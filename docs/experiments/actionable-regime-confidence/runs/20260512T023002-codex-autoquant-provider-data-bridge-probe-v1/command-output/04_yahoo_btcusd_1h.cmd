@@ -1,0 +1,1 @@
+python3 scripts/auto_quant_external/fetch_external.py yahoo --symbol BTC-USD --interval 1h --start 2021-01-01 --end 2025-12-31 --output /private/tmp/ict-engine-board-a-autoquant-provider-data-bridge-20260512T023002/BTC-USD-1h.csv 

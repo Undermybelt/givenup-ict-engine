@@ -1,0 +1,1 @@
+run-local fix: added exchange.skip_pair_validation=true to avoid network market validation in offline explicit-historical Auto-Quant backtest

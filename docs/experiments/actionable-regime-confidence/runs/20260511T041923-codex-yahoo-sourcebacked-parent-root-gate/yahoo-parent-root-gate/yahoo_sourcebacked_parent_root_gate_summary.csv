@@ -1,0 +1,3 @@
+root_class,state,rule,source_definition_candidate,train_support,train_lcb,calibration_support,calibration_lcb,test_support,test_lcb,test_precision,test_coverage,validation_market_contexts,validation_timeframes,blockers
+Bear,accepted_95,bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1,True,2303,0.9983347538661552,633,0.9939679511007218,524,0.9927223245607182,1.0,0.0655819774718398,crypto;equity_etf,1d;1w,
+Sideways,accepted_95,sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236,False,2501,0.9984663864424766,495,0.9886466535263686,863,0.9955684412857684,1.0,0.10801001251564456,crypto;equity_etf,1d;1w,

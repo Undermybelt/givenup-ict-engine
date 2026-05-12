@@ -1,0 +1,16 @@
+{
+  "profile": "synthetic_ohlcv",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "source_data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json",
+  "pair": "SRC_ROOT_CARRY_LONG_220646/USD",
+  "base_timeframe": "1h",
+  "additional_timeframes": [
+    "4h",
+    "1d"
+  ],
+  "notes": [
+    "profile_materializes_additive_external_runner",
+    "profile_reuses_primary_cleaned_candle_json_as_prepare_external_source",
+    "profile_is_opt_in_and_state_dir_scoped"
+  ]
+}

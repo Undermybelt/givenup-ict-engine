@@ -1,0 +1,12 @@
+run_id=20260511T190239+0800-codex-board-b-crosspanel-rootaware-daily-v1
+recipe_id=CrossPanelRootAwareDailyV1
+selected_trade_rows=231
+variant_trade_rows=775
+root_counts={'Bull': 128, 'Bear': 33, 'Sideways': 70, 'Crisis': 0, 'Manipulation(scoped)': 0}
+branch_paths_evaluated=5
+branch_paths_passed=0
+gate_result=fail:all_branch_paths_failed_rc_spa_hard_gates
+downstream_consumption=not_started:blocked_by_branch_rc_spa_hard_gates
+report_json=docs/experiments/actionable-regime-confidence/runs/20260511T190239-codex-board-b-crosspanel-rootaware-daily-v1/branch-rc-spa/crosspanel_rootaware_daily_rc_spa_report_v1.json
+report_md=docs/experiments/actionable-regime-confidence/runs/20260511T190239-codex-board-b-crosspanel-rootaware-daily-v1/branch-rc-spa/crosspanel_rootaware_daily_rc_spa_report_v1.md
+candidate_failure_missing_required_roots=['Crisis']

@@ -1,0 +1,8 @@
+Archive:  /tmp/ict-engine-kaggle-nifty500-behavior-regime-after-071538-v1/nifty-500-market-and-behavior-regime-dataset.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+   373941  04-15-2026 15:25   behavior_regime_predictions.csv
+  2561196  04-15-2026 15:25   final_features_matrix.csv
+  1401545  04-15-2026 15:25   regime_timeline_history.csv
+---------                     -------
+  4336682                     3 files

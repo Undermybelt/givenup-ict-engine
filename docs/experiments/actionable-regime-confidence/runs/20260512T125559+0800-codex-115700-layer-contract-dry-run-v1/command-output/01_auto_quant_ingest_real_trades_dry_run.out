@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "f37577efee062a19",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_SAME_ROOT_SIX_PROVIDER_BTC_1H_115700_20260512T045833.437917000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "board_b_115700_layer_contract_dry_run",
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_BTC_1H_115700",
+  "trades_applied": 237,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125559+0800-codex-115700-layer-contract-dry-run-v1/enriched-real-trades/115700_layer_contract_enriched_all.real_trades.jsonl",
+  "trades_total": 237
+}

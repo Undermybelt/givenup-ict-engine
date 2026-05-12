@@ -1,0 +1,8 @@
+{
+  "symbol": "NQ",
+  "analyze_runs": 38,
+  "update_runs": 40,
+  "matched_rows": 0,
+  "bbn_training_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/cisd_rb_bbn_training.csv",
+  "catboost_training_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/cisd_rb_catboost_training.csv"
+}

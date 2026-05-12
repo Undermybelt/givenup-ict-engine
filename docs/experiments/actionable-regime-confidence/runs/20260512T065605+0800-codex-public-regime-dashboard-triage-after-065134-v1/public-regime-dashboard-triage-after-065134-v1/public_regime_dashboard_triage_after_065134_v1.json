@@ -1,0 +1,50 @@
+{
+  "run_id": "20260512T065605+0800-codex-public-regime-dashboard-triage-after-065134-v1",
+  "gate_result": "public_regime_dashboard_triage_after_065134_v1=no_public_dashboard_unlock_no_downstream",
+  "scope": "Targeted public web/dashboard triage after 065134 for distinct regime-label leads not already counted by 064732.",
+  "candidate_count": 5,
+  "unlock_candidate_count": 0,
+  "accepted_rows_added": 0,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "candidates": [
+    {
+      "id": "VantMacro_market_regime_tracker",
+      "source_url": "https://vantmacro.com/methodology",
+      "decision": "rejected_dashboard_or_pro_export_not_acquired_cutoff_before_r5",
+      "unlock_candidate": false
+    },
+    {
+      "id": "TheInvestLog_market_regimes",
+      "source_url": "https://theinvestlog.com/market-regimes/",
+      "decision": "rejected_timeline_article_not_row_level_source_export",
+      "unlock_candidate": false
+    },
+    {
+      "id": "FinPredict_modern_macro_regime_clustering",
+      "source_url": "https://finpredictors.com/articles/modern-macro-regime-clustering",
+      "decision": "false_positive_article_not_verifier_export",
+      "unlock_candidate": false
+    },
+    {
+      "id": "Eco3min_market_macrofinancial_regimes",
+      "source_url": "https://eco3min.medium.com/factfulness-12-market-and-macro-financial-regimes-d71193b4c06d",
+      "decision": "rejected_narrative_regime_taxonomy_not_export",
+      "unlock_candidate": false
+    },
+    {
+      "id": "FortyTwoMacro_risk_matrix_sample",
+      "source_url": "https://42macro.com/wp-content/uploads/2025/09/SAMPLE-Global-Macro-Risk-Matrix.pdf",
+      "decision": "rejected_pdf_sample_not_row_level_regime_label_export",
+      "unlock_candidate": false
+    }
+  ]
+}

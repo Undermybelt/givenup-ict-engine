@@ -1,0 +1,83 @@
+{
+  "promotion_allowed": false,
+  "gates": [
+    {
+      "gate": "commands_zero",
+      "passed": true,
+      "status": "pass",
+      "evidence": "exit_count=11 nonzero=[]"
+    },
+    {
+      "gate": "replay_observations_min30",
+      "passed": true,
+      "status": "pass",
+      "evidence": "observations=32"
+    },
+    {
+      "gate": "catboost_trained_rows_min30",
+      "passed": true,
+      "status": "pass",
+      "evidence": "trained_rows=1120"
+    },
+    {
+      "gate": "path_ranker_runtime_ready",
+      "passed": true,
+      "status": "pass",
+      "evidence": "Ranker runtime: structural_path_ranking_target rows=1 history_rows=1130 mature_rows=1 history_mature_rows=1120 raw_scored_mature=1120/30 production_validation=1120/30 observation_validation=32/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=candidate_set_only runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=1"
+    },
+    {
+      "gate": "raw_scored_mature_min30",
+      "passed": true,
+      "status": "pass",
+      "evidence": "raw_scored_mature=1120/30"
+    },
+    {
+      "gate": "production_validation_min30",
+      "passed": true,
+      "status": "pass",
+      "evidence": "production_validation=1120/30"
+    },
+    {
+      "gate": "observation_validation_min30",
+      "passed": true,
+      "status": "pass",
+      "evidence": "observation_validation=32/30"
+    },
+    {
+      "gate": "current_pre_bayes_confidence_95",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "confidence=0.7873539660614577"
+    },
+    {
+      "gate": "every_regime_95",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "probabilities={'range': 1.0, 'stress': 0.0, 'transition': 0.0, 'trend': 0.0}"
+    },
+    {
+      "gate": "independent_cross_market_validation",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "replay used BTCUSD from the 172142 YF 1h candle file only"
+    },
+    {
+      "gate": "independent_cross_timeframe_validation",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "replay windows were generated from the same 1h source and passed as ltf/mtf/htf"
+    },
+    {
+      "gate": "execution_tree_non_observe",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "actionable=False ready=False gate=execution_blocked review=observe"
+    },
+    {
+      "gate": "path_probability_95",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "path_prob=0.3125 lower_bound=0.21821371337170056"
+    }
+  ]
+}

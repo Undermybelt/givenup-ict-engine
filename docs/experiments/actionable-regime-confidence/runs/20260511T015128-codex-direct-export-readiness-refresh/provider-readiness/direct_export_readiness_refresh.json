@@ -1,0 +1,72 @@
+{
+  "schema": "ict-engine/actionable-regime-confidence/direct-export-readiness-refresh/v1",
+  "run_id": "20260511T015128+0800-codex-direct-export-readiness-refresh",
+  "objective": "Re-check whether direct L2/L3/MBO/order-lifecycle data/tooling is now available for the active MainRegimeV2 Manipulation root gate.",
+  "active_root_axis": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "Manipulation",
+    "UnknownOrMixed"
+  ],
+  "tooling": {
+    "databento_cli": "missing",
+    "dbn_cli": "missing",
+    "zstdcat": "present",
+    "bsdtar": "present",
+    "uv": "present",
+    "python3": "present",
+    "python_module_databento": "missing",
+    "python_module_ib_insync": "missing",
+    "python_module_ibapi": "missing",
+    "python_module_pyarrow": "missing",
+    "python_module_pandas": "present",
+    "python_module_zstandard": "missing"
+  },
+  "credential_and_runtime_presence": {
+    "databento_env": "absent",
+    "databento_local_key_file": "absent",
+    "tradingviewremix_config": "present",
+    "ibkr_gateway_or_tws_listening_ports_4001_4002_7496_7497": "absent",
+    "ibc_config": "absent",
+    "tws_config_dir": "absent"
+  },
+  "local_data_readback": {
+    "tomac_large_files": "OHLCV and cleaned bar material only",
+    "tomac_archive_manifest_schema": "ohlcv-1m",
+    "tomac_archive_contents_checked": [
+      "GLBX-20260404-NQ.zip: condition.json, metadata.json, glbx-mdp3-20100606-20260403.ohlcv-1m.csv, manifest.json",
+      "gc future 2021-2025/databento.rar: gc_201101_202604.csv, nq_201101_202604.csv"
+    ],
+    "tomac_metadata_queries_checked": [
+      "NQ.FUT GLBX.MDP3 schema=ohlcv-1m encoding=csv",
+      "GC.FUT GLBX.MDP3 schema=ohlcv-1m encoding=csv",
+      "ES.FUT GLBX.MDP3 schema=ohlcv-1m encoding=csv",
+      "YM.FUT GLBX.MDP3 schema=ohlcv-1m encoding=csv",
+      "6E.FUT GLBX.MDP3 schema=ohlcv-1m encoding=csv"
+    ],
+    "targeted_direct_file_search": "no new qualifying MBO/MBP/L2/L3/order-lifecycle dataset found",
+    "symbology_files_found": [
+      "/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/symbology.csv",
+      "/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/symbology.csv",
+      "/Users/thrill3r/Downloads/Tomac/es future 2021-2025/symbology.csv",
+      "/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/symbology.csv",
+      "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/symbology.csv"
+    ]
+  },
+  "gate_result": {
+    "provider_export_ready_now": false,
+    "qualifying_direct_manipulation_input_sets": 0,
+    "manipulation_gate": "blocked_missing_required_inputs",
+    "bull_gate": "missing_95_root_packet",
+    "bear_gate": "missing_95_root_packet",
+    "sideways_gate": "missing_95_root_packet",
+    "crisis_gate": "accepted_95_root_packet_partial_prior_evidence_preserved",
+    "trade_usable": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "fresh_calibration_rerun": false
+  },
+  "next_action": "Provide or enable a Databento-style historical MBO/L3 export with credentials/tooling, or place an already exported calibration-grade direct L2/L3/MBO/order-lifecycle dataset in a documented local path before rerunning the Manipulation gate."
+}

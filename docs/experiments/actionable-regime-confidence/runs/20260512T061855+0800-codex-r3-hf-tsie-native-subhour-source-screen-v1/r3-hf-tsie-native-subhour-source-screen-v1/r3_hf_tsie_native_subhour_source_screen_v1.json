@@ -1,0 +1,65 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge": false,
+  "candidate": {
+    "author": "sujinwo",
+    "commit_sha": "75e7e2f86c37f8f28204651dcccf8338ca50aa6b",
+    "dataset_id": "sujinwo/tsie-market-regime-dataset",
+    "downloads_observed": 258,
+    "gated": false,
+    "last_modified": "2026-04-13T13:27:46.000Z",
+    "license": "mit",
+    "likes_observed": 2,
+    "page_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+    "private": false
+  },
+  "decision": "r3_hf_tsie_native_subhour_source_screen_v1=candidate_found_not_intaked_no_acceptance",
+  "downstream_promotion_rerun": false,
+  "external_requests_sent": true,
+  "files": [
+    {
+      "filename": "tft_dataset_labeled.parquet",
+      "parquet_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet",
+      "size_bytes": 591890794
+    }
+  ],
+  "gate_result": "candidate_found_not_intaked_no_acceptance",
+  "raw_data_committed": false,
+  "raw_data_downloaded": false,
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "row_shape": {
+    "num_columns": 32,
+    "num_rows": 7193996,
+    "split": "train"
+  },
+  "schema_signals": {
+    "has_ohlcv": true,
+    "has_regime_label": true,
+    "has_session_fields": true,
+    "has_timestamp": true,
+    "observed_time_samples": [
+      "2013-01-07T02:00:00",
+      "2013-01-07T03:00:00",
+      "2013-01-07T04:00:00",
+      "2013-01-07T06:00:00",
+      "2013-01-07T07:00:00"
+    ],
+    "regime_label_dtype": "int8",
+    "timestamp_dtype": "timestamp[ns]"
+  },
+  "source_urls": [
+    "https://huggingface.co/api/datasets/sujinwo/tsie-market-regime-dataset",
+    "https://datasets-server.huggingface.co/size?dataset=sujinwo/tsie-market-regime-dataset",
+    "https://datasets-server.huggingface.co/info?dataset=sujinwo/tsie-market-regime-dataset",
+    "https://datasets-server.huggingface.co/first-rows?dataset=sujinwo/tsie-market-regime-dataset&config=default&split=train",
+    "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/raw/main/README.md"
+  ],
+  "strict_full_objective": false,
+  "target_root_mutated": false,
+  "trade_usable": false,
+  "update_goal": false
+}

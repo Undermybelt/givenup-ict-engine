@@ -1,0 +1,333 @@
+{
+  "profiles": [
+    {
+      "columns": [
+        "Date",
+        "behavior_fast_confidence",
+        "behavior_fast_prob_gap",
+        "behavior_fast_state",
+        "behavior_slow_confidence",
+        "behavior_slow_prob_gap",
+        "behavior_slow_state",
+        "hybrid_action"
+      ],
+      "date_columns": [
+        "Date"
+      ],
+      "date_max": {
+        "Date": "2026-03-20"
+      },
+      "date_min": {
+        "Date": "2010-09-20"
+      },
+      "file": "/tmp/ict-engine-kaggle-nifty500-behavior-regime-after-071538-v1/extracted/behavior_regime_predictions.csv",
+      "label_columns": [
+        "behavior_fast_state",
+        "behavior_slow_state"
+      ],
+      "label_counts": {
+        "behavior_fast_state": {
+          "Mean-Reverting": 1935,
+          "Noisy": 592,
+          "Trending": 1319
+        },
+        "behavior_slow_state": {
+          "Mean-Reverting": 2395,
+          "Noisy": 1322,
+          "Trending": 129
+        }
+      },
+      "post_2026_01_30_rows": {
+        "Date": 35
+      },
+      "rows": 3846,
+      "sample_rows": [
+        {
+          "Date": "2010-09-20",
+          "behavior_fast_confidence": "1.0",
+          "behavior_fast_prob_gap": "1.0",
+          "behavior_fast_state": "Trending",
+          "behavior_slow_confidence": "1.0",
+          "behavior_slow_prob_gap": "1.0",
+          "behavior_slow_state": "Mean-Reverting",
+          "hybrid_action": "Mean-Reverting structure with Trending tactical short-term"
+        },
+        {
+          "Date": "2010-09-21",
+          "behavior_fast_confidence": "1.0",
+          "behavior_fast_prob_gap": "1.0",
+          "behavior_fast_state": "Trending",
+          "behavior_slow_confidence": "0.9835",
+          "behavior_slow_prob_gap": "0.9669",
+          "behavior_slow_state": "Mean-Reverting",
+          "hybrid_action": "Mean-Reverting structure with Trending tactical short-term"
+        },
+        {
+          "Date": "2010-09-22",
+          "behavior_fast_confidence": "1.0",
+          "behavior_fast_prob_gap": "1.0",
+          "behavior_fast_state": "Trending",
+          "behavior_slow_confidence": "0.9585",
+          "behavior_slow_prob_gap": "0.9169",
+          "behavior_slow_state": "Mean-Reverting",
+          "hybrid_action": "Mean-Reverting structure with Trending tactical short-term"
+        }
+      ],
+      "sha256": "a3d89910596bd8f953218e5bfe3d57eab4f5c9c76f9b0ef1d38c9c9dca079c77",
+      "symbol_columns": []
+    },
+    {
+      "columns": [
+        "Date",
+        "rv_126_norm",
+        "vol_of_vol_126_norm",
+        "downside_vol_126_norm",
+        "max_drawdown_126_norm",
+        "time_under_water_126_norm",
+        "skewness_126_norm",
+        "kurtosis_126_norm",
+        "rv_252_norm",
+        "vol_of_vol_252_norm",
+        "downside_vol_252_norm",
+        "max_drawdown_252_norm",
+        "time_under_water_252_norm",
+        "skewness_252_norm",
+        "kurtosis_252_norm",
+        "vix_percentile_252_norm",
+        "vix_ma_252_norm",
+        "vix_relative_252_norm",
+        "ret_1_norm",
+        "ret_5_norm",
+        "ret_20_norm",
+        "ret_60_norm",
+        "rv_20_norm",
+        "rv_60_norm",
+        "downside_vol_20_norm",
+        "downside_vol_60_norm",
+        "vol_of_vol_60_norm",
+        "skewness_60_norm",
+        "kurtosis_60_norm",
+        "hl_range_norm",
+        "gap_norm",
+        "volume_z_60_norm",
+        "amihud_20_norm",
+        "vix_level_norm",
+        "vix_change_norm",
+        "vix_percentile_60_norm",
+        "vix_shock_norm",
+        "vix_momentum_20_norm"
+      ],
+      "date_columns": [
+        "Date",
+        "time_under_water_126_norm",
+        "time_under_water_252_norm"
+      ],
+      "date_max": {
+        "Date": "2026-03-20",
+        "time_under_water_126_norm": "3.15129562951674",
+        "time_under_water_252_norm": "2.521975472094583"
+      },
+      "date_min": {
+        "Date": "2012-02-02",
+        "time_under_water_126_norm": "-0.0009980603116036234",
+        "time_under_water_252_norm": "-0.0025437891251176383"
+      },
+      "file": "/tmp/ict-engine-kaggle-nifty500-behavior-regime-after-071538-v1/extracted/final_features_matrix.csv",
+      "label_columns": [],
+      "label_counts": {},
+      "post_2026_01_30_rows": {
+        "Date": 35,
+        "time_under_water_126_norm": null,
+        "time_under_water_252_norm": null
+      },
+      "rows": 3500,
+      "sample_rows": [
+        {
+          "Date": "2012-02-02",
+          "downside_vol_126_norm": "0.5671158201597993",
+          "downside_vol_252_norm": "0.2997846267148929",
+          "kurtosis_126_norm": "-1.7455704928220341",
+          "max_drawdown_126_norm": "-0.6474024883810184",
+          "max_drawdown_252_norm": "-0.7389402701665466",
+          "rv_126_norm": "2.191035169435519",
+          "rv_252_norm": "1.486525917858128",
+          "skewness_126_norm": "0.5419514931829505",
+          "time_under_water_126_norm": "1.209013135164894",
+          "vol_of_vol_126_norm": "-0.6190808183342623",
+          "vol_of_vol_252_norm": "-0.6846400911106989"
+        },
+        {
+          "Date": "2012-02-03",
+          "downside_vol_126_norm": "0.5632288001793558",
+          "downside_vol_252_norm": "0.21049184018098435",
+          "kurtosis_126_norm": "-1.8170721123374913",
+          "max_drawdown_126_norm": "-0.3705707859684885",
+          "max_drawdown_252_norm": "-0.734005946937298",
+          "rv_126_norm": "2.2059901729975167",
+          "rv_252_norm": "1.4953305276667557",
+          "skewness_126_norm": "0.47841607409030096",
+          "time_under_water_126_norm": "1.2071815103412178",
+          "vol_of_vol_126_norm": "-0.6583854843124333",
+          "vol_of_vol_252_norm": "-0.6705145151069513"
+        },
+        {
+          "Date": "2012-02-06",
+          "downside_vol_126_norm": "0.6799452242047179",
+          "downside_vol_252_norm": "0.22503925314366333",
+          "kurtosis_126_norm": "-1.811007791754031",
+          "max_drawdown_126_norm": "-0.17267469167205013",
+          "max_drawdown_252_norm": "-0.7281396609050396",
+          "rv_126_norm": "2.1795654872791763",
+          "rv_252_norm": "1.4496751351909904",
+          "skewness_126_norm": "0.26854972269846983",
+          "time_under_water_126_norm": "1.204383232029531",
+          "vol_of_vol_126_norm": "-0.6804827344058295",
+          "vol_of_vol_252_norm": "-0.6559921718567309"
+        }
+      ],
+      "sha256": "f7e44a4f73505b2e733f33262262e9756bb974f717afdbfbfaa29a83cfeecc28",
+      "symbol_columns": []
+    },
+    {
+      "columns": [
+        "Date",
+        "run_date",
+        "feature_date",
+        "macro_state",
+        "fast_state",
+        "combined_state",
+        "macro_confidence",
+        "fast_confidence",
+        "combined_confidence",
+        "confidence",
+        "p_fragile_smooth",
+        "p_calm_smooth",
+        "p_choppy_smooth",
+        "p_stress_smooth",
+        "p_fragile_raw",
+        "p_calm_raw",
+        "p_choppy_raw",
+        "p_stress_raw",
+        "p_fragile_adaptive",
+        "p_calm_adaptive",
+        "p_choppy_adaptive",
+        "p_stress_adaptive",
+        "adaptive_macro_state",
+        "adaptive_fast_state",
+        "adaptive_combined_state"
+      ],
+      "date_columns": [
+        "Date",
+        "run_date",
+        "feature_date"
+      ],
+      "date_max": {
+        "Date": "2026-03-20",
+        "feature_date": "2026-03-20",
+        "run_date": "2026-03-20"
+      },
+      "date_min": {
+        "Date": "2012-02-02",
+        "feature_date": "2012-02-02",
+        "run_date": "2012-02-02"
+      },
+      "file": "/tmp/ict-engine-kaggle-nifty500-behavior-regime-after-071538-v1/extracted/regime_timeline_history.csv",
+      "label_columns": [
+        "macro_state",
+        "fast_state",
+        "combined_state",
+        "adaptive_macro_state",
+        "adaptive_fast_state",
+        "adaptive_combined_state"
+      ],
+      "label_counts": {
+        "adaptive_combined_state": {
+          "Durable\u2013Calm": 467,
+          "Durable\u2013Choppy": 471,
+          "Durable\u2013Stress": 271,
+          "Fragile\u2013Calm": 743,
+          "Fragile\u2013Choppy": 785,
+          "Fragile\u2013Stress": 727
+        },
+        "adaptive_fast_state": {
+          "Calm": 1210,
+          "Choppy": 1256,
+          "Stress": 998
+        },
+        "adaptive_macro_state": {
+          "Durable": 1209,
+          "Fragile": 2255
+        },
+        "combined_state": {
+          "Durable\u2013Calm": 499,
+          "Durable\u2013Choppy": 449,
+          "Durable\u2013Stress": 265,
+          "Fragile\u2013Calm": 732,
+          "Fragile\u2013Choppy": 793,
+          "Fragile\u2013Stress": 726
+        },
+        "fast_state": {
+          "Calm": 1231,
+          "Choppy": 1242,
+          "Stress": 991
+        },
+        "macro_state": {
+          "Durable": 1213,
+          "Fragile": 2251
+        }
+      },
+      "post_2026_01_30_rows": {
+        "Date": 34,
+        "feature_date": null,
+        "run_date": null
+      },
+      "rows": 3464,
+      "sample_rows": [
+        {
+          "Date": "2012-02-02",
+          "combined_confidence": "0.399998422064528",
+          "combined_state": "Durable\u2013Calm",
+          "confidence": "0.399998422064528",
+          "fast_confidence": "0.399998422064528",
+          "fast_state": "Calm",
+          "feature_date": "2012-02-02",
+          "macro_confidence": "0.5249353915700131",
+          "macro_state": "Durable",
+          "p_calm_smooth": "0.399998422064528",
+          "p_fragile_smooth": "0.5249353915700131",
+          "run_date": "2012-02-02"
+        },
+        {
+          "Date": "2012-02-03",
+          "combined_confidence": "0.4599930143114953",
+          "combined_state": "Durable\u2013Calm",
+          "confidence": "0.4599930143114953",
+          "fast_confidence": "0.4599930143114953",
+          "fast_state": "Calm",
+          "feature_date": "2012-02-03",
+          "macro_confidence": "0.548669415482433",
+          "macro_state": "Durable",
+          "p_calm_smooth": "0.4599930143114953",
+          "p_fragile_smooth": "0.548669415482433",
+          "run_date": "2012-02-03"
+        },
+        {
+          "Date": "2012-02-06",
+          "combined_confidence": "0.5139887138323773",
+          "combined_state": "Durable\u2013Calm",
+          "confidence": "0.5139887138323773",
+          "fast_confidence": "0.5139887138323773",
+          "fast_state": "Calm",
+          "feature_date": "2012-02-06",
+          "macro_confidence": "0.5712306474572529",
+          "macro_state": "Durable",
+          "p_calm_smooth": "0.5139887138323773",
+          "p_fragile_smooth": "0.5712306474572529",
+          "run_date": "2012-02-06"
+        }
+      ],
+      "sha256": "4bfb78601e36557e177701bf8ee6a0c9b8e243206e0f9eafe8ee6c7115f0b732",
+      "symbol_columns": []
+    }
+  ]
+}

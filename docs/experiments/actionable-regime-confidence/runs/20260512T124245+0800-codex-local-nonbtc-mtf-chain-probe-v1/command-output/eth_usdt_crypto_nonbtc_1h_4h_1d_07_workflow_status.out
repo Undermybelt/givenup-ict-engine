@@ -1,0 +1,22 @@
+{
+  "applied_path_count": null,
+  "artifact_match_count": null,
+  "calibrated_path_prob": null,
+  "candidate_set_match_count": null,
+  "execution_gate_status": null,
+  "history_match_count": null,
+  "path_prob_lower_bound": null,
+  "raw_path_score": null,
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d'",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1h.json",
+    "user_input_required": true
+  },
+  "reuse_mode": null,
+  "runtime_enabled": null,
+  "runtime_source": null,
+  "status": null
+}

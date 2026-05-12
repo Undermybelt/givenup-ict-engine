@@ -1,0 +1,42 @@
+{
+  "run_id": "20260512T040611-codex-tradingview-stdio-provider-readback-after-040109-v1",
+  "gate": "tradingview_stdio_provider_readback_after_040109_v1=local_stdio_ohlcv_ready_remote_config_still_nonpromoting_source_controls_absent",
+  "scope": "provider_reachability_only",
+  "provider_status": {
+    "command": "command-output/00_provider_status_tradingview_stdio.cmd",
+    "exit": 0,
+    "summary_line": "market_data:1/1 ready",
+    "provider_id": "tradingview_mcp",
+    "ready": true,
+    "status": "ready_degraded",
+    "reason": "local_stdio_ohlcv_ready_options_unverified"
+  },
+  "harness": {
+    "command": "command-output/01_harness_tradingview_stdio_qqq_1d.cmd",
+    "exit": 0,
+    "provider": "tradingview_mcp",
+    "symbol": "NASDAQ:QQQ",
+    "interval": "1d",
+    "rows": 21,
+    "first_timestamp": "2026-04-13T13:30:00Z",
+    "last_timestamp": "2026-05-11T13:30:00Z",
+    "missing_roles": [],
+    "warnings": []
+  },
+  "required_source_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "promotion_status": {
+    "source_control_evidence_acquired": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "counting_rule": "count_once_as_non_promoting_provider_reachability; not_source_control_acceptance; not_canonical_merge_input; not_downstream_promotion; not_trade_evidence"
+}

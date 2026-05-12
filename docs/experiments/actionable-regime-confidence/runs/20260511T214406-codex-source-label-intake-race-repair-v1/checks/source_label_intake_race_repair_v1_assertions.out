@@ -1,0 +1,15 @@
+PASS decision=source_label_intake_race_repair_v1=malformed_row_removed_schema_ready_unscored_strict_blocked
+PASS rows_before=248440
+PASS invalid_rows_removed=0
+PASS rows_after=248440
+PASS source_label_verifier_status=schema_ready_unscored
+PASS source_label_verifier_returncode=0
+PASS source_panel_recency_status=blocked
+PASS direct_verifier_status=schema_ready_unscored
+PASS r6_positive_rows=41
+PASS r6_matched_negative_rows=41
+PASS r6_wilson95_min_lcb=0.914332
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=false

@@ -1,0 +1,65 @@
+{
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "7616ed898e9b2b8697d429b98e036ffdfb626fef45aa4f2ebc35dde0e3840508",
+  "decision": {
+    "accepted_by_ticker": {
+      "PFE": [
+        "Bear",
+        "Sideways"
+      ],
+      "TSLA": [
+        "Crisis"
+      ]
+    },
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_gate": "pfe_tsla_rare_root_exact_loop_v1=accepted3_rare_roots_bear_sideways_crisis_no_new_download",
+    "accepted_roots": [
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "accepted_rows": 3,
+    "blocked_rows": 5,
+    "full_objective_achieved": false,
+    "rare_roots_closed": [
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "rare_roots_targeted": [
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "selected_rows": 8,
+    "support_floor_by_accepted_root": {
+      "Bear": 74,
+      "Crisis": 146,
+      "Sideways": 74
+    },
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T06:49:32.821321+00:00",
+  "inputs": {
+    "selector_json": "docs/experiments/actionable-regime-confidence/runs/20260511T142858-codex-positive-target-selector-v1/positive-target-selector/positive_target_selector_v1.json",
+    "selector_top_pair": "PFE+TSLA",
+    "universe_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1_rows.csv"
+  },
+  "next_action": "Use a separate abundant-root exact-source pair for Bull if a two-market loop artifact is still needed; do not force Bull into the PFE+TSLA rare-root loop. Then run a completion audit against full objective coverage instead of rerunning proxy/no-source scans.",
+  "policy": {
+    "active_taxonomy": "MainRegimeV2",
+    "consumer_scope": "intraday_parent_day_context_not_intraday_micro_regime",
+    "no_crosswalk": true,
+    "no_new_provider_download": true,
+    "no_subregime_promotion": true,
+    "selected_tickers": [
+      "PFE",
+      "TSLA"
+    ],
+    "timeframe": "1h"
+  },
+  "run_id": "20260511T144604+0800-codex-pfe-tsla-rare-root-exact-loop-v1"
+}

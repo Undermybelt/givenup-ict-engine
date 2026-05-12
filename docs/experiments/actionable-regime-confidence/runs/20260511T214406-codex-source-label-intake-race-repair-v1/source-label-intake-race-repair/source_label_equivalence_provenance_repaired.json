@@ -1,0 +1,46 @@
+{
+  "created_at_utc": "2026-05-11T13:49:25.504205+00:00",
+  "date_max": "2026-03-20",
+  "date_min": "2000-01-03",
+  "invalid_rows_removed": 0,
+  "label_counts": {
+    "Bear": 54939,
+    "Bull": 104979,
+    "Crisis": 30623,
+    "Sideways": 57899
+  },
+  "limitations": [
+    "schema readiness is not Board A confidence acceptance",
+    "daily source-label equivalence rows do not satisfy native sub-hour validation",
+    "R5 source-panel recency extension remains a separate missing intake root",
+    "R6 direct Manipulation remains a separate direct-event root"
+  ],
+  "market_family_counts": {
+    "india_equity_index": 3435,
+    "us_index": 26236,
+    "us_single_stock": 218769
+  },
+  "package_counts": {
+    "price_root_equivalence_us_index_futures": 248440
+  },
+  "previous_provenance_path": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/source-label-intake-race-repair/source_label_equivalence_previous_provenance_v1.json",
+  "raw_payload_committed_to_repo": false,
+  "repair_reason": "concurrent_us_panel_extension_and_duplicate_cleanup_left_provenance_out_of_sync_and_one_truncated_csv_row",
+  "row_count": 248440,
+  "rows_path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+  "rows_sha256": "915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f",
+  "run_id": "20260511T214406-codex-source-label-intake-race-repair-v1",
+  "source_owner_counts": {
+    "ahaanverma00": 3435,
+    "source-owned-stock-market-regimes-2000-2026": 245005
+  },
+  "split_counts": {
+    "calibration": 148976,
+    "heldout_market": 26236,
+    "heldout_time": 45384,
+    "test": 27844
+  },
+  "symbol_count": 40,
+  "updated_at_utc": "2026-05-11T13:49:25.504205+00:00",
+  "updated_by": "20260511T214406-codex-source-label-intake-race-repair-v1"
+}

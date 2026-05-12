@@ -1,0 +1,10 @@
+root,split,rule,support,success,precision,wilson95_lcb,coverage,ece,accepted_95,blockers
+Bull,train,p_bull >= 0.228501228501,3256,744,0.228501228501,0.214404373222,0.227263209325,0.000000000000,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05
+Bull,calibration,p_bull >= 0.228501228501,1123,199,0.177203918077,0.155982616871,0.193287435456,0.051297310425,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05
+Bull,test,p_bull >= 0.228501228501,875,174,0.198857142857,0.173751918829,0.151253241141,0.029644085644,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05
+Bear,train,p_bull >= 0.228501228501,3256,245,0.075245700246,0.066677093983,0.227263209325,0.000000000000,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95
+Bear,calibration,p_bull >= 0.228501228501,1123,133,0.118432769368,0.100822738564,0.193287435456,0.043187069122,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95
+Bear,test,p_bull >= 0.228501228501,875,88,0.100571428571,0.082356403625,0.151253241141,0.025325728326,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95
+Sideways,train,p_sideways >= 0.303875407461,5522,1678,0.303875407461,0.291884352533,0.385426118517,0.000000000000,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05
+Sideways,calibration,p_sideways >= 0.303875407461,1759,223,0.126776577601,0.112036733489,0.302753872633,0.177098829860,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05
+Sideways,test,p_sideways >= 0.303875407461,2014,351,0.174280039722,0.158336733589,0.348141745895,0.129595367739,False,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05

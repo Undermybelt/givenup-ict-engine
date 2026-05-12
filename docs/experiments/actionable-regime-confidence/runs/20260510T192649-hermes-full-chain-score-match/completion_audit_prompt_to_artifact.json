@@ -1,0 +1,110 @@
+{
+  "schema_version": "prompt-to-artifact-completion-audit/v1",
+  "objective": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md followed with real Auto-Quant -> filter/Pre-Bayes -> BBN -> CatBoost -> execution-tree operation and provider artifacts for IBKR/TradingViewRemix/yfinance/Kraken in durable subfolders",
+  "latest_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T192649-hermes-full-chain-score-match",
+  "lineage_run_roots": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T192649-hermes-full-chain-score-match"
+  ],
+  "checklist": [
+    {
+      "requirement": "Follow the named Board A markdown and keep the same board updated",
+      "evidence": [
+        "docs/plans/2026-05-10-actionable-regime-confidence-todo.md current cursor board_state=accepted_95",
+        "Evidence Ledger row 20260510T192649+0800-hermes-full-chain-score-match-catboost-readback"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Produce an acceptable 95%-99% calibrated regime factor without threshold relaxation",
+      "evidence": [
+        "20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json accepted_regime_packet",
+        "SessionLiquidityCoreViable cal/test=378/378 test Wilson95=0.9899396497369397 ECE=0.010582010582010581 coverage=0.3776223776223776"
+      ],
+      "status": "pass_accepted_95_not_99"
+    },
+    {
+      "requirement": "Run Auto-Quant import/material through ict-engine",
+      "evidence": [
+        "20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json auto_quant.n_ok=1 n_error=0",
+        "20260510T192649-hermes-full-chain-score-match/autoquant/01_auto_quant_status_replay36.json status=missing_dependency but replay/import artifacts reused; no new heavy training started"
+      ],
+      "status": "pass_with_replay_reuse"
+    },
+    {
+      "requirement": "Run filter / Pre-Bayes layer after score-match closure",
+      "evidence": [
+        "ict-engine/17_pre_bayes_status_current_reaudit.json latest_gate_status=observe_only latest_uses_soft_evidence=true",
+        "completion-audit/fresh_pre_bayes_status_nq.json"
+      ],
+      "status": "pass_observe_only"
+    },
+    {
+      "requirement": "Run BBN / belief-network layer, not only dry-run",
+      "evidence": [
+        "20260510T191350-codex-nq-structural-replay36/ict-engine/16_auto_quant_prior_init_nq_apply.json dry_run=false evidence_value_gate_passed=true strategies_applied=1 trade_count=1081",
+        "20260510T191350-codex-nq-structural-replay36/evidence_packet_structural_replay36_catboost_closure.json bbn_apply"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Run CatBoost/path-ranker and verify current score match",
+      "evidence": [
+        "evidence_packet_score_match_catboost_runtime_closure.json catboost_score_match rows_scored=3 score_model_family=catboost score_source_kind=external_model",
+        "ict-engine/16_policy_training_status_current_reaudit.json raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30 score_model_family=catboost",
+        "ict-engine/18_workflow_phase_structural_recommended_path_bundle_current_reaudit.json path_ranker_raw_score=0.405144071613999 score_model_family=catboost"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Run execution-tree consumer readback",
+      "evidence": [
+        "evidence_packet_score_match_catboost_runtime_closure.json execution_tree_readback gate_status=observe branch=transition_guardrail execution_bias=guarded score_visible=true score_used=true",
+        "ict-engine/15_execution_tree_trace_after_score_match_nq.json ranker_validation_ready=true"
+      ],
+      "status": "pass_with_residual",
+      "residual": "execution tree trace still reports path_ranker_model_family=unknown; policy/workflow readbacks are authoritative for CatBoost external-model family and execution trace proves score visibility/use. No execute promotion claimed."
+    },
+    {
+      "requirement": "Use or check IBKR, TradingViewRemix, yfinance, and Kraken provider paths",
+      "evidence": [
+        "20260510T185358-codex-accepted95-full-chain/provider/yf_QQQ_1h_20240601_20260509.csv lines=3370",
+        "20260510T185358-codex-accepted95-full-chain/provider/ibkr_QQQ_1h.csv lines=4008",
+        "20260510T185358-codex-accepted95-full-chain/provider/kraken_PF_XBTUSD_1h_2024_2025.csv lines=2001",
+        "20260510T185358-codex-accepted95-full-chain/provider/provider-tvremix-tools-list-health.json ok=false http_status=429",
+        "provider/provider-status-agent-current-reaudit.json summary_line=entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+      ],
+      "status": "pass_with_current_provider_runtime_drift_recorded"
+    },
+    {
+      "requirement": "Store useful outputs in named durable subfolders rather than relying on tmp",
+      "evidence": [
+        "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T192649-hermes-full-chain-score-match"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Do not claim a tradable strategy or execute-ready release candidate",
+      "evidence": [
+        "evidence_packet_score_match_catboost_runtime_closure.json decision.trade_usable=false",
+        "Board blocker says trade-use remains blocked by guardrail-only packet and observe/transition_guardrail/guarded execution state"
+      ],
+      "status": "pass"
+    }
+  ],
+  "overall_status": "achieved_for_requested_regime_confidence_and_full_chain_artifact_goal",
+  "not_claimed": [
+    "tradable strategy",
+    "execute-ready release candidate",
+    "99% regime confidence",
+    "TradingViewRemix usable market data",
+    "current default-runtime IBKR or Kraken-public readiness"
+  ],
+  "residual_risk": [
+    "Current default provider-status re-audit is weaker than the earlier saved provider artifact because Python/runtime dependencies are missing in the default environment; durable provider CSVs remain available.",
+    "Execution-tree trace still emits model_family=unknown even though policy/workflow readbacks show CatBoost/external_model and trace confirms score visible/used."
+  ]
+}

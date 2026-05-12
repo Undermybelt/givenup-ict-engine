@@ -1,0 +1,69 @@
+{
+  "enrichment": {
+    "combined_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T125559+0800-codex-115700-layer-contract-dry-run-v1/enriched-real-trades/115700_layer_contract_enriched_all.real_trades.jsonl",
+    "enriched_rows": 237,
+    "provider_counts": {
+      "auto-quant-112315-binance_public": 52,
+      "auto-quant-112315-bybit_public": 51,
+      "auto-quant-112315-ibkr_paxos_long_midpoint": 44,
+      "auto-quant-112315-kraken_public": 32,
+      "auto-quant-112315-tvr_default_binance": 37,
+      "auto-quant-112315-yfinance": 21
+    },
+    "source_files": 12,
+    "strategy_counts": {
+      "ProviderCryptoMomentumStateV1": 164,
+      "ProviderCryptoPullbackRevertV1": 73
+    }
+  },
+  "evidence_class": "chain_contract_repair_preview",
+  "gate_result": "115700_layer_contract_dry_run_v1=contract_complete_parse_preview_no_market_learning",
+  "ingest_dry_run": {
+    "cmd": [
+      "target/debug/ict-engine",
+      "auto-quant-ingest-real-trades",
+      "--symbol",
+      "B2R_SAME_ROOT_SIX_PROVIDER_BTC_1H_115700",
+      "--state-dir",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T125559+0800-codex-115700-layer-contract-dry-run-v1/state_dry_run",
+      "--trades",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T125559+0800-codex-115700-layer-contract-dry-run-v1/enriched-real-trades/115700_layer_contract_enriched_all.real_trades.jsonl",
+      "--source",
+      "board_b_115700_layer_contract_dry_run",
+      "--dry-run"
+    ],
+    "exit": 0,
+    "parsed_stdout": {
+      "command": "auto-quant-ingest-real-trades",
+      "content_hash": "f37577efee062a19",
+      "dry_run": true,
+      "feedback_records_inserted": 0,
+      "force": false,
+      "ledger_artifact_id": "auto_quant_real_trades_B2R_SAME_ROOT_SIX_PROVIDER_BTC_1H_115700_20260512T045833.437917000Z",
+      "ledger_status": "dry_run_preview",
+      "previous_artifact_id": null,
+      "source": "board_b_115700_layer_contract_dry_run",
+      "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_BTC_1H_115700",
+      "trades_applied": 237,
+      "trades_invalid": 0,
+      "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125559+0800-codex-115700-layer-contract-dry-run-v1/enriched-real-trades/115700_layer_contract_enriched_all.real_trades.jsonl",
+      "trades_total": 237
+    },
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T125559+0800-codex-115700-layer-contract-dry-run-v1/command-output/01_auto_quant_ingest_real_trades_dry_run.err",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T125559+0800-codex-115700-layer-contract-dry-run-v1/command-output/01_auto_quant_ingest_real_trades_dry_run.out"
+  },
+  "promotion_allowed": false,
+  "run_id": "20260512T125559+0800-codex-115700-layer-contract-dry-run-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "source_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "trade_usable": false,
+  "update_goal": false,
+  "validation": {
+    "contract_complete_rows": 237,
+    "examples": [],
+    "failure_counts": {},
+    "market_factor_trainable_rows": 0,
+    "quality_weight_zero_rows": 237,
+    "rows_checked": 237
+  }
+}

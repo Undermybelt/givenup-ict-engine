@@ -1,0 +1,42 @@
+{
+  "run_id": "20260512T070737+0800-codex-completion-audit-after-070531-v1",
+  "gate_result": "completion_audit_after_070531_v1=not_complete_r6_official_counts_no_controls_no_promotion",
+  "board_sha256_before_audit_artifact": "e23e16f21d42e30676b76bafa2b61357f33d51045a5b7aa87c5608503b8aabac",
+  "checklist": {
+    "met": 1,
+    "partial": 3,
+    "not_met": 4,
+    "blocked": 2
+  },
+  "evidence": {
+    "r6_owner_export_root_exists": false,
+    "r5_recency_root_exists": false,
+    "r3_native_subhour_root_exists": true,
+    "r3_valid_unlock": false,
+    "r3_crisis_present": false,
+    "cftc_official_counts_extracted": true,
+    "cftc_product_groups": 6,
+    "cftc_charged_trading_days_at_least": 51,
+    "r6_row_level_order_lifecycle_rows_acquired": false,
+    "r6_source_owned_normal_controls_acquired": false,
+    "autoquant_data_ready": true,
+    "autoquant_tomac_specific_successes": 1,
+    "workflow_blocker": "user_selected_historical_data_missing",
+    "path_ranking_mature_rows": 0,
+    "path_ranking_calibrated_rows": 0
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "direct_verifier_run": false,
+    "split_calibration_run": false,
+    "canonical_merge": false,
+    "provider_autoquant_promotion": false,
+    "pre_bayes_bbn_catboost_execution_tree_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next": "Continue source/control acquisition only before any verifier, canonical merge, provider/AutoQuant promotion, or downstream chain promotion."
+}

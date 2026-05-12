@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "4b7b74249907c153",
+  "dry_run": false,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_SPY_20260512T072352.171237000Z",
+  "ledger_status": "no_op",
+  "previous_artifact_id": null,
+  "source": "150352_145809_screen_branch_probe",
+  "symbol": "SPY",
+  "trades_applied": 0,
+  "trades_invalid": 81,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/selected_branch_real_trades_SPY.jsonl",
+  "trades_total": 81
+}

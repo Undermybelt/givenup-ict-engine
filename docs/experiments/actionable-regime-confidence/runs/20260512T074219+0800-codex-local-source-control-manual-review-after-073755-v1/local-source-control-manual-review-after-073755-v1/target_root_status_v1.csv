@@ -1,0 +1,6 @@
+root,path,present,unlock,decision
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,false,false,absent
+r5_recency_extension,/tmp/ict-engine-source-panel-recency-extension,false,false,absent
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,true,false,tsie_derived_crisis_absent_quarantined_non_promoting
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,true,false,non_target_non_promoting
+r6_approval_package,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,true,false,approval_present_false_no_merge_no_downstream

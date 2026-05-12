@@ -1,0 +1,23 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 5182,
+  "matched_negative_rows": 1553,
+  "matched_group_count": 1313,
+  "provenance_keys": [
+    "cftc_complaint_url_without_exhibit_a",
+    "cftc_press_url",
+    "courtlistener_docket_url",
+    "generated_at_utc",
+    "parser",
+    "raw_data_committed",
+    "raw_pdf_path_tmp",
+    "raw_pdf_sha256",
+    "run_id",
+    "runtime_code_changed",
+    "shared_intake_mutated",
+    "source_pdf_url",
+    "thresholds_relaxed",
+    "unparsed_candidate_lines_csv"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

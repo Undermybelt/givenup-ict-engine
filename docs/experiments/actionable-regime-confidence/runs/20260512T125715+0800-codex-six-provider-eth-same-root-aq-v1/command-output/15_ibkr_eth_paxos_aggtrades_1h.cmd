@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python scripts/auto_quant_external/fetch_external.py ibkr-bulk --config docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/config/ibkr_eth_paxos_aggtrades_1h.yaml --force

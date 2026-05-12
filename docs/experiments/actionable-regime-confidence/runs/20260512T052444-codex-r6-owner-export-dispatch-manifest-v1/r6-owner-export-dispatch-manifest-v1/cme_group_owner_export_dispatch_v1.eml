@@ -1,0 +1,20 @@
+To: CMEDataSales@cmegroup.com
+Cc: marketdata@cmegroup.com
+Subject: Request for source-owned normal-control order-lifecycle export for CME/NYMEX/COMEX 2011-2014 audit
+
+Hello CME Data Services team,
+
+I am requesting a historical source-owned order-lifecycle or market-depth export for a compliance research audit. The requested scope and verifier-native schema are captured in this request draft:
+
+docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3/r6-owner-export-sendable-requests-v3/cme_group_owner_export_request_v3.md
+
+The request covers Oystacher-era CME Globex / NYMEX / COMEX products and dates from the 2011-2014 window. The needed output is normal/non-manipulation control rows with provenance, not derived OHLCV bars and not same-exhibit FLIP rows.
+
+Required post-delivery files for the local verifier are:
+- positive_spoofing_layering_rows.csv
+- matched_negative_normal_activity_rows.csv
+- provenance_manifest.json
+
+Please include ticket/export/order/license identifiers and any product/date entitlement notes in the response so provenance can be preserved.
+
+Thank you.

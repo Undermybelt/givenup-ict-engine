@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-BOARD_A_BTC_BINANCE_191941-1778585488848",
+  "generated_at": "2026-05-12T11:31:28.848333Z",
+  "symbol": "BOARD_A_BTC_BINANCE_191941",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "a914f35f1715b144",
+  "execution_validity_summary": "execution_blocked=1180;execution_observe_only=748;execution_ready=472",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        720
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4558553378008093,
+      "execution_readiness_drift": -0.00005960144411397616,
+      "sample_count": 720
+    },
+    {
+      "horizon_bars": [
+        720,
+        1920
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.44881856261777614,
+      "execution_readiness_drift": 0.000019104570305869226,
+      "sample_count": 1200
+    },
+    {
+      "horizon_bars": [
+        1920,
+        2400
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.44483130801910514,
+      "execution_readiness_drift": -0.00014133351808617912,
+      "sample_count": 480
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "9975b3155fda0a29",
+    "data_fingerprint": "89afe2362ae3f2cd"
+  }
+}

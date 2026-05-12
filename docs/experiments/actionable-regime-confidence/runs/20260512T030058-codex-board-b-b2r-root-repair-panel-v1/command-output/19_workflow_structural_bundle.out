@@ -1,0 +1,30 @@
+{
+  "candidate_set_id": "structural-candidates:B2R_ROOT_REPAIR_030058:a3ee219f34f0355f",
+  "candidate_set_size": 3,
+  "composite_score": 0.5307610446255692,
+  "confirmation_summary": "user confirms the required input",
+  "current_posterior": 0.5507929505325677,
+  "direction": "favor_mean_reversion_only",
+  "experience_prior": 0.48401993084257267,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 1,
+  "invalidation_summary": "regime branch range loses posterior support or invalidates before trigger",
+  "path_id": "path:scenario:B2R_ROOT_REPAIR_030058:belief_regime_node:range:range_mean_reversion:primary",
+  "path_label": "range_mean_reversion",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol B2R_ROOT_REPAIR_030058 --data docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/state_root_repair_panel_v1/B2R_ROOT_REPAIR_030058/analyze_btc_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/state_root_repair_panel_v1",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2R_ROOT_REPAIR_030058 --data docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/state_root_repair_panel_v1/B2R_ROOT_REPAIR_030058/analyze_btc_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/state_root_repair_panel_v1",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2R_ROOT_REPAIR_030058 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/state_root_repair_panel_v1/B2R_ROOT_REPAIR_030058/analyze_btc_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/state_root_repair_panel_v1/B2R_ROOT_REPAIR_030058/analyze_btc_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/state_root_repair_panel_v1/B2R_ROOT_REPAIR_030058/analyze_btc_ltf.json",
+    "user_input_required": true
+  },
+  "scenario_id": "scenario:B2R_ROOT_REPAIR_030058:belief_regime_node:range:range_mean_reversion",
+  "selected_path_probability": 0.3655703437254911,
+  "stop_summary": "Use execution candidate 'execution-candidate:B2R_ROOT_REPAIR_030058:analyze:v1' once actionable; current candidate_status=no_trade.",
+  "symbol": "B2R_ROOT_REPAIR_030058",
+  "trigger_summary": "regime_posterior=range:0.755",
+  "why_this_path": "posterior=0.551 prior=0.484 invalidation_rate=0.000"
+}

@@ -1,0 +1,9 @@
+PASS run_id=20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1
+PASS core_commands_all_exit0=True
+PASS pre_bayes_gate=pass_neutralized
+PASS path_ranker_raw_scored_mature=86/30
+PASS path_ranker_production_validation=85/30
+FAIL_CLOSED execution_ready=False_actionable=False_gate=execution_blocked
+FAIL_CLOSED same_root_six_provider_aq_matrix=false
+PASS promotion_allowed=false
+PASS update_goal=false

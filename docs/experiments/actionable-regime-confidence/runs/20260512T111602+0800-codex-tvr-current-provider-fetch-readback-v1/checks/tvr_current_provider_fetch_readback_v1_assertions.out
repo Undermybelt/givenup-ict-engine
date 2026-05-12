@@ -1,0 +1,13 @@
+PASS run_id=20260512T111602+0800-codex-tvr-current-provider-fetch-readback-v1
+PASS provider_status_exit=0
+PASS provider_ready=True
+PASS default_harness_rows=21
+PASS local_stdio_harness_rows=21
+FAIL_CLOSED provider_layer_only_not_same_root_aq_matrix
+FAIL_CLOSED no_btc_comparable_ibkr_coverage
+FAIL_CLOSED no_source_control_or_selected_history_unlock
+FAIL_CLOSED no_downstream_promotion_chain
+PASS accepted_rows_added=0
+PASS mature_rooted_branch_observations_added=0
+PASS promotion_allowed=false
+PASS update_goal=false

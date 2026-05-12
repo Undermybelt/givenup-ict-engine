@@ -1,0 +1,6 @@
+route,url,readback,board_a_effect
+Databento CFE announcement,https://databento.com/blog/introducing-cboe-futures-exchange-cfe,"CFE historical coverage begins on 2018-11-04; data is sourced from the primary CFE Multicast PITCH feed; dataset id is XCBF.PITCH; example request is MBO/L3 VIX futures data.",cfe_vendor_route_specificity_confirmed_no_local_export
+Databento CFE catalog route,https://databento.com/catalog/xcbf/XCBF.PITCH,Catalog route for XCBF.PITCH CFE data.,route_pointer_only_no_local_export
+Databento PCAP,https://databento.com/pcaps,Raw packet-capture route for proprietary exchange feeds and full order book or market depth access.,vendor_route_confirmed_no_local_export
+Cboe DataShop CFE VIX futures trades/quotes,https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes,Legacy CFE VIX futures trades/quotes product remains a DataShop export route.,official_route_confirmed_no_local_export
+Prior local 044137 owner-route packet,docs/experiments/actionable-regime-confidence/runs/20260512T044137-codex-r6-owner-route-web-recheck-after-043901-v1,Already counted CME/Cboe/Databento official route context.,this_packet_is_specificity_addendum_not_acceptance

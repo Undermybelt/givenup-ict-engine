@@ -1,0 +1,7 @@
+clause,rule
+authority_boundary,This artifact is a candidate heldout contract only; it does not replace the current exact-symbol/exact-venue gate without explicit board/user approval.
+raw_identity_preserved,"Keep raw symbol and venue strings in every row; family labels are additional audit axes, not data rewrites."
+accepted_family_floor,A family bucket must pass support and Wilson95 with positive and matched-control rows; unknown_or_unmapped is fail-closed.
+no_new_sparse_bucket_promotion,Adding a new family bucket cannot improve acceptance unless that bucket also carries enough paired direct rows to pass.
+chronology_still_required,Family grouping does not waive chronological train/calibration/test gates.
+species_still_required,"Family grouping does not close quote_stuffing, pinging, bear_raid_or_painting_tape, or pump_dump_social_text_or_onchain gaps."

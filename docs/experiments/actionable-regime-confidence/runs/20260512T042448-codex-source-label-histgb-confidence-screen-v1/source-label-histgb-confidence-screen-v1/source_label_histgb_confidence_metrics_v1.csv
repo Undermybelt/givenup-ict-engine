@@ -1,0 +1,17 @@
+label,split_role,high_confidence_support,correct_high_confidence,precision,wilson95_lcb,coverage_rows
+Bear,calibration,20,20,1.0,0.8388748419,148976
+Bear,heldout_market,0,0,0.0,0.0,26236
+Bear,heldout_time,84,64,0.7619047619,0.6606493369,45384
+Bear,test,3,0,0.0,0.0,27844
+Bull,calibration,12,12,1.0,0.7575059933,148976
+Bull,heldout_market,0,0,0.0,0.0,26236
+Bull,heldout_time,0,0,0.0,0.0,45384
+Bull,test,11,11,1.0,0.741167033,27844
+Crisis,calibration,219,219,1.0,0.9827614716,148976
+Crisis,heldout_market,0,0,0.0,0.0,26236
+Crisis,heldout_time,115,115,1.0,0.9676757686,45384
+Crisis,test,76,76,1.0,0.9518864149,27844
+Sideways,calibration,237,237,1.0,0.9840498441,148976
+Sideways,heldout_market,0,0,0.0,0.0,26236
+Sideways,heldout_time,115,115,1.0,0.9676757686,45384
+Sideways,test,72,72,1.0,0.9493488274,27844

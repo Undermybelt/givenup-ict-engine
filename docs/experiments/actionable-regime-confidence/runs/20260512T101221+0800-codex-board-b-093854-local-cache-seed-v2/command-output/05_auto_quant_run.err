@@ -1,0 +1,1549 @@
+2026-05-12 10:18:54,505 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:18:54,506 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:18:54,506 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:18:54,506 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/strategies
+2026-05-12 10:18:54,507 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 10:18:54,507 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20211231 ...
+2026-05-12 10:18:54,507 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data ...
+2026-05-12 10:18:54,508 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/data ...
+2026-05-12 10:18:54,508 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:18:54,508 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20211231
+2026-05-12 10:18:54,510 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:18:54,517 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:18:54,517 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:18:54,518 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:18:54,518 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:18:54,530 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:18:54,566 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 10:18:54,835 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 10:18:55,136 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 10:18:55,435 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 10:18:55,436 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 10:18:55,450 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/config.json ...
+2026-05-12 10:18:55,452 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:18:55,452 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:18:55,452 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:18:55,452 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/strategies
+2026-05-12 10:18:55,452 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 10:18:55,452 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20220101-20221231 ...
+2026-05-12 10:18:55,453 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data ...
+2026-05-12 10:18:55,453 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/data ...
+2026-05-12 10:18:55,453 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:18:55,453 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20220101-20221231
+2026-05-12 10:18:55,453 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:18:55,458 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:18:55,459 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:18:55,459 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:18:55,459 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:18:55,469 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:18:55,493 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 10:18:55,776 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 10:18:56,075 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 10:18:56,389 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 10:18:56,391 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 10:18:56,417 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/config.json ...
+2026-05-12 10:18:56,433 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:18:56,436 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:18:56,437 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:18:56,438 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/strategies
+2026-05-12 10:18:56,438 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 10:18:56,438 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20230101-20251231 ...
+2026-05-12 10:18:56,439 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data ...
+2026-05-12 10:18:56,439 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/data ...
+2026-05-12 10:18:56,440 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:18:56,441 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20230101-20251231
+2026-05-12 10:18:56,441 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:18:56,462 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:18:56,463 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:18:56,464 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:18:56,464 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:18:56,486 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:18:56,526 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 10:18:56,794 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 10:18:57,094 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 10:18:57,395 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 10:18:57,396 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 10:18:57,404 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/config.json ...
+2026-05-12 10:18:57,406 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:18:57,406 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:18:57,407 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:18:57,407 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/strategies
+2026-05-12 10:18:57,407 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 10:18:57,407 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 10:18:57,408 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data ...
+2026-05-12 10:18:57,408 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/data ...
+2026-05-12 10:18:57,408 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:18:57,408 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 10:18:57,409 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:18:57,416 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:18:57,417 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:18:57,417 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:18:57,418 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:18:57,432 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:18:57,469 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 10:18:57,752 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 10:18:58,039 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 10:18:58,340 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 10:18:58,340 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 10:18:58,347 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/config.json ...
+2026-05-12 10:18:58,349 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:18:58,349 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:18:58,349 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:18:58,350 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/strategies
+2026-05-12 10:18:58,350 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 10:18:58,350 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20211231 ...
+2026-05-12 10:18:58,350 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data ...
+2026-05-12 10:18:58,351 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/data ...
+2026-05-12 10:18:58,351 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:18:58,351 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20211231
+2026-05-12 10:18:58,351 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:18:58,358 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:18:58,359 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:18:58,359 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:18:58,360 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:18:58,373 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:18:58,405 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 10:18:58,681 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 10:18:58,980 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 10:18:59,279 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 10:18:59,280 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 10:18:59,286 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/config.json ...
+2026-05-12 10:18:59,289 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:18:59,289 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:18:59,289 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:18:59,290 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/strategies
+2026-05-12 10:18:59,290 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 10:18:59,290 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20220101-20221231 ...
+2026-05-12 10:18:59,290 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data ...
+2026-05-12 10:18:59,291 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/data ...
+2026-05-12 10:18:59,291 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:18:59,291 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20220101-20221231
+2026-05-12 10:18:59,291 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:18:59,299 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:18:59,300 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:18:59,300 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:18:59,301 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:18:59,314 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:18:59,347 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 10:18:59,621 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 10:18:59,924 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 10:19:00,224 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 10:19:00,225 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 10:19:00,236 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/config.json ...
+2026-05-12 10:19:00,239 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:19:00,240 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:19:00,240 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:19:00,240 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/strategies
+2026-05-12 10:19:00,240 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 10:19:00,241 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20230101-20251231 ...
+2026-05-12 10:19:00,241 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data ...
+2026-05-12 10:19:00,241 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/data ...
+2026-05-12 10:19:00,242 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:19:00,242 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20230101-20251231
+2026-05-12 10:19:00,242 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:19:00,250 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:19:00,250 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:19:00,251 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:19:00,251 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:19:00,299 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:19:00,348 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 10:19:00,607 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 10:19:00,943 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 10:19:01,221 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 10:19:01,223 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 10:19:01,246 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/config.json ...
+2026-05-12 10:19:01,263 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:19:01,264 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:19:01,264 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:19:01,265 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/strategies
+2026-05-12 10:19:01,265 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 10:19:01,266 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 10:19:01,266 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data ...
+2026-05-12 10:19:01,267 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qua
+nt/user_data/data ...
+2026-05-12 10:19:01,267 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:19:01,268 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 10:19:01,269 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:19:01,291 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:19:01,292 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:19:01,296 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:19:01,297 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:19:01,326 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:19:01,379 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 10:19:01,644 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 10:19:01,936 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 10:19:02,241 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 10:19:02,243 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-qu
+ant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo

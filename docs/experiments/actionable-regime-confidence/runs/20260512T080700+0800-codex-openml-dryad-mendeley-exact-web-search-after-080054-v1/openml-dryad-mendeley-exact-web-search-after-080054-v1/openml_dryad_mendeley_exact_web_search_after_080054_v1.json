@@ -1,0 +1,62 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "exact_mainregimev2_hits": 0,
+  "gate_result": "openml_dryad_mendeley_exact_web_search_after_080054_v1=no_exact_public_research_route_no_unlock",
+  "generated_at_local": "2026-05-12T08:07:00+08:00",
+  "method": "web.search_query exact site/domain searches",
+  "providers": [
+    "OpenML",
+    "Dryad",
+    "Mendeley Data"
+  ],
+  "queries": [
+    {
+      "query": "site:openml.org \"MainRegimeV2\"",
+      "result_count": 0
+    },
+    {
+      "query": "site:dryad.org \"MainRegimeV2\"",
+      "result_count": 0
+    },
+    {
+      "query": "site:data.mendeley.com \"MainRegimeV2\"",
+      "result_count": 0
+    },
+    {
+      "query": "site:data.mendeley.com \"Oystacher\" \"spoofing\"",
+      "result_count": 0
+    },
+    {
+      "query": "site:dryad.org Oystacher spoofing controls",
+      "result_count": 0
+    },
+    {
+      "query": "site:data.mendeley.com \"3Red Trading\" \"matched controls\"",
+      "result_count": 0
+    },
+    {
+      "query": "site:openml.org \"Bull\" \"Bear\" \"Sideways\" \"Crisis\" \"market regime\"",
+      "result_count": 0
+    },
+    {
+      "query": "site:dryad.org \"native subhour\" \"market regime\"",
+      "result_count": 0
+    }
+  ],
+  "queries_sent": 8,
+  "r3_native_subhour_unlock": false,
+  "r3_route_hits": 0,
+  "r5_recency_unlock": false,
+  "r5_route_hits": 0,
+  "r6_owner_export_unlock": false,
+  "r6_route_hits": 0,
+  "run_id": "20260512T080700+0800-codex-openml-dryad-mendeley-exact-web-search-after-080054-v1",
+  "search_result_pages_with_hits": 0,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

@@ -1,0 +1,14 @@
+{
+  "api_key_present": true,
+  "content_type": "application/json",
+  "credential_source": "local_config",
+  "elapsed_ms": 1410,
+  "error_kind": "http_error",
+  "error_preview": "{\"error\": \"Rate limit exceeded. Retry after 58271s.\"}",
+  "http_status": 429,
+  "jsonrpc_has_result_tools": false,
+  "method": "tools/list",
+  "ok": false,
+  "tool_count": 0,
+  "url": "https://tvremix.xyz/api/mcp/v1"
+}

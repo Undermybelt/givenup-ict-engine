@@ -1,0 +1,18 @@
+field,required,control_value_rule
+label,true,must be matched_negative_normal_activity
+source_report,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+source_section,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+trade_date,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+symbol,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+venue_or_market_center,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+participant_type_code,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+participant_identifier,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+side,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+earliest_order_received_time,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+latest_order_received_time,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+order_count,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+total_order_quantity,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+activity_description,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+matched_negative_group_id,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+session_bucket,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved
+source_row_id,true,source-owned export value; no same-exhibit FLIP controls unless explicitly approved

@@ -1,0 +1,11 @@
+gate_result=public_source_candidate_sweep_after_062842_v1=no_candidate_selected_no_required_root_no_downstream
+required_root_unlocked_false=False
+accepted_candidate_count_zero=True
+accepted_rows_added=0
+source_control_evidence_acquired_false=True
+target_root_mutated_false=True
+canonical_merge_false=True
+downstream_promotion_rerun_false=True
+strict_full_objective_false=True
+trade_usable_false=True
+update_goal_false=True

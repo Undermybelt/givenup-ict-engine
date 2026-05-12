@@ -1,0 +1,46 @@
+{
+  "run_id": "20260511T090639+0800-codex-recent-source-probe-rollup",
+  "board": "Board A: Actionable Regime Confidence",
+  "artifact_type": "source_probe_rollup",
+  "active_taxonomy": "MainRegimeV2",
+  "main_price_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "separate_direct_event_class_or_overlay": "Manipulation",
+  "consumed_runs": [
+    {
+      "run_id": "20260511T085230+0800-codex-nonkaggle-github-source-label-search",
+      "decision": "blocked_nonkaggle_github_search_no_attachable_root_label_panel",
+      "accepted_mainregimev2_root_label_slots_added": 0,
+      "accepted_direct_manipulation_label_sources_added": 0,
+      "reason": "GitHub metadata search found methodology/proxy repositories, not exact-underlying independent root-label panels."
+    },
+    {
+      "run_id": "20260511T085653+0800-codex-zenodo-direct-manipulation-candidate-probe",
+      "decision": "blocked_zenodo_candidates_false_positive_or_no_rows",
+      "accepted_mainregimev2_root_label_slots_added": 0,
+      "accepted_direct_manipulation_label_sources_added": 0,
+      "reason": "Six Zenodo candidates were non-financial, policy text, catalog, or unrelated spoofing/deepfake records; no financial manipulation positive/negative rows were materialized."
+    },
+    {
+      "run_id": "20260511T085659+0800-codex-local-pine-regime-detector-audit",
+      "decision": "blocked_local_pine_indicator_is_proxy_logic_not_source_labels",
+      "accepted_mainregimev2_root_label_slots_added": 0,
+      "accepted_direct_manipulation_label_sources_added": 0,
+      "reason": "Local Pine indicator emits OHLCV-derived regime names, not source labels or direct manipulation event windows."
+    }
+  ],
+  "accepted_new_mainregimev2_root_label_slots": 0,
+  "accepted_new_direct_manipulation_label_sources": 0,
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "remaining_blocker": "The 564 missing/rejected MainRegimeV2 parent-root source-label slots remain open, and direct Manipulation still needs authenticated or otherwise materialized timestamped positive/negative rows outside the existing incomplete provenance.",
+  "gate_result": "blocked_recent_source_probes_no_new_labels",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Search outside the already-failed GitHub metadata, Zenodo false positives, and local Pine proxy lanes for exact-underlying non-Kaggle root-label panels or authenticated direct Manipulation rows."
+}

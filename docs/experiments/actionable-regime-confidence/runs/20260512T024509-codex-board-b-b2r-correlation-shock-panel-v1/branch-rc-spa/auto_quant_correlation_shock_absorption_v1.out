@@ -1,0 +1,28 @@
+strategy: CorrelationShockAbsorptionV1_Bull
+trade_count: 1
+win_rate_pct: 100.000000
+sharpe: 0.000000
+profit_factor: 999.000000
+total_profit_pct: 0.303690
+---
+strategy: CorrelationShockAbsorptionV1_Bear
+trade_count: 0
+win_rate_pct: 0.000000
+sharpe: 0.000000
+profit_factor: 0.000000
+total_profit_pct: 0.000000
+---
+strategy: CorrelationShockAbsorptionV1_Sideways
+trade_count: 87
+win_rate_pct: 59.770115
+sharpe: 1.035305
+profit_factor: 1.314098
+total_profit_pct: 19.678350
+---
+strategy: CorrelationShockAbsorptionV1_Crisis
+trade_count: 0
+win_rate_pct: 0.000000
+sharpe: 0.000000
+profit_factor: 0.000000
+total_profit_pct: 0.000000
+---

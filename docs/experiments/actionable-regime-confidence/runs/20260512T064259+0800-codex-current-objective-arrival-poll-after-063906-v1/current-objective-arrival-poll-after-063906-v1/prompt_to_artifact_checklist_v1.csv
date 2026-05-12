@@ -1,0 +1,14 @@
+requirement,evidence,status,notes
+Board file inspected and concurrent-safe append discipline preserved,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,met,Board hash captured before artifact; this script does not edit Current Cursor.
+"Bull regime has 95% calibrated, cross-market/cross-period evidence",063906 audit plus current root poll,not_met,No accepted Board A root after TSIE quarantine; TSIE Bull rows are proxy/materialized only.
+"Bear regime has 95% calibrated, cross-market/cross-period evidence",063906 audit plus current root poll,not_met,No accepted Board A root after TSIE quarantine; TSIE Bear rows are proxy/materialized only.
+"Sideways regime has 95% calibrated, cross-market/cross-period evidence",063906 audit plus current root poll,not_met,No accepted Board A root after TSIE quarantine; TSIE Sideways rows are proxy/materialized only.
+"Crisis regime has 95% calibrated, cross-market/cross-period evidence",063155/063734/063906,not_met,Crisis is absent from TSIE taxonomy and no replacement source packet is present.
+R6 owner/export or explicit source/control approval is available,/tmp/ict-engine-board-a-r6-owner-export-v1,not_met,Target root absent; no new owner-control arrival candidate found in bounded local scan.
+R5 post-cutoff source-panel recency evidence is available,/tmp/ict-engine-source-panel-recency-extension,not_met,Target root absent.
+"Provider surfaces checked: IBKR, TradingViewRemix, yfinance, Kraken where available",command-output/provider_status_agent.stdout,checked,"Provider catalog command executed read-only; readiness is evidence, not promotion."
+Auto-Quant status checked,command-output/auto_quant_status.stdout,checked,Managed Auto-Quant status command executed in isolated /tmp state.
+Filter / Pre-Bayes / BBN surface checked,command-output/pre_bayes_status_nq.stdout,checked,Pre-Bayes status refreshed after read-only analyze-live command.
+CatBoost/path-ranking surface checked,command-output/policy_training_status_nq.stdout and command-output/export_structural_path_ranking_target_nq.stdout,checked,Policy-training and structural path-ranking export commands executed read-only.
+Execution-tree/workflow status checked,command-output/workflow_status_nq_agent.stdout,checked,Workflow status command executed read-only.
+Canonical merge and downstream promotion rerun after a valid unlock,current root poll and command outputs,not_met,"No valid unlock exists, so canonical merge and promotion chain remain false by design."

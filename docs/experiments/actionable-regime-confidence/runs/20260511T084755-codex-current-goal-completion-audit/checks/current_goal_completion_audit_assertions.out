@@ -1,0 +1,6 @@
+goal_achieved=false
+accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+missing_or_rejected_slots=564
+PASS no_proxy_completion_promoted=true
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false

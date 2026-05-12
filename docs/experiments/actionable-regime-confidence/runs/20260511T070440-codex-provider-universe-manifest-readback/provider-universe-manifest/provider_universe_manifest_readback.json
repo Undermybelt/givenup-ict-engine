@@ -1,0 +1,63 @@
+{
+  "run_id": "20260511T070440+0800-codex-provider-universe-manifest-readback",
+  "goal_achieved": false,
+  "source_manifest": "docs/experiments/actionable-regime-confidence/runs/20260511T070103-codex-full-universe-scope-reset/provider-universe-manifest/provider_universe_manifest.json",
+  "current_taxonomy_readback": {
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "direct_overlay_gates": [
+      "Manipulation"
+    ],
+    "residual": [
+      "UnknownOrMixed"
+    ]
+  },
+  "provider_status_readback": {
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "market_data_ready": [
+      "yfinance"
+    ],
+    "pending_cells_must_be_recorded": [
+      "ibkr: ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "tradingview_mcp: tradingview_mcp_connectivity_probe_failed",
+      "binance_public/bybit_public/kraken_public/polymarket_public: python3_provider_dependencies_missing"
+    ]
+  },
+  "yfinance_first_matrix_inputs": {
+    "symbols": [
+      "CL=F",
+      "DIA",
+      "ES=F",
+      "GC=F",
+      "GLD",
+      "NQ=F",
+      "QQQ",
+      "SPY",
+      "USO",
+      "YM=F",
+      "^DJI",
+      "^GSPC",
+      "^NDX",
+      "^VIX"
+    ],
+    "timeframe_ladder": [
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "4h",
+      "1d",
+      "1w",
+      "1mo"
+    ]
+  },
+  "gate_result": "provider_universe_manifest_readback_yfinance_matrix_next",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

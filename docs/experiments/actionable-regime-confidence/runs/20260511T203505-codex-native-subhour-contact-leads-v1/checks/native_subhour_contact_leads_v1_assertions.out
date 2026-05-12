@@ -1,0 +1,16 @@
+prior_request_json_available=PASS
+prior_request_targets_available=PASS
+prior_focus_cells_available=PASS
+prior_request_template_available=PASS
+native_intraday_target_count_336=PASS
+focus_blocker_cell_count_4=PASS
+contact_lead_count_ge_8=PASS
+has_source_label_owner_route=PASS
+has_provider_terms_route=PASS
+request_sent_false=PASS
+rows_acquired_false=PASS
+accepted_rows_added_zero=PASS
+r3_closed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+raw_data_committed_false=PASS

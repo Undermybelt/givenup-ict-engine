@@ -1,0 +1,6 @@
+PASS user_explicitly_reopened_taxonomy=true
+PASS active_candidate_taxonomy=MainRegimeV5
+PASS supersedes_loop=20260511T091507+0800-codex-mainregimev2-reassert-after-v5-drift
+PASS accepted_95_roots_added=0
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false

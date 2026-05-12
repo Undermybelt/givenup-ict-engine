@@ -1,0 +1,8 @@
+PASS mendeley_dataset_metadata_fetch_ok
+PASS files_inspected=4
+PASS files_with_label_like_field=4
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS direct_row_schema_incomplete_rejected

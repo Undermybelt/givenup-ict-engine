@@ -1,0 +1,224 @@
+{
+  "manifest_version": "auto-quant-strategy-library/v1",
+  "exported_at": "2026-05-11T18:53:16.759182+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "local-auto-quant-env",
+  "config_path": "/Users/thrill3r/Auto-Quant/config.json",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/branch-rc-spa/auto_quant_correlation_shock_absorption_v1.out",
+  "timeframe": "1h",
+  "validation_errors": [],
+  "strategies": [
+    {
+      "name": "CorrelationShockAbsorptionV1_Bull",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/scripts/correlation_shock_absorption_v1.py",
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SPY/USD",
+        "QQQ/USD",
+        "GLD/USD"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "CorrelationShockAbsorptionV1_Bull",
+        "mutation_id": "b2r_correlation_shock_absorption_v1",
+        "status": "incubation_only_b2r_repeat_next",
+        "base_factor": "CorrelationShockAbsorptionV1",
+        "parent": "Bull -> CrossAssetRecovery -> EquityLeadCryptoCatchup -> CorrelationShockAbsorptionV1:equity_lead_crypto_catchup_h12",
+        "expected_regime": "MainRegimeV2::Bull",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "btc_qqq_corr72",
+          "btc_qqq_corr_delta",
+          "shock_absorption",
+          "cross_breadth"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 1,
+        "win_rate_pct": 100.0,
+        "total_profit_pct": 0.30368951354221363,
+        "sharpe": 0.0,
+        "profit_factor": 999.0,
+        "max_drawdown_pct": 0.0,
+        "sortino": 0.0,
+        "calmar": 0.0
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "trade_count": 1,
+          "win_rate_pct": 100.0,
+          "total_profit_pct": 0.30368951354221363,
+          "sharpe": 0.0,
+          "profit_factor": 999.0,
+          "max_drawdown_pct": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0
+        }
+      }
+    },
+    {
+      "name": "CorrelationShockAbsorptionV1_Bear",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/scripts/correlation_shock_absorption_v1.py",
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SPY/USD",
+        "QQQ/USD",
+        "GLD/USD"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "CorrelationShockAbsorptionV1_Bear",
+        "mutation_id": "b2r_correlation_shock_absorption_v1",
+        "status": "incubation_only_b2r_repeat_next",
+        "base_factor": "CorrelationShockAbsorptionV1",
+        "parent": "Bear -> RiskOffRelock -> CorrelationRelockShortBeta -> CorrelationShockAbsorptionV1:correlation_relock_short_btc_h8",
+        "expected_regime": "MainRegimeV2::Bear",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "btc_qqq_corr72",
+          "btc_qqq_corr_delta",
+          "shock_absorption",
+          "cross_breadth"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 0,
+        "win_rate_pct": 0.0,
+        "total_profit_pct": 0.0,
+        "sharpe": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown_pct": 0.0,
+        "sortino": 0.0,
+        "calmar": 0.0
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "trade_count": 0,
+          "win_rate_pct": 0.0,
+          "total_profit_pct": 0.0,
+          "sharpe": 0.0,
+          "profit_factor": 0.0,
+          "max_drawdown_pct": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0
+        }
+      }
+    },
+    {
+      "name": "CorrelationShockAbsorptionV1_Sideways",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/scripts/correlation_shock_absorption_v1.py",
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SPY/USD",
+        "QQQ/USD",
+        "GLD/USD"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "CorrelationShockAbsorptionV1_Sideways",
+        "mutation_id": "b2r_correlation_shock_absorption_v1",
+        "status": "incubation_only_b2r_repeat_next",
+        "base_factor": "CorrelationShockAbsorptionV1",
+        "parent": "Sideways -> CorrelationRange -> DecorrelatedRangeFade -> CorrelationShockAbsorptionV1:decorrelated_range_fade_h6",
+        "expected_regime": "MainRegimeV2::Sideways",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "btc_qqq_corr72",
+          "btc_qqq_corr_delta",
+          "shock_absorption",
+          "cross_breadth"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 87,
+        "win_rate_pct": 59.77011494252874,
+        "total_profit_pct": 19.678350381570954,
+        "sharpe": 1.035304838161631,
+        "profit_factor": 1.3140984592288598,
+        "max_drawdown_pct": 0.0,
+        "sortino": 1.035304838161631,
+        "calmar": 1.035304838161631
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "trade_count": 87,
+          "win_rate_pct": 59.77011494252874,
+          "total_profit_pct": 19.678350381570954,
+          "sharpe": 1.035304838161631,
+          "profit_factor": 1.3140984592288598,
+          "max_drawdown_pct": 0.0,
+          "sortino": 1.035304838161631,
+          "calmar": 1.035304838161631
+        }
+      }
+    },
+    {
+      "name": "CorrelationShockAbsorptionV1_Crisis",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/scripts/correlation_shock_absorption_v1.py",
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SPY/USD",
+        "QQQ/USD",
+        "GLD/USD"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "CorrelationShockAbsorptionV1_Crisis",
+        "mutation_id": "b2r_correlation_shock_absorption_v1",
+        "status": "incubation_only_b2r_repeat_next",
+        "base_factor": "CorrelationShockAbsorptionV1",
+        "parent": "Crisis -> SystemicStress -> OneCorrelationTailShort -> CorrelationShockAbsorptionV1:one_correlation_tail_short_h6",
+        "expected_regime": "MainRegimeV2::Crisis",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "btc_qqq_corr72",
+          "btc_qqq_corr_delta",
+          "shock_absorption",
+          "cross_breadth"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 0,
+        "win_rate_pct": 0.0,
+        "total_profit_pct": 0.0,
+        "sharpe": 0.0,
+        "profit_factor": 0.0,
+        "max_drawdown_pct": 0.0,
+        "sortino": 0.0,
+        "calmar": 0.0
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "trade_count": 0,
+          "win_rate_pct": 0.0,
+          "total_profit_pct": 0.0,
+          "sharpe": 0.0,
+          "profit_factor": 0.0,
+          "max_drawdown_pct": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0
+        }
+      }
+    }
+  ]
+}

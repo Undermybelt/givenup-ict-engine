@@ -1,0 +1,222 @@
+{
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/checks/crisis_crowded_suppression_full_replay_v2_assertions.out",
+    "feedback_file": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/suppression-full-replay-v2/crisis_crowded_suppression_feedback_v2.json",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/suppression-full-replay-v2/crisis_crowded_suppression_full_replay_v2.json",
+    "replay_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/suppression-full-replay-v2/crisis_crowded_suppression_full_replay_rows_v2.csv",
+    "summary_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/suppression-full-replay-v2/crisis_crowded_suppression_full_replay_summary_v2.csv"
+  },
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/00_provider_status_agent.exit",
+      "name": "00_provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/00_provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/00_provider_status_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2/auto-quant",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/01_auto_quant_status_json.exit",
+      "name": "01_auto_quant_status_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/01_auto_quant_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/01_auto_quant_status_json.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2 --refresh --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/02_pre_bayes_status_before_json.exit",
+      "name": "02_pre_bayes_status_before_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/02_pre_bayes_status_before_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/02_pre_bayes_status_before_json.out"
+    },
+    {
+      "cmd": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/structural_feedback_trade_enricher.py emit-probe --target-csv /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2/SRC_ROOT_CARRY_LONG_220646/policy_training/structural_path_ranking_target.csv --output /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/suppression-full-replay-v2/crisis_crowded_suppression_feedback_v2.json --path-id Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12 --realized-outcome not_followed --not-followed --pnl 0.0 --exit-reason suppressed_block_crowded_wide_range --notes Board B nursery replay: selected source Crisis path is recorded as not_followed because sibling no-trade suppression applies under block_crowded / RangeConsolidation-WideRange. This is execution-admissibility feedback, not a profitability pass.",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/03_emit_suppression_no_trade_feedback.exit",
+      "name": "03_emit_suppression_no_trade_feedback",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/03_emit_suppression_no_trade_feedback.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/03_emit_suppression_no_trade_feedback.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome not_followed --entry-signal medium --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2 --pnl=0.0 --feedback-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/suppression-full-replay-v2/crisis_crowded_suppression_feedback_v2.json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/05_bbn_update_suppression_feedback.exit",
+      "name": "05_bbn_update_suppression_feedback",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/05_bbn_update_suppression_feedback.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/05_bbn_update_suppression_feedback.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/06_policy_training_status_json.exit",
+      "name": "06_policy_training_status_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/06_policy_training_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/06_policy_training_status_json.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2 --phase structural-recommended-path-bundle --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/07_workflow_structural_bundle_agent.exit",
+      "name": "07_workflow_structural_bundle_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/07_workflow_structural_bundle_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/07_workflow_structural_bundle_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/08_workflow_execution_candidate_agent.exit",
+      "name": "08_workflow_execution_candidate_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/08_workflow_execution_candidate_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/08_workflow_execution_candidate_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/09_workflow_full_json.exit",
+      "name": "09_workflow_full_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/09_workflow_full_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/09_workflow_full_json.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2 --refresh --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/10_pre_bayes_status_after_json.exit",
+      "name": "10_pre_bayes_status_after_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/10_pre_bayes_status_after_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/command-output/10_pre_bayes_status_after_json.out"
+    }
+  ],
+  "decision": {
+    "command_failures": 0,
+    "interpretation": "The sibling leaf is encoded across the full 220646 selected-row replay. In the crowded/wide-range context it suppresses all exact Crisis carry rows, so it is execution-admissibility feedback and not a profitable Crisis branch.",
+    "promotion_status": "not_promoted:suppression_no_trade_guard_not_profitability_pass",
+    "status": "fail_closed_nursery_feedback_only"
+  },
+  "downstream_probe": {
+    "auto_quant_status": "missing_dependency",
+    "bbn_soft_evidence_status_source": "applied",
+    "bbn_update_command_exit": 0,
+    "command_exits": {
+      "00_provider_status_agent": 0,
+      "01_auto_quant_status_json": 0,
+      "02_pre_bayes_status_before_json": 0,
+      "03_emit_suppression_no_trade_feedback": 0,
+      "05_bbn_update_suppression_feedback": 0,
+      "06_policy_training_status_json": 0,
+      "07_workflow_structural_bundle_agent": 0,
+      "08_workflow_execution_candidate_agent": 0,
+      "09_workflow_full_json": 0,
+      "10_pre_bayes_status_after_json": 0
+    },
+    "execution_candidate_ready": true,
+    "execution_candidate_review_status": "promote_latest",
+    "feedback_path_id": null,
+    "market_state_primary_regime": null,
+    "market_state_secondary_regime": null,
+    "path_ranker_feedback_observation_ready": true,
+    "path_ranker_feedback_rows_total": 49,
+    "path_ranker_runtime_ready": true,
+    "path_ranker_score_consumed_source": true,
+    "path_ranker_target_rows_total": null,
+    "path_ranker_validation_ready": true,
+    "pre_bayes_branch_path_gate_after": "blocked_missing_consumed_pre_bayes_filter",
+    "pre_bayes_gate_after": "blocked",
+    "pre_bayes_gate_before": "pass_neutralized",
+    "provider_harness": {
+      "harness_ibkr_qqq_1d": {
+        "error_count": 0,
+        "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_ibkr_qqq_1d.exit",
+        "exit_code": 1,
+        "json_available": false,
+        "ok_count": 0,
+        "rows": 0,
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_ibkr_qqq_1d.err",
+        "stderr_excerpt": "Error: role 'etf_reference' uses ibkr; provide a full request JSON with an explicit ibkr contract",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_ibkr_qqq_1d.out"
+      },
+      "harness_tradingview_qqq_1d": {
+        "error_count": 1,
+        "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_tradingview_qqq_1d.exit",
+        "exit_code": 1,
+        "json_available": true,
+        "ok_count": 0,
+        "rows": 0,
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_tradingview_qqq_1d.err",
+        "stderr_excerpt": "Error: market-data-harness fetch encountered failures: role=etf_reference provider=tradingview_mcp symbol=NASDAQ:QQQ fetch_failed:tradingview MCP call 'get_ohlcv' returned error | install_prompt=Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable. | install_prompt=Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verif",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_tradingview_qqq_1d.out"
+      },
+      "harness_yfinance_qqq_1d": {
+        "error_count": 0,
+        "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_yfinance_qqq_1d.exit",
+        "exit_code": 0,
+        "json_available": true,
+        "ok_count": 1,
+        "rows": 21,
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_yfinance_qqq_1d.err",
+        "stderr_excerpt": "",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/harness_yfinance_qqq_1d.out"
+      },
+      "kraken_cli_xbtusd_1h_ohlc": {
+        "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/kraken_cli_xbtusd_1h_ohlc.exit",
+        "exit_code": 0,
+        "pair": "XXBTZUSD",
+        "rows": 721,
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/kraken_cli_xbtusd_1h_ohlc.err",
+        "stderr_excerpt": "",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/provider/kraken_cli_xbtusd_1h_ohlc.out"
+      }
+    },
+    "provider_ready": {
+      "ibkr": false,
+      "kraken_cli": true,
+      "kraken_public": false,
+      "tradingview_mcp": false,
+      "yfinance": true
+    },
+    "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "structural_bundle_path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "workflow_actionable_count": 3,
+    "workflow_blocker": "user_selected_historical_data_missing"
+  },
+  "generated_at": "2026-05-11T16:11:23Z",
+  "next_action": "Keep this as nursery feedback. Test a non-crowded Crisis context or user-selected historical data path before any profitability promotion, and do not route no-trade suppression as a pass.",
+  "nursery_status": "incubation_only",
+  "promotion_allowed": false,
+  "replay_summary": {
+    "compatible_context_execution_readiness": 0.4504,
+    "compatible_context_execution_tree_branch": "fill_viable",
+    "compatible_context_execution_tree_gate": "observe",
+    "compatible_context_workflow_blocker": "user_selected_historical_data_missing",
+    "crisis_effective_trade_rows": 0,
+    "crisis_source_dsr": 3.2177242727776023,
+    "crisis_source_edge_lcb": 0.002745066872817171,
+    "crisis_source_pbo": 0.1,
+    "crisis_source_rc_spa": 83.0,
+    "effective_trade_rows": 11797,
+    "selected_rows_total": 12329,
+    "sibling_branch_path": "Crisis -> CrisisReliefCarry -> BlockCrowdedSuppression -> SourceRootStopCarryLongHorizonV1:crisis_carry_no_trade_when_block_crowded_v1",
+    "source_crisis_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "source_crisis_rows": 532,
+    "source_runtime_block_crowded": true,
+    "source_runtime_range_wide": true,
+    "suppressed_no_trade_rows": 532,
+    "suppression_active": true,
+    "suppression_rule": "if execution_tree_branch=block_crowded or execution_readiness<0.45 or live_context=RangeConsolidation/WideRange then no_trade"
+  },
+  "run_id": "20260511T235923+0800-codex-board-b-crisis-crowded-suppression-full-replay-v2",
+  "schema_version": "board-b-crisis-crowded-suppression-full-replay/v2",
+  "sibling_branch_id": "B2R_CRISIS_CROWDED_SUPPRESSION_SIBLING_V1",
+  "sibling_branch_path": "Crisis -> CrisisReliefCarry -> BlockCrowdedSuppression -> SourceRootStopCarryLongHorizonV1:crisis_carry_no_trade_when_block_crowded_v1",
+  "source_artifacts": {
+    "compatible_live_context": "docs/experiments/actionable-regime-confidence/runs/20260511T234918-codex-board-b-220646-compatible-live-context-readback-v1/compatible-live-context-readback-v1/compatible_live_context_readback_v1.json",
+    "source_branch_summary": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_branch_summary_v1.csv",
+    "source_selected_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_selected_rows_v1.csv",
+    "source_sibling_packet": "docs/experiments/actionable-regime-confidence/runs/20260511T234938-codex-board-b-crisis-crowded-suppression-sibling-v1/crisis-crowded-suppression-sibling/crisis_crowded_suppression_sibling_v1.json",
+    "source_state": "docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4"
+  },
+  "source_recipe": "SourceRootStopCarryLongHorizonV1",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/state_crisis_crowded_suppression_full_replay_v2"
+}

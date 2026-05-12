@@ -1,0 +1,6 @@
+trade_rows=519
+branch_paths_evaluated=5
+branch_paths_passed=0
+gate_result=fail:all_branch_paths_failed_rc_spa_hard_gates
+downstream_consumption=not_started:blocked_by_branch_rc_spa_hard_gates
+report_json=docs/experiments/actionable-regime-confidence/runs/20260511T182219-codex-board-b-perpairmr-branch-rc-spa-v1/branch-rc-spa/perpairmr_branch_rc_spa_report_v1.json

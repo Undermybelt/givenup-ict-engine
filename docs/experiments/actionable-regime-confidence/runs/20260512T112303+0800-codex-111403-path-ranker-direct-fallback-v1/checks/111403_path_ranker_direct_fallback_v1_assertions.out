@@ -1,0 +1,7 @@
+commands_exit_zero=pass detail={'01_path_ranker_integration_direct_fallback': 0, '02_apply_structural_path_ranking_external_scores': 0, '03_policy_training_status_after_direct_fallback': 0, '04_workflow_execution_candidate_after_direct_fallback': 0, '05_workflow_full_after_direct_fallback': 0}
+trainer_artifact_ready=pass detail=present_validation_insufficient
+runtime_not_promotable=pass detail=enabled_registered_model_invalid
+raw_scored_mature_below_floor=pass detail=1/30
+production_validation_below_floor=pass detail=0/30
+execution_fail_closed=pass detail={'actionable': False, 'closed_loop_branch_admission_status': 'fail_closed', 'path_id': 'Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1', 'path_ranker_raw_score': 0.452055, 'path_ranker_runtime_source': 'candidate_set', 'ready': False, 'review_status': 'observe'}
+promotion_false=pass detail={'accepted_rows_added': 0, 'canonical_merge': False, 'downstream_promotion': False, 'explicit_selected_history': False, 'mature_rooted_branch_observations_promoted': 0, 'promotion_allowed': False, 'selected_data_autoquant_promotion': False, 'source_control_evidence_acquired': False, 'strict_full_objective': False, 'trade_usable': False, 'update_goal': False}

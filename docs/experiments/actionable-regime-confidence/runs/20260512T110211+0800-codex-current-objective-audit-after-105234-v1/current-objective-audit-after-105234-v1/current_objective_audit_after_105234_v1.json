@@ -1,0 +1,72 @@
+{
+  "run_id": "20260512T110211+0800-codex-current-objective-audit-after-105234-v1",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "objective": "Each active regime must reach calibrated confidence >=95%, validate across other markets/timeframes/periods, and be proven through real Auto-Quant plus ict-engine filter/Pre-Bayes, BBN, CatBoost/path-ranker, and execution-tree readbacks with provider matrix coverage including IBKR, TradingViewRemix/TVR, yfinance/YF, Kraken, Binance, and Bybit.",
+  "audited_after_sections": [
+    "105234 A/B AQ Provider Authority Hard Gate v1",
+    "105636 TVRemix Direct Health Probe v1",
+    "104703 BTC EMA/RSI Full-Chain Registration v1",
+    "104703 Duplicate Reconciliation Correction v2",
+    "105219 104610 Yahoo Crypto Downstream Readback v1",
+    "105014 104610 BTC Pullback Downstream Readback v1",
+    "104803 Provider Crypto Trail/Exit Scan Readback v1"
+  ],
+  "prompt_to_artifact": [
+    {
+      "requirement": "every active regime >=95 calibrated confidence",
+      "evidence": "Board still reports accepted rows added 0 and strict full objective false in latest sections; scoped 95 context factors are preserved but not strict full-objective completion",
+      "status": "not_achieved"
+    },
+    {
+      "requirement": "validate across other markets, timeframes, and periods",
+      "evidence": "Latest provider/AQ branches are single-provider/single-window or aggregate-negative; 104703 is Binance BTCUSDT 1h only; 104610 aggregate crypto panel is negative; 104803 panel scans are negative",
+      "status": "not_achieved"
+    },
+    {
+      "requirement": "real Auto-Quant execution",
+      "evidence": "Real AQ/TOMAC executions exist for 104703, 104610, 104803 and earlier roots, but all are incubation/non-promoting or aggregate-negative",
+      "status": "partial"
+    },
+    {
+      "requirement": "provider matrix: IBKR, TVRemix/TVR, yfinance/YF, Kraken, Binance, Bybit",
+      "evidence": "105207 proves ad hoc yfinance/Kraken/Binance/Bybit/IBKR rows but TVR failed; 105636 direct TVR probe is HTTP 429 rate-limited; 105234 requires AQ/provider provenance, not local/ad hoc substitution",
+      "status": "not_achieved"
+    },
+    {
+      "requirement": "ordered chain provider/AQ -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranker -> execution tree",
+      "evidence": "104703 and 105219/105014 exercise the ordered surfaces with exit 0, but Pre-Bayes remains empty or policy not ready, CatBoost/path-ranker has matched rows 0 or mature rows 0, trainer artifact missing/disabled, execution tree fail_closed/observe",
+      "status": "partial_fail_closed"
+    },
+    {
+      "requirement": "source/control unlock and selected-history/canonical merge",
+      "evidence": "Latest sections continue source/control evidence acquired false, explicit selected-history false, canonical merge false",
+      "status": "not_achieved"
+    },
+    {
+      "requirement": "do not disturb concurrent agents",
+      "evidence": "This audit writes only a new run root and later an append-only board section; Current Cursor remains untouched",
+      "status": "achieved_for_this_slice"
+    },
+    {
+      "requirement": "update_goal only if complete",
+      "evidence": "Completion is not achieved; update_goal remains false and must not be called",
+      "status": "not_complete_update_goal_false"
+    }
+  ],
+  "decision": {
+    "gate": "current_objective_audit_after_105234_v1=not_achieved",
+    "accepted_rows_added": 0,
+    "all_regimes_95_confidence": false,
+    "cross_context_full_validation": false,
+    "provider_matrix_promotion_ready": false,
+    "auto_quant_promotion_ready": false,
+    "downstream_promotion_ready": false,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "next": "Continue only from provider-matrix-backed AQ provenance, source/control unlock, explicit selected-history approval, or a rooted AQ branch that survives cross-context validation and then the ordered downstream chain."
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": "tvremix-tools-list-health/v1",
+  "url": "https://tvremix.xyz/api/mcp/v1",
+  "api_key_present": true,
+  "ok": false,
+  "http_status": 429,
+  "http_error": "HTTP Error 429: Too Many Requests",
+  "body_prefix": "{\"error\": \"Rate limit exceeded. Retry after 47475s.\"}"
+}

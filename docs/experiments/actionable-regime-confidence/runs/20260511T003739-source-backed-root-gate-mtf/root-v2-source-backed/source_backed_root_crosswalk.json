@@ -1,0 +1,49 @@
+{
+  "schema_version": "source-backed-main-regime-v2-crosswalk/v1",
+  "rule": "sub-regime packets are context/guardrail evidence only until the root label itself passes this gate",
+  "crosswalk": {
+    "BullExpansion": {
+      "sub_regime_context": [
+        "TrendExpansion"
+      ],
+      "promotion_requirement": "signed positive expansion root target passes 95 gate directly"
+    },
+    "BearExpansion": {
+      "sub_regime_context": [
+        "TrendExpansion",
+        "ExtremeStress"
+      ],
+      "promotion_requirement": "signed negative expansion root target passes 95 gate directly and is separated from CrisisStress"
+    },
+    "Consolidation": {
+      "sub_regime_context": [
+        "RangeConsolidation"
+      ],
+      "promotion_requirement": "root-level consolidation target passes 95 gate directly"
+    },
+    "CrisisStress": {
+      "sub_regime_context": [
+        "ExtremeStress"
+      ],
+      "promotion_requirement": "tail/stress root target passes 95 gate directly across contexts/timeframes"
+    },
+    "Manipulation": {
+      "sub_regime_context_only": [
+        "ThinLiquidity",
+        "SessionLiquidityCoreViable"
+      ],
+      "promotion_requirement": "direct non-OHLCV manipulation inputs",
+      "failure_state": "missing_required_inputs"
+    },
+    "TransitionRecovery": {
+      "sub_regime_context": [
+        "ReversalBrewing"
+      ],
+      "promotion_requirement": "transition/recovery target passes 95 gate directly with duration and hazard controls"
+    },
+    "UnknownOrMixed": {
+      "sub_regime_context": [],
+      "promotion_requirement": "residual routing only; never a release gate"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+date=2026-05-12T04:56:27+0800
+board_hash_before_artifact=1ffdf2edb702a1f1a2afdab68f51be1caed24afb2338865ebda4412055ec0296
+required_root:/tmp/ict-engine-board-a-r6-owner-export-v1=missing
+required_root:/tmp/ict-engine-native-subhour-source-label-intake=missing
+required_root:/tmp/ict-engine-source-panel-recency-extension=missing
+credential:DATABENTO_API_KEY=missing
+credential:CME_API_KEY=missing
+credential:CBOE_API_KEY=missing
+credential:IBKR_ACCOUNT_ID=missing
+credential:TV_SESSION=missing
+source_url:https://www.cmegroup.com/tools-information/lookups/advisories/disciplinary/COMEX-11-08380-BC-IGOR-OYSTACHER.html=opened
+source_url:https://www.cmegroup.com/tools-information/lookups/advisories/disciplinary/NYMEX-10-07963-BC-IGOR-OYSTACHER.html=opened

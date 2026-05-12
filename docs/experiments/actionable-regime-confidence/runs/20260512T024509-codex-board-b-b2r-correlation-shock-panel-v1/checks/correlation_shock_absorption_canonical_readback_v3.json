@@ -1,0 +1,63 @@
+{
+  "artifact_packet_verified": true,
+  "branch_paths_evaluated": 5,
+  "branch_paths_passed": 0,
+  "canonical_command_exit": "0",
+  "canonical_readback": true,
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "gate_result": "fail:required_root_branch_hard_gates_failed",
+  "matrix_root_trade_counts": {
+    "Bear": 5479,
+    "Bull": 26848,
+    "Crisis": 613,
+    "Manipulation(scoped)": 0,
+    "Sideways": 14903
+  },
+  "primary_blocker": "Bull=fail:reject_fold_inconsistency|reject_cost_fragile|reject_overfit_risk|reject_rc_spa_below_60; Bear=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_overfit_risk; Sideways=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Crisis=fail:reject_insufficient_test_folds|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Manipulation(scoped)=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+  "provider_focus": {
+    "ibkr": [
+      false,
+      "configured_runtime_unhealthy",
+      "ibkr_runtime_dependencies_missing_with_gateway_reachable"
+    ],
+    "ibkr_bridge": [
+      false,
+      "configured_runtime_unhealthy",
+      "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable"
+    ],
+    "kraken_cli": [
+      true,
+      "ready",
+      "kraken_cli_config_detected"
+    ],
+    "kraken_public": [
+      false,
+      "configured_runtime_unhealthy",
+      "python3_provider_dependencies_missing"
+    ],
+    "tradingview_mcp": [
+      false,
+      "configured_runtime_unhealthy",
+      "tradingview_mcp_connectivity_probe_failed"
+    ],
+    "yfinance": [
+      true,
+      "ready",
+      "public_yahoo_http_endpoints"
+    ]
+  },
+  "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "recipe_id": "CorrelationShockAbsorptionV1",
+  "run_id": "20260512T024509+0800-codex-board-b-b2r-correlation-shock-panel-v1",
+  "schema_observed": "canonical_readback_flat_report",
+  "selected_root_trade_counts": {
+    "Bear": 8,
+    "Bull": 6563,
+    "Crisis": 424,
+    "Manipulation(scoped)": 0,
+    "Sideways": 6280
+  },
+  "selected_trade_rows": 13275,
+  "stable_profit_score": 75.88863517875106,
+  "variant_trade_rows": 47843
+}

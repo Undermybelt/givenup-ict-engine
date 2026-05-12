@@ -1,0 +1,68 @@
+{
+  "body": {
+    "order": "published_date",
+    "order_direction": "desc",
+    "page_size": 10,
+    "search_for": "3 Red Trading matched controls"
+  },
+  "error": null,
+  "payload": [
+    {
+      "created_date": "2021-11-10T10:07:48Z",
+      "defined_type": 8,
+      "defined_type_name": "thesis",
+      "doi": "10.26686/wgtn.16973740.v1",
+      "group_id": 25676,
+      "handle": "",
+      "id": 16973740,
+      "modified_date": "2022-04-06T01:59:01Z",
+      "project_id": null,
+      "published_date": "2021-11-10T10:07:48Z",
+      "resource_doi": "",
+      "resource_title": "",
+      "thumb": "https://s3-eu-west-1.amazonaws.com/ppreviews-wellington-2529547045/31397851/thumb.png",
+      "timeline": {
+        "firstOnline": "2010-11-18",
+        "posted": "2021-11-10T10:07:48",
+        "publisherPublication": "2010-01-01T00:00:00"
+      },
+      "title": "Exotic Reptiles in the Pet Trade: Are They a Threat to New Zealand?",
+      "url": "https://api.figshare.com/v2/articles/16973740",
+      "url_private_api": "https://api.figshare.com/v2/account/articles/16973740",
+      "url_private_html": "https://figshare.com/account/articles/16973740",
+      "url_public_api": "https://api.figshare.com/v2/articles/16973740",
+      "url_public_html": "https://openaccess.wgtn.ac.nz/articles/thesis/Exotic_Reptiles_in_the_Pet_Trade_Are_They_a_Threat_to_New_Zealand_/16973740"
+    },
+    {
+      "created_date": "2020-12-09T07:29:20Z",
+      "defined_type": 6,
+      "defined_type_name": "journal contribution",
+      "doi": "10.6084/m9.figshare.13352102.v1",
+      "group_id": 6811,
+      "handle": "",
+      "id": 13352102,
+      "modified_date": "2026-03-08T07:28:59Z",
+      "project_id": null,
+      "published_date": "2020-12-09T07:29:20Z",
+      "resource_doi": "10.1186/s13059-020-02194-x",
+      "resource_title": "STARRPeaker: uniform processing and accurate identification of STARR-seq active regions",
+      "thumb": "https://ndownloader.figshare.com/files/25734716/preview/25734716/thumb.png",
+      "timeline": {
+        "firstOnline": "2020-12-09",
+        "posted": "2020-12-09T07:29:20",
+        "publisherAcceptance": "2020-11-04T05:00:00",
+        "publisherPublication": "2020-12-08T05:00:00"
+      },
+      "title": "Additional file 1 of STARRPeaker: uniform processing and accurate identification of STARR-seq active regions",
+      "url": "https://api.figshare.com/v2/articles/13352102",
+      "url_private_api": "https://api.figshare.com/v2/account/articles/13352102",
+      "url_private_html": "https://figshare.com/account/articles/13352102",
+      "url_public_api": "https://api.figshare.com/v2/articles/13352102",
+      "url_public_html": "https://springernature.figshare.com/articles/journal_contribution/Additional_file_1_of_STARRPeaker_uniform_processing_and_accurate_identification_of_STARR-seq_active_regions/13352102"
+    }
+  ],
+  "provider": "figshare",
+  "query": "3 Red Trading matched controls",
+  "status": 200,
+  "url": "https://api.figshare.com/v2/articles/search"
+}

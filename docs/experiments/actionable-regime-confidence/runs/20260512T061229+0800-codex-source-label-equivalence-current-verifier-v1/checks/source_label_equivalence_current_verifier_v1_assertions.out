@@ -1,0 +1,13 @@
+gate_result=source_label_equivalence_current_verifier_v1=schema_ready_unscored_no_promotion
+verifier_exit=0
+status=schema_ready_unscored
+row_count=248440
+schema_ready=true
+confidence_acceptance=false
+source_control_evidence_acquired=false
+target_root_mutated=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

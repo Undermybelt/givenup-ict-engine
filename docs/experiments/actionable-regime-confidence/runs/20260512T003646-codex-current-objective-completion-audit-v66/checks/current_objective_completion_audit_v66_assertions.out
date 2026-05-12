@@ -1,0 +1,10 @@
+board_cursor_read=PASS
+active_cursor_is_blocked=PASS
+live_direct_verifier_ran=PASS
+live_direct_schema_ready=PASS
+owner_export_target_not_ready=PASS
+policy_review_loaded=PASS
+flip_controls_not_accepted=PASS
+completion_not_achieved=PASS
+update_goal_false=PASS
+runtime_code_changed_false=PASS

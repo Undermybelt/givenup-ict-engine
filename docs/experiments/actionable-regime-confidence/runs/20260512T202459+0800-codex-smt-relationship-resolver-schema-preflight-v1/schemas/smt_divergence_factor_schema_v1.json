@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "actionable": {
+      "const": false
+    },
+    "base_level": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "base_swing_type": {
+      "enum": [
+        "HH",
+        "LH",
+        "LL",
+        "HL",
+        "equal_high",
+        "equal_low",
+        "n/a"
+      ]
+    },
+    "base_symbol": {
+      "type": "string"
+    },
+    "comparison_level": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "comparison_swing_type": {
+      "enum": [
+        "HH",
+        "LH",
+        "LL",
+        "HL",
+        "equal_high",
+        "equal_low",
+        "n/a"
+      ]
+    },
+    "comparison_symbol": {
+      "type": "string"
+    },
+    "confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "confirmation_only": {
+      "const": true
+    },
+    "displacement_confirmed": {
+      "type": "boolean"
+    },
+    "fail_closed_reason": {
+      "type": "string"
+    },
+    "mss_or_cisd_confirmed": {
+      "type": "boolean"
+    },
+    "near_pd_array": {
+      "type": "boolean"
+    },
+    "normalized_for_inverse_correlation": {
+      "type": "boolean"
+    },
+    "pd_array_type": {
+      "enum": [
+        "FVG",
+        "IFVG",
+        "OB",
+        "breaker",
+        "mitigation",
+        "rejection",
+        "session_high_low",
+        "previous_day_high_low",
+        "none"
+      ]
+    },
+    "relationship_confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "relationship_type": {
+      "enum": [
+        "positive",
+        "negative",
+        "uncertain"
+      ]
+    },
+    "session": {
+      "type": "string"
+    },
+    "smt_signal": {
+      "enum": [
+        "bullish_smt",
+        "bearish_smt",
+        "none"
+      ]
+    },
+    "swept_side": {
+      "enum": [
+        "buy_side_liquidity",
+        "sell_side_liquidity",
+        "none"
+      ]
+    },
+    "timeframe": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "base_symbol",
+    "comparison_symbol",
+    "relationship_type",
+    "relationship_confidence",
+    "timeframe",
+    "session",
+    "smt_signal",
+    "base_swing_type",
+    "base_level",
+    "comparison_swing_type",
+    "comparison_level",
+    "swept_side",
+    "normalized_for_inverse_correlation",
+    "near_pd_array",
+    "pd_array_type",
+    "mss_or_cisd_confirmed",
+    "displacement_confirmed",
+    "confidence",
+    "fail_closed_reason"
+  ],
+  "title": "ict-engine Board B SMT divergence factor evidence v1",
+  "type": "object"
+}

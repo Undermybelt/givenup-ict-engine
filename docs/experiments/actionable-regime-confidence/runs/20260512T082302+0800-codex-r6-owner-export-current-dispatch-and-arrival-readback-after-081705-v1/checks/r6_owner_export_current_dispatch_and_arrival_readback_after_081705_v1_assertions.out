@@ -1,0 +1,16 @@
+PASS gate_result=r6_owner_export_current_dispatch_and_arrival_readback_after_081705_v1=drafts_current_target_roots_absent_no_source_control_unlock
+PASS reference_artifacts_present=true
+PASS dispatch_drafts_parseable=true
+PASS sender_identity_present=false
+PASS external_requests_sent_by_this_artifact=false
+PASS owner_export_target_unlock=false
+PASS accepted_rows_added=0
+PASS source_control_evidence_acquired=false
+PASS valid_required_root_unlock=false
+PASS canonical_merge=false
+PASS selected_data_autoquant_promotion=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS target_roots_mutated_by_this_artifact=false

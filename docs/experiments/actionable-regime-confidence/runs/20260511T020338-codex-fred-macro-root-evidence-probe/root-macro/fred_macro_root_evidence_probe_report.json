@@ -1,0 +1,287 @@
+{
+  "schema_version": "fred-macro-root-evidence-probe/v1",
+  "loop_id": "20260511T020338+0800-codex-fred-macro-root-evidence-probe",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T020338-codex-fred-macro-root-evidence-probe",
+  "source_table": "docs/experiments/actionable-regime-confidence/runs/20260511T001642-cross-asset-root-evidence-yfinance/root-v2/cross_asset_root_feature_table.csv",
+  "fred_series": {
+    "T10Y2Y": "treasury_10y_2y_spread",
+    "T10Y3M": "treasury_10y_3m_spread",
+    "BAMLH0A0HYM2": "high_yield_oas",
+    "BAMLC0A0CM": "corp_oas",
+    "NFCI": "financial_conditions",
+    "VIXCLS": "fred_vix_close"
+  },
+  "rows": 28517,
+  "features_used": [
+    "treasury_10y_2y_spread",
+    "treasury_10y_3m_spread",
+    "high_yield_oas",
+    "corp_oas",
+    "financial_conditions",
+    "fred_vix_close",
+    "treasury_10y_2y_spread_chg5",
+    "treasury_10y_2y_spread_chg20",
+    "treasury_10y_2y_spread_rank252",
+    "treasury_10y_3m_spread_chg5",
+    "treasury_10y_3m_spread_chg20",
+    "treasury_10y_3m_spread_rank252",
+    "high_yield_oas_chg5",
+    "high_yield_oas_chg20",
+    "high_yield_oas_rank252",
+    "corp_oas_chg5",
+    "corp_oas_chg20",
+    "corp_oas_rank252",
+    "financial_conditions_chg5",
+    "financial_conditions_chg20",
+    "financial_conditions_rank252",
+    "fred_vix_close_chg5",
+    "fred_vix_close_chg20",
+    "fred_vix_close_rank252",
+    "vix_level_rank252",
+    "vix3m_vix_log_ratio",
+    "vix_term_rank252",
+    "cross_asset_risk_on_score16",
+    "credit_breadth_score16",
+    "crypto_risk_score16",
+    "macro_stress_score16",
+    "qqq_spy_rel16",
+    "iwm_spy_rel16",
+    "rsp_spy_rel16",
+    "xly_xlp_rel16",
+    "hyg_lqd_rel16",
+    "eth_btc_rel16"
+  ],
+  "results": [
+    {
+      "root_class": "Bull",
+      "state": "blocked",
+      "rule": "treasury_10y_3m_spread_chg5 >= 0.31 AND rsp_spy_rel16 >= 0.000381775351933",
+      "train": {
+        "support": 49,
+        "positives": 28,
+        "precision": 0.5714285714285714,
+        "wilson95_lcb": 0.4327024751701555,
+        "instruments": [
+          "BTC-USD",
+          "QQQ"
+        ],
+        "market_contexts": [
+          "yfinance_US_ETF",
+          "yfinance_crypto"
+        ],
+        "timeframes": [
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 5,
+        "positives": 1,
+        "precision": 0.2,
+        "wilson95_lcb": 0.036223160969787456,
+        "instruments": [
+          "QQQ"
+        ],
+        "market_contexts": [
+          "yfinance_US_ETF"
+        ],
+        "timeframes": [
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 0,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "instruments": [],
+        "market_contexts": [],
+        "timeframes": []
+      },
+      "blockers": [
+        "calibration_support_below_50",
+        "test_support_below_50",
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "test_instruments_below_2",
+        "test_market_contexts_below_2",
+        "test_timeframes_below_2"
+      ]
+    },
+    {
+      "root_class": "Bear",
+      "state": "blocked",
+      "rule": "treasury_10y_2y_spread_chg20 >= 0.32 AND treasury_10y_3m_spread_chg5 >= 0.1",
+      "train": {
+        "support": 114,
+        "positives": 49,
+        "precision": 0.4298245614035088,
+        "wilson95_lcb": 0.34269963895219036,
+        "instruments": [
+          "BTC-USD",
+          "QQQ"
+        ],
+        "market_contexts": [
+          "yfinance_US_ETF",
+          "yfinance_crypto"
+        ],
+        "timeframes": [
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 14,
+        "positives": 8,
+        "precision": 0.5714285714285714,
+        "wilson95_lcb": 0.3259026690286936,
+        "instruments": [
+          "QQQ"
+        ],
+        "market_contexts": [
+          "yfinance_US_ETF"
+        ],
+        "timeframes": [
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 0,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "instruments": [],
+        "market_contexts": [],
+        "timeframes": []
+      },
+      "blockers": [
+        "calibration_support_below_50",
+        "test_support_below_50",
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "test_instruments_below_2",
+        "test_market_contexts_below_2",
+        "test_timeframes_below_2"
+      ]
+    },
+    {
+      "root_class": "Sideways",
+      "state": "blocked",
+      "rule": "vix_term_rank252 >= 1 AND financial_conditions_rank252 <= 0.00396825396825",
+      "train": {
+        "support": 0,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "instruments": [],
+        "market_contexts": [],
+        "timeframes": []
+      },
+      "calibration": {
+        "support": 0,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "instruments": [],
+        "market_contexts": [],
+        "timeframes": []
+      },
+      "test": {
+        "support": 0,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "instruments": [],
+        "market_contexts": [],
+        "timeframes": []
+      },
+      "blockers": [
+        "calibration_support_below_50",
+        "test_support_below_50",
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "test_instruments_below_2",
+        "test_market_contexts_below_2",
+        "test_timeframes_below_2"
+      ]
+    },
+    {
+      "root_class": "Crisis",
+      "state": "blocked",
+      "rule": "corp_oas_chg5 >= 0.05 AND treasury_10y_3m_spread_chg20 <= -0.39",
+      "train": {
+        "support": 55,
+        "positives": 34,
+        "precision": 0.6181818181818182,
+        "wilson95_lcb": 0.48608979282392384,
+        "instruments": [
+          "BTC-USD",
+          "QQQ"
+        ],
+        "market_contexts": [
+          "yfinance_US_ETF",
+          "yfinance_crypto"
+        ],
+        "timeframes": [
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 7,
+        "positives": 3,
+        "precision": 0.42857142857142855,
+        "wilson95_lcb": 0.15821692226262685,
+        "instruments": [
+          "QQQ"
+        ],
+        "market_contexts": [
+          "yfinance_US_ETF"
+        ],
+        "timeframes": [
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 0,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "instruments": [],
+        "market_contexts": [],
+        "timeframes": []
+      },
+      "blockers": [
+        "calibration_support_below_50",
+        "test_support_below_50",
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "test_instruments_below_2",
+        "test_market_contexts_below_2",
+        "test_timeframes_below_2"
+      ]
+    }
+  ],
+  "decision": {
+    "board_state": "blocked",
+    "active_axis": "MainRegimeV2",
+    "candidate_regimes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "accepted_95_root_classes_from_this_run": [],
+    "missing_95_root_classes_from_this_run": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "accepted_gate": "none_for_new_macro_roots",
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "fresh_calibration_rerun": true,
+    "blocked_future_target_predictors": true,
+    "trade_usable": false,
+    "blocker": "FRED macro/credit/rates evidence did not close every missing active root at unchanged 95 gates; Manipulation still requires labeled direct data.",
+    "next_action": "Add materially different signed-direction/sideways evidence such as breadth constituent counts, options/dealer positioning, or labeled macro regime datasets before rerunning Bull/Bear/Sideways gates."
+  }
+}

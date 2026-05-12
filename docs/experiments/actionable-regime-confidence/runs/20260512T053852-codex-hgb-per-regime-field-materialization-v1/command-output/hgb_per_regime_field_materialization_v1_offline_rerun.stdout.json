@@ -1,0 +1,18 @@
+{
+  "diagnostic_field_complete_labels": [
+    "Bear",
+    "Bull",
+    "Crisis",
+    "Sideways"
+  ],
+  "gate_result": "hgb_per_regime_field_materialization_v1=all_hgb_labels_field_complete_diagnostic_source_control_absent",
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

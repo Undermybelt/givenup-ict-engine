@@ -1,0 +1,5 @@
+QQQ | workflow_status | no_workflow_state
+Block: no_workflow_state
+Latest: no_workflow_state | No workflow phase summary available yet.
+Next: Continue the Auto-Quant handoff. Run uv run --with ta-lib <local-path> and then review with ict-engine auto-quant-adoption-review --symbol QQQ --state-dir <local-path> --artifact-id auto-quant-handoff:factor_research:QQQ:20260510T112631.746Z.
+Auto-Quant: open Auto-Quant program.md and stage a research loop for the requested objective | run Auto-Quant backtest loop and export a stable candidate package for ict-engine Review: ict-engine auto-quant-adoption-review --symbol QQQ --state-dir <local-path> --artifact-id auto-quant-handoff:factor_research:QQQ:20260510T112631.746Z Workflow: ict-engine workflow-status --symbol QQQ --state-dir <local-path> --human

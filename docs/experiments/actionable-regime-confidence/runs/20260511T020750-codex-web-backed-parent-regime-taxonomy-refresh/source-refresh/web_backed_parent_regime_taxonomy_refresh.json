@@ -1,0 +1,156 @@
+{
+  "schema_version": "web-backed-parent-regime-taxonomy-refresh/v1",
+  "loop_id": "20260511T020750+0800-codex-web-backed-parent-regime-taxonomy-refresh",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T020750-codex-web-backed-parent-regime-taxonomy-refresh",
+  "purpose": "Refresh parent-vs-child regime taxonomy from papers and GitHub sources after user correction.",
+  "sources": [
+    {
+      "id": "pagan_sossounov_bull_bear_cycles",
+      "type": "paper",
+      "url": "https://doi.org/10.1002/jae.664",
+      "used_for": "top-level sustained bull/bear cycle framing"
+    },
+    {
+      "id": "maheu_mccurdy_bull_bear_regime_switching",
+      "type": "paper",
+      "url": "https://doi.org/10.1080/07350015.2000.10524851",
+      "used_for": "bull/bear as parent hidden states"
+    },
+    {
+      "id": "maheu_mccurdy_song_components",
+      "type": "paper",
+      "url": "https://doi.org/10.1198/jbes.2009.06134",
+      "used_for": "components/corrections/rallies as substructure below bull/bear"
+    },
+    {
+      "id": "hidden_regime_github",
+      "type": "github",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "used_for": "implementation provenance for Bull/Bear/Sideways/event-crisis style root naming"
+    },
+    {
+      "id": "hmmlearn",
+      "type": "github",
+      "url": "https://github.com/hmmlearn/hmmlearn",
+      "used_for": "HMM implementation primitive, not taxonomy authority"
+    },
+    {
+      "id": "ruptures",
+      "type": "github",
+      "url": "https://github.com/deepcharles/ruptures",
+      "used_for": "change-point boundary evidence, not root regime identity"
+    },
+    {
+      "id": "spoofing_layering_ssrn",
+      "type": "paper",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036",
+      "used_for": "direct microstructure manipulation mechanisms"
+    },
+    {
+      "id": "crypto_wash_trading_nber",
+      "type": "paper",
+      "url": "https://doi.org/10.3386/w30783",
+      "used_for": "wash trading as manipulation mechanism requiring direct/event evidence"
+    },
+    {
+      "id": "mendeley_wash_trading_dataset",
+      "type": "dataset",
+      "url": "https://data.mendeley.com/datasets/4hyxfwzpgg/3",
+      "used_for": "candidate row-level labeled manipulation data source; not acquired in prior probe"
+    },
+    {
+      "id": "nft_wash_trading_github",
+      "type": "github",
+      "url": "https://github.com/niuniu-zhang/nft_wash_trading",
+      "used_for": "implementation/dataset provenance; repo exposes aggregate results but not raw row-level samples"
+    }
+  ],
+  "active_parent_axis": {
+    "emittable_root_targets": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "residual_target": "UnknownOrMixed",
+    "root_aliases": {
+      "Bull": [
+        "BullExpansion",
+        "bull expansion",
+        "bull market expansion"
+      ],
+      "Bear": [
+        "BearExpansion",
+        "bear expansion",
+        "ordinary bear market"
+      ],
+      "Sideways": [
+        "Consolidation",
+        "range",
+        "sideways"
+      ],
+      "Crisis": [
+        "CrisisStress",
+        "extreme stress",
+        "crash"
+      ],
+      "Manipulation": [
+        "spoofing",
+        "layering",
+        "wash trading",
+        "pump and dump",
+        "quote stuffing"
+      ]
+    }
+  },
+  "child_or_overlay_only": [
+    "TrendExpansion",
+    "RangeConsolidation",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "SessionLiquidityCoreViable",
+    "ThinLiquidity",
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "CrisisStress",
+    "TransitionRecovery",
+    "unlabeled direct L2 signatures"
+  ],
+  "watchlist_big_classes_not_activated": [
+    {
+      "name": "TransitionRecovery",
+      "handling": "overlay/phase only until a downstream consumer activates a root gate"
+    },
+    {
+      "name": "BubbleEuphoria",
+      "handling": "watchlist; map under Bull or UnknownOrMixed for current Board A"
+    },
+    {
+      "name": "LiquidityStress",
+      "handling": "orthogonal risk overlay, not root completion"
+    },
+    {
+      "name": "SectorRotationOrCrossAssetRotation",
+      "handling": "context axis, not current Board A root"
+    }
+  ],
+  "acceptance_state_after_refresh": {
+    "accepted_95_roots": [
+      "Crisis"
+    ],
+    "missing_95_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ],
+    "accepted_gate": "partial_for_MainRegimeV2_Crisis_only_prior_evidence_preserved",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "fresh_calibration_rerun": false,
+    "trade_usable": false
+  },
+  "next_action": "Acquire row-level labeled/direct manipulation data, or a credentialed exact-date direct L2/L3/order-lifecycle export matched to labeled events, before rerunning the unchanged Manipulation gate; keep Bull/Bear/Sideways child signatures as predictors only."
+}

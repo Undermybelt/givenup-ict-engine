@@ -1,0 +1,9 @@
+PASS gate_result=current_objective_audit_after_050609_051145_051153_v1=not_complete_no_confidence_no_source_control_downstream_blocked
+PASS accepted_regime_confidence_labels=0
+PASS source_control_evidence_acquired=false
+PASS new_confidence_gate=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

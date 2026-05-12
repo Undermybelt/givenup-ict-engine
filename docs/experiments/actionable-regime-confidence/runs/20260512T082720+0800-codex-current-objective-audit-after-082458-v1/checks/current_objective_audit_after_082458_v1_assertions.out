@@ -1,0 +1,14 @@
+gate_result=current_objective_audit_after_082458_v1=not_complete_source_control_roots_absent_no_downstream_promotion
+assertion_roots_checked=6
+missing_assertion_roots=0
+blocked_requirements=5
+partial_requirements=1
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

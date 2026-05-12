@@ -1,0 +1,97 @@
+{
+  "run_id": "20260512T032417-codex-r6-owner-export-request-status-after-032258-v1",
+  "generated_at_local": "2026-05-12T03:24:17+08:00",
+  "board_sha256_before_packet": "d6f4fd63a06d888fdad0a70f2c47aebe6d5d5200382d575c883b42fa30317bfa",
+  "gate_result": "r6_owner_export_request_status_after_032258_v1=requests_ready_not_sent_rows_not_acquired_no_promotion",
+  "latest_durable_current_objective_audit": {
+    "run_id": "20260512T031655-codex-current-objective-completion-audit-after-031435-v1",
+    "gate_result": "current_objective_completion_audit_after_031435_v1=not_complete_latest_r6_packets_nonpromoting_source_controls_downstream_blocked"
+  },
+  "evidence_packets": [
+    {
+      "run_id": "20260512T005913-codex-r6-owner-export-sendable-requests-v3",
+      "gate_result": "r6_owner_export_sendable_requests_v3=sendable_requests_created_controls_not_acquired_no_merge",
+      "use": "sendable CME and Cboe/CFE request drafts"
+    },
+    {
+      "run_id": "20260512T031353-codex-r6-owner-export-dispatch-readiness-after-030957-v1",
+      "gate_result": "r6_owner_export_dispatch_readiness_after_030957_v1=requests_ready_dispatch_or_approval_required_rows_not_acquired",
+      "use": "dispatch checklist and verifier filename contract"
+    },
+    {
+      "run_id": "20260512T032152-codex-r6-owner-export-augmentation-requirements-after-031655-v1",
+      "gate_result": "r6_owner_export_augmentation_requirements_after_031655_v1=requirements_quantified_no_source_rows_acquired_no_promotion",
+      "use": "row-support and split-deficit quantification"
+    },
+    {
+      "run_id": "20260512T032155-codex-source-unlock-readback-after-031655-v1",
+      "gate_result": "source_unlock_readback_after_031655_v1=no_new_source_unlock_roots_sidecars_and_approval_still_nonpromoting",
+      "use": "root and approval readback"
+    },
+    {
+      "run_id": "20260512T032258-codex-r6-owner-route-refresh-after-031655-v1",
+      "gate_result": "r6_owner_route_refresh_after_031655_v1=official_routes_current_controls_not_acquired_no_merge",
+      "use": "official route refresh"
+    },
+    {
+      "run_id": "20260512T032302-codex-provider-autoquant-readonly-refresh-after-031655-v1",
+      "gate_result": "provider_autoquant_readonly_refresh_after_031655_v1=readiness_refreshed_no_promotion_source_controls_blocked",
+      "use": "read-only provider and Auto-Quant status after source block"
+    }
+  ],
+  "request_status": {
+    "cme_request_draft_ready": true,
+    "cboe_cfe_request_draft_ready": true,
+    "external_requests_sent_by_local_evidence": false,
+    "ticket_or_export_identifiers_recorded": false,
+    "licensed_rows_acquired": false
+  },
+  "required_dispatch_readback_fields": [
+    "owner",
+    "route",
+    "ticket_id_or_support_case_id",
+    "order_id_or_export_id_or_dataset_id",
+    "license_or_subscription_or_approval_reference",
+    "request_sent_at",
+    "response_received_at",
+    "product_scope",
+    "date_range",
+    "field_dictionary",
+    "timestamp_precision",
+    "normal_control_policy",
+    "raw_delivery_hashes",
+    "row_counts",
+    "source_filenames",
+    "verifier_file_mapping"
+  ],
+  "verifier_native_delivery_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "verifier_native_required_files": [
+    "positive_spoofing_layering_rows.csv",
+    "matched_negative_normal_activity_rows.csv",
+    "provenance_manifest.json"
+  ],
+  "live_gate_status": {
+    "source_owned_normal_controls_acquired": 0,
+    "flip_approval_present": false,
+    "r6_owner_export_root_complete": false,
+    "r3_native_subhour_root_exists": false,
+    "r5_recency_extension_root_exists": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "non_mutations": {
+    "external_requests_sent": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "downstream_chain_rerun": false
+  },
+  "decision": "not_complete"
+}

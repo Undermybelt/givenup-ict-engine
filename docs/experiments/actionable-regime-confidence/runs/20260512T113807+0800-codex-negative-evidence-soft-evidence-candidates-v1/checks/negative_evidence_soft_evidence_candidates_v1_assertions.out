@@ -1,0 +1,8 @@
+pass:json_schema_readable
+pass:candidate_count_8
+pass:all_candidate_distributions_sum_to_1
+pass:all_market_prior_update_allowed_false
+pass:runtime_mutation_false
+pass:prior_mutation_false
+pass:promotion_allowed_false
+pass:update_goal_false

@@ -1,0 +1,11 @@
+PASS run_id=20260512T053947-codex-r5-source-panel-upstream-live-recheck-v1
+PASS gate_result=r5_source_panel_upstream_live_recheck_v1=upstream_not_refreshed_no_post_cutoff_rows_no_promotion
+PASS kaggle_last_updated=2026-02-01 02:25:29.437000
+PASS local_source_date_max=2026-01-30
+PASS local_source_post_cutoff_rows=0
+PASS r5_intake_root_present=false
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS trade_usable=false
+PASS update_goal=false

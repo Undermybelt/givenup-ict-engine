@@ -1,0 +1,188 @@
+{
+  "active_boundary": {
+    "disallowed": [
+      "OHLCV/session/liquidity proxy",
+      "positive-only enforcement prose",
+      "synthetic detector rows",
+      "raw order book without source manipulation labels",
+      "model confidence without direct positive and matched negative rows"
+    ],
+    "not_price_root": true,
+    "target": "direct Manipulation spoofing_layering variety"
+  },
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T151720-codex-spoofing-layering-matched-row-readiness-v1/checks/spoofing_layering_matched_row_readiness_v1_assertions.out",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T151720-codex-spoofing-layering-matched-row-readiness-v1/matched-row-readiness/spoofing_layering_matched_row_readiness_v1.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T151720-codex-spoofing-layering-matched-row-readiness-v1/matched-row-readiness/spoofing_layering_matched_row_readiness_v1.md",
+    "required_files_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T151720-codex-spoofing-layering-matched-row-readiness-v1/matched-row-readiness/spoofing_layering_matched_row_readiness_v1_required_files.csv",
+    "script": "scripts/spoofing_layering_matched_row_readiness_v1.py",
+    "sources_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T151720-codex-spoofing-layering-matched-row-readiness-v1/matched-row-readiness/spoofing_layering_matched_row_readiness_v1_sources.csv"
+  },
+  "board_sha256_at_start": "cac7a2511a51a688ce7c3b80424628ead51b401a9fdca7b50a640fe8fe4c9f55",
+  "created_at_utc": "2026-05-11T07:41:23.077878+00:00",
+  "decision": {
+    "accepted_direct_manipulation_rows_added": 0,
+    "acquisition_ready": false,
+    "call_update_goal": false,
+    "confidence_gate_eligible_case_rows": 0,
+    "full_objective_achieved": false,
+    "gate_result": "spoofing_layering_matched_row_readiness_v1_rows_not_acquired",
+    "matched_negative_cases_available": 0,
+    "positive_case_inventory_count": 204,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "inputs": {
+    "case_inventory_csv": {
+      "bytes": 67818,
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T130457-codex-spoofing-appendix-direct-case-inventory/direct-case-inventory/spoofing_appendix_direct_case_inventory.csv"
+    },
+    "direct_schema_audit_csv": {
+      "bytes": 1571,
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T081556-codex-direct-manipulation-source-schema-audit/direct-manipulation-schema/direct_manipulation_source_schema_audit.csv"
+    },
+    "finra_schema_csv": {
+      "bytes": 2134,
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T133337-codex-finra-manipulation-acquisition-schema-v1/acquisition-schema/finra_manipulation_acquisition_schema_v1.csv"
+    },
+    "finra_schema_json": {
+      "bytes": 2518,
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T133337-codex-finra-manipulation-acquisition-schema-v1/acquisition-schema/finra_manipulation_acquisition_schema_v1.json"
+    },
+    "local_spoof_audit_json": {
+      "bytes": 3499,
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T110827-codex-local-spoofing-source-audit/source-audit/local_spoofing_source_audit.json"
+    },
+    "variety_matrix_json": {
+      "bytes": 9297,
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.json"
+    }
+  },
+  "next_action": "Obtain source-owned positive spoofing/layering rows plus matched normal controls matching finra_manipulation_acquisition_schema_v1.csv; otherwise keep spoofing_layering blocked.",
+  "required_files": [
+    {
+      "accepted_source_types": "FINRA/CAT/venue/surveillance/exported order-lifecycle rows; not enforcement-case prose",
+      "minimum_fields": "label, source_report, trade_date, symbol, venue_or_market_center, side, earliest_order_received_time, latest_order_received_time, order_count, total_order_quantity, activity_description, matched_negative_group_id, source_row_id",
+      "required": true,
+      "required_file": "positive_spoofing_layering_rows.csv",
+      "status": "missing"
+    },
+    {
+      "accepted_source_types": "same source/export family as positives or venue-owned normal control export",
+      "minimum_fields": "same schema as positives; matched venue/symbol/date/session/liquidity bucket; normal activity label",
+      "required": true,
+      "required_file": "matched_negative_normal_activity_rows.csv",
+      "status": "missing"
+    },
+    {
+      "accepted_source_types": "source-owned export provenance",
+      "minimum_fields": "source owner, export identity, pull date, redaction notes, row counts, schema version",
+      "required": true,
+      "required_file": "provenance_manifest.json",
+      "status": "missing"
+    }
+  ],
+  "run_id": "20260511T151720+0800-codex-spoofing-layering-matched-row-readiness-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T151720-codex-spoofing-layering-matched-row-readiness-v1",
+  "schema_version": "spoofing-layering-matched-row-readiness/v1",
+  "sources": [
+    {
+      "accepted_rows": 0,
+      "decision": "schema_target_rows_not_public",
+      "matched_negative_status": "not_acquired",
+      "reason": "Public FINRA page is useful as field/schema target but does not provide exportable positive and matched negative rows.",
+      "source_id": "finra_potential_manipulation_report",
+      "source_type": "regulator_schema_contract",
+      "url_or_path": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "positive_case_inventory_only",
+      "matched_negative_status": "absent",
+      "reason": "204 positive enforcement cases exist, but matched_negative_available=0 and confidence_gate_eligible_now=0.",
+      "source_id": "spoofing_appendix_case_inventory",
+      "source_type": "regulator_enforcement_case_inventory",
+      "url_or_path": "docs/experiments/actionable-regime-confidence/runs/20260511T130457-codex-spoofing-appendix-direct-case-inventory/direct-case-inventory/spoofing_appendix_direct_case_inventory.csv"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "direct_input_source_unlabeled",
+      "matched_negative_status": "not_labeled_or_not_matched",
+      "reason": "direct order-book/order-lifecycle fields exist, but no explicit manipulation-positive/negative labels or event windows were found",
+      "source_id": "trentmkelly/polymarket_crypto_derivatives",
+      "source_type": "direct_order_lifecycle_order_book",
+      "url_or_path": "https://huggingface.co/datasets/trentmkelly/polymarket_crypto_derivatives"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "direct_input_source_unlabeled",
+      "matched_negative_status": "not_labeled_or_not_matched",
+      "reason": "direct order-book/order-lifecycle fields exist, but no explicit manipulation-positive/negative labels or event windows were found",
+      "source_id": "phobia76/pmxt-l2-dump",
+      "source_type": "direct_order_book_l2",
+      "url_or_path": "https://huggingface.co/datasets/phobia76/pmxt-l2-dump"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "event_context_unlabeled",
+      "matched_negative_status": "not_labeled_or_not_matched",
+      "reason": "token/event context exists, but no explicit manipulation labels or order-lifecycle evidence were found",
+      "source_id": "muhammetakkurt/pump-fun-meme-token-dataset",
+      "source_type": "token_event_context",
+      "url_or_path": "https://huggingface.co/datasets/muhammetakkurt/pump-fun-meme-token-dataset"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "rejected_metadata_false_positive",
+      "matched_negative_status": "not_labeled_or_not_matched",
+      "reason": "dataset card is a generic template and does not provide market event/order-flow labels",
+      "source_id": "Washedashore/thepower",
+      "source_type": "metadata_false_positive",
+      "url_or_path": "https://huggingface.co/datasets/Washedashore/thepower"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "rejected_code_not_replayable_direct_rows",
+      "matched_negative_status": "absent",
+      "reason": "Local checkout contains model/notebook logic but no exported timestamped positive/negative spoofing rows or same-venue negative controls.",
+      "source_id": "navnoor_spoof_detection",
+      "source_type": "local_repo_candidate",
+      "url_or_path": "/tmp/ict-regime-navnoor-spoof-detection"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "rejected_synthetic_framework_no_real_labeled_rows",
+      "matched_negative_status": "absent",
+      "reason": "Repository provides framework, adapters, expected data schema, and synthetic spoofing injection, but no replayable real timestamped positive/negative spoofing dataset in the local checkout.",
+      "source_id": "quantsingularity_spoofing",
+      "source_type": "local_repo_candidate",
+      "url_or_path": "/tmp/ict-regime-quantsingularity-spoofing"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "raw_lob_no_manipulation_labels",
+      "matched_negative_status": "not_labeled",
+      "reason": "Raw limit-order-book data can provide market context, but without source positive spoofing/layering windows and matched controls it is not an accepted direct Manipulation label source.",
+      "source_id": "public_search_lobster_raw_lob",
+      "source_type": "public_raw_orderbook_source",
+      "url_or_path": "https://lobsterdata.com/"
+    },
+    {
+      "accepted_rows": 0,
+      "decision": "method_provenance_only",
+      "matched_negative_status": "synthetic_or_absent",
+      "reason": "Public spoofing repos and synthetic benchmarks are method provenance unless they ship replayable real positive and matched negative rows.",
+      "source_id": "public_search_spoofing_code_or_synthetic",
+      "source_type": "public_code_or_synthetic_benchmarks",
+      "url_or_path": "local audit plus targeted web/source scan"
+    }
+  ]
+}

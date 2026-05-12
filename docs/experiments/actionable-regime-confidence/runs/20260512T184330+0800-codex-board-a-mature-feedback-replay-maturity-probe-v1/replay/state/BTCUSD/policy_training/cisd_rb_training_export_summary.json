@@ -1,0 +1,8 @@
+{
+  "symbol": "BTCUSD",
+  "analyze_runs": 33,
+  "update_runs": 32,
+  "matched_rows": 0,
+  "bbn_training_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/state/BTCUSD/policy_training/cisd_rb_bbn_training.csv",
+  "catboost_training_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/state/BTCUSD/policy_training/cisd_rb_catboost_training.csv"
+}

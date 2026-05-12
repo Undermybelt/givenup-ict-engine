@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "9befaff9590b2add",
+  "dry_run": false,
+  "feedback_records_inserted": 34,
+  "force": true,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_20260512T034153.348536000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": "auto_quant_real_trades_B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_20260512T034153.283926000Z",
+  "source": "provider_matrix_bybit_momentum_112315",
+  "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+  "trades_applied": 34,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1/derived/bybit_provider_matrix_momentum_112315_real_trades.jsonl",
+  "trades_total": 34
+}

@@ -1,0 +1,26 @@
+{
+  "blocking_reason": "market_policy=QQQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+  "blocking_status": "pass_neutralized",
+  "focus_phase": "analyze",
+  "focus_reason": "market_policy=QQQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.839;long/short support gap 0.056 is too small, so alignment is treated as mixed;pre_bayes_quality_score=0.568 gating_status=pass_neutralized;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.718;market_state_source=volatility=NormalVol:0.667 liquidity=NormalLiquidity:0.433 structure=Trending:1.000 behavior=FOMO:0.650;market_state_source=rationale=volatility=NormalVol conf=0.67;market_state_source=rationale=structure=Trending conf=1.00;market_state_source=rationale=behavior=FOMO conf=0.65;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.72",
+  "latest_phase": "analyze",
+  "latest_phase_summary": "direction=Bull entry=medium gate=pass_neutralized quality=0.568",
+  "next_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state",
+  "pda_cluster_label": null,
+  "pending_actions": [
+    "analyze:Review Pre-Bayes Evidence Gate",
+    "promotion:Block Promotion",
+    "iteration:TUNE structure_ict"
+  ],
+  "risk_flags": [
+    "analyze:not_comparable:no_previous_run",
+    "analyze:pre_bayes:low_directional_separation"
+  ],
+  "symbol": "QQQ",
+  "top_actionable": {
+    "artifact_id": "execution-tree-QQQ-1778404704083",
+    "artifact_kind": "execution_tree_artifact",
+    "decision_hint": "execution_observe_with_medium_prediction"
+  },
+  "top_disagreement": null
+}

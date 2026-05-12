@@ -1,0 +1,43 @@
+{
+  "_id": "67b6dd3744975951e706a6a0",
+  "author": "Go3x3",
+  "cardData": {
+    "license": "mit"
+  },
+  "createdAt": "2025-02-20T07:43:51.000Z",
+  "disabled": false,
+  "downloads": 5,
+  "gated": false,
+  "id": "Go3x3/pump_and_dump_dataset",
+  "lastModified": "2025-02-20T07:44:45.000Z",
+  "likes": 0,
+  "private": false,
+  "sha": "7080e47b74dc04ea2de9d8254a3852a16d255774",
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "data1.zip"
+    },
+    {
+      "rfilename": "data2.zip"
+    }
+  ],
+  "tags": [
+    "license:mit",
+    "size_categories:1M<n<10M",
+    "format:csv",
+    "modality:tabular",
+    "modality:text",
+    "library:datasets",
+    "library:dask",
+    "library:mlcroissant",
+    "library:polars",
+    "region:us"
+  ],
+  "usedStorage": 352401070
+}

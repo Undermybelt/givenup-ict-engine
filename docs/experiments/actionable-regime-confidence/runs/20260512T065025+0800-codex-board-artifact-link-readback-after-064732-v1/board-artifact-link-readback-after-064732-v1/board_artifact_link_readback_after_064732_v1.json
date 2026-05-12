@@ -1,0 +1,144 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_before_artifact": "5edd72abb8c9857b178083be92538282332b2f5de689643ae89776f026fc6ec2",
+  "canonical_merge": false,
+  "decision": "No valid required root is available. The board currently references 064325 as a source/control refresh v2 run, but no matching run root exists under docs/experiments or bounded tmp readback, so that reference must not be counted as evidence. The 064908 R5 Kaggle redownload root is present and confirms no post-2026-01-30 rows.",
+  "downstream_promotion_rerun": false,
+  "gate_result": "board_artifact_link_readback_after_064732_v1=no_valid_unlock_064325_reference_missing_064908_no_recency_no_downstream",
+  "missing_referenced_run_count": 1,
+  "missing_referenced_runs": [
+    "20260512T064325+0800-codex-source-control-arrival-refresh-after-063906-v2"
+  ],
+  "referenced_runs": [
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 2,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064230+0800-codex-current-objective-prompt-artifact-audit-after-063926-v1",
+      "run_id": "20260512T064230+0800-codex-current-objective-prompt-artifact-audit-after-063926-v1"
+    },
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 1,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064254+0800-codex-source-control-arrival-scan-after-063906-v1",
+      "run_id": "20260512T064254+0800-codex-source-control-arrival-scan-after-063906-v1"
+    },
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 2,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1",
+      "run_id": "20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1"
+    },
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 1,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064309+0800-codex-source-control-arrival-refresh-after-063906-v2",
+      "run_id": "20260512T064309+0800-codex-source-control-arrival-refresh-after-063906-v2"
+    },
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 1,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064315+0800-codex-source-control-gate-refresh-after-r3-postwriter-v1",
+      "run_id": "20260512T064315+0800-codex-source-control-gate-refresh-after-r3-postwriter-v1"
+    },
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 2,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2",
+      "run_id": "20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2"
+    },
+    {
+      "assertion_count": 0,
+      "decision": "missing_referenced_root_do_not_count_as_evidence",
+      "exists": false,
+      "json_count": 0,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064325+0800-codex-source-control-arrival-refresh-after-063906-v2",
+      "run_id": "20260512T064325+0800-codex-source-control-arrival-refresh-after-063906-v2"
+    },
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 1,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064426+0800-codex-r6-local-cfe-sample-control-applicability-v1",
+      "run_id": "20260512T064426+0800-codex-r6-local-cfe-sample-control-applicability-v1"
+    },
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 1,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064732+0800-codex-public-regime-source-web-triage-after-064426-v1",
+      "run_id": "20260512T064732+0800-codex-public-regime-source-web-triage-after-064426-v1"
+    },
+    {
+      "assertion_count": 1,
+      "decision": "present",
+      "exists": true,
+      "json_count": 1,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T064908+0800-codex-r5-kaggle-stock-regimes-recency-redownload-v1",
+      "run_id": "20260512T064908+0800-codex-r5-kaggle-stock-regimes-recency-redownload-v1"
+    }
+  ],
+  "required_roots": [
+    {
+      "accepted_for_promotion": false,
+      "id": "r6_owner_export",
+      "labels": "",
+      "missing_files": "direct_manipulation_positive_rows.csv;direct_manipulation_matched_controls.csv;direct_manipulation_provenance.json",
+      "notes": "",
+      "physical_complete": false,
+      "policy": "must be verifier-native owner/export rows with valid controls",
+      "present_files": "",
+      "provenance_run_id": "",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false,
+      "row_count": ""
+    },
+    {
+      "accepted_for_promotion": false,
+      "id": "r3_native_subhour",
+      "labels": "Bear;Bull;Sideways",
+      "missing_files": "",
+      "notes": "physical TSIE-derived files present; policy accepted false; Crisis absent",
+      "physical_complete": true,
+      "policy": "must be verifier-native MainRegimeV2 labels, not TSIE proxy",
+      "present_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "provenance_run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": true,
+      "row_count": 5032903
+    },
+    {
+      "accepted_for_promotion": false,
+      "id": "r5_recency_extension",
+      "labels": "",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "notes": "",
+      "physical_complete": false,
+      "policy": "must be source-owned rows after 2026-01-30",
+      "present_files": "",
+      "provenance_run_id": "",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false,
+      "row_count": ""
+    }
+  ],
+  "run_id": "20260512T065025+0800-codex-board-artifact-link-readback-after-064732-v1",
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

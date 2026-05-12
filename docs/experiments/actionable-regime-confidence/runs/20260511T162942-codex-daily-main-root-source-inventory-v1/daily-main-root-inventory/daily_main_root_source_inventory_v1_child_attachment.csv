@@ -1,0 +1,10 @@
+tag,taxonomy_role,attachment_rule,may_complete_parent_root
+TrendExpansion,sub_regime_or_provenance_tag,attach only after a separate Bull or Bear parent root is emitted,false
+BullExpansion,sub_regime_or_display_label,attach under Bull only after Bull is separately emitted,false
+BearExpansion,sub_regime_or_display_label,attach under Bear only after Bear is separately emitted,false
+RangeConsolidation,sub_regime_or_provenance_tag,attach under Sideways only after Sideways is separately emitted,false
+ExtremeStress,sub_regime_or_provenance_tag,attach under Crisis only after Crisis is separately emitted,false
+ReversalBrewing,transition_child_tag,attach as transition context only; parent root must remain explicit,false
+SessionLiquidityCoreViable,liquidity_quality_child_tag,attach under any separately emitted price root as quality context,false
+ThinLiquidity,liquidity_risk_child_tag,attach under any separately emitted price root as risk context,false
+Manipulation,separate_direct_overlay,emit only from direct event/order-flow/order-lifecycle/social/on-chain rows; never from OHLCV child tags,false

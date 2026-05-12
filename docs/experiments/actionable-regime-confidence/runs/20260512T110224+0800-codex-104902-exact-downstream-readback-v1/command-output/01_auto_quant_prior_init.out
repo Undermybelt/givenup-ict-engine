@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 1.0389193246753248,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 5.186270968893672,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.4805171948051948,
+    1.1428571428571428e-6,
+    0.5194816623376624
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_B2R_YAHOO_BTC_PULLBACK_PRECISION_104902_20260512T030346.962109000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/104902_provider_crypto_pullback_strategy_library_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_B2R_YAHOO_BTC_PULLBACK_PRECISION_104902_20260512T030347.160529000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/state_104902_exact_downstream_v1/auto-quant/B2R_YAHOO_BTC_PULLBACK_PRECISION_104902/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/state_104902_exact_downstream_v1/auto-quant/B2R_YAHOO_BTC_PULLBACK_PRECISION_104902/auto_quant_prior_init_B2R_YAHOO_BTC_PULLBACK_PRECISION_104902_20260512T030347.160529000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.4805171948051948,
+        1.1428571428571428e-6,
+        0.5194816623376624
+      ],
+      "bbn_contradiction_after": 0.056927086283579384,
+      "bbn_contradiction_before": 1.0958464109589041,
+      "bbn_contradiction_lift": 1.0389193246753248,
+      "bbn_entropy_after": 0.6924038598607091,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6901698011910298,
+      "bbn_log_loss_before": 5.876440770084702,
+      "bbn_log_loss_delta": 5.186270968893672,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.5194388051948051,
+        -0.000020857142857142857,
+        0.5194596623376624
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "provider-owned-yahoo-crypto-pullback-revert-v1",
+      "n_breakeven": 0,
+      "n_loss": 80,
+      "n_win": 66,
+      "strategy_name": "ProviderCryptoPullbackRevertV1",
+      "temper": 0.5,
+      "trade_count": 146
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+  "temper": 0.5
+}

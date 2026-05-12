@@ -1,0 +1,60 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.73999296,
+    3.5199999999999998e-6,
+    0.26000352
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "ProviderBtcEmaRsiHold12",
+      "mutation_id": "provider-owned-btc-ema-rsi-hold12-v1",
+      "trade_count": 42,
+      "n_win": 29,
+      "n_loss": 13,
+      "n_breakeven": 0,
+      "temper": 0.5,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.73999296,
+        3.5199999999999998e-6,
+        0.26000352
+      ],
+      "diff": [
+        -0.2599630399999999,
+        -0.00001848,
+        0.25998151999999997
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.5731072598079734,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 3.3195086044750064,
+      "bbn_log_loss_after": 0.6248596430641731,
+      "bbn_log_loss_delta": 2.6946489614108335,
+      "bbn_contradiction_before": 0.619003619047619,
+      "bbn_contradiction_after": 0.09904057904761912,
+      "bbn_contradiction_lift": 0.5199630399999999,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [],
+  "temper": 0.5,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 2.6946489614108335,
+  "bbn_contradiction_lift": 0.5199630399999999,
+  "evidence_value_gate_passed": true
+}

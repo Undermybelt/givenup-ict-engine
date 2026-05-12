@@ -1,0 +1,187 @@
+{
+  "accepted_rows_added": 0,
+  "assertion_rows": [
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "courtlistener_recap_sibling_fast_probe_after_081323_v1=no_new_public_control_attachment_unlock",
+      "name": "081705_recap_fast",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T081705+0800-codex-courtlistener-recap-sibling-fast-probe-after-081323-v1/checks/courtlistener_recap_sibling_fast_probe_after_081323_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "r6_recap_novel_pdf_single_retry_after_081323_v1=rate_limited_no_body_no_control_unlock",
+      "name": "082215_recap_single_retry",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082215+0800-codex-r6-recap-novel-pdf-single-retry-after-081323-v1/checks/r6_recap_novel_pdf_single_retry_after_081323_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "current_objective_audit_after_081705_v1=not_complete_source_control_unlock_absent_no_downstream_promotion",
+      "name": "082240_current_objective_audit",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082240+0800-codex-current-objective-audit-after-081705-v1/checks/current_objective_audit_after_081705_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "r6_owner_export_current_dispatch_and_arrival_readback_after_081705_v1=drafts_current_target_roots_absent_no_source_control_unlock",
+      "name": "082302_owner_export_dispatch_readback",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082302+0800-codex-r6-owner-export-current-dispatch-and-arrival-readback-after-081705-v1/checks/r6_owner_export_current_dispatch_and_arrival_readback_after_081705_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "source_control_arrival_poll_after_081705_v1=no_new_required_root_no_unlock",
+      "name": "082314_source_control_arrival_poll",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082314+0800-codex-source-control-arrival-poll-after-081705-v1/checks/source_control_arrival_poll_after_081705_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "source_control_arrival_poll_after_082240_v1=no_new_required_root_no_owner_credentials_no_unlock",
+      "name": "082458_source_control_arrival_poll",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082458+0800-codex-source-control-arrival-poll-after-082240-v1/checks/source_control_arrival_poll_after_082240_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  ],
+  "blocked_requirements": 5,
+  "board_sha256_before_artifact": "fb3385d5199c834337cdc9262dd8e243853c79f733a02e757fc34ba388a8808c",
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "blocker": "",
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "requirement": "named_board_file_followed",
+      "status": "covered"
+    },
+    {
+      "blocker": "No R6 owner/export rows with valid controls, no R5 recency rows, no accepted Crisis-capable R3 source labels.",
+      "evidence": "Post-082458 terminal assertions add 0 accepted rows and no valid source/control root.",
+      "requirement": "every_regime_confidence_95_plus",
+      "status": "blocked"
+    },
+    {
+      "blocker": "Validation cannot proceed without source/control unlock.",
+      "evidence": "No accepted cross-market/cross-timeframe MainRegimeV2 source export in counted post-082458 artifacts.",
+      "requirement": "other_market_other_cycle_validation",
+      "status": "blocked"
+    },
+    {
+      "blocker": "Provider readiness is not label/control evidence.",
+      "evidence": "Earlier provider readbacks exist; 082458 confirms owner/export credential hints absent and source/control gate still closed.",
+      "requirement": "ibkr_tradingview_yfinance_kraken_considered",
+      "status": "partial"
+    },
+    {
+      "blocker": "No canonical source/control merge input.",
+      "evidence": "Latest counted assertions keep selected-data AutoQuant promotion false.",
+      "requirement": "auto_quant_selected_data_promotion",
+      "status": "blocked"
+    },
+    {
+      "blocker": "Direct verifier, split calibration, and canonical merge remain disallowed.",
+      "evidence": "Latest counted assertions keep downstream promotion rerun false.",
+      "requirement": "filter_prebayes_bbn_catboost_execution_tree_chain",
+      "status": "blocked"
+    },
+    {
+      "blocker": "",
+      "evidence": "This run writes JSON, checklist CSV, assertion CSV, report, and assertion output.",
+      "requirement": "prompt_to_artifact_completion_audit",
+      "status": "covered"
+    },
+    {
+      "blocker": "",
+      "evidence": "New run root only; board update must append without cursor rewrite.",
+      "requirement": "multi_agent_append_only_safety",
+      "status": "covered"
+    },
+    {
+      "blocker": "Objective is not complete.",
+      "evidence": "any_valid_unlock=False; any_source_control=False; any_downstream=False; any_update_goal=False.",
+      "requirement": "update_goal_complete_allowed",
+      "status": "blocked"
+    }
+  ],
+  "downstream_promotion_rerun": false,
+  "gate_result": "current_objective_audit_after_082458_v1=not_complete_source_control_roots_absent_no_downstream_promotion",
+  "missing_assertions": [],
+  "observed_at_utc": "2026-05-12T00:28:29.017532+00:00",
+  "owner_route_env_names_present": [],
+  "owner_route_env_names_present_count": 0,
+  "partial_requirements": 1,
+  "run_id": "20260512T082720+0800-codex-current-objective-audit-after-082458-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_roots": [
+    {
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "sample_file_count": 0,
+      "sample_files": []
+    },
+    {
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "sample_file_count": 0,
+      "sample_files": []
+    },
+    {
+      "name": "r5_recency",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false,
+      "sample_file_count": 0,
+      "sample_files": []
+    },
+    {
+      "name": "r3_native_subhour",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": true,
+      "sample_file_count": 2,
+      "sample_files": [
+        "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+        "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+      ]
+    },
+    {
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": true,
+      "sample_file_count": 2,
+      "sample_files": [
+        "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+        "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+      ]
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

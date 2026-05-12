@@ -1,0 +1,4 @@
+provider,label,market,pair,requested_history_span,returned_first,returned_last,timeframe,kline_rows,exit,current_window_ready,portable_to_consumer,local_file_runtime_dependency
+Kraken,01_kraken_futures_pfxbtusd_1h_recent_20260301_20260512,futures,PF_XBTUSD,2026-03-01_to_2026-05-12,2026-03-01 00:00:00+00:00,2026-05-12 00:00:00+00:00,1h,1729,0,True,True,False
+Kraken,02_kraken_futures_pfxbtusd_1h_1y_20250512_20260512,futures,PF_XBTUSD,2025-05-12_to_2026-05-12,2025-05-12 00:00:00+00:00,2025-08-03 07:00:00+00:00,1h,2000,0,False,True,False
+Kraken,03_kraken_spot_xbtusd_1h_default,spot,XBTUSD,spot_default_last_ohlc_window,2026-04-12 09:00:00+00:00,2026-05-12 09:00:00+00:00,1h,721,0,True,True,False

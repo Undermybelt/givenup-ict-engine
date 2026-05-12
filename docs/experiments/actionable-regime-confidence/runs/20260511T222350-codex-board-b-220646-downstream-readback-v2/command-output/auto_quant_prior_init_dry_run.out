@@ -1,0 +1,173 @@
+{
+  "bbn_contradiction_lift": 1.0689695565749093,
+  "bbn_entropy_reduction": 0.008143858548060656,
+  "bbn_log_loss_delta": 3.913491490353339,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": true,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.5655817109113468,
+    4.5048858626442725e-15,
+    0.43441828908864866
+  ],
+  "force": true,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_NQ_20260511T141856.557346000Z",
+  "library_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/autoquant_strategy_library_source_root_stop_carry_longhorizon_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_NQ_20260511T142559.737585000Z",
+  "prior_init_history_path": "/tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1/auto-quant/NQ/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "/tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1/auto-quant/NQ/auto_quant_prior_init_NQ_20260511T142559.737585000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.5730427054075867,
+        3.551251008878127e-8,
+        0.4269572590799032
+      ],
+      "bbn_contradiction_after": 0.0013805505548257664,
+      "bbn_contradiction_before": 0.8552510687146321,
+      "bbn_contradiction_lift": 0.8538705181598063,
+      "bbn_entropy_after": 0.6824390406443103,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6826415829339475,
+      "bbn_log_loss_before": 4.586317526290959,
+      "bbn_log_loss_delta": 3.903675943357011,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.42691329459241323,
+        -0.00002196448748991122,
+        0.42693525907990315
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "",
+      "n_breakeven": 0,
+      "n_loss": 2116,
+      "n_win": 2832,
+      "strategy_name": "SourceRootStopCarryLongHorizonV1_Bull_bull_carry_h12_sl040_tp12",
+      "temper": 0.5,
+      "trade_count": 4948
+    },
+    {
+      "after_probs": [
+        0.5155374662072666,
+        2.0935893935906424e-10,
+        0.4844625335833745
+      ],
+      "bbn_contradiction_after": 0.0006820492157565619,
+      "bbn_contradiction_before": 0.11569259822269916,
+      "bbn_contradiction_lift": 0.1150105490069426,
+      "bbn_entropy_after": 0.6926642818343512,
+      "bbn_entropy_before": 0.6824390406443103,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6926854787666795,
+      "bbn_log_loss_before": 0.6994612479256387,
+      "bbn_log_loss_delta": 0.006775769158959166,
+      "before_probs": [
+        0.5730427054075867,
+        3.551251008878127e-8,
+        0.4269572590799032
+      ],
+      "diff": [
+        -0.057505239200320135,
+        -3.530315114942221e-8,
+        0.057505274503471315
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "",
+      "n_breakeven": 0,
+      "n_loss": 654,
+      "n_win": 695,
+      "strategy_name": "SourceRootStopCarryLongHorizonV1_Bear_bear_carry_h20_sl048_tp12",
+      "temper": 0.5,
+      "trade_count": 1349
+    },
+    {
+      "after_probs": [
+        0.5517654865159147,
+        3.040797957284884e-13,
+        0.44823451348378124
+      ],
+      "bbn_contradiction_after": 0.00010539060453417317,
+      "bbn_contradiction_before": 0.07256143122183042,
+      "bbn_contradiction_lift": 0.07245604061729626,
+      "bbn_entropy_after": 0.6877782339506182,
+      "bbn_entropy_before": 0.6926642818343512,
+      "bbn_entropy_reduction": 0.004886047883733036,
+      "bbn_log_loss_after": 0.6877672835131492,
+      "bbn_log_loss_before": 0.6904087095154993,
+      "bbn_log_loss_delta": 0.002641426002350067,
+      "before_probs": [
+        0.5155374662072666,
+        2.0935893935906424e-10,
+        0.4844625335833745
+      ],
+      "diff": [
+        0.036228020308648134,
+        -2.0905485956333575e-10,
+        -0.03622802009959325
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "",
+      "n_breakeven": 0,
+      "n_loss": 2465,
+      "n_win": 3035,
+      "strategy_name": "SourceRootStopCarryLongHorizonV1_Sideways_sideways_carry_h8_sl040_tp12",
+      "temper": 0.5,
+      "trade_count": 5500
+    },
+    {
+      "after_probs": [
+        0.5655817109113468,
+        4.5048858626442725e-15,
+        0.43441828908864866
+      ],
+      "bbn_contradiction_after": 0.00041552554572738833,
+      "bbn_contradiction_before": 0.02804797433659161,
+      "bbn_contradiction_lift": 0.027632448790864222,
+      "bbn_entropy_after": 0.6845204232862906,
+      "bbn_entropy_before": 0.6877782339506182,
+      "bbn_entropy_reduction": 0.0032578106643276206,
+      "bbn_log_loss_after": 0.6844656057207944,
+      "bbn_log_loss_before": 0.6848639575558136,
+      "bbn_log_loss_delta": 0.00039835183501923943,
+      "before_probs": [
+        0.5517654865159147,
+        3.040797957284884e-13,
+        0.44823451348378124
+      ],
+      "diff": [
+        0.013816224395432064,
+        -2.995749098658441e-13,
+        -0.013816224395132581
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "",
+      "n_breakeven": 0,
+      "n_loss": 231,
+      "n_win": 301,
+      "strategy_name": "SourceRootStopCarryLongHorizonV1_Crisis_crisis_carry_h8_sl048_tp12",
+      "temper": 0.5,
+      "trade_count": 532
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "NQ",
+  "temper": 0.5
+}

@@ -1,0 +1,15 @@
+RUN_ID 20260511T020421+0800-codex-main-regime-v2-parent-child-crosswalk
+REPORT docs/experiments/actionable-regime-confidence/runs/20260511T020421-codex-main-regime-v2-parent-child-crosswalk/crosswalk/main_regime_v2_parent_child_crosswalk.json
+ROOT_TARGETS Bull,Bear,Sideways,Crisis,Manipulation
+RESIDUAL_TARGET UnknownOrMixed
+CROSSWALK_LOCKED true
+ACCEPTED_95_ROOTS Crisis
+MISSING_95_ROOTS Bull,Bear,Sideways,Manipulation
+SUBTYPE_PACKETS_COUNT_AS_ROOT_ACCEPTANCE false
+UNLABELED_L2_SIGNATURES_COUNT_AS_MANIPULATION_ACCEPTANCE false
+OHLCV_PROXY_COUNT_AS_MANIPULATION_ACCEPTANCE false
+ACCEPTED_GATE partial_for_MainRegimeV2_Crisis_only_prior_evidence_preserved
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+FRESH_CALIBRATION_RERUN false
+TRADE_USABLE false

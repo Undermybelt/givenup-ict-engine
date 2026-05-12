@@ -1,0 +1,14 @@
+run_id=20260511T151720+0800-codex-spoofing-layering-matched-row-readiness-v1
+gate_result=spoofing_layering_matched_row_readiness_v1_rows_not_acquired
+positive_case_inventory_count=204
+matched_negative_cases_available=0
+confidence_gate_eligible_case_rows=0
+accepted_direct_manipulation_rows_added=0
+acquisition_ready=false
+full_objective_achieved=false
+call_update_goal=false
+raw_data_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+assertion_status=PASS

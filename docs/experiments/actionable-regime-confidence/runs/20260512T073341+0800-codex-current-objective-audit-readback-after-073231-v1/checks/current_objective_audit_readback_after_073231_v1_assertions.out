@@ -1,0 +1,12 @@
+gate_result=not_complete_required_source_control_unlock_absent_no_downstream
+raw_command_exit_failures=0
+r6_root_absent=true
+r5_root_absent=true
+r3_root_present_non_promoting=true
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+path_target_rows=1
+path_target_mature_rows=0
+path_target_calibrated_rows=0
+strict_full_objective=false
+update_goal=false

@@ -1,0 +1,375 @@
+{
+  "accepted_rows_added": 0,
+  "blockers": [
+    "herding_candidate_has_recency_and_label_like_states_but_single_panel_no_target_symbols_no_MainRegimeV2_cross_market_contract",
+    "macro_asset_candidate_has_current_features_but_no_source_owned_regime_labels",
+    "us_regimes_candidate_is_explicit_regime_source_but_date_stale_2024",
+    "required_target_roots_absent"
+  ],
+  "board_hash_before_artifact": "a0560dbc3919616d782db8282f9e3828442e6d91f2e5e9d19290ca7d790df31a",
+  "candidate_count": 4,
+  "candidate_summary": [
+    {
+      "accepted_rows_added": 0,
+      "dataset_ref": "mafaqbhatti/stock-market-regimes-20002026",
+      "date_max": "2026-01-30",
+      "downloaded_files": "not_redownloaded_prior_040919_recheck_used",
+      "gate": "prior_live_recheck_upstream_unchanged_no_r5_recency_tail_repair_no_promotion",
+      "label_like_columns": "regime_label;regime_confidence",
+      "last_updated": "2026-02-01 02:25:29.437000",
+      "license": "see_prior_040919_kaggle_metadata",
+      "r3_native_subhour_root_satisfied": false,
+      "r5_recency_extension_root_satisfied": false,
+      "r6_owner_export_root_satisfied": false,
+      "raw_data_committed": false,
+      "rows_scanned": 245021,
+      "title": "Stock Market Regimes (2000-2026)"
+    },
+    {
+      "accepted_rows_added": 0,
+      "dataset_ref": "igormerlinicomposer/herding-based-market-regime-dataset",
+      "date_max": "2026-04-09",
+      "downloaded_files": "alpha_trading_signals.csv;risk_analysis_output.csv",
+      "gate": "recency_label_like_single_panel_mapping_insufficient_no_promotion",
+      "label_like_columns": "Position;Position_Smart;Position_Smart_Lagged;Risk_State;Trend",
+      "last_updated": "2026-04-13 08:46:58",
+      "license": "CC0-1.0",
+      "r3_native_subhour_root_satisfied": false,
+      "r5_recency_extension_root_satisfied": false,
+      "r6_owner_export_root_satisfied": false,
+      "raw_data_committed": false,
+      "rows_scanned": 630,
+      "title": "Herding-Based Market Regime Dataset"
+    },
+    {
+      "accepted_rows_added": 0,
+      "dataset_ref": "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+      "date_max": "2026-02-25",
+      "downloaded_files": "Global_Market_Stress_and_Liquidity_Regimes.csv",
+      "gate": "feature_panel_no_source_regime_labels_no_promotion",
+      "label_like_columns": "",
+      "last_updated": "2026-02-25 04:11:37.147000",
+      "license": "CC-BY-NC-SA-4.0",
+      "r3_native_subhour_root_satisfied": false,
+      "r5_recency_extension_root_satisfied": false,
+      "r6_owner_export_root_satisfied": false,
+      "raw_data_committed": false,
+      "rows_scanned": 4150,
+      "title": "Algorithmic Trading: Macro Stress & Asset Regimes"
+    },
+    {
+      "accepted_rows_added": 0,
+      "dataset_ref": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "date_max": "2023-12-29",
+      "downloaded_files": "gmm_regimes.csv;hmm_regimes.csv;market_features_weekly.csv;market_features_weekly_std.csv",
+      "gate": "explicit_regime_source_stale_2024_no_r5_recency_no_promotion",
+      "label_like_columns": "Regime_GMM;Regime_HMM;Regime_label",
+      "last_updated": "2026-01-23 12:42:22",
+      "license": "MIT",
+      "r3_native_subhour_root_satisfied": false,
+      "r5_recency_extension_root_satisfied": false,
+      "r6_owner_export_root_satisfied": false,
+      "raw_data_committed": false,
+      "rows_scanned": 6256,
+      "title": "US Market Regimes Dataset (1995-2024)"
+    }
+  ],
+  "canonical_merge_allowed": false,
+  "command_results": [
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "market regime",
+        "--csv"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/kaggle_search_market_regime.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/kaggle_search_market_regime.stdout.txt",
+      "stem": "kaggle_search_market_regime"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "stock market regime",
+        "--csv"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/kaggle_search_stock_market_regime.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/kaggle_search_stock_market_regime.stdout.txt",
+      "stem": "kaggle_search_stock_market_regime"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "regime classification",
+        "--csv"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/kaggle_search_regime_classification.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/kaggle_search_regime_classification.stdout.txt",
+      "stem": "kaggle_search_regime_classification"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "volatility regime",
+        "--csv"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/kaggle_search_volatility_regime.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/kaggle_search_volatility_regime.stdout.txt",
+      "stem": "kaggle_search_volatility_regime"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "metadata",
+        "igormerlinicomposer/herding-based-market-regime-dataset",
+        "-p",
+        "/tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/metadata-herding"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/metadata_herding.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/metadata_herding.stdout.txt",
+      "stem": "metadata_herding"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "files",
+        "igormerlinicomposer/herding-based-market-regime-dataset"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/files_herding.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/files_herding.stdout.txt",
+      "stem": "files_herding"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "download",
+        "igormerlinicomposer/herding-based-market-regime-dataset",
+        "-p",
+        "/tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/data-herding",
+        "--unzip"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/download_herding.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/download_herding.stdout.txt",
+      "stem": "download_herding"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "metadata",
+        "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+        "-p",
+        "/tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/metadata-macro_asset"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/metadata_macro_asset.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/metadata_macro_asset.stdout.txt",
+      "stem": "metadata_macro_asset"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "files",
+        "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/files_macro_asset.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/files_macro_asset.stdout.txt",
+      "stem": "files_macro_asset"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "download",
+        "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+        "-p",
+        "/tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/data-macro_asset",
+        "--unzip"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/download_macro_asset.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/download_macro_asset.stdout.txt",
+      "stem": "download_macro_asset"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "metadata",
+        "nickdatak/us-market-regimes-dataset-1995-2024",
+        "-p",
+        "/tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/metadata-us_regimes_1995_2024"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/metadata_us_regimes_1995_2024.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/metadata_us_regimes_1995_2024.stdout.txt",
+      "stem": "metadata_us_regimes_1995_2024"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "files",
+        "nickdatak/us-market-regimes-dataset-1995-2024"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/files_us_regimes_1995_2024.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/files_us_regimes_1995_2024.stdout.txt",
+      "stem": "files_us_regimes_1995_2024"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/.local/bin/kaggle",
+        "datasets",
+        "download",
+        "nickdatak/us-market-regimes-dataset-1995-2024",
+        "-p",
+        "/tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/data-us_regimes_1995_2024",
+        "--unzip"
+      ],
+      "return_code": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/download_us_regimes_1995_2024.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1/command-output/download_us_regimes_1995_2024.stdout.txt",
+      "stem": "download_us_regimes_1995_2024"
+    }
+  ],
+  "current_cursor_observed": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "decision": "live_source_label_extension_discovery_after_041423_v1=candidates_found_no_target_root_unlock_no_promotion",
+  "download_candidates": [
+    "igormerlinicomposer/herding-based-market-regime-dataset",
+    "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+    "nickdatak/us-market-regimes-dataset-1995-2024"
+  ],
+  "downstream_chain_rerun_allowed": false,
+  "file_summary": [
+    {
+      "dataset_ref": "igormerlinicomposer/herding-based-market-regime-dataset",
+      "date_col": "Date",
+      "date_max": "2026-04-09",
+      "date_min": "2021-12-21",
+      "file_name": "alpha_trading_signals.csv",
+      "label_like_columns": "Risk_State;Position;Trend;Position_Smart;Position_Smart_Lagged",
+      "raw_committed_to_repo": false,
+      "rows": 315,
+      "sha256": "f1112a137b37e8a612e68dd3108e9b5e03acd4d196df2a0d674a058e1baef05e"
+    },
+    {
+      "dataset_ref": "igormerlinicomposer/herding-based-market-regime-dataset",
+      "date_col": "Date",
+      "date_max": "2026-04-09",
+      "date_min": "2021-12-21",
+      "file_name": "risk_analysis_output.csv",
+      "label_like_columns": "",
+      "raw_committed_to_repo": false,
+      "rows": 315,
+      "sha256": "1c73e4b6075645cc5ca93f1ca4448c671520fd956db44aeff8c9d20f010c058c"
+    },
+    {
+      "dataset_ref": "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+      "date_col": "Date",
+      "date_max": "2026-02-25",
+      "date_min": "2014-10-17",
+      "file_name": "Global_Market_Stress_and_Liquidity_Regimes.csv",
+      "label_like_columns": "",
+      "raw_committed_to_repo": false,
+      "rows": 4150,
+      "sha256": "3d649ccdc33da4c037f72fb45098c925c760fb4faa8b2dc3a4482a1760636fb1"
+    },
+    {
+      "dataset_ref": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "date_col": "Date",
+      "date_max": "2023-12-29",
+      "date_min": "1994-01-14",
+      "file_name": "gmm_regimes.csv",
+      "label_like_columns": "Regime_GMM;Regime_label",
+      "raw_committed_to_repo": false,
+      "rows": 1564,
+      "sha256": "ea915998bbf3c3a1ed74d698d20176583ad4e38263520142c9623f1230242392"
+    },
+    {
+      "dataset_ref": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "date_col": "",
+      "date_max": "",
+      "date_min": "",
+      "file_name": "hmm_regimes.csv",
+      "label_like_columns": "Regime_HMM;Regime_label",
+      "raw_committed_to_repo": false,
+      "rows": 1564,
+      "sha256": "7ab10bec788401e548840c3e0aa3965d607b72936d3f75334b66bb163500a151"
+    },
+    {
+      "dataset_ref": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "date_col": "Date",
+      "date_max": "2023-12-29",
+      "date_min": "1994-01-14",
+      "file_name": "market_features_weekly.csv",
+      "label_like_columns": "",
+      "raw_committed_to_repo": false,
+      "rows": 1564,
+      "sha256": "1f05b4e75f750cacf7ff8037aff2139a68e084fd4457166bd55c350dbdfa5f31"
+    },
+    {
+      "dataset_ref": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "date_col": "Date",
+      "date_max": "2023-12-29",
+      "date_min": "1994-01-14",
+      "file_name": "market_features_weekly_std.csv",
+      "label_like_columns": "",
+      "raw_committed_to_repo": false,
+      "rows": 1564,
+      "sha256": "4549e756d8bc28473e549482afb28e8e5f9eac4b1b7cf9a213278c28ff47d7f2"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T20:24:49.410108+00:00",
+  "new_candidate_refs": [
+    "igormerlinicomposer/herding-based-market-regime-dataset",
+    "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+    "nickdatak/us-market-regimes-dataset-1995-2024"
+  ],
+  "new_confidence_gate": false,
+  "next": "Preserve Current Cursor next_action; continue only after source-owned recency/native-subhour rows, verifier-native R6 controls, owner-export delivery, or explicit approval unlocks a target root.",
+  "queries": [
+    "market regime",
+    "stock market regime",
+    "regime classification",
+    "volatility regime"
+  ],
+  "r3_native_subhour_root_present": false,
+  "r3_native_subhour_root_satisfied": false,
+  "r5_recency_extension_root_present": false,
+  "r5_recency_extension_root_satisfied": false,
+  "r6_owner_export_root_present": false,
+  "r6_owner_export_root_satisfied": false,
+  "raw_data_committed": false,
+  "run_id": "20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "tmp_root": "/tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1",
+  "trade_usable": false,
+  "update_goal": false
+}

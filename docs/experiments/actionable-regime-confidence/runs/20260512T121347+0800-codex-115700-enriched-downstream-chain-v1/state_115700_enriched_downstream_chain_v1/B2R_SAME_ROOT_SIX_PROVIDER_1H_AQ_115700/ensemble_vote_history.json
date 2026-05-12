@@ -1,0 +1,79 @@
+[
+  {
+    "artifact_id": "ensemble-vote:analyze:2026-05-12T04:17:06Z",
+    "generated_at": "2026-05-12T04:17:06.479404Z",
+    "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:20260512T041706.327Z",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "d1fba762150c532c",
+      "config_hash": "f7acd9a02541f1db",
+      "data_fingerprint": "f9e930aacf1afc72"
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "final_action": "favor_mean_reversion_only",
+    "recommended_command": "ask-user: Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1'",
+    "human_next_triage": "hard_blocked=false ensemble_action=favor_mean_reversion_only consensus=0.686 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1'",
+    "hard_block": {
+      "active": false,
+      "stage": null,
+      "status": null,
+      "reason": null,
+      "evidence": [],
+      "command": null,
+      "human_action": null
+    },
+    "confidence": 0.6864723716926113,
+    "consensus_strength": 0.6864723716926113,
+    "disagreement_flags": [],
+    "executor_summaries": [
+      "executor=catboost_file action=favor_mean_reversion_only confidence=0.636 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.636",
+      "executor=xgboost_file action=favor_mean_reversion_only confidence=0.748 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.748"
+    ],
+    "split_explanations": [
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "posterior_override=range:0.748",
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "posterior_override=range:0.748"
+    ],
+    "executor_scorecards": [],
+    "executor_scorecards_source": "persisted",
+    "posterior_fingerprint": "f9e930aacf1afc72",
+    "posterior_normalization_status": "normalized",
+    "posterior_active_regime": "range",
+    "posterior_confidence": 0.5250864595751618,
+    "posterior_probabilities": {
+      "range": 0.7476877176681956,
+      "stress": 0.17754351056498482,
+      "transition": 0.07476877176681956,
+      "trend": 0.0
+    },
+    "posterior_evidence": [
+      "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.802",
+      "long/short support gap 0.015 is too small, so alignment is treated as mixed",
+      "pre_bayes_quality_score=0.525 gating_status=pass_neutralized",
+      "market_state_source=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.402",
+      "market_state_source=volatility=NormalVol:0.719 liquidity=NormalLiquidity:0.398 structure=Unknown:0.300 behavior=Neutral:0.450",
+      "market_state_source=rationale=volatility=NormalVol conf=0.72",
+      "market_state_source=rationale=primary=RangeConsolidation secondary=WideRange overall=0.40"
+    ]
+  }
+]

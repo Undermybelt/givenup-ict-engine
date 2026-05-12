@@ -1,0 +1,25 @@
+---
+strategy:         TomacAggressiveBE
+commit:           b640cc8
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data found. Terminating.
+traceback:
+
+---
+strategy:         TomacKillzoneBreakout
+commit:           b640cc8
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data found. Terminating.
+traceback:
+
+---
+strategy:         TomacRRWinRate
+commit:           b640cc8
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data found. Terminating.
+traceback:
+
+Done: 0 succeeded, 3 failed.

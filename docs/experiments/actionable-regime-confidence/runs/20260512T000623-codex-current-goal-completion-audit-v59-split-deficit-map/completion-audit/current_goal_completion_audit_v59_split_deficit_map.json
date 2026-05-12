@@ -1,0 +1,92 @@
+{
+  "all_commands_returned_zero": true,
+  "board_sha256_at_start": "8593cb09cabc29d6b9b99367d6d1f755bb76a939a67eafb7399ced39a7a3fe96",
+  "checklist_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000623-codex-current-goal-completion-audit-v59-split-deficit-map/completion-audit/current_goal_completion_audit_v59_checklist.csv",
+  "command_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000623-codex-current-goal-completion-audit-v59-split-deficit-map/completion-audit/current_goal_completion_audit_v59_commands.csv",
+  "command_returncodes": {
+    "analyze_demo": 0,
+    "auto_quant_status": 0,
+    "direct_manipulation_row_intake_verifier": 0,
+    "export_structural_path_ranking_target": 0,
+    "policy_training_status": 0,
+    "pre_bayes_status": 0,
+    "provider_status_agent": 0,
+    "workflow_status_execution_candidate": 0
+  },
+  "deficit_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000623-codex-current-goal-completion-audit-v59-split-deficit-map/completion-audit/r6_split_deficit_map_v59.csv",
+  "direct_species_closed": false,
+  "gate_result": "current_goal_completion_audit_v59=not_complete_r6_split_species_r5_r3_blocked",
+  "generated_at_utc": "2026-05-11T16:09:46.834749+00:00",
+  "minimum_all_success_rows_for_wilson95_ge_095": 73,
+  "new_confidence_gate": false,
+  "next_action": "Acquire direct event/order-lifecycle rows that deliberately fill chronological calibration/test support and concentrate on existing exact symbols/venues, while adding missing non-spoofing direct species; rerun V58 calibration and keep R5/R3 blocked.",
+  "objective_restatement": {
+    "deliverables": [
+      "Each active regime has 95-99 calibrated confidence.",
+      "Evidence validates across other markets and timeframes.",
+      "Provider/Auto-Quant/pre-Bayes/BBN/CatBoost/execution-tree chain is exercised with IBKR, TradingViewRemix, yfinance, and Kraken surfaces visible.",
+      "All findings are written back into the same Board A markdown without disrupting concurrent work."
+    ]
+  },
+  "r3_native_subhour_root": "absent from Current Cursor",
+  "r5_post_2026_01_30_source_panel_rows": "absent from Current Cursor",
+  "r6_live_verified": true,
+  "r6_pooled_wilson_pass": true,
+  "r6_split_gates_blocked": true,
+  "raw_data_committed": false,
+  "run_id": "20260512T000623-codex-current-goal-completion-audit-v59-split-deficit-map",
+  "runtime_code_changed": false,
+  "source_label_confidence_accepted_roots": "0/4 from Current Cursor",
+  "species_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000623-codex-current-goal-completion-audit-v59-split-deficit-map/completion-audit/r6_direct_species_deficit_v59.csv",
+  "split_deficit_summary": {
+    "chronological_group_split": {
+      "best_current_bucket": "chronological_train",
+      "best_current_bucket_pair_rows_needed": 35,
+      "buckets": 3,
+      "failing_buckets": 3,
+      "max_pair_rows_needed_for_one_bucket": 56,
+      "sum_pair_rows_needed_if_all_current_buckets_must_pass": 146
+    },
+    "heldout_symbol_exact": {
+      "best_current_bucket": "E-mini S&P 500 futures",
+      "best_current_bucket_pair_rows_needed": 64,
+      "buckets": 36,
+      "failing_buckets": 36,
+      "max_pair_rows_needed_for_one_bucket": 73,
+      "sum_pair_rows_needed_if_all_current_buckets_must_pass": 2559
+    },
+    "heldout_venue_exact": {
+      "best_current_bucket": "COMEX/CME Globex",
+      "best_current_bucket_pair_rows_needed": 44,
+      "buckets": 11,
+      "failing_buckets": 11,
+      "max_pair_rows_needed_for_one_bucket": 73,
+      "sum_pair_rows_needed_if_all_current_buckets_must_pass": 732
+    },
+    "pooled_all_source_rows": {
+      "best_current_bucket": "all_rows",
+      "best_current_bucket_pair_rows_needed": 0,
+      "buckets": 1,
+      "failing_buckets": 0,
+      "max_pair_rows_needed_for_one_bucket": 0,
+      "sum_pair_rows_needed_if_all_current_buckets_must_pass": 0
+    }
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "v58_live_readback": {
+    "chronological_split_gate": false,
+    "gate_result": "r6_live_intake_rehydrate_calibration_v1=live_intake_rehydrated_pooled_and_sidecar_axes_pass_split_species_full_goal_still_blocked",
+    "heldout_symbol_gate": false,
+    "heldout_venue_gate": false,
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T235815-codex-r6-live-intake-rehydrate-calibration-v1/r6-live-intake-rehydrate-calibration/r6_live_intake_rehydrate_calibration_v1.json",
+    "matched_negative_rows": 73,
+    "pooled_min_wilson95_lcb": 0.950006246616,
+    "positive_rows": 73,
+    "sidecar_broad_normal_lcb": null,
+    "strict_full_objective_achieved": false,
+    "update_goal": false
+  }
+}

@@ -1,0 +1,401 @@
+Discovered 3 strategies: BTCLeaderBreakV4, MomentumMTFConfluence, VolBreakoutSized
+Whitelist:   BTC/USDT,ETH/USDT,SOL/USDT,BNB/USDT,AVAX/USDT
+Default TR:  20210101-20251231
+
+Result for strategy BTCLeaderBreakV4
+                                                BACKTESTING REPORT                                                
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃     Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  BTC/USDT │    116 │         1.19 │        1617.372 │        16.17 │ 2 days, 22:59:00 │   41     0    75  35.3 │
+│  BNB/USDT │    117 │         1.89 │         833.188 │         8.33 │  2 days, 7:31:00 │   36     0    81  30.8 │
+│  SOL/USDT │    124 │         0.79 │         711.137 │         7.11 │  2 days, 3:11:00 │   39     0    85  31.5 │
+│  ETH/USDT │    120 │         0.66 │         631.516 │         6.32 │ 2 days, 12:17:00 │   38     0    82  31.7 │
+│ AVAX/USDT │    123 │          1.0 │         452.788 │         4.53 │  2 days, 3:43:00 │   37     0    86  30.1 │
+│     TOTAL │    600 │          1.1 │        4246.001 │        42.46 │  2 days, 9:47:00 │  191     0   409  31.8 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                  
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │     600 │          1.1 │        4246.001 │        42.46 │ 2 days, 9:47:00 │  191     0   409  31.8 │
+│     TOTAL │     600 │          1.1 │        4246.001 │        42.46 │ 2 days, 9:47:00 │  191     0   409  31.8 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                 
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │   600 │          1.1 │        4246.001 │        42.46 │ 2 days, 9:47:00 │  191     0   409  31.8 │
+│       TOTAL │   600 │          1.1 │        4246.001 │        42.46 │ 2 days, 9:47:00 │  191     0   409  31.8 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                        MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │    600 │          1.1 │        4246.001 │        42.46 │ 2 days, 9:47:00 │  191     0   409  31.8 │
+│     TOTAL │             │    600 │          1.1 │        4246.001 │        42.46 │ 2 days, 9:47:00 │  191     0   409  31.8 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                          SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                           ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2021-01-11 10:00:00             │
+│ Backtesting to                │ 2025-12-31 00:00:00             │
+│ Trading Mode                  │ Spot                            │
+│ Max open trades               │ 5                               │
+│                               │                                 │
+│ Total/Daily Avg Trades        │ 600 / 0.33                      │
+│ Starting balance              │ 10000 USDT                      │
+│ Final balance                 │ 14246.001 USDT                  │
+│ Absolute profit               │ 4246.001 USDT                   │
+│ Total profit %                │ 42.46%                          │
+│ CAGR %                        │ 7.38%                           │
+│ Sortino                       │ 4.96                            │
+│ Sharpe                        │ 0.94                            │
+│ Calmar                        │ 7.78                            │
+│ SQN                           │ 3.65                            │
+│ Profit factor                 │ 1.75                            │
+│ Expectancy (Ratio)            │ 7.08 (0.51)                     │
+│ Avg. daily profit             │ 2.341 USDT                      │
+│ Avg. stake amount             │ 695.835 USDT                    │
+│ Total trade volume            │ 840928.064 USDT                 │
+│                               │                                 │
+│ Best Pair                     │ BTC/USDT 16.17%                 │
+│ Worst Pair                    │ AVAX/USDT 4.53%                 │
+│ Best trade                    │ BNB/USDT 96.73%                 │
+│ Worst trade                   │ AVAX/USDT -14.43%               │
+│ Best day                      │ 685.933 USDT                    │
+│ Worst day                     │ -146.141 USDT                   │
+│ Days win/draw/lose            │ 104 / 1393 / 215                │
+│ Min/Max/Avg. Duration Winners │ 1d 05:00 / 11d 21:00 / 5d 02:07 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 4d 07:00 / 1d 03:45  │
+│ Max Consecutive Wins / Loss   │ 8 / 23                          │
+│ Rejected Entry signals        │ 0                               │
+│ Entry/Exit Timeouts           │ 0 / 0                           │
+│                               │                                 │
+│ Min balance                   │ 9970.237 USDT                   │
+│ Max balance                   │ 14297.248 USDT                  │
+│ Max % of account underwater   │ 5.75%                           │
+│ Absolute drawdown             │ 679.051 USDT (5.75%)            │
+│ Drawdown duration             │ 189 days 15:00:00               │
+│ Profit at drawdown start      │ 1818.241 USDT                   │
+│ Profit at drawdown end        │ 1139.19 USDT                    │
+│ Drawdown start                │ 2023-04-19 09:00:00             │
+│ Drawdown end                  │ 2023-10-26 00:00:00             │
+│ Market change                 │ 1299.76%                        │
+└───────────────────────────────┴─────────────────────────────────┘
+
+Backtested 2021-01-11 10:00:00 -> 2025-12-31 00:00:00 | Max open trades : 5
+                                                               STRATEGY SUMMARY                                                               
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃         Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ BTCLeaderBreakV4 │    600 │         1.10 │        4246.001 │        42.46 │ 2 days, 9:47:00 │  191     0   409  31.8 │ 679.051 USDT  5.75% │
+└──────────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┴─────────────────────┘
+---
+strategy:         BTCLeaderBreakV4
+timerange_label:  full
+timerange:        20210101-20251231
+commit:           34ba6b6
+basket:           BTC/USDT,ETH/USDT,SOL/USDT,BNB/USDT,AVAX/USDT
+sharpe:           0.9415
+sortino:          4.9623
+calmar:           7.7829
+total_profit_pct: 42.4600
+max_drawdown_pct: -5.7458
+trade_count:      600
+win_rate_pct:     31.8333
+profit_factor:    1.7469
+bah_sharpe:       1.1482
+bah_profit_pct:   1739.6470
+bah_dd_pct:       -82.1410
+per_pair:
+  BTC/USDT: sharpe=0.2446 trades=116 profit_pct=16.17 dd_pct=-1.89 wr=35.3 pf=2.28 (bah_profit=198.8 bah_dd=-76.6)
+  ETH/USDT: sharpe=0.1579 trades=120 profit_pct=6.32 dd_pct=-2.09 wr=31.7 pf=1.52 (bah_profit=307.7 bah_dd=-79.3)
+  SOL/USDT: sharpe=0.1713 trades=124 profit_pct=7.11 dd_pct=-1.78 wr=31.5 pf=1.65 (bah_profit=6666.7 bah_dd=-96.3)
+  BNB/USDT: sharpe=0.2119 trades=117 profit_pct=8.33 dd_pct=-2.35 wr=30.8 pf=1.79 (bah_profit=2187.9 bah_dd=-70.9)
+  AVAX/USDT: sharpe=0.1451 trades=123 profit_pct=4.53 dd_pct=-1.27 wr=30.1 pf=1.42 (bah_profit=237.6 bah_dd=-93.5)
+
+---
+strategy:         BTCLeaderBreakV4
+timerange_label:  SUMMARY
+commit:           34ba6b6
+robust_sharpe:    0.9415   # min across declared timeranges
+worst_profit_pct: 42.4600
+worst_dd_pct:     -5.7458
+avg_position_pct: 6.9583
+profit_floor:     PASS   (threshold ≥ 20.0% per timerange)
+min_position_size: PASS   (threshold ≥ 5.0%)
+pareto_dominated_by: none (non-dominated)
+
+Result for strategy MomentumMTFConfluence
+                                               BACKTESTING REPORT                                                
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ AVAX/USDT │    163 │         0.87 │        2518.069 │        25.18 │ 1 day, 13:53:00 │   59     0   104  36.2 │
+│  SOL/USDT │    167 │         0.47 │        1655.051 │        16.55 │ 1 day, 14:28:00 │   60     0   107  35.9 │
+│  ETH/USDT │    162 │         0.26 │         949.789 │          9.5 │ 1 day, 12:59:00 │   59     0   103  36.4 │
+│  BTC/USDT │    169 │          0.1 │         265.718 │         2.66 │ 1 day, 13:25:00 │   52     0   117  30.8 │
+│  BNB/USDT │    193 │         0.01 │         -64.488 │        -0.64 │ 1 day, 15:15:00 │   67     0   126  34.7 │
+│     TOTAL │    854 │         0.33 │        5324.139 │        53.24 │ 1 day, 14:02:00 │  297     0   557  34.8 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                  
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │     854 │         0.33 │        5324.139 │        53.24 │ 1 day, 14:02:00 │  297     0   557  34.8 │
+│     TOTAL │     854 │         0.33 │        5324.139 │        53.24 │ 1 day, 14:02:00 │  297     0   557  34.8 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                 
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │   854 │         0.33 │        5324.139 │        53.24 │ 1 day, 14:02:00 │  297     0   557  34.8 │
+│       TOTAL │   854 │         0.33 │        5324.139 │        53.24 │ 1 day, 14:02:00 │  297     0   557  34.8 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                        MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │    854 │         0.33 │        5324.139 │        53.24 │ 1 day, 14:02:00 │  297     0   557  34.8 │
+│     TOTAL │             │    854 │         0.33 │        5324.139 │        53.24 │ 1 day, 14:02:00 │  297     0   557  34.8 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2021-01-11 10:00:00            │
+│ Backtesting to                │ 2025-12-31 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 5                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 854 / 0.47                     │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 15324.139 USDT                 │
+│ Absolute profit               │ 5324.139 USDT                  │
+│ Total profit %                │ 53.24%                         │
+│ CAGR %                        │ 8.97%                          │
+│ Sortino                       │ 1.08                           │
+│ Sharpe                        │ 0.40                           │
+│ Calmar                        │ 2.42                           │
+│ SQN                           │ 1.30                           │
+│ Profit factor                 │ 1.17                           │
+│ Expectancy (Ratio)            │ 6.23 (0.11)                    │
+│ Avg. daily profit             │ 2.935 USDT                     │
+│ Avg. stake amount             │ 2158.407 USDT                  │
+│ Total trade volume            │ 3699274.277 USDT               │
+│                               │                                │
+│ Best Pair                     │ AVAX/USDT 25.18%               │
+│ Worst Pair                    │ BNB/USDT -0.64%                │
+│ Best trade                    │ AVAX/USDT 120.66%              │
+│ Worst trade                   │ SOL/USDT -16.23%               │
+│ Best day                      │ 1937.091 USDT                  │
+│ Worst day                     │ -697.429 USDT                  │
+│ Days win/draw/lose            │ 181 / 1205 / 332               │
+│ Min/Max/Avg. Duration Winners │ 0d 01:00 / 6d 22:00 / 2d 18:18 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 7d 10:00 / 0d 22:58 │
+│ Max Consecutive Wins / Loss   │ 8 / 20                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 8071.142 USDT                  │
+│ Max balance                   │ 15884.112 USDT                 │
+│ Max % of account underwater   │ 23.18%                         │
+│ Absolute drawdown             │ 2617.69 USDT (23.18%)          │
+│ Drawdown duration             │ 227 days 04:00:00              │
+│ Profit at drawdown start      │ 1292.818 USDT                  │
+│ Profit at drawdown end        │ -1324.872 USDT                 │
+│ Drawdown start                │ 2021-09-06 16:00:00            │
+│ Drawdown end                  │ 2022-04-21 20:00:00            │
+│ Market change                 │ 1299.76%                       │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2021-01-11 10:00:00 -> 2025-12-31 00:00:00 | Max open trades : 5
+                                                                  STRATEGY SUMMARY                                                                  
+┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓
+┃              Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃             Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩
+│ MomentumMTFConfluence │    854 │         0.33 │        5324.139 │        53.24 │ 1 day, 14:02:00 │  297     0   557  34.8 │ 2617.69 USDT  23.18% │
+└───────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┴──────────────────────┘
+---
+strategy:         MomentumMTFConfluence
+timerange_label:  full
+timerange:        20210101-20251231
+commit:           34ba6b6
+basket:           BTC/USDT,ETH/USDT,SOL/USDT,BNB/USDT,AVAX/USDT
+sharpe:           0.3993
+sortino:          1.0760
+calmar:           2.4190
+total_profit_pct: 53.2400
+max_drawdown_pct: -23.1801
+trade_count:      854
+win_rate_pct:     34.7775
+profit_factor:    1.1682
+bah_sharpe:       1.1482
+bah_profit_pct:   1739.6470
+bah_dd_pct:       -82.1410
+per_pair:
+  BTC/USDT: sharpe=0.0351 trades=169 profit_pct=2.66 dd_pct=-10.55 wr=30.8 pf=1.06 (bah_profit=198.8 bah_dd=-76.6)
+  ETH/USDT: sharpe=0.0835 trades=162 profit_pct=9.50 dd_pct=-10.52 wr=36.4 pf=1.18 (bah_profit=307.7 bah_dd=-79.3)
+  SOL/USDT: sharpe=0.1137 trades=167 profit_pct=16.55 dd_pct=-17.46 wr=35.9 pf=1.21 (bah_profit=6666.7 bah_dd=-96.3)
+  BNB/USDT: sharpe=-0.0075 trades=193 profit_pct=-0.64 dd_pct=-14.61 wr=34.7 pf=0.99 (bah_profit=2187.9 bah_dd=-70.9)
+  AVAX/USDT: sharpe=0.1206 trades=163 profit_pct=25.18 dd_pct=-15.01 wr=36.2 pf=1.31 (bah_profit=237.6 bah_dd=-93.5)
+
+---
+strategy:         MomentumMTFConfluence
+timerange_label:  SUMMARY
+commit:           34ba6b6
+robust_sharpe:    0.3993   # min across declared timeranges
+worst_profit_pct: 53.2400
+worst_dd_pct:     -23.1801
+avg_position_pct: 21.5841
+profit_floor:     PASS   (threshold ≥ 20.0% per timerange)
+min_position_size: PASS   (threshold ≥ 5.0%)
+pareto_dominated_by: none (non-dominated)
+
+Result for strategy VolBreakoutSized
+                                               BACKTESTING REPORT                                               
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  SOL/USDT │    244 │         1.22 │         686.165 │         6.86 │ 1 day, 9:00:00 │   80     0   164  32.8 │
+│  BNB/USDT │    269 │         0.89 │         583.206 │         5.83 │ 1 day, 7:25:00 │   87     0   182  32.3 │
+│ AVAX/USDT │    209 │         1.39 │         479.657 │          4.8 │ 1 day, 6:36:00 │   70     0   139  33.5 │
+│  BTC/USDT │    257 │         0.12 │         465.960 │         4.66 │ 1 day, 7:42:00 │   84     0   173  32.7 │
+│  ETH/USDT │    242 │         0.33 │         286.953 │         2.87 │ 1 day, 7:40:00 │   80     0   162  33.1 │
+│     TOTAL │   1221 │         0.77 │        2501.941 │        25.02 │ 1 day, 7:42:00 │  401     0   820  32.8 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                 
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │    1221 │         0.77 │        2501.941 │        25.02 │ 1 day, 7:42:00 │  401     0   820  32.8 │
+│     TOTAL │    1221 │         0.77 │        2501.941 │        25.02 │ 1 day, 7:42:00 │  401     0   820  32.8 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │  1221 │         0.77 │        2501.941 │        25.02 │ 1 day, 7:42:00 │  401     0   820  32.8 │
+│       TOTAL │  1221 │         0.77 │        2501.941 │        25.02 │ 1 day, 7:42:00 │  401     0   820  32.8 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                       MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │   1221 │         0.77 │        2501.941 │        25.02 │ 1 day, 7:42:00 │  401     0   820  32.8 │
+│     TOTAL │             │   1221 │         0.77 │        2501.941 │        25.02 │ 1 day, 7:42:00 │  401     0   820  32.8 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2021-01-11 10:00:00            │
+│ Backtesting to                │ 2025-12-31 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 5                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 1221 / 0.67                    │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 12501.941 USDT                 │
+│ Absolute profit               │ 2501.941 USDT                  │
+│ Total profit %                │ 25.02%                         │
+│ CAGR %                        │ 4.60%                          │
+│ Sortino                       │ 7.30                           │
+│ Sharpe                        │ 1.34                           │
+│ Calmar                        │ 6.20                           │
+│ SQN                           │ 3.64                           │
+│ Profit factor                 │ 1.48                           │
+│ Expectancy (Ratio)            │ 2.05 (0.32)                    │
+│ Avg. daily profit             │ 1.379 USDT                     │
+│ Avg. stake amount             │ 366.41 USDT                    │
+│ Total trade volume            │ 899070.709 USDT                │
+│                               │                                │
+│ Best Pair                     │ SOL/USDT 6.86%                 │
+│ Worst Pair                    │ ETH/USDT 2.87%                 │
+│ Best trade                    │ AVAX/USDT 205.77%              │
+│ Worst trade                   │ AVAX/USDT -13.39%              │
+│ Best day                      │ 344.265 USDT                   │
+│ Worst day                     │ -54.518 USDT                   │
+│ Days win/draw/lose            │ 217 / 1084 / 428               │
+│ Min/Max/Avg. Duration Winners │ 1d 00:00 / 8d 11:00 / 2d 13:32 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 2d 08:00 / 0d 17:07 │
+│ Max Consecutive Wins / Loss   │ 7 / 17                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 9996.429 USDT                  │
+│ Max balance                   │ 12526.912 USDT                 │
+│ Max % of account underwater   │ 4.25%                          │
+│ Absolute drawdown             │ 485.425 USDT (4.25%)           │
+│ Drawdown duration             │ 265 days 15:00:00              │
+│ Profit at drawdown start      │ 1413.94 USDT                   │
+│ Profit at drawdown end        │ 928.515 USDT                   │
+│ Drawdown start                │ 2023-01-22 21:00:00            │
+│ Drawdown end                  │ 2023-10-15 12:00:00            │
+│ Market change                 │ 1299.76%                       │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2021-01-11 10:00:00 -> 2025-12-31 00:00:00 | Max open trades : 5
+                                                              STRATEGY SUMMARY                                                               
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃         Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ VolBreakoutSized │   1221 │         0.77 │        2501.941 │        25.02 │ 1 day, 7:42:00 │  401     0   820  32.8 │ 485.425 USDT  4.25% │
+└──────────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┴─────────────────────┘
+---
+strategy:         VolBreakoutSized
+timerange_label:  full
+timerange:        20210101-20251231
+commit:           34ba6b6
+basket:           BTC/USDT,ETH/USDT,SOL/USDT,BNB/USDT,AVAX/USDT
+sharpe:           1.3390
+sortino:          7.3012
+calmar:           6.1958
+total_profit_pct: 25.0200
+max_drawdown_pct: -4.2529
+trade_count:      1221
+win_rate_pct:     32.8419
+profit_factor:    1.4751
+bah_sharpe:       1.1482
+bah_profit_pct:   1739.6470
+bah_dd_pct:       -82.1410
+per_pair:
+  BTC/USDT: sharpe=0.2262 trades=257 profit_pct=4.66 dd_pct=-1.32 wr=32.7 pf=1.38 (bah_profit=198.8 bah_dd=-76.6)
+  ETH/USDT: sharpe=0.1799 trades=242 profit_pct=2.87 dd_pct=-1.77 wr=33.1 pf=1.27 (bah_profit=307.7 bah_dd=-79.3)
+  SOL/USDT: sharpe=0.4167 trades=244 profit_pct=6.86 dd_pct=-0.68 wr=32.8 pf=1.77 (bah_profit=6666.7 bah_dd=-96.3)
+  BNB/USDT: sharpe=0.3074 trades=269 profit_pct=5.83 dd_pct=-1.52 wr=32.3 pf=1.48 (bah_profit=2187.9 bah_dd=-70.9)
+  AVAX/USDT: sharpe=0.2281 trades=209 profit_pct=4.80 dd_pct=-0.82 wr=33.5 pf=1.56 (bah_profit=237.6 bah_dd=-93.5)
+
+---
+strategy:         VolBreakoutSized
+timerange_label:  SUMMARY
+commit:           34ba6b6
+robust_sharpe:    1.3390   # min across declared timeranges
+worst_profit_pct: 25.0200
+worst_dd_pct:     -4.2529
+avg_position_pct: 3.6641
+profit_floor:     PASS   (threshold ≥ 20.0% per timerange)
+min_position_size: FAIL   (threshold ≥ 5.0%)
+pareto_dominated_by: none (non-dominated)
+
+Done: 3 backtests succeeded, 0 failed.

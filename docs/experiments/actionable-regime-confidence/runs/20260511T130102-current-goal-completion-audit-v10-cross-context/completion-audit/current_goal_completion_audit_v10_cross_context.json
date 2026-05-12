@@ -1,0 +1,193 @@
+{
+  "active_taxonomy": {
+    "name": "MainRegimeV2",
+    "price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "separate_direct_event_class_or_overlay": [
+      "Manipulation"
+    ]
+  },
+  "audited_files": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256": "bc199ae38c6a2822a9c2ee0ce7b6c521780dcaf7a248c09669c9fb233ca4df9b",
+    "per_regime_factor_supply_map": "docs/experiments/actionable-regime-confidence/runs/20260511T121643-codex-per-regime-factor-supply-map/factor-supply/per_regime_factor_supply_map.json",
+    "source_window_slot_calibration": "docs/experiments/actionable-regime-confidence/runs/20260511T124107-codex-source-window-slot-calibration-v1/source-window-slot-calibration/source_window_slot_calibration_v1.json",
+    "stock_panel_parent_root_abstain": "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json"
+  },
+  "decision": {
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "call_update_goal": false,
+    "full_objective_achieved": false,
+    "gate_result": "scoped_cross_context_price_roots_pass_full_matrix_still_blocked",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "scoped_cross_market_timeframe_price_roots_pass": true,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T05:04:31.532314+00:00",
+  "manipulation_evidence": {
+    "accepted_direct_varieties_present": [
+      "manipulation_multichain_wash_maker_v1",
+      "manipulation_telegram_pump_event_v1"
+    ],
+    "full_variety_coverage_complete": false
+  },
+  "next_action": "Use the scoped cross-context pass as downstream gating context only; continue acquiring exact labels or approved crosswalks for unsupported full-matrix cells and direct manipulation varieties.",
+  "objective": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md every regime to 95% confidence and validate on other markets/timeframes before reporting result",
+  "per_root_evidence": {
+    "Bear": {
+      "cross_context_supply": {
+        "accepted_supply_factor_count": 1,
+        "context_count": 2,
+        "contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "meets_min_scoped_cross_context_floor": true,
+        "min_reported_supply_wilson95_lcb": 0.992722,
+        "timeframe_count": 2,
+        "timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "scoped_cross_market_timeframe_status": "accepted_scoped",
+      "stock_panel_parent_root_gate": {
+        "accepted": true,
+        "gate_id": "bear_20d_selloff_cross_section_bottom_abstain_v1",
+        "min_cal_time_ticker_wilson95_lcb": 0.963920242,
+        "mode": "feature_only_non_future_panel_cross_section",
+        "scope": "daily US equities and US equity indices"
+      }
+    },
+    "Bull": {
+      "cross_context_supply": {
+        "accepted_supply_factor_count": 1,
+        "context_count": 2,
+        "contexts": [
+          "index",
+          "single_stock"
+        ],
+        "meets_min_scoped_cross_context_floor": true,
+        "min_reported_supply_wilson95_lcb": 0.952516,
+        "timeframe_count": 2,
+        "timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "scoped_cross_market_timeframe_status": "accepted_scoped",
+      "stock_panel_parent_root_gate": {
+        "accepted": true,
+        "gate_id": "bull_252d_upper_range_abstain_v1",
+        "min_cal_time_ticker_wilson95_lcb": 0.9797225384,
+        "mode": "feature_only_non_future",
+        "scope": "daily US equities and US equity indices"
+      }
+    },
+    "Crisis": {
+      "cross_context_supply": {
+        "accepted_supply_factor_count": 1,
+        "context_count": 5,
+        "contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "meets_min_scoped_cross_context_floor": true,
+        "min_reported_supply_wilson95_lcb": 0.995981,
+        "timeframe_count": 2,
+        "timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "scoped_cross_market_timeframe_status": "accepted_scoped",
+      "stock_panel_parent_root_gate": {
+        "accepted": true,
+        "gate_id": "crisis_deep_drawdown_rebound_high_vol_abstain_v1",
+        "min_cal_time_ticker_wilson95_lcb": 0.9619059575,
+        "mode": "feature_only_non_future",
+        "scope": "daily US equities and US equity indices"
+      }
+    },
+    "Sideways": {
+      "cross_context_supply": {
+        "accepted_supply_factor_count": 1,
+        "context_count": 2,
+        "contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "meets_min_scoped_cross_context_floor": true,
+        "min_reported_supply_wilson95_lcb": 0.988647,
+        "timeframe_count": 2,
+        "timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "scoped_cross_market_timeframe_status": "accepted_scoped",
+      "stock_panel_parent_root_gate": {
+        "accepted": true,
+        "gate_id": "sideways_source_confidence_low_range_abstain_v1",
+        "min_cal_time_ticker_wilson95_lcb": 0.9937112015,
+        "mode": "source_confidence_assisted_non_future_features",
+        "scope": "daily US equities and US equity indices"
+      }
+    }
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json",
+      "notes": "Uses stock-market-regimes parent labels; all roots target Bull/Bear/Sideways/Crisis directly.",
+      "requirement": "Every active MainRegimeV2 price root has a direct parent-root 95% confidence gate.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json",
+      "notes": "Checks taxonomy_role for all four stock-panel gates.",
+      "requirement": "Accepted gates are not child/sub-regime packets.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T121643-codex-per-regime-factor-supply-map/factor-supply/per_regime_factor_supply_map.json",
+      "notes": "This is a scoped floor, not the expanded full-matrix objective.",
+      "requirement": "Each price root has scoped validation on more than one market/context and more than one timeframe.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T124107-codex-source-window-slot-calibration-v1/source-window-slot-calibration/source_window_slot_calibration_v1.json",
+      "notes": "Source-window slot calibration accepted 0 crosswalk slots and remains blocked.",
+      "requirement": "Unsupported full-market/full-timeframe cells are not treated as complete.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T121643-codex-per-regime-factor-supply-map/factor-supply/per_regime_factor_supply_map.json",
+      "notes": "Direct social/event and direct on-chain wash-maker slices are present, but full variety coverage is not complete.",
+      "requirement": "Manipulation is direct evidence only and not represented by OHLCV proxy price roots.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "notes": "Board still records full objective gate as none.",
+      "requirement": "Do not call the active goal complete unless the full objective gate is closed.",
+      "status": "pass"
+    }
+  ],
+  "remaining_blockers": [
+    "Expanded full-market/full-timeframe/full-species matrix remains incomplete.",
+    "Source-window slot calibration accepted 0 crosswalk slots for monthly S&P-linked Bull/Bear/Crisis cells.",
+    "The stock-market-regimes parent-root panel is daily US equities/indices only.",
+    "Sideways stock-panel gate depends on the source regime_confidence field.",
+    "Manipulation direct evidence remains scoped to known social/event and wash-maker varieties, not full spoofing/layering/quote-stuffing/order-book coverage."
+  ],
+  "run_id": "20260511T130102+0800-current-goal-completion-audit-v10-cross-context"
+}

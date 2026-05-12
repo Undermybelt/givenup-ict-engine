@@ -1,0 +1,151 @@
+{
+  "auto_quant_handoff_candidate": {
+    "agent_prompt": "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, work the 'expansion_manipulation' objective, and read docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/program.md before acting. Run uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py on the current active strategy set, review measured results, and iterate only from backtest evidence. Never treat 'no strategies found' as completion. Export the best measured candidate package back into ict-engine state.",
+    "artifact_id": "auto-quant-handoff:factor_research:BTC:20260512T043524.601Z",
+    "backend": "auto-quant",
+    "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json",
+    "data_ready": true,
+    "dependency_status": {
+      "adapter_version": "v1",
+      "bootstrap_needed": false,
+      "config_present": true,
+      "current_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+      "healthy": true,
+      "last_sync": "2026-05-12T04:33:07.693860Z",
+      "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant",
+      "managed_repo_present": true,
+      "notes": [],
+      "pinned_ref": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+      "repo_url": "/Users/thrill3r/Auto-Quant",
+      "required_files": [
+        "README.md",
+        "program.md",
+        "prepare.py",
+        "run.py",
+        "versions/README.md"
+      ],
+      "tracked_branch": "autoresearch/apr26",
+      "update_available": false,
+      "upstream_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f"
+    },
+    "handoff_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/BTC/auto_quant_handoff.factor_research.json",
+    "handoff_kind": "factor_research",
+    "iterations": null,
+    "mutation_spec_path": null,
+    "notes": [
+      "auto_quant_active_strategy_count=3",
+      "requested_at=20260512T043524.601Z"
+    ],
+    "objective": "expansion_manipulation",
+    "paired_data_path": null,
+    "readiness": {
+      "bootstrap_needed": false,
+      "data_ready": true,
+      "dependency_healthy": true,
+      "dependency_status": {
+        "adapter_version": "v1",
+        "bootstrap_needed": false,
+        "config_present": true,
+        "current_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+        "healthy": true,
+        "last_sync": "2026-05-12T04:33:07.693860Z",
+        "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant",
+        "managed_repo_present": true,
+        "notes": [],
+        "pinned_ref": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+        "repo_url": "/Users/thrill3r/Auto-Quant",
+        "required_files": [
+          "README.md",
+          "program.md",
+          "prepare.py",
+          "run.py",
+          "versions/README.md"
+        ],
+        "tracked_branch": "autoresearch/apr26",
+        "update_available": false,
+        "upstream_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f"
+      },
+      "healthy": true,
+      "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant",
+      "next_step": {
+        "action_type": "run_command",
+        "blocked_reason": null,
+        "deferred_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py",
+        "prompt": null,
+        "user_input_required": false
+      },
+      "notes": [
+        "auto_quant_profile=synthetic_ohlcv"
+      ],
+      "recommended_next_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py",
+      "recommended_next_command_meta": {
+        "blocked": false,
+        "executable_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py",
+        "kind": "other",
+        "prompt": null,
+        "recorded_data_paths": [],
+        "requires_user_input": false
+      },
+      "status": "dependency_ready_data_ready",
+      "update_available": false,
+      "workspace": {
+        "config_json": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/config.tomac.json",
+        "data_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/user_data/data",
+        "expected_data_files": [
+          "BTC_USD-1h.feather",
+          "BTC_USD-4h.feather",
+          "BTC_USD-1d.feather"
+        ],
+        "prepare_script": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/prepare_external.py",
+        "profile_name": "synthetic_ohlcv",
+        "program_md": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/program.md",
+        "repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant",
+        "run_script": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py",
+        "strategies_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/user_data/strategies_external",
+        "strategy_seed_source_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/user_data/strategies"
+      }
+    },
+    "session_id": null,
+    "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1",
+    "suggested_commands": [
+      "cat docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/program.md",
+      "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py"
+    ],
+    "suggested_next_steps": [
+      "open Auto-Quant program.md and stage a research loop for the requested objective",
+      "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
+    ],
+    "symbol": "BTC",
+    "workspace": {
+      "config_json": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/config.tomac.json",
+      "data_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/user_data/data",
+      "expected_data_files": [
+        "BTC_USD-1h.feather",
+        "BTC_USD-4h.feather",
+        "BTC_USD-1d.feather"
+      ],
+      "prepare_script": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/prepare_external.py",
+      "profile_name": "synthetic_ohlcv",
+      "program_md": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/program.md",
+      "repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant",
+      "run_script": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py",
+      "strategies_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/user_data/strategies_external",
+      "strategy_seed_source_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/user_data/strategies"
+    }
+  },
+  "human_output": "Auto-Quant handoff | status=dependency_ready_data_ready | objective=expansion_manipulation | data_ready=true\nNext: open Auto-Quant program.md and stage a research loop for the requested objective\nRun: uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py\nReview: ict-engine auto-quant-adoption-review --symbol BTC --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1 --artifact-id auto-quant-handoff:factor_research:BTC:20260512T043524.601Z\nWorkflow: ict-engine workflow-status --symbol BTC --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1 --human",
+  "recommended_next_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1/.deps/auto-quant/run_tomac.py",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "review_command": "ict-engine auto-quant-adoption-review --symbol BTC --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1 --artifact-id auto-quant-handoff:factor_research:BTC:20260512T043524.601Z",
+  "suggested_next_steps": [
+    "open Auto-Quant program.md and stage a research loop for the requested objective",
+    "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
+  ],
+  "workflow_status_command": "ict-engine workflow-status --symbol BTC --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/state_btc_alias_aq_v1 --human"
+}

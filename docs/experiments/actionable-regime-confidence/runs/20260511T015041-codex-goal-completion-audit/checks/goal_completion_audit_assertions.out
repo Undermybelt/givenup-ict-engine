@@ -1,0 +1,14 @@
+RUN_ID 20260511T015041+0800-codex-goal-completion-audit
+ACTIVE_AXIS MainRegimeV2
+OBJECTIVE every_active_regime_confidence_at_or_above_95_before_result
+GOAL_ACHIEVED false
+ACCEPTED_95_ROOTS Crisis
+MISSING_95_ROOTS Bull,Bear,Sideways,Manipulation
+SUBTYPE_PACKETS_DO_NOT_COUNT_AS_ROOT_COMPLETION true
+MANIPULATION_EVENT_GATE_ACCEPTED_95 false
+PROVIDER_EXPORT_READY_NOW false
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+TRADE_USABLE false
+GATE blocked_missing_required_roots
+

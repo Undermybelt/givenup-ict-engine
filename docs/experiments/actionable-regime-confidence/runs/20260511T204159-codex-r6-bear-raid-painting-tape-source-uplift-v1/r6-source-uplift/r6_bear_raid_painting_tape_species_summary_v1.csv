@@ -1,0 +1,3 @@
+species,candidate_surfaces,positive_surface_count,matched_controls_acquired,intake_files_created,gate
+bear_raid,2,2,False,False,candidate_surface_found_rows_not_acquired
+painting_tape,3,3,False,False,candidate_surface_found_rows_not_acquired

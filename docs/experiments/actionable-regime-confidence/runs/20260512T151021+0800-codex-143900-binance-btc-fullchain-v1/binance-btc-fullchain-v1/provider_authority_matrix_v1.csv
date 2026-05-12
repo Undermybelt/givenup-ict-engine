@@ -1,0 +1,7 @@
+provider,provider_requested,provider_data_acquired,provider_unreachable,local_cache_replay,provider_symbol,timeframe,rows,evidence_source,notes
+Binance,True,True,False,False,BTCUSDT,1h,76429,docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv,"provider-backed longspan input from 143900 smoke, carried into AQ/fullchain in this root"
+IBKR,True,True,False,False,SPY STK SMART/ARCA,1h,20034,docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/ibkr_spy_1h_5y.normalized.csv,cross-market provider context from 143900 smoke; not the AQ training input in this root
+yfinance/YF,True,True,False,False,ES=F,1h,11383,docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv,cross-market provider context from 143900 smoke; not the AQ training input in this root
+TradingViewRemix/TVR,True,False,True,False,NASDAQ:QQQ,1h,0,20260512T141554 provider matrix,TVR get_ohlcv failure remains a provider-context blocker
+Kraken,True,False,False,False,PF_XBTUSD/PF_SPXUSD,1h,2000,20260512T141554 provider matrix,Kraken long request capped; not used as AQ training input in this root
+Bybit,True,False,False,False,BTCUSDT linear,1h,1000,20260512T141554 provider matrix,Bybit single-page cap; not longspan until pagination is fixed

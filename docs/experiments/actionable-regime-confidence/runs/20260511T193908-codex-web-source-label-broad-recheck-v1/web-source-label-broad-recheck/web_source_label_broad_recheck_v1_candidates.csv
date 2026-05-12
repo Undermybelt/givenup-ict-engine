@@ -1,0 +1,4 @@
+source,ref,url,disposition,accepted_rows_added,reason
+kaggle,mafaqbhatti/stock-market-regimes-20002026,https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026,known_source_no_new_strict_or_transfer_closure,0,"Already screened and live-recency-checked; still no XOM/Sideways tail repair rows and no new strict 1h source-owned sessions beyond already-counted support."
+huggingface,sujinwo/tsie-market-regime-dataset,https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset,known_rule_or_generated_label_surface_no_mainregimev2_crosswalk,0,"Already screened; has regime_label-style fields but no source-owner approved MainRegimeV2 crosswalk and remains proxy/rule-generated evidence."
+web,general web results,,method_or_article_not_row_level_source_labels,0,"Search results include method pages, blog/model descriptions, and papers about regimes, but not row-level source-owned labels with provenance and MainRegimeV2 equivalence."

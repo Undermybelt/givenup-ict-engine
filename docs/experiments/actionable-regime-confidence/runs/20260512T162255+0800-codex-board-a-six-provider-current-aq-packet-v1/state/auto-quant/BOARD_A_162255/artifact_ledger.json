@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto-quant-agent-material-batch:BOARD_A_162255:20260512T084632.203Z",
+    "artifact_kind": "auto_quant_agent_material_batch",
+    "artifact_id": "auto-quant-agent-material-batch:BOARD_A_162255:20260512T084632.203Z",
+    "version": 1,
+    "generated_at": "2026-05-12T08:46:32.203875Z",
+    "symbol": "BOARD_A_162255",
+    "source_phase": "auto_quant_agent_material_batch",
+    "source_run_id": null,
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/state/auto-quant/BOARD_A_162255/auto_quant_agent_material_batch.20260512T084632.203Z.json",
+    "status": "batch_ready_for_dispatch",
+    "promote_candidate": false,
+    "actionable": true,
+    "decision_hint": "agent_material_dispatch",
+    "review_reason": "jobs=6 max_parallel=1",
+    "review_rule_version": "auto-quant-agent-material-batch-v1",
+    "top_factor_name": null,
+    "top_factor_action": "dispatch",
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 6,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

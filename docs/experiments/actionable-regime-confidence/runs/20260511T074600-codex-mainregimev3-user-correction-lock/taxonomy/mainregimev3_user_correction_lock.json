@@ -1,0 +1,39 @@
+{
+  "schema_version": "mainregimev3-user-correction-lock/v1",
+  "loop_id": "20260511T074600+0800-codex-mainregimev3-user-correction-lock",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T074600-codex-mainregimev3-user-correction-lock",
+  "purpose": "Lock the latest user-corrected taxonomy after concurrent V2 conflict-resolution writebacks.",
+  "supersedes_conflicting_writebacks": [
+    "20260511T074500+0800-codex-taxonomy-conflict-resolution",
+    "20260511T074243+0800-codex-mainregimev2-external-correction-repoint",
+    "20260511T074000+0800-codex-mainregimev2-reassert-after-v3-drift"
+  ],
+  "active_taxonomy": "MainRegimeV3",
+  "active_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "CrisisStress",
+    "Manipulation"
+  ],
+  "residual": "UnknownOrMixed",
+  "must_not_count_as_root_completion": [
+    "TrendExpansion",
+    "RangeConsolidation",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "SessionLiquidityCoreViable",
+    "ThinLiquidity",
+    "HMM_state_ids_without_source_labels",
+    "change_point_boundaries_without_source_labels",
+    "OHLCV_manipulation_proxies"
+  ],
+  "status": {
+    "accepted_95_roots_from_this_lock": [],
+    "full_universe_full_cycle_goal_achieved": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "next_action": "Rerun attachability/full-coverage disposition against MainRegimeV3 roots and keep missing source-label cells blocked."
+}

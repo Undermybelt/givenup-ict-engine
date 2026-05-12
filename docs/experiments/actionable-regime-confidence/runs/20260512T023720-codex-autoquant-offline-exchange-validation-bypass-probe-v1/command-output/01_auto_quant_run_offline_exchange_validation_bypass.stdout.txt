@@ -1,0 +1,425 @@
+Discovered 3 strategies: CrashRebound, PerPairMR, RegimeAdaptiveBNB
+Whitelist:   BTC/USDT,ETH/USDT,SOL/USDT,BNB/USDT,AVAX/USDT
+Default TR:  20210101-20251231
+
+---
+strategy:         CrashRebound
+timerange_label:  bull_2021
+timerange:        20210101-20211231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         CrashRebound
+timerange_label:  winter_2022
+timerange:        20220101-20221231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         CrashRebound
+timerange_label:  recovery_23_25
+timerange:        20230101-20251231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         CrashRebound
+timerange_label:  full_5y
+timerange:        20210101-20251231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         PerPairMR
+timerange_label:  bull_2021
+timerange:        20210101-20211231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         PerPairMR
+timerange_label:  winter_2022
+timerange:        20220101-20221231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         PerPairMR
+timerange_label:  recovery_23_25
+timerange:        20230101-20251231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         PerPairMR
+timerange_label:  full_5y
+timerange:        20210101-20251231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         RegimeAdaptiveBNB
+timerange_label:  bull_2021
+timerange:        20210101-20211231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         RegimeAdaptiveBNB
+timerange_label:  winter_2022
+timerange:        20220101-20221231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         RegimeAdaptiveBNB
+timerange_label:  recovery_23_25
+timerange:        20230101-20251231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+---
+strategy:         RegimeAdaptiveBNB
+timerange_label:  full_5y
+timerange:        20210101-20251231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Markets were not loaded.
+traceback:
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 182, in __init__
+    self.pairlists.refresh_pairlist(only_first=self.dynamic_pairlist)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 157, in refresh_pairlist
+    pairlist = self._pairlist_handlers[0].gen_pairlist(tickers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py", line 62, in gen_pairlist
+    wl = self.verify_whitelist(
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/IPairList.py", line 230, in verify_whitelist
+    return self._pairlistmanager.verify_whitelist(pairlist, logmethod, keep_invalid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlistmanager.py", line 214, in verify_whitelist
+    whitelist = expand_pairlist(pairlist, self._exchange.get_markets().keys(), keep_invalid)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 541, in get_markets
+    raise OperationalException("Markets were not loaded.")
+freqtrade.exceptions.OperationalException: Markets were not loaded.
+
+
+Done: 0 backtests succeeded, 12 failed.

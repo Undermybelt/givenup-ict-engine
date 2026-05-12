@@ -1,0 +1,99 @@
+{
+  "assertions": {
+    "candidate_unlock_file_count": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "known_stock_regime_files_only_for_name_match": true,
+    "recent_candidate_file_count": 4,
+    "source_control_evidence_acquired": false,
+    "stock_profile_max_date": "2026-01-30",
+    "stock_profile_post_2026_01_30_rows": 0,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "board_sha256_before_artifact": "e5b49122938cb6c48926e3e9e713c7cc4052ef5802251eda9602eedccea13adc",
+  "decision": "The bounded recent local sweep found only the known stock-market-regimes-20002026 CSV/parquet context files as name-matched arrivals. No vendor ticket/export/license response, DBN/MBO/MBP/depth/order-lifecycle file, required R6 filename, MainRegimeV2 source export, or native-subhour file arrived outside the target roots.",
+  "gate_result": "local_download_arrival_sweep_after_071837_v1=known_stock_regime_download_only_no_vendor_export_no_unlock",
+  "generated_at_local": "2026-05-12T07:21:41.341284+08:00",
+  "known_stock_market_regimes_profile": {
+    "columns": [
+      "date",
+      "ticker",
+      "close",
+      "returns",
+      "volatility",
+      "regime_label",
+      "regime_confidence",
+      "macro_context",
+      "unemployment_rate",
+      "fed_funds_rate",
+      "cpi",
+      "10y_treasury",
+      "2y_treasury",
+      "vix"
+    ],
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 103766,
+      "Crisis": 29632,
+      "High-volatility": 16,
+      "Sideways": 56668
+    },
+    "max_date": "2026-01-30",
+    "min_date": "2000-01-03",
+    "post_2026_01_30_rows": 0,
+    "row_count": 245021
+  },
+  "next": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned post-2026-01-30 R5 rows matching the source-panel schema, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export.",
+  "recent_candidates": [
+    {
+      "classification": "known_kaggle_stock_market_regimes_context_only",
+      "mtime_epoch": 1778464383,
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_analysis_by_ticker.csv",
+      "sha256": "4f393baa07e29de8e274e49ef1d9c4ecc006300827d76bdb1d6cf0d2559ee101",
+      "size_bytes": 1278,
+      "suffix": ".csv"
+    },
+    {
+      "classification": "known_kaggle_stock_market_regimes_context_only",
+      "mtime_epoch": 1778464383,
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_by_year.csv",
+      "sha256": "9e3fb7bf707a544210a80db3aec9fffc4e257b4a82cce1b934c3fe2cd02cd08e",
+      "size_bytes": 758,
+      "suffix": ".csv"
+    },
+    {
+      "classification": "known_kaggle_stock_market_regimes_context_only",
+      "mtime_epoch": 1778464384,
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+      "sha256": null,
+      "size_bytes": 37155794,
+      "suffix": ".csv"
+    },
+    {
+      "classification": "known_kaggle_stock_market_regimes_context_only",
+      "mtime_epoch": 1778464384,
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.parquet",
+      "sha256": "d22e8aa213f6d97b15348a3aa8f507929fed79d9a0aa3764badddb397a2f20dd",
+      "size_bytes": 6583934,
+      "suffix": ".parquet"
+    }
+  ],
+  "run_id": "20260512T072002+0800-codex-local-download-arrival-sweep-after-071837-v1",
+  "scope": {
+    "max_depth": 4,
+    "mode": "bounded_recent_local_download_vendor_arrival_sweep",
+    "mtime_window_days": 1,
+    "no_downstream_promotion": true,
+    "no_root_mutation": true,
+    "read_only": true,
+    "roots": [
+      "/Users/thrill3r/Downloads",
+      "/Users/thrill3r/Desktop",
+      "/Users/thrill3r/Documents"
+    ],
+    "update_goal": false
+  }
+}

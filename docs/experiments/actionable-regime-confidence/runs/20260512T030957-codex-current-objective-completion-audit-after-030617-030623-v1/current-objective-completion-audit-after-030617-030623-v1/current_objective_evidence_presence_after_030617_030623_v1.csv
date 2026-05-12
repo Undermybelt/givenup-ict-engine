@@ -1,0 +1,6 @@
+artifact_id,path,exists,classification
+030229_current_objective_audit,docs/experiments/actionable-regime-confidence/runs/20260512T030229-codex-current-objective-completion-audit-after-025816-v1/current-objective-completion-audit-after-025816-v1/current_objective_completion_audit_after_025816_v1.json,true,durable_prior_audit
+030300_provider_autoquant_refresh,docs/experiments/actionable-regime-confidence/runs/20260512T030300-codex-provider-autoquant-readonly-refresh-after-030147-v1,true,readiness_only
+030617_owner_export_verifier_json,docs/experiments/actionable-regime-confidence/runs/20260512T030617-codex-r6-owner-export-target-verifier-after-030300-v1/r6-owner-export-target-verifier-after-030300-v1/r6_owner_export_target_verifier_after_030300_v1.json,true,fail_closed_verifier
+030623_source_control_poll_json,docs/experiments/actionable-regime-confidence/runs/20260512T030623-codex-source-control-arrival-poll-after-030300-v1/source-control-arrival-poll-after-030300-v1/source_control_arrival_poll_after_030300_v1.json,true,durable_poll
+030722_source_control_poll_root,docs/experiments/actionable-regime-confidence/runs/20260512T030722-codex-source-control-arrival-poll-after-030300-v1,false,missing_board_reference

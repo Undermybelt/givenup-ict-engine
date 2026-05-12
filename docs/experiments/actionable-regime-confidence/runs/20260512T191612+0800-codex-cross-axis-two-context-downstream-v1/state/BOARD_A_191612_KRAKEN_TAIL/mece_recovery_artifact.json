@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-BOARD_A_191612_KRAKEN_TAIL-1778584837854",
+  "generated_at": "2026-05-12T11:20:37.854861Z",
+  "symbol": "BOARD_A_191612_KRAKEN_TAIL",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "2a26dafd377ff2f4",
+  "execution_validity_summary": "execution_blocked=370;execution_observe_only=229;execution_ready=121",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        216
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4465968136733067,
+      "execution_readiness_drift": 0.00016797668137877729,
+      "sample_count": 216
+    },
+    {
+      "horizon_bars": [
+        216,
+        576
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.44359647708313765,
+      "execution_readiness_drift": -0.00005068898472954211,
+      "sample_count": 360
+    },
+    {
+      "horizon_bars": [
+        576,
+        720
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.40756216208385104,
+      "execution_readiness_drift": -0.0009677300407706864,
+      "sample_count": 144
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "9a3add7c3f6dd999",
+    "data_fingerprint": "7cd858a2f3e60a4f"
+  }
+}

@@ -1,0 +1,9 @@
+label,period,start,end,high_conf_rows,support_pass
+Bull,early_2000s_2000_2006,2000-01-01,2006-12-31,1328,true
+Bull,gfc_recovery_2007_2013,2007-01-01,2013-12-31,2354,true
+Bull,late_cycle_2014_2019,2014-01-01,2019-12-31,3396,true
+Bull,covid_inflation_2020_2026,2020-01-01,2026-12-31,3115,true
+Sideways,early_2000s_2000_2006,2000-01-01,2006-12-31,1410,true
+Sideways,gfc_recovery_2007_2013,2007-01-01,2013-12-31,1937,true
+Sideways,late_cycle_2014_2019,2014-01-01,2019-12-31,3396,true
+Sideways,covid_inflation_2020_2026,2020-01-01,2026-12-31,1943,true

@@ -1,0 +1,3263 @@
+{
+  "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "auto_quant": {
+    "config": "/Users/thrill3r/Auto-Quant/config.tomac.json",
+    "data_path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+    "pinned_ref": "34ba6b6",
+    "root": "/Users/thrill3r/Auto-Quant",
+    "strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/strategies"
+  },
+  "board_b": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+  "completion": {
+    "auto_quant_checkout_changed": false,
+    "downstream_runtime_consumed_branch_path": false,
+    "raw_auto_quant_data_committed": false,
+    "run_local_strategy_variants_written": true,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false
+  },
+  "decision": {
+    "board_state": "rejected",
+    "branch_paths_evaluated": 5,
+    "branch_paths_passed": 0,
+    "downstream_consumption": "not_started:blocked_by_required_branch_rc_spa_hard_gates",
+    "gate_result": "fail:all_branch_paths_failed_rc_spa_hard_gates",
+    "next_action": "B2R-repeat: extend direct crisis/manipulation rows or synthesize a branch-specific recipe that increases Bear/Sideways/Crisis fold depth without losing edge.",
+    "primary_blocker": "TomacNQVariantMatrixV1 estimates PBO from 8 variants x 5 folds, but required Bear/Sideways/Crisis/Manipulation branch paths still do not all satisfy RC-SPA.",
+    "required_failed_roots": [
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation(scoped)"
+    ],
+    "root_trade_counts_selected": {
+      "Bear": 45,
+      "Bull": 538,
+      "Crisis": 7,
+      "Manipulation(scoped)": 0,
+      "Sideways": 113
+    },
+    "stable_profit_score": 69.57419312683517,
+    "total_trade_rows_full_matrix": 4074
+  },
+  "fold_matrix": [
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.01815934913040958,
+      "fold_trades": 110,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.09647986369302365,
+      "fold_trades": 113,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.11492826757134413,
+      "fold_trades": 86,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.013983613541241273,
+      "fold_trades": 2,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.011770269949427226,
+      "fold_trades": 3,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.005303993604142079,
+      "fold_trades": 1,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.051908731403550526,
+      "fold_trades": 6,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0240286334060079,
+      "fold_trades": 21,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.05927980069460282,
+      "fold_trades": 20,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.023768813387490165,
+      "fold_trades": 14,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.010661792249629702,
+      "fold_trades": 3,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.013565320977108906,
+      "fold_trades": 5,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.005729552258022983,
+      "fold_trades": 1,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.020351914062163738,
+      "fold_trades": 141,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0889356477168503,
+      "fold_trades": 151,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.13608449265242603,
+      "fold_trades": 108,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.03153945460684423,
+      "fold_trades": 2,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.036613139513541615,
+      "fold_trades": 7,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.005680070616545869,
+      "fold_trades": 4,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": -0.007746268400547974,
+      "fold_trades": 3,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.03175234631523002,
+      "fold_trades": 12,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.08252369585693697,
+      "fold_trades": 33,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0279927801752191,
+      "fold_trades": 33,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.005119007786063221,
+      "fold_trades": 24,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.007809980837738697,
+      "fold_trades": 4,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.022102338416261733,
+      "fold_trades": 5,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.03559829126049684,
+      "fold_trades": 4,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.029428138402359114,
+      "fold_trades": 6,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.020943109598309265,
+      "fold_trades": 157,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.12858786583699125,
+      "fold_trades": 176,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.1063816318712165,
+      "fold_trades": 116,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0052301071401144325,
+      "fold_trades": 5,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.06800799022730256,
+      "fold_trades": 8,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.0008918654295782206,
+      "fold_trades": 5,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": -0.005040872682431056,
+      "fold_trades": 6,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.0227727982501408,
+      "fold_trades": 14,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.09127692385322998,
+      "fold_trades": 40,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0014631508016059174,
+      "fold_trades": 32,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": -0.005745013502373841,
+      "fold_trades": 25,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.03945045260746354,
+      "fold_trades": 6,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.013005583505667651,
+      "fold_trades": 6,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.03432243416569825,
+      "fold_trades": 5,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.031428715412621655,
+      "fold_trades": 6,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.03845369489319791,
+      "fold_trades": 77,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.1144983057691279,
+      "fold_trades": 79,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.039238078691244876,
+      "fold_trades": 53,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.015620792998679207,
+      "fold_trades": 2,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.01499607843137255,
+      "fold_trades": 1,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.010331580536358308,
+      "fold_trades": 3,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.022716277503391488,
+      "fold_trades": 3,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.018274834710024133,
+      "fold_trades": 20,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.016417877834519905,
+      "fold_trades": 15,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.03204700130685467,
+      "fold_trades": 9,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.0052050274369832995,
+      "fold_trades": 3,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0037148502547296415,
+      "fold_trades": 3,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0061904915183313486,
+      "fold_trades": 1,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.008984099474013019,
+      "fold_trades": 1,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.01815934913040958,
+      "fold_trades": 110,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.09647986369302365,
+      "fold_trades": 113,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.11492826757134413,
+      "fold_trades": 86,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.013983613541241273,
+      "fold_trades": 2,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.011770269949427226,
+      "fold_trades": 3,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.005303993604142079,
+      "fold_trades": 1,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.051908731403550526,
+      "fold_trades": 6,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0240286334060079,
+      "fold_trades": 21,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.05927980069460282,
+      "fold_trades": 20,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.023768813387490165,
+      "fold_trades": 14,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.010661792249629702,
+      "fold_trades": 3,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.013565320977108906,
+      "fold_trades": 5,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.005729552258022983,
+      "fold_trades": 1,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.04937201460402434,
+      "fold_trades": 158,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.09608144678577797,
+      "fold_trades": 186,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.11684877015715796,
+      "fold_trades": 139,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.019160073200197927,
+      "fold_trades": 7,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.05553826480955236,
+      "fold_trades": 11,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.024171875258871323,
+      "fold_trades": 7,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.007764536871834715,
+      "fold_trades": 6,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.08213588767922764,
+      "fold_trades": 14,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.026613327525460452,
+      "fold_trades": 45,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.041026451957405015,
+      "fold_trades": 39,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.02509392671528375,
+      "fold_trades": 24,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.031810918079373,
+      "fold_trades": 4,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.027348962801585167,
+      "fold_trades": 7,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.04210879739679534,
+      "fold_trades": 5,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.04866473786975625,
+      "fold_trades": 9,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.08123388467950454,
+      "fold_trades": 145,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.14676038143630987,
+      "fold_trades": 158,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.08423678635076301,
+      "fold_trades": 100,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.01425321343335308,
+      "fold_trades": 2,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.04683766836027925,
+      "fold_trades": 4,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.010038820086097968,
+      "fold_trades": 3,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": -0.01153538660676895,
+      "fold_trades": 1,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.09909596379361803,
+      "fold_trades": 10,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.03758339411456653,
+      "fold_trades": 32,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.01894744916330558,
+      "fold_trades": 28,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.021514216970808957,
+      "fold_trades": 16,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.018443857400015896,
+      "fold_trades": 6,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.025754376686500043,
+      "fold_trades": 6,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0061904915183313486,
+      "fold_trades": 1,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.04128414043581671,
+      "fold_trades": 6,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.07196180434461581,
+      "fold_trades": 80,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.05750137270821093,
+      "fold_trades": 82,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.20748183813453444,
+      "fold_trades": 66,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bull",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.029992760581339373,
+      "fold_trades": 2,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.017800940639825697,
+      "fold_trades": 2,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0028933642974073932,
+      "fold_trades": 1,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.014999893223994703,
+      "fold_trades": 1,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Bear",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.06893321779226896,
+      "fold_trades": 11,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": -0.0299587349358274,
+      "fold_trades": 11,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.03839677995902383,
+      "fold_trades": 9,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.023894215605879017,
+      "fold_trades": 2,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Sideways",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": -0.02077899274068431,
+      "fold_trades": 3,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": -0.014999793924906236,
+      "fold_trades": 1,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Crisis",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2011_2014",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2015_2018",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2019_2021",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2022_2023",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "fold": "fold_2024_2025",
+      "fold_net_return_R": 0.0,
+      "fold_trades": 0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T10:47:10.514640+00:00",
+  "pair": "NQ/USD",
+  "recipe_id": "TomacNQVariantMatrixV1",
+  "root_summaries": [
+    {
+      "bootstrap_edge_lcb_5pct": 0.00017107294462398703,
+      "dsr": 2.3980652497325368,
+      "failure_reasons": [
+        "reject_fold_trade_depth",
+        "reject_cost_fragile",
+        "reject_overfit_risk"
+      ],
+      "fold_net_returns": [
+        0.020943109598309265,
+        0.12858786583699125,
+        0.1063816318712165,
+        0.0052301071401144325,
+        0.0
+      ],
+      "fold_positive_rate": 0.8,
+      "fold_trade_counts": [
+        157,
+        176,
+        116,
+        5,
+        0
+      ],
+      "hard_gate_result": "fail:reject_fold_trade_depth|reject_cost_fragile|reject_overfit_risk",
+      "min_trades_per_test_fold": 0,
+      "net_return_R": 0.3980686582724191,
+      "parent_regime_root": "Bull",
+      "pbo": 1.0,
+      "pbo_matrix_variant_count": 8,
+      "rc_spa": 61.286525484470914,
+      "regime_profit_branch_path": "Bull -> TrendExpansion -> TomacNQVariantMatrix -> TomacNQ_VM_Tight12_AM13_15",
+      "regime_specificity_ratio": 3.0,
+      "selected_variant": "TomacNQ_VM_Tight12_AM13_15",
+      "stressed_2x_cost_net_R": -0.677931341727581,
+      "tail_loss_p95": 0.010225569201954318,
+      "test_folds": 5,
+      "total_trades": 538,
+      "win_rate": 0.5557620817843866
+    },
+    {
+      "bootstrap_edge_lcb_5pct": -0.007228466693229098,
+      "dsr": -1.8521776313821467,
+      "failure_reasons": [
+        "reject_thin_trades",
+        "reject_fold_trade_depth",
+        "reject_fold_inconsistency",
+        "reject_no_positive_edge",
+        "reject_cost_fragile",
+        "reject_overfit_risk",
+        "reject_dsr_nonpositive",
+        "reject_no_regime_specificity",
+        "reject_rc_spa_below_60"
+      ],
+      "fold_net_returns": [
+        -0.05553826480955236,
+        0.024171875258871323,
+        0.007764536871834715,
+        -0.08213588767922764,
+        0.0
+      ],
+      "fold_positive_rate": 0.4,
+      "fold_trade_counts": [
+        11,
+        7,
+        6,
+        14,
+        0
+      ],
+      "hard_gate_result": "fail:reject_thin_trades|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "min_trades_per_test_fold": 0,
+      "net_return_R": -0.17256399998704955,
+      "parent_regime_root": "Bear",
+      "pbo": 1.0,
+      "pbo_matrix_variant_count": 8,
+      "rc_spa": 16.50009637706849,
+      "regime_profit_branch_path": "Bear -> BearMarketDrawdown -> TomacNQVariantMatrix -> TomacNQ_VM_CrisisWide12_AM12_16",
+      "regime_specificity_ratio": 0.0,
+      "selected_variant": "TomacNQ_VM_CrisisWide12_AM12_16",
+      "stressed_2x_cost_net_R": -0.26256399998704955,
+      "tail_loss_p95": 0.024999614491726035,
+      "test_folds": 5,
+      "total_trades": 45,
+      "win_rate": 0.4888888888888889
+    },
+    {
+      "bootstrap_edge_lcb_5pct": -0.0004629812939557875,
+      "dsr": 1.1037169728721312,
+      "failure_reasons": [
+        "reject_fold_trade_depth",
+        "reject_fold_inconsistency",
+        "reject_no_positive_edge",
+        "reject_cost_fragile",
+        "reject_overfit_risk",
+        "reject_rc_spa_below_60"
+      ],
+      "fold_net_returns": [
+        0.08252369585693697,
+        0.0279927801752191,
+        0.005119007786063221,
+        -0.007809980837738697,
+        0.0
+      ],
+      "fold_positive_rate": 0.6,
+      "fold_trade_counts": [
+        33,
+        33,
+        24,
+        4,
+        0
+      ],
+      "hard_gate_result": "fail:reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_rc_spa_below_60",
+      "min_trades_per_test_fold": 0,
+      "net_return_R": 0.09976928873352833,
+      "parent_regime_root": "Sideways",
+      "pbo": 0.75,
+      "pbo_matrix_variant_count": 8,
+      "rc_spa": 50.53796444404721,
+      "regime_profit_branch_path": "Sideways -> RangeConsolidation -> TomacNQVariantMatrix -> TomacNQ_VM_Fast18_AM13_16",
+      "regime_specificity_ratio": 1.879863249068441,
+      "selected_variant": "TomacNQ_VM_Fast18_AM13_16",
+      "stressed_2x_cost_net_R": -0.12623071126647167,
+      "tail_loss_p95": 0.013848142223811182,
+      "test_folds": 5,
+      "total_trades": 113,
+      "win_rate": 0.584070796460177
+    },
+    {
+      "bootstrap_edge_lcb_5pct": 0.0022351683927761606,
+      "dsr": 2.7453835139935077,
+      "failure_reasons": [
+        "reject_thin_trades",
+        "reject_fold_trade_depth",
+        "reject_fold_inconsistency",
+        "reject_overfit_risk"
+      ],
+      "fold_net_returns": [
+        0.0037148502547296415,
+        0.0,
+        0.0061904915183313486,
+        0.008984099474013019,
+        0.0
+      ],
+      "fold_positive_rate": 0.6,
+      "fold_trade_counts": [
+        3,
+        0,
+        1,
+        1,
+        0
+      ],
+      "hard_gate_result": "fail:reject_thin_trades|reject_fold_trade_depth|reject_fold_inconsistency|reject_overfit_risk",
+      "min_trades_per_test_fold": 0,
+      "net_return_R": 0.03741036520596973,
+      "parent_regime_root": "Crisis",
+      "pbo": 0.3333333333333333,
+      "pbo_matrix_variant_count": 8,
+      "rc_spa": 69.57419312683517,
+      "regime_profit_branch_path": "Crisis -> ExtremeStress -> TomacNQVariantMatrix -> TomacNQ_VM_Wide36_AM14_15",
+      "regime_specificity_ratio": 8.169098588145825,
+      "selected_variant": "TomacNQ_VM_Wide36_AM14_15",
+      "stressed_2x_cost_net_R": 0.02341036520596973,
+      "tail_loss_p95": 0.0019032274926593265,
+      "test_folds": 5,
+      "total_trades": 7,
+      "win_rate": 0.7142857142857143
+    },
+    {
+      "bootstrap_edge_lcb_5pct": 0.0,
+      "dsr": 0.0,
+      "failure_reasons": [
+        "reject_thin_trades",
+        "reject_fold_trade_depth",
+        "reject_fold_inconsistency",
+        "reject_no_positive_edge",
+        "reject_cost_fragile",
+        "reject_overfit_risk",
+        "reject_dsr_nonpositive",
+        "reject_no_regime_specificity",
+        "reject_rc_spa_below_60"
+      ],
+      "fold_net_returns": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fold_positive_rate": 0.0,
+      "fold_trade_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "hard_gate_result": "fail:reject_thin_trades|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "min_trades_per_test_fold": 0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "pbo": 1.0,
+      "pbo_matrix_variant_count": 8,
+      "rc_spa": 10.0,
+      "regime_profit_branch_path": "Manipulation(scoped) -> DirectEventOverlayMissing -> no_direct_event_rows -> suppress_or_abstain",
+      "regime_specificity_ratio": 0.0,
+      "selected_variant": "TomacNQ_VM_Base24_AM13_15",
+      "stressed_2x_cost_net_R": 0.0,
+      "tail_loss_p95": 0.0,
+      "test_folds": 5,
+      "total_trades": 0,
+      "win_rate": 0.0
+    }
+  ],
+  "run_id": "20260511T184211+0800-codex-board-b-tomac-nq-variant-matrix-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1",
+  "schema_version": "board-b-tomac-nq-variant-matrix/v1",
+  "source_ticker": "^IXIC",
+  "timerange_results": [
+    {
+      "aggregate_metrics": {
+        "calmar": 0.44189073565341364,
+        "max_drawdown_pct": -15.458322822091002,
+        "profit_factor": 1.1379464588275159,
+        "sharpe": 0.083910868328626,
+        "sortino": 0.13551893323730999,
+        "total_profit_pct": 19.54,
+        "trade_count": 450,
+        "win_rate_pct": 52.22222222222223
+      },
+      "label": "full_2011_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_full_2011_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.44189073565341364,
+          "max_drawdown_pct": -15.458322822091002,
+          "profit_factor": 1.1379464588275159,
+          "sharpe": 0.083910868328626,
+          "sortino": 0.13551893323730999,
+          "total_profit_pct": 19.54,
+          "trade_count": 450,
+          "win_rate_pct": 52.22222222222223
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_full_2011_2025.err",
+      "timerange": "20110101-20251231",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.13550835830077557,
+        "max_drawdown_pct": -9.352132730033999,
+        "profit_factor": 1.022437491818301,
+        "sharpe": 0.01708483137128096,
+        "sortino": 0.03260388136007172,
+        "total_profit_pct": 0.96,
+        "trade_count": 138,
+        "win_rate_pct": 47.10144927536232
+      },
+      "label": "fold_2011_2014",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2011_2014.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.13550835830077557,
+          "max_drawdown_pct": -9.352132730033999,
+          "profit_factor": 1.022437491818301,
+          "sharpe": 0.01708483137128096,
+          "sortino": 0.03260388136007172,
+          "total_profit_pct": 0.96,
+          "trade_count": 138,
+          "win_rate_pct": 47.10144927536232
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2011_2014.err",
+      "timerange": "20110101-20141231",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 5.116380779588608,
+        "max_drawdown_pct": -3.008864536837347,
+        "profit_factor": 1.373915123264388,
+        "sharpe": 0.223368427424793,
+        "sortino": 0.5311930826660074,
+        "total_profit_pct": 11.76,
+        "trade_count": 136,
+        "win_rate_pct": 45.588235294117645
+      },
+      "label": "fold_2015_2018",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2015_2018.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 5.116380779588608,
+          "max_drawdown_pct": -3.008864536837347,
+          "profit_factor": 1.373915123264388,
+          "sharpe": 0.223368427424793,
+          "sortino": 0.5311930826660074,
+          "total_profit_pct": 11.76,
+          "trade_count": 136,
+          "win_rate_pct": 45.588235294117645
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2015_2018.err",
+      "timerange": "20150101-20181231",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 3.9915382857862127,
+        "max_drawdown_pct": -4.764687794777971,
+        "profit_factor": 1.4380415039140986,
+        "sharpe": 0.27016136585842315,
+        "sortino": 0.3899128539228506,
+        "total_profit_pct": 10.9,
+        "trade_count": 102,
+        "win_rate_pct": 62.745098039215684
+      },
+      "label": "fold_2019_2021",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2019_2021.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 3.9915382857862127,
+          "max_drawdown_pct": -4.764687794777971,
+          "profit_factor": 1.4380415039140986,
+          "sharpe": 0.27016136585842315,
+          "sortino": 0.3899128539228506,
+          "total_profit_pct": 10.9,
+          "trade_count": 102,
+          "win_rate_pct": 62.745098039215684
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2019_2021.err",
+      "timerange": "20190101-20211231",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -2.400943780470479,
+        "max_drawdown_pct": -6.354437910295349,
+        "profit_factor": 0.2537789203084833,
+        "sharpe": -0.14097429561614502,
+        "sortino": -0.329068684688093,
+        "total_profit_pct": -5.81,
+        "trade_count": 9,
+        "win_rate_pct": 44.44444444444444
+      },
+      "label": "fold_2022_2023",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2022_2023.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -2.400943780470479,
+          "max_drawdown_pct": -6.354437910295349,
+          "profit_factor": 0.2537789203084833,
+          "sharpe": -0.14097429561614502,
+          "sortino": -0.329068684688093,
+          "total_profit_pct": -5.81,
+          "trade_count": 9,
+          "win_rate_pct": 44.44444444444444
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2022_2023.err",
+      "timerange": "20220101-20231231",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.0,
+        "max_drawdown_pct": -0.0,
+        "profit_factor": 0.0,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2024_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2024_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Base24_AM13_15_fold_2024_2025.err",
+      "timerange": "20240101-20251231",
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.8817995979918819,
+        "max_drawdown_pct": -12.31770671081404,
+        "profit_factor": 1.1604857667884707,
+        "sharpe": 0.13751285919269973,
+        "sortino": 0.2096644318112556,
+        "total_profit_pct": 31.07,
+        "trade_count": 634,
+        "win_rate_pct": 54.57413249211357
+      },
+      "label": "full_2011_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_full_2011_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.8817995979918819,
+          "max_drawdown_pct": -12.31770671081404,
+          "profit_factor": 1.1604857667884707,
+          "sharpe": 0.13751285919269973,
+          "sortino": 0.2096644318112556,
+          "total_profit_pct": 31.07,
+          "trade_count": 634,
+          "win_rate_pct": 54.57413249211357
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_full_2011_2025.err",
+      "timerange": "20110101-20251231",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.9502590000859032,
+        "max_drawdown_pct": -5.261706598105503,
+        "profit_factor": 1.0701216170174945,
+        "sharpe": 0.07106299722341843,
+        "sortino": 0.12208901317420864,
+        "total_profit_pct": 3.79,
+        "trade_count": 186,
+        "win_rate_pct": 51.075268817204304
+      },
+      "label": "fold_2011_2014",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2011_2014.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.9502590000859032,
+          "max_drawdown_pct": -5.261706598105503,
+          "profit_factor": 1.0701216170174945,
+          "sharpe": 0.07106299722341843,
+          "sortino": 0.12208901317420864,
+          "total_profit_pct": 3.79,
+          "trade_count": 186,
+          "win_rate_pct": 51.075268817204304
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2011_2014.err",
+      "timerange": "20110101-20141231",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 1.7071645651575402,
+        "max_drawdown_pct": -5.014697337655562,
+        "profit_factor": 1.1585034475401728,
+        "sharpe": 0.15000501603586228,
+        "sortino": 0.3014193814799572,
+        "total_profit_pct": 6.54,
+        "trade_count": 188,
+        "win_rate_pct": 47.340425531914896
+      },
+      "label": "fold_2015_2018",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2015_2018.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 1.7071645651575402,
+          "max_drawdown_pct": -5.014697337655562,
+          "profit_factor": 1.1585034475401728,
+          "sharpe": 0.15000501603586228,
+          "sortino": 0.3014193814799572,
+          "total_profit_pct": 6.54,
+          "trade_count": 188,
+          "win_rate_pct": 47.340425531914896
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2015_2018.err",
+      "timerange": "20150101-20181231",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 3.392196967133737,
+        "max_drawdown_pct": -6.192173392911798,
+        "profit_factor": 1.3577238864510488,
+        "sharpe": 0.31477420492839375,
+        "sortino": 0.4392469440911822,
+        "total_profit_pct": 12.04,
+        "trade_count": 139,
+        "win_rate_pct": 61.87050359712231
+      },
+      "label": "fold_2019_2021",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2019_2021.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 3.392196967133737,
+          "max_drawdown_pct": -6.192173392911798,
+          "profit_factor": 1.3577238864510488,
+          "sharpe": 0.31477420492839375,
+          "sortino": 0.4392469440911822,
+          "total_profit_pct": 12.04,
+          "trade_count": 139,
+          "win_rate_pct": 61.87050359712231
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2019_2021.err",
+      "timerange": "20190101-20211231",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -1.0904799793694637,
+        "max_drawdown_pct": -9.758832705833075,
+        "profit_factor": 0.724483464326925,
+        "sharpe": -0.08751999235458796,
+        "sortino": -0.19876317397054008,
+        "total_profit_pct": -4.05,
+        "trade_count": 24,
+        "win_rate_pct": 62.5
+      },
+      "label": "fold_2022_2023",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2022_2023.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -1.0904799793694637,
+          "max_drawdown_pct": -9.758832705833075,
+          "profit_factor": 0.724483464326925,
+          "sharpe": -0.08751999235458796,
+          "sortino": -0.19876317397054008,
+          "total_profit_pct": -4.05,
+          "trade_count": 24,
+          "win_rate_pct": 62.5
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2022_2023.err",
+      "timerange": "20220101-20231231",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.0,
+        "max_drawdown_pct": -0.0,
+        "profit_factor": 0.0,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2024_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2024_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Fast18_AM13_16_fold_2024_2025.err",
+      "timerange": "20240101-20251231",
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 1.3426184577212463,
+        "max_drawdown_pct": -8.636538175207075,
+        "profit_factor": 1.1741918624533974,
+        "sharpe": 0.16469447044264812,
+        "sortino": 0.24021874330182788,
+        "total_profit_pct": 33.17,
+        "trade_count": 720,
+        "win_rate_pct": 56.111111111111114
+      },
+      "label": "full_2011_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_full_2011_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 1.3426184577212463,
+          "max_drawdown_pct": -8.636538175207075,
+          "profit_factor": 1.1741918624533974,
+          "sharpe": 0.16469447044264812,
+          "sortino": 0.24021874330182788,
+          "total_profit_pct": 33.17,
+          "trade_count": 720,
+          "win_rate_pct": 56.111111111111114
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_full_2011_2025.err",
+      "timerange": "20110101-20251231",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.5774414913181317,
+        "max_drawdown_pct": -6.678206428904978,
+        "profit_factor": 1.0512751730637158,
+        "sharpe": 0.05812042846647338,
+        "sortino": 0.10156872542779531,
+        "total_profit_pct": 2.92,
+        "trade_count": 211,
+        "win_rate_pct": 51.65876777251185
+      },
+      "label": "fold_2011_2014",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2011_2014.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.5774414913181317,
+          "max_drawdown_pct": -6.678206428904978,
+          "profit_factor": 1.0512751730637158,
+          "sharpe": 0.05812042846647338,
+          "sortino": 0.10156872542779531,
+          "total_profit_pct": 2.92,
+          "trade_count": 211,
+          "win_rate_pct": 51.65876777251185
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2011_2014.err",
+      "timerange": "20110101-20141231",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 2.878701004389603,
+        "max_drawdown_pct": -3.7575075773071247,
+        "profit_factor": 1.2194484883906276,
+        "sharpe": 0.22587384269559382,
+        "sortino": 0.4734964474269408,
+        "total_profit_pct": 8.26,
+        "trade_count": 213,
+        "win_rate_pct": 49.76525821596244
+      },
+      "label": "fold_2015_2018",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2015_2018.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 2.878701004389603,
+          "max_drawdown_pct": -3.7575075773071247,
+          "profit_factor": 1.2194484883906276,
+          "sharpe": 0.22587384269559382,
+          "sortino": 0.4734964474269408,
+          "total_profit_pct": 8.26,
+          "trade_count": 213,
+          "win_rate_pct": 49.76525821596244
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2015_2018.err",
+      "timerange": "20150101-20181231",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 3.7969835377537793,
+        "max_drawdown_pct": -4.584571967570043,
+        "profit_factor": 1.3006069312610578,
+        "sharpe": 0.29399964312211474,
+        "sortino": 0.4138139098190371,
+        "total_profit_pct": 9.98,
+        "trade_count": 152,
+        "win_rate_pct": 63.81578947368421
+      },
+      "label": "fold_2019_2021",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2019_2021.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 3.7969835377537793,
+          "max_drawdown_pct": -4.584571967570043,
+          "profit_factor": 1.3006069312610578,
+          "sharpe": 0.29399964312211474,
+          "sortino": 0.4138139098190371,
+          "total_profit_pct": 9.98,
+          "trade_count": 152,
+          "win_rate_pct": 63.81578947368421
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2019_2021.err",
+      "timerange": "20190101-20211231",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.5459964065517235,
+        "max_drawdown_pct": -10.621099272247164,
+        "profit_factor": 0.8608281492020725,
+        "sharpe": -0.052439315044628926,
+        "sortino": -0.13606877418625915,
+        "total_profit_pct": -2.21,
+        "trade_count": 31,
+        "win_rate_pct": 67.74193548387096
+      },
+      "label": "fold_2022_2023",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2022_2023.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.5459964065517235,
+          "max_drawdown_pct": -10.621099272247164,
+          "profit_factor": 0.8608281492020725,
+          "sharpe": -0.052439315044628926,
+          "sortino": -0.13606877418625915,
+          "total_profit_pct": -2.21,
+          "trade_count": 31,
+          "win_rate_pct": 67.74193548387096
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2022_2023.err",
+      "timerange": "20220101-20231231",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.0,
+        "max_drawdown_pct": -0.0,
+        "profit_factor": 0.0,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2024_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2024_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Tight12_AM13_15_fold_2024_2025.err",
+      "timerange": "20240101-20251231",
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.809470019016882,
+        "max_drawdown_pct": -8.56347783627622,
+        "profit_factor": 1.1859986417376753,
+        "sharpe": 0.07585537437039006,
+        "sortino": 0.15204920829821839,
+        "total_profit_pct": 19.83,
+        "trade_count": 302,
+        "win_rate_pct": 49.00662251655629
+      },
+      "label": "full_2011_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_full_2011_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.809470019016882,
+          "max_drawdown_pct": -8.56347783627622,
+          "profit_factor": 1.1859986417376753,
+          "sharpe": 0.07585537437039006,
+          "sortino": 0.15204920829821839,
+          "total_profit_pct": 19.83,
+          "trade_count": 302,
+          "win_rate_pct": 49.00662251655629
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_full_2011_2025.err",
+      "timerange": "20110101-20251231",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.6336916700139466,
+        "max_drawdown_pct": -8.56347783627622,
+        "profit_factor": 1.1171550407041708,
+        "sharpe": 0.061583271069022755,
+        "sortino": 0.13245883396517147,
+        "total_profit_pct": 4.11,
+        "trade_count": 101,
+        "win_rate_pct": 46.53465346534654
+      },
+      "label": "fold_2011_2014",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2011_2014.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.6336916700139466,
+          "max_drawdown_pct": -8.56347783627622,
+          "profit_factor": 1.1171550407041708,
+          "sharpe": 0.061583271069022755,
+          "sortino": 0.13245883396517147,
+          "total_profit_pct": 4.11,
+          "trade_count": 101,
+          "win_rate_pct": 46.53465346534654
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2011_2014.err",
+      "timerange": "20110101-20141231",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 1.8368604184415585,
+        "max_drawdown_pct": -4.932029598796843,
+        "profit_factor": 1.2499436419442662,
+        "sharpe": 0.11380567747699641,
+        "sortino": 0.31732608765020676,
+        "total_profit_pct": 6.92,
+        "trade_count": 97,
+        "win_rate_pct": 41.23711340206185
+      },
+      "label": "fold_2015_2018",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2015_2018.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 1.8368604184415585,
+          "max_drawdown_pct": -4.932029598796843,
+          "profit_factor": 1.2499436419442662,
+          "sharpe": 0.11380567747699641,
+          "sortino": 0.31732608765020676,
+          "total_profit_pct": 6.92,
+          "trade_count": 97,
+          "win_rate_pct": 41.23711340206185
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2015_2018.err",
+      "timerange": "20150101-20181231",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 3.7138134787707786,
+        "max_drawdown_pct": -2.5813771912718835,
+        "profit_factor": 1.287800442492709,
+        "sharpe": 0.12062409876775125,
+        "sortino": 0.2045637455551228,
+        "total_profit_pct": 5.49,
+        "trade_count": 63,
+        "win_rate_pct": 53.96825396825397
+      },
+      "label": "fold_2019_2021",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2019_2021.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 3.7138134787707786,
+          "max_drawdown_pct": -2.5813771912718835,
+          "profit_factor": 1.287800442492709,
+          "sharpe": 0.12062409876775125,
+          "sortino": 0.2045637455551228,
+          "total_profit_pct": 5.49,
+          "trade_count": 63,
+          "win_rate_pct": 53.96825396825397
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2019_2021.err",
+      "timerange": "20190101-20211231",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.27514043495533397,
+        "max_drawdown_pct": -2.55207865779042,
+        "profit_factor": 0.9376644706145835,
+        "sharpe": -0.006971923375505125,
+        "sortino": -0.13573038776644908,
+        "total_profit_pct": -0.27,
+        "trade_count": 9,
+        "win_rate_pct": 66.66666666666666
+      },
+      "label": "fold_2022_2023",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2022_2023.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.27514043495533397,
+          "max_drawdown_pct": -2.55207865779042,
+          "profit_factor": 0.9376644706145835,
+          "sharpe": -0.006971923375505125,
+          "sortino": -0.13573038776644908,
+          "total_profit_pct": -0.27,
+          "trade_count": 9,
+          "win_rate_pct": 66.66666666666666
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2022_2023.err",
+      "timerange": "20220101-20231231",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.0,
+        "max_drawdown_pct": -0.0,
+        "profit_factor": 0.0,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2024_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2024_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Wide36_AM14_15_fold_2024_2025.err",
+      "timerange": "20240101-20251231",
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.44189073565341364,
+        "max_drawdown_pct": -15.458322822091002,
+        "profit_factor": 1.1379464588275159,
+        "sharpe": 0.083910868328626,
+        "sortino": 0.13551893323730999,
+        "total_profit_pct": 19.54,
+        "trade_count": 450,
+        "win_rate_pct": 52.22222222222223
+      },
+      "label": "full_2011_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_full_2011_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.44189073565341364,
+          "max_drawdown_pct": -15.458322822091002,
+          "profit_factor": 1.1379464588275159,
+          "sharpe": 0.083910868328626,
+          "sortino": 0.13551893323730999,
+          "total_profit_pct": 19.54,
+          "trade_count": 450,
+          "win_rate_pct": 52.22222222222223
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_full_2011_2025.err",
+      "timerange": "20110101-20251231",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.13550835830077557,
+        "max_drawdown_pct": -9.352132730033999,
+        "profit_factor": 1.022437491818301,
+        "sharpe": 0.01708483137128096,
+        "sortino": 0.03260388136007172,
+        "total_profit_pct": 0.96,
+        "trade_count": 138,
+        "win_rate_pct": 47.10144927536232
+      },
+      "label": "fold_2011_2014",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2011_2014.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.13550835830077557,
+          "max_drawdown_pct": -9.352132730033999,
+          "profit_factor": 1.022437491818301,
+          "sharpe": 0.01708483137128096,
+          "sortino": 0.03260388136007172,
+          "total_profit_pct": 0.96,
+          "trade_count": 138,
+          "win_rate_pct": 47.10144927536232
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2011_2014.err",
+      "timerange": "20110101-20141231",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 5.116380779588608,
+        "max_drawdown_pct": -3.008864536837347,
+        "profit_factor": 1.373915123264388,
+        "sharpe": 0.223368427424793,
+        "sortino": 0.5311930826660074,
+        "total_profit_pct": 11.76,
+        "trade_count": 136,
+        "win_rate_pct": 45.588235294117645
+      },
+      "label": "fold_2015_2018",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2015_2018.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 5.116380779588608,
+          "max_drawdown_pct": -3.008864536837347,
+          "profit_factor": 1.373915123264388,
+          "sharpe": 0.223368427424793,
+          "sortino": 0.5311930826660074,
+          "total_profit_pct": 11.76,
+          "trade_count": 136,
+          "win_rate_pct": 45.588235294117645
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2015_2018.err",
+      "timerange": "20150101-20181231",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 3.9915382857862127,
+        "max_drawdown_pct": -4.764687794777971,
+        "profit_factor": 1.4380415039140986,
+        "sharpe": 0.27016136585842315,
+        "sortino": 0.3899128539228506,
+        "total_profit_pct": 10.9,
+        "trade_count": 102,
+        "win_rate_pct": 62.745098039215684
+      },
+      "label": "fold_2019_2021",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2019_2021.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 3.9915382857862127,
+          "max_drawdown_pct": -4.764687794777971,
+          "profit_factor": 1.4380415039140986,
+          "sharpe": 0.27016136585842315,
+          "sortino": 0.3899128539228506,
+          "total_profit_pct": 10.9,
+          "trade_count": 102,
+          "win_rate_pct": 62.745098039215684
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2019_2021.err",
+      "timerange": "20190101-20211231",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -2.400943780470479,
+        "max_drawdown_pct": -6.354437910295349,
+        "profit_factor": 0.2537789203084833,
+        "sharpe": -0.14097429561614502,
+        "sortino": -0.329068684688093,
+        "total_profit_pct": -5.81,
+        "trade_count": 9,
+        "win_rate_pct": 44.44444444444444
+      },
+      "label": "fold_2022_2023",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2022_2023.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -2.400943780470479,
+          "max_drawdown_pct": -6.354437910295349,
+          "profit_factor": 0.2537789203084833,
+          "sharpe": -0.14097429561614502,
+          "sortino": -0.329068684688093,
+          "total_profit_pct": -5.81,
+          "trade_count": 9,
+          "win_rate_pct": 44.44444444444444
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2022_2023.err",
+      "timerange": "20220101-20231231",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.0,
+        "max_drawdown_pct": -0.0,
+        "profit_factor": 0.0,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2024_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2024_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_NoTrend24_AM13_15_fold_2024_2025.err",
+      "timerange": "20240101-20251231",
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.2852459302204752,
+        "max_drawdown_pct": -17.603053827939807,
+        "profit_factor": 1.0648723726219365,
+        "sharpe": 0.06375893991333,
+        "sortino": 0.09119488793663824,
+        "total_profit_pct": 14.36,
+        "trade_count": 708,
+        "win_rate_pct": 52.118644067796616
+      },
+      "label": "full_2011_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_full_2011_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.2852459302204752,
+          "max_drawdown_pct": -17.603053827939807,
+          "profit_factor": 1.0648723726219365,
+          "sharpe": 0.06375893991333,
+          "sortino": 0.09119488793663824,
+          "total_profit_pct": 14.36,
+          "trade_count": 708,
+          "win_rate_pct": 52.118644067796616
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_full_2011_2025.err",
+      "timerange": "20110101-20251231",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.041707045564116675,
+        "max_drawdown_pct": -11.492723365529486,
+        "profit_factor": 0.995069481415487,
+        "sharpe": -0.006151874024476969,
+        "sortino": -0.01032903342407386,
+        "total_profit_pct": -0.36,
+        "trade_count": 221,
+        "win_rate_pct": 49.321266968325794
+      },
+      "label": "fold_2011_2014",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2011_2014.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.041707045564116675,
+          "max_drawdown_pct": -11.492723365529486,
+          "profit_factor": 0.995069481415487,
+          "sharpe": -0.006151874024476969,
+          "sortino": -0.01032903342407386,
+          "total_profit_pct": -0.36,
+          "trade_count": 221,
+          "win_rate_pct": 49.321266968325794
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2011_2014.err",
+      "timerange": "20110101-20141231",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.514952310937509,
+        "max_drawdown_pct": -8.326372966587877,
+        "profit_factor": 1.0623237485001493,
+        "sharpe": 0.07533214943057406,
+        "sortino": 0.13456923065950951,
+        "total_profit_pct": 3.27,
+        "trade_count": 232,
+        "win_rate_pct": 45.689655172413794
+      },
+      "label": "fold_2015_2018",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2015_2018.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.514952310937509,
+          "max_drawdown_pct": -8.326372966587877,
+          "profit_factor": 1.0623237485001493,
+          "sharpe": 0.07533214943057406,
+          "sortino": 0.13456923065950951,
+          "total_profit_pct": 3.27,
+          "trade_count": 232,
+          "win_rate_pct": 45.689655172413794
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2015_2018.err",
+      "timerange": "20150101-20181231",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 3.7396192360804035,
+        "max_drawdown_pct": -6.246529526697299,
+        "profit_factor": 1.2727203100098101,
+        "sharpe": 0.3095725093686465,
+        "sortino": 0.44361955895907584,
+        "total_profit_pct": 13.39,
+        "trade_count": 174,
+        "win_rate_pct": 59.195402298850574
+      },
+      "label": "fold_2019_2021",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2019_2021.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 3.7396192360804035,
+          "max_drawdown_pct": -6.246529526697299,
+          "profit_factor": 1.2727203100098101,
+          "sharpe": 0.3095725093686465,
+          "sortino": 0.44361955895907584,
+          "total_profit_pct": 13.39,
+          "trade_count": 174,
+          "win_rate_pct": 59.195402298850574
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2019_2021.err",
+      "timerange": "20190101-20211231",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.4026644953848312,
+        "max_drawdown_pct": -11.991208129602624,
+        "profit_factor": 0.9080933992276756,
+        "sharpe": -0.03795358929424188,
+        "sortino": -0.07207057782277233,
+        "total_profit_pct": -1.84,
+        "trade_count": 34,
+        "win_rate_pct": 64.70588235294117
+      },
+      "label": "fold_2022_2023",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2022_2023.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.4026644953848312,
+          "max_drawdown_pct": -11.991208129602624,
+          "profit_factor": 0.9080933992276756,
+          "sharpe": -0.03795358929424188,
+          "sortino": -0.07207057782277233,
+          "total_profit_pct": -1.84,
+          "trade_count": 34,
+          "win_rate_pct": 64.70588235294117
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2022_2023.err",
+      "timerange": "20220101-20231231",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.0,
+        "max_drawdown_pct": -0.0,
+        "profit_factor": 0.0,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2024_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2024_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_CrisisWide12_AM12_16_fold_2024_2025.err",
+      "timerange": "20240101-20251231",
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.04435292537935346,
+        "max_drawdown_pct": -15.784720000000002,
+        "profit_factor": 0.9865350635379546,
+        "sharpe": -0.009748958308726342,
+        "sortino": -0.015834662660621952,
+        "total_profit_pct": -2.0,
+        "trade_count": 524,
+        "win_rate_pct": 46.75572519083969
+      },
+      "label": "full_2011_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_full_2011_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.04435292537935346,
+          "max_drawdown_pct": -15.784720000000002,
+          "profit_factor": 0.9865350635379546,
+          "sharpe": -0.009748958308726342,
+          "sortino": -0.015834662660621952,
+          "total_profit_pct": -2.0,
+          "trade_count": 524,
+          "win_rate_pct": 46.75572519083969
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_full_2011_2025.err",
+      "timerange": "20110101-20251231",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.89940002073818,
+        "max_drawdown_pct": -15.784720000000002,
+        "profit_factor": 0.8128020568417007,
+        "sharpe": -0.20396105484843144,
+        "sortino": -0.38254635781680346,
+        "total_profit_pct": -10.75,
+        "trade_count": 187,
+        "win_rate_pct": 40.64171122994652
+      },
+      "label": "fold_2011_2014",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2011_2014.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.89940002073818,
+          "max_drawdown_pct": -15.784720000000002,
+          "profit_factor": 0.8128020568417007,
+          "sharpe": -0.20396105484843144,
+          "sortino": -0.38254635781680346,
+          "total_profit_pct": -10.75,
+          "trade_count": 187,
+          "win_rate_pct": 40.64171122994652
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2011_2014.err",
+      "timerange": "20110101-20141231",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 4.490054164246382,
+        "max_drawdown_pct": -3.428927017248585,
+        "profit_factor": 1.293206982543641,
+        "sharpe": 0.24301858626186834,
+        "sortino": 0.5592335221795803,
+        "total_profit_pct": 11.76,
+        "trade_count": 189,
+        "win_rate_pct": 47.08994708994709
+      },
+      "label": "fold_2015_2018",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2015_2018.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 4.490054164246382,
+          "max_drawdown_pct": -3.428927017248585,
+          "profit_factor": 1.293206982543641,
+          "sharpe": 0.24301858626186834,
+          "sortino": 0.5592335221795803,
+          "total_profit_pct": 11.76,
+          "trade_count": 189,
+          "win_rate_pct": 47.08994708994709
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2015_2018.err",
+      "timerange": "20150101-20181231",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 2.46430321769064,
+        "max_drawdown_pct": -5.266333474465843,
+        "profit_factor": 1.2167582084541715,
+        "sharpe": 0.1674932825010489,
+        "sortino": 0.2620225653221808,
+        "total_profit_pct": 7.44,
+        "trade_count": 118,
+        "win_rate_pct": 55.08474576271186
+      },
+      "label": "fold_2019_2021",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2019_2021.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 2.46430321769064,
+          "max_drawdown_pct": -5.266333474465843,
+          "profit_factor": 1.2167582084541715,
+          "sharpe": 0.1674932825010489,
+          "sortino": 0.2620225653221808,
+          "total_profit_pct": 7.44,
+          "trade_count": 118,
+          "win_rate_pct": 55.08474576271186
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2019_2021.err",
+      "timerange": "20190101-20211231",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.6879714570081011,
+        "max_drawdown_pct": -8.512672631575734,
+        "profit_factor": 0.8424395651632899,
+        "sharpe": -0.04807236021810409,
+        "sortino": -0.10048591422505666,
+        "total_profit_pct": -2.23,
+        "trade_count": 24,
+        "win_rate_pct": 58.333333333333336
+      },
+      "label": "fold_2022_2023",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2022_2023.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.6879714570081011,
+          "max_drawdown_pct": -8.512672631575734,
+          "profit_factor": 0.8424395651632899,
+          "sharpe": -0.04807236021810409,
+          "sortino": -0.10048591422505666,
+          "total_profit_pct": -2.23,
+          "trade_count": 24,
+          "win_rate_pct": 58.333333333333336
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2022_2023.err",
+      "timerange": "20220101-20231231",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.0,
+        "max_drawdown_pct": -0.0,
+        "profit_factor": 0.0,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2024_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2024_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Sideways18_AM12_15_fold_2024_2025.err",
+      "timerange": "20240101-20251231",
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.39738406724373154,
+        "max_drawdown_pct": -12.571871275327773,
+        "profit_factor": 1.1406558068925552,
+        "sharpe": 0.054744994901734276,
+        "sortino": 0.12474200147440395,
+        "total_profit_pct": 14.29,
+        "trade_count": 286,
+        "win_rate_pct": 47.9020979020979
+      },
+      "label": "full_2011_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_full_2011_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.39738406724373154,
+          "max_drawdown_pct": -12.571871275327773,
+          "profit_factor": 1.1406558068925552,
+          "sharpe": 0.054744994901734276,
+          "sortino": 0.12474200147440395,
+          "total_profit_pct": 14.29,
+          "trade_count": 286,
+          "win_rate_pct": 47.9020979020979
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_full_2011_2025.err",
+      "timerange": "20110101-20251231",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.5989162772879913,
+        "max_drawdown_pct": -12.571871275327773,
+        "profit_factor": 0.8541483375959078,
+        "sharpe": -0.08265050669133499,
+        "sortino": -0.193537089295962,
+        "total_profit_pct": -5.7,
+        "trade_count": 96,
+        "win_rate_pct": 41.66666666666667
+      },
+      "label": "fold_2011_2014",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2011_2014.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.5989162772879913,
+          "max_drawdown_pct": -12.571871275327773,
+          "profit_factor": 0.8541483375959078,
+          "sharpe": -0.08265050669133499,
+          "sortino": -0.193537089295962,
+          "total_profit_pct": -5.7,
+          "trade_count": 96,
+          "win_rate_pct": 41.66666666666667
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2011_2014.err",
+      "timerange": "20110101-20141231",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.20383120366987628,
+        "max_drawdown_pct": -4.551946016295175,
+        "profit_factor": 0.9763740250317431,
+        "sharpe": -0.012406776497984941,
+        "sortino": -0.03437712339213586,
+        "total_profit_pct": -0.71,
+        "trade_count": 95,
+        "win_rate_pct": 37.89473684210527
+      },
+      "label": "fold_2015_2018",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2015_2018.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.20383120366987628,
+          "max_drawdown_pct": -4.551946016295175,
+          "profit_factor": 0.9763740250317431,
+          "sharpe": -0.012406776497984941,
+          "sortino": -0.03437712339213586,
+          "total_profit_pct": -0.71,
+          "trade_count": 95,
+          "win_rate_pct": 37.89473684210527
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2015_2018.err",
+      "timerange": "20150101-20181231",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 13.947032715891693,
+        "max_drawdown_pct": -2.51158827614823,
+        "profit_factor": 1.9730452786587775,
+        "sharpe": 0.3815819457949419,
+        "sortino": 1.0506302513778198,
+        "total_profit_pct": 20.08,
+        "trade_count": 76,
+        "win_rate_pct": 68.42105263157895
+      },
+      "label": "fold_2019_2021",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2019_2021.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 13.947032715891693,
+          "max_drawdown_pct": -2.51158827614823,
+          "profit_factor": 1.9730452786587775,
+          "sharpe": 0.3815819457949419,
+          "sortino": 1.0506302513778198,
+          "total_profit_pct": 20.08,
+          "trade_count": 76,
+          "win_rate_pct": 68.42105263157895
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2019_2021.err",
+      "timerange": "20190101-20211231",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -2.627919281230096,
+        "max_drawdown_pct": -5.112720000000001,
+        "profit_factor": 0.0,
+        "sharpe": -0.5366542685488207,
+        "sortino": -0.5366542685488207,
+        "total_profit_pct": -5.11,
+        "trade_count": 4,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2022_2023",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2022_2023.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -2.627919281230096,
+          "max_drawdown_pct": -5.112720000000001,
+          "profit_factor": 0.0,
+          "sharpe": -0.5366542685488207,
+          "sortino": -0.5366542685488207,
+          "total_profit_pct": -5.11,
+          "trade_count": 4,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2022_2023.err",
+      "timerange": "20220101-20231231",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.0,
+        "max_drawdown_pct": -0.0,
+        "profit_factor": 0.0,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0
+      },
+      "label": "fold_2024_2025",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2024_2025.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184211-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_TomacNQ_VM_Conservative48_AM13_14_fold_2024_2025.err",
+      "timerange": "20240101-20251231",
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    }
+  ],
+  "variant_count": 8,
+  "variant_summaries": [
+    {
+      "full_net_return_R": 0.23000444551152074,
+      "full_trades": 450,
+      "full_win_rate": 0.5222222222222223,
+      "params": {
+        "ema_fast": 21,
+        "ema_slow": 89,
+        "high_window": 24,
+        "hour_end": 15,
+        "hour_start": 13,
+        "low_window": 24,
+        "stoploss": -0.02,
+        "trail_offset": 0.01,
+        "trail_positive": 0.005,
+        "trend_filter": true
+      },
+      "root_trade_counts": {
+        "Bear": 15,
+        "Bull": 355,
+        "Crisis": 12,
+        "Manipulation(scoped)": 0,
+        "Sideways": 68
+      },
+      "variant_id": "TomacNQ_VM_Base24_AM13_15"
+    },
+    {
+      "full_net_return_R": 0.3444669949489603,
+      "full_trades": 634,
+      "full_win_rate": 0.5457413249211357,
+      "params": {
+        "ema_fast": 13,
+        "ema_slow": 55,
+        "high_window": 18,
+        "hour_end": 16,
+        "hour_start": 13,
+        "low_window": 24,
+        "stoploss": -0.02,
+        "trail_offset": 0.009,
+        "trail_positive": 0.004,
+        "trend_filter": true
+      },
+      "root_trade_counts": {
+        "Bear": 32,
+        "Bull": 470,
+        "Crisis": 19,
+        "Manipulation(scoped)": 0,
+        "Sideways": 113
+      },
+      "variant_id": "TomacNQ_VM_Fast18_AM13_16"
+    },
+    {
+      "full_net_return_R": 0.3680362505422414,
+      "full_trades": 720,
+      "full_win_rate": 0.5611111111111111,
+      "params": {
+        "ema_fast": 13,
+        "ema_slow": 55,
+        "high_window": 12,
+        "hour_end": 15,
+        "hour_start": 13,
+        "low_window": 18,
+        "stoploss": -0.018,
+        "trail_offset": 0.008,
+        "trail_positive": 0.004,
+        "trend_filter": true
+      },
+      "root_trade_counts": {
+        "Bear": 40,
+        "Bull": 538,
+        "Crisis": 20,
+        "Manipulation(scoped)": 0,
+        "Sideways": 122
+      },
+      "variant_id": "TomacNQ_VM_Tight12_AM13_15"
+    },
+    {
+      "full_net_return_R": 0.23040346714074986,
+      "full_trades": 302,
+      "full_win_rate": 0.4900662251655629,
+      "params": {
+        "ema_fast": 21,
+        "ema_slow": 89,
+        "high_window": 36,
+        "hour_end": 15,
+        "hour_start": 14,
+        "low_window": 36,
+        "stoploss": -0.015,
+        "trail_offset": 0.012,
+        "trail_positive": 0.006,
+        "trend_filter": true
+      },
+      "root_trade_counts": {
+        "Bear": 7,
+        "Bull": 236,
+        "Crisis": 7,
+        "Manipulation(scoped)": 0,
+        "Sideways": 52
+      },
+      "variant_id": "TomacNQ_VM_Wide36_AM14_15"
+    },
+    {
+      "full_net_return_R": 0.23000444551152074,
+      "full_trades": 450,
+      "full_win_rate": 0.5222222222222223,
+      "params": {
+        "ema_fast": 21,
+        "ema_slow": 89,
+        "high_window": 24,
+        "hour_end": 15,
+        "hour_start": 13,
+        "low_window": 24,
+        "stoploss": -0.02,
+        "trail_offset": 0.01,
+        "trail_positive": 0.005,
+        "trend_filter": false
+      },
+      "root_trade_counts": {
+        "Bear": 15,
+        "Bull": 355,
+        "Crisis": 12,
+        "Manipulation(scoped)": 0,
+        "Sideways": 68
+      },
+      "variant_id": "TomacNQ_VM_NoTrend24_AM13_15"
+    },
+    {
+      "full_net_return_R": 0.24059195005708844,
+      "full_trades": 708,
+      "full_win_rate": 0.5211864406779662,
+      "params": {
+        "ema_fast": 13,
+        "ema_slow": 55,
+        "high_window": 12,
+        "hour_end": 16,
+        "hour_start": 12,
+        "low_window": 24,
+        "stoploss": -0.025,
+        "trail_offset": 0.01,
+        "trail_positive": 0.004,
+        "trend_filter": false
+      },
+      "root_trade_counts": {
+        "Bear": 45,
+        "Bull": 517,
+        "Crisis": 24,
+        "Manipulation(scoped)": 0,
+        "Sideways": 122
+      },
+      "variant_id": "TomacNQ_VM_CrisisWide12_AM12_16"
+    },
+    {
+      "full_net_return_R": 0.04831742021189962,
+      "full_trades": 524,
+      "full_win_rate": 0.4675572519083969,
+      "params": {
+        "ema_fast": 21,
+        "ema_slow": 89,
+        "high_window": 18,
+        "hour_end": 15,
+        "hour_start": 12,
+        "low_window": 18,
+        "stoploss": -0.018,
+        "trail_offset": 0.012,
+        "trail_positive": 0.006,
+        "trend_filter": false
+      },
+      "root_trade_counts": {
+        "Bear": 19,
+        "Bull": 407,
+        "Crisis": 15,
+        "Manipulation(scoped)": 0,
+        "Sideways": 83
+      },
+      "variant_id": "TomacNQ_VM_Sideways18_AM12_15"
+    },
+    {
+      "full_net_return_R": 0.1962228004350934,
+      "full_trades": 286,
+      "full_win_rate": 0.479020979020979,
+      "params": {
+        "ema_fast": 34,
+        "ema_slow": 144,
+        "high_window": 48,
+        "hour_end": 14,
+        "hour_start": 13,
+        "low_window": 48,
+        "stoploss": -0.015,
+        "trail_offset": 0.014,
+        "trail_positive": 0.007,
+        "trend_filter": true
+      },
+      "root_trade_counts": {
+        "Bear": 6,
+        "Bull": 237,
+        "Crisis": 7,
+        "Manipulation(scoped)": 0,
+        "Sideways": 36
+      },
+      "variant_id": "TomacNQ_VM_Conservative48_AM13_14"
+    }
+  ]
+}

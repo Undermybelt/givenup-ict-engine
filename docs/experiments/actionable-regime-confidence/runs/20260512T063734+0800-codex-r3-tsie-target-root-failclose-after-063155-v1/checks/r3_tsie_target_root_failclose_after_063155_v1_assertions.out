@@ -1,0 +1,11 @@
+gate_result=r3_tsie_target_root_failclose_after_063155_v1=target_root_present_but_tsie_policy_blocked_no_unlock
+target_root_present=true
+target_root_valid_required_unlock=false
+logical_quarantine=true
+accepted_rows_added_by_audit=0
+materializer_claimed_accepted_rows=5032903
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

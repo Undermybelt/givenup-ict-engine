@@ -1,0 +1,17 @@
+PASS commands_zero exit_count=11 nonzero=[]
+PASS replay_observations_min30 observations=32
+PASS catboost_trained_rows_min30 trained_rows=1120
+PASS path_ranker_runtime_ready Ranker runtime: structural_path_ranking_target rows=1 history_rows=1130 mature_rows=1 history_mature_rows=1120 raw_scored_mature=1120/30 production_validation=1120/30 observation_validation=32/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=candidate_set_only runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=1
+PASS raw_scored_mature_min30 raw_scored_mature=1120/30
+PASS production_validation_min30 production_validation=1120/30
+PASS observation_validation_min30 observation_validation=32/30
+FAIL_CLOSED current_pre_bayes_confidence_95 confidence=0.7873539660614577
+FAIL_CLOSED every_regime_95 probabilities={'range': 1.0, 'stress': 0.0, 'transition': 0.0, 'trend': 0.0}
+FAIL_CLOSED independent_cross_market_validation replay used BTCUSD from the 172142 YF 1h candle file only
+FAIL_CLOSED independent_cross_timeframe_validation replay windows were generated from the same 1h source and passed as ltf/mtf/htf
+FAIL_CLOSED execution_tree_non_observe actionable=False ready=False gate=execution_blocked review=observe
+FAIL_CLOSED path_probability_95 path_prob=0.3125 lower_bound=0.21821371337170056
+PASS accepted_95_contexts_added=0
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

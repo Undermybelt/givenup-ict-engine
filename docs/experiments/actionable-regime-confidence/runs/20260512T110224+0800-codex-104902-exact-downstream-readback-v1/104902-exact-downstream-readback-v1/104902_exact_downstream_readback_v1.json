@@ -1,0 +1,128 @@
+{
+  "artifact_id": "104902_exact_downstream_readback_v1",
+  "artifact_type": "board_b_exact_root_downstream_readback",
+  "generated_at_local": "2026-05-12T11:10:00+08:00",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+  "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+  "source_strategy": "ProviderCryptoPullbackRevertV1",
+  "source_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+  "source_branch_fields": {
+    "main_regime": "Range",
+    "sub_regime": "ProviderCryptoPullback",
+    "sub_sub_regime_or_profit_factor": "MeanRevertBounce",
+    "profit_factor": "ProviderCryptoPullbackRevertV1"
+  },
+  "source_metrics": {
+    "trade_count": 146,
+    "total_profit_pct": 2.83,
+    "sharpe": 0.18746446058210575,
+    "sortino": 0.4630549582450334,
+    "calmar": 1.7869559060851206,
+    "win_rate_pct": 45.20547945205479,
+    "profit_factor": 1.1185755311888328,
+    "max_drawdown_pct": -4.291467939207919
+  },
+  "ordered_chain": [
+    {
+      "step": "auto_quant_results_import",
+      "exit": 0,
+      "summary": "imported one ok strategy from the 104902 strategy library"
+    },
+    {
+      "step": "auto_quant_prior_init",
+      "exit": 0,
+      "summary": "applied ProviderCryptoPullbackRevertV1 with trade_count=146 and evidence_value_gate_passed=true"
+    },
+    {
+      "step": "auto_quant_ingest_real_trades",
+      "exit": 0,
+      "summary": "applied 146 real-trade rows, invalid=0, inserted=146 feedback records"
+    },
+    {
+      "step": "pre_bayes_status",
+      "exit": 0,
+      "summary": "no latest bridge, policy, soft evidence, filtered assignments, canonical structural regime, or gate status"
+    },
+    {
+      "step": "policy_training_status",
+      "exit": 0,
+      "summary": "entry models not ready with matched_rows=0; structural path-ranking runtime disabled"
+    },
+    {
+      "step": "export_structural_path_ranking_target",
+      "exit": 0,
+      "summary": "exported one target row and one history row, mature_rows=0, pending_reward_state=unobserved"
+    },
+    {
+      "step": "workflow_structural_bundle",
+      "exit": 0,
+      "summary": "selected bootstrap_readiness observe path because no workflow snapshot exists"
+    },
+    {
+      "step": "workflow_execution_candidate",
+      "exit": 0,
+      "summary": "execution candidate observed but ready=false and actionable=false"
+    },
+    {
+      "step": "workflow_full",
+      "exit": 0,
+      "summary": "closed_loop_branch_admission fail_closed with exact_structural_branch_visible_but_not_ready_or_actionable"
+    }
+  ],
+  "downstream_readback": {
+    "bbn_network_written": true,
+    "pre_bayes_policy_present": false,
+    "pre_bayes_soft_evidence_present": false,
+    "pre_bayes_gate_status_present": false,
+    "entry_model_matched_rows": 0,
+    "structural_target_rows": 1,
+    "structural_target_history_rows": 1,
+    "structural_target_mature_rows": 0,
+    "catboost_runtime_selection_enabled": false,
+    "catboost_runtime_ready": false,
+    "catboost_raw_scored_mature_rows": 0,
+    "path_ranker_trainer_artifact_ready": false,
+    "execution_candidate_ready": false,
+    "execution_candidate_actionable": false,
+    "workflow_direction": "observe",
+    "workflow_path_label": "bootstrap_readiness",
+    "closed_loop_branch_admission_status": "fail_closed"
+  },
+  "branch_path_parity": {
+    "source_library_branch_present": true,
+    "learning_state_branch_present": true,
+    "structural_target_branch_path": "",
+    "workflow_path_id": "path:scenario:B2R_YAHOO_BTC_PULLBACK_PRECISION_104902:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+    "exact_source_branch_survived_to_structural_target": false,
+    "exact_source_branch_survived_to_execution_tree": false
+  },
+  "gate": {
+    "count_once": "110224_104902_exact_downstream_readback",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "decision": "fail_closed",
+    "reasons": [
+      "single_provider_yahoo_btc_only_source_already_fail_closed",
+      "pre_bayes_policy_absent",
+      "entry_model_matched_rows_0",
+      "structural_target_mature_rows_0",
+      "catboost_path_ranker_runtime_disabled",
+      "path_ranker_trainer_artifact_not_ready",
+      "execution_candidate_ready_false_actionable_false",
+      "workflow_bootstrap_readiness_observe_only",
+      "exact_source_branch_not_preserved_into_structural_target_or_execution_tree",
+      "six_provider_authority_gate_not_satisfied",
+      "no_selected_history_or_source_control_unlock"
+    ]
+  },
+  "evidence_paths": {
+    "strategy_library": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/104902_provider_crypto_pullback_strategy_library_v1.json",
+    "command_outputs": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/command-output/",
+    "exit_files": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/checks/",
+    "bbn_network": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/state_104902_exact_downstream_v1/auto-quant/B2R_YAHOO_BTC_PULLBACK_PRECISION_104902/bbn_network.json",
+    "structural_target_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/state_104902_exact_downstream_v1/B2R_YAHOO_BTC_PULLBACK_PRECISION_104902/policy_training/structural_path_ranking_target.csv",
+    "workflow_snapshot": "docs/experiments/actionable-regime-confidence/runs/20260512T110224+0800-codex-104902-exact-downstream-readback-v1/state_104902_exact_downstream_v1/B2R_YAHOO_BTC_PULLBACK_PRECISION_104902/workflow_snapshot.json"
+  }
+}

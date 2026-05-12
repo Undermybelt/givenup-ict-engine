@@ -1,0 +1,23 @@
+{
+  "accepted_new_roots_95": [
+    "Bull"
+  ],
+  "accepted_root_classes_95_effective": [
+    "Bull",
+    "Crisis"
+  ],
+  "fresh_calibration_rerun": true,
+  "gate_result": "accepted_bull_95",
+  "missing_root_classes_95_effective": [
+    "Bear",
+    "Sideways",
+    "Manipulation"
+  ],
+  "next_action": "Continue MainRegimeV2 root gates for Bear and Sideways; keep Manipulation blocked until direct event/order-lifecycle labels exist.",
+  "retained_prior_accepted_root_classes_95": [
+    "Crisis"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

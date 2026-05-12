@@ -1,0 +1,1169 @@
+{
+  "lane_id": "nq_autoquant_multitimeframe_agreement_15m",
+  "market": "NQ",
+  "timeframe": "15m",
+  "provider_observations": [
+    "nq_autoquant_15m",
+    "nq_autoquant_1h",
+    "nq_autoquant_4h",
+    "nq_autoquant_1d"
+  ],
+  "board_eligible": false,
+  "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+  "row_count": 87822,
+  "feature_count": 181,
+  "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T183512/provider-agreement-v2/nq_autoquant_multitimeframe_agreement_15m/provider_agreement_v2_features.csv",
+  "split": {
+    "train": 43911,
+    "calibration": 21955,
+    "test": 21956
+  },
+  "target_counts": {
+    "target_release_long_h4": {
+      "positive": 25935,
+      "negative": 61887
+    },
+    "target_release_long_h8": {
+      "positive": 25851,
+      "negative": 61971
+    },
+    "target_release_long_h16": {
+      "positive": 24840,
+      "negative": 62982
+    },
+    "target_release_short_h4": {
+      "positive": 17699,
+      "negative": 70123
+    },
+    "target_release_short_h8": {
+      "positive": 16915,
+      "negative": 70907
+    },
+    "target_release_short_h16": {
+      "positive": 15239,
+      "negative": 72583
+    }
+  },
+  "candidate_count": 39,
+  "accepted_95_count": 0,
+  "selected_candidate": {
+    "candidate_kind": "catboost_isotonic",
+    "target": "target_release_long_h16",
+    "threshold": 0.9762470308788599,
+    "calibration_support": 521,
+    "calibration_success": 510,
+    "calibration_precision": 0.9788867562380038,
+    "calibration_wilson_lcb_95": 0.9625927245954594,
+    "test_support": 392,
+    "test_success": 387,
+    "test_precision": 0.9872448979591837,
+    "precision_wilson_lcb_95": 0.9704930122116464,
+    "ece": 0.008790719375636136,
+    "coverage": 0.01785388959737657,
+    "accepted_95": false,
+    "board_eligible": false,
+    "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+    "positive_count": 24840,
+    "negative_count": 62982,
+    "top_importances": [
+      {
+        "feature": "provider_agreement_long_any",
+        "importance": 79.35050550976693
+      },
+      {
+        "feature": "nq_aq_1d_ret_16",
+        "importance": 5.001808908052261
+      },
+      {
+        "feature": "nq_aq_1d_pos_32",
+        "importance": 1.5166883287976218
+      },
+      {
+        "feature": "nq_aq_1d_ret_32",
+        "importance": 1.3394494939570436
+      },
+      {
+        "feature": "nq_aq_1d_pos_64",
+        "importance": 1.1951687433130314
+      },
+      {
+        "feature": "nq_aq_4h_ret_4",
+        "importance": 1.0058021869692142
+      },
+      {
+        "feature": "nq_aq_1d_volume",
+        "importance": 0.6589913872763046
+      },
+      {
+        "feature": "nq_aq_15m_ret_16",
+        "importance": 0.6400692937666088
+      },
+      {
+        "feature": "nq_aq_15m_pos_16",
+        "importance": 0.5582425923905799
+      },
+      {
+        "feature": "nq_aq_1d_vol_16",
+        "importance": 0.5467998066115639
+      },
+      {
+        "feature": "nq_aq_15m_pos_64",
+        "importance": 0.5244708840645623
+      },
+      {
+        "feature": "nq_aq_1d_volume_z_16",
+        "importance": 0.44616404947735755
+      },
+      {
+        "feature": "nq_aq_1d_pos_16",
+        "importance": 0.38573641902259376
+      },
+      {
+        "feature": "nq_aq_15m_ret_8",
+        "importance": 0.38550625940540983
+      },
+      {
+        "feature": "nq_aq_1d_ret_8",
+        "importance": 0.3449265401142107
+      },
+      {
+        "feature": "nq_aq_1d_volume_z_32",
+        "importance": 0.29355898802674896
+      }
+    ]
+  },
+  "top_candidates": [
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h16",
+      "threshold": 0.9762470308788599,
+      "calibration_support": 521,
+      "calibration_success": 510,
+      "calibration_precision": 0.9788867562380038,
+      "calibration_wilson_lcb_95": 0.9625927245954594,
+      "test_support": 392,
+      "test_success": 387,
+      "test_precision": 0.9872448979591837,
+      "precision_wilson_lcb_95": 0.9704930122116464,
+      "ece": 0.008790719375636136,
+      "coverage": 0.01785388959737657,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 24840,
+      "negative_count": 62982,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_long_any",
+          "importance": 79.35050550976693
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 5.001808908052261
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 1.5166883287976218
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 1.3394494939570436
+        },
+        {
+          "feature": "nq_aq_1d_pos_64",
+          "importance": 1.1951687433130314
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.0058021869692142
+        },
+        {
+          "feature": "nq_aq_1d_volume",
+          "importance": 0.6589913872763046
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.6400692937666088
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.5582425923905799
+        },
+        {
+          "feature": "nq_aq_1d_vol_16",
+          "importance": 0.5467998066115639
+        },
+        {
+          "feature": "nq_aq_15m_pos_64",
+          "importance": 0.5244708840645623
+        },
+        {
+          "feature": "nq_aq_1d_volume_z_16",
+          "importance": 0.44616404947735755
+        },
+        {
+          "feature": "nq_aq_1d_pos_16",
+          "importance": 0.38573641902259376
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.38550625940540983
+        },
+        {
+          "feature": "nq_aq_1d_ret_8",
+          "importance": 0.3449265401142107
+        },
+        {
+          "feature": "nq_aq_1d_volume_z_32",
+          "importance": 0.29355898802674896
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h16",
+      "threshold": 0.9753694581280788,
+      "calibration_support": 724,
+      "calibration_success": 708,
+      "calibration_precision": 0.9779005524861878,
+      "calibration_wilson_lcb_95": 0.9644045299453455,
+      "test_support": 599,
+      "test_success": 587,
+      "test_precision": 0.9799666110183639,
+      "precision_wilson_lcb_95": 0.9653126835632668,
+      "ece": 0.0025784376673405607,
+      "coverage": 0.027281836400072874,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 24840,
+      "negative_count": 62982,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_long_any",
+          "importance": 79.35050550976693
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 5.001808908052261
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 1.5166883287976218
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 1.3394494939570436
+        },
+        {
+          "feature": "nq_aq_1d_pos_64",
+          "importance": 1.1951687433130314
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.0058021869692142
+        },
+        {
+          "feature": "nq_aq_1d_volume",
+          "importance": 0.6589913872763046
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.6400692937666088
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.5582425923905799
+        },
+        {
+          "feature": "nq_aq_1d_vol_16",
+          "importance": 0.5467998066115639
+        },
+        {
+          "feature": "nq_aq_15m_pos_64",
+          "importance": 0.5244708840645623
+        },
+        {
+          "feature": "nq_aq_1d_volume_z_16",
+          "importance": 0.44616404947735755
+        },
+        {
+          "feature": "nq_aq_1d_pos_16",
+          "importance": 0.38573641902259376
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.38550625940540983
+        },
+        {
+          "feature": "nq_aq_1d_ret_8",
+          "importance": 0.3449265401142107
+        },
+        {
+          "feature": "nq_aq_1d_volume_z_32",
+          "importance": 0.29355898802674896
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_short_h4",
+      "threshold": 0.95,
+      "calibration_support": 558,
+      "calibration_success": 540,
+      "calibration_precision": 0.967741935483871,
+      "calibration_wilson_lcb_95": 0.9495882632230006,
+      "test_support": 598,
+      "test_success": 584,
+      "test_precision": 0.9765886287625418,
+      "precision_wilson_lcb_95": 0.961089255806938,
+      "ece": 0.008025586207147772,
+      "coverage": 0.027236290763344873,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 17699,
+      "negative_count": 70123,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_short_any",
+          "importance": 85.38390739339005
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 1.7786819673072622
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.323286317891822
+        },
+        {
+          "feature": "nq_aq_4h_pos_16",
+          "importance": 1.0621216621352765
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 0.9412822487705064
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.8906085499933666
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 0.834739052544847
+        },
+        {
+          "feature": "nq_aq_4h_ret_8",
+          "importance": 0.6498747273038639
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.5950755840054435
+        },
+        {
+          "feature": "nq_aq_4h_pos_4",
+          "importance": 0.576909803932833
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.5555506067235473
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.42120140390378014
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 0.40376470318059143
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.3852966898380357
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.35344588305294444
+        },
+        {
+          "feature": "nq_aq_15m_ret_1",
+          "importance": 0.2924131772975065
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_short_h4",
+      "threshold": 0.9219858156028369,
+      "calibration_support": 699,
+      "calibration_success": 670,
+      "calibration_precision": 0.9585121602288984,
+      "calibration_wilson_lcb_95": 0.9410518773714335,
+      "test_support": 728,
+      "test_success": 708,
+      "test_precision": 0.9725274725274725,
+      "precision_wilson_lcb_95": 0.9579478034314773,
+      "ece": 0.01228179192789236,
+      "coverage": 0.03315722353798506,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 17699,
+      "negative_count": 70123,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_short_any",
+          "importance": 85.38390739339005
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 1.7786819673072622
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.323286317891822
+        },
+        {
+          "feature": "nq_aq_4h_pos_16",
+          "importance": 1.0621216621352765
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 0.9412822487705064
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.8906085499933666
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 0.834739052544847
+        },
+        {
+          "feature": "nq_aq_4h_ret_8",
+          "importance": 0.6498747273038639
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.5950755840054435
+        },
+        {
+          "feature": "nq_aq_4h_pos_4",
+          "importance": 0.576909803932833
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.5555506067235473
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.42120140390378014
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 0.40376470318059143
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.3852966898380357
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.35344588305294444
+        },
+        {
+          "feature": "nq_aq_15m_ret_1",
+          "importance": 0.2924131772975065
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_short_h4",
+      "threshold": 0.9705882352941176,
+      "calibration_support": 418,
+      "calibration_success": 407,
+      "calibration_precision": 0.9736842105263158,
+      "calibration_wilson_lcb_95": 0.9534979495698493,
+      "test_support": 445,
+      "test_success": 434,
+      "test_precision": 0.9752808988764045,
+      "precision_wilson_lcb_95": 0.9562840536389343,
+      "ece": 0.00037932444248223174,
+      "coverage": 0.02026780834396065,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 17699,
+      "negative_count": 70123,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_short_any",
+          "importance": 85.38390739339005
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 1.7786819673072622
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.323286317891822
+        },
+        {
+          "feature": "nq_aq_4h_pos_16",
+          "importance": 1.0621216621352765
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 0.9412822487705064
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.8906085499933666
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 0.834739052544847
+        },
+        {
+          "feature": "nq_aq_4h_ret_8",
+          "importance": 0.6498747273038639
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.5950755840054435
+        },
+        {
+          "feature": "nq_aq_4h_pos_4",
+          "importance": 0.576909803932833
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.5555506067235473
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.42120140390378014
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 0.40376470318059143
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.3852966898380357
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.35344588305294444
+        },
+        {
+          "feature": "nq_aq_15m_ret_1",
+          "importance": 0.2924131772975065
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h8",
+      "threshold": 0.986784140969163,
+      "calibration_support": 238,
+      "calibration_success": 235,
+      "calibration_precision": 0.9873949579831933,
+      "calibration_wilson_lcb_95": 0.9636020973805965,
+      "test_support": 244,
+      "test_success": 239,
+      "test_precision": 0.9795081967213115,
+      "precision_wilson_lcb_95": 0.9529358324479502,
+      "ece": 0.007600924387954233,
+      "coverage": 0.011113135361632356,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 25851,
+      "negative_count": 61971,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_long_any",
+          "importance": 84.83548337815722
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 2.6357673851329246
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 1.0749327861636981
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 0.9715711533438195
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 0.808903794256006
+        },
+        {
+          "feature": "nq_aq_1d_pos_64",
+          "importance": 0.796214294374816
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 0.5898787299057463
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.5275202467248764
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.5210878654660624
+        },
+        {
+          "feature": "nq_aq_15m_pos_32",
+          "importance": 0.4323799366067196
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.41412855121194103
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.39575551556962313
+        },
+        {
+          "feature": "nq_aq_4h_pos_4",
+          "importance": 0.3831710219601128
+        },
+        {
+          "feature": "nq_aq_4h_pos_16",
+          "importance": 0.373014720115816
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.2941434241141939
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.2341905318152106
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_short_h16",
+      "threshold": 1.0,
+      "calibration_support": 127,
+      "calibration_success": 127,
+      "calibration_precision": 1.0,
+      "calibration_wilson_lcb_95": 0.9706403547062368,
+      "test_support": 149,
+      "test_success": 147,
+      "test_precision": 0.9865771812080537,
+      "precision_wilson_lcb_95": 0.9523842450665652,
+      "ece": 0.01342281879194629,
+      "coverage": 0.006786299872472217,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 15239,
+      "negative_count": 72583,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_short_any",
+          "importance": 80.15285084045792
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 4.155581458355948
+        },
+        {
+          "feature": "nq_aq_1d_pos_16",
+          "importance": 1.771475037828673
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 1.6179795905685646
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 1.460272763871275
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 1.0097174617480957
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.8446951348667175
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 0.7765284765342005
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.593364384081818
+        },
+        {
+          "feature": "nq_aq_15m_ret_32",
+          "importance": 0.31851865387026873
+        },
+        {
+          "feature": "nq_aq_1d_pos_64",
+          "importance": 0.3158854368675712
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.2959951866899765
+        },
+        {
+          "feature": "nq_aq_4h_range_mean_64",
+          "importance": 0.29597952191761145
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.2830137049165255
+        },
+        {
+          "feature": "nq_aq_15m_pos_32",
+          "importance": 0.27770092884055136
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 0.269297227840526
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h8",
+      "threshold": 0.9811320754716981,
+      "calibration_support": 291,
+      "calibration_success": 287,
+      "calibration_precision": 0.9862542955326461,
+      "calibration_wilson_lcb_95": 0.9651959509258117,
+      "test_support": 294,
+      "test_success": 287,
+      "test_precision": 0.9761904761904762,
+      "precision_wilson_lcb_95": 0.9516776501240231,
+      "ece": 0.009910354542679967,
+      "coverage": 0.013390417198032429,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 25851,
+      "negative_count": 61971,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_long_any",
+          "importance": 84.83548337815722
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 2.6357673851329246
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 1.0749327861636981
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 0.9715711533438195
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 0.808903794256006
+        },
+        {
+          "feature": "nq_aq_1d_pos_64",
+          "importance": 0.796214294374816
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 0.5898787299057463
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.5275202467248764
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.5210878654660624
+        },
+        {
+          "feature": "nq_aq_15m_pos_32",
+          "importance": 0.4323799366067196
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.41412855121194103
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.39575551556962313
+        },
+        {
+          "feature": "nq_aq_4h_pos_4",
+          "importance": 0.3831710219601128
+        },
+        {
+          "feature": "nq_aq_4h_pos_16",
+          "importance": 0.373014720115816
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.2941434241141939
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.2341905318152106
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h16",
+      "threshold": 0.9425287356321839,
+      "calibration_support": 1193,
+      "calibration_success": 1151,
+      "calibration_precision": 0.9647946353730092,
+      "calibration_wilson_lcb_95": 0.9527555336811848,
+      "test_support": 1072,
+      "test_success": 1030,
+      "test_precision": 0.960820895522388,
+      "precision_wilson_lcb_95": 0.9474655717066103,
+      "ece": 0.002175715746950191,
+      "coverage": 0.048824922572417565,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 24840,
+      "negative_count": 62982,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_long_any",
+          "importance": 79.35050550976693
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 5.001808908052261
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 1.5166883287976218
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 1.3394494939570436
+        },
+        {
+          "feature": "nq_aq_1d_pos_64",
+          "importance": 1.1951687433130314
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.0058021869692142
+        },
+        {
+          "feature": "nq_aq_1d_volume",
+          "importance": 0.6589913872763046
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.6400692937666088
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.5582425923905799
+        },
+        {
+          "feature": "nq_aq_1d_vol_16",
+          "importance": 0.5467998066115639
+        },
+        {
+          "feature": "nq_aq_15m_pos_64",
+          "importance": 0.5244708840645623
+        },
+        {
+          "feature": "nq_aq_1d_volume_z_16",
+          "importance": 0.44616404947735755
+        },
+        {
+          "feature": "nq_aq_1d_pos_16",
+          "importance": 0.38573641902259376
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.38550625940540983
+        },
+        {
+          "feature": "nq_aq_1d_ret_8",
+          "importance": 0.3449265401142107
+        },
+        {
+          "feature": "nq_aq_1d_volume_z_32",
+          "importance": 0.29355898802674896
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_short_h4",
+      "threshold": 0.8989169675090253,
+      "calibration_support": 986,
+      "calibration_success": 928,
+      "calibration_precision": 0.9411764705882353,
+      "calibration_wilson_lcb_95": 0.9247066050609278,
+      "test_support": 991,
+      "test_success": 952,
+      "test_precision": 0.9606458123107972,
+      "precision_wilson_lcb_95": 0.9466545933947744,
+      "ece": 0.016671695195426904,
+      "coverage": 0.045135725997449444,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 17699,
+      "negative_count": 70123,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_short_any",
+          "importance": 85.38390739339005
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 1.7786819673072622
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.323286317891822
+        },
+        {
+          "feature": "nq_aq_4h_pos_16",
+          "importance": 1.0621216621352765
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 0.9412822487705064
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.8906085499933666
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 0.834739052544847
+        },
+        {
+          "feature": "nq_aq_4h_ret_8",
+          "importance": 0.6498747273038639
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.5950755840054435
+        },
+        {
+          "feature": "nq_aq_4h_pos_4",
+          "importance": 0.576909803932833
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.5555506067235473
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.42120140390378014
+        },
+        {
+          "feature": "nq_aq_1d_pos_32",
+          "importance": 0.40376470318059143
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.3852966898380357
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.35344588305294444
+        },
+        {
+          "feature": "nq_aq_15m_ret_1",
+          "importance": 0.2924131772975065
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h4",
+      "threshold": 0.9696969696969697,
+      "calibration_support": 444,
+      "calibration_success": 433,
+      "calibration_precision": 0.9752252252252253,
+      "calibration_wilson_lcb_95": 0.9561868308364401,
+      "test_support": 455,
+      "test_success": 440,
+      "test_precision": 0.967032967032967,
+      "precision_wilson_lcb_95": 0.9463243523486267,
+      "ece": 0.008944998265025483,
+      "coverage": 0.020723264711240662,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 25935,
+      "negative_count": 61887,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_long_any",
+          "importance": 85.13252043247167
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 1.6712490635340675
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.576087551291997
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 0.980352352070754
+        },
+        {
+          "feature": "nq_aq_4h_pos_16",
+          "importance": 0.9107002334061066
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.886693519180155
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 0.8021736368266099
+        },
+        {
+          "feature": "nq_aq_4h_pos_4",
+          "importance": 0.794283016430991
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.7464918078220716
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.6532469326652374
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.5865580635485027
+        },
+        {
+          "feature": "nq_aq_4h_ret_8",
+          "importance": 0.5587760016918809
+        },
+        {
+          "feature": "nq_aq_15m_pos_32",
+          "importance": 0.43593781371676105
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.4274670703121593
+        },
+        {
+          "feature": "nq_aq_4h_vol_4",
+          "importance": 0.26318476992933554
+        },
+        {
+          "feature": "nq_aq_1d_pos_64",
+          "importance": 0.2611975772844597
+        }
+      ]
+    },
+    {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h4",
+      "threshold": 0.9728506787330317,
+      "calibration_support": 378,
+      "calibration_success": 369,
+      "calibration_precision": 0.9761904761904762,
+      "calibration_wilson_lcb_95": 0.9553754997461791,
+      "test_support": 394,
+      "test_success": 381,
+      "test_precision": 0.9670050761421319,
+      "precision_wilson_lcb_95": 0.9443736325837951,
+      "ece": 0.009945327561095119,
+      "coverage": 0.017944980870832575,
+      "accepted_95": false,
+      "board_eligible": false,
+      "board_eligibility_note": "Statistical sidecar only: all observations come from the Auto-Quant local cache, so this cannot alone satisfy independent provider breadth.",
+      "positive_count": 25935,
+      "negative_count": 61887,
+      "top_importances": [
+        {
+          "feature": "provider_agreement_long_any",
+          "importance": 85.13252043247167
+        },
+        {
+          "feature": "nq_aq_4h_ret_1",
+          "importance": 1.6712490635340675
+        },
+        {
+          "feature": "nq_aq_4h_ret_4",
+          "importance": 1.576087551291997
+        },
+        {
+          "feature": "nq_aq_1d_ret_16",
+          "importance": 0.980352352070754
+        },
+        {
+          "feature": "nq_aq_4h_pos_16",
+          "importance": 0.9107002334061066
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.886693519180155
+        },
+        {
+          "feature": "nq_aq_1d_ret_32",
+          "importance": 0.8021736368266099
+        },
+        {
+          "feature": "nq_aq_4h_pos_4",
+          "importance": 0.794283016430991
+        },
+        {
+          "feature": "nq_aq_15m_pos_8",
+          "importance": 0.7464918078220716
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.6532469326652374
+        },
+        {
+          "feature": "nq_aq_4h_pos_8",
+          "importance": 0.5865580635485027
+        },
+        {
+          "feature": "nq_aq_4h_ret_8",
+          "importance": 0.5587760016918809
+        },
+        {
+          "feature": "nq_aq_15m_pos_32",
+          "importance": 0.43593781371676105
+        },
+        {
+          "feature": "nq_aq_15m_ret_8",
+          "importance": 0.4274670703121593
+        },
+        {
+          "feature": "nq_aq_4h_vol_4",
+          "importance": 0.26318476992933554
+        },
+        {
+          "feature": "nq_aq_1d_pos_64",
+          "importance": 0.2611975772844597
+        }
+      ]
+    }
+  ]
+}

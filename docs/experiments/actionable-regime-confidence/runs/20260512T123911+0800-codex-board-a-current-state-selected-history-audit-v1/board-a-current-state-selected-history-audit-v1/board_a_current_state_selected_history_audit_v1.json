@@ -1,0 +1,346 @@
+{
+  "board_sha256_at_artifact_time": "16fb0cd3800fca54405b8d617abe8be655f29fc7444b76f715f9e5092068b8aa",
+  "checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "note": "artifact created first; board append must be done separately after re-reading tail/hash",
+      "requirement": "same Board A markdown updated without disturbing concurrent sections",
+      "status": "pending_board_append"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T122933+0800-codex-115700-provider-evidence-node-cross-context-gate-v1/115700-provider-evidence-node-cross-context-gate-v1/115700_provider_evidence_node_cross_context_gate_v1.json",
+      "note": "max_bbn_probability=0.747688; accepted_feature_gates=0",
+      "requirement": "each regime reaches >=95% confidence",
+      "status": "fail"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T122933+0800-codex-115700-provider-evidence-node-cross-context-gate-v1/115700-provider-evidence-node-cross-context-gate-v1/115700_provider_evidence_node_cross_context_gate_v1.json",
+      "note": "instrument_families=['BTC']",
+      "requirement": "validate on other markets/instruments",
+      "status": "fail"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/115700-selected-history-preflight-v1/115700_selected_history_preflight_v1.json",
+      "note": "selected-history native preflight checked 1h/4h/1d, but all remain observe/not ready and still BTC-only",
+      "requirement": "validate on other periods/timeframes",
+      "status": "partial_fail_closed"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/115700-selected-history-preflight-v1/115700_selected_history_preflight_v1.json",
+      "note": "selected_history_exits_ok=True; ready_actionable_count=0",
+      "requirement": "run ict-engine filter/BBN/CatBoost/execution-tree path",
+      "status": "partial_fail_closed"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/command-output/05_run_tomac_timerange_patched.out",
+      "note": "prepare_status=prepared; run_tomac_exit=0; total_trade_count=0",
+      "requirement": "run Auto-Quant on selected history",
+      "status": "partial_fail_closed"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T122933+0800-codex-115700-provider-evidence-node-cross-context-gate-v1/115700-provider-evidence-node-cross-context-gate-v1/115700_provider_evidence_node_cross_context_gate_v1.json",
+      "note": "six-provider lineage exists upstream in 115700/121347; current selected-history/AQ run remains BTC selected-history only",
+      "requirement": "remember IBKR TradingViewRemix YF Kraken provider lineage",
+      "status": "partial_fail_closed"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T122933+0800-codex-115700-provider-evidence-node-cross-context-gate-v1/115700-provider-evidence-node-cross-context-gate-v1/115700_provider_evidence_node_cross_context_gate_v1.json",
+      "note": "production_likelihood_mutation=False; promotion_allowed=False",
+      "requirement": "no production BBN mutation or execution promotion without evidence",
+      "status": "pass_fail_closed"
+    },
+    {
+      "evidence": "current audit",
+      "note": "strict objective remains incomplete",
+      "requirement": "do not call update_goal until objective fully achieved",
+      "status": "pass_fail_closed"
+    }
+  ],
+  "gate": "board_a_current_state_selected_history_audit_v1=strict_goal_not_achieved_no_update_goal",
+  "input_artifacts": {
+    "provider_gate": "docs/experiments/actionable-regime-confidence/runs/20260512T122933+0800-codex-115700-provider-evidence-node-cross-context-gate-v1/115700-provider-evidence-node-cross-context-gate-v1/115700_provider_evidence_node_cross_context_gate_v1.json",
+    "selected_history_aq_commands": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/command-output",
+    "selected_history_preflight": "docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/115700-selected-history-preflight-v1/115700_selected_history_preflight_v1.json",
+    "split_validation": "docs/experiments/actionable-regime-confidence/runs/20260512T123233+0800-codex-122351-provider-node-split-validation-v1/122351-provider-node-split-validation-v1/122351_provider_node_split_validation_v1.json"
+  },
+  "promotion_allowed": false,
+  "provider_node_gate": {
+    "accepted_feature_gates": 0,
+    "best_feature": {
+      "accepted_contexts": [],
+      "best_bin": {
+        "avg_pnl": 23.0331,
+        "feature_bin": "high",
+        "loss_rate": 0.384615,
+        "losses": 30,
+        "meets_95_gate": false,
+        "meets_min_rows": true,
+        "rows": 78,
+        "wilson_win_lower_95": 0.504426,
+        "win_rate": 0.615385,
+        "wins": 48
+      },
+      "best_bin_contexts": [
+        {
+          "avg_pnl": 23.378305,
+          "axis": "source_provider",
+          "loss_rate": 0.388889,
+          "losses": 7,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 18,
+          "source_provider": "binance_public",
+          "wilson_win_lower_95": 0.386187,
+          "win_rate": 0.611111,
+          "wins": 11
+        },
+        {
+          "avg_pnl": 20.540177,
+          "axis": "source_provider",
+          "loss_rate": 0.421053,
+          "losses": 8,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 19,
+          "source_provider": "bybit_public",
+          "wilson_win_lower_95": 0.362756,
+          "win_rate": 0.578947,
+          "wins": 11
+        },
+        {
+          "avg_pnl": 17.76084,
+          "axis": "source_provider",
+          "loss_rate": 0.5,
+          "losses": 8,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 16,
+          "source_provider": "ibkr_paxos_long_midpoint",
+          "wilson_win_lower_95": 0.279992,
+          "win_rate": 0.5,
+          "wins": 8
+        },
+        {
+          "avg_pnl": 28.016205,
+          "axis": "source_provider",
+          "loss_rate": 0.25,
+          "losses": 2,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 8,
+          "source_provider": "kraken_public",
+          "wilson_win_lower_95": 0.40927,
+          "win_rate": 0.75,
+          "wins": 6
+        },
+        {
+          "avg_pnl": 26.570993,
+          "axis": "source_provider",
+          "loss_rate": 0.3,
+          "losses": 3,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 10,
+          "source_provider": "tvr_default_binance",
+          "wilson_win_lower_95": 0.396773,
+          "win_rate": 0.7,
+          "wins": 7
+        },
+        {
+          "avg_pnl": 30.213704,
+          "axis": "source_provider",
+          "loss_rate": 0.285714,
+          "losses": 2,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 7,
+          "source_provider": "yfinance",
+          "wilson_win_lower_95": 0.358929,
+          "win_rate": 0.714286,
+          "wins": 5
+        },
+        {
+          "avg_pnl": 21.367192,
+          "axis": "chronological_bucket",
+          "chronological_bucket": "early",
+          "loss_rate": 0.454545,
+          "losses": 20,
+          "meets_95_gate": false,
+          "meets_min_rows": true,
+          "rows": 44,
+          "wilson_win_lower_95": 0.400659,
+          "win_rate": 0.545455,
+          "wins": 24
+        },
+        {
+          "avg_pnl": 20.529906,
+          "axis": "chronological_bucket",
+          "chronological_bucket": "middle",
+          "loss_rate": 0.285714,
+          "losses": 4,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 14,
+          "wilson_win_lower_95": 0.453505,
+          "win_rate": 0.714286,
+          "wins": 10
+        },
+        {
+          "avg_pnl": 28.450334,
+          "axis": "chronological_bucket",
+          "chronological_bucket": "late",
+          "loss_rate": 0.3,
+          "losses": 6,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 20,
+          "wilson_win_lower_95": 0.481023,
+          "win_rate": 0.7,
+          "wins": 14
+        },
+        {
+          "avg_pnl": 24.965425,
+          "axis": "branch_path",
+          "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "loss_rate": 0.333333,
+          "losses": 19,
+          "meets_95_gate": false,
+          "meets_min_rows": true,
+          "rows": 57,
+          "wilson_win_lower_95": 0.537223,
+          "win_rate": 0.666667,
+          "wins": 38
+        },
+        {
+          "avg_pnl": 17.788217,
+          "axis": "branch_path",
+          "branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+          "loss_rate": 0.52381,
+          "losses": 11,
+          "meets_95_gate": false,
+          "meets_min_rows": false,
+          "rows": 21,
+          "wilson_win_lower_95": 0.283437,
+          "win_rate": 0.47619,
+          "wins": 10
+        }
+      ],
+      "by_bin": [
+        {
+          "avg_pnl": 23.0331,
+          "feature_bin": "high",
+          "loss_rate": 0.384615,
+          "losses": 30,
+          "meets_95_gate": false,
+          "meets_min_rows": true,
+          "rows": 78,
+          "wilson_win_lower_95": 0.504426,
+          "win_rate": 0.615385,
+          "wins": 48
+        },
+        {
+          "avg_pnl": -8.658247,
+          "feature_bin": "low",
+          "loss_rate": 0.7375,
+          "losses": 59,
+          "meets_95_gate": false,
+          "meets_min_rows": true,
+          "rows": 80,
+          "wilson_win_lower_95": 0.178573,
+          "win_rate": 0.2625,
+          "wins": 21
+        },
+        {
+          "avg_pnl": -16.302794,
+          "feature_bin": "mid",
+          "loss_rate": 0.848101,
+          "losses": 67,
+          "meets_95_gate": false,
+          "meets_min_rows": true,
+          "rows": 79,
+          "wilson_win_lower_95": 0.089082,
+          "win_rate": 0.151899,
+          "wins": 12
+        }
+      ],
+      "feature": "provider_rv_median_24h",
+      "feature_gate": "fail_closed_no_95_context",
+      "rows": 237
+    },
+    "gate": "provider_evidence_node_cross_context_gate_fail_closed",
+    "instrument_families": [
+      "BTC"
+    ],
+    "max_bbn_probability": 0.747688,
+    "production_likelihood_mutation": false,
+    "timeframes": [
+      "1h"
+    ]
+  },
+  "run_id": "20260512T123911+0800-codex-board-a-current-state-selected-history-audit-v1",
+  "selected_history_aq": {
+    "factor_research_after_prepare_data_ready": true,
+    "factor_research_after_prepare_exit": 0,
+    "prepare_data_ready": true,
+    "prepare_exit": 0,
+    "prepare_status": "prepared",
+    "tomac": {
+      "done_failed": 0,
+      "done_succeeded": 3,
+      "exit_initial_autoquant_venv": 1,
+      "exit_timerange_patched": 0,
+      "output_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1/command-output/05_run_tomac_timerange_patched.out",
+      "strategies": [
+        {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "strategy": "TomacAggressiveBE",
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        },
+        {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "strategy": "TomacKillzoneBreakout",
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        },
+        {
+          "calmar": 0.0,
+          "max_drawdown_pct": -0.0,
+          "profit_factor": 0.0,
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "strategy": "TomacRRWinRate",
+          "total_profit_pct": 0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0
+        }
+      ],
+      "total_trade_count": 0
+    }
+  },
+  "selected_history_preflight": {
+    "exits_all_zero": true,
+    "preferred_for_user_selection": "1h",
+    "ready_actionable_count": 0,
+    "result_count": 3,
+    "source_state_mutated": false
+  },
+  "split_validation": {
+    "best_internal_candidate": "provider_rv_median_24h",
+    "gate": "122351_provider_node_split_validation_v1=provider_rv_internal_priority_but_external_validation_required_no_promotion",
+    "promotion_allowed": false,
+    "trade_usable": false
+  },
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,52 @@
+{
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "exit_code": 1,
+  "failed_strategies": [
+    {
+      "error": "No data left after adjusting for startup candles.",
+      "error_type": "OperationalException",
+      "strategy": "TomacNQ_CompressionMeanRevert"
+    },
+    {
+      "error": "No data left after adjusting for startup candles.",
+      "error_type": "OperationalException",
+      "strategy": "TomacNQ_MulticadenceTrendPullback"
+    }
+  ],
+  "gate_result": "non_promoting_multicadence_run_tomac_readback_v1=incubation_only_zero_trade_and_startup_candle_failure",
+  "packet": "non-promoting-multicadence-run-tomac-readback-v1",
+  "promotion_allowed": false,
+  "run_id": "20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "successful_strategies": [
+    {
+      "profit_factor": 0.0,
+      "sharpe": 0.0,
+      "strategy": "NQMeanRevertFeedback",
+      "total_profit_pct": 0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0
+    },
+    {
+      "profit_factor": 0.0,
+      "sharpe": 0.0,
+      "strategy": "NQTrendCarryFeedback",
+      "total_profit_pct": 0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0
+    },
+    {
+      "profit_factor": 0.0,
+      "sharpe": 0.0,
+      "strategy": "TomacNQ_KillzoneBreakout",
+      "total_profit_pct": 0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0
+    }
+  ],
+  "total_strategies": 5,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

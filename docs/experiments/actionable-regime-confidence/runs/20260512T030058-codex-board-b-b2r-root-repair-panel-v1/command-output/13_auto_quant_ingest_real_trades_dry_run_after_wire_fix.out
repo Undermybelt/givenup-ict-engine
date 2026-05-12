@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "036a9f4b31ddb71e",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_ROOT_REPAIR_030058_20260511T191015.823754000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades",
+  "symbol": "B2R_ROOT_REPAIR_030058",
+  "trades_applied": 10444,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/branch-rc-spa/root_repair_panel_real_trades_v1.jsonl",
+  "trades_total": 10444
+}

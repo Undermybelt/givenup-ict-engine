@@ -1,0 +1,553 @@
+{
+  "artifact_version": "structural-playbook-v1",
+  "branch_history": {
+    "summary": {
+      "distinct_entities": 0,
+      "total_records": 0
+    }
+  },
+  "branch_set": {
+    "branches": [
+      {
+        "activation_conditions": [
+          "regime_posterior=trend:0.450"
+        ],
+        "branch_id": "QQQ:belief_regime_node:trend:trend_follow_through",
+        "branch_label": "trend_follow_through",
+        "composite_branch_score": 0.4648782832252756,
+        "failure_conditions": [
+          "regime branch trend loses posterior support or invalidates before trigger"
+        ],
+        "historical_avg_pnl": 0.0003629357993323579,
+        "historical_followed_count": 1,
+        "historical_invalidation_rate": 0.0,
+        "historical_total_records": 1,
+        "historical_win_rate": 0.0,
+        "posterior_probability": 0.44982611889325086,
+        "prior_probability": 0.5,
+        "supporting_evidence": [
+          "posterior_probability=trend:0.450",
+          "pre_bayes_gate_status=pass_neutralized",
+          "bridge_probability_gap=0.013",
+          "selected_entry_quality=medium",
+          "analyze:Review Pre-Bayes Evidence Gate",
+          "promotion:Block Promotion"
+        ],
+        "target_node_id": "QQQ:trend:candidate"
+      },
+      {
+        "activation_conditions": [
+          "regime_posterior=range:0.310"
+        ],
+        "branch_id": "QQQ:belief_regime_node:trend:range_mean_reversion",
+        "branch_label": "range_mean_reversion",
+        "composite_branch_score": 0.31003477622134984,
+        "failure_conditions": [
+          "regime branch range loses posterior support or invalidates before trigger"
+        ],
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "posterior_probability": 0.31003477622134984,
+        "prior_probability": 0.31003477622134984,
+        "supporting_evidence": [
+          "posterior_probability=range:0.310",
+          "pre_bayes_gate_status=pass_neutralized",
+          "bridge_probability_gap=0.013",
+          "selected_entry_quality=medium",
+          "analyze:Review Pre-Bayes Evidence Gate",
+          "promotion:Block Promotion"
+        ],
+        "target_node_id": "QQQ:range:candidate"
+      },
+      {
+        "activation_conditions": [
+          "regime_posterior=stress:0.164"
+        ],
+        "branch_id": "QQQ:belief_regime_node:trend:stress_de_risk",
+        "branch_label": "stress_de_risk",
+        "composite_branch_score": 0.16415301537393934,
+        "failure_conditions": [
+          "regime branch stress loses posterior support or invalidates before trigger"
+        ],
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "posterior_probability": 0.16415301537393934,
+        "prior_probability": 0.16415301537393934,
+        "supporting_evidence": [
+          "posterior_probability=stress:0.164",
+          "pre_bayes_gate_status=pass_neutralized",
+          "bridge_probability_gap=0.013",
+          "selected_entry_quality=medium",
+          "analyze:Review Pre-Bayes Evidence Gate",
+          "promotion:Block Promotion"
+        ],
+        "target_node_id": "QQQ:stress:candidate"
+      },
+      {
+        "activation_conditions": [
+          "regime_posterior=transition:0.076"
+        ],
+        "branch_id": "QQQ:belief_regime_node:trend:transition_confirmation",
+        "branch_label": "transition_confirmation",
+        "composite_branch_score": 0.07598608951146008,
+        "failure_conditions": [
+          "regime branch transition loses posterior support or invalidates before trigger"
+        ],
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "posterior_probability": 0.07598608951146008,
+        "prior_probability": 0.07598608951146008,
+        "supporting_evidence": [
+          "posterior_probability=transition:0.076",
+          "pre_bayes_gate_status=pass_neutralized",
+          "bridge_probability_gap=0.013",
+          "selected_entry_quality=medium",
+          "analyze:Review Pre-Bayes Evidence Gate",
+          "promotion:Block Promotion"
+        ],
+        "target_node_id": "QQQ:transition:candidate"
+      }
+    ],
+    "from_node_id": "QQQ:belief_regime_node:trend"
+  },
+  "feedback_template": {
+    "allowed_outcomes": [
+      "win",
+      "loss",
+      "breakeven",
+      "invalidated",
+      "abandoned",
+      "not_followed"
+    ],
+    "bbn_support_score": 0.5679392993393031,
+    "branch_id": "QQQ:belief_regime_node:trend:trend_follow_through",
+    "candidate_set_id": "structural-candidates:QQQ:307925baea80d03d",
+    "candidate_set_size": 3,
+    "direction": "Observe",
+    "entry_style": "conditional_execution",
+    "feedback_fields": [
+      {
+        "description": "Whether the user actually followed the recommended path.",
+        "field_id": "followed_path",
+        "label": "Followed Path",
+        "required": true,
+        "value_type": "boolean"
+      },
+      {
+        "description": "One of win, loss, breakeven, invalidated, abandoned, or not_followed.",
+        "field_id": "realized_outcome",
+        "label": "Realized Outcome",
+        "required": true,
+        "value_type": "enum"
+      },
+      {
+        "description": "Optional realized PnL from the actual execution.",
+        "field_id": "realized_pnl",
+        "label": "Realized PnL",
+        "required": false,
+        "value_type": "number"
+      },
+      {
+        "description": "Freeform reason such as stop_hit, target_hit, invalidated, timed_out.",
+        "field_id": "exit_reason",
+        "label": "Exit Reason",
+        "required": false,
+        "value_type": "string"
+      },
+      {
+        "description": "Optional operator notes about what actually happened.",
+        "field_id": "notes",
+        "label": "Notes",
+        "required": false,
+        "value_type": "string"
+      }
+    ],
+    "node_id": "QQQ:belief_regime_node:trend",
+    "notes": [
+      "Preserve recommendation_id plus node/branch/scenario/path ids when recording live feedback.",
+      "This is a protocol contract only; canonical persistence wiring comes next."
+    ],
+    "path_id": "path:scenario:QQQ:belief_regime_node:trend:trend_follow_through:primary",
+    "path_posterior": 0.5679392993393031,
+    "pre_bayes_gate_status": "pass_neutralized",
+    "protocol_version": "structural-feedback-v1",
+    "recommendation_id": "structural-feedback:QQQ:QQQ:belief_regime_node:trend:path:scenario:QQQ:belief_regime_node:trend:trend_follow_through:primary",
+    "recommended_at": "2026-05-10T09:34:43Z",
+    "scenario_id": "scenario:QQQ:belief_regime_node:trend:trend_follow_through",
+    "selected_entry_quality": "medium",
+    "selected_entry_quality_probability": 1.0,
+    "selected_path_probability": 0.3668302987035447,
+    "symbol": "QQQ"
+  },
+  "history_summary": {
+    "distinct_branches": 0,
+    "distinct_nodes": 0,
+    "distinct_paths": 0,
+    "distinct_scenarios": 0,
+    "total_records": 0
+  },
+  "node": {
+    "belief_posterior": 0.4526135567325147,
+    "belief_prior": 0.5,
+    "focus_phase": "analyze",
+    "invalidating_evidence": [
+      "analyze:not_comparable:no_previous_run",
+      "analyze:pre_bayes:low_directional_separation"
+    ],
+    "market_context": [
+      "posterior_active_regime=trend",
+      "posterior_normalization_status=canonical_structural_regime_posterior",
+      "posterior_probability=trend:0.450",
+      "posterior_probability=range:0.310",
+      "posterior_probability=stress:0.164",
+      "posterior_probability=transition:0.076"
+    ],
+    "node_family": "belief_regime_node",
+    "node_id": "QQQ:belief_regime_node:trend",
+    "node_label": "trend",
+    "origin_artifacts": [
+      "ensemble_vote:ensemble-vote:analyze:2026-05-10T09:18:24Z",
+      "execution_tree_artifact:execution-tree-QQQ-1778404704083"
+    ],
+    "posterior_confidence": 0.4526135567325147,
+    "supporting_evidence": [
+      "pre_bayes_gate_status=pass_neutralized",
+      "bridge_probability_gap=0.013",
+      "selected_entry_quality=medium",
+      "analyze:Review Pre-Bayes Evidence Gate",
+      "promotion:Block Promotion"
+    ],
+    "timeframe_scope": [
+      "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+      "multi_timeframe_missing=1m,5m,30m,4h",
+      "15m",
+      "1h",
+      "1d",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=1.0000",
+      "lower_timeframe_entry_alignment_score=0.8387"
+    ]
+  },
+  "node_history": {
+    "summary": {
+      "distinct_entities": 0,
+      "total_records": 0
+    }
+  },
+  "path_history": {
+    "summary": {
+      "distinct_branches": 0,
+      "distinct_paths": 0,
+      "distinct_scenarios": 0,
+      "total_records": 0
+    }
+  },
+  "path_plan": {
+    "paths": [
+      {
+        "bbn_support_score": 0.5679392993393031,
+        "composite_preference_score": 0.5475575095375121,
+        "confirmation_conditions": [
+          "recommended command remains valid on next refresh"
+        ],
+        "direction": "Observe",
+        "entry_style": "conditional_execution",
+        "execution_candidate_artifact_id": "execution-candidate:QQQ:analyze:v1",
+        "execution_candidate_status": "no_trade",
+        "execution_edge_share": 0.3616497179279124,
+        "execution_propensity": 0.5354718391838077,
+        "execution_readiness": 0.454126136525544,
+        "expected_failure_mode": "structural_invalidation_before_path_completion",
+        "historical_avg_pnl": 0.0003629357993323579,
+        "historical_followed_count": 1,
+        "historical_invalidation_rate": 0.0,
+        "historical_total_records": 1,
+        "historical_win_rate": 0.0,
+        "invalidation_conditions": [
+          "regime branch trend loses posterior support or invalidates before trigger",
+          "execution_candidate_review_reason=first_execution_candidate_artifact",
+          "execution_candidate_pre_bayes_gate_status=pass_neutralized"
+        ],
+        "max_time_in_trade": "re-evaluate on next structural node update",
+        "multi_timeframe_direction_bias": "bullish",
+        "path_id": "path:scenario:QQQ:belief_regime_node:trend:trend_follow_through:primary",
+        "path_label": "trend_follow_through",
+        "path_posterior": 0.5679392993393031,
+        "path_prior": 0.5,
+        "pre_bayes_gate_status": "pass_neutralized",
+        "prediction_edge_share": 0.6383502820720875,
+        "recommended_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state",
+        "scenario_id": "scenario:QQQ:belief_regime_node:trend:trend_follow_through",
+        "selected_entry_quality": "medium",
+        "selected_entry_quality_probability": 1.0,
+        "stop_definition": "Use execution candidate 'execution-candidate:QQQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+        "target_definition": "Advance to execution candidate 'execution-candidate:QQQ:analyze:v1' while preserving candidate_status=no_trade.",
+        "trigger_conditions": [
+          "regime_posterior=trend:0.450",
+          "selected_entry_quality=medium",
+          "pre_bayes_gate_status=pass_neutralized",
+          "multi_timeframe_direction_bias=bullish"
+        ]
+      },
+      {
+        "bbn_support_score": 0.5679392993393031,
+        "composite_preference_score": 0.47255750953751213,
+        "confirmation_conditions": [
+          "recommended command remains valid on next refresh"
+        ],
+        "direction": "Observe",
+        "entry_style": "conditional_execution",
+        "execution_candidate_artifact_id": "execution-candidate:QQQ:analyze:v1",
+        "execution_candidate_status": "no_trade",
+        "execution_edge_share": 0.3616497179279124,
+        "execution_readiness": 0.454126136525544,
+        "expected_failure_mode": "structural_invalidation_before_path_completion",
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "invalidation_conditions": [
+          "regime branch range loses posterior support or invalidates before trigger",
+          "execution_candidate_review_reason=first_execution_candidate_artifact",
+          "execution_candidate_pre_bayes_gate_status=pass_neutralized"
+        ],
+        "max_time_in_trade": "re-evaluate on next structural node update",
+        "multi_timeframe_direction_bias": "bullish",
+        "path_id": "path:scenario:QQQ:belief_regime_node:trend:range_mean_reversion:primary",
+        "path_label": "range_mean_reversion",
+        "path_posterior": 0.5679392993393031,
+        "path_prior": 0.25,
+        "pre_bayes_gate_status": "pass_neutralized",
+        "prediction_edge_share": 0.6383502820720875,
+        "recommended_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state",
+        "scenario_id": "scenario:QQQ:belief_regime_node:trend:range_mean_reversion",
+        "selected_entry_quality": "medium",
+        "selected_entry_quality_probability": 1.0,
+        "stop_definition": "Use execution candidate 'execution-candidate:QQQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+        "target_definition": "Advance to execution candidate 'execution-candidate:QQQ:analyze:v1' while preserving candidate_status=no_trade.",
+        "trigger_conditions": [
+          "regime_posterior=range:0.310",
+          "selected_entry_quality=medium",
+          "pre_bayes_gate_status=pass_neutralized",
+          "multi_timeframe_direction_bias=bullish"
+        ]
+      },
+      {
+        "bbn_support_score": 0.5679392993393031,
+        "composite_preference_score": 0.47255750953751213,
+        "confirmation_conditions": [
+          "recommended command remains valid on next refresh"
+        ],
+        "direction": "Observe",
+        "entry_style": "conditional_execution",
+        "execution_candidate_artifact_id": "execution-candidate:QQQ:analyze:v1",
+        "execution_candidate_status": "no_trade",
+        "execution_edge_share": 0.3616497179279124,
+        "execution_readiness": 0.454126136525544,
+        "expected_failure_mode": "structural_invalidation_before_path_completion",
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "invalidation_conditions": [
+          "regime branch stress loses posterior support or invalidates before trigger",
+          "execution_candidate_review_reason=first_execution_candidate_artifact",
+          "execution_candidate_pre_bayes_gate_status=pass_neutralized"
+        ],
+        "max_time_in_trade": "re-evaluate on next structural node update",
+        "multi_timeframe_direction_bias": "bullish",
+        "path_id": "path:scenario:QQQ:belief_regime_node:trend:stress_de_risk:primary",
+        "path_label": "stress_de_risk",
+        "path_posterior": 0.5679392993393031,
+        "path_prior": 0.25,
+        "pre_bayes_gate_status": "pass_neutralized",
+        "prediction_edge_share": 0.6383502820720875,
+        "recommended_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state",
+        "scenario_id": "scenario:QQQ:belief_regime_node:trend:stress_de_risk",
+        "selected_entry_quality": "medium",
+        "selected_entry_quality_probability": 1.0,
+        "stop_definition": "Use execution candidate 'execution-candidate:QQQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+        "target_definition": "Advance to execution candidate 'execution-candidate:QQQ:analyze:v1' while preserving candidate_status=no_trade.",
+        "trigger_conditions": [
+          "regime_posterior=stress:0.164",
+          "selected_entry_quality=medium",
+          "pre_bayes_gate_status=pass_neutralized",
+          "multi_timeframe_direction_bias=bullish"
+        ]
+      },
+      {
+        "bbn_support_score": 0.5679392993393031,
+        "composite_preference_score": 0.47255750953751213,
+        "confirmation_conditions": [
+          "recommended command remains valid on next refresh"
+        ],
+        "direction": "Observe",
+        "entry_style": "conditional_execution",
+        "execution_candidate_artifact_id": "execution-candidate:QQQ:analyze:v1",
+        "execution_candidate_status": "no_trade",
+        "execution_edge_share": 0.3616497179279124,
+        "execution_readiness": 0.454126136525544,
+        "expected_failure_mode": "structural_invalidation_before_path_completion",
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "invalidation_conditions": [
+          "regime branch transition loses posterior support or invalidates before trigger",
+          "execution_candidate_review_reason=first_execution_candidate_artifact",
+          "execution_candidate_pre_bayes_gate_status=pass_neutralized"
+        ],
+        "max_time_in_trade": "re-evaluate on next structural node update",
+        "multi_timeframe_direction_bias": "bullish",
+        "path_id": "path:scenario:QQQ:belief_regime_node:trend:transition_confirmation:primary",
+        "path_label": "transition_confirmation",
+        "path_posterior": 0.5679392993393031,
+        "path_prior": 0.25,
+        "pre_bayes_gate_status": "pass_neutralized",
+        "prediction_edge_share": 0.6383502820720875,
+        "recommended_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state",
+        "scenario_id": "scenario:QQQ:belief_regime_node:trend:transition_confirmation",
+        "selected_entry_quality": "medium",
+        "selected_entry_quality_probability": 1.0,
+        "stop_definition": "Use execution candidate 'execution-candidate:QQQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+        "target_definition": "Advance to execution candidate 'execution-candidate:QQQ:analyze:v1' while preserving candidate_status=no_trade.",
+        "trigger_conditions": [
+          "regime_posterior=transition:0.076",
+          "selected_entry_quality=medium",
+          "pre_bayes_gate_status=pass_neutralized",
+          "multi_timeframe_direction_bias=bullish"
+        ]
+      }
+    ]
+  },
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state",
+    "execution_contract": null,
+    "prompt": null,
+    "user_input_required": false
+  },
+  "recommended_path_bundle": {
+    "candidate_set_id": "structural-candidates:QQQ:307925baea80d03d",
+    "candidate_set_size": 3,
+    "composite_score": 0.5475575095375121,
+    "confirmation_summary": "recommended command remains valid on next refresh",
+    "current_posterior": 0.5679392993393031,
+    "direction": "Observe",
+    "experience_prior": 0.5,
+    "historical_invalidation_rate": 0.0,
+    "historical_total_records": 1,
+    "invalidation_summary": "regime branch trend loses posterior support or invalidates before trigger",
+    "path_id": "path:scenario:QQQ:belief_regime_node:trend:trend_follow_through:primary",
+    "path_label": "trend_follow_through",
+    "rank": 1,
+    "recommended_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state",
+    "scenario_id": "scenario:QQQ:belief_regime_node:trend:trend_follow_through",
+    "selected_path_probability": 0.3668302987035447,
+    "stop_summary": "Use execution candidate 'execution-candidate:QQQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+    "symbol": "QQQ",
+    "trigger_summary": "regime_posterior=trend:0.450",
+    "why_this_path": "posterior=0.568 prior=0.500 invalidation_rate=0.000"
+  },
+  "scenario_history": {
+    "summary": {
+      "distinct_entities": 0,
+      "total_records": 0
+    }
+  },
+  "scenario_playbook": {
+    "scenarios": [
+      {
+        "branch_id": "QQQ:belief_regime_node:trend:trend_follow_through",
+        "composite_scenario_score": 0.4648782832252756,
+        "hard_invalidations": [
+          "regime branch trend loses posterior support or invalidates before trigger"
+        ],
+        "historical_avg_pnl": 0.0003629357993323579,
+        "historical_followed_count": 1,
+        "historical_invalidation_rate": 0.0,
+        "historical_total_records": 1,
+        "historical_win_rate": 0.0,
+        "narrative": "Continuation branch: wait for aligned confirmation, then follow the dominant directional path.",
+        "path_ids": [
+          "path:scenario:QQQ:belief_regime_node:trend:trend_follow_through:primary"
+        ],
+        "posterior_probability": 0.44982611889325086,
+        "prior_probability": 0.5,
+        "required_confirmations": [
+          "regime_posterior=trend:0.450"
+        ],
+        "scenario_id": "scenario:QQQ:belief_regime_node:trend:trend_follow_through",
+        "scenario_label": "trend_follow_through",
+        "timing_constraints": [
+          "re-evaluate on the next workflow refresh"
+        ]
+      },
+      {
+        "branch_id": "QQQ:belief_regime_node:trend:range_mean_reversion",
+        "composite_scenario_score": 0.31003477622134984,
+        "hard_invalidations": [
+          "regime branch range loses posterior support or invalidates before trigger"
+        ],
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "narrative": "Range branch: fade extremes only after explicit confirmation and invalidation boundaries are known.",
+        "path_ids": [
+          "path:scenario:QQQ:belief_regime_node:trend:range_mean_reversion:primary"
+        ],
+        "posterior_probability": 0.31003477622134984,
+        "prior_probability": 0.31003477622134984,
+        "required_confirmations": [
+          "regime_posterior=range:0.310"
+        ],
+        "scenario_id": "scenario:QQQ:belief_regime_node:trend:range_mean_reversion",
+        "scenario_label": "range_mean_reversion",
+        "timing_constraints": [
+          "re-evaluate on the next workflow refresh"
+        ]
+      },
+      {
+        "branch_id": "QQQ:belief_regime_node:trend:stress_de_risk",
+        "composite_scenario_score": 0.16415301537393934,
+        "hard_invalidations": [
+          "regime branch stress loses posterior support or invalidates before trigger"
+        ],
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "narrative": "Stress branch: preserve capital, reduce aggression, and require stronger confirmation.",
+        "path_ids": [
+          "path:scenario:QQQ:belief_regime_node:trend:stress_de_risk:primary"
+        ],
+        "posterior_probability": 0.16415301537393934,
+        "prior_probability": 0.16415301537393934,
+        "required_confirmations": [
+          "regime_posterior=stress:0.164"
+        ],
+        "scenario_id": "scenario:QQQ:belief_regime_node:trend:stress_de_risk",
+        "scenario_label": "stress_de_risk",
+        "timing_constraints": [
+          "re-evaluate on the next workflow refresh"
+        ]
+      },
+      {
+        "branch_id": "QQQ:belief_regime_node:trend:transition_confirmation",
+        "composite_scenario_score": 0.07598608951146008,
+        "hard_invalidations": [
+          "regime branch transition loses posterior support or invalidates before trigger"
+        ],
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "narrative": "Transition branch: wait for resolution evidence before committing to the next directional leg.",
+        "path_ids": [
+          "path:scenario:QQQ:belief_regime_node:trend:transition_confirmation:primary"
+        ],
+        "posterior_probability": 0.07598608951146008,
+        "prior_probability": 0.07598608951146008,
+        "required_confirmations": [
+          "regime_posterior=transition:0.076"
+        ],
+        "scenario_id": "scenario:QQQ:belief_regime_node:trend:transition_confirmation",
+        "scenario_label": "transition_confirmation",
+        "timing_constraints": [
+          "re-evaluate on the next workflow refresh"
+        ]
+      }
+    ]
+  },
+  "symbol": "QQQ"
+}

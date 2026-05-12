@@ -1,0 +1,164 @@
+{
+  "acceptable_label_panel_schema": {
+    "minimum_requirements": [
+      "labels are independent/source-backed rather than inferred by the current OHLCV features being scored",
+      "chronological splits can be constructed without future leakage",
+      "coverage explicitly maps to the requested provider/instrument/timeframe/root slot",
+      "source provenance is auditable enough to reproduce or review the label meaning",
+      "near-proxy mappings such as ^IXIC -> QQQ/^NDX/NQ=F remain rejected unless exact-underlying/source evidence is provided"
+    ],
+    "required_fields": [
+      "provider",
+      "instrument",
+      "timeframe",
+      "root",
+      "start_ts",
+      "end_ts",
+      "source_label",
+      "source_label_confidence",
+      "source_name",
+      "source_license_or_access_contract",
+      "labeling_method",
+      "label_timestamp_or_publication_time",
+      "raw_source_reference"
+    ],
+    "root_values": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ]
+  },
+  "acquisition_request": {
+    "columns": [
+      "provider",
+      "instrument",
+      "timeframe",
+      "root",
+      "missing_or_rejected_reason",
+      "candidate_source_ticker_rejected_or_missing",
+      "candidate_source_relation",
+      "required_label_source",
+      "forbidden_proxy_sources"
+    ],
+    "missing_or_rejected_slots": 564,
+    "missing_or_rejected_slots_by_provider": {
+      "kraken_public_lowpollution_http": 108,
+      "yfinance": 456
+    },
+    "missing_or_rejected_slots_by_reason": {
+      "missing_instrument_source_label": 40,
+      "missing_intraday_or_monthly_source_label": 392,
+      "missing_non_yfinance_source_label": 108,
+      "rejected_near_underlying_proxy_not_accepted": 24
+    },
+    "missing_or_rejected_slots_by_root": {
+      "Bear": 141,
+      "Bull": 141,
+      "Crisis": 141,
+      "Sideways": 141
+    },
+    "missing_or_rejected_slots_by_timeframe": {
+      "15m": 68,
+      "1d": 44,
+      "1h": 68,
+      "1m": 68,
+      "1mo": 68,
+      "1w": 44,
+      "30m": 68,
+      "4h": 68,
+      "5m": 68
+    },
+    "missing_slot_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/acquisition-package/missing_root_label_slots_acquisition_request_v2.csv"
+  },
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/checks/source_label_acquisition_package_v2_assertions.out",
+    "missing_slot_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/acquisition-package/missing_root_label_slots_acquisition_request_v2.csv",
+    "package_json": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/acquisition-package/source_label_acquisition_package_v2.json",
+    "package_md": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/acquisition-package/source_label_acquisition_package_v2.md",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/scripts/source_label_acquisition_package_v2.py"
+  },
+  "completion_accounting": {
+    "accepted_confidence": false,
+    "accepted_full_cycle_full_universe": false,
+    "goal_achieved": false,
+    "why_not_accepted": [
+      "Only 48/612 MainRegimeV2 source-label slots attach after exact-underlying mapping.",
+      "The remaining 564 slots need independent labels or must be explicitly removed from the full-universe/full-cycle target.",
+      "Provider residuals are dispositioned, but provider bars/catalogs do not replace source labels.",
+      "Direct Manipulation schema sources were materialized, but the audited order-book/order-lifecycle/event sources are unlabeled and add zero accepted windows."
+    ]
+  },
+  "created_at_utc": "2026-05-11T00:22:01.044206+00:00",
+  "current_attachability": {
+    "attached_candidate_slots": 48,
+    "direct_source_label_slots": 16,
+    "exact_underlying_source_label_slots": 32,
+    "full_four_root_cells": 12,
+    "missing_or_rejected_slots": 564,
+    "rejected_near_proxy_slots": 24,
+    "slot_count": 612
+  },
+  "direct_manipulation_schema_audit": {
+    "accepted_direct_manipulation_label_sources": 0,
+    "candidates_seen": 4,
+    "direct_input_sources_materialized": 2,
+    "gate_result": "blocked_direct_manipulation_sources_unlabeled_no_accepted_label_windows",
+    "manipulation_label_slots_added": 0
+  },
+  "gate_result": "blocked_acquisition_package_v2_created_missing_564_external_source_labels",
+  "input_evidence": {
+    "direct_manipulation_source_schema_audit": "docs/experiments/actionable-regime-confidence/runs/20260511T081556-codex-direct-manipulation-source-schema-audit/direct-manipulation-schema/direct_manipulation_source_schema_audit.json",
+    "provider_residual_disposition_readback": "docs/experiments/actionable-regime-confidence/runs/20260511T081120-codex-provider-residual-disposition-readback/coverage-disposition/provider_residual_disposition_readback.json",
+    "underlying_source_label_attachability": "docs/experiments/actionable-regime-confidence/runs/20260511T081210-codex-underlying-source-label-attachability/source-label-attachability/underlying_source_label_attachability.json",
+    "underlying_source_label_attachability_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T081210-codex-underlying-source-label-attachability/source-label-attachability/underlying_source_label_attachability.csv"
+  },
+  "manipulation_label_schema": {
+    "accepted_channels": [
+      "direct pump_dump_event",
+      "wash_trade_row_label",
+      "spoofing_or_layering_order_lifecycle_label",
+      "L2_L3_MBO_order_flow_event_label",
+      "social_event_plus_negative_controls"
+    ],
+    "forbidden_shortcuts": [
+      "OHLCV-only sweep proxy",
+      "thin-liquidity proxy",
+      "HMM state id",
+      "strategy/backtest prediction",
+      "future target generated by this repo"
+    ],
+    "required_fields": [
+      "instrument_or_asset",
+      "venue_or_source",
+      "event_start_ts",
+      "event_end_ts",
+      "event_type",
+      "positive_or_negative_label",
+      "direct_evidence_channel",
+      "source_name",
+      "source_license_or_access_contract",
+      "raw_source_reference"
+    ]
+  },
+  "next_action": "Use the v2 acquisition CSV to obtain independent labels for the 564 missing/rejected price-root slots plus explicit labeled Manipulation positive/negative windows; do not spend more cycles on provider bar fetches until label coverage exists.",
+  "provider_residuals": {
+    "ibkr_gate_result": "ibkr_ready_lane_blocked_by_operator_runtime_fetch",
+    "ibkr_ok_count": 0,
+    "polymarket_gate_result": "polymarket_catalog_materialized_root_confidence_pending",
+    "ready_not_yet_attempted_cells": 0,
+    "tradingview_blocked_cells": 99
+  },
+  "purpose": "Convert the current 564-slot MainRegimeV2 source-label blocker into a machine-readable acquisition request.",
+  "run_id": "20260511T081715+0800-codex-source-label-acquisition-package-v2",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2",
+  "runtime_code_changed": false,
+  "schema_version": "source-label-acquisition-package/v2",
+  "supersedes": {
+    "reason": "Earlier package used 16/612 direct attachability; current exact-underlying attachability is 48/612 with 564 missing/rejected slots.",
+    "stale_missing_slots": 596,
+    "stale_package": "docs/experiments/actionable-regime-confidence/runs/20260511T081522-codex-source-label-acquisition-package/acquisition-package/source_label_acquisition_package.json"
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

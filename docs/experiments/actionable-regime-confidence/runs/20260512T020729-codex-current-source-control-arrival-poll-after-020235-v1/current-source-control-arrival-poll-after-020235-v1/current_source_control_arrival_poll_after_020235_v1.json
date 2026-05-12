@@ -1,0 +1,65 @@
+{
+  "accepted_rows_added": 0,
+  "approval": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted": false,
+    "source_file": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid"
+  },
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "generated_at": "2026-05-12T02:07:29+0800",
+  "gate_result": "current_source_control_arrival_poll_after_020235_v1=legacy_direct_intake_present_owner_export_absent_no_promotion",
+  "legacy_direct_intake": {
+    "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+    "matched_group_count": 70,
+    "matched_negative_rows": 73,
+    "positive_rows": 73,
+    "status": "schema_ready_unscored"
+  },
+  "owner_export": {
+    "intake_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "missing_files": [
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json"
+    ],
+    "status": "blocked"
+  },
+  "root_status": [
+    {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "status": "absent"
+    },
+    {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "status": "absent"
+    },
+    {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "status": "absent"
+    },
+    {
+      "file_count": 2,
+      "note": "daily-only / confidence-blocked by board contract",
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "status": "present"
+    },
+    {
+      "file_count": 3,
+      "note": "legacy direct-intake root, not current owner-export target",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "status": "present"
+    }
+  ],
+  "runtime_code_changed": false,
+  "shared_intake_mutated_by_this_run": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

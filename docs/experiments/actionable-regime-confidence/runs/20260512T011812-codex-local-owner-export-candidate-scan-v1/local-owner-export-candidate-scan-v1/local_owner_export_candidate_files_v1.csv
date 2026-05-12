@@ -1,0 +1,4 @@
+path,exists,bytes,line_count,header,sha256
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/gc_201101_202604.csv,True,401491646,5327113,"ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",d0b368b7a4eea5f1f5db1e7da284df5bd06af15981d47da3decec6d9ef7a8f77
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/glbx-mdp3-20210106-20260105.ohlcv-1m.csv,True,585690521,5333533,"ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",3e566d0c7181c6fbddf80be1ec7fbb33987240a6aa495caa27b275d034fa174d
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/symbology.csv,True,30984640,1077104,"raw_symbol,instrument_id,date",ab1c0a090a878ade44a5f682bc7597cc85eba677ea34dd2daf06b5931058e9e3

@@ -1,0 +1,127 @@
+{
+  "accepted_95_candidates": 0,
+  "accepted_99_candidates": 0,
+  "assertions": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/checks/a8_transition_sidecar_assertions.out",
+  "auto_quant_status_source": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/auto-quant-status-agent.json",
+  "best_candidate_by_missing_regime": {
+    "ExtremeStress": {
+      "blocker": "wilson95_below_0_95;ece_above_0_05;coverage_below_0_03;cross_market_timeframe_support_below_2",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.04144736842105263,
+        "ece": 0.0,
+        "precision": 0.1746031746031746,
+        "precision_wilson_lcb_95": 0.1182265752111826,
+        "precision_wilson_lcb_99": 0.10442712295157212,
+        "success": 22,
+        "support": 126
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 4,
+        "test_contexts_with_support": 3,
+        "test_instruments_with_support": 2,
+        "test_markets_with_support": 3,
+        "test_timeframes_with_support": 1
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "range_accel_16_64 >= 0.4146110306 AND drawdown_from_32_high <= -0.01265267616",
+      "test": {
+        "calibrated_probability": 0.1746031746031746,
+        "coverage": 0.028801071667782986,
+        "ece": 0.29051310446659284,
+        "precision": 0.46511627906976744,
+        "precision_wilson_lcb_95": 0.3634587154004887,
+        "precision_wilson_lcb_99": 0.33410402941124695,
+        "success": 40,
+        "support": 86
+      }
+    },
+    "ReversalBrewing": {
+      "blocker": "calibration_support_below_120;wilson95_below_0_95;ece_above_0_05;cross_market_timeframe_support_below_2",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.030921052631578946,
+        "ece": 0.0,
+        "precision": 0.39361702127659576,
+        "precision_wilson_lcb_95": 0.30089893259000317,
+        "precision_wilson_lcb_99": 0.27499000571438065,
+        "success": 37,
+        "support": 94
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 3,
+        "test_contexts_with_support": 3,
+        "test_instruments_with_support": 2,
+        "test_markets_with_support": 3,
+        "test_timeframes_with_support": 1
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "ma32_slope_16 <= -0.006138442835 AND stress_persistence_32 >= 0.625",
+      "test": {
+        "calibrated_probability": 0.39361702127659576,
+        "coverage": 0.041527126590756865,
+        "ece": 0.06606039807824293,
+        "precision": 0.4596774193548387,
+        "precision_wilson_lcb_95": 0.37449018241529064,
+        "precision_wilson_lcb_99": 0.3493909786062929,
+        "success": 57,
+        "support": 124
+      }
+    },
+    "TrendExpansion": {
+      "blocker": "wilson95_below_0_95",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.07631578947368421,
+        "ece": 0.0,
+        "precision": 0.28879310344827586,
+        "precision_wilson_lcb_95": 0.23429094034285017,
+        "precision_wilson_lcb_99": 0.21886896475122358,
+        "success": 67,
+        "support": 232
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 4,
+        "test_contexts_with_support": 4,
+        "test_instruments_with_support": 3,
+        "test_markets_with_support": 4,
+        "test_timeframes_with_support": 2
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "realized_vol_rank_252 >= 0.6071428571 AND jump_intensity_32 <= 0.03125",
+      "test": {
+        "calibrated_probability": 0.28879310344827586,
+        "coverage": 0.06396517079705291,
+        "ece": 0.032248600830474816,
+        "precision": 0.25654450261780104,
+        "precision_wilson_lcb_95": 0.19983486757768276,
+        "precision_wilson_lcb_99": 0.18428216191588456,
+        "success": 49,
+        "support": 191
+      }
+    }
+  },
+  "blocked_feature_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "candidate_rule_table": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/sidecar/a8_transition_sidecar_candidate_rules.csv",
+  "candidate_search_report": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/sidecar/a8_transition_sidecar_candidate_report.json",
+  "loop_id": "20260510T204325+0800-hermes-a8-transition-sidecar",
+  "missing_regime_acceptance_complete": false,
+  "objective": "Build jump-model, persistence-penalty, and transition-hazard sidecar features for missing regimes and rerun chronological calibration without relaxing thresholds.",
+  "provider_status_source": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/provider/provider-status-agent.json",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar",
+  "schema_version": "board-a-a8-transition-sidecar-evidence/v1",
+  "searched_missing_regimes": [
+    "TrendExpansion",
+    "ExtremeStress",
+    "ReversalBrewing"
+  ],
+  "sidecar_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/sidecar/a8_transition_sidecar_features.csv",
+  "source_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/cross_market_regime_features_and_labels.csv",
+  "thresholds_relaxed": false
+}

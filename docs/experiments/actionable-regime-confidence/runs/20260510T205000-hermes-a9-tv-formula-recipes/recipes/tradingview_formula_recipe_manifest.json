@@ -1,0 +1,63 @@
+{
+  "schema_version": "tradingview-formula-recipe-manifest/v1",
+  "source_policy": {
+    "source_doc": "docs/market-regime-profitable-strategy-research-2026-05-10.md",
+    "live_tradingview_mcp_status": "fail_closed_unhealthy",
+    "profitability_trusted": false,
+    "script_profit_or_backtest_used": false,
+    "normalization_scope": "formula ingredients only: ADX/DMI, ATR, MA slope/spread, RSI, volatility percentile, Bollinger bandwidth"
+  },
+  "recipes": [
+    {
+      "recipe_id": "tv_style_trend_expansion_adx_ma_slope",
+      "target_regime": "TrendExpansion",
+      "formula": "ADX(14) >= 22 and +DI > -DI and MA20 > MA50 and MA20 slope > 0 and ATR percentile <= 0.85",
+      "non_leaky_fields": [
+        "high",
+        "low",
+        "close"
+      ],
+      "features": [
+        "tv_adx_14",
+        "tv_dmi_spread_14",
+        "tv_ma_spread_20_50",
+        "tv_ma_slope_20",
+        "tv_atr_rank_252"
+      ],
+      "notes": "Trend/momentum community formula shape only; no script PnL used."
+    },
+    {
+      "recipe_id": "tv_style_extreme_stress_atr_bandwidth_dmi",
+      "target_regime": "ExtremeStress",
+      "formula": "ATR percentile >= 0.85 or Bollinger bandwidth percentile >= 0.85 or ADX(14) >= 28 with wide DMI spread",
+      "non_leaky_fields": [
+        "high",
+        "low",
+        "close"
+      ],
+      "features": [
+        "tv_atr_rank_252",
+        "tv_bb_width_rank_252",
+        "tv_adx_14",
+        "tv_dmi_spread_14"
+      ],
+      "notes": "Stress detector candidate only; no live TradingView data trusted."
+    },
+    {
+      "recipe_id": "tv_style_reversal_rsi_adx_decay_bandwidth",
+      "target_regime": "ReversalBrewing",
+      "formula": "RSI(14) extreme and ADX falling over 5 bars and Bollinger bandwidth percentile >= 0.60",
+      "non_leaky_fields": [
+        "high",
+        "low",
+        "close"
+      ],
+      "features": [
+        "tv_rsi_14",
+        "tv_adx_14",
+        "tv_bb_width_rank_252"
+      ],
+      "notes": "Reversal setup formula candidate only; confirmation still requires chronological calibration."
+    }
+  ]
+}

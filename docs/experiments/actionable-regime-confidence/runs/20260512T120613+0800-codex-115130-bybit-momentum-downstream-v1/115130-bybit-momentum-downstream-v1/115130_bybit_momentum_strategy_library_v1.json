@@ -1,0 +1,62 @@
+{
+  "auto_quant_pinned_ref": "20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1",
+  "auto_quant_repo_url": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-bybit_public",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-bybit_public/config.tomac.json",
+  "exported_at": "2026-05-12T04:09:14.300752+00:00",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/command-output/source_115130_bybit_momentum_downstream.log",
+  "manifest_version": "1.0",
+  "strategies": [
+    {
+      "commit": "20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-bybit_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "asset_class": "crypto_provider_ohlcv",
+        "base_factor": "provider_crypto_momentum_state",
+        "expected_regime": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "factors_used": [
+          "bybit_btcusdt_linear_1h",
+          "provider_crypto_momentum_state",
+          "regime_profit_branch_path"
+        ],
+        "hypothesis": "Bybit 1h momentum branch from 115130 is the highest-density positive provider branch inside the comparable-timeframe six-provider AQ packet.",
+        "mutation_id": "provider-owned-115130-bybit-btc-momentum-state-v1",
+        "parent": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "provider": "bybit_public",
+        "source_run_id": "20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1",
+        "status": "incubation_only_six_provider_packet_branch",
+        "strategy": "ProviderCryptoMomentumStateV1"
+      },
+      "name": "ProviderCryptoMomentumStateV1",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": 48.80542741171871,
+          "max_drawdown_pct": -1.5662364321210493,
+          "profit_factor": 1.288511226299377,
+          "sharpe": 1.8613380661422825,
+          "sortino": 6.197582095303052,
+          "total_profit_pct": 1.48,
+          "trade_count": 34,
+          "win_rate_pct": 41.17647058823529
+        }
+      },
+      "status": "ok",
+      "timerange": "20260401-20260512",
+      "validation_metrics": {
+        "calmar": 48.80542741171871,
+        "max_drawdown_pct": -1.5662364321210493,
+        "profit_factor": 1.288511226299377,
+        "sharpe": 1.8613380661422825,
+        "sortino": 6.197582095303052,
+        "total_profit_pct": 1.48,
+        "trade_count": 34,
+        "win_rate_pct": 41.17647058823529
+      }
+    }
+  ],
+  "timeframe": "1h",
+  "validation_errors": []
+}

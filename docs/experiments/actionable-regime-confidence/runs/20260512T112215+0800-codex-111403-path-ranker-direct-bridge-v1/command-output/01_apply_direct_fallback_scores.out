@@ -1,0 +1,12 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T112215+0800-codex-111403-path-ranker-direct-bridge-v1/state_path_ranker_direct_bridge_v1/B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610/policy_training/structural_path_ranking_target.csv: 2 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 1 training samples
+[features] label dist: {np.int64(1): np.int64(1)}
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 2 training samples
+[features] label dist: {np.int64(0): np.int64(1), np.int64(1): np.int64(1)}
+[apply] No trained model found, using weighted sum fallback
+[fallback] Using structural_baseline_score, range [0.1500, 0.4521]
+[apply] Scores saved to docs/experiments/actionable-regime-confidence/runs/20260512T112215+0800-codex-111403-path-ranker-direct-bridge-v1/path_ranker_direct_scores.csv

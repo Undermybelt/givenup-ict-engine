@@ -1,0 +1,17 @@
+run_id,root_exists,file_count,status
+20260512T004410-codex-r6-official-route-date-fit-check-v1,True,4,present
+20260512T004636-codex-v69-r3-r5-source-label-current-readback-v1,True,11,present
+20260512T004822-codex-non-r6-source-intake-current-readback-v2,True,21,present
+20260512T004341-codex-current-goal-completion-audit-after-v71-v1,True,5,present
+20260512T004713-codex-r6-source-owner-export-presence-sweep-v1,True,6,present
+20260512T004552-codex-r6-board-artifact-integrity-repair-v1,True,5,present
+20260512T004507-codex-r6-oystacher-owner-market-data-access-preflight-v1,True,6,present
+20260512T004406-codex-r6-post-v68-artifact-readback-v1,True,5,present
+20260512T004322-codex-r6-oystacher-external-control-source-scan-v1,True,6,present
+20260512T004116-codex-r6-oystacher-public-normal-control-source-probe-v1,True,6,present
+20260512T004014-codex-r6-local-control-applicability-audit-v1,True,6,present
+20260512T004827-codex-current-goal-completion-audit-after-v70-v1,True,57,present
+20260512T005050-codex-r5-kaggle-stock-regime-recency-refresh-v2,True,14,present
+20260512T005126-codex-r6-owner-export-request-bundle-v2,True,8,present
+20260512T005248-codex-v71-provider-autoquant-readonly-refresh-v1,True,11,present
+20260512T005039-codex-current-objective-reconciliation-after-v71-v1,True,7,present

@@ -1,0 +1,81 @@
+{
+  "run_id": "20260511T112758+0800-current-goal-completion-audit-v7-post-midsummer",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T112758-current-goal-completion-audit-v7-post-midsummer",
+  "purpose": "Completion audit against the active user objective after the Midsummer meme direct wash slice, VantMacro source audit, and other post-v6 ledger updates.",
+  "board_cursor_readback": "20260511T111122+0800-codex-midsummer-meme-direct-wash-audit",
+  "objective_restatement": "Every active Board A regime must have at least 95% calibrated confidence, and the evidence must survive other markets, other timeframes, full-cycle, and broad-universe/full-species validation before reporting success.",
+  "active_taxonomy": {
+    "taxonomy_id": "MainRegimeV2",
+    "price_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "separate_direct_class_or_overlay": "Manipulation",
+    "residual": "UnknownOrMixed"
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "All active price-root regimes have >=95 calibrated confidence.",
+      "evidence": "V6 preserves scope-limited 95 packets for Bull/Bear/Sideways/Crisis, but the active cursor and later targeted-gap batch keep full-matrix accounting blocked.",
+      "status": "partial_scope_limited_only"
+    },
+    {
+      "requirement": "Evidence is validated across other markets, other timeframes, full-cycle, and broad universe/full species.",
+      "evidence": "Current cursor says expanded full-cycle/full-species requirement remains open; the 20260511T110540 targeted gap batch accepted 0 roots with test LCBs Crisis=0.246776, Bull=0.316151, Bear=0.219833, Sideways=0.282312.",
+      "status": "fail"
+    },
+    {
+      "requirement": "Direct Manipulation uses direct timestamped event/order-flow/order-lifecycle/on-chain rows plus negatives, not OHLCV proxies.",
+      "evidence": "Accepted scoped slices exist for Mehrnoom/Mirtaheri social/event and Midsummer BSC meme wash-maker rows; spoofing/layering, AIMM-GT, Mendeley anomaly, and all-chain Midsummer scope remain blocked or rejected.",
+      "status": "partial_scoped_direct_only"
+    },
+    {
+      "requirement": "No subtype/proxy evidence is promoted into parent-root completion.",
+      "evidence": "Board cursor keeps six prior packets as sub_regime_evidence_only; TVRemix, local panel, HMM/GMM/OHLCV, pump/rug OHLCV, and LPI positive-only surfaces remain rejected for completion.",
+      "status": "pass_fail_closed"
+    },
+    {
+      "requirement": "No threshold relaxation, runtime code change, raw data commit, or trade-usability claim.",
+      "evidence": "Latest ledgered runs report thresholds_relaxed=false, runtime_code_changed=false, raw_data_committed=false, trade_usable=false.",
+      "status": "pass"
+    },
+    {
+      "requirement": "If the goal is complete, mark the active goal complete.",
+      "evidence": "This audit finds the objective not achieved; update_goal must not be called.",
+      "status": "not_applicable_not_achieved"
+    }
+  ],
+  "post_v6_delta": {
+    "20260511T110540_full_matrix_targeted_gap_batch": {
+      "accepted_parent_root_slots_added": 0,
+      "test_wilson95_lcbs": {
+        "Crisis": 0.246776,
+        "Bull": 0.316151,
+        "Bear": 0.219833,
+        "Sideways": 0.282312
+      },
+      "effect_on_completion": "no_new_full_matrix_slice"
+    },
+    "20260511T110827_local_spoofing_source_audit": {
+      "accepted_direct_manipulation_rows_added": 0,
+      "effect_on_completion": "spoofing_layering_still_blocked"
+    },
+    "20260511T111122_midsummer_meme_direct_wash_audit": {
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 1870,
+      "accepted_gate": "accepted_95_bounded_bsc_meme_wash_maker_direct_slice",
+      "effect_on_completion": "adds_scoped_direct_wash_slice_only_not_full_manipulation_coverage"
+    },
+    "20260511T112622_vantmacro_source_audit": {
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0,
+      "public_historical_row_export_located": false,
+      "effect_on_completion": "macro composite states are provenance only and do not attach exact MainRegimeV2 provider/instrument/timeframe labels"
+    }
+  },
+  "completion_decision": {
+    "achieved": false,
+    "board_state": "blocked",
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "scoped_direct_manipulation_gate_preserved": "accepted_95_bounded_bsc_meme_wash_maker_direct_slice",
+    "primary_blocker": "Full-cycle/full-universe MainRegimeV2 matrix remains incomplete for Bull/Bear/Sideways/Crisis, and direct Manipulation variety coverage remains partial despite the new BSC meme wash-maker slice.",
+    "call_update_goal": false
+  }
+}

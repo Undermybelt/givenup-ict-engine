@@ -1,0 +1,7 @@
+exact_branch_paths_preserved=False
+score_rows_written=0
+apply_scores_exit_zero=False
+rows_with_raw_path_score_after_scores=0
+policy_runtime_ready=True
+workflow_execution_candidate_observed=False
+promotion_status=not_promoted:exact_branch_path_runtime_repair_failed

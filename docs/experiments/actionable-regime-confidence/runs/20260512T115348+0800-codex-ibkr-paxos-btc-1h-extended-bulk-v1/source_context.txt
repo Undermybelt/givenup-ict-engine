@@ -1,0 +1,3 @@
+Source blocker: 20260512T113833+0800-codex-112904-provider-matrix-aq-date-contract-repair-v1
+Reason: IBKR 1h MIDPOINT AQ failed because only 45 rows remained below Freqtrade startup_candle_count 80/90.
+Purpose: attempt a longer low-pollution IBKR PAXOS BTC 1h MIDPOINT bulk fetch before changing strategy startup rules.

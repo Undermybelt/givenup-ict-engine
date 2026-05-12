@@ -1,0 +1,5 @@
+root,path,suffix,duplicate_file_realpath,hit_Crisis,hit_MainRegimeV2,hit_main_regime_v2,hit_2026-01-30
+r3_native_subhour_tmp,/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json,.json,False,True,False,True,False
+r3_native_subhour_tmp,/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv,.csv,False,False,False,False,False
+r3_native_subhour_private_tmp,/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json,.json,True,False,False,False,False
+r3_native_subhour_private_tmp,/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv,.csv,True,False,False,False,False

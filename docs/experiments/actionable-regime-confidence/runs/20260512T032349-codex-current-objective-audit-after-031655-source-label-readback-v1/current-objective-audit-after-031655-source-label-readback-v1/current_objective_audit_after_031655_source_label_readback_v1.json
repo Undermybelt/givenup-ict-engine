@@ -1,0 +1,147 @@
+{
+  "approval_readback": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false
+  },
+  "checklist_counts": {
+    "blocked": 9,
+    "pass": 1
+  },
+  "cross_timeframe_ready_exports": 0,
+  "gate_result": "current_objective_audit_after_031655_source_label_readback_v1=not_complete_source_label_r6_r3_r5_downstream_blocked",
+  "generated_at_utc": "2026-05-11T19:26:48.465763+00:00",
+  "inputs": {
+    "approval_package": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "audit_031655": "docs/experiments/actionable-regime-confidence/runs/20260512T031655-codex-current-objective-completion-audit-after-031435-v1/current-objective-completion-audit-after-031435-v1/current_objective_completion_audit_after_031435_v1.json",
+    "readonly_runtime_chain_013533": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/readonly-runtime-chain-refresh-after-013042-v1/readonly_runtime_chain_refresh_after_013042_v1.json",
+    "source_label_calibration_011954": "docs/experiments/actionable-regime-confidence/runs/20260512T011954-codex-source-label-equivalence-arrival-calibration-v1/source-label-equivalence-arrival-calibration/source_label_equivalence_arrival_calibration_v1.json",
+    "source_label_cross_timeframe_013042": "docs/experiments/actionable-regime-confidence/runs/20260512T013042-codex-source-label-cross-timeframe-public-source-screen-v1/source-label-cross-timeframe-public-source-screen-v1/source_label_cross_timeframe_public_source_screen_v1.json",
+    "source_label_failclosed_012425": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/source-label-qualifying-condition-failclosed-v1/source_label_qualifying_condition_failclosed_v1.json",
+    "source_label_provenance": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+    "source_label_rows": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv"
+  },
+  "latest_current_audit_gate": "current_objective_completion_audit_after_031435_v1=not_complete_latest_r6_packets_nonpromoting_source_controls_downstream_blocked",
+  "next_action": "Continue only from owner/operator R6 export delivery, explicit FLIP approval, or genuinely source-owned cross-timeframe MainRegimeV2 exports before canonical merge and downstream promotion.",
+  "non_mutations": {
+    "r3_r5_r6_roots_mutated": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "thresholds_relaxed": false
+  },
+  "objective": "Every active regime reaches calibrated >=95% confidence with per-regime conditions and cross-market/cycle/timeframe validation, then provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/execution-tree promotion reruns after source/control gates pass.",
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "root_status": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "files": [],
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "promotion_use": "blocked",
+      "root_id": "r6_owner_export_root"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "files": [],
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "promotion_use": "blocked",
+      "root_id": "r3_native_subhour_source_label_root"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "files": [],
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "promotion_use": "blocked",
+      "root_id": "r5_source_panel_recency_extension_root"
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "files": [
+        "source_label_equivalence_provenance.json",
+        "source_label_equivalence_rows.csv"
+      ],
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "promotion_use": "non_promoting_sidecar",
+      "root_id": "source_label_equivalence_sidecar"
+    },
+    {
+      "exists": true,
+      "file_count": 3,
+      "files": [
+        "matched_negative_normal_activity_rows.csv",
+        "positive_spoofing_layering_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "promotion_use": "non_promoting_sidecar",
+      "root_id": "legacy_direct_manipulation_sidecar"
+    }
+  ],
+  "run_id": "20260512T032349-codex-current-objective-audit-after-031655-source-label-readback-v1",
+  "source_label_accepted_95_labels": [],
+  "source_label_accepted_condition_labels": [],
+  "source_label_calibration_decision": "source_label_equivalence_arrival_calibration_v1=source_confidence_scored_no_acceptance",
+  "source_label_field_complete_labels": [
+    "Bull",
+    "Sideways"
+  ],
+  "source_label_sidecar": {
+    "counts": {
+      "families": {
+        "india_equity_index": 3435,
+        "us_index": 26236,
+        "us_single_stock": 218769
+      },
+      "labels": {
+        "Bear": 54939,
+        "Bull": 104979,
+        "Crisis": 30623,
+        "Sideways": 57899
+      },
+      "owners": {
+        "ahaanverma00": 3435,
+        "source-owned-stock-market-regimes-2000-2026": 245005
+      },
+      "rows": 248440,
+      "species": {
+        "owner_described_nifty_hmm_market_regime": 3435,
+        "source_panel_daily_market_regime_label": 245005
+      },
+      "splits": {
+        "calibration": 148976,
+        "heldout_market": 26236,
+        "heldout_time": 45384,
+        "test": 27844
+      },
+      "timeframes": {
+        "1d": 248440
+      }
+    },
+    "provenance": {
+      "bytes": 3365,
+      "exists": true,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+      "sha256": "a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b"
+    },
+    "rows": {
+      "bytes": 148968262,
+      "exists": true,
+      "line_count_including_header": 248441,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+      "sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25"
+    }
+  }
+}

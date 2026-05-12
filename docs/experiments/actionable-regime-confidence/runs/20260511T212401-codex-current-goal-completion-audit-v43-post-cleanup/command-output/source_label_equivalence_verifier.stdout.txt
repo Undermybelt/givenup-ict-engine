@@ -1,0 +1,8 @@
+{
+  "missing_files": [
+    "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+    "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+  ],
+  "reason": "missing_required_files",
+  "status": "blocked"
+}

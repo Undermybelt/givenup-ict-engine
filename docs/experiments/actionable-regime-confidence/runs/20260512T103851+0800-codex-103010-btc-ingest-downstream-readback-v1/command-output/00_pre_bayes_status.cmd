@@ -1,0 +1,1 @@
+./target/debug/ict-engine pre-bayes-status --symbol B2R_PROVIDER_BTC_CANARY_103010 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T103010+0800-codex-board-b-provider-btc-always-entry-canary-v1/state_ingest --refresh --output-format json

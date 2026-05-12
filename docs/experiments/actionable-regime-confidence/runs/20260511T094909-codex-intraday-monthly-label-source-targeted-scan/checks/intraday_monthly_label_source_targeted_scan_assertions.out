@@ -1,0 +1,9 @@
+PASS targeted_queries_recorded=true
+PASS accepted_parent_root_label_sources=0
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS gate_result=blocked_targeted_intraday_monthly_scan_no_exact_parent_root_label_panel
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

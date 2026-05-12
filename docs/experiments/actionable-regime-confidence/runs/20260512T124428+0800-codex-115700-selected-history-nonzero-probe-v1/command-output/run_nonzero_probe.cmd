@@ -1,0 +1,2 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant
+.venv/bin/python -c 'from pathlib import Path; import run_tomac; run_tomac.CONFIG = Path("config.tomac.sanitized-pair-selected-window.json"); run_tomac.STRATEGIES_DIR = Path("../../../../20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1/strategies_external").resolve(); raise SystemExit(run_tomac.main())'

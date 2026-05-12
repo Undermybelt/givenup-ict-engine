@@ -1,0 +1,11 @@
+goal_achieved=false
+provider=yfinance
+cell_count=126
+ok_cell_count=126
+blocked_cell_count=0
+all_timeframes_attempted=true
+raw_ohlcv_committed=false
+gate_result=yfinance_full_universe_fetch_matrix_built_root_confidence_pending
+thresholds_relaxed=false
+runtime_code_changed=false
+trade_usable=false

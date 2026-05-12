@@ -1,0 +1,5 @@
+tag,ratio,branch_leaf,branch_path,ibkr_spy_trade_count,ibkr_spy_pnl_ratio_sum
+ote_050,0.5,OTERetracement050,TrendExpansion -> NormalVolatility -> OTERetracement050 -> OTEContinuationLong,76,0.00951618
+ote_0618,0.618,OTERetracement0618,TrendExpansion -> NormalVolatility -> OTERetracement0618 -> OTEContinuationLong,27,0.03758052
+ote_0705,0.705,OTERetracement0705,TrendExpansion -> NormalVolatility -> OTERetracement0705 -> OTEContinuationLong,27,0.01995716
+ote_0786,0.786,OTERetracement0786,TrendExpansion -> NormalVolatility -> OTERetracement0786 -> OTEContinuationLong,32,-0.0044121

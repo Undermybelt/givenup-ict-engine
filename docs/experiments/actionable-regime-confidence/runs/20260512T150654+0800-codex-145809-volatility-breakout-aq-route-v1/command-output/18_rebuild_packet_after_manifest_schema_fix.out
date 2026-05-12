@@ -1,0 +1,119 @@
+{
+  "branch_path": "trend_expansion->high_volatility->up_momentum->volatility_breakout_follow",
+  "main_regime": "trend_expansion",
+  "profit_factor_leaf": "volatility_breakout_follow",
+  "promotion_allowed": false,
+  "protocol": "150654-volatility-breakout-aq-route-packet-v1",
+  "provider_counts": {
+    "binance": 269,
+    "ibkr": 47,
+    "yahoo": 32
+  },
+  "provider_matrix": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/aq_provider_provenance_volatility_breakout.csv",
+  "real_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/volatility_breakout_real_trades.jsonl",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1",
+  "source_screen": "145809_provider_backed_high_density_factor_screen_v1",
+  "strategy": "volatility_breakout_follow_v1",
+  "strategy_library": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/strategy_library_volatility_breakout_v1.json",
+  "sub_regime": "high_volatility",
+  "sub_sub_regime_or_profit_factor": "up_momentum",
+  "summary": {
+    "avg_return": 0.0024524889854152443,
+    "losses": 166,
+    "profit_factor": 1.3270317756098415,
+    "total_return_units": 0.853466166924505,
+    "trades": 348,
+    "win_rate": 0.5229885057471264,
+    "wins": 182
+  },
+  "symbol": "B2R_VOL_BREAKOUT_150654",
+  "symbol_counts": {
+    "BTCUSDT": 269,
+    "ES": 32,
+    "SPY": 47
+  },
+  "trade_usable": false,
+  "update_goal": false,
+  "walk_forward_folds": [
+    {
+      "fold": "2017",
+      "fold_gate": "fail_closed",
+      "profit_factor": 2.2214575309320908,
+      "total_return_units": 0.21049959325076595,
+      "trades": 12,
+      "win_rate": 0.75
+    },
+    {
+      "fold": "2018",
+      "fold_gate": "fail_closed",
+      "profit_factor": 1.0833888824625468,
+      "total_return_units": 0.010469200071778428,
+      "trades": 12,
+      "win_rate": 0.5
+    },
+    {
+      "fold": "2019",
+      "fold_gate": "fail_closed",
+      "profit_factor": 0.871020359539746,
+      "total_return_units": -0.07530694889997969,
+      "trades": 38,
+      "win_rate": 0.4473684210526316
+    },
+    {
+      "fold": "2020",
+      "fold_gate": "pass",
+      "profit_factor": 1.3237139981730282,
+      "total_return_units": 0.15279749560024158,
+      "trades": 59,
+      "win_rate": 0.5254237288135594
+    },
+    {
+      "fold": "2021",
+      "fold_gate": "fail_closed",
+      "profit_factor": 2.0088869717500195,
+      "total_return_units": 0.20180712898607078,
+      "trades": 31,
+      "win_rate": 0.4838709677419355
+    },
+    {
+      "fold": "2022",
+      "fold_gate": "fail_closed",
+      "profit_factor": 1.21588074412296,
+      "total_return_units": 0.027869624023358575,
+      "trades": 18,
+      "win_rate": 0.6666666666666666
+    },
+    {
+      "fold": "2023",
+      "fold_gate": "fail_closed",
+      "profit_factor": 1.3985986024257149,
+      "total_return_units": 0.13466647816168675,
+      "trades": 47,
+      "win_rate": 0.44680851063829785
+    },
+    {
+      "fold": "2024",
+      "fold_gate": "pass",
+      "profit_factor": 1.5618740310088692,
+      "total_return_units": 0.18111480278059722,
+      "trades": 63,
+      "win_rate": 0.6031746031746031
+    },
+    {
+      "fold": "2025",
+      "fold_gate": "fail_closed",
+      "profit_factor": 0.6995177493159063,
+      "total_return_units": -0.06799010100672731,
+      "trades": 52,
+      "win_rate": 0.4423076923076923
+    },
+    {
+      "fold": "2026",
+      "fold_gate": "fail_closed",
+      "profit_factor": 2.919981267102678,
+      "total_return_units": 0.07753889395671276,
+      "trades": 16,
+      "win_rate": 0.625
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": "public-source-label-candidate-sweep/v1",
+  "loop_id": "20260511T081200+0800-codex-public-source-label-candidate-sweep",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T081200-codex-public-source-label-candidate-sweep",
+  "purpose": "Search for public labeled market-regime sources that could fill the 596 missing current MainRegimeV2 root-label slots without promoting proxy labels.",
+  "current_blocker": {
+    "slot_count": 612,
+    "attached_direct_source_label_slots": 16,
+    "missing_slots": 596,
+    "full_four_root_cells": 4,
+    "required_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "separate_direct_class": "Manipulation"
+  },
+  "candidate_sources": [
+    {
+      "name": "Kaggle stock-market-regimes-2000-2026",
+      "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+      "already_used": true,
+      "decision": "partial_only",
+      "reason": "Current attachability audit attaches 16/612 slots, limited to yfinance ^DJI/^GSPC 1d/1w; it does not cover missing intraday/monthly, Kraken, broad yfinance, or Manipulation slots."
+    },
+    {
+      "name": "Hugging Face Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "url": "https://huggingface.co/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "already_used": false,
+      "decision": "rejected_proxy_only",
+      "reason": "Dataset labels are HMM-derived/model-inferred BTCUSD 5m/15m regimes with arbitrary state ids/post-hoc interpretation; they are not independent source-backed Bull/Bear/Sideways/Crisis labels and cannot fill the current root-label contract."
+    },
+    {
+      "name": "Hugging Face TSIE-style IDX signal classes",
+      "url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+      "already_used": true,
+      "decision": "rejected_sidecar_only",
+      "reason": "Prior metadata audit found 0 accepted/manual full-root panel candidates; Crisis and direct Manipulation labels are missing."
+    }
+  ],
+  "sweep_result": {
+    "new_accepted_source_label_slots": 0,
+    "goal_achieved": false,
+    "accepted_full_panel": false,
+    "proxy_promoted": false,
+    "next_action": "Acquire non-public/proprietary or explicitly labeled multi-asset multi-timeframe source labels for the missing 596 slots; public HMM/HF/OHLCV-derived regime labels remain sidecar-only."
+  },
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

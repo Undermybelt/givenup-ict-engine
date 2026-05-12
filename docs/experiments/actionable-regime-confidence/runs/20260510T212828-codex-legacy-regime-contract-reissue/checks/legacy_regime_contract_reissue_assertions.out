@@ -1,0 +1,5 @@
+all_required_regimes_covered_under_current_contract=True
+missing_after_this_loop=none
+SessionLiquidityCoreViable passes_95=True wilson95=0.998989 cal=3496 test=3797 ece=0.000000 instruments=4 contexts=3
+RangeConsolidation passes_95=True wilson95=0.956760 cal=503 test=266 ece=0.046809 instruments=4 contexts=3
+ThinLiquidity passes_95=True wilson95=0.985604 cal=584 test=263 ece=0.001712 instruments=4 contexts=3

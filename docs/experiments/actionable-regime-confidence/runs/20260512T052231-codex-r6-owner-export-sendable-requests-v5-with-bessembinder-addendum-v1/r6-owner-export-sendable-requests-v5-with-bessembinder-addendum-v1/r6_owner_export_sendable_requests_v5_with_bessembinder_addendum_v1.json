@@ -1,0 +1,29 @@
+{
+  "run_id": "20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1",
+  "gate_result": "r6_owner_export_sendable_requests_v5_with_bessembinder_addendum_v1=request_packet_refreshed_addendum_integrated_controls_not_acquired_no_merge",
+  "purpose": "Register the current sendable R6 owner-export request packet as v4 current-route request text plus the Bessembinder/CFTC comparison-cohort addendum.",
+  "base_v4_packet": "docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/r6_owner_export_sendable_requests_v4_current_routes_v1.md",
+  "bessembinder_addendum": "docs/experiments/actionable-regime-confidence/runs/20260512T051015-codex-r6-bessembinder-control-cohort-source-delta-v1/r6-bessembinder-control-cohort-source-delta-v1/r6_bessembinder_control_cohort_request_addendum_v1.md",
+  "v5_wrappers": {
+    "cme_group": "docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/cme_group_owner_export_request_v5_with_bessembinder_addendum.md",
+    "cboe_cfe": "docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/cboe_cfe_owner_export_request_v5_with_bessembinder_addendum.md"
+  },
+  "delivery_root_after_approval": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "required_files_after_approval": [
+    "positive_spoofing_layering_rows.csv",
+    "matched_negative_normal_activity_rows.csv",
+    "provenance_manifest.json"
+  ],
+  "requested_bessembinder_cohorts": [
+    "Oystacher flip/spoof rows used in the analysis",
+    "Other flipping market participants in the same products, dates, sessions, and market contexts",
+    "Broader market-participant activity rows for the same products and windows",
+    "Non-flip order rows suitable for normal/non-manipulation controls"
+  ],
+  "source_control_evidence_acquired": false,
+  "canonical_merge_allowed_now": false,
+  "downstream_rerun_allowed_now": false,
+  "strict_full_objective_achieved": false,
+  "trade_usable": false,
+  "update_goal": false
+}

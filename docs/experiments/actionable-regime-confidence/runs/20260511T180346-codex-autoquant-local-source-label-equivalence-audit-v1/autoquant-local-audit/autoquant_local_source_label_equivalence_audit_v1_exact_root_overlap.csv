@@ -1,0 +1,5 @@
+symbol,timeframe,root,source_days,matched_bar_days,coverage,wilson95_lcb,status,reason
+AAPL,1d,Bull,3341,420,0.1257108650104759,0.1148974745631681,already_covered_by_daily_source_inventory,This is exact same-symbol daily overlap and does not add a new timeframe or source-label gate.
+AAPL,1d,Bear,1309,163,0.12452253628724216,0.10772716102708511,already_covered_by_daily_source_inventory,This is exact same-symbol daily overlap and does not add a new timeframe or source-label gate.
+AAPL,1d,Sideways,916,155,0.16921397379912664,0.14632601068152046,already_covered_by_daily_source_inventory,This is exact same-symbol daily overlap and does not add a new timeframe or source-label gate.
+AAPL,1d,Crisis,993,6,0.006042296072507553,0.0027720936903323523,already_covered_by_daily_source_inventory,This is exact same-symbol daily overlap and does not add a new timeframe or source-label gate.

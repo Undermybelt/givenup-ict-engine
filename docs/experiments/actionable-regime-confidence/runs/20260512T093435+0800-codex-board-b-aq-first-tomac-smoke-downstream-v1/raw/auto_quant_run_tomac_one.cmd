@@ -1,0 +1,1 @@
+bash -lc "cd /Users/thrill3r/Auto-Quant && uv run python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/run_tomac_one.py TomacNQ_KillzoneBreakout 1h \"$RUN_ROOT/raw/tomac_export.zip\" NQ/USD 20230101-20251231"

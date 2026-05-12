@@ -1,0 +1,10 @@
+requirement,status,evidence
+selected_history_gate_advanced,pass,01_factor_research_initial.exit=0 and 03_factor_research_after_prepare.exit=0
+auto_quant_data_ready,pass,02_auto_quant_prepare.exit=0 and BTC_USD 1h/4h/1d feather files present
+freqtrade_runtime_loaded_from_auto_quant_venv,pass,04_run_tomac_autoquant_venv reached Freqtrade OperationalException rather than ModuleNotFoundError
+btc_alias_and_timerange_patch_isolated,pass,config.tomac.json under state_btc_alias_aq_v1/.deps/auto-quant has BTC/USD and 20260401-20260512
+patched_backtest_succeeded,pass,05_run_tomac_timerange_patched.exit=0 and Done: 3 succeeded 0 failed
+nonzero_trades,fail_closed,all three strategy summaries report trade_count 0
+profitability_packet,fail_closed,total_profit_pct 0.0000 and no measured profitability packet emitted
+downstream_promotion,fail_closed,no Pre-Bayes BBN CatBoost execution-tree promotion artifact emitted
+goal_completion,fail_closed,promotion_allowed=false trade_usable=false update_goal=false

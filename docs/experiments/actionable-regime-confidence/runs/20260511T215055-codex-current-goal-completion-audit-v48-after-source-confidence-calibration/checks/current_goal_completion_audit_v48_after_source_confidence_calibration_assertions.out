@@ -1,0 +1,17 @@
+PASS decision=current_goal_completion_audit_v48=source_confidence_calibrated_no_acceptance_2of4_roots_still_blocked
+PASS objective_restatement_present
+PASS checklist_rows=10
+PASS failures_present=true
+PASS source_label_verifier_status=schema_ready_unscored
+PASS source_label_rows=248440
+PASS accepted_source_confidence_95_labels=none
+PASS source_panel_recency_status=blocked
+PASS native_subhour_root_ready=false
+PASS r6_positive_rows=41
+PASS r6_matched_negative_rows=41
+PASS r6_combined_min_wilson95_lcb=0.914332
+PASS update_goal=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS external_requests_sent=false
+PASS raw_data_committed=false

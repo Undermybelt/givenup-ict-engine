@@ -1,0 +1,45 @@
+{
+  "run_id": "20260511T133337+0800-codex-finra-manipulation-acquisition-schema-v1",
+  "artifact_type": "finra_manipulation_acquisition_schema_v1",
+  "source": {
+    "name": "FINRA Potential Manipulation Report",
+    "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report",
+    "source_role": "schema_target_not_public_row_export"
+  },
+  "purpose": "Convert the current direct Manipulation blocker into a row-level acquisition contract for spoofing/layering matched-negative calibration.",
+  "active_boundary": {
+    "manipulation_role": "separate_direct_event_order_flow_order_lifecycle_overlay",
+    "not_allowed": [
+      "OHLCV liquidity proxy",
+      "session/sweep proxy",
+      "synthetic detector rows",
+      "model confidence without source positive and matched negative rows"
+    ]
+  },
+  "required_files_after_acquisition": {
+    "positive_rows": "timestamped spoofing/layering rows matching the schema",
+    "matched_negative_rows": "same schema normal-activity controls matched by venue, symbol, date/session, and liquidity bucket",
+    "provenance_manifest": "source export identity, date pulled, source owner, and any row redaction notes"
+  },
+  "minimum_gate_contract": {
+    "taxonomy": "direct Manipulation variety, not MainRegimeV2 price root",
+    "varieties_targeted": [
+      "spoofing_layering"
+    ],
+    "calibration": "chronological calibration/test split plus heldout symbol or venue split",
+    "acceptance": "Wilson95 lower bound >= 0.95 on calibration, heldout-time, and heldout-symbol/venue splits",
+    "abstain": "missing matched_negative_group_id, missing timestamps, missing venue/symbol, or source rows not from direct order-lifecycle/report export"
+  },
+  "schema_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T133337-codex-finra-manipulation-acquisition-schema-v1/acquisition-schema/finra_manipulation_acquisition_schema_v1.csv",
+  "decision": {
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "full_objective_achieved": false,
+    "gate_result": "finra_spoofing_layering_schema_package_ready_rows_not_acquired",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "Acquire positive and matched negative row exports matching this schema; do not rerun proxy/OHLCV manipulation gates."
+}

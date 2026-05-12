@@ -1,0 +1,9 @@
+requirement,artifact,status,note
+source 115700 AQ root,docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1,covered,20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1
+provider provenance repair,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.repaired.jsonl,covered,"{'yfinance': 21, 'kraken_public': 32, 'binance_public': 52, 'bybit_public': 51, 'tvr_default_binance': 37, 'ibkr_paxos_long_midpoint': 44}"
+real-trade ingest,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/command-output/22_ingest_real_trades.out,covered,0
+Pre-Bayes/filter,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/command-output/24_pre_bayes_status.out,covered,0
+BBN state,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/bbn_network.json,covered,state readback captured
+CatBoost/path-ranker,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/path-ranker,covered,standard and augmented commands attempted
+execution tree,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/command-output/47_workflow_full_augmented.out,covered,workflow readback captured
+layer contract validation,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.enriched_layer_contract.jsonl,covered,pass:layer_contract_schema_valid

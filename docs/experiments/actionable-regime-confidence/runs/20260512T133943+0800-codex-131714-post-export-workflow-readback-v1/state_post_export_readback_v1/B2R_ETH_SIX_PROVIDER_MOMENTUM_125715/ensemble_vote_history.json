@@ -1,0 +1,81 @@
+[
+  {
+    "artifact_id": "ensemble-vote:analyze:2026-05-12T05:19:43Z",
+    "generated_at": "2026-05-12T05:19:43.745610Z",
+    "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:20260512T051943.700Z",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "d1fba762150c532c",
+      "config_hash": "b3f8c0bf78541ed0",
+      "data_fingerprint": "f0f258bdf4f6e597"
+    },
+    "dataset_comparability": {
+      "comparable": true,
+      "previous_run_id": "analyze:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:20260512T051740.139Z",
+      "reason": "same_data_same_config",
+      "comparison_class": "same_data_same_config",
+      "same_data": true,
+      "same_config": true,
+      "same_prompt_version": true,
+      "same_factor_version": true
+    },
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "final_action": "Observe",
+    "recommended_command": "ask-user: Before using historical data for B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/state_prebayes_bbn_readback_v1'",
+    "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.350 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/state_prebayes_bbn_readback_v1'",
+    "hard_block": {
+      "active": false,
+      "stage": null,
+      "status": null,
+      "reason": null,
+      "evidence": [],
+      "command": null,
+      "human_action": null
+    },
+    "confidence": 0.35,
+    "consensus_strength": 0.35,
+    "disagreement_flags": [],
+    "executor_summaries": [
+      "executor=catboost_file action=Observe confidence=0.350 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350",
+      "executor=xgboost_file action=Observe confidence=0.350 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350"
+    ],
+    "split_explanations": [
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high"
+    ],
+    "executor_scorecards": [],
+    "executor_scorecards_source": "persisted",
+    "posterior_fingerprint": "f0f258bdf4f6e597",
+    "posterior_normalization_status": "normalized",
+    "posterior_active_regime": "range",
+    "posterior_confidence": 0.367008438103555,
+    "posterior_probabilities": {
+      "range": 0.34954935902525164,
+      "stress": 0.18438482894107938,
+      "transition": 0.23303290601683446,
+      "trend": 0.23303290601683446
+    },
+    "posterior_evidence": [
+      "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.999 multi_timeframe_entry_alignment_score=0.903",
+      "long/short support gap 0.033 is too small, so alignment is treated as mixed",
+      "multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized",
+      "evidence quality is too low, so BBN input is downgraded to neutralized defaults",
+      "pre_bayes_quality_score=0.367 gating_status=observe_only",
+      "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.642",
+      "market_state_source=volatility=NormalVol:0.708 liquidity=NormalLiquidity:0.391 structure=Trending:0.939 behavior=RiskOff:0.550",
+      "market_state_source=rationale=volatility=NormalVol conf=0.71",
+      "market_state_source=rationale=structure=Trending conf=0.94",
+      "market_state_source=rationale=behavior=RiskOff conf=0.55",
+      "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.64"
+    ]
+  }
+]

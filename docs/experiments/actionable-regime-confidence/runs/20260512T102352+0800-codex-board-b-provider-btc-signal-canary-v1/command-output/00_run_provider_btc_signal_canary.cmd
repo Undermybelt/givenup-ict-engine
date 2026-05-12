@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102352+0800-codex-board-b-provider-btc-signal-canary-v1/workspace/auto-quant-provider-btc-signal-canary/run_tomac.py 

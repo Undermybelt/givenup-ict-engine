@@ -1,0 +1,8 @@
+query,exit,rows,exact_r3_hits,exact_r5_hits
+AAPL 15m regime label,0,0,0,0
+IXIC 15m regime label,0,0,0,0
+NQ futures 15m regime label,0,0,0,0
+market regime labels intraday,0,1,0,0
+Bull Bear Sideways Crisis market regime labels,0,0,0,0
+stock market regime labels 2026,0,1,0,0
+MainRegimeV2 stock panel,0,0,0,0

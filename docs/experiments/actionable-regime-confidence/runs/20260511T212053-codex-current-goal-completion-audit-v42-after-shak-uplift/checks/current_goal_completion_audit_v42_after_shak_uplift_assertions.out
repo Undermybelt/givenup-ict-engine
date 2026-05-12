@@ -1,0 +1,12 @@
+PASS decision=current_goal_completion_audit_v42=post_shak_live_32x32_still_blocked
+PASS objective_restatement_present
+PASS checklist_rows=7
+PASS failures_present=true
+PASS r6_positive_rows=32
+PASS r6_matched_negative_rows=32
+PASS r6_combined_min_wilson95_lcb=0.892821
+PASS update_goal=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS external_requests_sent=false
+PASS raw_data_committed=false

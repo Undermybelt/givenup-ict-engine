@@ -1,0 +1,119 @@
+{
+  "schema_version": "mainregimev3-crosswalk-contract/v1",
+  "loop_id": "20260511T073820+0800-codex-mainregimev3-crosswalk-contract",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T073820-codex-mainregimev3-crosswalk-contract",
+  "purpose": "Materialize the active MainRegimeV3 root crosswalk after the paper/GitHub source refresh and user correction.",
+  "active_roots": [
+    {
+      "root": "BullExpansion",
+      "old_v2_aliases": ["Bull"],
+      "accepted_status": "blocked_remap_required",
+      "evidence_channel": "bar_or_panel_state_with_expansion_behavior",
+      "required_label_semantics": [
+        "positive drift or persistent upside regime",
+        "expansion/risk-on behavior, not only a one-bar up move",
+        "downstream action differs from consolidation or crisis"
+      ],
+      "forbidden_shortcuts": [
+        "counting naked V2 Bull evidence without expansion remap",
+        "counting TrendExpansion child packet as parent completion by wording"
+      ]
+    },
+    {
+      "root": "BearExpansion",
+      "old_v2_aliases": ["Bear"],
+      "accepted_status": "blocked_remap_required",
+      "evidence_channel": "bar_or_panel_state_with_downside_expansion_behavior",
+      "required_label_semantics": [
+        "negative drift or persistent downside regime",
+        "risk-off/deleveraging/downside expansion behavior",
+        "not merely a crisis tail event"
+      ],
+      "forbidden_shortcuts": [
+        "counting naked V2 Bear evidence without downside-expansion remap",
+        "counting ordinary drawdown or volatility alone as BearExpansion"
+      ]
+    },
+    {
+      "root": "SidewaysConsolidation",
+      "old_v2_aliases": ["Sideways", "Consolidation", "Range"],
+      "accepted_status": "blocked_remap_required",
+      "evidence_channel": "bar_or_panel_state_with_range_compression_behavior",
+      "required_label_semantics": [
+        "range-bound or compression regime",
+        "directional strategies are suppressed, resized, or replaced",
+        "not just low volatility without range structure"
+      ],
+      "forbidden_shortcuts": [
+        "counting RangeConsolidation child packet as parent completion by wording",
+        "using only low ADX/low volatility without held-out source labels"
+      ]
+    },
+    {
+      "root": "CrisisStress",
+      "old_v2_aliases": ["Crisis", "CrisisCrash", "VolatilityDislocation"],
+      "accepted_status": "blocked_remap_required",
+      "evidence_channel": "stress_drawdown_volatility_correlation_or_liquidity_state",
+      "required_label_semantics": [
+        "stress/crash/dislocation state with separate sizing or abstain behavior",
+        "can dominate direction and ordinary bear evidence",
+        "must be validated beyond display naming"
+      ],
+      "forbidden_shortcuts": [
+        "counting naked V2 Crisis evidence without stress/dislocation remap",
+        "using a child ExtremeStress packet as completion without parent audit"
+      ]
+    },
+    {
+      "root": "Manipulation",
+      "old_v2_aliases": ["Manipulation"],
+      "accepted_status": "blocked_full_coverage_remap_required",
+      "evidence_channel": "direct_event_social_order_flow_order_lifecycle_or_wash_trade_labels",
+      "required_label_semantics": [
+        "engineered price/action lifecycle or market-abuse event",
+        "direct event, social/event, L2/L3/order-lifecycle, wash-trade, spoofing/layering, or comparable labeled evidence",
+        "routes to suppress, abstain, cooldown, or special handling before any strategy selection"
+      ],
+      "forbidden_shortcuts": [
+        "using OHLCV-only sweep/session/thin-liquidity proxies as accepted manipulation",
+        "counting one direct-event variety as all direct-manipulation coverage"
+      ]
+    }
+  ],
+  "residual_root": {
+    "root": "UnknownOrMixed",
+    "accepted_status": "residual_only",
+    "handling": "abstain/default guardrail, not a completion root"
+  },
+  "candidate_big_classes_to_preflight": [
+    "TransitionRecovery",
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "VolatilityDislocation",
+    "CrossAssetRotationOrRiskOnRiskOff",
+    "MacroPolicyRegime"
+  ],
+  "child_or_input_only": [
+    "TrendExpansion",
+    "RangeConsolidation",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "SessionLiquidityCoreViable",
+    "ThinLiquidity",
+    "raw_l2_wall_cancel_layering_signatures",
+    "HMM_state_id_without_source_label",
+    "change_point_boundary_without_class_label"
+  ],
+  "acceptance_contract": {
+    "per_root_wilson95_required": true,
+    "chronological_calibration_test_required": true,
+    "cross_market_timeframe_disposition_required": true,
+    "source_backed_labels_required_for_accepted_confidence": true,
+    "ohlcv_proxy_promotion_allowed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "gate_result": "blocked_mainregimev3_crosswalk_materialized_acceptance_not_rerun",
+  "next_action": "Rerun the attachability/full-coverage disposition matrix against the MainRegimeV3 roots and keep missing source-label cells blocked."
+}

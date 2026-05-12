@@ -1,0 +1,18 @@
+{
+  "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "output": "docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/derived/125715_eth_six_provider_momentum_trades.jsonl",
+  "providers": {
+    "binance_public": 34,
+    "bybit_public": 34,
+    "ibkr_aggtrades": 32,
+    "kraken_public": 20,
+    "tvr_binance": 21,
+    "yfinance": 21
+  },
+  "run_id": "20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1",
+  "same_root_six_provider_eth_aq_authority": true,
+  "source_run_id": "20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1",
+  "strategy": "ProviderCryptoMomentumStateV1",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+  "total_rows": 162
+}

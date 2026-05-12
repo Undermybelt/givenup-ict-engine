@@ -1,0 +1,16 @@
+run_id=20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1
+verifier_status=schema_ready_unscored
+baseline_positive_rows=57
+baseline_matched_negative_rows=57
+active_sidecar_positive_rows=16
+positive_rows=73
+matched_negative_rows=73
+pooled_min_wilson95_lcb=0.950007992044
+pooled_wilson95_gate=true
+chronological_split_gate=false
+heldout_symbol_gate=false
+heldout_venue_gate=false
+canonical_shared_intake_mutated=false
+gate_result=r6_active_sidecar_isolated_calibration_v1=pooled_wilson95_passed_split_species_canonical_intake_still_blocked
+strict_full_objective_achieved=false
+update_goal=false

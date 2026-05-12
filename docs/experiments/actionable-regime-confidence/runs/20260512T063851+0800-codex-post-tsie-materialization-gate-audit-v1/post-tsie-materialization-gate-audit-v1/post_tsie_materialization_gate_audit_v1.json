@@ -1,0 +1,198 @@
+{
+  "active_processes": [
+    {
+      "command": "/bin/zsh -lc sleep 180; ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '98181|062902|063155|063217|native-subhour-source-label-intake|r3_hf_tsie_native_intraday|public_source_candidate_sweep|shasum|wc -l|auto-quant|catboost|pre-bayes|bbn|execution-tree|apply_patch|target/debug/ict-engine' | rg -v 'rg -i' || true; echo '--- board-hash'; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; echo '--- tail'; tail -n 240 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; echo '--- root stats'; if [ -e /tmp/ict-engine-native-subhour-source-label-intake ]; then find /tmp/ict-engine-native-subhour-source-label-intake -maxdepth 2 -type f -print -exec ls -lhT {} \\; 2>/dev/null | sed -n '1,80p'; else echo absent; fi; echo '--- terminal files'; find docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1 docs/experiments/actionable-regime-confidence/runs/20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1 docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1 -maxdepth 4 -type f -print 2>/dev/null | sort | sed -n '1,280p'",
+      "etime": "01:52",
+      "pid": "9138",
+      "ppid": "4412",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 240; ps -axo pid,ppid,stat,lstart,etime,command | rg '062902|063155|063217|native_subhour|source-label-intake|target/debug/ict-engine|cargo|rustc|python|duckdb|uv run|shasum|sed -n 1,8p' | rg -v 'rg ' || true; echo '--- target root stat'; find /tmp/ict-engine-native-subhour-source-label-intake -maxdepth 2 -type f -print -exec ls -lhT {} \\; 2>/dev/null | sed -n '1,120p'; echo '--- board'; sha256sum docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "etime": "01:14",
+      "pid": "10250",
+      "ppid": "4717",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc wc -l /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv; shasum -a 256 /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json; jq -S . /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json | sed -n '1,240p'",
+      "etime": "00:45",
+      "pid": "11581",
+      "ppid": "3946",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 90; ps -axo pid,etime,command | rg -i \"062902|063155|063215|063217|063707|063733|063734|063851|public-source-candidate|native_subhour|source-label-intake|shasum|target/debug/ict-engine|auto.?quant|catboost|path.?rank|execution-tree|apply_patch|docs/plans/2026-05-10-regime-conditional\" | rg -v \"rg -i\"; printf '\\n--- hash ---\\n'; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; printf '\\n--- latest ids ---\\n'; rg -n \"062902|063155|063215|063217|063707|063733|063734|063851|target-root|materialization|quarantine|post-tsie\" docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md | tail -n 220; printf '\\n--- tail ---\\n'; tail -n 140 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; printf '\\n--- dirs ---\\n'; find docs/experiments/actionable-regime-confidence/runs -maxdepth 1 -type d \\( -name '*062902*' -o -name '*063155*' -o -name '*063215*' -o -name '*063217*' -o -name '*063707*' -o -name '*063733*' -o -name '*063734*' -o -name '*063851*' -o -name '*0639*' \\) -print | sort",
+      "etime": "00:39",
+      "pid": "11990",
+      "ppid": "4967",
+      "stat": "Ss"
+    },
+    {
+      "command": "/usr/bin/perl /usr/bin/shasum -a 256 /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+      "etime": "00:39",
+      "pid": "12015",
+      "ppid": "4022",
+      "stat": "Rs"
+    },
+    {
+      "command": "/usr/bin/perl /usr/bin/shasum -a 256 /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+      "etime": "00:33",
+      "pid": "12364",
+      "ppid": "11581",
+      "stat": "R"
+    },
+    {
+      "command": "/bin/zsh -lc while ps -p 7411 >/dev/null 2>&1 || ps -p 9391 >/dev/null 2>&1 || ps -p 2532 >/dev/null 2>&1; do sleep 20; done; echo active_checks_settled; ps -axo pid,ppid,etime,stat,command | rg -i '063155|063217|062902|source-label-intake|native_subhour|target/debug/ict-engine|cargo|rustc|python|shasum|docs/plans/2026-05-10|apply_patch' | rg -v 'rg -i' || true; printf '\\n--- hash ---\\n'; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; printf '\\n--- board hits ---\\n'; rg -n '063155|063217|063215|native_subhour|source-label-intake|target_root_mutated|Crisis|count_once:063155|count_once:063217|public_source_candidate_sweep' docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md | tail -n 220 || true; printf '\\n--- tail ---\\n'; tail -n 160 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "etime": "00:32",
+      "pid": "12450",
+      "ppid": "5520",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc while ps -p 9391 >/dev/null 2>&1 || ps -p 11581 >/dev/null 2>&1 || ps -p 12015 >/dev/null 2>&1; do sleep 20; done; echo settled2; ps -axo pid,ppid,stat,lstart,etime,command | rg -i '062902|063155|063217|063|native_subhour|source-label-intake|public-source|target/debug/ict-engine|cargo|rustc|python|duckdb|pyarrow|uv run|shasum|auto-quant|catboost|pre-bayes|bbn|execution-tree|path-ranker' | rg -v 'rg -i' || true; echo '--- board'; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; echo '--- target root'; find /tmp/ict-engine-native-subhour-source-label-intake -maxdepth 3 -type f -print 2>/dev/null | sort | xargs -r ls -lhT",
+      "etime": "00:28",
+      "pid": "12648",
+      "ppid": "5043",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc while ps -p 9391 >/dev/null 2>&1; do sleep 20; done; echo public_source_sweep_settled; find docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1 -maxdepth 4 -type f -print 2>/dev/null | sort | sed -n '1,240p'; ps -axo pid,ppid,stat,etime,command | rg -i '063217|063155|062902|native_subhour|source-label-intake|actionable-regime|target/debug/ict-engine|auto.?quant|catboost|bbn|pre-bayes|execution-tree|python|duckdb|uv run' | rg -v 'rg -i' || true",
+      "etime": "00:20",
+      "pid": "12865",
+      "ppid": "4110",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 90; ps -eo pid,ppid,stat,etime,command | rg -i '063217|public_source_candidate|native-subhour-intake|source-label-intake|target/debug/ict-engine|cargo|rustc|python|duckdb|uv run|shasum|auto.?quant|catboost|pre-bayes|bbn|execution-tree|workflow-status|find docs/experiments/actionable' | rg -v 'rg -i|zsh -lc ps'; printf '\\n--- root stat ---\\n'; find /tmp/ict-engine-native-subhour-source-label-intake -maxdepth 2 -type f -print -exec ls -lh {} \\; 2>/dev/null | sed -n '1,80p'; printf '\\n--- board ---\\n'; sha256sum docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "etime": "00:19",
+      "pid": "12921",
+      "ppid": "4488",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc while ps -axo command | rg -q '/tmp/ict-engine-native-subhour-source-label-intake.*(wc -l|shasum|jq|head)' ; do date '+%Y-%m-%dT%H:%M:%S%z readback_active'; sleep 10; done; echo readback_processes_settled",
+      "etime": "00:16",
+      "pid": "13035",
+      "ppid": "5349",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 90\\012ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '9391|063217|native-subhour-source-label-intake|source-label-intake|shasum|wc -l|jq -S|062902|063155|public_source_sweep|target/debug/ict-engine|auto.?quant|catboost|pre.?bayes|bbn|path.?rank|execution.?tree|apply_patch' | rg -v 'rg -i'",
+      "etime": "00:11",
+      "pid": "13171",
+      "ppid": "5119",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 90; ps -axo pid,ppid,stat,etime,command | rg '063155|063217|062902|native-subhour-source-label-intake|shasum|wc -l|public_source_candidate_sweep|r3_tsie_native_subhour|r3_hf_tsie_native|auto-quant|catboost|pre-bayes|bbn|execution-tree' | rg -v 'rg '",
+      "etime": "00:05",
+      "pid": "13373",
+      "ppid": "5434",
+      "stat": "Ss"
+    }
+  ],
+  "board_sha256_before_artifact": "57b14e94b35423f985eb01fe37a35ef9f8b6ff3813d289a7a935d7872e7c5d24",
+  "decision": {
+    "accepted_mapping_confidence_95_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "canonical_merge": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_promotion_rerun": false,
+    "downstream_promotion_rerun_allowed_now": false,
+    "gate_result": "post_tsie_materialization_gate_audit_v1=target_root_present_but_crisis_absent_policy_blocked_no_downstream",
+    "mapped_rows": 5032903,
+    "missing_main_regime_v2_labels": [
+      "Crisis"
+    ],
+    "policy_blockers": [
+      "Crisis absent from TSIE source taxonomy",
+      "063215 preflight gate says do_not_run_target_root_materializer_proxy_blocked",
+      "prior Board A TSIE policy rejected rule/OHLCV proxy labels as promoting evidence",
+      "canonical merge not run",
+      "provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun",
+      "R6 owner/export and R5 recency roots remain absent"
+    ],
+    "r3_required_files_present": true,
+    "r3_root_present": true,
+    "r3_rows_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+    "r3_rows_sha256_from_provenance": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+    "r3_rows_size_bytes": 2786719721,
+    "r3_target_root_mutated_by_063155": true,
+    "r3_unlock_accepted_for_promotion": false,
+    "raw_rows": 7193996,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T22:40:00.769775+00:00",
+  "guard_assertions": [
+    "gate_result=r3_tsie_native_intraday_materializer_preflight_v1=do_not_run_target_root_materializer_proxy_blocked",
+    "materializer_script_present=True",
+    "would_write_target_root_true=True",
+    "policy_blockers_present_true=True",
+    "r3_target_root_absent=True",
+    "accepted_rows_added_zero=True",
+    "source_control_evidence_acquired_false=True",
+    "target_root_mutated_false=True",
+    "canonical_merge_false=True",
+    "downstream_promotion_rerun_false=True",
+    "update_goal_false=True"
+  ],
+  "required_roots": [
+    {
+      "all_required_present": false,
+      "id": "r6_owner_export",
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "present_files": "",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false,
+      "sizes_json": "{}"
+    },
+    {
+      "all_required_present": true,
+      "id": "r3_native_subhour",
+      "missing_files": "",
+      "present_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": true,
+      "sizes_json": "{\"native_subhour_source_label_provenance.json\": 2400, \"native_subhour_source_label_rows.csv\": 2786719721}"
+    },
+    {
+      "all_required_present": false,
+      "id": "r5_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false,
+      "sizes_json": "{}"
+    }
+  ],
+  "run_id": "20260512T063851+0800-codex-post-tsie-materialization-gate-audit-v1",
+  "source_artifacts": {
+    "062902_root": "docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1",
+    "062902_terminal_report_present": false,
+    "063155_report_exists": true,
+    "063155_root": "docs/experiments/actionable-regime-confidence/runs/20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+    "063215_guard_assertions_present": true,
+    "063215_guard_root": "docs/experiments/actionable-regime-confidence/runs/20260512T063215+0800-codex-r3-tsie-native-intraday-materializer-preflight-v1"
+  },
+  "source_assertions": [
+    "gate_result=r3_tsie_native_subhour_intake_materialization_v1=target_root_materialized_bull_bear_sideways_crisis_absent_no_downstream",
+    "schema_ready=true",
+    "raw_parquet_sha256_verified=true",
+    "target_root_mutated=true",
+    "mapped_rows=5032903",
+    "accepted_mapping_confidence_95_labels=Bear,Bull,Sideways",
+    "crisis_present=false",
+    "canonical_merge=false",
+    "downstream_promotion_rerun=false",
+    "strict_full_objective=false",
+    "trade_usable=false",
+    "update_goal=false"
+  ]
+}

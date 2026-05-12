@@ -1,0 +1,110 @@
+{
+  "accepted_rows_added": 0,
+  "archive": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/databento.rar",
+  "archive_exists": true,
+  "archive_sha256": "60daf9e15e42a8c1884c7dbe36629dcea06fd13f0e20ec0ed0c9d1a74ee51112",
+  "archive_size_bytes": 102402878,
+  "board_hash_before_artifact": "fb3385d5199c834337cdc9262dd8e243853c79f733a02e757fc34ba388a8808c",
+  "canonical_merge": false,
+  "dataset": "GLBX.MDP3",
+  "downstream_promotion_rerun": false,
+  "gate_result": "local_databento_archive_readback_after_082240_v1=ohlcv_only_no_source_control_unlock",
+  "manifest_job_id": "GLBX-20260108-BUR5BGXTKJ",
+  "members": [
+    {
+      "columns": [
+        "ts_event",
+        "rtype",
+        "publisher_id",
+        "instrument_id",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "symbol"
+      ],
+      "has_order_lifecycle_columns": false,
+      "header": "ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",
+      "member": "gc_201101_202604.csv",
+      "missing_control_columns": [
+        "action",
+        "ask_px",
+        "ask_sz",
+        "bid_px",
+        "bid_sz",
+        "channel_id",
+        "label",
+        "order_id",
+        "participant",
+        "price",
+        "sequence",
+        "side",
+        "size",
+        "source_section"
+      ],
+      "sample": [
+        "ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",
+        "2011-01-02 18:00:00-05:00,33,1,102263,1420.4,1420.4,1418.8,1419.7,209,GC.n.0",
+        "2011-01-02 18:01:00-05:00,33,1,102263,1420.0,1420.4,1419.9,1419.9,48,GC.n.0",
+        "2011-01-02 18:02:00-05:00,33,1,102263,1419.9,1420.0,1419.6,1419.7,35,GC.n.0",
+        "2011-01-02 18:03:00-05:00,33,1,102263,1419.6,1419.6,1417.8,1418.5,84,GC.n.0"
+      ],
+      "sample_rows": 4
+    },
+    {
+      "columns": [
+        "ts_event",
+        "rtype",
+        "publisher_id",
+        "instrument_id",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "symbol"
+      ],
+      "has_order_lifecycle_columns": false,
+      "header": "ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",
+      "member": "nq_201101_202604.csv",
+      "missing_control_columns": [
+        "action",
+        "ask_px",
+        "ask_sz",
+        "bid_px",
+        "bid_sz",
+        "channel_id",
+        "label",
+        "order_id",
+        "participant",
+        "price",
+        "sequence",
+        "side",
+        "size",
+        "source_section"
+      ],
+      "sample": [
+        "ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",
+        "2011-01-02 18:00:00-05:00,33,1,93735,2220.0,2223.0,2220.0,2222.75,169,NQ.n.0",
+        "2011-01-02 18:01:00-05:00,33,1,93735,2222.0,2222.75,2222.0,2222.25,10,NQ.n.0",
+        "2011-01-02 18:02:00-05:00,33,1,93735,2222.25,2223.25,2222.0,2223.25,71,NQ.n.0",
+        "2011-01-02 18:03:00-05:00,33,1,93735,2223.5,2223.5,2222.75,2223.0,70,NQ.n.0"
+      ],
+      "sample_rows": 4
+    }
+  ],
+  "no_order_lifecycle_columns": true,
+  "observed_at_utc": "2026-05-12T00:29:04.565453+00:00",
+  "run_id": "20260512T082629+0800-codex-local-databento-archive-readback-after-082240-v1",
+  "schema": "ohlcv-1m",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "symbols": [
+    "GC.FUT"
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

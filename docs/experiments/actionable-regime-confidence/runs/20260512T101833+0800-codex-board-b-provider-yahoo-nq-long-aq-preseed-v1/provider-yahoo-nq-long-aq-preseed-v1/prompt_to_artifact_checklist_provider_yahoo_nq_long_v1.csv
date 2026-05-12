@@ -1,0 +1,9 @@
+requirement,status,evidence,notes
+real provider-owned input,pass,source_provider_csv.txt,Yahoo NQ provider CSV from 100419 reused as source
+Auto-Quant prepare,pass,command-output/00_prepare_provider_csv_long.out,11086 1h bars plus 3006 4h and 596 1d bars
+Auto-Quant strategy run,pass,command-output/01_run_tomac_provider_yahoo_nq_long.out,Freqtrade/TOMAC exited 0
+nonzero trades,fail,command-output/01_run_tomac_provider_yahoo_nq_long.out,trade_count 0
+mature rooted branch observations,fail,provider-yahoo-nq-long-aq-preseed-v1/provider_yahoo_nq_long_aq_preseed_v1.json,added 0
+accepted regime packet,fail,provider-yahoo-nq-long-aq-preseed-v1/provider_yahoo_nq_long_aq_preseed_v1.json,accepted rows added 0
+promotion allowed,fail,provider-yahoo-nq-long-aq-preseed-v1/provider_yahoo_nq_long_aq_preseed_v1.json,strict objective false
+update_goal allowed,fail,provider-yahoo-nq-long-aq-preseed-v1/provider_yahoo_nq_long_aq_preseed_v1.json,update_goal_allowed false

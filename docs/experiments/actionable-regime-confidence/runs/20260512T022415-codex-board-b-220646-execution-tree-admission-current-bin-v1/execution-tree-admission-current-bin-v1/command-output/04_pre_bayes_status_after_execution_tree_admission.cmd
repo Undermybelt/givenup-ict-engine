@@ -1,0 +1,1 @@
+target/debug/ict-engine pre-bayes-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1 --refresh --output-format json 

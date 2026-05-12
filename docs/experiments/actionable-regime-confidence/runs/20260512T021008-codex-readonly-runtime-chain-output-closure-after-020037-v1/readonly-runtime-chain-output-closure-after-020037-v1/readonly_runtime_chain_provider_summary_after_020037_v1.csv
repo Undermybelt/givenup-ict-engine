@@ -1,0 +1,5 @@
+provider,ready,reason,status
+yfinance,True,native_yfinance_runtime_available,ready
+kraken_cli,True,kraken_cli_config_detected,ready
+ibkr,False,ibkr_runtime_dependencies_missing_with_gateway_reachable,configured_runtime_unhealthy
+tradingview_mcp,False,tradingview_mcp_connectivity_probe_failed,configured_runtime_unhealthy

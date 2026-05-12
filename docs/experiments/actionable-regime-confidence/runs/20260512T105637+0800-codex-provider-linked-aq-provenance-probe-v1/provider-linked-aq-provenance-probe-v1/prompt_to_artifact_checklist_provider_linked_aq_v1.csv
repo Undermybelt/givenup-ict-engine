@@ -1,0 +1,9 @@
+requirement,artifact,status,note
+AQ execution,command-output/aq_*_run_tomac.out,covered,public provider BTC lanes only
+IBKR provenance,provider-csv/ibkr_QQQ_1h_5d.csv,partial_fail_closed,"ad hoc QQQ, not BTC AQ feed"
+TradingViewRemix provenance,105207 command-output/02_tradingview_mcp_qqq_1d_fetch.*,failed,fetch_failed
+yfinance provenance,provider-csv/yfinance_btc_usd_1h_7d.csv,covered,AQ run executed
+Kraken provenance,provider-csv/kraken_public_ccxt_btc_1h_120.csv,covered,AQ run executed
+Binance provenance,provider-csv/binance_public_ccxt_btc_1h_120.csv,covered,AQ run executed
+Bybit provenance,provider-csv/bybit_public_ccxt_btc_1h_120.csv,covered,AQ run executed
+Promotion,report decision,fail_closed,provider/AQ hard gate incomplete

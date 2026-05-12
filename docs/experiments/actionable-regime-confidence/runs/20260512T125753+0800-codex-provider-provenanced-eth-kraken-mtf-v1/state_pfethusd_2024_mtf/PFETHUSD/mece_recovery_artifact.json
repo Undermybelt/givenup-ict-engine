@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-PFETHUSD-1778563001294",
+  "generated_at": "2026-05-12T05:16:41.294938Z",
+  "symbol": "PFETHUSD",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "8729c30d6dab07eb",
+  "execution_validity_summary": "execution_blocked=1047;execution_observe_only=583;execution_ready=370",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        600
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4482388432333442,
+      "execution_readiness_drift": 0.00005580893327846016,
+      "sample_count": 600
+    },
+    {
+      "horizon_bars": [
+        600,
+        1600
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.44068968665170255,
+      "execution_readiness_drift": -5.971049983478562e-7,
+      "sample_count": 1000
+    },
+    {
+      "horizon_bars": [
+        1600,
+        2000
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4196512822807941,
+      "execution_readiness_drift": 0.00005361899874653862,
+      "sample_count": 400
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "e3de4cb9828320c9",
+    "data_fingerprint": "f7bad2ac0411bbc8"
+  }
+}

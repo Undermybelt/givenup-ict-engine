@@ -1,0 +1,6 @@
+PASS command_exit=0
+PASS completion_line='Done: 3 backtests succeeded, 0 failed.'
+PASS strategies_count=3 BTCLeaderBreakV4 MomentumMTFConfluence VolBreakoutSized
+PASS source_roots_absent r6_owner_export=false r3_native_subhour=false r5_recency_extension=false
+PASS approval_package_non_approving approval_present=false flip_controls_accepted=false canonical_merge_allowed=false downstream_rerun_allowed=false update_goal=false
+PASS board_a_promotion_false accepted_rows_added=0 new_confidence_gate=false strict_full_objective_achieved=false trade_usable=false

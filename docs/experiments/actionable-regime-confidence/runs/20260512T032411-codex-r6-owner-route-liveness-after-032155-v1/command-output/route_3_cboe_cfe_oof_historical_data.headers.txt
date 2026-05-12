@@ -1,0 +1,21 @@
+HTTP/2 200 
+date: Mon, 11 May 2026 19:24:39 GMT
+content-type: text/html; charset=utf-8
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 4294967294
+set-cookie: __cf_bm=L8At4UhE_0ap4lLdmcNyO9lixNxNnt2xQHQOtx1Wdws-1778527477.976434-1.0.1.1-0BsLlHWYATp6qsbo1d4uHc8GjCsmI4OBfqGQ2xG1tekWMUk5xuzE8t8D8ctSx_Scwde9O46nv9gWcfNaolb8kCcChX2H2x3vS0qvewqg8cumdG7GQt5yYy6B3eh2SGTa; HttpOnly; SameSite=None; Secure; Path=/; Domain=cboe.com; Expires=Mon, 11 May 2026 19:54:39 GMT
+cf-ray: 9fa390a15913e377-NRT
+cf-cache-status: DYNAMIC
+access-control-allow-origin: *
+cache-control: public, max-age=0, must-revalidate
+server: cloudflare
+strict-transport-security: max-age=15552000; includeSubDomains; preload
+vary: RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept-Encoding
+nel: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+report-to: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=KMJhPnu40mTHLEbwnbOs8P6KR4o5ZOKZpHLL2xzGTwnYsdnppbiIGoLFqSAae16JLtp8r3zZKS9fFBlpAmGFdO7Hw4SMtssYRfUl9LZHUqqVHM8hGm8zJoKY1zFXJOF7%2BmsxnV01fYhP6o4%3D"}],"group":"cf-nel","max_age":604800}
+referrer-policy: strict-origin-when-cross-origin
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-matched-path: /en/markets/us/futures/market-statistics/historical-data/oof
+x-next-cache-tags: _N_T_/layout,_N_T_/[lang]/layout,_N_T_/[lang]/markets/layout,_N_T_/[lang]/markets/us/layout,_N_T_/[lang]/markets/us/futures/layout,_N_T_/[lang]/markets/us/futures/market-statistics/layout,_N_T_/[lang]/markets/us/futures/market-statistics/historical-data/layout,_N_T_/[lang]/markets/us/futures/market-statistics/historical-data/[type]/layout,_N_T_/[lang]/markets/us/futures/market-statistics/historical-data/[type]/page,_N_T_/en/markets/us/futures/market-statistics/historical-data/oof/
+

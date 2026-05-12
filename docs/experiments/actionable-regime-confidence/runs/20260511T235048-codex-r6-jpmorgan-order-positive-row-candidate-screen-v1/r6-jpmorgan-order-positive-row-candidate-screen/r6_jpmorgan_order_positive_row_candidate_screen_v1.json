@@ -1,0 +1,83 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "8d124be9266685bfa76f1af6c263e533ef9bdf45e08ee5e57944b4d906c1afab",
+  "candidate_delta": {
+    "control_complete_matched_negative_rows_total": 16,
+    "control_complete_positive_rows_total": 16,
+    "jpm_semantic_duplicate_rows_excluded": [
+      "cftc_jpm_20140303_trader3_gold_buy_layered_spoof"
+    ],
+    "jpmorgan_control_complete_positive_rows": 8,
+    "nowak_smith_control_complete_positive_rows": 6,
+    "sarao_control_complete_positive_rows": 2
+  },
+  "composite_readback": {
+    "composite_min_wilson95_lcb": 0.950006246616,
+    "direct_species_closed": false,
+    "matched_negative_rows": 73,
+    "matched_negative_wilson95_lcb": 0.950006246616,
+    "pooled_95_pass": true,
+    "positive_rows": 73,
+    "positive_wilson95_lcb": 0.950006246616,
+    "sidecar_broad_normal_rows": 80,
+    "sidecar_wilson95_lcb": 0.954180263735,
+    "split_support_still_blocked": true
+  },
+  "delta_verifier": {
+    "payload": {
+      "matched_group_count": 16,
+      "matched_negative_rows": 16,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 16,
+      "provenance_keys": [
+        "candidate_policy",
+        "created_at_utc",
+        "matched_negative_control_policy",
+        "raw_payload_committed_to_repo",
+        "run_id",
+        "source",
+        "source_text_path"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/command-output/delta_direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/command-output/delta_direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "external_requests_sent": true,
+  "gate_result": "r6_jpmorgan_order_positive_row_candidate_screen_v1=control_complete_candidate_stack_pooled95_pass_live_intake_missing_split_still_blocked",
+  "generated_at_utc": "2026-05-11T15:58:15.691144+00:00",
+  "live_shared_intake_status": {
+    "missing_files": [
+      "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+    ],
+    "present": false,
+    "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+  },
+  "new_confidence_gate": false,
+  "next_action": "Restore or recreate a shared/direct intake from accepted row artifacts under a fresh lock, append the 16 control-complete positive/control candidate pairs, then rerun live direct and sidecar calibration; do not claim split or species closure yet.",
+  "raw_data_committed": false,
+  "run_id": "20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1",
+  "runtime_code_changed": false,
+  "source": {
+    "bytes": 127456,
+    "content_type": "application/pdf",
+    "http_status": 200,
+    "pdf_path": "/tmp/ict-engine-r6-jpmorgan-order-positive-row-candidate-screen-v1/raw/enfjpmorganchaseorder092920.pdf",
+    "sha256": "2db112d846bbce7d9c55e0a7fa2b7e007c6fab30873352abd2ecce9af107d2cd",
+    "url": "https://www.cftc.gov/media/4826/enfjpmorganchaseorder092920/download"
+  },
+  "source_text_path": "/tmp/ict-engine-r6-jpmorgan-order-positive-row-candidate-screen-v1/raw/enfjpmorganchaseorder092920.txt",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "v54_baseline": {
+    "matched_negative_rows": 57,
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T223100-codex-current-goal-completion-audit-v54-after-sidecar-calibration/completion-audit/current_goal_completion_audit_v54_after_sidecar_calibration.json",
+    "positive_rows": 57,
+    "sidecar_broad_normal_rows": 80
+  }
+}

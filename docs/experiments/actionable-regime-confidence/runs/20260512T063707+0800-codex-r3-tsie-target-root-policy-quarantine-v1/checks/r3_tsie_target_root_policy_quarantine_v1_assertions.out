@@ -1,0 +1,13 @@
+gate_result=r3_tsie_target_root_policy_quarantine_v1=target_root_present_but_proxy_policy_blocked_no_promotion
+writer_pid=98181
+writer_active=true
+required_root_path_present=true
+required_root_accepted=false
+target_root_mutated_by_other_active_process=true
+accepted_rows_added=0
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

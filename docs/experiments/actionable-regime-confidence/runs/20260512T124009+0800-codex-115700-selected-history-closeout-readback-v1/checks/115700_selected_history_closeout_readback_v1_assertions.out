@@ -1,0 +1,15 @@
+PASS run_id=20260512T124009+0800-codex-115700-selected-history-closeout-readback-v1
+PASS 123211_native_preflight_paths_checked=3
+PASS 123211_factor_research_and_workflow_exits_zero=true
+PASS 123227_aq_prepare_data_ready=true
+PASS 123227_123704_tomac_reached_measurement=true
+FAIL_CLOSED tomac_total_trades=0
+FAIL_CLOSED 123508_btcusdt_pairmap_successful_strategies=0
+FAIL_CLOSED selected_history_source_control_unlocked=false
+FAIL_CLOSED mature_rooted_observations=false
+FAIL_CLOSED execution_ready=false
+FAIL_CLOSED execution_actionable=false
+FAIL_CLOSED execution_review=observe
+FAIL_CLOSED promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

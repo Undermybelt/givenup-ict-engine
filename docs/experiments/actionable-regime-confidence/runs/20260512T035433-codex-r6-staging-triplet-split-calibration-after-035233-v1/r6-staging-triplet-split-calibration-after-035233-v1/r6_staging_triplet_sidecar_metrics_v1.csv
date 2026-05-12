@@ -1,0 +1,3 @@
+axis,successes,total,wilson95_lcb,support_ok,wilson_ok,pass
+staging_positive_all_correct,77,77,0.952479911333,True,True,True
+staging_same_event_control_seed_all_correct,77,77,0.952479911333,True,True,True

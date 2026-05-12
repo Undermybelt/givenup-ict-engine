@@ -1,0 +1,9 @@
+PASS parser_supports_record_level_regime_profit_branch_path=true
+PASS parser_supports_split_component_branch_path=true
+PASS explicit_path_only_recovers_node_branch_scenario=true
+PASS factor_usage_category_regime_profit_branch_path=true
+PASS structural_feedback_synthesized_when_missing=true
+PASS cargo_test_regime_profit_branch_path_lib=true
+PASS selected_historical_data=false
+PASS promotion_allowed=false
+PASS update_goal=false

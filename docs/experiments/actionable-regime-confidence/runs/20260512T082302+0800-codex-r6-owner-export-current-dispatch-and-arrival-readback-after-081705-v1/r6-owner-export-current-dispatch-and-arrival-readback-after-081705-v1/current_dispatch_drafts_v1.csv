@@ -1,0 +1,3 @@
+exists,from_header_present,parseable,path,sha256,subject_present,to_header_present
+True,False,True,docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml,56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b,True,True
+True,False,True,docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml,411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d,True,True

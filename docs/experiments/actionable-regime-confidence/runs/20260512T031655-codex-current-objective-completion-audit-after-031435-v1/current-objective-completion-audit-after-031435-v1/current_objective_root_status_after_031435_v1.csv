@@ -1,0 +1,6 @@
+root_id,path,exists,promotion_use
+r6_owner_export_root,/tmp/ict-engine-board-a-r6-owner-export-v1,false,blocked
+r3_native_subhour_source_label_root,/tmp/ict-engine-native-subhour-source-label-intake,false,blocked
+r5_source_panel_recency_extension_root,/tmp/ict-engine-source-panel-recency-extension,false,blocked
+legacy_direct_manipulation_sidecar,/private/tmp/ict-engine-direct-manipulation-row-intake,true,non_promoting_sidecar
+source_label_equivalence_sidecar,/private/tmp/ict-engine-source-label-equivalence-intake,true,non_promoting_sidecar

@@ -1,0 +1,12 @@
+PASS active_taxonomy=MainRegimeV2
+PASS active_main_price_roots=Bull,Bear,Sideways,Crisis
+PASS manipulation_is_separate_direct_event_class_or_overlay=true
+PASS false_reopen_drift=20260511T091940+0800-codex-user-reopened-mainregimev5-after-v2-reassert
+PASS accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+PASS accepted_new_mainregimev2_root_label_slots=0
+PASS accepted_new_direct_manipulation_label_sources=0
+PASS gate_result=mainregimev2_locked_after_false_v5_reopen_full_universe_still_blocked
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

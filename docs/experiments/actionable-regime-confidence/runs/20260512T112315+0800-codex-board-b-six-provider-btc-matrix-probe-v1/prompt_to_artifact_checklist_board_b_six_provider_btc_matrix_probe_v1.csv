@@ -1,0 +1,10 @@
+requirement,status,evidence
+six provider BTC raw rows,partial,"YF 983 rows; Kraken 721 rows; Binance 985 rows; Bybit 985 rows; IBKR PAXOS AGGTRADES 30 rows; TVR BTC-USD stdio alias 29 rows"
+default provider status all ready,fail,"Only yfinance was ready; TVR/IBKR/Kraken/Binance/Bybit provider-status paths remained unhealthy or dependency-blocked"
+same-root Auto-Quant provider matrix,fail,"No Auto-Quant run consumed this six-provider data root"
+Pre-Bayes/filter,fail,"Not run in this root"
+BBN,fail,"Not run in this root"
+CatBoost/path-ranker,fail,"Not run in this root"
+execution tree,fail,"Not run in this root"
+promotion allowed,fail,"Provider-layer mixed-path evidence only; update_goal=false"
+

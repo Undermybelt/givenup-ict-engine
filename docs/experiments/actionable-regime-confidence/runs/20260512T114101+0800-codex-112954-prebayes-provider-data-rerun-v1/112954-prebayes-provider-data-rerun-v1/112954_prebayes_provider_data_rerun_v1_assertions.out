@@ -1,0 +1,10 @@
+pass:provider_json_rows_present:{'ltf_1h': 983, 'mtf_4h': 246, 'htf_1d': 41}
+pass:pre_bayes_policy_present:gate=pass_neutralized regime=range confidence=0.523311097658614
+pass:pre_bayes_gate_non_empty:pass_neutralized
+pass:raw_scored_mature_gte_30:293
+pass:production_validation_gte_30:292
+pass:observation_validation_gte_30:146
+pass:trainer_artifact_ready:True
+pass:runtime_ready:enabled=True ready=True status=enabled_candidate_set_ready
+pass:binary_artifact_register_failed_as_expected:Error: stream did not contain valid UTF-8
+fail_closed:execution_actionable:admission=fail_closed ready=False review=observe reason=exact_structural_branch_visible_but_not_ready_or_actionable

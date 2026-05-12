@@ -1,0 +1,390 @@
+{
+  "board_sha256_at_start": "c76e0c29b59b8cddbf9f1cd8098454d01fc6b81de7c0c8765eb1f0b97bc34db6",
+  "calibration": {
+    "broad_normal_controls_present": false,
+    "chronological_split_gate": false,
+    "gap_summary": {
+      "chronological_group_split": {
+        "failing_cells": 3,
+        "max_pair_rows_needed_min": 55,
+        "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 142,
+        "worst_cells": [
+          {
+            "additional_negative_rows_needed_min": 55,
+            "additional_pair_rows_needed_min": 55,
+            "additional_positive_rows_needed_min": 55,
+            "current_min_wilson95_lcb": 0.824115449418,
+            "negative_support": 18,
+            "positive_support": 18,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "chronological_group_split",
+            "split_name": "chronological_calibration"
+          },
+          {
+            "additional_negative_rows_needed_min": 54,
+            "additional_pair_rows_needed_min": 54,
+            "additional_positive_rows_needed_min": 54,
+            "current_min_wilson95_lcb": 0.831815634632,
+            "negative_support": 19,
+            "positive_support": 19,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "chronological_group_split",
+            "split_name": "chronological_test"
+          },
+          {
+            "additional_negative_rows_needed_min": 33,
+            "additional_pair_rows_needed_min": 33,
+            "additional_positive_rows_needed_min": 33,
+            "current_min_wilson95_lcb": 0.91237546075,
+            "negative_support": 40,
+            "positive_support": 40,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "chronological_group_split",
+            "split_name": "chronological_train"
+          }
+        ]
+      },
+      "heldout_symbol_exact": {
+        "failing_cells": 40,
+        "max_pair_rows_needed_min": 73,
+        "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 2847,
+        "worst_cells": [
+          {
+            "additional_negative_rows_needed_min": 71,
+            "additional_pair_rows_needed_min": 73,
+            "additional_positive_rows_needed_min": 73,
+            "current_min_wilson95_lcb": 0.0,
+            "negative_support": 2,
+            "positive_support": 0,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "CBOT soybean call options"
+          },
+          {
+            "additional_negative_rows_needed_min": 71,
+            "additional_pair_rows_needed_min": 73,
+            "additional_positive_rows_needed_min": 73,
+            "current_min_wilson95_lcb": 0.0,
+            "negative_support": 2,
+            "positive_support": 0,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "COMEX copper futures"
+          },
+          {
+            "additional_negative_rows_needed_min": 73,
+            "additional_pair_rows_needed_min": 73,
+            "additional_positive_rows_needed_min": 71,
+            "current_min_wilson95_lcb": 0.0,
+            "negative_support": 0,
+            "positive_support": 2,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "LME copper futures / COMEX copper futures cross-market example"
+          },
+          {
+            "additional_negative_rows_needed_min": 72,
+            "additional_pair_rows_needed_min": 72,
+            "additional_positive_rows_needed_min": 72,
+            "current_min_wilson95_lcb": 0.206543291474,
+            "negative_support": 1,
+            "positive_support": 1,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "10-Year T-Note Futures contract, December 2011 expiry"
+          },
+          {
+            "additional_negative_rows_needed_min": 72,
+            "additional_pair_rows_needed_min": 72,
+            "additional_positive_rows_needed_min": 72,
+            "current_min_wilson95_lcb": 0.206543291474,
+            "negative_support": 1,
+            "positive_support": 1,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "10-Year T-Note Futures contract, March 2010 expiry"
+          },
+          {
+            "additional_negative_rows_needed_min": 72,
+            "additional_pair_rows_needed_min": 72,
+            "additional_positive_rows_needed_min": 72,
+            "current_min_wilson95_lcb": 0.206543291474,
+            "negative_support": 1,
+            "positive_support": 1,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "COMEX Gold Futures June delivery"
+          },
+          {
+            "additional_negative_rows_needed_min": 72,
+            "additional_pair_rows_needed_min": 72,
+            "additional_positive_rows_needed_min": 72,
+            "current_min_wilson95_lcb": 0.206543291474,
+            "negative_support": 1,
+            "positive_support": 1,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "COMEX Silver Futures"
+          },
+          {
+            "additional_negative_rows_needed_min": 72,
+            "additional_pair_rows_needed_min": 72,
+            "additional_positive_rows_needed_min": 72,
+            "current_min_wilson95_lcb": 0.206543291474,
+            "negative_support": 1,
+            "positive_support": 1,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "December 2014 E-mini S&P 500 futures"
+          },
+          {
+            "additional_negative_rows_needed_min": 72,
+            "additional_pair_rows_needed_min": 72,
+            "additional_positive_rows_needed_min": 72,
+            "current_min_wilson95_lcb": 0.206543291474,
+            "negative_support": 1,
+            "positive_support": 1,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "December 2017 Gold futures"
+          },
+          {
+            "additional_negative_rows_needed_min": 72,
+            "additional_pair_rows_needed_min": 72,
+            "additional_positive_rows_needed_min": 72,
+            "current_min_wilson95_lcb": 0.206543291474,
+            "negative_support": 1,
+            "positive_support": 1,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_symbol_exact",
+            "split_name": "December 2017 Silver futures"
+          }
+        ]
+      },
+      "heldout_venue_exact": {
+        "failing_cells": 11,
+        "max_pair_rows_needed_min": 73,
+        "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 728,
+        "worst_cells": [
+          {
+            "additional_negative_rows_needed_min": 73,
+            "additional_pair_rows_needed_min": 73,
+            "additional_positive_rows_needed_min": 71,
+            "current_min_wilson95_lcb": 0.0,
+            "negative_support": 0,
+            "positive_support": 2,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "LME and COMEX"
+          },
+          {
+            "additional_negative_rows_needed_min": 72,
+            "additional_pair_rows_needed_min": 72,
+            "additional_positive_rows_needed_min": 72,
+            "current_min_wilson95_lcb": 0.206543291474,
+            "negative_support": 1,
+            "positive_support": 1,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "IFEU electronic market"
+          },
+          {
+            "additional_negative_rows_needed_min": 71,
+            "additional_pair_rows_needed_min": 71,
+            "additional_positive_rows_needed_min": 71,
+            "current_min_wilson95_lcb": 0.34237195289,
+            "negative_support": 2,
+            "positive_support": 2,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "CBOT"
+          },
+          {
+            "additional_negative_rows_needed_min": 70,
+            "additional_pair_rows_needed_min": 70,
+            "additional_positive_rows_needed_min": 70,
+            "current_min_wilson95_lcb": 0.438493919551,
+            "negative_support": 3,
+            "positive_support": 3,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "CME Group registered futures market (source order)"
+          },
+          {
+            "additional_negative_rows_needed_min": 70,
+            "additional_pair_rows_needed_min": 70,
+            "additional_positive_rows_needed_min": 70,
+            "current_min_wilson95_lcb": 0.438493919551,
+            "negative_support": 3,
+            "positive_support": 3,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "US futures exchange / CFTC complaint"
+          },
+          {
+            "additional_negative_rows_needed_min": 69,
+            "additional_pair_rows_needed_min": 69,
+            "additional_positive_rows_needed_min": 69,
+            "current_min_wilson95_lcb": 0.510099979596,
+            "negative_support": 4,
+            "positive_support": 4,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "CME"
+          },
+          {
+            "additional_negative_rows_needed_min": 65,
+            "additional_pair_rows_needed_min": 65,
+            "additional_positive_rows_needed_min": 65,
+            "current_min_wilson95_lcb": 0.675584380489,
+            "negative_support": 8,
+            "positive_support": 8,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "CBOT/CME Globex"
+          },
+          {
+            "additional_negative_rows_needed_min": 63,
+            "additional_pair_rows_needed_min": 65,
+            "additional_positive_rows_needed_min": 65,
+            "current_min_wilson95_lcb": 0.675584380489,
+            "negative_support": 10,
+            "positive_support": 8,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "COMEX"
+          },
+          {
+            "additional_negative_rows_needed_min": 65,
+            "additional_pair_rows_needed_min": 65,
+            "additional_positive_rows_needed_min": 65,
+            "current_min_wilson95_lcb": 0.675584380489,
+            "negative_support": 8,
+            "positive_support": 8,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "NYMEX/CME Globex"
+          },
+          {
+            "additional_negative_rows_needed_min": 64,
+            "additional_pair_rows_needed_min": 64,
+            "additional_positive_rows_needed_min": 64,
+            "current_min_wilson95_lcb": 0.700847246449,
+            "negative_support": 9,
+            "positive_support": 9,
+            "required_negative_support_for_95_if_all_correct": 73,
+            "required_positive_support_for_95_if_all_correct": 73,
+            "split_family": "heldout_venue_exact",
+            "split_name": "CME Globex"
+          }
+        ]
+      }
+    },
+    "heldout_symbol_gate": false,
+    "heldout_venue_gate": false,
+    "pooled_gate": true,
+    "pooled_min_wilson95_lcb": 0.952479911333,
+    "required_all_success_support_for_wilson95_ge_095": 73,
+    "same_event_control_seed_axis_gate": true,
+    "sidecar_metrics_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/r6-staging-triplet-split-calibration-after-035233-v1/r6_staging_triplet_sidecar_metrics_v1.csv",
+    "split_gaps_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/r6-staging-triplet-split-calibration-after-035233-v1/r6_staging_triplet_split_gaps_v1.csv",
+    "split_metrics_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/r6-staging-triplet-split-calibration-after-035233-v1/r6_staging_triplet_split_metrics_v1.csv"
+  },
+  "counts": {
+    "matched_group_count": 74,
+    "matched_negative_rows": 77,
+    "positive_rows": 77,
+    "symbols": 40,
+    "venues": 11
+  },
+  "decision": {
+    "acceptance_blocker": "staging evidence is schema-ready and pooled95-pass, but chronological/heldout support, independent broad normal controls, explicit approval/canonical owner-export root, R3, and R5 remain blocked",
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "gate_result": "r6_staging_triplet_split_calibration_after_035233_v1=staging_pooled95_pass_split_support_broad_controls_and_policy_blocked_no_promotion",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "source_control_evidence_acquired": false,
+    "source_roots_mutated": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T19:56:18.239717+00:00",
+  "next_action": "Do not promote this staging triplet. Acquire explicit approval or verifier-native owner/export rows plus source-owned broad normal controls, then rerun direct verifier, split calibration, provider/AutoQuant, Pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback.",
+  "provenance_summary": {
+    "artifact_type": "r6_jpm_cbot_treasury_control_uplift_v1_isolated_projection",
+    "policy": "shared lock exists, so this run verifies an isolated projection and does not mutate the live /tmp intake",
+    "raw_data_committed": false,
+    "run_id": "20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1",
+    "runtime_code_changed": false,
+    "selected_source_row_ids": [
+      "cftc_jpm_20090720_trader7_tbond_buy_layered_spoof",
+      "cftc_jpm_20100204_trader8_tnote_sell_spoof",
+      "cftc_jpm_20110927_trader9_tnote_sell_spoof",
+      "cftc_jpm_20150630_trader10_ultra_tbond_sell_spoof"
+    ],
+    "thresholds_relaxed": false
+  },
+  "run_id": "20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1",
+  "staging_hashes": {
+    "matched_negative_normal_activity_rows.csv": "a829ce2e8ad4e13f133effdf8e0a41885d057979cd0d47acecb66679a5a8ac58",
+    "positive_spoofing_layering_rows.csv": "1102d09b92c07498676fa5a4ae93b3aa1323086f4edb4453281b25714348e793",
+    "provenance_manifest.json": "d936638ac43fd4d9f23fbc781e0b54be4c1c348683f381bed84ffbbfda47aa6f"
+  },
+  "staging_root": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+  "upstream_readback_root": "docs/experiments/actionable-regime-confidence/runs/20260512T035233-codex-r6-staging-triplet-readonly-verifier-after-035049-v1",
+  "verifier": {
+    "payload": {
+      "matched_group_count": 74,
+      "matched_negative_rows": 77,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 77,
+      "provenance_keys": [
+        "artifact_type",
+        "baseline_matched_negative_rows",
+        "baseline_positive_rows",
+        "baseline_provenance",
+        "generated_at_utc",
+        "lock_dir",
+        "policy",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "selected_source_row_ids",
+        "source_candidate_screen_json",
+        "thresholds_relaxed"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/command-output/direct_verifier_staging_candidate.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/command-output/direct_verifier_staging_candidate.stdout.txt"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-10T12:06:12Z",
+  "confidence": 0.6488770449019781,
+  "consensus_strength": 0.6488770449019781,
+  "dataset_comparability": {
+    "comparable": false,
+    "comparison_class": "different_data_fingerprint",
+    "previous_run_id": "analyze:NQ:20260510T112215.034Z",
+    "reason": "different_data_fingerprint",
+    "same_config": false,
+    "same_data": false,
+    "same_factor_version": true,
+    "same_prompt_version": true
+  },
+  "disagreement_flags": [],
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "executor_scorecard_source": "persisted",
+  "executor_scorecards": [
+    {
+      "breakevens": 0,
+      "cumulative_quality_score": 0,
+      "executor": "catboost_file",
+      "last_outcome": null,
+      "last_updated_at": null,
+      "latest_weight_hint": 0.55,
+      "losses": 0,
+      "validated_negative": 0,
+      "validated_positive": 0,
+      "wins": 0
+    },
+    {
+      "breakevens": 0,
+      "cumulative_quality_score": 0,
+      "executor": "xgboost_file",
+      "last_outcome": null,
+      "last_updated_at": null,
+      "latest_weight_hint": 0.45,
+      "losses": 0,
+      "validated_negative": 0,
+      "validated_positive": 0,
+      "wins": 0
+    }
+  ],
+  "executor_summaries": [
+    "executor=catboost_file action=favor_mean_reversion_only confidence=0.712 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.762",
+    "executor=xgboost_file action=favor_mean_reversion_only confidence=0.775 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.829"
+  ],
+  "final_action": "favor_mean_reversion_only",
+  "generated_at": "2026-05-10T12:06:12.674889Z",
+  "hard_block": {
+    "active": false,
+    "command": null,
+    "evidence": [],
+    "human_action": null,
+    "reason": null,
+    "stage": null,
+    "status": null
+  },
+  "human_next_triage": "hard_blocked=false ensemble_action=favor_mean_reversion_only consensus=0.793 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=<local-path>, <local-path>, <local-path> | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data <local-path> --state-dir <local-path>",
+  "policy_runtime_line": "Policy runtime: catboost_file:sample_file, xgboost_file:sample_file",
+  "posterior_active_regime": "range",
+  "posterior_confidence": 0.6488770449019781,
+  "posterior_evidence": [
+    "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.908 multi_timeframe_entry_alignment_score=0.786",
+    "long/short support gap 0.032 is too small, so alignment is treated as mixed",
+    "pre_bayes_quality_score=0.549 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.654",
+    "market_state_source=volatility=NormalVol:0.659 liquidity=NormalLiquidity:0.433 structure=Trending:0.940 behavior=Exhaustion:0.650",
+    "market_state_source=rationale=volatility=NormalVol conf=0.66",
+    "market_state_source=rationale=structure=Trending conf=0.94",
+    "market_state_source=rationale=behavior=Exhaustion conf=0.65",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.65",
+    "market_family=futures_index",
+    "market_behavior_profile=index_beta_regime_sensitive",
+    "node_transition_posterior_from=NQ:path_ranker:range_mean_reversion",
+    "branch_transition_prior_from=NQ:path_ranker:range_mean_reversion weighted_transition_mass=0.883 transition_outcome_support=0.508 transition_temporal_posterior_support=0.774",
+    "transition_posterior_multiplier=1.019",
+    "branch_temporal_summary=transition_mass=0.883 transition_prior=0.770 transition_support=0.508 transition_temporal=0.774 multiplier=1.019 normalized_posterior=0.775",
+    "duration_persistence_prior=0.500 observations=34 streaks=34 weighted_streak_mass=6.640 expected_dwell=1.000 break_hazard=1.000 sticky_self_transition=0.173 duration_outcome_support=0.576 duration_temporal_posterior_support=0.523",
+    "duration_posterior_blend_weight=0.500",
+    "node_temporal_summary=duration_mass=6.640 expected_dwell=1.000 break_hazard=1.000 sequence_break=0.943 sequence_reset=0.000 sticky_self_transition=0.173 duration_support=0.576 duration_temporal=0.523 blend=0.500"
+  ],
+  "posterior_fingerprint": "c5b4cb35bba22401",
+  "posterior_normalization_status": "canonical_structural_regime_posterior",
+  "posterior_probabilities": {
+    "range": 0.7748180685431559,
+    "stress": 0.05407716399918272,
+    "transition": 0.02902746719291944,
+    "trend": 0.1420773002647419
+  },
+  "provenance": {
+    "config_hash": "54390626044676e4",
+    "data_fingerprint": "c5b4cb35bba22401",
+    "factor_version": "d1fba762150c532c",
+    "prompt_version": "agent-prompts-v1"
+  },
+  "recommended_command": "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_htf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_mtf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:NQ:20260510T120612.386Z",
+  "split_explanations": [
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=index_beta_regime_sensitive",
+    "factor_uncertainty=low",
+    "posterior_override=range:0.775",
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=index_beta_regime_sensitive",
+    "factor_uncertainty=low",
+    "posterior_override=range:0.775"
+  ],
+  "symbol": "NQ"
+}

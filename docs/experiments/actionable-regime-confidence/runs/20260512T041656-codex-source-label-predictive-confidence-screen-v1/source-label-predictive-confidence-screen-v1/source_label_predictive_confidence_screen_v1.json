@@ -1,0 +1,100 @@
+{
+  "run_id": "20260512T041656-codex-source-label-predictive-confidence-screen-v1",
+  "gate_result": "source_label_predictive_confidence_screen_v1=predictive_confidence_scored_no_full_acceptance",
+  "verifier": {
+    "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+    "package_counts": {
+      "price_root_equivalence_us_index_futures": 248440
+    },
+    "provenance_keys": [
+      "created_at_utc",
+      "date_max",
+      "date_min",
+      "label_counts",
+      "limitations",
+      "market_family_counts",
+      "package_counts",
+      "raw_payload_committed_to_repo",
+      "reconstruction_reason",
+      "row_count",
+      "rows_path",
+      "rows_sha256",
+      "run_id",
+      "source_owner_counts",
+      "sources",
+      "split_counts",
+      "symbol_count",
+      "updated_at_utc",
+      "updated_by"
+    ],
+    "row_count": 248440,
+    "status": "schema_ready_unscored",
+    "return_code": 0
+  },
+  "row_count": 248440,
+  "rows_sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25",
+  "provenance_sha256": "a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b",
+  "model": {
+    "kind": "GaussianNaiveBayesInScript",
+    "train_split": "calibration",
+    "feature_count": 70
+  },
+  "label_counts": {
+    "Bull": 104979,
+    "Sideways": 57899,
+    "Bear": 54939,
+    "Crisis": 30623
+  },
+  "split_counts": {
+    "calibration": 148976,
+    "heldout_time": 45384,
+    "test": 27844,
+    "heldout_market": 26236
+  },
+  "accepted_predictive_confidence_95_labels": [],
+  "gates": [
+    {
+      "label": "Bear",
+      "accepted_predictive_confidence_95": false,
+      "blockers": "calibration_high_confidence_precision_wilson95_below_0.95;heldout_market_high_confidence_support_below_50;heldout_market_high_confidence_precision_wilson95_below_0.95;heldout_time_high_confidence_precision_wilson95_below_0.95;test_high_confidence_precision_wilson95_below_0.95",
+      "required_splits": "calibration;heldout_market;heldout_time;test",
+      "confidence_threshold": 0.95,
+      "wilson_threshold": 0.95,
+      "min_support": 50
+    },
+    {
+      "label": "Bull",
+      "accepted_predictive_confidence_95": false,
+      "blockers": "calibration_high_confidence_precision_wilson95_below_0.95;heldout_market_high_confidence_precision_wilson95_below_0.95;heldout_time_high_confidence_precision_wilson95_below_0.95;test_high_confidence_precision_wilson95_below_0.95",
+      "required_splits": "calibration;heldout_market;heldout_time;test",
+      "confidence_threshold": 0.95,
+      "wilson_threshold": 0.95,
+      "min_support": 50
+    },
+    {
+      "label": "Crisis",
+      "accepted_predictive_confidence_95": false,
+      "blockers": "calibration_high_confidence_precision_wilson95_below_0.95;heldout_market_high_confidence_support_below_50;heldout_market_high_confidence_precision_wilson95_below_0.95;heldout_time_high_confidence_precision_wilson95_below_0.95;test_high_confidence_precision_wilson95_below_0.95",
+      "required_splits": "calibration;heldout_market;heldout_time;test",
+      "confidence_threshold": 0.95,
+      "wilson_threshold": 0.95,
+      "min_support": 50
+    },
+    {
+      "label": "Sideways",
+      "accepted_predictive_confidence_95": false,
+      "blockers": "calibration_high_confidence_precision_wilson95_below_0.95;heldout_market_high_confidence_precision_wilson95_below_0.95;heldout_time_high_confidence_precision_wilson95_below_0.95;test_high_confidence_precision_wilson95_below_0.95",
+      "required_splits": "calibration;heldout_market;heldout_time;test",
+      "confidence_threshold": 0.95,
+      "wilson_threshold": 0.95,
+      "min_support": 50
+    }
+  ],
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

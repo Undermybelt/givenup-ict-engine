@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 690, in <module>
+    main()
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 635, in main
+    apply_model(
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 370, in apply_model
+    raise RuntimeError(
+RuntimeError: No trained model found in docs/experiments/actionable-regime-confidence/runs/20260512T121106+0800-codex-115700-same-root-six-provider-aq-chain-v1/path-ranker/catboost_model; pass --allow-direct-fallback to use weighted_feature_sum_v1

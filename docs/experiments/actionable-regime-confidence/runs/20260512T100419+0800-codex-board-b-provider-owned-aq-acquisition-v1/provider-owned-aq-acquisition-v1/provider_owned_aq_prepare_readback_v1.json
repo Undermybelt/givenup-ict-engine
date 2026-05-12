@@ -1,0 +1,26 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1",
+  "mode": "provider_prepare_readback_only",
+  "auto_quant_prepare_exit": 0,
+  "auto_quant_status_exit": 0,
+  "auto_quant_status": "dependency_ready_data_ready",
+  "healthy": true,
+  "dependency_healthy": true,
+  "data_ready": true,
+  "profile_note": "auto_quant_profile=synthetic_ohlcv",
+  "prepared_files": [
+    "B2R_NQ_PROVIDER_100419_USD-1h.feather",
+    "B2R_NQ_PROVIDER_100419_USD-4h.feather",
+    "B2R_NQ_PROVIDER_100419_USD-1d.feather"
+  ],
+  "recommended_next_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/state_provider_owned_aq_v1/.deps/auto-quant/run_tomac.py",
+  "promotion_allowed": false,
+  "update_goal": false,
+  "gates": [
+    "pass:provider_owned_yahoo_nq_preseeded_into_autoquant",
+    "pass:auto_quant_status_dependency_ready_data_ready",
+    "fail_closed:no_autoquant_run_tomac_yet",
+    "fail_closed:no_nonzero_mature_rooted_branch_observations_yet",
+    "fail_closed:no_pre_bayes_bbn_catboost_execution_tree_promotion_rerun"
+  ]
+}

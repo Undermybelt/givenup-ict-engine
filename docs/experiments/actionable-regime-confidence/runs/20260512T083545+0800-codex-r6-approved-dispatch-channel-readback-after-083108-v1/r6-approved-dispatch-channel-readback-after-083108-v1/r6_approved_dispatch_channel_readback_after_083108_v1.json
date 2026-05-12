@@ -1,0 +1,128 @@
+{
+  "accepted_rows_added": 0,
+  "approval_package_gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+  "approval_package_present": true,
+  "approval_present": false,
+  "approved_dispatch_channel_present": false,
+  "arrival_poll_gate_result": "source_control_arrival_poll_after_082720_v1=no_new_required_root_no_unlock",
+  "arrival_poll_source_control_evidence_acquired": false,
+  "arrival_poll_valid_required_root_unlock": false,
+  "board_sha256_before_artifact": "e33d75a5c23948712276647eeea2b8f2b08e74853fa26bfbc3658a207de86c75",
+  "canonical_merge": false,
+  "canonical_merge_allowed_now": false,
+  "dispatch_assets": [
+    {
+      "exists": true,
+      "owner": "CME Group",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b",
+      "status": "draft_not_sent"
+    },
+    {
+      "exists": true,
+      "owner": "Cboe/CFE",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d",
+      "status": "draft_not_sent"
+    }
+  ],
+  "dispatch_ticket_export_license_provenance_present": false,
+  "downstream_promotion_rerun": false,
+  "downstream_rerun_allowed_now": false,
+  "external_requests_sent_by_this_artifact": false,
+  "gate_result": "r6_approved_dispatch_channel_readback_after_083108_v1=no_approved_dispatch_channel_no_rows_no_unlock",
+  "inputs": {
+    "approval_package": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "arrival_poll_json": "docs/experiments/actionable-regime-confidence/runs/20260512T083108+0800-codex-source-control-arrival-poll-after-082720-v1/source-control-arrival-poll-after-082720-v1/source_control_arrival_poll_after_082720_v1.json",
+    "operator_handoff_md": "docs/experiments/actionable-regime-confidence/runs/20260512T061314+0800-codex-r6-v5-operator-dispatch-handoff-after-060807-v1/r6-v5-operator-dispatch-handoff-after-060807-v1/r6_v5_operator_dispatch_handoff_after_060807_v1.md",
+    "v5_dispatch_manifest_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1"
+  },
+  "mail_binary_names_present": [
+    "gh",
+    "mail",
+    "mailx",
+    "sendmail"
+  ],
+  "mail_binary_path_presence": {
+    "gh": true,
+    "mail": true,
+    "mailx": true,
+    "msmtp": false,
+    "mutt": false,
+    "neomutt": false,
+    "sendmail": true
+  },
+  "observed_at_utc": "2026-05-12T00:36:51.090648+00:00",
+  "operator_env_names_present": [],
+  "operator_env_names_present_count": 0,
+  "promotion_allowed": false,
+  "r3_native_subhour_unlock": false,
+  "r5_recency_roots_present": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_roots_present": false,
+  "r6_owner_export_unlock": false,
+  "required_dispatch_assets_present": true,
+  "run_id": "20260512T083545+0800-codex-r6-approved-dispatch-channel-readback-after-083108-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_roots": [
+    {
+      "exists": false,
+      "is_dir": false,
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": [],
+      "sampled_files": 0
+    },
+    {
+      "exists": false,
+      "is_dir": false,
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": [],
+      "sampled_files": 0
+    },
+    {
+      "exists": false,
+      "is_dir": false,
+      "name": "r5_recency_tmp",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": [],
+      "sampled_files": 0
+    },
+    {
+      "exists": false,
+      "is_dir": false,
+      "name": "r5_recency_private_tmp",
+      "path": "/private/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": [],
+      "sampled_files": 0
+    },
+    {
+      "exists": true,
+      "is_dir": true,
+      "name": "r3_native_subhour_tmp",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "sample_files": [
+        "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+        "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+      ],
+      "sampled_files": 2
+    },
+    {
+      "exists": true,
+      "is_dir": true,
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "sample_files": [
+        "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+        "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+      ],
+      "sampled_files": 2
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

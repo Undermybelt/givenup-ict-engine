@@ -1,0 +1,318 @@
+{
+  "accounting": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "explicit_user_selected_history": false,
+    "selected_data_autoquant_training": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/checks/current_goal_completion_audit_after_070531_v1_assertions.out",
+    "checklist_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/current-goal-completion-audit-after-070531-v1/prompt_to_artifact_checklist_after_070531_v1.csv",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/current-goal-completion-audit-after-070531-v1/current_goal_completion_audit_after_070531_v1.json",
+    "referenced_runs_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/current-goal-completion-audit-after-070531-v1/referenced_run_status_after_070531_v1.csv",
+    "report": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/current-goal-completion-audit-after-070531-v1/current_goal_completion_audit_after_070531_v1.md",
+    "roots_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/current-goal-completion-audit-after-070531-v1/required_root_status_after_070531_v1.csv"
+  },
+  "auto_quant": {
+    "bootstrap_needed": false,
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "data_ready": true,
+    "dependency_healthy": true,
+    "healthy": true,
+    "status": "dependency_ready_data_ready"
+  },
+  "checklist_counts": {
+    "blocked_or_not_complete": 8,
+    "partial_non_promoting": 3,
+    "pass": 1
+  },
+  "commands": [
+    {
+      "key": "board_sha256_before",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/board_sha256_before.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/board_sha256_before.stdout",
+      "timeout": false
+    },
+    {
+      "key": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/provider_status_agent.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/provider_status_agent.stdout",
+      "timeout": false
+    },
+    {
+      "key": "auto_quant_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/auto_quant_status.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/auto_quant_status.stdout",
+      "timeout": false
+    },
+    {
+      "key": "pre_bayes_status_nq",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/pre_bayes_status_nq.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/pre_bayes_status_nq.stdout",
+      "timeout": false
+    },
+    {
+      "key": "workflow_status_nq_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/workflow_status_nq_agent.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/workflow_status_nq_agent.stdout",
+      "timeout": false
+    },
+    {
+      "key": "export_structural_path_ranking_target_nq",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/export_structural_path_ranking_target_nq.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1/command-output/export_structural_path_ranking_target_nq.stdout",
+      "timeout": false
+    }
+  ],
+  "decision": "The active objective is not achieved. Current evidence is provider/runtime diagnostic plus negative source-control route evidence only; it does not unlock selected-history AutoQuant training or downstream promotion.",
+  "gate_result": "current_goal_completion_audit_after_070531_v1=not_complete_source_control_unlock_absent_no_selected_history_no_promotion",
+  "generated_at_epoch": 1778541021,
+  "next_action": "Continue only from explicit source/control approval, verifier-native R6 owner/export rows with controls, source-owned post-2026-01-30 R5 MainRegimeV2 recency rows, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export. After that, require exactly one explicit user-selected historical path.",
+  "objective_restatement": "Train profitability factors only after accepted regime-identification roots exist; preserve the branch path main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor through AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution tree; use real provider surfaces without disturbing concurrent board work.",
+  "path_ranking": {
+    "contains_calibrated_rows0": true,
+    "contains_mature_rows0": true,
+    "summary_line": "  \"summary_line\": \"structural_path_ranking_target rows=1 history_rows=7 candidate_set_size=1 mature_rows=0 history_mature_rows=0 propensity_rows=1 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=0\""
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "requirement": "Authoritative Board B file updated without disturbing concurrent work",
+      "status": "pass"
+    },
+    {
+      "evidence": "No accepted R3/R5/R6 MainRegimeV2 root exists; selected-data training is therefore not allowed.",
+      "requirement": "Profitability-factor training is based on accepted regime-identification roots",
+      "status": "blocked"
+    },
+    {
+      "evidence": "No post-unlock selected-data AutoQuant or downstream promotion rerun exists; branch path remains a contract, not verified output.",
+      "requirement": "Branch path main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor is preserved downstream",
+      "status": "blocked"
+    },
+    {
+      "evidence": "exists=False file_count=0",
+      "requirement": "R6 owner/export rows with valid normal controls",
+      "status": "blocked"
+    },
+    {
+      "evidence": "exists=False file_count=0",
+      "requirement": "R5 source-owned post-2026-01-30 MainRegimeV2 recency rows",
+      "status": "blocked"
+    },
+    {
+      "evidence": "exists=True notes=physical root is TSIE-derived/quarantined and Crisis-absent; non-promoting",
+      "requirement": "R3 verifier-native Crisis-capable native-subhour MainRegimeV2 labels",
+      "status": "blocked"
+    },
+    {
+      "evidence": "workflow-status still contains user_selected_historical_data_missing",
+      "requirement": "Explicit user-selected historical path, exactly one of HTF=1d, MTF=4h, LTF=1h",
+      "status": "blocked"
+    },
+    {
+      "evidence": "status=dependency_ready_data_ready data_ready=True; prior Tomac harness success remains runtime-only",
+      "requirement": "Real AutoQuant operation",
+      "status": "partial_non_promoting"
+    },
+    {
+      "evidence": "workflow_blocked=True path_ranking=  \"summary_line\": \"structural_path_ranking_target rows=1 history_rows=7 candidate_set_size=1 mature_rows=0 history_mature_rows=0 propensity_rows=1 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=0\"",
+      "requirement": "Real ict-engine filter / Pre-Bayes / BBN / CatBoost / execution-tree surfaces",
+      "status": "partial_non_promoting"
+    },
+    {
+      "evidence": "provider_summary=entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+      "requirement": "Provider coverage for IBKR, TradingViewRemix, yfinance, Kraken",
+      "status": "partial_non_promoting"
+    },
+    {
+      "evidence": "valid_required_root_unlock=false; no canonical merge or downstream promotion rerun permitted.",
+      "requirement": "Canonical merge and downstream promotion rerun after unlock",
+      "status": "blocked"
+    },
+    {
+      "evidence": "Required roots, selected history, selected-data training, and downstream promotion remain missing.",
+      "requirement": "Completion and update_goal",
+      "status": "not_complete"
+    }
+  ],
+  "provider": {
+    "pending_providers": [
+      "crypto_public_runtime@live_runtime:operator_runtime_required:explicit_opt_in_required",
+      "external_http_runtime@live_runtime:operator_runtime_required:base_url_and_service_required",
+      "ibkr_bridge@local_runtime:configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "polymarket_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed"
+    ],
+    "ready_by_domain": {
+      "entry_model": "2/2",
+      "live_runtime": "1/3",
+      "local_runtime": "1/2",
+      "market_data": "1/7"
+    },
+    "ready_providers": [
+      "breaker_rb_long_v1",
+      "cisd_rb_long_v1",
+      "yfinance",
+      "kraken_cli",
+      "yfinance"
+    ],
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+  },
+  "referenced_runs": [
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260512T065822+0800-codex-source-control-provider-refresh-after-065506-v1",
+      "status": "terminal_or_raw"
+    },
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260512T070031+0800-codex-autoquant-run-readback-after-data-ready-v1",
+      "status": "terminal_or_raw"
+    },
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260512T070312+0800-codex-autoquant-readback-reconciliation-after-070031-v1",
+      "status": "terminal_or_raw"
+    },
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 2,
+      "report_count": 1,
+      "run_id": "20260512T070315+0800-codex-public-exact-source-route-probe-after-065820-v1",
+      "status": "terminal_or_raw"
+    },
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260512T070434+0800-codex-r6-owner-export-arrival-poll-after-070315-v1",
+      "status": "terminal_or_raw"
+    },
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260512T070443+0800-codex-local-tomac-futures-ohlcv-r6-applicability-v1",
+      "status": "terminal_or_raw"
+    },
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 5,
+      "report_count": 1,
+      "run_id": "20260512T070506+0800-codex-github-code-source-route-probe-after-070315-v1",
+      "status": "terminal_or_raw"
+    },
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260512T070509+0800-codex-completion-audit-after-070315-v1",
+      "status": "terminal_or_raw"
+    },
+    {
+      "assertion_count": 1,
+      "exists": true,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260512T070531+0800-codex-r6-cftc-complaint-text-extraction-after-070315-v1",
+      "status": "terminal_or_raw"
+    }
+  ],
+  "required_roots": [
+    {
+      "accepted_for_promotion": false,
+      "exists": false,
+      "file_count": 0,
+      "files": "",
+      "id": "r6_owner_export",
+      "notes": "target root absent; no owner/export rows or normal controls acquired",
+      "physical_complete": false,
+      "required_present": {
+        "direct_manipulation_matched_controls.csv": false,
+        "direct_manipulation_positive_rows.csv": false,
+        "direct_manipulation_provenance.json": false
+      },
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    {
+      "accepted_for_promotion": false,
+      "exists": false,
+      "file_count": 0,
+      "files": "",
+      "id": "r5_recency_extension",
+      "notes": "target root absent; no source-owned post-2026-01-30 rows acquired",
+      "physical_complete": false,
+      "required_present": {
+        "source_panel_recency_provenance.json": false,
+        "stock_market_regimes_2026_extension.csv": false
+      },
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "accepted_for_promotion": false,
+      "exists": true,
+      "file_count": 2,
+      "files": "native_subhour_source_label_provenance.json;native_subhour_source_label_rows.csv",
+      "id": "r3_native_subhour",
+      "notes": "physical root is TSIE-derived/quarantined and Crisis-absent; non-promoting",
+      "physical_complete": true,
+      "required_present": {
+        "native_subhour_source_label_provenance.json": true,
+        "native_subhour_source_label_rows.csv": true
+      },
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "accepted_for_promotion": false,
+      "exists": true,
+      "file_count": 2,
+      "files": "source_label_equivalence_provenance.json;source_label_equivalence_rows.csv",
+      "id": "source_label_equivalence",
+      "notes": "non-target equivalence context; does not satisfy R3/R5/R6",
+      "physical_complete": true,
+      "required_present": {
+        "source_label_equivalence_provenance.json": true,
+        "source_label_equivalence_rows.csv": true
+      },
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    }
+  ],
+  "run_id": "20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1",
+  "workflow": {
+    "contains_blocked": true,
+    "contains_fail_closed": true,
+    "contains_user_selected_historical_data_missing": true,
+    "first_lines": "{\\n  \"auto_quant_handoff\": null,\\n  \"available_opt_in_profiles\": [],\\n  \"blocking_reason\": \"user_selected_historical_data_missing\",\\n  \"blocking_status\": \"blocked\",\\n  \"closed_loop_branch_admission\": {\\n    \"actionable\": false,\\n    \"candidate_status\": \"execution_blocked\",\\n    \"evidence\": [\\n      \"pre_bayes_gate_status=pass_neutralized\",\\n      \"execution_gate_status=execution_blocked\",\\n      \"review_status=observe\"\\n    ],\\n    \"execution_gate_status\": \"execution_blocked\",\\n    \"path_id\": \"path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary\",\\n    \"path_label\": \"trend_follow_through\",\\n    \"pre_bayes_gate_status\": \"pass_neutralized\",\\n    \"ready\": false,\\n    \"reason\": \"exact_structural_branch_visible_but_not_ready_or_actionable\",\\n    \"review_status\": \"observe\","
+  }
+}

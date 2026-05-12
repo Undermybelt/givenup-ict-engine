@@ -1,0 +1,42 @@
+{
+  "rows": [
+    {
+      "base_symbol": "NQ",
+      "comparison_symbol": "ES",
+      "relationship_type": "positive",
+      "relationship_confidence": 0.0,
+      "timeframe": "5m",
+      "session": "NY_AM",
+      "comparison_timeframe": "15m",
+      "comparison_session": "NY_AM",
+      "timeframe_aligned": false,
+      "session_overlap": true,
+      "correlation_window_bars": 27,
+      "recent_correlation": 0.0,
+      "smt_signal": "none",
+      "base_swing_type": "n/a",
+      "base_event_time": null,
+      "base_level": null,
+      "comparison_swing_type": "n/a",
+      "comparison_event_time": null,
+      "comparison_level": null,
+      "event_window_bars": 3,
+      "event_time_delta_bars": null,
+      "same_event_window_confirmed": false,
+      "swept_side": "none",
+      "normalized_for_inverse_correlation": false,
+      "raw_comparison_swing_type": null,
+      "raw_comparison_level": null,
+      "near_pd_array": false,
+      "pd_array_type": "none",
+      "mss_or_cisd_confirmed": false,
+      "displacement_confirmed": false,
+      "provider_provenance": null,
+      "evidence_source": "factor_fail_closed",
+      "confidence": 0.0,
+      "fail_closed_reason": "timeframe_mismatch",
+      "confirmation_role": "confirmation_only",
+      "actionable": false
+    }
+  ]
+}

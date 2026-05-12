@@ -1,0 +1,125 @@
+{
+  "approval_package": {
+    "approval_present": null,
+    "canonical_merge_allowed_now": null,
+    "downstream_rerun_allowed_now": null,
+    "exists": true,
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "r6_owner_export_unlock": null,
+    "sha256": "71407847f90a15035c53d44091701fd47d5c46bb1fdca894db10ffd59739f54c",
+    "update_goal": null
+  },
+  "env_hints": [
+    {
+      "name": "DATABENTO_API_KEY",
+      "present": false
+    },
+    {
+      "name": "DATABENTO_KEY",
+      "present": false
+    },
+    {
+      "name": "CME_API_KEY",
+      "present": false
+    },
+    {
+      "name": "CME_DATAMINE_API_KEY",
+      "present": false
+    },
+    {
+      "name": "CBOE_API_KEY",
+      "present": false
+    },
+    {
+      "name": "CFE_API_KEY",
+      "present": false
+    },
+    {
+      "name": "IBKR_ACCOUNT_ID",
+      "present": false
+    },
+    {
+      "name": "TV_SESSION",
+      "present": false
+    },
+    {
+      "name": "KAGGLE_USERNAME",
+      "present": false
+    }
+  ],
+  "summary": {
+    "accepted_rows_added": 0,
+    "approval_unlock": false,
+    "board_hash_before": "7e398228e4cbcb70a665d278d44dbb6c3a6d642ee448830caa7b12f7b4ccc038",
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "gate_result": "source_control_arrival_poll_after_080837_v1=no_new_required_root_no_unlock",
+    "generated_at_utc": "2026-05-12T00:14:05.365818+00:00",
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "run_id": "20260512T081155+0800-codex-source-control-arrival-poll-after-080837-v1",
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "target_roots": [
+    {
+      "crisis_hits": 0,
+      "exists": false,
+      "file_count": 0,
+      "mainregimev2_hits": 0,
+      "matched_control_hits": 0,
+      "name": "r6_owner_export",
+      "owner_export_hits": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "positive_spoofing_hits": 0,
+      "sample_files": []
+    },
+    {
+      "crisis_hits": 0,
+      "exists": false,
+      "file_count": 0,
+      "mainregimev2_hits": 0,
+      "matched_control_hits": 0,
+      "name": "r5_recency",
+      "owner_export_hits": 0,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "positive_spoofing_hits": 0,
+      "sample_files": []
+    },
+    {
+      "crisis_hits": 1,
+      "exists": true,
+      "file_count": 2,
+      "mainregimev2_hits": 0,
+      "matched_control_hits": 0,
+      "name": "r3_native_subhour",
+      "owner_export_hits": 0,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "positive_spoofing_hits": 0,
+      "sample_files": [
+        "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+        "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json"
+      ]
+    },
+    {
+      "crisis_hits": 1,
+      "exists": true,
+      "file_count": 2,
+      "mainregimev2_hits": 0,
+      "matched_control_hits": 0,
+      "name": "source_label_equivalence",
+      "owner_export_hits": 0,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "positive_spoofing_hits": 0,
+      "sample_files": [
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv"
+      ]
+    }
+  ]
+}

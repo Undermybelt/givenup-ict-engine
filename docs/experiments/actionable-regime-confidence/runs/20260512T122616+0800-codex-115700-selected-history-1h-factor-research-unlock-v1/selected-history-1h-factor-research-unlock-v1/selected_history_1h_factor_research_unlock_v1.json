@@ -1,0 +1,48 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T122616+0800-codex-115700-selected-history-1h-factor-research-unlock-v1",
+  "source_line": "115700 -> 121347 BTC 1h provider JSON",
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+  "commands": {
+    "01_factor_research_selected_1h": {
+      "exit": 0,
+      "result": "auto_quant_handoff_dependency_ready_data_missing"
+    },
+    "02_auto_quant_prepare": {
+      "exit": 1,
+      "result": "prepare_failed_dns_binance_markets_not_loaded"
+    }
+  },
+  "gates": {
+    "selected_history_source_control_unlocked": false,
+    "auto_quant_data_ready": false,
+    "auto_quant_prepare_passed": false,
+    "pre_bayes_ge_95": false,
+    "bbn_ge_95": false,
+    "cross_instrument": false,
+    "cross_timeframe": false,
+    "execution_ready": false,
+    "actionable": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "metrics": {
+    "pre_bayes_quality": 0.5250864595751618,
+    "canonical_structural_confidence": 0.5250864595751618,
+    "max_structural_regime_probability": 0.7476877176681956,
+    "max_structural_regime": "range",
+    "execution_readiness": 0.32853919817900823,
+    "execution_gate_status": "execution_blocked",
+    "candidate_status": "no_trade",
+    "review_status": "observe"
+  },
+  "blockers": [
+    "user_selected_historical_data_missing",
+    "auto_quant_data_ready_false",
+    "auto_quant_prepare_dns_failure_api_binance",
+    "btc_only_1h_only",
+    "pre_bayes_neutralized_low_directional_separation",
+    "execution_blocked"
+  ],
+  "counting_rule": "count_122616_selected_history_1h_factor_research_unlock_v1_once_as_fail_closed_unlock_attempt_only"
+}

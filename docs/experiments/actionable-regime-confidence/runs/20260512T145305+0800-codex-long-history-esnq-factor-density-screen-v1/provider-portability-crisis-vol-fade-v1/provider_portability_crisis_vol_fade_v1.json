@@ -1,0 +1,95 @@
+{
+  "evidence_class": "provider_backed_branch_portability_probe_not_promotion",
+  "promotion_allowed": false,
+  "provider_rows": [
+    {
+      "classification": "provider_backed_full_listing_1h",
+      "first_timestamp": "2017-08-17T04:00:00+00:00",
+      "interval": "1h",
+      "last_timestamp": "2026-05-12T00:00:00+00:00",
+      "provider": "binance_public",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "rows": 76429,
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "classification": "provider_backed_5y_1h",
+      "first_timestamp": "2021-05-13T08:00:00+00:00",
+      "interval": "1h",
+      "last_timestamp": "2026-05-11T23:00:00+00:00",
+      "provider": "ibkr",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "rows": 20034,
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/ibkr_spy_1h_5y.normalized.csv",
+      "symbol": "SPY"
+    },
+    {
+      "classification": "provider_backed_near_server_max_1h",
+      "first_timestamp": "2024-05-13T00:00:00+00:00",
+      "interval": "1h",
+      "last_timestamp": "2026-05-11T23:00:00+00:00",
+      "provider": "yfinance",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "rows": 11383,
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv",
+      "symbol": "ES=F"
+    },
+    {
+      "classification": "provider_backed_window_capped_1h",
+      "first_timestamp": "2022-03-23T10:00:00+00:00",
+      "interval": "1h",
+      "last_timestamp": "2022-06-14T17:00:00+00:00",
+      "provider": "kraken_public",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "rows": 2000,
+      "source_path": "/tmp/ict-provider-longspan-20260512T141554+0800/kraken_futures_pfxbtusd_1h_20200101_20260512.csv",
+      "symbol": "PF_XBTUSD"
+    },
+    {
+      "classification": "provider_backed_window_capped_1h",
+      "first_timestamp": "2024-12-20T17:00:00+00:00",
+      "interval": "1h",
+      "last_timestamp": "2025-03-14T00:00:00+00:00",
+      "provider": "kraken_public",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "rows": 2000,
+      "source_path": "/tmp/ict-provider-longspan-20260512T141554+0800/kraken_futures_pfspxusd_1h_20200101_20260512.csv",
+      "symbol": "PF_SPXUSD"
+    },
+    {
+      "classification": "provider_backed_page_capped_1h",
+      "first_timestamp": "2026-03-31T09:00:00+00:00",
+      "interval": "1h",
+      "last_timestamp": "2026-05-12T00:00:00+00:00",
+      "provider": "bybit_public",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "rows": 1000,
+      "source_path": "/tmp/ict-provider-longspan-20260512T141554+0800/bybit_linear_btcusdt_1h_20200101_20260512.csv",
+      "symbol": "BTCUSDT_LINEAR"
+    },
+    {
+      "classification": "fetch_failed_in_141554",
+      "first_timestamp": "",
+      "interval": "1h",
+      "last_timestamp": "",
+      "provider": "tradingview_mcp",
+      "provider_data_acquired": false,
+      "provider_requested": false,
+      "rows": 0,
+      "source_path": "",
+      "symbol": "NASDAQ:QQQ"
+    }
+  ],
+  "run_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145305+0800-codex-long-history-esnq-factor-density-screen-v1",
+  "selected_branch_path": "Crisis -> VolatilityShock -> SixHourExhaustionFade -> VolatilityExpansionFadeV1",
+  "total_provider_branch_trades": 6256,
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,1 @@
+python3 scripts/auto_quant_external/fetch_external.py yahoo --symbol QQQ --interval 1h --start 2026-04-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T051153-codex-provider-source-root-readonly-refresh-after-050609-v1/command-output/fetch_yahoo_qqq_1h.csv

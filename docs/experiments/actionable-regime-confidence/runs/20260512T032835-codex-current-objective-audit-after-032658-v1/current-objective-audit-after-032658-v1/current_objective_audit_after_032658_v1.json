@@ -1,0 +1,69 @@
+{
+  "run_id": "20260512T032835-codex-current-objective-audit-after-032658-v1",
+  "generated_at_local": "2026-05-12T03:28:35+08:00",
+  "board_sha256_before_artifact": "d48b06259aab76c37e74b13042e91da9766efdbeb1c0ea5fc18a508761908573",
+  "gate_result": "current_objective_audit_after_032658_v1=not_complete_dispatch_ready_autoquant_diagnostic_source_controls_downstream_blocked",
+  "objective_restatement": "Every active regime must reach calibrated >=95 confidence with per-regime qualifying conditions and cross-market/cycle/timeframe validation, then full provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree promotion may rerun only after source/control gates pass.",
+  "latest_evidence": {
+    "latest_durable_current_objective_audit": {
+      "run_id": "20260512T032349-codex-current-objective-audit-after-031655-source-label-readback-v1",
+      "gate_result": "current_objective_audit_after_031655_source_label_readback_v1=not_complete_source_label_r6_r3_r5_downstream_blocked",
+      "checklist_counts": {
+        "pass": 1,
+        "blocked": 9
+      }
+    },
+    "request_status": {
+      "run_id": "20260512T032417-codex-r6-owner-export-request-status-after-032258-v1",
+      "gate_result": "r6_owner_export_request_status_after_032258_v1=requests_ready_not_sent_rows_not_acquired_no_promotion"
+    },
+    "targeted_dispatch_addendum": {
+      "run_id": "20260512T032536-codex-r6-owner-export-targeted-dispatch-addendum-v1",
+      "gate_result": "r6_owner_export_targeted_dispatch_addendum_v1=dispatch_addendum_ready_rows_not_acquired_no_promotion"
+    },
+    "autoquant_bootstrap_prepare": {
+      "run_id": "20260512T032658-codex-autoquant-bootstrap-prepare-readback-after-032145-v1",
+      "gate_result": "autoquant_bootstrap_prepare_readback_after_032145_v1=bootstrap_succeeded_prepare_failed_dns_source_controls_absent_no_promotion"
+    }
+  },
+  "checklist_counts": {
+    "pass": 2,
+    "partial": 2,
+    "blocked": 11
+  },
+  "root_status": {
+    "r6_owner_export_root_exists": false,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "direct_manipulation_sidecar_present": true,
+    "source_label_equivalence_sidecar_present": true,
+    "sidecars_promotable": false
+  },
+  "approval_assertions": {
+    "approval_present": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "update_goal": false
+  },
+  "provider_autoquant_status": {
+    "provider_readiness_nonpromoting": true,
+    "yfinance_ready": true,
+    "kraken_cli_ready": true,
+    "ibkr_gateway_reachable_but_dependencies_missing": true,
+    "tradingview_mcp_blocked": true,
+    "autoquant_bootstrap_succeeded": true,
+    "autoquant_prepare_failed": "dns_binance_markets_not_loaded",
+    "autoquant_promotable_output": false
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "decision": "not_complete"
+}

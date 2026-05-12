@@ -1,0 +1,1 @@
+python3 scripts/auto_quant_external/fetch_external.py bybit-kline --category linear --symbol BTCUSDT --interval 1h --start 2025-01-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T204900+0800-codex-smt-provider-backed-candle-probe-v1/data/bybit_btcusdt_1h.csv

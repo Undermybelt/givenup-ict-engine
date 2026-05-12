@@ -1,0 +1,2929 @@
+{
+  "active_axis": "MainRegimeV2",
+  "candidate_regime": "Manipulation",
+  "decision": {
+    "accepted_95": false,
+    "accepted_files": [],
+    "blockers": [
+      "no strict non-leaky rule passed train/calibration/test 95% Wilson lower-bound support and coverage gates with chronology-grade evidence",
+      "NFT ML samples drop timestamp and are written in contractAddress,timestamp order, so file-order splits are not global chronological evidence",
+      "missing raw files in /tmp: OpenSea"
+    ],
+    "fresh_calibration_rerun": true,
+    "gate": "blocked_mendeley_multifile_no_chronology_grade_95_rule",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "feature_policy": {
+    "diagnostic_only_features": [
+      "cumu_wash_percent_opt"
+    ],
+    "excluded_from_acceptance_as_leakage_or_label": [
+      "filter_1234",
+      "wash",
+      "cumu_wash_percent_opt"
+    ],
+    "strict_features": [
+      "amount",
+      "log_amount",
+      "round_level",
+      "buyer_24h_trade_count",
+      "buyer_7d_trade_count",
+      "seller_24h_trade_count",
+      "seller_7d_trade_count",
+      "abs_price_deviation",
+      "log_time_since_last_trade",
+      "hours",
+      "buyer_seller_24h_count_ratio",
+      "buyer_seller_7d_count_ratio"
+    ]
+  },
+  "files": [
+    {
+      "accepted_95_chronology_grade": false,
+      "accepted_95_rule_only": false,
+      "actual_sha256": "b50e57907f9c5602f251c261cc4f29889d2f3ceeeaf9cbcfcca447a1fa566c3f",
+      "best_rules": [
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "amount",
+              "op": ">=",
+              "threshold": 4.28795e+19
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 114.0
+            }
+          ],
+          "min_support": 84,
+          "min_wilson95_lcb": 0.9172855899143008,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0010470551573698971,
+              "positives": 82,
+              "precision": 0.9761904761904762,
+              "support": 84,
+              "wilson95_lcb": 0.9172855899143008
+            },
+            "test": {
+              "coverage": 0.002991586163913992,
+              "positives": 240,
+              "precision": 1.0,
+              "support": 240,
+              "wilson95_lcb": 0.9842460800584413
+            },
+            "train": {
+              "coverage": 0.009735119975070115,
+              "positives": 2343,
+              "precision": 1.0,
+              "support": 2343,
+              "wilson95_lcb": 0.998363136629338
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "log_amount",
+              "op": ">=",
+              "threshold": 45.204925530139626
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 114.0
+            }
+          ],
+          "min_support": 84,
+          "min_wilson95_lcb": 0.9172855899143008,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0010470551573698971,
+              "positives": 82,
+              "precision": 0.9761904761904762,
+              "support": 84,
+              "wilson95_lcb": 0.9172855899143008
+            },
+            "test": {
+              "coverage": 0.002991586163913992,
+              "positives": 240,
+              "precision": 1.0,
+              "support": 240,
+              "wilson95_lcb": 0.9842460800584413
+            },
+            "train": {
+              "coverage": 0.009735119975070115,
+              "positives": 2343,
+              "precision": 1.0,
+              "support": 2343,
+              "wilson95_lcb": 0.998363136629338
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 1.3697882999737463e+19
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 55.0
+            }
+          ],
+          "min_support": 25,
+          "min_wilson95_lcb": 0.8668077490609514,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0003116235587410408,
+              "positives": 25,
+              "precision": 1.0,
+              "support": 25,
+              "wilson95_lcb": 0.8668077490609514
+            },
+            "test": {
+              "coverage": 0.004973511997507012,
+              "positives": 399,
+              "precision": 1.0,
+              "support": 399,
+              "wilson95_lcb": 0.9904640926682674
+            },
+            "train": {
+              "coverage": 0.022100342785914617,
+              "positives": 5316,
+              "precision": 0.9994359842075579,
+              "support": 5319,
+              "wilson95_lcb": 0.9983429236348396
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 1.3697882999737463e+19
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 74.0
+            }
+          ],
+          "min_support": 23,
+          "min_wilson95_lcb": 0.8568833815495732,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.00028669367404175755,
+              "positives": 23,
+              "precision": 1.0,
+              "support": 23,
+              "wilson95_lcb": 0.8568833815495732
+            },
+            "test": {
+              "coverage": 0.0036522281084449986,
+              "positives": 293,
+              "precision": 1.0,
+              "support": 293,
+              "wilson95_lcb": 0.9870588871380848
+            },
+            "train": {
+              "coverage": 0.015938506284408436,
+              "positives": 3834,
+              "precision": 0.9994786235662148,
+              "support": 3836,
+              "wilson95_lcb": 0.998100860988716
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "amount",
+              "op": ">=",
+              "threshold": 4.28795e+19
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 74.0
+            }
+          ],
+          "min_support": 118,
+          "min_wilson95_lcb": 0.8510066169479545,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0014708631972577128,
+              "positives": 108,
+              "precision": 0.9152542372881356,
+              "support": 118,
+              "wilson95_lcb": 0.8510066169479545
+            },
+            "test": {
+              "coverage": 0.005858522904331568,
+              "positives": 470,
+              "precision": 1.0,
+              "support": 470,
+              "wilson95_lcb": 0.9918929448886661
+            },
+            "train": {
+              "coverage": 0.02086215851251688,
+              "positives": 5019,
+              "precision": 0.9996016729735112,
+              "support": 5021,
+              "wilson95_lcb": 0.998548703881881
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "log_amount",
+              "op": ">=",
+              "threshold": 45.204925530139626
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 74.0
+            }
+          ],
+          "min_support": 118,
+          "min_wilson95_lcb": 0.8510066169479545,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0014708631972577128,
+              "positives": 108,
+              "precision": 0.9152542372881356,
+              "support": 118,
+              "wilson95_lcb": 0.8510066169479545
+            },
+            "test": {
+              "coverage": 0.005858522904331568,
+              "positives": 470,
+              "precision": 1.0,
+              "support": 470,
+              "wilson95_lcb": 0.9918929448886661
+            },
+            "train": {
+              "coverage": 0.02086215851251688,
+              "positives": 5019,
+              "precision": 0.9996016729735112,
+              "support": 5021,
+              "wilson95_lcb": 0.998548703881881
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 1.3697882999737463e+19
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 114.0
+            }
+          ],
+          "min_support": 19,
+          "min_wilson95_lcb": 0.8318207759473837,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.00023683390464319102,
+              "positives": 19,
+              "precision": 1.0,
+              "support": 19,
+              "wilson95_lcb": 0.8318207759473837
+            },
+            "test": {
+              "coverage": 0.0023808039887815518,
+              "positives": 191,
+              "precision": 1.0,
+              "support": 191,
+              "wilson95_lcb": 0.9802841815907913
+            },
+            "train": {
+              "coverage": 0.008152072296665628,
+              "positives": 1960,
+              "precision": 0.9989806320081549,
+              "support": 1962,
+              "wilson95_lcb": 0.9962907358316188
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 1.3697882999737463e+19
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 43.0
+            }
+          ],
+          "min_support": 29,
+          "min_wilson95_lcb": 0.8282447812067973,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.00036148332813960735,
+              "positives": 28,
+              "precision": 0.9655172413793104,
+              "support": 29,
+              "wilson95_lcb": 0.8282447812067973
+            },
+            "test": {
+              "coverage": 0.006830788407603615,
+              "positives": 548,
+              "precision": 1.0,
+              "support": 548,
+              "wilson95_lcb": 0.9930388361380033
+            },
+            "train": {
+              "coverage": 0.025183338527059312,
+              "positives": 6053,
+              "precision": 0.9986800857944234,
+              "support": 6061,
+              "wilson95_lcb": 0.9973974254823759
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "amount",
+              "op": ">=",
+              "threshold": 4.28795e+19
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 55.0
+            }
+          ],
+          "min_support": 133,
+          "min_wilson95_lcb": 0.8222448982769772,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0016578373325023372,
+              "positives": 118,
+              "precision": 0.8872180451127819,
+              "support": 133,
+              "wilson95_lcb": 0.8222448982769772
+            },
+            "test": {
+              "coverage": 0.009049548145839826,
+              "positives": 726,
+              "precision": 1.0,
+              "support": 726,
+              "wilson95_lcb": 0.9947365845359054
+            },
+            "train": {
+              "coverage": 0.02972473252311208,
+              "positives": 7152,
+              "precision": 0.9997204361196533,
+              "support": 7154,
+              "wilson95_lcb": 0.9989811637700915
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "log_amount",
+              "op": ">=",
+              "threshold": 45.204925530139626
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 55.0
+            }
+          ],
+          "min_support": 133,
+          "min_wilson95_lcb": 0.8222448982769772,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0016578373325023372,
+              "positives": 118,
+              "precision": 0.8872180451127819,
+              "support": 133,
+              "wilson95_lcb": 0.8222448982769772
+            },
+            "test": {
+              "coverage": 0.009049548145839826,
+              "positives": 726,
+              "precision": 1.0,
+              "support": 726,
+              "wilson95_lcb": 0.9947365845359054
+            },
+            "train": {
+              "coverage": 0.02972473252311208,
+              "positives": 7152,
+              "precision": 0.9997204361196533,
+              "support": 7154,
+              "wilson95_lcb": 0.9989811637700915
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "amount",
+              "op": ">=",
+              "threshold": 4.28795e+19
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 43.0
+            }
+          ],
+          "min_support": 146,
+          "min_wilson95_lcb": 0.7823841219064486,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0018198815830476785,
+              "positives": 124,
+              "precision": 0.8493150684931506,
+              "support": 146,
+              "wilson95_lcb": 0.7823841219064486
+            },
+            "test": {
+              "coverage": 0.013325023371766906,
+              "positives": 1067,
+              "precision": 0.9981290926099158,
+              "support": 1069,
+              "wilson95_lcb": 0.9932041638294994
+            },
+            "train": {
+              "coverage": 0.03501402306014335,
+              "positives": 8424,
+              "precision": 0.9996440014239943,
+              "support": 8427,
+              "wilson95_lcb": 0.9989537625420253
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "log_amount",
+              "op": ">=",
+              "threshold": 45.204925530139626
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 43.0
+            }
+          ],
+          "min_support": 146,
+          "min_wilson95_lcb": 0.7823841219064486,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0018198815830476785,
+              "positives": 124,
+              "precision": 0.8493150684931506,
+              "support": 146,
+              "wilson95_lcb": 0.7823841219064486
+            },
+            "test": {
+              "coverage": 0.013325023371766906,
+              "positives": 1067,
+              "precision": 0.9981290926099158,
+              "support": 1069,
+              "wilson95_lcb": 0.9932041638294994
+            },
+            "train": {
+              "coverage": 0.03501402306014335,
+              "positives": 8424,
+              "precision": 0.9996440014239943,
+              "support": 8427,
+              "wilson95_lcb": 0.9989537625420253
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "amount",
+              "op": ">=",
+              "threshold": 4.28795e+19
+            },
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 9.766675250000029e+16
+            }
+          ],
+          "min_support": 893,
+          "min_wilson95_lcb": 0.719701756345003,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.011131193518229977,
+              "positives": 669,
+              "precision": 0.7491601343784995,
+              "support": 893,
+              "wilson95_lcb": 0.719701756345003
+            },
+            "test": {
+              "coverage": 0.04300405110626363,
+              "positives": 3440,
+              "precision": 0.9971014492753624,
+              "support": 3450,
+              "wilson95_lcb": 0.994672341718644
+            },
+            "train": {
+              "coverage": 0.0678425262283162,
+              "positives": 16253,
+              "precision": 0.9954066634002939,
+              "support": 16328,
+              "wilson95_lcb": 0.9942465726525378
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "log_amount",
+              "op": ">=",
+              "threshold": 45.204925530139626
+            },
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 9.766675250000029e+16
+            }
+          ],
+          "min_support": 893,
+          "min_wilson95_lcb": 0.719701756345003,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.011131193518229977,
+              "positives": 669,
+              "precision": 0.7491601343784995,
+              "support": 893,
+              "wilson95_lcb": 0.719701756345003
+            },
+            "test": {
+              "coverage": 0.04300405110626363,
+              "positives": 3440,
+              "precision": 0.9971014492753624,
+              "support": 3450,
+              "wilson95_lcb": 0.994672341718644
+            },
+            "train": {
+              "coverage": 0.0678425262283162,
+              "positives": 16253,
+              "precision": 0.9954066634002939,
+              "support": 16328,
+              "wilson95_lcb": 0.9942465726525378
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "amount",
+              "op": ">=",
+              "threshold": 4.28795e+19
+            },
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 2.275e+17
+            }
+          ],
+          "min_support": 888,
+          "min_wilson95_lcb": 0.7181570708151691,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.01106886880648177,
+              "positives": 664,
+              "precision": 0.7477477477477478,
+              "support": 888,
+              "wilson95_lcb": 0.7181570708151691
+            },
+            "test": {
+              "coverage": 0.04299158616391399,
+              "positives": 3439,
+              "precision": 0.9971006088721368,
+              "support": 3449,
+              "wilson95_lcb": 0.9946707994621067
+            },
+            "train": {
+              "coverage": 0.06770956684325335,
+              "positives": 16224,
+              "precision": 0.9955817378497791,
+              "support": 16296,
+              "wilson95_lcb": 0.9944400940609738
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "log_amount",
+              "op": ">=",
+              "threshold": 45.204925530139626
+            },
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 2.275e+17
+            }
+          ],
+          "min_support": 888,
+          "min_wilson95_lcb": 0.7181570708151691,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.01106886880648177,
+              "positives": 664,
+              "precision": 0.7477477477477478,
+              "support": 888,
+              "wilson95_lcb": 0.7181570708151691
+            },
+            "test": {
+              "coverage": 0.04299158616391399,
+              "positives": 3439,
+              "precision": 0.9971006088721368,
+              "support": 3449,
+              "wilson95_lcb": 0.9946707994621067
+            },
+            "train": {
+              "coverage": 0.06770956684325335,
+              "positives": 16224,
+              "precision": 0.9955817378497791,
+              "support": 16296,
+              "wilson95_lcb": 0.9944400940609738
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "amount",
+              "op": ">=",
+              "threshold": 4.28795e+19
+            },
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 6.390144361910077e+17
+            }
+          ],
+          "min_support": 868,
+          "min_wilson95_lcb": 0.716562944427972,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.010819569959488937,
+              "positives": 648,
+              "precision": 0.7465437788018433,
+              "support": 868,
+              "wilson95_lcb": 0.716562944427972
+            },
+            "test": {
+              "coverage": 0.042804612028669364,
+              "positives": 3424,
+              "precision": 0.9970879440885265,
+              "support": 3434,
+              "wilson95_lcb": 0.9946475579978697
+            },
+            "train": {
+              "coverage": 0.06743118313077802,
+              "positives": 16161,
+              "precision": 0.9958099698071353,
+              "support": 16229,
+              "wilson95_lcb": 0.9946920520271574
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "log_amount",
+              "op": ">=",
+              "threshold": 45.204925530139626
+            },
+            {
+              "feature": "abs_price_deviation",
+              "op": ">=",
+              "threshold": 6.390144361910077e+17
+            }
+          ],
+          "min_support": 868,
+          "min_wilson95_lcb": 0.716562944427972,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.010819569959488937,
+              "positives": 648,
+              "precision": 0.7465437788018433,
+              "support": 868,
+              "wilson95_lcb": 0.716562944427972
+            },
+            "test": {
+              "coverage": 0.042804612028669364,
+              "positives": 3424,
+              "precision": 0.9970879440885265,
+              "support": 3434,
+              "wilson95_lcb": 0.9946475579978697
+            },
+            "train": {
+              "coverage": 0.06743118313077802,
+              "positives": 16161,
+              "precision": 0.9958099698071353,
+              "support": 16229,
+              "wilson95_lcb": 0.9946920520271574
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 4300.0
+            }
+          ],
+          "min_support": 3527,
+          "min_wilson95_lcb": 0.7120278956092774,
+          "passes_coverage": true,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "univariate",
+          "splits": {
+            "calibration": {
+              "coverage": 0.04607042692427547,
+              "positives": 2701,
+              "precision": 0.7307900432900433,
+              "support": 3696,
+              "wilson95_lcb": 0.7162562331722043
+            },
+            "test": {
+              "coverage": 0.04396385166718604,
+              "positives": 2626,
+              "precision": 0.7445421037709101,
+              "support": 3527,
+              "wilson95_lcb": 0.7298884754600555
+            },
+            "train": {
+              "coverage": 0.04068557182923029,
+              "positives": 7060,
+              "precision": 0.7209967320261438,
+              "support": 9792,
+              "wilson95_lcb": 0.7120278956092774
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 5778.0
+            }
+          ],
+          "min_support": 910,
+          "min_wilson95_lcb": 0.6950787887174084,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "univariate",
+          "splits": {
+            "calibration": {
+              "coverage": 0.014172639451542537,
+              "positives": 837,
+              "precision": 0.7361477572559367,
+              "support": 1137,
+              "wilson95_lcb": 0.7097662573026156
+            },
+            "test": {
+              "coverage": 0.011343097538173886,
+              "positives": 699,
+              "precision": 0.7681318681318682,
+              "support": 910,
+              "wilson95_lcb": 0.7396193291612132
+            },
+            "train": {
+              "coverage": 0.010075828399293654,
+              "positives": 1730,
+              "precision": 0.7134020618556701,
+              "support": 2425,
+              "wilson95_lcb": 0.6950787887174084
+            }
+          }
+        }
+      ],
+      "candidate_counts": {
+        "diagnostic_leaky": 20,
+        "strict_non_leaky": 160
+      },
+      "chronology_grade": "blocked_file_order_not_global_chronology",
+      "chronology_reason": "nft_ml_sample.py writes rows sorted by contractAddress,timestamp after dropping timestamp",
+      "exists": true,
+      "expected_sha256": "b50e57907f9c5602f251c261cc4f29889d2f3ceeeaf9cbcfcca447a1fa566c3f",
+      "label_counts": {
+        "calibration": {
+          "positive_rate": 0.3696104705515737,
+          "positives": 29652,
+          "rows": 80225
+        },
+        "test": {
+          "positive_rate": 0.3855032720473668,
+          "positives": 30927,
+          "rows": 80225
+        },
+        "train": {
+          "positive_rate": 0.4263675080502753,
+          "positives": 102616,
+          "rows": 240675
+        }
+      },
+      "path": "/tmp/LooksRare_ml_samples.csv",
+      "rows": 401125,
+      "sha256_matches": true,
+      "venue": "LooksRare"
+    },
+    {
+      "accepted_95_chronology_grade": false,
+      "accepted_95_rule_only": false,
+      "actual_sha256": "51e41acafc574fd4f7853b4a64676775e9695e8dd9fd2eb937e1587f9a41678b",
+      "best_rules": [
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_24h_trade_count",
+              "op": ">=",
+              "threshold": 8258.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 225,
+          "min_wilson95_lcb": 0.9593303773955086,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": true,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.00032498154826987043,
+              "positives": 223,
+              "precision": 0.9911111111111112,
+              "support": 225,
+              "wilson95_lcb": 0.9681751470156602
+            },
+            "test": {
+              "coverage": 0.0005531900142702802,
+              "positives": 375,
+              "precision": 0.97911227154047,
+              "support": 383,
+              "wilson95_lcb": 0.9593303773955086
+            },
+            "train": {
+              "coverage": 0.00014876933098576292,
+              "positives": 307,
+              "precision": 0.9935275080906149,
+              "support": 309,
+              "wilson95_lcb": 0.9767115088097861
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_24h_trade_count",
+              "op": ">=",
+              "threshold": 8258.0
+            }
+          ],
+          "min_support": 77,
+          "min_wilson95_lcb": 0.9524815747175658,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.00011121590763013344,
+              "positives": 77,
+              "precision": 1.0,
+              "support": 77,
+              "wilson95_lcb": 0.9524815747175658
+            },
+            "test": {
+              "coverage": 0.0004419742672759942,
+              "positives": 306,
+              "precision": 1.0,
+              "support": 306,
+              "wilson95_lcb": 0.9876018566549637
+            },
+            "train": {
+              "coverage": 8.714320035088378e-05,
+              "positives": 181,
+              "precision": 1.0,
+              "support": 181,
+              "wilson95_lcb": 0.9792175475934729
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 41905.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 187,
+          "min_wilson95_lcb": 0.9444508151322971,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0002700957756731812,
+              "positives": 186,
+              "precision": 0.9946524064171123,
+              "support": 187,
+              "wilson95_lcb": 0.9703356448529545
+            },
+            "test": {
+              "coverage": 0.0003596457272932109,
+              "positives": 248,
+              "precision": 0.9959839357429718,
+              "support": 249,
+              "wilson95_lcb": 0.9776060385063545
+            },
+            "train": {
+              "coverage": 0.00016802749680916264,
+              "positives": 338,
+              "precision": 0.9684813753581661,
+              "support": 349,
+              "wilson95_lcb": 0.9444508151322971
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 41905.0
+            }
+          ],
+          "min_support": 54,
+          "min_wilson95_lcb": 0.9335864119091036,
+          "passes_coverage": false,
+          "passes_support": false,
+          "passes_train_selection": true,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 7.799557158476891e-05,
+              "positives": 54,
+              "precision": 1.0,
+              "support": 54,
+              "wilson95_lcb": 0.9335864119091036
+            },
+            "test": {
+              "coverage": 0.00025420742170122537,
+              "positives": 176,
+              "precision": 1.0,
+              "support": 176,
+              "wilson95_lcb": 0.9786397483323124
+            },
+            "train": {
+              "coverage": 8.810610864205377e-05,
+              "positives": 183,
+              "precision": 1.0,
+              "support": 183,
+              "wilson95_lcb": 0.9794400084170792
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_24h_trade_count",
+              "op": ">=",
+              "threshold": 2251.0
+            }
+          ],
+          "min_support": 695,
+          "min_wilson95_lcb": 0.9316906595426551,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.001003831893544711,
+              "positives": 694,
+              "precision": 0.9985611510791367,
+              "support": 695,
+              "wilson95_lcb": 0.9918952618975819
+            },
+            "test": {
+              "coverage": 0.0018863346178511385,
+              "positives": 1259,
+              "precision": 0.9640122511485452,
+              "support": 1306,
+              "wilson95_lcb": 0.9524731377259036
+            },
+            "train": {
+              "coverage": 0.0011347874211438292,
+              "positives": 2220,
+              "precision": 0.9418752651675859,
+              "support": 2357,
+              "wilson95_lcb": 0.9316906595426551
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 14343.0
+            }
+          ],
+          "min_support": 647,
+          "min_wilson95_lcb": 0.9311432750995743,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.000934502496580472,
+              "positives": 645,
+              "precision": 0.9969088098918083,
+              "support": 647,
+              "wilson95_lcb": 0.9887999397424567
+            },
+            "test": {
+              "coverage": 0.0020481029771155547,
+              "positives": 1373,
+              "precision": 0.9682651622002821,
+              "support": 1418,
+              "wilson95_lcb": 0.9578011575656074
+            },
+            "train": {
+              "coverage": 0.0009513533916759467,
+              "positives": 1862,
+              "precision": 0.9423076923076923,
+              "support": 1976,
+              "wilson95_lcb": 0.9311432750995743
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2747.0
+            }
+          ],
+          "min_support": 1350,
+          "min_wilson95_lcb": 0.9311135159425167,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0019498892896192227,
+              "positives": 1311,
+              "precision": 0.9711111111111111,
+              "support": 1350,
+              "wilson95_lcb": 0.9607527337923208
+            },
+            "test": {
+              "coverage": 0.002673511008914592,
+              "positives": 1791,
+              "precision": 0.9675850891410048,
+              "support": 1851,
+              "wilson95_lcb": 0.958499163552053
+            },
+            "train": {
+              "coverage": 0.002286907191528718,
+              "positives": 4457,
+              "precision": 0.9383157894736842,
+              "support": 4750,
+              "wilson95_lcb": 0.9311135159425167
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 20232.0
+            }
+          ],
+          "min_support": 520,
+          "min_wilson95_lcb": 0.9298077595211691,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0007510684671125895,
+              "positives": 520,
+              "precision": 1.0,
+              "support": 520,
+              "wilson95_lcb": 0.9926667529726603
+            },
+            "test": {
+              "coverage": 0.0016191279529947367,
+              "positives": 1082,
+              "precision": 0.9652096342551294,
+              "support": 1121,
+              "wilson95_lcb": 0.9527948336821809
+            },
+            "train": {
+              "coverage": 0.0007380692051817947,
+              "positives": 1445,
+              "precision": 0.9425962165688193,
+              "support": 1533,
+              "wilson95_lcb": 0.9298077595211691
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 14343.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 1456,
+          "min_wilson95_lcb": 0.9290150256655615,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0021029917079152505,
+              "positives": 1399,
+              "precision": 0.9608516483516484,
+              "support": 1456,
+              "wilson95_lcb": 0.9496163008599465
+            },
+            "test": {
+              "coverage": 0.003777002316754002,
+              "positives": 2496,
+              "precision": 0.9544933078393881,
+              "support": 2615,
+              "wilson95_lcb": 0.9458167326203865
+            },
+            "train": {
+              "coverage": 0.0019609627349676776,
+              "positives": 3816,
+              "precision": 0.9369015467714216,
+              "support": 4073,
+              "wilson95_lcb": 0.9290150256655615
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 20232.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 1136,
+          "min_wilson95_lcb": 0.9287985587374107,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.001640795728153657,
+              "positives": 1101,
+              "precision": 0.9691901408450704,
+              "support": 1136,
+              "wilson95_lcb": 0.9574533171025851
+            },
+            "test": {
+              "coverage": 0.0029147191874606413,
+              "positives": 1932,
+              "precision": 0.9573835480673935,
+              "support": 2018,
+              "wilson95_lcb": 0.947667215779745
+            },
+            "train": {
+              "coverage": 0.00142991881238743,
+              "positives": 2786,
+              "precision": 0.938047138047138,
+              "support": 2970,
+              "wilson95_lcb": 0.9287985587374107
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 8840.0
+            }
+          ],
+          "min_support": 1006,
+          "min_wilson95_lcb": 0.9282265682278455,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0014530286113755098,
+              "positives": 974,
+              "precision": 0.9681908548707754,
+              "support": 1006,
+              "wilson95_lcb": 0.9554405405867015
+            },
+            "test": {
+              "coverage": 0.002279200633207578,
+              "positives": 1530,
+              "precision": 0.9695817490494296,
+              "support": 1578,
+              "wilson95_lcb": 0.9599018664867303
+            },
+            "train": {
+              "coverage": 0.0014328075372609399,
+              "positives": 2790,
+              "precision": 0.9375,
+              "support": 2976,
+              "wilson95_lcb": 0.9282265682278455
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_24h_trade_count",
+              "op": ">=",
+              "threshold": 1485.0
+            }
+          ],
+          "min_support": 917,
+          "min_wilson95_lcb": 0.9233674803329844,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": true,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0013244803545043166,
+              "positives": 897,
+              "precision": 0.9781897491821155,
+              "support": 917,
+              "wilson95_lcb": 0.9665522537991044
+            },
+            "test": {
+              "coverage": 0.0022387585433914737,
+              "positives": 1494,
+              "precision": 0.9638709677419355,
+              "support": 1550,
+              "wilson95_lcb": 0.9533749713984996
+            },
+            "train": {
+              "coverage": 0.0015825397765378728,
+              "positives": 3065,
+              "precision": 0.9324612108305446,
+              "support": 3287,
+              "wilson95_lcb": 0.9233674803329844
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 1225.0
+            },
+            {
+              "feature": "buyer_24h_trade_count",
+              "op": ">=",
+              "threshold": 3223.0
+            }
+          ],
+          "min_support": 594,
+          "min_wilson95_lcb": 0.9192445664986074,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.000857951287432458,
+              "positives": 593,
+              "precision": 0.9983164983164983,
+              "support": 594,
+              "wilson95_lcb": 0.9905263249826394
+            },
+            "test": {
+              "coverage": 0.0015050234852993004,
+              "positives": 1003,
+              "precision": 0.9625719769673704,
+              "support": 1042,
+              "wilson95_lcb": 0.9492446089516612
+            },
+            "train": {
+              "coverage": 0.0007972880650887489,
+              "positives": 1544,
+              "precision": 0.9323671497584541,
+              "support": 1656,
+              "wilson95_lcb": 0.9192445664986074
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_24h_trade_count",
+              "op": ">=",
+              "threshold": 3223.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 1122,
+          "min_wilson95_lcb": 0.9179278449263332,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0016205746540390873,
+              "positives": 1105,
+              "precision": 0.9848484848484849,
+              "support": 1122,
+              "wilson95_lcb": 0.9758694126921896
+            },
+            "test": {
+              "coverage": 0.0025391854963111036,
+              "positives": 1679,
+              "precision": 0.9550625711035268,
+              "support": 1758,
+              "wilson95_lcb": 0.9443460930639535
+            },
+            "train": {
+              "coverage": 0.0014771013186547592,
+              "positives": 2846,
+              "precision": 0.9276401564537158,
+              "support": 3068,
+              "wilson95_lcb": 0.9179278449263332
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_24h_trade_count",
+              "op": ">=",
+              "threshold": 2251.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 1487,
+          "min_wilson95_lcb": 0.916478923433801,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.002147766943454655,
+              "positives": 1421,
+              "precision": 0.9556153328850033,
+              "support": 1487,
+              "wilson95_lcb": 0.9439214445600469
+            },
+            "test": {
+              "coverage": 0.003404357346305615,
+              "positives": 2238,
+              "precision": 0.9495120916419177,
+              "support": 2357,
+              "wilson95_lcb": 0.9399184390360937
+            },
+            "train": {
+              "coverage": 0.0021939865414308144,
+              "positives": 4213,
+              "precision": 0.924511740179943,
+              "support": 4557,
+              "wilson95_lcb": 0.916478923433801
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 8840.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 2338,
+          "min_wilson95_lcb": 0.9158464047807783,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.003376919377133143,
+              "positives": 2181,
+              "precision": 0.9328485885372113,
+              "support": 2338,
+              "wilson95_lcb": 0.921976887790928
+            },
+            "test": {
+              "coverage": 0.004350413375932335,
+              "positives": 2875,
+              "precision": 0.954515272244356,
+              "support": 3012,
+              "wilson95_lcb": 0.9464773355934393
+            },
+            "train": {
+              "coverage": 0.0029079830393333593,
+              "positives": 5574,
+              "precision": 0.9228476821192053,
+              "support": 6040,
+              "wilson95_lcb": 0.9158464047807783
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2747.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 3054,
+          "min_wilson95_lcb": 0.9115690364493273,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.004411082881849708,
+              "positives": 2852,
+              "precision": 0.933857236411264,
+              "support": 3054,
+              "wilson95_lcb": 0.924486444178507
+            },
+            "test": {
+              "coverage": 0.0053224678918694064,
+              "positives": 3503,
+              "precision": 0.9506105834464044,
+              "support": 3685,
+              "wilson95_lcb": 0.9431332806623884
+            },
+            "train": {
+              "coverage": 0.004568999841601586,
+              "positives": 8705,
+              "precision": 0.9172813487881981,
+              "support": 9490,
+              "wilson95_lcb": 0.9115690364493273
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 20232.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 490.0
+            }
+          ],
+          "min_support": 1932,
+          "min_wilson95_lcb": 0.9101247690653358,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0027905082278106208,
+              "positives": 1783,
+              "precision": 0.9228778467908902,
+              "support": 1932,
+              "wilson95_lcb": 0.9101247690653358
+            },
+            "test": {
+              "coverage": 0.004770722237949701,
+              "positives": 3111,
+              "precision": 0.9418710263396912,
+              "support": 3303,
+              "wilson95_lcb": 0.9333661650412782
+            },
+            "train": {
+              "coverage": 0.0023066468114977027,
+              "positives": 4401,
+              "precision": 0.9185973700688791,
+              "support": 4791,
+              "wilson95_lcb": 0.9105147100066407
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_24h_trade_count",
+              "op": ">=",
+              "threshold": 1485.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 701.0
+            }
+          ],
+          "min_support": 2132,
+          "min_wilson95_lcb": 0.9081740524516035,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.003079380715161617,
+              "positives": 1988,
+              "precision": 0.9324577861163227,
+              "support": 2132,
+              "wilson95_lcb": 0.921008554152602
+            },
+            "test": {
+              "coverage": 0.004286861520507028,
+              "positives": 2803,
+              "precision": 0.9444070080862533,
+              "support": 2968,
+              "wilson95_lcb": 0.9355744959598765
+            },
+            "train": {
+              "coverage": 0.0031227115882642665,
+              "positives": 5936,
+              "precision": 0.9152019734813445,
+              "support": 6486,
+              "wilson95_lcb": 0.9081740524516035
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 14343.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 490.0
+            }
+          ],
+          "min_support": 2520,
+          "min_wilson95_lcb": 0.9056323886646901,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.003639793340622549,
+              "positives": 2330,
+              "precision": 0.9246031746031746,
+              "support": 2520,
+              "wilson95_lcb": 0.9136358381903378
+            },
+            "test": {
+              "coverage": 0.0061905284625650685,
+              "positives": 4050,
+              "precision": 0.94493700419972,
+              "support": 4286,
+              "wilson95_lcb": 0.9377010717911006
+            },
+            "train": {
+              "coverage": 0.00321852096323568,
+              "positives": 6101,
+              "precision": 0.91264023934181,
+              "support": 6685,
+              "wilson95_lcb": 0.9056323886646901
+            }
+          }
+        }
+      ],
+      "candidate_counts": {
+        "diagnostic_leaky": 20,
+        "strict_non_leaky": 160
+      },
+      "chronology_grade": "blocked_file_order_not_global_chronology",
+      "chronology_reason": "nft_ml_sample.py writes rows sorted by contractAddress,timestamp after dropping timestamp",
+      "exists": true,
+      "expected_sha256": "51e41acafc574fd4f7853b4a64676775e9695e8dd9fd2eb937e1587f9a41678b",
+      "label_counts": {
+        "calibration": {
+          "positive_rate": 0.40362997167605263,
+          "positives": 279452,
+          "rows": 692347
+        },
+        "test": {
+          "positive_rate": 0.379455129501349,
+          "positives": 262715,
+          "rows": 692348
+        },
+        "train": {
+          "positive_rate": 0.41657723655912426,
+          "positives": 865248,
+          "rows": 2077041
+        }
+      },
+      "path": "/tmp/Blur_ml_samples.csv",
+      "rows": 3461736,
+      "sha256_matches": true,
+      "venue": "Blur"
+    },
+    {
+      "accepted_95_chronology_grade": false,
+      "accepted_95_rule_only": false,
+      "actual_sha256": "28cd2a2cca5aed49964e7e75043f9a79f773018d1e891add17319f7541716bff",
+      "best_rules": [
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2466.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 5302.0
+            }
+          ],
+          "min_support": 24934,
+          "min_wilson95_lcb": 0.8871925447016642,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.05223892726533929,
+              "positives": 51475,
+              "precision": 0.8897704487312452,
+              "support": 57852,
+              "wilson95_lcb": 0.8871925447016642
+            },
+            "test": {
+              "coverage": 0.0225147658903193,
+              "positives": 23329,
+              "precision": 0.9356300633672896,
+              "support": 24934,
+              "wilson95_lcb": 0.9325163427318617
+            },
+            "train": {
+              "coverage": 0.036728509419986025,
+              "positives": 108481,
+              "precision": 0.8890063511575497,
+              "support": 122025,
+              "wilson95_lcb": 0.8872316064818604
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2026.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 5302.0
+            }
+          ],
+          "min_support": 26257,
+          "min_wilson95_lcb": 0.8871781649740053,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.05354372657907806,
+              "positives": 52758,
+              "precision": 0.8897246066411454,
+              "support": 59297,
+              "wilson95_lcb": 0.8871781649740053
+            },
+            "test": {
+              "coverage": 0.02370940113828964,
+              "positives": 24435,
+              "precision": 0.9306089804623529,
+              "support": 26257,
+              "wilson95_lcb": 0.927471874856308
+            },
+            "train": {
+              "coverage": 0.04128492143063752,
+              "positives": 122214,
+              "precision": 0.8910128824828853,
+              "support": 137163,
+              "wilson95_lcb": 0.8893527723385838
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 4487.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 2641.0
+            }
+          ],
+          "min_support": 26158,
+          "min_wilson95_lcb": 0.8845497354608419,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.05536683371709784,
+              "positives": 55762,
+              "precision": 0.9094200534933785,
+              "support": 61316,
+              "wilson95_lcb": 0.9071225867730103
+            },
+            "test": {
+              "coverage": 0.023620006663951722,
+              "positives": 24200,
+              "precision": 0.9251471825063078,
+              "support": 26158,
+              "wilson95_lcb": 0.9218953735653024
+            },
+            "train": {
+              "coverage": 0.037017461430173995,
+              "positives": 109006,
+              "precision": 0.8863357319998374,
+              "support": 122985,
+              "wilson95_lcb": 0.8845497354608419
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 4487.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 2137.0
+            }
+          ],
+          "min_support": 29529,
+          "min_wilson95_lcb": 0.882102441457155,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.05880084879678541,
+              "positives": 58533,
+              "precision": 0.8988620832629494,
+              "support": 65119,
+              "wilson95_lcb": 0.8965227215432351
+            },
+            "test": {
+              "coverage": 0.026663933663882193,
+              "positives": 26961,
+              "precision": 0.9130346439093773,
+              "support": 29529,
+              "wilson95_lcb": 0.9097667186198166
+            },
+            "train": {
+              "coverage": 0.040428299117101114,
+              "positives": 118713,
+              "precision": 0.883827065821899,
+              "support": 134317,
+              "wilson95_lcb": 0.882102441457155
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 1667.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 5302.0
+            }
+          ],
+          "min_support": 27624,
+          "min_wilson95_lcb": 0.8817364510478528,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.055716285159600885,
+              "positives": 54563,
+              "precision": 0.8842843945999385,
+              "support": 61703,
+              "wilson95_lcb": 0.8817364510478528
+            },
+            "test": {
+              "coverage": 0.024943767263743498,
+              "positives": 25599,
+              "precision": 0.9266941789748045,
+              "support": 27624,
+              "wilson95_lcb": 0.9235609272384466
+            },
+            "train": {
+              "coverage": 0.045911163510417775,
+              "positives": 135590,
+              "precision": 0.888922397120623,
+              "support": 152533,
+              "wilson95_lcb": 0.8873356658481487
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2898.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 5302.0
+            }
+          ],
+          "min_support": 23283,
+          "min_wilson95_lcb": 0.8788308975112353,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0501810465483769,
+              "positives": 49564,
+              "precision": 0.891871952207007,
+              "support": 55573,
+              "wilson95_lcb": 0.8892629299828457
+            },
+            "test": {
+              "coverage": 0.021023955010199095,
+              "positives": 21864,
+              "precision": 0.9390542455869089,
+              "support": 23283,
+              "wilson95_lcb": 0.935908337360951
+            },
+            "train": {
+              "coverage": 0.033115405325927334,
+              "positives": 96902,
+              "precision": 0.880759127802874,
+              "support": 110021,
+              "wilson95_lcb": 0.8788308975112353
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 4487.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 4220.0
+            }
+          ],
+          "min_support": 21022,
+          "min_wilson95_lcb": 0.8787170509922388,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0462242087678902,
+              "positives": 47551,
+              "precision": 0.9288937508546424,
+              "support": 51191,
+              "wilson95_lcb": 0.9266350961995468
+            },
+            "test": {
+              "coverage": 0.018982329692239206,
+              "positives": 20114,
+              "precision": 0.956807154409666,
+              "support": 21022,
+              "wilson95_lcb": 0.9539745999605088
+            },
+            "train": {
+              "coverage": 0.030494670791857935,
+              "positives": 89230,
+              "precision": 0.8807272440136605,
+              "support": 101314,
+              "wilson95_lcb": 0.8787170509922388
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 4487.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 3277.0
+            }
+          ],
+          "min_support": 22866,
+          "min_wilson95_lcb": 0.8769682599707576,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.05083480066820172,
+              "positives": 51871,
+              "precision": 0.9213812458923211,
+              "support": 56297,
+              "wilson95_lcb": 0.9191291349772163
+            },
+            "test": {
+              "coverage": 0.020647414648593935,
+              "positives": 21720,
+              "precision": 0.9498819207557072,
+              "support": 22866,
+              "wilson95_lcb": 0.9469775453760756
+            },
+            "train": {
+              "coverage": 0.033195469112083584,
+              "positives": 96932,
+              "precision": 0.8789068521221903,
+              "support": 110287,
+              "wilson95_lcb": 0.8769682599707576
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 1356.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 5302.0
+            }
+          ],
+          "min_support": 30598,
+          "min_wilson95_lcb": 0.8736281239410321,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.05855523951419929,
+              "positives": 56818,
+              "precision": 0.8761854827517078,
+              "support": 64847,
+              "wilson95_lcb": 0.8736281239410321
+            },
+            "test": {
+              "coverage": 0.02762921339183404,
+              "positives": 27854,
+              "precision": 0.9103209360088895,
+              "support": 30598,
+              "wilson95_lcb": 0.9070677822356024
+            },
+            "train": {
+              "coverage": 0.050576534508244314,
+              "positives": 149313,
+              "precision": 0.8885933120279945,
+              "support": 168033,
+              "wilson95_lcb": 0.8870800380460636
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 1091.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 5302.0
+            }
+          ],
+          "min_support": 32735,
+          "min_wilson95_lcb": 0.8711261429029624,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.061945911779312836,
+              "positives": 59933,
+              "precision": 0.8736334217661292,
+              "support": 68602,
+              "wilson95_lcb": 0.8711261429029624
+            },
+            "test": {
+              "coverage": 0.02955886987324947,
+              "positives": 29473,
+              "precision": 0.9003513059416527,
+              "support": 32735,
+              "wilson95_lcb": 0.8970594119257813
+            },
+            "train": {
+              "coverage": 0.05470162544535481,
+              "positives": 161211,
+              "precision": 0.8870516897951997,
+              "support": 181738,
+              "wilson95_lcb": 0.8855882445942046
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 5302.0
+            },
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 870.0
+            }
+          ],
+          "min_support": 36330,
+          "min_wilson95_lcb": 0.867641808359916,
+          "passes_coverage": true,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.06483814167682514,
+              "positives": 62479,
+              "precision": 0.8701204651486665,
+              "support": 71805,
+              "wilson95_lcb": 0.867641808359916
+            },
+            "test": {
+              "coverage": 0.032805063158550585,
+              "positives": 31981,
+              "precision": 0.8802917698871456,
+              "support": 36330,
+              "wilson95_lcb": 0.8769134634805575
+            },
+            "train": {
+              "coverage": 0.05796076332693325,
+              "positives": 169655,
+              "precision": 0.8810226104296709,
+              "support": 192566,
+              "wilson95_lcb": 0.8795689516854394
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 3492.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 4220.0
+            }
+          ],
+          "min_support": 24354,
+          "min_wilson95_lcb": 0.8653657796731143,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.05394013273736963,
+              "positives": 51857,
+              "precision": 0.8681029864738181,
+              "support": 59736,
+              "wilson95_lcb": 0.8653657796731143
+            },
+            "test": {
+              "coverage": 0.021991040687127466,
+              "positives": 23149,
+              "precision": 0.9505214749117188,
+              "support": 24354,
+              "wilson95_lcb": 0.9477260554333077
+            },
+            "train": {
+              "coverage": 0.034879216554783044,
+              "positives": 103063,
+              "precision": 0.8893865258325351,
+              "support": 115881,
+              "wilson95_lcb": 0.8875677120115733
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2898.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 4220.0
+            }
+          ],
+          "min_support": 26490,
+          "min_wilson95_lcb": 0.8627319862150995,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.05542191521061899,
+              "positives": 53119,
+              "precision": 0.8654544862081888,
+              "support": 61377,
+              "wilson95_lcb": 0.8627319862150995
+            },
+            "test": {
+              "coverage": 0.023919794194054635,
+              "positives": 24889,
+              "precision": 0.9395620989052472,
+              "support": 26490,
+              "wilson95_lcb": 0.9366282441685495
+            },
+            "train": {
+              "coverage": 0.03913704482157364,
+              "positives": 116270,
+              "precision": 0.89419889715213,
+              "support": 130027,
+              "wilson95_lcb": 0.8925154003310387
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 3492.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 3277.0
+            }
+          ],
+          "min_support": 26708,
+          "min_wilson95_lcb": 0.8588368287274317,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.0598582328773308,
+              "positives": 57108,
+              "precision": 0.8614874038316488,
+              "support": 66290,
+              "wilson95_lcb": 0.8588368287274317
+            },
+            "test": {
+              "coverage": 0.024116642632495706,
+              "positives": 25166,
+              "precision": 0.9422644900404373,
+              "support": 26708,
+              "wilson95_lcb": 0.9394030895963058
+            },
+            "train": {
+              "coverage": 0.038928156597541924,
+              "positives": 115011,
+              "precision": 0.8892626011922711,
+              "support": 129333,
+              "wilson95_lcb": 0.887540791741255
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2898.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 3277.0
+            }
+          ],
+          "min_support": 29087,
+          "min_wilson95_lcb": 0.858577805220364,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.06221680437040047,
+              "positives": 59337,
+              "precision": 0.8611796464543845,
+              "support": 68902,
+              "wilson95_lcb": 0.858577805220364
+            },
+            "test": {
+              "coverage": 0.026264818940070486,
+              "positives": 27035,
+              "precision": 0.9294530202495961,
+              "support": 29087,
+              "wilson95_lcb": 0.9264532209302055
+            },
+            "train": {
+              "coverage": 0.044058559736764716,
+              "positives": 130825,
+              "precision": 0.89374769432565,
+              "support": 146378,
+              "wilson95_lcb": 0.8921586946420242
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2026.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 4220.0
+            }
+          ],
+          "min_support": 30095,
+          "min_wilson95_lcb": 0.8528131646242689,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.059832046593525666,
+              "positives": 56687,
+              "precision": 0.8555107831152563,
+              "support": 66261,
+              "wilson95_lcb": 0.8528131646242689
+            },
+            "test": {
+              "coverage": 0.027175017224238363,
+              "positives": 27969,
+              "precision": 0.9293570360525004,
+              "support": 30095,
+              "wilson95_lcb": 0.926407050094756
+            },
+            "train": {
+              "coverage": 0.048874727564908106,
+              "positives": 145791,
+              "precision": 0.8978439330208956,
+              "support": 162379,
+              "wilson95_lcb": 0.8963614648366383
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2466.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 4220.0
+            }
+          ],
+          "min_support": 28438,
+          "min_wilson95_lcb": 0.8523036581516591,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.058329495688292925,
+              "positives": 55233,
+              "precision": 0.855039707726365,
+              "support": 64597,
+              "wilson95_lcb": 0.8523036581516591
+            },
+            "test": {
+              "coverage": 0.02567878849718859,
+              "positives": 26564,
+              "precision": 0.9341022575427246,
+              "support": 28438,
+              "wilson95_lcb": 0.9311596511662419
+            },
+            "train": {
+              "coverage": 0.043415942505773776,
+              "positives": 129808,
+              "precision": 0.8999258196238292,
+              "support": 144243,
+              "wilson95_lcb": 0.8983664609978091
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 3492.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 2641.0
+            }
+          ],
+          "min_support": 30499,
+          "min_wilson95_lcb": 0.8521507317683902,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.06507291525576775,
+              "positives": 61597,
+              "precision": 0.854742246582946,
+              "support": 72065,
+              "wilson95_lcb": 0.8521507317683902
+            },
+            "test": {
+              "coverage": 0.027539818917496125,
+              "positives": 28054,
+              "precision": 0.9198334371618742,
+              "support": 30499,
+              "wilson95_lcb": 0.9167327077014379
+            },
+            "train": {
+              "coverage": 0.043452663490401826,
+              "positives": 129239,
+              "precision": 0.8952239116129256,
+              "support": 144365,
+              "wilson95_lcb": 0.8936335377837956
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2898.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 2641.0
+            }
+          ],
+          "min_support": 33068,
+          "min_wilson95_lcb": 0.8521494694115676,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.06800487606663957,
+              "positives": 64368,
+              "precision": 0.8546845124282982,
+              "support": 75312,
+              "wilson95_lcb": 0.8521494694115676
+            },
+            "test": {
+              "coverage": 0.029859560377840644,
+              "positives": 30105,
+              "precision": 0.910396758195234,
+              "support": 33068,
+              "wilson95_lcb": 0.9072705245778024
+            },
+            "train": {
+              "coverage": 0.049344876564818105,
+              "positives": 147385,
+              "precision": 0.899012449600771,
+              "support": 163941,
+              "wilson95_lcb": 0.8975445381340087
+            }
+          }
+        },
+        {
+          "accepted_95_rule_only": false,
+          "candidate_class": "strict_non_leaky",
+          "clauses": [
+            {
+              "feature": "buyer_7d_trade_count",
+              "op": ">=",
+              "threshold": 2466.0
+            },
+            {
+              "feature": "seller_7d_trade_count",
+              "op": ">=",
+              "threshold": 3277.0
+            }
+          ],
+          "min_support": 31139,
+          "min_wilson95_lcb": 0.8487845151023573,
+          "passes_coverage": false,
+          "passes_support": true,
+          "passes_train_selection": false,
+          "passes_wilson95": false,
+          "rule_type": "and2",
+          "splits": {
+            "calibration": {
+              "coverage": 0.06553162671000948,
+              "positives": 61788,
+              "precision": 0.8513910131867224,
+              "support": 72573,
+              "wilson95_lcb": 0.8487845151023573
+            },
+            "test": {
+              "coverage": 0.028117722589983664,
+              "positives": 28763,
+              "precision": 0.9236969716432769,
+              "support": 31139,
+              "wilson95_lcb": 0.9206957219351107
+            },
+            "train": {
+              "coverage": 0.04931688433883115,
+              "positives": 147384,
+              "precision": 0.8995166251647869,
+              "support": 163848,
+              "wilson95_lcb": 0.8980515209402237
+            }
+          }
+        }
+      ],
+      "candidate_counts": {
+        "diagnostic_leaky": 20,
+        "strict_non_leaky": 160
+      },
+      "chronology_grade": "indirect_source_script_chronology",
+      "chronology_reason": "gox_ml_sample.py sorts by time immediately before writing features, but timestamp is absent from the ML CSV",
+      "exists": true,
+      "expected_sha256": "28cd2a2cca5aed49964e7e75043f9a79f773018d1e891add17319f7541716bff",
+      "label_counts": {
+        "calibration": {
+          "positive_rate": 0.29217662196938915,
+          "positives": 323571,
+          "rows": 1107450
+        },
+        "test": {
+          "positive_rate": 0.2184918339502154,
+          "positives": 241969,
+          "rows": 1107451
+        },
+        "train": {
+          "positive_rate": 0.40245777763999047,
+          "positives": 1337106,
+          "rows": 3322351
+        }
+      },
+      "path": "/tmp/gox_ml_samples.csv",
+      "rows": 5537252,
+      "sha256_matches": true,
+      "venue": "Gox"
+    },
+    {
+      "chronology_grade": "blocked_file_order_not_global_chronology",
+      "chronology_reason": "nft_ml_sample.py writes rows sorted by contractAddress,timestamp after dropping timestamp",
+      "exists": false,
+      "expected_sha256": "9b04bec65d083053b02ea82eb8432f48fdc2d8e27fe1a45565847a35c355e32f",
+      "path": "/tmp/OpenSea_ml_samples.csv",
+      "skipped_reason": "raw_file_not_present_in_tmp",
+      "venue": "OpenSea"
+    }
+  ],
+  "gate_thresholds": {
+    "calibration_coverage_min": 0.03,
+    "calibration_support_min": 120,
+    "calibration_wilson95_lcb_min": 0.95,
+    "test_coverage_min": 0.03,
+    "test_support_min": 60,
+    "test_wilson95_lcb_min": 0.95,
+    "train_wilson95_lcb_min": 0.95
+  },
+  "raw_data_policy": "raw_csvs_read_from_/tmp_only; no raw rows committed to repo",
+  "run_id": "20260511T022630+0800-codex-mendeley-multifile-manipulation-gate",
+  "source": {
+    "doi": "10.17632/4hyxfwzpgg.3",
+    "github": "https://github.com/niuniu-zhang/nft_wash_trading",
+    "name": "Mendeley Data: Detecting Crypto Wash Trades via Machine Learning",
+    "url": "https://data.mendeley.com/datasets/4hyxfwzpgg/3"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "run_id": "20260512T071722+0800-codex-board-b-post-071457-gate-refresh-v1",
+  "scope": "Board B post-071457 gate refresh",
+  "cursor_edited": false,
+  "source_control_approval_present": false,
+  "r6_owner_export_root_present": false,
+  "r5_recency_root_present": false,
+  "r3_native_subhour_root_present": true,
+  "r3_source_status": "tsie_quarantined",
+  "r3_data_rows": 5032903,
+  "r3_bear_rows": 1435764,
+  "r3_bull_rows": 1435055,
+  "r3_sideways_rows": 2162084,
+  "r3_crisis_rows": 0,
+  "provider_status": {
+    "yfinance_ready": true,
+    "kraken_cli_ready": true,
+    "ibkr_ready": false,
+    "ibkr_gateway_reachable_dependency_unhealthy": true,
+    "tradingview_mcp_ready": false,
+    "kraken_public_ready": false
+  },
+  "autoquant": {
+    "board_a_runtime_status": "dependency_ready_data_ready",
+    "board_a_runtime_data_ready": true,
+    "board_b_combined_status": "dependency_ready_data_missing",
+    "board_b_combined_data_ready": false
+  },
+  "downstream": {
+    "pre_bayes_gate_status": "observe_only",
+    "workflow_blocking_status": "blocked",
+    "workflow_blocking_reason": "user_selected_historical_data_missing",
+    "closed_loop_branch_admission_status": "fail_closed",
+    "execution_gate_status": "execution_blocked",
+    "execution_candidate_ready": false,
+    "path_ranker_runtime_source": "candidate_set",
+    "candidate_set_match_count": 5,
+    "history_match_count": 0,
+    "artifact_match_count": 0,
+    "selected_path": "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72"
+  },
+  "selected_history": {
+    "recorded_paths_present": true,
+    "explicit_user_selection_present": false
+  },
+  "promotion_allowed": false,
+  "update_goal": false,
+  "gate_result": "board_b_post_071457_gate_refresh_v1=source_control_absent_user_history_missing_execution_blocked_no_promotion"
+}

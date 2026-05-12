@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-NQ_LOCAL_AQ_MTF_123820-1778560989389",
+  "generated_at": "2026-05-12T04:43:09.389292Z",
+  "symbol": "NQ_LOCAL_AQ_MTF_123820",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "242434754819668f",
+  "execution_validity_summary": "execution_blocked=722;execution_observe_only=447;execution_ready=331",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        450
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.46088355762872596,
+      "execution_readiness_drift": -0.000028686809071836128,
+      "sample_count": 450
+    },
+    {
+      "horizon_bars": [
+        450,
+        1200
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.460183387411224,
+      "execution_readiness_drift": -0.0001107428811343368,
+      "sample_count": 750
+    },
+    {
+      "horizon_bars": [
+        1200,
+        1500
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4574770546667068,
+      "execution_readiness_drift": -0.0001432377706114612,
+      "sample_count": 300
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "5e87b98f216cf664",
+    "config_hash": "6a8db419e34bb13c",
+    "data_fingerprint": "8baa7c08f3637da8"
+  }
+}

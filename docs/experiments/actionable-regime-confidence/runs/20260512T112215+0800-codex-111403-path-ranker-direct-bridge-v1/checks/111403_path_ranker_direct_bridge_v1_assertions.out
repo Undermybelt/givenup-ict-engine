@@ -1,0 +1,10 @@
+PASS run_id=20260512T112215+0800-codex-111403-path-ranker-direct-bridge-v1
+PASS commands_all_exit0=true
+PASS scores_rows=2
+PASS runtime_selection_status=enabled_registered_model_invalid
+FAIL_CLOSED raw_scored_mature_rows=1
+FAIL_CLOSED production_validation_rows=0
+FAIL_CLOSED execution_ready=False_actionable=False
+FAIL_CLOSED closed_loop_status=fail_closed
+PASS promotion_allowed=false
+PASS update_goal=false

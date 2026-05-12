@@ -1,0 +1,93 @@
+{
+  "acceptance_scope": "direct Manipulation order-lifecycle wash-trade/self-trade evidence only; does not fill Bull/Bear/Sideways/Crisis parent-root slots and does not close all manipulation varieties",
+  "accepted_direct_manipulation_95": true,
+  "accepted_direct_manipulation_rows_added": 12671,
+  "accepted_gate": "accepted_95_direct_order_lifecycle_self_trade_bounded",
+  "accepted_parent_root_slots_added": 0,
+  "active_taxonomy": "MainRegimeV2",
+  "candidate_rows": 22671,
+  "chronological_split_metrics": {
+    "calibration": {
+      "end": "2017-12-14T06:36:17Z",
+      "false_positive_controls": 0,
+      "negative_controls": 1647,
+      "positive_coverage_within_candidate_rows": 0.6367445963828848,
+      "positive_support": 2887,
+      "precision": 1.0,
+      "rows": 4534,
+      "start": "2017-11-20T16:05:59Z",
+      "successes": 2887,
+      "wilson95_lcb": 0.9986711624018768
+    },
+    "test": {
+      "end": "2018-02-01T00:23:45Z",
+      "false_positive_controls": 0,
+      "negative_controls": 1639,
+      "positive_coverage_within_candidate_rows": 0.6385887541345093,
+      "positive_support": 2896,
+      "precision": 1.0,
+      "rows": 4535,
+      "start": "2017-12-14T06:57:44Z",
+      "successes": 2896,
+      "wilson95_lcb": 0.9986752866060974
+    },
+    "train": {
+      "end": "2017-11-20T15:57:33Z",
+      "false_positive_controls": 0,
+      "negative_controls": 6714,
+      "positive_coverage_within_candidate_rows": 0.5063961182179091,
+      "positive_support": 6888,
+      "precision": 1.0,
+      "rows": 13602,
+      "start": "2017-02-09T23:56:45Z",
+      "successes": 6888,
+      "wilson95_lcb": 0.9994426077785383
+    }
+  },
+  "extraction_stats": [
+    {
+      "negative_control_cap": 5000,
+      "negative_control_rows": 5000,
+      "positive_rows": 11055,
+      "positive_rule": "maker == taker",
+      "rows_scanned_until_stop": 100000,
+      "scan_rows": 100000,
+      "venue": "IDEX"
+    },
+    {
+      "negative_control_cap": 5000,
+      "negative_control_rows": 5000,
+      "positive_rows": 1616,
+      "positive_rule": "get == give",
+      "rows_scanned_until_stop": 100000,
+      "scan_rows": 100000,
+      "venue": "EtherDelta"
+    }
+  ],
+  "full_candidate_rows_persisted": false,
+  "full_candidate_rows_regenerable_by_script": true,
+  "gate_result": "accepted_95_direct_order_lifecycle_self_trade_bounded",
+  "negative_control_cap_per_venue": 5000,
+  "negative_control_rows": 10000,
+  "next_action": "Continue exact-underlying MainRegimeV2 parent-root label acquisition and broaden direct Manipulation varieties beyond bounded DEX self-trades.",
+  "objective": "Bounded chronological direct Manipulation gate for Zenodo DEX self-trade rows.",
+  "positive_self_trade_rows": 12671,
+  "raw_data_committed": false,
+  "rows_csv": "direct-gate/direct_manipulation_rows_sample.csv",
+  "rows_csv_is_sample_only": true,
+  "run_id": "20260511T101019+0800-codex-zenodo-dex-selftrade-direct-gate",
+  "runtime_code_changed": false,
+  "scan_rows_per_venue": 100000,
+  "source": {
+    "github_pipeline": "https://github.com/friedhelmvictor/lob-dex-wash-trading-paper",
+    "title": "Detecting and Quantifying Wash Trading on Decentralized Cryptocurrency Exchanges",
+    "venues": [
+      "IDEX",
+      "EtherDelta"
+    ],
+    "zenodo_api": "https://zenodo.org/api/records/4540223",
+    "zenodo_record": "https://zenodo.org/records/4540223"
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

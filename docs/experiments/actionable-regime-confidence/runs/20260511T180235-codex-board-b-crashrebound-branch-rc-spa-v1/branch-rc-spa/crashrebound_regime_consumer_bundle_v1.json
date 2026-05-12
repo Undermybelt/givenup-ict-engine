@@ -1,0 +1,63 @@
+{
+  "schema_version": "regime-consumer-bundle/v1",
+  "latest_decision": {
+    "timestamp": "20260511T180235+0800-codex-board-b-crashrebound-branch-rc-spa-v1",
+    "decision_state": "rejected_rc_spa_board_a_source_root_branch",
+    "trade_usable": false,
+    "final_label": "MainRegimeV2::CrashReboundBoardASourceRootRejected",
+    "label_set": [
+      "MainRegimeV2::Bull",
+      "MainRegimeV2::Bear",
+      "MainRegimeV2::Sideways"
+    ],
+    "abstain_reasons": [
+      "cost_stress_survival",
+      "pbo",
+      "tail_loss_p95",
+      "branch_min_total_trades_for_claimed_roots"
+    ]
+  },
+  "consumer_hints": {
+    "execution_tree_hint": "unknown_abstain",
+    "trade_usable": false,
+    "bbn_evidence_hint": {
+      "regime_decision_state": "rejected_rc_spa_board_a_source_root_branch",
+      "regime_trade_usable": false,
+      "regime_label": "MainRegimeV2::CrashReboundBoardASourceRootRejected",
+      "regime_label_set": [
+        "MainRegimeV2::Bull",
+        "MainRegimeV2::Bear",
+        "MainRegimeV2::Sideways"
+      ],
+      "regime_transition_hazard": null,
+      "regime_decision_reasons": [
+        "cost_stress_survival",
+        "pbo",
+        "tail_loss_p95",
+        "branch_min_total_trades_for_claimed_roots"
+      ]
+    },
+    "path_ranker_context": {
+      "recipe_id": "CrashRebound",
+      "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+      "downstream_consumption_status": "research_watch_rc_spa_rejected_branch_packet_not_execution_ready",
+      "rc_spa": 40.94642653697444,
+      "promotion_level": "reject",
+      "roots_with_rows": [
+        "Bull",
+        "Bear",
+        "Sideways"
+      ],
+      "missing_roots": [
+        "Crisis"
+      ],
+      "branch_path_source": "board_a_source_date_market_regime_context_root",
+      "catboost_scores": "docs/experiments/actionable-regime-confidence/runs/20260511T180235-codex-board-b-crashrebound-branch-rc-spa-v1/catboost/crashrebound_board_a_path_scores.csv"
+    },
+    "user_vrp_nq_context": {}
+  },
+  "provenance": {
+    "run_id": "20260511T180235+0800-codex-board-b-crashrebound-branch-rc-spa-v1",
+    "source": "real Auto-Quant CrashRebound replay plus Board A source-date root lookup and Board B RC-SPA diagnostic"
+  }
+}

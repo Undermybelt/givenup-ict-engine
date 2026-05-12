@@ -1,0 +1,325 @@
+{
+  "accepted_95_contexts": 0,
+  "aggregate_target_rows": 6,
+  "contexts": [
+    {
+      "candidate_actionable": false,
+      "candidate_status": "no_trade",
+      "end": "2026-05-11T23:00:00Z",
+      "execution_gate_status": null,
+      "history_calibrated_rows": 0,
+      "history_mature_rows": 2,
+      "pre_bayes_confidence": null,
+      "pre_bayes_gate": "pass_neutralized",
+      "provider": "yfinance",
+      "rows_1d": 31,
+      "rows_1h": 720,
+      "rows_4h": 181,
+      "start": "2026-04-11T23:00:00Z",
+      "symbol": "BOARD_A_191612_YFINANCE_TAIL",
+      "target_history_rows": 3
+    },
+    {
+      "candidate_actionable": false,
+      "candidate_status": "no_trade",
+      "end": "2026-05-12T00:00:00Z",
+      "execution_gate_status": null,
+      "history_calibrated_rows": 0,
+      "history_mature_rows": 2,
+      "pre_bayes_confidence": null,
+      "pre_bayes_gate": "pass_neutralized",
+      "provider": "kraken",
+      "rows_1d": 31,
+      "rows_1h": 720,
+      "rows_4h": 181,
+      "start": "2026-04-12T01:00:00Z",
+      "symbol": "BOARD_A_191612_KRAKEN_TAIL",
+      "target_history_rows": 3
+    }
+  ],
+  "contexts_total": 2,
+  "execution_ready_contexts": 0,
+  "generated_at": "2026-05-12T11:21:07.774104+00:00",
+  "promotion_allowed": false,
+  "source_packet": "172142_feasible_window_same_root_aq_packet",
+  "steps": [
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BOARD_A_191612_YFINANCE_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--library",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "01_yfinance_tail_auto_quant_results_import",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BOARD_A_191612_YFINANCE_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--library",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "01_yfinance_tail_auto_quant_prior_init",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-ingest-real-trades",
+        "--symbol",
+        "BOARD_A_191612_YFINANCE_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--trades",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_real_trades_v1.jsonl",
+        "--source",
+        "board_a_191612_yfinance_tail"
+      ],
+      "exit": 0,
+      "name": "01_yfinance_tail_auto_quant_ingest_real_trades",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BOARD_A_191612_YFINANCE_TAIL",
+        "--data-htf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/data/yfinance/tail/htf_1d.json",
+        "--data-mtf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/data/yfinance/tail/mtf_4h.json",
+        "--data-ltf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/data/yfinance/tail/ltf_1h.json",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "01_yfinance_tail_analyze",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BOARD_A_191612_YFINANCE_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "01_yfinance_tail_pre_bayes_status",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_191612_YFINANCE_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state"
+      ],
+      "exit": 0,
+      "name": "01_yfinance_tail_export_structural_path_target",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_191612_YFINANCE_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "01_yfinance_tail_workflow_execution_candidate",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BOARD_A_191612_KRAKEN_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--library",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "02_kraken_tail_auto_quant_results_import",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BOARD_A_191612_KRAKEN_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--library",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "02_kraken_tail_auto_quant_prior_init",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-ingest-real-trades",
+        "--symbol",
+        "BOARD_A_191612_KRAKEN_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--trades",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_real_trades_v1.jsonl",
+        "--source",
+        "board_a_191612_kraken_tail"
+      ],
+      "exit": 0,
+      "name": "02_kraken_tail_auto_quant_ingest_real_trades",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BOARD_A_191612_KRAKEN_TAIL",
+        "--data-htf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/data/kraken/tail/htf_1d.json",
+        "--data-mtf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/data/kraken/tail/mtf_4h.json",
+        "--data-ltf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/data/kraken/tail/ltf_1h.json",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "02_kraken_tail_analyze",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BOARD_A_191612_KRAKEN_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "02_kraken_tail_pre_bayes_status",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_191612_KRAKEN_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state"
+      ],
+      "exit": 0,
+      "name": "02_kraken_tail_export_structural_path_target",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_191612_KRAKEN_TAIL",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "02_kraken_tail_workflow_execution_candidate",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/.local/bin/uv",
+        "run",
+        "--offline",
+        "--with",
+        "pandas",
+        "--with",
+        "numpy",
+        "--with",
+        "catboost",
+        "python",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+        "--target-csv",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/cross-axis-two-context-downstream-v1/aggregate_structural_path_ranking_target_history.csv",
+        "--output-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/cross-axis-two-context-downstream-v1/catboost_aggregate_v1",
+        "--model-family",
+        "catboost"
+      ],
+      "exit": 0,
+      "name": "20_train_catboost_aggregate",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/.local/bin/uv",
+        "run",
+        "--offline",
+        "--with",
+        "pandas",
+        "--with",
+        "numpy",
+        "--with",
+        "catboost",
+        "python",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+        "--apply",
+        "--model-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/cross-axis-two-context-downstream-v1/catboost_aggregate_v1",
+        "--target-csv",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/cross-axis-two-context-downstream-v1/aggregate_structural_path_ranking_target_history.csv",
+        "--output-scores",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191612+0800-codex-cross-axis-two-context-downstream-v1/cross-axis-two-context-downstream-v1/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "21_apply_catboost_aggregate",
+      "timed_out": false
+    }
+  ],
+  "steps_all_zero": true,
+  "steps_exit_zero": 16,
+  "steps_total": 16,
+  "trade_usable": false,
+  "update_goal": false
+}

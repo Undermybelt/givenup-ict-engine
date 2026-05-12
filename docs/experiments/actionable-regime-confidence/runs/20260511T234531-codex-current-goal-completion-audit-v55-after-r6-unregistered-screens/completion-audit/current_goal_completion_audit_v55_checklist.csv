@@ -1,0 +1,7 @@
+requirement,evidence,status,gap
+Board A markdown is authoritative and must not be overwritten,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,append_only_update_required_after_audit,board still needs V55 registration writeback
+Every active regime has 95 percent confidence,regime_factor_consumer_map_v1 plus V54/V55 R6 readback,blocked_strict_full_objective,R6 direct positive confidence remains below 0.95 under pooled Wilson95
+Verify on other markets and timeframes,V54 plus current provider/downstream command outputs,blocked_strict_full_objective,R3 native subhour and R5 source-panel recency remain blocked; candidate screens add no cross-axis closure
+"Use IBKR, TradingViewRemix, yfinance, and Kraken paths",provider_status_agent.stdout.txt,readback_captured,provider readiness does not provide accepted direct order-lifecycle positives
+Run Auto-Quant and ict-engine downstream surfaces,"auto_quant_status, analyze_live, pre_bayes_status, policy_training_status, workflow_status, export_structural_path_ranking_target outputs",readback_captured,readbacks do not close Board A confidence/support gates
+Do not disturb multi-agent construction,shared_intake_mutated=false; live /tmp intake checked before append,preserved,"shared /tmp intake absent, so no candidate rows accepted"

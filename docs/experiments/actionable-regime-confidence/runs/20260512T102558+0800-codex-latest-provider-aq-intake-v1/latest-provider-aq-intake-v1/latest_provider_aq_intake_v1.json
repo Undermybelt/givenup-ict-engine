@@ -1,0 +1,120 @@
+{
+  "run_id": "20260512T102558+0800-codex-latest-provider-aq-intake-v1",
+  "mode": "append_only_non_promoting_intake",
+  "board_hash_before_packet_creation": "1bdd072ff8c1a940734fbe240b277275f2f8b0fd65722484bf9d75ea1a7d9e50",
+  "board_hash_after_concurrent_readback": "74d3a78e9f6fc8cff582318cdc921f87ff4304c82548c0fcde1dc955b6188e4b",
+  "board_hash_before_final_writeback": "00e6e37e3900e4cfcd39eb7831be4943a82eaf6b14d07bca612a2d70f8ed3b50",
+  "board_hash_after_102315_dedicated_writeback": "2c0f51eba689303bd1c392d8c07c457d50a52c14a614828b8cd2ead441750119",
+  "board_hash_after_102727_102828_writebacks": "6265fc99d4a8ad42f5f4244660a454df05581a3e242b50c6c55bce2fa4f881ee",
+  "cursor_edited": false,
+  "selected_history_approved": false,
+  "source_control_evidence_acquired": false,
+  "canonical_intake_mutated": false,
+  "selected_data_promotion_run": false,
+  "downstream_promotion_run": false,
+  "trade_claim": false,
+  "roots": [
+    {
+      "root_id": "101700",
+      "run_id": "20260512T101700+0800-codex-recent-unregistered-artifact-intake-v1",
+      "status": "empty_root_not_counted",
+      "promotion_allowed": false
+    },
+    {
+      "root_id": "101709",
+      "run_id": "20260512T101709+0800-codex-board-b-provider-owned-aq-pair-timerange-repair-v1",
+      "status": "concurrent_board_registered_do_not_count_here",
+      "command_exit": 0,
+      "pair": "NQ/USD",
+      "strategy": "TomacNQ_KillzoneBreakout",
+      "trade_count": 0,
+      "gate": "provider_owned_aq_pair_timerange_repair_v1=completed_zero_trades_no_promotion",
+      "promotion_allowed": false
+    },
+    {
+      "root_id": "101944",
+      "run_id": "20260512T101944+0800-codex-board-b-provider-yf-alias-ms-repair-v1",
+      "status": "concurrent_board_registered_do_not_count_here",
+      "copy_exit": 0,
+      "probe_exit": 0,
+      "run_exit": 0,
+      "feather_rows": {
+        "1h": 11086,
+        "4h": 3006,
+        "1d": 596
+      },
+      "strategies_succeeded": 3,
+      "strategies_failed": 0,
+      "trade_count": 0,
+      "promotion_allowed": false
+    },
+    {
+      "root_id": "102018",
+      "run_id": "20260512T102018+0800-codex-board-a-aq-provider-authority-readback-v1",
+      "status": "concurrent_board_registered_do_not_count_here",
+      "provider_status_exit": 0,
+      "factor_research_handoff_exit": 0,
+      "auto_quant_prepare_retry_exit": 0,
+      "auto_quant_status_after_retry": "dependency_ready_data_ready",
+      "provider_matrix": {
+        "yfinance": "NQ=F_1h_642_rows",
+        "IBKR": "QQQ_1d_21_rows_via_uv_low_pollution",
+        "TradingViewRemix": "provider_unreachable_get_ohlcv_failed",
+        "Kraken": "XBTUSD_1h_721_rows",
+        "Binance": "BTCUSDT_1h_985_rows",
+        "Bybit": "BTCUSDT_linear_1h_985_rows"
+      },
+      "promotion_allowed": false
+    },
+    {
+      "root_id": "102315",
+      "run_id": "20260512T102315+0800-codex-board-b-provider-yahoo-nq-long-aq-preseed-v1",
+      "status": "superseded_by_dedicated_board_section_do_not_count_here",
+      "fetch_exit": 0,
+      "rows": 11381,
+      "first_timestamp": "2024-05-13 00:00:00+00:00",
+      "last_timestamp": "2026-05-11 23:00:00+00:00",
+      "promotion_allowed": false
+    },
+    {
+      "root_id": "102332",
+      "run_id": "20260512T102332+0800-codex-board-b-provider-yf-nq-trendpulse-aq-v1",
+      "status": "count_once_settled_by_102727_exit_zero_zero_trade",
+      "exit_file_present_at_initial_readback": false,
+      "settled_readback_root": "20260512T102727+0800-codex-102315-102332-102352-aq-zero-trade-intake-v1",
+      "settled_run_exit": 0,
+      "settled_probe_exit": 0,
+      "stdout_done_line": "Done: 1 succeeded, 0 failed.",
+      "pair": "NQ/USD",
+      "strategy": "ProviderNqTrendPulse",
+      "trade_count": 0,
+      "promotion_allowed": false
+    },
+    {
+      "root_id": "102352",
+      "run_id": "20260512T102352+0800-codex-board-b-provider-btc-signal-canary-v1",
+      "status": "count_once_settled_by_102727_exit_zero_zero_trade",
+      "exit_file_present_at_initial_readback": false,
+      "settled_readback_root": "20260512T102727+0800-codex-102315-102332-102352-aq-zero-trade-intake-v1",
+      "settled_run_exit": 0,
+      "stdout_done_line": "Done: 1 succeeded, 0 failed.",
+      "pair": "BTC/USDT",
+      "strategy": "ProviderBtcSignalCanary",
+      "trade_count": 0,
+      "promotion_allowed": false
+    }
+  ],
+  "accepted_rows_added": 0,
+  "every_regime_95_99_objective": false,
+  "cross_context_full_validation": false,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "gate": [
+    "latest_provider_aq_intake_v1=102332_102352_count_once_settled_by_102727_no_promotion",
+    "duplicate_guard:101709_101944_102018_102315_already_board_registered",
+    "fail_closed:no_selected_history_approval",
+    "fail_closed:no_source_control_unlock",
+    "fail_closed:no_mature_rooted_branch_observations",
+    "fail_closed:no_downstream_promotion_chain"
+  ]
+}

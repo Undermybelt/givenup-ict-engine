@@ -1,0 +1,19 @@
+{
+  "branch_paths_passed": 0,
+  "direct_manipulation_ready": false,
+  "downstream_consumption": "not_started:blocked_by_combined_branch_rc_spa_hard_gates",
+  "gate_result": "fail:required_root_or_manipulation_branch_hard_gates_failed",
+  "manipulation_control_rows": 7149,
+  "manipulation_fold_positive_rate_vs_control": 0.4166666666666667,
+  "manipulation_monthly_folds": 12,
+  "manipulation_positive_minus_control_6h_return": -0.000871560164806551,
+  "manipulation_positive_minus_control_bootstrap_lcb_5pct_6h": -0.0016296320903618892,
+  "manipulation_positive_rows": 13535,
+  "next_action": "B2R-repeat: do not promote; direct Manipulation underperforms controls and RootTransitionTriad still has failed root branches. Source stronger direct PnL rows or switch to a different root-aware family/panel.",
+  "primary_blocker": "root=fail:required_root_branch_hard_gates_failed (Bull=fail:reject_overfit_risk; Bear=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_tail_risk|reject_rc_spa_below_60; Sideways=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Crisis=fail:reject_thin_trades|reject_fold_trade_depth|reject_no_positive_edge|reject_cost_fragile|reject_rc_spa_below_60; Manipulation(scoped)=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60); manipulation=fail:direct_manipulation_intraday_pnl_bridge_not_accepted (reject_positive_underperforms_control;reject_bootstrap_diff_lcb_nonpositive;reject_fold_positive_rate_lt60pct)",
+  "required_branch_paths": 5,
+  "root_branch_paths_passed": 0,
+  "root_selected_trade_rows": 11633,
+  "root_variant_trade_rows": 61896,
+  "stable_profit_score": 76.25
+}

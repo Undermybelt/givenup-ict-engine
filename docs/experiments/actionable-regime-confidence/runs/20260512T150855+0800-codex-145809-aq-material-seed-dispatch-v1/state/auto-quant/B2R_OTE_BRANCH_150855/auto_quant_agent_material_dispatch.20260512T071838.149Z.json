@@ -1,0 +1,121 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:B2R_OTE_BRANCH_150855:20260512T071838.149Z",
+  "generated_at": "2026-05-12T07:18:38.149711Z",
+  "symbol": "B2R_OTE_BRANCH_150855",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:B2R_OTE_BRANCH_150855:20260512T071508.178Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "OTE_trend_retracement_long_-_Binance_BTCUSDT_1h",
+          "title": "OTE trend retracement long - Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "OTE_trend_retracement_long_-_IBKR_SPY_1h",
+          "title": "OTE trend retracement long - IBKR SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.2471,
+            "sortino": 0.6153,
+            "calmar": 2.7994,
+            "total_profit_pct": 5.96,
+            "max_drawdown_pct": -3.7193,
+            "trade_count": 162,
+            "win_rate_pct": 34.5679,
+            "profit_factor": 1.2609
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "OTE_trend_retracement_long_-_Yahoo_ES_1h",
+          "title": "OTE trend retracement long - Yahoo ES 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Yahoo_ES_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Yahoo_ES_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Yahoo_ES_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -0.0873,
+            "sortino": -0.1433,
+            "calmar": -0.6127,
+            "total_profit_pct": -0.84,
+            "max_drawdown_pct": -4.4802,
+            "trade_count": 103,
+            "win_rate_pct": 30.0971,
+            "profit_factor": 0.927
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_results": [
+        {
+          "job_id": "OTE_trend_retracement_long_-_Kraken_XBTUSD_1h",
+          "title": "OTE trend retracement long - Kraken XBTUSD 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 15:18:30,245 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_results": [
+        {
+          "job_id": "OTE_trend_retracement_long_-_Bybit_BTCUSDT_1h",
+          "title": "OTE trend retracement long - Bybit BTCUSDT 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 15:18:37,107 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 5,
+    "completed_jobs": 3,
+    "blocked_jobs": 0,
+    "failed_jobs": 2
+  }
+}

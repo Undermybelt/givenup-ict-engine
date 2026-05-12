@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351 --output-format json 

@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "716a8a45ef1aa8ec",
+  "dry_run": false,
+  "feedback_records_inserted": 146,
+  "force": true,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610_20260512T025014.977536000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": "auto_quant_real_trades_B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610_20260512T025014.868585000Z",
+  "source": "auto_quant_real_trades",
+  "symbol": "B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610",
+  "trades_applied": 146,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T105014+0800-codex-104610-btc-pullback-downstream-readback-v1/derived/provider_crypto_pullback_btc_only_104610_trades.jsonl",
+  "trades_total": 146
+}

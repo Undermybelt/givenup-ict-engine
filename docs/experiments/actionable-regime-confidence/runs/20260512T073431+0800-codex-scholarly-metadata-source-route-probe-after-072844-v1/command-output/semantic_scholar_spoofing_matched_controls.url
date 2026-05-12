@@ -1,0 +1,1 @@
+https://api.semanticscholar.org/graph/v1/paper/search?query=%22spoofing%22+%22matched+controls%22+%22futures%22&limit=10&fields=title,year,venue,url,externalIds

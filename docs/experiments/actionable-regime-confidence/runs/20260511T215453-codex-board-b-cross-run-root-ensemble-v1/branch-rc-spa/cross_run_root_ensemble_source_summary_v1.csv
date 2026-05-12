@@ -1,0 +1,7 @@
+source_candidate_recipe_id,source_candidate_artifact,rows_loaded,status
+CryptoLiquidityRootFamilyV2,docs/experiments/actionable-regime-confidence/runs/20260511T210508-codex-board-b-crypto-liquidity-root-family-v2/branch-rc-spa/crypto_liquidity_root_family_variant_rows_v2.csv,33059,loaded
+YFinanceDefensiveCrossAssetV1Repaired,docs/experiments/actionable-regime-confidence/runs/20260511T212211-codex-board-b-yfinance-defensive-crossasset-v1-repaired/branch-rc-spa/yfinance_defensive_crossasset_variant_rows_v1.csv,8763,loaded
+ProviderRawDailyConsensusV1,docs/experiments/actionable-regime-confidence/runs/20260511T212329-codex-board-b-provider-raw-daily-consensus-v1/branch-rc-spa/provider_raw_daily_consensus_variant_rows_v1.csv,843,loaded
+SessionLiquidityIntradayV1,docs/experiments/actionable-regime-confidence/runs/20260511T213155-codex-board-b-session-liquidity-intraday-v1/branch-rc-spa/session_liquidity_intraday_variant_rows_v1.csv,19959,loaded
+VolStressTermStructureBreadthV1,docs/experiments/actionable-regime-confidence/runs/20260511T213339-codex-board-b-vol-stress-term-structure-breadth-v1/branch-rc-spa/vol_stress_breadth_variant_rows_v1.csv,7955,loaded
+IntradayRiskDefensiveRotationV1,docs/experiments/actionable-regime-confidence/runs/20260511T214454-codex-board-b-intraday-risk-defensive-rotation-v1/branch-rc-spa/intraday_rotation_variant_rows_v1.csv,41880,loaded

@@ -1,0 +1,9 @@
+requirement,status,evidence,gap
+Current cursor is V71 official route date-fit.,pass,20260512T004410+0800-codex-r6-official-route-date-fit-check-v1,
+R6 source-owned normal controls are acquired.,blocked,public=0; external=0; owner_presence=0; official_controls_not_acquired=PASS,No verifier-ready source-owned normal controls and no FLIP-control approval.
+Owner-market-data access can fetch usable controls locally.,blocked,source_owned_controls=0; cells_with_valid_controls=0,Local Databento/CME/Cboe access did not acquire verifier-ready rows.
+Owner export root is verifier-native and complete.,blocked,"{""exists"": false, ""path"": ""/tmp/ict-engine-board-a-r6-owner-export-v1"", ""required_files_present"": {""control_policy_approval.json"": false, ""matched_negative_normal_activity_rows.csv"": false, ""owner_approval_reference.md"": false, ""positive_spoofing_layering_rows.csv"": false, ""provenance_manifest.json"": false, ""source_policy_approval.json"": false}}",Owner-export root files and approval artifacts are absent.
+Non-R6 source roots are ready.,blocked,ready_roots=0/3; required_files_present=0/6,"Source-label equivalence, R5 recency, and R3 native-subhour roots remain absent/incomplete."
+Board artifact references are all present.,pass,broken_or_empty_recent_refs=0,
+Downstream provider/Auto-Quant/BBN/CatBoost/execution-tree rerun is justified.,deferred_blocked,canonical_merge_allowed=False; downstream_allowed=False,No accepted source/control input exists for a non-proxy downstream rerun.
+Do not claim strict objective completion.,pass,strict_full_objective_achieved=false; update_goal=false,

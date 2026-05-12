@@ -1,0 +1,141 @@
+{
+  "panel": [
+    {
+      "end": "2025-12-31T21:00:00+00:00",
+      "file": "NQ_USD-1h.feather",
+      "pair": "NQ/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+      "rows": 29519,
+      "sha256": "c1ee858e0efc87df74ede887d13dfb28fb3ed044b04c3b0020ae5b5d05d57c36",
+      "source": "^IXIC",
+      "start": "2021-01-03T23:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_futures"
+    },
+    {
+      "end": "2025-12-30T20:00:00+00:00",
+      "file": "QQQ_USD-1h.feather",
+      "pair": "QQQ/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-1h.feather",
+      "rows": 2754,
+      "sha256": "bfcdf2c3d972c1385e9f53e4568790552ad145fb79f08213f9e69250974149ee",
+      "source": "^IXIC",
+      "start": "2024-06-03T13:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-30T20:00:00+00:00",
+      "file": "SPY_USD-1h.feather",
+      "pair": "SPY/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-1h.feather",
+      "rows": 1286,
+      "sha256": "e06c3ad429461378616880ab67ff8cb37a60e6d853f48379b22fff140b8b0e19",
+      "source": "^GSPC",
+      "start": "2025-05-07T13:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-30T20:00:00+00:00",
+      "file": "IWM_USD-1h.feather",
+      "pair": "IWM/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-1h.feather",
+      "rows": 1286,
+      "sha256": "98e581e49e9e5201bc8f254ed01e7fb304df63cb2d0aad661e2a4e5d9144408f",
+      "source": "^RUT",
+      "start": "2025-05-07T13:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-30T20:00:00+00:00",
+      "file": "DIA_USD-1h.feather",
+      "pair": "DIA/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/DIA_USD-1h.feather",
+      "rows": 1286,
+      "sha256": "07ea6e9ce7e20c91362ecdc796fee76dd06c96e03cd7383688f5fc60fac9318e",
+      "source": "^GSPC",
+      "start": "2025-05-07T13:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-30T20:00:00+00:00",
+      "file": "GLD_USD-1h.feather",
+      "pair": "GLD/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-1h.feather",
+      "rows": 1284,
+      "sha256": "169d04d26c20609549c52a780c3b97e984a5779ab543e17b5d90e8194218e216",
+      "source": "^GSPC",
+      "start": "2025-05-07T13:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-29T21:00:00+00:00",
+      "file": "BTC_USDT-1h.feather",
+      "pair": "BTC/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1h.feather",
+      "rows": 44504,
+      "sha256": "5ba0e0b5d0760508a7f865d073b5fc3d9b6486b15d72d389d5087867b997c5ef",
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_crypto"
+    },
+    {
+      "end": "2026-01-29T21:00:00+00:00",
+      "file": "ETH_USDT-1h.feather",
+      "pair": "ETH/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1h.feather",
+      "rows": 44504,
+      "sha256": "cd0fe2167568cf06e2f10af0a860598fe0d17ac0b3704e69a38d7eb2339df55b",
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_crypto"
+    },
+    {
+      "end": "2026-01-29T21:00:00+00:00",
+      "file": "SOL_USDT-1h.feather",
+      "pair": "SOL/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SOL_USDT-1h.feather",
+      "rows": 44504,
+      "sha256": "7cdfe8e2c53706ff347627a01d344119570df62fbd62e13bee39c7fc11310c41",
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_crypto"
+    },
+    {
+      "end": "2026-01-29T21:00:00+00:00",
+      "file": "BNB_USDT-1h.feather",
+      "pair": "BNB/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BNB_USDT-1h.feather",
+      "rows": 44504,
+      "sha256": "271aa4440210b810cda0c90116fe072a924bb9e1ca2d89e6e3730b87540090aa",
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_crypto"
+    },
+    {
+      "end": "2026-01-29T20:00:00+00:00",
+      "file": "AVAX_USDT-1h.feather",
+      "pair": "AVAX/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/AVAX_USDT-1h.feather",
+      "rows": 44503,
+      "sha256": "0deb4a763fdce210341e3a64a36f6093a3f6e9caad1d12e9f34d5478800205c7",
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded",
+      "venue": "local_auto_quant_crypto"
+    }
+  ],
+  "source_roots": [
+    "^GSPC",
+    "^IXIC",
+    "^RUT"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "run_id": "20260512T071538+0800-codex-kaggle-r5-r3-source-route-probe-after-071316-v1",
+  "gate_result": "kaggle_r5_r3_source_route_probe_after_071316_v1=candidates_found_nifty500_profiled_no_mainregimev2_no_unlock",
+  "materialized_missing_referenced_artifacts_after_board_registration": true,
+  "scope": {
+    "readback_only": true,
+    "mutated_required_roots": false,
+    "direct_verifier_run": false,
+    "split_calibration_run": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "trade_claim": false,
+    "update_goal": false
+  },
+  "kaggle_searches": {
+    "mainregimev2_exit": 0,
+    "mainregimev2_dataset_rows": 0,
+    "market_regime_crisis_exit": 0,
+    "stock_market_regimes_exit": 0,
+    "stock_market_regimes_2000_2026_exit": 0,
+    "stock_market_regimes_2000_2026_files_exit": 0,
+    "nifty500_behavior_download_exit": 0
+  },
+  "historical_stock_regime_candidate": {
+    "ref": "mafaqbhatti/stock-market-regimes-20002026",
+    "rows": 245021,
+    "min_date": "2000-01-03",
+    "max_date": "2026-01-30",
+    "rows_after_2026_01_30": 0,
+    "has_regime_label": true,
+    "has_main_regime_v2": false,
+    "label_counts": {
+      "Bull": 103766,
+      "Bear": 54939,
+      "Sideways": 56668,
+      "Crisis": 29632,
+      "High-volatility": 16
+    },
+    "valid_r5_unlock": false,
+    "valid_r3_unlock": false
+  },
+  "nifty500_behavior_candidate": {
+    "ref": "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+    "download_exit": 0,
+    "post_2026_01_30_rows_seen": true,
+    "latest_date_seen": "2026-03-20",
+    "label_family": "behavior_or_macro_state",
+    "labels_include_main_regime_v2": false,
+    "labels_include_crisis": false,
+    "valid_r5_unlock": false,
+    "valid_r3_unlock": false,
+    "notes": "Current rows exist, but labels are Mean-Reverting/Noisy/Trending/Durable/Fragile/Calm/Choppy/Stress rather than source-panel MainRegimeV2."
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "r6_owner_export_unlock": false,
+    "r5_recency_unlock": false,
+    "r3_native_subhour_unlock": false,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "artifacts": {
+    "report": "docs/experiments/actionable-regime-confidence/runs/20260512T071538+0800-codex-kaggle-r5-r3-source-route-probe-after-071316-v1/kaggle-r5-r3-source-route-probe-after-071316-v1/kaggle_r5_r3_source_route_probe_after_071316_v1.md",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260512T071538+0800-codex-kaggle-r5-r3-source-route-probe-after-071316-v1/kaggle-r5-r3-source-route-probe-after-071316-v1/kaggle_r5_r3_source_route_probe_after_071316_v1.json",
+    "stock_regime_profile": "docs/experiments/actionable-regime-confidence/runs/20260512T071538+0800-codex-kaggle-r5-r3-source-route-probe-after-071316-v1/kaggle-r5-r3-source-route-probe-after-071316-v1/kaggle_stock_market_regimes_2000_2026_profile_v1.json",
+    "stock_regime_label_counts": "docs/experiments/actionable-regime-confidence/runs/20260512T071538+0800-codex-kaggle-r5-r3-source-route-probe-after-071316-v1/kaggle-r5-r3-source-route-probe-after-071316-v1/kaggle_stock_market_regimes_2000_2026_label_counts_v1.csv",
+    "nifty500_behavior_profile": "docs/experiments/actionable-regime-confidence/runs/20260512T071538+0800-codex-kaggle-r5-r3-source-route-probe-after-071316-v1/command-output/kaggle_nifty500_behavior_profile.json",
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T071538+0800-codex-kaggle-r5-r3-source-route-probe-after-071316-v1/checks/kaggle_r5_r3_source_route_probe_after_071316_v1_assertions.out"
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "bbn_roots_applied": [
+    "Bull",
+    "Sideways",
+    "Crisis"
+  ],
+  "bbn_roots_skipped_no_supported_label": [
+    "Bear"
+  ],
+  "branch_paths": [
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12"
+  ],
+  "branch_paths_preserved": true,
+  "branch_rc_spa_gate_result": "pass",
+  "catboost_available": false,
+  "catboost_model_family": "catboost_unavailable_fallback",
+  "catboost_policy_runtime_ready_observed": false,
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/provider_status_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1 --refresh --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/pre_bayes_status_refresh_json.exit",
+      "name": "pre_bayes_status_refresh_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/pre_bayes_status_refresh_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/pre_bayes_status_refresh_json.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/policy_training_status_json.exit",
+      "name": "policy_training_status_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/policy_training_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/policy_training_status_json.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol NQ --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/export_structural_path_ranking_target.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/workflow_status_execution_candidate_agent.exit",
+      "name": "workflow_status_execution_candidate_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/workflow_status_execution_candidate_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/workflow_status_execution_candidate_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1 --library /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/autoquant_strategy_library_source_root_stop_carry_longhorizon_v1.json --dry-run --force",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/auto_quant_prior_init_dry_run.exit",
+      "name": "auto_quant_prior_init_dry_run",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/auto_quant_prior_init_dry_run.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222350-codex-board-b-220646-downstream-readback-v2/command-output/auto_quant_prior_init_dry_run.out"
+    }
+  ],
+  "downstream_consumption": "blocked:downstream_branch_path_or_bbn_mapping_gap",
+  "generated_at_utc": "2026-05-11T14:25:59.746373+00:00",
+  "manipulation_component_pass": true,
+  "next_action": "Fix the downstream adapter boundary: Bear root BBN soft evidence is unsupported, and structural path-ranker/execution-tree targets still expose generic structural paths instead of exact Board B rooted branch paths; then rerun B5 for 220646.",
+  "price_root_paths_passed": 4,
+  "primary_blocker": "bbn_soft_evidence_unsupported_roots=Bear;ict_engine_structural_path_ranker_target_has_no_exact_board_b_branch_path_rows",
+  "promotion_status": "not_promoted:downstream_branch_path_or_bbn_mapping_gap",
+  "provider_readback": {
+    "ibkr": [
+      {
+        "access_mode": "operator_runtime_required",
+        "adopted_by_default": false,
+        "domain": "market_data",
+        "fallback_priority": 30,
+        "install_prompts": [
+          "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+          "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+        ],
+        "market_fit": [
+          "tradfi"
+        ],
+        "provider_id": "ibkr",
+        "ready": false,
+        "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+        "selectable_by_user": true,
+        "status": "configured_runtime_unhealthy",
+        "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows.",
+        "user_access": "login_and_local_runtime"
+      }
+    ],
+    "ibkr_bridge": [
+      {
+        "access_mode": "local_consent_runtime",
+        "adopted_by_default": false,
+        "domain": "local_runtime",
+        "fallback_priority": 40,
+        "install_prompts": [
+          "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+          "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise."
+        ],
+        "market_fit": [
+          "tradfi"
+        ],
+        "provider_id": "ibkr_bridge",
+        "ready": false,
+        "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+        "selectable_by_user": false,
+        "status": "configured_runtime_unhealthy",
+        "summary": "Local IBKR bridge reused by broker-linked workflows after the user enables the local API.",
+        "user_access": "login_and_local_runtime"
+      }
+    ],
+    "kraken_cli": [
+      {
+        "access_mode": "local_cli_runtime",
+        "adopted_by_default": false,
+        "domain": "local_runtime",
+        "fallback_priority": 40,
+        "market_fit": [
+          "crypto"
+        ],
+        "provider_id": "kraken_cli",
+        "ready": true,
+        "reason": "kraken_cli_config_detected",
+        "selectable_by_user": false,
+        "status": "ready",
+        "summary": "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows.",
+        "user_access": "login_and_local_runtime"
+      }
+    ],
+    "kraken_public": [
+      {
+        "access_mode": "public_script_adapter",
+        "adopted_by_default": false,
+        "domain": "market_data",
+        "fallback_priority": 3,
+        "install_prompts": [
+          "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+        ],
+        "market_fit": [
+          "crypto",
+          "fx",
+          "tokenized_assets"
+        ],
+        "provider_id": "kraken_public",
+        "ready": false,
+        "reason": "python3_provider_dependencies_missing",
+        "selectable_by_user": true,
+        "status": "configured_runtime_unhealthy",
+        "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately.",
+        "user_access": "public_no_login"
+      }
+    ],
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "tradingview_mcp": [
+      {
+        "access_mode": "operator_runtime_required",
+        "adopted_by_default": false,
+        "domain": "market_data",
+        "fallback_priority": 31,
+        "install_prompts": [
+          "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+          "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+        ],
+        "market_fit": [
+          "tradfi",
+          "crypto"
+        ],
+        "provider_id": "tradingview_mcp",
+        "ready": false,
+        "reason": "tradingview_mcp_connectivity_probe_failed",
+        "selectable_by_user": true,
+        "status": "configured_runtime_unhealthy",
+        "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.",
+        "user_access": "local_stdio_or_remote_api_key"
+      }
+    ],
+    "yfinance": [
+      {
+        "access_mode": "local_library",
+        "adopted_by_default": true,
+        "domain": "live_runtime",
+        "fallback_priority": 1,
+        "market_fit": [
+          "tradfi"
+        ],
+        "provider_id": "yfinance",
+        "ready": true,
+        "reason": "native_yfinance_runtime_available",
+        "selectable_by_user": true,
+        "status": "ready",
+        "summary": "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows.",
+        "user_access": "free_no_login"
+      },
+      {
+        "access_mode": "public_or_env_ready",
+        "adopted_by_default": false,
+        "domain": "market_data",
+        "fallback_priority": 1,
+        "market_fit": [
+          "tradfi"
+        ],
+        "provider_id": "yfinance",
+        "ready": true,
+        "reason": "public_yahoo_http_endpoints",
+        "selectable_by_user": true,
+        "status": "ready",
+        "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests.",
+        "user_access": "free_no_login"
+      }
+    ]
+  },
+  "raw_data_committed": false,
+  "root_probe_rows": [
+    {
+      "bbn_evidence_applied": "True",
+      "bbn_evidence_skipped_no_supported_label": "False",
+      "branch_path": "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+      "bundle": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/bull_regime_consumer_bundle_v1.json",
+      "exit": "0",
+      "root": "Bull"
+    },
+    {
+      "bbn_evidence_applied": "False",
+      "bbn_evidence_skipped_no_supported_label": "True",
+      "branch_path": "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+      "bundle": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/bear_regime_consumer_bundle_v1.json",
+      "exit": "0",
+      "root": "Bear"
+    },
+    {
+      "bbn_evidence_applied": "True",
+      "bbn_evidence_skipped_no_supported_label": "False",
+      "branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+      "bundle": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/sideways_regime_consumer_bundle_v1.json",
+      "exit": "0",
+      "root": "Sideways"
+    },
+    {
+      "bbn_evidence_applied": "True",
+      "bbn_evidence_skipped_no_supported_label": "False",
+      "branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "bundle": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/crisis_regime_consumer_bundle_v1.json",
+      "exit": "0",
+      "root": "Crisis"
+    }
+  ],
+  "run_id": "20260511T222350+0800-codex-board-b-220646-downstream-readback-v2",
+  "runtime_code_changed": false,
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "source_summary": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/source_root_stop_carry_longhorizon_downstream_v1.json",
+  "state_dir": "/tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1",
+  "structural_export_has_exact_board_b_rows": false,
+  "structural_target_exact_board_b_rows": 0,
+  "thresholds_relaxed": false,
+  "workflow_execution_blocked_observed": false
+}

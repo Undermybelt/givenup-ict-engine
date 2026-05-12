@@ -1,0 +1,1 @@
+uv --directory /Users/thrill3r/Auto-Quant run python /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T030913-codex-board-b-b2r-vol-carry-long-history-v1/scripts/board_b_b2r_vol_carry_long_history_v1.py 

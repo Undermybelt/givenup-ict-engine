@@ -1,0 +1,60 @@
+{
+  "accepted_rows_added": 0,
+  "approval_unlock": false,
+  "board_sha256": "be33877e959b2fa8463ab21ace69b1f8560e9ac7c286ddaf7ced974c75dbb13c",
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "required_root_arrival_poll_after_080054_v1=no_new_required_root_no_unlock",
+  "generated_at_utc": "2026-05-12T00:09:26.161534+00:00",
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "restored_note": "Run root restored after duplicate cleanup because a concurrent board section references this artifact.",
+  "run_id": "20260512T080446+0800-codex-required-root-arrival-poll-after-080054-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "targets": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "name": "r6_owner_export",
+      "reason": "absent",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "unlock": false
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "name": "r5_recency",
+      "reason": "absent",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "unlock": false
+    },
+    {
+      "crisis_present": false,
+      "exists": true,
+      "file_count": 2,
+      "labels": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "name": "r3_native_subhour",
+      "reason": "tsie_present_crisis_absent_non_promoting",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "unlock": false
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "name": "source_label_equivalence",
+      "reason": "equivalence_inventory_non_promoting",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "unlock": false
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

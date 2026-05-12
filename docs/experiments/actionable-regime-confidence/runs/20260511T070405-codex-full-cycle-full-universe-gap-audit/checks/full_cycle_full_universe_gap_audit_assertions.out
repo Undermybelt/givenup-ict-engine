@@ -1,0 +1,12 @@
+goal_achieved=false
+sampled_95_roots_preserved=Bull,Bear,Sideways,Crisis,Manipulation
+PASS checklist.named_board_contract
+PASS checklist.sampled_95_evidence_preserved
+FAIL checklist.full_cycle_all_observed_timeframes
+FAIL checklist.full_universe_all_observed_contexts
+FAIL checklist.manipulation_all_varieties
+BLOCKED full_matrix.Bull
+BLOCKED full_matrix.Bear
+BLOCKED full_matrix.Sideways
+BLOCKED full_matrix.Crisis
+BLOCKED manipulation.direct_varieties

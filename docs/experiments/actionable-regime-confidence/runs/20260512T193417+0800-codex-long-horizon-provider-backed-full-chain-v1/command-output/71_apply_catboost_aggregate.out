@@ -1,0 +1,11 @@
+[load] /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_structural_path_ranking_target_history.csv: 18 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 12 training samples
+[features] label dist: {np.int64(0): np.int64(4), np.int64(1): np.int64(8)}
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 18 training samples
+[features] label dist: {np.int64(0): np.int64(6), np.int64(1): np.int64(12)}
+[apply] CatBoost predictions: 18
+[apply] Scores saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_scores.csv

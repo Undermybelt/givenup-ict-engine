@@ -1,0 +1,130 @@
+{
+  "baseline_matched_negative_rows": 57,
+  "baseline_positive_rows": 57,
+  "baseline_reconstructed_from": [
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 2,
+      "positive_rows": 2,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T210150-codex-cftc-gandhi-source-row-uplift-v1/scripts/cftc_gandhi_source_row_uplift_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 6,
+      "positive_rows": 6,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T210744-codex-r6-mohan-additional-row-uplift-v1/scripts/r6_mohan_additional_row_uplift_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 17,
+      "positive_rows": 17,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T211201-codex-r6-mohan-shak-row-uplift-v1/scripts/r6_mohan_shak_row_uplift_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 25,
+      "positive_rows": 25,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T211606-codex-r6-shak-complaint-row-uplift-gate-v1/scripts/r6_shak_complaint_row_uplift_gate_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 30,
+      "positive_rows": 30,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T211628-codex-r6-shak-cftc-row-uplift-v1/scripts/r6_shak_cftc_row_uplift_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 33,
+      "positive_rows": 33,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T212137-codex-r6-geneva-cftc-row-uplift-v1/scripts/r6_geneva_cftc_row_uplift_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 40,
+      "positive_rows": 40,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T213113-codex-r6-zhao-skudder-cftc-row-uplift-v1/scripts/r6_zhao_skudder_cftc_row_uplift_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 50,
+      "positive_rows": 50,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T213312-codex-r6-flotron-cftc-row-uplift-v1/scripts/r6_flotron_cftc_row_uplift_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 54,
+      "positive_rows": 54,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T211208-codex-cftc-vorley-chanu-row-uplift-calibration-v1/scripts/cftc_vorley_chanu_row_uplift_calibration_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 61,
+      "positive_rows": 61,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T220410-codex-r6-vorley-franko-row-uplift-v1/scripts/r6_vorley_franko_row_uplift_v1.py"
+    },
+    {
+      "action": "add_positive_and_negative_constants",
+      "matched_negative_rows": 70,
+      "positive_rows": 70,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T220755-codex-r6-official-rowlevel-support-extension-v1/scripts/r6_official_rowlevel_support_extension_v1.py"
+    },
+    {
+      "action": "remove_shak_duplicate_ids",
+      "matched_negative_rows": 65,
+      "positive_rows": 65,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T212004-codex-r6-shak-duplicate-row-cleanup-v1/scripts/r6_shak_duplicate_row_cleanup_v1.py"
+    },
+    {
+      "action": "remove_211201_semantic_duplicates",
+      "matched_negative_rows": 54,
+      "positive_rows": 54,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T211201-codex-r6-mohan-shak-row-uplift-v1/scripts/r6_mohan_shak_row_uplift_v1.py"
+    },
+    {
+      "action": "remove_logista_serotta_prefix_duplicates",
+      "matched_negative_rows": 49,
+      "positive_rows": 49,
+      "step": "r6_logista_semantic_duplicate_cleanup_v1"
+    },
+    {
+      "action": "add_repaired_logista_rows",
+      "matched_negative_rows": 54,
+      "positive_rows": 54,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T220556-codex-r6-logista-cftc-row-repair-v1/scripts/r6_logista_cftc_row_repair_v1.py"
+    },
+    {
+      "action": "add_logista_franko_rows",
+      "matched_negative_rows": 57,
+      "positive_rows": 57,
+      "step": "docs/experiments/actionable-regime-confidence/runs/20260511T221034-codex-r6-logista-franko-row-uplift-v1/scripts/r6_logista_franko_row_uplift_v1.py"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T15:55:58.667210+00:00",
+  "jpm_cftc_rows_accepted_in_isolated_reconstruction": 4,
+  "jpm_source": {
+    "all_required_snippets_found": true,
+    "bytes": 127456,
+    "pdf_path": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/raw/enfjpmorganchaseorder092920.pdf",
+    "sha256": "2db112d846bbce7d9c55e0a7fa2b7e007c6fab30873352abd2ecce9af107d2cd",
+    "snippet_checks": {
+      "On June 22, 2016, at 2:14:33.935": true,
+      "On March 5, 2014, at 8:18:39.699": true,
+      "Trader 4 began entering a series of eight Layered Spoof Orders": true,
+      "Trader 5 entered a Spoof Order for 100 lots": true,
+      "Trader 6 had placed his tenth Layered Spoof Order": true,
+      "entering a series of five Layered Spoof Orders": true,
+      "on December 10, 2013, at 1:59:22.386": true,
+      "on December 12, 2011, at 11:59:36.669": true
+    },
+    "text_path": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/raw/enfjpmorganchaseorder092920.txt",
+    "url": "https://www.cftc.gov/media/4826/enfjpmorganchaseorder092920/download"
+  },
+  "matched_control_policy": "Candidate positives require same-source genuine-order controls for verifier parity. These controls remain same-event controls, not broad normal-market background.",
+  "nowak_smith_candidate_rows_accepted_in_isolated_reconstruction": 6,
+  "raw_data_committed": false,
+  "run_id": "20260511T234414-codex-r6-direct-intake-reconstruction-v55",
+  "runtime_code_changed": false,
+  "sarao_candidate_rows_accepted_in_isolated_reconstruction": 6,
+  "sidecar_broad_normal_controls_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T222000-codex-r6-broad-normal-order-lifecycle-screen-v1/r6-broad-normal-order-lifecycle-screen/broad_normal_market_order_lifecycle_controls_v1.csv",
+  "thresholds_relaxed": false
+}

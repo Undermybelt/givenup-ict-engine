@@ -1,0 +1,8 @@
+loop_id=20260511T040241+0800-codex-kaggle-bear-sideways-logodds-probe
+gate_result=blocked_kaggle_bear_sideways_logodds_below_95
+accepted_new_roots_95=none
+thresholds_relaxed=false
+runtime_code_changed=false
+raw_or_full_feature_table_committed=false
+Bear:state=blocked:cal_lcb=0.824304:test_lcb=0.775807:test_precision=0.802313:test_coverage=0.016061
+Sideways:state=blocked:cal_lcb=0.820398:test_lcb=0.770940:test_precision=0.789664:test_coverage=0.032680

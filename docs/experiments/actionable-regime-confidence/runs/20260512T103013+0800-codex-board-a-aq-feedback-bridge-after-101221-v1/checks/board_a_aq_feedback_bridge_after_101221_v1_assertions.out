@@ -1,0 +1,9 @@
+autoquant_run_exit_zero=PASS
+autoquant_backtests_succeeded_8=PASS
+ict_engine_import_n_ok_2=PASS
+bbn_prior_dry_run_evidence_value_gate_true=PASS
+mainregimev2_root_bound_false=PASS
+source_control_unlock_false=PASS
+canonical_merge_false=PASS
+promotion_allowed_false=PASS
+update_goal_false=PASS

@@ -1,0 +1,79 @@
+{
+  "accepted_rows_added": 0,
+  "additional_positive_rows_needed_after_sarao_nowak_smith": 4,
+  "additional_positive_rows_needed_after_sarao_nowak_smith_jpmorgan": 0,
+  "additional_positive_rows_needed_now": 16,
+  "base_count_source": {
+    "artifact": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223100-codex-current-goal-completion-audit-v54-after-sidecar-calibration/completion-audit/current_goal_completion_audit_v54_after_sidecar_calibration.json",
+    "matched_group_count": 56,
+    "matched_negative_rows": 57,
+    "positive_rows": 57,
+    "source": "v54_artifact_fallback_because_live_shared_intake_not_ready"
+  },
+  "base_positive_rows": 57,
+  "board_sha256_at_start": "7871c50ca903897c2c56941e3a1efe22bf77a0ca8abc90e53527938968240e12",
+  "current_positive_wilson95_lcb": 0.936858991217,
+  "direct_verifier": {
+    "payload": {
+      "missing_files": [
+        "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234746-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234746-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "external_requests_sent": true,
+  "gate_result": "r6_jpmorgan_positive_row_candidate_screen_v1=proposed_rows_only_pooled_whatif_pass_live_split_still_blocked",
+  "generated_at_utc": "2026-05-11T15:53:21.422531+00:00",
+  "jpmorgan_sidecar_positive_rows": 7,
+  "new_live_confidence_gate": false,
+  "new_pooled_positive_confidence_gate_if_all_sidecars_accepted": true,
+  "next_action": "Rebuild or recover the shared 57/57 intake under a fresh lock, then decide whether to accept Sarao, Nowak/Smith, and JPMorgan proposed rows plus matched controls before rerunning live direct calibration with sidecar broad-normal controls and split/species gates.",
+  "nowak_smith_sidecar_positive_rows": 6,
+  "proposed_controls_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234746-codex-r6-jpmorgan-positive-row-candidate-screen-v1/r6-jpmorgan-positive-row-candidate-screen/r6_jpmorgan_matched_control_candidates_v1.csv",
+  "proposed_matched_control_rows": 7,
+  "proposed_positive_rows": 7,
+  "proposed_rows_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234746-codex-r6-jpmorgan-positive-row-candidate-screen-v1/r6-jpmorgan-positive-row-candidate-screen/r6_jpmorgan_positive_row_candidates_v1.csv",
+  "raw_data_committed": false,
+  "raw_text_path": "/tmp/ict-engine-r6-jpmorgan-positive-row-candidate-screen-v1/raw/enfjpmorganchaseorder092920.txt",
+  "row_materializable_sources": [
+    "cftc_jpm_20131210_trader5_silver_buy_spoof",
+    "cftc_jpm_20140305_trader6_silver_buy_layered_spoof",
+    "cftc_jpm_20160622_trader4_platinum_buy_layered_spoof",
+    "cftc_jpm_20090720_trader7_tbond_buy_layered_spoof",
+    "cftc_jpm_20100204_trader8_10y_tnote_sell_spoof",
+    "cftc_jpm_20110927_trader9_10y_tnote_sell_spoof",
+    "cftc_jpm_20150630_trader10_ultra_tbond_sell_spoof"
+  ],
+  "run_id": "20260511T234746-codex-r6-jpmorgan-positive-row-candidate-screen-v1",
+  "runtime_code_changed": false,
+  "sarao_sidecar_positive_rows": 6,
+  "shared_intake_mutated": false,
+  "sidecar_broad_normal_control_rows": 80,
+  "sidecar_broad_normal_wilson95_lcb": 0.954180263735,
+  "source": {
+    "bytes": 127456,
+    "case_id": "jpmorgan_2020_order",
+    "content_type": "application/pdf",
+    "expected_use": "row-level positive and same-report genuine-order control candidates",
+    "http_status": 200,
+    "pdf_path": "/tmp/ict-engine-r6-jpmorgan-positive-row-candidate-screen-v1/raw/enfjpmorganchaseorder092920.pdf",
+    "sha256": "2db112d846bbce7d9c55e0a7fa2b7e007c6fab30873352abd2ecce9af107d2cd",
+    "url": "https://www.cftc.gov/media/4826/enfjpmorganchaseorder092920/download"
+  },
+  "source_screen_count": 8,
+  "source_screen_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234746-codex-r6-jpmorgan-positive-row-candidate-screen-v1/r6-jpmorgan-positive-row-candidate-screen/r6_jpmorgan_positive_row_source_screen_v1_cases.csv",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "what_if_min_wilson95_lcb_sarao_nowak_smith": 0.947260905856,
+  "what_if_min_wilson95_lcb_sarao_nowak_smith_jpmorgan": 0.951884731769,
+  "what_if_positive_rows_sarao_nowak_smith": 69,
+  "what_if_positive_rows_sarao_nowak_smith_jpmorgan": 76
+}

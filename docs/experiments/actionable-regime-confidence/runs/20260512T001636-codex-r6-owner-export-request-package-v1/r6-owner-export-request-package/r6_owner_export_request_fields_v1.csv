@@ -1,0 +1,21 @@
+file,field,required,notes
+direct_manipulation_positive_rows.csv,event_id,True,Stable unique positive event id.
+direct_manipulation_positive_rows.csv,species,True,"One of spoofing_layering, quote_spoofing, quote_stuffing, pinging, bear_raid, painting_tape, social_text_pump_dump if available."
+direct_manipulation_positive_rows.csv,market_family,True,"Equity index futures, metals, energy, agriculture, crypto, equities, FX, or venue-owned taxonomy."
+direct_manipulation_positive_rows.csv,symbol,True,Exact traded instrument or contract.
+direct_manipulation_positive_rows.csv,venue_or_market_center,True,Exact venue plus venue family if available.
+direct_manipulation_positive_rows.csv,event_start,True,Timestamp with timezone.
+direct_manipulation_positive_rows.csv,event_end,True,Timestamp with timezone.
+direct_manipulation_positive_rows.csv,positive_label,True,Source-owned manipulation label or owner-approved exception type.
+direct_manipulation_positive_rows.csv,matched_control_group_id,True,Joins to matched controls.
+direct_manipulation_positive_rows.csv,split_role,True,Predeclared train/calibration/test or export-native split id.
+direct_manipulation_positive_rows.csv,source_owner,True,"FINRA, exchange, venue surveillance, CAT-like owner, or approved data owner."
+direct_manipulation_positive_rows.csv,source_dataset,True,Export/report identifier.
+direct_manipulation_positive_rows.csv,source_row_id,True,Owner row id.
+direct_manipulation_positive_rows.csv,provenance_hash,True,Hash over source row/provenance payload.
+direct_manipulation_matched_controls.csv,matched_control_group_id,True,Matches positive row control group.
+direct_manipulation_matched_controls.csv,control_row_id,True,Stable unique control id.
+direct_manipulation_matched_controls.csv,normal_label,True,Owner-approved normal/non-manipulation label or report-negative status.
+direct_manipulation_matched_controls.csv,matching_dimensions,True,Symbol/venue/session/market-family/time-window matching policy.
+direct_manipulation_provenance.json,owner_approval_reference,True,Evidence that export is owner-approved or source-owned.
+direct_manipulation_provenance.json,split_contract,True,"Exact, market-family, or other approved heldout contract."

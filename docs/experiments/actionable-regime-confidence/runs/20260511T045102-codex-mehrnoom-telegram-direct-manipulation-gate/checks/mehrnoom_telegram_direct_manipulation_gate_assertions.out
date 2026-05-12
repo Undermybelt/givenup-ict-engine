@@ -1,0 +1,10 @@
+PASS accepted_95_true
+PASS calibration_lcb_ge_95
+PASS test_lcb_ge_95
+PASS calibration_support_ge_100
+PASS test_support_ge_100
+PASS negative_controls_present
+PASS multi_coin_multi_channel_context
+PASS no_runtime_code_change
+PASS no_threshold_relaxation
+PASS no_trade_usability_claim

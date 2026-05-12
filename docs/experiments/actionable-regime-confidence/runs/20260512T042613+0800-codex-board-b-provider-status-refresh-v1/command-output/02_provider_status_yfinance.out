@@ -1,0 +1,55 @@
+{
+  "summary_line": "live_runtime:1/1 ready | market_data:1/1 ready",
+  "ready_by_domain": {
+    "live_runtime": "1/1",
+    "market_data": "1/1"
+  },
+  "providers": [
+    {
+      "provider_id": "yfinance",
+      "domain": "live_runtime",
+      "selectable_by_user": true,
+      "adopted_by_default": true,
+      "ready": true,
+      "access_mode": "local_library",
+      "user_access": "free_no_login",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 1,
+      "status": "ready",
+      "reason": "native_yfinance_runtime_available",
+      "summary": "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows."
+    },
+    {
+      "provider_id": "yfinance",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "public_or_env_ready",
+      "user_access": "free_no_login",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 1,
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints",
+      "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests."
+    }
+  ],
+  "ready_providers": [
+    "yfinance",
+    "yfinance"
+  ],
+  "pending_providers": [],
+  "pending_provider_details": [],
+  "selectable_providers": [
+    "yfinance",
+    "yfinance"
+  ],
+  "default_enabled_providers": [
+    "yfinance"
+  ],
+  "install_prompts": []
+}

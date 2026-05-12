@@ -1,0 +1,3 @@
+json_assertions=pass
+gate_result=blocked_persistent_hmm_root_posterior_gate_below_95
+accepted_new_roots_95=none

@@ -1,0 +1,22 @@
+{
+  "schema_version": "structural-replay-current-readback/v1",
+  "loop_id": "20260510T1920-hermes-replay36-current-readback",
+  "run_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36",
+  "state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state",
+  "policy_training_status_command": "ict-engine policy-training-status --symbol NQ --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state --output-format json",
+  "runtime_summary": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=1421 mature_rows=1 history_mature_rows=1397 raw_scored_mature=0/30 production_validation=0/30 observation_validation=40/30 calibration=pending_eval trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0",
+  "validation_summary": "Ranker validation: calibration=true quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=40/30 ready=true",
+  "target_summary": "structural_path_ranking_target rows=3 history_rows=1421 mature_rows=1 history_mature_rows=1397 raw_scored_mature=0/30 production_validation=0/30 observation_validation=40/30 calibration=pending_eval trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0",
+  "observation_validation_ready": true,
+  "observation_validation_rows": 40,
+  "raw_scored_mature_rows": 0,
+  "production_validation_rows": 0,
+  "runtime_selection_status": "enabled_no_matching_scores",
+  "warnings": [
+    "structural_path_ranking_target_jsonl_missing",
+    "structural_path_ranking_target_raw_scored_mature_rows_insufficient:min=30 observed=0",
+    "structural_path_ranking_target_production_validation_insufficient_rows:min=30 observed=0"
+  ],
+  "decision": "Observation validation is ready, but CatBoost/path-ranker production validation is not ready because raw_scored_mature=0/30, production_validation=0/30, runtime has no matching scores.",
+  "next_action": "Generate/apply matching raw_path_score rows for at least 30 mature current/production structural targets, then rerun policy-training-status; keep SessionLiquidityCoreViable as guardrail only."
+}

@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "3e9320485ef25720",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_SRC_ROOT_CARRY_LONG_220646_20260511T163229.687105000Z",
+  "ledger_status": "no_op",
+  "previous_artifact_id": null,
+  "source": "board_b_tomac_nq_nonzero_candidate",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "trades_applied": 0,
+  "trades_invalid": 9,
+  "trades_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl",
+  "trades_total": 9
+}

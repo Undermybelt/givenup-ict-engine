@@ -1,0 +1,108 @@
+{
+  "artifact_id": "ensemble-vote:analyze-live:2026-05-10T11:05:05Z",
+  "generated_at": "2026-05-10T11:05:05.671969Z",
+  "symbol": "NQ",
+  "source_phase": "analyze-live",
+  "source_run_id": "analyze-live:NQ:20260510T110505.483Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "54390626044676e4",
+    "data_fingerprint": "3e24b39d08ab6973"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": "analyze-live:NQ:20260510T105601.989Z",
+    "reason": "different_data_fingerprint",
+    "comparison_class": "different_data_fingerprint",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": true,
+    "same_factor_version": true
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_htf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.642 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_htf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.642,
+  "consensus_strength": 0.642,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.642",
+    "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.642"
+  ],
+  "split_explanations": [
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=index_beta_regime_sensitive",
+    "factor_uncertainty=high",
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=index_beta_regime_sensitive",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [
+    {
+      "executor": "catboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.55,
+      "last_outcome": null,
+      "last_updated_at": null
+    },
+    {
+      "executor": "xgboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.45,
+      "last_outcome": null,
+      "last_updated_at": null
+    }
+  ],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "3e24b39d08ab6973",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "trend",
+  "posterior_confidence": 0.5612662262128775,
+  "posterior_probabilities": {
+    "range": 0.31145395118497193,
+    "stress": 0.16576410428834104,
+    "transition": 0.07619063301360048,
+    "trend": 0.4465913115130866
+  },
+  "posterior_evidence": [
+    "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.758 multi_timeframe_entry_alignment_score=0.878",
+    "long/short support gap 0.036 is too small, so alignment is treated as mixed",
+    "pre_bayes_quality_score=0.565 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.550",
+    "market_state_source=volatility=LowVol:0.890 liquidity=NormalLiquidity:0.433 structure=Trending:0.576 behavior=Neutral:0.450",
+    "market_state_source=rationale=volatility=LowVol conf=0.89",
+    "market_state_source=rationale=structure=Trending conf=0.58",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.55",
+    "regime_bundle_bbn_evidence_skipped=no_supported_label",
+    "market_family=futures_index",
+    "market_behavior_profile=index_beta_regime_sensitive",
+    "branch_transition_prior_from=NQ:belief_regime_node:trend:trend_follow_through weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000",
+    "duration_persistence_prior=0.500 observations=1 streaks=1 weighted_streak_mass=1.000 expected_dwell=1.000 break_hazard=0.667 sticky_self_transition=0.383 duration_outcome_support=0.500 duration_temporal_posterior_support=0.500",
+    "duration_posterior_blend_weight=0.056",
+    "node_temporal_summary=duration_mass=1.000 expected_dwell=1.000 break_hazard=0.667 sequence_break=0.432 sequence_reset=0.000 sticky_self_transition=0.383 duration_support=0.500 duration_temporal=0.500 blend=0.056"
+  ]
+}

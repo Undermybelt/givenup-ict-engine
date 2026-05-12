@@ -1,0 +1,14 @@
+PASS gate_result=r6_candidate_bundle_split_calibration_sweep_after_035442_v1=pooled_candidates_pass_but_split_broad_controls_policy_blocked_no_promotion
+PASS candidate_count=4
+PASS strongest_candidate_id=jpm_cbot_staging
+PASS any_pooled_gate=true
+PASS all_chronological_symbol_venue_gates=false
+PASS broad_normal_controls_present=false
+PASS source_control_evidence_acquired=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS canonical_merge_allowed=false
+PASS downstream_promotion_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS trade_usable=false
+PASS update_goal=false

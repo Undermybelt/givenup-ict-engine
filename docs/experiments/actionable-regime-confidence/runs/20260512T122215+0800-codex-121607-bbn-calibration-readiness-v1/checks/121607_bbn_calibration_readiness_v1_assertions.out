@@ -1,0 +1,16 @@
+PASS run_id=20260512T122215+0800-codex-121607-bbn-calibration-readiness-v1
+PASS source_feedback_run_id=20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1
+PASS source_chain_run_id=20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1
+PASS rows=237
+PASS wins=81
+PASS losses=156
+PASS provider_count=6
+PASS branch_count=2
+FAIL_CLOSED chronological_holdout=false
+FAIL_CLOSED cross_instrument=false
+FAIL_CLOSED selected_history_source_control=false
+FAIL_CLOSED execution_admissibility=false
+PASS bbn_cpd_update_candidate_only=true
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

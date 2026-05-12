@@ -1,0 +1,8 @@
+PASS auto_quant_prepare_exit=0
+PASS auto_quant_status_exit=0
+PASS auto_quant_status=dependency_ready_data_ready
+PASS data_ready=true
+PASS prepared_feather_count=3
+PASS run_tomac_not_started_in_this_readback=true
+PASS promotion_allowed=false
+PASS update_goal=false

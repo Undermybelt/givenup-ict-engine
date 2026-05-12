@@ -1,0 +1,171 @@
+[
+  {
+    "run_id": "auto_quant_prior_init_B2R_NQ_COST_CRISIS_REPAIR_032157_20260511T193044.389997000Z",
+    "timestamp": "2026-05-11T19:30:44.389997Z",
+    "library_artifact_id": "auto_quant_strategy_library_B2R_NQ_COST_CRISIS_REPAIR_032157_20260511T193044.322795000Z",
+    "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/strategy_library_nq_cost_crisis_repair_v3.json",
+    "dry_run": false,
+    "outcome": {
+      "parent_config": [
+        0,
+        0,
+        0
+      ],
+      "initial_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "final_probs": [
+        0.7104469877339227,
+        5.426272007230963e-15,
+        0.28955301226607194
+      ],
+      "strategies_applied": [
+        {
+          "strategy_name": "NQRootAdaptiveCostCrisisRepairV3_Bull",
+          "mutation_id": "b2r_nq_cost_crisis_repair_v3",
+          "trade_count": 10663,
+          "n_win": 6261,
+          "n_loss": 4402,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.999956,
+            0.000022,
+            0.000022
+          ],
+          "after_probs": [
+            0.5874800532283759,
+            1.6493299597038704e-8,
+            0.4125199302783244
+          ],
+          "diff": [
+            -0.412475946771624,
+            -0.000021983506700402962,
+            0.4124979302783244
+          ],
+          "bbn_entropy_before": 0.0005158756285885085,
+          "bbn_entropy_after": 0.6777629001745697,
+          "bbn_entropy_reduction": 0.0,
+          "bbn_log_loss_before": 4.427401677439393,
+          "bbn_log_loss_after": 0.6778720323824975,
+          "bbn_log_loss_delta": 3.749529645056896,
+          "bbn_contradiction_before": 0.8256148202194504,
+          "bbn_contradiction_after": 0.000618959662801548,
+          "bbn_contradiction_lift": 0.8249958605566489,
+          "evidence_value_gate_passed": true
+        },
+        {
+          "strategy_name": "NQRootAdaptiveCostCrisisRepairV3_Bear",
+          "mutation_id": "b2r_nq_cost_crisis_repair_v3",
+          "trade_count": 762,
+          "n_win": 427,
+          "n_loss": 335,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.5874800532283759,
+            1.6493299597038704e-8,
+            0.4125199302783244
+          ],
+          "after_probs": [
+            0.5606491434101649,
+            1.7135895685235018e-10,
+            0.43935085641847604
+          ],
+          "diff": [
+            -0.026830909818211013,
+            -1.6321940640186353e-8,
+            0.026830926140151645
+          ],
+          "bbn_entropy_before": 0.6777629001745697,
+          "bbn_entropy_after": 0.6857724001982627,
+          "bbn_entropy_reduction": 0.0,
+          "bbn_log_loss_before": 0.6873484893946646,
+          "bbn_log_loss_after": 0.6858410714983058,
+          "bbn_log_loss_delta": 0.001507417896358887,
+          "bbn_contradiction_before": 0.05422523130686817,
+          "bbn_contradiction_after": 0.0005633790265648662,
+          "bbn_contradiction_lift": 0.053661852280303304,
+          "evidence_value_gate_passed": true
+        },
+        {
+          "strategy_name": "NQRootAdaptiveCostCrisisRepairV3_Sideways",
+          "mutation_id": "b2r_nq_cost_crisis_repair_v3",
+          "trade_count": 3406,
+          "n_win": 1952,
+          "n_loss": 1454,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.5606491434101649,
+            1.7135895685235018e-10,
+            0.43935085641847604
+          ],
+          "after_probs": [
+            0.5730770923102757,
+            4.0154412853509123e-13,
+            0.42692290768932273
+          ],
+          "diff": [
+            0.012427948900110786,
+            -1.709574127238151e-10,
+            -0.012427948729153315
+          ],
+          "bbn_entropy_before": 0.6857724001982627,
+          "bbn_entropy_after": 0.6824283045421871,
+          "bbn_entropy_reduction": 0.0033440956560756296,
+          "bbn_log_loss_before": 0.6827353833944481,
+          "bbn_log_loss_after": 0.6824197102928988,
+          "bbn_log_loss_delta": 0.0003156731015492298,
+          "bbn_contradiction_before": 0.02491427923956438,
+          "bbn_contradiction_after": 0.0000583814393428681,
+          "bbn_contradiction_lift": 0.024855897800221512,
+          "evidence_value_gate_passed": true
+        },
+        {
+          "strategy_name": "NQRootAdaptiveCostCrisisRepairV3_Crisis",
+          "mutation_id": "b2r_nq_cost_crisis_repair_v3",
+          "trade_count": 584,
+          "n_win": 416,
+          "n_loss": 168,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.5730770923102757,
+            4.0154412853509123e-13,
+            0.42692290768932273
+          ],
+          "after_probs": [
+            0.7104469877339227,
+            5.426272007230963e-15,
+            0.28955301226607194
+          ],
+          "diff": [
+            0.13736989542364697,
+            -3.9611785652786024e-13,
+            -0.1373698954232508
+          ],
+          "bbn_entropy_before": 0.6824283045421871,
+          "bbn_entropy_after": 0.6017509715768578,
+          "bbn_entropy_reduction": 0.08067733296532931,
+          "bbn_log_loss_before": 0.6414302725472135,
+          "bbn_log_loss_after": 0.6000619693169322,
+          "bbn_log_loss_delta": 0.04136830323028129,
+          "bbn_contradiction_before": 0.27850334962602386,
+          "bbn_contradiction_after": 0.003763558778730011,
+          "bbn_contradiction_lift": 0.27473979084729383,
+          "evidence_value_gate_passed": true
+        }
+      ],
+      "strategies_skipped": [],
+      "temper": 0.5,
+      "prior_strength": 4.0,
+      "bbn_entropy_reduction": 0.08402142862140494,
+      "bbn_log_loss_delta": 3.792721039285085,
+      "bbn_contradiction_lift": 1.1782534014844674,
+      "evidence_value_gate_passed": true
+    }
+  }
+]

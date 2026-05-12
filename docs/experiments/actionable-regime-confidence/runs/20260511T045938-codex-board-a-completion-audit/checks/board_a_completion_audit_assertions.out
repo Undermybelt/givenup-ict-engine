@@ -1,0 +1,9 @@
+PASS all_active_roots_present
+PASS Bull_completion_pass
+PASS Bear_completion_pass
+PASS Sideways_completion_pass
+PASS Crisis_completion_pass
+PASS Manipulation_completion_pass
+PASS unknown_or_mixed_not_completion_root
+PASS preflight_candidates_not_counted
+PASS achieved_true

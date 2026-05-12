@@ -1,0 +1,64 @@
+{
+  "run_id": "20260512T031353-codex-r6-owner-export-dispatch-readiness-after-030957-v1",
+  "gate_result": "r6_owner_export_dispatch_readiness_after_030957_v1=requests_ready_dispatch_or_approval_required_rows_not_acquired",
+  "scope": "dispatch_readiness_only_after_030957",
+  "inputs": {
+    "request_package": "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_package_v1.json",
+    "route_entitlement_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1/r6-owner-route-entitlement-readback/r6_owner_route_entitlement_readback_v1.json",
+    "current_objective_audit": "docs/experiments/actionable-regime-confidence/runs/20260512T030957-codex-current-objective-completion-audit-after-030617-030623-v1/current-objective-completion-audit-after-030617-030623-v1/current_objective_completion_audit_after_030617_030623_v1.json"
+  },
+  "dispatch_ready_items": [
+    {
+      "item": "cme_market_depth_or_mbo_request",
+      "status": "ready_to_dispatch",
+      "required_before_promotion": "licensed_export_with_ticket_export_license_id_and_provenance"
+    },
+    {
+      "item": "cboe_cfe_vix_trades_quotes_or_depth_request",
+      "status": "ready_to_dispatch_or_confirm_scope",
+      "required_before_promotion": "historical_export_or_support_confirmation_with_provenance"
+    },
+    {
+      "item": "same_exhibit_flip_as_control_policy",
+      "status": "approval_absent",
+      "required_before_promotion": "explicit_approval_or_source_owned_normal_controls"
+    }
+  ],
+  "verifier_filename_contract": [
+    {
+      "concept": "positive_manipulation_rows",
+      "request_package_name": "direct_manipulation_positive_rows.csv",
+      "current_verifier_required_name": "positive_spoofing_layering_rows.csv",
+      "decision": "deliver_or_map_to_verifier_native_name_before_verifier_rerun"
+    },
+    {
+      "concept": "matched_normal_controls",
+      "request_package_name": "direct_manipulation_matched_controls.csv",
+      "current_verifier_required_name": "matched_negative_normal_activity_rows.csv",
+      "decision": "deliver_or_map_to_verifier_native_name_before_verifier_rerun"
+    },
+    {
+      "concept": "provenance_manifest",
+      "request_package_name": "direct_manipulation_provenance.json",
+      "current_verifier_required_name": "provenance_manifest.json",
+      "decision": "deliver_or_map_to_verifier_native_name_before_verifier_rerun"
+    }
+  ],
+  "decision": {
+    "dispatch_ready": true,
+    "external_requests_sent": false,
+    "rows_acquired": false,
+    "owner_export_root_complete": false,
+    "flip_approval_present": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

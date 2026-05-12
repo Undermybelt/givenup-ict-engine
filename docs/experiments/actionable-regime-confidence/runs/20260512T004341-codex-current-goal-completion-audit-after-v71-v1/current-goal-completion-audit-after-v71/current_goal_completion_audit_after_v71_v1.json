@@ -1,0 +1,82 @@
+{
+  "accepted_rows_added": 0,
+  "board_path": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_start": "89dadffe3d200ea5ad1136327ca894f4c0fa766a6c1e9d30f95e50a439a9712a",
+  "checklist_status_counts": {
+    "blocked": 7,
+    "deferred_blocked": 3,
+    "partial": 2,
+    "pass": 3
+  },
+  "current_cursor": {
+    "accepted_gate": "r6_official_route_date_fit_check_v1=`official_owner_routes_confirmed_controls_not_acquired_cfe_depth_date_gap`; r6_oystacher_external_control_source_scan_v1=`external_routes_identified_no_verifier_ready_source_owned_normal_controls`; r6_oystacher_public_normal_control_source_probe_v1=`no_public_source_owned_normal_controls_found`; r6_oystacher_owner_control_source_route_screen_v1=`official_source_routes_identified_controls_not_acquired`; r6_local_control_applicability_audit_v1=`local_candidate_controls_insufficient_no_approval_no_merge`; r6_oystacher_independent_normal_control_screen_v1=`no_independent_owner_approved_normal_controls_found`; r6_oystacher_local_control_path_disposition_v1=`no_local_path_satisfies_source_owned_normal_control_contract`; current_goal_completion_audit_after_v66_v1=`not_complete_technical_preflight_pass_policy_controls_canonical_downstream_r5_r3_blocked`; v65_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_policy_blocked`; r6_oystacher_control_contract_request_v1=`control_request_ready_no_controls_or_approval`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "blocker": "Strict objective remains blocked: public probes found `0` source-owned normal controls, official source-owner routes are identified but controls are not acquired, external CME/Databento-style routes remain raw acquisition/licensing paths rather than verifier-ready source-owned normal controls, all `17` required Oystacher control cells still have `0` valid source-owned normal controls, CFE/VIX historical depth remains a custom export/date-gap blocker, same-exhibit `FLIP` rows are not approved as controls, canonical live intake was not mutated, post-V71 provider/Auto-Quant/pre-Bayes/BBN/CatBoost/execution-tree were not rerun, source-label confidence is still `0/4`, R5 post-`2026-01-30` source-panel rows are absent, and R3 native-subhour root remains absent.",
+    "board_state": "blocked",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260512T004410-codex-r6-official-route-date-fit-check-v1`",
+    "last_loop_id": "20260512T004410+0800-codex-r6-official-route-date-fit-check-v1",
+    "next_action": "Request CME DataMine/FIX-FAST/Market by Order exports or licensed equivalent for the CME/NYMEX/COMEX/CME Globex Oystacher control cells and a Cboe/CFE DataShop or market-data-support export that explicitly covers historical depth/order-lifecycle rows for the 2014 VIX/CFE cell, or explicitly approve the same-exhibit `FLIP`-as-control exception; only then copy the isolated verifier-native intake into `/tmp/ict-engine-board-a-r6-owner-export-v1` or canonical live root under a shared lock and rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked."
+  },
+  "downstream_chain_rerun": false,
+  "gate_result": "current_goal_completion_audit_after_v71_v1=not_complete_r6_controls_canonical_downstream_source_label_r5_r3_blocked",
+  "generated_at_utc": "2026-05-11T16:51:14.104761+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Request CME DataMine/FIX-FAST/Market by Order exports or licensed equivalent for the CME/NYMEX/COMEX/CME Globex Oystacher control cells and a Cboe/CFE DataShop or market-data-support export that explicitly covers historical depth/order-lifecycle rows for the 2014 VIX/CFE cell, or explicitly approve the same-exhibit `FLIP`-as-control exception; only then copy the isolated verifier-native intake into `/tmp/ict-engine-board-a-r6-owner-export-v1` or canonical live root under a shared lock and rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked.",
+  "non_r6_root_states": {
+    "native_subhour": {
+      "exists": false,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "required_files_present": {}
+    },
+    "r5_source_panel_recency": {
+      "exists": false,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "required_files_present": {}
+    },
+    "source_label_equivalence": {
+      "exists": false,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "required_files_present": {}
+    }
+  },
+  "provider_autoquant_refresh": "docs/experiments/actionable-regime-confidence/runs/20260512T003800-codex-v65-provider-autoquant-readonly-refresh-v1/v65-provider-autoquant-readonly-refresh/v65_provider_autoquant_readonly_refresh_v1.json",
+  "r6_external_control_source_scan": "docs/experiments/actionable-regime-confidence/runs/20260512T004322-codex-r6-oystacher-external-control-source-scan-v1/r6-oystacher-external-control-source-scan/r6_oystacher_external_control_source_scan_v1.json",
+  "r6_external_raw_routes_identified": 3,
+  "r6_external_sources_checked": 4,
+  "r6_external_verifier_ready_controls_found": 0,
+  "r6_independent_normal_control_screen": "docs/experiments/actionable-regime-confidence/runs/20260512T003909-codex-r6-oystacher-independent-normal-control-screen-v1/r6-oystacher-independent-normal-control-screen/r6_oystacher_independent_normal_control_screen_v1.json",
+  "r6_local_control_disposition": "docs/experiments/actionable-regime-confidence/runs/20260512T003811-codex-r6-oystacher-local-control-path-disposition-v1/r6-oystacher-local-control-path-disposition/r6_oystacher_local_control_path_disposition_v1.json",
+  "r6_official_route_cells_checked": 17,
+  "r6_official_route_cfe_depth_gap_cells": 4,
+  "r6_official_route_controls_not_acquired_cells": 17,
+  "r6_official_route_date_fit_check": "docs/experiments/actionable-regime-confidence/runs/20260512T004410-codex-r6-official-route-date-fit-check-v1/r6-official-route-date-fit-check/r6_official_route_date_fit_check_v1.md",
+  "r6_official_route_sources_checked": 8,
+  "r6_official_source_routes_identified": 17,
+  "r6_owner_control_source_route_screen": "docs/experiments/actionable-regime-confidence/runs/20260512T003924-codex-r6-oystacher-owner-control-source-route-screen-v1/r6-oystacher-owner-control-source-route-screen/r6_oystacher_owner_control_source_route_screen_v1.json",
+  "r6_public_control_shortfall": 1241,
+  "r6_public_normal_control_source_probe": "docs/experiments/actionable-regime-confidence/runs/20260512T004116-codex-r6-oystacher-public-normal-control-source-probe-v1/r6-oystacher-public-normal-control-source-probe/r6_oystacher_public_normal_control_source_probe_v1.json",
+  "r6_public_source_owned_normal_controls_found": 0,
+  "r6_public_sources_checked": 5,
+  "r6_required_cells_still_short": 17,
+  "r6_target_state": {
+    "exists": false,
+    "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "required_files_present": {
+      "control_policy_approval.json": false,
+      "matched_negative_normal_activity_rows.csv": false,
+      "owner_approval_reference.md": false,
+      "positive_spoofing_layering_rows.csv": false,
+      "provenance_manifest.json": false,
+      "source_policy_approval.json": false
+    }
+  },
+  "r6_valid_normal_controls_acquired": 0,
+  "r6_valid_source_owned_normal_controls_found": 0,
+  "raw_data_committed": false,
+  "run_id": "20260512T004341-codex-current-goal-completion-audit-after-v71-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

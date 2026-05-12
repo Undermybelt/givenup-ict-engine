@@ -1,0 +1,9 @@
+surface,query_or_path,result,accepted_rows_added,disposition
+local_required_root,/tmp/ict-engine-native-subhour-source-label-intake,absent,0,blocked_required_intake_root_absent
+kaggle_cli,AAPL 15m regime label,No datasets found,0,blocked_no_public_dataset_hit
+kaggle_cli,IXIC 15m regime label,No datasets found,0,blocked_no_public_dataset_hit
+kaggle_cli,intraday market regime labels,thisathdamiru/bybit-multi-crypto-historical-data-2020-2026 raw Bybit data panel,0,blocked_raw_provider_panel_no_source_owned_labels
+huggingface_api,AAPL 15m regime label,"HTTP 200, zero dataset rows",0,blocked_no_dataset_rows
+huggingface_api,IXIC 15m regime label,"HTTP 200, zero dataset rows",0,blocked_no_dataset_rows
+huggingface_api,intraday market regime labels,"HTTP 200, zero dataset rows",0,blocked_no_dataset_rows
+huggingface_dataset_schema,akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD,5m/15m BTCUSD OHLCV and generated HMM-style fields,0,blocked_generated_or_model_derived_not_aapl_ixic_source_labels

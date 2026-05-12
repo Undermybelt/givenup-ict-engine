@@ -1,0 +1,3 @@
+required_file,path,size_bytes,sha256,csv_rows
+source_label_equivalence_rows.csv,/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv,148968262,337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25,248440
+source_label_equivalence_provenance.json,/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json,3365,a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b,0

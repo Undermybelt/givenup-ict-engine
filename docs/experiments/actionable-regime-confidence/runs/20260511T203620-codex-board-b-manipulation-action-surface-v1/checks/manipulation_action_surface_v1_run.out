@@ -1,0 +1,17 @@
+{
+  "best_specificity_action": "event_short",
+  "best_specificity_edge": 0.01817861586668583,
+  "best_specificity_horizon": "48h",
+  "best_specificity_lcb_5pct": 0.015635278078429456,
+  "best_trade_action": "event_long",
+  "best_trade_horizon": "48h",
+  "best_trade_lcb_5pct": 0.0011778126784598138,
+  "best_trade_mean_net": 0.0025270785336439774,
+  "branch_rows": 296282,
+  "downstream_consumption": "not_started:diagnostic_only_full_board_b_still_requires_all_root_rc_spa",
+  "gate_result": "fail:no_tradeable_manipulation_action_surface",
+  "next_action": "B2R-repeat: scoped Manipulation still lacks tradeable PnL edge; switch source/family/panel before downstream promotion.",
+  "primary_blocker": "no long/short direct-event action has positive absolute net LCB after costs",
+  "promotion_allowed_for_full_board_b": false,
+  "tradeable_candidates": []
+}

@@ -1,0 +1,352 @@
+{
+  "accepted_candidate_count": 0,
+  "board_sha256_before_artifact": "1d6e0879fa2b8d20ad173b23c10cdca98a587e2f37bacb94254e675e83868278",
+  "candidate_count": 9,
+  "candidates": [
+    {
+      "candidate_id": "kaggle_macro_stress_liquidity",
+      "date_span": "Date:2014-10-17..2026-02-25",
+      "decision": "rejected_feature_panel_no_mainregimev2_labels",
+      "label_summary": "",
+      "observed_files": "Global_Market_Stress_and_Liquidity_Regimes.csv",
+      "observed_rows": 4150,
+      "reason": "Daily cross-asset feature/stress panel reaches 2026-02-25 but has no discrete Bull/Bear/Sideways/Crisis source labels and no native sub-hour rows.",
+      "source": "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+      "surface": "kaggle",
+      "unlock": false
+    },
+    {
+      "candidate_id": "kaggle_stock_market_regimes_20002026",
+      "date_span": "date:2000-01-03..2026-01-30",
+      "decision": "rejected_known_daily_no_post_cutoff_rows",
+      "label_summary": "regime_label:['Bull', 'Sideways', 'Bear', 'Crisis', 'High-volatility']; regime_confidence:['0.6', '0.333', '0.5', '1.0', '0.417', '0.375', '0.385', '0.4']",
+      "observed_files": "stock_market_regimes_2000_2026.csv",
+      "observed_rows": 245021,
+      "reason": "Known 39-ticker daily MainRegimeV2-like panel still ends at 2026-01-30, so it does not unlock the R5 post-cutoff recency root.",
+      "source": "mafaqbhatti/stock-market-regimes-20002026",
+      "surface": "kaggle",
+      "unlock": false
+    },
+    {
+      "candidate_id": "kaggle_nifty500_behavior_regime",
+      "date_span": "Date:2010-09-20..2026-03-20; Date:2012-02-02..2026-03-20; Date:2012-02-02..2026-03-20; run_date:2012-02-02..2026-03-20; feature_date:2012-02-02..2026-03-20",
+      "decision": "rejected_behavior_hmm_not_mainregimev2_not_existing_panel",
+      "label_summary": "behavior_fast_confidence:['1.0', '0.9999', '0.9998', '0.9997', '0.9996', '0.9995', '0.9994', '0.9993']; behavior_fast_prob_gap:['1.0', '0.9999', '0.9998', '0.9997', '0.9996', '0.9995', '0.9993', '0.9994']; behavior_fast_state:['Mean-Reverting', 'Trending', 'Noisy']; behavior_slow_confidence:['1.0', '0.9999', '0.9998', '0.9996', '0.9997', '0.9994', '0.9992', '0.9995']; behavior_slow_prob_gap:['1.0', '0.9999', '0.9998', '0.9996', '0.9997', '0.9994', '0.9995', '0.9992']; behavior_slow_state:['Mean-Reverting', 'Noisy', 'Trending']; macro_state:['Fragile', 'Durable']; fast_state:['Choppy', 'Calm', 'Stress']; combined_state:['Fragile\u2013Choppy', 'Fragile\u2013Calm', 'Fragile\u2013Stress', 'Durable\u2013Calm', 'Durable\u2013Choppy', 'Durable\u2013Stress']; adaptive_macro_state:['Fragile', 'Durable']; adaptive_fast_state:['Choppy', 'Calm', 'Stress']; adaptive_combined_state:['Fragile\u2013Choppy', 'Fragile\u2013Calm', 'Fragile\u2013Stress', 'Durable\u2013Choppy', 'Durable\u2013Calm', 'Durable\u2013Stress']",
+      "observed_files": "behavior_regime_predictions.csv;final_features_matrix.csv;regime_timeline_history.csv",
+      "observed_rows": 10810,
+      "reason": "Daily NIFTY behavior/macro states reach 2026-03-20 but labels are Durable/Fragile/Calm/Stress/Trending/Noisy style states, not the existing R5 panel or accepted MainRegimeV2 source labels.",
+      "source": "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+      "surface": "kaggle",
+      "unlock": false
+    },
+    {
+      "candidate_id": "hf_clarus_coherence_mapping",
+      "date_span": "date_window:2025-09-01_to_2025-09-04..2025-09-01_to_2025-09-04; date_window:2025-01-10_to_2025-01-14..2025-06-10_to_2025-06-13",
+      "decision": "rejected_tiny_benchmark_no_market_matrix",
+      "label_summary": "regime_coherence_score:[]; dominant_driver_label:[]; regime_stability_band:[]; regime_coherence_score:['0.82', '0.6', '0.38', '0.76', '0.52', '0.68']; dominant_driver_label:['macro_rates', 'concentration_equity', 'uncertain_transition', 'risk_on_liquidity', 'shock_repricing', 'growth_beta']; regime_stability_band:['stable', 'moderate', 'fragile', 'unstable']",
+      "last_modified": "2026-02-05 09:17:45+00:00",
+      "observed_files": ".gitattributes;README.md;data/test.csv;data/train.csv;scorer.py",
+      "observed_rows": 7,
+      "reason": "Tiny 6-train/1-test relationship benchmark with 2025 windows and no instrument/timeframe matrix; not R3 native sub-hour or R5 recency evidence.",
+      "source": "ClarusC64/market-regime-coherence-mapping-v0.1",
+      "surface": "huggingface",
+      "unlock": false
+    },
+    {
+      "candidate_id": "hf_clarus_transition_breakpoint",
+      "date_span": "date_window:2025-09-01_to_2025-09-03..2025-09-01_to_2025-09-03; date_window:2025-01-15_to_2025-01-18..2025-06-11_to_2025-06-13",
+      "decision": "rejected_tiny_transition_benchmark_no_mainregimev2",
+      "label_summary": "current_regime_basin:[]; adjacent_regime_targets:[]; current_regime_basin:['growth_beta', 'macro_rates', 'risk_on_liquidity', 'uncertain_transition', 'shock_repricing']; adjacent_regime_targets:['liquidity_crisis;deleveraging', 'growth_beta', 'risk_off;volatility_spike', 'macro_rates', 'liquidity_crisis', 'uncertain_transition']",
+      "last_modified": "2026-02-05 09:21:14+00:00",
+      "observed_files": ".gitattributes;README.md;data/test.csv;data/train.csv;scorer.py",
+      "observed_rows": 7,
+      "reason": "Tiny transition benchmark with narrative basins/targets, not source-owned Bull/Bear/Sideways/Crisis rows and not native sub-hour.",
+      "source": "ClarusC64/market-regime-transition-breakpoint-mapping-v0.1",
+      "surface": "huggingface",
+      "unlock": false
+    },
+    {
+      "candidate_id": "hf_tsie_idx",
+      "date_span": "",
+      "decision": "rejected_known_sidecar_no_crisis_single_idx_rule_labels",
+      "label_summary": "",
+      "last_modified": "2026-04-13 13:27:46+00:00",
+      "observed_files": ".gitattributes;README.md;tft_dataset_labeled.parquet",
+      "observed_rows": 0,
+      "reason": "Full TSIE parquet is already counted as non-promoting: rule/OHLCV IDX labels, no direct Crisis semantic, no accepted MainRegimeV2 equivalence.",
+      "source": "sujinwo/tsie-market-regime-dataset",
+      "surface": "huggingface",
+      "unlock": false
+    },
+    {
+      "candidate_id": "hf_btc_hmm6",
+      "date_span": "timestamp:2025-05-25 13:10:00+00:00..2025-11-05 18:30:00+00:00; timestamp:2022-11-06 21:20:00+00:00..2024-12-12 07:40:00+00:00; timestamp:2024-12-12 07:45:00+00:00..2025-05-25 13:05:00+00:00",
+      "decision": "rejected_hmm_proxy_single_crypto_no_mainregimev2",
+      "label_summary": "state:['0', '4', '1', '2', '5', '3']; regime:['Range', 'Squeeze', 'Weak Trend', 'Strong Trend', 'Choppy High-Vol', 'Volatility Spike']; state:['0', '1', '2', '4', '5', '3']; regime:['Range', 'Weak Trend', 'Strong Trend', 'Squeeze', 'Choppy High-Vol', 'Volatility Spike']; state:['1', '0', '2', '5', '4', '3']; regime:['Weak Trend', 'Range', 'Strong Trend', 'Choppy High-Vol', 'Squeeze', 'Volatility Spike']",
+      "last_modified": "2025-12-13 08:25:14+00:00",
+      "observed_files": ".gitattributes;README.md;data/test.csv;data/test.parquet;data/train.csv;data/train.parquet;data/validation.csv;data/validation.parquet",
+      "observed_rows": 315311,
+      "reason": "5m/15m BTC HMM labels are proxy model states, not source-owned MainRegimeV2 labels across required markets.",
+      "source": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "surface": "huggingface",
+      "unlock": false
+    },
+    {
+      "candidate_id": "hf_nifty50_binary",
+      "date_span": "",
+      "decision": "rejected_binary_risk_on_off_small_single_market",
+      "label_summary": "",
+      "last_modified": "2025-11-05 02:35:05+00:00",
+      "observed_files": ".gitattributes;README.md;dataset_info.json;market_regime_data_nifty50.csv",
+      "observed_rows": 0,
+      "reason": "Binary risk-on/off NIFTY50 labels cannot cover Bull/Bear/Sideways/Crisis roots or the required R3/R5 target roots.",
+      "source": "AAdevloper/nifty50-market-regime",
+      "surface": "huggingface",
+      "unlock": false
+    },
+    {
+      "candidate_id": "github_repo_search",
+      "date_span": "",
+      "decision": "rejected_no_repo_candidate_returned",
+      "label_summary": "",
+      "observed_files": "",
+      "observed_rows": 0,
+      "reason": "Authenticated gh repo searches returned no candidate repositories for MainRegimeV2 R3/R5/R6 unlock contracts in this slice.",
+      "source": "gh search repos market-regime/source-label queries",
+      "surface": "github",
+      "unlock": false
+    }
+  ],
+  "commands": [
+    {
+      "args": [
+        "kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "stock market regimes",
+        "--csv"
+      ],
+      "name": "kaggle_search_0",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/kaggle_search_0.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/kaggle_search_0.out"
+    },
+    {
+      "args": [
+        "kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "market regime labels",
+        "--csv"
+      ],
+      "name": "kaggle_search_1",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/kaggle_search_1.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/kaggle_search_1.out"
+    },
+    {
+      "args": [
+        "kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "bull bear sideways crisis",
+        "--csv"
+      ],
+      "name": "kaggle_search_2",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/kaggle_search_2.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/kaggle_search_2.out"
+    },
+    {
+      "args": [
+        "kaggle",
+        "datasets",
+        "download",
+        "-d",
+        "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+        "-p",
+        "/tmp/ict-engine-board-a-public-source-candidate-sweep-20260512T063217+0800/kaggle/kaggle_macro_stress_liquidity",
+        "--unzip",
+        "-o"
+      ],
+      "name": "download_kaggle_macro_stress_liquidity",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/download_kaggle_macro_stress_liquidity.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/download_kaggle_macro_stress_liquidity.out"
+    },
+    {
+      "args": [
+        "kaggle",
+        "datasets",
+        "download",
+        "-d",
+        "mafaqbhatti/stock-market-regimes-20002026",
+        "-f",
+        "stock_market_regimes_2000_2026.csv",
+        "-p",
+        "/tmp/ict-engine-board-a-public-source-candidate-sweep-20260512T063217+0800/kaggle/kaggle_stock_market_regimes_20002026",
+        "--unzip",
+        "-o"
+      ],
+      "name": "download_kaggle_stock_market_regimes_20002026",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/download_kaggle_stock_market_regimes_20002026.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/download_kaggle_stock_market_regimes_20002026.out"
+    },
+    {
+      "args": [
+        "kaggle",
+        "datasets",
+        "download",
+        "-d",
+        "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+        "-p",
+        "/tmp/ict-engine-board-a-public-source-candidate-sweep-20260512T063217+0800/kaggle/kaggle_nifty500_behavior_regime",
+        "--unzip",
+        "-o"
+      ],
+      "name": "download_kaggle_nifty500_behavior_regime",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/download_kaggle_nifty500_behavior_regime.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/download_kaggle_nifty500_behavior_regime.out"
+    },
+    {
+      "args": [
+        "gh",
+        "search",
+        "repos",
+        "market regime dataset bull bear sideways crisis",
+        "--limit",
+        "20",
+        "--json",
+        "fullName,description,updatedAt,url"
+      ],
+      "name": "github_search_0",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/github_search_0.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/github_search_0.out"
+    },
+    {
+      "args": [
+        "gh",
+        "search",
+        "repos",
+        "AAPL 15m market regime labels",
+        "--limit",
+        "20",
+        "--json",
+        "fullName,description,updatedAt,url"
+      ],
+      "name": "github_search_1",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/github_search_1.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/github_search_1.out"
+    },
+    {
+      "args": [
+        "gh",
+        "search",
+        "repos",
+        "stock market regime labels dataset 2026",
+        "--limit",
+        "20",
+        "--json",
+        "fullName,description,updatedAt,url"
+      ],
+      "name": "github_search_2",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/github_search_2.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/command-output/github_search_2.out"
+    }
+  ],
+  "decision": "No public Kaggle/HuggingFace/GitHub candidate selected for target-root materialization. R6/R3/R5 required roots remain absent, and the unregistered 062842 refresh is negative evidence only.",
+  "gate_result": "public_source_candidate_sweep_after_062842_v1=no_candidate_selected_no_required_root_no_downstream",
+  "generated_at_utc": "2026-05-11T22:40:48.539090+00:00",
+  "local_artifacts": [
+    {
+      "exists": true,
+      "expected_report_exists": true,
+      "file_count": 7,
+      "id": "062842_source_control_unlock_refresh",
+      "role": "unregistered read-only unlock refresh",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T062842+0800-codex-source-control-unlock-refresh-after-062604-v1"
+    },
+    {
+      "exists": true,
+      "expected_report_exists": false,
+      "file_count": 20,
+      "id": "062854_readonly_runtime_refresh",
+      "role": "unregistered read-only runtime outputs",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T062854-codex-readonly-runtime-refresh-after-062604-v1"
+    },
+    {
+      "exists": true,
+      "expected_report_exists": false,
+      "file_count": 6,
+      "id": "062902_r3_hf_tsie_native_intraday_intake",
+      "role": "empty/incomplete root observed, not evidence",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1"
+    }
+  ],
+  "next": "Preserve the Current Cursor next action: use approved operator/vendor route for R6 owner-export rows or supply explicit source/control approval, or acquire true R5 post-cutoff source-panel rows or R3 native-subhour MainRegimeV2 labels before rerunning direct verifier and downstream chain.",
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "target_root_mutated": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_root_unlocked": true,
+  "required_roots": [
+    {
+      "all_required_present": false,
+      "hashes": "{}",
+      "id": "r6_owner_export",
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "present_files": "",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false,
+      "row_counts": "{}",
+      "unlock_contract": "verifier-native R6 owner/export positives plus valid normal controls"
+    },
+    {
+      "all_required_present": true,
+      "hashes": "{\"native_subhour_source_label_provenance.json\": \"60f2422260c404302dbb98dc641f13e50cdae8f09527a848e614a690b87fcc0f\", \"native_subhour_source_label_rows.csv\": \"72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f\"}",
+      "id": "r3_native_subhour",
+      "missing_files": "",
+      "present_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": true,
+      "row_counts": "{\"native_subhour_source_label_rows.csv\": 5032903}",
+      "unlock_contract": "source-owned native sub-hour MainRegimeV2 labels plus provenance"
+    },
+    {
+      "all_required_present": false,
+      "hashes": "{}",
+      "id": "r5_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false,
+      "row_counts": "{}",
+      "unlock_contract": "post-2026-01-30 source-panel recency rows plus provenance"
+    }
+  ],
+  "run_id": "20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1",
+  "scope": {
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "external_requests_sent": false,
+    "read_only_public_candidate_sweep": true,
+    "target_roots_mutated": false,
+    "trade_claim": false,
+    "update_goal": false,
+    "vendor_portal_used": false
+  }
+}

@@ -1,0 +1,1075 @@
+{
+  "schema_version": "board-a-cross-timeframe-regime-validation/v1",
+  "loop_id": "20260510T224014+0800-codex-cross-timeframe-regime-validation",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation",
+  "objective": "Verify every required Board A regime has >=95 calibrated confidence and cross-market/cross-timeframe validation.",
+  "input_sources": {
+    "prior_6of6_handoff": "docs/experiments/actionable-regime-confidence/runs/20260510T221035-codex-board-a-6of6-board-b-handoff/board_a_6of6_regime_context_handoff_to_board_b.json",
+    "QQQ_IBKR_1h": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/ibkr_QQQ_1h.csv",
+    "QQQ_yfinance_1h": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/yf_QQQ_1h_20240601_20260509.csv",
+    "NQ_local_15m": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json",
+    "Kraken_PF_XBTUSD_1h": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/kraken_PF_XBTUSD_1h_2024_2025.csv",
+    "new_yfinance_1h": [
+      "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/provider/BTC_USD_1h_yfinance.csv",
+      "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/provider/ESF_1h_yfinance.csv",
+      "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/provider/NQF_1h_yfinance.csv",
+      "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/provider/SPY_1h_yfinance.csv"
+    ]
+  },
+  "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/cross_timeframe_regime_features.csv",
+  "threshold_policy": {
+    "thresholds_relaxed": false,
+    "precision_wilson_lcb_95": 0.95,
+    "calibration_support_min_95": 120,
+    "test_support_min_95": 60,
+    "ece_max_95": 0.05,
+    "coverage_min_95": 0.03,
+    "validation_instruments_min_95": 2,
+    "validation_market_contexts_min_95": 2,
+    "validation_timeframes_min_95": 2,
+    "blocked_feature_prefixes": [
+      "future_",
+      "target_"
+    ]
+  },
+  "accepted_regime_packets": [
+    {
+      "accepted_regime_id": "SessionLiquidityCoreViable",
+      "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T214429-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json",
+      "calibration_support": 792,
+      "confidence_lane": "95",
+      "coverage": 0.2412771560236998,
+      "downstream_evidence_fields": [
+        "hour_utc",
+        "context_train_stable_high_liquidity_hour",
+        "volume_rank_252",
+        "future_median_volume_h4"
+      ],
+      "duration_viable": true,
+      "ece": 0.010898548927198326,
+      "horizon": "next native bar",
+      "market": "cross_context",
+      "precision_wilson_lcb": 0.9631734677247024,
+      "qualifying_condition": "context_train_stable_high_liquidity_hour AND volume_rank_252 >= 0.55",
+      "test_support": 733,
+      "timeframe": "native 15m/1h",
+      "transition_hazard": 0.0,
+      "validation_contexts": [
+        "NQ:CME_futures_local:15m",
+        "PF_XBTUSD:Kraken_crypto:1h",
+        "QQQ:IBKR_US_ETF:1h",
+        "QQQ:yfinance_US_ETF:1h"
+      ],
+      "validation_instruments": [
+        "NQ",
+        "PF_XBTUSD",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_US_ETF"
+      ],
+      "validation_periods": {
+        "calibration": {
+          "coverage": 0.26052631578947366,
+          "ece": 0.0026317390775222327,
+          "precision": 0.9659090909090909,
+          "precision_wilson_lcb_95": 0.9508538732616755,
+          "precision_wilson_lcb_99": 0.9450517337890919,
+          "success": 765,
+          "support": 792,
+          "validation_contexts": [
+            "NQ:CME_futures_local:15m",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h"
+          ],
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_US_ETF"
+          ]
+        },
+        "test": {
+          "coverage": 0.2412771560236998,
+          "ece": 0.010898548927198326,
+          "precision": 0.9768076398362893,
+          "precision_wilson_lcb_95": 0.9631734677247024,
+          "precision_wilson_lcb_99": 0.9576470056213496,
+          "success": 716,
+          "support": 733,
+          "validation_contexts": [
+            "NQ:CME_futures_local:15m",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h"
+          ],
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_US_ETF"
+          ]
+        },
+        "train": {
+          "coverage": 0.24572368421052632,
+          "ece": 0.0,
+          "precision": 0.9685408299866132,
+          "precision_wilson_lcb_95": 0.9584179731658582,
+          "precision_wilson_lcb_99": 0.9546790134651986,
+          "success": 1447,
+          "support": 1494,
+          "validation_contexts": [
+            "NQ:CME_futures_local:15m",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h"
+          ],
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_US_ETF"
+          ]
+        }
+      },
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "passes_95_cross_market_timeframe": true
+    },
+    {
+      "accepted_regime_id": "RangeConsolidation",
+      "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T214429-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json",
+      "calibration_support": 467,
+      "confidence_lane": "95",
+      "coverage": 0.06341166936790923,
+      "downstream_evidence_fields": [
+        "catboost_isotonic",
+        "RangeConsolidation_persists_next_15m"
+      ],
+      "duration_viable": true,
+      "ece": 0.004488121867580741,
+      "horizon": "next 15m window regime persistence",
+      "market": "NQ",
+      "precision_wilson_lcb": 0.9676071866741978,
+      "qualifying_condition": "catboost_isotonic_probability(RangeConsolidation_persists_next_15m) >= 0.9896907216494846",
+      "reissue_note": "Existing accepted NQ CatBoost/isotonic persistence packet reissued with explicit contract fields; no threshold relaxation.",
+      "reissue_source": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json",
+      "test_support": 313,
+      "timeframe": "15m",
+      "transition_hazard": null,
+      "validation_contexts": [
+        "NQ:AutoQuant_NQ_15m_cache:15m",
+        "QQQ:yfinance_QQQ_1h:1h",
+        "QQQ:IBKR_QQQ_1h:1h"
+      ],
+      "validation_instruments": [
+        "NQ",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "AutoQuant_NQ_15m_cache",
+        "yfinance_QQQ_1h",
+        "IBKR_QQQ_1h"
+      ],
+      "validation_periods": {
+        "calibration": {
+          "coverage": 0.09461102106969206,
+          "ece": 0.0,
+          "mean_probability": 0.9914346895074947,
+          "precision": 0.9914346895074947,
+          "precision_wilson_lcb_95": 0.978186212412689,
+          "precision_wilson_lcb_99": 0.9716526963513256,
+          "success": 463,
+          "support": 467
+        },
+        "test": {
+          "coverage": 0.06341166936790923,
+          "ece": 0.004488121867580741,
+          "mean_probability": 0.9917085691519257,
+          "precision": 0.987220447284345,
+          "precision_wilson_lcb_95": 0.9676071866741978,
+          "precision_wilson_lcb_99": 0.9580236351321185,
+          "success": 309,
+          "support": 313
+        },
+        "train": {
+          "support": 9872,
+          "time_range": {
+            "end": "train/cal boundary from chronological NQ persistence split",
+            "start": "2025-02-28 12:00:00+00:00"
+          }
+        }
+      },
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "passes_95_cross_market_timeframe": true
+    },
+    {
+      "accepted_regime_id": "TrendExpansion",
+      "qualifying_condition": "trend_base AND trend_persistence16 >= 0.0",
+      "market": "cross-market: local CME futures + yfinance ETF/futures/crypto + Kraken crypto",
+      "timeframe": "cross-timeframe 15m/1h",
+      "horizon": "next native bar",
+      "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9713424033215112,
+      "calibration_support": 3351,
+      "test_support": 3192,
+      "ece": 0.0013022148028979386,
+      "coverage": 0.20600193610842207,
+      "validation_instruments": [
+        "BTC-USD",
+        "ES=F",
+        "NQ",
+        "NQ=F",
+        "PF_XBTUSD",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_periods": {
+        "train": {
+          "support": 6714,
+          "success": 6570,
+          "precision": 0.9785522788203753,
+          "precision_wilson_lcb_95": 0.9748035348627737,
+          "coverage": 0.21658763185909222,
+          "ece": 0.0,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        },
+        "calibration": {
+          "support": 3351,
+          "success": 3270,
+          "precision": 0.9758281110116384,
+          "precision_wilson_lcb_95": 0.9700577660738495,
+          "coverage": 0.21619354838709678,
+          "ece": 0.002724167808736966,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        },
+        "test": {
+          "support": 3192,
+          "success": 3119,
+          "precision": 0.9771303258145363,
+          "precision_wilson_lcb_95": 0.9713424033215112,
+          "coverage": 0.20600193610842207,
+          "ece": 0.0013022148028979386,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        }
+      },
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_ETF",
+        "yfinance_US_ETF",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1h",
+        "ES=F:yfinance_futures:1h",
+        "NQ:CME_futures_local:15m",
+        "NQ=F:yfinance_futures:1h",
+        "PF_XBTUSD:Kraken_crypto:1h",
+        "QQQ:IBKR_US_ETF:1h",
+        "QQQ:yfinance_US_ETF:1h",
+        "SPY:yfinance_ETF:1h"
+      ],
+      "transition_hazard": 0.022869674185463706,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "trend_base",
+        "trend_persistence16",
+        "ma64_slope16",
+        "ret4",
+        "target_trend_structural_next"
+      ],
+      "passes_95_cross_market_timeframe": true,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/evidence_packet_cross_timeframe_regime_validation.json"
+    },
+    {
+      "accepted_regime_id": "ExtremeStress",
+      "qualifying_condition": "stress_base AND vol_ratio32_128 >= 1.34852",
+      "market": "cross-market: local CME futures + yfinance ETF/futures/crypto + Kraken crypto",
+      "timeframe": "cross-timeframe 15m/1h",
+      "horizon": "next native bar",
+      "allowed_action": "guardrail_only_reduce_or_block_release",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9830666793726355,
+      "calibration_support": 1994,
+      "test_support": 1674,
+      "ece": 0.001725606928311807,
+      "coverage": 0.10803484995159729,
+      "validation_instruments": [
+        "BTC-USD",
+        "ES=F",
+        "NQ",
+        "NQ=F",
+        "PF_XBTUSD",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_periods": {
+        "train": {
+          "support": 3067,
+          "success": 3025,
+          "precision": 0.9863058363221389,
+          "precision_wilson_lcb_95": 0.9815422369098867,
+          "coverage": 0.09893867544114326,
+          "ece": 0.0,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        },
+        "calibration": {
+          "support": 1994,
+          "success": 1976,
+          "precision": 0.9909729187562688,
+          "precision_wilson_lcb_95": 0.9857754223573135,
+          "coverage": 0.12864516129032258,
+          "ece": 0.004667082434129943,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        },
+        "test": {
+          "support": 1674,
+          "success": 1656,
+          "precision": 0.989247311827957,
+          "precision_wilson_lcb_95": 0.9830666793726355,
+          "coverage": 0.10803484995159729,
+          "ece": 0.001725606928311807,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        }
+      },
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_ETF",
+        "yfinance_US_ETF",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1h",
+        "ES=F:yfinance_futures:1h",
+        "NQ:CME_futures_local:15m",
+        "NQ=F:yfinance_futures:1h",
+        "PF_XBTUSD:Kraken_crypto:1h",
+        "QQQ:IBKR_US_ETF:1h",
+        "QQQ:yfinance_US_ETF:1h",
+        "SPY:yfinance_ETF:1h"
+      ],
+      "transition_hazard": 0.010752688172043001,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "stress_base",
+        "vol_ratio32_128",
+        "range_ratio32_128",
+        "drawdown64",
+        "target_stress_next"
+      ],
+      "passes_95_cross_market_timeframe": true,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/evidence_packet_cross_timeframe_regime_validation.json"
+    },
+    {
+      "accepted_regime_id": "ReversalBrewing",
+      "qualifying_condition": "reversal_base AND stretch64 <= -0.00323461",
+      "market": "cross-market: local CME futures + yfinance ETF/futures/crypto + Kraken crypto",
+      "timeframe": "cross-timeframe 15m/1h",
+      "horizon": "next native bar",
+      "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9690934583043807,
+      "calibration_support": 4083,
+      "test_support": 4559,
+      "ece": 0.0013030236757065605,
+      "coverage": 0.2942239432074863,
+      "validation_instruments": [
+        "BTC-USD",
+        "ES=F",
+        "NQ",
+        "NQ=F",
+        "PF_XBTUSD",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_periods": {
+        "train": {
+          "support": 8390,
+          "success": 8175,
+          "precision": 0.9743742550655542,
+          "precision_wilson_lcb_95": 0.9707697866098739,
+          "coverage": 0.27065389206103424,
+          "ece": 0.0,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        },
+        "calibration": {
+          "support": 4083,
+          "success": 3972,
+          "precision": 0.9728141072740631,
+          "precision_wilson_lcb_95": 0.9673640440453622,
+          "coverage": 0.26341935483870965,
+          "ece": 0.001560147791491051,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        },
+        "test": {
+          "support": 4559,
+          "success": 4441,
+          "precision": 0.9741171309497697,
+          "precision_wilson_lcb_95": 0.9690934583043807,
+          "coverage": 0.2942239432074863,
+          "ece": 0.0013030236757065605,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h",
+            "QQQ:yfinance_US_ETF:1h",
+            "SPY:yfinance_ETF:1h"
+          ]
+        }
+      },
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_ETF",
+        "yfinance_US_ETF",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1h",
+        "ES=F:yfinance_futures:1h",
+        "NQ:CME_futures_local:15m",
+        "NQ=F:yfinance_futures:1h",
+        "PF_XBTUSD:Kraken_crypto:1h",
+        "QQQ:IBKR_US_ETF:1h",
+        "QQQ:yfinance_US_ETF:1h",
+        "SPY:yfinance_ETF:1h"
+      ],
+      "transition_hazard": 0.025882869050230295,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "reversal_base",
+        "stretch64",
+        "ma64_slope16",
+        "ret16",
+        "target_reversal_next"
+      ],
+      "passes_95_cross_market_timeframe": true,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/evidence_packet_cross_timeframe_regime_validation.json"
+    },
+    {
+      "accepted_regime_id": "ThinLiquidity",
+      "qualifying_condition": "thin_base AND hour_utc <= 5",
+      "market": "cross-market: local CME futures + yfinance ETF/futures/crypto + Kraken crypto",
+      "timeframe": "cross-timeframe 15m/1h",
+      "horizon": "next native bar",
+      "allowed_action": "guardrail_only_liquidity_context",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9947662152718565,
+      "calibration_support": 2889,
+      "test_support": 2756,
+      "ece": 0.0009214924132927571,
+      "coverage": 0.17786382704098097,
+      "validation_instruments": [
+        "BTC-USD",
+        "ES=F",
+        "NQ",
+        "NQ=F",
+        "PF_XBTUSD",
+        "QQQ"
+      ],
+      "validation_periods": {
+        "train": {
+          "support": 5751,
+          "success": 5735,
+          "precision": 0.9972178751521474,
+          "precision_wilson_lcb_95": 0.9954852201115868,
+          "coverage": 0.18552211361656828,
+          "ece": 0.0,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "Kraken_crypto",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h"
+          ]
+        },
+        "calibration": {
+          "support": 2889,
+          "success": 2879,
+          "precision": 0.9965385946694358,
+          "precision_wilson_lcb_95": 0.9936397418291508,
+          "coverage": 0.18638709677419354,
+          "ece": 0.0006792804827115972,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h"
+          ]
+        },
+        "test": {
+          "support": 2756,
+          "success": 2749,
+          "precision": 0.9974600870827286,
+          "precision_wilson_lcb_95": 0.9947662152718565,
+          "coverage": 0.17786382704098097,
+          "ece": 0.0009214924132927571,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1h",
+            "ES=F:yfinance_futures:1h",
+            "NQ:CME_futures_local:15m",
+            "NQ=F:yfinance_futures:1h",
+            "PF_XBTUSD:Kraken_crypto:1h",
+            "QQQ:IBKR_US_ETF:1h"
+          ]
+        }
+      },
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1h",
+        "ES=F:yfinance_futures:1h",
+        "NQ:CME_futures_local:15m",
+        "NQ=F:yfinance_futures:1h",
+        "PF_XBTUSD:Kraken_crypto:1h",
+        "QQQ:IBKR_US_ETF:1h"
+      ],
+      "transition_hazard": 0.002539912917271403,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "thin_base",
+        "hour_utc",
+        "volume_rank",
+        "target_thin_soft_next"
+      ],
+      "passes_95_cross_market_timeframe": true,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/evidence_packet_cross_timeframe_regime_validation.json"
+    }
+  ],
+  "per_regime_cross_timeframe_coverage": {
+    "SessionLiquidityCoreViable": {
+      "passes_95": true,
+      "precision_wilson_lcb": 0.9631734677247024,
+      "validation_instruments": [
+        "NQ",
+        "PF_XBTUSD",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_US_ETF"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    "RangeConsolidation": {
+      "passes_95": true,
+      "precision_wilson_lcb": 0.9676071866741978,
+      "validation_instruments": [
+        "NQ",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "AutoQuant_NQ_15m_cache",
+        "yfinance_QQQ_1h",
+        "IBKR_QQQ_1h"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    "TrendExpansion": {
+      "passes_95": true,
+      "precision_wilson_lcb": 0.9713424033215112,
+      "validation_instruments": [
+        "BTC-USD",
+        "ES=F",
+        "NQ",
+        "NQ=F",
+        "PF_XBTUSD",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_ETF",
+        "yfinance_US_ETF",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    "ExtremeStress": {
+      "passes_95": true,
+      "precision_wilson_lcb": 0.9830666793726355,
+      "validation_instruments": [
+        "BTC-USD",
+        "ES=F",
+        "NQ",
+        "NQ=F",
+        "PF_XBTUSD",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_ETF",
+        "yfinance_US_ETF",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    "ReversalBrewing": {
+      "passes_95": true,
+      "precision_wilson_lcb": 0.9690934583043807,
+      "validation_instruments": [
+        "BTC-USD",
+        "ES=F",
+        "NQ",
+        "NQ=F",
+        "PF_XBTUSD",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_ETF",
+        "yfinance_US_ETF",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    "ThinLiquidity": {
+      "passes_95": true,
+      "precision_wilson_lcb": 0.9947662152718565,
+      "validation_instruments": [
+        "BTC-USD",
+        "ES=F",
+        "NQ",
+        "NQ=F",
+        "PF_XBTUSD",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    }
+  },
+  "missing_after_this_loop": [],
+  "decision": {
+    "board_state": "accepted_95_cross_market_timeframe",
+    "all_required_regimes_95_cross_market_timeframe": true,
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "This closes Board A confidence and cross-market/cross-timeframe validation only.",
+      "Execution promotion remains blocked until Board B proves non-observe release, RC-SPA profitability, and path-specific edge gates."
+    ],
+    "next_action": "Board B B2 selects exactly one Auto-Quant recipe; Board A should not promote execution from confidence evidence alone."
+  }
+}

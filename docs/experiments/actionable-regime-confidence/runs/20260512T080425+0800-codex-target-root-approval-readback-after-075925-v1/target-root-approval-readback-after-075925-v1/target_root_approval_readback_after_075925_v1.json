@@ -1,0 +1,189 @@
+{
+  "accepted_rows_added": 0,
+  "approval": {
+    "approval_file": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "exists": true,
+    "flip_controls_accepted_under_current_contract": false,
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "next_action": "Record one explicit decision option. Do not merge isolated rows or rerun downstream chain until RECAP/PACER provenance plus FLIP-as-control approval exist, or source-owned normal controls are supplied."
+  },
+  "board_hash_before_artifact": {
+    "board_a": "7b52ec2306e5a9f8c7a899451189fefba3dbb60fb4b2c152c0a5a78e7d79e1fe",
+    "board_b": "2bf81bbea5a1642a866df54739e70c195a3756c12048369f20728ef7984caa36"
+  },
+  "canonical_merge": false,
+  "direct_intake_present": true,
+  "direct_intake_source_run_id": "20260511T235910-codex-r6-canonical-intake-v57-materialization-v1",
+  "downstream_promotion_rerun": false,
+  "gate_result": "target_root_approval_readback_after_075925_v1=no_target_root_or_approval_unlock",
+  "generated_at_utc": "2026-05-12T00:07:37.014130+00:00",
+  "pid": 22057,
+  "r3_crisis_supported": false,
+  "r3_native_subhour_complete": true,
+  "r3_native_subhour_unlock": false,
+  "r5_recency_complete": false,
+  "r5_recency_unlock": false,
+  "r6_direct_intake_is_owner_export_root": false,
+  "r6_owner_export_complete": false,
+  "r6_owner_export_unlock": false,
+  "roots": [
+    {
+      "all_required_files_exist": false,
+      "files": [
+        {
+          "csv_rows": null,
+          "exists": false,
+          "required_file": "direct_manipulation_positive_rows.csv",
+          "root_id": "r6_owner_export",
+          "root_path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+          "sha256": "",
+          "size_bytes": null
+        },
+        {
+          "csv_rows": null,
+          "exists": false,
+          "required_file": "direct_manipulation_matched_controls.csv",
+          "root_id": "r6_owner_export",
+          "root_path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+          "sha256": "",
+          "size_bytes": null
+        },
+        {
+          "csv_rows": null,
+          "exists": false,
+          "required_file": "direct_manipulation_provenance.json",
+          "root_id": "r6_owner_export",
+          "root_path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+          "sha256": "",
+          "size_bytes": null
+        }
+      ],
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false,
+      "root_id": "r6_owner_export"
+    },
+    {
+      "all_required_files_exist": false,
+      "files": [
+        {
+          "csv_rows": null,
+          "exists": false,
+          "required_file": "stock_market_regimes_2026_extension.csv",
+          "root_id": "r5_recency_extension",
+          "root_path": "/tmp/ict-engine-source-panel-recency-extension",
+          "sha256": "",
+          "size_bytes": null
+        },
+        {
+          "csv_rows": null,
+          "exists": false,
+          "required_file": "source_panel_recency_provenance.json",
+          "root_id": "r5_recency_extension",
+          "root_path": "/tmp/ict-engine-source-panel-recency-extension",
+          "sha256": "",
+          "size_bytes": null
+        }
+      ],
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false,
+      "root_id": "r5_recency_extension"
+    },
+    {
+      "all_required_files_exist": true,
+      "files": [
+        {
+          "csv_rows": 5032903,
+          "exists": true,
+          "required_file": "native_subhour_source_label_rows.csv",
+          "root_id": "r3_native_subhour",
+          "root_path": "/tmp/ict-engine-native-subhour-source-label-intake",
+          "sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+          "size_bytes": 2786719721
+        },
+        {
+          "csv_rows": null,
+          "exists": true,
+          "required_file": "native_subhour_source_label_provenance.json",
+          "root_id": "r3_native_subhour",
+          "root_path": "/tmp/ict-engine-native-subhour-source-label-intake",
+          "sha256": "60f2422260c404302dbb98dc641f13e50cdae8f09527a848e614a690b87fcc0f",
+          "size_bytes": 2400
+        }
+      ],
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": true,
+      "root_id": "r3_native_subhour"
+    },
+    {
+      "all_required_files_exist": true,
+      "files": [
+        {
+          "csv_rows": 73,
+          "exists": true,
+          "required_file": "positive_spoofing_layering_rows.csv",
+          "root_id": "r6_direct_manipulation_intake",
+          "root_path": "/tmp/ict-engine-direct-manipulation-row-intake",
+          "sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+          "size_bytes": 58924
+        },
+        {
+          "csv_rows": 73,
+          "exists": true,
+          "required_file": "matched_negative_normal_activity_rows.csv",
+          "root_id": "r6_direct_manipulation_intake",
+          "root_path": "/tmp/ict-engine-direct-manipulation-row-intake",
+          "sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+          "size_bytes": 58890
+        },
+        {
+          "csv_rows": null,
+          "exists": true,
+          "required_file": "provenance_manifest.json",
+          "root_id": "r6_direct_manipulation_intake",
+          "root_path": "/tmp/ict-engine-direct-manipulation-row-intake",
+          "sha256": "9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b",
+          "size_bytes": 1450
+        }
+      ],
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "root_exists": true,
+      "root_id": "r6_direct_manipulation_intake"
+    },
+    {
+      "all_required_files_exist": false,
+      "files": [
+        {
+          "csv_rows": null,
+          "exists": false,
+          "required_file": "source_label_equivalence_rows.csv",
+          "root_id": "source_label_equivalence",
+          "root_path": "/tmp/ict-engine-source-label-equivalence-v1",
+          "sha256": "",
+          "size_bytes": null
+        },
+        {
+          "csv_rows": null,
+          "exists": false,
+          "required_file": "source_label_equivalence_provenance.json",
+          "root_id": "source_label_equivalence",
+          "root_path": "/tmp/ict-engine-source-label-equivalence-v1",
+          "sha256": "",
+          "size_bytes": null
+        }
+      ],
+      "path": "/tmp/ict-engine-source-label-equivalence-v1",
+      "root_exists": false,
+      "root_id": "source_label_equivalence"
+    }
+  ],
+  "run_id": "20260512T080425+0800-codex-target-root-approval-readback-after-075925-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

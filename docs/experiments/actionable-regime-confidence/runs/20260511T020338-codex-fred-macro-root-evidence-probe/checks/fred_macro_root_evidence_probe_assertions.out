@@ -1,0 +1,12 @@
+RUN_ID 20260511T020338+0800-codex-fred-macro-root-evidence-probe
+REPORT docs/experiments/actionable-regime-confidence/runs/20260511T020338-codex-fred-macro-root-evidence-probe/root-macro/fred_macro_root_evidence_probe_report.json
+SUMMARY docs/experiments/actionable-regime-confidence/runs/20260511T020338-codex-fred-macro-root-evidence-probe/root-macro/fred_macro_root_evidence_probe_summary.csv
+ROWS 28517
+ACCEPTED_FROM_THIS_RUN none
+MISSING_FROM_THIS_RUN Bull,Bear,Sideways,Crisis
+BLOCKED_FUTURE_TARGET_PREDICTORS true
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+FRESH_CALIBRATION_RERUN true
+TRADE_USABLE false
+GATE none_for_new_macro_roots

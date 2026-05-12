@@ -1,0 +1,8 @@
+PASS diagnostic_only:043932_stable_terminal_readback
+PASS command_exit=0
+PASS accepted_rule_confidence_95_labels=[]
+PASS fail_closed:no_confidence_95_rule_labels
+PASS fail_closed:all_best_rules_wilson95_below_threshold
+PASS blocked:user_selected_historical_data_missing
+PASS promotion_allowed=false
+PASS update_goal=false

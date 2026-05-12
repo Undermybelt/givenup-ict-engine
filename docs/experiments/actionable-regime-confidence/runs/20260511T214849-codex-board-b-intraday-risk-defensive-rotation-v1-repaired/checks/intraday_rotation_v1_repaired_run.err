@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+ModuleNotFoundError: No module named 'pyarrow'
+
+The above exception was the direct cause of the following exception:
+
+ImportError: `Import pyarrow` failed.  Use pip or conda to install the pyarrow package.

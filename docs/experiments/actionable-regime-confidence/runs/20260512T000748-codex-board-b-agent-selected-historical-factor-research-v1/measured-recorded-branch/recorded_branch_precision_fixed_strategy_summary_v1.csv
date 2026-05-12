@@ -1,0 +1,6 @@
+strategy,status,trade_count,win_rate_pct,total_profit_pct,sharpe,sortino,calmar,max_drawdown_pct,profit_factor,pairs
+RecordedBranchDailyPulse,ok,478,39.3305,14.75,6.4413,8.1186,38.0246,-6.2287,1.3201,NQ/USD
+RegimeRootPulseBranch,ok,300,35.0,3.16,1.561,2.0641,11.391,-4.4578,1.1132,NQ/USD
+RegimeRsiRelief,ok,2,100.0,0.37,1.8253,-100.0,-100.0,-0.0,0.0,NQ/USD
+RegimeTrendCarry,ok,30,36.6667,6.91,0.7811,2.6739,18.7385,-6.1775,1.7378,NQ/USD
+RegimeVolBreakout,ok,33,33.3333,3.28,0.4492,1.5183,9.5207,-5.7258,1.2903,NQ/USD

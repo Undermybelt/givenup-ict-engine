@@ -1,0 +1,15 @@
+{
+  "auto_quant_pinned_ref": "local-board-b-source-root-stop-carry-longhorizon-v1",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260511T154919.379745000Z",
+  "library_source": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/autoquant/strategy_library_source_root_stop_carry_longhorizon_v1.json",
+  "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_strategy_library.json",
+  "log_cross_check": null,
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 1,
+  "n_total_strategies": 1,
+  "symbol": "SRC_ROOT_CARRY_LONG_220646"
+}

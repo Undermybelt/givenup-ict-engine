@@ -1,0 +1,19 @@
+{
+  "market_key": "provider_longspan_tradingview_qqq_2y_1h",
+  "interval": "1h",
+  "start": "2024-05-13T00:00:00Z",
+  "end": "2026-05-12T00:00:00Z",
+  "count": 5000,
+  "related_roles": [
+    "etf_reference"
+  ],
+  "provider_preferences": {
+    "etf_reference": "tradingview_mcp"
+  },
+  "symbol_overrides": {
+    "etf_reference": {
+      "display_symbol": "QQQ",
+      "tradingview_mcp": "NASDAQ:QQQ"
+    }
+  }
+}

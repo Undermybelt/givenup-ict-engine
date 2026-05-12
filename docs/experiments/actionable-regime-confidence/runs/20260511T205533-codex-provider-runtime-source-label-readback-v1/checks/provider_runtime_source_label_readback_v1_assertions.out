@@ -1,0 +1,13 @@
+PASS decision=provider_runtime_source_label_readback_v1=providers_checked_no_source_owned_labels_acquired
+PASS provider_status_returncode=0
+PASS tradingview_mcp_status=configured_runtime_unhealthy
+PASS auto_quant_status=missing_dependency
+PASS yfinance_rows=88
+PASS kraken_rows=721
+PASS ibkr_returncode=0
+PASS source_label_ready_count=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

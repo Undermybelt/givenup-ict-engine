@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/data/nq.cleaned-1m.csv ...
+  raw_rows=301,577 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=301,577
+  range 2012-07-06 12:46:00+00:00 -> 2023-10-26 16:19:00+00:00
+  after timerange slice: 301,575 rows
+  cleaning: dropped 9 (0.0030%) | ohlc_inconsistent=0 nonpositive_price=0 negative_volume=0 ghost_bar=0 jump_outlier=9 -> after_clean=301,566
+  gap_audit: median_gap=60s max_gap=911,566.0min big_gaps_gt_60x_median=1,559 (typical for futures session breaks/weekends)
+  wrote   1m: 301,566 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/aq_runtime/user_data/data/NQ_USD-1m.feather
+  wrote   1h:   8,878 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/aq_runtime/user_data/data/NQ_USD-1h.feather
+  wrote   4h:   2,911 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/aq_runtime/user_data/data/NQ_USD-4h.feather
+Done: 3 feather files for pair NQ/USD in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/aq_runtime/user_data/data

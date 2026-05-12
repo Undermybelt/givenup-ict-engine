@@ -1,0 +1,12 @@
+PASS candidate_rows=22671
+PASS positive_self_trade_rows=12671
+PASS negative_control_rows=10000
+PASS calibration_wilson95_lcb=0.998671
+PASS test_wilson95_lcb=0.998675
+PASS accepted_direct_manipulation_95=true
+PASS accepted_parent_root_slots_added=0
+PASS raw_data_committed=false
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS trade_usable=false
+GATE accepted_95_direct_order_lifecycle_self_trade_bounded

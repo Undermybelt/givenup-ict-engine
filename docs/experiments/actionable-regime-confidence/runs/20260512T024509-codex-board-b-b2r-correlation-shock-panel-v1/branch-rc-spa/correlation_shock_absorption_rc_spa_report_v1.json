@@ -1,0 +1,77 @@
+{
+  "run_id": "20260512T024509+0800-codex-board-b-b2r-correlation-shock-panel-v1",
+  "recipe_id": "CorrelationShockAbsorptionV1",
+  "schema_version": "canonical_readback_flat_report",
+  "canonical_readback": true,
+  "gate_result": "fail:required_root_branch_hard_gates_failed",
+  "stable_profit_score": 75.88863517875106,
+  "variant_trade_rows": 47843,
+  "selected_trade_rows": 13275,
+  "branch_paths_evaluated": 5,
+  "branch_paths_passed": 0,
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "matrix_root_trade_counts": {
+    "Bull": 26848,
+    "Bear": 5479,
+    "Sideways": 14903,
+    "Crisis": 613,
+    "Manipulation(scoped)": 0
+  },
+  "selected_root_trade_counts": {
+    "Bull": 6563,
+    "Bear": 8,
+    "Sideways": 6280,
+    "Crisis": 424,
+    "Manipulation(scoped)": 0
+  },
+  "primary_blocker": "Bull=fail:reject_fold_inconsistency|reject_cost_fragile|reject_overfit_risk|reject_rc_spa_below_60; Bear=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_overfit_risk; Sideways=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Crisis=fail:reject_insufficient_test_folds|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Manipulation(scoped)=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+  "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "provider_focus": {
+    "yfinance": [
+      true,
+      "ready",
+      "public_yahoo_http_endpoints"
+    ],
+    "kraken_cli": [
+      true,
+      "ready",
+      "kraken_cli_config_detected"
+    ],
+    "kraken_public": [
+      false,
+      "configured_runtime_unhealthy",
+      "python3_provider_dependencies_missing"
+    ],
+    "ibkr": [
+      false,
+      "configured_runtime_unhealthy",
+      "ibkr_runtime_dependencies_missing_with_gateway_reachable"
+    ],
+    "ibkr_bridge": [
+      false,
+      "configured_runtime_unhealthy",
+      "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable"
+    ],
+    "tradingview_mcp": [
+      false,
+      "configured_runtime_unhealthy",
+      "tradingview_mcp_connectivity_probe_failed"
+    ]
+  },
+  "artifacts": {
+    "canonical_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/checks/correlation_shock_absorption_canonical_readback_v3.json",
+    "completion_check": "docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/checks/correlation_shock_absorption_completion_v1.json",
+    "selected_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/branch-rc-spa/correlation_shock_absorption_selected_rows_v1.csv",
+    "variant_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/branch-rc-spa/correlation_shock_absorption_variant_rows_v1.csv",
+    "provider_status": "docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/command-output/00_provider_status.out",
+    "canonical_command_exit": "docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/command-output/02_correlation_shock_absorption_rc_spa_py313.exit"
+  },
+  "shadow_packet": {
+    "status": "historical_shadow_not_latest_024509_ledger_row",
+    "stable_profit_score": 72.16251032599476,
+    "variant_trade_rows": 281,
+    "selected_trade_rows": 88,
+    "source": "checks/correlation_shock_absorption_current_artifact_readback_v2.json"
+  },
+  "next_action": "Keep fail-closed and do not run downstream for this candidate; use the canonical packet as nursery feedback."
+}

@@ -1,0 +1,6 @@
+requirement,artifact,status,note
+six provider rows,docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/provider-csv,covered,"{""binance_btcusdt_1h"": 985, ""bybit_btcusdt_linear_1h"": 985, ""ibkr_btc_paxos_aggtrades_1h"": 787, ""kraken_xbtusd_1h"": 721, ""tvr_btc_usd_1h_local_stdio"": 720, ""tvr_selected_1h"": 720, ""yfinance_btc_usd_1h"": 983}"
+local stdio TVR,docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/provider-csv/tvr_btc_usd_local_stdio_1h.csv,covered,BTC-USD(local-stdio)
+AQ for non-empty provider rows,docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/workspace,covered,run_success=6
+downstream chain,N/A,not_started,requires board step_done/readback first
+Board A acceptance,N/A,not_claimed,accepted_95_contexts_added=0

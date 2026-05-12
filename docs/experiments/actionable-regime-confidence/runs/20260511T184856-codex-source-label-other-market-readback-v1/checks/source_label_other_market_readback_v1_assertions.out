@@ -1,0 +1,6 @@
+PASS source_artifact_count=6
+PASS accepted_factor_or_gate_total=0
+PASS intake_missing_files
+PASS full_other_market_source_label_equivalence=false
+PASS full_objective=false
+PASS current_cursor_edited=false

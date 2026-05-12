@@ -1,0 +1,1 @@
+target/debug/ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol ^VIX --state-dir /tmp/ict-engine-board-a-064259-runtime-v1 --output-format agent

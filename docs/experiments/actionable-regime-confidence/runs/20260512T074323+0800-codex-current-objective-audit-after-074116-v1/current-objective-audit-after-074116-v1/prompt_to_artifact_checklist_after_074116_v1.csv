@@ -1,0 +1,9 @@
+requirement,status,evidence,decision
+each_regime_confidence_95,fail,"No accepted per-regime 95% packet produced by this audit; Pre-Bayes latest gate is observe_only and dominant soft probability is 0.6","not complete"
+cross_market_cross_timeframe_validation,fail,"No validation_instruments / validation_periods / validation_market_contexts packet produced by this audit","not complete"
+use_auto_quant,blocked,"auto_quant_status=missing_dependency healthy=false data_ready=false bootstrap_needed=true","selected-data AutoQuant not run"
+use_ict_engine_filter_pre_bayes_bbn_catboost_execution_tree,blocked,"workflow_status=fail_closed; structural path target mature_rows=0 calibrated_rows=0","downstream promotion not run"
+use_ibkr_tradingviewremix_yf_kraken,partial,"provider-status command exited 0 but live/local/market provider readiness remains partial","not completion evidence"
+source_control_unlock,fail,"R6 owner/export root absent; R5 recency root absent; R3 root present but TSIE-derived and Crisis taxonomy absent","no unlock"
+do_not_disturb_multi_agent_board,pass,"append-only materialization; no target-root mutation; board registration is count-once only","safe to register"
+update_goal,fail,"strict_full_objective=false and update_goal=false","do not call update_goal"

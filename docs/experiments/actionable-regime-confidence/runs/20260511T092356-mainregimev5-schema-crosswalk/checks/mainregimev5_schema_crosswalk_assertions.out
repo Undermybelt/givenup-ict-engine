@@ -1,0 +1,13 @@
+PASS active_taxonomy=MainRegimeV5
+PASS mandatory_roots=6
+PASS optional_overlay=CrossAssetMacroRotation
+PASS residual=UnknownOrMixed
+PASS accepted_95_roots_added=0
+PASS prior_v2_exact_underlying_slots_auto_promoted=false
+PASS prior_subtype_packets_auto_promoted=false
+PASS manipulation_fail_closed_without_direct_rows=true
+PASS gate_result=blocked_mainregimev5_schema_materialized_calibration_not_run
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

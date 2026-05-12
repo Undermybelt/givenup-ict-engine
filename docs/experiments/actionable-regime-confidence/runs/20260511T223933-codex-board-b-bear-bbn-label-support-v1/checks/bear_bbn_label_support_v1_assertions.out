@@ -1,0 +1,6 @@
+PASS cargo_test_bear_relief_bundle_exit=0
+PASS analyze_demo_bear_bundle_exit=0
+PASS regime_bundle_bbn_evidence_applied=primary::BearReliefCarry
+PASS regime_bundle_bbn_market_regime=bear
+PASS branch_path_preserved=Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12
+PASS remaining_blocker=structural_path_ranking_target_exact_branch_path_or_bijection_missing

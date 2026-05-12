@@ -1,0 +1,1 @@
+target/debug/ict-engine workflow-status --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1 --refresh --output-format json

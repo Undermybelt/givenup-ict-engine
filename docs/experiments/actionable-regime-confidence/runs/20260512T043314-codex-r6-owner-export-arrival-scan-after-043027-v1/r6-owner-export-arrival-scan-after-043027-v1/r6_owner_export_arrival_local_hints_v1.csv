@@ -1,0 +1,86 @@
+search_root,path,size_bytes,reason,decision
+/tmp,/tmp/ict-engine-cme-mbo.html,602,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-databento-docs-headers.txt,468,name_contains_databento,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-cme-datamine.html,602,name_contains_cme,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-cme-datamine-headers.txt,4641,name_contains_cme,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-databento-metadata-range-response.json,30,name_contains_databento,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-cme-mbo-headers.txt,4641,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-cme-datamine-page.html,602,name_contains_cme,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-databento-docs.html,15043,name_contains_databento,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-uv-cache-probe/archive-v0/PsdtC1pQuNImbrw-BS-yo/numpy/f2py/symbolic.py,53310,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-uv-cache-probe/archive-v0/PsdtC1pQuNImbrw-BS-yo/numpy/f2py/symbolic.pyi,6064,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,58924,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,58890,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,1450,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-pypdf-py313/pypdf/_codecs/symbol.py,3734,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-board-a-tsie-market-regime-dryrun-20260512T0200/symbol_counts_top100.csv,1112,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-provider-deps-uv-cache/archive-v0/-hPI09v6pv_HkxatcXAI5/numpy/f2py/symbolic.py,53310,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-provider-deps-uv-cache/archive-v0/-hPI09v6pv_HkxatcXAI5/numpy/f2py/symbolic.pyi,6064,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-pypdf/pypdf/_codecs/symbol.py,3734,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/positive_spoofing_layering_rows.csv,58924,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/matched_negative_normal_activity_rows.csv,58890,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/provenance_manifest.json,6572,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/positive_spoofing_layering_rows.csv,62121,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/matched_negative_normal_activity_rows.csv,62426,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/provenance_manifest.json,1676,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/positive_spoofing_layering_rows.csv,58924,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/matched_negative_normal_activity_rows.csv,58890,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/tmp,/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/provenance_manifest.json,1458,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-cme-mbo.html,602,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-databento-docs-headers.txt,468,name_contains_databento,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-cme-datamine.html,602,name_contains_cme,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-cme-datamine-headers.txt,4641,name_contains_cme,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-databento-metadata-range-response.json,30,name_contains_databento,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-cme-mbo-headers.txt,4641,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-cme-datamine-page.html,602,name_contains_cme,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-databento-docs.html,15043,name_contains_databento,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-uv-cache-probe/archive-v0/PsdtC1pQuNImbrw-BS-yo/numpy/f2py/symbolic.py,53310,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-uv-cache-probe/archive-v0/PsdtC1pQuNImbrw-BS-yo/numpy/f2py/symbolic.pyi,6064,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,58924,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,58890,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,1450,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-pypdf-py313/pypdf/_codecs/symbol.py,3734,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-board-a-tsie-market-regime-dryrun-20260512T0200/symbol_counts_top100.csv,1112,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-provider-deps-uv-cache/archive-v0/-hPI09v6pv_HkxatcXAI5/numpy/f2py/symbolic.py,53310,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-provider-deps-uv-cache/archive-v0/-hPI09v6pv_HkxatcXAI5/numpy/f2py/symbolic.pyi,6064,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-pypdf/pypdf/_codecs/symbol.py,3734,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/positive_spoofing_layering_rows.csv,58924,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/matched_negative_normal_activity_rows.csv,58890,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/provenance_manifest.json,6572,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/positive_spoofing_layering_rows.csv,62121,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/matched_negative_normal_activity_rows.csv,62426,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/provenance_manifest.json,1676,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/positive_spoofing_layering_rows.csv,58924,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/matched_negative_normal_activity_rows.csv,58890,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/private/tmp,/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/provenance_manifest.json,1458,required_or_legacy_required_filename,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/symbology.csv,8273022,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/symbology.json,159781,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/symbology.csv,3201374,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/symbology.json,55943,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/es future 2021-2025/symbology.csv,4267811,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/es future 2021-2025/symbology.json,56948,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/symbology.csv,3560949,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/symbology.json,54038,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/databento.rar,102402878,name_contains_databento,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/symbology.csv,30984640,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/symbology.json,1324648,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1/meetings__board-acme-2025-q1-0.json,3424,name_contains_cme,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1/companies__acme-labs-50.json,3699,name_contains_cme,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1/companies__acme-0.json,3498,name_contains_cme,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/repo-intake/Pnlclaw-community/packages/exchange-sdk/tests/test_symbol_normalizer.py,3076,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/repo-intake/GenericAgent/memory/procmem_scanner.py,4950,name_contains_cme,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/repo-intake/GenericAgent/memory/procmem_scanner_sop.md,4260,name_contains_cme,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/databento_provider.py,126901,name_contains_databento,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/build_akshare_symbols_db.py,8977,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/databento_live.py,12342,name_contains_databento,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/explore_databento_data.py,7088,name_contains_databento,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/cme_data.py,3473,name_contains_cme,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/cboe_vix_data.py,4952,name_contains_vix,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/strategies/SelectUniverseSymbolsFromIDRegressionAlgorithm.py,2279,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/strategies/MultipleSymbolConsolidationAlgorithm.py,5874,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/strategies/ComboOrderTicketDemoAlgorithm.py,10578,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/strategies/ManuallySetMarketHoursAndSymbolPropertiesDatabaseEntriesAlgorithm.py,4647,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/strategies/CoarseFineFundamentalComboAlgorithm.py,3522,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/strategies/AllShortableSymbolsCoarseSelectionRegressionAlgorithm.py,6514,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/strategies/ComboOrdersFillModelAlgorithm.py,5794,name_contains_mbo,local_hint_not_verifier_native_owner_export
+/Users/thrill3r/Downloads,/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/strategies/StringToSymbolImplicitConversionRegressionAlgorithm.py,1716,name_contains_mbo,local_hint_not_verifier_native_owner_export

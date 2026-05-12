@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python docs/experiments/actionable-regime-confidence/runs/20260512T103010+0800-codex-board-b-provider-btc-always-entry-canary-v1/workspace/auto-quant-provider-btc-always-entry-canary/run_tomac.py

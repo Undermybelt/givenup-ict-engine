@@ -1,0 +1,14 @@
+PASS decision=r6_geneva_cftc_row_uplift_v1=direct_intake_rows_uplifted_schema_ready_calibration_still_blocked
+PASS source_pdf_sha256=7b4b6a7631e476d683923327aae7c1e6300e6903a02b4a2a2e5dc0cf69d2c994
+PASS positive_rows_added=3
+PASS matched_negative_rows_added=3
+PASS verifier_status=schema_ready_unscored
+PASS positive_rows=24
+PASS matched_negative_rows=24
+PASS combined_min_wilson95_lcb=0.862024
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=false

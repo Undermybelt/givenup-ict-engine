@@ -1,0 +1,11 @@
+requirement,evidence,status
+use concrete Auto-Quant/ict-engine artifacts,command-output/*.cmd and checks/*.exit,PASS
+ingest real trades into ict-engine,02_ingest_real_trades_force.out shows 146/146 applied with 0 invalid,PASS
+BBN state present,state_ingest_bridge_fix_v1/B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610/bbn_network.json exists,PASS
+Pre-Bayes/filter bridge present,03_pre_bayes_status.out has null bridge policy soft evidence filtered assignments and gate status,FAIL_CLOSED
+CatBoost/path-ranker mature scored rows,09_policy_training_status_after_export.out raw_scored_mature=0/30,FAIL_CLOSED
+CatBoost trainer/runtime available,09_policy_training_status_after_export.out trainer_artifact=missing runtime_selection=disabled,FAIL_CLOSED
+execution tree ready/actionable,08_workflow_full.out closed_loop_branch_admission.status=fail_closed and ready=false actionable=false,FAIL_CLOSED
+cross-provider six-provider matrix,run is Yahoo BTC pullback branch only and does not include same-run IBKR TVR YF Kraken Binance Bybit matrix,FAIL_CLOSED
+per-regime 95 confidence and cross-market/timeframe validation,not proven by this run,FAIL_CLOSED
+promotion/update_goal authorization,strict_full_objective=false and update_goal=false,FAIL_CLOSED

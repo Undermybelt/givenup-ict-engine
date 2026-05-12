@@ -1,0 +1,12 @@
+PASS decision=r6_cme_normal_control_route_screen_v1=official_route_identified_controls_not_acquired
+PASS positive_rows_count=2
+PASS provenance_present=true
+PASS matched_negative_rows_present=true
+PASS request_sent=false
+PASS authenticated_account_used=false
+PASS rows_acquired=false
+PASS matched_controls_acquired=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

@@ -1,0 +1,13 @@
+run_id=20260511T140042+0800-codex-positive-regime-factor-index-v1
+board_sha256_at_run=54d604e33cad12718144844c828c7d8af9ba8b72f254e4b57b3e7fcde39cfb59
+minimum_all_success_support=73
+daily_parent_price_roots_accepted_count=4
+same_source_weekly_monthly_cells_accepted_count=8
+exact_intraday_parent_context_rows_accepted=36
+direct_manipulation_scoped_varieties_accepted_count=5
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

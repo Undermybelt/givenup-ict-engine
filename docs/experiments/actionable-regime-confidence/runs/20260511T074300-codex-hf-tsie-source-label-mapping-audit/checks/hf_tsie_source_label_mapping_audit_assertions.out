@@ -1,0 +1,13 @@
+goal_achieved=false
+downloaded_full_parquet=false
+metadata_only=true
+sample_rows_read=10
+train_examples=7193996
+rule_based_signal_logic=true
+accepted_root_labels_added=0
+accepted_mainregimev2_full_universe_full_cycle=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_dataset_committed=false
+trade_usable=false
+gate_result=blocked_hf_tsie_not_attachable_as_mainregimev2_source_label_panel

@@ -1,0 +1,9 @@
+PASS attached_source_label_slots_added=3
+PASS accepted_calibrated_root_factors_added=0
+PASS accepted_parent_root_slots_added=0
+PASS crisis_absent=[{'provider': 'yfinance', 'instrument': 'QQQ', 'timeframe': '1d', 'root': 'Crisis', 'missing_or_rejected_reason': 'rejected_near_underlying_proxy_not_accepted', 'candidate_source_ticker_rejected_or_missing': '^IXIC', 'candidate_source_relation': 'near_underlying_proxy_rejected', 'required_label_source': 'exact_underlying_or_direct_instrument_source_label', 'forbidden_proxy_sources': 'hmm_state_or_ohlcv_derived_proxy_or_strategy_prediction_or_future_return_label', 'slot_decision': 'rejected_no_matching_source_root_label', 'reason': 'CrystalBull/IBD outlook has Bull/Bear/Sideways-style states but no Crisis root label.'}]
+PASS factor_gate_still_blocked=[]
+PASS thresholds_relaxed_false=False
+PASS runtime_code_changed_false=False
+PASS raw_data_committed_false=False
+PASS trade_usable_false=False

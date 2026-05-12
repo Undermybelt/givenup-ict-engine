@@ -1,0 +1,10 @@
+PASS active taxonomy remains MainRegimeV2
+PASS main price roots are Bull, Bear, Sideways, Crisis
+PASS UnknownOrMixed remains residual only
+PASS Manipulation remains a separate direct-event/order-flow/order-lifecycle overlay
+PASS subtype labels are child/provenance evidence only
+PASS accepted gate remains none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+PASS no thresholds relaxed
+PASS no runtime code changed
+PASS no raw data committed
+PASS not trade usable

@@ -1,0 +1,10 @@
+shared_lock_respected=ok
+selected_positive_rows_4=ok
+selected_controls_4=ok
+projected_verifier_ok=ok
+projected_positive_rows_77=ok
+projected_matched_negative_rows_77=ok
+pooled_direct_gate_true=ok
+sidecar_axis_gate_true=ok
+strict_goal_false=ok
+shared_intake_not_mutated=ok

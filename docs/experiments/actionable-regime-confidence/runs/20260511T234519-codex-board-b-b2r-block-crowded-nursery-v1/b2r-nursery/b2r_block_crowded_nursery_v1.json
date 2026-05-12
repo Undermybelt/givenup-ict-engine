@@ -1,0 +1,148 @@
+{
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "action_leaf": "observe_or_skip_until_execution_context_compatible",
+  "auto_quant_status": {
+    "data_ready": true,
+    "healthy": true,
+    "managed_dir": "/Users/thrill3r/Auto-Quant",
+    "notes": [
+      "auto_quant_seed_strategies_required"
+    ],
+    "status": "dependency_ready_seed_required"
+  },
+  "block_crowded_feature_packet": {
+    "feature_name": "execution_admissibility_block_crowded_context_v1",
+    "feature_role": "negative execution-admissibility / market-state feature",
+    "fresh_value": false,
+    "interpretation": "The exact Crisis branch can move from block_crowded to fill_viable/observe as live market-state readiness changes. Keep this as nursery feedback and do not turn it into a promotion signal without execution-tree admit plus closed-loop confidence.",
+    "previous_value": true
+  },
+  "branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "downstream_stage_readback": {
+    "bbn_soft_evidence_label_set": "Bull_->_RootCarryExpansion_->_StopManagedRiskCarry_->_SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12,Bear_->_BearReliefCarry_->_StopManagedRecoveryCarry_->_SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12,Sideways_->_RangeCarry_->_StopManagedRangeCarry_->_SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12,Crisis_->_CrisisReliefCarry_->_StopManagedPanicRecovery_->_SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "catboost_ranker_runtime_source": "history_path",
+    "catboost_ranker_runtime_status": "using_history_scores",
+    "execution_candidate_review_status": "promote_latest",
+    "execution_candidate_status": "ready",
+    "pre_bayes_gate_status": "pass_neutralized"
+  },
+  "fresh_live_replay_feedback": {
+    "decision_hint": "execution_observe_with_medium_prediction",
+    "execution_bias": "passive",
+    "execution_branch": "fill_viable",
+    "execution_gate_status": "observe",
+    "execution_reason": "market_state=RangeConsolidation/WideRange | execution=observe/fill_viable/passive | ranker=history_path/unknown/ready",
+    "execution_score": 0.5637168720248323,
+    "factor_research_next_step_blocker": "user_selected_historical_data_missing",
+    "pre_bayes_gate": "pass_neutralized",
+    "source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/logs/03_analyze_live_crisis_bundle.out",
+    "structural_path_preserved": true,
+    "workflow_candidate_status": "ready",
+    "workflow_review_status": "observe"
+  },
+  "gates": [
+    {
+      "gate": "nursery_status",
+      "pass": true,
+      "source": "Board B nursery contract",
+      "value": "incubation_only"
+    },
+    {
+      "gate": "exact_branch_path_preserved_previous",
+      "pass": true,
+      "source": "231800 exact-branch readback",
+      "value": "true"
+    },
+    {
+      "gate": "exact_branch_path_preserved_live_replay",
+      "pass": true,
+      "source": "233426 workflow structural bundle",
+      "value": "true"
+    },
+    {
+      "gate": "previous_block_crowded_observed",
+      "pass": true,
+      "source": "231800 execution tree",
+      "value": "block_crowded"
+    },
+    {
+      "gate": "fresh_execution_not_block_crowded",
+      "pass": true,
+      "source": "233426 analyze-live execution triage",
+      "value": "fill_viable"
+    },
+    {
+      "gate": "fresh_execution_gate_observe_only",
+      "pass": true,
+      "source": "233426 analyze-live execution triage",
+      "value": "observe"
+    },
+    {
+      "gate": "pre_bayes_live_gate",
+      "pass": true,
+      "source": "233426 analyze-live",
+      "value": "pass_neutralized"
+    },
+    {
+      "gate": "catboost_ranker_history_ready",
+      "pass": true,
+      "source": "231800 closed-loop readback",
+      "value": "enabled_candidate_set_ready"
+    },
+    {
+      "gate": "provider_status_exit0",
+      "pass": true,
+      "source": "fresh provider-status",
+      "value": "0"
+    },
+    {
+      "gate": "local_auto_quant_healthy",
+      "pass": true,
+      "source": "fresh local Auto-Quant status",
+      "value": "true"
+    },
+    {
+      "gate": "promotion_allowed",
+      "pass": true,
+      "source": "nursery feedback only; live replay is observe, not execute",
+      "value": "false"
+    }
+  ],
+  "next_action": "Record block_crowded/fill_viable as nursery execution-admissibility feedback; only rerun promotion when the exact branch reaches execution_tree_admitted or after a predeclared historical-data continuation is selected.",
+  "nursery_branch_id": "B2R-220646-crisis-block-crowded-execution-admissibility-v1",
+  "nursery_status": "incubation_only",
+  "parent_regime_root": "Crisis",
+  "previous_execution_feedback": {
+    "decision_hint": "execution_blocked_regardless_of_prediction",
+    "execution_branch": "block_crowded",
+    "execution_gate_status": "blocked",
+    "execution_readiness": 0.4433,
+    "execution_reason": "market_state=RangeConsolidation/WideRange | execution=blocked/block_crowded/skip | ranker=history_path/unknown/ready",
+    "path_ranker_used": true,
+    "path_ranker_visible": true,
+    "source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/exact_branch_closed_loop_readback_v4.json"
+  },
+  "promotion_allowed": false,
+  "promotion_blocker": "incubation_only: fresh exact-branch replay is fill_viable/observe, not admitted execution; factor-research continuation also requires explicit historical data selection.",
+  "provider_status": {
+    "ready_providers": [
+      "breaker_rb_long_v1",
+      "cisd_rb_long_v1",
+      "yfinance",
+      "kraken_cli",
+      "yfinance"
+    ],
+    "selected_provider_reasons": {
+      "ibkr": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "kraken_cli": "kraken_cli_config_detected",
+      "kraken_public": "python3_provider_dependencies_missing",
+      "tradingview_mcp": "tradingview_mcp_connectivity_probe_failed",
+      "yfinance": "public_yahoo_http_endpoints"
+    },
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+  },
+  "recipe_id": "SourceRootStopCarryLongHorizonV1",
+  "regime_prior_confidence": 85.7407,
+  "run_id": "20260511T234519+0800-codex-board-b-b2r-block-crowded-nursery-v1",
+  "schema_version": "board-b-b2r-block-crowded-nursery/v1"
+}

@@ -1,0 +1,8 @@
+PASS github_queries=6
+PASS repos_classified=1
+PASS accepted_new_independent_label_sources=0
+PASS new_attached_root_label_slots=0
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS gate_result=blocked_nonkaggle_github_search_no_attachable_root_label_panel

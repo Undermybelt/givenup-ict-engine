@@ -1,0 +1,10 @@
+bear_bbn_applied=True
+bear_bbn_skipped_no_supported_label=False
+exact_feedback_current_rows_before_apply=6
+exact_feedback_exact_branch_rows_before_apply=4
+exact_branch_score_rows_written=4
+exact_branch_apply_exit=0
+nq_runtime_exact_board_b_rows=0
+nq_runtime_branch_path_count=4
+structural_bijection_status=fail_closed:no_exact_bijection_in_nq_runtime_target
+promotion_allowed=false

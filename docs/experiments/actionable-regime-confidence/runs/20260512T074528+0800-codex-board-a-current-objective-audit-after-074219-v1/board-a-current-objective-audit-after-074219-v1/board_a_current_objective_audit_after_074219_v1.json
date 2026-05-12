@@ -1,0 +1,32 @@
+{
+  "board_a_sha256_at_audit": "ce758db0e75fb9938ef7590db3a7d6a2ee9cb668ef28740134172747ac0c8b4a",
+  "board_b_sha256_at_audit": "d23163d3f688dd8d34e8e38b6b000fbbfda954bbcd75b9f63a58950d047b2477",
+  "decision": "not_complete",
+  "gate_result": "board_a_current_objective_audit_after_074219_v1=not_complete_source_control_unlock_absent_after_manual_review_no_downstream_promotion",
+  "readback": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "direct_verifier_run": false,
+    "downstream_promotion_rerun": false,
+    "local_manual_review_counted_once": true,
+    "manual_074219_gate": "local_source_control_manual_review_after_073755_v1=no_new_required_source_control_unlock",
+    "r3_074116_gate": "r3_possible_file_manual_review_after_073755_v1=tsie_existing_native_subhour_root_non_promoting_no_unlock",
+    "r3_manual_review_counted_once": true,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "source_control_evidence_acquired": false,
+    "split_calibration_run": false,
+    "strict_full_objective": false,
+    "sweep_073755_gate": "local_required_source_control_sweep_after_073650_v1=no_new_required_root_no_unlock",
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "run_id": "20260512T074528+0800-codex-board-a-current-objective-audit-after-074219-v1",
+  "source_artifacts": {
+    "local_manual_review_074219_assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T074219+0800-codex-local-source-control-manual-review-after-073755-v1/checks/local_source_control_manual_review_after_073755_v1_assertions.out",
+    "local_sweep_073755_assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T073755+0800-codex-local-required-source-control-sweep-after-073650-v1/checks/local_required_source_control_sweep_after_073650_v1_assertions.out",
+    "r3_manual_review_074116_assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T074116+0800-codex-r3-possible-file-manual-review-after-073755-v1/checks/r3_possible_file_manual_review_after_073755_v1_assertions.out"
+  }
+}

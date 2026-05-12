@@ -1,0 +1,39 @@
+{
+  "candidate_set_id": "structural-candidates:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:0c261c3624a38bf7",
+  "candidate_set_size": 3,
+  "composite_score": 0.5402479642913006,
+  "confirmation_summary": "user confirms the required input",
+  "current_posterior": 0.5574970918447152,
+  "direction": "Observe",
+  "experience_prior": 0.5,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 1,
+  "invalidation_summary": "regime branch trend loses posterior support or invalidates before trigger",
+  "path_id": "path:scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:trend:trend_follow_through:primary",
+  "path_label": "trend_follow_through",
+  "path_ranker_runtime": {
+    "applied_path_count": 0,
+    "artifact_match_count": 0,
+    "candidate_set_match_count": 0,
+    "enabled": true,
+    "history_match_count": 0,
+    "reuse_mode": "candidate_set_only",
+    "status": "enabled_no_matching_scores"
+  },
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T131621+0800-codex-125715-eth-same-symbol-prebayes-bbn-v1/state_ingest'",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T131621+0800-codex-125715-eth-same-symbol-prebayes-bbn-v1/state_ingest'",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json",
+    "user_input_required": true
+  },
+  "scenario_id": "scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:trend:trend_follow_through",
+  "selected_path_probability": 0.3673297349109715,
+  "stop_summary": "Use execution candidate 'execution-candidate:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:analyze:v1' once actionable; current candidate_status=no_trade.",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+  "trigger_summary": "regime_posterior=trend:0.446",
+  "why_this_path": "posterior=0.557 prior=0.500 invalidation_rate=0.000"
+}

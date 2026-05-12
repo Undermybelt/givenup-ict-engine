@@ -1,0 +1,23 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 73,
+  "matched_negative_rows": 73,
+  "matched_group_count": 70,
+  "provenance_keys": [
+    "canonical_intake_root",
+    "generated_at_utc",
+    "materialization_note",
+    "raw_data_committed",
+    "run_id",
+    "runtime_code_changed",
+    "source_v56_json",
+    "source_v56_negative_csv",
+    "source_v56_positive_csv",
+    "thresholds_relaxed",
+    "trade_usable",
+    "v56_gate_result",
+    "v56_negative_sha256",
+    "v56_positive_sha256"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

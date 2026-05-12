@@ -1,0 +1,5 @@
+candidate_set_id,path_id,raw_path_score
+RootRepairPanelV1_candidate_set,Bull -> TrendExpansion -> CrossAssetTrendCarry -> RootRepairPanelV1:nq_crypto_trend_followthrough_h24,0.26738819
+RootRepairPanelV1_candidate_set,Bear -> BearMarketDrawdown -> CryptoDeleveragingShort -> RootRepairPanelV1:btc_deleveraging_short_h12,0.31270534
+RootRepairPanelV1_candidate_set,Sideways -> RangeConsolidation -> IndexRangeFade -> RootRepairPanelV1:nq_lowvol_range_fade_h12,0.25463567
+RootRepairPanelV1_candidate_set,Crisis -> ExtremeStress -> IndexTailShort -> RootRepairPanelV1:nq_tail_short_h12,0.13774863

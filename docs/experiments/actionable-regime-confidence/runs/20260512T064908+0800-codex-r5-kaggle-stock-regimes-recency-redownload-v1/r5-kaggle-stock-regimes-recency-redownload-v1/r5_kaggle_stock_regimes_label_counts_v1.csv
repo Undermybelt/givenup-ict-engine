@@ -1,0 +1,6 @@
+regime_label,rows,mean_regime_confidence,max_regime_confidence
+Bear,54939,0.45678,1.0
+Bull,103766,0.595192,1.0
+Crisis,29632,0.402279,0.75
+High-volatility,16,0.303625,0.333
+Sideways,56668,0.627392,1.0

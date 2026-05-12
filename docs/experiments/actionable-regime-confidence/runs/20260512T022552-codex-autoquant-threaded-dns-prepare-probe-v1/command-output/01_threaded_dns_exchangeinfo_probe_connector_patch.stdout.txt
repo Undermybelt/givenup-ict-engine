@@ -1,0 +1,7 @@
+{
+  "body_prefix": "{\"timezone\":\"UTC\",\"serverTime\":1778524047408,\"rateLimits\":[{\"rateLimitType\":\"REQUEST_WEIGHT\",\"interval\":\"MINUTE\",\"intervalNum\":1,\"limit\":6000},{\"rateLimitType\":\"ORDERS\",\"interval\":\"SECOND\",\"intervalNum\":10,\"limit\":100},{\"rateLimitType\":\"ORD",
+  "connector_default": "ThreadedResolver",
+  "http_status": 200,
+  "resolver_default": "ThreadedResolver",
+  "system_getaddrinfo": "198.18.0.57"
+}

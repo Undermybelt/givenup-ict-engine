@@ -1,0 +1,4 @@
+strategy,robust_sharpe,total_profit_pct,trade_count,win_rate_pct,profit_factor,profit_floor,min_position_size,promotion_decision
+BTCLeaderBreakV4BTCOnly,0.2464,14.81,116,35.3448,2.3460,FAIL,PASS,runtime_only_non_promoting
+MTFTrendStackBTCOnly,-0.0796,-4.27,150,22.0000,0.8513,FAIL,PASS,runtime_only_non_promoting
+MomentumMTFConfluenceBTCOnly,0.0411,2.86,169,30.7692,1.0709,FAIL,PASS,runtime_only_non_promoting

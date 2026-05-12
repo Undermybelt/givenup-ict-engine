@@ -1,0 +1,57 @@
+{
+  "run_id": "20260512T062657+0800-codex-tsie-negative-packet-reconciliation-after-062409-v1",
+  "gate_result": "tsie_negative_packet_reconciliation_after_062409_v1=tsie_packets_counted_or_scoped_no_required_root_no_promotion",
+  "scope": "reconcile TSIE follow-up artifacts after 062409 without target-root mutation or downstream promotion",
+  "packet_disposition": [
+    {
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T062201+0800-codex-r3-hf-tsie-provenance-decision-v1",
+      "gate": "r3_hf_tsie_provenance_decision_v1=rejected_rule_based_proxy_labels_no_intake_no_promotion",
+      "counting": "count_once_provenance_negative",
+      "promotion": false
+    },
+    {
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T062205+0800-codex-r3-hf-tsie-raw-download-verify-v1",
+      "gate": "r3_hf_tsie_raw_download_verify_v1=raw_download_blocked_xethub_tls_schema_api_readable_no_acceptance",
+      "counting": "count_once_historical_transport_attempt_not_latest_raw_availability",
+      "promotion": false
+    },
+    {
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T062256+0800-codex-r3-hf-tsie-native-subhour-failclosed-v1",
+      "gate": "r3_hf_tsie_native_subhour_failclosed_v1=rule_generated_ohlcv_technical_indicator_labels_not_verifier_native_source_labels",
+      "counting": "count_once_r3_policy_failure",
+      "promotion": false
+    },
+    {
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1",
+      "gate": "r3_tsie_parquet_transport_retry_after_061855_v1=partial_range_downloaded_not_intaked_no_promotion",
+      "counting": "count_once_transport_retry_only",
+      "promotion": false
+    }
+  ],
+  "local_raw_readback": {
+    "/private/tmp/ict-engine-r3-hf-tsie-native-subhour-intake-v1/raw/tft_dataset_labeled.parquet": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+    "/private/tmp/ict-engine-r3-tsie-native-subhour-source-v1/tft_dataset_labeled.parquet": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+    "/private/tmp/ict-engine-r3-hf-tsie-raw-v1/0000.parquet": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "blockers": [
+    "rule_or_ohlcv_generated_labels",
+    "no_direct_crisis_semantic",
+    "single_idx_context",
+    "no_accepted_mainregimev2_equivalence",
+    "exact_active_r3_target_cells_absent",
+    "prior_full_parquet_gates_accepted_zero_roots"
+  ],
+  "accepted_rows_added": 0,
+  "source_control_evidence_acquired": false,
+  "target_root_mutated": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

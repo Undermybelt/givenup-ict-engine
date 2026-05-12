@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "73cdc3df383ef6fc",
+  "dry_run": false,
+  "feedback_records_inserted": 2758,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_BTC_BINANCE_FULL_MOMENTUM_150515_20260512T071547.113384000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "auto_quant_binance_full_provider_momentum_150515",
+  "symbol": "B2R_BTC_BINANCE_FULL_MOMENTUM_150515",
+  "trades_applied": 2758,
+  "trades_invalid": 0,
+  "trades_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150515+0800-codex-btc-binance-full-provider-aq-chain-v1/derived/ProviderCryptoMomentumStateV1.real_trades.normalized.jsonl",
+  "trades_total": 2758
+}

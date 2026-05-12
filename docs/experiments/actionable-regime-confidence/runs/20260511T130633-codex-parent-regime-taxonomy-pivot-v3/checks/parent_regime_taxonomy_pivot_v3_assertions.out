@@ -1,0 +1,15 @@
+PASS run_id=20260511T130633+0800-codex-parent-regime-taxonomy-pivot-v3
+PASS consumed_latest_cursor=20260511T130600+0800-codex-stock-regime-same-source-timeframe-rollup-v1
+PASS artifact_type=taxonomy_preflight_only
+PASS accepted_confidence_gate_added=false
+PASS parent_taxonomy_reopened=true
+PASS same_source_rollup_preserved_as_seed=true
+PASS train_next_gate_before_crosswalk_lock=false
+PASS broad_negative_scan_default_stopped=true
+PASS child_packets_not_promoted=true
+PASS manipulation_requires_direct_rows=true
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+PASS goal_complete=false

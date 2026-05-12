@@ -1,0 +1,1 @@
+interrupted_or_host_killed_before_exit_marker; stdout=0B stderr=0B; direct 1m analyze did not complete, do not treat as downstream chain evidence

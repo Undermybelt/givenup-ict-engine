@@ -1,0 +1,2 @@
+strategy_name,timeframe,timerange,total_trades,wins,losses,winrate,profit_total,profit_total_abs,sharpe,profit_factor,max_drawdown_account,first_trade_open,last_trade_close,acceptance_status
+TomacNQ_KillzoneBreakout,1h,20210101-20251231,9,4,5,0.4444444444444444,-0.058056,-5805.6,-0.056157979678321875,0.2537789203084833,0.06354437910295349,2022-07-07 14:00:00+00:00,2023-01-12 14:00:00+00:00,fail_closed_low_trade_count_and_negative_edge

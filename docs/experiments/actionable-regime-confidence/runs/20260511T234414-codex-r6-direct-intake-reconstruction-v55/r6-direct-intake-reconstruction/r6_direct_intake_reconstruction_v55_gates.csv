@@ -1,0 +1,7 @@
+gate,observed,required,pass
+isolated_verifier_schema,schema_ready_unscored,schema_ready_unscored,True
+reconstructs_v54_positive_count,53,57,False
+reconstructs_v54_negative_count,53,57,False
+positive_groups_have_matched_controls,0,0,True
+reconstructed_wilson95,0.932415695547,>=0.95,False
+v54_plus_sarao_nowak_wilson95,0.947260905856,>=0.95,False

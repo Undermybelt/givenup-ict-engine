@@ -1,0 +1,696 @@
+{
+  "context_hits": [
+    {
+      "conceptdoi": "10.5281/zenodo.18184440",
+      "created": "2026-03-25T16:59:52.400350+00:00",
+      "doi": "10.5281/zenodo.18184441",
+      "files": [
+        {
+          "checksum": "md5:5b2b2007dbd59196ba010e2b3923f5e0",
+          "key": "btc_orders_202512.tar.xz",
+          "size": 19268354932
+        },
+        {
+          "checksum": "md5:3cbb57a28ef63339bb1c60252cbd3024",
+          "key": "eth_orders_202512.tar.xz",
+          "size": 12120113008
+        },
+        {
+          "checksum": "md5:df9b9220373a6f11403a75796a084c6d",
+          "key": "btc_rejected_202512.tar.xz",
+          "size": 46038646232
+        },
+        {
+          "checksum": "md5:b2a54cf4796f95b524bbdf108d835522",
+          "key": "eth_rejected_202512.tar.xz",
+          "size": 24087215608
+        },
+        {
+          "checksum": "md5:5abed7980b4d8c57651dbb9237c02d88",
+          "key": "sol_orders_202512.tar.xz",
+          "size": 6271301388
+        },
+        {
+          "checksum": "md5:7bbe3626b137d356ea4c5c3009cb3e56",
+          "key": "sol_rejected_202512.tar.xz",
+          "size": 8529075876
+        },
+        {
+          "checksum": "md5:350656ae19550b14d2e1ebe025b25dc7",
+          "key": "book_diffs_202512.tar",
+          "size": 49555435520
+        },
+        {
+          "checksum": "md5:582490cf94b58068a6ae59aedb63c952",
+          "key": "trades_2025_10.tar",
+          "size": 10049740800
+        },
+        {
+          "checksum": "md5:6fbab17d761b67e279ac0592e8520af7",
+          "key": "trades_2025_11.tar",
+          "size": 8847390720
+        },
+        {
+          "checksum": "md5:434b242b9b897e689576b3eea8450e0c",
+          "key": "trades_2026_01.tar",
+          "size": 3847168000
+        },
+        {
+          "checksum": "md5:83f0ecdcc34a5d55e93048ac844bed3f",
+          "key": "mapdir.tar.xz",
+          "size": 10188884
+        },
+        {
+          "checksum": "md5:03ccb90a9042880ef7360a54f49c9a6b",
+          "key": "read_data.py",
+          "size": 24427
+        },
+        {
+          "checksum": "md5:44f6eaf275db120e32678c263809610d",
+          "key": "SCHEMA.md",
+          "size": 16136
+        },
+        {
+          "checksum": "md5:79c1f3018c90cfdce86bc68fccd1a6d8",
+          "key": "README.md",
+          "size": 5407
+        },
+        {
+          "checksum": "md5:7949be6a52ec7fb3b591ee633bae3329",
+          "key": "trades_2025_12.tar",
+          "size": 6694522880
+        }
+      ],
+      "id": 18184441,
+      "keywords": [
+        "market microstructure",
+        "high-frequency trading",
+        "order flow",
+        "limit order book",
+        "rejected orders",
+        "Hyperliquid",
+        "cryptocurrency",
+        "perpetual futures"
+      ],
+      "links": {
+        "html": null,
+        "self": "https://zenodo.org/api/records/18184441"
+      },
+      "publication_date": "2026-03-25",
+      "resource_type": "dataset",
+      "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+      "updated": "2026-03-25T16:59:53.103968+00:00"
+    }
+  ],
+  "decision": {
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "gate": "zenodo_source_route_probe_after_072015_v1",
+    "gate_result": "exact_required_queries_zero_generic_l4_context_only_no_unlock",
+    "notes": [
+      "Zenodo exact searches did not find Oystacher/3Red owner-export records, required direct_manipulation filenames, MainRegimeV2 rows, or native-subhour source labels.",
+      "Broader Level 4 / Hyperliquid order-book hits are context only: they are not CFTC/Oystacher/3Red positives, matched normal controls, source-panel MainRegimeV2 recency rows, or Crisis-capable R3 labels.",
+      "This probe did not mutate required roots and does not authorize direct verifier, split calibration, canonical merge, AutoQuant selected-data promotion, or downstream BBN/CatBoost/execution-tree promotion."
+    ],
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "query_results": [
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22Oystacher%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"Oystacher\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "r6_owner_export_exact",
+      "slug": "oystacher_exact",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%223Red+Trading%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"3Red Trading\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "r6_owner_export_exact",
+      "slug": "three_red_exact",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22direct_manipulation_positive_rows%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"direct_manipulation_positive_rows\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "required_filename",
+      "slug": "positive_filename",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22direct_manipulation_matched_controls%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"direct_manipulation_matched_controls\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "required_filename",
+      "slug": "controls_filename",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22direct_manipulation_provenance%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"direct_manipulation_provenance\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "required_filename",
+      "slug": "provenance_filename",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22MainRegimeV2%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"MainRegimeV2\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "r5_r3_exact",
+      "slug": "mainregimev2_exact",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22native+subhour+source+label%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"native subhour source label\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "r3_exact",
+      "slug": "native_subhour_label_exact",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22stock+market+regimes+2026%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"stock market regimes 2026\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "r5_context",
+      "slug": "stock_regime_2026_exact",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22market+regime+crisis%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"market regime crisis\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "r3_context",
+      "slug": "market_regime_crisis_exact",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22futures+order+lifecycle+spoofing%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [],
+      "order_lifecycle_context_hits_in_top_10": 0,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"futures order lifecycle spoofing\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "r6_context",
+      "slug": "futures_order_lifecycle_spoofing_exact",
+      "total": 0
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=%22Level+4+Order+Book%22&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [
+        {
+          "conceptdoi": "10.5281/zenodo.18184440",
+          "created": "2026-03-25T16:59:52.400350+00:00",
+          "doi": "10.5281/zenodo.18184441",
+          "files": [
+            {
+              "checksum": "md5:5b2b2007dbd59196ba010e2b3923f5e0",
+              "key": "btc_orders_202512.tar.xz",
+              "size": 19268354932
+            },
+            {
+              "checksum": "md5:3cbb57a28ef63339bb1c60252cbd3024",
+              "key": "eth_orders_202512.tar.xz",
+              "size": 12120113008
+            },
+            {
+              "checksum": "md5:df9b9220373a6f11403a75796a084c6d",
+              "key": "btc_rejected_202512.tar.xz",
+              "size": 46038646232
+            },
+            {
+              "checksum": "md5:b2a54cf4796f95b524bbdf108d835522",
+              "key": "eth_rejected_202512.tar.xz",
+              "size": 24087215608
+            },
+            {
+              "checksum": "md5:5abed7980b4d8c57651dbb9237c02d88",
+              "key": "sol_orders_202512.tar.xz",
+              "size": 6271301388
+            },
+            {
+              "checksum": "md5:7bbe3626b137d356ea4c5c3009cb3e56",
+              "key": "sol_rejected_202512.tar.xz",
+              "size": 8529075876
+            },
+            {
+              "checksum": "md5:350656ae19550b14d2e1ebe025b25dc7",
+              "key": "book_diffs_202512.tar",
+              "size": 49555435520
+            },
+            {
+              "checksum": "md5:582490cf94b58068a6ae59aedb63c952",
+              "key": "trades_2025_10.tar",
+              "size": 10049740800
+            },
+            {
+              "checksum": "md5:6fbab17d761b67e279ac0592e8520af7",
+              "key": "trades_2025_11.tar",
+              "size": 8847390720
+            },
+            {
+              "checksum": "md5:434b242b9b897e689576b3eea8450e0c",
+              "key": "trades_2026_01.tar",
+              "size": 3847168000
+            },
+            {
+              "checksum": "md5:83f0ecdcc34a5d55e93048ac844bed3f",
+              "key": "mapdir.tar.xz",
+              "size": 10188884
+            },
+            {
+              "checksum": "md5:03ccb90a9042880ef7360a54f49c9a6b",
+              "key": "read_data.py",
+              "size": 24427
+            },
+            {
+              "checksum": "md5:44f6eaf275db120e32678c263809610d",
+              "key": "SCHEMA.md",
+              "size": 16136
+            },
+            {
+              "checksum": "md5:79c1f3018c90cfdce86bc68fccd1a6d8",
+              "key": "README.md",
+              "size": 5407
+            },
+            {
+              "checksum": "md5:7949be6a52ec7fb3b591ee633bae3329",
+              "key": "trades_2025_12.tar",
+              "size": 6694522880
+            }
+          ],
+          "id": 18184441,
+          "keywords": [
+            "market microstructure",
+            "high-frequency trading",
+            "order flow",
+            "limit order book",
+            "rejected orders",
+            "Hyperliquid",
+            "cryptocurrency",
+            "perpetual futures"
+          ],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/18184441"
+          },
+          "publication_date": "2026-03-25",
+          "resource_type": "dataset",
+          "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+          "updated": "2026-03-25T16:59:53.103968+00:00"
+        }
+      ],
+      "order_lifecycle_context_hits_in_top_10": 1,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "\"Level 4 Order Book\"",
+      "required_filename_hits_in_top_10": 0,
+      "route": "order_lifecycle_context",
+      "slug": "level4_order_book_broad",
+      "total": 1
+    },
+    {
+      "api_url": "https://zenodo.org/api/records?q=Hyperliquid+order+book&size=10&sort=bestmatch",
+      "exit_code": 0,
+      "hits": [
+        {
+          "conceptdoi": "10.5281/zenodo.18184440",
+          "created": "2026-03-25T16:59:52.400350+00:00",
+          "doi": "10.5281/zenodo.18184441",
+          "files": [
+            {
+              "checksum": "md5:5b2b2007dbd59196ba010e2b3923f5e0",
+              "key": "btc_orders_202512.tar.xz",
+              "size": 19268354932
+            },
+            {
+              "checksum": "md5:3cbb57a28ef63339bb1c60252cbd3024",
+              "key": "eth_orders_202512.tar.xz",
+              "size": 12120113008
+            },
+            {
+              "checksum": "md5:df9b9220373a6f11403a75796a084c6d",
+              "key": "btc_rejected_202512.tar.xz",
+              "size": 46038646232
+            },
+            {
+              "checksum": "md5:b2a54cf4796f95b524bbdf108d835522",
+              "key": "eth_rejected_202512.tar.xz",
+              "size": 24087215608
+            },
+            {
+              "checksum": "md5:5abed7980b4d8c57651dbb9237c02d88",
+              "key": "sol_orders_202512.tar.xz",
+              "size": 6271301388
+            },
+            {
+              "checksum": "md5:7bbe3626b137d356ea4c5c3009cb3e56",
+              "key": "sol_rejected_202512.tar.xz",
+              "size": 8529075876
+            },
+            {
+              "checksum": "md5:350656ae19550b14d2e1ebe025b25dc7",
+              "key": "book_diffs_202512.tar",
+              "size": 49555435520
+            },
+            {
+              "checksum": "md5:582490cf94b58068a6ae59aedb63c952",
+              "key": "trades_2025_10.tar",
+              "size": 10049740800
+            },
+            {
+              "checksum": "md5:6fbab17d761b67e279ac0592e8520af7",
+              "key": "trades_2025_11.tar",
+              "size": 8847390720
+            },
+            {
+              "checksum": "md5:434b242b9b897e689576b3eea8450e0c",
+              "key": "trades_2026_01.tar",
+              "size": 3847168000
+            },
+            {
+              "checksum": "md5:83f0ecdcc34a5d55e93048ac844bed3f",
+              "key": "mapdir.tar.xz",
+              "size": 10188884
+            },
+            {
+              "checksum": "md5:03ccb90a9042880ef7360a54f49c9a6b",
+              "key": "read_data.py",
+              "size": 24427
+            },
+            {
+              "checksum": "md5:44f6eaf275db120e32678c263809610d",
+              "key": "SCHEMA.md",
+              "size": 16136
+            },
+            {
+              "checksum": "md5:79c1f3018c90cfdce86bc68fccd1a6d8",
+              "key": "README.md",
+              "size": 5407
+            },
+            {
+              "checksum": "md5:7949be6a52ec7fb3b591ee633bae3329",
+              "key": "trades_2025_12.tar",
+              "size": 6694522880
+            }
+          ],
+          "id": 18184441,
+          "keywords": [
+            "market microstructure",
+            "high-frequency trading",
+            "order flow",
+            "limit order book",
+            "rejected orders",
+            "Hyperliquid",
+            "cryptocurrency",
+            "perpetual futures"
+          ],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/18184441"
+          },
+          "publication_date": "2026-03-25",
+          "resource_type": "dataset",
+          "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+          "updated": "2026-03-25T16:59:53.103968+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.15847285",
+          "created": "2025-07-09T11:02:05.084464+00:00",
+          "doi": "10.5281/zenodo.15847286",
+          "files": [
+            {
+              "checksum": "md5:8e0ee58d1daec2964310bd788b367e25",
+              "key": "D8.4 City Communication Pack.pdf",
+              "size": 12600943
+            }
+          ],
+          "id": 15847286,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/15847286"
+          },
+          "publication_date": "2021-12-31",
+          "resource_type": "publication",
+          "title": "D8.4 City Communication Pack",
+          "updated": "2025-07-09T11:02:05.370512+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.15846856",
+          "created": "2025-07-09T10:12:45.057469+00:00",
+          "doi": "10.5281/zenodo.15846857",
+          "files": [
+            {
+              "checksum": "md5:2d111cedd981fc5bd7b42991fe7277de",
+              "key": "D8.2 Promotional Video.pdf",
+              "size": 34234478
+            }
+          ],
+          "id": 15846857,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/15846857"
+          },
+          "publication_date": "2021-09-30",
+          "resource_type": "publication",
+          "title": "D8.2 - IN-HABIT Promotional Video",
+          "updated": "2025-07-09T10:12:45.319534+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.15848387",
+          "created": "2025-07-09T13:19:29.411604+00:00",
+          "doi": "10.5281/zenodo.15848388",
+          "files": [
+            {
+              "checksum": "md5:36076c1ba6ce02a3888c023dd07b8db4",
+              "key": "D8.7 Dissemination and Communication Actions Report II.pdf",
+              "size": 1725406
+            }
+          ],
+          "id": 15848388,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/15848388"
+          },
+          "publication_date": "2022-08-31",
+          "resource_type": "publication",
+          "title": "D8.7 Dissemination and Communication Actions Report II",
+          "updated": "2025-07-09T13:19:29.609404+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.15847018",
+          "created": "2025-07-09T10:36:14.892756+00:00",
+          "doi": "10.5281/zenodo.15847019",
+          "files": [
+            {
+              "checksum": "md5:57860e64eb921164a5bb7cba1f5d50b7",
+              "key": "D8.3 IN-HABIT Website.pdf",
+              "size": 593638
+            }
+          ],
+          "id": 15847019,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/15847019"
+          },
+          "publication_date": "2021-08-31",
+          "resource_type": "publication",
+          "title": "D8.3 IN-HABIT Website",
+          "updated": "2025-07-09T10:36:15.121946+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.10594520",
+          "created": "2024-01-30T21:31:32.489457+00:00",
+          "doi": "10.5281/zenodo.10594521",
+          "files": [
+            {
+              "checksum": "md5:a02f415c1e2d7ba7217209d4976c1eaa",
+              "key": "Annex 2_IN-HABIT_Communication Guidelines_final_24022021.pdf",
+              "size": 3720747
+            },
+            {
+              "checksum": "md5:a62945887a6bb9cb8d152381c4f97639",
+              "key": "WP8_D 8.1_ DC Plan_ final_rev25022021_reviewed_FULL.pdf",
+              "size": 17019247
+            },
+            {
+              "checksum": "md5:3ec091d50221fe09d9d4d7f01b117813",
+              "key": "Annex 1_IN-HABIT_Visual identity-Guidelines_final_2402021.pdf",
+              "size": 11768202
+            }
+          ],
+          "id": 10594521,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/10594521"
+          },
+          "publication_date": "2021-02-28",
+          "resource_type": "publication",
+          "title": "D8.1 IN-HABIT Dissemination and Communication Plan (DECO) & Annexes - Communication and Visual Guidelines",
+          "updated": "2025-07-09T09:43:48.983514+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.15848953",
+          "created": "2025-07-09T14:27:47.759290+00:00",
+          "doi": "10.5281/zenodo.15848954",
+          "files": [
+            {
+              "checksum": "md5:7dffc3ab3b3f8ed623254a426ddb1d45",
+              "key": "D8.11 IN-HABIT Video in Lucca.pdf",
+              "size": 183660
+            }
+          ],
+          "id": 15848954,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/15848954"
+          },
+          "publication_date": "2023-08-30",
+          "resource_type": "publication",
+          "title": "D8.11 IN-HABIT Video in Lucca",
+          "updated": "2025-07-09T14:33:17.947407+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.15848451",
+          "created": "2025-07-09T14:17:27.596423+00:00",
+          "doi": "10.5281/zenodo.15848452",
+          "files": [
+            {
+              "checksum": "md5:bb721cee27973fdadc5bfcd777fc74cf",
+              "key": "D8.10 IN-HABIT Video in Riga.pdf",
+              "size": 202663
+            }
+          ],
+          "id": 15848452,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/15848452"
+          },
+          "publication_date": "2023-08-30",
+          "resource_type": "publication",
+          "title": "D8.10 IN-HABIT Video in Riga",
+          "updated": "2025-07-09T14:17:27.842906+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.15847607",
+          "created": "2025-07-09T11:45:33.961002+00:00",
+          "doi": "10.5281/zenodo.15847608",
+          "files": [
+            {
+              "checksum": "md5:624909cfad7958534c1200a0744d49c1",
+              "key": "D8.6 IN-HABIT App Initial (Demo) Version.pdf",
+              "size": 1680059
+            }
+          ],
+          "id": 15847608,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/15847608"
+          },
+          "publication_date": "2022-12-31",
+          "resource_type": "publication",
+          "title": "D8.6 IN-HABIT App Initial (Demo) Version",
+          "updated": "2025-07-09T11:45:34.187045+00:00"
+        },
+        {
+          "conceptdoi": "10.5281/zenodo.15848994",
+          "created": "2025-07-09T14:32:43.758443+00:00",
+          "doi": "10.5281/zenodo.15848995",
+          "files": [
+            {
+              "checksum": "md5:cb317b904723ac74d69af2bc896f5c42",
+              "key": "D8.12 IN-HABIT Video in Nitra.pdf",
+              "size": 184112
+            }
+          ],
+          "id": 15848995,
+          "keywords": [],
+          "links": {
+            "html": null,
+            "self": "https://zenodo.org/api/records/15848995"
+          },
+          "publication_date": "2023-08-30",
+          "resource_type": "publication",
+          "title": "D8.12 IN-HABIT Video in Nitra",
+          "updated": "2025-07-09T14:32:43.978030+00:00"
+        }
+      ],
+      "order_lifecycle_context_hits_in_top_10": 1,
+      "owner_or_mainregime_hits_in_top_10": 0,
+      "query": "Hyperliquid order book",
+      "required_filename_hits_in_top_10": 0,
+      "route": "order_lifecycle_context",
+      "slug": "hyperliquid_order_book_broad",
+      "total": 259177
+    }
+  ],
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": true,
+    "/tmp/ict-engine-source-label-equivalence-intake": true,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "run_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T072412+0800-codex-zenodo-source-route-probe-after-072015-v1",
+  "summary": {
+    "failed_query_count": 0,
+    "owner_or_mainregime_hits_in_top_10": 0,
+    "query_count": 12,
+    "required_filename_hits_in_top_10": 0,
+    "unique_order_lifecycle_context_hits": 1
+  }
+}

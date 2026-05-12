@@ -1,0 +1,203 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_generation": "85f13c62a42d509a3c0bbef781545fe460352e7b9f654aec46a3497d96c133c6",
+  "canonical_merge_allowed": false,
+  "command": "uv run --with ta-lib run.py",
+  "command_exit": 0,
+  "data_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data",
+  "data_files": [
+    "BTC_USDT-1d.feather",
+    "BTC_USDT-1h.feather",
+    "BTC_USDT-4h.feather",
+    "ETH_USDT-1h.feather",
+    "ETH_USDT-4h.feather",
+    "NQ_USD-15m.feather",
+    "NQ_USD-1d.feather",
+    "NQ_USD-1h.feather",
+    "NQ_USD-4h.feather",
+    "NQ_USD-5m.feather",
+    "QQQ_USD-1h.feather",
+    "QQQ_USD-4h.feather",
+    "SPY_USD-15m.feather",
+    "SPY_USD-1d.feather",
+    "SPY_USD-4h.feather"
+  ],
+  "done": {
+    "failed": 0,
+    "succeeded": 3
+  },
+  "downstream_chain_rerun_allowed": false,
+  "gate_result": "autoquant_isolated_seeded_btc_run_v1=seeded_btc_strategy_backtests_succeeded_non_promoting_source_control_blocked",
+  "generated_at_utc": "2026-05-11T18:46:02.482531+00:00",
+  "new_confidence_gate": false,
+  "r3_r5_r6_roots_mutated": false,
+  "raw_data_committed": false,
+  "robust_summary_rows": [
+    {
+      "commit": "34ba6b6",
+      "robust_sharpe": "0.2464   # min across declared timeranges",
+      "strategy": "BTCLeaderBreakV4BTCOnly"
+    },
+    {
+      "commit": "34ba6b6",
+      "robust_sharpe": "-0.0796   # min across declared timeranges",
+      "strategy": "MTFTrendStackBTCOnly"
+    },
+    {
+      "commit": "34ba6b6",
+      "robust_sharpe": "0.0411   # min across declared timeranges",
+      "strategy": "MomentumMTFConfluenceBTCOnly"
+    }
+  ],
+  "root_status": {
+    "legacy_direct_intake": {
+      "file_count": 3,
+      "kind": "dir",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "present": true
+    },
+    "r3_native_subhour": {
+      "file_count": 0,
+      "kind": "absent",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    "r5_recency_extension": {
+      "file_count": 0,
+      "kind": "absent",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    },
+    "r6_owner_export": {
+      "file_count": 0,
+      "kind": "absent",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false
+    },
+    "source_label_equivalence": {
+      "file_count": 2,
+      "kind": "dir",
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true
+    }
+  },
+  "run_id": "20260512T023540-codex-autoquant-isolated-seeded-btc-run-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "strategy_results": [
+    {
+      "calmar": 9.5916,
+      "commit": "34ba6b6",
+      "max_drawdown_pct": -1.6263,
+      "profit_factor": 2.346,
+      "sharpe": 0.2464,
+      "sortino": 1.9306,
+      "strategy": "BTCLeaderBreakV4BTCOnly",
+      "total_profit_pct": 14.81,
+      "trade_count": 116,
+      "win_rate_pct": 35.3448
+    },
+    {
+      "commit": "34ba6b6",
+      "robust_sharpe": "0.2464   # min across declared timeranges",
+      "strategy": "BTCLeaderBreakV4BTCOnly"
+    },
+    {
+      "calmar": -0.5944,
+      "commit": "34ba6b6",
+      "max_drawdown_pct": -7.5637,
+      "profit_factor": 0.8513,
+      "sharpe": -0.0796,
+      "sortino": -0.2218,
+      "strategy": "MTFTrendStackBTCOnly",
+      "total_profit_pct": -4.27,
+      "trade_count": 150,
+      "win_rate_pct": 22.0
+    },
+    {
+      "commit": "34ba6b6",
+      "robust_sharpe": "-0.0796   # min across declared timeranges",
+      "strategy": "MTFTrendStackBTCOnly"
+    },
+    {
+      "calmar": 0.3001,
+      "commit": "34ba6b6",
+      "max_drawdown_pct": -10.0246,
+      "profit_factor": 1.0709,
+      "sharpe": 0.0411,
+      "sortino": 0.0932,
+      "strategy": "MomentumMTFConfluenceBTCOnly",
+      "total_profit_pct": 2.86,
+      "trade_count": 169,
+      "win_rate_pct": 30.7692
+    },
+    {
+      "commit": "34ba6b6",
+      "robust_sharpe": "0.0411   # min across declared timeranges",
+      "strategy": "MomentumMTFConfluenceBTCOnly"
+    }
+  ],
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_result_rows": [
+    {
+      "calmar": 9.5916,
+      "commit": "34ba6b6",
+      "max_drawdown_pct": -1.6263,
+      "profit_factor": 2.346,
+      "sharpe": 0.2464,
+      "sortino": 1.9306,
+      "strategy": "BTCLeaderBreakV4BTCOnly",
+      "total_profit_pct": 14.81,
+      "trade_count": 116,
+      "win_rate_pct": 35.3448
+    },
+    {
+      "calmar": -0.5944,
+      "commit": "34ba6b6",
+      "max_drawdown_pct": -7.5637,
+      "profit_factor": 0.8513,
+      "sharpe": -0.0796,
+      "sortino": -0.2218,
+      "strategy": "MTFTrendStackBTCOnly",
+      "total_profit_pct": -4.27,
+      "trade_count": 150,
+      "win_rate_pct": 22.0
+    },
+    {
+      "calmar": 0.3001,
+      "commit": "34ba6b6",
+      "max_drawdown_pct": -10.0246,
+      "profit_factor": 1.0709,
+      "sharpe": 0.0411,
+      "sortino": 0.0932,
+      "strategy": "MomentumMTFConfluenceBTCOnly",
+      "total_profit_pct": 2.86,
+      "trade_count": 169,
+      "win_rate_pct": 30.7692
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "workspace": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant",
+  "wrapper_strategies": [
+    {
+      "bytes": 325,
+      "filename": "BTCLeaderBreakV4BTCOnly.py",
+      "path": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/strategies/BTCLeaderBreakV4BTCOnly.py",
+      "sha256": "0f44c5562419ed0e2ac9d81a1092167916b559906ec865b99c7dc1efbf3c9f56"
+    },
+    {
+      "bytes": 310,
+      "filename": "MTFTrendStackBTCOnly.py",
+      "path": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/strategies/MTFTrendStackBTCOnly.py",
+      "sha256": "3846d6f8de215c2a62e51ccb0a88ffecf24cc57c0aa260b533c577d1d9ae1e57"
+    },
+    {
+      "bytes": 350,
+      "filename": "MomentumMTFConfluenceBTCOnly.py",
+      "path": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/strategies/MomentumMTFConfluenceBTCOnly.py",
+      "sha256": "f0e2ab4afeaae6d3e8f2152672e036b386799f3905e7205917caa299231246f6"
+    }
+  ]
+}

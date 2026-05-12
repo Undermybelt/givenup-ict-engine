@@ -1,0 +1,365 @@
+Discovered 3 strategies: RegimeRsiRelief, RegimeTrendCarry, RegimeVolBreakout
+Whitelist:   BTC/USDT,ETH/USDT,SOL/USDT,BNB/USDT,AVAX/USDT
+Default TR:  20210101-20251231
+
+Result for strategy RegimeRsiRelief
+                                             BACKTESTING REPORT                                              
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │      2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │
+│    TOTAL │      2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                ENTER TAG STATS                                                
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │       2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │
+│     TOTAL │       2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                               EXIT REASON STATS                                               
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │     2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │
+│       TOTAL │     2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                      MIXED TAG STATS                                                       
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │      2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │
+│     TOTAL │             │      2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-03-27 00:00:00            │
+│ Backtesting to                │ 2026-05-11 15:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 2 / 0.04                       │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 9999.505 USDT                  │
+│ Absolute profit               │ -0.495 USDT                    │
+│ Total profit %                │ -0.00%                         │
+│ CAGR %                        │ -0.04%                         │
+│ Sortino                       │ -100.00                        │
+│ Sharpe                        │ -0.31                          │
+│ Calmar                        │ -22.81                         │
+│ SQN                           │ -0.37                          │
+│ Profit factor                 │ 0.46                           │
+│ Expectancy (Ratio)            │ -0.25 (-0.27)                  │
+│ Avg. daily profit             │ -0.011 USDT                    │
+│ Avg. stake amount             │ 1980.042 USDT                  │
+│ Total trade volume            │ 7935.529 USDT                  │
+│                               │                                │
+│ Best Pair                     │ BTC/USDT -0.00%                │
+│ Worst Pair                    │ BTC/USDT -0.00%                │
+│ Best trade                    │ BTC/USDT 0.02%                 │
+│ Worst trade                   │ BTC/USDT -0.05%                │
+│ Best day                      │ 0.426 USDT                     │
+│ Worst day                     │ -0.921 USDT                    │
+│ Days win/draw/lose            │ 1 / 13 / 1                     │
+│ Min/Max/Avg. Duration Winners │ 0d 02:00 / 0d 02:00 / 0d 02:00 │
+│ Min/Max/Avg. Duration Losers  │ 0d 03:00 / 0d 03:00 / 0d 03:00 │
+│ Max Consecutive Wins / Loss   │ 1 / 1                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 9999.505 USDT                  │
+│ Max balance                   │ 10000.426 USDT                 │
+│ Max % of account underwater   │ 0.01%                          │
+│ Absolute drawdown             │ 0.921 USDT (0.01%)             │
+│ Drawdown duration             │ 14 days 01:00:00               │
+│ Profit at drawdown start      │ 0.426 USDT                     │
+│ Profit at drawdown end        │ -0.495 USDT                    │
+│ Drawdown start                │ 2026-04-27 01:00:00            │
+│ Drawdown end                  │ 2026-05-11 02:00:00            │
+│ Market change                 │ 23.48%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-03-27 00:00:00 -> 2026-05-11 15:00:00 | Max open trades : 1
+                                                            STRATEGY SUMMARY                                                            
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
+┃        Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃          Drawdown ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩
+│ RegimeRsiRelief │      2 │        -0.01 │          -0.495 │         -0.0 │      2:30:00 │    1     0     1  50.0 │ 0.921 USDT  0.01% │
+└─────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┴───────────────────┘
+---
+strategy:         RegimeRsiRelief
+timerange_label:  recorded_mtf_2026
+timerange:        20260327-20260512
+commit:           34ba6b6
+status:           ERROR
+error_type:       AttributeError
+error_msg:        Can only use .dt accessor with datetimelike values
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/run.py", line 526, in main
+    bah = compute_bah_benchmark(timerange, active_pairs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/run.py", line 242, in compute_bah_benchmark
+    if df["date"].dt.tz is None:
+       ^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/generic.py", line 6321, in __getattr__
+    return object.__getattribute__(self, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/accessor.py", line 224, in __get__
+    accessor_obj = self._accessor(obj)
+                   ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/indexes/accessors.py", line 643, in __new__
+    raise AttributeError("Can only use .dt accessor with datetimelike values")
+AttributeError: Can only use .dt accessor with datetimelike values
+
+
+Result for strategy RegimeTrendCarry
+                                               BACKTESTING REPORT                                               
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │     17 │         0.39 │         131.667 │         1.32 │ 2 days, 0:39:00 │    6     0    11  35.3 │
+│    TOTAL │     17 │         0.39 │         131.667 │         1.32 │ 2 days, 0:39:00 │    6     0    11  35.3 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                           LEFT OPEN TRADES REPORT                                           
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │      1 │        -0.06 │          -1.161 │        -0.01 │      3:00:00 │    0     0     1     0 │
+│    TOTAL │      1 │        -0.06 │          -1.161 │        -0.01 │      3:00:00 │    0     0     1     0 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                  
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │      17 │         0.39 │         131.667 │         1.32 │ 2 days, 0:39:00 │    6     0    11  35.3 │
+│     TOTAL │      17 │         0.39 │         131.667 │         1.32 │ 2 days, 0:39:00 │    6     0    11  35.3 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                 
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │    16 │         0.42 │         132.828 │         1.33 │ 2 days, 3:30:00 │    6     0    10  37.5 │
+│  force_exit │     1 │        -0.06 │          -1.161 │        -0.01 │         3:00:00 │    0     0     1     0 │
+│       TOTAL │    17 │         0.39 │         131.667 │         1.32 │ 2 days, 0:39:00 │    6     0    11  35.3 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                        MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │     16 │         0.42 │         132.828 │         1.33 │ 2 days, 3:30:00 │    6     0    10  37.5 │
+│           │  force_exit │      1 │        -0.06 │          -1.161 │        -0.01 │         3:00:00 │    0     0     1     0 │
+│     TOTAL │             │     17 │         0.39 │         131.667 │         1.32 │ 2 days, 0:39:00 │    6     0    11  35.3 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-03-27 22:00:00            │
+│ Backtesting to                │ 2026-05-11 15:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 17 / 0.39                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 10131.667 USDT                 │
+│ Absolute profit               │ 131.667 USDT                   │
+│ Total profit %                │ 1.32%                          │
+│ CAGR %                        │ 11.46%                         │
+│ Sortino                       │ 9.08                           │
+│ Sharpe                        │ 1.62                           │
+│ Calmar                        │ 99.79                          │
+│ SQN                           │ 0.88                           │
+│ Profit factor                 │ 2.15                           │
+│ Expectancy (Ratio)            │ 7.75 (0.74)                    │
+│ Avg. daily profit             │ 2.992 USDT                     │
+│ Avg. stake amount             │ 1987.05 USDT                   │
+│ Total trade volume            │ 67826.896 USDT                 │
+│                               │                                │
+│ Best Pair                     │ BTC/USDT 1.32%                 │
+│ Worst Pair                    │ BTC/USDT 1.32%                 │
+│ Best trade                    │ BTC/USDT 5.10%                 │
+│ Worst trade                   │ BTC/USDT -1.29%                │
+│ Best day                      │ 101.547 USDT                   │
+│ Worst day                     │ -31.989 USDT                   │
+│ Days win/draw/lose            │ 5 / 26 / 9                     │
+│ Min/Max/Avg. Duration Winners │ 1d 08:00 / 6d 08:00 / 3d 18:30 │
+│ Min/Max/Avg. Duration Losers  │ 0d 02:00 / 4d 22:00 / 1d 01:49 │
+│ Max Consecutive Wins / Loss   │ 2 / 4                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 9953.715 USDT                  │
+│ Max balance                   │ 10139.698 USDT                 │
+│ Max % of account underwater   │ 0.57%                          │
+│ Absolute drawdown             │ 57.352 USDT (0.57%)            │
+│ Drawdown duration             │ 10 days 21:00:00               │
+│ Profit at drawdown start      │ 11.067 USDT                    │
+│ Profit at drawdown end        │ -46.285 USDT                   │
+│ Drawdown start                │ 2026-04-02 02:00:00            │
+│ Drawdown end                  │ 2026-04-12 23:00:00            │
+│ Market change                 │ 26.48%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-03-27 22:00:00 -> 2026-05-11 15:00:00 | Max open trades : 1
+                                                              STRATEGY SUMMARY                                                               
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃         Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃           Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ RegimeTrendCarry │     17 │         0.39 │         131.667 │         1.32 │ 2 days, 0:39:00 │    6     0    11  35.3 │ 57.352 USDT  0.57% │
+└──────────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┴────────────────────┘
+---
+strategy:         RegimeTrendCarry
+timerange_label:  recorded_mtf_2026
+timerange:        20260327-20260512
+commit:           34ba6b6
+status:           ERROR
+error_type:       AttributeError
+error_msg:        Can only use .dt accessor with datetimelike values
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/run.py", line 526, in main
+    bah = compute_bah_benchmark(timerange, active_pairs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/run.py", line 242, in compute_bah_benchmark
+    if df["date"].dt.tz is None:
+       ^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/generic.py", line 6321, in __getattr__
+    return object.__getattribute__(self, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/accessor.py", line 224, in __get__
+    accessor_obj = self._accessor(obj)
+                   ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/indexes/accessors.py", line 643, in __new__
+    raise AttributeError("Can only use .dt accessor with datetimelike values")
+AttributeError: Can only use .dt accessor with datetimelike values
+
+
+Result for strategy RegimeVolBreakout
+                                               BACKTESTING REPORT                                               
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │     13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │
+│    TOTAL │     13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                  
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │      13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │
+│     TOTAL │      13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                 
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │    13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │
+│       TOTAL │    13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                        MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │     13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │
+│     TOTAL │             │     13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-03-27 02:00:00            │
+│ Backtesting to                │ 2026-05-11 15:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 13 / 0.29                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 10110.181 USDT                 │
+│ Absolute profit               │ 110.181 USDT                   │
+│ Total profit %                │ 1.10%                          │
+│ CAGR %                        │ 9.29%                          │
+│ Sortino                       │ 6.87                           │
+│ Sharpe                        │ 1.19                           │
+│ Calmar                        │ 53.97                          │
+│ SQN                           │ 0.75                           │
+│ Profit factor                 │ 2.01                           │
+│ Expectancy (Ratio)            │ 8.48 (0.78)                    │
+│ Avg. daily profit             │ 2.448 USDT                     │
+│ Avg. stake amount             │ 1989.3 USDT                    │
+│ Total trade volume            │ 51935.752 USDT                 │
+│                               │                                │
+│ Best Pair                     │ BTC/USDT 1.10%                 │
+│ Worst Pair                    │ BTC/USDT 1.10%                 │
+│ Best trade                    │ BTC/USDT 5.15%                 │
+│ Worst trade                   │ BTC/USDT -1.35%                │
+│ Best day                      │ 102.22 USDT                    │
+│ Worst day                     │ -26.969 USDT                   │
+│ Days win/draw/lose            │ 3 / 29 / 10                    │
+│ Min/Max/Avg. Duration Winners │ 1d 12:00 / 6d 09:00 / 4d 10:20 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 4d 23:00 / 1d 00:42 │
+│ Max Consecutive Wins / Loss   │ 1 / 7                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 9996.571 USDT                  │
+│ Max balance                   │ 10110.181 USDT                 │
+│ Max % of account underwater   │ 0.87%                          │
+│ Absolute drawdown             │ 87.606 USDT (0.87%)            │
+│ Drawdown duration             │ 14 days 12:00:00               │
+│ Profit at drawdown start      │ 108.208 USDT                   │
+│ Profit at drawdown end        │ 20.601 USDT                    │
+│ Drawdown start                │ 2026-04-19 23:00:00            │
+│ Drawdown end                  │ 2026-05-04 11:00:00            │
+│ Market change                 │ 23.29%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-03-27 02:00:00 -> 2026-05-11 15:00:00 | Max open trades : 1
+                                                               STRATEGY SUMMARY                                                               
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃          Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃           Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ RegimeVolBreakout │     13 │         0.43 │         110.181 │          1.1 │ 1 day, 19:32:00 │    3     0    10  23.1 │ 87.606 USDT  0.87% │
+└───────────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┴────────────────────┘
+---
+strategy:         RegimeVolBreakout
+timerange_label:  recorded_mtf_2026
+timerange:        20260327-20260512
+commit:           34ba6b6
+status:           ERROR
+error_type:       AttributeError
+error_msg:        Can only use .dt accessor with datetimelike values
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/run.py", line 526, in main
+    bah = compute_bah_benchmark(timerange, active_pairs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/run.py", line 242, in compute_bah_benchmark
+    if df["date"].dt.tz is None:
+       ^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/generic.py", line 6321, in __getattr__
+    return object.__getattribute__(self, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/accessor.py", line 224, in __get__
+    accessor_obj = self._accessor(obj)
+                   ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/core/indexes/accessors.py", line 643, in __new__
+    raise AttributeError("Can only use .dt accessor with datetimelike values")
+AttributeError: Can only use .dt accessor with datetimelike values
+
+
+Done: 0 backtests succeeded, 3 failed.

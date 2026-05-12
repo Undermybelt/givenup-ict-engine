@@ -1,0 +1,67 @@
+{
+  "run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T104610+0800-codex-board-b-yahoo-crypto-precision-fix-aq-v1",
+  "artifact_type": "standalone_btc_only_aq_registration",
+  "config": {
+    "pair_whitelist": [
+      "BTC/USDT"
+    ],
+    "timeframe": "1h",
+    "timerange": "20240601-20260512",
+    "trading_mode": "spot",
+    "entry_price_side": "other",
+    "exit_price_side": "other"
+  },
+  "evidence": {
+    "compile_exit": 0,
+    "tomac_exit": 0,
+    "pullback_trade_rows": 146,
+    "momentum_trade_rows": 315,
+    "source_side_branch_fields_present": true,
+    "provider_matrix_rows_present": false
+  },
+  "branches": [
+    {
+      "strategy": "ProviderCryptoPullbackRevertV1",
+      "branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "main_regime": "Range",
+      "sub_regime": "ProviderCryptoPullback",
+      "sub_sub_regime_or_profit_factor": "MeanRevertBounce",
+      "profit_factor": "ProviderCryptoPullbackRevertV1",
+      "pair": "BTC/USDT",
+      "trade_count": 146,
+      "total_profit_pct": 2.83,
+      "sharpe": 0.18746446058210575,
+      "win_rate_pct": 45.20547945205479,
+      "profit_factor_metric": 1.1185755311888328,
+      "max_drawdown_pct": -4.291467939207919,
+      "status": "positive_but_fail_closed"
+    },
+    {
+      "strategy": "ProviderCryptoMomentumStateV1",
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "main_regime": "Bull",
+      "sub_regime": "ProviderCryptoMomentum",
+      "sub_sub_regime_or_profit_factor": "RsiMidlineExpansion",
+      "profit_factor": "ProviderCryptoMomentumStateV1",
+      "pair": "BTC/USDT",
+      "trade_count": 315,
+      "total_profit_pct": -21.96,
+      "sharpe": -1.5339098865078014,
+      "win_rate_pct": 23.809523809523807,
+      "profit_factor_metric": 0.6357465964287989,
+      "max_drawdown_pct": -23.399186365500007,
+      "status": "negative"
+    }
+  ],
+  "gate": {
+    "promotion_allowed": false,
+    "update_goal": false,
+    "fail_closed_reasons": [
+      "provider_matrix_rows_absent_under_105234_hard_gate",
+      "single_provider_single_instrument_yahoo_btc_only",
+      "no_selected_history_or_source_control_unlock",
+      "downstream_promotion_readback_not_run_due_provider_matrix_gate"
+    ]
+  }
+}

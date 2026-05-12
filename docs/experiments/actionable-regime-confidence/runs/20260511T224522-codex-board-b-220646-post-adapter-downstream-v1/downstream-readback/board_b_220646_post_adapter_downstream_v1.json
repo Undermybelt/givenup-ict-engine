@@ -1,0 +1,377 @@
+{
+  "after_raw_path_counts": {
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12": 1,
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12": 1,
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12": 1,
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12": 1
+  },
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/checks/board_b_220646_post_adapter_downstream_v1_assertions.out",
+    "feedback_dir": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/feedback",
+    "scores_file": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/downstream-readback/exact_branch_runtime_scores_post_adapter_v1.csv",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/downstream-readback/board_b_220646_post_adapter_downstream_v1.json",
+    "trainer_companion": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/downstream-readback/catboost_trainer_companion_post_adapter_v1.json"
+  },
+  "bear_bbn_applied": false,
+  "bear_bbn_skipped_unsupported": false,
+  "branch_paths": [
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12"
+  ],
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/provider_status_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --regime-consumer-bundle /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/bear_regime_consumer_bundle_v1.json --apply-regime-bundle-bbn-soft-evidence --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/analyze_bear_regime_bundle_bbn.exit",
+      "name": "analyze_bear_regime_bundle_bbn",
+      "returncode": 2,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/analyze_bear_regime_bundle_bbn.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/analyze_bear_regime_bundle_bbn.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --outcome win --entry-signal bull_carry_h12_sl040_tp12 --pnl 0.002938806997440142 --regime Bull --direction long --feedback-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/feedback/bull_bull_carry_h12_sl040_tp12.json --ensemble",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_01_bull.exit",
+      "name": "update_01_bull",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_01_bull.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_01_bull.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --outcome win --entry-signal bear_carry_h20_sl048_tp12 --pnl 0.005381556632271275 --regime Bear --direction short --feedback-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/feedback/bear_bear_carry_h20_sl048_tp12.json --ensemble",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_02_bear.exit",
+      "name": "update_02_bear",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_02_bear.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_02_bear.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --outcome win --entry-signal sideways_carry_h8_sl040_tp12 --pnl 0.0028262130961230294 --regime Sideways --direction long --feedback-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/feedback/sideways_sideways_carry_h8_sl040_tp12.json --ensemble",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_03_sideways.exit",
+      "name": "update_03_sideways",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_03_sideways.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_03_sideways.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --outcome win --entry-signal crisis_carry_h8_sl048_tp12 --pnl 0.005464054855810504 --regime Crisis --direction long --feedback-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/feedback/crisis_crisis_carry_h8_sl048_tp12.json --ensemble",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_04_crisis.exit",
+      "name": "update_04_crisis",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_04_crisis.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/update_04_crisis.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --refresh --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/pre_bayes_status_refresh_json.exit",
+      "name": "pre_bayes_status_refresh_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/pre_bayes_status_refresh_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/pre_bayes_status_refresh_json.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/export_structural_path_ranking_target_before_scores.exit",
+      "name": "export_structural_path_ranking_target_before_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/export_structural_path_ranking_target_before_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/export_structural_path_ranking_target_before_scores.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine register-structural-path-ranking-trainer-artifact --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --artifact-uri /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/downstream-readback/catboost_trainer_companion_post_adapter_v1.json --model-family catboost",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/register_catboost_trainer_companion.exit",
+      "name": "register_catboost_trainer_companion",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/register_catboost_trainer_companion.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/register_catboost_trainer_companion.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine enable-structural-path-ranking-runtime --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --reuse-mode candidate_set_only",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/enable_branch_path_runtime_candidate_set.exit",
+      "name": "enable_branch_path_runtime_candidate_set",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/enable_branch_path_runtime_candidate_set.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/enable_branch_path_runtime_candidate_set.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine apply-structural-path-ranking-external-scores --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --scores-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/downstream-readback/exact_branch_runtime_scores_post_adapter_v1.csv",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/apply_exact_branch_scores.exit",
+      "name": "apply_exact_branch_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/apply_exact_branch_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/apply_exact_branch_scores.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/export_structural_path_ranking_target_after_scores.exit",
+      "name": "export_structural_path_ranking_target_after_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/export_structural_path_ranking_target_after_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/export_structural_path_ranking_target_after_scores.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/policy_training_status_after_scores.exit",
+      "name": "policy_training_status_after_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/policy_training_status_after_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/policy_training_status_after_scores.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --phase structural-recommended-path-bundle --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_structural_bundle_candidate_set.exit",
+      "name": "workflow_structural_bundle_candidate_set",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_structural_bundle_candidate_set.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_structural_bundle_candidate_set.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_execution_candidate_candidate_set.exit",
+      "name": "workflow_execution_candidate_candidate_set",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_execution_candidate_candidate_set.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_execution_candidate_candidate_set.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine enable-structural-path-ranking-runtime --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --reuse-mode prefer_history",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/enable_branch_path_runtime_prefer_history.exit",
+      "name": "enable_branch_path_runtime_prefer_history",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/enable_branch_path_runtime_prefer_history.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/enable_branch_path_runtime_prefer_history.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/policy_training_status_prefer_history.exit",
+      "name": "policy_training_status_prefer_history",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/policy_training_status_prefer_history.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/policy_training_status_prefer_history.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --phase structural-recommended-path-bundle --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_structural_bundle_prefer_history.exit",
+      "name": "workflow_structural_bundle_prefer_history",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_structural_bundle_prefer_history.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_structural_bundle_prefer_history.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_execution_candidate_prefer_history.exit",
+      "name": "workflow_execution_candidate_prefer_history",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_execution_candidate_prefer_history.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/command-output/workflow_execution_candidate_prefer_history.out",
+      "timed_out": false
+    }
+  ],
+  "downstream_promotable": false,
+  "execution_candidate_has_branch_path": false,
+  "generated_at_utc": "2026-05-11T15:35:04.279582+00:00",
+  "ict_engine_bin": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+  "policy_prefer_history_runtime_summary": "Ranker runtime: structural_path_ranking_target rows=4 history_rows=16 mature_rows=4 history_mature_rows=13 raw_scored_mature=7/30 production_validation=7/30 observation_validation=4/30 calibration=evaluated trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=3",
+  "policy_runtime_summary": "Ranker runtime: structural_path_ranking_target rows=4 history_rows=16 mature_rows=4 history_mature_rows=13 raw_scored_mature=7/30 production_validation=7/30 observation_validation=4/30 calibration=evaluated trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_candidate_set_ready runtime_mode=candidate_set_only runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=3",
+  "policy_summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural_path_ranking_target rows=4 history_rows=16 mature_rows=4 history_mature_rows=13 raw_scored_mature=7/30 production_validation=7/30 observation_validation=4/30 calibration=evaluated trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_candidate_set_ready runtime_mode=candidate_set_only runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=3",
+  "policy_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=7/30 production_validation=7/30 observation_validation=4/30 ready=false",
+  "promotion_status": "not_promoted:post_adapter_downstream_rerun_failed",
+  "provider_readback": {
+    "ibkr": [
+      {
+        "access_mode": "operator_runtime_required",
+        "adopted_by_default": false,
+        "domain": "market_data",
+        "fallback_priority": 30,
+        "install_prompts": [
+          "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+          "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+        ],
+        "market_fit": [
+          "tradfi"
+        ],
+        "provider_id": "ibkr",
+        "ready": false,
+        "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+        "selectable_by_user": true,
+        "status": "configured_runtime_unhealthy",
+        "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows.",
+        "user_access": "login_and_local_runtime"
+      }
+    ],
+    "ibkr_bridge": [
+      {
+        "access_mode": "local_consent_runtime",
+        "adopted_by_default": false,
+        "domain": "local_runtime",
+        "fallback_priority": 40,
+        "install_prompts": [
+          "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+          "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise."
+        ],
+        "market_fit": [
+          "tradfi"
+        ],
+        "provider_id": "ibkr_bridge",
+        "ready": false,
+        "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+        "selectable_by_user": false,
+        "status": "configured_runtime_unhealthy",
+        "summary": "Local IBKR bridge reused by broker-linked workflows after the user enables the local API.",
+        "user_access": "login_and_local_runtime"
+      }
+    ],
+    "kraken_cli": [
+      {
+        "access_mode": "local_cli_runtime",
+        "adopted_by_default": false,
+        "domain": "local_runtime",
+        "fallback_priority": 40,
+        "market_fit": [
+          "crypto"
+        ],
+        "provider_id": "kraken_cli",
+        "ready": true,
+        "reason": "kraken_cli_config_detected",
+        "selectable_by_user": false,
+        "status": "ready",
+        "summary": "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows.",
+        "user_access": "login_and_local_runtime"
+      }
+    ],
+    "kraken_public": [
+      {
+        "access_mode": "public_script_adapter",
+        "adopted_by_default": false,
+        "domain": "market_data",
+        "fallback_priority": 3,
+        "install_prompts": [
+          "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+        ],
+        "market_fit": [
+          "crypto",
+          "fx",
+          "tokenized_assets"
+        ],
+        "provider_id": "kraken_public",
+        "ready": false,
+        "reason": "python3_provider_dependencies_missing",
+        "selectable_by_user": true,
+        "status": "configured_runtime_unhealthy",
+        "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately.",
+        "user_access": "public_no_login"
+      }
+    ],
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:2/7 ready",
+    "tradingview_mcp": [
+      {
+        "access_mode": "public_or_env_ready",
+        "adopted_by_default": false,
+        "domain": "market_data",
+        "fallback_priority": 31,
+        "market_fit": [
+          "tradfi",
+          "crypto"
+        ],
+        "provider_id": "tradingview_mcp",
+        "ready": true,
+        "reason": "mcp_url_and_api_key_available",
+        "selectable_by_user": true,
+        "status": "ready",
+        "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.",
+        "user_access": "local_stdio_or_remote_api_key"
+      }
+    ],
+    "yfinance": [
+      {
+        "access_mode": "local_library",
+        "adopted_by_default": true,
+        "domain": "live_runtime",
+        "fallback_priority": 1,
+        "market_fit": [
+          "tradfi"
+        ],
+        "provider_id": "yfinance",
+        "ready": true,
+        "reason": "native_yfinance_runtime_available",
+        "selectable_by_user": true,
+        "status": "ready",
+        "summary": "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows.",
+        "user_access": "free_no_login"
+      },
+      {
+        "access_mode": "public_or_env_ready",
+        "adopted_by_default": false,
+        "domain": "market_data",
+        "fallback_priority": 1,
+        "market_fit": [
+          "tradfi"
+        ],
+        "provider_id": "yfinance",
+        "ready": true,
+        "reason": "public_yahoo_http_endpoints",
+        "selectable_by_user": true,
+        "status": "ready",
+        "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests.",
+        "user_access": "free_no_login"
+      }
+    ]
+  },
+  "raw_data_committed": false,
+  "rows_with_raw_path_score_after_scores": 4,
+  "run_id": "20260511T224522+0800-codex-board-b-220646-post-adapter-downstream-v1",
+  "schema_version": "board-b-220646-post-adapter-downstream/v1",
+  "score_export": {
+    "matched_path_ids": [
+      "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+      "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+      "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+    ],
+    "score_rows_written": 4,
+    "scores_file": "docs/experiments/actionable-regime-confidence/runs/20260511T224522-codex-board-b-220646-post-adapter-downstream-v1/downstream-readback/exact_branch_runtime_scores_post_adapter_v1.csv"
+  },
+  "score_run_id": "20260511T222129+0800-codex-board-b-220646-branch-catboost-runtime-gap-v1",
+  "scores_applied": true,
+  "source_branch_rc_spa_gate": "pass",
+  "source_run_id": "20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "stable_profit_score": 85.7407,
+  "state_dir": "/tmp/ict-engine-board-b-220646-post-adapter-downstream-v1-20260511T224522",
+  "target_exact_paths_ready": true,
+  "target_path_counts_before_scores": {
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12": 1,
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12": 1,
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12": 1,
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12": 1
+  },
+  "thresholds_relaxed": false,
+  "workflow_actionable": null,
+  "workflow_candidate_status": null,
+  "workflow_prefer_history_has_branch_path": true
+}

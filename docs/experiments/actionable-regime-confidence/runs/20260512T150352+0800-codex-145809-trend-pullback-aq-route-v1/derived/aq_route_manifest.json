@@ -1,0 +1,35 @@
+{
+  "protocol": "150352-trend-pullback-aq-route-v1",
+  "generated_at": "2026-05-12T07:16:05.043189Z",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+  "selected_strategy": "trend_pullback_resume_v1",
+  "selected_branch_path": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+  "selected_branch_summary": {
+    "trades": 384,
+    "wins": 232,
+    "win_rate": 0.6041666666666666,
+    "avg_return": 0.0015056034211132481,
+    "total_return_units": 0.5781517137074873,
+    "profit_factor": 1.3558460293603907,
+    "first_entry": "2017-08-26 08:00:00+00:00",
+    "last_entry": "2026-05-10 20:00:00+00:00"
+  },
+  "material_packages": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/material_binance_btcusdt.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/material_ibkr_spy.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/material_yahoo_es.json"
+  ],
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/ProviderBackedTrendPullbackResume1h.py",
+  "selected_branch_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/selected_branch_seed_trades.csv",
+  "walk_forward_summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/walk_forward_summary.csv",
+  "six_provider_provenance_matrix_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/six_provider_provenance_matrix.csv",
+  "real_trades_dryrun_jsonl": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/selected_branch_real_trades_dryrun.jsonl",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "notes": [
+    "selected branch is screen evidence from 145809; AQ dispatch must be checked separately",
+    "TVR/Kraken/Bybit are explicit fail-closed provider rows until acquired through a provider-backed path",
+    "real_trades_dryrun_jsonl is parser/downstream dry-run input, not production BBN mutation evidence"
+  ]
+}

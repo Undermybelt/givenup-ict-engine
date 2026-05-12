@@ -1,0 +1,9 @@
+Downloading scikit-learn (7.7MiB)
+Downloading numpy (5.0MiB)
+Downloading scipy (19.4MiB)
+Downloading pandas (9.4MiB)
+ Downloaded numpy
+ Downloaded scikit-learn
+ Downloaded pandas
+ Downloaded scipy
+Installed 8 packages in 291ms

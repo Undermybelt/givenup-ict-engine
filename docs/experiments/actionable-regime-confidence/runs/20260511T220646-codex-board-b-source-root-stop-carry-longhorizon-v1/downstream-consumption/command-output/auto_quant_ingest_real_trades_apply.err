@@ -1,0 +1,4 @@
+Error: ingesting real trades for symbol 'SRC_STOP_CARRY_LH_220646' from '/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/source_root_stop_carry_longhorizon_real_trades_wire_v1.jsonl'
+
+Caused by:
+    refusing to re-ingest the same JSONL: a prior auto_quant_real_trades_ingested entry with content_hash 'e313d6fefe0324dc' exists (auto_quant_real_trades_SRC_STOP_CARRY_LH_220646_20260511T141553.967404000Z); pass --force after rolling back the BBN to override

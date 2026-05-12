@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/data/binance_btcusdt_1h_20170817_20260512.csv ...
+  raw_rows=76,429 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=76,429
+  range 2017-08-17 04:00:00+00:00 -> 2026-05-12 00:00:00+00:00
+  after timerange slice: 76,429 rows
+  cleaning: dropped 0 (0.0000%) | ohlc_inconsistent=0 nonpositive_price=0 negative_volume=0 ghost_bar=0 jump_outlier=0 -> after_clean=76,429
+  gap_audit: median_gap=3600s max_gap=2,040.0min big_gaps_gt_60x_median=0 (typical for futures session breaks/weekends)
+  wrote   1h:  76,429 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/workspace/auto-quant-provider-multi-longspan-v1/user_data/data/BTC_USDT-1h.feather
+  wrote   4h:  19,124 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/workspace/auto-quant-provider-multi-longspan-v1/user_data/data/BTC_USDT-4h.feather
+  wrote   1d:   3,191 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/workspace/auto-quant-provider-multi-longspan-v1/user_data/data/BTC_USDT-1d.feather
+Done: 3 feather files for pair BTC/USDT in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/workspace/auto-quant-provider-multi-longspan-v1/user_data/data

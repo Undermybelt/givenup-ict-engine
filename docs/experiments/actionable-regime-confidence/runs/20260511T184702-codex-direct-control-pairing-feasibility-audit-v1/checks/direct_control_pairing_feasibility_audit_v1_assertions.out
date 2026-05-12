@@ -1,0 +1,5 @@
+PASS symbol_overlap_checked
+PASS temporal_overlap false
+PASS matched_pair_ready false
+PASS accepted_rows_added 0
+PASS update_goal false

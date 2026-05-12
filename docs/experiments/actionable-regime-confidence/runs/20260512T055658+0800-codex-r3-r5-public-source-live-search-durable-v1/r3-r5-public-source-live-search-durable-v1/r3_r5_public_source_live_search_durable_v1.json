@@ -1,0 +1,162 @@
+{
+  "board_sha256_before_artifact": "c445fce33e105139152e3d040db59f930510682b53cd397d0e53179757c04664",
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "target_root_mutated": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "exact_hits": {
+    "hugging_face_r3_metadata": 0,
+    "hugging_face_r5_metadata": 0,
+    "kaggle_r3_file": 0,
+    "kaggle_r3_metadata": 0,
+    "kaggle_r5_file": 0,
+    "kaggle_r5_metadata": 0
+  },
+  "gate_result": "r3_r5_public_source_live_search_durable_v1=metadata_search_no_exact_r3_r5_rows_no_promotion",
+  "generated_at_utc": "2026-05-11T21:58:33.108007+00:00",
+  "hugging_face": {
+    "queries": 5,
+    "results": [
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "query": "AAPL 15m regime label",
+        "rows": 0
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "query": "IXIC 15m regime label",
+        "rows": 0
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "query": "NQ futures 15m regime label",
+        "rows": 0
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "query": "market regime labels intraday",
+        "rows": 0
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "query": "Bull Bear Sideways Crisis market regime labels",
+        "rows": 0
+      }
+    ],
+    "rows_scanned": 0
+  },
+  "kaggle": {
+    "file_candidate_refs": [
+      "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+      "svenneawolf/geopolitics-nationfiles-stability-index-nfsi"
+    ],
+    "file_results": [
+      {
+        "exact_r3_file_hits": 0,
+        "exact_r5_file_hits": 0,
+        "exit": 0,
+        "file_rows": 20,
+        "ref": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+        "sample_files": [
+          "BYBIT_0GUSDT_SPOT_5m.csv",
+          "BYBIT_1INCHUSDT_SPOT_5m.csv",
+          "BYBIT_2ZUSDC_SPOT_5m.csv",
+          "BYBIT_2ZUSDT_SPOT_5m.csv",
+          "BYBIT_A8USDT_SPOT_5m.csv",
+          "BYBIT_AAPLXUSDT_SPOT_5m.csv",
+          "BYBIT_AAVEUSDC_SPOT_5m.csv",
+          "BYBIT_AAVEUSDT_SPOT_5m.csv",
+          "BYBIT_ACHUSDT_SPOT_5m.csv",
+          "BYBIT_ACSUSDT_SPOT_5m.csv",
+          "BYBIT_ADAEUR_SPOT_5m.csv",
+          "BYBIT_ADAMNT_SPOT_5m.csv"
+        ]
+      },
+      {
+        "exact_r3_file_hits": 0,
+        "exact_r5_file_hits": 0,
+        "exit": 0,
+        "file_rows": 5,
+        "ref": "svenneawolf/geopolitics-nationfiles-stability-index-nfsi",
+        "sample_files": [
+          "algorithmic-geopolitics-nfsi-comprehensive-peer-review-NFL.pdf",
+          "algorithmic-geopolitics-nfsi-comprehensive-peer-review.md",
+          "algorithmic-geopolitics-nfsi-comprehensive-peer-review.pdf",
+          "build-peer-review-pdf-ieee.sh",
+          "supplementary-peer-review-artefacts.md"
+        ]
+      }
+    ],
+    "queries": 7,
+    "results": [
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "exit": 0,
+        "query": "AAPL 15m regime label",
+        "rows": 0
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "exit": 0,
+        "query": "IXIC 15m regime label",
+        "rows": 0
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "exit": 0,
+        "query": "NQ futures 15m regime label",
+        "rows": 0
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "exit": 0,
+        "query": "market regime labels intraday",
+        "rows": 1
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "exit": 0,
+        "query": "Bull Bear Sideways Crisis market regime labels",
+        "rows": 0
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "exit": 0,
+        "query": "stock market regime labels 2026",
+        "rows": 1
+      },
+      {
+        "exact_r3_hits": 0,
+        "exact_r5_hits": 0,
+        "exit": 0,
+        "query": "MainRegimeV2 stock panel",
+        "rows": 0
+      }
+    ],
+    "rows_scanned": 2
+  },
+  "next_action": "obtain explicit source/control approval or source-owned R6/R5/R3 rows before canonical merge and ordered downstream promotion rerun",
+  "required_roots_present": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "run_id": "20260512T055658+0800-codex-r3-r5-public-source-live-search-durable-v1"
+}

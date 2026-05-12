@@ -1,0 +1,13 @@
+goal_achieved=false
+provider_status_summary=market_data:6/7 ready
+kraken.cell_count=27
+kraken.ok_cell_count=24
+kraken.failed_cell_count=0
+kraken.unsupported_cell_count=3
+actual_data_fetch_attempted=true
+accepted_full_cycle_full_universe=false
+raw_ohlcv_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=uv_wrapper_opened_provider_lane_kraken_data_available_root_confidence_pending

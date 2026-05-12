@@ -1,0 +1,13 @@
+PASS run_id=20260512T050612-codex-045830-terminal-143-readback-v1
+PASS gate_result=045830_terminal_143_readback_v1=extra_trees_exit_143_no_result_artifacts_no_promotion
+PASS writer_active=false
+PASS exit_content=143
+PASS stdout_bytes=0
+PASS result_json_present=false
+PASS accepted_extra_trees_confidence_95_labels=none
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

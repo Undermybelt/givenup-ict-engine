@@ -1,0 +1,43 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/checks/nq_root_adaptive_panel_v1_assertions.out",
+    "branch_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/nq-root-adaptive-panel/nq_root_adaptive_panel_branch_summary_v1.csv",
+    "input_manifest": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/nq-root-adaptive-panel/nq_root_adaptive_panel_inputs_v1.json",
+    "real_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/nq-root-adaptive-panel/nq_root_adaptive_panel_real_trades_v1.jsonl",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/nq-root-adaptive-panel/nq_root_adaptive_panel_rc_spa_v1.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/nq-root-adaptive-panel/nq_root_adaptive_panel_rc_spa_v1.md",
+    "selected_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/nq-root-adaptive-panel/nq_root_adaptive_panel_selected_rows_v1.csv",
+    "strategy_library": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/nq-root-adaptive-panel/strategy_library_nq_root_adaptive_panel_v1.json",
+    "variant_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/nq-root-adaptive-panel/nq_root_adaptive_panel_variant_rows_v1.csv"
+  },
+  "board_state": "rejected",
+  "decision": {
+    "all_required_branches_passed": false,
+    "branch_paths_evaluated": 12,
+    "direct_manipulation_gate": "pass:direct_manipulation_stop_tp_candidate",
+    "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+    "failure_tags": [
+      "Bull=fail:reject_cost_fragile",
+      "Bear=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_rc_spa_below_60",
+      "Sideways=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "Crisis=fail:reject_thin_trades|reject_insufficient_test_folds"
+    ],
+    "gate_result": "fail:required_root_or_scoped_manipulation_hard_gates_failed",
+    "minimum_required_branch_score": 32.99999999999999,
+    "next_action": "Do not run downstream. Use this as nursery feedback: keep the NQ long-history source-root join, but repair the failing price-root gate(s) before another downstream attempt.",
+    "price_roots_passed": 0,
+    "primary_blocker": "NQ long-history root-adaptive panel repaired row supply and combined the scoped Manipulation component, but at least one required price-root RC-SPA gate still failed.",
+    "root_trade_counts": {
+      "Bear": 2662,
+      "Bull": 8750,
+      "Crisis": 31,
+      "Sideways": 1672
+    },
+    "selected_price_root_rows": 13115,
+    "stable_profit_score": 89.92148669967574,
+    "variant_trade_rows": 45463
+  },
+  "recipe_id": "NQRootAdaptiveEventPanelV1",
+  "run_id": "20260512T030356+0800-codex-board-b-b2r-repeat-nq-root-adaptive-v1",
+  "schema_version": "board-b-b2r-repeat-nq-root-adaptive-event-panel/v1"
+}

@@ -1,0 +1,13 @@
+gate_result=databento_gc_metadata_disposition_after_075426_v1=batch_metadata_no_source_label_or_control_unlock
+checked_files=4
+source_label_or_control_key_hits=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

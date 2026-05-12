@@ -1,0 +1,3 @@
+state_dir=/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351
+managed_dir=/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant
+helper=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T023920-codex-autoquant-synthetic-market-map-backtest-probe-v1/scripts

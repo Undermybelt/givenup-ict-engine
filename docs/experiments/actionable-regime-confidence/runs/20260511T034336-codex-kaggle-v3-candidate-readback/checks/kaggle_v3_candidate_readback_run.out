@@ -1,0 +1,20 @@
+{
+  "accepted_gate": "partial_for_MainRegimeV3Candidate_CrisisCrash_only",
+  "accepted_root_classes_95_effective": [
+    "CrisisCrash"
+  ],
+  "blocker": "missing_root_classes_95=BullExpansion,BearExpansion,SidewaysConsolidation,Manipulation",
+  "board_state": "blocked",
+  "fresh_calibration_rerun": false,
+  "missing_root_classes_95_effective": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "Manipulation"
+  ],
+  "next_action": "Find materially stronger direct labels/features for BullExpansion/BearExpansion/SidewaysConsolidation and direct-event evidence for Manipulation.",
+  "raw_data_committed": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,10 @@
+run_id=20260512T004713-codex-r6-source-owner-export-presence-sweep-v1
+owner_package_files_present=0
+candidate_hits=40
+manual_review_candidates=0
+strictly_usable_source_owned_controls_found=0
+canonical_merge_allowed=false
+downstream_chain_rerun_allowed=false
+shared_intake_mutated=false
+gate_result=r6_source_owner_export_presence_sweep_v1=no_verifier_native_owner_package_or_viable_local_source_owner_export_found
+ASSERTIONS_PASSED=true

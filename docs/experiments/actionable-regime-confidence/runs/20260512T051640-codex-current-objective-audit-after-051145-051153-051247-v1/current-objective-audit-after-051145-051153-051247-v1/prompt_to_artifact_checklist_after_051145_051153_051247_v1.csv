@@ -1,0 +1,11 @@
+requirement,evidence,status,blocker,next_action
+every_regime_confidence_95,045926 accepted labels empty and 050609 accepted labels empty,fail,no strict accepted per-regime confidence packet,acquire or mine non-proxy qualifier that passes all split gates
+cross_market_validation,050609 heldout-market support/wilson gates failed and source roots absent,fail,no source-owned other-market validation packet,obtain source-owned cross-market MainRegimeV2 rows
+cross_period_timeframe_validation,045926 and 050609 heldout-time/test gates failed plus native subhour root absent,fail,no native subhour source-label rows,obtain native subhour source labels with provenance
+per_regime_qualifying_condition,diagnostic rules exist but accepted labels empty,fail,no accepted qualifying_condition per regime,rerun only after source/control unlock or stronger qualifier
+provider_paths_covered,051153 yfinance 197 rows kraken 721 rows ibkr spy 21 rows tradingview harness exit 1,partial,provider reachability is not source/control evidence,use providers only after canonical accepted packet exists
+autoquant_and_ict_engine_chain_touched,051145 ran read-only provider autoquant prebayes policy workflow path-ranking surfaces with zero command failures,partial,read-only status is not promotion rerun,rerun chain after canonical merge
+official_owner_route,051247 confirms CME/Cboe routes,partial,external license/export still required,satisfy owner-export request and preserve provenance
+source_control_roots_present,three required target roots absent,fail,no target root unlock,populate approved roots only with verifier-native/source-owned rows
+multi_agent_board_integrity,count-once sections exist and this audit is append-only,pass,none,continue append-only and re-read before edits
+update_goal_allowed,current audit says strict_full_objective false,fail,objective incomplete,do not call update_goal

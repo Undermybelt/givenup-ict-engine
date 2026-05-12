@@ -1,0 +1,1 @@
+./target/debug/ict-engine provider-status --domain live_runtime --agent 

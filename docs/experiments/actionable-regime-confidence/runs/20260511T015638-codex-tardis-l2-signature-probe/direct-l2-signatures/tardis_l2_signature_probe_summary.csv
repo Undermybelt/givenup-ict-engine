@@ -1,0 +1,10 @@
+name,exchange,symbol,data_type,rows_sampled,wall_events,wall_cancel_without_price_move_events,layering_stack_events,zero_amount_updates,update_burst_seconds,one_sided_cancel_burst_seconds
+bitmex_xbtusd_book_snapshot_5_2020_09_01,bitmex,XBTUSD,book_snapshot_5,40000,18401,35,13501,0,0,0
+binance_futures_btcusdt_book_snapshot_5_2020_09_01,binance-futures,BTCUSDT,book_snapshot_5,40000,12620,317,8305,0,0,0
+bitmex_xbtusd_book_snapshot_5_2020_10_01,bitmex,XBTUSD,book_snapshot_5,40000,13748,0,11472,0,0,0
+binance_futures_btcusdt_book_snapshot_5_2020_10_01,binance-futures,BTCUSDT,book_snapshot_5,40000,12466,814,8198,0,0,0
+bitmex_xbtusd_book_snapshot_5_2020_11_01,bitmex,XBTUSD,book_snapshot_5,40000,21769,194,16623,0,0,0
+binance_futures_btcusdt_book_snapshot_5_2020_11_01,binance-futures,BTCUSDT,book_snapshot_5,40000,9282,600,5844,0,0,0
+deribit_btc_perpetual_incremental_book_l2_2020_04_01,deribit,BTC-PERPETUAL,incremental_book_L2,60000,0,0,0,2788,68,0
+deribit_btc_perpetual_incremental_book_l2_2020_05_01,deribit,BTC-PERPETUAL,incremental_book_L2,60000,0,0,0,4330,123,0
+deribit_btc_perpetual_incremental_book_l2_2020_06_01,deribit,BTC-PERPETUAL,incremental_book_L2,60000,0,0,0,3414,79,0

@@ -1,0 +1,110 @@
+Result for strategy TomacNQRootAwareBranchMatrixV1
+                                            BACKTESTING REPORT                                            
+┏━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃   Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ NQ/USD │   9240 │         0.02 │     459635.680 │       459.64 │      1:59:00 │ 4715   332  4193  51.0 │
+│  TOTAL │   9240 │         0.02 │     459635.680 │       459.64 │      1:59:00 │ 4715   332  4193  51.0 │
+└────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                                   ENTER TAG STATS                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│        Bull/TomacNQTrendPullbackContinuation/long │    5913 │         0.01 │     190428.000 │       190.43 │      2:00:00 │ 3090   154  2669  52.3 │
+│ Sideways/TomacNQRangeLowerBreakContinuation/short │    1817 │         0.04 │     176442.000 │       176.44 │      1:59:00 │  910    38   869  50.1 │
+│      Bear/TomacNQBearTrendShortContinuation/short │    1137 │         0.04 │      71469.200 │        71.47 │      1:58:00 │  571    24   542  50.2 │
+│              Crisis/TomacNQStressReboundLong/long │     373 │         0.03 │      21296.480 │         21.3 │      2:00:00 │  144   116   113  38.6 │
+│                                             TOTAL │    9240 │         0.02 │     459635.680 │       459.64 │      1:59:00 │ 4715   332  4193  51.0 │
+└───────────────────────────────────────────────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                    EXIT REASON STATS                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃            Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ nq_rootaware_time_exit │  9030 │         0.03 │     719590.000 │       719.59 │      2:00:00 │ 4637   332  4061  51.4 │
+│              stop_loss │     2 │         -4.0 │     -21730.320 │       -21.73 │      0:30:00 │    0     0     2     0 │
+│            exit_signal │   208 │        -0.38 │    -238224.000 │      -238.22 │      1:32:00 │   78     0   130  37.5 │
+│                  TOTAL │  9240 │         0.02 │     459635.680 │       459.64 │      1:59:00 │ 4715   332  4193  51.0 │
+└────────────────────────┴───────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                                               MIXED TAG STATS                                                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Enter Tag ┃            Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│      Bear/TomacNQBearTrendShortContinuation/short │ nq_rootaware_time_exit │   1061 │         0.12 │     346878.000 │       346.88 │      2:00:00 │  571    24   466  53.8 │
+│ Sideways/TomacNQRangeLowerBreakContinuation/short │ nq_rootaware_time_exit │   1763 │         0.06 │     269384.000 │       269.38 │      2:00:00 │  910    38   815  51.6 │
+│        Bull/TomacNQTrendPullbackContinuation/long │            exit_signal │     77 │         0.47 │     108352.000 │       108.35 │      1:34:00 │   76     0     1  98.7 │
+│        Bull/TomacNQTrendPullbackContinuation/long │ nq_rootaware_time_exit │   5836 │         0.01 │      82076.000 │        82.08 │      2:00:00 │ 3014   154  2668  51.6 │
+│              Crisis/TomacNQStressReboundLong/long │ nq_rootaware_time_exit │    370 │         0.03 │      21252.000 │        21.25 │      2:00:00 │  142   116   112  38.4 │
+│              Crisis/TomacNQStressReboundLong/long │            exit_signal │      2 │         1.51 │       9608.000 │         9.61 │      2:00:00 │    2     0     0   100 │
+│              Crisis/TomacNQStressReboundLong/long │              stop_loss │      1 │         -4.0 │      -9563.520 │        -9.56 │      1:00:00 │    0     0     1     0 │
+│      Bear/TomacNQBearTrendShortContinuation/short │              stop_loss │      1 │         -4.0 │     -12166.800 │       -12.17 │      0:00:00 │    0     0     1     0 │
+│ Sideways/TomacNQRangeLowerBreakContinuation/short │            exit_signal │     54 │        -0.68 │     -92942.000 │       -92.94 │      1:33:00 │    0     0    54     0 │
+│      Bear/TomacNQBearTrendShortContinuation/short │            exit_signal │     75 │        -1.08 │    -263242.000 │      -263.24 │      1:29:00 │    0     0    75     0 │
+│                                             TOTAL │                        │   9240 │         0.02 │     459635.680 │       459.64 │      1:59:00 │ 4715   332  4193  51.0 │
+└───────────────────────────────────────────────────┴────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2011-01-11 07:00:00            │
+│ Backtesting to                │ 2025-12-31 00:00:00            │
+│ Trading Mode                  │ Isolated Futures               │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 9240 / 1.69                    │
+│ Starting balance              │ 100000 USD                     │
+│ Final balance                 │ 559635.68 USD                  │
+│ Absolute profit               │ 459635.68 USD                  │
+│ Total profit %                │ 459.64%                        │
+│ CAGR %                        │ 12.18%                         │
+│ Sortino                       │ 1.44                           │
+│ Sharpe                        │ 1.24                           │
+│ Calmar                        │ 9.16                           │
+│ SQN                           │ 3.70                           │
+│ Profit factor                 │ 1.15                           │
+│ Expectancy (Ratio)            │ 49.74 (0.03)                   │
+│ Avg. daily profit             │ 84.075 USD                     │
+│ Avg. stake amount             │ 274104.905 USD                 │
+│ Total trade volume            │ 5065422449.28 USD              │
+│                               │                                │
+│ Long / Short trades           │ 6286 / 2954                    │
+│ Long / Short profit %         │ 211.72% / 247.91%              │
+│ Long / Short profit USD       │ 211724.480 / 247911.200        │
+│                               │                                │
+│ Best Pair                     │ NQ/USD 459.64%                 │
+│ Worst Pair                    │ NQ/USD 459.64%                 │
+│ Best trade                    │ NQ/USD 3.84%                   │
+│ Worst trade                   │ NQ/USD -4.00%                  │
+│ Best day                      │ 21846 USD                      │
+│ Worst day                     │ -21477.52 USD                  │
+│ Days win/draw/lose            │ 1722 / 2262 / 1480             │
+│ Min/Max/Avg. Duration Winners │ 0d 01:00 / 0d 02:00 / 0d 02:00 │
+│ Min/Max/Avg. Duration Losers  │ 0d 00:00 / 0d 02:00 / 0d 01:59 │
+│ Max Consecutive Wins / Loss   │ 12 / 17                        │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 94682 USD                      │
+│ Max balance                   │ 595025.68 USD                  │
+│ Max % of account underwater   │ 17.53%                         │
+│ Absolute drawdown             │ 58238.32 USD (17.53%)          │
+│ Drawdown duration             │ 13 days 05:00:00               │
+│ Profit at drawdown start      │ 232192 USD                     │
+│ Profit at drawdown end        │ 173953.68 USD                  │
+│ Drawdown start                │ 2020-03-10 14:00:00            │
+│ Drawdown end                  │ 2020-03-23 19:00:00            │
+│ Market change                 │ 1146.86%                       │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2011-01-11 07:00:00 -> 2025-12-31 00:00:00 | Max open trades : 1
+                                                                    STRATEGY SUMMARY                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓
+┃                       Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃             Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩
+│ TomacNQRootAwareBranchMatrixV1 │   9240 │         0.02 │     459635.680 │       459.64 │      1:59:00 │ 4715   332  4193  51.0 │ 58238.32 USD  17.53% │
+└────────────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┴──────────────────────┘

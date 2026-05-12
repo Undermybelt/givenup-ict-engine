@@ -1,0 +1,11 @@
+PASS gate_result=True
+PASS provider_status_command_recorded=True
+PASS auto_quant_status_command_recorded=True
+PASS source_control_evidence_acquired_false=True
+PASS target_root_mutated_false=True
+PASS canonical_merge_false=True
+PASS downstream_promotion_rerun_false=True
+PASS strict_full_objective_false=True
+PASS trade_usable_false=True
+PASS update_goal_false=True
+PASS raw_data_committed_false=True

@@ -1,0 +1,12 @@
+PASS decision=live_public_acquisition_recheck_v36=no_new_public_rows_intakes_still_absent_blocked
+PASS kaggle_available=true
+PASS kaggle_date_max=2026-01-30
+PASS kaggle_post_cutoff_target_rows=0
+PASS ready_intake_roots=0_of_4
+PASS request_sent=false
+PASS external_authenticated_message_sent=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

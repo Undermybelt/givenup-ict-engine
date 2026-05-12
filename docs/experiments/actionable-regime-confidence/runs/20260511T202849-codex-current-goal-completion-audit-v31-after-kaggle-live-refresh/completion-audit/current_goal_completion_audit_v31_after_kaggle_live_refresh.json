@@ -1,0 +1,166 @@
+{
+  "accepted_rows_added_since_v30": 0,
+  "checklist_rows": [
+    {
+      "artifact": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "evidence": "Board re-read; v31 audit generated under docs/experiments for the same board after the latest Kaggle live refresh.",
+      "gap": "",
+      "id": "R0",
+      "requirement": "Use the named Board A markdown as the execution contract and write results back there.",
+      "status": "pass_checked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T195945-codex-sapienza-pumpdump-control-gate-v1/sapienza-pumpdump-control-gate/sapienza_pumpdump_control_gate_v1.json",
+      "evidence": "Scoped active-lane 95% evidence persists; Sapienza pump/dump has 317 event groups and min Wilson LCB 0.970640354706.",
+      "gap": "This remains scoped consumer-map evidence, not strict full-market/full-cycle/full-species closure.",
+      "id": "R1",
+      "requirement": "Every active regime has calibrated >=95% confidence.",
+      "status": "pass_scoped_not_full"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py",
+      "evidence": "Live source-label verifier returncode=2; status=blocked; reason=missing_required_files; missing_files=2.",
+      "gap": "No source_label_equivalence_rows.csv or provenance file is present; no other-market/source-label equivalence can be accepted.",
+      "id": "R2",
+      "requirement": "The 95% regime result transfers to other markets/species using source-owned or owner-approved labels.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T201713-codex-native-subhour-local-live-intake-sweep-v1/native-subhour-local-live-intake-sweep/native_subhour_local_live_intake_sweep_v1.json",
+      "evidence": "Native local/live sweep decision=native_subhour_local_live_intake_sweep_v1=no_native_subhour_source_owned_intake_package; exact_required_intake_files_present=0; complete_native_subhour_package_present=False.",
+      "gap": "No native sub-hour source-owned label intake package is present; raw OHLCV/provider files remain rejected.",
+      "id": "R3",
+      "requirement": "The 95% regime result transfers to other cycles/timeframes, including native sub-hour source labels.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T202304-codex-stock-regime-owner-contact-leads-v1/stock-regime-owner-contact-leads/stock_regime_owner_contact_leads_v1.json",
+      "evidence": "Stock contact leads decision=stock_regime_owner_contact_leads_v1=public_contact_paths_ready_rows_not_acquired; rows_acquired=False; source_label_equivalence_intake_files_created=False; source-label verifier status=blocked.",
+      "gap": "Contact paths are ready, but source-owned strict 1h rows/provenance are not acquired.",
+      "id": "R4",
+      "requirement": "Strict exact 1h remaining slots have source-owned rows and provenance.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T202501-codex-kaggle-stock-regime-live-refresh-v1/kaggle-stock-regime-live-refresh/kaggle_stock_regime_live_refresh_v1.json",
+      "evidence": "Kaggle live refresh decision=kaggle_stock_regime_live_refresh_v1=downloaded_latest_public_dataset_no_post_2026_01_30_rows; download_matches_local_reference=True; date_max=2026-01-30; post_cutoff_target_rows=0. Recency verifier status=blocked; reason=missing_required_files.",
+      "gap": "Latest public Kaggle package is byte-identical to the local panel and still has zero post-2026-01-30 target rows.",
+      "id": "R5",
+      "requirement": "Strict 1h recency-tail targets after 2026-01-30 are repaired with source-owned labels.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T201759-codex-do-putnins-contact-leads-v1/do-putnins-contact-leads/do_putnins_contact_leads_v1.json",
+      "evidence": "Do/Putnins contact leads decision=do_putnins_contact_leads_v1=public_contact_paths_ready_rows_not_acquired; rows_acquired=False; direct verifier returncode=2; status=blocked; reason=missing_required_files.",
+      "gap": "Pump/dump scoped gate persists, but spoofing/layering and other direct species still lack owner-approved positive/control row packages.",
+      "id": "R6",
+      "requirement": "Direct Manipulation has source-owned row-level positives, matched controls, and provenance across required species.",
+      "status": "partial_still_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T202225-codex-current-goal-completion-audit-v30-after-native-and-recency-requests/completion-audit/current_goal_completion_audit_v30_after_native_and_recency_requests.json",
+      "evidence": "v31 live readback preserved fail-closed verifier status; raw_data_committed=false and thresholds_relaxed=false across latest artifacts.",
+      "gap": "",
+      "id": "R7",
+      "requirement": "No proxy, generated, synthetic, future-return, duplicated, or OHLCV-only labels are promoted.",
+      "status": "pass_guardrail"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T202849-codex-current-goal-completion-audit-v31-after-kaggle-live-refresh",
+      "evidence": "Unmet rows remain R2, R3, R4, R5, R6, R8 after v31 live verifier readbacks and Kaggle refresh.",
+      "gap": "Strict full objective is not achieved; update_goal must remain false.",
+      "id": "R8",
+      "requirement": "Mark the goal complete only if every explicit requirement is covered by real evidence.",
+      "status": "fail_blocked"
+    }
+  ],
+  "decision": "current_goal_completion_audit_v31=kaggle_live_refresh_confirms_strict_objective_blocked",
+  "generated_at_utc": "2026-05-11T12:31:43.766817+00:00",
+  "latest_artifacts_checked": [
+    "docs/experiments/actionable-regime-confidence/runs/20260511T202225-codex-current-goal-completion-audit-v30-after-native-and-recency-requests/completion-audit/current_goal_completion_audit_v30_after_native_and_recency_requests.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T202304-codex-stock-regime-owner-contact-leads-v1/stock-regime-owner-contact-leads/stock_regime_owner_contact_leads_v1.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T202501-codex-kaggle-stock-regime-live-refresh-v1/kaggle-stock-regime-live-refresh/kaggle_stock_regime_live_refresh_v1.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T201713-codex-native-subhour-local-live-intake-sweep-v1/native-subhour-local-live-intake-sweep/native_subhour_local_live_intake_sweep_v1.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T201759-codex-do-putnins-contact-leads-v1/do-putnins-contact-leads/do_putnins_contact_leads_v1.json"
+  ],
+  "live_verifier_readbacks": {
+    "direct_manipulation": {
+      "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+          "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+          "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"status\": \"blocked\",\n  \"reason\": \"missing_required_files\",\n  \"missing_files\": [\n    \"/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv\",\n    \"/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv\",\n    \"/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json\"\n  ]\n}"
+    },
+    "native_subhour_roots": [
+      {
+        "complete_native_subhour_package": false,
+        "exists": false,
+        "present_files": "",
+        "required_provenance_present": false,
+        "required_rows_present": false,
+        "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+      },
+      {
+        "complete_native_subhour_package": false,
+        "exists": false,
+        "present_files": "",
+        "required_provenance_present": false,
+        "required_rows_present": false,
+        "root": "/private/tmp/ict-engine-native-subhour-source-label-intake"
+      }
+    ],
+    "recency_extension": {
+      "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py --intake-root /tmp/ict-engine-source-panel-recency-extension",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"status\": \"blocked\",\n  \"reason\": \"missing_required_files\",\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv\",\n    \"/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json\"\n  ]\n}"
+    },
+    "source_label_equivalence": {
+      "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py --intake-root /tmp/ict-engine-source-label-equivalence-intake",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv\",\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json\"\n  ],\n  \"reason\": \"missing_required_files\",\n  \"status\": \"blocked\"\n}"
+    }
+  },
+  "new_confidence_gate_since_v30": false,
+  "objective_restatement": "For docs/plans/2026-05-10-actionable-regime-confidence-todo.md, each active regime must have >=95% calibrated confidence and must be validated across other markets and other cycles/timeframes with source-owned or owner-approved evidence before reporting completion.",
+  "raw_data_committed": false,
+  "run_id": "20260511T202849-codex-current-goal-completion-audit-v31-after-kaggle-live-refresh",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unmet_requirement_ids": [
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R8"
+  ],
+  "update_goal": false
+}

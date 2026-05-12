@@ -1,0 +1,10 @@
+PASS run_id=20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1
+PASS providers_with_rows=5
+PASS providers_with_aq_execution=5
+PASS providers_with_nonzero_trades=5
+FAIL_CLOSED mature_rooted_observations_added=0
+FAIL_CLOSED accepted_95_regime_context=false
+FAIL_CLOSED no_pre_bayes_bbn_catboost_execution_tree_promotion
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

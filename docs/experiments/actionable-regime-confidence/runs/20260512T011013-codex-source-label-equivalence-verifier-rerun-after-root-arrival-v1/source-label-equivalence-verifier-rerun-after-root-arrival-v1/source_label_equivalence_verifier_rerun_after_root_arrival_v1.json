@@ -1,0 +1,20 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "gate_result": "source_label_equivalence_verifier_rerun_after_root_arrival_v1=schema_ready_unscored_no_confidence_acceptance",
+  "intake_root": "/tmp/ict-engine-source-label-equivalence-intake",
+  "new_confidence_gate": false,
+  "package_counts": {
+    "price_root_equivalence_us_index_futures": 248440
+  },
+  "provenance_sha256": "a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b",
+  "row_count": 248440,
+  "rows_sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25",
+  "run_id": "20260512T011013-codex-source-label-equivalence-verifier-rerun-after-root-arrival-v1",
+  "schema_ready": true,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "verifier_exit_code": 0,
+  "verifier_status": "schema_ready_unscored"
+}

@@ -1,0 +1,3 @@
+entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0
+Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0
+Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false

@@ -1,0 +1,81 @@
+{
+  "crosswalk": {
+    "BearExpansion": {
+      "context_packets": [
+        "TrendExpansion",
+        "ExtremeStress"
+      ],
+      "historical_aliases": [
+        "Bear"
+      ],
+      "must_not_inherit": [
+        "CrisisStress",
+        "generic drawdown without ordinary-bear separation"
+      ],
+      "promotion_requirement": "signed negative expansion root target passes 95 gate directly and is separated from CrisisStress"
+    },
+    "BullExpansion": {
+      "context_packets": [
+        "TrendExpansion"
+      ],
+      "historical_aliases": [
+        "Bull"
+      ],
+      "must_not_inherit": [
+        "generic unsigned trend"
+      ],
+      "promotion_requirement": "signed positive expansion root target passes 95 gate directly across contexts/timeframes"
+    },
+    "Consolidation": {
+      "context_packets": [
+        "RangeConsolidation"
+      ],
+      "historical_aliases": [
+        "Sideways"
+      ],
+      "must_not_inherit": [
+        "low-vol bull drift",
+        "post-crisis compression"
+      ],
+      "promotion_requirement": "root-level consolidation target passes 95 gate directly"
+    },
+    "CrisisStress": {
+      "context_packets": [
+        "ExtremeStress"
+      ],
+      "historical_aliases": [
+        "Crisis"
+      ],
+      "promotion_requirement": "tail/stress root target passes 95 gate directly across contexts/timeframes"
+    },
+    "Manipulation": {
+      "context_packets": [
+        "ThinLiquidity",
+        "SessionLiquidityCoreViable"
+      ],
+      "failure_state_without_inputs": "missing_required_inputs",
+      "historical_aliases": [],
+      "must_not_inherit": [
+        "OHLCV sweep-like shape",
+        "thin liquidity alone",
+        "volume-ratio proxy"
+      ],
+      "promotion_requirement": "direct tick/order-flow/bid-ask/L2/L3/order-lifecycle/venue-event evidence"
+    },
+    "TransitionRecovery": {
+      "context_packets": [
+        "ReversalBrewing"
+      ],
+      "contract_state": "optional root until downstream consumer explicitly requires it",
+      "historical_aliases": [],
+      "promotion_requirement": "transition/recovery target passes 95 gate directly with duration and hazard controls"
+    },
+    "UnknownOrMixed": {
+      "context_packets": [],
+      "historical_aliases": [],
+      "promotion_requirement": "residual routing only; never a release gate"
+    }
+  },
+  "rule": "Historical subtype/signature packets are context only until the exact RootTaxonomyV3 class passes the unchanged root gate.",
+  "schema_version": "root-taxonomy-v3-crosswalk/v1"
+}

@@ -1,0 +1,6 @@
+market_data:0/1 ready
+guide: binance_public: access=public_no_login fit=crypto fallback=2 summary=Public no-login crypto market-data path for broad spot/perp history.
+detail: binance_public | access=public_no_login | Public no-login crypto market-data path for broad spot/perp history.
+setup: System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost
+market_data: ready 0/1 selectable 1 default 0
+  pending: binance_public(configured_runtime_unhealthy:python3_provider_dependencies_missing)

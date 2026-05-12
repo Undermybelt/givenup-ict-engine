@@ -1,0 +1,10 @@
+PASS gate_result=board_a_provider_chain_readback_v1=providers_and_chain_rerun_source_rows_still_missing
+PASS outbox_rows_checked=9
+PASS ready_intake_roots=0/4
+PASS accepted_rows_added=0
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS provider_fetches_executed=true
+PASS chain_readback_executed=true

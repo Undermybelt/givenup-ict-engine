@@ -1,0 +1,10 @@
+PASS candidate_files_classified=2000
+PASS accepted_independent_parent_root_label_sources=0
+PASS new_attached_parent_root_slots=0
+PASS accepted_direct_manipulation_sources=0
+PASS accepted_direct_manipulation_rows_or_windows=0
+PASS gate_result=blocked_local_filesystem_no_new_independent_label_panel
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

@@ -1,0 +1,27 @@
+{
+  "artifact_type": "local_intake_schema_sweep_v1",
+  "candidate_files": 515,
+  "decision": {
+    "accepted_rows_added": 0,
+    "gate_result": "local_intake_schema_sweep_v1=no_exact_required_schema_match",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "exact_schema_matches": 0,
+  "generated_at_utc": "2026-05-11T10:55:19.078141+00:00",
+  "parsed_files": 176,
+  "run_id": "20260511T185420-codex-local-intake-schema-sweep-v1",
+  "schemas_checked": [
+    "direct_controls",
+    "direct_positive_rows",
+    "external_price_rows",
+    "external_recency_rows"
+  ],
+  "strong_partial_schema_matches": 0,
+  "todo_hash_before_append": "437f4676ebcc28d205d94eaa84079a15453f33a72239e381318c50ff7d4c88b7"
+}

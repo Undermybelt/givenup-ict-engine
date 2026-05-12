@@ -1,0 +1,42 @@
+{
+  "rows": [
+    {
+      "base_symbol": "NQ",
+      "comparison_symbol": "DXY",
+      "relationship_type": "negative",
+      "relationship_confidence": 0.9996,
+      "timeframe": "5m",
+      "session": "NY_AM",
+      "comparison_timeframe": "5m",
+      "comparison_session": "NY_AM",
+      "timeframe_aligned": true,
+      "session_overlap": true,
+      "correlation_window_bars": 27,
+      "recent_correlation": -0.9996,
+      "smt_signal": "bearish_smt",
+      "base_swing_type": "HH",
+      "base_event_time": "t22",
+      "base_level": 115.0,
+      "comparison_swing_type": "LH",
+      "comparison_event_time": "t22",
+      "comparison_level": 95.0,
+      "event_window_bars": 3,
+      "event_time_delta_bars": 0,
+      "same_event_window_confirmed": true,
+      "swept_side": "buy_side_liquidity",
+      "normalized_for_inverse_correlation": true,
+      "raw_comparison_swing_type": "HL",
+      "raw_comparison_level": 95.0,
+      "near_pd_array": false,
+      "pd_array_type": "none",
+      "mss_or_cisd_confirmed": false,
+      "displacement_confirmed": false,
+      "provider_provenance": null,
+      "evidence_source": "local_input_candles",
+      "confidence": 0.25,
+      "fail_closed_reason": "confirmation_only_waiting_for_mss_cisd_displacement_and_pda",
+      "confirmation_role": "confirmation_only",
+      "actionable": false
+    }
+  ]
+}

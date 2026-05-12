@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto_quant_real_trades_VRP_PANEL_V25_190356_SELECTED_20260511T111955.404387000Z",
+    "artifact_kind": "auto_quant_real_trades_ingested",
+    "artifact_id": "auto_quant_real_trades_VRP_PANEL_V25_190356_SELECTED_20260511T111955.404387000Z",
+    "version": 1,
+    "generated_at": "2026-05-11T11:19:55.404387Z",
+    "symbol": "VRP_PANEL_V25_190356_SELECTED",
+    "source_phase": "auto_quant_real_trades",
+    "source_run_id": "560c801ec43f0bfa",
+    "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T190356-codex-board-b-vrp-v25-root-branch-rc-spa-v1/ict-engine-fail-closed/vrp_v25_selected_real_trades_wire_v1.jsonl",
+    "status": "dry_run_preview",
+    "promote_candidate": false,
+    "actionable": false,
+    "decision_hint": "ingested 1184 trade(s)",
+    "review_reason": "ingested 1184/1184 (invalid 0) feedback_inserted=0 content_hash=560c801ec43f0bfa dry_run=true force=false",
+    "review_rule_version": "auto-quant-real-trades-v1",
+    "top_factor_name": null,
+    "top_factor_action": null,
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 1184,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

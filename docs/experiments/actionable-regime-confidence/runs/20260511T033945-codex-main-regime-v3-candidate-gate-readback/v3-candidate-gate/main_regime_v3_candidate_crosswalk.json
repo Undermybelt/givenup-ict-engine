@@ -1,0 +1,11 @@
+{
+  "crosswalk": {
+    "BearExpansion": "same source-backed expanded root label",
+    "BullExpansion": "same source-backed expanded root label",
+    "CrisisCrash": "crosswalk from source root CrisisStress",
+    "Manipulation": "direct event/order-lifecycle/L2/L3/MBO/social/on-chain evidence only",
+    "SidewaysConsolidation": "source labels Consolidation/ConsolidationRange collapsed to SidewaysConsolidation",
+    "UnknownOrMixed": "residual abstain bucket, not release confidence"
+  },
+  "schema_id": "MainRegimeV3CandidateCrosswalk"
+}

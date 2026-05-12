@@ -1,0 +1,73 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T13:59:00+08:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant (runtime only); isolated wrapper copied into run root",
+  "auto_quant_pinned_ref": "1fe86ab",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/aq_runtime/config.tomac.json",
+  "timeframe": "1h_from_cleaned_1m_resample",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/command-output/03_tomac_backtest.out",
+  "strategies": [
+    {
+      "name": "TomacNQ_KillzoneBreakout",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/aq_runtime/user_data/strategies_external/TomacNQ_KillzoneBreakout.py",
+      "metadata": {
+        "strategy": "TomacNQ_KillzoneBreakout",
+        "mutation_id": "long_history_es_nq_1m_smoke_v1",
+        "base_factor": "tomac_killzone_breakout",
+        "hypothesis": "1m-staged ES/NQ long-history futures data resampled to 1h/4h should retain killzone breakout edge across both index futures.",
+        "paradigm": "breakout",
+        "expected_regime": "trend_expansion",
+        "factors_used": [
+          "killzone",
+          "24h_breakout",
+          "4h_ema_alignment"
+        ],
+        "parent": "TomacNQ_KillzoneBreakout",
+        "asset_class": "equity_index_futures",
+        "status": "support_only_long_history_smoke",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.0252,
+        "sortino": 0.0336,
+        "calmar": 0.3682,
+        "total_profit_pct": 5.43,
+        "max_drawdown_pct": -6.8357,
+        "trade_count": 153,
+        "win_rate_pct": 59.4771,
+        "profit_factor": 1.0984
+      },
+      "per_pair_metrics": {
+        "ES/USD": {
+          "sharpe": -0.0221,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": -4.08,
+          "max_drawdown_pct": -10.19,
+          "trade_count": 76,
+          "win_rate_pct": 46.1,
+          "profit_factor": 0.83
+        },
+        "NQ/USD": {
+          "sharpe": 0.0395,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 9.5,
+          "max_drawdown_pct": -7.04,
+          "trade_count": 77,
+          "win_rate_pct": 72.7,
+          "profit_factor": 1.31
+        }
+      },
+      "pairs": [
+        "NQ/USD",
+        "ES/USD"
+      ],
+      "timerange": "20120706-20231026",
+      "commit": "1fe86ab",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

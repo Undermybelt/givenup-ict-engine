@@ -1,0 +1,17 @@
+gate,pass,evidence
+accepted_regime_id_present,True,docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv
+branch_path_present,True,all canonical fold rows emit regime_profit_branch_path
+accepted_per_trade_root_label_join,False,root_label_source=timerange_proxy_not_board_a_per_trade_join
+required_main_roots_covered,False,"missing=Crisis,Sideways"
+scoped_manipulation_overlay_joined,False,manipulation_overlay_state=not_joined_abstain
+min_total_trades_gte_100,False,canonical_trade_rows=82
+min_test_folds_gte_4,False,canonical_nonoverlapping_folds=2
+min_trades_per_test_fold_gte_10,True,"bull_2021=50,winter_2022=32"
+fold_positive_rate_gte_0_75,True,fold_positive_rate=1.000000
+bootstrap_edge_lcb_5pct_gt_0,False,bootstrap_edge_lcb_5pct=-0.00106078
+cost_stress_survival_true,False,2x fee proxy subtracts extra 20 bps round trip; stressed_lcb=-0.00306078
+pbo_lte_0_25,False,not_computable_without_4plus_nonoverlapping_folds_or_model_selection_matrix
+dsr_gt_0,False,not_computable_from_current artifact; no deflated-sharpe trials matrix
+tail_loss_p95_lte_budget,False,tail_loss_p95=0.17779169; configured_risk_budget=missing
+regime_specificity_ratio_gte_1_20,False,not_computable_without out-of-branch baseline roots
+downstream_branch_consumption_verified,False,pre_bayes/bbn/catboost/execution_tree not run because hard gates failed

@@ -1,0 +1,10 @@
+{
+  "accepted_95": true,
+  "assertion_path": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/checks/mehrnoom_telegram_direct_manipulation_gate_assertions.out",
+  "calibration_support": 14516,
+  "calibration_wilson95_lcb": 0.9997354338315891,
+  "gate_result": "accepted_manipulation_95_direct_event_sourcebacked",
+  "report_path": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.json",
+  "test_support": 12834,
+  "test_wilson95_lcb": 0.9997007706604714
+}

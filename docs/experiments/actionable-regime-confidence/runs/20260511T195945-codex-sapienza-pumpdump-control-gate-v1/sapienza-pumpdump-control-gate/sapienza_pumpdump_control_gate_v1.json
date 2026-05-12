@@ -1,0 +1,223 @@
+{
+  "abstain_condition": "non-Sapienza source, missing gt labels, missing same-pump_index controls, spoofing/layering/quote-stuffing/pinging/bear-raid/painting-tape claims, provider-only OHLCV, or generated labels",
+  "accepted_direct_variety": "pump_dump_social_text_or_twitter",
+  "accepted_feature_positive_rows": 951,
+  "accepted_positive_event_groups": 317,
+  "accepted_rows_added": 317,
+  "accepted_scope": "scoped_telegram_pumpdump_positive_control",
+  "allowed_action": "direct_manipulation_overlay_suppress_or_cooldown_only",
+  "chronological_splits_pass_95": true,
+  "cross_cycle_granularities": [
+    "features_5S.csv.gz",
+    "features_15S.csv.gz",
+    "features_25S.csv.gz"
+  ],
+  "cross_cycle_granularity_count": 3,
+  "crypto_symbol_count_min": 85,
+  "decision": "sapienza_pumpdump_control_gate_v1=accepted_95_scoped_telegram_pumpdump_positive_control",
+  "feature_summaries": [
+    {
+      "all_split_wilson95_lcb": 0.9880269250899991,
+      "controlled_positive_event_groups": 317,
+      "date_max": "2021-01-18 17:00:25",
+      "date_min": "2018-01-03 18:00:20",
+      "file": "features_5S.csv.gz",
+      "headers": [
+        "date",
+        "pump_index",
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos",
+        "symbol",
+        "gt"
+      ],
+      "heldout_split_wilson95_lcb": 0.9706403547062368,
+      "negative_rows_gt_0": 820990,
+      "negative_symbols": 85,
+      "positive_event_groups": 317,
+      "positive_event_groups_with_controls_rate": 1.0,
+      "positive_rows_gt_1": 317,
+      "positive_symbols": 85,
+      "rows": 821307,
+      "split_rows": [
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 317,
+          "file": "features_5S.csv.gz",
+          "positive_event_groups": 317,
+          "split": "all",
+          "wilson95_lcb": 0.9880269250899991
+        },
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 190,
+          "file": "features_5S.csv.gz",
+          "positive_event_groups": 190,
+          "split": "chronological_calibration_first_60pct",
+          "wilson95_lcb": 0.9801824705402803
+        },
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 127,
+          "file": "features_5S.csv.gz",
+          "positive_event_groups": 127,
+          "split": "chronological_heldout_last_40pct",
+          "wilson95_lcb": 0.9706403547062368
+        }
+      ],
+      "symbols": 85
+    },
+    {
+      "all_split_wilson95_lcb": 0.9880269250899991,
+      "controlled_positive_event_groups": 317,
+      "date_max": "2021-01-18 17:00:15",
+      "date_min": "2018-01-03 18:00:15",
+      "file": "features_15S.csv.gz",
+      "headers": [
+        "date",
+        "pump_index",
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos",
+        "symbol",
+        "gt"
+      ],
+      "heldout_split_wilson95_lcb": 0.9706403547062368,
+      "negative_rows_gt_0": 583787,
+      "negative_symbols": 85,
+      "positive_event_groups": 317,
+      "positive_event_groups_with_controls_rate": 1.0,
+      "positive_rows_gt_1": 317,
+      "positive_symbols": 85,
+      "rows": 584104,
+      "split_rows": [
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 317,
+          "file": "features_15S.csv.gz",
+          "positive_event_groups": 317,
+          "split": "all",
+          "wilson95_lcb": 0.9880269250899991
+        },
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 190,
+          "file": "features_15S.csv.gz",
+          "positive_event_groups": 190,
+          "split": "chronological_calibration_first_60pct",
+          "wilson95_lcb": 0.9801824705402803
+        },
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 127,
+          "file": "features_15S.csv.gz",
+          "positive_event_groups": 127,
+          "split": "chronological_heldout_last_40pct",
+          "wilson95_lcb": 0.9706403547062368
+        }
+      ],
+      "symbols": 85
+    },
+    {
+      "all_split_wilson95_lcb": 0.9880269250899991,
+      "controlled_positive_event_groups": 317,
+      "date_max": "2021-01-18 17:00:25",
+      "date_min": "2018-01-03 18:00:00",
+      "file": "features_25S.csv.gz",
+      "headers": [
+        "date",
+        "pump_index",
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos",
+        "symbol",
+        "gt"
+      ],
+      "heldout_split_wilson95_lcb": 0.9706403547062368,
+      "negative_rows_gt_0": 481840,
+      "negative_symbols": 85,
+      "positive_event_groups": 317,
+      "positive_event_groups_with_controls_rate": 1.0,
+      "positive_rows_gt_1": 317,
+      "positive_symbols": 85,
+      "rows": 482157,
+      "split_rows": [
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 317,
+          "file": "features_25S.csv.gz",
+          "positive_event_groups": 317,
+          "split": "all",
+          "wilson95_lcb": 0.9880269250899991
+        },
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 190,
+          "file": "features_25S.csv.gz",
+          "positive_event_groups": 190,
+          "split": "chronological_calibration_first_60pct",
+          "wilson95_lcb": 0.9801824705402803
+        },
+        {
+          "control_presence_rate": 1.0,
+          "controlled_positive_event_groups": 127,
+          "file": "features_25S.csv.gz",
+          "positive_event_groups": 127,
+          "split": "chronological_heldout_last_40pct",
+          "wilson95_lcb": 0.9706403547062368
+        }
+      ],
+      "symbols": 85
+    }
+  ],
+  "full_direct_manipulation_species_coverage": false,
+  "horizon": "5S/15S/25S Binance feature windows around Telegram pump events",
+  "min_positive_event_groups_per_split": 127,
+  "min_split_wilson95_lcb": 0.9706403547062368,
+  "new_confidence_gate": true,
+  "qualifying_condition": "source commit pinned; labeled_features rows expose gt=1 pump groups and same-schema gt=0 controls for the same pump_index across 5S, 15S, and 25S feature granularities",
+  "raw_data_committed": false,
+  "remaining_direct_species_blockers": [
+    "spoofing_layering_enforcement_cases",
+    "local_spoofing_repos",
+    "quote_stuffing",
+    "pinging",
+    "bear_raid_or_painting_tape"
+  ],
+  "run_id": "20260511T195945+0800-codex-sapienza-pumpdump-control-gate-v1",
+  "runtime_code_changed": false,
+  "source": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+  "source_commit": "d71250d4cb055dde2d415c8cba38a0dcd6eb6e16",
+  "source_root": "/tmp/ict-engine-sapienza-pumpdump-source-screen",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

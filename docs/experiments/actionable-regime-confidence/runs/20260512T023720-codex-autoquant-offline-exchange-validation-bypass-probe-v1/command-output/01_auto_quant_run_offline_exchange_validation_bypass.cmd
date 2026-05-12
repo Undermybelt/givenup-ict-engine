@@ -1,0 +1,1 @@
+env PYTHONUNBUFFERED=1 PYTHONPATH=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T023720-codex-autoquant-offline-exchange-validation-bypass-probe-v1/scripts uv --directory /tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant run --with ta-lib python run.py 

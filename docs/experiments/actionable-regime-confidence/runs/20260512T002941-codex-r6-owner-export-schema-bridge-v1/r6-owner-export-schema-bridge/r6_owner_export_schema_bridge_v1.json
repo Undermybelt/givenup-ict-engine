@@ -1,0 +1,82 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "6500f3adb22862ca88f1c04f8f1eda464403aecd1370d7b93d02c09381bced9a",
+  "direct_verifier_path": "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+  "external_requests_sent": false,
+  "gate_result": "r6_owner_export_schema_bridge_v1=adapter_not_ready_request_underspecified_for_unchanged_verifier",
+  "generated_at_utc": "2026-05-11T16:31:01.339903+00:00",
+  "hard_missing_rows": 6,
+  "new_confidence_gate": false,
+  "next_action": "Require owner export to provide verifier-native files/fields or amend the V62 request with explicit adapter fields before copying any owner-export CSV into the unchanged direct verifier path.",
+  "raw_data_committed": false,
+  "request_control_fields": [
+    "control_row_id",
+    "matched_control_group_id",
+    "matching_dimensions",
+    "normal_label"
+  ],
+  "request_fields_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_fields_v1.csv",
+  "request_matrix_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_matrix_v1.csv",
+  "request_positive_fields": [
+    "event_end",
+    "event_id",
+    "event_start",
+    "market_family",
+    "matched_control_group_id",
+    "positive_label",
+    "provenance_hash",
+    "source_dataset",
+    "source_owner",
+    "source_row_id",
+    "species",
+    "split_role",
+    "symbol",
+    "venue_or_market_center"
+  ],
+  "request_provenance_fields": [
+    "owner_approval_reference",
+    "split_contract"
+  ],
+  "request_required_files": [
+    "direct_manipulation_matched_controls.csv",
+    "direct_manipulation_positive_rows.csv",
+    "direct_manipulation_provenance.json"
+  ],
+  "request_vs_verifier_filename_mismatch": true,
+  "run_id": "20260512T002941-codex-r6-owner-export-schema-bridge-v1",
+  "runtime_code_changed": false,
+  "schema_bridge_rows": 17,
+  "schema_gap_rows": 12,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "target_readback_gate_result": "r6_owner_export_target_readback_v1=target_root_missing_request_verifier_names_mismatch_no_chain_rerun",
+  "target_readback_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002004-codex-r6-owner-export-target-readback-v1/r6-owner-export-target-readback/r6_owner_export_target_readback_v1.json",
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unchanged_verifier_adapter_ready": false,
+  "update_goal": false,
+  "verifier_required_fields": [
+    "label",
+    "source_report",
+    "source_section",
+    "trade_date",
+    "symbol",
+    "venue_or_market_center",
+    "participant_type_code",
+    "participant_identifier",
+    "side",
+    "earliest_order_received_time",
+    "latest_order_received_time",
+    "order_count",
+    "total_order_quantity",
+    "activity_description",
+    "matched_negative_group_id",
+    "session_bucket",
+    "source_row_id"
+  ],
+  "verifier_required_files": {
+    "matched_negative_rows": "matched_negative_normal_activity_rows.csv",
+    "positive_rows": "positive_spoofing_layering_rows.csv",
+    "provenance_manifest": "provenance_manifest.json"
+  }
+}

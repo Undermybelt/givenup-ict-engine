@@ -1,0 +1,3 @@
+run_id,root_present,file_count,report_count,json_count,assertion_count,command_output_count,command_exit_codes,board_ref_count,status
+20260512T013436-codex-provider-autoquant-readonly-refresh-after-0130-v1,true,23,0,0,0,23,auto_quant_status.exit:0;provider_status_agent.exit:0;provider_status_ibkr_agent.exit:0;provider_status_kraken_cli_agent.exit:0;provider_status_kraken_public_agent.exit:0;provider_status_tradingview_mcp_agent.exit:0;provider_status_yfinance_agent.exit:0,0,partial_command_capture_only_not_evidence
+20260512T013502-codex-readonly-runtime-surface-registration-after-0130xx-review-v1,false,0,0,0,0,0,,0,absent_not_evidence

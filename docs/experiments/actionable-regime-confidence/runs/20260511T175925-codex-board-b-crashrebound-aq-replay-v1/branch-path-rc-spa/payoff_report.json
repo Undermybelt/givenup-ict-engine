@@ -1,0 +1,13 @@
+{
+  "candidate_id": "CrashRebound__branch_path_rc_spa",
+  "promotion_gate": "reject",
+  "dsr": 0.5930162980157118,
+  "psr": 1.0,
+  "sharpe": 1.5850442866769856,
+  "payoff_shape": "counter_trend_drawdown_rebound",
+  "failure_tags": [
+    "reject_missing_branch_path",
+    "reject_no_positive_edge",
+    "reject_overfit_risk"
+  ]
+}

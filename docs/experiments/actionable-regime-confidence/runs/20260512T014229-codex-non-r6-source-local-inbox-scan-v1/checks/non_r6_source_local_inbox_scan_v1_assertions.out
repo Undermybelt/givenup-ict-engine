@@ -1,0 +1,13 @@
+ready_source_input_candidate_count_zero=True
+r3_native_subhour_root_absent=True
+r5_recency_extension_root_absent=True
+source_label_equivalence_root_present=True
+r6_owner_export_root_absent=True
+accepted_rows_added_zero=True
+canonical_merge_allowed_false=True
+downstream_chain_rerun_allowed_false=True
+strict_full_objective_achieved_false=True
+update_goal_false=True
+runtime_code_changed_false=True
+shared_intake_mutated_false=True
+external_requests_sent_false=True

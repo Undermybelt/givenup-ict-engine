@@ -1,0 +1,5 @@
+lane,reason,evidence,allowed_next
+exact_^GSPC_^DJI_intraday_Crisis,mathematically_support_short_under_current_split,all-success Wilson95 needs at least 73 observations per split; current calibration=28 and heldout_time=2.,add broader exact-source Crisis dates or a new independent source-label panel; do not tune OHLCV.
+ES_NQ_15m_1h_crosswalk_without_new_source_relation,recent crosswalk package already accepted only scoped ES Bull rows,"135932 crosswalk states={'False': 14, 'True': 2}; unresolved NQ source relation and support-short roots remain.",obtain Nasdaq-100-grade source labels or explicit owner-approved relation before any NQ promotion.
+local_filename_export_search_for_FINRA_or_native_labels,bounded local export checks already found no attachable rows,blocked_local_row_export_acquisition_check_no_accepted_exports_found,use authenticated/user-provided row exports with positives and matched negatives.
+OHLCV_HMM_generated_labels_for_Manipulation,forbidden_by_MainRegimeV2_taxonomy,Manipulation requires direct timestamped event/order-flow/order-lifecycle/social/on-chain rows plus controls.,only direct rows or classified event feeds can be evaluated.

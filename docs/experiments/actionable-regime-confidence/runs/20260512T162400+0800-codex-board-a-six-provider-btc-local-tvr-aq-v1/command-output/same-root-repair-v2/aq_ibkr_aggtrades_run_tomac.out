@@ -1,0 +1,232 @@
+Result for strategy ProviderCryptoMomentumStateV1
+                                             BACKTESTING REPORT                                              
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │     34 │         0.01 │           8.244 │         0.08 │     10:35:00 │   13     0    21  38.2 │
+│    TOTAL │     34 │         0.01 │           8.244 │         0.08 │     10:35:00 │   13     0    21  38.2 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                           LEFT OPEN TRADES REPORT                                           
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │      1 │         0.77 │          25.253 │         0.25 │     14:00:00 │    1     0     0   100 │
+│    TOTAL │      1 │         0.77 │          25.253 │         0.25 │     14:00:00 │    1     0     0   100 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                ENTER TAG STATS                                                
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │      34 │         0.01 │           8.244 │         0.08 │     10:35:00 │   13     0    21  38.2 │
+│     TOTAL │      34 │         0.01 │           8.244 │         0.08 │     10:35:00 │   13     0    21  38.2 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                  EXIT REASON STATS                                                   
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ trailing_stop_loss │    10 │         1.61 │         535.327 │         5.35 │     15:30:00 │   10     0     0   100 │
+│         force_exit │     1 │         0.77 │          25.253 │         0.25 │     14:00:00 │    1     0     0   100 │
+│        exit_signal │    23 │        -0.72 │        -552.337 │        -5.52 │      8:18:00 │    2     0    21   8.7 │
+│              TOTAL │    34 │         0.01 │           8.244 │         0.08 │     10:35:00 │   13     0    21  38.2 │
+└────────────────────┴───────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                          MIXED TAG STATS                                                          
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃        Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ trailing_stop_loss │     10 │         1.61 │         535.327 │         5.35 │     15:30:00 │   10     0     0   100 │
+│           │         force_exit │      1 │         0.77 │          25.253 │         0.25 │     14:00:00 │    1     0     0   100 │
+│           │        exit_signal │     23 │        -0.72 │        -552.337 │        -5.52 │      8:18:00 │    2     0    21   8.7 │
+│     TOTAL │                    │     34 │         0.01 │           8.244 │         0.08 │     10:35:00 │   13     0    21  38.2 │
+└───────────┴────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-04-04 14:00:00            │
+│ Backtesting to                │ 2026-05-12 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 34 / 0.92                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 10008.244 USDT                 │
+│ Absolute profit               │ 8.244 USDT                     │
+│ Total profit %                │ 0.08%                          │
+│ CAGR %                        │ 0.82%                          │
+│ Sortino                       │ 0.36                           │
+│ Sharpe                        │ 0.11                           │
+│ Calmar                        │ 2.32                           │
+│ SQN                           │ 0.04                           │
+│ Profit factor                 │ 1.01                           │
+│ Expectancy (Ratio)            │ 0.24 (0.01)                    │
+│ Avg. daily profit             │ 0.223 USDT                     │
+│ Avg. stake amount             │ 3325.213 USDT                  │
+│ Total trade volume            │ 226575.449 USDT                │
+│                               │                                │
+│ Best Pair                     │ BTC/USDT 0.08%                 │
+│ Worst Pair                    │ BTC/USDT 0.08%                 │
+│ Best trade                    │ BTC/USDT 2.63%                 │
+│ Worst trade                   │ BTC/USDT -1.82%                │
+│ Best day                      │ 60.374 USDT                    │
+│ Worst day                     │ -72.049 USDT                   │
+│ Days win/draw/lose            │ 12 / 15 / 11                   │
+│ Min/Max/Avg. Duration Winners │ 0d 04:00 / 2d 03:00 / 0d 16:23 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 1d 22:00 / 0d 07:00 │
+│ Max Consecutive Wins / Loss   │ 3 / 6                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 9982.99 USDT                   │
+│ Max balance                   │ 10169.647 USDT                 │
+│ Max % of account underwater   │ 1.84%                          │
+│ Absolute drawdown             │ 186.656 USDT (1.84%)           │
+│ Drawdown duration             │ 18 days 23:00:00               │
+│ Profit at drawdown start      │ 169.647 USDT                   │
+│ Profit at drawdown end        │ -17.01 USDT                    │
+│ Drawdown start                │ 2026-04-22 05:00:00            │
+│ Drawdown end                  │ 2026-05-11 04:00:00            │
+│ Market change                 │ 21.95%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-04-04 14:00:00 -> 2026-05-12 00:00:00 | Max open trades : 1
+                                                                    STRATEGY SUMMARY                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃                      Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ ProviderCryptoMomentumStateV1 │     34 │         0.01 │           8.244 │         0.08 │     10:35:00 │   13     0    21  38.2 │ 186.656 USDT  1.84% │
+└───────────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┴─────────────────────┘
+---
+strategy:         ProviderCryptoMomentumStateV1
+commit:           8735ca1
+config:           config.tomac.json
+pairs:            BTC/USDT
+sharpe:           0.1108
+sortino:          0.3636
+calmar:           2.3192
+total_profit_pct: 0.0800
+max_drawdown_pct: -1.8354
+trade_count:      34
+win_rate_pct:     38.2353
+profit_factor:    1.0145
+per_pair:
+  BTC/USDT: sharpe=0.1108 trades=34 profit_pct=0.08 dd_pct=-1.84 wr=38.2 pf=1.01
+
+exported_trades:  34
+raw_trades_json:  /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/workspace/same-root-repair-v2/auto-quant-112315-ibkr_aggtrades/derived/ProviderCryptoMomentumStateV1.raw_trades.json
+real_trades_jsonl:/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/workspace/same-root-repair-v2/auto-quant-112315-ibkr_aggtrades/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl
+
+Result for strategy ProviderCryptoPullbackRevertV1
+                                             BACKTESTING REPORT                                              
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │     17 │         0.23 │         131.289 │         1.31 │      6:35:00 │    9     0     8  52.9 │
+│    TOTAL │     17 │         0.23 │         131.289 │         1.31 │      6:35:00 │    9     0     8  52.9 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                ENTER TAG STATS                                                
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │      17 │         0.23 │         131.289 │         1.31 │      6:35:00 │    9     0     8  52.9 │
+│     TOTAL │      17 │         0.23 │         131.289 │         1.31 │      6:35:00 │    9     0     8  52.9 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                  EXIT REASON STATS                                                   
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ trailing_stop_loss │     2 │         1.17 │          78.396 │         0.78 │      3:30:00 │    2     0     0   100 │
+│        exit_signal │    15 │         0.11 │          52.893 │         0.53 │      7:00:00 │    7     0     8  46.7 │
+│              TOTAL │    17 │         0.23 │         131.289 │         1.31 │      6:35:00 │    9     0     8  52.9 │
+└────────────────────┴───────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                          MIXED TAG STATS                                                          
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃        Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ trailing_stop_loss │      2 │         1.17 │          78.396 │         0.78 │      3:30:00 │    2     0     0   100 │
+│           │        exit_signal │     15 │         0.11 │          52.893 │         0.53 │      7:00:00 │    7     0     8  46.7 │
+│     TOTAL │                    │     17 │         0.23 │         131.289 │         1.31 │      6:35:00 │    9     0     8  52.9 │
+└───────────┴────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-04-04 04:00:00            │
+│ Backtesting to                │ 2026-05-12 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 17 / 0.46                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 10131.289 USDT                 │
+│ Absolute profit               │ 131.289 USDT                   │
+│ Total profit %                │ 1.31%                          │
+│ CAGR %                        │ 13.73%                         │
+│ Sortino                       │ 10.27                          │
+│ Sharpe                        │ 2.13                           │
+│ Calmar                        │ 49.71                          │
+│ SQN                           │ 0.97                           │
+│ Profit factor                 │ 1.69                           │
+│ Expectancy (Ratio)            │ 7.72 (0.32)                    │
+│ Avg. daily profit             │ 3.548 USDT                     │
+│ Avg. stake amount             │ 3342.833 USDT                  │
+│ Total trade volume            │ 114015.414 USDT                │
+│                               │                                │
+│ Best Pair                     │ BTC/USDT 1.31%                 │
+│ Worst Pair                    │ BTC/USDT 1.31%                 │
+│ Best trade                    │ BTC/USDT 1.84%                 │
+│ Worst trade                   │ BTC/USDT -1.07%                │
+│ Best day                      │ 61.315 USDT                    │
+│ Worst day                     │ -40.925 USDT                   │
+│ Days win/draw/lose            │ 8 / 22 / 6                     │
+│ Min/Max/Avg. Duration Winners │ 0d 02:00 / 2d 00:00 / 0d 09:33 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 0d 08:00 / 0d 03:15 │
+│ Max Consecutive Wins / Loss   │ 3 / 4                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 10015.705 USDT                 │
+│ Max balance                   │ 10233.239 USDT                 │
+│ Max % of account underwater   │ 1.36%                          │
+│ Absolute drawdown             │ 139.551 USDT (1.36%)           │
+│ Drawdown duration             │ 10 days 16:00:00               │
+│ Profit at drawdown start      │ 233.239 USDT                   │
+│ Profit at drawdown end        │ 93.688 USDT                    │
+│ Drawdown start                │ 2026-04-27 11:00:00            │
+│ Drawdown end                  │ 2026-05-08 03:00:00            │
+│ Market change                 │ 21.95%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-04-04 04:00:00 -> 2026-05-12 00:00:00 | Max open trades : 1
+                                                                    STRATEGY SUMMARY                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃                       Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ ProviderCryptoPullbackRevertV1 │     17 │         0.23 │         131.289 │         1.31 │      6:35:00 │    9     0     8  52.9 │ 139.551 USDT  1.36% │
+└────────────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┴─────────────────────┘
+---
+strategy:         ProviderCryptoPullbackRevertV1
+commit:           8735ca1
+config:           config.tomac.json
+pairs:            BTC/USDT
+sharpe:           2.1333
+sortino:          10.2694
+calmar:           49.7112
+total_profit_pct: 1.3100
+max_drawdown_pct: -1.3637
+trade_count:      17
+win_rate_pct:     52.9412
+profit_factor:    1.6850
+per_pair:
+  BTC/USDT: sharpe=2.1333 trades=17 profit_pct=1.31 dd_pct=-1.36 wr=52.9 pf=1.69
+
+exported_trades:  17
+raw_trades_json:  /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/workspace/same-root-repair-v2/auto-quant-112315-ibkr_aggtrades/derived/ProviderCryptoPullbackRevertV1.raw_trades.json
+real_trades_jsonl:/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/workspace/same-root-repair-v2/auto-quant-112315-ibkr_aggtrades/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl
+
+Done: 2 succeeded, 0 failed.

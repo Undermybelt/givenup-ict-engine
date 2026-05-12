@@ -1,0 +1,13 @@
+gate,observed,required,pass
+ready_intake_roots,2,4,false
+source_label_schema_ready,schema_ready_unscored,schema_ready_unscored,true
+source_label_all_root_labels_present,"Bull,Crisis,Sideways","Bear,Bull,Crisis,Sideways",false
+source_label_accepted_confidence,false,true,false
+source_label_full_coverage,false,true,false
+source_panel_recency_verifier,blocked,not_blocked,false
+native_subhour_root_ready,false,true,false
+r6_positive_support,24,>=50,false
+r6_negative_support,24,>=50,false
+r6_wilson95_lcb,0.862024,>=0.95,false
+r6_broad_normal_sample,false,true,false
+r6_direct_species_coverage,false,true,false

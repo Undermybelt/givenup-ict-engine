@@ -1,0 +1,140 @@
+{
+  "board": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+  "completion_audit": {
+    "missing_or_weak_count": 9,
+    "must_not_call_update_goal": true,
+    "next_smallest_safe_action": "Let active 201055/201300 provider-density material redesign owners close or inspect their artifacts; only run AQ/downstream after a packet has direct branch fields plus adequate provider nonzero density.",
+    "objective_complete": false,
+    "reason": "schema repair is verified, but no adequate same-root cross-provider profitability packet exists; therefore valid Pre-Bayes/filter -> BBN -> CatBoost/path-ranker -> execution-tree chain is still blocked"
+  },
+  "generated_at": "2026-05-12T20:16:16.121978+08:00",
+  "objective": "Board B regime-rooted profitability factors must preserve branch identity through AQ, Pre-Bayes/filter, BBN, CatBoost/path-ranker, execution tree, with real six-provider evidence and multi-agent safety.",
+  "requirements": [
+    {
+      "evidence": [
+        "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+        "Board B tail has 193422, 200319, and 201055 rows"
+      ],
+      "gap": null,
+      "requirement": "authoritative_board_markdown_updated",
+      "status": "covered_active"
+    },
+    {
+      "evidence": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T200319+0800-codex-agent-material-rank-branch-contract-verify-v1/summaries/rank_branch_contract_schema_summary.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/summaries/trend_momentum_volume_aq_rank_branch_aggregate_v1.json"
+      ],
+      "gap": "historical 192258 remains stale/null; only fresh rank paths count",
+      "observed": {
+        "contract_all_direct_branch_fields_present": true,
+        "tmvp_missing_branch_field_rows": 0,
+        "tmvp_rank_rows_have_explicit_branch_fields": true
+      },
+      "requirement": "rooted_branch_path_identity_preserved_in_AQ_rank",
+      "status": "covered_for_current_rank_contract"
+    },
+    {
+      "evidence": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/summaries/trend_momentum_volume_aq_rank_branch_aggregate_v1.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T200319+0800-codex-agent-material-rank-branch-contract-verify-v1/summaries/rank_branch_contract_schema_summary.json"
+      ],
+      "gap": "provider presence is not enough because nonzero observations are concentrated in IBKR and yfinance/YF",
+      "observed": {
+        "provider_count": 6,
+        "providers": [
+          "Binance",
+          "Bybit",
+          "IBKR",
+          "Kraken",
+          "TradingViewRemix/TVR",
+          "yfinance/YF"
+        ]
+      },
+      "requirement": "six_provider_surface_includes_ibkr_tvr_yf_kraken_plus_crypto_venues",
+      "status": "covered_schema_only"
+    },
+    {
+      "evidence": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/summaries/trend_momentum_volume_aq_rank_branch_aggregate_v1.json"
+      ],
+      "gap": "fresh provider/material redesign needed before downstream learning",
+      "observed": {
+        "adequate_branch_keyed_training_sample": false,
+        "nonzero_trade_providers": [
+          "IBKR",
+          "yfinance/YF"
+        ],
+        "nonzero_trade_rows": 7,
+        "quality_weight": "0_for_bbn_catboost_execution_tree_learning",
+        "zero_trade_only_providers": [
+          "Binance",
+          "Bybit",
+          "Kraken",
+          "TradingViewRemix/TVR"
+        ],
+        "zero_trade_rows": 17
+      },
+      "requirement": "adequate_cross_provider_nonzero_profitability_density",
+      "status": "missing"
+    },
+    {
+      "evidence": [
+        "193422 checks/04_auto_quant_agent_material_batch.exit=0",
+        "193422 checks/05_auto_quant_agent_material_dispatch.exit=0",
+        "193422 checks/06_auto_quant_agent_material_rank.exit=0",
+        "200319 rank contract verify exits 0"
+      ],
+      "gap": "real AQ artifacts exist but are not adequate training samples",
+      "requirement": "real_auto_quant_commands_and_artifacts",
+      "status": "covered_fail_closed"
+    },
+    {
+      "evidence": [
+        "Board B quarantines downstream attempts from inadequate 192258 packet"
+      ],
+      "gap": "blocked until same-root AQ packet passes branch fields and provider-density gates",
+      "requirement": "pre_bayes_filter_on_same_adequate_profitability_packet",
+      "status": "missing"
+    },
+    {
+      "evidence": [
+        "No accepted same-root adequate packet with BBN posterior found in current Board B tail"
+      ],
+      "gap": "must follow valid Pre-Bayes/filter on adequate source packet",
+      "requirement": "bbn_posterior_keyed_to_same_branch_path",
+      "status": "missing"
+    },
+    {
+      "evidence": [
+        "Unauthorized/quarantined downstream checks are explicitly not accepted"
+      ],
+      "gap": "must run only after adequate branch-keyed packet exists",
+      "requirement": "catboost_path_ranker_label_keyed_to_same_branch_path",
+      "status": "missing"
+    },
+    {
+      "evidence": [
+        "No non-quarantined Board B execution-tree chain from adequate packet"
+      ],
+      "gap": "must follow CatBoost/path-ranker on adequate same-root packet",
+      "requirement": "execution_tree_decision_and_outcome_keyed_to_same_branch_path",
+      "status": "missing"
+    },
+    {
+      "evidence": [
+        "Active 201055 provider-density material redesign claim exists",
+        "200516 native crypto full-chain retry root exists with commands/checks"
+      ],
+      "gap": "do not duplicate active provider-density/full-chain owners",
+      "requirement": "multi_agent_safety_no_takeover",
+      "status": "covered_by_coordination"
+    }
+  ],
+  "source_artifacts": {
+    "active_native_crypto_retry_root_200516": "docs/experiments/actionable-regime-confidence/runs/20260512T200516+0800-codex-native-crypto-full-chain-retry-v1",
+    "active_provider_density_claim_root_201055": "docs/experiments/actionable-regime-confidence/runs/20260512T201055+0800-codex-crypto-adaptive-provider-density-redesign-v1",
+    "obfvg_192258_join_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/summaries/ob_fvg_aq_rank_branch_aggregate_readback.json",
+    "rank_contract_200319_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T200319+0800-codex-agent-material-rank-branch-contract-verify-v1/summaries/rank_branch_contract_schema_summary.json",
+    "tmvp_193422_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/summaries/trend_momentum_volume_aq_rank_branch_aggregate_v1.json"
+  }
+}

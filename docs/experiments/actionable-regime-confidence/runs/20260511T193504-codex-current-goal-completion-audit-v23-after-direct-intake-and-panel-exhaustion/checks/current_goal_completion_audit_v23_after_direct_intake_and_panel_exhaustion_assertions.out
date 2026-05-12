@@ -1,0 +1,11 @@
+PASS checklist_items=11
+PASS unmet_requirements=7
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS strict_1h_fixed_gate=41/156
+PASS strict_1h_future_protocol=45/156
+PASS strict_intake_missing_files=2
+PASS panel_extra_rows=0
+PASS native_subhour_eligible_rows=0
+PASS direct_intake_missing_files=3
+PASS report_json=docs/experiments/actionable-regime-confidence/runs/20260511T193504-codex-current-goal-completion-audit-v23-after-direct-intake-and-panel-exhaustion/completion-audit/current_goal_completion_audit_v23_after_direct_intake_and_panel_exhaustion.json

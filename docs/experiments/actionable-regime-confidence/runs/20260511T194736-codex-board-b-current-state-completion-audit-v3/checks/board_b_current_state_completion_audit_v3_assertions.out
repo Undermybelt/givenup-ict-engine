@@ -1,0 +1,6 @@
+goal_complete=False
+update_goal=False
+branch_paths_passed=0
+hard_gate_result=fail:required_root_branch_hard_gates_failed
+downstream_consumption=not_started:blocked_by_branch_rc_spa_hard_gates
+checklist_items=10

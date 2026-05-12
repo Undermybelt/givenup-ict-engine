@@ -1,0 +1,150 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T074300-codex-hf-tsie-source-label-mapping-audit/checks/hf_tsie_source_label_mapping_audit_assertions.out",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T074300-codex-hf-tsie-source-label-mapping-audit/scripts/hf_tsie_source_label_mapping_audit.py",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T074300-codex-hf-tsie-source-label-mapping-audit/hf-tsie-mapping/hf_tsie_source_label_mapping_audit.json",
+    "summary_md": "docs/experiments/actionable-regime-confidence/runs/20260511T074300-codex-hf-tsie-source-label-mapping-audit/hf-tsie-mapping/hf_tsie_source_label_mapping_audit.md"
+  },
+  "bounded_fetch": {
+    "downloaded_full_parquet": false,
+    "metadata_only": true,
+    "sample_rows_read": 10
+  },
+  "completion_accounting": {
+    "accepted_mainregimev2_full_universe_full_cycle": false,
+    "accepted_root_labels_added": 0,
+    "raw_dataset_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "why_not_accepted": [
+      "Dataset is IDX-specific and does not attach to the ready yfinance/Kraken provider matrix.",
+      "Labels are described as rule-based signal logic, not independent external root annotations.",
+      "Schema includes future_volatility and target_return fields, so leakage-safe usage would need a separate causal feature audit.",
+      "No direct Crisis or Manipulation source label is available in the inspected schema/README."
+    ]
+  },
+  "created_at_utc": "2026-05-10T23:49:12.127944+00:00",
+  "dataset_shape": {
+    "dataset_size": 639796905,
+    "download_size": 591890794,
+    "features": [
+      "group_id",
+      "time_idx",
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "log_return",
+      "price_norm",
+      "volume_norm",
+      "volatility",
+      "momentum_3",
+      "momentum_10",
+      "future_volatility",
+      "trend_return",
+      "target_return",
+      "macd_norm",
+      "atr_norm",
+      "bb_pos",
+      "is_opening",
+      "is_closing",
+      "is_session_1",
+      "is_session_2",
+      "hour",
+      "day_of_week",
+      "month",
+      "hour_sin",
+      "hour_cos",
+      "dow_sin",
+      "dow_cos",
+      "regime_label"
+    ],
+    "num_examples": 7193996,
+    "sample_group_ids": [
+      "IDX_DLY_AALI_60"
+    ],
+    "sample_label_values": [
+      1,
+      2,
+      3
+    ],
+    "splits": [
+      {
+        "config": "default",
+        "dataset": "sujinwo/tsie-market-regime-dataset",
+        "split": "train"
+      }
+    ]
+  },
+  "gate_result": "blocked_hf_tsie_not_attachable_as_mainregimev2_source_label_panel",
+  "goal_achieved": false,
+  "mapping_candidates": [
+    {
+      "mainregimev2_candidate": "Bear",
+      "reason": "rule-based IDX signal class is not an independent source-backed Bear root label for the requested yfinance/Kraken matrix",
+      "status": "candidate_only_not_accepted",
+      "tsie_label": "STRONG SELL / WEAK SELL"
+    },
+    {
+      "mainregimev2_candidate": "Sideways",
+      "reason": "rule-based IDX flat/noise class may resemble Sideways but is not source-backed cross-market/cross-timeframe root evidence",
+      "status": "candidate_only_not_accepted",
+      "tsie_label": "FLAT / NOISE"
+    },
+    {
+      "mainregimev2_candidate": "Bull",
+      "reason": "rule-based IDX buy/breakout class is not an accepted Bull root label panel",
+      "status": "candidate_only_not_accepted",
+      "tsie_label": "WEAK BUY / STRONG BUY"
+    },
+    {
+      "mainregimev2_candidate": "UnknownOrMixed or child/provenance",
+      "reason": "trap labels are subtype/event-shape evidence, not active MainRegimeV2 root labels",
+      "status": "candidate_only_not_accepted",
+      "tsie_label": "BEAR TRAP / BULL TRAP"
+    },
+    {
+      "mainregimev2_candidate": "Crisis",
+      "reason": "README/schema expose no direct Crisis root class",
+      "status": "missing",
+      "tsie_label": "none"
+    },
+    {
+      "mainregimev2_candidate": "Manipulation",
+      "reason": "dataset has no direct manipulation event/order-flow/order-lifecycle source labels",
+      "status": "missing",
+      "tsie_label": "none"
+    }
+  ],
+  "next_action": "Acquire a provenance-backed MainRegimeV2 label panel that directly covers the ready yfinance/Kraken/local cells, or keep full-universe completion blocked.",
+  "objective": "Bounded metadata/schema/sample audit of Hugging Face TSIE as a possible MainRegimeV2 source-label candidate.",
+  "readme_claims": {
+    "label_map": {
+      "0": "STRONG SELL",
+      "1": "WEAK SELL",
+      "2": "BEAR TRAP",
+      "3": "FLAT / NOISE",
+      "4": "BULL TRAP",
+      "5": "WEAK BUY",
+      "6": "STRONG BUY"
+    },
+    "rule_based_signal_logic": true,
+    "seven_class_labels": true
+  },
+  "run_id": "20260511T074300+0800-codex-hf-tsie-source-label-mapping-audit",
+  "source": {
+    "api_dataset": "https://huggingface.co/api/datasets/sujinwo/tsie-market-regime-dataset",
+    "api_first_rows": "https://datasets-server.huggingface.co/first-rows?dataset=sujinwo/tsie-market-regime-dataset&config=default&split=train",
+    "api_info": "https://datasets-server.huggingface.co/info?dataset=sujinwo/tsie-market-regime-dataset&config=default",
+    "api_splits": "https://datasets-server.huggingface.co/splits?dataset=sujinwo/tsie-market-regime-dataset",
+    "dataset": "sujinwo/tsie-market-regime-dataset",
+    "last_modified": "2026-04-13T13:27:46.000Z",
+    "license": "mit",
+    "readme": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/raw/main/README.md",
+    "sha": "75e7e2f86c37f8f28204651dcccf8338ca50aa6b",
+    "used_storage_bytes": 1057691033
+  }
+}

@@ -1,0 +1,729 @@
+{
+  "acceptance_source_window_95": {
+    "coverage_min": 0.01,
+    "ece_max": 0.05,
+    "precision_wilson_lcb_95_min": 0.95,
+    "support_min": 60
+  },
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "calibrated_gate_reports": {
+    "native_gspc_1d": [
+      {
+        "accepted_95_source_window_gate": false,
+        "blockers": [
+          "test_wilson95_below_0_95"
+        ],
+        "calibration": {
+          "coverage": 0.2342819324950364,
+          "ece": 0.012089810017271163,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9892649140394351,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 354,
+          "support": 354,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "root": "Bull",
+        "rule": "dd60 >= -0.0032047199531 AND vol60 <= 0.152179344579",
+        "rule_name": "existing_scoped_bull_factor_rule",
+        "selected_on": "prior_accepted_factor_supply_map",
+        "test": {
+          "coverage": 0.20535714285714285,
+          "ece": 0.0012202447998798105,
+          "precision": 0.9891304347826086,
+          "precision_wilson_lcb_95": 0.9409721438693747,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2022-01-03:2022-10-12",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 91,
+          "support": 92,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "train": {
+          "coverage": 0.1534181240063593,
+          "ece": 0.0,
+          "precision": 0.9879101899827288,
+          "precision_wilson_lcb_95": 0.9752572135853536,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 572,
+          "support": 579,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        }
+      },
+      {
+        "accepted_95_source_window_gate": true,
+        "blockers": [],
+        "calibration": {
+          "coverage": 0.49702183984116477,
+          "ece": 0.023851590106007015,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.994910906421733,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 751,
+          "support": 751,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "root": "Bull",
+        "rule": "vol20 <= 0.109670170889",
+        "rule_name": "train_atom_vol20_<=_0.10967017",
+        "selected_on": "train_candidate_library_then_calibration_split",
+        "test": {
+          "coverage": 0.21875,
+          "ece": 0.023851590106007015,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9622800098783192,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 98,
+          "support": 98,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "train": {
+          "coverage": 0.2999470058293588,
+          "ece": 0.0,
+          "precision": 0.976148409893993,
+          "precision_wilson_lcb_95": 0.9655194006989233,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2007-10-09:2009-03-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 1105,
+          "support": 1132,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        }
+      },
+      {
+        "accepted_95_source_window_gate": false,
+        "blockers": [
+          "calibration_support_below_60",
+          "calibration_wilson95_below_0_95",
+          "calibration_ece_above_0_05",
+          "test_support_below_60",
+          "test_wilson95_below_0_95",
+          "test_ece_above_0_05"
+        ],
+        "calibration": {
+          "coverage": 0.011912640635340834,
+          "ece": 0.5151515151515151,
+          "precision": 0.3888888888888889,
+          "precision_wilson_lcb_95": 0.20305246572163624,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2020-02-19:2020-03-23",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 7,
+          "support": 18,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "root": "Bear",
+        "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+        "rule_name": "existing_scoped_bear_factor_rule",
+        "selected_on": "prior_accepted_factor_supply_map",
+        "test": {
+          "coverage": 0.017857142857142856,
+          "ece": 0.09595959595959591,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.6755924351161198,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2022-01-03:2022-10-12"
+          ],
+          "success": 8,
+          "support": 8,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "train": {
+          "coverage": 0.05246422893481717,
+          "ece": 0.0,
+          "precision": 0.9040404040404041,
+          "precision_wilson_lcb_95": 0.854996253946972,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2007-10-09:2009-03-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 179,
+          "support": 198,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        }
+      },
+      {
+        "accepted_95_source_window_gate": false,
+        "blockers": [
+          "calibration_support_below_60",
+          "calibration_wilson95_below_0_95",
+          "calibration_coverage_below_0_01",
+          "calibration_ece_above_0_05",
+          "test_support_below_60",
+          "test_wilson95_below_0_95",
+          "test_ece_above_0_05"
+        ],
+        "calibration": {
+          "coverage": 0.009265387160820648,
+          "ece": 0.13364055299539168,
+          "precision": 0.7857142857142857,
+          "precision_wilson_lcb_95": 0.524107694133997,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2020-02-19:2020-03-23",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 11,
+          "support": 14,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "root": "Bear",
+        "rule": "ma_gap20 <= -0.066403763953 AND ret40 <= -0.101798358916",
+        "rule_name": "train_pair_ma_gap20_<=_-0.066403764_AND_ret40_<=_-0.10179836",
+        "selected_on": "train_candidate_library_then_calibration_split",
+        "test": {
+          "coverage": 0.011160714285714286,
+          "ece": 0.08064516129032262,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.5655175352168252,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2022-01-03:2022-10-12"
+          ],
+          "success": 5,
+          "support": 5,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "train": {
+          "coverage": 0.016428192898781134,
+          "ece": 0.0,
+          "precision": 0.9193548387096774,
+          "precision_wilson_lcb_95": 0.8247142865138738,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2007-10-09:2009-03-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 57,
+          "support": 62,
+          "tickers": [
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        }
+      }
+    ],
+    "nonaccepted_1d_crosswalk_stress": [
+      {
+        "accepted_95_source_window_gate": true,
+        "blockers": [],
+        "calibration": {
+          "coverage": 0.1936978683966636,
+          "ece": 0.0060579835569017915,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9973811356383513,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 1463,
+          "support": 1463,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "root": "Bull",
+        "rule": "dd60 >= -0.0032047199531 AND vol60 <= 0.152179344579",
+        "rule_name": "existing_scoped_bull_factor_rule",
+        "selected_on": "prior_accepted_factor_supply_map",
+        "test": {
+          "coverage": 0.1392857142857143,
+          "ece": 0.0035574010584827898,
+          "precision": 0.9903846153846154,
+          "precision_wilson_lcb_95": 0.9721158923953789,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2022-01-03:2022-10-12",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 309,
+          "support": 312,
+          "tickers": [
+            "ES=F",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "train": {
+          "coverage": 0.1279198494409388,
+          "ece": 0.0,
+          "precision": 0.9939420164430982,
+          "precision_wilson_lcb_95": 0.9898567209712006,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 2297,
+          "support": 2311,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        }
+      },
+      {
+        "accepted_95_source_window_gate": true,
+        "blockers": [],
+        "calibration": {
+          "coverage": 0.3802462597643321,
+          "ece": 0.012921205979224748,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9986642313647326,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 2872,
+          "support": 2872,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "root": "Bull",
+        "rule": "vol20 <= 0.109670170889",
+        "rule_name": "train_atom_vol20_<=_0.10967017",
+        "selected_on": "train_candidate_library_then_calibration_split",
+        "test": {
+          "coverage": 0.16160714285714287,
+          "ece": 0.012921205979224748,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9894996624136662,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 362,
+          "support": 362,
+          "tickers": [
+            "ES=F",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "train": {
+          "coverage": 0.21847669655706853,
+          "ece": 0.0,
+          "precision": 0.9870787940207753,
+          "precision_wilson_lcb_95": 0.9830519728534223,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2007-10-09:2009-03-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 3896,
+          "support": 3947,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        }
+      },
+      {
+        "accepted_95_source_window_gate": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "calibration_ece_above_0_05",
+          "test_ece_above_0_05"
+        ],
+        "calibration": {
+          "coverage": 0.018403283463524427,
+          "ece": 0.6168224797478548,
+          "precision": 0.2949640287769784,
+          "precision_wilson_lcb_95": 0.2254906684995262,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2020-02-19:2020-03-23",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 41,
+          "support": 139,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "root": "Bear",
+        "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+        "rule_name": "existing_scoped_bear_factor_rule",
+        "selected_on": "prior_accepted_factor_supply_map",
+        "test": {
+          "coverage": 0.05625,
+          "ece": 0.08821349147516677,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9704142355178014,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2022-01-03:2022-10-12"
+          ],
+          "success": 126,
+          "support": 126,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "train": {
+          "coverage": 0.07467065205358131,
+          "ece": 0.0,
+          "precision": 0.9117865085248332,
+          "precision_wilson_lcb_95": 0.8954594694214862,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2007-10-09:2009-03-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 1230,
+          "support": 1349,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        }
+      },
+      {
+        "accepted_95_source_window_gate": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "calibration_ece_above_0_05",
+          "test_support_below_60",
+          "test_wilson95_below_0_95",
+          "test_ece_above_0_05"
+        ],
+        "calibration": {
+          "coverage": 0.012048192771084338,
+          "ece": 0.2912087912087913,
+          "precision": 0.6373626373626373,
+          "precision_wilson_lcb_95": 0.534882923607384,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2020-02-19:2020-03-23",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+          ],
+          "success": 58,
+          "support": 91,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "root": "Bear",
+        "rule": "ma_gap20 <= -0.066403763953 AND ret40 <= -0.101798358916",
+        "rule_name": "train_pair_ma_gap20_<=_-0.066403764_AND_ret40_<=_-0.10179836",
+        "selected_on": "train_candidate_library_then_calibration_split",
+        "test": {
+          "coverage": 0.016964285714285713,
+          "ece": 0.0714285714285714,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9081901317744159,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2022-01-03:2022-10-12"
+          ],
+          "success": 38,
+          "support": 38,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        },
+        "train": {
+          "coverage": 0.02402302667995129,
+          "ece": 0.0,
+          "precision": 0.9285714285714286,
+          "precision_wilson_lcb_95": 0.9003969006278155,
+          "source_windows": [
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bear:2007-10-09:2009-03-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+            "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19"
+          ],
+          "success": 403,
+          "support": 434,
+          "tickers": [
+            "ES=F",
+            "IWM",
+            "QQQ",
+            "SPY",
+            "^GSPC"
+          ],
+          "timeframes": [
+            "1d"
+          ]
+        }
+      }
+    ]
+  },
+  "decision": {
+    "accepted_95_source_window_gates": [
+      "Bull"
+    ],
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_source_label_target_slots_added": 2,
+    "full_objective_achieved": false,
+    "gate_result": "accepted_native_bull_source_window_gate_and_two_sp500_source_label_slots_full_matrix_still_open",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "panel_profile": {
+    "closed_source_label_counts_native": {
+      "Bear": 1211,
+      "Bull": 4464,
+      "UnknownOrMixed": 58
+    },
+    "native_rows": 5733,
+    "raw_cache_dir": "/private/tmp/ict-regime-source-window-attachability-v1",
+    "rows": 32639,
+    "split_counts_native": {
+      "calibration": 1511,
+      "test": 448,
+      "train": 3774
+    },
+    "tickers": [
+      "ES=F",
+      "IWM",
+      "QQQ",
+      "SPY",
+      "^GSPC"
+    ],
+    "timeframes": [
+      "1d",
+      "1w"
+    ]
+  },
+  "purpose": "Attach positive source-window seeds to native yfinance ^GSPC daily slots and test train-only abstaining gates against closed Yardeni Bull/Bear windows.",
+  "run_id": "20260511T122120+0800-codex-source-window-attachability-v1",
+  "source_label_slots": [
+    {
+      "accepted_source_label_target_slot": true,
+      "instrument": "^GSPC",
+      "note": "Closed Yardeni S&P 500 windows only; the open-ended 2022-10-12 bull window is excluded until refreshed.",
+      "projection_status": "native_exact_sp500_daily_closed_windows",
+      "provider": "yfinance",
+      "root": "Bull",
+      "rows": 4464,
+      "source_id": "yardeni_sp500_bull_bear_tables_2024",
+      "source_windows": [
+        "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+        "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19",
+        "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03"
+      ],
+      "timeframe": "1d"
+    },
+    {
+      "accepted_source_label_target_slot": true,
+      "instrument": "^GSPC",
+      "note": "Closed Yardeni S&P 500 windows only; the open-ended 2022-10-12 bull window is excluded until refreshed.",
+      "projection_status": "native_exact_sp500_daily_closed_windows",
+      "provider": "yfinance",
+      "root": "Bear",
+      "rows": 1211,
+      "source_id": "yardeni_sp500_bull_bear_tables_2024",
+      "source_windows": [
+        "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+        "yardeni_sp500_bull_bear_tables_2024:Bear:2007-10-09:2009-03-09",
+        "yardeni_sp500_bull_bear_tables_2024:Bear:2020-02-19:2020-03-23",
+        "yardeni_sp500_bull_bear_tables_2024:Bear:2022-01-03:2022-10-12"
+      ],
+      "timeframe": "1d"
+    },
+    {
+      "accepted_source_label_target_slot": false,
+      "instrument": "US macro/business cycle",
+      "note": "NBER windows are primary macro dates, not instrument-specific price-root labels.",
+      "projection_status": "requires_owner_crosswalk_before_instrument_attachment",
+      "provider": "n/a",
+      "root": "Crisis",
+      "rows": 0,
+      "source_id": "nber_business_cycle_dates",
+      "source_windows": [
+        "nber_business_cycle_dates:Crisis:2001-03-01:2001-11-01",
+        "nber_business_cycle_dates:Crisis:2007-12-01:2009-06-01",
+        "nber_business_cycle_dates:Crisis:2020-02-01:2020-04-01"
+      ],
+      "timeframe": "month"
+    },
+    {
+      "accepted_source_label_target_slot": false,
+      "instrument": "n/a",
+      "note": "Sideways still needs a dated source or adjudication protocol; do not infer it from Bull/Bear residuals.",
+      "projection_status": "missing_dated_source_or_owner_approved_adjudication_protocol",
+      "provider": "n/a",
+      "root": "Sideways",
+      "rows": 0,
+      "source_id": "none",
+      "source_windows": [],
+      "timeframe": "n/a"
+    }
+  ],
+  "source_policy": {
+    "closed_yardeni_windows_used_for_native_acceptance": [
+      "yardeni_sp500_bull_bear_tables_2024:Bear:2000-03-24:2002-10-09",
+      "yardeni_sp500_bull_bear_tables_2024:Bull:2002-10-09:2007-10-09",
+      "yardeni_sp500_bull_bear_tables_2024:Bear:2007-10-09:2009-03-09",
+      "yardeni_sp500_bull_bear_tables_2024:Bull:2009-03-09:2020-02-19",
+      "yardeni_sp500_bull_bear_tables_2024:Bear:2020-02-19:2020-03-23",
+      "yardeni_sp500_bull_bear_tables_2024:Bull:2020-03-23:2022-01-03",
+      "yardeni_sp500_bull_bear_tables_2024:Bear:2022-01-03:2022-10-12"
+    ],
+    "crosswalks_not_owner_approved": [
+      "SPY",
+      "QQQ",
+      "IWM",
+      "ES=F",
+      "1w"
+    ],
+    "nber_crisis_requires_owner_crosswalk_before_instrument_attachment": true,
+    "open_ended_yardeni_window_excluded_until_refresh": true,
+    "sideways_fail_closed": true
+  },
+  "taxonomy": {
+    "direct_overlay_or_class": [
+      "Manipulation"
+    ],
+    "name": "MainRegimeV2",
+    "price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ]
+  }
+}

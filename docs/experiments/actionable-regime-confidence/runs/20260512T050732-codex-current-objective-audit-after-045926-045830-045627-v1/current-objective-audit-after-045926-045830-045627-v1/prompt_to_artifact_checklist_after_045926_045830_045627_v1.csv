@@ -1,0 +1,7 @@
+requirement,evidence,status,notes
+every regime strict confidence >=0.95,"041410/041656/042448/043932/044701/045926 accepted labels empty; 045830 incomplete",blocked,"No Bear/Bull/Crisis/Sideways accepted packet"
+per-regime qualifying conditions,"043932/044701/045926 diagnostic qualifier artifacts only",blocked,"No accepted per-regime rule"
+cross-market cross-period cross-timeframe validation,"required split Wilson/support gates fail; R3/R5/R6 roots absent",blocked,"No cross-axis accepted validation"
+source/control unlock,"/tmp/ict-engine-board-a-r6-owner-export-v1 missing; /tmp/ict-engine-native-subhour-source-label-intake missing; /tmp/ict-engine-source-panel-recency-extension missing",blocked,"No canonical merge input"
+full downstream chain,"no source/control unlock and no accepted confidence gate",blocked,"Do not rerun provider/AutoQuant/filter/Pre-Bayes/BBN/CatBoost/execution-tree promotion"
+multi-agent safety,"append-only artifact and board note; Current Cursor unchanged",pass,"No active root mutation"

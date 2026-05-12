@@ -1,0 +1,6 @@
+Exchange:   binance
+Pairs:      ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'BNB/USDT', 'AVAX/USDT']
+Timeframes: ['1h', '4h', '1d']
+Timerange:  20210101-20251231
+Dest:       /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/data
+

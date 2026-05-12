@@ -1,0 +1,117 @@
+{
+  "accepted_rows_added": 0,
+  "counts_after_cleanup": {
+    "date_max": "2026-03-20",
+    "date_min": "2000-01-03",
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 104979,
+      "Crisis": 30623,
+      "Sideways": 57899
+    },
+    "market_family_counts": {
+      "india_equity_index": 3435,
+      "us_index": 26236,
+      "us_single_stock": 218769
+    },
+    "row_count": 248440,
+    "source_owner_counts": {
+      "ahaanverma00": 3435,
+      "source-owned-stock-market-regimes-2000-2026": 245005
+    },
+    "split_counts": {
+      "calibration": 148976,
+      "heldout_market": 26236,
+      "heldout_time": 45384,
+      "test": 27844
+    },
+    "symbol_count": 40
+  },
+  "counts_before_cleanup": {
+    "date_max": "2026-03-20",
+    "date_min": "2000-01-03",
+    "label_counts": {
+      "Bear": 109878,
+      "Bull": 208745,
+      "Crisis": 60255,
+      "Sideways": 114567
+    },
+    "market_family_counts": {
+      "india_equity_index": 3435,
+      "us_index": 52472,
+      "us_single_stock": 437538
+    },
+    "row_count": 493445,
+    "source_owner_counts": {
+      "ahaanverma00": 3435,
+      "source-owned-stock-market-regimes-2000-2026": 490010
+    },
+    "split_counts": {
+      "calibration": 296660,
+      "heldout_market": 52472,
+      "heldout_time": 89449,
+      "test": 54864
+    },
+    "symbol_count": 40
+  },
+  "created_at_utc": "2026-05-11T13:41:24.556259+00:00",
+  "decision": "us_panel_source_label_duplicate_cleanup_v1=duplicate_extension_removed_schema_ready_unscored",
+  "external_requests_sent": false,
+  "hash_after_cleanup": "915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f",
+  "hash_before_cleanup": "32435e9a73c1d09cf93bd7c4e88b8cefb888981a2768ff68ed32b7baccf9fa11",
+  "new_confidence_gate": false,
+  "next_action": "run current-goal audit over the cleaned source-label root; R3/R5/R6 blockers remain",
+  "oversized_repo_snapshot_removed": true,
+  "provenance_extension_entries_before": 2,
+  "provenance_extension_entries_removed": 1,
+  "raw_data_committed": false,
+  "rows_after_cleanup": 248440,
+  "rows_before_cleanup": 493445,
+  "rows_removed": 245005,
+  "run_id": "20260511T213906-codex-us-panel-source-label-duplicate-cleanup-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier": {
+    "parsed": {
+      "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+      "package_counts": {
+        "price_root_equivalence_us_index_futures": 248440
+      },
+      "provenance_keys": [
+        "cleanup_actions",
+        "created_at_utc",
+        "date_max",
+        "date_min",
+        "extensions",
+        "label_counts",
+        "license_or_permission",
+        "limitations",
+        "mapping_policy",
+        "raw_payload_committed_to_repo",
+        "row_count",
+        "rows_path",
+        "rows_sha256",
+        "run_id",
+        "source_csv_sha256",
+        "source_dataset_title",
+        "source_description",
+        "source_metadata_sha256",
+        "source_owner",
+        "source_pull_date",
+        "source_report_or_dataset",
+        "source_root",
+        "split_counts",
+        "updated_at_utc",
+        "updated_by"
+      ],
+      "row_count": 248440,
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T213906-codex-us-panel-source-label-duplicate-cleanup-v1/command-output/source_label_equivalence_verifier.stderr.txt",
+    "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T213906-codex-us-panel-source-label-duplicate-cleanup-v1/command-output/source_label_equivalence_verifier.stdout.txt"
+  }
+}

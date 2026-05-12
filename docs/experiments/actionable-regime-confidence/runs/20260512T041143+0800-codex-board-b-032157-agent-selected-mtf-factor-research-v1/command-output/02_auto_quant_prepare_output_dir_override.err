@@ -1,0 +1,10 @@
+Error: auto-quant prepare failed with status exit status: 2 while running uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/.deps/auto-quant/prepare_external.py.
+stdout:
+
+stderr:
+Using CPython 3.11.11
+Creating virtual environment at: .venv
+Installed 158 packages in 1.75s
+error: Failed to spawn: `docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/.deps/auto-quant/prepare_external.py`
+  Caused by: No such file or directory (os error 2)
+

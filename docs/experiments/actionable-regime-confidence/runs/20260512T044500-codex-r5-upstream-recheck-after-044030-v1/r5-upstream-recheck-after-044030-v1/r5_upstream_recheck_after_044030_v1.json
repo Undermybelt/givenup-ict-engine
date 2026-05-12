@@ -1,0 +1,24 @@
+{
+  "run_id": "20260512T044500-codex-r5-upstream-recheck-after-044030-v1",
+  "gate_result": "r5_upstream_recheck_after_044030_v1=no_new_post_cutoff_target_rows_no_promotion",
+  "board_sha256_before_artifact": "45caf9c9a3ccd8968af491f908df7d25e870c7111420d1a4a6f0598f5cee5f8f",
+  "kaggle_files_exit": 0,
+  "live_kaggle_file_creation_window": "2026-02-01",
+  "required_cells": [
+    "XOM/Sideways",
+    "UNH/Bear",
+    "^DJI/Sideways",
+    "AMD/Bear"
+  ],
+  "post_2026_01_30_required_rows": 0,
+  "target_root": "/tmp/ict-engine-source-panel-recency-extension",
+  "required_target_files_present": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

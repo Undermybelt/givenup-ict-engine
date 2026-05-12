@@ -1,0 +1,686 @@
+  PID  PPID STAT  ELAPSED COMMAND
+    1     0 Ss   07:39:01 /sbin/launchd
+  122     1 Ss   07:38:33 /usr/libexec/logd
+  124     1 Ss   07:38:33 /usr/libexec/UserEventAgent (System)
+  126     1 Ss   07:38:33 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/FSEvents.framework/Versions/A/Support/fseventsd
+  127     1 Ss   07:38:33 /System/Library/PrivateFrameworks/MediaRemote.framework/Support/mediaremoted
+  130     1 Ss   07:38:33 /usr/sbin/systemstats --daemon
+  134     1 Ss   07:38:33 /usr/libexec/configd
+  136     1 Ss   07:38:33 /System/Library/CoreServices/powerd.bundle/powerd
+  137     1 Ss   07:38:33 /usr/libexec/IOMFB_bics_daemon
+  141     1 Ss   07:38:33 /usr/libexec/remoted
+  145     1 Ss   07:38:33 /System/Library/PrivateFrameworks/CoreSpeech.framework/corespeechd_system
+  147     1 Ss   07:38:33 /usr/libexec/watchdogd
+  151     1 Us   07:38:33 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds
+  153     1 Ss   07:38:33 /usr/libexec/kernelmanagerd
+  154     1 Ss   07:38:33 /usr/libexec/diskarbitrationd
+  158     1 Ss   07:38:33 /usr/sbin/syslogd
+  160     1 Ss   07:38:33 /usr/libexec/thermalmonitord
+  161     1 Ss   07:38:33 /System/Library/PrivateFrameworks/CoreDuetContext.framework/Resources/contextstored
+  162     1 Ss   07:38:33 /usr/libexec/opendirectoryd
+  164     1 Ss   07:38:33 /System/Library/PrivateFrameworks/ApplePushService.framework/apsd
+  165     1 Ss   07:38:33 /System/Library/CoreServices/launchservicesd
+  166     1 Ss   07:38:33 /usr/libexec/timed
+  167     1 Ss   07:38:33 /System/Library/PrivateFrameworks/MobileDevice.framework/Versions/A/Resources/usbmuxd -launchd
+  168     1 Ss   07:38:33 /usr/sbin/securityd -i
+  170     1 Ss   07:38:33 /usr/libexec/locationd
+  171     1 Ss   07:38:33 /usr/libexec/nesessionmanager
+  173     1 Ss   07:38:33 autofsd
+  174     1 Ss   07:38:33 /usr/libexec/dasd
+  175     1 Ss   07:38:33 /usr/libexec/corerepaird
+  177     1 Ss   07:38:33 /usr/sbin/distnoted daemon
+  179     1 Ss   07:38:33 /usr/libexec/PerfPowerServices
+  181     1 Ss   07:38:33 /System/Library/CoreServices/logind
+  182     1 Ss   07:38:33 /System/Library/PrivateFrameworks/GenerationalStorage.framework/Versions/A/Support/revisiond
+  183     1 Ss   07:38:33 /usr/sbin/KernelEventAgent
+  187     1 Ss   07:38:33 /usr/sbin/bluetoothd
+  188     1 Ss   07:38:33 /usr/sbin/notifyd
+  190     1 Ss   07:38:33 /usr/libexec/corebrightnessd --launchd
+  191     1 Ss   07:38:33 /usr/libexec/AirPlayXPCHelper
+  192     1 Ss   07:38:33 /System/Library/Frameworks/CoreMediaIO.framework/Versions/A/Resources/com.apple.cmio.registerassistantservice
+  194     1 Ss   07:38:33 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer -daemon
+  195     1 Ss   07:38:33 /System/Library/PrivateFrameworks/TCC.framework/Support/tccd system
+  196     1 Ss   07:38:32 /usr/sbin/cfprefsd daemon
+  197     1 Ss   07:38:32 /System/Library/CoreServices/loginwindow.app/Contents/MacOS/loginwindow console
+  200     1 Ss   07:38:32 /usr/libexec/runningboardd
+  201     1 Ss   07:38:32 /System/Library/CoreServices/coreservicesd
+  202     1 Ss   07:38:32 /usr/sbin/coreaudiod
+  204     1 Ss   07:38:32 /usr/libexec/trustd
+  205     1 Ss   07:38:32 /usr/libexec/lsd runAsRoot
+  206     1 Ss   07:38:32 /System/Library/PrivateFrameworks/CoreAnalytics.framework/Support/analyticsd
+  216     1 Ss   07:38:32 /usr/libexec/eligibilityd
+  222     1 Ss   07:38:32 /System/Library/PrivateFrameworks/BiomeStreams.framework/Support/biomed
+  223     1 S    07:38:32 /usr/sbin/distnoted agent
+  225     1 Ss   07:38:32 /usr/libexec/nsurlsessiond --privileged
+  227     1 Ss   07:38:32 /usr/libexec/apfsd
+  230     1 Ss   07:38:32 /usr/libexec/biometrickitd --launchd
+  233     1 Ss   07:38:32 /usr/libexec/ApplicationFirewall/socketfilterfw
+  235     1 Ss   07:38:32 /usr/libexec/airportd
+  236     1 S    07:38:32 /usr/sbin/distnoted agent
+  243     1 Ss   07:38:32 /usr/libexec/symptomsd
+  250     1 Ss   07:38:32 /System/Library/Frameworks/Security.framework/Versions/A/XPCServices/authd.xpc/Contents/MacOS/authd
+  252     1 S    07:38:32 /usr/sbin/distnoted agent
+  297     1 Ss   07:38:31 /usr/libexec/syspolicyd
+  298     1 S    07:38:31 /usr/sbin/distnoted agent
+  300     1 Ss   07:38:31 /usr/sbin/mDNSResponder
+  303     1 Ss   07:38:31 Core Audio Driver (Background Music Device.driver)
+  305     1 S<s  07:38:31 /Library/Application Support/Hayaku/HayakuDaemon.app/Contents/MacOS/InjectLib --daemon /Library/Application Support/Hayaku/HayakuDaemon.app/Contents/Resources/config.json
+  307     1 Ss   07:38:31 /Library/PrivilegedHelperTools/io.github.clash-verge-rev.clash-verge-rev.service.bundle/Contents/MacOS/clash-verge-service
+  308     1 Ss   07:38:31 /Applications/UURemote.app/Contents/MacOS/UURemoteDaemon -daemon
+  310     1 Ss   07:38:31 /Library/PrivilegedHelperTools/com.docker.vmnetd
+  311     1 Ss   07:38:31 /usr/sbin/WirelessRadioManagerd
+  313     1 Ss   07:38:31 /usr/libexec/rosetta/oahd
+  316     1 Ss   07:38:31 /System/Library/Frameworks/SystemExtensions.framework/Versions/A/Helpers/sysextd
+  317     1 Ss   07:38:31 /System/Library/CoreServices/appleeventsd --server
+  319     1 Ss   07:38:31 /usr/libexec/audiomxd
+  329     1 Ss   07:38:31 /usr/libexec/audioclocksyncd
+  330     1 Ss   07:38:31 /usr/sbin/mDNSResponderHelper
+  332     1 Ss   07:38:31 /usr/libexec/com.apple.cmio.videodriverkithostextension.systemextension/Contents/MacOS/com.apple.cmio.videodriverkithostextension
+  335     1 Ss   07:38:31 /usr/sbin/appleh13camerad
+  341     1 Ss   07:38:31 /usr/libexec/cameracaptured
+  342     1 Ss   07:38:31 /System/Library/Frameworks/CoreMediaIO.framework/Versions/A/Resources/UVCAssistant.systemextension/Contents/MacOS/UVCAssistant
+  343     1 Ss   07:38:31 /usr/libexec/modelmanagerd
+  345     1 Ss   07:38:31 /System/Library/CoreServices/Software Update.app/Contents/Resources/suhelperd
+  350     1 Ss   07:38:30 /System/Library/DriverExtensions/com.apple.DriverKit-IOUserDockChannelSerial.dext/com.apple.DriverKit-IOUserDockChannelSerial com.apple.IOUserDockChannelSerial 0x100000aa2 com.apple.DriverKit-IOUserDockChannelSerial
+  352     1 Ss   07:38:30 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN com.apple.bcmwlan 0x100000aae com.apple.DriverKit-AppleBCMWLAN
+  353     1 Ss   07:38:30 /System/Library/DriverExtensions/com.apple.AppleUserHIDDrivers.dext/com.apple.AppleUserHIDDrivers com.apple.driverkit.AppleUserHIDDrivers 0x100000aaf com.apple.AppleUserHIDDrivers
+  354     1 S    07:38:30 /usr/sbin/distnoted agent
+  355     1 S    07:38:30 /usr/sbin/distnoted agent
+  356     1 Ss   07:38:30 /usr/libexec/searchpartyd
+  361     1 S    07:38:30 /usr/sbin/distnoted agent
+  363     1 Ss   07:38:30 /System/Library/Frameworks/CryptoTokenKit.framework/ctkahp.bundle/Contents/MacOS/ctkahp -d
+  371     1 Ss   07:38:30 /System/Library/Frameworks/CryptoTokenKit.framework/ctkd -st
+  372     1 Ss   07:38:30 Core Audio Driver (ParrotAudioPlugin.driver)
+  374     1 Ss   07:38:30 Core Audio Driver (WMAudioPlugin.driver)
+  380     1 Ss   07:38:30 /System/Library/Frameworks/LocalAuthentication.framework/Support/coreauthd
+  381     1 Ss   07:38:30 /usr/sbin/filecoordinationd
+  385     1 Us   07:38:29 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores
+  396     1 S    07:38:29 /usr/sbin/distnoted agent
+  397     1 Ss   07:38:29 /usr/libexec/wifip2pd
+  404     1 S    07:38:28 /usr/sbin/distnoted agent
+  408     1 S    07:38:28 /usr/sbin/distnoted agent
+  413     1 Ss   07:38:28 /usr/libexec/wifianalyticsd
+  422     1 Ss   07:38:27 /usr/libexec/sysmond
+  424     1 S    07:38:27 /usr/sbin/distnoted agent
+  427   130 S    07:38:27 /usr/sbin/systemstats --logger-helper /private/var/db/systemstats
+  428     1 S    07:38:26 /usr/sbin/distnoted agent
+  442     1 Ss   07:38:25 /usr/libexec/gamepolicyd
+  450     1 Ss   07:38:20 /System/Library/DriverExtensions/IOUserBluetoothSerialDriver.dext/IOUserBluetoothSerialDriver com.apple.IOUserBluetoothSerialDriver 0x100000bd5 com.apple.IOUserBluetoothSerialDriver
+  455     1 S    07:38:19 /usr/sbin/distnoted agent
+  456     1 S    07:38:19 /usr/sbin/cfprefsd agent
+  458     1 S    07:38:19 /usr/libexec/UserEventAgent (Aqua)
+  465     1 S    07:38:19 /usr/sbin/universalaccessd launchd -s
+  466     1 S    07:38:19 /usr/libexec/containermanagerd --runmode=agent --user-container-mode=current --bundle-container-mode=proxy --system-container-mode=none
+  468     1 S    07:38:19 /usr/libexec/pboard
+  469     1 S    07:38:19 /System/Library/PrivateFrameworks/BiomeStreams.framework/Support/BiomeAgent
+  470     1 S    07:38:19 /usr/libexec/lsd
+  475     1 S    07:38:19 /usr/libexec/nsurlsessiond
+  476     1 S    07:38:19 /usr/libexec/rapportd
+  477     1 S    07:38:19 /usr/sbin/usernoted
+  479     1 S    07:38:19 /System/Library/PrivateFrameworks/TCC.framework/Support/tccd
+  480     1 S    07:38:19 /System/Library/CoreServices/lockoutagent
+  484     1 S    07:38:18 /System/Library/PrivateFrameworks/UserNotificationsCore.framework/Support/usernotificationsd
+  486     1 S    07:38:18 /usr/libexec/secd
+  490     1 S    07:38:18 /System/Library/CoreServices/WiFiAgent.app/Contents/MacOS/WiFiAgent
+  492     1 S    07:38:18 /System/Library/CoreServices/WindowManager.app/Contents/MacOS/WindowManager
+  494     1 S    07:38:18 /usr/libexec/trustd --agent
+  502     1 S    07:38:18 /System/Library/Frameworks/Accounts.framework/Versions/A/Support/accountsd
+  503     1 S    07:38:18 /usr/sbin/distnoted agent
+  504     1 S    07:38:18 /System/Library/PrivateFrameworks/IDS.framework/identityservicesd.app/Contents/MacOS/identityservicesd
+  513     1 S    07:38:18 /usr/libexec/sharingd
+  518     1 R    07:38:17 /Applications/Ghostty.app/Contents/MacOS/ghostty
+  519     1 S    07:38:17 /Applications/Clash Mi.app/Contents/MacOS/Clash Mi
+  521     1 S    07:38:17 /Applications/CC Switch.app/Contents/MacOS/cc-switch
+  522     1 S    07:38:17 /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+  525     1 S    07:38:17 /System/Library/PrivateFrameworks/FamilyCircle.framework/Versions/A/Resources/familycircled
+  526     1 S    07:38:17 /System/Applications/Utilities/Activity Monitor.app/Contents/MacOS/Activity Monitor
+  527     1 S    07:38:17 /Applications/Visual Studio Code.app/Contents/MacOS/Code
+  529     1 S    07:38:17 /Users/thrill3r/Applications/IB Gateway 10.37/IB Gateway 10.37.app/Contents/MacOS/JavaApplicationStub
+  531     1 S    07:38:17 /System/Library/CoreServices/Dock.app/Contents/MacOS/Dock
+  533     1 S    07:38:17 /System/Library/CoreServices/ControlCenter.app/Contents/MacOS/ControlCenter
+  536     1 S    07:38:17 /System/Library/Frameworks/ApplicationServices.framework/Frameworks/ATS.framework/Support/fontd
+  537     1 S    07:38:17 /System/Library/CoreServices/SystemUIServer.app/Contents/MacOS/SystemUIServer
+  538     1 S    07:38:17 /System/Library/PrivateFrameworks/HomeKitDaemon.framework/Support/homed
+  539     1 S    07:38:17 /System/Library/CoreServices/Finder.app/Contents/MacOS/Finder
+  542     1 S    07:38:17 /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Support/fontworker
+  544     1 S    07:38:17 /System/Library/CoreServices/WallpaperAgent.app/Contents/MacOS/WallpaperAgent
+  545     1 S    07:38:17 /System/Library/CoreServices/AccessibilityUIServer.app/Contents/MacOS/AccessibilityUIServer
+  552     1 S    07:38:16 /usr/libexec/ContinuityCaptureAgent server
+  553     1 Ss   07:38:16 automountd
+  554     1 S    07:38:16 /System/Library/PrivateFrameworks/ViewBridge.framework/Versions/A/XPCServices/ViewBridgeAuxiliary.xpc/Contents/MacOS/ViewBridgeAuxiliary
+  555     1 S    07:38:16 /System/Library/CoreServices/sharedfilelistd
+  556     1 S    07:38:16 /System/Library/PrivateFrameworks/FileProvider.framework/Support/fileproviderd
+  557     1 S    07:38:16 /System/Library/PrivateFrameworks/AMPDevices.framework/Versions/A/Support/AMPDeviceDiscoveryAgent --launchd
+  558     1 Ss   07:38:16 /Applications/wpsoffice.app/Contents/PlugIns/KFinderSync.appex/Contents/MacOS/KFinderSync -AppleLanguages ("zh-Hans", "zh-Hans-CN", "en-GB", "zh-Hant-CN")
+  564     1 U    07:38:16 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/corespotlightd
+  565     1 Ss   07:38:16 /Applications/Keka.app/Contents/PlugIns/KekaFinderIntegration.appex/Contents/MacOS/KekaFinderIntegration -AppleLanguages ("zh-Hans", "zh-Hans-CN", "en-GB", "zh-Hant-CN")
+  568     1 S    07:38:16 /System/Library/PrivateFrameworks/ChronoCore.framework/Support/chronod
+  569     1 Ss   07:38:16 /System/Library/ExtensionKit/Extensions/WallpaperAerialsExtension.appex/Contents/MacOS/WallpaperAerialsExtension -LaunchArguments eyJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUud2FsbHBhcGVyLmV4dGVuc2lvbi5hZXJpYWxzIiwidHlwZSI6MX0=
+  578     1 S    07:38:16 /System/Library/PrivateFrameworks/CommunicationsFilter.framework/CMFSyncAgent
+  599     1 Ss   07:38:16 /usr/libexec/nearbyd
+  603     1 S    07:38:15 /System/Library/Frameworks/InputMethodKit.framework/Resources/imklaunchagent
+  605     1 S    07:38:15 /Library/Input Methods/iFlytekIME.app/Contents/MacOS/iFlytekIME
+  609     1 Ss   07:38:15 /System/Library/Input Methods/PressAndHold.app/Contents/PlugIns/PAH_Extension.appex/Contents/MacOS/PAH_Extension -AppleLanguages ("zh-Hans", "zh-Hans-CN", "en-GB", "zh-Hant-CN")
+  612     1 S    07:38:15 /System/Library/CoreServices/NotificationCenter.app/Contents/MacOS/NotificationCenter
+  626     1 S    07:38:15 /System/Library/PrivateFrameworks/StatusKit.framework/StatusKitAgent
+  629     1 Ss   07:38:15 /System/Library/CoreServices/SubmitDiagInfo server-init
+  632     1 S    07:38:14 /System/Library/CoreServices/Spotlight.app/Contents/MacOS/Spotlight
+  635     1 S    07:38:14 /System/Library/PrivateFrameworks/IMCore.framework/imagent.app/Contents/MacOS/imagent
+  638     1 S    07:38:14 /System/Library/PrivateFrameworks/TextInputUIMacHelper.framework/Versions/A/XPCServices/CursorUIViewService.xpc/Contents/MacOS/CursorUIViewService
+  645     1 Ss   07:38:14 /System/Library/PrivateFrameworks/CloudDocs.framework/PlugIns/com.apple.CloudDocs.iCloudDriveFileProvider.appex/Contents/MacOS/com.apple.CloudDocs.iCloudDriveFileProvider -LaunchArguments eyJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwidHlwZSI6MSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuQ2xvdWREb2NzLmlDbG91ZERyaXZlRmlsZVByb3ZpZGVyIn0=
+  677     1 Ss   07:38:12 /System/Library/ExtensionKit/Extensions/HostInferenceProviderService.appex/Contents/MacOS/HostInferenceProviderService -LaunchArguments eyJzZXJ2aWNlTmFtZSI6ImNvbS5hcHBsZS5Ib3N0SW5mZXJlbmNlUHJvdmlkZXJTZXJ2aWNlIiwiZW5oYW5jZWRTZWN1cml0eSI6ZmFsc2UsInR5cGUiOjh9
+  678     1 S    07:38:12 /usr/sbin/distnoted agent
+  690     1 S    07:38:11 /System/Library/PrivateFrameworks/UserActivity.framework/Agents/useractivityd
+  691     1 Ss   07:38:11 /System/Library/CoreServices/Dock.app/Contents/XPCServices/com.apple.dock.extra.xpc/Contents/MacOS/com.apple.dock.extra
+  694     1 Ss   07:38:11 /System/Library/CoreServices/Dock.app/Contents/XPCServices/com.apple.dock.external.extra.arm64.xpc/Contents/MacOS/com.apple.dock.external.extra.arm64
+  705     1 S    07:38:11 /System/Library/PrivateFrameworks/MediaRemote.framework/Support/mediaremoteagent
+  708     1 S    07:38:11 /usr/libexec/avconferenced
+  745     1 S    07:38:10 /System/Library/PrivateFrameworks/PassKitCore.framework/passd
+  782     1 S    07:38:10 /Applications/Visual Studio Code.app/Contents/Frameworks/Electron Framework.framework/Helpers/chrome_crashpad_handler --no-rate-limit --monitor-self-annotation=ptype=crashpad-handler --database=/Users/thrill3r/Library/Application Support/Code/Crashpad --url=appcenter://code?aid=de75e3cc-e22f-4f42-a03f-1409c21d8af8&uid=01a2321b-d079-4208-939e-4179d22a9bf8&iid=01a2321b-d079-4208-939e-4179d22a9bf8&sid=01a2321b-d079-4208-939e-4179d22a9bf8 --annotation=_companyName=Microsoft --annotation=_productName=VSCode --annotation=_version=1.117.0 --annotation=plat=OS X --annotation=prod=Electron --annotation=ver=39.8.7 --handshake-fd=21
+  802   527 S    07:38:10 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (GPU).app/Contents/MacOS/Code Helper (GPU) --type=gpu-process --user-data-dir=/Users/thrill3r/Library/Application Support/Code --gpu-preferences=SAAAAAAAAAAgAAAEAAAAAAAAAAAAAGAAAwAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --shared-files --field-trial-handle=1718379636,r,11497488030884150598,11584606757510131514,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,ScreenCaptureKitPickerScreen,ScreenCaptureKitStreamPickerSonoma --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,MacWebContentsOcclusion,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TimeoutHangingVideoCaptureStarts,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708988185955192 --seatbelt-client=33
+  805   527 S    07:38:10 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --type=utility --utility-sub-type=network.mojom.NetworkService --lang=zh-CN --service-sandbox-type=network --user-data-dir=/Users/thrill3r/Library/Application Support/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files --field-trial-handle=1718379636,r,11497488030884150598,11584606757510131514,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,ScreenCaptureKitPickerScreen,ScreenCaptureKitStreamPickerSonoma --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,MacWebContentsOcclusion,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TimeoutHangingVideoCaptureStarts,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041 --seatbelt-client=33
+ 1008     1 Ss   07:38:08 /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/CVMServer
+ 1033     1 S    07:38:08 /System/Library/PrivateFrameworks/CommerceKit.framework/Versions/A/Resources/commerce
+ 1045     1 Ss   07:38:07 /System/Applications/Stocks.app/Contents/PlugIns/StocksWidget.appex/Contents/MacOS/StocksWidget -LaunchArguments eyJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwidHlwZSI6MSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuc3RvY2tzLndpZGdldCJ9
+ 1046     1 SN   07:38:07 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdbulkimport -s mdworker-bundle -c MDSImporterBundleFinder -m com.apple.metadata.mdbulkimport
+ 1105     1 Ss   07:38:07 /System/Applications/Weather.app/Contents/PlugIns/WeatherWidget.appex/Contents/MacOS/WeatherWidget -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUud2VhdGhlci53aWRnZXQifQ==
+ 1137     1 Ss   07:38:07 /System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU
+ 1142     1 Ss   07:38:07 /System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking
+ 1145     1 Ss   07:38:07 /System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent
+ 1160     1 Ss   07:38:07 /System/Applications/Home.app/Contents/PlugIns/HomeEnergyWidgetsExtension.appex/Contents/MacOS/HomeEnergyWidgetsExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuSG9tZS5Ib21lRW5lcmd5V2lkZ2V0cyJ9
+ 1177     1 Ss   07:38:07 /System/Applications/VoiceMemos.app/Contents/PlugIns/VoiceMemosSettingsWidgetExtension.appex/Contents/MacOS/VoiceMemosSettingsWidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuVm9pY2VNZW1vcy5Wb2ljZU1lbW9zU2V0dGluZ3NXaWRnZXQifQ==
+ 1209     1 Ss   07:38:06 /System/Applications/Podcasts.app/Contents/PlugIns/PodcastsWidget.appex/Contents/MacOS/PodcastsWidget -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUucG9kY2FzdHMud2lkZ2V0In0=
+ 1269     1 S    07:38:06 /System/Library/PrivateFrameworks/SafariSafeBrowsing.framework/com.apple.Safari.SafeBrowsing.Service
+ 1294     1 S    07:38:06 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/147.0.7727.138/Helpers/chrome_crashpad_handler --monitor-self-annotation=ptype=crashpad-handler --database=/Users/thrill3r/Library/Application Support/Google/Chrome/Crashpad --metrics-dir=/Users/thrill3r/Library/Application Support/Google/Chrome --url=https://clients2.google.com/cr/report --annotation=channel= --annotation=plat=OS X --annotation=prod=Chrome_Mac --annotation=ver=147.0.7727.138 --handshake-fd=5
+ 1376     1 Ss   07:38:05 /System/Library/CoreServices/Batteries.app/Contents/PlugIns/BatteriesAvocadoWidgetExtension.appex/Contents/MacOS/BatteriesAvocadoWidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuQmF0dGVyaWVzLkJhdHRlcmllc0F2b2NhZG9XaWRnZXRFeHRlbnNpb24ifQ==
+ 1415   522 S    07:38:05 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/147.0.7727.138/Helpers/Google Chrome Helper.app/Contents/MacOS/Google Chrome Helper --type=gpu-process --metrics-client-id=5eb69b45-4352-426c-816c-bde20ec04e2a --gpu-preferences=SAAAAAAAAAAgAQAEAAAAAAAAAAAAAGAAAwAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --shared-files --metrics-shmem-handle=1752395122,r,3371950043814422238,922983541290069611,262144 --field-trial-handle=1718379636,r,10120216589271600897,11808513906520224627,262144 --variations-seed-version=20260511-010040.854000-production --pseudonymization-salt-handle=1935764596,r,16329538979903365997,1704800830730106244,4 --trace-process-track-uuid=3190708988185955192 --seatbelt-client=17
+ 1416   522 S    07:38:05 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/147.0.7727.138/Helpers/Google Chrome Helper.app/Contents/MacOS/Google Chrome Helper --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=network --metrics-client-id=5eb69b45-4352-426c-816c-bde20ec04e2a --shared-files --metrics-shmem-handle=1752395122,r,5301730946387160234,10940991069679495369,524288 --field-trial-handle=1718379636,r,10120216589271600897,11808513906520224627,262144 --variations-seed-version=20260511-010040.854000-production --pseudonymization-salt-handle=1935764596,r,16329538979903365997,1704800830730106244,4 --trace-process-track-uuid=3190708989122997041 --seatbelt-client=16
+ 1440     1 Ss   07:38:05 /System/Applications/FindMy.app/Contents/PlugIns/FindMyWidgetPeople.appex/Contents/MacOS/FindMyWidgetPeople -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuZmluZG15LkZpbmRNeVdpZGdldFBlb3BsZSJ9
+ 1456     1 Ss   07:38:05 /System/Applications/Clock.app/Contents/PlugIns/WorldClockWidget.appex/Contents/MacOS/WorldClockWidget -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuY2xvY2suV29ybGRDbG9ja1dpZGdldCJ9
+ 1479   522 S    07:38:05 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/147.0.7727.138/Helpers/Google Chrome Helper.app/Contents/MacOS/Google Chrome Helper --type=utility --utility-sub-type=storage.mojom.StorageService --lang=en-US --service-sandbox-type=service --metrics-client-id=5eb69b45-4352-426c-816c-bde20ec04e2a --shared-files --metrics-shmem-handle=1752395122,r,12032216581210803275,17413901157848402175,524288 --field-trial-handle=1718379636,r,10120216589271600897,11808513906520224627,262144 --variations-seed-version=20260511-010040.854000-production --pseudonymization-salt-handle=1935764596,r,16329538979903365997,1704800830730106244,4 --trace-process-track-uuid=3190708990060038890 --seatbelt-client=31
+ 1489     1 Ss   07:38:05 /System/Applications/Home.app/Contents/PlugIns/HomeWidget.appex/Contents/MacOS/HomeWidget -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuSG9tZS5Ib21lV2lkZ2V0LkludGVyYWN0aXZlIn0=
+ 1572     1 Ss   07:38:04 /System/Applications/Journal.app/Contents/PlugIns/JournalWidgets.appex/Contents/MacOS/JournalWidgets -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuam91cm5hbC53aWRnZXRzIn0=
+ 1575     1 Ss   07:38:04 /System/Applications/Weather.app/Contents/PlugIns/WeatherIntents.appex/Contents/MacOS/WeatherIntents -AppleLanguages ("zh-Hans", "zh-Hans-CN", "en-GB", "zh-Hant-CN")
+ 1623     1 Ss   07:38:03 /System/Applications/VoiceMemos.app/Contents/PlugIns/RecordWidgetExtension.appex/Contents/MacOS/RecordWidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuVm9pY2VNZW1vcy5SZWNvcmRXaWRnZXQifQ==
+ 1651     1 Ss   07:38:03 /System/Library/PrivateFrameworks/MobileTimer.framework/PlugIns/MobileTimerIntents.appex/Contents/MacOS/MobileTimerIntents -AppleLanguages ("zh-Hans", "zh-Hans-CN", "en-GB", "zh-Hant-CN")
+ 1691     1 Ss   07:38:03 /System/Applications/FindMy.app/Contents/PlugIns/FindMyWidgetItems.appex/Contents/MacOS/FindMyWidgetItems -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuZmluZG15LkZpbmRNeVdpZGdldEl0ZW1zIn0=
+ 1727     1 Ss   07:38:03 /System/Library/CoreServices/Screen Time.app/Contents/PlugIns/ScreenTimeWidgetIntentsExtension.appex/Contents/MacOS/ScreenTimeWidgetIntentsExtension -AppleLanguages ("zh-Hans", "zh-Hans-CN", "en-GB", "zh-Hant-CN")
+ 1765     1 Ss   07:38:03 /System/Applications/Journal.app/Contents/PlugIns/JournalWidgetsSecure.appex/Contents/MacOS/JournalWidgetsSecure -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuam91cm5hbC53aWRnZXRzLnNlY3VyZSJ9
+ 1814     1 Ss   07:38:03 /System/Applications/Tips.app/Contents/PlugIns/TipsWidgetExtension.appex/Contents/MacOS/TipsWidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUudGlwcy5XaWRnZXQifQ==
+ 1934     1 Ss   07:38:02 /System/Applications/Reminders.app/Contents/PlugIns/RemindersWidgetExtension.appex/Contents/MacOS/RemindersWidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUucmVtaW5kZXJzLldpZGdldEV4dGVuc2lvbiJ9
+ 1940   527 S    07:38:02 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --type=utility --utility-sub-type=node.mojom.NodeService --lang=zh-CN --service-sandbox-type=none --user-data-dir=/Users/thrill3r/Library/Application Support/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files --field-trial-handle=1718379636,r,11497488030884150598,11584606757510131514,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,ScreenCaptureKitPickerScreen,ScreenCaptureKitStreamPickerSonoma --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,MacWebContentsOcclusion,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TimeoutHangingVideoCaptureStarts,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990997080739
+ 2006     1 Ss   07:38:02 /System/Applications/Shortcuts.app/Contents/PlugIns/ShortcutsWidgetExtension.appex/Contents/MacOS/ShortcutsWidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuc2hvcnRjdXRzLlNob3J0Y3V0c1dpZGdldCJ9
+ 2201     1 Ss   07:37:59 /System/Applications/Calendar.app/Contents/PlugIns/CalendarWidgetExtension.appex/Contents/MacOS/CalendarWidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuaUNhbC5DYWxlbmRhcldpZGdldEV4dGVuc2lvbiJ9
+ 2234   527 S    07:37:59 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --type=utility --utility-sub-type=node.mojom.NodeService --lang=zh-CN --service-sandbox-type=none --user-data-dir=/Users/thrill3r/Library/Application Support/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files --field-trial-handle=1718379636,r,11497488030884150598,11584606757510131514,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,ScreenCaptureKitPickerScreen,ScreenCaptureKitStreamPickerSonoma --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,MacWebContentsOcclusion,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TimeoutHangingVideoCaptureStarts,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708993808206286
+ 2378     1 S    07:37:57 /System/Library/PrivateFrameworks/CoreSpeech.framework/corespeechd
+ 2388     1 S    07:37:57 /opt/homebrew/Cellar/node/25.8.2/bin/node /Users/thrill3r/.npm-global/lib/node_modules/@cosmicstack/mercury-agent/dist/index.js start --daemon
+ 2389     1 S    07:37:57 /Users/thrill3r/.local/bin/cpa-manager
+ 2390     1 S    07:37:57 /Users/thrill3r/.local/bin/opencli-rs --daemon --port 19825
+ 2393     1 S    07:37:57 /opt/homebrew/opt/redis/bin/redis-server 127.0.0.1:6379 
+ 2400     1 S    07:37:57 /System/Library/Image Capture/Support/icdd
+ 2407     1 S    07:37:57 /Applications/UURemote.app/Contents/MacOS/UURemoteService -agent
+ 2409     1 S    07:37:57 /opt/homebrew/opt/cliproxyapi/bin/cliproxyapi
+ 2411     1 S    07:37:57 /System/Library/CoreServices/AirPlayUIAgent.app/Contents/MacOS/AirPlayUIAgent --launchd
+ 2412     1 S    07:37:57 /Users/thrill3r/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run --replace
+ 2414     1 S    07:37:57 /System/Library/CoreServices/diagnostics_agent
+ 2416     1 S    07:37:57 /Applications/BaiduNetdisk_mac.app/Contents/Frameworks/netdisk_service --hidden
+ 2417     1 S    07:37:57 /System/Library/CoreServices/TextInputMenuAgent.app/Contents/MacOS/TextInputMenuAgent
+ 2425     1 S    07:37:57 /Applications/Tencent Lemon.app/Contents/Library/LoginItems/LemonMonitor.app/Contents/MacOS/LemonMonitor 1023
+ 2430     1 S    07:37:57 /System/Library/Frameworks/CryptoTokenKit.framework/ctkahp.bundle/Contents/MacOS/ctkahp
+ 2442     1 S    07:37:57 /Applications/Bob.app/Contents/MacOS/Bob
+ 2608     1 Ss   07:37:55 /System/Library/PrivateFrameworks/SafariPlatformSupport.framework/Versions/A/XPCServices/com.apple.SafariPlatformSupport.Helper.xpc/Contents/MacOS/com.apple.SafariPlatformSupport.Helper
+ 2625     1 Ss      44:03 /System/Library/Frameworks/Security.framework/Versions/A/XPCServices/com.apple.CodeSigningHelper.xpc/Contents/MacOS/com.apple.CodeSigningHelper
+ 2850     1 S    07:37:54 /Applications/Paste.app/Contents/MacOS/Paste
+ 2875     1 Ss   07:37:53 /System/Applications/Photos.app/Contents/PlugIns/PhotosReliveWidget.appex/Contents/MacOS/PhotosReliveWidget -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuUGhvdG9zLlBob3Rvc1JlbGl2ZVdpZGdldCJ9
+ 2876     1 Ss   07:37:53 /System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/Contents/Extensions/SafariWidgetExtension.appex/Contents/MacOS/SafariWidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuU2FmYXJpLlNhZmFyaVdpZGdldEV4dGVuc2lvbiJ9
+ 2895     1 Ss   07:37:52 /System/Library/CoreServices/PeopleViewService.app/Contents/PlugIns/PeopleWidget_macOSExtension.appex/Contents/MacOS/PeopleWidget_macOSExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuUGVvcGxlVmlld1NlcnZpY2UuUGVvcGxlV2lkZ2V0LW1hY09TIn0=
+ 2906     1 Ss   07:37:50 /System/Applications/Notes.app/Contents/PlugIns/com.apple.Notes.WidgetExtension.appex/Contents/MacOS/com.apple.Notes.WidgetExtension -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20uYXBwbGUuTm90ZXMuV2lkZ2V0RXh0ZW5zaW9uIn0=
+ 2907     1 Ss   07:37:50 /Applications/wpsoffice.app/Contents/PlugIns/recentfiles.appex/Contents/MacOS/recentfiles -LaunchArguments eyJ0eXBlIjoxLCJlbmhhbmNlZFNlY3VyaXR5IjpmYWxzZSwic2VydmljZU5hbWUiOiJjb20ua2luZ3NvZnQud3Bzb2ZmaWNlLm1hYy5yZWNlbnRmaWxlcyJ9
+ 2911     1 Ss   07:37:50 /Library/Application Support/Lemon/LemonDaemon loadBySystem
+ 2922     1 S    07:37:48 /usr/sbin/distnoted agent
+ 2932     1 Ss   07:37:47 /System/Library/PrivateFrameworks/CoreFP.framework/Versions/A/fairplayd
+ 2961     1 SNs  07:37:43 /usr/sbin/netbiosd
+ 2963     1 Ss   07:37:43 /System/Library/PrivateFrameworks/InstallCoordination.framework/Support/installcoordinationd
+ 2966     1 S    07:37:43 /usr/sbin/distnoted agent
+ 2985     1 Rs   07:37:37 /Library/SystemExtensions/C1BF2984-B813-4164-A651-340036EDF764/com.nebula.clashmi.clashmiServiceSE.systemextension/Contents/MacOS/com.nebula.clashmi.clashmiServiceSE
+ 3061     1 Ss   07:37:28 /usr/libexec/wifivelocityd
+ 3154     1 Ss   07:36:58 /System/Library/CoreServices/CrashReporterSupportHelper server-init
+ 3402     1 S    07:36:55 /usr/bin/ssh-agent -l
+ 3624     1 Ss      43:22 /usr/libexec/containermanagerd_system --runmode=privileged --user-container-mode=current --bundle-container-mode=global --bundle-container-owner=_appinstalld --system-container-mode=none
+ 3639     1 S       43:21 /usr/libexec/containermanagerd --runmode=agent --user-container-mode=current --bundle-container-mode=proxy --system-container-mode=none
+ 3643     1 S       43:21 /usr/libexec/containermanagerd --runmode=agent --user-container-mode=current --bundle-container-mode=proxy --system-container-mode=none
+ 3730     1 S       43:19 /usr/libexec/containermanagerd --runmode=agent --user-container-mode=current --bundle-container-mode=proxy --system-container-mode=none
+ 3867     1 S    05:51:19 /System/Library/Frameworks/ManagedAppDistribution.framework/Support/managedappdistributionagent
+ 3873     1 S    05:51:19 /usr/libexec/duetexpertd
+ 4156     1 S    03:57:01 /System/Library/Frameworks/CoreSpotlight.framework/spotlightknowledged -u
+ 5312     1 S    07:36:29 /usr/sbin/distnoted agent
+ 5429     1 Ss   07:36:27 /System/Library/Frameworks/ManagedAppDistribution.framework/Support/managedappdistributiond
+ 5560     1 Ss   06:29:21 /usr/libexec/aned
+ 6251     1 S    07:35:46 /System/Library/CoreServices/UserNotificationCenter.app/Contents/MacOS/UserNotificationCenter
+ 7001     1 S       41:24 /System/Library/PrivateFrameworks/CoreDuetContext.framework/Resources/ContextStoreAgent
+ 7053     1 S       41:23 /System/Library/CoreServices/Siri.app/Contents/MacOS/Siri launchd
+ 7138     1 S       41:20 /System/Library/PrivateFrameworks/CoreSuggestions.framework/Versions/A/Support/suggestd
+ 7139     1 S       41:20 /System/Library/PrivateFrameworks/SyncedDefaults.framework/Support/syncdefaultsd
+ 7142     1 Ss      41:19 /usr/libexec/usermanagerd -t 15
+ 7299     1 S       41:15 /System/Library/CoreServices/CoreLocationAgent.app/Contents/MacOS/CoreLocationAgent
+ 7321     1 S       41:10 /System/Library/PrivateFrameworks/ScreenTimeCore.framework/Versions/A/ScreenTimeAgent
+ 7367     1 S    03:26:33 /System/Library/PrivateFrameworks/HearingCore.framework/heard
+ 7447     1 S    03:26:32 /usr/libexec/secinitd
+ 7979     1 S       40:46 /System/Library/CoreServices/Keychain Circle Notification.app/Contents/MacOS/Keychain Circle Notification
+ 8149     1 S       40:41 /System/Library/Frameworks/CoreTelephony.framework/Support/CommCenter -L
+ 8158     1 Ss      40:41 /usr/libexec/nehelper
+ 8159     1 S       40:41 /System/Library/PrivateFrameworks/TelephonyUtilities.framework/callservicesd
+ 8161     1 S       40:40 /System/Library/CoreServices/UIKitSystem.app/Contents/MacOS/UIKitSystem system_app_start
+ 8162     1 Ss      40:40 /System/Library/PrivateFrameworks/TelephonyUtilities.framework/XPCServices/com.apple.FaceTime.FTConversationService.xpc/Contents/MacOS/com.apple.FaceTime.FTConversationService
+ 8163     1 S       40:40 /System/Library/PrivateFrameworks/SiriTTSService.framework/sirittsd
+ 8164     1 Ss      40:40 /System/Library/Frameworks/Speech.framework/Versions/A/XPCServices/localspeechrecognition.xpc/Contents/MacOS/localspeechrecognition
+ 8165     1 S       40:39 /usr/libexec/linkd
+ 8168     1 S       40:39 /usr/libexec/dmd
+ 8169     1 S       40:39 /System/Library/Frameworks/FamilyControls.framework/Versions/A/FamilyControlsAgent
+ 8170     1 S       40:39 /System/Library/Frameworks/ManagedSettings.framework/Versions/A/ManagedSettingsAgent
+ 8173     1 S       40:38 /System/Library/Frameworks/Contacts.framework/Support/postersyncd
+ 8180     1 S       40:38 /System/Library/PrivateFrameworks/CoreRecents.framework/Versions/A/Support/recentsd
+ 8193     1 Ss      40:38 /usr/libexec/online-auth-agent
+ 8194     1 Ss      40:37 /System/Library/Frameworks/ExtensionFoundation.framework/Versions/A/XPCServices/extensionkitservice.xpc/Contents/MacOS/extensionkitservice
+ 8196     1 S       40:37 /usr/libexec/feedbackd
+ 8215     1 S       40:36 /usr/libexec/assessmentagent
+ 8279     1 Ss      40:35 /System/Library/CoreServices/TimeMachine/backupd
+ 8292     1 S       40:34 /System/Library/PrivateFrameworks/CoreCDP.framework/Versions/A/Resources/cdpd
+ 8348     1 S       40:33 /System/Library/PrivateFrameworks/BusinessChatService.framework/businessservicesd
+ 8349     1 Ss      40:33 /System/Library/PrivateFrameworks/MessagesBlastDoorSupport.framework/Versions/A/XPCServices/MessagesBlastDoorService.xpc/Contents/MacOS/MessagesBlastDoorService
+ 8351     1 Ss      40:32 /usr/libexec/ospredictiond
+ 8353     1 S       40:31 /usr/libexec/SidecarRelay
+ 8370     1 S       40:30 /System/Library/CoreServices/UniversalControl.app/Contents/MacOS/UniversalControl
+ 8525     1 S       40:25 /System/Library/PrivateFrameworks/AssistantServices.framework/Versions/A/Support/assistantd
+ 8539     1 S       40:25 /usr/libexec/replayd
+ 8540     1 S       40:24 /System/Library/Frameworks/AudioToolbox.framework/AudioComponentRegistrar
+ 8541     1 S       40:24 /System/Library/PrivateFrameworks/SkyLight.framework//Versions/A/Resources/AquaAppearanceHelper.app/Contents/MacOS/AquaAppearanceHelper
+ 8542     1 Ss      40:24 /usr/libexec/mobileassetd
+ 8543     1 S       40:24 /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/XPCServices/com.apple.hiservices-xpcservice.xpc/Contents/MacOS/com.apple.hiservices-xpcservice
+ 8576     1 Ss      40:22 /System/Library/PrivateFrameworks/EcosystemAnalytics.framework/Support/ecosystemanalyticsd
+ 8593     1 Ss      40:20 /System/Library/CoreServices/Siri.app/Contents/XPCServices/SiriNCService.xpc/Contents/MacOS/SiriNCService
+ 8659     1 S       40:19 /usr/libexec/siriknowledged
+ 8660     1 S       40:19 /System/Library/PrivateFrameworks/ContinuousDialogManagerService.framework/assistant_cdmd
+ 8661     1 S       40:19 /System/Library/PrivateFrameworks/CoreParsec.framework/parsecd
+ 8664     1 S       40:18 /System/Library/PrivateFrameworks/GenerativeExperiencesRuntime.framework/Versions/A/generativeexperiencesd
+ 8665     1 S       40:18 /System/Library/PrivateFrameworks/iTunesCloud.framework/Support/itunescloudd
+ 8666     1 S       40:18 /System/Library/PrivateFrameworks/GeoServices.framework/Versions/A/XPCServices/com.apple.geod.xpc/Contents/MacOS/com.apple.geod
+ 8679     1 Ss      40:18 /System/Library/PrivateFrameworks/ModelCatalogRuntime.framework/Versions/A/modelcatalogd
+ 8691     1 S       40:18 /System/Library/PrivateFrameworks/GeoServices.framework/Versions/A/XPCServices/com.apple.geod.xpc/Contents/MacOS/com.apple.geod
+ 8692     1 S       40:18 /System/Library/PrivateFrameworks/GeoServices.framework/Versions/A/XPCServices/com.apple.geod.xpc/Contents/MacOS/com.apple.geod
+ 8693     1 S       40:18 /System/Library/PrivateFrameworks/GeoServices.framework/Versions/A/XPCServices/com.apple.geod.xpc/Contents/MacOS/com.apple.geod
+ 8697     1 S       40:18 /usr/libexec/secinitd
+ 8705     1 S       40:18 /usr/libexec/secinitd
+ 8708     1 Ss      40:18 /usr/libexec/secinitd
+ 8711     1 S       40:17 /System/Library/PrivateFrameworks/CloudSubscriptionFeatures.framework/FeatureAccessAgent
+ 8712     1 Ss      40:17 /System/Library/PrivateFrameworks/SystemStatusServer.framework/Support/systemstatusd
+ 8713     1 S       40:17 /usr/sbin/cfprefsd agent
+ 8714     1 S       40:17 /System/Library/PrivateFrameworks/CoreFollowUp.framework/Versions/A/Support/followupd
+ 8715     1 S       40:17 /usr/libexec/trustd --agent
+ 8716     1 Ss      40:17 /usr/libexec/trustdFileHelper
+ 8717     1 S       40:17 /usr/sbin/cfprefsd agent
+ 8718     1 S       40:17 /usr/libexec/trustd --agent
+ 8719     1 S       40:17 /usr/libexec/triald
+ 8747     1 Ss      40:17 /System/Library/CoreServices/Software Update.app/Contents/Resources/softwareupdated
+ 8758     1 Ss      40:17 /System/Library/Frameworks/AudioToolbox.framework/XPCServices/com.apple.audio.SandboxHelper.xpc/Contents/MacOS/com.apple.audio.SandboxHelper
+ 8810     1 S       40:16 /System/Library/PrivateFrameworks/AppleMediaServices.framework/Resources/amsaccountsd
+ 8811     1 S       40:16 /usr/libexec/networkserviceproxy
+ 8812     1 S       40:16 /usr/libexec/pkd
+ 8815     1 S       40:16 /System/Library/PrivateFrameworks/AppleMediaServicesUI.framework/amsengagementd
+ 8842     1 S       40:16 /System/Library/CoreServices/CoreServicesUIAgent.app/Contents/MacOS/CoreServicesUIAgent
+ 8847     1 Ss      40:15 /System/Library/Frameworks/AudioToolbox.framework/XPCServices/com.apple.audio.SandboxHelper.xpc/Contents/MacOS/com.apple.audio.SandboxHelper
+ 8849     1 S       40:15 /usr/libexec/neagent
+ 8853     1 S       40:15 /usr/libexec/swcd
+ 8854     1 S       40:14 /usr/libexec/swtransparencyd
+ 8856     1 S       40:14 /System/Library/Frameworks/CryptoTokenKit.framework/ctkd -tw
+ 8857     1 Ss      40:14 /usr/libexec/mobileactivationd
+ 8859     1 S       40:14 /System/Library/Frameworks/LocalAuthentication.framework/Support/coreauthd
+ 8876     1 S       40:13 /usr/sbin/cfprefsd agent
+ 8877     1 S       40:13 /usr/sbin/cfprefsd agent
+ 8896     1 S       40:13 /usr/sbin/cfprefsd agent
+ 8908     1 S       40:13 /usr/sbin/cfprefsd agent
+ 8926     1 Ss      40:12 /System/Library/PrivateFrameworks/CloudTelemetry.framework/Versions/A/XPCServices/CloudTelemetryService.xpc/Contents/MacOS/CloudTelemetryService
+ 8927     1 Ss      40:12 /usr/libexec/assetsubscriptiond
+ 8936     1 Ss      40:12 /System/Library/PrivateFrameworks/MobileSoftwareUpdate.framework/Support/softwareupdated
+ 8948     1 Ss      40:12 /System/Library/PrivateFrameworks/MobileSoftwareUpdate.framework/Versions/A/XPCServices/com.apple.MobileSoftwareUpdate.CleanupPreparePathService.xpc/Contents/MacOS/com.apple.MobileSoftwareUpdate.CleanupPreparePathService
+ 8952     1 S       40:12 /System/Library/PrivateFrameworks/ModelCatalogRuntime.framework/Versions/A/ModelCatalogAgent
+ 8966     1 Ss      40:12 /System/Library/CoreServices/osanalyticshelper server-init
+ 8967     1 Ss      40:11 /System/Library/CoreServices/TimeMachine/backupd-helper -launchd
+ 8972     1 Ss      40:11 /usr/libexec/logd_helper
+ 8983     1 Ss      40:10 /System/Library/PrivateFrameworks/Ecosystem.framework/Support/ecosystemd
+ 9034     1 Ss      40:08 /System/Library/PrivateFrameworks/TrialServer.framework/Versions/A/XPCServices/TrialArchivingService.xpc/Contents/MacOS/TrialArchivingService
+ 9054     1 S       40:07 /System/Library/PrivateFrameworks/AssetCacheServices.framework/Versions/A/XPCServices/AssetCacheLocatorService.xpc/Contents/MacOS/AssetCacheLocatorService -a
+ 9058     1 S       40:06 /System/Library/PrivateFrameworks/AuthKit.framework/Versions/A/Support/akd
+ 9061     1 Ss      40:06 /System/Library/PrivateFrameworks/CoreADI.framework/adid
+ 9119     1 S       40:03 /System/Library/PrivateFrameworks/AXAssetLoader.framework/Support/axassetsd
+ 9120     1 Ss      40:03 /usr/libexec/storagekitd
+ 9140     1 S       40:01 /System/Library/CoreServices/talagentd
+ 9223     1 Ss      39:59 /usr/libexec/fskitd
+ 9249     1 S       39:57 /usr/sbin/cfprefsd agent
+ 9274     1 S       39:55 /System/Library/PrivateFrameworks/CacheDelete.framework/deleted
+ 9392     1 Ss      39:50 /System/Library/PrivateFrameworks/CacheDelete.framework/deleted_helper
+ 9403     1 Ss      39:50 /usr/libexec/amfid
+ 9419     1 Ss      39:48 /usr/libexec/triald_system
+ 9420     1 Ss      39:48 /usr/libexec/AssetCache/AssetCache
+ 9421     1 S       39:48 /System/Library/PrivateFrameworks/iCloudDriveCore.framework/Versions/A/Support/bird
+ 9428     1 Ss      39:48 /System/Library/PrivateFrameworks/PackageKit.framework/Resources/system_installd
+ 9429     1 S       39:48 /System/Library/PrivateFrameworks/GeoServices.framework/geodMachServiceBridge
+ 9430     1 Ss      39:48 /System/Library/PrivateFrameworks/CloudKitDaemon.framework/Support/cloudd --system
+ 9431     1 S       39:48 /System/Library/Frameworks/QuickLookThumbnailing.framework/Support/com.apple.quicklook.ThumbnailsAgent
+ 9432     1 Ss      39:48 /System/Library/PrivateFrameworks/PackageKit.framework/Resources/installd
+ 9521     1 Ss      39:43 /System/Library/PrivateFrameworks/AssetCacheServicesExtensions.framework/XPCServices/AssetCacheTetheratorService.xpc/Contents/MacOS/AssetCacheTetheratorService
+ 9631     1 S       39:40 /usr/sbin/cfprefsd agent
+ 9766     1 S       39:38 /System/Library/CoreServices/ReportCrash agent
+ 9787     1 Ss      39:36 /System/Library/PrivateFrameworks/CoreSymbolication.framework/coresymbolicationd
+10350     1 S       39:22 /usr/sbin/cfprefsd agent
+10351     1 S       39:22 /usr/sbin/cfprefsd agent
+10352     1 S       39:22 /usr/sbin/cfprefsd agent
+10353     1 S       39:22 /usr/sbin/cfprefsd agent
+10619     1 Ss      39:10 /usr/libexec/mmaintenanced
+10626     1 S       39:10 /System/Library/PrivateFrameworks/Categories.framework/Versions/A/XPCServices/CategoriesService.xpc/Contents/MacOS/CategoriesService
+10633     1 Ss      39:10 /usr/libexec/sandboxd
+10647     1 S       39:10 /System/Library/PrivateFrameworks/ContextKit.framework/Versions/A/XPCServices/ContextService.xpc/Contents/MacOS/ContextService
+10648     1 S       39:10 /System/Library/Frameworks/Security.framework/Versions/A/XPCServices/TrustedPeersHelper.xpc/Contents/MacOS/TrustedPeersHelper
+11424     1 S    03:25:29 /usr/libexec/knowledge-agent
+11775     1 S       08:22 /usr/libexec/promotedcontentd
+11792     1 Ss      08:21 /usr/libexec/fairplaydeviceidentityd
+12566     1 Ss      38:39 /System/Library/PrivateFrameworks/iCloudDriveService.framework/XPCServices/ContainerMetadataExtractor.xpc/Contents/MacOS/ContainerMetadataExtractor
+13850     1 Ss      38:00 /usr/libexec/smd
+15691     1 S       07:32 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/managedcorespotlightd
+15858     1 S       37:08 /System/Library/PrivateFrameworks/VoiceShortcuts.framework/Versions/A/Support/siriactionsd
+15859     1 S       37:08 /usr/libexec/MTLAssetUpgraderD
+15860     1 S       37:08 /System/Library/Frameworks/MediaExtension.framework/Versions/A/Helpers/MENotificationAgent
+15861     1 S       37:08 /System/Library/PrivateFrameworks/SessionCore.framework/Support/liveactivitiesd
+15862     1 S       37:08 /System/Library/PrivateFrameworks/BackgroundTaskManagement.framework/Support/BackgroundTaskManagementAgent.app/Contents/MacOS/BackgroundTaskManagementAgent
+15916     1 S       37:07 /System/Library/PrivateFrameworks/ReplicatorCore.framework/Support/replicatord
+15997     1 Us      37:06 /System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner
+15998     1 S       37:06 /System/Library/PrivateFrameworks/MobileTimer.framework/Executables/mobiletimerd
+16139     1 Ss      37:05 /System/Library/PrivateFrameworks/BackgroundTaskManagement.framework/Resources/backgroundtaskmanagementd -daemon
+16146     1 S    06:26:41 /System/Library/CoreServices/audioaccessoryd
+16241     1 S       37:02 /System/Library/PrivateFrameworks/CascadeSets.framework/Versions/A/XPCServices/SetStoreUpdateService.xpc/Contents/MacOS/SetStoreUpdateService
+16740     1 S       36:57 /System/Library/CoreServices/pbs
+16741     1 S       36:57 /System/Library/CoreServices/appplaceholdersyncd
+17151     1 Ss      36:49 /usr/libexec/aneuserd
+18019     1 S       36:32 /System/Library/PrivateFrameworks/IntelligencePlatformCore.framework/Versions/A/intelligenceplatformd
+18154     1 Ss      36:27 /System/Library/PrivateFrameworks/CloudTelemetry.framework/Versions/A/XPCServices/CloudTelemetryService.xpc/Contents/MacOS/CloudTelemetryService
+18236     1 Ss      36:27 /System/Library/PrivateFrameworks/XprotectFramework.framework/Versions/A/XPCServices/XProtectBridgeService.xpc/Contents/MacOS/XProtectBridgeService
+19096     1 S       36:03 /usr/libexec/routined LAUNCHED_BY_LAUNCHD
+21184     1 S       35:22 /System/Library/PrivateFrameworks/MapsSync.framework/mapssyncd
+21516     1 Ss      35:16 /System/Library/PrivateFrameworks/StreamingZip.framework/Versions/A/XPCServices/com.apple.StreamingUnzipService.xpc/Contents/MacOS/com.apple.StreamingUnzipService
+22498     1 S       34:58 /System/Library/PrivateFrameworks/IMDPersistence.framework/XPCServices/IMDPersistenceAgent.xpc/Contents/MacOS/IMDPersistenceAgent
+23429     1 Ss      34:38 /usr/libexec/coreduetd
+23606     1 Ss      34:34 /System/Library/PrivateFrameworks/AppPredictionFoundation.framework/Versions/A/XPCServices/AppPredictionIntentsHelperService.xpc/Contents/MacOS/AppPredictionIntentsHelperService
+23815     1 S       34:29 /System/Library/PrivateFrameworks/SiriInference.framework/Versions/A/siriinferenced
+24260     1 Ss      34:23 /System/Library/PrivateFrameworks/SiriAnalytics.framework/Versions/A/XPCServices/SAExtensionOrchestrator.xpc/Contents/MacOS/SAExtensionOrchestrator
+24646     1 Ss      34:16 /System/Library/Frameworks/ExtensionFoundation.framework/Versions/A/XPCServices/extensionkitservice.xpc/Contents/MacOS/extensionkitservice
+25038     1 Ss      34:13 /System/Library/ExtensionKit/Extensions/BiomeSELFIngestor.appex/Contents/MacOS/BiomeSELFIngestor -LaunchArguments eyJzZXJ2aWNlTmFtZSI6ImNvbS5hcHBsZS5saWdodGhvdXNlLkJpb21lU0VMRkluZ2VzdG9yIiwiZW5oYW5jZWRTZWN1cml0eSI6ZmFsc2UsInR5cGUiOjF9
+25156     1 Ss      34:11 /System/Library/ExtensionKit/Extensions/IFTelemetrySELFIngestor.appex/Contents/MacOS/IFTelemetrySELFIngestor -LaunchArguments eyJ0eXBlIjoxLCJzZXJ2aWNlTmFtZSI6ImNvbS5hcHBsZS5saWdodGhvdXNlLklGVGVsZW1ldHJ5U0VMRkluZ2VzdG9yIiwiZW5oYW5jZWRTZWN1cml0eSI6ZmFsc2V9
+25157     1 Ss      34:11 /System/Library/ExtensionKit/Extensions/IFTranscriptSELFIngestor.appex/Contents/MacOS/IFTranscriptSELFIngestor -LaunchArguments eyJ0eXBlIjoxLCJzZXJ2aWNlTmFtZSI6ImNvbS5hcHBsZS5saWdodGhvdXNlLklGVHJhbnNjcmlwdFNFTEZJbmdlc3RvciIsImVuaGFuY2VkU2VjdXJpdHkiOmZhbHNlfQ==
+25164     1 Ss      34:10 /System/Library/ExtensionKit/Extensions/GMSSELFIngestor.appex/Contents/MacOS/GMSSELFIngestor -LaunchArguments eyJ0eXBlIjoxLCJzZXJ2aWNlTmFtZSI6ImNvbS5hcHBsZS5zaXJpLkdNU1NFTEZJbmdlc3RvciIsImVuaGFuY2VkU2VjdXJpdHkiOmZhbHNlfQ==
+25842     1 Ss   01:37:18 /System/Library/CoreServices/ControlCenter.app/Contents/PlugIns/DisplayControls.appex/Contents/MacOS/DisplayControls -LaunchArguments eyJzZXJ2aWNlTmFtZSI6ImNvbS5hcHBsZS5jb250cm9scy5kaXNwbGF5IiwidHlwZSI6MSwiZW5oYW5jZWRTZWN1cml0eSI6ZmFsc2V9
+27764     1 S       33:25 /System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/ShortcutsViewService.xpc/Contents/MacOS/ShortcutsViewService
+27843     1 Ss   01:36:19 /Library/Apple/System/Library/CoreServices/XProtect.app/Contents/MacOS/XProtect
+27859     1 S       33:22 /usr/libexec/mlhostd
+27860     1 S       33:22 /usr/libexec/searchpartyuseragent
+27979     1 Ss      33:21 /System/Library/Frameworks/ExtensionFoundation.framework/Versions/A/XPCServices/extensionkitservice.xpc/Contents/MacOS/extensionkitservice
+28026     1 Ss   01:36:16 /Library/Apple/System/Library/CoreServices/XProtect.app/Contents/XPCServices/XProtectPluginService.xpc/Contents/MacOS/XProtectPluginService
+28029     1 S       33:16 /usr/libexec/findmylocateagent
+28157     1 Ss      33:09 /usr/libexec/findmybeaconingd
+28159     1 Ss      33:09 /usr/libexec/securityd_system
+28237     1 Ss      33:08 /usr/libexec/findmydeviced
+28323     1 S       33:06 /usr/libexec/findmydevice-user-agent
+31195     1 Ss      31:39 /System/Library/PrivateFrameworks/SiriSuggestionsSupport.framework/Versions/A/XPCServices/SiriSuggestionsBookkeepingService.xpc/Contents/MacOS/SiriSuggestionsBookkeepingService
+32354     1 Ss      31:13 /usr/libexec/rtcreportingd
+32574     1 S<   06:20:50 /Applications/Visual Studio Code.app/Contents/Frameworks/Squirrel.framework/Resources/ShipIt com.microsoft.VSCode.ShipIt /Users/thrill3r/Library/Caches/com.microsoft.VSCode.ShipIt/ShipItState.plist
+32705     1 Ss      31:02 /System/Library/PrivateFrameworks/IntelligencePlatformCompute.framework/Versions/A/XPCServices/IntelligencePlatformComputeService.xpc/Contents/MacOS/IntelligencePlatformComputeService
+33003     1 Ss      30:56 /usr/libexec/powerdatad
+36174     1 S       01:12 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+36907 28026 S       00:56 /Library/Apple/System/Library/CoreServices/XProtect.app/Contents/MacOS/XProtectRemediatorBundlore 10EAF582-4E61-4A46-AF2C-E9F4636B01E7
+37413  2412 Ss   04:56:55 node /Users/thrill3r/.npm-global/bin/jshookmcp
+37977     1 S       00:36 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+37983     1 S       00:36 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+37984     1 S       00:36 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+37985     1 S       00:36 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+37986     1 S       00:36 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+38003     1 Ss      29:43 /System/Library/PrivateFrameworks/PowerLog.framework/Versions/A/XPCServices/PerfPowerTelemetryClientRegistrationService.xpc/Contents/MacOS/PerfPowerTelemetryClientRegistrationService
+38618     1 S       00:28 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+38706  3568 Ss      00:26 /bin/zsh -lc sleep 30; printf 'hash '; sha256sum docs/plans/2026-05-10-actionable-regime-confidence-todo.md; printf '\nactive\n'; ps -axo pid=,ppid=,stat=,etime=,%cpu=,%mem=,command= | rg -i "071538|071558|071630|071524|kaggle|regime-confidence|source_control|owner-export|verifier|canonical|pre-bayes|bbn|catboost" | rg -v "rg -i|ps -axo" || true; printf '\nnew roots\n'; find docs/experiments/actionable-regime-confidence/runs -maxdepth 1 -type d \( -name '20260512T071524*' -o -name '20260512T071538*' -o -name '20260512T071558*' -o -name '20260512T071625*' -o -name '20260512T071630*' \) -print | sort
+38718 38706 S       00:26 sleep 30
+39546  4268 Ss      00:19 /bin/zsh -lc sleep 35\012shasum -a 256 docs/plans/2026-05-10-actionable-regime-confidence-todo.md\012find docs/experiments/actionable-regime-confidence/runs -maxdepth 1 -type d \( -name '20260512T071524*' -o -name '20260512T071538*' -o -name '20260512T071558*' -o -name '20260512T071625*' -o -name '20260512T071630*' \) -print | sort\012nl -ba docs/plans/2026-05-10-actionable-regime-confidence-todo.md | tail -n 130
+39557 39546 S       00:19 sleep 35
+40038     1 S       00:15 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+40187  5043 Ss      00:13 /bin/zsh -lc while ps -p 38706 >/dev/null 2>&1; do sleep 5; done
+40547  3280 Ss      00:07 /bin/zsh -lc while ps -p 39546,39911,39917 >/dev/null 2>&1; do date '+%Y-%m-%dT%H:%M:%S%z waiting_for_0715_readbacks'; ps -p 39546,39911,39917 -o pid,ppid,stat,etime,%cpu,%mem,command 2>/dev/null || true; sleep 5; done; date '+%Y-%m-%dT%H:%M:%S%z 0715_readbacks_settled'
+40712 63241 S       00:03 sleep 5
+40755     1 S       00:03 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+40757     1 S       00:03 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+40758     1 S       00:03 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared -s mdworker -c MDSImporterWorker -m com.apple.mdworker.shared
+40796 40187 S       00:03 sleep 5
+40802  5434 Ss      00:02 /bin/zsh -lc while ps -p 39546 >/dev/null 2>&1; do sleep 10; done\012ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '20260512T|auto.?quant|target/debug/ict-engine|provider-status|analyze-live|pre.?bayes|bbn|catboost|execution.?tree|source-control|source_control|native_subhour|MainRegimeV2|owner.export|apply_patch|docs/plans/2026-05-10|kaggle' | rg -v 'rg -i|ps -axo'
+40814 40802 S       00:02 sleep 10
+40933 88228 S       00:01 sleep 5
+40951 40547 S       00:00 sleep 5
+40957  4640 Ss      00:00 (zsh)
+40973  4022 Ss      00:00 /bin/zsh -lc set -u\012cd /Users/thrill3r/projects-ict-engine/ict-engine\012RUN_ID='20260512T071722+0800-codex-board-b-post-071457-gate-refresh-v1'\012RUN_ROOT="docs/experiments/actionable-regime-confidence/runs/$RUN_ID"\012OUT="$RUN_ROOT/command-output"\012STATE_B='docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1'\012STATE_A='/tmp/ict-engine-board-a-064259-runtime-v1'\012SYMBOL='B2R_NQ_COST_CRISIS_REPAIR_032157'\012mkdir -p "$OUT"\012printf '%s\n' "$RUN_ID" > "$OUT/run_id.txt"\012printf '%s\n' "$RUN_ROOT" > "$OUT/run_root.txt"\012run_log() {\012  name="$1"; shift\012  printf '%s\n' "$*" > "$OUT/${name}.cmd"\012  "$@" > "$OUT/${name}.out" 2> "$OUT/${name}.err"\012  printf '%s\n' "$?" > "$OUT/${name}.exit"\012}\012run_log git_status git status --short\012run_log board_shas shasum docs/plans/2026-05-10-actionable-regime-confidence-todo.md docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md\012run_log board_a_latest rg -n '071457|071346|071316 Tail Pointer|Continue source/control acquisition only|update_goal=false' docs/plans/2026-05-10-actionable-regime-confidence-todo.md\012run_log board_b_latest rg -n '071032|071107|071316|070842|source/control|valid_required_root_unlock_false|user-selected|update_goal=false' docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md\012run_log process_table ps -axo pid,ppid,stat,etime,command\012run_log provider_status_agent ./target/debug/ict-engine provider-status --agent\012run_log auto_quant_status_board_a ./target/debug/ict-engine auto-quant-status --state-dir "$STATE_A" --output-format json\012run_log auto_quant_status_board_b_combined ./target/debug/ict-engine auto-quant-status --state-dir "$STATE_B" --output-format json\012run_log pre_bayes_status_combined ./target/debug/ict-engine pre-bayes-status --symbol "$SYMBOL" --state-dir "$STATE_B" --output-format json\012run_log workflow_structural_bundle_combined ./target/debug/ict-engine workflow-status --symbol "$SYMBOL" --state-dir "$STATE_B" --phase structural-recommended-path-bundle --agent --stable\012run_log workflow_execution_candidate_combined ./target/debug/ict-engine workflow-status --symbol "$SYMBOL" --state-dir "$STATE_B" --phase execution-candidate --agent --stable\012run_log workflow_full_combined ./target/debug/ict-engine workflow-status --symbol "$SYMBOL" --state-dir "$STATE_B" --agent --stable\012run_log root_presence sh -c 'ls -ld /tmp/ict-engine-board-a-r6-owner-export-v1 /tmp/ict-engine-source-panel-recency-extension /tmp/ict-engine-native-subhour-source-label-intake 2>&1; printf "\nR3 file rows:\n"; wc -l /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv 2>&1 || true'\012run_log r3_header_aware_counts sh -c 'csv=/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv; awk -F, "NR==1{for(i=1;i<=NF;i++){if(\$i==\"main_regime_v2_label\") c=i} next} c{count[\$c]++; n++} END{print \"data_rows\t\" n; for(k in count) print k \"\t\" count[k]; if(!(\"Crisis\" in count)) print \"Crisis\t0\"}" "$csv" | sort'\012run_log dispatch_draft_assets sh -c 'find docs/experiments/actionable-regime-confidence/runs -path "*r6*v5*dispatch*" -o -path "*r6*operator*dispatch*" -o -name "*.eml" | sort | tail -n 80 | xargs -I{} sh -c '\''printf "%s\t" "$1"; shasum "$1" 2>/dev/null | awk "{print \\\$1}" || true'\'' sh {}'\012run_log approval_ticket_scan sh -c 'rg -n "approval_present=true|external_requests_sent=true|ticket_id|export_id|license_id|support_id|sent_at|dispatch_sent=true|approval received" docs/experiments/actionable-regime-confidence/runs -g "*.json" -g "*.csv" -g "*.md" | head -n 200 || true'\012run_log selected_history_scan sh -c 'rg -n "user_selected_historical_data|explicit user-selected|HTF=1d|MTF=4h|LTF=1h|analyze_nq_htf|analyze_nq_mtf|analyze_nq_ltf" docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3 -g "*.md" -g "*.json" -g "*.out" | tail -n 160 || true'\012find "$RUN_ROOT" -maxdepth 2 -type f | sort
+41053 40957 S       00:00 (xargs)
+41097 41053 S       00:00 (bash)
+41100 40973 R       00:00 ps -axo pid,ppid,stat,etime,command
+41101 41097 R       00:00 (sed)
+47154     1 S    02:03:57 /System/Library/PrivateFrameworks/IMDPersistence.framework/IMAutomaticHistoryDeletionAgent.app/Contents/MacOS/IMAutomaticHistoryDeletionAgent
+47762     1 Ss      26:29 /System/Library/PrivateFrameworks/XprotectFramework.framework/Versions/A/XPCServices/XprotectService.xpc/Contents/MacOS/XprotectService
+47764     1 Ss      26:28 /System/Library/CoreServices/ReportCrash daemon
+48235     1 S       26:20 /System/Library/CoreServices/iconservicesagent
+48239     1 Ss      26:20 /System/Library/CoreServices/iconservicesd
+52371     1 S    07:22:41 /Applications/Modafinil.app/Contents/MacOS/Modafinil
+52374     1 Ss   07:22:41 ModafinilHelper
+60882   527 S    07:20:15 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Renderer).app/Contents/MacOS/Code Helper (Renderer) --type=renderer --user-data-dir=/Users/thrill3r/Library/Application Support/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --app-path=/Applications/Visual Studio Code.app/Contents/Resources/app --enable-sandbox --enable-blink-features=HighlightAPI --max-active-webgl-contexts=32 --disable-blink-features=FontMatchingCTMigration,StandardizedBrowserZoom, --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=9 --time-ticks-at-unix-epoch=-1778513942731991 --launch-time-ticks=1131902872 --shared-files --field-trial-handle=1718379636,r,11497488030884150598,11584606757510131514,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,ScreenCaptureKitPickerScreen,ScreenCaptureKitStreamPickerSonoma --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,MacWebContentsOcclusion,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TimeoutHangingVideoCaptureStarts,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708994745248135 --vscode-window-config=vscode:8577a688-3ac6-4680-b310-e438e40d752a --seatbelt-client=92
+60943   527 S    07:20:14 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin) --type=utility --utility-sub-type=node.mojom.NodeService --lang=zh-CN --service-sandbox-type=none --dns-result-order=ipv4first --experimental-network-inspection --inspect-port=0 --user-data-dir=/Users/thrill3r/Library/Application Support/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files --field-trial-handle=1718379636,r,11497488030884150598,11584606757510131514,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,ScreenCaptureKitPickerScreen,ScreenCaptureKitStreamPickerSonoma --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,MacWebContentsOcclusion,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TimeoutHangingVideoCaptureStarts,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708995682289984
+60945   527 S    07:20:14 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --type=utility --utility-sub-type=node.mojom.NodeService --lang=zh-CN --service-sandbox-type=none --user-data-dir=/Users/thrill3r/Library/Application Support/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files --field-trial-handle=1718379636,r,11497488030884150598,11584606757510131514,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,ScreenCaptureKitPickerScreen,ScreenCaptureKitStreamPickerSonoma --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,MacWebContentsOcclusion,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TimeoutHangingVideoCaptureStarts,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708996619331833
+60985 60943 S    07:20:13 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin) /Applications/Visual Studio Code.app/Contents/Resources/app/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=60943
+61024 60943 S    07:20:12 /Users/thrill3r/.vscode/extensions/openai.chatgpt-26.506.31421-darwin-arm64/bin/macos-aarch64/codex app-server --analytics-default-enabled
+63241  4640 Ss      21:39 /bin/zsh -lc while ps -axo command | rg -q '20260512T065449|20260512T065547|kaggle datasets|candidate_csv_profile|github_market_regime_crisis|hf_datasets|kaggle_market_regime_crisis'; do sleep 5; done; echo source_searches_settled; ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '065449|065547|kaggle|candidate_csv_profile|github_market_regime_crisis|hf_datasets|apply_patch' | rg -v 'rg -i|while ps|sleep [0-9]' || true
+65984     1 S    07:18:53 /System/Library/PrivateFrameworks/CloudKitDaemon.framework/Support/cloudd
+65994     1 Ss   07:18:52 /System/Library/PrivateFrameworks/CloudTelemetry.framework/Versions/A/XPCServices/CloudTelemetryService.xpc/Contents/MacOS/CloudTelemetryService
+66160     1 Ss      20:49 /System/Library/Frameworks/Intents.framework/XPCServices/intents_helper.xpc/Contents/MacOS/intents_helper
+66494   527 S    07:18:16 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --type=utility --utility-sub-type=audio.mojom.AudioService --lang=zh-CN --service-sandbox-type=audio --message-loop-type-ui --user-data-dir=/Users/thrill3r/Library/Application Support/Code --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files --field-trial-handle=1718379636,r,11497488030884150598,11584606757510131514,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,ScreenCaptureKitPickerScreen,ScreenCaptureKitStreamPickerSonoma --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,MacWebContentsOcclusion,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TimeoutHangingVideoCaptureStarts,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708997556373682 --seatbelt-client=115
+67632 60943 S    07:17:15 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin) /Applications/Visual Studio Code.app/Contents/Resources/app/extensions/json-language-features/server/dist/node/jsonServerMain --node-ipc --clientProcessId=60943
+71666     1 S    01:20:43 /usr/sbin/distnoted agent
+77824     1 S    02:31:06 /System/Library/PrivateFrameworks/AssistantServices.framework/Versions/A/Support/assistant_service
+81240     1 S    04:04:15 /System/Library/Frameworks/Contacts.framework/Support/contactsd
+82374     1 Ss   05:59:39 /usr/libexec/taskgated
+83966     1 S       15:55 /usr/libexec/remindd
+88228  4640 Ss      14:45 /bin/zsh -lc while ps -axo command | rg -q '[n]ative_subhour_source_label_rows|[s]ource-control|[r]un_tomac|[a]uto.?quant|[p]re.?bayes|[b]bn|[c]atboost|[p]ath.?rank|[t]arget/debug/ict-engine'; do sleep 5; done; echo active_relevant_processes_settled; ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '065|070|auto.?quant|ict-engine|catboost|provider-status|analyze-live|export-structural-path-ranking-target|kaggle|tsie|native-subhour|native_subhour|pre.?bayes|bbn|execution.?tree|apply_patch|source-control|source_control' | rg -v 'rg -i|while ps|sleep [0-9]' || true
+89421     1 S       14:22 /System/Library/PrivateFrameworks/CalendarDaemon.framework/Support/calaccessd
+92558     1 S       13:38 /System/Library/PrivateFrameworks/CommunicationTrust.framework/Support/communicationtrustd
+  576   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  631   576 S    07:38:15 -/bin/zsh
+ 3153   631 S+   07:36:58 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3155  3153 R+   07:36:58 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3174  3155 S    07:36:57 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 3175  3155 S    07:36:57 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  577   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  637   577 S    07:38:14 -/bin/zsh
+ 3721   637 S+   07:36:50 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3722  3721 S+   07:36:50 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3742  3722 S    07:36:50 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 3743  3722 S    07:36:50 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  579   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  627   579 S    07:38:15 -/bin/zsh
+ 3183   627 S+   07:36:57 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3195  3183 S+   07:36:56 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3224  3195 S    07:36:56 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 3226  3195 S    07:36:56 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  581   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  643   581 S    07:38:14 -/bin/zsh
+ 3645   643 S+   07:36:51 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3646  3645 S+   07:36:51 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3664  3646 S    07:36:51 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 3665  3646 S    07:36:51 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  583   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  722   583 S    07:38:10 -/bin/zsh
+ 3789   722 S+   07:36:50 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3793  3789 S+   07:36:50 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3812  3793 S    07:36:49 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 3813  3793 S    07:36:49 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  593   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  644   593 S    07:38:14 -/bin/zsh
+ 4343   644 S+   07:36:42 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4344  4343 S+   07:36:42 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4361  4344 S    07:36:42 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 4362  4344 S    07:36:42 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  596   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  664   596 S    07:38:12 -/bin/zsh
+ 3869   664 S+   07:36:49 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3870  3869 S+   07:36:49 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3887  3870 S    07:36:49 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 3888  3870 S    07:36:49 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  584   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  700   584 S    07:38:11 -/bin/zsh
+ 4188   700 S+   07:36:44 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4189  4188 S+   07:36:44 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4206  4189 S    07:36:44 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 4207  4189 S    07:36:44 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  624   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  716   624 S    07:38:11 -/bin/zsh
+ 4267   716 S+   07:36:43 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4268  4267 S+   07:36:43 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4285  4268 S    07:36:43 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 4286  4268 S    07:36:43 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  585   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  674   585 S    07:38:12 -/bin/zsh
+ 3566   674 S+   07:36:52 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3568  3566 S+   07:36:52 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3585  3568 S    07:36:52 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 3587  3568 S    07:36:52 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  587   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  666   587 S    07:38:12 -/bin/zsh
+ 3945   666 S+   07:36:48 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3946  3945 S+   07:36:48 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3966  3946 S    07:36:48 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 3968  3946 S    07:36:48 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  595   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  675   595 S    07:38:12 -/bin/zsh
+ 3404   675 S+   07:36:55 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3405  3404 S+   07:36:55 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3424  3405 S    07:36:55 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 3425  3405 S    07:36:55 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  607   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  707   607 S    07:38:11 -/bin/zsh
+ 3472   707 S+   07:36:54 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3473  3472 S+   07:36:54 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3489  3473 S    07:36:54 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 3490  3473 S    07:36:54 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  625   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  742   625 S    07:38:10 -/bin/zsh
+ 4966   742 S+   07:36:33 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4967  4966 S+   07:36:33 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4984  4967 S    07:36:33 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 4985  4967 S    07:36:33 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  619   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  698   619 S    07:38:11 -/bin/zsh
+ 5118   698 S+   07:36:31 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 5119  5118 S+   07:36:31 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 5136  5119 S    07:36:31 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 5137  5119 S    07:36:31 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  586   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  718   586 S    07:38:11 -/bin/zsh
+ 4898   718 S+   07:36:34 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4899  4898 R+   07:36:34 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4911  4899 S    07:36:34 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 4912  4899 S    07:36:34 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  590   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  687   590 S    07:38:12 -/bin/zsh
+ 4821   687 S+   07:36:35 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4822  4821 S+   07:36:35 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4839  4822 S    07:36:35 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 4840  4822 S    07:36:35 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  602   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  670   602 S+   07:38:12 -/bin/zsh
+  617   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  676   617 S    07:38:12 -/bin/zsh
+ 5034   676 S+   07:36:32 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 5043  5034 S+   07:36:32 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 5060  5043 S    07:36:31 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 5061  5043 S    07:36:31 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  611   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  649   611 S    07:38:13 -/bin/zsh
+ 5347   649 S+   07:36:28 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 5349  5347 S+   07:36:28 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 5368  5349 S    07:36:28 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 5369  5349 S    07:36:28 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  588   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  668   588 S+   07:38:12 -/bin/zsh
+  606   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  665   606 S    07:38:12 -/bin/zsh
+ 5433   665 S+   07:36:27 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 5434  5433 S+   07:36:27 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 5452  5434 S    07:36:27 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 5453  5434 S    07:36:27 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  589   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  728   589 S    07:38:10 -/bin/zsh
+ 4487   728 S+   07:36:40 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4488  4487 S+   07:36:40 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4505  4488 S    07:36:40 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 4506  4488 S    07:36:40 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  591   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  738   591 S    07:38:10 -/bin/zsh
+ 5266   738 S+   07:36:29 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 5267  5266 S+   07:36:29 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 5288  5267 S    07:36:29 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 5289  5267 S    07:36:29 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  592   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  686   592 S    07:38:12 -/bin/zsh
+ 4411   686 S+   07:36:41 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4412  4411 S+   07:36:41 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4437  4412 S    07:36:41 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 4438  4412 S    07:36:41 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  622   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  669   622 S    07:38:12 -/bin/zsh
+ 5519   669 S+   07:36:26 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 5520  5519 S+   07:36:26 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 5540  5520 S    07:36:26 node /Users/thrill3r/.npm-global/bin/jshookmcp
+ 5541  5520 S    07:36:26 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+  597   518 Ss   07:38:16 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  659   597 S+   07:38:12 -/bin/zsh
+  616   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  692   616 S    07:38:11 -/bin/zsh
+ 5187   692 S+   07:36:30 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 5196  5187 S+   07:36:30 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 5213  5196 S    07:36:30 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 5214  5196 S    07:36:30 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  610   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  667   610 S+   07:38:12 -/bin/zsh
+  620   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  663   620 S    07:38:12 -/bin/zsh
+ 3264   663 S+   07:36:56 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 3280  3264 S+   07:36:56 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 3329  3280 S    07:36:56 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 3330  3280 S    07:36:56 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  608   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  706   608 S    07:38:11 -/bin/zsh
+ 4639   706 S+   07:36:38 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4640  4639 R+   07:36:38 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4652  4640 S    07:36:38 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 4653  4640 S    07:36:38 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  614   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  660   614 S+   07:38:12 -/bin/zsh
+  618   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  719   618 S    07:38:11 -/bin/zsh
+ 4109   719 S+   07:36:45 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4110  4109 S+   07:36:45 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4127  4110 S    07:36:45 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 4128  4110 S    07:36:45 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  623   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  709   623 S    07:38:11 -/bin/zsh
+ 4716   709 S+   07:36:37 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4717  4716 S+   07:36:37 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4731  4717 S    07:36:37 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 4732  4717 S    07:36:37 node /Users/thrill3r/.npm-global/bin/jshookmcp
+  621   518 Ss   07:38:15 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+  713   621 S    07:38:11 -/bin/zsh
+ 4021   713 S+   07:36:47 node /Users/thrill3r/.npm-global/bin/codex --yolo
+ 4022  4021 R+   07:36:47 /Users/thrill3r/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex/codex --yolo
+ 4041  4022 S    07:36:47 node /Users/thrill3r/.npm-global/lib/node_modules/@tobilu/qmd/dist/cli/qmd.js mcp
+ 4042  4022 S    07:36:47 node /Users/thrill3r/.npm-global/bin/jshookmcp
+88096   518 Ss   04:35:13 /usr/bin/login -flp thrill3r /bin/bash --noprofile --norc -c exec -l /bin/zsh
+88107 88096 S+   04:35:13 -/bin/zsh

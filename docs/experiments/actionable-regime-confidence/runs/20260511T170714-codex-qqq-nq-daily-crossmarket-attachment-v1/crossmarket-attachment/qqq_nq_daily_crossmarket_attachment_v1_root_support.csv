@@ -1,0 +1,9 @@
+target,target_role,source_anchor,root,target_available_root_days,source_anchor_root_days,root_present_on_target,root_support_ge_min
+QQQ,nasdaq_100_etf_crossmarket,^IXIC,Bull,3228,3228,true,true
+QQQ,nasdaq_100_etf_crossmarket,^IXIC,Bear,1281,1281,true,true
+QQQ,nasdaq_100_etf_crossmarket,^IXIC,Sideways,1588,1588,true,true
+QQQ,nasdaq_100_etf_crossmarket,^IXIC,Crisis,462,462,true,true
+NQ=F,nasdaq_100_futures_crossmarket,^IXIC,Bull,3164,3228,true,true
+NQ=F,nasdaq_100_futures_crossmarket,^IXIC,Bear,1262,1281,true,true
+NQ=F,nasdaq_100_futures_crossmarket,^IXIC,Sideways,1570,1588,true,true
+NQ=F,nasdaq_100_futures_crossmarket,^IXIC,Crisis,382,462,true,true

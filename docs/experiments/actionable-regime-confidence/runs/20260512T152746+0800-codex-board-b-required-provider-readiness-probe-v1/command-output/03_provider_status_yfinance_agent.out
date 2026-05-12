@@ -1,0 +1,34 @@
+{
+  "summary_line": "market_data:1/1 ready",
+  "ready_by_domain": {
+    "market_data": "1/1"
+  },
+  "providers": [
+    {
+      "provider_id": "yfinance",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "public_or_env_ready",
+      "user_access": "free_no_login",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 1,
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints",
+      "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests."
+    }
+  ],
+  "ready_providers": [
+    "yfinance"
+  ],
+  "pending_providers": [],
+  "pending_provider_details": [],
+  "selectable_providers": [
+    "yfinance"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": []
+}

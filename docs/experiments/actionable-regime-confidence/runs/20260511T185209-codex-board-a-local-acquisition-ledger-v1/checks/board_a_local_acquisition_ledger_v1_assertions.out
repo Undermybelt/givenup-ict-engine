@@ -1,0 +1,7 @@
+PASS readbacks=2
+PASS unregistered_readbacks_before_ledger=1
+PASS ready_intake_file_count=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective=false
+PASS update_goal=false

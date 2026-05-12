@@ -1,0 +1,10 @@
+current_objective_audit_after_043932_r3_v1=not_complete_043932_044701_no_acceptance_roots_absent_downstream_blocked
+accepted_rows_added=0
+accepted_regime_confidence_labels=0
+source_control_evidence_acquired=false
+new_confidence_gate=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

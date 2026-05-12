@@ -1,0 +1,7 @@
+exact_branch_paths_preserved=True
+score_rows_written=4
+apply_scores_exit_zero=True
+rows_with_raw_path_score_after_scores=4
+policy_runtime_ready=True
+workflow_execution_candidate_observed=False
+promotion_status=not_promoted:exact_branch_paths_preserved_scores_applied_but_validation_or_execution_gate_missing

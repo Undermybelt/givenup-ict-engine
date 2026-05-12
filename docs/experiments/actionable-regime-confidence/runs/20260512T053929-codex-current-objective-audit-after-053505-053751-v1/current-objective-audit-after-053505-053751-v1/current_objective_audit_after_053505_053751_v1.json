@@ -1,0 +1,69 @@
+{
+  "run_id": "20260512T053929-codex-current-objective-audit-after-053505-053751-v1",
+  "board_sha256_before_artifact": "e87a03c13c35a9ced1ac131464ac7f5bcf8f6568bd54a791dcaf8f6ab4b1d8d7",
+  "gate_result": "current_objective_audit_after_053505_053751_v1=not_complete_confidence_screen_only_source_control_and_downstream_blocked",
+  "objective_restated": {
+    "required_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "confidence_threshold": ">=95 Wilson lower bound",
+    "cross_validation_required": ["other_markets", "other_periods_or_timeframes"],
+    "ordered_chain": ["provider_or_autoquant", "filter_or_pre_bayes", "bbn", "catboost_or_path_ranking", "execution_tree"],
+    "providers_named": ["IBKR", "TradingViewRemix", "yfinance", "Kraken"],
+    "multi_agent_safety": "append_only_no_overwrite"
+  },
+  "diagnostic_confidence_evidence": {
+    "hgb_root": "docs/experiments/actionable-regime-confidence/runs/20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1",
+    "hgb_gate": "source_label_hgb_numeric_threshold_screen_v1=all_root_labels_hgb_numeric_accepted_source_control_absent_no_promotion",
+    "accepted_labels": ["Bear", "Bull", "Crisis", "Sideways"],
+    "min_split_gates": {
+      "Bear": {"support": 177, "wilson95_lcb": 0.9787578642},
+      "Bull": {"support": 618, "wilson95_lcb": 0.9908918883},
+      "Crisis": {"support": 547, "wilson95_lcb": 0.9930261988},
+      "Sideways": {"support": 534, "wilson95_lcb": 0.990666799}
+    },
+    "source_control_evidence_acquired": false,
+    "diagnostic_only": true
+  },
+  "weaker_or_non_counting_evidence": {
+    "numeric_tree_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052522-codex-source-label-numeric-tree-threshold-screen-v1",
+    "numeric_tree_gate": "source_label_numeric_tree_threshold_screen_v1=numeric_tree_scored_no_full_acceptance",
+    "numeric_tree_accepted_labels": ["Bull", "Crisis", "Sideways"],
+    "numeric_tree_rejected": {"Bear": {"heldout_market_wilson95_lcb": 0.9465286635}},
+    "macro_cleanup_root": "docs/experiments/actionable-regime-confidence/runs/20260512T053751-codex-052301-macro-final-process-readback-v1",
+    "macro_gate": "052301_macro_final_process_readback_v1=process_exited_artifacts_unchanged_non_counting_no_promotion"
+  },
+  "source_unlock_state": {
+    "r6_owner_export_root": {"path": "/tmp/ict-engine-board-a-r6-owner-export-v1", "present": false},
+    "r3_native_subhour_root": {"path": "/tmp/ict-engine-native-subhour-source-label-intake", "present": false},
+    "r5_recency_extension_root": {"path": "/tmp/ict-engine-source-panel-recency-extension", "present": false},
+    "equivalence_intake_root": {"path": "/tmp/ict-engine-source-label-equivalence-intake", "present": true, "promoting_by_itself": false},
+    "r5_kaggle_screen": {
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1",
+      "gate": "r5_current_kaggle_recency_candidate_screen_v1=no_current_post_cutoff_target_rows_no_promotion",
+      "target_rows_found": 0,
+      "target_root_mutated": false
+    }
+  },
+  "approval_package": {
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false
+  },
+  "completion_decision": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "required_target_roots_complete": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_live_objective_complete": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_required_unlocks": [
+    "explicit approval plus verifier-native R6 owner/export rows and source-owned normal controls",
+    "source-owned R5 recency-extension rows",
+    "native sub-hour source-label rows",
+    "genuinely source-owned cross-timeframe MainRegimeV2 exports"
+  ]
+}

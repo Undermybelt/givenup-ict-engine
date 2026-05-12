@@ -1,0 +1,5 @@
+error: unexpected argument '--output-format' found
+
+Usage: ict-engine auto-quant-adoption-review --symbol <SYMBOL> --state-dir <STATE_DIR> --artifact-id <ARTIFACT_ID>
+
+For more information, try '--help'.

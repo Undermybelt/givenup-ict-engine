@@ -1,0 +1,15 @@
+{
+  "auto_quant_pinned_ref": "run-local-board-b-rc-spa-artifact",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_NQ_20260511T141856.557346000Z",
+  "library_source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/autoquant_strategy_library_source_root_stop_carry_longhorizon_v1.json",
+  "library_state_path": "/tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1/auto-quant/NQ/auto_quant_strategy_library.json",
+  "log_cross_check": null,
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 4,
+  "n_total_strategies": 4,
+  "symbol": "NQ"
+}

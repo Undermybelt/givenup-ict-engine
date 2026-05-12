@@ -1,0 +1,10 @@
+requirement,evidence,status
+route one 145809 branch seed,aq_route_manifest.json selected_branch_path matches requested seed,pass
+materialize portable AQ recipe,aq-material strategy and three material packages exist,pass
+six provider provenance,six_provider_provenance_matrix.csv rows=6,pass
+run Auto-Quant public path,auto-quant-agent-material batch/dispatch/rank exits all 0,pass
+apply BBN feedback in isolated state,auto-quant-ingest-real-trades applied 254/81/49 rows for BTCUSDT/SPY/ES,pass
+run CatBoost/path-ranker,"SPY CatBoost model trained, scores applied, runtime enabled with 2 active matches",pass
+execution tree admission,workflow-status shows exact path but ready=false actionable=false observe,fail_closed
+do not mutate production,state dirs are /tmp/ict-engine-150352-* and copied evidence only,pass
+do not call update_goal,no update_goal called; promotion_allowed=false trade_usable=false,pass

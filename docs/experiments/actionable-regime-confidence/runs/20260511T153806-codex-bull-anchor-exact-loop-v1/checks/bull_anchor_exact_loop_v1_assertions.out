@@ -1,0 +1,6 @@
+accepted_bull_rows_eq_2: PASS
+this_loop_only_bull: PASS
+rare_loop_closes_three_roots: PASS
+combined_roots_cover_mainregimev2: PASS
+full_objective_not_claimed: PASS
+no_threshold_relaxation: PASS

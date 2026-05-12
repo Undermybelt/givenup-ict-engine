@@ -1,0 +1,6 @@
+run_id,exists,report_count,json_count,assertion_count,status
+20260512T070842+0800-codex-current-goal-completion-audit-after-070531-v1,True,1,1,1,materialized
+20260512T071032+0800-codex-r3-label-count-readback-after-070434-v1,True,1,1,1,materialized
+20260512T071107+0800-codex-r6-order-lifecycle-local-scan-readback-after-070820-v1,True,1,1,1,materialized
+20260512T071316+0800-codex-local-order-lifecycle-depth-source-scan-after-070840-v1,True,1,1,1,materialized
+20260512T071346+0800-codex-r3-label-count-settled-readback-after-071032-v1,True,1,1,1,materialized

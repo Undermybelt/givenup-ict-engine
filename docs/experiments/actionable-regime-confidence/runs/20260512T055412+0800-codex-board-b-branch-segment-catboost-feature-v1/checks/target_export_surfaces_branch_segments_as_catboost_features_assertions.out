@@ -1,0 +1,2 @@
+target_export_surfaces_branch_segments_as_catboost_features=pass
+branch_segment_fields=manifest_json_csv_row_verified

@@ -1,0 +1,15 @@
+source_screen_json_present=PASS
+source_screen_candidates_present=PASS
+candidate_count_7=PASS
+target_species_count_6=PASS
+matrix_rows_ge_target_species=PASS
+has_quote_stuffing=PASS
+has_pinging=PASS
+has_bear_raid_no_candidate=PASS
+has_painting_tape_no_candidate=PASS
+rows_acquired_false=PASS
+accepted_rows_added_zero=PASS
+r6_closed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+raw_data_committed_false=PASS

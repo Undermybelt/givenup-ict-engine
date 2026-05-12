@@ -1,0 +1,4 @@
+file,destination,purpose,required
+positive_spoofing_layering_rows.csv,/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,direct positive spoofing/layering rows,True
+matched_negative_normal_activity_rows.csv,/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,same-schema normal controls matched by venue/symbol/date/session/liquidity bucket,True
+provenance_manifest.json,/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,"source export identity, pull date, source owner, redaction notes",True

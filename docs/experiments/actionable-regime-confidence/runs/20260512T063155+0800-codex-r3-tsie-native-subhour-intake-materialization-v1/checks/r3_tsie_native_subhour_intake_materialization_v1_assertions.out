@@ -1,0 +1,12 @@
+gate_result=r3_tsie_native_subhour_intake_materialization_v1=target_root_materialized_bull_bear_sideways_crisis_absent_no_downstream
+schema_ready=true
+raw_parquet_sha256_verified=true
+target_root_mutated=true
+mapped_rows=5032903
+accepted_mapping_confidence_95_labels=Bear,Bull,Sideways
+crisis_present=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

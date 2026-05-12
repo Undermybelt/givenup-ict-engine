@@ -1,0 +1,10 @@
+requirement,status,evidence,blocker
+board_contract,pass,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,
+rooted_branch_path_contract,pass,Root-first branch path contract present,
+real_artifacts,pass,Latest Board B scorer artifacts include JSON CSV assertions and fail-closed summaries,
+provider_evidence,partial_pass,yfinance Kraken Binance Bybit plus prior IBKR TradingView MCP yfinance Kraken readbacks,latest vol-stress run itself is yfinance-cache based
+price_root_rc_spa,fail,latest price_root_paths_passed=0,No Bull/Bear/Sideways/Crisis family passed unchanged RC-SPA
+scoped_manipulation_component,component_pass_only,205047 Manipulation component pass consumed,Cannot promote without price roots
+downstream_chain,blocked_correctly,downstream not_started:blocked_by_branch_rc_spa_hard_gates,No Pre-Bayes/BBN/CatBoost/execution-tree promotion until root gates pass
+multi_agent_coordination,pass,No active cursor overwritten,
+goal_complete,fail,update_goal=false,Required branch gates missing

@@ -1,0 +1,96 @@
+{
+  "run_id": "20260511T130633+0800-codex-parent-regime-taxonomy-pivot-v3",
+  "status": "taxonomy_preflight_only",
+  "purpose": "Consume the latest 130600 same-source timeframe rollup while correcting the active denominator toward parent action families instead of more negative full-matrix bookkeeping.",
+  "consumed_local_context": [
+    "20260511T130600-codex-stock-regime-same-source-timeframe-rollup-v1",
+    "20260511T130102-current-goal-completion-audit-v10-cross-context",
+    "20260511T125337-codex-post-calibration-acquisition-request-v4",
+    "20260511T125122-codex-stock-market-regimes-parent-root-abstain"
+  ],
+  "external_sources": [
+    {
+      "name": "Maheu, McCurdy, and Song - Components of Bull and Bear Markets",
+      "url": "https://ideas.repec.org/a/taf/jnlbes/v30y2012i3p391-403.html",
+      "use": "Bull and bear are parent market families; corrections and bear rallies are subcomponents."
+    },
+    {
+      "name": "Zakamulin - Not all bull and bear markets are alike",
+      "url": "https://ideas.repec.org/a/pal/risman/v25y2023i1d10.1057_s41283-022-00112-y.html",
+      "use": "Bull/bear regimes can have multiple child states; a flat subtype list is insufficient."
+    },
+    {
+      "name": "hidden-regime GitHub",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "use": "Open-source reference for Bull, Bear, Sideways, and Crisis style market-regime labels."
+    },
+    {
+      "name": "Stock Market Regimes 2000-2026 Kaggle",
+      "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+      "use": "Same-source seed panel for Bull, Bear, Sideways, Crisis, and High-Volatility labels."
+    },
+    {
+      "name": "Siering, Clapham, Engel, and Gomber - taxonomy of financial market manipulations",
+      "url": "https://journals.sagepub.com/doi/10.1057/s41265-016-0029-z",
+      "use": "Manipulation should be handled as a direct-event taxonomy, not as an OHLCV child of price regimes."
+    },
+    {
+      "name": "Putnins - An Overview of Market Manipulation",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3398258",
+      "use": "Manipulation varieties include pump and dump, bear raids, painting the tape, spoofing, layering, pinging, and quote stuffing."
+    },
+    {
+      "name": "Do and Putnins - Detecting Layering and Spoofing in Markets",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036",
+      "use": "Spoofing/layering requires direct order-lifecycle evidence."
+    },
+    {
+      "name": "Arora et al. - Detecting and Quantifying Wash Trading on Decentralized Cryptocurrency Exchanges",
+      "url": "https://arxiv.org/abs/2102.07001",
+      "use": "Wash/self-trade is a direct manipulation variety with replayable DEX order/trade evidence."
+    }
+  ],
+  "parent_taxonomy_candidate": [
+    {
+      "parent": "BullExpansion",
+      "seed_mapping": "Map existing Bull same-source daily/weekly/monthly labels here only after explicit crosswalk approval.",
+      "child_examples": ["low_vol_bull", "high_vol_bull", "bubble_euphoria", "bull_correction"]
+    },
+    {
+      "parent": "BearExpansion",
+      "seed_mapping": "Map existing Bear same-source daily/weekly/monthly labels here only after explicit crosswalk approval.",
+      "child_examples": ["regular_bear", "bear_rally", "distribution", "downtrend_acceleration"]
+    },
+    {
+      "parent": "ConsolidationBalance",
+      "seed_mapping": "Map existing Sideways labels here only when source confidence or adjudicated range labels are present.",
+      "child_examples": ["quiet_sideways", "choppy_sideways", "range_compression", "accumulation_distribution_candidate"]
+    },
+    {
+      "parent": "CrisisDislocation",
+      "seed_mapping": "Map existing Crisis labels here as tail-stress seed evidence, not manipulation evidence.",
+      "child_examples": ["crash", "liquidity_drought", "correlation_breakdown", "gap_or_jump_stress"]
+    },
+    {
+      "parent": "ManipulationIntegrityEvent",
+      "seed_mapping": "Map existing Mehrnoom/Midsummer/DEX evidence here only by direct variety and support.",
+      "child_examples": ["pump_and_dump", "bear_raid", "painting_the_tape", "spoofing", "layering", "pinging", "quote_stuffing", "wash_or_self_trade"]
+    }
+  ],
+  "watchlist_not_parent_until_preflight": [
+    "TransitionRotation",
+    "CrossAssetMacroRotation",
+    "PolicyLiquidityRegime",
+    "UnknownOrMixed"
+  ],
+  "local_decision": {
+    "accepted_confidence_gate_added": false,
+    "full_objective_complete": false,
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "decision": "Keep 130600 as useful same-source timeframe seed data, but do not train the next gate until the parent taxonomy and crosswalk are locked."
+  },
+  "next_positive_action": "Lock the parent taxonomy/crosswalk first, then train/evaluate one parent class on the 130600 rollup or acquire direct manipulation rows."
+}

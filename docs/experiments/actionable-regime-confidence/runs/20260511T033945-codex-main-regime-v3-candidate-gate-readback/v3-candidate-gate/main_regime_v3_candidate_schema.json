@@ -1,0 +1,28 @@
+{
+  "gate_note": "Readback/crosswalk only; does not relax thresholds or introduce a fresh calibration rerun.",
+  "optional_preflight_roots": [
+    "TransitionRecovery",
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "VolatilityDislocation",
+    "CrossAssetRotation"
+  ],
+  "required_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "CrisisCrash",
+    "Manipulation"
+  ],
+  "residual_root": "UnknownOrMixed",
+  "root_map": {
+    "BearExpansion": "BearExpansion",
+    "BullExpansion": "BullExpansion",
+    "CrisisStress": "CrisisCrash",
+    "Manipulation": "Manipulation",
+    "SidewaysConsolidation": "SidewaysConsolidation"
+  },
+  "schema_id": "MainRegimeV3Candidate",
+  "source_calibration_report": "docs/experiments/actionable-regime-confidence/runs/20260511T032456-codex-expanded-root-schema-gate/expanded-root-gate/expanded_root_schema_gate_report.json",
+  "source_taxonomy_refresh": "docs/experiments/actionable-regime-confidence/runs/20260511T033340-codex-main-regime-v3-taxonomy-source-refresh/source-refresh/main_regime_v3_taxonomy_source_refresh.json"
+}

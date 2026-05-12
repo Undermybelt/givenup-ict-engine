@@ -1,0 +1,43 @@
+{
+  "run_id": "20260512T054650-codex-current-blocker-readback-artifact-correction-after-054357-v1",
+  "gate_result": "current_blocker_readback_artifact_correction_after_054357_v1=054000_artifacts_present_nonpromoting_roots_absent_no_unlock",
+  "board_hash_before_artifact": "49a93fa0b63238f9845c98154634b4a49471a3c6d87807807455350477216c1a",
+  "correction": {
+    "stale_phrase": "054000 had no report/assertion artifacts at the 054357 readback",
+    "current_readback": "054000 report, JSON, and assertions are present",
+    "promotion_effect": "none"
+  },
+  "artifact_presence": {
+    "r5_broad_kaggle_source_search_report": true,
+    "r5_broad_kaggle_source_search_json": true,
+    "r5_broad_kaggle_source_search_assertions": true,
+    "current_blocker_readback_after_054000_054025_root": true
+  },
+  "counting": {
+    "count_054000_once_gate": "r5_broad_kaggle_source_search_v1=current_nifty_candidate_found_not_schema_compatible_no_promotion",
+    "count_054357_once_gate": "current_blocker_readback_after_054000_054025_v1=054000_incomplete_nonpromoting_054025_no_export_rows_no_unlock",
+    "this_correction_is_not_additional_r5_evidence": true
+  },
+  "root_status": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "approval_readback": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "update_goal": false
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Unlock a valid source/control target root or explicit control-policy approval before rerunning direct verifier, split calibration, canonical merge, provider/AutoQuant, Pre-Bayes, BBN, CatBoost/path-ranking, and execution tree."
+}

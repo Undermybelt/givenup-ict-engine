@@ -1,0 +1,19 @@
+Downloading cryptography (7.6MiB)
+Downloading ccxt (6.3MiB)
+Downloading pandas (9.4MiB)
+Downloading xgboost (2.2MiB)
+Downloading scikit-learn (7.7MiB)
+Downloading numpy (5.0MiB)
+Downloading pyarrow (33.4MiB)
+Downloading coincurve (1.3MiB)
+Downloading scipy (19.4MiB)
+ Downloaded coincurve
+ Downloaded xgboost
+ Downloaded numpy
+ Downloaded ccxt
+ Downloaded cryptography
+ Downloaded scikit-learn
+ Downloaded pandas
+ Downloaded scipy
+ Downloaded pyarrow
+Installed 38 packages in 509ms

@@ -1,0 +1,44 @@
+=== Market State Classification Validation ===
+
+Loading data from: /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json
+Loaded 2786 candles
+
+Classifier: Enhanced aggregation
+
+Running validation...
+  Window: 100 | Step: 25 | Samples: 109
+
+=== Market State Classification Validation Report ===
+
+Total Samples: 109
+Average Confidence: 59.05%
+High Confidence Ratio: 8.26%
+Tradeable Ratio: 64.22%
+
+--- Primary Regime Distribution ---
+  TrendExpansion                51 ( 46.8%)
+  RangeConsolidation            49 ( 45.0%)
+  ExtremeStress                  9 (  8.3%)
+
+--- Secondary Regime Distribution ---
+  BullTrendAcceleration         38 ( 34.9%)
+  WideRange                     25 ( 22.9%)
+  BullTrendExhaustion           13 ( 11.9%)
+  TightRange                    12 ( 11.0%)
+  VolatilitySpike                7 (  6.4%)
+  Accumulation                   7 (  6.4%)
+  Distribution                   5 (  4.6%)
+  LiquidityCrunch                2 (  1.8%)
+
+--- Confidence Distribution ---
+  High    (≥0.75):      9 (  8.3%)
+  Medium  (≥0.55):     61 ( 56.0%)
+  Low     (≥0.35):     39 ( 35.8%)
+  VeryLow (<0.35):      0 (  0.0%)
+
+--- Quality Assessment ---
+  ❌ High confidence ratio < 30% (NEEDS IMPROVEMENT)
+  ✅ Tradeable ratio > 60% (EXCELLENT)
+  ⚠️  Average confidence 50-65% (GOOD)
+
+=== End of Report ===

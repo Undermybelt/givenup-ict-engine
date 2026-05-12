@@ -1,0 +1,60 @@
+{
+  "run_id": "20260512T025256-codex-autoquant-seeded-strategy-readback-settlement-v1",
+  "gate_result": "autoquant_seeded_strategy_readback_settlement_v1=connector_patch_backtests_succeeded_profit_floor_failed_non_promoting_source_control_blocked",
+  "source_runtime_root": "/tmp/ict-engine-board-a-autoquant-seeded-strategy-readback-20260512T024111",
+  "prepared_autoquant_workspace": "/private/tmp/ict-engine-board-a-autoquant-threaded-dns-20260512T022552/auto-quant/.deps/auto-quant",
+  "connector_patch_source": "docs/experiments/actionable-regime-confidence/runs/20260512T022552-codex-autoquant-threaded-dns-prepare-probe-v1/scripts",
+  "command_exits": {
+    "uv_run_run_py": 1,
+    "uv_run_run_py_connector_patch": 0,
+    "auto_quant_status_after_seeded_run": 0
+  },
+  "settled_stdout": "Done: 12 backtests succeeded, 0 failed.",
+  "strategies": [
+    {
+      "strategy": "CrashRebound",
+      "robust_sharpe": 0.0847,
+      "worst_profit_pct": 2.99,
+      "profit_floor": "FAIL",
+      "full_5y_profit_pct": 55.69,
+      "full_5y_trades": 207,
+      "full_5y_win_rate_pct": 68.599
+    },
+    {
+      "strategy": "PerPairMR",
+      "robust_sharpe": 0.052,
+      "worst_profit_pct": 0.84,
+      "profit_floor": "FAIL",
+      "full_5y_profit_pct": 35.78,
+      "full_5y_trades": 519,
+      "full_5y_win_rate_pct": 58.1888
+    },
+    {
+      "strategy": "RegimeAdaptiveBNB",
+      "robust_sharpe": 0.0967,
+      "worst_profit_pct": 3.71,
+      "profit_floor": "FAIL",
+      "full_5y_profit_pct": 16.41,
+      "full_5y_trades": 115,
+      "full_5y_win_rate_pct": 69.5652
+    }
+  ],
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "trade_usable": false
+  },
+  "non_mutations": {
+    "runtime_code_changed": false,
+    "autoquant_run_py_changed": false,
+    "autoquant_config_json_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false
+  }
+}

@@ -1,0 +1,4 @@
+      74 /private/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv
+      74 /private/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv
+  248441 /private/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv
+  248589 total

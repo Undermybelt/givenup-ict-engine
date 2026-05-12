@@ -1,0 +1,42 @@
+{
+  "protocol_version": "structural-path-ranking-trainer-artifact-v1",
+  "dataset_role": "external_path_ranker_training_dataset",
+  "model_family": "catboost",
+  "artifact_uri": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_scores_nq_history_mature.csv",
+  "score_column": "raw_path_score",
+  "trained_rows": 1397,
+  "history_rows": 1462,
+  "calibration_rows": 1397,
+  "selected_features": [
+    "rank",
+    "direction",
+    "regime_calibration_bucket",
+    "behavior_policy_probability",
+    "execution_propensity",
+    "target_policy_probability_confidence",
+    "target_policy_probability_lower_bound",
+    "target_policy_reward_prior",
+    "target_policy_reward_lower_bound",
+    "experience_prior",
+    "current_posterior",
+    "structural_baseline_score"
+  ],
+  "validation_metrics": {
+    "raw_scored_mature_rows": 1436,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 1434,
+    "production_validation_min_rows": 30
+  },
+  "calibration_metrics": {
+    "eligible_rows": 1434,
+    "brier_score": 0.24975648528643069,
+    "propensity_weighted_brier_score": 0.2497621976101618,
+    "expected_calibration_error": 0.00005814474704688795,
+    "max_calibration_error": 0.0007507507507509281
+  },
+  "created_at": "2026-05-10T12:34:23.200572+00:00",
+  "notes": [
+    "registered_via=explicit_external_artifact",
+    "uri_source=cli_opt_in"
+  ]
+}

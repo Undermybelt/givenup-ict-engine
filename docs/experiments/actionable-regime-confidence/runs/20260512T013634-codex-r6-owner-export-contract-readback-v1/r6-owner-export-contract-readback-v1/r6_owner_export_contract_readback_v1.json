@@ -1,0 +1,266 @@
+{
+  "accepted_rows_added": 0,
+  "access_preflight_required_status_rows": [
+    {
+      "present": "false",
+      "required_file": "positive_spoofing_layering_rows.csv",
+      "root_name": "r6_owner_export",
+      "root_path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "status": "missing"
+    },
+    {
+      "present": "false",
+      "required_file": "matched_negative_normal_activity_rows.csv",
+      "root_name": "r6_owner_export",
+      "root_path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "status": "missing"
+    },
+    {
+      "present": "false",
+      "required_file": "provenance_manifest.json",
+      "root_name": "r6_owner_export",
+      "root_path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "status": "missing"
+    },
+    {
+      "present": "true",
+      "required_file": "source_label_equivalence_rows.csv",
+      "root_name": "source_label_equivalence",
+      "root_path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "status": "schema_ready_unscored_no_confidence_acceptance"
+    },
+    {
+      "present": "true",
+      "required_file": "source_label_equivalence_provenance.json",
+      "root_name": "source_label_equivalence",
+      "root_path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "status": "schema_ready_unscored_no_confidence_acceptance"
+    },
+    {
+      "present": "false",
+      "required_file": "native_subhour_source_label_rows.csv",
+      "root_name": "r3_native_subhour_source_label",
+      "root_path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "status": "missing"
+    },
+    {
+      "present": "false",
+      "required_file": "native_subhour_source_label_provenance.json",
+      "root_name": "r3_native_subhour_source_label",
+      "root_path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "status": "missing"
+    },
+    {
+      "present": "false",
+      "required_file": "stock_market_regimes_2026_extension.csv",
+      "root_name": "r5_source_panel_recency_extension",
+      "root_path": "/tmp/ict-engine-source-panel-recency-extension",
+      "status": "missing"
+    },
+    {
+      "present": "false",
+      "required_file": "stock_market_regimes_2026_extension_provenance.json",
+      "root_name": "r5_source_panel_recency_extension",
+      "root_path": "/tmp/ict-engine-source-panel-recency-extension",
+      "status": "missing"
+    }
+  ],
+  "alias_mapping_rows": [
+    {
+      "mapping_rule": "must equal or map to positive_spoofing_layering under current verifier; other species need explicit contract/adaptor approval",
+      "owner_field": "positive_label",
+      "owner_file": "direct_manipulation_positive_rows.csv",
+      "verifier_field": "label",
+      "verifier_file": "positive_spoofing_layering_rows.csv"
+    },
+    {
+      "mapping_rule": "timestamp with timezone",
+      "owner_field": "event_start",
+      "owner_file": "direct_manipulation_positive_rows.csv",
+      "verifier_field": "earliest_order_received_time",
+      "verifier_file": "positive_spoofing_layering_rows.csv"
+    },
+    {
+      "mapping_rule": "timestamp with timezone",
+      "owner_field": "event_end",
+      "owner_file": "direct_manipulation_positive_rows.csv",
+      "verifier_field": "latest_order_received_time",
+      "verifier_file": "positive_spoofing_layering_rows.csv"
+    },
+    {
+      "mapping_rule": "join key must also exist in matched_negative_normal_activity_rows.csv",
+      "owner_field": "matched_control_group_id",
+      "owner_file": "direct_manipulation_positive_rows.csv",
+      "verifier_field": "matched_negative_group_id",
+      "verifier_file": "positive_spoofing_layering_rows.csv"
+    },
+    {
+      "mapping_rule": "same join key as positives",
+      "owner_field": "matched_control_group_id",
+      "owner_file": "direct_manipulation_matched_controls.csv",
+      "verifier_field": "matched_negative_group_id",
+      "verifier_file": "matched_negative_normal_activity_rows.csv"
+    },
+    {
+      "mapping_rule": "must cite source owner/export approval or source-owned report basis",
+      "owner_field": "owner_approval_reference",
+      "owner_file": "direct_manipulation_provenance.json",
+      "verifier_field": "owner_approval_reference",
+      "verifier_file": "provenance_manifest.json"
+    },
+    {
+      "mapping_rule": "exact split by default; market-family/venue-family only with explicit owner approval",
+      "owner_field": "split_contract",
+      "owner_file": "direct_manipulation_provenance.json",
+      "verifier_field": "split_contract",
+      "verifier_file": "provenance_manifest.json"
+    }
+  ],
+  "board_hash_before": "1154af1d9bb0c23da138b1288245ab7f6282722facc42d9432a2dbc03c5eb5f3",
+  "board_state": "blocked",
+  "canonical_merge_allowed": false,
+  "current_required_file_rows": [
+    {
+      "accepted_without_adapter": false,
+      "logical_role": "positive_rows",
+      "owner_alias_present": false,
+      "owner_request_alias": "direct_manipulation_positive_rows.csv",
+      "required_before_chain_rerun": true,
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "verifier_native_filename": "positive_spoofing_layering_rows.csv",
+      "verifier_native_present": false
+    },
+    {
+      "accepted_without_adapter": false,
+      "logical_role": "matched_negative_rows",
+      "owner_alias_present": false,
+      "owner_request_alias": "direct_manipulation_matched_controls.csv",
+      "required_before_chain_rerun": true,
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "verifier_native_filename": "matched_negative_normal_activity_rows.csv",
+      "verifier_native_present": false
+    },
+    {
+      "accepted_without_adapter": false,
+      "logical_role": "provenance_manifest",
+      "owner_alias_present": false,
+      "owner_request_alias": "direct_manipulation_provenance.json",
+      "required_before_chain_rerun": true,
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json",
+      "verifier_native_filename": "provenance_manifest.json",
+      "verifier_native_present": false
+    }
+  ],
+  "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1`",
+  "direct_verifier_exit_code": 2,
+  "downstream_rerun_allowed": false,
+  "existing_access_preflight": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T010212-codex-r6-owner-export-access-route-preflight-v1/r6-owner-export-access-route-preflight-v1/r6_owner_export_access_route_preflight_v1.md",
+  "existing_contract_artifact": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T003003-codex-r6-owner-export-verifier-native-contract-v1/r6-owner-export-verifier-native-contract/r6_owner_export_verifier_native_contract_v1.md",
+  "existing_entitlement_readback": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1/r6-owner-route-entitlement-readback/r6_owner_route_entitlement_readback_v1.md",
+  "external_requests_sent": false,
+  "gate_result": "r6_owner_export_contract_readback_v1=verifier_native_contract_confirmed_owner_export_absent_no_promotion",
+  "new_confidence_gate": false,
+  "next_action": "Satisfy the CME/Cboe owner-export requests with verifier-native files and provenance, or explicitly approve the same-exhibit FLIP-as-control exception; only then populate the owner-export root under shared lock and rerun direct verifier, calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback.",
+  "observed_cursor": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "owner_export_root_mutated": false,
+  "provider_autoquant_command_rows": [
+    {
+      "command": "provider_status_agent",
+      "data_ready": "",
+      "exit_code": 0,
+      "healthy": "",
+      "status": "",
+      "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+    },
+    {
+      "command": "provider_status_yfinance",
+      "data_ready": "",
+      "exit_code": 0,
+      "healthy": "",
+      "status": "",
+      "summary_line": "live_runtime:1/1 ready | market_data:1/1 ready"
+    },
+    {
+      "command": "provider_status_ibkr",
+      "data_ready": "",
+      "exit_code": 0,
+      "healthy": "",
+      "status": "",
+      "summary_line": "market_data:0/1 ready"
+    },
+    {
+      "command": "provider_status_tradingview_mcp",
+      "data_ready": "",
+      "exit_code": 0,
+      "healthy": "",
+      "status": "",
+      "summary_line": "market_data:0/1 ready"
+    },
+    {
+      "command": "provider_status_kraken_public",
+      "data_ready": "",
+      "exit_code": 0,
+      "healthy": "",
+      "status": "",
+      "summary_line": "market_data:0/1 ready"
+    },
+    {
+      "command": "provider_status_kraken_cli",
+      "data_ready": "",
+      "exit_code": 0,
+      "healthy": "",
+      "status": "",
+      "summary_line": "local_runtime:1/1 ready"
+    },
+    {
+      "command": "auto_quant_status_json",
+      "data_ready": true,
+      "exit_code": 0,
+      "healthy": true,
+      "status": "dependency_ready_seed_required",
+      "summary_line": ""
+    }
+  ],
+  "raw_data_committed": false,
+  "run_id": "20260512T013634-codex-r6-owner-export-contract-readback-v1",
+  "runtime_code_changed": false,
+  "same_exhibit_flip_approval": false,
+  "shared_intake_mutated": false,
+  "source_owned_normal_controls_acquired": 0,
+  "strict_full_objective_achieved": false,
+  "target_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "target_root_present": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_native_contract_rows": [
+    {
+      "accepted_without_adapter": "false",
+      "logical_role": "positive_rows",
+      "owner_request_filename": "direct_manipulation_positive_rows.csv",
+      "owner_request_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_positive_rows.csv",
+      "required_before_chain_rerun": "true",
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "verifier_native_filename": "positive_spoofing_layering_rows.csv"
+    },
+    {
+      "accepted_without_adapter": "false",
+      "logical_role": "matched_negative_rows",
+      "owner_request_filename": "direct_manipulation_matched_controls.csv",
+      "owner_request_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_matched_controls.csv",
+      "required_before_chain_rerun": "true",
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "verifier_native_filename": "matched_negative_normal_activity_rows.csv"
+    },
+    {
+      "accepted_without_adapter": "false",
+      "logical_role": "provenance_manifest",
+      "owner_request_filename": "direct_manipulation_provenance.json",
+      "owner_request_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_provenance.json",
+      "required_before_chain_rerun": "true",
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json",
+      "verifier_native_filename": "provenance_manifest.json"
+    }
+  ],
+  "verifier_required_all_present": false
+}

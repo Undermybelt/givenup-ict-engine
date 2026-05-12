@@ -1,0 +1,27 @@
+{
+  "artifact_type": "r6_isolated_rehydration_split_readback_v1",
+  "board_current_run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235815-codex-r6-live-intake-rehydrate-calibration-v1",
+  "board_current_run_root_exists": true,
+  "board_sha256_at_start": "8593cb09cabc29d6b9b99367d6d1f755bb76a939a67eafb7399ced39a7a3fe96",
+  "current_cursor_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235303-codex-r6-direct-intake-reconstruction-preflight-v1",
+  "current_cursor_root_exists": true,
+  "generated_at_utc": "2026-05-11T16:09:15.866245+00:00",
+  "policy": "isolated rehydration only; does not mutate canonical shared /tmp intake",
+  "post_thakkar_control_candidate_rows": 2,
+  "post_thakkar_unique_candidate_rows": 34,
+  "run_id": "20260512T000038+0800-codex-r6-isolated-rehydration-split-readback-v1",
+  "shared_intake_exists_at_start": true,
+  "shared_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "source_snapshot_hashes": {
+    "matched_negative_rows": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+    "positive_rows": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+    "v55_json": "9c70f402acacc9a119fd9ff41660458a30c0a0c4770ba6a9a93890a249186ac8",
+    "v55_split_metrics": "8e2983c1d027e3e8b876763cd861c067177cf39d1c501c8c85fb978c2319f2d8"
+  },
+  "source_snapshot_paths": {
+    "matched_negative_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction-v55/matched_negative_normal_activity_rows_v55.csv",
+    "positive_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction-v55/positive_spoofing_layering_rows_v55.csv",
+    "v55_json": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction-v55/r6_direct_intake_reconstruction_v55.json",
+    "v55_split_metrics": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction-v55/r6_direct_intake_reconstruction_v55_split_metrics.csv"
+  }
+}

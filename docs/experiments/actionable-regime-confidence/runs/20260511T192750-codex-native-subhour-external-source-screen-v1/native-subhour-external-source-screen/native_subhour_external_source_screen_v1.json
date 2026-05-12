@@ -1,0 +1,146 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before": "0eb6413068a91426297973904bc12d6a5e7da40ad497f5691127767ed74cdb50",
+  "candidate_records": 3,
+  "candidates": [
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "native_subhour_crypto_regime_labels",
+      "disposition": "blocked_hmm_generated_labels_not_source_owned",
+      "metadata": {
+        "downloads": 10,
+        "id": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+        "likes": 1,
+        "siblings": [
+          ".gitattributes",
+          "README.md",
+          "data/test.csv",
+          "data/test.parquet",
+          "data/train.csv",
+          "data/train.parquet",
+          "data/validation.csv",
+          "data/validation.parquet"
+        ],
+        "tags": [
+          "license:cc-by-4.0",
+          "size_categories:100K<n<1M",
+          "format:parquet",
+          "modality:tabular",
+          "modality:text",
+          "modality:timeseries",
+          "library:datasets",
+          "library:pandas",
+          "library:mlcroissant",
+          "library:polars",
+          "region:us",
+          "datasets",
+          "finance",
+          "timeseries",
+          "tabular",
+          "classification"
+        ]
+      },
+      "new_confidence_gate": false,
+      "reason": "Only HF native-subhour regime hit from targeted API search; labels are HMM-6 inferred from 5m/15m OHLCV and technical indicators, so they remain generated/proxy labels rather than source-owned MainRegimeV2 rows.",
+      "ref": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "source": "huggingface",
+      "url": "https://huggingface.co/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "native_subhour_raw_crypto_ohlcv",
+      "disposition": "blocked_raw_provider_panel_no_regime_labels",
+      "new_confidence_gate": false,
+      "reason": "Kaggle targeted searches surface this raw Bybit historical data set, but search metadata indicates historical crypto data rather than source-owned regime labels or owner-approved MainRegimeV2 equivalence.",
+      "ref": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+      "source": "kaggle",
+      "url": "https://www.kaggle.com/datasets/thisathdamiru/bybit-multi-crypto-historical-data-2020-2026"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "synthetic_minute_like_price_panel",
+      "disposition": "blocked_synthetic_price_data_not_source_labels",
+      "new_confidence_gate": false,
+      "reason": "Synthetic 1m-instance price data cannot satisfy source-owned market-regime labels, other-market validation, or source provenance.",
+      "ref": "toocool69/synthetic-stock-price-data-1m-instances",
+      "source": "kaggle",
+      "url": "https://www.kaggle.com/datasets/toocool69/synthetic-stock-price-data-1m-instances"
+    }
+  ],
+  "created_at_utc": "2026-05-11T11:29:00.847205+00:00",
+  "decision": "native_subhour_external_source_screen_v1=no_ready_native_subhour_source_labels",
+  "huggingface_queries": [
+    {
+      "query": "intraday market regime",
+      "raw_count": 0,
+      "top_refs": []
+    },
+    {
+      "query": "market regime 5m",
+      "raw_count": 0,
+      "top_refs": []
+    },
+    {
+      "query": "market regime 15m",
+      "raw_count": 0,
+      "top_refs": []
+    },
+    {
+      "query": "HMM6 BTCUSD",
+      "raw_count": 1,
+      "top_refs": [
+        "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD"
+      ]
+    },
+    {
+      "query": "BTCUSD market regime",
+      "raw_count": 1,
+      "top_refs": [
+        "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD"
+      ]
+    }
+  ],
+  "kaggle_queries": [
+    {
+      "query": "intraday market regime",
+      "result_file": "kaggle_search_intraday_market_regime.csv",
+      "returncode": 0,
+      "top_refs": [
+        "ranodipghosh/top-50-crypto-market-data-daily-usd",
+        "hassanjameelahmed/aramco-stock-2019-2025",
+        "vivek468/sip-dataset-nifty-banknifty-gold-and-silver",
+        "srisahithis/vix-volatility-index-ohlcv-data-20062020",
+        "szlevente/romania-financial-markets",
+        "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+        "toocool69/synthetic-stock-price-data-1m-instances"
+      ]
+    },
+    {
+      "query": "intraday regime label",
+      "result_file": "kaggle_search_intraday_regime_label.csv",
+      "returncode": 0,
+      "top_refs": [
+        "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+        "toocool69/synthetic-stock-price-data-1m-instances"
+      ]
+    },
+    {
+      "query": "5m market regime",
+      "result_file": "kaggle_search_5m_market_regime.csv",
+      "returncode": 0,
+      "top_refs": [
+        "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026"
+      ]
+    }
+  ],
+  "native_subhour_source_overlap_closed": false,
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "run_id": "20260511T192750+0800-codex-native-subhour-external-source-screen-v1",
+  "runtime_code_changed": false,
+  "scope": "Targeted public-source search for native sub-hour source-owned regime labels.",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

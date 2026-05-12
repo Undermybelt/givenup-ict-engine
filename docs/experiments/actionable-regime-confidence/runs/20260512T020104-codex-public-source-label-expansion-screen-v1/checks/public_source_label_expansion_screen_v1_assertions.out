@@ -1,0 +1,12 @@
+gate_result=public_source_label_expansion_screen_v1=new_candidates_screened_no_source_owned_mainregime_export_no_promotion
+search_result_count=5
+new_candidate_count=3
+accepted_rows_added=0
+new_confidence_gate=false
+canonical_merge_allowed=false
+downstream_chain_rerun_allowed=false
+strict_full_objective_achieved=false
+raw_dataset_files_downloaded=false
+shared_intake_mutated=false
+r3_r5_r6_roots_mutated=false
+update_goal=false

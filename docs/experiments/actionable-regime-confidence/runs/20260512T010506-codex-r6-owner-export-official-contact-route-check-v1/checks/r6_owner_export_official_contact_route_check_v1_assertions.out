@@ -1,0 +1,14 @@
+PASS run_id=20260512T010506-codex-r6-owner-export-official-contact-route-check-v1
+PASS input_request_drafts=docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3
+PASS cme_datamine_contact_route_verified=true
+PASS cme_fallback_contact_route_verified=true
+PASS cboe_datashop_contact_route_verified=true
+PASS cfe_market_data_contact_route_verified=true
+PASS represented_cells=17
+PASS required_support_per_cell=73
+PASS external_requests_sent=false
+PASS valid_source_owned_normal_controls_acquired_now=0
+PASS same_exhibit_flip_approval_acquired_now=false
+PASS canonical_merge_allowed_now=false
+PASS downstream_rerun_allowed_now=false
+PASS strict_full_objective_achieved=false

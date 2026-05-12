@@ -1,0 +1,1 @@
+Error: market-data-harness fetch encountered failures: role=etf_reference provider=tradingview_mcp symbol=NASDAQ:QQQ fetch_failed:tradingview MCP call 'get_ohlcv' returned error

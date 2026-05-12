@@ -1,0 +1,1 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_IBKR_SPY_1h/aq_workspace && python inspect run_tomac results

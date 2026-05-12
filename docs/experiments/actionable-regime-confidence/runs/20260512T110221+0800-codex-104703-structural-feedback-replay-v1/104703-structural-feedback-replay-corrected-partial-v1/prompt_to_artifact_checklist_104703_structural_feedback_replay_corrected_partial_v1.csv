@@ -1,0 +1,5 @@
+requirement,evidence,status
+use real 104703 provider-backed AQ artifact,source feather converted to 985 BTC/USDT 1h candles,partial
+run filter/pre-Bayes/BBN/CatBoost/path-ranker/execution tree chain,post-partial readback files 04-07,fail_closed
+achieve mature CatBoost/path-ranker floor,Ranker validation: calibration=true quality_ready=true raw_scored_mature=3/30 production_validation=2/30 observation_validation=1/30 ready=false,not_met
+avoid goal completion claim,update_goal=false,met

@@ -1,0 +1,10 @@
+{
+  "branch_score_rows": 4,
+  "catboost_available": false,
+  "features_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/catboost/catboost_branch_features_v1.csv",
+  "model_family": "catboost_unavailable_fallback",
+  "model_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/catboost/path_ranker_model/catboost_model.cbm",
+  "positive_rate": 0.5566550409603375,
+  "trainer_note": "fallback_mean_positive_rate:ModuleNotFoundError:No module named 'catboost'",
+  "training_rows": 12329
+}

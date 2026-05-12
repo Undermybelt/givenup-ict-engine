@@ -1,0 +1,25 @@
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 1: validation failed: factors_used[2] invalid: direction must be Bull|Bear|Neutral, got 'long'
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 2: validation failed: factors_used[2] invalid: direction must be Bull|Bear|Neutral, got 'long'
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 3: validation failed: factors_used[2] invalid: direction must be Bull|Bear|Neutral, got 'long'
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 4: validation failed: factors_used[2] invalid: direction must be Bull|Bear|Neutral, got 'long'
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 5: validation failed: factors_used[2] invalid: direction must be Bull|Bear|Neutral, got 'long'
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 6: validation failed: factors_used[0] invalid: direction must be Bull|Bear|Neutral, got 'Sideways'
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 7: validation failed: factors_used[2] invalid: direction must be Bull|Bear|Neutral, got 'long'
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 8: validation failed: factors_used[0] invalid: direction must be Bull|Bear|Neutral, got 'Sideways'
+[2026-05-11T16:36:15Z WARN  ict_engine::application::auto_quant::real_trades::ingest] real-trades JSONL 'docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl' line 9: validation failed: factors_used[0] invalid: direction must be Bull|Bear|Neutral, got 'Sideways'
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "3e9320485ef25720",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_SRC_ROOT_CARRY_LONG_220646_20260511T163615.082057000Z",
+  "ledger_status": "no_op",
+  "previous_artifact_id": null,
+  "source": "board_b_tomac_nq_nonzero_candidate_v1",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "trades_applied": 0,
+  "trades_invalid": 9,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/ict-engine-downstream/tomac_nq_nonzero_candidate_real_trades_v1.jsonl",
+  "trades_total": 9
+}

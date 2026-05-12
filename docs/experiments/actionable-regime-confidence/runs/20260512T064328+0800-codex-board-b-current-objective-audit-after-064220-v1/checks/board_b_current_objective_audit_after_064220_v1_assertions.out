@@ -1,0 +1,15 @@
+gate_result=board_b_current_objective_audit_after_064220_v1=not_complete_no_valid_source_control_unlock_no_selected_history_no_downstream
+goal_complete=false
+valid_required_unlock=false
+r3_native_subhour_root_exists=true
+r3_valid_required_unlock=false
+r3_quarantined=true
+r6_owner_export_root_exists=false
+r5_recency_root_exists=false
+selected_history_path_present=false
+selected_data_autoquant_training=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+promotion_allowed=false
+update_goal=false

@@ -1,0 +1,5 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_path_ranker_target.csv: 205 rows, 24 columns
+[features] 13 features, 205 training samples
+[features] label dist: {np.float64(0.0): np.int64(66), np.float64(1.0): np.int64(139)}
+[apply] CatBoost predictions: 205
+[apply] Scores saved to docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/catboost/crashrebound_path_scores.csv

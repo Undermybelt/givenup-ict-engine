@@ -1,0 +1,15 @@
+{
+  "auto_quant_pinned_ref": "local",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_20260512T041651.465131000Z",
+  "library_source": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/strategy_library_same_root_six_provider_1h_aq_v1.json",
+  "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1/auto-quant/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/auto_quant_strategy_library.json",
+  "log_cross_check": null,
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 12,
+  "n_total_strategies": 12,
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+}

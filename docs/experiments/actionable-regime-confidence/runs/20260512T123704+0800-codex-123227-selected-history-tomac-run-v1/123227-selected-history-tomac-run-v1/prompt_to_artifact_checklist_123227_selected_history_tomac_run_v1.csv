@@ -1,0 +1,7 @@
+requirement,artifact,status,note
+selected-history data-ready root,docs/experiments/actionable-regime-confidence/runs/20260512T123704+0800-codex-123227-selected-history-tomac-run-v1/command-output/03_auto_quant_status.out,covered,dependency_ready_data_ready
+run Auto-Quant TOMAC,docs/experiments/actionable-regime-confidence/runs/20260512T123704+0800-codex-123227-selected-history-tomac-run-v1/command-output/02_run_tomac_venv.out,covered,succeeded=3 failed=0
+measure candidate trades,docs/experiments/actionable-regime-confidence/runs/20260512T123704+0800-codex-123227-selected-history-tomac-run-v1/123227-selected-history-tomac-run-v1/123227_selected_history_tomac_strategy_metrics_v1.csv,fail_closed,total_trades=0
+ict-engine adoption review,docs/experiments/actionable-regime-confidence/runs/20260512T123704+0800-codex-123227-selected-history-tomac-run-v1/command-output/04b_auto_quant_adoption_review.out,covered,ready_for_external_execution
+downstream Pre-Bayes/BBN/CatBoost/execution,docs/experiments/actionable-regime-confidence/runs/20260512T123704+0800-codex-123227-selected-history-tomac-run-v1/command-output/05_workflow_status.out,fail_closed,no candidate package; workflow insufficient_state
+no promotion/update_goal,docs/experiments/actionable-regime-confidence/runs/20260512T123704+0800-codex-123227-selected-history-tomac-run-v1/123227-selected-history-tomac-run-v1/123227_selected_history_tomac_run_v1.json,covered,promotion_allowed=false update_goal=false

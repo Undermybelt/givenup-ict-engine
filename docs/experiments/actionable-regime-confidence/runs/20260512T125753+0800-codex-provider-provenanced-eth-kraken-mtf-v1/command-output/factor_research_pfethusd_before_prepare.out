@@ -1,0 +1,154 @@
+{
+  "auto_quant_handoff_candidate": {
+    "agent_prompt": "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, work the 'regime_conditioned_profitability' objective, and read docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/program.md before acting. If docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/strategies_external has no active non-underscore .py strategies, first read docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/strategies_external/_template.py.example, create 2-3 seed strategies across different paradigms, prefer archived winners or minimal descendants when available, and only then run uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/run_tomac.py. Never treat 'no strategies found' as completion. Export the best measured candidate package back into ict-engine state.",
+    "artifact_id": "auto-quant-handoff:factor_research:PFETHUSD:20260512T051751.245Z",
+    "backend": "auto-quant",
+    "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_1h.json",
+    "data_ready": false,
+    "dependency_status": {
+      "adapter_version": "v1",
+      "bootstrap_needed": false,
+      "config_present": true,
+      "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "healthy": true,
+      "last_sync": "2026-05-12T05:17:46.603436Z",
+      "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant",
+      "managed_repo_present": true,
+      "notes": [],
+      "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+      "required_files": [
+        "README.md",
+        "program.md",
+        "prepare.py",
+        "run.py",
+        "versions/README.md"
+      ],
+      "tracked_branch": "master",
+      "update_available": false,
+      "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+    },
+    "handoff_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/PFETHUSD/auto_quant_handoff.factor_research.json",
+    "handoff_kind": "factor_research",
+    "iterations": null,
+    "mutation_spec_path": null,
+    "notes": [
+      "auto_quant_prepare_required_before_run",
+      "auto_quant_seed_strategies_required",
+      "auto_quant_active_strategy_count=0",
+      "requested_at=20260512T051751.245Z"
+    ],
+    "objective": "regime_conditioned_profitability",
+    "paired_data_path": null,
+    "readiness": {
+      "bootstrap_needed": false,
+      "data_ready": false,
+      "dependency_healthy": true,
+      "dependency_status": {
+        "adapter_version": "v1",
+        "bootstrap_needed": false,
+        "config_present": true,
+        "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+        "healthy": true,
+        "last_sync": "2026-05-12T05:17:46.603436Z",
+        "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant",
+        "managed_repo_present": true,
+        "notes": [],
+        "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+        "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+        "required_files": [
+          "README.md",
+          "program.md",
+          "prepare.py",
+          "run.py",
+          "versions/README.md"
+        ],
+        "tracked_branch": "master",
+        "update_available": false,
+        "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+      },
+      "healthy": false,
+      "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant",
+      "next_step": {
+        "action_type": "run_command",
+        "blocked_reason": "auto_quant_prepare_required",
+        "deferred_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf",
+        "prompt": null,
+        "user_input_required": false
+      },
+      "notes": [
+        "auto_quant_profile=synthetic_ohlcv"
+      ],
+      "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf",
+      "recommended_next_command_meta": {
+        "blocked": false,
+        "executable_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf",
+        "kind": "ict_engine",
+        "prompt": null,
+        "recorded_data_paths": [],
+        "requires_user_input": false
+      },
+      "status": "dependency_ready_data_missing",
+      "update_available": false,
+      "workspace": {
+        "config_json": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/config.tomac.json",
+        "data_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/data",
+        "expected_data_files": [
+          "PFETHUSD_USD-1h.feather",
+          "PFETHUSD_USD-4h.feather",
+          "PFETHUSD_USD-1d.feather"
+        ],
+        "prepare_script": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/prepare_external.py",
+        "profile_name": "synthetic_ohlcv",
+        "program_md": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/program.md",
+        "repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant",
+        "run_script": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/run_tomac.py",
+        "strategies_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/strategies_external",
+        "strategy_seed_source_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/strategies"
+      }
+    },
+    "session_id": null,
+    "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf",
+    "suggested_commands": [
+      "cat docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/program.md",
+      "cat docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/strategies_external/_template.py.example",
+      "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf"
+    ],
+    "suggested_next_steps": [
+      "prepare Auto-Quant market data before attempting the research loop",
+      "re-run factor-research with backend=auto-quant after data becomes ready"
+    ],
+    "symbol": "PFETHUSD",
+    "workspace": {
+      "config_json": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/config.tomac.json",
+      "data_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/data",
+      "expected_data_files": [
+        "PFETHUSD_USD-1h.feather",
+        "PFETHUSD_USD-4h.feather",
+        "PFETHUSD_USD-1d.feather"
+      ],
+      "prepare_script": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/prepare_external.py",
+      "profile_name": "synthetic_ohlcv",
+      "program_md": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/program.md",
+      "repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant",
+      "run_script": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/run_tomac.py",
+      "strategies_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/strategies_external",
+      "strategy_seed_source_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf/.deps/auto-quant/user_data/strategies"
+    }
+  },
+  "human_output": "Auto-Quant handoff | status=dependency_ready_data_missing | objective=regime_conditioned_profitability | data_ready=false\nNext: prepare Auto-Quant market data before attempting the research loop\nRun: ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf\nReview: ict-engine auto-quant-adoption-review --symbol PFETHUSD --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf --artifact-id auto-quant-handoff:factor_research:PFETHUSD:20260512T051751.245Z\nWorkflow: ict-engine workflow-status --symbol PFETHUSD --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf --human",
+  "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": "auto_quant_prepare_required",
+    "deferred_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "review_command": "ict-engine auto-quant-adoption-review --symbol PFETHUSD --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf --artifact-id auto-quant-handoff:factor_research:PFETHUSD:20260512T051751.245Z",
+  "suggested_next_steps": [
+    "prepare Auto-Quant market data before attempting the research loop",
+    "re-run factor-research with backend=auto-quant after data becomes ready"
+  ],
+  "workflow_status_command": "ict-engine workflow-status --symbol PFETHUSD --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf --human"
+}

@@ -1,0 +1,5 @@
+source_label_root_present=True
+r3_native_required_files_absent=True
+all_r3_targets_satisfied_false=True
+downstream_chain_rerun_allowed_false=True
+strict_full_objective_achieved_false=True

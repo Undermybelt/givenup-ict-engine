@@ -1,0 +1,423 @@
+{
+  "aq_results": [
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-tradingview_mcp/user_data/data/ETH_USDT-1h.feather",
+      "first_time": "2026-04-12T05:00:00+00:00",
+      "last_time": "2026-05-12T04:58:50+00:00",
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": 61.59487438188233,
+            "max_drawdown_pct": -1.0534999430255998,
+            "profit_factor": 1.4235383800476185,
+            "sharpe": 1.4401270367771482,
+            "sortino": 3.3713994475590776,
+            "total_profit_pct": 0.88,
+            "trade_count": 14,
+            "win_rate_pct": 42.857142857142854
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": 61.59487438188233,
+              "max_drawdown_pct": -1.0534999430255998,
+              "profit_factor": 1.4235383800476185,
+              "sharpe": 1.4401270367771482,
+              "sortino": 3.3713994475590776,
+              "total_profit_pct": 0.88,
+              "trade_count": 14,
+              "win_rate_pct": 42.857142857142854
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": -58.35982047236762,
+            "max_drawdown_pct": -1.6327089164288995,
+            "profit_factor": 0.2084833870690368,
+            "sharpe": -2.3770608113074574,
+            "sortino": -3.8466590293889125,
+            "total_profit_pct": -1.3,
+            "trade_count": 5,
+            "win_rate_pct": 40.0
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": -58.35982047236762,
+              "max_drawdown_pct": -1.6327089164288995,
+              "profit_factor": 0.2084833870690368,
+              "sharpe": -2.3770608113074574,
+              "sortino": -3.8466590293889125,
+              "total_profit_pct": -1.3,
+              "trade_count": 5,
+              "win_rate_pct": 40.0
+            }
+          }
+        }
+      },
+      "provider": "tradingview_mcp",
+      "real_trade_rows": 19,
+      "rows": 708,
+      "run_tomac_exit": 0,
+      "skipped": false,
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-tradingview_mcp"
+    },
+    {
+      "provider": "yfinance",
+      "reason": "provider_rows_below_120_or_missing_csv",
+      "rows": 0,
+      "skipped": true
+    },
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-kraken/user_data/data/ETH_USDT-1h.feather",
+      "first_time": "2026-04-12T05:00:00+00:00",
+      "last_time": "2026-05-12T05:00:00+00:00",
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": 25.098263337953238,
+            "max_drawdown_pct": -0.9189178804527118,
+            "profit_factor": 1.0986393316703826,
+            "sharpe": 0.5593725027192263,
+            "sortino": 1.6412064928153154,
+            "total_profit_pct": 0.31,
+            "trade_count": 20,
+            "win_rate_pct": 35.0
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": 25.098263337953238,
+              "max_drawdown_pct": -0.9189178804527118,
+              "profit_factor": 1.0986393316703826,
+              "sharpe": 0.5593725027192263,
+              "sortino": 1.6412064928153154,
+              "total_profit_pct": 0.31,
+              "trade_count": 20,
+              "win_rate_pct": 35.0
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": -60.91761406374082,
+            "max_drawdown_pct": -3.042111238673604,
+            "profit_factor": 0.2889546244656568,
+            "sharpe": -5.997652729406005,
+            "sortino": -12.40616053967693,
+            "total_profit_pct": -2.52,
+            "trade_count": 14,
+            "win_rate_pct": 28.57142857142857
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": -60.91761406374082,
+              "max_drawdown_pct": -3.042111238673604,
+              "profit_factor": 0.2889546244656568,
+              "sharpe": -5.997652729406005,
+              "sortino": -12.40616053967693,
+              "total_profit_pct": -2.52,
+              "trade_count": 14,
+              "win_rate_pct": 28.57142857142857
+            }
+          }
+        }
+      },
+      "provider": "kraken",
+      "real_trade_rows": 34,
+      "rows": 721,
+      "run_tomac_exit": 0,
+      "skipped": false,
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-kraken"
+    },
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-binance/user_data/data/ETH_USDT-1h.feather",
+      "first_time": "2026-04-01T00:00:00+00:00",
+      "last_time": "2026-05-12T05:00:00+00:00",
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": 58.250371895216055,
+            "max_drawdown_pct": -1.4198681113411187,
+            "profit_factor": 1.2727521145789806,
+            "sharpe": 1.602132735541575,
+            "sortino": 4.942029828090926,
+            "total_profit_pct": 1.6,
+            "trade_count": 34,
+            "win_rate_pct": 32.35294117647059
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": 58.250371895216055,
+              "max_drawdown_pct": -1.4198681113411187,
+              "profit_factor": 1.2727521145789806,
+              "sharpe": 1.602132735541575,
+              "sortino": 4.942029828090926,
+              "total_profit_pct": 1.6,
+              "trade_count": 34,
+              "win_rate_pct": 32.35294117647059
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": -40.46108190919781,
+            "max_drawdown_pct": -4.352359332668259,
+            "profit_factor": 0.3438922381605806,
+            "sharpe": -4.90788934576029,
+            "sortino": -9.795847615556253,
+            "total_profit_pct": -3.41,
+            "trade_count": 20,
+            "win_rate_pct": 25.0
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": -40.46108190919781,
+              "max_drawdown_pct": -4.352359332668259,
+              "profit_factor": 0.3438922381605806,
+              "sharpe": -4.90788934576029,
+              "sortino": -9.795847615556253,
+              "total_profit_pct": -3.41,
+              "trade_count": 20,
+              "win_rate_pct": 25.0
+            }
+          }
+        }
+      },
+      "provider": "binance",
+      "real_trade_rows": 54,
+      "rows": 990,
+      "run_tomac_exit": 0,
+      "skipped": false,
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-binance"
+    },
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-bybit/user_data/data/ETH_USDT-1h.feather",
+      "first_time": "2026-04-01T00:00:00+00:00",
+      "last_time": "2026-05-12T05:00:00+00:00",
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": 58.28165395155828,
+            "max_drawdown_pct": -1.4308706866629226,
+            "profit_factor": 1.2731908285700428,
+            "sharpe": 1.6059422609111882,
+            "sortino": 4.940106810540093,
+            "total_profit_pct": 1.62,
+            "trade_count": 34,
+            "win_rate_pct": 32.35294117647059
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": 58.28165395155828,
+              "max_drawdown_pct": -1.4308706866629226,
+              "profit_factor": 1.2731908285700428,
+              "sharpe": 1.6059422609111882,
+              "sortino": 4.940106810540093,
+              "total_profit_pct": 1.62,
+              "trade_count": 34,
+              "win_rate_pct": 32.35294117647059
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": -42.55146880100243,
+            "max_drawdown_pct": -4.185345883471582,
+            "profit_factor": 0.34268285102471957,
+            "sharpe": -4.817452087414439,
+            "sortino": -10.936418820250125,
+            "total_profit_pct": -3.45,
+            "trade_count": 19,
+            "win_rate_pct": 26.31578947368421
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": -42.55146880100243,
+              "max_drawdown_pct": -4.185345883471582,
+              "profit_factor": 0.34268285102471957,
+              "sharpe": -4.817452087414439,
+              "sortino": -10.936418820250125,
+              "total_profit_pct": -3.45,
+              "trade_count": 19,
+              "win_rate_pct": 26.31578947368421
+            }
+          }
+        }
+      },
+      "provider": "bybit",
+      "real_trade_rows": 53,
+      "rows": 990,
+      "run_tomac_exit": 0,
+      "skipped": false,
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-bybit"
+    },
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-ibkr/user_data/data/ETH_USDT-1h.feather",
+      "first_time": "2026-03-31T20:01:00+00:00",
+      "last_time": "2026-05-12T05:00:00+00:00",
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": 43.93496504956297,
+            "max_drawdown_pct": -1.3949635038789563,
+            "profit_factor": 1.1810934260535257,
+            "sharpe": 1.0758916953973414,
+            "sortino": 3.5783848636693363,
+            "total_profit_pct": 1.19,
+            "trade_count": 32,
+            "win_rate_pct": 31.25
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": 43.93496504956297,
+              "max_drawdown_pct": -1.3949635038789563,
+              "profit_factor": 1.1810934260535257,
+              "sharpe": 1.0758916953973414,
+              "sortino": 3.5783848636693363,
+              "total_profit_pct": 1.19,
+              "trade_count": 32,
+              "win_rate_pct": 31.25
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": -30.470803315527604,
+            "max_drawdown_pct": -2.6139451292612037,
+            "profit_factor": 0.5245622776678557,
+            "sharpe": -2.069065100008619,
+            "sortino": -5.282936211703169,
+            "total_profit_pct": -1.54,
+            "trade_count": 14,
+            "win_rate_pct": 35.714285714285715
+          },
+          "per_pair": {
+            "ETH/USDT": {
+              "calmar": -30.470803315527604,
+              "max_drawdown_pct": -2.6139451292612037,
+              "profit_factor": 0.5245622776678557,
+              "sharpe": -2.069065100008619,
+              "sortino": -5.282936211703169,
+              "total_profit_pct": -1.54,
+              "trade_count": 14,
+              "win_rate_pct": 35.714285714285715
+            }
+          }
+        }
+      },
+      "provider": "ibkr",
+      "real_trade_rows": 46,
+      "rows": 784,
+      "run_tomac_exit": 0,
+      "skipped": false,
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace/auto-quant-eth-ibkr"
+    }
+  ],
+  "gate_result": "eth_six_provider_aq_authority_probe=provider_rows_and_aq_nonzero_incubation_but_no_mature_rooted_calibration_or_execution_promotion",
+  "mature_rooted_branch_observations_added": 0,
+  "pair": "ETH/USDT",
+  "promotion_allowed": false,
+  "provider_results": [
+    {
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/tvr_eth_usd_1h.csv",
+      "exit": 0,
+      "fetch_name": "tvr_eth_usd_1h",
+      "first_time": "2026-04-12T05:00:00Z",
+      "last_time": "2026-05-12T04:58:50Z",
+      "provider": "tradingview_mcp",
+      "rows": 708,
+      "source_output": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/command-output/00_tvr_eth_usd_1h.out"
+    },
+    {
+      "error": "429 Client Error: Too Many Requests for url: https://query1.finance.yahoo.com/v8/finance/chart/ETH-USD?period1=1775001600&period2=1778562000&interval=1h&includePrePost=false",
+      "exit": 1,
+      "fetch_name": "yfinance_eth_usd_1h",
+      "provider": "yfinance",
+      "rows": 0
+    },
+    {
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/kraken_ethusd_1h.csv",
+      "exit": 0,
+      "fetch_name": "kraken_ethusd_1h",
+      "first_time": "2026-04-12T05:00:00Z",
+      "last_time": "2026-05-12T05:00:00Z",
+      "provider": "kraken",
+      "rows": 721
+    },
+    {
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/binance_ethusdt_1h.csv",
+      "exit": 0,
+      "fetch_name": "binance_ethusdt_1h",
+      "first_time": "2026-04-01T00:00:00Z",
+      "last_time": "2026-05-12T05:00:00Z",
+      "provider": "binance",
+      "rows": 990
+    },
+    {
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/bybit_ethusdt_linear_1h.csv",
+      "exit": 0,
+      "fetch_name": "bybit_ethusdt_linear_1h",
+      "first_time": "2026-04-01T00:00:00Z",
+      "last_time": "2026-05-12T05:00:00Z",
+      "provider": "bybit",
+      "rows": 990
+    },
+    {
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/ibkr_eth_paxos_aggtrades_1h.csv",
+      "exit": 0,
+      "fetch_name": "ibkr_eth_paxos_aggtrades_1h",
+      "first_time": "2026-03-31 16:01:00-04:00",
+      "ibkr_result": {
+        "bar_size": "1 hour",
+        "connected": true,
+        "contract_attempt": "Crypto(ETH,PAXOS,USD)",
+        "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/ibkr_eth_paxos_aggtrades_1h.csv",
+        "first_time": "2026-03-31 16:01:00-04:00",
+        "last_time": "2026-05-12 01:00:00-04:00",
+        "messages": [
+          {
+            "contract": "None",
+            "errorCode": 2104,
+            "errorString": "Market data farm connection is OK:hfarm",
+            "reqId": -1
+          },
+          {
+            "contract": "None",
+            "errorCode": 2107,
+            "errorString": "HMDS data farm connection is inactive but should be available upon demand.apachmds",
+            "reqId": -1
+          },
+          {
+            "contract": "None",
+            "errorCode": 2106,
+            "errorString": "HMDS data farm connection is OK:ushmds",
+            "reqId": -1
+          },
+          {
+            "contract": "None",
+            "errorCode": 2158,
+            "errorString": "Sec-def data farm connection is OK:secdefhk",
+            "reqId": -1
+          }
+        ],
+        "qualified": true,
+        "qualified_contract": "Crypto(conId=495759171, symbol='ETH', exchange='PAXOS', currency='USD', localSymbol='ETH.USD', tradingClass='ETH')",
+        "rows": 784,
+        "what_to_show": "AGGTRADES"
+      },
+      "last_time": "2026-05-12 01:00:00-04:00",
+      "provider": "ibkr",
+      "rows": 784
+    }
+  ],
+  "providers_with_aq_execution": 5,
+  "providers_with_nonzero_trades": 5,
+  "providers_with_rows": 5,
+  "run_id": "20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1",
+  "trade_usable": false,
+  "update_goal": false
+}

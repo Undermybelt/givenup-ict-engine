@@ -1,0 +1,108 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-12T11:32:30Z",
+  "generated_at": "2026-05-12T11:32:30.493107Z",
+  "symbol": "BOARD_A_BTC_TVR_191941",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:BOARD_A_BTC_TVR_191941:20260512T113230.465Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "47278cb82ca5061e",
+    "data_fingerprint": "646770beea7f065e"
+  },
+  "dataset_comparability": {
+    "comparable": true,
+    "previous_run_id": "analyze:BOARD_A_BTC_TVR_191941:20260512T112846.956Z",
+    "reason": "same_data_same_config",
+    "comparison_class": "same_data_same_config",
+    "same_data": true,
+    "same_config": true,
+    "same_prompt_version": true,
+    "same_factor_version": true
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ask-user: Before using historical data for BOARD_A_BTC_TVR_191941 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_TVR_191941/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_TVR_191941/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_TVR_191941/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_BTC_TVR_191941 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_TVR_191941/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state'",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=transition jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for BOARD_A_BTC_TVR_191941 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_TVR_191941/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_TVR_191941/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_TVR_191941/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_BTC_TVR_191941 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_TVR_191941/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state'",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.5999999999999999,
+  "consensus_strength": 0.5999999999999999,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600",
+    "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600"
+  ],
+  "split_explanations": [
+    "gating_status=transition",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "gating_status=transition",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [
+    {
+      "executor": "catboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.55,
+      "last_outcome": null,
+      "last_updated_at": null
+    },
+    {
+      "executor": "xgboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.45,
+      "last_outcome": null,
+      "last_updated_at": null
+    }
+  ],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "646770beea7f065e",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "transition",
+  "posterior_confidence": 0.45333124389593066,
+  "posterior_probabilities": {
+    "range": 0.21254155994453222,
+    "stress": 0.13330795793267186,
+    "transition": 0.3804001054733404,
+    "trend": 0.2737503766494555
+  },
+  "posterior_evidence": [
+    "market_policy=BOARD hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.984 multi_timeframe_entry_alignment_score=0.872",
+    "long/short support gap 0.078 is too small, so alignment is treated as mixed",
+    "multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized",
+    "pre_bayes_quality_score=0.452 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.673",
+    "market_state_source=volatility=NormalVol:0.757 liquidity=HighLiquidity:0.601 structure=Trending:1.000 behavior=RiskOff:0.550",
+    "market_state_source=rationale=volatility=NormalVol conf=0.76",
+    "market_state_source=rationale=liquidity=HighLiquidity conf=0.60",
+    "market_state_source=rationale=structure=Trending conf=1.00",
+    "market_state_source=rationale=behavior=RiskOff conf=0.55",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.67",
+    "branch_transition_prior_from=BOARD_A_BTC_TVR_191941:belief_regime_node:transition:transition_confirmation weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000",
+    "duration_persistence_prior=0.500 observations=1 streaks=1 weighted_streak_mass=1.000 expected_dwell=1.000 break_hazard=0.667 sticky_self_transition=0.364 duration_outcome_support=0.435 duration_temporal_posterior_support=0.480",
+    "duration_posterior_blend_weight=0.056",
+    "node_temporal_summary=duration_mass=1.000 expected_dwell=1.000 break_hazard=0.667 sequence_break=0.439 sequence_reset=0.000 sticky_self_transition=0.364 duration_support=0.435 duration_temporal=0.480 blend=0.056"
+  ]
+}

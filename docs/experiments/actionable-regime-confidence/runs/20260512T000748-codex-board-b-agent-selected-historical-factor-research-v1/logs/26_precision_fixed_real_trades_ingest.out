@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "a522d3c8b83a9241",
+  "dry_run": false,
+  "feedback_records_inserted": 300,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_SRC_ROOT_CARRY_LONG_220646_20260511T164020.378425000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "recorded_nq_precision_fixed_regime_root_pulse_branch",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "trades_applied": 300,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/measured-recorded-branch/regime_root_pulse_branch_real_trades_v1.jsonl",
+  "trades_total": 300
+}

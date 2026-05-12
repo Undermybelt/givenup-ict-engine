@@ -1,0 +1,14 @@
+PASS strict_full_objective=false
+PASS goal_complete=false
+PASS promotion_allowed=false
+PASS update_goal=false
+PASS blocker=user_selected_historical_data_missing
+PASS current_cursor_unchanged=20260512T034002+0800-codex-board-b-nq-cost-crisis-repair-v3-downstream-combined-v1
+PASS latest_050609_terminal=true
+PASS latest_050609_accepted_extra_trees_light_confidence_95_labels=none
+PASS no_selected_data_auto_quant_training=true
+PASS no_nonzero_mature_rooted_selected_observations=true
+PASS pre_bayes_observe_only=true
+PASS bbn_application_skipped=true
+PASS catboost_validation_zero_of_30=true
+PASS execution_candidate_blocked=true

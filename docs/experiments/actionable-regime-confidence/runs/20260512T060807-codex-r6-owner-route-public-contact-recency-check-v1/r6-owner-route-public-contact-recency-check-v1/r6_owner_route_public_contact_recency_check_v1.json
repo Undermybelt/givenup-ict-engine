@@ -1,0 +1,139 @@
+{
+  "approval_package": {
+    "assertions": {
+      "approval_present": false,
+      "canonical_merge_allowed_now": false,
+      "downstream_rerun_allowed_now": false,
+      "flip_controls_accepted_under_current_contract": false,
+      "public_recap_source_positive_candidate": true,
+      "shared_intake_mutated": false,
+      "strict_full_objective_achieved": false,
+      "trade_usable": false,
+      "update_goal": false
+    },
+    "exists": true,
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "next_action": "Record one explicit decision option. Do not merge isolated rows or rerun downstream chain until RECAP/PACER provenance plus FLIP-as-control approval exist, or source-owned normal controls are supplied."
+  },
+  "board_hash_before_artifact": "d5c54f5ab70e1abae30af31ac39300a2bf4dfd89d19d20a5a8c4199296e6f11f",
+  "decision": {
+    "approval_present": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "external_email_sent": false,
+    "http_reachable_sources": 3,
+    "marker_positive_sources": 3,
+    "official_routes_still_findable": false,
+    "owner_export_root_mutated": false,
+    "public_http_route_checks_sent": 5,
+    "required_root_unlocked": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "gate_result": "r6_owner_route_public_contact_recency_check_after_060446_v1=cboe_routes_live_cme_public_fetch_403_no_controls_no_promotion",
+  "generated_at_epoch": 1778537423,
+  "next_action": "Use the existing v5 owner-export drafts only through an approved operator mail path, or supply explicit source/control approval or verifier-native owner-export rows. Do not mutate target roots or rerun downstream until the source/control gate unlocks.",
+  "run_id": "20260512T060807-codex-r6-owner-route-public-contact-recency-check-v1",
+  "source_rows": [
+    {
+      "captured_bytes": 602,
+      "content_length_header": "602",
+      "content_type": "application/json",
+      "elapsed_seconds": 0.246,
+      "error": "HTTPError:403",
+      "final_url": "https://www.cmegroup.com/market-data/datamine-historical-data/index.html",
+      "http_status": 403,
+      "marker_hit_count": 0,
+      "marker_hits": {
+        "DataMine": false,
+        "historical": false,
+        "market data": false
+      },
+      "owner": "CME Group",
+      "route_role": "licensed historical data / DataMine route",
+      "url": "https://www.cmegroup.com/market-data/datamine-historical-data/index.html"
+    },
+    {
+      "captured_bytes": 602,
+      "content_length_header": "602",
+      "content_type": "application/json",
+      "elapsed_seconds": 0.205,
+      "error": "HTTPError:403",
+      "final_url": "https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf",
+      "http_status": 403,
+      "marker_hit_count": 0,
+      "marker_hits": {
+        "FIX": false,
+        "Historical": false,
+        "Market Depth": false
+      },
+      "owner": "CME Group",
+      "route_role": "Market Depth documentation route",
+      "url": "https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf"
+    },
+    {
+      "captured_bytes": 52817,
+      "content_length_header": "",
+      "content_type": "text/html; charset=utf-8",
+      "elapsed_seconds": 1.139,
+      "error": null,
+      "final_url": "https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes",
+      "http_status": 200,
+      "marker_hit_count": 4,
+      "marker_hits": {
+        "CFE": true,
+        "Quotes": true,
+        "Trades": true,
+        "VIX": true
+      },
+      "owner": "Cboe/CFE",
+      "route_role": "CFE VIX trades and quotes DataShop route",
+      "url": "https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes"
+    },
+    {
+      "captured_bytes": 608422,
+      "content_length_header": "",
+      "content_type": "text/html; charset=utf-8",
+      "elapsed_seconds": 0.259,
+      "error": null,
+      "final_url": "https://www.cboe.com/market_data_services/us/futures/",
+      "http_status": 200,
+      "marker_hit_count": 4,
+      "marker_hits": {
+        "Book": true,
+        "Depth": true,
+        "Futures": true,
+        "Market Data": true
+      },
+      "owner": "Cboe/CFE",
+      "route_role": "US futures market-data services route",
+      "url": "https://www.cboe.com/market_data_services/us/futures/"
+    },
+    {
+      "captured_bytes": 603230,
+      "content_length_header": "",
+      "content_type": "text/html; charset=utf-8",
+      "elapsed_seconds": 0.406,
+      "error": null,
+      "final_url": "https://www.cboe.com/cboe-data-vantage/market-data-services/us/futures/",
+      "http_status": 200,
+      "marker_hit_count": 3,
+      "marker_hits": {
+        "Book": true,
+        "Depth": false,
+        "Futures": true,
+        "Market Data": true
+      },
+      "owner": "Cboe/CFE",
+      "route_role": "current futures market-data services route fallback",
+      "url": "https://www.cboe.com/cboe-data-vantage/market-data-services/us/futures/"
+    }
+  ],
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  }
+}

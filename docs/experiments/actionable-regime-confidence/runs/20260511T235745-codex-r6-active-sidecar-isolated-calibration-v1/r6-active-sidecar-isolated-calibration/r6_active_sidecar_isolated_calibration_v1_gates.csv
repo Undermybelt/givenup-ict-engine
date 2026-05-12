@@ -1,0 +1,13 @@
+gate,observed,pass
+verifier_schema_ready,schema_ready_unscored,True
+baseline_recovered_57x57,57/57,True
+active_sidecar_positive_rows,16,True
+positive_wilson95_lcb,0.950007992044,True
+matched_negative_wilson95_lcb,0.950007992044,True
+sidecar_broad_normal_wilson95_lcb,0.954181870464,True
+pooled_wilson95,0.950007992044,True
+chronological_split,False,False
+heldout_symbol,False,False
+heldout_venue,False,False
+direct_species_closed,False,False
+canonical_shared_intake_mutated,False,True

@@ -1,0 +1,535 @@
+{
+  "schema_version": "corrected-main-regime-v2-train-select-refinement/v1",
+  "loop_id": "20260510T234759+0800-corrected-root-train-select-refinement",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T234759-corrected-root-train-select-refinement",
+  "objective": "Rerun corrected MainRegimeV2 root-axis candidates with train-only selection discipline.",
+  "source_probe": "docs/experiments/actionable-regime-confidence/runs/20260510T232844-codex-main-regime-v2-root-probe/root-v2/main_regime_v2_root_calibration_report.json",
+  "source_script": "docs/experiments/actionable-regime-confidence/runs/20260510T232844-codex-main-regime-v2-root-probe/tmp-scripts/main_regime_v2_root_probe.py",
+  "threshold_policy": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2,
+    "thresholds_relaxed": false,
+    "blocked_predictor_prefixes": [
+      "future_",
+      "target_"
+    ]
+  },
+  "root_reports": [
+    {
+      "root_class": "Bull",
+      "state": "blocked",
+      "selected_candidate": {
+        "rule": "condition_trend_expansion AND realized_vol_rank_252 >= 0.809523809524",
+        "train": {
+          "support": 289,
+          "success": 113,
+          "precision": 0.39100346020761245,
+          "precision_wilson_lcb_95": 0.3365255677299126,
+          "coverage": 0.0475172640578757,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "calibration": {
+          "support": 166,
+          "success": 33,
+          "precision": 0.19879518072289157,
+          "precision_wilson_lcb_95": 0.14520172584970303,
+          "coverage": 0.05458730680697139,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "test": {
+          "support": 194,
+          "success": 44,
+          "precision": 0.2268041237113402,
+          "precision_wilson_lcb_95": 0.17351558570014192,
+          "coverage": 0.06383678841724251,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "ece": 0.028008942988448637,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95"
+        ]
+      },
+      "candidate_count": 1274,
+      "train_viable_candidate_count": 1152,
+      "selection_policy": "train_only_rank_by_train_wilson_lcb_then_support; calibration/test are held-out checks",
+      "best_test_observed_not_accepted": {
+        "rule": "condition_reversal_brewing AND realized_vol_rank_252 <= 0.0873015873016",
+        "test_wilson95": 0.470324391373011,
+        "calibration_support": 33,
+        "test_support": 40,
+        "test_timeframes": [
+          "1h"
+        ],
+        "blockers": [
+          "calibration_support_below_120",
+          "test_support_below_60",
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05",
+          "coverage_below_0_03",
+          "validation_instruments_below_2",
+          "validation_timeframes_below_2"
+        ],
+        "note": "Exploratory only; not an acceptance basis because it is test-selected."
+      }
+    },
+    {
+      "root_class": "Bear",
+      "state": "blocked",
+      "selected_candidate": {
+        "rule": "condition_thin_liquidity AND stretch_abs_rank_252 >= 0.805555555556",
+        "train": {
+          "support": 220,
+          "success": 66,
+          "precision": 0.3,
+          "precision_wilson_lcb_95": 0.24330161966979505,
+          "coverage": 0.03617231173955936,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "calibration": {
+          "support": 74,
+          "success": 9,
+          "precision": 0.12162162162162163,
+          "precision_wilson_lcb_95": 0.06532315657822622,
+          "coverage": 0.024334100624794474,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "test": {
+          "support": 98,
+          "success": 22,
+          "precision": 0.22448979591836735,
+          "precision_wilson_lcb_95": 0.15318242080683164,
+          "coverage": 0.03224744981901941,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "ece": 0.10286817429674572,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_support_below_120",
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ]
+      },
+      "candidate_count": 1274,
+      "train_viable_candidate_count": 1152,
+      "selection_policy": "train_only_rank_by_train_wilson_lcb_then_support; calibration/test are held-out checks",
+      "best_test_observed_not_accepted": {
+        "rule": "NOT condition_reversal_brewing AND volume_rank_252 >= 0.906542056075",
+        "test_wilson95": 0.2488361493242652,
+        "calibration_support": 211,
+        "test_support": 183,
+        "test_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ],
+        "note": "Exploratory only; not an acceptance basis because it is test-selected."
+      }
+    },
+    {
+      "root_class": "Sideways",
+      "state": "blocked",
+      "selected_candidate": {
+        "rule": "realized_vol_rank_252 <= 0.0357142857143",
+        "train": {
+          "support": 310,
+          "success": 149,
+          "precision": 0.4806451612903226,
+          "precision_wilson_lcb_95": 0.42560546962851936,
+          "coverage": 0.050970075633015456,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "calibration": {
+          "support": 184,
+          "success": 74,
+          "precision": 0.40217391304347827,
+          "precision_wilson_lcb_95": 0.3340251947564748,
+          "coverage": 0.060506412364353834,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "test": {
+          "support": 156,
+          "success": 46,
+          "precision": 0.2948717948717949,
+          "precision_wilson_lcb_95": 0.22894057633681125,
+          "coverage": 0.05133267522211254,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "ece": 0.10730211817168339,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ]
+      },
+      "candidate_count": 1274,
+      "train_viable_candidate_count": 1152,
+      "selection_policy": "train_only_rank_by_train_wilson_lcb_then_support; calibration/test are held-out checks",
+      "best_test_observed_not_accepted": {
+        "rule": "condition_range_consolidation AND volume_rank_252 <= 0.0992063492063",
+        "test_wilson95": 0.33368429621624807,
+        "calibration_support": 156,
+        "test_support": 149,
+        "test_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95"
+        ],
+        "note": "Exploratory only; not an acceptance basis because it is test-selected."
+      }
+    },
+    {
+      "root_class": "Crisis",
+      "state": "blocked",
+      "selected_candidate": {
+        "rule": "range_pct >= 0.0117216606811",
+        "train": {
+          "support": 306,
+          "success": 125,
+          "precision": 0.4084967320261438,
+          "precision_wilson_lcb_95": 0.3548862020694976,
+          "coverage": 0.05031239723775074,
+          "validation_instruments": [
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME futures",
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ],
+          "validation_contexts": [
+            "NQ:CME futures:15m",
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "calibration": {
+          "support": 138,
+          "success": 50,
+          "precision": 0.36231884057971014,
+          "precision_wilson_lcb_95": 0.28685664689873536,
+          "coverage": 0.045379809273265376,
+          "validation_instruments": [
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ],
+          "validation_contexts": [
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "test": {
+          "support": 280,
+          "success": 134,
+          "precision": 0.4785714285714286,
+          "precision_wilson_lcb_95": 0.42074668823847566,
+          "coverage": 0.09213557091148404,
+          "validation_instruments": [
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "Kraken crypto",
+            "US ETF / IBKR",
+            "US ETF / yfinance"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ],
+          "validation_contexts": [
+            "PF_XBTUSD:Kraken crypto:1h",
+            "QQQ:US ETF / IBKR:1h",
+            "QQQ:US ETF / yfinance:1h"
+          ]
+        },
+        "ece": 0.11625258799171845,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05",
+          "validation_timeframes_below_2"
+        ]
+      },
+      "candidate_count": 1274,
+      "train_viable_candidate_count": 1152,
+      "selection_policy": "train_only_rank_by_train_wilson_lcb_then_support; calibration/test are held-out checks",
+      "best_test_observed_not_accepted": {
+        "rule": "condition_reversal_brewing AND range_pct >= 0.00873047568964",
+        "test_wilson95": 0.4607859489023281,
+        "calibration_support": 117,
+        "test_support": 194,
+        "test_timeframes": [
+          "1h"
+        ],
+        "blockers": [
+          "calibration_support_below_120",
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05",
+          "validation_timeframes_below_2"
+        ],
+        "note": "Exploratory only; not an acceptance basis because it is test-selected."
+      }
+    },
+    {
+      "root_class": "Manipulation",
+      "state": "missing_required_inputs",
+      "selected_candidate": {
+        "rule": "",
+        "train": {
+          "support": 0,
+          "precision_wilson_lcb_95": 0.0
+        },
+        "calibration": {
+          "support": 0,
+          "precision_wilson_lcb_95": 0.0
+        },
+        "test": {
+          "support": 0,
+          "precision_wilson_lcb_95": 0.0,
+          "coverage": 0.0,
+          "validation_instruments": [],
+          "validation_market_contexts": [],
+          "validation_timeframes": []
+        },
+        "ece": 1.0,
+        "accepted_95": false,
+        "blockers": [
+          "missing_required_inputs",
+          "proxy_only_low_confidence"
+        ]
+      },
+      "selection_policy": "fail_closed_required_inputs_missing"
+    }
+  ],
+  "accepted_root_classes_95": [],
+  "missing_root_classes_95": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "Manipulation"
+  ],
+  "decision": {
+    "board_state": "blocked",
+    "accepted_gate": "none_for_MainRegimeV2",
+    "trade_usable": false,
+    "blocker": "missing_root_classes_95=Bull,Bear,Sideways,Crisis,Manipulation",
+    "next_action": "Current corrected-root feature set still fails; add higher-signal root inputs or direct manipulation inputs before rerunning unchanged gates."
+  }
+}

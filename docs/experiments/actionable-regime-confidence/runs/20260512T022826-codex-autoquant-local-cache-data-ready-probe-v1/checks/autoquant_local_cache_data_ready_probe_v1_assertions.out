@@ -1,0 +1,5 @@
+status_dependency_ready_seed_required=PASS
+data_ready_true=PASS
+copied_feather_count_ge_15=PASS
+seed_strategies_required=PASS
+non_promoting_guards=PASS

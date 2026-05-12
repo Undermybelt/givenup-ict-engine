@@ -1,0 +1,12 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T014313-codex-direct-manipulation-data-readiness-scan/input-readiness/direct_manipulation_data_readiness_scan.json
+candidate_file_count: 44
+direct_candidate_file_count: 24
+qualifying_direct_manipulation_input_sets: 0
+python_databento: False
+python_pyarrow: False
+thresholds_relaxed: False
+runtime_code_changed: False
+fresh_calibration_rerun: False
+trade_usable: False
+MANIPULATION_INPUT_STATE missing_required_inputs
+GATE blocked_missing_required_inputs

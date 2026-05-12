@@ -1,0 +1,62 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T14:10:00+08:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant (runtime only); isolated wrapper copied from 135318 run root",
+  "auto_quant_pinned_ref": "1fe86ab",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135318+0800-codex-long-history-es-nq-aq-staging-v1/workspace/auto-quant/config.tomac.json",
+  "timeframe": "1h_from_cleaned_mtf_long_history",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135318+0800-codex-long-history-es-nq-aq-staging-v1/command-output/02_auto_quant_run_tomac_long_history_es_nq.out",
+  "strategies": [
+    {
+      "name": "TomacNQ_KillzoneBreakout_NQ",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135318+0800-codex-long-history-es-nq-aq-staging-v1/workspace/auto-quant/user_data/strategies_external/TomacNQ_KillzoneBreakout.py",
+      "metadata": {
+        "strategy": "TomacNQ_KillzoneBreakout",
+        "mutation_id": "135318_long_history_nq_tomac_v1",
+        "base_factor": "tomac_killzone_breakout",
+        "hypothesis": "Long-history NQ TOMAC killzone breakout support evidence, split from the 135318 ES/NQ measured packet.",
+        "paradigm": "breakout",
+        "expected_regime": "trend_expansion",
+        "factors_used": [
+          "killzone",
+          "24h_breakout",
+          "4h_ema_alignment"
+        ],
+        "parent": "TomacNQ_KillzoneBreakout",
+        "asset_class": "equity_index_futures",
+        "status": "support_only_long_history_downstream",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.03357919416689083,
+        "sortino": 0.06455361635106481,
+        "calmar": 0.6145489454246446,
+        "total_profit_pct": 9.5,
+        "max_drawdown_pct": -7.03791564412842,
+        "trade_count": 77,
+        "win_rate_pct": 72.72727272727273,
+        "profit_factor": 1.3085853861344974
+      },
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "sharpe": 0.03357919416689083,
+          "sortino": 0.06699265514375707,
+          "calmar": 0.5328470448089402,
+          "total_profit_pct": 9.5,
+          "max_drawdown_pct": -7.03791564412842,
+          "trade_count": 77,
+          "win_rate_pct": 72.72727272727273,
+          "profit_factor": 1.3085853861344974
+        }
+      },
+      "pairs": [
+        "NQ/USD"
+      ],
+      "timerange": "2012-05-03 23:00:00 -> 2025-08-04 12:00:00",
+      "commit": "1fe86ab",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

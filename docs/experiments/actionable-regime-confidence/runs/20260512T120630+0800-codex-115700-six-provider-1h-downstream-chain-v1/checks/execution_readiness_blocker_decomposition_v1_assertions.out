@@ -1,0 +1,14 @@
+PASS audit_id=execution_readiness_blocker_decomposition_v1
+PASS source_downstream_root=20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1
+PASS source_provider_aq_root=20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1
+PASS execution_readiness=0.32853919817900823
+PASS readiness_formula_components_sum=0.32853919817900823
+PASS gate=execution_blocked gap_to_observe=-0.1214608018209918 gap_to_ready=-0.3214608018209918
+PASS spectral_penalty_applied=false entropy=0.22620388710604733 dominant_cycle_energy=0.5813130295837036
+PASS catboost_path_ranker_immediate_blocker=false runtime=enabled_candidate_set_ready raw_scored_mature=237/30 production_validation=237/30 observation_validation=237/30
+PASS secondary_blocker=pre_bayes_pass_neutralized_not_pass_hard
+PASS secondary_blocker=path_ranker_observe_lower_bound_0p292839_lt_0p5
+PASS secondary_blocker=pythagorean_overstretch_1p0_gte_0p70
+PASS secondary_blocker=entry_model_matched_rows_0
+PASS secondary_blocker=selected_history_source_control_unlock_absent
+PASS promotion_allowed=false trade_usable=false update_goal=false

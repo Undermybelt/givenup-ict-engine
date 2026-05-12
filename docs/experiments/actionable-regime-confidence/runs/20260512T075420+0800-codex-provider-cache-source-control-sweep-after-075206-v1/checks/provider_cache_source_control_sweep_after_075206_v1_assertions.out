@@ -1,0 +1,15 @@
+gate_result=provider_cache_source_control_sweep_after_075206_v1=no_valid_required_root_no_unlock
+candidate_hit_count=124
+root_absent_count=2
+scan_truncated_count=3
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

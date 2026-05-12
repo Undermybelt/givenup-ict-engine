@@ -1,0 +1,90 @@
+{
+  "run_id": "20260511T134038+0800-codex-local-row-export-acquisition-check-v1",
+  "artifact_type": "local_row_export_acquisition_check_v1",
+  "purpose": "Bounded local check for the current Board A next action: authenticated/user-provided FINRA-like spoofing/layering row exports or exact native intraday/full-species MainRegimeV2 source-label panels.",
+  "search_scope": [
+    "/Users/thrill3r/Downloads",
+    "/Users/thrill3r/Documents",
+    "/Users/thrill3r/Desktop",
+    "/private/tmp",
+    "/tmp",
+    "docs/experiments/actionable-regime-confidence/runs"
+  ],
+  "search_patterns": [
+    "*finra*",
+    "*potential*manip*",
+    "*spoof*",
+    "*layering*",
+    "*quote*stuff*",
+    "*order*book*",
+    "*market*regime*label*",
+    "*regime*label*"
+  ],
+  "candidate_hits": [
+    {
+      "path": "/Users/thrill3r/Downloads/repo-intake/hummingbot/scripts/download_order_book_and_trades.py",
+      "decision": "script_only_not_label_export",
+      "reason": "Order-book/trade downloader script, not row-level positive/negative Manipulation labels."
+    },
+    {
+      "path": "/Users/thrill3r/Downloads/external-data-sources/clob-client/examples/populateOrderbook.ts",
+      "decision": "script_only_not_label_export",
+      "reason": "CLOB client example, not labeled manipulation rows."
+    },
+    {
+      "path": "/Users/thrill3r/Downloads/external-data-sources/clob-client/examples/getOrderbooks.ts",
+      "decision": "script_only_not_label_export",
+      "reason": "CLOB client example, not labeled manipulation rows."
+    },
+    {
+      "path": "/Users/thrill3r/Downloads/external-data-sources/clob-client/examples/getOrderbook.ts",
+      "decision": "script_only_not_label_export",
+      "reason": "CLOB client example, not labeled manipulation rows."
+    },
+    {
+      "path": "/private/tmp/ict-regime-direct-manipulation-schema-20260511T081556/phobia76__pmxt-l2-dump/hours__2026__02__21__polymarket_orderbook_2026-02-21T16.parquet",
+      "decision": "unlabeled_orderbook_sidecar_not_accepted",
+      "reason": "Order-book sample; current direct Manipulation schema audit already records Polymarket/order-book sources as unlabeled and accepted direct windows as 0."
+    },
+    {
+      "path": "/private/tmp/ict-regime-direct-manipulation-schema-20260511T081556/trentmkelly__polymarket_crypto_derivatives/btc15m_market1402567_2026-02-21_15-45-00_all__steps.parquet",
+      "decision": "unlabeled_orderbook_sidecar_not_accepted",
+      "reason": "Polymarket event/book sidecar, not spoofing/layering positive plus matched-negative rows."
+    },
+    {
+      "path": "/private/tmp/ict-regime-direct-manipulation-schema-20260511T081556/trentmkelly__polymarket_crypto_derivatives/btc15m_market1402567_2026-02-21_15-45-00_all__events.parquet",
+      "decision": "unlabeled_orderbook_sidecar_not_accepted",
+      "reason": "Polymarket event/book sidecar, not spoofing/layering positive plus matched-negative rows."
+    },
+    {
+      "path": "/private/tmp/ict-regime-direct-manipulation-schema-20260511T081556/trentmkelly__polymarket_crypto_derivatives/btc15m_market1402567_2026-02-21_15-45-00_all__book_levels.parquet",
+      "decision": "unlabeled_orderbook_sidecar_not_accepted",
+      "reason": "Polymarket event/book sidecar, not spoofing/layering positive plus matched-negative rows."
+    },
+    {
+      "path": "/private/tmp/hmm_regime_nq_15m_v8/regime_v2_labels.json",
+      "decision": "model_inferred_proxy_not_accepted",
+      "reason": "HMM/model-inferred labels are explicitly forbidden as source-label completion evidence."
+    },
+    {
+      "path": "/private/tmp/hmm_regime_nq_15m_v8/regime_v2_labels.feather",
+      "decision": "model_inferred_proxy_not_accepted",
+      "reason": "HMM/model-inferred labels are explicitly forbidden as source-label completion evidence."
+    }
+  ],
+  "existing_repo_schema_package": "docs/experiments/actionable-regime-confidence/runs/20260511T133337-codex-finra-manipulation-acquisition-schema-v1/acquisition-schema/finra_manipulation_acquisition_schema_v1.csv",
+  "existing_direct_schema_audit": "docs/experiments/actionable-regime-confidence/runs/20260511T081556-codex-direct-manipulation-source-schema-audit/direct-manipulation-schema/direct_manipulation_source_schema_audit.json",
+  "accepted_finra_like_positive_rows_found": 0,
+  "accepted_matched_negative_rows_found": 0,
+  "accepted_native_intraday_full_species_source_label_panels_found": 0,
+  "accepted_direct_manipulation_windows_added": 0,
+  "decision": {
+    "gate_result": "blocked_local_row_export_acquisition_check_no_accepted_exports_found",
+    "full_objective_achieved": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "External row exports are still required: either FINRA-like spoofing/layering positives plus matched negatives, or an exact native intraday/full-species MainRegimeV2 source-label panel."
+}

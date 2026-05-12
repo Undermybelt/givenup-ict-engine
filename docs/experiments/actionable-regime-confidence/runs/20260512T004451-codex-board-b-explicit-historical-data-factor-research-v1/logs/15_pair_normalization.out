@@ -1,0 +1,10 @@
+{
+  "pair_whitelist": [
+    "NQ/USD"
+  ],
+  "data_files": [
+    "NQ_USD-1h.feather",
+    "NQ_USD-4h.feather",
+    "NQ_USD-1d.feather"
+  ]
+}

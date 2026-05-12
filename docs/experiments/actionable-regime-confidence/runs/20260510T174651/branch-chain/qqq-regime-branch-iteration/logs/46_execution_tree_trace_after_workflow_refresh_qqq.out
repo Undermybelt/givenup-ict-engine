@@ -1,0 +1,13 @@
+{
+  "branch": "transition_guardrail",
+  "branch_probability": 0.0,
+  "execution_bias": "guarded",
+  "gate_status": "observe",
+  "execution_score": 0.584538417337384,
+  "decision_hint": "execution_guarded_due_to_low_remaining_regime_duration",
+  "path_ranker_runtime_source": "unknown",
+  "path_ranker_model_family": "unknown",
+  "path_ranker_score_visible_to_execution_tree": false,
+  "path_ranker_score_used_by_execution_tree": false,
+  "ranker_validation_ready": true
+}

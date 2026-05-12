@@ -1,0 +1,11 @@
+goal_achieved=false
+rows_scanned=347
+auto_quant_ohlcv_cells=52
+independent_source_backed_mainregimev2_label_sources=0
+full_root_label_panel_cells_available=0
+accepted_full_cycle_full_universe=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_ohlcv_committed=false
+trade_usable=false
+gate_result=blocked_local_and_autoquant_cache_have_no_independent_root_label_panel

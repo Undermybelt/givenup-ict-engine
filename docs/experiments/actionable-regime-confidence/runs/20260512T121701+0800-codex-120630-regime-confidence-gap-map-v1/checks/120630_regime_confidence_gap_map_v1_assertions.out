@@ -1,0 +1,12 @@
+PASS run_id=20260512T121701+0800-codex-120630-regime-confidence-gap-map-v1
+PASS source_run_id=20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1
+PASS active_regime=range
+PASS active_confidence=0.5250864595751618
+PASS range_gap_to_95=0.20231228233180432
+PASS pre_bayes_gate_status=pass_neutralized
+PASS directional_gap_shortfall=0.0762866318583341
+PASS raw_scored_mature=237
+FAIL_CLOSED execution_ready=False actionable=False review=observe
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

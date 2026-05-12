@@ -1,0 +1,129 @@
+{
+  "active_rows": 20,
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T081000-codex-polymarket-public-catalog-probe/checks/polymarket_public_catalog_probe_assertions.out",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T081000-codex-polymarket-public-catalog-probe/scripts/polymarket_public_catalog_probe.py",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T081000-codex-polymarket-public-catalog-probe/polymarket-catalog/polymarket_public_catalog_probe.json",
+    "summary_md": "docs/experiments/actionable-regime-confidence/runs/20260511T081000-codex-polymarket-public-catalog-probe/polymarket-catalog/polymarket_public_catalog_probe.md"
+  },
+  "catalog_rows": 20,
+  "closed_rows": 0,
+  "completion_accounting": {
+    "accepted_confidence": false,
+    "accepted_full_cycle_full_universe": false,
+    "catalog_materialized": true,
+    "why_not_accepted": [
+      "Polymarket catalog rows are alternative-data market discovery, not MainRegimeV2 price-root labels.",
+      "No provider/instrument/timeframe Bull/Bear/Sideways/Crisis source-label panel is attached.",
+      "No Polymarket CLOB price-history token was promoted to root confidence in this slice."
+    ]
+  },
+  "created_at_utc": "2026-05-11T00:14:31.833234+00:00",
+  "gate_result": "polymarket_catalog_materialized_root_confidence_pending",
+  "goal_achieved": false,
+  "next_action": "Keep Polymarket as alternative-data sidecar unless a concrete CLOB token history can be mapped to an independent MainRegimeV2 source-label panel.",
+  "objective": "Probe the Polymarket public catalog cell from the expanded Board A provider universe.",
+  "raw_data_committed": false,
+  "rows_with_clob_token_ids": 20,
+  "run_id": "20260511T081000+0800-codex-polymarket-public-catalog-probe",
+  "runtime_code_changed": false,
+  "sample_rows": [
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2026-07-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "540817",
+      "question": "New Rihanna Album before GTA VI?",
+      "slug": "new-rhianna-album-before-gta-vi-926"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2026-07-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "540818",
+      "question": "New Playboi Carti Album before GTA VI?",
+      "slug": "new-playboi-carti-album-before-gta-vi-421"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2026-07-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "540819",
+      "question": "Will Jesus Christ return before GTA VI?",
+      "slug": "will-jesus-christ-return-before-gta-vi-665"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2026-07-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "540820",
+      "question": "Trump out as President before GTA VI?",
+      "slug": "trump-out-as-president-before-gta-vi-846"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2026-07-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "540843",
+      "question": "Will China invades Taiwan before GTA VI?",
+      "slug": "will-china-invades-taiwan-before-gta-vi-716"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2026-07-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "540844",
+      "question": "Will bitcoin hit $1m before GTA VI?",
+      "slug": "will-bitcoin-hit-1m-before-gta-vi-872"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2026-05-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "540881",
+      "question": "GTA VI released before June 2026?",
+      "slug": "gta-vi-released-before-june-2026"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2025-12-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "544092",
+      "question": "Will Harvey Weinstein be sentenced to no prison time?",
+      "slug": "will-harvey-weinstein-be-sentenced-to-no-prison-time"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2025-12-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "544093",
+      "question": "Will Harvey Weinstein be sentenced to less than 5 years in prison?",
+      "slug": "will-harvey-weinstein-be-sentenced-to-less-than-5-years-in-prison"
+    },
+    {
+      "active": true,
+      "closed": false,
+      "end_date": "2025-12-31T12:00:00Z",
+      "has_clob_token_ids": true,
+      "id": "544094",
+      "question": "Will Harvey Weinstein be sentenced to between 5 and 10 years in prison?",
+      "slug": "will-harvey-weinstein-be-sentenced-to-between-5-and-10-years-in-prison"
+    }
+  ],
+  "source": {
+    "fetch_command": "uv run --with requests --with pandas python scripts/auto_quant_external/fetch_external.py polymarket-markets --limit 20 --active true --closed false --format json --output /private/tmp/ict-regime-polymarket-public-catalog-20260511T081000/polymarket_markets.json",
+    "raw_data_committed": false,
+    "raw_json": "/private/tmp/ict-regime-polymarket-public-catalog-20260511T081000/polymarket_markets.json"
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

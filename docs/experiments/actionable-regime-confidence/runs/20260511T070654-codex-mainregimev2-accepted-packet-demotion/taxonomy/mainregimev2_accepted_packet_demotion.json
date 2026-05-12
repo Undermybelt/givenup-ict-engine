@@ -1,0 +1,100 @@
+{
+  "run_id": "20260511T070654+0800-codex-mainregimev2-accepted-packet-demotion",
+  "source_board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "decision": "board_a_repointed_to_mainregimev2_price_roots_with_subtype_packet_demotion",
+  "main_regime_v2_taxonomy": {
+    "main_price_regime_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "separate_direct_event_class_or_overlay": [
+      {
+        "name": "Manipulation",
+        "accounting_class": "separate_direct_event_class_or_overlay_gate",
+        "price_root_completion_accounting": "not_counted_as_main_price_regime_root",
+        "accepted_evidence_requirement": "direct microstructure, order-flow, order-lifecycle, direct social-event, or direct on-chain event evidence",
+        "rejected_evidence": [
+          "OHLCV-only proxy",
+          "session-liquidity proxy",
+          "thin-liquidity proxy",
+          "sweep-like range proxy",
+          "volume-ratio proxy without direct event/order-flow source"
+        ],
+        "downstream_action": "suppress_abstain_cooldown_only"
+      }
+    ],
+    "residual": [
+      "UnknownOrMixed"
+    ]
+  },
+  "demoted_accepted_packets": [
+    {
+      "packet": "TrendExpansion",
+      "new_accounting_class": "sub_regime_evidence_only",
+      "root_completion_allowed": false,
+      "allowed_use": "child/provenance evidence under a parent Bull/Bear trend context after the parent root is separately identified"
+    },
+    {
+      "packet": "RangeConsolidation",
+      "new_accounting_class": "sub_regime_evidence_only",
+      "root_completion_allowed": false,
+      "allowed_use": "child/provenance evidence under Sideways after the parent root is separately identified"
+    },
+    {
+      "packet": "ExtremeStress",
+      "new_accounting_class": "sub_regime_evidence_only",
+      "root_completion_allowed": false,
+      "allowed_use": "child/provenance evidence under Crisis after the parent root is separately identified"
+    },
+    {
+      "packet": "ReversalBrewing",
+      "new_accounting_class": "sub_regime_evidence_only",
+      "root_completion_allowed": false,
+      "allowed_use": "transition/guardrail evidence; no parent root completion by itself"
+    },
+    {
+      "packet": "SessionLiquidityCoreViable",
+      "new_accounting_class": "sub_regime_evidence_only",
+      "root_completion_allowed": false,
+      "allowed_use": "liquidity-context evidence only; rejected as a Manipulation acceptance source without direct event/order-flow evidence"
+    },
+    {
+      "packet": "ThinLiquidity",
+      "new_accounting_class": "sub_regime_evidence_only",
+      "root_completion_allowed": false,
+      "allowed_use": "liquidity-risk evidence only; rejected as a Manipulation acceptance source without direct event/order-flow evidence"
+    }
+  ],
+  "preserved_parent_root_baseline_evidence": [
+    {
+      "root": "Bull",
+      "packet": "20260511T035045+0800-codex-kaggle-bull-coverage-buffer-gate",
+      "status": "parent_root_baseline_evidence_preserved"
+    },
+    {
+      "root": "Bear",
+      "packet": "20260511T041923+0800-codex-yahoo-sourcebacked-parent-root-gate",
+      "status": "parent_root_baseline_evidence_preserved"
+    },
+    {
+      "root": "Sideways",
+      "packet": "20260511T041923+0800-codex-yahoo-sourcebacked-parent-root-gate",
+      "status": "parent_root_baseline_evidence_preserved"
+    },
+    {
+      "root": "Crisis",
+      "packet": "20260510T235220+0800-codex-broader-root-v2-probe",
+      "status": "parent_root_baseline_evidence_preserved"
+    }
+  ],
+  "current_expanded_scope_status": {
+    "all_species_all_cycles_complete": false,
+    "accepted_gate": "none_for_expanded_full_universe_full_cycle_goal",
+    "blocker": "provider-universe/timeframe-ladder cross-product coverage is not complete for Bull/Bear/Sideways/Crisis; Manipulation varieties remain separate overlay/direct-event cells"
+  },
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,7 @@
+{
+  "failed_assertions": [],
+  "json": "docs/experiments/actionable-regime-confidence/runs/20260511T122120-codex-source-window-attachability-v1/source-window-attachability/mainregimev2_source_window_attachability_v1.json",
+  "markdown": "docs/experiments/actionable-regime-confidence/runs/20260511T122120-codex-source-window-attachability-v1/source-window-attachability/mainregimev2_source_window_attachability_v1.md",
+  "raw_cache_dir": "/private/tmp/ict-regime-source-window-attachability-v1",
+  "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T122120-codex-source-window-attachability-v1/source-window-attachability/mainregimev2_source_window_attachability_v1_summary.csv"
+}

@@ -1,0 +1,4 @@
+file,rows,positive_rows_gt_1,negative_rows_gt_0,symbols,positive_symbols,negative_symbols,positive_event_groups,controlled_positive_event_groups,positive_event_groups_with_controls_rate,date_min,date_max,all_split_wilson95_lcb,heldout_split_wilson95_lcb
+features_5S.csv.gz,821307,317,820990,85,85,85,317,317,1.0,2018-01-03 18:00:20,2021-01-18 17:00:25,0.9880269250899991,0.9706403547062368
+features_15S.csv.gz,584104,317,583787,85,85,85,317,317,1.0,2018-01-03 18:00:15,2021-01-18 17:00:15,0.9880269250899991,0.9706403547062368
+features_25S.csv.gz,482157,317,481840,85,85,85,317,317,1.0,2018-01-03 18:00:00,2021-01-18 17:00:25,0.9880269250899991,0.9706403547062368

@@ -1,0 +1,103 @@
+{
+  "accepted_rows_added": 0,
+  "after_counts": {
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 104979,
+      "Crisis": 30623,
+      "Sideways": 57899
+    },
+    "package_counts": {
+      "price_root_equivalence_us_index_futures": 248440
+    },
+    "row_count": 248440,
+    "source_owner_counts": {
+      "ahaanverma00": 3435,
+      "source-owned-stock-market-regimes-2000-2026": 245005
+    }
+  },
+  "before_counts": {
+    "label_counts": {
+      "": 1,
+      "Bear": 54939,
+      "Bull": 104979,
+      "Crisis": 30623,
+      "Sideways": 57899
+    },
+    "package_counts": {
+      "price_root_equivalence_us_index_futures": 248441
+    },
+    "row_count": 248441,
+    "source_owner_counts": {
+      "ahaanverma00": 3435,
+      "source-owned-stock-market-regimes-2000-2026": 245006
+    }
+  },
+  "created_at_utc": "2026-05-11T13:44:27.292564+00:00",
+  "decision": "source_label_equivalence_duplicate_cleanup_v1=duplicates_or_malformed_rows_removed_schema_ready_unscored",
+  "external_requests_sent": false,
+  "final_rows_sha256": "915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f",
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "removed_counts": {
+    "label_counts": {
+      "": 1
+    },
+    "package_counts": {
+      "price_root_equivalence_us_index_futures": 1
+    },
+    "row_count": 1,
+    "source_owner_counts": {
+      "source-owned-stock-market-regimes-2000-2026": 1
+    }
+  },
+  "rows_after": 248440,
+  "rows_before": 248441,
+  "rows_removed": 1,
+  "run_id": "20260511T213910-codex-source-label-equivalence-duplicate-cleanup-v1",
+  "runtime_code_changed": false,
+  "start_rows_sha256": "4e59aa598eaed6d75cd93988383837bb6c364eb73aaf90ee32968a434d80bf5b",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier": {
+    "parsed": {
+      "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+      "package_counts": {
+        "price_root_equivalence_us_index_futures": 248440
+      },
+      "provenance_keys": [
+        "cleanups",
+        "created_at_utc",
+        "label_counts",
+        "license_or_permission",
+        "limitations",
+        "merged_label_counts",
+        "merged_market_counts",
+        "merged_row_count",
+        "previous_rows_retained",
+        "prior_provenance_run_id",
+        "raw_payload_committed_to_repo",
+        "row_count",
+        "rows_path",
+        "rows_sha256",
+        "run_id",
+        "shared_rows_path",
+        "shared_rows_sha256",
+        "source_csv_sha256",
+        "source_owner",
+        "source_pull_date",
+        "source_report_or_dataset",
+        "source_summary_sha256",
+        "updated_at_utc",
+        "updated_by",
+        "us_panel_summary",
+        "us_rows_added"
+      ],
+      "row_count": 248440,
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0
+  }
+}

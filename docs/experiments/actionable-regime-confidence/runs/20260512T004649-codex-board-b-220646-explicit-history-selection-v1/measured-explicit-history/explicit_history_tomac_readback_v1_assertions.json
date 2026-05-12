@@ -1,0 +1,76 @@
+{
+  "artifact": "explicit_history_tomac_readback_v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T004649-codex-board-b-220646-explicit-history-selection-v1",
+  "board_context": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "source_recipe": "SourceRootStopCarryLongHorizonV1",
+  "measured_strategy": "TomacNQ_KillzoneBreakout",
+  "auto_quant_run_exit": 0,
+  "prepare": {
+    "raw_rows": 2746,
+    "bars_1h": 689,
+    "bars_4h": 187,
+    "bars_1d": 38
+  },
+  "measured_metrics": {
+    "trade_count": 9,
+    "wins": 6,
+    "losses": 3,
+    "win_rate_pct": 66.6667,
+    "total_profit_pct": 5.28,
+    "sharpe": 4.1966,
+    "profit_factor": 7.3091,
+    "max_drawdown_pct": -0.5978
+  },
+  "import": {
+    "exit": 0,
+    "n_total_strategies": 1,
+    "n_ok": 1,
+    "log_matched": 1
+  },
+  "prior_init": {
+    "exit": 0,
+    "dry_run": false,
+    "strategies_applied": 1,
+    "temper": 0.25,
+    "evidence_value_gate_passed": true,
+    "n_win": 6,
+    "n_loss": 3
+  },
+  "downstream": {
+    "pre_bayes_exit": 0,
+    "pre_bayes_latest_gate_status": "blocked",
+    "pre_bayes_branch_path_gate": "blocked_missing_consumed_pre_bayes_filter",
+    "policy_training_exit": 0,
+    "path_ranker_runtime_ready": true,
+    "path_ranker_production_validation_rows": 843,
+    "path_ranker_observation_validation_rows": 81,
+    "workflow_structural_bundle_exit": 0,
+    "workflow_structural_bundle_gate": "observe",
+    "workflow_execution_candidate_exit": 0,
+    "workflow_execution_candidate_status": "ready",
+    "workflow_execution_candidate_source_phase": "analyze-live",
+    "workflow_status_exit": 0,
+    "workflow_promotion_status": "hold",
+    "promotion_allowed": false
+  },
+  "providers": {
+    "provider_status_exit": 0,
+    "yfinance_ready": true,
+    "kraken_cli_ready": true,
+    "ibkr_gateway_reachable_dependencies_missing": true,
+    "tradingview_remix_probe_failed": true
+  },
+  "decision": {
+    "status": "incubation_only_explicit_history_thin_support",
+    "promotion_allowed": false,
+    "primary_blockers": [
+      "thin_support_9_trades",
+      "pre_bayes_blocked_missing_consumed_pre_bayes_filter",
+      "workflow_promotion_hold",
+      "execution_candidate_is_analyze_live_not_exact_structural_branch_promotion"
+    ]
+  },
+  "active_cursor_at_artifact_write": "20260512T004738+0800-codex-board-b-220646-explicit-historical-rerun-v1",
+  "active_cursor_before_board_ledger": "20260512T010454+0800-codex-board-b-220646-real-catboost-explicit-closure-v1",
+  "supersedes_cursor": false
+}

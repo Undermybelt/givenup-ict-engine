@@ -1,0 +1,422 @@
+{
+  "achieved": true,
+  "active_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "Manipulation"
+  ],
+  "next_action": "report final result and mark goal complete",
+  "non_completion_buckets": [
+    "UnknownOrMixed"
+  ],
+  "objective": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md every active regime reaches >=95% confidence before reporting result",
+  "preflight_only_candidates": [
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "VolatilityDislocation",
+    "TransitionRecovery",
+    "CrossAssetRotation/RiskOnRiskOff",
+    "MacroPolicyRegime"
+  ],
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md Current Cursor and Active MainRegimeV2 Root Ledger",
+      "requirement": "Named TODO file owns the active Board A contract",
+      "status": "pass"
+    },
+    {
+      "evidence": [
+        "docs/experiments/actionable-regime-confidence/runs/20260511T035045-codex-kaggle-bull-coverage-buffer-gate/kaggle-bull-gate/kaggle_bull_coverage_buffer_gate_report.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T235220-codex-broader-root-v2-probe/root-v2-broader/main_regime_v2_broader_root_calibration_report.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.json"
+      ],
+      "requirement": "Every active completion root has calibrated 95% evidence",
+      "status": "pass"
+    },
+    {
+      "evidence": "Active ledger marks UnknownOrMixed residual_only",
+      "requirement": "Residual UnknownOrMixed is not promoted as a completion root",
+      "status": "pass"
+    },
+    {
+      "evidence": "Active ledger marks BubbleEuphoria/LiquidityDrought/VolatilityDislocation/TransitionRecovery/CrossAssetRotation/MacroPolicyRegime preflight_only",
+      "requirement": "Candidate additional concepts are not silently counted as complete roots",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.json",
+      "requirement": "Manipulation is accepted only from direct evidence, not OHLCV proxy",
+      "status": "pass"
+    }
+  ],
+  "root_audits": [
+    {
+      "accepted_flag": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T035045-codex-kaggle-bull-coverage-buffer-gate/kaggle-bull-gate/kaggle_bull_coverage_buffer_gate_report.json",
+      "calibration": {
+        "coverage": 0.03721354694788075,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 2202,
+        "validation_instruments": [
+          "AAPL",
+          "ABBV",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "MS",
+          "MSFT",
+          "NKE",
+          "NVDA",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "validation_market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9525159363146446
+      },
+      "completion_pass": true,
+      "root": "Bull",
+      "rule": "close_drawdown60 >= -0.0032047199531 AND volatility <= 0.152179344579",
+      "runtime_code_changed": false,
+      "test": {
+        "coverage": 0.05277735555893331,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 3125,
+        "validation_instruments": [
+          "AAPL",
+          "ABBV",
+          "AMZN",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "META",
+          "MS",
+          "MSFT",
+          "NKE",
+          "NVDA",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "validation_market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9619306121174673
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    },
+    {
+      "accepted_flag": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "calibration": {
+        "coverage": 0.07935314027830011,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 633,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "IWM",
+          "QQQ",
+          "SOL-USD",
+          "SPY",
+          "TLT"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9939679511007218
+      },
+      "completion_pass": true,
+      "root": "Bear",
+      "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+      "runtime_code_changed": false,
+      "test": {
+        "coverage": 0.0655819774718398,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 524,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "ETH-USD",
+          "IWM",
+          "QQQ",
+          "SOL-USD"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9927223245607182
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    },
+    {
+      "accepted_flag": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "calibration": {
+        "coverage": 0.062053403535163594,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 495,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "GLD",
+          "HYG",
+          "SPY",
+          "TLT"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9886466535263686
+      },
+      "completion_pass": true,
+      "root": "Sideways",
+      "rule": "sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236",
+      "runtime_code_changed": false,
+      "test": {
+        "coverage": 0.10801001251564456,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 863,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "GLD",
+          "HYG",
+          "IWM",
+          "QQQ",
+          "SOL-USD",
+          "SPY",
+          "TLT"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9955684412857684
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    },
+    {
+      "accepted_flag": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T235220-codex-broader-root-v2-probe/root-v2-broader/main_regime_v2_broader_root_calibration_report.json",
+      "calibration": {
+        "coverage": 0.06580645161290323,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 1020,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "wilson95_lcb": 0.996247994464769
+      },
+      "completion_pass": true,
+      "ece": 0.0,
+      "root": "Crisis",
+      "rule": "range_ratio32_128 >= 1.43116959912",
+      "runtime_code_changed": false,
+      "test": {
+        "coverage": 0.06175802789490756,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 952,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "wilson95_lcb": 0.9959810711439178
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    },
+    {
+      "accepted_flag": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.json",
+      "calibration": {
+        "coverage": 0.5902732595966168,
+        "negative_controls": 10076,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_negative_controls": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 14516,
+        "unique_channels_predicted_positive": 147,
+        "unique_coins_predicted_positive": 364,
+        "wilson95_lcb": 0.9997354338315891
+      },
+      "completion_pass": true,
+      "evidence_class": "direct_social_event_confirmed",
+      "root": "Manipulation",
+      "rule": "classified_telegram_coin_pump_event_present == 1",
+      "runtime_code_changed": false,
+      "source_repo": "https://github.com/Mehrnoom/Cryptocurrency-Pump-Dump",
+      "target_policy": "source-backed direct Telegram pump-attempt event, not OHLCV proxy",
+      "test": {
+        "coverage": 0.5218770331815225,
+        "negative_controls": 11758,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_negative_controls": true,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "support": 12834,
+        "unique_channels_predicted_positive": 167,
+        "unique_coins_predicted_positive": 365,
+        "wilson95_lcb": 0.9997007706604714
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    }
+  ],
+  "run_id": "20260511T045938+0800-codex-board-a-completion-audit"
+}

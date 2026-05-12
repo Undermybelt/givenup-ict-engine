@@ -1,0 +1,63 @@
+{
+  "run_id": "20260512T072830+0800-codex-datacite-dataverse-readback-after-072758-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T072758+0800-codex-datacite-dataverse-source-route-probe-after-072412-v1",
+  "gate_result": "datacite_dataverse_readback_after_072758_v1=no_required_source_control_unlock_no_downstream",
+  "query_exits_zero": true,
+  "sources_checked": [
+    "DataCite",
+    "Harvard Dataverse"
+  ],
+  "queries_checked": [
+    "3Red Trading spoofing owner export",
+    "direct manipulation positive rows matched controls",
+    "MainRegimeV2",
+    "native_subhour_source_label_rows",
+    "Oystacher spoofing futures order book dataset",
+    "stock_market_regimes_2026_extension"
+  ],
+  "readback": {
+    "datacite_zero_result_queries": 5,
+    "datacite_false_positive_queries": 1,
+    "dataverse_zero_result_queries": 3,
+    "dataverse_false_positive_queries": 3,
+    "required_filename_hits": 0,
+    "owner_export_hits": 0,
+    "mainregimev2_hits": 0,
+    "native_subhour_source_label_hits": 0,
+    "r5_recency_extension_hits": 0
+  },
+  "false_positive_examples": {
+    "datacite_direct_manipulation_positive_rows_matched_controls": [
+      "The Nexus Recursive Harmonic Framework",
+      "COVID-19: A Global Biological Update..."
+    ],
+    "dataverse_3red_trading_spoofing_owner_export": [
+      "Foreign Trade of Shanghai: Analysis of Exports",
+      "ERC-20 Trading 2015"
+    ],
+    "dataverse_direct_manipulation_positive_rows_matched_controls": [
+      "Replication Data for: lobbying-position",
+      "Direct-MSM-Droplet",
+      "Feedback and Education Improve Human Detection of Image Manipulation on Social Media"
+    ],
+    "dataverse_oystacher_spoofing_futures_order_book_dataset": [
+      "Experiment 2",
+      "Experiment 1",
+      "State Level Executive Orders"
+    ]
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "r6_owner_export_unlock": false,
+    "r5_recency_unlock": false,
+    "r3_native_subhour_unlock": false,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next": "Continue source/control acquisition only. Do not run direct verifier, split calibration, canonical merge, selected-data AutoQuant, or downstream promotion until explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned post-2026-01-30 R5 rows matching the source-panel schema, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export exists."
+}

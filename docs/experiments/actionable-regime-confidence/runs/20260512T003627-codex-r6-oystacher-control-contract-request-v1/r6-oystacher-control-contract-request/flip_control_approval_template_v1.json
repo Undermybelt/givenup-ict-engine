@@ -1,0 +1,21 @@
+{
+  "acknowledged_risks": [
+    "FLIP rows are same-exhibit same-sequence counterpart legs.",
+    "FLIP rows are not source-owned normal/non-manipulation controls under the default R6 contract.",
+    "Acceptance is a deliberate control-contract exception and must be recorded before canonical merge."
+  ],
+  "approval_state": "approved",
+  "approval_timestamp_utc": "<YYYY-MM-DDTHH:MM:SSZ>",
+  "approved_by": "<user-or-source-owner>",
+  "approved_contract_id": "r6_oystacher_exhibit_a_flip_as_control_exception",
+  "no_ohlcv_proxy_acceptance": true,
+  "policy_review_run": "20260512T003334-codex-r6-oystacher-exhibit-a-policy-review-v1",
+  "required_followup": [
+    "copy verifier-native files under /tmp/ict-engine-board-a-r6-owner-export-v1 under shared lock",
+    "rerun direct_manipulation_row_intake_verifier",
+    "rerun split calibration",
+    "rerun provider status for IBKR, TradingView, yfinance, Kraken",
+    "rerun Auto-Quant, pre-Bayes/BBN, CatBoost/policy-training, workflow/execution-tree, and path-ranking readback"
+  ],
+  "source_materialization_run": "20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1"
+}

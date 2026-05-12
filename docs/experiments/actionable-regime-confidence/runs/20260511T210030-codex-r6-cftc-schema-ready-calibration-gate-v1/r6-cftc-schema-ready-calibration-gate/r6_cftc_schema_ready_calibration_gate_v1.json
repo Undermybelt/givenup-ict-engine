@@ -1,0 +1,106 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_writeback": "31cbeb6b377dcedee44e0fac6b88ff9ba7ba40ba27e2d0c9b2be49bc5bf1e416",
+  "broad_normal_sample": false,
+  "chronological_split_ok": true,
+  "combined_min_wilson95_lcb": 0.700854951580456,
+  "decision": "r6_cftc_schema_ready_calibration_gate_v1=schema_ready_but_calibration_blocked",
+  "gate_rows": [
+    {
+      "gate": "positive_support",
+      "observed": 9,
+      "pass": false,
+      "required": 50
+    },
+    {
+      "gate": "negative_support",
+      "observed": 9,
+      "pass": false,
+      "required": 50
+    },
+    {
+      "gate": "chronological_split",
+      "observed": 6,
+      "pass": true,
+      "required": 2
+    },
+    {
+      "gate": "heldout_symbol_or_venue",
+      "observed": "symbols=4;venues=2",
+      "pass": true,
+      "required": "symbol>=2 or venue>=2"
+    },
+    {
+      "gate": "wilson95_lcb",
+      "observed": "0.700855",
+      "pass": false,
+      "required": ">=0.95"
+    },
+    {
+      "gate": "broad_normal_sample",
+      "observed": "Derived only from public CFTC facts describing genuine iceberg order legs in the same examples; schema-ready/unscored seed, not a broad normal-activity calibration sample.",
+      "pass": false,
+      "required": "source-owned broad normal activity sample"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T13:12:03.894472+00:00",
+  "heldout_symbol_or_venue_ok": true,
+  "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "labels": {
+    "matched_negative_normal_activity": 6,
+    "normal_control": 3,
+    "positive_spoofing_layering": 9
+  },
+  "matched_groups": [
+    "cftc_gandhi_20131216_es_example",
+    "cftc_gandhi_20140917_es_example",
+    "cftc_mohan_20131127_dow_first_example",
+    "cftc_mohan_20131127_dow_second_example",
+    "cftc_mohan_20131202_nq_example",
+    "cftc_mohan_20131209_nq_first_example",
+    "cftc_mohan_20131209_nq_second_example",
+    "cftc_mohan_complaint_20131203_nq_no_fill_leg"
+  ],
+  "matched_negative_rows": 9,
+  "min_support_required_per_class": 50,
+  "negative_wilson95_lcb": 0.700854951580456,
+  "new_confidence_gate": false,
+  "next_action": "Acquire source-owned or owner-approved broad same-schema normal controls with enough dates and symbols/venues, then rerun this gate and the full completion audit.",
+  "positive_rows": 9,
+  "positive_wilson95_lcb": 0.700854951580456,
+  "raw_data_committed": false,
+  "run_id": "20260511T210030-codex-r6-cftc-schema-ready-calibration-gate-v1",
+  "runtime_code_changed": false,
+  "session_buckets": [
+    "overnight_central_time",
+    "regular_us_central_time"
+  ],
+  "source_hashes": {
+    "matched_negative_normal_activity_rows.csv": "5f6468bd833df0934b3018f96f6da1d66264ec5d163ff05c1ce5ad3e50382df1",
+    "positive_spoofing_layering_rows.csv": "64482ed3fb1f2ba9a749705c61cb845fcba22196180c3cc84705ae12067b030d",
+    "provenance_manifest.json": "ed022ade0d5cdbdff145bf3e45f6822e2857edc0e502cb3559fb5d349f8d4e8d"
+  },
+  "strict_full_objective_achieved": false,
+  "support_ok": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unique_dates": [
+    "2013-11-27",
+    "2013-12-02",
+    "2013-12-03",
+    "2013-12-09",
+    "2013-12-16",
+    "2014-09-17"
+  ],
+  "unique_symbols": [
+    "December 2013 E-mini Dow futures",
+    "December 2013 E-mini NASDAQ futures",
+    "December 2014 E-mini S&P 500 futures",
+    "March 2014 E-mini S&P 500 futures"
+  ],
+  "unique_venues": [
+    "CBOT",
+    "CME"
+  ],
+  "update_goal": false
+}

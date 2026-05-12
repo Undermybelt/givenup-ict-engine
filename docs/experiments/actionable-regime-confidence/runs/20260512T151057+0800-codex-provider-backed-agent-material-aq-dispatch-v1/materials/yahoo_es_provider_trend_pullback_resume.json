@@ -1,0 +1,42 @@
+{
+  "package_id": "yahoo-es-provider-trend-pullback-resume-1h-v1",
+  "generated_at": "2026-05-12T15:10:57+08:00",
+  "title": "Yahoo ES 1h Provider Trend Pullback Resume",
+  "symbol": "ES",
+  "timeframe": "1h",
+  "direction": "long",
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/strategies/ProviderTrendPullbackResume.py",
+  "strategy_class_name": "ProviderTrendPullbackResume",
+  "strategy_brief": "Provider-backed 1h trend pullback continuation material derived from the 145809 high-density screen and dispatched through the generic Auto-Quant agent-material runtime.",
+  "evaluation_priority": [
+    "trade_count",
+    "win_rate_pct",
+    "profit_factor",
+    "regime_branch_path_preservation",
+    "downstream_pre_bayes_bbn_catboost_execution_tree_admission"
+  ],
+  "consumer_evidence_profile": {
+    "required_surfaces": [
+      "ohlcv"
+    ],
+    "required_indicators": [
+      "ema_fast",
+      "ema_slow",
+      "momentum_24",
+      "range_24"
+    ],
+    "provider_guidance": [
+      "source_provider=Yahoo",
+      "source_input=20260512T143900 yahoo_es_1h_20240513_20260512.normalized.csv"
+    ],
+    "notes": [
+      "screen_only_until Auto-Quant dispatch and downstream admission complete"
+    ]
+  },
+  "notes": [
+    "branch_family=trend_expansion_or_bull_pullback_resume",
+    "provider_backed_input=true",
+    "not_trade_usable_without downstream admission"
+  ]
+}

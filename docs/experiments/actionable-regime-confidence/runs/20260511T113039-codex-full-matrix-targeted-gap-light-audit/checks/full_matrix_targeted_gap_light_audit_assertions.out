@@ -1,0 +1,11 @@
+PASS active_taxonomy=MainRegimeV2
+PASS input_kaggle_feature_table_present
+PASS input_intraday_feature_table_present
+PASS accepted_parent_root_gap_slices_added=0
+PASS full_matrix_goal_achieved=false
+PASS intraday_future_targets_not_counted_as_source_labels
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+GATE blocked_light_gap_audit_no_95_source_label_slice

@@ -1,0 +1,44 @@
+{
+  "run_id": "20260512T070801+0800-codex-cftc-complaint-pdf-parse-after-070315-v1",
+  "gate_result": "cftc_complaint_pdf_parse_after_070315_v1=official_complaint_parsed_no_r6_owner_export_controls_no_unlock",
+  "source_pdf": "/tmp/ict-engine-board-a-public-exact-source-route-probe-after-065820-v1/enfigorcomplnt101915.pdf",
+  "source_pdf_sha256": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+  "parser": {
+    "command_shape": "UV_CACHE_DIR=/tmp/ict-engine-uv-cache-pdf uv run --no-project --with pypdf python ...",
+    "pages": 36,
+    "extracted_text_chars": 59020
+  },
+  "parsed_product_date_support": {
+    "COMEX_copper_charged_dates": 14,
+    "NYMEX_crude_oil_charged_dates": 4,
+    "NYMEX_natural_gas_charged_dates": 3,
+    "CFE_VIX_charged_dates": 19,
+    "CME_E_mini_SP500_charged_dates": 11,
+    "total_charged_dates": 51
+  },
+  "term_counts": {
+    "spoof": 93,
+    "flip": 41,
+    "market_depth": 17,
+    "cancel": 57,
+    "normal": 0,
+    "order_lifecycle": 0,
+    "top_of_book": 0,
+    "market_by_order": 0,
+    "non_manipulation": 0
+  },
+  "decision": {
+    "official_route_context": true,
+    "verifier_native_r6_owner_export_rows": false,
+    "source_owned_normal_control_rows": false,
+    "provenance_manifest_with_ticket_export_license": false,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_run": "606aa340878ceafd8062a513192f8b9ec236120ab9158d6c9880a81926856b7e",
+  "commands": [
+    {
+      "cmd": [
+        "kaggle",
+        "datasets",
+        "files",
+        "mafaqbhatti/stock-market-regimes-20002026",
+        "-v"
+      ],
+      "name": "kaggle_files",
+      "return_code": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215621-codex-r5-kaggle-stock-regime-recency-refresh-v1/command-output/kaggle_files.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215621-codex-r5-kaggle-stock-regime-recency-refresh-v1/command-output/kaggle_files.stdout.txt"
+    },
+    {
+      "cmd": [
+        "kaggle",
+        "datasets",
+        "download",
+        "mafaqbhatti/stock-market-regimes-20002026",
+        "-p",
+        "/tmp/ict-engine-kaggle-stock-regimes-live-refresh-20260511T215621",
+        "--force",
+        "--unzip"
+      ],
+      "name": "kaggle_download",
+      "return_code": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215621-codex-r5-kaggle-stock-regime-recency-refresh-v1/command-output/kaggle_download.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215621-codex-r5-kaggle-stock-regime-recency-refresh-v1/command-output/kaggle_download.stdout.txt"
+    }
+  ],
+  "csv_stats": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 103766,
+      "Crisis": 29632,
+      "High-volatility": 16,
+      "Sideways": 56668
+    },
+    "post_cutoff_root_rows": 0,
+    "post_cutoff_rows": 0,
+    "row_count": 245021,
+    "target_counts": [
+      {
+        "main_regime_v2_label": "Sideways",
+        "min_new_source_sessions": 5,
+        "post_cutoff_rows": 0,
+        "split_role": "heldout_time",
+        "symbol": "XOM"
+      },
+      {
+        "main_regime_v2_label": "Bear",
+        "min_new_source_sessions": 7,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "symbol": "UNH"
+      },
+      {
+        "main_regime_v2_label": "Sideways",
+        "min_new_source_sessions": 7,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "symbol": "^DJI"
+      },
+      {
+        "main_regime_v2_label": "Bear",
+        "min_new_source_sessions": 10,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "symbol": "AMD"
+      }
+    ],
+    "ticker_count": 39
+  },
+  "dataset_id": "mafaqbhatti/stock-market-regimes-20002026",
+  "dataset_url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+  "decision": "r5_kaggle_stock_regime_recency_refresh_v1=latest_public_dataset_no_post_2026_01_30_rows",
+  "download_matches_local_reference": true,
+  "download_root": "/tmp/ict-engine-kaggle-stock-regimes-live-refresh-20260511T215621",
+  "downloaded_csv": "/tmp/ict-engine-kaggle-stock-regimes-live-refresh-20260511T215621/stock_market_regimes_2000_2026.csv",
+  "downloaded_csv_sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+  "extension_rows_found": 0,
+  "external_requests_sent": true,
+  "generated_at_utc": "2026-05-11T13:58:01.860612+00:00",
+  "intake_root": "/tmp/ict-engine-source-panel-recency-extension",
+  "intake_rows_written": false,
+  "last_accepted_source_date": "2026-01-30",
+  "local_reference_csv": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "local_reference_csv_sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+  "missing_columns": [],
+  "new_confidence_gate": false,
+  "r5_recency_ready": false,
+  "raw_data_committed": false,
+  "recency_verifier": {
+    "missing_files": [
+      "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+      "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+    ],
+    "reason": "missing_required_files",
+    "return_code": 2,
+    "status": "blocked"
+  },
+  "run_id": "20260511T215621-codex-r5-kaggle-stock-regime-recency-refresh-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

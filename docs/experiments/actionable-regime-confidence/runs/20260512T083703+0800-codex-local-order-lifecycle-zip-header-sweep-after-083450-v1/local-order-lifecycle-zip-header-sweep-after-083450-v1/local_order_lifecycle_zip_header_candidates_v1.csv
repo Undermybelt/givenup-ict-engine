@@ -1,0 +1,244 @@
+container,member,size,kind,class,hits,headers
+/Users/thrill3r/Downloads/Tomac/70wr2.49rrr5.84pf62.93e.csv,,1233593,csv,unknown_context,,entry|sl|tp1|tp2|dir|type|entry_time|tp1_hit|exit|reason|pnl
+/Users/thrill3r/Downloads/Tomac/77wr6.99pf2rrr.csv,,1237914,csv,unknown_context,,Entry|Exit|Type|Result|PnL
+/Users/thrill3r/Downloads/Tomac/80wr8pf1.97rrr.csv,,504899,csv,unknown_context,,entry_time|exit_time|type|res|pnl
+/Users/thrill3r/Downloads/Tomac/82wr1.5rrr7.5pf.csv,,156121,csv,unknown_context,,Entry Time|Exit Time|Direction|Entry|Exit|Net PnL|Reason
+/Users/thrill3r/Downloads/Tomac/85wr12.9pf2.21rrr.csv,,931679,csv,unknown_context,,Entry Time|Exit Time|Net PnL|Type|Reason
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_ES_final.csv,,10188,csv,unknown_context,,Net PnL|Result|Direction
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_ES_results.csv,,2801,csv,strategy_or_backtest_context,,Net PnL|Result
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_ES_v2.csv,,4586,csv,unknown_context,,Time|Direction|Net PnL|Result|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_ES_v3.csv,,57686,csv,unknown_context,,Time|Direction|Net PnL|Result|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_EUR_final.csv,,63283,csv,unknown_context,,Net PnL|Result|Direction
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_NQ_final.csv,,3287,csv,unknown_context,,Net PnL|Result|Direction
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_NQ_results.csv,,1062,csv,strategy_or_backtest_context,,Net PnL|Result
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_XAU_final.csv,,4293,csv,unknown_context,,Net PnL|Result|Direction
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_YM_final.csv,,32722,csv,unknown_context,,Net PnL|Result|Direction
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_all_contracts_summary.csv,,113,csv,strategy_or_backtest_context,,Contract|Trades|WinRate%|RRR|ProfitFactor|TotalPnL
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_balanced.csv,,20849,csv,unknown_context,,Time|Net PnL|Result|Direction
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_final_summary.csv,,216,csv,strategy_or_backtest_context,,Contract|Trades|WinRate%|RRR|ProfitFactor|TotalPnL
+/Users/thrill3r/Downloads/Tomac/90wr1.5rrr_pro_results.csv,,501,csv,strategy_or_backtest_context,,Time|Net PnL|Result|Direction|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/92w0.5rrrr5.54pf.csv,,337152,csv,unknown_context,,Entry Time|Exit Time|Net PnL|Type|Reason
+/Users/thrill3r/Downloads/Tomac/98wr0.8rrr41.07pf.csv,,1272927,csv,unknown_context,,Time|Net PnL|Result
+/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,condition.json,594696,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,metadata.json,683,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,glbx-mdp3-20100606-20260403.ohlcv-1m.csv,787648781,zip_member,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,manifest.json,1463,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025/condition.json,,563507,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025/glbx-mdp3-20100606-20260403.ohlcv-1m.csv,,927819291,csv,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025/manifest.json,,2342,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025/metadata.json,,683,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025/symbology.csv,,4267811,csv,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025/symbology.json,,56948,json,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,condition.json,563507,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,metadata.json,683,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,symbology.json,56948,zip_member,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,symbology.csv,4267811,zip_member,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,glbx-mdp3-20110101-20251231.ohlcv-1m.csv,881122398,zip_member,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,manifest.json,2342,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/condition.json,,413267,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/glbx-mdp3-20150101-20251231.ohlcv-1m.csv,,539544466,csv,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/manifest.json,,2343,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/metadata.json,,683,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/symbology.csv,,8273022,csv,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/symbology.json,,159781,json,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,condition.json,413267,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,metadata.json,683,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,symbology.json,159781,zip_member,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,symbology.csv,8273022,zip_member,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,glbx-mdp3-20150101-20251231.ohlcv-1m.csv,539544466,zip_member,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,manifest.json,2343,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/full_backtest_ES.csv,,2087525,csv,strategy_or_backtest_context,,Time|Net PnL|Result|Direction|Entry|Exit|Year
+/Users/thrill3r/Downloads/Tomac/full_backtest_EUR.csv,,1056173,csv,strategy_or_backtest_context,,Time|Net PnL|Result|Direction|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/full_backtest_NQ.csv,,1678636,csv,strategy_or_backtest_context,,Time|Net PnL|Result|Direction|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/full_backtest_XAU.csv,,396476,csv,strategy_or_backtest_context,,Time|Net PnL|Result|Direction|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/full_backtest_YM.csv,,1542896,csv,strategy_or_backtest_context,,Time|Net PnL|Result|Direction|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/full_backtest_summary.csv,,197,csv,strategy_or_backtest_context,,Contract|Years|Trades|WinRate%|RRR|ProfitFactor|TotalPnL|Passed
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/condition.json,,187797,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/databento.rar,,102402878,rar,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/gc_201101_202604.csv,,401491646,csv,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/glbx-mdp3-20210106-20260105.ohlcv-1m.csv,,585690521,csv,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/manifest.json,,2345,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/metadata.json,,683,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/symbology.csv,,30984640,csv,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/symbology.json,,1324648,json,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/es.continuous-15m.json,,7786235,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/eur.continuous-15m.json,,4256273,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/nq-structure-ict-mutation.json,,599,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/nq.continuous-15m.json,,5832749,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/state/NQ/backtest_runs.json,,47111,json,strategy_or_backtest_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/state/NQ/bbn_network.json,,20753,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/state/NQ/factor_mutation_runs.json,,3511,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/state/NQ/learning_state.json,,59268155,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/state/NQ/research_runs.json,,94739,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/state/NQ/workflow_snapshot.json,,9907,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/xau.continuous-15m.json,,1756672,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/ym.continuous-15m.json,,1440736,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m-expansion/cleaned-15m/es.continuous-15m.json,,7786235,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m-expansion/cleaned-15m/eur.continuous-15m.json,,4256273,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m-expansion/cleaned-15m/nq.continuous-15m.json,,5832749,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m-expansion/cleaned-15m/xau.continuous-15m.json,,1756672,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m-expansion/cleaned-15m/ym.continuous-15m.json,,1440736,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m-expansion/expansion_sop_report.15m.json,,66464,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m-expansion/state/EXPANSION_SOP/factor_mutation_runs.json,,4705,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-5m/es.continuous-5m.json,,17449673,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-5m/eur.continuous-5m.json,,10465730,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-5m/nq.continuous-5m.json,,14850693,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-5m/xau.continuous-5m.json,,5059998,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-5m/ym.continuous-5m.json,,3470417,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-gc-cl/cleaned-15m/gc.continuous-15m.json,,1524286,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-gc-cl/cleaned-1d/gc.continuous-1d.json,,26122,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-gc-cl/cleaned-1h/gc.continuous-1h.json,,460897,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/es.continuous-15m.json,,7786235,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/eur.continuous-15m.json,,4256273,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/nq.continuous-15m.json,,5832749,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/xau.continuous-15m.json,,1756672,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/ym.continuous-15m.json,,1440736,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1d/es.continuous-1d.json,,273982,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1d/eur.continuous-1d.json,,130527,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1d/nq.continuous-1d.json,,146938,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1d/xau.continuous-1d.json,,26122,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1d/ym.continuous-1d.json,,73341,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/es.continuous-1h.json,,2763250,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/eur.continuous-1h.json,,1397476,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/nq.continuous-1h.json,,1796737,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/xau.continuous-1h.json,,460897,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/ym.continuous-1h.json,,540038,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/es.continuous-1m.json,,57954434,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/eur.continuous-1m.json,,42271978,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json,,60407104,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/xau.continuous-1m.json,,23790500,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/ym.continuous-1m.json,,14344274,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-4h/es.continuous-4h.json,,1002442,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-4h/eur.continuous-4h.json,,484347,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-4h/nq.continuous-4h.json,,589952,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-4h/xau.continuous-4h.json,,129667,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-4h/ym.continuous-4h.json,,226191,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-5m/es.continuous-5m.json,,17449673,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-5m/eur.continuous-5m.json,,10465730,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-5m/nq.continuous-5m.json,,14850693,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-5m/xau.continuous-5m.json,,5059998,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-5m/ym.continuous-5m.json,,3470417,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-multi-timeframe-manifest.json,,43668,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/state/NQ/bbn_network.json,,20795,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/state/NQ/learning_state.json,,42770887,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/state/NQ/research_runs.json,,48254,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/state/NQ/workflow_snapshot.json,,7098,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-cleaned-15m/es.continuous-15m.json,,6624195,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-cleaned-15m/eur.continuous-15m.json,,3374583,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-cleaned-15m/nq.continuous-15m.json,,4932963,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-cleaned-15m/xau.continuous-15m.json,,1524286,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-cleaned-15m/ym.continuous-15m.json,,1430673,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-expansion-sop-15m/cleaned-15m/es.continuous-15m.json,,6624195,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-expansion-sop-15m/cleaned-15m/eur.continuous-15m.json,,3374583,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-expansion-sop-15m/cleaned-15m/nq.continuous-15m.json,,4932963,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-expansion-sop-15m/cleaned-15m/xau.continuous-15m.json,,1524286,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-expansion-sop-15m/cleaned-15m/ym.continuous-15m.json,,1430673,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-expansion-sop-15m/expansion_sop_report.15m.json,,39519,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/ES/bbn_network.json,,20802,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/ES/learning_state.json,,45763156,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/ES/research_runs.json,,42782,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/EUR/bbn_network.json,,20809,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/EUR/learning_state.json,,21450541,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/EUR/research_runs.json,,45054,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/EUR/workflow_snapshot.json,,6092,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/NQ/bbn_network.json,,20780,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/NQ/learning_state.json,,34604200,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/NQ/research_runs.json,,87373,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/NQ/workflow_snapshot.json,,6209,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/XAU/bbn_network.json,,20817,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/XAU/learning_state.json,,10609850,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/XAU/research_runs.json,,42784,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/YM/bbn_network.json,,20802,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/YM/learning_state.json,,13606388,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state/YM/research_runs.json,,42046,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406/ES/bbn_network.json,,20802,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406/ES/learning_state.json,,45763156,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406/ES/research_runs.json,,42971,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/ES/bbn_network.json,,20802,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/ES/learning_state.json,,45763156,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/ES/research_runs.json,,42991,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/ES/workflow_snapshot.json,,6086,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/EUR/bbn_network.json,,20809,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/EUR/learning_state.json,,21450541,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/EUR/research_runs.json,,45264,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/EUR/workflow_snapshot.json,,6112,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/NQ/bbn_network.json,,20794,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/NQ/learning_state.json,,32383125,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/NQ/research_runs.json,,43592,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/NQ/workflow_snapshot.json,,6236,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/XAU/bbn_network.json,,20817,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/XAU/learning_state.json,,10609850,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/XAU/research_runs.json,,42993,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/XAU/workflow_snapshot.json,,6089,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/YM/bbn_network.json,,20802,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/YM/learning_state.json,,13606388,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/YM/research_runs.json,,42255,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-factor-state-20260406b/YM/workflow_snapshot.json,,6065,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/cleaned-15m/es.continuous-15m.json,,6624195,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/cleaned-15m/eur.continuous-15m.json,,3374583,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/cleaned-15m/nq.continuous-15m.json,,4932963,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/cleaned-15m/xau.continuous-15m.json,,1524286,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/cleaned-15m/ym.continuous-15m.json,,1430673,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/futures_sop_report.15m.json,,16827,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/ES/bbn_network.json,,20802,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/ES/learning_state.json,,45763156,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/ES/research_runs.json,,43034,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/ES/workflow_snapshot.json,,6084,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/EUR/bbn_network.json,,20809,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/EUR/learning_state.json,,21450541,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/EUR/research_runs.json,,45307,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/EUR/workflow_snapshot.json,,6110,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/NQ/bbn_network.json,,20794,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/NQ/learning_state.json,,32383125,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/NQ/research_runs.json,,43635,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/NQ/workflow_snapshot.json,,6234,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/XAU/bbn_network.json,,20817,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/XAU/learning_state.json,,10609850,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/XAU/research_runs.json,,43036,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/XAU/workflow_snapshot.json,,6087,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/YM/bbn_network.json,,20802,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/YM/learning_state.json,,13606388,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/YM/research_runs.json,,42298,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict-engine-sop-15m/state/YM/workflow_snapshot.json,,6063,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ict_90wr_1.5rrr_results.csv,,11095,csv,strategy_or_backtest_context,,Time|Net PnL|Result|Direction|Entry|Exit|Score
+/Users/thrill3r/Downloads/Tomac/ict_final_1year.csv,,6901,csv,unknown_context,,Net PnL|Result
+/Users/thrill3r/Downloads/Tomac/no_be_results.csv,,406698,csv,strategy_or_backtest_context,,Net PnL|Result
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/NQ_1min_Continuous_Shifted_2836.csv,,365097822,csv,unknown_context,volume,ts_event|symbol|open_adj|high_adj|low_adj|close_adj|volume
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/condition.json,,594696,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/glbx-mdp3-20100606-20260403.ohlcv-1m.csv,,787648781,csv,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/manifest.json,,1463,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/metadata.json,,683,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/nq_201101_202604.csv,,412562869,csv,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/symbology.csv,,3560949,csv,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/symbology.json,,54038,json,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,condition.json,563507,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,metadata.json,683,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,symbology.json,54038,zip_member,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,symbology.csv,3560949,zip_member,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,glbx-mdp3-20110101-20251231.ohlcv-1m.csv,748392850,zip_member,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,manifest.json,2342,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/optimal_be_1.0_results.csv,,373271,csv,strategy_or_backtest_context,,Net PnL|Result
+/Users/thrill3r/Downloads/Tomac/perfect_ict_1y.csv,,27803,csv,unknown_context,,Time|Net PnL|Result|Direction|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/perfect_ict_2y.csv,,44217,csv,unknown_context,,Time|Net PnL|Result|Direction|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/perfect_ict_5y.csv,,1229459,csv,unknown_context,,Time|Net PnL|Result|Direction|Entry|Exit
+/Users/thrill3r/Downloads/Tomac/poc-cleaned-15m/es/es.continuous-15m.json,,7786235,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/poc-cleaned-15m/nq/nq.continuous-15m.json,,5832749,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ultimate_ict_results.csv,,45110,csv,strategy_or_backtest_context,,Time|Net PnL|Result|Direction|Entry|Exit|Score
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,condition.json,187797,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,metadata.json,683,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,symbology.json,1324648,zip_member,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,symbology.csv,30984640,zip_member,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,glbx-mdp3-20210106-20260105.ohlcv-1m.csv,585690521,zip_member,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,manifest.json,2345,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/condition.json,,563507,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv,,688693827,csv,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/manifest.json,,2342,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/metadata.json,,683,json,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/symbology.csv,,3201374,csv,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/symbology.json,,55943,json,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,condition.json,563507,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,metadata.json,683,zip_member,unknown_context,,
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,symbology.json,55943,zip_member,symbology_context,,
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,symbology.csv,3201374,zip_member,symbology_context,instrument_id|raw_symbol,raw_symbol|instrument_id|date
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,glbx-mdp3-20110101-20251231.ohlcv-1m.csv,688693827,zip_member,ohlcv_or_bar_context,close|high|low|open|volume,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,manifest.json,2342,zip_member,unknown_context,,

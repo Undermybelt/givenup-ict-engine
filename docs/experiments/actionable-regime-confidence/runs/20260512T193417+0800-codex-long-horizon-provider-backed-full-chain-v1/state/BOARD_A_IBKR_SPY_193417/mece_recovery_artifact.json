@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-BOARD_A_IBKR_SPY_193417-1778586038914",
+  "generated_at": "2026-05-12T11:40:38.914511Z",
+  "symbol": "BOARD_A_IBKR_SPY_193417",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "4047a7b3e7f29d9f",
+  "execution_validity_summary": "execution_blocked=705;execution_observe_only=424;execution_ready=298",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        428
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4679456377727123,
+      "execution_readiness_drift": 0.00013159359424900037,
+      "sample_count": 428
+    },
+    {
+      "horizon_bars": [
+        428,
+        1142
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4494526733384721,
+      "execution_readiness_drift": -6.907187797079193e-6,
+      "sample_count": 714
+    },
+    {
+      "horizon_bars": [
+        1142,
+        1427
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.43977950378562936,
+      "execution_readiness_drift": -0.000023049317591873053,
+      "sample_count": 285
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "7204e4523d1b7037",
+    "data_fingerprint": "e565e7a7cd426ed6"
+  }
+}

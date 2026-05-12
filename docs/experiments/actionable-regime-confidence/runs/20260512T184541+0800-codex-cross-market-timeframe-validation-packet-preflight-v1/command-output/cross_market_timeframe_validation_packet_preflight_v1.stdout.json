@@ -1,0 +1,65 @@
+{
+  "promotion_allowed": false,
+  "gates": [
+    {
+      "gate": "six_provider_aq_surface",
+      "passed": true,
+      "status": "pass",
+      "evidence": "provider/AQ surface present"
+    },
+    {
+      "gate": "aq_trade_rows_present",
+      "passed": true,
+      "status": "pass",
+      "evidence": "real_trade_rows=1953"
+    },
+    {
+      "gate": "independent_cross_market_downstream",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "provider_markets=6 but downstream validation rows=0"
+    },
+    {
+      "gate": "independent_cross_timeframe_downstream",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "cleaned_timeframes=1h"
+    },
+    {
+      "gate": "raw_scored_mature_min30",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "history_mature_rows=0 history_raw_score_rows=4"
+    },
+    {
+      "gate": "production_validation_min30",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "mature_rows=0"
+    },
+    {
+      "gate": "observation_validation_min30",
+      "passed": true,
+      "status": "pass",
+      "evidence": "observation trade rows from AQ feedback=1953; still not production validation"
+    },
+    {
+      "gate": "per_regime_calibrated_95",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "no artifact proves every visible regime calibrated >=0.95"
+    },
+    {
+      "gate": "catboost_path_ranker_ready",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "calibrated_rows=0"
+    },
+    {
+      "gate": "execution_tree_non_observe",
+      "passed": false,
+      "status": "fail_closed",
+      "evidence": "latest execution candidate remains non-promoting/no-trade in source packet"
+    }
+  ]
+}

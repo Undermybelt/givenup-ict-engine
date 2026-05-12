@@ -1,0 +1,35 @@
+{
+  "run_id": "20260512T053946-codex-current-objective-audit-after-052522-053505-v1",
+  "gate_result": "current_objective_audit_after_052522_053505_v1=not_complete_confidence_screen_improved_source_control_absent_no_promotion",
+  "board_sha256_before_audit": "e87a03c13c35a9ced1ac131464ac7f5bcf8f6568bd54a791dcaf8f6ab4b1d8d7",
+  "objective_complete": false,
+  "diagnostic_confidence": {
+    "hgb_051844_all_roots_accepted": true,
+    "numeric_tree_052522_accepted_labels": ["Bull", "Crisis", "Sideways"],
+    "numeric_tree_052522_rejected_labels": ["Bear"],
+    "numeric_tree_bear_blocker": "heldout_market_wilson95_below_0.95"
+  },
+  "source_control": {
+    "r6_owner_export_root_present": false,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_extension_root_present": false,
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "latest_verified_inputs": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T052522-codex-source-label-numeric-tree-threshold-screen-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1"
+  ],
+  "next_action": "Send or otherwise satisfy the 052650 v5 CME/Cboe/CFE owner-export dispatch drafts, preserving ticket/export/license identifiers in provenance; continue promotion only after a required target root unlocks."
+}

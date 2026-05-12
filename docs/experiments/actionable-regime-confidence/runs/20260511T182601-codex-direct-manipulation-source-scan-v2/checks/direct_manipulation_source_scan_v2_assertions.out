@@ -1,0 +1,8 @@
+PASS accepted_rows_added_zero
+PASS ready_candidates_zero
+PASS new_confidence_gate_false
+PASS full_objective_false
+PASS no_threshold_relaxation
+PASS no_raw_data_commit
+PASS candidate_csv_written
+ALL_ASSERTIONS_PASS

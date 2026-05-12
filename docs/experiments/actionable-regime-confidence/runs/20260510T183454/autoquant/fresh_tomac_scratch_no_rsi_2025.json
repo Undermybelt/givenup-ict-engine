@@ -1,0 +1,18 @@
+{
+  "schema_version": "fresh-tomac-backtests/v1",
+  "timerange": "20250101-20251231",
+  "scratch_user_data": "/tmp/ict-regime-chain-20260509T231052/autoquant-fresh-user-data",
+  "scratch_config": "/tmp/ict-regime-chain-20260509T231052/config.tomac.class-timeframe.json",
+  "strategy_dir": "/tmp/ict-regime-chain-20260509T231052/scratch_strategies",
+  "data_dir": "/Users/thrill3r/Auto-Quant/user_data/data",
+  "results": {},
+  "summaries": [],
+  "errors": [
+    {
+      "strategy": "TomacNQ_ScratchNoRSINoConflict15m",
+      "error_type": "OperationalException",
+      "error": "No data found. Terminating.",
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/ict-regime-chain-20260509T231052/fresh_tomac_backtest_runner.py\", line 168, in main\n    results = run_one(strategy, args.timerange, strategy_dir)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ict-regime-chain-20260509T231052/fresh_tomac_backtest_runner.py\", line 116, in run_one\n    bt.start()\n  File \"/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py\", line 1834, in start\n    data, timerange = self.load_bt_data()\n                      ^^^^^^^^^^^^^^^^^^^\n  File \"/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py\", line 314, in load_bt_data\n    data = history.load_data(\n           ^^^^^^^^^^^^^^^^^^\n  File \"/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/data/history/history_utils.py\", line 132, in load_data\n    raise OperationalException(\"No data found. Terminating.\")\nfreqtrade.exceptions.OperationalException: No data found. Terminating.\n"
+    }
+  ]
+}

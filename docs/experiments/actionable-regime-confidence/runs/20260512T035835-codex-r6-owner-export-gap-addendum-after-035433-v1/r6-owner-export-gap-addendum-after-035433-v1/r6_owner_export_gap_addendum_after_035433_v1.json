@@ -1,0 +1,61 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_artifact": "e09bf82dd9663660b451e0523337acd798b6b0fe2b3612addce0e6ea9f0d92f6",
+  "broad_normal_controls_present": false,
+  "canonical_merge_allowed": false,
+  "chronological_split_gate": false,
+  "downstream_promotion_rerun_allowed": false,
+  "external_requests_sent": false,
+  "gap_summary": [
+    {
+      "failing_cells": 3,
+      "max_additional_pair_rows_needed_min": 55,
+      "split_family": "chronological_group_split",
+      "sum_additional_pair_rows_needed_min_if_exact_cells_must_all_pass": 142,
+      "worst_cell": "chronological_calibration"
+    },
+    {
+      "failing_cells": 40,
+      "max_additional_pair_rows_needed_min": 73,
+      "split_family": "heldout_symbol_exact",
+      "sum_additional_pair_rows_needed_min_if_exact_cells_must_all_pass": 2847,
+      "worst_cell": "CBOT soybean call options"
+    },
+    {
+      "failing_cells": 11,
+      "max_additional_pair_rows_needed_min": 73,
+      "split_family": "heldout_venue_exact",
+      "sum_additional_pair_rows_needed_min_if_exact_cells_must_all_pass": 728,
+      "worst_cell": "LME and COMEX"
+    }
+  ],
+  "gate_result": "r6_owner_export_gap_addendum_after_035433_v1=gap_addendum_ready_rows_not_acquired_no_promotion",
+  "generated_at_utc": "2026-05-11T20:00:45.262190+00:00",
+  "heldout_symbol_gate": false,
+  "heldout_venue_gate": false,
+  "new_confidence_gate": false,
+  "next_action": "Use this addendum with the 015040 v4 owner-export requests; do not rerun downstream until verifier-native rows or explicit approval unlock the root.",
+  "pooled_gate": true,
+  "pooled_min_wilson95_lcb": 0.952479911333,
+  "raw_data_committed": false,
+  "request_addendum": {
+    "delivery_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "minimum_contract": "source-owned positive rows and independent normal/non-manipulation controls with provenance; same-exhibit FLIP remains invalid unless explicitly approved",
+    "required_files": [
+      "positive_spoofing_layering_rows.csv",
+      "matched_negative_normal_activity_rows.csv",
+      "provenance_manifest.json"
+    ],
+    "use": "append to 015040 v4 CME/Cboe request drafts and 015055 operator handoff"
+  },
+  "run_id": "20260512T035835-codex-r6-owner-export-gap-addendum-after-035433-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_gate": "r6_staging_triplet_split_calibration_after_035233_v1=staging_pooled95_pass_split_support_broad_controls_and_policy_blocked_no_promotion",
+  "source_roots_mutated": false,
+  "source_run": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/r6-staging-triplet-split-calibration-after-035233-v1/r6_staging_triplet_split_calibration_after_035233_v1.json",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

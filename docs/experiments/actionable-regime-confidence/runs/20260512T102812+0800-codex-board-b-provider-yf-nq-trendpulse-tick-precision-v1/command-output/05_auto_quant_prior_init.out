@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.9230464615384613,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 6.42785513841725,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.538448,
+    6.769230769230769e-6,
+    0.46154523076923076
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812_20260512T023602.969483000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/provider_yf_nq_tick_precision_strategy_library_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812_20260512T023603.115066000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/state_provider_yf_nq_tick_precision_v1/auto-quant/B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/state_provider_yf_nq_tick_precision_v1/auto-quant/B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812/auto_quant_prior_init_B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812_20260512T023603.115066000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.538448,
+        6.769230769230769e-6,
+        0.46154523076923076
+      ],
+      "bbn_contradiction_after": 0.41024287179487184,
+      "bbn_contradiction_before": 1.333289333333333,
+      "bbn_contradiction_lift": 0.9230464615384613,
+      "bbn_entropy_after": 0.6902698730791463,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.7218049316427306,
+      "bbn_log_loss_before": 7.149660070059981,
+      "bbn_log_loss_delta": 6.42785513841725,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.4615079999999999,
+        -0.00001523076923076923,
+        0.46152323076923074
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "provider-yf-nq-sampled-pulse-tick-precision-v1",
+      "n_breakeven": 0,
+      "n_loss": 12,
+      "n_win": 6,
+      "strategy_name": "ProviderNqSampledPulse",
+      "temper": 0.5,
+      "trade_count": 18
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+  "temper": 0.5
+}

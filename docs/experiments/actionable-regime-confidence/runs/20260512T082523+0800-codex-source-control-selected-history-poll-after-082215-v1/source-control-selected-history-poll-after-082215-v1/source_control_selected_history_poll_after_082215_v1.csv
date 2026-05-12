@@ -1,0 +1,6 @@
+root_name,path,exists,file_count,sampled_file_count,mainregimev2_hits,crisis_hits,positive_hits,matched_hits,control_hits,normal_hits,owner_hits,export_hits,source_owned_hits,post_cutoff_hits,htf_hits,mtf_hits,ltf_hits
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+r5_recency,/tmp/ict-engine-source-panel-recency-extension,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,true,2,2,0,713,0,1,0,0,1,0,0,0,0,0,0
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,true,2,2,336,19,0,1,1,0,4,0,1,0,0,0,0
+direct_manipulation_intake,/tmp/ict-engine-direct-manipulation-row-intake,true,3,3,0,0,77,126,173,132,0,0,0,0,0,0,0

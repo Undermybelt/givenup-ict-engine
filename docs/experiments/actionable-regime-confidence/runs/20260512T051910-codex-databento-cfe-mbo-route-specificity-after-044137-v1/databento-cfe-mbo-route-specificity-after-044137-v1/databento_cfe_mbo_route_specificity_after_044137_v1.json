@@ -1,0 +1,67 @@
+{
+  "run_id": "20260512T051910-codex-databento-cfe-mbo-route-specificity-after-044137-v1",
+  "generated_at_local": "2026-05-12T05:19:10+0800",
+  "gate_result": "databento_cfe_mbo_route_specificity_after_044137_v1=route_specificity_confirmed_no_local_export_no_promotion",
+  "purpose": "Refine the already-counted 044137 official route recheck with Databento CFE XCBF.PITCH/MBO specificity.",
+  "sources": [
+    {
+      "route": "Databento CFE announcement",
+      "url": "https://databento.com/blog/introducing-cboe-futures-exchange-cfe",
+      "readback": "CFE historical coverage begins on 2018-11-04; data is sourced from the primary CFE Multicast PITCH feed; dataset id is XCBF.PITCH; the example request is MBO/L3 for VIX futures.",
+      "board_a_effect": "cfe_vendor_route_specificity_confirmed_no_local_export"
+    },
+    {
+      "route": "Databento CFE catalog route",
+      "url": "https://databento.com/catalog/xcbf/XCBF.PITCH",
+      "readback": "Catalog route for XCBF.PITCH CFE data.",
+      "board_a_effect": "route_pointer_only_no_local_export"
+    },
+    {
+      "route": "Databento PCAP",
+      "url": "https://databento.com/pcaps",
+      "readback": "Raw packet-capture route for proprietary exchange feeds and full order book or market depth access.",
+      "board_a_effect": "vendor_route_confirmed_no_local_export"
+    },
+    {
+      "route": "Cboe DataShop CFE VIX futures trades/quotes",
+      "url": "https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes",
+      "readback": "Legacy CFE VIX futures trades/quotes product remains a DataShop export route.",
+      "board_a_effect": "official_route_confirmed_no_local_export"
+    },
+    {
+      "route": "Prior local 044137 owner-route packet",
+      "url": "docs/experiments/actionable-regime-confidence/runs/20260512T044137-codex-r6-owner-route-web-recheck-after-043901-v1",
+      "readback": "Already counted CME/Cboe/Databento official route context.",
+      "board_a_effect": "this_packet_is_specificity_addendum_not_acceptance"
+    }
+  ],
+  "local_entitlement": {
+    "databento_cli": false,
+    "dbn_cli": false,
+    "python_databento": false,
+    "python_pyarrow": false,
+    "visible_databento_cme_cboe_cfe_env_names": false
+  },
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false,
+    "/tmp/ict-engine-source-label-equivalence-intake": true
+  },
+  "decision": {
+    "route_specificity_confirmed": true,
+    "verifier_native_rows_acquired": false,
+    "source_owned_normal_controls_supplied": false,
+    "same_exhibit_flip_approved": false,
+    "accepted_rows_added": 0,
+    "accepted_regime_confidence_labels": 0,
+    "source_control_evidence_acquired": false,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Use the Databento CFE route only to acquire licensed verifier-native CFE/VIX rows/provenance or guide operator export requests; continue Board A only after a target root is actually unlocked."
+}

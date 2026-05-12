@@ -1,0 +1,21 @@
+{
+  "board_state": "blocked",
+  "accepted_gate": "partial_for_expanded_roots",
+  "accepted_95_all_expanded_root_roots": false,
+  "accepted_root_classes_95": [
+    "CrisisStress"
+  ],
+  "missing_root_classes_95": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "Manipulation"
+  ],
+  "thresholds_relaxed": false,
+  "blocked_future_target_predictors": true,
+  "fresh_calibration_rerun": true,
+  "runtime_code_changed": false,
+  "trade_usable": false,
+  "blocker": "missing_root_classes_95=BullExpansion,BearExpansion,SidewaysConsolidation,Manipulation",
+  "next_action": "Acquire calibration-grade direct L2/L3/MBO/order-lifecycle/event data for Manipulation and add materially stronger cross-provider signed expansion/consolidation inputs before rerunning unchanged expanded-root gates."
+}

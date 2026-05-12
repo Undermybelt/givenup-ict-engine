@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 1.3343745126118796,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 6.569263102256201,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": true,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.33279060048820175,
+    1.4320585842148087e-7,
+    0.6672092563059397
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_QQQ_20260510T113339.782267000Z",
+  "library_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/QQQ/auto_quant_strategy_library.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_QQQ_20260510T113544.174428000Z",
+  "prior_init_history_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/QQQ/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/QQQ/auto_quant_prior_init_QQQ_20260510T113544.174428000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.33279060048820175,
+        1.4320585842148087e-7,
+        0.6672092563059397
+      ],
+      "bbn_contradiction_after": 0.008742830549463593,
+      "bbn_contradiction_before": 1.3431173431613432,
+      "bbn_contradiction_lift": 1.3343745126118796,
+      "bbn_entropy_after": 0.6361396536517671,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6330968405489288,
+      "bbn_log_loss_before": 7.20235994280513,
+      "bbn_log_loss_delta": 6.569263102256201,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.6671653995117982,
+        -0.00002185679414157852,
+        0.6671872563059398
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "board-b-volbreakoutsized-seed",
+      "n_breakeven": 0,
+      "n_loss": 820,
+      "n_win": 401,
+      "strategy_name": "VolBreakoutSized",
+      "temper": 0.5,
+      "trade_count": 1221
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "QQQ",
+  "temper": 0.5
+}

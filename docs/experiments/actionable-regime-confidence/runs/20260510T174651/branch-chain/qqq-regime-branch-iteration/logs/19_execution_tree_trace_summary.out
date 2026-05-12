@@ -1,0 +1,10 @@
+{
+  "branch": "fill_viable",
+  "branch_probability": 0.0,
+  "execution_bias": "passive",
+  "gate_status": "observe",
+  "execution_score": 0.5665380404532696,
+  "decision_hint": "execution_observe_with_medium_prediction",
+  "path_ranker_runtime_source": "unknown",
+  "ranker_validation_ready": false
+}

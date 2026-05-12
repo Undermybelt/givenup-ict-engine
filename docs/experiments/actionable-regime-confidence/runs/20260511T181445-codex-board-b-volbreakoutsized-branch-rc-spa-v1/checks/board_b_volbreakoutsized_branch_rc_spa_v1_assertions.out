@@ -1,0 +1,11 @@
+run_id=20260511T181445+0800-codex-board-b-volbreakoutsized-branch-rc-spa-v1
+strategy=VolBreakoutSized
+auto_quant_backtest_full_5y_trades=1221
+branch_path_present=True
+root_lookup_coverage_full=True
+rc_spa=59.507300
+promotion_level=reject
+failure_reasons=cost_stress_survival,pbo,branch_min_total_trades_for_claimed_roots
+trades_csv=docs/experiments/actionable-regime-confidence/runs/20260511T181445-codex-board-b-volbreakoutsized-branch-rc-spa-v1/branch-rc-spa/volbreakoutsized_branch_trades_v1.csv
+packet_json=docs/experiments/actionable-regime-confidence/runs/20260511T181445-codex-board-b-volbreakoutsized-branch-rc-spa-v1/branch-rc-spa/volbreakoutsized_regime_profitability_packet_v1.json
+import_manifest=docs/experiments/actionable-regime-confidence/runs/20260511T181445-codex-board-b-volbreakoutsized-branch-rc-spa-v1/branch-rc-spa/volbreakoutsized_strategy_library_for_import_v1.json

@@ -1,0 +1,18 @@
+axis,bucket,required_valid_normal_control_support,best_single_root_valid_non_flip_controls,best_single_root,shortfall,decision
+contract_family,energy,73,10,/private/tmp/ict-engine-direct-manipulation-row-intake,63,short
+contract_family,equity_index,73,19,docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake,54,short
+contract_family,metals,73,2,docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake,71,short
+contract_family,volatility_index,73,0,,73,short
+venue_exact,CFE/CBOE Futures Exchange,73,0,,73,short
+venue_exact,CME Globex,73,13,docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake,60,short
+venue_exact,COMEX/CME Globex,73,29,/private/tmp/ict-engine-direct-manipulation-row-intake,44,short
+venue_exact,NYMEX/CME Globex,73,8,/private/tmp/ict-engine-direct-manipulation-row-intake,65,short
+symbol_exact,Crude Oil futures,73,0,,73,short
+symbol_exact,E-mini S&P 500 futures,73,9,/private/tmp/ict-engine-direct-manipulation-row-intake,64,short
+symbol_exact,High-Grade Copper futures,73,0,,73,short
+symbol_exact,Natural Gas futures,73,0,,73,short
+symbol_exact,VIX futures,73,0,,73,short
+chronological_year,2011,73,5,/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging,68,short
+chronological_year,2012,73,3,/private/tmp/ict-engine-direct-manipulation-row-intake,70,short
+chronological_year,2013,73,27,docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake,46,short
+chronological_year,2014,73,5,/private/tmp/ict-engine-direct-manipulation-row-intake,68,short

@@ -1,0 +1,15 @@
+PASS run_id=20260512T011056-codex-source-label-equivalence-calibration-after-root-poll-v1
+PASS verifier_status=schema_ready_unscored
+PASS verifier_return_code=0
+PASS row_count=248440
+PASS all_roots_present=true
+PASS missing_confidence_rows=0
+PASS accepted_source_confidence_95_labels=none
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS external_requests_sent=false
+PASS trade_usable=false

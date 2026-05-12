@@ -1,0 +1,12 @@
+negative_evidence_feedback_map_v1=pass_non_promoting_feedback_artifact
+events_jsonl_expected_rows=5
+production_bbn_prior_mutated=false
+production_cpd_mutated=false
+runtime_code_changed=false
+accepted_95_contexts_added=0
+promotion_allowed=false
+trade_usable=false
+update_goal=false
+counts_142321_again=false
+counts_141000=false
+next_provider_lanes=binance_public_BTCUSDT_1h_full_listing,ibkr_SPY_1h_5Y

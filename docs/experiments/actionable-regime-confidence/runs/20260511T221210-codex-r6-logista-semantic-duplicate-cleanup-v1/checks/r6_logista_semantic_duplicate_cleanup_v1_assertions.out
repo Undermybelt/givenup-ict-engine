@@ -1,0 +1,14 @@
+PASS decision=r6_logista_semantic_duplicate_cleanup_v1=duplicates_removed_support_ok_confidence_still_blocked
+PASS positive_rows_after=57
+PASS matched_negative_rows_after=57
+PASS positive_rows_removed=3
+PASS matched_negative_rows_removed=3
+PASS verifier_status=schema_ready_unscored
+PASS min_wilson95_lcb=0.936861
+PASS support_50x50=true
+PASS broad_normal_sample=false
+PASS direct_species_closed=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false

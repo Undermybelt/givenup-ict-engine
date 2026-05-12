@@ -1,0 +1,5 @@
+QQQ | analyze | action_blocked | duration=geometric | remaining_bars=3.00
+Block: user_selected_historical_data_missing
+Latest: analyze | direction=Bull entry=medium gate=pass_neutralized quality=0.568
+Next: Review the latest ensemble, pre-bayes evidence, and structural path before rerunning analyze. Start with ict-engine workflow-status --symbol QQQ --state-dir <local-path> --phase ensemble-vote --human.
+Evidence: ict-engine workflow-status --symbol QQQ --state-dir <local-path> --phase ensemble-vote --human | ict-engine pre-bayes-status --symbol QQQ --state-dir <local-path> --human | ict-engine workflow-status --symbol QQQ --state-dir <local-path> --phase structural-recommended-path-bundle --human

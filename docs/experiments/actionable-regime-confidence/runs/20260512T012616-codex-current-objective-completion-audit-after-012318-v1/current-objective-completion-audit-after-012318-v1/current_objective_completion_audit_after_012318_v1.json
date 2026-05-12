@@ -1,0 +1,77 @@
+{
+  "run_id": "20260512T012616-codex-current-objective-completion-audit-after-012318-v1",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "f51f71b6878244e78fdbd3a7299d1c9b3cf0538d7aaae28189c6d3c5443d64d2",
+  "current_cursor_observed": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "board_state_observed": "blocked",
+  "objective_restatement": "Each active regime must reach 95% confidence and validate across other markets/cycles/timeframes; the result must be grounded in real ict-engine/Auto-Quant/provider/pre-Bayes/BBN/CatBoost/execution-tree artifacts without disrupting concurrent board work.",
+  "checklist_total": 8,
+  "checklist_pass": 2,
+  "checklist_partial": 3,
+  "checklist_blocked": 3,
+  "roots": [
+    {
+      "id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_present": false,
+      "required_files": "direct_manipulation_rows.csv;direct_manipulation_provenance.json",
+      "required_files_present": false,
+      "missing_files": "direct_manipulation_rows.csv;direct_manipulation_provenance.json"
+    },
+    {
+      "id": "source_label_equivalence",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_present": true,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "required_files_present": true,
+      "missing_files": ""
+    },
+    {
+      "id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_present": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "required_files_present": false,
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json"
+    },
+    {
+      "id": "r5_recency_extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_present": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "required_files_present": false,
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json"
+    }
+  ],
+  "artifact_count": 11,
+  "artifact_present_count": 10,
+  "accepted_source_labels": [],
+  "candidate_labels": [
+    "Bull",
+    "Sideways"
+  ],
+  "blocked_labels": {
+    "Bear": [
+      "calibration_high_conf_support_below_50",
+      "heldout_market_high_conf_support_below_50",
+      "heldout_time_high_conf_support_below_50",
+      "test_high_conf_support_below_50"
+    ],
+    "Crisis": [
+      "heldout_market_high_conf_support_below_50",
+      "cross_market_family_high_conf_coverage_below_2"
+    ]
+  },
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "gate_result": "current_objective_completion_audit_after_012318_v1=not_complete_r6_r3_r5_bear_crisis_timeframe_downstream_blocked",
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false
+}

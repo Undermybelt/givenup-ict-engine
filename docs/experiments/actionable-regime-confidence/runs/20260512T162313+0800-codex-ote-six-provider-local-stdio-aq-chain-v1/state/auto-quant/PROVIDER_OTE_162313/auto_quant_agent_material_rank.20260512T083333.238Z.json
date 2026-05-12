@@ -1,0 +1,56 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:PROVIDER_OTE_162313:20260512T083333.238Z",
+  "generated_at": "2026-05-12T08:33:33.238470Z",
+  "symbol": "PROVIDER_OTE_162313",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_OTE_162313:20260512T083333.225Z",
+  "ranking": [
+    {
+      "unit_label": "OTE six-provider local-stdio packet - yfinance SPY 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OTE six-provider local-stdio packet - Binance BTCUSDT 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OTE six-provider local-stdio packet - Bybit BTCUSDT linear 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OTE six-provider local-stdio packet - Kraken PF_XBTUSD 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OTE six-provider local-stdio packet - IBKR SPY 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OTE six-provider local-stdio packet - TVR BTC-USD 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    }
+  ]
+}

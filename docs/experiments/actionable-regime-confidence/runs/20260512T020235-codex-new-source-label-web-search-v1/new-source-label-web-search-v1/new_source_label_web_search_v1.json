@@ -1,0 +1,69 @@
+{
+  "run_id": "20260512T020235-codex-new-source-label-web-search-v1",
+  "gate_result": "new_source_label_web_search_v1=no_new_ready_source_owned_mainregime_labels_found",
+  "board_hash_before_artifact": "c3200cbc18b66a4e75f437a532eccd49058d0ad6858ac8b332105d8623f622a6",
+  "external_web_search_sent": true,
+  "external_vendor_contact_sent": false,
+  "raw_dataset_files_downloaded": false,
+  "raw_data_committed": false,
+  "queries": [
+    "site:huggingface.co/datasets \"regime_label\" \"stock\" \"market\" -sujinwo -akashkumar5",
+    "site:huggingface.co/datasets \"market regime\" \"stock\" \"parquet\" -sujinwo -akashkumar5",
+    "site:kaggle.com \"market regime\" \"15m\" \"stock\"",
+    "\"market regime\" \"regime_label\" \"AAPL\" OR \"NASDAQ\" dataset",
+    "\"regime_label\" \"STRONG SELL\" -sujinwo",
+    "\"market regime\" \"STRONG SELL\" \"WEAK BUY\" -sujinwo",
+    "\"source-owned\" \"market regimes\" dataset stock",
+    "\"market regime\" \"MainRegimeV2\""
+  ],
+  "new_ready_source_owned_mainregime_exports_found": 0,
+  "known_prior_results_seen": [
+    {
+      "id": "sujinwo/tsie-market-regime-dataset",
+      "prior_status": "sidecar_only"
+    },
+    {
+      "id": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "prior_status": "proxy_only"
+    }
+  ],
+  "rejected_result_categories": [
+    "TradingView_indicator_pages_not_source_rows",
+    "charting_libraries_or_articles_not_datasets",
+    "known_prior_proxy_or_sidecar_datasets"
+  ],
+  "source_roots": [
+    {
+      "id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false
+    },
+    {
+      "id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    {
+      "id": "r5_recency_extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    },
+    {
+      "id": "source_label_equivalence",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "acceptance_status": "confidence_blocked_daily_only"
+    }
+  ],
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,453 @@
+{
+  "artifact_type": "source_consensus_timeframe_gate_v1",
+  "artifacts": {
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T131411-codex-source-consensus-timeframe-gate-v1/source-consensus-gate/source_consensus_timeframe_gate_v1_summary.csv"
+  },
+  "cells": [
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "bull_1w_source_consensus_rollup_v1",
+      "horizon": "1w",
+      "qualifying_condition": "same_source_rollup.root == 'Bull' AND timeframe == '1w' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Bull",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 13506,
+          "daily_support": 13506,
+          "periods": 2804,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9997156548
+        },
+        "heldout_ticker": {
+          "agreeing_source_days": 21516,
+          "daily_support": 21516,
+          "periods": 4470,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9998214922
+        },
+        "heldout_time": {
+          "agreeing_source_days": 8632,
+          "daily_support": 8632,
+          "periods": 1804,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9995551726
+        },
+        "train": {
+          "agreeing_source_days": 32845,
+          "daily_support": 32845,
+          "periods": 6821,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9998830565
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1w",
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "bear_1w_source_consensus_rollup_v1",
+      "horizon": "1w",
+      "qualifying_condition": "same_source_rollup.root == 'Bear' AND timeframe == '1w' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Bear",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 4419,
+          "daily_support": 4419,
+          "periods": 916,
+          "precision": 1.0,
+          "wilson95_lcb": 0.99913145
+        },
+        "heldout_ticker": {
+          "agreeing_source_days": 7877,
+          "daily_support": 7877,
+          "periods": 1638,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9995125573
+        },
+        "heldout_time": {
+          "agreeing_source_days": 5802,
+          "daily_support": 5802,
+          "periods": 1209,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9993383459
+        },
+        "train": {
+          "agreeing_source_days": 16964,
+          "daily_support": 16964,
+          "periods": 3516,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9997736036
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1w",
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "sideways_1w_source_consensus_rollup_v1",
+      "horizon": "1w",
+      "qualifying_condition": "same_source_rollup.root == 'Sideways' AND timeframe == '1w' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Sideways",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 3478,
+          "daily_support": 3478,
+          "periods": 726,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9988967163
+        },
+        "heldout_ticker": {
+          "agreeing_source_days": 6877,
+          "daily_support": 6877,
+          "periods": 1437,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9994417167
+        },
+        "heldout_time": {
+          "agreeing_source_days": 2050,
+          "daily_support": 2050,
+          "periods": 433,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9981296225
+        },
+        "train": {
+          "agreeing_source_days": 10124,
+          "daily_support": 10124,
+          "periods": 2123,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9996207031
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1w",
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "crisis_1w_source_consensus_rollup_v1",
+      "horizon": "1w",
+      "qualifying_condition": "same_source_rollup.root == 'Crisis' AND timeframe == '1w' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Crisis",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 1704,
+          "daily_support": 1704,
+          "periods": 353,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9977506935
+        },
+        "heldout_ticker": {
+          "agreeing_source_days": 3478,
+          "daily_support": 3478,
+          "periods": 724,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9988967163
+        },
+        "heldout_time": {
+          "agreeing_source_days": 1821,
+          "daily_support": 1821,
+          "periods": 381,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9978949082
+        },
+        "train": {
+          "agreeing_source_days": 10411,
+          "daily_support": 10411,
+          "periods": 2163,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9996311553
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1w",
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "bull_1mo_source_consensus_rollup_v1",
+      "horizon": "1mo",
+      "qualifying_condition": "same_source_rollup.root == 'Bull' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Bull",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 7447,
+          "daily_support": 7522,
+          "periods": 359,
+          "precision": 0.9900292475,
+          "wilson95_lcb": 0.9875205249
+        },
+        "heldout_ticker": {
+          "agreeing_source_days": 11275,
+          "daily_support": 11376,
+          "periods": 544,
+          "precision": 0.9911216596,
+          "wilson95_lcb": 0.9892244255
+        },
+        "heldout_time": {
+          "agreeing_source_days": 4220,
+          "daily_support": 4258,
+          "periods": 206,
+          "precision": 0.9910756224,
+          "wilson95_lcb": 0.9877749748
+        },
+        "train": {
+          "agreeing_source_days": 16961,
+          "daily_support": 17148,
+          "periods": 818,
+          "precision": 0.9890949382,
+          "wilson95_lcb": 0.9874272738
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1mo",
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "bear_1mo_source_consensus_rollup_v1",
+      "horizon": "1mo",
+      "qualifying_condition": "same_source_rollup.root == 'Bear' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Bear",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 1354,
+          "daily_support": 1364,
+          "periods": 64,
+          "precision": 0.9926686217,
+          "wilson95_lcb": 0.9865571155
+        },
+        "heldout_ticker": {
+          "agreeing_source_days": 2768,
+          "daily_support": 2803,
+          "periods": 135,
+          "precision": 0.9875133785,
+          "wilson95_lcb": 0.9826843089
+        },
+        "heldout_time": {
+          "agreeing_source_days": 2182,
+          "daily_support": 2205,
+          "periods": 105,
+          "precision": 0.989569161,
+          "wilson95_lcb": 0.9843961325
+        },
+        "train": {
+          "agreeing_source_days": 6375,
+          "daily_support": 6429,
+          "periods": 308,
+          "precision": 0.99160056,
+          "wilson95_lcb": 0.9890575739
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1mo",
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_gate": false,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [
+        "heldout_time_source_consensus_wilson95_below_0_95"
+      ],
+      "gate_id": "sideways_1mo_source_consensus_rollup_v1",
+      "horizon": "1mo",
+      "qualifying_condition": "same_source_rollup.root == 'Sideways' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Sideways",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 559,
+          "daily_support": 573,
+          "periods": 27,
+          "precision": 0.9755671902,
+          "wilson95_lcb": 0.9594092375
+        },
+        "heldout_ticker": {
+          "agreeing_source_days": 1141,
+          "daily_support": 1168,
+          "periods": 56,
+          "precision": 0.9768835616,
+          "wilson95_lcb": 0.9665754996
+        },
+        "heldout_time": {
+          "agreeing_source_days": 100,
+          "daily_support": 102,
+          "periods": 5,
+          "precision": 0.9803921569,
+          "wilson95_lcb": 0.931306916
+        },
+        "train": {
+          "agreeing_source_days": 1305,
+          "daily_support": 1336,
+          "periods": 64,
+          "precision": 0.9767964072,
+          "wilson95_lcb": 0.9672530713
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1mo",
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "crisis_1mo_source_consensus_rollup_v1",
+      "horizon": "1mo",
+      "qualifying_condition": "same_source_rollup.root == 'Crisis' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Crisis",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 501,
+          "daily_support": 507,
+          "periods": 24,
+          "precision": 0.9881656805,
+          "wilson95_lcb": 0.974424233
+        },
+        "heldout_ticker": {
+          "agreeing_source_days": 1199,
+          "daily_support": 1212,
+          "periods": 58,
+          "precision": 0.9892739274,
+          "wilson95_lcb": 0.9817351263
+        },
+        "heldout_time": {
+          "agreeing_source_days": 435,
+          "daily_support": 442,
+          "periods": 21,
+          "precision": 0.9841628959,
+          "wilson95_lcb": 0.9676747105
+        },
+        "train": {
+          "agreeing_source_days": 3706,
+          "daily_support": 3745,
+          "periods": 180,
+          "precision": 0.9895861148,
+          "wilson95_lcb": 0.9857963148
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1mo",
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    }
+  ],
+  "decision": {
+    "accepted_95_timeframe_root_cells": [
+      "1w:Bull",
+      "1w:Bear",
+      "1w:Sideways",
+      "1w:Crisis",
+      "1mo:Bull",
+      "1mo:Bear",
+      "1mo:Crisis"
+    ],
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "blocked_timeframe_root_cells": [
+      "1mo:Sideways"
+    ],
+    "full_market_full_timeframe_completion": false,
+    "gate_result": "accepted_95_source_consensus_7of8_same_source_timeframe_cells_full_matrix_still_blocked",
+    "newly_closed_cells_vs_prior_derived_probe": [
+      "1w:Bear",
+      "1w:Crisis",
+      "1mo:Bull",
+      "1mo:Bear",
+      "1mo:Crisis"
+    ],
+    "raw_data_committed": false,
+    "remaining_same_source_timeframe_blocker": "1mo:Sideways",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "fixed_policy": {
+    "confidence_definition": "Wilson95 lower bound of daily source-label agreement inside emitted weekly/monthly windows",
+    "min_daily_support_per_validation_split": 50,
+    "source_consensus_threshold": 0.95,
+    "threshold_selection": "fixed_before_evaluation_not_train_optimized"
+  },
+  "generated_at_utc": "2026-05-11T05:18:32.207556+00:00",
+  "inputs": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "754dbd6b9074afdf889760cb4e256cde500a530775fd14d4f1ff4841c54f3359",
+    "rollup_labels": "docs/experiments/actionable-regime-confidence/runs/20260511T130600-codex-stock-regime-same-source-timeframe-rollup-v1/timeframe-rollup/stock_regime_same_source_timeframe_rollup_v1.csv",
+    "rollup_labels_sha256": "7996c1dd166917630a0c4f11252f0bc04efa643a02be5cfbc4dc2812ac420c38"
+  },
+  "panel": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "roots": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "rows": 44396,
+    "tickers": [
+      "AAPL",
+      "ABBV",
+      "AMD",
+      "AMZN",
+      "BA",
+      "BAC",
+      "CAT",
+      "COP",
+      "CSCO",
+      "CVX",
+      "DIS",
+      "GE",
+      "GOOGL",
+      "GS",
+      "HD",
+      "INTC",
+      "JNJ",
+      "JPM",
+      "MCD",
+      "META",
+      "MS",
+      "MSFT",
+      "NFLX",
+      "NKE",
+      "NVDA",
+      "PFE",
+      "SBUX",
+      "T",
+      "TMO",
+      "TSLA",
+      "UNH",
+      "VZ",
+      "WFC",
+      "WMT",
+      "XOM",
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^RUT"
+    ],
+    "timeframes": [
+      "1mo",
+      "1w"
+    ]
+  },
+  "run_id": "20260511T131411+0800-codex-source-consensus-timeframe-gate-v1"
+}

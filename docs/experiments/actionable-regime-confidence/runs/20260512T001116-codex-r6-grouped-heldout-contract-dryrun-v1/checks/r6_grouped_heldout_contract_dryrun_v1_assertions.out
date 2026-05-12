@@ -1,0 +1,7 @@
+live_verifier_schema_ready=PASS
+grouped_market_family_still_fails=PASS
+grouped_venue_family_still_fails=PASS
+owner_approved_contract_false=PASS
+new_confidence_gate_false=PASS
+strict_full_objective_not_complete=PASS
+update_goal_false=PASS

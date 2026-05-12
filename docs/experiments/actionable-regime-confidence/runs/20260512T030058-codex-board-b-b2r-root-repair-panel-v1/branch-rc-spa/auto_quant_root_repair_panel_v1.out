@@ -1,0 +1,24 @@
+strategy: RootRepairPanelV1_Bull
+branch_path: Bull -> TrendExpansion -> CrossAssetTrendCarry -> RootRepairPanelV1:nq_crypto_trend_followthrough_h24
+trade_count: 4365
+rc_spa: 26.738819
+gate: fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60
+---
+strategy: RootRepairPanelV1_Bear
+branch_path: Bear -> BearMarketDrawdown -> CryptoDeleveragingShort -> RootRepairPanelV1:btc_deleveraging_short_h12
+trade_count: 340
+rc_spa: 31.270534
+gate: fail:reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_tail_risk|reject_rc_spa_below_60
+---
+strategy: RootRepairPanelV1_Sideways
+branch_path: Sideways -> RangeConsolidation -> IndexRangeFade -> RootRepairPanelV1:nq_lowvol_range_fade_h12
+trade_count: 5722
+rc_spa: 25.463567
+gate: fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60
+---
+strategy: RootRepairPanelV1_Crisis
+branch_path: Crisis -> ExtremeStress -> IndexTailShort -> RootRepairPanelV1:nq_tail_short_h12
+trade_count: 17
+rc_spa: 13.774863
+gate: fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60
+---

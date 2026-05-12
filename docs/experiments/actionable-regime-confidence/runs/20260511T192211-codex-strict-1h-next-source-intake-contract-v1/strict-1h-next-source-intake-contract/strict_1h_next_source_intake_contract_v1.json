@@ -1,0 +1,120 @@
+{
+  "artifact_type": "strict_1h_next_source_intake_contract_v1",
+  "run_id": "20260511T192211+0800-codex-strict-1h-next-source-intake-contract-v1",
+  "generated_at_utc": "2026-05-11T11:22:11+00:00",
+  "current_cursor_edited": false,
+  "purpose": "Convert the post-future strict 1h gap triage into exact source-label equivalence intake requirements for the next source-owned row drop.",
+  "not_evidence_warning": "This is a request contract and template only. It does not supply source-owned rows, does not pass the intake verifier, and does not create a confidence gate.",
+  "source_artifacts": {
+    "post_future_gap_triage": "docs/experiments/actionable-regime-confidence/runs/20260511T191552-codex-strict-1h-post-future-gap-triage-v1/strict-1h-post-future-gap-triage/strict_1h_post_future_gap_triage_v1.json",
+    "equivalence_intake_verifier": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py",
+    "equivalence_intake_required_files": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_required_files_v1.csv"
+  },
+  "target_intake_root": "/tmp/ict-engine-source-label-equivalence-intake",
+  "required_files": [
+    {
+      "file": "source_label_equivalence_rows.csv",
+      "destination": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+      "status": "not_present_in_this_artifact"
+    },
+    {
+      "file": "source_label_equivalence_provenance.json",
+      "destination": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+      "status": "not_present_in_this_artifact"
+    }
+  ],
+  "verifier_contract": {
+    "accepted_price_package_id_for_these_rows": "native_subhour_overlap_after_recency",
+    "timeframe": "1h",
+    "required_fields": [
+      "package_id",
+      "source_owner",
+      "source_report_or_dataset",
+      "source_pull_date",
+      "market_family",
+      "symbol",
+      "source_symbol",
+      "equivalence_policy",
+      "event_species",
+      "timestamp_or_date",
+      "timeframe",
+      "main_regime_v2_label",
+      "direct_label",
+      "matched_negative_group_id",
+      "split_role",
+      "source_row_id",
+      "provenance_hash"
+    ],
+    "disallowed_equivalence_policy_tokens": [
+      "ohlcv_proxy",
+      "generated_label",
+      "future_return",
+      "unapproved_ixic"
+    ],
+    "required_provenance_attestation": [
+      "source-owned or owner-approved regime labels",
+      "no provider-generated labels",
+      "no HMM/generated labels",
+      "no future-return labels",
+      "no unapproved taxonomy crosswalk",
+      "hashes identify the exported source rows"
+    ]
+  },
+  "target_rows": [
+    {
+      "priority": 1,
+      "symbol": "XOM",
+      "source_symbol": "XOM",
+      "main_regime_v2_label": "Sideways",
+      "split_role": "heldout_time",
+      "minimum_new_source_sessions": 5,
+      "acceptable_package_id": "native_subhour_overlap_after_recency",
+      "market_family": "us_equity_strict_1h_source_extension",
+      "equivalence_policy_required_shape": "source_owner_asserts_main_regime_v2_or_owner_approved_equivalence_for_XOM_Sideways_1h_heldout_time"
+    },
+    {
+      "priority": 2,
+      "symbol": "UNH",
+      "source_symbol": "UNH",
+      "main_regime_v2_label": "Bear",
+      "split_role": "calibration",
+      "minimum_new_source_sessions": 7,
+      "acceptable_package_id": "native_subhour_overlap_after_recency",
+      "market_family": "us_equity_strict_1h_source_extension",
+      "equivalence_policy_required_shape": "source_owner_asserts_main_regime_v2_or_owner_approved_equivalence_for_UNH_Bear_1h_calibration"
+    },
+    {
+      "priority": 3,
+      "symbol": "^DJI",
+      "source_symbol": "^DJI",
+      "main_regime_v2_label": "Sideways",
+      "split_role": "calibration",
+      "minimum_new_source_sessions": 7,
+      "acceptable_package_id": "native_subhour_overlap_after_recency",
+      "market_family": "us_index_strict_1h_source_extension",
+      "equivalence_policy_required_shape": "source_owner_asserts_main_regime_v2_or_owner_approved_equivalence_for_DJI_Sideways_1h_calibration"
+    },
+    {
+      "priority": 4,
+      "symbol": "AMD",
+      "source_symbol": "AMD",
+      "main_regime_v2_label": "Bear",
+      "split_role": "calibration",
+      "minimum_new_source_sessions": 10,
+      "acceptable_package_id": "native_subhour_overlap_after_recency",
+      "market_family": "us_equity_strict_1h_source_extension",
+      "equivalence_policy_required_shape": "source_owner_asserts_main_regime_v2_or_owner_approved_equivalence_for_AMD_Bear_1h_calibration"
+    }
+  ],
+  "decision": {
+    "gate_result": "strict_1h_next_source_intake_contract_v1=request_contract_ready_no_rows_acquired",
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  }
+}

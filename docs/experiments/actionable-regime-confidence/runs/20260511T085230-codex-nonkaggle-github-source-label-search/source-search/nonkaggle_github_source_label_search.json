@@ -1,0 +1,135 @@
+{
+  "accepted_new_independent_label_sources": 0,
+  "active_taxonomy": "MainRegimeV2",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T085230-codex-nonkaggle-github-source-label-search/checks/nonkaggle_github_source_label_search_assertions.out",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T085230-codex-nonkaggle-github-source-label-search/scripts/nonkaggle_github_source_label_search.py",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T085230-codex-nonkaggle-github-source-label-search/source-search/nonkaggle_github_source_label_search.json",
+    "summary_md": "docs/experiments/actionable-regime-confidence/runs/20260511T085230-codex-nonkaggle-github-source-label-search/source-search/nonkaggle_github_source_label_search.md"
+  },
+  "completion_accounting": {
+    "accepted_confidence": false,
+    "accepted_full_cycle_full_universe": false,
+    "goal_achieved": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "created_at_utc": "2026-05-11T01:01:25.874692+00:00",
+  "gate_result": "blocked_nonkaggle_github_search_no_attachable_root_label_panel",
+  "github_search_results": [
+    {
+      "error": null,
+      "item_count": 0,
+      "query": "\"market regime\" \"bull\" \"bear\" \"sideways\" labels",
+      "status": 200,
+      "total_count": 0
+    },
+    {
+      "error": null,
+      "item_count": 1,
+      "query": "\"market regimes\" dataset \"bull\" \"bear\"",
+      "status": 200,
+      "total_count": 1
+    },
+    {
+      "error": null,
+      "item_count": 0,
+      "query": "\"stock market regime\" labels csv",
+      "status": 200,
+      "total_count": 0
+    },
+    {
+      "error": null,
+      "item_count": 0,
+      "query": "\"regime classification\" \"bull\" \"bear\" \"crisis\"",
+      "status": 200,
+      "total_count": 0
+    },
+    {
+      "error": null,
+      "item_count": 0,
+      "query": "\"market regime\" \"crisis\" \"sideways\" \"csv\"",
+      "status": 200,
+      "total_count": 0
+    },
+    {
+      "error": null,
+      "item_count": 0,
+      "query": "\"Bull\" \"Bear\" \"Sideways\" \"Crisis\" \"market regime\"",
+      "status": 200,
+      "total_count": 0
+    }
+  ],
+  "input_evidence": {
+    "current_goal_completion_audit": "docs/experiments/actionable-regime-confidence/runs/20260511T084755-codex-current-goal-completion-audit/completion-audit/current_goal_completion_audit.json",
+    "source_label_acquisition_package_v2": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/acquisition-package/source_label_acquisition_package_v2.json"
+  },
+  "manual_followup_candidates": [],
+  "missing_slot_accounting": {
+    "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "missing_or_rejected_slots": 564,
+    "missing_or_rejected_slots_by_reason": {
+      "missing_instrument_source_label": 40,
+      "missing_intraday_or_monthly_source_label": 392,
+      "missing_non_yfinance_source_label": 108,
+      "rejected_near_underlying_proxy_not_accepted": 24
+    },
+    "missing_or_rejected_slots_by_root": {
+      "Bear": 141,
+      "Bull": 141,
+      "Crisis": 141,
+      "Sideways": 141
+    }
+  },
+  "new_attached_root_label_slots": 0,
+  "next_action": "Authenticated/user-provided exact-underlying source-label panels are still required; GitHub metadata search did not produce attachable non-Kaggle root labels.",
+  "objective": "Search non-Kaggle GitHub/public repository metadata for independent Bull/Bear/Sideways/Crisis label panels attachable to the missing Board A slots.",
+  "repos_classified": [
+    {
+      "data_term_hits": {
+        "csv": 7,
+        "dataset": 10,
+        "label": 0,
+        "labels": 0,
+        "regime": 24
+      },
+      "decision": "rejected_proxy_or_methodology_only",
+      "description": "Genetic algorithm framework that evolves trading strategies by optimizing technical indicator combinations, stop-loss methods, and entry logic. Features market regime classification (Bull/Bear/Uncertain), Monte-Carlo robustness testing with reshuffled datasets, hybrid fitness scoring, and parallel backtesting. Python NumPy TensorBoard",
+      "full_name": "yannpointud/AI-setupGen",
+      "html_url": "https://github.com/yannpointud/AI-setupGen",
+      "proxy_term_hits": {
+        "clustering": 0,
+        "gmm": 0,
+        "hmm": 0,
+        "kmeans": 0,
+        "prediction": 0,
+        "strategy": 2,
+        "unsupervised": 0
+      },
+      "readme_status": 200,
+      "reason": "README/metadata emphasize model, HMM/GMM, clustering, strategy, or prediction terms rather than independent labels.",
+      "root_term_hits": {
+        "bear": 7,
+        "bull": 6,
+        "crisis": 0,
+        "sideways": 0
+      },
+      "target_term_hits": {
+        "15m": 0,
+        "1h": 0,
+        "btc": 1,
+        "es": 121,
+        "intraday": 0,
+        "kraken": 0,
+        "nq": 0,
+        "qqq": 0,
+        "spy": 0,
+        "yfinance": 0
+      },
+      "updated_at": "2026-03-17T07:09:19Z"
+    }
+  ],
+  "run_id": "20260511T085230+0800-codex-nonkaggle-github-source-label-search"
+}

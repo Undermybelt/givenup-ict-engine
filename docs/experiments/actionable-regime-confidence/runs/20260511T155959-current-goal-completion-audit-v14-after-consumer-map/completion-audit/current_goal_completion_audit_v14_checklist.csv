@@ -1,0 +1,11 @@
+requirement,evidence,status,notes
+every_active_lane_has_95_factor,regime_factor_consumer_map_v1,pass_scoped,"5/5 active lanes have scoped 95% consumer factor"
+price_root_regimes_are_main_classes,board_relock_and_market_regime_context_packet_v1,pass,"main roots Bull/Bear/Sideways/Crisis; child labels provenance only"
+price_root_confidence_floor_ge_095,market_regime_context_packet_v1,pass,"Bull=0.9797225384 Bear=0.963920242 Sideways=0.9529358324 Crisis=0.9619059575"
+direct_manipulation_has_direct_evidence,regime_factor_consumer_map_v1,pass_scoped,"scoped direct overlay floor 0.967945; no OHLCV proxy promotion"
+direct_manipulation_full_species_coverage,regime_factor_consumer_map_v1,fail,"missing/blocked social text spoofing/layering local spoofing repos quote stuffing pinging bear raid painting tape"
+cross_timeframe_validation,market_context_layers,pass_scoped,"daily 1w 1mo exact 1h context layers exist; native sub-hour source overlap blocked"
+cross_market_species_validation,same_source_39_ticker_panel_and_consumer_map,partial,"source-panel breadth covered for context; full NQ/QQQ/futures/crypto/FX source-label equivalence not closed"
+ticker_specific_support,exact_1h_source_universe_expansion_v1,partial,"strict ticker/root accepted rows 41/156"
+source_recency_2026,stock_market_regimes_source_panel,partial,"source panel ends 2026-01-30"
+completion_authority,current_goal_completion_audit_v14,fail,"required missing items remain; update_goal=false"

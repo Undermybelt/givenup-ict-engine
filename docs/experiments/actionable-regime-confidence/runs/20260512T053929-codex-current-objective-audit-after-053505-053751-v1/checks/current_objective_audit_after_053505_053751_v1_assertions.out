@@ -1,0 +1,16 @@
+PASS gate_result=current_objective_audit_after_053505_053751_v1=not_complete_confidence_screen_only_source_control_and_downstream_blocked
+PASS required_roots=Bear,Bull,Crisis,Sideways
+PASS hgb_diagnostic_accepted_labels=Bear,Bull,Crisis,Sideways
+PASS hgb_source_control_evidence_acquired=false
+PASS numeric_tree_full_acceptance=false
+PASS r5_target_rows_found=0
+PASS r6_owner_export_root_present=false
+PASS r3_native_subhour_root_present=false
+PASS r5_recency_extension_root_present=false
+PASS equivalence_intake_promoting_by_itself=false
+PASS approval_gate=decision_package_ready_no_approval_no_merge
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_live_objective_complete=false
+PASS trade_usable=false
+PASS update_goal=false

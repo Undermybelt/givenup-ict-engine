@@ -1,0 +1,678 @@
+{
+  "accepted_rows_added": 0,
+  "all_required_cells_pass": false,
+  "best_cell_count_max": 29,
+  "board_file_sha256_before_writeback": "d00c9372ccd24930a907297d8cf86abd63e065bab9497a335b809e9c7fbda0d8",
+  "candidate_roots": [
+    {
+      "candidate_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 4,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 73,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "positive_rows": 73,
+      "provenance_sha256": "9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 13,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 68
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 4,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 73,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "positive_rows": 73,
+      "provenance_sha256": "dab98802cca2f2f9cd411e41ba8e3c561e05692aec6c8e342da48f13fa5d00c8",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 13,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 68
+    },
+    {
+      "candidate_root": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 5,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 77,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "a829ce2e8ad4e13f133effdf8e0a41885d057979cd0d47acecb66679a5a8ac58",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "1102d09b92c07498676fa5a4ae93b3aa1323086f4edb4453281b25714348e793",
+      "positive_rows": 77,
+      "provenance_sha256": "d936638ac43fd4d9f23fbc781e0b54be4c1c348683f381bed84ffbbfda47aa6f",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 14,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 72
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 4,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 73,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "positive_rows": 73,
+      "provenance_sha256": "99dd02f92423ae8bbf78e90fcc0981551d19a5036c75382cd7db679c7772b657",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 13,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 68
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 3,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 22,
+        "chronological_year:2014": 2,
+        "contract_family:energy": 7,
+        "contract_family:equity_index": 11,
+        "contract_family:metals": 2,
+        "symbol_exact:E-mini S&P 500 futures": 3,
+        "venue_exact:CME Globex": 3,
+        "venue_exact:COMEX/CME Globex": 19,
+        "venue_exact:NYMEX/CME Globex": 5
+      },
+      "control_rows_total": 53,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 22,
+      "missing_files": [],
+      "negative_csv_sha256": "6fdb52467d1c4f9e12d30e233a9a28806ee579d80872645fa1e238be3bd69a4a",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "88ae4cb6b3f9d638a4c798e2c939b00aba07bb12c425c3590634f1a217ffa0c6",
+      "positive_rows": 53,
+      "provenance_sha256": "b5931c245f0c71f067b9d185ff97c5057bb1b0c3ec12a21ee5950894ce64e9ba",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 12,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC and Nicholas Serotta, Case 1:23-cv-07485"
+      ],
+      "valid_non_flip_control_rows": 53
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 4,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 73,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "positive_rows": 73,
+      "provenance_sha256": "afcd402e0f03f66b0d9abb33d8bdc9c648655c76da8a8ef76a9f626b606f544c",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 13,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 68
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/delta-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 2,
+        "chronological_year:2013": 6,
+        "chronological_year:2014": 3,
+        "contract_family:equity_index": 2,
+        "symbol_exact:E-mini S&P 500 futures": 2,
+        "venue_exact:CME Globex": 2,
+        "venue_exact:COMEX/CME Globex": 9,
+        "venue_exact:NYMEX/CME Globex": 1
+      },
+      "control_rows_total": 16,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 9,
+      "missing_files": [],
+      "negative_csv_sha256": "dd0312dbdc5bd5b0b027a05cc76c2ca4b0ac4495b42badc7c648e611fc2fc6ab",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "b5349cdbda4e85f9fb5db1977e8be0a8b7a0cdeaf619f275c15238b226320550",
+      "positive_rows": 16,
+      "provenance_sha256": "f25e79bac1ce1fd6f1ad8f2ea9683a6cdba793a3cb18fe9459126cb774b2002b",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 3,
+      "source_reports_sample": [
+        "CFTC Complaint: Michael Thomas Nowak and Gregg Francis Smith, filed Sep. 16 2019",
+        "CFTC Complaint: Navinder Singh Sarao and Nav Sarao Futures Limited PLC, filed Apr. 17 2015",
+        "CFTC Order: JPMorgan Chase & Co., JPMorgan Chase Bank, N.A., and J.P. Morgan Securities LLC, CFTC Docket No. 20-69"
+      ],
+      "valid_non_flip_control_rows": 16
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/isolated-direct-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 4,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 73,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "positive_rows": 73,
+      "provenance_sha256": "dab98802cca2f2f9cd411e41ba8e3c561e05692aec6c8e342da48f13fa5d00c8",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 13,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 68
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 3,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 27,
+        "chronological_year:2014": 4,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 19,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 13,
+        "venue_exact:COMEX/CME Globex": 25,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 73,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 27,
+      "missing_files": [],
+      "negative_csv_sha256": "08b9099fe9ce94da2a833556adfbb05aa8b29fbc21a82380910bed27a58e09f9",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "6d52ddca652e68165aec9d0fa407c0177b96fa2ea0a5b7f8069f32119eb0caca",
+      "positive_rows": 73,
+      "provenance_sha256": "fa41262b011c885ac469a7fcba3adaf52fdb30854af1c4a012e48061a9ec46c9",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 13,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 68
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 4,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 73,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "positive_rows": 73,
+      "provenance_sha256": "2c2d2620704a9b442fe8b9205739eeb71c837a33334043bec30057ab34c5ee5c",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 13,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 68
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-live-intake-rehydration-v1/r6-live-intake-rehydration",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 4,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 73,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "positive_rows": 73,
+      "provenance_sha256": "9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 13,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 68
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {},
+      "control_rows_total": 1553,
+      "disqualifiers": [
+        "no_valid_non_flip_control_rows",
+        "required_oystacher_cells_short",
+        "oystacher_flip_rows_rejected_without_explicit_approval"
+      ],
+      "exists": true,
+      "max_required_cell_count": 0,
+      "missing_files": [],
+      "negative_csv_sha256": "cbf742b41797fb727f47db2e0a2840f01bb14f9e1d5bea4d4b160fc43a275c0e",
+      "oystacher_flip_control_rows_rejected": 1553,
+      "positive_csv_sha256": "83ca3116fc15fb6dd59ff78c0b98dc2efdd5eb6bc4252fc8c399b786c788f690",
+      "positive_rows": 5182,
+      "provenance_sha256": "adbec91f711e065abdc87b4eb56aa38e9f07f3c61ae37b08f4299f4b2e6f8a1a",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 0,
+      "source_reports_sample": [],
+      "valid_non_flip_control_rows": 0
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000345-codex-r6-moncada-species-extension-calibration-v1/r6-moncada-species-extension-calibration/isolated-direct-intake",
+      "canonical_merge_candidate": false,
+      "cell_counts": {
+        "chronological_year:2011": 4,
+        "chronological_year:2012": 3,
+        "chronological_year:2013": 24,
+        "chronological_year:2014": 5,
+        "contract_family:energy": 10,
+        "contract_family:equity_index": 15,
+        "symbol_exact:E-mini S&P 500 futures": 9,
+        "venue_exact:CME Globex": 9,
+        "venue_exact:COMEX/CME Globex": 29,
+        "venue_exact:NYMEX/CME Globex": 8
+      },
+      "control_rows_total": 79,
+      "disqualifiers": [
+        "required_oystacher_cells_short"
+      ],
+      "exists": true,
+      "max_required_cell_count": 29,
+      "missing_files": [],
+      "negative_csv_sha256": "0cce1dcd3f6f265146d3d185f571aa348eae3e734b2f88720e67c7ae1f70986d",
+      "oystacher_flip_control_rows_rejected": 0,
+      "positive_csv_sha256": "e83fa86adb437e5dcfb9a5484e84f6e79fa51a530f22c09357596cff235e03a7",
+      "positive_rows": 79,
+      "provenance_sha256": "136545b70d8fb9ba8478da57cb8b712ee9445c975528afbf6eed34a261459c55",
+      "required_cells_meeting_threshold": 0,
+      "required_cells_total": 17,
+      "source_report_count": 14,
+      "source_reports_sample": [
+        "CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158",
+        "CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1",
+        "CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925",
+        "CFTC Complaint: CFTC v. Jiongsheng Zhao, No. 1:18-cv-00620",
+        "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1"
+      ],
+      "valid_non_flip_control_rows": 74
+    }
+  ],
+  "candidate_roots_checked": 13,
+  "canonical_merge_allowed": false,
+  "downstream_rerun_allowed": false,
+  "external_requests_sent": false,
+  "gate_result": "r6_local_control_applicability_audit_v1=local_candidate_controls_insufficient_no_approval_no_merge",
+  "generated_at_utc": "2026-05-11T16:42:40.758625+00:00",
+  "owner_approval_files": {
+    "matched_negative_normal_activity_rows_csv": false,
+    "owner_approval_reference_md": false,
+    "positive_spoofing_layering_rows_csv": false,
+    "provenance_manifest_json": false,
+    "target_root_exists": false,
+    "validation_contract_approval_json": false
+  },
+  "owner_approval_present": false,
+  "owner_export_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "required_cell_applicability": [
+    {
+      "axis": "contract_family",
+      "best_single_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "best_single_root_valid_non_flip_controls": 10,
+      "bucket": "energy",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 63
+    },
+    {
+      "axis": "contract_family",
+      "best_single_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake",
+      "best_single_root_valid_non_flip_controls": 19,
+      "bucket": "equity_index",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 54
+    },
+    {
+      "axis": "contract_family",
+      "best_single_root": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake",
+      "best_single_root_valid_non_flip_controls": 2,
+      "bucket": "metals",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 71
+    },
+    {
+      "axis": "contract_family",
+      "best_single_root": "",
+      "best_single_root_valid_non_flip_controls": 0,
+      "bucket": "volatility_index",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 73
+    },
+    {
+      "axis": "venue_exact",
+      "best_single_root": "",
+      "best_single_root_valid_non_flip_controls": 0,
+      "bucket": "CFE/CBOE Futures Exchange",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 73
+    },
+    {
+      "axis": "venue_exact",
+      "best_single_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake",
+      "best_single_root_valid_non_flip_controls": 13,
+      "bucket": "CME Globex",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 60
+    },
+    {
+      "axis": "venue_exact",
+      "best_single_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "best_single_root_valid_non_flip_controls": 29,
+      "bucket": "COMEX/CME Globex",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 44
+    },
+    {
+      "axis": "venue_exact",
+      "best_single_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "best_single_root_valid_non_flip_controls": 8,
+      "bucket": "NYMEX/CME Globex",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 65
+    },
+    {
+      "axis": "symbol_exact",
+      "best_single_root": "",
+      "best_single_root_valid_non_flip_controls": 0,
+      "bucket": "Crude Oil futures",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 73
+    },
+    {
+      "axis": "symbol_exact",
+      "best_single_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "best_single_root_valid_non_flip_controls": 9,
+      "bucket": "E-mini S&P 500 futures",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 64
+    },
+    {
+      "axis": "symbol_exact",
+      "best_single_root": "",
+      "best_single_root_valid_non_flip_controls": 0,
+      "bucket": "High-Grade Copper futures",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 73
+    },
+    {
+      "axis": "symbol_exact",
+      "best_single_root": "",
+      "best_single_root_valid_non_flip_controls": 0,
+      "bucket": "Natural Gas futures",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 73
+    },
+    {
+      "axis": "symbol_exact",
+      "best_single_root": "",
+      "best_single_root_valid_non_flip_controls": 0,
+      "bucket": "VIX futures",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 73
+    },
+    {
+      "axis": "chronological_year",
+      "best_single_root": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+      "best_single_root_valid_non_flip_controls": 5,
+      "bucket": "2011",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 68
+    },
+    {
+      "axis": "chronological_year",
+      "best_single_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "best_single_root_valid_non_flip_controls": 3,
+      "bucket": "2012",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 70
+    },
+    {
+      "axis": "chronological_year",
+      "best_single_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake",
+      "best_single_root_valid_non_flip_controls": 27,
+      "bucket": "2013",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 46
+    },
+    {
+      "axis": "chronological_year",
+      "best_single_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "best_single_root_valid_non_flip_controls": 5,
+      "bucket": "2014",
+      "decision": "short",
+      "required_valid_normal_control_support": 73,
+      "shortfall": 68
+    }
+  ],
+  "required_cell_source": "docs/experiments/actionable-regime-confidence/runs/20260512T003627-codex-r6-oystacher-control-contract-request-v1/r6-oystacher-control-contract-request/r6_oystacher_required_normal_control_cells_v1.csv",
+  "required_cells_passing_best_single_root": 0,
+  "required_cells_total": 17,
+  "run_id": "20260512T004014-codex-r6-local-control-applicability-audit-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unique_control_csv_sets": 7,
+  "verifier_native_owner_package_present": false
+}

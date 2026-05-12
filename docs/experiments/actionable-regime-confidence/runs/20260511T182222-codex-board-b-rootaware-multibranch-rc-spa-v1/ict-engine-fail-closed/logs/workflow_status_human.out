@@ -1,0 +1,6 @@
+ROOTAWARE_MULTIBRANCH_B_182222 | workflow_status | no_workflow_state
+Block: no_workflow_state
+Latest: no_workflow_state | No workflow phase summary available yet.
+Next: Start with ict-engine provider-status --compact. Then choose replay, factors/backtest, or live from the routes below.
+Provider: tradfi free fallback=yfinance | live zero-config=none | crypto public=none | setup required=crypto_public_runtime, external_http_runtime, ibkr Check: ict-engine provider-status --compact
+Routes: replay=ict-engine analyze --symbol ROOTAWARE_MULTIBRANCH_B_182222 --demo --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/ict-engine-fail-closed/state --human | factors/backtest=ict-engine factor-research --symbol ROOTAWARE_MULTIBRANCH_B_182222 --data <historical-data.json> --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/ict-engine-fail-closed/state --human | live bootstrap=ict-engine workflow-status --symbol ROOTAWARE_MULTIBRANCH_B_182222 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/ict-engine-fail-closed/state --phase bootstrap --human

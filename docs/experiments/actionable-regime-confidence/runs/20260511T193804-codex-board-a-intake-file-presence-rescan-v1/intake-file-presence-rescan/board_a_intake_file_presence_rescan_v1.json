@@ -1,0 +1,34 @@
+{
+  "accepted_rows_added": 0,
+  "complete_packages": [],
+  "decision": "board_a_intake_file_presence_rescan_v1=no_required_intake_files_present",
+  "exact_filename_candidate_count": 0,
+  "incomplete_packages": [
+    "direct_manipulation_row_intake",
+    "external_bundle_direct_manipulation_species",
+    "external_bundle_price_root_equivalence",
+    "external_bundle_source_panel_recency_extension",
+    "strict_1h_source_label_equivalence"
+  ],
+  "max_depth": 6,
+  "new_confidence_gate": false,
+  "notes": [
+    "This is a presence rescan only and does not modify intake roots.",
+    "Provider candles, generated labels, and projected rows are not promoted.",
+    "Unregistered concurrent v23 run directories are not edited or registered here."
+  ],
+  "raw_data_committed": false,
+  "required_file_count": 12,
+  "required_missing_count": 12,
+  "required_present_count": 0,
+  "runtime_code_changed": false,
+  "scan_started_at": "2026-05-11T11:39:03.530455+00:00",
+  "search_roots": [
+    "/tmp",
+    "/Users/thrill3r/Downloads"
+  ],
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

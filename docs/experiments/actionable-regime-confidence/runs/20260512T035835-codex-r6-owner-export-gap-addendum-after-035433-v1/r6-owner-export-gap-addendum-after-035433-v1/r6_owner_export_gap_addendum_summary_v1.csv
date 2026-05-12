@@ -1,0 +1,4 @@
+split_family,failing_cells,max_additional_pair_rows_needed_min,sum_additional_pair_rows_needed_min_if_exact_cells_must_all_pass,worst_cell
+chronological_group_split,3,55,142,chronological_calibration
+heldout_symbol_exact,40,73,2847,CBOT soybean call options
+heldout_venue_exact,11,73,728,LME and COMEX

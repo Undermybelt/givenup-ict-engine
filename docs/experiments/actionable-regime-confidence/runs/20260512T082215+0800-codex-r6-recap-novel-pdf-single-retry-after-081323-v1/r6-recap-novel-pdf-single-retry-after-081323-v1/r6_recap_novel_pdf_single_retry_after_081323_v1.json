@@ -1,0 +1,50 @@
+{
+  "body_prefix": "<html><body><p>Hi,</p><p>You have hit this error because you attempted to gather too many documents from CourtListener during a given block of time. Unfortunately, it costs us money every time somebody downloads something, so we have to be careful that fol",
+  "command_output": {
+    "body_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T082215+0800-codex-r6-recap-novel-pdf-single-retry-after-081323-v1/command-output/gov_uscourts_ilnd_316889_1_0_pdf.body",
+    "headers_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T082215+0800-codex-r6-recap-novel-pdf-single-retry-after-081323-v1/command-output/gov_uscourts_ilnd_316889_1_0_pdf.headers.txt",
+    "status_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T082215+0800-codex-r6-recap-novel-pdf-single-retry-after-081323-v1/command-output/gov_uscourts_ilnd_316889_1_0_pdf.status",
+    "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T082215+0800-codex-r6-recap-novel-pdf-single-retry-after-081323-v1/command-output/gov_uscourts_ilnd_316889_1_0_pdf.stderr.txt"
+  },
+  "decision": "The retry did not acquire a PDF. It produced an HTTP 429 CloudFront/CourtListener rate-limit HTML response, so it cannot supply source-owned normal controls or any R3/R5/R6 source-control unlock.",
+  "headers": {
+    "alt-svc": "h3=\":443\"; ma=86400",
+    "content-length": "964",
+    "content-type": "text/html",
+    "date": "Tue, 12 May 2026 00:22:16 GMT",
+    "server": "CloudFront",
+    "via": "1.1 d13d02cbda3d9f87796479cd273941a4.cloudfront.net (CloudFront)",
+    "x-amz-cf-id": "euMZCKP5DICXTQEdjSK_dhONmxcZ0AjG88MVWnl6Id8-73eUMyFUIw==",
+    "x-amz-cf-pop": "YVR52-P2",
+    "x-cache": "Error from cloudfront"
+  },
+  "metrics": {
+    "accepted_rows_added": 0,
+    "body_bytes": 964,
+    "body_is_html": true,
+    "body_is_pdf": false,
+    "body_sha256": "686b56a1f1794f8c11178ac17b1bd7fdb1704769536393366098586f6a0f2279",
+    "canonical_merge": false,
+    "cloudfront_rate_limited": true,
+    "content_length_header": "964",
+    "content_type": "text/html",
+    "downstream_promotion_rerun": false,
+    "gate_result": "r6_recap_novel_pdf_single_retry_after_081323_v1=rate_limited_no_body_no_control_unlock",
+    "generated_at_utc": "2026-05-12T00:25:03.286862+00:00",
+    "http_status": 429,
+    "pdf_acquired": false,
+    "promotion_allowed": false,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "retried_object": "gov.uscourts.ilnd.316889.1.0.pdf",
+    "run_id": "20260512T082215+0800-codex-r6-recap-novel-pdf-single-retry-after-081323-v1",
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "source_owned_normal_control_document": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  }
+}

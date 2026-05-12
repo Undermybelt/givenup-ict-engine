@@ -1,0 +1,11 @@
+PASS decision=local_owner_export_candidate_scan_v1=tomac_databento_ohlcv_only_no_r6_controls
+PASS archive_exists=true
+PASS schema=ohlcv-1m
+PASS archive_only_csv=true
+PASS has_depth_or_order_lifecycle=false
+PASS has_only_ohlcv_headers=true
+PASS r6_owner_control_contract_satisfied=false
+PASS canonical_merge_allowed_now=false
+PASS downstream_rerun_allowed_now=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

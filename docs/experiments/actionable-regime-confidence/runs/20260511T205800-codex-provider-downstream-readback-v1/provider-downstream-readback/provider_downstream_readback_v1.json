@@ -1,0 +1,174 @@
+{
+  "accepted_rows_added": 0,
+  "autoquant_state_dir": "/tmp/ict-engine-board-a-autoquant-status-v1",
+  "blocker": "R2/R3/R4/R5/R6 source-owned or owner-approved intake rows remain absent; provider/downstream readiness cannot replace source-label acceptance.",
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider ibkr --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_ibkr_agent.exit",
+      "name": "provider_status_ibkr_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_ibkr_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_ibkr_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider tradingview_mcp --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_tradingview_mcp_agent.exit",
+      "name": "provider_status_tradingview_mcp_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_tradingview_mcp_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_tradingview_mcp_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider yfinance --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_yfinance_agent.exit",
+      "name": "provider_status_yfinance_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_yfinance_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_yfinance_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_public --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_kraken_public_agent.exit",
+      "name": "provider_status_kraken_public_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_kraken_public_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_kraken_public_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_cli --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_kraken_cli_agent.exit",
+      "name": "provider_status_kraken_cli_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_kraken_cli_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/provider_status_kraken_cli_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-status-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/auto_quant_status.exit",
+      "name": "auto_quant_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/auto_quant_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/auto_quant_status.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol ^VIX --futures-backend yfinance --aux-backend yfinance --state-dir /tmp/ict-engine-board-a-provider-downstream-readback-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/analyze_live_nq_yfinance.exit",
+      "name": "analyze_live_nq_yfinance",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/analyze_live_nq_yfinance.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/analyze_live_nq_yfinance.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-board-a-provider-downstream-readback-v1 --refresh",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/pre_bayes_status.exit",
+      "name": "pre_bayes_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/pre_bayes_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/pre_bayes_status.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-a-provider-downstream-readback-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/policy_training_status.exit",
+      "name": "policy_training_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/policy_training_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/policy_training_status.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-a-provider-downstream-readback-v1 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/workflow_status_execution_candidate.exit",
+      "name": "workflow_status_execution_candidate",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/workflow_status_execution_candidate.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/workflow_status_execution_candidate.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol NQ --state-dir /tmp/ict-engine-board-a-provider-downstream-readback-v1",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205800-codex-provider-downstream-readback-v1/command-output/export_structural_path_ranking_target.out"
+    }
+  ],
+  "decision": "provider_downstream_readback_v1=live_status_recorded_strict_source_rows_still_blocked",
+  "downstream_statuses": {
+    "analyze_live_nq_yfinance_exit": 0,
+    "export_structural_path_ranking_target_exit": 0,
+    "pre_bayes_status_exit": 0,
+    "workflow_execution_candidate_exit": 0
+  },
+  "generated_at_utc": "2026-05-11T12:57:29.080307+00:00",
+  "new_confidence_gate": false,
+  "providers": [
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "tradingview_mcp",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "live_runtime",
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available;public_yahoo_http_endpoints",
+      "status": "ready"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "local_runtime"
+      ],
+      "observed": true,
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    }
+  ],
+  "raw_data_committed": false,
+  "run_id": "20260511T205800-codex-provider-downstream-readback-v1",
+  "runtime_code_changed": false,
+  "state_dir": "/tmp/ict-engine-board-a-provider-downstream-readback-v1",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "yfinance_live_chain_started": true
+}

@@ -1,0 +1,9 @@
+connect host=127.0.0.1 port=4002 clientId=383 readonly=true
+connected True
+managed_accounts ['DUN189136']
+qualified_count 1
+qualified Stock(conId=320227571, symbol='QQQ', exchange='SMART', primaryExchange='NASDAQ', currency='USD', localSymbol='QQQ', tradingClass='NMS')
+historical_rows 5
+first_bar BarData(date=datetime.date(2026, 5, 5), open=674.85, high=688.27, low=673.98, close=687.25, volume=22925668.0, average=681.027, barCount=175632)
+last_bar BarData(date=datetime.date(2026, 5, 11), open=710.77, high=714.59, low=708.91, close=713.33, volume=26622881.0, average=712.604, barCount=217082)
+disconnected

@@ -1,0 +1,17 @@
+PASS objective_restated
+PASS prompt_to_artifact_checklist_present
+PASS root_status_csv_present
+PASS r6_owner_export_absent
+PASS r3_native_subhour_root_absent
+PASS r5_recency_extension_root_absent
+PASS source_label_equivalence_present_non_promoting
+PASS direct_intake_present_legacy_non_promoting
+PASS approval_present_false
+PASS flip_controls_accepted_false
+PASS canonical_merge_false
+PASS downstream_rerun_false
+PASS accepted_rows_zero
+PASS new_confidence_gate_false
+PASS strict_objective_false
+PASS update_goal_false
+PASS no_proxy_promotion

@@ -1,0 +1,298 @@
+{
+  "assertions": {
+    "accepted_rows_added": 0,
+    "all_ncd_last_only": true,
+    "canonical_merge_allowed": false,
+    "downstream_rerun_allowed": false,
+    "executions_empty": true,
+    "market_data_entitlement_empty": true,
+    "ncd_file_count": 2440,
+    "ncd_types": [
+      "Last"
+    ],
+    "no_depth_bid_ask_order_ncd_candidates": true,
+    "ntb_built_from": [
+      "Minute",
+      "Tick"
+    ],
+    "ntb_market_data_types": [
+      "Last"
+    ],
+    "order_updates_empty": true,
+    "orders_empty": true,
+    "owner_export_root_present": false,
+    "promoting": false,
+    "sqlite_exists": true,
+    "strict_full_objective_achieved": false,
+    "update_goal": false
+  },
+  "board_file": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_before_artifact_write": "7e45c103115a05f165bd4e878a0099f54740c87e026837db2ab8ca39f665b85d",
+  "cache_inventory_summary_rows": 42,
+  "cache_inventory_totals": {
+    "ncd_files": 2440,
+    "ncd_types": [
+      "Last"
+    ],
+    "ntb_built_from": [
+      "Minute",
+      "Tick"
+    ],
+    "ntb_files": 13,
+    "ntb_market_data_types": [
+      "Last"
+    ]
+  },
+  "created_at_local": "2026-05-12T02:49:42+08:00",
+  "file_extension_counts": {
+    ".ncd": 2440,
+    ".ntb": 13,
+    ".sqlite": 1
+  },
+  "gate_result": "r6_ninjatrader_local_cache_owner_export_screen_v1=non_promoting_local_last_cache_no_owner_export_no_order_lifecycle_no_depth_controls",
+  "instrument_summary": [
+    {
+      "contracts": 235,
+      "description": "Crude Oil Futures",
+      "instrument_type": 0,
+      "master_name": "CL",
+      "max_expiry_net_ticks": 639685728000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    },
+    {
+      "contracts": 2,
+      "description": "Colgate-Palmolive",
+      "instrument_type": 1,
+      "master_name": "CL",
+      "max_expiry_net_ticks": 662353632000000000,
+      "min_expiry_net_ticks": 662353632000000000
+    },
+    {
+      "contracts": 1,
+      "description": "Crude Oil Futures Option",
+      "instrument_type": 3,
+      "master_name": "CL",
+      "max_expiry_net_ticks": 662353632000000000,
+      "min_expiry_net_ticks": 662353632000000000
+    },
+    {
+      "contracts": 93,
+      "description": "E-mini S&P 500 Futures",
+      "instrument_type": 0,
+      "master_name": "ES",
+      "max_expiry_net_ticks": 639632160000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    },
+    {
+      "contracts": 2,
+      "description": "Eversource Energy",
+      "instrument_type": 1,
+      "master_name": "ES",
+      "max_expiry_net_ticks": 662353632000000000,
+      "min_expiry_net_ticks": 662353632000000000
+    },
+    {
+      "contracts": 1,
+      "description": "E-mini S&P 500 Futures Option",
+      "instrument_type": 3,
+      "master_name": "ES",
+      "max_expiry_net_ticks": 662353632000000000,
+      "min_expiry_net_ticks": 662353632000000000
+    },
+    {
+      "contracts": 120,
+      "description": "Gold Futures",
+      "instrument_type": 0,
+      "master_name": "GC",
+      "max_expiry_net_ticks": 639685728000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    },
+    {
+      "contracts": 1,
+      "description": "Gold Futures Option",
+      "instrument_type": 3,
+      "master_name": "GC",
+      "max_expiry_net_ticks": 662353632000000000,
+      "min_expiry_net_ticks": 662353632000000000
+    },
+    {
+      "contracts": 33,
+      "description": "Micro E-mini Nasdaq-100 Futures",
+      "instrument_type": 0,
+      "master_name": "MNQ",
+      "max_expiry_net_ticks": 639394560000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    },
+    {
+      "contracts": 92,
+      "description": "E-mini NASDAQ 100 Futures",
+      "instrument_type": 0,
+      "master_name": "NQ",
+      "max_expiry_net_ticks": 639632160000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    },
+    {
+      "contracts": 117,
+      "description": "Silver Futures",
+      "instrument_type": 0,
+      "master_name": "SI",
+      "max_expiry_net_ticks": 639632160000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    },
+    {
+      "contracts": 263,
+      "description": "CBOE Volatility Index Futures",
+      "instrument_type": 0,
+      "master_name": "VX",
+      "max_expiry_net_ticks": 639264096000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    },
+    {
+      "contracts": 89,
+      "description": "U.S. Treasury Bond Futures",
+      "instrument_type": 0,
+      "master_name": "ZB",
+      "max_expiry_net_ticks": 639238176000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    },
+    {
+      "contracts": 89,
+      "description": "10-Year T-Note Futures",
+      "instrument_type": 0,
+      "master_name": "ZN",
+      "max_expiry_net_ticks": 639238176000000000,
+      "min_expiry_net_ticks": 599266080000000000
+    }
+  ],
+  "interesting_counts": {
+    "AccountItems": 75,
+    "Accounts": 4,
+    "Executions": 0,
+    "Instruments": 30648,
+    "JournalEntries": 0,
+    "Logs": 0,
+    "MasterInstruments": 1745,
+    "OrderUpdates": 0,
+    "Orders": 0,
+    "Positions": 0,
+    "Strategies": 0,
+    "Strategy2Execution": 0,
+    "Strategy2Order": 0,
+    "User2MarketDataEntitlement": 0
+  },
+  "key_findings": [
+    "NinjaTrader.sqlite contains zero Orders, zero OrderUpdates, zero Executions, zero Positions, and zero User2MarketDataEntitlement rows in this screen.",
+    "Local cache contains 2440 .ncd files summarized as Last-only day/minute/tick/cache entries, concentrated in MNQ and small ES 03-26 samples.",
+    "No .ncd filenames indicate MarketDepth, depth, bid, ask, MBO, book, or order-lifecycle payloads.",
+    "The .ntb cache descriptors mention BidAsk only as volumetric build settings; extracted MarketDataType remains Last and they are descriptors, not source-owned depth/control rows.",
+    "The screen finds local chart/bar/tick cache evidence only. It does not satisfy the R6 owner/source normal-control contract and cannot unblock canonical merge or downstream promotion."
+  ],
+  "owner_export_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "owner_export_root_present": false,
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_provider_autoquant_filter_prebayes_bbn_catboost_pathranking_executiontree_rerun_allowed": false,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false
+  },
+  "r3_r5_r6_roots_mutated": false,
+  "raw_data_committed": false,
+  "run_id": "20260512T024942-codex-r6-ninjatrader-local-cache-owner-export-screen-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_under_screen": "/Users/thrill3r/Documents/NinjaTrader 8/db",
+  "sqlite_path": "/Users/thrill3r/Documents/NinjaTrader 8/db/NinjaTrader.sqlite",
+  "sqlite_sha256": "b3aef10093423a9c48d22547611fe714e4d6cda6f8a838f91738d0ac23f5999b",
+  "suspicious_ncd_candidate_count": 0,
+  "suspicious_ncd_candidates": [],
+  "table_counts": [
+    {
+      "rows": 75,
+      "table_name": "AccountItems"
+    },
+    {
+      "rows": 4,
+      "table_name": "Accounts"
+    },
+    {
+      "rows": 0,
+      "table_name": "Executions"
+    },
+    {
+      "rows": 747,
+      "table_name": "Instrument2InstrumentList"
+    },
+    {
+      "rows": 9,
+      "table_name": "InstrumentLists"
+    },
+    {
+      "rows": 30648,
+      "table_name": "Instruments"
+    },
+    {
+      "rows": 0,
+      "table_name": "JournalEntries"
+    },
+    {
+      "rows": 0,
+      "table_name": "Logs"
+    },
+    {
+      "rows": 1745,
+      "table_name": "MasterInstruments"
+    },
+    {
+      "rows": 0,
+      "table_name": "OrderUpdates"
+    },
+    {
+      "rows": 0,
+      "table_name": "Orders"
+    },
+    {
+      "rows": 0,
+      "table_name": "Positions"
+    },
+    {
+      "rows": 0,
+      "table_name": "Strategies"
+    },
+    {
+      "rows": 0,
+      "table_name": "Strategy2Account"
+    },
+    {
+      "rows": 0,
+      "table_name": "Strategy2Execution"
+    },
+    {
+      "rows": 0,
+      "table_name": "Strategy2Instrument"
+    },
+    {
+      "rows": 0,
+      "table_name": "Strategy2Order"
+    },
+    {
+      "rows": 0,
+      "table_name": "User2Account"
+    },
+    {
+      "rows": 0,
+      "table_name": "User2MarketDataEntitlement"
+    },
+    {
+      "rows": 0,
+      "table_name": "Users"
+    },
+    {
+      "rows": 78,
+      "table_name": "Versions"
+    }
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,141 @@
+{
+  "commands": [
+    {
+      "exit": "0",
+      "name": "auto_quant_status_json",
+      "stderr_bytes": 0,
+      "stdout_bytes": 2638
+    },
+    {
+      "exit": "2",
+      "name": "fetch_ibkr_qqq_1d",
+      "stderr_bytes": 516,
+      "stdout_bytes": 0
+    },
+    {
+      "exit": "1",
+      "name": "fetch_ibkr_qqq_1d_retry_default_uv",
+      "stderr_bytes": 2469,
+      "stdout_bytes": 0
+    },
+    {
+      "exit": "0",
+      "name": "fetch_ibkr_spy_1d_retry_default_uv",
+      "stderr_bytes": 0,
+      "stdout_bytes": 340
+    },
+    {
+      "exit": "0",
+      "name": "fetch_kraken_xbtusd_1h",
+      "stderr_bytes": 0,
+      "stdout_bytes": 308
+    },
+    {
+      "exit": "0",
+      "name": "fetch_yahoo_qqq_1h",
+      "stderr_bytes": 52,
+      "stdout_bytes": 295
+    },
+    {
+      "exit": "1",
+      "name": "harness_tradingview_qqq_1d",
+      "stderr_bytes": 554,
+      "stdout_bytes": 4710
+    },
+    {
+      "exit": "0",
+      "name": "harness_yfinance_qqq_1d",
+      "stderr_bytes": 0,
+      "stdout_bytes": 9639
+    },
+    {
+      "exit": "0",
+      "name": "kraken_cli_xbtusd_1h",
+      "stderr_bytes": 0,
+      "stdout_bytes": 59210
+    },
+    {
+      "exit": "0",
+      "name": "provider_status_agent",
+      "stderr_bytes": 0,
+      "stdout_bytes": 18007
+    },
+    {
+      "exit": "0",
+      "name": "provider_status_ibkr",
+      "stderr_bytes": 0,
+      "stdout_bytes": 2380
+    },
+    {
+      "exit": "0",
+      "name": "provider_status_kraken_cli",
+      "stderr_bytes": 0,
+      "stdout_bytes": 834
+    },
+    {
+      "exit": "0",
+      "name": "provider_status_kraken_public",
+      "stderr_bytes": 0,
+      "stdout_bytes": 1983
+    },
+    {
+      "exit": "0",
+      "name": "provider_status_tradingview_mcp",
+      "stderr_bytes": 0,
+      "stdout_bytes": 2394
+    },
+    {
+      "exit": "0",
+      "name": "provider_status_yfinance",
+      "stderr_bytes": 0,
+      "stdout_bytes": 1463
+    },
+    {
+      "exit": "0",
+      "name": "source_root_presence",
+      "stderr_bytes": 0,
+      "stdout_bytes": 389
+    }
+  ],
+  "gate_result": "provider_source_root_readonly_refresh_after_050609_v1=providers_refreshed_no_source_control_unlock_no_promotion",
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provider_summary": {
+    "ibkr_failed_probe": "QQQ primaryExchange=ARCA contract lookup failed after reaching gateway",
+    "ibkr_fetch_rows": 21,
+    "ibkr_fetch_symbol": "SPY",
+    "kraken_cli_exit": "0",
+    "kraken_fetch_rows": 721,
+    "tradingview_harness_exit": "1",
+    "yfinance_fetch_rows": 197
+  },
+  "rows": {
+    "fetch_ibkr_qqq_1d": 0,
+    "fetch_ibkr_qqq_1d_retry_default_uv": 0,
+    "fetch_ibkr_spy_1d_retry_default_uv": 21,
+    "fetch_kraken_xbtusd_1h": 721,
+    "fetch_yahoo_qqq_1h": 197
+  },
+  "run_id": "20260512T051153-codex-provider-source-root-readonly-refresh-after-050609-v1",
+  "source_roots": {
+    "raw_readback": [
+      "absent:/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "absent:/tmp/ict-engine-native-subhour-source-label-intake",
+      "absent:/tmp/ict-engine-source-panel-recency-extension",
+      "present:/tmp/ict-engine-source-label-equivalence-intake",
+      "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+      "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv"
+    ],
+    "required_roots_absent": true
+  },
+  "state_dir": "/tmp/ict-engine-board-a-readonly-refresh-20260512T051153"
+}

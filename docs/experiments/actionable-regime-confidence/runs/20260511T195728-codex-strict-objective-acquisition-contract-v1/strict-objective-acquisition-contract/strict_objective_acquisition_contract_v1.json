@@ -1,0 +1,66 @@
+{
+  "accepted_rows_added": 0,
+  "contract_rows": 5,
+  "contracts": [
+    {
+      "acceptance_check": "source_label_equivalence verifier accepts rows and a completion audit shows other-market/source-label equivalence is true with accepted_rows_added > 0",
+      "current_blocker_evidence": "web_source_label_broad_recheck_v1, external_metadata_search_readback_v1, github_source_label_candidate_screen_v1, and local inventory all found 0 promotable owner-approved equivalence rows",
+      "explicit_non_acceptance": "HMM/KMeans/model outputs, feature-threshold labels, future-return labels, research-code predictions, source panels already counted, raw candles without source-owned labels",
+      "minimum_required_content": "owner-approved row-level source labels for non-counted markets/species; must include source label, owner mapping to MainRegimeV2, instrument, market, timestamp/window, timeframe, source owner, provenance URL, and validation split tags",
+      "package_id": "other_market_source_label_equivalence",
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "requirement_id": "R2"
+    },
+    {
+      "acceptance_check": "native sub-hour verifier reports ready_native_subhour_source_owned_label_sources > 0 and native_subhour_source_overlap_closed=true",
+      "current_blocker_evidence": "native_subhour_projection_quarantine_v1 quarantined 264 projected rows; native_subhour_source_recheck_v2 found 0 ready native sub-hour source-owned labels",
+      "explicit_non_acceptance": "projected daily/monthly labels, provider OHLCV panels, synthetic panels, HMM/classifier-generated labels, code-only repos",
+      "minimum_required_content": "source-owned native 1m/5m/15m/30m regime labels or owner-approved crosswalk rows, with native sub-hour window timestamps and no daily/monthly projection",
+      "package_id": "native_subhour_source_labels",
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "requirement_id": "R3"
+    },
+    {
+      "acceptance_check": "strict_1h_source_intake_verifier reports live intake files present and strict_1h_target_exact_source_search finds ready exact-target source-owned rows",
+      "current_blocker_evidence": "strict_1h_source_intake_verifier_readback_v1 missing 2 required files; strict_1h_contract_panel_exhaustion_v1 found 0 extra source rows; strict_1h_target_exact_source_search_v1 found 0 ready exact target sources",
+      "explicit_non_acceptance": "reusing existing source-panel rows, duplicating already-counted gate support, provider-derived 1h candles without owner labels",
+      "minimum_required_content": "new source-owned exact 1h rows for XOM/Sideways, UNH/Bear, ^DJI/Sideways, and AMD/Bear, not duplicated from the existing daily source panel; row-level provenance must identify source owner and mapping authority",
+      "package_id": "strict_1h_exact_target_source_rows",
+      "required_files": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv;/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+      "requirement_id": "R4"
+    },
+    {
+      "acceptance_check": "local target counts show rows_after_2026_01_30 > 0 for each strict target and completion audit clears the recency-tail row",
+      "current_blocker_evidence": "strict_1h_target_exact_source_search_v1 reported rows_after_2026_01_30 = 0 for all four strict targets",
+      "explicit_non_acceptance": "same historical panel with no post-2026-01-30 rows, generated forward fills, provider candles without source-owned labels",
+      "minimum_required_content": "source-owned tail rows after 2026-01-30 for the strict target cells: XOM/Sideways, UNH/Bear, ^DJI/Sideways, AMD/Bear",
+      "package_id": "strict_1h_recency_tail_repair",
+      "required_files": "source_panel_recency_tail_rows.csv;source_panel_recency_tail_provenance.json",
+      "requirement_id": "R5"
+    },
+    {
+      "acceptance_check": "direct_manipulation_intake verifier finds all required files, missing_files=0, and full_direct_manipulation_species_coverage=true",
+      "current_blocker_evidence": "direct_manipulation_intake_verifier_readback_v1 missing 3 files; Sapienza is only a pump/dump positive/control candidate and not spoofing/layering or full species coverage",
+      "explicit_non_acceptance": "positive-only enforcement cases, raw LOB/order book without manipulation labels, synthetic spoofing repos, pump/dump-only evidence, unmatched control-only panels",
+      "minimum_required_content": "row-level direct manipulation positives and matched same-venue/symbol/session normal controls for spoofing/layering, with extension slots for quote stuffing, pinging, bear raid, and painting tape; rows need timestamp/session, venue, instrument, event id, control group id, source owner, and provenance",
+      "package_id": "direct_manipulation_full_species_rows",
+      "required_files": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv;/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv;/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+      "requirement_id": "R6"
+    }
+  ],
+  "decision": "strict_objective_acquisition_contract_v1=contracts_ready_objective_still_blocked",
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "required_packages": [
+    "other_market_source_label_equivalence",
+    "native_subhour_source_labels",
+    "strict_1h_exact_target_source_rows",
+    "strict_1h_recency_tail_repair",
+    "direct_manipulation_full_species_rows"
+  ],
+  "run_id": "20260511T195728-codex-strict-objective-acquisition-contract-v1",
+  "runtime_code_changed": false,
+  "source_audit": "Built from v25 failed rows R2/R3/R4/R5/R6/R8 and latest source/inventory readbacks.",
+  "strict_full_objective_achieved": false,
+  "update_goal": false
+}

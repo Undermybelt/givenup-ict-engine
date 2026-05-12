@@ -1,0 +1,1 @@
+uv run --with pandas scripts/auto_quant_external/fetch_external.py kraken-kline --market futures --pair PF_XBTUSD --interval 1h --start 2021-01-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T165415+0800-codex-board-a-provider-max-window-capability-probe-v1/provider-csv/kraken_pfxbtusd_1h_20210101_20260512.csv

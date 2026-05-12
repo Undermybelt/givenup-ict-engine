@@ -1,0 +1,17 @@
+PASS tomac_exit=0
+PASS tickfix_precision_mode=TICK_SIZE
+PASS ProviderBtcMomentumCross_trade_count=9
+PASS ProviderBtcMomentumCross_total_profit_pct=2.1400
+PASS ProviderBtcMomentumCross_profit_factor=1.7770
+PASS ProviderBtcMomentumPulse_trade_count=57
+PASS ProviderBtcMomentumPulse_total_profit_pct=-3.6100
+PASS ProviderBtcTrendPullback_trade_count=16
+PASS ProviderBtcTrendPullback_total_profit_pct=-5.2100
+PASS nonzero_provider_owned_trades=true
+PASS mature_profitable_rooted_branch=false
+PASS accepted_production_rows_added=0
+PASS source_control_unlock=false
+PASS explicit_selected_history=false
+PASS downstream_promotion=false
+PASS promotion_allowed=false
+PASS update_goal=false

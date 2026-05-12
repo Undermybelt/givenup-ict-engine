@@ -1,0 +1,4 @@
+id,root,exists,file_count,expected_report_exists,role
+062842_source_control_unlock_refresh,docs/experiments/actionable-regime-confidence/runs/20260512T062842+0800-codex-source-control-unlock-refresh-after-062604-v1,True,7,True,unregistered read-only unlock refresh
+062854_readonly_runtime_refresh,docs/experiments/actionable-regime-confidence/runs/20260512T062854-codex-readonly-runtime-refresh-after-062604-v1,True,20,False,unregistered read-only runtime outputs
+062902_r3_hf_tsie_native_intraday_intake,docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1,True,6,False,"empty/incomplete root observed, not evidence"

@@ -1,0 +1,11 @@
+PASS diagnostic_only:044701_stable_terminal_readback
+PASS command_exit=0
+PASS accepted_single_atom_confidence_95_labels=[]
+PASS fail_closed:no_single_atom_confidence_95_labels
+PASS fail_closed:all_single_atom_wilson95_below_threshold
+PASS accepted_rows_added=0
+PASS canonical_merge_allowed=false
+PASS downstream_rerun_allowed=false
+PASS blocked:user_selected_historical_data_missing
+PASS promotion_allowed=false
+PASS update_goal=false

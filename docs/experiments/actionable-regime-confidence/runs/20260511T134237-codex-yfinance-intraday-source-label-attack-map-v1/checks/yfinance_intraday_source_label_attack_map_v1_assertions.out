@@ -1,0 +1,12 @@
+run_id=20260511T134237+0800-codex-yfinance-intraday-source-label-attack-map-v1
+input_yfinance_intraday_rows=336
+exact_same_source_rows=48
+crosswalk_candidate_rows=168
+unsupported_rows=120
+accepted_confidence_added=0
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

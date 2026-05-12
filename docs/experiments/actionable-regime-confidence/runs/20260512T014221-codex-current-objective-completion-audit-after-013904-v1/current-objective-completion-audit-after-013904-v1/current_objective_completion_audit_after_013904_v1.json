@@ -1,0 +1,106 @@
+{
+  "run_id": "20260512T014221-codex-current-objective-completion-audit-after-013904-v1",
+  "gate_result": "current_objective_completion_audit_after_013904_v1=not_complete_source_r6_r3_r5_timeframe_downstream_blocked",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_registration_hash_before_writeback": "0793c4479b51eae4f1616baa7cbac821a41ab10be23c6ae7e78b9ae42c92114e",
+  "board_sha256_before_restoration": "81267de5f4bc420f89210457bd905df1385ca9adb649e21703d6a3b856e84ffa",
+  "observed_cursor": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "board_state": "blocked",
+  "checklist_counts": {
+    "pass": 2,
+    "partial": 2,
+    "blocked": 10
+  },
+  "accepted_labels": [],
+  "field_complete_condition_leads": [
+    "Bull",
+    "Sideways"
+  ],
+  "unaccepted_regime_labels": [
+    "Bull",
+    "Sideways",
+    "Bear",
+    "Crisis"
+  ],
+  "source_roots": [
+    {
+      "id": "source_label_equivalence",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "file_count": 2,
+      "acceptance_status": "confidence_blocked_daily_only"
+    },
+    {
+      "id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "file_count": 0,
+      "required_files_present": false,
+      "source_owned_normal_controls": 0,
+      "explicit_flip_approval": false
+    },
+    {
+      "id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false,
+      "file_count": 0
+    },
+    {
+      "id": "r5_recency_extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false,
+      "file_count": 0
+    }
+  ],
+  "r6_required_verifier_native_files": [
+    {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "present": false
+    },
+    {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "present": false
+    },
+    {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json",
+      "present": false
+    }
+  ],
+  "auto_quant_latest_cache": {
+    "source_run": "20260512T013904-codex-autoquant-latest-backtest-cache-readback-v1",
+    "strategy_name": "TomacNQ_KillzoneBreakout",
+    "timeframe": "1h",
+    "total_trades": 9,
+    "wins": 4,
+    "losses": 5,
+    "winrate": 0.4444444444444444,
+    "profit_total": -0.058056,
+    "acceptance_status": "fail_closed_low_trade_count_and_negative_edge"
+  },
+  "provider_context": {
+    "yfinance": "usable_recent_readback",
+    "kraken_cli": "usable_recent_readback",
+    "ibkr": "unhealthy_or_dependency_blocked",
+    "tradingview_remix": "unhealthy_or_dependency_blocked",
+    "kraken_public": "unhealthy_or_dependency_blocked",
+    "acceptance_status": "partial_context_only_not_regime_evidence"
+  },
+  "downstream_chain": {
+    "provider_autoquant_filter_prebayes_bbn_catboost_pathranking_execution_tree": "callable_but_non_promoting",
+    "canonical_merge_allowed": false,
+    "promotion_rerun_allowed": false
+  },
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_requests_sent": false,
+  "trade_usable": false
+}

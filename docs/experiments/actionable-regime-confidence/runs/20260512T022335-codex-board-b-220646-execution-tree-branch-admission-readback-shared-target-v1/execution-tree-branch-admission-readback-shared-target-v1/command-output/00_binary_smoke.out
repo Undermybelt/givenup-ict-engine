@@ -1,0 +1,115 @@
+ICT Expansion Trading Engine
+
+Usage: ict-engine <COMMAND>
+
+Commands:
+  analyze
+          Analyze market data
+  analyze-live
+          Analyze live futures with integrated backends and spot/options auxiliary evidence
+  validate-market-state
+          Validate market-state main/sub-regime confidence on OHLCV candles
+  train
+          Train HMM model
+  backtest
+          Run backtest
+  update
+          Update BBN from realized trade outcome
+  factor-research
+          Run factor research sandbox
+  auto-quant-promote-canonical-setup
+          [Experimental/Internal] Promote a PB12 discovery candidate into the repo-versioned canonical setup manifest
+  factor-mutation-status
+          Show factor mutation history and clustered failure tags
+  factor-autoresearch
+          Run checkpointed keep/discard factor mutation autoresearch loop
+  env
+          Show the currently effective ICT-related environment settings
+  auto-quant-status
+          Show managed Auto-Quant dependency status
+  auto-quant-bootstrap
+          Bootstrap the managed Auto-Quant dependency checkout
+  auto-quant-update
+          Update the managed Auto-Quant dependency checkout
+  auto-quant-prepare
+          Prepare the managed Auto-Quant workspace data in-place through the repo CLI
+  auto-quant-adoption-review
+          Review the latest Auto-Quant handoff candidate as an adoption surface
+  auto-quant-adoption-decision
+          Record an explicit adoption decision for an Auto-Quant handoff candidate
+  factor-autoresearch-status
+          Show factor-autoresearch sessions and attempts
+  research-verdict
+          Summarize research closure truth into one compact verdict
+  evidence-quality-breakdown
+          Explain the latest Pre-Bayes evidence quality score composition
+  factor-backtest
+          Run factor walk-forward backtest and learning updates
+  clean-futures
+          Clean TOMAC-style futures minute CSVs into continuous candles
+  futures-sop
+          Standard futures research SOP: clean, research, summarize best factors
+  expansion-sop
+          Expansion-focused futures SOP: rank factors by bull/bear expansion discrimination
+  market-data-harness
+          Agent-operable market-data harness driven by explicit external request/provider config
+  factor-pipeline-debug
+          Structured latest-sample trace from factor signal through Pre-Bayes, bridge, and resonance
+  workflow-status
+          Show the latest cross-phase workflow snapshot
+  pre-bayes-status
+          Show the latest Pre-Bayes status directly
+  policy-training-status
+          Show a read-only quality summary for internal policy training tables
+  register-structural-path-ranking-trainer-artifact
+          Register an explicit external structural path-ranker artifact into the policy_training contract
+  clear-structural-path-ranking-trainer-artifact
+          Remove a previously registered external structural path-ranker artifact from the policy_training contract
+  enable-structural-path-ranking-runtime
+          Opt in to reusing external structural path-ranking scores for current consumer surfaces
+  disable-structural-path-ranking-runtime
+          Disable previously enabled structural path-ranking runtime reuse and return to zero-config defaults
+  export-structural-path-ranking-target
+          Export the structural path-ranking target summary and row files on demand from persisted workflow state
+  apply-structural-path-ranking-external-scores
+          Apply explicit external raw path scores onto the latest and accumulated structural path-ranking target datasets
+  provider-status
+          Show a global read-only catalog of providers grouped by domain
+  pre-bayes-diff
+          Show the latest Pre-Bayes diff package directly
+  artifact-lineage
+          Show artifact lineage edges and related nodes
+  artifact-status
+          Show artifact ledger status
+  artifact-diff
+          Diff two artifacts by id
+  auto-quant-seed-evidence
+          Persist external strategy materials as seed evidence nodes for Auto-Quant iteration
+  auto-quant-agent-material-batch
+          Build a generic agent-material batch from agent-produced strategy packages
+  auto-quant-agent-material-dispatch
+          Dispatch the latest generic agent-material batch through external Auto-Quant execution
+  auto-quant-agent-material-rank
+          Rank the latest generic agent-material dispatch results by win rate, Sharpe, then return
+  auto-quant-results-import
+          Import an Auto-Quant strategy_library.json manifest as a validated handoff artifact
+  auto-quant-consume-live-signals
+          Consume Auto-Quant live factor-signal envelopes from a Redis stream and append them to the local JSONL log + ledger
+  auto-quant-ingest-real-trades
+          Ingest a JSONL artifact of realised trade outcomes produced by Auto-Quant and apply them to the trade_outcome CPT
+  auto-quant-prior-init
+          Apply tempered Beta-Binomial pseudo-counts from an imported Auto-Quant strategy library to the trade_outcome CPT prior
+  help
+          Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+
+Start here:
+  ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --human
+  ict-engine provider-status --compact
+  ict-engine analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human
+
+When you want managed factor iteration:
+  ict-engine auto-quant-status --state-dir /tmp/ict-engine-auto-quant

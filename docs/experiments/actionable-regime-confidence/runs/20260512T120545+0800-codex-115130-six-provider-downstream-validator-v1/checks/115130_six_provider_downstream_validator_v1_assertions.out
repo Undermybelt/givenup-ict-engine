@@ -1,0 +1,9 @@
+PASS run_id=20260512T120545+0800-codex-115130-six-provider-downstream-validator-v1
+PASS source_run_id=20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1
+PASS input_files=12
+PASS records_total=211
+PASS validator_pass=True
+PASS ingestion_allowed=True
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

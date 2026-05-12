@@ -1,0 +1,1 @@
+/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/state --refresh --phase structural-feedback --output-format agent

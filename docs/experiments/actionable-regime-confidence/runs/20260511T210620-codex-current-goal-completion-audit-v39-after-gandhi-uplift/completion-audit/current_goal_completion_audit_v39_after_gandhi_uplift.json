@@ -1,0 +1,158 @@
+{
+  "accepted_rows_added_since_v38": 0,
+  "board_hash_before_artifact_generation": "1c8b6e37848e723361abea48436fd0890c0891be33b82536a6ad5a8c607d6979",
+  "checklist": [
+    {
+      "artifact": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "evidence": "board_hash_before_audit=1c8b6e37848e723361abea48436fd0890c0891be33b82536a6ad5a8c607d6979; current strict cursor and latest R6 Gandhi artifacts read.",
+      "gap": "",
+      "id": "R0",
+      "requirement": "Use the named Board A markdown and current cursor as the contract.",
+      "status": "pass_checked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T210002-codex-current-goal-completion-audit-v38-after-cftc-control-seed/completion-audit/current_goal_completion_audit_v38_after_cftc_control_seed.json",
+      "evidence": "Prior scoped evidence remains preserved, but the strict full objective still lacks complete source rows and calibration.",
+      "gap": "Full per-regime >=95 confidence across the required market/species/cycle axes is not complete.",
+      "id": "R1",
+      "requirement": "Every active regime has source-owned or owner-approved >=95% confidence and is not promoted as a trade claim.",
+      "status": "fail_not_full"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204715-codex-source-acquisition-outbox-v2-after-r6-uplift/source-acquisition-outbox-v2/source_acquisition_outbox_v2.json",
+      "evidence": "outbox_v2_rows=9; rows_acquired=False; request_sent=False.",
+      "gap": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "id": "R2",
+      "requirement": "Other-market/source-label equivalence rows and provenance are acquired and verifier-accepted.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "evidence": "The native sub-hour intake root remains absent by current /tmp readback.",
+      "gap": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "id": "R3",
+      "requirement": "Native sub-hour source-label rows and provenance are acquired and verifier-accepted.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204715-codex-source-acquisition-outbox-v2-after-r6-uplift/source-acquisition-outbox-v2/source_acquisition_outbox_v2.json",
+      "evidence": "R4 still depends on the absent source-label equivalence intake package.",
+      "gap": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "id": "R4",
+      "requirement": "Strict exact 1h source rows and provenance are acquired.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205031-codex-current-public-regime-dataset-scout-v1/current-public-regime-dataset-scout/current_public_regime_dataset_scout_v1.json",
+      "evidence": "Current public candidates were found but not accepted; no recency extension files exist in /tmp.",
+      "gap": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "id": "R5",
+      "requirement": "Post-2026-01-30 source-panel recency extension rows and provenance are acquired.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T210150-codex-cftc-gandhi-source-row-uplift-v1/cftc-gandhi-source-row-uplift/cftc_gandhi_source_row_uplift_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T210514-codex-r6-gandhi-expanded-calibration-gate-v1/r6-gandhi-expanded-calibration-gate/r6_gandhi_expanded_calibration_gate_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T210156-codex-r6-official-cftc-expansion-scout-v1/r6-official-cftc-expansion-scout/r6_official_cftc_expansion_scout_v1.json",
+      "evidence": "positive_rows=4; matched_negative_rows=4; wilson95_min=0.5101091635454027; chronological=True; heldout=True; broad_normal=False; species_ok=False; official_cftc_candidates=9.",
+      "gap": "Support remains below Wilson95 >=0.95, controls are same-report seeds rather than broad normal controls, and direct species coverage is incomplete.",
+      "id": "R6",
+      "requirement": "Direct Manipulation positive/control/provenance files cover required species and pass chronological plus heldout Wilson95 calibration.",
+      "status": "partial_expanded_schema_ready_calibration_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T210150-codex-cftc-gandhi-source-row-uplift-v1/cftc-gandhi-source-row-uplift/cftc_gandhi_source_row_uplift_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T210514-codex-r6-gandhi-expanded-calibration-gate-v1/r6-gandhi-expanded-calibration-gate/r6_gandhi_expanded_calibration_gate_v1.json",
+      "evidence": "Artifacts keep accepted_rows_added=0, new_confidence_gate=false, thresholds_relaxed=false, raw_data_committed=false, trade_usable=false, request_sent=false where applicable.",
+      "gap": "",
+      "id": "R7",
+      "requirement": "No proxy labels, raw-data commits, threshold relaxation, external send, or trade-usable claim.",
+      "status": "pass_guardrail"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T210620-codex-current-goal-completion-audit-v39-after-gandhi-uplift/completion-audit/current_goal_completion_audit_v39_after_gandhi_uplift.json",
+      "evidence": "R2/R3/R4/R5 remain blocked and R6 remains partial despite the Gandhi uplift.",
+      "gap": "Strict full objective is not achieved; update_goal remains false.",
+      "id": "R8",
+      "requirement": "Only call update_goal when every strict requirement is covered by real accepted evidence.",
+      "status": "fail_blocked"
+    }
+  ],
+  "decision": "current_goal_completion_audit_v39=gandhi_rows_expanded_r6_still_calibration_blocked",
+  "generated_at_utc": "2026-05-11T13:08:12.855667+00:00",
+  "input_decisions": {
+    "cftc_scout": "r6_official_cftc_expansion_scout_v1=official_candidates_found_rows_not_acquired",
+    "gandhi_gate": "r6_gandhi_expanded_calibration_gate_v1=expanded_rows_schema_ready_calibration_blocked",
+    "gandhi_uplift": "cftc_gandhi_source_row_uplift_v1=direct_intake_rows_uplifted_schema_ready_unscored",
+    "outbox_v2": "source_acquisition_outbox_v2=r6_uplift_merged_rows_not_acquired",
+    "public_scout": "current_public_regime_dataset_scout_v1=current_public_candidates_found_but_not_accepted",
+    "v38": "current_goal_completion_audit_v38=cftc_control_seed_schema_ready_unscored_strict_objective_blocked"
+  },
+  "intake_roots_checked": [
+    {
+      "exists": false,
+      "id": "source_label_equivalence",
+      "missing_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "present_files": "",
+      "ready_by_file_presence": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "requirements": "R2;R4",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "row_counts": ""
+    },
+    {
+      "exists": false,
+      "id": "native_subhour_source_label",
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_files": "",
+      "ready_by_file_presence": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "requirements": "R3",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "row_counts": ""
+    },
+    {
+      "exists": false,
+      "id": "source_panel_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "ready_by_file_presence": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "requirements": "R5",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "row_counts": ""
+    },
+    {
+      "exists": true,
+      "id": "direct_manipulation_row_intake",
+      "missing_files": "",
+      "present_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "ready_by_file_presence": true,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "requirements": "R6",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "row_counts": "positive_spoofing_layering_rows.csv:4;matched_negative_normal_activity_rows.csv:4;provenance_manifest.json:json"
+    }
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Continue source-owned extraction for R6 until support, broad controls, direct species, chronological, and heldout gates all pass; in parallel populate the existing R2/R3/R4/R5 fail-closed intake roots before rerunning completion audit.",
+  "objective_restatement": "Every active Board A regime must have source-owned or owner-approved >=95% confidence and survive other-market/species plus other-cycle/timeframe validation before completion.",
+  "raw_data_committed": false,
+  "ready_intake_root_count": 1,
+  "ready_intake_roots": [
+    "direct_manipulation_row_intake"
+  ],
+  "run_id": "20260511T210620-codex-current-goal-completion-audit-v39-after-gandhi-uplift",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unmet_ids": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R8"
+  ],
+  "unmet_rows": 7,
+  "update_goal": false
+}

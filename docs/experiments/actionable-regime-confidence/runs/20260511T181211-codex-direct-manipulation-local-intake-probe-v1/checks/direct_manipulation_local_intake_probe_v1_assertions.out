@@ -1,0 +1,10 @@
+run_id=20260511T181211+0800-codex-direct-manipulation-local-intake-probe-v1
+candidate_file_count=0
+required_files_missing=3
+verifier_status=blocked
+verifier_reason=missing_required_files
+accepted_direct_rows_added=0
+new_confidence_gate=false
+full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

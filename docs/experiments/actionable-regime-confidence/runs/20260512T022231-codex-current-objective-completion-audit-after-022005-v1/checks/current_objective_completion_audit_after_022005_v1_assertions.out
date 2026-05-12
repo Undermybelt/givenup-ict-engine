@@ -1,0 +1,13 @@
+gate_result=current_objective_completion_audit_after_022005_v1=not_complete_r6_source_controls_autoquant_data_cross_validation_and_downstream_blocked
+checklist_pass=1
+checklist_partial=3
+checklist_blocked=7
+r6_owner_export_present=False
+r3_native_subhour_present=False
+r5_recency_extension_present=False
+accepted_rows_added=0
+new_confidence_gate=false
+canonical_merge_allowed=false
+downstream_chain_rerun_allowed=false
+strict_full_objective_achieved=false
+update_goal=false

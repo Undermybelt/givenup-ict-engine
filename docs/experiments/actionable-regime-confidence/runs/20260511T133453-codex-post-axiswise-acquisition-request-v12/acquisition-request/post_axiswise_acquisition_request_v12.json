@@ -1,0 +1,98 @@
+{
+  "active_request_counts": {
+    "by_provider": {
+      "kraken_public_lowpollution_http": 108,
+      "yfinance": 448
+    },
+    "by_reason": {
+      "missing_instrument_source_label": 40,
+      "missing_intraday_or_monthly_source_label": 384,
+      "missing_non_yfinance_source_label": 108,
+      "rejected_near_underlying_proxy_not_accepted": 24
+    },
+    "by_root": {
+      "Bear": 139,
+      "Bull": 139,
+      "Crisis": 139,
+      "Sideways": 139
+    },
+    "by_timeframe": {
+      "15m": 68,
+      "1d": 44,
+      "1h": 68,
+      "1m": 68,
+      "1mo": 60,
+      "1w": 44,
+      "30m": 68,
+      "4h": 68,
+      "5m": 68
+    }
+  },
+  "artifact_type": "post_axiswise_acquisition_request_v12",
+  "artifacts": {
+    "active_request_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T133453-codex-post-axiswise-acquisition-request-v12/acquisition-request/post_axiswise_active_source_label_requests_v12.csv",
+    "disposition_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T133453-codex-post-axiswise-acquisition-request-v12/acquisition-request/post_axiswise_source_label_request_disposition_v12.csv"
+  },
+  "decision": {
+    "accepted_confidence_added": 0,
+    "active_source_label_requests_after_axiswise": 556,
+    "full_objective_achieved": false,
+    "gate_result": "post_axiswise_acquisition_request_v12_active_556_source_label_slots_plus_direct_manipulation_open",
+    "next_action": "Attack the 336 native intraday yfinance rows first, then Kraken/full-species rows; keep direct Manipulation matched-negative acquisition separate.",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "superseded_by_axiswise_rows": 8,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "v2_rows": 564
+  },
+  "generated_at_utc": "2026-05-11T05:45:14.643731+00:00",
+  "high_yield_batches": [
+    {
+      "batch_id": "native_intraday_yfinance_index_etf_futures",
+      "forbidden": "do not use OHLCV/HMM/future-return generated labels as acceptance evidence",
+      "required_evidence": "native intraday MainRegimeV2 labels or owner-approved source labels for all four roots",
+      "rows": 336,
+      "selector": "provider == yfinance AND timeframe in 1m/5m/15m/30m/1h/4h"
+    },
+    {
+      "batch_id": "kraken_full_species_native_labels",
+      "forbidden": "do not promote raw Kraken bars or provider readiness to regime labels",
+      "required_evidence": "crypto exact-underlying source labels across roots/timeframes with chronological and heldout-symbol validation",
+      "rows": 108,
+      "selector": "provider == kraken_public_lowpollution_http"
+    },
+    {
+      "batch_id": "yfinance_non_same_source_daily_weekly_monthly_species",
+      "forbidden": "do not infer labels from the accepted US stock/index panel unless an explicit crosswalk is approved and calibrated",
+      "required_evidence": "exact-underlying labels for commodities, ETFs, futures, volatility, and non-same-source instruments",
+      "rows": 112,
+      "selector": "provider == yfinance AND timeframe in 1d/1w/1mo AND not superseded"
+    }
+  ],
+  "inputs": {
+    "axiswise_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1.json",
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "00d7dab1282c5653bda90ab86df0a4226a4fc69bfed8e24d3ae25a1cda901cbb",
+    "same_source_rollup": "docs/experiments/actionable-regime-confidence/runs/20260511T130600-codex-stock-regime-same-source-timeframe-rollup-v1/timeframe-rollup/stock_regime_same_source_timeframe_rollup_v1.csv",
+    "stale_v2_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/acquisition-package/missing_root_label_slots_acquisition_request_v2.csv",
+    "stale_v2_csv_sha256": "2c4af3a3e497fbf8a2fd5cc2982b27ba720ac5d5cd01785322ff78e939f1e69f",
+    "v11_targets": "docs/experiments/actionable-regime-confidence/runs/20260511T132625-current-goal-completion-audit-v11-after-axiswise/completion-audit/targeted_unsupported_cell_targets_v11.csv"
+  },
+  "run_id": "20260511T133453+0800-codex-post-axiswise-acquisition-request-v12",
+  "superseded_counts": {
+    "by_instrument": {
+      "^DJI": 4,
+      "^GSPC": 4
+    },
+    "by_root": {
+      "Bear": 2,
+      "Bull": 2,
+      "Crisis": 2,
+      "Sideways": 2
+    },
+    "by_timeframe": {
+      "1mo": 8
+    }
+  }
+}

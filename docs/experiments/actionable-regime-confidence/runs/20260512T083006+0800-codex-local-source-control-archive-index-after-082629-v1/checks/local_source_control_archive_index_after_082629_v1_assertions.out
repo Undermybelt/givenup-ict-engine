@@ -1,0 +1,15 @@
+gate_result=local_source_control_archive_index_after_082629_v1=no_verifier_native_source_control_archive_found
+candidate_files_scanned=1
+archive_member_hit_files=0
+verifier_native_candidate_files=0
+exact_required_packages=0
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

@@ -1,0 +1,6 @@
+requirement,blocking_evidence,next_safe_action
+full other-market source-label equivalence,"source_label_other_market_readback_v1 accepted factor/gate total is 0","Acquire source-owned or owner-approved other-market rows/provenance."
+full other-cycle/timeframe confidence,"strict 1h future protocol is 45/156 and native sub-hour is 0/4","Acquire source-overlap rows for remaining strict 1h and native sub-hour cells."
+direct Manipulation full species coverage,"6 direct varieties remain unaccepted; missing-species ready sources are 0","Acquire real positives plus matched normal controls for missing species."
+external/local intake schemas,"local schema exact matches are 0 and strong partial matches are 0","Place exact-schema source rows/provenance under the intake root."
+source recency/source-label expansion,"known source tail only supports 4 future-protocol rows","Acquire source-owned labels beyond current tail for remaining near-miss rows."

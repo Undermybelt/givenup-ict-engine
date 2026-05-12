@@ -1,0 +1,64 @@
+{
+  "run_id": "20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1",
+  "generated_at_local": "2026-05-12T03:34:30+08:00",
+  "gate_result": "autoquant_threaded_resolver_prepare_after_033216_v1=prepare_succeeded_data_ready_seed_required_no_board_a_promotion",
+  "inputs": {
+    "status_before": {
+      "cmd": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/00_status_before.cmd",
+      "exit": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/00_status_before.exit",
+      "stdout_json": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/00_status_before.stdout.json"
+    },
+    "prepare": {
+      "cmd": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/01_prepare_threaded_resolver.cmd",
+      "exit": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/01_prepare_threaded_resolver.exit",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/01_prepare_threaded_resolver.stdout.txt"
+    },
+    "status_after": {
+      "cmd": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/02_status_after.cmd",
+      "exit": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/02_status_after.exit",
+      "stdout_json": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1/command-output/02_status_after.stdout.json"
+    }
+  },
+  "command_readback": {
+    "status_before_exit_code": 0,
+    "status_before_status": "dependency_ready_data_missing",
+    "status_before_healthy": false,
+    "status_before_data_ready": false,
+    "prepare_exit_code": 0,
+    "prepare_status": "prepared",
+    "prepare_data_ready": true,
+    "prepare_dependency_status_before": "dependency_ready_data_missing",
+    "prepare_dependency_status_after": "dependency_ready_seed_required",
+    "status_after_exit_code": 0,
+    "status_after_status": "dependency_ready_seed_required",
+    "status_after_healthy": true,
+    "status_after_dependency_healthy": true,
+    "status_after_data_ready": true,
+    "status_after_blocked_reason": "auto_quant_seed_strategies_required",
+    "threaded_resolver_probe_path_used": true
+  },
+  "sibling_readback": {
+    "failed_default_aiodns_retry_root": "20260512T033430-codex-autoquant-threaded-resolver-workaround-run-v1",
+    "failed_default_aiodns_retry_gate": "autoquant_threaded_resolver_workaround_run_v1=prepare_retry_failed_aiodns_loopback_no_promotion"
+  },
+  "promotion": {
+    "autoquant_prepare_succeeded": true,
+    "autoquant_data_ready": true,
+    "source_control_evidence_acquired": false,
+    "owner_export_rows_acquired": false,
+    "flip_approval_acquired": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "non_mutations": {
+    "runtime_code_changed": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "canonical_intake_mutated": false
+  }
+}

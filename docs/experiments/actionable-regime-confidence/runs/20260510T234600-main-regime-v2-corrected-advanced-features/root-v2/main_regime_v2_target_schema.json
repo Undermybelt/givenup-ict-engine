@@ -1,0 +1,66 @@
+{
+  "schema_version": "main-regime-v2-target-schema/v1",
+  "root_axis": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "manipulation_treatment": "fifth_main_class_or_overlay_fail_closed",
+  "residual_bucket": "UnknownOrMixed",
+  "input_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/cross_market_regime_features_and_labels.csv",
+  "chronological_split": "per instrument:market:timeframe context, 50% train / 25% calibration / 25% test",
+  "blocked_predictor_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "target_definitions": {
+    "Crisis": "target_extreme_stress == true OR future_absret_h8h >= train_context_pool_q90; evaluated before Bull/Bear/Sideways",
+    "Sideways": "target_range_consolidation == true AND NOT Crisis",
+    "Bull": "future_ret_h8h >= train_context_pool_q65 AND NOT Crisis AND NOT Sideways",
+    "Bear": "future_ret_h8h <= train_context_pool_q35 AND NOT Crisis AND NOT Sideways",
+    "Manipulation": "not materialized from this OHLCV-derived table; requires direct tick/order-flow/L2/order-lifecycle or crypto event/social evidence",
+    "UnknownOrMixed": "residual bucket after Crisis/Sideways/Bull/Bear"
+  },
+  "train_thresholds": {
+    "bull_future_ret_h8h_train_q65": 0.004029420797713623,
+    "bear_future_ret_h8h_train_q35": -0.0012429261813430292,
+    "crisis_future_absret_h8h_train_q90": 0.018347656455949712
+  },
+  "row_counts_by_split_and_root": {
+    "train": {
+      "Bull": 1595,
+      "Bear": 1203,
+      "Sideways": 1395,
+      "Crisis": 1117,
+      "Manipulation": 0,
+      "UnknownOrMixed": 772
+    },
+    "calibration": {
+      "Bull": 770,
+      "Bear": 651,
+      "Sideways": 798,
+      "Crisis": 413,
+      "Manipulation": 0,
+      "UnknownOrMixed": 409
+    },
+    "test": {
+      "Bull": 905,
+      "Bear": 641,
+      "Sideways": 426,
+      "Crisis": 627,
+      "Manipulation": 0,
+      "UnknownOrMixed": 440
+    }
+  },
+  "acceptance_95": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  }
+}

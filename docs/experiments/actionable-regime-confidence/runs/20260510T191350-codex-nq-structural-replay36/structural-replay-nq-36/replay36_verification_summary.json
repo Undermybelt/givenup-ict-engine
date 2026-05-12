@@ -1,0 +1,35 @@
+{
+  "schema_version": "board-a-replay36-verification/v1",
+  "loop_id": "20260510T191100+0800-hermes-replay36-verification",
+  "run_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36",
+  "feedback_files": 36,
+  "update_runs": 40,
+  "observation_validation": {
+    "ready": true,
+    "mature_observations": 37,
+    "min_observations": 30,
+    "shortfall_observations": 0,
+    "pending_observations": 0,
+    "total_observations": 37,
+    "outcome_distribution": {
+      "breakeven": 4,
+      "invalidated": 2,
+      "loss": 12,
+      "win": 19
+    },
+    "summary_line": "observations mature=37/30 pending=0 total=37 ready=true"
+  },
+  "raw_scored_mature_rows": 0,
+  "production_validation_rows": 0,
+  "runtime": {
+    "enabled": true,
+    "ready": false,
+    "status": "enabled_no_matching_scores",
+    "reuse_mode": "prefer_history",
+    "active_match_count": 0,
+    "summary_line": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=1190 mature_rows=1 history_mature_rows=1172 raw_scored_mature=0/30 production_validation=0/30 observation_validation=37/30 calibration=pending_eval trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0"
+  },
+  "target_summary_line": "structural_path_ranking_target rows=3 history_rows=1190 mature_rows=1 history_mature_rows=1172 raw_scored_mature=0/30 production_validation=0/30 observation_validation=37/30 calibration=pending_eval trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0",
+  "decision": "observation_validation_ready=true at 37/30; CatBoost production/raw-scored validation remains not ready at 0/30 and runtime has no matching scores.",
+  "next_action": "Generate/apply matching raw_path_score rows for at least 30 mature structural targets, then re-run policy-training-status."
+}

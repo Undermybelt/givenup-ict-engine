@@ -1,0 +1,10 @@
+{
+  "schema_version": "board-b-selected-dataset/v1",
+  "selected_by_user": "NQ 5m full",
+  "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-5m.feather",
+  "converted_json": "docs/experiments/actionable-regime-confidence/runs/20260510T191125-board-b-nq-5m-factor-research/data/NQ_USD_5m_20110102_20251231_candles.json",
+  "rows": 1053341,
+  "first": "2011-01-02T23:00:00Z",
+  "last": "2025-12-31T21:55:00Z",
+  "generated_at": "2026-05-10T11:11:54.723705+00:00"
+}

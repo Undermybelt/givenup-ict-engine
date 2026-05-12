@@ -1,0 +1,17 @@
+gate_result=source_control_arrival_poll_after_090725_v1=no_new_required_root_no_unlock
+post_090725_dropzone_candidates=10
+current_r6_required_package_complete=false
+r5_recency_complete_required_file_set=false
+r3_native_subhour_complete_required_file_set=true
+r3_crisis_label_present=false
+r3_native_subhour_unlock=false
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

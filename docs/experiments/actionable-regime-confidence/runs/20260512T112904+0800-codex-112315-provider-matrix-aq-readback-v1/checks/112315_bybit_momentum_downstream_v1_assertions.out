@@ -1,0 +1,21 @@
+PASS run_id=20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1
+PASS symbol=B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315
+PASS materialized_trades=34
+PASS branch_path=Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1
+PASS ingest_applied=34
+PASS feedback_history=34
+PASS target_rows=2
+PASS target_mature_rows=1
+FAIL_CLOSED source_provider_authority_tvr_ibkr_not_satisfied
+FAIL_CLOSED promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS 20_ingest_real_trades_dry_run_exit=0
+PASS 21_ingest_real_trades_force_exit=0
+PASS 22_pre_bayes_status_exit=0
+PASS 23_policy_training_status_before_export_exit=0
+PASS 24_export_structural_path_ranking_target_exit=0
+PASS 25_policy_training_status_after_export_exit=0
+PASS 26_workflow_structural_bundle_exit=0
+PASS 27_workflow_execution_candidate_exit=0
+PASS 28_workflow_full_exit=0

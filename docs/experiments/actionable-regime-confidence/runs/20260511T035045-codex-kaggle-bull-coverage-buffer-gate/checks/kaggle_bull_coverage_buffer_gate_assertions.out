@@ -1,0 +1,16 @@
+loop_id=20260511T035045+0800-codex-kaggle-bull-coverage-buffer-gate
+root=Bull
+rule=close_drawdown60 >= -0.0032047199531 AND volatility <= 0.152179344579
+accepted_95=true
+gate_result=accepted_bull_95
+train_support=9281
+train_lcb=0.964902
+calibration_support=2202
+calibration_lcb=0.952516
+calibration_coverage=0.037214
+test_support=3125
+test_lcb=0.961931
+test_coverage=0.052777
+thresholds_relaxed=false
+runtime_code_changed=false
+raw_or_full_feature_table_committed=false

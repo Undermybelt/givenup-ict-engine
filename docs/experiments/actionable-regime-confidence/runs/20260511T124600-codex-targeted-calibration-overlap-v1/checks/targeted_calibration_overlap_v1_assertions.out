@@ -1,0 +1,14 @@
+run_id=20260511T124600+0800-codex-targeted-calibration-overlap-v1
+board_sha256_at_run=b802c63a51b770776f2f17a02763d299fbb755cf7d280ad4ece5fde3a0b49de6
+total_label_windows_checked=839
+overlap_ready_windows=658
+no_bar_overlap_windows=181
+overlap_ready_by_root={'Bear': 11, 'Bull': 30, 'Crisis': 9, 'Sideways': 608}
+bar_overlap_by_root={'Bear': 160, 'Bull': 61560, 'Crisis': 87, 'Sideways': 4049}
+confidence_gate_claimed=false
+full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

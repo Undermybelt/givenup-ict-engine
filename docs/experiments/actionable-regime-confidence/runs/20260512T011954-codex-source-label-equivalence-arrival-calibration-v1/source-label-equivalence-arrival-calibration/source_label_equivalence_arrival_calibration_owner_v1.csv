@@ -1,0 +1,8 @@
+label,split_role,source_owner,market_family,support,rows_at_or_above_0_95,share_at_or_above_0_95,wilson95_lcb,confidence_min,confidence_median,confidence_mean,confidence_max
+Bull,ALL,ahaanverma00,ALL,1213,837,0.6900247321,0.663432665,0.5005807666,0.9911904637,0.9302089616,0.9999972111
+Crisis,ALL,ahaanverma00,ALL,991,276,0.278506559,0.2514935801,0.3642152607,0.8805300136,0.8275488297,0.9977056923
+Sideways,ALL,ahaanverma00,ALL,1231,328,0.2664500406,0.2425074687,0.3528485153,0.8602598035,0.8161819978,0.9958733727
+Bear,ALL,source-owned-stock-market-regimes-2000-2026,ALL,54939,52,0.0009465043,0.0007219128,0.25,0.444,0.4567797193,1.0
+Bull,ALL,source-owned-stock-market-regimes-2000-2026,ALL,103766,9356,0.0901644084,0.0884368585,0.0,0.6,0.5951924619,1.0
+Crisis,ALL,source-owned-stock-market-regimes-2000-2026,ALL,29632,0,0.0,0.0,0.333,0.417,0.4022794951,0.75
+Sideways,ALL,source-owned-stock-market-regimes-2000-2026,ALL,56668,8358,0.1474906473,0.1445950263,0.25,0.6,0.6273916143,1.0

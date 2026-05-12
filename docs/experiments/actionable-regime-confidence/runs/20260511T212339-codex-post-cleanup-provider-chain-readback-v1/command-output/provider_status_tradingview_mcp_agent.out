@@ -1,0 +1,50 @@
+{
+  "summary_line": "market_data:0/1 ready",
+  "ready_by_domain": {
+    "market_data": "0/1"
+  },
+  "providers": [
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "operator_runtime_required",
+      "user_access": "local_stdio_or_remote_api_key",
+      "market_fit": [
+        "tradfi",
+        "crypto"
+      ],
+      "fallback_priority": 31,
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_ohlcv_probe_failed",
+      "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.",
+      "install_prompts": [
+        "Consumer agent follow-up: TradingViewRemix MCP is reachable but the OHLCV tool path failed on the built-in smoke check. Retry later or fall back to yfinance / IBKR for OHLCV lanes."
+      ]
+    }
+  ],
+  "ready_providers": [],
+  "pending_providers": [
+    "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_ohlcv_probe_failed"
+  ],
+  "pending_provider_details": [
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_ohlcv_probe_failed",
+      "install_prompts": [
+        "Consumer agent follow-up: TradingViewRemix MCP is reachable but the OHLCV tool path failed on the built-in smoke check. Retry later or fall back to yfinance / IBKR for OHLCV lanes."
+      ]
+    }
+  ],
+  "selectable_providers": [
+    "tradingview_mcp"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": [
+    "Consumer agent follow-up: TradingViewRemix MCP is reachable but the OHLCV tool path failed on the built-in smoke check. Retry later or fall back to yfinance / IBKR for OHLCV lanes."
+  ]
+}

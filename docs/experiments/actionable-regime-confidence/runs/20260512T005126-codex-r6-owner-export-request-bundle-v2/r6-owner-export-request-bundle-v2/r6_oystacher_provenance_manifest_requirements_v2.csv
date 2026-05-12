@@ -1,0 +1,7 @@
+key,required,rule
+source_owner,true,CME Group or Cboe/CFE
+licensed_export_reference,true,invoice/order/ticket/export id or owner approval reference
+raw_file_sha256,true,"hash of raw export kept outside repo, usually under /tmp"
+field_mapping,true,mapping from owner columns to verifier-native CSV fields
+normal_control_basis,true,"why rows are normal/non-manipulation controls, not Exhibit A FLIP rows"
+license_constraints,true,state whether raw market data can be committed; default false

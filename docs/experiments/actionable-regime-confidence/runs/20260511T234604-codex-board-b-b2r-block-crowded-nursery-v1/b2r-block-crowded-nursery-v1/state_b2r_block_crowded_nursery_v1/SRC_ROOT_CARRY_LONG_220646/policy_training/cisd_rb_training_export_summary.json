@@ -1,0 +1,8 @@
+{
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "analyze_runs": 0,
+  "update_runs": 49,
+  "matched_rows": 0,
+  "bbn_training_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1/SRC_ROOT_CARRY_LONG_220646/policy_training/cisd_rb_bbn_training.csv",
+  "catboost_training_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1/SRC_ROOT_CARRY_LONG_220646/policy_training/cisd_rb_catboost_training.csv"
+}

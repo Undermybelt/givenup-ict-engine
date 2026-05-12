@@ -1,0 +1,16 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 16,
+  "matched_negative_rows": 16,
+  "matched_group_count": 16,
+  "provenance_keys": [
+    "candidate_policy",
+    "created_at_utc",
+    "matched_negative_control_policy",
+    "raw_payload_committed_to_repo",
+    "run_id",
+    "source",
+    "source_text_path"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

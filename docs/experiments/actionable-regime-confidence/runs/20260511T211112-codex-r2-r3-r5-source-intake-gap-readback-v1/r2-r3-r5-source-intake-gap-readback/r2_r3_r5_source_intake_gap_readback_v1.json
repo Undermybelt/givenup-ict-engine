@@ -1,0 +1,222 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before": "d2e9e4b958414175046c68c981eb778dce365b6d5b701730143d52a90a493971",
+  "current_cursor": {
+    "accepted_gate": "r6_mohan_additional_row_uplift_v1=`direct_intake_rows_uplifted_schema_ready_calibration_still_blocked`; r6_cftc_gandhi_calibration_gate_v2=`schema_ready_but_calibration_blocked`; r6_cftc_schema_ready_calibration_gate_v1=`schema_ready_but_calibration_blocked`; cftc_matched_control_seed_v1=`direct_intake_schema_ready_unscored_confidence_gate_false`; current_goal_completion_audit_v37=`live_public_v37_and_finra_addendum_rows_not_acquired_blocked`; cftc_finra_direct_public_positive_probe_v1=`public_positives_extracted_controls_absent_blocked`; current_goal_completion_audit_v36=`current_public_scout_and_outbox_v2_rows_not_acquired_blocked`; source_acquisition_outbox_v2=`r6_uplift_merged_rows_not_acquired`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "active_market_set": "R6 direct Manipulation calibration slice after the Mohan additional CFTC row uplift; the direct intake root is schema-ready with five dates, four symbols, and two venues, but support/Wilson95/broad-normal gates still fail, while R2/R3/R4/R5 remain row-unacquired.",
+    "active_timeframes": "R6 public CFTC event timestamps are schema-ready only; chronological split `true`, heldout symbol/venue `true`, support `8/8` versus required `50/50`, Wilson95 min LCB `0.675592`; R3 native sub-hour, R4 strict `1h`, and R5 recency extension remain explicit blockers.",
+    "blocker": "R6 direct root is schema-ready but still fails calibration: eight CFTC positives and eight same-source controls, chronological split true, heldout symbol/venue true, Wilson95 min LCB `0.675592`, support below `50/50`, and no broad normal sample; broader direct Manipulation species are not complete, and R2/R3/R4/R5 source-owned/provenance files remain absent.",
+    "board_state": "blocked",
+    "candidate_regime": "Strict Board A objective across active lanes: scoped `>=95%` evidence persists; R6 spoofing/layering has public regulator schema-ready seeds and now passes chronological plus heldout-symbol/venue checks, but fails support/Wilson95/broad-normal gates; broader direct species remain absent, and R2/R3/R4/R5 still lack source-owned rows/provenance.",
+    "confidence_lane": "`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260511T210744-codex-r6-mohan-additional-row-uplift-v1`",
+    "last_loop_id": "20260511T210744+0800-codex-r6-mohan-additional-row-uplift-v1",
+    "next_action": "For R6, acquire additional source-owned/owner-approved positive and same-schema normal-control rows across more symbols/venues/periods until chronological + heldout-symbol/venue Wilson95 `>=0.95` can pass; for R2/R3/R4/R5, populate the existing fail-closed roots with required source-owned/provenance files, then rerun the relevant verifiers before another completion audit.",
+    "provider_status": "After Mohan additional R6 row uplift: direct files `3/3` are present and verifier can parse them; calibration now has positive rows `8`, matched negative rows `8`, unique dates `5`, symbols `4`, venues `2`, chronological split `true`, heldout symbol/venue `true`, Wilson95 min LCB `0.675592`, broad normal sample `false`; no fresh raw data commit, threshold relaxation, external request send, or runtime code change was introduced by this slice."
+  },
+  "decision": "r2_r3_r5_source_intake_gap_readback_v1=no_required_source_label_or_recency_rows_found",
+  "exact_required_filenames_searched": [
+    "native_subhour_source_label_provenance.json",
+    "native_subhour_source_label_rows.csv",
+    "source_label_equivalence_provenance.json",
+    "source_label_equivalence_rows.csv",
+    "source_panel_recency_provenance.json",
+    "stock_market_regimes_2026_extension.csv"
+  ],
+  "exact_required_hits": [],
+  "generated_at_utc": "2026-05-11T13:13:15.861427+00:00",
+  "intake_roots": [
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "id": "source_label_equivalence",
+      "missing_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "requirements": "R2;R4",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "id": "native_subhour_source_label",
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "requirements": "R3",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "id": "source_panel_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "requirements": "R5",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "csv_row_counts": "{\"matched_negative_normal_activity_rows.csv\": 9, \"positive_spoofing_layering_rows.csv\": 9}",
+      "exists": true,
+      "id": "direct_manipulation_row_intake",
+      "missing_files": "",
+      "present_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "ready": true,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "requirements": "R6",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "max_search_depth": 5,
+  "new_confidence_gate": false,
+  "next": "Acquire source-owned or owner-approved R2/R3/R5 row exports and provenance; then populate the exact fail-closed intake roots and rerun verifiers.",
+  "raw_data_committed": false,
+  "ready_intake_root_ids": [
+    "direct_manipulation_row_intake"
+  ],
+  "ready_intake_roots": 1,
+  "run_id": "20260511T211112+0800-codex-r2-r3-r5-source-intake-gap-readback-v1",
+  "runtime_code_changed": false,
+  "search_roots": [
+    "/tmp",
+    "/Users/thrill3r/Downloads"
+  ],
+  "source_candidate_inventory": [
+    {
+      "closes_required_intake": false,
+      "date_max": "2026-01-30",
+      "date_min": "2000-01-03",
+      "kind": "file",
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+      "post_2026_01_30_rows_available": false,
+      "reason": "source panel exists locally but max source date is not a post-2026-01-30 recency extension and it is not copied into the R5 intake root with provenance",
+      "regime_count": 5,
+      "rows": 245021,
+      "sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+      "size_bytes": 37155794,
+      "ticker_count": 39
+    },
+    {
+      "closes_required_intake": false,
+      "kind": "file",
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.parquet",
+      "reason": "not an exact required R2/R3/R5 intake file",
+      "sha256": "d22e8aa213f6d97b15348a3aa8f507929fed79d9a0aa3764badddb397a2f20dd",
+      "size_bytes": 6583934
+    },
+    {
+      "closes_required_intake": false,
+      "kind": "file",
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_analysis_by_ticker.csv",
+      "reason": "not an exact required R2/R3/R5 intake file",
+      "sha256": "4f393baa07e29de8e274e49ef1d9c4ecc006300827d76bdb1d6cf0d2559ee101",
+      "size_bytes": 1278
+    },
+    {
+      "closes_required_intake": false,
+      "kind": "file",
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_by_year.csv",
+      "reason": "not an exact required R2/R3/R5 intake file",
+      "sha256": "9e3fb7bf707a544210a80db3aec9fffc4e257b4a82cce1b934c3fe2cd02cd08e",
+      "size_bytes": 758
+    },
+    {
+      "closes_required_intake": false,
+      "kind": "file",
+      "path": "/Users/thrill3r/Downloads/ictscripts/ICT Market Regime Detector",
+      "reason": "not an exact required R2/R3/R5 intake file",
+      "sha256": "36422875795844de1b29e8cc40d154153de628d81c50f30aabbfdd211e1b6bb7",
+      "size_bytes": 68553
+    }
+  ],
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_results": [
+    {
+      "command": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py --intake-root /tmp/ict-engine-source-label-equivalence-intake",
+      "name": "source_label_equivalence_verifier",
+      "payload": {
+        "missing_files": [
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T211112-codex-r2-r3-r5-source-intake-gap-readback-v1/command-output/source_label_equivalence_verifier.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T211112-codex-r2-r3-r5-source-intake-gap-readback-v1/command-output/source_label_equivalence_verifier.stdout.txt"
+    },
+    {
+      "command": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py --intake-root /tmp/ict-engine-source-panel-recency-extension",
+      "name": "source_panel_recency_verifier",
+      "payload": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T211112-codex-r2-r3-r5-source-intake-gap-readback-v1/command-output/source_panel_recency_verifier.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T211112-codex-r2-r3-r5-source-intake-gap-readback-v1/command-output/source_panel_recency_verifier.stdout.txt"
+    },
+    {
+      "command": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+      "name": "direct_manipulation_verifier",
+      "payload": {
+        "matched_group_count": 8,
+        "matched_negative_rows": 9,
+        "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+        "positive_rows": 9,
+        "provenance_keys": [
+          "cftc_gandhi_order",
+          "cftc_genuine_order_text_checks",
+          "cftc_genuine_order_text_status",
+          "cftc_mohan_additional_examples",
+          "cftc_mohan_complaint",
+          "cftc_mohan_complaint_rows_added",
+          "cftc_mohan_complaint_text_checks",
+          "cftc_order",
+          "cftc_text_checks",
+          "cftc_text_extraction_status",
+          "created_at_utc",
+          "finra_public_schema",
+          "gandhi_matched_negative_rows_added",
+          "gandhi_positive_rows_added",
+          "gandhi_rows_materialized_at_utc",
+          "license_or_permission",
+          "matched_control_limitations",
+          "matched_control_policy",
+          "matched_negative_control_policy",
+          "matched_negative_materialized_at_utc",
+          "matched_negative_rows_acquired",
+          "matched_negative_rows_count",
+          "matched_negative_rows_path",
+          "matched_negative_rows_sha256",
+          "mohan_additional_matched_negative_rows_added",
+          "mohan_additional_positive_rows_added",
+          "mohan_additional_rows_materialized_at_utc",
+          "mohan_complaint_control_policy",
+          "positive_rows_count",
+          "positive_rows_path",
+          "positive_rows_sha256",
+          "source",
+          "updated_at_utc",
+          "updated_by"
+        ],
+        "status": "schema_ready_unscored"
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T211112-codex-r2-r3-r5-source-intake-gap-readback-v1/command-output/direct_manipulation_verifier.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T211112-codex-r2-r3-r5-source-intake-gap-readback-v1/command-output/direct_manipulation_verifier.stdout.txt"
+    }
+  ]
+}

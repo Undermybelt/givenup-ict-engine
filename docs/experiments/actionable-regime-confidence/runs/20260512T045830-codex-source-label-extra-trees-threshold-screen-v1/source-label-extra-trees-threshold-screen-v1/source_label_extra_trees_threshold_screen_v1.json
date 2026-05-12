@@ -1,0 +1,22 @@
+{
+  "run_id": "20260512T045830-codex-source-label-extra-trees-threshold-screen-v1",
+  "gate_result": "source_label_extra_trees_threshold_screen_v1=terminated_no_terminal_screen_no_promotion",
+  "command_exit": 143,
+  "stdout_bytes": 0,
+  "stderr_disposition": "uv_dependency_download_install_lines_only",
+  "screen_completed": false,
+  "scored_rows": 0,
+  "accepted_extra_trees_confidence_95_labels": [],
+  "failure_reason": "terminated_after_exceeding_useful_diagnostic_window_without_terminal_artifacts",
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "accepted_regime_confidence_labels": 0,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

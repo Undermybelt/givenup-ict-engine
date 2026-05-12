@@ -1,0 +1,8 @@
+{
+  "cached_panel": "/private/tmp/ict-regime-hmm-markov-root/yfinance_cross_asset_daily_close.csv",
+  "cached_panel_exists": true,
+  "live_probe_attempted": true,
+  "live_probe_ok": true,
+  "live_probe_rows": 5,
+  "provider": "yfinance"
+}

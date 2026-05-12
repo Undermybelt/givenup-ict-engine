@@ -1,0 +1,14 @@
+PASS gate_result=044701_stable_terminal_readback_v1=stable_terminal_no_acceptance_no_promotion
+PASS writer_processes_present=false
+PASS stable_hash_window_seconds=10
+PASS source_gate=source_label_single_atom_qualifier_scan_v1=single_atom_scored_no_full_acceptance
+PASS accepted_single_atom_confidence_95_labels=none
+PASS accepted_rows_added=0
+PASS accepted_regime_confidence_labels=0
+PASS source_control_evidence_acquired=false
+PASS new_confidence_gate=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

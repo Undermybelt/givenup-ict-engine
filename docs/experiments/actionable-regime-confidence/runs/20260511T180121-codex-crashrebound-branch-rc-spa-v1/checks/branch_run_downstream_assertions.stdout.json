@@ -1,0 +1,14 @@
+{
+  "provider_rows": {
+    "yfinance": 343,
+    "tradingview_mcp": 140,
+    "kraken_spot_xbtusd": 721,
+    "ibkr_qqq": 66
+  },
+  "rc_spa": 59.790091923028434,
+  "promotion_level": "reject",
+  "gate_result": "fail:reject_missing_branch_path;reject_missing_required_roots;reject_overfit_risk;reject_cost_fragile;reject_tail_risk",
+  "execution_tree_branch": "transition_guardrail",
+  "branch_path_visible_downstream": false,
+  "failed_checks": []
+}

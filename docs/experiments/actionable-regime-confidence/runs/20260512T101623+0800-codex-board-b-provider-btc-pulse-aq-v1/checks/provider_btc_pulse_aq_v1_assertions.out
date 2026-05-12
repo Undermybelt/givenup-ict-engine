@@ -1,0 +1,17 @@
+PASS prepare_exit=0
+PASS tomac_exit=0
+PASS provider_rows_prepared=985
+PASS prepared_1h_bars=985
+PASS prepared_4h_bars=247
+PASS prepared_1d_bars=42
+PASS strategy=ProviderBtcTrendPullback
+PASS trade_count=0
+PASS source_control_unlock=false
+PASS explicit_selected_history=false
+PASS canonical_merge=false
+PASS selected_data_autoquant_promotion=false
+PASS downstream_promotion=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS promotion_allowed=false
+PASS update_goal=false

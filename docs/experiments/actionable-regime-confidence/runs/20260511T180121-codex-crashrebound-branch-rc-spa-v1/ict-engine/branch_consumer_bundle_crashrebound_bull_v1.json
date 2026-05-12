@@ -1,0 +1,66 @@
+{
+  "consumer_hints": {
+    "bbn_evidence_hint": {
+      "regime_decision_reasons": [
+        "accepted_95_scoped_context",
+        "board_b_recipe_rejected",
+        "not_trade_usable",
+        "branch_path_source_not_board_a_source_label",
+        "crisis_root_missing",
+        "pbo_uncomputed",
+        "cost_stress_failed",
+        "tail_loss_budget_failed"
+      ],
+      "regime_decision_state": "single_label_95",
+      "regime_label": "MainRegimeV2::Bull",
+      "regime_label_set": [
+        "MainRegimeV2::Bull"
+      ],
+      "regime_trade_usable": false,
+      "regime_transition_hazard": null
+    },
+    "execution_tree_hint": "transition_guardrail",
+    "path_ranker_context": {
+      "allowed_action": "pre_bayes_regime_context; bbn_soft_evidence_context; catboost_path_ranker_context; execution_tree_sizing_or_suppression_context",
+      "branch_path_source": "auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label",
+      "confidence_floor": 0.9797225384,
+      "consumer_factor": "market_regime_context",
+      "context_source": "regime_factor_consumer_map_v1",
+      "downstream_consumption_status": "branch_path_not_consumed_current_runtime",
+      "promotion_level": "reject",
+      "rc_spa": 59.790091923028434,
+      "recipe_id": "CrashRebound",
+      "regime_profit_branch_path": "Bull -> BullPullback -> CapitulationMeanReversionSetup -> CrashRebound",
+      "regime_profit_branch_path_version": "regime_profit_branch_path/v1",
+      "scope_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion."
+    },
+    "trade_usable": false,
+    "user_vrp_nq_context": {}
+  },
+  "latest_decision": {
+    "abstain_reasons": [
+      "accepted_95_scoped_context",
+      "board_b_recipe_rejected",
+      "not_trade_usable",
+      "branch_path_source_not_board_a_source_label",
+      "crisis_root_missing",
+      "pbo_uncomputed",
+      "cost_stress_failed",
+      "tail_loss_budget_failed"
+    ],
+    "decision_state": "single_label_95",
+    "final_label": "MainRegimeV2::Bull",
+    "label_set": [
+      "MainRegimeV2::Bull"
+    ],
+    "timestamp": "20260511T180121+0800-codex-crashrebound-branch-rc-spa-v1",
+    "trade_usable": false
+  },
+  "provenance": {
+    "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+    "branch_rc_spa_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T180121-codex-crashrebound-branch-rc-spa-v1/branch-rc-spa/crashrebound_branch_rc_spa_v1.json",
+    "run_id": "20260511T180121+0800-codex-crashrebound-branch-rc-spa-v1",
+    "source_consumer_map": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv"
+  },
+  "schema_version": "regime-consumer-bundle/v1"
+}

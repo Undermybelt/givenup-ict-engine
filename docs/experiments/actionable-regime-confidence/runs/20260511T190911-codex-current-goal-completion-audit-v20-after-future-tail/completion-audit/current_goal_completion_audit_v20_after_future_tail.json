@@ -1,0 +1,136 @@
+{
+  "artifact_type": "current_goal_completion_audit_v20_after_future_tail",
+  "run_id": "20260511T190911+0800-codex-current-goal-completion-audit-v20-after-future-tail",
+  "generated_at_utc": "2026-05-11T11:09:11+00:00",
+  "todo_hash_before_append": "36b2020d653c35aac81d95393c505fc704a4c65eb48f5f7b4d797194c2e620f6",
+  "current_cursor_edited": false,
+  "objective": {
+    "restatement": "Every active regime must have calibrated confidence >=95 percent and must retain suitable confidence on other markets and other cycles/timeframes before the goal can be called complete.",
+    "success_criteria": [
+      "scoped active regime lanes have calibrated confidence >=0.95",
+      "other-market/species validation uses source-owned or owner-approved labels",
+      "other-cycle/timeframe validation reaches suitable confidence without proxy labels",
+      "direct Manipulation species coverage uses real positives, matched controls, and provenance",
+      "no raw provider rows or large cache files are committed",
+      "update_goal is called only if all strict criteria are covered"
+    ]
+  },
+  "decision": {
+    "gate_result": "current_goal_completion_audit_v20=scoped_95_present_future_tail_45of156_full_objective_blocked",
+    "scoped_active_lanes_accepted_95": true,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "accepted_future_protocol_rows_added_since_v19": 4,
+    "new_confidence_gate_since_v19": true,
+    "new_confidence_gate_scope": "strict_1h_future_tail_chronological_protocol_only",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "latest_evidence": {
+    "scoped_active_lanes": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T155959-current-goal-completion-audit-v14-after-consumer-map/completion-audit/current_goal_completion_audit_v14_after_consumer_map.json",
+      "status": "accepted_95_scoped"
+    },
+    "strict_1h_future_tail": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T190440-codex-strict-1h-future-tail-gate-rerun-v1/future-tail-gate-rerun/strict_1h_future_tail_gate_rerun_v1.json",
+      "fixed_gate_rows": "41/156",
+      "future_protocol_rows": "45/156",
+      "future_protocol_rows_added": 4,
+      "fixed_gate_rows_added": 0
+    },
+    "timeframe_cycle_readback": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185126-codex-timeframe-cycle-coverage-readback-v1/timeframe-cycle-readback/timeframe_cycle_coverage_readback_v1.json",
+      "native_subhour_ready": "0/4",
+      "jan2026_tail_standalone_gate_passes": 0
+    },
+    "source_label_other_market": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184856-codex-source-label-other-market-readback-v1/source-label-readback/source_label_other_market_readback_v1.json",
+      "accepted_factor_or_gate_total": 0,
+      "full_other_market_source_label_equivalence": false
+    },
+    "local_intake_schema": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185420-codex-local-intake-schema-sweep-v1/local-intake-schema-sweep/local_intake_schema_sweep_v1.json",
+      "candidate_files": 515,
+      "parsed_files": 176,
+      "exact_schema_matches": 0,
+      "strong_partial_schema_matches": 0
+    },
+    "direct_manipulation": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184630-codex-direct-manipulation-coverage-readback-v2/direct-manipulation-readback/direct_manipulation_coverage_readback_v2.json",
+      "accepted_scoped_variety_count": 5,
+      "remaining_unaccepted_variety_count": 6,
+      "spoofing_layering_matched_negative_cases_available": 0
+    },
+    "direct_missing_species": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185706-codex-direct-missing-species-source-screen-v1/direct-missing-species-screen/direct_missing_species_source_screen_v1.json",
+      "ready_source_candidate_count": 0
+    }
+  },
+  "checklist": [
+    {
+      "requirement_id": "R1",
+      "requirement": "active regimes have calibrated confidence >=95 percent",
+      "status": "scoped_pass",
+      "evidence": "v14 completion audit and regime-factor consumer map",
+      "gap": "strict full objective requires broader source/timeframe/species validation"
+    },
+    {
+      "requirement_id": "R2",
+      "requirement": "other-market validation has suitable confidence",
+      "status": "partial_fail",
+      "evidence": "source_label_other_market_readback_v1",
+      "gap": "accepted factor/gate total remains 0 and full other-market source-label equivalence is false"
+    },
+    {
+      "requirement_id": "R3",
+      "requirement": "other-cycle/timeframe validation has suitable confidence",
+      "status": "partial_fail_progressed",
+      "evidence": "strict_1h_future_tail_gate_rerun_v1 and timeframe_cycle_coverage_readback_v1",
+      "gap": "future protocol improved strict 1h to 45/156, but native sub-hour remains 0/4 and full strict 1h remains incomplete"
+    },
+    {
+      "requirement_id": "R4",
+      "requirement": "direct Manipulation species coverage has matched controls and provenance",
+      "status": "fail",
+      "evidence": "direct_manipulation_coverage_readback_v2 and direct_missing_species_source_screen_v1",
+      "gap": "6 direct varieties remain unaccepted and ready missing-species sources are 0"
+    },
+    {
+      "requirement_id": "R5",
+      "requirement": "local/external intake files satisfy required schemas before promotion",
+      "status": "fail",
+      "evidence": "local_intake_schema_sweep_v1",
+      "gap": "exact schema matches are 0 and strong partial matches are 0"
+    },
+    {
+      "requirement_id": "R6",
+      "requirement": "proxy labels and unapproved crosswalks are not promoted",
+      "status": "guardrail_pass",
+      "evidence": "source-label and direct-source screens remain fail-closed",
+      "gap": "guardrail compliance leaves the strict objective blocked until acceptable rows arrive"
+    },
+    {
+      "requirement_id": "R7",
+      "requirement": "no raw data or runtime-code pollution by this audit",
+      "status": "pass",
+      "evidence": "this audit records only small JSON/MD/CSV/check/script files",
+      "gap": "the wider worktree remains dirty from concurrent agents and was not normalized"
+    },
+    {
+      "requirement_id": "R8",
+      "requirement": "call update_goal only after strict completion",
+      "status": "fail",
+      "evidence": "this audit decision",
+      "gap": "strict_full_objective_achieved=false and update_goal=false"
+    }
+  ],
+  "unmet_requirements": [
+    "full other-market source-label equivalence",
+    "full other-cycle/timeframe confidence beyond 45/156 strict 1h future protocol rows and 0/4 native sub-hour",
+    "direct Manipulation full species coverage with matched controls",
+    "external/local intake rows with exact required schemas",
+    "source-owned recency/source-label expansion for remaining strict rows"
+  ]
+}

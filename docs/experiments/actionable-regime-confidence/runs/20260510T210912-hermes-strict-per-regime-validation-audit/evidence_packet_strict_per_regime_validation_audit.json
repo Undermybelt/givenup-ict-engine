@@ -1,0 +1,116 @@
+{
+  "schema_version": "board-a-strict-per-regime-validation-audit/v1",
+  "loop_id": "20260510T210912+0800-hermes-strict-per-regime-validation-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T210912-hermes-strict-per-regime-validation-audit",
+  "objective": "Apply the stricter Board A rule that every regime needs its own qualifying condition and validation across instruments, chronological periods, and market contexts.",
+  "thresholds_relaxed": false,
+  "required_output_contract_fields": [
+    "qualifying_condition",
+    "validation_instruments",
+    "validation_periods",
+    "validation_market_contexts"
+  ],
+  "strict_95_context_minimums": {
+    "validation_instruments": 2,
+    "validation_periods": 2,
+    "validation_market_contexts": 2,
+    "time_ordered_train_calibration_test_required": true
+  },
+  "strict_99_context_minimums": {
+    "validation_instruments": 3,
+    "validation_periods": 3,
+    "validation_market_contexts": 3,
+    "time_ordered_train_calibration_test_required": true
+  },
+  "legacy_accepted_packet_audit": [
+    {
+      "regime_id": "SessionLiquidityCoreViable",
+      "legacy_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json",
+      "packet_hint": "session_liquidity_accepted_packet",
+      "legacy_confidence_lane": null,
+      "legacy_precision_wilson_lcb": null,
+      "legacy_calibration_support": 378,
+      "legacy_test_support": 378,
+      "legacy_ece": 0.010582010582010581,
+      "legacy_rule_or_target": "13 <= hour_utc <= 18",
+      "missing_output_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "validation_counts": {
+        "validation_instruments": 0,
+        "validation_periods": 0,
+        "validation_market_contexts": 0
+      },
+      "strict_context_gate_passes_95": false,
+      "strict_status": "legacy_accepted_95_pending_strict_validation"
+    },
+    {
+      "regime_id": "RangeConsolidation",
+      "legacy_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json",
+      "packet_hint": "accepted_new_regime_packets",
+      "legacy_confidence_lane": "95",
+      "legacy_precision_wilson_lcb": null,
+      "legacy_calibration_support": 467,
+      "legacy_test_support": 313,
+      "legacy_ece": 0.004488121867580741,
+      "legacy_rule_or_target": "RangeConsolidation_persists_next_15m",
+      "missing_output_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "validation_counts": {
+        "validation_instruments": 0,
+        "validation_periods": 0,
+        "validation_market_contexts": 0
+      },
+      "strict_context_gate_passes_95": false,
+      "strict_status": "legacy_accepted_95_pending_strict_validation"
+    },
+    {
+      "regime_id": "ThinLiquidityOffHoursPersistent",
+      "legacy_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json",
+      "packet_hint": "accepted_new_regime_packets",
+      "legacy_confidence_lane": "95",
+      "legacy_precision_wilson_lcb": null,
+      "legacy_calibration_support": 125,
+      "legacy_test_support": 167,
+      "legacy_ece": 0.0,
+      "legacy_rule_or_target": "21 <= hour_utc <= 23 and qqq_yfinance_current_bar_present == 0",
+      "missing_output_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "validation_counts": {
+        "validation_instruments": 0,
+        "validation_periods": 0,
+        "validation_market_contexts": 0
+      },
+      "strict_context_gate_passes_95": false,
+      "strict_status": "legacy_accepted_95_pending_strict_validation"
+    }
+  ],
+  "strict_accepted_regimes_after_audit": [],
+  "legacy_accepted_regimes_pending_strict_validation": [
+    "SessionLiquidityCoreViable",
+    "RangeConsolidation",
+    "ThinLiquidityOffHoursPersistent"
+  ],
+  "missing_unaccepted_regimes": [
+    "TrendExpansion",
+    "ExtremeStress",
+    "ReversalBrewing"
+  ],
+  "strict_accepted_count": 0,
+  "legacy_accepted_pending_count": 3,
+  "required_regime_count": 6,
+  "gate_result": "strict_context_validation_pending",
+  "decision": "Do not count legacy accepted packets as complete under the new stricter standard until their artifacts expose qualifying_condition, validation_instruments, validation_periods, and validation_market_contexts.",
+  "next_action": "Backfill or rerun strict per-regime packets for SessionLiquidityCoreViable, RangeConsolidation, and ThinLiquidity with explicit qualifying conditions and cross-instrument/cross-period/cross-market validation; continue missing-regime search for TrendExpansion, ExtremeStress, and ReversalBrewing under unchanged thresholds."
+}

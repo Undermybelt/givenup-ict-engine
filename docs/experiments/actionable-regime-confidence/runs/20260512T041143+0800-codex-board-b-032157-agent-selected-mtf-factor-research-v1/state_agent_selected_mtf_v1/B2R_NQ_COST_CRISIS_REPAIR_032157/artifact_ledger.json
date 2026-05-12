@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto-quant-handoff:factor_research:B2R_NQ_COST_CRISIS_REPAIR_032157:20260511T201150.941Z",
+    "artifact_kind": "auto_quant_handoff_candidate",
+    "artifact_id": "auto-quant-handoff:factor_research:B2R_NQ_COST_CRISIS_REPAIR_032157:20260511T201150.941Z",
+    "version": 1,
+    "generated_at": "2026-05-11T20:11:50.958311Z",
+    "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+    "source_phase": "factor_research",
+    "source_run_id": null,
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/B2R_NQ_COST_CRISIS_REPAIR_032157/auto_quant_handoff.factor_research.json",
+    "status": "prepare_required",
+    "promote_candidate": false,
+    "actionable": true,
+    "decision_hint": "auto-quant",
+    "review_reason": "prepare Auto-Quant market data before attempting the research loop | re-run factor-research with backend=auto-quant after data becomes ready",
+    "review_rule_version": "auto-quant-handoff-v1",
+    "top_factor_name": null,
+    "top_factor_action": "review",
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 30,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

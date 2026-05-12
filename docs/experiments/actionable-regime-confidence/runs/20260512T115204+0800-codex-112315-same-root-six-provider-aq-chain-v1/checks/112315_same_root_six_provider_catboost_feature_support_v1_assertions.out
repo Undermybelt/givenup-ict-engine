@@ -1,0 +1,16 @@
+PASS run_id=20260512T115204+0800-codex-112315-same-root-six-provider-aq-chain-v1
+PASS train_catboost_augmented_exit=0
+PASS apply_catboost_augmented_history_exit=0
+PASS apply_external_scores_augmented_exit=0
+PASS register_trainer_artifact_augmented_exit=0
+PASS enable_runtime_augmented_exit=0
+PASS raw_scored_mature=170
+PASS production_validation=170
+PASS observation_validation=170
+PASS trainer_artifact_ready=True
+PASS runtime_selection_status=enabled_candidate_set_ready
+PASS catboost_info_cleanup=catboost_info_absent
+FAIL_CLOSED execution_ready=False actionable=False review=observe
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

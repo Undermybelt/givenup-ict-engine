@@ -1,0 +1,20 @@
+Exploration: train-only narrower root rules on existing MainRegimeV2 augmented feature table.
+
+Result:
+- BullExpansion: no 95 pass. Best explored test LCB 0.884564, support 59, timeframe count 1, calibration support 28.
+- BearExpansion: no 95 pass. Best explored test LCB 0.856452, support 149, timeframe count 1, calibration support 124.
+- ConsolidationRange: no 95 pass. Best explored test LCB 0.880912, support 468, timeframe count 2, ECE 0.063262.
+
+Interpretation:
+- Narrowing current OHLCV-derived rules did not close the missing root classes.
+- Next evidence needs new aligned root features or inputs, not threshold relaxation.
+
+20260510T233823+0800 persistence/streak extension:
+- Added current/past-only rolling persistence windows 8/16/32/64/96 and current true-streak lengths for BullExpansion, BearExpansion, and ConsolidationRange.
+- BullExpansion: no 95 pass. Best explored test LCB 0.826371, test support 409, ECE 0.010869, coverage 0.026382, timeframes 15m|1h.
+- BearExpansion: no 95 pass. Best explored test LCB 0.900231, test support 179, ECE 0.007828, coverage 0.011546, timeframe 1h only.
+- ConsolidationRange: no 95 pass. Best explored test LCB 0.894303, test support 228, ECE 0.118421, coverage 0.014707, timeframes 15m|1h.
+
+Interpretation:
+- Persistence/streak narrowing improved some point precision but still failed unchanged 95 gates on Wilson lower bound, support/coverage, ECE, or timeframe breadth.
+- Current OHLCV-only feature space remains insufficient for the missing BullExpansion, BearExpansion, and ConsolidationRange root packets.

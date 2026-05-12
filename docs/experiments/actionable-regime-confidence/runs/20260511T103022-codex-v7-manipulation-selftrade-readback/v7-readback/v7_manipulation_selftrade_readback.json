@@ -1,0 +1,32 @@
+{
+  "accepted_direct_manipulation_integrity_event_rows_evaluated": 200000,
+  "accepted_direct_slice_95": true,
+  "accepted_v7_parent_roots_added": 0,
+  "accepted_v7_root_slices_added": 1,
+  "active_taxonomy": "ActionableRegimeRootV7",
+  "candidate_root": "ManipulationIntegrityEvent",
+  "direct_slice": "wash_trade_self_trade",
+  "full_manipulation_integrity_event_root_complete": false,
+  "full_v7_goal_achieved": false,
+  "gate_result": "partial_v7_manipulation_integrity_event_selftrade_slice_95_full_root_blocked",
+  "limitations": [
+    "This maps only direct self-trade/wash-trade order-lifecycle evidence into V7 ManipulationIntegrityEvent.",
+    "It does not complete every ManipulationIntegrityEvent mechanism or venue.",
+    "It does not add BullExpansion, BearExpansion, ConsolidationBalance, or CrisisDislocation source labels.",
+    "The full all-market/all-timeframe V7 objective remains blocked."
+  ],
+  "minimum_calibration_test_negative_support": 32858,
+  "minimum_calibration_test_positive_or_negative_wilson95_lcb": 0.979218,
+  "minimum_calibration_test_positive_support": 181,
+  "negative_control_rows": 187329,
+  "next_action": "Acquire or build V7 label panels and run unchanged 95%-99% chronological calibration separately for BullExpansion, BearExpansion, ConsolidationBalance, CrisisDislocation, and broader ManipulationIntegrityEvent mechanisms beyond self-trade.",
+  "positive_self_trade_rows": 12671,
+  "raw_data_committed": false,
+  "rows_streamed_consecutive": 200000,
+  "run_id": "20260511T103022+0800-codex-v7-manipulation-selftrade-readback",
+  "runtime_code_changed": false,
+  "source_gate_result": "accepted_direct_manipulation_self_trade_consecutive_95_context_only_full_goal_blocked",
+  "source_gate_run": "docs/experiments/actionable-regime-confidence/runs/20260511T102332-codex-zenodo-dex-consecutive-selftrade-gate/direct-gate/zenodo_dex_consecutive_selftrade_gate.json",
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

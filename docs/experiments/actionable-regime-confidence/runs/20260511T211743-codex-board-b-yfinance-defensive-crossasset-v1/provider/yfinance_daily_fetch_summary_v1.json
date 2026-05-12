@@ -1,0 +1,92 @@
+{
+  "end": "2026-05-12",
+  "provider": "yfinance",
+  "ready_count": 10,
+  "ready_tickers": [
+    "EEM",
+    "EFA",
+    "GLD",
+    "IEF",
+    "IWM",
+    "QQQ",
+    "SPY",
+    "TLT",
+    "USO",
+    "UUP"
+  ],
+  "start": "2000-01-01",
+  "status_by_ticker": {
+    "EEM": {
+      "first_date": "2003-04-14",
+      "last_date": "2026-05-08",
+      "rows": 5805,
+      "status": "ready"
+    },
+    "EFA": {
+      "first_date": "2001-08-27",
+      "last_date": "2026-05-08",
+      "rows": 6211,
+      "status": "ready"
+    },
+    "GLD": {
+      "first_date": "2004-11-18",
+      "last_date": "2026-05-08",
+      "rows": 5401,
+      "status": "ready"
+    },
+    "IEF": {
+      "first_date": "2002-07-30",
+      "last_date": "2026-05-08",
+      "rows": 5983,
+      "status": "ready"
+    },
+    "IWM": {
+      "first_date": "2000-05-26",
+      "last_date": "2026-05-08",
+      "rows": 6526,
+      "status": "ready"
+    },
+    "QQQ": {
+      "first_date": "2000-01-03",
+      "last_date": "2026-05-08",
+      "rows": 6627,
+      "status": "ready"
+    },
+    "SPY": {
+      "first_date": "2000-01-03",
+      "last_date": "2026-05-08",
+      "rows": 6627,
+      "status": "ready"
+    },
+    "TLT": {
+      "first_date": "2002-07-30",
+      "last_date": "2026-05-08",
+      "rows": 5983,
+      "status": "ready"
+    },
+    "USO": {
+      "first_date": "2006-04-10",
+      "last_date": "2026-05-08",
+      "rows": 5052,
+      "status": "ready"
+    },
+    "UUP": {
+      "first_date": "2007-03-01",
+      "last_date": "2026-05-08",
+      "rows": 4829,
+      "status": "ready"
+    }
+  },
+  "tickers": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "EFA",
+    "EEM",
+    "TLT",
+    "IEF",
+    "GLD",
+    "UUP",
+    "USO"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "run_id": "20260512T014314-codex-r6-owner-route-current-web-recheck-v1",
+  "gate_result": "r6_owner_route_current_web_recheck_v1=current_official_routes_rechecked_controls_not_acquired_no_merge",
+  "current_cursor_preserved": true,
+  "board_hash_before_artifact": "48aae7026e70b109ba517bb4fff2c529701017a179ad2b0a260b1a6245319e0d",
+  "artifact_restored_after_missing_root_readback": true,
+  "official_sources": [
+    {
+      "owner": "CME Group",
+      "route": "CME DataMine historical data",
+      "url": "https://www.cmegroup.com/market-data/datamine-historical-data/index.html",
+      "request_implication": "Route through CME DataMine/Data Sales and require verifier-native normal-control rows plus provenance."
+    },
+    {
+      "owner": "CME Group",
+      "route": "CME Market Depth Files FAQ",
+      "url": "https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf",
+      "request_implication": "Ask for Market Depth/FIX-FAST, Market by Order, or licensed equivalent rows with product/date coverage confirmation."
+    },
+    {
+      "owner": "Cboe/CFE",
+      "route": "Cboe DataShop CFE VIX futures trades and quotes",
+      "url": "https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes",
+      "request_implication": "Use for VIX trades/quotes and ask support for depth/order-lifecycle if the verifier requires deeper controls."
+    },
+    {
+      "owner": "Cboe/CFE",
+      "route": "Cboe U.S. Futures Market Data Services",
+      "url": "https://ww2.cboe.com/market_data_services/us/futures/",
+      "request_implication": "Use as the support/custom-export path for Top-of-Book/Depth-of-Book style futures data."
+    }
+  ],
+  "ready_owner_export_download_found": false,
+  "owner_or_operator_submission_still_required": true,
+  "source_owned_normal_controls_acquired": 0,
+  "flip_as_control_approved": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_requests_sent": false,
+  "trade_usable": false,
+  "target_roots": "r6_absent,r3_absent,r5_absent,source_label_present_confidence_blocked"
+}

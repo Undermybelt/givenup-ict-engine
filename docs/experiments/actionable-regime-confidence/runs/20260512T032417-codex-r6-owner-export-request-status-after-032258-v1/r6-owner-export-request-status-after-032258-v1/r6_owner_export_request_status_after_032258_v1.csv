@@ -1,0 +1,11 @@
+item,status,evidence,next_required
+cme_request_draft,ready_not_sent,20260512T005913 cme_group_owner_export_request_v3.md,send or satisfy request and record ticket/export/license provenance
+cboe_cfe_request_draft,ready_not_sent,20260512T005913 cboe_cfe_owner_export_request_v3.md,send or satisfy request and record ticket/export/license provenance
+official_routes,current_but_rows_absent,20260512T032258 route refresh,obtain licensed export or support-confirmed historical package
+row_deficits,quantified_no_rows_acquired,20260512T032152 augmentation requirements,acquire source-owned rows and matched controls for failed cells
+source_unlock,no_new_unlock,20260512T032155 source unlock readback,wait for R6 owner root or explicit FLIP approval
+provider_autoquant,readonly_no_promotion,20260512T032302 readonly refresh,rerun only after source/control gates unlock
+verifier_delivery_contract,required_root_absent,/tmp/ict-engine-board-a-r6-owner-export-v1,deliver verifier-native files under shared lock
+canonical_merge,blocked,live gate status,unlock source/control gate before merge
+downstream_chain,blocked,live gate status,rerun provider Auto-Quant Pre-Bayes BBN CatBoost path-ranking execution tree only after verifier and split pass
+update_goal,blocked,live gate status,do not call update_goal

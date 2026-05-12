@@ -1,0 +1,18 @@
+{
+  "protocol_version": "structural-path-ranking-direct-model-v1",
+  "model_family": "weighted_feature_sum_v1",
+  "feature_schema_version": "structural-path-ranking-trainer-manifest-v1",
+  "output_transform": "sigmoid",
+  "intercept": -0.05,
+  "numerical_feature_weights": {
+    "structural_baseline_score": 0.45
+  },
+  "categorical_feature_weights": {},
+  "lower_bound_margin": 0.05,
+  "execution_gate_min_path_prob": 0.5,
+  "notes": [
+    "repo_runtime_direct_model=true",
+    "zero_config_default_preserved=true",
+    "external_path_ranker_opt_in_reuse=true"
+  ]
+}

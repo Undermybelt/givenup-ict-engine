@@ -1,0 +1,564 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T04:22:11Z",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "local",
+  "config_path": "config.tomac.json",
+  "timeframe": "",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/command-output",
+  "strategies": [
+    {
+      "name": "yfinance:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-yfinance/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "yfinance:ProviderCryptoMomentumStateV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.818747063920762,
+        "sortino": 6.559970627224493,
+        "calmar": 83.72530639706653,
+        "total_profit_pct": 1.83,
+        "max_drawdown_pct": -1.1290711536620912,
+        "trade_count": 13,
+        "win_rate_pct": 53.84615384615385,
+        "profit_factor": 1.837494864219173
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.818747063920762,
+          "sortino": 6.559970627224493,
+          "calmar": 83.72530639706653,
+          "total_profit_pct": 1.83,
+          "max_drawdown_pct": -1.1290711536620912,
+          "trade_count": 13,
+          "win_rate_pct": 53.84615384615385,
+          "profit_factor": 1.837494864219173
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "yfinance:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-yfinance/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "yfinance:ProviderCryptoPullbackRevertV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -0.25811102944679704,
+        "sortino": -0.6266921747186355,
+        "calmar": -6.943237583587309,
+        "total_profit_pct": -0.18,
+        "max_drawdown_pct": -1.358756192335166,
+        "trade_count": 8,
+        "win_rate_pct": 37.5,
+        "profit_factor": 0.8671168003674068
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -0.25811102944679704,
+          "sortino": -0.6266921747186355,
+          "calmar": -6.943237583587309,
+          "total_profit_pct": -0.18,
+          "max_drawdown_pct": -1.358756192335166,
+          "trade_count": 8,
+          "win_rate_pct": 37.5,
+          "profit_factor": 0.8671168003674068
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "kraken_public:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-kraken_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "kraken_public:ProviderCryptoMomentumStateV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -1.1266214858050263,
+        "sortino": -3.468558823780218,
+        "calmar": -25.514612024641565,
+        "total_profit_pct": -0.55,
+        "max_drawdown_pct": -1.5951611870743552,
+        "trade_count": 23,
+        "win_rate_pct": 34.78260869565217,
+        "profit_factor": 0.8609310567518771
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -1.1266214858050263,
+          "sortino": -3.468558823780218,
+          "calmar": -25.514612024641565,
+          "total_profit_pct": -0.55,
+          "max_drawdown_pct": -1.5951611870743552,
+          "trade_count": 23,
+          "win_rate_pct": 34.78260869565217,
+          "profit_factor": 0.8609310567518771
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "kraken_public:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-kraken_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "kraken_public:ProviderCryptoPullbackRevertV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -1.627366200080825,
+        "sortino": -5.369962446012744,
+        "calmar": -41.405314647424355,
+        "total_profit_pct": -0.71,
+        "max_drawdown_pct": -1.2627939015214378,
+        "trade_count": 9,
+        "win_rate_pct": 22.22222222222222,
+        "profit_factor": 0.5831340534022595
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -1.627366200080825,
+          "sortino": -5.369962446012744,
+          "calmar": -41.405314647424355,
+          "total_profit_pct": -0.71,
+          "max_drawdown_pct": -1.2627939015214378,
+          "trade_count": 9,
+          "win_rate_pct": 22.22222222222222,
+          "profit_factor": 0.5831340534022595
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "binance_public:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-binance_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "binance_public:ProviderCryptoMomentumStateV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.0089262848650395,
+        "sortino": 3.630136981793552,
+        "calmar": 20.917891838682948,
+        "total_profit_pct": 0.77,
+        "max_drawdown_pct": -1.9084665436534447,
+        "trade_count": 37,
+        "win_rate_pct": 37.83783783783784,
+        "profit_factor": 1.1326410355009615
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.0089262848650395,
+          "sortino": 3.630136981793552,
+          "calmar": 20.917891838682948,
+          "total_profit_pct": 0.77,
+          "max_drawdown_pct": -1.9084665436534447,
+          "trade_count": 37,
+          "win_rate_pct": 37.83783783783784,
+          "profit_factor": 1.1326410355009615
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "binance_public:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-binance_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "binance_public:ProviderCryptoPullbackRevertV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -1.8226824759876528,
+        "sortino": -5.109067421275159,
+        "calmar": -25.27585391033777,
+        "total_profit_pct": -0.98,
+        "max_drawdown_pct": -2.0034384641025116,
+        "trade_count": 15,
+        "win_rate_pct": 26.666666666666668,
+        "profit_factor": 0.5850842589000907
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -1.8226824759876528,
+          "sortino": -5.109067421275159,
+          "calmar": -25.27585391033777,
+          "total_profit_pct": -0.98,
+          "max_drawdown_pct": -2.0034384641025116,
+          "trade_count": 15,
+          "win_rate_pct": 26.666666666666668,
+          "profit_factor": 0.5850842589000907
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "bybit_public:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-bybit_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "bybit_public:ProviderCryptoMomentumStateV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.8613380661422825,
+        "sortino": 6.197582095303052,
+        "calmar": 48.80542741171871,
+        "total_profit_pct": 1.48,
+        "max_drawdown_pct": -1.5662364321210491,
+        "trade_count": 34,
+        "win_rate_pct": 41.17647058823529,
+        "profit_factor": 1.288511226299377
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.8613380661422825,
+          "sortino": 6.197582095303052,
+          "calmar": 48.80542741171871,
+          "total_profit_pct": 1.48,
+          "max_drawdown_pct": -1.5662364321210491,
+          "trade_count": 34,
+          "win_rate_pct": 41.17647058823529,
+          "profit_factor": 1.288511226299377
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "bybit_public:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-bybit_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "bybit_public:ProviderCryptoPullbackRevertV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -3.1115433239784096,
+        "sortino": -7.53777610032749,
+        "calmar": -36.10071356282439,
+        "total_profit_pct": -1.71,
+        "max_drawdown_pct": -2.45058452605016,
+        "trade_count": 17,
+        "win_rate_pct": 23.52941176470588,
+        "profit_factor": 0.45016637432495576
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -3.1115433239784096,
+          "sortino": -7.53777610032749,
+          "calmar": -36.10071356282439,
+          "total_profit_pct": -1.71,
+          "max_drawdown_pct": -2.45058452605016,
+          "trade_count": 17,
+          "win_rate_pct": 23.52941176470588,
+          "profit_factor": 0.45016637432495576
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "tvr_default_binance:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-tvr_default_binance/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "tvr_default_binance:ProviderCryptoMomentumStateV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -2.165966674403075,
+        "sortino": -6.553493325080297,
+        "calmar": -43.55957641112397,
+        "total_profit_pct": -1.03,
+        "max_drawdown_pct": -1.7328183337692755,
+        "trade_count": 25,
+        "win_rate_pct": 32.0,
+        "profit_factor": 0.765930096934388
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -2.165966674403075,
+          "sortino": -6.553493325080297,
+          "calmar": -43.55957641112397,
+          "total_profit_pct": -1.03,
+          "max_drawdown_pct": -1.7328183337692755,
+          "trade_count": 25,
+          "win_rate_pct": 32.0,
+          "profit_factor": 0.765930096934388
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "tvr_default_binance:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-tvr_default_binance/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "tvr_default_binance:ProviderCryptoPullbackRevertV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -4.279593054030906,
+        "sortino": -11.044580756682132,
+        "calmar": -53.913300500591646,
+        "total_profit_pct": -1.47,
+        "max_drawdown_pct": -2.0034385240298596,
+        "trade_count": 12,
+        "win_rate_pct": 16.666666666666664,
+        "profit_factor": 0.34369888998507653
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -4.279593054030906,
+          "sortino": -11.044580756682132,
+          "calmar": -53.913300500591646,
+          "total_profit_pct": -1.47,
+          "max_drawdown_pct": -2.0034385240298596,
+          "trade_count": 12,
+          "win_rate_pct": 16.666666666666664,
+          "profit_factor": 0.34369888998507653
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "ibkr_paxos_long_midpoint:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-ibkr_paxos_long_midpoint/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "ibkr_paxos_long_midpoint:ProviderCryptoMomentumStateV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.240588302704347,
+        "sortino": 5.556237225008735,
+        "calmar": 31.354478209765105,
+        "total_profit_pct": 0.98,
+        "max_drawdown_pct": -1.6175148214886688,
+        "trade_count": 32,
+        "win_rate_pct": 37.5,
+        "profit_factor": 1.192305918603454
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.240588302704347,
+          "sortino": 5.556237225008735,
+          "calmar": 31.354478209765105,
+          "total_profit_pct": 0.98,
+          "max_drawdown_pct": -1.6175148214886688,
+          "trade_count": 32,
+          "win_rate_pct": 37.5,
+          "profit_factor": 1.192305918603454
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "ibkr_paxos_long_midpoint:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-ibkr_paxos_long_midpoint/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "ibkr_paxos_long_midpoint:ProviderCryptoPullbackRevertV1",
+        "base_factor": "same_root_provider_matrix_crypto",
+        "hypothesis": "115700 same-root six-provider 1h rows carry branch and provider provenance into the downstream chain.",
+        "paradigm": "provider_matrix_momentum_or_pullback",
+        "expected_regime": "Bull/Range -> ProviderCrypto* -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -0.4138146160673979,
+        "sortino": -1.0164867610854114,
+        "calmar": -8.413817130084068,
+        "total_profit_pct": -0.27,
+        "max_drawdown_pct": -1.6395309666720548,
+        "trade_count": 12,
+        "win_rate_pct": 25.0,
+        "profit_factor": 0.8524420093984961
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -0.4138146160673979,
+          "sortino": -1.0164867610854114,
+          "calmar": -8.413817130084068,
+          "total_profit_pct": -0.27,
+          "max_drawdown_pct": -1.6395309666720548,
+          "trade_count": 12,
+          "win_rate_pct": 25.0,
+          "profit_factor": 0.8524420093984961
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

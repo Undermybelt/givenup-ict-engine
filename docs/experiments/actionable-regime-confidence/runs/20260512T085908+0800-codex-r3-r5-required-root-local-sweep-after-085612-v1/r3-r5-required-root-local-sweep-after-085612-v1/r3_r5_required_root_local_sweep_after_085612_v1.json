@@ -1,0 +1,164 @@
+{
+  "assertions": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "gate_result": "r3_r5_required_root_local_sweep_after_085612_v1=no_crisis_r3_or_r5_mainregimev2_unlock",
+    "promotion_allowed": false,
+    "r3_crisis_label_present": false,
+    "r3_native_subhour_data_rows": 5032903,
+    "r3_native_subhour_labels": [
+      "0",
+      "1",
+      "3",
+      "5",
+      "6",
+      "Bear",
+      "Bull",
+      "FLAT / NOISE",
+      "STRONG BUY",
+      "STRONG SELL",
+      "Sideways",
+      "WEAK BUY",
+      "WEAK SELL"
+    ],
+    "r3_native_subhour_roots_present": true,
+    "r5_mainregimev2_post_20260130_rows": 0,
+    "r5_recency_roots_present": false,
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "target_roots_scanned": 6,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "mainregimev2_summaries": [
+    {
+      "header": [
+        "package_id",
+        "source_owner",
+        "source_report_or_dataset",
+        "source_pull_date",
+        "market_family",
+        "symbol",
+        "source_symbol",
+        "equivalence_policy",
+        "event_species",
+        "timestamp_or_date",
+        "timeframe",
+        "main_regime_v2_label",
+        "direct_label",
+        "matched_negative_group_id",
+        "split_role",
+        "source_row_id",
+        "provenance_hash",
+        "source_confidence",
+        "native_timeframe_minutes",
+        "source_regime_label",
+        "source_regime_name",
+        "redaction_notes"
+      ],
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "post_cutoff_rows": 0,
+      "rows": 0
+    }
+  ],
+  "native_subhour_summaries": [
+    {
+      "crisis_label_present": false,
+      "crisis_rows": 0,
+      "header": [
+        "package_id",
+        "source_owner",
+        "source_report_or_dataset",
+        "source_pull_date",
+        "market_family",
+        "symbol",
+        "source_symbol",
+        "equivalence_policy",
+        "event_species",
+        "timestamp_or_date",
+        "timeframe",
+        "main_regime_v2_label",
+        "direct_label",
+        "matched_negative_group_id",
+        "split_role",
+        "source_row_id",
+        "provenance_hash",
+        "source_confidence",
+        "native_timeframe_minutes",
+        "source_regime_label",
+        "source_regime_name",
+        "redaction_notes"
+      ],
+      "labels": [
+        "0",
+        "1",
+        "3",
+        "5",
+        "6",
+        "Bear",
+        "Bull",
+        "FLAT / NOISE",
+        "STRONG BUY",
+        "STRONG SELL",
+        "Sideways",
+        "WEAK BUY",
+        "WEAK SELL"
+      ],
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "rows": 5032903
+    }
+  ],
+  "target_roots": [
+    {
+      "duplicate_realpath": false,
+      "exists": true,
+      "file_count": 2,
+      "name": "r3_native_subhour_tmp",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "realpath": "/private/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "duplicate_realpath": true,
+      "exists": true,
+      "file_count": 2,
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "realpath": "/private/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "duplicate_realpath": false,
+      "exists": false,
+      "file_count": 0,
+      "name": "r5_recency_tmp",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "realpath": ""
+    },
+    {
+      "duplicate_realpath": false,
+      "exists": false,
+      "file_count": 0,
+      "name": "r5_recency_private_tmp",
+      "path": "/private/tmp/ict-engine-source-panel-recency-extension",
+      "realpath": ""
+    },
+    {
+      "duplicate_realpath": false,
+      "exists": false,
+      "file_count": 0,
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "realpath": ""
+    },
+    {
+      "duplicate_realpath": false,
+      "exists": false,
+      "file_count": 0,
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "realpath": ""
+    }
+  ]
+}

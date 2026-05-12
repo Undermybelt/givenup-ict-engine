@@ -1,0 +1,17 @@
+objective_restated=PASS
+checklist_present=PASS
+evidence_presence_present=PASS
+root_status_present=PASS
+r6_owner_export_root_absent=PASS
+r3_native_subhour_root_absent=PASS
+r5_recency_root_absent=PASS
+approval_present_false=PASS
+flip_controls_false=PASS
+canonical_merge_false=PASS
+downstream_rerun_false=PASS
+accepted_rows_zero=PASS
+new_confidence_gate_false=PASS
+strict_objective_false=PASS
+update_goal_false=PASS
+not_complete_gate=PASS
+all_required_artifacts_present=PASS

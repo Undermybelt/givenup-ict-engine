@@ -1,0 +1,12 @@
+run_id=20260512T001635-codex-r6-oystacher-exact-date-candidate-extract-v1
+source_fetch_ok_count=2
+candidate_positive_dates=51
+source_group_count=6
+aggregate_flip_sequences=1316
+aggregate_spoof_orders=5207
+aggregate_spoof_contracts=359790
+matched_controls_present=false
+gate_result=r6_oystacher_exact_date_candidate_extract_v1=exact_dates_extracted_controls_and_order_times_missing_no_acceptance
+accepted_rows_added=0
+strict_full_objective_achieved=false
+update_goal=false

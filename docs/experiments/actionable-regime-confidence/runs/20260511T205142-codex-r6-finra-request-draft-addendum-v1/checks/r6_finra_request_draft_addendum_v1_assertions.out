@@ -1,0 +1,12 @@
+PASS decision=r6_finra_request_draft_addendum_v1=draft_ready_not_sent_rows_not_acquired
+PASS official_route_count=2
+PASS request_sent=false
+PASS authenticated_account_used=false
+PASS rows_acquired=false
+PASS matched_controls_acquired=false
+PASS intake_files_created=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

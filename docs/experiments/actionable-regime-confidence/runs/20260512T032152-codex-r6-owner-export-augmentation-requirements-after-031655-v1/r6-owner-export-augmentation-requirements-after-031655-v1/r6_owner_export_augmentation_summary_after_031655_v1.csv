@@ -1,0 +1,4 @@
+split_family,failed_cell_count,positive_deficit_total,negative_deficit_total,combined_deficit_total,worst_min_wilson95_lcb,required_rows_per_class_per_cell,requirement_reason,promotion_decision
+chronological_group_split,3,142,142,284,0.824115449418,73,MIN_SUPPORT=50; Wilson95 perfect-row lower bound >= 0.95,non_promoting_requirements_only
+heldout_symbol_exact,40,2843,2843,5686,0.0,73,MIN_SUPPORT=50; Wilson95 perfect-row lower bound >= 0.95,non_promoting_requirements_only
+heldout_venue_exact,11,726,726,1452,0.0,73,MIN_SUPPORT=50; Wilson95 perfect-row lower bound >= 0.95,non_promoting_requirements_only

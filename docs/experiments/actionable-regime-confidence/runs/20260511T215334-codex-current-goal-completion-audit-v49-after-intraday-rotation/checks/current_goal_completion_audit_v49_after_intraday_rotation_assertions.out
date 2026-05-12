@@ -1,0 +1,14 @@
+run_id=20260511T215334+0800-codex-current-goal-completion-audit-v49-after-intraday-rotation
+objective_file=docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md
+latest_profitability_loop=20260511T214454+0800-codex-board-b-intraday-risk-defensive-rotation-v1
+latest_stable_profit_score=33.8736
+price_root_paths_passed=0
+scoped_manipulation_component_pass=true
+all_required_branches_passed=false
+downstream_consumption=not_started:blocked_by_branch_rc_spa_hard_gates
+pre_bayes_started=false
+bbn_started=false
+catboost_started=false
+execution_tree_started=false
+goal_complete=false
+update_goal=false

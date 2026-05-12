@@ -1,0 +1,516 @@
+{
+  "analyze_live": {
+    "command_returncode": 0,
+    "decision_summary": "Observe only",
+    "direction": "Bull",
+    "execution_gate": "observe",
+    "pre_bayes_gate": "pass_neutralized"
+  },
+  "auto_quant": {
+    "bootstrap_needed": true,
+    "data_ready": false,
+    "healthy": false,
+    "status": "missing_dependency"
+  },
+  "bounded_local_arrival_scan": {
+    "candidate_count": 172,
+    "candidate_csv": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/current-objective-arrival-poll-after-063906-v1/current_objective_arrival_poll_candidates_v1.csv",
+    "new_owner_control_arrival_candidates": 0
+  },
+  "commands": [
+    {
+      "args": [
+        "shasum",
+        "-a",
+        "256",
+        "docs/plans/2026-05-10-actionable-regime-confidence-todo.md"
+      ],
+      "key": "board_sha256_before",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/board_sha256_before.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/board_sha256_before.stdout",
+      "timeout": false
+    },
+    {
+      "args": [
+        "target/debug/ict-engine",
+        "provider-status",
+        "--agent"
+      ],
+      "key": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/provider_status_agent.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/provider_status_agent.stdout",
+      "timeout": false
+    },
+    {
+      "args": [
+        "target/debug/ict-engine",
+        "auto-quant-status",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-064259-runtime-v1",
+        "--output-format",
+        "json"
+      ],
+      "key": "auto_quant_status",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/auto_quant_status.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/auto_quant_status.stdout",
+      "timeout": false
+    },
+    {
+      "args": [
+        "target/debug/ict-engine",
+        "analyze-live",
+        "--symbol",
+        "NQ",
+        "--futures-symbol",
+        "NQ=F",
+        "--spot-symbol",
+        "QQQ",
+        "--options-symbol",
+        "QQQ",
+        "--options-volatility-proxy-symbol",
+        "^VIX",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-064259-runtime-v1",
+        "--output-format",
+        "agent"
+      ],
+      "key": "analyze_live_nq_yfinance_agent",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/analyze_live_nq_yfinance_agent.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/analyze_live_nq_yfinance_agent.stdout",
+      "timeout": false
+    },
+    {
+      "args": [
+        "target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-064259-runtime-v1",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "key": "pre_bayes_status_nq",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/pre_bayes_status_nq.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/pre_bayes_status_nq.stdout",
+      "timeout": false
+    },
+    {
+      "args": [
+        "target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-064259-runtime-v1",
+        "--output-format",
+        "json"
+      ],
+      "key": "policy_training_status_nq",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/policy_training_status_nq.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/policy_training_status_nq.stdout",
+      "timeout": false
+    },
+    {
+      "args": [
+        "target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-064259-runtime-v1",
+        "--refresh",
+        "--agent"
+      ],
+      "key": "workflow_status_nq_agent",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/workflow_status_nq_agent.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/workflow_status_nq_agent.stdout",
+      "timeout": false
+    },
+    {
+      "args": [
+        "target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-064259-runtime-v1"
+      ],
+      "key": "export_structural_path_ranking_target_nq",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/export_structural_path_ranking_target_nq.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1/command-output/export_structural_path_ranking_target_nq.stdout",
+      "timeout": false
+    }
+  ],
+  "decision": {
+    "accepted_regime_roots": [],
+    "accepted_rows_added_for_board_a": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "missing_or_blocked_regime_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "new_owner_control_arrival_candidates": 0,
+    "r3_counts_as_unlock": false,
+    "r3_physical_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "r3_physical_rows": 5032903,
+    "r3_policy_state": "present_quarantined_tsie_proxy_not_accepted",
+    "r5_recency_evidence_acquired": false,
+    "r6_source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "gate_result": "current_objective_arrival_poll_after_063906_v1=not_complete_no_new_source_control_arrival_no_downstream_promotion",
+  "next_action": "Continue from a real source/control unlock only: explicit source/control approval, verifier-native R6 owner-export rows with controls, source-owned R5 recency rows, or verifier-native Crisis-capable R3 MainRegimeV2 labels. Do not run canonical merge or downstream promotion from the TSIE root.",
+  "objective": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "success_criteria": [
+      "Bull, Bear, Sideways, and Crisis each have accepted 95% calibrated evidence",
+      "Each accepted root has cross-market/cross-period/cross-context validation",
+      "Only source/control-approved or verifier-native roots count",
+      "After a valid unlock, canonical merge and provider/AutoQuant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree readback rerun"
+    ]
+  },
+  "observed_at_utc": "2026-05-11T22:50:25.769173+00:00",
+  "path_ranking_export": {
+    "mature_rows": 0,
+    "rows": 3,
+    "rows_with_calibrated_path_prob": 0,
+    "summary_line": "structural_path_ranking_target rows=3 history_rows=6 candidate_set_size=3 mature_rows=0 history_mature_rows=0 propensity_rows=1 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=0"
+  },
+  "policy_training": {
+    "entry_models": [
+      {
+        "consumer_adopted_by_default": false,
+        "consumer_effect": "internal_training_only",
+        "entry_model_id": "cisd_rb_long_v1",
+        "matched_rows": 0,
+        "ready": false,
+        "summary_line": "policy training is not ready for either BBN or CatBoost: matched_rows=0 bbn_warnings=matched_rows_below_minimum: 0; outcome_labels_do_not_cover_win_loss; entry_quality_bins_have_low_diversity; trigger_confirmation_bins_have_low_diversity catboost_warnings=matched_rows_below_recommended_minimum: 0; outcome_labels_do_not_cover_win_loss; numeric_feature_variation_too_low: 0/5 varying"
+      },
+      {
+        "consumer_adopted_by_default": false,
+        "consumer_effect": "internal_training_only",
+        "entry_model_id": "breaker_rb_long_v1",
+        "matched_rows": 0,
+        "ready": false,
+        "summary_line": "Breaker RB policy training is not ready for either BBN or CatBoost: matched_rows=0 bbn_warnings=matched_rows_below_minimum: 0; outcome_labels_do_not_cover_win_loss; entry_quality_bins_have_low_diversity; trigger_confirmation_bins_have_low_diversity catboost_warnings=matched_rows_below_recommended_minimum: 0; outcome_labels_do_not_cover_win_loss; numeric_feature_variation_too_low: 0/5 varying"
+      }
+    ],
+    "structural_path_ranking_target": {
+      "calibration_evaluation_rows": 0,
+      "calibration_propensity_weighted_rows": 0,
+      "calibration_quality_ready": false,
+      "calibration_ready": false,
+      "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+      "candidate_set_size": 3,
+      "csv_path": "/tmp/ict-engine-board-a-064259-runtime-v1/NQ/policy_training/structural_path_ranking_target.csv",
+      "export_ready": true,
+      "feedback_observation_validation": {
+        "mature_observations": 0,
+        "min_observations": 30,
+        "pending_observations": 0,
+        "ready": false,
+        "shortfall_observations": 30,
+        "summary_line": "observations mature=0/30 pending=0 total=0 ready=false",
+        "total_observations": 0
+      },
+      "feedback_rows_matured": 0,
+      "feedback_rows_pending": 0,
+      "feedback_rows_total": 0,
+      "feedback_rows_with_structural_feedback": 0,
+      "feedback_rows_without_structural_feedback": 0,
+      "feedback_rows_without_structural_feedback_dominant_count": 0,
+      "history_csv_path": "/tmp/ict-engine-board-a-064259-runtime-v1/NQ/policy_training/structural_path_ranking_target_history.csv",
+      "history_jsonl_path": "/tmp/ict-engine-board-a-064259-runtime-v1/NQ/policy_training/structural_path_ranking_target_history.jsonl",
+      "history_mature_rows": 0,
+      "history_rows": 3,
+      "history_rows_with_calibrated_path_prob": 0,
+      "history_rows_with_path_prob_lower_bound": 0,
+      "history_rows_with_propensity_estimate": 1,
+      "history_rows_with_raw_path_score": 0,
+      "history_rows_with_training_weight": 0,
+      "jsonl_path": "/tmp/ict-engine-board-a-064259-runtime-v1/NQ/policy_training/structural_path_ranking_target.jsonl",
+      "mature_rows": 0,
+      "observation_validation_min_rows": 30,
+      "observation_validation_ready": false,
+      "observation_validation_rows": 0,
+      "observation_validation_shortfall_rows": 30,
+      "pending_update_artifact_present": true,
+      "pending_update_history_rows": 2,
+      "pending_update_templates_with_structural_feedback": 0,
+      "production_validation_min_rows": 30,
+      "production_validation_ready": false,
+      "production_validation_rows": 0,
+      "production_validation_shortfall_rows": 30,
+      "raw_scored_mature_min_rows": 30,
+      "raw_scored_mature_rows": 0,
+      "raw_scored_mature_shortfall_rows": 30,
+      "rows": 3,
+      "rows_with_calibrated_path_prob": 0,
+      "rows_with_execution_gate_status": 0,
+      "rows_with_propensity_estimate": 1,
+      "rows_with_training_weight": 0,
+      "runtime_active_match_count": 0,
+      "runtime_artifact_match_count": 0,
+      "runtime_candidate_set_match_count": 0,
+      "runtime_history_match_count": 0,
+      "runtime_selection_enabled": false,
+      "runtime_selection_path": "/tmp/ict-engine-board-a-064259-runtime-v1/NQ/policy_training/structural_path_ranking_runtime_selection.json",
+      "runtime_selection_ready": false,
+      "runtime_selection_status": "disabled",
+      "summary_line": "structural_path_ranking_target rows=3 history_rows=3 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=missing trainer_status=missing runtime_selection=disabled runtime_mode=none runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0",
+      "summary_path": "/tmp/ict-engine-board-a-064259-runtime-v1/NQ/policy_training/structural_path_ranking_target_summary.json",
+      "target_row_validation": {
+        "production_validation_min_rows": 30,
+        "production_validation_ready": false,
+        "production_validation_rows": 0,
+        "production_validation_shortfall_rows": 30,
+        "raw_scored_mature_min_rows": 30,
+        "raw_scored_mature_rows": 0,
+        "raw_scored_mature_shortfall_rows": 30,
+        "summary_line": "target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"
+      },
+      "trainer_artifact_calibration_rows": 0,
+      "trainer_artifact_feature_columns": 0,
+      "trainer_artifact_history_rows": 0,
+      "trainer_artifact_path": "/tmp/ict-engine-board-a-064259-runtime-v1/NQ/policy_training/structural_path_ranking_trainer_artifact.json",
+      "trainer_artifact_ready": false,
+      "trainer_artifact_status": "missing",
+      "trainer_artifact_trained_rows": 0,
+      "trainer_artifact_uri_present": false,
+      "trainer_calibration_columns": 3,
+      "trainer_feature_columns": 12,
+      "trainer_guardrail_columns": 7,
+      "trainer_manifest_dataset_role": "external_path_ranker_training_dataset",
+      "trainer_manifest_protocol_version": "structural-path-ranking-trainer-manifest-v1",
+      "trainer_manifest_ready": true,
+      "update_runs_with_structural_feedback": 0,
+      "warnings": [
+        "structural_path_ranking_target_mature_rows_missing",
+        "structural_path_ranking_target_update_runs_missing",
+        "structural_path_ranking_target_structural_feedback_missing",
+        "structural_path_ranking_target_pending_update_templates_present",
+        "structural_path_ranking_target_calibration_not_fitted",
+        "structural_path_ranking_target_trainer_artifact_missing",
+        "structural_path_probability_calibration_evaluation_insufficient_rows",
+        "structural_path_ranking_target_raw_scored_mature_rows_insufficient:min=30 observed=0",
+        "structural_path_ranking_target_production_validation_insufficient_rows:min=30 observed=0",
+        "structural_path_ranking_observation_validation_insufficient_rows:min=30 observed=0"
+      ]
+    },
+    "summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural_path_ranking_target rows=3 history_rows=3 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=missing trainer_status=missing runtime_selection=disabled runtime_mode=none runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0"
+  },
+  "pre_bayes": {
+    "latest_canonical_structural_active_regime": "trend",
+    "latest_canonical_structural_confidence": 0.5588099176968618,
+    "latest_gate_status": "pass_neutralized"
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "notes": "Board hash captured before artifact; this script does not edit Current Cursor.",
+      "requirement": "Board file inspected and concurrent-safe append discipline preserved",
+      "status": "met"
+    },
+    {
+      "evidence": "063906 audit plus current root poll",
+      "notes": "No accepted Board A root after TSIE quarantine; TSIE Bull rows are proxy/materialized only.",
+      "requirement": "Bull regime has 95% calibrated, cross-market/cross-period evidence",
+      "status": "not_met"
+    },
+    {
+      "evidence": "063906 audit plus current root poll",
+      "notes": "No accepted Board A root after TSIE quarantine; TSIE Bear rows are proxy/materialized only.",
+      "requirement": "Bear regime has 95% calibrated, cross-market/cross-period evidence",
+      "status": "not_met"
+    },
+    {
+      "evidence": "063906 audit plus current root poll",
+      "notes": "No accepted Board A root after TSIE quarantine; TSIE Sideways rows are proxy/materialized only.",
+      "requirement": "Sideways regime has 95% calibrated, cross-market/cross-period evidence",
+      "status": "not_met"
+    },
+    {
+      "evidence": "063155/063734/063906",
+      "notes": "Crisis is absent from TSIE taxonomy and no replacement source packet is present.",
+      "requirement": "Crisis regime has 95% calibrated, cross-market/cross-period evidence",
+      "status": "not_met"
+    },
+    {
+      "evidence": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "notes": "Target root absent; no new owner-control arrival candidate found in bounded local scan.",
+      "requirement": "R6 owner/export or explicit source/control approval is available",
+      "status": "not_met"
+    },
+    {
+      "evidence": "/tmp/ict-engine-source-panel-recency-extension",
+      "notes": "Target root absent.",
+      "requirement": "R5 post-cutoff source-panel recency evidence is available",
+      "status": "not_met"
+    },
+    {
+      "evidence": "command-output/provider_status_agent.stdout",
+      "notes": "Provider catalog command executed read-only; readiness is evidence, not promotion.",
+      "requirement": "Provider surfaces checked: IBKR, TradingViewRemix, yfinance, Kraken where available",
+      "status": "checked"
+    },
+    {
+      "evidence": "command-output/auto_quant_status.stdout",
+      "notes": "Managed Auto-Quant status command executed in isolated /tmp state.",
+      "requirement": "Auto-Quant status checked",
+      "status": "checked"
+    },
+    {
+      "evidence": "command-output/pre_bayes_status_nq.stdout",
+      "notes": "Pre-Bayes status refreshed after read-only analyze-live command.",
+      "requirement": "Filter / Pre-Bayes / BBN surface checked",
+      "status": "checked"
+    },
+    {
+      "evidence": "command-output/policy_training_status_nq.stdout and command-output/export_structural_path_ranking_target_nq.stdout",
+      "notes": "Policy-training and structural path-ranking export commands executed read-only.",
+      "requirement": "CatBoost/path-ranking surface checked",
+      "status": "checked"
+    },
+    {
+      "evidence": "command-output/workflow_status_nq_agent.stdout",
+      "notes": "Workflow status command executed read-only.",
+      "requirement": "Execution-tree/workflow status checked",
+      "status": "checked"
+    },
+    {
+      "evidence": "current root poll and command outputs",
+      "notes": "No valid unlock exists, so canonical merge and promotion chain remain false by design.",
+      "requirement": "Canonical merge and downstream promotion rerun after a valid unlock",
+      "status": "not_met"
+    }
+  ],
+  "provider_readiness": {
+    "ibkr": {
+      "domain": "market_data",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    "kraken_cli": {
+      "domain": "local_runtime",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    },
+    "kraken_public": {
+      "domain": "market_data",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    "tradingview_remix": {
+      "domain": null,
+      "ready": false,
+      "reason": "not_reported",
+      "status": "missing"
+    },
+    "yfinance": {
+      "domain": "live_runtime",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available",
+      "status": "ready"
+    }
+  },
+  "r3_provenance": {
+    "labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "limitations": [
+      "Crisis has no direct TSIE source taxonomy class",
+      "trap labels are fail-closed abstain and excluded from accepted rows",
+      "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+      "canonical merge not run",
+      "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+    ],
+    "raw_parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+    "row_count": 5032903,
+    "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f"
+  },
+  "roots": {
+    "r3_native_subhour": {
+      "all_required_files_present": true,
+      "exists": true,
+      "file_count": 2,
+      "required_files_missing": [],
+      "required_files_present": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    "r5_recency": {
+      "all_required_files_present": false,
+      "exists": false,
+      "file_count": 0,
+      "required_files_missing": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "required_files_present": [],
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    "r6_owner_export": {
+      "all_required_files_present": false,
+      "exists": false,
+      "file_count": 0,
+      "required_files_missing": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "required_files_present": [],
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    "source_label_equivalence_non_target": {
+      "all_required_files_present": true,
+      "exists": true,
+      "file_count": 2,
+      "required_files_missing": [],
+      "required_files_present": [
+        "source_label_equivalence_rows.csv",
+        "source_label_equivalence_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    }
+  },
+  "run_id": "20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1",
+  "workflow": {
+    "blocking_reason": "user_selected_historical_data_missing",
+    "blocking_status": "blocked",
+    "focus_phase": "analyze",
+    "next_step": {
+      "action_type": "ask_user_choose_historical_data",
+      "blocked_reason": "user_selected_historical_data_missing",
+      "deferred_command": "ict-engine factor-research --symbol NQ --data /tmp/ict-engine-board-a-064259-runtime-v1/NQ/analyze_live_20260511T225003_ltf.json --paired-data /tmp/ict-engine-board-a-064259-runtime-v1/NQ/analyze_live_20260511T225003_spot.json --state-dir /tmp/ict-engine-board-a-064259-runtime-v1",
+      "execution_contract": null,
+      "prompt": "Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=<local-path>, <local-path>, <local-path>, <local-path>",
+      "user_input_required": true
+    }
+  }
+}

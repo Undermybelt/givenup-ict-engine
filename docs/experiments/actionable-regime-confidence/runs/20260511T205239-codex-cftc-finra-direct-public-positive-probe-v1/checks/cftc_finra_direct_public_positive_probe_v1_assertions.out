@@ -1,0 +1,7 @@
+PASS decision=cftc_finra_direct_public_positive_probe_v1=public_positives_extracted_controls_absent_blocked
+PASS cftc_positive_rows_extracted=2
+PASS finra_layering_spoofing_field_count=38
+PASS matched_negative_rows_acquired=false
+PASS verifier_returncode=2
+PASS accepted_rows_added=0
+PASS update_goal=false

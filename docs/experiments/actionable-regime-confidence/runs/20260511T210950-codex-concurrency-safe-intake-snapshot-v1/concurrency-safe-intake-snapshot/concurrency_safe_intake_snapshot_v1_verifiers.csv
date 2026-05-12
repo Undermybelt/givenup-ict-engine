@@ -1,0 +1,4 @@
+id,status,returncode,stderr
+R2_R4_source_label_equivalence,blocked,2,
+R5_source_panel_recency_extension,blocked,2,
+R6_direct_manipulation_row_intake,schema_ready_unscored,0,

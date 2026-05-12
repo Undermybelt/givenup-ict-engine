@@ -1,0 +1,158 @@
+{
+  "schema_version": "structural-replay36-catboost-closure-evidence/v1",
+  "loop_id": "20260510T191350+0800-codex-nq-structural-replay36-catboost-closure",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state",
+  "objective": "Close the prior CatBoost/path-ranker 0/30 mature structural-path validation blocker after Board A accepted_95.",
+  "accepted_regime_context": {
+    "accepted_regime_id": "SessionLiquidityCoreViable",
+    "confidence_lane": 95,
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json",
+    "trade_use": "guardrail_only_not_standalone_edge"
+  },
+  "replay": {
+    "command_artifact": "structural-replay-nq-36/replay_summary.json",
+    "symbol": "NQ",
+    "candles_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_ltf.json",
+    "count": 36,
+    "lookback": 120,
+    "horizon": 16,
+    "threshold": 0.001,
+    "outcome_distribution": {
+      "breakeven": 4,
+      "invalidated": 3,
+      "loss": 11,
+      "win": 18
+    },
+    "first_entry_timestamp": "2026-03-27T17:30:00Z",
+    "last_entry_timestamp": "2026-05-07T16:00:00Z"
+  },
+  "catboost_training": {
+    "mature_only_target_csv": "catboost/structural_path_ranking_target_history_mature_only.csv",
+    "model_dir": "catboost/path_ranker_model",
+    "model_artifact": "catboost/path_ranker_model/catboost_model.cbm",
+    "trainer_artifact": "catboost/path_ranker_model/trainer_artifact.json",
+    "scores_history_mature": "catboost/path_ranker_scores_nq_history_mature.csv",
+    "scores_current": "catboost/path_ranker_scores_nq_current.csv",
+    "model_family": "catboost",
+    "trained_rows": 1397,
+    "calibration_rows": 1397,
+    "selected_features": [
+      "structural_baseline_score"
+    ],
+    "validation_metrics": {
+      "raw_scored_mature_rows": 1397,
+      "raw_scored_mature_min_rows": 30,
+      "production_validation_rows": 1397,
+      "production_validation_min_rows": 30
+    }
+  },
+  "policy_training_status": {
+    "artifact": "ict-engine/13_policy_training_status_after_workflow_refresh_nq_agent.json",
+    "runtime_summary": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=1421 mature_rows=1 history_mature_rows=1397 raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+    "validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30 ready=true",
+    "target_summary": "structural_path_ranking_target rows=3 history_rows=1421 mature_rows=1 history_mature_rows=1397 raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+    "raw_scored_mature_rows": 1397,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_ready": true,
+    "production_validation_rows": 1395,
+    "production_validation_min_rows": 30,
+    "observation_validation_ready": true,
+    "observation_validation_rows": 40,
+    "observation_validation_min_rows": 30,
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "runtime_matches": 3,
+    "trainer_artifact_status": "runtime_eligible"
+  },
+  "workflow_readback": {
+    "workflow_artifact": "ict-engine/10_workflow_status_after_catboost_nq_agent.json",
+    "ranker_phase_artifact": "ict-engine/14_workflow_phase_structural_ranker_runtime_nq_agent.json",
+    "validation_phase_artifact": "ict-engine/15_workflow_phase_structural_validation_nq_agent.json",
+    "ranker_phase_status": "using_candidate_set_scores",
+    "ranker_phase_runtime_source": "candidate_set",
+    "ranker_phase_applied_path_count": 3,
+    "ranker_phase_execution_gate_status": "observe",
+    "delayed_reward_status": "ready",
+    "delayed_reward_resolution_observation_count": 13,
+    "recommended_path": "range_mean_reversion",
+    "recommended_runtime_source": "candidate_set",
+    "recommended_raw_score": 0.405144071613999,
+    "recommended_gate": "observe"
+  },
+  "execution_tree_readback": {
+    "artifact": "ict-engine/12_execution_tree_trace_after_workflow_refresh_nq.json",
+    "gate_status": "observe",
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "decision_hint": "execution_guarded_due_to_low_remaining_regime_duration",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "ranker_validation_ready": true,
+    "trace_model_family_note": "trace artifact was generated before final CatBoost score-family readback; policy/workflow artifacts are authoritative for CatBoost runtime family in this packet"
+  },
+  "supersedes_stale_midrun_readbacks": [
+    "evidence_packet_structural_replay36_validation.json",
+    "structural-replay-nq-36/replay36_verification_summary.json",
+    "structural-replay-nq-36/replay36_current_readback_hermes.json"
+  ],
+  "decision": {
+    "board_a_confidence_goal": "accepted_95",
+    "structural_path_validation_goal": "met",
+    "catboost_runtime_goal": "met_for_policy_training_and_workflow_readback",
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "SessionLiquidityCoreViable remains a liquidity/session guardrail, not standalone path-specific edge.",
+      "Workflow ranker gate remains observe and execution tree remains observe/transition_guardrail/guarded.",
+      "Entry-model training modules remain pending even though CatBoost structural path-ranker validation is ready."
+    ],
+    "next_action": "Use this ready CatBoost/path-ranker validation state only as downstream context; do not promote to execute until a non-observe release candidate passes edge and execution gates.",
+    "bbn_apply_goal": "met_with_dry_run_false_in_isolated_replay_state",
+    "completion_audit_artifact": "completion_audit_prompt_to_artifact.json"
+  },
+  "bbn_apply": {
+    "artifact": "ict-engine/16_auto_quant_prior_init_nq_apply.json",
+    "dry_run": false,
+    "evidence_value_gate_passed": true,
+    "strategies_applied": 1,
+    "trade_count": 1081,
+    "bbn_log_loss_delta": 6.7286527442285795,
+    "bbn_contradiction_lift": 1.3608378659320477,
+    "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/NQ/auto_quant_prior_init_NQ_20260510T113446.792406000Z.json"
+  },
+  "pre_bayes_after_bbn_apply": {
+    "artifact": "ict-engine/17_pre_bayes_status_after_bbn_apply_nq.json",
+    "latest_gate_status": "observe_only",
+    "latest_uses_soft_evidence": true,
+    "latest_canonical_structural_active_regime": "range",
+    "latest_canonical_structural_confidence": 0.6195059211153686
+  },
+  "post_bbn_apply_readback": {
+    "policy_training_artifact": "ict-engine/18_policy_training_status_after_bbn_apply_nq_agent.json",
+    "workflow_artifact": "ict-engine/19_workflow_status_after_bbn_apply_nq_agent.json",
+    "execution_tree_artifact": "ict-engine/20_execution_tree_trace_after_bbn_apply_nq.json",
+    "ranker_runtime_summary": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=1421 mature_rows=1 history_mature_rows=1397 raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+    "ranker_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30 ready=true",
+    "workflow_ranker_status": "using_candidate_set_scores",
+    "workflow_ranker_gate": "observe",
+    "execution_tree_gate_status": "observe",
+    "execution_tree_branch": "transition_guardrail",
+    "execution_tree_path_ranker_visible": true,
+    "execution_tree_path_ranker_used": true,
+    "execution_tree_ranker_validation_ready": true
+  },
+  "provider_audit": {
+    "provider_artifact_root": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider",
+    "line_counts": {
+      "yfinance_QQQ_1h": 3370,
+      "ibkr_QQQ_1h": 4008,
+      "kraken_PF_XBTUSD_1h": 2001
+    },
+    "tradingviewremix_health": {
+      "artifact": "provider/provider-tvremix-tools-list-health.json",
+      "ok": false,
+      "http_status": 429,
+      "reason": "HTTP Error 429: Too Many Requests"
+    }
+  }
+}

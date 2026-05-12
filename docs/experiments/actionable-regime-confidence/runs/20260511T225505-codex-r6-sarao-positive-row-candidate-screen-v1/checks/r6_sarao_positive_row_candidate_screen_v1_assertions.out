@@ -1,0 +1,6 @@
+shared_intake_mutated=False
+proposed_positive_rows=6
+what_if_min_wilson95_lcb=0.942526809651
+new_confidence_gate=False
+strict_full_objective_achieved=False
+update_goal=False

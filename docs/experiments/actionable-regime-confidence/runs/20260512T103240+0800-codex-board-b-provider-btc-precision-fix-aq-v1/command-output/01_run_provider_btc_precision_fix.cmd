@@ -1,0 +1,1 @@
+uv --directory /Users/thrill3r/Auto-Quant run python /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103240+0800-codex-board-b-provider-btc-precision-fix-aq-v1/workspace/auto-quant-provider-btc-precision-fix/run_tomac.py

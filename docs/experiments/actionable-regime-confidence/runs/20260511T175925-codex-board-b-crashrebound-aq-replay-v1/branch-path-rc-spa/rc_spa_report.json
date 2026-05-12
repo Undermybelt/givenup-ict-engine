@@ -1,0 +1,60 @@
+{
+  "schema_version": "board-b-branch-path-rc-spa/v1",
+  "generated_at": "2026-05-11T10:12:17.202117+00:00",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "accepted_regime_artifact": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+  "recipe_id": "CrashRebound",
+  "recipe_artifact_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/autoquant/user_data/strategies/CrashRebound.py",
+  "backtest_artifact_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/autoquant/crashrebound_replay.out",
+  "total_trades": 207,
+  "independent_trade_rows": 205,
+  "test_folds": 3,
+  "valid_branch_path_test_folds": 2,
+  "fold_positive_rate": 1.0,
+  "bootstrap_edge_lcb_5pct": -0.000715510212297216,
+  "pbo": 1.0,
+  "dsr": 0.5930162980157118,
+  "cost_stress_result": "pass",
+  "tail_loss_p95": 0.1036159738010012,
+  "tail_loss_budget": 0.2,
+  "regime_specificity_ratio": 2.3337009691628534,
+  "covered_roots": [
+    "Bear",
+    "Bull"
+  ],
+  "missing_roots": [
+    "Sideways",
+    "Crisis"
+  ],
+  "manipulation_overlay_covered": false,
+  "hard_gate_result": "fail:reject_missing_branch_path,reject_no_positive_edge,reject_overfit_risk",
+  "hard_gate_failures": [
+    "reject_missing_branch_path",
+    "reject_no_positive_edge",
+    "reject_overfit_risk"
+  ],
+  "raw_rc_spa_before_hard_gate_zero": 58.71444578018562,
+  "rc_spa": 0.0,
+  "promotion_level": "reject",
+  "downstream_consumption_status": "not_eligible_fail_closed",
+  "downstream_consumption": {
+    "pre_bayes_filter": "fail_closed_before_bbn",
+    "bbn": "failure_memory_only",
+    "catboost_path_ranker": "not_run_no_target_rows",
+    "execution_tree": "not_eligible_no_stable_or_pilot_candidate"
+  },
+  "notes": [
+    "full_5y replay is overlapping diagnostic evidence and is not counted as an independent fold",
+    "recovery_23_25 is not a Board A accepted root and is therefore marked branch_path_valid=false",
+    "Manipulation overlay has no direct source-positive rows for this CrashRebound replay"
+  ],
+  "artifact_paths": {
+    "trade_rows_csv": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/branch-path-rc-spa/crashrebound_branch_trade_rows.csv",
+    "trade_rows_jsonl": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/branch-path-rc-spa/crashrebound_branch_trade_rows.jsonl",
+    "folds_csv": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/branch-path-rc-spa/crashrebound_branch_folds.csv",
+    "labels_jsonl": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/branch-path-rc-spa/labels.jsonl",
+    "payoff_report_json": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/branch-path-rc-spa/payoff_report.json",
+    "rc_spa_report_json": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/branch-path-rc-spa/rc_spa_report.json",
+    "freqtrade_trade_extract_log": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/branch-path-rc-spa/freqtrade_trade_extract.log"
+  }
+}

@@ -1,0 +1,7 @@
+requirement,status,evidence
+Source roots inspected,pass,"112315 provider matrix; 112740 provider-data/pre-bayes/path-ranker; 112954 symbol-normalized path-ranker bridge"
+Six-provider BTC provider rows read back,partial,"YF/Kraken/Binance/Bybit rows present; IBKR AGGTRADES rows present; TVR fetch failed; not same-root AQ authority"
+Pre-Bayes and path-ranker downstream read back,partial,"112740 Pre-Bayes pass_neutralized and CatBoost/path-ranker ready, but execution blocked"
+111403 path-ranker cardinality repaired,partial,"112954 raw_scored_mature=147/30 production_validation=146/30 observation_validation=146/30"
+Promotion gate preserved,pass,"Pre-Bayes absent or pass_neutralized; execution candidate false; closed-loop fail_closed"
+Completion/update_goal avoided,pass,"strict_full_objective=false trade_usable=false promotion_allowed=false update_goal=false"

@@ -1,0 +1,1 @@
+for p in /tmp/ict-engine-board-a-r6-owner-export-v1 /tmp/ict-engine-native-subhour-source-label-intake /tmp/ict-engine-source-panel-recency-extension; do [ -e "" ] && echo present: || echo absent:; done

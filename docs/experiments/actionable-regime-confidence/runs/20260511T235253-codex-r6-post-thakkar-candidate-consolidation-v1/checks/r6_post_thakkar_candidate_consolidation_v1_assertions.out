@@ -1,0 +1,11 @@
+canonical_live_intake_exists=False
+direct_verifier_blocked_missing_required_files=True
+unique_proposed_positive_rows=34
+duplicate_candidate_rows=0
+proposed_matched_control_rows=2
+what_if_min_wilson95_lcb_after_unique_sidecars=0.954180263735
+pooled_what_if_wilson95_pass=True
+shared_intake_mutated=False
+new_confidence_gate=False
+strict_full_objective_achieved=False
+update_goal=False

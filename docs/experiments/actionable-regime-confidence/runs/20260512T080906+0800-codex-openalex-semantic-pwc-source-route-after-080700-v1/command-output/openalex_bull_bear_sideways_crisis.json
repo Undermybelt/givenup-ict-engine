@@ -1,0 +1,6945 @@
+{
+  "group_by": [],
+  "meta": {
+    "cost_usd": 0.001,
+    "count": 22,
+    "db_response_time_ms": 196,
+    "groups_count": null,
+    "page": 1,
+    "per_page": 8
+  },
+  "results": [
+    {
+      "abstract_inverted_index": null,
+      "apc_list": {
+        "currency": "USD",
+        "value": 3220,
+        "value_usd": 3220
+      },
+      "apc_paid": null,
+      "authorships": [
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I82767444"
+              ],
+              "raw_affiliation_string": "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga, M\u00e1laga, Spain"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I82767444"
+              ],
+              "raw_affiliation_string": "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga , M\u00e1laga, Spain"
+            }
+          ],
+          "author": {
+            "display_name": "Jos\u00e9 Manuel Berutich",
+            "id": "https://openalex.org/A5003955437",
+            "orcid": "https://orcid.org/0000-0002-0918-9634"
+          },
+          "author_position": "first",
+          "countries": [
+            "ES"
+          ],
+          "institutions": [
+            {
+              "country_code": "ES",
+              "display_name": "Universidad de M\u00e1laga",
+              "id": "https://openalex.org/I82767444",
+              "lineage": [
+                "https://openalex.org/I82767444"
+              ],
+              "ror": "https://ror.org/036b2ww28",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": true,
+          "raw_affiliation_strings": [
+            "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga, M\u00e1laga, Spain",
+            "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga , M\u00e1laga, Spain"
+          ],
+          "raw_author_name": "Jos\u00e9 Manuel Berutich",
+          "raw_orcid": "https://orcid.org/0000-0002-0918-9634"
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I82767444"
+              ],
+              "raw_affiliation_string": "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga, M\u00e1laga, Spain"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I82767444"
+              ],
+              "raw_affiliation_string": "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga , M\u00e1laga, Spain"
+            }
+          ],
+          "author": {
+            "display_name": "Francisco L\u00f3pez",
+            "id": "https://openalex.org/A5111489974",
+            "orcid": null
+          },
+          "author_position": "middle",
+          "countries": [
+            "ES"
+          ],
+          "institutions": [
+            {
+              "country_code": "ES",
+              "display_name": "Universidad de M\u00e1laga",
+              "id": "https://openalex.org/I82767444",
+              "lineage": [
+                "https://openalex.org/I82767444"
+              ],
+              "ror": "https://ror.org/036b2ww28",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga, M\u00e1laga, Spain",
+            "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga , M\u00e1laga, Spain"
+          ],
+          "raw_author_name": "Francisco L\u00f3pez",
+          "raw_orcid": null
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I82767444"
+              ],
+              "raw_affiliation_string": "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga, M\u00e1laga, Spain"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I82767444"
+              ],
+              "raw_affiliation_string": "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga , M\u00e1laga, Spain"
+            }
+          ],
+          "author": {
+            "display_name": "Francisco Luna",
+            "id": "https://openalex.org/A5062472224",
+            "orcid": "https://orcid.org/0000-0002-0455-7223"
+          },
+          "author_position": "middle",
+          "countries": [
+            "ES"
+          ],
+          "institutions": [
+            {
+              "country_code": "ES",
+              "display_name": "Universidad de M\u00e1laga",
+              "id": "https://openalex.org/I82767444",
+              "lineage": [
+                "https://openalex.org/I82767444"
+              ],
+              "ror": "https://ror.org/036b2ww28",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga, M\u00e1laga, Spain",
+            "Departamento de Lenguajes y Ciencias de la Computaci\u00f3n, Universidad de M\u00e1laga , M\u00e1laga, Spain"
+          ],
+          "raw_author_name": "Francisco Luna",
+          "raw_orcid": null
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I50357001"
+              ],
+              "raw_affiliation_string": "Departamento de Inform\u00e1tica, Universidad Carlos III de Madrid, Legan\u00e9s, Madrid, Spain"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I50357001"
+              ],
+              "raw_affiliation_string": "Departamento de Inform\u00e1tica, Universidad Carlos III de Madrid, Legan\u00e9s, Madrid, Spain#TAB#"
+            }
+          ],
+          "author": {
+            "display_name": "David Quintana",
+            "id": "https://openalex.org/A5022379007",
+            "orcid": "https://orcid.org/0000-0003-0320-1695"
+          },
+          "author_position": "last",
+          "countries": [
+            "ES"
+          ],
+          "institutions": [
+            {
+              "country_code": "ES",
+              "display_name": "Universidad Carlos III de Madrid",
+              "id": "https://openalex.org/I50357001",
+              "lineage": [
+                "https://openalex.org/I50357001"
+              ],
+              "ror": "https://ror.org/03ths8210",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Departamento de Inform\u00e1tica, Universidad Carlos III de Madrid, Legan\u00e9s, Madrid, Spain",
+            "Departamento de Inform\u00e1tica, Universidad Carlos III de Madrid, Legan\u00e9s, Madrid, Spain#TAB#"
+          ],
+          "raw_author_name": "David Quintana",
+          "raw_orcid": null
+        }
+      ],
+      "awards": [],
+      "best_oa_location": {
+        "id": "doi:10.1016/j.eswa.2015.10.040",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": true,
+        "landing_page_url": "https://doi.org/10.1016/j.eswa.2015.10.040",
+        "license": null,
+        "license_id": null,
+        "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0957417415007447",
+        "raw_source_name": "Expert Systems with Applications",
+        "raw_type": "journal-article",
+        "source": {
+          "display_name": "Expert Systems with Applications",
+          "host_organization": "https://openalex.org/P4310320990",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310320990"
+          ],
+          "host_organization_lineage_names": [
+            "Elsevier BV"
+          ],
+          "host_organization_name": "Elsevier BV",
+          "id": "https://openalex.org/S13144211",
+          "is_core": true,
+          "is_in_doaj": false,
+          "is_oa": false,
+          "issn": [
+            "0957-4174",
+            "1873-6793"
+          ],
+          "issn_l": "0957-4174",
+          "type": "journal"
+        },
+        "version": "publishedVersion"
+      },
+      "biblio": {
+        "first_page": "307",
+        "issue": null,
+        "last_page": "315",
+        "volume": "46"
+      },
+      "citation_normalized_percentile": {
+        "is_in_top_10_percent": true,
+        "is_in_top_1_percent": false,
+        "value": 0.96948911
+      },
+      "cited_by_count": 62,
+      "cited_by_percentile_year": {
+        "max": 99,
+        "min": 96
+      },
+      "concepts": [
+        {
+          "display_name": "Genetic programming",
+          "id": "https://openalex.org/C110332635",
+          "level": 2,
+          "score": 0.6817917823791504,
+          "wikidata": "https://www.wikidata.org/wiki/Q629498"
+        },
+        {
+          "display_name": "Robustness (evolution)",
+          "id": "https://openalex.org/C63479239",
+          "level": 3,
+          "score": 0.6514806747436523,
+          "wikidata": "https://www.wikidata.org/wiki/Q7353546"
+        },
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/C41008148",
+          "level": 0,
+          "score": 0.6160429120063782,
+          "wikidata": "https://www.wikidata.org/wiki/Q21198"
+        },
+        {
+          "display_name": "Trading strategy",
+          "id": "https://openalex.org/C131562839",
+          "level": 2,
+          "score": 0.6070163249969482,
+          "wikidata": "https://www.wikidata.org/wiki/Q1574928"
+        },
+        {
+          "display_name": "Volatility (finance)",
+          "id": "https://openalex.org/C91602232",
+          "level": 2,
+          "score": 0.5964659452438354,
+          "wikidata": "https://www.wikidata.org/wiki/Q756115"
+        },
+        {
+          "display_name": "Sharpe ratio",
+          "id": "https://openalex.org/C139938925",
+          "level": 3,
+          "score": 0.5727754831314087,
+          "wikidata": "https://www.wikidata.org/wiki/Q1501898"
+        },
+        {
+          "display_name": "Portfolio",
+          "id": "https://openalex.org/C2780821815",
+          "level": 2,
+          "score": 0.5672376751899719,
+          "wikidata": "https://www.wikidata.org/wiki/Q5340806"
+        },
+        {
+          "display_name": "Investment strategy",
+          "id": "https://openalex.org/C103144560",
+          "level": 3,
+          "score": 0.5329825282096863,
+          "wikidata": "https://www.wikidata.org/wiki/Q2670999"
+        },
+        {
+          "display_name": "Econometrics",
+          "id": "https://openalex.org/C149782125",
+          "level": 1,
+          "score": 0.47197991609573364,
+          "wikidata": "https://www.wikidata.org/wiki/Q160039"
+        },
+        {
+          "display_name": "Machine learning",
+          "id": "https://openalex.org/C119857082",
+          "level": 1,
+          "score": 0.29285138845443726,
+          "wikidata": "https://www.wikidata.org/wiki/Q2539"
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/C162324750",
+          "level": 0,
+          "score": 0.26291927695274353,
+          "wikidata": "https://www.wikidata.org/wiki/Q8134"
+        },
+        {
+          "display_name": "Market liquidity",
+          "id": "https://openalex.org/C183582576",
+          "level": 2,
+          "score": 0.24305468797683716,
+          "wikidata": "https://www.wikidata.org/wiki/Q184783"
+        },
+        {
+          "display_name": "Financial economics",
+          "id": "https://openalex.org/C106159729",
+          "level": 1,
+          "score": 0.21478518843650818,
+          "wikidata": "https://www.wikidata.org/wiki/Q2294553"
+        },
+        {
+          "display_name": "Finance",
+          "id": "https://openalex.org/C10138342",
+          "level": 1,
+          "score": 0.14751681685447693,
+          "wikidata": "https://www.wikidata.org/wiki/Q43015"
+        },
+        {
+          "display_name": "Biochemistry",
+          "id": "https://openalex.org/C55493867",
+          "level": 1,
+          "score": 0.0,
+          "wikidata": "https://www.wikidata.org/wiki/Q7094"
+        },
+        {
+          "display_name": "Gene",
+          "id": "https://openalex.org/C104317684",
+          "level": 2,
+          "score": 0.0,
+          "wikidata": "https://www.wikidata.org/wiki/Q7187"
+        },
+        {
+          "display_name": "Chemistry",
+          "id": "https://openalex.org/C185592680",
+          "level": 0,
+          "score": 0.0,
+          "wikidata": "https://www.wikidata.org/wiki/Q2329"
+        }
+      ],
+      "content_urls": {
+        "grobid_xml": "https://content.openalex.org/works/W1943807073.grobid-xml",
+        "pdf": "https://content.openalex.org/works/W1943807073.pdf"
+      },
+      "corresponding_author_ids": [
+        "https://openalex.org/A5003955437"
+      ],
+      "corresponding_institution_ids": [
+        "https://openalex.org/I82767444"
+      ],
+      "countries_distinct_count": 1,
+      "counts_by_year": [
+        {
+          "cited_by_count": 4,
+          "year": 2025
+        },
+        {
+          "cited_by_count": 3,
+          "year": 2024
+        },
+        {
+          "cited_by_count": 5,
+          "year": 2023
+        },
+        {
+          "cited_by_count": 3,
+          "year": 2022
+        },
+        {
+          "cited_by_count": 10,
+          "year": 2021
+        },
+        {
+          "cited_by_count": 6,
+          "year": 2020
+        },
+        {
+          "cited_by_count": 13,
+          "year": 2019
+        },
+        {
+          "cited_by_count": 8,
+          "year": 2018
+        },
+        {
+          "cited_by_count": 10,
+          "year": 2017
+        }
+      ],
+      "created_date": "2025-10-10T00:00:00",
+      "display_name": "Robust technical trading strategies using GP for algorithmic portfolio selection",
+      "doi": "https://doi.org/10.1016/j.eswa.2015.10.040",
+      "funders": [],
+      "fwci": 7.4184,
+      "has_content": {
+        "grobid_xml": true,
+        "pdf": true
+      },
+      "has_fulltext": true,
+      "id": "https://openalex.org/W1943807073",
+      "ids": {
+        "doi": "https://doi.org/10.1016/j.eswa.2015.10.040",
+        "mag": "1943807073",
+        "openalex": "https://openalex.org/W1943807073"
+      },
+      "indexed_in": [
+        "crossref"
+      ],
+      "institutions": [],
+      "institutions_distinct_count": 4,
+      "is_paratext": false,
+      "is_retracted": false,
+      "is_xpac": false,
+      "keywords": [
+        {
+          "display_name": "Genetic programming",
+          "id": "https://openalex.org/keywords/genetic-programming",
+          "score": 0.6817917823791504
+        },
+        {
+          "display_name": "Robustness (evolution)",
+          "id": "https://openalex.org/keywords/robustness",
+          "score": 0.6514806747436523
+        },
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/keywords/computer-science",
+          "score": 0.6160429120063782
+        },
+        {
+          "display_name": "Trading strategy",
+          "id": "https://openalex.org/keywords/trading-strategy",
+          "score": 0.6070163249969482
+        },
+        {
+          "display_name": "Volatility (finance)",
+          "id": "https://openalex.org/keywords/volatility",
+          "score": 0.5964659452438354
+        },
+        {
+          "display_name": "Sharpe ratio",
+          "id": "https://openalex.org/keywords/sharpe-ratio",
+          "score": 0.5727754831314087
+        },
+        {
+          "display_name": "Portfolio",
+          "id": "https://openalex.org/keywords/portfolio",
+          "score": 0.5672376751899719
+        },
+        {
+          "display_name": "Investment strategy",
+          "id": "https://openalex.org/keywords/investment-strategy",
+          "score": 0.5329825282096863
+        },
+        {
+          "display_name": "Econometrics",
+          "id": "https://openalex.org/keywords/econometrics",
+          "score": 0.47197991609573364
+        },
+        {
+          "display_name": "Machine learning",
+          "id": "https://openalex.org/keywords/machine-learning",
+          "score": 0.29285138845443726
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/keywords/economics",
+          "score": 0.26291927695274353
+        },
+        {
+          "display_name": "Market liquidity",
+          "id": "https://openalex.org/keywords/market-liquidity",
+          "score": 0.24305468797683716
+        },
+        {
+          "display_name": "Financial economics",
+          "id": "https://openalex.org/keywords/financial-economics",
+          "score": 0.21478518843650818
+        },
+        {
+          "display_name": "Finance",
+          "id": "https://openalex.org/keywords/finance",
+          "score": 0.14751681685447693
+        }
+      ],
+      "language": "en",
+      "locations": [
+        {
+          "id": "doi:10.1016/j.eswa.2015.10.040",
+          "is_accepted": true,
+          "is_oa": true,
+          "is_published": true,
+          "landing_page_url": "https://doi.org/10.1016/j.eswa.2015.10.040",
+          "license": null,
+          "license_id": null,
+          "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0957417415007447",
+          "raw_source_name": "Expert Systems with Applications",
+          "raw_type": "journal-article",
+          "source": {
+            "display_name": "Expert Systems with Applications",
+            "host_organization": "https://openalex.org/P4310320990",
+            "host_organization_lineage": [
+              "https://openalex.org/P4310320990"
+            ],
+            "host_organization_lineage_names": [
+              "Elsevier BV"
+            ],
+            "host_organization_name": "Elsevier BV",
+            "id": "https://openalex.org/S13144211",
+            "is_core": true,
+            "is_in_doaj": false,
+            "is_oa": false,
+            "issn": [
+              "0957-4174",
+              "1873-6793"
+            ],
+            "issn_l": "0957-4174",
+            "type": "journal"
+          },
+          "version": "publishedVersion"
+        },
+        {
+          "id": "pmh:oai:dnet:earchivo____::a12268b3b1e7d2015f519a2a6915eed4",
+          "is_accepted": true,
+          "is_oa": false,
+          "is_published": false,
+          "landing_page_url": "http://hdl.handle.net/10016/30770",
+          "license": null,
+          "license_id": null,
+          "pdf_url": null,
+          "raw_source_name": "",
+          "raw_type": "info:eu-repo/semantics/article",
+          "source": {
+            "display_name": "LA Referencia (Red Federada de Repositorios Institucionales de Publicaciones Cient\u00edficas)",
+            "host_organization": "https://openalex.org/I4383465926",
+            "host_organization_lineage": [
+              "https://openalex.org/I4383465926"
+            ],
+            "host_organization_lineage_names": [],
+            "host_organization_name": "LA Referencia",
+            "id": "https://openalex.org/S4306402641",
+            "is_core": false,
+            "is_in_doaj": false,
+            "is_oa": false,
+            "issn": null,
+            "issn_l": null,
+            "type": "repository"
+          },
+          "version": "acceptedVersion"
+        }
+      ],
+      "locations_count": 2,
+      "mesh": [],
+      "open_access": {
+        "any_repository_has_fulltext": false,
+        "is_oa": true,
+        "oa_status": "bronze",
+        "oa_url": "https://www.sciencedirect.com/science/article/pii/S0957417415007447"
+      },
+      "primary_location": {
+        "id": "doi:10.1016/j.eswa.2015.10.040",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": true,
+        "landing_page_url": "https://doi.org/10.1016/j.eswa.2015.10.040",
+        "license": null,
+        "license_id": null,
+        "pdf_url": "https://www.sciencedirect.com/science/article/pii/S0957417415007447",
+        "raw_source_name": "Expert Systems with Applications",
+        "raw_type": "journal-article",
+        "source": {
+          "display_name": "Expert Systems with Applications",
+          "host_organization": "https://openalex.org/P4310320990",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310320990"
+          ],
+          "host_organization_lineage_names": [
+            "Elsevier BV"
+          ],
+          "host_organization_name": "Elsevier BV",
+          "id": "https://openalex.org/S13144211",
+          "is_core": true,
+          "is_in_doaj": false,
+          "is_oa": false,
+          "issn": [
+            "0957-4174",
+            "1873-6793"
+          ],
+          "issn_l": "0957-4174",
+          "type": "journal"
+        },
+        "version": "publishedVersion"
+      },
+      "primary_topic": {
+        "display_name": "Stock Market Forecasting Methods",
+        "domain": {
+          "display_name": "Social Sciences",
+          "id": "https://openalex.org/domains/2"
+        },
+        "field": {
+          "display_name": "Decision Sciences",
+          "id": "https://openalex.org/fields/18"
+        },
+        "id": "https://openalex.org/T11326",
+        "score": 0.9994999766349792,
+        "subfield": {
+          "display_name": "Management Science and Operations Research",
+          "id": "https://openalex.org/subfields/1803"
+        }
+      },
+      "publication_date": "2015-11-04",
+      "publication_year": 2015,
+      "referenced_works": [
+        "https://openalex.org/W582003392",
+        "https://openalex.org/W842098112",
+        "https://openalex.org/W1483736078",
+        "https://openalex.org/W1497256448",
+        "https://openalex.org/W1519134063",
+        "https://openalex.org/W1555106872",
+        "https://openalex.org/W1576818901",
+        "https://openalex.org/W1806989990",
+        "https://openalex.org/W1845116111",
+        "https://openalex.org/W1972312461",
+        "https://openalex.org/W1991955539",
+        "https://openalex.org/W2024840580",
+        "https://openalex.org/W2027433115",
+        "https://openalex.org/W2034234980",
+        "https://openalex.org/W2034456203",
+        "https://openalex.org/W2036714088",
+        "https://openalex.org/W2041730429",
+        "https://openalex.org/W2049349410",
+        "https://openalex.org/W2109042184",
+        "https://openalex.org/W2132090039",
+        "https://openalex.org/W2133535658",
+        "https://openalex.org/W2145530871",
+        "https://openalex.org/W2149214223",
+        "https://openalex.org/W2166794013",
+        "https://openalex.org/W2195085701",
+        "https://openalex.org/W2344279130",
+        "https://openalex.org/W2490242742",
+        "https://openalex.org/W2499249924",
+        "https://openalex.org/W4211017114",
+        "https://openalex.org/W4299353676",
+        "https://openalex.org/W6616809325",
+        "https://openalex.org/W6623562888",
+        "https://openalex.org/W6631225230",
+        "https://openalex.org/W6633404594",
+        "https://openalex.org/W6643447232",
+        "https://openalex.org/W6676279030",
+        "https://openalex.org/W6681673365",
+        "https://openalex.org/W6684565158"
+      ],
+      "referenced_works_count": 38,
+      "related_works": [
+        "https://openalex.org/W2036327890",
+        "https://openalex.org/W3123514471",
+        "https://openalex.org/W3123746910",
+        "https://openalex.org/W4313439152",
+        "https://openalex.org/W3154045295",
+        "https://openalex.org/W3122396399",
+        "https://openalex.org/W2887643887",
+        "https://openalex.org/W4289704194",
+        "https://openalex.org/W3212910953",
+        "https://openalex.org/W1943807073"
+      ],
+      "relevance_score": 13.5589,
+      "sustainable_development_goals": [
+        {
+          "display_name": "Partnerships for the goals",
+          "id": "https://metadata.un.org/sdg/17",
+          "score": 0.5600000023841858
+        }
+      ],
+      "title": "Robust technical trading strategies using GP for algorithmic portfolio selection",
+      "topics": [
+        {
+          "display_name": "Stock Market Forecasting Methods",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T11326",
+          "score": 0.9994999766349792,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        },
+        {
+          "display_name": "Evolutionary Algorithms and Applications",
+          "domain": {
+            "display_name": "Physical Sciences",
+            "id": "https://openalex.org/domains/3"
+          },
+          "field": {
+            "display_name": "Computer Science",
+            "id": "https://openalex.org/fields/17"
+          },
+          "id": "https://openalex.org/T11975",
+          "score": 0.9958999752998352,
+          "subfield": {
+            "display_name": "Artificial Intelligence",
+            "id": "https://openalex.org/subfields/1702"
+          }
+        },
+        {
+          "display_name": "Metaheuristic Optimization Algorithms Research",
+          "domain": {
+            "display_name": "Physical Sciences",
+            "id": "https://openalex.org/domains/3"
+          },
+          "field": {
+            "display_name": "Computer Science",
+            "id": "https://openalex.org/fields/17"
+          },
+          "id": "https://openalex.org/T10100",
+          "score": 0.9940999746322632,
+          "subfield": {
+            "display_name": "Artificial Intelligence",
+            "id": "https://openalex.org/subfields/1702"
+          }
+        }
+      ],
+      "type": "article",
+      "updated_date": "2025-11-06T03:46:38.306776"
+    },
+    {
+      "abstract_inverted_index": null,
+      "apc_list": null,
+      "apc_paid": null,
+      "authorships": [
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I4210131589"
+              ],
+              "raw_affiliation_string": "Ericsson"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I106118109"
+              ],
+              "raw_affiliation_string": "E\u00f6tv\u00f6s Lor\u00e1nd University"
+            },
+            {
+              "institution_ids": [],
+              "raw_affiliation_string": "QuantSingularity Research Institute"
+            }
+          ],
+          "author": {
+            "display_name": "Abrar Ahmed",
+            "id": "https://openalex.org/A5126181947",
+            "orcid": null
+          },
+          "author_position": "first",
+          "countries": [
+            "HU"
+          ],
+          "institutions": [
+            {
+              "country_code": "HU",
+              "display_name": "E\u00f6tv\u00f6s Lor\u00e1nd University",
+              "id": "https://openalex.org/I106118109",
+              "lineage": [
+                "https://openalex.org/I106118109"
+              ],
+              "ror": "https://ror.org/01jsq2704",
+              "type": "education"
+            },
+            {
+              "country_code": "HU",
+              "display_name": "Ericsson (Hungary)",
+              "id": "https://openalex.org/I4210131589",
+              "lineage": [
+                "https://openalex.org/I1306339040",
+                "https://openalex.org/I4210131589"
+              ],
+              "ror": "https://ror.org/03c0yyz21",
+              "type": "company"
+            }
+          ],
+          "is_corresponding": true,
+          "raw_affiliation_strings": [
+            "Ericsson",
+            "E\u00f6tv\u00f6s Lor\u00e1nd University",
+            "QuantSingularity Research Institute"
+          ],
+          "raw_author_name": "Abrar Ahmed"
+        }
+      ],
+      "awards": [],
+      "best_oa_location": {
+        "id": "doi:10.2139/ssrn.6301338",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": false,
+        "landing_page_url": "https://doi.org/10.2139/ssrn.6301338",
+        "license": null,
+        "license_id": null,
+        "pdf_url": null,
+        "raw_source_name": null,
+        "raw_type": "posted-content",
+        "source": {
+          "display_name": "SSRN Electronic Journal",
+          "host_organization": "https://openalex.org/I1318003438",
+          "host_organization_lineage": [
+            "https://openalex.org/I1318003438"
+          ],
+          "host_organization_lineage_names": [],
+          "host_organization_name": "RELX Group (Netherlands)",
+          "id": "https://openalex.org/S4210172589",
+          "is_core": false,
+          "is_in_doaj": false,
+          "is_oa": true,
+          "issn": [
+            "1556-5068"
+          ],
+          "issn_l": "1556-5068",
+          "type": "repository"
+        },
+        "version": "acceptedVersion"
+      },
+      "biblio": {
+        "first_page": null,
+        "issue": null,
+        "last_page": null,
+        "volume": null
+      },
+      "citation_normalized_percentile": null,
+      "cited_by_count": 0,
+      "cited_by_percentile_year": null,
+      "concepts": [
+        {
+          "display_name": "Sharpe ratio",
+          "id": "https://openalex.org/C139938925",
+          "level": 3,
+          "score": 0.7717000246047974,
+          "wikidata": "https://www.wikidata.org/wiki/Q1501898"
+        },
+        {
+          "display_name": "Reinforcement learning",
+          "id": "https://openalex.org/C97541855",
+          "level": 2,
+          "score": 0.7071999907493591,
+          "wikidata": "https://www.wikidata.org/wiki/Q830687"
+        },
+        {
+          "display_name": "Asset allocation",
+          "id": "https://openalex.org/C139819358",
+          "level": 3,
+          "score": 0.5421000123023987,
+          "wikidata": "https://www.wikidata.org/wiki/Q462748"
+        },
+        {
+          "display_name": "Portfolio",
+          "id": "https://openalex.org/C2780821815",
+          "level": 2,
+          "score": 0.5378999710083008,
+          "wikidata": "https://www.wikidata.org/wiki/Q5340806"
+        },
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/C41008148",
+          "level": 0,
+          "score": 0.517799973487854,
+          "wikidata": "https://www.wikidata.org/wiki/Q21198"
+        },
+        {
+          "display_name": "Econometrics",
+          "id": "https://openalex.org/C149782125",
+          "level": 1,
+          "score": 0.49709999561309814,
+          "wikidata": "https://www.wikidata.org/wiki/Q160039"
+        },
+        {
+          "display_name": "Margin (machine learning)",
+          "id": "https://openalex.org/C774472",
+          "level": 2,
+          "score": 0.4893999993801117,
+          "wikidata": "https://www.wikidata.org/wiki/Q6760393"
+        },
+        {
+          "display_name": "Portfolio optimization",
+          "id": "https://openalex.org/C202655437",
+          "level": 3,
+          "score": 0.4041000008583069,
+          "wikidata": "https://www.wikidata.org/wiki/Q7231728"
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/C162324750",
+          "level": 0,
+          "score": 0.400299996137619,
+          "wikidata": "https://www.wikidata.org/wiki/Q8134"
+        },
+        {
+          "display_name": "CVAR",
+          "id": "https://openalex.org/C2779922397",
+          "level": 4,
+          "score": 0.37290000915527344,
+          "wikidata": "https://www.wikidata.org/wiki/Q5014755"
+        },
+        {
+          "display_name": "Mathematical optimization",
+          "id": "https://openalex.org/C126255220",
+          "level": 1,
+          "score": 0.37049999833106995,
+          "wikidata": "https://www.wikidata.org/wiki/Q141495"
+        },
+        {
+          "display_name": "Expected return",
+          "id": "https://openalex.org/C154611145",
+          "level": 3,
+          "score": 0.3578999936580658,
+          "wikidata": "https://www.wikidata.org/wiki/Q4331879"
+        },
+        {
+          "display_name": "Asset (computer security)",
+          "id": "https://openalex.org/C76178495",
+          "level": 2,
+          "score": 0.35679998993873596,
+          "wikidata": "https://www.wikidata.org/wiki/Q4808784"
+        },
+        {
+          "display_name": "Markov decision process",
+          "id": "https://openalex.org/C106189395",
+          "level": 3,
+          "score": 0.35100001096725464,
+          "wikidata": "https://www.wikidata.org/wiki/Q176789"
+        },
+        {
+          "display_name": "Ranking (information retrieval)",
+          "id": "https://openalex.org/C189430467",
+          "level": 2,
+          "score": 0.34630000591278076,
+          "wikidata": "https://www.wikidata.org/wiki/Q7293293"
+        },
+        {
+          "display_name": "Block (permutation group theory)",
+          "id": "https://openalex.org/C2777210771",
+          "level": 2,
+          "score": 0.3433000147342682,
+          "wikidata": "https://www.wikidata.org/wiki/Q4927124"
+        },
+        {
+          "display_name": "Artificial intelligence",
+          "id": "https://openalex.org/C154945302",
+          "level": 1,
+          "score": 0.33649998903274536,
+          "wikidata": "https://www.wikidata.org/wiki/Q11660"
+        },
+        {
+          "display_name": "Core (optical fiber)",
+          "id": "https://openalex.org/C2164484",
+          "level": 2,
+          "score": 0.3278999924659729,
+          "wikidata": "https://www.wikidata.org/wiki/Q5170150"
+        },
+        {
+          "display_name": "Operations research",
+          "id": "https://openalex.org/C42475967",
+          "level": 1,
+          "score": 0.3154999911785126,
+          "wikidata": "https://www.wikidata.org/wiki/Q194292"
+        },
+        {
+          "display_name": "Quantile regression",
+          "id": "https://openalex.org/C63817138",
+          "level": 2,
+          "score": 0.30570000410079956,
+          "wikidata": "https://www.wikidata.org/wiki/Q3455889"
+        },
+        {
+          "display_name": "Reinforcement",
+          "id": "https://openalex.org/C67203356",
+          "level": 2,
+          "score": 0.29739999771118164,
+          "wikidata": "https://www.wikidata.org/wiki/Q1321905"
+        },
+        {
+          "display_name": "Markov process",
+          "id": "https://openalex.org/C159886148",
+          "level": 2,
+          "score": 0.29440000653266907,
+          "wikidata": "https://www.wikidata.org/wiki/Q176645"
+        },
+        {
+          "display_name": "Expected utility hypothesis",
+          "id": "https://openalex.org/C205706631",
+          "level": 2,
+          "score": 0.29100000858306885,
+          "wikidata": "https://www.wikidata.org/wiki/Q2319304"
+        },
+        {
+          "display_name": "Function (biology)",
+          "id": "https://openalex.org/C14036430",
+          "level": 2,
+          "score": 0.2872999906539917,
+          "wikidata": "https://www.wikidata.org/wiki/Q3736076"
+        },
+        {
+          "display_name": "Benchmarking",
+          "id": "https://openalex.org/C86251818",
+          "level": 2,
+          "score": 0.28290000557899475,
+          "wikidata": "https://www.wikidata.org/wiki/Q816754"
+        },
+        {
+          "display_name": "Quantile",
+          "id": "https://openalex.org/C118671147",
+          "level": 2,
+          "score": 0.27140000462532043,
+          "wikidata": "https://www.wikidata.org/wiki/Q578714"
+        },
+        {
+          "display_name": "Risk\u2013return spectrum",
+          "id": "https://openalex.org/C30755413",
+          "level": 3,
+          "score": 0.27090001106262207,
+          "wikidata": "https://www.wikidata.org/wiki/Q1245402"
+        },
+        {
+          "display_name": "Statistical hypothesis testing",
+          "id": "https://openalex.org/C87007009",
+          "level": 2,
+          "score": 0.2619999945163727,
+          "wikidata": "https://www.wikidata.org/wiki/Q210832"
+        },
+        {
+          "display_name": "Statistical inference",
+          "id": "https://openalex.org/C134261354",
+          "level": 2,
+          "score": 0.2612000107765198,
+          "wikidata": "https://www.wikidata.org/wiki/Q938438"
+        },
+        {
+          "display_name": "Market portfolio",
+          "id": "https://openalex.org/C2777302077",
+          "level": 3,
+          "score": 0.259799987077713,
+          "wikidata": "https://www.wikidata.org/wiki/Q1321921"
+        },
+        {
+          "display_name": "Calibration",
+          "id": "https://openalex.org/C165838908",
+          "level": 2,
+          "score": 0.2596000134944916,
+          "wikidata": "https://www.wikidata.org/wiki/Q736777"
+        },
+        {
+          "display_name": "Markov chain",
+          "id": "https://openalex.org/C98763669",
+          "level": 2,
+          "score": 0.2572999894618988,
+          "wikidata": "https://www.wikidata.org/wiki/Q176645"
+        },
+        {
+          "display_name": "Process (computing)",
+          "id": "https://openalex.org/C98045186",
+          "level": 2,
+          "score": 0.2556999921798706,
+          "wikidata": "https://www.wikidata.org/wiki/Q205663"
+        }
+      ],
+      "content_urls": null,
+      "corresponding_author_ids": [
+        "https://openalex.org/A5126181947"
+      ],
+      "corresponding_institution_ids": [
+        "https://openalex.org/I106118109",
+        "https://openalex.org/I4210131589"
+      ],
+      "countries_distinct_count": 1,
+      "counts_by_year": [],
+      "created_date": "2026-03-14T00:00:00",
+      "display_name": "Deep Reinforcement Learning for Risk-Aware Portfolio Optimization: A Comparative Study of PPO, QR-DDPG, DDPG, and SAC under Market Uncertainty",
+      "doi": "https://doi.org/10.2139/ssrn.6301338",
+      "funders": [],
+      "fwci": null,
+      "has_content": {
+        "grobid_xml": false,
+        "pdf": false
+      },
+      "has_fulltext": false,
+      "id": "https://openalex.org/W7135167156",
+      "ids": {
+        "doi": "https://doi.org/10.2139/ssrn.6301338",
+        "openalex": "https://openalex.org/W7135167156"
+      },
+      "indexed_in": [
+        "crossref"
+      ],
+      "institutions": [],
+      "institutions_distinct_count": 1,
+      "is_paratext": false,
+      "is_retracted": false,
+      "is_xpac": false,
+      "keywords": [
+        {
+          "display_name": "Sharpe ratio",
+          "id": "https://openalex.org/keywords/sharpe-ratio",
+          "score": 0.7717000246047974
+        },
+        {
+          "display_name": "Reinforcement learning",
+          "id": "https://openalex.org/keywords/reinforcement-learning",
+          "score": 0.7071999907493591
+        },
+        {
+          "display_name": "Asset allocation",
+          "id": "https://openalex.org/keywords/asset-allocation",
+          "score": 0.5421000123023987
+        },
+        {
+          "display_name": "Portfolio",
+          "id": "https://openalex.org/keywords/portfolio",
+          "score": 0.5378999710083008
+        },
+        {
+          "display_name": "Margin (machine learning)",
+          "id": "https://openalex.org/keywords/margin",
+          "score": 0.4893999993801117
+        },
+        {
+          "display_name": "Portfolio optimization",
+          "id": "https://openalex.org/keywords/portfolio-optimization",
+          "score": 0.4041000008583069
+        },
+        {
+          "display_name": "CVAR",
+          "id": "https://openalex.org/keywords/cvar",
+          "score": 0.37290000915527344
+        },
+        {
+          "display_name": "Expected return",
+          "id": "https://openalex.org/keywords/expected-return",
+          "score": 0.3578999936580658
+        },
+        {
+          "display_name": "Asset (computer security)",
+          "id": "https://openalex.org/keywords/asset",
+          "score": 0.35679998993873596
+        },
+        {
+          "display_name": "Markov decision process",
+          "id": "https://openalex.org/keywords/markov-decision-process",
+          "score": 0.35100001096725464
+        }
+      ],
+      "language": null,
+      "locations": [
+        {
+          "id": "doi:10.2139/ssrn.6301338",
+          "is_accepted": true,
+          "is_oa": true,
+          "is_published": false,
+          "landing_page_url": "https://doi.org/10.2139/ssrn.6301338",
+          "license": null,
+          "license_id": null,
+          "pdf_url": null,
+          "raw_source_name": null,
+          "raw_type": "posted-content",
+          "source": {
+            "display_name": "SSRN Electronic Journal",
+            "host_organization": "https://openalex.org/I1318003438",
+            "host_organization_lineage": [
+              "https://openalex.org/I1318003438"
+            ],
+            "host_organization_lineage_names": [],
+            "host_organization_name": "RELX Group (Netherlands)",
+            "id": "https://openalex.org/S4210172589",
+            "is_core": false,
+            "is_in_doaj": false,
+            "is_oa": true,
+            "issn": [
+              "1556-5068"
+            ],
+            "issn_l": "1556-5068",
+            "type": "repository"
+          },
+          "version": "acceptedVersion"
+        }
+      ],
+      "locations_count": 1,
+      "mesh": [],
+      "open_access": {
+        "any_repository_has_fulltext": true,
+        "is_oa": true,
+        "oa_status": "green",
+        "oa_url": "https://doi.org/10.2139/ssrn.6301338"
+      },
+      "primary_location": {
+        "id": "doi:10.2139/ssrn.6301338",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": false,
+        "landing_page_url": "https://doi.org/10.2139/ssrn.6301338",
+        "license": null,
+        "license_id": null,
+        "pdf_url": null,
+        "raw_source_name": null,
+        "raw_type": "posted-content",
+        "source": {
+          "display_name": "SSRN Electronic Journal",
+          "host_organization": "https://openalex.org/I1318003438",
+          "host_organization_lineage": [
+            "https://openalex.org/I1318003438"
+          ],
+          "host_organization_lineage_names": [],
+          "host_organization_name": "RELX Group (Netherlands)",
+          "id": "https://openalex.org/S4210172589",
+          "is_core": false,
+          "is_in_doaj": false,
+          "is_oa": true,
+          "issn": [
+            "1556-5068"
+          ],
+          "issn_l": "1556-5068",
+          "type": "repository"
+        },
+        "version": "acceptedVersion"
+      },
+      "primary_topic": {
+        "display_name": "Advanced Bandit Algorithms Research",
+        "domain": {
+          "display_name": "Social Sciences",
+          "id": "https://openalex.org/domains/2"
+        },
+        "field": {
+          "display_name": "Decision Sciences",
+          "id": "https://openalex.org/fields/18"
+        },
+        "id": "https://openalex.org/T12101",
+        "score": 0.20509999990463257,
+        "subfield": {
+          "display_name": "Management Science and Operations Research",
+          "id": "https://openalex.org/subfields/1803"
+        }
+      },
+      "publication_date": "2026-01-01",
+      "publication_year": 2026,
+      "referenced_works": [],
+      "referenced_works_count": 0,
+      "related_works": [],
+      "relevance_score": 7.6320925,
+      "sustainable_development_goals": [
+        {
+          "display_name": "Peace, Justice and strong institutions",
+          "id": "https://metadata.un.org/sdg/16",
+          "score": 0.6169049143791199
+        }
+      ],
+      "title": "Deep Reinforcement Learning for Risk-Aware Portfolio Optimization: A Comparative Study of PPO, QR-DDPG, DDPG, and SAC under Market Uncertainty",
+      "topics": [
+        {
+          "display_name": "Advanced Bandit Algorithms Research",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T12101",
+          "score": 0.20509999990463257,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        },
+        {
+          "display_name": "Stock Market Forecasting Methods",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T11326",
+          "score": 0.19850000739097595,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        },
+        {
+          "display_name": "Risk and Portfolio Optimization",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T11413",
+          "score": 0.19830000400543213,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        }
+      ],
+      "type": "preprint",
+      "updated_date": "2026-03-14T06:46:50.379900"
+    },
+    {
+      "abstract_inverted_index": null,
+      "apc_list": null,
+      "apc_paid": null,
+      "authorships": [
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "Dip Roy",
+            "id": "https://openalex.org/A5019705967",
+            "orcid": null
+          },
+          "author_position": "first",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": true,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "Dip Roy",
+          "raw_orcid": "https://orcid.org/0009-0003-1519-8179"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "Rajiv Misra",
+            "id": "https://openalex.org/A5081123737",
+            "orcid": "https://orcid.org/0000-0002-4910-5749"
+          },
+          "author_position": "middle",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "Rajiv Misra",
+          "raw_orcid": "https://orcid.org/0000-0002-4910-5749"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "Sanjay  Kumar Singh",
+            "id": "https://openalex.org/A5135091154",
+            "orcid": "https://orcid.org/0000-0002-6546-7643"
+          },
+          "author_position": "middle",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "Sanjay  Kumar Singh",
+          "raw_orcid": "https://orcid.org/0000-0002-6546-7643"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "Anisha Roy",
+            "id": "https://openalex.org/A5130443283",
+            "orcid": null
+          },
+          "author_position": "last",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "Anisha Roy",
+          "raw_orcid": "https://orcid.org/0009-0003-9669-7390"
+        }
+      ],
+      "awards": [],
+      "best_oa_location": {
+        "id": "doi:10.2139/ssrn.6676600",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": false,
+        "landing_page_url": "https://doi.org/10.2139/ssrn.6676600",
+        "license": null,
+        "license_id": null,
+        "pdf_url": null,
+        "raw_source_name": null,
+        "raw_type": "posted-content",
+        "source": {
+          "display_name": "SSRN Electronic Journal",
+          "host_organization": "https://openalex.org/I1318003438",
+          "host_organization_lineage": [
+            "https://openalex.org/I1318003438"
+          ],
+          "host_organization_lineage_names": [],
+          "host_organization_name": "RELX Group (Netherlands)",
+          "id": "https://openalex.org/S4210172589",
+          "is_core": false,
+          "is_in_doaj": false,
+          "is_oa": true,
+          "issn": [
+            "1556-5068"
+          ],
+          "issn_l": "1556-5068",
+          "type": "repository"
+        },
+        "version": "acceptedVersion"
+      },
+      "biblio": {
+        "first_page": null,
+        "issue": null,
+        "last_page": null,
+        "volume": null
+      },
+      "citation_normalized_percentile": null,
+      "cited_by_count": 0,
+      "cited_by_percentile_year": null,
+      "concepts": [
+        {
+          "display_name": "Interpretability",
+          "id": "https://openalex.org/C2781067378",
+          "level": 2,
+          "score": 0.9088000059127808,
+          "wikidata": "https://www.wikidata.org/wiki/Q17027399"
+        },
+        {
+          "display_name": "Financial market",
+          "id": "https://openalex.org/C19244329",
+          "level": 2,
+          "score": 0.5080000162124634,
+          "wikidata": "https://www.wikidata.org/wiki/Q208697"
+        },
+        {
+          "display_name": "Equity (law)",
+          "id": "https://openalex.org/C199728807",
+          "level": 2,
+          "score": 0.5029000043869019,
+          "wikidata": "https://www.wikidata.org/wiki/Q2578557"
+        },
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/C41008148",
+          "level": 0,
+          "score": 0.4690999984741211,
+          "wikidata": "https://www.wikidata.org/wiki/Q21198"
+        },
+        {
+          "display_name": "Autoencoder",
+          "id": "https://openalex.org/C101738243",
+          "level": 3,
+          "score": 0.42590001225471497,
+          "wikidata": "https://www.wikidata.org/wiki/Q786435"
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/C162324750",
+          "level": 0,
+          "score": 0.41929998993873596,
+          "wikidata": "https://www.wikidata.org/wiki/Q8134"
+        },
+        {
+          "display_name": "Artificial intelligence",
+          "id": "https://openalex.org/C154945302",
+          "level": 1,
+          "score": 0.3968000113964081,
+          "wikidata": "https://www.wikidata.org/wiki/Q11660"
+        },
+        {
+          "display_name": "Econometrics",
+          "id": "https://openalex.org/C149782125",
+          "level": 1,
+          "score": 0.391400009393692,
+          "wikidata": "https://www.wikidata.org/wiki/Q160039"
+        },
+        {
+          "display_name": "Key (lock)",
+          "id": "https://openalex.org/C26517878",
+          "level": 2,
+          "score": 0.36469998955726624,
+          "wikidata": "https://www.wikidata.org/wiki/Q228039"
+        },
+        {
+          "display_name": "Machine learning",
+          "id": "https://openalex.org/C119857082",
+          "level": 1,
+          "score": 0.3418000042438507,
+          "wikidata": "https://www.wikidata.org/wiki/Q2539"
+        },
+        {
+          "display_name": "Layer (electronics)",
+          "id": "https://openalex.org/C2779227376",
+          "level": 2,
+          "score": 0.3377000093460083,
+          "wikidata": "https://www.wikidata.org/wiki/Q6505497"
+        },
+        {
+          "display_name": "Financial modeling",
+          "id": "https://openalex.org/C23925645",
+          "level": 2,
+          "score": 0.33180001378059387,
+          "wikidata": "https://www.wikidata.org/wiki/Q5449731"
+        },
+        {
+          "display_name": "Market data",
+          "id": "https://openalex.org/C114118609",
+          "level": 2,
+          "score": 0.3287000060081482,
+          "wikidata": "https://www.wikidata.org/wiki/Q3036837"
+        },
+        {
+          "display_name": "Valuation (finance)",
+          "id": "https://openalex.org/C186027771",
+          "level": 2,
+          "score": 0.32100000977516174,
+          "wikidata": "https://www.wikidata.org/wiki/Q4008379"
+        },
+        {
+          "display_name": "Financial instrument",
+          "id": "https://openalex.org/C191654821",
+          "level": 2,
+          "score": 0.3068999946117401,
+          "wikidata": "https://www.wikidata.org/wiki/Q247506"
+        },
+        {
+          "display_name": "Finance",
+          "id": "https://openalex.org/C10138342",
+          "level": 1,
+          "score": 0.29660001397132874,
+          "wikidata": "https://www.wikidata.org/wiki/Q43015"
+        },
+        {
+          "display_name": "Relative value",
+          "id": "https://openalex.org/C201236551",
+          "level": 2,
+          "score": 0.29280000925064087,
+          "wikidata": "https://www.wikidata.org/wiki/Q7310809"
+        },
+        {
+          "display_name": "Complete information",
+          "id": "https://openalex.org/C113336015",
+          "level": 2,
+          "score": 0.26980000734329224,
+          "wikidata": "https://www.wikidata.org/wiki/Q574010"
+        },
+        {
+          "display_name": "Style analysis",
+          "id": "https://openalex.org/C2776172590",
+          "level": 4,
+          "score": 0.26759999990463257,
+          "wikidata": "https://www.wikidata.org/wiki/Q7629421"
+        },
+        {
+          "display_name": "Discretization",
+          "id": "https://openalex.org/C73000952",
+          "level": 2,
+          "score": 0.267300009727478,
+          "wikidata": "https://www.wikidata.org/wiki/Q17007827"
+        },
+        {
+          "display_name": "Complex dynamics",
+          "id": "https://openalex.org/C126701199",
+          "level": 2,
+          "score": 0.2630999982357025,
+          "wikidata": "https://www.wikidata.org/wiki/Q264224"
+        },
+        {
+          "display_name": "Intervention (counseling)",
+          "id": "https://openalex.org/C2780665704",
+          "level": 2,
+          "score": 0.26109999418258667,
+          "wikidata": "https://www.wikidata.org/wiki/Q959298"
+        },
+        {
+          "display_name": "Stock market",
+          "id": "https://openalex.org/C2780299701",
+          "level": 3,
+          "score": 0.25929999351501465,
+          "wikidata": "https://www.wikidata.org/wiki/Q475000"
+        },
+        {
+          "display_name": "State variable",
+          "id": "https://openalex.org/C129537906",
+          "level": 2,
+          "score": 0.25040000677108765,
+          "wikidata": "https://www.wikidata.org/wiki/Q7603913"
+        }
+      ],
+      "content_urls": null,
+      "corresponding_author_ids": [
+        "https://openalex.org/A5019705967"
+      ],
+      "corresponding_institution_ids": [],
+      "countries_distinct_count": 0,
+      "counts_by_year": [],
+      "created_date": "2026-05-04T00:00:00",
+      "display_name": "Opening the Selective Gate: Mechanistic Interpretability of Mamba\u2019s Latent State Dynamics for Financial Market Regime Discovery",
+      "doi": "https://doi.org/10.2139/ssrn.6676600",
+      "funders": [],
+      "fwci": null,
+      "has_content": {
+        "grobid_xml": false,
+        "pdf": false
+      },
+      "has_fulltext": false,
+      "id": "https://openalex.org/W7159989521",
+      "ids": {
+        "doi": "https://doi.org/10.2139/ssrn.6676600",
+        "openalex": "https://openalex.org/W7159989521"
+      },
+      "indexed_in": [
+        "crossref"
+      ],
+      "institutions": [],
+      "institutions_distinct_count": 4,
+      "is_paratext": false,
+      "is_retracted": false,
+      "is_xpac": false,
+      "keywords": [
+        {
+          "display_name": "Interpretability",
+          "id": "https://openalex.org/keywords/interpretability",
+          "score": 0.9088000059127808
+        },
+        {
+          "display_name": "Financial market",
+          "id": "https://openalex.org/keywords/financial-market",
+          "score": 0.5080000162124634
+        },
+        {
+          "display_name": "Equity (law)",
+          "id": "https://openalex.org/keywords/equity",
+          "score": 0.5029000043869019
+        },
+        {
+          "display_name": "Autoencoder",
+          "id": "https://openalex.org/keywords/autoencoder",
+          "score": 0.42590001225471497
+        },
+        {
+          "display_name": "Key (lock)",
+          "id": "https://openalex.org/keywords/key",
+          "score": 0.36469998955726624
+        },
+        {
+          "display_name": "Layer (electronics)",
+          "id": "https://openalex.org/keywords/layer",
+          "score": 0.3377000093460083
+        },
+        {
+          "display_name": "Financial modeling",
+          "id": "https://openalex.org/keywords/financial-modeling",
+          "score": 0.33180001378059387
+        },
+        {
+          "display_name": "Market data",
+          "id": "https://openalex.org/keywords/market-data",
+          "score": 0.3287000060081482
+        }
+      ],
+      "language": null,
+      "locations": [
+        {
+          "id": "doi:10.2139/ssrn.6676600",
+          "is_accepted": true,
+          "is_oa": true,
+          "is_published": false,
+          "landing_page_url": "https://doi.org/10.2139/ssrn.6676600",
+          "license": null,
+          "license_id": null,
+          "pdf_url": null,
+          "raw_source_name": null,
+          "raw_type": "posted-content",
+          "source": {
+            "display_name": "SSRN Electronic Journal",
+            "host_organization": "https://openalex.org/I1318003438",
+            "host_organization_lineage": [
+              "https://openalex.org/I1318003438"
+            ],
+            "host_organization_lineage_names": [],
+            "host_organization_name": "RELX Group (Netherlands)",
+            "id": "https://openalex.org/S4210172589",
+            "is_core": false,
+            "is_in_doaj": false,
+            "is_oa": true,
+            "issn": [
+              "1556-5068"
+            ],
+            "issn_l": "1556-5068",
+            "type": "repository"
+          },
+          "version": "acceptedVersion"
+        }
+      ],
+      "locations_count": 1,
+      "mesh": [],
+      "open_access": {
+        "any_repository_has_fulltext": true,
+        "is_oa": true,
+        "oa_status": "green",
+        "oa_url": "https://doi.org/10.2139/ssrn.6676600"
+      },
+      "primary_location": {
+        "id": "doi:10.2139/ssrn.6676600",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": false,
+        "landing_page_url": "https://doi.org/10.2139/ssrn.6676600",
+        "license": null,
+        "license_id": null,
+        "pdf_url": null,
+        "raw_source_name": null,
+        "raw_type": "posted-content",
+        "source": {
+          "display_name": "SSRN Electronic Journal",
+          "host_organization": "https://openalex.org/I1318003438",
+          "host_organization_lineage": [
+            "https://openalex.org/I1318003438"
+          ],
+          "host_organization_lineage_names": [],
+          "host_organization_name": "RELX Group (Netherlands)",
+          "id": "https://openalex.org/S4210172589",
+          "is_core": false,
+          "is_in_doaj": false,
+          "is_oa": true,
+          "issn": [
+            "1556-5068"
+          ],
+          "issn_l": "1556-5068",
+          "type": "repository"
+        },
+        "version": "acceptedVersion"
+      },
+      "primary_topic": {
+        "display_name": "Stock Market Forecasting Methods",
+        "domain": {
+          "display_name": "Social Sciences",
+          "id": "https://openalex.org/domains/2"
+        },
+        "field": {
+          "display_name": "Decision Sciences",
+          "id": "https://openalex.org/fields/18"
+        },
+        "id": "https://openalex.org/T11326",
+        "score": 0.296099990606308,
+        "subfield": {
+          "display_name": "Management Science and Operations Research",
+          "id": "https://openalex.org/subfields/1803"
+        }
+      },
+      "publication_date": "2026-01-01",
+      "publication_year": 2026,
+      "referenced_works": [],
+      "referenced_works_count": 0,
+      "related_works": [],
+      "relevance_score": 7.2516804,
+      "sustainable_development_goals": [],
+      "title": "Opening the Selective Gate: Mechanistic Interpretability of Mamba\u2019s Latent State Dynamics for Financial Market Regime Discovery",
+      "topics": [
+        {
+          "display_name": "Stock Market Forecasting Methods",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T11326",
+          "score": 0.296099990606308,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        },
+        {
+          "display_name": "Forecasting Techniques and Applications",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T11918",
+          "score": 0.08240000158548355,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        },
+        {
+          "display_name": "Time Series Analysis and Forecasting",
+          "domain": {
+            "display_name": "Physical Sciences",
+            "id": "https://openalex.org/domains/3"
+          },
+          "field": {
+            "display_name": "Computer Science",
+            "id": "https://openalex.org/fields/17"
+          },
+          "id": "https://openalex.org/T12205",
+          "score": 0.051500000059604645,
+          "subfield": {
+            "display_name": "Signal Processing",
+            "id": "https://openalex.org/subfields/1711"
+          }
+        }
+      ],
+      "type": "preprint",
+      "updated_date": "2026-05-04T06:06:13.049942"
+    },
+    {
+      "abstract_inverted_index": {
+        "$124,290": [
+          24
+        ],
+        "$2.24": [
+          17
+        ],
+        "&": [
+          360
+        ],
+        "(1)": [
+          464
+        ],
+        "(2)": [
+          481
+        ],
+        "(3)": [
+          496
+        ],
+        "(Bull,": [
+          376
+        ],
+        "(DPT)": [
+          149
+        ],
+        "(DSS)": [
+          67
+        ],
+        "(EEG,": [
+          323
+        ],
+        "(IPT),": [
+          154
+        ],
+        "(System": [
+          182,
+          186
+        ],
+        "(cognitive": [
+          328
+        ],
+        "(control,": [
+          352
+        ],
+        "(decision": [
+          316
+        ],
+        "(e.g.,": [
+          513
+        ],
+        "(fast,": [
+          207
+        ],
+        "(n": [
+          310
+        ],
+        "(slow,": [
+          213
+        ],
+        "1": [
+          206,
+          225
+        ],
+        "1)": [
+          183
+        ],
+        "124)": [
+          312
+        ],
+        "18.37%": [
+          42
+        ],
+        "2": [
+          212,
+          242
+        ],
+        "2)": [
+          187
+        ],
+        "2025,": [
+          27
+        ],
+        "3\u00d73": [
+          340
+        ],
+        "=": [
+          311
+        ],
+        "Additionally,": [
+          434
+        ],
+        "August": [
+          26
+        ],
+        "Bear,": [
+          377
+        ],
+        "Bitcoin's": [
+          38
+        ],
+        "Bitcoin,": [
+          11
+        ],
+        "Consequently,": [
+          46
+        ],
+        "Cryptocurrency": [
+          0
+        ],
+        "DSS": [
+          99,
+          122,
+          131,
+          159,
+          173,
+          405,
+          415,
+          444,
+          504
+        ],
+        "Despite": [
+          35
+        ],
+        "Drawing": [
+          145
+        ],
+        "Dual-Process": [
+          147,
+          201,
+          468
+        ],
+        "Embedding": [
+          232
+        ],
+        "Fear": [
+          359
+        ],
+        "Financial": [
+          112
+        ],
+        "Furthermore,": [
+          249
+        ],
+        "Greed": [
+          361
+        ],
+        "However,": [
+          63
+        ],
+        "In": [
+          94,
+          217
+        ],
+        "Index,": [
+          362
+        ],
+        "Information": [
+          109,
+          151,
+          485
+        ],
+        "Mediation": [
+          417
+        ],
+        "Our": [
+          379
+        ],
+        "Processing": [
+          152,
+          486
+        ],
+        "Sentiment": [
+          271
+        ],
+        "Sideways).": [
+          378
+        ],
+        "System": [
+          205,
+          211,
+          224,
+          241
+        ],
+        "Systems": [
+          110
+        ],
+        "Technology": [
+          113
+        ],
+        "The": [
+          127
+        ],
+        "Theory": [
+          148,
+          153,
+          202,
+          487
+        ],
+        "Theory,": [
+          469
+        ],
+        "We": [
+          165,
+          301,
+          337,
+          397,
+          456
+        ],
+        "Within": [
+          107
+        ],
+        "a": [
+          13,
+          50,
+          117,
+          157,
+          197,
+          307,
+          339,
+          349,
+          373,
+          500
+        ],
+        "above": [
+          23
+        ],
+        "accelerate": [
+          33
+        ],
+        "acceptance,": [
+          9
+        ],
+        "act": [
+          236
+        ],
+        "advancement": [
+          483
+        ],
+        "affect-driven": [
+          141
+        ],
+        "affect-driven)": [
+          209
+        ],
+        "affective": [
+          90,
+          105,
+          490
+        ],
+        "affective-cognitive": [
+          162,
+          503
+        ],
+        "all-time": [
+          21
+        ],
+        "an": [
+          4,
+          465,
+          482
+        ],
+        "analyses": [
+          418
+        ],
+        "analysis": [
+          102,
+          439
+        ],
+        "and": [
+          7,
+          59,
+          71,
+          103,
+          111,
+          124,
+          150,
+          210,
+          265,
+          293,
+          318,
+          325,
+          333,
+          363,
+          369,
+          393,
+          410,
+          427,
+          454
+        ],
+        "anticipate": [
+          436
+        ],
+        "are": [
+          419
+        ],
+        "argue": [
+          166
+        ],
+        "as": [
+          43,
+          221,
+          237,
+          348,
+          372,
+          449,
+          462,
+          492
+        ],
+        "at": [
+          41
+        ],
+        "attention": [
+          295
+        ],
+        "availability": [
+          260
+        ],
+        "based": [
+          356
+        ],
+        "behavior.": [
+          93
+        ],
+        "behavioral": [
+          125,
+          334
+        ],
+        "between": [
+          204
+        ],
+        "between-subjects": [
+          350
+        ],
+        "beyond": [
+          511
+        ],
+        "bias": [
+          335
+        ],
+        "biases": [
+          447
+        ],
+        "boasting": [
+          12
+        ],
+        "bounded": [
+          262,
+          286
+        ],
+        "by": [
+          54,
+          69,
+          488
+        ],
+        "can": [
+          174,
+          235,
+          279,
+          445,
+          474
+        ],
+        "cap": [
+          15
+        ],
+        "characterized": [
+          53
+        ],
+        "cognition.": [
+          216
+        ],
+        "cognitive": [
+          263,
+          287,
+          388,
+          425
+        ],
+        "cognitive-rational": [
+          101,
+          130
+        ],
+        "complexity": [
+          292
+        ],
+        "conceptual": [
+          380
+        ],
+        "condition": [
+          347
+        ],
+        "contexts": [
+          219
+        ],
+        "contextual": [
+          281,
+          364
+        ],
+        "continues": [
+          31
+        ],
+        "contribution": [
+          461
+        ],
+        "control": [
+          414
+        ],
+        "cost-effective": [
+          83
+        ],
+        "creates": [
+          116
+        ],
+        "crisis": [
+          515
+        ],
+        "cryptocurrency": [
+          47,
+          222
+        ],
+        "cues": [
+          170,
+          234,
+          272,
+          385,
+          491
+        ],
+        "current": [
+          121
+        ],
+        "data": [
+          77
+        ],
+        "decision": [
+          51,
+          64,
+          238,
+          255,
+          299,
+          395,
+          408,
+          509
+        ],
+        "decision-makers": [
+          176
+        ],
+        "decision-making.": [
+          126,
+          480
+        ],
+        "decisions": [
+          195
+        ],
+        "decisions.": [
+          231
+        ],
+        "deeper": [
+          428
+        ],
+        "deliberative": [
+          185,
+          476
+        ],
+        "deliberative,": [
+          214
+        ],
+        "demonstrate": [
+          406
+        ],
+        "depends": [
+          257
+        ],
+        "depth,": [
+          332
+        ],
+        "design": [
+          123,
+          473,
+          505
+        ],
+        "design,": [
+          343
+        ],
+        "display": [
+          346
+        ],
+        "disposition": [
+          451
+        ],
+        "distinguishes": [
+          203
+        ],
+        "dominate.": [
+          144
+        ],
+        "dominates,": [
+          227
+        ],
+        "drivers": [
+          91
+        ],
+        "effect,": [
+          452
+        ],
+        "effects.": [
+          433
+        ],
+        "efficiently,": [
+          296
+        ],
+        "effortful)": [
+          215
+        ],
+        "embedded": [
+          171
+        ],
+        "emotional": [
+          61
+        ],
+        "emphasize": [
+          100
+        ],
+        "employ": [
+          338
+        ],
+        "encouraging": [
+          240
+        ],
+        "engagement": [
+          243
+        ],
+        "enhance": [
+          390
+        ],
+        "enhancing": [
+          190
+        ],
+        "environment": [
+          52
+        ],
+        "environment.": [
+          200
+        ],
+        "environments": [
+          137,
+          510
+        ],
+        "especially": [
+          133
+        ],
+        "existing": [
+          97
+        ],
+        "expect": [
+          398
+        ],
+        "expected": [
+          420,
+          460
+        ],
+        "experiment": [
+          309
+        ],
+        "experimental": [
+          342
+        ],
+        "explain": [
+          431
+        ],
+        "explicit": [
+          168
+        ],
+        "extension": [
+          466
+        ],
+        "extreme": [
+          55
+        ],
+        "extreme.": [
+          248
+        ],
+        "eye-tracking),": [
+          324
+        ],
+        "factor": [
+          351,
+          375
+        ],
+        "fast,": [
+          139,
+          180
+        ],
+        "finance": [
+          512
+        ],
+        "financial": [
+          80,
+          98,
+          479
+        ],
+        "find": [
+          400
+        ],
+        "focus": [
+          74
+        ],
+        "follows:": [
+          463
+        ],
+        "for": [
+          507
+        ],
+        "fragmented": [
+          57
+        ],
+        "framing": [
+          282,
+          494
+        ],
+        "from": [
+          179
+        ],
+        "further": [
+          438
+        ],
+        "gap": [
+          119
+        ],
+        "globally.": [
+          34
+        ],
+        "growth,": [
+          37
+        ],
+        "have": [
+          2
+        ],
+        "healthcare,": [
+          514
+        ],
+        "herding,": [
+          453
+        ],
+        "high-emotion": [
+          508
+        ],
+        "high-volatility": [
+          218
+        ],
+        "higher": [
+          407
+        ],
+        "highly": [
+          198
+        ],
+        "highs": [
+          22
+        ],
+        "hitting": [
+          19
+        ],
+        "how": [
+          471
+        ],
+        "i.e.,": [
+          355
+        ],
+        "illustrating": [
+          489
+        ],
+        "impact.": [
+          62
+        ],
+        "improve": [
+          394
+        ],
+        "improving": [
+          298
+        ],
+        "in": [
+          25,
+          120,
+          135,
+          172,
+          196,
+          478
+        ],
+        "information": [
+          163,
+          250,
+          290,
+          330,
+          391,
+          429
+        ],
+        "information,": [
+          58
+        ],
+        "information.": [
+          270
+        ],
+        "inputs.": [
+          106
+        ],
+        "institutional": [
+          29
+        ],
+        "integrates": [
+          161
+        ],
+        "integration": [
+          30
+        ],
+        "interpretation),": [
+          368
+        ],
+        "introduction": [
+          498
+        ],
+        "intuitive": [
+          181
+        ],
+        "intuitive,": [
+          140,
+          208
+        ],
+        "investors": [
+          70
+        ],
+        "is": [
+          132,
+          247
+        ],
+        "laboratory": [
+          308
+        ],
+        "leading": [
+          228
+        ],
+        "literature,": [
+          114
+        ],
+        "load": [
+          426
+        ],
+        "load,": [
+          329,
+          389
+        ],
+        "load-reducing,": [
+          493
+        ],
+        "mainstream": [
+          8
+        ],
+        "management).": [
+          516
+        ],
+        "market": [
+          14,
+          245,
+          370
+        ],
+        "markets": [
+          1,
+          48
+        ],
+        "markets,": [
+          223
+        ],
+        "measurement).": [
+          336
+        ],
+        "measurements": [
+          322
+        ],
+        "measures": [
+          315,
+          327
+        ],
+        "methods": [
+          85
+        ],
+        "mid-2025.": [
+          45
+        ],
+        "mitigate": [
+          446
+        ],
+        "mixed-factorial": [
+          341
+        ],
+        "model": [
+          381,
+          501
+        ],
+        "needed": [
+          285
+        ],
+        "negative": [
+          277
+        ],
+        "neglect": [
+          104
+        ],
+        "new": [
+          20
+        ],
+        "nudges,": [
+          239
+        ],
+        "numeric": [
+          353
+        ],
+        "of": [
+          16,
+          44,
+          92,
+          129,
+          193,
+          261,
+          269,
+          403,
+          467,
+          484,
+          499,
+          502
+        ],
+        "offering": [
+          79
+        ],
+        "often": [
+          143,
+          226
+        ],
+        "on": [
+          75,
+          146,
+          258,
+          357
+        ],
+        "or": [
+          276,
+          283
+        ],
+        "other": [
+          95
+        ],
+        "outcome": [
+          314
+        ],
+        "overconfidence.": [
+          455
+        ],
+        "overlooking": [
+          88
+        ],
+        "paper\u2019s": [
+          459
+        ],
+        "performance),": [
+          320
+        ],
+        "performance.": [
+          300
+        ],
+        "portfolio": [
+          319,
+          411
+        ],
+        "positive": [
+          275
+        ],
+        "posits": [
+          253
+        ],
+        "predicts": [
+          382
+        ],
+        "predominance": [
+          128
+        ],
+        "present": [
+          49
+        ],
+        "presentation": [
+          268
+        ],
+        "primarily": [
+          73
+        ],
+        "problematic": [
+          134
+        ],
+        "process": [
+          326
+        ],
+        "processing": [
+          251,
+          331,
+          430,
+          477
+        ],
+        "processing,": [
+          188,
+          392
+        ],
+        "processing.": [
+          164
+        ],
+        "products": [
+          81
+        ],
+        "prompt": [
+          175,
+          475
+        ],
+        "propose": [
+          156
+        ],
+        "proposition": [
+          305
+        ],
+        "provide": [
+          280
+        ],
+        "psychophysiological": [
+          321
+        ],
+        "quality": [
+          192,
+          256,
+          317,
+          409
+        ],
+        "quality.": [
+          396
+        ],
+        "rational-analytic": [
+          76
+        ],
+        "reached": [
+          3
+        ],
+        "reallocating": [
+          294
+        ],
+        "reduce": [
+          387
+        ],
+        "reduced": [
+          424
+        ],
+        "reducing": [
+          289
+        ],
+        "regime": [
+          371
+        ],
+        "remains": [
+          40
+        ],
+        "resource,": [
+          288
+        ],
+        "resources": [
+          264
+        ],
+        "returns": [
+          412
+        ],
+        "reveal": [
+          422,
+          441
+        ],
+        "scale": [
+          6
+        ],
+        "search": [
+          291
+        ],
+        "sentiment": [
+          169,
+          233,
+          246,
+          345,
+          365,
+          384
+        ],
+        "sentiment,": [
+          354
+        ],
+        "sentiment-augmented": [
+          158,
+          404,
+          443
+        ],
+        "sentiments": [
+          142
+        ],
+        "shift": [
+          178
+        ],
+        "showing": [
+          470
+        ],
+        "significant": [
+          60,
+          118
+        ],
+        "structured": [
+          267
+        ],
+        "suboptimal": [
+          230
+        ],
+        "such": [
+          220,
+          448
+        ],
+        "suited": [
+          506
+        ],
+        "summarize": [
+          457
+        ],
+        "support": [
+          65
+        ],
+        "system": [
+          472
+        ],
+        "systems": [
+          66
+        ],
+        "technical": [
+          84
+        ],
+        "test": [
+          303
+        ],
+        "textual": [
+          367
+        ],
+        "than": [
+          413
+        ],
+        "that": [
+          160,
+          167,
+          254,
+          383,
+          401,
+          423,
+          437,
+          442
+        ],
+        "the": [
+          89,
+          108,
+          191,
+          259,
+          266,
+          284,
+          358,
+          450,
+          458,
+          497
+        ],
+        "their": [
+          194
+        ],
+        "theory": [
+          252
+        ],
+        "thereby": [
+          189,
+          297
+        ],
+        "these": [
+          432
+        ],
+        "this": [
+          36,
+          115,
+          304
+        ],
+        "through": [
+          82,
+          306
+        ],
+        "to": [
+          32,
+          177,
+          184,
+          229,
+          399,
+          421
+        ],
+        "tools.": [
+          495
+        ],
+        "traders": [
+          72
+        ],
+        "trillion,": [
+          18
+        ],
+        "unprecedented": [
+          5
+        ],
+        "used": [
+          68
+        ],
+        "users": [
+          402
+        ],
+        "users.": [
+          416
+        ],
+        "volatile": [
+          136,
+          199
+        ],
+        "volatility": [
+          39
+        ],
+        "volatility,": [
+          56
+        ],
+        "we": [
+          155,
+          435
+        ],
+        "when": [
+          244
+        ],
+        "where": [
+          138
+        ],
+        "whether": [
+          274
+        ],
+        "while": [
+          28,
+          87
+        ],
+        "will": [
+          302,
+          386,
+          440
+        ],
+        "with": [
+          10,
+          313,
+          344,
+          366
+        ],
+        "within-subjects": [
+          374
+        ],
+        "words,": [
+          96
+        ],
+        "\u2013": [
+          78,
+          86,
+          273,
+          278
+        ]
+      },
+      "apc_list": null,
+      "apc_paid": null,
+      "authorships": [
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "Daniel N. Treku",
+            "id": "https://openalex.org/A5064432644",
+            "orcid": "https://orcid.org/0000-0002-9907-3407"
+          },
+          "author_position": "first",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": true,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "Treku, Daniel"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "Shahbaz Khan",
+            "id": "https://openalex.org/A5076290874",
+            "orcid": "https://orcid.org/0000-0003-3543-9729"
+          },
+          "author_position": "last",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "Khan, Shahbaz"
+        }
+      ],
+      "awards": [],
+      "best_oa_location": null,
+      "biblio": {
+        "first_page": null,
+        "issue": null,
+        "last_page": null,
+        "volume": null
+      },
+      "citation_normalized_percentile": {
+        "is_in_top_10_percent": false,
+        "is_in_top_1_percent": false,
+        "value": 0.86653242
+      },
+      "cited_by_count": 0,
+      "cited_by_percentile_year": null,
+      "concepts": [
+        {
+          "display_name": "Cryptocurrency",
+          "id": "https://openalex.org/C180706569",
+          "level": 2,
+          "score": 0.7353000044822693,
+          "wikidata": "https://www.wikidata.org/wiki/Q13479982"
+        },
+        {
+          "display_name": "Mainstream",
+          "id": "https://openalex.org/C2777617010",
+          "level": 2,
+          "score": 0.5705999732017517,
+          "wikidata": "https://www.wikidata.org/wiki/Q18957"
+        },
+        {
+          "display_name": "Decision support system",
+          "id": "https://openalex.org/C107327155",
+          "level": 2,
+          "score": 0.5467000007629395,
+          "wikidata": "https://www.wikidata.org/wiki/Q330268"
+        },
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/C41008148",
+          "level": 0,
+          "score": 0.4860000014305115,
+          "wikidata": "https://www.wikidata.org/wiki/Q21198"
+        },
+        {
+          "display_name": "Sentiment analysis",
+          "id": "https://openalex.org/C66402592",
+          "level": 2,
+          "score": 0.4456999897956848,
+          "wikidata": "https://www.wikidata.org/wiki/Q2271421"
+        },
+        {
+          "display_name": "Information system",
+          "id": "https://openalex.org/C180198813",
+          "level": 2,
+          "score": 0.42179998755455017,
+          "wikidata": "https://www.wikidata.org/wiki/Q121182"
+        },
+        {
+          "display_name": "Financial market",
+          "id": "https://openalex.org/C19244329",
+          "level": 2,
+          "score": 0.4187999963760376,
+          "wikidata": "https://www.wikidata.org/wiki/Q208697"
+        },
+        {
+          "display_name": "Behavioral economics",
+          "id": "https://openalex.org/C109574028",
+          "level": 2,
+          "score": 0.415800005197525,
+          "wikidata": "https://www.wikidata.org/wiki/Q647525"
+        },
+        {
+          "display_name": "Big data",
+          "id": "https://openalex.org/C75684735",
+          "level": 2,
+          "score": 0.4032000005245209,
+          "wikidata": "https://www.wikidata.org/wiki/Q858810"
+        },
+        {
+          "display_name": "Information processing",
+          "id": "https://openalex.org/C87868495",
+          "level": 2,
+          "score": 0.3813999891281128,
+          "wikidata": "https://www.wikidata.org/wiki/Q750843"
+        },
+        {
+          "display_name": "Volatility (finance)",
+          "id": "https://openalex.org/C91602232",
+          "level": 2,
+          "score": 0.3693999946117401,
+          "wikidata": "https://www.wikidata.org/wiki/Q756115"
+        },
+        {
+          "display_name": "Prospect theory",
+          "id": "https://openalex.org/C339426",
+          "level": 2,
+          "score": 0.36160001158714294,
+          "wikidata": "https://www.wikidata.org/wiki/Q1151839"
+        },
+        {
+          "display_name": "Nexus (standard)",
+          "id": "https://openalex.org/C148609458",
+          "level": 2,
+          "score": 0.3564000129699707,
+          "wikidata": "https://www.wikidata.org/wiki/Q7021281"
+        },
+        {
+          "display_name": "Neglect",
+          "id": "https://openalex.org/C2776289891",
+          "level": 2,
+          "score": 0.335099995136261,
+          "wikidata": "https://www.wikidata.org/wiki/Q1931511"
+        },
+        {
+          "display_name": "Intelligent decision support system",
+          "id": "https://openalex.org/C56397880",
+          "level": 2,
+          "score": 0.33009999990463257,
+          "wikidata": "https://www.wikidata.org/wiki/Q6044094"
+        },
+        {
+          "display_name": "Financial services",
+          "id": "https://openalex.org/C139043278",
+          "level": 2,
+          "score": 0.3287999927997589,
+          "wikidata": "https://www.wikidata.org/wiki/Q837171"
+        },
+        {
+          "display_name": "Data science",
+          "id": "https://openalex.org/C2522767166",
+          "level": 1,
+          "score": 0.32739999890327454,
+          "wikidata": "https://www.wikidata.org/wiki/Q2374463"
+        },
+        {
+          "display_name": "Business",
+          "id": "https://openalex.org/C144133560",
+          "level": 0,
+          "score": 0.32030001282691956,
+          "wikidata": "https://www.wikidata.org/wiki/Q4830453"
+        },
+        {
+          "display_name": "Quality (philosophy)",
+          "id": "https://openalex.org/C2779530757",
+          "level": 2,
+          "score": 0.31139999628067017,
+          "wikidata": "https://www.wikidata.org/wiki/Q1207505"
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/C162324750",
+          "level": 0,
+          "score": 0.2915000021457672,
+          "wikidata": "https://www.wikidata.org/wiki/Q8134"
+        },
+        {
+          "display_name": "Heuristics",
+          "id": "https://openalex.org/C127705205",
+          "level": 2,
+          "score": 0.290800005197525,
+          "wikidata": "https://www.wikidata.org/wiki/Q5748245"
+        },
+        {
+          "display_name": "Information integration",
+          "id": "https://openalex.org/C33326189",
+          "level": 2,
+          "score": 0.2897000014781952,
+          "wikidata": "https://www.wikidata.org/wiki/Q17092450"
+        },
+        {
+          "display_name": "Information overload",
+          "id": "https://openalex.org/C186625053",
+          "level": 2,
+          "score": 0.28859999775886536,
+          "wikidata": "https://www.wikidata.org/wiki/Q1130191"
+        },
+        {
+          "display_name": "Expected utility hypothesis",
+          "id": "https://openalex.org/C205706631",
+          "level": 2,
+          "score": 0.2867000102996826,
+          "wikidata": "https://www.wikidata.org/wiki/Q2319304"
+        },
+        {
+          "display_name": "Financial crisis",
+          "id": "https://openalex.org/C2778300220",
+          "level": 2,
+          "score": 0.2808000147342682,
+          "wikidata": "https://www.wikidata.org/wiki/Q114380"
+        },
+        {
+          "display_name": "Efficient-market hypothesis",
+          "id": "https://openalex.org/C29368100",
+          "level": 4,
+          "score": 0.28040000796318054,
+          "wikidata": "https://www.wikidata.org/wiki/Q724931"
+        },
+        {
+          "display_name": "Cognition",
+          "id": "https://openalex.org/C169900460",
+          "level": 2,
+          "score": 0.2694999873638153,
+          "wikidata": "https://www.wikidata.org/wiki/Q2200417"
+        },
+        {
+          "display_name": "Risk analysis (engineering)",
+          "id": "https://openalex.org/C112930515",
+          "level": 1,
+          "score": 0.26930001378059387,
+          "wikidata": "https://www.wikidata.org/wiki/Q4389547"
+        },
+        {
+          "display_name": "Executive information system",
+          "id": "https://openalex.org/C204304583",
+          "level": 4,
+          "score": 0.26089999079704285,
+          "wikidata": "https://www.wikidata.org/wiki/Q950847"
+        },
+        {
+          "display_name": "Decision quality",
+          "id": "https://openalex.org/C2779351106",
+          "level": 3,
+          "score": 0.2531999945640564,
+          "wikidata": "https://www.wikidata.org/wiki/Q24965456"
+        },
+        {
+          "display_name": "Information quality",
+          "id": "https://openalex.org/C45983554",
+          "level": 3,
+          "score": 0.2526000142097473,
+          "wikidata": "https://www.wikidata.org/wiki/Q3412851"
+        }
+      ],
+      "content_urls": null,
+      "corresponding_author_ids": [
+        "https://openalex.org/A5064432644"
+      ],
+      "corresponding_institution_ids": [],
+      "countries_distinct_count": 0,
+      "counts_by_year": [],
+      "created_date": "2026-02-03T00:00:00",
+      "display_name": "Nudging Deliberation: Affective\u2013Cognitive Integration in Cryptocurrency DSS",
+      "doi": null,
+      "funders": [],
+      "fwci": 0.0,
+      "has_content": {
+        "grobid_xml": false,
+        "pdf": false
+      },
+      "has_fulltext": false,
+      "id": "https://openalex.org/W7127226524",
+      "ids": {
+        "openalex": "https://openalex.org/W7127226524"
+      },
+      "indexed_in": [],
+      "institutions": [],
+      "institutions_distinct_count": 2,
+      "is_paratext": false,
+      "is_retracted": false,
+      "is_xpac": false,
+      "keywords": [
+        {
+          "display_name": "Cryptocurrency",
+          "id": "https://openalex.org/keywords/cryptocurrency",
+          "score": 0.7353000044822693
+        },
+        {
+          "display_name": "Mainstream",
+          "id": "https://openalex.org/keywords/mainstream",
+          "score": 0.5705999732017517
+        },
+        {
+          "display_name": "Decision support system",
+          "id": "https://openalex.org/keywords/decision-support-system",
+          "score": 0.5467000007629395
+        },
+        {
+          "display_name": "Sentiment analysis",
+          "id": "https://openalex.org/keywords/sentiment-analysis",
+          "score": 0.4456999897956848
+        },
+        {
+          "display_name": "Information system",
+          "id": "https://openalex.org/keywords/information-system",
+          "score": 0.42179998755455017
+        },
+        {
+          "display_name": "Financial market",
+          "id": "https://openalex.org/keywords/financial-market",
+          "score": 0.4187999963760376
+        },
+        {
+          "display_name": "Behavioral economics",
+          "id": "https://openalex.org/keywords/behavioral-economics",
+          "score": 0.415800005197525
+        },
+        {
+          "display_name": "Big data",
+          "id": "https://openalex.org/keywords/big-data",
+          "score": 0.4032000005245209
+        },
+        {
+          "display_name": "Information processing",
+          "id": "https://openalex.org/keywords/information-processing",
+          "score": 0.3813999891281128
+        }
+      ],
+      "language": null,
+      "locations": [
+        {
+          "id": "pmh:oai:aisel.aisnet.org:neais2025-1025",
+          "is_accepted": false,
+          "is_oa": false,
+          "is_published": false,
+          "landing_page_url": "https://aisel.aisnet.org/neais2025/26",
+          "license": null,
+          "license_id": null,
+          "pdf_url": null,
+          "raw_source_name": "NEAIS 2025 Proceedings",
+          "raw_type": "text",
+          "source": {
+            "display_name": "Journal of the Association for Information Systems",
+            "host_organization": "https://openalex.org/P4310321080",
+            "host_organization_lineage": [
+              "https://openalex.org/P4310321080"
+            ],
+            "host_organization_lineage_names": [
+              "Association for Information Systems"
+            ],
+            "host_organization_name": "Association for Information Systems",
+            "id": "https://openalex.org/S30879505",
+            "is_core": true,
+            "is_in_doaj": false,
+            "is_oa": false,
+            "issn": [
+              "1536-9323"
+            ],
+            "issn_l": "1536-9323",
+            "type": "journal"
+          },
+          "version": "submittedVersion"
+        }
+      ],
+      "locations_count": 1,
+      "mesh": [],
+      "open_access": {
+        "any_repository_has_fulltext": false,
+        "is_oa": false,
+        "oa_status": "closed",
+        "oa_url": null
+      },
+      "primary_location": {
+        "id": "pmh:oai:aisel.aisnet.org:neais2025-1025",
+        "is_accepted": false,
+        "is_oa": false,
+        "is_published": false,
+        "landing_page_url": "https://aisel.aisnet.org/neais2025/26",
+        "license": null,
+        "license_id": null,
+        "pdf_url": null,
+        "raw_source_name": "NEAIS 2025 Proceedings",
+        "raw_type": "text",
+        "source": {
+          "display_name": "Journal of the Association for Information Systems",
+          "host_organization": "https://openalex.org/P4310321080",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310321080"
+          ],
+          "host_organization_lineage_names": [
+            "Association for Information Systems"
+          ],
+          "host_organization_name": "Association for Information Systems",
+          "id": "https://openalex.org/S30879505",
+          "is_core": true,
+          "is_in_doaj": false,
+          "is_oa": false,
+          "issn": [
+            "1536-9323"
+          ],
+          "issn_l": "1536-9323",
+          "type": "journal"
+        },
+        "version": "submittedVersion"
+      },
+      "primary_topic": {
+        "display_name": "Blockchain Technology Applications and Security",
+        "domain": {
+          "display_name": "Physical Sciences",
+          "id": "https://openalex.org/domains/3"
+        },
+        "field": {
+          "display_name": "Computer Science",
+          "id": "https://openalex.org/fields/17"
+        },
+        "id": "https://openalex.org/T10270",
+        "score": 0.70660001039505,
+        "subfield": {
+          "display_name": "Information Systems",
+          "id": "https://openalex.org/subfields/1710"
+        }
+      },
+      "publication_date": "2025-10-25",
+      "publication_year": 2025,
+      "referenced_works": [],
+      "referenced_works_count": 0,
+      "related_works": [],
+      "relevance_score": 4.5740166,
+      "sustainable_development_goals": [],
+      "title": "Nudging Deliberation: Affective\u2013Cognitive Integration in Cryptocurrency DSS",
+      "topics": [
+        {
+          "display_name": "Blockchain Technology Applications and Security",
+          "domain": {
+            "display_name": "Physical Sciences",
+            "id": "https://openalex.org/domains/3"
+          },
+          "field": {
+            "display_name": "Computer Science",
+            "id": "https://openalex.org/fields/17"
+          },
+          "id": "https://openalex.org/T10270",
+          "score": 0.70660001039505,
+          "subfield": {
+            "display_name": "Information Systems",
+            "id": "https://openalex.org/subfields/1710"
+          }
+        },
+        {
+          "display_name": "Impact of AI and Big Data on Business and Society",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T14260",
+          "score": 0.024299999698996544,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        },
+        {
+          "display_name": "Financial Markets and Investment Strategies",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Economics, Econometrics and Finance",
+            "id": "https://openalex.org/fields/20"
+          },
+          "id": "https://openalex.org/T10047",
+          "score": 0.012299999594688416,
+          "subfield": {
+            "display_name": "Finance",
+            "id": "https://openalex.org/subfields/2003"
+          }
+        }
+      ],
+      "type": "article",
+      "updated_date": "2026-02-10T06:17:13.238206"
+    },
+    {
+      "abstract_inverted_index": {
+        "(DRL),": [
+          206
+        ],
+        "(GA).": [
+          222
+        ],
+        "(LCC)": [
+          114
+        ],
+        "(LDA).": [
+          102
+        ],
+        "(LSTM),": [
+          202
+        ],
+        "(SVM),": [
+          218
+        ],
+        "(WA),": [
+          209
+        ],
+        "1-week": [
+          154
+        ],
+        "15-minute": [
+          152
+        ],
+        "1999": [
+          175
+        ],
+        "2023.": [
+          178
+        ],
+        "98.77%,": [
+          189
+        ],
+        "Additionally,": [
+          157
+        ],
+        "Algorithms": [
+          221
+        ],
+        "April": [
+          177
+        ],
+        "Classifier": [
+          112
+        ],
+        "Configurator": [
+          113
+        ],
+        "Deep": [
+          203
+        ],
+        "Forex": [
+          44
+        ],
+        "Furthermore,": [
+          223
+        ],
+        "Genetic": [
+          220
+        ],
+        "January": [
+          174
+        ],
+        "LCC": [
+          181
+        ],
+        "Linear": [
+          111
+        ],
+        "Long": [
+          199
+        ],
+        "Machines": [
+          217
+        ],
+        "Memory": [
+          201
+        ],
+        "Predicting": [
+          0
+        ],
+        "Sentiment": [
+          210
+        ],
+        "Short-Term": [
+          200
+        ],
+        "Support": [
+          215
+        ],
+        "The": [
+          77,
+          103,
+          141,
+          179
+        ],
+        "Vector": [
+          216
+        ],
+        "Wavelet": [
+          207
+        ],
+        "We": [
+          128
+        ],
+        "a": [
+          9,
+          55,
+          98,
+          160
+        ],
+        "accuracy": [
+          187
+        ],
+        "accurate": [
+          51
+        ],
+        "achieves": [
+          183
+        ],
+        "action.": [
+          76
+        ],
+        "algorithmic": [
+          169
+        ],
+        "an": [
+          168,
+          184
+        ],
+        "analysis": [
+          208,
+          211
+        ],
+        "analysis,": [
+          35
+        ],
+        "and": [
+          3,
+          24,
+          50,
+          85,
+          94,
+          123,
+          132,
+          153,
+          176,
+          219,
+          229,
+          245
+        ],
+        "applied": [
+          31,
+          172
+        ],
+        "approaches": [
+          196
+        ],
+        "artificial": [
+          26
+        ],
+        "as": [
+          198,
+          236,
+          238
+        ],
+        "assets.": [
+          250
+        ],
+        "based": [
+          193
+        ],
+        "been": [
+          30
+        ],
+        "between": [
+          92,
+          173
+        ],
+        "by": [
+          73,
+          167
+        ],
+        "challenge": [
+          11
+        ],
+        "classification": [
+          186
+        ],
+        "collection": [
+          161
+        ],
+        "construct": [
+          97
+        ],
+        "content,": [
+          214
+        ],
+        "core": [
+          104
+        ],
+        "data": [
+          119,
+          145
+        ],
+        "data,": [
+          71
+        ],
+        "decision-making": [
+          18
+        ],
+        "detection": [
+          124
+        ],
+        "differences": [
+          91
+        ],
+        "directional": [
+          62
+        ],
+        "discriminant": [
+          100
+        ],
+        "downtrends": [
+          95
+        ],
+        "effective": [
+          25
+        ],
+        "efficiency": [
+          19
+        ],
+        "euro-dollar": [
+          66,
+          148
+        ],
+        "exchange": [
+          39,
+          67,
+          149
+        ],
+        "experiments": [
+          142
+        ],
+        "exposure": [
+          232
+        ],
+        "feature": [
+          121
+        ],
+        "financial": [
+          6,
+          14,
+          227,
+          249
+        ],
+        "for": [
+          20,
+          58,
+          118
+        ],
+        "frames.": [
+          156
+        ],
+        "function": [
+          101
+        ],
+        "have": [
+          29
+        ],
+        "impacting": [
+          16
+        ],
+        "improves": [
+          226
+        ],
+        "in": [
+          12,
+          42,
+          151,
+          233,
+          242
+        ],
+        "includes": [
+          116
+        ],
+        "incorporate": [
+          159
+        ],
+        "industry,": [
+          15
+        ],
+        "inflection": [
+          83
+        ],
+        "instruments": [
+          7
+        ],
+        "intelligence": [
+          27
+        ],
+        "interpretable,": [
+          49
+        ],
+        "interpretations": [
+          133
+        ],
+        "intraday": [
+          163
+        ],
+        "investment": [
+          17
+        ],
+        "is": [
+          8,
+          108,
+          240
+        ],
+        "it": [
+          239
+        ],
+        "learning": [
+          205
+        ],
+        "linear": [
+          99
+        ],
+        "major": [
+          10
+        ],
+        "market": [
+          45,
+          70,
+          82,
+          144
+        ],
+        "measuring": [
+          74
+        ],
+        "methodologies": [
+          192
+        ],
+        "methodology": [
+          57,
+          79,
+          107,
+          182,
+          225
+        ],
+        "model": [
+          171
+        ],
+        "movement": [
+          63
+        ],
+        "movements": [
+          41
+        ],
+        "multidimensional": [
+          87
+        ],
+        "nature": [
+          88
+        ],
+        "necessitates": [
+          47
+        ],
+        "novel": [
+          56,
+          110
+        ],
+        "numerous": [
+          23
+        ],
+        "of": [
+          5,
+          38,
+          64,
+          89,
+          105,
+          125,
+          138,
+          146,
+          162,
+          188,
+          212
+        ],
+        "on": [
+          194
+        ],
+        "other": [
+          191,
+          248
+        ],
+        "our": [
+          106,
+          109,
+          224
+        ],
+        "out-of-sample": [
+          185
+        ],
+        "outperforming": [
+          190
+        ],
+        "paper": [
+          53
+        ],
+        "parametric": [
+          139
+        ],
+        "parsimonious,": [
+          48
+        ],
+        "performance": [
+          228
+        ],
+        "points": [
+          84
+        ],
+        "power": [
+          137
+        ],
+        "predicting": [
+          59
+        ],
+        "prediction": [
+          37
+        ],
+        "preparation,": [
+          120
+        ],
+        "presents": [
+          54
+        ],
+        "price": [
+          2,
+          75
+        ],
+        "prioritizes": [
+          80
+        ],
+        "proposed": [
+          78,
+          180
+        ],
+        "provided": [
+          166
+        ],
+        "rate": [
+          40,
+          68,
+          150
+        ],
+        "reduces": [
+          230
+        ],
+        "reinforcement": [
+          204
+        ],
+        "results": [
+          131
+        ],
+        "risk": [
+          231
+        ],
+        "selecting": [
+          243
+        ],
+        "selection,": [
+          122
+        ],
+        "series": [
+          34
+        ],
+        "short-term": [
+          61
+        ],
+        "solutions.This": [
+          52
+        ],
+        "sophisticated": [
+          195
+        ],
+        "specifically": [
+          72
+        ],
+        "stages": [
+          117
+        ],
+        "stakeholders.Although": [
+          22
+        ],
+        "statistical": [
+          136
+        ],
+        "still": [
+          46
+        ],
+        "strategies,": [
+          235
+        ],
+        "structures.": [
+          127
+        ],
+        "such": [
+          197
+        ],
+        "techniques": [
+          28
+        ],
+        "tests.": [
+          140
+        ],
+        "textual": [
+          213
+        ],
+        "the": [
+          1,
+          13,
+          36,
+          43,
+          60,
+          65,
+          86,
+          90,
+          130,
+          135,
+          147
+        ],
+        "time": [
+          33,
+          155
+        ],
+        "to": [
+          32,
+          96,
+          247
+        ],
+        "trades": [
+          165
+        ],
+        "trading": [
+          170,
+          234
+        ],
+        "transferable": [
+          246
+        ],
+        "trends": [
+          4
+        ],
+        "underlying": [
+          126
+        ],
+        "uptrends": [
+          93
+        ],
+        "use": [
+          143
+        ],
+        "useful": [
+          241
+        ],
+        "using": [
+          69,
+          81,
+          134
+        ],
+        "validate": [
+          129
+        ],
+        "variables": [
+          244
+        ],
+        "various": [
+          21
+        ],
+        "we": [
+          158
+        ],
+        "well": [
+          237
+        ],
+        "which": [
+          115
+        ],
+        "winning": [
+          164
+        ]
+      },
+      "apc_list": {
+        "currency": "USD",
+        "value": 1850,
+        "value_usd": 1850
+      },
+      "apc_paid": {
+        "currency": "USD",
+        "value": 1850,
+        "value_usd": 1850
+      },
+      "authorships": [
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I184999862"
+              ],
+              "raw_affiliation_string": "Department of Statistics, University of Salamanca, Campus Miguel de Unamuno, Salamanca, Spain"
+            }
+          ],
+          "author": {
+            "display_name": "Mauricio Argotty-Erazo",
+            "id": "https://openalex.org/A5092122946",
+            "orcid": "https://orcid.org/0000-0001-8195-4479"
+          },
+          "author_position": "first",
+          "countries": [
+            "ES"
+          ],
+          "institutions": [
+            {
+              "country_code": "ES",
+              "display_name": "Universidad de Salamanca",
+              "id": "https://openalex.org/I184999862",
+              "lineage": [
+                "https://openalex.org/I184999862"
+              ],
+              "ror": "https://ror.org/02f40zc51",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": true,
+          "raw_affiliation_strings": [
+            "Department of Statistics, University of Salamanca, Campus Miguel de Unamuno, Salamanca, Spain"
+          ],
+          "raw_author_name": "Mauricio Argotty-Erazo",
+          "raw_orcid": "https://orcid.org/0000-0001-8195-4479"
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I184999862"
+              ],
+              "raw_affiliation_string": "Department of Statistics, University of Salamanca, Campus Miguel de Unamuno, Salamanca, Spain"
+            }
+          ],
+          "author": {
+            "display_name": "Antonio Bl\u00e1zquez-Zaballos",
+            "id": "https://openalex.org/A5092122947",
+            "orcid": "https://orcid.org/0000-0001-5074-8859"
+          },
+          "author_position": "middle",
+          "countries": [
+            "ES"
+          ],
+          "institutions": [
+            {
+              "country_code": "ES",
+              "display_name": "Universidad de Salamanca",
+              "id": "https://openalex.org/I184999862",
+              "lineage": [
+                "https://openalex.org/I184999862"
+              ],
+              "ror": "https://ror.org/02f40zc51",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Department of Statistics, University of Salamanca, Campus Miguel de Unamuno, Salamanca, Spain"
+          ],
+          "raw_author_name": "Antonio Bl\u00e1zquez-Zaballos",
+          "raw_orcid": "https://orcid.org/0000-0001-5074-8859"
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I271702661"
+              ],
+              "raw_affiliation_string": "Facultad de Ciencias Econ&#x00F3;micas y Administrativas, Universidad de Nari&#x00F1;o, Torobajo, San Juan de Pasto, Colombia"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I271702661"
+              ],
+              "raw_affiliation_string": "Facultad de Ciencias Econ&#x00F3;micas y Administrativas, Bloque 2 Piso 3, 52001 San Juan de Pasto, Universidad de Nari&#x00F1;o, Torobajo, Colombia"
+            }
+          ],
+          "author": {
+            "display_name": "Carlos A. Argoty-Eraso",
+            "id": "https://openalex.org/A5092122948",
+            "orcid": null
+          },
+          "author_position": "middle",
+          "countries": [
+            "CO"
+          ],
+          "institutions": [
+            {
+              "country_code": "CO",
+              "display_name": "University of Nari\u00f1o",
+              "id": "https://openalex.org/I271702661",
+              "lineage": [
+                "https://openalex.org/I271702661"
+              ],
+              "ror": "https://ror.org/050bg0846",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Facultad de Ciencias Econ&#x00F3;micas y Administrativas, Universidad de Nari&#x00F1;o, Torobajo, San Juan de Pasto, Colombia",
+            "Facultad de Ciencias Econ&#x00F3;micas y Administrativas, Bloque 2 Piso 3, 52001 San Juan de Pasto, Universidad de Nari&#x00F1;o, Torobajo, Colombia"
+          ],
+          "raw_author_name": "Carlos A. Argoty-Eraso",
+          "raw_orcid": null
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [],
+              "raw_affiliation_string": "Smart Data Analysis Systems Group (SDAS) Research Group, Ben Guerir, Morocco"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I4210091861"
+              ],
+              "raw_affiliation_string": "Facultad de Derecho, Ciencias Administrativas y Sociales, Universidad UTE, Quito, Ecuador; SDAS Research Group, Ben Guerir, Morocco"
+            }
+          ],
+          "author": {
+            "display_name": "Leandro L. Lorente-Leyva",
+            "id": "https://openalex.org/A5068852288",
+            "orcid": "https://orcid.org/0000-0002-2973-7765"
+          },
+          "author_position": "middle",
+          "countries": [
+            "EC"
+          ],
+          "institutions": [
+            {
+              "country_code": "EC",
+              "display_name": "Universidad UTE",
+              "id": "https://openalex.org/I4210091861",
+              "lineage": [
+                "https://openalex.org/I4210091861"
+              ],
+              "ror": "https://ror.org/00dmdt028",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Smart Data Analysis Systems Group (SDAS) Research Group, Ben Guerir, Morocco",
+            "Facultad de Derecho, Ciencias Administrativas y Sociales, Universidad UTE, Quito, Ecuador; SDAS Research Group, Ben Guerir, Morocco"
+          ],
+          "raw_author_name": "Leandro L. Lorente-Leyva",
+          "raw_orcid": "https://orcid.org/0000-0002-2973-7765"
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I4210145045"
+              ],
+              "raw_affiliation_string": "Centro de Posgrado, Universidad Polit&#x00E9;cnica Estatal del Carchi, Tulc&#x00E1;n, Ecuador"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I4210145045"
+              ],
+              "raw_affiliation_string": "Centro de Posgrado, Universidad Polit&#x00E9;cnica Estatal del Carchi, Tulc&#x00E1;n, Ecuador; SDAS Research Group, Ben Guerir, Morocco"
+            }
+          ],
+          "author": {
+            "display_name": "Nadia N. S\u00e1nchez-Pozo",
+            "id": "https://openalex.org/A5017650015",
+            "orcid": "https://orcid.org/0000-0003-0509-2082"
+          },
+          "author_position": "middle",
+          "countries": [
+            "EC"
+          ],
+          "institutions": [
+            {
+              "country_code": "EC",
+              "display_name": "Universidad Polit\u00e9cnica Estatal del Carchi",
+              "id": "https://openalex.org/I4210145045",
+              "lineage": [
+                "https://openalex.org/I4210145045"
+              ],
+              "ror": "https://ror.org/04msd0t92",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Centro de Posgrado, Universidad Polit&#x00E9;cnica Estatal del Carchi, Tulc&#x00E1;n, Ecuador",
+            "Centro de Posgrado, Universidad Polit&#x00E9;cnica Estatal del Carchi, Tulc&#x00E1;n, Ecuador; SDAS Research Group, Ben Guerir, Morocco"
+          ],
+          "raw_author_name": "Nadia N. S\u00e1nchez-Pozo",
+          "raw_orcid": "https://orcid.org/0000-0003-0509-2082"
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [],
+              "raw_affiliation_string": "Smart Data Analysis Systems Group (SDAS) Research Group, Ben Guerir, Morocco"
+            },
+            {
+              "institution_ids": [
+                "https://openalex.org/I4210131560"
+              ],
+              "raw_affiliation_string": "College of Computing, Mohammed VI Polytechnic University, Lot 660, Hay Moulay Rachid Ben Guerir, Morocco; SDAS Research Group, Ben Guerir, Morocco"
+            }
+          ],
+          "author": {
+            "display_name": "Diego H. Peluffo-Ord\u00f3\u0144ez",
+            "id": "https://openalex.org/A5062882562",
+            "orcid": "https://orcid.org/0000-0002-9045-6997"
+          },
+          "author_position": "last",
+          "countries": [
+            "MA"
+          ],
+          "institutions": [
+            {
+              "country_code": "MA",
+              "display_name": "Universit\u00e9 Mohammed VI Polytechnique",
+              "id": "https://openalex.org/I4210131560",
+              "lineage": [
+                "https://openalex.org/I4210131560"
+              ],
+              "ror": "https://ror.org/03xc55g68",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Smart Data Analysis Systems Group (SDAS) Research Group, Ben Guerir, Morocco",
+            "College of Computing, Mohammed VI Polytechnic University, Lot 660, Hay Moulay Rachid Ben Guerir, Morocco; SDAS Research Group, Ben Guerir, Morocco"
+          ],
+          "raw_author_name": "Diego H. Peluffo-Ord\u00f3\u00f1ez",
+          "raw_orcid": "https://orcid.org/0000-0002-9045-6997"
+        }
+      ],
+      "awards": [],
+      "best_oa_location": {
+        "id": "doi:10.1109/access.2023.3285082",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": true,
+        "landing_page_url": "https://doi.org/10.1109/access.2023.3285082",
+        "license": null,
+        "license_id": null,
+        "pdf_url": "https://ieeexplore.ieee.org/ielx7/6287639/6514899/10147811.pdf",
+        "raw_source_name": "IEEE Access",
+        "raw_type": "journal-article",
+        "source": {
+          "display_name": "IEEE Access",
+          "host_organization": "https://openalex.org/P4310319808",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310319808"
+          ],
+          "host_organization_lineage_names": [
+            "Institute of Electrical and Electronics Engineers"
+          ],
+          "host_organization_name": "Institute of Electrical and Electronics Engineers",
+          "id": "https://openalex.org/S2485537415",
+          "is_core": true,
+          "is_in_doaj": true,
+          "is_oa": true,
+          "issn": [
+            "2169-3536"
+          ],
+          "issn_l": "2169-3536",
+          "type": "journal"
+        },
+        "version": "publishedVersion"
+      },
+      "biblio": {
+        "first_page": "67249",
+        "issue": null,
+        "last_page": "67284",
+        "volume": "11"
+      },
+      "citation_normalized_percentile": {
+        "is_in_top_10_percent": false,
+        "is_in_top_1_percent": false,
+        "value": 0.86581334
+      },
+      "cited_by_count": 8,
+      "cited_by_percentile_year": {
+        "max": 98,
+        "min": 90
+      },
+      "concepts": [
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/C41008148",
+          "level": 0,
+          "score": 0.7287662029266357,
+          "wikidata": "https://www.wikidata.org/wiki/Q21198"
+        },
+        {
+          "display_name": "Artificial intelligence",
+          "id": "https://openalex.org/C154945302",
+          "level": 1,
+          "score": 0.5633875727653503,
+          "wikidata": "https://www.wikidata.org/wiki/Q11660"
+        },
+        {
+          "display_name": "Support vector machine",
+          "id": "https://openalex.org/C12267149",
+          "level": 2,
+          "score": 0.5236027836799622,
+          "wikidata": "https://www.wikidata.org/wiki/Q282453"
+        },
+        {
+          "display_name": "Exchange rate",
+          "id": "https://openalex.org/C2776988154",
+          "level": 2,
+          "score": 0.5069227814674377,
+          "wikidata": "https://www.wikidata.org/wiki/Q66100"
+        },
+        {
+          "display_name": "Machine learning",
+          "id": "https://openalex.org/C119857082",
+          "level": 1,
+          "score": 0.49502772092819214,
+          "wikidata": "https://www.wikidata.org/wiki/Q2539"
+        },
+        {
+          "display_name": "Feature selection",
+          "id": "https://openalex.org/C148483581",
+          "level": 2,
+          "score": 0.43946683406829834,
+          "wikidata": "https://www.wikidata.org/wiki/Q446488"
+        },
+        {
+          "display_name": "Econometrics",
+          "id": "https://openalex.org/C149782125",
+          "level": 1,
+          "score": 0.33385011553764343,
+          "wikidata": "https://www.wikidata.org/wiki/Q160039"
+        },
+        {
+          "display_name": "Finance",
+          "id": "https://openalex.org/C10138342",
+          "level": 1,
+          "score": 0.16092386841773987,
+          "wikidata": "https://www.wikidata.org/wiki/Q43015"
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/C162324750",
+          "level": 0,
+          "score": 0.1383036971092224,
+          "wikidata": "https://www.wikidata.org/wiki/Q8134"
+        }
+      ],
+      "content_urls": {
+        "grobid_xml": "https://content.openalex.org/works/W4379984205.grobid-xml",
+        "pdf": "https://content.openalex.org/works/W4379984205.pdf"
+      },
+      "corresponding_author_ids": [
+        "https://openalex.org/A5092122946"
+      ],
+      "corresponding_institution_ids": [
+        "https://openalex.org/I184999862"
+      ],
+      "countries_distinct_count": 4,
+      "counts_by_year": [
+        {
+          "cited_by_count": 5,
+          "year": 2025
+        },
+        {
+          "cited_by_count": 2,
+          "year": 2024
+        },
+        {
+          "cited_by_count": 1,
+          "year": 2023
+        }
+      ],
+      "created_date": "2025-10-10T00:00:00",
+      "display_name": "A Novel Linear-Model-Based Methodology for Predicting the Directional Movement of the Euro-Dollar Exchange Rate",
+      "doi": "https://doi.org/10.1109/access.2023.3285082",
+      "funders": [
+        {
+          "display_name": "Universit\u00e9 Mohammed VI Polytechnique",
+          "id": "https://openalex.org/F4320316682",
+          "ror": "https://ror.org/03xc55g68"
+        },
+        {
+          "display_name": "Shandong Academy of Sciences",
+          "id": "https://openalex.org/F4320324887",
+          "ror": "https://ror.org/04y8d6y55"
+        }
+      ],
+      "fwci": 1.9524,
+      "has_content": {
+        "grobid_xml": true,
+        "pdf": true
+      },
+      "has_fulltext": true,
+      "id": "https://openalex.org/W4379984205",
+      "ids": {
+        "doi": "https://doi.org/10.1109/access.2023.3285082",
+        "openalex": "https://openalex.org/W4379984205"
+      },
+      "indexed_in": [
+        "crossref",
+        "doaj"
+      ],
+      "institutions": [],
+      "institutions_distinct_count": 6,
+      "is_paratext": false,
+      "is_retracted": false,
+      "is_xpac": false,
+      "keywords": [
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/keywords/computer-science",
+          "score": 0.7287662029266357
+        },
+        {
+          "display_name": "Artificial intelligence",
+          "id": "https://openalex.org/keywords/artificial-intelligence",
+          "score": 0.5633875727653503
+        },
+        {
+          "display_name": "Support vector machine",
+          "id": "https://openalex.org/keywords/support-vector-machine",
+          "score": 0.5236027836799622
+        },
+        {
+          "display_name": "Exchange rate",
+          "id": "https://openalex.org/keywords/exchange-rate",
+          "score": 0.5069227814674377
+        },
+        {
+          "display_name": "Machine learning",
+          "id": "https://openalex.org/keywords/machine-learning",
+          "score": 0.49502772092819214
+        },
+        {
+          "display_name": "Feature selection",
+          "id": "https://openalex.org/keywords/feature-selection",
+          "score": 0.43946683406829834
+        },
+        {
+          "display_name": "Econometrics",
+          "id": "https://openalex.org/keywords/econometrics",
+          "score": 0.33385011553764343
+        },
+        {
+          "display_name": "Finance",
+          "id": "https://openalex.org/keywords/finance",
+          "score": 0.16092386841773987
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/keywords/economics",
+          "score": 0.1383036971092224
+        }
+      ],
+      "language": "en",
+      "locations": [
+        {
+          "id": "doi:10.1109/access.2023.3285082",
+          "is_accepted": true,
+          "is_oa": true,
+          "is_published": true,
+          "landing_page_url": "https://doi.org/10.1109/access.2023.3285082",
+          "license": null,
+          "license_id": null,
+          "pdf_url": "https://ieeexplore.ieee.org/ielx7/6287639/6514899/10147811.pdf",
+          "raw_source_name": "IEEE Access",
+          "raw_type": "journal-article",
+          "source": {
+            "display_name": "IEEE Access",
+            "host_organization": "https://openalex.org/P4310319808",
+            "host_organization_lineage": [
+              "https://openalex.org/P4310319808"
+            ],
+            "host_organization_lineage_names": [
+              "Institute of Electrical and Electronics Engineers"
+            ],
+            "host_organization_name": "Institute of Electrical and Electronics Engineers",
+            "id": "https://openalex.org/S2485537415",
+            "is_core": true,
+            "is_in_doaj": true,
+            "is_oa": true,
+            "issn": [
+              "2169-3536"
+            ],
+            "issn_l": "2169-3536",
+            "type": "journal"
+          },
+          "version": "publishedVersion"
+        },
+        {
+          "id": "pmh:oai:doaj.org/article:6682fd90bd164adeac05f07b5fb64986",
+          "is_accepted": false,
+          "is_oa": true,
+          "is_published": false,
+          "landing_page_url": "https://doaj.org/article/6682fd90bd164adeac05f07b5fb64986",
+          "license": "cc-by-sa",
+          "license_id": "https://openalex.org/licenses/cc-by-sa",
+          "pdf_url": null,
+          "raw_source_name": "IEEE Access, Vol 11, Pp 67249-67284 (2023)",
+          "raw_type": "article",
+          "source": {
+            "display_name": "DOAJ (DOAJ: Directory of Open Access Journals)",
+            "host_organization": null,
+            "host_organization_lineage": [],
+            "host_organization_lineage_names": [],
+            "host_organization_name": null,
+            "id": "https://openalex.org/S4306401280",
+            "is_core": false,
+            "is_in_doaj": false,
+            "is_oa": false,
+            "issn": null,
+            "issn_l": null,
+            "type": "repository"
+          },
+          "version": "submittedVersion"
+        }
+      ],
+      "locations_count": 2,
+      "mesh": [],
+      "open_access": {
+        "any_repository_has_fulltext": true,
+        "is_oa": true,
+        "oa_status": "gold",
+        "oa_url": "https://ieeexplore.ieee.org/ielx7/6287639/6514899/10147811.pdf"
+      },
+      "primary_location": {
+        "id": "doi:10.1109/access.2023.3285082",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": true,
+        "landing_page_url": "https://doi.org/10.1109/access.2023.3285082",
+        "license": null,
+        "license_id": null,
+        "pdf_url": "https://ieeexplore.ieee.org/ielx7/6287639/6514899/10147811.pdf",
+        "raw_source_name": "IEEE Access",
+        "raw_type": "journal-article",
+        "source": {
+          "display_name": "IEEE Access",
+          "host_organization": "https://openalex.org/P4310319808",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310319808"
+          ],
+          "host_organization_lineage_names": [
+            "Institute of Electrical and Electronics Engineers"
+          ],
+          "host_organization_name": "Institute of Electrical and Electronics Engineers",
+          "id": "https://openalex.org/S2485537415",
+          "is_core": true,
+          "is_in_doaj": true,
+          "is_oa": true,
+          "issn": [
+            "2169-3536"
+          ],
+          "issn_l": "2169-3536",
+          "type": "journal"
+        },
+        "version": "publishedVersion"
+      },
+      "primary_topic": {
+        "display_name": "Stock Market Forecasting Methods",
+        "domain": {
+          "display_name": "Social Sciences",
+          "id": "https://openalex.org/domains/2"
+        },
+        "field": {
+          "display_name": "Decision Sciences",
+          "id": "https://openalex.org/fields/18"
+        },
+        "id": "https://openalex.org/T11326",
+        "score": 0.9997000098228455,
+        "subfield": {
+          "display_name": "Management Science and Operations Research",
+          "id": "https://openalex.org/subfields/1803"
+        }
+      },
+      "publication_date": "2023-01-01",
+      "publication_year": 2023,
+      "referenced_works": [
+        "https://openalex.org/W61851215",
+        "https://openalex.org/W85350352",
+        "https://openalex.org/W1484864026",
+        "https://openalex.org/W1593864613",
+        "https://openalex.org/W1923947982",
+        "https://openalex.org/W1949087994",
+        "https://openalex.org/W1978892405",
+        "https://openalex.org/W1980943088",
+        "https://openalex.org/W1994401197",
+        "https://openalex.org/W1999029409",
+        "https://openalex.org/W2001619934",
+        "https://openalex.org/W2002670026",
+        "https://openalex.org/W2005011583",
+        "https://openalex.org/W2011691565",
+        "https://openalex.org/W2012511784",
+        "https://openalex.org/W2018244852",
+        "https://openalex.org/W2026672835",
+        "https://openalex.org/W2027717478",
+        "https://openalex.org/W2032170121",
+        "https://openalex.org/W2048059991",
+        "https://openalex.org/W2053154970",
+        "https://openalex.org/W2059508144",
+        "https://openalex.org/W2064709414",
+        "https://openalex.org/W2080400971",
+        "https://openalex.org/W2098738227",
+        "https://openalex.org/W2104146802",
+        "https://openalex.org/W2105305265",
+        "https://openalex.org/W2128792405",
+        "https://openalex.org/W2130180922",
+        "https://openalex.org/W2133218851",
+        "https://openalex.org/W2133983882",
+        "https://openalex.org/W2138217758",
+        "https://openalex.org/W2146580995",
+        "https://openalex.org/W2181845779",
+        "https://openalex.org/W2224848099",
+        "https://openalex.org/W2245678448",
+        "https://openalex.org/W2268889386",
+        "https://openalex.org/W2438012245",
+        "https://openalex.org/W2548244941",
+        "https://openalex.org/W2558028446",
+        "https://openalex.org/W2586389957",
+        "https://openalex.org/W2597372336",
+        "https://openalex.org/W2761096802",
+        "https://openalex.org/W2766986120",
+        "https://openalex.org/W2803204740",
+        "https://openalex.org/W2883880271",
+        "https://openalex.org/W2891503716",
+        "https://openalex.org/W2902035838",
+        "https://openalex.org/W2945613508",
+        "https://openalex.org/W2945976633",
+        "https://openalex.org/W2967732991",
+        "https://openalex.org/W2981731882",
+        "https://openalex.org/W2986519133",
+        "https://openalex.org/W2999309192",
+        "https://openalex.org/W3005880472",
+        "https://openalex.org/W3007066689",
+        "https://openalex.org/W3011236531",
+        "https://openalex.org/W3093186795",
+        "https://openalex.org/W3110975233",
+        "https://openalex.org/W3121678544",
+        "https://openalex.org/W3122384970",
+        "https://openalex.org/W3122585411",
+        "https://openalex.org/W3123598380",
+        "https://openalex.org/W3124185353",
+        "https://openalex.org/W3126284633",
+        "https://openalex.org/W3130713566",
+        "https://openalex.org/W3134631187",
+        "https://openalex.org/W3135178882",
+        "https://openalex.org/W3158521348",
+        "https://openalex.org/W3167966771",
+        "https://openalex.org/W3172545452",
+        "https://openalex.org/W3180891272",
+        "https://openalex.org/W3181153667",
+        "https://openalex.org/W3191705637",
+        "https://openalex.org/W3198357836",
+        "https://openalex.org/W3203019534",
+        "https://openalex.org/W3208869239",
+        "https://openalex.org/W4200032453",
+        "https://openalex.org/W4200243358",
+        "https://openalex.org/W4205942123",
+        "https://openalex.org/W4206252738",
+        "https://openalex.org/W4206416499",
+        "https://openalex.org/W4210309036",
+        "https://openalex.org/W4210532528",
+        "https://openalex.org/W4224037372",
+        "https://openalex.org/W4231546411",
+        "https://openalex.org/W4238240379",
+        "https://openalex.org/W4280525177",
+        "https://openalex.org/W4289744562",
+        "https://openalex.org/W6603460400",
+        "https://openalex.org/W6675952449",
+        "https://openalex.org/W6794859392"
+      ],
+      "referenced_works_count": 92,
+      "related_works": [
+        "https://openalex.org/W2345184372",
+        "https://openalex.org/W3195168932",
+        "https://openalex.org/W1996541855",
+        "https://openalex.org/W4288767684",
+        "https://openalex.org/W4293525103",
+        "https://openalex.org/W3034132578",
+        "https://openalex.org/W3200179079",
+        "https://openalex.org/W2735962158",
+        "https://openalex.org/W2985924212",
+        "https://openalex.org/W4327511089"
+      ],
+      "relevance_score": 3.6107483,
+      "sustainable_development_goals": [
+        {
+          "display_name": "Peace, Justice and strong institutions",
+          "id": "https://metadata.un.org/sdg/16",
+          "score": 0.6299999952316284
+        }
+      ],
+      "title": "A Novel Linear-Model-Based Methodology for Predicting the Directional Movement of the Euro-Dollar Exchange Rate",
+      "topics": [
+        {
+          "display_name": "Stock Market Forecasting Methods",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T11326",
+          "score": 0.9997000098228455,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        },
+        {
+          "display_name": "Market Dynamics and Volatility",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Economics, Econometrics and Finance",
+            "id": "https://openalex.org/fields/20"
+          },
+          "id": "https://openalex.org/T11059",
+          "score": 0.9990000128746033,
+          "subfield": {
+            "display_name": "Economics and Econometrics",
+            "id": "https://openalex.org/subfields/2002"
+          }
+        },
+        {
+          "display_name": "Complex Systems and Time Series Analysis",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Economics, Econometrics and Finance",
+            "id": "https://openalex.org/fields/20"
+          },
+          "id": "https://openalex.org/T11270",
+          "score": 0.9896000027656555,
+          "subfield": {
+            "display_name": "Economics and Econometrics",
+            "id": "https://openalex.org/subfields/2002"
+          }
+        }
+      ],
+      "type": "article",
+      "updated_date": "2026-05-06T08:25:59.206177"
+    },
+    {
+      "abstract_inverted_index": {
+        "(1/N)": [
+          13
+        ],
+        "(after": [
+          66,
+          98
+        ],
+        "10th": [
+          100
+        ],
+        "1st": [
+          67
+        ],
+        "2018)": [
+          101
+        ],
+        "2020).": [
+          70
+        ],
+        "Covid-19.": [
+          65
+        ],
+        "For": [
+          35,
+          71
+        ],
+        "Further": [
+          119
+        ],
+        "However,": [
+          86
+        ],
+        "January": [
+          69
+        ],
+        "November": [
+          99
+        ],
+        "Our": [
+          102
+        ],
+        "The": [
+          59
+        ],
+        "This": [
+          0
+        ],
+        "We": [
+          22
+        ],
+        "add": [
+          122
+        ],
+        "after": [
+          64
+        ],
+        "all": [
+          93
+        ],
+        "and": [
+          14,
+          26,
+          133
+        ],
+        "are": [
+          96
+        ],
+        "as": [
+          82
+        ],
+        "assets": [
+          131
+        ],
+        "available.": [
+          97
+        ],
+        "better": [
+          124
+        ],
+        "both": [
+          116
+        ],
+        "by": [
+          8
+        ],
+        "combining": [
+          139
+        ],
+        "contributes": [
+          2
+        ],
+        "could": [
+          121
+        ],
+        "cryptocurrencies": [
+          7,
+          95
+        ],
+        "cryptocurrencies.": [
+          21
+        ],
+        "cryptocurrency": [
+          16,
+          40,
+          84,
+          109,
+          126
+        ],
+        "daily": [
+          24
+        ],
+        "data": [
+          25,
+          57
+        ],
+        "day": [
+          54
+        ],
+        "different": [
+          142
+        ],
+        "duration": [
+          45,
+          50,
+          62,
+          78,
+          90
+        ],
+        "duration.": [
+          118,
+          144
+        ],
+        "durations": [
+          29
+        ],
+        "each": [
+          31
+        ],
+        "earliest": [
+          53
+        ],
+        "employ": [
+          23
+        ],
+        "examine": [
+          134
+        ],
+        "examining": [
+          9
+        ],
+        "first": [
+          43,
+          76
+        ],
+        "for": [
+          30
+        ],
+        "from": [
+          51
+        ],
+        "full": [
+          48
+        ],
+        "in": [
+          38,
+          55,
+          107,
+          115,
+          141
+        ],
+        "individual": [
+          15,
+          39,
+          83
+        ],
+        "investing": [
+          37,
+          106
+        ],
+        "is": [
+          46,
+          63,
+          79,
+          91
+        ],
+        "largest": [
+          20
+        ],
+        "literature": [
+          5
+        ],
+        "nave": [
+          12,
+          73,
+          113
+        ],
+        "of": [
+          11,
+          18,
+          33,
+          68,
+          137
+        ],
+        "on": [
+          6
+        ],
+        "our": [
+          56
+        ],
+        "outperforms": [
+          111
+        ],
+        "paper": [
+          1
+        ],
+        "performance": [
+          10,
+          136
+        ],
+        "performing": [
+          125
+        ],
+        "portfolio": [
+          17,
+          110,
+          114,
+          127,
+          132,
+          140
+        ],
+        "portfolio,": [
+          41,
+          74
+        ],
+        "portfolio.": [
+          34,
+          85
+        ],
+        "research": [
+          120
+        ],
+        "result": [
+          103
+        ],
+        "same": [
+          81
+        ],
+        "sample.": [
+          58
+        ],
+        "second": [
+          60,
+          88
+        ],
+        "shows": [
+          104
+        ],
+        "single": [
+          108
+        ],
+        "ten": [
+          19,
+          94
+        ],
+        "than": [
+          112
+        ],
+        "that": [
+          105
+        ],
+        "the": [
+          4,
+          36,
+          42,
+          47,
+          52,
+          72,
+          75,
+          80,
+          87,
+          123,
+          129,
+          135,
+          138
+        ],
+        "time": [
+          28,
+          44,
+          49,
+          61,
+          77,
+          89,
+          117,
+          143
+        ],
+        "to": [
+          3,
+          128
+        ],
+        "traditional": [
+          130
+        ],
+        "two": [
+          27
+        ],
+        "type": [
+          32
+        ],
+        "when": [
+          92
+        ]
+      },
+      "apc_list": null,
+      "apc_paid": null,
+      "authorships": [
+        {
+          "affiliations": [
+            {
+              "institution_ids": [],
+              "raw_affiliation_string": "Electrical Engineering, Elect, Comp & Syst Enginr"
+            }
+          ],
+          "author": {
+            "display_name": "Tian Chen",
+            "id": "https://openalex.org/A5039200178",
+            "orcid": "https://orcid.org/0000-0003-1655-5249"
+          },
+          "author_position": "first",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": true,
+          "raw_affiliation_strings": [
+            "Electrical Engineering, Elect, Comp & Syst Enginr"
+          ],
+          "raw_author_name": "Tian Chen"
+        }
+      ],
+      "awards": [],
+      "best_oa_location": {
+        "id": "doi:10.2991/aebmr.k.210319.101",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": true,
+        "landing_page_url": "https://doi.org/10.2991/aebmr.k.210319.101",
+        "license": "cc-by-nc",
+        "license_id": "https://openalex.org/licenses/cc-by-nc",
+        "pdf_url": "https://www.atlantis-press.com/article/125954319.pdf",
+        "raw_source_name": "Advances in Economics, Business and Management Research",
+        "raw_type": "proceedings-article",
+        "source": {
+          "display_name": "Advances in economics, business and management research/Advances in Economics, Business and Management Research",
+          "host_organization": "https://openalex.org/P4310315540",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310315540"
+          ],
+          "host_organization_lineage_names": [
+            "Atlantis Press"
+          ],
+          "host_organization_name": "Atlantis Press",
+          "id": "https://openalex.org/S4210228009",
+          "is_core": false,
+          "is_in_doaj": false,
+          "is_oa": false,
+          "issn": [
+            "2352-5428",
+            "2731-7854"
+          ],
+          "issn_l": "2352-5428",
+          "type": "book series"
+        },
+        "version": "publishedVersion"
+      },
+      "biblio": {
+        "first_page": null,
+        "issue": null,
+        "last_page": null,
+        "volume": "166"
+      },
+      "citation_normalized_percentile": {
+        "is_in_top_10_percent": false,
+        "is_in_top_1_percent": false,
+        "value": 0.57828847
+      },
+      "cited_by_count": 1,
+      "cited_by_percentile_year": {
+        "max": 94,
+        "min": 89
+      },
+      "concepts": [
+        {
+          "display_name": "Cryptocurrency",
+          "id": "https://openalex.org/C180706569",
+          "level": 2,
+          "score": 0.9144710302352905,
+          "wikidata": "https://www.wikidata.org/wiki/Q13479982"
+        },
+        {
+          "display_name": "Diversification (marketing strategy)",
+          "id": "https://openalex.org/C180916674",
+          "level": 2,
+          "score": 0.7587868571281433,
+          "wikidata": "https://www.wikidata.org/wiki/Q3711935"
+        },
+        {
+          "display_name": "Portfolio",
+          "id": "https://openalex.org/C2780821815",
+          "level": 2,
+          "score": 0.6537322402000427,
+          "wikidata": "https://www.wikidata.org/wiki/Q5340806"
+        },
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/C41008148",
+          "level": 0,
+          "score": 0.5541608929634094,
+          "wikidata": "https://www.wikidata.org/wiki/Q21198"
+        },
+        {
+          "display_name": "Financial economics",
+          "id": "https://openalex.org/C106159729",
+          "level": 1,
+          "score": 0.27988964319229126,
+          "wikidata": "https://www.wikidata.org/wiki/Q2294553"
+        },
+        {
+          "display_name": "Business",
+          "id": "https://openalex.org/C144133560",
+          "level": 0,
+          "score": 0.2516055107116699,
+          "wikidata": "https://www.wikidata.org/wiki/Q4830453"
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/C162324750",
+          "level": 0,
+          "score": 0.24931710958480835,
+          "wikidata": "https://www.wikidata.org/wiki/Q8134"
+        },
+        {
+          "display_name": "Computer security",
+          "id": "https://openalex.org/C38652104",
+          "level": 1,
+          "score": 0.19490432739257812,
+          "wikidata": "https://www.wikidata.org/wiki/Q3510521"
+        },
+        {
+          "display_name": "Marketing",
+          "id": "https://openalex.org/C162853370",
+          "level": 1,
+          "score": 0.05995452404022217,
+          "wikidata": "https://www.wikidata.org/wiki/Q39809"
+        }
+      ],
+      "content_urls": {
+        "grobid_xml": "https://content.openalex.org/works/W3148723717.grobid-xml",
+        "pdf": "https://content.openalex.org/works/W3148723717.pdf"
+      },
+      "corresponding_author_ids": [
+        "https://openalex.org/A5039200178"
+      ],
+      "corresponding_institution_ids": [],
+      "countries_distinct_count": 0,
+      "counts_by_year": [
+        {
+          "cited_by_count": 1,
+          "year": 2023
+        }
+      ],
+      "created_date": "2025-10-10T00:00:00",
+      "display_name": "Looking for the Optimal Cryptocurrency Portfolio: Benefits of Diversification",
+      "doi": "https://doi.org/10.2991/aebmr.k.210319.101",
+      "funders": [],
+      "fwci": 0.2754,
+      "has_content": {
+        "grobid_xml": true,
+        "pdf": true
+      },
+      "has_fulltext": true,
+      "id": "https://openalex.org/W3148723717",
+      "ids": {
+        "doi": "https://doi.org/10.2991/aebmr.k.210319.101",
+        "mag": "3148723717",
+        "openalex": "https://openalex.org/W3148723717"
+      },
+      "indexed_in": [
+        "crossref"
+      ],
+      "institutions": [],
+      "institutions_distinct_count": 1,
+      "is_paratext": false,
+      "is_retracted": false,
+      "is_xpac": false,
+      "keywords": [
+        {
+          "display_name": "Cryptocurrency",
+          "id": "https://openalex.org/keywords/cryptocurrency",
+          "score": 0.9144710302352905
+        },
+        {
+          "display_name": "Diversification (marketing strategy)",
+          "id": "https://openalex.org/keywords/diversification",
+          "score": 0.7587868571281433
+        },
+        {
+          "display_name": "Portfolio",
+          "id": "https://openalex.org/keywords/portfolio",
+          "score": 0.6537322402000427
+        },
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/keywords/computer-science",
+          "score": 0.5541608929634094
+        },
+        {
+          "display_name": "Financial economics",
+          "id": "https://openalex.org/keywords/financial-economics",
+          "score": 0.27988964319229126
+        },
+        {
+          "display_name": "Business",
+          "id": "https://openalex.org/keywords/business",
+          "score": 0.2516055107116699
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/keywords/economics",
+          "score": 0.24931710958480835
+        },
+        {
+          "display_name": "Computer security",
+          "id": "https://openalex.org/keywords/computer-security",
+          "score": 0.19490432739257812
+        },
+        {
+          "display_name": "Marketing",
+          "id": "https://openalex.org/keywords/marketing",
+          "score": 0.05995452404022217
+        }
+      ],
+      "language": "en",
+      "locations": [
+        {
+          "id": "doi:10.2991/aebmr.k.210319.101",
+          "is_accepted": true,
+          "is_oa": true,
+          "is_published": true,
+          "landing_page_url": "https://doi.org/10.2991/aebmr.k.210319.101",
+          "license": "cc-by-nc",
+          "license_id": "https://openalex.org/licenses/cc-by-nc",
+          "pdf_url": "https://www.atlantis-press.com/article/125954319.pdf",
+          "raw_source_name": "Advances in Economics, Business and Management Research",
+          "raw_type": "proceedings-article",
+          "source": {
+            "display_name": "Advances in economics, business and management research/Advances in Economics, Business and Management Research",
+            "host_organization": "https://openalex.org/P4310315540",
+            "host_organization_lineage": [
+              "https://openalex.org/P4310315540"
+            ],
+            "host_organization_lineage_names": [
+              "Atlantis Press"
+            ],
+            "host_organization_name": "Atlantis Press",
+            "id": "https://openalex.org/S4210228009",
+            "is_core": false,
+            "is_in_doaj": false,
+            "is_oa": false,
+            "issn": [
+              "2352-5428",
+              "2731-7854"
+            ],
+            "issn_l": "2352-5428",
+            "type": "book series"
+          },
+          "version": "publishedVersion"
+        }
+      ],
+      "locations_count": 1,
+      "mesh": [],
+      "open_access": {
+        "any_repository_has_fulltext": false,
+        "is_oa": true,
+        "oa_status": "hybrid",
+        "oa_url": "https://www.atlantis-press.com/article/125954319.pdf"
+      },
+      "primary_location": {
+        "id": "doi:10.2991/aebmr.k.210319.101",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": true,
+        "landing_page_url": "https://doi.org/10.2991/aebmr.k.210319.101",
+        "license": "cc-by-nc",
+        "license_id": "https://openalex.org/licenses/cc-by-nc",
+        "pdf_url": "https://www.atlantis-press.com/article/125954319.pdf",
+        "raw_source_name": "Advances in Economics, Business and Management Research",
+        "raw_type": "proceedings-article",
+        "source": {
+          "display_name": "Advances in economics, business and management research/Advances in Economics, Business and Management Research",
+          "host_organization": "https://openalex.org/P4310315540",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310315540"
+          ],
+          "host_organization_lineage_names": [
+            "Atlantis Press"
+          ],
+          "host_organization_name": "Atlantis Press",
+          "id": "https://openalex.org/S4210228009",
+          "is_core": false,
+          "is_in_doaj": false,
+          "is_oa": false,
+          "issn": [
+            "2352-5428",
+            "2731-7854"
+          ],
+          "issn_l": "2352-5428",
+          "type": "book series"
+        },
+        "version": "publishedVersion"
+      },
+      "primary_topic": {
+        "display_name": "Blockchain Technology Applications and Security",
+        "domain": {
+          "display_name": "Physical Sciences",
+          "id": "https://openalex.org/domains/3"
+        },
+        "field": {
+          "display_name": "Computer Science",
+          "id": "https://openalex.org/fields/17"
+        },
+        "id": "https://openalex.org/T10270",
+        "score": 0.9998000264167786,
+        "subfield": {
+          "display_name": "Information Systems",
+          "id": "https://openalex.org/subfields/1710"
+        }
+      },
+      "publication_date": "2021-01-01",
+      "publication_year": 2021,
+      "referenced_works": [
+        "https://openalex.org/W1798106456",
+        "https://openalex.org/W2655997960",
+        "https://openalex.org/W2771030840",
+        "https://openalex.org/W2775323873",
+        "https://openalex.org/W2785114503",
+        "https://openalex.org/W2805371591",
+        "https://openalex.org/W2883487552",
+        "https://openalex.org/W3014497039"
+      ],
+      "referenced_works_count": 8,
+      "related_works": [
+        "https://openalex.org/W2748952813",
+        "https://openalex.org/W4366411693",
+        "https://openalex.org/W3211641817",
+        "https://openalex.org/W3164717803",
+        "https://openalex.org/W4389915954",
+        "https://openalex.org/W3123387860",
+        "https://openalex.org/W3109867883",
+        "https://openalex.org/W4291291739",
+        "https://openalex.org/W4321377877",
+        "https://openalex.org/W2479414348"
+      ],
+      "relevance_score": 2.9742205,
+      "sustainable_development_goals": [],
+      "title": "Looking for the Optimal Cryptocurrency Portfolio: Benefits of Diversification",
+      "topics": [
+        {
+          "display_name": "Blockchain Technology Applications and Security",
+          "domain": {
+            "display_name": "Physical Sciences",
+            "id": "https://openalex.org/domains/3"
+          },
+          "field": {
+            "display_name": "Computer Science",
+            "id": "https://openalex.org/fields/17"
+          },
+          "id": "https://openalex.org/T10270",
+          "score": 0.9998000264167786,
+          "subfield": {
+            "display_name": "Information Systems",
+            "id": "https://openalex.org/subfields/1710"
+          }
+        },
+        {
+          "display_name": "Art History and Market Analysis",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Arts and Humanities",
+            "id": "https://openalex.org/fields/12"
+          },
+          "id": "https://openalex.org/T13342",
+          "score": 0.9021000266075134,
+          "subfield": {
+            "display_name": "Visual Arts and Performing Arts",
+            "id": "https://openalex.org/subfields/1213"
+          }
+        }
+      ],
+      "type": "article",
+      "updated_date": "2025-11-06T03:46:38.306776"
+    },
+    {
+      "abstract_inverted_index": null,
+      "apc_list": null,
+      "apc_paid": null,
+      "authorships": [
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "\u6817\u539f \u5171\u559c",
+            "id": "https://openalex.org/A5133025635",
+            "orcid": null
+          },
+          "author_position": "first",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": true,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "\u6817\u539f \u5171\u559c"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "Tomoki Kurihara",
+            "id": "https://openalex.org/A5128675799",
+            "orcid": null
+          },
+          "author_position": "middle",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "Tomoki Kurihara"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "\u677e\u672c\u62d3\u53f2",
+            "id": "https://openalex.org/A5133033618",
+            "orcid": null
+          },
+          "author_position": "middle",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "\u677e\u672c\u62d3\u53f2"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "display_name": "Takuji Matsumoto",
+            "id": "https://openalex.org/A5133055125",
+            "orcid": null
+          },
+          "author_position": "last",
+          "countries": [],
+          "institutions": [],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [],
+          "raw_author_name": "Takuji Matsumoto"
+        }
+      ],
+      "awards": [],
+      "best_oa_location": null,
+      "biblio": {
+        "first_page": null,
+        "issue": null,
+        "last_page": null,
+        "volume": null
+      },
+      "citation_normalized_percentile": {
+        "is_in_top_10_percent": true,
+        "is_in_top_1_percent": false,
+        "value": 0.95505436
+      },
+      "cited_by_count": 0,
+      "cited_by_percentile_year": null,
+      "concepts": [
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/C162324750",
+          "level": 0,
+          "score": 0.4702000021934509,
+          "wikidata": "https://www.wikidata.org/wiki/Q8134"
+        },
+        {
+          "display_name": "Business",
+          "id": "https://openalex.org/C144133560",
+          "level": 0,
+          "score": 0.38359999656677246,
+          "wikidata": "https://www.wikidata.org/wiki/Q4830453"
+        },
+        {
+          "display_name": "Monetary economics",
+          "id": "https://openalex.org/C556758197",
+          "level": 1,
+          "score": 0.32899999618530273,
+          "wikidata": "https://www.wikidata.org/wiki/Q580018"
+        },
+        {
+          "display_name": "Transmission (telecommunications)",
+          "id": "https://openalex.org/C761482",
+          "level": 2,
+          "score": 0.3111000061035156,
+          "wikidata": "https://www.wikidata.org/wiki/Q118093"
+        },
+        {
+          "display_name": "Computer science",
+          "id": "https://openalex.org/C41008148",
+          "level": 0,
+          "score": 0.2953999936580658,
+          "wikidata": "https://www.wikidata.org/wiki/Q21198"
+        },
+        {
+          "display_name": "Cryptocurrency",
+          "id": "https://openalex.org/C180706569",
+          "level": 2,
+          "score": 0.25099998712539673,
+          "wikidata": "https://www.wikidata.org/wiki/Q13479982"
+        },
+        {
+          "display_name": "Financial economics",
+          "id": "https://openalex.org/C106159729",
+          "level": 1,
+          "score": 0.23389999568462372,
+          "wikidata": "https://www.wikidata.org/wiki/Q2294553"
+        },
+        {
+          "display_name": "Econometrics",
+          "id": "https://openalex.org/C149782125",
+          "level": 1,
+          "score": 0.2304999977350235,
+          "wikidata": "https://www.wikidata.org/wiki/Q160039"
+        },
+        {
+          "display_name": "Investment (military)",
+          "id": "https://openalex.org/C27548731",
+          "level": 3,
+          "score": 0.22609999775886536,
+          "wikidata": "https://www.wikidata.org/wiki/Q88272"
+        },
+        {
+          "display_name": "Payment",
+          "id": "https://openalex.org/C145097563",
+          "level": 2,
+          "score": 0.22550000250339508,
+          "wikidata": "https://www.wikidata.org/wiki/Q1148747"
+        }
+      ],
+      "content_urls": null,
+      "corresponding_author_ids": [
+        "https://openalex.org/A5133025635"
+      ],
+      "corresponding_institution_ids": [],
+      "countries_distinct_count": 0,
+      "counts_by_year": [],
+      "created_date": "2026-04-07T00:00:00",
+      "display_name": "Price Transmission from Bitcoin to Altcoins: High-Frequency Evidence and Implications for Trading Strategy",
+      "doi": null,
+      "funders": [],
+      "fwci": 0.0,
+      "has_content": {
+        "grobid_xml": false,
+        "pdf": false
+      },
+      "has_fulltext": true,
+      "id": "https://openalex.org/W7151150477",
+      "ids": {
+        "openalex": "https://openalex.org/W7151150477"
+      },
+      "indexed_in": [],
+      "institutions": [],
+      "institutions_distinct_count": 4,
+      "is_paratext": false,
+      "is_retracted": false,
+      "is_xpac": false,
+      "keywords": [
+        {
+          "display_name": "Transmission (telecommunications)",
+          "id": "https://openalex.org/keywords/transmission",
+          "score": 0.3111000061035156
+        },
+        {
+          "display_name": "Cryptocurrency",
+          "id": "https://openalex.org/keywords/cryptocurrency",
+          "score": 0.25099998712539673
+        },
+        {
+          "display_name": "Investment (military)",
+          "id": "https://openalex.org/keywords/investment",
+          "score": 0.22609999775886536
+        },
+        {
+          "display_name": "Payment",
+          "id": "https://openalex.org/keywords/payment",
+          "score": 0.22550000250339508
+        }
+      ],
+      "language": "en",
+      "locations": [
+        {
+          "id": "pmh:oai:t2r2.star.titech.ac.jp:50753150",
+          "is_accepted": false,
+          "is_oa": false,
+          "is_published": false,
+          "landing_page_url": "http://t2r2.star.titech.ac.jp/cgi-bin/publicationinfo.cgi?q_publication_content_number=CTT100941776",
+          "license": null,
+          "license_id": null,
+          "pdf_url": null,
+          "raw_source_name": null,
+          "raw_type": "Journal Article",
+          "source": {
+            "display_name": "Tokyo Tech Research Repository (Tokyo Institute of Technology)",
+            "host_organization": "https://openalex.org/I114531698",
+            "host_organization_lineage": [
+              "https://openalex.org/I114531698"
+            ],
+            "host_organization_lineage_names": [],
+            "host_organization_name": "Tokyo Institute of Technology",
+            "id": "https://openalex.org/S4377196385",
+            "is_core": false,
+            "is_in_doaj": false,
+            "is_oa": false,
+            "issn": null,
+            "issn_l": null,
+            "type": "repository"
+          },
+          "version": "submittedVersion"
+        }
+      ],
+      "locations_count": 1,
+      "mesh": [],
+      "open_access": {
+        "any_repository_has_fulltext": false,
+        "is_oa": false,
+        "oa_status": "closed",
+        "oa_url": null
+      },
+      "primary_location": {
+        "id": "pmh:oai:t2r2.star.titech.ac.jp:50753150",
+        "is_accepted": false,
+        "is_oa": false,
+        "is_published": false,
+        "landing_page_url": "http://t2r2.star.titech.ac.jp/cgi-bin/publicationinfo.cgi?q_publication_content_number=CTT100941776",
+        "license": null,
+        "license_id": null,
+        "pdf_url": null,
+        "raw_source_name": null,
+        "raw_type": "Journal Article",
+        "source": {
+          "display_name": "Tokyo Tech Research Repository (Tokyo Institute of Technology)",
+          "host_organization": "https://openalex.org/I114531698",
+          "host_organization_lineage": [
+            "https://openalex.org/I114531698"
+          ],
+          "host_organization_lineage_names": [],
+          "host_organization_name": "Tokyo Institute of Technology",
+          "id": "https://openalex.org/S4377196385",
+          "is_core": false,
+          "is_in_doaj": false,
+          "is_oa": false,
+          "issn": null,
+          "issn_l": null,
+          "type": "repository"
+        },
+        "version": "submittedVersion"
+      },
+      "primary_topic": {
+        "display_name": "Blockchain Technology Applications and Security",
+        "domain": {
+          "display_name": "Physical Sciences",
+          "id": "https://openalex.org/domains/3"
+        },
+        "field": {
+          "display_name": "Computer Science",
+          "id": "https://openalex.org/fields/17"
+        },
+        "id": "https://openalex.org/T10270",
+        "score": 0.37369999289512634,
+        "subfield": {
+          "display_name": "Information Systems",
+          "id": "https://openalex.org/subfields/1710"
+        }
+      },
+      "publication_date": "2026-03-29",
+      "publication_year": 2026,
+      "referenced_works": [],
+      "referenced_works_count": 0,
+      "related_works": [],
+      "relevance_score": 0.85945463,
+      "sustainable_development_goals": [],
+      "title": "Price Transmission from Bitcoin to Altcoins: High-Frequency Evidence and Implications for Trading Strategy",
+      "topics": [
+        {
+          "display_name": "Blockchain Technology Applications and Security",
+          "domain": {
+            "display_name": "Physical Sciences",
+            "id": "https://openalex.org/domains/3"
+          },
+          "field": {
+            "display_name": "Computer Science",
+            "id": "https://openalex.org/fields/17"
+          },
+          "id": "https://openalex.org/T10270",
+          "score": 0.37369999289512634,
+          "subfield": {
+            "display_name": "Information Systems",
+            "id": "https://openalex.org/subfields/1710"
+          }
+        },
+        {
+          "display_name": "Consumer Market Behavior and Pricing",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Business, Management and Accounting",
+            "id": "https://openalex.org/fields/14"
+          },
+          "id": "https://openalex.org/T11161",
+          "score": 0.03020000085234642,
+          "subfield": {
+            "display_name": "Marketing",
+            "id": "https://openalex.org/subfields/1406"
+          }
+        },
+        {
+          "display_name": "Market Dynamics and Volatility",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Economics, Econometrics and Finance",
+            "id": "https://openalex.org/fields/20"
+          },
+          "id": "https://openalex.org/T11059",
+          "score": 0.02280000038444996,
+          "subfield": {
+            "display_name": "Economics and Econometrics",
+            "id": "https://openalex.org/subfields/2002"
+          }
+        }
+      ],
+      "type": "article",
+      "updated_date": "2026-04-08T06:07:18.267832"
+    },
+    {
+      "abstract_inverted_index": {
+        "(ALTs)": [
+          13
+        ],
+        "(BTC)": [
+          10
+        ],
+        "ALTs.": [
+          82
+        ],
+        "Abstract": [
+          0
+        ],
+        "BTC": [
+          43,
+          80
+        ],
+        "BTC's": [
+          94
+        ],
+        "Based": [
+          83
+        ],
+        "Bitcoin": [
+          9
+        ],
+        "Granger": [
+          71
+        ],
+        "Granger-causal": [
+          77
+        ],
+        "Our": [
+          27,
+          140
+        ],
+        "This": [
+          1,
+          117
+        ],
+        "Through": [
+          101
+        ],
+        "To": [
+          46
+        ],
+        "a": [
+          52,
+          89,
+          98
+        ],
+        "academic": [
+          152
+        ],
+        "across": [
+          30,
+          113
+        ],
+        "altcoins": [
+          12
+        ],
+        "analysis": [
+          29
+        ],
+        "and": [
+          17,
+          59,
+          128,
+          146
+        ],
+        "anomalies.": [
+          139
+        ],
+        "approaches": [
+          112
+        ],
+        "arbitrage": [
+          147
+        ],
+        "as": [
+          97
+        ],
+        "associated": [
+          67
+        ],
+        "be": [
+          66
+        ],
+        "behavior,": [
+          49
+        ],
+        "buy-and-hold": [
+          111
+        ],
+        "causality": [
+          72
+        ],
+        "comprehensive": [
+          28
+        ],
+        "conditions.": [
+          116
+        ],
+        "consistently": [
+          108
+        ],
+        "contributing": [
+          150
+        ],
+        "cryptocurrencies": [
+          37
+        ],
+        "cryptocurrency": [
+          126,
+          158
+        ],
+        "data": [
+          16
+        ],
+        "decisions,": [
+          105
+        ],
+        "delayed": [
+          40
+        ],
+        "demonstrate": [
+          75
+        ],
+        "demonstrates": [
+          129
+        ],
+        "develop": [
+          88
+        ],
+        "diverse": [
+          114
+        ],
+        "empirically": [
+          18
+        ],
+        "evidence": [
+          120
+        ],
+        "examine": [
+          47
+        ],
+        "exhibit": [
+          38
+        ],
+        "find": [
+          60
+        ],
+        "findings": [
+          141
+        ],
+        "findings,": [
+          86
+        ],
+        "frictions": [
+          124
+        ],
+        "from": [
+          8,
+          79
+        ],
+        "further": [
+          74
+        ],
+        "high-frequency": [
+          15,
+          145
+        ],
+        "immediate": [
+          56
+        ],
+        "in": [
+          125
+        ],
+        "indicator": [
+          54
+        ],
+        "indicator.": [
+          100
+        ],
+        "inefficiencies.": [
+          26
+        ],
+        "information": [
+          122
+        ],
+        "insights": [
+          153
+        ],
+        "introduce": [
+          51
+        ],
+        "investigates": [
+          3
+        ],
+        "investment": [
+          134
+        ],
+        "lag": [
+          90
+        ],
+        "lagged": [
+          5
+        ],
+        "leading": [
+          99
+        ],
+        "learning-based": [
+          103
+        ],
+        "leverage": [
+          23,
+          137
+        ],
+        "liquidity": [
+          63
+        ],
+        "literature": [
+          156
+        ],
+        "lower": [
+          62
+        ],
+        "machine": [
+          102
+        ],
+        "market": [
+          25,
+          32,
+          115,
+          159
+        ],
+        "markets": [
+          127
+        ],
+        "microstructure.": [
+          160
+        ],
+        "movements.": [
+          45
+        ],
+        "multiple": [
+          31
+        ],
+        "new": [
+          151
+        ],
+        "of": [
+          55,
+          121,
+          132
+        ],
+        "offer": [
+          142
+        ],
+        "on": [
+          84,
+          157
+        ],
+        "our": [
+          106
+        ],
+        "outperforms": [
+          109
+        ],
+        "practical": [
+          133
+        ],
+        "preceding": [
+          95
+        ],
+        "price": [
+          6,
+          44,
+          57
+        ],
+        "provides": [
+          119
+        ],
+        "reactions.": [
+          70
+        ],
+        "regimes": [
+          33
+        ],
+        "relationships": [
+          78
+        ],
+        "research": [
+          118
+        ],
+        "responses": [
+          41
+        ],
+        "responsiveness": [
+          58
+        ],
+        "returns": [
+          96
+        ],
+        "reveals": [
+          34
+        ],
+        "short-term": [
+          138
+        ],
+        "significant": [
+          39
+        ],
+        "simple": [
+          53
+        ],
+        "slower": [
+          69
+        ],
+        "small-cap": [
+          36
+        ],
+        "strategies": [
+          21,
+          135
+        ],
+        "strategy": [
+          92,
+          107
+        ],
+        "study": [
+          2
+        ],
+        "tends": [
+          64
+        ],
+        "tests": [
+          73
+        ],
+        "that": [
+          22,
+          35,
+          61,
+          136
+        ],
+        "the": [
+          4,
+          130,
+          155
+        ],
+        "these": [
+          24,
+          85
+        ],
+        "this": [
+          48
+        ],
+        "to": [
+          11,
+          42,
+          65,
+          81,
+          144,
+          154
+        ],
+        "traders": [
+          148
+        ],
+        "trading": [
+          20,
+          91,
+          104
+        ],
+        "traditional": [
+          110
+        ],
+        "transmission": [
+          7,
+          123
+        ],
+        "unidirectional": [
+          76
+        ],
+        "using": [
+          14,
+          93
+        ],
+        "validates": [
+          19
+        ],
+        "value": [
+          143
+        ],
+        "viability": [
+          131
+        ],
+        "we": [
+          50,
+          87
+        ],
+        "while": [
+          149
+        ],
+        "with": [
+          68
+        ]
+      },
+      "apc_list": {
+        "currency": "EUR",
+        "value": 2390,
+        "value_usd": 2990
+      },
+      "apc_paid": {
+        "currency": "EUR",
+        "value": 2390,
+        "value_usd": 2990
+      },
+      "authorships": [
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I171494771"
+              ],
+              "raw_affiliation_string": "Graduate School of Data Science, Shiga University, 1-1-1 Banba, Hikone-Shi, Shiga, 522-8522, Japan"
+            }
+          ],
+          "author": {
+            "display_name": "Tomoki Kurihara",
+            "id": "https://openalex.org/A5128675799",
+            "orcid": null
+          },
+          "author_position": "first",
+          "countries": [
+            "JP"
+          ],
+          "institutions": [
+            {
+              "country_code": "JP",
+              "display_name": "Shiga University",
+              "id": "https://openalex.org/I171494771",
+              "lineage": [
+                "https://openalex.org/I171494771"
+              ],
+              "ror": "https://ror.org/01vvhy971",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": false,
+          "raw_affiliation_strings": [
+            "Graduate School of Data Science, Shiga University, 1-1-1 Banba, Hikone-Shi, Shiga, 522-8522, Japan"
+          ],
+          "raw_author_name": "Tomoki Kurihara",
+          "raw_orcid": null
+        },
+        {
+          "affiliations": [
+            {
+              "institution_ids": [
+                "https://openalex.org/I171481255"
+              ],
+              "raw_affiliation_string": "Department of Innovation Science, Institute of Science Tokyo, 3-3-6 Shibaura, Minato-Ku, Tokyo, 108-0023, Japan"
+            }
+          ],
+          "author": {
+            "display_name": "Takuji Matsumoto",
+            "id": "https://openalex.org/A5128685782",
+            "orcid": null
+          },
+          "author_position": "last",
+          "countries": [
+            "JP"
+          ],
+          "institutions": [
+            {
+              "country_code": "JP",
+              "display_name": "Shibaura Institute of Technology",
+              "id": "https://openalex.org/I171481255",
+              "lineage": [
+                "https://openalex.org/I171481255"
+              ],
+              "ror": "https://ror.org/020wjcq07",
+              "type": "education"
+            }
+          ],
+          "is_corresponding": true,
+          "raw_affiliation_strings": [
+            "Department of Innovation Science, Institute of Science Tokyo, 3-3-6 Shibaura, Minato-Ku, Tokyo, 108-0023, Japan"
+          ],
+          "raw_author_name": "Takuji Matsumoto",
+          "raw_orcid": "https://orcid.org/0000-0002-6651-5889"
+        }
+      ],
+      "awards": [],
+      "best_oa_location": {
+        "id": "doi:10.1007/s10690-026-09589-z",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": true,
+        "landing_page_url": "https://doi.org/10.1007/s10690-026-09589-z",
+        "license": "cc-by",
+        "license_id": "https://openalex.org/licenses/cc-by",
+        "pdf_url": "https://link.springer.com/content/pdf/10.1007/s10690-026-09589-z.pdf",
+        "raw_source_name": "Asia-Pacific Financial Markets",
+        "raw_type": "journal-article",
+        "source": {
+          "display_name": "Asia-Pacific Financial Markets",
+          "host_organization": "https://openalex.org/P4310319900",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310319900",
+            "https://openalex.org/P4310319965"
+          ],
+          "host_organization_lineage_names": [
+            "Springer Science+Business Media",
+            "Springer Nature"
+          ],
+          "host_organization_name": "Springer Science+Business Media",
+          "id": "https://openalex.org/S116955675",
+          "is_core": true,
+          "is_in_doaj": false,
+          "is_oa": false,
+          "issn": [
+            "1387-2834",
+            "1573-6946"
+          ],
+          "issn_l": "1387-2834",
+          "type": "journal"
+        },
+        "version": "publishedVersion"
+      },
+      "biblio": {
+        "first_page": null,
+        "issue": null,
+        "last_page": null,
+        "volume": null
+      },
+      "citation_normalized_percentile": {
+        "is_in_top_10_percent": false,
+        "is_in_top_1_percent": false,
+        "value": 0.38644452
+      },
+      "cited_by_count": 0,
+      "cited_by_percentile_year": null,
+      "concepts": [
+        {
+          "display_name": "Cryptocurrency",
+          "id": "https://openalex.org/C180706569",
+          "level": 2,
+          "score": 0.7774999737739563,
+          "wikidata": "https://www.wikidata.org/wiki/Q13479982"
+        },
+        {
+          "display_name": "Leverage (statistics)",
+          "id": "https://openalex.org/C153083717",
+          "level": 2,
+          "score": 0.6444000005722046,
+          "wikidata": "https://www.wikidata.org/wiki/Q6535263"
+        },
+        {
+          "display_name": "Economics",
+          "id": "https://openalex.org/C162324750",
+          "level": 0,
+          "score": 0.5841000080108643,
+          "wikidata": "https://www.wikidata.org/wiki/Q8134"
+        },
+        {
+          "display_name": "Price discovery",
+          "id": "https://openalex.org/C39658296",
+          "level": 3,
+          "score": 0.5648000240325928,
+          "wikidata": "https://www.wikidata.org/wiki/Q7242611"
+        },
+        {
+          "display_name": "Algorithmic trading",
+          "id": "https://openalex.org/C78508483",
+          "level": 2,
+          "score": 0.5479000210762024,
+          "wikidata": "https://www.wikidata.org/wiki/Q139445"
+        },
+        {
+          "display_name": "Market liquidity",
+          "id": "https://openalex.org/C183582576",
+          "level": 2,
+          "score": 0.5429999828338623,
+          "wikidata": "https://www.wikidata.org/wiki/Q184783"
+        },
+        {
+          "display_name": "Trading strategy",
+          "id": "https://openalex.org/C131562839",
+          "level": 2,
+          "score": 0.5120999813079834,
+          "wikidata": "https://www.wikidata.org/wiki/Q1574928"
+        },
+        {
+          "display_name": "Arbitrage",
+          "id": "https://openalex.org/C160623529",
+          "level": 2,
+          "score": 0.5065000057220459,
+          "wikidata": "https://www.wikidata.org/wiki/Q273088"
+        },
+        {
+          "display_name": "Granger causality",
+          "id": "https://openalex.org/C129824826",
+          "level": 2,
+          "score": 0.4756999909877777,
+          "wikidata": "https://www.wikidata.org/wiki/Q2630107"
+        },
+        {
+          "display_name": "Financial economics",
+          "id": "https://openalex.org/C106159729",
+          "level": 1,
+          "score": 0.4487000107765198,
+          "wikidata": "https://www.wikidata.org/wiki/Q2294553"
+        },
+        {
+          "display_name": "Econometrics",
+          "id": "https://openalex.org/C149782125",
+          "level": 1,
+          "score": 0.4453999996185303,
+          "wikidata": "https://www.wikidata.org/wiki/Q160039"
+        },
+        {
+          "display_name": "Investment (military)",
+          "id": "https://openalex.org/C27548731",
+          "level": 3,
+          "score": 0.3817000091075897,
+          "wikidata": "https://www.wikidata.org/wiki/Q88272"
+        },
+        {
+          "display_name": "Investment strategy",
+          "id": "https://openalex.org/C103144560",
+          "level": 3,
+          "score": 0.37040001153945923,
+          "wikidata": "https://www.wikidata.org/wiki/Q2670999"
+        },
+        {
+          "display_name": "Monetary economics",
+          "id": "https://openalex.org/C556758197",
+          "level": 1,
+          "score": 0.3628999888896942,
+          "wikidata": "https://www.wikidata.org/wiki/Q580018"
+        },
+        {
+          "display_name": "Technical analysis",
+          "id": "https://openalex.org/C117245426",
+          "level": 2,
+          "score": 0.34200000762939453,
+          "wikidata": "https://www.wikidata.org/wiki/Q235038"
+        },
+        {
+          "display_name": "High-frequency trading",
+          "id": "https://openalex.org/C24683644",
+          "level": 3,
+          "score": 0.3409999907016754,
+          "wikidata": "https://www.wikidata.org/wiki/Q138372"
+        },
+        {
+          "display_name": "Market microstructure",
+          "id": "https://openalex.org/C51926234",
+          "level": 3,
+          "score": 0.3257000148296356,
+          "wikidata": "https://www.wikidata.org/wiki/Q3312426"
+        },
+        {
+          "display_name": "Pairs trade",
+          "id": "https://openalex.org/C158876240",
+          "level": 4,
+          "score": 0.31310001015663147,
+          "wikidata": "https://www.wikidata.org/wiki/Q17105131"
+        },
+        {
+          "display_name": "Trend following",
+          "id": "https://openalex.org/C186797051",
+          "level": 2,
+          "score": 0.30640000104904175,
+          "wikidata": "https://www.wikidata.org/wiki/Q60738868"
+        },
+        {
+          "display_name": "Information transmission",
+          "id": "https://openalex.org/C2983568541",
+          "level": 2,
+          "score": 0.29010000824928284,
+          "wikidata": "https://www.wikidata.org/wiki/Q389772"
+        },
+        {
+          "display_name": "Value (mathematics)",
+          "id": "https://openalex.org/C2776291640",
+          "level": 2,
+          "score": 0.2872999906539917,
+          "wikidata": "https://www.wikidata.org/wiki/Q2912517"
+        },
+        {
+          "display_name": "Business",
+          "id": "https://openalex.org/C144133560",
+          "level": 0,
+          "score": 0.2858999967575073,
+          "wikidata": "https://www.wikidata.org/wiki/Q4830453"
+        },
+        {
+          "display_name": "Asset (computer security)",
+          "id": "https://openalex.org/C76178495",
+          "level": 2,
+          "score": 0.27970001101493835,
+          "wikidata": "https://www.wikidata.org/wiki/Q4808784"
+        },
+        {
+          "display_name": "Alternative investment",
+          "id": "https://openalex.org/C134221152",
+          "level": 3,
+          "score": 0.2687000036239624,
+          "wikidata": "https://www.wikidata.org/wiki/Q4736525"
+        },
+        {
+          "display_name": "Market price",
+          "id": "https://openalex.org/C64112148",
+          "level": 2,
+          "score": 0.26499998569488525,
+          "wikidata": "https://www.wikidata.org/wiki/Q160151"
+        },
+        {
+          "display_name": "Microeconomics",
+          "id": "https://openalex.org/C175444787",
+          "level": 1,
+          "score": 0.2547999918460846,
+          "wikidata": "https://www.wikidata.org/wiki/Q39072"
+        },
+        {
+          "display_name": "Panel data",
+          "id": "https://openalex.org/C6422946",
+          "level": 2,
+          "score": 0.2542000114917755,
+          "wikidata": "https://www.wikidata.org/wiki/Q857354"
+        }
+      ],
+      "content_urls": {
+        "grobid_xml": "https://content.openalex.org/works/W7134839761.grobid-xml",
+        "pdf": "https://content.openalex.org/works/W7134839761.pdf"
+      },
+      "corresponding_author_ids": [
+        "https://openalex.org/A5128685782"
+      ],
+      "corresponding_institution_ids": [
+        "https://openalex.org/I171481255"
+      ],
+      "countries_distinct_count": 1,
+      "counts_by_year": [],
+      "created_date": "2026-03-11T00:00:00",
+      "display_name": "Price Transmission from Bitcoin to Altcoins: High-Frequency Evidence and Implications for Trading Strategy",
+      "doi": "https://doi.org/10.1007/s10690-026-09589-z",
+      "funders": [],
+      "fwci": 0.0,
+      "has_content": {
+        "grobid_xml": true,
+        "pdf": true
+      },
+      "has_fulltext": true,
+      "id": "https://openalex.org/W7134839761",
+      "ids": {
+        "doi": "https://doi.org/10.1007/s10690-026-09589-z",
+        "openalex": "https://openalex.org/W7134839761"
+      },
+      "indexed_in": [
+        "crossref"
+      ],
+      "institutions": [],
+      "institutions_distinct_count": 2,
+      "is_paratext": false,
+      "is_retracted": false,
+      "is_xpac": false,
+      "keywords": [
+        {
+          "display_name": "Cryptocurrency",
+          "id": "https://openalex.org/keywords/cryptocurrency",
+          "score": 0.7774999737739563
+        },
+        {
+          "display_name": "Leverage (statistics)",
+          "id": "https://openalex.org/keywords/leverage",
+          "score": 0.6444000005722046
+        },
+        {
+          "display_name": "Price discovery",
+          "id": "https://openalex.org/keywords/price-discovery",
+          "score": 0.5648000240325928
+        },
+        {
+          "display_name": "Algorithmic trading",
+          "id": "https://openalex.org/keywords/algorithmic-trading",
+          "score": 0.5479000210762024
+        },
+        {
+          "display_name": "Market liquidity",
+          "id": "https://openalex.org/keywords/market-liquidity",
+          "score": 0.5429999828338623
+        },
+        {
+          "display_name": "Trading strategy",
+          "id": "https://openalex.org/keywords/trading-strategy",
+          "score": 0.5120999813079834
+        },
+        {
+          "display_name": "Arbitrage",
+          "id": "https://openalex.org/keywords/arbitrage",
+          "score": 0.5065000057220459
+        },
+        {
+          "display_name": "Granger causality",
+          "id": "https://openalex.org/keywords/granger-causality",
+          "score": 0.4756999909877777
+        },
+        {
+          "display_name": "Investment (military)",
+          "id": "https://openalex.org/keywords/investment",
+          "score": 0.3817000091075897
+        }
+      ],
+      "language": "en",
+      "locations": [
+        {
+          "id": "doi:10.1007/s10690-026-09589-z",
+          "is_accepted": true,
+          "is_oa": true,
+          "is_published": true,
+          "landing_page_url": "https://doi.org/10.1007/s10690-026-09589-z",
+          "license": "cc-by",
+          "license_id": "https://openalex.org/licenses/cc-by",
+          "pdf_url": "https://link.springer.com/content/pdf/10.1007/s10690-026-09589-z.pdf",
+          "raw_source_name": "Asia-Pacific Financial Markets",
+          "raw_type": "journal-article",
+          "source": {
+            "display_name": "Asia-Pacific Financial Markets",
+            "host_organization": "https://openalex.org/P4310319900",
+            "host_organization_lineage": [
+              "https://openalex.org/P4310319900",
+              "https://openalex.org/P4310319965"
+            ],
+            "host_organization_lineage_names": [
+              "Springer Science+Business Media",
+              "Springer Nature"
+            ],
+            "host_organization_name": "Springer Science+Business Media",
+            "id": "https://openalex.org/S116955675",
+            "is_core": true,
+            "is_in_doaj": false,
+            "is_oa": false,
+            "issn": [
+              "1387-2834",
+              "1573-6946"
+            ],
+            "issn_l": "1387-2834",
+            "type": "journal"
+          },
+          "version": "publishedVersion"
+        }
+      ],
+      "locations_count": 1,
+      "mesh": [],
+      "open_access": {
+        "any_repository_has_fulltext": false,
+        "is_oa": true,
+        "oa_status": "hybrid",
+        "oa_url": "https://link.springer.com/content/pdf/10.1007/s10690-026-09589-z.pdf"
+      },
+      "primary_location": {
+        "id": "doi:10.1007/s10690-026-09589-z",
+        "is_accepted": true,
+        "is_oa": true,
+        "is_published": true,
+        "landing_page_url": "https://doi.org/10.1007/s10690-026-09589-z",
+        "license": "cc-by",
+        "license_id": "https://openalex.org/licenses/cc-by",
+        "pdf_url": "https://link.springer.com/content/pdf/10.1007/s10690-026-09589-z.pdf",
+        "raw_source_name": "Asia-Pacific Financial Markets",
+        "raw_type": "journal-article",
+        "source": {
+          "display_name": "Asia-Pacific Financial Markets",
+          "host_organization": "https://openalex.org/P4310319900",
+          "host_organization_lineage": [
+            "https://openalex.org/P4310319900",
+            "https://openalex.org/P4310319965"
+          ],
+          "host_organization_lineage_names": [
+            "Springer Science+Business Media",
+            "Springer Nature"
+          ],
+          "host_organization_name": "Springer Science+Business Media",
+          "id": "https://openalex.org/S116955675",
+          "is_core": true,
+          "is_in_doaj": false,
+          "is_oa": false,
+          "issn": [
+            "1387-2834",
+            "1573-6946"
+          ],
+          "issn_l": "1387-2834",
+          "type": "journal"
+        },
+        "version": "publishedVersion"
+      },
+      "primary_topic": {
+        "display_name": "Blockchain Technology Applications and Security",
+        "domain": {
+          "display_name": "Physical Sciences",
+          "id": "https://openalex.org/domains/3"
+        },
+        "field": {
+          "display_name": "Computer Science",
+          "id": "https://openalex.org/fields/17"
+        },
+        "id": "https://openalex.org/T10270",
+        "score": 0.4327000081539154,
+        "subfield": {
+          "display_name": "Information Systems",
+          "id": "https://openalex.org/subfields/1710"
+        }
+      },
+      "publication_date": "2026-03-10",
+      "publication_year": 2026,
+      "referenced_works": [
+        "https://openalex.org/W2090637028",
+        "https://openalex.org/W2113152628",
+        "https://openalex.org/W2655997960",
+        "https://openalex.org/W2771030840",
+        "https://openalex.org/W2888245487",
+        "https://openalex.org/W2900785697",
+        "https://openalex.org/W2941675756",
+        "https://openalex.org/W2978792312",
+        "https://openalex.org/W3083082410",
+        "https://openalex.org/W3096773305",
+        "https://openalex.org/W3136959963",
+        "https://openalex.org/W3185924170",
+        "https://openalex.org/W4281906061",
+        "https://openalex.org/W4360610769",
+        "https://openalex.org/W4386781645",
+        "https://openalex.org/W4391617086",
+        "https://openalex.org/W4392946620",
+        "https://openalex.org/W4396733597"
+      ],
+      "referenced_works_count": 18,
+      "related_works": [],
+      "relevance_score": 0.8589949,
+      "sustainable_development_goals": [
+        {
+          "display_name": "Partnerships for the goals",
+          "id": "https://metadata.un.org/sdg/17",
+          "score": 0.4131353795528412
+        }
+      ],
+      "title": "Price Transmission from Bitcoin to Altcoins: High-Frequency Evidence and Implications for Trading Strategy",
+      "topics": [
+        {
+          "display_name": "Blockchain Technology Applications and Security",
+          "domain": {
+            "display_name": "Physical Sciences",
+            "id": "https://openalex.org/domains/3"
+          },
+          "field": {
+            "display_name": "Computer Science",
+            "id": "https://openalex.org/fields/17"
+          },
+          "id": "https://openalex.org/T10270",
+          "score": 0.4327000081539154,
+          "subfield": {
+            "display_name": "Information Systems",
+            "id": "https://openalex.org/subfields/1710"
+          }
+        },
+        {
+          "display_name": "Stock Market Forecasting Methods",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Decision Sciences",
+            "id": "https://openalex.org/fields/18"
+          },
+          "id": "https://openalex.org/T11326",
+          "score": 0.11800000071525574,
+          "subfield": {
+            "display_name": "Management Science and Operations Research",
+            "id": "https://openalex.org/subfields/1803"
+          }
+        },
+        {
+          "display_name": "Financial Markets and Investment Strategies",
+          "domain": {
+            "display_name": "Social Sciences",
+            "id": "https://openalex.org/domains/2"
+          },
+          "field": {
+            "display_name": "Economics, Econometrics and Finance",
+            "id": "https://openalex.org/fields/20"
+          },
+          "id": "https://openalex.org/T10047",
+          "score": 0.034299999475479126,
+          "subfield": {
+            "display_name": "Finance",
+            "id": "https://openalex.org/subfields/2003"
+          }
+        }
+      ],
+      "type": "article",
+      "updated_date": "2026-03-12T06:13:28.667946"
+    }
+  ]
+}

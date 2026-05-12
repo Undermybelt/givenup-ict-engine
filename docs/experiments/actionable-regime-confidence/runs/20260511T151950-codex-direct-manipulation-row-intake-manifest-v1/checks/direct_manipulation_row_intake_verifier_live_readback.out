@@ -1,0 +1,11 @@
+command=python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake
+status=blocked
+reason=missing_required_files
+missing_file=/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv
+missing_file=/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv
+missing_file=/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json
+exit_code=2
+accepted_direct_manipulation_rows_added=0
+full_objective_achieved=false
+call_update_goal=false
+assertion_status=PASS

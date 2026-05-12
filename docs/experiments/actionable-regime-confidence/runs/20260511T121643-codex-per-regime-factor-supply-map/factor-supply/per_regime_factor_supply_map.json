@@ -1,0 +1,207 @@
+{
+  "active_taxonomy": {
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "name": "MainRegimeV2",
+    "residual": "UnknownOrMixed",
+    "separate_direct_event_class_or_overlay": [
+      "Manipulation"
+    ]
+  },
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_audit": "ed5838531f52679f9c2ab3555787198cbd8b37831d7e7e6a708b1304667b3802",
+  "coverage": {
+    "active_regimes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "all_active_regimes_have_scoped_factor": true,
+    "manipulation_direct_varieties_present": [
+      "manipulation_telegram_pump_event_v1",
+      "manipulation_multichain_wash_maker_v1"
+    ],
+    "missing_regimes": [],
+    "regimes_with_scoped_accepted_factor": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Manipulation",
+      "Sideways"
+    ]
+  },
+  "decision": {
+    "accepted_95_scoped_factor_regimes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_parent_root_full_matrix_completion": false,
+    "gate_result": "per_regime_scoped_factor_supply_mapped_full_matrix_still_blocked",
+    "per_regime_factor_supply_achieved": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "factors": [
+    {
+      "accepted_95_scoped_factor": true,
+      "calibration_support": 2202,
+      "calibration_wilson95_lcb": 0.952516,
+      "consumer_use": "allow_or_size_up_bull_continuation_candidates_inside_supported_scope",
+      "evidence_class": "source_backed_scope_limited_parent_root_factor",
+      "factor_id": "bull_sourcebacked_drawdown_volatility_v1",
+      "full_matrix_completion": false,
+      "not_allowed": "do_not_promote_to_full_universe_or_intraday_without missing slots/crosswalk",
+      "regime": "Bull",
+      "rule": "close_drawdown60 >= -0.0032047199531 AND volatility <= 0.152179344579",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T035045-codex-kaggle-bull-coverage-buffer-gate/kaggle-bull-gate/kaggle_bull_coverage_buffer_gate_report.json",
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "test_support": 3125,
+      "test_wilson95_lcb": 0.961931,
+      "validation_contexts": [
+        "index",
+        "single_stock"
+      ],
+      "validation_timeframes": [
+        "1d",
+        "1w"
+      ]
+    },
+    {
+      "accepted_95_scoped_factor": true,
+      "calibration_support": 633,
+      "calibration_wilson95_lcb": 0.993968,
+      "consumer_use": "allow_or_size_up_bear_defensive_or_short_bias_candidates_inside_supported_scope",
+      "evidence_class": "source_backed_scope_limited_parent_root_factor",
+      "factor_id": "bear_sourcebacked_drawdown_return_ratio_v1",
+      "full_matrix_completion": false,
+      "not_allowed": "do_not_promote_to_full_universe_or_intraday_without missing slots/crosswalk",
+      "regime": "Bear",
+      "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "test_support": 524,
+      "test_wilson95_lcb": 0.992722,
+      "validation_contexts": [
+        "crypto",
+        "equity_etf"
+      ],
+      "validation_timeframes": [
+        "1d",
+        "1w"
+      ]
+    },
+    {
+      "accepted_95_scoped_factor": true,
+      "calibration_support": 495,
+      "calibration_wilson95_lcb": 0.988647,
+      "consumer_use": "allow_mean_reversion_or_range_candidates_inside_supported_scope",
+      "evidence_class": "source_backed_scope_limited_parent_root_factor",
+      "factor_id": "sideways_sourcebacked_abs_return_range_v1",
+      "full_matrix_completion": false,
+      "not_allowed": "do_not_treat_old_RangeConsolidation_subregime_as_parent_completion",
+      "regime": "Sideways",
+      "rule": "sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "test_support": 863,
+      "test_wilson95_lcb": 0.995568,
+      "validation_contexts": [
+        "crypto",
+        "equity_etf"
+      ],
+      "validation_timeframes": [
+        "1d",
+        "1w"
+      ]
+    },
+    {
+      "accepted_95_scoped_factor": true,
+      "calibration_support": 1020,
+      "calibration_wilson95_lcb": 0.996248,
+      "consumer_use": "suppress_risk_or_size_down_execution_inside_supported_scope",
+      "evidence_class": "scope_limited_parent_root_factor",
+      "factor_id": "crisis_range_ratio_intraday_v1",
+      "full_matrix_completion": false,
+      "not_allowed": "do_not_use_crisis_price_stress_as_direct_manipulation_evidence",
+      "regime": "Crisis",
+      "rule": "range_ratio32_128 >= 1.43116959912",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T235220-codex-broader-root-v2-probe/root-v2-broader/main_regime_v2_broader_root_calibration_report.json",
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "test_support": 952,
+      "test_wilson95_lcb": 0.995981,
+      "validation_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    {
+      "accepted_95_scoped_factor": true,
+      "calibration_support": 14516,
+      "calibration_wilson95_lcb": 0.999735,
+      "consumer_use": "suppress_entry_or_route_to_abstain_cooldown_on_direct_event",
+      "evidence_class": "direct_social_event_factor",
+      "factor_id": "manipulation_telegram_pump_event_v1",
+      "full_matrix_completion": false,
+      "not_allowed": "not_an_automatic_trade_entry_and_not_an_OHLCV_proxy",
+      "regime": "Manipulation",
+      "rule": "classified_telegram_coin_pump_event_present == 1",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-gate/mehrnoom_telegram_direct_manipulation_gate.json",
+      "taxonomy_role": "separate_direct_event_order_flow_overlay_or_class",
+      "test_support": 12834,
+      "test_wilson95_lcb": 0.999701,
+      "validation_contexts": [
+        "crypto_telegram_event",
+        "same_coin_non_event_controls"
+      ],
+      "validation_timeframes": [
+        "event_window"
+      ]
+    },
+    {
+      "accepted_95_scoped_factor": true,
+      "accepted_direct_rows": 7563,
+      "consumer_use": "suppress_or_abstain_on_direct_wash_maker_evidence",
+      "evidence_class": "direct_onchain_order_lifecycle_wash_factor",
+      "factor_id": "manipulation_multichain_wash_maker_v1",
+      "full_matrix_completion": false,
+      "minimum_split_class_wilson95_lcb": 0.967945,
+      "not_allowed": "wash_maker_scope_only_not_full_spoofing_layering_quote_stuffing_coverage",
+      "regime": "Manipulation",
+      "rule": "same platform/address/day paired controls AND is_both_buyer_seller == True",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.json",
+      "taxonomy_role": "separate_direct_event_order_flow_overlay_or_class",
+      "validation_contexts": [
+        "base",
+        "bsc",
+        "ethereum",
+        "solana"
+      ],
+      "validation_timeframes": [
+        "maker_token_day"
+      ]
+    }
+  ],
+  "generated_at_utc": "2026-05-11T04:22:27.130768+00:00",
+  "next_action": "Use this as the regime-to-factor map for downstream gating only within supported scopes; continue exact source-label/crosswalk acquisition for full-market/full-timeframe completion.",
+  "purpose": "Make the current per-regime factor supply explicit: every active main regime has at least one accepted 95% scoped factor/evidence packet, while full-matrix completion remains blocked.",
+  "run_id": "20260511T121643+0800-codex-per-regime-factor-supply-map"
+}

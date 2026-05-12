@@ -1,0 +1,7 @@
+PASS exact_required_hits=0
+PASS source_label_verifier_blocked=True
+PASS native_subhour_ready=False
+PASS recency_verifier_blocked=True
+PASS direct_schema_ready_unscored=True
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

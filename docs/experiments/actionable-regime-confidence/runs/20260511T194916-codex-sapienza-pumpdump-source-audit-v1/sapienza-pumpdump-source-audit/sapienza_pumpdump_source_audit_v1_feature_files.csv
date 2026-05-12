@@ -1,0 +1,4 @@
+file,rows,positive_rows_gt_1,negative_rows_gt_0,symbols,pump_indices,positive_pump_indices,positive_pump_indices_with_same_schema_negative_rows,date_min,date_max
+features_15S.csv.gz,584104,317,583787,85,327,317,317,2018-01-02 18:14:30,2021-01-19 16:58:15
+features_25S.csv.gz,482157,317,481840,85,327,317,317,2018-01-02 18:14:35,2021-01-19 16:58:20
+features_5S.csv.gz,821307,317,820990,85,327,317,317,2018-01-02 18:14:40,2021-01-19 16:58:25

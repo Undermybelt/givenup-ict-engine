@@ -1,0 +1,371 @@
+{
+  "active_taxonomy": "MainRegimeV2",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "crisis_source_label_probe": {
+    "accepted_95": false,
+    "accepted_rules": [],
+    "best_blocked_rules": [
+      {
+        "blockers": [
+          "calibration_support_below_250",
+          "calibration_wilson95_below_0_95",
+          "calibration_coverage_below_0_01",
+          "calibration_market_contexts_below_2",
+          "test_support_below_250",
+          "test_coverage_below_0_01",
+          "test_market_contexts_below_2"
+        ],
+        "calibration": {
+          "coverage": 0.0017406881633204895,
+          "precision": 0.9902912621359223,
+          "precision_wilson_lcb_95": 0.9470418081674633,
+          "success": 102,
+          "support": 103,
+          "validation_instruments_count": 6,
+          "validation_market_contexts": [
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        },
+        "rule": "volatility >= 0.654152684787 AND close_drawdown60 <= -0.20621762849 AND fed_funds_rate >= 6.02",
+        "test": {
+          "coverage": 0.00138487780986641,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9552493763098997,
+          "success": 82,
+          "support": 82,
+          "validation_instruments_count": 6,
+          "validation_market_contexts": [
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        }
+      },
+      {
+        "blockers": [
+          "calibration_support_below_250",
+          "calibration_wilson95_below_0_95",
+          "calibration_coverage_below_0_01",
+          "calibration_market_contexts_below_2",
+          "test_support_below_250",
+          "test_coverage_below_0_01",
+          "test_market_contexts_below_2"
+        ],
+        "calibration": {
+          "coverage": 0.0017406881633204895,
+          "precision": 0.9902912621359223,
+          "precision_wilson_lcb_95": 0.9470418081674633,
+          "success": 102,
+          "support": 103,
+          "validation_instruments_count": 6,
+          "validation_market_contexts": [
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        },
+        "rule": "volatility >= 0.654152684787 AND close_drawdown60 <= -0.20621762849 AND real_rate_proxy >= 6.02",
+        "test": {
+          "coverage": 0.00138487780986641,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9552493763098997,
+          "success": 82,
+          "support": 82,
+          "validation_instruments_count": 6,
+          "validation_market_contexts": [
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        }
+      },
+      {
+        "blockers": [
+          "calibration_support_below_250",
+          "calibration_wilson95_below_0_95",
+          "calibration_coverage_below_0_01",
+          "test_support_below_250",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_01",
+          "test_market_contexts_below_2"
+        ],
+        "calibration": {
+          "coverage": 0.003194078280267694,
+          "precision": 0.9788359788359788,
+          "precision_wilson_lcb_95": 0.9468551665010807,
+          "success": 185,
+          "support": 189,
+          "validation_instruments_count": 17,
+          "validation_market_contexts": [
+            "index",
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        },
+        "rule": "volatility >= 0.437733133896 AND close_drawdown60 <= -0.20621762849 AND fed_funds_rate >= 6.02",
+        "test": {
+          "coverage": 0.0026515343432808093,
+          "precision": 0.9808917197452229,
+          "precision_wilson_lcb_95": 0.9453321525513407,
+          "success": 154,
+          "support": 157,
+          "validation_instruments_count": 13,
+          "validation_market_contexts": [
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        }
+      },
+      {
+        "blockers": [
+          "calibration_support_below_250",
+          "calibration_wilson95_below_0_95",
+          "calibration_coverage_below_0_01",
+          "test_support_below_250",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_01",
+          "test_market_contexts_below_2"
+        ],
+        "calibration": {
+          "coverage": 0.003194078280267694,
+          "precision": 0.9788359788359788,
+          "precision_wilson_lcb_95": 0.9468551665010807,
+          "success": 185,
+          "support": 189,
+          "validation_instruments_count": 17,
+          "validation_market_contexts": [
+            "index",
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        },
+        "rule": "volatility >= 0.437733133896 AND close_drawdown60 <= -0.20621762849 AND real_rate_proxy >= 6.02",
+        "test": {
+          "coverage": 0.0026515343432808093,
+          "precision": 0.9808917197452229,
+          "precision_wilson_lcb_95": 0.9453321525513407,
+          "success": 154,
+          "support": 157,
+          "validation_instruments_count": 13,
+          "validation_market_contexts": [
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        }
+      },
+      {
+        "blockers": [
+          "calibration_support_below_250",
+          "calibration_wilson95_below_0_95",
+          "calibration_coverage_below_0_01",
+          "calibration_market_contexts_below_2",
+          "test_support_below_250",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_01",
+          "test_market_contexts_below_2"
+        ],
+        "calibration": {
+          "coverage": 0.002027986209693774,
+          "precision": 0.9833333333333333,
+          "precision_wilson_lcb_95": 0.9412640370278411,
+          "success": 118,
+          "support": 120,
+          "validation_instruments_count": 10,
+          "validation_market_contexts": [
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        },
+        "rule": "volatility >= 0.566823188131 AND close_drawdown60 <= -0.20621762849 AND fed_funds_rate >= 6.02",
+        "test": {
+          "coverage": 0.002026650453463039,
+          "precision": 0.9833333333333333,
+          "precision_wilson_lcb_95": 0.9412640370278411,
+          "success": 118,
+          "support": 120,
+          "validation_instruments_count": 9,
+          "validation_market_contexts": [
+            "single_stock"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "1w"
+          ]
+        }
+      }
+    ],
+    "label_counts": {
+      "Bear": 66270,
+      "Bull": 125575,
+      "Crisis": 35709,
+      "High-volatility": 16,
+      "Sideways": 68295
+    },
+    "root": "Crisis",
+    "rows": 295865,
+    "search_policy": {
+      "candidate_features": [
+        "vix",
+        "volatility",
+        "vol60_z",
+        "ret20",
+        "returns",
+        "close_drawdown60",
+        "yield_curve_10y_2y",
+        "unemployment_rate",
+        "fed_funds_rate",
+        "real_rate_proxy"
+      ],
+      "max_rule_depth": 3,
+      "predictor_source": "current_or_trailing_fields_only",
+      "target_source": "existing source regime_label column",
+      "top_train_terms_kept": 50
+    },
+    "source": "/private/tmp/ict-regime-kaggle-regime-label-root/kaggle_regime_label_feature_table.csv",
+    "top_train_terms": [
+      {
+        "term": "volatility >= 0.654152684787",
+        "train_coverage": 0.050005070936771055,
+        "train_precision": 0.5086197183098592,
+        "train_support": 8875,
+        "train_wilson95": 0.4982173756810692
+      },
+      {
+        "term": "volatility >= 0.512113751899",
+        "train_coverage": 0.10000450749935205,
+        "train_precision": 0.5023945010986535,
+        "train_support": 17749,
+        "train_wilson95": 0.49503904220635847
+      },
+      {
+        "term": "volatility >= 0.566823188131",
+        "train_coverage": 0.07500478921806154,
+        "train_precision": 0.5034555288461539,
+        "train_support": 13312,
+        "train_wilson95": 0.4949622692969998
+      },
+      {
+        "term": "volatility >= 0.816851684399",
+        "train_coverage": 0.025005352655480557,
+        "train_precision": 0.5022532672374944,
+        "train_support": 4438,
+        "train_wilson95": 0.4875474313322189
+      },
+      {
+        "term": "volatility >= 0.437733133896",
+        "train_coverage": 0.15012790029411432,
+        "train_precision": 0.49052355038468753,
+        "train_support": 26645,
+        "train_wilson95": 0.4845228482503294
+      },
+      {
+        "term": "volatility >= 0.386512286277",
+        "train_coverage": 0.20000338062451403,
+        "train_precision": 0.45834859283883145,
+        "train_support": 35497,
+        "train_wilson95": 0.45317003286060886
+      },
+      {
+        "term": "vix >= 41.2900009155",
+        "train_coverage": 0.025230727623082903,
+        "train_precision": 0.4423849933005806,
+        "train_support": 4478,
+        "train_wilson95": 0.4278935268573765
+      },
+      {
+        "term": "close_drawdown60 <= -0.28574241973",
+        "train_coverage": 0.04959939599508682,
+        "train_precision": 0.40236283085311825,
+        "train_support": 8803,
+        "train_wilson95": 0.39216377975197053
+      },
+      {
+        "term": "vix >= 34.7700004578",
+        "train_coverage": 0.05002197405934123,
+        "train_precision": 0.4020049560711872,
+        "train_support": 8878,
+        "train_wilson95": 0.39185051780094576
+      },
+      {
+        "term": "close_drawdown60 <= -0.20621762849",
+        "train_coverage": 0.09919879199017365,
+        "train_precision": 0.39566057026013857,
+        "train_support": 17606,
+        "train_wilson95": 0.38846105023880917
+      }
+    ]
+  },
+  "decision": {
+    "accepted_parent_root_gap_slices_added": 0,
+    "accepted_roots_in_this_slice": [],
+    "blocked_roots_in_this_slice": [
+      "Crisis"
+    ],
+    "full_matrix_goal_achieved": false,
+    "gate_result": "blocked_light_gap_audit_no_95_source_label_slice",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T03:34:55.289075+00:00",
+  "heavy_runner_readback": {
+    "action_taken": "heavy_runner_observed_no_report_outputs_after_manual_run_attempt; this light audit avoids modifying that script",
+    "report_outputs_present": true,
+    "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T110540-codex-full-matrix-targeted-gap-batch",
+    "script_present": true
+  },
+  "intraday_source_label_readiness": {
+    "decision": "blocked_intraday_table_has_future_target_columns_but_no_independent_source_root_labels",
+    "has_source_regime_label": false,
+    "markets": {
+      "CME_futures_local": 2786,
+      "IBKR_US_ETF": 4007,
+      "Kraken_crypto": 2000,
+      "yfinance_ETF": 5068,
+      "yfinance_US_ETF": 3369,
+      "yfinance_crypto": 17479,
+      "yfinance_futures": 27293
+    },
+    "rows": 62002,
+    "source": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/cross_timeframe_regime_features.csv",
+    "target_like_columns": [
+      "target_trend_structural_next",
+      "target_stress_next",
+      "target_reversal_next",
+      "target_thin_soft_next"
+    ],
+    "timeframes": {
+      "15m": 2786,
+      "1h": 59216
+    }
+  },
+  "next_action": "Acquire independent source root labels for the missing intraday/monthly provider matrix; do not count future-return target columns as source labels. Continue separate direct Manipulation variety acquisition.",
+  "objective": "Lightweight recovery audit for the stalled full-matrix targeted gap batch: test bounded source-labeled Crisis rules and block intraday proxy targets without independent labels.",
+  "run_id": "20260511T113039+0800-codex-full-matrix-targeted-gap-light-audit"
+}

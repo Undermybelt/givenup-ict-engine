@@ -1,0 +1,51 @@
+{
+  "run_id": "20260512T065506+0800-codex-autoquant-local-cache-seed-after-065116-v1",
+  "generated_at_utc": "2026-05-11T22:56:00Z",
+  "gate_result": "autoquant_local_cache_seed_after_065116_v1=data_ready_true_no_source_control_unlock_no_promotion",
+  "state_dir": "/tmp/ict-engine-board-a-064259-runtime-v1",
+  "managed_autoquant_dir": "/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant",
+  "source_cache_dir": "/Users/thrill3r/Auto-Quant/user_data/data",
+  "seeded_required_files": {
+    "pairs": ["BTC_USDT", "ETH_USDT", "SOL_USDT", "BNB_USDT", "AVAX_USDT"],
+    "timeframes": ["1h", "4h", "1d"],
+    "required_file_count": 15,
+    "date_floor_utc": "2021-01-01 00:00:00+00:00",
+    "shortest_required_file_last_bar_utc": "2026-01-29 20:00:00+00:00"
+  },
+  "command_exits": {
+    "auto_quant_prepare_after_local_cache_seed": 0,
+    "auto_quant_status_after_local_cache_seed": 0
+  },
+  "status_after_local_cache_seed": {
+    "status": "dependency_ready_data_ready",
+    "healthy": true,
+    "bootstrap_needed": false,
+    "dependency_healthy": true,
+    "data_ready": true,
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "recommended_next_command": "uv run --with ta-lib /tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/run.py"
+  },
+  "prepare_result": {
+    "status": "prepared",
+    "data_ready": true,
+    "dependency_status_before": "dependency_ready_seed_required",
+    "dependency_status_after": "dependency_ready_data_ready"
+  },
+  "board_a_accounting": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "artifacts": {
+    "seeded_files": "docs/experiments/actionable-regime-confidence/runs/20260512T065506+0800-codex-autoquant-local-cache-seed-after-065116-v1/command-output/local_cache_seed_files.txt",
+    "seeded_sha256": "docs/experiments/actionable-regime-confidence/runs/20260512T065506+0800-codex-autoquant-local-cache-seed-after-065116-v1/command-output/local_cache_seed_sha256.txt",
+    "prepare_stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T065506+0800-codex-autoquant-local-cache-seed-after-065116-v1/command-output/auto_quant_prepare_after_local_cache_seed.stdout",
+    "status_stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T065506+0800-codex-autoquant-local-cache-seed-after-065116-v1/command-output/auto_quant_status_after_local_cache_seed.stdout"
+  },
+  "next_action": "Auto-Quant dependency/data readiness is now true in the isolated /tmp state, but this is not Board A promotion evidence. Continue from a valid source/control unlock before direct verifier, canonical merge, downstream promotion, or trade claims."
+}

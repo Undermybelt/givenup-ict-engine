@@ -1,0 +1,1 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant && .venv/bin/python run_tomac.py

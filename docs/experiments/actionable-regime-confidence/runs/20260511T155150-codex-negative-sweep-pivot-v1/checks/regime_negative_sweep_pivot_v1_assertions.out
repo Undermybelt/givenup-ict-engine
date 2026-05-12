@@ -1,0 +1,9 @@
+accepted_lanes_preserved=true
+new_confidence_gate_claimed=false
+full_objective_achieved=false
+update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

@@ -1,0 +1,7 @@
+species,candidate_surfaces,ready_positive_control_sources,has_explicit_positive_label_surface,has_matched_control_surface,has_provenance_surface,gate_state
+spoofing_layering,6,0,True,False,True,blocked
+quote_spoofing,1,0,True,False,False,blocked
+quote_stuffing,3,0,True,False,True,blocked
+pinging,2,0,True,False,True,blocked
+bear_raid,0,0,False,False,False,blocked
+painting_tape,0,0,False,False,False,blocked

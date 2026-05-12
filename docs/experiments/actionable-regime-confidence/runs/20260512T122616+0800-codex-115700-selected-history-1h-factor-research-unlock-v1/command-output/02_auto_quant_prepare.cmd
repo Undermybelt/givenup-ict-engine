@@ -1,0 +1,1 @@
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 target/debug/ict-engine auto-quant-prepare --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T122616+0800-codex-115700-selected-history-1h-factor-research-unlock-v1/state_115700_selected_history_1h_factor_research_unlock_v1'

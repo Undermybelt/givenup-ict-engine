@@ -1,0 +1,12 @@
+current_cursor_010127=PASS
+source_label_root_present=PASS
+r6_owner_root_missing=PASS
+r3_native_root_missing=PASS
+r5_recency_root_missing=PASS
+accepted_labels_empty=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+downstream_chain_rerun_allowed_false=PASS
+thresholds_relaxed_false=PASS
+raw_data_committed_false=PASS
+trade_usable_false=PASS

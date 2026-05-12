@@ -1,0 +1,77 @@
+{
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "rows": 3,
+  "candidate_set_id": "structural-candidates:B2R_PROVIDER_BTC_EMA_RSI_104703:b0be302783209e55",
+  "candidate_set_size": 3,
+  "pending_reward_states": {
+    "matured_success": 1,
+    "unobserved": 2
+  },
+  "mature_rows": 1,
+  "rows_with_raw_path_score": 0,
+  "rows_with_calibrated_path_prob": 0,
+  "rows_with_path_prob_lower_bound": 0,
+  "rows_with_propensity_estimate": 1,
+  "rows_with_execution_gate_status": 0,
+  "rows_with_training_weight": 1,
+  "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T113911+0800-codex-104703-prebayes-branch-surface-v1/state_prebayes_branch_surface_v1/B2R_PROVIDER_BTC_EMA_RSI_104703/policy_training/structural_path_ranking_target.csv",
+  "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T113911+0800-codex-104703-prebayes-branch-surface-v1/state_prebayes_branch_surface_v1/B2R_PROVIDER_BTC_EMA_RSI_104703/policy_training/structural_path_ranking_target.jsonl",
+  "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T113911+0800-codex-104703-prebayes-branch-surface-v1/state_prebayes_branch_surface_v1/B2R_PROVIDER_BTC_EMA_RSI_104703/policy_training/structural_path_ranking_target_history.csv",
+  "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T113911+0800-codex-104703-prebayes-branch-surface-v1/state_prebayes_branch_surface_v1/B2R_PROVIDER_BTC_EMA_RSI_104703/policy_training/structural_path_ranking_target_history.jsonl",
+  "history_rows": 90,
+  "history_mature_rows": 87,
+  "history_rows_with_raw_path_score": 87,
+  "history_rows_with_calibrated_path_prob": 85,
+  "history_rows_with_path_prob_lower_bound": 85,
+  "history_rows_with_propensity_estimate": 87,
+  "history_rows_with_training_weight": 87,
+  "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T113911+0800-codex-104703-prebayes-branch-surface-v1/state_prebayes_branch_surface_v1/B2R_PROVIDER_BTC_EMA_RSI_104703/policy_training/structural_path_ranking_target_summary.json",
+  "trainer_manifest": {
+    "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+    "dataset_role": "external_path_ranker_training_dataset",
+    "group_id_column": "candidate_set_id",
+    "label_column": "calibrated_label",
+    "weight_column": "training_weight",
+    "maturity_column": "maturity_mask",
+    "raw_score_column": "raw_path_score",
+    "feature_columns": [
+      "rank",
+      "direction",
+      "regime_profit_branch_path",
+      "parent_regime_root",
+      "main_regime",
+      "sub_regime",
+      "sub_sub_regime_or_profit_factor",
+      "profit_factor",
+      "regime_calibration_bucket",
+      "behavior_policy_probability",
+      "execution_propensity",
+      "target_policy_probability_confidence",
+      "target_policy_probability_lower_bound",
+      "target_policy_reward_prior",
+      "target_policy_reward_lower_bound",
+      "experience_prior",
+      "current_posterior",
+      "structural_baseline_score"
+    ],
+    "calibration_columns": [
+      "calibrated_path_prob",
+      "path_prob_lower_bound",
+      "execution_gate_status"
+    ],
+    "guardrail_columns": [
+      "candidate_set_size",
+      "path_id",
+      "scenario_id",
+      "pending_reward_state",
+      "maturity_weight",
+      "propensity_estimate",
+      "ips_weight"
+    ],
+    "notes": [
+      "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+      "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+    ]
+  },
+  "summary_line": "structural_path_ranking_target rows=3 history_rows=90 candidate_set_size=3 mature_rows=1 history_mature_rows=87 propensity_rows=1 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=1"
+}

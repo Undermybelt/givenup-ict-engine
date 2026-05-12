@@ -1,0 +1,1 @@
+./target/debug/ict-engine provider-status --provider binance_public --agent 

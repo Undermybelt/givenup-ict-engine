@@ -1,0 +1,73 @@
+{
+  "artifact_id": "execution-tree-SRC_ROOT_CARRY_LONG_220646-1778517424964",
+  "generated_at": "2026-05-11T16:37:04.964200Z",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "output": {
+    "execution_score": 0.5621401595857166,
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "gate_status": "observe",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.4486 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.4486 < 0.45)",
+      "path_ranker_score_input=0.5517 visible=true used=true ranker_validation_ready=true effective_prediction_vote_score=0.5491",
+      "prediction_vote_score=0.5491 (medium) × execution_readiness=0.4486 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.543",
+      "market_state=volatility=NormalVol:0.601 liquidity=NormalLiquidity:0.412 structure=Trending:0.589 behavior=RiskOn:0.550",
+      "market_state=rationale=volatility=NormalVol conf=0.60",
+      "market_state=rationale=structure=Trending conf=0.59",
+      "market_state=rationale=behavior=RiskOn conf=0.55",
+      "market_state=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.54",
+      "path_ranker=Ranker runtime: structural_path_ranking_target rows=6 history_rows=796 mature_rows=4 history_mature_rows=794 raw_scored_mature=794/30 production_validation=794/30 observation_validation=80/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=2",
+      "path_ranker=Ranker validation: calibration=true quality_ready=true raw_scored_mature=794/30 production_validation=794/30 observation_validation=80/30 ready=true",
+      "path_ranker=ranker_machine=runtime_source=candidate_set score_model_family=catboost score_source=external_model validation_ready=true active_match_count=2",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 runtime_source=history_path raw_path_score=0.989590 calibrated_path_prob=0.580402 path_prob_lower_bound=0.551734 execution_gate_status=pass",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "hybrid_transition_hazard=0.600"
+    ],
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=history_path/catboost/ready",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_model_family": "catboost",
+    "path_ranker_runtime_source": "history_path",
+    "ranker_validation_ready": true
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.5849441211987764,
+      "feature_value": "0.2151"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.4443027210884354,
+      "feature_value": "0.2557"
+    },
+    {
+      "feature": "cycle_phase_alignment",
+      "contribution": 0.3975723492716299,
+      "feature_value": "0.3976"
+    },
+    {
+      "feature": "dominant_cycle_energy",
+      "contribution": 0.385751386303125,
+      "feature_value": "0.5358"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "0739cf78a430efa5",
+    "data_fingerprint": "50090ae500f54c9d"
+  }
+}

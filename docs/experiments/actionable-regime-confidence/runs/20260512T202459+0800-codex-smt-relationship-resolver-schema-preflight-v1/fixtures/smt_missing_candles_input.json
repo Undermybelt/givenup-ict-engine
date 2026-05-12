@@ -1,0 +1,15 @@
+{
+  "base_symbol": "AAPL",
+  "timeframe": "15m",
+  "session": "NY_AM",
+  "provider_universe": ["AAPL", "QQQ", "XLK", "MSFT", "NVDA", "SPY"],
+  "symbol_metadata": {
+    "AAPL": {
+      "index_etf": "QQQ",
+      "sector_etf": "XLK",
+      "top_peers": ["MSFT", "NVDA"],
+      "options_liquidity_proxies": ["SPY"]
+    }
+  },
+  "candles": {}
+}

@@ -1,0 +1,13 @@
+PASS run_id=20260512T122144+0800-codex-121607-bbn-feedback-cross-context-calibration-audit-v1
+PASS rows=237
+PASS required_provider_coverage=True
+FAIL_CLOSED max_bbn_probability=0.747688_below_0.95
+FAIL_CLOSED max_pre_bayes_confidence=0.525086_below_0.95
+FAIL_CLOSED accepted_regime_count_95=0
+FAIL_CLOSED instrument_context_pass=False
+FAIL_CLOSED timeframe_context_pass=False
+FAIL_CLOSED chronological_context_pass=False
+FAIL_CLOSED execution_admissible=False
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

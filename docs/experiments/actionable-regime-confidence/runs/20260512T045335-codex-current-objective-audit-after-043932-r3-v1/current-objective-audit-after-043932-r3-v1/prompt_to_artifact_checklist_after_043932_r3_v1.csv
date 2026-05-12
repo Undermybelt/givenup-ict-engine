@@ -1,0 +1,13 @@
+requirement,status,evidence
+named_board_authoritative_append_only,satisfied_for_this_audit,board sha256 before packet 1ffdf2edb702a1f1a2afdab68f51be1caed24afb2338865ebda4412055ec0296
+Bull_confidence_ge_95_own_condition_cross_axis,blocked,043932 Bull min Wilson95 0.7054974201 and 044701 Bull min Wilson95 0.5353234712 accepted false
+Bear_confidence_ge_95_own_condition_cross_axis,blocked,043932 Bear min Wilson95 0.566325058 and 044701 Bear min Wilson95 0.4249084736 accepted false
+Sideways_confidence_ge_95_own_condition_cross_axis,blocked,043932 Sideways min Wilson95 0.3659108855 and 044701 Sideways min Wilson95 0.3488806669 accepted false
+Crisis_confidence_ge_95_own_condition_cross_axis,blocked,043932 Crisis min Wilson95 0.4729340579 and 044701 Crisis min Wilson95 0.4324193032 accepted false
+R6_owner_export_or_approved_controls,blocked,044137 official routes confirmed no verifier-native rows and required root absent
+R5_recency_extension,blocked,044500 no new post-cutoff target rows and required root absent
+R3_native_subhour_rows,blocked,044947 no ready source-owned native sub-hour rows and required root absent
+provider_autoquant_surfaces,partial_non_promoting,prior runtime/provider readbacks diagnostic only
+prebayes_bbn_catboost_execution_tree_promotion_chain,blocked,no source-control unlock and prior downstream promotion rows zero
+active_concurrent_outputs_not_disturbed,satisfied_for_this_audit,043932 and 044701 consumed only after terminal artifacts; stale process notes not promoted
+update_goal_only_if_complete,not_complete,strict_full_objective false update_goal false

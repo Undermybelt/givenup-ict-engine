@@ -1,0 +1,6 @@
+PASS controls_materialized=80
+PASS controls_ge_50=true
+PASS shared_intake_mutated=false
+PASS accepted_as_live_r6_calibration=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

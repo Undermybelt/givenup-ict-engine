@@ -1,0 +1,2 @@
+timeout_seconds=240
+./target/debug/ict-engine analyze --symbol LONG_ES_TOMAC_135318 --data-ltf /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/es.continuous-1h.json --data-mtf /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-4h/es.continuous-4h.json --data-htf /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1d/es.continuous-1d.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/state_es_v1 --output-format json

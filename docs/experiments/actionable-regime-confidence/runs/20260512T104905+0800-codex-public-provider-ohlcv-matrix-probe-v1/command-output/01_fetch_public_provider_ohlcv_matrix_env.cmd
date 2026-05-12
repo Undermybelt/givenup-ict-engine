@@ -1,0 +1,1 @@
+RUN_ROOT_ABS="$PWD/docs/experiments/actionable-regime-confidence/runs/20260512T104905+0800-codex-public-provider-ohlcv-matrix-probe-v1" RUN_ID="20260512T104905+0800-codex-public-provider-ohlcv-matrix-probe-v1" uv run --with ccxt --with yfinance --with pandas python < embedded probe

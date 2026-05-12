@@ -1,0 +1,13 @@
+post_axiswise_json_present=PASS
+active_request_csv_present=PASS
+native_blocker_json_present=PASS
+native_blocker_cells_csv_present=PASS
+native_intraday_target_count_336=PASS
+focus_blocker_cell_count_4=PASS
+required_field_count_ge_15=PASS
+rows_acquired_false=PASS
+accepted_rows_added_zero=PASS
+r3_closed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+raw_data_committed_false=PASS

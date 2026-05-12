@@ -1,0 +1,69 @@
+{
+  "run_id": "20260512T102601+0800-codex-board-b-nq-canary-engine-debug-v1",
+  "gate": "nq_canary_engine_debug_v1",
+  "gate_result": "signals_exist_freqtrade_entry_execution_zero_trade_no_promotion",
+  "scope": "provider_owned_nq_auto_quant_signal_to_trade_diagnostic",
+  "source_workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T102332+0800-codex-board-b-provider-yf-nq-trendpulse-aq-v1/workspace/auto-quant-yf-nq-trendpulse",
+  "pair": "NQ/USD",
+  "data_rows": 11086,
+  "data_start_utc": "2024-06-02T22:00:00Z",
+  "data_end_utc": "2026-05-11T23:00:00Z",
+  "command_exits": {
+    "default_limit_order_backtest": 0,
+    "market_order_config_without_price_side_other": 1,
+    "market_order_backtest_price_side_other": 0,
+    "direct_strategy_signal_counts": 0
+  },
+  "direct_signal_counts": {
+    "ProviderNqAlwaysInDiagnostic": {
+      "enter_long": 11086,
+      "exit_long": 0,
+      "overlap": 0,
+      "enter_after_2024_06_10": 10969
+    },
+    "ProviderNqModuloCanary": {
+      "enter_long": 450,
+      "exit_long": 443,
+      "overlap": 0,
+      "enter_after_2024_06_10": 445
+    },
+    "ProviderNqSampledPulse": {
+      "enter_long": 130,
+      "exit_long": 4435,
+      "overlap": 0,
+      "enter_after_2024_06_10": 128
+    },
+    "ProviderNqTrendPulse": {
+      "enter_long": 3080,
+      "exit_long": 5011,
+      "overlap": 0,
+      "enter_after_2024_06_10": 3069
+    }
+  },
+  "freqtrade_backtest_result": {
+    "default_limit_order_config_trade_count": 0,
+    "market_order_price_side_other_trade_count": 0,
+    "strategies_succeeded_market_order_price_side_other": 4,
+    "strategies_failed_market_order_price_side_other": 0
+  },
+  "root_cause_boundary": {
+    "not_provider_data_absence": true,
+    "not_strategy_signal_absence": true,
+    "remaining_blocker": "tomac_freqtrade_signal_handoff_or_trade_entry_execution_for_synthetic_nq_usd"
+  },
+  "acceptance": {
+    "accepted_regime_packets_added": 0,
+    "mature_rooted_branch_observations_added": 0,
+    "every_regime_95_99_objective": false,
+    "cross_context_full_validation": false,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal_allowed": false
+  }
+}

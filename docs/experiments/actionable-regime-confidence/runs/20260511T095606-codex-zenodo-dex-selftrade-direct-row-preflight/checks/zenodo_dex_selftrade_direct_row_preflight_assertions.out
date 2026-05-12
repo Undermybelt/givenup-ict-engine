@@ -1,0 +1,9 @@
+PASS json_written
+PASS csv_written
+PASS candidate_rows=48
+PASS positive_rows=24
+PASS negative_control_rows=24
+PASS raw_data_committed=false
+PASS accepted_parent_root_sources_added=0
+PASS accepted_direct_manipulation_rows_added=0
+GATE blocked_candidate_direct_rows_exported_full_acceptance_gate_not_run

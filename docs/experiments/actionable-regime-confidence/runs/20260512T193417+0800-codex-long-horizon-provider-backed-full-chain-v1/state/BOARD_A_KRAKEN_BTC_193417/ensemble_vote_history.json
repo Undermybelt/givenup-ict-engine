@@ -1,0 +1,84 @@
+[
+  {
+    "artifact_id": "ensemble-vote:analyze:2026-05-12T11:47:41Z",
+    "generated_at": "2026-05-12T11:47:41.376965Z",
+    "symbol": "BOARD_A_KRAKEN_BTC_193417",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:BOARD_A_KRAKEN_BTC_193417:20260512T114741.233Z",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "d1fba762150c532c",
+      "config_hash": "7bcb9e239804d1cc",
+      "data_fingerprint": "b3fea6e90f3d0af3"
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "final_action": "favor_mean_reversion_only",
+    "recommended_command": "ask-user: Before using historical data for BOARD_A_KRAKEN_BTC_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_KRAKEN_BTC_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'",
+    "human_next_triage": "hard_blocked=false ensemble_action=favor_mean_reversion_only consensus=0.119 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for BOARD_A_KRAKEN_BTC_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_KRAKEN_BTC_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'",
+    "hard_block": {
+      "active": false,
+      "stage": null,
+      "status": null,
+      "reason": null,
+      "evidence": [],
+      "command": null,
+      "human_action": null
+    },
+    "confidence": 0.43383225566976313,
+    "consensus_strength": 0.11883225566976316,
+    "disagreement_flags": [
+      "executor_disagreement:favor_mean_reversion_only_vs_Observe"
+    ],
+    "executor_summaries": [
+      "executor=catboost_file action=favor_mean_reversion_only confidence=0.502 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.502",
+      "executor=xgboost_file action=Observe confidence=0.350 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350"
+    ],
+    "split_explanations": [
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "posterior_override=range:0.556",
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high"
+    ],
+    "executor_scorecards": [],
+    "executor_scorecards_source": "persisted",
+    "posterior_fingerprint": "b3fea6e90f3d0af3",
+    "posterior_normalization_status": "normalized",
+    "posterior_active_regime": "range",
+    "posterior_confidence": 0.4492890105163103,
+    "posterior_probabilities": {
+      "range": 0.5555555555555556,
+      "stress": 0.38888888888888884,
+      "transition": 0.05555555555555556,
+      "trend": 0.0
+    },
+    "posterior_evidence": [
+      "market_policy=BOARD hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bearish multi_timeframe_alignment_score=0.998 multi_timeframe_entry_alignment_score=0.917",
+      "long/short support gap 0.033 is too small, so alignment is treated as mixed",
+      "hostile liquidity downgrades evidence confidence, so uncertainty is raised",
+      "pre_bayes_quality_score=0.449 gating_status=pass_neutralized",
+      "market_state_source=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.590",
+      "market_state_source=volatility=NormalVol:0.530 liquidity=ThinLiquidity:0.643 structure=Trending:0.830 behavior=Exhaustion:0.650",
+      "market_state_source=rationale=volatility=NormalVol conf=0.53",
+      "market_state_source=rationale=liquidity=ThinLiquidity conf=0.64",
+      "market_state_source=rationale=structure=Trending conf=0.83",
+      "market_state_source=rationale=behavior=Exhaustion conf=0.65",
+      "market_state_source=rationale=primary=RangeConsolidation secondary=WideRange overall=0.59"
+    ]
+  }
+]

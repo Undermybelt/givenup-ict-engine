@@ -1,0 +1,105 @@
+{
+  "bbn_contradiction_lift": 0.6131557638540795,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 2.5683766138164983,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": true,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.6934000690615427,
+    4.901141743247006e-8,
+    0.3065998819270398
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260512T023935.357339000Z",
+  "library_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/local-cache-seed-v2/strategy_library_local_cache_seed_v2.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260512T023936.019994000Z",
+  "prior_init_history_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103013+0800-codex-board-a-aq-feedback-bridge-after-101221-v1/state_bridge_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103013+0800-codex-board-a-aq-feedback-bridge-after-101221-v1/state_bridge_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260512T023936.019994000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.7218018646616541,
+        1.3233082706766917e-6,
+        0.27819681203007524
+      ],
+      "bbn_contradiction_after": 0.03560637593984955,
+      "bbn_contradiction_before": 0.5919559999999999,
+      "bbn_contradiction_lift": 0.5563496240601504,
+      "bbn_entropy_after": 0.5912610041907262,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6082174726271212,
+      "bbn_log_loss_before": 3.174473535644855,
+      "bbn_log_loss_delta": 2.566256063017734,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.2781541353383459,
+        -0.000020676691729323306,
+        0.2781748120300752
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "board_b_093854_local_cache_seed_bnb_mr_v2",
+      "n_breakeven": 0,
+      "n_loss": 37,
+      "n_win": 88,
+      "strategy_name": "BNBMeanRevertSharp",
+      "temper": 0.5,
+      "trade_count": 125
+    },
+    {
+      "after_probs": [
+        0.6934000690615427,
+        4.901141743247006e-8,
+        0.3065998819270398
+      ],
+      "bbn_contradiction_after": 0.0021848515305357774,
+      "bbn_contradiction_before": 0.05899099132446494,
+      "bbn_contradiction_lift": 0.056806139793929164,
+      "bbn_entropy_after": 0.6163539416486933,
+      "bbn_entropy_before": 0.5912610041907262,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6172446235223205,
+      "bbn_log_loss_before": 0.6193651743210848,
+      "bbn_log_loss_delta": 0.002120550798764387,
+      "before_probs": [
+        0.7218018646616541,
+        1.3233082706766917e-6,
+        0.27819681203007524
+      ],
+      "diff": [
+        -0.028401795600111357,
+        -1.2742968532442216e-6,
+        0.02840306989696456
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "board_b_093854_local_cache_seed_crash_rebound_v2",
+      "n_breakeven": 0,
+      "n_loss": 64,
+      "n_win": 144,
+      "strategy_name": "CrashReboundVolume",
+      "temper": 0.5,
+      "trade_count": 208
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "temper": 0.5
+}

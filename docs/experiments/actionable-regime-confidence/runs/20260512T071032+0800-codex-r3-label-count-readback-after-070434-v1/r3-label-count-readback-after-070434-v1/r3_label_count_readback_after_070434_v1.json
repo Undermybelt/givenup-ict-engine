@@ -1,0 +1,41 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_before_artifact": "eb14e44d73fd2123792b7288bd3b592be5af177e225ded16d57345c1497fe008",
+  "canonical_merge": false,
+  "decision": {
+    "gate_result": "r3_label_count_readback_after_070434_v1=header_aware_counts_no_crisis_tsie_quarantined_no_unlock",
+    "reason": "Header-aware label counting confirms the R3 native-subhour TSIE intake has Bear, Bull, and Sideways rows only. Crisis is absent, provenance remains TSIE-derived and quarantined, and the root is not accepted source/control evidence."
+  },
+  "downstream_promotion_rerun": false,
+  "input_root": {
+    "provenance_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+    "rows_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+    "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+    "source_run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1"
+  },
+  "label_counts": {
+    "Bear": 1435764,
+    "Bull": 1435055,
+    "Crisis": 0,
+    "Sideways": 2162084
+  },
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "row_accounting": {
+    "data_rows": 5032903,
+    "file_lines_including_header": 5032904,
+    "labels_observed": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "main_regime_v2_column_present": true
+  },
+  "run_id": "20260512T071032+0800-codex-r3-label-count-readback-after-070434-v1",
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

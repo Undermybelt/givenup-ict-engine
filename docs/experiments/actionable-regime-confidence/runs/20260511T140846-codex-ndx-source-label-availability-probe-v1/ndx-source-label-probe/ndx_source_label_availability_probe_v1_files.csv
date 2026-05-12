@@ -1,0 +1,4 @@
+path,exists,classification,rows,columns,sha256,raw_data_committed
+/private/tmp/ict-crosswalk-tracking-source-attachment-v1/_NDX_1d.csv,True,price_only_not_source_label,2282,"date,close",f9319dee3371bcb9f7d8b25e70d032873dab94f91e3592cabca764db88046ea4,False
+/private/tmp/ict-crosswalk-tracking-probe-20260511T1355/_NDX_1d.csv,True,price_only_not_source_label,2282,"date,^NDX",f91537d965502fdd9fdcbee2ba6397bdac61cceab866c5160ba32a9a03853c87,False
+/private/tmp/ict-engine-ibkr-probe/ndx.1d.10y.csv,True,price_only_not_source_label,2513,"ts,open,high,low,close,volume,wap,count",a5a7b14838dbbf83789e6abcf7f642b67756e5fd261d0416d7ca0d9f222e8fbd,False

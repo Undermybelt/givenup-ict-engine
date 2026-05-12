@@ -1,0 +1,1 @@
+/Users/thrill3r/.local/bin/uv --directory /Users/thrill3r/Auto-Quant run python /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135318+0800-codex-long-history-es-nq-aq-staging-v1/workspace/auto-quant/run_tomac.py

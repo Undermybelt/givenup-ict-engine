@@ -1,0 +1,79 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-12T06:24:49Z",
+  "generated_at": "2026-05-12T06:24:49.028821Z",
+  "symbol": "LONG_NQ_TOMAC_135318_SLICE",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:LONG_NQ_TOMAC_135318_SLICE:20260512T062448.987Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "c1c5b18b41b45779",
+    "data_fingerprint": "93ce7d7568d0ff16"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "favor_mean_reversion_only",
+  "recommended_command": "ask-user: Before using historical data for LONG_NQ_TOMAC_135318_SLICE again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/data/nq.slice-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/data/nq.slice-1h.json, docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/data/nq.slice-15m.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol LONG_NQ_TOMAC_135318_SLICE --data 'docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/data/nq.slice-15m.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/state_nq_slice_v1'",
+  "human_next_triage": "hard_blocked=false ensemble_action=favor_mean_reversion_only consensus=0.689 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for LONG_NQ_TOMAC_135318_SLICE again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/data/nq.slice-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/data/nq.slice-1h.json, docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/data/nq.slice-15m.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol LONG_NQ_TOMAC_135318_SLICE --data 'docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/data/nq.slice-15m.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/state_nq_slice_v1'",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.6890172675484907,
+  "consensus_strength": 0.6890172675484907,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=favor_mean_reversion_only confidence=0.640 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.640",
+    "executor=xgboost_file action=favor_mean_reversion_only confidence=0.749 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.749"
+  ],
+  "split_explanations": [
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "posterior_override=range:0.749",
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "posterior_override=range:0.749"
+  ],
+  "executor_scorecards": [],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "93ce7d7568d0ff16",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "range",
+  "posterior_confidence": 0.5304098970495816,
+  "posterior_probabilities": {
+    "range": 0.7491786839446286,
+    "stress": 0.17590344766090854,
+    "transition": 0.07491786839446286,
+    "trend": 0.0
+  },
+  "posterior_evidence": [
+    "market_policy=LONG hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.925 multi_timeframe_entry_alignment_score=0.897",
+    "long/short support gap 0.002 is too small, so alignment is treated as mixed",
+    "pre_bayes_quality_score=0.530 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=RangeConsolidation secondary_regime=Accumulation overall_confidence=0.501",
+    "market_state_source=volatility=NormalVol:0.555 liquidity=NormalLiquidity:0.391 structure=Accumulation:0.650 behavior=Crowding:0.600",
+    "market_state_source=rationale=volatility=NormalVol conf=0.55",
+    "market_state_source=rationale=structure=Accumulation conf=0.65",
+    "market_state_source=rationale=behavior=Crowding conf=0.60",
+    "market_state_source=rationale=primary=RangeConsolidation secondary=Accumulation overall=0.50"
+  ]
+}

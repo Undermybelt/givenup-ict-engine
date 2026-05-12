@@ -1,0 +1,87 @@
+{
+  "all_commands_exit0": true,
+  "artifact_id": "131500_125715_eth_downstream_catboost_runtime_readback_v1",
+  "board_effect": {
+    "accepted_95": false,
+    "accepted_95_contexts_added": 0,
+    "production_likelihood_mutation": false,
+    "promotion_allowed": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "catboost_runtime": {
+    "enabled": true,
+    "ready": true,
+    "runtime_active_match_count": 2,
+    "score_model_artifact_uri": "docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/path-ranker/catboost_history_runtime_v1/catboost_model/catboost_model.cbm",
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "status": "enabled_candidate_set_ready",
+    "trainer_artifact_feature_columns": 1,
+    "trainer_artifact_history_rows": 163,
+    "trainer_artifact_trained_rows": 163,
+    "trainer_selected_features": [
+      "structural_baseline_score"
+    ]
+  },
+  "execution": {
+    "actionable": false,
+    "closed_loop_reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "closed_loop_status": "fail_closed",
+    "current_posterior": 0.345679012345679,
+    "execution_gate_status": "execution_candidate_observed",
+    "path_ranker_raw_score": 0.2934390186466203,
+    "path_ranker_runtime_source": "candidate_set",
+    "ready": false,
+    "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+    "review_status": "observe",
+    "selected_path_probability": 0.6632710958496916
+  },
+  "exit_count": 24,
+  "gate": "same_root_eth_catboost_runtime_ready_but_execution_prebayes_fail_closed_no_promotion",
+  "generated_at": "2026-05-12T05:10:44.793058+00:00",
+  "ingest": {
+    "feedback_records_inserted": 162,
+    "trades_applied": 162,
+    "trades_invalid": 0,
+    "trades_total": 162
+  },
+  "pre_bayes": {
+    "latest_canonical_structural_confidence": null,
+    "latest_canonical_structural_probabilities": {},
+    "latest_gate_status": null,
+    "latest_policy_version": null,
+    "ready": false
+  },
+  "provider_counts": {
+    "binance_public": 34,
+    "bybit_public": 34,
+    "ibkr_aggtrades": 32,
+    "kraken_public": 20,
+    "tvr_binance": 21,
+    "yfinance": 21
+  },
+  "run_id": "20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1",
+  "source_run_id": "20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+  "target_summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/state_ingest/B2R_ETH_SIX_PROVIDER_MOMENTUM_125715/policy_training/structural_path_ranking_target_summary.json",
+  "total_provider_momentum_rows": 162,
+  "validation": {
+    "calibration_brier_score": 0.22618857455512223,
+    "calibration_expected_error": 0.0018819632640756367,
+    "calibration_quality_ready": true,
+    "calibration_ready": true,
+    "calibration_status": "evaluated",
+    "observation_validation_min_rows": 30,
+    "observation_validation_rows": 162,
+    "outcome_distribution": {
+      "loss": 106,
+      "win": 56
+    },
+    "production_validation_min_rows": 30,
+    "production_validation_rows": 162,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_rows": 163
+  }
+}

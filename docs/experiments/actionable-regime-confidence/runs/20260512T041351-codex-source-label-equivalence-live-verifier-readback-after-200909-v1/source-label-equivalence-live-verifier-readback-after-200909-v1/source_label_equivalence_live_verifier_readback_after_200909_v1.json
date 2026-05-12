@@ -1,0 +1,54 @@
+{
+  "run_id": "20260512T041351-codex-source-label-equivalence-live-verifier-readback-after-200909-v1",
+  "gate_result": "source_label_equivalence_live_verifier_readback_after_200909_v1=schema_ready_unscored_no_confidence_acceptance_no_promotion",
+  "source_command_root": "docs/experiments/actionable-regime-confidence/runs/20260512T200909-codex-source-label-equivalence-live-verifier-v1",
+  "verifier_exit": 0,
+  "verifier_status": "schema_ready_unscored",
+  "row_count": 248440,
+  "package_counts": {
+    "price_root_equivalence_us_index_futures": 248440
+  },
+  "rows_sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25",
+  "provenance_sha256": "a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b",
+  "source_label_root": "/tmp/ict-engine-source-label-equivalence-intake",
+  "provenance_summary": {
+    "date_min": "2000-01-03",
+    "date_max": "2026-03-20",
+    "label_counts": {
+      "Bull": 104979,
+      "Sideways": 57899,
+      "Bear": 54939,
+      "Crisis": 30623
+    },
+    "market_family_counts": {
+      "us_single_stock": 218769,
+      "us_index": 26236,
+      "india_equity_index": 3435
+    },
+    "split_counts": {
+      "calibration": 148976,
+      "heldout_market": 26236,
+      "heldout_time": 45384,
+      "test": 27844
+    }
+  },
+  "existing_calibration_boundary": {
+    "confidence_calibration_decision": "source_label_equivalence_confidence_calibration_v1=source_confidence_scored_no_acceptance",
+    "arrival_calibration_decision": "source_label_equivalence_arrival_calibration_v1=source_confidence_scored_no_acceptance",
+    "schema_readiness_is_confidence_acceptance": false
+  },
+  "required_source_roots_still_separate": [
+    "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "/tmp/ict-engine-native-subhour-source-label-intake",
+    "/tmp/ict-engine-source-panel-recency-extension"
+  ],
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

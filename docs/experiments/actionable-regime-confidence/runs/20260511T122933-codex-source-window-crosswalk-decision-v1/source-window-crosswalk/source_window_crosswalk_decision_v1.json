@@ -1,0 +1,88 @@
+{
+  "run_id": "20260511T122933+0800-codex-source-window-crosswalk-decision-v1",
+  "artifact_type": "source_window_crosswalk_decision",
+  "inputs": {
+    "preflight": "docs/experiments/actionable-regime-confidence/runs/20260511T122239-codex-source-window-attachability-v1/source-window-attachability/source_window_attachability_v1.json",
+    "candidate_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T122239-codex-source-window-attachability-v1/source-window-attachability/source_window_crosswalk_candidates_v1.csv",
+    "approved_slots_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T122933-codex-source-window-crosswalk-decision-v1/source-window-crosswalk/approved_source_window_slots_v1.csv"
+  },
+  "decision_policy": {
+    "approved": [
+      {
+        "crosswalk_layer": "same_underlying_spx_to_gspc_time_projection",
+        "candidate_slots": 14,
+        "reason": "Yardeni source windows are native S&P 500 windows and yfinance ^GSPC is the same index target; projection is calendar-date membership to non-native timeframes."
+      },
+      {
+        "crosswalk_layer": "macro_crisis_to_gspc_time_projection",
+        "candidate_slots": 7,
+        "reason": "NBER contraction months are accepted only as macro Crisis context for S&P 500 bars, not as trade-entry evidence."
+      },
+      {
+        "crosswalk_layer": "spx_tradable_proxy_time_projection",
+        "candidate_slots": 28,
+        "reason": "SPY and ES=F are S&P 500 tradable proxy targets; source-window membership can attach as context labels with provenance."
+      },
+      {
+        "crosswalk_layer": "macro_crisis_to_spx_tradable_proxy",
+        "candidate_slots": 14,
+        "reason": "NBER contraction months can attach as macro Crisis context to S&P 500 tradable proxy targets with explicit provenance."
+      }
+    ],
+    "blocked_or_rejected": [
+      {
+        "crosswalk_layer": "sideways_source_gap",
+        "candidate_slots": 0,
+        "reason": "No dated Sideways source window or approved adjudication protocol exists."
+      },
+      {
+        "crosswalk_layer": "broad_us_equity_family_projection",
+        "candidate_slots": 0,
+        "reason": "QQQ, NQ, Dow instruments, and similar targets are not exact S&P 500 same-underlying/proxy labels under this decision."
+      },
+      {
+        "crosswalk_layer": "non_equity_projection",
+        "candidate_slots": 0,
+        "reason": "S&P 500 and NBER source windows are not direct labels for commodities, volatility, or crypto targets."
+      }
+    ]
+  },
+  "result": {
+    "approved_source_label_slots_added": 63,
+    "approved_by_root": {
+      "Bull": 21,
+      "Bear": 21,
+      "Crisis": 21,
+      "Sideways": 0
+    },
+    "approved_by_instrument": {
+      "^GSPC": 21,
+      "SPY": 21,
+      "ES=F": 21
+    },
+    "approved_by_timeframe": {
+      "1m": 9,
+      "5m": 9,
+      "15m": 9,
+      "30m": 9,
+      "1h": 9,
+      "4h": 9,
+      "1mo": 9
+    },
+    "confidence_gate_claimed": false,
+    "full_matrix_completion": false,
+    "trade_usable": false
+  },
+  "remaining_blockers": [
+    "Sideways still has zero dated source-window slots under this lane.",
+    "Nasdaq, Dow, commodity, volatility, crypto, Kraken, and broader provider/timeframe cells remain unapproved unless separate exact sources or explicit crosswalks are supplied.",
+    "Source-label slot attachment is not the same as calibrated 95% held-out confidence; downstream calibration remains required before completion."
+  ],
+  "safety_flags": {
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "raw_data_committed": false,
+    "proxy_promoted_beyond_declared_crosswalk": false,
+    "trade_usable": false
+  }
+}

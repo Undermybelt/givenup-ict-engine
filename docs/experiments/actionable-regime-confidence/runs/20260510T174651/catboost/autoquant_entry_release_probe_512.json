@@ -1,0 +1,381 @@
+{
+  "rows": 512,
+  "features_csv": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-release-probe-512/autoquant_entry_release_features_512.csv",
+  "numeric_feature_count": 435,
+  "target_counts": {
+    "AvoidBadLossCluster": {
+      "positive": 331,
+      "negative": 181
+    },
+    "AnyWinCluster": {
+      "positive": 162,
+      "negative": 350
+    },
+    "ExecutionObserveOrBetter": {
+      "positive": 407,
+      "negative": 105
+    },
+    "LowTransitionHazard": {
+      "positive": 114,
+      "negative": 398
+    },
+    "DurationViable": {
+      "positive": 165,
+      "negative": 347
+    },
+    "ReadinessObserveOrReady": {
+      "positive": 73,
+      "negative": 439
+    }
+  },
+  "targets": {
+    "AvoidBadLossCluster": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "aq_15m_ret_1",
+          "importance": 17.133868637115334
+        },
+        {
+          "feature": "aq_4h_ret_1",
+          "importance": 3.0104247705006806
+        },
+        {
+          "feature": "aq_1d_dd_10",
+          "importance": 2.5541525825761506
+        },
+        {
+          "feature": "aq_5m_dd_192",
+          "importance": 1.9873090854901279
+        },
+        {
+          "feature": "aq_1d_dd_5",
+          "importance": 1.4992503997335573
+        },
+        {
+          "feature": "aq_15m_eff_1440",
+          "importance": 1.3555526342296287
+        },
+        {
+          "feature": "aq_5m_range_mean_4",
+          "importance": 1.3153081414459742
+        },
+        {
+          "feature": "aq_15m_upper_wick_frac",
+          "importance": 1.2440600158610258
+        },
+        {
+          "feature": "aq_1d_ret_1",
+          "importance": 1.1378875041295757
+        },
+        {
+          "feature": "aq_1h_ret_1",
+          "importance": 1.0166061349447586
+        },
+        {
+          "feature": "aq_15m_body_frac",
+          "importance": 1.0035678465785574
+        },
+        {
+          "feature": "ict_ising_phase_transition_risk",
+          "importance": 0.9772533294547777
+        }
+      ],
+      "accepted_rules": 0,
+      "calibration_admissible_rules": 0,
+      "selected_rule": null
+    },
+    "AnyWinCluster": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "aq_15m_ret_1",
+          "importance": 6.411983326755776
+        },
+        {
+          "feature": "aq_4h_ret_1",
+          "importance": 4.531810501935723
+        },
+        {
+          "feature": "aq_1h_pos_4",
+          "importance": 4.071587506081799
+        },
+        {
+          "feature": "aq_1d_pos_10",
+          "importance": 3.119207913306858
+        },
+        {
+          "feature": "aq_1h_ret_1",
+          "importance": 2.8188916067645007
+        },
+        {
+          "feature": "aq_5m_ret_1",
+          "importance": 2.7437861423893564
+        },
+        {
+          "feature": "aq_1d_eff_5",
+          "importance": 2.472529791132411
+        },
+        {
+          "feature": "aq_1h_dd_4",
+          "importance": 1.5875690208023958
+        },
+        {
+          "feature": "aq_1h_eff_32",
+          "importance": 1.5737788983695304
+        },
+        {
+          "feature": "aq_5m_pos_64",
+          "importance": 1.4339875739828352
+        },
+        {
+          "feature": "aq_1d_pos_5",
+          "importance": 1.318061231560866
+        },
+        {
+          "feature": "aq_15m_eff_192",
+          "importance": 1.222284905384029
+        }
+      ],
+      "accepted_rules": 0,
+      "calibration_admissible_rules": 0,
+      "selected_rule": null
+    },
+    "ExecutionObserveOrBetter": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "ict_decision_hint__execution_blocked_regardless_of_prediction",
+          "importance": 35.78178475846749
+        },
+        {
+          "feature": "ict_branch__block_crowded",
+          "importance": 33.65261129766675
+        },
+        {
+          "feature": "ict_gate_status__blocked",
+          "importance": 21.839728917175933
+        },
+        {
+          "feature": "aq_15m_pos_1440",
+          "importance": 0.2785830551260734
+        },
+        {
+          "feature": "aq_1d_eff_10",
+          "importance": 0.21668743042573074
+        },
+        {
+          "feature": "aq_1h_dd_4",
+          "importance": 0.19826558679456924
+        },
+        {
+          "feature": "aq_4h_vol_192",
+          "importance": 0.16526485247466
+        },
+        {
+          "feature": "aq_1d_eff_100",
+          "importance": 0.16014634080525567
+        },
+        {
+          "feature": "ict_ising_phase_transition_risk",
+          "importance": 0.1507162235781349
+        },
+        {
+          "feature": "aq_15m_eff_192",
+          "importance": 0.14195157807208486
+        },
+        {
+          "feature": "aq_4h_volume_z_4",
+          "importance": 0.13722919973295555
+        },
+        {
+          "feature": "aq_1d_pos_100",
+          "importance": 0.12740748456568748
+        }
+      ],
+      "accepted_rules": 35,
+      "calibration_admissible_rules": 35,
+      "selected_rule": {
+        "threshold": 0.9960211614238486,
+        "calibration_success": 107,
+        "calibration_total": 107,
+        "calibration_precision": 1.0,
+        "calibration_wilson_lower": 0.9653427619812514,
+        "test_success": 98,
+        "test_total": 98,
+        "test_precision": 1.0,
+        "test_wilson_lower": 0.9622800098783192,
+        "passes": true
+      }
+    },
+    "LowTransitionHazard": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "aq_4h_eff_8",
+          "importance": 5.274291732479841
+        },
+        {
+          "feature": "ict_branch__block_crowded",
+          "importance": 5.023380756700742
+        },
+        {
+          "feature": "ict_decision_hint__execution_blocked_regardless_of_prediction",
+          "importance": 4.065578300441969
+        },
+        {
+          "feature": "ict_gate_status__blocked",
+          "importance": 3.2980578766603883
+        },
+        {
+          "feature": "aq_15m_pos_96",
+          "importance": 1.8748151407458347
+        },
+        {
+          "feature": "ict_dominant_cycle_energy",
+          "importance": 1.7554336767915988
+        },
+        {
+          "feature": "ict_ising_phase_transition_risk",
+          "importance": 1.6327939785842456
+        },
+        {
+          "feature": "aq_15m_eff_96",
+          "importance": 1.6124717612101211
+        },
+        {
+          "feature": "aq_filter_reversal_hazard",
+          "importance": 1.5372635560348293
+        },
+        {
+          "feature": "aq_15m_ret_32",
+          "importance": 1.517723108655556
+        },
+        {
+          "feature": "aq_1d_bounce_5",
+          "importance": 1.4536035607986402
+        },
+        {
+          "feature": "aq_5m_eff_192",
+          "importance": 1.28036668113454
+        }
+      ],
+      "accepted_rules": 0,
+      "calibration_admissible_rules": 0,
+      "selected_rule": null
+    },
+    "DurationViable": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "aq_1h_eff_8",
+          "importance": 3.915814439761843
+        },
+        {
+          "feature": "aq_4h_pos_16",
+          "importance": 2.0087733309716964
+        },
+        {
+          "feature": "aq_1d_pos_100",
+          "importance": 1.8761739749666484
+        },
+        {
+          "feature": "aq_4h_pos_64",
+          "importance": 1.3391123318720042
+        },
+        {
+          "feature": "aq_15m_upper_wick_frac",
+          "importance": 1.3320300140702441
+        },
+        {
+          "feature": "aq_1h_lower_wick_frac",
+          "importance": 1.3171712566379221
+        },
+        {
+          "feature": "aq_1h_vol_8",
+          "importance": 1.243054631688399
+        },
+        {
+          "feature": "ict_top_positive_contribution",
+          "importance": 1.104170939741105
+        },
+        {
+          "feature": "aq_15m_pos_192",
+          "importance": 1.0734149233835917
+        },
+        {
+          "feature": "aq_aligned_candle_timestamp",
+          "importance": 0.9967473316920771
+        },
+        {
+          "feature": "aq_1h_dd_4",
+          "importance": 0.9667593137981346
+        },
+        {
+          "feature": "aq_5m_eff_96",
+          "importance": 0.9573221856357168
+        }
+      ],
+      "accepted_rules": 0,
+      "calibration_admissible_rules": 0,
+      "selected_rule": null
+    },
+    "ReadinessObserveOrReady": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "ict_readiness_gap_to_ready",
+          "importance": 30.14028529791793
+        },
+        {
+          "feature": "ict_execution_readiness",
+          "importance": 29.28768199853222
+        },
+        {
+          "feature": "ict_readiness_gap_to_observe",
+          "importance": 26.55110792565029
+        },
+        {
+          "feature": "aq_15m_pos_1440",
+          "importance": 0.371299804828396
+        },
+        {
+          "feature": "aq_entry_hour_cos",
+          "importance": 0.3053967688631321
+        },
+        {
+          "feature": "aq_1h_dd_4",
+          "importance": 0.2932285312856704
+        },
+        {
+          "feature": "aq_4h_absret_sum_4",
+          "importance": 0.2737997795246009
+        },
+        {
+          "feature": "aq_1d_eff_10",
+          "importance": 0.26679214939930385
+        },
+        {
+          "feature": "ict_ising_phase_transition_risk",
+          "importance": 0.2632213503869443
+        },
+        {
+          "feature": "aq_4h_volume_z_4",
+          "importance": 0.24634348781854293
+        },
+        {
+          "feature": "aq_1d_range_mean_5",
+          "importance": 0.24469239598070347
+        },
+        {
+          "feature": "aq_5m_range_mean_64",
+          "importance": 0.24268495163701237
+        }
+      ],
+      "accepted_rules": 0,
+      "calibration_admissible_rules": 0,
+      "selected_rule": null
+    }
+  },
+  "overall_decision": "candidate_found"
+}

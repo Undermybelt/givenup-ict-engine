@@ -1,0 +1,11 @@
+PASS decision=stock_regime_owner_recency_request_package_v1=owner_request_ready_rows_not_acquired
+PASS source_dataset=mafaqbhatti/stock-market-regimes-20002026
+PASS target_rows=4
+PASS required_fields=17
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS r4_strict_1h_source_rows_acquired=false
+PASS r5_recency_tail_repair_closed=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

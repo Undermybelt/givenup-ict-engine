@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.5199630399999999,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 2.6946489614108335,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.73999296,
+    3.5199999999999998e-6,
+    0.26000352
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/provider_btc_ema_rsi_strategy_library_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.804762000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/state_provider_btc_ema_rsi_v1/auto-quant/B2R_PROVIDER_BTC_EMA_RSI_104703/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/state_provider_btc_ema_rsi_v1/auto-quant/B2R_PROVIDER_BTC_EMA_RSI_104703/auto_quant_prior_init_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.804762000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.73999296,
+        3.5199999999999998e-6,
+        0.26000352
+      ],
+      "bbn_contradiction_after": 0.09904057904761912,
+      "bbn_contradiction_before": 0.619003619047619,
+      "bbn_contradiction_lift": 0.5199630399999999,
+      "bbn_entropy_after": 0.5731072598079734,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6248596430641731,
+      "bbn_log_loss_before": 3.3195086044750064,
+      "bbn_log_loss_delta": 2.6946489614108335,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.2599630399999999,
+        -0.00001848,
+        0.25998151999999997
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "provider-owned-btc-ema-rsi-hold12-v1",
+      "n_breakeven": 0,
+      "n_loss": 13,
+      "n_win": 29,
+      "strategy_name": "ProviderBtcEmaRsiHold12",
+      "temper": 0.5,
+      "trade_count": 42
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "temper": 0.5
+}

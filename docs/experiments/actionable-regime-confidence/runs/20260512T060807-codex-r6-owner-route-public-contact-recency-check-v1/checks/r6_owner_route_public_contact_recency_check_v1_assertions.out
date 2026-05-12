@@ -1,0 +1,9 @@
+gate_result: PASS
+required_root_unlocked_false: PASS
+approval_present_false: PASS
+source_control_evidence_false: PASS
+public_http_route_checks_sent: PASS
+external_email_sent_false: PASS
+canonical_merge_false: PASS
+downstream_promotion_rerun_false: PASS
+update_goal_false: PASS

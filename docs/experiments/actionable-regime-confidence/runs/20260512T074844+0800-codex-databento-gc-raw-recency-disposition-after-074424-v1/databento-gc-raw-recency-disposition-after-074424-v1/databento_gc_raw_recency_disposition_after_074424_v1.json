@@ -1,0 +1,281 @@
+{
+  "archive": {
+    "exists": true,
+    "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/databento.rar",
+    "size_bytes": 102402878
+  },
+  "assertions": {
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "local_root_present": true,
+    "order_lifecycle_columns_present": false,
+    "post_2026_01_30_raw_ohlcv_present": true,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "source_control_evidence_acquired": false,
+    "source_label_columns_present": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "candidate_columns": {
+    "gc_continuous": {
+      "has_order_lifecycle_columns": false,
+      "has_source_label_columns": false
+    },
+    "glbx_ohlcv": {
+      "has_order_lifecycle_columns": false,
+      "has_source_label_columns": false
+    },
+    "symbology": {
+      "has_order_lifecycle_columns": false,
+      "has_source_label_columns": false
+    }
+  },
+  "condition": {
+    "exists": true,
+    "first": {
+      "condition": "available",
+      "date": "2021-01-06",
+      "last_modified_date": "2024-05-16"
+    },
+    "last": {
+      "condition": "available",
+      "date": "2026-01-05",
+      "last_modified_date": "2026-01-07"
+    },
+    "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/condition.json",
+    "rows": 1565
+  },
+  "contract_readback": {
+    "r3_native_subhour": "blocked_raw_ohlcv_has_native_minutes_but_no_verifier_native_mainregimev2_labels_or_crisis_taxonomy",
+    "r5_source_panel_recency": "blocked_no_stock_market_regimes_2026_extension_csv_no_source_panel_recency_provenance_json",
+    "r6_owner_export": "blocked_no_order_lifecycle_positive_rows_no_matched_normal_controls_no_flip_approval"
+  },
+  "gate_result": "databento_gc_raw_recency_disposition_after_074424_v1=raw_ohlcv_post_cutoff_no_source_label_or_control_unlock",
+  "local_root": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025",
+  "manifest": {
+    "exists": true,
+    "filenames": [
+      "condition.json",
+      "metadata.json",
+      "symbology.json",
+      "symbology.csv",
+      "glbx-mdp3-20210106-20260105.ohlcv-1m.csv"
+    ],
+    "glbx_ohlcv_manifest_entry": {
+      "filename": "glbx-mdp3-20210106-20260105.ohlcv-1m.csv",
+      "hash": "sha256:3e566d0c7181c6fbddf80be1ec7fbb33987240a6aa495caa27b275d034fa174d",
+      "size": 585690521,
+      "urls": {
+        "ftp": "ftp://ftp.databento.com/DGU3SABE/GLBX-20260108-BUR5BGXTKJ/glbx-mdp3-20210106-20260105.ohlcv-1m.csv",
+        "https": "https://api.databento.com/v0/batch/download/DGU3SABE/GLBX-20260108-BUR5BGXTKJ/glbx-mdp3-20210106-20260105.ohlcv-1m.csv"
+      }
+    },
+    "job_id": "GLBX-20260108-BUR5BGXTKJ",
+    "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/manifest.json"
+  },
+  "metadata": {
+    "customizations": {
+      "delivery": "download",
+      "map_symbols": true,
+      "packaging": null,
+      "pretty_px": true,
+      "pretty_ts": true,
+      "split_duration": null,
+      "split_size": null,
+      "split_symbols": false
+    },
+    "exists": true,
+    "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/metadata.json",
+    "query": {
+      "compression": null,
+      "dataset": "GLBX.MDP3",
+      "encoding": "csv",
+      "end": 1767657600000000000,
+      "limit": null,
+      "schema": "ohlcv-1m",
+      "start": 1609891200000000000,
+      "stype_in": "parent",
+      "stype_out": "instrument_id",
+      "symbols": [
+        "GC.FUT"
+      ]
+    }
+  },
+  "next": "Continue source/control acquisition only; do not convert Databento raw OHLCV into source-owned MainRegimeV2 labels or R6 controls.",
+  "profiles": {
+    "gc_continuous": {
+      "columns": [
+        "ts_event",
+        "rtype",
+        "publisher_id",
+        "instrument_id",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "symbol"
+      ],
+      "exists": true,
+      "first_row": {
+        "close": "1419.7",
+        "high": "1420.4",
+        "instrument_id": "102263",
+        "low": "1418.8",
+        "open": "1420.4",
+        "publisher_id": "1",
+        "rtype": "33",
+        "symbol": "GC.n.0",
+        "ts_event": "2011-01-02 18:00:00-05:00",
+        "volume": "209"
+      },
+      "last_row": {
+        "close": "4861.7",
+        "high": "4863.0",
+        "instrument_id": "19181",
+        "low": "4860.9",
+        "open": "4862.8",
+        "publisher_id": "1",
+        "rtype": "33",
+        "symbol": "GC.n.0",
+        "ts_event": "2026-04-14 19:59:00-04:00",
+        "volume": "20"
+      },
+      "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/gc_201101_202604.csv",
+      "rows": 5327112,
+      "sample_rows": [
+        {
+          "close": "1419.7",
+          "high": "1420.4",
+          "instrument_id": "102263",
+          "low": "1418.8",
+          "open": "1420.4",
+          "publisher_id": "1",
+          "rtype": "33",
+          "symbol": "GC.n.0",
+          "ts_event": "2011-01-02 18:00:00-05:00",
+          "volume": "209"
+        },
+        {
+          "close": "1419.9",
+          "high": "1420.4",
+          "instrument_id": "102263",
+          "low": "1419.9",
+          "open": "1420.0",
+          "publisher_id": "1",
+          "rtype": "33",
+          "symbol": "GC.n.0",
+          "ts_event": "2011-01-02 18:01:00-05:00",
+          "volume": "48"
+        }
+      ],
+      "size_bytes": 401491646
+    },
+    "glbx_ohlcv": {
+      "columns": [
+        "ts_event",
+        "rtype",
+        "publisher_id",
+        "instrument_id",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "symbol"
+      ],
+      "exists": true,
+      "first_row": {
+        "close": "1954.100000000",
+        "high": "1954.200000000",
+        "instrument_id": "6466",
+        "low": "1953.600000000",
+        "open": "1954.200000000",
+        "publisher_id": "1",
+        "rtype": "33",
+        "symbol": "GCG1",
+        "ts_event": "2021-01-06T00:00:00.000000000Z",
+        "volume": "63"
+      },
+      "last_row": {
+        "close": "4450.700000000",
+        "high": "4451.300000000",
+        "instrument_id": "42001025",
+        "low": "4450.700000000",
+        "open": "4451.000000000",
+        "publisher_id": "1",
+        "rtype": "33",
+        "symbol": "GCG6",
+        "ts_event": "2026-01-05T23:59:00.000000000Z",
+        "volume": "18"
+      },
+      "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/glbx-mdp3-20210106-20260105.ohlcv-1m.csv",
+      "rows": 5333532,
+      "sample_rows": [
+        {
+          "close": "1954.100000000",
+          "high": "1954.200000000",
+          "instrument_id": "6466",
+          "low": "1953.600000000",
+          "open": "1954.200000000",
+          "publisher_id": "1",
+          "rtype": "33",
+          "symbol": "GCG1",
+          "ts_event": "2021-01-06T00:00:00.000000000Z",
+          "volume": "63"
+        },
+        {
+          "close": "1954.200000000",
+          "high": "1954.600000000",
+          "instrument_id": "6466",
+          "low": "1954.000000000",
+          "open": "1954.200000000",
+          "publisher_id": "1",
+          "rtype": "33",
+          "symbol": "GCG1",
+          "ts_event": "2021-01-06T00:01:00.000000000Z",
+          "volume": "36"
+        }
+      ],
+      "size_bytes": 585690521
+    },
+    "symbology": {
+      "columns": [
+        "raw_symbol",
+        "instrument_id",
+        "date"
+      ],
+      "exists": true,
+      "first_row": {
+        "date": "2022-03-30",
+        "instrument_id": "312961",
+        "raw_symbol": "GCG3-GSPJ220"
+      },
+      "last_row": {
+        "date": "2022-05-10",
+        "instrument_id": "10368",
+        "raw_symbol": "GCJ3-GSPK203"
+      },
+      "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/symbology.csv",
+      "rows": 1077103,
+      "sample_rows": [
+        {
+          "date": "2022-03-30",
+          "instrument_id": "312961",
+          "raw_symbol": "GCG3-GSPJ220"
+        },
+        {
+          "date": "2022-03-31",
+          "instrument_id": "312961",
+          "raw_symbol": "GCG3-GSPJ220"
+        }
+      ],
+      "size_bytes": 30984640
+    }
+  },
+  "run_id": "20260512T074844+0800-codex-databento-gc-raw-recency-disposition-after-074424-v1"
+}

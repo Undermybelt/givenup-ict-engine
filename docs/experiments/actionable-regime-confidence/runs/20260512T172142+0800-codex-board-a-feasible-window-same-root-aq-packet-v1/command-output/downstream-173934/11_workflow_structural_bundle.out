@@ -1,0 +1,42 @@
+{
+  "candidate_set_id": "structural-candidates:BTC:f09ac9932aa04cab",
+  "candidate_set_size": 3,
+  "composite_score": 0.24532535527299926,
+  "confirmation_summary": "history_records=1337 followed=1337",
+  "current_posterior": 0.24532535527299926,
+  "direction": "bull",
+  "experience_prior": 0.24532535527299926,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 1337,
+  "invalidation_summary": "do not collapse exact feedback path into a generic structural path",
+  "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol BTC --data 'docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1'",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine factor-research --symbol BTC --data 'docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1'",
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:BTC:f09ac9932aa04cab",
+      "candidate_set_size": 3,
+      "confirmation": "history_records=1337 followed=1337",
+      "invalidation": "do not collapse exact feedback path into a generic structural path",
+      "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "recommended_command": "ict-engine factor-research --symbol BTC --data 'docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1'",
+      "selected_path_probability": 0.29483407249770804,
+      "stop": "use the recorded branch feedback stop/exit contract",
+      "trigger": "preserve exact structural feedback path Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "why": "posterior=0.245 prior=0.245 invalidation_rate=0.000"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+  "selected_path_probability": 0.29483407249770804,
+  "stop_summary": "use the recorded branch feedback stop/exit contract",
+  "symbol": "BTC",
+  "trigger_summary": "preserve exact structural feedback path Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "why_this_path": "posterior=0.245 prior=0.245 invalidation_rate=0.000"
+}

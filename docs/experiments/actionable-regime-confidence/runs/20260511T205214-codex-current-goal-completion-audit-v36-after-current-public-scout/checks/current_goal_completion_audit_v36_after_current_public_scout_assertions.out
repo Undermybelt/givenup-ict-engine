@@ -1,0 +1,12 @@
+PASS decision=current_goal_completion_audit_v36=current_public_scout_and_outbox_v2_rows_not_acquired_blocked
+PASS outbox_v2_rows=9
+PASS draft_count=5
+PASS public_scout_candidate_count=2
+PASS finra_official_route_count=2
+PASS ready_intake_roots=0_of_4
+PASS request_sent=false
+PASS rows_acquired=false
+PASS accepted_rows_added_since_v35=0
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS unmet_ids=R2,R3,R4,R5,R6,R8

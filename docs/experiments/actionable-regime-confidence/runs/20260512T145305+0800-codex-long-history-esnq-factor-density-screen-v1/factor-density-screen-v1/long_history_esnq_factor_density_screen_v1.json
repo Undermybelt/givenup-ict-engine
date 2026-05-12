@@ -1,0 +1,97 @@
+{
+  "evidence_class": "local_training_candidate_surface_screen",
+  "primary_candidate_trades": 11589,
+  "primary_positive_branch_leaf_candidates": 5,
+  "promotion_allowed": false,
+  "provider_authority": "fail_closed:local_cache_replay_primary_source",
+  "round_trip_cost_bps": 2.0,
+  "run_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145305+0800-codex-long-history-esnq-factor-density-screen-v1",
+  "source_root": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf",
+  "source_summary": [
+    {
+      "end": "2023-10-26T16:00:00+00:00",
+      "path": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/nq.continuous-1h.json",
+      "role": "primary_esnq",
+      "rows": 8880,
+      "start": "2012-07-06T12:00:00+00:00",
+      "symbol": "NQ"
+    },
+    {
+      "end": "2025-08-04T12:00:00+00:00",
+      "path": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/es.continuous-1h.json",
+      "role": "primary_esnq",
+      "rows": 14036,
+      "start": "2012-04-23T13:00:00+00:00",
+      "symbol": "ES"
+    },
+    {
+      "end": "2025-09-18T20:00:00+00:00",
+      "path": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/ym.continuous-1h.json",
+      "role": "support_cross_market",
+      "rows": 3230,
+      "start": "2014-02-14T17:00:00+00:00",
+      "symbol": "YM"
+    },
+    {
+      "end": "2023-06-09T17:00:00+00:00",
+      "path": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/xau.continuous-1h.json",
+      "role": "support_cross_market",
+      "rows": 2402,
+      "start": "2021-07-12T00:00:00+00:00",
+      "symbol": "XAU"
+    },
+    {
+      "end": "2023-12-18T13:00:00+00:00",
+      "path": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/eur.continuous-1h.json",
+      "role": "support_cross_market",
+      "rows": 6629,
+      "start": "2020-06-29T15:00:00+00:00",
+      "symbol": "EUR"
+    }
+  ],
+  "top_primary": {
+    "branches_with_min_trades": 8,
+    "candidate_id": "TwentyHourBreakoutContinuationV1",
+    "chronological_gate": true,
+    "density_gate": true,
+    "max_drawdown_compounded": -0.7751353796484096,
+    "mean_net_return": -0.00016191992417569006,
+    "periods_with_trades": 8,
+    "positive_periods": 4,
+    "return_profit_factor": 0.9631292996165097,
+    "screen_score": 69.29024558749616,
+    "source_symbol_role": "primary_esnq",
+    "sum_net_return": -0.3973514939271434,
+    "trades": 2454,
+    "win_rate": 0.4702526487367563,
+    "win_rate_wilson95_lcb": 0.45056672362767636
+  },
+  "top_primary_branch_leaf": {
+    "branch_leaf_screen_score": 91.99432345835079,
+    "branch_path": "Sideways -> BreakoutContinuation -> TwentyHourRangeExpansion -> TwentyHourBreakoutContinuationV1",
+    "candidate_id": "TwentyHourBreakoutContinuationV1",
+    "chronological_gate": true,
+    "density_gate": true,
+    "edge_gate": true,
+    "losses": 125,
+    "main_regime": "Sideways",
+    "max_drawdown_compounded": -0.054053377438508465,
+    "mean_net_return": 0.0008901507308452464,
+    "periods_with_trades": 4,
+    "positive_periods": 3,
+    "profit_factor": "TwentyHourBreakoutContinuationV1",
+    "return_profit_factor": 1.722660922202113,
+    "source_symbol_role": "primary_esnq",
+    "sub_regime": "BreakoutContinuation",
+    "sub_sub_regime_or_profit_factor": "TwentyHourRangeExpansion",
+    "sum_net_return": 0.21630662759539487,
+    "symbol": "ES",
+    "trades": 243,
+    "win_rate": 0.48559670781893005,
+    "win_rate_wilson95_lcb": 0.42347043861896416,
+    "wins": 118
+  },
+  "total_candidate_trades": 16233,
+  "trade_usable": false,
+  "update_goal": false
+}

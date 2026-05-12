@@ -1,0 +1,75 @@
+{
+  "run_id": "20260512T102828+0800-codex-board-a-provider-nq-entry-wire-v1",
+  "mode": "board_a_provider_owned_aq_signal_wiring_diagnostic_no_promotion",
+  "source_workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T102332+0800-codex-board-b-provider-yf-nq-trendpulse-aq-v1/workspace/auto-quant-yf-nq-trendpulse",
+  "upstream_provider_workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T101833+0800-codex-board-b-provider-yahoo-nq-long-aq-preseed-v1/workspace/auto-quant-yahoo-nq-long",
+  "copied_data": {
+    "file": "NQ_USD-1h.feather",
+    "sha256": "c549307d194379c0500f71b4908e4d5c6ecd5c090e69c8b46e14efac5bc14b82",
+    "rows": 11086,
+    "volume_nonzero": 10691
+  },
+  "commands": {
+    "00_probe_provider_nq_entry_wire_conditions": 0,
+    "01_run_provider_nq_entry_wire": 0,
+    "02_probe_provider_nq_forced_entry_conditions": 0,
+    "03_run_provider_nq_entry_wire_with_forced": 0,
+    "04_run_provider_nq_entry_wire_fixed_stake": 0,
+    "05_freqtrade_cli_forced_entry": 2
+  },
+  "offline_signal_counts": {
+    "ProviderNqEntryWireCanary": {
+      "entry_count_raw": 3600,
+      "entry_count_after_startup": 3571,
+      "exit_count_raw": 4772,
+      "entry_exit_overlap": 405,
+      "entry_no_exit_after_startup": 3171
+    },
+    "ProviderNqForcedEntryCanary": {
+      "entry_count_raw": 11062,
+      "entry_count_after_startup": 11062,
+      "exit_count_raw": 924,
+      "entry_exit_overlap": 922,
+      "entry_no_exit_after_startup": 10140
+    }
+  },
+  "tomac_results": {
+    "unlimited_stake": {
+      "ProviderNqEntryWireCanary": {
+        "trade_count": 0,
+        "total_profit_pct": 0.0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0
+      },
+      "ProviderNqForcedEntryCanary": {
+        "trade_count": 0,
+        "total_profit_pct": 0.0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0
+      }
+    },
+    "fixed_stake_1000": {
+      "ProviderNqEntryWireCanary": {
+        "trade_count": 0,
+        "total_profit_pct": 0.0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0
+      },
+      "ProviderNqForcedEntryCanary": {
+        "trade_count": 0,
+        "total_profit_pct": 0.0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0
+      }
+    }
+  },
+  "freqtrade_cli": {
+    "exit": 2,
+    "blocked_reason": "binance_market_metadata_dns_failure_api_binance_com"
+  },
+  "accepted_rows_added": 0,
+  "mature_rooted_branch_observations_added": 0,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "next": "repair_or_replace_tomac_cached_provider_signal_to_trade_conversion_before_more_threshold_mutation"
+}

@@ -1,0 +1,54 @@
+{
+  "packet_assertion": "pass",
+  "rows": 4,
+  "coverage_target": [
+    "NQ/ES/YM",
+    "EURUSD/GBPUSD/DXY",
+    "XAUUSD/XAGUSD/DXY",
+    "BTC/ETH"
+  ],
+  "quality_weight": 0.0,
+  "downstream_allowed": false,
+  "executable_cases": {
+    "smt_bullish_positive_input.json": {
+      "smt_signal": "bullish_smt",
+      "fail_closed_reason": "confirmation_only_waiting_for_mss_cisd_displacement_and_pda",
+      "base_level": 85.0,
+      "comparison_level": 95.0,
+      "normalized_for_inverse_correlation": false,
+      "raw_comparison_swing_type": "HL",
+      "confirmation_role": "confirmation_only",
+      "same_event_window_confirmed": true
+    },
+    "smt_bearish_negative_input.json": {
+      "smt_signal": "bearish_smt",
+      "fail_closed_reason": "confirmation_only_waiting_for_mss_cisd_displacement_and_pda",
+      "base_level": 120.0,
+      "comparison_level": 95.0,
+      "normalized_for_inverse_correlation": true,
+      "raw_comparison_swing_type": "HL",
+      "confirmation_role": "confirmation_only",
+      "same_event_window_confirmed": true
+    },
+    "smt_timeframe_mismatch_input.json": {
+      "smt_signal": "none",
+      "fail_closed_reason": "timeframe_mismatch",
+      "base_level": null,
+      "comparison_level": null,
+      "normalized_for_inverse_correlation": false,
+      "raw_comparison_swing_type": null,
+      "confirmation_role": "confirmation_only",
+      "same_event_window_confirmed": false
+    },
+    "smt_session_mismatch_input.json": {
+      "smt_signal": "none",
+      "fail_closed_reason": "session_not_overlapping",
+      "base_level": null,
+      "comparison_level": null,
+      "normalized_for_inverse_correlation": false,
+      "raw_comparison_swing_type": null,
+      "confirmation_role": "confirmation_only",
+      "same_event_window_confirmed": false
+    }
+  }
+}

@@ -1,0 +1,6 @@
+PASS decision no_promotable_source_label_equivalence
+PASS accepted_rows_added 0
+PASS new_confidence_gate false
+PASS full_objective_achieved false
+PASS promising_candidates_blocked
+PASS raw_data_committed false

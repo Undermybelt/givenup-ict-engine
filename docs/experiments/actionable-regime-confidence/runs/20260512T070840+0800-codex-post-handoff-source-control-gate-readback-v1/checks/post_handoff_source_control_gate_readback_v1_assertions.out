@@ -1,0 +1,13 @@
+post_handoff_source_control_gate_readback_v1 assertions
+
+PASS 070315 decision CSV present
+PASS 070315 JSON present and jq-valid
+PASS 070315 assertions present
+PASS R6 owner-export root absent
+PASS R5 recency root absent
+PASS R3 native-subhour root present but TSIE-quarantined and Crisis absent
+PASS R6 approval decision package approval_present=false
+PASS canonical merge false
+PASS downstream promotion rerun false
+PASS trade usable false
+PASS update_goal false

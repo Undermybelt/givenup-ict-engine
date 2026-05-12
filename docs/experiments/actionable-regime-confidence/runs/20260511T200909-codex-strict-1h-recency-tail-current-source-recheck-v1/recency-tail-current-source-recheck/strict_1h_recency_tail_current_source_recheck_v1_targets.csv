@@ -1,0 +1,5 @@
+ticker,regime_label,source_rows,rows_after_2026_01_30,max_date
+XOM,Sideways,2067,0,2025-12-19
+UNH,Bear,1225,0,2025-12-31
+^DJI,Sideways,2198,0,2025-12-01
+AMD,Bear,1667,0,2025-12-11

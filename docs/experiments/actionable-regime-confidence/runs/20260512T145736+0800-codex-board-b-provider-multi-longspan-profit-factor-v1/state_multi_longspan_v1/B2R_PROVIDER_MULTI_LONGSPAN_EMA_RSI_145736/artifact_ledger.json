@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto_quant_real_trades_B2R_PROVIDER_MULTI_LONGSPAN_EMA_RSI_145736_20260512T071522.551531000Z",
+    "artifact_kind": "auto_quant_real_trades_ingested",
+    "artifact_id": "auto_quant_real_trades_B2R_PROVIDER_MULTI_LONGSPAN_EMA_RSI_145736_20260512T071522.551531000Z",
+    "version": 1,
+    "generated_at": "2026-05-12T07:15:22.551531Z",
+    "symbol": "B2R_PROVIDER_MULTI_LONGSPAN_EMA_RSI_145736",
+    "source_phase": "auto_quant_real_trades",
+    "source_run_id": "4f4061e237ad6aa4",
+    "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/provider_multi_longspan_ema_rsi_real_trades_v1.jsonl",
+    "status": "no_op",
+    "promote_candidate": false,
+    "actionable": false,
+    "decision_hint": "ingested 0 trade(s)",
+    "review_reason": "ingested 0/4865 (invalid 4865) feedback_inserted=0 content_hash=4f4061e237ad6aa4 dry_run=false force=false",
+    "review_rule_version": "auto-quant-real-trades-v1",
+    "top_factor_name": null,
+    "top_factor_action": null,
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 0,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

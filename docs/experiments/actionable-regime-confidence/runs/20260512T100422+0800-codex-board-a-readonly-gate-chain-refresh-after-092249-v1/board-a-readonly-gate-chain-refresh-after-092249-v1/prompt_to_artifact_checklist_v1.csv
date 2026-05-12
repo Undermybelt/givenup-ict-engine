@@ -1,0 +1,9 @@
+requirement,status,evidence,gap
+read_current_board_and_preserve_concurrent_work,covered,board_hash_before=4d0e3e757460af35bb96bdef0de8b56603f97377511095af1e513974d8b41d7e; append-only artifact under docs/experiments/actionable-regime-confidence/runs/20260512T100422+0800-codex-board-a-readonly-gate-chain-refresh-after-092249-v1,
+owner_export_or_source_control_rows,blocked,dropzone_required_files_present=false,"needs direct_manipulation_positive_rows.csv, direct_manipulation_matched_controls.csv, direct_manipulation_provenance.json"
+explicit_htf_mtf_ltf_user_history_selection,blocked,selected_history_hints=40; no current explicit HTF/MTF/LTF selection recorded,"user/operator must select exactly one of HTF, MTF, LTF before selected-data promotion"
+provider_status_ibkr_tradingview_yfinance_kraken,partial,"{""ibkr_gateway_reachable_candidates"": null, ""ibkr_market_data_ready"": false, ""kraken_cli_local_runtime_ready"": true, ""kraken_public_market_data_ready"": false, ""tradingview_mcp_market_data_ready"": false, ""yfinance_live_ready"": true, ""yfinance_market_data_ready"": true}",provider readiness is not enough without source/control and selected-history gates
+auto_quant_operated,partial,status_exit=0; prepare_exit=1,Auto-Quant prepare/status does not become selected-data promotion while upstream gates are blocked
+filter_pre_bayes_bbn_catboost_execution_tree_readback,read_only_non_promoting,analyze_exit=0; pre_bayes_exit=0; policy_exit=0; export_target_exit=0; workflow_exit=0,read-only chain does not satisfy full promotion because source/control and selected-history gates are blocked
+canonical_merge_and_promotion,blocked,canonical_merge=False; selected_data_autoquant_promotion=False; downstream_promotion_rerun=False; promotion_allowed=False,do not merge or promote until source/control rows and explicit history selection exist
+update_goal,blocked,update_goal=false,strict objective not complete

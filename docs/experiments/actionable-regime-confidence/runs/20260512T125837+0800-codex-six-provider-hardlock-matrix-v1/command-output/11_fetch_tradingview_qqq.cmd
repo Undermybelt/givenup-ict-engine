@@ -1,0 +1,1 @@
+target/debug/ict-engine market-data-harness --action fetch --market hardlock-tvr-qqq-1d --interval 1d --role etf_reference --provider etf_reference=tradingview_mcp --symbol-spec etf_reference=NASDAQ:QQQ

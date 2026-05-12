@@ -1,0 +1,6 @@
+candidate,source_url,decision,unlock_candidate,reason
+thesven/fintime-decoder-dataset,https://huggingface.co/datasets/thesven/fintime-decoder-dataset,rejected_forecasting_dataset_no_source_regime_labels,false,Market forecasting coverage but no accepted source-owned MainRegimeV2 regime labels.
+Sashank-810/crisisnet-dataset,https://huggingface.co/datasets/Sashank-810/crisisnet-dataset,rejected_corporate_distress_not_mainregimev2_market_regime,false,Corporate distress/crisis event data rather than market-wide Bull/Bear/Sideways/Crisis source labels.
+FinMultiTime,https://arxiv.org/abs/2506.05019,rejected_multimodal_forecasting_not_source_label_packet,false,Multimodal forecasting dataset rather than accepted source-label packet.
+FinRL-Meta,https://papers.nips.cc/paper_files/paper/2022/file/0bf54b80686d2c4dc0808c2e98d430f7-Paper-Datasets_and_Benchmarks.pdf,rejected_platform_data_source_not_regime_label_unlock,false,Platform/data-source reference rather than R3/R5/R6 unlock evidence.
+mafaqbhatti/stock-market-regimes-20002026,https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026,rejected_prior_known_daily_panel_no_new_unlock_in_this_slice,false,Prior known daily panel; no new accepted R5/R3/R6 unlock in this slice.

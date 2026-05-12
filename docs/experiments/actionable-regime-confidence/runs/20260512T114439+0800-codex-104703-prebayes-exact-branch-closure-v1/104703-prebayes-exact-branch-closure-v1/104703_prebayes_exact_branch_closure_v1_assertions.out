@@ -1,0 +1,11 @@
+pass:ordered_commands_exit0:{'00_emit_exact_branch_probe': '0', '01_update_exact_branch_feedback': '0', '02_pre_bayes_status_after_update': '0', '03_policy_training_status_before_export': '0', '04_export_structural_path_ranking_target': '0', '05_train_catboost': '0', '06_apply_catboost_history': '0', '07_apply_external_scores': '0', '08_register_trainer_artifact': '0', '09_enable_runtime': '0', '10_policy_training_status_final': '0', '11_pre_bayes_status_final': '0', '12_workflow_structural_bundle': '0', '13_workflow_execution_candidate': '0', '14_workflow_full': '0'}
+pass:pre_bayes_gate_surface_present:pass_neutralized
+pass:pre_bayes_exact_branch_assignment_present:Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12
+partial:durable_pre_bayes_policy_absent:
+pass:raw_scored_mature_gte_30:87
+pass:production_validation_gte_30:87
+pass:observation_validation_gte_30:43
+pass:catboost_runtime_ready:Ranker runtime: structural_path_ranking_target rows=3 history_rows=90 mature_rows=1 history_mature_rows=87 raw_scored_mature=87/30 production_validation=87/30 observation_validation=43/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3
+partial:path_ranker_execution_gate_observe:observe
+fail_closed:closed_loop_branch_admission_not_admitted:fail_closed
+fail_closed:execution_observe_only:execution_observe_only

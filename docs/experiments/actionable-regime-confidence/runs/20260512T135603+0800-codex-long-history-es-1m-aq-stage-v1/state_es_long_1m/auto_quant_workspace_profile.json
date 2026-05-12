@@ -1,0 +1,16 @@
+{
+  "profile": "synthetic_ohlcv",
+  "symbol": "ES_LONG_1M_135603",
+  "source_data_path": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/es.continuous-1m.json",
+  "pair": "ES_LONG_1M_135603/USD",
+  "base_timeframe": "1h",
+  "additional_timeframes": [
+    "4h",
+    "1d"
+  ],
+  "notes": [
+    "profile_materializes_additive_external_runner",
+    "profile_reuses_primary_cleaned_candle_json_as_prepare_external_source",
+    "profile_is_opt_in_and_state_dir_scoped"
+  ]
+}

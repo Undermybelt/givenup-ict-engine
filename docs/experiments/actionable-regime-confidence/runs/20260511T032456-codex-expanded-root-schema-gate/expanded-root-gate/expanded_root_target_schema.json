@@ -1,0 +1,131 @@
+{
+  "schema_id": "ExpandedMainRegimeRootTargetGate",
+  "source_taxonomy_schema": "docs/experiments/actionable-regime-confidence/runs/20260511T032111-codex-expanded-main-regime-source-refresh/source-refresh/expanded_main_regime_source_refresh.json",
+  "input_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260511T003739-source-backed-root-gate-mtf/root-v2-source-backed/source_backed_root_feature_table.csv",
+  "required_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "Manipulation",
+    "CrisisStress"
+  ],
+  "conditional_roots": [
+    "TransitionRecovery",
+    "UnknownOrMixed"
+  ],
+  "evaluated_ohlcv_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "CrisisStress"
+  ],
+  "chronological_split": "source feature table split column; train/calibration/test are time ordered per context",
+  "blocked_predictor_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "predictor_columns_used": {
+    "numeric": [
+      "BearExpansion_persistence16",
+      "BullExpansion_persistence16",
+      "ConsolidationRange_persistence16",
+      "CrisisStress_persistence16",
+      "TransitionAccumulationDistribution_persistence16",
+      "UnknownOrMixed_persistence16",
+      "abs_ma64_slope16",
+      "abs_stretch64",
+      "drawdown64",
+      "hour_utc",
+      "known_root_count",
+      "ma32_slope8",
+      "ma64_slope16",
+      "rally64",
+      "range_mean128",
+      "range_mean16",
+      "range_mean32",
+      "range_mean64",
+      "range_pct",
+      "range_rank",
+      "range_ratio32_128",
+      "ret1",
+      "ret16",
+      "ret4",
+      "reversal_persistence16",
+      "stress_persistence16",
+      "stretch128",
+      "stretch16",
+      "stretch32",
+      "stretch64",
+      "thin_persistence16",
+      "timeframe_minutes",
+      "trend_persistence16",
+      "vol128",
+      "vol16",
+      "vol32",
+      "vol64",
+      "vol_rank",
+      "vol_ratio32_128",
+      "volume_rank",
+      "volume_ratio32_128"
+    ],
+    "boolean": [
+      "BearExpansion_base",
+      "BullExpansion_base",
+      "ConsolidationRange_base",
+      "CrisisStress_base",
+      "TransitionAccumulationDistribution_base",
+      "UnknownOrMixed_base",
+      "reversal_base",
+      "stress_base",
+      "thin_base",
+      "thin_soft_next_base",
+      "trend_base",
+      "trend_structural_next_base"
+    ]
+  },
+  "target_definitions": {
+    "BullExpansion": "expanded_root_label == BullExpansion",
+    "BearExpansion": "expanded_root_label == BearExpansion",
+    "SidewaysConsolidation": "source_backed_root_label in {Consolidation, ConsolidationRange}",
+    "CrisisStress": "expanded_root_label == CrisisStress",
+    "Manipulation": "not materialized without direct tick/order-flow/L2/L3/order-lifecycle/event/social/on-chain evidence",
+    "TransitionRecovery": "optional/conditional overlay; not required in this expanded root gate",
+    "UnknownOrMixed": "residual abstention bucket; not release confidence"
+  },
+  "target_counts_by_split": {
+    "train": {
+      "TransitionRecovery": 5087,
+      "CrisisStress": 3532,
+      "BullExpansion": 1921,
+      "UnknownOrMixed": 1823,
+      "SidewaysConsolidation": 1691,
+      "BearExpansion": 765
+    },
+    "calibration": {
+      "TransitionRecovery": 2644,
+      "CrisisStress": 1498,
+      "SidewaysConsolidation": 1139,
+      "BullExpansion": 858,
+      "UnknownOrMixed": 777,
+      "BearExpansion": 494
+    },
+    "test": {
+      "TransitionRecovery": 2538,
+      "CrisisStress": 1960,
+      "BullExpansion": 916,
+      "UnknownOrMixed": 800,
+      "SidewaysConsolidation": 777,
+      "BearExpansion": 421
+    }
+  },
+  "acceptance_95": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  }
+}

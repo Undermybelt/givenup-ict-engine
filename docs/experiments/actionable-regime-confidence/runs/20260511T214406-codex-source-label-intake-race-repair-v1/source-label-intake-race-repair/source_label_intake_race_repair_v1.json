@@ -1,0 +1,217 @@
+{
+  "accepted_rows_added": 0,
+  "created_at_utc": "2026-05-11T13:49:25.504205+00:00",
+  "decision": "source_label_intake_race_repair_v1=malformed_row_removed_schema_ready_unscored_strict_blocked",
+  "direct_manipulation_verifier": {
+    "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/direct_manipulation_verifier.exit",
+    "name": "direct_manipulation_verifier",
+    "parsed": {
+      "matched_group_count": 40,
+      "matched_negative_rows": 41,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 41,
+      "provenance_keys": [
+        "cftc_flotron_complaint_examples",
+        "cftc_gandhi_order",
+        "cftc_geneva_order_2018",
+        "cftc_geneva_order_examples",
+        "cftc_geneva_order_rows_added",
+        "cftc_genuine_order_text_checks",
+        "cftc_genuine_order_text_status",
+        "cftc_mohan_additional_examples",
+        "cftc_mohan_complaint",
+        "cftc_mohan_complaint_rows_added",
+        "cftc_mohan_complaint_text_checks",
+        "cftc_order",
+        "cftc_shak_complaint",
+        "cftc_shak_complaint_examples",
+        "cftc_shak_rows_added",
+        "cftc_text_checks",
+        "cftc_text_extraction_status",
+        "cftc_vorley_chanu_complaint",
+        "cftc_zhao_skudder_examples",
+        "created_at_utc",
+        "finra_public_schema",
+        "gandhi_matched_negative_rows_added",
+        "gandhi_positive_rows_added",
+        "gandhi_rows_materialized_at_utc",
+        "license_or_permission",
+        "matched_control_limitations",
+        "matched_control_policy",
+        "matched_negative_control_policy",
+        "matched_negative_materialized_at_utc",
+        "matched_negative_rows_acquired",
+        "matched_negative_rows_count",
+        "matched_negative_rows_path",
+        "matched_negative_rows_sha256",
+        "mohan_additional_matched_negative_rows_added",
+        "mohan_additional_positive_rows_added",
+        "mohan_additional_rows_materialized_at_utc",
+        "mohan_complaint_control_policy",
+        "positive_rows_count",
+        "positive_rows_path",
+        "positive_rows_sha256",
+        "r6_flotron_cftc_row_uplift_v1",
+        "r6_geneva_cftc_row_uplift_v1",
+        "r6_mohan_shak_duplicate_cleanup_v1",
+        "r6_mohan_shak_row_uplift_v1",
+        "r6_shak_duplicate_row_cleanup_v1",
+        "r6_zhao_skudder_cftc_row_uplift_v1",
+        "shak_complaint_matched_negative_rows_added",
+        "shak_complaint_positive_rows_added",
+        "shak_complaint_rows_materialized_at_utc",
+        "source",
+        "updated_at_utc",
+        "updated_by",
+        "vorley_chanu_matched_negative_rows_added",
+        "vorley_chanu_positive_rows_added",
+        "vorley_chanu_rows_materialized_at_utc"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/direct_manipulation_verifier.stderr.txt",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/direct_manipulation_verifier.stdout.txt"
+  },
+  "external_requests_sent": false,
+  "final_rows_sha256": "915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f",
+  "invalid_counts": {
+    "date_max": null,
+    "date_min": null,
+    "label_counts": {},
+    "market_family_counts": {},
+    "package_counts": {},
+    "row_count": 0,
+    "source_owner_counts": {},
+    "split_counts": {},
+    "symbol_count": 0
+  },
+  "invalid_rows_removed": 0,
+  "native_subhour_root_exists": false,
+  "new_confidence_gate": false,
+  "r6_broad_normal_sample": false,
+  "r6_direct_species_closed": false,
+  "r6_support_gate": false,
+  "r6_wilson95_gate": false,
+  "r6_wilson95_min_lcb": 0.914332,
+  "raw_data_committed": false,
+  "rows_after": {
+    "date_max": "2026-03-20",
+    "date_min": "2000-01-03",
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 104979,
+      "Crisis": 30623,
+      "Sideways": 57899
+    },
+    "market_family_counts": {
+      "india_equity_index": 3435,
+      "us_index": 26236,
+      "us_single_stock": 218769
+    },
+    "package_counts": {
+      "price_root_equivalence_us_index_futures": 248440
+    },
+    "row_count": 248440,
+    "source_owner_counts": {
+      "ahaanverma00": 3435,
+      "source-owned-stock-market-regimes-2000-2026": 245005
+    },
+    "split_counts": {
+      "calibration": 148976,
+      "heldout_market": 26236,
+      "heldout_time": 45384,
+      "test": 27844
+    },
+    "symbol_count": 40
+  },
+  "rows_before": {
+    "date_max": "2026-03-20",
+    "date_min": "2000-01-03",
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 104979,
+      "Crisis": 30623,
+      "Sideways": 57899
+    },
+    "market_family_counts": {
+      "india_equity_index": 3435,
+      "us_index": 26236,
+      "us_single_stock": 218769
+    },
+    "package_counts": {
+      "price_root_equivalence_us_index_futures": 248440
+    },
+    "row_count": 248440,
+    "source_owner_counts": {
+      "ahaanverma00": 3435,
+      "source-owned-stock-market-regimes-2000-2026": 245005
+    },
+    "split_counts": {
+      "calibration": 148976,
+      "heldout_market": 26236,
+      "heldout_time": 45384,
+      "test": 27844
+    },
+    "symbol_count": 40
+  },
+  "run_id": "20260511T214406-codex-source-label-intake-race-repair-v1",
+  "runtime_code_changed": false,
+  "source_label_verifier": {
+    "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/source_label_equivalence_verifier.exit",
+    "name": "source_label_equivalence_verifier",
+    "parsed": {
+      "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+      "package_counts": {
+        "price_root_equivalence_us_index_futures": 248440
+      },
+      "provenance_keys": [
+        "created_at_utc",
+        "date_max",
+        "date_min",
+        "invalid_rows_removed",
+        "label_counts",
+        "limitations",
+        "market_family_counts",
+        "package_counts",
+        "previous_provenance_path",
+        "raw_payload_committed_to_repo",
+        "repair_reason",
+        "row_count",
+        "rows_path",
+        "rows_sha256",
+        "run_id",
+        "source_owner_counts",
+        "split_counts",
+        "symbol_count",
+        "updated_at_utc",
+        "updated_by"
+      ],
+      "row_count": 248440,
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/source_label_equivalence_verifier.stderr.txt",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/source_label_equivalence_verifier.stdout.txt"
+  },
+  "source_panel_recency_verifier": {
+    "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/source_panel_recency_verifier.exit",
+    "name": "source_panel_recency_verifier",
+    "parsed": {
+      "missing_files": [
+        "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+        "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/source_panel_recency_verifier.stderr.txt",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T214406-codex-source-label-intake-race-repair-v1/command-output/source_panel_recency_verifier.stdout.txt"
+  },
+  "start_rows_sha256": "915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

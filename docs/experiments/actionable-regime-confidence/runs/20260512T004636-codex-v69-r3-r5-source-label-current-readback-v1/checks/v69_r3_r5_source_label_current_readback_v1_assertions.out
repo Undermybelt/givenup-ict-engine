@@ -1,0 +1,9 @@
+gate_result=v69_r3_r5_source_label_current_readback_v1=non_r6_roots_absent_no_confidence_gate
+roots_checked=3
+ready_roots=0
+missing_required_files=6
+source_label_status=blocked
+r5_recency_status=blocked
+r3_native_subhour_ready=False
+strict_full_objective_achieved=False
+update_goal=False

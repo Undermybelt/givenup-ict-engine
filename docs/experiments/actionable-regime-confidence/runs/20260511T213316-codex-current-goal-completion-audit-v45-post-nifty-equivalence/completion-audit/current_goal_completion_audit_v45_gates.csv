@@ -1,0 +1,12 @@
+gate,observed,required,pass
+ready_intake_roots,2,4,false
+source_label_equivalence_schema,schema_ready_unscored,schema_ready_unscored,true
+source_label_equivalence_full_roots,"labels={'Bull': 1213, 'Sideways': 1231, 'Crisis': 991}",Bull/Bear/Sideways/Crisis source-owned accepted confidence,false
+source_label_no_proxy_acceptance,proxy_guardrail=true,no HMM/proxy/generative acceptance,true
+native_subhour_root_ready,false,true,false
+source_panel_recency_verifier,blocked,not_blocked,false
+r6_positive_support,34,>=50,false
+r6_negative_support,34,>=50,false
+r6_wilson95_lcb,0.898485,>=0.95,false
+r6_broad_normal_sample,false,true,false
+r6_direct_species_coverage,false,true,false

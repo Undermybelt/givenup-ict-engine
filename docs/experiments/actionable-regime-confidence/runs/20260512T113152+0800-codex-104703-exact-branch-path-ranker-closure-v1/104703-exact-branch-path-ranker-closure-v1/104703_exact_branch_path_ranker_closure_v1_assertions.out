@@ -1,0 +1,10 @@
+pass:ingest_trades_applied_all_rows:42
+pass:exact_branch_feedback_rows_42:42
+pass:target_branch_path_preserved:current_and_history_jsonl
+pass:raw_scored_mature_gte_30:43
+pass:production_validation_gte_30:42
+pass:observation_validation_gte_30:42
+pass:trainer_artifact_ready:True
+pass:runtime_enabled_ready:enabled=True ready=True
+pass:pre_bayes_not_promoted:no_policy_expected_fail_closed
+fail_closed:execution_tree_ready:False

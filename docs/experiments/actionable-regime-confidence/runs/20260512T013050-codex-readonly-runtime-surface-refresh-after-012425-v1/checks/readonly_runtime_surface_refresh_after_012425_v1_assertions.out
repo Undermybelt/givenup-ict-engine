@@ -1,0 +1,14 @@
+all_command_exit_codes_zero=PASS
+yfinance_ready=PASS
+kraken_cli_ready=PASS
+ibkr_not_ready=PASS
+tradingview_mcp_not_ready=PASS
+auto_quant_not_ready=PASS
+pre_bayes_not_ready=PASS
+policy_training_not_ready=PASS
+path_ranking_not_ready=PASS
+downstream_chain_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+raw_data_committed_false=PASS
+trade_usable_false=PASS

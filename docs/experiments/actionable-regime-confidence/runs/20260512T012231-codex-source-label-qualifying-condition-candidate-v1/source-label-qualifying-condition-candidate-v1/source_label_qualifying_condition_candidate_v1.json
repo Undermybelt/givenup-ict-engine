@@ -1,0 +1,77 @@
+{
+  "run_id": "20260512T012231-codex-source-label-qualifying-condition-candidate-v1",
+  "board_hash_observed": "e7fc017f0e48a78ebd762b02c83097ac0cccb027b3b00e5e845b7638cfb29254",
+  "triage_input": "docs/experiments/actionable-regime-confidence/runs/20260512T011819-codex-source-label-high-confidence-subset-triage-v1",
+  "calibration_input": "docs/experiments/actionable-regime-confidence/runs/20260512T011056-codex-source-label-equivalence-calibration-after-root-poll-v1",
+  "gate_result": "source_label_qualifying_condition_candidate_v1=bull_sideways_candidates_no_acceptance",
+  "qualifying_condition": "main_regime_v2_label in {Bull, Sideways} and source_confidence >= 0.95",
+  "candidate_labels": [
+    "Bull",
+    "Sideways"
+  ],
+  "blocked_labels": {
+    "Bear": [
+      "calibration_high_conf_support_below_50",
+      "heldout_market_high_conf_support_below_50",
+      "heldout_time_high_conf_support_below_50",
+      "test_high_conf_support_below_50"
+    ],
+    "Crisis": [
+      "heldout_market_high_conf_support_below_50",
+      "cross_market_family_high_conf_coverage_below_2"
+    ]
+  },
+  "candidate_validation": {
+    "Bull": {
+      "high_conf_rows": 10193,
+      "market_family_count": 3,
+      "date_min": "2000-01-21",
+      "date_max": "2026-01-30",
+      "split_support": {
+        "calibration": 5460,
+        "heldout_market": 795,
+        "heldout_time": 2417,
+        "test": 1521
+      },
+      "conditional_wilson95_lcb_if_condition_is_policy_approved": {
+        "calibration": 0.999297,
+        "heldout_market": 0.995191,
+        "heldout_time": 0.998413,
+        "test": 0.997481
+      }
+    },
+    "Sideways": {
+      "high_conf_rows": 8686,
+      "market_family_count": 3,
+      "date_min": "2000-01-21",
+      "date_max": "2026-01-30",
+      "split_support": {
+        "calibration": 4929,
+        "heldout_market": 1671,
+        "heldout_time": 1388,
+        "test": 698
+      },
+      "conditional_wilson95_lcb_if_condition_is_policy_approved": {
+        "calibration": 0.999221,
+        "heldout_market": 0.997706,
+        "heldout_time": 0.99724,
+        "test": 0.994527
+      }
+    }
+  },
+  "accepted_labels_now": 0,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_provider_autoquant_prebayes_bbn_catboost_execution_tree_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "owner_export_root_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_requests_sent": false,
+  "trade_usable": false,
+  "next_action": "If the board/user approves condition-specific source-label gates, run a formal per-regime qualifying-condition acceptance packet for Bull and Sideways. Bear and Crisis still require additional high-confidence source rows; R6 still requires owner controls or explicit FLIP approval before downstream promotion."
+}

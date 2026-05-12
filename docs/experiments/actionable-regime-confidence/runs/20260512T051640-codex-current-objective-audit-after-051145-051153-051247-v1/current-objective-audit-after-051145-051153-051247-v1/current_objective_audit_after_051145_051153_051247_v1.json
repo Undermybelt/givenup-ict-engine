@@ -1,0 +1,71 @@
+{
+  "gate_result": "current_objective_audit_after_051145_051153_051247_v1=not_complete_runtime_and_routes_refreshed_no_source_unlock_no_strict_acceptance",
+  "objective_complete": false,
+  "run_id": "20260512T051640-codex-current-objective-audit-after-051145-051153-051247-v1",
+  "evidence": {
+    "latest_confidence_screens": {
+      "045926_three_atom": {
+        "accepted_labels": [],
+        "best_min_wilson95": {
+          "Bear": 0.6435280915,
+          "Bull": 0.7986296577,
+          "Crisis": 0.4324193032,
+          "Sideways": 0.3659108855
+        },
+        "gate_result": "source_label_three_atom_qualifier_miner_v1=three_atom_scored_no_full_acceptance"
+      },
+      "050609_extra_trees_light": {
+        "accepted_labels": [],
+        "best_min_support": {
+          "Bear": 0,
+          "Bull": 0,
+          "Crisis": 0,
+          "Sideways": 0
+        },
+        "best_min_wilson95": {
+          "Bear": 0.0,
+          "Bull": 0.0,
+          "Crisis": 0.0,
+          "Sideways": 0.0
+        },
+        "gate_result": "source_label_extra_trees_light_threshold_screen_v1=extra_trees_light_scored_no_full_acceptance"
+      }
+    },
+    "provider_runtime_readbacks": {
+      "051145_runtime_chain": {
+        "command_failures": 0,
+        "gate_result": "post_050609_readonly_runtime_chain_v1=runtime_readback_no_source_unlock_no_promotion",
+        "promotion_evidence": false
+      },
+      "051153_provider_source_root": {
+        "gate_result": "provider_source_root_readonly_refresh_after_050609_v1=providers_refreshed_no_source_control_unlock_no_promotion",
+        "rows": {
+          "ibkr_qqq_retry": 0,
+          "ibkr_spy_retry": 21,
+          "kraken_xbtusd_1h": 721,
+          "yfinance_qqq_1h": 197
+        },
+        "tradingview_harness_exit": 1
+      },
+      "051247_owner_route": {
+        "gate_result": "official_owner_data_route_refresh_after_050609_v1=routes_confirmed_external_license_export_required_no_local_unlock",
+        "licensed_or_owner_export_required": true
+      }
+    },
+    "required_target_roots": {
+      "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+      "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+      "/tmp/ict-engine-source-panel-recency-extension": "absent"
+    }
+  },
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

@@ -1,0 +1,12 @@
+PASS run_id=20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1
+PASS gate_result=source_label_hgb_numeric_threshold_screen_v1=all_root_labels_hgb_numeric_accepted
+PASS row_count=248440
+PASS accepted_hgb_numeric_confidence_95_labels=Bear,Bull,Crisis,Sideways
+PASS accepted_regime_confidence_labels=4
+PASS new_confidence_gate=true
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=true
+PASS trade_usable=false
+PASS update_goal=false

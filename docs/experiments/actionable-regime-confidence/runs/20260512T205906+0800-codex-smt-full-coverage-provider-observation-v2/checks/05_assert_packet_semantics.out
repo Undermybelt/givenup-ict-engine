@@ -1,0 +1,39 @@
+{
+  "by_pair": {
+    "BTC/ETH": {
+      "events": 28,
+      "fail": 0
+    },
+    "EURUSD/DXY": {
+      "events": 0,
+      "fail": 1
+    },
+    "EURUSD/GBPUSD": {
+      "events": 3,
+      "fail": 0
+    },
+    "NQ/ES": {
+      "events": 4,
+      "fail": 0
+    },
+    "NQ/YM": {
+      "events": 0,
+      "fail": 1
+    },
+    "XAUUSD/DXY": {
+      "events": 0,
+      "fail": 1
+    },
+    "XAUUSD/XAGUSD": {
+      "events": 7,
+      "fail": 0
+    }
+  },
+  "downstream_allowed": false,
+  "fail_closed_rows": 3,
+  "packet_assertion": "pass",
+  "provider_pairs": 7,
+  "quality_weight": 0.0,
+  "row_count": 45,
+  "smt_event_count": 42
+}

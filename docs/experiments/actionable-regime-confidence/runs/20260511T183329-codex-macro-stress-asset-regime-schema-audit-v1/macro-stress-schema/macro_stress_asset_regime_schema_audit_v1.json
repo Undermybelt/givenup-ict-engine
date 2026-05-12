@@ -1,0 +1,76 @@
+{
+  "accepted_rows_added": 0,
+  "artifact_type": "macro_stress_asset_regime_schema_audit_v1",
+  "dataset": "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+  "dataset_url": "https://www.kaggle.com/datasets/kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+  "decision": "blocked_feature_context_only_no_source_regime_labels",
+  "full_objective_achieved": false,
+  "gate_result": "macro_stress_asset_regime_schema_audit_v1=feature_context_only_no_source_label_equivalence",
+  "generated_at_utc": "2026-05-11T10:35:15.868623+00:00",
+  "kaggle_files_listing": "name                                               size  creationDate                \n----------------------------------------------  -------  --------------------------  \nGlobal_Market_Stress_and_Liquidity_Regimes.csv  1185023  2026-02-25 04:11:38.222000  \n",
+  "metadata": {
+    "licenses": [
+      {
+        "name": "CC-BY-NC-SA-4.0"
+      }
+    ],
+    "ownerUser": "kanchana1990",
+    "subtitle": "S&P 500 | Bitcoin | Fed Macro Features | Time-Series ML (2014-Present)",
+    "title": "Algorithmic Trading: Macro Stress & Asset Regimes",
+    "totalDownloads": 354,
+    "totalViews": 1978,
+    "totalVotes": 35
+  },
+  "new_confidence_gate": false,
+  "next_action": "Do not use this package as Board A source labels. It can only be sidecar macro/cross-asset context unless a source owner supplies explicit regime labels and equivalence provenance.",
+  "purpose": "Check whether this public cross-asset Kaggle package can satisfy Board A source-label equivalence or recency-extension requirements.",
+  "raw_data_committed": false,
+  "reason": "The package has useful cross-asset prices and macro stress features, including QQQ/BTC/GLD/USO/TLT/FRED-derived context, but the CSV contains no explicit source-owned MainRegimeV2 labels, no direct Manipulation labels, and no matched negative/control groups. Its post-2026-01-30 rows are features, not source-label recency extension rows.",
+  "run_id": "20260511T183329+0800-codex-macro-stress-asset-regime-schema-audit-v1",
+  "runtime_code_changed": false,
+  "schema": {
+    "cross_asset_columns": [
+      "Equities_US",
+      "Equities_Tech",
+      "Equities_Emerging",
+      "Bonds_LongTerm",
+      "Gold",
+      "Oil",
+      "Volatility_Index",
+      "Crypto_Bitcoin",
+      "Yield_Curve_Spread",
+      "High_Yield_Spread",
+      "Financial_Stress_Index"
+    ],
+    "date_max": "2026-02-25",
+    "date_min": "2014-10-17",
+    "field_count": 18,
+    "fields": [
+      "Date",
+      "Equities_US",
+      "Equities_Tech",
+      "Equities_Emerging",
+      "Bonds_LongTerm",
+      "Gold",
+      "Oil",
+      "Volatility_Index",
+      "Crypto_Bitcoin",
+      "Yield_Curve_Spread",
+      "High_Yield_Spread",
+      "Financial_Stress_Index",
+      "SPY_Drawdown",
+      "SPY_Rolling_Vol_30d",
+      "BTC_Rolling_Vol_30d",
+      "Stock_Bond_Corr_90d",
+      "SPY_RSI_14",
+      "GLD_RSI_14"
+    ],
+    "file": "Global_Market_Stress_and_Liquidity_Regimes.csv",
+    "label_like_fields": [],
+    "post_source_tail_rows_after_2026_01_30": 26,
+    "row_count": 4150
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

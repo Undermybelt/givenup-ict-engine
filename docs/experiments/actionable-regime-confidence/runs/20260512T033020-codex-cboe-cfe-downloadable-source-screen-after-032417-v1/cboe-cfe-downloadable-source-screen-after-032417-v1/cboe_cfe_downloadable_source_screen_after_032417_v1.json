@@ -1,0 +1,40 @@
+{
+  "run_id": "20260512T033020-codex-cboe-cfe-downloadable-source-screen-after-032417-v1",
+  "generated_at_utc": "2026-05-11T19:30:52.830746+00:00",
+  "gate_result": "cboe_cfe_downloadable_source_screen_after_032417_v1=public_aggregate_csv_and_datashop_route_found_no_order_lifecycle_controls_no_promotion",
+  "observed_links": [
+    "https://cdn.cboe.com/data/us/futures/market_statistics/historical_data/cfevoloi.csv",
+    "https://datashop.cboe.com/",
+    "https://www.cboe.com/en/markets/us/futures/market-statistics/historical-data/oof/"
+  ],
+  "cfevoloi_head_sha256": "11ad2fea89c50364a3fb7fc25a5b8ef1b49b03f988d8f2ef50daac2a2fc0364d",
+  "classification": [
+    {
+      "item": "cfe_daily_volume_open_interest_csv",
+      "url": "https://cdn.cboe.com/data/us/futures/market_statistics/historical_data/cfevoloi.csv",
+      "observed_in": "Cboe CFE historical OOF page",
+      "classification": "public_aggregate_daily_volume_open_interest",
+      "board_a_use": "route_context_only_no_order_lifecycle_controls",
+      "promotion_allowed": "false",
+      "reason": "aggregate daily product volume/open interest is not source-owned normal-control order-lifecycle/depth/trade/quote rows"
+    },
+    {
+      "item": "cboe_datashop_route",
+      "url": "https://datashop.cboe.com/",
+      "observed_in": "Cboe CFE historical OOF page and futures data-services page",
+      "classification": "owner_route_for_custom_historical_data",
+      "board_a_use": "owner_export_route_only",
+      "promotion_allowed": "false",
+      "reason": "requires export/order/license/ticket provenance and verifier-native delivery before use"
+    }
+  ],
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "raw_full_csv_committed": false
+}

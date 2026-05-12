@@ -1,0 +1,1 @@
+wget --tries=2 --timeout=60 --continue --output-document=/tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/tft_dataset_labeled_wget.parquet https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet

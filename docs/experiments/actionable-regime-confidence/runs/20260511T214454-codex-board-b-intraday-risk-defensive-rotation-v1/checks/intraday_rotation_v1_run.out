@@ -1,0 +1,20 @@
+{
+  "branch_paths_evaluated": 5,
+  "branch_paths_passed": 1,
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "gate_result": "fail:required_root_branch_hard_gates_failed",
+  "manipulation_component_pass": true,
+  "next_action": "B2R-repeat: keep the 205047 scoped Manipulation component, but repair Bull/Bear/Sideways/Crisis with a different root family or provider panel; do not relax RC-SPA.",
+  "price_root_paths_passed": 0,
+  "primary_blocker": "Bull=fail:reject_thin_trades|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Bear=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Sideways=fail:reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Crisis=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_rc_spa_below_60",
+  "selected_root_trade_counts": {
+    "Bear": 2191,
+    "Bull": 98,
+    "Crisis": 79,
+    "Manipulation(scoped)": 13535,
+    "Sideways": 203
+  },
+  "selected_trade_rows": 2571,
+  "stable_profit_score": 33.87357912515513,
+  "variant_trade_rows": 41880
+}

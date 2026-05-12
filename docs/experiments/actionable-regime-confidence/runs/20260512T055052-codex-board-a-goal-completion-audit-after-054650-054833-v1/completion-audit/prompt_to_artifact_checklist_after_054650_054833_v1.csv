@@ -1,0 +1,22 @@
+requirement,evidence,status,completion_effect
+named_board_a_file,docs/plans/2026-05-10-actionable-regime-confidence-todo.md hash aab0840f6ca87435aca2b219944d43cb11114ca9d123e1370a291e31dad938f2,satisfied_for_audit_scope,not_completion_by_itself
+bull_95_confidence,051844 HGB accepted Bull support 618 wilson95 0.9908918883,satisfied_diagnostic_only,insufficient_for_goal
+bear_95_confidence,051844 HGB accepted Bear support 177 wilson95 0.9787578642 while 052522 numeric tree rejected Bear at 0.9465286635,satisfied_by_hgb_diagnostic_only,insufficient_for_goal
+sideways_95_confidence,051844 HGB accepted Sideways support 534 wilson95 0.990666799,satisfied_diagnostic_only,insufficient_for_goal
+crisis_95_confidence,051844 HGB accepted Crisis support 547 wilson95 0.9930261988,satisfied_diagnostic_only,insufficient_for_goal
+per_regime_qualifying_conditions,accepted evidence remains diagnostic numeric screen not source/control accepted packet,blocked,prevents_completion
+cross_market_validation,053856 heldout-market and market families over daily equivalence package,partial_diagnostic_only,prevents_completion
+cross_period_validation,053856 heldout-time/test rows spanning 2000-01-03 to 2026-03-20,partial_diagnostic_only,prevents_completion
+cross_timeframe_cycle_validation,053856 all rows timeframe 1d and R3 target root absent,blocked,prevents_completion
+r6_owner_export_source_control,052650 draft_not_sent and 054025 no export rows,blocked,prevents_completion
+r5_recency_extension,053505 053947 054650 no schema-compatible post-cutoff MainRegimeV2 rows,blocked,prevents_completion
+r3_native_subhour,054833 route refresh only and no native labels acquired,blocked,prevents_completion
+required_target_roots,"/tmp/ict-engine-board-a-r6-owner-export-v1 absent; /tmp/ict-engine-native-subhour-source-label-intake absent; /tmp/ict-engine-source-panel-recency-extension absent",blocked,prevents_completion
+provider_surfaces,054116 callable readback only with yfinance and Kraken visible IBKR unhealthy TradingViewRemix not promotion evidence,partial_visibility_only,prevents_completion
+auto_quant_surface,054116 Auto-Quant missing_dependency bootstrap_needed true,blocked,prevents_completion
+filter_pre_bayes,054116 Pre-Bayes observe_only,blocked,prevents_completion
+bbn_catboost_path_ranking,054116 matched_rows 0 structural rows 2 mature_rows 0,blocked,prevents_completion
+execution_tree,054116 execution candidate ready false actionable false trade_direction observe,blocked,prevents_completion
+provider_bars_source_unlock,054718 no source-root unlock and provider bars are not source labels,blocked,prevents_completion
+active_writer_safety,HGB materialization and Board B branch-segment cargo runs active but not consumed,satisfied_for_audit_scope,not_completion_by_itself
+goal_completion_update_goal,source_control false canonical_merge false downstream_rerun false strict_full_objective false trade_usable false,not_allowed,do_not_update_goal

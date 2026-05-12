@@ -1,0 +1,15 @@
+run_id=20260511T184151+0800-codex-strict-1h-near-miss-extension-requirements-v1
+strict_slots=156
+accepted_current_strict_rows=41
+blocked_current_strict_rows=115
+one_split_passes_blocked_rows=26
+post_2025_extension_candidate_rows=13
+accepted_rows_added=0
+new_confidence_gate=false
+full_objective_achieved=false
+update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

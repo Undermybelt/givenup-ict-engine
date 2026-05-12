@@ -1,0 +1,18 @@
+requirement,evidence,decision
+per_regime_95_confidence,"Only NQ structural trend confidence 0.9787037037037036 observed; not every MainRegimeV2 root covered",blocked
+cross_market_validation,"No complete cross-market/cross-period/context packet in this audit",blocked
+provider_ibkr,"provider-status exit 0; IBKR bridge and market-data paths dependency-unhealthy despite reachable gateway",blocked
+provider_tradingviewremix,"provider-status exit 0; tradingview_mcp connectivity probe failed",blocked
+provider_yfinance,"provider-status exit 0; yfinance ready",partial
+provider_kraken,"provider-status exit 0; kraken_cli ready but kraken_public market-data dependency-unhealthy",partial
+auto_quant,"auto-quant-status exit 0; dependency_ready_data_ready",runtime_ready_not_promoting
+filter_pre_bayes_bbn,"pre-bayes-status NQ exit 0; latest_gate_status pass_neutralized; one NQ structural trend readback only",blocked
+catboost_policy_training,"policy-training-status exit 0; matched_rows=0; not ready for BBN or CatBoost",blocked
+path_ranking,"export-structural-path-ranking-target exit 0; rows=1 mature_rows=0 calibrated rows=0 training_weight rows=0",blocked
+workflow_execution_tree,"workflow-status exit 0; blocking_status=blocked; execution_gate_status=execution_blocked; review_status=observe",blocked
+r6_owner_export_controls,"/tmp/ict-engine-board-a-r6-owner-export-v1 absent; approval_present=false; canonical_merge_allowed_now=false",blocked
+r5_recency_rows,"/tmp/ict-engine-source-panel-recency-extension absent",blocked
+r3_crisis_native_subhour,"/tmp/ict-engine-native-subhour-source-label-intake exists but prior board evidence keeps it quarantined/Crisis-absent",blocked
+canonical_merge,"No valid required root unlock; no shared-lock canonical merge allowed",blocked
+downstream_promotion,"No direct verifier/split calibration/canonical merge; downstream rerun not allowed",blocked
+update_goal,"strict_full_objective=false update_goal=false",not_allowed

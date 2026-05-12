@@ -1,0 +1,9 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.01s
+     Running unittests src/lib.rs (/tmp/ict-engine-codex-regime-bundle-bbn-target/debug/deps/ict_engine-97d28a47a09f25ad)
+
+thread 'application::orchestration::structural_playbook::tests::target_export_surfaces_branch_segments_as_catboost_features' (2520157) panicked at src/application/orchestration/structural_playbook.rs:6155:9:
+assertion `left == right` failed
+  left: Null
+ right: "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--lib`

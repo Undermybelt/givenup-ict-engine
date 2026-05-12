@@ -1,0 +1,8 @@
+candidate_id,path,observed_type,observed_schema_or_header,decision,required_root_unlock
+glbx_20260404_nq_zip,/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,databento_batch_zip,ohlcv-1m,ohlcv_context_only_no_order_lifecycle_depth_or_control_labels,false
+nq_2021_2025_zip,/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,databento_batch_zip,ohlcv-1m,ohlcv_context_only_no_order_lifecycle_depth_or_control_labels,false
+es_2021_2025_zip,/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,databento_batch_zip,ohlcv-1m,ohlcv_context_only_no_order_lifecycle_depth_or_control_labels,false
+gc_databento_rar,/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/databento.rar,rar_csv_archive,"ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",ohlcv_context_only_no_order_lifecycle_depth_or_control_labels,false
+external_datasource_clients,/Users/thrill3r/Downloads/external-data-sources,code_examples,databento_or_orderbook_client_code,code_only_not_source_owned_rows_or_controls,false
+tmp_matching_source_files,/tmp,none,none,no_r6_r5_r3_unlock,false
+repo_experiment_matches,docs/experiments/actionable-regime-confidence/runs,prior_artifacts,prior_readbacks_and_scripts,do_not_repromote_prior_non_unlock_artifacts,false

@@ -1,0 +1,6 @@
+requirement,evidence,status
+same 115130 AQ root,docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1,PASS
+six provider JSONL present,docs/experiments/actionable-regime-confidence/runs/20260512T120545+0800-codex-115130-six-provider-downstream-validator-v1/real-trades/source-jsonl,PASS
+branch/provenance/outcome validator,docs/experiments/actionable-regime-confidence/runs/20260512T120545+0800-codex-115130-six-provider-downstream-validator-v1/115130-six-provider-downstream-validator-v1/115130_six_provider_downstream_validator_v1.json,PASS
+combined downstream JSONL,docs/experiments/actionable-regime-confidence/runs/20260512T120545+0800-codex-115130-six-provider-downstream-validator-v1/real-trades/115130_six_provider_real_trades_validated.jsonl,PASS
+promotion,N/A,FAIL_CLOSED

@@ -1,0 +1,8 @@
+requirement,artifact,status,note
+use yfinance,public_provider_ohlcv_probe_v1.json + provider-csv/yfinance_btc_usd_1h_7d.csv,covered,ok
+use kraken,kraken_public_ccxt fetch + provider-status kraken_cli from 104235/104621,covered,ok
+use binance,binance_public_ccxt fetch,covered,ok
+use bybit,bybit_public_ccxt fetch,covered,ok
+use ibkr,01_ibkr_qqq_1h_5d_fetch + provider-csv/ibkr_QQQ_1h_5d.csv,covered,rows=80; exit=0
+use tradingviewremix,02_tradingview_mcp_qqq_1d_fetch,failed,exit=1
+do not promote,provider_lane_bridge_probe_v1.json,covered,promotion_allowed=false; update_goal=false

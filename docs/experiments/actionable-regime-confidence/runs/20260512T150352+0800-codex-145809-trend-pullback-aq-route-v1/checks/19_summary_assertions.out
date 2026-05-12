@@ -1,0 +1,6 @@
+PASS selected_branch_rows: 384
+PASS provider_rows: 6
+PASS dispatch_completed_3: {'total_jobs': 3, 'completed_jobs': 3, 'blocked_jobs': 0, 'failed_jobs': 0}
+PASS spy_runtime_ready: Ranker runtime: structural_path_ranking_target rows=2 history_rows=83 mature_rows=1 history_mature_rows=82 raw_scored_mature=82/30 production_validation=81/30 observation_validation=81/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=candidate_set_only runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=2
+PASS workflow_observe: structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready
+OVERALL PASS

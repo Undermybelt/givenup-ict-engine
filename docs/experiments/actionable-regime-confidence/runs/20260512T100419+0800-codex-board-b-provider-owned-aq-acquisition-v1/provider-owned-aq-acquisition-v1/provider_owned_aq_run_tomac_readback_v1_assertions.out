@@ -1,0 +1,9 @@
+PASS auto_quant_prepare_exit=0
+PASS auto_quant_status=dependency_ready_data_ready
+PASS prepared_feather_count=3
+PASS run_tomac_exit=1
+PASS run_tomac_error=No pair in whitelist.
+PASS successful_backtests=0
+PASS mature_rooted_branch_observations=0
+PASS promotion_allowed=false
+PASS update_goal=false

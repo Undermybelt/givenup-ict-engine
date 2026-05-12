@@ -1,0 +1,55 @@
+{
+  "run_id": "20260512T102928+0800-codex-board-b-provider-btc-tickfix-factor-v1",
+  "gate_result": "provider_btc_tickfix_factor_v1=nonzero_provider_btc_factor_trades_incubation_only_no_promotion",
+  "source_provider_csv_lineage": "20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/binance_btcusdt_1h.csv via 20260512T101623+0800-codex-board-b-provider-btc-pulse-aq-v1 prepared feathers",
+  "tickfix": {
+    "old_synthetic_amount_precision": 8,
+    "fixed_synthetic_amount_precision": 0.00000001,
+    "precision_mode": "TICK_SIZE"
+  },
+  "strategies": [
+    {
+      "strategy": "ProviderBtcMomentumCross",
+      "branch_path": "Bull -> Momentum -> Pullback -> ProviderBtcMomentumCross",
+      "trade_count": 9,
+      "total_profit_pct": 2.14,
+      "sharpe": 1.226,
+      "sortino": 3.2287,
+      "calmar": 66.2785,
+      "max_drawdown_pct": -1.6264,
+      "win_rate_pct": 55.5556,
+      "profit_factor": 1.777
+    },
+    {
+      "strategy": "ProviderBtcMomentumPulse",
+      "branch_path": "Bull -> ProviderTrend -> MomentumPulse -> ProviderBtcMomentumPulse",
+      "trade_count": 57,
+      "total_profit_pct": -3.61,
+      "sharpe": -2.1249,
+      "sortino": -4.2369,
+      "calmar": -27.8283,
+      "max_drawdown_pct": -6.524,
+      "win_rate_pct": 38.5965,
+      "profit_factor": 0.8418
+    },
+    {
+      "strategy": "ProviderBtcTrendPullback",
+      "branch_path": "Bull -> ProviderTrend -> PullbackReclaim -> ProviderBtcTrendPullback",
+      "trade_count": 16,
+      "total_profit_pct": -5.21,
+      "sharpe": -4.0764,
+      "sortino": -5.5392,
+      "calmar": -48.4344,
+      "max_drawdown_pct": -5.5521,
+      "win_rate_pct": 31.25,
+      "profit_factor": 0.2877
+    }
+  ],
+  "accepted_production_rows_added": 0,
+  "mature_profitable_rooted_branch": false,
+  "selected_history_approval": false,
+  "source_control_unlock": false,
+  "downstream_promotion_rerun": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

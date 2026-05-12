@@ -1,0 +1,148 @@
+{
+  "request": {
+    "market_key": "board-b-provider-matrix-spy-1d-after-125425",
+    "primary_data_path": null,
+    "interval": "1d",
+    "start": "2026-04-01T00:00:00Z",
+    "end": "2026-05-09T00:00:00Z",
+    "count": 40,
+    "related_roles": [
+      "yf_spy",
+      "tvr_spy",
+      "ibkr_spy"
+    ],
+    "provider_preferences": {
+      "ibkr_spy": "ibkr",
+      "tvr_spy": "tradingview_mcp",
+      "yf_spy": "yfinance"
+    },
+    "symbol_overrides": {
+      "ibkr_spy": {
+        "display_symbol": "SPY",
+        "yfinance": null,
+        "tradingview_mcp": null,
+        "ibkr": {
+          "symbol": "SPY",
+          "sec_type": "STK",
+          "exchange": "SMART",
+          "currency": "USD",
+          "primary_exchange": "ARCA"
+        }
+      },
+      "tvr_spy": {
+        "display_symbol": "AMEX:SPY",
+        "yfinance": null,
+        "tradingview_mcp": "AMEX:SPY",
+        "ibkr": null
+      },
+      "yf_spy": {
+        "display_symbol": "SPY",
+        "yfinance": "SPY",
+        "tradingview_mcp": null,
+        "ibkr": null
+      }
+    },
+    "options_volatility_proxy_symbol": null
+  },
+  "provider_summary": {
+    "required_requirements": [],
+    "provider_statuses": [
+      {
+        "provider": "ibkr",
+        "status": "configured_runtime_unhealthy",
+        "healthy": false,
+        "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+        "supported_requirements": [],
+        "install_prompts": [
+          "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+          "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+        ],
+        "redacted_config": [
+          "consent_path=<local-path>",
+          "capabilities_path=<local-path>",
+          "consent_present=true",
+          "capabilities_present=true",
+          "reachable_gateway_ports=IB Gateway paper:4002",
+          "ibkr_runtime_missing_modules=redis"
+        ]
+      },
+      {
+        "provider": "yfinance",
+        "status": "ready",
+        "healthy": true,
+        "reason": "public_yahoo_http_endpoints",
+        "supported_requirements": [],
+        "install_prompts": [],
+        "redacted_config": [
+          "provider_mode=public_http"
+        ]
+      },
+      {
+        "provider": "tradingview_mcp",
+        "status": "ready",
+        "healthy": true,
+        "reason": "mcp_url_and_api_key_available",
+        "supported_requirements": [],
+        "install_prompts": [],
+        "redacted_config": [
+          "mcp_url=https://tvremix.xyz/api/mcp/v1",
+          "credential_source=local_config",
+          "local_config=<set>",
+          "ICT_ENGINE_TVREMIX_MCP_API_KEY=<set>",
+          "stdio_cmd_env=<unset>",
+          "stdio_args_env=<unset>",
+          "probe_connectivity=true",
+          "probe_ohlcv=<skipped>",
+          "probe_options=<skipped>"
+        ]
+      }
+    ],
+    "actionable_install_prompts": [
+      "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+      "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+    ]
+  },
+  "tasks": [
+    {
+      "role": "yf_spy",
+      "provider": "yfinance",
+      "operation": "Ohlcv",
+      "symbol": "SPY",
+      "request": {
+        "YahooFinance": {
+          "symbol": "SPY"
+        }
+      }
+    },
+    {
+      "role": "tvr_spy",
+      "provider": "tradingview_mcp",
+      "operation": "Ohlcv",
+      "symbol": "AMEX:SPY",
+      "request": {
+        "TradingViewMcp": {
+          "symbol": "AMEX:SPY"
+        }
+      }
+    },
+    {
+      "role": "ibkr_spy",
+      "provider": "ibkr",
+      "operation": "Ohlcv",
+      "symbol": "SPY",
+      "request": {
+        "Ibkr": {
+          "contract": {
+            "symbol": "SPY",
+            "sec_type": "STK",
+            "exchange": "SMART",
+            "currency": "USD",
+            "primary_exchange": "ARCA"
+          }
+        }
+      }
+    }
+  ],
+  "missing_roles": [],
+  "warnings": []
+}

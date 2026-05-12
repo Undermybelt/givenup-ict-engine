@@ -1,0 +1,1 @@
+uv run --with pandas scripts/auto_quant_external/fetch_external.py bybit-kline --category linear --symbol BTCUSDT --interval 1h --start 2021-01-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T172214+0800-codex-board-a-provider-window-aware-same-root-aq-v1/provider-csv/bybit_btcusdt_linear_1h.csv

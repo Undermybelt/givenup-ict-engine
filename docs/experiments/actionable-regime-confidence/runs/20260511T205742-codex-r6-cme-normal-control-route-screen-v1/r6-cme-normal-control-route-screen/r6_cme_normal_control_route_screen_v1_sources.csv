@@ -1,0 +1,4 @@
+id,owner,url,role,status,content_type,bytes,sha256,saved_path,mentions_market_depth,mentions_order_book,mentions_historical,mentions_contact,error
+cme_datamine_landing,CME Group,https://www.cmegroup.com/market-data/datamine-historical-data.html,Official historical-data acquisition route for CME futures market data.,,,0,,,False,False,False,False,HTTP Error 403: Forbidden
+cme_datamine_order_book,CME Group,https://www.cmegroup.com/market-data/datamine-historical-data/datamine-order-book.html,Official CME DataMine order-book route candidate for matched normal activity controls.,,,0,,,False,False,False,False,HTTP Error 403: Forbidden
+cme_datamine_contact,CME Group,https://www.cmegroup.com/market-data/datamine-historical-data/contact-us.html,Official inquiry route for acquiring permissioned historical CME market data exports.,,,0,,,False,False,False,False,HTTP Error 403: Forbidden

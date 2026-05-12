@@ -1,0 +1,1 @@
+c205b02cd80077cf063f90cc0ada60e650f90ee9c85f62d19baf7b6e4fe44502  docs/plans/2026-05-10-actionable-regime-confidence-todo.md

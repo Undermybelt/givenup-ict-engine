@@ -1,0 +1,5 @@
+symbol,required_timeframe,required_after,tsie_exact_rows,decision
+AAPL,15m,2026-01-30,0,missing_exact_target_cell
+AAPL,30m,2026-01-30,0,missing_exact_target_cell
+^IXIC,15m,2026-01-30,0,missing_exact_target_cell
+^IXIC,30m,2026-01-30,0,missing_exact_target_cell

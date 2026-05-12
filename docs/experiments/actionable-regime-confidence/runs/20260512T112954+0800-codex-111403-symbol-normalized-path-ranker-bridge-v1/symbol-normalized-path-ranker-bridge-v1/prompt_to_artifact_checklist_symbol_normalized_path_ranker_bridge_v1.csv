@@ -1,0 +1,5 @@
+artifact,required,present,path
+normalized_trades,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T112954+0800-codex-111403-symbol-normalized-path-ranker-bridge-v1/derived/provider_crypto_pullback_btc_only_104610_symbol_normalized_trades.jsonl
+state_dir,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T112954+0800-codex-111403-symbol-normalized-path-ranker-bridge-v1/state_symbol_normalized
+policy_status_final,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T112954+0800-codex-111403-symbol-normalized-path-ranker-bridge-v1/symbol-normalized-path-ranker-bridge-v1/symbol_normalized_path_ranker_bridge_v1.json
+assertions,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T112954+0800-codex-111403-symbol-normalized-path-ranker-bridge-v1/checks/symbol_normalized_path_ranker_bridge_v1_assertions.out

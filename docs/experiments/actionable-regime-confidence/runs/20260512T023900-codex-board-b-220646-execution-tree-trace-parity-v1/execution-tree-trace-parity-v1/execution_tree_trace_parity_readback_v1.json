@@ -1,0 +1,34 @@
+{
+  "closed_loop_branch_admission": {
+    "actionable": false,
+    "candidate_status": "execution_blocked",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "evidence": [
+      "pre_bayes_gate_status=pass_neutralized",
+      "execution_gate_status=execution_blocked",
+      "review_status=observe",
+      "execution_tree_gate_status=observe",
+      "execution_tree_branch=transition_guardrail"
+    ],
+    "execution_gate_status": "execution_blocked",
+    "execution_tree_bias": "guarded",
+    "execution_tree_branch": "transition_guardrail",
+    "execution_tree_gate_status": "observe",
+    "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "path_label": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "ready": false,
+    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "review_status": "observe",
+    "source_phase": "structural-recommended-path-bundle",
+    "status": "fail_closed"
+  },
+  "output": {
+    "gate_status": "observe",
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "path_ranker_runtime_source": "history_path",
+    "ranker_validation_ready": true,
+    "score_line": "path_ranker=ranker_score=path_id=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 runtime_source=history_path raw_path_score=0.857407 calibrated_path_prob=0.428571 path_prob_lower_bound=0.219020 execution_gate_status=observe"
+  }
+}

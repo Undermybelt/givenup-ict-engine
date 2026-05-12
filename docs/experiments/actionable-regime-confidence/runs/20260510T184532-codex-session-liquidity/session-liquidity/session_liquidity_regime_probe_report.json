@@ -1,0 +1,113 @@
+{
+  "schema_version": "board-a-session-liquidity-regime-probe/v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity",
+  "output_dir": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity",
+  "input_paths": {
+    "ibkr_qqq_1h": "docs/experiments/actionable-regime-confidence/runs/20260510T183454/provider/ibkr_QQQ_1h.csv",
+    "yfinance_qqq_1h": "docs/experiments/actionable-regime-confidence/runs/20260510T183454/provider/yf_QQQ_1h_20240601_20260509.csv"
+  },
+  "threshold_policy": {
+    "precision_wilson_lcb_95": 0.95,
+    "precision_wilson_lcb_99": 0.99,
+    "thresholds_relaxed": false,
+    "calibration_support_min_95": 120,
+    "test_support_min_95": 60,
+    "ece_max_95": 0.05,
+    "coverage_min_95": 0.03
+  },
+  "label_policy": {
+    "future_horizon_observed_bars": 4,
+    "min_ibkr_count": 800,
+    "min_ibkr_volume": 100000.0,
+    "forbidden_future_fields_as_features": "future_* and target_* columns are excluded from the white-box rule",
+    "blocked_leakage_fields": [
+      "gate_status",
+      "branch",
+      "decision_hint",
+      "execution_readiness",
+      "readiness_gap_to_observe",
+      "readiness_gap_to_ready",
+      "hybrid_transition_hazard",
+      "duration_remaining_expected_bars",
+      "same_surface_execution_tree_categorical"
+    ]
+  },
+  "provider_observations": [
+    "ibkr_QQQ_1h_count_volume",
+    "yfinance_QQQ_1h_regular_session_presence"
+  ],
+  "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_features.csv",
+  "split": {
+    "train": 2001,
+    "calibration": 1001,
+    "test": 1001,
+    "train_time_range": {
+      "start": "2025-05-09 08:00:00+00:00",
+      "end": "2025-11-06 12:00:00+00:00"
+    },
+    "calibration_time_range": {
+      "start": "2025-11-06 13:00:00+00:00",
+      "end": "2026-02-09 11:00:00+00:00"
+    },
+    "test_time_range": {
+      "start": "2026-02-09 12:00:00+00:00",
+      "end": "2026-05-08 19:00:00+00:00"
+    }
+  },
+  "candidate": {
+    "candidate_kind": "whitebox_session_calendar_guardrail",
+    "regime_id": "SessionLiquidityCoreViable",
+    "market": "QQQ",
+    "timeframe": "1h",
+    "horizon": "4 observed IBKR bars",
+    "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+    "rule": "13 <= hour_utc <= 18",
+    "target": "target_session_liquidity_viable_h4",
+    "target_definition": "median future IBKR trade count over next 4 observed 1h bars > 800 and median future IBKR volume over next 4 observed 1h bars > 100000",
+    "calibration_support": 378,
+    "calibration_success": 374,
+    "calibration_precision": 0.9894179894179894,
+    "calibrated_probability": 0.9894179894179894,
+    "calibration_wilson_lcb_95": 0.9731111640997078,
+    "calibration_wilson_lcb_99": 0.9651048564875663,
+    "test_support": 378,
+    "test_success": 378,
+    "test_precision": 1.0,
+    "precision_wilson_lcb_95": 0.9899396497369397,
+    "precision_wilson_lcb_99": 0.9827501439425982,
+    "ece": 0.010582010582010581,
+    "coverage": 0.3776223776223776,
+    "transition_hazard": 0.0,
+    "duration_viable": true,
+    "board_eligible": true,
+    "board_eligibility_note": "Same-market QQQ session-liquidity packet. IBKR supplies extended-hours trade count/volume truth; yfinance supplies regular-session bar presence as provider cross-check. The candidate uses only current UTC session fields.",
+    "accepted_95": true,
+    "accepted_99": false
+  },
+  "accepted_95_count": 1,
+  "accepted_99_count": 0,
+  "accepted_packet": {
+    "accepted_regime_id": "SessionLiquidityCoreViable",
+    "market": "QQQ",
+    "timeframe": "1h",
+    "horizon": "4 observed IBKR bars",
+    "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+    "confidence_lane": "95",
+    "precision_wilson_lcb": 0.9899396497369397,
+    "calibration_support": 378,
+    "test_support": 378,
+    "ece": 0.010582010582010581,
+    "coverage": 0.3776223776223776,
+    "transition_hazard": 0.0,
+    "duration_viable": true,
+    "downstream_evidence_fields": [
+      "hour_utc",
+      "session_core_utc_13_18",
+      "qqq_ibkr_1h_count",
+      "qqq_ibkr_1h_volume",
+      "qqq_yfinance_current_bar_present"
+    ],
+    "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json"
+  },
+  "overall_decision": "accepted_95_candidate"
+}

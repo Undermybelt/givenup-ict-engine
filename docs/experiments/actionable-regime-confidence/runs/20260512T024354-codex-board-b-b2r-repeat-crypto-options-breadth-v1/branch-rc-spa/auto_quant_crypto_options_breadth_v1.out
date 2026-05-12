@@ -1,0 +1,21 @@
+strategy: CryptoOptionsBreadthRootV1_Bull
+trade_count: 183
+win_rate_pct: 40.983607
+sharpe: -1.780132
+profit_factor: 0.715830
+total_profit_pct: -68.281975
+---
+strategy: CryptoOptionsBreadthRootV1_Bear
+trade_count: 2
+win_rate_pct: 0.000000
+sharpe: -26.774312
+profit_factor: 0.000000
+total_profit_pct: -17.035145
+---
+strategy: CryptoOptionsBreadthRootV1_Sideways
+trade_count: 307
+win_rate_pct: 51.465798
+sharpe: 0.537769
+profit_factor: 1.080274
+total_profit_pct: 21.310826
+---

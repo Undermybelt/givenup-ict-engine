@@ -1,0 +1,10 @@
+PASS decision=source_label_malformed_row_cleanup_v1=malformed_row_removed_schema_ready_unscored
+PASS rows_before=248440
+PASS malformed_rows_removed=0
+PASS rows_after=248440
+PASS verifier_status=schema_ready_unscored
+PASS verifier_returncode=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

@@ -1,0 +1,14 @@
+PASS metadata_downloaded
+PASS tree_lists_jsonl_and_parquet
+PASS rows_inspected_10000
+PASS synthetic_rows_all
+PASS market_manipulation_spoofing_rows_present
+PASS benign_control_like_rows_present
+PASS synthetic_source_detected
+PASS no_real_transactions_claim_detected
+PASS accepted_95_roots_added_0
+PASS accepted_direct_ManipulationLiquidityEngineering_rows_added_0
+PASS gate_blocked_synthetic_not_accepted
+PASS thresholds_relaxed_false
+PASS runtime_code_changed_false
+PASS trade_usable_false

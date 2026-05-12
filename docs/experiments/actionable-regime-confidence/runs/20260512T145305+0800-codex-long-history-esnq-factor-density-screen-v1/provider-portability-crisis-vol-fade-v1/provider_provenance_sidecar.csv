@@ -1,0 +1,8 @@
+provider,symbol,interval,provider_requested,provider_data_acquired,rows,first_timestamp,last_timestamp,classification,source_path
+binance_public,BTCUSDT,1h,True,True,76429,2017-08-17T04:00:00+00:00,2026-05-12T00:00:00+00:00,provider_backed_full_listing_1h,docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv
+ibkr,SPY,1h,True,True,20034,2021-05-13T08:00:00+00:00,2026-05-11T23:00:00+00:00,provider_backed_5y_1h,docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/ibkr_spy_1h_5y.normalized.csv
+yfinance,ES=F,1h,True,True,11383,2024-05-13T00:00:00+00:00,2026-05-11T23:00:00+00:00,provider_backed_near_server_max_1h,docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv
+kraken_public,PF_XBTUSD,1h,True,True,2000,2022-03-23T10:00:00+00:00,2022-06-14T17:00:00+00:00,provider_backed_window_capped_1h,/tmp/ict-provider-longspan-20260512T141554+0800/kraken_futures_pfxbtusd_1h_20200101_20260512.csv
+kraken_public,PF_SPXUSD,1h,True,True,2000,2024-12-20T17:00:00+00:00,2025-03-14T00:00:00+00:00,provider_backed_window_capped_1h,/tmp/ict-provider-longspan-20260512T141554+0800/kraken_futures_pfspxusd_1h_20200101_20260512.csv
+bybit_public,BTCUSDT_LINEAR,1h,True,True,1000,2026-03-31T09:00:00+00:00,2026-05-12T00:00:00+00:00,provider_backed_page_capped_1h,/tmp/ict-provider-longspan-20260512T141554+0800/bybit_linear_btcusdt_1h_20200101_20260512.csv
+tradingview_mcp,NASDAQ:QQQ,1h,False,False,0,,,fetch_failed_in_141554,

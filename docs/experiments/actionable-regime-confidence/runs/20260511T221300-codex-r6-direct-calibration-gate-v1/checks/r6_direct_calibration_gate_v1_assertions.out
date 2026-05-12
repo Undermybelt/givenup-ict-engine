@@ -1,0 +1,8 @@
+PASS decision=r6_direct_calibration_gate_v1=chronological_heldout_calibration_fail_closed
+PASS positive_rows=57
+PASS matched_negative_rows=57
+PASS support_gate_50_50=true
+PASS accepted_gate=false
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

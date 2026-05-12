@@ -1,0 +1,5 @@
+"dataset","path","rows","date_min","date_max","post_2026_01_30_rows","label_like_columns"
+"nifty500_behavior","/tmp/ict-engine-r5-r3-targeted-source-downloads-after-065134/nifty500_behavior/behavior_regime_predictions.csv",3846,"2010-09-20","2026-03-20",35,"behavior_fast_state|behavior_slow_state"
+"nifty500_behavior","/tmp/ict-engine-r5-r3-targeted-source-downloads-after-065134/nifty500_behavior/final_features_matrix.csv",3500,"2012-02-02","2026-03-20",35,""
+"nifty500_behavior","/tmp/ict-engine-r5-r3-targeted-source-downloads-after-065134/nifty500_behavior/regime_timeline_history.csv",3464,"2012-02-02","2026-03-20",34,"macro_state|fast_state|combined_state|p_stress_smooth|p_stress_raw|p_stress_adaptive|adaptive_macro_state|adaptive_fast_state|adaptive_combined_state"
+"macro_stress_asset_regimes","/tmp/ict-engine-r5-r3-targeted-source-downloads-after-065134/macro_stress_asset_regimes/Global_Market_Stress_and_Liquidity_Regimes.csv",4150,"2014-10-17","2026-02-25",26,"Financial_Stress_Index"

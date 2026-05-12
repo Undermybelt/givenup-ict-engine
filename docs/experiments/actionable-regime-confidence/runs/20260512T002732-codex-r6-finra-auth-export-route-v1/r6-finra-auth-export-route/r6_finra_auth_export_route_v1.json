@@ -1,0 +1,66 @@
+{
+  "run_id": "20260512T002732-codex-r6-finra-auth-export-route-v1",
+  "board_cursor_observed": "20260512T001636+0800-codex-r6-owner-export-request-package-v1",
+  "target_intake_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "gate_result": "r6_finra_auth_export_route_v1=official_access_path_identified_rows_not_acquired",
+  "official_sources": [
+    {
+      "source": "FINRA Potential Manipulation Report",
+      "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report",
+      "relevance": "Report covers layering and cross-market quote-spoofing exception detail fields."
+    },
+    {
+      "source": "FINRA Report Center Sign Up",
+      "url": "https://www.finra.org/compliance-tools/report-center/sign-up",
+      "relevance": "Report Center access is controlled through the firm's Super Account Administrator and user privileges."
+    },
+    {
+      "source": "FINRA Report Center Technical Assistance",
+      "url": "https://www.finra.org/compliance-tools/report-center/technical-assistance",
+      "relevance": "Report contents and detail data can be exported or requested as CSV when available to the entitled user."
+    }
+  ],
+  "board_a_mapping": {
+    "positive_species": [
+      "spoofing_layering",
+      "quote_spoofing"
+    ],
+    "finra_fields_useful_for_positive_rows": [
+      "trade_date",
+      "symbol",
+      "participant_identifier",
+      "side",
+      "earliest_order_received_time",
+      "latest_order_received_time",
+      "order_count",
+      "total_orders_quantity",
+      "market_center_code",
+      "activity_description",
+      "exception_count"
+    ],
+    "required_intake_files": [
+      "direct_manipulation_positive_rows.csv",
+      "direct_manipulation_matched_controls.csv",
+      "direct_manipulation_provenance.json"
+    ],
+    "current_verifier_native_files_or_adapter_required": [
+      "positive_spoofing_layering_rows.csv",
+      "matched_negative_normal_activity_rows.csv",
+      "provenance_manifest.json"
+    ]
+  },
+  "state": {
+    "authenticated_export_available": false,
+    "matched_controls_available": false,
+    "owner_approval_record_available": false,
+    "approved_filename_adapter_available": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "Place owner/user-approved FINRA or equivalent venue/CAT/exchange export files under /tmp/ict-engine-board-a-r6-owner-export-v1 with verifier-native filenames or an approved adapter step, or record explicit approval for a different split contract; then rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked."
+}

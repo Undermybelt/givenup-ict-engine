@@ -1,0 +1,8 @@
+prompt_requirement,artifact_or_readback,status,notes
+every_regime_ge_95_confidence,docs/experiments/actionable-regime-confidence/runs/20260512T041410-codex-source-label-equivalence-live-calibration-after-200909-v1,blocked,source-label calibration accepted 0 labels
+predictive_confidence_screen,docs/experiments/actionable-regime-confidence/runs/20260512T041656-codex-source-label-predictive-confidence-screen-v1,blocked,predictive-confidence labels accepted []
+source_control_roots,/tmp/ict-engine-board-a-r6-owner-export-v1; /tmp/ict-engine-native-subhour-source-label-intake; /tmp/ict-engine-source-panel-recency-extension,blocked,all three roots absent at readback
+provider_autoquant_runtime,docs/experiments/actionable-regime-confidence/runs/20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1,partial,threaded-resolver AutoQuant runtime succeeded 3/3 but is runtime-only
+canonical_merge,none,not_started,blocked until source/control and confidence gates pass
+pre_bayes_bbn_catboost_execution_tree,none,not_started,blocked until canonical evidence unlocks downstream rerun
+update_goal,none,forbidden,strict objective not complete

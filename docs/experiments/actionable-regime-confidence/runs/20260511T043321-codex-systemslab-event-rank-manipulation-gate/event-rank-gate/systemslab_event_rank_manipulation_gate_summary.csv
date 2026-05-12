@@ -1,0 +1,4 @@
+timeframe,features,cal_lcb,test_lcb,cal_success,cal_support,test_success,test_support,accepted_95
+5S,std_rush_order + avg_rush_order + avg_price_max,0.731884232182,0.753837182584,53,63,55,64,False
+15S,std_rush_order + avg_rush_order + avg_price_max,0.827296901491,0.871003462599,58,63,61,64,False
+25S,avg_rush_order,0.731884232182,0.850025149078,53,63,60,64,False

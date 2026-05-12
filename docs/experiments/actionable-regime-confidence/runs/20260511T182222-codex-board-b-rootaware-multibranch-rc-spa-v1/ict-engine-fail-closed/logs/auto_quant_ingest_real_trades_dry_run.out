@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "396d91af5ab089e4",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_ROOTAWARE_MULTIBRANCH_B_182222_20260511T102854.999020000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades",
+  "symbol": "ROOTAWARE_MULTIBRANCH_B_182222",
+  "trades_applied": 1064,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/ict-engine-fail-closed/rootaware_multibranch_real_trades_wire_v1.jsonl",
+  "trades_total": 1064
+}

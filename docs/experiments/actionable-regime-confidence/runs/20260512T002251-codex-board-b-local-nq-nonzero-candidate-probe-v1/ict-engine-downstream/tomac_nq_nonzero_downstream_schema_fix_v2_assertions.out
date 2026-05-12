@@ -1,0 +1,13 @@
+PASS schema_fix_scope=run_local_packet_builder_only
+PASS before_fix_trades_applied=0
+PASS before_fix_trades_invalid=9
+PASS after_fix_dry_run_trades_applied=9
+PASS after_fix_dry_run_trades_invalid=0
+PASS after_fix_apply_ledger_status=applied
+PASS after_fix_apply_feedback_records_inserted=9
+PASS pre_bayes_gate_status=pass_neutralized
+PASS path_ranker_runtime_status=enabled_candidate_set_ready
+PASS execution_candidate_review_status=observe
+PASS workflow_blocking_status=blocked
+PASS workflow_blocking_reason=user_selected_historical_data_missing
+PASS promotion_allowed=false

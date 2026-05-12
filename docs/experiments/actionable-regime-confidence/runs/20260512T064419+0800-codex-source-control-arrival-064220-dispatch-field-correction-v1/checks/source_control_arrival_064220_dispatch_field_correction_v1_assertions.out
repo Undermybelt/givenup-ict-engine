@@ -1,0 +1,12 @@
+gate_result=source_control_arrival_064220_dispatch_field_correction_v1=dispatch_sent_field_false_no_unlock
+json_decision_external_dispatch_sent_evidence=false
+dispatch_csv_cme_sent_evidence=false
+dispatch_csv_cboe_sent_evidence=false
+valid_required_unlock=false
+source_control_evidence_acquired=false
+accepted_rows_added=0
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

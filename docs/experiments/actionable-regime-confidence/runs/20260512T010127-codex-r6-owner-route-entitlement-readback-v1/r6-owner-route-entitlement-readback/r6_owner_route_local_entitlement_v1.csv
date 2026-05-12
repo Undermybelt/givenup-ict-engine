@@ -1,0 +1,8 @@
+probe,observed,decision
+databento_cli,absent,no_live_entitlement_path
+dbn_cli,absent,no_live_decoder_cli
+python_databento,absent,no_live_entitlement_path
+python_pyarrow,absent,no_local_arrow_decode_path
+databento_api_key_env,absent,no_live_entitlement_path
+owner_export_root,absent,delivery_root_absent_or_incomplete
+owner_required_files,"positive_spoofing_layering_rows.csv:false,matched_negative_normal_activity_rows.csv:false,provenance_manifest.json:false",verifier_native_package_absent

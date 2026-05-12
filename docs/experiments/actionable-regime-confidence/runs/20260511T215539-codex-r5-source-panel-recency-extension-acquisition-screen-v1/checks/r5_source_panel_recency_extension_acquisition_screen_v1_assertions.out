@@ -1,0 +1,10 @@
+PASS decision=r5_source_panel_recency_extension_acquisition_screen_v1=no_acceptable_post_cutoff_source_owned_rows
+PASS primary_source_post_rows=0
+PASS accepted_candidate_count=0
+PASS accepted_rows_added=0
+PASS intake_rows_written=false
+PASS verifier_status=blocked
+PASS update_goal=false
+PASS strict_full_objective_achieved=false
+PASS raw_data_committed=false
+PASS runtime_code_changed=false

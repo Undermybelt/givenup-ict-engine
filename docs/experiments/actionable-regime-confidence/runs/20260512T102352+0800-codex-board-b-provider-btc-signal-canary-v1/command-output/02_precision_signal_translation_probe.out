@@ -1,0 +1,9 @@
+ccxt_DECIMAL_PLACES=2
+ccxt_SIGNIFICANT_DIGITS=3
+ccxt_TICK_SIZE=4
+sample_stake=9900.0
+sample_price=68600.29
+raw_amount=0.14431425872981005
+amount_precision_old_8_tick_size=0.0
+amount_precision_fixed_1e-8_tick_size=0.14431425
+root_cause=old synthetic precision amount=8 is an 8-unit tick in ccxt TICK_SIZE mode, so sub-unit BTC entries rounded to zero stake and _enter_trade returned None

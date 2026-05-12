@@ -1,0 +1,12 @@
+requirement,evidence,status
+Authoritative Board B markdown updated in-place,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,covered_this_run_readonly_no_cursor_edit
+Branch path must remain main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor,Board B tail preserves exact branch path contract,contract_present_not_executed_without_unlock
+Do not disturb concurrent multi-agent construction,new run root used; empty 064220 root was not modified,covered
+R3 native subhour source/control unlock,/tmp/ict-engine-native-subhour-source-label-intake accepted_unlock=False,blocked_quarantined_tsie_root
+R5 source-panel recency unlock,/tmp/ict-engine-source-panel-recency-extension exists=False,missing
+R6 owner/export control unlock,/tmp/ict-engine-board-a-r6-owner-export-v1 exists=False,missing
+"Provider context must include IBKR, TradingViewRemix, yfinance, Kraken",docs/experiments/actionable-regime-confidence/runs/20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2/command-output/provider_status_agent.out,diagnostic_only_provider_status_ran
+"Explicit user selection of exactly one HTF=1d, MTF=4h, or LTF=1h",Board B blocker remains user_selected_historical_data_missing,missing
+Selected-data AutoQuant/factor research,No accepted source/control unlock and no selected history,blocked_not_run
+Filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution tree rerun preserving branch path,Downstream promotion rerun remains false,blocked_not_run
+Goal completion,strict_full_objective=false; update_goal=false,not_complete

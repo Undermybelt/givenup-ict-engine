@@ -1,0 +1,30 @@
+{
+  "candidate_set_id": "structural-candidates:B2R_NQ_COST_CRISIS_REPAIR_032157:838d3a5e1604c214",
+  "candidate_set_size": 3,
+  "composite_score": 0.4257510021254683,
+  "confirmation_summary": "user confirms the required input",
+  "current_posterior": 0.3993185754313692,
+  "direction": "Observe",
+  "experience_prior": 0.4874266644116994,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 1,
+  "invalidation_summary": "regime branch range loses posterior support or invalidates before trigger",
+  "path_id": "path:scenario:B2R_NQ_COST_CRISIS_REPAIR_032157:belief_regime_node:range:range_mean_reversion:primary",
+  "path_label": "range_mean_reversion",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --data docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --data docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2R_NQ_COST_CRISIS_REPAIR_032157 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json",
+    "user_input_required": true
+  },
+  "scenario_id": "scenario:B2R_NQ_COST_CRISIS_REPAIR_032157:belief_regime_node:range:range_mean_reversion",
+  "selected_path_probability": 0.3751781148747944,
+  "stop_summary": "Use execution candidate 'execution-candidate:B2R_NQ_COST_CRISIS_REPAIR_032157:analyze:v1' once actionable; current candidate_status=no_trade.",
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "trigger_summary": "regime_posterior=range:0.353",
+  "why_this_path": "posterior=0.399 prior=0.487 invalidation_rate=0.000"
+}

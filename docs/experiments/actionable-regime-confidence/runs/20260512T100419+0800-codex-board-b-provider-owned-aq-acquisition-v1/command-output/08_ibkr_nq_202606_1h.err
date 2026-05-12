@@ -1,0 +1,40 @@
+Error 200, reqId 3: \u672a\u627e\u5230\u8be5\u8bf7\u6c42\u7684\u8bc1\u5238\u5b9a\u4e49, contract: Future(symbol='NQ', lastTradeDateOrContractMonth='20260619', multiplier='20', exchange='CME', currency='USD')
+Unknown contract: Future(symbol='NQ', lastTradeDateOrContractMonth='20260619', multiplier='20', exchange='CME', currency='USD')
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 1685, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 1677, in main
+    return cmd_ibkr_historical(args)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 1211, in cmd_ibkr_historical
+    return asyncio.run(_ibkr_historical_async(args))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 1144, in _ibkr_historical_async
+    bars = await ib.reqHistoricalDataAsync(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+    )
+    ^
+  File "/Users/thrill3r/.cache/uv/archive-v0/kHvGS9H-2pnXWi3cFe6f8/lib/python3.13/site-packages/ib_async/ib.py", line 2354, in reqHistoricalDataAsync
+    self.client.reqHistoricalData(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        reqId,
+        ^^^^^^
+    ...<8 lines>...
+        chartOptions,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/thrill3r/.cache/uv/archive-v0/kHvGS9H-2pnXWi3cFe6f8/lib/python3.13/site-packages/ib_async/client.py", line 825, in reqHistoricalData
+    contract.includeExpired,
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'includeExpired'

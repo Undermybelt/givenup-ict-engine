@@ -1,0 +1,32 @@
+{
+  "metrics": {
+    "accepted_rows_added": 0,
+    "api_status": 401,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "failed_or_parse_failed": 3,
+    "gate_result": "courtlistener_recap_sibling_fast_probe_after_081323_v1=no_new_public_control_attachment_unlock",
+    "generated_at": "2026-05-12T00:20:45.990503+00:00",
+    "html_status": 403,
+    "known_exhibit_a_present": false,
+    "novel_public_pdf_hits": 0,
+    "possible_control_name_hits": 0,
+    "promotion_allowed": false,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "requests_sent": 402,
+    "run_id": "20260512T081705+0800-codex-courtlistener-recap-sibling-fast-probe-after-081323-v1",
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "storage_head_requests": 400,
+    "storage_pdf_hits": 0,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "novel_hits": [],
+  "possible_control_name_hits": [],
+  "storage_hits": []
+}

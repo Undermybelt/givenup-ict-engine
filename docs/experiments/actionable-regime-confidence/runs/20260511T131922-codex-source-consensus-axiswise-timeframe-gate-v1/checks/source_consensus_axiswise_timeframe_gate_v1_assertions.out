@@ -1,0 +1,13 @@
+run_id=20260511T131922+0800-codex-source-consensus-axiswise-timeframe-gate-v1
+board_sha256_at_run=28f8ce29e2292291761ca66d967f3c257a9f9e99ad5e6eb9ef26b323c6152081
+source_consensus_threshold=0.95
+accepted_95_timeframe_root_cells=1w:Bull,1w:Bear,1w:Sideways,1w:Crisis,1mo:Bull,1mo:Bear,1mo:Sideways,1mo:Crisis
+blocked_timeframe_root_cells=
+newly_closed_cells_vs_disjoint_source_consensus_v1=1mo:Sideways
+gate_result=accepted_95_source_consensus_axiswise_8of8_same_source_timeframe_cells_full_matrix_still_blocked
+accepted_full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

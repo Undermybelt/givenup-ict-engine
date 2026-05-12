@@ -1,0 +1,11 @@
+PASS run_id=20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1
+PASS provider_runs=6
+PASS compile_success=6
+PASS run_success=6
+PASS strategies_with_metrics=12
+PASS same_root_six_provider_eth_aq_authority=True
+PASS ibkr_first_class_aq_success=True
+FAIL_CLOSED downstream_chain_not_run
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

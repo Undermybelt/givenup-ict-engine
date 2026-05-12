@@ -1,0 +1,60 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.5337068764044944,
+    4.943820224719101e-7,
+    0.4662926292134832
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "volatility_breakout_follow_v1",
+      "mutation_id": "150654_145809_volatility_breakout_follow_v1",
+      "trade_count": 348,
+      "n_win": 182,
+      "n_loss": 166,
+      "n_breakeven": 0,
+      "temper": 0.5,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.5337068764044944,
+        4.943820224719101e-7,
+        0.4662926292134832
+      ],
+      "diff": [
+        -0.4662491235955055,
+        -0.00002150561797752809,
+        0.46627062921348317
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.6908804448666366,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 5.11571756764589,
+      "bbn_log_loss_after": 0.6923209813662785,
+      "bbn_log_loss_delta": 4.423396586279612,
+      "bbn_contradiction_before": 0.953978988505747,
+      "bbn_contradiction_after": 0.021437730078780845,
+      "bbn_contradiction_lift": 0.9325412584269662,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [],
+  "temper": 0.5,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 4.423396586279612,
+  "bbn_contradiction_lift": 0.9325412584269662,
+  "evidence_value_gate_passed": true
+}

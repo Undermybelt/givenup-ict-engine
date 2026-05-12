@@ -1,0 +1,33 @@
+{
+  "run_id": "20260512T061621+0800-codex-source-label-equivalence-current-calibration-v1",
+  "gate_result": "source_label_equivalence_arrival_calibration_v1=source_confidence_scored_no_acceptance",
+  "source_root": "/tmp/ict-engine-source-label-equivalence-intake",
+  "source_root_status": "present",
+  "verifier_status": "schema_ready_unscored",
+  "row_count": 248440,
+  "missing_confidence_rows": 0,
+  "accepted_source_confidence_95_labels": [],
+  "labels": [
+    "Bear",
+    "Bull",
+    "Crisis",
+    "Sideways"
+  ],
+  "repeated_from": "docs/experiments/actionable-regime-confidence/runs/20260512T061421+0800-codex-source-label-equivalence-current-calibration-after-061229-v1/source-label-equivalence-current-calibration-after-061229-v1/source_label_equivalence_confidence_calibration_v1.json",
+  "decision": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "next_action": "Do not promote repeated source-label equivalence calibration evidence. Continue only after explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, or source-owned R3 native sub-hour labels unlock a required target root."
+}

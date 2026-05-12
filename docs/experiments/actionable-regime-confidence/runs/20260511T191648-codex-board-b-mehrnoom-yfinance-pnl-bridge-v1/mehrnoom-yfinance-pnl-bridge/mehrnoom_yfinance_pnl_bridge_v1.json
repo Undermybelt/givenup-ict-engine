@@ -1,0 +1,226 @@
+{
+  "schema_version": "board-b-mehrnoom-yfinance-pnl-bridge/v1",
+  "run_id": "20260511T191648+0800-codex-board-b-mehrnoom-yfinance-pnl-bridge-v1",
+  "source": {
+    "raw_root": "/private/tmp/ict-regime-mehrnoom-pump-dump",
+    "coin_pump_csv": "/private/tmp/ict-regime-mehrnoom-pump-dump/Telegram/classified/coin-pump.csv",
+    "direct_source": "Mehrnoom/Mirtaheri Telegram pump-event labels",
+    "provider_bridge": "yfinance daily OHLCV"
+  },
+  "candidate_coins": [
+    "BTC",
+    "ADA",
+    "XRP",
+    "ETC",
+    "SC",
+    "NEO",
+    "DGB",
+    "LSK",
+    "TRX",
+    "WAVES",
+    "OMG",
+    "STORJ",
+    "ETH",
+    "XLM",
+    "BAT",
+    "XEM"
+  ],
+  "coin_coverage": [
+    {
+      "coin": "BTC",
+      "ticker": "BTC-USD",
+      "positive_events": 8957,
+      "control_events": 8936,
+      "download_rows": 471,
+      "price_start": "2017-05-01",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 17893
+    },
+    {
+      "coin": "ADA",
+      "ticker": "ADA-USD",
+      "positive_events": 504,
+      "control_events": 504,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 817
+    },
+    {
+      "coin": "XRP",
+      "ticker": "XRP-USD",
+      "positive_events": 480,
+      "control_events": 480,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 707
+    },
+    {
+      "coin": "ETC",
+      "ticker": "ETC-USD",
+      "positive_events": 427,
+      "control_events": 427,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 710
+    },
+    {
+      "coin": "SC",
+      "ticker": "SC-USD",
+      "positive_events": 425,
+      "control_events": 425,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 745
+    },
+    {
+      "coin": "NEO",
+      "ticker": "NEO-USD",
+      "positive_events": 415,
+      "control_events": 415,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 554
+    },
+    {
+      "coin": "DGB",
+      "ticker": "DGB-USD",
+      "positive_events": 378,
+      "control_events": 378,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 542
+    },
+    {
+      "coin": "LSK",
+      "ticker": "LSK-USD",
+      "positive_events": 372,
+      "control_events": 372,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 631
+    },
+    {
+      "coin": "TRX",
+      "ticker": "TRX-USD",
+      "positive_events": 369,
+      "control_events": 369,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 721
+    },
+    {
+      "coin": "WAVES",
+      "ticker": "WAVES-USD",
+      "positive_events": 340,
+      "control_events": 340,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 554
+    },
+    {
+      "coin": "OMG",
+      "ticker": "OMG-USD",
+      "positive_events": 338,
+      "control_events": 338,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 501
+    },
+    {
+      "coin": "STORJ",
+      "ticker": "STORJ-USD",
+      "positive_events": 329,
+      "control_events": 329,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 590
+    },
+    {
+      "coin": "ETH",
+      "ticker": "ETH-USD",
+      "positive_events": 320,
+      "control_events": 320,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 521
+    },
+    {
+      "coin": "XLM",
+      "ticker": "XLM-USD",
+      "positive_events": 301,
+      "control_events": 301,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 511
+    },
+    {
+      "coin": "BAT",
+      "ticker": "BAT-USD",
+      "positive_events": 298,
+      "control_events": 298,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 509
+    },
+    {
+      "coin": "XEM",
+      "ticker": "XEM-USD",
+      "positive_events": 283,
+      "control_events": 283,
+      "download_rows": 279,
+      "price_start": "2017-11-09",
+      "price_end": "2018-08-14",
+      "reconstructed_rows": 510
+    }
+  ],
+  "summary": {
+    "positive_rows": 13784,
+    "control_rows": 13232,
+    "coins_with_price_rows": 16,
+    "positive_mean_next_day_return": 0.0037973990515600157,
+    "control_mean_next_day_return": 0.010499859771582874,
+    "positive_minus_control_mean_return": -0.0067024607200228585,
+    "positive_bootstrap_lcb_5pct": 0.002716983386538929,
+    "positive_win_rate": 0.5339524085896692,
+    "folds_monthly": 14,
+    "fold_positive_rate_monthly": 0.7142857142857143,
+    "tail_loss_p95": 0.10060415105858134
+  },
+  "decision": {
+    "gate_result": "diagnostic_only:yfinance_daily_pnl_bridge_not_promotion_grade",
+    "provider_reconstructed_rows": 27016,
+    "board_b_profitability_rows_added": 0,
+    "promotion_allowed": false,
+    "downstream_consumption": "not_started:daily_bridge_not_intraday_or_source_owned_pnl",
+    "primary_blocker": "provider-reconstructed daily PnL is useful bridge evidence, but not source-owned/intraday execution PnL.",
+    "next_action": "If this branch is reused, rebuild with intraday provider bars or source-owned entry/exit prices and then run branch RC-SPA with matched controls."
+  },
+  "completion": {
+    "runtime_code_changed": false,
+    "auto_quant_checkout_changed": false,
+    "raw_data_committed": false,
+    "thresholds_relaxed": false,
+    "board_b_cursor_superseded": false
+  },
+  "artifacts": {
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T191648-codex-board-b-mehrnoom-yfinance-pnl-bridge-v1/mehrnoom-yfinance-pnl-bridge/mehrnoom_yfinance_pnl_bridge_v1.json",
+    "md": "docs/experiments/actionable-regime-confidence/runs/20260511T191648-codex-board-b-mehrnoom-yfinance-pnl-bridge-v1/mehrnoom-yfinance-pnl-bridge/mehrnoom_yfinance_pnl_bridge_v1.md",
+    "rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T191648-codex-board-b-mehrnoom-yfinance-pnl-bridge-v1/mehrnoom-yfinance-pnl-bridge/mehrnoom_yfinance_pnl_rows_v1.csv",
+    "coin_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T191648-codex-board-b-mehrnoom-yfinance-pnl-bridge-v1/mehrnoom-yfinance-pnl-bridge/mehrnoom_yfinance_coin_coverage_v1.csv",
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T191648-codex-board-b-mehrnoom-yfinance-pnl-bridge-v1/checks/mehrnoom_yfinance_pnl_bridge_v1_assertions.out"
+  }
+}

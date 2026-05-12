@@ -1,0 +1,2 @@
+candidate_control_class,source_context,risk,decision,required_replacement
+FLIP,same court-filed Exhibit A as SPOOF rows,"same alleged manipulation sequence, not normal baseline",reject_as_normal_control,owner-approved normal/non-manipulation order-lifecycle rows matched by instrument/venue/session/time window

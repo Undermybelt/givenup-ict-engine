@@ -1,0 +1,120 @@
+{
+  "run_id": "20260512T030957-codex-current-objective-completion-audit-after-030617-030623-v1",
+  "generated_at_local": "2026-05-12T03:09:57+08:00",
+  "objective": "Every Board A regime reaches calibrated >=95% confidence with per-regime qualifying conditions and cross-market/cycle/timeframe validation, then provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree evidence supports promotion without disturbing the multi-agent board.",
+  "board_hash_before_audit": "3958988977e2823a8faac06f26434733847fea221fae1e8ea0662e800c9432d8",
+  "gate_result": "current_objective_completion_audit_after_030617_030623_v1=not_complete_source_controls_missing_030722_reference_broken_downstream_blocked",
+  "checklist_counts": {
+    "pass": 2,
+    "partial": 2,
+    "blocked": 6
+  },
+  "prior_audit": {
+    "run_id": "20260512T030229-codex-current-objective-completion-audit-after-025816-v1",
+    "gate_result": "current_objective_completion_audit_after_025816_v1=not_complete_r6_source_controls_regime_confidence_cross_validation_downstream_blocked_after_btcusdt_amplitude_screen",
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_rerun_allowed": false,
+    "update_goal": false
+  },
+  "verifier_030617": {
+    "gate_result": "r6_owner_export_target_verifier_after_030300_v1=owner_export_target_missing_required_files_no_promotion",
+    "status": "blocked",
+    "command_exit": 2,
+    "reason": "missing_required_files",
+    "missing_files": [
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json"
+    ],
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "update_goal": false
+  },
+  "source_control_poll_030623": {
+    "gate_result": "source_control_arrival_poll_after_030300_v1=no_new_r6_r3_r5_source_control_or_approval_after_030300_readiness_refresh",
+    "root_readback": [
+      {
+        "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+        "status": "absent",
+        "files": 0,
+        "promotion_use": "blocked"
+      },
+      {
+        "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+        "status": "absent",
+        "files": 0,
+        "promotion_use": "blocked"
+      },
+      {
+        "root": "/tmp/ict-engine-source-panel-recency-extension",
+        "status": "absent",
+        "files": 0,
+        "promotion_use": "blocked"
+      },
+      {
+        "root": "/tmp/ict-engine-source-label-equivalence-intake",
+        "status": "present",
+        "files": 2,
+        "promotion_use": "non_promoting_sidecar"
+      },
+      {
+        "root": "/tmp/ict-engine-direct-manipulation-row-intake",
+        "status": "present",
+        "files": 3,
+        "promotion_use": "legacy_non_promoting_sidecar"
+      }
+    ],
+    "approval_readback": {
+      "source": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+      "approval_present": false,
+      "flip_controls_accepted_under_current_contract": false,
+      "canonical_merge_allowed_now": false,
+      "downstream_rerun_allowed_now": false,
+      "strict_full_objective_achieved": false,
+      "trade_usable": false,
+      "update_goal": false
+    },
+    "decision": {
+      "accepted_rows_added": 0,
+      "new_confidence_gate": false,
+      "canonical_merge_allowed": false,
+      "downstream_promotion_rerun_allowed": false,
+      "strict_full_objective_achieved": false,
+      "runtime_code_changed": false,
+      "shared_intake_mutated": false,
+      "r3_r5_r6_roots_mutated": false,
+      "thresholds_relaxed": false,
+      "raw_data_committed": false,
+      "trade_usable": false,
+      "update_goal": false
+    }
+  },
+  "reference_integrity": {
+    "board_references_030722_as_durable": true,
+    "artifact_root_030722_exists": false,
+    "decision": "do_not_use_030722_until_artifact_root_exists; use 030623 as durable same-family poll provenance"
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "missing_or_weak_requirements": [
+    "no per-regime >=95% complete matrix after current strict objective",
+    "R6 owner-export root absent and verifier required files missing",
+    "R3 native-subhour source-label root absent",
+    "R5 source-panel recency-extension root absent",
+    "approval package present but non-approving",
+    "canonical merge false and downstream promotion rerun blocked",
+    "030722 board reference is broken because artifact root is absent"
+  ],
+  "next_action": "Preserve Current Cursor. Continue only from owner/operator R6 export delivery, explicit FLIP approval, or genuinely source-owned cross-timeframe MainRegimeV2 exports; repair or supersede broken 030722 reference by using durable 030623 provenance unless 030722 artifacts are restored."
+}

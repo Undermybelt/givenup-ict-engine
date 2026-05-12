@@ -1,0 +1,24 @@
+{
+  "accepted_new_roots_95": [],
+  "accepted_root_classes_95_effective": [
+    "Bull",
+    "Crisis"
+  ],
+  "fresh_calibration_rerun": true,
+  "gate_result": "blocked_kaggle_bear_sideways_logodds_below_95",
+  "manipulation_blocker": "Kaggle OHLCV/macro regime labels are not direct event/order-lifecycle/L2/L3/MBO/social/on-chain manipulation evidence.",
+  "manipulation_evaluated": false,
+  "missing_root_classes_95_effective": [
+    "Bear",
+    "Sideways",
+    "Manipulation"
+  ],
+  "next_action": "Stop repeating Kaggle OHLCV/macro transformations for Bear/Sideways; acquire materially stronger parent-labeled bear/sideways regime-cycle evidence, and keep Manipulation on direct-event evidence only.",
+  "retained_prior_accepted_root_classes_95": [
+    "Bull",
+    "Crisis"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

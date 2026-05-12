@@ -1,0 +1,8 @@
+interval,period,provider_rows,ready_ticker_count,failed_ticker_count,provider_first_session_date,provider_last_session_date,source_overlap_ticker_days,bull_overlap_days,bear_overlap_days,sideways_overlap_days,crisis_overlap_days,has_source_date_overlap
+1m,7d,106452,39,0,2026-04-30,2026-05-08,0,0,0,0,0,False
+5m,60d,182520,39,0,2026-02-12,2026-05-08,0,0,0,0,0,False
+15m,60d,60840,39,0,2026-02-12,2026-05-08,0,0,0,0,0,False
+30m,60d,30420,39,0,2026-02-12,2026-05-08,0,0,0,0,0,False
+60m,730d,182478,36,3,2023-06-12,2026-05-08,23826,11483,5023,5170,2150,True
+90m,60d,11700,39,0,2026-02-12,2026-05-08,0,0,0,0,0,False
+1h,730d,197694,39,0,2023-06-12,2026-05-08,25812,12486,5430,5731,2165,True

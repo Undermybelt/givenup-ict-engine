@@ -1,0 +1,106 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "7997ba52cefafc587dbc3246901d69b09d18de2fbaccad4ca9f544bd508f09dd",
+  "direct_verifier": {
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-direct-manipulation-row-intake"
+    ],
+    "matched_group_count": 70,
+    "matched_negative_rows": 73,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 73,
+    "provenance_keys": [
+      "canonical_intake_root",
+      "generated_at_utc",
+      "materialization_note",
+      "raw_data_committed",
+      "run_id",
+      "runtime_code_changed",
+      "source_v56_json",
+      "source_v56_negative_csv",
+      "source_v56_positive_csv",
+      "thresholds_relaxed",
+      "trade_usable",
+      "v56_gate_result",
+      "v56_negative_sha256",
+      "v56_positive_sha256"
+    ],
+    "returncode": 0,
+    "status": "schema_ready_unscored"
+  },
+  "external_requests_sent_by_script": false,
+  "gate_result": "r6_oystacher_public_appendix_trace_v1=public_sources_confirm_large_aggregate_but_no_row_appendix_materialized",
+  "generated_at_utc": "2026-05-11T16:20:09.288243+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Acquire the Oystacher Exhibit A row appendix or owner-approved equivalent row export; otherwise record explicit owner approval for a different heldout split contract before another R6 acceptance rerun.",
+  "prior_oystacher_screen": {
+    "appendix_exhibit_a_referenced": true,
+    "appendix_rows_visible_in_public_pdf": false,
+    "gate_result": "r6_oystacher_large_source_acquisition_screen_v1=official_large_row_source_found_appendix_required_not_materialized",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260512T001237-codex-r6-oystacher-large-source-acquisition-screen-v1/r6-oystacher-large-source-acquisition-screen/r6_oystacher_large_source_acquisition_screen_v1.json",
+    "public_pdf_page_count": 36,
+    "totals": {
+      "flip_sequences": 1316,
+      "spoof_contracts": 359790,
+      "spoof_orders": 5207,
+      "trading_days": 51
+    }
+  },
+  "raw_data_committed": false,
+  "row_appendix_materialized": false,
+  "run_id": "20260512T001700-codex-r6-oystacher-public-appendix-trace-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "sources": [
+    {
+      "blocker": "public PDF artifact does not expose the row appendix needed for timestamp/order-leg ingestion",
+      "board_a_utility": "confirms source-owned large aggregate row universe and Exhibit A reference",
+      "public_access_state": "public_pdf",
+      "row_appendix_visible": false,
+      "source_class": "official_regulator_complaint",
+      "source_id": "cftc_oystacher_complaint_public_pdf",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf"
+    },
+    {
+      "blocker": "summary page is not a row-level order-lifecycle export",
+      "board_a_utility": "confirms official enforcement context and source identity",
+      "public_access_state": "public_html",
+      "row_appendix_visible": false,
+      "source_class": "official_regulator_press_release",
+      "source_id": "cftc_oystacher_press_release",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7253-15"
+    },
+    {
+      "blocker": "secondary summary cannot source-own positive labels or matched controls",
+      "board_a_utility": "corroborates that public discourse preserves aggregate counts, not Board A rows",
+      "public_access_state": "public_page",
+      "row_appendix_visible": false,
+      "source_class": "secondary_legal_academic_summary",
+      "source_id": "secondary_oystacher_aggregate_table",
+      "url": "https://academic.oup.com/cmlj/article/doi/10.1093/cmlj/kmaf012/8257809"
+    }
+  ],
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "v59_debt_summary": {
+    "additional_positive_rows_for_chrono_quantiles_before_symbol_venue": 219,
+    "chronological_failing": 3,
+    "exact_symbol_bucket_count": 36,
+    "exact_symbol_pairwise_debt_if_current_buckets_must_all_pass": 2559,
+    "exact_venue_bucket_count": 11,
+    "exact_venue_pairwise_debt_if_current_buckets_must_all_pass": 732,
+    "failing_split_rows": 50,
+    "max_single_bucket_debt": 73,
+    "minimum_total_positive_rows_for_current_50_25_25_chrono_quantiles": 292,
+    "split_rows": 51,
+    "symbol_failing": 36,
+    "total_pairwise_rows_needed_if_existing_exact_buckets_are_filled": 3291,
+    "venue_failing": 11
+  },
+  "v59_gate_result": "r6_exact_split_support_debt_audit_v1=pooled95_passed_exact_split_row_debt_structural_blocker_quantified"
+}

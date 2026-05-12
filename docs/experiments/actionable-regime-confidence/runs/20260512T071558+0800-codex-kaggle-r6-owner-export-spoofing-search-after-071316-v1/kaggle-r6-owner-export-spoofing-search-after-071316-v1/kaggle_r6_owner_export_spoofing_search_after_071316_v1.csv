@@ -1,0 +1,9 @@
+query,exit,datasets_found,classification
+Oystacher,0,0,no_dataset
+3Red Trading,0,0,no_dataset
+spoofing futures,0,3,crypto_orderbook_depth_context_only
+futures order lifecycle,0,0,no_dataset
+market depth MBO MBP,0,0,no_dataset
+direct manipulation controls,0,0,no_dataset
+direct_manipulation_positive_rows,0,0,no_dataset
+direct_manipulation_matched_controls,0,0,no_dataset

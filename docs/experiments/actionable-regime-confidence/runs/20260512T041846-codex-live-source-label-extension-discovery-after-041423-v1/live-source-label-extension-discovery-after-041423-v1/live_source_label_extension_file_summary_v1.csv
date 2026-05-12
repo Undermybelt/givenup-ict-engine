@@ -1,0 +1,8 @@
+dataset_ref,file_name,sha256,rows,date_col,date_min,date_max,label_like_columns,raw_committed_to_repo
+igormerlinicomposer/herding-based-market-regime-dataset,alpha_trading_signals.csv,f1112a137b37e8a612e68dd3108e9b5e03acd4d196df2a0d674a058e1baef05e,315,Date,2021-12-21,2026-04-09,Risk_State;Position;Trend;Position_Smart;Position_Smart_Lagged,False
+igormerlinicomposer/herding-based-market-regime-dataset,risk_analysis_output.csv,1c73e4b6075645cc5ca93f1ca4448c671520fd956db44aeff8c9d20f010c058c,315,Date,2021-12-21,2026-04-09,,False
+kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes,Global_Market_Stress_and_Liquidity_Regimes.csv,3d649ccdc33da4c037f72fb45098c925c760fb4faa8b2dc3a4482a1760636fb1,4150,Date,2014-10-17,2026-02-25,,False
+nickdatak/us-market-regimes-dataset-1995-2024,gmm_regimes.csv,ea915998bbf3c3a1ed74d698d20176583ad4e38263520142c9623f1230242392,1564,Date,1994-01-14,2023-12-29,Regime_GMM;Regime_label,False
+nickdatak/us-market-regimes-dataset-1995-2024,hmm_regimes.csv,7ab10bec788401e548840c3e0aa3965d607b72936d3f75334b66bb163500a151,1564,,,,Regime_HMM;Regime_label,False
+nickdatak/us-market-regimes-dataset-1995-2024,market_features_weekly.csv,1f05b4e75f750cacf7ff8037aff2139a68e084fd4457166bd55c350dbdfa5f31,1564,Date,1994-01-14,2023-12-29,,False
+nickdatak/us-market-regimes-dataset-1995-2024,market_features_weekly_std.csv,4549e756d8bc28473e549482afb28e8e5f9eac4b1b7cf9a213278c28ff47d7f2,1564,Date,1994-01-14,2023-12-29,,False

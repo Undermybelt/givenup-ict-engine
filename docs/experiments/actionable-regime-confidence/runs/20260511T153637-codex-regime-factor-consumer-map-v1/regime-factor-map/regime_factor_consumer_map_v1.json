@@ -1,0 +1,126 @@
+{
+  "artifact_type": "regime_factor_consumer_map_v1",
+  "guardrails": {
+    "no_ohlcv_proxy_manipulation": true,
+    "no_parent_root_slots_added_by_manipulation": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "map_rows": [
+    {
+      "abstain_or_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion.",
+      "accepted_95": true,
+      "allowed_action": "pre_bayes_regime_context; bbn_soft_evidence_context; catboost_path_ranker_context; execution_tree_sizing_or_suppression_context",
+      "confidence_floor": 0.9797225384,
+      "consumer_factor": "market_regime_context",
+      "regime": "Bull",
+      "rule_or_signal": "market_regime_context.root == Bull; emit only from accepted source-backed context layers",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+      "status": "accepted_95_context_factor",
+      "support_summary": "5 accepted layers: 1h_exact_source_panel_context, 1mo_source_consensus_context, 1w_source_consensus_context, daily_parent_root_factor, intraday_parent_day_context_attachment",
+      "taxonomy_role": "MainRegimeV2_price_root"
+    },
+    {
+      "abstain_or_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion.",
+      "accepted_95": true,
+      "allowed_action": "pre_bayes_regime_context; bbn_soft_evidence_context; catboost_path_ranker_context; execution_tree_sizing_or_suppression_context",
+      "confidence_floor": 0.963920242,
+      "consumer_factor": "market_regime_context",
+      "regime": "Bear",
+      "rule_or_signal": "market_regime_context.root == Bear; emit only from accepted source-backed context layers",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+      "status": "accepted_95_context_factor",
+      "support_summary": "5 accepted layers: 1h_exact_source_panel_context, 1mo_source_consensus_context, 1w_source_consensus_context, daily_parent_root_factor, intraday_parent_day_context_attachment",
+      "taxonomy_role": "MainRegimeV2_price_root"
+    },
+    {
+      "abstain_or_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion.",
+      "accepted_95": true,
+      "allowed_action": "pre_bayes_regime_context; bbn_soft_evidence_context; catboost_path_ranker_context; execution_tree_sizing_or_suppression_context",
+      "confidence_floor": 0.9529358324,
+      "consumer_factor": "market_regime_context",
+      "regime": "Sideways",
+      "rule_or_signal": "market_regime_context.root == Sideways; emit only from accepted source-backed context layers",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+      "status": "accepted_95_context_factor",
+      "support_summary": "5 accepted layers: 1h_exact_source_panel_context, 1mo_source_consensus_context, 1w_source_consensus_context, daily_parent_root_factor, intraday_parent_day_context_attachment",
+      "taxonomy_role": "MainRegimeV2_price_root"
+    },
+    {
+      "abstain_or_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion.",
+      "accepted_95": true,
+      "allowed_action": "pre_bayes_regime_context; bbn_soft_evidence_context; catboost_path_ranker_context; execution_tree_sizing_or_suppression_context",
+      "confidence_floor": 0.9619059575,
+      "consumer_factor": "market_regime_context",
+      "regime": "Crisis",
+      "rule_or_signal": "market_regime_context.root == Crisis; emit only from accepted source-backed context layers",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+      "status": "accepted_95_context_factor",
+      "support_summary": "4 accepted layers: 1h_exact_source_panel_context, 1mo_source_consensus_context, 1w_source_consensus_context, daily_parent_root_factor",
+      "taxonomy_role": "MainRegimeV2_price_root"
+    },
+    {
+      "abstain_or_limit": "Scoped direct coverage only. Missing or blocked varieties remain abstain: pump_dump_social_text_or_twitter, spoofing_layering_enforcement_cases, local_spoofing_repos, quote_stuffing, pinging, bear_raid_or_painting_tape",
+      "accepted_95": true,
+      "allowed_action": "suppression; cooldown; abstain; risk overlay; BBN soft evidence; execution-tree audit field",
+      "confidence_floor": 0.967945,
+      "consumer_factor": "direct_manipulation_overlay",
+      "regime": "Manipulation",
+      "rule_or_signal": "Emit only when a direct source subtype is present: pump_dump_telegram_event, dex_self_trade_order_lifecycle, dex_consecutive_self_trade_order_lifecycle, midsummer_bsc_wash_maker, midsummer_multichain_wash_maker; otherwise abstain. No OHLCV/session/liquidity proxy promotion.",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.md | docs/experiments/actionable-regime-confidence/runs/20260511T101019-codex-zenodo-dex-selftrade-direct-gate/direct-gate/zenodo_dex_selftrade_direct_gate_report.md | docs/experiments/actionable-regime-confidence/runs/20260511T102332-codex-zenodo-dex-consecutive-selftrade-gate/direct-gate/zenodo_dex_consecutive_selftrade_gate.md | docs/experiments/actionable-regime-confidence/runs/20260511T111122-codex-midsummer-meme-direct-wash-audit/midsummer-meme-audit/midsummer_meme_direct_wash_audit.md | docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.md",
+      "status": "accepted_95_scoped_direct_factor",
+      "support_summary": "pump_dump_telegram_event: 61515 positive Telegram pump events; 61445 same-coin non-event controls | dex_self_trade_order_lifecycle: 12671 positive self-trade rows; 10000 negative controls | dex_consecutive_self_trade_order_lifecycle: 200000 streamed rows; 12671 positives; 187329 negatives | midsummer_bsc_wash_maker: 1870 positive BSC wash-maker rows; 2994 negative controls | midsummer_multichain_wash_maker: 5693 new accepted base/ethereum/solana wash-maker positive rows",
+      "taxonomy_role": "separate_direct_overlay"
+    }
+  ],
+  "purpose": "Convert existing positive evidence into one consumer map so the board does not treat spoofing/layering row absence as absence of any Manipulation factor.",
+  "rollup": {
+    "accepted_95_lane_count": 5,
+    "accepted_95_lanes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "all_active_lanes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "direct_manipulation_full_species_complete": false,
+    "direct_manipulation_scoped_factor_ready": true,
+    "every_active_lane_has_corresponding_accepted_factor": true,
+    "full_objective_achieved": false,
+    "market_regime_context_roots_ready": true,
+    "missing_or_blocked_direct_varieties": [
+      "pump_dump_social_text_or_twitter",
+      "spoofing_layering_enforcement_cases",
+      "local_spoofing_repos",
+      "quote_stuffing",
+      "pinging",
+      "bear_raid_or_painting_tape"
+    ],
+    "next_action": "Use this map as the downstream consumer contract; only reopen spoofing/layering as a species-expansion lane after source-owned positive and matched-negative row exports exist.",
+    "update_goal": false
+  },
+  "run_id": "20260511T153637+0800-codex-regime-factor-consumer-map-v1",
+  "sources": {
+    "direct_manipulation_variety_matrix": "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.json",
+    "market_regime_context_packet": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json"
+  },
+  "taxonomy": {
+    "direct_overlay": "Manipulation",
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "unknown_or_mixed": "residual_only"
+  }
+}

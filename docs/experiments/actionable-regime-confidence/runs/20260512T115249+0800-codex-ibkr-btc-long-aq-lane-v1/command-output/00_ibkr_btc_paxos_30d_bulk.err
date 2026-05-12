@@ -1,0 +1,4 @@
+ibkr-bulk: 1 task(s) -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/derived/ibkr_btc_paxos_long
+  [1/1] OK   BTC      1 hour   MIDPOINT      782 rows -> BTC_1h_midpoint.csv
+
+ibkr-bulk done: ok=1 skip=0 empty=0 fail=0  (1 total)

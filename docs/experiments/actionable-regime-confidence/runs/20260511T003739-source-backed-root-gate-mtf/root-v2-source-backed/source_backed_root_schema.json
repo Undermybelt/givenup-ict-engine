@@ -1,0 +1,148 @@
+{
+  "schema_version": "source-backed-main-regime-v2-root-schema/v1",
+  "root_axis": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "CrisisStress",
+    "Manipulation",
+    "TransitionRecovery",
+    "UnknownOrMixed"
+  ],
+  "active_market_set": [
+    "US equity-index ETF/futures: QQQ, NQ",
+    "crypto: BTC-USD, PF_XBTUSD"
+  ],
+  "active_timeframes": [
+    "15m",
+    "1h"
+  ],
+  "input_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T230938-main-regime-v2-schema-preflight/main_regime_v2_augmented_features.csv",
+  "filtered_contexts": {
+    "BTC-USD:yfinance_crypto:1h": 17479,
+    "NQ:CME_futures_local:15m": 2786,
+    "PF_XBTUSD:Kraken_crypto:1h": 2000,
+    "QQQ:IBKR_US_ETF:1h": 4007,
+    "QQQ:yfinance_US_ETF:1h": 3369
+  },
+  "chronological_split": "source split column from preflight table; train/calibration/test are time ordered per context",
+  "target_priority": [
+    "CrisisStress",
+    "BullExpansion if bull and not bear",
+    "BearExpansion if bear and not bull",
+    "Consolidation",
+    "TransitionRecovery",
+    "UnknownOrMixed residual"
+  ],
+  "target_definitions": {
+    "BullExpansion": "target_BullExpansion_next true, target_BearExpansion_next false, and not CrisisStress",
+    "BearExpansion": "target_BearExpansion_next true, target_BullExpansion_next false, and not CrisisStress",
+    "Consolidation": "target_ConsolidationRange_next true after Crisis/Bull/Bear priority",
+    "CrisisStress": "target_CrisisStress_next true; highest priority among materialized roots",
+    "TransitionRecovery": "target_TransitionAccumulationDistribution_next true after Crisis/Bull/Bear/Consolidation priority",
+    "Manipulation": "not materialized without direct tick/order-flow/L2/Level-3/order-lifecycle or event evidence",
+    "UnknownOrMixed": "residual bucket, not release gate"
+  },
+  "blocked_predictor_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "predictor_columns_used": {
+    "numeric": [
+      "BearExpansion_persistence16",
+      "BullExpansion_persistence16",
+      "ConsolidationRange_persistence16",
+      "CrisisStress_persistence16",
+      "TransitionAccumulationDistribution_persistence16",
+      "UnknownOrMixed_persistence16",
+      "abs_ma64_slope16",
+      "abs_stretch64",
+      "drawdown64",
+      "hour_utc",
+      "known_root_count",
+      "ma32_slope8",
+      "ma64_slope16",
+      "rally64",
+      "range_mean128",
+      "range_mean16",
+      "range_mean32",
+      "range_mean64",
+      "range_pct",
+      "range_rank",
+      "range_ratio32_128",
+      "ret1",
+      "ret16",
+      "ret4",
+      "reversal_persistence16",
+      "stress_persistence16",
+      "stretch128",
+      "stretch16",
+      "stretch32",
+      "stretch64",
+      "thin_persistence16",
+      "timeframe_minutes",
+      "trend_persistence16",
+      "vol128",
+      "vol16",
+      "vol32",
+      "vol64",
+      "vol_rank",
+      "vol_ratio32_128",
+      "volume_rank",
+      "volume_ratio32_128"
+    ],
+    "boolean": [
+      "BearExpansion_base",
+      "BullExpansion_base",
+      "ConsolidationRange_base",
+      "CrisisStress_base",
+      "TransitionAccumulationDistribution_base",
+      "UnknownOrMixed_base",
+      "reversal_base",
+      "stress_base",
+      "thin_base",
+      "thin_soft_next_base",
+      "trend_base",
+      "trend_structural_next_base"
+    ]
+  },
+  "acceptance_95": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  },
+  "row_counts_by_split_and_root": {
+    "train": {
+      "BullExpansion": 1921,
+      "BearExpansion": 765,
+      "Consolidation": 1691,
+      "CrisisStress": 3532,
+      "Manipulation": 0,
+      "TransitionRecovery": 5087,
+      "UnknownOrMixed": 1823
+    },
+    "calibration": {
+      "BullExpansion": 858,
+      "BearExpansion": 494,
+      "Consolidation": 1139,
+      "CrisisStress": 1498,
+      "Manipulation": 0,
+      "TransitionRecovery": 2644,
+      "UnknownOrMixed": 777
+    },
+    "test": {
+      "BullExpansion": 916,
+      "BearExpansion": 421,
+      "Consolidation": 777,
+      "CrisisStress": 1960,
+      "Manipulation": 0,
+      "TransitionRecovery": 2538,
+      "UnknownOrMixed": 800
+    }
+  }
+}

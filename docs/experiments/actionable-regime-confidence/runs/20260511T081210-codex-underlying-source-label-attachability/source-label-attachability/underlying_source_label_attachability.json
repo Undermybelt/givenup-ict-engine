@@ -1,0 +1,200 @@
+{
+  "active_taxonomy": "MainRegimeV2",
+  "attachability": {
+    "accepted_exact_underlying_map": {
+      "DIA": "^DJI",
+      "ES=F": "^GSPC",
+      "SPY": "^GSPC",
+      "YM=F": "^DJI"
+    },
+    "attached_candidate_slots": 48,
+    "attached_slots_by_provider": {
+      "yfinance": 48
+    },
+    "attached_slots_by_relation": {
+      "exact_source_instrument": 16,
+      "exact_underlying_index": 32
+    },
+    "attached_slots_by_root": {
+      "Bear": 12,
+      "Bull": 12,
+      "Crisis": 12,
+      "Sideways": 12
+    },
+    "full_four_root_cell_details": [
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "DIA",
+        "provider": "yfinance",
+        "timeframe": "1d"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "DIA",
+        "provider": "yfinance",
+        "timeframe": "1w"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "ES=F",
+        "provider": "yfinance",
+        "timeframe": "1d"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "ES=F",
+        "provider": "yfinance",
+        "timeframe": "1w"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "SPY",
+        "provider": "yfinance",
+        "timeframe": "1d"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "SPY",
+        "provider": "yfinance",
+        "timeframe": "1w"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "YM=F",
+        "provider": "yfinance",
+        "timeframe": "1d"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "YM=F",
+        "provider": "yfinance",
+        "timeframe": "1w"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "^DJI",
+        "provider": "yfinance",
+        "timeframe": "1d"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "^DJI",
+        "provider": "yfinance",
+        "timeframe": "1w"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "^GSPC",
+        "provider": "yfinance",
+        "timeframe": "1d"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "^GSPC",
+        "provider": "yfinance",
+        "timeframe": "1w"
+      }
+    ],
+    "full_four_root_cells": 12,
+    "missing_or_rejected_slots": 564,
+    "rejected_near_proxy_map": {
+      "NQ=F": "^IXIC",
+      "QQQ": "^IXIC",
+      "^NDX": "^IXIC"
+    },
+    "status_counts": {
+      "direct_source_label_attached_candidate": 16,
+      "exact_underlying_source_label_attached_candidate": 32,
+      "missing_instrument_source_label": 40,
+      "missing_intraday_or_monthly_source_label": 392,
+      "missing_non_yfinance_source_label": 108,
+      "rejected_near_underlying_proxy_not_accepted": 24
+    }
+  },
+  "completion_accounting": {
+    "accepted_confidence": false,
+    "accepted_full_panel": false,
+    "blocker": "Only 48 of 612 current MainRegimeV2 root-label slots have direct or exact-underlying source-label candidates; 564 slots remain missing or rejected. Intraday/monthly, Kraken/non-yfinance, non-index commodities/crypto, near-proxy Nasdaq mappings, and full direct Manipulation coverage remain outside accepted source-label coverage.",
+    "goal_achieved": false
+  },
+  "contract": {
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T073700-codex-root-label-panel-contract/label-panel-contract/root_label_panel_contract.json",
+    "slot_count": 612
+  },
+  "main_price_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "objective": "Attach exact-underlying source labels without accepting near proxies.",
+  "run_id": "20260511T081210+0800-codex-underlying-source-label-attachability",
+  "runtime_code_changed": false,
+  "source": {
+    "local_feature_table": "/private/tmp/ict-regime-kaggle-regime-label-root/kaggle_regime_label_feature_table.csv",
+    "name": "Kaggle stock-market-regimes-2000-2026",
+    "raw_data_committed": false
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

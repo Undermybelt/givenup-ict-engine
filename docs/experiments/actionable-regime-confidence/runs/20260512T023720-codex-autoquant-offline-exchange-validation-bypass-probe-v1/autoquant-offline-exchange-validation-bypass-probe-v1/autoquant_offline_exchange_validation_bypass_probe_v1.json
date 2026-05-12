@@ -1,0 +1,41 @@
+{
+  "accepted_rows_added": 0,
+  "autoquant_status_after": {
+    "bootstrap_needed": false,
+    "data_ready": true,
+    "dependency_healthy": true,
+    "healthy": true,
+    "status": "dependency_ready_data_ready"
+  },
+  "board_sha256_before_artifact": "b23942d664ded202243f52823ce7dca4d5ba2164e6986da32de65a60d16c7149",
+  "canonical_merge_allowed": false,
+  "command": "env PYTHONUNBUFFERED=1 PYTHONPATH=docs/experiments/actionable-regime-confidence/runs/20260512T023720-codex-autoquant-offline-exchange-validation-bypass-probe-v1/scripts uv --directory /tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant run --with ta-lib python run.py",
+  "command_exits": {
+    "00_auto_quant_status_before": 0,
+    "01_auto_quant_run_offline_exchange_validation_bypass": 1,
+    "02_auto_quant_status_after": 0
+  },
+  "diagnostic_shim": "scripts/sitecustomize.py",
+  "downstream_chain_rerun_allowed": false,
+  "failure": {
+    "backtests_failed": 12,
+    "backtests_succeeded": 0,
+    "error_type": "OperationalException",
+    "primary_message": "Markets were not loaded.",
+    "underlying_market_metadata_path": "binance GET https://api.binance.com/api/v3/exchangeInfo",
+    "underlying_network_message": "Could not contact DNS servers"
+  },
+  "gate_result": "autoquant_offline_exchange_validation_bypass_probe_v1=validation_bypass_still_markets_not_loaded_no_promotion",
+  "new_confidence_gate": false,
+  "r3_r5_r6_roots_mutated": false,
+  "raw_data_committed": false,
+  "run_id": "20260512T023720-codex-autoquant-offline-exchange-validation-bypass-probe-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "state_dir": "/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "workspace": "/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant"
+}

@@ -1,0 +1,7 @@
+PASS candidate_files=515
+PASS parsed_files=176
+PASS exact_schema_matches=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective=false
+PASS update_goal=false

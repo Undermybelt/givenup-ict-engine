@@ -1,0 +1,1 @@
+./target/debug/ict-engine pre-bayes-status --symbol ETH_KRAKEN --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf --refresh --output-format json

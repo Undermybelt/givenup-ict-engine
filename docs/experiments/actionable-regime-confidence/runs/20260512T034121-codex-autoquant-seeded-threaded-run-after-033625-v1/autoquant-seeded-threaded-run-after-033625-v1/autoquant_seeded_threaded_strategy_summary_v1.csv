@@ -1,0 +1,4 @@
+strategy,robust_sharpe,total_profit_pct,worst_profit_pct,worst_dd_pct,avg_position_pct,trade_count,win_rate_pct,profit_factor,profit_floor,min_position_size,board_a_promotion
+BTCLeaderBreakV4,0.9415,42.46,42.46,-5.7458,6.9583,600,31.8333,1.7469,PASS,PASS,false
+MomentumMTFConfluence,0.3993,53.24,53.24,-23.1801,21.5841,854,34.7775,1.1682,PASS,PASS,false
+VolBreakoutSized,1.3390,25.02,25.02,-4.2529,3.6641,1221,32.8419,1.4751,PASS,FAIL,false

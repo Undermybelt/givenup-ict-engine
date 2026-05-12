@@ -1,0 +1,1 @@
+cd /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps/auto-quant && uv run python -m py_compile user_data/strategies_external/NQRootPulseMeanRevert.py user_data/strategies_external/NQRootTrendPulse.py

@@ -1,0 +1,1 @@
+PYTHONPATH=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T023540-codex-autoquant-isolated-seeded-btc-run-v1/scripts uv run --with ta-lib run.py

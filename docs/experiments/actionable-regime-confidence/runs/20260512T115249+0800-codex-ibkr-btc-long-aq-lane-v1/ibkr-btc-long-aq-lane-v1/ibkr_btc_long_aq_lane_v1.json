@@ -1,0 +1,105 @@
+{
+  "aq": {
+    "result": {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/workspace/auto-quant-112315-ibkr_paxos_long_midpoint/user_data/data/BTC_USDT-1h.feather",
+      "first_ts_ms": 1774987260000,
+      "last_ts_ms": 1778554800000,
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": 31.354478209765105,
+            "max_drawdown_pct": -1.6175148214886688,
+            "profit_factor": 1.1923059186034541,
+            "sharpe": 1.240588302704347,
+            "sortino": 5.556237225008735,
+            "total_profit_pct": 0.98,
+            "trade_count": 32,
+            "win_rate_pct": 37.5
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": 31.354478209765105,
+              "max_drawdown_pct": -1.6175148214886688,
+              "profit_factor": 1.1923059186034541,
+              "sharpe": 1.240588302704347,
+              "sortino": 5.556237225008735,
+              "total_profit_pct": 0.98,
+              "trade_count": 32,
+              "win_rate_pct": 37.5
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": -8.413817130084068,
+            "max_drawdown_pct": -1.6395309666720548,
+            "profit_factor": 0.8524420093984961,
+            "sharpe": -0.4138146160673979,
+            "sortino": -1.0164867610854114,
+            "total_profit_pct": -0.27,
+            "trade_count": 12,
+            "win_rate_pct": 25.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": -8.413817130084068,
+              "max_drawdown_pct": -1.6395309666720548,
+              "profit_factor": 0.8524420093984961,
+              "sharpe": -0.4138146160673979,
+              "sortino": -1.0164867610854114,
+              "total_profit_pct": -0.27,
+              "trade_count": 12,
+              "win_rate_pct": 25.0
+            }
+          }
+        }
+      },
+      "provider": "ibkr_paxos_long_midpoint",
+      "provider_symbol": "BTC.PAXOS",
+      "rows": 782,
+      "run_tomac_exit": 0,
+      "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/provider-csv/BTC_1h_midpoint.csv",
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/workspace/auto-quant-112315-ibkr_paxos_long_midpoint"
+    },
+    "totals": {
+      "compile_success": 1,
+      "positive_profit_metric_count": 1,
+      "provider_runs": 1,
+      "run_success": 1,
+      "strategies_with_metrics": 2,
+      "total_trades": 44
+    }
+  },
+  "config": "docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/config/ibkr_btc_paxos_30d_bulk.yaml",
+  "csv_summary": {
+    "first": "2026-03-31T20:01:00+00:00",
+    "last": "2026-05-12T03:00:00+00:00",
+    "rows": 782
+  },
+  "evidence_class": "infrastructure_repair_candidate_ibkr_provider_aq_lane",
+  "fetch": {
+    "command": [
+      "/Users/thrill3r/Auto-Quant/.venv/bin/python",
+      "scripts/auto_quant_external/fetch_external.py",
+      "ibkr-bulk",
+      "--config",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/config/ibkr_btc_paxos_30d_bulk.yaml",
+      "--force"
+    ],
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/derived/ibkr_btc_paxos_long/BTC_1h_midpoint.csv",
+    "exit": 0,
+    "rows": 782,
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/command-output/00_ibkr_btc_paxos_30d_bulk.err",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/command-output/00_ibkr_btc_paxos_30d_bulk.out"
+  },
+  "gate_result": "ibkr_btc_long_aq_lane=ibkr_provider_lane_repaired_but_same_root_downstream_chain_not_rerun",
+  "mature_rooted_branch_observations_added": 44,
+  "precheck_root_id": "20260512T112030+0800-codex-btc-comparable-tvr-ibkr-provider-preflight-v1",
+  "promotion_allowed": false,
+  "provider_matrix_root_id": "20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1",
+  "run_id": "20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1",
+  "source_run_id": "20260512T113833+0800-codex-112904-provider-matrix-aq-date-contract-repair-v1",
+  "trade_usable": false,
+  "update_goal": false
+}

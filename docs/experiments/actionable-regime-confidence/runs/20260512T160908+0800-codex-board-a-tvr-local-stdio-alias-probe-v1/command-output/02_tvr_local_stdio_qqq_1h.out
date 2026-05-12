@@ -1,0 +1,1307 @@
+{
+  "plan": {
+    "request": {
+      "market_key": "board-a-tvr-stdio-qqq-1h",
+      "primary_data_path": null,
+      "interval": "1h",
+      "start": null,
+      "end": null,
+      "count": null,
+      "related_roles": [
+        "etf_reference"
+      ],
+      "provider_preferences": {
+        "etf_reference": "tradingview_mcp"
+      },
+      "symbol_overrides": {
+        "etf_reference": {
+          "display_symbol": "NASDAQ:QQQ",
+          "yfinance": null,
+          "tradingview_mcp": "NASDAQ:QQQ",
+          "ibkr": null
+        }
+      },
+      "options_volatility_proxy_symbol": null
+    },
+    "provider_summary": {
+      "required_requirements": [
+        "etf_reference"
+      ],
+      "provider_statuses": [
+        {
+          "provider": "ibkr",
+          "status": "install_required",
+          "healthy": false,
+          "reason": "missing_local_ibkr_consent",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [
+            "Consumer agent request: ask the user to install IBKR TWS or IB Gateway, then enable the IBKR API locally. Search keywords: Interactive Brokers TWS download, IB Gateway download.",
+            "Consumer agent follow-up: after the user installs IBKR TWS or Gateway, run python scripts/ibkr_bridge/setup.py --enable",
+            "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+            "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+          ],
+          "redacted_config": [
+            "consent_path=<local-path>",
+            "capabilities_path=<local-path>",
+            "consent_present=false",
+            "capabilities_present=false",
+            "reachable_gateway_ports=IB Gateway paper:4002",
+            "ibkr_runtime_missing_modules=redis"
+          ]
+        },
+        {
+          "provider": "yfinance",
+          "status": "ready",
+          "healthy": true,
+          "reason": "public_yahoo_http_endpoints",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [],
+          "redacted_config": [
+            "provider_mode=public_http"
+          ]
+        },
+        {
+          "provider": "tradingview_mcp",
+          "status": "ready",
+          "healthy": true,
+          "reason": "local_stdio_ohlcv_available",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [],
+          "redacted_config": [
+            "mcp_url=https://tvremix.xyz/api/mcp/v1",
+            "credential_source=missing",
+            "local_config=<unset>",
+            "ICT_ENGINE_TVREMIX_MCP_API_KEY=<unset>",
+            "stdio_cmd_env=<set>",
+            "stdio_args_env=<set>",
+            "probe_connectivity=true",
+            "probe_ohlcv=<skipped>",
+            "probe_options=<skipped>"
+          ]
+        }
+      ],
+      "actionable_install_prompts": [
+        "Consumer agent follow-up: after the user installs IBKR TWS or Gateway, run python scripts/ibkr_bridge/setup.py --enable",
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise.",
+        "Consumer agent request: ask the user to install IBKR TWS or IB Gateway, then enable the IBKR API locally. Search keywords: Interactive Brokers TWS download, IB Gateway download."
+      ]
+    },
+    "tasks": [
+      {
+        "role": "etf_reference",
+        "provider": "tradingview_mcp",
+        "operation": "Ohlcv",
+        "symbol": "NASDAQ:QQQ",
+        "request": {
+          "TradingViewMcp": {
+            "symbol": "NASDAQ:QQQ"
+          }
+        }
+      }
+    ],
+    "missing_roles": [],
+    "warnings": []
+  },
+  "results": [
+    {
+      "ok": true,
+      "provider": "tradingview_mcp",
+      "operation": "ohlcv.fetch",
+      "role": "etf_reference",
+      "symbol": "NASDAQ:QQQ",
+      "data": [
+        {
+          "close": 611.338013,
+          "high": 612.25,
+          "low": 608.109985,
+          "open": 609.789978,
+          "timestamp": "2026-04-13T13:30:00Z",
+          "volume": 8962496.0
+        },
+        {
+          "close": 611.799927,
+          "high": 612.880005,
+          "low": 610.940002,
+          "open": 611.375,
+          "timestamp": "2026-04-13T14:30:00Z",
+          "volume": 3271610.0
+        },
+        {
+          "close": 613.48999,
+          "high": 613.76001,
+          "low": 611.070007,
+          "open": 611.76001,
+          "timestamp": "2026-04-13T15:30:00Z",
+          "volume": 2887391.0
+        },
+        {
+          "close": 614.599976,
+          "high": 614.825195,
+          "low": 612.570007,
+          "open": 613.5,
+          "timestamp": "2026-04-13T16:30:00Z",
+          "volume": 5401272.0
+        },
+        {
+          "close": 613.890015,
+          "high": 614.7901,
+          "low": 613.809998,
+          "open": 614.590027,
+          "timestamp": "2026-04-13T17:30:00Z",
+          "volume": 2018409.0
+        },
+        {
+          "close": 615.344971,
+          "high": 615.390015,
+          "low": 613.830017,
+          "open": 613.880005,
+          "timestamp": "2026-04-13T18:30:00Z",
+          "volume": 2433972.0
+        },
+        {
+          "close": 617.320007,
+          "high": 617.960022,
+          "low": 615.159119,
+          "open": 615.330017,
+          "timestamp": "2026-04-13T19:30:00Z",
+          "volume": 4999047.0
+        },
+        {
+          "close": 623.710022,
+          "high": 623.780029,
+          "low": 620.099976,
+          "open": 620.27002,
+          "timestamp": "2026-04-14T13:30:00Z",
+          "volume": 11898180.0
+        },
+        {
+          "close": 624.460022,
+          "high": 624.77002,
+          "low": 622.76001,
+          "open": 623.76001,
+          "timestamp": "2026-04-14T14:30:00Z",
+          "volume": 6908947.0
+        },
+        {
+          "close": 626.719971,
+          "high": 626.809387,
+          "low": 624.450012,
+          "open": 624.469971,
+          "timestamp": "2026-04-14T15:30:00Z",
+          "volume": 6890452.0
+        },
+        {
+          "close": 627.059998,
+          "high": 627.465027,
+          "low": 626.159973,
+          "open": 626.719971,
+          "timestamp": "2026-04-14T16:30:00Z",
+          "volume": 5020302.0
+        },
+        {
+          "close": 626.26001,
+          "high": 627.700012,
+          "low": 625.679993,
+          "open": 627.080017,
+          "timestamp": "2026-04-14T17:30:00Z",
+          "volume": 5635012.0
+        },
+        {
+          "close": 628.119995,
+          "high": 628.179993,
+          "low": 626.059998,
+          "open": 626.26001,
+          "timestamp": "2026-04-14T18:30:00Z",
+          "volume": 4712330.0
+        },
+        {
+          "close": 628.539978,
+          "high": 628.599976,
+          "low": 627.359985,
+          "open": 628.080017,
+          "timestamp": "2026-04-14T19:30:00Z",
+          "volume": 5747392.0
+        },
+        {
+          "close": 631.724976,
+          "high": 631.72998,
+          "low": 628.200012,
+          "open": 629.125,
+          "timestamp": "2026-04-15T13:30:00Z",
+          "volume": 10102146.0
+        },
+        {
+          "close": 633.174988,
+          "high": 633.400024,
+          "low": 631.130005,
+          "open": 631.72998,
+          "timestamp": "2026-04-15T14:30:00Z",
+          "volume": 5639089.0
+        },
+        {
+          "close": 633.705017,
+          "high": 634.570129,
+          "low": 632.559998,
+          "open": 633.179993,
+          "timestamp": "2026-04-15T15:30:00Z",
+          "volume": 5090516.0
+        },
+        {
+          "close": 633.015015,
+          "high": 633.799988,
+          "low": 630.950012,
+          "open": 633.719971,
+          "timestamp": "2026-04-15T16:30:00Z",
+          "volume": 7814867.0
+        },
+        {
+          "close": 634.479309,
+          "high": 634.690002,
+          "low": 632.679993,
+          "open": 633.007996,
+          "timestamp": "2026-04-15T17:30:00Z",
+          "volume": 5150714.0
+        },
+        {
+          "close": 636.630005,
+          "high": 636.659973,
+          "low": 634.484985,
+          "open": 634.484985,
+          "timestamp": "2026-04-15T18:30:00Z",
+          "volume": 5379255.0
+        },
+        {
+          "close": 637.36499,
+          "high": 637.650024,
+          "low": 636.47998,
+          "open": 636.619995,
+          "timestamp": "2026-04-15T19:30:00Z",
+          "volume": 6731624.0
+        },
+        {
+          "close": 637.099976,
+          "high": 639.580017,
+          "low": 635.255005,
+          "open": 639.215027,
+          "timestamp": "2026-04-16T13:30:00Z",
+          "volume": 10080639.0
+        },
+        {
+          "close": 639.650024,
+          "high": 640.75,
+          "low": 637.039978,
+          "open": 637.099976,
+          "timestamp": "2026-04-16T14:30:00Z",
+          "volume": 5941209.0
+        },
+        {
+          "close": 641.119995,
+          "high": 642.179993,
+          "low": 639.5,
+          "open": 639.679993,
+          "timestamp": "2026-04-16T15:30:00Z",
+          "volume": 4880222.0
+        },
+        {
+          "close": 640.130005,
+          "high": 641.219971,
+          "low": 639.018982,
+          "open": 641.130005,
+          "timestamp": "2026-04-16T16:30:00Z",
+          "volume": 3965856.0
+        },
+        {
+          "close": 637.600098,
+          "high": 640.919983,
+          "low": 637.200012,
+          "open": 640.140015,
+          "timestamp": "2026-04-16T17:30:00Z",
+          "volume": 4544301.0
+        },
+        {
+          "close": 639.349976,
+          "high": 639.840027,
+          "low": 637.590027,
+          "open": 637.609985,
+          "timestamp": "2026-04-16T18:30:00Z",
+          "volume": 4803131.0
+        },
+        {
+          "close": 640.409973,
+          "high": 640.719971,
+          "low": 639.220886,
+          "open": 639.349976,
+          "timestamp": "2026-04-16T19:30:00Z",
+          "volume": 4929662.0
+        },
+        {
+          "close": 646.630005,
+          "high": 647.530029,
+          "low": 644.070007,
+          "open": 645.549988,
+          "timestamp": "2026-04-17T13:30:00Z",
+          "volume": 14422022.0
+        },
+        {
+          "close": 649.059875,
+          "high": 649.419983,
+          "low": 646.63501,
+          "open": 646.640015,
+          "timestamp": "2026-04-17T14:30:00Z",
+          "volume": 6812185.0
+        },
+        {
+          "close": 649.349976,
+          "high": 649.900024,
+          "low": 647.869995,
+          "open": 649.080017,
+          "timestamp": "2026-04-17T15:30:00Z",
+          "volume": 9084304.0
+        },
+        {
+          "close": 647.379883,
+          "high": 650.0,
+          "low": 646.48999,
+          "open": 649.375,
+          "timestamp": "2026-04-17T16:30:00Z",
+          "volume": 5142899.0
+        },
+        {
+          "close": 647.652405,
+          "high": 648.72998,
+          "low": 646.940002,
+          "open": 647.340027,
+          "timestamp": "2026-04-17T17:30:00Z",
+          "volume": 5035817.0
+        },
+        {
+          "close": 647.52002,
+          "high": 648.359985,
+          "low": 647.02002,
+          "open": 647.659973,
+          "timestamp": "2026-04-17T18:30:00Z",
+          "volume": 4342276.0
+        },
+        {
+          "close": 648.780029,
+          "high": 648.849976,
+          "low": 647.519897,
+          "open": 647.52002,
+          "timestamp": "2026-04-17T19:30:00Z",
+          "volume": 4696462.0
+        },
+        {
+          "close": 646.405029,
+          "high": 648.75,
+          "low": 646.080017,
+          "open": 648.039978,
+          "timestamp": "2026-04-20T13:30:00Z",
+          "volume": 7344205.0
+        },
+        {
+          "close": 645.650024,
+          "high": 646.659424,
+          "low": 642.52002,
+          "open": 646.380005,
+          "timestamp": "2026-04-20T14:30:00Z",
+          "volume": 12601892.0
+        },
+        {
+          "close": 645.080017,
+          "high": 645.619995,
+          "low": 644.080017,
+          "open": 645.619995,
+          "timestamp": "2026-04-20T15:30:00Z",
+          "volume": 3379451.0
+        },
+        {
+          "close": 645.609985,
+          "high": 646.090027,
+          "low": 644.755005,
+          "open": 645.109985,
+          "timestamp": "2026-04-20T16:30:00Z",
+          "volume": 2257173.0
+        },
+        {
+          "close": 646.48999,
+          "high": 646.710022,
+          "low": 645.309998,
+          "open": 645.599976,
+          "timestamp": "2026-04-20T17:30:00Z",
+          "volume": 2270282.0
+        },
+        {
+          "close": 646.329773,
+          "high": 646.809998,
+          "low": 645.934998,
+          "open": 646.5,
+          "timestamp": "2026-04-20T18:30:00Z",
+          "volume": 2732413.0
+        },
+        {
+          "close": 646.77002,
+          "high": 646.929993,
+          "low": 645.919983,
+          "open": 646.309998,
+          "timestamp": "2026-04-20T19:30:00Z",
+          "volume": 3356621.0
+        },
+        {
+          "close": 649.168213,
+          "high": 650.200012,
+          "low": 646.450012,
+          "open": 648.390015,
+          "timestamp": "2026-04-21T13:30:00Z",
+          "volume": 8435442.0
+        },
+        {
+          "close": 646.309998,
+          "high": 649.580017,
+          "low": 644.880005,
+          "open": 649.140015,
+          "timestamp": "2026-04-21T14:30:00Z",
+          "volume": 5932089.0
+        },
+        {
+          "close": 645.89502,
+          "high": 647.72998,
+          "low": 645.590027,
+          "open": 646.299988,
+          "timestamp": "2026-04-21T15:30:00Z",
+          "volume": 3266275.0
+        },
+        {
+          "close": 644.179626,
+          "high": 646.849976,
+          "low": 643.36499,
+          "open": 645.820007,
+          "timestamp": "2026-04-21T16:30:00Z",
+          "volume": 4239334.0
+        },
+        {
+          "close": 645.219971,
+          "high": 647.419983,
+          "low": 644.119995,
+          "open": 644.179993,
+          "timestamp": "2026-04-21T17:30:00Z",
+          "volume": 3640448.0
+        },
+        {
+          "close": 647.631226,
+          "high": 647.690002,
+          "low": 644.914978,
+          "open": 645.210022,
+          "timestamp": "2026-04-21T18:30:00Z",
+          "volume": 3559715.0
+        },
+        {
+          "close": 644.280029,
+          "high": 647.830017,
+          "low": 642.210022,
+          "open": 647.659973,
+          "timestamp": "2026-04-21T19:30:00Z",
+          "volume": 7093566.0
+        },
+        {
+          "close": 652.76001,
+          "high": 652.789978,
+          "low": 648.52002,
+          "open": 650.26001,
+          "timestamp": "2026-04-22T13:30:00Z",
+          "volume": 8791027.0
+        },
+        {
+          "close": 652.780029,
+          "high": 653.22998,
+          "low": 651.609985,
+          "open": 652.75,
+          "timestamp": "2026-04-22T14:30:00Z",
+          "volume": 5489795.0
+        },
+        {
+          "close": 652.429993,
+          "high": 653.140015,
+          "low": 652.140015,
+          "open": 652.77002,
+          "timestamp": "2026-04-22T15:30:00Z",
+          "volume": 2844895.0
+        },
+        {
+          "close": 653.710022,
+          "high": 654.25,
+          "low": 652.030029,
+          "open": 652.409973,
+          "timestamp": "2026-04-22T16:30:00Z",
+          "volume": 3173662.0
+        },
+        {
+          "close": 653.049988,
+          "high": 654.22998,
+          "low": 652.889526,
+          "open": 653.72998,
+          "timestamp": "2026-04-22T17:30:00Z",
+          "volume": 3474599.0
+        },
+        {
+          "close": 654.140015,
+          "high": 654.429077,
+          "low": 652.530029,
+          "open": 653.054993,
+          "timestamp": "2026-04-22T18:30:00Z",
+          "volume": 3162870.0
+        },
+        {
+          "close": 655.080017,
+          "high": 655.330017,
+          "low": 653.960022,
+          "open": 654.130005,
+          "timestamp": "2026-04-22T19:30:00Z",
+          "volume": 6159771.0
+        },
+        {
+          "close": 653.52002,
+          "high": 655.619995,
+          "low": 652.309998,
+          "open": 653.539978,
+          "timestamp": "2026-04-23T13:30:00Z",
+          "volume": 7528016.0
+        },
+        {
+          "close": 656.330017,
+          "high": 656.780029,
+          "low": 653.290222,
+          "open": 653.544983,
+          "timestamp": "2026-04-23T14:30:00Z",
+          "volume": 3500544.0
+        },
+        {
+          "close": 655.309998,
+          "high": 656.919983,
+          "low": 654.119995,
+          "open": 656.299988,
+          "timestamp": "2026-04-23T15:30:00Z",
+          "volume": 2787083.0
+        },
+        {
+          "close": 650.065002,
+          "high": 656.02002,
+          "low": 649.799988,
+          "open": 655.309998,
+          "timestamp": "2026-04-23T16:30:00Z",
+          "volume": 5972286.0
+        },
+        {
+          "close": 651.674988,
+          "high": 651.969971,
+          "low": 645.525024,
+          "open": 650.080017,
+          "timestamp": "2026-04-23T17:30:00Z",
+          "volume": 9361281.0
+        },
+        {
+          "close": 651.109985,
+          "high": 652.73999,
+          "low": 649.340027,
+          "open": 651.679993,
+          "timestamp": "2026-04-23T18:30:00Z",
+          "volume": 3423558.0
+        },
+        {
+          "close": 651.409973,
+          "high": 651.849915,
+          "low": 649.349976,
+          "open": 651.109985,
+          "timestamp": "2026-04-23T19:30:00Z",
+          "volume": 3641594.0
+        },
+        {
+          "close": 658.140015,
+          "high": 659.849976,
+          "low": 656.53009,
+          "open": 658.469971,
+          "timestamp": "2026-04-24T13:30:00Z",
+          "volume": 11152297.0
+        },
+        {
+          "close": 661.200012,
+          "high": 661.369995,
+          "low": 657.460022,
+          "open": 658.23999,
+          "timestamp": "2026-04-24T14:30:00Z",
+          "volume": 6183311.0
+        },
+        {
+          "close": 663.0,
+          "high": 663.434998,
+          "low": 660.77002,
+          "open": 661.22998,
+          "timestamp": "2026-04-24T15:30:00Z",
+          "volume": 5925375.0
+        },
+        {
+          "close": 662.619995,
+          "high": 663.739929,
+          "low": 662.224976,
+          "open": 663.0,
+          "timestamp": "2026-04-24T16:30:00Z",
+          "volume": 2989687.0
+        },
+        {
+          "close": 662.76001,
+          "high": 664.51001,
+          "low": 662.320007,
+          "open": 662.60498,
+          "timestamp": "2026-04-24T17:30:00Z",
+          "volume": 3393552.0
+        },
+        {
+          "close": 663.630005,
+          "high": 664.380005,
+          "low": 662.700012,
+          "open": 662.789978,
+          "timestamp": "2026-04-24T18:30:00Z",
+          "volume": 5014224.0
+        },
+        {
+          "close": 663.909973,
+          "high": 664.23999,
+          "low": 663.200012,
+          "open": 663.619995,
+          "timestamp": "2026-04-24T19:30:00Z",
+          "volume": 6637284.0
+        },
+        {
+          "close": 662.169983,
+          "high": 663.849976,
+          "low": 660.690002,
+          "open": 663.38501,
+          "timestamp": "2026-04-27T13:30:00Z",
+          "volume": 9878956.0
+        },
+        {
+          "close": 661.820007,
+          "high": 663.280029,
+          "low": 660.950012,
+          "open": 662.185974,
+          "timestamp": "2026-04-27T14:30:00Z",
+          "volume": 4578008.0
+        },
+        {
+          "close": 662.580017,
+          "high": 662.909973,
+          "low": 661.609985,
+          "open": 661.830017,
+          "timestamp": "2026-04-27T15:30:00Z",
+          "volume": 2850422.0
+        },
+        {
+          "close": 663.469971,
+          "high": 663.650024,
+          "low": 662.580017,
+          "open": 662.580017,
+          "timestamp": "2026-04-27T16:30:00Z",
+          "volume": 2678173.0
+        },
+        {
+          "close": 663.859985,
+          "high": 664.122498,
+          "low": 663.440002,
+          "open": 663.440002,
+          "timestamp": "2026-04-27T17:30:00Z",
+          "volume": 4011496.0
+        },
+        {
+          "close": 663.690125,
+          "high": 664.375,
+          "low": 662.929993,
+          "open": 663.840027,
+          "timestamp": "2026-04-27T18:30:00Z",
+          "volume": 3552589.0
+        },
+        {
+          "close": 664.27002,
+          "high": 664.419983,
+          "low": 663.429993,
+          "open": 663.710022,
+          "timestamp": "2026-04-27T19:30:00Z",
+          "volume": 3253113.0
+        },
+        {
+          "close": 657.638611,
+          "high": 659.640015,
+          "low": 655.275024,
+          "open": 657.455017,
+          "timestamp": "2026-04-28T13:30:00Z",
+          "volume": 10914906.0
+        },
+        {
+          "close": 654.684998,
+          "high": 657.929993,
+          "low": 653.860901,
+          "open": 657.657227,
+          "timestamp": "2026-04-28T14:30:00Z",
+          "volume": 5782351.0
+        },
+        {
+          "close": 655.255005,
+          "high": 655.678894,
+          "low": 653.809998,
+          "open": 654.585022,
+          "timestamp": "2026-04-28T15:30:00Z",
+          "volume": 4068703.0
+        },
+        {
+          "close": 655.580017,
+          "high": 655.919983,
+          "low": 654.250122,
+          "open": 655.27002,
+          "timestamp": "2026-04-28T16:30:00Z",
+          "volume": 2007166.0
+        },
+        {
+          "close": 657.820007,
+          "high": 657.960022,
+          "low": 655.562012,
+          "open": 655.580017,
+          "timestamp": "2026-04-28T17:30:00Z",
+          "volume": 2538420.0
+        },
+        {
+          "close": 658.030029,
+          "high": 658.963989,
+          "low": 656.380005,
+          "open": 657.809998,
+          "timestamp": "2026-04-28T18:30:00Z",
+          "volume": 3094495.0
+        },
+        {
+          "close": 657.570007,
+          "high": 658.150024,
+          "low": 657.27002,
+          "open": 658.029907,
+          "timestamp": "2026-04-28T19:30:00Z",
+          "volume": 3761298.0
+        },
+        {
+          "close": 660.059998,
+          "high": 660.280029,
+          "low": 656.589905,
+          "open": 658.580017,
+          "timestamp": "2026-04-29T13:30:00Z",
+          "volume": 6147273.0
+        },
+        {
+          "close": 660.23999,
+          "high": 661.22998,
+          "low": 658.929993,
+          "open": 660.070007,
+          "timestamp": "2026-04-29T14:30:00Z",
+          "volume": 3804193.0
+        },
+        {
+          "close": 658.460022,
+          "high": 660.73999,
+          "low": 658.380005,
+          "open": 660.249878,
+          "timestamp": "2026-04-29T15:30:00Z",
+          "volume": 3499793.0
+        },
+        {
+          "close": 658.706787,
+          "high": 659.119995,
+          "low": 657.289978,
+          "open": 658.409973,
+          "timestamp": "2026-04-29T16:30:00Z",
+          "volume": 2577105.0
+        },
+        {
+          "close": 658.629089,
+          "high": 659.75,
+          "low": 657.390015,
+          "open": 658.789978,
+          "timestamp": "2026-04-29T17:30:00Z",
+          "volume": 2589973.0
+        },
+        {
+          "close": 661.054993,
+          "high": 661.719971,
+          "low": 657.75,
+          "open": 658.630005,
+          "timestamp": "2026-04-29T18:30:00Z",
+          "volume": 4503409.0
+        },
+        {
+          "close": 661.599976,
+          "high": 661.599976,
+          "low": 659.859985,
+          "open": 661.049988,
+          "timestamp": "2026-04-29T19:30:00Z",
+          "volume": 3680083.0
+        },
+        {
+          "close": 659.129883,
+          "high": 665.312012,
+          "low": 657.559998,
+          "open": 665.309998,
+          "timestamp": "2026-04-30T13:30:00Z",
+          "volume": 12183330.0
+        },
+        {
+          "close": 663.375,
+          "high": 663.640015,
+          "low": 657.77002,
+          "open": 659.5,
+          "timestamp": "2026-04-30T14:30:00Z",
+          "volume": 5221667.0
+        },
+        {
+          "close": 663.650024,
+          "high": 664.190002,
+          "low": 661.640015,
+          "open": 663.390015,
+          "timestamp": "2026-04-30T15:30:00Z",
+          "volume": 2780012.0
+        },
+        {
+          "close": 664.780029,
+          "high": 664.789978,
+          "low": 662.030029,
+          "open": 663.669983,
+          "timestamp": "2026-04-30T16:30:00Z",
+          "volume": 3912044.0
+        },
+        {
+          "close": 667.179626,
+          "high": 667.710022,
+          "low": 664.76001,
+          "open": 664.775024,
+          "timestamp": "2026-04-30T17:30:00Z",
+          "volume": 4193157.0
+        },
+        {
+          "close": 667.890015,
+          "high": 668.26001,
+          "low": 666.690002,
+          "open": 667.169983,
+          "timestamp": "2026-04-30T18:30:00Z",
+          "volume": 4232738.0
+        },
+        {
+          "close": 667.570007,
+          "high": 668.75,
+          "low": 667.400024,
+          "open": 667.719971,
+          "timestamp": "2026-04-30T19:30:00Z",
+          "volume": 5135043.0
+        },
+        {
+          "close": 674.86499,
+          "high": 675.76001,
+          "low": 668.799988,
+          "open": 669.159973,
+          "timestamp": "2026-05-01T13:30:00Z",
+          "volume": 11736144.0
+        },
+        {
+          "close": 674.700012,
+          "high": 674.900024,
+          "low": 672.01001,
+          "open": 674.900024,
+          "timestamp": "2026-05-01T14:30:00Z",
+          "volume": 5947353.0
+        },
+        {
+          "close": 674.01001,
+          "high": 675.969971,
+          "low": 673.630005,
+          "open": 674.710022,
+          "timestamp": "2026-05-01T15:30:00Z",
+          "volume": 5923565.0
+        },
+        {
+          "close": 675.23999,
+          "high": 675.284973,
+          "low": 673.330017,
+          "open": 673.969971,
+          "timestamp": "2026-05-01T16:30:00Z",
+          "volume": 2609357.0
+        },
+        {
+          "close": 674.870117,
+          "high": 675.52002,
+          "low": 674.070007,
+          "open": 675.25,
+          "timestamp": "2026-05-01T17:30:00Z",
+          "volume": 2387010.0
+        },
+        {
+          "close": 675.549988,
+          "high": 675.640015,
+          "low": 673.090088,
+          "open": 674.837097,
+          "timestamp": "2026-05-01T18:30:00Z",
+          "volume": 3581744.0
+        },
+        {
+          "close": 674.159973,
+          "high": 675.659973,
+          "low": 673.840027,
+          "open": 675.550476,
+          "timestamp": "2026-05-01T19:30:00Z",
+          "volume": 3780084.0
+        },
+        {
+          "close": 675.030029,
+          "high": 676.059998,
+          "low": 673.559998,
+          "open": 674.640015,
+          "timestamp": "2026-05-04T13:30:00Z",
+          "volume": 7095753.0
+        },
+        {
+          "close": 672.784973,
+          "high": 676.72998,
+          "low": 671.320007,
+          "open": 675.030029,
+          "timestamp": "2026-05-04T14:30:00Z",
+          "volume": 6183611.0
+        },
+        {
+          "close": 671.27002,
+          "high": 672.969971,
+          "low": 668.900024,
+          "open": 672.780029,
+          "timestamp": "2026-05-04T15:30:00Z",
+          "volume": 5638528.0
+        },
+        {
+          "close": 673.222412,
+          "high": 673.450012,
+          "low": 670.669983,
+          "open": 671.284973,
+          "timestamp": "2026-05-04T16:30:00Z",
+          "volume": 3690852.0
+        },
+        {
+          "close": 672.650024,
+          "high": 673.789917,
+          "low": 671.719971,
+          "open": 673.23999,
+          "timestamp": "2026-05-04T17:30:00Z",
+          "volume": 2462185.0
+        },
+        {
+          "close": 672.830017,
+          "high": 673.080017,
+          "low": 671.390015,
+          "open": 672.640015,
+          "timestamp": "2026-05-04T18:30:00Z",
+          "volume": 3624361.0
+        },
+        {
+          "close": 672.880005,
+          "high": 673.195007,
+          "low": 672.070007,
+          "open": 672.835022,
+          "timestamp": "2026-05-04T19:30:00Z",
+          "volume": 3082755.0
+        },
+        {
+          "close": 681.119995,
+          "high": 681.460022,
+          "low": 677.51001,
+          "open": 677.950012,
+          "timestamp": "2026-05-05T13:30:00Z",
+          "volume": 9677563.0
+        },
+        {
+          "close": 681.340027,
+          "high": 681.609985,
+          "low": 680.030029,
+          "open": 681.130005,
+          "timestamp": "2026-05-05T14:30:00Z",
+          "volume": 5598323.0
+        },
+        {
+          "close": 681.025024,
+          "high": 681.940002,
+          "low": 680.419983,
+          "open": 681.400024,
+          "timestamp": "2026-05-05T15:30:00Z",
+          "volume": 3360491.0
+        },
+        {
+          "close": 681.744995,
+          "high": 681.76001,
+          "low": 680.47998,
+          "open": 681.030029,
+          "timestamp": "2026-05-05T16:30:00Z",
+          "volume": 3916528.0
+        },
+        {
+          "close": 682.539978,
+          "high": 682.719971,
+          "low": 681.52002,
+          "open": 681.75,
+          "timestamp": "2026-05-05T17:30:00Z",
+          "volume": 3399126.0
+        },
+        {
+          "close": 682.275024,
+          "high": 682.773376,
+          "low": 681.955017,
+          "open": 682.530029,
+          "timestamp": "2026-05-05T18:30:00Z",
+          "volume": 4044988.0
+        },
+        {
+          "close": 681.51001,
+          "high": 682.349915,
+          "low": 680.868286,
+          "open": 682.26001,
+          "timestamp": "2026-05-05T19:30:00Z",
+          "volume": 3390819.0
+        },
+        {
+          "close": 688.419983,
+          "high": 690.52002,
+          "low": 686.47998,
+          "open": 687.809998,
+          "timestamp": "2026-05-06T13:30:00Z",
+          "volume": 11599098.0
+        },
+        {
+          "close": 692.289978,
+          "high": 692.400024,
+          "low": 688.440002,
+          "open": 688.440002,
+          "timestamp": "2026-05-06T14:30:00Z",
+          "volume": 4970780.0
+        },
+        {
+          "close": 692.190002,
+          "high": 692.849976,
+          "low": 691.150024,
+          "open": 692.289978,
+          "timestamp": "2026-05-06T15:30:00Z",
+          "volume": 3183941.0
+        },
+        {
+          "close": 692.419983,
+          "high": 692.628296,
+          "low": 690.74353,
+          "open": 692.224976,
+          "timestamp": "2026-05-06T16:30:00Z",
+          "volume": 2480982.0
+        },
+        {
+          "close": 693.640015,
+          "high": 693.76001,
+          "low": 692.369995,
+          "open": 692.409973,
+          "timestamp": "2026-05-06T17:30:00Z",
+          "volume": 2776136.0
+        },
+        {
+          "close": 695.05011,
+          "high": 695.21228,
+          "low": 693.419983,
+          "open": 693.73999,
+          "timestamp": "2026-05-06T18:30:00Z",
+          "volume": 3871511.0
+        },
+        {
+          "close": 695.590027,
+          "high": 695.929993,
+          "low": 694.419983,
+          "open": 695.049988,
+          "timestamp": "2026-05-06T19:30:00Z",
+          "volume": 6268228.0
+        },
+        {
+          "close": 699.52002,
+          "high": 700.080017,
+          "low": 695.539978,
+          "open": 696.22998,
+          "timestamp": "2026-05-07T13:30:00Z",
+          "volume": 9316092.0
+        },
+        {
+          "close": 699.049988,
+          "high": 701.22998,
+          "low": 698.349976,
+          "open": 699.539978,
+          "timestamp": "2026-05-07T14:30:00Z",
+          "volume": 4372529.0
+        },
+        {
+          "close": 696.315002,
+          "high": 700.099976,
+          "low": 693.789978,
+          "open": 699.157471,
+          "timestamp": "2026-05-07T15:30:00Z",
+          "volume": 5499518.0
+        },
+        {
+          "close": 693.075012,
+          "high": 697.159973,
+          "low": 691.780029,
+          "open": 696.309998,
+          "timestamp": "2026-05-07T16:30:00Z",
+          "volume": 5346537.0
+        },
+        {
+          "close": 694.200012,
+          "high": 695.780029,
+          "low": 692.648987,
+          "open": 693.090027,
+          "timestamp": "2026-05-07T17:30:00Z",
+          "volume": 4820078.0
+        },
+        {
+          "close": 693.150024,
+          "high": 695.080017,
+          "low": 692.484985,
+          "open": 694.200012,
+          "timestamp": "2026-05-07T18:30:00Z",
+          "volume": 4942343.0
+        },
+        {
+          "close": 694.919983,
+          "high": 695.549988,
+          "low": 693.080017,
+          "open": 693.190002,
+          "timestamp": "2026-05-07T19:30:00Z",
+          "volume": 6056313.0
+        },
+        {
+          "close": 705.469971,
+          "high": 706.779114,
+          "low": 699.530029,
+          "open": 699.919983,
+          "timestamp": "2026-05-08T13:30:00Z",
+          "volume": 10065318.0
+        },
+        {
+          "close": 707.190125,
+          "high": 707.27002,
+          "low": 704.570007,
+          "open": 705.47998,
+          "timestamp": "2026-05-08T14:30:00Z",
+          "volume": 5661846.0
+        },
+        {
+          "close": 708.61499,
+          "high": 708.679993,
+          "low": 706.51001,
+          "open": 707.22998,
+          "timestamp": "2026-05-08T15:30:00Z",
+          "volume": 5516874.0
+        },
+        {
+          "close": 710.200012,
+          "high": 710.460022,
+          "low": 707.51001,
+          "open": 708.61499,
+          "timestamp": "2026-05-08T16:30:00Z",
+          "volume": 4830794.0
+        },
+        {
+          "close": 709.74762,
+          "high": 710.499878,
+          "low": 708.97998,
+          "open": 710.210022,
+          "timestamp": "2026-05-08T17:30:00Z",
+          "volume": 3840069.0
+        },
+        {
+          "close": 709.125,
+          "high": 710.190002,
+          "low": 708.549988,
+          "open": 709.72998,
+          "timestamp": "2026-05-08T18:30:00Z",
+          "volume": 4305647.0
+        },
+        {
+          "close": 711.109985,
+          "high": 711.130005,
+          "low": 708.98999,
+          "open": 709.140015,
+          "timestamp": "2026-05-08T19:30:00Z",
+          "volume": 7425589.0
+        },
+        {
+          "close": 709.830017,
+          "high": 713.5,
+          "low": 709.609985,
+          "open": 710.359985,
+          "timestamp": "2026-05-11T13:30:00Z",
+          "volume": 9738057.0
+        },
+        {
+          "close": 713.27002,
+          "high": 713.309998,
+          "low": 708.909973,
+          "open": 709.859985,
+          "timestamp": "2026-05-11T14:30:00Z",
+          "volume": 5284678.0
+        },
+        {
+          "close": 714.190002,
+          "high": 714.590027,
+          "low": 712.775024,
+          "open": 713.349976,
+          "timestamp": "2026-05-11T15:30:00Z",
+          "volume": 3275622.0
+        },
+        {
+          "close": 713.549988,
+          "high": 714.5,
+          "low": 711.911011,
+          "open": 714.190002,
+          "timestamp": "2026-05-11T16:30:00Z",
+          "volume": 3127822.0
+        },
+        {
+          "close": 714.36908,
+          "high": 714.460022,
+          "low": 713.51001,
+          "open": 713.820007,
+          "timestamp": "2026-05-11T17:30:00Z",
+          "volume": 3002271.0
+        },
+        {
+          "close": 712.163086,
+          "high": 714.350098,
+          "low": 711.929993,
+          "open": 714.350098,
+          "timestamp": "2026-05-11T18:30:00Z",
+          "volume": 4300533.0
+        },
+        {
+          "close": 713.349976,
+          "high": 713.390015,
+          "low": 711.869995,
+          "open": 712.140015,
+          "timestamp": "2026-05-11T19:30:00Z",
+          "volume": 3558826.0
+        },
+        {
+          "close": 713.289978,
+          "high": 713.289978,
+          "low": 713.289978,
+          "open": 713.289978,
+          "timestamp": "2026-05-11T20:00:00Z",
+          "volume": 0.0
+        }
+      ]
+    }
+  ]
+}

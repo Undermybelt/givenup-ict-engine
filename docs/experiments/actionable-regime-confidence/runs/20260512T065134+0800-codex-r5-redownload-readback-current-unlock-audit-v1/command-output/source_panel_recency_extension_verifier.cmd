@@ -1,0 +1,1 @@
+python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py --intake-root /tmp/ict-engine-source-panel-recency-extension

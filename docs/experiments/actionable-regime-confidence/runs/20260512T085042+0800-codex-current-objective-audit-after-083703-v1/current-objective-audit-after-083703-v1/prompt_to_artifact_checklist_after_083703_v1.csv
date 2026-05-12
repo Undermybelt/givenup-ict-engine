@@ -1,0 +1,9 @@
+requirement,evidence,status
+named_board_file_live_contract,"board hash 92eaff288853168f05d160b29402bd3c25b4d263cd6622e754642b3762837a25; cursor 034002 remains fail-closed",partial
+root_first_branch_identity,"branch-path contract remains present; current cursor rejected promotion",partial
+real_autoquant_ict_downstream_chain,"prior 034002 chain evidence exists; no rerun allowed while source/control and selected-history gates are false",blocked
+provider_surfaces_ibkr_tradingviewremix_yfinance_kraken,"082430 observed provider/runtime surfaces; provider visibility is non-promoting",partial
+multi_agent_append_only,"083545/083559/083618/083703 terminal; 083711 empty uncounted; this artifact is additive",pass
+source_control_unlock,"R6 absent; R5 absent; R3 present but TSIE-derived/quarantined and Crisis-absent",blocked
+explicit_user_selected_history,"no exact HTF/MTF/LTF user selection recorded",blocked
+update_goal_guard,"strict_full_objective=false; promotion_allowed=false; update_goal=false",pass

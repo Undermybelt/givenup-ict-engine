@@ -1,0 +1,127 @@
+{
+  "artifact_type": "strict_1h_future_tail_gate_spec_v1",
+  "counts": {
+    "accepted_rows_added": 0,
+    "candidate_rows": 4,
+    "eligible_for_future_rerun_rows": 4
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "current_cursor_edited": false,
+    "gate_result": "strict_1h_future_tail_gate_spec_v1=predeclared_4_candidates_no_current_acceptance",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T11:01:15.235187+00:00",
+  "guardrail": "This spec can only seed a later rerun under the named future chronological protocol. It does not change the fixed 2024/2025 strict gate and accepts no current rows.",
+  "inputs": {
+    "jan2026_tail_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T184530-codex-strict-1h-jan2026-tail-support-probe-v1/jan2026-tail-support/strict_1h_jan2026_tail_support_probe_v1_rows.csv",
+    "near_miss_candidates_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T184151-codex-strict-1h-near-miss-extension-requirements-v1/strict-1h-extension-requirements/strict_1h_near_miss_extension_candidates_v1.csv",
+    "source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv"
+  },
+  "protocol": {
+    "calibration_split": "calendar_2024_fixed_from_exact_1h_universe",
+    "future_validation_split": "calendar_2025_heldout_plus_source_owned_jan2026_tail",
+    "minimum_support": 73,
+    "minimum_wilson95_lcb": 0.95,
+    "name": "strict_1h_2026_tail_future_chronological_gate_v1",
+    "non_retroactive": true,
+    "required_provenance": [
+      "source-owned or owner-approved regime labels",
+      "provider exact 1h coverage for the same instrument/root/date window",
+      "no generated labels, proxy OHLCV labels, or threshold relaxation"
+    ],
+    "tail_window": {
+      "end": "2026-01-30",
+      "start": "2026-01-02"
+    }
+  },
+  "rows": [
+    {
+      "accepted_now": "false",
+      "allowed_use": "predeclared_future_chronological_gate_only",
+      "calibration_2024_passes": "true",
+      "calibration_2024_support": 75,
+      "calibration_2024_wilson95_lcb": "0.9512761575",
+      "eligible_for_future_rerun": "true",
+      "fixed_gate_current_acceptance": "blocked",
+      "future_heldout_2025_plus_jan2026_passes": "true",
+      "future_heldout_2025_plus_jan2026_support": 86,
+      "future_heldout_2025_plus_jan2026_wilson95_lcb": "0.9572418027",
+      "heldout_2025_passes": "false",
+      "heldout_2025_support": 67,
+      "heldout_2025_wilson95_lcb": "0.9457738606",
+      "instrument": "ABBV",
+      "jan2026_source_tail_sessions": 19,
+      "jan2026_tail_wilson95_lcb": "0.8318207759",
+      "provider_1h_covers_tail": "true",
+      "root": "Sideways"
+    },
+    {
+      "accepted_now": "false",
+      "allowed_use": "predeclared_future_chronological_gate_only",
+      "calibration_2024_passes": "true",
+      "calibration_2024_support": 118,
+      "calibration_2024_wilson95_lcb": "0.9684716610",
+      "eligible_for_future_rerun": "true",
+      "fixed_gate_current_acceptance": "blocked",
+      "future_heldout_2025_plus_jan2026_passes": "true",
+      "future_heldout_2025_plus_jan2026_support": 85,
+      "future_heldout_2025_plus_jan2026_wilson95_lcb": "0.9567605162",
+      "heldout_2025_passes": "false",
+      "heldout_2025_support": 67,
+      "heldout_2025_wilson95_lcb": "0.9457738606",
+      "instrument": "TMO",
+      "jan2026_source_tail_sessions": 18,
+      "jan2026_tail_wilson95_lcb": "0.8241207764",
+      "provider_1h_covers_tail": "true",
+      "root": "Bull"
+    },
+    {
+      "accepted_now": "false",
+      "allowed_use": "predeclared_future_chronological_gate_only",
+      "calibration_2024_passes": "true",
+      "calibration_2024_support": 162,
+      "calibration_2024_wilson95_lcb": "0.9768365592",
+      "eligible_for_future_rerun": "true",
+      "fixed_gate_current_acceptance": "blocked",
+      "future_heldout_2025_plus_jan2026_passes": "true",
+      "future_heldout_2025_plus_jan2026_support": 84,
+      "future_heldout_2025_plus_jan2026_wilson95_lcb": "0.9562682716",
+      "heldout_2025_passes": "false",
+      "heldout_2025_support": 69,
+      "heldout_2025_wilson95_lcb": "0.9472627418",
+      "instrument": "HD",
+      "jan2026_source_tail_sessions": 15,
+      "jan2026_tail_wilson95_lcb": "0.7961166990",
+      "provider_1h_covers_tail": "true",
+      "root": "Bull"
+    },
+    {
+      "accepted_now": "false",
+      "allowed_use": "predeclared_future_chronological_gate_only",
+      "calibration_2024_passes": "true",
+      "calibration_2024_support": 76,
+      "calibration_2024_wilson95_lcb": "0.9518864149",
+      "eligible_for_future_rerun": "true",
+      "fixed_gate_current_acceptance": "blocked",
+      "future_heldout_2025_plus_jan2026_passes": "true",
+      "future_heldout_2025_plus_jan2026_support": 74,
+      "future_heldout_2025_plus_jan2026_wilson95_lcb": "0.9506502206",
+      "heldout_2025_passes": "false",
+      "heldout_2025_support": 62,
+      "heldout_2025_wilson95_lcb": "0.9416559279",
+      "instrument": "AMD",
+      "jan2026_source_tail_sessions": 12,
+      "jan2026_tail_wilson95_lcb": "0.7575059933",
+      "provider_1h_covers_tail": "true",
+      "root": "Bull"
+    }
+  ],
+  "run_id": "20260511T185905+0800-codex-strict-1h-future-tail-gate-spec-v1"
+}

@@ -1,0 +1,7 @@
+ed21b444c63db89c2cc3b5bb49d42fac8cf67ce914ae6ee33f4b8e34492329c1  docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/150352_145809_trend_pullback_aq_route_readback_v1.md
+b3e332af758fb7fb1777fd109afea8ccc063718d6250ddc250786d88bc30187d  docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/prompt_to_artifact_checklist_150352.csv
+794806fc0dced69fb3f271a6a5da6bc2b6089dddf49dc472f634bd81c900424d  docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/aq_route_manifest.json
+4310f4733f9e2084dbc198904d57bb41ef6f2d231d4c2ce747ecd2efb8a151c6  docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/six_provider_provenance_matrix.csv
+e17e93a1c0b240a530e7f405723414f46596f0d9483dcef5dd4177550abf98b2  docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/walk_forward_summary.csv
+6c0cde07a13b4033137eecb3723f8569adf64044ab4bf4458b740dbbd8d6a0fe  docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/downstream/catboost_spy_scores.csv
+d0ec41a3ed532be491e0b58f13adbb40ad854a8c2af01a0168cbafa6243f6daf  docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/checks/19_summary_assertions.out

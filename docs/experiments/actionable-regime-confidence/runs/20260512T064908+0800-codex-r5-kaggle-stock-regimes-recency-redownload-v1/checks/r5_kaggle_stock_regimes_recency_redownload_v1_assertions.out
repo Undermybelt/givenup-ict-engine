@@ -1,0 +1,13 @@
+gate_result=r5_kaggle_stock_regimes_recency_redownload_v1=download_ok_no_post_2026_01_30_recency_no_unlock
+download_exit_zero=true
+date_max=2026-01-30
+has_bull_bear_sideways_crisis=true
+post_2026_01_30_rows=0
+r5_recency_unlock=false
+accepted_rows_added=0
+valid_required_root_unlock=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

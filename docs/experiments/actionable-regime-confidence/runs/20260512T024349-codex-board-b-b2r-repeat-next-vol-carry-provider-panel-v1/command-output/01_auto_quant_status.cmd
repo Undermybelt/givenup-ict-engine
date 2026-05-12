@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-b-b2r-repeat-next-vol-carry-provider-panel-v1 --output-format json 

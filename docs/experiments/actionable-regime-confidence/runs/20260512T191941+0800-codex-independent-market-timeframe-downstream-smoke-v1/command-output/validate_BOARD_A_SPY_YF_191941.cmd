@@ -1,0 +1,1 @@
+./target/debug/ict-engine validate-market-state --data docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_YF_191941/1h.json --compact

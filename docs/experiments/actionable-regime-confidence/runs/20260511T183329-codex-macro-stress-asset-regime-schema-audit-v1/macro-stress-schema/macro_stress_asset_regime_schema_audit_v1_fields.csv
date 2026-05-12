@@ -1,0 +1,19 @@
+field,role,accepted_as_main_regime_v2_label,notes
+Date,timestamp,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Equities_US,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Equities_Tech,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Equities_Emerging,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Bonds_LongTerm,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Gold,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Oil,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Volatility_Index,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Crypto_Bitcoin,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Yield_Curve_Spread,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+High_Yield_Spread,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Financial_Stress_Index,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+SPY_Drawdown,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+SPY_Rolling_Vol_30d,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+BTC_Rolling_Vol_30d,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+Stock_Bond_Corr_90d,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+SPY_RSI_14,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field
+GLD_RSI_14,feature_or_price_context,false,no explicit Bull/Bear/Sideways/Crisis or direct Manipulation label field

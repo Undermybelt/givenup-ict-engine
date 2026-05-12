@@ -1,0 +1,53 @@
+{
+  "run_id": "20260512T034100-codex-autoquant-prepared-strategy-run-threaded-after-034000-v1",
+  "gate_result": "autoquant_prepared_strategy_run_threaded_after_034000_v1=shimmed_run_succeeded_three_backtests_no_board_a_promotion",
+  "workspace": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant/.deps/auto-quant",
+  "command": "PYTHONPATH=<shim-dir> uv run --with ta-lib run.py",
+  "exit_code": 0,
+  "strategies_discovered": 3,
+  "backtests_succeeded": 3,
+  "backtests_failed": 0,
+  "strategies": [
+    {
+      "strategy": "BTCLeaderBreakV4",
+      "robust_sharpe": 0.9415,
+      "total_profit_pct": 42.46,
+      "trade_count": 600,
+      "win_rate_pct": 31.8333,
+      "profit_factor": 1.7469,
+      "profit_floor": "PASS",
+      "min_position_size": "PASS",
+      "promotion_decision": "runtime_only_non_promoting"
+    },
+    {
+      "strategy": "MomentumMTFConfluence",
+      "robust_sharpe": 0.3993,
+      "total_profit_pct": 53.24,
+      "trade_count": 854,
+      "win_rate_pct": 34.7775,
+      "profit_factor": 1.1682,
+      "profit_floor": "PASS",
+      "min_position_size": "PASS",
+      "promotion_decision": "runtime_only_non_promoting"
+    },
+    {
+      "strategy": "VolBreakoutSized",
+      "robust_sharpe": 1.339,
+      "total_profit_pct": 25.02,
+      "trade_count": 1221,
+      "win_rate_pct": 32.8419,
+      "profit_factor": 1.4751,
+      "profit_floor": "PASS",
+      "min_position_size": "FAIL",
+      "promotion_decision": "runtime_only_non_promoting"
+    }
+  ],
+  "source_control_evidence_acquired": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "trade_usable": false,
+  "update_goal": false
+}

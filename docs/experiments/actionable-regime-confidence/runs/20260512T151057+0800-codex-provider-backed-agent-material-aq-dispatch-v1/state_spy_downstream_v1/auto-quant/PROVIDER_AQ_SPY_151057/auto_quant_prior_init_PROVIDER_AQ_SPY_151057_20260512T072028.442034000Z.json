@@ -1,0 +1,60 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.42901125925925926,
+    5.432098765432098e-7,
+    0.5709881975308643
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "ProviderTrendPullbackResume_SPY_IBKR_AQ_DISPATCH",
+      "mutation_id": "151057_provider_backed_agent_material_spy_v1",
+      "trade_count": 316,
+      "n_win": 131,
+      "n_loss": 185,
+      "n_breakeven": 0,
+      "temper": 0.5,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.42901125925925926,
+        5.432098765432098e-7,
+        0.5709881975308643
+      ],
+      "diff": [
+        -0.5709447407407406,
+        -0.00002145679012345679,
+        0.5709661975308643
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.6830423161987758,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 6.278583428730741,
+      "bbn_log_loss_after": 0.6789025121907477,
+      "bbn_log_loss_delta": 5.5996809165399934,
+      "bbn_contradiction_before": 1.1708420759493672,
+      "bbn_contradiction_after": 0.028909680887638643,
+      "bbn_contradiction_lift": 1.1419323950617286,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [],
+  "temper": 0.5,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 5.5996809165399934,
+  "bbn_contradiction_lift": 1.1419323950617286,
+  "evidence_value_gate_passed": true
+}

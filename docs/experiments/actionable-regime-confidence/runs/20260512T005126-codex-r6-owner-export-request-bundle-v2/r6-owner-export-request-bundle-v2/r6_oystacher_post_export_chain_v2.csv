@@ -1,0 +1,5 @@
+step,name,command_or_check,requires_prior_approval,allowed_now
+1,place_owner_export_files,write /tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv and /tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json from licensed owner export,true,false
+2,copy_isolated_oystacher_positives_under_lock,copy isolated positive_spoofing_layering_rows.csv into /tmp/ict-engine-board-a-r6-owner-export-v1 only after source/control policy approval,true,false
+3,direct_verifier,python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-board-a-r6-owner-export-v1,true,false
+4,downstream_chain,direct verifier -> split calibration -> provider status -> Auto-Quant -> Pre-Bayes/BBN -> CatBoost/path-ranking -> execution-tree readback,true,false

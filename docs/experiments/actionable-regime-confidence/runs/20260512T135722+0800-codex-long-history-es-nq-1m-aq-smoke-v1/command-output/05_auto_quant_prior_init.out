@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.7701445217391305,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 3.6699624144424834,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.6149046459627329,
+    1.093167701863354e-6,
+    0.3850942608695652
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_LONG_ES_NQ_1M_TOMAC_V1_20260512T060115.308198000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/chain-artifacts/strategy_library.long_history_es_nq_1m_smoke_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_LONG_ES_NQ_1M_TOMAC_V1_20260512T060115.386376000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/state_ict_chain_v1/auto-quant/LONG_ES_NQ_1M_TOMAC_V1/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/state_ict_chain_v1/auto-quant/LONG_ES_NQ_1M_TOMAC_V1/auto_quant_prior_init_LONG_ES_NQ_1M_TOMAC_V1_20260512T060115.386376000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.6149046459627329,
+        1.093167701863354e-6,
+        0.3850942608695652
+      ],
+      "bbn_contradiction_after": 0.040268994600738794,
+      "bbn_contradiction_before": 0.8104135163398692,
+      "bbn_contradiction_lift": 0.7701445217391305,
+      "bbn_entropy_after": 0.6665185984889033,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6759266481304579,
+      "bbn_log_loss_before": 4.345889062572941,
+      "bbn_log_loss_delta": 3.6699624144424834,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.3850513540372671,
+        -0.000020906832298136646,
+        0.3850722608695652
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "long_history_es_nq_1m_smoke_v1",
+      "n_breakeven": 0,
+      "n_loss": 62,
+      "n_win": 91,
+      "strategy_name": "TomacNQ_KillzoneBreakout",
+      "temper": 0.5,
+      "trade_count": 153
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "LONG_ES_NQ_1M_TOMAC_V1",
+  "temper": 0.5
+}

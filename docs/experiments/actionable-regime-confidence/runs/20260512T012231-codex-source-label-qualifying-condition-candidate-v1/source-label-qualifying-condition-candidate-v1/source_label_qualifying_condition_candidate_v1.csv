@@ -1,0 +1,5 @@
+label,qualifying_condition,high_conf_rows,market_family_count,date_min,date_max,calibration_support,calibration_conditional_wilson95_lcb,heldout_market_support,heldout_market_conditional_wilson95_lcb,heldout_time_support,heldout_time_conditional_wilson95_lcb,test_support,test_conditional_wilson95_lcb,candidate_status,acceptance_status
+Bull,source_confidence>=0.95,10193,3,2000-01-21,2026-01-30,5460,0.999297,795,0.995191,2417,0.998413,1521,0.997481,qualifying_condition_candidate,not_accepted
+Sideways,source_confidence>=0.95,8686,3,2000-01-21,2026-01-30,4929,0.999221,1671,0.997706,1388,0.997240,698,0.994527,qualifying_condition_candidate,not_accepted
+Bear,source_confidence>=0.95,52,2,2000-01-05,2012-05-25,49,,3,,0,,0,,blocked_insufficient_split_support,not_accepted
+Crisis,source_confidence>=0.95,276,1,2013-04-16,2026-03-20,130,,0,,80,,66,,blocked_heldout_market_and_market_family,not_accepted

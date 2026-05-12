@@ -1,0 +1,6 @@
+aq_provider_invoked=true
+provider_requested_has_six=true
+auto_quant_prepare_exit=0
+auto_quant_status_after_prepare=dependency_ready_data_ready
+auto_quant_data_ready=True
+promotion_allowed=false

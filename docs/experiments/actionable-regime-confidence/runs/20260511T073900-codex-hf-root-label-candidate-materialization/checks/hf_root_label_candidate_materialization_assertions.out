@@ -1,0 +1,13 @@
+goal_achieved=false
+hf_candidate_sources_found=true
+hf_candidate_raw_materialized=true
+btc_hmm6_train_rows=220717
+nifty50_rows=2235
+all_four_mainregimev2_roots_present=false
+full_yfinance_kraken_matrix_attachable=false
+accepted_full_cycle_full_universe=false
+raw_data_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=blocked_hf_candidates_materialized_but_not_full_mainregimev2_panel

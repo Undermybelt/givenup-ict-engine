@@ -1,0 +1,13 @@
+source_label_extra_trees_threshold_screen_v1=terminated_no_terminal_screen_no_promotion
+command_exit=143
+screen_completed=false
+scored_rows=0
+accepted_extra_trees_confidence_95_labels=none
+accepted_regime_confidence_labels=0
+new_confidence_gate=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

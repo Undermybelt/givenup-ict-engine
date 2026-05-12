@@ -1,0 +1,1900 @@
+{
+  "candidate_features": [
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 23.0331,
+          "loss_rate": 0.384615,
+          "losses": 30,
+          "rows": 78,
+          "win_rate": 0.615385,
+          "wins": 48
+        },
+        "low": {
+          "avg_pnl": -8.658247,
+          "loss_rate": 0.7375,
+          "losses": 59,
+          "rows": 80,
+          "win_rate": 0.2625,
+          "wins": 21
+        },
+        "mid": {
+          "avg_pnl": -16.302794,
+          "loss_rate": 0.848101,
+          "losses": 67,
+          "rows": 79,
+          "win_rate": 0.151899,
+          "wins": 12
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_rv_median_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.463486
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 6.143126,
+          "loss_rate": 0.526316,
+          "losses": 40,
+          "rows": 76,
+          "win_rate": 0.473684,
+          "wins": 36
+        },
+        "low": {
+          "avg_pnl": -14.896473,
+          "loss_rate": 0.898734,
+          "losses": 71,
+          "rows": 79,
+          "win_rate": 0.101266,
+          "wins": 8
+        },
+        "mid": {
+          "avg_pnl": 6.413963,
+          "loss_rate": 0.54878,
+          "losses": 45,
+          "rows": 82,
+          "win_rate": 0.45122,
+          "wins": 37
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_dispersion_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.372418
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 13.619044,
+          "loss_rate": 0.481481,
+          "losses": 39,
+          "rows": 81,
+          "win_rate": 0.518519,
+          "wins": 42
+        },
+        "low": {
+          "avg_pnl": -9.647738,
+          "loss_rate": 0.825,
+          "losses": 66,
+          "rows": 80,
+          "win_rate": 0.175,
+          "wins": 14
+        },
+        "mid": {
+          "avg_pnl": -6.780556,
+          "loss_rate": 0.671053,
+          "losses": 51,
+          "rows": 76,
+          "win_rate": 0.328947,
+          "wins": 25
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_range_pos_median_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.343519
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 8.956794,
+          "loss_rate": 0.6,
+          "losses": 48,
+          "rows": 80,
+          "win_rate": 0.4,
+          "wins": 32
+        },
+        "low": {
+          "avg_pnl": -11.040633,
+          "loss_rate": 0.780488,
+          "losses": 64,
+          "rows": 82,
+          "win_rate": 0.219512,
+          "wins": 18
+        },
+        "mid": {
+          "avg_pnl": 0.063862,
+          "loss_rate": 0.586667,
+          "losses": 44,
+          "rows": 75,
+          "win_rate": 0.413333,
+          "wins": 31
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_median_abs_1h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.193821
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 10.04565,
+          "loss_rate": 0.556962,
+          "losses": 44,
+          "rows": 79,
+          "win_rate": 0.443038,
+          "wins": 35
+        },
+        "low": {
+          "avg_pnl": -7.40606,
+          "loss_rate": 0.7375,
+          "losses": 59,
+          "rows": 80,
+          "win_rate": 0.2625,
+          "wins": 21
+        },
+        "mid": {
+          "avg_pnl": -4.93744,
+          "loss_rate": 0.679487,
+          "losses": 53,
+          "rows": 78,
+          "win_rate": 0.320513,
+          "wins": 25
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_dispersion_4h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.180538
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 0.389096,
+          "loss_rate": 0.730769,
+          "losses": 57,
+          "rows": 78,
+          "win_rate": 0.269231,
+          "wins": 21
+        },
+        "low": {
+          "avg_pnl": 0.211515,
+          "loss_rate": 0.578313,
+          "losses": 48,
+          "rows": 83,
+          "win_rate": 0.421687,
+          "wins": 35
+        },
+        "mid": {
+          "avg_pnl": -3.051368,
+          "loss_rate": 0.671053,
+          "losses": 51,
+          "rows": 76,
+          "win_rate": 0.328947,
+          "wins": 25
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_trend_abs_median_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.152456
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 4.766556,
+          "loss_rate": 0.575,
+          "losses": 46,
+          "rows": 80,
+          "win_rate": 0.425,
+          "wins": 34
+        },
+        "low": {
+          "avg_pnl": -3.352321,
+          "loss_rate": 0.717949,
+          "losses": 56,
+          "rows": 78,
+          "win_rate": 0.282051,
+          "wins": 22
+        },
+        "mid": {
+          "avg_pnl": -3.846104,
+          "loss_rate": 0.683544,
+          "losses": 54,
+          "rows": 79,
+          "win_rate": 0.316456,
+          "wins": 25
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_dispersion_1h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.142949
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 6.624813,
+          "loss_rate": 0.641975,
+          "losses": 52,
+          "rows": 81,
+          "win_rate": 0.358025,
+          "wins": 29
+        },
+        "low": {
+          "avg_pnl": -1.944516,
+          "loss_rate": 0.6,
+          "losses": 48,
+          "rows": 80,
+          "win_rate": 0.4,
+          "wins": 32
+        },
+        "mid": {
+          "avg_pnl": -7.434833,
+          "loss_rate": 0.736842,
+          "losses": 56,
+          "rows": 76,
+          "win_rate": 0.263158,
+          "wins": 20
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_median_abs_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.136842
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 4.267344,
+          "loss_rate": 0.6125,
+          "losses": 49,
+          "rows": 80,
+          "win_rate": 0.3875,
+          "wins": 31
+        },
+        "low": {
+          "avg_pnl": -2.428909,
+          "loss_rate": 0.6625,
+          "losses": 53,
+          "rows": 80,
+          "win_rate": 0.3375,
+          "wins": 27
+        },
+        "mid": {
+          "avg_pnl": -4.299656,
+          "loss_rate": 0.701299,
+          "losses": 54,
+          "rows": 77,
+          "win_rate": 0.298701,
+          "wins": 23
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_median_abs_4h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.088799
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 0.352484,
+          "loss_rate": 0.628205,
+          "losses": 49,
+          "rows": 78,
+          "win_rate": 0.371795,
+          "wins": 29
+        },
+        "low": {
+          "avg_pnl": 1.096149,
+          "loss_rate": 0.628205,
+          "losses": 49,
+          "rows": 78,
+          "win_rate": 0.371795,
+          "wins": 29
+        },
+        "mid": {
+          "avg_pnl": -3.66657,
+          "loss_rate": 0.716049,
+          "losses": 58,
+          "rows": 81,
+          "win_rate": 0.283951,
+          "wins": 23
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_range_pos_dispersion_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.087844
+    },
+    {
+      "bins": {
+        "all": {
+          "avg_pnl": -0.776366,
+          "loss_rate": 0.658228,
+          "losses": 156,
+          "rows": 237,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_direction_consensus_1h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.0
+    },
+    {
+      "bins": {
+        "all": {
+          "avg_pnl": -0.776366,
+          "loss_rate": 0.658228,
+          "losses": 156,
+          "rows": 237,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_direction_consensus_4h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.0
+    },
+    {
+      "bins": {
+        "all": {
+          "avg_pnl": -0.776366,
+          "loss_rate": 0.658228,
+          "losses": 156,
+          "rows": 237,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_direction_consensus_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.0
+    },
+    {
+      "bins": {
+        "all": {
+          "avg_pnl": -0.776366,
+          "loss_rate": 0.658228,
+          "losses": 156,
+          "rows": 237,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_direction_edge_1h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.0
+    },
+    {
+      "bins": {
+        "all": {
+          "avg_pnl": -0.776366,
+          "loss_rate": 0.658228,
+          "losses": 156,
+          "rows": 237,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_direction_edge_4h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.0
+    },
+    {
+      "bins": {
+        "all": {
+          "avg_pnl": -0.776366,
+          "loss_rate": 0.658228,
+          "losses": 156,
+          "rows": 237,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_direction_edge_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.0
+    },
+    {
+      "bins": {
+        "all": {
+          "avg_pnl": -0.776366,
+          "loss_rate": 0.658228,
+          "losses": 156,
+          "rows": 237,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_count",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.0
+    }
+  ],
+  "decision": {
+    "gate": "provider_evidence_node_candidates_identified_no_promotion",
+    "note": "Candidate feature separations are exploratory and require chronological/cross-instrument validation before BBN likelihood mutation.",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "overall": {
+    "loss_rate": 0.658228,
+    "losses": 156,
+    "matched_feature_rows": 237,
+    "trade_rows": 237,
+    "win_rate": 0.341772,
+    "wins": 81
+  },
+  "provider_coverage": {
+    "binance_public": {
+      "first_ts": "2026-04-01T00:00:00+00:00",
+      "last_ts": "2026-05-12T00:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/binance_btcusdt_1h.csv",
+      "rows": 985
+    },
+    "bybit_public": {
+      "first_ts": "2026-04-01T00:00:00+00:00",
+      "last_ts": "2026-05-12T00:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/bybit_btcusdt_linear_1h.csv",
+      "rows": 985
+    },
+    "ibkr_paxos_long_midpoint": {
+      "first_ts": "2026-03-31T20:00:00+00:00",
+      "last_ts": "2026-05-12T04:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/BTC_1h_midpoint.csv",
+      "rows": 783
+    },
+    "kraken_public": {
+      "first_ts": "2026-04-12T04:00:00+00:00",
+      "last_ts": "2026-05-12T04:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/kraken_xbtusd_1h.csv",
+      "rows": 721
+    },
+    "tvr_default_binance": {
+      "first_ts": "2026-04-12T05:00:00+00:00",
+      "last_ts": "2026-05-12T04:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/tvr_default_binance_btcusdt_1h.csv",
+      "rows": 720
+    },
+    "yfinance": {
+      "first_ts": "2026-04-01T00:00:00+00:00",
+      "last_ts": "2026-05-11T23:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/yfinance_btc_usd_1h.csv",
+      "rows": 971
+    }
+  },
+  "run_id": "20260512T122351+0800-codex-115700-provider-evidence-node-scan-v1",
+  "source_aq_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "source_chain_run_id": "20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+  "top_candidate_features": [
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 23.0331,
+          "loss_rate": 0.384615,
+          "losses": 30,
+          "rows": 78,
+          "win_rate": 0.615385,
+          "wins": 48
+        },
+        "low": {
+          "avg_pnl": -8.658247,
+          "loss_rate": 0.7375,
+          "losses": 59,
+          "rows": 80,
+          "win_rate": 0.2625,
+          "wins": 21
+        },
+        "mid": {
+          "avg_pnl": -16.302794,
+          "loss_rate": 0.848101,
+          "losses": 67,
+          "rows": 79,
+          "win_rate": 0.151899,
+          "wins": 12
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_rv_median_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.463486
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 6.143126,
+          "loss_rate": 0.526316,
+          "losses": 40,
+          "rows": 76,
+          "win_rate": 0.473684,
+          "wins": 36
+        },
+        "low": {
+          "avg_pnl": -14.896473,
+          "loss_rate": 0.898734,
+          "losses": 71,
+          "rows": 79,
+          "win_rate": 0.101266,
+          "wins": 8
+        },
+        "mid": {
+          "avg_pnl": 6.413963,
+          "loss_rate": 0.54878,
+          "losses": 45,
+          "rows": 82,
+          "win_rate": 0.45122,
+          "wins": 37
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_dispersion_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.372418
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 13.619044,
+          "loss_rate": 0.481481,
+          "losses": 39,
+          "rows": 81,
+          "win_rate": 0.518519,
+          "wins": 42
+        },
+        "low": {
+          "avg_pnl": -9.647738,
+          "loss_rate": 0.825,
+          "losses": 66,
+          "rows": 80,
+          "win_rate": 0.175,
+          "wins": 14
+        },
+        "mid": {
+          "avg_pnl": -6.780556,
+          "loss_rate": 0.671053,
+          "losses": 51,
+          "rows": 76,
+          "win_rate": 0.328947,
+          "wins": 25
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_range_pos_median_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.343519
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 8.956794,
+          "loss_rate": 0.6,
+          "losses": 48,
+          "rows": 80,
+          "win_rate": 0.4,
+          "wins": 32
+        },
+        "low": {
+          "avg_pnl": -11.040633,
+          "loss_rate": 0.780488,
+          "losses": 64,
+          "rows": 82,
+          "win_rate": 0.219512,
+          "wins": 18
+        },
+        "mid": {
+          "avg_pnl": 0.063862,
+          "loss_rate": 0.586667,
+          "losses": 44,
+          "rows": 75,
+          "win_rate": 0.413333,
+          "wins": 31
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_median_abs_1h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.193821
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 10.04565,
+          "loss_rate": 0.556962,
+          "losses": 44,
+          "rows": 79,
+          "win_rate": 0.443038,
+          "wins": 35
+        },
+        "low": {
+          "avg_pnl": -7.40606,
+          "loss_rate": 0.7375,
+          "losses": 59,
+          "rows": 80,
+          "win_rate": 0.2625,
+          "wins": 21
+        },
+        "mid": {
+          "avg_pnl": -4.93744,
+          "loss_rate": 0.679487,
+          "losses": 53,
+          "rows": 78,
+          "win_rate": 0.320513,
+          "wins": 25
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_dispersion_4h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.180538
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 0.389096,
+          "loss_rate": 0.730769,
+          "losses": 57,
+          "rows": 78,
+          "win_rate": 0.269231,
+          "wins": 21
+        },
+        "low": {
+          "avg_pnl": 0.211515,
+          "loss_rate": 0.578313,
+          "losses": 48,
+          "rows": 83,
+          "win_rate": 0.421687,
+          "wins": 35
+        },
+        "mid": {
+          "avg_pnl": -3.051368,
+          "loss_rate": 0.671053,
+          "losses": 51,
+          "rows": 76,
+          "win_rate": 0.328947,
+          "wins": 25
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_trend_abs_median_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.152456
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 4.766556,
+          "loss_rate": 0.575,
+          "losses": 46,
+          "rows": 80,
+          "win_rate": 0.425,
+          "wins": 34
+        },
+        "low": {
+          "avg_pnl": -3.352321,
+          "loss_rate": 0.717949,
+          "losses": 56,
+          "rows": 78,
+          "win_rate": 0.282051,
+          "wins": 22
+        },
+        "mid": {
+          "avg_pnl": -3.846104,
+          "loss_rate": 0.683544,
+          "losses": 54,
+          "rows": 79,
+          "win_rate": 0.316456,
+          "wins": 25
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_dispersion_1h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.142949
+    },
+    {
+      "bins": {
+        "high": {
+          "avg_pnl": 6.624813,
+          "loss_rate": 0.641975,
+          "losses": 52,
+          "rows": 81,
+          "win_rate": 0.358025,
+          "wins": 29
+        },
+        "low": {
+          "avg_pnl": -1.944516,
+          "loss_rate": 0.6,
+          "losses": 48,
+          "rows": 80,
+          "win_rate": 0.4,
+          "wins": 32
+        },
+        "mid": {
+          "avg_pnl": -7.434833,
+          "loss_rate": 0.736842,
+          "losses": 56,
+          "rows": 76,
+          "win_rate": 0.263158,
+          "wins": 20
+        }
+      },
+      "branch_stability": {
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+          "rows": 164,
+          "win_rate": 0.384146
+        },
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+          "rows": 73,
+          "win_rate": 0.246575
+        }
+      },
+      "candidate_use": "bbn_evidence_node_candidate_only",
+      "feature": "provider_return_median_abs_24h",
+      "period_stability": {
+        "early": {
+          "rows": 119,
+          "win_rate": 0.453782
+        },
+        "late": {
+          "rows": 118,
+          "win_rate": 0.228814
+        }
+      },
+      "provider_stability": {
+        "binance_public": {
+          "rows": 52,
+          "win_rate": 0.346154
+        },
+        "bybit_public": {
+          "rows": 51,
+          "win_rate": 0.352941
+        },
+        "ibkr_paxos_long_midpoint": {
+          "rows": 44,
+          "win_rate": 0.340909
+        },
+        "kraken_public": {
+          "rows": 32,
+          "win_rate": 0.3125
+        },
+        "tvr_default_binance": {
+          "rows": 37,
+          "win_rate": 0.27027
+        },
+        "yfinance": {
+          "rows": 21,
+          "win_rate": 0.47619
+        }
+      },
+      "rows": 237,
+      "win_rate_separation": 0.136842
+    }
+  ]
+}

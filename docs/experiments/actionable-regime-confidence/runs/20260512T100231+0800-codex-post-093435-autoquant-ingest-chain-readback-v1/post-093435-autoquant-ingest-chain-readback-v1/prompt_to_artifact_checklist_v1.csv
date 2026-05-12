@@ -1,0 +1,9 @@
+requirement,evidence,status
+real_autoquant_output,093435 Freqtrade backtest zip and v2 JSONL,done_non_promoting
+ict_engine_ingest,16_ingest_real_trades_v2_force.stdout.txt reports feedback_records_inserted=5,done_non_promoting
+pre_bayes_readback,17_pre_bayes_status_after_force.json has null latest policy and gate,fail_closed
+bbn_feedback_path,isolated force ingest applied 5 feedback records,done_non_promoting
+catboost_policy_training,19_policy_training_status_after_force.json matched_rows=0 and not ready,fail_closed
+execution_tree_path_ranking,20_export_structural_path_ranking_target_after_force.stdout.txt rows=1 mature_rows=0,fail_closed
+provider_readback,07_provider_status_agent.json yfinance ready and kraken_cli ready but IBKR/TradingView blocked,partial
+completion_gate,report records strict_full_objective=false and update_goal=false,blocked

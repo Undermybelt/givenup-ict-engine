@@ -1,0 +1,7 @@
+requirement,status,evidence
+"Keep existing 122600 workspace read-only","covered","Probe strategies are under 124428 run root; command reuses prepared data/config"
+"Attempt nonzero selected-history recipe","covered","B2R115700SelectedHistoryMomentumProbeV1 executed via existing Auto-Quant venv"
+"Check whether zero trades are due only to selective strategy thresholds","covered","Always-in control strategy forced entries and still produced zero trades"
+"Verify command execution","covered","Both probe commands exited 0"
+"Avoid promotion from proxy evidence","covered","No measured profitability packet, no RC-SPA surface, no downstream promotion artifact"
+"Classify evidence","covered","chain_contract_negative_sample / harness-control support only"

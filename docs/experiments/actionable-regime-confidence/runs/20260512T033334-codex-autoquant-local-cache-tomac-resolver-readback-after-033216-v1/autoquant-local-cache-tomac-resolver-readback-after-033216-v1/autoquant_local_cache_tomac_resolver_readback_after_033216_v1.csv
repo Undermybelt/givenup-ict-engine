@@ -1,0 +1,11 @@
+item,status,evidence,promotion_decision
+tomac_local_cache_run,succeeded,033215 exitcode 0 QQQ/USD 74 trades win_rate 52.7027 total_profit_pct 6.98,non_promoting_single_strategy_metric
+resolver_diagnostic,root_cause_narrowed,033216 threaded resolver reaches Binance aiodns loopback fails,diagnostic_only
+regime_confidence_95,not_added,no accepted regime labels in this packet,blocked
+per_regime_conditions,not_added,no qualifying-condition packet in this run,blocked
+cross_market_cycle_timeframe,not_added,one pair QQQ/USD one primary timeframe 1h,blocked
+r6_owner_export_root,absent,current Board A source gate,blocked
+r3_native_subhour_source_labels,absent,current Board A source gate,blocked
+r5_source_panel_recency_extension,absent,current Board A source gate,blocked
+downstream_chain,not_rerun,no source/control unlock,blocked
+update_goal,false,status readback,do_not_call_update_goal

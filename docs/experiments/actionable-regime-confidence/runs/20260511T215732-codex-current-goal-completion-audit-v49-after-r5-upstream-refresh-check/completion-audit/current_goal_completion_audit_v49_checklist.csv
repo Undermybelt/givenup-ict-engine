@@ -1,0 +1,6 @@
+requirement,status,evidence
+source_owned_or_owner_approved_95_confidence_all_active_regimes,fail,accepted_source_confidence_95_labels=0/4
+cross_market_species_validation,partial,daily source-label schema rows present; native sub-hour and direct Manipulation species incomplete
+cross_cycle_timeframe_validation,fail,native sub-hour root absent; R5 recency root blocked
+direct_manipulation_controls,fail,direct=41/41; min 50/50 and broad-normal/direct species gates still open
+no_threshold_relaxation_or_proxy_promotion,pass,R5 refresh check explicitly rejected OHLCV-derived labels for source-panel recency

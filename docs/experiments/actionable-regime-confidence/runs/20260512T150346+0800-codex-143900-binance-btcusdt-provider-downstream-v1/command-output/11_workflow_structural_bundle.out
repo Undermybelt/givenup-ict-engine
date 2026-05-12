@@ -1,0 +1,30 @@
+{
+  "candidate_set_id": "structural-candidates:B2RBINANCEBTC143900:b79ec4d48dba5f61",
+  "candidate_set_size": 3,
+  "composite_score": 0.5193298453078226,
+  "confirmation_summary": "user confirms the required input",
+  "current_posterior": 0.5345590139527494,
+  "direction": "favor_mean_reversion_only",
+  "experience_prior": 0.48379511846965984,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 1,
+  "invalidation_summary": "regime branch range loses posterior support or invalidates before trigger",
+  "path_id": "path:scenario:B2RBINANCEBTC143900:belief_regime_node:range:range_mean_reversion:primary",
+  "path_label": "range_mean_reversion",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol B2RBINANCEBTC143900 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-1h-slice4000.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/state_btc_provider_chain_v1'",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2RBINANCEBTC143900 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-1h-slice4000.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/state_btc_provider_chain_v1'",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2RBINANCEBTC143900 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-1d-slice700.json, docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-4h-slice1200.json, docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-1h-slice4000.json",
+    "user_input_required": true
+  },
+  "scenario_id": "scenario:B2RBINANCEBTC143900:belief_regime_node:range:range_mean_reversion",
+  "selected_path_probability": 0.3663153553254684,
+  "stop_summary": "Use execution candidate 'execution-candidate:B2RBINANCEBTC143900:analyze:v1' once actionable; current candidate_status=no_trade.",
+  "symbol": "B2RBINANCEBTC143900",
+  "trigger_summary": "regime_posterior=range:0.750",
+  "why_this_path": "posterior=0.535 prior=0.484 invalidation_rate=0.000"
+}

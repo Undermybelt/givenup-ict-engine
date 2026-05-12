@@ -1,0 +1,1 @@
+./target/debug/ict-engine validate-market-state --data docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv --window-size 500 --step-size 250 --profile high_confidence --compact

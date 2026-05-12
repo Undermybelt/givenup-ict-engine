@@ -1,0 +1,10 @@
+live_verifier_schema_ready=PASS
+live_positive_rows_73=PASS
+live_matched_negative_rows_73=PASS
+required_support_is_73=PASS
+chronological_split_still_blocked=PASS
+heldout_symbol_still_blocked=PASS
+heldout_venue_still_blocked=PASS
+direct_species_not_closed=PASS
+strict_full_objective_not_complete=PASS
+update_goal_false=PASS

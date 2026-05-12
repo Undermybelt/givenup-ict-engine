@@ -1,0 +1,109 @@
+Result for strategy BoardAProviderBreadthProbeV1
+                                             BACKTESTING REPORT                                              
+┏━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃    Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ SPY/USD │     15 │          0.0 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │
+│   TOTAL │     15 │          0.0 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │
+└─────────┴────────┴──────────────┴────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                            ENTER TAG STATS                                                             
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                         Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ board_a_provider_breadth_probe_v1 │      15 │          0.0 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │
+│                             TOTAL │      15 │          0.0 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │
+└───────────────────────────────────┴─────────┴──────────────┴────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                               EXIT REASON STATS                                                
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │    15 │          0.0 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │
+│       TOTAL │    15 │          0.0 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │
+└─────────────┴───────┴──────────────┴────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                                   MIXED TAG STATS                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                         Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ board_a_provider_breadth_probe_v1 │ exit_signal │     15 │          0.0 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │
+│                             TOTAL │             │     15 │          0.0 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │
+└───────────────────────────────────┴─────────────┴────────┴──────────────┴────────────────┴──────────────┴────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-02-15 22:00:00            │
+│ Backtesting to                │ 2026-05-11 20:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 15 / 0.18                      │
+│ Starting balance              │ 100000 USD                     │
+│ Final balance                 │ 100003.047 USD                 │
+│ Absolute profit               │ 3.047 USD                      │
+│ Total profit %                │ 0.00%                          │
+│ CAGR %                        │ 0.01%                          │
+│ Sortino                       │ 0.00                           │
+│ Sharpe                        │ 0.00                           │
+│ Calmar                        │ 0.02                           │
+│ SQN                           │ 0.00                           │
+│ Profit factor                 │ 1.00                           │
+│ Expectancy (Ratio)            │ 0.20 (0.00)                    │
+│ Avg. daily profit             │ 0.036 USD                      │
+│ Avg. stake amount             │ 96060.368 USD                  │
+│ Total trade volume            │ 2881814.083 USD                │
+│                               │                                │
+│ Best Pair                     │ SPY/USD 0.00%                  │
+│ Worst Pair                    │ SPY/USD 0.00%                  │
+│ Best trade                    │ SPY/USD 2.26%                  │
+│ Worst trade                   │ SPY/USD -0.76%                 │
+│ Best day                      │ 2141.279 USD                   │
+│ Worst day                     │ -781.919 USD                   │
+│ Days win/draw/lose            │ 4 / 57 / 9                     │
+│ Min/Max/Avg. Duration Winners │ 0d 18:00 / 3d 19:00 / 1d 13:00 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 2d 21:00 / 0d 21:49 │
+│ Max Consecutive Wins / Loss   │ 2 / 8                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 65                         │
+│                               │                                │
+│ Min balance                   │ 97429.612 USD                  │
+│ Max balance                   │ 100965.846 USD                 │
+│ Max % of account underwater   │ 3.11%                          │
+│ Absolute drawdown             │ 3127.676 USD (3.11%)           │
+│ Drawdown duration             │ 43 days 03:00:00               │
+│ Profit at drawdown start      │ 557.288 USD                    │
+│ Profit at drawdown end        │ -2570.388 USD                  │
+│ Drawdown start                │ 2026-02-18 15:00:00            │
+│ Drawdown end                  │ 2026-04-02 18:00:00            │
+│ Market change                 │ 8.47%                          │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-02-15 22:00:00 -> 2026-05-11 20:00:00 | Max open trades : 1
+                                                                    STRATEGY SUMMARY                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃                     Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ BoardAProviderBreadthProbeV1 │     15 │         0.00 │          3.047 │          0.0 │ 1 day, 1:52:00 │    4     0    11  26.7 │ 3127.676 USD  3.11% │
+└──────────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴────────────────┴────────────────────────┴─────────────────────┘
+---
+strategy:         BoardAProviderBreadthProbeV1
+commit:           8735ca1
+config:           config.tomac.json
+pairs:            SPY/USD
+sharpe:           0.0009
+sortino:          0.0047
+calmar:           0.0223
+total_profit_pct: 0.0000
+max_drawdown_pct: -3.1103
+trade_count:      15
+win_rate_pct:     26.6667
+profit_factor:    1.0007
+per_pair:
+  SPY/USD: sharpe=0.0009 trades=15 profit_pct=0.00 dd_pct=-3.11 wr=26.7 pf=1.00
+
+Done: 1 succeeded, 0 failed.

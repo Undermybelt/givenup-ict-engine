@@ -1,0 +1,13 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/state/BTCUSD/policy_training/structural_path_ranking_target_history.csv: 1097 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 1087 training samples
+[features] label dist: {np.int64(0): np.int64(256), np.int64(1): np.int64(831)}
+[template] User weights template saved to docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/path-ranker/catboost_184330_v1/user_weights.json
+[train] CatBoost saved to docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/path-ranker/catboost_184330_v1/catboost_model.cbm
+[train] top features:                   Feature Id  Importances
+0  structural_baseline_score        100.0
+[artifact] Registration metadata saved to docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/path-ranker/catboost_184330_v1/trainer_artifact.json
+
+[done] Model saved to docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/path-ranker/catboost_184330_v1
+[done] To apply: python scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/path-ranker/catboost_184330_v1 --target-csv <new_target.csv> --output-scores scores.csv

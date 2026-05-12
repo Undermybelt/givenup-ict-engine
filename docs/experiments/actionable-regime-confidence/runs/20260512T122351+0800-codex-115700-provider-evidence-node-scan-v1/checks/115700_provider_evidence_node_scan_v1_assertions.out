@@ -1,0 +1,12 @@
+PASS run_id=20260512T122351+0800-codex-115700-provider-evidence-node-scan-v1
+PASS source_aq_run_id=20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1
+PASS providers=6
+PASS trade_rows=237
+PASS matched_feature_rows=237
+PASS candidate_features=17
+PASS top_feature=provider_rv_median_24h
+PASS top_feature_win_rate_separation=0.463486
+FAIL_CLOSED accepted_95_regime_gate=false
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

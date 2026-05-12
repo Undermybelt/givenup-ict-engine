@@ -1,0 +1,71 @@
+{
+  "run_id": "20260512T033216-codex-autoquant-aiodns-resolver-diagnostic-after-032658-v1",
+  "generated_at_local": "2026-05-12T03:32:16+08:00",
+  "gate_result": "autoquant_aiodns_resolver_diagnostic_after_032658_v1=threaded_resolver_reaches_binance_aiodns_loopback_fails_prepare_still_no_promotion",
+  "inputs": {
+    "autoquant_bootstrap_prepare_readback": "20260512T032658-codex-autoquant-bootstrap-prepare-readback-after-032145-v1",
+    "state_dir": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145",
+    "auto_quant_output_dir": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant"
+  },
+  "network_probe": {
+    "socket_getaddrinfo_api_binance": {
+      "status": "ok",
+      "address": "198.18.0.57"
+    },
+    "curl_api_binance_exchange_info": {
+      "status": "ok",
+      "http_status": 200
+    },
+    "curl_api_kraken_time": {
+      "status": "reachable_method_not_allowed",
+      "http_status": 405
+    }
+  },
+  "python_resolver_probe": {
+    "aiodns_nameservers": [
+      "127.0.0.1"
+    ],
+    "aiodns_api_binance": {
+      "status": "failed",
+      "error": "DNSError(11, 'Could not contact DNS servers')"
+    },
+    "aiohttp_default_resolver": {
+      "status": "failed",
+      "error": "ClientConnectorDNSError"
+    },
+    "aiohttp_threaded_resolver": {
+      "status": "ok",
+      "http_status": 200
+    }
+  },
+  "auto_quant_prepare_retry": {
+    "command": "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR=/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant ./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145",
+    "exit_code": 1,
+    "status": "failed",
+    "failure_class": "aiodns_loopback_resolver_failure",
+    "error_summary": "Freqtrade/CCXT aiohttp path still failed with Could not contact DNS servers while loading Binance markets"
+  },
+  "diagnosis": {
+    "plain_host_reachability_ok": true,
+    "default_aiohttp_aiodns_path_fails": true,
+    "threaded_resolver_reaches_binance": true,
+    "root_cause": "aiodns uses loopback nameserver 127.0.0.1 in this environment and cannot contact it",
+    "safe_no_code_workaround_candidate": "force threaded resolver or remove aiodns from the isolated prepare environment",
+    "workaround_implemented": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "non_mutations": {
+    "runtime_code_changed": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false
+  }
+}

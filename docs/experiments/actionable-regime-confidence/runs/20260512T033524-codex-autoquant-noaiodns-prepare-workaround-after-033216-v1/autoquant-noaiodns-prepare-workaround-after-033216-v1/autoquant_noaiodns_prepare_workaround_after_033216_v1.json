@@ -1,0 +1,50 @@
+{
+  "command": {
+    "aiodns_still_importable": true,
+    "auto_quant_prepare_exit_code": 0,
+    "auto_quant_status_after_exit_code": 0,
+    "import_check_exit_code": 0,
+    "uv_pip_uninstall_aiodns_error": true,
+    "uv_pip_uninstall_aiodns_exit_code": 2
+  },
+  "decision": "The no-aiodns uninstall did not actually remove aiodns, but the prepare command exited 0 because the isolated Auto-Quant state was already data-ready/dependency_ready_seed_required. This is runtime-readiness corroboration only, not Board A acceptance.",
+  "gate_result": "autoquant_noaiodns_prepare_workaround_after_033216_v1=prepare_succeeded_but_noaiodns_uninstall_failed_state_already_data_ready_no_promotion",
+  "generated_at_utc": "2026-05-11T19:39:34.176610+00:00",
+  "inputs": {
+    "import_check": "docs/experiments/actionable-regime-confidence/runs/20260512T033524-codex-autoquant-noaiodns-prepare-workaround-after-033216-v1/command-output/noaiodns_import_check.stdout.txt",
+    "prepare_stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T033524-codex-autoquant-noaiodns-prepare-workaround-after-033216-v1/command-output/auto_quant_prepare_noaiodns.stdout.txt",
+    "status_after": "docs/experiments/actionable-regime-confidence/runs/20260512T033524-codex-autoquant-noaiodns-prepare-workaround-after-033216-v1/command-output/auto_quant_status_noaiodns_after_prepare.stdout.json",
+    "uninstall_exit": "docs/experiments/actionable-regime-confidence/runs/20260512T033524-codex-autoquant-noaiodns-prepare-workaround-after-033216-v1/command-output/uv_pip_uninstall_aiodns.exitcode"
+  },
+  "next_action": "Continue Board A only from source/control unlock. Auto-Quant runtime follow-up may seed active strategies in isolated state, but cannot promote without verifier rerun and downstream chain.",
+  "non_mutations": {
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false
+  },
+  "objective_mapping": "Settle the no-aiodns Auto-Quant prepare workaround attempt after 033216.",
+  "prepare": {
+    "data_ready": true,
+    "dependency_status_after": "dependency_ready_seed_required",
+    "dependency_status_before": "dependency_ready_seed_required",
+    "status": "prepared"
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "run_id": "20260512T033524-codex-autoquant-noaiodns-prepare-workaround-after-033216-v1",
+  "status_after": {
+    "blocked_reason": null,
+    "data_ready": true,
+    "dependency_healthy": true,
+    "healthy": true,
+    "status": "dependency_ready_seed_required"
+  }
+}

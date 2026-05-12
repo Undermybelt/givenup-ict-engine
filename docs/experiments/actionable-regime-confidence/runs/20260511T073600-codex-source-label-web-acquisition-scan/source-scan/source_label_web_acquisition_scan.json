@@ -1,0 +1,59 @@
+{
+  "accepted_full_cycle_full_universe": false,
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T073600-codex-source-label-web-acquisition-scan/checks/source_label_web_acquisition_scan_assertions.out",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T073600-codex-source-label-web-acquisition-scan/source-scan/source_label_web_acquisition_scan.json",
+    "summary_md": "docs/experiments/actionable-regime-confidence/runs/20260511T073600-codex-source-label-web-acquisition-scan/source-scan/source_label_web_acquisition_scan.md"
+  },
+  "goal_achieved": false,
+  "gate_result": "blocked_no_public_full_matrix_source_label_panel_found",
+  "objective": "Check public and already-known external source-label candidates for an independent MainRegimeV2 root-label panel covering the ready yfinance/Kraken full symbol/timeframe matrix.",
+  "run_id": "20260511T073600+0800-codex-source-label-web-acquisition-scan",
+  "source_candidates": [
+    {
+      "candidate": "Kaggle stock-market-regimes-2000-2026",
+      "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+      "useful_for": "possible daily stock/index Bull/Bear/Sideways/Crisis-style source-label evidence",
+      "blocking_gap": "not a full ready-provider matrix for yfinance plus Kraken; not all requested symbols/timeframes/cycles are attachable; prior accepted packets already consume the usable subset as sampled evidence",
+      "disposition": "partial_source_candidate_not_full_panel"
+    },
+    {
+      "candidate": "Hugging Face sujinwo/tsie-market-regime-dataset",
+      "url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+      "useful_for": "large time-series dataset with a regime_label column and OHLCV-derived fields",
+      "blocking_gap": "IDX/narrow-market panel with label encoding not proven equivalent to MainRegimeV2 Bull/Bear/Sideways/Crisis; includes target/future fields and does not attach to the yfinance/Kraken matrix",
+      "disposition": "method_or_narrow_panel_not_full_source_panel"
+    },
+    {
+      "candidate": "FRED USREC / NBER recession indicator",
+      "url": "https://fred.stlouisfed.org/series/USREC",
+      "useful_for": "official recession/expansion timing for U.S. macro Crisis-style context",
+      "blocking_gap": "monthly/daily recession dummy only; does not label Bull/Bear/Sideways, crypto, futures, ETFs, or intraday cycles",
+      "disposition": "official_crisis_macro_context_only"
+    },
+    {
+      "candidate": "Mirtaheri et al. crypto social manipulation source",
+      "url": "https://arxiv.org/abs/1902.03110",
+      "useful_for": "direct crypto manipulation event/social overlay evidence",
+      "blocking_gap": "direct Manipulation overlay only; not a main price-regime root label panel and not attachable to OHLCV root cells",
+      "disposition": "accepted_overlay_source_only"
+    },
+    {
+      "candidate": "Xu and Livshits pump-and-dump event source",
+      "url": "https://arxiv.org/abs/1811.10109",
+      "useful_for": "direct pump-and-dump event context for manipulation research",
+      "blocking_gap": "event manipulation source only; not Bull/Bear/Sideways/Crisis root labels and not full species/cycle coverage",
+      "disposition": "overlay_or_research_context_only"
+    }
+  ],
+  "summary": {
+    "candidate_sources_checked": 5,
+    "full_matrix_source_label_panels_found": 0,
+    "official_source_label_panels_found": 1,
+    "official_source_label_panels_usable_for_all_roots": 0,
+    "direct_overlay_sources_found": 2,
+    "root_panel_cells_added": 0
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

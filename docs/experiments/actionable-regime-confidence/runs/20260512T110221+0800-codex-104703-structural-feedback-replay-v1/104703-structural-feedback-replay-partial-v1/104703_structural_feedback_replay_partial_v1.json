@@ -1,0 +1,42 @@
+{
+  "run_id": "20260512T110221+0800-codex-104703-structural-feedback-replay-v1",
+  "gate_result": "104703_structural_feedback_replay_partial_v1=partial_mature_observation_fail_closed",
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "source_run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+  "source_branch_path": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+  "command_exits": {
+    "materialize_btc_candles_json": 1,
+    "materialize_btc_candles_json_corrected": 0,
+    "structural_feedback_replay_harness": 127,
+    "structural_feedback_replay_harness_corrected": 143,
+    "policy_training_status_partial": 0
+  },
+  "feedback_observation": {
+    "path_id": "path:scenario:B2R_PROVIDER_BTC_EMA_RSI_104703:belief_regime_node:trend:trend_follow_through:primary",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "followed_path": true,
+    "realized_outcome": "win",
+    "realized_pnl": 0.008412209719880881,
+    "exit_reason": "forward_12_bar_close"
+  },
+  "path_ranking": {
+    "rows": 3,
+    "history_rows": 10,
+    "mature_rows": 1,
+    "history_mature_rows": 4,
+    "raw_scored_mature": "3/30",
+    "production_validation": "2/30",
+    "observation_validation": "1/30",
+    "calibration_status": "evaluated",
+    "trainer_artifact": "missing",
+    "runtime_selection": "disabled",
+    "branch_path_columns_preserved": false
+  },
+  "decision": {
+    "count_once": true,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "reason": "One mature feedback win was produced, but the source regime-profit branch path did not survive into the structural target columns, validation remains below 30 rows, and path-ranker runtime is disabled."
+  }
+}

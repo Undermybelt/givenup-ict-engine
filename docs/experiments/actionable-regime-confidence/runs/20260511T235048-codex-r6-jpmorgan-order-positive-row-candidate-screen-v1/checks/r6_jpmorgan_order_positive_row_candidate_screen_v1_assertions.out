@@ -1,0 +1,10 @@
+PASS live_shared_intake_present=false
+PASS jpm_control_complete_positive_rows=8
+PASS candidate_positive_pairs=16
+PASS delta_verifier_returncode=0
+PASS composite_positive_rows=73
+PASS composite_min_wilson95_lcb=0.950006246616
+PASS pooled_95_pass=true
+PASS split_support_still_blocked=true
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

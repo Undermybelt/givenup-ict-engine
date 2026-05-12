@@ -1,0 +1,94 @@
+{
+  "accepted_direct_manipulation_label_sources_added": 0,
+  "accepted_mainregimev2_root_label_slots_added": 0,
+  "active_taxonomy": {
+    "manipulation": "separate_direct_event_or_order_lifecycle_overlay",
+    "price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ]
+  },
+  "candidate_bytes": 68553,
+  "candidate_line_count": 999,
+  "candidate_path": "/Users/thrill3r/Downloads/ictscripts/ICT Market Regime Detector",
+  "candidate_sha256": "36422875795844de1b29e8cc40d154153de628d81c50f30aabbfdd211e1b6bb7",
+  "candidate_type": "TradingView Pine Script indicator",
+  "decision": "rejected_proxy_only_no_source_label_attachment",
+  "direct_manipulation_positive_negative_windows": false,
+  "direct_price_tokens_present": {
+    "close": true,
+    "high": true,
+    "low": true,
+    "open": true,
+    "syminfo.tickerid": true,
+    "time": true,
+    "volume": true
+  },
+  "exact_underlying_source_labels": false,
+  "external_label_markers_present": {
+    "\\bcsv\\b": false,
+    "\\bdataset\\b": false,
+    "\\blabel_source\\b": false,
+    "\\bmanual\\b": false,
+    "\\bnegative\\b": false,
+    "\\bpositive\\b": false,
+    "request\\.economic": false,
+    "request\\.financial": false,
+    "request\\.seed": false
+  },
+  "gate_result": "blocked_local_pine_indicator_is_proxy_logic_not_source_labels",
+  "independent_mainregimev2_root_label_panel": false,
+  "next_action": "Acquire exact-underlying non-Kaggle root-label panels for the missing intraday/monthly/Kraken/missing-instrument slots or authenticated direct Manipulation rows.",
+  "observed_output_labels": [
+    "ACCUMULATION",
+    "CHOPPY",
+    "CONSOLIDATION",
+    "DISTRIBUTION",
+    "EXPANSION",
+    "REVERSAL",
+    "STRONG TREND",
+    "WEAK TREND"
+  ],
+  "observed_sub_regime_labels": [
+    "\u26a0\ufe0f EXTREME VOLATILITY",
+    "\u26a1 VOLATILE PHASE",
+    "\ud83c\udfe6 INSTITUTIONAL BUYING",
+    "\ud83c\udfe6 INSTITUTIONAL SELLING",
+    "\ud83d\udca5 BREAKOUT IN PROGRESS",
+    "\ud83d\udddc\ufe0f SQUEEZE FORMING",
+    "\ud83d\udeab NO EDGE - AVOID"
+  ],
+  "raw_source_committed": false,
+  "reason": "The script generates regime names inside classifyRegime() from chart OHLCV/volume, ADX, EMA, RSI, ATR/range, wick, and same-symbol 4h DMI features. It does not contain an independent label table, exact-underlying MainRegimeV2 root labels, or direct Manipulation positive/negative event windows.",
+  "regime_decision_tree_inputs": [
+    "volatility ratio from close-to-close returns",
+    "DMI/ADX from high/low/close",
+    "EMA20/EMA50 structure from close",
+    "RSI divergence from high/low/close",
+    "range high/low/position from high/low/close",
+    "volume spike plus candle body/wick heuristics",
+    "same-symbol 4h request.security DMI alignment"
+  ],
+  "request_calls": [
+    "security"
+  ],
+  "run_id": "20260511T085659+0800-codex-local-pine-regime-detector-audit",
+  "runtime_code_changed": false,
+  "source_class": "ohlcv_derived_pine_indicator_proxy_logic",
+  "ta_calls": [
+    "atr",
+    "ema",
+    "highest",
+    "lowest",
+    "rma",
+    "rsi",
+    "sma",
+    "stdev",
+    "tr",
+    "valuewhen"
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

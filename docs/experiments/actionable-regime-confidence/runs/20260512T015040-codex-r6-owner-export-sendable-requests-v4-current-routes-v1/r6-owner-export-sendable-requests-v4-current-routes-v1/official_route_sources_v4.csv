@@ -1,0 +1,5 @@
+owner,route,url,request_use
+CME Group,CME DataMine historical data,https://www.cmegroup.com/market-data/datamine-historical-data/index.html,"Primary path for CME/NYMEX/COMEX historical exports; require verifier-native normal-control rows plus provenance."
+CME Group,CME Market Depth Files FAQ,https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf,"Ask Data Sales to confirm Market Depth/FIX-FAST, Market by Order, or licensed equivalent coverage for 2011-2013 products."
+Cboe/CFE,Cboe DataShop CFE VIX futures trades and quotes,https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes,"Primary current route for 2014 CFE/VIX futures trades/quotes when trade/quote rows can satisfy verifier-native controls."
+Cboe/CFE,Cboe U.S. Futures Market Data Services,https://ww2.cboe.com/market_data_services/us/futures/,"Support/custom-export route for Top-of-Book/Depth-of-Book or deeper historical order-lifecycle rows for 2014 CFE/VIX controls."

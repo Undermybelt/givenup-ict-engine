@@ -1,0 +1,9 @@
+goal_achieved=false
+prior_cross_context_gate_preserved=true
+all_available_species_tried=false
+all_available_cycles_tried=false
+unsupported_cells_explained=false
+gate_result=blocked_full_universe_full_cycle_not_yet_attempted
+thresholds_relaxed=false
+runtime_code_changed=false
+trade_usable=false

@@ -1,0 +1,1 @@
+./target/debug/ict-engine pre-bayes-status --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T131717+0800-codex-131500-prebayes-bbn-bundle-repair-v1/state_ingest --refresh --output-format json

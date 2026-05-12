@@ -1,0 +1,55 @@
+{
+  "attempts": [
+    {
+      "current_window_ready": true,
+      "exit": 0,
+      "kline_rows": 1729,
+      "label": "01_kraken_futures_pfxbtusd_1h_recent_20260301_20260512",
+      "local_file_runtime_dependency": false,
+      "market": "futures",
+      "pair": "PF_XBTUSD",
+      "portable_to_consumer": true,
+      "provider": "Kraken",
+      "requested_history_span": "2026-03-01_to_2026-05-12",
+      "returned_first": "2026-03-01 00:00:00+00:00",
+      "returned_last": "2026-05-12 00:00:00+00:00",
+      "timeframe": "1h"
+    },
+    {
+      "current_window_ready": false,
+      "exit": 0,
+      "kline_rows": 2000,
+      "label": "02_kraken_futures_pfxbtusd_1h_1y_20250512_20260512",
+      "local_file_runtime_dependency": false,
+      "market": "futures",
+      "pair": "PF_XBTUSD",
+      "portable_to_consumer": true,
+      "provider": "Kraken",
+      "requested_history_span": "2025-05-12_to_2026-05-12",
+      "returned_first": "2025-05-12 00:00:00+00:00",
+      "returned_last": "2025-08-03 07:00:00+00:00",
+      "timeframe": "1h"
+    },
+    {
+      "current_window_ready": true,
+      "exit": 0,
+      "kline_rows": 721,
+      "label": "03_kraken_spot_xbtusd_1h_default",
+      "local_file_runtime_dependency": false,
+      "market": "spot",
+      "pair": "XBTUSD",
+      "portable_to_consumer": true,
+      "provider": "Kraken",
+      "requested_history_span": "spot_default_last_ohlc_window",
+      "returned_first": "2026-04-12 09:00:00+00:00",
+      "returned_last": "2026-05-12 09:00:00+00:00",
+      "timeframe": "1h"
+    }
+  ],
+  "current_window_ready_any": true,
+  "promotion_allowed": false,
+  "run_id": "20260512T171227+0800-codex-board-a-kraken-current-window-repair-v1",
+  "source_gap": "165415_kraken_broad_request_returned_stale_2022_slice",
+  "trade_usable": false,
+  "update_goal": false
+}

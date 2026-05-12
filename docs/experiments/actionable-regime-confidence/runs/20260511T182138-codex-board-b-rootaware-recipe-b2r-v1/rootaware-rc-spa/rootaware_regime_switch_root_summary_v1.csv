@@ -1,0 +1,6 @@
+parent_regime_root,regime_profit_branch_path,total_trades,test_folds,folds,win_rate,mean_profit_ratio_net,sum_profit_ratio_net
+Bull,Bull->no_rows->no_rows->RootAwareRegimeSwitch,0,0,,0.0,0.0,0
+Bear,Bear->no_rows->no_rows->RootAwareRegimeSwitch,0,0,,0.0,0.0,0
+Sideways,Sideways->no_rows->no_rows->RootAwareRegimeSwitch,0,0,,0.0,0.0,0
+Crisis,Crisis->no_rows->no_rows->RootAwareRegimeSwitch,0,0,,0.0,0.0,0
+Manipulation(scoped),Manipulation(scoped)->DirectEventOverlayMissing->no_direct_event_rows->suppress_or_abstain,0,0,,0.0,0.0,0

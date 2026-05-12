@@ -1,0 +1,68 @@
+{
+  "accepted_rows_added": 0,
+  "aggregate_negative": true,
+  "auto_quant_ingest_real_trades": {
+    "exit": 0,
+    "feedback_records_inserted": 1326,
+    "trades_applied": 1326,
+    "trades_invalid": 0
+  },
+  "auto_quant_prior_init": {
+    "exit": 0,
+    "final_probs": [
+      0.4216979023486318,
+      3.792286145227321e-9,
+      0.5783020938590822
+    ],
+    "strategies_applied": [
+      "ProviderCryptoMomentumStateV1",
+      "ProviderCryptoPullbackRevertV1"
+    ]
+  },
+  "auto_quant_results_import": {
+    "exit": 0,
+    "n_error": 0,
+    "n_ok": 2,
+    "n_total_strategies": 2
+  },
+  "canonical_merge": false,
+  "catboost_path_ranking": {
+    "calibration": "not_fitted",
+    "history_rows": 1,
+    "mature_rows": 0,
+    "observation_validation": "0/30",
+    "production_validation": "0/30",
+    "raw_scored_mature": "0/30",
+    "runtime_selection": "disabled",
+    "target_rows": 1,
+    "trainer_artifact": "missing"
+  },
+  "downstream_promotion": false,
+  "execution_tree": {
+    "actionable": false,
+    "closed_loop_branch_admission": "fail_closed",
+    "path_id": "path:scenario:B2R_YAHOO_CRYPTO_PRECISION_104610:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+    "ready": false,
+    "review_status": "observe"
+  },
+  "explicit_selected_history": false,
+  "gate": "104610_yahoo_crypto_downstream_readback_v1=real_trades_ingested_downstream_fail_closed_no_promotion",
+  "mature_rooted_branch_observations_promoted": 0,
+  "pre_bayes": {
+    "exit": 0,
+    "latest_bridge": null,
+    "latest_canonical_structural_active_regime": null,
+    "latest_filtered_assignments": null,
+    "latest_policy": null,
+    "latest_soft_evidence": null
+  },
+  "promotion_allowed": false,
+  "provider_matrix_satisfied": false,
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T104610+0800-codex-board-b-yahoo-crypto-precision-fix-aq-v1",
+  "strict_full_objective": false,
+  "symbol": "B2R_YAHOO_CRYPTO_PRECISION_104610",
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,6 @@
+docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/agent-material/board-a-sixprov-binance-btcusdt-1h-v1.material-iso-v2.material.json
+docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/agent-material/board-a-sixprov-bybit-btcusdt-1h-v1.material-iso-v2.material.json
+docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/agent-material/board-a-sixprov-ibkr-spy-1h-v1.material-iso-v2.material.json
+docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/agent-material/board-a-sixprov-kraken-pfxbtusd-1h-v1.material-iso-v2.material.json
+docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/agent-material/board-a-sixprov-tvr-btc-usd-1h-v1.material-iso-v2.material.json
+docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/agent-material/board-a-sixprov-yf-spy-1h-v1.material-iso-v2.material.json

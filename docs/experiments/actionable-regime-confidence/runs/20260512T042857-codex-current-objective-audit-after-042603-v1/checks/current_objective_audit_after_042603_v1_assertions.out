@@ -1,0 +1,8 @@
+PASS decision=current_objective_audit_after_042603_v1=not_complete_source_roots_absent_no_confidence_gate_downstream_blocked
+PASS required_roots_present=false
+PASS accepted_source_confidence_95_labels=0
+PASS accepted_predictive_confidence_95_labels=0
+PASS autoquant_successful_backtests=3
+PASS checklist_fail_or_partial=8
+PASS strict_full_objective=false
+PASS update_goal=false

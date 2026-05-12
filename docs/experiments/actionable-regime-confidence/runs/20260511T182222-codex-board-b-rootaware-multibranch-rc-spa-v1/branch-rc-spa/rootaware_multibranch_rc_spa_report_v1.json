@@ -1,0 +1,122 @@
+{
+  "schema_version": "rc-spa/v1",
+  "run_id": "20260511T182222+0800-codex-board-b-rootaware-multibranch-rc-spa-v1",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "recipe_id": "RootAwareMultiBranchV1",
+  "total_trades": 1064,
+  "test_folds": 4,
+  "min_trades_per_test_fold": 266,
+  "fold_positive_rate": 1.0,
+  "bootstrap_edge_lcb_5pct": 0.005142015480321316,
+  "pbo": 0.75,
+  "dsr": 0.8246115657449011,
+  "tail_loss_p95_abs": 0.048977739817434474,
+  "tail_loss_budget_abs": 0.1,
+  "max_drawdown_R": 0.8064195493751143,
+  "regime_specificity_ratio": 2.4659921869692196,
+  "cost_stress_survival": true,
+  "hard_gates": {
+    "accepted_regime_id_present": true,
+    "branch_path_present": true,
+    "root_lookup_coverage_full": true,
+    "min_total_trades": true,
+    "min_test_folds": true,
+    "min_trades_per_test_fold": true,
+    "fold_positive_rate": true,
+    "bootstrap_edge_lcb_5pct": true,
+    "cost_stress_survival": true,
+    "pbo": false,
+    "dsr": true,
+    "tail_loss_p95": true,
+    "regime_specificity_ratio": true,
+    "branch_min_total_trades_for_claimed_roots": false
+  },
+  "failure_reasons": [
+    "pbo",
+    "branch_min_total_trades_for_claimed_roots"
+  ],
+  "scores": {
+    "edge_score": 1.0,
+    "fold_score": 1.0,
+    "depth_score": 1.0,
+    "dsr_score": 1.0,
+    "pbo_score": 0.0,
+    "cost_score": 1.0,
+    "drawdown_score": 0.0,
+    "specificity_score": 1.0
+  },
+  "rc_spa": 80.0,
+  "promotion_level": "reject",
+  "folds": [
+    {
+      "fold_index": 0,
+      "test_count": 266,
+      "net_return_R": 7.04189740653634,
+      "positive": true,
+      "stressed_2x_cost_net_R": 6.509897406536342,
+      "stressed_positive": true
+    },
+    {
+      "fold_index": 1,
+      "test_count": 266,
+      "net_return_R": 1.03102839857261,
+      "positive": true,
+      "stressed_2x_cost_net_R": 0.49902839857261017,
+      "stressed_positive": true
+    },
+    {
+      "fold_index": 2,
+      "test_count": 266,
+      "net_return_R": 1.075804096154118,
+      "positive": true,
+      "stressed_2x_cost_net_R": 0.543804096154118,
+      "stressed_positive": true
+    },
+    {
+      "fold_index": 3,
+      "test_count": 266,
+      "net_return_R": 0.9840124899932678,
+      "positive": true,
+      "stressed_2x_cost_net_R": 0.45201248999326826,
+      "stressed_positive": true
+    }
+  ],
+  "branch_summary": {
+    "Bull": {
+      "trade_count": 1063,
+      "win_rate": 0.3396048918156162,
+      "net_return_R": 10.109290433378122,
+      "mean_R": 0.009510150925097037,
+      "bootstrap_edge_lcb_5pct": 0.004895496585123898,
+      "stressed_2x_cost_net_R": 7.983290433378163,
+      "branch_path": "Bull -> TrendExpansion -> Donchian24Ema4hTrendVolumeVolTarget -> RootAwareMultiBranchV1"
+    },
+    "Bear": {
+      "trade_count": 0,
+      "win_rate": 0.0,
+      "net_return_R": 0,
+      "mean_R": 0.0,
+      "bootstrap_edge_lcb_5pct": 0.0,
+      "stressed_2x_cost_net_R": 0,
+      "branch_path": "Bear -> SuppressBearRootNoTrade -> NoPositiveEdge -> no_trade"
+    },
+    "Sideways": {
+      "trade_count": 1,
+      "win_rate": 1.0,
+      "net_return_R": 0.02345195787818739,
+      "mean_R": 0.02345195787818739,
+      "bootstrap_edge_lcb_5pct": 0.02345195787818739,
+      "stressed_2x_cost_net_R": 0.02145195787818739,
+      "branch_path": "Sideways -> SuppressSidewaysRootNoTrade -> Donchian24Ema4hTrendVolumeVolTarget -> RootAwareMultiBranchV1"
+    },
+    "Crisis": {
+      "trade_count": 0,
+      "win_rate": 0.0,
+      "net_return_R": 0,
+      "mean_R": 0.0,
+      "bootstrap_edge_lcb_5pct": 0.0,
+      "stressed_2x_cost_net_R": 0,
+      "branch_path": "Crisis -> SuppressCrisisRootNoTrade -> TailRiskSuppression -> no_trade"
+    }
+  }
+}

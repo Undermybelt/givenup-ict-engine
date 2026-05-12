@@ -1,0 +1,15 @@
+gate_result=r6_owner_export_contract_readback_v1=verifier_native_contract_confirmed_owner_export_absent_no_promotion
+observed_cursor=20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1
+target_root_present=false
+verifier_required_all_present=false
+direct_verifier_exit_code=2
+accepted_rows_added=0
+canonical_merge_allowed=false
+downstream_rerun_allowed=false
+strict_full_objective_achieved=false
+update_goal=false
+runtime_code_changed=false
+shared_intake_mutated=false
+owner_export_root_mutated=false
+raw_data_committed=false
+trade_usable=false

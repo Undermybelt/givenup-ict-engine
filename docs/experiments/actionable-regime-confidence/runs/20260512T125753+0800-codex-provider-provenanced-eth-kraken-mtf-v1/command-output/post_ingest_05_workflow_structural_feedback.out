@@ -1,0 +1,91 @@
+{
+  "allowed_outcomes": [
+    "win",
+    "loss",
+    "breakeven",
+    "invalidated",
+    "abandoned",
+    "not_followed"
+  ],
+  "bbn_support_score": 1.0,
+  "branch_id": "ETH_KRAKEN:belief_regime_node:trend:trend_follow_through",
+  "candidate_set_id": "structural-candidates:ETH_KRAKEN:b59bf44b142615b4",
+  "candidate_set_size": 3,
+  "confirmation_summary": "history_records=1 followed=1",
+  "direction": "bull",
+  "entry_style": "structural_recommended_path",
+  "feedback_fields": [
+    {
+      "description": "Whether the user actually followed the recommended path.",
+      "field_id": "followed_path",
+      "label": "Followed Path",
+      "required": true,
+      "value_type": "boolean"
+    },
+    {
+      "description": "One of win, loss, breakeven, invalidated, abandoned, or not_followed.",
+      "field_id": "realized_outcome",
+      "label": "Realized Outcome",
+      "required": true,
+      "value_type": "enum"
+    },
+    {
+      "description": "Optional realized PnL from the actual execution.",
+      "field_id": "realized_pnl",
+      "label": "Realized PnL",
+      "required": false,
+      "value_type": "number"
+    },
+    {
+      "description": "Freeform reason such as stop_hit, target_hit, invalidated, timed_out.",
+      "field_id": "exit_reason",
+      "label": "Exit Reason",
+      "required": false,
+      "value_type": "string"
+    },
+    {
+      "description": "Optional operator notes about what actually happened.",
+      "field_id": "notes",
+      "label": "Notes",
+      "required": false,
+      "value_type": "string"
+    }
+  ],
+  "generic_template_path_id": "path:scenario:ETH_KRAKEN:belief_regime_node:trend:trend_follow_through:primary",
+  "invalidation_summary": "do not collapse exact feedback path into a generic structural path",
+  "node_id": "ETH_KRAKEN:belief_regime_node:trend",
+  "notes": [
+    "Preserve recommendation_id plus node/branch/scenario/path ids when recording live feedback.",
+    "This is a protocol contract only; canonical persistence wiring comes next."
+  ],
+  "path_id": "TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance -> TomacNQ_KillzoneBreakout",
+  "path_label": "TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance -> TomacNQ_KillzoneBreakout",
+  "path_posterior": 1.0,
+  "path_ranker_calibrated_path_prob": null,
+  "path_ranker_execution_gate_status": null,
+  "path_ranker_path_prob_lower_bound": null,
+  "path_ranker_raw_score": null,
+  "path_ranker_runtime_source": null,
+  "pre_bayes_gate_status": "pass_neutralized",
+  "protocol_version": "structural-feedback-v1",
+  "recommendation_id": "structural-feedback:ETH_KRAKEN:TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance -> TomacNQ_KillzoneBreakout",
+  "recommended_at": "2026-05-12T05:41:27Z",
+  "recommended_command": "ict-engine factor-research --symbol ETH_KRAKEN --data 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf'",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol ETH_KRAKEN --data 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf'",
+    "execution_contract": null,
+    "prompt": "Before using historical data for ETH_KRAKEN again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json",
+    "user_input_required": true
+  },
+  "scenario_id": "TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance",
+  "selected_entry_quality": "medium",
+  "selected_entry_quality_probability": 1.0,
+  "selected_path_probability": 0.45043788716383176,
+  "source_phase": "structural-recommended-path-bundle",
+  "stop_summary": "use the recorded branch feedback stop/exit contract",
+  "symbol": "ETH_KRAKEN",
+  "trigger_summary": "preserve exact structural feedback path TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance -> TomacNQ_KillzoneBreakout",
+  "why_this_path": "posterior=1.000 prior=0.400 invalidation_rate=0.000"
+}

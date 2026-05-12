@@ -1,0 +1,1 @@
+./target/debug/ict-engine pre-bayes-status --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/state_provider_btc_ema_rsi_v1 --refresh --output-format json

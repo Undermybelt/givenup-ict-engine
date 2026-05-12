@@ -1,0 +1,71 @@
+{
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_live_intake_merge_approved": false,
+    "external_requests_sent": false,
+    "flip_rows_accepted_as_matched_normal_controls": false,
+    "gate_result": "r6_oystacher_exhibit_a_policy_review_v1=positive_source_passed_flip_controls_rejected_no_canonical_merge",
+    "new_confidence_gate": false,
+    "public_recapped_court_exhibit_positive_source_ok": true,
+    "raw_data_committed": false,
+    "rerun_downstream_chain": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "spoof_rows_can_be_positive_candidates": true,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T16:36:32.533967+00:00",
+  "next_action": "Keep Oystacher Exhibit A rows isolated unless the user/owner explicitly approves same-exhibit FLIP rows as controls or supplies source-owned normal controls; after approval or new controls, merge through the verifier-native contract and rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked.",
+  "policy_checks": [
+    {
+      "check": "public_recapped_court_exhibit_positive_source",
+      "reason": "CourtListener/RECAP PDF is a public copy of court-filed CFTC Exhibit A and the parsed rows carry source labels marked SPOOF.",
+      "status": "pass_for_positive_candidate"
+    },
+    {
+      "check": "spoof_rows_source_owned_positive_label",
+      "reason": "Positive candidate rows=5182 and labels={'positive_spoofing_layering': 5182}.",
+      "status": "pass_for_positive_candidate"
+    },
+    {
+      "check": "flip_rows_are_normal_matched_controls",
+      "reason": "Rows marked FLIP in the same CFTC exhibit are counterpart legs in the alleged flip sequence, not source-owned normal/non-manipulation controls.",
+      "status": "fail_current_contract"
+    },
+    {
+      "check": "canonical_merge_without_approval",
+      "reason": "Existing R6 verifier contract calls the negative file matched_negative_normal_activity_rows.csv; same-exhibit FLIP rows require explicit policy approval or a separate control taxonomy before promotion.",
+      "status": "fail_closed"
+    }
+  ],
+  "row_counts": {
+    "flip_control_candidates": 1553,
+    "negative_activity_counts": {
+      "flip_marked_same_exhibit": 1553
+    },
+    "negative_label_counts": {
+      "matched_negative_normal_activity": 1553
+    },
+    "parsed_order_rows": 6735,
+    "parsed_side_counts": {
+      "FLIP": 1553,
+      "SPOOF": 5182
+    },
+    "positive_candidates": 5182,
+    "positive_label_counts": {
+      "positive_spoofing_layering": 5182
+    }
+  },
+  "run_id": "20260512T003334-codex-r6-oystacher-exhibit-a-policy-review-v1",
+  "source_materialization": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/r6_oystacher_exhibit_a_row_materialization_v1.json",
+  "source_materialization_gate": null,
+  "split_readback": {
+    "all_axes_pass_in_isolated_candidate": true,
+    "axis_rows": 17,
+    "min_split_wilson95_lcb": 0.95771100465,
+    "split_metrics": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/oystacher_exhibit_a_split_metrics_v1.csv"
+  }
+}

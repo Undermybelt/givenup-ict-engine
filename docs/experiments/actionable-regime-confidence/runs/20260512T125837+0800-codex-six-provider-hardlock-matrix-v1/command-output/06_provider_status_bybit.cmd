@@ -1,0 +1,1 @@
+target/debug/ict-engine provider-status --provider bybit_public --agent

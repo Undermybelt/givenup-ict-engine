@@ -1,0 +1,53 @@
+{
+  "accepted_rows_added": 0,
+  "decision": "live_intake_verifier_recheck_v2_after_v26=both_required_intake_roots_still_missing_files",
+  "direct_manipulation_recheck": {
+    "args": [
+      "python3",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-direct-manipulation-row-intake"
+    ],
+    "returncode": 2,
+    "stderr": "",
+    "stdout_json": {
+      "missing_files": [
+        "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    }
+  },
+  "direct_manipulation_status": "blocked",
+  "intake_files": [],
+  "intake_files_present": 0,
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "run_id": "20260511T200951-codex-live-intake-verifier-recheck-v2-after-v26",
+  "runtime_code_changed": false,
+  "source_label_recheck": {
+    "args": [
+      "python3",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-source-label-equivalence-intake"
+    ],
+    "returncode": 2,
+    "stderr": "",
+    "stdout_json": {
+      "missing_files": [
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    }
+  },
+  "source_label_status": "blocked",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

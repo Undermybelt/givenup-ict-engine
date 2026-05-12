@@ -1,0 +1,13 @@
+run_id=20260511T134756+0800-codex-daily-to-intraday-source-attachment-v1
+board_sha256_at_run=3718ef087e979ec6dec6cf29436153533bf1a3854d4b79cba059e6f0a0db35e8
+input_exact_same_source_slots=48
+accepted_95_source_label_attachment_rows=36
+blocked_exact_attachment_rows=12
+accepted_roots=Bear,Bull,Sideways
+blocked_roots=Crisis
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

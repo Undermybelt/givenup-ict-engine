@@ -1,0 +1,11 @@
+cursor_is_v71_official_route=PASS
+public_controls_zero=PASS
+external_controls_zero=PASS
+owner_access_controls_zero=PASS
+owner_presence_controls_zero=PASS
+owner_export_root_incomplete=PASS
+non_r6_ready_roots_zero=PASS
+recent_board_refs_all_present=PASS
+no_downstream_rerun=PASS
+strict_objective_false=PASS
+update_goal_false=PASS

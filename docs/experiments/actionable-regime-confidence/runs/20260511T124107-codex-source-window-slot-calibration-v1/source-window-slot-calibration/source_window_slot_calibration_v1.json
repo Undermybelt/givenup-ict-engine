@@ -1,0 +1,423 @@
+{
+  "acceptance": {
+    "ece_max": 0.05,
+    "precision_wilson_lcb_95_min": 0.95,
+    "support_min": 60
+  },
+  "artifact_type": "source_window_slot_calibration_v1",
+  "decision": {
+    "accepted_crosswalk_slots_by_root": {},
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "blocked_crosswalk_slots_by_root": {
+      "Bear": [
+        "ES=F:1mo",
+        "SPY:1mo",
+        "^GSPC:1mo"
+      ],
+      "Bull": [
+        "ES=F:1mo",
+        "SPY:1mo",
+        "^GSPC:1mo"
+      ],
+      "Crisis": [
+        "ES=F:1mo",
+        "SPY:1mo",
+        "^GSPC:1mo"
+      ]
+    },
+    "full_objective_achieved": false,
+    "gate_result": "partial_supported_bar_overlap_calibrated_full_matrix_still_blocked",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "sideways_scoped_accepted": true,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T04:43:14.766561+00:00",
+  "inputs": {
+    "sideways_materialization": "docs/experiments/actionable-regime-confidence/runs/20260511T123500-codex-sideways-dated-window-materialization-v1/sideways-windows/sideways_dated_window_materialization_v1.json",
+    "unified_panel": "docs/experiments/actionable-regime-confidence/runs/20260511T124000-codex-unified-source-label-panel-v1/unified-panel/unified_source_label_panel_v1.csv"
+  },
+  "next_action": "Do not broaden source-window projections. Use only accepted slots downstream; acquire exact/direct labels for blocked Bear/Crisis cells and direct Manipulation varieties.",
+  "run_id": "20260511T124107+0800-codex-source-window-slot-calibration-v1",
+  "sideways_carried_forward": {
+    "accepted_95": true,
+    "calibration_wilson95_lcb": 0.988647,
+    "guardrail": "not expanded to intraday/monthly/full-species cells",
+    "root": "Sideways",
+    "scope": "Yahoo crypto/equity_etf 1d/1w only",
+    "status": "carried_forward_scoped_existing_gate",
+    "test_wilson95_lcb": 0.995568,
+    "window_count": 608
+  },
+  "slot_reports": [
+    {
+      "instrument": "ES=F",
+      "labeled_rows": 227,
+      "root_reports": [
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8754449702581327,
+            "source_window_count": 2,
+            "success": 27,
+            "support": 27
+          },
+          "root": "Bull",
+          "rule": "dd60 >= -0.0032047199531 AND vol60 <= 0.152179344579",
+          "test": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.5101091635454027,
+            "source_window_count": 1,
+            "success": 4,
+            "support": 4
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.6755924351161198,
+            "source_window_count": 2,
+            "success": 8,
+            "support": 8
+          }
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "root": "Bear",
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+          "test": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          }
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "root": "Crisis",
+          "rule": "range_ratio32_128 >= 1.43116959912",
+          "test": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          }
+        }
+      ],
+      "source_root_counts": {
+        "Bear": 44,
+        "Bull": 183,
+        "Crisis": 25
+      },
+      "status": "calibrated_on_supported_bar_overlap",
+      "timeframe": "1mo"
+    },
+    {
+      "instrument": "SPY",
+      "labeled_rows": 271,
+      "root_reports": [
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.895730002457548,
+            "source_window_count": 2,
+            "success": 33,
+            "support": 33
+          },
+          "root": "Bull",
+          "rule": "dd60 >= -0.0032047199531 AND vol60 <= 0.152179344579",
+          "test": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.20654931437723742,
+            "source_window_count": 1,
+            "success": 1,
+            "support": 1
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8513451253913791,
+            "source_window_count": 2,
+            "success": 22,
+            "support": 22
+          }
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "root": "Bear",
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+          "test": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 0.4,
+            "precision_wilson_lcb_95": 0.16818032970623617,
+            "source_window_count": 3,
+            "success": 4,
+            "support": 10
+          }
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "root": "Crisis",
+          "rule": "range_ratio32_128 >= 1.43116959912",
+          "test": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          }
+        }
+      ],
+      "source_root_counts": {
+        "Bear": 58,
+        "Bull": 213,
+        "Crisis": 31
+      },
+      "status": "calibrated_on_supported_bar_overlap",
+      "timeframe": "1mo"
+    },
+    {
+      "instrument": "^GSPC",
+      "labeled_rows": 271,
+      "root_reports": [
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.898485445846676,
+            "source_window_count": 2,
+            "success": 34,
+            "support": 34
+          },
+          "root": "Bull",
+          "rule": "dd60 >= -0.0032047199531 AND vol60 <= 0.152179344579",
+          "test": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.6456695649333126,
+            "source_window_count": 1,
+            "success": 7,
+            "support": 7
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8453609810751531,
+            "source_window_count": 2,
+            "success": 21,
+            "support": 21
+          }
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "root": "Bear",
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+          "test": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 0.17391304347826086,
+            "precision_wilson_lcb_95": 0.06978653563062567,
+            "source_window_count": 3,
+            "success": 4,
+            "support": 23
+          }
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_support_below_60",
+            "calibration_wilson95_below_0_95",
+            "test_support_below_60",
+            "test_wilson95_below_0_95"
+          ],
+          "calibration": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "root": "Crisis",
+          "rule": "range_ratio32_128 >= 1.43116959912",
+          "test": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          },
+          "train": {
+            "ece": 0.0,
+            "precision": 0.0,
+            "precision_wilson_lcb_95": 0.0,
+            "source_window_count": 0,
+            "success": 0,
+            "support": 0
+          }
+        }
+      ],
+      "source_root_counts": {
+        "Bear": 58,
+        "Bull": 213,
+        "Crisis": 31
+      },
+      "status": "calibrated_on_supported_bar_overlap",
+      "timeframe": "1mo"
+    }
+  ],
+  "supported_timeframes": [
+    "1d",
+    "1mo",
+    "1w"
+  ],
+  "unsupported_crosswalk_timeframes": {
+    "15m": 33,
+    "1h": 33,
+    "1m": 33,
+    "30m": 33,
+    "4h": 33,
+    "5m": 33
+  },
+  "unsupported_timeframe_reason": "no_long_historical_yfinance_bar_overlap_for_intraday_slot"
+}

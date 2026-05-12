@@ -1,0 +1,12 @@
+run_id=20260511T133453+0800-codex-post-axiswise-acquisition-request-v12
+v2_rows=564
+superseded_by_axiswise_rows=8
+active_source_label_requests_after_axiswise=556
+accepted_confidence_added=0
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+gate_result=post_axiswise_acquisition_request_v12_active_556_source_label_slots_plus_direct_manipulation_open
+assertion_status=PASS

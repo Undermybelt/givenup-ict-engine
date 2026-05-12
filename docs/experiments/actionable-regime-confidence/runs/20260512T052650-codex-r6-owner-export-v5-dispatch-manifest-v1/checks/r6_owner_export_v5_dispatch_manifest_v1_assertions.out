@@ -1,0 +1,16 @@
+PASS gate_result=r6_owner_export_v5_dispatch_manifest_v1=v5_dispatch_drafts_ready_not_sent_controls_not_acquired
+PASS dispatch_items=2
+PASS uses_v5_addendum=true
+PASS cme_primary_contact=CMEDataSales@cmegroup.com
+PASS cboe_primary_contact=marketdata@cboe.com
+PASS external_requests_sent_by_this_artifact=false
+PASS accepted_rows_added=0
+PASS accepted_regime_confidence_labels=0
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS target_roots_mutated=false
+PASS raw_data_committed=false

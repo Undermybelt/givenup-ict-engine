@@ -1,0 +1,251 @@
+{
+  "assertions": {
+    "accepted_rows_added": 0,
+    "auto_quant_data_ready": false,
+    "auto_quant_status": "dependency_ready_data_missing",
+    "backtest_failed": 0,
+    "backtest_succeeded": 3,
+    "cached_data_files_copied": 2,
+    "canonical_merge_allowed_now": false,
+    "dependency_healthy": true,
+    "downstream_rerun_allowed_now": false,
+    "isolated_clone_created": true,
+    "repo_runtime_code_mutated": false,
+    "source_autoquant_mutated": false,
+    "source_control_evidence_acquired": false,
+    "strategy_files_copied": 3,
+    "strict_full_objective_achieved": false,
+    "target_root_mutated": false,
+    "total_trade_count": 26,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "backtest_summary": {
+    "best_by_sharpe": {
+      "calmar": -100.0,
+      "commit": "34ba6b6",
+      "config": "config.tomac.json",
+      "max_drawdown_pct": -0.0,
+      "pairs": "NQ/USD",
+      "profit_factor": 0.0,
+      "sharpe": 0.1722,
+      "sortino": -100.0,
+      "strategy": "TomacNQ_RegimeTransitionHazard",
+      "total_profit_pct": 2.52,
+      "trade_count": 2,
+      "win_rate_pct": 100.0
+    },
+    "failed": 0,
+    "metrics": [
+      {
+        "calmar": -0.8279,
+        "commit": "34ba6b6",
+        "config": "config.tomac.json",
+        "max_drawdown_pct": -2.7549,
+        "pairs": "NQ/USD",
+        "profit_factor": 0.6185,
+        "sharpe": -0.0192,
+        "sortino": -0.1413,
+        "strategy": "TomacNQ_KillzoneBreakout",
+        "total_profit_pct": -1.31,
+        "trade_count": 5,
+        "win_rate_pct": 60.0
+      },
+      {
+        "calmar": 4.1283,
+        "commit": "34ba6b6",
+        "config": "config.tomac.json",
+        "max_drawdown_pct": -1.7998,
+        "pairs": "NQ/USD",
+        "profit_factor": 1.9146,
+        "sharpe": 0.0954,
+        "sortino": 0.1954,
+        "strategy": "TomacNQ_RegimePersistenceCluster",
+        "total_profit_pct": 4.26,
+        "trade_count": 19,
+        "win_rate_pct": 57.8947
+      },
+      {
+        "calmar": -100.0,
+        "commit": "34ba6b6",
+        "config": "config.tomac.json",
+        "max_drawdown_pct": -0.0,
+        "pairs": "NQ/USD",
+        "profit_factor": 0.0,
+        "sharpe": 0.1722,
+        "sortino": -100.0,
+        "strategy": "TomacNQ_RegimeTransitionHazard",
+        "total_profit_pct": 2.52,
+        "trade_count": 2,
+        "win_rate_pct": 100.0
+      }
+    ],
+    "succeeded": 3,
+    "total_trade_count": 26
+  },
+  "data_summaries": [
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "date_unit": "epoch_ms",
+      "max_date": "2025-12-31T21:00:00+00:00",
+      "min_date": "2011-01-02T23:00:00+00:00",
+      "path": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/data/NQ_USD-1h.feather",
+      "rows": 89250
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "date_unit": "epoch_ms",
+      "max_date": "2025-12-31T20:00:00+00:00",
+      "min_date": "2011-01-02T20:00:00+00:00",
+      "path": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/data/NQ_USD-4h.feather",
+      "rows": 23879
+    }
+  ],
+  "decision": "Local cached NQ feathers and selected external strategy sources can run inside an isolated Auto-Quant clone without network data download. ict-engine dependency status sees the tmp clone as dependency-healthy but still reports dependency_ready_data_missing because canonical readiness does not treat the sidecar strategies_external/cache overlay as a prepared canonical Auto-Quant workspace. This is runtime-readiness evidence only and does not unlock source/control, canonical merge, or Board A promotion.",
+  "gate_result": "autoquant_local_cache_isolated_backtest_after_055200_v1=isolated_local_cache_backtest_succeeded_status_data_missing_no_promotion",
+  "generated_from": "isolated /tmp clone of /Users/thrill3r/Auto-Quant plus repo scripts/auto_quant_external runner and selected cached NQ data",
+  "next_action": "Preserve the Current Cursor next action. Continue only after source/control approval or verifier/source-owned rows unlock R6/R5/R3 target roots; then rerun direct verifier, split calibration, canonical merge, provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback in order.",
+  "roots_after": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "run_id": "20260512T060056-codex-autoquant-local-cache-isolated-backtest-after-055200-v1",
+  "scope": "non-promoting Auto-Quant local-cache reuse readback after 055200 DNS/data-missing blocker",
+  "status_after": {
+    "bootstrap_needed": false,
+    "data_ready": false,
+    "dependency_healthy": true,
+    "dependency_status": {
+      "adapter_version": "v1",
+      "bootstrap_needed": false,
+      "config_present": false,
+      "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "healthy": true,
+      "last_sync": null,
+      "managed_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant",
+      "managed_repo_present": true,
+      "notes": [],
+      "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+      "required_files": [
+        "README.md",
+        "program.md",
+        "prepare.py",
+        "run.py",
+        "versions/README.md"
+      ],
+      "tracked_branch": "master",
+      "update_available": false,
+      "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+    },
+    "healthy": false,
+    "managed_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant",
+    "next_step": {
+      "action_type": "run_command",
+      "blocked_reason": "auto_quant_prepare_required",
+      "deferred_command": "ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/ict-state/auto-quant",
+      "prompt": null,
+      "user_input_required": false
+    },
+    "notes": [],
+    "recommended_next_command": "ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/ict-state/auto-quant",
+    "recommended_next_command_meta": {
+      "blocked": false,
+      "executable_command": "ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/ict-state/auto-quant",
+      "kind": "ict_engine",
+      "prompt": null,
+      "recorded_data_paths": [],
+      "requires_user_input": false
+    },
+    "status": "dependency_ready_data_missing",
+    "update_available": false,
+    "workspace": {
+      "config_json": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/config.json",
+      "data_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/data",
+      "prepare_script": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/prepare.py",
+      "program_md": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/program.md",
+      "repo_root": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant",
+      "run_script": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/run.py",
+      "strategies_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/strategies"
+    }
+  },
+  "status_before": {
+    "bootstrap_needed": false,
+    "data_ready": false,
+    "dependency_healthy": true,
+    "dependency_status": {
+      "adapter_version": "v1",
+      "bootstrap_needed": false,
+      "config_present": false,
+      "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "healthy": true,
+      "last_sync": null,
+      "managed_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant",
+      "managed_repo_present": true,
+      "notes": [],
+      "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+      "required_files": [
+        "README.md",
+        "program.md",
+        "prepare.py",
+        "run.py",
+        "versions/README.md"
+      ],
+      "tracked_branch": "master",
+      "update_available": false,
+      "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+    },
+    "healthy": false,
+    "managed_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant",
+    "next_step": {
+      "action_type": "run_command",
+      "blocked_reason": "auto_quant_prepare_required",
+      "deferred_command": "ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/ict-state/auto-quant",
+      "prompt": null,
+      "user_input_required": false
+    },
+    "notes": [],
+    "recommended_next_command": "ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/ict-state/auto-quant",
+    "recommended_next_command_meta": {
+      "blocked": false,
+      "executable_command": "ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/ict-state/auto-quant",
+      "kind": "ict_engine",
+      "prompt": null,
+      "recorded_data_paths": [],
+      "requires_user_input": false
+    },
+    "status": "dependency_ready_data_missing",
+    "update_available": false,
+    "workspace": {
+      "config_json": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/config.json",
+      "data_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/data",
+      "prepare_script": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/prepare.py",
+      "program_md": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/program.md",
+      "repo_root": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant",
+      "run_script": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/run.py",
+      "strategies_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/strategies"
+    }
+  },
+  "strategy_files": [
+    "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/strategies_external/TomacNQ_KillzoneBreakout.py",
+    "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/strategies_external/TomacNQ_RegimePersistenceCluster.py",
+    "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056/auto-quant/user_data/strategies_external/TomacNQ_RegimeTransitionHazard.py"
+  ],
+  "tmp_root": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T060056"
+}

@@ -1,0 +1,26 @@
+{
+  "accepted_new_roots_95": [
+    "Bear",
+    "Sideways"
+  ],
+  "accepted_root_classes_95_effective": [
+    "Bull",
+    "Crisis",
+    "Bear",
+    "Sideways"
+  ],
+  "fresh_calibration_rerun": true,
+  "gate_result": "accepted_95",
+  "manipulation_blocker": "Yahoo OHLCV is not direct event/order-lifecycle/L2/L3/MBO/social/on-chain manipulation evidence.",
+  "missing_root_classes_95_effective": [
+    "Manipulation"
+  ],
+  "next_action": "Use the preserved Hyperliquid L4/order-lifecycle source path to acquire explicit direct manipulation positives/negatives; keep Manipulation fail-closed until then.",
+  "retained_prior_accepted_root_classes_95": [
+    "Bull",
+    "Crisis"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

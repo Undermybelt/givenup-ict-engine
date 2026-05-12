@@ -1,0 +1,137 @@
+{
+  "board_sha256_before_audit_artifact": "867f3f3e846c1025ecbd363aee093c2b483dbb6fc66c7c86bb811795d2b90c20",
+  "evidence": {
+    "autoquant_042900": {
+      "accepted_rows_added": "0",
+      "autoquant_failed_backtests": "0",
+      "autoquant_successful_backtests": "3",
+      "btc_leader_break_profit_pct": "14.8100",
+      "btc_leader_break_sharpe": "0.2464",
+      "btc_leader_break_trades": "116",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "autoquant_threaded_resolver_run_settlement_after_042222_v1=runtime_succeeded_strategy_quality_not_promoting_source_roots_absent",
+      "momentum_mtf_confluence_profit_pct": "2.8600",
+      "momentum_mtf_confluence_sharpe": "0.0411",
+      "momentum_mtf_confluence_trades": "169",
+      "mtf_trend_stack_profit_pct": "-4.2700",
+      "mtf_trend_stack_sharpe": "-0.0796",
+      "mtf_trend_stack_trades": "150",
+      "new_confidence_gate": "false",
+      "r3_native_subhour_root_present": "false",
+      "r5_recency_extension_root_present": "false",
+      "r6_owner_export_root_present": "false",
+      "source_command_root": "20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1",
+      "source_control_evidence_acquired": "false",
+      "source_label_equivalence_root_present": "diagnostic_only",
+      "strict_full_objective": "false",
+      "threaded_resolver_exit": "0",
+      "trade_usable": "false",
+      "update_goal": "false"
+    },
+    "downstream_readback_042857": {
+      "accepted_predictive_confidence_95_labels": "0",
+      "accepted_source_confidence_95_labels": "0",
+      "autoquant_successful_backtests": "3",
+      "checklist_fail_or_partial": "8",
+      "decision": "current_objective_audit_after_042603_v1=not_complete_source_roots_absent_no_confidence_gate_downstream_blocked",
+      "required_roots_present": "false",
+      "strict_full_objective": "false",
+      "update_goal": "false"
+    },
+    "histgb_042448": {
+      "accepted_histgb_confidence_95_labels": [],
+      "command_exit": "0",
+      "gate_result": "source_label_histgb_confidence_screen_v1=histgb_confidence_scored_no_full_acceptance",
+      "gate_status_by_label": {
+        "Bear": "False",
+        "Bull": "False",
+        "Crisis": "False",
+        "Sideways": "False"
+      },
+      "heldout_market_zero_support_labels": [
+        "Bear",
+        "Bull",
+        "Crisis",
+        "Sideways"
+      ],
+      "row_count": 248440,
+      "stderr_bytes": 0,
+      "verifier_return_code": 0,
+      "verifier_status": "schema_ready_unscored"
+    },
+    "previous_objective_043027": {
+      "autoquant_runtime_success_is_non_promoting": "true",
+      "autoquant_threaded_resolver_runtime_failed_backtests": "0",
+      "autoquant_threaded_resolver_runtime_successful_backtests": "3",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "current_objective_audit_after_042222_threaded_resolver_v1=not_complete_source_roots_absent_source_confidence_failed_autoquant_runtime_succeeded_non_promoting_downstream_blocked",
+      "objective_restated": "true",
+      "pre_shim_runtime_failed_interpretation_superseded": "true",
+      "predictive_confidence_accepted_labels": "[]",
+      "prompt_to_artifact_checklist_present": "true",
+      "r3_native_subhour_root_present": "false",
+      "r5_recency_extension_root_present": "false",
+      "r6_owner_export_root_present": "false",
+      "source_control_evidence_acquired": "false",
+      "source_label_calibration_accepted_labels": "0",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false"
+    },
+    "source_control_043436": {
+      "decision": {
+        "accepted_rows_added": 0,
+        "canonical_merge": false,
+        "downstream_promotion_rerun": false,
+        "explicit_approval": false,
+        "flip_controls_approved": false,
+        "new_source_unlock": false,
+        "owner_export_required_files_present": 0,
+        "owner_export_root_present": false,
+        "r3_native_subhour_root_present": false,
+        "r5_recency_root_present": false,
+        "source_control_evidence_acquired": false,
+        "source_owned_normal_controls_supplied": false,
+        "strict_full_objective": false,
+        "trade_usable": false,
+        "update_goal": false
+      },
+      "gate_result": "source_control_arrival_scan_after_043027_v1=no_new_source_control_unlock_no_promotion"
+    },
+    "target_roots": [
+      {
+        "file_count": 0,
+        "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+        "present": false
+      },
+      {
+        "file_count": 0,
+        "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+        "present": false
+      },
+      {
+        "file_count": 0,
+        "path": "/tmp/ict-engine-source-panel-recency-extension",
+        "present": false
+      }
+    ]
+  },
+  "gate_result": "current_objective_audit_after_042448_043436_v1=not_complete_histgb_no_acceptance_source_roots_absent_downstream_blocked",
+  "generated_at_utc": "2026-05-11T20:42:21.631537+00:00",
+  "next": "Continue only after explicit approval, verifier-native R6 owner/export rows plus source-owned broad normal controls, source-owned R5 recency-extension rows, native sub-hour source-label rows, or genuinely source-owned cross-timeframe MainRegimeV2 exports unlock a target root; then rerun the full chain in order.",
+  "objective_restated": true,
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "prompt_to_artifact_checklist_present": true,
+  "run_id": "20260512T043901-codex-current-objective-audit-after-042448-043436-v1"
+}

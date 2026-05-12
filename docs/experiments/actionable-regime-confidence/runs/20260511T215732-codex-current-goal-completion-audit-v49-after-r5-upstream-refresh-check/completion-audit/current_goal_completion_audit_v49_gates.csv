@@ -1,0 +1,8 @@
+gate,status,evidence
+source_label_equivalence_schema,pass,status=schema_ready_unscored; rows=248440
+source_label_equivalence_confidence,fail,accepted_source_confidence_95_labels=0/4; decision=source_label_equivalence_confidence_calibration_v1=source_confidence_scored_no_acceptance
+native_subhour_source_label_root,fail,path=/tmp/ict-engine-native-subhour-source-label-intake; exists=False
+source_panel_recency_extension_root,fail,status=blocked; reason=missing_required_files; r5_screen=r5_source_panel_recency_extension_acquisition_screen_v1=no_acceptable_post_cutoff_source_owned_rows; r5_refresh=source_panel_recency_upstream_refresh_check_v1=upstream_not_refreshed_r5_still_missing_required_files
+direct_manipulation_schema,pass,status=schema_ready_unscored; positives=41; matched_negatives=41
+direct_manipulation_support,fail,positives=41; matched_negatives=41; required_min=50/50
+strict_full_objective,fail,source confidence accepted 0/4 labels; R3 native sub-hour missing; R5 recency missing; R6 direct support and broad normal controls incomplete

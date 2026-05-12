@@ -1,0 +1,13 @@
+gate_result=current_objective_audit_after_060032_060056_v1=not_complete_source_control_roots_absent_no_downstream_rerun
+json_exists=True
+md_exists=True
+checklist_exists=True
+missing_requirement_count=5
+required_roots_absent=true
+objective_complete=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

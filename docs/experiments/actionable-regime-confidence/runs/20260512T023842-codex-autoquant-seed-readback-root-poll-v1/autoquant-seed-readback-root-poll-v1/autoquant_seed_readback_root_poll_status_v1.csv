@@ -1,0 +1,16 @@
+item,status,value,promotion_use
+r6_owner_export_root,absent,0,blocked
+r3_native_subhour_root,absent,0,blocked
+r5_recency_extension_root,absent,0,blocked
+source_label_equivalence_root,present,2,non_promoting_confidence_blocked
+direct_manipulation_row_intake,present,3,legacy_non_promoting
+autoquant_023236_data_ready,true,15,non_promoting
+autoquant_023312_run_exit,pass,0,non_promoting
+autoquant_023312_active_strategy_count,pass,3,non_promoting
+autoquant_023351_run_exit,fail,1,non_promoting
+accepted_rows_added,pass,0,none
+new_confidence_gate,pass,false,none
+canonical_merge_allowed,pass,false,none
+downstream_promotion_rerun_allowed,pass,false,none
+strict_full_objective_achieved,pass,false,none
+update_goal,pass,false,none

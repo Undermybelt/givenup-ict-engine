@@ -1,0 +1,1 @@
+python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging

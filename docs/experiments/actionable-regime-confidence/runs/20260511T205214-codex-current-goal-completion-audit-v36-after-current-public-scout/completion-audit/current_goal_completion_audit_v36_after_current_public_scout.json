@@ -1,0 +1,152 @@
+{
+  "accepted_rows_added_since_v35": 0,
+  "board_hash_before_writeback": "4df97fddb9a4af54fc7a7088d7fbe1d15f0b7c3eb99298dc36d60e21ab2a4f33",
+  "checklist": [
+    {
+      "artifact": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "evidence": "Board hash before v36 writeback=4df97fddb9a4af54fc7a7088d7fbe1d15f0b7c3eb99298dc36d60e21ab2a4f33; v35, outbox v2, request drafts, FINRA screen, and public scout were read.",
+      "gap": "",
+      "id": "R0",
+      "requirement": "Use the named Board A markdown and latest artifacts as the contract.",
+      "status": "pass_checked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204335-codex-current-goal-completion-audit-v35-after-source-outbox/completion-audit/current_goal_completion_audit_v35_after_source_outbox.json",
+      "evidence": "v35 preserved scoped >=95% evidence and no later artifact relaxes thresholds or promotes proxy labels.",
+      "gap": "Scoped evidence still does not satisfy the strict all-market/all-cycle/all-species objective.",
+      "id": "R1",
+      "requirement": "Every scoped active lane keeps calibrated >=95% evidence without becoming a trade claim.",
+      "status": "pass_scoped_not_full"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204715-codex-source-acquisition-outbox-v2-after-r6-uplift/source-acquisition-outbox-v2/source_acquisition_outbox_v2.json; docs/experiments/actionable-regime-confidence/runs/20260511T205031-codex-current-public-regime-dataset-scout-v1/current-public-regime-dataset-scout/current_public_regime_dataset_scout_v1.json",
+      "evidence": "Outbox v2 is send-ready and public scout found current candidates, but no MainRegimeV2-compatible source-owned rows/provenance were acquired.",
+      "gap": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "id": "R2",
+      "requirement": "Other-market/source-label equivalence rows and provenance are acquired and verifier-accepted.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204729-codex-source-acquisition-request-draft-bundle-v1/source-acquisition-request-draft-bundle/source_acquisition_request_draft_bundle_v1.json",
+      "evidence": "Request draft exists, but request_sent=false, rows_acquired=false, and native sub-hour intake files are absent.",
+      "gap": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "id": "R3",
+      "requirement": "Native sub-hour source-label rows and provenance are acquired and verifier-accepted.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204715-codex-source-acquisition-outbox-v2-after-r6-uplift/source-acquisition-outbox-v2/source_acquisition_outbox_v2.json",
+      "evidence": "Outbox v2 keeps R4 in the acquisition queue, but source-label equivalence files remain absent.",
+      "gap": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "id": "R4",
+      "requirement": "Strict exact 1h source rows and provenance are acquired.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204715-codex-source-acquisition-outbox-v2-after-r6-uplift/source-acquisition-outbox-v2/source_acquisition_outbox_v2.json; docs/experiments/actionable-regime-confidence/runs/20260511T205031-codex-current-public-regime-dataset-scout-v1/current-public-regime-dataset-scout/current_public_regime_dataset_scout_v1.json",
+      "evidence": "The public scout found current public rows, but the current candidate is HMM/model-derived and not the required source-panel recency extension.",
+      "gap": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "id": "R5",
+      "requirement": "Post-2026-01-30 source-panel recency extension rows and provenance are acquired.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204715-codex-source-acquisition-outbox-v2-after-r6-uplift/source-acquisition-outbox-v2/source_acquisition_outbox_v2.json; docs/experiments/actionable-regime-confidence/runs/20260511T204850-codex-r6-finra-official-route-screen-v1/r6-finra-official-route-screen/r6_finra_official_route_screen_v1.json",
+      "evidence": "Outbox v2 merges bear_raid and painting_tape candidate surfaces and FINRA official routes were identified for spoofing/layering, but request_sent=false, rows_acquired=false, matched controls are absent, and intake files are absent.",
+      "gap": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "id": "R6",
+      "requirement": "Direct Manipulation positive/control/provenance files are acquired across required species.",
+      "status": "partial_still_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T204729-codex-source-acquisition-request-draft-bundle-v1/source-acquisition-request-draft-bundle/source_acquisition_request_draft_bundle_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T205031-codex-current-public-regime-dataset-scout-v1/current-public-regime-dataset-scout/current_public_regime_dataset_scout_v1.json",
+      "evidence": "Drafts were not sent; public candidates were not promoted; accepted_rows_added=0; new_confidence_gate=false; raw_data_committed=false.",
+      "gap": "",
+      "id": "R7",
+      "requirement": "No proxy labels, raw-data commits, threshold relaxation, external send, or trade-usable claim.",
+      "status": "pass_guardrail"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205214-codex-current-goal-completion-audit-v36-after-current-public-scout",
+      "evidence": "R2/R3/R4/R5/R6 remain blocked or partial after outbox v2, request drafts, and current public scout.",
+      "gap": "Strict full objective is not achieved; update_goal remains false.",
+      "id": "R8",
+      "requirement": "Only call update_goal when every strict requirement is covered by real evidence.",
+      "status": "fail_blocked"
+    }
+  ],
+  "checklist_rows": 9,
+  "decision": "current_goal_completion_audit_v36=current_public_scout_and_outbox_v2_rows_not_acquired_blocked",
+  "draft_bundle_decision": "source_acquisition_request_draft_bundle_v1=drafts_ready_not_sent_rows_not_acquired",
+  "draft_count": 5,
+  "finra_official_route_count": 2,
+  "finra_public_rows_acquired": false,
+  "finra_screen_decision": "r6_finra_official_route_screen_v1=official_route_identified_rows_not_acquired",
+  "generated_at_utc": "2026-05-11T12:51:44.716350+00:00",
+  "intake_roots_checked": [
+    {
+      "exists": false,
+      "missing_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "requirements": "R2;R4",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "exists": false,
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "requirements": "R3",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "exists": false,
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "requirements": "R5",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "exists": false,
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "requirements": "R6",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "new_confidence_gate_since_v35": false,
+  "objective_restatement": "Every active Board A regime requires source-owned or owner-approved >=95% confidence plus other-market/species and other-cycle/timeframe validation before completion.",
+  "outbox_v2_decision": "source_acquisition_outbox_v2=r6_uplift_merged_rows_not_acquired",
+  "outbox_v2_rows": 9,
+  "prior_v35_decision": "current_goal_completion_audit_v35=outbox_ready_rows_not_acquired_blocked",
+  "public_scout_candidate_count": 2,
+  "public_scout_current_rows_found": true,
+  "public_scout_decision": "current_public_regime_dataset_scout_v1=current_public_candidates_found_but_not_accepted",
+  "raw_data_committed": false,
+  "ready_intake_root_count": 0,
+  "ready_intake_roots": [],
+  "request_sent": false,
+  "rows_acquired": false,
+  "run_id": "20260511T205214-codex-current-goal-completion-audit-v36-after-current-public-scout",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unmet_ids": [
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R8"
+  ],
+  "unmet_rows": 6,
+  "update_goal": false
+}

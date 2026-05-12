@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245-1778561405017",
+  "generated_at": "2026-05-12T04:50:05.017955Z",
+  "symbol": "B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "4b3fe479b8b06ad1",
+  "execution_validity_summary": "execution_blocked=1039;execution_observe_only=599;execution_ready=362",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        600
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4468884521953106,
+      "execution_readiness_drift": -0.000053400487630086264,
+      "sample_count": 600
+    },
+    {
+      "horizon_bars": [
+        600,
+        1600
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.43106758762660335,
+      "execution_readiness_drift": 0.000011678235807101241,
+      "sample_count": 1000
+    },
+    {
+      "horizon_bars": [
+        1600,
+        2000
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4556481972932074,
+      "execution_readiness_drift": 0.00013382244877269,
+      "sample_count": 400
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "e0c4f72f03ea735b",
+    "data_fingerprint": "1bff940f3584cc4f"
+  }
+}

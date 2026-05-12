@@ -1,0 +1,15 @@
+RUN_ID 20260511T021900+0800-codex-mendeley-wash-trading-calibration-gate
+REPORT docs/experiments/actionable-regime-confidence/runs/20260511T021900-codex-mendeley-wash-trading-calibration-gate/wash-gate/mendeley_wash_trading_calibration_gate_report.json
+ACTIVE_AXIS MainRegimeV2
+CANDIDATE_REGIME Manipulation
+FILES_EVALUATED 2
+ACCEPTED_95_CONTEXT_COUNT 0
+CHRONOLOGY_BLOCKED_CONTEXT_COUNT 1
+ACCEPTED_95 false
+MANIPULATION_INPUT_STATE raw_wash_labels_calibration_failed_or_blocked
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+FRESH_CALIBRATION_RERUN true
+TRADE_USABLE false
+RAW_DATA_COMMITTED false
+GATE raw_wash_labels_calibration_failed_or_blocked

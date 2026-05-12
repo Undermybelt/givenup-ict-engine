@@ -1,0 +1,8 @@
+lock_acquired=ok
+canonical_files_exist=ok
+verifier_returncode_zero=ok
+verifier_schema_ready=ok
+positive_rows_73=ok
+matched_negative_rows_73=ok
+split_gates_still_blocked=ok
+strict_objective_still_false=ok

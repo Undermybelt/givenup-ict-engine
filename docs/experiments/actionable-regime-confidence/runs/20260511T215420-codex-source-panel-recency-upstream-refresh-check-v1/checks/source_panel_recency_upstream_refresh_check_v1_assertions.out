@@ -1,0 +1,15 @@
+run_id=20260511T215420+0800-codex-source-panel-recency-upstream-refresh-check-v1
+board_sha256_at_run=efd822d9146c732e0589eaa9aa415a8737e7bb1fdff5aac692ff51f30e15cc3a
+local_source_panel_date_max=2026-01-30
+kaggle_last_updated=2026-02-01 02:25:29.437000
+kaggle_max_file_creation=2026-02-01 02:25:31.845000
+r5_verifier_status=blocked
+r5_verifier_reason=missing_required_files
+extension_rows_added=0
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+external_requests_sent=true
+full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

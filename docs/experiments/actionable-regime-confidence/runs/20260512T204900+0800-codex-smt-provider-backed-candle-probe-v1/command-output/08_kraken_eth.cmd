@@ -1,0 +1,1 @@
+python3 scripts/auto_quant_external/fetch_external.py kraken-kline --market spot --pair ETHUSD --interval 1h --output docs/experiments/actionable-regime-confidence/runs/20260512T204900+0800-codex-smt-provider-backed-candle-probe-v1/data/kraken_ethusd_1h.csv

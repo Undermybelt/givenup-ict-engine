@@ -1,0 +1,8 @@
+gate_result=tsie_public_source_intake_dry_run_v1=metadata_mapping_transport_blocked_no_acceptance_no_merge
+size_api_rows=7193996
+feature_count=32
+full_parquet_aggregate_status=blocked
+accepted_rows_added=0
+canonical_merge_allowed=false
+downstream_chain_rerun_allowed=false
+update_goal=false

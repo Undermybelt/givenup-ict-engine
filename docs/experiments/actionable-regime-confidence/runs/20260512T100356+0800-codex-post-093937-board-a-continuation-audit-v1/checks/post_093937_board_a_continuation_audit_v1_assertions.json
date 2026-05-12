@@ -1,0 +1,11 @@
+{
+  "all_late_roots_present": true,
+  "auto_quant_status_exit_0": true,
+  "direct_verifier_exit_0": true,
+  "direct_verifier_schema_ready_unscored": true,
+  "owner_export_triplet_absent": true,
+  "promotion_allowed_false": true,
+  "provider_status_exit_0": true,
+  "strict_full_objective_false": true,
+  "update_goal_false": true
+}

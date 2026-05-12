@@ -1,0 +1,13 @@
+pass: mode=incubation_only
+pass: label=non_promoting_aq_feedback
+pass: first_wrapper_failure_classified_as_wrong_uv_project_owner
+pass: workspace_owned_run_attempted
+pass: workspace_owned_run_exit_code=1
+pass: workspace_owned_run_error=No pair in whitelist
+pass: synthetic_market_present=true
+pass: pairlist_underscore_filter_identified=true
+pass: mature_rooted_branch_observations_added=0
+pass: selected_data_autoquant_promotion=false
+pass: downstream_promotion_rerun=false
+pass: promotion_allowed=false
+pass: update_goal=false

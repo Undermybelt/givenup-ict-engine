@@ -1,0 +1,11 @@
+PASS gate_result=source_label_macro_context_rule_miner_v1=aborted_nonterminal_superseded_no_evidence
+PASS row_count=0
+PASS accepted_regime_confidence_labels=0
+PASS new_confidence_gate=false
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS required_target_roots_mutated=false

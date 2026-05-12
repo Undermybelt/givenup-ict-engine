@@ -1,0 +1,4 @@
+run_root=docs/experiments/actionable-regime-confidence/runs/20260512T075108+0800-codex-board-b-readonly-provider-runtime-gate-refresh-v1
+started_at=2026-05-12T07:51:08+08:00
+board_a_sha_before=4e59b20dec4d217a7bbe0e9b83b7b8d2a4c490aefb9bbc5653be5028634795f3
+board_b_sha_before=8d9012590fb4d431ec89ca11830a1cb4433f20873a198fbb6430d841e4277a15

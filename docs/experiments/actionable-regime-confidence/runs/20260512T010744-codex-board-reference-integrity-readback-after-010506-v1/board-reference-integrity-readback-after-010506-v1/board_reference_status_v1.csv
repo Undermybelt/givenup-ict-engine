@@ -1,0 +1,9 @@
+run_root,status,file_count,board_use
+docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3,present_verified,7,supporting_request_artifact
+docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1,present_verified,7,current_cursor_artifact
+docs/experiments/actionable-regime-confidence/runs/20260512T010201-codex-non-r6-source-intake-outbound-request-messages-v1,present_verified,9,supporting_request_artifact
+docs/experiments/actionable-regime-confidence/runs/20260512T010212-codex-r6-owner-export-access-route-preflight-v1,missing,0,do_not_use_until_restored_or_regenerated
+docs/experiments/actionable-regime-confidence/runs/20260512T010401-codex-r3-native-subhour-sendable-requests-v2,present_verified,10,supporting_non_r6_request_artifact_no_rows_acquired
+docs/experiments/actionable-regime-confidence/runs/20260512T010503-codex-current-objective-completion-audit-after-r6-entitlement-v1,present_non_promoting_audit,28,do_not_promote_controls_absent
+docs/experiments/actionable-regime-confidence/runs/20260512T010506-codex-r6-owner-export-official-contact-route-check-v1,present_verified,4,supporting_contact_route_artifact
+docs/experiments/actionable-regime-confidence/runs/20260512T010612-codex-current-objective-completion-audit-after-010127-v1,present_verified,6,non_promoting_current_cursor_completion_audit

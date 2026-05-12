@@ -1,0 +1,23 @@
+{
+  "accepted_new_roots_95": [],
+  "accepted_root_classes_95_effective": [
+    "Crisis"
+  ],
+  "fresh_calibration_rerun": true,
+  "gate_result": "blocked_kaggle_regime_label_root_gate_below_95",
+  "manipulation_blocker": "Kaggle stock-market regime labels are not direct event/order-lifecycle/L2 manipulation evidence.",
+  "manipulation_evaluated": false,
+  "missing_root_classes_95_effective": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Manipulation"
+  ],
+  "next_action": "If all source-labeled price/macro gates fail, acquire an authoritative regime-cycle label source or reopen feature design; keep Manipulation blocked until direct event/order-lifecycle labels exist.",
+  "retained_prior_accepted_root_classes_95": [
+    "Crisis"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

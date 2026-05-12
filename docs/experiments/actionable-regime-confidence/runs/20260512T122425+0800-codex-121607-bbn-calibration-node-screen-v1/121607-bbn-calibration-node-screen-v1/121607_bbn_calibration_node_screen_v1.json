@@ -1,0 +1,400 @@
+{
+  "accepted_candidate_nodes": [],
+  "active_confidence": 0.5250864595751618,
+  "active_regime": "range",
+  "branch_count": 2,
+  "candidate_nodes": [
+    {
+      "accepted_candidate": false,
+      "node": "source_provider",
+      "notes": [
+        "best_provider=yfinance win_rate=0.47619 rows=21"
+      ],
+      "rejection_reasons": [
+        "best_provider_win_rate_below_0_95",
+        "single_symbol_single_timeframe_only",
+        "provider_outcomes_do_not_lift_regime_confidence"
+      ],
+      "states": [
+        {
+          "avg_pnl": -0.399159,
+          "losses": 34,
+          "rows": 52,
+          "state": "binance_public",
+          "total_pnl": -20.756286,
+          "win_rate": 0.346154,
+          "wins": 18
+        },
+        {
+          "avg_pnl": -0.456712,
+          "losses": 33,
+          "rows": 51,
+          "state": "bybit_public",
+          "total_pnl": -23.292335,
+          "win_rate": 0.352941,
+          "wins": 18
+        },
+        {
+          "avg_pnl": 1.625112,
+          "losses": 29,
+          "rows": 44,
+          "state": "ibkr_paxos_long_midpoint",
+          "total_pnl": 71.504938,
+          "win_rate": 0.340909,
+          "wins": 15
+        },
+        {
+          "avg_pnl": -6.749075,
+          "losses": 27,
+          "rows": 37,
+          "state": "tvr_default_binance",
+          "total_pnl": -249.715776,
+          "win_rate": 0.27027,
+          "wins": 10
+        },
+        {
+          "avg_pnl": -3.954539,
+          "losses": 22,
+          "rows": 32,
+          "state": "kraken_public",
+          "total_pnl": -126.545257,
+          "win_rate": 0.3125,
+          "wins": 10
+        },
+        {
+          "avg_pnl": 7.847903,
+          "losses": 11,
+          "rows": 21,
+          "state": "yfinance",
+          "total_pnl": 164.805961,
+          "win_rate": 0.47619,
+          "wins": 10
+        }
+      ]
+    },
+    {
+      "accepted_candidate": false,
+      "node": "branch_path",
+      "notes": [],
+      "rejection_reasons": [
+        "best_branch_win_rate_below_0_95",
+        "active_bbn_regime_constant_range",
+        "branch_label_is_not_independent_regime_state_evidence"
+      ],
+      "states": [
+        {
+          "avg_pnl": 2.125252,
+          "losses": 101,
+          "rows": 164,
+          "state": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "total_pnl": 348.541397,
+          "win_rate": 0.384146,
+          "wins": 63
+        },
+        {
+          "avg_pnl": -7.295071,
+          "losses": 55,
+          "rows": 73,
+          "state": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+          "total_pnl": -532.540152,
+          "win_rate": 0.246575,
+          "wins": 18
+        }
+      ]
+    },
+    {
+      "accepted_candidate": false,
+      "node": "source_provider_x_branch_path",
+      "notes": [
+        "best_group=yfinance | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1 rows=13 win_rate=0.538462"
+      ],
+      "rejection_reasons": [
+        "best_group_rows_below_30",
+        "best_group_not_cross_provider_stable",
+        "best_group_win_rate_below_0_95"
+      ],
+      "states": [
+        {
+          "avg_pnl": 2.089566,
+          "losses": 23,
+          "rows": 37,
+          "state": "binance_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "total_pnl": 77.313931,
+          "win_rate": 0.378378,
+          "wins": 14
+        },
+        {
+          "avg_pnl": 4.354134,
+          "losses": 20,
+          "rows": 34,
+          "state": "bybit_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "total_pnl": 148.040565,
+          "win_rate": 0.411765,
+          "wins": 14
+        },
+        {
+          "avg_pnl": 3.069398,
+          "losses": 20,
+          "rows": 32,
+          "state": "ibkr_paxos_long_midpoint | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "total_pnl": 98.220726,
+          "win_rate": 0.375,
+          "wins": 12
+        },
+        {
+          "avg_pnl": -4.108881,
+          "losses": 17,
+          "rows": 25,
+          "state": "tvr_default_binance | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "total_pnl": -102.722031,
+          "win_rate": 0.32,
+          "wins": 8
+        },
+        {
+          "avg_pnl": -2.4082,
+          "losses": 15,
+          "rows": 23,
+          "state": "kraken_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "total_pnl": -55.388609,
+          "win_rate": 0.347826,
+          "wins": 8
+        },
+        {
+          "avg_pnl": -10.078406,
+          "losses": 13,
+          "rows": 17,
+          "state": "bybit_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+          "total_pnl": -171.3329,
+          "win_rate": 0.235294,
+          "wins": 4
+        },
+        {
+          "avg_pnl": -6.538014,
+          "losses": 11,
+          "rows": 15,
+          "state": "binance_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+          "total_pnl": -98.070217,
+          "win_rate": 0.266667,
+          "wins": 4
+        },
+        {
+          "avg_pnl": 14.082832,
+          "losses": 6,
+          "rows": 13,
+          "state": "yfinance | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "total_pnl": 183.076815,
+          "win_rate": 0.538462,
+          "wins": 7
+        },
+        {
+          "avg_pnl": -2.226316,
+          "losses": 9,
+          "rows": 12,
+          "state": "ibkr_paxos_long_midpoint | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+          "total_pnl": -26.715788,
+          "win_rate": 0.25,
+          "wins": 3
+        },
+        {
+          "avg_pnl": -12.249479,
+          "losses": 10,
+          "rows": 12,
+          "state": "tvr_default_binance | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+          "total_pnl": -146.993745,
+          "win_rate": 0.166667,
+          "wins": 2
+        },
+        {
+          "avg_pnl": -7.906294,
+          "losses": 7,
+          "rows": 9,
+          "state": "kraken_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+          "total_pnl": -71.156648,
+          "win_rate": 0.222222,
+          "wins": 2
+        },
+        {
+          "avg_pnl": -2.283857,
+          "losses": 5,
+          "rows": 8,
+          "state": "yfinance | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+          "total_pnl": -18.270854,
+          "win_rate": 0.375,
+          "wins": 3
+        }
+      ]
+    },
+    {
+      "accepted_candidate": false,
+      "node": "chronological_quartile",
+      "notes": [
+        "best_quartile=Q1 win_rate=0.5",
+        "worst_quartile=Q3 win_rate=0.050847"
+      ],
+      "rejection_reasons": [
+        "chronological_outcomes_unstable",
+        "worst_quartile_collapse",
+        "does_not_supply_cross_period_regime_lift"
+      ],
+      "states": [
+        {
+          "avg_pnl": 14.211239,
+          "losses": 30,
+          "rows": 60,
+          "state": "Q1",
+          "total_pnl": 852.674356,
+          "win_rate": 0.5,
+          "wins": 30
+        },
+        {
+          "avg_pnl": -0.007539,
+          "losses": 35,
+          "rows": 59,
+          "state": "Q2",
+          "total_pnl": -0.444799,
+          "win_rate": 0.40678,
+          "wins": 24
+        },
+        {
+          "avg_pnl": -16.562119,
+          "losses": 56,
+          "rows": 59,
+          "state": "Q3",
+          "total_pnl": -977.165008,
+          "win_rate": 0.050847,
+          "wins": 3
+        },
+        {
+          "avg_pnl": -1.001073,
+          "losses": 35,
+          "rows": 59,
+          "state": "Q4",
+          "total_pnl": -59.063304,
+          "win_rate": 0.40678,
+          "wins": 24
+        }
+      ]
+    },
+    {
+      "accepted_candidate": false,
+      "node": "factor_weighted_score_sign",
+      "notes": [
+        "weighted_score_equals_pnl_rows=237/237"
+      ],
+      "rejection_reasons": [
+        "post_trade_pnl_label_leakage",
+        "weighted_score_equals_realized_pnl_for_all_rows",
+        "not_admissible_as_pre_trade_bbn_node"
+      ],
+      "states": [
+        {
+          "avg_pnl": -25.151747,
+          "losses": 156,
+          "rows": 156,
+          "state": "negative_or_zero_score",
+          "total_pnl": -3923.672574,
+          "win_rate": 0.0,
+          "wins": 0
+        },
+        {
+          "avg_pnl": 46.168813,
+          "losses": 0,
+          "rows": 81,
+          "state": "positive_score",
+          "total_pnl": 3739.67382,
+          "win_rate": 1.0,
+          "wins": 81
+        }
+      ]
+    },
+    {
+      "accepted_candidate": false,
+      "node": "pre_bayes_canonical_regime",
+      "notes": [],
+      "rejection_reasons": [
+        "constant_state_range",
+        "pre_bayes_gate_pass_neutralized",
+        "no_cross_regime_separator_in_current_packet"
+      ],
+      "states": [
+        {
+          "avg_pnl": -0.776366,
+          "losses": 156,
+          "rows": 237,
+          "state": "range",
+          "total_pnl": -183.998755,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      ]
+    },
+    {
+      "accepted_candidate": false,
+      "node": "execution_status_tuple",
+      "notes": [],
+      "rejection_reasons": [
+        "constant_fail_closed_execution_status",
+        "ready_false_actionable_false_review_observe",
+        "cannot_promote_without_execution_admissibility"
+      ],
+      "states": [
+        {
+          "avg_pnl": -0.776366,
+          "losses": 156,
+          "rows": 237,
+          "state": "('execution_blocked', 'observe', False, False)",
+          "total_pnl": -183.998755,
+          "win_rate": 0.341772,
+          "wins": 81
+        }
+      ]
+    }
+  ],
+  "current_feedback_context": "entry_quality=medium,factor_alignment=mixed,factor_uncertainty=low",
+  "current_feedback_empirical_outcome": {
+    "probs": [
+      0.341772,
+      0.0,
+      0.658228
+    ],
+    "rows": 237,
+    "states": [
+      "win",
+      "breakeven",
+      "loss"
+    ]
+  },
+  "decision": {
+    "bbn_likelihood_mutation_allowed": false,
+    "gate": "121607_bbn_calibration_node_screen_v1=no_admissible_bbn_node_no_promotion",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "directional_gap_shortfall": 0.0762866318583341,
+  "leakage_detector": {
+    "verdict": "reject_factor_weighted_score_as_pre_trade_evidence",
+    "weighted_score_equals_pnl_ratio": 1.0,
+    "weighted_score_equals_pnl_rows": 237
+  },
+  "next_evidence_needs": [
+    "pre_trade provider/context features independent of realized pnl",
+    "cross-provider and cross-period validation before CPD mutation",
+    "non-constant pre-bayes regime evidence across trend/range/stress/transition",
+    "execution admissibility evidence resolving ready=false/actionable=false/observe"
+  ],
+  "provider_count": 6,
+  "range_gap_to_95": 0.20231228233180432,
+  "row_count": 237,
+  "run_id": "20260512T122425+0800-codex-121607-bbn-calibration-node-screen-v1",
+  "source_files": {
+    "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.enriched_layer_contract.jsonl": "84b42c482eab6d2049d591f6200c1054a7ffb0dc5f167301b435834ba90e383f",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json": "8dbaca4cc5663d504d22865003a968249e57fb4cafc7c109c1bc0f257ae92aaa",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T121701+0800-codex-120630-regime-confidence-gap-map-v1/120630-regime-confidence-gap-map-v1/120630_regime_confidence_gap_map_v1.json": "f35957ee36d47fc802b7e1207a7536ceb95a8d71fc7671a53dd39fb6757b2f3f"
+  },
+  "source_runs": {
+    "enriched_rows": "20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+    "feedback_packet": "20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1",
+    "gap_map": "20260512T121701+0800-codex-120630-regime-confidence-gap-map-v1"
+  }
+}

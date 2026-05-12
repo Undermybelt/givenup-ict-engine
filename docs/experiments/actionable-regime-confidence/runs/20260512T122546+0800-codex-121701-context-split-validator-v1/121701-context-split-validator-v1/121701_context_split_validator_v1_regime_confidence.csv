@@ -1,0 +1,5 @@
+regime,probability,gap_to_95,meets_95,is_active
+trend,0.0,0.95,False,False
+range,0.747688,0.202312,False,True
+stress,0.177544,0.772456,False,False
+transition,0.074769,0.875231,False,False

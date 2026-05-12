@@ -1,0 +1,6 @@
+requirement,artifact,status,note
+six provider matrix,docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv,covered,5/6 providers with rows
+AQ execution,docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/workspace,covered_partial,5/6 providers executed
+nonzero observations,workspace/*/derived/*.real_trades.jsonl,covered_partial,5/6 providers nonzero
+Pre-Bayes/BBN/CatBoost/execution,N/A,not_run,not enough mature rooted/calibrated evidence for promotion
+promotion,N/A,fail_closed,promotion_allowed=false

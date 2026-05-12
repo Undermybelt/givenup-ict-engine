@@ -1,0 +1,153 @@
+{
+  "run_id": "20260512T091219+0800-codex-source-control-arrival-poll-after-090725-v1",
+  "gate_result": "source_control_arrival_poll_after_090725_v1=no_new_required_root_no_unlock",
+  "board_a_sha256_before_artifact": "b09875c19f7b9d251b56eefab24a8df7b715af047d1db03255fce6f1c8749fbe",
+  "board_b_sha256_before_artifact": "6eef171cc0b17be54ed614492a89a4731f0c8dd7a9e84942710d6928d2adb452",
+  "generated_at_local": "2026-05-12T09:12:19+08:00",
+  "post_090725_dropzone_candidates": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T090725+0800-codex-current-objective-audit-after-085908-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091058+0800-codex-source-control-arrival-poll-after-090725-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091105+0800-codex-r5-mainregimev2-local-candidate-screen-after-090725-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091136+0800-codex-source-control-arrival-poll-after-090725-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091213+0800-codex-source-control-arrival-poll-after-090725-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091219+0800-codex-source-control-arrival-poll-after-090725-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091236+0800-codex-r5-mainregimev2-local-candidate-screen-after-090725-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091245+0800-codex-local-source-control-candidate-refresh-after-085908-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091246+0800-codex-source-control-arrival-poll-after-090725-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T091346+0800-codex-source-control-selected-history-poll-after-090725-v1"
+  ],
+  "target_roots": [
+    {
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "exists": false,
+      "is_dir": false,
+      "file_count": 0,
+      "required_files_present": {
+        "positive_spoofing_layering_rows.csv": false,
+        "matched_negative_normal_activity_rows.csv": false,
+        "provenance_manifest.json": false
+      },
+      "complete_required_file_set": false,
+      "sample_files": []
+    },
+    {
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "exists": false,
+      "is_dir": false,
+      "file_count": 0,
+      "required_files_present": {
+        "positive_spoofing_layering_rows.csv": false,
+        "matched_negative_normal_activity_rows.csv": false,
+        "provenance_manifest.json": false
+      },
+      "complete_required_file_set": false,
+      "sample_files": []
+    },
+    {
+      "name": "r5_recency_tmp",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "exists": false,
+      "is_dir": false,
+      "file_count": 0,
+      "required_files_present": {
+        "stock_market_regimes_2026_extension.csv": false,
+        "source_panel_recency_provenance.json": false
+      },
+      "complete_required_file_set": false,
+      "sample_files": []
+    },
+    {
+      "name": "r5_recency_private_tmp",
+      "path": "/private/tmp/ict-engine-source-panel-recency-extension",
+      "exists": false,
+      "is_dir": false,
+      "file_count": 0,
+      "required_files_present": {
+        "stock_market_regimes_2026_extension.csv": false,
+        "source_panel_recency_provenance.json": false
+      },
+      "complete_required_file_set": false,
+      "sample_files": []
+    },
+    {
+      "name": "r3_native_subhour_tmp",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "exists": true,
+      "is_dir": true,
+      "file_count": 2,
+      "required_files_present": {
+        "native_subhour_source_label_rows.csv": true,
+        "native_subhour_source_label_provenance.json": true
+      },
+      "complete_required_file_set": true,
+      "sample_files": [
+        {
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "size": 2400,
+          "mtime": "2026-05-11T22:35:34.137892+00:00"
+        },
+        {
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size": 2786719721,
+          "mtime": "2026-05-11T22:35:23.150451+00:00"
+        }
+      ]
+    },
+    {
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "exists": true,
+      "is_dir": true,
+      "file_count": 2,
+      "required_files_present": {
+        "native_subhour_source_label_rows.csv": true,
+        "native_subhour_source_label_provenance.json": true
+      },
+      "complete_required_file_set": true,
+      "sample_files": [
+        {
+          "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "size": 2400,
+          "mtime": "2026-05-11T22:35:34.137892+00:00"
+        },
+        {
+          "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size": 2786719721,
+          "mtime": "2026-05-11T22:35:23.150451+00:00"
+        }
+      ]
+    }
+  ],
+  "prior_assertion_rows": [
+    {
+      "name": "090725_current_objective_audit",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T090725+0800-codex-current-objective-audit-after-085908-v1/checks/current_objective_audit_after_085908_v1_assertions.out",
+      "gate_result": "current_objective_audit_after_085908_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+      "present": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "name": "090006_current_objective_audit",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T090006+0800-codex-current-objective-audit-after-085612-v1/checks/current_objective_audit_after_085612_v1_assertions.out",
+      "gate_result": "current_objective_audit_after_085612_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+      "present": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  ],
+  "accepted_rows_added": 0,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

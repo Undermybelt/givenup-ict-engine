@@ -1,0 +1,61 @@
+{
+  "artifact_count": 2,
+  "artifacts": {
+    "branch_rc_spa_report": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_rc_spa_report_v1.json",
+      "schema_version": "board-b-source-root-stop-carry-longhorizon/v1",
+      "status": "present"
+    }
+  },
+  "consumer_contract": {
+    "hotplug_scope": "include_artifact",
+    "main_runtime_mutation": "none",
+    "optional_for_consumers": true,
+    "token_friendly": true,
+    "zero_config": true
+  },
+  "consumer_hints": {
+    "bbn_evidence_hint": {
+      "regime_decision_reasons": [
+        "branch_rc_spa_passed",
+        "root=Bear"
+      ],
+      "regime_decision_state": "single_label_95",
+      "regime_label": "primary::BearReliefCarry",
+      "regime_label_set": [
+        "primary::BearReliefCarry",
+        "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12"
+      ],
+      "regime_trade_usable": true,
+      "regime_transition_hazard": 0.0
+    },
+    "execution_tree_hint": "accept_regime",
+    "path_ranker_context": {
+      "dsr": 4.00065690911295,
+      "edge_lcb_5pct": 0.0031720041424467393,
+      "parent_regime_root": "Bear",
+      "pbo": 0.22727272727272727,
+      "rc_spa": 77.5,
+      "recipe_id": "SourceRootStopCarryLongHorizonV1",
+      "regime_profit_branch_path": "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+      "selected_variant_id": "bear_carry_h20_sl048_tp12",
+      "trade_count": 1349
+    },
+    "trade_usable": true
+  },
+  "latest_decision": {
+    "abstain_reasons": [
+      "branch_path_downstream_consumption_probe"
+    ],
+    "decision_state": "single_label_95",
+    "final_label": "primary::BearReliefCarry",
+    "label_set": [
+      "primary::BearReliefCarry",
+      "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12"
+    ],
+    "timestamp": "2026-05-11T14:18:56.001680Z",
+    "trade_usable": true
+  },
+  "missing_artifacts": [],
+  "schema_version": "regime-consumer-bundle/v1"
+}

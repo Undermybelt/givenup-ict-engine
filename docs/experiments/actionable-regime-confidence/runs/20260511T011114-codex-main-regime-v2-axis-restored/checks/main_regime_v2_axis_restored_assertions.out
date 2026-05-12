@@ -1,0 +1,8 @@
+PASS active_axis=Bull,Bear,Sideways,Crisis,Manipulation,UnknownOrMixed
+PASS roottaxonomyv3_wrong_axis_provenance_only=true
+PASS six_accepted_packets_sub_regime_evidence_only=true
+PASS manipulation_ohlcv_proxy_acceptance=false
+PASS accepted_gate=partial_for_MainRegimeV2
+PASS accepted_root_classes_95=Crisis
+PASS missing_root_classes_95=Bull,Bear,Sideways,Manipulation
+GATE blocked_not_complete

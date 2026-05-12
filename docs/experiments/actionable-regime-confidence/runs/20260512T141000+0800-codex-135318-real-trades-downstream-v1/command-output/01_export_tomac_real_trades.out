@@ -1,0 +1,143 @@
+Result for strategy TomacNQ_KillzoneBreakout
+                                              BACKTESTING REPORT                                               
+┏━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃   Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃      Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ NQ/USD │     77 │         0.13 │       9500.480 │          9.5 │  8 days, 22:29:00 │   56     0    21  72.7 │
+│ ES/USD │    115 │         0.03 │       2137.360 │         2.14 │ 10 days, 16:23:00 │   59     3    53  51.3 │
+│  TOTAL │    192 │         0.07 │      11637.840 │        11.64 │  9 days, 23:35:00 │  115     3    74  59.9 │
+└────────┴────────┴──────────────┴────────────────┴──────────────┴───────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                  
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃     Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │     192 │         0.07 │      11637.840 │        11.64 │ 9 days, 23:35:00 │  115     3    74  59.9 │
+│     TOTAL │     192 │         0.07 │      11637.840 │        11.64 │ 9 days, 23:35:00 │  115     3    74  59.9 │
+└───────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────────┴────────────────────────┘
+                                                    EXIT REASON STATS                                                     
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃      Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ trailing_stop_loss │    88 │         0.86 │      71390.720 │        71.39 │  10 days, 1:08:00 │   88     0     0   100 │
+│        exit_signal │    87 │        -0.32 │     -27688.000 │       -27.69 │ 11 days, 18:46:00 │   27     3    57  31.0 │
+│          stop_loss │    17 │        -2.03 │     -32064.880 │       -32.06 │          10:39:00 │    0     0    17     0 │
+│              TOTAL │   192 │         0.07 │      11637.840 │        11.64 │  9 days, 23:35:00 │  115     3    74  59.9 │
+└────────────────────┴───────┴──────────────┴────────────────┴──────────────┴───────────────────┴────────────────────────┘
+                                                            MIXED TAG STATS                                                            
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃        Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃      Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ trailing_stop_loss │     88 │         0.86 │      71390.720 │        71.39 │  10 days, 1:08:00 │   88     0     0   100 │
+│           │        exit_signal │     87 │        -0.32 │     -27688.000 │       -27.69 │ 11 days, 18:46:00 │   27     3    57  31.0 │
+│           │          stop_loss │     17 │        -2.03 │     -32064.880 │       -32.06 │          10:39:00 │    0     0    17     0 │
+│     TOTAL │                    │    192 │         0.07 │      11637.840 │        11.64 │  9 days, 23:35:00 │  115     3    74  59.9 │
+└───────────┴────────────────────┴────────┴──────────────┴────────────────┴──────────────┴───────────────────┴────────────────────────┘
+                           SUMMARY METRICS                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                             ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2012-05-03 23:00:00               │
+│ Backtesting to                │ 2025-08-04 12:00:00               │
+│ Trading Mode                  │ Spot                              │
+│ Max open trades               │ 1                                 │
+│                               │                                   │
+│ Total/Daily Avg Trades        │ 192 / 0.04                        │
+│ Starting balance              │ 100000 USD                        │
+│ Final balance                 │ 111637.84 USD                     │
+│ Absolute profit               │ 11637.84 USD                      │
+│ Total profit %                │ 11.64%                            │
+│ CAGR %                        │ 0.83%                             │
+│ Sortino                       │ 0.06                              │
+│ Sharpe                        │ 0.04                              │
+│ Calmar                        │ 0.61                              │
+│ SQN                           │ 0.82                              │
+│ Profit factor                 │ 1.16                              │
+│ Expectancy (Ratio)            │ 60.61 (0.05)                      │
+│ Avg. daily profit             │ 2.405 USD                         │
+│ Avg. stake amount             │ 93801.45 USD                      │
+│ Total trade volume            │ 36031394.64 USD                   │
+│                               │                                   │
+│ Best Pair                     │ NQ/USD 9.50%                      │
+│ Worst Pair                    │ ES/USD 2.14%                      │
+│ Best trade                    │ NQ/USD 2.85%                      │
+│ Worst trade                   │ ES/USD -2.74%                     │
+│ Best day                      │ 3378.48 USD                       │
+│ Worst day                     │ -2842 USD                         │
+│ Days win/draw/lose            │ 91 / 4120 / 72                    │
+│ Min/Max/Avg. Duration Winners │ 0d 00:00 / 570d 16:00 / 12d 23:08 │
+│ Min/Max/Avg. Duration Losers  │ 0d 00:00 / 191d 22:00 / 5d 00:19  │
+│ Max Consecutive Wins / Loss   │ 9 / 5                             │
+│ Rejected Entry signals        │ 54                                │
+│ Entry/Exit Timeouts           │ 0 / 7633                          │
+│                               │                                   │
+│ Min balance                   │ 98191.2 USD                       │
+│ Max balance                   │ 113515.84 USD                     │
+│ Max % of account underwater   │ 7.48%                             │
+│ Absolute drawdown             │ 8422.96 USD (7.48%)               │
+│ Drawdown duration             │ 120 days 16:00:00                 │
+│ Profit at drawdown start      │ 12680.24 USD                      │
+│ Profit at drawdown end        │ 4257.28 USD                       │
+│ Drawdown start                │ 2023-08-01 22:00:00               │
+│ Drawdown end                  │ 2023-11-30 14:00:00               │
+│ Market change                 │ 69.30%                            │
+└───────────────────────────────┴───────────────────────────────────┘
+
+Backtested 2012-05-03 23:00:00 -> 2025-08-04 12:00:00 | Max open trades : 1
+                                                                  STRATEGY SUMMARY                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃                 Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃     Avg Duration ┃  Win  Draw  Loss  Win% ┃           Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ TomacNQ_KillzoneBreakout │    192 │         0.07 │      11637.840 │        11.64 │ 9 days, 23:35:00 │  115     3    74  59.9 │ 8422.96 USD  7.48% │
+└──────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────────┴────────────────────────┴────────────────────┘
+{
+  "protocol": "tomac-real-trade-export-v1",
+  "strategy": "TomacNQ_KillzoneBreakout",
+  "run_id": "20260512T135318-long-history-es-nq-tomac",
+  "records": 192,
+  "raw_trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_raw_trades.json",
+  "all_trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_all.jsonl",
+  "split_paths": {
+    "ES": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_es.jsonl",
+    "NQ": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_nq.jsonl"
+  },
+  "aggregate_metrics": {
+    "sharpe": 0.0448679173799532,
+    "sortino": 0.06455361635106481,
+    "calmar": 0.6145489454246446,
+    "total_profit_pct": 11.64,
+    "max_drawdown_pct": -7.475099449557431,
+    "trade_count": 192,
+    "win_rate_pct": 59.895833333333336,
+    "profit_factor": 1.1615431511314005
+  },
+  "per_pair_metrics": {
+    "NQ/USD": {
+      "sharpe": 0.03357919416689083,
+      "sortino": 0.06699265514375707,
+      "calmar": 0.5328470448089402,
+      "total_profit_pct": 9.5,
+      "max_drawdown_pct": -7.03791564412842,
+      "trade_count": 77,
+      "win_rate_pct": 72.72727272727273,
+      "profit_factor": 1.3085853861344974
+    },
+    "ES/USD": {
+      "sharpe": 0.008841057929702766,
+      "sortino": 0.0125949374031921,
+      "calmar": 0.07478661216189522,
+      "total_profit_pct": 2.14,
+      "max_drawdown_pct": -11.281189329114827,
+      "trade_count": 115,
+      "win_rate_pct": 51.30434782608696,
+      "profit_factor": 1.0518091610898985
+    }
+  },
+  "backtest_start": "2012-05-03 23:00:00",
+  "backtest_end": "2025-08-04 12:00:00"
+}

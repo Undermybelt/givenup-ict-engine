@@ -1,0 +1,188 @@
+{
+  "schema_version": "board-a-main-regime-taxonomy-enrichment/v1",
+  "loop_id": "20260511T042050+0800-codex-main-regime-taxonomy-enrichment",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T042050-codex-main-regime-taxonomy-enrichment",
+  "purpose": "paper_and_github_source_refresh_after_user_main_vs_sub_regime_correction",
+  "fresh_calibration_rerun": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "accepted_roots_after_refresh": [
+    "BullExpansion",
+    "SidewaysConsolidation",
+    "CrisisCrash"
+  ],
+  "missing_roots_after_refresh": [
+    "BearExpansion",
+    "Manipulation"
+  ],
+  "active_roots": [
+    {
+      "root": "BullExpansion",
+      "layer": "active_root",
+      "status": "accepted_95",
+      "decision": "main_directional_expansion_root"
+    },
+    {
+      "root": "BearExpansion",
+      "layer": "active_root",
+      "status": "missing",
+      "decision": "main_directional_negative_expansion_root"
+    },
+    {
+      "root": "SidewaysConsolidation",
+      "layer": "active_root",
+      "status": "accepted_95",
+      "decision": "main_range_consolidation_root"
+    },
+    {
+      "root": "CrisisCrash",
+      "layer": "active_root",
+      "status": "accepted_95",
+      "decision": "main_stress_crash_root"
+    },
+    {
+      "root": "Manipulation",
+      "layer": "direct_input_root_or_overlay",
+      "status": "missing_required_inputs",
+      "decision": "requires_direct_event_order_lifecycle_L2_L3_MBO_social_or_on_chain_evidence"
+    },
+    {
+      "root": "UnknownOrMixed",
+      "layer": "residual",
+      "status": "residual_only",
+      "decision": "abstain_bucket_not_completion_root"
+    }
+  ],
+  "preflight_only_candidates": [
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "VolatilityDislocation",
+    "TransitionRecovery",
+    "CrossAssetRotation/RiskOnRiskOff",
+    "MacroPolicyRegime"
+  ],
+  "source_matrix": [
+    {
+      "source": "Zakamulin Not all bull and bear markets are alike",
+      "url": "https://doi.org/10.1057/s41283-022-00112-y",
+      "supports": [
+        "BullExpansion",
+        "BearExpansion",
+        "CrisisCrash",
+        "BubbleEuphoria"
+      ],
+      "board_a_decision": "bull_bear_are_main_axes_with_child_states_below_them"
+    },
+    {
+      "source": "Oelschlager Adam hierarchical HMM",
+      "url": "https://arxiv.org/abs/2007.14874",
+      "supports": [
+        "root_plus_substate_hierarchy"
+      ],
+      "board_a_decision": "use_root_state_plus_context_not_flat_child_only_taxonomy"
+    },
+    {
+      "source": "Chen Tsang directional-change regimes",
+      "url": "https://doi.org/10.3390/a11120202",
+      "supports": [
+        "event_based_features",
+        "abnormal_regime_evidence"
+      ],
+      "board_a_decision": "directional_change_is_evidence_feature_not_root_completion_by_itself"
+    },
+    {
+      "source": "Werge asset-independent regime switching",
+      "url": "https://arxiv.org/abs/2107.05535",
+      "supports": [
+        "cross_asset_bull_bear_high_volatility"
+      ],
+      "board_a_decision": "root_contract_should_remain_cross_market"
+    },
+    {
+      "source": "mafaqbhatti stock-market-regimes-20002026",
+      "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+      "supports": [
+        "Bull",
+        "Bear",
+        "Sideways",
+        "Crisis"
+      ],
+      "board_a_decision": "root_label_preflight_source_already_used_for_bull_and_failed_for_bear"
+    },
+    {
+      "source": "hidden-regime GitHub",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "supports": [
+        "implementation_prior",
+        "Bull",
+        "Bear",
+        "Sideways",
+        "Crisis"
+      ],
+      "board_a_decision": "implementation_prior_not_acceptance_evidence"
+    },
+    {
+      "source": "hmmlearn",
+      "url": "https://github.com/hmmlearn/hmmlearn",
+      "supports": [
+        "hidden_state_modeling"
+      ],
+      "board_a_decision": "tooling_prior_only"
+    },
+    {
+      "source": "ruptures",
+      "url": "https://github.com/deepcharles/ruptures",
+      "supports": [
+        "change_point_detection"
+      ],
+      "board_a_decision": "boundary_evidence_not_root_label_by_itself"
+    },
+    {
+      "source": "Siering Clapham Engel Gomber manipulation taxonomy",
+      "url": "https://doi.org/10.1057/s41265-016-0029-z",
+      "supports": [
+        "Manipulation"
+      ],
+      "board_a_decision": "manipulation_requires_type_specific_direct_evidence"
+    },
+    {
+      "source": "Do Putnins spoofing layering",
+      "url": "https://ssrn.com/abstract=4525036",
+      "supports": [
+        "Manipulation",
+        "order_book_direct_inputs"
+      ],
+      "board_a_decision": "direct_order_lifecycle_inputs_required"
+    },
+    {
+      "source": "Fabre Challet order-level manipulation analysis",
+      "url": "https://arxiv.org/abs/2504.15908",
+      "supports": [
+        "Manipulation",
+        "L3_order_level_inputs"
+      ],
+      "board_a_decision": "OHLCV_only_manipulation_proxy_is_fail_closed"
+    },
+    {
+      "source": "SystemsLab Sapienza pump-and-dump dataset",
+      "url": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+      "supports": [
+        "Manipulation",
+        "pump_event_social_evidence"
+      ],
+      "board_a_decision": "candidate_direct_event_source_needs_chronological_positive_negative_gate"
+    },
+    {
+      "source": "Bayi-Hu pump-and-dump GitHub",
+      "url": "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+      "supports": [
+        "Manipulation",
+        "pump_event_social_market_features"
+      ],
+      "board_a_decision": "candidate_direct_event_source_prior_probes_did_not_pass_95"
+    }
+  ],
+  "gate_result": "taxonomy_enriched_no_new_accepted_root",
+  "next_action": "Acquire materially stronger BearExpansion evidence and direct Manipulation evidence; do not repeat OHLCV-only manipulation proxies."
+}

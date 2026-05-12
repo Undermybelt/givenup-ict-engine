@@ -1,0 +1,1 @@
+./target/debug/ict-engine market-data-harness --action fetch --market board-a-115431-tvr-btc-usd-1h-stdio --interval 1h --role crypto_reference --provider crypto_reference=tradingview_mcp --symbol-spec crypto_reference=BTC-USD

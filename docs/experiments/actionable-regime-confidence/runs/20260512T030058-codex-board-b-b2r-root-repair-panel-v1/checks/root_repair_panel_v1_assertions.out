@@ -1,0 +1,16 @@
+PASS consumer_map_exists=True
+PASS accepted_floors_loaded_for_all_price_roots=True
+PASS auto_quant_panel_rows_positive=True
+PASS variant_rows_positive=True
+PASS selected_rows_positive=True
+PASS all_price_roots_represented=True
+PASS rooted_paths_present=True
+PASS strategy_library_exists=True
+PASS real_trades_exists=True
+PASS path_scores_exists=True
+PASS analyze_jsons_exist=True
+PASS no_runtime_code_changed=True
+PASS no_auto_quant_checkout_changed=True
+PASS all_assertions_passed=True
+INFO gate_result=fail:required_root_branch_hard_gates_failed
+INFO downstream_consumption=not_started:blocked_by_branch_rc_spa_hard_gates

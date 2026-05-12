@@ -1,0 +1,23 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 73,
+  "matched_negative_rows": 73,
+  "matched_group_count": 70,
+  "provenance_keys": [
+    "baseline_matched_negative_rows",
+    "baseline_positive_rows",
+    "baseline_reconstructed_from",
+    "generated_at_utc",
+    "jpm_cftc_rows_accepted_in_isolated_reconstruction",
+    "jpm_source",
+    "matched_control_policy",
+    "nowak_smith_candidate_rows_accepted_in_isolated_reconstruction",
+    "raw_data_committed",
+    "run_id",
+    "runtime_code_changed",
+    "sarao_candidate_rows_accepted_in_isolated_reconstruction",
+    "sidecar_broad_normal_controls_path",
+    "thresholds_relaxed"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

@@ -1,0 +1,23 @@
+{
+  "accepted_new_roots_95": [],
+  "accepted_root_classes_95_effective": [
+    "Crisis"
+  ],
+  "fresh_calibration_rerun": true,
+  "gate_result": "blocked_cftc_dealer_root_gate_below_95",
+  "manipulation_blocker": "Weekly CFTC positioning is not direct event/order-lifecycle/L2 manipulation evidence.",
+  "manipulation_evaluated": false,
+  "missing_root_classes_95_effective": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Manipulation"
+  ],
+  "next_action": "Acquire direct parent-labeled bull/bear/sideways regime-cycle data; CFTC positioning alone is still a proxy feature source.",
+  "retained_prior_accepted_root_classes_95": [
+    "Crisis"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

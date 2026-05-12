@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035139-codex-board-b-032157-agent-selected-ltf-factor-research-v1/agent-selected-ltf-v1/analyze_nq_ltf_candles.csv ...
+  raw_rows=260 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=260
+  range 2025-12-15 12:00:00+00:00 -> 2025-12-31 21:00:00+00:00
+  after timerange slice: 239 rows
+  cleaning: SKIPPED (--no-clean)
+  gap_audit: median_gap=3600s max_gap=3,000.0min big_gaps_gt_60x_median=0 (typical for futures session breaks/weekends)
+  wrote   1h:     239 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035139-codex-board-b-032157-agent-selected-ltf-factor-research-v1/state_agent_selected_ltf_v1/.deps/auto-quant/user_data/data/NQ_USD-1h.feather
+  wrote   4h:      66 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035139-codex-board-b-032157-agent-selected-ltf-factor-research-v1/state_agent_selected_ltf_v1/.deps/auto-quant/user_data/data/NQ_USD-4h.feather
+  wrote   1d:      15 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035139-codex-board-b-032157-agent-selected-ltf-factor-research-v1/state_agent_selected_ltf_v1/.deps/auto-quant/user_data/data/NQ_USD-1d.feather
+Done: 3 feather files for pair NQ/USD in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035139-codex-board-b-032157-agent-selected-ltf-factor-research-v1/state_agent_selected_ltf_v1/.deps/auto-quant/user_data/data

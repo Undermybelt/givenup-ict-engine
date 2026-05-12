@@ -1,0 +1,10 @@
+PASS decision=r3_r5_source_label_intake_presence_sweep_v1=non_r6_intake_roots_absent_or_incomplete
+PASS ready_roots=0
+PASS present_required_files=0
+PASS missing_required_files=6
+PASS source_label_equivalence_status=blocked
+PASS source_panel_recency_status=blocked
+PASS native_subhour_root_ready=false
+PASS candidate_hits_count=0
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

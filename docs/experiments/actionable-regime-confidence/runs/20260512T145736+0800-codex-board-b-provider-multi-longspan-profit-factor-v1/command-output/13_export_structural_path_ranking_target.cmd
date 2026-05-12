@@ -1,0 +1,1 @@
+./target/debug/ict-engine export-structural-path-ranking-target --symbol B2R_PROVIDER_MULTI_LONGSPAN_EMA_RSI_145736 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/state_multi_longspan_v1

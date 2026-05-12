@@ -1,0 +1,10 @@
+PASS decision=provider_downstream_readback_v1=live_status_recorded_strict_source_rows_still_blocked
+PASS yfinance_ready=true
+PASS kraken_cli_ready=true
+PASS ibkr_observed=true
+PASS tradingview_mcp_observed=true
+PASS analyze_live_nq_yfinance_exit=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

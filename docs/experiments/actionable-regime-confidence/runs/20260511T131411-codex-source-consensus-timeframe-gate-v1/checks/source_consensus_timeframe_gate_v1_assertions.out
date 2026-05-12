@@ -1,0 +1,14 @@
+run_id=20260511T131411+0800-codex-source-consensus-timeframe-gate-v1
+board_sha256_at_run=754dbd6b9074afdf889760cb4e256cde500a530775fd14d4f1ff4841c54f3359
+source_consensus_threshold=0.95
+accepted_95_timeframe_root_cells=1w:Bull,1w:Bear,1w:Sideways,1w:Crisis,1mo:Bull,1mo:Bear,1mo:Crisis
+blocked_timeframe_root_cells=1mo:Sideways
+newly_closed_cells_vs_prior_derived_probe=1w:Bear,1w:Crisis,1mo:Bull,1mo:Bear,1mo:Crisis
+remaining_same_source_timeframe_blocker=1mo:Sideways
+gate_result=accepted_95_source_consensus_7of8_same_source_timeframe_cells_full_matrix_still_blocked
+accepted_full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

@@ -1,0 +1,171 @@
+[
+  {
+    "run_id": "auto_quant_prior_init_B2R_ROOT_REPAIR_030058_20260511T191015.824435000Z",
+    "timestamp": "2026-05-11T19:10:15.824435Z",
+    "library_artifact_id": "docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/branch-rc-spa/strategy_library_root_repair_panel_v1.json",
+    "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/branch-rc-spa/strategy_library_root_repair_panel_v1.json",
+    "dry_run": true,
+    "outcome": {
+      "parent_config": [
+        0,
+        0,
+        0
+      ],
+      "initial_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "final_probs": [
+        0.21826298447957018,
+        4.13360788394327e-13,
+        0.7817370155200165
+      ],
+      "strategies_applied": [
+        {
+          "strategy_name": "RootRepairPanelV1_Bull",
+          "mutation_id": "b2r_root_repair_panel_v1",
+          "trade_count": 4365,
+          "n_win": 2213,
+          "n_loss": 2152,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.999956,
+            0.000022,
+            0.000022
+          ],
+          "after_probs": [
+            0.5078892403384404,
+            4.024697004344843e-8,
+            0.4921107194145895
+          ],
+          "diff": [
+            -0.49206675966155955,
+            -0.00002195975302995655,
+            0.4920887194145895
+          ],
+          "bbn_entropy_before": 0.0005158756285885085,
+          "bbn_entropy_after": 0.6930233922125895,
+          "bbn_entropy_reduction": 0.0,
+          "bbn_log_loss_before": 5.287320214262147,
+          "bbn_log_loss_after": 0.6930511971988553,
+          "bbn_log_loss_delta": 4.594269017063292,
+          "bbn_contradiction_before": 0.9859812004581902,
+          "bbn_contradiction_after": 0.001803761629011145,
+          "bbn_contradiction_lift": 0.984177438829179,
+          "evidence_value_gate_passed": true
+        },
+        {
+          "strategy_name": "RootRepairPanelV1_Bear",
+          "mutation_id": "b2r_root_repair_panel_v1",
+          "trade_count": 340,
+          "n_win": 160,
+          "n_loss": 180,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.5078892403384404,
+            4.024697004344843e-8,
+            0.4921107194145895
+          ],
+          "after_probs": [
+            0.4714457296629526,
+            9.252177021482398e-10,
+            0.5285542694118297
+          ],
+          "diff": [
+            -0.03644351067548779,
+            -3.932175234130019e-8,
+            0.0364435499972402
+          ],
+          "bbn_entropy_before": 0.6930233922125895,
+          "bbn_entropy_after": 0.6915156198871186,
+          "bbn_entropy_reduction": 0.0015077723254708353,
+          "bbn_log_loss_before": 0.6941999425392442,
+          "bbn_log_loss_after": 0.6914175540462718,
+          "bbn_log_loss_delta": 0.0027823884929724096,
+          "bbn_contradiction_before": 0.07460209058258566,
+          "bbn_contradiction_after": 0.001714990588105336,
+          "bbn_contradiction_lift": 0.07288709999448031,
+          "evidence_value_gate_passed": true
+        },
+        {
+          "strategy_name": "RootRepairPanelV1_Sideways",
+          "mutation_id": "b2r_root_repair_panel_v1",
+          "trade_count": 5722,
+          "n_win": 2472,
+          "n_loss": 3250,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.4714457296629526,
+            9.252177021482398e-10,
+            0.5285542694118297
+          ],
+          "after_probs": [
+            0.43207182649865683,
+            1.291752463732272e-12,
+            0.5679281735000514
+          ],
+          "diff": [
+            -0.03937390316429579,
+            -9.239259496845075e-10,
+            0.03937390408822172
+          ],
+          "bbn_entropy_before": 0.6915156198871186,
+          "bbn_entropy_after": 0.6838901071637982,
+          "bbn_entropy_reduction": 0.00762551272332046,
+          "bbn_log_loss_before": 0.6870072360047441,
+          "bbn_log_loss_after": 0.6838750565205405,
+          "bbn_log_loss_delta": 0.0031321794842036343,
+          "bbn_contradiction_before": 0.07885790647518717,
+          "bbn_contradiction_after": 0.00011009829874370733,
+          "bbn_contradiction_lift": 0.07874780817644346,
+          "evidence_value_gate_passed": true
+        },
+        {
+          "strategy_name": "RootRepairPanelV1_Crisis",
+          "mutation_id": "b2r_root_repair_panel_v1",
+          "trade_count": 17,
+          "n_win": 2,
+          "n_loss": 15,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.43207182649865683,
+            1.291752463732272e-12,
+            0.5679281735000514
+          ],
+          "after_probs": [
+            0.21826298447957018,
+            4.13360788394327e-13,
+            0.7817370155200165
+          ],
+          "diff": [
+            -0.21380884201908665,
+            -8.783916753379449e-13,
+            0.21380884201996508
+          ],
+          "bbn_entropy_before": 0.6838901071637982,
+          "bbn_entropy_after": 0.5247006711823936,
+          "bbn_entropy_reduction": 0.15918943598140456,
+          "bbn_log_loss_before": 0.5979253958512016,
+          "bbn_log_loss_after": 0.3963330923028218,
+          "bbn_log_loss_delta": 0.20159230354837981,
+          "bbn_contradiction_before": 0.6288495353528383,
+          "bbn_contradiction_after": 0.2012318513129082,
+          "bbn_contradiction_lift": 0.42761768403993006,
+          "evidence_value_gate_passed": true
+        }
+      ],
+      "strategies_skipped": [],
+      "temper": 0.5,
+      "prior_strength": 4.0,
+      "bbn_entropy_reduction": 0.16832272103019585,
+      "bbn_log_loss_delta": 4.801775888588848,
+      "bbn_contradiction_lift": 1.5634300310400326,
+      "evidence_value_gate_passed": true
+    }
+  }
+]

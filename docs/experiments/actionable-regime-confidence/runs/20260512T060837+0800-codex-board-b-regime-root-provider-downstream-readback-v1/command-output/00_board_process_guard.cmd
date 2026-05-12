@@ -1,0 +1,1 @@
+shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md docs/plans/2026-05-10-actionable-regime-confidence-todo.md; ps -axo pid,ppid,etime,command | rg 'ict-engine|Auto-Quant|auto_quant|regime|catboost|bbn|tradingview|ibkr|kraken|yfinance|yf|board-a|board-b|profitability' | rg -v 'rg ' || true

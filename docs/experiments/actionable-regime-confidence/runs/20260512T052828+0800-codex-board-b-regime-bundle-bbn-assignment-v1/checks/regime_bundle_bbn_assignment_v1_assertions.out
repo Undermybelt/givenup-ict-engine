@@ -1,0 +1,14 @@
+red_command=CARGO_TARGET_DIR=/tmp/ict-engine-codex-regime-bundle-bbn-target cargo test single_branch_path_survives_pre_bayes_into_bbn_assignments --test regime_consumer_bundle_adapter -- --nocapture
+red_result=failed_expected_missing_direct_regime_profit_branch_path_assignment
+red_failure=tests/regime_consumer_bundle_adapter.rs:157:36 no entry found for key
+green_focused_command=CARGO_TARGET_DIR=/tmp/ict-engine-codex-regime-bundle-bbn-target cargo test single_branch_path_survives_pre_bayes_into_bbn_assignments --test regime_consumer_bundle_adapter -- --nocapture
+green_focused_result=1 passed; 0 failed; 17 filtered out
+integration_command=CARGO_TARGET_DIR=/tmp/ict-engine-codex-regime-bundle-bbn-target cargo test --test regime_consumer_bundle_adapter -- --nocapture
+integration_result=18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+format_command=rustfmt --edition 2021 --check src/application/regime/consumer_bundle_adapter.rs tests/regime_consumer_bundle_adapter.rs
+format_result=exit0
+direct_assignment_keys=regime_profit_branch_path,parent_regime_root,main_regime,sub_regime,sub_sub_regime_or_profit_factor,profit_factor
+selected_data_auto_quant_training=false
+nonzero_mature_rooted_selected_observations=false
+promotion_allowed=false
+update_goal=false

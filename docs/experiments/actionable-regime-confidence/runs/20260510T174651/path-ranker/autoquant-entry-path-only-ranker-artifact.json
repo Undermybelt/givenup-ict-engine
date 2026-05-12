@@ -1,0 +1,25 @@
+{
+  "protocol_version": "structural-path-ranking-trainer-artifact-v1",
+  "dataset_role": "external_path_ranker_training_dataset",
+  "model_family": "catboost",
+  "artifact_uri": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-path-only-scores.csv",
+  "model_artifact_uri": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-release-probe-512-leaksafe/autoquant_entry_release_leaksafe_probe_512.json",
+  "score_column": "raw_path_score",
+  "trained_rows": 256,
+  "history_rows": 512,
+  "calibration_rows": 128,
+  "selected_features": [
+    "entry_aligned_path_id_safe_rate_only_for_score_coverage_probe"
+  ],
+  "validation_metrics": {
+    "raw_scored_mature_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 73
+  },
+  "notes": [
+    "score_coverage_probe_only",
+    "not_a_release_signal",
+    "leak_safe_entry_aligned_probe_no_95_candidate"
+  ]
+}

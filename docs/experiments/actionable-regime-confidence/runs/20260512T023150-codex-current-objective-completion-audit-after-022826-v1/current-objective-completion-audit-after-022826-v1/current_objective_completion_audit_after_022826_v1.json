@@ -1,0 +1,44 @@
+{
+  "run_id": "20260512T023150-codex-current-objective-completion-audit-after-022826-v1",
+  "board_sha256": "037f8bbc1098bc0cb44a43a4f5d028e54ba6bfea4b7777f985b04d6a313d2702",
+  "gate_result": "current_objective_completion_audit_after_022826_v1=not_complete_source_controls_strategy_backtest_cross_validation_and_downstream_blocked",
+  "objective_restatement": [
+    "Every MainRegimeV2 regime must have calibrated confidence >=95%",
+    "Each accepted regime needs its own qualifying condition",
+    "Validation must transfer across markets and cycles/timeframes",
+    "Provider context must cover IBKR TradingViewRemix yfinance Kraken where available",
+    "Operate Auto-Quant -> filter/Pre-Bayes/BBN -> CatBoost/path-ranking -> execution tree on real artifacts",
+    "Do not treat proxies/callability/sample mappings as completion"
+  ],
+  "checklist_counts": {
+    "pass": 3,
+    "partial": 3,
+    "blocked": 5
+  },
+  "autoquant_after_022826": {
+    "gate_result": "autoquant_local_cache_data_ready_probe_v1=local_cache_seeded_data_ready_seed_required_no_promotion",
+    "status": "dependency_ready_seed_required",
+    "dependency_healthy": true,
+    "data_ready": true,
+    "blocked_reason": "auto_quant_seed_strategies_required",
+    "copied_feather_count": 15
+  },
+  "previous_audit_gate": "current_objective_completion_audit_after_022005_v1=not_complete_r6_source_controls_autoquant_data_cross_validation_and_downstream_blocked",
+  "provider_gate": "required_provider_status_readback_v1=provider_requirements_mapped_non_promoting",
+  "tsie_gate": "tsie_source_label_intake_dryrun_v1=full_parquet_support_screen_passed_acceptance_blocked_no_intake_mutation",
+  "r6_owner_export_present": false,
+  "r3_native_subhour_present": false,
+  "r5_recency_extension_present": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false
+}

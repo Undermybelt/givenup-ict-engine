@@ -1,0 +1,15 @@
+PASS decision=board_b_220646_downstream_closure_audit_v1=partial_fail_closed_no_closed_loop_confidence
+PASS rc_spa_gate=pass
+PASS wire_records=12329
+PASS unique_branch_paths=4
+PASS ingest_records=12329
+PASS pre_bayes_branch_path_posterior=false
+PASS bbn_branch_path_posterior=false
+PASS catboost_closed=false
+PASS execution_closed=false
+PASS closed_loop_confidence_ready=false
+PASS promotion_allowed=false
+PASS update_goal=false
+PASS force_ingest_used=false
+PASS auto_quant_training_started=false
+PASS runtime_code_changed=false

@@ -1,0 +1,15 @@
+run_id=20260511T134007+0800-codex-post-axiswise-remaining-target-selector-v1
+board_sha256_at_run=f0d2881399d91acbb56a1d364c5801c485757d582486f29bb4a78eaed693e2ca
+same_source_weekly_monthly_cells_accepted_95=true
+selected_next_target=v4-price-root-exact-label-panel
+fallback_next_target=v4-direct-manipulation-variety-rows
+tradingview_mcp_ready_for_ohlcv_not_labels=true
+missing_slot_rows=564
+accepted_full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+full_objective_achieved=false
+call_update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

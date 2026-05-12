@@ -1,0 +1,4 @@
+owner,cell_count,required_valid_normal_control_support_per_cell,total_required_control_cell_support,current_controls_found,current_request_status
+CME Group,13,73,949,0,sendable_request_refreshed_current_routes_not_submitted
+Cboe/CFE,4,73,292,0,sendable_request_refreshed_current_routes_not_submitted
+ALL,17,73,1241,0,controls_not_acquired_no_merge

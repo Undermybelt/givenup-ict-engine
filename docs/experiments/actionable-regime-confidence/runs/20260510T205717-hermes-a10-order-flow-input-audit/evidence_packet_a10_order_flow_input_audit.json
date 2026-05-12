@@ -1,0 +1,69 @@
+{
+  "schema_version": "board-a-regime-confidence/a10-order-flow-input-audit/v1",
+  "loop_id": "20260510T205717+0800-hermes-a10-order-flow-input-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T205717-hermes-a10-order-flow-input-audit",
+  "objective": "Audit whether A10 order-flow entropy can be built from real tick, trade-flow, quote, order-book, or L2 inputs before rerunning missing-regime calibration.",
+  "provider_status_source": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/provider/provider-status-agent.json",
+  "provider_status_summary": "provider-status 2/2,1/3,2/2,6/7; yfinance, IBKR, and Kraken ready; TradingView MCP unhealthy; Auto-Quant dependency/data ready but seed strategies required",
+  "input_audit_report": "docs/experiments/actionable-regime-confidence/runs/20260510T205717-hermes-a10-order-flow-input-audit/audit/a10_order_flow_input_audit_report.json",
+  "input_audit_csv": "docs/experiments/actionable-regime-confidence/runs/20260510T205717-hermes-a10-order-flow-input-audit/audit/a10_scanned_input_fields.csv",
+  "source_roots_audited": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ"
+  ],
+  "file_count_scanned": 112,
+  "audit_decision": "missing_required_inputs",
+  "order_flow_entropy_status": "blocked",
+  "missing_required_inputs": [
+    "historical bid/ask quote price and size",
+    "historical L2 bid/ask depth or order-book snapshots",
+    "signed trade volume or aggressor-side trade labels",
+    "buy/sell volume split aligned to Board A windows",
+    "durable tick/trade tape aligned to QQQ/NQ/PF_XBTUSD calibration/test windows"
+  ],
+  "available_input_summary": {
+    "ohlcv_or_derived_only_files": 46,
+    "no_relevant_fields_files": 61,
+    "partial_microstructure_like_files": 5,
+    "real_order_flow_candidate_files": 0,
+    "partial_hit_explanation": "The five partial hits contain internal strategy trade_id keys only; they do not contain market tick/trade price, trade size, trade side, signed volume, bid/ask, spread, or L2 depth fields."
+  },
+  "proxy_policy": "OHLCV/count-derived pressure and scripts/research/ofi_session_sidecar.py fallback_mode=ohlcv_proxy_low_confidence are not accepted as A10 order-flow entropy evidence.",
+  "candidate_regimes_checked": [
+    "TrendExpansion",
+    "ExtremeStress",
+    "ReversalBrewing"
+  ],
+  "accepted_95_candidates": [],
+  "accepted_99_candidates": [],
+  "accepted_missing_regime_packets_added": 0,
+  "accepted_coverage_after_a10": {
+    "accepted_count": 3,
+    "required_count": 6,
+    "accepted_regimes": [
+      "SessionLiquidityCoreViable",
+      "RangeConsolidation",
+      "ThinLiquidityOffHoursPersistent"
+    ],
+    "missing_accepted_packets": [
+      "TrendExpansion",
+      "ExtremeStress",
+      "ReversalBrewing"
+    ]
+  },
+  "thresholds_relaxed": false,
+  "live_tradingview_data_used": false,
+  "profitability_trusted": false,
+  "downstream_chain_status": {
+    "auto_quant": "no_new_factor_generated_due_missing_required_inputs",
+    "filter_pre_bayes": "not_rerun",
+    "bbn": "not_rerun",
+    "catboost": "not_rerun",
+    "execution_tree": "not_rerun"
+  },
+  "gate_result": "provider_gap:missing_required_inputs",
+  "next_action": "Ingest or attach aligned historical tick/trade tape plus bid/ask or L2 depth for the target Board A windows before attempting A10 order-flow entropy; keep Board A active with coverage 3/6."
+}

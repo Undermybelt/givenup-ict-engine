@@ -1,0 +1,9 @@
+PASS decision=current_goal_completion_audit_v41=post_source_gap_still_blocked
+PASS objective_restatement_present
+PASS checklist_rows=9
+PASS failures_present=true
+PASS update_goal=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS external_requests_sent=false
+PASS raw_data_committed=false

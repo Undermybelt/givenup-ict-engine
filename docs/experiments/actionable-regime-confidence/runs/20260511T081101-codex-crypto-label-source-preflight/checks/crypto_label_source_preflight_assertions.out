@@ -1,0 +1,12 @@
+PASS source_downloaded_to_private_tmp=true
+PASS raw_data_committed=false
+PASS metadata_has_kraken=true
+PASS metadata_timeframes=15m,1h,1d
+PASS label_type=future_return_proxy
+PASS eligible_as_independent_root_label_panel=false
+PASS eligible_roots=0
+PASS crisis_label_absent=true
+PASS manipulation_direct_evidence_absent=true
+PASS goal_achieved=false
+PASS thresholds_relaxed=false
+PASS trade_usable=false

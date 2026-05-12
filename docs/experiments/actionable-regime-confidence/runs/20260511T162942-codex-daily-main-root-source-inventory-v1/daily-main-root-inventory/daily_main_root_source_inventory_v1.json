@@ -1,0 +1,64 @@
+{
+  "artifact_type": "daily_main_root_source_inventory_v1",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/checks/daily_main_root_source_inventory_v1_assertions.out",
+    "child_attachment_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/daily-main-root-inventory/daily_main_root_source_inventory_v1_child_attachment.csv",
+    "instrument_root_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/daily-main-root-inventory/daily_main_root_source_inventory_v1_instrument_root.csv",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/daily-main-root-inventory/daily_main_root_source_inventory_v1.json",
+    "md": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/daily-main-root-inventory/daily_main_root_source_inventory_v1.md",
+    "split_root_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/daily-main-root-inventory/daily_main_root_source_inventory_v1_split_root.csv",
+    "ticker_root_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/daily-main-root-inventory/daily_main_root_source_inventory_v1_ticker_root.csv",
+    "year_root_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/daily-main-root-inventory/daily_main_root_source_inventory_v1_year_root.csv"
+  },
+  "coverage": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 103766,
+      "Crisis": 29632,
+      "High-volatility": 16,
+      "Sideways": 56668
+    },
+    "rows": 245021,
+    "ticker_root_slot_coverage": 1.0,
+    "ticker_root_slot_wilson95_lcb": 0.9759670685625849,
+    "ticker_root_slots_covered": 156,
+    "ticker_root_slots_total": 156,
+    "tickers": 39,
+    "year_root_slot_coverage": 1.0,
+    "year_root_slot_wilson95_lcb": 0.9656526402534428,
+    "year_root_slots_covered": 108,
+    "year_root_slots_total": 108,
+    "years": 27
+  },
+  "created_at_utc": "2026-05-11T08:29:42+00:00",
+  "decision": {
+    "blocked_reason": "This is a positive daily source-panel inventory, not native sub-hour, full species, futures/crypto/FX, or direct Manipulation completion.",
+    "full_objective_achieved": false,
+    "gate_result": "daily_main_root_source_inventory_v1=positive_156of156_daily_ticker_root_slots_108of108_year_root_slots",
+    "new_confidence_gate_claimed": false,
+    "next_action": "Use this as the root-first denominator for Board A hardening and Board B profitability conditioning; attach sub-regime tags only after the parent root is present.",
+    "positive_daily_main_root_inventory": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "run_id": "20260511T162942+0800-codex-daily-main-root-source-inventory-v1",
+  "source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "taxonomy": {
+    "child_tags_never_complete_roots": true,
+    "direct_overlay": "Manipulation",
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "residual_labels": [
+      "High-volatility"
+    ]
+  }
+}

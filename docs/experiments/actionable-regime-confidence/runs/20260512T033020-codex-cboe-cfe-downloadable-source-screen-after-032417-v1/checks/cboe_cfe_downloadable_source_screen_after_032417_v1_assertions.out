@@ -1,0 +1,12 @@
+PASS gate_result=cboe_cfe_downloadable_source_screen_after_032417_v1=public_aggregate_csv_and_datashop_route_found_no_order_lifecycle_controls_no_promotion
+PASS public_cfevoloi_csv_found=true
+PASS datashop_route_found=true
+PASS order_lifecycle_rows_acquired=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS canonical_merge_allowed=false
+PASS downstream_promotion_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS raw_full_csv_committed=false

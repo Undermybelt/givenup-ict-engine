@@ -1,0 +1,24 @@
+gateway:
+  host: 127.0.0.1
+  port: 4002
+  client_id: 77
+output:
+  directory: docs/experiments/actionable-regime-confidence/runs/20260512T165415+0800-codex-board-a-provider-max-window-capability-probe-v1/provider-csv
+  filename_template: '{symbol}_{bar_suffix}_{what}_client77.csv'
+  force: true
+defaults:
+  bar_size: '1 hour'
+  duration: '1 Y'
+  what_to_show: AGGTRADES
+  rth: false
+  exchange: PAXOS
+  currency: USD
+symbols:
+  - symbol: BTC
+    sec_type: CRYPTO
+    exchange: PAXOS
+    currency: USD
+    what_to_show: AGGTRADES
+    rth: false
+    bar_sizes: ['1 hour']
+    duration: '1 Y'

@@ -1,0 +1,49 @@
+target_key,surface,query,url,status,error,result_count
+XOM/Sideways,github_repositories,XOM Sideways market regime label,https://api.github.com/search/repositories?q=XOM+Sideways+market+regime+label&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+XOM/Sideways,huggingface_datasets,XOM Sideways market regime label,https://huggingface.co/api/datasets?search=XOM+Sideways+market+regime+label&limit=5,200,,0
+XOM/Sideways,kaggle_datasets,XOM Sideways market regime label,kaggle datasets list,0,,0
+XOM/Sideways,github_repositories,XOM Sideways stock market regimes,https://api.github.com/search/repositories?q=XOM+Sideways+stock+market+regimes&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+XOM/Sideways,huggingface_datasets,XOM Sideways stock market regimes,https://huggingface.co/api/datasets?search=XOM+Sideways+stock+market+regimes&limit=5,200,,0
+XOM/Sideways,kaggle_datasets,XOM Sideways stock market regimes,kaggle datasets list,0,,0
+XOM/Sideways,github_repositories,XOM Sideways regime_label,https://api.github.com/search/repositories?q=XOM+Sideways+regime_label&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+XOM/Sideways,huggingface_datasets,XOM Sideways regime_label,https://huggingface.co/api/datasets?search=XOM+Sideways+regime_label&limit=5,200,,0
+XOM/Sideways,kaggle_datasets,XOM Sideways regime_label,kaggle datasets list,0,,0
+XOM/Sideways,github_repositories,XOM MainRegimeV2 Sideways,https://api.github.com/search/repositories?q=XOM+MainRegimeV2+Sideways&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+XOM/Sideways,huggingface_datasets,XOM MainRegimeV2 Sideways,https://huggingface.co/api/datasets?search=XOM+MainRegimeV2+Sideways&limit=5,200,,0
+XOM/Sideways,kaggle_datasets,XOM MainRegimeV2 Sideways,kaggle datasets list,0,,0
+UNH/Bear,github_repositories,UNH Bear market regime label,https://api.github.com/search/repositories?q=UNH+Bear+market+regime+label&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+UNH/Bear,huggingface_datasets,UNH Bear market regime label,https://huggingface.co/api/datasets?search=UNH+Bear+market+regime+label&limit=5,200,,0
+UNH/Bear,kaggle_datasets,UNH Bear market regime label,kaggle datasets list,0,,0
+UNH/Bear,github_repositories,UNH Bear stock market regimes,https://api.github.com/search/repositories?q=UNH+Bear+stock+market+regimes&per_page=5&sort=updated,200,,0
+UNH/Bear,huggingface_datasets,UNH Bear stock market regimes,https://huggingface.co/api/datasets?search=UNH+Bear+stock+market+regimes&limit=5,200,,0
+UNH/Bear,kaggle_datasets,UNH Bear stock market regimes,kaggle datasets list,0,,1
+UNH/Bear,github_repositories,UNH Bear regime_label,https://api.github.com/search/repositories?q=UNH+Bear+regime_label&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+UNH/Bear,huggingface_datasets,UNH Bear regime_label,https://huggingface.co/api/datasets?search=UNH+Bear+regime_label&limit=5,200,,0
+UNH/Bear,kaggle_datasets,UNH Bear regime_label,kaggle datasets list,0,,0
+UNH/Bear,github_repositories,UNH MainRegimeV2 Bear,https://api.github.com/search/repositories?q=UNH+MainRegimeV2+Bear&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+UNH/Bear,huggingface_datasets,UNH MainRegimeV2 Bear,https://huggingface.co/api/datasets?search=UNH+MainRegimeV2+Bear&limit=5,200,,0
+UNH/Bear,kaggle_datasets,UNH MainRegimeV2 Bear,kaggle datasets list,0,,0
+^DJI/Sideways,github_repositories,^DJI Sideways market regime label,https://api.github.com/search/repositories?q=%5EDJI+Sideways+market+regime+label&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+^DJI/Sideways,huggingface_datasets,^DJI Sideways market regime label,https://huggingface.co/api/datasets?search=%5EDJI+Sideways+market+regime+label&limit=5,200,,0
+^DJI/Sideways,kaggle_datasets,^DJI Sideways market regime label,kaggle datasets list,0,,0
+^DJI/Sideways,github_repositories,DJI Sideways stock market regimes,https://api.github.com/search/repositories?q=DJI+Sideways+stock+market+regimes&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+^DJI/Sideways,huggingface_datasets,DJI Sideways stock market regimes,https://huggingface.co/api/datasets?search=DJI+Sideways+stock+market+regimes&limit=5,200,,0
+^DJI/Sideways,kaggle_datasets,DJI Sideways stock market regimes,kaggle datasets list,0,,0
+^DJI/Sideways,github_repositories,^DJI Sideways regime_label,https://api.github.com/search/repositories?q=%5EDJI+Sideways+regime_label&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+^DJI/Sideways,huggingface_datasets,^DJI Sideways regime_label,https://huggingface.co/api/datasets?search=%5EDJI+Sideways+regime_label&limit=5,200,,0
+^DJI/Sideways,kaggle_datasets,^DJI Sideways regime_label,kaggle datasets list,0,,0
+^DJI/Sideways,github_repositories,DJI MainRegimeV2 Sideways,https://api.github.com/search/repositories?q=DJI+MainRegimeV2+Sideways&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+^DJI/Sideways,huggingface_datasets,DJI MainRegimeV2 Sideways,https://huggingface.co/api/datasets?search=DJI+MainRegimeV2+Sideways&limit=5,200,,0
+^DJI/Sideways,kaggle_datasets,DJI MainRegimeV2 Sideways,kaggle datasets list,0,,0
+AMD/Bear,github_repositories,AMD Bear market regime label,https://api.github.com/search/repositories?q=AMD+Bear+market+regime+label&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+AMD/Bear,huggingface_datasets,AMD Bear market regime label,https://huggingface.co/api/datasets?search=AMD+Bear+market+regime+label&limit=5,200,,0
+AMD/Bear,kaggle_datasets,AMD Bear market regime label,kaggle datasets list,0,,0
+AMD/Bear,github_repositories,AMD Bear stock market regimes,https://api.github.com/search/repositories?q=AMD+Bear+stock+market+regimes&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+AMD/Bear,huggingface_datasets,AMD Bear stock market regimes,https://huggingface.co/api/datasets?search=AMD+Bear+stock+market+regimes&limit=5,200,,0
+AMD/Bear,kaggle_datasets,AMD Bear stock market regimes,kaggle datasets list,0,,1
+AMD/Bear,github_repositories,AMD Bear regime_label,https://api.github.com/search/repositories?q=AMD+Bear+regime_label&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+AMD/Bear,huggingface_datasets,AMD Bear regime_label,https://huggingface.co/api/datasets?search=AMD+Bear+regime_label&limit=5,200,,0
+AMD/Bear,kaggle_datasets,AMD Bear regime_label,kaggle datasets list,0,,0
+AMD/Bear,github_repositories,AMD MainRegimeV2 Bear,https://api.github.com/search/repositories?q=AMD+MainRegimeV2+Bear&per_page=5&sort=updated,,URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>,
+AMD/Bear,huggingface_datasets,AMD MainRegimeV2 Bear,https://huggingface.co/api/datasets?search=AMD+MainRegimeV2+Bear&limit=5,200,,0
+AMD/Bear,kaggle_datasets,AMD MainRegimeV2 Bear,kaggle datasets list,0,,0

@@ -1,0 +1,10 @@
+market_state=TrendExpansion/BullTrendAcceleration | execution=observe/fill_viable/passive | ranker=unknown/unknown/not_ready
+QQQ | Bull bias | entry=medium | gate=pass_neutralized | quality=0.568
+Decision: Observe only
+Action: TUNE structure_ict
+Next: ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state
+Structure: bullish_price_action_with_higher_probability_if_execution_confirms
+Technicals: technicals_support_bullish_continuation
+SMT: smt_analysis_unavailable_without_paired_market
+Regime: regime=bull liquidity=favorable direction=Bull subgraph=trend_subgraph objective_jump_weight=1.000
+Plan: Bull_bias_exists_but_position_size_is_zero_due_to_probability_risk_constraints

@@ -1,0 +1,11 @@
+metric,value
+positive_rows_added_this_run,4
+matched_negative_rows_added_this_run,4
+positive_rows_total,13
+matched_negative_rows_total,13
+unique_dates,10
+unique_symbols,6
+unique_venues,3
+combined_min_wilson95_lcb,0.771905
+support_ok,false
+broad_normal_sample,false

@@ -1,0 +1,14 @@
+gate,value
+source_root_present,true
+verifier_status,schema_ready_unscored
+row_count,248440
+missing_confidence_rows,0
+accepted_source_confidence_95_label_count,0
+accepted_rows_added,0
+new_confidence_gate,false
+source_control_evidence_acquired,false
+canonical_merge,false
+downstream_promotion_rerun,false
+strict_full_objective,false
+trade_usable,false
+update_goal,false

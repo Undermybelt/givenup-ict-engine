@@ -1,0 +1,10 @@
+PASS objective_complete=false
+PASS gate_result=current_objective_audit_after_051145_051153_051247_v1=not_complete_runtime_and_routes_refreshed_no_source_unlock_no_strict_acceptance
+PASS accepted_regime_confidence_labels=0
+PASS source_control_evidence_acquired=false
+PASS required_target_roots_absent=true
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

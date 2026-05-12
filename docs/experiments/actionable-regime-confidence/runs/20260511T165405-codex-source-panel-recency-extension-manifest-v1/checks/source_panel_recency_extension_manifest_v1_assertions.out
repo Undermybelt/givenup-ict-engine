@@ -1,0 +1,12 @@
+run_id=20260511T165405+0800-codex-source-panel-recency-extension-manifest-v1
+board_sha256_at_run=a0243aa0a0c9b238d0c3a0d41402c3fc3405ce1d39fbe79ea1ed0572fd1a0546
+source_panel_date_max=2026-01-30
+weekday_sessions_after_last_source_date=71
+estimated_extension_rows=2769
+extension_rows_added=0
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

@@ -1,0 +1,8 @@
+PASS Board A taxonomy points to MainRegimeV2 main price roots Bull/Bear/Sideways/Crisis
+PASS Manipulation is outside the price-root axis as a separate direct-event class or overlay gate
+PASS six prior accepted packets are demoted to sub_regime_evidence_only
+PASS OHLCV/session/liquidity/sweep proxies are rejected for Manipulation acceptance
+PASS expanded full-universe/full-cycle accepted_gate remains none
+PASS runtime code changed false
+PASS thresholds relaxed false
+PASS trade usable false

@@ -1,0 +1,13 @@
+check_id,observed,decision,required_root_unlock
+main_regime_v2_column_present,true,column_found,false
+data_rows,5032903,large_tsie_intake_read,false
+bear_rows,1435764,tsie_quarantined_non_promoting,false
+bull_rows,1435055,tsie_quarantined_non_promoting,false
+sideways_rows,2162084,tsie_quarantined_non_promoting,false
+crisis_rows,0,no_crisis_native_subhour_unlock,false
+provenance_source,tsie-market-regime-dataset,tsie_quarantined,false
+r3_native_subhour_unlock,false,no_crisis_and_not_verifier_native,false
+valid_required_root_unlock,false,no_unlock,false
+canonical_merge,false,no_required_unlock,false
+downstream_promotion_rerun,false,no_required_unlock,false
+update_goal,false,strict_objective_not_complete,false

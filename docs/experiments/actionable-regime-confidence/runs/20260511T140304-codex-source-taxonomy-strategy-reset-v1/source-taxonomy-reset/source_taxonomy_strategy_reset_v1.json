@@ -1,0 +1,117 @@
+{
+  "run_id": "20260511T140304+0800-codex-source-taxonomy-strategy-reset-v1",
+  "status": "strategy_reset_no_confidence_gate",
+  "purpose": "Stop converting missing label availability into repeated negative loops; split the regime problem into parent taxonomy, source-label attachment or crosswalk, and direct manipulation evidence lanes.",
+  "cursor_seen_before_final_board_write": "20260511T140042+0800-codex-positive-regime-factor-index-v1",
+  "triggering_user_correction": "Repeated loops produced too many negative results; the main classes should be handled at a higher action-family level, including bull expansion, bear expansion, manipulation, consolidation, and other possible large classes.",
+  "preserved_recent_results": [
+    {
+      "run_id": "20260511T140042+0800-codex-positive-regime-factor-index-v1",
+      "decision": "Preserve the positive factor-supply index as the Board A supply map and avoid re-proving accepted scoped supply with more negative scans."
+    },
+    {
+      "run_id": "20260511T135908+0800-codex-crosswalk-tracking-source-attachment-v1",
+      "decision": "Preserve accepted SPY/DIA Bull/Bear/Sideways tracking attachments and do not rerun the broad 168-row crosswalk scan."
+    },
+    {
+      "run_id": "20260511T135932+0800-codex-es-nq-source-crosswalk-calibration-v1",
+      "decision": "Preserve ES=F Bull 15m/1h as scoped source-label crosswalk evidence; do not promote NQ because the Nasdaq 100 versus Nasdaq Composite relation is unresolved."
+    }
+  ],
+  "primary_decision": {
+    "do_not_repeat": [
+      "broad 556-row source-label availability sweeps",
+      "broad 168-row crosswalk rescans after SPY/DIA and ES Bull have been extracted",
+      "raw ES/NQ bar scans as if market bars were source labels",
+      "OHLCV, HMM, change-point, jump-model, or generated state promotion to parent labels",
+      "direct Manipulation acceptance from liquidity, session, sweep, or other OHLCV proxies"
+    ],
+    "do_next": "Acquire or document a Nasdaq-100-grade source-label relation for NQ/QQQ before any more NQ/QQQ crosswalk calibration. If no such source relation is obtained, NQ/QQQ stay abstained and the next evidence work moves to crisis support or direct manipulation rows, not another NQ proxy run."
+  },
+  "source_backed_parent_map": [
+    {
+      "parent": "BullExpansion",
+      "evidence_lane": "price_cycle_source_label_or_owner_approved_crosswalk",
+      "compatible_seed_labels": ["MainRegimeV2.Bull"],
+      "not_sufficient_alone": ["low_vol_bull", "generic trend packet", "HMM state id"],
+      "consumer_action": "allow long-risk continuation only when source or crosswalk support and downstream edge gates also pass"
+    },
+    {
+      "parent": "BearExpansion",
+      "evidence_lane": "price_cycle_source_label_or_owner_approved_crosswalk",
+      "compatible_seed_labels": ["MainRegimeV2.Bear"],
+      "not_sufficient_alone": ["correction", "bear rally", "downside volatility spike"],
+      "consumer_action": "suppress long-risk continuation or allow defensive or short-risk logic only after separate edge validation"
+    },
+    {
+      "parent": "ConsolidationBalance",
+      "evidence_lane": "range_or_balance_source_label_or_high-confidence_source_consensus",
+      "compatible_seed_labels": ["MainRegimeV2.Sideways"],
+      "not_sufficient_alone": ["range-consolidation child packet", "low ATR", "lack of trend only"],
+      "consumer_action": "shift allowed actions away from directional continuation and toward range or abstain logic"
+    },
+    {
+      "parent": "CrisisDislocation",
+      "evidence_lane": "stress_source_label_or_event_boundary_evidence_with_support",
+      "compatible_seed_labels": ["MainRegimeV2.Crisis"],
+      "not_sufficient_alone": ["single high-volatility bar", "change-point break without economic label"],
+      "consumer_action": "suppress or hard-size-down risk unless a crisis-specific downstream strategy is separately accepted"
+    },
+    {
+      "parent": "ManipulationIntegrityEvent",
+      "evidence_lane": "direct_event_order_flow_order_lifecycle_social_or_on_chain_rows_with_matched_negatives",
+      "compatible_seed_labels": ["direct Manipulation variety rows only"],
+      "not_sufficient_alone": ["OHLCV sweep", "session liquidity", "unlabeled L2 signature", "methodology paper without rows"],
+      "consumer_action": "suppress, abstain, cooldown, or quarantine; not automatic entry"
+    }
+  ],
+  "watchlist_not_promoted": [
+    "TransitionRotation",
+    "CrossAssetMacroRotation",
+    "PolicyLiquidityRegime",
+    "UnknownOrMixed"
+  ],
+  "source_research_inputs": [
+    {
+      "source": "Pagan and Sossounov bull/bear cycle framework",
+      "url": "https://ideas.repec.org/a/jae/japmet/v18y2003i1p23-46.html",
+      "use": "Supports treating bull and bear as parent cycle families, not flat child signatures."
+    },
+    {
+      "source": "hidden-regime GitHub",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "use": "Open-source reference for source-style regime families including bull, bear, sideways, and crisis."
+    },
+    {
+      "source": "jump-models GitHub",
+      "url": "https://github.com/Yizhan-Oliver-Shu/jump-models",
+      "use": "Useful stress or dislocation and regime-posterior tooling; not an independent label source."
+    },
+    {
+      "source": "ruptures GitHub",
+      "url": "https://github.com/deepcharles/ruptures",
+      "use": "Useful boundary and change-point evidence; not by itself a parent economic label."
+    },
+    {
+      "source": "FINRA Potential Manipulation Report",
+      "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report",
+      "use": "Regulatory evidence that spoofing and layering belong in direct manipulation or order-lifecycle lane; public docs are schema, not rows."
+    },
+    {
+      "source": "Putnins overview of market manipulation",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3398258",
+      "use": "Variety map for direct manipulation including pump and dump, bear raid, painting the tape, spoofing, layering, pinging, and quote stuffing."
+    }
+  ],
+  "gate": {
+    "accepted_95_roots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_confidence_gate_added": false,
+    "full_objective_achieved": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "gate_result": "source_taxonomy_strategy_reset_no_new_confidence_gate_stop_broad_negative_sweeps"
+  }
+}

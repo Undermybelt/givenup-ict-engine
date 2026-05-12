@@ -1,0 +1,5 @@
+check,status,evidence,decision
+run_tomac,pass,exit=0 strategy=TomacNQ_KillzoneBreakout trades=74,diagnostic_only
+local_data_cache,present,feather_count=40 relevant_count=19,usable_for_local_backtest_only
+source_control_roots,absent,"{""r3_native_subhour_source_label_root_exists"": false, ""r5_source_panel_recency_extension_root_exists"": false, ""r6_owner_export_root_exists"": false}",blocks_promotion
+promotion,blocked,accepted_rows_added=0 canonical_merge=false downstream_rerun=false update_goal=false,no_promotion

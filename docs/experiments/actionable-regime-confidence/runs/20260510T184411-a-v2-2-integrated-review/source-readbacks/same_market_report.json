@@ -1,0 +1,935 @@
+{
+  "schema_version": "board-a-provider-agreement-v2-probe/v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T174651",
+  "output_dir": "docs/experiments/actionable-regime-confidence/runs/20260510T183942-codex-same-market-qqq/provider-agreement-v2",
+  "threshold_policy": {
+    "precision_wilson_lcb_95": 0.95,
+    "thresholds_relaxed": false,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03
+  },
+  "label_policy": {
+    "future_horizons_bars": [
+      4,
+      8,
+      16
+    ],
+    "cost": 0.0002,
+    "bad_loss": 0.004,
+    "tail_loss": 0.006,
+    "blocked_leakage_fields": [
+      "branch",
+      "decision_hint",
+      "duration_remaining_expected_bars",
+      "execution_readiness",
+      "gate_status",
+      "hybrid_transition_hazard",
+      "readiness_gap_to_observe",
+      "readiness_gap_to_ready",
+      "same_surface_execution_tree_categorical"
+    ],
+    "forbidden_future_fields_as_features": "all future_* and target_* columns are excluded from model features"
+  },
+  "lanes": [
+    {
+      "lane_id": "qqq_yf_ibkr_same_market_provider_agreement_1h",
+      "market": "QQQ",
+      "timeframe": "1h",
+      "provider_observations": [
+        "qqq_yfinance_1h",
+        "qqq_ibkr_1h"
+      ],
+      "board_eligible": true,
+      "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+      "row_count": 1740,
+      "feature_count": 103,
+      "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T183942-codex-same-market-qqq/provider-agreement-v2/qqq_yf_ibkr_same_market_provider_agreement_1h/provider_agreement_v2_features.csv",
+      "split": {
+        "train": 870,
+        "calibration": 435,
+        "test": 435
+      },
+      "target_counts": {
+        "target_release_long_h4": {
+          "positive": 508,
+          "negative": 1232
+        },
+        "target_release_long_h8": {
+          "positive": 480,
+          "negative": 1260
+        },
+        "target_release_long_h16": {
+          "positive": 428,
+          "negative": 1312
+        },
+        "target_release_short_h4": {
+          "positive": 206,
+          "negative": 1534
+        },
+        "target_release_short_h8": {
+          "positive": 159,
+          "negative": 1581
+        },
+        "target_release_short_h16": {
+          "positive": 116,
+          "negative": 1624
+        }
+      },
+      "candidate_count": 45,
+      "accepted_95_count": 0,
+      "selected_candidate": {
+        "candidate_kind": "whitebox_provider_agreement_long",
+        "target": "target_release_long_h4",
+        "threshold": 1.0,
+        "calibration_support": 200,
+        "calibration_success": 107,
+        "calibration_precision": 0.535,
+        "calibration_wilson_lcb_95": 0.4658664687236315,
+        "test_support": 234,
+        "test_success": 122,
+        "test_precision": 0.5213675213675214,
+        "precision_wilson_lcb_95": 0.45753555462970824,
+        "ece": 0.4786324786324786,
+        "coverage": 0.5379310344827586,
+        "accepted_95": false,
+        "board_eligible": true,
+        "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap."
+      },
+      "top_candidates": [
+        {
+          "candidate_kind": "whitebox_provider_agreement_long",
+          "target": "target_release_long_h4",
+          "threshold": 1.0,
+          "calibration_support": 200,
+          "calibration_success": 107,
+          "calibration_precision": 0.535,
+          "calibration_wilson_lcb_95": 0.4658664687236315,
+          "test_support": 234,
+          "test_success": 122,
+          "test_precision": 0.5213675213675214,
+          "precision_wilson_lcb_95": 0.45753555462970824,
+          "ece": 0.4786324786324786,
+          "coverage": 0.5379310344827586,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap."
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h4",
+          "threshold": 0.3333333333333333,
+          "calibration_support": 200,
+          "calibration_success": 107,
+          "calibration_precision": 0.535,
+          "calibration_wilson_lcb_95": 0.4658664687236315,
+          "test_support": 234,
+          "test_success": 122,
+          "test_precision": 0.5213675213675214,
+          "precision_wilson_lcb_95": 0.45753555462970824,
+          "ece": 0.026814199429027477,
+          "coverage": 0.5379310344827586,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 508,
+          "negative_count": 1232,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 47.437881006212294
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 2.1681442133547404
+            },
+            {
+              "feature": "weekday",
+              "importance": 1.8200759037986844
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 1.6678062514918157
+            },
+            {
+              "feature": "qqq_ibkr_1h_eff_16",
+              "importance": 1.546355687832216
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.3916332248804095
+            },
+            {
+              "feature": "qqq_yf_1h_ret_8",
+              "importance": 1.3890215926924854
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3528142957866685
+            },
+            {
+              "feature": "qqq_yf_1h_vol_4",
+              "importance": 1.3249023723244047
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.2950431061524301
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.2850818266006474
+            },
+            {
+              "feature": "hour_utc",
+              "importance": 1.2197818801745564
+            },
+            {
+              "feature": "qqq_ibkr_1h_range_mean_4",
+              "importance": 1.1686155491918304
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.1505135539658375
+            },
+            {
+              "feature": "qqq_ibkr_1h_eff_64",
+              "importance": 1.111477427566781
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.0387414961726948
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h4",
+          "threshold": 0.5,
+          "calibration_support": 197,
+          "calibration_success": 106,
+          "calibration_precision": 0.5380710659898477,
+          "calibration_wilson_lcb_95": 0.4683899093322727,
+          "test_support": 231,
+          "test_success": 120,
+          "test_precision": 0.5194805194805194,
+          "precision_wilson_lcb_95": 0.45526107191413334,
+          "ece": 0.020678828040206574,
+          "coverage": 0.5310344827586206,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 508,
+          "negative_count": 1232,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 47.437881006212294
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 2.1681442133547404
+            },
+            {
+              "feature": "weekday",
+              "importance": 1.8200759037986844
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 1.6678062514918157
+            },
+            {
+              "feature": "qqq_ibkr_1h_eff_16",
+              "importance": 1.546355687832216
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.3916332248804095
+            },
+            {
+              "feature": "qqq_yf_1h_ret_8",
+              "importance": 1.3890215926924854
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3528142957866685
+            },
+            {
+              "feature": "qqq_yf_1h_vol_4",
+              "importance": 1.3249023723244047
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.2950431061524301
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.2850818266006474
+            },
+            {
+              "feature": "hour_utc",
+              "importance": 1.2197818801745564
+            },
+            {
+              "feature": "qqq_ibkr_1h_range_mean_4",
+              "importance": 1.1686155491918304
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.1505135539658375
+            },
+            {
+              "feature": "qqq_ibkr_1h_eff_64",
+              "importance": 1.111477427566781
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.0387414961726948
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h4",
+          "threshold": 0.5324675324675324,
+          "calibration_support": 163,
+          "calibration_success": 89,
+          "calibration_precision": 0.5460122699386503,
+          "calibration_wilson_lcb_95": 0.46939805591962824,
+          "test_support": 172,
+          "test_success": 81,
+          "test_precision": 0.47093023255813954,
+          "precision_wilson_lcb_95": 0.39778535473034016,
+          "ece": 0.08300470510050999,
+          "coverage": 0.3954022988505747,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 508,
+          "negative_count": 1232,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 47.437881006212294
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 2.1681442133547404
+            },
+            {
+              "feature": "weekday",
+              "importance": 1.8200759037986844
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 1.6678062514918157
+            },
+            {
+              "feature": "qqq_ibkr_1h_eff_16",
+              "importance": 1.546355687832216
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.3916332248804095
+            },
+            {
+              "feature": "qqq_yf_1h_ret_8",
+              "importance": 1.3890215926924854
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3528142957866685
+            },
+            {
+              "feature": "qqq_yf_1h_vol_4",
+              "importance": 1.3249023723244047
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.2950431061524301
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.2850818266006474
+            },
+            {
+              "feature": "hour_utc",
+              "importance": 1.2197818801745564
+            },
+            {
+              "feature": "qqq_ibkr_1h_range_mean_4",
+              "importance": 1.1686155491918304
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.1505135539658375
+            },
+            {
+              "feature": "qqq_ibkr_1h_eff_64",
+              "importance": 1.111477427566781
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.0387414961726948
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h4",
+          "threshold": 0.5125760315633733,
+          "calibration_support": 163,
+          "calibration_success": 89,
+          "calibration_precision": 0.5460122699386503,
+          "calibration_wilson_lcb_95": 0.46939805591962824,
+          "test_support": 172,
+          "test_success": 81,
+          "test_precision": 0.47093023255813954,
+          "precision_wilson_lcb_95": 0.39778535473034016,
+          "ece": 0.08300470510050999,
+          "coverage": 0.3954022988505747,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 508,
+          "negative_count": 1232,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 47.437881006212294
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 2.1681442133547404
+            },
+            {
+              "feature": "weekday",
+              "importance": 1.8200759037986844
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 1.6678062514918157
+            },
+            {
+              "feature": "qqq_ibkr_1h_eff_16",
+              "importance": 1.546355687832216
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.3916332248804095
+            },
+            {
+              "feature": "qqq_yf_1h_ret_8",
+              "importance": 1.3890215926924854
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3528142957866685
+            },
+            {
+              "feature": "qqq_yf_1h_vol_4",
+              "importance": 1.3249023723244047
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.2950431061524301
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.2850818266006474
+            },
+            {
+              "feature": "hour_utc",
+              "importance": 1.2197818801745564
+            },
+            {
+              "feature": "qqq_ibkr_1h_range_mean_4",
+              "importance": 1.1686155491918304
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.1505135539658375
+            },
+            {
+              "feature": "qqq_ibkr_1h_eff_64",
+              "importance": 1.111477427566781
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.0387414961726948
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h8",
+          "threshold": 0.5454545454545454,
+          "calibration_support": 190,
+          "calibration_success": 108,
+          "calibration_precision": 0.5684210526315789,
+          "calibration_wilson_lcb_95": 0.49732670271478174,
+          "test_support": 229,
+          "test_success": 102,
+          "test_precision": 0.44541484716157204,
+          "precision_wilson_lcb_95": 0.3824702972587724,
+          "ece": 0.14860167048042736,
+          "coverage": 0.5264367816091954,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 480,
+          "negative_count": 1260,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 42.7115607236236
+            },
+            {
+              "feature": "weekday",
+              "importance": 3.1816059861051103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 3.1600380598213063
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 1.91505211526022
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.8130273458131307
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_64",
+              "importance": 1.7162600067871103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.710820042799913
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_16",
+              "importance": 1.6225662268408032
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.564875750846855
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.4708832241003509
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.3518203255712071
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3173600224921964
+            },
+            {
+              "feature": "qqq_ibkr_1h_ret_16",
+              "importance": 1.3115940536715778
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_64",
+              "importance": 1.28423391670009
+            },
+            {
+              "feature": "qqq_ibkr_1h_open",
+              "importance": 1.2260585140083542
+            },
+            {
+              "feature": "qqq_ibkr_1h_low",
+              "importance": 1.1736388058328515
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h8",
+          "threshold": 0.5088032220943614,
+          "calibration_support": 190,
+          "calibration_success": 108,
+          "calibration_precision": 0.5684210526315789,
+          "calibration_wilson_lcb_95": 0.49732670271478174,
+          "test_support": 229,
+          "test_success": 102,
+          "test_precision": 0.44541484716157204,
+          "precision_wilson_lcb_95": 0.3824702972587724,
+          "ece": 0.14860167048042736,
+          "coverage": 0.5264367816091954,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 480,
+          "negative_count": 1260,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 42.7115607236236
+            },
+            {
+              "feature": "weekday",
+              "importance": 3.1816059861051103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 3.1600380598213063
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 1.91505211526022
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.8130273458131307
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_64",
+              "importance": 1.7162600067871103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.710820042799913
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_16",
+              "importance": 1.6225662268408032
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.564875750846855
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.4708832241003509
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.3518203255712071
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3173600224921964
+            },
+            {
+              "feature": "qqq_ibkr_1h_ret_16",
+              "importance": 1.3115940536715778
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_64",
+              "importance": 1.28423391670009
+            },
+            {
+              "feature": "qqq_ibkr_1h_open",
+              "importance": 1.2260585140083542
+            },
+            {
+              "feature": "qqq_ibkr_1h_low",
+              "importance": 1.1736388058328515
+            }
+          ]
+        },
+        {
+          "candidate_kind": "whitebox_provider_agreement_long",
+          "target": "target_release_long_h8",
+          "threshold": 1.0,
+          "calibration_support": 200,
+          "calibration_success": 112,
+          "calibration_precision": 0.56,
+          "calibration_wilson_lcb_95": 0.4907167533465867,
+          "test_support": 234,
+          "test_success": 104,
+          "test_precision": 0.4444444444444444,
+          "precision_wilson_lcb_95": 0.38218486591379713,
+          "ece": 0.5555555555555556,
+          "coverage": 0.5379310344827586,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap."
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h8",
+          "threshold": 0.375,
+          "calibration_support": 200,
+          "calibration_success": 112,
+          "calibration_precision": 0.56,
+          "calibration_wilson_lcb_95": 0.4907167533465867,
+          "test_support": 234,
+          "test_success": 104,
+          "test_precision": 0.4444444444444444,
+          "precision_wilson_lcb_95": 0.38218486591379713,
+          "ece": 0.14596060914537548,
+          "coverage": 0.5379310344827586,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 480,
+          "negative_count": 1260,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 42.7115607236236
+            },
+            {
+              "feature": "weekday",
+              "importance": 3.1816059861051103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 3.1600380598213063
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 1.91505211526022
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.8130273458131307
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_64",
+              "importance": 1.7162600067871103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.710820042799913
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_16",
+              "importance": 1.6225662268408032
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.564875750846855
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.4708832241003509
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.3518203255712071
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3173600224921964
+            },
+            {
+              "feature": "qqq_ibkr_1h_ret_16",
+              "importance": 1.3115940536715778
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_64",
+              "importance": 1.28423391670009
+            },
+            {
+              "feature": "qqq_ibkr_1h_open",
+              "importance": 1.2260585140083542
+            },
+            {
+              "feature": "qqq_ibkr_1h_low",
+              "importance": 1.1736388058328515
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h8",
+          "threshold": 0.5649717514124294,
+          "calibration_support": 179,
+          "calibration_success": 102,
+          "calibration_precision": 0.5698324022346368,
+          "calibration_wilson_lcb_95": 0.4965868157622955,
+          "test_support": 216,
+          "test_success": 95,
+          "test_precision": 0.4398148148148148,
+          "precision_wilson_lcb_95": 0.37524442476709724,
+          "ece": 0.15712441411624428,
+          "coverage": 0.496551724137931,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 480,
+          "negative_count": 1260,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 42.7115607236236
+            },
+            {
+              "feature": "weekday",
+              "importance": 3.1816059861051103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 3.1600380598213063
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 1.91505211526022
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.8130273458131307
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_64",
+              "importance": 1.7162600067871103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.710820042799913
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_16",
+              "importance": 1.6225662268408032
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.564875750846855
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.4708832241003509
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.3518203255712071
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3173600224921964
+            },
+            {
+              "feature": "qqq_ibkr_1h_ret_16",
+              "importance": 1.3115940536715778
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_64",
+              "importance": 1.28423391670009
+            },
+            {
+              "feature": "qqq_ibkr_1h_open",
+              "importance": 1.2260585140083542
+            },
+            {
+              "feature": "qqq_ibkr_1h_low",
+              "importance": 1.1736388058328515
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h8",
+          "threshold": 0.5468429846631951,
+          "calibration_support": 179,
+          "calibration_success": 102,
+          "calibration_precision": 0.5698324022346368,
+          "calibration_wilson_lcb_95": 0.4965868157622955,
+          "test_support": 216,
+          "test_success": 95,
+          "test_precision": 0.4398148148148148,
+          "precision_wilson_lcb_95": 0.37524442476709724,
+          "ece": 0.15712441411624428,
+          "coverage": 0.496551724137931,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap.",
+          "positive_count": 480,
+          "negative_count": 1260,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 42.7115607236236
+            },
+            {
+              "feature": "weekday",
+              "importance": 3.1816059861051103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_32",
+              "importance": 3.1600380598213063
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 1.91505211526022
+            },
+            {
+              "feature": "qqq_yf_1h_eff_64",
+              "importance": 1.8130273458131307
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_64",
+              "importance": 1.7162600067871103
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.710820042799913
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_16",
+              "importance": 1.6225662268408032
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_32",
+              "importance": 1.564875750846855
+            },
+            {
+              "feature": "qqq_yf_1h_vol_64",
+              "importance": 1.4708832241003509
+            },
+            {
+              "feature": "qqq_ibkr_1h_vol_16",
+              "importance": 1.3518203255712071
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.3173600224921964
+            },
+            {
+              "feature": "qqq_ibkr_1h_ret_16",
+              "importance": 1.3115940536715778
+            },
+            {
+              "feature": "qqq_yf_1h_range_mean_64",
+              "importance": 1.28423391670009
+            },
+            {
+              "feature": "qqq_ibkr_1h_open",
+              "importance": 1.2260585140083542
+            },
+            {
+              "feature": "qqq_ibkr_1h_low",
+              "importance": 1.1736388058328515
+            }
+          ]
+        },
+        {
+          "candidate_kind": "whitebox_provider_agreement_short",
+          "target": "target_release_short_h4",
+          "threshold": 1.0,
+          "calibration_support": 169,
+          "calibration_success": 75,
+          "calibration_precision": 0.4437869822485207,
+          "calibration_wilson_lcb_95": 0.3709575663271781,
+          "test_support": 135,
+          "test_success": 59,
+          "test_precision": 0.43703703703703706,
+          "precision_wilson_lcb_95": 0.3562543228003883,
+          "ece": 0.5629629629629629,
+          "coverage": 0.3103448275862069,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Same-market QQQ provider agreement from yfinance and IBKR 1h bars over the long refreshed overlap."
+        }
+      ]
+    }
+  ],
+  "accepted_95_count": 0,
+  "accepted_packet": null,
+  "overall_decision": "no_95_candidate"
+}

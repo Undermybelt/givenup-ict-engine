@@ -1,0 +1,15 @@
+goal_achieved=false
+candidates_seen=4
+direct_input_sources_materialized=2
+accepted_direct_manipulation_label_sources=0
+mainregimev2_root_slots_added=0
+manipulation_label_slots_added=0
+accepted_full_cycle_full_universe=false
+raw_sample_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=blocked_direct_manipulation_sources_unlabeled_no_accepted_label_windows
+status.direct_input_source_unlabeled=2
+status.event_context_unlabeled=1
+status.rejected_metadata_false_positive=1

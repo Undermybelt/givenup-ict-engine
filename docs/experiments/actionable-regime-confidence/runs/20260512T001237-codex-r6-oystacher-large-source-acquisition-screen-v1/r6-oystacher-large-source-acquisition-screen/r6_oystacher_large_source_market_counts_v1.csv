@@ -1,0 +1,7 @@
+market_family,instrument_scope,trading_days,flip_sequences,spoof_orders,spoof_contracts
+metals,High-Grade Copper futures,14,288,1633,24354
+energy,Crude Oil futures,4,324,1102,26204
+energy,Natural Gas futures,3,330,1574,29590
+volatility_index,VIX futures,19,89,284,37694
+equity_index,"E-mini S&P 500 futures, June 2013 contract",2,59,202,35523
+equity_index,"E-mini S&P 500 futures, December 2013 and January 2014 contracts",9,226,412,206425

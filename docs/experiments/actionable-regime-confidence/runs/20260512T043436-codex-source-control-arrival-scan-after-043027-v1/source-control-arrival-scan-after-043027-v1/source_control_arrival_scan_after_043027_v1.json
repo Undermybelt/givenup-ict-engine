@@ -1,0 +1,110 @@
+{
+  "run_id": "20260512T043436-codex-source-control-arrival-scan-after-043027-v1",
+  "generated_at_utc": "2026-05-11T20:37:12+00:00",
+  "board_sha256_before_scan_artifact": "55f6246262f1fe2153d621640ce8788f8b1fb0d1a9c0a779ea66a7b2bcc765f6",
+  "gate_result": "source_control_arrival_scan_after_043027_v1=no_new_source_control_unlock_no_promotion",
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "file_count": 0,
+      "required_files": {
+        "positive_spoofing_layering_rows.csv": false,
+        "matched_negative_normal_activity_rows.csv": false,
+        "provenance_manifest.json": false
+      },
+      "required_files_present": 0
+    },
+    "/tmp/ict-engine-native-subhour-source-label-intake": {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false,
+      "file_count": 0
+    },
+    "/tmp/ict-engine-source-panel-recency-extension": {
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false,
+      "file_count": 0
+    }
+  },
+  "approval_package": {
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "present": true,
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "public_recap_pacer_provenance": "pending_explicit_user_or_board_approval",
+    "same_exhibit_flip_as_matched_controls": "rejected_under_current_contract",
+    "source_owned_normal_controls_alternative": "not_supplied"
+  },
+  "known_non_target_local_triplets": [
+    {
+      "path": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+      "present": true,
+      "file_count": 3
+    },
+    {
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "present": true,
+      "file_count": 3
+    },
+    {
+      "path": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "present": true,
+      "file_count": 3
+    },
+    {
+      "path": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "present": true,
+      "file_count": 3
+    }
+  ],
+  "related_roots_readback": [
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T043222-codex-autoquant-offline-market-metadata-run-after-042222-v1",
+      "present": true,
+      "file_count": 5,
+      "completed_artifact_count": 3,
+      "completed_artifacts": [
+        "autoquant-offline-market-metadata-run-after-042222-v1/autoquant_offline_market_metadata_run_after_042222_v1.json",
+        "autoquant-offline-market-metadata-run-after-042222-v1/autoquant_offline_market_metadata_run_after_042222_v1.md",
+        "checks/autoquant_offline_market_metadata_run_after_042222_v1_assertions.out"
+      ],
+      "classification": "completed_or_not_present_count_separately"
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T043314-codex-r6-owner-export-arrival-scan-after-043027-v1",
+      "present": true,
+      "file_count": 6,
+      "completed_artifact_count": 3,
+      "completed_artifacts": [
+        "checks/r6_owner_export_arrival_scan_after_043027_v1_assertions.out",
+        "r6-owner-export-arrival-scan-after-043027-v1/r6_owner_export_arrival_scan_after_043027_v1.json",
+        "r6-owner-export-arrival-scan-after-043027-v1/r6_owner_export_arrival_scan_after_043027_v1.md"
+      ],
+      "classification": "completed_or_not_present_count_separately"
+    }
+  ],
+  "histgb_042448": {
+    "root": "docs/experiments/actionable-regime-confidence/runs/20260512T042448-codex-source-label-histgb-confidence-screen-v1",
+    "active_process_count": 0,
+    "stdout_bytes": 4180,
+    "stderr_bytes": 0,
+    "exit_present": true,
+    "classification": "settled_needs_artifact_readback"
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "new_source_unlock": false,
+    "owner_export_root_present": false,
+    "owner_export_required_files_present": 0,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_root_present": false,
+    "explicit_approval": false,
+    "flip_controls_approved": false,
+    "source_owned_normal_controls_supplied": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

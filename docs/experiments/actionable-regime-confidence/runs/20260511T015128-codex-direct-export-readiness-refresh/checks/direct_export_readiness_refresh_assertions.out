@@ -1,0 +1,13 @@
+PASS active_root_axis=MainRegimeV2
+PASS provider_export_ready_now=false
+PASS databento_cli=missing
+PASS python_module_databento=missing
+PASS python_module_pyarrow=missing
+PASS ibkr_gateway_or_tws_ports=absent
+PASS tradingviewremix_config_present_but_not_direct_l2_l3_order_lifecycle_evidence=true
+PASS tomac_archive_schema=ohlcv-1m_only
+PASS qualifying_direct_manipulation_input_sets=0
+PASS manipulation_gate=blocked_missing_required_inputs
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS trade_usable=false

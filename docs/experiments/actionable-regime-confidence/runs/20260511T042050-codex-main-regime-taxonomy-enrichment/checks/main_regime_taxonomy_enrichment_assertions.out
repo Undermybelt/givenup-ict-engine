@@ -1,0 +1,7 @@
+OK main_regime_taxonomy_enrichment.json parses with jq.
+OK active roots include BullExpansion, BearExpansion, SidewaysConsolidation, CrisisCrash, Manipulation, UnknownOrMixed.
+OK accepted roots are unchanged: BullExpansion, SidewaysConsolidation, CrisisCrash.
+OK missing roots remain BearExpansion and Manipulation.
+OK runtime code changed false.
+OK thresholds relaxed false.
+OK trade usable false.

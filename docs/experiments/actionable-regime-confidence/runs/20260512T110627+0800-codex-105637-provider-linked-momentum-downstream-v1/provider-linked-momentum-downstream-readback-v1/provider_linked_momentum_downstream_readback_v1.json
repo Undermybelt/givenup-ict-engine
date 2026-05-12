@@ -1,0 +1,66 @@
+{
+  "run_id": "20260512T110627+0800-codex-105637-provider-linked-momentum-downstream-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1",
+  "gate": "105637_provider_linked_momentum_downstream_v1=real_trade_artifact_missing_downstream_bootstrap_fail_closed_no_promotion",
+  "exit_markers": {
+    "01_ingest_real_trades_dry_run": 1,
+    "02_ingest_real_trades_force": 1,
+    "03_pre_bayes_status": 0,
+    "04_policy_training_status_before_export": 0,
+    "05_export_structural_path_ranking_target": 0,
+    "06_policy_training_status_after_export": 0,
+    "07_workflow_structural_bundle": 0,
+    "08_workflow_execution_candidate": 0,
+    "09_workflow_full": 0
+  },
+  "missing_artifacts": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T110627+0800-codex-105637-provider-linked-momentum-downstream-v1/derived/provider_linked_momentum_105637_real_trades.jsonl",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T110250+0800-codex-board-b-104703-provider-matrix-tomac-v1"
+  ],
+  "pre_bayes": {
+    "latest_filtered_assignments": null,
+    "latest_policy": null,
+    "latest_gate_status": null,
+    "latest_canonical_structural_confidence": null,
+    "latest_canonical_structural_probabilities": {}
+  },
+  "policy_training": {
+    "entry_model_ready": false,
+    "matched_rows": 0,
+    "rows": 1,
+    "history_rows": 1,
+    "mature_rows": 0,
+    "raw_scored_mature_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 0,
+    "observation_validation_min_rows": 30,
+    "trainer_artifact_status": "missing",
+    "runtime_selection_status": "disabled",
+    "runtime_active_match_count": 0
+  },
+  "execution_tree": {
+    "direction": "observe",
+    "review_status": "observe",
+    "ready": false,
+    "actionable": false,
+    "closed_loop_branch_admission": "fail_closed",
+    "current_posterior": 0.0,
+    "trigger_summary": "No workflow snapshot exists yet."
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_promoted": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "six_provider_aq_matrix_satisfied": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

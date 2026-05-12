@@ -1,0 +1,1 @@
+target/debug/ict-engine provider-status --provider tradingview_mcp --agent

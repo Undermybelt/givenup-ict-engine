@@ -1,0 +1,81 @@
+query,rank,ref,title,size,lastUpdated,downloadCount,voteCount,usabilityRating
+market regime,1,mafaqbhatti/stock-market-regimes-20002026,Stock Market Regimes (2000–2026),14239487,2026-02-01 02:25:29.437000,229,45,1.0
+market regime,2,krupalpatel07/gold-price-dynamics,Gold Price Dynamics,85982,2026-03-03 05:42:46,2889,60,1.0
+market regime,3,rifatalam3/gold-price-trends,Gold Price Trends,85994,2026-04-06 14:00:56.563000,1614,47,1.0
+market regime,4,bsthere/mercedes-stock-data-1996-2026,Mercedes-Benz Stock Data (1996-2026),194202,2026-02-26 13:52:53,498,37,1.0
+market regime,5,ranodipghosh/top-50-crypto-market-data-daily-usd,"Top 50 Crypto Market Data (Daily, USD)",5050,2026-01-24 17:37:58.133000,682,34,0.9411765
+market regime,6,kanchana1990/world-bank-commodity-price-intelligence-19602026,World Bank Commodity Price Intelligence 1960–2026,2231883,2026-03-16 11:22:36.463000,552,44,1.0
+market regime,7,igormerlinicomposer/herding-based-market-regime-dataset,Herding-Based Market Regime Dataset,39816,2026-04-13 08:46:58,4,1,1.0
+market regime,8,krupalpatel07/wti-crude-oil,WTI Crude Oil,117856,2026-03-03 05:30:18.767000,133,16,1.0
+market regime,9,nickdatak/us-market-regimes-dataset-1995-2024,US Market Regimes Dataset (1995-2024),163252,2026-01-23 12:42:22,31,1,1.0
+market regime,10,sergionefedov/oil-and-geopolitics-9k-daily-obs-brent-35-years,Oil and Geopolitics 9K daily obs Brent 35 years,229563,2026-05-07 10:55:18,565,27,1.0
+market regime,11,darkmatternet/s-and-p-500-stocks-25-years-of-data-updated-daily,S&P 500 Stocks: 25 Years of Data (Updated Daily),104570337,2026-05-10 22:34:10,876,31,1.0
+market regime,12,kaushalnandania/crypto-data-2014-2026,Top 50 Cryptocurrency Data (2014 - 2026),8925801,2026-02-17 08:59:51,710,26,1.0
+market regime,13,aaronnorman/2023-global-prosperity-index-w-region-politics,2023 Global Prosperity Index w/ region politics,5940,2024-07-14 17:10:00.013000,1057,24,1.0
+market regime,14,rockyt07/stock-market-sensex-nifty-all-time-dataset,Stock Market Sensex & Nifty All-time Dataset,59549439,2025-11-13 12:17:40,1281,67,1.0
+market regime,15,kanchana1990/tech-giants-and-global-macroeconomic-indicators,Tech Giants & Global Macroeconomic Indicators,878030,2026-03-12 05:32:05.367000,184,32,1.0
+market regime,16,kanchana1990/bis-global-debt-securities-intelligence-19622025,BIS Global Debt Securities Intelligence 1962–2025,28925723,2026-03-18 19:20:43.603000,182,31,1.0
+market regime,17,ahaanverma00/nifty-500-market-and-behavior-regime-dataset,NIFTY 500 Market & Behavior Regime Dataset,1655332,2026-04-15 15:25:28.867000,14,1,0.7647059
+market regime,18,sergionefedov/synthetic-limit-order-book-market-microstructure,Limit Order Book 10 days · 3 market regimes ,16204538,2026-03-16 17:19:19,3,1,0.9411765
+market regime,19,krupalpatel07/silver-market-intelligence-dataset,Silver Price Historical Dataset,82974,2026-03-05 04:31:17.297000,48,7,1.0
+market regime,20,darkmatternet/daily-crypto-market-tracker,Daily Crypto Market Tracker CoinGecko,33338,2026-05-10 22:27:46,54,13,0.9411765
+stock market regime,1,mafaqbhatti/stock-market-regimes-20002026,Stock Market Regimes (2000–2026),14239487,2026-02-01 02:25:29.437000,229,45,1.0
+stock market regime,2,bsthere/mercedes-stock-data-1996-2026,Mercedes-Benz Stock Data (1996-2026),194202,2026-02-26 13:52:53,498,37,1.0
+stock market regime,3,darkmatternet/s-and-p-500-stocks-25-years-of-data-updated-daily,S&P 500 Stocks: 25 Years of Data (Updated Daily),104570337,2026-05-10 22:34:10,876,31,1.0
+stock market regime,4,kaushalnandania/crypto-data-2014-2026,Top 50 Cryptocurrency Data (2014 - 2026),8925801,2026-02-17 08:59:51,710,26,1.0
+stock market regime,5,rockyt07/stock-market-sensex-nifty-all-time-dataset,Stock Market Sensex & Nifty All-time Dataset,59549439,2025-11-13 12:17:40,1281,67,1.0
+stock market regime,6,kanchana1990/tech-giants-and-global-macroeconomic-indicators,Tech Giants & Global Macroeconomic Indicators,878030,2026-03-12 05:32:05.367000,184,32,1.0
+stock market regime,7,ibrahimshahrukh/top-50-companies-dataset,Global Top 50 Stocks Historical Data (2006–2026),6168886,2026-02-23 02:06:15.217000,308,28,1.0
+stock market regime,8,hassanjameelahmed/aramco-stock-2019-2025,Aramco-Stock-2019-2025,33045,2026-02-14 05:38:30.307000,49,11,1.0
+stock market regime,9,patelris/nvidia-corporation-stock-data-1999-2026,📈 NVIDIA Share Price History,227172,2026-04-29 17:11:37.247000,68,16,1.0
+stock market regime,10,kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes,Algorithmic Trading: Macro Stress & Asset Regimes,382546,2026-02-25 04:11:37.147000,359,35,1.0
+stock market regime,11,yekahaaagayeham/stocks-listed-on-nifty-500-july-2021,"Indian Stock Market, Stocks name, symbol(ticker)..",94578,2022-09-15 22:12:09,670,8,0.9411765
+stock market regime,12,macrosynergy/fixed-income-returns-and-macro-trends,JPMaQS Quantamental Indicators,32934147,2023-12-14 11:23:22,1716,60,1.0
+stock market regime,13,sergionefedov/macro-indicators-40-years-30-countries,"Macro Indicators, 40 years, 30 countries",97362,2026-04-09 18:10:54.503000,196,11,1.0
+stock market regime,14,willianoliveiragibin/time-series-prediction,Time Series Prediction,5933,2026-01-20 22:47:54,16,4,1.0
+stock market regime,15,nickdatak/us-market-regimes-dataset-1995-2024,US Market Regimes Dataset (1995-2024),163252,2026-01-23 12:42:22,31,1,1.0
+stock market regime,16,vivek468/sip-dataset-nifty-banknifty-gold-and-silver,"SIP ETF Dataset (Nifty, BankNifty, Gold & Silver)",44533,2026-01-14 04:46:52,153,8,1.0
+stock market regime,17,abidhussai512/macro-regime-dataset-s-and-p-500-vs-federal-fund-rate,Macro Regime Dataset: S&P 500 vs Federal Fund Rate,15701,2026-03-16 04:45:43.063000,14,27,0.9411765
+stock market regime,18,srisahithis/vix-volatility-index-ohlcv-data-20062020,VIX Volatility Index OHLCV Data (2006–2020),52025,2025-08-06 18:14:45.117000,39,1,0.9411765
+stock market regime,19,muzaddidafaque/global-and-indian-financial-markets-dataset-2025,Global & Indian Financial Markets Dataset 2025,395094,2026-01-13 21:42:49,136,0,1.0
+stock market regime,20,tanulkumarsrivastava/lme-aluminum-forecasting-dataset-explainability,lme aluminum forecasting dataset - explainability,589928,2026-02-28 19:37:39,113,1,0.9375
+regime classification,1,rohit8527kmr7518/online-retail-customer-classification-dataset,Online Retail Customer Segmentation Dataset,3604260,2026-02-23 14:04:39.013000,877,34,1.0
+regime classification,2,kanchana1990/world-bank-commodity-price-intelligence-19602026,World Bank Commodity Price Intelligence 1960–2026,2231883,2026-03-16 11:22:36.463000,552,44,1.0
+regime classification,3,niladriroy0/llm-data,"LLM Inference Scaling, Latency Collapse Simulation",9197724,2026-02-21 07:09:14.363000,11,8,1.0
+regime classification,4,katerynameleshenko/ai-index,AI Global Index,2441,2023-04-26 01:28:59,9965,106,1.0
+regime classification,5,aishimuskan/people-living-in-democracies-and-autocracies,People living in democracies and autocracies,35887,2026-05-09 06:20:11.017000,7,12,0.9411765
+regime classification,6,ranodipghosh/top-50-crypto-market-data-daily-usd,"Top 50 Crypto Market Data (Daily, USD)",5050,2026-01-24 17:37:58.133000,682,34,0.9411765
+regime classification,7,rohit8527kmr7518/chemical-process-monitoring-time-series-dataset,Chemical Process Monitoring Time-Series Dataset,86556455,2026-02-10 14:24:10.883000,436,28,1.0
+regime classification,8,kanchana1990/central-bank-rates-intelligence-19452026,Central Bank Rates Intelligence 1945–2026,625247,2026-03-18 02:07:33,382,34,1.0
+regime classification,9,niladriroy0/agro-environmental-dataset,Agro-Environmental Stress & Failure Simulation,16529892,2026-01-29 17:53:26.723000,248,15,1.0
+regime classification,10,anthonytherrien/gladiator-combat-records-and-profiles-dataset,Gladiator Combat Records and Profiles Dataset,534507,2025-05-05 14:46:46.467000,1324,82,1.0
+regime classification,11,liamarguedas/brazil-total-highway-crashes-2010-2023,Brazil: Total highway crashes 2010 - 2023,29530564,2023-08-04 13:25:59.847000,1129,26,0.9411765
+regime classification,12,kanchana1990/bis-global-debt-securities-intelligence-19622025,BIS Global Debt Securities Intelligence 1962–2025,28925723,2026-03-18 19:20:43.603000,182,31,1.0
+regime classification,13,ibrahimshahrukh/s-and-p-500-historical-data-1980-2026,S&P 500 Historical Daily Prices (1980–2026),941367,2026-02-26 02:30:37.997000,91,13,1.0
+regime classification,14,moaz1911/strait-of-hormuz-2026-the-great-decoupling,Strait of Hormuz 2026: The Great Decoupling,27473,2026-04-08 15:26:09.873000,95,21,1.0
+regime classification,15,sergionefedov/crypto-microstructure,"Crypto Microstructure 10 assets, 3 years ",973212,2026-03-17 15:13:07,30,3,0.9411765
+regime classification,16,georgyzubkov/visa-regime-of-russia,Visa regime of Russia,2084,2022-06-04 06:10:35,136,47,0.9411765
+regime classification,17,willianoliveiragibin/time-series-prediction,Time Series Prediction,5933,2026-01-20 22:47:54,16,4,1.0
+regime classification,18,rahulcris07/human-decision-drift-under-cognitive-load,Human Decision Drift Under Cognitive Load,49602255,2026-01-19 20:48:35,111,12,0.9411765
+regime classification,19,hassanjameelahmed/aramco-stock-2019-2025,Aramco-Stock-2019-2025,33045,2026-02-14 05:38:30.307000,49,11,1.0
+regime classification,20,ahaanverma00/nifty-500-market-and-behavior-regime-dataset,NIFTY 500 Market & Behavior Regime Dataset,1655332,2026-04-15 15:25:28.867000,14,1,0.7647059
+volatility regime,1,krupalpatel07/gold-price-dynamics,Gold Price Dynamics,85982,2026-03-03 05:42:46,2889,60,1.0
+volatility regime,2,rifatalam3/gold-price-trends,Gold Price Trends,85994,2026-04-06 14:00:56.563000,1614,47,1.0
+volatility regime,3,mafaqbhatti/stock-market-regimes-20002026,Stock Market Regimes (2000–2026),14239487,2026-02-01 02:25:29.437000,229,45,1.0
+volatility regime,4,kanchana1990/world-bank-commodity-price-intelligence-19602026,World Bank Commodity Price Intelligence 1960–2026,2231883,2026-03-16 11:22:36.463000,552,44,1.0
+volatility regime,5,ranodipghosh/top-50-crypto-market-data-daily-usd,"Top 50 Crypto Market Data (Daily, USD)",5050,2026-01-24 17:37:58.133000,682,34,0.9411765
+volatility regime,6,darkmatternet/s-and-p-500-stocks-25-years-of-data-updated-daily,S&P 500 Stocks: 25 Years of Data (Updated Daily),104570337,2026-05-10 22:34:10,876,31,1.0
+volatility regime,7,bsthere/mercedes-stock-data-1996-2026,Mercedes-Benz Stock Data (1996-2026),194202,2026-02-26 13:52:53,498,37,1.0
+volatility regime,8,sergionefedov/oil-and-geopolitics-9k-daily-obs-brent-35-years,Oil and Geopolitics 9K daily obs Brent 35 years,229563,2026-05-07 10:55:18,565,27,1.0
+volatility regime,9,krupalpatel07/wti-crude-oil,WTI Crude Oil,117856,2026-03-03 05:30:18.767000,133,16,1.0
+volatility regime,10,hassanjameelahmed/intc-historical-stock-prices,INTC Historical Stock Prices,178908,2026-03-17 09:26:12,28,25,1.0
+volatility regime,11,kaushalnandania/crypto-data-2014-2026,Top 50 Cryptocurrency Data (2014 - 2026),8925801,2026-02-17 08:59:51,710,26,1.0
+volatility regime,12,kanchana1990/tech-giants-and-global-macroeconomic-indicators,Tech Giants & Global Macroeconomic Indicators,878030,2026-03-12 05:32:05.367000,184,32,1.0
+volatility regime,13,kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes,Algorithmic Trading: Macro Stress & Asset Regimes,382546,2026-02-25 04:11:37.147000,359,35,1.0
+volatility regime,14,ibrahimshahrukh/s-and-p-500-historical-data-1980-2026,S&P 500 Historical Daily Prices (1980–2026),941367,2026-02-26 02:30:37.997000,91,13,1.0
+volatility regime,15,patelris/ferrari-n-v-stock-data-2015-2026,💹 Ferrari Stock Price History,71338,2026-04-25 17:38:19,43,15,1.0
+volatility regime,16,krupalpatel07/volatility-index-historical-dataset-cboe-vix,Volatility Risk Index CBOE,125234,2026-03-04 05:21:11.207000,20,4,1.0
+volatility regime,17,patelris/nvidia-corporation-stock-data-1999-2026,📈 NVIDIA Share Price History,227172,2026-04-29 17:11:37.247000,68,16,1.0
+volatility regime,18,rockyt07/stock-market-sensex-nifty-all-time-dataset,Stock Market Sensex & Nifty All-time Dataset,59549439,2025-11-13 12:17:40,1281,67,1.0
+volatility regime,19,krupalpatel07/silver-market-intelligence-dataset,Silver Price Historical Dataset,82974,2026-03-05 04:31:17.297000,48,7,1.0
+volatility regime,20,krupalpatel07/bitcoin-market-microstructure-dataset,Bitcoin Historical Dataset,116169,2026-03-07 06:01:29,35,5,1.0

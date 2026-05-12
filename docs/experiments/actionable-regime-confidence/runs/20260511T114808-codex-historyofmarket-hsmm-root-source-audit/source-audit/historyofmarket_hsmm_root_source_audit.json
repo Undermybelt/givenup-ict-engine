@@ -1,0 +1,97 @@
+{
+  "active_taxonomy": "MainRegimeV2",
+  "candidates": [
+    {
+      "accepted_parent_root_slots_added": 0,
+      "blockers": [
+        "label axis is formula-derived from S&P 500 price/log-yoy, not an independent provider/instrument/timeframe label panel",
+        "source exposes Bull/Bear style states only; no Sideways or Crisis root",
+        "daily S&P 500 only; does not cover other instruments, providers, timeframes, full species, or full cycles required by current board",
+        "using this formula as both label source and detector would be circular proxy evidence"
+      ],
+      "computed_log_yoy_rows": 24455,
+      "date_range": {
+        "end": "2026-05-08",
+        "start": "1927-12-30"
+      },
+      "decision": "blocked_historyofmarket_formula_derived_price_only_two_root_spx_daily_source",
+      "derived_label_counts": {
+        "Bear": 7435,
+        "Bull": 17020
+      },
+      "mainregimev2_mapping_attempted": {
+        "Bear": "log_yoy <= 0 per source page wording",
+        "Bull": "log_yoy > 0 per source page wording",
+        "Crisis": null,
+        "Sideways": null
+      },
+      "name": "History of Market S&P 500 Log YoY",
+      "page_declares_positive_bull_negative_bear": true,
+      "public_json_rows": 24705,
+      "retrieval_status": "ok",
+      "urls": {
+        "api": "https://historyofmarket.com/api/sp500/price.json",
+        "page": "https://historyofmarket.com/sp500/sp500-logyoy/"
+      },
+      "zero_crossings_approx": 384
+    },
+    {
+      "accepted_parent_root_slots_added": 0,
+      "blockers": [
+        "public pages expose paper/methodology, not a downloadable row-level decoded-state panel",
+        "model states are inferred HSMM outputs, not an accepted source-label export for repo providers",
+        "no provider/instrument/timeframe label windows available for calibration or cross-context acceptance"
+      ],
+      "decision": "blocked_hsmm_paper_methodology_no_materialized_row_export",
+      "has_four_state_terms": true,
+      "mainregimev2_mapping_attempted": {
+        "Bear": "Bear state term in paper",
+        "Bull": "Bull state term in paper",
+        "Crisis": "Crash state term as candidate Crisis analogue",
+        "Sideways": "Sidewalk state term as candidate Sideways analogue"
+      },
+      "name": "Wang Gupta Zhang Bear/Bull/Sidewalk/Crash HSMM paper",
+      "public_fetch_statuses": [
+        {
+          "error": null,
+          "ok": true,
+          "status": 200,
+          "url": "https://www.sciencedirect.com/science/article/pii/S1544612321000799"
+        },
+        {
+          "error": "HTTP Error 404: Not Found",
+          "ok": false,
+          "status": 404,
+          "url": "https://centaur.reading.ac.uk/107284/"
+        },
+        {
+          "error": "HTTP Error 404: Not Found",
+          "ok": false,
+          "status": 404,
+          "url": "https://ideas.repec.org/a/eee/intfor/v37y2021i2p699-713.html"
+        }
+      ],
+      "retrieval_status": "partial_or_blocked_public_pages",
+      "row_level_state_export_found": true,
+      "urls": {
+        "centaur": "https://centaur.reading.ac.uk/107284/",
+        "repec": "https://ideas.repec.org/a/eee/intfor/v37y2021i2p699-713.html",
+        "sciencedirect": "https://www.sciencedirect.com/science/article/pii/S1544612321000799"
+      }
+    }
+  ],
+  "decision": {
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_parent_root_slots_added": 0,
+    "accepted_roots": [],
+    "gate_result": "blocked_historyofmarket_hsmm_no_attachable_full_matrix_mainregimev2_panel",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T03:57:33.319990+00:00",
+  "next_action": "Acquire an exact provider/instrument/timeframe MainRegimeV2 label panel or explicit owner-approved crosswalk; do not count formula-derived price labels or paper-only HSMM states.",
+  "objective_slice": "targeted public parent-root source acquisition without repeating generic Kaggle/HF scans",
+  "run_id": "20260511T114808+0800-codex-historyofmarket-hsmm-root-source-audit"
+}

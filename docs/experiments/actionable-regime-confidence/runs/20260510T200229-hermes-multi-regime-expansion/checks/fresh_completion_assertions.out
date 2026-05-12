@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "run_root_exists": true,
+    "report_json_valid": true,
+    "evidence_matches_report_decision": true,
+    "thresholds_not_relaxed": true,
+    "five_regimes_tested": true,
+    "zero_additional_95": true,
+    "zero_additional_99": true,
+    "existing_session_liquidity_preserved": true,
+    "board_cursor_complete": true,
+    "board_ledger_points_to_evidence": true,
+    "completion_audit_status": true,
+    "full_chain_lineage_files_exist": true,
+    "providers_checked_yf_ibkr_kraken_tv": true,
+    "bbn_apply_readback_present": true,
+    "catboost_readback_present": true,
+    "execution_tree_no_promote": true,
+    "no_execute_claim": true
+  },
+  "failed": [],
+  "decision": "abstain_no_additional_calibrated_regime",
+  "accepted_new_regime_count_95": 0,
+  "accepted_new_regime_count_99": 0,
+  "abstained": [
+    "TrendExpansion",
+    "RangeConsolidation",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "ThinLiquidity"
+  ]
+}

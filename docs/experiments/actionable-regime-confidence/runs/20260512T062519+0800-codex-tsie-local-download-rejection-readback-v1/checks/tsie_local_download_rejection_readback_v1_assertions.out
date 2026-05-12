@@ -1,0 +1,8 @@
+local_download_present=True
+same_payload_as_prior_dryrun=True
+provenance_rejected=True
+prior_rejected=True
+required_roots_absent=True
+target_root_mutated=False
+accepted_rows_added=0
+update_goal=False

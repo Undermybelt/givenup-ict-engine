@@ -1,0 +1,632 @@
+{
+  "schema_version": "board-a-actionable-regime-confidence-evidence/v2",
+  "loop_id": "20260510T183017+0800-board-a-v2-provider-agreement-calibration",
+  "durable_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T183017",
+  "provider_packet": {
+    "yfinance_nq_15m": {
+      "artifact": "provider/yf_nq_15m.csv",
+      "rows": 519,
+      "first": "2026-05-01T00:00:00+00:00",
+      "last": "2026-05-08T20:59:59+00:00",
+      "ready": true
+    },
+    "yfinance_qqq_1h": {
+      "artifact": "provider/yf_qqq_1h.csv",
+      "rows": 43,
+      "first": "2026-05-01T13:30:00+00:00",
+      "last": "2026-05-08T20:00:00+00:00",
+      "ready": true
+    },
+    "ibkr_qqq_1h": {
+      "artifact": "provider/ibkr_qqq_1h.csv",
+      "rows": 160,
+      "first": "2026-04-27T08:00:00+00:00",
+      "last": "2026-05-08T23:00:00+00:00",
+      "ready": true
+    },
+    "kraken_pf_xbtusd_15m": {
+      "artifact": "provider/kraken_pf_xbtusd_15m.csv",
+      "rows": 865,
+      "first": "2026-05-01T00:00:00+00:00",
+      "last": "2026-05-10T00:00:00+00:00",
+      "ready": true
+    },
+    "auto_quant_cache_nq_15m": {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+      "ready": true,
+      "rows": 351288,
+      "first": "2011-01-02 23:00:00+00:00",
+      "last": "2025-12-31 21:45:00+00:00"
+    },
+    "tradingview_remix": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "provider-status probe returned tradingview_mcp_connectivity_probe_failed; durable 2026-only tv_QQQ_1h artifact not chronologically aligned with 2024-2025 replay labels"
+    }
+  },
+  "active_market_timeframe_set": {
+    "primary_chain": [
+      "QQQ 1h",
+      "NQ 15m"
+    ],
+    "provider_probe_only": [
+      "PF_XBTUSD 15m",
+      "TradingViewRemix QQQ 1h unavailable for replay"
+    ]
+  },
+  "candidate_regime": {
+    "regime_id": "ProviderAgreementTrendExpansion",
+    "horizon": "16h replay label",
+    "allowed_action": "none"
+  },
+  "calibration_result": {
+    "accepted_gate": "none",
+    "board_state": "abstain",
+    "blocker": "support_too_thin_for_release_packet",
+    "release_target": {
+      "target": "target_provider_agreement_trend_expansion_release_v2",
+      "skipped": false,
+      "positive": 24,
+      "negative": 488,
+      "train_rows": 256,
+      "calibration_rows": 128,
+      "test_rows": 128,
+      "top_importances": [
+        {
+          "feature": "aq_1h_dd_32",
+          "importance": 6.538512528191698
+        },
+        {
+          "feature": "provider_trend_expansion_votes",
+          "importance": 6.42089968602244
+        },
+        {
+          "feature": "aq_4h_ret_1",
+          "importance": 2.866952115700295
+        },
+        {
+          "feature": "aq_4h_pos_192",
+          "importance": 2.3788539549964813
+        },
+        {
+          "feature": "aq_15m_dd_8",
+          "importance": 2.012044974398634
+        },
+        {
+          "feature": "aq_1h_dd_16",
+          "importance": 1.7605463064925087
+        },
+        {
+          "feature": "aq_1h_volume_z_4",
+          "importance": 1.6653898995366385
+        },
+        {
+          "feature": "aq_15m_absret_sum_8",
+          "importance": 1.5721907986090748
+        },
+        {
+          "feature": "aq_15m_ret_1",
+          "importance": 1.5512805206470717
+        },
+        {
+          "feature": "aq_4h_pos_16",
+          "importance": 1.5181713951250135
+        },
+        {
+          "feature": "aq_4h_ret_4",
+          "importance": 1.422719897836696
+        },
+        {
+          "feature": "aq_15m_vol_8",
+          "importance": 1.2853933962354895
+        },
+        {
+          "feature": "aq_1h_ret_16",
+          "importance": 1.2340139264856935
+        },
+        {
+          "feature": "aq_15m_pos_96",
+          "importance": 1.204732104184674
+        },
+        {
+          "feature": "aq_4h_bounce_96",
+          "importance": 1.1773514115437533
+        }
+      ],
+      "admissible_rules": 9,
+      "accepted_95_rules": 0,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.0008482361722078959,
+        "calibration_support": 120,
+        "calibration_success": 8,
+        "calibration_precision": 0.06666666666666667,
+        "calibration_wilson_lcb_95": 0.03416530686090633,
+        "test_support": 120,
+        "test_success": 6,
+        "test_precision": 0.05,
+        "precision_wilson_lcb_95": 0.023114364414465797,
+        "precision_wilson_lcb_99": 0.018399385546893656,
+        "ece": 0.04407290631992322,
+        "coverage": 0.9375,
+        "passes_95": false,
+        "passes_99": false
+      }
+    },
+    "other_target_summary": {
+      "target_release_allowed_v2": {
+        "target": "target_release_allowed_v2",
+        "skipped": false,
+        "positive": 156,
+        "negative": 356,
+        "train_rows": 256,
+        "calibration_rows": 128,
+        "test_rows": 128,
+        "top_importances": [
+          {
+            "feature": "aq_15m_ret_1",
+            "importance": 5.241185469214255
+          },
+          {
+            "feature": "aq_1h_ret_1",
+            "importance": 4.114053999481192
+          },
+          {
+            "feature": "qqq_yf_1h_ret_1",
+            "importance": 3.8368802823505255
+          },
+          {
+            "feature": "aq_1h_pos_4",
+            "importance": 2.474049871082294
+          },
+          {
+            "feature": "nq_autoquant_15m_ret_1",
+            "importance": 2.4422827277288133
+          },
+          {
+            "feature": "aq_1d_eff_5",
+            "importance": 2.316082056226971
+          },
+          {
+            "feature": "aq_1d_pos_5",
+            "importance": 2.297692050550506
+          },
+          {
+            "feature": "aq_4h_ret_1",
+            "importance": 2.137191307864215
+          },
+          {
+            "feature": "aq_15m_eff_192",
+            "importance": 2.034409322152299
+          },
+          {
+            "feature": "aq_5m_pos_64",
+            "importance": 1.9774887844242957
+          },
+          {
+            "feature": "aq_5m_ret_1",
+            "importance": 1.8319588401980051
+          },
+          {
+            "feature": "aq_1d_pos_10",
+            "importance": 1.7900616488052667
+          },
+          {
+            "feature": "aq_15m_pos_4",
+            "importance": 1.5754964913263858
+          },
+          {
+            "feature": "aq_5m_ret_8",
+            "importance": 1.4881864532083748
+          },
+          {
+            "feature": "aq_1h_eff_32",
+            "importance": 1.369630825555599
+          }
+        ],
+        "admissible_rules": 9,
+        "accepted_95_rules": 0,
+        "accepted_99_rules": 0,
+        "selected_rule": {
+          "threshold": 0.0962070354639523,
+          "calibration_support": 120,
+          "calibration_success": 41,
+          "calibration_precision": 0.3416666666666667,
+          "calibration_wilson_lcb_95": 0.2629043836856451,
+          "test_support": 114,
+          "test_success": 34,
+          "test_precision": 0.2982456140350877,
+          "precision_wilson_lcb_95": 0.2219613548029891,
+          "precision_wilson_lcb_99": 0.201479533948883,
+          "ece": 0.10720588904706062,
+          "coverage": 0.890625,
+          "passes_95": false,
+          "passes_99": false
+        }
+      },
+      "target_transition_stable_v2": {
+        "target": "target_transition_stable_v2",
+        "skipped": false,
+        "positive": 277,
+        "negative": 235,
+        "train_rows": 256,
+        "calibration_rows": 128,
+        "test_rows": 128,
+        "top_importances": [
+          {
+            "feature": "aq_entry_hour_sin",
+            "importance": 4.662114205679934
+          },
+          {
+            "feature": "aq_1d_ret_1",
+            "importance": 4.50089232970577
+          },
+          {
+            "feature": "qqq_yf_1h_trend_dir",
+            "importance": 3.2060791928288093
+          },
+          {
+            "feature": "aq_1d_eff_5",
+            "importance": 2.541832704939304
+          },
+          {
+            "feature": "aq_4h_volume_z_96",
+            "importance": 2.53213883715333
+          },
+          {
+            "feature": "aq_1d_upper_wick_frac",
+            "importance": 1.9580336296999812
+          },
+          {
+            "feature": "qqq_yf_1h_ret_8",
+            "importance": 1.7587336717954083
+          },
+          {
+            "feature": "aq_5m_volume_z_96",
+            "importance": 1.7159956870895772
+          },
+          {
+            "feature": "aq_1d_pos_5",
+            "importance": 1.548048480075607
+          },
+          {
+            "feature": "aq_4h_pos_8",
+            "importance": 1.380464242552456
+          },
+          {
+            "feature": "provider_bull_trend_votes",
+            "importance": 1.340950080173969
+          },
+          {
+            "feature": "aq_5m_volume_z_64",
+            "importance": 1.340119546601819
+          },
+          {
+            "feature": "aq_5m_lower_wick_frac",
+            "importance": 1.2816288873882784
+          },
+          {
+            "feature": "aq_5m_volume_z_8",
+            "importance": 1.1813998216315282
+          },
+          {
+            "feature": "aq_1h_range_mean_4",
+            "importance": 1.0975950198192255
+          }
+        ],
+        "admissible_rules": 9,
+        "accepted_95_rules": 0,
+        "accepted_99_rules": 0,
+        "selected_rule": {
+          "threshold": 0.130664845579801,
+          "calibration_support": 125,
+          "calibration_success": 74,
+          "calibration_precision": 0.592,
+          "calibration_wilson_lcb_95": 0.504351064828952,
+          "test_support": 128,
+          "test_success": 62,
+          "test_precision": 0.484375,
+          "precision_wilson_lcb_95": 0.39952298025969557,
+          "precision_wilson_lcb_99": 0.3742003097931056,
+          "ece": 0.16816887816495923,
+          "coverage": 1.0,
+          "passes_95": false,
+          "passes_99": false
+        }
+      },
+      "target_path_specific_edge_v2": {
+        "target": "target_path_specific_edge_v2",
+        "skipped": false,
+        "positive": 140,
+        "negative": 372,
+        "train_rows": 256,
+        "calibration_rows": 128,
+        "test_rows": 128,
+        "top_importances": [
+          {
+            "feature": "aq_15m_ret_1",
+            "importance": 4.434918925907592
+          },
+          {
+            "feature": "aq_1d_eff_5",
+            "importance": 3.5679426879045644
+          },
+          {
+            "feature": "qqq_yf_1h_ret_1",
+            "importance": 3.078071582155365
+          },
+          {
+            "feature": "aq_1d_pos_10",
+            "importance": 2.88153212689043
+          },
+          {
+            "feature": "nq_autoquant_15m_ret_1",
+            "importance": 2.2572800008333966
+          },
+          {
+            "feature": "aq_5m_pos_64",
+            "importance": 2.0809420031721286
+          },
+          {
+            "feature": "aq_1d_pos_5",
+            "importance": 2.0590219393452127
+          },
+          {
+            "feature": "aq_5m_pos_4",
+            "importance": 2.0121573395591494
+          },
+          {
+            "feature": "aq_1h_ret_1",
+            "importance": 1.9153215589869765
+          },
+          {
+            "feature": "aq_15m_upper_wick_frac",
+            "importance": 1.5341013430805786
+          },
+          {
+            "feature": "aq_1d_dd_10",
+            "importance": 1.4944688908792099
+          },
+          {
+            "feature": "aq_5m_ret_1",
+            "importance": 1.3620110637027534
+          },
+          {
+            "feature": "aq_1h_pos_4",
+            "importance": 1.2350987815492722
+          },
+          {
+            "feature": "aq_15m_eff_192",
+            "importance": 1.2036620729385425
+          },
+          {
+            "feature": "aq_1h_eff_32",
+            "importance": 1.060024078085371
+          }
+        ],
+        "admissible_rules": 9,
+        "accepted_95_rules": 0,
+        "accepted_99_rules": 0,
+        "selected_rule": {
+          "threshold": 0.07826760854909409,
+          "calibration_support": 120,
+          "calibration_success": 37,
+          "calibration_precision": 0.30833333333333335,
+          "calibration_wilson_lcb_95": 0.23272736988916295,
+          "test_support": 112,
+          "test_success": 32,
+          "test_precision": 0.2857142857142857,
+          "precision_wilson_lcb_95": 0.21024839799081718,
+          "precision_wilson_lcb_99": 0.1901937497039548,
+          "ece": 0.08466420410841952,
+          "coverage": 0.875,
+          "passes_95": false,
+          "passes_99": false
+        }
+      },
+      "target_provider_agreement_v2": {
+        "target": "target_provider_agreement_v2",
+        "skipped": false,
+        "positive": 165,
+        "negative": 347,
+        "train_rows": 256,
+        "calibration_rows": 128,
+        "test_rows": 128,
+        "top_importances": [
+          {
+            "feature": "provider_bull_trend_votes",
+            "importance": 92.94410129756729
+          },
+          {
+            "feature": "aq_1h_bounce_64",
+            "importance": 0.15565956764818306
+          },
+          {
+            "feature": "aq_1h_ret_16",
+            "importance": 0.12121580746955497
+          },
+          {
+            "feature": "aq_15m_pos_96",
+            "importance": 0.112069417363295
+          },
+          {
+            "feature": "aq_15m_range_mean_8",
+            "importance": 0.11168458085381228
+          },
+          {
+            "feature": "aq_1d_eff_200",
+            "importance": 0.10778188613748142
+          },
+          {
+            "feature": "aq_4h_eff_8",
+            "importance": 0.10623883919620962
+          },
+          {
+            "feature": "aq_1d_volume_z_50",
+            "importance": 0.10163088312392335
+          },
+          {
+            "feature": "qqq_yf_1h_range_pct",
+            "importance": 0.10048938913343065
+          },
+          {
+            "feature": "aq_4h_absret_sum_32",
+            "importance": 0.09999813863294969
+          },
+          {
+            "feature": "aq_1h_eff_768",
+            "importance": 0.09962148421785527
+          },
+          {
+            "feature": "aq_1h_range_pct",
+            "importance": 0.09834047130192262
+          },
+          {
+            "feature": "aq_1h_pos_96",
+            "importance": 0.09685960316878557
+          },
+          {
+            "feature": "aq_15m_ret_1440",
+            "importance": 0.09606179741189318
+          },
+          {
+            "feature": "aq_1h_vol_1440",
+            "importance": 0.09331604165431642
+          }
+        ],
+        "admissible_rules": 9,
+        "accepted_95_rules": 0,
+        "accepted_99_rules": 0,
+        "selected_rule": {
+          "threshold": 0.0014447842636266086,
+          "calibration_support": 120,
+          "calibration_success": 41,
+          "calibration_precision": 0.3416666666666667,
+          "calibration_wilson_lcb_95": 0.2629043836856451,
+          "test_support": 110,
+          "test_success": 40,
+          "test_precision": 0.36363636363636365,
+          "precision_wilson_lcb_95": 0.27975228932289853,
+          "precision_wilson_lcb_99": 0.2563984018094297,
+          "ece": 0.0025655041150837573,
+          "coverage": 0.859375,
+          "passes_95": false,
+          "passes_99": false
+        }
+      },
+      "target_provider_agreement_trend_expansion_event": {
+        "target": "target_provider_agreement_trend_expansion_event",
+        "skipped": false,
+        "positive": 53,
+        "negative": 459,
+        "train_rows": 256,
+        "calibration_rows": 128,
+        "test_rows": 128,
+        "top_importances": [
+          {
+            "feature": "provider_trend_expansion_votes",
+            "importance": 59.758949178688795
+          },
+          {
+            "feature": "provider_bull_trend_votes",
+            "importance": 13.710427573036599
+          },
+          {
+            "feature": "qqq_yf_1h_trend_dir",
+            "importance": 2.6043561120252035
+          },
+          {
+            "feature": "qqq_yf_1h_ret_8",
+            "importance": 2.4973882646904064
+          },
+          {
+            "feature": "aq_15m_pos_96",
+            "importance": 1.3520112664313944
+          },
+          {
+            "feature": "aq_15m_eff_16",
+            "importance": 0.5860883114906807
+          },
+          {
+            "feature": "aq_nq_vs_200d_pct",
+            "importance": 0.5758098082336348
+          },
+          {
+            "feature": "aq_5m_ret_16",
+            "importance": 0.43599762642056855
+          },
+          {
+            "feature": "aq_5m_range_mean_8",
+            "importance": 0.42742992525497286
+          },
+          {
+            "feature": "aq_5m_range_mean_64",
+            "importance": 0.39417536944273324
+          },
+          {
+            "feature": "aq_15m_dd_32",
+            "importance": 0.3928609453804691
+          },
+          {
+            "feature": "aq_1h_bounce_64",
+            "importance": 0.3491307321689868
+          },
+          {
+            "feature": "aq_1h_dd_32",
+            "importance": 0.345819763533206
+          },
+          {
+            "feature": "aq_1h_dd_16",
+            "importance": 0.33679593349172715
+          },
+          {
+            "feature": "aq_1h_vol_1440",
+            "importance": 0.3346295152724882
+          }
+        ],
+        "admissible_rules": 9,
+        "accepted_95_rules": 0,
+        "accepted_99_rules": 0,
+        "selected_rule": {
+          "threshold": 0.0008594587362897042,
+          "calibration_support": 120,
+          "calibration_success": 13,
+          "calibration_precision": 0.10833333333333334,
+          "calibration_wilson_lcb_95": 0.06441141154173441,
+          "test_support": 111,
+          "test_success": 15,
+          "test_precision": 0.13513513513513514,
+          "precision_wilson_lcb_95": 0.08363439676694351,
+          "precision_wilson_lcb_99": 0.07195603066200452,
+          "ece": 0.009272910658120973,
+          "coverage": 0.8671875,
+          "passes_95": false,
+          "passes_99": false
+        }
+      }
+    }
+  },
+  "downstream_chain": {
+    "pre_bayes": {
+      "artifact": "bbn/02_pre_bayes_status.out"
+    },
+    "bbn": {
+      "dry_run_artifact": "bbn/03_auto_quant_prior_init_dry_run.out",
+      "apply_artifact": "bbn/04_auto_quant_prior_init_apply.out"
+    },
+    "catboost": {
+      "path_ranker_train": "catboost/03_path_ranker_train.out",
+      "blocker": "catboost_support_too_thin: 3 target rows, mature_rows=0"
+    },
+    "execution_tree": {
+      "workflow_after_bbn": "execution-tree/04_workflow_status_after_bbn_apply.out",
+      "state_snapshot": "state-snapshots/workflow_snapshot.json"
+    }
+  },
+  "artifacts": {
+    "labels": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/labels/provider_agreement_v2_labels_512.csv",
+    "features": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/calibration/provider_agreement_v2_features_512.csv",
+    "calibration_report": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/calibration/provider_agreement_v2_calibration_report.json"
+  },
+  "next_action": "A-v2-2: add replay-aligned second same-market provider or realized covariance/eigenstructure, then rerun ProviderAgreementTrendExpansion release calibration without lowering thresholds."
+}

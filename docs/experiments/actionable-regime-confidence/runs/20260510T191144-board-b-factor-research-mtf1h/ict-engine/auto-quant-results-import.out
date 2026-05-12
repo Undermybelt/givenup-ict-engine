@@ -1,0 +1,22 @@
+{
+  "auto_quant_pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_QQQ_20260510T113049.198582000Z",
+  "library_source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/auto_quant_strategy_library.measured.json",
+  "library_state_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/auto-quant/QQQ/auto_quant_strategy_library.json",
+  "log_cross_check": {
+    "log_only": [],
+    "manifest_only": [],
+    "matched": 3,
+    "mismatches": [],
+    "n_blocks_in_log": 12,
+    "n_strategies_in_manifest": 3
+  },
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 3,
+  "n_total_strategies": 3,
+  "symbol": "QQQ"
+}

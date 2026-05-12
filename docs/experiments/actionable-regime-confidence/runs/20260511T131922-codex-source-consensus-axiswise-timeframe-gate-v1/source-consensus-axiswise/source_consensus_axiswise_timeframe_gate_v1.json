@@ -1,0 +1,430 @@
+{
+  "artifact_type": "source_consensus_axiswise_timeframe_gate_v1",
+  "artifacts": {
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1_summary.csv"
+  },
+  "cells": [
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_axiswise_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "bull_1w_source_consensus_axiswise_v1",
+      "horizon": "1w",
+      "qualifying_condition": "same_source_rollup.root == 'Bull' AND timeframe == '1w' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Bull",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 13506,
+          "daily_support": 13506,
+          "periods": 2804,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9997156548
+        },
+        "heldout_ticker_axis": {
+          "agreeing_source_days": 21516,
+          "daily_support": 21516,
+          "periods": 4470,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9998214922
+        },
+        "heldout_time_axis": {
+          "agreeing_source_days": 12181,
+          "daily_support": 12181,
+          "periods": 2543,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9996847346
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1w",
+      "validation_axes": {
+        "calibration": "non-heldout tickers, 2017-2021",
+        "heldout_ticker_axis": "heldout tickers, all dates",
+        "heldout_time_axis": "all tickers, 2022+"
+      },
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_axiswise_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "bear_1w_source_consensus_axiswise_v1",
+      "horizon": "1w",
+      "qualifying_condition": "same_source_rollup.root == 'Bear' AND timeframe == '1w' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Bear",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 4419,
+          "daily_support": 4419,
+          "periods": 916,
+          "precision": 1.0,
+          "wilson95_lcb": 0.99913145
+        },
+        "heldout_ticker_axis": {
+          "agreeing_source_days": 7877,
+          "daily_support": 7877,
+          "periods": 1638,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9995125573
+        },
+        "heldout_time_axis": {
+          "agreeing_source_days": 7293,
+          "daily_support": 7293,
+          "periods": 1521,
+          "precision": 1.0,
+          "wilson95_lcb": 0.999473545
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1w",
+      "validation_axes": {
+        "calibration": "non-heldout tickers, 2017-2021",
+        "heldout_ticker_axis": "heldout tickers, all dates",
+        "heldout_time_axis": "all tickers, 2022+"
+      },
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_axiswise_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "sideways_1w_source_consensus_axiswise_v1",
+      "horizon": "1w",
+      "qualifying_condition": "same_source_rollup.root == 'Sideways' AND timeframe == '1w' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Sideways",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 3478,
+          "daily_support": 3478,
+          "periods": 726,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9988967163
+        },
+        "heldout_ticker_axis": {
+          "agreeing_source_days": 6877,
+          "daily_support": 6877,
+          "periods": 1437,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9994417167
+        },
+        "heldout_time_axis": {
+          "agreeing_source_days": 2993,
+          "daily_support": 2993,
+          "periods": 631,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9987181641
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1w",
+      "validation_axes": {
+        "calibration": "non-heldout tickers, 2017-2021",
+        "heldout_ticker_axis": "heldout tickers, all dates",
+        "heldout_time_axis": "all tickers, 2022+"
+      },
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_axiswise_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "crisis_1w_source_consensus_axiswise_v1",
+      "horizon": "1w",
+      "qualifying_condition": "same_source_rollup.root == 'Crisis' AND timeframe == '1w' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Crisis",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 1704,
+          "daily_support": 1704,
+          "periods": 353,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9977506935
+        },
+        "heldout_ticker_axis": {
+          "agreeing_source_days": 3478,
+          "daily_support": 3478,
+          "periods": 724,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9988967163
+        },
+        "heldout_time_axis": {
+          "agreeing_source_days": 2399,
+          "daily_support": 2399,
+          "periods": 501,
+          "precision": 1.0,
+          "wilson95_lcb": 0.9984012849
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1w",
+      "validation_axes": {
+        "calibration": "non-heldout tickers, 2017-2021",
+        "heldout_ticker_axis": "heldout tickers, all dates",
+        "heldout_time_axis": "all tickers, 2022+"
+      },
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_axiswise_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "bull_1mo_source_consensus_axiswise_v1",
+      "horizon": "1mo",
+      "qualifying_condition": "same_source_rollup.root == 'Bull' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Bull",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 7447,
+          "daily_support": 7522,
+          "periods": 359,
+          "precision": 0.9900292475,
+          "wilson95_lcb": 0.9875205249
+        },
+        "heldout_ticker_axis": {
+          "agreeing_source_days": 11275,
+          "daily_support": 11376,
+          "periods": 544,
+          "precision": 0.9911216596,
+          "wilson95_lcb": 0.9892244255
+        },
+        "heldout_time_axis": {
+          "agreeing_source_days": 6105,
+          "daily_support": 6160,
+          "periods": 298,
+          "precision": 0.9910714286,
+          "wilson95_lcb": 0.9883971558
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1mo",
+      "validation_axes": {
+        "calibration": "non-heldout tickers, 2017-2021",
+        "heldout_ticker_axis": "heldout tickers, all dates",
+        "heldout_time_axis": "all tickers, 2022+"
+      },
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_axiswise_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "bear_1mo_source_consensus_axiswise_v1",
+      "horizon": "1mo",
+      "qualifying_condition": "same_source_rollup.root == 'Bear' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Bear",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 1354,
+          "daily_support": 1364,
+          "periods": 64,
+          "precision": 0.9926686217,
+          "wilson95_lcb": 0.9865571155
+        },
+        "heldout_ticker_axis": {
+          "agreeing_source_days": 2768,
+          "daily_support": 2803,
+          "periods": 135,
+          "precision": 0.9875133785,
+          "wilson95_lcb": 0.9826843089
+        },
+        "heldout_time_axis": {
+          "agreeing_source_days": 2755,
+          "daily_support": 2793,
+          "periods": 133,
+          "precision": 0.9863945578,
+          "wilson95_lcb": 0.9813814842
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1mo",
+      "validation_axes": {
+        "calibration": "non-heldout tickers, 2017-2021",
+        "heldout_ticker_axis": "heldout tickers, all dates",
+        "heldout_time_axis": "all tickers, 2022+"
+      },
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_axiswise_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "sideways_1mo_source_consensus_axiswise_v1",
+      "horizon": "1mo",
+      "qualifying_condition": "same_source_rollup.root == 'Sideways' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Sideways",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 559,
+          "daily_support": 573,
+          "periods": 27,
+          "precision": 0.9755671902,
+          "wilson95_lcb": 0.9594092375
+        },
+        "heldout_ticker_axis": {
+          "agreeing_source_days": 1141,
+          "daily_support": 1168,
+          "periods": 56,
+          "precision": 0.9768835616,
+          "wilson95_lcb": 0.9665754996
+        },
+        "heldout_time_axis": {
+          "agreeing_source_days": 239,
+          "daily_support": 244,
+          "periods": 12,
+          "precision": 0.9795081967,
+          "wilson95_lcb": 0.9529358324
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1mo",
+      "validation_axes": {
+        "calibration": "non-heldout tickers, 2017-2021",
+        "heldout_ticker_axis": "heldout tickers, all dates",
+        "heldout_time_axis": "all tickers, 2022+"
+      },
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    },
+    {
+      "abstain_condition": "label_share < 0.95 OR unsupported source panel",
+      "accepted_95_source_consensus_axiswise_gate": true,
+      "allowed_action": "emit_regime_context_only",
+      "blockers": [],
+      "gate_id": "crisis_1mo_source_consensus_axiswise_v1",
+      "horizon": "1mo",
+      "qualifying_condition": "same_source_rollup.root == 'Crisis' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "regime": "Crisis",
+      "stats": {
+        "calibration": {
+          "agreeing_source_days": 501,
+          "daily_support": 507,
+          "periods": 24,
+          "precision": 0.9881656805,
+          "wilson95_lcb": 0.974424233
+        },
+        "heldout_ticker_axis": {
+          "agreeing_source_days": 1199,
+          "daily_support": 1212,
+          "periods": 58,
+          "precision": 0.9892739274,
+          "wilson95_lcb": 0.9817351263
+        },
+        "heldout_time_axis": {
+          "agreeing_source_days": 730,
+          "daily_support": 740,
+          "periods": 35,
+          "precision": 0.9864864865,
+          "wilson95_lcb": 0.9753047546
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root_timeframe_label",
+      "timeframe": "1mo",
+      "validation_axes": {
+        "calibration": "non-heldout tickers, 2017-2021",
+        "heldout_ticker_axis": "heldout tickers, all dates",
+        "heldout_time_axis": "all tickers, 2022+"
+      },
+      "validation_unit": "daily source-label agreement inside emitted timeframe windows"
+    }
+  ],
+  "decision": {
+    "accepted_95_timeframe_root_cells": [
+      "1w:Bull",
+      "1w:Bear",
+      "1w:Sideways",
+      "1w:Crisis",
+      "1mo:Bull",
+      "1mo:Bear",
+      "1mo:Sideways",
+      "1mo:Crisis"
+    ],
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "blocked_timeframe_root_cells": [],
+    "full_market_full_timeframe_completion": false,
+    "gate_result": "accepted_95_source_consensus_axiswise_8of8_same_source_timeframe_cells_full_matrix_still_blocked",
+    "newly_closed_cells_vs_disjoint_source_consensus_v1": [
+      "1mo:Sideways"
+    ],
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "fixed_policy": {
+    "axiswise_validation_reason": "Validate time and ticker generalization as separate axes instead of requiring the low-support intersection for monthly Sideways.",
+    "confidence_definition": "Wilson95 lower bound of daily source-label agreement inside emitted weekly/monthly windows",
+    "min_daily_support_per_validation_axis": 50,
+    "source_consensus_threshold": 0.95,
+    "threshold_selection": "fixed_before_evaluation_not_train_optimized"
+  },
+  "generated_at_utc": "2026-05-11T05:22:41.780424+00:00",
+  "inputs": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "28f8ce29e2292291761ca66d967f3c257a9f9e99ad5e6eb9ef26b323c6152081",
+    "rollup_labels": "docs/experiments/actionable-regime-confidence/runs/20260511T130600-codex-stock-regime-same-source-timeframe-rollup-v1/timeframe-rollup/stock_regime_same_source_timeframe_rollup_v1.csv",
+    "rollup_labels_sha256": "7996c1dd166917630a0c4f11252f0bc04efa643a02be5cfbc4dc2812ac420c38"
+  },
+  "panel": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "roots": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "rows": 44396,
+    "tickers": [
+      "AAPL",
+      "ABBV",
+      "AMD",
+      "AMZN",
+      "BA",
+      "BAC",
+      "CAT",
+      "COP",
+      "CSCO",
+      "CVX",
+      "DIS",
+      "GE",
+      "GOOGL",
+      "GS",
+      "HD",
+      "INTC",
+      "JNJ",
+      "JPM",
+      "MCD",
+      "META",
+      "MS",
+      "MSFT",
+      "NFLX",
+      "NKE",
+      "NVDA",
+      "PFE",
+      "SBUX",
+      "T",
+      "TMO",
+      "TSLA",
+      "UNH",
+      "VZ",
+      "WFC",
+      "WMT",
+      "XOM",
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^RUT"
+    ],
+    "timeframes": [
+      "1mo",
+      "1w"
+    ]
+  },
+  "run_id": "20260511T131922+0800-codex-source-consensus-axiswise-timeframe-gate-v1"
+}

@@ -1,0 +1,1 @@
+Error: market-data-harness request validation failed: missing_provider_symbol_for_role=crypto_reference | unsupported provider 'binance_public'

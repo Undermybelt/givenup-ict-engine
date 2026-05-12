@@ -1,0 +1,9 @@
+requirement,status,evidence
+provider data converted from 104703 source,pass,provider_data_conversion_summary.json
+analyze produced Pre-Bayes status,pass,02_pre_bayes_status.out latest_gate_status=pass_neutralized
+BBN/path-ranker readback run,pass,03_policy_training_status.out
+CatBoost/path-ranker validation floors met,pass,raw=86/30 production=85/30 observation=43/30
+execution tree promotion,fail_closed,ready=False actionable=False gate=execution_blocked readiness=0.3363756308524155
+same-root six-provider AQ matrix,fail_closed,not part of this run
+source/control and selected-history gates,fail_closed,source_control=false explicit_selected_history=false
+update_goal allowed,fail_closed,update_goal=false

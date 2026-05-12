@@ -1,0 +1,115 @@
+{
+  "accepted_rows_added": 0,
+  "baseline_live_positive_rows": 73,
+  "blocker": "Candidate rows cover one non-spoofing marking-close species, but no matched normal controls are materialized and chronological/symbol/venue/direct-species gates remain false.",
+  "board_sha256_at_start": "851e7f8f4cd0a4c9cdcea294f2e48790ca893d4c98b1f90748e90d9c65c8fd98",
+  "candidate_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001226-codex-r6-athena-marking-close-nonspoofing-candidate-screen-v1/r6-athena-marking-close-nonspoofing-candidate-screen/r6_athena_marking_close_nonspoofing_candidates_v1.csv",
+  "candidate_rows": 10,
+  "candidate_species": [
+    "marking_close_gravy"
+  ],
+  "candidate_symbols": [
+    "EBAY"
+  ],
+  "candidate_trade_dates": [
+    "2009-11-25"
+  ],
+  "candidate_venues": {
+    "BATS": 4,
+    "NASDAQ": 2,
+    "NASDAQ / lit market": 1,
+    "NASDAQ / lit markets": 1,
+    "NASDAQ closing cross": 2
+  },
+  "gate_result": "r6_athena_marking_close_nonspoofing_candidate_screen_v1=nonspoofing_marking_close_candidate_rows_found_controls_and_splits_still_blocked",
+  "generated_at_utc": "2026-05-11T16:16:50.823273+00:00",
+  "live_intake_mutated": false,
+  "matched_controls_materialized": false,
+  "new_confidence_gate": false,
+  "next_action": "Find owner-approved matched normal closing-auction controls or additional direct non-spoofing species rows, then rerun direct plus sidecar split calibration without mutating the shared intake until policy is explicit.",
+  "raw_pdf_committed": false,
+  "run_id": "20260512T001226-codex-r6-athena-marking-close-nonspoofing-candidate-screen-v1",
+  "runtime_code_changed": false,
+  "source_verification": {
+    "all_markers_found": true,
+    "content_type": "application/pdf",
+    "curl": {
+      "cmd": "/usr/bin/curl -L -sS --fail -A Mozilla/5.0 ict-engine-board-a-audit contact=research@example.com -D /var/folders/l1/8xfkxd9d5yb4kgnlsplv8md40000gn/T/ict-r6-athena-source-daw_d9xq/headers.txt -o /var/folders/l1/8xfkxd9d5yb4kgnlsplv8md40000gn/T/ict-r6-athena-source-daw_d9xq/athena_34_73369.pdf https://www.sec.gov/file/34-73369pdf",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001226-codex-r6-athena-marking-close-nonspoofing-candidate-screen-v1/command-output/curl_source_fetch.exit",
+      "name": "curl_source_fetch",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001226-codex-r6-athena-marking-close-nonspoofing-candidate-screen-v1/command-output/curl_source_fetch.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001226-codex-r6-athena-marking-close-nonspoofing-candidate-screen-v1/command-output/curl_source_fetch.stdout.txt",
+      "timed_out": false
+    },
+    "final_url": "https://www.sec.gov/files/litigation/admin/2014/34-73369.pdf",
+    "ghostscript": {
+      "cmd": "/opt/homebrew/bin/gs -q -dNOPAUSE -dBATCH -sDEVICE=txtwrite -sOutputFile=/var/folders/l1/8xfkxd9d5yb4kgnlsplv8md40000gn/T/ict-r6-athena-source-daw_d9xq/athena_34_73369.txt /var/folders/l1/8xfkxd9d5yb4kgnlsplv8md40000gn/T/ict-r6-athena-source-daw_d9xq/athena_34_73369.pdf",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001226-codex-r6-athena-marking-close-nonspoofing-candidate-screen-v1/command-output/ghostscript_txtwrite_source_extract.exit",
+      "name": "ghostscript_txtwrite_source_extract",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001226-codex-r6-athena-marking-close-nonspoofing-candidate-screen-v1/command-output/ghostscript_txtwrite_source_extract.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001226-codex-r6-athena-marking-close-nonspoofing-candidate-screen-v1/command-output/ghostscript_txtwrite_source_extract.stdout.txt",
+      "timed_out": false
+    },
+    "line_refs": [
+      {
+        "line": 241,
+        "text": "29. By way of illustration, Athena\u2019s trading in shares of EBAY stock on November"
+      },
+      {
+        "line": 247,
+        "text": "224,638 Buy Imbalance for shares of EBAY. At the time, shares of EBAY were"
+      },
+      {
+        "line": 250,
+        "text": "\u2022 3:50:00.578 \u2013 Athena placed a Sell Imbalance-Only Order for 224,638 shares at $.01,"
+      },
+      {
+        "line": 255,
+        "text": "between 100 and 5800 shares of EBAY, purchasing an additional 64,000 shares."
+      },
+      {
+        "line": 257,
+        "text": "\u2022 Milliseconds before 3:59:58, the National Best Offer for EBAY was $23.58, at which"
+      },
+      {
+        "line": 261,
+        "text": "15:59:58.355 $23.81 11,200 BATS"
+      },
+      {
+        "line": 266,
+        "text": "15:59:59.950 $23.81 11,200 NASDAQ"
+      },
+      {
+        "line": 269,
+        "text": "which constituted over 71% of the entire market volume for EBAY stock in the final"
+      },
+      {
+        "line": 276,
+        "text": "\u2022 4:00:03.348 \u2013 NASDAQ ran its Closing Cross auction. Athena\u2019s Sell Imbalance-Only"
+      }
+    ],
+    "markers": {
+      "15:59:58.355": true,
+      "15:59:59.950": true,
+      "224,638 Buy Imbalance": true,
+      "3:50:00.578": true,
+      "4:00:03.348": true,
+      "Athena Capital Research": true,
+      "shares of EBAY stock on November": true
+    },
+    "pdf_byte_count": 71622,
+    "pdf_sha256": "d676f8bb1ff0272020c77ee39d3c9ff261b8e78437acff7e42cd43ec6cf915cd",
+    "raw_pdf_committed": false,
+    "source_canonical_url": "https://www.sec.gov/files/litigation/admin/2014/34-73369.pdf",
+    "source_url": "https://www.sec.gov/file/34-73369pdf",
+    "text_committed": false
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "what_if_positive_rows_if_future_policy_accepts": 83,
+  "what_if_positive_wilson95_lcb": 0.955763136561
+}

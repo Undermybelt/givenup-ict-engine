@@ -1,0 +1,23 @@
+{
+  "repo_url": "/Users/thrill3r/Auto-Quant",
+  "managed_dir": "/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant",
+  "tracked_branch": "master",
+  "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "bootstrap_needed": false,
+  "config_present": true,
+  "managed_repo_present": true,
+  "healthy": true,
+  "update_available": false,
+  "required_files": [
+    "README.md",
+    "program.md",
+    "prepare.py",
+    "run.py",
+    "versions/README.md"
+  ],
+  "notes": [],
+  "adapter_version": "v1",
+  "last_sync": "2026-05-11T22:51:35.893143Z"
+}

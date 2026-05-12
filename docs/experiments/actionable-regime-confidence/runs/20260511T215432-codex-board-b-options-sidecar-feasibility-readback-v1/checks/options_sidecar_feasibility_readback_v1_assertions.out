@@ -1,0 +1,11 @@
+run_id=20260511T215432+0800-codex-board-b-options-sidecar-feasibility-readback-v1
+total_option_rows=1038
+unique_snapshot_count=2
+has_iv=True
+has_greeks=True
+has_open_interest=True
+branch_rows_emitted=0
+rc_spa_scored=False
+gate_result=fail:options_sidecar_single_snapshot_not_trainable
+downstream_consumption=not_started:blocked_by_options_sidecar_feasibility
+artifacts_exist=true

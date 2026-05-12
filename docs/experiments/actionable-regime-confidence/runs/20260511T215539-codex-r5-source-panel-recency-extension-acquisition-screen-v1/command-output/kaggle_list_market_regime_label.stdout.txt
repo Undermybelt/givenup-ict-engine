@@ -1,0 +1,11 @@
+ref,title,size,lastUpdated,downloadCount,voteCount,usabilityRating
+kanchana1990/world-bank-commodity-price-intelligence-19602026,World Bank Commodity Price Intelligence 1960–2026,2231883,2026-03-16 11:22:36.463000,552,44,1.0
+kanchana1990/bis-global-debt-securities-intelligence-19622025,BIS Global Debt Securities Intelligence 1962–2025,28925723,2026-03-18 19:20:43.603000,182,31,1.0
+macrosynergy/fixed-income-returns-and-macro-trends,JPMaQS Quantamental Indicators,32934147,2023-12-14 11:23:22,1715,60,1.0
+samyakrajbayar/global-fuel-prices-100-years-19242024,Global Fuel Prices: 100 Years (1924–2024),359654,2026-03-31 11:51:58,586,28,1.0
+ahaanverma00/nifty-500-market-and-behavior-regime-dataset,NIFTY 500 Market & Behavior Regime Dataset,1655332,2026-04-15 15:25:28.867000,11,1,0.7647059
+sergionefedov/big-energy-dataset-gas-solarwind-generation,European Power Markets Dataset (2015–2024),5652549,2026-03-22 21:30:59.527000,43,4,0.9411765
+thisathdamiru/bybit-multi-crypto-historical-data-2020-2026,Bybit Full-Lifetime Multi-Crypto Historical Data,18264837966,2026-05-09 10:41:59.257000,116,1,0.7647059
+toocool69/synthetic-stock-price-data-1m-instances,Synthetic Stock Price Data (1M instances),40833341,2025-11-25 16:56:47,9,0,0.9411765
+obesever/nem-eval-australian-nem-30-minute-benchmark,NEM-Eval: Australian NEM 30-Minute Benchmark,121323266,2026-05-07 07:21:34.403000,1,1,0.4117647
+svenneawolf/geopolitics-nationfiles-stability-index-nfsi,Geopolitics - NationFiles Stability Index (NFSI),1424752,2026-05-06 15:14:26.307000,3,1,0.625

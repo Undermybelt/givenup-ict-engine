@@ -1,0 +1,7 @@
+source_root_exists: PASS
+analyze_exit_not_success: PASS
+execution_not_actionable: PASS
+no_consumed_targets: PASS
+no_accepted_rows: PASS
+no_goal_update: PASS
+overall: PASS

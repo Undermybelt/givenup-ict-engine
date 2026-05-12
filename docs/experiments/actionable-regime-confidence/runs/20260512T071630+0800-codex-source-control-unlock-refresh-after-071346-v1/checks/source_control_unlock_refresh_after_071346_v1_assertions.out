@@ -1,0 +1,17 @@
+gate_result=source_control_unlock_refresh_after_071346_v1=no_required_unlock_no_dispatch_no_downstream
+r6_required_files_present_count=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+r3_crisis_rows=0
+r3_source_status=tsie_quarantined
+dispatch_sent_evidence=false
+owner_data_cli_ready=false
+owner_data_env_ready=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

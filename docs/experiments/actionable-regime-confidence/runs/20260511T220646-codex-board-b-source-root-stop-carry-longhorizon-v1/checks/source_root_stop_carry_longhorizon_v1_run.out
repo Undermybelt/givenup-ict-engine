@@ -1,0 +1,20 @@
+{
+  "branch_paths_evaluated": 5,
+  "branch_paths_passed": 5,
+  "downstream_consumption": "eligible_for_pre_bayes_bbn_catboost_execution_tree_probe",
+  "gate_result": "pass",
+  "manipulation_component_pass": true,
+  "next_action": "B5: run Pre-Bayes -> BBN -> CatBoost/path-ranker -> execution-tree branch consumption with the same branch paths.",
+  "price_root_paths_passed": 4,
+  "primary_blocker": "all required branch hard gates passed; downstream chain still required before promotion",
+  "selected_root_trade_counts": {
+    "Bear": 1349,
+    "Bull": 4948,
+    "Crisis": 532,
+    "Manipulation(scoped)": 13535,
+    "Sideways": 5500
+  },
+  "selected_trade_rows": 12329,
+  "stable_profit_score": 85.74074074074075,
+  "variant_trade_rows": 53916
+}

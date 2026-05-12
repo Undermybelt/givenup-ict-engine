@@ -1,0 +1,6 @@
+name                                      size  creationDate                
+-----------------------------------  ---------  --------------------------  
+Test_Dst_NoAuction_DecPre_CF_7.txt   132259850  2021-03-30 17:03:24.743000  
+Test_Dst_NoAuction_DecPre_CF_8.txt   124378346  2021-03-30 17:03:24         
+Test_Dst_NoAuction_DecPre_CF_9.txt    76138106  2021-03-30 17:03:24         
+Train_Dst_NoAuction_DecPre_CF_7.txt  607324298  2021-03-30 17:03:33.714000  

@@ -1,0 +1,62 @@
+{
+  "bootstrap_needed": true,
+  "data_ready": false,
+  "dependency_healthy": false,
+  "dependency_status": {
+    "adapter_version": "v1",
+    "bootstrap_needed": true,
+    "config_present": false,
+    "current_commit": null,
+    "healthy": false,
+    "last_sync": null,
+    "managed_dir": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant",
+    "managed_repo_present": false,
+    "notes": [
+      "auto_quant_not_bootstrapped"
+    ],
+    "pinned_ref": null,
+    "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+    "required_files": [
+      "README.md",
+      "program.md",
+      "prepare.py",
+      "run.py",
+      "versions/README.md"
+    ],
+    "tracked_branch": "master",
+    "update_available": false,
+    "upstream_commit": null
+  },
+  "healthy": false,
+  "managed_dir": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant",
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": "auto_quant_bootstrap_required",
+    "deferred_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "notes": [
+    "auto_quant_not_bootstrapped"
+  ],
+  "recommended_next_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant",
+  "recommended_next_command_meta": {
+    "blocked": false,
+    "executable_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant",
+    "kind": "ict_engine",
+    "prompt": null,
+    "recorded_data_paths": [],
+    "requires_user_input": false
+  },
+  "status": "missing_dependency",
+  "update_available": false,
+  "workspace": {
+    "config_json": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant/config.json",
+    "data_dir": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant/user_data/data",
+    "prepare_script": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant/prepare.py",
+    "program_md": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant/program.md",
+    "repo_root": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant",
+    "run_script": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant/run.py",
+    "strategies_dir": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant/auto-quant/.deps/auto-quant/user_data/strategies"
+  }
+}

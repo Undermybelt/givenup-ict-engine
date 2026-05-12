@@ -1,0 +1,4 @@
+strategy,pairs,trade_count,win_rate_pct,sharpe,total_profit_pct,profit_factor,config,commit
+TomacAggressiveBE,BTC/USD,0,0.0,0.0,0.0,0.0,config.tomac.json,b640cc8
+TomacKillzoneBreakout,BTC/USD,0,0.0,0.0,0.0,0.0,config.tomac.json,b640cc8
+TomacRRWinRate,BTC/USD,0,0.0,0.0,0.0,0.0,config.tomac.json,b640cc8

@@ -1,0 +1,7 @@
+group_id,source_section,symbol,venue_or_market_center,date_count,first_date,last_date,flip_sequences,spoof_orders,spoof_contracts,row_materialization_status
+oystacher_copper_2011,"CFTC complaint paragraph 94, Copper Futures Contracts",Copper Futures Contracts,COMEX/CME Globex,14,2011-12-01,2011-12-20,156,896,35235,date_level_positive_only_controls_and_order_times_missing
+oystacher_crude_2012,"CFTC complaint paragraph 94, Crude Oil Futures Contracts",Crude Oil Futures Contracts,NYMEX/CME Globex,4,2012-05-07,2012-05-11,120,286,15210,date_level_positive_only_controls_and_order_times_missing
+oystacher_natural_gas_2012,"CFTC complaint paragraph 94, Natural Gas Futures Contracts",Natural Gas Futures Contracts,NYMEX/CME Globex,3,2012-11-30,2012-12-04,124,369,1630,date_level_positive_only_controls_and_order_times_missing
+oystacher_vix_2013,"CFTC complaint paragraph 94, VIX Futures Contracts",VIX Futures Contracts,CFE electronic market,19,2013-02-19,2013-03-21,692,2705,283621,date_level_positive_only_controls_and_order_times_missing
+oystacher_es_june_2013,"CFTC complaint paragraph 94, June 2013 E-Mini S&P 500 Futures Contract",June 2013 E-Mini S&P 500 Futures Contract,CME Globex,2,2013-06-11,2013-06-12,12,129,3633,date_level_positive_only_controls_and_order_times_missing
+oystacher_es_dec_2013_jan_2014,"CFTC complaint paragraph 94, Dec 2013 and Jan 2014 E-Mini S&P 500 Futures Contracts",E-Mini S&P 500 Futures Contracts,CME Globex,9,2013-12-16,2014-01-10,212,822,20461,date_level_positive_only_controls_and_order_times_missing

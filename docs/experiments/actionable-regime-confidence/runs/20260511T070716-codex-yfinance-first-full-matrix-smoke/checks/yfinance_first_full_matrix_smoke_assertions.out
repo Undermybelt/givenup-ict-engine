@@ -1,0 +1,7 @@
+goal_achieved=false
+total_cells=126
+ok_cells=126
+empty_cells=0
+error_cells=0
+all_cells_ok=true
+root_regime_calibration_executed=false

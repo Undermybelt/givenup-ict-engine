@@ -1,0 +1,73 @@
+{
+  "run_id": "20260512T021456-codex-required-provider-status-readback-v1",
+  "generated_at_local": "2026-05-12T02:14:56+0800",
+  "generated_at_utc": "2026-05-11T18:14:56Z",
+  "board_hash_before_artifact": "a76ee17f2375d3df5177349e2a1664b9b65e8b1a5eca564804ae1a2e2f0f7d9f",
+  "source_runtime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T020037-codex-readonly-runtime-chain-refresh-after-015533-v1",
+  "gate_result": "required_provider_status_readback_v1=provider_requirements_mapped_non_promoting",
+  "required_providers": {
+    "yfinance": {
+      "ready": true,
+      "evidence": "live_runtime:1/1 ready | market_data:1/1 ready",
+      "promotion_note": "ready but does not supply missing source/control roots by itself"
+    },
+    "TradingViewRemix": {
+      "ready": false,
+      "provider_id": "tradingview_mcp",
+      "evidence": "market_data:0/1 ready; tradingview_mcp_connectivity_probe_failed",
+      "promotion_note": "not usable for Board A promotion at this readback"
+    },
+    "IBKR": {
+      "ready": false,
+      "provider_ids": [
+        "ibkr",
+        "ibkr_bridge"
+      ],
+      "evidence": "runtime dependencies missing while local IBKR API is reachable on port 4002",
+      "promotion_note": "requires redis and ib_async runtime path before provider fetches"
+    },
+    "Kraken": {
+      "ready": "partial",
+      "provider_ids": [
+        "kraken_cli",
+        "kraken_public"
+      ],
+      "evidence": "kraken_cli ready; kraken_public market_data unhealthy due missing Python provider dependencies",
+      "promotion_note": "Kraken CLI readiness does not create source/control roots"
+    }
+  },
+  "runtime_chain_readback": {
+    "gate_result": "readonly_runtime_chain_refresh_after_015533_v1=runtime_surfaces_callable_non_promoting_source_control_blocked",
+    "auto_quant_status": "missing_dependency",
+    "auto_quant_healthy": false,
+    "auto_quant_bootstrap_needed": true,
+    "pre_bayes_structural_regime": "trend",
+    "pre_bayes_structural_confidence": 0.5822867835012198,
+    "policy_training_matched_rows": 0,
+    "execution_candidate_actionable": false,
+    "execution_candidate_status": "execution_observe_only",
+    "structural_path_ranker_runtime_status": "disabled",
+    "structural_path_ranker_active_match_count": 0,
+    "export_rows": 3,
+    "export_mature_rows": 0,
+    "export_rows_with_training_weight": 0
+  },
+  "decisions": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_chain_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false
+  },
+  "mutation_flags": {
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "external_contact_submitted": false,
+    "trade_usable": false
+  },
+  "next_action": "Continue from owner/operator R6 export delivery, explicit FLIP approval, or genuinely new source-owned cross-timeframe MainRegimeV2 exports before canonical merge or downstream promotion rerun."
+}

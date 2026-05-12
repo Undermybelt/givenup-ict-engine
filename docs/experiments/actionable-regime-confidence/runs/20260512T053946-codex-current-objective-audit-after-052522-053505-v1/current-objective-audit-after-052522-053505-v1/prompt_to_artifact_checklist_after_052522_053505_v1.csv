@@ -1,0 +1,12 @@
+requirement,evidence,status,notes
+Bull 95 confidence,"051844 HGB accepted Bull; 052522 numeric tree accepted Bull",satisfied_diagnostic,"Diagnostic confidence only"
+Bear 95 confidence,"051844 HGB accepted Bear; 052522 numeric tree Bear heldout-market Wilson95 0.9465286635",satisfied_by_hgb_only,"Tree cross-check did not pass Bear"
+Crisis 95 confidence,"051844 HGB accepted Crisis; 052522 numeric tree accepted Crisis",satisfied_diagnostic,"Diagnostic confidence only"
+Sideways 95 confidence,"051844 HGB accepted Sideways; 052522 numeric tree accepted Sideways",satisfied_diagnostic,"Diagnostic confidence only"
+R5 recency extension,"053505 screened current Kaggle candidates; no compatible R5 rows; target root absent",blocked,"No R5 intake"
+R6 owner/control unlock,"/tmp/ict-engine-board-a-r6-owner-export-v1 absent; approval false",blocked,"No verifier-native owner/control root"
+R3 native subhour unlock,"/tmp/ict-engine-native-subhour-source-label-intake absent",blocked,"No native sub-hour rows"
+source-control validity,"HGB/tree screens source_control_evidence_acquired=false",blocked,"Existing equivalence package only"
+canonical merge,"canonical_merge=false",blocked,"No unlock"
+ordered downstream rerun,"downstream_promotion_rerun=false",blocked,"No authorized post-unlock rerun"
+goal completion,"trade_usable=false; update_goal=false",not_allowed,"Do not mark complete"

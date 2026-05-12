@@ -1,0 +1,16 @@
+{
+  "profile": "synthetic_ohlcv",
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "source_data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json",
+  "pair": "B2R_NQ_COST_CRISIS_REPAIR_032157/USD",
+  "base_timeframe": "1h",
+  "additional_timeframes": [
+    "4h",
+    "1d"
+  ],
+  "notes": [
+    "profile_materializes_additive_external_runner",
+    "profile_reuses_primary_cleaned_candle_json_as_prepare_external_source",
+    "profile_is_opt_in_and_state_dir_scoped"
+  ]
+}

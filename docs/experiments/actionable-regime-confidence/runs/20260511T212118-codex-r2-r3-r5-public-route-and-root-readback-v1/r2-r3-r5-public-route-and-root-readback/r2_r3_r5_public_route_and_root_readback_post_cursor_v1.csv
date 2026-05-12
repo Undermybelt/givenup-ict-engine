@@ -1,0 +1,5 @@
+assertion_count,file_count,json_count,report_count,run_id,state
+1,8,1,1,20260511T211201-codex-r6-mohan-shak-row-uplift-v1,artifact_complete_sampled
+1,13,1,1,20260511T211552-codex-current-goal-completion-audit-v41-post-source-gap,artifact_complete_sampled
+1,7,1,1,20260511T211606-codex-r6-shak-complaint-row-uplift-gate-v1,artifact_complete_sampled
+1,8,1,1,20260511T211628-codex-r6-shak-cftc-row-uplift-v1,artifact_complete_sampled

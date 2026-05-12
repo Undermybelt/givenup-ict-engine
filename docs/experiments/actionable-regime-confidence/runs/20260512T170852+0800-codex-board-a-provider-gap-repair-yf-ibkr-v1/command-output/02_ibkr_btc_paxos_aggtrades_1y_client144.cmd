@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python scripts/auto_quant_external/fetch_external.py ibkr-bulk --config docs/experiments/actionable-regime-confidence/runs/20260512T170852+0800-codex-board-a-provider-gap-repair-yf-ibkr-v1/config/ibkr_btc_paxos_aggtrades_1y_client144.yaml --force 

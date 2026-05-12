@@ -1,0 +1,9 @@
+PASS providers_tested=6
+PASS independent_market_classes=2
+PASS commands_exit_zero=30_of_30
+FAIL_CLOSED native_cross_timeframe_provider_fetch=false
+FAIL_CLOSED auto_quant_rerun=false
+FAIL_CLOSED catboost_path_ranker_production_maturity_repair=false
+FAIL_CLOSED accepted_95_contexts_added=0
+PASS promotion_allowed=false
+PASS trade_usable=false

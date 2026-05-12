@@ -1,0 +1,1154 @@
+{
+  "acceptance_95": {
+    "calibration_support_min": 120,
+    "coverage_min": 0.03,
+    "ece_max": 0.05,
+    "precision_wilson_lcb_95_min": 0.95,
+    "test_support_min": 60,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  },
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T031605-codex-persistent-hmm-root-posterior-gate/checks/persistent_hmm_root_gate_assertions.out",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T031605-codex-persistent-hmm-root-posterior-gate/persistent-hmm-root-posterior-gate/persistent_hmm_root_gate_report.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T031605-codex-persistent-hmm-root-posterior-gate/persistent-hmm-root-posterior-gate/persistent_hmm_root_gate_report.md",
+    "score_sample_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T031605-codex-persistent-hmm-root-posterior-gate/persistent-hmm-root-posterior-gate/persistent_hmm_root_score_sample.csv",
+    "scores_csv_pruned": {
+      "cleanup_manifest": "docs/experiments/actionable-regime-confidence/runs/20260511T142928-codex-negative-raw-prune-v6/cleanup/negative_raw_prune_v6_manifest.md",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T031605-codex-persistent-hmm-root-posterior-gate/persistent-hmm-root-posterior-gate/persistent_hmm_root_scores.csv",
+      "reason": "blocked gate full row-score matrix pruned; summary/sample/checks retained"
+    },
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T031605-codex-persistent-hmm-root-posterior-gate/persistent-hmm-root-posterior-gate/persistent_hmm_root_gate_summary.csv"
+  },
+  "context_counts": {
+    "contexts": [
+      "breadth_sector:IWM:1d",
+      "breadth_sector:IWM:1w",
+      "breadth_sector:QQQ:1d",
+      "breadth_sector:QQQ:1w",
+      "breadth_sector:SPY:1d",
+      "breadth_sector:SPY:1w",
+      "cboe_options_vol:IWM:1d",
+      "cboe_options_vol:IWM:1w",
+      "cboe_options_vol:QQQ:1d",
+      "cboe_options_vol:QQQ:1w",
+      "cboe_options_vol:SPY:1d",
+      "cboe_options_vol:SPY:1w"
+    ],
+    "instruments": [
+      "IWM",
+      "QQQ",
+      "SPY"
+    ],
+    "market_contexts": [
+      "us_growth_equity_with_cboe_vol",
+      "us_large_cap_equity_with_cboe_vol",
+      "us_small_cap_equity_with_cboe_vol",
+      "yfinance_US_growth_ETF",
+      "yfinance_US_large_cap_ETF",
+      "yfinance_US_small_cap_ETF"
+    ],
+    "source_panels": [
+      "breadth_sector",
+      "cboe_options_vol"
+    ],
+    "timeframes": [
+      "1d",
+      "1w"
+    ]
+  },
+  "decision": {
+    "accepted_new_roots_95": [],
+    "accepted_root_classes_95_effective": [
+      "Crisis"
+    ],
+    "gate_result": "blocked_persistent_hmm_root_posterior_gate_below_95",
+    "manipulation_blocker": "No direct event/order-lifecycle/L2 evidence in these input panels.",
+    "manipulation_evaluated": false,
+    "missing_root_classes_95_effective": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ],
+    "retained_prior_accepted_root_classes_95": [
+      "Crisis"
+    ],
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "feature_policy": {
+    "allowed_target_prefix_note": "`target_` current/past engineered fields are allowed only where they are already present in the source feature table; `future_` and label fields are never predictors.",
+    "blocked_predictor_columns": [
+      "close",
+      "context",
+      "date",
+      "high",
+      "instrument",
+      "low",
+      "market",
+      "market_context",
+      "open",
+      "provider_context",
+      "root_label",
+      "source_panel",
+      "split",
+      "ticker",
+      "timeframe",
+      "ts",
+      "volume"
+    ],
+    "blocked_predictor_prefixes": [
+      "future_",
+      "next_"
+    ],
+    "blocked_predictor_substrings": [
+      "_next"
+    ],
+    "candidate_root_labels": [
+      "Bull",
+      "Bear",
+      "Sideways"
+    ],
+    "hidden_competing_states": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "UnknownOrMixed"
+    ],
+    "target_columns_used_only_as_labels": true,
+    "uses_current_and_past_fields_only": true
+  },
+  "input_feature_tables": {
+    "breadth_sector": "docs/experiments/actionable-regime-confidence/runs/20260511T030516-codex-breadth-sector-root-gate/breadth-sector-gate/breadth_sector_root_feature_table.csv",
+    "cboe_options_vol": "docs/experiments/actionable-regime-confidence/runs/20260511T030759-codex-cboe-options-vol-root-gate/options-vol-gate/cboe_options_vol_root_feature_table.csv"
+  },
+  "label_counts": {
+    "Bear": 5826,
+    "Bull": 9503,
+    "Crisis": 5713,
+    "Sideways": 8403,
+    "UnknownOrMixed": 3503
+  },
+  "loop_id": "20260511T031605+0800-codex-persistent-hmm-root-posterior-gate",
+  "model_policy": {
+    "emission_estimation": "train-only diagonal Gaussian emissions over selected current/past features",
+    "family": "supervised_gaussian_hmm_forward_filter",
+    "feature_selection": "train-only ANOVA-style between-state score per panel",
+    "fit_scope": "per_source_panel_train_split_only",
+    "posterior_filter": "causal forward filter per source/instrument/timeframe context",
+    "threshold_selection": "chronological calibration split only; held-out test is not used for threshold choice",
+    "transition_estimation": "chronological train root-label transitions per context with Laplace smoothing"
+  },
+  "objective": "Persistent-state MainRegimeV2 parent-root posterior gate for Bull/Bear/Sideways from existing breadth-sector and CBOE options-volatility panels.",
+  "root_reports": {
+    "Bear": {
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05"
+      ],
+      "calibration": {
+        "coverage": 0.040093048713738366,
+        "mean_posterior": 0.35983671161100705,
+        "precision": 0.27986348122866894,
+        "precision_wilson_lcb_95": 0.2315628402850278,
+        "success": 82,
+        "support": 293,
+        "validation_contexts": [
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1w",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:IWM:1w",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:QQQ:1w",
+          "cboe_options_vol:SPY:1d",
+          "cboe_options_vol:SPY:1w"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "ece": 0.07986348122866893,
+      "model": "supervised_gaussian_hmm_forward_filter",
+      "qualifying_condition": "p_Bear_persistent_hmm >= 0.31973710557",
+      "root_class": "Bear",
+      "state": "blocked",
+      "test": {
+        "coverage": 0.03848306745032186,
+        "mean_posterior": 0.3587064509560838,
+        "precision": 0.2,
+        "precision_wilson_lcb_95": 0.1570020576110895,
+        "success": 55,
+        "support": 275,
+        "validation_contexts": [
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1w",
+          "breadth_sector:SPY:1w",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:QQQ:1w",
+          "cboe_options_vol:SPY:1d",
+          "cboe_options_vol:SPY:1w"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_large_cap_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "threshold": 0.31973710556981405,
+      "threshold_selected_on": "calibration_support_and_coverage_candidate",
+      "train": {
+        "coverage": 0.03152373742835514,
+        "mean_posterior": 0.36063902855272084,
+        "precision": 0.2521440823327616,
+        "precision_wilson_lcb_95": 0.21859563151349992,
+        "success": 147,
+        "support": 583,
+        "validation_contexts": [
+          "breadth_sector:IWM:1d",
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1d",
+          "breadth_sector:QQQ:1w",
+          "breadth_sector:SPY:1d",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:IWM:1w",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:QQQ:1w",
+          "cboe_options_vol:SPY:1d",
+          "cboe_options_vol:SPY:1w"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_large_cap_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      }
+    },
+    "Bull": {
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05"
+      ],
+      "calibration": {
+        "coverage": 0.19006568144499178,
+        "mean_posterior": 0.4474545602594166,
+        "precision": 0.40028797696184304,
+        "precision_wilson_lcb_95": 0.37483061792557865,
+        "success": 556,
+        "support": 1389,
+        "validation_contexts": [
+          "breadth_sector:IWM:1d",
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1d",
+          "breadth_sector:QQQ:1w",
+          "breadth_sector:SPY:1d",
+          "breadth_sector:SPY:1w",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:QQQ:1w",
+          "cboe_options_vol:SPY:1d",
+          "cboe_options_vol:SPY:1w"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_large_cap_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "ece": 0.09241760659147269,
+      "model": "supervised_gaussian_hmm_forward_filter",
+      "qualifying_condition": "p_Bull_persistent_hmm >= 0.362128598499",
+      "root_class": "Bull",
+      "state": "blocked",
+      "test": {
+        "coverage": 0.24181360201511334,
+        "mean_posterior": 0.4566877117450615,
+        "precision": 0.30787037037037035,
+        "precision_wilson_lcb_95": 0.28655175494571733,
+        "success": 532,
+        "support": 1728,
+        "validation_contexts": [
+          "breadth_sector:IWM:1d",
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1d",
+          "breadth_sector:QQQ:1w",
+          "breadth_sector:SPY:1d",
+          "breadth_sector:SPY:1w",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:SPY:1d",
+          "cboe_options_vol:SPY:1w"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_large_cap_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "threshold": 0.36212859849901624,
+      "threshold_selected_on": "calibration_support_and_coverage_candidate",
+      "train": {
+        "coverage": 0.20249810749432248,
+        "mean_posterior": 0.448471696231602,
+        "precision": 0.3965287049399199,
+        "precision_wilson_lcb_95": 0.38097533198636385,
+        "success": 1485,
+        "support": 3745,
+        "validation_contexts": [
+          "breadth_sector:IWM:1d",
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1d",
+          "breadth_sector:QQQ:1w",
+          "breadth_sector:SPY:1d",
+          "breadth_sector:SPY:1w",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:IWM:1w",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:QQQ:1w",
+          "cboe_options_vol:SPY:1d",
+          "cboe_options_vol:SPY:1w"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_large_cap_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      }
+    },
+    "Sideways": {
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05"
+      ],
+      "calibration": {
+        "coverage": 0.26997810618500273,
+        "mean_posterior": 0.6768244815708684,
+        "precision": 0.3375570197668525,
+        "precision_wilson_lcb_95": 0.31702490549231765,
+        "success": 666,
+        "support": 1973,
+        "validation_contexts": [
+          "breadth_sector:IWM:1d",
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1d",
+          "breadth_sector:QQQ:1w",
+          "breadth_sector:SPY:1d",
+          "breadth_sector:SPY:1w",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:SPY:1d"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_large_cap_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "ece": 0.10312280211660885,
+      "model": "supervised_gaussian_hmm_forward_filter",
+      "qualifying_condition": "p_Sideways_persistent_hmm >= 0.553223518042",
+      "root_class": "Sideways",
+      "state": "blocked",
+      "test": {
+        "coverage": 0.2584662748390708,
+        "mean_posterior": 0.7286695601095693,
+        "precision": 0.23443421765024364,
+        "precision_wilson_lcb_95": 0.2156771834793161,
+        "success": 433,
+        "support": 1847,
+        "validation_contexts": [
+          "breadth_sector:IWM:1d",
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1d",
+          "breadth_sector:QQQ:1w",
+          "breadth_sector:SPY:1d",
+          "breadth_sector:SPY:1w",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:SPY:1d",
+          "cboe_options_vol:SPY:1w"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_large_cap_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "threshold": 0.5532235180415884,
+      "threshold_selected_on": "calibration_support_and_coverage_candidate",
+      "train": {
+        "coverage": 0.37471612414837246,
+        "mean_posterior": 0.7398212125165098,
+        "precision": 0.4494949494949495,
+        "precision_wilson_lcb_95": 0.43781431742788735,
+        "success": 3115,
+        "support": 6930,
+        "validation_contexts": [
+          "breadth_sector:IWM:1d",
+          "breadth_sector:IWM:1w",
+          "breadth_sector:QQQ:1d",
+          "breadth_sector:QQQ:1w",
+          "breadth_sector:SPY:1d",
+          "breadth_sector:SPY:1w",
+          "cboe_options_vol:IWM:1d",
+          "cboe_options_vol:IWM:1w",
+          "cboe_options_vol:QQQ:1d",
+          "cboe_options_vol:QQQ:1w",
+          "cboe_options_vol:SPY:1d",
+          "cboe_options_vol:SPY:1w"
+        ],
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "us_growth_equity_with_cboe_vol",
+          "us_large_cap_equity_with_cboe_vol",
+          "us_small_cap_equity_with_cboe_vol",
+          "yfinance_US_growth_ETF",
+          "yfinance_US_large_cap_ETF",
+          "yfinance_US_small_cap_ETF"
+        ],
+        "validation_source_panels": [
+          "breadth_sector",
+          "cboe_options_vol"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      }
+    }
+  },
+  "source_panel_report": {
+    "breadth_sector": {
+      "feature_scores_train_only": [
+        {
+          "feature": "vix_level",
+          "non_null_train": 11670,
+          "score": 0.17712181135776037,
+          "state_support": {
+            "Bear": 1940,
+            "Bull": 3455,
+            "Crisis": 1170,
+            "Sideways": 4086,
+            "UnknownOrMixed": 1019
+          }
+        },
+        {
+          "feature": "target_drawdown_slow",
+          "non_null_train": 11577,
+          "score": 0.11644939232894637,
+          "state_support": {
+            "Bear": 1918,
+            "Bull": 3441,
+            "Crisis": 1170,
+            "Sideways": 4039,
+            "UnknownOrMixed": 1009
+          }
+        },
+        {
+          "feature": "vix_term_ratio",
+          "non_null_train": 10272,
+          "score": 0.09618646316960544,
+          "state_support": {
+            "Bear": 1626,
+            "Bull": 3137,
+            "Crisis": 1145,
+            "Sideways": 3455,
+            "UnknownOrMixed": 909
+          }
+        },
+        {
+          "feature": "target_vol_fast",
+          "non_null_train": 11622,
+          "score": 0.08282123973955219,
+          "state_support": {
+            "Bear": 1930,
+            "Bull": 3450,
+            "Crisis": 1170,
+            "Sideways": 4057,
+            "UnknownOrMixed": 1015
+          }
+        },
+        {
+          "feature": "target_ma_slow_stretch",
+          "non_null_train": 11577,
+          "score": 0.07900467492489549,
+          "state_support": {
+            "Bear": 1918,
+            "Bull": 3441,
+            "Crisis": 1170,
+            "Sideways": 4039,
+            "UnknownOrMixed": 1009
+          }
+        },
+        {
+          "feature": "vix_rank",
+          "non_null_train": 11370,
+          "score": 0.06579225571027993,
+          "state_support": {
+            "Bear": 1847,
+            "Bull": 3420,
+            "Crisis": 1169,
+            "Sideways": 3946,
+            "UnknownOrMixed": 988
+          }
+        },
+        {
+          "feature": "sector_dispersion_fast",
+          "non_null_train": 11643,
+          "score": 0.05826522784341278,
+          "state_support": {
+            "Bear": 1935,
+            "Bull": 3453,
+            "Crisis": 1170,
+            "Sideways": 4068,
+            "UnknownOrMixed": 1017
+          }
+        },
+        {
+          "feature": "sector_breadth_slow",
+          "non_null_train": 11670,
+          "score": 0.04852354185694933,
+          "state_support": {
+            "Bear": 1940,
+            "Bull": 3455,
+            "Crisis": 1170,
+            "Sideways": 4086,
+            "UnknownOrMixed": 1019
+          }
+        },
+        {
+          "feature": "risk_breadth_slow",
+          "non_null_train": 11670,
+          "score": 0.046100604513852186,
+          "state_support": {
+            "Bear": 1940,
+            "Bull": 3455,
+            "Crisis": 1170,
+            "Sideways": 4086,
+            "UnknownOrMixed": 1019
+          }
+        },
+        {
+          "feature": "risk_mean_slow",
+          "non_null_train": 11571,
+          "score": 0.045972733349903955,
+          "state_support": {
+            "Bear": 1918,
+            "Bull": 3439,
+            "Crisis": 1170,
+            "Sideways": 4036,
+            "UnknownOrMixed": 1008
+          }
+        },
+        {
+          "feature": "target_ret_slow",
+          "non_null_train": 11571,
+          "score": 0.04444442987619277,
+          "state_support": {
+            "Bear": 1918,
+            "Bull": 3439,
+            "Crisis": 1170,
+            "Sideways": 4036,
+            "UnknownOrMixed": 1008
+          }
+        },
+        {
+          "feature": "target_ma_fast_stretch",
+          "non_null_train": 11628,
+          "score": 0.04153636483210963,
+          "state_support": {
+            "Bear": 1931,
+            "Bull": 3450,
+            "Crisis": 1170,
+            "Sideways": 4060,
+            "UnknownOrMixed": 1017
+          }
+        },
+        {
+          "feature": "target_vol_rank",
+          "non_null_train": 11322,
+          "score": 0.038730686449084575,
+          "state_support": {
+            "Bear": 1837,
+            "Bull": 3406,
+            "Crisis": 1169,
+            "Sideways": 3924,
+            "UnknownOrMixed": 986
+          }
+        },
+        {
+          "feature": "credit_risk_ratio_slow",
+          "non_null_train": 9507,
+          "score": 0.026270543362493206,
+          "state_support": {
+            "Bear": 1564,
+            "Bull": 2804,
+            "Crisis": 1138,
+            "Sideways": 3192,
+            "UnknownOrMixed": 809
+          }
+        },
+        {
+          "feature": "vix_term_rank",
+          "non_null_train": 9972,
+          "score": 0.021673100517493486,
+          "state_support": {
+            "Bear": 1624,
+            "Bull": 2956,
+            "Crisis": 1138,
+            "Sideways": 3385,
+            "UnknownOrMixed": 869
+          }
+        },
+        {
+          "feature": "cyclical_defensive_slow",
+          "non_null_train": 11571,
+          "score": 0.02043499962782799,
+          "state_support": {
+            "Bear": 1918,
+            "Bull": 3439,
+            "Crisis": 1170,
+            "Sideways": 4036,
+            "UnknownOrMixed": 1008
+          }
+        },
+        {
+          "feature": "sector_breadth_fast",
+          "non_null_train": 11670,
+          "score": 0.019576754585515964,
+          "state_support": {
+            "Bear": 1940,
+            "Bull": 3455,
+            "Crisis": 1170,
+            "Sideways": 4086,
+            "UnknownOrMixed": 1019
+          }
+        },
+        {
+          "feature": "risk_breadth_fast",
+          "non_null_train": 11670,
+          "score": 0.01887689936610605,
+          "state_support": {
+            "Bear": 1940,
+            "Bull": 3455,
+            "Crisis": 1170,
+            "Sideways": 4086,
+            "UnknownOrMixed": 1019
+          }
+        }
+      ],
+      "prior": {
+        "Bear": 0.18181818181818182,
+        "Bull": 0.18181818181818182,
+        "Crisis": 0.09090909090909091,
+        "Sideways": 0.36363636363636365,
+        "UnknownOrMixed": 0.18181818181818182
+      },
+      "selected_features": [
+        "vix_level",
+        "target_drawdown_slow",
+        "vix_term_ratio",
+        "target_vol_fast",
+        "target_ma_slow_stretch",
+        "vix_rank",
+        "sector_dispersion_fast",
+        "sector_breadth_slow",
+        "risk_breadth_slow",
+        "risk_mean_slow",
+        "target_ret_slow",
+        "target_ma_fast_stretch",
+        "target_vol_rank",
+        "credit_risk_ratio_slow",
+        "vix_term_rank",
+        "cyclical_defensive_slow",
+        "sector_breadth_fast",
+        "risk_breadth_fast"
+      ],
+      "state_counts_train": {
+        "Bear": 1940,
+        "Bull": 3455,
+        "Crisis": 1170,
+        "Sideways": 4086,
+        "UnknownOrMixed": 1019
+      },
+      "train_rows": 11670,
+      "transition_rows": {
+        "Bear": {
+          "Bear": 0.7109053497942387,
+          "Bull": 0.00720164609053498,
+          "Crisis": 0.07253086419753087,
+          "Sideways": 0.20473251028806586,
+          "UnknownOrMixed": 0.004629629629629629
+        },
+        "Bull": {
+          "Bear": 0.002313475997686524,
+          "Bull": 0.7440717177559283,
+          "Crisis": 0.05725853094274147,
+          "Sideways": 0.09167148640832852,
+          "UnknownOrMixed": 0.10468478889531521
+        },
+        "Crisis": {
+          "Bear": 0.11914893617021277,
+          "Bull": 0.1778723404255319,
+          "Crisis": 0.6859574468085107,
+          "Sideways": 0.011914893617021277,
+          "UnknownOrMixed": 0.005106382978723404
+        },
+        "Sideways": {
+          "Bear": 0.09977989728539985,
+          "Bull": 0.0748349229640499,
+          "Crisis": 0.0046466128637808754,
+          "Sideways": 0.7324529224749328,
+          "UnknownOrMixed": 0.08828564441183663
+        },
+        "UnknownOrMixed": {
+          "Bear": 0.005865102639296188,
+          "Bull": 0.3489736070381232,
+          "Crisis": 0.010752688172043012,
+          "Sideways": 0.35581622678396874,
+          "UnknownOrMixed": 0.2785923753665689
+        }
+      }
+    },
+    "cboe_options_vol": {
+      "feature_scores_train_only": [
+        {
+          "feature": "target_range_20",
+          "non_null_train": 6789,
+          "score": 0.6050466499884427,
+          "state_support": {
+            "Bear": 1221,
+            "Bull": 1814,
+            "Crisis": 1152,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "target_vol_20",
+          "non_null_train": 6783,
+          "score": 0.5621036460765073,
+          "state_support": {
+            "Bear": 1219,
+            "Bull": 1814,
+            "Crisis": 1148,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "target_vol_60",
+          "non_null_train": 6735,
+          "score": 0.44809104966947316,
+          "state_support": {
+            "Bear": 1196,
+            "Bull": 1814,
+            "Crisis": 1123,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "target_range_pct",
+          "non_null_train": 6824,
+          "score": 0.3746450820102286,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vix3m",
+          "non_null_train": 6824,
+          "score": 0.2014163832746162,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vix",
+          "non_null_train": 6824,
+          "score": 0.20112259974595348,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "target_drawdown_60",
+          "non_null_train": 6717,
+          "score": 0.1984441517818029,
+          "state_support": {
+            "Bear": 1192,
+            "Bull": 1811,
+            "Crisis": 1114,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1009
+          }
+        },
+        {
+          "feature": "vix6m",
+          "non_null_train": 6824,
+          "score": 0.18520781891334823,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vxeem",
+          "non_null_train": 6824,
+          "score": 0.18037498832338425,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vix9d",
+          "non_null_train": 6824,
+          "score": 0.16728269882922844,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vix1y",
+          "non_null_train": 6824,
+          "score": 0.15993195493593704,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "long_vol_contango",
+          "non_null_train": 6824,
+          "score": 0.14079393108593347,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vvix_vix_ratio",
+          "non_null_train": 6821,
+          "score": 0.1401964669180115,
+          "state_support": {
+            "Bear": 1232,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1589,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "crossasset_vol_mean",
+          "non_null_train": 6824,
+          "score": 0.137347798736172,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vix1y_vix_ratio",
+          "non_null_train": 6824,
+          "score": 0.13264471374514783,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vix6m_vix_ratio",
+          "non_null_train": 6824,
+          "score": 0.11628789698015965,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vix_rank_252",
+          "non_null_train": 6824,
+          "score": 0.10069809265142024,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        },
+        {
+          "feature": "vix3m_vix_ratio",
+          "non_null_train": 6824,
+          "score": 0.09274531008719093,
+          "state_support": {
+            "Bear": 1233,
+            "Bull": 1814,
+            "Crisis": 1175,
+            "Sideways": 1591,
+            "UnknownOrMixed": 1011
+          }
+        }
+      ],
+      "prior": {
+        "Bear": 0.36363636363636365,
+        "Bull": 0.09090909090909091,
+        "Crisis": 0.36363636363636365,
+        "Sideways": 0.09090909090909091,
+        "UnknownOrMixed": 0.09090909090909091
+      },
+      "selected_features": [
+        "target_range_20",
+        "target_vol_20",
+        "target_vol_60",
+        "target_range_pct",
+        "vix3m",
+        "vix",
+        "target_drawdown_60",
+        "vix6m",
+        "vxeem",
+        "vix9d",
+        "vix1y",
+        "long_vol_contango",
+        "vvix_vix_ratio",
+        "crossasset_vol_mean",
+        "vix1y_vix_ratio",
+        "vix6m_vix_ratio",
+        "vix_rank_252",
+        "vix3m_vix_ratio"
+      ],
+      "state_counts_train": {
+        "Bear": 1233,
+        "Bull": 1814,
+        "Crisis": 1175,
+        "Sideways": 1591,
+        "UnknownOrMixed": 1011
+      },
+      "train_rows": 6824,
+      "transition_rows": {
+        "Bear": {
+          "Bear": 0.7046925566343042,
+          "Bull": 0.0186084142394822,
+          "Crisis": 0.07119741100323625,
+          "Sideways": 0.09870550161812297,
+          "UnknownOrMixed": 0.10679611650485436
+        },
+        "Bull": {
+          "Bear": 0.01154480483782298,
+          "Bull": 0.7537108301264431,
+          "Crisis": 0.056624518966465094,
+          "Sideways": 0.040131940626717974,
+          "UnknownOrMixed": 0.13798790544255085
+        },
+        "Crisis": {
+          "Bear": 0.07051826677994902,
+          "Bull": 0.08920985556499575,
+          "Crisis": 0.826677994902294,
+          "Sideways": 0.0008496176720475786,
+          "UnknownOrMixed": 0.012744265080713678
+        },
+        "Sideways": {
+          "Bear": 0.08270676691729323,
+          "Bull": 0.05012531328320802,
+          "Crisis": 0.0006265664160401002,
+          "Sideways": 0.793859649122807,
+          "UnknownOrMixed": 0.07268170426065163
+        },
+        "UnknownOrMixed": {
+          "Bear": 0.12610837438423644,
+          "Bull": 0.23645320197044334,
+          "Crisis": 0.011822660098522168,
+          "Sideways": 0.1310344827586207,
+          "UnknownOrMixed": 0.4945812807881773
+        }
+      }
+    }
+  },
+  "split_counts": {
+    "calibration": 7308,
+    "test": 7146,
+    "train": 18494
+  }
+}

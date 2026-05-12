@@ -1,0 +1,102 @@
+{
+  "cleanups": [
+    {
+      "created_at_utc": "2026-05-11T13:44:27.292564+00:00",
+      "dedupe_key": [
+        "package_id",
+        "source_owner",
+        "source_row_id",
+        "main_regime_v2_label"
+      ],
+      "raw_payload_committed_to_repo": false,
+      "removed_counts": {
+        "label_counts": {
+          "": 1
+        },
+        "package_counts": {
+          "price_root_equivalence_us_index_futures": 1
+        },
+        "row_count": 1,
+        "source_owner_counts": {
+          "source-owned-stock-market-regimes-2000-2026": 1
+        }
+      },
+      "rows_after": 248440,
+      "rows_before": 248441,
+      "rows_removed": 1,
+      "run_id": "20260511T213910-codex-source-label-equivalence-duplicate-cleanup-v1"
+    }
+  ],
+  "created_at_utc": "2026-05-11T13:42:16.668403+00:00",
+  "label_counts": {
+    "Bear": 54939,
+    "Bull": 104979,
+    "Crisis": 30623,
+    "Sideways": 57899
+  },
+  "license_or_permission": [
+    {
+      "name": "local_download_metadata_missing"
+    }
+  ],
+  "limitations": [
+    "schema extension only",
+    "local source metadata does not provide owner-approved >=95 confidence acceptance",
+    "source regime_confidence values are below 0.95 for all materialized rows",
+    "daily US equity panel rows do not satisfy native sub-hour validation",
+    "R6 direct Manipulation remains a separate direct-event root"
+  ],
+  "merged_label_counts": {
+    "Bear": 164817,
+    "Bull": 312511,
+    "Crisis": 89887,
+    "Sideways": 171235
+  },
+  "merged_market_counts": {
+    "india_equity_index": 3435,
+    "us_equity_panel": 245005,
+    "us_index": 52472,
+    "us_single_stock": 437538
+  },
+  "merged_row_count": 738450,
+  "previous_rows_retained": 493445,
+  "prior_provenance_run_id": "20260511T212819-codex-nifty-source-label-equivalence-intake-v1",
+  "raw_payload_committed_to_repo": false,
+  "row_count": 248440,
+  "rows_path": "/tmp/ict-engine-us-panel-source-label-equivalence-extension-v1/source_label_equivalence_rows.csv",
+  "rows_sha256": "fcb9f2509043e48130accad1b047c701ad09b25f4b2c7705c7bbc062df19dcc8",
+  "run_id": "20260511T213446-codex-us-panel-source-label-equivalence-extension-v1",
+  "shared_rows_path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+  "shared_rows_sha256": "4e59aa598eaed6d75cd93988383837bb6c364eb73aaf90ee32968a434d80bf5b",
+  "source_csv_sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+  "source_owner": "local_stock_market_regimes_2000_2026_panel",
+  "source_pull_date": "2026-05-11",
+  "source_report_or_dataset": "local:/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "source_summary_sha256": "78c9af96260b21ea393c7166224389a62a90bd6d889ae318a366173e2e34e028",
+  "updated_at_utc": "2026-05-11T13:44:27.292564+00:00",
+  "updated_by": "20260511T213910-codex-source-label-equivalence-duplicate-cleanup-v1",
+  "us_panel_summary": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 103766,
+      "Crisis": 29632,
+      "Sideways": 56668
+    },
+    "row_count": 245005,
+    "skipped_counts": {
+      "High-volatility": 16
+    },
+    "source_confidence_ge_95_count": 17766,
+    "source_confidence_max": 1.0,
+    "source_confidence_min": 0.0,
+    "split_counts": {
+      "calibration": 136351,
+      "heldout_time": 68757,
+      "test": 39897
+    },
+    "ticker_count": 39
+  },
+  "us_rows_added": 245005
+}

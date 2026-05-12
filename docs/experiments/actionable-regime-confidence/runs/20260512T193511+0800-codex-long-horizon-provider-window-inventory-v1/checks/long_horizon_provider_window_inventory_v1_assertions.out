@@ -1,0 +1,6 @@
+PASS providers_present=6_of_6
+PASS long_span_candidates=2_of_6
+FAIL_CLOSED native_cross_timeframe_provider_fetch=0_of_6
+FAIL_CLOSED training_adequate_rows=0_of_6
+FAIL_CLOSED accepted_95_contexts_added=0
+PASS promotion_allowed=false

@@ -1,0 +1,1 @@
+env HF_HUB_DISABLE_XET=1 HF_HUB_DISABLE_PROGRESS_BARS=1 hf download sujinwo/tsie-market-regime-dataset default/train/0000.parquet --repo-type dataset --revision refs/convert/parquet --local-dir /tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/hf-cli-convert --force-download --quiet

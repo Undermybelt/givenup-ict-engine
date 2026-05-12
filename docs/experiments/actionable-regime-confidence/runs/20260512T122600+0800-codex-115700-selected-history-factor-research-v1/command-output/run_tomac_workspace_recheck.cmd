@@ -1,0 +1,1 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 uv run --with ta-lib run_tomac.py

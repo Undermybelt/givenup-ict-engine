@@ -1,0 +1,97 @@
+{
+  "artifact_id": "execution-tree-BOARD_A_IBKR_SPY_193417-1778586049875",
+  "generated_at": "2026-05-12T11:40:49.875128Z",
+  "symbol": "BOARD_A_IBKR_SPY_193417",
+  "output": {
+    "execution_score": 0.5640568262281549,
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "gate_status": "observe",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.3571 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.3571 < 0.45)",
+      "prediction_vote_score=0.5496 (medium) × execution_readiness=0.3571 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.593",
+      "market_state=volatility=NormalVol:0.725 liquidity=NormalLiquidity:0.517 structure=Trending:0.674 behavior=Exhaustion:0.650",
+      "market_state=rationale=volatility=NormalVol conf=0.72",
+      "market_state=rationale=liquidity=NormalLiquidity conf=0.52",
+      "market_state=rationale=structure=Trending conf=0.67",
+      "market_state=rationale=behavior=Exhaustion conf=0.65",
+      "market_state=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.59",
+      "path_ranker=Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+      "path_ranker=Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false",
+      "path_ranker=ranker_machine=runtime_source=unknown score_model_family=unknown score_source=unknown validation_ready=false active_match_count=0",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1 runtime_source=none raw_path_score=none calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "hybrid_transition_hazard=0.630"
+    ],
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "consumer_reason": "market_state=TrendExpansion/BullTrendExhaustion | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+    "path_ranker_score_visible_to_execution_tree": false,
+    "path_ranker_score_used_by_execution_tree": false,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "unknown",
+    "ranker_validation_ready": false
+  },
+  "closed_loop_branch_admission": {
+    "actionable": false,
+    "candidate_status": "execution_observe_only",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "evidence": [
+      "pre_bayes_gate_status=pass_neutralized",
+      "execution_gate_status=execution_observe_only",
+      "review_status=observe",
+      "execution_tree_gate_status=observe",
+      "execution_tree_branch=transition_guardrail"
+    ],
+    "execution_gate_status": "execution_observe_only",
+    "execution_tree_bias": "guarded",
+    "execution_tree_branch": "transition_guardrail",
+    "execution_tree_gate_status": "observe",
+    "path_id": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+    "path_label": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "ready": false,
+    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "review_status": "observe",
+    "source_phase": "structural-recommended-path-bundle",
+    "status": "fail_closed"
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "cycle_phase_alignment",
+      "contribution": 0.904217082823105,
+      "feature_value": "0.9042"
+    },
+    {
+      "feature": "pythagorean_overstretch",
+      "contribution": 0.6649509116409537,
+      "feature_value": "0.0350"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.5094122886952894,
+      "feature_value": "0.2906"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.41845238095238085,
+      "feature_value": "0.2815"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "7204e4523d1b7037",
+    "data_fingerprint": "e565e7a7cd426ed6"
+  }
+}

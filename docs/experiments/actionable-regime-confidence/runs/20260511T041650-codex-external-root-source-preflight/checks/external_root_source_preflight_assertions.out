@@ -1,0 +1,8 @@
+loop_id=20260511T041650+0800-codex-external-root-source-preflight
+gate_result=blocked_external_source_preflight_no_completion_eligible_new_source
+accepted_new_roots_95=none
+missing_root_classes_95_effective=BearExpansion,Manipulation
+nickdatak_rows=1564
+raw_committed_to_repo=false
+runtime_code_changed=false
+thresholds_relaxed=false

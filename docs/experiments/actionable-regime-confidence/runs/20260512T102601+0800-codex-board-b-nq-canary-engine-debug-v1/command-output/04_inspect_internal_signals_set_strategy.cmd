@@ -1,0 +1,1 @@
+inspect internal Freqtrade signal list for ProviderNqAlwaysInDiagnostic with _set_strategy

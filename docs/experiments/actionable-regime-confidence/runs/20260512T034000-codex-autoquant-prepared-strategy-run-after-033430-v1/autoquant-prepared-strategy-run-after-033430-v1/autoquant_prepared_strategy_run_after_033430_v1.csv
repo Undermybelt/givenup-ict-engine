@@ -1,0 +1,4 @@
+strategy,status,error_class,sharpe,total_profit_pct,trade_count,win_rate_pct,profit_factor,promotion_decision
+BTCLeaderBreakV4,error,aiodns_binance_market_load_failure,,,,,non_promoting
+MomentumMTFConfluence,error,aiodns_binance_market_load_failure,,,,,non_promoting
+VolBreakoutSized,error,aiodns_binance_market_load_failure,,,,,non_promoting

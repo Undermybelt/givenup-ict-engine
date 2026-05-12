@@ -1,0 +1,8 @@
+PASS source_gate_json_read
+PASS accepted_direct_slice_95=true
+PASS min_wilson95_lcb=0.979218
+PASS min_positive_support=181
+PASS min_negative_support=32858
+PASS accepted_v7_parent_roots_added=0
+PASS raw_data_committed=false
+GATE partial_v7_manipulation_integrity_event_selftrade_slice_95_full_root_blocked

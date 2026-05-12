@@ -1,0 +1,20 @@
+PASS tomac_local_source_label_sidecar_scan_after_074844_v1
+gate_result=tomac_local_source_label_sidecar_scan_after_074844_v1=no_source_label_or_control_sidecar_no_unlock
+filename_sidecar_scan_hits=0
+mainregimev2_hits=0
+source_confidence_hits=0
+matched_negative_hits=0
+order_lifecycle_hits=0
+market_regime_label_report_files=2
+csv_header_source_label_or_control_hits=0
+accepted_rows_added=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

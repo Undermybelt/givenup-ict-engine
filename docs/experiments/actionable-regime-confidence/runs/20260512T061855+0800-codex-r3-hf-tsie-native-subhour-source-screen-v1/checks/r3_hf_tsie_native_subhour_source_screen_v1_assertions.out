@@ -1,0 +1,16 @@
+gate_result=r3_hf_tsie_native_subhour_source_screen_v1=candidate_found_not_intaked_no_acceptance
+candidate_found=true
+dataset_id=sujinwo/tsie-market-regime-dataset
+license=mit
+rows=7193996
+has_timestamp=true
+has_regime_label=true
+raw_data_downloaded=false
+raw_data_committed=false
+target_root_mutated=false
+accepted_rows_added=0
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

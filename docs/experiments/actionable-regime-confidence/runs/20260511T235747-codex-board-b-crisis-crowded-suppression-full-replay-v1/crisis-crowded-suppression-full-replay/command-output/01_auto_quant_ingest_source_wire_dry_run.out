@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "94ca0acd6de8089d",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_SRC_ROOT_CARRY_LONG_220646_20260511T160418.582058000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "board_b_crisis_crowded_suppression_source_wire_dry_run",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "trades_applied": 48,
+  "trades_invalid": 0,
+  "trades_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/selected_real_trades_wire.jsonl",
+  "trades_total": 48
+}

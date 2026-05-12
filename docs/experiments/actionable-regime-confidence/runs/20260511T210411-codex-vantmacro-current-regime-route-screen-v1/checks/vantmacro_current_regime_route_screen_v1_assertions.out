@@ -1,0 +1,9 @@
+PASS decision=vantmacro_current_regime_route_screen_v1=source_route_found_rows_not_acquired
+PASS public_page_status=200
+PASS text_mentions_market_regime=true
+PASS verifier_status=blocked
+PASS rows_acquired=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

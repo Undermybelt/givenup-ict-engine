@@ -1,0 +1,83 @@
+{
+  "accepted_rows_added": 0,
+  "archive_member_hit_files": 0,
+  "board_a_hash_before_artifact": "357696f3ce6d94e756e59eff529047f57388a8c21a941c3be30a7dfc97396ef3",
+  "board_b_hash_before_artifact": "12b3944c9ab784e325472eb49f7d3765a6900fcd74495d07c0bcd984b32cde8d",
+  "candidate_files_scanned": 1,
+  "candidate_files_truncated": false,
+  "canonical_merge": false,
+  "classified_files": [
+    {
+      "archive_member_count_read": 2,
+      "archive_member_name_hits": [],
+      "control_column_hits": [],
+      "exact_required_file_name": false,
+      "exists": true,
+      "header": "",
+      "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/databento.rar",
+      "size_bytes": 102402878,
+      "suffix": ".rar",
+      "verifier_native_hint": false
+    }
+  ],
+  "downstream_promotion_rerun": false,
+  "exact_required_packages": [],
+  "gate_result": "local_source_control_archive_index_after_082629_v1=no_verifier_native_source_control_archive_found",
+  "observed_at_utc": "2026-05-12T00:33:58.125044+00:00",
+  "promotion_allowed": false,
+  "run_id": "20260512T083006+0800-codex-local-source-control-archive-index-after-082629-v1",
+  "scan_roots": [
+    "/Users/thrill3r/Downloads/Tomac"
+  ],
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_roots": [
+    {
+      "exists": false,
+      "files": [],
+      "has_exact_required_package": false,
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    {
+      "exists": false,
+      "files": [],
+      "has_exact_required_package": false,
+      "root": "/private/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    {
+      "exists": false,
+      "files": [],
+      "has_exact_required_package": false,
+      "root": "/tmp/ict-engine-board-a-r5-recency-source-panel-v1"
+    },
+    {
+      "exists": false,
+      "files": [],
+      "has_exact_required_package": false,
+      "root": "/private/tmp/ict-engine-board-a-r5-recency-source-panel-v1"
+    },
+    {
+      "exists": true,
+      "files": [
+        "native_subhour_source_label_provenance.json",
+        "native_subhour_source_label_rows.csv"
+      ],
+      "has_exact_required_package": false,
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "exists": true,
+      "files": [
+        "native_subhour_source_label_provenance.json",
+        "native_subhour_source_label_rows.csv"
+      ],
+      "has_exact_required_package": false,
+      "root": "/private/tmp/ict-engine-native-subhour-source-label-intake"
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false,
+  "verifier_native_candidate_files": 0
+}

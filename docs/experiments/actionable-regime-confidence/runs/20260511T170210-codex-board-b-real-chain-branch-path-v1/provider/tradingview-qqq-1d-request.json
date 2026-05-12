@@ -1,0 +1,17 @@
+{
+  "market_key": "board-b-real-chain-tradingview-qqq",
+  "interval": "1d",
+  "start": "2026-02-01T00:00:00Z",
+  "end": "2026-05-01T00:00:00Z",
+  "count": 90,
+  "related_roles": ["etf_reference"],
+  "provider_preferences": {
+    "etf_reference": "tradingview_mcp"
+  },
+  "symbol_overrides": {
+    "etf_reference": {
+      "display_symbol": "NASDAQ:QQQ",
+      "tradingview_mcp": "NASDAQ:QQQ"
+    }
+  }
+}

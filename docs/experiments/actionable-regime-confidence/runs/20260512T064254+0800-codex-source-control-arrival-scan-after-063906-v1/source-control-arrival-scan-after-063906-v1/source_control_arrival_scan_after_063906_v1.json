@@ -1,0 +1,70 @@
+{
+  "approval_hit_count_total": 634,
+  "approval_hits_tail_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T064254+0800-codex-source-control-arrival-scan-after-063906-v1/source-control-arrival-scan-after-063906-v1/source_control_arrival_board_approval_hits_v1.csv",
+  "board_sha256": "05ebe2d952c07ebf623341b08bf303592002edd1a95e938937e89f85a9508257",
+  "candidate_count": 240,
+  "candidate_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T064254+0800-codex-source-control-arrival-scan-after-063906-v1/source-control-arrival-scan-after-063906-v1/source_control_arrival_candidates_v1.csv",
+  "created_at_utc": "2026-05-11T22:43:36.067584+00:00",
+  "decision": {
+    "accepted_unlock_found": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_promotion_allowed_now": false,
+    "gate_result": "source_control_arrival_scan_after_063906_v1=no_new_accepted_source_control_unlock_no_downstream",
+    "r3_native_subhour_accepted_for_promotion": false,
+    "r3_native_subhour_path_present": true,
+    "r5_recency_ready": false,
+    "r6_owner_export_ready": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_roots": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "required_files_present": false,
+      "root_id": "r6_owner_export",
+      "unlock_role": "R6 owner/export rows with valid controls"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "required_files_present": false,
+      "root_id": "r5_recency_extension",
+      "unlock_role": "R5 post-cutoff source-panel recency rows"
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "missing_files": "",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "required_files_present": true,
+      "root_id": "r3_native_subhour",
+      "unlock_role": "R3 native-subhour MainRegimeV2 labels"
+    }
+  ],
+  "run_id": "20260512T064254+0800-codex-source-control-arrival-scan-after-063906-v1",
+  "tsie_summary": {
+    "accepted_mapping_confidence_95_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "crisis_present": false,
+    "limitations": [
+      "Crisis has no direct TSIE source taxonomy class",
+      "trap labels are fail-closed abstain and excluded from accepted rows",
+      "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+      "canonical merge not run",
+      "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+    ],
+    "raw_parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+    "row_count": 5032903,
+    "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+    "run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1"
+  }
+}

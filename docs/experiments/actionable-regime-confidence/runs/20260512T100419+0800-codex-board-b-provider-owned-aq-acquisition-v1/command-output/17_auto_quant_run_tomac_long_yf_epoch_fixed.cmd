@@ -1,0 +1,1 @@
+uv --directory /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/state_provider_owned_aq_long_yf_v1/.deps/auto-quant run python run_tomac.py

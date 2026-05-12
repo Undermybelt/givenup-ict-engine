@@ -1,0 +1,34 @@
+{
+  "run_id": "20260511T033340-codex-main-regime-v3-taxonomy-source-refresh",
+  "result": "taxonomy_reset_only_no_new_95",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "active_parent_axis": "MainRegimeV3Candidate",
+  "parent_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "CrisisCrash",
+    "Manipulation",
+    "UnknownOrMixed"
+  ],
+  "preflight_only_optional_roots": [
+    "TransitionRecovery",
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "VolatilityDislocation",
+    "CrossAssetRotation"
+  ],
+  "accepted_95_roots_from_this_run": [],
+  "source_links": [
+    "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3678004",
+    "https://github.com/hidden-regime/hidden-regime",
+    "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2780579",
+    "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+    "https://arxiv.org/abs/2204.12929",
+    "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency"
+  ],
+  "next_action": "Run a MainRegimeV3Candidate schema preflight/root gate using existing source-backed feature tables, with Manipulation split into a direct-event evidence lane."
+}
+

@@ -1,0 +1,109 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-12T04:43:13Z",
+  "generated_at": "2026-05-12T04:43:13.873382Z",
+  "symbol": "NQ_LOCAL_AQ_MTF_123820",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:NQ_LOCAL_AQ_MTF_123820:20260512T044313.602Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "5e87b98f216cf664",
+    "config_hash": "6a8db419e34bb13c",
+    "data_fingerprint": "8baa7c08f3637da8"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.374 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.37449999999999994,
+  "consensus_strength": 0.37449999999999994,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.350 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.374",
+    "executor=xgboost_file action=Observe confidence=0.350 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.374"
+  ],
+  "split_explanations": [
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=index_beta_regime_sensitive",
+    "factor_uncertainty=high",
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=index_beta_regime_sensitive",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [
+    {
+      "executor": "catboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.55,
+      "last_outcome": null,
+      "last_updated_at": null
+    },
+    {
+      "executor": "xgboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.45,
+      "last_outcome": null,
+      "last_updated_at": null
+    }
+  ],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "8baa7c08f3637da8",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "range",
+  "posterior_confidence": 0.14423512439311514,
+  "posterior_probabilities": {
+    "range": 0.32824868142013397,
+    "stress": 0.23408641001968747,
+    "transition": 0.21883245428008935,
+    "trend": 0.21883245428008935
+  },
+  "posterior_evidence": [
+    "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969",
+    "long/short support gap 0.008 is too small, so alignment is treated as mixed",
+    "factor uncertainty 0.514 exceeds the hard-evidence comfort band",
+    "multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized",
+    "multi-timeframe alignment 0.333 is below the policy support floor 0.550",
+    "evidence quality is too low, so BBN input is downgraded to neutralized defaults",
+    "pre_bayes_quality_score=0.144 gating_status=observe_only",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629",
+    "market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550",
+    "market_state_source=rationale=volatility=ElevatedVol conf=0.66",
+    "market_state_source=rationale=structure=Trending conf=0.59",
+    "market_state_source=rationale=behavior=RiskOff conf=0.55",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63",
+    "market_family=futures_index",
+    "market_behavior_profile=index_beta_regime_sensitive",
+    "branch_transition_prior_from=NQ_LOCAL_AQ_MTF_123820:research:actionable:execute_recommended_path weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000"
+  ]
+}

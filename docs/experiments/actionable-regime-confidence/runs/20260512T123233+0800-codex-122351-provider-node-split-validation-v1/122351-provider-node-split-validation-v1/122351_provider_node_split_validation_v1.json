@@ -1,0 +1,285 @@
+{
+  "branch_count": 2,
+  "decision": {
+    "bbn_likelihood_mutation_allowed": false,
+    "best_internal_candidate": "provider_rv_median_24h",
+    "gate": "122351_provider_node_split_validation_v1=provider_rv_internal_priority_but_external_validation_required_no_promotion",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "external_blockers": [
+    "BTC_only",
+    "1h_only",
+    "no_selected_history_source_control_unlock_for_promotion",
+    "execution_ready_false_actionable_false_observe",
+    "no_95_percent_regime_confidence"
+  ],
+  "feature_summary": [
+    {
+      "eligible_split_groups": 14,
+      "failed_split_groups": 0,
+      "feature": "provider_rv_median_24h",
+      "guards": [
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 2,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_rv_median_24h",
+          "passed_groups": 2,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "period_half"
+        },
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 4,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_rv_median_24h",
+          "passed_groups": 4,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "chronological_quartile"
+        },
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 2,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_rv_median_24h",
+          "passed_groups": 2,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "branch_path"
+        },
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 6,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_rv_median_24h",
+          "passed_groups": 6,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "source_provider"
+        }
+      ],
+      "internal_direction_guard_pass": true,
+      "source_scan_bins": {
+        "high": {
+          "avg_pnl": 23.0331,
+          "loss_rate": 0.384615,
+          "losses": 30,
+          "rows": 78,
+          "win_rate": 0.615385,
+          "wins": 48
+        },
+        "low": {
+          "avg_pnl": -8.658247,
+          "loss_rate": 0.7375,
+          "losses": 59,
+          "rows": 80,
+          "win_rate": 0.2625,
+          "wins": 21
+        },
+        "mid": {
+          "avg_pnl": -16.302794,
+          "loss_rate": 0.848101,
+          "losses": 67,
+          "rows": 79,
+          "win_rate": 0.151899,
+          "wins": 12
+        }
+      },
+      "source_scan_separation": 0.463486
+    },
+    {
+      "eligible_split_groups": 12,
+      "failed_split_groups": 0,
+      "feature": "provider_return_dispersion_24h",
+      "guards": [
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 2,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_return_dispersion_24h",
+          "passed_groups": 2,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "period_half"
+        },
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 3,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_return_dispersion_24h",
+          "passed_groups": 3,
+          "skipped": [
+            "Q3"
+          ],
+          "skipped_groups": 1,
+          "split": "chronological_quartile"
+        },
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 2,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_return_dispersion_24h",
+          "passed_groups": 2,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "branch_path"
+        },
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 5,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_return_dispersion_24h",
+          "passed_groups": 5,
+          "skipped": [
+            "yfinance"
+          ],
+          "skipped_groups": 1,
+          "split": "source_provider"
+        }
+      ],
+      "internal_direction_guard_pass": true,
+      "source_scan_bins": {
+        "high": {
+          "avg_pnl": 6.143126,
+          "loss_rate": 0.526316,
+          "losses": 40,
+          "rows": 76,
+          "win_rate": 0.473684,
+          "wins": 36
+        },
+        "low": {
+          "avg_pnl": -14.896473,
+          "loss_rate": 0.898734,
+          "losses": 71,
+          "rows": 79,
+          "win_rate": 0.101266,
+          "wins": 8
+        },
+        "mid": {
+          "avg_pnl": 6.413963,
+          "loss_rate": 0.54878,
+          "losses": 45,
+          "rows": 82,
+          "win_rate": 0.45122,
+          "wins": 37
+        }
+      },
+      "source_scan_separation": 0.372418
+    },
+    {
+      "eligible_split_groups": 14,
+      "failed_split_groups": 1,
+      "feature": "provider_range_pos_median_24h",
+      "guards": [
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 2,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_range_pos_median_24h",
+          "passed_groups": 2,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "period_half"
+        },
+        {
+          "direction_consistent_high_gt_low": false,
+          "eligible_groups": 4,
+          "failed_groups": 1,
+          "failures": [
+            {
+              "delta_high_minus_low": -0.103448,
+              "group": "Q3",
+              "high_rows": 22,
+              "high_win_rate": 0.0,
+              "low_rows": 29,
+              "low_win_rate": 0.103448
+            }
+          ],
+          "feature": "provider_range_pos_median_24h",
+          "passed_groups": 3,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "chronological_quartile"
+        },
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 2,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_range_pos_median_24h",
+          "passed_groups": 2,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "branch_path"
+        },
+        {
+          "direction_consistent_high_gt_low": true,
+          "eligible_groups": 6,
+          "failed_groups": 0,
+          "failures": [],
+          "feature": "provider_range_pos_median_24h",
+          "passed_groups": 6,
+          "skipped": [],
+          "skipped_groups": 0,
+          "split": "source_provider"
+        }
+      ],
+      "internal_direction_guard_pass": false,
+      "source_scan_bins": {
+        "high": {
+          "avg_pnl": 13.619044,
+          "loss_rate": 0.481481,
+          "losses": 39,
+          "rows": 81,
+          "win_rate": 0.518519,
+          "wins": 42
+        },
+        "low": {
+          "avg_pnl": -9.647738,
+          "loss_rate": 0.825,
+          "losses": 66,
+          "rows": 80,
+          "win_rate": 0.175,
+          "wins": 14
+        },
+        "mid": {
+          "avg_pnl": -6.780556,
+          "loss_rate": 0.671053,
+          "losses": 51,
+          "rows": 76,
+          "win_rate": 0.328947,
+          "wins": 25
+        }
+      },
+      "source_scan_separation": 0.343519
+    }
+  ],
+  "features_validated": [
+    "provider_rv_median_24h",
+    "provider_return_dispersion_24h",
+    "provider_range_pos_median_24h"
+  ],
+  "min_internal_bin_rows": 5,
+  "priority_order": [
+    "provider_rv_median_24h",
+    "provider_return_dispersion_24h",
+    "provider_range_pos_median_24h"
+  ],
+  "provider_count": 6,
+  "row_count": 237,
+  "run_id": "20260512T123233+0800-codex-122351-provider-node-split-validation-v1",
+  "source_scan_run_id": "20260512T122351+0800-codex-115700-provider-evidence-node-scan-v1"
+}

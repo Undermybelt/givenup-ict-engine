@@ -1,0 +1,96 @@
+{
+  "run_id": "20260511T105619+0800-codex-tvremix-label-source-readiness",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV2",
+  "objective": "Verify whether the now-reachable TradingViewRemix provider path can supply exact-underlying independent MainRegimeV2 parent-root labels or direct Manipulation rows.",
+  "commands": [
+    {
+      "cmd": "./target/debug/ict-engine provider-status --provider tradingview_mcp --agent --compact",
+      "result": "market_data:1/1 ready; provider_id tradingview_mcp ready; reason mcp_url_and_api_key_available"
+    },
+    {
+      "cmd": "MCP tools/list via ~/.ict-engine/tvremix_mcp.json with secret value redacted from artifacts",
+      "result": "tools list reachable"
+    }
+  ],
+  "secret_handling": {
+    "secret_values_recorded": false,
+    "config_path_checked": "~/.ict-engine/tvremix_mcp.json",
+    "artifact_contains_api_key": false
+  },
+  "provider_status": {
+    "provider_id": "tradingview_mcp",
+    "domain": "market_data",
+    "ready": true,
+    "reason": "mcp_url_and_api_key_available",
+    "selectable_by_user": true,
+    "adopted_by_default": false
+  },
+  "reachable_tool_names": [
+    "get_quote",
+    "get_quotes_batch",
+    "get_technicals",
+    "get_technicals_rating",
+    "get_full_technicals",
+    "get_financials",
+    "get_news",
+    "get_news_story",
+    "search_symbols",
+    "get_economic_calendar",
+    "get_earnings_calendar",
+    "get_dividends_calendar",
+    "run_screener",
+    "get_symbol_data",
+    "get_option_expirations",
+    "get_option_chain",
+    "get_forecasts",
+    "get_documents",
+    "get_document_view",
+    "get_ohlcv",
+    "rank_symbol_setups",
+    "analyze_multi_timeframe",
+    "analyze_multi_timeframe_batch",
+    "filter_by_indicator",
+    "compute_levels_batch",
+    "compare_symbols_tool",
+    "analyze_sector_tool",
+    "calculate_correlation_tool",
+    "analyze_smc_tool",
+    "analyze_swing_tool",
+    "web_search",
+    "my_watchlists",
+    "my_watchlist_symbols",
+    "my_alerts",
+    "my_charts",
+    "report_session_intent",
+    "report_outcome"
+  ],
+  "label_source_assessment": {
+    "can_supply_ohlcv_or_analysis": true,
+    "can_supply_independent_parent_root_labels_now": false,
+    "can_supply_direct_manipulation_rows_now": false,
+    "rejected_as_completion_sources": [
+      "get_technicals",
+      "get_technicals_rating",
+      "get_full_technicals",
+      "rank_symbol_setups",
+      "analyze_multi_timeframe",
+      "analyze_multi_timeframe_batch",
+      "filter_by_indicator",
+      "analyze_smc_tool",
+      "analyze_swing_tool"
+    ],
+    "rejection_reason": "These tools are provider OHLCV/technical/analysis surfaces. The board rejects OHLCV-derived, Pine/technical, model, and strategy-output labels as independent MainRegimeV2 parent-root completion evidence."
+  },
+  "result": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "provider_readiness_changed": "tradingview_mcp reachable for market_data",
+    "gate_result": "blocked_tvremix_ready_but_no_independent_parent_root_label_export",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "Use TradingViewRemix only for OHLCV/sidecar validation unless a documented manual/official label export is provided. Do not count technicals, SMC/swing analysis, rankings, alerts, or chart-derived labels as parent-root completion without explicit source-label provenance and the v3 schema."
+}

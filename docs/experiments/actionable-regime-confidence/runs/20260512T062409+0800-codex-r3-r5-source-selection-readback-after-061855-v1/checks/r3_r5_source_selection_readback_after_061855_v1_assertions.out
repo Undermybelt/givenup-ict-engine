@@ -1,0 +1,13 @@
+gate_result=r3_r5_source_selection_readback_after_061855_v1=no_candidate_selected_no_required_root_no_promotion
+required_root_unlocked=false
+tsie_parquet_present=true
+tsie_rows=7193996
+selected_unlock_count=0
+accepted_rows_added=0
+target_root_mutated=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

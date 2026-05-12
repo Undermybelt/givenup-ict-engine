@@ -1,0 +1,10 @@
+PASS stock_request_ready_rows_not_acquired
+PASS r4_strict_1h_source_rows_acquired=false
+PASS r5_recency_tail_repair_closed=false
+PASS native_subhour_package_absent
+PASS native_exact_required_intake_files_present=0
+PASS new_confidence_gate_since_v29=false
+PASS accepted_rows_added_since_v29=0
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS unmet_ids=R2,R3,R4,R5,R6,R8

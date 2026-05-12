@@ -1,0 +1,79 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-12T05:17:00Z",
+  "generated_at": "2026-05-12T05:17:00.861269Z",
+  "symbol": "PFETHUSD",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:PFETHUSD:20260512T051700.784Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "e3de4cb9828320c9",
+    "data_fingerprint": "f7bad2ac0411bbc8"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ask-user: Before using historical data for PFETHUSD again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol PFETHUSD --data 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf'",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.350 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for PFETHUSD again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol PFETHUSD --data 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_pf_ethusd_2024_2025_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_pfethusd_2024_mtf'",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.35,
+  "consensus_strength": 0.35,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.350 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350",
+    "executor=xgboost_file action=Observe confidence=0.350 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350"
+  ],
+  "split_explanations": [
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "f7bad2ac0411bbc8",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "range",
+  "posterior_confidence": 0.36059825911294685,
+  "posterior_probabilities": {
+    "range": 0.34889788701755703,
+    "stress": 0.18590493029236696,
+    "transition": 0.23259859134503802,
+    "trend": 0.23259859134503802
+  },
+  "posterior_evidence": [
+    "market_policy=PFETHUSD hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bearish multi_timeframe_alignment_score=0.917 multi_timeframe_entry_alignment_score=0.710",
+    "long/short support gap 0.000 is too small, so alignment is treated as mixed",
+    "multi-timeframe direction bias 'bearish' conflicts with regime/alignment, so factor_alignment is neutralized",
+    "evidence quality is too low, so BBN input is downgraded to neutralized defaults",
+    "pre_bayes_quality_score=0.361 gating_status=observe_only",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.658",
+    "market_state_source=volatility=LowVol:0.678 liquidity=NormalLiquidity:0.433 structure=Trending:1.000 behavior=RiskOn:0.550",
+    "market_state_source=rationale=volatility=LowVol conf=0.68",
+    "market_state_source=rationale=structure=Trending conf=1.00",
+    "market_state_source=rationale=behavior=RiskOn conf=0.55",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.66"
+  ]
+}

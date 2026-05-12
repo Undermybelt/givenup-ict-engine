@@ -1,0 +1,1717 @@
+{
+  "aligned_ibkr_coverage": {
+    "combined_bars": 21779,
+    "combined_path": "/tmp/ict-regime-chain-20260509T231052/provider-probes/aligned_ibkr_nq_contract_roll_15m_trades_combined.csv",
+    "decision": "partial_aligned_nq_trade_coverage",
+    "first": "2025-01-20T23:00:00+00:00",
+    "first_match": {
+      "contract": "NQH5",
+      "count": "1464",
+      "final_ts_ms": 1740617100000,
+      "volume": "2441.0",
+      "window": "001"
+    },
+    "first_missing": {
+      "final_ts_ms": 1742523300000,
+      "window": "040"
+    },
+    "last": "2025-12-24T18:00:00+00:00",
+    "last_match": {
+      "contract": "NQH6",
+      "count": "3900",
+      "final_ts_ms": 1766511000000,
+      "volume": "7520.0",
+      "window": "512"
+    },
+    "last_missing": {
+      "final_ts_ms": 1758308400000,
+      "window": "352"
+    },
+    "matched_by_contract": {
+      "NQH5": 39,
+      "NQH6": 7,
+      "NQM5": 152,
+      "NQU5": 153,
+      "NQZ5": 153
+    },
+    "matched_window_count": 504,
+    "missing_window_count": 8,
+    "window_count": 512
+  },
+  "aligned_ibkr_tradeflow_probe_512": {
+    "accepted_candidate_count": 0,
+    "catboost_reports": [
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 89,
+        "ibkr_tradeflow_features": 34,
+        "negative_count": 181,
+        "positive_count": 331,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "ReleaseAllowed",
+        "top_importances": [
+          {
+            "feature": "execution_score",
+            "importance": 5.224122715299551
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 4.342692177365984
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 3.9859483866613767
+          },
+          {
+            "feature": "dominant_cycle_energy",
+            "importance": 3.9152311498935486
+          },
+          {
+            "feature": "ibkr_nq_realized_vol_64",
+            "importance": 3.4087903135156266
+          },
+          {
+            "feature": "readiness_gap_to_observe",
+            "importance": 3.016600086109319
+          },
+          {
+            "feature": "hybrid_transition_hazard",
+            "importance": 2.7580287603224938
+          },
+          {
+            "feature": "spectral_entropy",
+            "importance": 2.686852159250373
+          },
+          {
+            "feature": "nq_vs_200d_pct",
+            "importance": 2.5529097324825942
+          },
+          {
+            "feature": "ibkr_nq_trade_count",
+            "importance": 2.5074938199336705
+          },
+          {
+            "feature": "top_negative_contribution",
+            "importance": 2.467812971206535
+          },
+          {
+            "feature": "top_positive_contribution",
+            "importance": 2.4308070341201042
+          },
+          {
+            "feature": "ibkr_nq_volume_mean_16",
+            "importance": 2.3060161769390177
+          },
+          {
+            "feature": "ibkr_nq_count_z_64",
+            "importance": 2.2091114463742136
+          },
+          {
+            "feature": "ofi_flow_component",
+            "importance": 2.164449549749784
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 2.134530507876008
+          },
+          {
+            "feature": "ofi_pressure",
+            "importance": 2.084510303976922
+          },
+          {
+            "feature": "ibkr_nq_trade_body",
+            "importance": 2.003353635081493
+          },
+          {
+            "feature": "ibkr_nq_absret_sum_64",
+            "importance": 1.9189377158880416
+          },
+          {
+            "feature": "ibkr_nq_range_mean_16",
+            "importance": 1.9082772652052624
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 89,
+        "ibkr_tradeflow_features": 34,
+        "negative_count": 381,
+        "positive_count": 131,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "LowTransitionHazard",
+        "top_importances": [
+          {
+            "feature": "hybrid_transition_hazard",
+            "importance": 71.2338166356725
+          },
+          {
+            "feature": "hybrid_transition_hazard_missing",
+            "importance": 9.685888951311881
+          },
+          {
+            "feature": "duration_remaining_expected_bars",
+            "importance": 8.647361262036357
+          },
+          {
+            "feature": "duration_remaining_expected_bars_missing",
+            "importance": 6.451790230392008
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 0.20669162877744993
+          },
+          {
+            "feature": "ibkr_nq_count_mean_64",
+            "importance": 0.19675862978918932
+          },
+          {
+            "feature": "ibkr_nq_count_z_16",
+            "importance": 0.19365366761533895
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 0.17364181816851118
+          },
+          {
+            "feature": "ibkr_nq_count_z_64",
+            "importance": 0.16419106208758122
+          },
+          {
+            "feature": "ibkr_nq_realized_vol_192",
+            "importance": 0.14293878930852263
+          },
+          {
+            "feature": "ibkr_nq_trade_contract_code",
+            "importance": 0.14292049078306965
+          },
+          {
+            "feature": "ibkr_nq_range_mean_192",
+            "importance": 0.13831953893222598
+          },
+          {
+            "feature": "ibkr_nq_count_sum_64",
+            "importance": 0.13825958285481602
+          },
+          {
+            "feature": "ibkr_nq_absret_sum_16",
+            "importance": 0.13689735482581977
+          },
+          {
+            "feature": "ibkr_nq_range_mean_64",
+            "importance": 0.1315025511977899
+          },
+          {
+            "feature": "ibkr_nq_volume_z_16",
+            "importance": 0.12858970519297383
+          },
+          {
+            "feature": "cycle_phase_alignment",
+            "importance": 0.12322691028965431
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 0.12191640809482024
+          },
+          {
+            "feature": "qqq_hv_level",
+            "importance": 0.11295382643091442
+          },
+          {
+            "feature": "ibkr_nq_absret_sum_64",
+            "importance": 0.10966711705834732
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 89,
+        "ibkr_tradeflow_features": 34,
+        "negative_count": 503,
+        "positive_count": 9,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "ReadinessObserveOrReady",
+        "top_importances": [
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 8.46500832653219
+          },
+          {
+            "feature": "top_negative_contribution",
+            "importance": 4.153667080780222
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 3.2578044967176014
+          },
+          {
+            "feature": "ibkr_nq_range_mean_192",
+            "importance": 3.060430565464026
+          },
+          {
+            "feature": "ibkr_nq_range_mean_64",
+            "importance": 2.8927253058102105
+          },
+          {
+            "feature": "ofi_session_quality",
+            "importance": 2.839573882025658
+          },
+          {
+            "feature": "readiness_gap_to_observe",
+            "importance": 2.825705415941886
+          },
+          {
+            "feature": "ibkr_nq_trade_count",
+            "importance": 2.807178837457459
+          },
+          {
+            "feature": "ibkr_nq_trade_contract_code",
+            "importance": 2.5563507489538746
+          },
+          {
+            "feature": "branch_probability",
+            "importance": 2.5323038546605363
+          },
+          {
+            "feature": "ibkr_nq_trade_body",
+            "importance": 2.4447206124589855
+          },
+          {
+            "feature": "ibkr_nq_volume_mean_64",
+            "importance": 2.4253883478435005
+          },
+          {
+            "feature": "ibkr_nq_volume_sum_16",
+            "importance": 2.423687253767244
+          },
+          {
+            "feature": "ibkr_nq_realized_vol_64",
+            "importance": 2.3776925183181628
+          },
+          {
+            "feature": "ofi_flow_component",
+            "importance": 2.371968746633931
+          },
+          {
+            "feature": "dominant_cycle_energy",
+            "importance": 2.3404554892898233
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 2.309689063017798
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 2.2415017959179555
+          },
+          {
+            "feature": "ibkr_nq_realized_vol_16",
+            "importance": 2.173652770494089
+          },
+          {
+            "feature": "execution_score",
+            "importance": 2.1453001152681477
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 89,
+        "ibkr_tradeflow_features": 34,
+        "negative_count": 467,
+        "positive_count": 45,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "DurationViable",
+        "top_importances": [
+          {
+            "feature": "duration_remaining_expected_bars",
+            "importance": 80.15529339373234
+          },
+          {
+            "feature": "ibkr_nq_trade_body",
+            "importance": 0.9860403298641085
+          },
+          {
+            "feature": "ibkr_nq_range_mean_192",
+            "importance": 0.9615440446975364
+          },
+          {
+            "feature": "ibkr_nq_trade_contract_code",
+            "importance": 0.8686705406042499
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 0.7840677704805934
+          },
+          {
+            "feature": "ibkr_nq_volume_mean_64",
+            "importance": 0.7446025796184803
+          },
+          {
+            "feature": "ibkr_nq_trade_count",
+            "importance": 0.7389125714120922
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 0.7091584367377504
+          },
+          {
+            "feature": "cycle_phase_alignment",
+            "importance": 0.6366822006449249
+          },
+          {
+            "feature": "ibkr_nq_volume_z_16",
+            "importance": 0.5999626527981045
+          },
+          {
+            "feature": "ibkr_nq_range_mean_64",
+            "importance": 0.5924434994576612
+          },
+          {
+            "feature": "ibkr_nq_trade_range",
+            "importance": 0.5711070101599829
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 0.564592570028446
+          },
+          {
+            "feature": "dominant_cycle_energy",
+            "importance": 0.5177423860906039
+          },
+          {
+            "feature": "ibkr_nq_volume_sum_64",
+            "importance": 0.5042325286467569
+          },
+          {
+            "feature": "ofi_pressure",
+            "importance": 0.4925374175466571
+          },
+          {
+            "feature": "ibkr_nq_range_mean_16",
+            "importance": 0.4473099224794529
+          },
+          {
+            "feature": "ibkr_nq_count_mean_64",
+            "importance": 0.4357045592371265
+          },
+          {
+            "feature": "ibkr_nq_realized_vol_64",
+            "importance": 0.40664695100941645
+          },
+          {
+            "feature": "ibkr_nq_trade_volume",
+            "importance": 0.3975756271085756
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 89,
+        "ibkr_tradeflow_features": 34,
+        "negative_count": 379,
+        "positive_count": 133,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "PathEdgePositive",
+        "top_importances": [
+          {
+            "feature": "ibkr_nq_count_z_64",
+            "importance": 4.501705679522352
+          },
+          {
+            "feature": "top_positive_contribution",
+            "importance": 3.9129170025480735
+          },
+          {
+            "feature": "qqq_hv_level",
+            "importance": 3.333525175325437
+          },
+          {
+            "feature": "execution_score",
+            "importance": 3.1991251705774637
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 3.0807947926873624
+          },
+          {
+            "feature": "nq_vs_200d_pct",
+            "importance": 2.9933628036463067
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 2.9395359024794834
+          },
+          {
+            "feature": "ibkr_nq_realized_vol_192",
+            "importance": 2.8395609265233444
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 2.8296832046834743
+          },
+          {
+            "feature": "ibkr_nq_realized_vol_64",
+            "importance": 2.807790260603477
+          },
+          {
+            "feature": "ibkr_nq_realized_vol_16",
+            "importance": 2.5880557376175384
+          },
+          {
+            "feature": "ibkr_nq_range_mean_192",
+            "importance": 2.4452557489501707
+          },
+          {
+            "feature": "ofi_flow_component",
+            "importance": 2.374942597229964
+          },
+          {
+            "feature": "ibkr_nq_count_z_192",
+            "importance": 2.354337263729111
+          },
+          {
+            "feature": "cycle_phase_alignment",
+            "importance": 2.2494094165056078
+          },
+          {
+            "feature": "ibkr_nq_volume_sum_64",
+            "importance": 2.2485429619578587
+          },
+          {
+            "feature": "ibkr_nq_trade_range",
+            "importance": 2.1984625707724437
+          },
+          {
+            "feature": "hybrid_transition_hazard",
+            "importance": 2.1279145741407035
+          },
+          {
+            "feature": "ofi_pressure",
+            "importance": 2.0822023835788093
+          },
+          {
+            "feature": "ibkr_nq_volume_mean_16",
+            "importance": 2.08193172504225
+          }
+        ]
+      }
+    ],
+    "feature_count": 89,
+    "feature_table": "/tmp/ict-regime-chain-20260509T231052/execution-native-release-512-aligned-ibkr-tradeflow/execution_native_aligned_ibkr_tradeflow_features_512.csv",
+    "ibkr_tradeflow_feature_count": 34,
+    "ibkr_tradeflow_matched_windows": 504,
+    "ibkr_tradeflow_missing_windows": 8,
+    "input_feature_table": "/tmp/ict-regime-chain-20260509T231052/execution-native-release-512/execution_native_release_provider_ofi_scores_512.csv",
+    "overall_decision": "no_95_candidate",
+    "row_count": 512,
+    "schema_version": "execution-native-aligned-ibkr-tradeflow/v1",
+    "score_table": "/tmp/ict-regime-chain-20260509T231052/execution-native-release-512-aligned-ibkr-tradeflow/execution_native_aligned_ibkr_tradeflow_scores_512.csv",
+    "tradeflow_input": "/tmp/ict-regime-chain-20260509T231052/provider-probes/aligned_ibkr_nq_contract_roll_15m_trades_combined.csv",
+    "training_policy": {
+      "chronological_split": {
+        "calibration": 128,
+        "final_holdout": 128,
+        "train": 256
+      },
+      "excluded_features": [
+        "DurationViable",
+        "LowTransitionHazard",
+        "PathEdgePositive",
+        "ReadinessObserveOrReady",
+        "ReleaseAllowed",
+        "safe_forward",
+        "score_DurationViable",
+        "score_LowTransitionHazard",
+        "score_PathEdgePositive",
+        "score_ReadinessObserveOrReady",
+        "score_ReleaseAllowed"
+      ],
+      "leakage_policy": "IBKR trade-flow features use only bars at or before each execution scan-window final timestamp; outcome and previous score columns are excluded"
+    }
+  },
+  "compact": {
+    "aligned_ibkr_tradeflow_probe_512": {
+      "accepted_candidates": null,
+      "overall_decision": "no_95_candidate",
+      "passes": null,
+      "rows": 512,
+      "target_reports": {}
+    },
+    "online_changepoint_probe_512": {
+      "accepted_candidates": null,
+      "overall_decision": "no_95_candidate",
+      "passes": null,
+      "rows": 512,
+      "target_reports": {}
+    },
+    "provider_ofi_probe_512": {
+      "accepted_candidates": null,
+      "overall_decision": "no_95_candidate",
+      "passes": null,
+      "rows": 512,
+      "target_reports": {}
+    }
+  },
+  "online_changepoint_probe_512": {
+    "accepted_candidate_count": 0,
+    "catboost_reports": [
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 98,
+        "negative_count": 181,
+        "online_changepoint_features": 43,
+        "positive_count": 331,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "ReleaseAllowed",
+        "top_importances": [
+          {
+            "feature": "nq_vs_200d_pct",
+            "importance": 4.123735634405455
+          },
+          {
+            "feature": "online_changepoint_hazard_96",
+            "importance": 3.521654078878886
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 3.316594940206037
+          },
+          {
+            "feature": "online_mean_shift_z_32",
+            "importance": 3.2514296366149633
+          },
+          {
+            "feature": "online_vol_jump_16",
+            "importance": 3.123824714320465
+          },
+          {
+            "feature": "online_volume_z_16",
+            "importance": 2.830536004315623
+          },
+          {
+            "feature": "online_volume_z_96",
+            "importance": 2.7968110976921317
+          },
+          {
+            "feature": "online_changepoint_hazard_max",
+            "importance": 2.6474429675130278
+          },
+          {
+            "feature": "online_vol_jump_32",
+            "importance": 2.5788632913333505
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 2.4498383093998912
+          },
+          {
+            "feature": "execution_score",
+            "importance": 2.4149417712847283
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 2.261129901460845
+          },
+          {
+            "feature": "online_changepoint_hazard_mean",
+            "importance": 2.091491289051675
+          },
+          {
+            "feature": "online_changepoint_hazard_64",
+            "importance": 2.0890838541415286
+          },
+          {
+            "feature": "online_mean_shift_z_64",
+            "importance": 2.065359122729824
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 2.0591032190245593
+          },
+          {
+            "feature": "online_range_z_32",
+            "importance": 2.0543261491257456
+          },
+          {
+            "feature": "online_cusum_up_96",
+            "importance": 2.0347465351742824
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 1.933260871270194
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 1.8682921024185613
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 98,
+        "negative_count": 381,
+        "online_changepoint_features": 43,
+        "positive_count": 131,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "LowTransitionHazard",
+        "top_importances": [
+          {
+            "feature": "hybrid_transition_hazard",
+            "importance": 74.90092358696587
+          },
+          {
+            "feature": "duration_remaining_expected_bars",
+            "importance": 11.1199464953909
+          },
+          {
+            "feature": "hybrid_transition_hazard_missing",
+            "importance": 5.432695442634289
+          },
+          {
+            "feature": "duration_remaining_expected_bars_missing",
+            "importance": 3.5299120881394317
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 0.3490454080291751
+          },
+          {
+            "feature": "top_positive_contribution",
+            "importance": 0.2658396567038159
+          },
+          {
+            "feature": "online_changepoint_hazard_max",
+            "importance": 0.264466893583177
+          },
+          {
+            "feature": "ofi_flow_component",
+            "importance": 0.2161607180980535
+          },
+          {
+            "feature": "online_changepoint_hazard_16",
+            "importance": 0.18120885202701303
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 0.17994263439360003
+          },
+          {
+            "feature": "online_body_z_96",
+            "importance": 0.1775221097339673
+          },
+          {
+            "feature": "online_changepoint_hazard_64",
+            "importance": 0.16897587262103875
+          },
+          {
+            "feature": "online_volume_z_32",
+            "importance": 0.16182015756865442
+          },
+          {
+            "feature": "online_mean_shift_z_32",
+            "importance": 0.14960359973686133
+          },
+          {
+            "feature": "online_cusum_down_32",
+            "importance": 0.147394630257659
+          },
+          {
+            "feature": "online_changepoint_hazard_96",
+            "importance": 0.14458944076515712
+          },
+          {
+            "feature": "online_cusum_up_16",
+            "importance": 0.11918006046083184
+          },
+          {
+            "feature": "online_volume_z_64",
+            "importance": 0.11535968628354389
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 0.11066994307136035
+          },
+          {
+            "feature": "online_volume_z_16",
+            "importance": 0.1066192586735412
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 98,
+        "negative_count": 503,
+        "online_changepoint_features": 43,
+        "positive_count": 9,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "ReadinessObserveOrReady",
+        "top_importances": [
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 6.42833854299044
+          },
+          {
+            "feature": "top_negative_contribution",
+            "importance": 4.927732545611104
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 4.437528885404599
+          },
+          {
+            "feature": "readiness_gap_to_observe",
+            "importance": 4.005653072064201
+          },
+          {
+            "feature": "ofi_session_quality",
+            "importance": 3.7253430350751837
+          },
+          {
+            "feature": "branch_probability",
+            "importance": 3.5615713390975885
+          },
+          {
+            "feature": "top_positive_contribution",
+            "importance": 3.1092187772536413
+          },
+          {
+            "feature": "online_changepoint_hazard_64",
+            "importance": 2.892459959061509
+          },
+          {
+            "feature": "online_cusum_down_64",
+            "importance": 2.4914550874435943
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 2.4805304459610795
+          },
+          {
+            "feature": "online_changepoint_hazard_mean",
+            "importance": 2.3498737153359945
+          },
+          {
+            "feature": "online_changepoint_hazard_max",
+            "importance": 2.2619421063019085
+          },
+          {
+            "feature": "online_mean_shift_z_96",
+            "importance": 2.2601607716707846
+          },
+          {
+            "feature": "online_body_z_96",
+            "importance": 2.1504023830824446
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 2.036390917519144
+          },
+          {
+            "feature": "online_cusum_down_32",
+            "importance": 2.0153479339927474
+          },
+          {
+            "feature": "online_age_since_abs_z2_32",
+            "importance": 1.9901582290171573
+          },
+          {
+            "feature": "online_vol_jump_96",
+            "importance": 1.9865316707548832
+          },
+          {
+            "feature": "online_vol_jump_16",
+            "importance": 1.8506737774711242
+          },
+          {
+            "feature": "online_range_z_64",
+            "importance": 1.8105853561517746
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 98,
+        "negative_count": 467,
+        "online_changepoint_features": 43,
+        "positive_count": 45,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "DurationViable",
+        "top_importances": [
+          {
+            "feature": "duration_remaining_expected_bars",
+            "importance": 75.44636917481034
+          },
+          {
+            "feature": "online_mean_shift_z_96",
+            "importance": 1.0373790554877755
+          },
+          {
+            "feature": "online_vol_jump_96",
+            "importance": 0.886668963811133
+          },
+          {
+            "feature": "top_positive_contribution",
+            "importance": 0.8464742121507487
+          },
+          {
+            "feature": "online_changepoint_hazard_64",
+            "importance": 0.8317252366921439
+          },
+          {
+            "feature": "online_age_since_abs_z2_96",
+            "importance": 0.8262637737810075
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 0.7212486292120589
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 0.7204734736363401
+          },
+          {
+            "feature": "ofi_pressure",
+            "importance": 0.7197905331034199
+          },
+          {
+            "feature": "ofi_session_quality",
+            "importance": 0.6840796600708859
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 0.6386346502072804
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 0.6308516368873592
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 0.6114076761263517
+          },
+          {
+            "feature": "online_body_z_96",
+            "importance": 0.5900113514414824
+          },
+          {
+            "feature": "ofi_flow_component",
+            "importance": 0.5852768709334017
+          },
+          {
+            "feature": "online_ret_z_96",
+            "importance": 0.5712301908986416
+          },
+          {
+            "feature": "online_mean_shift_z_32",
+            "importance": 0.5692824047937418
+          },
+          {
+            "feature": "online_changepoint_hazard_max",
+            "importance": 0.5447890180548182
+          },
+          {
+            "feature": "hybrid_transition_hazard",
+            "importance": 0.5352550858426527
+          },
+          {
+            "feature": "online_ret_z_64",
+            "importance": 0.5026043481447726
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 98,
+        "negative_count": 379,
+        "online_changepoint_features": 43,
+        "positive_count": 133,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "PathEdgePositive",
+        "top_importances": [
+          {
+            "feature": "online_changepoint_hazard_96",
+            "importance": 6.759674158261535
+          },
+          {
+            "feature": "top_positive_contribution",
+            "importance": 3.5882671062642277
+          },
+          {
+            "feature": "nq_vs_200d_pct",
+            "importance": 3.412674055023403
+          },
+          {
+            "feature": "online_changepoint_hazard_max",
+            "importance": 3.4051644210462775
+          },
+          {
+            "feature": "online_cusum_up_64",
+            "importance": 3.216849327980706
+          },
+          {
+            "feature": "online_mean_shift_z_32",
+            "importance": 2.8841364345156117
+          },
+          {
+            "feature": "online_cusum_up_96",
+            "importance": 2.84534097411536
+          },
+          {
+            "feature": "readiness_gap_to_observe",
+            "importance": 2.662145407868239
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 2.5698984396944247
+          },
+          {
+            "feature": "online_mean_shift_z_16",
+            "importance": 2.5076132233050084
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 2.4727209659085974
+          },
+          {
+            "feature": "online_changepoint_hazard_64",
+            "importance": 2.2529572722785214
+          },
+          {
+            "feature": "online_volume_z_16",
+            "importance": 2.251303230304999
+          },
+          {
+            "feature": "online_range_z_64",
+            "importance": 2.1623949345314335
+          },
+          {
+            "feature": "ofi_abs_pressure",
+            "importance": 2.131929762964733
+          },
+          {
+            "feature": "online_mean_shift_z_96",
+            "importance": 2.028832895107217
+          },
+          {
+            "feature": "online_cusum_down_32",
+            "importance": 1.854527762351759
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 1.794095377080008
+          },
+          {
+            "feature": "online_volume_z_96",
+            "importance": 1.766266710263012
+          },
+          {
+            "feature": "online_changepoint_hazard_16",
+            "importance": 1.7079763959018428
+          }
+        ]
+      }
+    ],
+    "feature_count": 98,
+    "feature_table": "/tmp/ict-regime-chain-20260509T231052/execution-native-release-512-online-changepoint/execution_native_online_changepoint_features_512.csv",
+    "input_feature_table": "/tmp/ict-regime-chain-20260509T231052/execution-native-release-512/execution_native_release_provider_ofi_scores_512.csv",
+    "online_changepoint_feature_count": 43,
+    "overall_decision": "no_95_candidate",
+    "row_count": 512,
+    "schema_version": "execution-native-online-changepoint/v1",
+    "score_table": "/tmp/ict-regime-chain-20260509T231052/execution-native-release-512-online-changepoint/execution_native_online_changepoint_scores_512.csv",
+    "training_policy": {
+      "chronological_split": {
+        "calibration": 128,
+        "final_holdout": 128,
+        "train": 256
+      },
+      "excluded_features": [
+        "DurationViable",
+        "LowTransitionHazard",
+        "PathEdgePositive",
+        "ReadinessObserveOrReady",
+        "ReleaseAllowed",
+        "safe_forward",
+        "score_DurationViable",
+        "score_LowTransitionHazard",
+        "score_PathEdgePositive",
+        "score_ReadinessObserveOrReady",
+        "score_ReleaseAllowed"
+      ],
+      "leakage_policy": "online features use only candles inside each scan window; no offline changepoint labels or future rows are used"
+    }
+  },
+  "provider_ofi_probe_512": {
+    "catboost_reports": [
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 67,
+        "negative_count": 181,
+        "positive_count": 331,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "ReleaseAllowed",
+        "top_importances": [
+          {
+            "feature": "execution_score",
+            "importance": 7.384321695591216
+          },
+          {
+            "feature": "nq_vs_200d_pct",
+            "importance": 6.408379706331295
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 6.201656529280751
+          },
+          {
+            "feature": "qqq_hv_level",
+            "importance": 5.800469942789935
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 5.630128057573496
+          },
+          {
+            "feature": "readiness_gap_to_observe",
+            "importance": 5.284267937713761
+          },
+          {
+            "feature": "ofi_abs_pressure",
+            "importance": 5.2393323881949225
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 5.210852855081062
+          },
+          {
+            "feature": "dominant_cycle_energy",
+            "importance": 4.930468935150908
+          },
+          {
+            "feature": "top_negative_contribution",
+            "importance": 3.8036858140232663
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 3.7338026706894376
+          },
+          {
+            "feature": "ofi_session_quality",
+            "importance": 3.64076106658814
+          },
+          {
+            "feature": "ofi_pressure",
+            "importance": 3.4781030820054206
+          },
+          {
+            "feature": "hybrid_transition_hazard",
+            "importance": 3.286771599883142
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 63,
+        "negative_count": 381,
+        "positive_count": 131,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "LowTransitionHazard",
+        "top_importances": [
+          {
+            "feature": "duration_remaining_expected_bars",
+            "importance": 29.55365482096953
+          },
+          {
+            "feature": "duration_remaining_expected_bars_missing",
+            "importance": 13.130992865970796
+          },
+          {
+            "feature": "execution_bias",
+            "importance": 9.64006706266398
+          },
+          {
+            "feature": "gate_status",
+            "importance": 4.725694748741009
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 4.616351628905954
+          },
+          {
+            "feature": "ofi_abs_pressure",
+            "importance": 3.4719466414382016
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 3.412926178797492
+          },
+          {
+            "feature": "execution_score",
+            "importance": 2.965112438464582
+          },
+          {
+            "feature": "readiness_gap_to_observe",
+            "importance": 2.5957835237092817
+          },
+          {
+            "feature": "qqq_hv_level",
+            "importance": 2.161790912300528
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 2.160410201371518
+          },
+          {
+            "feature": "ofi_session_quality",
+            "importance": 2.131855156364531
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 1.762575865929521
+          },
+          {
+            "feature": "top_positive_contribution",
+            "importance": 1.6185081364345755
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 60,
+        "negative_count": 503,
+        "positive_count": 9,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "ReadinessObserveOrReady",
+        "top_importances": [
+          {
+            "feature": "top_negative_feature",
+            "importance": 68.0180571419435
+          },
+          {
+            "feature": "branch_probability",
+            "importance": 19.842690200355776
+          },
+          {
+            "feature": "ofi_session_quality",
+            "importance": 2.886400849830297
+          },
+          {
+            "feature": "cycle_phase_alignment",
+            "importance": 1.7242049153119763
+          },
+          {
+            "feature": "execution_score",
+            "importance": 1.201348457359228
+          },
+          {
+            "feature": "top_negative_contribution",
+            "importance": 0.8233991951233551
+          },
+          {
+            "feature": "pythagorean_overstretch",
+            "importance": 0.7555697617923371
+          },
+          {
+            "feature": "pythagorean_overstretch_missing",
+            "importance": 0.5352354950263366
+          },
+          {
+            "feature": "ofi_abs_pressure",
+            "importance": 0.5249060914699796
+          },
+          {
+            "feature": "nq_vs_200d_pct",
+            "importance": 0.3913248948964968
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 0.32983893427451233
+          },
+          {
+            "feature": "vix3m_level",
+            "importance": 0.32743532469764824
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 0.28102917086267193
+          },
+          {
+            "feature": "duration_remaining_expected_bars",
+            "importance": 0.2737969709133772
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 64,
+        "negative_count": 467,
+        "positive_count": 45,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "DurationViable",
+        "top_importances": [
+          {
+            "feature": "execution_bias",
+            "importance": 39.04679682708449
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 5.602200060812419
+          },
+          {
+            "feature": "hybrid_transition_hazard",
+            "importance": 5.038206597017301
+          },
+          {
+            "feature": "execution_readiness",
+            "importance": 4.674529077601081
+          },
+          {
+            "feature": "execution_score",
+            "importance": 4.307668770091695
+          },
+          {
+            "feature": "readiness_gap_to_observe",
+            "importance": 4.19037556298141
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 3.377010876489353
+          },
+          {
+            "feature": "top_positive_contribution",
+            "importance": 2.986445490238279
+          },
+          {
+            "feature": "spectral_entropy",
+            "importance": 2.587356083496892
+          },
+          {
+            "feature": "cycle_phase_alignment",
+            "importance": 2.5377780142065407
+          },
+          {
+            "feature": "ofi_session_quality",
+            "importance": 2.5187696618735655
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 2.272507918031518
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 2.2171930036541236
+          },
+          {
+            "feature": "vix3m_level",
+            "importance": 2.0943128523001957
+          }
+        ]
+      },
+      {
+        "accepted_rules": [],
+        "decision": "no_95_candidate",
+        "feature_count": 67,
+        "negative_count": 379,
+        "positive_count": 133,
+        "selected_rule": null,
+        "split": {
+          "calibration": 128,
+          "final_holdout": 128,
+          "train": 256
+        },
+        "status": "ran_catboost",
+        "target": "PathEdgePositive",
+        "top_importances": [
+          {
+            "feature": "nq_vs_200d_pct",
+            "importance": 8.476721018118948
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 5.794953334385587
+          },
+          {
+            "feature": "qqq_hv_level",
+            "importance": 4.914131232098076
+          },
+          {
+            "feature": "execution_score",
+            "importance": 4.913336976737543
+          },
+          {
+            "feature": "dominant_cycle_energy",
+            "importance": 4.900938276243414
+          },
+          {
+            "feature": "ofi_flow_component",
+            "importance": 4.7054334984870145
+          },
+          {
+            "feature": "ising_phase_transition_risk",
+            "importance": 4.519977296160773
+          },
+          {
+            "feature": "prediction_vote_score",
+            "importance": 4.150273159480564
+          },
+          {
+            "feature": "ofi_session_quality",
+            "importance": 4.119466464860998
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 4.002439297498862
+          },
+          {
+            "feature": "top_positive_feature",
+            "importance": 3.888532077375925
+          },
+          {
+            "feature": "cycle_phase_alignment",
+            "importance": 3.7384518862389036
+          },
+          {
+            "feature": "readiness_gap_to_ready",
+            "importance": 3.6568713702852547
+          },
+          {
+            "feature": "readiness_gap_to_observe",
+            "importance": 3.588697992147476
+          }
+        ]
+      }
+    ],
+    "ofi_fallback_modes": {
+      "ohlcv_proxy_low_confidence": 512
+    },
+    "overall_decision": "no_95_candidate",
+    "provider_aux_coverage": {
+      "nq_vs_200d_pct": 495,
+      "qqq_hv_level": 495,
+      "qqq_hv_pct_rank_252": 495,
+      "vix3m_level": 495,
+      "vvix_over_vix": 495
+    },
+    "reject_reason_counts": {
+      "bad_loss": 158,
+      "duration_depleted": 95,
+      "transition_hazard": 259
+    },
+    "row_count": 512,
+    "scan_tsv": "/tmp/ict-regime-chain-20260509T231052/execution-tree-guardrail-scan-execnative-release-512/scan.tsv",
+    "schema_version": "execution-native-release-512-provider-ofi-catboost/v1",
+    "score_table": "/tmp/ict-regime-chain-20260509T231052/execution-native-release-512/execution_native_release_provider_ofi_scores_512.csv",
+    "target_counts": {
+      "DurationViable": {
+        "negative": 467,
+        "positive": 45
+      },
+      "LowTransitionHazard": {
+        "negative": 381,
+        "positive": 131
+      },
+      "PathEdgePositive": {
+        "negative": 379,
+        "positive": 133
+      },
+      "ReadinessObserveOrReady": {
+        "negative": 503,
+        "positive": 9
+      },
+      "ReleaseAllowed": {
+        "negative": 181,
+        "positive": 331
+      }
+    },
+    "truth_table": "/tmp/ict-regime-chain-20260509T231052/execution-native-release-512/execution_native_release_truth_512.jsonl"
+  },
+  "scan_512_readback": {
+    "actionable_or_pass": 0,
+    "registered_artifact_path": 256,
+    "rows": 512,
+    "score_used_true": 256
+  },
+  "scan_512_summary": {
+    "branch_counts": {
+      "block_crowded": 137,
+      "transition_guardrail": 373,
+      "wait_for_reversion": 2
+    },
+    "decision_hint_counts": {
+      "execution_blocked_regardless_of_prediction": 137,
+      "execution_guarded_due_to_high_transition_hazard": 70,
+      "execution_guarded_due_to_low_remaining_regime_duration": 303,
+      "execution_observe_with_medium_prediction": 2
+    },
+    "gate_status_counts": {
+      "blocked": 137,
+      "observe": 375
+    },
+    "metric_summary": {
+      "branch_probability": {
+        "count": 512,
+        "max": 1.0,
+        "mean": 0.008977810546875,
+        "median": 0.0,
+        "min": 0.0,
+        "p25": 0.0,
+        "p75": 0.0
+      },
+      "cycle_phase_alignment": {
+        "count": 337,
+        "max": 1.0,
+        "mean": 0.013855786350148367,
+        "median": 0.3049,
+        "min": -1.0,
+        "p25": -0.6679,
+        "p75": 0.658
+      },
+      "dominant_cycle_energy": {
+        "count": 356,
+        "max": 0.936,
+        "mean": 0.6567898876404494,
+        "median": 0.6588,
+        "min": 0.3486,
+        "p25": 0.5601,
+        "p75": 0.7622
+      },
+      "duration_remaining_expected_bars": {
+        "count": 348,
+        "max": 2.5,
+        "mean": 0.39535344827586205,
+        "median": 0.05,
+        "min": 0.0,
+        "p25": 0.0,
+        "p75": 0.3
+      },
+      "execution_readiness": {
+        "count": 512,
+        "max": 0.5296,
+        "mean": 0.35751015625,
+        "median": 0.355,
+        "min": 0.1979,
+        "p25": 0.3226,
+        "p75": 0.4001
+      },
+      "execution_score": {
+        "count": 512,
+        "max": 0.623519,
+        "mean": 0.498013298828125,
+        "median": 0.500211,
+        "min": 0.45159,
+        "p25": 0.492288,
+        "p75": 0.506825
+      },
+      "hybrid_transition_hazard": {
+        "count": 373,
+        "max": 0.7,
+        "mean": 0.614171581769437,
+        "median": 0.617,
+        "min": 0.42,
+        "p25": 0.577,
+        "p75": 0.662
+      },
+      "ising_phase_transition_risk": {
+        "count": 498,
+        "max": 0.3634,
+        "mean": 0.28210100401606425,
+        "median": 0.2795,
+        "min": 0.2292,
+        "p25": 0.2579,
+        "p75": 0.2877
+      },
+      "prediction_vote_score": {
+        "count": 512,
+        "max": 0.6476,
+        "mean": 0.4986451171875,
+        "median": 0.5162,
+        "min": 0.4148,
+        "p25": 0.4217,
+        "p75": 0.5212
+      },
+      "pythagorean_overstretch": {
+        "count": 200,
+        "max": 1.0,
+        "mean": 0.7082565,
+        "median": 1.0,
+        "min": 0.0021,
+        "p25": 0.2563,
+        "p75": 1.0
+      },
+      "ranker_score_calibrated_path_prob": {
+        "count": 0,
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "p25": null,
+        "p75": null
+      },
+      "ranker_score_path_prob_lower_bound": {
+        "count": 0,
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "p25": null,
+        "p75": null
+      },
+      "ranker_score_raw_path_score": {
+        "count": 256,
+        "max": 0.807741,
+        "mean": 0.807741,
+        "median": 0.807741,
+        "min": 0.807741,
+        "p25": 0.807741,
+        "p75": 0.807741
+      },
+      "readiness_gap_to_observe": {
+        "count": 512,
+        "max": 0.2521,
+        "mean": 0.09319765625,
+        "median": 0.0951,
+        "min": 0.0,
+        "p25": 0.0499,
+        "p75": 0.1274
+      },
+      "readiness_gap_to_ready": {
+        "count": 512,
+        "max": 0.4521,
+        "mean": 0.29248984375,
+        "median": 0.2951,
+        "min": 0.1204,
+        "p25": 0.2499,
+        "p75": 0.3274
+      },
+      "spectral_entropy": {
+        "count": 424,
+        "max": 0.6784,
+        "mean": 0.34859999999999997,
+        "median": 0.3461,
+        "min": 0.0957,
+        "p25": 0.2641,
+        "p75": 0.4394
+      },
+      "top_negative_contribution": {
+        "count": 512,
+        "max": -0.3,
+        "mean": -0.564831138671875,
+        "median": -0.5,
+        "min": -0.999991,
+        "p25": -0.5,
+        "p75": -0.5
+      },
+      "top_positive_contribution": {
+        "count": 512,
+        "max": 0.999959,
+        "mean": 0.58068834765625,
+        "median": 0.546073,
+        "min": 0.336606,
+        "p25": 0.444303,
+        "p75": 0.672292
+      }
+    },
+    "scan_tsv": "/tmp/ict-regime-chain-20260509T231052/execution-tree-guardrail-scan-execnative-release-512/scan.tsv",
+    "schema_version": "execution-tree-guardrail-scan/v1",
+    "windows_scanned": 512
+  }
+}

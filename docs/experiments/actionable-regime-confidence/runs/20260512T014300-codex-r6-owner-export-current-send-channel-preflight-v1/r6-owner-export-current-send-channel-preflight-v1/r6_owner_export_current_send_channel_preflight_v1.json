@@ -1,0 +1,106 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "external_contact_submitted": false,
+  "flip_as_control_approved": false,
+  "gate_result": "r6_owner_export_current_send_channel_preflight_v1=current_send_channels_confirmed_no_request_sent_no_controls_acquired",
+  "generated_at_utc": "2026-05-11T17:45:10.182171+00:00",
+  "new_confidence_gate": false,
+  "official_web_route_lookup_performed": true,
+  "owner_export_request_sent": false,
+  "owner_or_vendor_request_submitted": false,
+  "r3_native_subhour_ready": false,
+  "r3_root_mutated": false,
+  "r5_recency_extension_ready": false,
+  "r5_root_mutated": false,
+  "r6_owner_export_ready": false,
+  "r6_owner_export_root_mutated": false,
+  "raw_data_committed": false,
+  "run_id": "20260512T014300-codex-r6-owner-export-current-send-channel-preflight-v1",
+  "runtime_code_changed": false,
+  "send_channels": [
+    {
+      "current_web_evidence": "Official CME DataMine page exposes a Data Sales contact channel, including CMEDataSales@cmegroup.com, for historical data packages.",
+      "owner": "CME Group",
+      "request_use": "Primary send channel for CME/NYMEX/COMEX/CME Globex normal-control export request covering 2011-2013 Oystacher cells.",
+      "route": "DataMine historical data",
+      "send_status": "not_sent_needs_owner_or_operator_submission",
+      "url": "https://www.cmegroup.com/market-data/datamine-historical-data/index.html"
+    },
+    {
+      "current_web_evidence": "FAQ remains route evidence for order-book reconstruction, FIX/FAST depth files, timestamps, and exchange-level start-date fit; it is not a data export.",
+      "owner": "CME Group",
+      "request_use": "Attach as scope evidence when asking CME Data Sales to confirm product-level CL/NG/HG/ES coverage and matched normal-control exports.",
+      "route": "Market Depth Files FAQ",
+      "send_status": "not_sent_supporting_reference_only",
+      "url": "https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf"
+    },
+    {
+      "current_web_evidence": "CFE public history route points to Cboe DataShop for custom VIX futures historical data; public page itself is not verifier-native normal-control data.",
+      "owner": "Cboe/CFE",
+      "request_use": "Route 2014 VIX/CFE cells to Cboe DataShop/support for historical trades/quotes or depth/order-lifecycle export.",
+      "route": "Cboe U.S. Futures historical data",
+      "send_status": "not_sent_needs_owner_or_operator_submission",
+      "url": "https://www.cboe.com/markets/us/futures/market-statistics/historical-data/oof/"
+    },
+    {
+      "current_web_evidence": "Cboe U.S. Futures market-data services document Top-of-Book and Depth-of-Book routes for VIX futures data, but historical verifier-native export terms still require DataShop/support.",
+      "owner": "Cboe/CFE",
+      "request_use": "Supporting route for CFE/VIX depth/order-lifecycle availability and licensing clarification.",
+      "route": "Cboe Market Data Services U.S. Futures",
+      "send_status": "not_sent_supporting_reference_only",
+      "url": "https://res.cboe.com/market_data_services/us/futures/"
+    },
+    {
+      "current_web_evidence": "DataShop CFE futures trades product exposes trade fields such as trade date, contract symbol, size, price, side, trade time, and originating-order indicators; it is useful route evidence but not yet acquired/provenanced Board A input.",
+      "owner": "Cboe/CFE",
+      "request_use": "Ask whether this product or a custom support export can satisfy matched normal/non-manipulation controls for 2014 VIX futures cells.",
+      "route": "Cboe DataShop CFE futures trades",
+      "send_status": "not_sent_needs_owner_or_operator_submission",
+      "url": "https://datashop.cboe.com/cfe-futures-trades"
+    }
+  ],
+  "shared_intake_mutated": false,
+  "source_label_equivalence_ready": true,
+  "source_owned_normal_controls_acquired": 0,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "ticket_or_export_identifier_received": false,
+  "tmp_roots": [
+    {
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "required_files_present": "false",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_id": "r6_owner_export",
+      "root_present": "false"
+    },
+    {
+      "missing_files": "",
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "required_files_present": "true",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_id": "source_label_equivalence",
+      "root_present": "true"
+    },
+    {
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "required_files_present": "false",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_id": "r3_native_subhour",
+      "root_present": "false"
+    },
+    {
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "required_files_present": "false",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_id": "r5_recency_extension",
+      "root_present": "false"
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false
+}

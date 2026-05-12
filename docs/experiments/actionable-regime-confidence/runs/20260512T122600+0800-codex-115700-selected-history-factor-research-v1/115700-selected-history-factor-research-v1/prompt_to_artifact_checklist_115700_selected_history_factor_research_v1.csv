@@ -1,0 +1,11 @@
+requirement,evidence,status
+Auto-Quant factor-research handoff before prepare,command-output/factor_research_selected_history.out,pass
+Auto-Quant prepare,command-output/auto_quant_prepare.out and command-output/auto_quant_prepare.exit,pass
+Auto-Quant factor-research handoff after prepare,command-output/factor_research_after_prepare.out,pass
+Run TOMAC from workspace with dependencies,command-output/run_tomac_selected_history_workspace.out,fail_closed_long_pair_whitelist
+Repair experiment pair alias only in workspace,state_selected_history_factor_research_v1/.deps/auto-quant/config.tomac.json plus B2R115700_USD feathers,pass
+Repair experiment timerange only in workspace,state_selected_history_factor_research_v1/.deps/auto-quant/config.tomac.json,pass
+Final TOMAC execution,command-output/run_tomac_selected_history_shortpair_timerange.out and checks/run_tomac_selected_history_shortpair_timerange.exit,pass_zero_trades
+Downstream Pre-Bayes / BBN / CatBoost / execution-tree promotion,new AQ trade rows,not_applicable_zero_trades
+Promotion allowed,N/A,fail_closed
+update_goal,N/A,false

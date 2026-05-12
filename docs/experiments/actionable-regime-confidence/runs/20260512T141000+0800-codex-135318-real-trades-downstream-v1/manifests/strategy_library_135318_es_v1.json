@@ -1,0 +1,60 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T14:10:00+08:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant (runtime only); isolated wrapper copied from 135318 run root",
+  "auto_quant_pinned_ref": "1fe86ab",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135318+0800-codex-long-history-es-nq-aq-staging-v1/workspace/auto-quant/config.tomac.json",
+  "timeframe": "1h_from_cleaned_mtf_long_history",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135318+0800-codex-long-history-es-nq-aq-staging-v1/command-output/02_auto_quant_run_tomac_long_history_es_nq.out",
+  "validation_errors": [],
+  "strategies": [
+    {
+      "name": "TomacNQ_KillzoneBreakout_ES",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135318+0800-codex-long-history-es-nq-aq-staging-v1/workspace/auto-quant/user_data/strategies_external/TomacNQ_KillzoneBreakout.py",
+      "metadata": {
+        "strategy": "TomacNQ_KillzoneBreakout",
+        "mutation_id": "135318_long_history_es_tomac_v1",
+        "base_factor": "tomac_killzone_breakout",
+        "hypothesis": "Long-history ES TOMAC killzone breakout support evidence, split from the 135318 ES/NQ measured packet.",
+        "paradigm": "breakout",
+        "expected_regime": "trend_expansion",
+        "factors_used": [
+          "killzone",
+          "24h_breakout",
+          "4h_ema_alignment"
+        ],
+        "parent": "TomacNQ_KillzoneBreakout",
+        "asset_class": "equity_index_futures",
+        "status": "support_only_long_history_downstream"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.008841057929702766,
+        "sortino": 0.06455361635106481,
+        "calmar": 0.6145489454246446,
+        "total_profit_pct": 2.14,
+        "max_drawdown_pct": -11.281189329114827,
+        "trade_count": 115,
+        "win_rate_pct": 51.30434782608696,
+        "profit_factor": 1.0518091610898985
+      },
+      "per_pair_metrics": {
+        "ES/USD": {
+          "sharpe": 0.008841057929702766,
+          "sortino": 0.0125949374031921,
+          "calmar": 0.07478661216189522,
+          "total_profit_pct": 2.14,
+          "max_drawdown_pct": -11.281189329114827,
+          "trade_count": 115,
+          "win_rate_pct": 51.30434782608696,
+          "profit_factor": 1.0518091610898985
+        }
+      },
+      "pairs": [
+        "ES/USD"
+      ],
+      "timerange": "2012-05-03 23:00:00 -> 2025-08-04 12:00:00",
+      "commit": "1fe86ab"
+    }
+  ]
+}

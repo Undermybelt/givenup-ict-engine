@@ -1,0 +1,3 @@
+run_id,kind,registered_in_todo_before_this_ledger,gate_result,accepted_rows_added,new_confidence_gate,full_objective_achieved,update_goal,path
+20260511T184630-codex-direct-manipulation-coverage-readback-v2,direct_manipulation_coverage,False,direct_manipulation_coverage_readback_v2=scoped_varieties_present_full_species_blocked,0,False,False,False,docs/experiments/actionable-regime-confidence/runs/20260511T184630-codex-direct-manipulation-coverage-readback-v2
+20260511T184856-codex-source-label-other-market-readback-v1,source_label_other_market,True,source_label_other_market_readback_v1=partial_sources_no_full_equivalence,0,False,False,False,docs/experiments/actionable-regime-confidence/runs/20260511T184856-codex-source-label-other-market-readback-v1

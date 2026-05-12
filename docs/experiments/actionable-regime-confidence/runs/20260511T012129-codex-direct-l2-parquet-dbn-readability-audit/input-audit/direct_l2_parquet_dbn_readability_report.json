@@ -1,0 +1,272 @@
+{
+  "dbn_candidates": [
+    {
+      "dbn_magic": true,
+      "decoded_header_text": "DBN.....GLBX.MDP3............._Z..... `Z........................................................",
+      "directness": "potential_direct_mbo_if_decoded_and_supported",
+      "exists": true,
+      "header_hex_prefix": "44424e01c6000000474c42582e4d4450330000000000000000000000e5a85f5acd1700941a20605acd170000000000000000ffffffffffffffff010000000000",
+      "input_class": "dbn_mbo_or_market_data",
+      "kind": "dbn_zst",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/databento/order_book_deltas_catalog/databento/orderbooks_mbo_2024-05-08T00-00-00_2024-05-08T00-00-02.dbn.zst",
+      "qualifies_for_manipulation_gate": false,
+      "size_bytes": 183688,
+      "support_state": "decoder_missing_or_sample_too_short"
+    },
+    {
+      "dbn_magic": true,
+      "decoded_header_text": "DBN.....GLBX.MDP3............vr.....<...........................................................",
+      "directness": "potential_direct_mbo_if_decoded_and_supported",
+      "exists": true,
+      "header_hex_prefix": "44424e01c6000000474c42582e4d4450330000000000000000000000ed76729ba31700003c0807eaa3170000000000000000ffffffffffffffff010000000000",
+      "input_class": "dbn_mbo_or_market_data",
+      "kind": "dbn_zst",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/databento/esh4-glbx-mdp3-20231224.mbo.dbn.zst",
+      "qualifies_for_manipulation_gate": false,
+      "size_bytes": 53814,
+      "support_state": "decoder_missing_or_sample_too_short"
+    },
+    {
+      "dbn_magic": true,
+      "decoded_header_text": "DBN.....GLBX.MDP3...........<..........8........................................................",
+      "directness": "potential_direct_mbo_if_decoded_and_supported",
+      "exists": true,
+      "header_hex_prefix": "44424e01c6000000474c42582e4d44503300000000000000000000003c0807eaa31700008b999b38a4170000000000000000ffffffffffffffff010000000000",
+      "input_class": "dbn_mbo_or_market_data",
+      "kind": "dbn_zst",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/databento/esh4-glbx-mdp3-20231225.mbo.dbn.zst",
+      "qualifies_for_manipulation_gate": false,
+      "size_bytes": 997238,
+      "support_state": "decoder_missing_or_sample_too_short"
+    }
+  ],
+  "decision": {
+    "blocker": "Readable local parquet/DBN candidates are fixtures, quote/trade-only, simulation/context-only, or metadata-only. The large Tardis/ITCH order-book-delta datasets are referenced but not present.",
+    "fresh_manipulation_gate_supported_now": false,
+    "manipulation_state": "missing_required_inputs",
+    "next_action": "Acquire the actual large Tardis/ITCH delta Parquet files or a supported DBN decoder plus sufficiently long MBO sample before rerunning Manipulation gates.",
+    "qualifying_direct_input_sets": 0,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false
+  },
+  "large_dataset_metadata": [
+    {
+      "directness": "NautilusTrader OrderBookDelta Parquet",
+      "exists": true,
+      "kind": "large_metadata",
+      "metadata": {
+        "added_at": "2026-02-11T00:00:00Z",
+        "compression": "ZSTD(3)",
+        "date": "2020-04-01",
+        "file": "tardis_BTC-PERPETUAL.DERIBIT_2020-04-01_deltas.parquet",
+        "format": "NautilusTrader OrderBookDelta Parquet",
+        "instrument": "BTC-PERPETUAL.DERIBIT",
+        "licence": "Public market data from Deribit exchange, transformed to NautilusTrader Parquet format",
+        "original_file": "tardis_deribit_incremental_book_L2_2020-04-01_BTC-PERPETUAL.csv.gz",
+        "original_url": "https://tardis.dev/",
+        "parser": "nautilus-tardis load_deltas()",
+        "price_precision": 1,
+        "records": 19239597,
+        "row_group_size": 1000000,
+        "sha256": "ba4024e394f6425049827607bc479afe93c4015f8331b9c2942929abce43a9f1",
+        "size_bytes": 193727532,
+        "size_precision": 0
+      },
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/large/tardis_BTC-PERPETUAL.DERIBIT_2020-04-01_deltas.metadata.json",
+      "qualifies_for_manipulation_gate": false,
+      "records": 19239597,
+      "referenced_data_exists": false,
+      "referenced_data_path": "/Users/thrill3r/nautilus_trader/tests/test_data/large/tardis_BTC-PERPETUAL.DERIBIT_2020-04-01_deltas.parquet",
+      "support_state": "large_direct_dataset_metadata_only"
+    },
+    {
+      "directness": "NautilusTrader OrderBookDelta Parquet",
+      "exists": true,
+      "kind": "large_metadata",
+      "metadata": {
+        "added_at": "2026-02-12T00:00:00Z",
+        "compression": "ZSTD(3)",
+        "date": "2019-01-30",
+        "file": "itch_AAPL.XNAS_2019-01-30_deltas.parquet",
+        "format": "NautilusTrader OrderBookDelta Parquet",
+        "instrument": "AAPL.XNAS",
+        "licence": "Public market data from NASDAQ exchange, transformed to NautilusTrader Parquet format",
+        "original_file": "01302019.NASDAQ_ITCH50.gz",
+        "original_url": "https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/01302019.NASDAQ_ITCH50.gz",
+        "parser": "itchy 0.3.4 via ItchParser",
+        "price_precision": 4,
+        "records": 1779561,
+        "row_group_size": 1000000,
+        "sha256": "a31aa366ab939e36c9fd484c5d2d5d0760fa84d47bd66e89c135655e9d2a360c",
+        "size_bytes": 23699344,
+        "size_precision": 0
+      },
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/large/itch_AAPL.XNAS_2019-01-30_deltas.metadata.json",
+      "qualifies_for_manipulation_gate": false,
+      "records": 1779561,
+      "referenced_data_exists": false,
+      "referenced_data_path": "/Users/thrill3r/nautilus_trader/tests/test_data/large/itch_AAPL.XNAS_2019-01-30_deltas.parquet",
+      "support_state": "large_direct_dataset_metadata_only"
+    }
+  ],
+  "loop_id": "20260511T012129+0800-codex-direct-l2-parquet-dbn-readability-audit",
+  "objective": "Decode local parquet/DBN direct-input candidates before declaring Manipulation data blocked.",
+  "parquet_candidates": [
+    {
+      "columns": [
+        "action",
+        "side",
+        "price",
+        "size",
+        "order_id",
+        "flags",
+        "sequence",
+        "ts_event",
+        "ts_init"
+      ],
+      "directness": "direct_l2_or_order_book_delta",
+      "exists": true,
+      "input_class": "order_book_delta_parquet",
+      "kind": "parquet",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/nautilus/64-bit/deltas.parquet",
+      "qualifies_for_manipulation_gate": false,
+      "row_groups": 1077,
+      "rows": 1077,
+      "schema_metadata": {
+        "instrument_id": "1.166564490-60424-0.0.BETFAIR",
+        "price_precision": "0",
+        "rows_per_group": "1",
+        "size_precision": "0"
+      },
+      "size_bytes": 1851968,
+      "support_state": "support_too_thin_fixture"
+    },
+    {
+      "columns": [
+        "action",
+        "side",
+        "price",
+        "size",
+        "order_id",
+        "flags",
+        "sequence",
+        "ts_event",
+        "ts_init"
+      ],
+      "directness": "direct_l2_or_order_book_delta",
+      "exists": true,
+      "input_class": "order_book_delta_parquet",
+      "kind": "parquet",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/nautilus/128-bit/deltas.parquet",
+      "qualifies_for_manipulation_gate": false,
+      "row_groups": 1077,
+      "rows": 1077,
+      "schema_metadata": {
+        "instrument_id": "1.166564490-60424-0.0.BETFAIR",
+        "price_precision": "0",
+        "rows_per_group": "1",
+        "size_precision": "0"
+      },
+      "size_bytes": 1982724,
+      "support_state": "support_too_thin_fixture"
+    },
+    {
+      "columns": [
+        "timestamp",
+        "symbol",
+        "ask_size",
+        "ask",
+        "bid_size",
+        "bid"
+      ],
+      "directness": "direct_bid_ask_quotes_no_depth_or_order_lifecycle",
+      "exists": true,
+      "input_class": "quote_tick_parquet",
+      "kind": "parquet",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/binance/btcusdt-quotes.parquet",
+      "qualifies_for_manipulation_gate": false,
+      "row_groups": 1,
+      "rows": 451,
+      "schema_metadata": {
+        "pandas": "{\"index_columns\": [{\"kind\": \"range\", \"name\": null, \"start\": 0, \"stop\": 451, \"step\": 1}], \"column_indexes\": [{\"name\": null, \"field_name\": null, \"pandas_type\": \"unicode\", \"numpy_type\": \"object\", \"metadata\": {\"encoding\": \"UTF-8\"}}], \"columns\": [{\"name\": \"timestamp\", \"field_name\": \"timestamp\", \"pandas_type\": \"datetimetz\", \"numpy_type\": \"datetime64[ns]\", \"metadata\": {\"timezone\": \"UTC\"}}, {\"name\": \"symbol\", \"field_name\": \"symbol\", \"pandas_type\": \"unicode\", \"numpy_type\": \"object\", \"metadata\": null}, {\"name\": \"ask_size\", \"field_name\": \"ask_size\", \"pandas_type\": \"float64\", \"numpy_type\": \"float64\", \"metadata\": null}, {\"name\": \"ask\", \"field_name\": \"ask\", \"pandas_type\": \"float64\", \"numpy_type\": \"float64\", \"metadata\": null}, {\"name\": \"bid_size\", \"field_name\": \"bid_size\", \"pandas_type\": \"float64\", \"numpy_type\": \"float64\", \"metadata\": null}, {\"name\": \"bid\", \"field_name\": \"bid\", \"pandas_type\": \"float64\", \"numpy_type\": \"float64\", \"metadata\": null}], \"creator\": {\"library\": \"pyarrow\", \"version\": \"2.0.0\"}, \"pandas_version\": \"1.0.4\"}"
+      },
+      "size_bytes": 14908,
+      "support_state": "partial_quote_context_only"
+    },
+    {
+      "columns": [
+        "timestamp",
+        "trade_id",
+        "price",
+        "quantity",
+        "buyer_maker"
+      ],
+      "directness": "direct_trades_no_depth_or_cancel_lifecycle",
+      "exists": true,
+      "input_class": "trade_tape_parquet",
+      "kind": "parquet",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/binance/btcusdt-trades.parquet",
+      "qualifies_for_manipulation_gate": false,
+      "row_groups": 1,
+      "rows": 2001,
+      "schema_metadata": {
+        "pandas": "{\"index_columns\": [{\"kind\": \"range\", \"name\": null, \"start\": 0, \"stop\": 2001, \"step\": 1}], \"column_indexes\": [{\"name\": null, \"field_name\": null, \"pandas_type\": \"unicode\", \"numpy_type\": \"object\", \"metadata\": {\"encoding\": \"UTF-8\"}}], \"columns\": [{\"name\": \"timestamp\", \"field_name\": \"timestamp\", \"pandas_type\": \"datetimetz\", \"numpy_type\": \"datetime64[ns]\", \"metadata\": {\"timezone\": \"UTC\"}}, {\"name\": \"trade_id\", \"field_name\": \"trade_id\", \"pandas_type\": \"int64\", \"numpy_type\": \"int64\", \"metadata\": null}, {\"name\": \"price\", \"field_name\": \"price\", \"pandas_type\": \"float64\", \"numpy_type\": \"float64\", \"metadata\": null}, {\"name\": \"quantity\", \"field_name\": \"quantity\", \"pandas_type\": \"float64\", \"numpy_type\": \"float64\", \"metadata\": null}, {\"name\": \"buyer_maker\", \"field_name\": \"buyer_maker\", \"pandas_type\": \"unicode\", \"numpy_type\": \"object\", \"metadata\": null}], \"creator\": {\"library\": \"pyarrow\", \"version\": \"2.0.0\"}, \"pandas_version\": \"1.0.4\"}"
+      },
+      "size_bytes": 32530,
+      "support_state": "partial_tradeflow_only"
+    },
+    {
+      "columns": [
+        "bid_price",
+        "ask_price",
+        "bid_size",
+        "ask_size",
+        "ts_event",
+        "ts_init"
+      ],
+      "directness": "direct_bid_ask_quotes_no_depth_or_order_lifecycle",
+      "exists": true,
+      "input_class": "quote_tick_parquet",
+      "kind": "parquet",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/quote_tick_eurusd_2019_sim_rust.parquet",
+      "qualifies_for_manipulation_gate": false,
+      "row_groups": 1,
+      "rows": 10000,
+      "schema_metadata": {
+        "instrument_id": "EUR/USD.SIM",
+        "price_precision": "5",
+        "rows_per_group": "10000",
+        "size_precision": "0"
+      },
+      "size_bytes": 152371,
+      "support_state": "partial_quote_context_only"
+    },
+    {
+      "columns": [
+        "bid_price",
+        "ask_price",
+        "bid_size",
+        "ask_size",
+        "ts_event",
+        "ts_init"
+      ],
+      "directness": "direct_bid_ask_quotes_no_depth_or_order_lifecycle",
+      "exists": true,
+      "input_class": "quote_tick_parquet",
+      "kind": "parquet",
+      "path": "/Users/thrill3r/nautilus_trader/tests/test_data/quote_tick_usdjpy_2019_sim_rust.parquet",
+      "qualifies_for_manipulation_gate": false,
+      "row_groups": 1,
+      "rows": 10000,
+      "schema_metadata": {
+        "instrument_id": "USD/JPY.SIM",
+        "price_precision": "3",
+        "rows_per_group": "10000",
+        "size_precision": "0"
+      },
+      "size_bytes": 185015,
+      "support_state": "partial_quote_context_only"
+    }
+  ],
+  "schema_version": 1
+}

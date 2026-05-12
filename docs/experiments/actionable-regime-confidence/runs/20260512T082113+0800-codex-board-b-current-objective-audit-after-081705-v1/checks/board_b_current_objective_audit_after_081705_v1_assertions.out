@@ -1,0 +1,17 @@
+gate_result=board_b_current_objective_audit_after_081705_v1=not_complete_latest_recap_routes_no_required_unlock_no_selected_history_no_downstream_promotion
+blocked_requirements=4
+partial_requirements=3
+covered_requirements=3
+missing_assertion_files=none
+missing_board_markers=none
+explicit_user_selected_history=false
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

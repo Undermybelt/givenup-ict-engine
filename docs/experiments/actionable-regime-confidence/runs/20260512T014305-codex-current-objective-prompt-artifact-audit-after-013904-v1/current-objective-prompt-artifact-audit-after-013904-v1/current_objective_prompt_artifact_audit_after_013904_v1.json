@@ -1,0 +1,85 @@
+{
+  "run_id": "20260512T014305-codex-current-objective-prompt-artifact-audit-after-013904-v1",
+  "gate_result": "current_objective_prompt_artifact_audit_after_013904_v1=not_complete_r6_r3_r5_source_confidence_and_downstream_promotion_blocked",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_hash_before_artifact": "87f8bc9f7682c2bb8304170e6b7b57399a3bcd311327f17e4e813f8be67d7551",
+  "observed_cursor": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "board_state": "blocked",
+  "objective_achieved": false,
+  "checklist": [
+    {
+      "requirement": "every active MainRegimeV2 regime has 95 percent confidence",
+      "status": "blocked",
+      "evidence": "012425 accepted_labels empty; accepted_rows_added_zero PASS"
+    },
+    {
+      "requirement": "validated across other markets and cycles/timeframes",
+      "status": "blocked",
+      "evidence": "source label rows are daily; R3 native-subhour and R5 recency roots absent"
+    },
+    {
+      "requirement": "R6 direct manipulation controls or explicit FLIP approval",
+      "status": "blocked",
+      "evidence": "010127 controls_zero PASS; no_flip_approval PASS; owner_files_absent PASS"
+    },
+    {
+      "requirement": "real Auto-Quant evidence",
+      "status": "non_promoting",
+      "evidence": "013904 parsed latest Tomac cache: 9 trades, winrate 0.4444444444444444, profit_total -0.058056"
+    },
+    {
+      "requirement": "ict-engine filter, Pre-Bayes/BBN, CatBoost/path-ranking, execution tree",
+      "status": "callable_but_non_promoting",
+      "evidence": "013533 command exits pass but downstream promotion rerun allowed false"
+    },
+    {
+      "requirement": "IBKR, TradingViewRemix, yfinance, Kraken provider context",
+      "status": "partial",
+      "evidence": "recent provider readbacks show yfinance and Kraken CLI usable; IBKR/TradingView/Kraken public unhealthy or dependency-blocked"
+    },
+    {
+      "requirement": "multi-agent safe ledger update",
+      "status": "pass",
+      "evidence": "append-only artifact; shared intake and runtime code not mutated"
+    }
+  ],
+  "tmp_roots": [
+    {
+      "id": "source_label_equivalence",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "file_count": 2
+    },
+    {
+      "id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "file_count": 0
+    },
+    {
+      "id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false,
+      "file_count": 0
+    },
+    {
+      "id": "r5_recency_extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false,
+      "file_count": 0
+    }
+  ],
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_requests_sent": false,
+  "trade_usable": false
+}

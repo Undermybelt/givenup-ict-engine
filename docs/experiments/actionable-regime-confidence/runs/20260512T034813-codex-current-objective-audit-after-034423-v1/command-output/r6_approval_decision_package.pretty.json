@@ -1,0 +1,132 @@
+{
+    "approval_slots": [
+        {
+            "current_evidence": "CourtListener/RECAP mirror of court-filed CFTC Exhibit A with stable PDF SHA-256.",
+            "current_state": "pending_explicit_user_or_board_approval",
+            "merge_effect_if_approved": "Allows source provenance to be used for canonical R6 intake, subject to control-policy approval or separate normal controls.",
+            "minimum_approval_value": "approved",
+            "slot_id": "public_recap_pacer_provenance"
+        },
+        {
+            "current_evidence": "FLIP rows are same-exhibit sequence counterpart legs, not source-owned normal/non-manipulation labels.",
+            "current_state": "rejected_under_current_contract",
+            "merge_effect_if_approved": "Allows isolated FLIP rows to populate matched_negative_normal_activity_rows.csv after verifier-native copy under lock.",
+            "minimum_approval_value": "explicitly_approved_as_matched_controls",
+            "slot_id": "same_exhibit_flip_as_matched_controls"
+        },
+        {
+            "current_evidence": "No independent owner-approved normal controls are present in the target root.",
+            "current_state": "not_supplied",
+            "merge_effect_if_approved": "Allows R6 to proceed without approving same-exhibit FLIP rows as controls.",
+            "minimum_approval_value": "source_owned_normal_controls_supplied",
+            "slot_id": "source_owned_normal_controls_alternative"
+        }
+    ],
+    "assertions": {
+        "approval_present": false,
+        "canonical_merge_allowed_now": false,
+        "downstream_rerun_allowed_now": false,
+        "flip_controls_accepted_under_current_contract": false,
+        "public_recap_source_positive_candidate": true,
+        "shared_intake_mutated": false,
+        "strict_full_objective_achieved": false,
+        "trade_usable": false,
+        "update_goal": false
+    },
+    "control_policy_json": "docs/experiments/actionable-regime-confidence/runs/20260512T003334-codex-r6-oystacher-exhibit-a-policy-review-v1/r6-oystacher-exhibit-a-policy-review/r6_oystacher_exhibit_a_policy_review_v1.json",
+    "decision_options": [
+        {
+            "canonical_merge_allowed_after_lock": "true",
+            "decision_id": "approve_recap_and_flip_controls",
+            "downstream_rerun_required": "true",
+            "flip_control_policy": "explicitly_approved_as_matched_controls",
+            "gate_if_chosen": "approval_ready_merge_then_rerun_full_chain",
+            "public_recap_pacer_provenance": "approved",
+            "source_owned_normal_controls_required": "false"
+        },
+        {
+            "canonical_merge_allowed_after_lock": "only_after_controls_supplied",
+            "decision_id": "approve_recap_reject_flip_supply_controls",
+            "downstream_rerun_required": "true_after_controls",
+            "flip_control_policy": "rejected",
+            "gate_if_chosen": "source_positive_ready_controls_still_required",
+            "public_recap_pacer_provenance": "approved",
+            "source_owned_normal_controls_required": "true"
+        },
+        {
+            "canonical_merge_allowed_after_lock": "false_until_owner_export",
+            "decision_id": "reject_recap_use_owner_export_only",
+            "downstream_rerun_required": "false_until_owner_export",
+            "flip_control_policy": "not_applicable",
+            "gate_if_chosen": "owner_export_required",
+            "public_recap_pacer_provenance": "rejected",
+            "source_owned_normal_controls_required": "true"
+        },
+        {
+            "canonical_merge_allowed_after_lock": "false",
+            "decision_id": "no_decision_keep_blocked",
+            "downstream_rerun_required": "false",
+            "flip_control_policy": "pending_or_rejected",
+            "gate_if_chosen": "decision_package_ready_no_approval_no_merge",
+            "public_recap_pacer_provenance": "pending",
+            "source_owned_normal_controls_required": "true_if_flip_rejected"
+        }
+    ],
+    "followup_chain": [
+        {
+            "allowed_before_approval": "false",
+            "command_or_artifact": "/tmp/ict-engine-direct-manipulation-row-intake.lock",
+            "required_after_approval": "true",
+            "step_id": "shared_lock",
+            "step_order": 1
+        },
+        {
+            "allowed_before_approval": "false",
+            "command_or_artifact": "/tmp/ict-engine-board-a-r6-owner-export-v1/{positive_spoofing_layering_rows.csv,matched_negative_normal_activity_rows.csv,provenance_manifest.json}",
+            "required_after_approval": "true",
+            "step_id": "verifier_native_copy",
+            "step_order": 2
+        },
+        {
+            "allowed_before_approval": "false",
+            "command_or_artifact": "direct_manipulation_row_intake_verifier",
+            "required_after_approval": "true",
+            "step_id": "direct_verifier",
+            "step_order": 3
+        },
+        {
+            "allowed_before_approval": "false",
+            "command_or_artifact": "chronological plus symbol/venue or explicitly approved family split calibration",
+            "required_after_approval": "true",
+            "step_id": "split_calibration",
+            "step_order": 4
+        },
+        {
+            "allowed_before_approval": "false",
+            "command_or_artifact": "provider status, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, workflow/execution-tree readback",
+            "required_after_approval": "true",
+            "step_id": "provider_and_downstream_chain",
+            "step_order": 5
+        }
+    ],
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "generated_at_utc": "2026-05-11T16:36:53+00:00",
+    "next_action": "Record one explicit decision option. Do not merge isolated rows or rerun downstream chain until RECAP/PACER provenance plus FLIP-as-control approval exist, or source-owned normal controls are supplied.",
+    "row_counts": {
+        "flip_rows": 1553,
+        "isolated_split_axes_pass": true,
+        "isolated_verifier_status": "schema_ready_unscored",
+        "matched_groups": 1313,
+        "parsed_order_rows": 6735,
+        "positive_spoof_rows": 5182
+    },
+    "run_id": "20260512T003653-codex-r6-oystacher-approval-decision-package-v1",
+    "source": {
+        "courtlistener_docket_url": "https://www.courtlistener.com/docket/4263217/us-commodity-futures-trading-commission-v-oystacher/",
+        "raw_data_committed": false,
+        "raw_pdf_sha256": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+        "source_pdf_url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf"
+    },
+    "source_materialization_json": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/r6_oystacher_exhibit_a_row_materialization_v1.json",
+    "source_policy_json": "docs/experiments/actionable-regime-confidence/runs/20260512T003051-codex-r6-oystacher-exhibit-a-source-policy-review-v1/r6-oystacher-exhibit-a-source-policy-review/r6_oystacher_exhibit_a_source_policy_review_v1.json"
+}

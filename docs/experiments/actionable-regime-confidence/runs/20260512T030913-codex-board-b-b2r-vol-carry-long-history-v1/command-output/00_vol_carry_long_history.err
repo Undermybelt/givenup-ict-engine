@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T030913-codex-board-b-b2r-vol-carry-long-history-v1/scripts/board_b_b2r_vol_carry_long_history_v1.py", line 113, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T030913-codex-board-b-b2r-vol-carry-long-history-v1/scripts/board_b_b2r_vol_carry_long_history_v1.py", line 109, in main
+    return int(module.main())
+               ^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024349-codex-board-b-b2r-repeat-next-vol-carry-provider-panel-v1/scripts/board_b_b2r_repeat_next_vol_carry_provider_panel_v1.py", line 644, in main
+    manipulation = load_manipulation_component()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024349-codex-board-b-b2r-repeat-next-vol-carry-provider-panel-v1/scripts/board_b_b2r_repeat_next_vol_carry_provider_panel_v1.py", line 549, in load_manipulation_component
+    with MANIP_SUMMARY.open(newline="", encoding="utf-8") as handle:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'docs/experiments/actionable-regime-confidence/runs/20260511T194231-codex-board-b-root-plus-manip-bridge-rc-spa-v1/branch-rc-spa/root_plus_manip_bridge_branch_summary_v1.csv'

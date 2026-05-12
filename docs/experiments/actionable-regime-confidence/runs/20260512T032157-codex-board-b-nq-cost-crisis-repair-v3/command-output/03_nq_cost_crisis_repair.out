@@ -1,0 +1,21 @@
+{
+  "all_required_branches_passed": true,
+  "branch_paths_evaluated": 23,
+  "direct_manipulation_gate": "pass:direct_manipulation_stop_tp_candidate",
+  "downstream_consumption": "ready_for_pre_bayes_bbn_catboost_execution_tree",
+  "failure_tags": [],
+  "gate_result": "pass",
+  "minimum_required_branch_score": 85.8501013275014,
+  "next_action": "Run ict-engine Pre-Bayes/filter -> BBN -> CatBoost/path-ranker -> execution tree using the same rooted branch paths; promotion remains forbidden until downstream admits the branch.",
+  "price_roots_passed": 4,
+  "primary_blocker": "All price roots plus scoped Manipulation passed; run ordered downstream before any promotion claim.",
+  "root_trade_counts": {
+    "Bear": 762,
+    "Bull": 10663,
+    "Crisis": 584,
+    "Sideways": 3406
+  },
+  "selected_price_root_rows": 15415,
+  "stable_profit_score": 90.0,
+  "variant_trade_rows": 75768
+}

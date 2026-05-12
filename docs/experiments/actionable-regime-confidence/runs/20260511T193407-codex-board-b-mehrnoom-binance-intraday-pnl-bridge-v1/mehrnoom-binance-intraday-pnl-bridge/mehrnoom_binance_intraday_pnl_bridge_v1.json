@@ -1,0 +1,33 @@
+{
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "artifact_paths": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T193407-codex-board-b-mehrnoom-binance-intraday-pnl-bridge-v1/checks/mehrnoom_binance_intraday_pnl_bridge_v1_assertions.out",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T193407-codex-board-b-mehrnoom-binance-intraday-pnl-bridge-v1/mehrnoom-binance-intraday-pnl-bridge/mehrnoom_binance_intraday_pnl_bridge_v1.json",
+    "markdown": "docs/experiments/actionable-regime-confidence/runs/20260511T193407-codex-board-b-mehrnoom-binance-intraday-pnl-bridge-v1/mehrnoom-binance-intraday-pnl-bridge/mehrnoom_binance_intraday_pnl_bridge_v1.md",
+    "provider_probe_json": "docs/experiments/actionable-regime-confidence/runs/20260511T193407-codex-board-b-mehrnoom-binance-intraday-pnl-bridge-v1/mehrnoom-binance-intraday-pnl-bridge/mehrnoom_binance_provider_probe_v1.json",
+    "rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T193407-codex-board-b-mehrnoom-binance-intraday-pnl-bridge-v1/mehrnoom-binance-intraday-pnl-bridge/mehrnoom_binance_intraday_pnl_rows_v1.csv",
+    "symbol_coverage_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T193407-codex-board-b-mehrnoom-binance-intraday-pnl-bridge-v1/mehrnoom-binance-intraday-pnl-bridge/mehrnoom_binance_symbol_coverage_v1.csv"
+  },
+  "board_b_profitability_rows_added": 3211,
+  "bridge_precision": "source_buy_to_binance_public_1h_exit_intraday",
+  "control_mean_provider_open_return": 0.02049868615653792,
+  "control_return_lcb_5pct": 0.017185071935249645,
+  "downstream_consumption": "not_started:no_rc_spa_promotion",
+  "edge_vs_control_provider_open_return": -0.019742422074352083,
+  "gate_result": "diagnostic_only:intraday_rows_reconstructed_but_no_positive_edge_vs_controls",
+  "horizon_hours": 6,
+  "monthly_folds": 13,
+  "next_action": "Use these intraday provider-reconstructed direct rows only as scoped Manipulation bridge input; run full branch RC-SPA and downstream checks only if combined root branches pass without relaxed gates.",
+  "positive_direct_event_rows": 3211,
+  "positive_mean_provider_open_return": 0.0007562640821858362,
+  "positive_mean_source_buy_return": 0.04716526245746999,
+  "positive_provider_return_lcb_5pct": -0.0009133787527774277,
+  "positive_source_return_lcb_5pct": 0.0429169334508086,
+  "promotion_allowed": false,
+  "recipe_id": "MehrnoomBinanceIntradayPnlBridgeV1",
+  "run_id": "20260511T193407+0800-codex-board-b-mehrnoom-binance-intraday-pnl-bridge-v1",
+  "same_coin_control_rows": 3211,
+  "source_rows_are_trade_pnl_usable": true,
+  "symbols_attempted": 17,
+  "symbols_with_rows": 16
+}

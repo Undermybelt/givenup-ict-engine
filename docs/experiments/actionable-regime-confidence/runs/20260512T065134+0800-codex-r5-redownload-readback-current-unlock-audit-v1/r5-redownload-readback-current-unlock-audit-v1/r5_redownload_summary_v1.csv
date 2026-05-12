@@ -1,0 +1,2 @@
+path,exists,rows,date_min,date_max,rows_after_2026_01_30,ticker_count,sha256
+/tmp/ict-engine-board-a-r5-kaggle-stock-regimes-recency-redownload-v1/stock_market_regimes_2000_2026.csv,True,245021,2000-01-03,2026-01-30,0,39,2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0

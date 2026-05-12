@@ -1,0 +1,4 @@
+Dataset URL: https://www.kaggle.com/datasets/kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes
+License(s): CC-BY-NC-SA-4.0
+Downloading algorithmic-trading-macro-stress-and-asset-regimes.zip to /tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/data-macro_asset
+

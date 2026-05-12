@@ -1,0 +1,32 @@
+{
+  "columns": [
+    "Date",
+    "india_vix",
+    "rsi_14",
+    "ma_50",
+    "ma_200",
+    "regime"
+  ],
+  "date_columns": [
+    "Date"
+  ],
+  "date_ranges": {
+    "Date": {
+      "max": "2024-11-14",
+      "min": "2015-10-23",
+      "post_2026_01_30_rows": 0
+    }
+  },
+  "label_columns": [
+    "regime"
+  ],
+  "label_counts": {
+    "regime": {
+      "0": 1216,
+      "1": 1019
+    }
+  },
+  "rows": 2235,
+  "ticker_count": 0,
+  "ticker_sample": {}
+}

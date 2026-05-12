@@ -1,0 +1,35 @@
+{
+  "run_id": "20260512T102352+0800-codex-board-b-provider-btc-signal-canary-v1",
+  "gate_result": "provider_btc_signal_canary_v1=precision_root_cause_confirmed_nonzero_after_tickfix_no_promotion",
+  "source_provider_csv_lineage": "20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/binance_btcusdt_1h.csv via 20260512T101623+0800-codex-board-b-provider-btc-pulse-aq-v1 prepared feathers",
+  "strategy": "ProviderBtcSignalCanary",
+  "pre_fix": {
+    "exit_code": 0,
+    "trade_count": 0
+  },
+  "precision_probe": {
+    "ccxt_precision_mode": "TICK_SIZE",
+    "sample_stake": 9900.0,
+    "sample_price": 68600.29,
+    "raw_amount": 0.14431425872981005,
+    "old_amount_tick": 8,
+    "old_amount_after_precision": 0.0,
+    "fixed_amount_tick": 0.00000001,
+    "fixed_amount_after_precision": 0.14431425,
+    "root_cause": "synthetic market amount=8 was treated as an 8-unit tick and rounded sub-unit BTC stakes to zero"
+  },
+  "post_fix": {
+    "exit_code": 0,
+    "trade_count": 40,
+    "total_profit_pct": -3.9,
+    "sharpe": -2.2199,
+    "sortino": -2.6887,
+    "calmar": -27.5892,
+    "max_drawdown_pct": -6.7546,
+    "win_rate_pct": 45.0,
+    "profit_factor": 0.7079
+  },
+  "diagnostic_only": true,
+  "promotion_allowed": false,
+  "update_goal": false
+}

@@ -1,0 +1,132 @@
+{
+  "run_id": "20260511T104752+0800-codex-current-public-source-delta-audit",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV2",
+  "current_cursor_readback": "20260511T103333+0800-codex-mainregimev2-board-a-top-relock",
+  "objective": "Audit fresh public Kaggle and Hugging Face source candidates for attachable exact-underlying MainRegimeV2 parent-root labels or direct Manipulation rows without disturbing concurrent board edits.",
+  "missing_slot_contract": {
+    "source": "docs/experiments/actionable-regime-confidence/runs/20260511T094002-codex-external-label-request-package-v3/acquisition-request/missing_parent_root_label_slots_request_v3.csv",
+    "missing_slots": 564,
+    "missing_by_provider": {
+      "yfinance": 456,
+      "kraken_public_lowpollution_http": 108
+    },
+    "missing_by_root": {
+      "Bull": 141,
+      "Bear": 141,
+      "Sideways": 141,
+      "Crisis": 141
+    },
+    "hard_acceptance_boundary": "exact provider or exact underlying, exact timeframe, source-backed/manual/official Bull/Bear/Sideways/Crisis windows; HMM/GMM/OHLCV/technical/future-return/proxy labels remain rejected"
+  },
+  "queries": [
+    {
+      "surface": "kaggle_public_api",
+      "query": "bull bear sideways",
+      "url": "https://www.kaggle.com/api/v1/datasets/list?search=bull%20bear%20sideways"
+    },
+    {
+      "surface": "kaggle_public_api",
+      "query": "regime label",
+      "url": "https://www.kaggle.com/api/v1/datasets/list?search=regime%20label"
+    },
+    {
+      "surface": "kaggle_public_api",
+      "query": "crypto regime",
+      "url": "https://www.kaggle.com/api/v1/datasets/list?search=crypto%20regime"
+    },
+    {
+      "surface": "kaggle_public_api",
+      "query": "asset regimes",
+      "url": "https://www.kaggle.com/api/v1/datasets/list?search=asset%20regimes"
+    },
+    {
+      "surface": "kaggle_public_api",
+      "query": "market behavior regime",
+      "url": "https://www.kaggle.com/api/v1/datasets/list?search=market%20behavior%20regime"
+    },
+    {
+      "surface": "huggingface_api",
+      "query": "market regime",
+      "url": "https://huggingface.co/api/datasets?search=market%20regime&limit=20"
+    },
+    {
+      "surface": "huggingface_api",
+      "query": "regime_label",
+      "url": "https://huggingface.co/api/datasets?search=regime_label&limit=20"
+    },
+    {
+      "surface": "huggingface_api",
+      "query": "Kraken market regime",
+      "url": "https://huggingface.co/api/datasets?search=Kraken%20market%20regime&limit=20"
+    }
+  ],
+  "candidates": [
+    {
+      "source_id": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "source_url": "https://huggingface.co/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "observed_shape": "BTCUSD/BTCUSDT 5m and 15m rows with OHLCV, technical indicators, integer HMM states, and post-hoc semantic regime strings such as Squeeze/Range/Strong Trend",
+      "decision": "rejected",
+      "reason": "HMM-derived state labels and technical-indicator/OHLCV provenance are explicitly forbidden as independent MainRegimeV2 parent-root source labels; exchange is unspecified and labels are not Bull/Bear/Sideways/Crisis windows"
+    },
+    {
+      "source_id": "sergionefedov/crypto-microstructure",
+      "source_url": "https://www.kaggle.com/datasets/sergionefedov/crypto-microstructure",
+      "observed_shape": "Synthetic crypto market microstructure set with BTC/ETH/SOL and other assets, bear/crab/bull period labels, liquidation rows, funding rates, and cross-exchange spread columns",
+      "decision": "rejected",
+      "reason": "dataset description states synthetic generation/reproducibility; not a real Kraken parent-root label panel or real direct Manipulation positive/negative row source; crab would require Sideways crosswalk but provenance is simulated"
+    },
+    {
+      "source_id": "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+      "source_url": "https://www.kaggle.com/datasets/kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+      "observed_shape": "Daily yfinance/FRED feature panel for SPY, QQQ, GLD, USO, BTC-USD, volatility, spreads, RSI, rolling volatility, and drawdown",
+      "decision": "rejected",
+      "reason": "features are useful sidecars only; no independent Bull/Bear/Sideways/Crisis source-label windows; daily frequency also does not fill current intraday/monthly gaps"
+    },
+    {
+      "source_id": "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+      "source_url": "https://www.kaggle.com/datasets/ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+      "observed_shape": "NIFTY 500 daily HMM market/behavior regimes with Durable/Calm/Choppy/Stress and technical features",
+      "decision": "rejected",
+      "reason": "off-contract instrument universe and HMM-derived labels; not exact current yfinance/Kraken instruments/timeframes and not source-backed MainRegimeV2 parent roots"
+    },
+    {
+      "source_id": "nudratabbas/tech-titans-volatility-and-trend-analysis-data",
+      "source_url": "https://www.kaggle.com/datasets/nudratabbas/tech-titans-volatility-and-trend-analysis-data",
+      "observed_shape": "Daily large-cap technology stock data with SMA/volatility features and Bull/Bear/Sideways trend labels",
+      "decision": "rejected",
+      "reason": "labels are moving-average crossover trend labels for AAPL/MSFT/GOOG/AMZN/META, not current missing exact instruments or Crisis root coverage"
+    },
+    {
+      "source_id": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+      "source_url": "https://www.kaggle.com/datasets/thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+      "observed_shape": "Bybit spot/perpetual OHLCV for many symbols and 5m/15m/1h/4h/1D timeframes with optional future-return labels",
+      "decision": "rejected",
+      "reason": "raw OHLCV/future-return labels and Bybit venue mismatch; cannot satisfy Kraken exact-provider parent-root labels or direct Manipulation row schema"
+    },
+    {
+      "source_id": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "source_url": "https://www.kaggle.com/datasets/nickdatak/us-market-regimes-dataset-1995-2024",
+      "observed_shape": "Weekly S&P 500/VIX/yield-spread feature table for comparative GMM/HMM regime discovery",
+      "decision": "rejected",
+      "reason": "explicitly intended for unsupervised GMM/HMM discovery and lacks predefined independent economic labels; no current missing intraday/monthly slots"
+    },
+    {
+      "source_id": "ClarusC64/market-regime-transition-breakpoint-mapping-v0.1",
+      "source_url": "https://huggingface.co/datasets/ClarusC64/market-regime-transition-breakpoint-mapping-v0.1",
+      "observed_shape": "Small benchmark-style macro regime transition rows with date windows, textual macro context, current regime basin, and transition probabilities",
+      "decision": "rejected",
+      "reason": "not exact instrument/provider/timeframe rows; labels are benchmark task basins such as macro_rates/risk_off, not MainRegimeV2 root windows"
+    }
+  ],
+  "result": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "gate_result": "blocked_current_public_source_delta_no_attachable_mainregimev2_labels",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "Escalate acquisition away from public generic regime-search surfaces: obtain exact provider/instrument/timeframe label windows via private/exported labels, or add a source-adapter only if the owner explicitly permits a provider/venue crosswalk from non-Kraken crypto sources."
+}

@@ -1,0 +1,14 @@
+PASS decision=source_acquisition_request_draft_bundle_v1=drafts_ready_not_sent_rows_not_acquired
+PASS draft_count=5
+PASS covers_R2=true
+PASS covers_R3=true
+PASS covers_R4=true
+PASS covers_R5=true
+PASS covers_R6=true
+PASS request_sent=false
+PASS rows_acquired=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

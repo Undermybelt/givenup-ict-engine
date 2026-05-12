@@ -1,0 +1,1250 @@
+{
+  "accepted_rows_added": 0,
+  "auto_quant_data_ready": true,
+  "auto_quant_healthy": true,
+  "auto_quant_status": "dependency_ready_seed_required",
+  "canonical_merge_allowed": false,
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "parsed": {
+        "default_enabled_providers": [
+          "yfinance"
+        ],
+        "install_prompts": [
+          "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise.",
+          "Consumer agent follow-up: if the user chooses the external HTTP runtime, keep the external_http_runtime backend and pass --external-http-base-url <url> (default http://127.0.0.1:6901/api/v1).",
+          "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+          "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable.",
+          "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise.",
+          "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+          "Consumer agent request: ask whether the user wants zero-config yfinance or a generic external HTTP runtime.",
+          "Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane.",
+          "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+          "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+        ],
+        "pending_provider_details": [
+          {
+            "domain": "live_runtime",
+            "install_prompts": [
+              "Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane."
+            ],
+            "provider_id": "crypto_public_runtime",
+            "reason": "explicit_opt_in_required",
+            "status": "operator_runtime_required"
+          },
+          {
+            "domain": "live_runtime",
+            "install_prompts": [
+              "Consumer agent request: ask whether the user wants zero-config yfinance or a generic external HTTP runtime.",
+              "Consumer agent follow-up: if the user chooses the external HTTP runtime, keep the external_http_runtime backend and pass --external-http-base-url <url> (default http://127.0.0.1:6901/api/v1)."
+            ],
+            "provider_id": "external_http_runtime",
+            "reason": "base_url_and_service_required",
+            "status": "operator_runtime_required"
+          },
+          {
+            "domain": "local_runtime",
+            "install_prompts": [
+              "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+              "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise."
+            ],
+            "provider_id": "ibkr_bridge",
+            "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+            "status": "configured_runtime_unhealthy"
+          },
+          {
+            "domain": "market_data",
+            "install_prompts": [
+              "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+            ],
+            "provider_id": "binance_public",
+            "reason": "python3_provider_dependencies_missing",
+            "status": "configured_runtime_unhealthy"
+          },
+          {
+            "domain": "market_data",
+            "install_prompts": [
+              "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+            ],
+            "provider_id": "bybit_public",
+            "reason": "python3_provider_dependencies_missing",
+            "status": "configured_runtime_unhealthy"
+          },
+          {
+            "domain": "market_data",
+            "install_prompts": [
+              "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+              "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+            ],
+            "provider_id": "ibkr",
+            "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+            "status": "configured_runtime_unhealthy"
+          },
+          {
+            "domain": "market_data",
+            "install_prompts": [
+              "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+            ],
+            "provider_id": "kraken_public",
+            "reason": "python3_provider_dependencies_missing",
+            "status": "configured_runtime_unhealthy"
+          },
+          {
+            "domain": "market_data",
+            "install_prompts": [
+              "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+            ],
+            "provider_id": "polymarket_public",
+            "reason": "python3_provider_dependencies_missing",
+            "status": "configured_runtime_unhealthy"
+          },
+          {
+            "domain": "market_data",
+            "install_prompts": [
+              "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+              "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+            ],
+            "provider_id": "tradingview_mcp",
+            "reason": "tradingview_mcp_connectivity_probe_failed",
+            "status": "configured_runtime_unhealthy"
+          }
+        ],
+        "pending_providers": [
+          "crypto_public_runtime@live_runtime:operator_runtime_required:explicit_opt_in_required",
+          "external_http_runtime@live_runtime:operator_runtime_required:base_url_and_service_required",
+          "ibkr_bridge@local_runtime:configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+          "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+          "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+          "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+          "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+          "polymarket_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+          "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed"
+        ],
+        "providers": [
+          {
+            "access_mode": "internal_model_registry",
+            "adopted_by_default": false,
+            "domain": "entry_model",
+            "market_fit": [
+              "entry_model"
+            ],
+            "provider_id": "breaker_rb_long_v1",
+            "ready": true,
+            "reason": "entry_model_registry_member",
+            "selectable_by_user": false,
+            "status": "registered",
+            "summary": "Built-in entry-model registry member used by status and training surfaces.",
+            "user_access": "builtin_registry"
+          },
+          {
+            "access_mode": "internal_model_registry",
+            "adopted_by_default": false,
+            "domain": "entry_model",
+            "market_fit": [
+              "entry_model"
+            ],
+            "provider_id": "cisd_rb_long_v1",
+            "ready": true,
+            "reason": "entry_model_registry_member",
+            "selectable_by_user": false,
+            "status": "registered",
+            "summary": "Built-in entry-model registry member used by status and training surfaces.",
+            "user_access": "builtin_registry"
+          },
+          {
+            "access_mode": "public_runtime_bundle",
+            "adopted_by_default": false,
+            "domain": "live_runtime",
+            "fallback_priority": 21,
+            "install_prompts": [
+              "Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane."
+            ],
+            "market_fit": [
+              "crypto"
+            ],
+            "provider_id": "crypto_public_runtime",
+            "ready": false,
+            "reason": "explicit_opt_in_required",
+            "selectable_by_user": true,
+            "status": "operator_runtime_required",
+            "summary": "Optional crypto-public runtime bundle for CoinAnk/Hyperliquid-style futures observation when the user explicitly wants that lane.",
+            "user_access": "operator_runtime_optional"
+          },
+          {
+            "access_mode": "external_http_runtime",
+            "adopted_by_default": false,
+            "domain": "live_runtime",
+            "fallback_priority": 20,
+            "install_prompts": [
+              "Consumer agent request: ask whether the user wants zero-config yfinance or a generic external HTTP runtime.",
+              "Consumer agent follow-up: if the user chooses the external HTTP runtime, keep the external_http_runtime backend and pass --external-http-base-url <url> (default http://127.0.0.1:6901/api/v1)."
+            ],
+            "market_fit": [
+              "tradfi",
+              "crypto"
+            ],
+            "provider_id": "external_http_runtime",
+            "ready": false,
+            "reason": "base_url_and_service_required",
+            "selectable_by_user": true,
+            "status": "operator_runtime_required",
+            "summary": "Optional external HTTP runtime when the user already has a compatible market-data service.",
+            "user_access": "operator_runtime_optional"
+          },
+          {
+            "access_mode": "local_library",
+            "adopted_by_default": true,
+            "domain": "live_runtime",
+            "fallback_priority": 1,
+            "market_fit": [
+              "tradfi"
+            ],
+            "provider_id": "yfinance",
+            "ready": true,
+            "reason": "native_yfinance_runtime_available",
+            "selectable_by_user": true,
+            "status": "ready",
+            "summary": "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows.",
+            "user_access": "free_no_login"
+          },
+          {
+            "access_mode": "local_consent_runtime",
+            "adopted_by_default": false,
+            "domain": "local_runtime",
+            "fallback_priority": 40,
+            "install_prompts": [
+              "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+              "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise."
+            ],
+            "market_fit": [
+              "tradfi"
+            ],
+            "provider_id": "ibkr_bridge",
+            "ready": false,
+            "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+            "selectable_by_user": false,
+            "status": "configured_runtime_unhealthy",
+            "summary": "Local IBKR bridge reused by broker-linked workflows after the user enables the local API.",
+            "user_access": "login_and_local_runtime"
+          },
+          {
+            "access_mode": "local_cli_runtime",
+            "adopted_by_default": false,
+            "domain": "local_runtime",
+            "fallback_priority": 40,
+            "market_fit": [
+              "crypto"
+            ],
+            "provider_id": "kraken_cli",
+            "ready": true,
+            "reason": "kraken_cli_config_detected",
+            "selectable_by_user": false,
+            "status": "ready",
+            "summary": "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows.",
+            "user_access": "login_and_local_runtime"
+          },
+          {
+            "access_mode": "public_script_adapter",
+            "adopted_by_default": false,
+            "domain": "market_data",
+            "fallback_priority": 2,
+            "install_prompts": [
+              "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+            ],
+            "market_fit": [
+              "crypto"
+            ],
+            "provider_id": "binance_public",
+            "ready": false,
+            "reason": "python3_provider_dependencies_missing",
+            "selectable_by_user": true,
+            "status": "configured_runtime_unhealthy",
+            "summary": "Public no-login crypto market-data path for broad spot/perp history.",
+            "user_access": "public_no_login"
+          },
+          {
+            "access_mode": "public_script_adapter",
+            "adopted_by_default": false,
+            "domain": "market_data",
+            "fallback_priority": 1,
+            "install_prompts": [
+              "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+            ],
+            "market_fit": [
+              "crypto"
+            ],
+            "provider_id": "bybit_public",
+            "ready": false,
+            "reason": "python3_provider_dependencies_missing",
+            "selectable_by_user": true,
+            "status": "configured_runtime_unhealthy",
+            "summary": "Public no-login crypto market-data path for exchange-style replay and factor work.",
+            "user_access": "public_no_login"
+          },
+          {
+            "access_mode": "operator_runtime_required",
+            "adopted_by_default": false,
+            "domain": "market_data",
+            "fallback_priority": 30,
+            "install_prompts": [
+              "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+              "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+            ],
+            "market_fit": [
+              "tradfi"
+            ],
+            "provider_id": "ibkr",
+            "ready": false,
+            "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+            "selectable_by_user": true,
+            "status": "configured_runtime_unhealthy",
+            "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows.",
+            "user_access": "login_and_local_runtime"
+          },
+          {
+            "access_mode": "public_script_adapter",
+            "adopted_by_default": false,
+            "domain": "market_data",
+            "fallback_priority": 3,
+            "install_prompts": [
+              "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+            ],
+            "market_fit": [
+              "crypto",
+              "fx",
+              "tokenized_assets"
+            ],
+            "provider_id": "kraken_public",
+            "ready": false,
+            "reason": "python3_provider_dependencies_missing",
+            "selectable_by_user": true,
+            "status": "configured_runtime_unhealthy",
+            "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately.",
+            "user_access": "public_no_login"
+          },
+          {
+            "access_mode": "public_script_adapter",
+            "adopted_by_default": false,
+            "domain": "market_data",
+            "fallback_priority": 4,
+            "install_prompts": [
+              "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+            ],
+            "market_fit": [
+              "prediction_market"
+            ],
+            "provider_id": "polymarket_public",
+            "ready": false,
+            "reason": "python3_provider_dependencies_missing",
+            "selectable_by_user": true,
+            "status": "configured_runtime_unhealthy",
+            "summary": "Public no-login prediction-market history path when network access is available.",
+            "user_access": "public_no_login"
+          },
+          {
+            "access_mode": "operator_runtime_required",
+            "adopted_by_default": false,
+            "domain": "market_data",
+            "fallback_priority": 31,
+            "install_prompts": [
+              "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+              "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+            ],
+            "market_fit": [
+              "tradfi",
+              "crypto"
+            ],
+            "provider_id": "tradingview_mcp",
+            "ready": false,
+            "reason": "tradingview_mcp_connectivity_probe_failed",
+            "selectable_by_user": true,
+            "status": "configured_runtime_unhealthy",
+            "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.",
+            "user_access": "local_stdio_or_remote_api_key"
+          },
+          {
+            "access_mode": "public_or_env_ready",
+            "adopted_by_default": false,
+            "domain": "market_data",
+            "fallback_priority": 1,
+            "market_fit": [
+              "tradfi"
+            ],
+            "provider_id": "yfinance",
+            "ready": true,
+            "reason": "public_yahoo_http_endpoints",
+            "selectable_by_user": true,
+            "status": "ready",
+            "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests.",
+            "user_access": "free_no_login"
+          }
+        ],
+        "ready_by_domain": {
+          "entry_model": "2/2",
+          "live_runtime": "1/3",
+          "local_runtime": "1/2",
+          "market_data": "1/7"
+        },
+        "ready_providers": [
+          "breaker_rb_long_v1",
+          "cisd_rb_long_v1",
+          "yfinance",
+          "kraken_cli",
+          "yfinance"
+        ],
+        "selectable_providers": [
+          "crypto_public_runtime",
+          "external_http_runtime",
+          "yfinance",
+          "binance_public",
+          "bybit_public",
+          "ibkr",
+          "kraken_public",
+          "polymarket_public",
+          "tradingview_mcp",
+          "yfinance"
+        ],
+        "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/provider_status_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/provider_status_agent.stdout.txt"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533/auto-quant --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/auto_quant_status_json.exit",
+      "name": "auto_quant_status_json",
+      "parsed": {
+        "bootstrap_needed": false,
+        "data_ready": true,
+        "dependency_healthy": true,
+        "dependency_status": {
+          "adapter_version": "v1",
+          "bootstrap_needed": false,
+          "config_present": false,
+          "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+          "healthy": true,
+          "last_sync": null,
+          "managed_dir": "/Users/thrill3r/Auto-Quant",
+          "managed_repo_present": true,
+          "notes": [],
+          "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+          "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+          "required_files": [
+            "README.md",
+            "program.md",
+            "prepare.py",
+            "run.py",
+            "versions/README.md"
+          ],
+          "tracked_branch": "master",
+          "update_available": false,
+          "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+        },
+        "healthy": true,
+        "managed_dir": "/Users/thrill3r/Auto-Quant",
+        "next_step": {
+          "action_type": "run_command",
+          "blocked_reason": "auto_quant_seed_strategies_required",
+          "deferred_command": "blocked: create 2-3 active non-underscore strategy files under /Users/thrill3r/Auto-Quant/user_data/strategies before uv run --with ta-lib /Users/thrill3r/Auto-Quant/run.py",
+          "prompt": null,
+          "user_input_required": false
+        },
+        "notes": [
+          "auto_quant_seed_strategies_required"
+        ],
+        "recommended_next_command": "blocked: create 2-3 active non-underscore strategy files under /Users/thrill3r/Auto-Quant/user_data/strategies before uv run --with ta-lib /Users/thrill3r/Auto-Quant/run.py",
+        "recommended_next_command_meta": {
+          "blocked": true,
+          "executable_command": null,
+          "kind": "blocked",
+          "prompt": null,
+          "recorded_data_paths": [],
+          "requires_user_input": false
+        },
+        "status": "dependency_ready_seed_required",
+        "update_available": false,
+        "workspace": {
+          "config_json": "/Users/thrill3r/Auto-Quant/config.json",
+          "data_dir": "/Users/thrill3r/Auto-Quant/user_data/data",
+          "prepare_script": "/Users/thrill3r/Auto-Quant/prepare.py",
+          "program_md": "/Users/thrill3r/Auto-Quant/program.md",
+          "repo_root": "/Users/thrill3r/Auto-Quant",
+          "run_script": "/Users/thrill3r/Auto-Quant/run.py",
+          "strategies_dir": "/Users/thrill3r/Auto-Quant/user_data/strategies"
+        }
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/auto_quant_status_json.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/auto_quant_status_json.stdout.txt"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol NQ --demo --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --output-format agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/analyze_demo_agent.exit",
+      "name": "analyze_demo_agent",
+      "parsed": {
+        "decision_hint_raw": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=trend_decay|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.582|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.8596",
+        "decision_summary": "Observe only",
+        "direction": "Bull",
+        "entry_state": "medium",
+        "evidence": [
+          "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+          "multi_timeframe_missing=1m,5m,30m,4h",
+          "15m:52 bars path=examples/demo/demo-15m.json"
+        ],
+        "execution_triage": {
+          "branch": "transition_guardrail",
+          "branch_probability": 0.0,
+          "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+          "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+          "execution_bias": "guarded",
+          "execution_score": 0.5730942918066175,
+          "gate_status": "observe",
+          "one_line": "execution observe | branch=transition_guardrail | bias=guarded | score=0.573 | confidence=0.000 | hint=execution_guarded_due_to_high_transition_hazard",
+          "posterior_uncertainty": 1.0,
+          "reason_summary": [
+            "branch=fill_viable (gate_status=observe, ising_risk=0.3293<0.70, overstretch=0.2765<0.70)",
+            "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.837",
+            "market_state=volatility=ElevatedVol:0.741 liquidity=NormalLiquidity:0.419 structure=Trending:1.000 behavior=FOMO:0.650",
+            "market_state=rationale=volatility=ElevatedVol conf=0.74",
+            "market_state=rationale=structure=Trending conf=1.00"
+          ]
+        },
+        "next_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --backend native",
+        "next_step": {
+          "action_type": "run_command",
+          "blocked_reason": null,
+          "deferred_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --backend native",
+          "prompt": null,
+          "user_input_required": false
+        },
+        "pre_bayes_gate": "pass_neutralized",
+        "recommended_next_actions": [
+          "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir <local-path> --backend native"
+        ],
+        "risks": [
+          "factor:trend_momentum status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+        ]
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/analyze_demo_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/analyze_demo_agent.stdout.txt"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --refresh --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/pre_bayes_status_json.exit",
+      "name": "pre_bayes_status_json",
+      "parsed": {
+        "latest_bridge": {
+          "long_entry_bias": [
+            0.2686746395923997,
+            0.49754436458883383,
+            0.2337809958187664
+          ],
+          "long_entry_quality": {
+            "high": 0.0,
+            "low": 0.0,
+            "medium": 1.0
+          },
+          "long_signal_probability": 0.5539864835137568,
+          "multi_timeframe_alignment_score": 1.0,
+          "multi_timeframe_direction_bias": "bullish",
+          "multi_timeframe_entry_alignment_score": 0.8596,
+          "rationale": [
+            "factor_alignment=mixed factor_uncertainty=low",
+            "long_support=0.099 short_support=0.016 uncertainty=0.312",
+            "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.860",
+            "entry_quality_bias combines directional factor support with cascade probability bias"
+          ],
+          "selected_entry_quality": {
+            "high": 0.0,
+            "low": 0.0,
+            "medium": 1.0
+          },
+          "short_entry_bias": [
+            0.03672464448476754,
+            0.21300680337169736,
+            0.750268552143535
+          ],
+          "short_entry_quality": {
+            "high": 0.0,
+            "low": 0.0,
+            "medium": 1.0
+          },
+          "short_signal_probability": 0.5339921625176068
+        },
+        "latest_bridge_diff": {
+          "dominant_long_entry_quality": "medium",
+          "dominant_long_entry_quality_probability": 1.0,
+          "dominant_short_entry_quality": "medium",
+          "dominant_short_entry_quality_probability": 1.0,
+          "long_short_signal_probability_gap": 0.01999432099614995,
+          "multi_timeframe_alignment_score": 1.0,
+          "multi_timeframe_direction_bias": "bullish",
+          "multi_timeframe_entry_alignment_score": 0.8596,
+          "rationale_summary": [
+            "factor_alignment=mixed factor_uncertainty=low",
+            "long_support=0.099 short_support=0.016 uncertainty=0.312",
+            "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.860",
+            "entry_quality_bias combines directional factor support with cascade probability bias"
+          ],
+          "selected_entry_quality": "medium",
+          "selected_entry_quality_probability": 1.0
+        },
+        "latest_canonical_structural_active_regime": "trend",
+        "latest_canonical_structural_confidence": 0.5822867835012198,
+        "latest_canonical_structural_probabilities": {
+          "range": 0.30899359148717004,
+          "stress": 0.1595718025435484,
+          "transition": 0.07640256340513198,
+          "trend": 0.4550320425641497
+        },
+        "latest_filtered_assignments": {
+          "__policy_version": "318900600c5e8cf2",
+          "factor_alignment": "mixed",
+          "factor_uncertainty": "low",
+          "liquidity_context": "neutral",
+          "market_regime": "trend",
+          "market_state_primary_regime": "TrendExpansion",
+          "market_state_secondary_regime": "BullTrendAcceleration",
+          "multi_timeframe_resonance": "aligned"
+        },
+        "latest_gate_status": "pass_neutralized",
+        "latest_policy": {
+          "directional_conflict_penalty": 0.2,
+          "favorable_liquidity_bonus": 0.05,
+          "hard_pass_quality_threshold": 0.75,
+          "high_uncertainty_threshold": 0.45,
+          "hostile_liquidity_forces_high_uncertainty": true,
+          "hostile_liquidity_penalty": 0.1,
+          "market_overrides": {
+            "CL": {
+              "favorable_liquidity_bonus": 0.03,
+              "hostile_liquidity_forces_high_uncertainty": true,
+              "hostile_liquidity_penalty": 0.14
+            },
+            "ES": {
+              "favorable_liquidity_bonus": 0.06,
+              "hostile_liquidity_forces_high_uncertainty": false,
+              "hostile_liquidity_penalty": 0.06
+            },
+            "GC": {
+              "favorable_liquidity_bonus": 0.07,
+              "hostile_liquidity_forces_high_uncertainty": false,
+              "hostile_liquidity_penalty": 0.09
+            },
+            "NQ": {
+              "favorable_liquidity_bonus": 0.04,
+              "hostile_liquidity_forces_high_uncertainty": true,
+              "hostile_liquidity_penalty": 0.1
+            },
+            "YM": {
+              "favorable_liquidity_bonus": 0.05,
+              "hostile_liquidity_forces_high_uncertainty": false,
+              "hostile_liquidity_penalty": 0.07
+            }
+          },
+          "min_directional_support_gap": 0.08,
+          "min_multi_timeframe_alignment_score": 0.55,
+          "min_multi_timeframe_entry_alignment_score": 0.5,
+          "mixed_alignment_penalty": 0.1,
+          "multi_timeframe_alignment_bonus": 0.05,
+          "multi_timeframe_alignment_penalty": 0.1,
+          "multi_timeframe_direction_conflict_penalty": 0.18,
+          "multi_timeframe_entry_penalty": 0.08,
+          "neutralized_quality_threshold": 0.4,
+          "source": "default",
+          "version": "318900600c5e8cf2"
+        },
+        "latest_policy_diff": {
+          "changed_fields": [
+            "initial_policy"
+          ],
+          "previous_version": null,
+          "summary": "changed_fields=[\"initial_policy\"]"
+        },
+        "latest_policy_lineage": {
+          "changed_fields_union": [
+            "initial_policy"
+          ],
+          "latest_version": "318900600c5e8cf2",
+          "previous_version": null,
+          "rollback_candidate_version": null,
+          "rollback_reason": "no_policy_rollback_suggested",
+          "total_versions": 1
+        },
+        "latest_policy_version": "318900600c5e8cf2",
+        "latest_soft_evidence": {
+          "factor_alignment": {
+            "bearish": 0.0,
+            "bullish": 0.0,
+            "mixed": 1.0
+          },
+          "factor_uncertainty": {
+            "high": 0.404428304124695,
+            "low": 0.595571695875305
+          },
+          "liquidity_context": {
+            "favorable": 0.0,
+            "hostile": 0.0,
+            "neutral": 1.0
+          },
+          "market_regime": {
+            "range": 0.30899359148717004,
+            "stress": 0.1595718025435484,
+            "transition": 0.07640256340513198,
+            "trend": 0.4550320425641497
+          },
+          "multi_timeframe_resonance": {
+            "aligned": 0.595571695875305,
+            "dislocated": 0.0,
+            "mixed": 0.404428304124695
+          }
+        },
+        "latest_soft_evidence_diff": [
+          {
+            "diverges_from_filtered_state": false,
+            "dominant_soft_probability": 0.595571695875305,
+            "dominant_soft_state": "bull",
+            "entropy": 0.67476638551595,
+            "filtered_state": "bull",
+            "node": "market_regime"
+          },
+          {
+            "diverges_from_filtered_state": false,
+            "dominant_soft_probability": 1.0,
+            "dominant_soft_state": "neutral",
+            "entropy": -0.0,
+            "filtered_state": "neutral",
+            "node": "liquidity_context"
+          },
+          {
+            "diverges_from_filtered_state": false,
+            "dominant_soft_probability": 1.0,
+            "dominant_soft_state": "mixed",
+            "entropy": -0.0,
+            "filtered_state": "mixed",
+            "node": "factor_alignment"
+          },
+          {
+            "diverges_from_filtered_state": false,
+            "dominant_soft_probability": 0.595571695875305,
+            "dominant_soft_state": "low",
+            "entropy": 0.67476638551595,
+            "filtered_state": "low",
+            "node": "factor_uncertainty"
+          },
+          {
+            "diverges_from_filtered_state": false,
+            "dominant_soft_probability": 0.595571695875305,
+            "dominant_soft_state": "aligned",
+            "entropy": 0.67476638551595,
+            "filtered_state": "aligned",
+            "node": "multi_timeframe_resonance"
+          }
+        ],
+        "latest_structural_feedback": null,
+        "latest_uses_soft_evidence": true
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/pre_bayes_status_json.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/pre_bayes_status_json.stdout.txt"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/policy_training_status_json.exit",
+      "name": "policy_training_status_json",
+      "parsed": {
+        "analyze_runs": 1,
+        "entry_models": [
+          {
+            "consumer_adopted_by_default": false,
+            "consumer_effect": "internal_training_only",
+            "entry_model_id": "cisd_rb_long_v1",
+            "matched_rows": 0,
+            "ready": false,
+            "summary_line": "policy training is not ready for either BBN or CatBoost: matched_rows=0 bbn_warnings=matched_rows_below_minimum: 0; outcome_labels_do_not_cover_win_loss; entry_quality_bins_have_low_diversity; trigger_confirmation_bins_have_low_diversity catboost_warnings=matched_rows_below_recommended_minimum: 0; outcome_labels_do_not_cover_win_loss; numeric_feature_variation_too_low: 0/5 varying"
+          },
+          {
+            "consumer_adopted_by_default": false,
+            "consumer_effect": "internal_training_only",
+            "entry_model_id": "breaker_rb_long_v1",
+            "matched_rows": 0,
+            "ready": false,
+            "summary_line": "Breaker RB policy training is not ready for either BBN or CatBoost: matched_rows=0 bbn_warnings=matched_rows_below_minimum: 0; outcome_labels_do_not_cover_win_loss; entry_quality_bins_have_low_diversity; trigger_confirmation_bins_have_low_diversity catboost_warnings=matched_rows_below_recommended_minimum: 0; outcome_labels_do_not_cover_win_loss; numeric_feature_variation_too_low: 0/5 varying"
+          }
+        ],
+        "factor_hotplug_summary": "Factor hotplug: config=absent all_default_enabled",
+        "structural_path_ranking_runtime": {
+          "active_match_count": 0,
+          "enabled": false,
+          "ready": false,
+          "status": "disabled",
+          "summary_line": "Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0"
+        },
+        "structural_path_ranking_runtime_summary": "Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+        "structural_path_ranking_target": {
+          "calibration_evaluation_rows": 0,
+          "calibration_propensity_weighted_rows": 0,
+          "calibration_quality_ready": false,
+          "calibration_ready": false,
+          "candidate_set_id": null,
+          "candidate_set_size": 0,
+          "csv_path": null,
+          "export_ready": false,
+          "feedback_observation_validation": {
+            "mature_observations": 0,
+            "min_observations": 0,
+            "pending_observations": 0,
+            "ready": false,
+            "shortfall_observations": 0,
+            "summary_line": "",
+            "total_observations": 0
+          },
+          "feedback_rows_matured": 0,
+          "feedback_rows_pending": 0,
+          "feedback_rows_total": 0,
+          "feedback_rows_with_structural_feedback": 0,
+          "feedback_rows_without_structural_feedback": 0,
+          "feedback_rows_without_structural_feedback_dominant_count": 0,
+          "history_mature_rows": 0,
+          "history_rows": 0,
+          "history_rows_with_calibrated_path_prob": 0,
+          "history_rows_with_path_prob_lower_bound": 0,
+          "history_rows_with_propensity_estimate": 0,
+          "history_rows_with_raw_path_score": 0,
+          "history_rows_with_training_weight": 0,
+          "jsonl_path": null,
+          "mature_rows": 0,
+          "observation_validation_min_rows": 0,
+          "observation_validation_ready": false,
+          "observation_validation_rows": 0,
+          "observation_validation_shortfall_rows": 0,
+          "pending_update_artifact_present": false,
+          "pending_update_history_rows": 0,
+          "pending_update_templates_with_structural_feedback": 0,
+          "production_validation_min_rows": 0,
+          "production_validation_ready": false,
+          "production_validation_rows": 0,
+          "production_validation_shortfall_rows": 0,
+          "raw_scored_mature_min_rows": 0,
+          "raw_scored_mature_rows": 0,
+          "raw_scored_mature_shortfall_rows": 0,
+          "rows": 0,
+          "rows_with_calibrated_path_prob": 0,
+          "rows_with_execution_gate_status": 0,
+          "rows_with_propensity_estimate": 0,
+          "rows_with_training_weight": 0,
+          "runtime_active_match_count": 0,
+          "runtime_artifact_match_count": 0,
+          "runtime_candidate_set_match_count": 0,
+          "runtime_history_match_count": 0,
+          "runtime_selection_enabled": false,
+          "runtime_selection_path": "",
+          "runtime_selection_ready": false,
+          "runtime_selection_status": "disabled",
+          "summary_line": "structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+          "summary_path": "/tmp/ict-engine-board-a-readonly-runtime-20260512T013533/NQ/policy_training/structural_path_ranking_target_summary.json",
+          "target_row_validation": {
+            "production_validation_min_rows": 0,
+            "production_validation_ready": false,
+            "production_validation_rows": 0,
+            "production_validation_shortfall_rows": 0,
+            "raw_scored_mature_min_rows": 0,
+            "raw_scored_mature_rows": 0,
+            "raw_scored_mature_shortfall_rows": 0,
+            "summary_line": ""
+          },
+          "trainer_artifact_calibration_rows": 0,
+          "trainer_artifact_feature_columns": 0,
+          "trainer_artifact_history_rows": 0,
+          "trainer_artifact_path": "",
+          "trainer_artifact_ready": false,
+          "trainer_artifact_status": "",
+          "trainer_artifact_trained_rows": 0,
+          "trainer_artifact_uri_present": false,
+          "trainer_calibration_columns": 0,
+          "trainer_feature_columns": 0,
+          "trainer_guardrail_columns": 0,
+          "trainer_manifest_ready": false,
+          "update_runs_with_structural_feedback": 0,
+          "warnings": [
+            "structural_path_ranking_target_export_missing"
+          ]
+        },
+        "structural_path_ranking_validation": {
+          "calibration_quality_ready": false,
+          "calibration_ready": false,
+          "calibration_status": "not_fitted",
+          "feedback_observation_validation": {
+            "mature_observations": 0,
+            "min_observations": 0,
+            "pending_observations": 0,
+            "ready": false,
+            "shortfall_observations": 0,
+            "summary_line": "",
+            "total_observations": 0
+          },
+          "observation_validation_min_rows": 0,
+          "observation_validation_ready": false,
+          "observation_validation_rows": 0,
+          "observation_validation_shortfall_rows": 0,
+          "production_validation_min_rows": 0,
+          "production_validation_ready": false,
+          "production_validation_rows": 0,
+          "production_validation_shortfall_rows": 0,
+          "raw_scored_mature_min_rows": 0,
+          "raw_scored_mature_rows": 0,
+          "raw_scored_mature_shortfall_rows": 0,
+          "summary_line": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false",
+          "target_row_validation": {
+            "production_validation_min_rows": 0,
+            "production_validation_ready": false,
+            "production_validation_rows": 0,
+            "production_validation_shortfall_rows": 0,
+            "raw_scored_mature_min_rows": 0,
+            "raw_scored_mature_rows": 0,
+            "raw_scored_mature_shortfall_rows": 0,
+            "summary_line": ""
+          }
+        },
+        "structural_path_ranking_validation_summary": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false",
+        "summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+        "symbol": "NQ",
+        "update_runs": 0
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/policy_training_status_json.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/policy_training_status_json.stdout.txt"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --refresh --phase execution-candidate --output-format agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/workflow_status_execution_candidate_agent.exit",
+      "name": "workflow_status_execution_candidate_agent",
+      "parsed": {
+        "actionable": false,
+        "artifact_id": "execution-candidate:structural-recommended-path:NQ:structural-candidates:NQ:af0c00ee702b8d23",
+        "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+        "candidate_set_size": 3,
+        "candidate_status": "execution_observe_only",
+        "decision_hint": "posterior=0.582 prior=0.500 invalidation_rate=0.000",
+        "execution_gate_status": "execution_observe_only",
+        "execution_readiness": 0.4612333809537747,
+        "generated_at": "2026-05-11T17:37:03.246895Z",
+        "path": "structural-recommended-path-bundle:path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+        "path_id": "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+        "path_label": "trend_follow_through",
+        "path_ranker_calibrated_path_prob": null,
+        "path_ranker_path_prob_lower_bound": null,
+        "path_ranker_raw_score": null,
+        "path_ranker_runtime_source": null,
+        "persisted": false,
+        "pre_bayes_gate_status": "pass_neutralized",
+        "pre_bayes_policy_version": "318900600c5e8cf2",
+        "ready": false,
+        "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+        "review_status": "observe",
+        "scenario_id": "scenario:NQ:belief_regime_node:trend:trend_follow_through",
+        "selected_path_probability": 0.3661675376120536,
+        "source_phase": "structural-recommended-path-bundle",
+        "source_run_id": "analyze:NQ:20260511T173703.246Z",
+        "structural_recommended_path_bundle": {
+          "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+          "candidate_set_size": 3,
+          "composite_score": 0.5576007484508538,
+          "confirmation_summary": "recommended command remains valid on next refresh",
+          "current_posterior": 0.5822867835012198,
+          "direction": "Observe",
+          "experience_prior": 0.5,
+          "historical_invalidation_rate": 0.0,
+          "historical_total_records": 1,
+          "invalidation_summary": "regime branch trend loses posterior support or invalidates before trigger",
+          "path_id": "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+          "path_label": "trend_follow_through",
+          "rank": 1,
+          "recommended_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --backend native",
+          "scenario_id": "scenario:NQ:belief_regime_node:trend:trend_follow_through",
+          "selected_path_probability": 0.3661675376120536,
+          "stop_summary": "Use execution candidate 'execution-candidate:NQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+          "symbol": "NQ",
+          "trigger_summary": "regime_posterior=trend:0.455",
+          "why_this_path": "posterior=0.582 prior=0.500 invalidation_rate=0.000"
+        },
+        "symbol": "NQ",
+        "trade_direction": "Observe",
+        "version": 0
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/workflow_status_execution_candidate_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/workflow_status_execution_candidate_agent.stdout.txt"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --refresh --phase structural-recommended-path-bundle --output-format agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/workflow_status_structural_path_bundle_agent.exit",
+      "name": "workflow_status_structural_path_bundle_agent",
+      "parsed": {
+        "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+        "candidate_set_size": 3,
+        "composite_score": 0.5576007484508538,
+        "confirmation_summary": "recommended command remains valid on next refresh",
+        "current_posterior": 0.5822867835012198,
+        "direction": "Observe",
+        "experience_prior": 0.5,
+        "historical_invalidation_rate": 0.0,
+        "historical_total_records": 1,
+        "invalidation_summary": "regime branch trend loses posterior support or invalidates before trigger",
+        "path_id": "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+        "path_label": "trend_follow_through",
+        "rank": 1,
+        "recommended_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --backend native",
+        "recommended_next_step": {
+          "action_type": "run_command",
+          "blocked_reason": null,
+          "deferred_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --backend native",
+          "execution_contract": {
+            "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+            "candidate_set_size": 3,
+            "confirmation": "recommended command remains valid on next refresh",
+            "invalidation": "regime branch trend loses posterior support or invalidates before trigger",
+            "path_id": "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+            "path_label": "trend_follow_through",
+            "recommended_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533 --backend native",
+            "selected_path_probability": 0.3661675376120536,
+            "stop": "Use execution candidate 'execution-candidate:NQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+            "trigger": "regime_posterior=trend:0.455",
+            "why": "posterior=0.582 prior=0.500 invalidation_rate=0.000"
+          },
+          "prompt": null,
+          "user_input_required": false
+        },
+        "scenario_id": "scenario:NQ:belief_regime_node:trend:trend_follow_through",
+        "selected_path_probability": 0.3661675376120536,
+        "stop_summary": "Use execution candidate 'execution-candidate:NQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+        "symbol": "NQ",
+        "trigger_summary": "regime_posterior=trend:0.455",
+        "why_this_path": "posterior=0.582 prior=0.500 invalidation_rate=0.000"
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/workflow_status_structural_path_bundle_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/workflow_status_structural_path_bundle_agent.stdout.txt"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol NQ --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013533",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "parsed": {
+        "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+        "candidate_set_size": 3,
+        "csv_path": "/tmp/ict-engine-board-a-readonly-runtime-20260512T013533/NQ/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "/tmp/ict-engine-board-a-readonly-runtime-20260512T013533/NQ/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "/tmp/ict-engine-board-a-readonly-runtime-20260512T013533/NQ/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 0,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 0,
+        "history_rows_with_path_prob_lower_bound": 0,
+        "history_rows_with_propensity_estimate": 1,
+        "history_rows_with_raw_path_score": 0,
+        "history_rows_with_training_weight": 0,
+        "jsonl_path": "/tmp/ict-engine-board-a-readonly-runtime-20260512T013533/NQ/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 0,
+        "pending_reward_states": {
+          "unobserved": 3
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 0,
+        "rows_with_execution_gate_status": 0,
+        "rows_with_path_prob_lower_bound": 0,
+        "rows_with_propensity_estimate": 1,
+        "rows_with_raw_path_score": 0,
+        "rows_with_training_weight": 0,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=0 history_mature_rows=0 propensity_rows=1 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=0",
+        "summary_path": "/tmp/ict-engine-board-a-readonly-runtime-20260512T013533/NQ/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "NQ",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/export_structural_path_ranking_target.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1/command-output/export_structural_path_ranking_target.stdout.txt"
+    }
+  ],
+  "downstream_promotion_rerun_allowed": false,
+  "external_requests_sent": false,
+  "gate_result": "readonly_runtime_chain_refresh_after_013042_v1=commands_ran_non_promoting_roots_blocked",
+  "generated_at_utc": "2026-05-11T17:37:53.839102+00:00",
+  "new_confidence_gate": false,
+  "path_export_mature_rows": 0,
+  "path_export_rows": 3,
+  "policy_entry_models": [
+    {
+      "entry_model_id": "cisd_rb_long_v1",
+      "matched_rows": 0,
+      "ready": false
+    },
+    {
+      "entry_model_id": "breaker_rb_long_v1",
+      "matched_rows": 0,
+      "ready": false
+    }
+  ],
+  "pre_bayes_latest_policy": {
+    "directional_conflict_penalty": 0.2,
+    "favorable_liquidity_bonus": 0.05,
+    "hard_pass_quality_threshold": 0.75,
+    "high_uncertainty_threshold": 0.45,
+    "hostile_liquidity_forces_high_uncertainty": true,
+    "hostile_liquidity_penalty": 0.1,
+    "market_overrides": {
+      "CL": {
+        "favorable_liquidity_bonus": 0.03,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.14
+      },
+      "ES": {
+        "favorable_liquidity_bonus": 0.06,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.06
+      },
+      "GC": {
+        "favorable_liquidity_bonus": 0.07,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.09
+      },
+      "NQ": {
+        "favorable_liquidity_bonus": 0.04,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.1
+      },
+      "YM": {
+        "favorable_liquidity_bonus": 0.05,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.07
+      }
+    },
+    "min_directional_support_gap": 0.08,
+    "min_multi_timeframe_alignment_score": 0.55,
+    "min_multi_timeframe_entry_alignment_score": 0.5,
+    "mixed_alignment_penalty": 0.1,
+    "multi_timeframe_alignment_bonus": 0.05,
+    "multi_timeframe_alignment_penalty": 0.1,
+    "multi_timeframe_direction_conflict_penalty": 0.18,
+    "multi_timeframe_entry_penalty": 0.08,
+    "neutralized_quality_threshold": 0.4,
+    "source": "default",
+    "version": "318900600c5e8cf2"
+  },
+  "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "r3_native_root_present": false,
+  "r3_root_mutated": false,
+  "r5_recency_root_present": false,
+  "r5_root_mutated": false,
+  "r6_owner_root_mutated": false,
+  "r6_owner_root_present": false,
+  "raw_data_committed": false,
+  "run_id": "20260512T013533-codex-readonly-runtime-chain-refresh-after-013042-v1",
+  "runtime_code_changed": false,
+  "selected_provider_status": [
+    {
+      "domain": "live_runtime",
+      "provider_id": "yfinance",
+      "ready": "true",
+      "reason": "native_yfinance_runtime_available",
+      "status": "ready",
+      "summary": "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows."
+    },
+    {
+      "domain": "local_runtime",
+      "provider_id": "ibkr_bridge",
+      "ready": "false",
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy",
+      "summary": "Local IBKR bridge reused by broker-linked workflows after the user enables the local API."
+    },
+    {
+      "domain": "local_runtime",
+      "provider_id": "kraken_cli",
+      "ready": "true",
+      "reason": "kraken_cli_config_detected",
+      "status": "ready",
+      "summary": "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows."
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "kraken_public",
+      "ready": "false",
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy",
+      "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately."
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "tradingview_mcp",
+      "ready": "false",
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy",
+      "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes."
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "yfinance",
+      "ready": "true",
+      "reason": "public_yahoo_http_endpoints",
+      "status": "ready",
+      "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests."
+    }
+  ],
+  "shared_intake_mutated": false,
+  "source_label_root_present": true,
+  "state_dir": "/tmp/ict-engine-board-a-readonly-runtime-20260512T013533",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "workflow_execution_direction": null,
+  "workflow_execution_stop": null,
+  "workflow_path_direction": "Observe"
+}

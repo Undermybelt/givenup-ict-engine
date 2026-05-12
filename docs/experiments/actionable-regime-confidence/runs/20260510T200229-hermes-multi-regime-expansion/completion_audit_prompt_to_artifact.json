@@ -1,0 +1,91 @@
+{
+  "schema_version": "prompt-to-artifact-completion-audit/v1",
+  "objective": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md followed with real Auto-Quant -> filter/Pre-Bayes -> BBN -> CatBoost -> execution-tree evidence under docs/experiments, while current cursor extends regime coverage without lowering thresholds",
+  "latest_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion",
+  "lineage_run_roots": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T192649-hermes-full-chain-score-match",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T200154-hermes-loop-full-chain-reaudit",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion"
+  ],
+  "checklist": [
+    {
+      "requirement": "Keep the named Board A markdown updated",
+      "evidence": [
+        "docs/plans/2026-05-10-actionable-regime-confidence-todo.md current cursor points at 20260510T200229-hermes-multi-regime-expansion",
+        "Evidence Ledger row 20260510T200229+0800-multi-regime-expansion-complete"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Maintain a 95%-99% acceptable calibrated regime packet",
+      "evidence": [
+        "SessionLiquidityCoreViable remains accepted_95 from 20260510T185358-codex-accepted95-full-chain",
+        "cal/test=378/378 test Wilson95=0.989940 ECE=0.010582 coverage=0.377622"
+      ],
+      "status": "pass_accepted_95_not_99"
+    },
+    {
+      "requirement": "Run the current multi-regime loop and explicitly accept or abstain without threshold relaxation",
+      "evidence": [
+        "evidence_packet_multi_regime_expansion.json decision=abstain_no_additional_calibrated_regime",
+        "accepted_new_regime_count_95=0 accepted_new_regime_count_99=0",
+        "abstained_new_regimes length=5",
+        "threshold_policy.thresholds_relaxed=false"
+      ],
+      "status": "pass_abstain_recorded"
+    },
+    {
+      "requirement": "Preserve real full-chain lineage: Auto-Quant -> Pre-Bayes/filter -> BBN -> CatBoost -> execution tree",
+      "evidence": [
+        "20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json auto_quant.n_ok=1",
+        "20260510T191350-codex-nq-structural-replay36/ict-engine/16_auto_quant_prior_init_nq_apply.json dry_run=false trade_count=1081",
+        "20260510T200154-hermes-loop-full-chain-reaudit/ict-engine/07_policy_training_status_reaudit.json score_model_family=catboost raw_scored_mature=1397/30",
+        "20260510T200154-hermes-loop-full-chain-reaudit/ict-engine/11_artifact_status_execution_tree_reaudit.json status=observe promote_candidate=false"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Use or check IBKR, TradingViewRemix, yfinance, and Kraken",
+      "evidence": [
+        "20260510T200154-hermes-loop-full-chain-reaudit/provider/01_provider_status_agent.json yfinance/IBKR/Kraken ready and tradingview_mcp not ready",
+        "20260510T185358-codex-accepted95-full-chain/provider/yf_QQQ_1h_20240601_20260509.csv lines=3370",
+        "20260510T185358-codex-accepted95-full-chain/provider/ibkr_QQQ_1h.csv lines=4008",
+        "20260510T185358-codex-accepted95-full-chain/provider/kraken_PF_XBTUSD_1h_2024_2025.csv lines=2001",
+        "TradingViewRemix health/check remains not ready and is not trusted as market data"
+      ],
+      "status": "pass_with_tradingview_blocker_recorded"
+    },
+    {
+      "requirement": "Store outputs under docs/experiments",
+      "evidence": [
+        "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_multi_regime_expansion.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/completion_audit_prompt_to_artifact.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/README.md"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Do not claim trade/execution readiness",
+      "evidence": [
+        "Current multi-regime run accepted 0 additional regimes",
+        "Lineage execution tree remains observe/transition_guardrail/guarded and promote_candidate=false"
+      ],
+      "status": "pass"
+    }
+  ],
+  "overall_status": "achieved_for_requested_regime_confidence_and_full_chain_artifact_goal",
+  "not_claimed": [
+    "tradable strategy",
+    "execute-ready release candidate",
+    "99% regime confidence",
+    "additional accepted regimes beyond SessionLiquidityCoreViable",
+    "TradingViewRemix usable market data"
+  ],
+  "residual_risk": [
+    "Additional regimes all abstained under unchanged thresholds.",
+    "TradingView MCP remains not ready.",
+    "Execution tree remains observe/transition_guardrail/guarded."
+  ]
+}

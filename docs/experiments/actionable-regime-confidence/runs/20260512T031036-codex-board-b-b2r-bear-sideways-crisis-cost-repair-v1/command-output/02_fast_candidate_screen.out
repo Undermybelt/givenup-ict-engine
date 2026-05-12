@@ -1,0 +1,69 @@
+candidates 300
+
+ROOT Bull
+bull_cost_breakout_h72_r200_v12 action long hold 72 n 8408 folds 15 minfold 280 fold+ 0.867 win 0.614 net 17.4863 lcb 0.001758 2x 0.000875 dsr 11.186
+bull_cost_breakout_h72_r140_v12 action long hold 72 n 7290 folds 15 minfold 178 fold+ 0.933 win 0.598 net 14.6213 lcb 0.001699 2x 0.000828 dsr 10.838
+bull_cost_breakout_h72_r200_v8 action long hold 72 n 8293 folds 15 minfold 280 fold+ 0.867 win 0.61 net 16.4406 lcb 0.001687 2x 0.000783 dsr 10.558
+bull_cost_breakout_h72_r200_v4 action long hold 72 n 8012 folds 15 minfold 279 fold+ 0.867 win 0.61 net 16.019 lcb 0.001672 2x 0.000787 dsr 10.785
+bull_cost_breakout_h72_r100_v12 action long hold 72 n 10100 folds 15 minfold 195 fold+ 0.933 win 0.594 net 19.163 lcb 0.001665 2x 0.000744 dsr 12.462
+bull_cost_breakout_h72_r140_v4 action long hold 72 n 6962 folds 15 minfold 172 fold+ 0.933 win 0.595 net 13.4215 lcb 0.001651 2x 0.000755 dsr 10.398
+bull_cost_breakout_h72_r100_v4 action long hold 72 n 9628 folds 15 minfold 189 fold+ 0.933 win 0.593 net 18.1607 lcb 0.001623 2x 0.000746 dsr 12.305
+bull_cost_breakout_h72_r140_v8 action long hold 72 n 7220 folds 15 minfold 178 fold+ 0.933 win 0.597 net 13.8324 lcb 0.001615 2x 0.00073 dsr 10.242
+bull_cost_breakout_h72_r100_v8 action long hold 72 n 10013 folds 15 minfold 194 fold+ 0.933 win 0.593 net 18.4444 lcb 0.001574 2x 0.000689 dsr 12.039
+bull_cost_breakout_h72_r60_v4 action long hold 72 n 8396 folds 15 minfold 132 fold+ 0.933 win 0.59 net 15.3508 lcb 0.001529 2x 0.000654 dsr 11.291
+bull_cost_breakout_h72_r60_v8 action long hold 72 n 8750 folds 15 minfold 136 fold+ 0.933 win 0.589 net 15.6759 lcb 0.001522 2x 0.000605 dsr 11.17
+bull_cost_breakout_h72_r60_v12 action long hold 72 n 8819 folds 15 minfold 136 fold+ 0.933 win 0.59 net 15.7045 lcb 0.001508 2x 0.0006 dsr 11.144
+bull_cost_breakout_h48_r200_v12 action long hold 48 n 8408 folds 15 minfold 280 fold+ 0.8 win 0.596 net 12.6881 lcb 0.001256 2x 0.000357 dsr 9.636
+bull_cost_breakout_h48_r200_v4 action long hold 48 n 8012 folds 15 minfold 279 fold+ 0.867 win 0.594 net 11.828 lcb 0.001218 2x 0.000324 dsr 9.508
+bull_cost_breakout_h48_r200_v8 action long hold 48 n 8293 folds 15 minfold 280 fold+ 0.8 win 0.594 net 12.1903 lcb 0.001202 2x 0.000305 dsr 9.294
+
+ROOT Bear
+bear_cap_rebound_h72_r350 action long hold 72 n 575 folds 12 minfold 2 fold+ 0.75 win 0.534 net 5.3963 lcb 0.006244 2x 0.005856 dsr 5.191
+bear_cap_rebound_h72_r250 action long hold 72 n 1384 folds 13 minfold 18 fold+ 0.923 win 0.528 net 9.2231 lcb 0.004888 2x 0.00401 dsr 6.289
+bear_cap_rebound_h72_r120 action long hold 72 n 3032 folds 13 minfold 52 fold+ 0.769 win 0.532 net 12.6218 lcb 0.003187 2x 0.002148 dsr 6.209
+bear_cap_rebound_h72_r180 action long hold 72 n 2195 folds 13 minfold 34 fold+ 0.769 win 0.513 net 9.222 lcb 0.002927 2x 0.001957 dsr 5.186
+bear_cap_rebound_h36_r350 action long hold 36 n 575 folds 12 minfold 2 fold+ 0.583 win 0.551 net 2.6277 lcb 0.002521 2x 0.00148 dsr 3.429
+bear_cap_rebound_h48_r250 action long hold 48 n 1384 folds 13 minfold 18 fold+ 0.692 win 0.543 net 4.826 lcb 0.002193 2x 0.001117 dsr 4.041
+bear_cap_rebound_h24_r350 action long hold 24 n 575 folds 12 minfold 2 fold+ 0.5 win 0.534 net 2.4167 lcb 0.002166 2x 0.001285 dsr 3.289
+bear_cap_rebound_h48_r350 action long hold 48 n 575 folds 12 minfold 2 fold+ 0.583 win 0.558 net 1.9199 lcb 0.000974 2x 0.00026 dsr 2.355
+bear_cap_rebound_h36_r250 action long hold 36 n 1384 folds 13 minfold 18 fold+ 0.538 win 0.534 net 2.8203 lcb 0.000789 2x -0.000105 dsr 2.526
+bear_cap_rebound_h48_r120 action long hold 48 n 3032 folds 13 minfold 52 fold+ 0.692 win 0.519 net 4.9831 lcb 0.000714 2x -0.000292 dsr 2.929
+bear_cap_rebound_h48_r180 action long hold 48 n 2195 folds 13 minfold 34 fold+ 0.692 win 0.51 net 3.4857 lcb 0.000623 2x -0.000387 dsr 2.343
+bear_cap_rebound_h12_r350 action long hold 12 n 575 folds 12 minfold 2 fold+ 0.583 win 0.517 net 1.1847 lcb 0.000367 2x -0.00045 dsr 2.176
+bear_cap_rebound_h24_r250 action long hold 24 n 1384 folds 13 minfold 18 fold+ 0.538 win 0.509 net 1.0986 lcb -0.000294 2x -0.001305 dsr 1.059
+bear_breakdown_short_h12_r30 action short hold 12 n 5291 folds 13 minfold 92 fold+ 0.385 win 0.492 net -0.0746 lcb -0.000395 2x -0.0013 dsr -0.064
+bear_breakdown_short_h12_r60 action short hold 12 n 4757 folds 13 minfold 89 fold+ 0.385 win 0.49 net -0.3423 lcb -0.000428 2x -0.001342 dsr -0.303
+
+ROOT Sideways
+side_band_revert_h24_z16_a12 action z_revert hold 24 n 724 folds 15 minfold 3 fold+ 0.733 win 0.507 net 0.5902 lcb 7e-05 2x -0.000815 dsr 1.956
+side_band_revert_h24_z6_a12 action z_revert hold 24 n 6064 folds 15 minfold 108 fold+ 0.667 win 0.503 net 1.1336 lcb -8e-05 2x -0.000983 dsr 1.166
+side_band_revert_h24_z12_a12 action z_revert hold 24 n 2167 folds 15 minfold 34 fold+ 0.667 win 0.507 net 0.7782 lcb -8.6e-05 2x -0.000998 dsr 1.376
+side_band_revert_h24_z12_a18 action z_revert hold 24 n 4140 folds 15 minfold 72 fold+ 0.6 win 0.51 net 0.7756 lcb -9.8e-05 2x -0.001008 dsr 1.018
+side_band_revert_h24_z9_a12 action z_revert hold 24 n 4051 folds 15 minfold 81 fold+ 0.533 win 0.505 net 0.777 lcb -0.0001 2x -0.001027 dsr 0.991
+side_band_revert_h24_z12_a30 action z_revert hold 24 n 7506 folds 15 minfold 127 fold+ 0.4 win 0.49 net -0.163 lcb -0.000242 2x -0.001152 dsr -0.157
+side_band_revert_h24_z6_a18 action z_revert hold 24 n 9065 folds 15 minfold 163 fold+ 0.6 win 0.503 net -0.0906 lcb -0.000243 2x -0.001124 dsr -0.077
+side_band_revert_h24_z12_a24 action z_revert hold 24 n 5963 folds 15 minfold 87 fold+ 0.467 win 0.495 net -0.0831 lcb -0.000266 2x -0.001162 dsr -0.091
+side_band_revert_h24_z9_a18 action z_revert hold 24 n 6597 folds 15 minfold 133 fold+ 0.533 win 0.502 net -0.3174 lcb -0.000285 2x -0.00121 dsr -0.322
+side_band_revert_h24_z6_a24 action z_revert hold 24 n 11577 folds 15 minfold 191 fold+ 0.533 win 0.497 net -1.2781 lcb -0.000288 2x -0.001194 dsr -0.957
+side_band_revert_h24_z6_a30 action z_revert hold 24 n 6748 folds 15 minfold 118 fold+ 0.533 win 0.493 net -0.5257 lcb -0.000306 2x -0.001219 dsr -0.514
+side_band_revert_h24_z16_a30 action z_revert hold 24 n 4144 folds 15 minfold 38 fold+ 0.4 win 0.483 net -0.0167 lcb -0.000332 2x -0.001171 dsr -0.023
+side_pull_revert_h24_z16_a30 action long hold 24 n 1614 folds 15 minfold 19 fold+ 0.533 win 0.508 net 0.2132 lcb -0.000343 2x -0.001224 dsr 0.427
+side_band_revert_h24_z9_a30 action z_revert hold 24 n 10603 folds 15 minfold 204 fold+ 0.533 win 0.49 net -1.8254 lcb -0.000361 2x -0.001285 dsr -1.449
+side_band_revert_h24_z16_a18 action z_revert hold 24 n 1772 folds 15 minfold 11 fold+ 0.667 win 0.498 net 0.0147 lcb -0.000381 2x -0.001277 dsr 0.033
+
+ROOT Crisis
+crisis_rebound_h72_r250 action long hold 72 n 172 folds 4 minfold 8 fold+ 1.0 win 0.791 net 4.6031 lcb 0.020604 2x 0.020249 dsr 7.392
+crisis_rebound_h72_r180 action long hold 72 n 270 folds 4 minfold 12 fold+ 1.0 win 0.748 net 6.4119 lcb 0.019303 2x 0.018714 dsr 8.953
+crisis_rebound_h72_r120 action long hold 72 n 401 folds 5 minfold 9 fold+ 1.0 win 0.756 net 8.4123 lcb 0.01755 2x 0.016652 dsr 10.499
+crisis_rebound_h72_r80 action long hold 72 n 506 folds 5 minfold 16 fold+ 1.0 win 0.735 net 9.6952 lcb 0.016424 2x 0.015589 dsr 11.523
+crisis_rebound_h36_r250 action long hold 36 n 172 folds 4 minfold 8 fold+ 0.75 win 0.663 net 3.5484 lcb 0.015526 2x 0.014782 dsr 7.038
+crisis_rebound_h48_r250 action long hold 48 n 172 folds 4 minfold 8 fold+ 1.0 win 0.68 net 3.503 lcb 0.014814 2x 0.014632 dsr 5.771
+crisis_rebound_h36_r180 action long hold 36 n 270 folds 4 minfold 12 fold+ 1.0 win 0.604 net 4.5699 lcb 0.013494 2x 0.012461 dsr 7.392
+crisis_rebound_h48_r180 action long hold 48 n 270 folds 4 minfold 12 fold+ 1.0 win 0.644 net 4.7027 lcb 0.013397 2x 0.012548 dsr 6.736
+crisis_rebound_h72_r40 action long hold 72 n 618 folds 5 minfold 28 fold+ 1.0 win 0.688 net 9.3579 lcb 0.012686 2x 0.011915 dsr 10.113
+crisis_rebound_h24_r250 action long hold 24 n 172 folds 4 minfold 8 fold+ 0.75 win 0.581 net 2.8073 lcb 0.011649 2x 0.010889 dsr 5.763
+crisis_rebound_h36_r120 action long hold 36 n 401 folds 5 minfold 9 fold+ 1.0 win 0.599 net 5.3207 lcb 0.010578 2x 0.009618 dsr 7.529
+crisis_rebound_h48_r120 action long hold 48 n 401 folds 5 minfold 9 fold+ 0.8 win 0.626 net 5.5257 lcb 0.010258 2x 0.009715 dsr 7.081
+crisis_rebound_h48_r80 action long hold 48 n 506 folds 5 minfold 16 fold+ 1.0 win 0.654 net 6.4924 lcb 0.010017 2x 0.009312 dsr 7.936
+crisis_rebound_h36_r80 action long hold 36 n 506 folds 5 minfold 16 fold+ 1.0 win 0.615 net 6.1036 lcb 0.009567 2x 0.008993 dsr 8.235
+crisis_rebound_h24_r180 action long hold 24 n 270 folds 4 minfold 12 fold+ 1.0 win 0.533 net 3.3681 lcb 0.00907 2x 0.008017 dsr 5.645

@@ -1,0 +1,61 @@
+{
+  "artifact": "124408_precision_fix_tomac_rerun_v1",
+  "best_strategy": "TomacAggressiveBE",
+  "board_effect": {
+    "accepted_regime_gate": false,
+    "measured_candidate": true,
+    "pre_bayes_bbn_catboost_execution_ready": false,
+    "production_likelihood_mutation": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "candidate_package_available": true,
+  "data_scope": {
+    "informative_timeframe": "4h",
+    "pair": "BTC/USD",
+    "timeframe": "1h",
+    "timerange": "20260401-20260512"
+  },
+  "diagnostic_parent": "docs/experiments/actionable-regime-confidence/runs/20260512T125232+0800-codex-124408-signal-export-diagnostic-v1",
+  "next": "Use TomacAggressiveBE trade rows as a BTC-only measured candidate for Pre-Bayes/filter, BBN, CatBoost/path-ranker, and execution-tree validation; do not promote without cross-context and >=95% calibrated regime evidence.",
+  "patch_scope": "in_memory_wrapper_only_synthetic_market_precision_amount_1e-8",
+  "results": [
+    {
+      "max_drawdown_pct": -3.632529542484822,
+      "profit_factor": 1.472592122842784,
+      "sharpe": 3.175190735078109,
+      "strategy": "TomacAggressiveBE",
+      "total_profit_pct": 2.72,
+      "trade_count": 94,
+      "trade_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T130436+0800-codex-124408-precision-fix-tomac-rerun-v1/trade-exports/TomacAggressiveBE_trades.csv",
+      "trade_rows": 94,
+      "win_rate_pct": 24.46808510638298
+    },
+    {
+      "max_drawdown_pct": -3.8927271036548814,
+      "profit_factor": 0.6449873917038034,
+      "sharpe": -2.4521679209406284,
+      "strategy": "TomacKillzoneBreakout",
+      "total_profit_pct": -2.25,
+      "trade_count": 49,
+      "trade_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T130436+0800-codex-124408-precision-fix-tomac-rerun-v1/trade-exports/TomacKillzoneBreakout_trades.csv",
+      "trade_rows": 49,
+      "win_rate_pct": 20.408163265306122
+    },
+    {
+      "max_drawdown_pct": -0.0,
+      "profit_factor": 0.0,
+      "sharpe": -100.0,
+      "strategy": "TomacRRWinRate",
+      "total_profit_pct": 0.0,
+      "trade_count": 1,
+      "trade_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T130436+0800-codex-124408-precision-fix-tomac-rerun-v1/trade-exports/TomacRRWinRate_trades.csv",
+      "trade_rows": 1,
+      "win_rate_pct": 0.0
+    }
+  ],
+  "source_run": "docs/experiments/actionable-regime-confidence/runs/20260512T124408+0800-codex-123227-tomac-trade-density-iteration-v1",
+  "strategy_metrics_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T130436+0800-codex-124408-precision-fix-tomac-rerun-v1/precision-fix-tomac-rerun-v1/strategy_metrics_v1.csv",
+  "total_trades": 144
+}

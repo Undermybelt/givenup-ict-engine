@@ -1,0 +1,186 @@
+{
+  "run_id": "20260512T010639-codex-current-objective-prompt-artifact-audit-after-010201-v1",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_hash": "6ac85f7af44e170b6f7216340716d1c42a573295a62bbf6b6fb7070056f77349",
+  "cursor": {
+    "board_state": "blocked",
+    "last_loop_id": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+    "active_market_set": "R6 owner-route entitlement readback after public Exhibit A materialization and outbound request packaging: `5182` source-marked `SPOOF` rows remain isolated positive candidates, `1553` same-exhibit `FLIP` rows remain rejected as normal controls without explicit approval, public/source-owned normal controls remain `0`, candidate official owner routes cover `17/17` required cells, CME Market Depth exchange-level date fit is improved for the 2011-2013 CME/NYMEX/COMEX window, and Cboe/CFE VIX DataShop trades/quotes date fit is improved while full historical depth/order-lifecycle remains a custom/support export blocker.",
+    "active_timeframes": "Event/order-lifecycle rows only for R6; no OHLCV proxy timeframe promotion. The materialized public row-level source still contains only `SPOOF`/`FLIP` sides, not independent normal/non-manipulation rows. No full downstream rerun is allowed until RECAP/PACER provenance plus FLIP-control approval, or source-owned normal controls, then canonical/owner-export-root merge happens under a shared lock.",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1`",
+    "provider_status": "Latest provider/Auto-Quant read-only refresh `005248` remains non-promoting with `entry_model:2/2 ready`, `live_runtime:1/3 ready`, `local_runtime:1/2 ready`, `market_data:1/7 ready`; yfinance and Kraken CLI are usable, IBKR/TradingView/Kraken public remain non-promoting/dependency-blocked; Auto-Quant status is `dependency_ready_seed_required`, healthy/data_ready true. Latest R6 entitlement readback found no local `databento` CLI, no `dbn` CLI, no Python `databento`, no Python `pyarrow`, no Databento API key env, no complete owner-export package, and only local OHLCV bar data rather than source-owned normal controls. Rerun provider promotion plus pre-Bayes/BBN/CatBoost/workflow/execution-tree only after explicit source/control-policy approval or source-owned normal controls and canonical merge.",
+    "candidate_regime": "DirectOverlay::Manipulation / R6 Oystacher Exhibit A public court-order-lifecycle rows; `SPOOF` positives are preserved as positive candidates, but same-exhibit `FLIP` rows are rejected as normal controls until explicit control-policy approval or source-owned normal controls arrive.",
+    "confidence_lane": "`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.",
+    "accepted_gate": "r6_owner_route_entitlement_readback_v1=`route_fit_improved_controls_not_acquired_no_merge`; r6_owner_export_outbound_request_messages_v1=`outbound_messages_ready_not_sent_controls_not_acquired`; r6_official_route_date_fit_check_v1=`official_owner_routes_confirmed_controls_not_acquired_cfe_depth_date_gap`; r6_oystacher_external_control_source_scan_v1=`external_routes_identified_no_verifier_ready_source_owned_normal_controls`; r6_oystacher_public_normal_control_source_probe_v1=`no_public_source_owned_normal_controls_found`; r6_oystacher_owner_control_source_route_screen_v1=`official_source_routes_identified_controls_not_acquired`; r6_local_control_applicability_audit_v1=`local_candidate_controls_insufficient_no_approval_no_merge`; r6_oystacher_independent_normal_control_screen_v1=`no_independent_owner_approved_normal_controls_found`; r6_oystacher_local_control_path_disposition_v1=`no_local_path_satisfies_source_owned_normal_control_contract`; current_objective_reconciliation_after_v71_v1=`blocked_controls_absent_non_r6_absent_no_merge`; current_goal_completion_audit_after_v66_v1=`not_complete_technical_preflight_pass_policy_controls_canonical_downstream_r5_r3_blocked`; v71_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_source_control_blocked`; v65_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_policy_blocked`; r6_oystacher_control_contract_request_v1=`control_request_ready_no_controls_or_approval`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "blocker": "Strict objective remains blocked: public probes found `0` source-owned normal controls, official source-owner routes are identified but controls are not acquired, CME exchange-level date fit is improved but licensed verifier-native exports/provenance are still absent, Cboe/CFE VIX trades/quotes date fit is improved but historical full-depth/order-lifecycle still needs DataShop/support confirmation, all `17` required Oystacher control cells still have `0` valid source-owned normal controls, same-exhibit `FLIP` rows are not approved as controls, canonical live intake was not mutated, post-V71 provider/Auto-Quant ran read-only without promotion, pre-Bayes/BBN/CatBoost/execution-tree promotion rerun was not allowed, source-label confidence is still `0/4`, R5 post-`2026-01-30` source-panel rows are absent, and R3 native-subhour root remains absent.",
+    "next_action": "Send or otherwise satisfy the CME and Cboe/CFE owner-export messages, preserving ticket/export/license identifiers in provenance; obtain licensed CME Market Depth/Market by Order or equivalent normal-control exports plus Cboe/CFE VIX historical trades/quotes or depth/order-lifecycle export, or explicitly approve the same-exhibit `FLIP`-as-control exception; only then copy verifier-native files into `/tmp/ict-engine-board-a-r6-owner-export-v1` or canonical live root under a shared lock and rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked."
+  },
+  "artifact_presence": [
+    {
+      "artifact_id": "r6_owner_route_entitlement",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1/r6-owner-route-entitlement-readback/r6_owner_route_entitlement_readback_v1.json",
+      "exists": true,
+      "sha256": "4173cbe84cbfa393da2ea795730affbf20215df378ee85b74bee863e73cf6b4a"
+    },
+    {
+      "artifact_id": "non_r6_outbound_requests",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T010201-codex-non-r6-source-intake-outbound-request-messages-v1/non-r6-source-intake-outbound-request-messages-v1/non_r6_source_intake_outbound_request_messages_v1.json",
+      "exists": true,
+      "sha256": "feb276f6e0d09d41d5b09cc7b6c1fe6e720eed1d05332b1e390d43023fb0bf8c"
+    },
+    {
+      "artifact_id": "r6_sendable_requests",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3/r6-owner-export-sendable-requests-v3/r6_owner_export_sendable_requests_v3.json",
+      "exists": true,
+      "sha256": "24eddc49b9e6b8d2b140d8698cd9a31612dc09c1bc3de723c709c2e95fafa660"
+    },
+    {
+      "artifact_id": "provider_autoquant_refresh",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T005248-codex-v71-provider-autoquant-readonly-refresh-v1/v71-provider-autoquant-readonly-refresh/v71_provider_autoquant_readonly_refresh_v1.json",
+      "exists": true,
+      "sha256": "f88633370f7b5b23803726d99d87a0c6d061dd8005a5852cc01747f390c4789b"
+    }
+  ],
+  "intake_roots": [
+    {
+      "root_id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "present_required_files": "",
+      "missing_required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "file_count_maxdepth4": 0,
+      "ready": false
+    },
+    {
+      "root_id": "source_label_equivalence",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_exists": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "present_required_files": "",
+      "missing_required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "file_count_maxdepth4": 0,
+      "ready": false
+    },
+    {
+      "root_id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_required_files": "",
+      "missing_required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "file_count_maxdepth4": 0,
+      "ready": false
+    },
+    {
+      "root_id": "r5_source_panel_recency",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;stock_market_regimes_2026_extension_provenance.json",
+      "present_required_files": "",
+      "missing_required_files": "stock_market_regimes_2026_extension.csv;stock_market_regimes_2026_extension_provenance.json",
+      "file_count_maxdepth4": 0,
+      "ready": false
+    }
+  ],
+  "checklist": [
+    {
+      "requirement": "Use the named Board A markdown as the authoritative task board.",
+      "evidence": "board_hash=6ac85f7af44e170b6f7216340716d1c42a573295a62bbf6b6fb7070056f77349; last_loop_id=20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+      "status": "covered",
+      "gap": ""
+    },
+    {
+      "requirement": "Do not disrupt multi-agent work or overwrite another cursor.",
+      "evidence": "This audit writes a new run root only and does not edit Current Cursor or canonical intake.",
+      "status": "covered",
+      "gap": ""
+    },
+    {
+      "requirement": "Every active regime/root has calibrated confidence >=95%.",
+      "evidence": "cursor board_state=blocked; confidence_lane=`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.; accepted_gate=r6_owner_route_entitlement_readback_v1=`route_fit_improved_controls_not_acquired_no_merge`; r6_owner_export_outbound_request_messages_v1=`outbound_messages_ready_not_sent_controls_not_acquired`; r6_official_route_date_fit_check_v1=`official_owner_routes_confirmed_controls_not_acquired_cfe_depth_date_gap`; r6_oystacher_external_control_source_scan_v1=`external_routes_identified_no_verifier_ready_source_owned_normal_controls`; r6_oystacher_public_normal_control_source_probe_v1=`no_public_source_owned_normal_controls_found`; r6_oystacher_owner_control_source_route_screen_v1=`official_source_routes_identified_controls_not_acquired`; r6_local_control_applicability_audit_v1=`local_candidate_controls_insufficient_no_approval_no_merge`; r6_oystacher_independent_normal_control_screen_v1=`no_independent_owner_approved_normal_controls_found`; r6_oystacher_local_control_path_disposition_v1=`no_local_path_satisfies_source_owned_normal_control_contract`; current_objective_reconciliation_after_v71_v1=`blocked_controls_absent_non_r6_absent_no_merge`; current_goal_completion_audit_after_v66_v1=`not_complete_technical_preflight_pass_policy_controls_canonical_downstream_r5_r3_blocked`; v71_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_source_control_blocked`; v65_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_policy_blocked`; r6_oystacher_control_contract_request_v1=`control_request_ready_no_controls_or_approval`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+      "status": "blocked",
+      "gap": "Current cursor is blocked and full_objective_gate remains none; strict active-root completion is not achieved."
+    },
+    {
+      "requirement": "Validate accepted regimes across other markets, timeframes, and periods.",
+      "evidence": "source_rows_acquired=0; intake_roots_ready=false",
+      "status": "blocked",
+      "gap": "Source-label equivalence, R3 native sub-hour, and R5 recency roots do not contain required files."
+    },
+    {
+      "requirement": "R6 DirectOverlay::Manipulation has source-owned normal controls or explicit FLIP-control approval.",
+      "evidence": "required_cells=17; controls_acquired=0; flip_approval=false",
+      "status": "blocked",
+      "gap": "0 valid source-owned controls and no same-exhibit FLIP approval."
+    },
+    {
+      "requirement": "Use provider surfaces including IBKR, TradingViewRemix/MCP, yfinance, and Kraken.",
+      "evidence": "provider_artifact=docs/experiments/actionable-regime-confidence/runs/20260512T005248-codex-v71-provider-autoquant-readonly-refresh-v1/v71-provider-autoquant-readonly-refresh/v71_provider_autoquant_readonly_refresh_v1.json; gate=v71_provider_autoquant_readonly_refresh_v1=readiness_refreshed_no_promotion_source_control_blocked",
+      "status": "partial",
+      "gap": "Provider/Auto-Quant refresh is read-only/non-promoting; promotion rerun is blocked until source controls arrive."
+    },
+    {
+      "requirement": "Run Auto-Quant and ict-engine filter/pre-Bayes/BBN/CatBoost/path-ranking/execution-tree in order.",
+      "evidence": "downstream_allowed_r6=false; downstream_allowed_non_r6=false",
+      "status": "blocked",
+      "gap": "Downstream promotion rerun is explicitly not allowed without source-owned inputs and canonical merge."
+    },
+    {
+      "requirement": "Do not accept proxy or OHLCV-only evidence for direct manipulation/source-label gates.",
+      "evidence": "cursor_blocker=Strict objective remains blocked: public probes found `0` source-owned normal controls, official source-owner routes are identified but controls are not acquired, CME exchange-level date fit is improved but licensed verifier-native exports/provenance are still absent, Cboe/CFE VIX trades/quotes date fit is improved but historical full-depth/order-lifecycle still needs DataShop/support confirmation, all `17` required Oystacher control cells still have `0` valid source-owned normal controls, same-exhibit `FLIP` rows are not approved as controls, canonical live intake was not mutated, post-V71 provider/Auto-Quant ran read-only without promotion, pre-Bayes/BBN/CatBoost/execution-tree promotion rerun was not allowed, source-label confidence is still `0/4`, R5 post-`2026-01-30` source-panel rows are absent, and R3 native-subhour root remains absent.",
+      "status": "covered",
+      "gap": ""
+    },
+    {
+      "requirement": "Do not call update_goal until strict completion is proven.",
+      "evidence": "strict_full_objective_achieved=false; r6_update_goal=False; non_r6_update_goal=False",
+      "status": "covered",
+      "gap": ""
+    }
+  ],
+  "unmet_requirements": [
+    {
+      "requirement": "Every active regime/root has calibrated confidence >=95%.",
+      "evidence": "cursor board_state=blocked; confidence_lane=`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.; accepted_gate=r6_owner_route_entitlement_readback_v1=`route_fit_improved_controls_not_acquired_no_merge`; r6_owner_export_outbound_request_messages_v1=`outbound_messages_ready_not_sent_controls_not_acquired`; r6_official_route_date_fit_check_v1=`official_owner_routes_confirmed_controls_not_acquired_cfe_depth_date_gap`; r6_oystacher_external_control_source_scan_v1=`external_routes_identified_no_verifier_ready_source_owned_normal_controls`; r6_oystacher_public_normal_control_source_probe_v1=`no_public_source_owned_normal_controls_found`; r6_oystacher_owner_control_source_route_screen_v1=`official_source_routes_identified_controls_not_acquired`; r6_local_control_applicability_audit_v1=`local_candidate_controls_insufficient_no_approval_no_merge`; r6_oystacher_independent_normal_control_screen_v1=`no_independent_owner_approved_normal_controls_found`; r6_oystacher_local_control_path_disposition_v1=`no_local_path_satisfies_source_owned_normal_control_contract`; current_objective_reconciliation_after_v71_v1=`blocked_controls_absent_non_r6_absent_no_merge`; current_goal_completion_audit_after_v66_v1=`not_complete_technical_preflight_pass_policy_controls_canonical_downstream_r5_r3_blocked`; v71_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_source_control_blocked`; v65_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_policy_blocked`; r6_oystacher_control_contract_request_v1=`control_request_ready_no_controls_or_approval`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+      "status": "blocked",
+      "gap": "Current cursor is blocked and full_objective_gate remains none; strict active-root completion is not achieved."
+    },
+    {
+      "requirement": "Validate accepted regimes across other markets, timeframes, and periods.",
+      "evidence": "source_rows_acquired=0; intake_roots_ready=false",
+      "status": "blocked",
+      "gap": "Source-label equivalence, R3 native sub-hour, and R5 recency roots do not contain required files."
+    },
+    {
+      "requirement": "R6 DirectOverlay::Manipulation has source-owned normal controls or explicit FLIP-control approval.",
+      "evidence": "required_cells=17; controls_acquired=0; flip_approval=false",
+      "status": "blocked",
+      "gap": "0 valid source-owned controls and no same-exhibit FLIP approval."
+    },
+    {
+      "requirement": "Use provider surfaces including IBKR, TradingViewRemix/MCP, yfinance, and Kraken.",
+      "evidence": "provider_artifact=docs/experiments/actionable-regime-confidence/runs/20260512T005248-codex-v71-provider-autoquant-readonly-refresh-v1/v71-provider-autoquant-readonly-refresh/v71_provider_autoquant_readonly_refresh_v1.json; gate=v71_provider_autoquant_readonly_refresh_v1=readiness_refreshed_no_promotion_source_control_blocked",
+      "status": "partial",
+      "gap": "Provider/Auto-Quant refresh is read-only/non-promoting; promotion rerun is blocked until source controls arrive."
+    },
+    {
+      "requirement": "Run Auto-Quant and ict-engine filter/pre-Bayes/BBN/CatBoost/path-ranking/execution-tree in order.",
+      "evidence": "downstream_allowed_r6=false; downstream_allowed_non_r6=false",
+      "status": "blocked",
+      "gap": "Downstream promotion rerun is explicitly not allowed without source-owned inputs and canonical merge."
+    }
+  ],
+  "gate_result": "current_objective_prompt_artifact_audit_after_010201_v1=blocked_source_inputs_absent_no_completion",
+  "accepted_rows_added": 0,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "new_confidence_gate": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_requests_sent": false
+}

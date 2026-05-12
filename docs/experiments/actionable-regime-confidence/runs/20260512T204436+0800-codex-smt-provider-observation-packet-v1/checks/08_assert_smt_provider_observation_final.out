@@ -1,0 +1,7 @@
+{
+  "packet_assertion": "pass",
+  "rows": 65,
+  "signals": 65,
+  "aligned_rows": 4636,
+  "downstream_allowed": false
+}

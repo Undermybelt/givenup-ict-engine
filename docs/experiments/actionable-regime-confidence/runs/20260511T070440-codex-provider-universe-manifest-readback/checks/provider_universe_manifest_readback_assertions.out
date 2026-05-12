@@ -1,0 +1,11 @@
+goal_achieved=false
+main_price_roots=Bull,Bear,Sideways,Crisis
+direct_overlay_gates=Manipulation
+market_data_ready_count=1
+market_data_provider_count=7
+yfinance_first_matrix_inputs_defined=true
+full_matrix_executed=false
+gate_result=provider_universe_manifest_readback_yfinance_matrix_next
+thresholds_relaxed=false
+runtime_code_changed=false
+trade_usable=false

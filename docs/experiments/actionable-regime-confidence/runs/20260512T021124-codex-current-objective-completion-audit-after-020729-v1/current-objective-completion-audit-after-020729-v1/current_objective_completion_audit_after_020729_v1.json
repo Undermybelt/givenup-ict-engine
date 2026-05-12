@@ -1,0 +1,47 @@
+{
+  "run_id": "20260512T021124-codex-current-objective-completion-audit-after-020729-v1",
+  "gate_result": "current_objective_completion_audit_after_020729_v1=not_complete_r6_r3_r5_source_confidence_downstream_blocked",
+  "current_cursor": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "board_state": "blocked",
+  "strict_full_objective_achieved": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "update_goal": false,
+  "evidence": {
+    "runtime_chain": "docs/experiments/actionable-regime-confidence/runs/20260512T020037-codex-readonly-runtime-chain-refresh-after-015533-v1",
+    "coordination_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T020708-codex-current-coordination-readback-after-020235-v1",
+    "source_control_poll": "docs/experiments/actionable-regime-confidence/runs/20260512T020729-codex-current-source-control-arrival-poll-after-020235-v1",
+    "tsie_sample": "docs/experiments/actionable-regime-confidence/runs/20260512T020216-codex-tsie-public-source-intake-dry-run-v1"
+  },
+  "blocking_requirements": [
+    "every_active_regime_95_confidence",
+    "per_regime_qualifying_condition_acceptance",
+    "cross_market_cross_period_cross_cycle_validation",
+    "r6_owner_export_root",
+    "explicit_flip_control_approval",
+    "r3_native_subhour_source_labels",
+    "r5_recency_extension_source_panel",
+    "promoting_auto_quant_run",
+    "promoting_pre_bayes_bbn_catboost_execution_tree_chain"
+  ],
+  "observations": {
+    "r6_owner_export_root_present": false,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_extension_root_present": false,
+    "source_label_equivalence_file_count": 2,
+    "legacy_direct_intake_positive_rows": 73,
+    "legacy_direct_intake_matched_negative_rows": 73,
+    "legacy_direct_intake_promoting": false,
+    "flip_controls_accepted": false,
+    "auto_quant_status": "missing_dependency",
+    "pre_bayes_gate": "pass_neutralized",
+    "pre_bayes_structural_confidence": 0.5822867835012198,
+    "policy_catboost_matched_rows": 0,
+    "path_ranking_rows": 3,
+    "path_ranking_mature_rows": 0,
+    "execution_status": "execution_observe_only",
+    "execution_actionable": false
+  }
+}

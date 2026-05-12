@@ -1,0 +1,46 @@
+{
+  "accepted_candidate_count": 0,
+  "accepted_candidates": [],
+  "accepted_extension_rows": 0,
+  "accepted_rows_added": 0,
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T215539-codex-r5-source-panel-recency-extension-acquisition-screen-v1/checks/r5_source_panel_recency_extension_acquisition_screen_v1_assertions.out",
+    "candidate_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T215539-codex-r5-source-panel-recency-extension-acquisition-screen-v1/r5-source-panel-recency-extension-acquisition-screen/r5_source_panel_recency_extension_candidates_v1.csv",
+    "command_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T215539-codex-r5-source-panel-recency-extension-acquisition-screen-v1/r5-source-panel-recency-extension-acquisition-screen/r5_source_panel_recency_extension_commands_v1.csv",
+    "command_output": "docs/experiments/actionable-regime-confidence/runs/20260511T215539-codex-r5-source-panel-recency-extension-acquisition-screen-v1/command-output",
+    "report": "docs/experiments/actionable-regime-confidence/runs/20260511T215539-codex-r5-source-panel-recency-extension-acquisition-screen-v1/r5-source-panel-recency-extension-acquisition-screen/r5_source_panel_recency_extension_acquisition_screen_v1.md"
+  },
+  "board_hash_before": "efd822d9146c732e0589eaa9aa415a8737e7bb1fdff5aac692ff51f30e15cc3a",
+  "candidate_count": 16,
+  "candidate_reject_summary": {
+    "no_post_2026_01_30_rows;non_root_or_missing_labels": 1,
+    "schema_mismatch": 4,
+    "schema_mismatch;non_root_or_missing_labels;not_existing_39_ticker_source_panel": 1,
+    "schema_mismatch;unknown_tickers_for_r5_verifier": 10
+  },
+  "decision": "r5_source_panel_recency_extension_acquisition_screen_v1=no_acceptable_post_cutoff_source_owned_rows",
+  "external_requests_sent": true,
+  "generated_at_utc": "2026-05-11T13:57:30.920096+00:00",
+  "intake_root": "/tmp/ict-engine-source-panel-recency-extension",
+  "intake_rows_written": false,
+  "last_source_date": "2026-01-30",
+  "new_confidence_gate": false,
+  "next_action": "Expand R6 direct Manipulation intake toward >=50/50 support with broad normal controls and direct species coverage while keeping R5 blocked until a source owner publishes valid post-cutoff source-panel rows.",
+  "objective": "Populate the R5 source-panel recency extension only with source-owned post-2026-01-30 rows that satisfy the existing verifier schema.",
+  "raw_data_committed": false,
+  "run_id": "20260511T215539-codex-r5-source-panel-recency-extension-acquisition-screen-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_result": {
+    "missing_files": [
+      "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+      "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+    ],
+    "reason": "missing_required_files",
+    "status": "blocked"
+  },
+  "verifier_status": "blocked"
+}

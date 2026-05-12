@@ -1,0 +1,230 @@
+{
+  "artifact_id": "execution-candidate:B2R_SIX_PROVIDER_BTC_AQ_115500:analyze:v1",
+  "version": 1,
+  "generated_at": "2026-05-12T04:12:40.823322Z",
+  "symbol": "B2R_SIX_PROVIDER_BTC_AQ_115500",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:B2R_SIX_PROVIDER_BTC_AQ_115500:20260512T041240.823Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "609bd9dda6b0819c",
+    "data_fingerprint": "38e87d9798c1bcb5"
+  },
+  "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.523|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.9974 mtf_entry_alignment=0.8022",
+  "selected_direction": "Bear",
+  "trade_direction": "Neutral",
+  "actionable": false,
+  "entry": 0.0,
+  "stop_loss": 0.0,
+  "take_profits": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "posterior": 0.0,
+  "win_probability": 0.0,
+  "factor_alignment": "mixed",
+  "factor_uncertainty": "low",
+  "candidate_status": "no_trade",
+  "top_factor_name": "structure_ict",
+  "top_factor_action": "tune",
+  "family_scores": {
+    "cross_market_smt": 0.12250000000000001,
+    "options_hedging": 0.1514570088835277,
+    "other": 0.21714867286539966,
+    "structure_ict": 0.3879100000000001,
+    "trend_momentum": 0.16470238269176177,
+    "volatility_mean_reversion": 0.27078784588192456
+  },
+  "review_rule_version": "7bfaf4a346c607e8",
+  "review_rule_snapshot": {
+    "min_posterior_improvement": 0.03,
+    "min_win_probability_improvement": 0.03,
+    "require_same_data": true,
+    "require_same_factor_version": true
+  },
+  "pre_bayes_evidence_filter": {
+    "policy": {
+      "version": "318900600c5e8cf2",
+      "source": "default",
+      "min_directional_support_gap": 0.08,
+      "high_uncertainty_threshold": 0.45,
+      "min_multi_timeframe_alignment_score": 0.55,
+      "min_multi_timeframe_entry_alignment_score": 0.5,
+      "hard_pass_quality_threshold": 0.75,
+      "neutralized_quality_threshold": 0.4,
+      "directional_conflict_penalty": 0.2,
+      "mixed_alignment_penalty": 0.1,
+      "multi_timeframe_direction_conflict_penalty": 0.18,
+      "multi_timeframe_alignment_penalty": 0.1,
+      "multi_timeframe_entry_penalty": 0.08,
+      "multi_timeframe_alignment_bonus": 0.05,
+      "hostile_liquidity_penalty": 0.1,
+      "favorable_liquidity_bonus": 0.05,
+      "hostile_liquidity_forces_high_uncertainty": true,
+      "market_overrides": {
+        "CL": {
+          "hostile_liquidity_penalty": 0.14,
+          "favorable_liquidity_bonus": 0.03,
+          "hostile_liquidity_forces_high_uncertainty": true
+        },
+        "ES": {
+          "hostile_liquidity_penalty": 0.06,
+          "favorable_liquidity_bonus": 0.06,
+          "hostile_liquidity_forces_high_uncertainty": false
+        },
+        "GC": {
+          "hostile_liquidity_penalty": 0.09,
+          "favorable_liquidity_bonus": 0.07,
+          "hostile_liquidity_forces_high_uncertainty": false
+        },
+        "NQ": {
+          "hostile_liquidity_penalty": 0.1,
+          "favorable_liquidity_bonus": 0.04,
+          "hostile_liquidity_forces_high_uncertainty": true
+        },
+        "YM": {
+          "hostile_liquidity_penalty": 0.07,
+          "favorable_liquidity_bonus": 0.05,
+          "hostile_liquidity_forces_high_uncertainty": false
+        }
+      }
+    },
+    "entry_logic_id": null,
+    "logic_family": null,
+    "raw_market_regime_label": "range",
+    "raw_liquidity_context_label": "neutral",
+    "raw_factor_alignment": "mixed",
+    "raw_factor_uncertainty": "low",
+    "raw_multi_timeframe_direction_bias": "bullish",
+    "raw_multi_timeframe_alignment_score": 0.9974,
+    "raw_multi_timeframe_entry_alignment_score": 0.8022,
+    "raw_multi_timeframe_resonance_label": "aligned",
+    "active_pda_count": 0,
+    "inversed_pda_count": 0,
+    "stale_pda_count": 0,
+    "nearest_active_pda": null,
+    "nearest_inversed_pda": null,
+    "filtered_market_regime_label": "range",
+    "filtered_liquidity_context_label": "neutral",
+    "filtered_factor_alignment": "mixed",
+    "filtered_factor_uncertainty": "low",
+    "filtered_multi_timeframe_direction_bias": "bullish",
+    "filtered_multi_timeframe_alignment_score": 0.9974,
+    "filtered_multi_timeframe_entry_alignment_score": 0.8022,
+    "filtered_multi_timeframe_resonance_label": "aligned",
+    "evidence_quality_score": 0.523311097658614,
+    "gating_status": "pass_neutralized",
+    "pass_to_bbn": true,
+    "uses_soft_evidence": true,
+    "conflict_flags": [
+      "low_directional_separation"
+    ],
+    "rationale": [
+      "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.802",
+      "long/short support gap 0.015 is too small, so alignment is treated as mixed",
+      "pre_bayes_quality_score=0.523 gating_status=pass_neutralized",
+      "market_state_source=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.398",
+      "market_state_source=volatility=NormalVol:0.701 liquidity=NormalLiquidity:0.335 structure=Unknown:0.300 behavior=Neutral:0.450",
+      "market_state_source=rationale=volatility=NormalVol conf=0.70",
+      "market_state_source=rationale=primary=RangeConsolidation secondary=WideRange overall=0.40"
+    ],
+    "evidence_assignments": {
+      "factor_alignment": "mixed",
+      "factor_uncertainty": "low",
+      "liquidity_context": "neutral",
+      "market_regime": "range",
+      "market_state_primary_regime": "RangeConsolidation",
+      "market_state_secondary_regime": "WideRange",
+      "multi_timeframe_resonance": "aligned"
+    },
+    "soft_market_regime_distribution": {
+      "bear": 0.0,
+      "bull": 0.0,
+      "range": 1.0
+    },
+    "soft_liquidity_context_distribution": {
+      "favorable": 0.0,
+      "hostile": 0.0,
+      "neutral": 1.0
+    },
+    "soft_factor_alignment_distribution": {
+      "bearish": 0.0,
+      "bullish": 0.0,
+      "mixed": 1.0
+    },
+    "soft_factor_uncertainty_distribution": {
+      "high": 0.4191722255853465,
+      "low": 0.5808277744146535
+    },
+    "soft_multi_timeframe_resonance_distribution": {
+      "aligned": 0.5808277744146535,
+      "dislocated": 0.0,
+      "mixed": 0.4191722255853465
+    }
+  },
+  "pre_bayes_entry_quality_bridge": {
+    "long_signal_probability": 0.5373720853900505,
+    "short_signal_probability": 0.540972863824069,
+    "long_entry_bias": [
+      0.18997937927448003,
+      0.5246605659299513,
+      0.2853600547955687
+    ],
+    "short_entry_bias": [
+      0.056802338183673265,
+      0.3194704038443677,
+      0.623727257971959
+    ],
+    "long_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "selected_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_alignment_score": 0.9974,
+    "multi_timeframe_entry_alignment_score": 0.8022,
+    "rationale": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.015 short_support=0.030 uncertainty=0.383",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.802",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ]
+  },
+  "multi_timeframe_summary": [
+    "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+    "multi_timeframe_missing=1m,5m,30m,4h",
+    "15m:983 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T120903+0800-codex-115500-same-root-aq-downstream-chain-v1/provider-data-json/BTC_USD-1h.json",
+    "1h:246 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T120903+0800-codex-115500-same-root-aq-downstream-chain-v1/provider-data-json/BTC_USD-4h.json",
+    "1d:41 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T120903+0800-codex-115500-same-root-aq-downstream-chain-v1/provider-data-json/BTC_USD-1d.json",
+    "higher_timeframe_direction_bias=bullish",
+    "higher_timeframe_alignment_score=0.9974",
+    "lower_timeframe_entry_alignment_score=0.8022"
+  ],
+  "executor_scorecards": [],
+  "diff_from_previous": {
+    "previous_artifact_id": null,
+    "changed_fields": [],
+    "posterior_delta": 0.0,
+    "win_probability_delta": 0.0,
+    "entry_delta": 0.0,
+    "exact_duplicate": false
+  },
+  "review_decision": {
+    "status": "observe",
+    "reason": "first_execution_candidate_artifact",
+    "supersedes_artifact_id": null
+  }
+}

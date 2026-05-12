@@ -1,0 +1,8 @@
+requirement,status,evidence,gap
+Use the named Board A markdown and preserve concurrent work.,pass,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,
+Every active regime/root reaches >=95% calibrated confidence.,fail,source_confidence_labels=0/4; direct_r6=schema_ready_unscored,"Source-confidence labels remain 0/4 and direct R6 is schema-ready/unscored, not promoted."
+"Validate across other markets, timeframes, and periods.",fail,R3_files=0/2; R5_files=0/2,Native sub-hour source labels and post-2026-01-30 source-panel rows are absent.
+Direct Manipulation/R6 has source-owned positives plus normal controls.,fail,external_controls=0; public_controls=None; owner_files=0/3,No verifier-ready source-owned normal controls or FLIP-control approval exists.
+"Operate provider, Auto-Quant, Pre-Bayes/BBN, CatBoost/policy, and execution-tree surfaces.",partial,docs/experiments/actionable-regime-confidence/runs/20260512T004827-codex-current-goal-completion-audit-after-v70-v1/command-output,Read-only surfaces ran; promotion chain is deferred because canonical R6/source-label inputs are missing.
+"Check IBKR, TradingViewRemix/MCP, yfinance, Kraken, and local Auto-Quant.",partial,"providers=[('ibkr', False), ('tradingview_mcp', False), ('yfinance', True), ('kraken_public', False), ('kraken_cli', True)]; auto_quant=dependency_ready_seed_required",Provider readiness is not acceptance evidence; missing source/control inputs still block.
+Avoid proxy acceptance and shared-intake pollution.,pass,No intake files created; no canonical merge; raw data not committed.,

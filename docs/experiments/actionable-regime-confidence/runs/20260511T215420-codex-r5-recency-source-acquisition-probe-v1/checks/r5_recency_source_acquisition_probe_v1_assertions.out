@@ -1,0 +1,13 @@
+PASS decision=r5_recency_source_acquisition_probe_v1=no_source_owned_post_cutoff_rows_found
+PASS stock_source_date_max=2026-01-30
+PASS stock_source_post_cutoff_rows=0
+PASS compatible_post_cutoff_source_count=0
+PASS source_panel_recency_status=blocked
+PASS source_panel_recency_reason=missing_required_files
+PASS intake_files_written=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=true_metadata_only

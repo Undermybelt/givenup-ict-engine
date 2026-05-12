@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "1de1e10025ac2e71",
+  "dry_run": false,
+  "feedback_records_inserted": 892,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_BINANCE_BTC_FULLCHAIN_143900_20260512T072457.938980000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades_binance_btc_fullchain_143900",
+  "symbol": "B2R_BINANCE_BTC_FULLCHAIN_143900",
+  "trades_applied": 892,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151021+0800-codex-143900-binance-btc-fullchain-v1/derived/binance_btc_fullchain_real_trades.jsonl",
+  "trades_total": 892
+}

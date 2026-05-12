@@ -1,0 +1,9 @@
+{
+  "status": "blocked",
+  "reason": "missing_required_files",
+  "missing_files": [
+    "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+    "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+    "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+  ]
+}

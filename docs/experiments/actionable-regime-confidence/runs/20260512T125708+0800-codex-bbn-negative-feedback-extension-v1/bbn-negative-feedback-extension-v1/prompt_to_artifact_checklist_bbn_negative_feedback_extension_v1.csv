@@ -1,0 +1,7 @@
+requirement,status,evidence
+existing BBN feedback source read,pass,docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json
+provider evidence node gate included,pass,docs/experiments/actionable-regime-confidence/runs/20260512T122933+0800-codex-115700-provider-evidence-node-cross-context-gate-v1/115700-provider-evidence-node-cross-context-gate-v1/115700_provider_evidence_node_cross_context_gate_v1.json
+post-121607 non-BTC/MTF negatives included,pass,123820 and 124245 JSON roots
+selected-history zero-trade negative included,pass,docs/experiments/actionable-regime-confidence/runs/20260512T124408+0800-codex-123227-tomac-trade-density-iteration-v1/tomac-trade-density-iteration-v1/tomac_trade_density_iteration_v1.json
+no production prior/CPD mutation,pass,summary prior_mutation=false production_likelihood_mutation=false
+strict Board A objective remains fail-closed,pass,accepted_95_contexts_added=0

@@ -1,0 +1,15 @@
+PASS run_id=20260512T130432+0800-codex-130000-provider-momentum-fallback-runtime-v1
+PASS direct_fallback_apply_exit0
+PASS apply_scores_to_ict_exit0
+PASS register_fallback_artifact_exit0
+PASS enable_runtime_exit0
+PASS validation_raw_scored_mature_133_of_30
+FAIL_CLOSED runtime_selection_status=enabled_registered_model_invalid
+FAIL_CLOSED runtime_active_match_count=0
+FAIL_CLOSED execution_ready=false
+FAIL_CLOSED execution_gate_status=execution_blocked
+FAIL_CLOSED pre_bayes_gate_status=pass_neutralized
+FAIL_CLOSED path_ranker_raw_score_null_in_execution_candidate
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

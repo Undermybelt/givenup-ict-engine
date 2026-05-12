@@ -1,0 +1,10 @@
+PASS active_taxonomy=MainRegimeV2
+PASS slot_count=612
+PASS direct_source_label_slots=16
+PASS full_four_root_cells=4
+PASS missing_slots=596
+PASS goal_achieved=false
+PASS accepted_full_panel=false
+PASS raw_data_committed=false
+PASS thresholds_relaxed=false
+PASS trade_usable=false

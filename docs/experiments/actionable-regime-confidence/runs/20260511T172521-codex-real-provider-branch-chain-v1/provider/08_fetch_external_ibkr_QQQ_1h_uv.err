@@ -1,0 +1,5 @@
+Installed 6 packages in 59ms
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 70, in <module>
+    import pandas as pd
+ModuleNotFoundError: No module named 'pandas'

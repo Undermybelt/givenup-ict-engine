@@ -1,0 +1,343 @@
+{
+  "run_id": "20260511T022233+0800-codex-bayi-hu-manipulation-event-social-gate",
+  "source": {
+    "url": "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+    "commit": "17e398f99558c52a472728d4a5856f15313be079",
+    "local_clone": "/tmp/ict-regime-bayi-pd",
+    "paper": "Sequence-based Target Coin Prediction for Cryptocurrency Pump-and-Dump",
+    "paper_url": "https://arxiv.org/pdf/2204.12929.pdf"
+  },
+  "dataset": {
+    "event_log": {
+      "event_rows": 1335,
+      "numeric_session_rows": 1311,
+      "unknown_session_rows": 24,
+      "exchanges": 14,
+      "coins": 277,
+      "largest_exchange": "binance",
+      "largest_exchange_rows": 1003,
+      "date_min": "2019-01-01 14:30:04+00:00",
+      "date_max": "2022-01-19 18:00:28+00:00"
+    },
+    "manual_message_labels": {
+      "label_rows_total": 5146,
+      "skipped_unknown_label_rows": 15,
+      "mapped_rows": 3884,
+      "unmapped_rows": 1247,
+      "missing_label_channels": [
+        "1126741955",
+        "1149375708",
+        "1155451890",
+        "1369950426",
+        "1371800770",
+        "1493950470"
+      ],
+      "labels_mapped": {
+        "0": 2416,
+        "2": 629,
+        "1": 839
+      },
+      "positive_rows": 1468,
+      "negative_control_rows": 2416,
+      "channels_mapped": 35,
+      "date_min": "2018-08-29 10:38:43+00:00",
+      "date_max": "2021-11-18 21:03:41+00:00"
+    },
+    "event_sessions": {
+      "candidate_sessions": 4377,
+      "positive_sessions_covered": 1168,
+      "negative_control_sessions": 3209,
+      "channels": 172,
+      "event_log_numeric_rows": 1311,
+      "event_log_numeric_rows_not_covered_by_session_pickles": 143,
+      "negative_control_semantics": "predicted-pump sessions absent from cleaned event log; weaker than manual negative labels",
+      "date_min": "2017-06-28 07:45:02+00:00",
+      "date_max": "2022-01-22 14:22:23+00:00"
+    },
+    "github_market_feature_samples_present": false,
+    "notes": "The README points generated train/test target-coin samples to external Google Drive archives; this bounded run did not acquire them and did not commit raw data."
+  },
+  "evaluations": [
+    {
+      "gate": "manual_message_multinomial_nb",
+      "support_min": 50,
+      "split": {
+        "train": {
+          "rows": 1942,
+          "positives": 947,
+          "negatives": 995,
+          "date_min": "2018-08-29 10:38:43+00:00",
+          "date_max": "2020-03-29 17:03:29+00:00"
+        },
+        "calibration": {
+          "rows": 971,
+          "positives": 343,
+          "negatives": 628,
+          "date_min": "2020-03-29 18:12:15+00:00",
+          "date_max": "2021-02-13 03:59:33+00:00"
+        },
+        "test": {
+          "rows": 971,
+          "positives": 178,
+          "negatives": 793,
+          "date_min": "2021-02-13 10:02:52+00:00",
+          "date_max": "2021-11-18 21:03:41+00:00"
+        }
+      },
+      "vocab_size": 969,
+      "threshold": 9.494898003833766,
+      "train": {
+        "support": 514,
+        "positives": 511,
+        "precision": 0.9941634241245136,
+        "wilson95_lcb": 0.9829821348671409
+      },
+      "calibration": {
+        "support": 83,
+        "positives": 79,
+        "precision": 0.9518072289156626,
+        "wilson95_lcb": 0.8825414079954845
+      },
+      "test": {
+        "support": 17,
+        "positives": 16,
+        "precision": 0.9411764705882353,
+        "wilson95_lcb": 0.7301796936242461
+      },
+      "top_positive_tokens": [
+        {
+          "token": "instructions",
+          "log_odds": 5.126442470917394,
+          "positive_count": 230,
+          "negative_count": 0
+        },
+        {
+          "token": "released",
+          "log_odds": 4.871410566236356,
+          "positive_count": 178,
+          "negative_count": 0
+        },
+        {
+          "token": "net",
+          "log_odds": 4.271540011144971,
+          "positive_count": 392,
+          "negative_count": 3
+        },
+        {
+          "token": "read",
+          "log_odds": 3.8887173797865655,
+          "positive_count": 200,
+          "negative_count": 2
+        },
+        {
+          "token": "outside",
+          "log_odds": 3.794898624568912,
+          "positive_count": 60,
+          "negative_count": 0
+        },
+        {
+          "token": "setting",
+          "log_odds": 3.7615622043013204,
+          "positive_count": 58,
+          "negative_count": 0
+        },
+        {
+          "token": "lead",
+          "log_odds": 3.7615622043013204,
+          "positive_count": 58,
+          "negative_count": 0
+        },
+        {
+          "token": "attract",
+          "log_odds": 3.7615622043013204,
+          "positive_count": 58,
+          "negative_count": 0
+        },
+        {
+          "token": "under",
+          "log_odds": 3.534172362105659,
+          "positive_count": 46,
+          "negative_count": 0
+        },
+        {
+          "token": "sell",
+          "log_odds": 3.3390026628338547,
+          "positive_count": 463,
+          "negative_count": 11
+        },
+        {
+          "token": "repump",
+          "log_odds": 3.1392893633280305,
+          "positive_count": 94,
+          "negative_count": 2
+        },
+        {
+          "token": "stabilized",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        },
+        {
+          "token": "slowly",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        },
+        {
+          "token": "reminder",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        },
+        {
+          "token": "promote",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        },
+        {
+          "token": "process",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        },
+        {
+          "token": "prepared",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        },
+        {
+          "token": "popular",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        },
+        {
+          "token": "phone",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        },
+        {
+          "token": "percentage",
+          "log_odds": 3.118011964880747,
+          "positive_count": 30,
+          "negative_count": 0
+        }
+      ],
+      "accepted_95": false,
+      "blocker": "calibration_or_test_wilson_below_95_or_support_below_floor"
+    },
+    {
+      "gate": "manual_message_regex_rule",
+      "support_min": 50,
+      "split": {
+        "train": {
+          "rows": 1942,
+          "positives": 947,
+          "negatives": 995,
+          "date_min": "2018-08-29 10:38:43+00:00",
+          "date_max": "2020-03-29 17:03:29+00:00"
+        },
+        "calibration": {
+          "rows": 971,
+          "positives": 343,
+          "negatives": 628,
+          "date_min": "2020-03-29 18:12:15+00:00",
+          "date_max": "2021-02-13 03:59:33+00:00"
+        },
+        "test": {
+          "rows": 971,
+          "positives": 178,
+          "negatives": 793,
+          "date_min": "2021-02-13 10:02:52+00:00",
+          "date_max": "2021-11-18 21:03:41+00:00"
+        }
+      },
+      "rule": "has_coin & has_countdown",
+      "train": {
+        "support": 387,
+        "positives": 385,
+        "precision": 0.9948320413436692,
+        "wilson95_lcb": 0.9813553696415802
+      },
+      "calibration": {
+        "support": 83,
+        "positives": 80,
+        "precision": 0.963855421686747,
+        "wilson95_lcb": 0.8990410702303961
+      },
+      "test": {
+        "support": 104,
+        "positives": 55,
+        "precision": 0.5288461538461539,
+        "wilson95_lcb": 0.43360208820409
+      },
+      "accepted_95": false,
+      "blocker": "calibration_or_test_wilson_below_95_or_support_below_floor"
+    },
+    {
+      "gate": "cleaned_event_session_candidate_rule",
+      "support_min": 50,
+      "split": {
+        "train": {
+          "rows": 2188,
+          "positives": 367,
+          "negatives": 1821,
+          "date_min": "2017-06-28 07:45:02+00:00",
+          "date_max": "2019-10-09 13:28:26+00:00"
+        },
+        "calibration": {
+          "rows": 1094,
+          "positives": 429,
+          "negatives": 665,
+          "date_min": "2019-10-11 16:00:05+00:00",
+          "date_max": "2021-03-21 12:49:26+00:00"
+        },
+        "test": {
+          "rows": 1095,
+          "positives": 372,
+          "negatives": 723,
+          "date_min": "2021-03-21 13:06:20+00:00",
+          "date_max": "2022-01-22 14:22:23+00:00"
+        }
+      },
+      "rule": "has_vip",
+      "train": {
+        "support": 484,
+        "positives": 115,
+        "precision": 0.23760330578512398,
+        "wilson95_lcb": 0.20184491555526618
+      },
+      "calibration": {
+        "support": 561,
+        "positives": 204,
+        "precision": 0.36363636363636365,
+        "wilson95_lcb": 0.3248821108717282
+      },
+      "test": {
+        "support": 391,
+        "positives": 147,
+        "precision": 0.37595907928388744,
+        "wilson95_lcb": 0.32937423567519136
+      },
+      "accepted_95": false,
+      "blocker": "calibration_or_test_wilson_below_95_or_support_below_floor"
+    }
+  ],
+  "decision": {
+    "board_state": "blocked",
+    "active_axis": "MainRegimeV2",
+    "candidate_regime": "Manipulation",
+    "accepted_95": false,
+    "accepted_gates": [],
+    "manipulation_input_state": "partial_crypto_event_social_dataset_below_95",
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "trade_usable": false,
+    "gate": "blocked_bayi_hu_event_social_gate_below_95",
+    "blocker": "Bayi-Hu provides direct crypto P&D event/social evidence and manual negative message controls, but the unchanged chronological gates failed held-out 95% Wilson lower bounds; no aligned market-feature samples were acquired in this bounded run.",
+    "next_action": "Acquire or regenerate Bayi-Hu aligned market-feature samples with explicit positive/negative controls, then rerun the unchanged Manipulation gate before trying another source."
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "run_id": "20260511T070241+0800-codex-main-regime-taxonomy-correction",
+  "source_board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "user_correction": "previous labels look like child regimes under main regimes, not main-class regimes",
+  "decision": "taxonomy_corrected_main_roots_four_overlay_separate_full_universe_still_blocked",
+  "main_price_regime_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "overlay_gates": [
+    {
+      "name": "Manipulation",
+      "accounting_class": "direct_event_overlay_gate",
+      "completion_accounting": "not_counted_as_main_price_regime_root",
+      "accepted_packet": "20260511T045102+0800-codex-mehrnoom-telegram-direct-manipulation-gate",
+      "test_wilson95_lcb": 0.99970077066,
+      "downstream_action": "suppress_abstain_cooldown_only"
+    }
+  ],
+  "child_or_provenance_labels": [
+    "BullExpansion",
+    "BearExpansion",
+    "RangeConsolidation",
+    "SidewaysConsolidation",
+    "CrisisStress",
+    "CrisisCrash",
+    "VolatilityDislocation",
+    "TrendExpansion",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "SessionLiquidityCoreViable",
+    "ThinLiquidity"
+  ],
+  "preflight_only_labels": [
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "TransitionRecovery",
+    "CrossAssetRotation",
+    "MacroPolicyRegime"
+  ],
+  "residual_labels": [
+    "UnknownOrMixed"
+  ],
+  "preserved_main_root_evidence": [
+    {
+      "root": "Bull",
+      "accepted_packet": "20260511T035045+0800-codex-kaggle-bull-coverage-buffer-gate",
+      "calibration_wilson95_lcb": 0.952516,
+      "test_wilson95_lcb": 0.961931,
+      "baseline_validation": "index + single_stock, 1d + 1w"
+    },
+    {
+      "root": "Bear",
+      "accepted_packet": "20260511T041923+0800-codex-yahoo-sourcebacked-parent-root-gate",
+      "calibration_wilson95_lcb": 0.993968,
+      "test_wilson95_lcb": 0.992722,
+      "baseline_validation": "crypto + equity_etf, 1d + 1w"
+    },
+    {
+      "root": "Sideways",
+      "accepted_packet": "20260511T041923+0800-codex-yahoo-sourcebacked-parent-root-gate",
+      "calibration_wilson95_lcb": 0.988647,
+      "test_wilson95_lcb": 0.995568,
+      "baseline_validation": "crypto + equity_etf, 1d + 1w"
+    },
+    {
+      "root": "Crisis",
+      "accepted_packet": "20260510T235220+0800-codex-broader-root-v2-probe",
+      "calibration_wilson95_lcb": 0.996248,
+      "test_wilson95_lcb": 0.995981,
+      "baseline_validation": "7 contexts, 15m + 1h"
+    }
+  ],
+  "expanded_scope_status": {
+    "all_species_all_cycles_complete": false,
+    "blocker": "provider-universe and timeframe-ladder coverage matrix has not been built",
+    "next_action": "build provider-universe and timeframe-ladder coverage matrix for the four main price roots, then account for Manipulation separately as an overlay gate"
+  },
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

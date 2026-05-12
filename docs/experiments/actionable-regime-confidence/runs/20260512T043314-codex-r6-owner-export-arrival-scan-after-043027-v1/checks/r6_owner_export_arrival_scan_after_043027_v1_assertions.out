@@ -1,0 +1,12 @@
+PASS gate_result=r6_owner_export_arrival_scan_after_043027_v1=no_verifier_native_owner_export_arrival_no_promotion
+PASS r6_owner_root_present=false
+PASS r6_current_contract_complete=false
+PASS r6_legacy_contract_complete=false
+PASS r3_native_subhour_root_present=false
+PASS r5_recency_extension_root_present=false
+PASS accepted_rows_added=0
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

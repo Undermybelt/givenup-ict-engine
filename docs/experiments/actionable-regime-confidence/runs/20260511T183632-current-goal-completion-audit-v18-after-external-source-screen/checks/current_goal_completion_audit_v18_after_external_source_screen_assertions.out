@@ -1,0 +1,6 @@
+PASS scoped_active_lane_95_present true
+PASS strict_full_objective_achieved false
+PASS update_goal false
+PASS source_label_equivalence_blocked
+PASS native_subhour_and_strict_1h_blocked
+PASS direct_manipulation_full_species_blocked

@@ -1,0 +1,15 @@
+pass: corrected_fetch_exit_0
+pass: yfinance_btc_usd_1h_rows_146
+pass: kraken_public_ccxt_btc_usd_1h_rows_120
+pass: binance_public_ccxt_btc_usdt_1h_rows_120
+pass: bybit_public_ccxt_btc_usdt_1h_rows_120
+fail_closed: first_probe_bad_run_root_literal
+fail_closed: not_default_provider_status_repair
+fail_closed: no_tradingviewremix_data
+fail_closed: no_ibkr_data_in_this_probe
+fail_closed: no_auto_quant_run
+fail_closed: no_pre_bayes_bbn_catboost_execution_tree_rerun
+fail_closed: no_source_control_unlock
+fail_closed: no_selected_history
+promotion_allowed=false
+update_goal=false

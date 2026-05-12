@@ -1,0 +1,71 @@
+{
+  "run_id": "20260512T014854-codex-reference-restoration-readback-after-014726-v1",
+  "gate_result": "reference_restoration_readback_after_014726_v1=014221_014314_restored_fail_closed_no_promotion",
+  "board_hash_before_artifact": "bb78b1529af7ed0b9f9bf45c5aba31c81ad2f28f1f64c0be9ec4cc4d129380a2",
+  "current_cursor_preserved": true,
+  "restored_references": [
+    {
+      "run_id": "20260512T014221-codex-current-objective-completion-audit-after-013904-v1",
+      "present": true,
+      "required_files_present": true,
+      "assertions_pass": true,
+      "gate_result": "current_objective_completion_audit_after_013904_v1=not_complete_source_r6_r3_r5_timeframe_downstream_blocked",
+      "promotion_evidence": false
+    },
+    {
+      "run_id": "20260512T014314-codex-r6-owner-route-current-web-recheck-v1",
+      "present": true,
+      "required_files_present": true,
+      "assertions_pass": true,
+      "gate_result": "r6_owner_route_current_web_recheck_v1=current_official_routes_rechecked_controls_not_acquired_no_merge",
+      "promotion_evidence": false
+    }
+  ],
+  "still_stale_references": [
+    {
+      "run_id": "20260512T014426-codex-current-objective-completion-audit-after-014229-v1",
+      "present": false,
+      "promotion_evidence": false
+    }
+  ],
+  "source_roots": [
+    {
+      "id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "required_verifier_native_files_present": false,
+      "source_owned_normal_controls": 0,
+      "explicit_flip_approval": false
+    },
+    {
+      "id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    {
+      "id": "r5_recency_extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    },
+    {
+      "id": "source_label_equivalence",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "file_count": 2,
+      "acceptance_status": "confidence_blocked_daily_only"
+    }
+  ],
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_requests_sent": false,
+  "trade_usable": false
+}

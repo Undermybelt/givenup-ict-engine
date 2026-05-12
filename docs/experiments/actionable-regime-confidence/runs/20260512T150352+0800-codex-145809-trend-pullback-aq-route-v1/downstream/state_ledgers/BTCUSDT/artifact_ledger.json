@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto_quant_real_trades_BTCUSDT_20260512T072618.964057000Z",
+    "artifact_kind": "auto_quant_real_trades_ingested",
+    "artifact_id": "auto_quant_real_trades_BTCUSDT_20260512T072618.964057000Z",
+    "version": 1,
+    "generated_at": "2026-05-12T07:26:18.964057Z",
+    "symbol": "BTCUSDT",
+    "source_phase": "auto_quant_real_trades",
+    "source_run_id": "7c9c599ae06cbd99",
+    "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/selected_branch_real_trades_BTCUSDT.jsonl",
+    "status": "applied",
+    "promote_candidate": false,
+    "actionable": false,
+    "decision_hint": "ingested 254 trade(s)",
+    "review_reason": "ingested 254/254 (invalid 0) feedback_inserted=254 content_hash=7c9c599ae06cbd99 dry_run=false force=false",
+    "review_rule_version": "auto-quant-real-trades-v1",
+    "top_factor_name": null,
+    "top_factor_action": null,
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 254,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

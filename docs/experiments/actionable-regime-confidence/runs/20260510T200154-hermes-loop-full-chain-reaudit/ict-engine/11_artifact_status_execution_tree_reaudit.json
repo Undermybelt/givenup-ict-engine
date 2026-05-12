@@ -1,0 +1,39 @@
+{
+  "symbol": "NQ",
+  "total_entries": 1,
+  "entries": [
+    {
+      "entry_id": "ledger:execution-tree-NQ-1778410561984",
+      "artifact_kind": "execution_tree_artifact",
+      "artifact_id": "execution-tree-NQ-1778410561984",
+      "version": 1,
+      "generated_at": "2026-05-10T10:56:01.984649Z",
+      "symbol": "NQ",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/execution_tree_trace.json",
+      "status": "observe",
+      "promote_candidate": false,
+      "actionable": true,
+      "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+      "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000",
+      "review_rule_version": "execution-tree-artifact-v1",
+      "top_factor_name": null,
+      "top_factor_action": null,
+      "family_scores": {
+        "branch_probability": 0.0,
+        "execution_score": 0.5677200754449443
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 0,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null,
+      "path_kind": "file",
+      "path_exists": true
+    }
+  ]
+}

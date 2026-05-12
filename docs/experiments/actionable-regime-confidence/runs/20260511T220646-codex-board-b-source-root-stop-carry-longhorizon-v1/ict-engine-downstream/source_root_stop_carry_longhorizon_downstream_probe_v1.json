@@ -1,0 +1,112 @@
+{
+  "bbn_state_exists": true,
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-ingest-real-trades --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2 --trades /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/source_root_stop_carry_longhorizon_real_trades_wire_v1.jsonl --source board_b_source_root_stop_carry_longhorizon_220646",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/auto_quant_ingest_real_trades_apply.exit",
+      "name": "auto_quant_ingest_real_trades_apply",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/auto_quant_ingest_real_trades_apply.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/auto_quant_ingest_real_trades_apply.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2 --refresh --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/pre_bayes_status_json.exit",
+      "name": "pre_bayes_status_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/pre_bayes_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/pre_bayes_status_json.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/policy_training_status_json.exit",
+      "name": "policy_training_status_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/policy_training_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/policy_training_status_json.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/workflow_status_execution_candidate_agent.exit",
+      "name": "workflow_status_execution_candidate_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/workflow_status_execution_candidate_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/workflow_status_execution_candidate_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/logs/export_structural_path_ranking_target.out",
+      "timed_out": false
+    }
+  ],
+  "downstream_consumption": "consumed_through_bbn_feedback_readback;pre_bayes_policy_workflow_export_checked",
+  "execution_tree_ready": false,
+  "export_payload_keys": [
+    "candidate_set_id",
+    "candidate_set_size",
+    "csv_path",
+    "history_csv_path",
+    "history_jsonl_path",
+    "history_mature_rows",
+    "history_rows",
+    "history_rows_with_calibrated_path_prob",
+    "history_rows_with_path_prob_lower_bound",
+    "history_rows_with_propensity_estimate",
+    "history_rows_with_raw_path_score",
+    "history_rows_with_training_weight",
+    "jsonl_path",
+    "mature_rows",
+    "pending_reward_states",
+    "rows",
+    "rows_with_calibrated_path_prob",
+    "rows_with_execution_gate_status",
+    "rows_with_path_prob_lower_bound",
+    "rows_with_propensity_estimate",
+    "rows_with_raw_path_score",
+    "rows_with_training_weight",
+    "summary_line",
+    "summary_path",
+    "symbol",
+    "trainer_manifest"
+  ],
+  "export_returncode": 0,
+  "generated_at_utc": "2026-05-11T14:21:52.850816+00:00",
+  "ingest_ok": true,
+  "learning_state_exists": true,
+  "policy_ready": false,
+  "policy_summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+  "pre_bayes_gate_status": null,
+  "pre_bayes_policy": null,
+  "probe_id": "20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-downstream-v1",
+  "promotion_status": "not_promoted:execution_tree_or_policy_not_calibrated",
+  "rc_spa": {
+    "gate_result": "pass",
+    "manipulation_component_pass": true,
+    "price_root_paths_passed": 4,
+    "stable_profit_score": 85.74074074074075
+  },
+  "recipe_id": "SourceRootStopCarryLongHorizonV1",
+  "run_id": "20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "same_branch_paths_preserved_to_wire": true,
+  "state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "wire": {
+    "branch_paths_preserved": true,
+    "count": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/source_root_stop_carry_longhorizon_real_trades_wire_v1.count",
+    "jsonl": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/source_root_stop_carry_longhorizon_real_trades_wire_v1.jsonl",
+    "records": 12329,
+    "sample": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/source_root_stop_carry_longhorizon_real_trades_wire_v1.sample.json",
+    "unique_csv_branch_paths": 4,
+    "unique_wire_branch_paths": 4
+  },
+  "workflow_snapshot_exists": true,
+  "workflow_top_actionable": null
+}

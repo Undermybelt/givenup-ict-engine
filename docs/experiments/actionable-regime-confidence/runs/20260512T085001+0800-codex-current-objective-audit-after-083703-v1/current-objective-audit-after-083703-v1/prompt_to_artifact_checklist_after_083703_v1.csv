@@ -1,0 +1,8 @@
+requirement,evidence,status,gap
+Board B authoritative plan updated without disturbing concurrent work,Board B EOF readbacks and append-only corrections through 083703,partial,Duplicate concurrent sections exist; latest EOF count pointers are fail-closed.
+"Use real provider/runtime surfaces ibkr, tradingviewremix, yf/yfinance, kraken",082430/083447 runtime-readiness/current-objective assertions and board mirrors,covered_runtime_only,"Provider visibility is diagnostic only, not source/control evidence."
+Acquire valid regime/source-control root before training/promotion,"083545, 083618, and 083703 assertions",blocked,"No approved dispatch channel, no verifier-native order-lifecycle package, no source/control rows."
+User-selected exactly one historical path HTF/MTF/LTF before selected-data AutoQuant,Board B gates remain no_explicit_user_selected_history,blocked,No explicit user-selected history path.
+Run selected-data AutoQuant based on regime root,Selected-data AutoQuant promotion assertions remain false,not_run,Correctly blocked until source/control and selected-history gates pass.
+Run ordered AutoQuant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution tree with regime branch path,Downstream promotion rerun assertions remain false,not_run,Correctly blocked until source/control and selected-history gates pass.
+Do not mark completion/update_goal prematurely,All counted assertions retain update_goal=false,covered,

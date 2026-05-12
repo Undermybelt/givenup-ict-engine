@@ -1,0 +1,17 @@
+provider,query,url,status,error,total_count,returned_rows
+openml,MainRegimeV2,https://www.openml.org/api/v1/json/data/list/data_name/MainRegimeV2,412,"http_error:412:{""error"":{""code"":""372"",""message"":""No results""}}",,0
+harvard_dataverse,MainRegimeV2,https://dataverse.harvard.edu/api/search?type=dataset&per_page=10&q=MainRegimeV2,200,,0,0
+openml,main_regime_v2,https://www.openml.org/api/v1/json/data/list/data_name/main_regime_v2,412,"http_error:412:{""error"":{""code"":""372"",""message"":""No results""}}",,0
+harvard_dataverse,main_regime_v2,https://dataverse.harvard.edu/api/search?type=dataset&per_page=10&q=main_regime_v2,200,,0,0
+openml,source_confidence matched_negative_group_id,https://www.openml.org/api/v1/json/data/list/data_name/source_confidence%20matched_negative_group_id,412,"http_error:412:{""error"":{""code"":""372"",""message"":""No results""}}",,0
+harvard_dataverse,source_confidence matched_negative_group_id,https://dataverse.harvard.edu/api/search?type=dataset&per_page=10&q=source_confidence%20matched_negative_group_id,200,,0,0
+openml,native_subhour_source_label_rows Crisis,https://www.openml.org/api/v1/json/data/list/data_name/native_subhour_source_label_rows%20Crisis,412,"http_error:412:{""error"":{""code"":""372"",""message"":""No results""}}",,0
+harvard_dataverse,native_subhour_source_label_rows Crisis,https://dataverse.harvard.edu/api/search?type=dataset&per_page=10&q=native_subhour_source_label_rows%20Crisis,200,,2812,10
+openml,direct_manipulation_positive_rows matched_controls provenance,https://www.openml.org/api/v1/json/data/list/data_name/direct_manipulation_positive_rows%20matched_controls%20provenance,412,"http_error:412:{""error"":{""code"":""372"",""message"":""No results""}}",,0
+harvard_dataverse,direct_manipulation_positive_rows matched_controls provenance,https://dataverse.harvard.edu/api/search?type=dataset&per_page=10&q=direct_manipulation_positive_rows%20matched_controls%20provenance,200,,2823,10
+openml,Oystacher spoofing futures order book matched controls,https://www.openml.org/api/v1/json/data/list/data_name/Oystacher%20spoofing%20futures%20order%20book%20matched%20controls,412,"http_error:412:{""error"":{""code"":""372"",""message"":""No results""}}",,0
+harvard_dataverse,Oystacher spoofing futures order book matched controls,https://dataverse.harvard.edu/api/search?type=dataset&per_page=10&q=Oystacher%20spoofing%20futures%20order%20book%20matched%20controls,200,,47677,10
+openml,stock market regimes 2026 extension,https://www.openml.org/api/v1/json/data/list/data_name/stock%20market%20regimes%202026%20extension,412,"http_error:412:{""error"":{""code"":""372"",""message"":""No results""}}",,0
+harvard_dataverse,stock market regimes 2026 extension,https://dataverse.harvard.edu/api/search?type=dataset&per_page=10&q=stock%20market%20regimes%202026%20extension,200,,35161,10
+openml,Bull Bear Sideways Crisis market regime labels,https://www.openml.org/api/v1/json/data/list/data_name/Bull%20Bear%20Sideways%20Crisis%20market%20regime%20labels,412,"http_error:412:{""error"":{""code"":""372"",""message"":""No results""}}",,0
+harvard_dataverse,Bull Bear Sideways Crisis market regime labels,https://dataverse.harvard.edu/api/search?type=dataset&per_page=10&q=Bull%20Bear%20Sideways%20Crisis%20market%20regime%20labels,200,,31388,10

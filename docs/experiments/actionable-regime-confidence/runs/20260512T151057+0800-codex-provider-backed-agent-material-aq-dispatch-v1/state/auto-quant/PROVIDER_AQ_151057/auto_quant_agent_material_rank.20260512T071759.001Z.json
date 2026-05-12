@@ -1,0 +1,16 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:PROVIDER_AQ_151057:20260512T071759.000Z",
+  "generated_at": "2026-05-12T07:17:59.001032Z",
+  "symbol": "PROVIDER_AQ_151057",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_AQ_151057:20260512T071446.730Z",
+  "ranking": [
+    {
+      "unit_label": "IBKR SPY 1h Provider Trend Pullback Resume",
+      "status": "completed",
+      "win_rate_pct": 41.4557,
+      "sharpe": 0.6637,
+      "total_profit_pct": 29.99,
+      "trade_count": 316
+    }
+  ]
+}

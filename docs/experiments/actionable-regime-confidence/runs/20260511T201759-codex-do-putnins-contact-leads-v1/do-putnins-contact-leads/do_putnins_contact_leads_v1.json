@@ -1,0 +1,58 @@
+{
+  "accepted_rows_added": 0,
+  "contact_lead_count": 4,
+  "contact_leads": [
+    {
+      "contact_surface": "SSRN abstract page author email links",
+      "intended_use": "Use the page's public author email links to send the owner-request template.",
+      "lead_id": "ssrn_author_email_links",
+      "privacy_boundary": "Use only public SSRN/institutional contact surfaces; do not scrape private addresses.",
+      "status": "ready_contact_surface_no_rows_acquired",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036"
+    },
+    {
+      "contact_surface": "SSRN contact author listing for Bao Linh Do",
+      "intended_use": "Ask whether an owner-approved, redacted positive/control row package can be exported for Board A verifier intake.",
+      "lead_id": "ssrn_contact_author",
+      "privacy_boundary": "Contact path is public on the SSRN record; no request was sent by this run.",
+      "status": "ready_contact_surface_no_rows_acquired",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036"
+    },
+    {
+      "contact_surface": "UTS public profile for Talis Putnins",
+      "intended_use": "Secondary author/institutional route if SSRN author email links are unavailable.",
+      "lead_id": "uts_talis_putnins_profile",
+      "privacy_boundary": "Use public institutional profile/contact route only.",
+      "status": "ready_contact_surface_no_rows_acquired",
+      "url": "https://profiles.uts.edu.au/talis.putnins"
+    },
+    {
+      "contact_surface": "RePEc author-paper record",
+      "intended_use": "Bibliographic fallback to confirm paper identity and author linkage before sending the request.",
+      "lead_id": "repec_author_record",
+      "privacy_boundary": "Use as identity/source confirmation only.",
+      "status": "bibliographic_fallback_no_rows_acquired",
+      "url": "https://ideas.repec.org/p/arx/papers/2308.00198.html"
+    }
+  ],
+  "decision": "do_putnins_contact_leads_v1=public_contact_paths_ready_rows_not_acquired",
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "ready_spoofing_layering_intake_source": false,
+  "request_sent": false,
+  "request_template_available": true,
+  "rows_acquired": false,
+  "run_id": "20260511T201759-codex-do-putnins-contact-leads-v1",
+  "runtime_code_changed": false,
+  "source_target": {
+    "paper_title": "Detecting Layering and Spoofing in Markets",
+    "primary_source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036",
+    "prior_request_package": "docs/experiments/actionable-regime-confidence/runs/20260511T201352-codex-do-putnins-owner-request-package-v1/do-putnins-owner-request-package/do_putnins_owner_request_template_v1.md",
+    "required_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+    "target_id": "do_putnins_2023_detecting_layering_spoofing"
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,708 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T072500-codex-kraken-public-lowpollution-lane/checks/kraken_public_lowpollution_lane_assertions.out",
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260511T072500-codex-kraken-public-lowpollution-lane/kraken-lane/kraken_public_lowpollution_lane.csv",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T072500-codex-kraken-public-lowpollution-lane/kraken-lane/kraken_public_lowpollution_lane.json",
+    "md": "docs/experiments/actionable-regime-confidence/runs/20260511T072500-codex-kraken-public-lowpollution-lane/kraken-lane/kraken_public_lowpollution_lane.md",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T072500-codex-kraken-public-lowpollution-lane/scripts/kraken_public_lowpollution_lane.py"
+  },
+  "cell_count": 27,
+  "cells": [
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 1,
+      "kraken_result_key": "XXBTZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_XBTUSD_1m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 510,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 5,
+      "kraken_result_key": "XXBTZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_XBTUSD_5m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 505,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "5m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 15,
+      "kraken_result_key": "XXBTZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_XBTUSD_15m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 267,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "15m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 30,
+      "kraken_result_key": "XXBTZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_XBTUSD_30m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 231,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "30m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 60,
+      "kraken_result_key": "XXBTZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_XBTUSD_1h.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 117,
+          "Crisis": 0,
+          "Sideways": 589
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1h",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 240,
+      "kraken_result_key": "XXBTZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_XBTUSD_4h.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 49,
+          "Crisis": 0,
+          "Sideways": 365
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "4h",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 1440,
+      "kraken_result_key": "XXBTZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_XBTUSD_1d.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 36,
+          "Bull": 72,
+          "Crisis": 0,
+          "Sideways": 114
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1d",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 658,
+      "data_status": "usable",
+      "interval": 10080,
+      "kraken_result_key": "XXBTZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_XBTUSD_1w.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 658,
+        "evaluated_rows": 530,
+        "root_hits": {
+          "Bear": 99,
+          "Bull": 82,
+          "Crisis": 0,
+          "Sideways": 0
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1w",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_interval_unsupported",
+      "data_status": "unsupported_provider_interval",
+      "label_status": "not_labeled_interval_unsupported",
+      "pair": "XBTUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "reason": "kraken_public_ohlc_has_no_monthly_interval",
+      "runtime_code_changed": false,
+      "thresholds_relaxed": false,
+      "timeframe": "1mo",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 1,
+      "kraken_result_key": "XETHZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_ETHUSD_1m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 476,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 5,
+      "kraken_result_key": "XETHZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_ETHUSD_5m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 423,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "5m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 15,
+      "kraken_result_key": "XETHZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_ETHUSD_15m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 185,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "15m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 30,
+      "kraken_result_key": "XETHZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_ETHUSD_30m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 160,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "30m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 60,
+      "kraken_result_key": "XETHZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_ETHUSD_1h.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 86,
+          "Crisis": 0,
+          "Sideways": 588
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1h",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 240,
+      "kraken_result_key": "XETHZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_ETHUSD_4h.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 35,
+          "Bull": 28,
+          "Crisis": 0,
+          "Sideways": 347
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "4h",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 1440,
+      "kraken_result_key": "XETHZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_ETHUSD_1d.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 180,
+          "Bull": 44,
+          "Crisis": 0,
+          "Sideways": 10
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1d",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 562,
+      "data_status": "usable",
+      "interval": 10080,
+      "kraken_result_key": "XETHZUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_ETHUSD_1w.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 562,
+        "evaluated_rows": 434,
+        "root_hits": {
+          "Bear": 151,
+          "Bull": 24,
+          "Crisis": 0,
+          "Sideways": 0
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1w",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_interval_unsupported",
+      "data_status": "unsupported_provider_interval",
+      "label_status": "not_labeled_interval_unsupported",
+      "pair": "ETHUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "reason": "kraken_public_ohlc_has_no_monthly_interval",
+      "runtime_code_changed": false,
+      "thresholds_relaxed": false,
+      "timeframe": "1mo",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 1,
+      "kraken_result_key": "SOLUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_SOLUSD_1m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 414,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 5,
+      "kraken_result_key": "SOLUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_SOLUSD_5m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 270,
+          "Crisis": 0,
+          "Sideways": 593
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "5m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 15,
+      "kraken_result_key": "SOLUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_SOLUSD_15m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 206,
+          "Crisis": 0,
+          "Sideways": 591
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "15m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 30,
+      "kraken_result_key": "SOLUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_SOLUSD_30m.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 136,
+          "Crisis": 0,
+          "Sideways": 580
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "30m",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 60,
+      "kraken_result_key": "SOLUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_SOLUSD_1h.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 0,
+          "Bull": 82,
+          "Crisis": 0,
+          "Sideways": 552
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1h",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 240,
+      "kraken_result_key": "SOLUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_SOLUSD_4h.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 45,
+          "Bull": 29,
+          "Crisis": 0,
+          "Sideways": 354
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "4h",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 721,
+      "data_status": "usable",
+      "interval": 1440,
+      "kraken_result_key": "SOLUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_SOLUSD_1d.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 721,
+        "evaluated_rows": 593,
+        "root_hits": {
+          "Bear": 193,
+          "Bull": 37,
+          "Crisis": 0,
+          "Sideways": 2
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1d",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_no_source_root_labels",
+      "bars": 256,
+      "data_status": "usable",
+      "interval": 10080,
+      "kraken_result_key": "SOLUSD",
+      "label_status": "unsupported_missing_independent_root_labels",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "raw_tmp_csv": "/private/tmp/ict-regime-kraken-public-lowpollution-20260511T072500/kraken_SOLUSD_1w.csv",
+      "runtime_code_changed": false,
+      "score": {
+        "bars": 256,
+        "evaluated_rows": 128,
+        "root_hits": {
+          "Bear": 25,
+          "Bull": 4,
+          "Crisis": 0,
+          "Sideways": 0
+        },
+        "status": "scored_close_ohlc_proxy"
+      },
+      "thresholds_relaxed": false,
+      "timeframe": "1w",
+      "trade_usable": false
+    },
+    {
+      "accepted_confidence_status": "blocked_interval_unsupported",
+      "data_status": "unsupported_provider_interval",
+      "label_status": "not_labeled_interval_unsupported",
+      "pair": "SOLUSD",
+      "provider": "kraken_public_lowpollution_http",
+      "reason": "kraken_public_ohlc_has_no_monthly_interval",
+      "runtime_code_changed": false,
+      "thresholds_relaxed": false,
+      "timeframe": "1mo",
+      "trade_usable": false
+    }
+  ],
+  "completion_accounting": {
+    "accepted_full_cycle_full_universe": false,
+    "why_not_accepted": [
+      "The lane opens public Kraken OHLC data without new dependencies, but it still has no independent source-backed MainRegimeV2 root labels.",
+      "Close/OHLC root-hit scoring is applicability evidence only and cannot compute accepted Wilson95 confidence.",
+      "The monthly cycle is unsupported by Kraken public OHLC and remains an explicit blocked cell."
+    ]
+  },
+  "gate_result": "kraken_public_lane_opened_confidence_blocked_missing_independent_labels",
+  "goal_achieved": false,
+  "objective": "Open the blocked kraken_public lane with a no-new-dependency HTTP sidecar and record all cycle dispositions.",
+  "pairs": [
+    "XBTUSD",
+    "ETHUSD",
+    "SOLUSD"
+  ],
+  "provider": "kraken_public_lowpollution_http",
+  "provider_lane_opened": true,
+  "raw_ohlcv_committed": false,
+  "run_id": "20260511T072500+0800-codex-kraken-public-lowpollution-lane",
+  "runtime_code_changed": false,
+  "scored_close_ohlc_proxy_cells": 24,
+  "thresholds_relaxed": false,
+  "timeframes_attempted": [
+    "1m",
+    "5m",
+    "15m",
+    "30m",
+    "1h",
+    "4h",
+    "1d",
+    "1w",
+    "1mo"
+  ],
+  "trade_usable": false,
+  "usable_cells": 24
+}

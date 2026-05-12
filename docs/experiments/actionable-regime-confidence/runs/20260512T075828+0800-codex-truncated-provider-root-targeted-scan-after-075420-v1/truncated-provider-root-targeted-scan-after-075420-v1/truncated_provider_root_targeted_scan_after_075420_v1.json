@@ -1,0 +1,40 @@
+{
+  "summary": {
+    "run_id": "20260512T075828+0800-codex-truncated-provider-root-targeted-scan-after-075420-v1",
+    "generated_at_utc": "2026-05-11T23:58:28.927325+00:00",
+    "roots": [
+      "/Users/thrill3r/tradingview-mcp",
+      "/Users/thrill3r/Library/Application Support/TradingView",
+      "/tmp/ict-engine-board-a-064259-runtime-v1"
+    ],
+    "files_scanned": 29885,
+    "required_filename_hits": 0,
+    "schema_hits": 1,
+    "read_errors": 0,
+    "oversize_skips": 1,
+    "r6_owner_export_complete": false,
+    "r5_source_panel_candidate": false,
+    "r3_crisis_capable_candidate": false,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_by_root": {
+    "/Users/thrill3r/tradingview-mcp": [],
+    "/Users/thrill3r/Library/Application Support/TradingView": [],
+    "/tmp/ict-engine-board-a-064259-runtime-v1": []
+  },
+  "schema_by_root": {
+    "/Users/thrill3r/tradingview-mcp": [],
+    "/Users/thrill3r/Library/Application Support/TradingView": [],
+    "/tmp/ict-engine-board-a-064259-runtime-v1": [
+      "source_panel"
+    ]
+  }
+}

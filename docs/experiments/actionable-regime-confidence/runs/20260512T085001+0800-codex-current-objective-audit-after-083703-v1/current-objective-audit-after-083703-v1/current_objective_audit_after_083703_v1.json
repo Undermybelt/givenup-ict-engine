@@ -1,0 +1,198 @@
+{
+  "accepted_rows_added": 0,
+  "assertion_rows": [
+    {
+      "accepted_rows_added": "0",
+      "all_commands_exit0": "true",
+      "canonical_merge": "false",
+      "commands_exit0": "9",
+      "commands_run": "9",
+      "downstream_promotion_rerun": "false",
+      "explicit_user_selected_history": "false",
+      "gate_result": "runtime_readiness_after_082215_v1=readiness_observed_but_source_control_and_selected_history_gates_block_promotion",
+      "missing_board_markers": "none",
+      "name": "082430_runtime_readiness",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/checks/runtime_readiness_after_082215_v1_assertions.out",
+      "present": "true",
+      "promotion_allowed": "false",
+      "provider_ibkr_visible": "true",
+      "provider_kraken_visible": "true",
+      "provider_surface_mentions_all": "true",
+      "provider_tradingviewremix_visible": "true",
+      "provider_yfinance_visible": "true",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "blocked_requirements": "4",
+      "canonical_merge": "false",
+      "covered_requirements": "4",
+      "downstream_promotion_rerun": "false",
+      "explicit_user_selected_history": "false",
+      "gate_result": "current_objective_audit_after_083108_v1=not_complete_source_control_and_selected_history_absent_no_downstream_promotion",
+      "name": "083447_current_objective_audit",
+      "partial_requirements": "2",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T083447+0800-codex-current-objective-audit-after-083108-v1/checks/current_objective_audit_after_083108_v1_assertions.out",
+      "present": "true",
+      "promotion_allowed": "false",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "approval_present": "false",
+      "approved_dispatch_channel_present": "false",
+      "canonical_merge": "false",
+      "dispatch_ticket_export_license_provenance_present": "false",
+      "downstream_promotion_rerun": "false",
+      "external_requests_sent_by_this_artifact": "false",
+      "gate_result": "r6_approved_dispatch_channel_readback_after_083108_v1=no_approved_dispatch_channel_no_rows_no_unlock",
+      "name": "083545_dispatch_channel_readback",
+      "operator_env_names_present_count": "0",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T083545+0800-codex-r6-approved-dispatch-channel-readback-after-083108-v1/checks/r6_approved_dispatch_channel_readback_after_083108_v1_assertions.out",
+      "present": "true",
+      "promotion_allowed": "false",
+      "required_dispatch_assets_present": "true",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "files_indexed": "13",
+      "gate_result": "tomac_futures_header_inventory_after_083108_v1=ohlcv_symbology_only_no_source_control_unlock",
+      "matched_control_header_hits": "0",
+      "name": "083618_tomac_header_inventory",
+      "order_lifecycle_header_hits": "0",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T083618+0800-codex-tomac-futures-header-inventory-after-083108-v1/checks/tomac_futures_header_inventory_after_083108_v1_assertions.out",
+      "present": "true",
+      "promotion_allowed": "false",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "source_control_package_hits": "0",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "candidate_rows_scanned": "243",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "exact_required_package_present": "false",
+      "gate_result": "local_order_lifecycle_zip_header_sweep_after_083450_v1=no_verifier_native_order_lifecycle_package_no_unlock",
+      "name": "083703_zip_header_sweep",
+      "order_lifecycle_candidate_rows": "0",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T083703+0800-codex-local-order-lifecycle-zip-header-sweep-after-083450-v1/checks/local_order_lifecycle_zip_header_sweep_after_083450_v1_assertions.out",
+      "present": "true",
+      "promotion_allowed": "false",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false",
+      "zip_member_rows_scanned": "34"
+    }
+  ],
+  "board_a_sha256_before_artifact": "4e99e2ec508795e194c7b6d6449cac590a605e95ab2d97eb24443bf2b0d5772c",
+  "board_b_sha256_before_artifact": "2b6c632ac3b2e811e35a0166e61a6d286a2c48e183d268445499ecfb6d9c9fa8",
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "evidence": "Board B EOF readbacks and append-only corrections through 083703",
+      "gap": "Duplicate concurrent sections exist; latest EOF count pointers are fail-closed.",
+      "requirement": "Board B authoritative plan updated without disturbing concurrent work",
+      "status": "partial"
+    },
+    {
+      "evidence": "082430/083447 runtime-readiness/current-objective assertions and board mirrors",
+      "gap": "Provider visibility is diagnostic only, not source/control evidence.",
+      "requirement": "Use real provider/runtime surfaces ibkr, tradingviewremix, yf/yfinance, kraken",
+      "status": "covered_runtime_only"
+    },
+    {
+      "evidence": "083545, 083618, and 083703 assertions",
+      "gap": "No approved dispatch channel, no verifier-native order-lifecycle package, no source/control rows.",
+      "requirement": "Acquire valid regime/source-control root before training/promotion",
+      "status": "blocked"
+    },
+    {
+      "evidence": "Board B gates remain no_explicit_user_selected_history",
+      "gap": "No explicit user-selected history path.",
+      "requirement": "User-selected exactly one historical path HTF/MTF/LTF before selected-data AutoQuant",
+      "status": "blocked"
+    },
+    {
+      "evidence": "Selected-data AutoQuant promotion assertions remain false",
+      "gap": "Correctly blocked until source/control and selected-history gates pass.",
+      "requirement": "Run selected-data AutoQuant based on regime root",
+      "status": "not_run"
+    },
+    {
+      "evidence": "Downstream promotion rerun assertions remain false",
+      "gap": "Correctly blocked until source/control and selected-history gates pass.",
+      "requirement": "Run ordered AutoQuant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution tree with regime branch path",
+      "status": "not_run"
+    },
+    {
+      "evidence": "All counted assertions retain update_goal=false",
+      "gap": "",
+      "requirement": "Do not mark completion/update_goal prematurely",
+      "status": "covered"
+    }
+  ],
+  "downstream_promotion_rerun": false,
+  "empty_or_nonterminal_roots": [
+    {
+      "counted": false,
+      "exists": true,
+      "file_count": 6,
+      "run_root": "20260512T083559+0800-codex-local-order-lifecycle-source-sweep-after-083108-v1"
+    },
+    {
+      "counted": false,
+      "exists": true,
+      "file_count": 7,
+      "run_root": "20260512T083711+0800-codex-r6-approved-dispatch-channel-readback-after-083108-v1"
+    },
+    {
+      "counted": false,
+      "exists": true,
+      "file_count": 6,
+      "run_root": "20260512T084654+0800-codex-current-objective-audit-after-083618-v1"
+    },
+    {
+      "counted": false,
+      "exists": true,
+      "file_count": 1,
+      "run_root": "20260512T084727+0800-codex-local-source-control-wide-header-sweep-after-083618-v1"
+    }
+  ],
+  "explicit_user_selected_history": false,
+  "gate_result": "current_objective_audit_after_083703_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+  "observed_at_utc": "2026-05-12T00:50:01.509232+00:00",
+  "promotion_allowed": false,
+  "provider_surface_observed": true,
+  "run_id": "20260512T085001+0800-codex-current-objective-audit-after-083703-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

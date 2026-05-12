@@ -1,0 +1,31 @@
+{
+  "run_id": "20260512T062201+0800-codex-r3-hf-tsie-provenance-decision-v1",
+  "gate_result": "r3_hf_tsie_provenance_decision_v1=rejected_rule_based_proxy_labels_no_intake_no_promotion",
+  "source_run_id": "20260512T061855+0800-codex-r3-hf-tsie-native-subhour-source-screen-v1",
+  "dataset_id": "sujinwo/tsie-market-regime-dataset",
+  "license": "mit",
+  "public": true,
+  "readme_fetch_exit": 0,
+  "api_fetch_exit": 0,
+  "first_rows_fetch_exit": 0,
+  "parquet_head_exit": 35,
+  "raw_parquet_downloaded": false,
+  "target_root_mutated": false,
+  "required_target_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+  "native_subhour_timestamps_present": true,
+  "regime_label_column_present": true,
+  "provenance_rejection_reasons": [
+    "readme_states_labels_are_generated_using_rule_based_signal_classification",
+    "readme_states_label_logic_uses_price_action_volatility_rsi_and_volume",
+    "first_rows_include_technical_and_target_adjacent_fields",
+    "labels_are_generated_proxy_labels_not_source_owned_main_regime_v2_exports"
+  ],
+  "accepted_rows_added": 0,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "next_action": "Continue only from required roots or owner/source-native exports; do not materialize TSIE under the R3 target root."
+}

@@ -1,0 +1,1 @@
+./target/debug/ict-engine policy-training-status --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T131621+0800-codex-125715-eth-same-symbol-prebayes-bbn-v1/state_ingest --output-format json

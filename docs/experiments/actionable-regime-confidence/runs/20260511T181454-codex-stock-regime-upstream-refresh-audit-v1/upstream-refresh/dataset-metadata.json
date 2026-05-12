@@ -1,0 +1,31 @@
+{
+  "collaborators": [
+    {
+      "groupSlug": "",
+      "role": "READER",
+      "username": "zulqarnain11"
+    }
+  ],
+  "datasetId": 9386207,
+  "datasetSlug": "stock-market-regimes-20002026",
+  "description": "This dataset provides a comprehensive, ML-ready view of stock market regimes from 2000 to 2026, covering multiple global equities and indices.\nEach trading day is labeled into interpretable market regimes\u2014Bull, Bear, Sideways, Crisis, and High-Volatility\u2014based on return dynamics, volatility behavior, and stress indicators.\n\nIn addition to price-based features, the dataset integrates key macroeconomic variables (interest rates, inflation, unemployment, yield curve, and VIX) to provide broader economic context for each regime.\n\nThe dataset is designed for:\n- Market regime detection\n- Algorithmic trading & portfolio allocation\n- Risk management & stress testing\n- Financial time-series modeling\n- ML & deep learning research\n\nAll features are constructed to avoid look-ahead bias, making the dataset suitable for real-world modeling and backtesting.",
+  "keywords": [
+    "finance",
+    "time series analysis",
+    "deep learning",
+    "neural networks",
+    "investing"
+  ],
+  "licenses": [
+    {
+      "name": "apache-2.0"
+    }
+  ],
+  "ownerUser": "mafaqbhatti",
+  "subtitle": "Labeled bull, bear, crisis & volatility regimes with macro data",
+  "title": "Stock Market Regimes (2000\u20132026)",
+  "totalDownloads": 221,
+  "totalViews": 1276,
+  "totalVotes": 45,
+  "usabilityRating": 1.0
+}

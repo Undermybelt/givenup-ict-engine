@@ -1,0 +1,674 @@
+{
+  "accepted_95": false,
+  "active_root_accounting_after_gate": {
+    "accepted_95_roots": [
+      "Crisis"
+    ],
+    "missing_95_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ]
+  },
+  "candidate_regime": "Manipulation",
+  "gate": "blocked_systemslab_direct_pump_gate_below_95",
+  "label_polarity": "gt=1 labeled pump/dump chunk; gt=0 non-pump chunk.",
+  "min_support": 50,
+  "raw_data_committed_to_repo": false,
+  "run_id": "20260511T030031+0800-codex-systemslab-direct-pump-gate",
+  "runtime_code_changed": false,
+  "source_commit": "d71250d4cb055dde2d415c8cba38a0dcd6eb6e16",
+  "source_context": "Direct crypto pump-and-dump event dataset with labeled exchange-transaction feature chunks.",
+  "source_repo": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+  "source_root": "/private/tmp/ict-regime-systemslab-pump-dump",
+  "thresholds_relaxed": false,
+  "timeframe_reports": [
+    {
+      "accepted_95": false,
+      "blocked_predictors": [
+        "date",
+        "pump_index",
+        "symbol",
+        "gt",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos"
+      ],
+      "candidate_rules": 222,
+      "features_used": [
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max"
+      ],
+      "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_5S.csv.gz",
+      "profile": {
+        "all": {
+          "date_max_utc": "2021-01-19T16:58:25",
+          "date_min_utc": "2018-01-02T18:14:40",
+          "negatives": 820990,
+          "positives": 317,
+          "pump_indices": 327,
+          "rows": 821307,
+          "symbols": 85
+        },
+        "calibration": {
+          "date_max_utc": "2020-05-29T18:35:25",
+          "date_min_utc": "2019-07-09T20:13:30",
+          "negatives": 164163,
+          "positives": 98,
+          "pump_indices": 102,
+          "rows": 164261,
+          "symbols": 53
+        },
+        "test": {
+          "date_max_utc": "2021-01-19T16:58:25",
+          "date_min_utc": "2020-05-29T18:35:30",
+          "negatives": 164191,
+          "positives": 71,
+          "pump_indices": 76,
+          "rows": 164262,
+          "symbols": 36
+        },
+        "train_select": {
+          "date_max_utc": "2019-07-09T20:13:25",
+          "date_min_utc": "2018-01-02T18:14:40",
+          "negatives": 492636,
+          "positives": 148,
+          "pump_indices": 152,
+          "rows": 492784,
+          "symbols": 59
+        }
+      },
+      "selected_calibration": {
+        "false_positive": 230,
+        "feature": "std_rush_order",
+        "op": ">=",
+        "precision": 0.27672955974842767,
+        "rule": "std_rush_order >= 0.041",
+        "support": 318,
+        "threshold": 0.041,
+        "true_positive": 88,
+        "wilson95_lcb": 0.23044481372408968
+      },
+      "selected_rule": "std_rush_order >= 0.041",
+      "selected_test": {
+        "false_positive": 195,
+        "feature": "std_rush_order",
+        "op": ">=",
+        "precision": 0.26136363636363635,
+        "rule": "std_rush_order >= 0.041",
+        "support": 264,
+        "threshold": 0.041,
+        "true_positive": 69,
+        "wilson95_lcb": 0.21205548702883487
+      },
+      "selected_train": {
+        "false_positive": 364,
+        "feature": "std_rush_order",
+        "op": ">=",
+        "precision": 0.28205128205128205,
+        "rule": "std_rush_order >= 0.041",
+        "support": 507,
+        "threshold": 0.041,
+        "true_positive": 143,
+        "wilson95_lcb": 0.24463326284474574
+      },
+      "sha256": "e1f82b42d735e368f04a60062cadd50d6b097cc1222ebe8830cbff24b6d5ab99",
+      "timeframe": "5S",
+      "top_train_rules": [
+        {
+          "false_positive": 364,
+          "feature": "std_rush_order",
+          "op": ">=",
+          "precision": 0.28205128205128205,
+          "rule": "std_rush_order >= 0.041",
+          "support": 507,
+          "threshold": 0.041,
+          "true_positive": 143,
+          "wilson95_lcb": 0.24463326284474574
+        },
+        {
+          "false_positive": 367,
+          "feature": "std_trades",
+          "op": ">=",
+          "precision": 0.2600806451612903,
+          "rule": "std_trades >= 0.092",
+          "support": 496,
+          "threshold": 0.092,
+          "true_positive": 129,
+          "wilson95_lcb": 0.22342308842662995
+        },
+        {
+          "false_positive": 369,
+          "feature": "avg_rush_order",
+          "op": ">=",
+          "precision": 0.25303643724696356,
+          "rule": "avg_rush_order >= 0.036",
+          "support": 494,
+          "threshold": 0.036,
+          "true_positive": 125,
+          "wilson95_lcb": 0.2167050645939881
+        },
+        {
+          "false_positive": 391,
+          "feature": "avg_volume",
+          "op": ">=",
+          "precision": 0.21643286573146292,
+          "rule": "avg_volume >= 0.056",
+          "support": 499,
+          "threshold": 0.056,
+          "true_positive": 108,
+          "wilson95_lcb": 0.18253986856337012
+        },
+        {
+          "false_positive": 391,
+          "feature": "std_volume",
+          "op": ">=",
+          "precision": 0.21327967806841047,
+          "rule": "std_volume >= 0.156",
+          "support": 497,
+          "threshold": 0.156,
+          "true_positive": 106,
+          "wilson95_lcb": 0.17953722941036837
+        },
+        {
+          "false_positive": 528,
+          "feature": "avg_price",
+          "op": ">=",
+          "precision": 0.1301482701812191,
+          "rule": "avg_price >= 0.005",
+          "support": 607,
+          "threshold": 0.005,
+          "true_positive": 79,
+          "wilson95_lcb": 0.1056905621406801
+        },
+        {
+          "false_positive": 710,
+          "feature": "avg_price_max",
+          "op": ">=",
+          "precision": 0.12669126691266913,
+          "rule": "avg_price_max >= 0.005",
+          "support": 813,
+          "threshold": 0.005,
+          "true_positive": 103,
+          "wilson95_lcb": 0.1055688249268496
+        },
+        {
+          "false_positive": 1112,
+          "feature": "std_rush_order",
+          "op": ">=",
+          "precision": 0.11535401750198886,
+          "rule": "std_rush_order >= 0.022",
+          "support": 1257,
+          "threshold": 0.022,
+          "true_positive": 145,
+          "wilson95_lcb": 0.09885432710463468
+        },
+        {
+          "false_positive": 1095,
+          "feature": "std_trades",
+          "op": ">=",
+          "precision": 0.11407766990291263,
+          "rule": "std_trades >= 0.042",
+          "support": 1236,
+          "threshold": 0.042,
+          "true_positive": 141,
+          "wilson95_lcb": 0.09753752543684727
+        },
+        {
+          "false_positive": 1115,
+          "feature": "avg_rush_order",
+          "op": ">=",
+          "precision": 0.11226114649681529,
+          "rule": "avg_rush_order >= 0.025",
+          "support": 1256,
+          "threshold": 0.025,
+          "true_positive": 141,
+          "wilson95_lcb": 0.0959713670306982
+        },
+        {
+          "false_positive": 1176,
+          "feature": "avg_volume",
+          "op": ">=",
+          "precision": 0.09399075500770417,
+          "rule": "avg_volume >= 0.034",
+          "support": 1298,
+          "threshold": 0.034,
+          "true_positive": 122,
+          "wilson95_lcb": 0.07929181784173236
+        },
+        {
+          "false_positive": 1137,
+          "feature": "std_volume",
+          "op": ">=",
+          "precision": 0.09330143540669857,
+          "rule": "std_volume >= 0.06",
+          "support": 1254,
+          "threshold": 0.06,
+          "true_positive": 117,
+          "wilson95_lcb": 0.07842206693793949
+        },
+        {
+          "false_positive": 555,
+          "feature": "std_price",
+          "op": ">=",
+          "precision": 0.09016393442622951,
+          "rule": "std_price >= 0.015",
+          "support": 610,
+          "threshold": 0.015,
+          "true_positive": 55,
+          "wilson95_lcb": 0.0699262020423669
+        },
+        {
+          "false_positive": 1285,
+          "feature": "avg_price",
+          "op": ">=",
+          "precision": 0.0681653372008702,
+          "rule": "avg_price >= 0.004",
+          "support": 1379,
+          "threshold": 0.004,
+          "true_positive": 94,
+          "wilson95_lcb": 0.056027374621838814
+        },
+        {
+          "false_positive": 1629,
+          "feature": "avg_price_max",
+          "op": ">=",
+          "precision": 0.06540447504302926,
+          "rule": "avg_price_max >= 0.004",
+          "support": 1743,
+          "threshold": 0.004,
+          "true_positive": 114,
+          "wilson95_lcb": 0.054726768528764895
+        },
+        {
+          "false_positive": 2381,
+          "feature": "std_trades",
+          "op": ">=",
+          "precision": 0.05777601899485556,
+          "rule": "std_trades >= 0.023",
+          "support": 2527,
+          "threshold": 0.023,
+          "true_positive": 146,
+          "wilson95_lcb": 0.04933244836761419
+        },
+        {
+          "false_positive": 2514,
+          "feature": "std_rush_order",
+          "op": ">=",
+          "precision": 0.05488721804511278,
+          "rule": "std_rush_order >= 0.014",
+          "support": 2660,
+          "threshold": 0.014,
+          "true_positive": 146,
+          "wilson95_lcb": 0.046856209969294696
+        },
+        {
+          "false_positive": 2627,
+          "feature": "avg_rush_order",
+          "op": ">=",
+          "precision": 0.05162454873646209,
+          "rule": "avg_rush_order >= 0.019",
+          "support": 2770,
+          "threshold": 0.019,
+          "true_positive": 143,
+          "wilson95_lcb": 0.04398783990192585
+        },
+        {
+          "false_positive": 2392,
+          "feature": "std_volume",
+          "op": ">=",
+          "precision": 0.051170170567235225,
+          "rule": "std_volume >= 0.029",
+          "support": 2521,
+          "threshold": 0.029,
+          "true_positive": 129,
+          "wilson95_lcb": 0.043231206319115575
+        },
+        {
+          "false_positive": 2510,
+          "feature": "avg_volume",
+          "op": ">=",
+          "precision": 0.049602423324498296,
+          "rule": "avg_volume >= 0.023",
+          "support": 2641,
+          "threshold": 0.023,
+          "true_positive": 131,
+          "wilson95_lcb": 0.04195607581808831
+        }
+      ]
+    },
+    {
+      "accepted_95": false,
+      "blocked_predictors": [
+        "date",
+        "pump_index",
+        "symbol",
+        "gt",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos"
+      ],
+      "candidate_rules": 216,
+      "features_used": [
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max"
+      ],
+      "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_25S.csv.gz",
+      "profile": {
+        "all": {
+          "date_max_utc": "2021-01-19T16:58:20",
+          "date_min_utc": "2018-01-02T18:14:35",
+          "negatives": 481840,
+          "positives": 317,
+          "pump_indices": 327,
+          "rows": 482157,
+          "symbols": 85
+        },
+        "calibration": {
+          "date_max_utc": "2020-06-03T07:59:10",
+          "date_min_utc": "2019-07-28T21:50:50",
+          "negatives": 96341,
+          "positives": 90,
+          "pump_indices": 94,
+          "rows": 96431,
+          "symbols": 51
+        },
+        "test": {
+          "date_max_utc": "2021-01-19T16:58:20",
+          "date_min_utc": "2020-06-03T07:59:35",
+          "negatives": 96362,
+          "positives": 70,
+          "pump_indices": 73,
+          "rows": 96432,
+          "symbols": 36
+        },
+        "train_select": {
+          "date_max_utc": "2019-07-28T21:49:10",
+          "date_min_utc": "2018-01-02T18:14:35",
+          "negatives": 289137,
+          "positives": 157,
+          "pump_indices": 163,
+          "rows": 289294,
+          "symbols": 62
+        }
+      },
+      "selected_calibration": {
+        "false_positive": 65,
+        "feature": "std_rush_order",
+        "op": ">=",
+        "precision": 0.5578231292517006,
+        "rule": "std_rush_order >= 0.062707",
+        "support": 147,
+        "threshold": 0.06270699999999488,
+        "true_positive": 82,
+        "wilson95_lcb": 0.4770805391709516
+      },
+      "selected_rule": "std_rush_order >= 0.062707",
+      "selected_test": {
+        "false_positive": 38,
+        "feature": "std_rush_order",
+        "op": ">=",
+        "precision": 0.6415094339622641,
+        "rule": "std_rush_order >= 0.062707",
+        "support": 106,
+        "threshold": 0.06270699999999488,
+        "true_positive": 68,
+        "wilson95_lcb": 0.5467420011769402
+      },
+      "selected_train": {
+        "false_positive": 136,
+        "feature": "std_rush_order",
+        "op": ">=",
+        "precision": 0.5310344827586206,
+        "rule": "std_rush_order >= 0.062707",
+        "support": 290,
+        "threshold": 0.06270699999999488,
+        "true_positive": 154,
+        "wilson95_lcb": 0.4735684222109722
+      },
+      "sha256": "0d43d1d396ef13778ab2cd2a9f047034713f9066bdc07c23efce335da8185331",
+      "timeframe": "25S",
+      "top_train_rules": [
+        {
+          "false_positive": 136,
+          "feature": "std_rush_order",
+          "op": ">=",
+          "precision": 0.5310344827586206,
+          "rule": "std_rush_order >= 0.062707",
+          "support": 290,
+          "threshold": 0.06270699999999488,
+          "true_positive": 154,
+          "wilson95_lcb": 0.4735684222109722
+        },
+        {
+          "false_positive": 141,
+          "feature": "avg_rush_order",
+          "op": ">=",
+          "precision": 0.5137931034482759,
+          "rule": "avg_rush_order >= 0.033707",
+          "support": 290,
+          "threshold": 0.03370699999999488,
+          "true_positive": 149,
+          "wilson95_lcb": 0.45646512851882065
+        },
+        {
+          "false_positive": 142,
+          "feature": "std_trades",
+          "op": ">=",
+          "precision": 0.5120274914089347,
+          "rule": "std_trades >= 0.088",
+          "support": 291,
+          "threshold": 0.088,
+          "true_positive": 149,
+          "wilson95_lcb": 0.4548149901948648
+        },
+        {
+          "false_positive": 153,
+          "feature": "std_volume",
+          "op": ">=",
+          "precision": 0.4724137931034483,
+          "rule": "std_volume >= 0.149707",
+          "support": 290,
+          "threshold": 0.14970699999999487,
+          "true_positive": 137,
+          "wilson95_lcb": 0.4156912455525707
+        },
+        {
+          "false_positive": 161,
+          "feature": "avg_volume",
+          "op": ">=",
+          "precision": 0.4523809523809524,
+          "rule": "avg_volume >= 0.051",
+          "support": 294,
+          "threshold": 0.051,
+          "true_positive": 133,
+          "wilson95_lcb": 0.3964659608367096
+        },
+        {
+          "false_positive": 262,
+          "feature": "avg_price_max",
+          "op": ">=",
+          "precision": 0.28610354223433243,
+          "rule": "avg_price_max >= 0.008",
+          "support": 367,
+          "threshold": 0.008,
+          "true_positive": 105,
+          "wilson95_lcb": 0.24226852132667334
+        },
+        {
+          "false_positive": 578,
+          "feature": "avg_rush_order",
+          "op": ">=",
+          "precision": 0.2125340599455041,
+          "rule": "avg_rush_order >= 0.021",
+          "support": 734,
+          "threshold": 0.021,
+          "true_positive": 156,
+          "wilson95_lcb": 0.18447412480343145
+        },
+        {
+          "false_positive": 578,
+          "feature": "std_trades",
+          "op": ">=",
+          "precision": 0.21145975443383355,
+          "rule": "std_trades >= 0.034",
+          "support": 733,
+          "threshold": 0.034,
+          "true_positive": 155,
+          "wilson95_lcb": 0.18344165364788048
+        },
+        {
+          "false_positive": 595,
+          "feature": "std_rush_order",
+          "op": ">=",
+          "precision": 0.20877659574468085,
+          "rule": "std_rush_order >= 0.025",
+          "support": 752,
+          "threshold": 0.025,
+          "true_positive": 157,
+          "wilson95_lcb": 0.18124393538229597
+        },
+        {
+          "false_positive": 588,
+          "feature": "std_volume",
+          "op": ">=",
+          "precision": 0.20108695652173914,
+          "rule": "std_volume >= 0.048",
+          "support": 736,
+          "threshold": 0.048,
+          "true_positive": 148,
+          "wilson95_lcb": 0.17371577506782607
+        },
+        {
+          "false_positive": 601,
+          "feature": "avg_volume",
+          "op": ">=",
+          "precision": 0.19866666666666666,
+          "rule": "avg_volume >= 0.029",
+          "support": 750,
+          "threshold": 0.029,
+          "true_positive": 149,
+          "wilson95_lcb": 0.17167841237499826
+        },
+        {
+          "false_positive": 319,
+          "feature": "avg_price",
+          "op": ">=",
+          "precision": 0.1984924623115578,
+          "rule": "avg_price >= 0.007",
+          "support": 398,
+          "threshold": 0.007,
+          "true_positive": 79,
+          "wilson95_lcb": 0.16227002005004593
+        },
+        {
+          "false_positive": 237,
+          "feature": "std_price",
+          "op": ">=",
+          "precision": 0.19112627986348124,
+          "rule": "std_price >= 0.015",
+          "support": 293,
+          "threshold": 0.015,
+          "true_positive": 56,
+          "wilson95_lcb": 0.1502164911201652
+        },
+        {
+          "false_positive": 746,
+          "feature": "avg_price_max",
+          "op": ">=",
+          "precision": 0.1425287356321839,
+          "rule": "avg_price_max >= 0.006",
+          "support": 870,
+          "threshold": 0.006,
+          "true_positive": 124,
+          "wilson95_lcb": 0.12086809375047723
+        },
+        {
+          "false_positive": 1310,
+          "feature": "std_rush_order",
+          "op": ">=",
+          "precision": 0.10702113156100886,
+          "rule": "std_rush_order >= 0.014",
+          "support": 1467,
+          "threshold": 0.014,
+          "true_positive": 157,
+          "wilson95_lcb": 0.09221551778784028
+        },
+        {
+          "false_positive": 1295,
+          "feature": "std_volume",
+          "op": ">=",
+          "precision": 0.1050449205252246,
+          "rule": "std_volume >= 0.021535",
+          "support": 1447,
+          "threshold": 0.021534999999974387,
+          "true_positive": 152,
+          "wilson95_lcb": 0.09027897533634904
+        },
+        {
+          "false_positive": 1357,
+          "feature": "std_trades",
+          "op": ">=",
+          "precision": 0.1036988110964333,
+          "rule": "std_trades >= 0.017",
+          "support": 1514,
+          "threshold": 0.017,
+          "true_positive": 157,
+          "wilson95_lcb": 0.08933174279980345
+        },
+        {
+          "false_positive": 1321,
+          "feature": "avg_volume",
+          "op": ">=",
+          "precision": 0.10319076714188731,
+          "rule": "avg_volume >= 0.019",
+          "support": 1473,
+          "threshold": 0.019,
+          "true_positive": 152,
+          "wilson95_lcb": 0.08867363154779213
+        },
+        {
+          "false_positive": 1421,
+          "feature": "avg_rush_order",
+          "op": ">=",
+          "precision": 0.09949302915082382,
+          "rule": "avg_rush_order >= 0.015",
+          "support": 1578,
+          "threshold": 0.015,
+          "true_positive": 157,
+          "wilson95_lcb": 0.08568312666830682
+        },
+        {
+          "false_positive": 1076,
+          "feature": "avg_price",
+          "op": ">=",
+          "precision": 0.09351305812973884,
+          "rule": "avg_price >= 0.005",
+          "support": 1187,
+          "threshold": 0.005,
+          "true_positive": 111,
+          "wilson95_lcb": 0.07823612300870983
+        }
+      ]
+    }
+  ],
+  "timeframes_evaluated": [
+    "5S",
+    "25S"
+  ]
+}

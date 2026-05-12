@@ -1,0 +1,7 @@
+artifact,required,present,path
+provider_conversion,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/provider-data-json/provider_data_conversion_summary.json
+summary_json,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/112954-prebayes-provider-data-rerun-v1/112954_prebayes_provider_data_rerun_v1.json
+report_md,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/112954-prebayes-provider-data-rerun-v1/112954_prebayes_provider_data_rerun_v1.md
+assertions,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/112954-prebayes-provider-data-rerun-v1/112954_prebayes_provider_data_rerun_v1_assertions.out
+catboost_model,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/path-ranker/catboost_model/catboost_model.cbm
+history_scores,true,true,docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/path-ranker/history_scores.csv

@@ -1,0 +1,12 @@
+requirement,evidence,status,notes
+Named board updated and preserved append-only,/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md,pass,Board exists and current audit writes a separate run root; Current Cursor is not edited.
+Every required regime has calibrated confidence >=95%,041410 source-label calibration; 041656 predictive screen,fail,source_labels=[]; predictive_labels=[]; no all-regime pass.
+Per-regime qualifying conditions exist for accepted regimes,041410/041656/041846/042436 readbacks,fail,No accepted regimes are available under the latest strict gates; diagnostic conditions are not acceptance.
+"Cross-market, cross-cycle, and cross-timeframe validation passes",041410 split gates; 041846 source discovery; 042436 target-root scan,fail,R3/R5 target roots absent; 041846 found no target-root unlock; source-label confidence failed required splits.
+"Use real provider surfaces: IBKR, TradingView, yfinance, Kraken",provider-status --agent fresh command,partial,"{""ibkr"": true, ""kraken"": true, ""tradingview"": true, ""yfinance"": true}"
+AutoQuant operates on real/local artifacts,042222 and 042603 AutoQuant readbacks plus fresh auto-quant-status,partial,data_ready=True; successful_backtests=3; runtime succeeded via threaded resolver but remains non-promoting because source/control roots are absent and strategy rows are runtime_only_non_promoting.
+Filter/Pre-Bayes and BBN evidence is present after source unlock,fresh pre-bayes-status command,fail,pre-bayes exit=0; source/control roots absent so no promoting rerun.
+CatBoost/path-ranking evidence is present after source unlock,fresh policy-training-status and export-structural-path-ranking-target commands,fail,policy exit=0; export exit=0; no promoting target export accepted.
+Execution-tree/workflow readback is actionable,fresh workflow-status commands,fail,workflow exit=0; structural phase exit=0; target roots absent.
+No proxy-only evidence is promoted,"041846, 042436, 042222/042603 board gates",pass,All proxy/readiness/discovery surfaces are non-promoting.
+Do not call update_goal unless the full objective is complete,promotion statuses and this audit,pass,Full objective is not complete; update_goal remains false.

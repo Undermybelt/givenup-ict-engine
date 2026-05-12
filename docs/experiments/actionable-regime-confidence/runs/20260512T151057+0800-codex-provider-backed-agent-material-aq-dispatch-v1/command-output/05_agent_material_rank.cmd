@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-rank --symbol PROVIDER_AQ_151057 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state

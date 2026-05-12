@@ -1,0 +1,16 @@
+PASS run_id=20260511T122933+0800-codex-source-window-crosswalk-decision-v1
+PASS approved_source_label_slots_added=63
+PASS approved_bull_slots=21
+PASS approved_bear_slots=21
+PASS approved_crisis_slots=21
+PASS approved_sideways_slots=0
+PASS approved_instruments=^GSPC,SPY,ES=F
+PASS broader_us_equity_family_projection_rejected_by_default=true
+PASS non_equity_projection_rejected_by_default=true
+PASS confidence_gate_claimed=false
+PASS full_matrix_completion=false
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+PASS proxy_promoted_beyond_declared_crosswalk=false

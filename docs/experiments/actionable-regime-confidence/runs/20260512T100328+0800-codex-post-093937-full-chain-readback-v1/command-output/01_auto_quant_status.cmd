@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-status --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T100328+0800-codex-post-093937-full-chain-readback-v1/state_copy --output-format json

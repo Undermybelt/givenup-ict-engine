@@ -1,0 +1,7 @@
+sources_fetched=ok
+candidate_rows_found=ok
+shared_intake_not_mutated=ok
+live_verifier_captured=ok
+no_acceptance_claimed=ok
+pooled_wilson_would_pass_if_all_sidecars_accepted=ok
+strict_objective_still_false=ok

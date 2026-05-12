@@ -1,0 +1,2 @@
+candidate,source_url,source_kind,fetch_status,content_type,text_chars,row_materializable,fail_closed_reason
+cftc_tower_linked_order_2019,https://www.cftc.gov/media/2986/enftowerresearchorder110619/download,official_cftc_order_pdf,200,application/pdf,45856,False,"Order exposes broad period, markets, generic genuine/spoof pattern, and thousands-of-occasions language, but no single event date/timestamp/side/quantity/matched-control row."

@@ -1,0 +1,8 @@
+{
+  "smoke_state": "/tmp/ict-engine-aq-config-smoke.12wsjI",
+  "managed_dir_tmp_local": true,
+  "repo_root_tmp_local": true,
+  "recommended_command_tmp_local": true,
+  "shared_combined_state_in_command": false,
+  "recommended_next_command": "uv run --with ta-lib /tmp/ict-engine-aq-config-smoke.12wsjI/.deps/auto-quant/run_tomac.py"
+}

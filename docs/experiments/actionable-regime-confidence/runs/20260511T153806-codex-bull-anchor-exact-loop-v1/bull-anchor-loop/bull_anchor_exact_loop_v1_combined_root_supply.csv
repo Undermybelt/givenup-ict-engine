@@ -1,0 +1,6 @@
+source_loop,instrument,root,timeframe,calibration_2024_support,calibration_2024_wilson95_lcb,heldout_time_2025_support,heldout_time_2025_wilson95_lcb
+bull_anchor_exact_loop_v1,GE,Bull,1h,184,0.9795494624,196,0.9807774681
+bull_anchor_exact_loop_v1,GS,Bull,1h,206,0.9816935183,179,0.97899022
+pfe_tsla_rare_root_exact_loop_v1,PFE,Bear,1h,109,0.9659570262,74,0.9506502206
+pfe_tsla_rare_root_exact_loop_v1,PFE,Sideways,1h,74,0.9506502206,92,0.9599186107
+pfe_tsla_rare_root_exact_loop_v1,TSLA,Crisis,1h,146,0.9743631779,146,0.9743631779

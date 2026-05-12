@@ -1,0 +1,49 @@
+{
+  "summary_line": "market_data:0/1 ready",
+  "ready_by_domain": {
+    "market_data": "0/1"
+  },
+  "providers": [
+    {
+      "provider_id": "bybit_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "crypto"
+      ],
+      "fallback_priority": 1,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto market-data path for exchange-style replay and factor work.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, yaml, sklearn, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis PyYAML scikit-learn xgboost"
+      ]
+    }
+  ],
+  "ready_providers": [],
+  "pending_providers": [
+    "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing"
+  ],
+  "pending_provider_details": [
+    {
+      "provider_id": "bybit_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, yaml, sklearn, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis PyYAML scikit-learn xgboost"
+      ]
+    }
+  ],
+  "selectable_providers": [
+    "bybit_public"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": [
+    "System python3 is missing provider script modules: ccxt, ib_async, redis, yaml, sklearn, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis PyYAML scikit-learn xgboost"
+  ]
+}

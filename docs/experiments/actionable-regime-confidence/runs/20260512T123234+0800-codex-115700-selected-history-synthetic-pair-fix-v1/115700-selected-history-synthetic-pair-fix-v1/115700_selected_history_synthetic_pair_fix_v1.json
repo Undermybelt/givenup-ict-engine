@@ -1,0 +1,56 @@
+{
+  "data_loaded": true,
+  "fixed_pair_alias": "B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD",
+  "gate_result": "selected_history_autoquant_runs_zero_trades_no_board_a_promotion",
+  "pairlist_fixed": true,
+  "production_likelihood_mutation": false,
+  "promotion_allowed": false,
+  "root_cause": {
+    "data_failure": "The original timerange ended at 2025-12-31 while selected-history data starts at 2026-04-01.",
+    "whitelist_failure": "Freqtrade drops underscore-containing pairs in expand_pairlist(..., keep_invalid=True); strict verification would keep it, but StaticPairList uses keep_invalid=True."
+  },
+  "run_id": "20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1",
+  "run_tomac_exit": 0,
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1",
+  "strategies_failed": 0,
+  "strategies_succeeded": 3,
+  "strategy_metrics": [
+    {
+      "calmar": 0.0,
+      "max_drawdown_pct": -0.0,
+      "profit_factor": 0.0,
+      "sharpe": 0.0,
+      "sortino": 0.0,
+      "strategy": "TomacAggressiveBE",
+      "total_profit_pct": 0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0
+    },
+    {
+      "calmar": 0.0,
+      "max_drawdown_pct": -0.0,
+      "profit_factor": 0.0,
+      "sharpe": 0.0,
+      "sortino": 0.0,
+      "strategy": "TomacKillzoneBreakout",
+      "total_profit_pct": 0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0
+    },
+    {
+      "calmar": 0.0,
+      "max_drawdown_pct": -0.0,
+      "profit_factor": 0.0,
+      "sharpe": 0.0,
+      "sortino": 0.0,
+      "strategy": "TomacRRWinRate",
+      "total_profit_pct": 0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0
+    }
+  ],
+  "timerange": "20260401-20260512",
+  "total_trades": 0,
+  "trade_usable": false,
+  "update_goal": false
+}

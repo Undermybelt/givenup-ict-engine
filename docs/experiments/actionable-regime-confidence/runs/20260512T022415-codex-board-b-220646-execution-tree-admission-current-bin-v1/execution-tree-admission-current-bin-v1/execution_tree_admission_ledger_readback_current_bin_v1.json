@@ -1,0 +1,8 @@
+{
+  "status": "observe",
+  "promote_candidate": false,
+  "actionable": false,
+  "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+  "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000;branch_admission_status=fail_closed",
+  "path": "docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/execution_tree_trace.json"
+}

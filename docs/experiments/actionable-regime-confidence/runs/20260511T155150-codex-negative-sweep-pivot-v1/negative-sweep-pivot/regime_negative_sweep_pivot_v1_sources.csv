@@ -1,0 +1,7 @@
+source_id,url,source_type,use,acceptance_decision
+hidden_regime,https://github.com/hidden-regime/hidden-regime,github_repo,HMM posterior and temporal-isolation workflow reference,modeling_reference_not_label_source
+hmmlearn,https://github.com/hmmlearn/hmmlearn,github_repo,HMM implementation reference,implementation_reference_not_label_source
+ruptures,https://github.com/deepcharles/ruptures,github_repo,change-point boundary feature reference,feature_reference_not_label_source
+spoofability_lob,https://arxiv.org/abs/2504.15908,paper,order-flow spoofability feature framing,paper_reference_not_row_export
+lobflow,https://pypi.org/project/lobflow/,python_package,detector/probe reference,heuristic_detector_not_label_source
+zeroxarchive_l4,https://www.0xarchive.io/blog/l4-tpsl-data/,data_vendor_docs,potential approved order-lifecycle row acquisition path,possible_negative_controls_not_positive_label_source

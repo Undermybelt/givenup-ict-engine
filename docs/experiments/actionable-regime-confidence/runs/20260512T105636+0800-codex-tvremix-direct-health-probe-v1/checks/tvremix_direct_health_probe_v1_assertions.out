@@ -1,0 +1,5 @@
+pass:local_config_present
+pass:api_key_present_redacted
+pass:no_promotion
+fail:tools_list_http_not_ok
+fail_closed:get_ohlcv_no_bars

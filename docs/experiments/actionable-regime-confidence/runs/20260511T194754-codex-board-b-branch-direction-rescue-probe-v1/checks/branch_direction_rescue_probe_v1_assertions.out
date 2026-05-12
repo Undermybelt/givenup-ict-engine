@@ -1,0 +1,6 @@
+branch_paths_evaluated=5
+branch_paths_passed=1
+gate_result=fail:direction_rescue_probe_not_promotion_grade
+downstream_consumption=not_started:direction_probe_not_promotion_grade
+numeric_candidates_before_diagnostic_blockers=1
+artifacts_exist=true

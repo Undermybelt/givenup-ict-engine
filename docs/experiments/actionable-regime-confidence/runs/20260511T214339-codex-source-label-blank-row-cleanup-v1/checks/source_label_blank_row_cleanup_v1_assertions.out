@@ -1,0 +1,11 @@
+PASS decision=source_label_blank_row_cleanup_v1=blank_row_removed_schema_ready_unscored
+PASS rows_before=248440
+PASS rows_after=248440
+PASS blank_or_malformed_rows_removed=0
+PASS verifier_status=schema_ready_unscored
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=false

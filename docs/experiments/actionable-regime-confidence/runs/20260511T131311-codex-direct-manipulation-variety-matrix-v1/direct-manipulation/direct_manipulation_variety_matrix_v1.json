@@ -1,0 +1,153 @@
+{
+  "run_id": "20260511T131311+0800-codex-direct-manipulation-variety-matrix-v1",
+  "artifact_type": "direct_manipulation_variety_coverage_matrix",
+  "board_cursor_read_before_write": "20260511T130916+0800-codex-mainregimev2-relock-after-taxonomy-drift-v10",
+  "active_axis": {
+    "price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "direct_overlay": "Manipulation",
+    "residual": "UnknownOrMixed"
+  },
+  "scope": {
+    "purpose": "Separate accepted direct Manipulation varieties from positive-only, rejected, and missing direct-evidence varieties without changing MainRegimeV2 price-root accounting.",
+    "not_a_price_root_gate": true,
+    "no_ohlcv_proxy_promotion": true,
+    "no_parent_root_slots_added": true
+  },
+  "coverage_matrix": [
+    {
+      "variety": "pump_dump_telegram_event",
+      "state": "accepted_95_scoped_direct_event",
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.md",
+      "evidence_summary": "Public Telegram pump-attempt labels with same-source negative controls; multi-coin and multi-channel context; 542 unique positive coins and 209 channels.",
+      "gate_summary": "accepted_95_true; calibration and test Wilson95 LCB >= 0.95; per-regime map records cal/test 0.999735 / 0.999701.",
+      "accepted_direct_rows_added": null,
+      "remaining_gap": "Event-confirmed suppression/cooldown signal only; does not cover spoofing, layering, quote stuffing, or order-book behavior."
+    },
+    {
+      "variety": "pump_dump_social_text_or_twitter",
+      "state": "blocked_below_95",
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T050029-codex-mehrnoom-twitter-social-direct-gate/mehrnoom-social-gate/mehrnoom_twitter_social_direct_gate_report.md",
+      "evidence_summary": "Sparse Mehrnoom Twitter/social rows aligned to pump attempts with same-coin non-event controls.",
+      "gate_summary": "blocked; best calibration/test Wilson95 LCB 0.937652 / 0.815594 for Twitter social gate, and 0.901875 / 0.881516 for raw social text gate.",
+      "accepted_direct_rows_added": 0,
+      "remaining_gap": "Needs stronger direct controls or a different text/event construction before acceptance."
+    },
+    {
+      "variety": "dex_self_trade_order_lifecycle",
+      "state": "accepted_95_scoped_direct_order_lifecycle",
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T101019-codex-zenodo-dex-selftrade-direct-gate/direct-gate/zenodo_dex_selftrade_direct_gate_report.md",
+      "evidence_summary": "Zenodo DEX self-trade rows with explicit negative controls.",
+      "gate_summary": "candidate_rows=22671; positive_self_trade_rows=12671; negative_control_rows=10000; calibration/test Wilson95 LCB 0.998671 / 0.998675; accepted direct Manipulation 95 true.",
+      "accepted_direct_rows_added": 12671,
+      "remaining_gap": "Bounded DEX self-trade/wash-trade slice only; not spoofing/layering/quote stuffing."
+    },
+    {
+      "variety": "dex_consecutive_self_trade_order_lifecycle",
+      "state": "accepted_95_scoped_direct_order_lifecycle_context",
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T102332-codex-zenodo-dex-consecutive-selftrade-gate/direct-gate/zenodo_dex_consecutive_selftrade_gate.md",
+      "evidence_summary": "Consecutive stream readback of the same Zenodo DEX self-trade source.",
+      "gate_summary": "rows_streamed=200000; positive_self_trade_rows=12671; negative_control_rows=187329; min calibration/test positive-or-negative Wilson95 LCB 0.979218; accepted 95 context slice.",
+      "accepted_direct_rows_added": 12671,
+      "remaining_gap": "Confirms bounded self-trade context; still not full direct Manipulation variety coverage."
+    },
+    {
+      "variety": "midsummer_bsc_wash_maker",
+      "state": "accepted_95_scoped_direct_onchain_wash",
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T111122-codex-midsummer-meme-direct-wash-audit/midsummer-meme-audit/midsummer_meme_direct_wash_audit.md",
+      "evidence_summary": "Midsummer Dune wash-maker rows for a bounded same-token-day BSC slice with positive and negative controls.",
+      "gate_summary": "positive_rows=1870; negative_control_rows=2994; minimum split/class Wilson95 LCB 0.995736; accepted gate accepted_95_bounded_bsc_meme_wash_maker_direct_slice.",
+      "accepted_direct_rows_added": 1870,
+      "remaining_gap": "BSC wash-maker only; not centralized spoofing/layering/quote stuffing."
+    },
+    {
+      "variety": "midsummer_multichain_wash_maker",
+      "state": "accepted_95_scoped_direct_onchain_wash",
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.md",
+      "evidence_summary": "Additional accepted Midsummer wash-maker slices across base, ethereum, and solana; BSC already ledgered.",
+      "gate_summary": "new accepted platform count=3; accepted direct Manipulation rows added=5693; per-platform min LCBs base 0.98008, ethereum 0.967945, solana 0.998285.",
+      "accepted_direct_rows_added": 5693,
+      "remaining_gap": "Direct on-chain wash-maker evidence only; full manipulation class remains incomplete."
+    },
+    {
+      "variety": "spoofing_layering_enforcement_cases",
+      "state": "positive_only_no_95_gate",
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T130457-codex-spoofing-appendix-direct-case-inventory/direct-case-inventory/spoofing_appendix_direct_case_inventory.md",
+      "evidence_summary": "204 positive direct regulator/enforcement cases from CFTC, CME Group, and ICE; tags include layering=116 and single_spoof_order=78.",
+      "gate_summary": "accepted_95_direct_gate_added=0 because rows are case-level positives with no matched negative order-lifecycle/order-book controls.",
+      "accepted_direct_rows_added": 0,
+      "remaining_gap": "Acquire matched negative order-lifecycle/order-book rows before any spoofing/layering Wilson95 gate claim."
+    },
+    {
+      "variety": "local_spoofing_repos",
+      "state": "rejected_no_replayable_positive_negative_rows",
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T110827-codex-local-spoofing-source-audit/source-audit/local_spoofing_source_audit.md",
+      "evidence_summary": "Local spoofing repos had models/frameworks/synthetic injection logic but no replayable real timestamped positive/negative rows.",
+      "gate_summary": "accepted_direct_manipulation_rows_added=0; synthetic/framework evidence rejected.",
+      "accepted_direct_rows_added": 0,
+      "remaining_gap": "Need exportable direct order-book/order-lifecycle rows with controls."
+    },
+    {
+      "variety": "quote_stuffing",
+      "state": "missing_direct_rows",
+      "primary_artifact": null,
+      "evidence_summary": "No accepted timestamped order-message burst rows found in current artifacts.",
+      "gate_summary": "none",
+      "accepted_direct_rows_added": 0,
+      "remaining_gap": "Acquire quote-message/order-book bursts and matched normal-period controls."
+    },
+    {
+      "variety": "pinging",
+      "state": "missing_direct_rows",
+      "primary_artifact": null,
+      "evidence_summary": "No accepted pinging/order-probe rows found in current artifacts.",
+      "gate_summary": "none",
+      "accepted_direct_rows_added": 0,
+      "remaining_gap": "Acquire order-lifecycle probe rows and matched controls."
+    },
+    {
+      "variety": "bear_raid_or_painting_tape",
+      "state": "missing_direct_rows",
+      "primary_artifact": null,
+      "evidence_summary": "No accepted direct rows for bear raid or painting-the-tape variety found in current artifacts.",
+      "gate_summary": "none",
+      "accepted_direct_rows_added": 0,
+      "remaining_gap": "Acquire direct event/order-flow rows and same-venue non-event controls."
+    }
+  ],
+  "rollup": {
+    "accepted_scoped_varieties": [
+      "pump_dump_telegram_event",
+      "dex_self_trade_order_lifecycle",
+      "dex_consecutive_self_trade_order_lifecycle",
+      "midsummer_bsc_wash_maker",
+      "midsummer_multichain_wash_maker"
+    ],
+    "blocked_or_positive_only_varieties": [
+      "pump_dump_social_text_or_twitter",
+      "spoofing_layering_enforcement_cases",
+      "local_spoofing_repos"
+    ],
+    "missing_varieties": [
+      "quote_stuffing",
+      "pinging",
+      "bear_raid_or_painting_tape"
+    ],
+    "full_direct_manipulation_variety_coverage": false,
+    "accepted_parent_root_slots_added": 0,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "full_objective_achieved": false
+  },
+  "guardrails": {
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "update_goal_allowed": false
+  },
+  "next_action": "Acquire matched negative order-lifecycle/order-book rows for spoofing/layering/quote-stuffing, then run one direct Manipulation calibration gate; do not run another OHLCV proxy scan."
+}

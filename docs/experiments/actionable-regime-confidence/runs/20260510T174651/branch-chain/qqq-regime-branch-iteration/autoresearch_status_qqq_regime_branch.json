@@ -1,0 +1,20 @@
+{
+  "effective_status": "manual_auto_quant_probe_importable",
+  "decision_counts": {
+    "probe_only": 1,
+    "promoted": 0,
+    "rejected": 0
+  },
+  "failure_tag_counts": {
+    "weak_sharpe": 1,
+    "provider_regime_disagreement": 1,
+    "not_branch_complete": 1
+  },
+  "best_attempt": {
+    "strategy": "TomacNQ_KillzoneBreakout",
+    "decision": {
+      "score_delta": 0.0,
+      "reason": "Actual Auto-Quant run produced 74 trades and positive profit, but Sharpe=0.2207 and branch fit is transition_confirmation rather than range_mean_reversion."
+    }
+  }
+}

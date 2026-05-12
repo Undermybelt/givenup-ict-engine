@@ -1,0 +1,6 @@
+step_order,step_id,command_or_artifact,allowed_before_approval,required_after_approval
+1,shared_lock,/tmp/ict-engine-direct-manipulation-row-intake.lock,false,true
+2,verifier_native_copy,"/tmp/ict-engine-board-a-r6-owner-export-v1/{positive_spoofing_layering_rows.csv,matched_negative_normal_activity_rows.csv,provenance_manifest.json}",false,true
+3,direct_verifier,direct_manipulation_row_intake_verifier,false,true
+4,split_calibration,chronological plus symbol/venue or explicitly approved family split calibration,false,true
+5,provider_and_downstream_chain,"provider status, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, workflow/execution-tree readback",false,true

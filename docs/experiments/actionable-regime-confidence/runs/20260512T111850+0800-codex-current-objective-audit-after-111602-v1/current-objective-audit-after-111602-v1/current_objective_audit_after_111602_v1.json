@@ -1,0 +1,49 @@
+{
+  "accepted_rows_added": 0,
+  "audit_id": "current_objective_audit_after_111602_v1",
+  "bbn_stage": "partial_fail_closed",
+  "catboost_path_ranker_stage": "not_achieved",
+  "cross_market_timeframe_period_validation": "not_achieved",
+  "decision": "not_achieved",
+  "downstream_promotion": false,
+  "every_active_regime_95_confidence": "not_achieved",
+  "execution_tree_stage": "not_achieved",
+  "ibkr_latest_readback": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T111538+0800-codex-ibkr-hmds-spy-spotcheck-v1/ibkr-hmds-spy-spotcheck-v1/ibkr_hmds_spy_spotcheck_v1.json",
+    "direct_uv_ib_async_rows": 2,
+    "provider_layer_only": true,
+    "repo_provider_ready": false
+  },
+  "mature_rooted_branch_observations_added": 0,
+  "pre_bayes_filter_stage": "not_achieved",
+  "provider_authority_gate": "not_achieved",
+  "provider_linked_downstream_latest": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T111309+0800-codex-105637-provider-linked-momentum-materialized-downstream-v1/command-output/06_policy_training_status_after_export.out",
+    "observation_validation_rows": 7,
+    "production_validation_rows": 0,
+    "raw_scored_mature_rows": 0,
+    "runtime_selection": "disabled",
+    "same_root_providers": [
+      "yfinance",
+      "kraken_public_ccxt",
+      "binance_public_ccxt",
+      "bybit_public_ccxt"
+    ],
+    "source_pnl": -200.6922557,
+    "target_mature_rows": 1
+  },
+  "run_id": "20260512T111850+0800-codex-current-objective-audit-after-111602-v1",
+  "same_root_six_provider_aq_matrix": false,
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "tvr_latest_readback": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T111602+0800-codex-tvr-current-provider-fetch-readback-v1/tvr-current-provider-fetch-readback-v1/tvr_current_provider_fetch_readback_v1.json",
+    "default_harness_rows": 21,
+    "local_stdio_harness_rows": 21,
+    "provider_layer_only": true,
+    "provider_ready": true
+  },
+  "update_goal": false
+}

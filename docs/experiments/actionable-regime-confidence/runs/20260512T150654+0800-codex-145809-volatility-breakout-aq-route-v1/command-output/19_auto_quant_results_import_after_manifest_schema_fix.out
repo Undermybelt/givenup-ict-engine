@@ -1,0 +1,15 @@
+{
+  "auto_quant_pinned_ref": "screen-145809-volatility-breakout-150654",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_B2R_VOL_BREAKOUT_150654_20260512T072837.580144000Z",
+  "library_source": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/strategy_library_volatility_breakout_v1.json",
+  "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/state_volatility_breakout_v1/auto-quant/B2R_VOL_BREAKOUT_150654/auto_quant_strategy_library.json",
+  "log_cross_check": null,
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 3,
+  "n_not_run": 0,
+  "n_ok": 1,
+  "n_total_strategies": 1,
+  "symbol": "B2R_VOL_BREAKOUT_150654"
+}

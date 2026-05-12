@@ -1,0 +1,9 @@
+source_json_loaded=PASS
+positive_rows_gt_5000=PASS
+matched_controls_gt_1000=PASS
+isolated_verifier_schema_ready=PASS
+isolated_split_axes_pass=PASS
+source_policy_gate_false_without_approval=PASS
+canonical_merge_not_approved=PASS
+accepted_rows_zero=PASS
+update_goal_false=PASS

@@ -1,0 +1,119 @@
+{
+  "schema_version": "main-regime-v2-target-schema/v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T230938-main-regime-v2-schema-preflight",
+  "source_scan": "docs/experiments/actionable-regime-confidence/runs/20260510T225102-main-regime-taxonomy-research/main_regime_taxonomy_source_scan.md",
+  "root_classes": {
+    "BullExpansion": {
+      "type": "root_main_class",
+      "qualifying_inputs": [
+        "signed positive drift",
+        "positive slope",
+        "trend persistence",
+        "non-crisis filter"
+      ],
+      "allowed_action": "risk_on_or_long_context_only_after_BoardB_edge_gate",
+      "subtype_evidence": [
+        "TrendExpansion"
+      ]
+    },
+    "BearExpansion": {
+      "type": "root_main_class",
+      "qualifying_inputs": [
+        "signed negative drift",
+        "negative slope",
+        "downside persistence",
+        "ordinary bear separated from crisis"
+      ],
+      "allowed_action": "short_hedge_or_risk_down_context_only_after_BoardB_edge_gate",
+      "subtype_evidence": [
+        "TrendExpansion",
+        "ExtremeStress"
+      ]
+    },
+    "ConsolidationRange": {
+      "type": "root_main_class",
+      "qualifying_inputs": [
+        "range compression",
+        "low directional slope",
+        "range persistence",
+        "false-break abstain condition"
+      ],
+      "allowed_action": "mean_reversion_or_no_breakout_context_only_after_BoardB_edge_gate",
+      "subtype_evidence": [
+        "RangeConsolidation"
+      ]
+    },
+    "ManipulationLiquidityEngineering": {
+      "type": "root_main_class_or_overlay",
+      "qualifying_inputs": [
+        "tick or trade tape",
+        "bid/ask or L2 depth",
+        "order-lifecycle anomalies",
+        "venue/liquidity-taking behavior",
+        "crypto social/event/mempool evidence when applicable"
+      ],
+      "allowed_action": "fail_closed_block_or_size_down",
+      "subtype_evidence": [
+        "ThinLiquidity",
+        "SessionLiquidityCoreViable"
+      ]
+    },
+    "CrisisStress": {
+      "type": "root_main_class",
+      "qualifying_inputs": [
+        "tail loss",
+        "volatility/range explosion",
+        "liquidity cliff",
+        "crash gap or drawdown"
+      ],
+      "allowed_action": "block_or_reduce_release_context",
+      "subtype_evidence": [
+        "ExtremeStress"
+      ]
+    },
+    "TransitionAccumulationDistribution": {
+      "type": "root_main_class",
+      "qualifying_inputs": [
+        "change-point recency",
+        "transition hazard",
+        "directional-change overshoot",
+        "accumulation/distribution boundary evidence"
+      ],
+      "allowed_action": "observe_or_transition_candidate_only_after_BoardB_edge_gate",
+      "subtype_evidence": [
+        "ReversalBrewing"
+      ]
+    },
+    "UnknownOrMixed": {
+      "type": "residual_bucket",
+      "qualifying_inputs": [
+        "zero or multiple root-class predicates active",
+        "uncovered provider/input state"
+      ],
+      "allowed_action": "abstain_no_release",
+      "subtype_evidence": []
+    }
+  },
+  "acceptance_gate_95": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2,
+    "blocked_predictor_prefixes": [
+      "future_",
+      "target_"
+    ],
+    "thresholds_relaxed": false
+  },
+  "required_input_status": {
+    "ManipulationLiquidityEngineering": {
+      "a10_audit": "docs/experiments/actionable-regime-confidence/runs/20260510T205717-hermes-a10-order-flow-input-audit/evidence_packet_a10_order_flow_input_audit.json",
+      "has_tick_or_l2_or_order_lifecycle": false,
+      "fail_closed_state": "missing_required_inputs"
+    }
+  }
+}

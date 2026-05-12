@@ -1,0 +1,3 @@
+closure_root=docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-chain/closure_reuse_cleanwire_bundle_catboost_20260512T034711+0800
+state_dir=docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-chain/closure_reuse_cleanwire_bundle_catboost_20260512T034711+0800/state_reuse_cleanwire_bundle_catboost_v1
+source_clean_state=docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire_apply

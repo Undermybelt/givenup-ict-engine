@@ -1,0 +1,14 @@
+run_id=20260511T133057+0800-codex-targeted-native-source-label-probe-v1
+probe_type=targeted_not_broad_sweep
+accepted_new_native_intraday_full_species_parent_root_panels=0
+accepted_direct_manipulation_rows_added=0
+finra_spoofing_layering_schema_target_identified=true
+marketindicator_rejected_model_output=true
+lobflow_rejected_detector_or_synthetic_proxy=true
+etf_binary_paper_rejected_not_exact_mainregimev2=true
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

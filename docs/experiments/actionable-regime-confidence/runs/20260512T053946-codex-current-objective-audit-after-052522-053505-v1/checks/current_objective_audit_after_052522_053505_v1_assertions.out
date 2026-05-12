@@ -1,0 +1,11 @@
+PASS run_id=20260512T053946-codex-current-objective-audit-after-052522-053505-v1
+PASS gate_result=current_objective_audit_after_052522_053505_v1=not_complete_confidence_screen_improved_source_control_absent_no_promotion
+PASS hgb_051844_all_roots_accepted=true
+PASS numeric_tree_052522_accepted_labels=Bull,Crisis,Sideways
+PASS r5_053505_no_compatible_rows=true
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

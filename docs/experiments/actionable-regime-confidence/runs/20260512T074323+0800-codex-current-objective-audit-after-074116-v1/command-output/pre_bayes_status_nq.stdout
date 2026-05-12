@@ -1,0 +1,189 @@
+{
+  "latest_bridge": {
+    "long_entry_bias": [
+      0.16305345900130222,
+      0.3998761658413467,
+      0.437070375157351
+    ],
+    "long_entry_quality": {
+      "high": 0.1025651104041026,
+      "low": 0.3780881681886255,
+      "medium": 0.5193467214072719
+    },
+    "long_signal_probability": 0.3715296077818178,
+    "multi_timeframe_alignment_score": 0.9966,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.6545,
+    "rationale": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.030 short_support=0.000 uncertainty=0.402",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.654",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": {
+      "high": 0.1025651104041026,
+      "low": 0.3780881681886255,
+      "medium": 0.5193467214072719
+    },
+    "short_entry_bias": [
+      0.0371404387501903,
+      0.233872992391826,
+      0.7289865688579837
+    ],
+    "short_entry_quality": {
+      "high": 0.024393727005071763,
+      "low": 0.6584499009454585,
+      "medium": 0.3171563720494697
+    },
+    "short_signal_probability": 0.2925209549852438
+  },
+  "latest_bridge_diff": {
+    "dominant_long_entry_quality": "medium",
+    "dominant_long_entry_quality_probability": 0.5193467214072719,
+    "dominant_short_entry_quality": "low",
+    "dominant_short_entry_quality_probability": 0.6584499009454585,
+    "long_short_signal_probability_gap": 0.07900865279657404,
+    "multi_timeframe_alignment_score": 0.9966,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.6545,
+    "rationale_summary": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.030 short_support=0.000 uncertainty=0.402",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.654",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": "medium",
+    "selected_entry_quality_probability": 0.5193467214072719
+  },
+  "latest_canonical_structural_active_regime": null,
+  "latest_canonical_structural_confidence": null,
+  "latest_canonical_structural_probabilities": {},
+  "latest_filtered_assignments": {
+    "__policy_version": "7483be1861357e2b",
+    "factor_alignment": "mixed",
+    "factor_uncertainty": "high",
+    "liquidity_context": "neutral",
+    "market_regime": "range",
+    "multi_timeframe_resonance": "mixed"
+  },
+  "latest_gate_status": "observe_only",
+  "latest_policy": {
+    "directional_conflict_penalty": 0.2,
+    "favorable_liquidity_bonus": 0.05,
+    "hard_pass_quality_threshold": 0.75,
+    "high_uncertainty_threshold": 0.45,
+    "hostile_liquidity_forces_high_uncertainty": true,
+    "hostile_liquidity_penalty": 0.1,
+    "market_overrides": {
+      "CL": {
+        "favorable_liquidity_bonus": 0.03,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.14
+      },
+      "ES": {
+        "favorable_liquidity_bonus": 0.06,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.06
+      }
+    },
+    "min_directional_support_gap": 0.08,
+    "min_multi_timeframe_alignment_score": 0.55,
+    "min_multi_timeframe_entry_alignment_score": 0.5,
+    "mixed_alignment_penalty": 0.1,
+    "multi_timeframe_alignment_bonus": 0.05,
+    "multi_timeframe_alignment_penalty": 0.1,
+    "multi_timeframe_direction_conflict_penalty": 0.18,
+    "multi_timeframe_entry_penalty": 0.08,
+    "neutralized_quality_threshold": 0.4,
+    "source": "default",
+    "version": "7483be1861357e2b"
+  },
+  "latest_policy_diff": {
+    "changed_fields": [
+      "initial_policy"
+    ],
+    "previous_version": null,
+    "summary": "changed_fields=[\"initial_policy\"]"
+  },
+  "latest_policy_lineage": {
+    "changed_fields_union": [
+      "initial_policy"
+    ],
+    "latest_version": "7483be1861357e2b",
+    "previous_version": null,
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested",
+    "total_versions": 1
+  },
+  "latest_policy_version": "7483be1861357e2b",
+  "latest_soft_evidence": {
+    "factor_alignment": {
+      "bearish": 0.2,
+      "bullish": 0.2,
+      "mixed": 0.6
+    },
+    "factor_uncertainty": {
+      "high": 0.6,
+      "low": 0.4
+    },
+    "liquidity_context": {
+      "favorable": 0.2,
+      "hostile": 0.2,
+      "neutral": 0.6
+    },
+    "market_regime": {
+      "bear": 0.2,
+      "bull": 0.2,
+      "range": 0.6
+    },
+    "multi_timeframe_resonance": {
+      "aligned": 0.2,
+      "dislocated": 0.2,
+      "mixed": 0.6
+    }
+  },
+  "latest_soft_evidence_diff": [
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "range",
+      "entropy": 0.9502705392332347,
+      "filtered_state": "range",
+      "node": "market_regime"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "neutral",
+      "entropy": 0.9502705392332347,
+      "filtered_state": "neutral",
+      "node": "liquidity_context"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "mixed",
+      "entropy": 0.9502705392332347,
+      "filtered_state": "mixed",
+      "node": "factor_alignment"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "high",
+      "entropy": 0.6730116670092565,
+      "filtered_state": "high",
+      "node": "factor_uncertainty"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "mixed",
+      "entropy": 0.9502705392332347,
+      "filtered_state": "mixed",
+      "node": "multi_timeframe_resonance"
+    }
+  ],
+  "latest_structural_feedback": null,
+  "latest_uses_soft_evidence": true
+}

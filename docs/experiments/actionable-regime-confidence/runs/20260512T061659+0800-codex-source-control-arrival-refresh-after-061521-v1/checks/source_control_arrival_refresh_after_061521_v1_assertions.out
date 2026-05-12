@@ -1,0 +1,16 @@
+gate_result=source_control_arrival_refresh_after_061521_v1=no_required_root_no_approval_no_promotion
+required_roots_present_any=false
+required_roots_present_all=false
+source_label_equivalence_present=true
+source_label_equivalence_rows=248440
+operator_dispatch_drafts_present=true
+external_requests_sent=false
+approval_present=false
+source_control_evidence_acquired=false
+accepted_rows_added=0
+target_root_mutated=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

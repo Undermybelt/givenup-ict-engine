@@ -1,0 +1,627 @@
+{
+  "best_rule": {
+    "accepted_95": false,
+    "calibration": {
+      "coverage": 0.2088157344120519,
+      "precision": 0.9498997995991983,
+      "successes": 1422,
+      "support": 1497,
+      "wilson95_lcb": 0.9376516514875128
+    },
+    "direction": "le",
+    "feature": "sentiment_mean_24h",
+    "test": {
+      "coverage": 0.11075463802482913,
+      "precision": 0.8425692695214105,
+      "successes": 669,
+      "support": 794,
+      "wilson95_lcb": 0.8155942250339645
+    },
+    "threshold": 0.16547428315412963,
+    "train": {
+      "coverage": 0.5,
+      "precision": 0.08778945410583093,
+      "successes": 944,
+      "support": 10753,
+      "wilson95_lcb": 0.08258684510777846
+    }
+  },
+  "candidate_regime": "Manipulation",
+  "decision": {
+    "accepted_95": false,
+    "blocker": "classified pump attempts plus Twitter social aggregates did not reach unchanged held-out Wilson95 and coverage gates",
+    "fresh_calibration_rerun": true,
+    "gate_result": "blocked_mehrnoom_twitter_social_below_95",
+    "next_action": "Acquire stronger direct order-lifecycle/L2/L3/MBO/social/on-chain positives and negatives; do not treat positive-only social event lists as sufficient without robust controls.",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "evidence_class": "direct_event_social_positive_attempts_with_same_coin_twitter_non_event_controls",
+  "gate_contract": {
+    "future_or_target_leakage_allowed": false,
+    "min_calibration_support": 120,
+    "min_coverage": 0.03,
+    "min_test_support": 120,
+    "min_wilson95_lcb": 0.95,
+    "thresholds_relaxed": false
+  },
+  "leaderboard_top20": [
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.2088157344120519,
+        "precision": 0.9498997995991983,
+        "successes": 1422,
+        "support": 1497,
+        "wilson95_lcb": 0.9376516514875128
+      },
+      "direction": "le",
+      "feature": "sentiment_mean_24h",
+      "test": {
+        "coverage": 0.11075463802482913,
+        "precision": 0.8425692695214105,
+        "successes": 669,
+        "support": 794,
+        "wilson95_lcb": 0.8155942250339645
+      },
+      "threshold": 0.16547428315412963,
+      "train": {
+        "coverage": 0.5,
+        "precision": 0.08778945410583093,
+        "successes": 944,
+        "support": 10753,
+        "wilson95_lcb": 0.08258684510777846
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.1606918677639838,
+        "precision": 0.9435763888888888,
+        "successes": 1087,
+        "support": 1152,
+        "wilson95_lcb": 0.9287186813698431
+      },
+      "direction": "le",
+      "feature": "sentiment_mean_24h",
+      "test": {
+        "coverage": 0.09024968614869577,
+        "precision": 0.8238021638330757,
+        "successes": 533,
+        "support": 647,
+        "wilson95_lcb": 0.7925586919321047
+      },
+      "threshold": 0.15744665467627456,
+      "train": {
+        "coverage": 0.40002789919092346,
+        "precision": 0.08787632221318145,
+        "successes": 756,
+        "support": 8603,
+        "wilson95_lcb": 0.0820762269035396
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.22415957595201563,
+        "precision": 0.9327940261356565,
+        "successes": 1499,
+        "support": 1607,
+        "wilson95_lcb": 0.9194914748636974
+      },
+      "direction": "ge",
+      "feature": "users_delta_6h",
+      "test": {
+        "coverage": 0.1555307574278142,
+        "precision": 0.3704035874439462,
+        "successes": 413,
+        "support": 1115,
+        "wilson95_lcb": 0.34254856124540306
+      },
+      "threshold": 1.8029120914403132,
+      "train": {
+        "coverage": 0.08007067795033944,
+        "precision": 0.13763066202090593,
+        "successes": 237,
+        "support": 1722,
+        "wilson95_lcb": 0.12216355291247204
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.2240200864834705,
+        "precision": 0.9283935242839353,
+        "successes": 1491,
+        "support": 1606,
+        "wilson95_lcb": 0.9147348444101131
+      },
+      "direction": "ge",
+      "feature": "tweets_delta_6h",
+      "test": {
+        "coverage": 0.16585297810015343,
+        "precision": 0.36921783010933557,
+        "successes": 439,
+        "support": 1189,
+        "wilson95_lcb": 0.3422491884015309
+      },
+      "threshold": 1.8301633045148895,
+      "train": {
+        "coverage": 0.10006509811215475,
+        "precision": 0.13289962825278812,
+        "successes": 286,
+        "support": 2152,
+        "wilson95_lcb": 0.11920916409549567
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.2375505649323476,
+        "precision": 0.9336465061655901,
+        "successes": 1590,
+        "support": 1703,
+        "wilson95_lcb": 0.9208223117700259
+      },
+      "direction": "ge",
+      "feature": "users_delta_6h",
+      "test": {
+        "coverage": 0.16934021481378156,
+        "precision": 0.3673805601317957,
+        "successes": 446,
+        "support": 1214,
+        "wilson95_lcb": 0.34071980466190444
+      },
+      "threshold": 1.6685561798683977,
+      "train": {
+        "coverage": 0.10006509811215475,
+        "precision": 0.13522304832713755,
+        "successes": 291,
+        "support": 2152,
+        "wilson95_lcb": 0.12142340153264211
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.2032361556702469,
+        "precision": 0.9251887439945092,
+        "successes": 1348,
+        "support": 1457,
+        "wilson95_lcb": 0.9105333742943506
+      },
+      "direction": "ge",
+      "feature": "tweets_delta_6h",
+      "test": {
+        "coverage": 0.14632445250383597,
+        "precision": 0.36320305052430885,
+        "successes": 381,
+        "support": 1049,
+        "wilson95_lcb": 0.33464817614148246
+      },
+      "threshold": 2.0125470306465774,
+      "train": {
+        "coverage": 0.08007067795033944,
+        "precision": 0.14285714285714285,
+        "successes": 246,
+        "support": 1722,
+        "wilson95_lcb": 0.1271237907133461
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.20170177151625052,
+        "precision": 0.9100968188105117,
+        "successes": 1316,
+        "support": 1446,
+        "wilson95_lcb": 0.8942464241121941
+      },
+      "direction": "ge",
+      "feature": "users_ratio_6h",
+      "test": {
+        "coverage": 0.14576649462965546,
+        "precision": 0.3492822966507177,
+        "successes": 365,
+        "support": 1045,
+        "wilson95_lcb": 0.32097690864280265
+      },
+      "threshold": 1.1912605526338194,
+      "train": {
+        "coverage": 0.20003719892123129,
+        "precision": 0.09739655973965597,
+        "successes": 419,
+        "support": 4302,
+        "wilson95_lcb": 0.08889242572926889
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.27409680569117034,
+        "precision": 0.9307888040712469,
+        "successes": 1829,
+        "support": 1965,
+        "wilson95_lcb": 0.918705504490686
+      },
+      "direction": "ge",
+      "feature": "users_delta_6h",
+      "test": {
+        "coverage": 0.22081182870693264,
+        "precision": 0.34365129500947567,
+        "successes": 544,
+        "support": 1583,
+        "wilson95_lcb": 0.32065947071372813
+      },
+      "threshold": 1.3288713715574727,
+      "train": {
+        "coverage": 0.15005114851669302,
+        "precision": 0.12116516888751162,
+        "successes": 391,
+        "support": 3227,
+        "wilson95_lcb": 0.11035451051796491
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.18175477751429767,
+        "precision": 0.9332310053722179,
+        "successes": 1216,
+        "support": 1303,
+        "wilson95_lcb": 0.9183639750340896
+      },
+      "direction": "ge",
+      "feature": "users_delta_6h",
+      "test": {
+        "coverage": 0.12930673734133072,
+        "precision": 0.34951456310679613,
+        "successes": 324,
+        "support": 927,
+        "wilson95_lcb": 0.319498267394209
+      },
+      "threshold": 2.175482443244247,
+      "train": {
+        "coverage": 0.05007904770761648,
+        "precision": 0.16991643454038996,
+        "successes": 183,
+        "support": 1077,
+        "wilson95_lcb": 0.14866931537674855
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.2671223322639141,
+        "precision": 0.9284595300261097,
+        "successes": 1778,
+        "support": 1915,
+        "wilson95_lcb": 0.9160384065433225
+      },
+      "direction": "ge",
+      "feature": "tweets_delta_6h",
+      "test": {
+        "coverage": 0.22095131817547775,
+        "precision": 0.3409090909090909,
+        "successes": 540,
+        "support": 1584,
+        "wilson95_lcb": 0.3179757456519237
+      },
+      "threshold": 1.4693514627889774,
+      "train": {
+        "coverage": 0.15005114851669302,
+        "precision": 0.12054539820266501,
+        "successes": 389,
+        "support": 3227,
+        "wilson95_lcb": 0.10976028509747243
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.331845445668852,
+        "precision": 0.9503993274485077,
+        "successes": 2261,
+        "support": 2379,
+        "wilson95_lcb": 0.9409254281527877
+      },
+      "direction": "ge",
+      "feature": "tweets_current",
+      "test": {
+        "coverage": 0.37759799135165295,
+        "precision": 0.33247137052087183,
+        "successes": 900,
+        "support": 2707,
+        "wilson95_lcb": 0.3149731245263281
+      },
+      "threshold": 13.0,
+      "train": {
+        "coverage": 0.051195015344555006,
+        "precision": 0.11353315168029064,
+        "successes": 125,
+        "support": 1101,
+        "wilson95_lcb": 0.09612225072502888
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.16947970428232667,
+        "precision": 0.934156378600823,
+        "successes": 1135,
+        "support": 1215,
+        "wilson95_lcb": 0.9187976916929006
+      },
+      "direction": "ge",
+      "feature": "tweets_delta_6h",
+      "test": {
+        "coverage": 0.12595899009624772,
+        "precision": 0.3444075304540421,
+        "successes": 311,
+        "support": 903,
+        "wilson95_lcb": 0.31413275988345196
+      },
+      "threshold": 2.3324494949494943,
+      "train": {
+        "coverage": 0.05007904770761648,
+        "precision": 0.19498607242339833,
+        "successes": 210,
+        "support": 1077,
+        "wilson95_lcb": 0.17242577550146715
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.1924954665922723,
+        "precision": 0.8992753623188405,
+        "successes": 1241,
+        "support": 1380,
+        "wilson95_lcb": 0.8822713789368418
+      },
+      "direction": "ge",
+      "feature": "tweets_ratio_6h",
+      "test": {
+        "coverage": 0.14213976844748222,
+        "precision": 0.3356231599607458,
+        "successes": 342,
+        "support": 1019,
+        "wilson95_lcb": 0.3072953471684511
+      },
+      "threshold": 1.1935919055649242,
+      "train": {
+        "coverage": 0.20003719892123129,
+        "precision": 0.09646675964667596,
+        "successes": 415,
+        "support": 4302,
+        "wilson95_lcb": 0.08800122532038049
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.3149672199748919,
+        "precision": 0.8861824623560673,
+        "successes": 2001,
+        "support": 2258,
+        "wilson95_lcb": 0.8724218573525726
+      },
+      "direction": "ge",
+      "feature": "tweets_ratio_6h",
+      "test": {
+        "coverage": 0.2701911005719068,
+        "precision": 0.32576148683531236,
+        "successes": 631,
+        "support": 1937,
+        "wilson95_lcb": 0.3052533257025281
+      },
+      "threshold": 1.1035395212883778,
+      "train": {
+        "coverage": 0.3000557983818469,
+        "precision": 0.08879590887959089,
+        "successes": 573,
+        "support": 6453,
+        "wilson95_lcb": 0.08209811196796767
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.31189845166689917,
+        "precision": 0.9315742397137746,
+        "successes": 2083,
+        "support": 2236,
+        "wilson95_lcb": 0.9203520809787438
+      },
+      "direction": "ge",
+      "feature": "users_delta_6h",
+      "test": {
+        "coverage": 0.2629376482075603,
+        "precision": 0.32148541114058354,
+        "successes": 606,
+        "support": 1885,
+        "wilson95_lcb": 0.30078280751040465
+      },
+      "threshold": 1.0384280040042624,
+      "train": {
+        "coverage": 0.20003719892123129,
+        "precision": 0.10762436076243607,
+        "successes": 463,
+        "support": 4302,
+        "wilson95_lcb": 0.09871127199222819
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.3040870414283722,
+        "precision": 0.9288990825688074,
+        "successes": 2025,
+        "support": 2180,
+        "wilson95_lcb": 0.9173397343959441
+      },
+      "direction": "ge",
+      "feature": "tweets_delta_6h",
+      "test": {
+        "coverage": 0.26433254289301156,
+        "precision": 0.31926121372031663,
+        "successes": 605,
+        "support": 1895,
+        "wilson95_lcb": 0.29865518463336677
+      },
+      "threshold": 1.1367380839378938,
+      "train": {
+        "coverage": 0.20003719892123129,
+        "precision": 0.10669456066945607,
+        "successes": 459,
+        "support": 4302,
+        "wilson95_lcb": 0.09781751613290335
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.44385548891058724,
+        "precision": 0.9390320553111251,
+        "successes": 2988,
+        "support": 3182,
+        "wilson95_lcb": 0.9301772431110701
+      },
+      "direction": "ge",
+      "feature": "tweets_current",
+      "test": {
+        "coverage": 0.5084391128469801,
+        "precision": 0.3122085048010974,
+        "successes": 1138,
+        "support": 3645,
+        "wilson95_lcb": 0.2973692891547426
+      },
+      "threshold": 11.0,
+      "train": {
+        "coverage": 0.0927648098205152,
+        "precision": 0.10275689223057644,
+        "successes": 205,
+        "support": 1995,
+        "wilson95_lcb": 0.0901871871981233
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.36574138652531735,
+        "precision": 0.9279176201372997,
+        "successes": 2433,
+        "support": 2622,
+        "wilson95_lcb": 0.9173798341764701
+      },
+      "direction": "ge",
+      "feature": "tweets_delta_6h",
+      "test": {
+        "coverage": 0.33937787697028876,
+        "precision": 0.30867242087957253,
+        "successes": 751,
+        "support": 2433,
+        "wilson95_lcb": 0.29063045459611114
+      },
+      "threshold": 0.639531609718933,
+      "train": {
+        "coverage": 0.3000557983818469,
+        "precision": 0.09236014256934759,
+        "successes": 596,
+        "support": 6453,
+        "wilson95_lcb": 0.08553634966060389
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.4693820616543451,
+        "precision": 0.937890044576523,
+        "successes": 3156,
+        "support": 3365,
+        "wilson95_lcb": 0.9292253143097514
+      },
+      "direction": "ge",
+      "feature": "users_current",
+      "test": {
+        "coverage": 0.5412191379550844,
+        "precision": 0.3033505154639175,
+        "successes": 1177,
+        "support": 3880,
+        "wilson95_lcb": 0.2890860884555233
+      },
+      "threshold": 10.0,
+      "train": {
+        "coverage": 0.08374407142192876,
+        "precision": 0.11549139367018323,
+        "successes": 208,
+        "support": 1801,
+        "wilson95_lcb": 0.10154176838100225
+      }
+    },
+    {
+      "accepted_95": false,
+      "calibration": {
+        "coverage": 0.5064862602873483,
+        "precision": 0.9361057559900854,
+        "successes": 3399,
+        "support": 3631,
+        "wilson95_lcb": 0.9276809349637352
+      },
+      "direction": "ge",
+      "feature": "tweets_current",
+      "test": {
+        "coverage": 0.5774863997768168,
+        "precision": 0.30144927536231886,
+        "successes": 1248,
+        "support": 4140,
+        "wilson95_lcb": 0.2876603167818817
+      },
+      "threshold": 10.0,
+      "train": {
+        "coverage": 0.12508137264019342,
+        "precision": 0.10185873605947955,
+        "successes": 274,
+        "support": 2690,
+        "wilson95_lcb": 0.09099061577398822
+      }
+    }
+  ],
+  "panel": {
+    "coins": [
+      "BTC",
+      "ADA"
+    ],
+    "negative_control_policy": "same coin Twitter timestamps outside +/-6h of classified pump attempts, deterministic 3x sampling",
+    "negative_controls": {
+      "ADA": 1410,
+      "BTC": 25473
+    },
+    "negatives": 26883,
+    "positive_events": {
+      "ADA": 470,
+      "BTC": 8491
+    },
+    "positives": 8961,
+    "rows": 35844,
+    "split_positives": {
+      "calibration": 5764,
+      "test": 1942,
+      "train": 1255
+    },
+    "split_rows": {
+      "calibration": 7169,
+      "test": 7169,
+      "train": 21506
+    }
+  },
+  "run_id": "20260511T050029+0800-codex-mehrnoom-twitter-social-direct-gate",
+  "source": {
+    "full_checkout_attempt": "failed_no_space_left_on_device_then_cleaned",
+    "paper": "https://arxiv.org/abs/1902.03110",
+    "raw_committed_to_repo": false,
+    "repo": "https://github.com/Mehrnoom/Cryptocurrency-Pump-Dump",
+    "sparse_checkout": "/private/tmp/ict-regime-mehrnoom-pumpdump-sparse"
+  }
+}

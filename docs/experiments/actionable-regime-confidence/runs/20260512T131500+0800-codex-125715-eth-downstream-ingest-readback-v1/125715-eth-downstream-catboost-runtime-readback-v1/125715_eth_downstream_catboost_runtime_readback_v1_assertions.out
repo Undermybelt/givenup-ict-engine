@@ -1,0 +1,13 @@
+PASS six_provider_source_preserved
+PASS all_recorded_commands_exit0
+PASS ingest_162_rows_applied
+PASS catboost_runtime_ready
+PASS raw_scored_mature_floor_met
+PASS production_validation_floor_met
+PASS observation_validation_floor_met
+PASS pre_bayes_not_ready_fail_closed
+PASS execution_not_ready_fail_closed
+PASS accepted_95_contexts_zero
+PASS promotion_allowed_false
+PASS trade_usable_false
+PASS update_goal_false

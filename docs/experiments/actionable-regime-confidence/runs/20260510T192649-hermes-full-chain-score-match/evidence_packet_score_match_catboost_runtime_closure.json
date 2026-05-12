@@ -1,0 +1,143 @@
+{
+  "schema_version": "score-match-catboost-runtime-closure-evidence/v1",
+  "loop_id": "20260510T192649+0800-hermes-full-chain-score-match-catboost-readback",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T192649-hermes-full-chain-score-match",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state",
+  "objective": "Verify score-match handoff by applying the verified replay36 CatBoost path-ranker model to the current NQ structural candidate set, registering/enabling it through ict-engine, and reading it back from policy/workflow/execution-tree surfaces.",
+  "accepted_regime_context": {
+    "accepted_regime_id": "SessionLiquidityCoreViable",
+    "confidence_lane": 95,
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json",
+    "trade_use": "guardrail_only_not_standalone_edge"
+  },
+  "upstream_replay36_closure": {
+    "source_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/evidence_packet_structural_replay36_catboost_closure.json",
+    "structural_path_validation_goal": "met",
+    "catboost_runtime_goal": "met_for_policy_training_and_workflow_readback",
+    "raw_scored_mature_rows": 1397,
+    "production_validation_rows": 1395,
+    "observation_validation_rows": 40
+  },
+  "failed_direct_current_retrain": {
+    "artifact_stdout": "catboost/05_path_ranker_integration.out",
+    "artifact_stderr": "catboost/05_path_ranker_integration.err",
+    "status": "failed_expected_current_target_too_small",
+    "reason": "current structural target has only 3 rows/1 mature row; CatBoost refused direct training because all usable features were constant or ignored",
+    "not_used_for_closure": true
+  },
+  "catboost_score_match": {
+    "apply_stdout": "catboost/06_path_ranker_apply_only.out",
+    "scores_artifact": "catboost/06_path_ranker_apply_only_scores_nq.csv",
+    "scores_summary_artifact": "catboost/06_path_ranker_apply_only_scores_summary.json",
+    "rows_scored": 3,
+    "model_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "sample_scores": [
+      {
+        "candidate_set_id": "structural-candidates:NQ:8f288754c638a9e8",
+        "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+        "raw_path_score": "0.405144071613999",
+        "score_model_family": "catboost",
+        "score_source_kind": "external_model",
+        "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+        "score_generator": "pandas_path_ranker_trainer.py"
+      },
+      {
+        "candidate_set_id": "structural-candidates:NQ:8f288754c638a9e8",
+        "path_id": "path:scenario:NQ:belief_regime_node:range:trend_follow_through:primary",
+        "raw_path_score": "0.3630173590379622",
+        "score_model_family": "catboost",
+        "score_source_kind": "external_model",
+        "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+        "score_generator": "pandas_path_ranker_trainer.py"
+      },
+      {
+        "candidate_set_id": "structural-candidates:NQ:8f288754c638a9e8",
+        "path_id": "path:scenario:NQ:belief_regime_node:range:transition_confirmation:primary",
+        "raw_path_score": "0.3630173590379622",
+        "score_model_family": "catboost",
+        "score_source_kind": "external_model",
+        "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+        "score_generator": "pandas_path_ranker_trainer.py"
+      }
+    ]
+  },
+  "ict_engine_runtime_artifacts": {
+    "apply_scores_artifact": "ict-engine/07_apply_catboost_scores_current_nq.json",
+    "register_artifact": "ict-engine/08_register_catboost_path_ranker_artifact_nq.json",
+    "enable_artifact": "ict-engine/09_enable_structural_path_ranking_runtime_nq.json",
+    "policy_status_artifact": "ict-engine/10_policy_training_status_after_score_match_nq.json",
+    "workflow_status_artifact": "ict-engine/11_workflow_status_after_score_match_nq.json",
+    "recommended_path_phase_artifact": "ict-engine/12_workflow_phase_structural_recommended_path_bundle_nq.json",
+    "ranker_runtime_phase_artifact": "ict-engine/13_workflow_phase_structural_ranker_runtime_nq.json",
+    "structural_validation_phase_artifact": "ict-engine/14_workflow_phase_structural_validation_nq.json",
+    "execution_tree_trace_artifact": "ict-engine/15_execution_tree_trace_after_score_match_nq.json"
+  },
+  "policy_training_status": {
+    "runtime_summary": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=1421 mature_rows=1 history_mature_rows=1397 raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+    "validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30 ready=true",
+    "ready": true,
+    "runtime_status": "enabled_candidate_set_ready",
+    "reuse_mode": "prefer_history",
+    "runtime_source": "candidate_set",
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+    "runtime_matches": 3,
+    "raw_scored_mature_rows": 1397,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_ready": true,
+    "production_validation_rows": 1395,
+    "production_validation_min_rows": 30,
+    "observation_validation_ready": true,
+    "observation_validation_rows": 40,
+    "observation_validation_min_rows": 30,
+    "trainer_artifact_status": "runtime_eligible",
+    "entry_model_ready": [],
+    "entry_model_pending": [
+      "cisd_rb_long_v1",
+      "breaker_rb_long_v1"
+    ]
+  },
+  "workflow_readback": {
+    "ranker_phase_status": "using_candidate_set_scores",
+    "runtime_source": "candidate_set",
+    "reuse_mode": "prefer_history",
+    "applied_path_count": 3,
+    "candidate_set_match_count": 3,
+    "artifact_match_count": 0,
+    "history_match_count": 0,
+    "recommended_raw_score": 0.405144071613999,
+    "recommended_calibrated_path_prob": 0.5342465753424658,
+    "recommended_path_prob_lower_bound": 0.43914736952977457,
+    "recommended_gate": "observe",
+    "delayed_reward_status": "ready",
+    "delayed_reward_resolution_observation_count": 13,
+    "source_reliability_status": "needs_multi_source_overlap",
+    "target_policy_status": "bucket_posterior_live"
+  },
+  "execution_tree_readback": {
+    "gate_status": "observe",
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "decision_hint": "execution_guarded_due_to_low_remaining_regime_duration",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_runtime_source": "candidate_set",
+    "path_ranker_model_family_note": "execution_tree_trace still reports unknown model family, while policy/workflow readbacks are authoritative for CatBoost score_model_family=catboost",
+    "ranker_validation_ready": true
+  },
+  "decision": {
+    "board_a_confidence_goal": "accepted_95",
+    "score_match_goal": "met",
+    "catboost_runtime_goal": "met_for_policy_training_workflow_and_execution_tree_readback",
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "SessionLiquidityCoreViable remains a liquidity/session guardrail, not standalone path-specific edge.",
+      "Workflow ranker gate remains observe and execution tree remains observe/transition_guardrail/guarded.",
+      "Entry-model training modules remain pending even though structural path-ranker validation is ready."
+    ],
+    "next_action": "Keep CatBoost-ready score-match ranker as downstream context only; wait for a non-observe release candidate with path-specific edge and execution gates before any execute promotion."
+  }
+}

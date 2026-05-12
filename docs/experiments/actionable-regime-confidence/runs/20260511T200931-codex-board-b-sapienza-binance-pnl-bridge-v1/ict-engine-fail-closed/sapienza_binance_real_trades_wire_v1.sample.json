@@ -1,0 +1,63 @@
+{
+  "auto_quant_run_id": "20260511T200931+0800-codex-board-b-sapienza-binance-pnl-bridge-v1",
+  "close_ts_ms": 1562367600000,
+  "direction": "long",
+  "entry_signal": "sapienza_positive_pump_event",
+  "factors_used": [
+    {
+      "category": "regime_context",
+      "confidence": 0.970640354706,
+      "direction": "Neutral",
+      "factor_name": "market_regime_context.root",
+      "uncertainty_contribution": 0.029359645294000036,
+      "value": 0.970640354706,
+      "weighted_score": 0.970640354706
+    },
+    {
+      "category": "branch_path",
+      "confidence": 0.970640354706,
+      "direction": "Bear",
+      "factor_name": "regime_profit_branch_path",
+      "uncertainty_contribution": 0.029359645294000036,
+      "value": -0.0023866348448686736,
+      "weighted_score": -0.0023866348448686736
+    },
+    {
+      "category": "direct_manipulation_provider_reconstructed_pnl",
+      "confidence": 0.6,
+      "direction": "Bear",
+      "factor_name": "SapienzaTelegramPumpDumpPositiveControl",
+      "uncertainty_contribution": 0.4,
+      "value": -0.0023866348448686736,
+      "weighted_score": -0.0023866348448686736
+    }
+  ],
+  "open_ts_ms": 1562349600000,
+  "pnl": -0.0023866348448686736,
+  "realized_outcome": "loss",
+  "regime_at_entry": "Manipulation(scoped)",
+  "schema_version": "1.0",
+  "strategy_mutation_id": "board-b-sapienza-binance-6h",
+  "strategy_name": "SapienzaBinancePnlBridgeV1",
+  "structural_feedback": {
+    "branch_id": "Manipulation(scoped) -> TelegramPumpDumpPositiveControl -> SapienzaBinanceProviderExit -> pnl_bridge",
+    "candidate_set_id": "20260511T200931+0800-codex-board-b-sapienza-binance-pnl-bridge-v1",
+    "candidate_set_size": 96,
+    "direction": "long",
+    "entry_style": "source_timestamp_symbol_to_provider_1h_entry_exit",
+    "exit_reason": null,
+    "followed_path": true,
+    "node_id": "Manipulation(scoped)",
+    "notes": "diagnostic_dry_run_only_sapienza_binance_bridge_rc_spa_rejected",
+    "path_id": "Manipulation(scoped) -> TelegramPumpDumpPositiveControl -> SapienzaBinanceProviderExit -> pnl_bridge",
+    "protocol_version": "board-b-sapienza-binance-pnl-bridge/v1",
+    "realized_outcome": "loss",
+    "realized_pnl": -0.0023866348448686736,
+    "recommendation_id": "SapienzaBinancePnlBridgeV1|ADXBTC|200|2019-07-05T17:00:10+00:00|6h|sapienza_positive_pump_event|1",
+    "recommended_at": "2019-07-05T17:00:10+00:00",
+    "scenario_id": "sapienza_positive_pump_event",
+    "symbol": "SAPIENZA_BINANCE_PNL_200931"
+  },
+  "symbol": "SAPIENZA_BINANCE_PNL_200931",
+  "trade_id": "SapienzaBinancePnlBridgeV1|ADXBTC|200|2019-07-05T17:00:10+00:00|6h|sapienza_positive_pump_event|1"
+}

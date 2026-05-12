@@ -1,0 +1,17 @@
+assert cargo_build_exit=0
+assert provider_status_exit=0
+assert provider_yfinance_ready=true
+assert provider_tradingview_specific_ready=true
+assert provider_tradingview_aggregate_unhealthy=true
+assert provider_ibkr_gateway_reachable_but_dependency_unhealthy=true
+assert provider_kraken_cli_ready=true
+assert provider_kraken_public_dependency_unhealthy=true
+assert pre_bayes_gate=pass_neutralized
+assert bbn_branch_path_bundle_applied=true
+assert structural_path_ranker_runtime_ready=true
+assert structural_path_ranker_validation_ready=true
+assert structural_branch_path_preserved=true
+assert execution_branch_path_preserved=true
+assert execution_candidate_ready=false
+assert promotion_allowed=false
+assert update_goal=false

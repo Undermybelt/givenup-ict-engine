@@ -1,0 +1,122 @@
+{
+  "plan": {
+    "request": {
+      "market_key": "hardlock-tvr-qqq-1d",
+      "primary_data_path": null,
+      "interval": "1d",
+      "start": null,
+      "end": null,
+      "count": null,
+      "related_roles": [
+        "etf_reference"
+      ],
+      "provider_preferences": {
+        "etf_reference": "tradingview_mcp"
+      },
+      "symbol_overrides": {
+        "etf_reference": {
+          "display_symbol": "NASDAQ:QQQ",
+          "yfinance": null,
+          "tradingview_mcp": "NASDAQ:QQQ",
+          "ibkr": null
+        }
+      },
+      "options_volatility_proxy_symbol": null
+    },
+    "provider_summary": {
+      "required_requirements": [
+        "etf_reference"
+      ],
+      "provider_statuses": [
+        {
+          "provider": "ibkr",
+          "status": "configured_runtime_unhealthy",
+          "healthy": false,
+          "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [
+            "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+            "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+          ],
+          "redacted_config": [
+            "consent_path=<local-path>",
+            "capabilities_path=<local-path>",
+            "consent_present=true",
+            "capabilities_present=true",
+            "reachable_gateway_ports=IB Gateway paper:4002",
+            "ibkr_runtime_missing_modules=redis"
+          ]
+        },
+        {
+          "provider": "yfinance",
+          "status": "ready",
+          "healthy": true,
+          "reason": "public_yahoo_http_endpoints",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [],
+          "redacted_config": [
+            "provider_mode=public_http"
+          ]
+        },
+        {
+          "provider": "tradingview_mcp",
+          "status": "ready",
+          "healthy": true,
+          "reason": "mcp_url_and_api_key_available",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [],
+          "redacted_config": [
+            "mcp_url=https://tvremix.xyz/api/mcp/v1",
+            "credential_source=local_config",
+            "local_config=<set>",
+            "ICT_ENGINE_TVREMIX_MCP_API_KEY=<set>",
+            "stdio_cmd_env=<unset>",
+            "stdio_args_env=<unset>",
+            "probe_connectivity=true",
+            "probe_ohlcv=true",
+            "probe_options=<skipped>"
+          ]
+        }
+      ],
+      "actionable_install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    },
+    "tasks": [
+      {
+        "role": "etf_reference",
+        "provider": "tradingview_mcp",
+        "operation": "Ohlcv",
+        "symbol": "NASDAQ:QQQ",
+        "request": {
+          "TradingViewMcp": {
+            "symbol": "NASDAQ:QQQ"
+          }
+        }
+      }
+    ],
+    "missing_roles": [],
+    "warnings": []
+  },
+  "results": [
+    {
+      "ok": false,
+      "provider": "tradingview_mcp",
+      "operation": "ohlcv.fetch",
+      "role": "etf_reference",
+      "symbol": "NASDAQ:QQQ",
+      "error": {
+        "category": "fetch_failed",
+        "message": "tradingview MCP call 'get_ohlcv' returned error",
+        "retryable": true
+      }
+    }
+  ]
+}

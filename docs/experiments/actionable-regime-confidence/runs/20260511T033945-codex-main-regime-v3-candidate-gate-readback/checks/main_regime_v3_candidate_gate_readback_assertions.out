@@ -1,0 +1,7 @@
+ok: main_regime_v3_candidate_schema_written
+ok: thresholds_relaxed=false
+ok: runtime_code_changed=false
+ok: raw_data_committed=false
+ok: fresh_calibration_rerun=false_readback_only
+ok: accepted_roots=CrisisCrash
+ok: missing_roots=BullExpansion,BearExpansion,SidewaysConsolidation,Manipulation

@@ -1,0 +1,12 @@
+run_id=20260511T132544+0800-codex-monthly-sideways-purity-policy-probe-v1
+board_sha256_at_run=28f8ce29e2292291761ca66d967f3c257a9f9e99ad5e6eb9ef26b323c6152081
+positive_candidate=pure_month_1_00_two_axis_validation_split
+positive_candidate_accepted_95=true
+prior_cross_product_split_still_closed=false
+support_gap_for_prior_cross_product_split_if_all_successes=13
+thresholds_relaxed=false
+runtime_code_changed=false
+raw_data_committed=false
+trade_usable=false
+full_objective_achieved=false
+assertion_status=PASS

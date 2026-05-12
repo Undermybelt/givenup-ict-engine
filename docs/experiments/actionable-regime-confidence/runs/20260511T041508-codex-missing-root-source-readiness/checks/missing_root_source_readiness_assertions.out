@@ -1,0 +1,7 @@
+PASS: active roots remained MainRegimeV2 parent roots.
+PASS: accepted_roots_added is empty.
+PASS: thresholds_relaxed is false.
+PASS: runtime_code_changed is false.
+PASS: no raw large provider archives were committed.
+PASS: Bear and Sideways remain missing.
+PASS: Manipulation remains missing_required_inputs until direct labels exist.

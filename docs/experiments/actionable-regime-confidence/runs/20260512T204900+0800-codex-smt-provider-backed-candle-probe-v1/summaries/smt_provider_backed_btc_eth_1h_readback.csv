@@ -1,0 +1,5 @@
+provider,provider_provenance,aligned_rows,first,last,relationship_type,relationship_confidence,recent_correlation,correlation_window_bars,smt_signal,confidence,fail_closed_reason,actionable
+yahoo,yfinance/YF BTC-USD ETH-USD 1h,11868,2025-01-01 00:00:00+00:00,2026-05-11 23:00:00+00:00,positive,0.0,0.0,11867,none,0.0,swing_confirmation_failure_not_near_same_event_window,False
+binance,Binance BTCUSDT ETHUSDT 1h,11905,2025-01-01 00:00:00+00:00,2026-05-12 00:00:00+00:00,positive,0.0,0.0,11904,none,0.0,swing_confirmation_failure_not_near_same_event_window,False
+bybit,Bybit linear BTCUSDT ETHUSDT 1h,1000,2026-03-31 09:00:00+00:00,2026-05-12 00:00:00+00:00,positive,0.0,0.0,999,none,0.0,no_swing_confirmation_failure_at_latest_event,False
+kraken,Kraken spot XBTUSD ETHUSD 1h,721,2026-04-12 12:00:00+00:00,2026-05-12 12:00:00+00:00,positive,0.0,0.0,720,none,0.0,no_swing_confirmation_failure_at_latest_event,False

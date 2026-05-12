@@ -1,0 +1,9 @@
+PASS 00_provider_status_agent exit=0
+PASS 01_auto_quant_status exit=0
+PASS 02_pre_bayes_status exit=0
+PASS 03_workflow_status_agent exit=0
+PASS 04_structural_recommended_path_bundle exit=0
+PASS 05_execution_candidate exit=0
+FAIL 06_policy_training_status exit=2
+PASS 06b_policy_training_status_output_format_agent exit=0
+PASS 07_export_structural_path_ranking_target exit=0

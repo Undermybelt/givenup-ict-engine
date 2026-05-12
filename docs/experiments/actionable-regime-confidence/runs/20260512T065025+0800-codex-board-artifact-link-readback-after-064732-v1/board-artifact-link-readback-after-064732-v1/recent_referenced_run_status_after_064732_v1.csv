@@ -1,0 +1,11 @@
+run_id,path,exists,json_count,assertion_count,decision
+20260512T064230+0800-codex-current-objective-prompt-artifact-audit-after-063926-v1,docs/experiments/actionable-regime-confidence/runs/20260512T064230+0800-codex-current-objective-prompt-artifact-audit-after-063926-v1,True,2,1,present
+20260512T064254+0800-codex-source-control-arrival-scan-after-063906-v1,docs/experiments/actionable-regime-confidence/runs/20260512T064254+0800-codex-source-control-arrival-scan-after-063906-v1,True,1,1,present
+20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1,docs/experiments/actionable-regime-confidence/runs/20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1,True,2,1,present
+20260512T064309+0800-codex-source-control-arrival-refresh-after-063906-v2,docs/experiments/actionable-regime-confidence/runs/20260512T064309+0800-codex-source-control-arrival-refresh-after-063906-v2,True,1,1,present
+20260512T064315+0800-codex-source-control-gate-refresh-after-r3-postwriter-v1,docs/experiments/actionable-regime-confidence/runs/20260512T064315+0800-codex-source-control-gate-refresh-after-r3-postwriter-v1,True,1,1,present
+20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2,docs/experiments/actionable-regime-confidence/runs/20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2,True,2,1,present
+20260512T064325+0800-codex-source-control-arrival-refresh-after-063906-v2,docs/experiments/actionable-regime-confidence/runs/20260512T064325+0800-codex-source-control-arrival-refresh-after-063906-v2,False,0,0,missing_referenced_root_do_not_count_as_evidence
+20260512T064426+0800-codex-r6-local-cfe-sample-control-applicability-v1,docs/experiments/actionable-regime-confidence/runs/20260512T064426+0800-codex-r6-local-cfe-sample-control-applicability-v1,True,1,1,present
+20260512T064732+0800-codex-public-regime-source-web-triage-after-064426-v1,docs/experiments/actionable-regime-confidence/runs/20260512T064732+0800-codex-public-regime-source-web-triage-after-064426-v1,True,1,1,present
+20260512T064908+0800-codex-r5-kaggle-stock-regimes-recency-redownload-v1,docs/experiments/actionable-regime-confidence/runs/20260512T064908+0800-codex-r5-kaggle-stock-regimes-recency-redownload-v1,True,1,1,present

@@ -1,0 +1,16 @@
+PASS objective_restated_as_deliverables=true
+PASS active_taxonomy=MainRegimeV2
+PASS target_price_roots=Bull,Bear,Sideways,Crisis
+PASS board_cursor_last_loop=20260511T121643+0800-codex-per-regime-factor-supply-map
+PASS accepted_parent_root_completion_slots_added_post_v8=0
+PASS accepted_direct_manipulation_rows_added_post_v8=0
+PASS crystalbull_attached_source_label_target_slots=3
+PASS source_window_seed_rows=11
+PASS cleanup_manifest_exists=true
+PASS full_objective_achieved=false
+PASS call_update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+GATE blocked_completion_audit_v9_post_source_pivot_no_full_matrix_95

@@ -1,0 +1,6 @@
+PASS current_user_text_explicitly_reopens_taxonomy=true
+PASS active_candidate_taxonomy=MainRegimeV5
+PASS accepted_95_roots_added=0
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS supersedes_conflict_writebacks=true

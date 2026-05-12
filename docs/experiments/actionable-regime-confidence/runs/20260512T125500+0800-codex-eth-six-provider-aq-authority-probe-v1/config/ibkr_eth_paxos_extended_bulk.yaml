@@ -1,0 +1,31 @@
+gateway:
+  host: 127.0.0.1
+  port: 4002
+  client_id: 43
+output:
+  directory: docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv
+  filename_template: 'ibkr_{symbol}_{bar_suffix}_{what}.csv'
+  force: true
+defaults:
+  bar_size: '1 hour'
+  duration: '10 D'
+  rth: false
+  exchange: PAXOS
+  currency: USD
+symbols:
+  - symbol: ETH
+    sec_type: CRYPTO
+    exchange: PAXOS
+    currency: USD
+    what_to_show: AGGTRADES
+    rth: false
+    bar_sizes: ['1 hour']
+    duration: '10 D'
+  - symbol: ETH
+    sec_type: CRYPTO
+    exchange: PAXOS
+    currency: USD
+    what_to_show: MIDPOINT
+    rth: false
+    bar_sizes: ['1 hour']
+    duration: '10 D'

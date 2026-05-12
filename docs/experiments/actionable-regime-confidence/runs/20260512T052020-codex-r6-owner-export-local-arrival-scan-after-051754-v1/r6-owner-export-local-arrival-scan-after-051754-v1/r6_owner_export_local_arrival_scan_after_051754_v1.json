@@ -1,0 +1,2953 @@
+{
+  "accepted_regime_confidence_labels": 0,
+  "approved_target_complete_package_count": 0,
+  "board_hash_before_artifact": "67557d6beb6e45708cdd19eed62233b5c7e5b043ed5e23db7c2324b73d9283e2",
+  "candidate_file_count": 233,
+  "candidate_package_count": 28,
+  "candidates": [
+    {
+      "basename": "ict-engine-cboe-futures-market-data-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518047,
+      "mtime_iso_local": "2026-05-12T00:47:27+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cboe-futures-market-data-headers.txt",
+      "sha256_if_small": "c20170b9841335fde9e9afbdfc9ab2f63a1cfcb86c0e43ca58919c8cae954cd7",
+      "size_bytes": 1174,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-r6-cme-delta-jsoncheck-final.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778533299,
+      "mtime_iso_local": "2026-05-12T05:01:39+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-r6-cme-delta-jsoncheck-final.out",
+      "sha256_if_small": "ad3b08dffbe9b5c702f6c189b7630392fa59ad0685cbbda1e8099ba6045d6648",
+      "size_bytes": 2550,
+      "under_required_root": false
+    },
+    {
+      "basename": "current_state_audit_after_v62_owner_export_v1.final.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517109,
+      "mtime_iso_local": "2026-05-12T00:31:49+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/current_state_audit_after_v62_owner_export_v1.final.jsoncheck",
+      "sha256_if_small": "95b22e0a2f46962d82ed067109c29829f7b14f3a281278455699ebd988373492",
+      "size_bytes": 16999,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cme-mbo.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517853,
+      "mtime_iso_local": "2026-05-12T00:44:13+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cme-mbo.html",
+      "sha256_if_small": "eecde3fafbde4090c30e610a7ed4b8d877f8351c0490e4189574890e8a5a4f7e",
+      "size_bytes": 602,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cme-datamine.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517853,
+      "mtime_iso_local": "2026-05-12T00:44:13+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cme-datamine.html",
+      "sha256_if_small": "eecde3fafbde4090c30e610a7ed4b8d877f8351c0490e4189574890e8a5a4f7e",
+      "size_bytes": 602,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher_policy_jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517369,
+      "mtime_iso_local": "2026-05-12T00:36:09+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/oystacher_policy_jsoncheck",
+      "sha256_if_small": "3e4f1290ccc2ee89ba24294c221ae0c61b701b1d6bd54ace3e631e49c0771b6d",
+      "size_bytes": 19332,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_approval_decision_package_v1.json.valid",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517559,
+      "mtime_iso_local": "2026-05-12T00:39:19+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "sha256_if_small": "71407847f90a15035c53d44091701fd47d5c46bb1fdca894db10ffd59739f54c",
+      "size_bytes": 7249,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cboe-oof.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518047,
+      "mtime_iso_local": "2026-05-12T00:47:27+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cboe-oof.html",
+      "sha256_if_small": "2277b06a2a703a8a28ef055be523b46e48af150adfa8d14fdf330bd4ae75d498",
+      "size_bytes": 377477,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-oystacher-exhibit-a.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517937,
+      "mtime_iso_local": "2026-05-12T00:45:37+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-oystacher-exhibit-a.pdf",
+      "sha256_if_small": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "size_bytes": 1132071,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_local_control_path_disposition_v1.rerun.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517588,
+      "mtime_iso_local": "2026-05-12T00:39:48+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_oystacher_local_control_path_disposition_v1.rerun.out",
+      "sha256_if_small": "38a29d4a52556d1bc6c470f618fe7b44579fff34db9d39616bd6f5b17d376c1a",
+      "size_bytes": 1315,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-r6-oystacher-normal-control-preflight-v1.verify.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517600,
+      "mtime_iso_local": "2026-05-12T00:40:00+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-r6-oystacher-normal-control-preflight-v1.verify.out",
+      "sha256_if_small": "8991617b377b8c3075cf0dd5a2476683be165b8b88e29a5c48a6405285e1856c",
+      "size_bytes": 363,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-r6-oystacher-normal-control-preflight-v1.rerun.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517492,
+      "mtime_iso_local": "2026-05-12T00:38:12+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-r6-oystacher-normal-control-preflight-v1.rerun.out",
+      "sha256_if_small": "8991617b377b8c3075cf0dd5a2476683be165b8b88e29a5c48a6405285e1856c",
+      "size_bytes": 363,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-justia-oystacher.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517854,
+      "mtime_iso_local": "2026-05-12T00:44:14+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-justia-oystacher.html",
+      "sha256_if_small": "0454e506eb9db4076e2b581c687cca7136d4f640feedce8af1e5db52d8b829d2",
+      "size_bytes": 5618,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cboe-futures-market-data.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518048,
+      "mtime_iso_local": "2026-05-12T00:47:28+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cboe-futures-market-data.html",
+      "sha256_if_small": "1847b26a3cae4e6ba9a86f64c62aff83b53725d93df0717cc65f858d33449d77",
+      "size_bytes": 608422,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_presence_sweep_v1.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516495,
+      "mtime_iso_local": "2026-05-12T00:21:35+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_owner_export_presence_sweep_v1.jsoncheck",
+      "sha256_if_small": "33160813ccf1b5c6fe66807ed825c6a7ceb685f6108050185367c1bdb5bd9e68",
+      "size_bytes": 3445,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cftc-oystacher-order.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517960,
+      "mtime_iso_local": "2026-05-12T00:46:00+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cftc-oystacher-order.pdf",
+      "sha256_if_small": "7d48312cb71fda354f52d4053d22cbea0b65f73587bd93d427ee2d5fa1703816",
+      "size_bytes": 147602,
+      "under_required_root": false
+    },
+    {
+      "basename": "current_state_audit_after_v62_owner_export_v1.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517028,
+      "mtime_iso_local": "2026-05-12T00:30:28+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/current_state_audit_after_v62_owner_export_v1.jsoncheck",
+      "sha256_if_small": "dc7e71c9ea3ae2a85152c95a74de697156aa638c072c339a3bed7cab7ff95685",
+      "size_bytes": 17685,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_target_verifier_after_030300_v1.json.check",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778526545,
+      "mtime_iso_local": "2026-05-12T03:09:05+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_owner_export_target_verifier_after_030300_v1.json.check",
+      "sha256_if_small": "4deda087796bf5531a2befe24525fa29d7c10bb08daa7f63593667170baec500",
+      "size_bytes": 1607,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cme-datamine-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517853,
+      "mtime_iso_local": "2026-05-12T00:44:13+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cme-datamine-headers.txt",
+      "sha256_if_small": "06b732e36c3c03227970352ecb1651e7b684e88ec8c6486add351e668d566d25",
+      "size_bytes": 4641,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cboe-oof-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518046,
+      "mtime_iso_local": "2026-05-12T00:47:26+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cboe-oof-headers.txt",
+      "sha256_if_small": "51eba963c962c530db294e417d2b75733ae0e1cd05bdc8e59564cc5520bc21ca",
+      "size_bytes": 1878,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_approval_template_v1.json.valid",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517559,
+      "mtime_iso_local": "2026-05-12T00:39:19+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_oystacher_approval_template_v1.json.valid",
+      "sha256_if_small": "3fd0a4c6aadb0eae59b1ec649a21234f2195ba48b96713af45906dcbf4678e30",
+      "size_bytes": 1011,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cme-mbo-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517853,
+      "mtime_iso_local": "2026-05-12T00:44:13+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-cme-mbo-headers.txt",
+      "sha256_if_small": "6473edfbd6d10683e36c8ed09955d970013cb14c8db192989b9a55293dd431dd",
+      "size_bytes": 4641,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-r6-cme-delta-jsoncheck.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778533041,
+      "mtime_iso_local": "2026-05-12T04:57:21+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-r6-cme-delta-jsoncheck.out",
+      "sha256_if_small": "ad3b08dffbe9b5c702f6c189b7630392fa59ad0685cbbda1e8099ba6045d6648",
+      "size_bytes": 2550,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_request_bundle_v2_json_check.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518540,
+      "mtime_iso_local": "2026-05-12T00:55:40+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_owner_export_request_bundle_v2_json_check.out",
+      "sha256_if_small": "b50526229222d7c0a2dbc38fbd54f2d297c7e9396a355881c3505258a9c69bd7",
+      "size_bytes": 5690,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_canonical_merge_preflight_v1.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517316,
+      "mtime_iso_local": "2026-05-12T00:35:16+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_oystacher_canonical_merge_preflight_v1.jsoncheck",
+      "sha256_if_small": "2b095b737a1e12b8007cef116442fa5c2d1431ca49d6733b326fa649d39fc566",
+      "size_bytes": 16248,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_rerun.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514781,
+      "mtime_iso_local": "2026-05-11T23:53:01+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_oystacher_rerun.out",
+      "sha256_if_small": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-cme-datamine-page.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518761,
+      "mtime_iso_local": "2026-05-12T00:59:21+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-cme-datamine-page.html",
+      "sha256_if_small": "eecde3fafbde4090c30e610a7ed4b8d877f8351c0490e4189574890e8a5a4f7e",
+      "size_bytes": 602,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_canonical_merge_preflight_v1.final.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517418,
+      "mtime_iso_local": "2026-05-12T00:36:58+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_oystacher_canonical_merge_preflight_v1.final.jsoncheck",
+      "sha256_if_small": "2b095b737a1e12b8007cef116442fa5c2d1431ca49d6733b326fa649d39fc566",
+      "size_bytes": 16248,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-justia-oystacher-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517854,
+      "mtime_iso_local": "2026-05-12T00:44:14+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-justia-oystacher-headers.txt",
+      "sha256_if_small": "2841a89c6e7b128a78e698fbf4a284b76b44c2aeab141c0168acecb6b7463916",
+      "size_bytes": 2186,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_oystacher_docket_exact.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516391,
+      "mtime_iso_local": "2026-05-12T00:19:51+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/courtlistener_oystacher_docket_exact.json",
+      "sha256_if_small": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "size_bytes": 58,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_arrival_scan_after_043027_v1.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778531749,
+      "mtime_iso_local": "2026-05-12T04:35:49+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_owner_export_arrival_scan_after_043027_v1.out",
+      "sha256_if_small": "5f7c2394f7a96ad2358aef4e058268cb3c02f54d985fa5844b1e8e1eb66e8e79",
+      "size_bytes": 7394,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_oystacher_dockets.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516391,
+      "mtime_iso_local": "2026-05-12T00:19:51+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/courtlistener_oystacher_dockets.json",
+      "sha256_if_small": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "size_bytes": 58,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_sendable_requests_v3_json_check.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518916,
+      "mtime_iso_local": "2026-05-12T01:01:56+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/r6_owner_export_sendable_requests_v3_json_check.out",
+      "sha256_if_small": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-direct-manipulation-row-intake.lock",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778515319,
+      "mtime_iso_local": "2026-05-12T00:01:59+08:00",
+      "parent": "/tmp",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake.lock",
+      "sha256_if_small": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_doc1.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516297,
+      "mtime_iso_local": "2026-05-12T00:18:17+08:00",
+      "parent": "/tmp/ict-oystacher-govinfo-yAc5hD",
+      "path": "/tmp/ict-oystacher-govinfo-yAc5hD/govinfo_doc1.txt",
+      "sha256_if_small": "9c10a8dd97f70ad944fcda2e6efc1e4cd71549ea12cd213f9739d3af93726152",
+      "size_bytes": 271777,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_doc1.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516279,
+      "mtime_iso_local": "2026-05-12T00:17:59+08:00",
+      "parent": "/tmp/ict-oystacher-govinfo-yAc5hD",
+      "path": "/tmp/ict-oystacher-govinfo-yAc5hD/govinfo_doc1.pdf",
+      "sha256_if_small": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "size_bytes": 556530,
+      "under_required_root": false
+    },
+    {
+      "basename": "positive_spoofing_layering_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514958,
+      "mtime_iso_local": "2026-05-11T23:55:58+08:00",
+      "parent": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "sha256_if_small": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "size_bytes": 58924,
+      "under_required_root": false
+    },
+    {
+      "basename": "matched_negative_normal_activity_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514958,
+      "mtime_iso_local": "2026-05-11T23:55:58+08:00",
+      "parent": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "sha256_if_small": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "size_bytes": 58890,
+      "under_required_root": false
+    },
+    {
+      "basename": "provenance_manifest.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778515296,
+      "mtime_iso_local": "2026-05-12T00:01:36+08:00",
+      "parent": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+      "sha256_if_small": "9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b",
+      "size_bytes": 1450,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516296,
+      "mtime_iso_local": "2026-05-12T00:18:16+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "press_7253_15.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516297,
+      "mtime_iso_local": "2026-05-12T00:18:17+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1/press_7253_15.html",
+      "sha256_if_small": "49d51b83e0b8e178f20d9d9f199d8f8a8049f3a6c4f493086a6acd0df5f0f854",
+      "size_bytes": 39058,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_press_release_7264_15.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517757,
+      "mtime_iso_local": "2026-05-12T00:42:37+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/cftc_press_release_7264_15.html",
+      "sha256_if_small": "11f7f0bfdc6a2f28f727e9ee52481c853655a2e5394bd874fb3328d2bb5baab7",
+      "size_bytes": 40201,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_complaint_pdf.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517755,
+      "mtime_iso_local": "2026-05-12T00:42:35+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/cftc_complaint_pdf.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_exhibit_a_pdf.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517751,
+      "mtime_iso_local": "2026-05-12T00:42:31+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/courtlistener_exhibit_a_pdf.pdf",
+      "sha256_if_small": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "size_bytes": 1132071,
+      "under_required_root": false
+    },
+    {
+      "basename": "justia_doc_237.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517758,
+      "mtime_iso_local": "2026-05-12T00:42:38+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/justia_doc_237.html",
+      "sha256_if_small": "e0b5e034c720670e2aa90cf8379549b746c3a7fc7fc4444ff7314d44825ff72a",
+      "size_bytes": 5624,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_doc_195_pdf.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517761,
+      "mtime_iso_local": "2026-05-12T00:42:41+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/govinfo_doc_195_pdf.pdf",
+      "sha256_if_small": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "size_bytes": 556530,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_doc1.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516258,
+      "mtime_iso_local": "2026-05-12T00:17:38+08:00",
+      "parent": "/tmp/ict-oystacher-govinfo-vB0tdv",
+      "path": "/tmp/ict-oystacher-govinfo-vB0tdv/govinfo_doc1.pdf",
+      "sha256_if_small": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "size_bytes": 556530,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher_exhibit_a.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516384,
+      "mtime_iso_local": "2026-05-12T00:19:44+08:00",
+      "parent": "/tmp/ict-engine-oystacher-exhibit-a-probe",
+      "path": "/tmp/ict-engine-oystacher-exhibit-a-probe/oystacher_exhibit_a.pdf",
+      "sha256_if_small": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "size_bytes": 1132071,
+      "under_required_root": false
+    },
+    {
+      "basename": "pypdf-install.log",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516384,
+      "mtime_iso_local": "2026-05-12T00:19:44+08:00",
+      "parent": "/tmp/ict-engine-oystacher-exhibit-a-probe",
+      "path": "/tmp/ict-engine-oystacher-exhibit-a-probe/pypdf-install.log",
+      "sha256_if_small": "606c9eaacfe5d59fd027eaaf0fe907bf7d21ae9727e3d87708db9f4c3ef2cff0",
+      "size_bytes": 143,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict_engine-97d28a47a09f25ad.6yk8etcz5cmeyx45js7h9gjru.0pzqw6o.rcgu.o",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778530279,
+      "mtime_iso_local": "2026-05-12T04:11:19+08:00",
+      "parent": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps",
+      "path": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps/ict_engine-97d28a47a09f25ad.6yk8etcz5cmeyx45js7h9gjru.0pzqw6o.rcgu.o",
+      "sha256_if_small": "5e59f7a8d7431f5908b489673dd6048c1b7f005f4900306d2b09311f1000cfd2",
+      "size_bytes": 194248,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict_engine-97d28a47a09f25ad.bkxksl28i2kbl6stscmeylie6.1qrqlhu.rcgu.o",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778532164,
+      "mtime_iso_local": "2026-05-12T04:42:44+08:00",
+      "parent": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps",
+      "path": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps/ict_engine-97d28a47a09f25ad.bkxksl28i2kbl6stscmeylie6.1qrqlhu.rcgu.o",
+      "sha256_if_small": "a235593f2a707d15579c832d1b59096f2689aed5b01d582d3d1aba0738b7d26d",
+      "size_bytes": 197080,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict_engine-97d28a47a09f25ad.6yk8etcz5cmeyx45js7h9gjru.0uhhccd.rcgu.o",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778530279,
+      "mtime_iso_local": "2026-05-12T04:11:19+08:00",
+      "parent": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps",
+      "path": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps/ict_engine-97d28a47a09f25ad.6yk8etcz5cmeyx45js7h9gjru.0uhhccd.rcgu.o",
+      "sha256_if_small": "5e59f7a8d7431f5908b489673dd6048c1b7f005f4900306d2b09311f1000cfd2",
+      "size_bytes": 194248,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514345,
+      "mtime_iso_local": "2026-05-11T23:45:45+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915_gs.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514483,
+      "mtime_iso_local": "2026-05-11T23:48:03+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915_gs.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514362,
+      "mtime_iso_local": "2026-05-11T23:46:02+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.txt",
+      "sha256_if_small": "4b392bd71caea5d70e18590ca72b2171eaff948593f8aacf1f6fe27d88f40501",
+      "size_bytes": 59763,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514782,
+      "mtime_iso_local": "2026-05-11T23:53:02+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfheetsalimorder033116.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514787,
+      "mtime_iso_local": "2026-05-11T23:53:07+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfheetsalimorder033116.pdf",
+      "sha256_if_small": "2969b46f868464895fcdaee3e084151925e6e990317bae62cafac5e938358f4c",
+      "size_bytes": 1982589,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfheetsalimorder033116.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514789,
+      "mtime_iso_local": "2026-05-11T23:53:09+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfheetsalimorder033116.txt",
+      "sha256_if_small": "1463eb4254120776306a4052f04854a3462f73848ae79be72240ab33600285a8",
+      "size_bytes": 51154,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514786,
+      "mtime_iso_local": "2026-05-11T23:53:06+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514405,
+      "mtime_iso_local": "2026-05-11T23:46:45+08:00",
+      "parent": "/tmp/ict-engine-oystacher-probe2",
+      "path": "/tmp/ict-engine-oystacher-probe2/oystacher.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514409,
+      "mtime_iso_local": "2026-05-11T23:46:49+08:00",
+      "parent": "/tmp/ict-engine-oystacher-probe2",
+      "path": "/tmp/ict-engine-oystacher-probe2/oystacher.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "positive_spoofing_layering_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514958,
+      "mtime_iso_local": "2026-05-11T23:55:58+08:00",
+      "parent": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "path": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/positive_spoofing_layering_rows.csv",
+      "sha256_if_small": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "size_bytes": 58924,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516079,
+      "mtime_iso_local": "2026-05-12T00:14:39+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516085,
+      "mtime_iso_local": "2026-05-12T00:14:45+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/enfigorcomplnt101915.txt",
+      "sha256_if_small": "109ee804f0d3b2bcee88288558203bef995e5c5d0476cb8deeb2178519b684f7",
+      "size_bytes": 59124,
+      "under_required_root": false
+    },
+    {
+      "basename": "press_7253_15.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516081,
+      "mtime_iso_local": "2026-05-12T00:14:41+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1",
+      "path": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/press_7253_15.html",
+      "sha256_if_small": "be6247e4deae4a3e6a99fda7c7a9ae735e2e84a08fcc535af6401820e3b49b2f",
+      "size_bytes": 39058,
+      "under_required_root": false
+    },
+    {
+      "basename": "positive_spoofing_layering_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778515915,
+      "mtime_iso_local": "2026-05-12T00:11:55+08:00",
+      "parent": "/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+      "path": "/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/positive_spoofing_layering_rows.csv",
+      "sha256_if_small": "1102d09b92c07498676fa5a4ae93b3aa1323086f4edb4453281b25714348e793",
+      "size_bytes": 62121,
+      "under_required_root": false
+    },
+    {
+      "basename": "gov.uscourts.ilnd.316889.1.1.oystacher_exhibit_a.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516937,
+      "mtime_iso_local": "2026-05-12T00:28:57+08:00",
+      "parent": "/tmp/ict-engine-oystacher-exhibit-a-row-materialization-v1",
+      "path": "/tmp/ict-engine-oystacher-exhibit-a-row-materialization-v1/gov.uscourts.ilnd.316889.1.1.oystacher_exhibit_a.pdf",
+      "sha256_if_small": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "size_bytes": 1132071,
+      "under_required_root": false
+    },
+    {
+      "basename": "positive_spoofing_layering_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514958,
+      "mtime_iso_local": "2026-05-11T23:55:58+08:00",
+      "parent": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "path": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/positive_spoofing_layering_rows.csv",
+      "sha256_if_small": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "size_bytes": 58924,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514513,
+      "mtime_iso_local": "2026-05-11T23:48:33+08:00",
+      "parent": "/tmp/ict-engine-oystacher-probe",
+      "path": "/tmp/ict-engine-oystacher-probe/oystacher.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514515,
+      "mtime_iso_local": "2026-05-11T23:48:35+08:00",
+      "parent": "/tmp/ict-engine-oystacher-probe",
+      "path": "/tmp/ict-engine-oystacher-probe/oystacher.txt",
+      "sha256_if_small": "109ee804f0d3b2bcee88288558203bef995e5c5d0476cb8deeb2178519b684f7",
+      "size_bytes": 59124,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict_engine-97d28a47a09f25ad.7mpnmcme4ka7wofvethsd65lc.053mp6n.rcgu.o",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778524504,
+      "mtime_iso_local": "2026-05-12T02:35:04+08:00",
+      "parent": "/tmp/ict-engine-codex-execution-tree-admission/debug/deps",
+      "path": "/tmp/ict-engine-codex-execution-tree-admission/debug/deps/ict_engine-97d28a47a09f25ad.7mpnmcme4ka7wofvethsd65lc.053mp6n.rcgu.o",
+      "sha256_if_small": "4a36115bce7ee8391f80e5f164178f03a8fe8415c066630a658fc98bf5eaf447",
+      "size_bytes": 153576,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514374,
+      "mtime_iso_local": "2026-05-11T23:46:14+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-candidate/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-candidate/raw/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514376,
+      "mtime_iso_local": "2026-05-11T23:46:16+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-candidate/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-candidate/raw/enfigorcomplnt101915.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_2.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516411,
+      "mtime_iso_local": "2026-05-12T00:20:11+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.txt",
+      "sha256_if_small": "86907034fc478b036a11923b50b5795e4a92664883908588922f79d8acb9ef5c",
+      "size_bytes": 69948,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_oystacher_complaint.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516376,
+      "mtime_iso_local": "2026-05-12T00:19:36+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.headers.txt",
+      "sha256_if_small": "6a2504c2ac749530c4bd10d5056accb941ab1213c11ce029cb8f931ebb712c4f",
+      "size_bytes": 793,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915appa.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516398,
+      "mtime_iso_local": "2026-05-12T00:19:58+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915appa.pdf",
+      "sha256_if_small": "54e7570ea0da0be6cb22e47477c71e0eb062982aa935a3ebde972c0d721b35c2",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915exha.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516386,
+      "mtime_iso_local": "2026-05-12T00:19:46+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exha.headers.txt",
+      "sha256_if_small": "60e95b83a7c605b33a609c5f3bb610f473786161053b6725d7924e4312207997",
+      "size_bytes": 1996,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_0.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516402,
+      "mtime_iso_local": "2026-05-12T00:20:02+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.txt",
+      "sha256_if_small": "9dbbe57d13ef7ab9ab0cfa029633a5ee23c3287f51ffd8135c8d01d8fc8f4083",
+      "size_bytes": 34515,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_2.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516409,
+      "mtime_iso_local": "2026-05-12T00:20:09+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.headers.txt",
+      "sha256_if_small": "66f4b558de03d9e14b6cbcf48b02697ff8a7e385c5282afdff21a48e3a23a8db",
+      "size_bytes": 1741,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_dockets_api.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516413,
+      "mtime_iso_local": "2026-05-12T00:20:13+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/courtlistener_dockets_api.json",
+      "sha256_if_small": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "size_bytes": 58,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_1.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516408,
+      "mtime_iso_local": "2026-05-12T00:20:08+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.txt",
+      "sha256_if_small": "9c10a8dd97f70ad944fcda2e6efc1e4cd71549ea12cd213f9739d3af93726152",
+      "size_bytes": 271777,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_0.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516399,
+      "mtime_iso_local": "2026-05-12T00:19:59+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.pdf",
+      "sha256_if_small": "f4234cde0c2da6869e4b1fcc441ed2f52454a7500c76e37d71a081b0e363e375",
+      "size_bytes": 175942,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_1.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516404,
+      "mtime_iso_local": "2026-05-12T00:20:04+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.pdf",
+      "sha256_if_small": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "size_bytes": 556530,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_3.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516412,
+      "mtime_iso_local": "2026-05-12T00:20:12+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_3.pdf",
+      "sha256_if_small": "aa3ddc6268e610f9051c55051868d452f86b25ec78f5182270954788b184667b",
+      "size_bytes": 44165,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_2.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516410,
+      "mtime_iso_local": "2026-05-12T00:20:10+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.pdf",
+      "sha256_if_small": "36b62f65019d703d2e107909bb7c37d1f46c7aa3729bb8a8a605d2884eb3d83d",
+      "size_bytes": 217542,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorexha101915.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516392,
+      "mtime_iso_local": "2026-05-12T00:19:52+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexha101915.headers.txt",
+      "sha256_if_small": "43f1776c3dcadb82d1b0b699b8658bab3f1c91931ee95040ef52ada076ab70f3",
+      "size_bytes": 1980,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_1.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516402,
+      "mtime_iso_local": "2026-05-12T00:20:02+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.headers.txt",
+      "sha256_if_small": "321f949fdcca65d66b3631d4b5e0452d06afbc7b39c28684f7296b92dbd3286e",
+      "size_bytes": 1741,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_dockets_api.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516413,
+      "mtime_iso_local": "2026-05-12T00:20:13+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/courtlistener_dockets_api.headers.txt",
+      "sha256_if_small": "dbb96e69e8fc1256cdd7b837a147261e70814d79234b20b8aea6adf06ec39356",
+      "size_bytes": 1693,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915exhibita.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516384,
+      "mtime_iso_local": "2026-05-12T00:19:44+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exhibita.pdf",
+      "sha256_if_small": "058b62102339f7fb9200759f5281d4475046048944ef5cf46182e85c4516c2a2",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorexha101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516392,
+      "mtime_iso_local": "2026-05-12T00:19:52+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexha101915.pdf",
+      "sha256_if_small": "29304557298b2e022a1101f35b095f151b1bd94224f11b906287f8cd0c0a349d",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorappa101915.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516395,
+      "mtime_iso_local": "2026-05-12T00:19:55+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorappa101915.headers.txt",
+      "sha256_if_small": "89cc695e8a726cc810f439cc2d8a6c132ca7202b86cd7b1bf8aa967efa46de2b",
+      "size_bytes": 1981,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorexhibita101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516388,
+      "mtime_iso_local": "2026-05-12T00:19:48+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexhibita101915.pdf",
+      "sha256_if_small": "c0fc91729fc6a62bca737595849cfa5c69aae92dcbfae82fd3759ed9bfc0f2db",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915exha.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516386,
+      "mtime_iso_local": "2026-05-12T00:19:46+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exha.pdf",
+      "sha256_if_small": "9aa6b38b797cfe52a75f90d768ec6b6db5517e64339767e591af9f2b44016e61",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_oystacher_complaint.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516377,
+      "mtime_iso_local": "2026-05-12T00:19:37+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_press_7253_15.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516381,
+      "mtime_iso_local": "2026-05-12T00:19:41+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_press_7253_15.headers.txt",
+      "sha256_if_small": "0dd7a856db5af21306d8ee66ea163b7e772e5f71d93571065300af1eeb1fbdaa",
+      "size_bytes": 1975,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_3.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516412,
+      "mtime_iso_local": "2026-05-12T00:20:12+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_3.headers.txt",
+      "sha256_if_small": "4c5b5ec19e855ab2916ce4509b3c2d2ae5d5eeb3ee230bb5153855849408e0db",
+      "size_bytes": 3196,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorappa101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516395,
+      "mtime_iso_local": "2026-05-12T00:19:55+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorappa101915.pdf",
+      "sha256_if_small": "7bd92c9f8a83843bf4619fffb3bebbb1f2a0c30c72d7e6d16cb88641f1440e37",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_0.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516398,
+      "mtime_iso_local": "2026-05-12T00:19:58+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.headers.txt",
+      "sha256_if_small": "bce37a890d92627f070201dd2ebaead717f5b6054feb6e7ba52556fe917d6700",
+      "size_bytes": 1741,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915exhibita.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516384,
+      "mtime_iso_local": "2026-05-12T00:19:44+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exhibita.headers.txt",
+      "sha256_if_small": "ec6fa1fcf37436d7ef4bdeeab5abb665966407c802951fdfebc1f3c846ef6ec7",
+      "size_bytes": 1972,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_press_7253_15.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516381,
+      "mtime_iso_local": "2026-05-12T00:19:41+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_press_7253_15.html",
+      "sha256_if_small": "daf95ce749e88813991dacc492f6c908ca7d922afd724d0419030d3e432ca129",
+      "size_bytes": 38560,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_oystacher_complaint.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516380,
+      "mtime_iso_local": "2026-05-12T00:19:40+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915appa.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516398,
+      "mtime_iso_local": "2026-05-12T00:19:58+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915appa.headers.txt",
+      "sha256_if_small": "3f956dad668cbb0b6c425ebbd711b89697448595a162fbe66428aaeb583b6310",
+      "size_bytes": 1987,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorexhibita101915.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516388,
+      "mtime_iso_local": "2026-05-12T00:19:48+08:00",
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexhibita101915.headers.txt",
+      "sha256_if_small": "f86530a94f06f874705df9fb3e314a78cbd11e0a536fb1bacb88790520baeef3",
+      "size_bytes": 1996,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cboe-futures-market-data-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518047,
+      "mtime_iso_local": "2026-05-12T00:47:27+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cboe-futures-market-data-headers.txt",
+      "sha256_if_small": "c20170b9841335fde9e9afbdfc9ab2f63a1cfcb86c0e43ca58919c8cae954cd7",
+      "size_bytes": 1174,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-r6-cme-delta-jsoncheck-final.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778533299,
+      "mtime_iso_local": "2026-05-12T05:01:39+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-r6-cme-delta-jsoncheck-final.out",
+      "sha256_if_small": "ad3b08dffbe9b5c702f6c189b7630392fa59ad0685cbbda1e8099ba6045d6648",
+      "size_bytes": 2550,
+      "under_required_root": false
+    },
+    {
+      "basename": "current_state_audit_after_v62_owner_export_v1.final.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517109,
+      "mtime_iso_local": "2026-05-12T00:31:49+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/current_state_audit_after_v62_owner_export_v1.final.jsoncheck",
+      "sha256_if_small": "95b22e0a2f46962d82ed067109c29829f7b14f3a281278455699ebd988373492",
+      "size_bytes": 16999,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cme-mbo.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517853,
+      "mtime_iso_local": "2026-05-12T00:44:13+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cme-mbo.html",
+      "sha256_if_small": "eecde3fafbde4090c30e610a7ed4b8d877f8351c0490e4189574890e8a5a4f7e",
+      "size_bytes": 602,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cme-datamine.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517853,
+      "mtime_iso_local": "2026-05-12T00:44:13+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cme-datamine.html",
+      "sha256_if_small": "eecde3fafbde4090c30e610a7ed4b8d877f8351c0490e4189574890e8a5a4f7e",
+      "size_bytes": 602,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher_policy_jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517369,
+      "mtime_iso_local": "2026-05-12T00:36:09+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/oystacher_policy_jsoncheck",
+      "sha256_if_small": "3e4f1290ccc2ee89ba24294c221ae0c61b701b1d6bd54ace3e631e49c0771b6d",
+      "size_bytes": 19332,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_approval_decision_package_v1.json.valid",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517559,
+      "mtime_iso_local": "2026-05-12T00:39:19+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "sha256_if_small": "71407847f90a15035c53d44091701fd47d5c46bb1fdca894db10ffd59739f54c",
+      "size_bytes": 7249,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cboe-oof.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518047,
+      "mtime_iso_local": "2026-05-12T00:47:27+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cboe-oof.html",
+      "sha256_if_small": "2277b06a2a703a8a28ef055be523b46e48af150adfa8d14fdf330bd4ae75d498",
+      "size_bytes": 377477,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-oystacher-exhibit-a.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517937,
+      "mtime_iso_local": "2026-05-12T00:45:37+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-oystacher-exhibit-a.pdf",
+      "sha256_if_small": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "size_bytes": 1132071,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_local_control_path_disposition_v1.rerun.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517588,
+      "mtime_iso_local": "2026-05-12T00:39:48+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_oystacher_local_control_path_disposition_v1.rerun.out",
+      "sha256_if_small": "38a29d4a52556d1bc6c470f618fe7b44579fff34db9d39616bd6f5b17d376c1a",
+      "size_bytes": 1315,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-r6-oystacher-normal-control-preflight-v1.verify.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517600,
+      "mtime_iso_local": "2026-05-12T00:40:00+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-r6-oystacher-normal-control-preflight-v1.verify.out",
+      "sha256_if_small": "8991617b377b8c3075cf0dd5a2476683be165b8b88e29a5c48a6405285e1856c",
+      "size_bytes": 363,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-r6-oystacher-normal-control-preflight-v1.rerun.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517492,
+      "mtime_iso_local": "2026-05-12T00:38:12+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-r6-oystacher-normal-control-preflight-v1.rerun.out",
+      "sha256_if_small": "8991617b377b8c3075cf0dd5a2476683be165b8b88e29a5c48a6405285e1856c",
+      "size_bytes": 363,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-justia-oystacher.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517854,
+      "mtime_iso_local": "2026-05-12T00:44:14+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-justia-oystacher.html",
+      "sha256_if_small": "0454e506eb9db4076e2b581c687cca7136d4f640feedce8af1e5db52d8b829d2",
+      "size_bytes": 5618,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cboe-futures-market-data.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518048,
+      "mtime_iso_local": "2026-05-12T00:47:28+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cboe-futures-market-data.html",
+      "sha256_if_small": "1847b26a3cae4e6ba9a86f64c62aff83b53725d93df0717cc65f858d33449d77",
+      "size_bytes": 608422,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_presence_sweep_v1.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516495,
+      "mtime_iso_local": "2026-05-12T00:21:35+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_owner_export_presence_sweep_v1.jsoncheck",
+      "sha256_if_small": "33160813ccf1b5c6fe66807ed825c6a7ceb685f6108050185367c1bdb5bd9e68",
+      "size_bytes": 3445,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cftc-oystacher-order.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517960,
+      "mtime_iso_local": "2026-05-12T00:46:00+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cftc-oystacher-order.pdf",
+      "sha256_if_small": "7d48312cb71fda354f52d4053d22cbea0b65f73587bd93d427ee2d5fa1703816",
+      "size_bytes": 147602,
+      "under_required_root": false
+    },
+    {
+      "basename": "current_state_audit_after_v62_owner_export_v1.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517028,
+      "mtime_iso_local": "2026-05-12T00:30:28+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/current_state_audit_after_v62_owner_export_v1.jsoncheck",
+      "sha256_if_small": "dc7e71c9ea3ae2a85152c95a74de697156aa638c072c339a3bed7cab7ff95685",
+      "size_bytes": 17685,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_target_verifier_after_030300_v1.json.check",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778526545,
+      "mtime_iso_local": "2026-05-12T03:09:05+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_owner_export_target_verifier_after_030300_v1.json.check",
+      "sha256_if_small": "4deda087796bf5531a2befe24525fa29d7c10bb08daa7f63593667170baec500",
+      "size_bytes": 1607,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cme-datamine-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517853,
+      "mtime_iso_local": "2026-05-12T00:44:13+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cme-datamine-headers.txt",
+      "sha256_if_small": "06b732e36c3c03227970352ecb1651e7b684e88ec8c6486add351e668d566d25",
+      "size_bytes": 4641,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cboe-oof-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518046,
+      "mtime_iso_local": "2026-05-12T00:47:26+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cboe-oof-headers.txt",
+      "sha256_if_small": "51eba963c962c530db294e417d2b75733ae0e1cd05bdc8e59564cc5520bc21ca",
+      "size_bytes": 1878,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_approval_template_v1.json.valid",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517559,
+      "mtime_iso_local": "2026-05-12T00:39:19+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_oystacher_approval_template_v1.json.valid",
+      "sha256_if_small": "3fd0a4c6aadb0eae59b1ec649a21234f2195ba48b96713af45906dcbf4678e30",
+      "size_bytes": 1011,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-cme-mbo-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517853,
+      "mtime_iso_local": "2026-05-12T00:44:13+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-cme-mbo-headers.txt",
+      "sha256_if_small": "6473edfbd6d10683e36c8ed09955d970013cb14c8db192989b9a55293dd431dd",
+      "size_bytes": 4641,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-r6-cme-delta-jsoncheck.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778533041,
+      "mtime_iso_local": "2026-05-12T04:57:21+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-r6-cme-delta-jsoncheck.out",
+      "sha256_if_small": "ad3b08dffbe9b5c702f6c189b7630392fa59ad0685cbbda1e8099ba6045d6648",
+      "size_bytes": 2550,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_request_bundle_v2_json_check.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518540,
+      "mtime_iso_local": "2026-05-12T00:55:40+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_owner_export_request_bundle_v2_json_check.out",
+      "sha256_if_small": "b50526229222d7c0a2dbc38fbd54f2d297c7e9396a355881c3505258a9c69bd7",
+      "size_bytes": 5690,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_canonical_merge_preflight_v1.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517316,
+      "mtime_iso_local": "2026-05-12T00:35:16+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_oystacher_canonical_merge_preflight_v1.jsoncheck",
+      "sha256_if_small": "2b095b737a1e12b8007cef116442fa5c2d1431ca49d6733b326fa649d39fc566",
+      "size_bytes": 16248,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_rerun.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514781,
+      "mtime_iso_local": "2026-05-11T23:53:01+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_oystacher_rerun.out",
+      "sha256_if_small": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-cme-datamine-page.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518761,
+      "mtime_iso_local": "2026-05-12T00:59:21+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-cme-datamine-page.html",
+      "sha256_if_small": "eecde3fafbde4090c30e610a7ed4b8d877f8351c0490e4189574890e8a5a4f7e",
+      "size_bytes": 602,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_oystacher_canonical_merge_preflight_v1.final.jsoncheck",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517418,
+      "mtime_iso_local": "2026-05-12T00:36:58+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_oystacher_canonical_merge_preflight_v1.final.jsoncheck",
+      "sha256_if_small": "2b095b737a1e12b8007cef116442fa5c2d1431ca49d6733b326fa649d39fc566",
+      "size_bytes": 16248,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-justia-oystacher-headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517854,
+      "mtime_iso_local": "2026-05-12T00:44:14+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-justia-oystacher-headers.txt",
+      "sha256_if_small": "2841a89c6e7b128a78e698fbf4a284b76b44c2aeab141c0168acecb6b7463916",
+      "size_bytes": 2186,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_oystacher_docket_exact.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516391,
+      "mtime_iso_local": "2026-05-12T00:19:51+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/courtlistener_oystacher_docket_exact.json",
+      "sha256_if_small": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "size_bytes": 58,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_arrival_scan_after_043027_v1.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778531749,
+      "mtime_iso_local": "2026-05-12T04:35:49+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_owner_export_arrival_scan_after_043027_v1.out",
+      "sha256_if_small": "5f7c2394f7a96ad2358aef4e058268cb3c02f54d985fa5844b1e8e1eb66e8e79",
+      "size_bytes": 7394,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_oystacher_dockets.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516391,
+      "mtime_iso_local": "2026-05-12T00:19:51+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/courtlistener_oystacher_dockets.json",
+      "sha256_if_small": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "size_bytes": 58,
+      "under_required_root": false
+    },
+    {
+      "basename": "r6_owner_export_sendable_requests_v3_json_check.out",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778518916,
+      "mtime_iso_local": "2026-05-12T01:01:56+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/r6_owner_export_sendable_requests_v3_json_check.out",
+      "sha256_if_small": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict-engine-direct-manipulation-row-intake.lock",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778515319,
+      "mtime_iso_local": "2026-05-12T00:01:59+08:00",
+      "parent": "/private/tmp",
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake.lock",
+      "sha256_if_small": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_doc1.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516297,
+      "mtime_iso_local": "2026-05-12T00:18:17+08:00",
+      "parent": "/private/tmp/ict-oystacher-govinfo-yAc5hD",
+      "path": "/private/tmp/ict-oystacher-govinfo-yAc5hD/govinfo_doc1.txt",
+      "sha256_if_small": "9c10a8dd97f70ad944fcda2e6efc1e4cd71549ea12cd213f9739d3af93726152",
+      "size_bytes": 271777,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_doc1.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516279,
+      "mtime_iso_local": "2026-05-12T00:17:59+08:00",
+      "parent": "/private/tmp/ict-oystacher-govinfo-yAc5hD",
+      "path": "/private/tmp/ict-oystacher-govinfo-yAc5hD/govinfo_doc1.pdf",
+      "sha256_if_small": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "size_bytes": 556530,
+      "under_required_root": false
+    },
+    {
+      "basename": "positive_spoofing_layering_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514958,
+      "mtime_iso_local": "2026-05-11T23:55:58+08:00",
+      "parent": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "sha256_if_small": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "size_bytes": 58924,
+      "under_required_root": false
+    },
+    {
+      "basename": "matched_negative_normal_activity_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514958,
+      "mtime_iso_local": "2026-05-11T23:55:58+08:00",
+      "parent": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "sha256_if_small": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "size_bytes": 58890,
+      "under_required_root": false
+    },
+    {
+      "basename": "provenance_manifest.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778515296,
+      "mtime_iso_local": "2026-05-12T00:01:36+08:00",
+      "parent": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+      "sha256_if_small": "9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b",
+      "size_bytes": 1450,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516296,
+      "mtime_iso_local": "2026-05-12T00:18:16+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "press_7253_15.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516297,
+      "mtime_iso_local": "2026-05-12T00:18:17+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1/press_7253_15.html",
+      "sha256_if_small": "49d51b83e0b8e178f20d9d9f199d8f8a8049f3a6c4f493086a6acd0df5f0f854",
+      "size_bytes": 39058,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_press_release_7264_15.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517757,
+      "mtime_iso_local": "2026-05-12T00:42:37+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/cftc_press_release_7264_15.html",
+      "sha256_if_small": "11f7f0bfdc6a2f28f727e9ee52481c853655a2e5394bd874fb3328d2bb5baab7",
+      "size_bytes": 40201,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_complaint_pdf.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517755,
+      "mtime_iso_local": "2026-05-12T00:42:35+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/cftc_complaint_pdf.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_exhibit_a_pdf.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517751,
+      "mtime_iso_local": "2026-05-12T00:42:31+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/courtlistener_exhibit_a_pdf.pdf",
+      "sha256_if_small": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "size_bytes": 1132071,
+      "under_required_root": false
+    },
+    {
+      "basename": "justia_doc_237.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517758,
+      "mtime_iso_local": "2026-05-12T00:42:38+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/justia_doc_237.html",
+      "sha256_if_small": "e0b5e034c720670e2aa90cf8379549b746c3a7fc7fc4444ff7314d44825ff72a",
+      "size_bytes": 5624,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_doc_195_pdf.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778517761,
+      "mtime_iso_local": "2026-05-12T00:42:41+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1/govinfo_doc_195_pdf.pdf",
+      "sha256_if_small": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "size_bytes": 556530,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_doc1.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516258,
+      "mtime_iso_local": "2026-05-12T00:17:38+08:00",
+      "parent": "/private/tmp/ict-oystacher-govinfo-vB0tdv",
+      "path": "/private/tmp/ict-oystacher-govinfo-vB0tdv/govinfo_doc1.pdf",
+      "sha256_if_small": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "size_bytes": 556530,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher_exhibit_a.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516384,
+      "mtime_iso_local": "2026-05-12T00:19:44+08:00",
+      "parent": "/private/tmp/ict-engine-oystacher-exhibit-a-probe",
+      "path": "/private/tmp/ict-engine-oystacher-exhibit-a-probe/oystacher_exhibit_a.pdf",
+      "sha256_if_small": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "size_bytes": 1132071,
+      "under_required_root": false
+    },
+    {
+      "basename": "pypdf-install.log",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516384,
+      "mtime_iso_local": "2026-05-12T00:19:44+08:00",
+      "parent": "/private/tmp/ict-engine-oystacher-exhibit-a-probe",
+      "path": "/private/tmp/ict-engine-oystacher-exhibit-a-probe/pypdf-install.log",
+      "sha256_if_small": "606c9eaacfe5d59fd027eaaf0fe907bf7d21ae9727e3d87708db9f4c3ef2cff0",
+      "size_bytes": 143,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict_engine-97d28a47a09f25ad.6yk8etcz5cmeyx45js7h9gjru.0pzqw6o.rcgu.o",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778530279,
+      "mtime_iso_local": "2026-05-12T04:11:19+08:00",
+      "parent": "/private/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps/ict_engine-97d28a47a09f25ad.6yk8etcz5cmeyx45js7h9gjru.0pzqw6o.rcgu.o",
+      "sha256_if_small": "5e59f7a8d7431f5908b489673dd6048c1b7f005f4900306d2b09311f1000cfd2",
+      "size_bytes": 194248,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict_engine-97d28a47a09f25ad.bkxksl28i2kbl6stscmeylie6.1qrqlhu.rcgu.o",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778532164,
+      "mtime_iso_local": "2026-05-12T04:42:44+08:00",
+      "parent": "/private/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps/ict_engine-97d28a47a09f25ad.bkxksl28i2kbl6stscmeylie6.1qrqlhu.rcgu.o",
+      "sha256_if_small": "a235593f2a707d15579c832d1b59096f2689aed5b01d582d3d1aba0738b7d26d",
+      "size_bytes": 197080,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict_engine-97d28a47a09f25ad.6yk8etcz5cmeyx45js7h9gjru.0uhhccd.rcgu.o",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778530279,
+      "mtime_iso_local": "2026-05-12T04:11:19+08:00",
+      "parent": "/private/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps/ict_engine-97d28a47a09f25ad.6yk8etcz5cmeyx45js7h9gjru.0uhhccd.rcgu.o",
+      "sha256_if_small": "5e59f7a8d7431f5908b489673dd6048c1b7f005f4900306d2b09311f1000cfd2",
+      "size_bytes": 194248,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514345,
+      "mtime_iso_local": "2026-05-11T23:45:45+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915_gs.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514483,
+      "mtime_iso_local": "2026-05-11T23:48:03+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915_gs.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514362,
+      "mtime_iso_local": "2026-05-11T23:46:02+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.txt",
+      "sha256_if_small": "4b392bd71caea5d70e18590ca72b2171eaff948593f8aacf1f6fe27d88f40501",
+      "size_bytes": 59763,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514782,
+      "mtime_iso_local": "2026-05-11T23:53:02+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfheetsalimorder033116.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514787,
+      "mtime_iso_local": "2026-05-11T23:53:07+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfheetsalimorder033116.pdf",
+      "sha256_if_small": "2969b46f868464895fcdaee3e084151925e6e990317bae62cafac5e938358f4c",
+      "size_bytes": 1982589,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfheetsalimorder033116.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514789,
+      "mtime_iso_local": "2026-05-11T23:53:09+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfheetsalimorder033116.txt",
+      "sha256_if_small": "1463eb4254120776306a4052f04854a3462f73848ae79be72240ab33600285a8",
+      "size_bytes": 51154,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514786,
+      "mtime_iso_local": "2026-05-11T23:53:06+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514405,
+      "mtime_iso_local": "2026-05-11T23:46:45+08:00",
+      "parent": "/private/tmp/ict-engine-oystacher-probe2",
+      "path": "/private/tmp/ict-engine-oystacher-probe2/oystacher.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514409,
+      "mtime_iso_local": "2026-05-11T23:46:49+08:00",
+      "parent": "/private/tmp/ict-engine-oystacher-probe2",
+      "path": "/private/tmp/ict-engine-oystacher-probe2/oystacher.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "positive_spoofing_layering_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514958,
+      "mtime_iso_local": "2026-05-11T23:55:58+08:00",
+      "parent": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "path": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/positive_spoofing_layering_rows.csv",
+      "sha256_if_small": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "size_bytes": 58924,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516079,
+      "mtime_iso_local": "2026-05-12T00:14:39+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516085,
+      "mtime_iso_local": "2026-05-12T00:14:45+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/enfigorcomplnt101915.txt",
+      "sha256_if_small": "109ee804f0d3b2bcee88288558203bef995e5c5d0476cb8deeb2178519b684f7",
+      "size_bytes": 59124,
+      "under_required_root": false
+    },
+    {
+      "basename": "press_7253_15.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516081,
+      "mtime_iso_local": "2026-05-12T00:14:41+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1",
+      "path": "/private/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/press_7253_15.html",
+      "sha256_if_small": "be6247e4deae4a3e6a99fda7c7a9ae735e2e84a08fcc535af6401820e3b49b2f",
+      "size_bytes": 39058,
+      "under_required_root": false
+    },
+    {
+      "basename": "positive_spoofing_layering_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778515915,
+      "mtime_iso_local": "2026-05-12T00:11:55+08:00",
+      "parent": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+      "path": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/positive_spoofing_layering_rows.csv",
+      "sha256_if_small": "1102d09b92c07498676fa5a4ae93b3aa1323086f4edb4453281b25714348e793",
+      "size_bytes": 62121,
+      "under_required_root": false
+    },
+    {
+      "basename": "gov.uscourts.ilnd.316889.1.1.oystacher_exhibit_a.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516937,
+      "mtime_iso_local": "2026-05-12T00:28:57+08:00",
+      "parent": "/private/tmp/ict-engine-oystacher-exhibit-a-row-materialization-v1",
+      "path": "/private/tmp/ict-engine-oystacher-exhibit-a-row-materialization-v1/gov.uscourts.ilnd.316889.1.1.oystacher_exhibit_a.pdf",
+      "sha256_if_small": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "size_bytes": 1132071,
+      "under_required_root": false
+    },
+    {
+      "basename": "positive_spoofing_layering_rows.csv",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514958,
+      "mtime_iso_local": "2026-05-11T23:55:58+08:00",
+      "parent": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "path": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/positive_spoofing_layering_rows.csv",
+      "sha256_if_small": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "size_bytes": 58924,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514513,
+      "mtime_iso_local": "2026-05-11T23:48:33+08:00",
+      "parent": "/private/tmp/ict-engine-oystacher-probe",
+      "path": "/private/tmp/ict-engine-oystacher-probe/oystacher.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "oystacher.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514515,
+      "mtime_iso_local": "2026-05-11T23:48:35+08:00",
+      "parent": "/private/tmp/ict-engine-oystacher-probe",
+      "path": "/private/tmp/ict-engine-oystacher-probe/oystacher.txt",
+      "sha256_if_small": "109ee804f0d3b2bcee88288558203bef995e5c5d0476cb8deeb2178519b684f7",
+      "size_bytes": 59124,
+      "under_required_root": false
+    },
+    {
+      "basename": "ict_engine-97d28a47a09f25ad.7mpnmcme4ka7wofvethsd65lc.053mp6n.rcgu.o",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778524504,
+      "mtime_iso_local": "2026-05-12T02:35:04+08:00",
+      "parent": "/private/tmp/ict-engine-codex-execution-tree-admission/debug/deps",
+      "path": "/private/tmp/ict-engine-codex-execution-tree-admission/debug/deps/ict_engine-97d28a47a09f25ad.7mpnmcme4ka7wofvethsd65lc.053mp6n.rcgu.o",
+      "sha256_if_small": "4a36115bce7ee8391f80e5f164178f03a8fe8415c066630a658fc98bf5eaf447",
+      "size_bytes": 153576,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514374,
+      "mtime_iso_local": "2026-05-11T23:46:14+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-candidate/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-candidate/raw/enfigorcomplnt101915.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "enfigorcomplnt101915.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778514376,
+      "mtime_iso_local": "2026-05-11T23:46:16+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-candidate/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-candidate/raw/enfigorcomplnt101915.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_2.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516411,
+      "mtime_iso_local": "2026-05-12T00:20:11+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.txt",
+      "sha256_if_small": "86907034fc478b036a11923b50b5795e4a92664883908588922f79d8acb9ef5c",
+      "size_bytes": 69948,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_oystacher_complaint.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516376,
+      "mtime_iso_local": "2026-05-12T00:19:36+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.headers.txt",
+      "sha256_if_small": "6a2504c2ac749530c4bd10d5056accb941ab1213c11ce029cb8f931ebb712c4f",
+      "size_bytes": 793,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915appa.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516398,
+      "mtime_iso_local": "2026-05-12T00:19:58+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915appa.pdf",
+      "sha256_if_small": "54e7570ea0da0be6cb22e47477c71e0eb062982aa935a3ebde972c0d721b35c2",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915exha.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516386,
+      "mtime_iso_local": "2026-05-12T00:19:46+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exha.headers.txt",
+      "sha256_if_small": "60e95b83a7c605b33a609c5f3bb610f473786161053b6725d7924e4312207997",
+      "size_bytes": 1996,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_0.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516402,
+      "mtime_iso_local": "2026-05-12T00:20:02+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.txt",
+      "sha256_if_small": "9dbbe57d13ef7ab9ab0cfa029633a5ee23c3287f51ffd8135c8d01d8fc8f4083",
+      "size_bytes": 34515,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_2.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516409,
+      "mtime_iso_local": "2026-05-12T00:20:09+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.headers.txt",
+      "sha256_if_small": "66f4b558de03d9e14b6cbcf48b02697ff8a7e385c5282afdff21a48e3a23a8db",
+      "size_bytes": 1741,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_dockets_api.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516413,
+      "mtime_iso_local": "2026-05-12T00:20:13+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/courtlistener_dockets_api.json",
+      "sha256_if_small": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "size_bytes": 58,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_1.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516408,
+      "mtime_iso_local": "2026-05-12T00:20:08+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.txt",
+      "sha256_if_small": "9c10a8dd97f70ad944fcda2e6efc1e4cd71549ea12cd213f9739d3af93726152",
+      "size_bytes": 271777,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_0.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516399,
+      "mtime_iso_local": "2026-05-12T00:19:59+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.pdf",
+      "sha256_if_small": "f4234cde0c2da6869e4b1fcc441ed2f52454a7500c76e37d71a081b0e363e375",
+      "size_bytes": 175942,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_1.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516404,
+      "mtime_iso_local": "2026-05-12T00:20:04+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.pdf",
+      "sha256_if_small": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "size_bytes": 556530,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_3.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516412,
+      "mtime_iso_local": "2026-05-12T00:20:12+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_3.pdf",
+      "sha256_if_small": "aa3ddc6268e610f9051c55051868d452f86b25ec78f5182270954788b184667b",
+      "size_bytes": 44165,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_2.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516410,
+      "mtime_iso_local": "2026-05-12T00:20:10+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.pdf",
+      "sha256_if_small": "36b62f65019d703d2e107909bb7c37d1f46c7aa3729bb8a8a605d2884eb3d83d",
+      "size_bytes": 217542,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorexha101915.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516392,
+      "mtime_iso_local": "2026-05-12T00:19:52+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexha101915.headers.txt",
+      "sha256_if_small": "43f1776c3dcadb82d1b0b699b8658bab3f1c91931ee95040ef52ada076ab70f3",
+      "size_bytes": 1980,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_1.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516402,
+      "mtime_iso_local": "2026-05-12T00:20:02+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.headers.txt",
+      "sha256_if_small": "321f949fdcca65d66b3631d4b5e0452d06afbc7b39c28684f7296b92dbd3286e",
+      "size_bytes": 1741,
+      "under_required_root": false
+    },
+    {
+      "basename": "courtlistener_dockets_api.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516413,
+      "mtime_iso_local": "2026-05-12T00:20:13+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/courtlistener_dockets_api.headers.txt",
+      "sha256_if_small": "dbb96e69e8fc1256cdd7b837a147261e70814d79234b20b8aea6adf06ec39356",
+      "size_bytes": 1693,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915exhibita.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516384,
+      "mtime_iso_local": "2026-05-12T00:19:44+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exhibita.pdf",
+      "sha256_if_small": "058b62102339f7fb9200759f5281d4475046048944ef5cf46182e85c4516c2a2",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorexha101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516392,
+      "mtime_iso_local": "2026-05-12T00:19:52+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexha101915.pdf",
+      "sha256_if_small": "29304557298b2e022a1101f35b095f151b1bd94224f11b906287f8cd0c0a349d",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorappa101915.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516395,
+      "mtime_iso_local": "2026-05-12T00:19:55+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorappa101915.headers.txt",
+      "sha256_if_small": "89cc695e8a726cc810f439cc2d8a6c132ca7202b86cd7b1bf8aa967efa46de2b",
+      "size_bytes": 1981,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorexhibita101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516388,
+      "mtime_iso_local": "2026-05-12T00:19:48+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexhibita101915.pdf",
+      "sha256_if_small": "c0fc91729fc6a62bca737595849cfa5c69aae92dcbfae82fd3759ed9bfc0f2db",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915exha.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516386,
+      "mtime_iso_local": "2026-05-12T00:19:46+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exha.pdf",
+      "sha256_if_small": "9aa6b38b797cfe52a75f90d768ec6b6db5517e64339767e591af9f2b44016e61",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_oystacher_complaint.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516377,
+      "mtime_iso_local": "2026-05-12T00:19:37+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.pdf",
+      "sha256_if_small": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "size_bytes": 2553330,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_press_7253_15.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516381,
+      "mtime_iso_local": "2026-05-12T00:19:41+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_press_7253_15.headers.txt",
+      "sha256_if_small": "0dd7a856db5af21306d8ee66ea163b7e772e5f71d93571065300af1eeb1fbdaa",
+      "size_bytes": 1975,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_3.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516412,
+      "mtime_iso_local": "2026-05-12T00:20:12+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_3.headers.txt",
+      "sha256_if_small": "4c5b5ec19e855ab2916ce4509b3c2d2ae5d5eeb3ee230bb5153855849408e0db",
+      "size_bytes": 3196,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorappa101915.pdf",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516395,
+      "mtime_iso_local": "2026-05-12T00:19:55+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorappa101915.pdf",
+      "sha256_if_small": "7bd92c9f8a83843bf4619fffb3bebbb1f2a0c30c72d7e6d16cb88641f1440e37",
+      "size_bytes": 32765,
+      "under_required_root": false
+    },
+    {
+      "basename": "govinfo_0.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516398,
+      "mtime_iso_local": "2026-05-12T00:19:58+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.headers.txt",
+      "sha256_if_small": "bce37a890d92627f070201dd2ebaead717f5b6054feb6e7ba52556fe917d6700",
+      "size_bytes": 1741,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915exhibita.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516384,
+      "mtime_iso_local": "2026-05-12T00:19:44+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exhibita.headers.txt",
+      "sha256_if_small": "ec6fa1fcf37436d7ef4bdeeab5abb665966407c802951fdfebc1f3c846ef6ec7",
+      "size_bytes": 1972,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_press_7253_15.html",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516381,
+      "mtime_iso_local": "2026-05-12T00:19:41+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_press_7253_15.html",
+      "sha256_if_small": "daf95ce749e88813991dacc492f6c908ca7d922afd724d0419030d3e432ca129",
+      "size_bytes": 38560,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_oystacher_complaint.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516380,
+      "mtime_iso_local": "2026-05-12T00:19:40+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.txt",
+      "sha256_if_small": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d",
+      "size_bytes": 116919,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorcomplnt101915appa.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516398,
+      "mtime_iso_local": "2026-05-12T00:19:58+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915appa.headers.txt",
+      "sha256_if_small": "3f956dad668cbb0b6c425ebbd711b89697448595a162fbe66428aaeb583b6310",
+      "size_bytes": 1987,
+      "under_required_root": false
+    },
+    {
+      "basename": "cftc_candidate_enfigorexhibita101915.headers.txt",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1778516388,
+      "mtime_iso_local": "2026-05-12T00:19:48+08:00",
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "path": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexhibita101915.headers.txt",
+      "sha256_if_small": "f86530a94f06f874705df9fb3e314a78cbd11e0a536fb1bacb88790520baeef3",
+      "size_bytes": 1996,
+      "under_required_root": false
+    },
+    {
+      "basename": "meetings__board-acme-2025-q1-0.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1776608876,
+      "mtime_iso_local": "2026-04-19T22:27:56+08:00",
+      "parent": "/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1",
+      "path": "/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1/meetings__board-acme-2025-q1-0.json",
+      "sha256_if_small": "a2fdba1d47cce0e2a50a3744f87418009e29c10ef0526a36341412d7e220ff8c",
+      "size_bytes": 3424,
+      "under_required_root": false
+    },
+    {
+      "basename": "companies__acme-labs-50.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1776608876,
+      "mtime_iso_local": "2026-04-19T22:27:56+08:00",
+      "parent": "/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1",
+      "path": "/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1/companies__acme-labs-50.json",
+      "sha256_if_small": "e5c6ffef5e12348d4c07e249031e325938edcab6f01d0b532b364bbe21c034e1",
+      "size_bytes": 3699,
+      "under_required_root": false
+    },
+    {
+      "basename": "companies__acme-0.json",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1776608876,
+      "mtime_iso_local": "2026-04-19T22:27:56+08:00",
+      "parent": "/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1",
+      "path": "/Users/thrill3r/Downloads/repo-intake/gbrain/eval/data/world-v1/companies__acme-0.json",
+      "sha256_if_small": "0dda61ff912ce272403f2f9e902b60b8c43b277b7c658d3d62fc893303c91177",
+      "size_bytes": 3498,
+      "under_required_root": false
+    },
+    {
+      "basename": "procmem_scanner.py",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1776476851,
+      "mtime_iso_local": "2026-04-18T09:47:31+08:00",
+      "parent": "/Users/thrill3r/Downloads/repo-intake/GenericAgent/memory",
+      "path": "/Users/thrill3r/Downloads/repo-intake/GenericAgent/memory/procmem_scanner.py",
+      "sha256_if_small": "566413c6974dc9681e1139a333399d652ac1ddcfc281d5876b99a3f033d61efc",
+      "size_bytes": 4950,
+      "under_required_root": false
+    },
+    {
+      "basename": "procmem_scanner_sop.md",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1776476851,
+      "mtime_iso_local": "2026-04-18T09:47:31+08:00",
+      "parent": "/Users/thrill3r/Downloads/repo-intake/GenericAgent/memory",
+      "path": "/Users/thrill3r/Downloads/repo-intake/GenericAgent/memory/procmem_scanner_sop.md",
+      "sha256_if_small": "692962669d2a176ff28079b65195e526cb4c4171de60fff3742952eacd432a58",
+      "size_bytes": 4260,
+      "under_required_root": false
+    },
+    {
+      "basename": "cboe_data.py",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1777163937,
+      "mtime_iso_local": "2026-04-26T08:38:57+08:00",
+      "parent": "/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts",
+      "path": "/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/cboe_data.py",
+      "sha256_if_small": "f10528b66f22ae7b3844c0752a7938270a3590ae0e86f456d9b1cedcbbdfc1d7",
+      "size_bytes": 31999,
+      "under_required_root": false
+    },
+    {
+      "basename": "cme_data.py",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1777163937,
+      "mtime_iso_local": "2026-04-26T08:38:57+08:00",
+      "parent": "/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts",
+      "path": "/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/cme_data.py",
+      "sha256_if_small": "e683f18e00c41137ddc5cb49e2da2560c41940f42f662a53ef4ba1d0316dd852",
+      "size_bytes": 3473,
+      "under_required_root": false
+    },
+    {
+      "basename": "cboe_vix_data.py",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1777163937,
+      "mtime_iso_local": "2026-04-26T08:38:57+08:00",
+      "parent": "/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts",
+      "path": "/Users/thrill3r/Downloads/external-data-sources/FinceptTerminal/fincept-qt/scripts/cboe_vix_data.py",
+      "sha256_if_small": "58806497a1af04c42a4e1248faa2712cbcfa43aade655b219bb36da5ae3d003d",
+      "size_bytes": 4952,
+      "under_required_root": false
+    },
+    {
+      "basename": "CBOE US Index Futures RTH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CBOE US Index Futures RTH.xml",
+      "sha256_if_small": "7b8e62149b3de5135f8e3e6f57cf78a044d3405197f48a4e56d7805e128c4fe9",
+      "size_bytes": 23268,
+      "under_required_root": false
+    },
+    {
+      "basename": "CFE FX Futures.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CFE FX Futures.xml",
+      "sha256_if_small": "9d9a943f6eb41dfd68df7882b956764bac8032fadcaab88f26d7033a48f8a535",
+      "size_bytes": 40081,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Forest Futures.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME Forest Futures.xml",
+      "sha256_if_small": "41d121ddecc23ae6299057370c999d29601b0269d5d033ed4e165c2cb20a2a58",
+      "size_bytes": 32542,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Global Index Futures RTH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME Global Index Futures RTH.xml",
+      "sha256_if_small": "a21f5581a7654476bf0b930fbe470f9c818da001483d904f380d43b7f38b782b",
+      "size_bytes": 59181,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME US Index Futures RTH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME US Index Futures RTH.xml",
+      "sha256_if_small": "ab35d1f1c0b42d28fd7b75adc1f6300a8407620c8b8cd699f3c3b9b06b5559fc",
+      "size_bytes": 59177,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Commodities RTH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME Commodities RTH.xml",
+      "sha256_if_small": "6731924fdfa5fc422e6a3fec4cafb8ca5e7ab3d561d531c1de44cb3fc272d1bf",
+      "size_bytes": 23985,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Agriculture Dairy ETH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME Agriculture Dairy ETH.xml",
+      "sha256_if_small": "7de9087fc5c66fd0ceaa72594a300ad71896774d031922d4e4dad912f2a9b263",
+      "size_bytes": 30396,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME FX Futures RTH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME FX Futures RTH.xml",
+      "sha256_if_small": "17d43bd07ed530cbc486077261e13902c4dc1312573e0e2a51a64a3ce0f36637",
+      "size_bytes": 42616,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME FX Futures ETH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME FX Futures ETH.xml",
+      "sha256_if_small": "7f66f6be905e083d4cb0245769cc7ce1fb66db7e275c49b62bd46d9b0de33361",
+      "size_bytes": 42621,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Commodities ETH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME Commodities ETH.xml",
+      "sha256_if_small": "b87040fa9667eacb28159566e2aef7e5123f5285764abbc0b3f744e7a2c7c5c5",
+      "size_bytes": 23985,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Agriculture Dairy RTH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME Agriculture Dairy RTH.xml",
+      "sha256_if_small": "62dc1a076dd41005aebc115143f17c2ec867d42cb575dec1959dfa3c83414709",
+      "size_bytes": 30391,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME US Index Futures ETH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME US Index Futures ETH.xml",
+      "sha256_if_small": "61d23be256b5a1c352079daffb787ef35fc926878830eacca3dae107addd0eef",
+      "size_bytes": 59182,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Forest Futures ETH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME Forest Futures ETH.xml",
+      "sha256_if_small": "6b240748472053e00dc797d2f75840559cdbf2b5cc76e4ef76258de656fbb06c",
+      "size_bytes": 32550,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Housing Futures ETH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CME Housing Futures ETH.xml",
+      "sha256_if_small": "5fa6a169a8c0b2e8c6d45f809af091740e2e8fd576e5d33b1e50ea31eb6ad6ed",
+      "size_bytes": 59181,
+      "under_required_root": false
+    },
+    {
+      "basename": "CBOE US Index Futures ETH.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1773374218,
+      "mtime_iso_local": "2026-03-13T11:56:58+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/TradingHours/CBOE US Index Futures ETH.xml",
+      "sha256_if_small": "38159ac7e26def16c665661a1909e467ee6b5bc5b3299b99cfffb347e3662a39",
+      "size_bytes": 23273,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1714340094,
+      "mtime_iso_local": "2024-04-29T05:34:54+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/MarketDataEntitlement",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/MarketDataEntitlement/CME.xml",
+      "sha256_if_small": "1664359e4afcf534b0f08d76479c4bdc64ffcf720a4c5fa5d6b2f8802277bf51",
+      "size_bytes": 2068,
+      "under_required_root": false
+    },
+    {
+      "basename": "CBOE Market Data Internals.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1714340094,
+      "mtime_iso_local": "2024-04-29T05:34:54+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/MarketDataEntitlement",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/MarketDataEntitlement/CBOE Market Data Internals.xml",
+      "sha256_if_small": "95f4ae9f7a1b3a4f3c3309a2c05f3c9fe0d49e2e448b98890f54c7bddb012cc9",
+      "size_bytes": 890,
+      "under_required_root": false
+    },
+    {
+      "basename": "CFE.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1714340094,
+      "mtime_iso_local": "2024-04-29T05:34:54+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/MarketDataEntitlement",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/MarketDataEntitlement/CFE.xml",
+      "sha256_if_small": "0141bcc45aacacf1613f25beb6344746b2edee0e62441e03731dde96302f5415",
+      "size_bytes": 852,
+      "under_required_root": false
+    },
+    {
+      "basename": "CME Bundle.xml",
+      "match_kind": "keyword_path_or_filename",
+      "mtime_epoch": 1714340094,
+      "mtime_iso_local": "2024-04-29T05:34:54+08:00",
+      "parent": "/Users/thrill3r/Documents/NinjaTrader 8/templates/MarketDataEntitlement",
+      "path": "/Users/thrill3r/Documents/NinjaTrader 8/templates/MarketDataEntitlement/CME Bundle.xml",
+      "sha256_if_small": "6dd3ffb1fe7298b237019cf85463f8243253d4b1bab2d7dc535e02de8be046f6",
+      "size_bytes": 3331,
+      "under_required_root": false
+    }
+  ],
+  "canonical_merge": false,
+  "complete_exact_required_package_count": 0,
+  "downstream_promotion_rerun": false,
+  "empty_incomplete_root_observed": "docs/experiments/actionable-regime-confidence/runs/20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1",
+  "gate_result": "r6_owner_export_local_arrival_scan_after_051754_v1=no_complete_owner_export_package_no_source_control_unlock_no_promotion",
+  "new_confidence_gate": false,
+  "packages": [
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-oystacher-exhibit-a-probe",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-oystacher-exhibit-a-row-materialization-v1",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-oystacher-probe",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-oystacher-probe2",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-r6-oystacher-candidate/raw",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-oystacher-govinfo-vB0tdv",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/private/tmp/ict-oystacher-govinfo-yAc5hD",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-oystacher-exhibit-a-probe",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-oystacher-exhibit-a-row-materialization-v1",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-oystacher-probe",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-oystacher-probe2",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-r6-oystacher-candidate/raw",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-r6-oystacher-positive-row-candidate-screen-v1/raw",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-oystacher-govinfo-vB0tdv",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    },
+    {
+      "complete_exact_required_package": false,
+      "parent": "/tmp/ict-oystacher-govinfo-yAc5hD",
+      "required_files_found": [],
+      "required_files_missing": [
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "under_required_root": false
+    }
+  ],
+  "required_files": [
+    "direct_manipulation_matched_controls.csv",
+    "direct_manipulation_positive_rows.csv",
+    "direct_manipulation_provenance.json"
+  ],
+  "required_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "run_id": "20260512T052020-codex-r6-owner-export-local-arrival-scan-after-051754-v1",
+  "scan_roots": [
+    "/tmp",
+    "/private/tmp",
+    "/Users/thrill3r/Downloads",
+    "/Users/thrill3r/Desktop",
+    "/Users/thrill3r/Documents"
+  ],
+  "scan_stats": [
+    {
+      "candidate_files": 103,
+      "dirs_seen": 513,
+      "exists": true,
+      "files_seen": 30892,
+      "inaccessible_entries": 0,
+      "root": "/tmp"
+    },
+    {
+      "candidate_files": 103,
+      "dirs_seen": 528,
+      "exists": true,
+      "files_seen": 30956,
+      "inaccessible_entries": 0,
+      "root": "/private/tmp"
+    },
+    {
+      "candidate_files": 8,
+      "dirs_seen": 2125,
+      "exists": true,
+      "files_seen": 10561,
+      "inaccessible_entries": 0,
+      "root": "/Users/thrill3r/Downloads"
+    },
+    {
+      "candidate_files": 0,
+      "dirs_seen": 5,
+      "exists": true,
+      "files_seen": 2,
+      "inaccessible_entries": 0,
+      "root": "/Users/thrill3r/Desktop"
+    },
+    {
+      "candidate_files": 19,
+      "dirs_seen": 208,
+      "exists": true,
+      "files_seen": 3670,
+      "inaccessible_entries": 0,
+      "root": "/Users/thrill3r/Documents"
+    }
+  ],
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

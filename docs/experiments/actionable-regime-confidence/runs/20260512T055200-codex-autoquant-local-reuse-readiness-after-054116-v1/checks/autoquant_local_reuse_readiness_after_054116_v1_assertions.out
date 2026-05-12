@@ -1,0 +1,16 @@
+autoquant_local_reuse_readiness_after_054116_v1=bootstrap_ok_prepare_dns_blocked_data_missing_no_promotion
+bootstrap_exit=0
+prepare_exit=1
+status_exit=0
+status=dependency_ready_data_missing
+healthy=false
+dependency_healthy=true
+bootstrap_needed=false
+data_ready=false
+source_control_evidence_acquired=false
+target_root_mutated=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

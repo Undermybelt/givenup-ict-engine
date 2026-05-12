@@ -1,0 +1,4 @@
+fold_label,timerange,parent_regime_root,regime_profit_branch_path,trades,win_rate,net_profit_ratio,stressed_profit_ratio_2x_cost,profit_factor,max_drawdown,branch_path_source,branch_path_valid_for_promotion
+bull_2021,20210101-20211231,Bull,Bull -> TrendExpansion -> DrawdownRebound -> CrashRebound,50,0.7,0.830923017662636,0.7309230176626359,2.099350015630853,0.24140884037847665,auto_quant_timerange_label_proxy_not_board_a_trade_label,False
+winter_2022,20220101-20221231,Bear,Bear -> DowntrendStress -> CapitulationRebound -> CrashRebound,32,0.6875,0.1056288037727739,0.041628803772773816,1.1271210406504786,0.45478810032513095,auto_quant_timerange_label_proxy_not_board_a_trade_label,False
+recovery_23_25,20230101-20251231,Sideways,Sideways -> RangeRecovery -> MeanReversionRebound -> CrashRebound,123,0.6666666666666666,0.638921467692727,0.3929214676927266,1.2880902007854973,0.3609644931218744,auto_quant_timerange_label_proxy_not_board_a_trade_label,False

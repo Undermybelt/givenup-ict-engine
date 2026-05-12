@@ -1,0 +1,10 @@
+PASS run_id=20260511T114135+0800-codex-paper-github-source-delta-after-v8
+PASS board_cursor_seen_before_write=20260511T113606+0800-codex-current-goal-completion-audit-v8-after-chain-expansion
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+PASS preserved_scoped_direct_gate=accepted_95_bounded_midsummer_multichain_wash_maker_direct_slices
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

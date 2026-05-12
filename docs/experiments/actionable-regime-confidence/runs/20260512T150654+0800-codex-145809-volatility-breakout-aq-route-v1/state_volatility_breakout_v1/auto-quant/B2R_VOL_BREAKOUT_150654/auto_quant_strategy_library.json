@@ -1,0 +1,75 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T15:06:54+08:00",
+  "auto_quant_repo_url": "provider-backed volatility breakout packet derived from settled 145809 screen; not an Auto-Quant-native backtest yet",
+  "auto_quant_pinned_ref": "screen-145809-volatility-breakout-150654",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_manifest.json",
+  "timeframe": "1h_provider_backed",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/checks/volatility_breakout_packet_assertions.out",
+  "strategies": [
+    {
+      "name": "volatility_breakout_follow_v1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_trades.csv",
+      "metadata": {
+        "strategy": "volatility_breakout_follow_v1",
+        "mutation_id": "150654_145809_volatility_breakout_follow_v1",
+        "base_factor": "volatility_breakout_follow_v1",
+        "hypothesis": "Trend-expansion plus high-volatility plus up-momentum continuation can be a branch-local profit factor when provider-backed 1h data agrees.",
+        "paradigm": "provider_backed_branch_factor_seed",
+        "expected_regime": "trend_expansion",
+        "factors_used": [
+          "volatility_breakout_follow_v1",
+          "high_volatility",
+          "up_momentum"
+        ],
+        "parent": "145809_provider_backed_high_density_factor_screen_v1",
+        "asset_class": "multi_asset_provider_backed",
+        "status": "support_only_branch_seed_not_auto_quant_native_backtest",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "calmar": 0.0,
+        "total_profit_pct": 85.34661669245051,
+        "max_drawdown_pct": 0.0,
+        "trade_count": 348,
+        "win_rate_pct": 52.29885057471264,
+        "profit_factor": 1.3270317756098415
+      },
+      "per_pair_metrics": {
+        "PROVIDER_BACKED/VOL_BREAKOUT": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 85.34661669245051,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 348,
+          "win_rate_pct": 52.29885057471264,
+          "profit_factor": 1.3270317756098415
+        }
+      },
+      "pairs": [
+        "PROVIDER_BACKED/VOL_BREAKOUT"
+      ],
+      "timerange": "2017-10-19 -> 2026-04-30",
+      "commit": "provider-backed-screen-145809-volatility-breakout-150654",
+      "error": null
+    }
+  ],
+  "validation_errors": [
+    {
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_trades.csv",
+      "error": "not_auto_quant_native_backtest"
+    },
+    {
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/aq_provider_provenance_volatility_breakout.csv",
+      "error": "missing_provider_data_rows_for_tvr_kraken_bybit"
+    },
+    {
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/summaries/volatility_breakout_walkforward_summary.csv",
+      "error": "branch_seed_requires_walk_forward_and_downstream_readback"
+    }
+  ]
+}

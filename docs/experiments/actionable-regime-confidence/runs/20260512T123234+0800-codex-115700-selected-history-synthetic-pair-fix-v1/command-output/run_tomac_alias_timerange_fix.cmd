@@ -1,0 +1,1 @@
+cd 'docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthetic_pair_fix_v1/.deps/auto-quant' && .venv/bin/python run_tomac.py

@@ -1,0 +1,14 @@
+gate_result=source_control_arrival_refresh_after_063906_v1=no_valid_required_unlock_no_downstream
+r6_owner_export_root_exists=false
+r6_valid_required_unlock=false
+r3_native_subhour_root_exists=true
+r3_valid_required_unlock=false
+r3_quarantine_reason=tsie_proxy_policy_quarantined
+r5_recency_root_exists=false
+r5_valid_required_unlock=false
+valid_required_unlock=false
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

@@ -1,0 +1,1 @@
+uv run --with pandas --with pyarrow --with numpy python docs/experiments/actionable-regime-confidence/runs/20260512T031036-codex-board-b-b2r-bear-sideways-crisis-cost-repair-v1/scripts/bear_sideways_crisis_cost_repair_v1.py

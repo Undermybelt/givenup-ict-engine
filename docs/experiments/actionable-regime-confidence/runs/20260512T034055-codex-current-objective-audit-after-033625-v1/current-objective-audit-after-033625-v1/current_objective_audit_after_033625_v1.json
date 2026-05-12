@@ -1,0 +1,227 @@
+{
+  "autoquant": {
+    "data_ready": true,
+    "dependency_healthy": true,
+    "plain_run_exit": 1,
+    "plain_run_failure_class": "aiodns_market_load_failure",
+    "status": "dependency_ready_data_ready",
+    "strategy_metrics": [
+      {
+        "calmar": "7.7829",
+        "max_drawdown_pct": "-5.7458",
+        "profit_factor": "1.7469",
+        "sharpe": "0.9415",
+        "sortino": "4.9623",
+        "strategy": "BTCLeaderBreakV4",
+        "timerange": "20210101-20251231",
+        "timerange_label": "full",
+        "total_profit_pct": "42.4600",
+        "trade_count": "600",
+        "win_rate_pct": "31.8333"
+      },
+      {
+        "avg_position_pct": "6.9583",
+        "min_position_size": "PASS   (threshold \u2265 5.0%)",
+        "pareto_dominated_by": "none (non-dominated)",
+        "profit_floor": "PASS   (threshold \u2265 20.0% per timerange)",
+        "robust_sharpe": "0.9415   # min across declared timeranges",
+        "strategy": "BTCLeaderBreakV4",
+        "timerange_label": "SUMMARY",
+        "worst_dd_pct": "-5.7458",
+        "worst_profit_pct": "42.4600"
+      },
+      {
+        "calmar": "2.4190",
+        "max_drawdown_pct": "-23.1801",
+        "profit_factor": "1.1682",
+        "sharpe": "0.3993",
+        "sortino": "1.0760",
+        "strategy": "MomentumMTFConfluence",
+        "timerange": "20210101-20251231",
+        "timerange_label": "full",
+        "total_profit_pct": "53.2400",
+        "trade_count": "854",
+        "win_rate_pct": "34.7775"
+      },
+      {
+        "avg_position_pct": "21.5841",
+        "min_position_size": "PASS   (threshold \u2265 5.0%)",
+        "pareto_dominated_by": "none (non-dominated)",
+        "profit_floor": "PASS   (threshold \u2265 20.0% per timerange)",
+        "robust_sharpe": "0.3993   # min across declared timeranges",
+        "strategy": "MomentumMTFConfluence",
+        "timerange_label": "SUMMARY",
+        "worst_dd_pct": "-23.1801",
+        "worst_profit_pct": "53.2400"
+      },
+      {
+        "calmar": "6.1958",
+        "max_drawdown_pct": "-4.2529",
+        "profit_factor": "1.4751",
+        "sharpe": "1.3390",
+        "sortino": "7.3012",
+        "strategy": "VolBreakoutSized",
+        "timerange": "20210101-20251231",
+        "timerange_label": "full",
+        "total_profit_pct": "25.0200",
+        "trade_count": "1221",
+        "win_rate_pct": "32.8419"
+      },
+      {
+        "avg_position_pct": "3.6641",
+        "min_position_size": "FAIL   (threshold \u2265 5.0%)",
+        "pareto_dominated_by": "none (non-dominated)",
+        "profit_floor": "PASS   (threshold \u2265 20.0% per timerange)",
+        "robust_sharpe": "1.3390   # min across declared timeranges",
+        "strategy": "VolBreakoutSized",
+        "timerange_label": "SUMMARY",
+        "worst_dd_pct": "-4.2529",
+        "worst_profit_pct": "25.0200"
+      }
+    ],
+    "threaded_resolver_abs_exit": 0,
+    "threaded_resolver_abs_success": true
+  },
+  "command_exits": {
+    "autoquant_run_oracle": 1,
+    "autoquant_run_oracle_threaded_resolver": 1,
+    "autoquant_run_oracle_threaded_resolver_abs": 0,
+    "autoquant_run_oracle_uv_directory": 1,
+    "autoquant_status_prepared": 0,
+    "direct_verifier_live_sidecar": 0,
+    "direct_verifier_required_owner_export": 2,
+    "policy_training_status_nq": 0,
+    "pre_bayes_status_nq": 0,
+    "provider_status_agent": 0,
+    "workflow_status_nq": 0
+  },
+  "downstream": {
+    "policy_training_summary": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+    "pre_bayes_latest_filtered_assignments": null,
+    "pre_bayes_latest_gate_status": null,
+    "workflow_blocking_reason": "no workflow phase snapshots available",
+    "workflow_blocking_status": "insufficient_state"
+  },
+  "gate_result": "current_objective_audit_after_033625_v1=not_complete_autoquant_oracle_succeeded_diagnostic_only_source_control_downstream_blocked",
+  "generated_at_utc": "2026-05-11T19:49:01.428173+00:00",
+  "next_action": "Preserve the Current Cursor: acquire verifier-native R6 owner/export rows or explicit FLIP-control approval before canonical merge and downstream promotion. AutoQuant oracle success is diagnostic only until source/control gates unlock.",
+  "non_mutations": {
+    "canonical_live_intake_mutated": false,
+    "runtime_code_changed": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "board sha captured before audit; append-only packet generated under new run root",
+      "notes": "d4bdd2ad485f47bedb3f3ca41a9ea6d00883ff3dcd16301a0a9986be9806d89c  docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "requirement": "Use the named board as the live contract without disrupting concurrent work",
+      "status": "pass"
+    },
+    {
+      "evidence": "live R6 verifier is schema_ready_unscored; no accepted per-regime calibration packet added",
+      "notes": "live_verifier_status=schema_ready_unscored",
+      "requirement": "Every active regime has calibrated confidence >=95%",
+      "status": "blocked"
+    },
+    {
+      "evidence": "source/control gates absent; no canonical split-calibrated accepted rows",
+      "notes": "accepted_rows_added=0",
+      "requirement": "Each regime has its own qualifying conditions",
+      "status": "blocked"
+    },
+    {
+      "evidence": "owner-export root and R3/R5 source roots are absent; downstream validation is blocked",
+      "notes": "{'/tmp/ict-engine-board-a-r6-owner-export-v1': False, '/tmp/ict-engine-native-subhour-source-label-intake': False, '/tmp/ict-engine-source-panel-recency-extension': False, '/private/tmp/ict-engine-direct-manipulation-row-intake': True, '/private/tmp/ict-engine-source-label-equivalence-intake': True, '/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid': True}",
+      "requirement": "Cross-market/cycle/timeframe validation passes",
+      "status": "blocked"
+    },
+    {
+      "evidence": "provider-status --agent executed",
+      "notes": "yfinance=True kraken_cli=True ibkr=configured_runtime_unhealthy tradingview_mcp=configured_runtime_unhealthy",
+      "requirement": "Operate providers: IBKR, TradingViewRemix/TradingView, yfinance, Kraken",
+      "status": "partial"
+    },
+    {
+      "evidence": "AutoQuant status and oracle run executed in isolated /tmp workspace",
+      "notes": "3 backtests succeeded with absolute threaded-resolver shim",
+      "requirement": "Operate AutoQuant locally",
+      "status": "pass"
+    },
+    {
+      "evidence": "pre-bayes-status --refresh executed",
+      "notes": "latest_gate_status=None",
+      "requirement": "Run filter / Pre-Bayes readback",
+      "status": "blocked"
+    },
+    {
+      "evidence": "policy-training-status executed",
+      "notes": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+      "requirement": "Run BBN / policy-training readback",
+      "status": "blocked"
+    },
+    {
+      "evidence": "policy-training-status structural path-ranking fields inspected",
+      "notes": "structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+      "requirement": "Run CatBoost / path-ranking readback",
+      "status": "blocked"
+    },
+    {
+      "evidence": "workflow-status --refresh executed",
+      "notes": "no workflow phase snapshots available",
+      "requirement": "Run execution-tree / workflow readback",
+      "status": "blocked"
+    },
+    {
+      "evidence": "source/control roots and approval package inspected",
+      "notes": "owner_export=False approval_present=False canonical_merge=False",
+      "requirement": "Do not promote proxy/runtime/local-cache evidence into Board A acceptance",
+      "status": "pass"
+    }
+  ],
+  "prompt_to_artifact_counts": {
+    "blocked": 7,
+    "partial": 1,
+    "pass": 3
+  },
+  "provider_summary": {
+    "ibkr_bridge_status": "configured_runtime_unhealthy",
+    "ibkr_status": "configured_runtime_unhealthy",
+    "kraken_cli_ready": true,
+    "kraken_public_status": "configured_runtime_unhealthy",
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "tradingview_mcp_status": "configured_runtime_unhealthy",
+    "yfinance_live_ready": true,
+    "yfinance_market_data_status": "ready"
+  },
+  "run_id": "20260512T034055-codex-current-objective-audit-after-033625-v1",
+  "source_control_status": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "live_matched_group_count": 70,
+    "live_matched_negative_rows": 73,
+    "live_positive_rows": 73,
+    "live_sidecar_status": "schema_ready_unscored",
+    "owner_export_missing_files": [
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json"
+    ],
+    "owner_export_status": "blocked",
+    "owner_export_verifier_exit": 2,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "r6_owner_export_root_exists": false
+  }
+}

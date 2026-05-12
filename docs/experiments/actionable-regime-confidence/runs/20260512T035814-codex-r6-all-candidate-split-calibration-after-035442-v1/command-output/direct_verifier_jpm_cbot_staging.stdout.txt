@@ -1,0 +1,22 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 77,
+  "matched_negative_rows": 77,
+  "matched_group_count": 74,
+  "provenance_keys": [
+    "artifact_type",
+    "baseline_matched_negative_rows",
+    "baseline_positive_rows",
+    "baseline_provenance",
+    "generated_at_utc",
+    "lock_dir",
+    "policy",
+    "raw_data_committed",
+    "run_id",
+    "runtime_code_changed",
+    "selected_source_row_ids",
+    "source_candidate_screen_json",
+    "thresholds_relaxed"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

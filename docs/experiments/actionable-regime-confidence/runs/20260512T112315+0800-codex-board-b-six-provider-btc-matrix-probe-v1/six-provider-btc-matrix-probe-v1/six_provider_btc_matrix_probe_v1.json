@@ -1,0 +1,539 @@
+{
+  "aq_handoff_or_run_artifact": null,
+  "aq_provider_invoked": false,
+  "auto_quant_training_run": false,
+  "downstream_promotion": false,
+  "fetches": {
+    "binance": {
+      "exists": true,
+      "exit": 0,
+      "first": {
+        "close": "68330.75",
+        "date": "2026-04-01 00:00:00+00:00",
+        "high": "68343.77",
+        "low": "67853.3",
+        "open": "68284.49",
+        "volume": "542.79511"
+      },
+      "last": {
+        "close": "81545.2",
+        "date": "2026-05-12 00:00:00+00:00",
+        "high": "81788.0",
+        "low": "81478.75",
+        "open": "81745.66",
+        "volume": "419.66559"
+      },
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/binance_btcusdt_1h.csv",
+      "rows": 985
+    },
+    "bybit": {
+      "exists": true,
+      "exit": 0,
+      "first": {
+        "close": "68295.9",
+        "date": "2026-04-01 00:00:00+00:00",
+        "high": "68320.6",
+        "low": "67813.0",
+        "open": "68244.6",
+        "volume": "2704.358"
+      },
+      "last": {
+        "close": "81508.3",
+        "date": "2026-05-12 00:00:00+00:00",
+        "high": "81768.1",
+        "low": "81428.3",
+        "open": "81699.8",
+        "volume": "1637.674"
+      },
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/bybit_btcusdt_linear_1h.csv",
+      "rows": 985
+    },
+    "ibkr_aggtrades": {
+      "connected": true,
+      "contract_attempt": "Crypto(BTC,PAXOS,USD)",
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/ibkr_btc_paxos_aggtrades_1d.csv",
+      "first_time": "2026-04-01",
+      "last_time": "2026-05-12",
+      "messages": [
+        {
+          "contract": "None",
+          "errorCode": 2104,
+          "errorString": "\\u5e02\\u573a\\u6570\\u636e\\u573a\\u8fde\\u63a5\\u6b63\\u5e38:hfarm",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2107,
+          "errorString": "\\u5386\\u53f2\\u5e02\\u573a\\u6570\\u636e\\u573a\\u8fde\\u63a5\\u6682\\u672a\\u6fc0\\u6d3b\\uff0c\\u4f46\\u53ef\\u6309\\u9700\\u63d0\\u4f9b\\u3002:apachmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2107,
+          "errorString": "\\u5386\\u53f2\\u5e02\\u573a\\u6570\\u636e\\u573a\\u8fde\\u63a5\\u6682\\u672a\\u6fc0\\u6d3b\\uff0c\\u4f46\\u53ef\\u6309\\u9700\\u63d0\\u4f9b\\u3002:ushmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2158,
+          "errorString": "Sec-def\\u6570\\u636e\\u573a\\u8fde\\u63a5\\u6b63\\u5e38:secdefhk",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 321,
+          "errorString": "\\u786e\\u8ba4\\u8bf7\\u6c42\\u65f6\\u51fa\\u9519\\u3002:-'cs'\\uff1a\\u5bfc\\u81f4- API\\u63a5\\u53e3\\u73b0\\u5904\\u4e8e\\u53ea\\u8bfb\\u6a21\\u5f0f\\u3002",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 321,
+          "errorString": "\\u786e\\u8ba4\\u8bf7\\u6c42\\u65f6\\u51fa\\u9519\\u3002:-'b2'\\uff1a\\u5bfc\\u81f4- API\\u63a5\\u53e3\\u73b0\\u5904\\u4e8e\\u53ea\\u8bfb\\u6a21\\u5f0f\\u3002",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2106,
+          "errorString": "HMDS data farm connection is OK:ushmds",
+          "reqId": -1
+        }
+      ],
+      "qualified": true,
+      "qualified_contract": "Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')",
+      "rows": 30,
+      "what_to_show": "AGGTRADES"
+    },
+    "ibkr_aggtrades_csv": {
+      "exists": true,
+      "exit": 0,
+      "first": {
+        "close": "68166.5",
+        "date": "2026-04-01",
+        "high": "69345.0",
+        "low": "67438.0",
+        "open": "67816.0",
+        "volume": "249.72845137"
+      },
+      "last": {
+        "close": "81176.25",
+        "date": "2026-05-12",
+        "high": "82071.0",
+        "low": "80661.5",
+        "open": "82009.0",
+        "volume": "55.02755624"
+      },
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/ibkr_btc_paxos_aggtrades_1d.csv",
+      "rows": 30
+    },
+    "ibkr_initial_trades": {
+      "connected": true,
+      "contract_attempt": "Crypto(BTC,PAXOS,USD)",
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/ibkr_btc_paxos_1d.csv",
+      "messages": [
+        {
+          "contract": "None",
+          "errorCode": 2104,
+          "errorString": "\\u5e02\\u573a\\u6570\\u636e\\u573a\\u8fde\\u63a5\\u6b63\\u5e38:hfarm",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2107,
+          "errorString": "\\u5386\\u53f2\\u5e02\\u573a\\u6570\\u636e\\u573a\\u8fde\\u63a5\\u6682\\u672a\\u6fc0\\u6d3b\\uff0c\\u4f46\\u53ef\\u6309\\u9700\\u63d0\\u4f9b\\u3002:apachmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2107,
+          "errorString": "\\u5386\\u53f2\\u5e02\\u573a\\u6570\\u636e\\u573a\\u8fde\\u63a5\\u6682\\u672a\\u6fc0\\u6d3b\\uff0c\\u4f46\\u53ef\\u6309\\u9700\\u63d0\\u4f9b\\u3002:ushmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2158,
+          "errorString": "Sec-def\\u6570\\u636e\\u573a\\u8fde\\u63a5\\u6b63\\u5e38:secdefhk",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 321,
+          "errorString": "\\u786e\\u8ba4\\u8bf7\\u6c42\\u65f6\\u51fa\\u9519\\u3002:-'cs'\\uff1a\\u5bfc\\u81f4- API\\u63a5\\u53e3\\u73b0\\u5904\\u4e8e\\u53ea\\u8bfb\\u6a21\\u5f0f\\u3002",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 321,
+          "errorString": "\\u786e\\u8ba4\\u8bf7\\u6c42\\u65f6\\u51fa\\u9519\\u3002:-'b2'\\uff1a\\u5bfc\\u81f4- API\\u63a5\\u53e3\\u73b0\\u5904\\u4e8e\\u53ea\\u8bfb\\u6a21\\u5f0f\\u3002",
+          "reqId": -1
+        },
+        {
+          "contract": "Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')",
+          "errorCode": 10299,
+          "errorString": "\\u9884\\u671f\\u663e\\u793a\\u7684\\u662fAGGTRADES\\uff0c\\u8bf7\\u4f7f\\u7528\\u8be5\\u503c\\uff08\\u800c\\u975eTRADES\\uff09\\u3002",
+          "reqId": 4
+        }
+      ],
+      "qualified": true,
+      "qualified_contract": "Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')",
+      "rows": 0
+    },
+    "kraken": {
+      "exists": true,
+      "exit": 0,
+      "first": {
+        "close": "71627.2",
+        "date": "2026-04-12 03:00:00+00:00",
+        "high": "71893.3",
+        "low": "71627.0",
+        "open": "71800.9",
+        "volume": "77.3939294"
+      },
+      "last": {
+        "close": "81165.7",
+        "date": "2026-05-12 03:00:00+00:00",
+        "high": "81249.0",
+        "low": "81150.0",
+        "open": "81224.5",
+        "volume": "3.84676348"
+      },
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/kraken_xbtusd_1h.csv",
+      "rows": 721
+    },
+    "tvr_alias_bitstamp": {
+      "exit": 1,
+      "results": [
+        {
+          "error": {
+            "category": "fetch_failed",
+            "message": "tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'BITSTAMP:BTCUSD': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+            "retryable": true
+          },
+          "first_time": null,
+          "last_time": null,
+          "ok": false,
+          "provider": "tradingview_mcp",
+          "rows": 0,
+          "symbol": "BITSTAMP:BTCUSD"
+        }
+      ],
+      "stderr_excerpt": "Error: market-data-harness fetch encountered failures: role=crypto_reference provider=tradingview_mcp symbol=BITSTAMP:BTCUSD fetch_failed:tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'BITSTAMP:BTCUSD': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/18_tvr_alias_BITSTAMP_BTCUSD_1d_local_stdio.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/18_tvr_alias_BITSTAMP_BTCUSD_1d_local_stdio.stdout"
+    },
+    "tvr_alias_btc_usd": {
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/tvr_btc_usd_1d.csv",
+      "exit": 0,
+      "results": [
+        {
+          "error": null,
+          "first_time": "2026-04-13T00:00:00Z",
+          "last_time": "2026-05-12T00:00:00Z",
+          "ok": true,
+          "provider": "tradingview_mcp",
+          "rows": 29,
+          "symbol": "BTC-USD"
+        }
+      ],
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/18_tvr_alias_BTC_USD_1d_local_stdio.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/18_tvr_alias_BTC_USD_1d_local_stdio.stdout"
+    },
+    "tvr_alias_btcusd": {
+      "exit": 1,
+      "results": [
+        {
+          "error": {
+            "category": "fetch_failed",
+            "message": "tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'BTCUSD': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+            "retryable": true
+          },
+          "first_time": null,
+          "last_time": null,
+          "ok": false,
+          "provider": "tradingview_mcp",
+          "rows": 0,
+          "symbol": "BTCUSD"
+        }
+      ],
+      "stderr_excerpt": "Error: market-data-harness fetch encountered failures: role=crypto_reference provider=tradingview_mcp symbol=BTCUSD fetch_failed:tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'BTCUSD': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/18_tvr_alias_BTCUSD_1d_local_stdio.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/18_tvr_alias_BTCUSD_1d_local_stdio.stdout"
+    },
+    "tvr_alias_coinbase": {
+      "exit": 1,
+      "results": [
+        {
+          "error": {
+            "category": "fetch_failed",
+            "message": "tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'COINBASE:BTCUSD': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+            "retryable": true
+          },
+          "first_time": null,
+          "last_time": null,
+          "ok": false,
+          "provider": "tradingview_mcp",
+          "rows": 0,
+          "symbol": "COINBASE:BTCUSD"
+        }
+      ],
+      "stderr_excerpt": "Error: market-data-harness fetch encountered failures: role=crypto_reference provider=tradingview_mcp symbol=COINBASE:BTCUSD fetch_failed:tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'COINBASE:BTCUSD': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/18_tvr_alias_COINBASE_BTCUSD_1d_local_stdio.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/18_tvr_alias_COINBASE_BTCUSD_1d_local_stdio.stdout"
+    },
+    "tvr_btc_usd_csv": {
+      "exists": true,
+      "exit": 0,
+      "first": {
+        "close": "74484.640625",
+        "high": "74896.3125",
+        "low": "70588.523438",
+        "open": "70757.617188",
+        "timestamp": "2026-04-13T00:00:00Z",
+        "volume": "52278211554.0"
+      },
+      "last": {
+        "close": "81152.476562",
+        "high": "81721.414062",
+        "low": "80838.953125",
+        "open": "81721.414062",
+        "timestamp": "2026-05-12T00:00:00Z",
+        "volume": "30045034496.0"
+      },
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/tvr_btc_usd_1d.csv",
+      "rows": 29
+    },
+    "tvr_local_binance": {
+      "exit": 1,
+      "results": [
+        {
+          "error": {
+            "category": "fetch_failed",
+            "message": "tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'BINANCE:BTCUSDT': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+            "retryable": true
+          },
+          "first_time": null,
+          "last_time": null,
+          "ok": false,
+          "provider": "tradingview_mcp",
+          "rows": 0,
+          "symbol": "BINANCE:BTCUSDT"
+        }
+      ],
+      "stderr_excerpt": "Error: market-data-harness fetch encountered failures: role=crypto_reference provider=tradingview_mcp symbol=BINANCE:BTCUSDT fetch_failed:tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'BINANCE:BTCUSDT': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/16_tvr_btcusdt_1d_local_stdio.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/16_tvr_btcusdt_1d_local_stdio.stdout"
+    },
+    "tvr_remote_binance": {
+      "exit": 1,
+      "results": [
+        {
+          "error": {
+            "category": "fetch_failed",
+            "message": "tradingview MCP call 'get_ohlcv' returned error",
+            "retryable": true
+          },
+          "first_time": null,
+          "last_time": null,
+          "ok": false,
+          "provider": "tradingview_mcp",
+          "rows": 0,
+          "symbol": "BINANCE:BTCUSDT"
+        }
+      ],
+      "stderr_excerpt": "Error: market-data-harness fetch encountered failures: role=crypto_reference provider=tradingview_mcp symbol=BINANCE:BTCUSDT fetch_failed:tradingview MCP call 'get_ohlcv' returned error | install_prompt=Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable. | install_prompt=Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/10_tvr_btcusdt_1d.stderr",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/command-output/10_tvr_btcusdt_1d.stdout"
+    },
+    "yfinance": {
+      "exists": true,
+      "exit": 0,
+      "first": {
+        "close": "68230.671875",
+        "date": "2026-04-01 00:00:00+00:00",
+        "high": "68232.4765625",
+        "low": "67823.25",
+        "open": "68224.46875",
+        "volume": "0.0"
+      },
+      "last": {
+        "close": "81727.0625",
+        "date": "2026-05-11 23:00:00+00:00",
+        "high": "81806.9609375",
+        "low": "81606.46875",
+        "open": "81791.828125",
+        "volume": "2289664.0"
+      },
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/yfinance_btc_usd_1h.csv",
+      "rows": 983
+    }
+  },
+  "gates": [
+    "count_once:112315_six_provider_btc_matrix_probe",
+    "pass:six_required_provider_rows_recorded_in_one_run_root",
+    "pass:yfinance_btc_usd_1h_rows_983",
+    "pass:tvr_btc_usd_1d_rows_29_via_local_stdio_alias",
+    "pass:ibkr_btc_paxos_aggtrades_1d_rows_30",
+    "pass:kraken_xbtusd_1h_rows_721",
+    "pass:binance_btcusdt_1h_rows_985",
+    "pass:bybit_btcusdt_linear_1h_rows_985",
+    "partial:default_provider_statuses_still_unhealthy_for_tvr_ibkr_public_crypto_adapters",
+    "fail_closed:provider_acquisition_only_no_auto_quant_training_run",
+    "fail_closed:no_mature_rooted_branch_observations",
+    "fail_closed:no_pre_bayes_bbn_catboost_execution_tree_promotion_rerun",
+    "promotion_allowed=false",
+    "trade_usable=false",
+    "update_goal=false"
+  ],
+  "local_cache_replay": false,
+  "mature_rooted_branch_observations_added": 0,
+  "mode": "same_root_provider_matrix_probe_only",
+  "promotion_allowed": false,
+  "provider_data_acquired": {
+    "Binance": "BTCUSDT 1h 985 rows",
+    "Bybit": "BTCUSDT linear 1h 985 rows",
+    "IBKR": "BTC PAXOS AGGTRADES 1d 30 rows",
+    "Kraken": "XBTUSD 1h 721 rows",
+    "TradingViewRemix/TVR": "BTC-USD 1d 29 rows via local stdio alias",
+    "yfinance": "BTC-USD 1h 983 rows"
+  },
+  "provider_requested": [
+    "IBKR",
+    "TradingViewRemix/TVR",
+    "yfinance/YF",
+    "Kraken",
+    "Binance",
+    "Bybit"
+  ],
+  "provider_status": {
+    "binance_public": {
+      "exit": 0,
+      "pending_providers": [
+        "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing"
+      ],
+      "providers": [
+        {
+          "provider_id": "binance_public",
+          "ready": false,
+          "reason": "python3_provider_dependencies_missing",
+          "status": "configured_runtime_unhealthy"
+        }
+      ],
+      "ready_providers": [],
+      "summary_line": "market_data:0/1 ready"
+    },
+    "bybit_public": {
+      "exit": 0,
+      "pending_providers": [
+        "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing"
+      ],
+      "providers": [
+        {
+          "provider_id": "bybit_public",
+          "ready": false,
+          "reason": "python3_provider_dependencies_missing",
+          "status": "configured_runtime_unhealthy"
+        }
+      ],
+      "ready_providers": [],
+      "summary_line": "market_data:0/1 ready"
+    },
+    "ibkr": {
+      "exit": 0,
+      "pending_providers": [
+        "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable"
+      ],
+      "providers": [
+        {
+          "provider_id": "ibkr",
+          "ready": false,
+          "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+          "status": "configured_runtime_unhealthy"
+        }
+      ],
+      "ready_providers": [],
+      "summary_line": "market_data:0/1 ready"
+    },
+    "ibkr_bridge": {
+      "exit": 0,
+      "pending_providers": [
+        "ibkr_bridge@local_runtime:configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable"
+      ],
+      "providers": [
+        {
+          "provider_id": "ibkr_bridge",
+          "ready": false,
+          "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+          "status": "configured_runtime_unhealthy"
+        }
+      ],
+      "ready_providers": [],
+      "summary_line": "local_runtime:0/1 ready"
+    },
+    "kraken_public": {
+      "exit": 0,
+      "pending_providers": [
+        "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing"
+      ],
+      "providers": [
+        {
+          "provider_id": "kraken_public",
+          "ready": false,
+          "reason": "python3_provider_dependencies_missing",
+          "status": "configured_runtime_unhealthy"
+        }
+      ],
+      "ready_providers": [],
+      "summary_line": "market_data:0/1 ready"
+    },
+    "tradingview_mcp": {
+      "exit": 0,
+      "pending_providers": [
+        "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed"
+      ],
+      "providers": [
+        {
+          "provider_id": "tradingview_mcp",
+          "ready": false,
+          "reason": "tradingview_mcp_connectivity_probe_failed",
+          "status": "configured_runtime_unhealthy"
+        }
+      ],
+      "ready_providers": [],
+      "summary_line": "market_data:0/1 ready"
+    },
+    "yfinance": {
+      "exit": 0,
+      "pending_providers": [],
+      "providers": [
+        {
+          "provider_id": "yfinance",
+          "ready": true,
+          "reason": "native_yfinance_runtime_available",
+          "status": "ready"
+        },
+        {
+          "provider_id": "yfinance",
+          "ready": true,
+          "reason": "public_yahoo_http_endpoints",
+          "status": "ready"
+        }
+      ],
+      "ready_providers": [
+        "yfinance",
+        "yfinance"
+      ],
+      "summary_line": "live_runtime:1/1 ready | market_data:1/1 ready"
+    }
+  },
+  "provider_unreachable_or_default_gate_caveats": [
+    "TradingViewRemix remote/default BINANCE:BTCUSDT failed get_ohlcv",
+    "TradingViewRemix local stdio exchange-prefixed aliases BITSTAMP:BTCUSD, COINBASE:BTCUSD, BTCUSD failed HTTP 404; BTC-USD alias succeeded",
+    "IBKR default provider-status remains unhealthy due runtime dependency path, while direct ib_async BTC/PAXOS AGGTRADES succeeded",
+    "Kraken/Binance/Bybit default provider-status remains unhealthy due python3 provider dependencies, while uv direct fetches succeeded"
+  ],
+  "regime_profit_branch_path": "not_scored_provider_acquisition_only:BTC -> SixProviderBtcMatrixProbe -> ProviderAuthorityReadback -> SixProviderBtcMatrixProbeV1",
+  "run_id": "20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1",
+  "same_root_six_provider_acquisition_rows": true,
+  "same_root_six_provider_aq_matrix": false,
+  "trade_usable": false,
+  "update_goal": false
+}

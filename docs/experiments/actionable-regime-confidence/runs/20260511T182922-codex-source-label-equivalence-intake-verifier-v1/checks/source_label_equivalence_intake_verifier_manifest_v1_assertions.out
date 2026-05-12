@@ -1,0 +1,14 @@
+run_id=20260511T182922+0800-codex-source-label-equivalence-intake-verifier-v1
+target_package_count=5
+required_field_count=17
+verifier_missing_status=blocked
+verifier_missing_reason=missing_required_files
+accepted_rows_added=0
+new_confidence_gate=false
+full_objective_achieved=false
+update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

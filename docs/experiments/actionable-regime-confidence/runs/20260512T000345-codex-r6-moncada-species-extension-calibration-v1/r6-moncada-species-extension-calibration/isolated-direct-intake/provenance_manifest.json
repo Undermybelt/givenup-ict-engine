@@ -1,0 +1,23 @@
+{
+  "artifact_type": "isolated_moncada_species_extension_calibration",
+  "baseline_matched_negative_rows": 73,
+  "baseline_positive_rows": 73,
+  "baseline_source_v57_json": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/r6-canonical-intake-v57-materialization/r6_canonical_intake_v57_materialization.json",
+  "canonical_shared_intake_mutated": false,
+  "external_requests_sent": false,
+  "generated_at_utc": "2026-05-11T16:08:45.496314+00:00",
+  "matched_control_policy": "Moncada controls are generated same-source schema controls for isolated species preflight only; they are not accepted canonical controls and not independent broad-normal samples.",
+  "moncada_candidate_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1/r6-moncada-large-lot-positive-row-candidate-screen/r6_moncada_large_lot_positive_row_candidates_v1.csv",
+  "moncada_matched_controls_generated_isolated_only": 6,
+  "moncada_positive_rows_added_isolated_only": 6,
+  "raw_data_committed": false,
+  "run_id": "20260512T000345-codex-r6-moncada-species-extension-calibration-v1",
+  "runtime_code_changed": false,
+  "sidecar_broad_normal_controls_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222000-codex-r6-broad-normal-order-lifecycle-screen-v1/r6-broad-normal-order-lifecycle-screen/broad_normal_market_order_lifecycle_controls_v1.csv",
+  "source_v57_negative_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/r6-canonical-intake-v57-materialization/matched_negative_normal_activity_rows_v57.csv",
+  "source_v57_negative_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+  "source_v57_positive_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/r6-canonical-intake-v57-materialization/positive_spoofing_layering_rows_v57.csv",
+  "source_v57_positive_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,60 @@
+{
+  "run_id": "20260512T003733-codex-current-goal-completion-audit-after-v66-v1",
+  "board_cursor_observed": "20260512T003358+0800-codex-r6-oystacher-exhibit-a-policy-review-v1",
+  "board_sha256_observed_before_artifact": "fae4f120f878870e820f902624a2ea2252f567580e33a0c367460a2b06dffb40",
+  "gate_result": "current_goal_completion_audit_after_v66_v1=not_complete_technical_preflight_pass_policy_controls_canonical_downstream_r5_r3_blocked",
+  "objective_deliverables": {
+    "all_regimes_95_confidence": "blocked",
+    "cross_market_cross_period_validation": "blocked",
+    "direct_manipulation_r6": "technical_preflight_pass_policy_control_blocked",
+    "provider_autoquant_bbn_catboost_execution_tree_after_v66": "not_rerun_without_approved_canonical_intake",
+    "same_markdown_updated": "pending_board_registration",
+    "multi_agent_safe_append_only": true
+  },
+  "r6_oystacher_preflight": {
+    "canonical_merge_preflight_run": "docs/experiments/actionable-regime-confidence/runs/20260512T003355-codex-r6-oystacher-canonical-merge-preflight-v1",
+    "policy_review_run": "docs/experiments/actionable-regime-confidence/runs/20260512T003334-codex-r6-oystacher-exhibit-a-policy-review-v1",
+    "isolated_verifier_status": "schema_ready_unscored",
+    "positive_spoof_candidates": 5182,
+    "flip_control_candidates": 1553,
+    "matched_groups": 1313,
+    "technical_preflight_pass": true,
+    "split_axes_pass": true,
+    "minimum_split_wilson95_lcb": 0.95771100465,
+    "source_policy_gate": false,
+    "canonical_merge_allowed": false,
+    "owner_target_mutated": false,
+    "shared_intake_mutated": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false
+  },
+  "r6_oystacher_control_contract_request": {
+    "run": "docs/experiments/actionable-regime-confidence/runs/20260512T003627-codex-r6-oystacher-control-contract-request-v1",
+    "required_validation_cells": 17,
+    "valid_source_owned_normal_controls_per_cell_current": 0,
+    "minimum_valid_normal_controls_per_cell": 73,
+    "flip_as_control_approved": false,
+    "controls_acquired": false
+  },
+  "missing_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-label-equivalence-intake": "absent"
+  },
+  "post_v66_downstream_chain": {
+    "provider_status_ibkr_tradingview_yfinance_kraken": "not_rerun_after_v66_without_approved_canonical_intake",
+    "auto_quant": "not_rerun_after_v66_without_approved_canonical_intake",
+    "pre_bayes_bbn": "not_rerun_after_v66_without_approved_canonical_intake",
+    "catboost_path_ranking": "not_rerun_after_v66_without_approved_canonical_intake",
+    "execution_tree": "not_rerun_after_v66_without_approved_canonical_intake"
+  },
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Supply source-owned normal controls for the 17 required Oystacher cells or explicitly approve the same-exhibit FLIP-as-control exception, with public RECAP/PACER Exhibit A provenance accepted for the positive side; then merge approved verifier-native intake under lock and rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree while keeping R5 and R3 blocked."
+}

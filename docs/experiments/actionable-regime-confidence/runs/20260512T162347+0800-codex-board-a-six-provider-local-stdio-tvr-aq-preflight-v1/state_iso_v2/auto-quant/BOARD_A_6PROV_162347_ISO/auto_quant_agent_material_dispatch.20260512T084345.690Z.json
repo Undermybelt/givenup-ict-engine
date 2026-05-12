@@ -1,0 +1,106 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:BOARD_A_6PROV_162347_ISO:20260512T084345.687Z",
+  "generated_at": "2026-05-12T08:43:45.690139Z",
+  "symbol": "BOARD_A_6PROV_162347_ISO",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:BOARD_A_6PROV_162347_ISO:20260512T084323.191Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "Board_A_six-provider_preflight_-_Binance_BTCUSDT_1h_ISO_timestamp_retry",
+          "title": "Board A six-provider preflight - Binance BTCUSDT 1h ISO timestamp retry",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:43:28,223 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Binance_BTCUSDT_1h_ISO_timestamp_retry/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Binance_BTCUSDT_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Binance_BTCUSDT_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "Board_A_six-provider_preflight_-_Bybit_BTCUSDT_linear_1h_ISO_timestamp_retry",
+          "title": "Board A six-provider preflight - Bybit BTCUSDT linear 1h ISO timestamp retry",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:43:31,708 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Bybit_BTCUSDT_linear_1h_ISO_timestamp_retry/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Bybit_BTCUSDT_linear_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Bybit_BTCUSDT_linear_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "Board_A_six-provider_preflight_-_IBKR_SPY_1h_ISO_timestamp_retry",
+          "title": "Board A six-provider preflight - IBKR SPY 1h ISO timestamp retry",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:43:34,962 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_IBKR_SPY_1h_ISO_timestamp_retry/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_IBKR_SPY_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_IBKR_SPY_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_results": [
+        {
+          "job_id": "Board_A_six-provider_preflight_-_Kraken_PF_XBTUSD_1h_ISO_timestamp_retry",
+          "title": "Board A six-provider preflight - Kraken PF_XBTUSD 1h ISO timestamp retry",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:43:38,645 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Kraken_PF_XBTUSD_1h_ISO_timestamp_retry/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Kraken_PF_XBTUSD_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Kraken_PF_XBTUSD_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_results": [
+        {
+          "job_id": "Board_A_six-provider_preflight_-_TVR_BTC-USD_1h_local_stdio_ISO_timestamp_retry",
+          "title": "Board A six-provider preflight - TVR BTC-USD 1h local stdio ISO timestamp retry",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:43:41,784 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_TVR_BTC-USD_1h_local_stdio_ISO_timestamp_retry/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_TVR_BTC-USD_1h_local_stdio_ISO_timestamp_retry/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_TVR_BTC-USD_1h_local_stdio_ISO_timestamp_retry/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_results": [
+        {
+          "job_id": "Board_A_six-provider_preflight_-_yfinance_SPY_1h_ISO_timestamp_retry",
+          "title": "Board A six-provider preflight - yfinance SPY 1h ISO timestamp retry",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:43:45,209 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_yfinance_SPY_1h_ISO_timestamp_retry/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_yfinance_SPY_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_yfinance_SPY_1h_ISO_timestamp_retry/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 6,
+    "completed_jobs": 0,
+    "blocked_jobs": 0,
+    "failed_jobs": 6
+  }
+}

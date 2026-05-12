@@ -1,0 +1,8 @@
+gate=104703_structural_feedback_replay_corrected_partial_v1=one_structural_feedback_partial_replay_mature_floor_not_met_fail_closed
+corrected_materialization_exit=0
+corrected_replay_exit=143
+partial_feedback_files=1
+mature_rows=1
+history_mature_rows=4
+workflow_blocking_status=fail_closed
+update_goal=false

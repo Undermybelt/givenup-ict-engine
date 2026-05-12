@@ -1,0 +1,131 @@
+{
+  "fetch_rows": [
+    {
+      "exit": 0,
+      "first": "2026-02-12T14:30:00Z",
+      "label": "01_fetch_yahoo_spy_1h",
+      "last": "2026-05-11T20:00:00Z",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/raw/yahoo_spy_1h.csv",
+      "rows": 428
+    },
+    {
+      "exit": 0,
+      "first": "2026-02-12T00:00:00Z",
+      "label": "02_fetch_binance_btcusdt_1h",
+      "last": "2026-05-12T00:00:00Z",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/raw/binance_btcusdt_1h.csv",
+      "rows": 2137
+    },
+    {
+      "exit": 0,
+      "first": "2026-03-31T09:00:00Z",
+      "label": "03_fetch_bybit_linear_btcusdt_1h",
+      "last": "2026-05-12T00:00:00Z",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/raw/bybit_linear_btcusdt_1h.csv",
+      "rows": 1000
+    },
+    {
+      "exit": 0,
+      "first": "2026-02-12T00:00:00Z",
+      "label": "04_fetch_kraken_futures_pfxbtusd_1h",
+      "last": "2026-05-06T07:00:00Z",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/raw/kraken_futures_pfxbtusd_1h.csv",
+      "rows": 2000
+    },
+    {
+      "exit": 0,
+      "first": "2026-01-02T09:00:00Z",
+      "label": "05_fetch_ibkr_spy_1h",
+      "last": "2026-05-12T08:00:00Z",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/raw/ibkr_spy_1h_90d.csv",
+      "rows": 1425
+    },
+    {
+      "exit": 0,
+      "first": "2026-04-12T09:00:00Z",
+      "label": "06_fetch_tvr_local_stdio_btc_usd_1h",
+      "last": "2026-05-12T08:00:00Z",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/raw/tvr_btc_usd_1h.csv",
+      "rows": 719
+    }
+  ],
+  "material_paths": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/agent-material/board-a-162255-yf-spy-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/agent-material/board-a-162255-binance-btcusdt-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/agent-material/board-a-162255-bybit-btcusdt-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/agent-material/board-a-162255-kraken-pfxbtusd-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/agent-material/board-a-162255-ibkr-spy-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/agent-material/board-a-162255-tvr-btc-usd-1h-v1.material.json"
+  ],
+  "promotion_allowed": false,
+  "provider_rows": [
+    {
+      "aq_material_created": true,
+      "aq_provider_invoked": false,
+      "local_cache_replay": false,
+      "provider": "IBKR",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv"
+    },
+    {
+      "aq_material_created": true,
+      "aq_provider_invoked": false,
+      "local_cache_replay": false,
+      "provider": "TradingViewRemix/TVR",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/tvr_btc_usd_1h.normalized.csv"
+    },
+    {
+      "aq_material_created": true,
+      "aq_provider_invoked": false,
+      "local_cache_replay": false,
+      "provider": "yfinance/YF",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/yahoo_spy_1h.normalized.csv"
+    },
+    {
+      "aq_material_created": true,
+      "aq_provider_invoked": false,
+      "local_cache_replay": false,
+      "provider": "Kraken",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv"
+    },
+    {
+      "aq_material_created": true,
+      "aq_provider_invoked": false,
+      "local_cache_replay": false,
+      "provider": "Binance",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/binance_btcusdt_1h.normalized.csv"
+    },
+    {
+      "aq_material_created": true,
+      "aq_provider_invoked": false,
+      "local_cache_replay": false,
+      "provider": "Bybit",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv"
+    }
+  ],
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1",
+  "trade_usable": false
+}

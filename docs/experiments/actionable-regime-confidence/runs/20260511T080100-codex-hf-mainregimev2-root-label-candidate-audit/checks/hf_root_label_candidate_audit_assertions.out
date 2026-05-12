@@ -1,0 +1,15 @@
+goal_achieved=false
+dataset_candidates_seen=339
+accepted_candidates=0
+manual_schema_candidates=0
+manipulation_candidates=3
+query_error_count=0
+accepted_full_cycle_full_universe=false
+raw_ohlcv_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=blocked_hf_scan_no_accepted_full_root_label_panel
+status.manipulation_candidate_only=3
+status.not_a_full_root_label_panel=296
+status.partial_or_ambiguous_market_label_candidate=40

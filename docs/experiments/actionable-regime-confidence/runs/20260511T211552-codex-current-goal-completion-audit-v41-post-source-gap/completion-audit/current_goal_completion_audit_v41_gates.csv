@@ -1,0 +1,7 @@
+gate,observed,required,pass
+ready_intake_roots,1,4,false
+r6_positive_support,37,>=50,false
+r6_negative_support,37,>=50,false
+source_label_equivalence_verifier,blocked,not_blocked,false
+source_panel_recency_verifier,blocked,not_blocked,false
+vorley_chanu_run_state,artifact_complete,artifact_complete_or_ignore_if_active,true

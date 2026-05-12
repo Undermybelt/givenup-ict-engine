@@ -1,0 +1,8 @@
+provider_lane_opened=true
+usable_cells=24
+scored_close_ohlc_proxy_cells=24
+accepted_full_cycle_full_universe=false
+gate_result=kraken_public_lane_opened_confidence_blocked_missing_independent_labels
+thresholds_relaxed=false
+runtime_code_changed=false
+trade_usable=false

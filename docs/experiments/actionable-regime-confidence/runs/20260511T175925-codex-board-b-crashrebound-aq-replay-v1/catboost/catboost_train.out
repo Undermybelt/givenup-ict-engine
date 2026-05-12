@@ -1,0 +1,15 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_path_ranker_target.csv: 205 rows, 24 columns
+[features] 13 features, 205 training samples
+[features] label dist: {np.float64(0.0): np.int64(66), np.float64(1.0): np.int64(139)}
+[template] User weights template saved to docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/catboost/path_ranker_model/user_weights.json
+[train] CatBoost saved to docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/catboost/path_ranker_model/catboost_model.cbm
+[train] top features:                Feature Id  Importances
+0          kelly_fraction    48.010146
+1           setup_quality    47.859211
+2             risk_reward     4.130642
+3  evidence_quality_score     0.000000
+4           gating_status     0.000000
+[artifact] Registration metadata saved to docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/catboost/path_ranker_model/trainer_artifact.json
+
+[done] Model saved to docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/catboost/path_ranker_model
+[done] To apply: python scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/catboost/path_ranker_model --target-csv <new_target.csv> --output-scores scores.csv

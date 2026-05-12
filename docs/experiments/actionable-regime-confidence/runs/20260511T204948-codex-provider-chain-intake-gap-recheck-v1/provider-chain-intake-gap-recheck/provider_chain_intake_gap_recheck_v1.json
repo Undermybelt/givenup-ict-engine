@@ -1,0 +1,245 @@
+{
+  "accepted_rows_added": 0,
+  "autoquant": {
+    "bytes": 27240,
+    "completed_without_traceback": true,
+    "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/autoquant_run.log",
+    "robust_sharpe": -7.598,
+    "sha256": "fd4c0478e370168c53abcdd5909a899f7134578dbdb58eb1c982503fdd9839f6",
+    "sharpe": -7.598,
+    "strategy": "TomacNQ_RegimeTrendPullback",
+    "total_profit_pct": -93.55,
+    "trade_count": 3925,
+    "win_rate_pct": 47.4904
+  },
+  "blocker": "Live providers and local chain are operable, and R6 direct-manipulation intake is schema-ready but unscored; R2/R3/R4/R5 intake files remain absent and R6 still needs chronological plus heldout-symbol/venue calibration.",
+  "board_hash_before_writeback": "f6b8e2deb8312b949f4866eb649d8f9dafa1da2b8bbf7800ba6af6b3d31d1427",
+  "decision": "provider_chain_intake_gap_recheck_v1=real_chain_ran_r6_schema_ready_unscored_remaining_intakes_blocked",
+  "direct_manipulation_verifier": {
+    "matched_group_count": 1,
+    "matched_negative_rows": 2,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/verifiers/direct_manipulation_row_intake_verifier_v1.out",
+    "positive_rows": 2,
+    "provenance_keys": [
+      "cftc_genuine_order_text_checks",
+      "cftc_genuine_order_text_status",
+      "cftc_order",
+      "cftc_text_checks",
+      "cftc_text_extraction_status",
+      "created_at_utc",
+      "finra_public_schema",
+      "license_or_permission",
+      "matched_control_limitations",
+      "matched_control_policy",
+      "matched_negative_control_policy",
+      "matched_negative_materialized_at_utc",
+      "matched_negative_rows_acquired",
+      "matched_negative_rows_count",
+      "matched_negative_rows_path",
+      "matched_negative_rows_sha256",
+      "positive_rows_path",
+      "source",
+      "updated_at_utc",
+      "updated_by"
+    ],
+    "ran": true,
+    "status": "schema_ready_unscored",
+    "stderr_path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/verifiers/direct_manipulation_row_intake_verifier_v1.err"
+  },
+  "generated_at_utc": "2026-05-11T13:01:04.770504+00:00",
+  "ict_chain": {
+    "analyze_decision_summary": "Observe only",
+    "analyze_direction": "Bull",
+    "analyze_path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/ict_chain/analyze_NQ_demo_bull_bundle.json",
+    "catboost_ready": false,
+    "execution_candidate_actionable": false,
+    "execution_candidate_path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/ict_chain/workflow_execution-candidate.json",
+    "execution_candidate_status": "no_trade",
+    "execution_review_status": "observe",
+    "execution_triage_gate": "observe",
+    "path_bundle_label": "trend_follow_through",
+    "path_bundle_path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/ict_chain/workflow_structural-recommended-path-bundle.json",
+    "path_bundle_probability": 0.3661675376120536,
+    "policy_path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/ict_chain/policy_training_status_NQ.json",
+    "policy_summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+    "pre_bayes_active_regime": "trend",
+    "pre_bayes_confidence": 0.5822867835012198,
+    "pre_bayes_gate_status": "pass_neutralized",
+    "pre_bayes_path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/ict_chain/pre_bayes_status_NQ.json",
+    "structural_export_path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/ict_chain/export_structural_path_ranking_target.out",
+    "structural_feedback_path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/ict_chain/workflow_structural-feedback.json",
+    "structural_feedback_protocol": "structural-feedback-v1"
+  },
+  "intake_roots": [
+    {
+      "exists": false,
+      "missing_files": [
+        "source_label_equivalence_rows.csv",
+        "source_label_equivalence_provenance.json"
+      ],
+      "present_files": [],
+      "ready": false,
+      "required_files": [
+        "source_label_equivalence_rows.csv",
+        "source_label_equivalence_provenance.json"
+      ],
+      "requirements": "R2;R4",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "exists": false,
+      "missing_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "present_files": [],
+      "ready": false,
+      "required_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "requirements": "R3",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "exists": false,
+      "missing_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "present_files": [],
+      "ready": false,
+      "required_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "requirements": "R5",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "exists": true,
+      "missing_files": [],
+      "present_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "ready": true,
+      "required_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "requirements": "R6",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Run the R6 chronological and heldout-symbol/venue Wilson95 calibration gate, while continuing to populate the R2/R3/R4/R5 intake roots with source-owned or owner-approved files.",
+  "provider_fetches": {
+    "ibkr_QQQ_1h_1M": {
+      "bytes": 24995,
+      "columns": [
+        "ts",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "wap",
+        "count"
+      ],
+      "first_timestamp": "2026-04-13T08:00:00+00:00",
+      "last_timestamp": "2026-05-11T12:00:00+00:00",
+      "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_raw/ibkr_QQQ_1h_1M.csv",
+      "rows": 325,
+      "sha256": "b301d707e9c1b787880d53d2d33248e2c9f878eb718db53551fd4e7eeb7decb7"
+    },
+    "kraken_XBTUSD_1h": {
+      "bytes": 50518,
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "first_timestamp": "2026-04-11 12:00:00+00:00",
+      "last_timestamp": "2026-05-11 12:00:00+00:00",
+      "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_raw/kraken_XBTUSD_1h.csv",
+      "rows": 721,
+      "sha256": "60146f05d30ba025edc5faf86747f119138b7fb143fbbcd552109a6903ca3fd4"
+    },
+    "tradingview_mcp_QQQ_1h": {
+      "bytes": 31858,
+      "first_timestamp": "2026-04-13T13:30:00Z",
+      "last_timestamp": "2026-05-08T19:30:00Z",
+      "ok": true,
+      "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_raw/tradingview_mcp_QQQ_1h.json",
+      "provider": "tradingview_mcp",
+      "rows": 140,
+      "sha256": "86e2cc7d6b39ceab9636c0c9784a43f02ff180b49d411a1de43cdd639a6515ff",
+      "symbol": "NASDAQ:QQQ"
+    },
+    "yfinance_QQQ_1h": {
+      "bytes": 356179,
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "first_timestamp": "2024-06-03 13:30:00+00:00",
+      "last_timestamp": "2026-05-08 20:00:00+00:00",
+      "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_raw/yahoo_QQQ_1h.csv",
+      "rows": 3369,
+      "sha256": "b3f72e678c93db2b65fed4ff0c25df3d8b1aad547c9d266f4fc1e2de9f8693a1"
+    }
+  },
+  "provider_statuses": {
+    "provider_status_ibkr_agent": {
+      "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_status/provider_status_ibkr_agent.json",
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy",
+      "summary_line": "market_data:0/1 ready"
+    },
+    "provider_status_kraken_public_agent": {
+      "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_status/provider_status_kraken_public_agent.json",
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy",
+      "summary_line": "market_data:0/1 ready"
+    },
+    "provider_status_tradingview_mcp_agent": {
+      "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_status/provider_status_tradingview_mcp_agent.json",
+      "provider_id": "tradingview_mcp",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy",
+      "summary_line": "market_data:0/1 ready"
+    },
+    "provider_status_yfinance_agent": {
+      "path": "/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_status/provider_status_yfinance_agent.json",
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available",
+      "status": "ready",
+      "summary_line": "live_runtime:1/1 ready | market_data:1/1 ready"
+    }
+  },
+  "raw_data_committed": false,
+  "ready_intake_root_count": 1,
+  "run_id": "20260511T204948-codex-provider-chain-intake-gap-recheck-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

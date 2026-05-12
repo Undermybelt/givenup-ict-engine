@@ -1,0 +1,179 @@
+{
+  "blocked_requirements": [
+    "Every active MainRegimeV2 regime reaches >=95% accepted confidence",
+    "Cross-market/cycle/timeframe validation is accepted for each regime",
+    "R6 owner/export controls available",
+    "R5 post-cutoff source-panel recency rows available",
+    "R3 native-subhour labels accepted under current policy",
+    "Provider/AutoQuant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree promotion rerun",
+    "Latest source/control arrival refresh after 063906 changes the unlock state"
+  ],
+  "board_sha256_before_artifact": "f47b087c29e70970126ff273732aac51bd90017571a8ed183026b7d2caa88019",
+  "checklist": [
+    {
+      "details": "R3 physical labels=Bear,Bull,Sideways; Crisis absent; Board A accepted TSIE rows=0",
+      "evidence": "latest board 063906 plus R3 provenance",
+      "requirement": "Every active MainRegimeV2 regime reaches >=95% accepted confidence",
+      "status": "blocked"
+    },
+    {
+      "details": "No accepted R3/R5/R6 source/control unlock; public candidates accepted=0",
+      "evidence": "063217 public sweep and 063906 current audit",
+      "requirement": "Cross-market/cycle/timeframe validation is accepted for each regime",
+      "status": "blocked"
+    },
+    {
+      "details": "R6 owner/export root absent",
+      "evidence": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "requirement": "R6 owner/export controls available",
+      "status": "blocked"
+    },
+    {
+      "details": "R5 recency root absent",
+      "evidence": "/tmp/ict-engine-source-panel-recency-extension",
+      "requirement": "R5 post-cutoff source-panel recency rows available",
+      "status": "blocked"
+    },
+    {
+      "details": "Root present but TSIE-quarantined/proxy; not an accepted unlock",
+      "evidence": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "requirement": "R3 native-subhour labels accepted under current policy",
+      "status": "blocked"
+    },
+    {
+      "details": "Read-only runtime evidence only; canonical merge false; downstream promotion false",
+      "evidence": "062854 read-only runtime correction",
+      "requirement": "Provider/AutoQuant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree promotion rerun",
+      "status": "blocked"
+    },
+    {
+      "details": "064220 reports no valid required unlock and no downstream rerun",
+      "evidence": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064220+0800-codex-source-control-arrival-refresh-after-063906-v1/checks/source_control_arrival_refresh_after_063906_v1_assertions.out",
+      "requirement": "Latest source/control arrival refresh after 063906 changes the unlock state",
+      "status": "blocked"
+    },
+    {
+      "details": "TSIE physical rows are explicitly quarantined and count as 0 accepted rows",
+      "evidence": "063734/063906 quarantine and fail-close readbacks",
+      "requirement": "Do not accept proxy signals as completion",
+      "status": "pass"
+    },
+    {
+      "details": "Latest relevant roots are registered through 063906/063217/063734 in board tail",
+      "evidence": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "requirement": "Board A markdown remains the authoritative ledger",
+      "status": "pass"
+    }
+  ],
+  "gate_result": "current_objective_prompt_artifact_audit_after_063926_v1=not_complete_required_unlocks_absent_or_quarantined_no_downstream",
+  "generated_at_utc": "2026-05-11T22:45:01.615583+00:00",
+  "next": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with controls, source-owned R5 recency rows, verifier-native R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export before canonical merge and downstream chain.",
+  "objective_complete": false,
+  "promotion": {
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "r3_target_root": {
+    "accepted_rows_added_for_board_a": 0,
+    "physical_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "physical_row_count": 5032903,
+    "policy_blockers": [
+      "tsie_rule_or_ohlcv_generated_labels",
+      "crisis_absent_from_tsie_taxonomy",
+      "r3_root_policy_quarantined",
+      "no_accepted_mainregimev2_equivalence_under_current_policy",
+      "canonical_merge_not_run",
+      "downstream_promotion_not_rerun"
+    ],
+    "provenance_file": {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+      "present": true,
+      "sha256": "60f2422260c404302dbb98dc641f13e50cdae8f09527a848e614a690b87fcc0f",
+      "size_bytes": 2400
+    },
+    "provenance_run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+    "rows_file": {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "present": true,
+      "size_bytes": 2786719721
+    }
+  },
+  "roots": {
+    "r3_native_subhour": {
+      "accepted_unlock": false,
+      "all_required_present": true,
+      "missing_required_files": [],
+      "present": true,
+      "present_files": [
+        "native_subhour_source_label_provenance.json",
+        "native_subhour_source_label_rows.csv"
+      ],
+      "quarantined": true,
+      "required_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    "r5_recency_extension": {
+      "accepted_unlock": false,
+      "all_required_present": false,
+      "missing_required_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "present": false,
+      "present_files": [],
+      "quarantined": false,
+      "required_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    "r6_owner_export": {
+      "accepted_unlock": false,
+      "all_required_present": false,
+      "missing_required_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "present": false,
+      "present_files": [],
+      "quarantined": false,
+      "required_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    "source_label_equivalence_non_target": {
+      "accepted_unlock": false,
+      "all_required_present": true,
+      "missing_required_files": [],
+      "present": true,
+      "present_files": [
+        "source_label_equivalence_provenance.json",
+        "source_label_equivalence_rows.csv"
+      ],
+      "quarantined": true,
+      "required_files": [
+        "source_label_equivalence_rows.csv",
+        "source_label_equivalence_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    }
+  },
+  "run_id": "20260512T064230+0800-codex-current-objective-prompt-artifact-audit-after-063926-v1"
+}

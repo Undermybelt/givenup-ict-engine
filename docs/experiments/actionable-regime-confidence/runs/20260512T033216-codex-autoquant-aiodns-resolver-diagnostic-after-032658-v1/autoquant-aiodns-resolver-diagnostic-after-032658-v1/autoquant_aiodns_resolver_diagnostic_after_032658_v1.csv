@@ -1,0 +1,8 @@
+probe,status,evidence,decision
+socket_getaddrinfo_api_binance,ok,api.binance.com resolved to 198.18.0.57,plain_dns_path_not_blocked
+curl_api_binance_exchange_info,ok,HTTP 200,plain_https_path_not_blocked
+aiodns_nameserver,loopback,127.0.0.1,aiodns_environment_suspect
+aiodns_api_binance,failed,"DNSError(11 Could not contact DNS servers)",default_async_dns_fails
+aiohttp_default_resolver,failed,ClientConnectorDNSError,default_prepare_path_still_blocked
+aiohttp_threaded_resolver,ok,HTTP 200,threaded_resolver_workaround_candidate
+auto_quant_prepare_retry,failed,exit 1 with aiohttp/aiodns DNS failure,no_promotion

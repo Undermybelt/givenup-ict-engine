@@ -1,0 +1,11 @@
+PASS decision=kaggle_stock_regime_live_refresh_v1=downloaded_latest_public_dataset_no_post_2026_01_30_rows
+PASS dataset_id=mafaqbhatti/stock-market-regimes-20002026
+PASS row_count=245021
+PASS date_max=2026-01-30
+PASS post_cutoff_target_rows=0
+PASS download_matches_local_reference=true
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

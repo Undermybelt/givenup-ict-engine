@@ -1,0 +1,199 @@
+{
+  "schema_version": "board-a-provider-agreement-calibration/v2-local-probe",
+  "loop_id": "20260510T183017+0800-board-a-v2-provider-agreement-calibration-local-probe",
+  "generated_at": "2026-05-10T10:38:07.239063+00:00",
+  "target_schema": "docs/experiments/actionable-regime-confidence/runs/20260510T174651/target_schema_v2.json",
+  "active_market_set": [
+    "QQQ",
+    "NQ"
+  ],
+  "active_timeframes": [
+    "1h",
+    "15m"
+  ],
+  "feature_policy": {
+    "blocked_leakage_features": [
+      "gate_status",
+      "branch",
+      "decision_hint",
+      "execution_readiness",
+      "readiness_gap_to_observe",
+      "readiness_gap_to_ready",
+      "hybrid_transition_hazard",
+      "duration_remaining_expected_bars",
+      "same_surface_execution_tree_categorical"
+    ],
+    "used_features": [
+      "qqq_yf_1h_ret_1",
+      "qqq_yf_1h_ret_4",
+      "qqq_yf_1h_ret_8",
+      "qqq_yf_1h_ret_16",
+      "qqq_yf_1h_range_pct",
+      "qqq_yf_1h_range_mean_8",
+      "qqq_yf_1h_range_mean_16",
+      "qqq_yf_1h_vol_8",
+      "qqq_yf_1h_vol_16",
+      "qqq_yf_1h_volume_z_32",
+      "qqq_yf_1h_ema_spread",
+      "qqq_ibkr_1h_ret_1",
+      "qqq_ibkr_1h_ret_4",
+      "qqq_ibkr_1h_ret_8",
+      "qqq_ibkr_1h_ret_16",
+      "qqq_ibkr_1h_range_pct",
+      "qqq_ibkr_1h_range_mean_8",
+      "qqq_ibkr_1h_range_mean_16",
+      "qqq_ibkr_1h_vol_8",
+      "qqq_ibkr_1h_vol_16",
+      "qqq_ibkr_1h_volume_z_32",
+      "qqq_ibkr_1h_ema_spread",
+      "nq_yf_15m_ret_4",
+      "nq_yf_15m_ret_16",
+      "nq_yf_15m_vol_16",
+      "xbt_kraken_15m_ret_4",
+      "xbt_kraken_15m_ret_16",
+      "xbt_kraken_15m_vol_16",
+      "same_market_provider_count",
+      "same_market_agreement_count",
+      "cross_market_alignment",
+      "crypto_stress_divergence",
+      "aq_entry_context_available"
+    ]
+  },
+  "chronological_splits": {
+    "usable_rows": 35,
+    "train_rows": 17,
+    "calibration_rows": 9,
+    "test_rows": 9,
+    "train_range": [
+      "2026-05-01 17:30:00+00:00",
+      "2026-05-05 19:30:00+00:00"
+    ],
+    "calibration_range": [
+      "2026-05-06 13:30:00+00:00",
+      "2026-05-07 14:30:00+00:00"
+    ],
+    "test_range": [
+      "2026-05-07 15:30:00+00:00",
+      "2026-05-08 16:30:00+00:00"
+    ]
+  },
+  "deterministic_provider_agreement_rule": {
+    "rule": "same-market QQQ yfinance+IBKR agree on trend_expansion_up; future QQQ yfinance+IBKR path remains positive and avoids bad-loss/tail-loss",
+    "calibration": {
+      "support": 1,
+      "success": 1,
+      "precision": 1.0,
+      "precision_wilson_lcb_95": 0.20654931437723742,
+      "precision_wilson_lcb_99": 0.13097754328018593,
+      "coverage": 0.1111111111111111
+    },
+    "test": {
+      "support": 3,
+      "success": 0,
+      "precision": 0.0,
+      "precision_wilson_lcb_95": 4.8683609171202235e-17,
+      "precision_wilson_lcb_99": 0.0,
+      "coverage": 0.3333333333333333
+    },
+    "95_acceptance_state": "reject",
+    "99_acceptance_state": "reject"
+  },
+  "catboost_probe": {
+    "status": "skipped_catboost_support_or_class_gap",
+    "reason": "train_target_single_class",
+    "feature_policy": {
+      "blocked_leakage_features": [
+        "gate_status",
+        "branch",
+        "decision_hint",
+        "execution_readiness",
+        "readiness_gap_to_observe",
+        "readiness_gap_to_ready",
+        "hybrid_transition_hazard",
+        "duration_remaining_expected_bars",
+        "same_surface_execution_tree_categorical"
+      ],
+      "used_features": [
+        "qqq_yf_1h_ret_1",
+        "qqq_yf_1h_ret_4",
+        "qqq_yf_1h_ret_8",
+        "qqq_yf_1h_ret_16",
+        "qqq_yf_1h_range_pct",
+        "qqq_yf_1h_range_mean_8",
+        "qqq_yf_1h_range_mean_16",
+        "qqq_yf_1h_vol_8",
+        "qqq_yf_1h_vol_16",
+        "qqq_yf_1h_volume_z_32",
+        "qqq_yf_1h_ema_spread",
+        "qqq_ibkr_1h_ret_1",
+        "qqq_ibkr_1h_ret_4",
+        "qqq_ibkr_1h_ret_8",
+        "qqq_ibkr_1h_ret_16",
+        "qqq_ibkr_1h_range_pct",
+        "qqq_ibkr_1h_range_mean_8",
+        "qqq_ibkr_1h_range_mean_16",
+        "qqq_ibkr_1h_vol_8",
+        "qqq_ibkr_1h_vol_16",
+        "qqq_ibkr_1h_volume_z_32",
+        "qqq_ibkr_1h_ema_spread",
+        "nq_yf_15m_ret_4",
+        "nq_yf_15m_ret_16",
+        "nq_yf_15m_vol_16",
+        "xbt_kraken_15m_ret_4",
+        "xbt_kraken_15m_ret_16",
+        "xbt_kraken_15m_vol_16",
+        "same_market_provider_count",
+        "same_market_agreement_count",
+        "cross_market_alignment",
+        "crypto_stress_divergence",
+        "aq_entry_context_available"
+      ]
+    },
+    "train_support": 17,
+    "calibration_support": 9,
+    "test_support": 9,
+    "train_positive": 0,
+    "calibration_positive": 1,
+    "test_positive": 0,
+    "overall_decision": "no_95_candidate"
+  },
+  "transition_guardrail": {
+    "calibration": {
+      "support": 6,
+      "success": 1,
+      "precision": 0.16666666666666666,
+      "precision_wilson_lcb_95": 0.030053369748306667,
+      "precision_wilson_lcb_99": 0.019879805142887372,
+      "coverage": 0.6666666666666666
+    },
+    "test": {
+      "support": 2,
+      "success": 2,
+      "precision": 1.0,
+      "precision_wilson_lcb_95": 0.3423802275066531,
+      "precision_wilson_lcb_99": 0.23161829173072768,
+      "coverage": 0.2222222222222222
+    },
+    "handoff_allowed": false
+  },
+  "acceptance_thresholds": {
+    "95": {
+      "precision_wilson_lcb_95": 0.95,
+      "calibration_support": 120,
+      "test_support": 60,
+      "ece": 0.05,
+      "coverage": 0.03
+    },
+    "99": {
+      "precision_wilson_lcb_99": 0.99,
+      "calibration_support": 300,
+      "test_support": 120,
+      "ece": 0.02,
+      "coverage": 0.02
+    }
+  },
+  "accepted_gate": "none",
+  "board_state": "abstain",
+  "blocker": "support_too_thin; no calibrated release rule met 95/99 Wilson/support/ECE thresholds; TradingViewRemix current provider gap; NQ lacks same-market second provider in refreshed packet",
+  "next_action": "A-v2-2: extend QQQ/NQ chronological support with longer yfinance+IBKR same-market windows and restore TradingViewRemix health before rerunning provider-agreement calibration."
+}

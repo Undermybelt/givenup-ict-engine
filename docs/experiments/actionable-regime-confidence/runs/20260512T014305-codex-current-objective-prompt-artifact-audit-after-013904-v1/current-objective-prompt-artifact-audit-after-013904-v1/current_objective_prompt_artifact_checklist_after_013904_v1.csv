@@ -1,0 +1,9 @@
+requirement,status,evidence,next_needed
+every active MainRegimeV2 regime reaches 95 percent confidence,blocked,"012425 accepted_labels empty; Bull and Sideways are field-complete but fail-closed; Bear and Crisis not accepted","source-native accepted rows with per-regime qualifying conditions and split confidence"
+validation works on other markets and other cycles/timeframes,blocked,"source-label root is daily; R3 native-subhour root absent; R5 recency root absent","exact source-owned cross-timeframe/subhour/recency rows with provenance"
+R6 direct manipulation control contract,blocked,"010127 controls_zero PASS; no_flip_approval PASS; owner_files_absent PASS","source-owned normal controls or explicit FLIP approval plus canonical merge"
+real Auto-Quant evidence,non_promoting,"013904 latest Tomac cache parsed; 9 trades; winrate 0.4444444444444444; profit_total -0.058056","wait for accepted source/control roots before promotion run; do not use cache as proxy"
+ict-engine filter Pre-Bayes BBN CatBoost execution tree,callable_but_non_promoting,"013533 command exits pass; downstream_promotion_rerun_allowed_false PASS","rerun after canonical merge and accepted source/control roots"
+IBKR TradingViewRemix yfinance Kraken provider context,partial,"yfinance and Kraken CLI usable; IBKR and TradingView remain unhealthy/dependency-blocked in recent readbacks","recheck after source/control unlock or provider repair"
+multi-agent safe board handling,pass,"append-only artifact; no duplicate cleanup; shared intake not mutated","continue append-only under fresh hash readback"
+completion and update_goal,blocked,"strict_full_objective_achieved false; update_goal false","do not call update_goal until every requirement above is satisfied"

@@ -1,0 +1,16 @@
+PASS gate_result=board_b_combined_autoquant_local_bootstrap_v1=dependency_bootstrap_attempted_no_selected_data_no_promotion
+PASS bootstrap_exit=0
+PASS status_after_exit=0
+PASS status_before_exit=0
+PASS after_status=dependency_ready_data_missing
+PASS after_bootstrap_needed=False
+PASS after_dependency_healthy=True
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS nonzero_mature_rooted_observations=false
+PASS promotion_allowed=false
+PASS selected_data_auto_quant_training=false
+PASS selected_historical_data_present=false
+PASS source_control_evidence_acquired=false
+PASS trade_usable=false
+PASS update_goal=false

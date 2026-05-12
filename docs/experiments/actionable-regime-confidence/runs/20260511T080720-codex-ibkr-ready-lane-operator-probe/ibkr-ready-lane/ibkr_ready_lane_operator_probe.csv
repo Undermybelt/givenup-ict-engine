@@ -1,0 +1,272 @@
+provider,symbol,timeframe,attempted,status,reason,rows,first_ts,last_ts,raw_csv,raw_committed,label_status,accepted_for_confidence,runtime_code_changed,thresholds_relaxed,trade_usable,returncode,stdout,stderr
+ibkr,QQQ,1h,True,fetch_failed,returncode=1,0,,,/private/tmp/ict-regime-ibkr-ready-lane-20260511T080720/QQQ_1h.csv,False,missing_independent_root_labels,False,False,False,False,1,,"Installed 15 packages in 90ms
+API connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)"
+ibkr,DIA,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DIA,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DIA,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DIA,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DIA,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DIA,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DIA,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DIA,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DIA,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,DJI,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,GLD,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,NDX,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,QQQ,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,QQQ,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,QQQ,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,QQQ,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,QQQ,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,QQQ,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,QQQ,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,QQQ,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPX,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,SPY,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,USO,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,VIX,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,1m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,5m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,15m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,30m,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,1h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,4h,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,1d,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,1w,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,
+ibkr,XAUUSD,1mo,False,not_attempted_after_operator_fetch_blocker,"fetch_failed:returncode=1: connection failed: ConnectionRefusedError(61, ""Connect call failed ('127.0.0.1', 7497)"")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)",0,,,,False,missing_independent_root_labels,False,False,False,False,,,

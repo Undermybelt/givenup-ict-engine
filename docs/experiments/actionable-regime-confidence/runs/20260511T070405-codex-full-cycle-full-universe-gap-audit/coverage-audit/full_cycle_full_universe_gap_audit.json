@@ -1,0 +1,525 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T070405-codex-full-cycle-full-universe-gap-audit/checks/full_cycle_full_universe_gap_audit_assertions.out",
+    "audit_json": "docs/experiments/actionable-regime-confidence/runs/20260511T070405-codex-full-cycle-full-universe-gap-audit/coverage-audit/full_cycle_full_universe_gap_audit.json",
+    "audit_md": "docs/experiments/actionable-regime-confidence/runs/20260511T070405-codex-full-cycle-full-universe-gap-audit/coverage-audit/full_cycle_full_universe_gap_audit.md",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T070405-codex-full-cycle-full-universe-gap-audit/scripts/full_cycle_full_universe_gap_audit.py"
+  },
+  "bar_root_results": [
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T035045-codex-kaggle-bull-coverage-buffer-gate/kaggle-bull-gate/kaggle_bull_coverage_buffer_gate_report.json",
+      "calibration": {
+        "coverage": 0.03721354694788075,
+        "instruments": [
+          "AAPL",
+          "ABBV",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "MS",
+          "MSFT",
+          "NKE",
+          "NVDA",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "support": 2202,
+        "timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9525159363146446
+      },
+      "evidence_kind": "bar",
+      "full_universe_gap": {
+        "missing_observed_instrument_count": 16,
+        "missing_observed_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "crypto",
+          "equity_etf",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "missing_observed_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "root": "Bull",
+      "rule": "close_drawdown60 >= -0.0032047199531 AND volatility <= 0.152179344579",
+      "sampled_95_passed": true,
+      "test": {
+        "coverage": 0.05277735555893331,
+        "instruments": [
+          "AAPL",
+          "ABBV",
+          "AMZN",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "META",
+          "MS",
+          "MSFT",
+          "NKE",
+          "NVDA",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "support": 3125,
+        "timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9619306121174673
+      }
+    },
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "calibration": {
+        "coverage": 0.07935314027830011,
+        "instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "IWM",
+          "QQQ",
+          "SOL-USD",
+          "SPY",
+          "TLT"
+        ],
+        "market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "support": 633,
+        "timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9939679511007218
+      },
+      "evidence_kind": "bar",
+      "full_universe_gap": {
+        "missing_observed_instrument_count": 46,
+        "missing_observed_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "index",
+          "single_stock",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "missing_observed_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "root": "Bear",
+      "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+      "sampled_95_passed": true,
+      "test": {
+        "coverage": 0.0655819774718398,
+        "instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "ETH-USD",
+          "IWM",
+          "QQQ",
+          "SOL-USD"
+        ],
+        "market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "support": 524,
+        "timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9927223245607182
+      }
+    },
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "calibration": {
+        "coverage": 0.062053403535163594,
+        "instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "GLD",
+          "HYG",
+          "SPY",
+          "TLT"
+        ],
+        "market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "support": 495,
+        "timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9886466535263686
+      },
+      "evidence_kind": "bar",
+      "full_universe_gap": {
+        "missing_observed_instrument_count": 40,
+        "missing_observed_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "index",
+          "single_stock",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "missing_observed_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "root": "Sideways",
+      "rule": "sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236",
+      "sampled_95_passed": true,
+      "test": {
+        "coverage": 0.10801001251564456,
+        "instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "GLD",
+          "HYG",
+          "IWM",
+          "QQQ",
+          "SOL-USD",
+          "SPY",
+          "TLT"
+        ],
+        "market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "support": 863,
+        "timeframes": [
+          "1d",
+          "1w"
+        ],
+        "wilson95_lcb": 0.9955684412857684
+      }
+    },
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T235220-codex-broader-root-v2-probe/root-v2-broader/main_regime_v2_broader_root_calibration_report.json",
+      "calibration": {
+        "coverage": 0.06580645161290323,
+        "instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "support": 1020,
+        "timeframes": [
+          "15m",
+          "1h"
+        ],
+        "wilson95_lcb": 0.996247994464769
+      },
+      "evidence_kind": "bar",
+      "full_universe_gap": {
+        "missing_observed_instrument_count": 45,
+        "missing_observed_market_contexts": [
+          "crypto",
+          "equity_etf",
+          "index",
+          "single_stock"
+        ],
+        "missing_observed_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "root": "Crisis",
+      "rule": "range_ratio32_128 >= 1.43116959912",
+      "sampled_95_passed": true,
+      "test": {
+        "coverage": 0.06175802789490756,
+        "instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "support": 952,
+        "timeframes": [
+          "15m",
+          "1h"
+        ],
+        "wilson95_lcb": 0.9959810711439178
+      }
+    }
+  ],
+  "direct_event_root_result": {
+    "accepted_95": true,
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.json",
+    "calibration": {
+      "channels": 147,
+      "coins": 364,
+      "coverage": 0.5902732595966168,
+      "support": 14516,
+      "wilson95_lcb": 0.9997354338315891
+    },
+    "evidence_kind": "direct_event",
+    "full_universe_gap": [
+      "Only crypto Telegram pump-attempt direct events are accepted.",
+      "Other direct manipulation varieties remain unaccepted or blocked: wash trading, NFT wash, sequence/ranking pump target prediction, SystemsLab event-rank, raw-message prediction.",
+      "No bar-timeframe product exists for this event feed; it uses chronological event periods instead."
+    ],
+    "root": "Manipulation",
+    "rule": "classified_telegram_coin_pump_event_present == 1",
+    "sampled_95_passed": true,
+    "test": {
+      "channels": 167,
+      "coins": 365,
+      "coverage": 0.5218770331815225,
+      "support": 12834,
+      "wilson95_lcb": 0.9997007706604714
+    }
+  },
+  "full_cycle_full_universe_blockers": {
+    "bar_roots_missing_full_matrix": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "manipulation_missing_direct_varieties": true,
+    "why_not_complete": [
+      "Prior audits prove at least two market/timeframe contexts, not all observed contexts/timeframes.",
+      "Bull/Bear/Sideways/Crisis accepted packets use different context/timeframe slices and are not cross-product complete.",
+      "Manipulation is accepted only for a crypto Telegram direct-event feed; other direct manipulation varieties are blocked or diagnostic-only."
+    ]
+  },
+  "goal_achieved": false,
+  "interpretation": {
+    "full_cycle": "not just two timeframes; every observed accepted bar timeframe in the current evidence universe",
+    "full_universe": "not just two market contexts; every observed accepted market context/instrument family plus direct manipulation varieties",
+    "scope_limit": "This audit does not claim the literal global market universe is exhaustively enumerable from current repo artifacts."
+  },
+  "next_action": "Run a bounded full-matrix batch across available providers/instruments/timeframes, then keep Manipulation split by direct evidence variety; do not report full-cycle/full-universe completion until the matrix is accepted.",
+  "objective": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md every active regime >=95 and try all cycles/all varieties",
+  "observed_current_evidence_universe": {
+    "bar_instruments": [
+      "AAPL",
+      "ABBV",
+      "AMZN",
+      "BA",
+      "BAC",
+      "BNB-USD",
+      "BTC-USD",
+      "CAT",
+      "COP",
+      "CSCO",
+      "CVX",
+      "DIS",
+      "EEM",
+      "EFA",
+      "ES=F",
+      "ETH-USD",
+      "GE",
+      "GLD",
+      "GOOGL",
+      "GS",
+      "HD",
+      "HYG",
+      "INTC",
+      "IWM",
+      "JNJ",
+      "JPM",
+      "MCD",
+      "META",
+      "MS",
+      "MSFT",
+      "NKE",
+      "NQ",
+      "NQ=F",
+      "NVDA",
+      "PFE",
+      "PF_XBTUSD",
+      "QQQ",
+      "SBUX",
+      "SOL-USD",
+      "SPY",
+      "T",
+      "TLT",
+      "TMO",
+      "UNH",
+      "VZ",
+      "WFC",
+      "WMT",
+      "XOM",
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^RUT"
+    ],
+    "bar_market_contexts": [
+      "CME_futures_local",
+      "IBKR_US_ETF",
+      "Kraken_crypto",
+      "crypto",
+      "equity_etf",
+      "index",
+      "single_stock",
+      "yfinance_ETF",
+      "yfinance_US_ETF",
+      "yfinance_crypto",
+      "yfinance_futures"
+    ],
+    "bar_timeframes": [
+      "15m",
+      "1d",
+      "1h",
+      "1w"
+    ],
+    "direct_manipulation_accepted_feed": "Mehrnoom/Mirtaheri Telegram pump-attempt events"
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "id": "named_board_contract",
+      "passed": true,
+      "requirement": "Named TODO board remains the active contract"
+    },
+    {
+      "evidence": "Accepted root artifacts",
+      "id": "sampled_95_evidence_preserved",
+      "passed": true,
+      "requirement": "Previously accepted sampled 95% root evidence still exists"
+    },
+    {
+      "evidence": "observed_timeframes=['15m', '1d', '1h', '1w']",
+      "id": "full_cycle_all_observed_timeframes",
+      "passed": false,
+      "requirement": "Each bar root is validated on every observed accepted bar timeframe"
+    },
+    {
+      "evidence": "observed_contexts=['CME_futures_local', 'IBKR_US_ETF', 'Kraken_crypto', 'crypto', 'equity_etf', 'index', 'single_stock', 'yfinance_ETF', 'yfinance_US_ETF', 'yfinance_crypto', 'yfinance_futures']",
+      "id": "full_universe_all_observed_contexts",
+      "passed": false,
+      "requirement": "Each bar root is validated on every observed accepted market context/instrument family"
+    },
+    {
+      "evidence": "Mehrnoom accepted; SystemsLab/Mendeley/Bayi/Kaggle NFT/raw-message/Twitter social diagnostics remain blocked or caveat-only",
+      "id": "manipulation_all_varieties",
+      "passed": false,
+      "requirement": "Direct-input-gated Manipulation is accepted across direct manipulation varieties, not only one crypto Telegram event feed"
+    }
+  ],
+  "run_id": "20260511T070405+0800-codex-full-cycle-full-universe-gap-audit",
+  "sampled_95_roots_preserved": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "Manipulation"
+  ]
+}

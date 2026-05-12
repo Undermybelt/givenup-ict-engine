@@ -1,0 +1,12 @@
+requirement,evidence,status,note
+named_board_file,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,covered,Board A hash read before writeback
+multi_agent_append_only_safety,Board A duplicate guards for 150515 and 151021 plus fresh process check,covered,No active Board A/AQ process observed before this audit
+all_regimes_95_confidence,Board A tail after 150515 and 151021,fail,Accepted >=95 contexts remain 0
+cross_market_cross_timeframe_validation,No current accepted regime packet with cross-market and cross-timeframe validation,fail,Provider/context evidence remains non-promoting
+six_provider_same_root_authority,153551 five-provider smoke plus 154536 TVR 429,fail,TVR unavailable and no same-root six-provider AQ packet exists
+real_auto_quant_chain,150515 and 151021 reports,partial,Real AQ/downstream ran but negative or timed out and Binance-only for AQ input
+pre_bayes_bbn_catboost_pathranker,150515/151021 downstream readbacks,partial,CatBoost/path-ranker artifacts or attempts exist but no calibrated promotable runtime admission
+execution_tree_admission,150515/151021 workflow outputs,fail,Execution remained observe or not actionable
+provider_blocker_tvr,154536 redacted TVR health probe,fail_closed,HTTP 429 Retry after 58271s
+ote_branch_contract,155014 OTE branch contract,partial,Branch leaves preserved but contract-only and not same-root six-provider AQ authority
+goal_completion,This audit,fail,objective_complete=false and update_goal=false

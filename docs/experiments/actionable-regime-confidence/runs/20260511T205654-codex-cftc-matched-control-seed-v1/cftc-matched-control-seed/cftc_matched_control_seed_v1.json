@@ -1,0 +1,60 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_writeback": "90aecabf2c4a34a82a78479782713f86478670a45e6f5d8d38776a52e089efba",
+  "decision": "cftc_matched_control_seed_v1=direct_intake_schema_ready_unscored_confidence_gate_false",
+  "generated_at_utc": "2026-05-11T12:58:01.060954+00:00",
+  "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "matched_negative_rows_count": 2,
+  "matched_negative_rows_path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+  "matched_negative_rows_sha256": "04a078f2bc3f3d7b0539c0dc11aec9cbd2899f6f152e08a108058bdab8a88f63",
+  "new_confidence_gate": false,
+  "next_action": "Run chronological and heldout-symbol/venue calibration only after enough source-owned positive and same-schema normal-control rows exist; continue R2/R3/R4/R5 intake acquisition in parallel.",
+  "positive_rows_count": 2,
+  "positive_rows_path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+  "positive_rows_sha256": "4bfbe25f9b1ad7affdef44f9ca44cdc1e81e8dd9b9ef0db95f8a572ed05a8b0c",
+  "provenance_manifest_path": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+  "provenance_manifest_sha256": "ac438a0dc2c2599b297cb0be7a0c05d1c367d6bb7a98dc61130d777584214aea",
+  "raw_data_committed": false,
+  "run_id": "20260511T205654+0800-codex-cftc-matched-control-seed-v1",
+  "runtime_code_changed": false,
+  "schema_ready_unscored": true,
+  "source_policy": "Public CFTC order facts only. Genuine iceberg legs are used as same-report control seeds; this does not by itself establish Wilson95 confidence or full direct Manipulation coverage.",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier": {
+    "cmd": [
+      "python3",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-direct-manipulation-row-intake"
+    ],
+    "parsed_json": {
+      "matched_group_count": 1,
+      "matched_negative_rows": 2,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 2,
+      "provenance_keys": [
+        "cftc_order",
+        "cftc_text_checks",
+        "cftc_text_extraction_status",
+        "created_at_utc",
+        "finra_public_schema",
+        "license_or_permission",
+        "matched_negative_control_policy",
+        "matched_negative_materialized_at_utc",
+        "matched_negative_rows_acquired",
+        "matched_negative_rows_count",
+        "matched_negative_rows_path",
+        "matched_negative_rows_sha256",
+        "positive_rows_path",
+        "source"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205654-codex-cftc-matched-control-seed-v1/cftc-matched-control-seed/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T205654-codex-cftc-matched-control-seed-v1/cftc-matched-control-seed/direct_manipulation_row_intake_verifier.stdout.txt"
+  }
+}

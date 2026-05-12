@@ -1,0 +1,35 @@
+{
+  "summary_line": "market_data:1/1 ready",
+  "ready_by_domain": {
+    "market_data": "1/1"
+  },
+  "providers": [
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "public_or_env_ready",
+      "user_access": "local_stdio_or_remote_api_key",
+      "market_fit": [
+        "tradfi",
+        "crypto"
+      ],
+      "fallback_priority": 31,
+      "status": "ready",
+      "reason": "mcp_url_and_api_key_available",
+      "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes."
+    }
+  ],
+  "ready_providers": [
+    "tradingview_mcp"
+  ],
+  "pending_providers": [],
+  "pending_provider_details": [],
+  "selectable_providers": [
+    "tradingview_mcp"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": []
+}

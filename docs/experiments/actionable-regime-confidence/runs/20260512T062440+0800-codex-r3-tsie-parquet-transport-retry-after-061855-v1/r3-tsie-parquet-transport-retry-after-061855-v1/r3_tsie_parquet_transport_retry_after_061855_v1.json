@@ -1,0 +1,91 @@
+{
+  "commands": [
+    {
+      "cmd_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/curl_head.cmd",
+      "name": "curl_head",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/curl_head.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/curl_head.stdout.txt",
+      "stdout_preview": "HTTP/2 302 \ncontent-type: text/plain; charset=utf-8\ncontent-length: 1345\nlocation: https://cas-bridge.xethub.hf.co/xet-bridge-us/69db153a61f7dc0587c18e6e/c2c9c64568d08ce3fcd37c3de85f8c155bb0dec0c678cb4140b8e6e2eb85bff3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cas%2F20260511%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260511T222550Z&X-Amz-Expires=3600&X-Amz-Signature=18e201e81f083b40c098a1c3bf3016bed3bca7257f0e2c7b1114b0f05a4301fd&X-Amz-SignedHeaders=host&X-Xet-Cas-Uid=public&response-content-disposition=inline%3B+filename*%3DUTF-8%27%270000.parquet%3B+filename%3D%220000.parquet%22%3B&x-amz-checksum-mode=ENABLED&x-id=GetObject&Expires=1778541950&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc3ODU0MTk1MH19LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2FzLWJyaWRnZS54ZXRodWIuaGYuY28veGV0LWJyaWRnZS11cy82OWRiMTUzYTYxZjdkYzA1ODdjMThlNmUvYzJjOWM2NDU2OGQwOGNlM2ZjZDM3YzNkZTg1ZjhjMTU1YmIwZGVjMGM2NzhjYjQxNDBiOGU2ZTJlYjg1YmZmMyoifV19&Signature=If%7ETy4wqPFtD8s5Ie%7EZC9O6bR4RmI51Oy7d9spclogQpcTPpXAIxsu%7E0XcDf7dAcf8ro873XlAYa2JrGMmA91OxMp9Uirji4B22X-VezKatPoD7ezqjNCVT75%7EcRYigwguuYuZec%7E3EYK32Sh9JGuPfb9q9bQTW6VSwLSV6jHNc",
+      "timeout": false
+    },
+    {
+      "cmd_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/curl_range_1m.cmd",
+      "name": "curl_range_1m",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/curl_range_1m.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/curl_range_1m.stdout.txt",
+      "stdout_preview": "",
+      "timeout": false
+    },
+    {
+      "cmd_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/uvx_hf_xet_help.cmd",
+      "name": "uvx_hf_xet_help",
+      "returncode": 0,
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/uvx_hf_xet_help.stderr.txt",
+      "stderr_preview": "Downloading pygments (1.2MiB)\nDownloading hf-xet (3.6MiB)\n Downloaded hf-xet\n Downloaded pygments\nInstalled 22 packages in 43ms\n",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1/command-output/uvx_hf_xet_help.stdout.txt",
+      "stdout_preview": "Usage: hf [OPTIONS] COMMAND [ARGS]...\n\n  Hugging Face Hub CLI\n\nOptions:\n  --install-completion  Install completion for the current shell.\n  --show-completion     Show completion for the current shell, to copy it or\n                        customize the installation.\n  -h, --help            Show this message and exit.\n\nMain commands:\n  auth                 Manage authentication (login, logout, etc.).\n  buckets              Commands to interact with buckets.\n  cache                Manage local cache directory.\n  collections          Interact with collections on the Hub.\n  datasets             Interact with datasets on the Hub.\n  discussions          Manage discussions and pull requests on the Hub.\n  download             Download files from the Hub.\n  endpoints            Manage Hugging Face Inference Endpoints.\n  extensions           Manage hf CLI extensions. [alias: ext]\n  jobs                 Run and manage Jobs on the Hub.\n  models               Interact with models on the Hub.\n  papers               Interact with papers on the Hub.\n  repos                Manage repos on the Hub. [alias: repo]\n  skills               Manage skills for AI assistants.\n  spaces               Interact ",
+      "timeout": false
+    }
+  ],
+  "dataset_id": "sujinwo/tsie-market-regime-dataset",
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "curl_head_ok": true,
+    "curl_range_ok": true,
+    "downstream_promotion_rerun": false,
+    "raw_data_committed": false,
+    "raw_parquet_downloaded": false,
+    "row_api_length_cap_confirmed": true,
+    "strict_full_objective": false,
+    "target_root_mutated": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "uvx_hf_xet_help_ok": true
+  },
+  "gate_result": "r3_tsie_parquet_transport_retry_after_061855_v1=partial_range_downloaded_not_intaked_no_promotion",
+  "head1m_bytes": 1048576,
+  "head1m_exists": true,
+  "module_status": {
+    "duckdb": false,
+    "pandas": true,
+    "polars": false,
+    "pyarrow": false,
+    "requests": true
+  },
+  "observed_at_utc": "2026-05-11T22:26:06.769200+00:00",
+  "parquet_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet",
+  "required_roots_present_any": false,
+  "row_api_length_probe": {
+    "body_preview": "{\"error\":\"Parameter 'length' must not be greater than 100\"}",
+    "error": "",
+    "length_cap_confirmed": true,
+    "status_code": 422
+  },
+  "run_id": "20260512T062440+0800-codex-r3-tsie-parquet-transport-retry-after-061855-v1",
+  "target_roots": {
+    "r3_native_subhour": {
+      "file_count_sampled": 0,
+      "present": false,
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "sampled_files": []
+    },
+    "r5_recency_extension": {
+      "file_count_sampled": 0,
+      "present": false,
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "sampled_files": []
+    },
+    "r6_owner_export": {
+      "file_count_sampled": 0,
+      "present": false,
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sampled_files": []
+    }
+  },
+  "tmp_root": "/tmp/ict-engine-tsie-transport-retry-after-061855-v1"
+}

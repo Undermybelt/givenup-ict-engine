@@ -1,0 +1,32 @@
+{
+  "run_id": "20260512T124009+0800-codex-115700-selected-history-closeout-readback-v1",
+  "source_roots": [
+    "20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+    "20260512T123211+0800-codex-115700-selected-history-preflight-v1",
+    "20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1",
+    "20260512T123704+0800-codex-123227-selected-history-tomac-run-v1",
+    "20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1"
+  ],
+  "mode": "support_only_closeout",
+  "summary": {
+    "native_preflight_paths_checked": 3,
+    "native_preflight_all_exits_zero": true,
+    "native_preflight_ready_actionable_labels": [],
+    "aq_prepare_data_ready": true,
+    "tomac_measurement_reached": true,
+    "tomac_successful_strategies": 3,
+    "tomac_total_trades": 0,
+    "btcusdt_pairmap_successful_strategies": 0
+  },
+  "gates": {
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "selected_history_source_control_unlocked": false,
+    "mature_rooted_observations": false,
+    "execution_ready": false,
+    "execution_actionable": false,
+    "execution_review": "observe"
+  },
+  "next": "Stop duplicating selected-history TOMAC repair roots for this exact 115700 slice unless a materially new data window or strategy family is introduced."
+}

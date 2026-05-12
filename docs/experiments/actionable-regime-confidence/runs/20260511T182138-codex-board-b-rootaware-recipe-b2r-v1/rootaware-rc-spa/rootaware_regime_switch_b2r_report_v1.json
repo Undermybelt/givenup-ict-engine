@@ -1,0 +1,92 @@
+{
+  "aggregate_metrics": {
+    "max_drawdown_pct": -0.0,
+    "profit_factor": 0.0,
+    "sharpe": 0.0,
+    "total_profit_pct": 0.0,
+    "trade_count": 0,
+    "win_rate": 0.0
+  },
+  "artifacts": {
+    "backtest_stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T182138-codex-board-b-rootaware-recipe-b2r-v1/checks/rootaware_freqtrade_backtest.err",
+    "backtest_stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T182138-codex-board-b-rootaware-recipe-b2r-v1/checks/rootaware_freqtrade_backtest.out",
+    "root_summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T182138-codex-board-b-rootaware-recipe-b2r-v1/rootaware-rc-spa/rootaware_regime_switch_root_summary_v1.csv",
+    "trade_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T182138-codex-board-b-rootaware-recipe-b2r-v1/rootaware-rc-spa/rootaware_regime_switch_trades_v1.csv"
+  },
+  "auto_quant": {
+    "config": "/Users/thrill3r/Auto-Quant/config.json",
+    "pairs": [
+      "BTC/USDT",
+      "ETH/USDT",
+      "SOL/USDT",
+      "BNB/USDT",
+      "AVAX/USDT"
+    ],
+    "root": "/Users/thrill3r/Auto-Quant",
+    "timerange": "20210101-20251231"
+  },
+  "decision": {
+    "gate_result": "reject_b2r_insufficient_root_coverage",
+    "next_action": "B2R: synthesize another root-aware recipe or loosen only the recipe logic, not the RC-SPA gates.",
+    "reason": "RootAwareRegimeSwitch ran as a real Auto-Quant/Freqtrade strategy, but did not produce trades across Bull/Bear/Sideways/Crisis.",
+    "selected_for_b3": false
+  },
+  "generated_at_utc": "2026-05-11T10:27:08.166466+00:00",
+  "recipe_id": "RootAwareRegimeSwitch",
+  "root_summary": [
+    {
+      "folds": "",
+      "mean_profit_ratio_net": 0.0,
+      "parent_regime_root": "Bull",
+      "regime_profit_branch_path": "Bull->no_rows->no_rows->RootAwareRegimeSwitch",
+      "sum_profit_ratio_net": 0,
+      "test_folds": 0,
+      "total_trades": 0,
+      "win_rate": 0.0
+    },
+    {
+      "folds": "",
+      "mean_profit_ratio_net": 0.0,
+      "parent_regime_root": "Bear",
+      "regime_profit_branch_path": "Bear->no_rows->no_rows->RootAwareRegimeSwitch",
+      "sum_profit_ratio_net": 0,
+      "test_folds": 0,
+      "total_trades": 0,
+      "win_rate": 0.0
+    },
+    {
+      "folds": "",
+      "mean_profit_ratio_net": 0.0,
+      "parent_regime_root": "Sideways",
+      "regime_profit_branch_path": "Sideways->no_rows->no_rows->RootAwareRegimeSwitch",
+      "sum_profit_ratio_net": 0,
+      "test_folds": 0,
+      "total_trades": 0,
+      "win_rate": 0.0
+    },
+    {
+      "folds": "",
+      "mean_profit_ratio_net": 0.0,
+      "parent_regime_root": "Crisis",
+      "regime_profit_branch_path": "Crisis->no_rows->no_rows->RootAwareRegimeSwitch",
+      "sum_profit_ratio_net": 0,
+      "test_folds": 0,
+      "total_trades": 0,
+      "win_rate": 0.0
+    },
+    {
+      "folds": "",
+      "mean_profit_ratio_net": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "regime_profit_branch_path": "Manipulation(scoped)->DirectEventOverlayMissing->no_direct_event_rows->suppress_or_abstain",
+      "sum_profit_ratio_net": 0,
+      "test_folds": 0,
+      "total_trades": 0,
+      "win_rate": 0.0
+    }
+  ],
+  "run_id": "20260511T182138+0800-codex-board-b-rootaware-recipe-b2r-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T182138-codex-board-b-rootaware-recipe-b2r-v1",
+  "schema_version": "board-b-rootaware-recipe-b2r/v1",
+  "strategy_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T182138-codex-board-b-rootaware-recipe-b2r-v1/strategies/RootAwareRegimeSwitch.py"
+}

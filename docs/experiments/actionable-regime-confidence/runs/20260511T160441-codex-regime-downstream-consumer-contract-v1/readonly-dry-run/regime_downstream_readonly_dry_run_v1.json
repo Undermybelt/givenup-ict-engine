@@ -1,0 +1,30 @@
+{
+  "artifact_type": "regime_downstream_readonly_dry_run_v1",
+  "command": "./target/debug/ict-engine analyze --symbol DEMO --demo --human --state-dir /tmp/ict-engine-regime-bundle-readonly-160441 --regime-consumer-bundle docs/experiments/actionable-regime-confidence/runs/20260511T160441-codex-regime-downstream-consumer-contract-v1/downstream-consumer-contract/bundle-templates/bull_regime_consumer_bundle_template_v1.json --regime-consumer-bundle-strict",
+  "decision": {
+    "bbn_mutation_remained_off": true,
+    "full_objective_achieved": false,
+    "raw_data_committed": false,
+    "read_only_diagnostics_visible": true,
+    "runtime_code_changed": false,
+    "runtime_loaded_bundle": true,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "evidence_files": {
+    "analyze_runs": "/tmp/ict-engine-regime-bundle-readonly-160441/DEMO/analyze_runs.json",
+    "workflow_snapshot": "/tmp/ict-engine-regime-bundle-readonly-160441/DEMO/workflow_snapshot.json"
+  },
+  "probes": {
+    "bbn_application_applied": false,
+    "bbn_application_skipped": true,
+    "bundle_loaded": true,
+    "bundle_template_path_visible": true,
+    "mainregime_label_visible": true,
+    "read_only_bbn_label_visible": true
+  },
+  "run_id": "20260511T160441+0800-codex-regime-downstream-readonly-dry-run-v1",
+  "template": "docs/experiments/actionable-regime-confidence/runs/20260511T160441-codex-regime-downstream-consumer-contract-v1/downstream-consumer-contract/bundle-templates/bull_regime_consumer_bundle_template_v1.json",
+  "tmp_state": "/tmp/ict-engine-regime-bundle-readonly-160441/DEMO"
+}

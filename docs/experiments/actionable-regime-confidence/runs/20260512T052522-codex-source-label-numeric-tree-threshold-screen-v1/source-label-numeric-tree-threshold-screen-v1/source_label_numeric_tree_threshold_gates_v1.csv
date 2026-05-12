@@ -1,0 +1,5 @@
+label,threshold,calibration_support,calibration_label_hits,calibration_precision,calibration_wilson95_lcb,heldout_market_support,heldout_market_label_hits,heldout_market_precision,heldout_market_wilson95_lcb,heldout_time_support,heldout_time_label_hits,heldout_time_precision,heldout_time_wilson95_lcb,test_support,test_label_hits,test_precision,test_wilson95_lcb,min_split_support,min_split_wilson95_lcb,accepted_extra_trees_confidence_95,blockers
+Bear,0.965,2193,2177,0.9927040584,0.9881809332,68,68,1.0,0.9465286635,656,641,0.9771341463,0.9626178731,241,238,0.9875518672,0.9640471233,68,0.9465286635,False,heldout_market_wilson95_below_0.95
+Bull,0.995,6513,6512,0.9998464609,0.9991307404,539,535,0.9925788497,0.9810757714,2742,2740,0.9992706054,0.9973442911,1679,1679,1.0,0.9977172782,539,0.9810757714,True,
+Crisis,0.995,13569,13569,1.0,0.9997169746,547,547,1.0,0.9930261988,3299,3299,1.0,0.998836923,1608,1608,1.0,0.9976167266,547,0.9930261988,True,
+Sideways,0.995,4095,4094,0.9997557998,0.9986179599,1180,1180,1.0,0.9967550901,1939,1939,1.0,0.9980227626,955,955,1.0,0.9959936455,955,0.9959936455,True,

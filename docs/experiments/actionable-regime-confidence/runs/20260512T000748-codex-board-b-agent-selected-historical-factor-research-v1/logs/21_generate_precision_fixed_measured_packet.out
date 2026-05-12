@@ -1,0 +1,7 @@
+{
+  "manifest": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/measured-recorded-branch/strategy_library_recorded_nq_precision_fixed_v1.json",
+  "summary": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/measured-recorded-branch/recorded_branch_precision_fixed_v1.json",
+  "trades": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/measured-recorded-branch/regime_root_pulse_branch_real_trades_v1.jsonl",
+  "strategies": 5,
+  "trade_rows": 300
+}

@@ -1,0 +1,10 @@
+PASS schema_materialized=true
+PASS crosswalk_materialized=true
+PASS root_axis=RootTaxonomyV3
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS fresh_calibration_rerun=false
+GATE blocked_missing_required_inputs
+ACCEPTED_95_PRIOR CrisisStress
+MISSING_95 BullExpansion,BearExpansion,Consolidation,Manipulation,TransitionRecovery
+MANIPULATION_INPUT_STATE missing_required_inputs

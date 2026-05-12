@@ -1,0 +1,4 @@
+Dataset URL: https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026
+License(s): apache-2.0
+Downloading stock-market-regimes-20002026.zip to /tmp/ict-engine-kaggle-stock-regimes-current-20260512T053505
+

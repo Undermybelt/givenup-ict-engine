@@ -1,0 +1,14 @@
+PASS run_id=20260511T234938+0800-codex-board-b-crisis-crowded-suppression-sibling-v1
+PASS nursery_status=incubation_only
+PASS source_crisis_branch_rc_spa_available
+PASS source_crisis_trades=532
+PASS pre_bayes_gate=pass_neutralized
+PASS execution_candidate_ready=True
+PASS ranker_consumed_by_execution_tree=True
+PASS execution_tree_branch=block_crowded
+PASS execution_tree_gate=blocked
+PASS current_context_range_wide=True
+PASS sibling_action_result=no_trade
+PASS promotion_allowed=False
+PASS runtime_code_changed=False
+PASS thresholds_relaxed=False

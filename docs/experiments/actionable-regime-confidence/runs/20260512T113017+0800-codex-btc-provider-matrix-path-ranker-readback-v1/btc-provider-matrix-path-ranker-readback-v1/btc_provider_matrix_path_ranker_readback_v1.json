@@ -1,0 +1,116 @@
+{
+  "run_id": "20260512T113017+0800-codex-btc-provider-matrix-path-ranker-readback-v1",
+  "source_roots": {
+    "six_provider_btc_matrix_probe": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1",
+    "provider_data_prebayes_pathranker_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1",
+    "symbol_normalized_path_ranker_bridge": "docs/experiments/actionable-regime-confidence/runs/20260512T112954+0800-codex-111403-symbol-normalized-path-ranker-bridge-v1"
+  },
+  "provider_matrix_readback": {
+    "same_root_aq_provider_authority": false,
+    "provider_layer_only": true,
+    "providers": {
+      "yfinance": {
+        "provider_status_ready": true,
+        "data_acquired": true,
+        "rows": 983,
+        "symbol": "BTC-USD",
+        "interval": "1h"
+      },
+      "tradingview_mcp": {
+        "provider_status_ready": false,
+        "data_acquired": false,
+        "default_fetch_exit": 1,
+        "local_stdio_fetch_exit": 1,
+        "blocker": "BINANCE:BTCUSDT get_ohlcv failed; local stdio returned HTTP 404"
+      },
+      "ibkr": {
+        "provider_status_ready": false,
+        "qualified_contract": true,
+        "trades_rows": 0,
+        "aggtrades_rows": 30,
+        "blocker": "repo provider-status runtime unhealthy; TRADES request returned error 10299 and AGGTRADES retry produced provider-layer rows only"
+      },
+      "kraken": {
+        "provider_status_ready": false,
+        "data_acquired": true,
+        "rows": 721,
+        "symbol": "XBTUSD",
+        "interval": "1h"
+      },
+      "binance": {
+        "provider_status_ready": false,
+        "data_acquired": true,
+        "rows": 985,
+        "symbol": "BTCUSDT",
+        "interval": "1h"
+      },
+      "bybit": {
+        "provider_status_ready": false,
+        "data_acquired": true,
+        "rows": 985,
+        "symbol": "BTCUSDT",
+        "interval": "1h"
+      }
+    }
+  },
+  "provider_data_prebayes_pathranker_readback": {
+    "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+    "provider_data_rows": {
+      "1d": 42,
+      "4h": 247,
+      "1h": 985
+    },
+    "pre_bayes_gate": "pass_neutralized",
+    "canonical_structural_regime": "range",
+    "canonical_structural_confidence": 0.5345590139527494,
+    "corrected_export_exit": 0,
+    "raw_scored_mature_rows": 86,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 85,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 43,
+    "observation_validation_min_rows": 30,
+    "trainer_artifact_ready": true,
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "execution_candidate_ready": false,
+    "execution_candidate_actionable": false,
+    "workflow_closed_loop_status": "fail_closed",
+    "remaining_blocker": "user_selected_historical_data_missing"
+  },
+  "symbol_normalized_path_ranker_bridge": {
+    "symbol": "B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610",
+    "normalized_real_trades_ingested": 146,
+    "pre_bayes_policy_present": false,
+    "target_rows": 2,
+    "target_history_rows": 148,
+    "raw_scored_mature_rows": 147,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 146,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 146,
+    "observation_validation_min_rows": 30,
+    "trainer_artifact_ready": true,
+    "trainer_artifact_model_family": "catboost",
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "runtime_active_match_count": 2,
+    "execution_candidate_ready": false,
+    "execution_candidate_actionable": false,
+    "execution_candidate_review_status": "observe",
+    "workflow_closed_loop_status": "fail_closed"
+  },
+  "decision": {
+    "gate": "btc_provider_matrix_path_ranker_readback_v1=provider_rows_and_path_ranker_validation_repaired_but_same_root_aq_authority_pre_bayes_execution_fail_closed_no_promotion",
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_promoted": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "same_root_six_provider_aq_matrix": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

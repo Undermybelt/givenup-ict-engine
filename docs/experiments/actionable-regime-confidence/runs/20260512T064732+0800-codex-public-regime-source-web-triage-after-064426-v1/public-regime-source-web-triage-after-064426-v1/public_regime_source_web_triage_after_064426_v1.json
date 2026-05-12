@@ -1,0 +1,45 @@
+{
+  "run_id": "20260512T064732+0800-codex-public-regime-source-web-triage-after-064426-v1",
+  "board_sha256_before_artifact": "367a295e6e70dcb55b1619d7bf53afe056aeb87a6a3b5855cbc0ab1fa0b32670",
+  "gate_result": "public_regime_source_web_triage_after_064426_v1=no_public_crisis_or_recency_unlock_no_downstream",
+  "candidate_count": 5,
+  "accepted_candidate_count": 0,
+  "accepted_rows_added": 0,
+  "valid_required_root_unlock": false,
+  "r3_crisis_capable_native_subhour_found": false,
+  "r5_source_panel_recency_found": false,
+  "r6_owner_export_rows_found": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "candidates": [
+    {
+      "candidate": "thesven/fintime-decoder-dataset",
+      "source_url": "https://huggingface.co/datasets/thesven/fintime-decoder-dataset",
+      "decision": "rejected_forecasting_dataset_no_source_regime_labels"
+    },
+    {
+      "candidate": "Sashank-810/crisisnet-dataset",
+      "source_url": "https://huggingface.co/datasets/Sashank-810/crisisnet-dataset",
+      "decision": "rejected_corporate_distress_not_mainregimev2_market_regime"
+    },
+    {
+      "candidate": "FinMultiTime",
+      "source_url": "https://arxiv.org/abs/2506.05019",
+      "decision": "rejected_multimodal_forecasting_not_source_label_packet"
+    },
+    {
+      "candidate": "FinRL-Meta",
+      "source_url": "https://papers.nips.cc/paper_files/paper/2022/file/0bf54b80686d2c4dc0808c2e98d430f7-Paper-Datasets_and_Benchmarks.pdf",
+      "decision": "rejected_platform_data_source_not_regime_label_unlock"
+    },
+    {
+      "candidate": "mafaqbhatti/stock-market-regimes-20002026",
+      "source_url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+      "decision": "rejected_prior_known_daily_panel_no_new_unlock_in_this_slice"
+    }
+  ]
+}

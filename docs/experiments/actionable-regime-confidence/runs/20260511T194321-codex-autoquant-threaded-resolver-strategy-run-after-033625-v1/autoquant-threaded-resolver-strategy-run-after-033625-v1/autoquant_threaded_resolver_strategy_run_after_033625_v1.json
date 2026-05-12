@@ -1,0 +1,80 @@
+{
+  "run_id": "20260511T194321-codex-autoquant-threaded-resolver-strategy-run-after-033625-v1",
+  "gate_result": "autoquant_threaded_resolver_strategy_run_after_033625_v1=threaded_resolver_backtest_succeeded_three_strategies_diagnostic_no_source_control_no_promotion",
+  "autoquant_root": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant/.deps/auto-quant",
+  "threaded_resolver_patch_root": "docs/experiments/actionable-regime-confidence/runs/20260512T022552-codex-autoquant-threaded-dns-prepare-probe-v1/scripts",
+  "contrast_default_run": {
+    "run_id": "20260511T194206-codex-autoquant-prepared-strategy-run-after-033625-v1",
+    "exit_code": 1,
+    "result": "default_aiodns_path_failed_before_backtest",
+    "successful_backtests": 0,
+    "failed_backtests": 3
+  },
+  "threaded_run": {
+    "exit_code": 0,
+    "successful_backtests": 3,
+    "failed_backtests": 0,
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T194321-codex-autoquant-threaded-resolver-strategy-run-after-033625-v1/command-output/autoquant_threaded_run.stdout.txt",
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T194321-codex-autoquant-threaded-resolver-strategy-run-after-033625-v1/command-output/autoquant_threaded_run.stderr.txt"
+  },
+  "strategies": [
+    {
+      "name": "BTCLeaderBreakV4",
+      "trades": 600,
+      "win_rate_pct": 31.8333,
+      "total_profit_pct": 42.46,
+      "sharpe": 0.9415,
+      "sortino": 4.9623,
+      "calmar": 7.7829,
+      "max_drawdown_pct": -5.7458,
+      "profit_factor": 1.7469,
+      "robust_sharpe": 0.9415,
+      "profit_floor": "PASS",
+      "min_position_size": "PASS"
+    },
+    {
+      "name": "MomentumMTFConfluence",
+      "trades": 854,
+      "win_rate_pct": 34.7775,
+      "total_profit_pct": 53.24,
+      "sharpe": 0.3993,
+      "sortino": 1.076,
+      "calmar": 2.419,
+      "max_drawdown_pct": -23.1801,
+      "profit_factor": 1.1682,
+      "robust_sharpe": 0.3993,
+      "profit_floor": "PASS",
+      "min_position_size": "PASS"
+    },
+    {
+      "name": "VolBreakoutSized",
+      "trades": 1221,
+      "win_rate_pct": 32.8419,
+      "total_profit_pct": 25.02,
+      "sharpe": 1.339,
+      "sortino": 7.3012,
+      "calmar": 6.1958,
+      "max_drawdown_pct": -4.2529,
+      "profit_factor": 1.4751,
+      "robust_sharpe": 1.339,
+      "profit_floor": "PASS",
+      "min_position_size": "FAIL"
+    }
+  ],
+  "source_control_status": {
+    "r6_owner_export_root_present": false,
+    "native_subhour_source_label_root_present": false,
+    "source_panel_recency_extension_root_present": false,
+    "flip_controls_approved": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Continue only from verifier-native owner/export rows, explicit FLIP approval/source-owned controls, or genuinely source-owned cross-timeframe MainRegimeV2 exports before verifier rerun, canonical merge, and downstream promotion."
+}

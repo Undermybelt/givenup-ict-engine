@@ -1,0 +1,16 @@
+PASS gate_result=true
+PASS inferred_exit_code_1=true
+PASS aiodns_dns_error_true=true
+PASS exchange_not_available_api_binance_true=true
+PASS threaded_resolver_workaround_effective_false=true
+PASS data_ready_false=true
+PASS accepted_rows_added_0=true
+PASS canonical_merge_allowed_false=true
+PASS downstream_promotion_rerun_allowed_false=true
+PASS strict_full_objective_false=true
+PASS trade_usable_false=true
+PASS update_goal_false=true
+PASS runtime_code_changed_false=true
+PASS source_roots_mutated_false=true
+PASS thresholds_relaxed_false=true
+PASS raw_data_committed_false=true

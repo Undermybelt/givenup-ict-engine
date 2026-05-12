@@ -1,0 +1,5 @@
+split_id,rows,wins,losses,win_rate,wilson_95_low,wilson_95_high,total_pnl,avg_pnl,open_start_utc,open_end_utc,provider_count,branch_count,source_timeframe_count,symbol_count,meets_min_context_rows
+chronological_q1,60,30,30,0.5,0.37735,0.62265,856.565513,14.276092,2026-04-05T03:00:00+00:00,2026-04-16T15:00:00+00:00,6,2,1,1,True
+chronological_q2,59,24,35,0.40678,0.29089,0.534066,-4.335955,-0.073491,2026-04-16T15:00:00+00:00,2026-04-23T15:00:00+00:00,6,2,1,1,True
+chronological_q3,59,3,56,0.050847,0.017443,0.139165,-977.165008,-16.562119,2026-04-23T23:00:00+00:00,2026-04-30T08:00:00+00:00,6,2,1,1,True
+chronological_q4,59,24,35,0.40678,0.29089,0.534066,-59.063304,-1.001073,2026-04-30T13:00:00+00:00,2026-05-11T16:00:00+00:00,6,2,1,1,True

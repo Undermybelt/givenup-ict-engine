@@ -1,0 +1,51 @@
+{
+  "run_id": "20260511T091142+0800-codex-main-regime-v5-web-research-taxonomy",
+  "run_type": "web_source_refresh_taxonomy_reset",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "accepted_gate": "none_for_MainRegimeV5_taxonomy_reset_no_calibration",
+  "accepted_95_roots_added": 0,
+  "active_candidate_taxonomy": "MainRegimeV5",
+  "candidate_main_classes": [
+    "BullExpansion",
+    "BearExpansion",
+    "ConsolidationRange",
+    "CrisisStress",
+    "ManipulationLiquidityEngineering",
+    "TransitionAccumulationDistribution",
+    "CrossAssetMacroRotation",
+    "UnknownOrMixed"
+  ],
+  "mandatory_roots_next_calibration": [
+    "BullExpansion",
+    "BearExpansion",
+    "ConsolidationRange",
+    "CrisisStress",
+    "ManipulationLiquidityEngineering",
+    "TransitionAccumulationDistribution"
+  ],
+  "optional_overlays_until_proven": [
+    "CrossAssetMacroRotation"
+  ],
+  "superseded_accounting": [
+    "MainRegimeV2",
+    "MainRegimeV3",
+    "MainRegimeV4"
+  ],
+  "sources": [
+    "https://ideas.repec.org/a/jae/japmet/v18y2003i1p23-46.html",
+    "https://doi.org/10.2307/1912559",
+    "https://doi.org/10.1093/rfs/15.4.1137",
+    "https://github.com/hmmlearn/hmmlearn",
+    "https://github.com/deepcharles/ruptures",
+    "https://arxiv.org/abs/2309.15383",
+    "https://github.com/Yizhan-Oliver-Shu/jump-models",
+    "https://arxiv.org/abs/1811.10109",
+    "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+    "https://arxiv.org/abs/2508.17086"
+  ],
+  "gate_result": "blocked_taxonomy_reset_only_no_new_95",
+  "next_action": "materialize MainRegimeV5 schema/crosswalk and rerun unchanged 95-99 chronological calibration across full market/timeframe coverage"
+}

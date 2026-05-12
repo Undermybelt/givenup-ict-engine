@@ -1,0 +1,52 @@
+{
+  "accepted_rows_added": 0,
+  "approval_package": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "present": true
+  },
+  "canonical_merge": false,
+  "direct_verifier_run": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "local_source_control_manual_review_after_073755_v1=no_new_required_source_control_unlock",
+  "input_roots": {
+    "r3_possible_file_manual_review": "docs/experiments/actionable-regime-confidence/runs/20260512T074116+0800-codex-r3-possible-file-manual-review-after-073755-v1",
+    "source_control_sweep": "docs/experiments/actionable-regime-confidence/runs/20260512T073755+0800-codex-local-required-source-control-sweep-after-073650-v1"
+  },
+  "r3_native_subhour": {
+    "crisis_absent": true,
+    "dataset_id": "sujinwo/tsie-market-regime-dataset",
+    "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+    "present": true,
+    "unlock": false
+  },
+  "r5_recency": {
+    "path": "/tmp/ict-engine-source-panel-recency-extension",
+    "present": false,
+    "unlock": false
+  },
+  "r6_owner_export": {
+    "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "present": false,
+    "unlock": false
+  },
+  "recent_local_candidates": {
+    "candidate_count": 84,
+    "required_filename_count": 2,
+    "unlock_like_count": 2
+  },
+  "source_control_evidence_acquired": false,
+  "source_label_equivalence": {
+    "path": "/tmp/ict-engine-source-label-equivalence-intake",
+    "present": true,
+    "target_root": false,
+    "unlock": false
+  },
+  "split_calibration_run": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

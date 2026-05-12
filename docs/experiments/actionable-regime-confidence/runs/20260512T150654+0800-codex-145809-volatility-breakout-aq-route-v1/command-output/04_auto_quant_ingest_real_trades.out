@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "9ed49ddb8fa04383",
+  "dry_run": false,
+  "feedback_records_inserted": 348,
+  "force": true,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_VOL_BREAKOUT_150654_20260512T072116.613436000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades",
+  "symbol": "B2R_VOL_BREAKOUT_150654",
+  "trades_applied": 348,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/volatility_breakout_real_trades.jsonl",
+  "trades_total": 348
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T005019-codex-board-b-220646-explicit-historical-mtf-probe-v1/state_explicit_historical_mtf_probe_v1/auto-quant/.deps/auto-quant/prepare.py", line 34, in <module>
+    from freqtrade.commands.data_commands import start_download_data  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'freqtrade'

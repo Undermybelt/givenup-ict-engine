@@ -1,0 +1,172 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_artifact": "31ea5b9fb4ec086586d91075b9e452e8b19e392c16f46de7decdc746e74fbca4",
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "blocker": "",
+      "evidence": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "requirement": "board_a_authoritative_file",
+      "status": "covered"
+    },
+    {
+      "blocker": "No valid R6 owner/export, R5 recency, or Crisis-capable R3 source/control root.",
+      "evidence": "Latest post-080906/0815xx/081705 source-control routes add zero accepted rows and no valid required root.",
+      "requirement": "all_regimes_95_confidence",
+      "status": "blocked"
+    },
+    {
+      "blocker": "Source/control unlock absent.",
+      "evidence": "No accepted cross-timeframe MainRegimeV2 source export or verifier-native Crisis-capable R3 rows in latest assertions.",
+      "requirement": "cross_market_cross_timeframe_validation",
+      "status": "blocked"
+    },
+    {
+      "blocker": "Provider reachability cannot substitute for source/control evidence.",
+      "evidence": "Earlier provider/runtime readbacks exist; current slice checked source/control and credential presence only.",
+      "requirement": "ibkr_tradingview_yfinance_kraken_provider_use",
+      "status": "partial"
+    },
+    {
+      "blocker": "No canonical source/control unlock.",
+      "evidence": "Earlier Auto-Quant readbacks exist, but selected-data promotion remains false in latest assertions.",
+      "requirement": "auto_quant_operated",
+      "status": "partial"
+    },
+    {
+      "blocker": "Direct verifier/split calibration/canonical merge input is invalid until source/control unlock.",
+      "evidence": "Latest assertions keep canonical_merge=false and downstream_promotion_rerun=false.",
+      "requirement": "filter_prebayes_bbn_catboost_execution_tree",
+      "status": "blocked"
+    },
+    {
+      "blocker": "Owner/export or explicit FLIP-control approval still absent.",
+      "evidence": "Assertion roots checked 6; missing assertions 0; any_unlock=False.",
+      "requirement": "source_control_unlock",
+      "status": "blocked"
+    },
+    {
+      "blocker": "",
+      "evidence": "This audit writes a new run root and does not edit cursor or prior sections.",
+      "requirement": "multi_agent_append_only",
+      "status": "covered"
+    },
+    {
+      "blocker": "Objective incomplete.",
+      "evidence": "any_update_goal=False; strict_full_objective=false in latest route assertions.",
+      "requirement": "update_goal_allowed",
+      "status": "blocked"
+    }
+  ],
+  "credential_hint_names_present": [],
+  "credential_hint_names_present_count": 0,
+  "downstream_promotion_rerun": false,
+  "gate_result": "current_objective_audit_after_081705_v1=not_complete_source_control_unlock_absent_no_downstream_promotion",
+  "missing_assertions": [],
+  "observed_at": "2026-05-12T00:23:29.246385+00:00",
+  "route_assertions": [
+    {
+      "accepted_rows_added": "0",
+      "gate": "openalex_semantic_pwc_source_route_after_080700_v1=no_required_source_control_unlock",
+      "name": "080906_openalex_semantic_pwc",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T080906+0800-codex-openalex-semantic-pwc-source-route-after-080700-v1/checks/openalex_semantic_pwc_source_route_after_080700_v1_assertions.out",
+      "present": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "gate": "source_control_arrival_poll_after_080837_v1=no_new_required_root_no_unlock",
+      "name": "081155_arrival_poll",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T081155+0800-codex-source-control-arrival-poll-after-080837-v1/checks/source_control_arrival_poll_after_080837_v1_assertions.out",
+      "present": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "gate": "current_objective_audit_after_080906_v1=not_complete_latest_public_routes_no_required_unlock_no_downstream_promotion",
+      "name": "081227_objective_audit",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T081227+0800-codex-current-objective-audit-after-080906-v1/checks/current_objective_audit_after_080906_v1_assertions.out",
+      "present": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "gate": "courtlistener_recap_sibling_attachment_probe_after_080906_v1=no_new_public_control_attachment_unlock",
+      "name": "081323_recap_sibling",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T081323+0800-codex-courtlistener-recap-sibling-attachment-probe-after-080906-v1/checks/courtlistener_recap_sibling_attachment_probe_after_080906_v1_assertions.out",
+      "present": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "gate": "r6_courtlistener_recap_control_route_after_080950_v1=public_recap_positive_and_context_only_no_source_owned_normal_controls",
+      "name": "081522_recap_control",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T081522+0800-codex-r6-courtlistener-recap-control-route-after-080950-v1/checks/r6_courtlistener_recap_control_route_after_080950_v1_assertions.out",
+      "present": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "gate": "courtlistener_recap_sibling_fast_probe_after_081323_v1=no_new_public_control_attachment_unlock",
+      "name": "081705_recap_fast",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T081705+0800-codex-courtlistener-recap-sibling-fast-probe-after-081323-v1/checks/courtlistener_recap_sibling_fast_probe_after_081323_v1_assertions.out",
+      "present": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  ],
+  "run_id": "20260512T082240+0800-codex-current-objective-audit-after-081705-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_roots": [
+    {
+      "file_count_sampled": 0,
+      "name": "r6_owner_export",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "sample_files": []
+    },
+    {
+      "file_count_sampled": 0,
+      "name": "r5_recency",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false,
+      "sample_files": []
+    },
+    {
+      "file_count_sampled": 2,
+      "name": "r3_native_subhour",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": true,
+      "sample_files": [
+        "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+        "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+      ]
+    },
+    {
+      "file_count_sampled": 2,
+      "name": "source_label_equivalence",
+      "path": "/private/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "sample_files": [
+        "/private/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+        "/private/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv"
+      ]
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

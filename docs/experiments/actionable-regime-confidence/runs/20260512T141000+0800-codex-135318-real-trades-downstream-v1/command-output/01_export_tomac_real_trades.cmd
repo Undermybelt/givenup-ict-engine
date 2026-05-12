@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python docs/experiments/actionable-regime-confidence/runs/20260512T135318+0800-codex-long-history-es-nq-aq-staging-v1/scripts/export_tomac_real_trades.py --output-dir docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived

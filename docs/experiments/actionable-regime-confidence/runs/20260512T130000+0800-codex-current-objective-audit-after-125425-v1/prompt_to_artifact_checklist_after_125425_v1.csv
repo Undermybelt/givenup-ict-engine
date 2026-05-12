@@ -1,0 +1,15 @@
+requirement,evidence,status
+Branch-rooted regime/factor contract,"Board B Root-First Profit Factor Contract",covered
+Negative evidence attribution contract,"Board B Negative Evidence Attribution Contract and Immediate priority lock",covered
+Append-only multi-agent safety,"125425 Board B section says Current Cursor not edited and original 124245 state untouched",covered
+Auto-Quant and ict-engine chain exercised,"124245 parent and 125425 child command outputs",partial
+IBKR provider row,"125851 provider-status ibkr: configured_runtime_unhealthy with gateway reachable",fail_closed
+TradingViewRemix provider row,"125851 provider-status tradingview_mcp: connectivity probe failed",fail_closed
+yfinance provider row,"125851 provider-status yfinance: ready",covered
+Kraken provider row,"125851 provider-status kraken_public: dependency unhealthy; kraken_cli local runtime ready",partial_fail_closed
+Provider-provenanced profitability packet,"125425 uses local feather replay only and no new provider fetch",missing
+Mature rooted observations,"125425 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30",missing
+CatBoost runtime consumption,"125425 runtime_selection_status=enabled_candidate_set_ready runtime_matches=3 score_model_family=catboost",covered_local
+BBN/likelihood training eligibility,"125425 is chain_contract_negative_sample quality_weight=0 for market/factor learning",blocked
+Execution-tree non-observe release,"125425 has no calibrated path probability no execution gate status and user_selected_historical_data_missing",missing
+Promotion readiness,"provider authority mature observations calibration execution release all missing",not_complete

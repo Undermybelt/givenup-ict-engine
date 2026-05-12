@@ -1,0 +1,26 @@
+{
+  "accepted_schema_rows": 237,
+  "checked_rows": 237,
+  "market_factor_training_scope": "isolated_downstream_readback_only",
+  "missing_by_field": {
+    "auto_quant_run_id": 0,
+    "bbn_posterior": 0,
+    "catboost_path_ranker_label": 0,
+    "execution_tree_decision": 0,
+    "failure_reason": 0,
+    "main_regime": 0,
+    "pre_bayes_filter_state": 0,
+    "profit_factor": 0,
+    "provider_provenance": 0,
+    "quality_weight": 0,
+    "regime_profit_branch_path": 0,
+    "structural_feedback": 0,
+    "sub_regime": 0,
+    "sub_sub_regime_or_profit_factor": 0
+  },
+  "promotion_allowed": false,
+  "rejected_rows": 0,
+  "stale_or_wrong_auto_quant_run_id_rows": 0,
+  "stale_symbol_namespace_rows": 0,
+  "trade_usable": false
+}

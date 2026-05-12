@@ -1,0 +1,49 @@
+{
+  "schema_version": "purged-cv-backtest-guard/v1",
+  "label_count": 1221,
+  "fold_count": 4,
+  "requested_fold_count": 4,
+  "embargo_bars": 24,
+  "nb_trials": 30,
+  "pbo": 0.75,
+  "oos_sharpe_lcb": -0.10839150202941475,
+  "oos_sharpe_mean": 1.355348297872714,
+  "leakage_flags": [
+    "overlapping_labels"
+  ],
+  "purged_cv_gate": "reject",
+  "folds": [
+    {
+      "fold_index": 0,
+      "train_count": 916,
+      "test_count": 305,
+      "is_sharpe": 1.8399633988237836,
+      "oos_sharpe": 2.3925634028513922,
+      "oos_return_R": 6.6216696395447725
+    },
+    {
+      "fold_index": 1,
+      "train_count": 913,
+      "test_count": 305,
+      "is_sharpe": 3.0504819214775534,
+      "oos_sharpe": -0.10839150202941475,
+      "oos_return_R": -0.08379944445922041
+    },
+    {
+      "fold_index": 2,
+      "train_count": 911,
+      "test_count": 306,
+      "is_sharpe": 2.555414812040435,
+      "oos_sharpe": 1.6863192641325095,
+      "oos_return_R": 1.7724739638699611
+    },
+    {
+      "fold_index": 3,
+      "train_count": 914,
+      "test_count": 305,
+      "is_sharpe": 2.685732471265349,
+      "oos_sharpe": 1.4509020265363688,
+      "oos_return_R": 1.076833682570892
+    }
+  ]
+}

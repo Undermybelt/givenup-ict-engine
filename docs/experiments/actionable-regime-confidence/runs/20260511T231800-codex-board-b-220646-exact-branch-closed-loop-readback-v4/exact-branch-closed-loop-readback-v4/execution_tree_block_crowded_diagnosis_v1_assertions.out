@@ -1,0 +1,12 @@
+exact_branch_path_reached_structural_bundle=true
+pre_bayes_gate_status=pass_neutralized
+execution_candidate_ready=true
+path_ranker_score_visible_to_execution_tree=true
+path_ranker_score_used_by_execution_tree=true
+execution_tree_gate_status=blocked
+execution_tree_branch=block_crowded
+execution_readiness_below_observe_threshold=true
+market_state_range_wide=true
+branch_path_preservation_gap=false
+catboost_routing_gap=false
+promotion_allowed=false

@@ -1,0 +1,20 @@
+{
+  "accepted_95_roots_from_this_run": [],
+  "active_root_accounting_after_gate": {
+    "accepted_95_roots": [
+      "Crisis"
+    ],
+    "missing_95_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ]
+  },
+  "blocker": "Strict observed-feature model over external TSIE parent-mapped labels did not pass unchanged 95% held-out and context-breadth gates.",
+  "gate": "blocked_tsie_parent_root_labeled_gate_below_95",
+  "raw_data_committed_to_repo": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

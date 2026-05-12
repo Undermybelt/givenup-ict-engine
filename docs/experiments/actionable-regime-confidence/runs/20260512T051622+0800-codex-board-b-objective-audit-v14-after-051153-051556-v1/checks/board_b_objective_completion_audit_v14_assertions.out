@@ -1,0 +1,15 @@
+PASS strict_full_objective=false
+PASS goal_complete=false
+PASS promotion_allowed=false
+PASS update_goal=false
+PASS blocker=user_selected_historical_data_missing
+PASS current_cursor_unchanged=20260512T034002+0800-codex-board-b-nq-cost-crisis-repair-v3-downstream-combined-v1
+PASS latest_050609_count_once_non_promoting=true
+PASS post_v13_051145_runtime_status_visibility_only=true
+PASS post_v13_051247_owner_routes_no_local_unlock=true
+PASS post_v13_051153_provider_reachability_only=true
+PASS post_v13_051153_ibkr_spy_rows21_provider_only=true
+PASS post_v13_051556_config_rebase_plumbing_only=true
+PASS no_explicit_one_of_three_user_selection=true
+PASS no_selected_data_auto_quant_training_after_user_selection=true
+PASS no_nonzero_mature_rooted_selected_observations=true

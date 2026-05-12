@@ -1,0 +1,612 @@
+{
+  "auto_quant_pinned_ref": "",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "config_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/feasible-window-same-root-aq-packet-v1/feasible_window_same_root_aq_packet_v1.json",
+  "exported_at": "2026-05-12T09:59:37.447242+00:00",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/feasible-window-same-root-aq-packet-v1/feasible_window_same_root_aq_packet_v1.md",
+  "manifest_version": "1.0",
+  "strategies": [
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-yfinance/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_yfinance_ProviderCryptoMomentumStateV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoMomentumStateV1"
+      },
+      "name": "ProviderCryptoMomentumStateV1_yfinance_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -2.541714468670095,
+          "max_drawdown_pct": -26.685182254024674,
+          "profit_factor": 0.6030737112508623,
+          "sharpe": -1.569479022993312,
+          "sortino": -2.375297737315518,
+          "total_profit_pct": -25.17,
+          "trade_count": 317,
+          "win_rate_pct": 23.974763406940063
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=17291;provider_symbol=BTC-USD",
+      "validation_metrics": {
+        "calmar": -2.541714468670095,
+        "max_drawdown_pct": -26.685182254024674,
+        "profit_factor": 0.6030737112508623,
+        "sharpe": -1.569479022993312,
+        "sortino": -2.375297737315518,
+        "total_profit_pct": -25.17,
+        "trade_count": 317,
+        "win_rate_pct": 23.974763406940063
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-yfinance/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_yfinance_ProviderCryptoPullbackRevertV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoPullbackRevertV1"
+      },
+      "name": "ProviderCryptoPullbackRevertV1_yfinance_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": 3.250738758779843,
+          "max_drawdown_pct": -3.9367600472982005,
+          "profit_factor": 1.2059353117408125,
+          "sharpe": 0.3097144485075514,
+          "sortino": 0.7663066231887183,
+          "total_profit_pct": 4.75,
+          "trade_count": 145,
+          "win_rate_pct": 46.89655172413793
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=17291;provider_symbol=BTC-USD",
+      "validation_metrics": {
+        "calmar": 3.250738758779843,
+        "max_drawdown_pct": -3.9367600472982005,
+        "profit_factor": 1.2059353117408125,
+        "sharpe": 0.3097144485075514,
+        "sortino": 0.7663066231887183,
+        "total_profit_pct": 4.75,
+        "trade_count": 145,
+        "win_rate_pct": 46.89655172413793
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-ibkr_aggtrades/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_ibkr_aggtrades_ProviderCryptoMomentumStateV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoMomentumStateV1"
+      },
+      "name": "ProviderCryptoMomentumStateV1_ibkr_aggtrades_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -5.143285192844291,
+          "max_drawdown_pct": -22.364740565267315,
+          "profit_factor": 0.5732222166410332,
+          "sharpe": -3.3248740309286307,
+          "sortino": -6.8749163378401414,
+          "total_profit_pct": -21.68,
+          "trade_count": 276,
+          "win_rate_pct": 23.91304347826087
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=6930;provider_symbol=BTC.PAXOS",
+      "validation_metrics": {
+        "calmar": -5.143285192844291,
+        "max_drawdown_pct": -22.364740565267315,
+        "profit_factor": 0.5732222166410332,
+        "sharpe": -3.3248740309286307,
+        "sortino": -6.8749163378401414,
+        "total_profit_pct": -21.68,
+        "trade_count": 276,
+        "win_rate_pct": 23.91304347826087
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-ibkr_aggtrades/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_ibkr_aggtrades_ProviderCryptoPullbackRevertV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoPullbackRevertV1"
+      },
+      "name": "ProviderCryptoPullbackRevertV1_ibkr_aggtrades_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -2.8465690457186805,
+          "max_drawdown_pct": -8.692035783707038,
+          "profit_factor": 0.8472423442015747,
+          "sharpe": -0.571672848949126,
+          "sortino": -1.039280924800968,
+          "total_profit_pct": -4.66,
+          "trade_count": 150,
+          "win_rate_pct": 50.0
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=6930;provider_symbol=BTC.PAXOS",
+      "validation_metrics": {
+        "calmar": -2.8465690457186805,
+        "max_drawdown_pct": -8.692035783707038,
+        "profit_factor": 0.8472423442015747,
+        "sharpe": -0.571672848949126,
+        "sortino": -1.039280924800968,
+        "total_profit_pct": -4.66,
+        "trade_count": 150,
+        "win_rate_pct": 50.0
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-kraken_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_kraken_public_ProviderCryptoMomentumStateV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoMomentumStateV1"
+      },
+      "name": "ProviderCryptoMomentumStateV1_kraken_public_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -17.834607184637115,
+          "max_drawdown_pct": -4.71418475030001,
+          "profit_factor": 0.7440064020125409,
+          "sharpe": -2.303120493540084,
+          "sortino": -7.535313006298499,
+          "total_profit_pct": -3.48,
+          "trade_count": 76,
+          "win_rate_pct": 31.57894736842105
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=1993;provider_symbol=PF_XBTUSD",
+      "validation_metrics": {
+        "calmar": -17.834607184637115,
+        "max_drawdown_pct": -4.71418475030001,
+        "profit_factor": 0.7440064020125409,
+        "sharpe": -2.303120493540084,
+        "sortino": -7.535313006298499,
+        "total_profit_pct": -3.48,
+        "trade_count": 76,
+        "win_rate_pct": 31.57894736842105
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-kraken_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_kraken_public_ProviderCryptoPullbackRevertV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoPullbackRevertV1"
+      },
+      "name": "ProviderCryptoPullbackRevertV1_kraken_public_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -24.183510347522553,
+          "max_drawdown_pct": -2.246712216699998,
+          "profit_factor": 0.611492759978,
+          "sharpe": -1.5387890042241286,
+          "sortino": -2.8957325975086974,
+          "total_profit_pct": -2.25,
+          "trade_count": 30,
+          "win_rate_pct": 33.33333333333333
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=1993;provider_symbol=PF_XBTUSD",
+      "validation_metrics": {
+        "calmar": -24.183510347522553,
+        "max_drawdown_pct": -2.246712216699998,
+        "profit_factor": 0.611492759978,
+        "sharpe": -1.5387890042241286,
+        "sortino": -2.8957325975086974,
+        "total_profit_pct": -2.25,
+        "trade_count": 30,
+        "win_rate_pct": 33.33333333333333
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-binance_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_binance_public_ProviderCryptoMomentumStateV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoMomentumStateV1"
+      },
+      "name": "ProviderCryptoMomentumStateV1_binance_public_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -2.6421943844021576,
+          "max_drawdown_pct": -44.1427787292021,
+          "profit_factor": 0.5637237561972133,
+          "sharpe": -3.7953903216129747,
+          "sortino": -6.981728160474456,
+          "total_profit_pct": -43.34,
+          "trade_count": 624,
+          "win_rate_pct": 23.076923076923077
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=46955;provider_symbol=BTCUSDT",
+      "validation_metrics": {
+        "calmar": -2.6421943844021576,
+        "max_drawdown_pct": -44.1427787292021,
+        "profit_factor": 0.5637237561972133,
+        "sharpe": -3.7953903216129747,
+        "sortino": -6.981728160474456,
+        "total_profit_pct": -43.34,
+        "trade_count": 624,
+        "win_rate_pct": 23.076923076923077
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-binance_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_binance_public_ProviderCryptoPullbackRevertV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoPullbackRevertV1"
+      },
+      "name": "ProviderCryptoPullbackRevertV1_binance_public_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -2.6908412921891256,
+          "max_drawdown_pct": -13.253374518700003,
+          "profit_factor": 0.7389778890096554,
+          "sharpe": -0.9433509054688197,
+          "sortino": -2.1600190913843003,
+          "total_profit_pct": -13.25,
+          "trade_count": 268,
+          "win_rate_pct": 38.43283582089552
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=46955;provider_symbol=BTCUSDT",
+      "validation_metrics": {
+        "calmar": -2.6908412921891256,
+        "max_drawdown_pct": -13.253374518700003,
+        "profit_factor": 0.7389778890096554,
+        "sharpe": -0.9433509054688197,
+        "sortino": -2.1600190913843003,
+        "total_profit_pct": -13.25,
+        "trade_count": 268,
+        "win_rate_pct": 38.43283582089552
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-bybit_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_bybit_public_ProviderCryptoMomentumStateV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoMomentumStateV1"
+      },
+      "name": "ProviderCryptoMomentumStateV1_bybit_public_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": 48.80542741171871,
+          "max_drawdown_pct": -1.5662364321210493,
+          "profit_factor": 1.288511226299377,
+          "sharpe": 1.8613380661422825,
+          "sortino": 6.197582095303052,
+          "total_profit_pct": 1.48,
+          "trade_count": 34,
+          "win_rate_pct": 41.17647058823529
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=1000;provider_symbol=BTCUSDT",
+      "validation_metrics": {
+        "calmar": 48.80542741171871,
+        "max_drawdown_pct": -1.5662364321210493,
+        "profit_factor": 1.288511226299377,
+        "sharpe": 1.8613380661422825,
+        "sortino": 6.197582095303052,
+        "total_profit_pct": 1.48,
+        "trade_count": 34,
+        "win_rate_pct": 41.17647058823529
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-bybit_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_bybit_public_ProviderCryptoPullbackRevertV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoPullbackRevertV1"
+      },
+      "name": "ProviderCryptoPullbackRevertV1_bybit_public_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -35.150694784855325,
+          "max_drawdown_pct": -2.45058452605016,
+          "profit_factor": 0.45016637432495576,
+          "sharpe": -3.029660604926346,
+          "sortino": -7.339413571371503,
+          "total_profit_pct": -1.71,
+          "trade_count": 17,
+          "win_rate_pct": 23.52941176470588
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=1000;provider_symbol=BTCUSDT",
+      "validation_metrics": {
+        "calmar": -35.150694784855325,
+        "max_drawdown_pct": -2.45058452605016,
+        "profit_factor": 0.45016637432495576,
+        "sharpe": -3.029660604926346,
+        "sortino": -7.339413571371503,
+        "total_profit_pct": -1.71,
+        "trade_count": 17,
+        "win_rate_pct": 23.52941176470588
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-tvr_local_stdio/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_tvr_local_stdio_ProviderCryptoMomentumStateV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoMomentumStateV1"
+      },
+      "name": "ProviderCryptoMomentumStateV1_tvr_local_stdio_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -38.707944337364,
+          "max_drawdown_pct": -1.2860010750999935,
+          "profit_factor": 0.6867694918857996,
+          "sharpe": -1.3130955799102464,
+          "sortino": -3.3899745011579165,
+          "total_profit_pct": -0.65,
+          "trade_count": 10,
+          "win_rate_pct": 40.0
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=720;provider_symbol=BTC-USD(local-stdio)",
+      "validation_metrics": {
+        "calmar": -38.707944337364,
+        "max_drawdown_pct": -1.2860010750999935,
+        "profit_factor": 0.6867694918857996,
+        "sharpe": -1.3130955799102464,
+        "sortino": -3.3899745011579165,
+        "total_profit_pct": -0.65,
+        "trade_count": 10,
+        "win_rate_pct": 40.0
+      }
+    },
+    {
+      "commit": "",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace/same-root-aq-v1/auto-quant-112315-tvr_local_stdio/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "asset_class": "crypto_cross_provider",
+        "base_factor": "feasible_window_six_provider_btc_provider_aq",
+        "created": "2026-05-12T17:21:42+08:00",
+        "expected_regime": "BoardA -> BTC -> feasible_window_six_provider_aq_surface",
+        "factors_used": [
+          "provider_crypto_momentum",
+          "provider_crypto_pullback_reversion",
+          "six_provider_feasible_window_agreement"
+        ],
+        "hypothesis": "Board A BTC 1h feasible-window six-provider AQ evidence packet; provider-backed downstream readback only, not acceptance.",
+        "mutation_id": "172142_tvr_local_stdio_ProviderCryptoPullbackRevertV1",
+        "paradigm": "provider_backed_crypto_regime_probe",
+        "parent": "BoardA_BTC_172142",
+        "status": "provider_backed_auto_quant_downstream_input",
+        "strategy": "ProviderCryptoPullbackRevertV1"
+      },
+      "name": "ProviderCryptoPullbackRevertV1_tvr_local_stdio_172142",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -43.93890378048223,
+          "max_drawdown_pct": -1.385216060634356,
+          "profit_factor": 0.40539240394914555,
+          "sharpe": -1.771019029820702,
+          "sortino": -3.9962817157853667,
+          "total_profit_pct": -0.83,
+          "trade_count": 6,
+          "win_rate_pct": 16.666666666666664
+        }
+      },
+      "status": "ok",
+      "timerange": "provider_rows=720;provider_symbol=BTC-USD(local-stdio)",
+      "validation_metrics": {
+        "calmar": -43.93890378048223,
+        "max_drawdown_pct": -1.385216060634356,
+        "profit_factor": 0.40539240394914555,
+        "sharpe": -1.771019029820702,
+        "sortino": -3.9962817157853667,
+        "total_profit_pct": -0.83,
+        "trade_count": 6,
+        "win_rate_pct": 16.666666666666664
+      }
+    }
+  ],
+  "timeframe": "1h",
+  "validation_errors": []
+}

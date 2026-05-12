@@ -1,0 +1,13 @@
+requirement,evidence,status
+every_regime_calibrated_ge_95,041410 accepted_source_confidence_95_labels empty and all label split Wilson95 gates below 0.95,blocked
+per_regime_qualifying_conditions,no accepted labels so no qualifying conditions can be promoted,blocked
+cross_market_cross_timeframe_validation,041410 heldout_market and heldout_time fail for every label and native_subhour root absent,blocked
+r6_owner_export_controls,fresh owner-export verifier exit 2 missing required files,blocked
+r5_recency_extension,fresh source-panel recency verifier exit 2 missing required files,blocked
+source_label_equivalence,verifier exit 0 schema_ready_unscored with 248440 rows but 041410 no acceptance,diagnostic_only
+providers,040824 TradingView stdio OHLCV diagnostic only and provider promotion remains source-control gated,diagnostic_only
+autoquant,fresh auto_quant_status dependency_ready_data_missing data_ready false,blocked
+pre_bayes_bbn,fresh pre_bayes_status policy soft_evidence bridge and gate null,blocked
+catboost_path_ranking,fresh policy_training_status matched_rows zero and path runtime disabled,blocked
+execution_tree_workflow,fresh workflow execution candidate ready false actionable false observe,blocked
+no_proxy_completion,audit does not count schema/provider/dependency command success as completion,pass

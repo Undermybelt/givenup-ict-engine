@@ -1,0 +1,123 @@
+{
+  "schema_version": "rc-spa/v1",
+  "run_id": "20260511T181445+0800-codex-board-b-volbreakoutsized-branch-rc-spa-v1",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "recipe_id": "VolBreakoutSized",
+  "total_trades": 1221,
+  "test_folds": 4,
+  "min_trades_per_test_fold": 305,
+  "fold_positive_rate": 0.75,
+  "bootstrap_edge_lcb_5pct": 0.0036756015926335084,
+  "pbo": 0.75,
+  "dsr": 0.7229276855338879,
+  "tail_loss_p95_abs": 0.048488467601521944,
+  "tail_loss_budget_abs": 0.1,
+  "max_drawdown_R": 1.0946783502417468,
+  "regime_specificity_ratio": 999.0,
+  "cost_stress_survival": false,
+  "hard_gates": {
+    "accepted_regime_id_present": true,
+    "branch_path_present": true,
+    "root_lookup_coverage_full": true,
+    "min_total_trades": true,
+    "min_test_folds": true,
+    "min_trades_per_test_fold": true,
+    "fold_positive_rate": true,
+    "bootstrap_edge_lcb_5pct": true,
+    "cost_stress_survival": false,
+    "pbo": false,
+    "dsr": true,
+    "tail_loss_p95": true,
+    "regime_specificity_ratio": true,
+    "branch_min_total_trades_for_claimed_roots": false
+  },
+  "failure_reasons": [
+    "cost_stress_survival",
+    "pbo",
+    "branch_min_total_trades_for_claimed_roots"
+  ],
+  "scores": {
+    "edge_score": 0.7351203185267017,
+    "fold_score": 0.75,
+    "depth_score": 1.0,
+    "dsr_score": 0.9036596069173598,
+    "pbo_score": 0.0,
+    "cost_score": 0.0,
+    "drawdown_score": 0.0,
+    "specificity_score": 1.0
+  },
+  "rc_spa": 59.50730047429443,
+  "promotion_level": "reject",
+  "folds": [
+    {
+      "fold_index": 0,
+      "test_count": 305,
+      "net_return_R": 6.6216696395447725,
+      "positive": true,
+      "stressed_2x_cost_net_R": 6.011669639544772,
+      "stressed_positive": true
+    },
+    {
+      "fold_index": 1,
+      "test_count": 305,
+      "net_return_R": -0.08379944445922041,
+      "positive": false,
+      "stressed_2x_cost_net_R": -0.6937994444592209,
+      "stressed_positive": false
+    },
+    {
+      "fold_index": 2,
+      "test_count": 306,
+      "net_return_R": 1.7724739638699611,
+      "positive": true,
+      "stressed_2x_cost_net_R": 1.1604739638699593,
+      "stressed_positive": true
+    },
+    {
+      "fold_index": 3,
+      "test_count": 305,
+      "net_return_R": 1.076833682570892,
+      "positive": true,
+      "stressed_2x_cost_net_R": 0.466833682570892,
+      "stressed_positive": true
+    }
+  ],
+  "branch_summary": {
+    "Bull": {
+      "trade_count": 1050,
+      "win_rate": 0.3419047619047619,
+      "net_return_R": 10.289923326810078,
+      "mean_R": 0.00979992697791438,
+      "bootstrap_edge_lcb_5pct": 0.0053165921202953945,
+      "stressed_2x_cost_net_R": 8.189923326810106,
+      "branch_path": "Bull -> TrendExpansion -> Donchian24Ema4hTrendVolumeVolTarget -> VolBreakoutSized"
+    },
+    "Bear": {
+      "trade_count": 117,
+      "win_rate": 0.23076923076923078,
+      "net_return_R": -0.2658697407596883,
+      "mean_R": -0.0022723909466640024,
+      "bootstrap_edge_lcb_5pct": -0.008877527268663516,
+      "stressed_2x_cost_net_R": -0.4998697407596885,
+      "branch_path": "Bear -> BearReliefBreakout -> Donchian24Ema4hTrendVolumeVolTarget -> VolBreakoutSized"
+    },
+    "Sideways": {
+      "trade_count": 44,
+      "win_rate": 0.3181818181818182,
+      "net_return_R": -0.44167104224987236,
+      "mean_R": -0.010037978232951644,
+      "bootstrap_edge_lcb_5pct": -0.01661261094009827,
+      "stressed_2x_cost_net_R": -0.5296710422498725,
+      "branch_path": "Sideways -> RangeBreakoutAttempt -> Donchian24Ema4hTrendVolumeVolTarget -> VolBreakoutSized"
+    },
+    "Crisis": {
+      "trade_count": 10,
+      "win_rate": 0.1,
+      "net_return_R": -0.19520470227413428,
+      "mean_R": -0.019520470227413426,
+      "bootstrap_edge_lcb_5pct": -0.027661651291983218,
+      "stressed_2x_cost_net_R": -0.2152047022741343,
+      "branch_path": "Crisis -> CrisisBreakoutSuppression -> Donchian24Ema4hTrendVolumeVolTarget -> VolBreakoutSized"
+    }
+  }
+}

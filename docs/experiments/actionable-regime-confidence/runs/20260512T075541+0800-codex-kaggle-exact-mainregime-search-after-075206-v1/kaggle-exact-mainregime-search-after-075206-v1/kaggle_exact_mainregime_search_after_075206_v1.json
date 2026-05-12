@@ -1,0 +1,178 @@
+{
+  "assertions": {
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "exact_mainregimev2_named_hit_present": false,
+    "exact_stock_regime_hit_present": true,
+    "kaggle_cli_all_exit_zero": true,
+    "known_r5_rows_after_cutoff": 0,
+    "mainregimev2_query_returned_rows": false,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "decision": "Exact Kaggle source-route search found only the already-known stock regime dataset for exact Bull/Bear/Sideways/Crisis style queries, no MainRegimeV2 dataset rows, and no post-cutoff R5 rows in the known redownloaded source panel.",
+  "gate_result": "kaggle_exact_mainregime_search_after_075206_v1=existing_stock_regime_only_no_new_source_control_unlock",
+  "known_r5_profile": {
+    "exists": true,
+    "labels": {
+      "Bear": 54939,
+      "Bull": 103766,
+      "Crisis": 29632,
+      "High-volatility": 16,
+      "Sideways": 56668
+    },
+    "max_date": "2026-01-30",
+    "min_date": "2000-01-03",
+    "path": "/tmp/ict-engine-board-a-r5-kaggle-stock-regimes-recency-redownload-v1/stock_market_regimes_2000_2026.csv",
+    "rows": 245021,
+    "rows_after_2026_01_30": 0
+  },
+  "next": "Continue source/control acquisition only.",
+  "queries": [
+    {
+      "command": [
+        "kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "Bull Bear Sideways Crisis",
+        "--csv"
+      ],
+      "exit_code": 0,
+      "query": "Bull Bear Sideways Crisis",
+      "row_count": 1,
+      "rows": [
+        {
+          "downloadCount": "232",
+          "lastUpdated": "2026-02-01 02:25:29.437000",
+          "ref": "mafaqbhatti/stock-market-regimes-20002026",
+          "size": "14239487",
+          "title": "Stock Market Regimes (2000\u20132026)",
+          "usabilityRating": "1.0",
+          "voteCount": "45"
+        }
+      ],
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1/command-output/kaggle_search_bull_bear_sideways_crisis.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1/command-output/kaggle_search_bull_bear_sideways_crisis.stdout.csv"
+    },
+    {
+      "command": [
+        "kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "MainRegimeV2",
+        "--csv"
+      ],
+      "exit_code": 0,
+      "query": "MainRegimeV2",
+      "row_count": 0,
+      "rows": [],
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1/command-output/kaggle_search_mainregimev2.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1/command-output/kaggle_search_mainregimev2.stdout.csv"
+    },
+    {
+      "command": [
+        "kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "stock_market_regimes_2000_2026",
+        "--csv"
+      ],
+      "exit_code": 0,
+      "query": "stock_market_regimes_2000_2026",
+      "row_count": 1,
+      "rows": [
+        {
+          "downloadCount": "232",
+          "lastUpdated": "2026-02-01 02:25:29.437000",
+          "ref": "mafaqbhatti/stock-market-regimes-20002026",
+          "size": "14239487",
+          "title": "Stock Market Regimes (2000\u20132026)",
+          "usabilityRating": "1.0",
+          "voteCount": "45"
+        }
+      ],
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1/command-output/kaggle_search_stock_market_regimes_2000_2026.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1/command-output/kaggle_search_stock_market_regimes_2000_2026.stdout.csv"
+    },
+    {
+      "command": [
+        "kaggle",
+        "datasets",
+        "list",
+        "-s",
+        "Crisis market regime label",
+        "--csv"
+      ],
+      "exit_code": 0,
+      "query": "Crisis market regime label",
+      "row_count": 5,
+      "rows": [
+        {
+          "downloadCount": "552",
+          "lastUpdated": "2026-03-16 11:22:36.463000",
+          "ref": "kanchana1990/world-bank-commodity-price-intelligence-19602026",
+          "size": "2231883",
+          "title": "World Bank Commodity Price Intelligence 1960\u20132026",
+          "usabilityRating": "1.0",
+          "voteCount": "44"
+        },
+        {
+          "downloadCount": "184",
+          "lastUpdated": "2026-03-18 19:20:43.603000",
+          "ref": "kanchana1990/bis-global-debt-securities-intelligence-19622025",
+          "size": "28925723",
+          "title": "BIS Global Debt Securities Intelligence 1962\u20132025",
+          "usabilityRating": "1.0",
+          "voteCount": "31"
+        },
+        {
+          "downloadCount": "43",
+          "lastUpdated": "2026-03-22 21:30:59.527000",
+          "ref": "sergionefedov/big-energy-dataset-gas-solarwind-generation",
+          "size": "5652549",
+          "title": "European Power Markets Dataset (2015\u20132024)",
+          "usabilityRating": "0.9411765",
+          "voteCount": "4"
+        },
+        {
+          "downloadCount": "16",
+          "lastUpdated": "2026-04-15 15:25:28.867000",
+          "ref": "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+          "size": "1655332",
+          "title": "NIFTY 500 Market & Behavior Regime Dataset",
+          "usabilityRating": "0.7647059",
+          "voteCount": "1"
+        },
+        {
+          "downloadCount": "4",
+          "lastUpdated": "2026-05-06 15:14:26.307000",
+          "ref": "svenneawolf/geopolitics-nationfiles-stability-index-nfsi",
+          "size": "1424752",
+          "title": "Geopolitics - NationFiles Stability Index (NFSI)",
+          "usabilityRating": "0.625",
+          "voteCount": "1"
+        }
+      ],
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1/command-output/kaggle_search_crisis_market_regime_label.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1/command-output/kaggle_search_crisis_market_regime_label.stdout.csv"
+    }
+  ],
+  "run_id": "20260512T075541+0800-codex-kaggle-exact-mainregime-search-after-075206-v1",
+  "unique_refs": [
+    "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+    "kanchana1990/bis-global-debt-securities-intelligence-19622025",
+    "kanchana1990/world-bank-commodity-price-intelligence-19602026",
+    "mafaqbhatti/stock-market-regimes-20002026",
+    "sergionefedov/big-energy-dataset-gas-solarwind-generation",
+    "svenneawolf/geopolitics-nationfiles-stability-index-nfsi"
+  ]
+}

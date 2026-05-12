@@ -1,0 +1,1 @@
+target/debug/ict-engine workflow-status --symbol B2R_LOCAL_NONBTC_SPY_USD_MTF_124245 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d --phase structural-ranker-runtime --agent

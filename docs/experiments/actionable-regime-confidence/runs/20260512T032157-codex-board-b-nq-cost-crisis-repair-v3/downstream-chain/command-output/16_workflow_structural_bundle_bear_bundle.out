@@ -1,0 +1,31 @@
+{
+  "candidate_set_id": "structural-candidates:B2R_NQ_COST_CRISIS_REPAIR_032157:3f5a658495e85383",
+  "candidate_set_size": 3,
+  "composite_score": 0.7733270192303091,
+  "confirmation_summary": "same rooted branch path must reach downstream runtime",
+  "current_posterior": 0.878571,
+  "direction": "bear",
+  "experience_prior": 0.5277577307676973,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 2,
+  "invalidation_summary": "do not collapse this branch into a generic structural runtime path",
+  "path_id": "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+  "path_label": "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+  "path_ranker_raw_score": 0.878571,
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --data docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-chain/state_bear_bundle_v1",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --data docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-chain/state_bear_bundle_v1",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2R_NQ_COST_CRISIS_REPAIR_032157 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json",
+    "user_input_required": true
+  },
+  "scenario_id": "regime-bundle-branch:32eb3ca273869b40",
+  "selected_path_probability": 0.5216817941737643,
+  "stop_summary": "use the branch-specific stop contract",
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "trigger_summary": "preserve exact regime_profit_branch_path Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+  "why_this_path": "posterior=0.879 prior=0.528 invalidation_rate=0.000"
+}

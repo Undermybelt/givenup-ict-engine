@@ -1,0 +1,13 @@
+bootstrap_exit_zero=PASS
+prepare_exit_one=PASS
+dependency_healthy_true=PASS
+bootstrap_needed_false=PASS
+data_ready_false=PASS
+status_dependency_ready_data_missing=PASS
+prepare_error_detected=PASS
+accepted_rows_zero=PASS
+new_confidence_gate_false=PASS
+canonical_merge_false=PASS
+downstream_rerun_false=PASS
+strict_objective_false=PASS
+update_goal_false=PASS

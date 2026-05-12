@@ -1,0 +1,9 @@
+PASS decision=current_public_regime_dataset_scout_v1=current_public_candidates_found_but_not_accepted
+PASS current_rows_found=true
+PASS intake_files_created=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false

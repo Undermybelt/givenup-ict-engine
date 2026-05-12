@@ -1,0 +1,79 @@
+{
+  "schema_version": "regime-profitability-packet/v1",
+  "run_id": "20260511T181445+0800-codex-board-b-volbreakoutsized-branch-rc-spa-v1",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "recipe_id": "VolBreakoutSized",
+  "recipe_artifact_path": "/Users/thrill3r/Auto-Quant/versions/0.4.0/strategies/VolBreakoutSized.py",
+  "backtest_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260511T181445-codex-board-b-volbreakoutsized-branch-rc-spa-v1/branch-rc-spa/volbreakoutsized_branch_trades_v1.csv",
+  "total_trades": 1221,
+  "test_folds": 4,
+  "fold_positive_rate": 0.75,
+  "bootstrap_edge_lcb_5pct": 0.0036756015926335084,
+  "pbo": 0.75,
+  "dsr": 0.7229276855338879,
+  "cost_stress_result": "fail",
+  "tail_loss_p95": 0.048488467601521944,
+  "regime_specificity_ratio": 999.0,
+  "rc_spa": 59.50730047429443,
+  "promotion_level": "reject",
+  "downstream_consumption_status": "not_started_rc_spa_rejected",
+  "branch_summary": {
+    "Bull": {
+      "trade_count": 1050,
+      "win_rate": 0.3419047619047619,
+      "net_return_R": 10.289923326810078,
+      "mean_R": 0.00979992697791438,
+      "bootstrap_edge_lcb_5pct": 0.0053165921202953945,
+      "stressed_2x_cost_net_R": 8.189923326810106,
+      "branch_path": "Bull -> TrendExpansion -> Donchian24Ema4hTrendVolumeVolTarget -> VolBreakoutSized"
+    },
+    "Bear": {
+      "trade_count": 117,
+      "win_rate": 0.23076923076923078,
+      "net_return_R": -0.2658697407596883,
+      "mean_R": -0.0022723909466640024,
+      "bootstrap_edge_lcb_5pct": -0.008877527268663516,
+      "stressed_2x_cost_net_R": -0.4998697407596885,
+      "branch_path": "Bear -> BearReliefBreakout -> Donchian24Ema4hTrendVolumeVolTarget -> VolBreakoutSized"
+    },
+    "Sideways": {
+      "trade_count": 44,
+      "win_rate": 0.3181818181818182,
+      "net_return_R": -0.44167104224987236,
+      "mean_R": -0.010037978232951644,
+      "bootstrap_edge_lcb_5pct": -0.01661261094009827,
+      "stressed_2x_cost_net_R": -0.5296710422498725,
+      "branch_path": "Sideways -> RangeBreakoutAttempt -> Donchian24Ema4hTrendVolumeVolTarget -> VolBreakoutSized"
+    },
+    "Crisis": {
+      "trade_count": 10,
+      "win_rate": 0.1,
+      "net_return_R": -0.19520470227413428,
+      "mean_R": -0.019520470227413426,
+      "bootstrap_edge_lcb_5pct": -0.027661651291983218,
+      "stressed_2x_cost_net_R": -0.2152047022741343,
+      "branch_path": "Crisis -> CrisisBreakoutSuppression -> Donchian24Ema4hTrendVolumeVolTarget -> VolBreakoutSized"
+    }
+  },
+  "hard_gates": {
+    "accepted_regime_id_present": true,
+    "branch_path_present": true,
+    "root_lookup_coverage_full": true,
+    "min_total_trades": true,
+    "min_test_folds": true,
+    "min_trades_per_test_fold": true,
+    "fold_positive_rate": true,
+    "bootstrap_edge_lcb_5pct": true,
+    "cost_stress_survival": false,
+    "pbo": false,
+    "dsr": true,
+    "tail_loss_p95": true,
+    "regime_specificity_ratio": true,
+    "branch_min_total_trades_for_claimed_roots": false
+  },
+  "failure_reasons": [
+    "cost_stress_survival",
+    "pbo",
+    "branch_min_total_trades_for_claimed_roots"
+  ]
+}

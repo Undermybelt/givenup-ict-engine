@@ -1,0 +1,116 @@
+{
+  "run_id": "20260512T021453-codex-kaggle-regime-candidate-screen-v1",
+  "gate_result": "kaggle_regime_candidate_screen_v1=kaggle_candidates_screened_no_ready_source_owned_cross_timeframe_mainregime_export_no_promotion",
+  "board_hash_before_writeback": "da876875127181fa6f7484b332ffc871c2c6cafe64ac22fa0ca0025298079340",
+  "current_cursor": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "root_status": {
+    "r6_owner_export_root": {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false
+    },
+    "r3_native_subhour_root": {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    "r5_source_panel_recency_extension_root": {
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    },
+    "source_label_equivalence_root": {
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "files": [
+        "source_label_equivalence_provenance.json",
+        "source_label_equivalence_rows.csv"
+      ],
+      "acceptance_status": "confidence_blocked_existing_root"
+    },
+    "legacy_direct_manipulation_root": {
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "present": true,
+      "acceptance_status": "non_promoting_not_owner_export_root"
+    }
+  },
+  "commands": [
+    {
+      "command": "kaggle datasets list -s \"market regime\" --csv",
+      "purpose": "surface bounded public Kaggle market-regime candidates"
+    },
+    {
+      "command": "kaggle datasets files <candidate>",
+      "purpose": "inspect candidate file set without committing raw data"
+    },
+    {
+      "command": "kaggle datasets metadata <candidate> -p /tmp/...",
+      "purpose": "inspect license and description metadata under /tmp"
+    },
+    {
+      "command": "kaggle datasets download <candidate> --file <small representative file> -p /tmp/... --force --quiet",
+      "purpose": "inspect representative schema/sample only under /tmp"
+    }
+  ],
+  "candidates_screened": [
+    {
+      "candidate": "mafaqbhatti/stock-market-regimes-20002026",
+      "source_url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+      "status": "known_exhausted_source_panel",
+      "license": "apache-2.0",
+      "evidence": "files list plus dataset_summary.txt/regime_by_year.csv/regime_analysis_by_ticker.csv under /tmp",
+      "decision": "non_promoting",
+      "blocking_reason": "already counted in board history; daily-only; max date 2026-01-30; no R3 native subhour, R5 post-cutoff, or R6 owner-control unlock"
+    },
+    {
+      "candidate": "igormerlinicomposer/herding-based-market-regime-dataset",
+      "source_url": "https://www.kaggle.com/datasets/igormerlinicomposer/herding-based-market-regime-dataset",
+      "status": "reject_acceptance",
+      "license": "CC0-1.0",
+      "evidence": "alpha_trading_signals.csv header/sample under /tmp",
+      "decision": "non_promoting",
+      "blocking_reason": "transformed herding/risk signals; no source-owned MainRegimeV2 labels or verifier-native market rows"
+    },
+    {
+      "candidate": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "source_url": "https://www.kaggle.com/datasets/nickdatak/us-market-regimes-dataset-1995-2024",
+      "status": "proxy_only",
+      "license": "MIT",
+      "evidence": "hmm_regimes.csv header/sample under /tmp",
+      "decision": "non_promoting",
+      "blocking_reason": "weekly SP500 HMM/GMM latent states and no predefined source-owned MainRegimeV2 labels"
+    },
+    {
+      "candidate": "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+      "source_url": "https://www.kaggle.com/datasets/ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+      "status": "sidecar_only",
+      "license": "Attribution 4.0 International (CC BY 4.0)",
+      "evidence": "regime_timeline_history.csv header/sample under /tmp",
+      "decision": "non_promoting",
+      "blocking_reason": "daily India-only HMM labels; no approved source-native Bull/Bear/Sideways/Crisis crosswalk; no native cross-timeframe rows"
+    },
+    {
+      "candidate": "sergionefedov/synthetic-limit-order-book-market-microstructure",
+      "source_url": "https://www.kaggle.com/datasets/sergionefedov/synthetic-limit-order-book-market-microstructure",
+      "status": "reject_board_a_acceptance",
+      "license": "MIT",
+      "evidence": "daily_stats.csv header/sample under /tmp",
+      "decision": "non_promoting",
+      "blocking_reason": "synthetic 10-day simulated LOB data; not real source-owned market evidence"
+    }
+  ],
+  "new_ready_source_owned_cross_timeframe_mainregime_exports_found": 0,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "non_edits": {
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "external_vendor_contact_sent": false,
+    "trade_usable": false
+  },
+  "next_action": "Preserve the Current Cursor next action for R6. Continue only from owner/operator R6 export delivery, explicit FLIP approval, or genuinely new source-owned cross-timeframe MainRegimeV2 exports before canonical merge and downstream rerun."
+}

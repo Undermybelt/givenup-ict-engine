@@ -1,0 +1,32 @@
+{
+  "accepted_rows_added": 0,
+  "decision": "source_acquisition_outbox_v2=r6_uplift_merged_rows_not_acquired",
+  "expanded_species_counts": {
+    "bear_raid": 2,
+    "painting_tape": 3
+  },
+  "inputs": {
+    "r6_uplift_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T204159-codex-r6-bear-raid-painting-tape-source-uplift-v1/r6-source-uplift/r6_bear_raid_painting_tape_source_uplift_v1_candidates.csv",
+    "r6_uplift_json": "docs/experiments/actionable-regime-confidence/runs/20260511T204159-codex-r6-bear-raid-painting-tape-source-uplift-v1/r6-source-uplift/r6_bear_raid_painting_tape_source_uplift_v1.json",
+    "source_acquisition_outbox_v1_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T204131-codex-source-acquisition-outbox-v1/source-acquisition-outbox/source_acquisition_outbox_v1.csv"
+  },
+  "new_confidence_gate": false,
+  "outbox_v1_rows": 5,
+  "r6_candidate_surfaces": 5,
+  "r6_uplift_decision": "r6_bear_raid_painting_tape_source_uplift_v1=candidate_surfaces_found_rows_not_acquired",
+  "raw_data_committed": false,
+  "request_sent": false,
+  "required_intake_roots": [
+    "/tmp/ict-engine-direct-manipulation-row-intake",
+    "/tmp/ict-engine-native-subhour-source-label-intake",
+    "/tmp/ict-engine-source-label-equivalence-intake",
+    "/tmp/ict-engine-source-panel-recency-extension"
+  ],
+  "rows_acquired": false,
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "v2_outbox_rows": 9
+}

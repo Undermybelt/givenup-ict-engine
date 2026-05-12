@@ -1,0 +1,226 @@
+Result for strategy ProviderNqSampledPulse
+                                            BACKTESTING REPORT                                            
+┏━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃   Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ NQ/USD │     18 │         0.05 │        974.319 │         0.97 │      2:20:00 │    6    10     2  33.3 │
+│  TOTAL │     18 │         0.05 │        974.319 │         0.97 │      2:20:00 │    6    10     2  33.3 │
+└────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                         ENTER TAG STATS                                                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                    Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ provider_yf_nq_sampled_pulse │      18 │         0.05 │        974.319 │         0.97 │      2:20:00 │    6    10     2  33.3 │
+│                        TOTAL │      18 │         0.05 │        974.319 │         0.97 │      2:20:00 │    6    10     2  33.3 │
+└──────────────────────────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                      EXIT REASON STATS                                                       
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                 Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│                         roi │    16 │         0.08 │       1199.614 │          1.2 │      2:19:00 │    6    10     0   100 │
+│ provider_yf_nq_sampled_exit │     2 │        -0.11 │       -225.295 │        -0.23 │      2:30:00 │    0     0     2     0 │
+│                       TOTAL │    18 │         0.05 │        974.319 │         0.97 │      2:20:00 │    6    10     2  33.3 │
+└─────────────────────────────┴───────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                                       MIXED TAG STATS                                                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                    Enter Tag ┃                 Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ provider_yf_nq_sampled_pulse │                         roi │     16 │         0.08 │       1199.614 │          1.2 │      2:19:00 │    6    10     0   100 │
+│ provider_yf_nq_sampled_pulse │ provider_yf_nq_sampled_exit │      2 │        -0.11 │       -225.295 │        -0.23 │      2:30:00 │    0     0     2     0 │
+│                        TOTAL │                             │     18 │         0.05 │        974.319 │         0.97 │      2:20:00 │    6    10     2  33.3 │
+└──────────────────────────────┴─────────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2024-06-06 22:00:00            │
+│ Backtesting to                │ 2026-05-11 23:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 18 / 0.03                      │
+│ Starting balance              │ 100000 USD                     │
+│ Final balance                 │ 100974.319 USD                 │
+│ Absolute profit               │ 974.319 USD                    │
+│ Total profit %                │ 0.97%                          │
+│ CAGR %                        │ 0.50%                          │
+│ Sortino                       │ 0.67                           │
+│ Sharpe                        │ 0.19                           │
+│ Calmar                        │ 17.04                          │
+│ SQN                           │ 1.60                           │
+│ Profit factor                 │ 5.32                           │
+│ Expectancy (Ratio)            │ 54.13 (-0.08)                  │
+│ Avg. daily profit             │ 1.384 USD                      │
+│ Avg. stake amount             │ 99744.888 USD                  │
+│ Total trade volume            │ 3591790.303 USD                │
+│                               │                                │
+│ Best Pair                     │ NQ/USD 0.97%                   │
+│ Worst Pair                    │ NQ/USD 0.97%                   │
+│ Best trade                    │ NQ/USD 0.40%                   │
+│ Worst trade                   │ NQ/USD -0.15%                  │
+│ Best day                      │ 397.553 USD                    │
+│ Worst day                     │ -151.835 USD                   │
+│ Days win/draw/lose            │ 6 / 493 / 2                    │
+│ Min/Max/Avg. Duration Winners │ 0d 01:00 / 0d 02:00 / 0d 01:40 │
+│ Min/Max/Avg. Duration Losers  │ 0d 02:00 / 0d 03:00 / 0d 02:30 │
+│ Max Consecutive Wins / Loss   │ 1 / 4                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 100000 USD                     │
+│ Max balance                   │ 101121.22 USD                  │
+│ Max % of account underwater   │ 0.16%                          │
+│ Absolute drawdown             │ 156.875 USD (0.16%)            │
+│ Drawdown duration             │ 104 days 00:00:00              │
+│ Profit at drawdown start      │ 1121.22 USD                    │
+│ Profit at drawdown end        │ 964.345 USD                    │
+│ Drawdown start                │ 2025-06-10 01:00:00            │
+│ Drawdown end                  │ 2025-09-22 01:00:00            │
+│ Market change                 │ 54.24%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2024-06-06 22:00:00 -> 2026-05-11 23:00:00 | Max open trades : 1
+                                                               STRATEGY SUMMARY                                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃               Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃           Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ ProviderNqSampledPulse │     18 │         0.05 │        974.319 │         0.97 │      2:20:00 │    6    10     2  33.3 │ 156.875 USD  0.16% │
+└────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┴────────────────────┘
+top_keys ['metadata', 'strategy', 'strategy_comparison']
+strategy_keys ['avg_stake_amount', 'backtest_best_day', 'backtest_best_day_abs', 'backtest_days', 'backtest_end', 'backtest_end_ts', 'backtest_run_end_ts', 'backtest_run_start_ts', 'backtest_start', 'backtest_start_ts', 'backtest_worst_day', 'backtest_worst_day_abs', 'best_pair', 'cagr', 'calmar', 'canceled_entry_orders', 'canceled_trade_entries', 'csum_max', 'csum_min', 'daily_profit', 'draw_days', 'drawdown_duration', 'drawdown_duration_s', 'drawdown_end', 'drawdown_end_ts', 'drawdown_start', 'drawdown_start_ts', 'draws', 'dry_run_wallet', 'enable_protections', 'exit_profit_offset', 'exit_profit_only', 'exit_reason_summary', 'expectancy', 'expectancy_ratio', 'final_balance', 'freqai_identifier', 'freqaimodel', 'holding_avg', 'holding_avg_s', 'ignore_roi_if_entry_signal', 'left_open_trades', 'locks', 'loser_holding_avg', 'loser_holding_avg_s', 'loser_holding_max', 'loser_holding_max_s', 'loser_holding_min', 'loser_holding_min_s', 'losing_days', 'losses', 'margin_mode', 'market_change', 'max_consecutive_losses', 'max_consecutive_wins', 'max_drawdown_abs', 'max_drawdown_account', 'max_drawdown_high', 'max_drawdown_low', 'max_open_trades', 'max_open_trades_setting', 'max_relative_drawdown', 'minimal_roi', 'mix_tag_stats', 'pairlist', 'periodic_breakdown', 'profit_factor', 'profit_mean', 'profit_median', 'profit_total', 'profit_total_abs', 'profit_total_long', 'profit_total_long_abs', 'profit_total_short', 'profit_total_short_abs', 'rejected_signals', 'replaced_entry_orders', 'results_per_enter_tag', 'results_per_pair', 'sharpe', 'sortino', 'sqn', 'stake_amount', 'stake_currency', 'stake_currency_decimals', 'starting_balance', 'stoploss', 'strategy_name', 'timedout_entry_orders', 'timedout_exit_orders', 'timeframe', 'timeframe_detail', 'timerange', 'total_trades', 'total_volume', 'trade_count_long', 'trade_count_short', 'trades', 'trades_per_day', 'trading_mode', 'trailing_only_offset_is_reached', 'trailing_stop', 'trailing_stop_positive', 'trailing_stop_positive_offset', 'use_custom_stoploss', 'use_exit_signal', 'winner_holding_avg', 'winner_holding_avg_s', 'winner_holding_max', 'winner_holding_max_s', 'winner_holding_min', 'winner_holding_min_s', 'winning_days', 'winrate', 'wins', 'worst_pair']
+list trades len 18 first_type dict
+first_repr {'pair': 'NQ/USD', 'stake_amount': 98999.99597775, 'max_stake_amount': 98999.99597775, 'amount': 5.188883, 'open_date': Timestamp('2024-06-06 23:00:00+0000', tz='UTC'), 'close_date': Timestamp('2024-06-07 01:00:00+0000', tz='UTC'), 'open_rate': 19079.25, 'close_rate': 19079.25, 'fee_open': 0.0, 'fee_close': 0.0, 'trade_duration': 120, 'profit_ratio': 0.0, 'profit_abs': 0.0, 'exit_reason': 'roi', 'initial_stop_loss_abs': 18506.88, 'initial_stop_loss_ratio': -0.03, 'stop_loss_abs': 18506.88, 'stop_loss_ratio': -0.03, 'min_rate': 19067.5, 'max_rate': 19086.75, 'is_open': False, 'enter_tag': 'provider_yf_nq_sampled_pulse', 'leverage': 1.0, 'is_short': False, 'open_timestamp': 1717714800000, 'close_timestamp': 1717722000000, 'orders': [{'amount': 5.188883, 'safe_price': 19079.25, 'ft_order_side': 'buy', 'order_filled_timestamp': 1717714800000, 'ft_is_entry': True, 'ft_order_tag': 'provider_yf_nq_sampled_pulse', 'cost': 98999.99597774999}, {'amount': 5.188883, 'safe_price': 19079.25, 'ft_ord
+first_dict_keys ['amount', 'close_date', 'close_rate', 'close_timestamp', 'enter_tag', 'exit_reason', 'fee_close', 'fee_open', 'funding_fees', 'initial_stop_loss_abs', 'initial_stop_loss_ratio', 'is_open', 'is_short', 'leverage', 'max_rate', 'max_stake_amount', 'min_rate', 'open_date', 'open_rate', 'open_timestamp', 'orders', 'pair', 'profit_abs', 'profit_ratio', 'stake_amount', 'stop_loss_abs', 'stop_loss_ratio', 'trade_duration', 'weekday']
+list locks len 0 first_type None
+dict best_pair keys ['cagr', 'calmar', 'draws', 'duration_avg', 'expectancy', 'expectancy_ratio', 'key', 'losses', 'max_drawdown_abs', 'max_drawdown_account', 'profit_factor', 'profit_mean', 'profit_mean_pct', 'profit_total', 'profit_total_abs', 'profit_total_pct', 'sharpe', 'sortino', 'sqn', 'trades', 'winrate', 'wins']
+dict worst_pair keys ['cagr', 'calmar', 'draws', 'duration_avg', 'expectancy', 'expectancy_ratio', 'key', 'losses', 'max_drawdown_abs', 'max_drawdown_account', 'profit_factor', 'profit_mean', 'profit_mean_pct', 'profit_total', 'profit_total_abs', 'profit_total_pct', 'sharpe', 'sortino', 'sqn', 'trades', 'winrate', 'wins']
+list results_per_pair len 2 first_type dict
+first_repr {'key': 'NQ/USD', 'trades': 18, 'profit_mean': np.float64(0.000545227516545854), 'profit_mean_pct': np.float64(0.05), 'profit_total_abs': np.float64(974.31937576), 'profit_total': np.float64(0.009743193757599999), 'profit_total_pct': np.float64(0.97), 'duration_avg': '2:20:00', 'wins': 6, 'draws': 10, 'losses': 2, 'winrate': 0.3333333333333333, 'cagr': np.float64(0.005039720441592399), 'expectancy': np.float64(54.12885420888888), 'expectancy_ratio': np.float64(-0.07503953959396892), 'sortino': np.float64(0.674729601362148), 'sharpe': np.float64(0.18978977589209955), 'calmar': np.float64(17.04373657861229), 'sqn': np.float64(1.602), 'profit_factor': np.float64(5.32464414365428), 'max_drawdown_account': np.float64(0.0015513518181420826), 'max_drawdown_abs': np.float64(156.8745882500001)}
+first_dict_keys ['cagr', 'calmar', 'draws', 'duration_avg', 'expectancy', 'expectancy_ratio', 'key', 'losses', 'max_drawdown_abs', 'max_drawdown_account', 'profit_factor', 'profit_mean', 'profit_mean_pct', 'profit_total', 'profit_total_abs', 'profit_total_pct', 'sharpe', 'sortino', 'sqn', 'trades', 'winrate', 'wins']
+list results_per_enter_tag len 2 first_type dict
+first_repr {'key': 'provider_yf_nq_sampled_pulse', 'trades': 18, 'profit_mean': np.float64(0.000545227516545854), 'profit_mean_pct': np.float64(0.05), 'profit_total_abs': np.float64(974.31937576), 'profit_total': np.float64(0.009743193757599999), 'profit_total_pct': np.float64(0.97), 'duration_avg': '2:20:00', 'wins': 6, 'draws': 10, 'losses': 2, 'winrate': 0.3333333333333333, 'cagr': np.float64(0.005039720441592399), 'expectancy': np.float64(54.12885420888888), 'expectancy_ratio': np.float64(-0.07503953959396892), 'sortino': np.float64(0.674729601362148), 'sharpe': np.float64(0.18978977589209955), 'calmar': np.float64(17.04373657861229), 'sqn': np.float64(1.602), 'profit_factor': np.float64(5.32464414365428), 'max_drawdown_account': np.float64(0.0015513518181420826), 'max_drawdown_abs': np.float64(156.8745882500001)}
+first_dict_keys ['cagr', 'calmar', 'draws', 'duration_avg', 'expectancy', 'expectancy_ratio', 'key', 'losses', 'max_drawdown_abs', 'max_drawdown_account', 'profit_factor', 'profit_mean', 'profit_mean_pct', 'profit_total', 'profit_total_abs', 'profit_total_pct', 'sharpe', 'sortino', 'sqn', 'trades', 'winrate', 'wins']
+list exit_reason_summary len 3 first_type dict
+first_repr {'key': 'roi', 'trades': 16, 'profit_mean': np.float64(0.0007540732815493399), 'profit_mean_pct': np.float64(0.08), 'profit_total_abs': np.float64(1199.61406901), 'profit_total': np.float64(0.0119961406901), 'profit_total_pct': np.float64(1.2), 'duration_avg': '2:19:00', 'wins': 6, 'draws': 10, 'losses': 0, 'winrate': 0.375, 'cagr': np.float64(0.0062017317367750735), 'expectancy': np.float64(74.97587931312499), 'expectancy_ratio': 100.0, 'sortino': -100, 'sharpe': np.float64(0.24447712507547664), 'calmar': -100, 'sqn': np.float64(2.1807), 'profit_factor': 0.0, 'max_drawdown_account': np.float64(0.0), 'max_drawdown_abs': np.float64(0.0)}
+first_dict_keys ['cagr', 'calmar', 'draws', 'duration_avg', 'expectancy', 'expectancy_ratio', 'key', 'losses', 'max_drawdown_abs', 'max_drawdown_account', 'profit_factor', 'profit_mean', 'profit_mean_pct', 'profit_total', 'profit_total_abs', 'profit_total_pct', 'sharpe', 'sortino', 'sqn', 'trades', 'winrate', 'wins']
+list mix_tag_stats len 3 first_type dict
+first_repr {'key': ('provider_yf_nq_sampled_pulse', 'roi'), 'trades': 16, 'profit_mean': np.float64(0.0007540732815493399), 'profit_mean_pct': np.float64(0.08), 'profit_total_abs': np.float64(1199.61406901), 'profit_total': np.float64(0.0119961406901), 'profit_total_pct': np.float64(1.2), 'duration_avg': '2:19:00', 'wins': 6, 'draws': 10, 'losses': 0, 'winrate': 0.375, 'cagr': np.float64(0.0062017317367750735), 'expectancy': np.float64(74.97587931312499), 'expectancy_ratio': 100.0, 'sortino': -100, 'sharpe': np.float64(0.24447712507547664), 'calmar': -100, 'sqn': np.float64(2.1807), 'profit_factor': 0.0, 'max_drawdown_account': np.float64(0.0), 'max_drawdown_abs': np.float64(0.0)}
+first_dict_keys ['cagr', 'calmar', 'draws', 'duration_avg', 'expectancy', 'expectancy_ratio', 'key', 'losses', 'max_drawdown_abs', 'max_drawdown_account', 'profit_factor', 'profit_mean', 'profit_mean_pct', 'profit_total', 'profit_total_abs', 'profit_total_pct', 'sharpe', 'sortino', 'sqn', 'trades', 'winrate', 'wins']
+list left_open_trades len 1 first_type dict
+first_repr {'key': 'TOTAL', 'trades': 0, 'profit_mean': 0.0, 'profit_mean_pct': 0.0, 'profit_total_abs': np.float64(0.0), 'profit_total': np.float64(0.0), 'profit_total_pct': np.float64(0.0), 'duration_avg': '0:00', 'wins': 0, 'draws': 0, 'losses': 0, 'winrate': 0.0, 'cagr': np.float64(0.0), 'expectancy': 0.0, 'expectancy_ratio': 100.0, 'sortino': 0, 'sharpe': 0, 'calmar': 0, 'sqn': 0.0, 'profit_factor': 0.0, 'max_drawdown_account': 0.0, 'max_drawdown_abs': 0.0}
+first_dict_keys ['cagr', 'calmar', 'draws', 'duration_avg', 'expectancy', 'expectancy_ratio', 'key', 'losses', 'max_drawdown_abs', 'max_drawdown_account', 'profit_factor', 'profit_mean', 'profit_mean_pct', 'profit_total', 'profit_total_abs', 'profit_total_pct', 'sharpe', 'sortino', 'sqn', 'trades', 'winrate', 'wins']
+scalar total_trades int 18
+scalar trade_count_long int 18
+scalar trade_count_short int 0
+scalar total_volume float 3591790.3034852603
+scalar avg_stake_amount float64 np.float64(99744.88844748611)
+scalar profit_mean float64 np.float64(0.000545227516545854)
+scalar profit_median float64 np.float64(0.0)
+scalar profit_total float64 np.float64(0.009743193757599999)
+scalar profit_total_long float64 np.float64(0.009743193757599999)
+scalar profit_total_short float64 np.float64(0.0)
+scalar profit_total_abs float64 np.float64(974.31937576)
+scalar profit_total_long_abs float64 np.float64(974.31937576)
+scalar profit_total_short_abs float64 np.float64(0.0)
+scalar cagr float 0.005039720441592399
+scalar expectancy float64 np.float64(54.12885420888888)
+scalar expectancy_ratio float64 np.float64(-0.07503953959396892)
+scalar sortino float64 np.float64(0.674729601362148)
+scalar sharpe float64 np.float64(0.18978977589209955)
+scalar calmar float64 np.float64(17.04373657861229)
+scalar sqn float64 np.float64(1.602)
+scalar profit_factor float64 np.float64(5.32464414365428)
+scalar backtest_start str '2024-06-06 22:00:00'
+scalar backtest_start_ts int 1717711200000
+scalar backtest_end str '2026-05-11 23:00:00'
+scalar backtest_end_ts int 1778540400000
+scalar backtest_days int 704
+scalar backtest_run_start_ts int 1778553097
+scalar backtest_run_end_ts int 1778553098
+scalar trades_per_day float 0.03
+scalar market_change float 0.5424419518842707
+list pairlist len 1 first_type str
+first_repr 'NQ/USD'
+scalar stake_amount str 'unlimited'
+scalar stake_currency str 'USD'
+scalar stake_currency_decimals int 3
+scalar starting_balance int 100000
+scalar dry_run_wallet int 100000
+scalar final_balance float 100974.31937576
+scalar rejected_signals int 0
+scalar timedout_entry_orders int 0
+scalar timedout_exit_orders int 0
+scalar canceled_trade_entries int 0
+scalar canceled_entry_orders int 0
+scalar replaced_entry_orders int 0
+scalar max_open_trades int 1
+scalar max_open_trades_setting int 1
+scalar timeframe str '1h'
+scalar timeframe_detail str ''
+scalar timerange str '20240601-20260512'
+scalar enable_protections bool False
+scalar strategy_name str 'ProviderNqSampledPulse'
+scalar freqaimodel NoneType None
+scalar freqai_identifier NoneType None
+scalar stoploss float -0.03
+scalar trailing_stop bool False
+scalar trailing_stop_positive NoneType None
+scalar trailing_stop_positive_offset float 0.0
+scalar trailing_only_offset_is_reached bool False
+scalar use_custom_stoploss bool False
+dict minimal_roi keys ['0', '24', '72']
+scalar use_exit_signal bool True
+scalar exit_profit_only bool False
+scalar exit_profit_offset float 0.0
+scalar ignore_roi_if_entry_signal bool False
+scalar trading_mode TradingMode <TradingMode.SPOT: 'spot'>
+scalar margin_mode MarginMode <MarginMode.NONE: ''>
+dict periodic_breakdown keys ['day', 'month', 'week', 'weekday', 'year']
+scalar backtest_best_day float 0.003999999999999999
+scalar backtest_worst_day float -0.001516678156652702
+scalar backtest_best_day_abs float 397.55321725
+scalar backtest_worst_day_abs float -151.83464725
+scalar winning_days int 6
+scalar draw_days int 493
+scalar losing_days int 2
+list daily_profit len 501 first_type tuple
+first_repr ('2024-06-07', 0.0)
+scalar wins int 6
+scalar losses int 2
+scalar draws int 10
+scalar winrate float 0.3333333333333333
+scalar holding_avg timedelta datetime.timedelta(seconds=8400)
+scalar holding_avg_s float 8400.0
+scalar winner_holding_min str '0d 01:00'
+scalar winner_holding_min_s float 3600.0
+scalar winner_holding_max str '0d 02:00'
+scalar winner_holding_max_s float 7200.0
+scalar winner_holding_avg str '0d 01:40'
+scalar winner_holding_avg_s float 6000.0
+scalar loser_holding_min str '0d 02:00'
+scalar loser_holding_min_s float 7200.0
+scalar loser_holding_max str '0d 03:00'
+scalar loser_holding_max_s float 10800.0
+scalar loser_holding_avg str '0d 02:30'
+scalar loser_holding_avg_s float 9000.0
+scalar max_consecutive_wins int 1
+scalar max_consecutive_losses int 4
+scalar max_drawdown_account float64 np.float64(0.0015513518181420826)
+scalar max_relative_drawdown float64 np.float64(0.0015513518181420826)
+scalar max_drawdown_abs float64 np.float64(156.8745882500001)
+scalar drawdown_start str '2025-06-10 01:00:00'
+scalar drawdown_start_ts float 1749517200000.0
+scalar drawdown_end str '2025-09-22 01:00:00'
+scalar drawdown_end_ts float 1758502800000.0
+scalar drawdown_duration Timedelta Timedelta('104 days 00:00:00')
+scalar drawdown_duration_s float 8985600.0
+scalar max_drawdown_low float64 np.float64(964.3452507599999)
+scalar max_drawdown_high float64 np.float64(1121.21983901)
+scalar csum_min float64 np.float64(100000.0)
+scalar csum_max float64 np.float64(101121.21983901)

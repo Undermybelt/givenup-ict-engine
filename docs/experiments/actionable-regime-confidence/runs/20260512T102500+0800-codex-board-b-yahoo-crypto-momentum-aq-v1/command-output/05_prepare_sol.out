@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1/provider-csv/yahoo_sol_usd_1h_20240601_20260512.csv ...
+  raw_rows=17,006 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=17,006
+  range 2024-06-01 00:00:00+00:00 -> 2026-05-11 23:00:00+00:00
+  after timerange slice: 17,006 rows
+  cleaning: SKIPPED (--no-clean)
+  gap_audit: median_gap=3600s max_gap=1,260.0min big_gaps_gt_60x_median=0 (typical for futures session breaks/weekends)
+  wrote   1h:  17,006 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1/workspace/auto-quant-yahoo-crypto-momentum/user_data/data/SOL_USDT-1h.feather
+  wrote   4h:   4,254 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1/workspace/auto-quant-yahoo-crypto-momentum/user_data/data/SOL_USDT-4h.feather
+  wrote   1d:     710 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1/workspace/auto-quant-yahoo-crypto-momentum/user_data/data/SOL_USDT-1d.feather
+Done: 3 feather files for pair SOL/USDT in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1/workspace/auto-quant-yahoo-crypto-momentum/user_data/data

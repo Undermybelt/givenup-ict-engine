@@ -1,0 +1,2524 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T070716-codex-yfinance-first-full-matrix-smoke/checks/yfinance_first_full_matrix_smoke_assertions.out",
+    "matrix_json": "docs/experiments/actionable-regime-confidence/runs/20260511T070716-codex-yfinance-first-full-matrix-smoke/matrix-smoke/yfinance_first_full_matrix_smoke.json",
+    "matrix_md": "docs/experiments/actionable-regime-confidence/runs/20260511T070716-codex-yfinance-first-full-matrix-smoke/matrix-smoke/yfinance_first_full_matrix_smoke.md",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T070716-codex-yfinance-first-full-matrix-smoke/scripts/yfinance_first_full_matrix_smoke.py"
+  },
+  "cells": [
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-10 22:58:00+00:00",
+      "date_min": "2026-05-05 04:00:00+00:00",
+      "elapsed_seconds": 0.946,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 5191,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-10 22:55:00+00:00",
+      "date_min": "2026-03-01 23:10:00+00:00",
+      "elapsed_seconds": 0.759,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 13375,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-10 22:45:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.553,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 4466,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-10 22:30:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.549,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 2233,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-10 22:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.75,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 13447,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-10 20:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.342,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 3664,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-10 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.438,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1259,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.333,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_CL=F",
+        "Close_CL=F",
+        "High_CL=F",
+        "Low_CL=F",
+        "Open_CL=F",
+        "Volume_CL=F"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "2000-08-01 00:00:00",
+      "elapsed_seconds": 0.374,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 264,
+      "status": "ok",
+      "symbol": "CL=F",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-08 19:59:00+00:00",
+      "date_min": "2026-05-04 13:30:00+00:00",
+      "elapsed_seconds": 0.364,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 1947,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-08 19:55:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.475,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 4680,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-08 19:45:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.476,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 1560,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.52,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 780,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.558,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 5068,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-08 17:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.463,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 1450,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.381,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.443,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_DIA",
+        "Close_DIA",
+        "High_DIA",
+        "Low_DIA",
+        "Open_DIA",
+        "Volume_DIA"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "1998-01-01 00:00:00",
+      "elapsed_seconds": 0.394,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 341,
+      "status": "ok",
+      "symbol": "DIA",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-10 22:58:00+00:00",
+      "date_min": "2026-05-05 04:09:00+00:00",
+      "elapsed_seconds": 0.413,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 5170,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-10 22:55:00+00:00",
+      "date_min": "2026-03-01 23:10:00+00:00",
+      "elapsed_seconds": 0.6,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 13430,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-10 22:45:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.388,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 4497,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-10 22:30:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.466,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 2249,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-10 22:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.629,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 13649,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-10 20:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.557,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 3692,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-10 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.325,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1260,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.265,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_ES=F",
+        "Close_ES=F",
+        "High_ES=F",
+        "Low_ES=F",
+        "Open_ES=F",
+        "Volume_ES=F"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "2000-09-01 00:00:00",
+      "elapsed_seconds": 0.311,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 263,
+      "status": "ok",
+      "symbol": "ES=F",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-10 22:58:00+00:00",
+      "date_min": "2026-05-05 04:00:00+00:00",
+      "elapsed_seconds": 0.379,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 5196,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-10 22:55:00+00:00",
+      "date_min": "2026-03-01 23:10:00+00:00",
+      "elapsed_seconds": 0.735,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 13430,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-10 22:45:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.52,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 4486,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-10 22:30:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.45,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 2243,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-10 22:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.643,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 13695,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-10 20:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.452,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 3701,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-10 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.312,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1259,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.259,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_GC=F",
+        "Close_GC=F",
+        "High_GC=F",
+        "Low_GC=F",
+        "Open_GC=F",
+        "Volume_GC=F"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "2000-08-01 00:00:00",
+      "elapsed_seconds": 0.306,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 264,
+      "status": "ok",
+      "symbol": "GC=F",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-08 19:59:00+00:00",
+      "date_min": "2026-05-04 13:30:00+00:00",
+      "elapsed_seconds": 0.492,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 1950,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-08 19:55:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.561,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 4680,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-08 19:45:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.381,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 1560,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.505,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 780,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.664,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 5067,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-08 17:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.512,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 1450,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.345,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.389,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_GLD",
+        "Close_GLD",
+        "High_GLD",
+        "Low_GLD",
+        "Open_GLD",
+        "Volume_GLD"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "2004-11-01 00:00:00",
+      "elapsed_seconds": 0.31,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 259,
+      "status": "ok",
+      "symbol": "GLD",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-10 22:58:00+00:00",
+      "date_min": "2026-05-05 04:09:00+00:00",
+      "elapsed_seconds": 0.523,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 5170,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-10 22:55:00+00:00",
+      "date_min": "2026-03-01 23:10:00+00:00",
+      "elapsed_seconds": 0.61,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 13429,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-10 22:45:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.457,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 4497,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-10 22:30:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.511,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 2249,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-10 22:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.567,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 13646,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-10 20:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.493,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 3689,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-10 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.357,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1260,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.288,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_NQ=F",
+        "Close_NQ=F",
+        "High_NQ=F",
+        "Low_NQ=F",
+        "Open_NQ=F",
+        "Volume_NQ=F"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "2000-09-01 00:00:00",
+      "elapsed_seconds": 0.247,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 263,
+      "status": "ok",
+      "symbol": "NQ=F",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-08 19:59:00+00:00",
+      "date_min": "2026-05-04 13:30:00+00:00",
+      "elapsed_seconds": 0.683,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 1950,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-08 19:55:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.57,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 4680,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-08 19:45:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.323,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 1560,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.466,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 780,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.552,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 5069,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-08 17:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.456,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 1450,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.658,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.43,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_QQQ",
+        "Close_QQQ",
+        "High_QQQ",
+        "Low_QQQ",
+        "Open_QQQ",
+        "Volume_QQQ"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "1999-03-01 00:00:00",
+      "elapsed_seconds": 0.368,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 327,
+      "status": "ok",
+      "symbol": "QQQ",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-08 19:59:00+00:00",
+      "date_min": "2026-05-04 13:30:00+00:00",
+      "elapsed_seconds": 0.444,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 1950,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-08 19:55:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.491,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 4680,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-08 19:45:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.466,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 1560,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.343,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 780,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.56,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 5068,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-08 17:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.563,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 1450,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.515,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.466,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_SPY",
+        "Close_SPY",
+        "High_SPY",
+        "Low_SPY",
+        "Open_SPY",
+        "Volume_SPY"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "1993-01-01 00:00:00",
+      "elapsed_seconds": 0.382,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 401,
+      "status": "ok",
+      "symbol": "SPY",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-08 19:59:00+00:00",
+      "date_min": "2026-05-04 13:30:00+00:00",
+      "elapsed_seconds": 0.381,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 1950,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-08 19:55:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.516,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 4680,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-08 19:45:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.474,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 1560,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.33,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 780,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.692,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 5068,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-08 17:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.405,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 1450,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.465,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.406,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_USO",
+        "Close_USO",
+        "High_USO",
+        "Low_USO",
+        "Open_USO",
+        "Volume_USO"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "2006-04-01 00:00:00",
+      "elapsed_seconds": 0.318,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 242,
+      "status": "ok",
+      "symbol": "USO",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-10 22:58:00+00:00",
+      "date_min": "2026-05-05 04:00:00+00:00",
+      "elapsed_seconds": 0.516,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 5166,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-10 22:55:00+00:00",
+      "date_min": "2026-03-01 23:10:00+00:00",
+      "elapsed_seconds": 0.762,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 13468,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-10 22:45:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.442,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 4497,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-10 22:30:00+00:00",
+      "date_min": "2026-03-01 23:00:00+00:00",
+      "elapsed_seconds": 0.498,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 2249,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-10 22:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.68,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 13642,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-10 20:00:00+00:00",
+      "date_min": "2023-12-15 05:00:00+00:00",
+      "elapsed_seconds": 0.365,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 3690,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-10 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.28,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1260,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.305,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_YM=F",
+        "Close_YM=F",
+        "High_YM=F",
+        "Low_YM=F",
+        "Open_YM=F",
+        "Volume_YM=F"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "2002-04-01 00:00:00",
+      "elapsed_seconds": 0.334,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 247,
+      "status": "ok",
+      "symbol": "YM=F",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-08 19:59:00+00:00",
+      "date_min": "2026-05-04 13:30:00+00:00",
+      "elapsed_seconds": 0.289,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 1950,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-08 19:55:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.508,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 4680,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-08 19:45:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.514,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 1560,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.44,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 780,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.479,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 5069,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-08 17:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.388,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 1450,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.327,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.325,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_^DJI",
+        "Close_^DJI",
+        "High_^DJI",
+        "Low_^DJI",
+        "Open_^DJI",
+        "Volume_^DJI"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "1992-01-01 00:00:00",
+      "elapsed_seconds": 0.369,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 413,
+      "status": "ok",
+      "symbol": "^DJI",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-08 19:59:00+00:00",
+      "date_min": "2026-05-04 13:30:00+00:00",
+      "elapsed_seconds": 0.455,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 1950,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-08 19:55:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.611,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 4680,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-08 19:45:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.414,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 1560,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.447,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 780,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.585,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 5069,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-08 17:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.387,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 1450,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.472,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.378,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_^GSPC",
+        "Close_^GSPC",
+        "High_^GSPC",
+        "Low_^GSPC",
+        "Open_^GSPC",
+        "Volume_^GSPC"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "1985-01-01 00:00:00",
+      "elapsed_seconds": 0.334,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 497,
+      "status": "ok",
+      "symbol": "^GSPC",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-08 19:59:00+00:00",
+      "date_min": "2026-05-04 13:30:00+00:00",
+      "elapsed_seconds": 0.479,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 1950,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-08 19:55:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.487,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 4680,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-08 19:45:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.505,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 1560,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2026-02-12 14:30:00+00:00",
+      "elapsed_seconds": 0.309,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 780,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-08 19:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.572,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 5069,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-08 17:30:00+00:00",
+      "date_min": "2023-06-12 13:30:00+00:00",
+      "elapsed_seconds": 0.386,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 1450,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.328,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.345,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_^NDX",
+        "Close_^NDX",
+        "High_^NDX",
+        "Low_^NDX",
+        "Open_^NDX",
+        "Volume_^NDX"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "1985-10-01 00:00:00",
+      "elapsed_seconds": 0.241,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 488,
+      "status": "ok",
+      "symbol": "^NDX",
+      "yf_interval": "1mo"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-08 20:14:00+00:00",
+      "date_min": "2026-05-04 07:15:00+00:00",
+      "elapsed_seconds": 0.417,
+      "interval": "1m",
+      "period": "5d",
+      "rows": 3875,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "1m"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-08 20:10:00+00:00",
+      "date_min": "2026-02-16 09:00:00+00:00",
+      "elapsed_seconds": 0.597,
+      "interval": "5m",
+      "period": "60d",
+      "rows": 9114,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "5m"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-08 20:00:00+00:00",
+      "date_min": "2026-02-16 09:00:00+00:00",
+      "elapsed_seconds": 0.373,
+      "interval": "15m",
+      "period": "60d",
+      "rows": 3039,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "15m"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-08 20:00:00+00:00",
+      "date_min": "2026-02-16 09:00:00+00:00",
+      "elapsed_seconds": 0.364,
+      "interval": "30m",
+      "period": "60d",
+      "rows": 1578,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "30m"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-08 20:00:00+00:00",
+      "date_min": "2023-07-24 08:00:00+00:00",
+      "elapsed_seconds": 0.611,
+      "interval": "1h",
+      "period": "730d",
+      "rows": 9950,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "1h"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-08 19:00:00+00:00",
+      "date_min": "2023-07-24 07:00:00+00:00",
+      "elapsed_seconds": 0.477,
+      "interval": "4h",
+      "period": "730d",
+      "rows": 2852,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "4h"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-08 00:00:00",
+      "date_min": "2021-05-10 00:00:00",
+      "elapsed_seconds": 0.267,
+      "interval": "1d",
+      "period": "5y",
+      "rows": 1256,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "1d"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-04 00:00:00",
+      "date_min": "2016-05-09 00:00:00",
+      "elapsed_seconds": 0.323,
+      "interval": "1w",
+      "period": "10y",
+      "rows": 522,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "1wk"
+    },
+    {
+      "columns": [
+        "Adj Close_^VIX",
+        "Close_^VIX",
+        "High_^VIX",
+        "Low_^VIX",
+        "Open_^VIX",
+        "Volume_^VIX"
+      ],
+      "date_max": "2026-05-01 00:00:00",
+      "date_min": "1990-01-01 00:00:00",
+      "elapsed_seconds": 0.263,
+      "interval": "1mo",
+      "period": "max",
+      "rows": 437,
+      "status": "ok",
+      "symbol": "^VIX",
+      "yf_interval": "1mo"
+    }
+  ],
+  "goal_achieved": false,
+  "intervals": [
+    "1m",
+    "5m",
+    "15m",
+    "30m",
+    "1h",
+    "4h",
+    "1d",
+    "1w",
+    "1mo"
+  ],
+  "next_action": "Use the fetchable yfinance cells to build a root-regime calibration matrix for Bull/Bear/Sideways/Crisis; keep unavailable cells explicit.",
+  "objective": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md yfinance-first full symbol/timeframe availability smoke",
+  "run_id": "20260511T070716+0800-codex-yfinance-first-full-matrix-smoke",
+  "runtime_code_changed": false,
+  "source_manifest": "docs/experiments/actionable-regime-confidence/runs/20260511T070440-codex-provider-universe-manifest-readback/provider-universe-manifest/provider_universe_manifest_readback.json",
+  "summary": {
+    "all_cells_ok": true,
+    "by_interval": {
+      "15m": {
+        "ok": 14
+      },
+      "1d": {
+        "ok": 14
+      },
+      "1h": {
+        "ok": 14
+      },
+      "1m": {
+        "ok": 14
+      },
+      "1mo": {
+        "ok": 14
+      },
+      "1w": {
+        "ok": 14
+      },
+      "30m": {
+        "ok": 14
+      },
+      "4h": {
+        "ok": 14
+      },
+      "5m": {
+        "ok": 14
+      }
+    },
+    "by_symbol": {
+      "CL=F": {
+        "ok": 9
+      },
+      "DIA": {
+        "ok": 9
+      },
+      "ES=F": {
+        "ok": 9
+      },
+      "GC=F": {
+        "ok": 9
+      },
+      "GLD": {
+        "ok": 9
+      },
+      "NQ=F": {
+        "ok": 9
+      },
+      "QQQ": {
+        "ok": 9
+      },
+      "SPY": {
+        "ok": 9
+      },
+      "USO": {
+        "ok": 9
+      },
+      "YM=F": {
+        "ok": 9
+      },
+      "^DJI": {
+        "ok": 9
+      },
+      "^GSPC": {
+        "ok": 9
+      },
+      "^NDX": {
+        "ok": 9
+      },
+      "^VIX": {
+        "ok": 9
+      }
+    },
+    "empty_cells": 0,
+    "error_cells": 0,
+    "ok_cells": 126,
+    "total_cells": 126
+  },
+  "symbols": [
+    "CL=F",
+    "DIA",
+    "ES=F",
+    "GC=F",
+    "GLD",
+    "NQ=F",
+    "QQQ",
+    "SPY",
+    "USO",
+    "YM=F",
+    "^DJI",
+    "^GSPC",
+    "^NDX",
+    "^VIX"
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "why_not_complete": [
+    "This run only proves which yfinance cells are fetchable.",
+    "Root-regime calibration has not yet been rerun across the matrix.",
+    "Non-yfinance provider cells remain pending or blocked per provider-status."
+  ]
+}

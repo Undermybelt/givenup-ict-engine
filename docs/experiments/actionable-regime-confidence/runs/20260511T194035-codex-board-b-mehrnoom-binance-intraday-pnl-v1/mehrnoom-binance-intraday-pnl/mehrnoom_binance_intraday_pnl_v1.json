@@ -1,0 +1,229 @@
+{
+  "accepted_source": "mehrnoom_telegram_pump_events",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T194035-codex-board-b-mehrnoom-binance-intraday-pnl-v1/checks/mehrnoom_binance_intraday_pnl_v1_assertions.out",
+    "coverage_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T194035-codex-board-b-mehrnoom-binance-intraday-pnl-v1/mehrnoom-binance-intraday-pnl/mehrnoom_binance_intraday_coin_coverage_v1.csv",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T194035-codex-board-b-mehrnoom-binance-intraday-pnl-v1/mehrnoom-binance-intraday-pnl/mehrnoom_binance_intraday_pnl_v1.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T194035-codex-board-b-mehrnoom-binance-intraday-pnl-v1/mehrnoom-binance-intraday-pnl/mehrnoom_binance_intraday_pnl_v1.md",
+    "rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T194035-codex-board-b-mehrnoom-binance-intraday-pnl-v1/mehrnoom-binance-intraday-pnl/mehrnoom_binance_intraday_pnl_rows_v1.csv"
+  },
+  "blockers": [
+    "reject_positive_underperforms_control",
+    "reject_bootstrap_diff_lcb_nonpositive",
+    "reject_fold_positive_rate_lt60pct"
+  ],
+  "bridge_precision": "intraday_1h_next_bar_open_to_6h_close",
+  "coins_with_rows": 18,
+  "control_mean_24h_return": 0.00839546470026925,
+  "control_mean_6h_return": 0.0018179584576280576,
+  "control_rows": 7149,
+  "coverage": [
+    {
+      "bars": 8650,
+      "coin": "BTC",
+      "control_events": 8865,
+      "control_rows": 2804,
+      "positive_events": 8957,
+      "positive_rows": 8898,
+      "status": "ready",
+      "symbol": "BTC/USDT"
+    },
+    {
+      "bars": 8650,
+      "coin": "ETH",
+      "control_events": 320,
+      "control_rows": 309,
+      "positive_events": 320,
+      "positive_rows": 313,
+      "status": "ready",
+      "symbol": "ETH/USDT"
+    },
+    {
+      "bars": 6805,
+      "coin": "XRP",
+      "control_events": 480,
+      "control_rows": 328,
+      "positive_events": 480,
+      "positive_rows": 410,
+      "status": "ready",
+      "symbol": "XRP/BTC"
+    },
+    {
+      "bars": 6128,
+      "coin": "ADA",
+      "control_events": 504,
+      "control_rows": 303,
+      "positive_events": 504,
+      "positive_rows": 471,
+      "status": "ready",
+      "symbol": "ADA/BTC"
+    },
+    {
+      "bars": 7307,
+      "coin": "ETC",
+      "control_events": 427,
+      "control_rows": 373,
+      "positive_events": 427,
+      "positive_rows": 406,
+      "status": "ready",
+      "symbol": "ETC/BTC"
+    },
+    {
+      "bars": 6856,
+      "coin": "TRX",
+      "control_events": 369,
+      "control_rows": 355,
+      "positive_events": 369,
+      "positive_rows": 367,
+      "status": "ready",
+      "symbol": "TRX/BTC"
+    },
+    {
+      "bars": 8032,
+      "coin": "OMG",
+      "control_events": 338,
+      "control_rows": 296,
+      "positive_events": 338,
+      "positive_rows": 317,
+      "status": "ready",
+      "symbol": "OMG/BTC"
+    },
+    {
+      "bars": 6323,
+      "coin": "LSK",
+      "control_events": 372,
+      "control_rows": 299,
+      "positive_events": 372,
+      "positive_rows": 295,
+      "status": "ready",
+      "symbol": "LSK/BTC"
+    },
+    {
+      "bars": 5942,
+      "coin": "XLM",
+      "control_events": 301,
+      "control_rows": 215,
+      "positive_events": 301,
+      "positive_rows": 210,
+      "status": "ready",
+      "symbol": "XLM/BTC"
+    },
+    {
+      "bars": 6537,
+      "coin": "BAT",
+      "control_events": 298,
+      "control_rows": 250,
+      "positive_events": 298,
+      "positive_rows": 253,
+      "status": "ready",
+      "symbol": "BAT/BTC"
+    },
+    {
+      "bars": 8008,
+      "coin": "ZRX",
+      "control_events": 117,
+      "control_rows": 117,
+      "positive_events": 117,
+      "positive_rows": 116,
+      "status": "ready",
+      "symbol": "ZRX/BTC"
+    },
+    {
+      "bars": 9466,
+      "coin": "LTC",
+      "control_events": 236,
+      "control_rows": 233,
+      "positive_events": 236,
+      "positive_rows": 236,
+      "status": "ready",
+      "symbol": "LTC/BTC"
+    },
+    {
+      "bars": 7120,
+      "coin": "DASH",
+      "control_events": 167,
+      "control_rows": 161,
+      "positive_events": 167,
+      "positive_rows": 159,
+      "status": "ready",
+      "symbol": "DASH/BTC"
+    },
+    {
+      "bars": 9466,
+      "coin": "NEO",
+      "control_events": 415,
+      "control_rows": 407,
+      "positive_events": 415,
+      "positive_rows": 412,
+      "status": "ready",
+      "symbol": "NEO/BTC"
+    },
+    {
+      "bars": 3523,
+      "coin": "XEM",
+      "control_events": 283,
+      "control_rows": 123,
+      "positive_events": 283,
+      "positive_rows": 135,
+      "status": "ready",
+      "symbol": "XEM/BTC"
+    },
+    {
+      "bars": 1459,
+      "coin": "SC",
+      "control_events": 425,
+      "control_rows": 46,
+      "positive_events": 425,
+      "positive_rows": 32,
+      "status": "ready",
+      "symbol": "SC/BTC"
+    },
+    {
+      "bars": 0,
+      "coin": "DGB",
+      "control_events": 378,
+      "control_rows": 0,
+      "positive_events": 378,
+      "positive_rows": 0,
+      "status": "no_provider_bars",
+      "symbol": "DGB/BTC"
+    },
+    {
+      "bars": 6779,
+      "coin": "STORJ",
+      "control_events": 329,
+      "control_rows": 298,
+      "positive_events": 329,
+      "positive_rows": 304,
+      "status": "ready",
+      "symbol": "STORJ/BTC"
+    },
+    {
+      "bars": 5768,
+      "coin": "WAVES",
+      "control_events": 340,
+      "control_rows": 232,
+      "positive_events": 340,
+      "positive_rows": 201,
+      "status": "ready",
+      "symbol": "WAVES/BTC"
+    }
+  ],
+  "direct_manipulation_rows_ready_for_future_rc_spa": false,
+  "downstream_consumption": "not_started:full_board_b_still_blocked_by_required_root_branch_rc_spa",
+  "fold_positive_rate_vs_control": 0.4166666666666667,
+  "gate_result": "fail:direct_manipulation_intraday_pnl_bridge_not_accepted",
+  "monthly_folds": 12,
+  "next_action": "B2R-repeat: direct Manipulation still needs stronger intraday/source-owned PnL rows; do not promote downstream.",
+  "positive_bootstrap_lcb_5pct_6h": 0.00042251625698919886,
+  "positive_mean_24h_return": 0.002925239210618698,
+  "positive_mean_6h_return": 0.0009463982928215066,
+  "positive_minus_control_24h_return": -0.005470225489650553,
+  "positive_minus_control_6h_return": -0.000871560164806551,
+  "positive_minus_control_bootstrap_lcb_5pct_6h": -0.0016296320903618892,
+  "positive_rows": 13535,
+  "promotion_allowed_for_full_board_b": false,
+  "provider": "ccxt.binance",
+  "run_id": "20260511T194035+0800-codex-board-b-mehrnoom-binance-intraday-pnl-v1",
+  "source_artifact": "/private/tmp/ict-regime-mehrnoom-pump-dump/Telegram/classified/coin-pump.csv"
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": "board-a-sideways-consolidation-legacy-reissue/v1",
+  "loop_id": "20260511T041213+0800-codex-sideways-consolidation-legacy-reissue",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T041213-codex-sideways-consolidation-legacy-reissue",
+  "active_root": "SidewaysConsolidation",
+  "source_regime_id": "RangeConsolidation",
+  "source_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T214429-codex-legacy-regime-contract-reissue/legacy-contract/legacy_regime_contract_reissue_report.json",
+  "source_reissue_source": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json",
+  "crosswalk_decision": "RangeConsolidation is reissued as the active MainRegimeV3SourceBacked root SidewaysConsolidation after the latest user correction that consolidation is a main regime class.",
+  "qualifying_condition": "catboost_isotonic_probability(RangeConsolidation_persists_next_15m) >= 0.9896907216494846",
+  "target": "RangeConsolidation_persists_next_15m crosswalked to SidewaysConsolidation",
+  "market": "NQ plus QQQ cross-context validation",
+  "timeframe": "15m primary with 1h cross-context validation",
+  "horizon": "next 15m window regime persistence",
+  "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+  "confidence_lane": "95",
+  "accepted_95": true,
+  "accepted_99": false,
+  "calibration": {
+    "support": 467,
+    "success": 463,
+    "precision": 0.9914346895074947,
+    "precision_wilson_lcb_95": 0.978186212412689,
+    "precision_wilson_lcb_99": 0.9716526963513256,
+    "coverage": 0.09461102106969206,
+    "ece": 0.0
+  },
+  "test": {
+    "support": 313,
+    "success": 309,
+    "precision": 0.987220447284345,
+    "precision_wilson_lcb_95": 0.9676071866741978,
+    "precision_wilson_lcb_99": 0.9580236351321185,
+    "coverage": 0.06341166936790923,
+    "ece": 0.004488121867580741
+  },
+  "validation_instruments": [
+    "NQ",
+    "QQQ"
+  ],
+  "validation_market_contexts": [
+    "AutoQuant_NQ_15m_cache",
+    "yfinance_QQQ_1h",
+    "IBKR_QQQ_1h"
+  ],
+  "validation_contexts": [
+    "NQ:AutoQuant_NQ_15m_cache:15m",
+    "QQQ:yfinance_QQQ_1h:1h",
+    "QQQ:IBKR_QQQ_1h:1h"
+  ],
+  "validation_timeframes": [
+    "15m",
+    "1h"
+  ],
+  "threshold_policy": {
+    "thresholds_relaxed": false,
+    "precision_wilson_lcb_95_min": 0.95,
+    "coverage_min_95": 0.03,
+    "ece_max_95": 0.05,
+    "calibration_support_min_95": 120,
+    "test_support_min_95": 60,
+    "validation_instruments_min_95": 2,
+    "validation_market_contexts_min_95": 2
+  },
+  "gate_result": "accepted_sideways_consolidation_95",
+  "accepted_roots_after_reissue": [
+    "BullExpansion",
+    "SidewaysConsolidation",
+    "CrisisCrash"
+  ],
+  "missing_roots_after_reissue": [
+    "BearExpansion",
+    "Manipulation"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "fresh_calibration_rerun": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Continue unchanged 95 root gate work for BearExpansion and acquire calibration-grade direct event/order-lifecycle evidence for Manipulation."
+}

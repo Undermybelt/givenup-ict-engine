@@ -1,0 +1,56 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:BOARD_A_6PROV_162347_ISO:20260512T084345.770Z",
+  "generated_at": "2026-05-12T08:43:45.770545Z",
+  "symbol": "BOARD_A_6PROV_162347_ISO",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:BOARD_A_6PROV_162347_ISO:20260512T084345.687Z",
+  "ranking": [
+    {
+      "unit_label": "Board A six-provider preflight - Binance BTCUSDT 1h ISO timestamp retry",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "Board A six-provider preflight - Bybit BTCUSDT linear 1h ISO timestamp retry",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "Board A six-provider preflight - IBKR SPY 1h ISO timestamp retry",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "Board A six-provider preflight - Kraken PF_XBTUSD 1h ISO timestamp retry",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "Board A six-provider preflight - TVR BTC-USD 1h local stdio ISO timestamp retry",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "Board A six-provider preflight - yfinance SPY 1h ISO timestamp retry",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    }
+  ]
+}

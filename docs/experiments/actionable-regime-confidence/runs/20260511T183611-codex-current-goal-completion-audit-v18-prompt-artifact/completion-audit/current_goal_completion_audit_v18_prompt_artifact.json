@@ -1,0 +1,136 @@
+{
+  "artifact_type": "current_goal_completion_audit_v18_prompt_artifact",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "0821e9bb90ed0833d9c3d58b9acbfe36b025821ed588b3eb7d08b7d9da5781f2",
+  "checklist": [
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+      "evidence": "accepted_95_lanes=['Bull', 'Bear', 'Sideways', 'Crisis', 'Manipulation']; min_price_root_floor=0.9529358324; scoped_direct_manipulation_floor=0.967945",
+      "gap": "Scoped active lane passes, but consumer map itself marks full objective false.",
+      "requirement": "every active regime has calibrated confidence >=95",
+      "status": "pass_scoped"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_missing_result_v1.json",
+      "evidence": "source_equivalence_missing_files=['/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv', '/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json']; external_screen_decision=external_source_label_candidate_screen_v1=no_promotable_source_label_equivalence; autoquant_gate=autoquant_local_source_label_equivalence_audit_v1=no_new_source_labels_exact_daily_aapl_only",
+      "gap": "No source-owned MainRegimeV2 equivalence rows/provenance for QQQ/NQ/crypto/FX/rates/commodities/native sub-hour/direct species.",
+      "requirement": "validated on other markets with source-owned or owner-approved labels",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T180420-codex-native-subhour-overlap-blocker-v1/native-subhour-overlap/native_subhour_overlap_blocker_v1.json",
+      "evidence": "native_subhour_ready_overlap=0/4; strict_1h=41/156",
+      "gap": "Native sub-hour source-overlap cells are 0; strict exact 1h remains partial.",
+      "requirement": "validated on other cycles/timeframes beyond scoped daily/weekly/monthly support",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T181859-codex-strict-1h-gap-triage-v1/strict-1h-gap-triage/strict_1h_gap_triage_v1.json",
+      "evidence": "accepted=41; blocked=115; total=156",
+      "gap": "Provider rows are ready, but source-label support/recency blocks 115 strict rows.",
+      "requirement": "strict exact 1h ticker/root support complete enough for full objective",
+      "status": "partial_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T181454-codex-stock-regime-upstream-refresh-audit-v1/upstream-refresh/stock_regime_upstream_refresh_audit_v1.json",
+      "evidence": "source_max_date=2026-01-30; upstream_same_csv_or_parquet_size=True; macro_post_tail_rows=26 feature rows only",
+      "gap": "Post-tail feature rows are not source labels; upstream source package has no newer label revision.",
+      "requirement": "source panel recency after 2026-01-30",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T182601-codex-direct-manipulation-source-scan-v2/direct-source-scan/direct_manipulation_source_scan_v2.json",
+      "evidence": "full_species_complete=False; direct_local_accepted=0; direct_scan_ready=0; hf_schema_decision=blocked_schema_missing_labels_and_controls",
+      "gap": "Scoped direct overlay passes, but spoofing/layering/quote-stuffing/pinging/bear-raid/painting-tape/social-text variants remain missing or positive-only.",
+      "requirement": "direct Manipulation full species coverage with matched negatives",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T183328-codex-external-source-label-candidate-screen-v1/external-source-label-screen/external_source_label_candidate_screen_v1.json",
+      "evidence": "external source candidates with labels/signals were screened but blocked without owner-approved MainRegimeV2 equivalence; macro_label_like_fields=[]",
+      "gap": "Proxy OHLCV/rule labels remain excluded.",
+      "requirement": "do not rely on proxy signals as completion",
+      "status": "pass_guardrail"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T182155-current-goal-completion-audit-v17-after-local-upstream-probes/completion-audit/current_goal_completion_audit_v17_after_local_upstream_probes.json",
+      "evidence": "prior_strict_full_objective=False; this_audit_full_objective=false",
+      "gap": "Do not call update_goal.",
+      "requirement": "update_goal only if full objective is achieved",
+      "status": "pass_guardrail"
+    }
+  ],
+  "decision": {
+    "blocking_requirements": [
+      "validated on other markets with source-owned or owner-approved labels",
+      "validated on other cycles/timeframes beyond scoped daily/weekly/monthly support",
+      "strict exact 1h ticker/root support complete enough for full objective",
+      "source panel recency after 2026-01-30",
+      "direct Manipulation full species coverage with matched negatives"
+    ],
+    "gate_result": "current_goal_completion_audit_v18=scoped_95_present_prompt_artifact_audit_blocks_full_objective",
+    "scoped_active_lane_status": "accepted_95",
+    "strict_full_objective_achieved": false,
+    "update_goal": false
+  },
+  "evidence_paths": {
+    "autoquant_source_label": "docs/experiments/actionable-regime-confidence/runs/20260511T180346-codex-autoquant-local-source-label-equivalence-audit-v1/autoquant-local-audit/autoquant_local_source_label_equivalence_audit_v1.json",
+    "consumer_map": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+    "direct_local_intake": "docs/experiments/actionable-regime-confidence/runs/20260511T181211-codex-direct-manipulation-local-intake-probe-v1/local-intake-probe/direct_manipulation_local_intake_probe_v1.json",
+    "direct_source_scan_v2": "docs/experiments/actionable-regime-confidence/runs/20260511T182601-codex-direct-manipulation-source-scan-v2/direct-source-scan/direct_manipulation_source_scan_v2.json",
+    "external_source_screen": "docs/experiments/actionable-regime-confidence/runs/20260511T183328-codex-external-source-label-candidate-screen-v1/external-source-label-screen/external_source_label_candidate_screen_v1.json",
+    "hf_pumpdump_schema": "docs/experiments/actionable-regime-confidence/runs/20260511T183018-codex-hf-pumpdump-schema-audit-v1/hf-pumpdump-schema/hf_pumpdump_schema_audit_v1.json",
+    "macro_stress_schema": "docs/experiments/actionable-regime-confidence/runs/20260511T183329-codex-macro-stress-asset-regime-schema-audit-v1/macro-stress-schema/macro_stress_asset_regime_schema_audit_v1.json",
+    "native_subhour": "docs/experiments/actionable-regime-confidence/runs/20260511T180420-codex-native-subhour-overlap-blocker-v1/native-subhour-overlap/native_subhour_overlap_blocker_v1.json",
+    "prior_completion_v17": "docs/experiments/actionable-regime-confidence/runs/20260511T182155-current-goal-completion-audit-v17-after-local-upstream-probes/completion-audit/current_goal_completion_audit_v17_after_local_upstream_probes.json",
+    "recency_upstream": "docs/experiments/actionable-regime-confidence/runs/20260511T181454-codex-stock-regime-upstream-refresh-audit-v1/upstream-refresh/stock_regime_upstream_refresh_audit_v1.json",
+    "shared_state_v16": "docs/experiments/actionable-regime-confidence/runs/20260511T180401-codex-board-a-shared-state-audit-v16/shared-state-audit/board_a_shared_state_audit_v16.json",
+    "source_equivalence_missing_result": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_missing_result_v1.json",
+    "source_equivalence_request": "docs/experiments/actionable-regime-confidence/runs/20260511T163532-codex-source-label-equivalence-request-v1/source-label-equivalence/source_label_equivalence_request_v1.json",
+    "source_equivalence_verifier_manifest": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_manifest_v1.json",
+    "strict_1h": "docs/experiments/actionable-regime-confidence/runs/20260511T181859-codex-strict-1h-gap-triage-v1/strict-1h-gap-triage/strict_1h_gap_triage_v1.json"
+  },
+  "generated_at_utc": "2026-05-11T10:37:59.803425+00:00",
+  "guardrails": {
+    "proxy_signals_accepted_as_completion": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "key_counts": {
+    "accepted_95_lanes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "direct_manipulation_full_species_complete": false,
+    "external_source_candidate_records": 6,
+    "macro_post_tail_feature_rows_after_2026_01_30": 26,
+    "min_price_root_confidence_floor": 0.9529358324,
+    "native_subhour_ready_overlap_cells": 0,
+    "native_subhour_total_cells": 4,
+    "scoped_direct_manipulation_confidence_floor": 0.967945,
+    "source_label_equivalence_missing_files": [
+      "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+      "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+    ],
+    "source_panel_date_max": "2026-01-30",
+    "strict_1h_accepted_rows": 41,
+    "strict_1h_blocked_rows": 115,
+    "strict_1h_total_rows": 156
+  },
+  "next_action": "Fill the source-label equivalence intake with source-owned rows/provenance, or obtain matched direct Manipulation species rows, then rerun unchanged gates.",
+  "objective": "Every active regime has confidence >=95 and remains suitably confident when validated on other markets and other timeframes/cycles.",
+  "run_id": "20260511T183611+0800-codex-current-goal-completion-audit-v18-prompt-artifact",
+  "success_criteria": [
+    "Bull/Bear/Sideways/Crisis/Manipulation all have calibrated confidence floors >=0.95.",
+    "Each accepted regime has its own qualifying condition and validation evidence.",
+    "Other-market validation uses source-owned labels or owner-approved equivalence, not provider/OHLCV proxy rows.",
+    "Other-timeframe/cycle validation includes strict exact 1h and native sub-hour source-overlap coverage.",
+    "Source labels are current enough beyond 2026-01-30 or explicitly extended with provenance.",
+    "Direct Manipulation covers full species set with positive rows, matched negatives, and provenance."
+  ]
+}

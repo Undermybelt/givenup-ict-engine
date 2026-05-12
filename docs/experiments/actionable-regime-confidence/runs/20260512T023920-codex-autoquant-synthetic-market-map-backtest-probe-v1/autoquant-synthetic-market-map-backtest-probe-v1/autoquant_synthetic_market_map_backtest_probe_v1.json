@@ -1,0 +1,70 @@
+{
+  "run_id": "20260512T023920-codex-autoquant-synthetic-market-map-backtest-probe-v1",
+  "gate_result": "autoquant_synthetic_market_map_backtest_probe_v1=synthetic_market_map_backtest_passed_noncanonical_no_promotion",
+  "board_sha256_before_readback_registration": "85f13c62a42d509a3c0bbef781545fe460352e7b9f654aec46a3497d96c133c6",
+  "state_dir": "/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351",
+  "managed_autoquant_dir": "/tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant",
+  "synthetic_market_shim": "docs/experiments/actionable-regime-confidence/runs/20260512T023920-codex-autoquant-synthetic-market-map-backtest-probe-v1/scripts/sitecustomize.py",
+  "command_exits": {
+    "00_auto_quant_status_before": 0,
+    "01_auto_quant_run_synthetic_market_map": 0,
+    "02_auto_quant_status_after": 0
+  },
+  "final_autoquant_status": {
+    "status": "dependency_ready_data_ready",
+    "healthy": true,
+    "dependency_healthy": true,
+    "data_ready": true,
+    "bootstrap_needed": false
+  },
+  "strategy_results": [
+    {
+      "strategy": "CrashRebound",
+      "robust_sharpe": 0.1516,
+      "full_profit_pct": 40.58,
+      "full_trades": 176,
+      "full_win_rate_pct": 65.3409,
+      "worst_timerange_profit_pct": 8.63,
+      "profit_floor": "FAIL",
+      "min_position_size": "PASS",
+      "pareto_dominated_by": "none"
+    },
+    {
+      "strategy": "PerPairMR",
+      "robust_sharpe": -0.2159,
+      "full_profit_pct": 23.97,
+      "full_trades": 287,
+      "full_win_rate_pct": 64.1115,
+      "worst_timerange_profit_pct": -2.48,
+      "profit_floor": "FAIL",
+      "min_position_size": "PASS",
+      "pareto_dominated_by": "none"
+    },
+    {
+      "strategy": "RegimeAdaptiveBNB",
+      "robust_sharpe": -0.039,
+      "full_profit_pct": 15.96,
+      "full_trades": 30,
+      "full_win_rate_pct": 60.0,
+      "worst_timerange_profit_pct": -0.76,
+      "profit_floor": "FAIL",
+      "min_position_size": "PASS",
+      "pareto_dominated_by": "none"
+    }
+  ],
+  "decision": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next": "Preserve Current Cursor next action for R6; treat this synthetic-market probe as diagnostic Auto-Quant runtime evidence only."
+}

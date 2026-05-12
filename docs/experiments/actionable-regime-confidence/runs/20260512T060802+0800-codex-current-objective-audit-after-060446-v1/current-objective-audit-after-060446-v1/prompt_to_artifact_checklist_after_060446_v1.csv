@@ -1,0 +1,12 @@
+check,status,evidence,decision
+active_roots_diagnostic_confidence,present,"053852 and 055058 diagnostic packets","diagnostic only; not promotion"
+required_r6_owner_export_root,absent,"/tmp/ict-engine-board-a-r6-owner-export-v1","blocks canonical merge"
+required_r3_native_subhour_root,absent,"/tmp/ict-engine-native-subhour-source-label-intake","blocks cross-timeframe source-label promotion"
+required_r5_recency_root,absent,"/tmp/ict-engine-source-panel-recency-extension","blocks recency-extension promotion"
+approval_package,present_unapproved,"/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid","approval_present=false"
+local_owner_export_search,non_promoting,"060032","no accepted owner-export/control rows"
+autoquant_local_cache,non_promoting,"060056","runtime/readiness evidence only"
+source_arrival_sweep,non_promoting,"060446","no required root or approved source drop"
+canonical_merge,blocked,"required roots absent and approval false","do not run"
+downstream_chain,blocked,"canonical merge absent","do not rerun promotion"
+completion,not_complete,"strict full objective false","update_goal=false"

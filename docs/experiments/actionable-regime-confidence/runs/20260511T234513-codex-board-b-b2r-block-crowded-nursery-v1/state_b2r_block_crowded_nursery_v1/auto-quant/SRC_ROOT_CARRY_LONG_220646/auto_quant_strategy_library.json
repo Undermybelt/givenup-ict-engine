@@ -1,0 +1,234 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-11T14:14:37.305987+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "local-board-b-source-root-stop-carry-longhorizon-v1",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream/source_root_stop_carry_longhorizon_downstream_packet_v1.json",
+  "timeframe": "mixed:1d,4h",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/checks/source_root_stop_carry_longhorizon_v1_run.out",
+  "strategies": [
+    {
+      "name": "SourceRootStopCarryLongHorizonV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/scripts/source_root_stop_carry_longhorizon_v1.py",
+      "metadata": {
+        "strategy": "SourceRootStopCarryLongHorizonV1",
+        "mutation_id": "board-b-20260511T220646-source-root-stop-carry-longhorizon-v1",
+        "base_factor": "source_root_stop_carry_longhorizon",
+        "hypothesis": "root-specific long horizon stop/carry branch family with scoped Manipulation component",
+        "paradigm": "regime_conditioned_stop_carry",
+        "expected_regime": "",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "",
+        "status": "rc_spa_pass_downstream_probe_required",
+        "created": "2026-05-11"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.6777503164146017,
+        "sortino": 0.0,
+        "calmar": 0.0,
+        "total_profit_pct": 4025.198613223562,
+        "max_drawdown_pct": 0.0,
+        "trade_count": 12329,
+        "win_rate_pct": 55.66550409603374,
+        "profit_factor": 1.3259832160167375
+      },
+      "per_pair_metrics": {
+        "DIA/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 298.85634985812317,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 791,
+          "win_rate_pct": 58.91276864728192,
+          "profit_factor": 1.3739965296827754
+        },
+        "EEM/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 446.09674133276656,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 667,
+          "win_rate_pct": 55.622188905547226,
+          "profit_factor": 1.4798012788591164
+        },
+        "EFA/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 330.3881414945636,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 725,
+          "win_rate_pct": 58.3448275862069,
+          "profit_factor": 1.3988636745245142
+        },
+        "GLD/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 374.4802971777818,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 613,
+          "win_rate_pct": 56.93311582381729,
+          "profit_factor": 1.5756699759434225
+        },
+        "HYG/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 183.3218596973912,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 561,
+          "win_rate_pct": 64.88413547237077,
+          "profit_factor": 1.6347957045922574
+        },
+        "IEF/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 73.99889775576463,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 653,
+          "win_rate_pct": 52.06738131699847,
+          "profit_factor": 1.2417592372684174
+        },
+        "IWM/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 348.7751915751395,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 761,
+          "win_rate_pct": 56.11038107752957,
+          "profit_factor": 1.3248736022948178
+        },
+        "NQ/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 142.50609268863087,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 1199,
+          "win_rate_pct": 54.62885738115096,
+          "profit_factor": 1.143979099459405
+        },
+        "QQQ/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 397.97068944963127,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 843,
+          "win_rate_pct": 56.34638196915777,
+          "profit_factor": 1.3320148343937168
+        },
+        "SHY/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 20.899740670429097,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 674,
+          "win_rate_pct": 47.92284866468843,
+          "profit_factor": 1.3364631757347152
+        },
+        "SPY/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 368.08917559154,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 821,
+          "win_rate_pct": 60.90133982947625,
+          "profit_factor": 1.4366766995494962
+        },
+        "TLT/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 94.2567805815092,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 643,
+          "win_rate_pct": 50.077760497667185,
+          "profit_factor": 1.1476704568921117
+        },
+        "USO/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 102.53870297243424,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 553,
+          "win_rate_pct": 44.84629294755877,
+          "profit_factor": 1.090936168616024
+        },
+        "UUP/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": -38.161326982190296,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 509,
+          "win_rate_pct": 46.75834970530452,
+          "profit_factor": 0.8865550749890269
+        },
+        "XLP/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 270.8396520837558,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 778,
+          "win_rate_pct": 60.66838046272493,
+          "profit_factor": 1.405128716199947
+        },
+        "XLU/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 351.9737157773131,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 764,
+          "win_rate_pct": 58.37696335078534,
+          "profit_factor": 1.4324202678557518
+        },
+        "XLV/USD": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 258.3679114989787,
+          "max_drawdown_pct": 0.0,
+          "trade_count": 774,
+          "win_rate_pct": 57.36434108527132,
+          "profit_factor": 1.3255976703241117
+        }
+      },
+      "pairs": [
+        "DIA/USD",
+        "EEM/USD",
+        "EFA/USD",
+        "GLD/USD",
+        "HYG/USD",
+        "IEF/USD",
+        "IWM/USD",
+        "NQ/USD",
+        "QQQ/USD",
+        "SHY/USD",
+        "SPY/USD",
+        "TLT/USD",
+        "USO/USD",
+        "UUP/USD",
+        "XLP/USD",
+        "XLU/USD",
+        "XLV/USD"
+      ],
+      "timerange": "2000-01-06T00:00:00+00:00 -> 2026-01-30T00:00:00+00:00",
+      "commit": "local-board-b-source-root-stop-carry-longhorizon-v1",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

@@ -1,0 +1,10 @@
+PASS zip_count_two
+PASS csv_files_seen
+PASS timestamp_fields_present
+PASS trade_fields_present
+PASS explicit_labels_absent
+PASS matched_negatives_absent
+PASS accepted_rows_added_zero
+PASS new_confidence_gate_false
+PASS no_raw_data_commit
+ALL_ASSERTIONS_PASS

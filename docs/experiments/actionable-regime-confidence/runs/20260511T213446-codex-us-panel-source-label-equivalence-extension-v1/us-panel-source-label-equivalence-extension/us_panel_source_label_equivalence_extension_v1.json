@@ -1,0 +1,77 @@
+{
+  "accepted_rows_added": 0,
+  "decision": "us_panel_source_label_equivalence_extension_v1=schema_ready_all_price_roots_confidence_unaccepted",
+  "external_requests_sent": false,
+  "merged_label_counts": {
+    "Bear": 164817,
+    "Bull": 312511,
+    "Crisis": 89887,
+    "Sideways": 171235
+  },
+  "merged_market_counts": {
+    "india_equity_index": 3435,
+    "us_equity_panel": 245005,
+    "us_index": 52472,
+    "us_single_stock": 437538
+  },
+  "merged_row_count": 738450,
+  "new_confidence_gate": false,
+  "next_action": "Rerun the current-goal audit against the now full-root source-label schema, then acquire accepted confidence scoring/native sub-hour/recency/R6 broad-control evidence.",
+  "previous_rows_retained": 493445,
+  "raw_data_committed": false,
+  "run_id": "20260511T213446-codex-us-panel-source-label-equivalence-extension-v1",
+  "runtime_code_changed": false,
+  "shared_intake_root": "/tmp/ict-engine-source-label-equivalence-intake",
+  "staging_root": "/tmp/ict-engine-us-panel-source-label-equivalence-extension-v1",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "us_panel_summary": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 103766,
+      "Crisis": 29632,
+      "Sideways": 56668
+    },
+    "row_count": 245005,
+    "skipped_counts": {
+      "High-volatility": 16
+    },
+    "source_confidence_ge_95_count": 17766,
+    "source_confidence_max": 1.0,
+    "source_confidence_min": 0.0,
+    "split_counts": {
+      "calibration": 136351,
+      "heldout_time": 68757,
+      "test": 39897
+    },
+    "ticker_count": 39
+  },
+  "us_rows_added": 245005,
+  "verifier": {
+    "parsed": {
+      "bad_direct_groups": [],
+      "bad_rows": [
+        {
+          "line": 248442,
+          "package_id": "price_root_equivalence_us_index_futures",
+          "reason": "bad_main_regime_v2_label"
+        },
+        {
+          "line": 248442,
+          "package_id": "price_root_equivalence_us_index_futures",
+          "reason": "missing_equivalence_policy"
+        }
+      ],
+      "reason": "rows_failed_guardrails",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "status": "blocked",
+    "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T213446-codex-us-panel-source-label-equivalence-extension-v1/command-output/source_label_equivalence_verifier.stderr.txt",
+    "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T213446-codex-us-panel-source-label-equivalence-extension-v1/command-output/source_label_equivalence_verifier.stdout.txt"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "bbn_contradiction_lift": 1.612260476966171,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 6.904135010750464,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.4216979023486318,
+    3.792286145227321e-9,
+    0.5783020938590822
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_B2R_YAHOO_CRYPTO_PRECISION_104610_20260512T025220.290901000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T105219+0800-codex-104610-yahoo-crypto-downstream-readback-v1/104610_yahoo_crypto_precision_strategy_library_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_B2R_YAHOO_CRYPTO_PRECISION_104610_20260512T025220.398165000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T105219+0800-codex-104610-yahoo-crypto-downstream-readback-v1/state_yahoo_crypto_precision_104610/auto-quant/B2R_YAHOO_CRYPTO_PRECISION_104610/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T105219+0800-codex-104610-yahoo-crypto-downstream-readback-v1/state_yahoo_crypto_precision_104610/auto-quant/B2R_YAHOO_CRYPTO_PRECISION_104610/auto_quant_prior_init_B2R_YAHOO_CRYPTO_PRECISION_104610_20260512T025220.398165000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.3077727394957983,
+        1.8487394957983192e-7,
+        0.6922270756302521
+      ],
+      "bbn_contradiction_after": 0.011732289417461891,
+      "bbn_contradiction_before": 1.396142440677966,
+      "bbn_contradiction_lift": 1.384410151260504,
+      "bbn_entropy_after": 0.6173099622059697,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6125524962132839,
+      "bbn_log_loss_before": 7.486691759757641,
+      "bbn_log_loss_delta": 6.8741392635443574,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.6921832605042016,
+        -0.000021815126050420166,
+        0.6922050756302521
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "provider-owned-yahoo-crypto-momentum-state-v1",
+      "n_breakeven": 0,
+      "n_loss": 659,
+      "n_win": 285,
+      "strategy_name": "ProviderCryptoMomentumStateV1",
+      "temper": 0.5,
+      "trade_count": 944
+    },
+    {
+      "after_probs": [
+        0.4216979023486318,
+        3.792286145227321e-9,
+        0.5783020938590822
+      ],
+      "bbn_contradiction_after": 0.004771734569752155,
+      "bbn_contradiction_before": 0.23262206027541904,
+      "bbn_contradiction_lift": 0.22785032570566688,
+      "bbn_entropy_after": 0.6808341981029256,
+      "bbn_entropy_before": 0.6173099622059697,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6815876007116415,
+      "bbn_log_loss_before": 0.7115833479177481,
+      "bbn_log_loss_delta": 0.02999574720610665,
+      "before_probs": [
+        0.3077727394957983,
+        1.8487394957983192e-7,
+        0.6922270756302521
+      ],
+      "diff": [
+        0.1139251628528335,
+        -1.810816634346046e-7,
+        -0.11392498177116994
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "provider-owned-yahoo-crypto-pullback-revert-v1",
+      "n_breakeven": 0,
+      "n_loss": 220,
+      "n_win": 162,
+      "strategy_name": "ProviderCryptoPullbackRevertV1",
+      "temper": 0.5,
+      "trade_count": 382
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "B2R_YAHOO_CRYPTO_PRECISION_104610",
+  "temper": 0.5
+}

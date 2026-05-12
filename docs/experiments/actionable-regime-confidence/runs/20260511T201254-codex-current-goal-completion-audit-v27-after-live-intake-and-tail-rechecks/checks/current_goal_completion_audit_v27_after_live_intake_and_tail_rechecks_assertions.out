@@ -1,0 +1,9 @@
+PASS new_confidence_gate_since_v26=false
+PASS accepted_rows_added_since_v26=0
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS unmet_ids=R2,R3,R4,R5,R6,R8
+PASS source_label_status=blocked
+PASS direct_manipulation_status=blocked
+PASS recency_tail_all_rows_present=false
+PASS ready_positive_control_sources=0

@@ -1,0 +1,232 @@
+{
+  "accepted_rows_added": 0,
+  "autoquant_state_dir": "/tmp/ict-engine-board-a-r6-post-canonical-autoquant-v1",
+  "blocker": "Canonical intake is schema-ready and pooled Wilson95 passes, but chronological, heldout-symbol, heldout-venue, and direct-species closure gates are still false.",
+  "board_sha256_at_start": "4c93ac99448ea53b9d96da8896ca335106370ceeab5e660c755e0277d5c58b3e",
+  "commands": [
+    {
+      "cmd": "/opt/homebrew/opt/python@3.14/bin/python3.14 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_direct_manipulation_verifier.exit",
+      "name": "direct_manipulation_verifier",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_direct_manipulation_verifier.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_direct_manipulation_verifier.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider ibkr --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_ibkr_agent.exit",
+      "name": "provider_status_ibkr_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_ibkr_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_ibkr_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider tradingview_mcp --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_tradingview_mcp_agent.exit",
+      "name": "provider_status_tradingview_mcp_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_tradingview_mcp_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_tradingview_mcp_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider yfinance --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_yfinance_agent.exit",
+      "name": "provider_status_yfinance_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_yfinance_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_yfinance_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_public --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_kraken_public_agent.exit",
+      "name": "provider_status_kraken_public_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_kraken_public_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_kraken_public_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_cli --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_kraken_cli_agent.exit",
+      "name": "provider_status_kraken_cli_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_kraken_cli_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_provider_status_kraken_cli_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-r6-post-canonical-autoquant-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_auto_quant_status.exit",
+      "name": "auto_quant_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_auto_quant_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_auto_quant_status.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol ^VIX --futures-backend yfinance --aux-backend yfinance --state-dir /tmp/ict-engine-board-a-r6-post-canonical-chain-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_analyze_live_nq_yfinance.exit",
+      "name": "analyze_live_nq_yfinance",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_analyze_live_nq_yfinance.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_analyze_live_nq_yfinance.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-post-canonical-chain-v1 --refresh",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_pre_bayes_status.exit",
+      "name": "pre_bayes_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_pre_bayes_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_pre_bayes_status.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-post-canonical-chain-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_policy_training_status.exit",
+      "name": "policy_training_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_policy_training_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_policy_training_status.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-post-canonical-chain-v1 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_workflow_status_execution_candidate.exit",
+      "name": "workflow_status_execution_candidate",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_workflow_status_execution_candidate.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_workflow_status_execution_candidate.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-post-canonical-chain-v1",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-canonical-intake-v57-materialization-v1/command-output/r6_post_canonical_provider_chain_readback_v1_export_structural_path_ranking_target.out",
+      "timed_out": false
+    }
+  ],
+  "decision": "r6_post_canonical_provider_chain_readback_v1=runtime_chain_checked_canonical_intake_schema_ready_but_split_species_blocked",
+  "direct_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "direct_matched_negative_rows_csv": 73,
+  "direct_positive_rows_csv": 73,
+  "direct_verifier": {
+    "matched_group_count": 70,
+    "matched_negative_rows": 73,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 73,
+    "provenance_keys": [
+      "canonical_intake_root",
+      "generated_at_utc",
+      "materialization_note",
+      "raw_data_committed",
+      "run_id",
+      "runtime_code_changed",
+      "source_v56_json",
+      "source_v56_negative_csv",
+      "source_v56_positive_csv",
+      "thresholds_relaxed",
+      "trade_usable",
+      "v56_gate_result",
+      "v56_negative_sha256",
+      "v56_positive_sha256"
+    ],
+    "status": "schema_ready_unscored"
+  },
+  "downstream_statuses": {
+    "analyze_live_nq_yfinance_exit": 0,
+    "auto_quant_status_exit": 0,
+    "export_structural_path_ranking_target_exit": 0,
+    "policy_training_status_exit": 0,
+    "pre_bayes_status_exit": 0,
+    "workflow_execution_candidate_exit": 0
+  },
+  "external_requests_sent": true,
+  "generated_at_utc": "2026-05-11T16:07:20.019485+00:00",
+  "new_confidence_gate": true,
+  "next_action": "Source or remap enough direct rows to satisfy chronological/symbol/venue split support and add non-spoofing direct species coverage before any Board A acceptance claim.",
+  "providers": [
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "tradingview_mcp",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "live_runtime",
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available;public_yahoo_http_endpoints",
+      "status": "ready"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "local_runtime"
+      ],
+      "observed": true,
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    }
+  ],
+  "raw_data_committed": false,
+  "readback_id": "r6_post_canonical_provider_chain_readback_v1",
+  "run_id": "20260511T235910-codex-r6-canonical-intake-v57-materialization-v1",
+  "runtime_code_changed": false,
+  "state_dir": "/tmp/ict-engine-board-a-r6-post-canonical-chain-v1",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "v57_chronological_split_gate": false,
+  "v57_direct_species_closed": false,
+  "v57_gate_result": "r6_canonical_intake_v57_materialization=canonical_verifier_schema_ready_pooled_wilson95_passed_split_species_blocked",
+  "v57_heldout_symbol_gate": false,
+  "v57_heldout_venue_gate": false,
+  "v57_pooled_wilson95_gate": true
+}

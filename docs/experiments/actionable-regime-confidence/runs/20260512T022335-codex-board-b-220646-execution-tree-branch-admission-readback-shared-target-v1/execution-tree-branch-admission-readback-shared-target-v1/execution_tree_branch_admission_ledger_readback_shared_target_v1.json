@@ -1,0 +1,9 @@
+{
+  "artifact_kind": "execution_tree_artifact",
+  "artifact_id": "execution-tree-SRC_ROOT_CARRY_LONG_220646-1778524076656",
+  "status": "observe",
+  "promote_candidate": false,
+  "actionable": false,
+  "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000;branch_admission_status=fail_closed",
+  "path": "docs/experiments/actionable-regime-confidence/runs/20260512T022335-codex-board-b-220646-execution-tree-branch-admission-readback-shared-target-v1/execution-tree-branch-admission-readback-shared-target-v1/state_execution_tree_branch_admission_shared_target_v1/SRC_ROOT_CARRY_LONG_220646/execution_tree_trace.json"
+}

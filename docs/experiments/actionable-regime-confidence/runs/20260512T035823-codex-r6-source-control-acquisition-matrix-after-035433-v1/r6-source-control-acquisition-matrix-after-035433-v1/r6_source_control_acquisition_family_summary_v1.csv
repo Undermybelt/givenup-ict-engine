@@ -1,0 +1,4 @@
+split_family,failing_cells,max_pair_rows_needed_min,sum_pair_rows_needed_min_if_exact_cells_must_all_pass
+chronological_group_split,3,55,142
+heldout_symbol_exact,40,73,2847
+heldout_venue_exact,11,73,728

@@ -1,0 +1,55 @@
+{
+  "run_id": "20260512T002009-codex-r6-owner-export-presence-sweep-v1",
+  "board_cursor_observed": "20260512T001636+0800-codex-r6-owner-export-request-package-v1",
+  "request_package_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1",
+  "target_intake_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "target_intake_root_state": "missing",
+  "required_files": [
+    "direct_manipulation_positive_rows.csv",
+    "direct_manipulation_matched_controls.csv",
+    "direct_manipulation_provenance.json"
+  ],
+  "required_files_present": 0,
+  "required_files_missing": 3,
+  "search_scopes": [
+    {
+      "scope": "/tmp /private/tmp",
+      "maxdepth": 5,
+      "candidate_hits": 0,
+      "decision": "no_required_owner_export_files_seen"
+    },
+    {
+      "scope": "/Users/thrill3r/Downloads",
+      "maxdepth": 5,
+      "candidate_hits": 0,
+      "decision": "no_required_owner_export_files_seen"
+    },
+    {
+      "scope": "docs/experiments/actionable-regime-confidence/runs",
+      "maxdepth": null,
+      "candidate_hits": 7,
+      "decision": "only_request_package_files_seen_no_required_data_exports"
+    }
+  ],
+  "repo_candidate_hits": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/checks/r6_owner_export_request_package_v1_assertions.out",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_fields_v1.csv",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_matrix_v1.csv",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_package_v1.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_package_v1.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_package_v1_request.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/scripts/r6_owner_export_request_package_v1.py"
+  ],
+  "gate_result": "r6_owner_export_presence_sweep_v1=no_owner_export_files_present_request_package_still_blocked",
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_requests_sent": false,
+  "trade_usable": false,
+  "next_action": "Place owner/user-approved R6 export files under /tmp/ict-engine-board-a-r6-owner-export-v1 or record explicit approval for a different split contract; then rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked."
+}

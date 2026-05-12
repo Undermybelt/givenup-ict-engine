@@ -1,0 +1,7 @@
+root,status,promoting,file_count,notes
+/tmp/ict-engine-board-a-r6-owner-export-v1,absent,false,0,R6 owner/export controls not acquired
+/tmp/ict-engine-native-subhour-source-label-intake,absent,false,0,R3 native-subhour source labels absent
+/tmp/ict-engine-source-panel-recency-extension,absent,false,0,R5 source-panel recency extension absent
+/tmp/ict-engine-source-label-equivalence-intake,present,false,2,confidence-blocked sidecar only
+/tmp/ict-engine-direct-manipulation-row-intake,present,false,3,legacy non-promoting sidecar only
+/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,present,false,1,approval_present=false and canonical_merge_allowed_now=false

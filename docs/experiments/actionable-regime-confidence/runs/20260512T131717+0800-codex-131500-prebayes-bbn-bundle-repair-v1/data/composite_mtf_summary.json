@@ -1,0 +1,17 @@
+{
+  "provider_input_rows": {
+    "yfinance": 983,
+    "kraken": 721,
+    "binance": 985,
+    "bybit": 985,
+    "tradingview_mcp": 720,
+    "ibkr_paxos_aggtrades": 784
+  },
+  "composite_1h_rows_all_six": 572,
+  "composite_4h_rows": 141,
+  "composite_1d_rows": 21,
+  "first_1h": "2026-04-12T07:00:00Z",
+  "last_1h": "2026-05-11T23:00:00Z",
+  "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "bundle": "docs/experiments/actionable-regime-confidence/runs/20260512T131717+0800-codex-131500-prebayes-bbn-bundle-repair-v1/bundle/regime_consumer_bundle.json"
+}

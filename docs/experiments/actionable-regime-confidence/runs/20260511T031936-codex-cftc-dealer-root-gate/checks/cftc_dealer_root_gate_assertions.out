@@ -1,0 +1,10 @@
+loop_id=20260511T031936+0800-codex-cftc-dealer-root-gate
+rows=1596
+raw_committed_to_repo=false
+runtime_code_changed=false
+thresholds_relaxed=false
+accepted_new_roots_95=none
+gate_result=blocked_cftc_dealer_root_gate_below_95
+Bull:cal_lcb=0.224186:test_lcb=0.045587:accepted=false
+Bear:cal_lcb=0.134810:test_lcb=0.107960:accepted=false
+Sideways:cal_lcb=0.000000:test_lcb=0.000000:accepted=false

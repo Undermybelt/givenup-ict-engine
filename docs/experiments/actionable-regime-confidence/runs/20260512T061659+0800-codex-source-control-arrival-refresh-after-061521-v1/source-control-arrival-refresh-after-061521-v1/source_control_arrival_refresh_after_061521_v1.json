@@ -1,0 +1,299 @@
+{
+  "accepted_rows_added": 0,
+  "approval_present": false,
+  "board_sha256_before_artifact": "b1455a80b2ce7d898dd643c00fd7b48dc3efe6be6b66e3de2b77c980fccd194c",
+  "canonical_merge": false,
+  "dispatch_drafts": {
+    "cboe_cfe": {
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "present": true,
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d"
+    },
+    "cme_group": {
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "present": true,
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b"
+    }
+  },
+  "downstream_promotion_rerun": false,
+  "external_requests_sent": false,
+  "gate_result": "source_control_arrival_refresh_after_061521_v1=no_required_root_no_approval_no_promotion",
+  "local_candidate_count": 120,
+  "local_candidate_sample": [
+    {
+      "is_required_root_member": false,
+      "mtime": 1778535649,
+      "path": "/tmp/cfe_futures_trades_sample_226.zip",
+      "size": 1064511
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516391,
+      "path": "/tmp/courtlistener_oystacher_docket_exact.json",
+      "size": 58
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516391,
+      "path": "/tmp/courtlistener_oystacher_dockets.json",
+      "size": 58
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778518047,
+      "path": "/tmp/ict-engine-cboe-futures-market-data-headers.txt",
+      "size": 1174
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778518046,
+      "path": "/tmp/ict-engine-cboe-oof-headers.txt",
+      "size": 1878
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778517853,
+      "path": "/tmp/ict-engine-cme-mbo-headers.txt",
+      "size": 4641
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778517853,
+      "path": "/tmp/ict-engine-databento-docs-headers.txt",
+      "size": 468
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778517831,
+      "path": "/tmp/ict-engine-databento-metadata-range-response.json",
+      "size": 30
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778517854,
+      "path": "/tmp/ict-engine-justia-oystacher-headers.txt",
+      "size": 2186
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778523449,
+      "path": "/tmp/ict-engine-board-a-tsie-market-regime-dryrun-20260512T0200/symbol_counts_top100.csv",
+      "size": 1112
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778531946,
+      "path": "/tmp/ict-engine-codex-auto-quant-config-target/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778529653,
+      "path": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778532407,
+      "path": "/tmp/ict-engine-codex-branch-path-wire-target/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778533336,
+      "path": "/tmp/ict-engine-codex-branch-path-wire-target-v2/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778535549,
+      "path": "/tmp/ict-engine-codex-branch-segment-catboost-target/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778536458,
+      "path": "/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778536102,
+      "path": "/tmp/ict-engine-codex-branch-segments-unit-v3-20260512T054651+0800/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778522283,
+      "path": "/tmp/ict-engine-codex-execution-tree-admission/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778523243,
+      "path": "/tmp/ict-engine-codex-local-execution-tree-branch-admission-target-20260512T020827/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778534279,
+      "path": "/tmp/ict-engine-codex-regime-bundle-bbn-target/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778521442,
+      "path": "/tmp/ict-engine-codex-test-agent-neutralized/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778522026,
+      "path": "/tmp/ict-engine-codex-test-execution-tree-admission/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778522335,
+      "path": "/tmp/ict-engine-codex-test-execution-tree-ledger/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778518345,
+      "path": "/tmp/ict-engine-codex-test-target-20260512-branch-path/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778518734,
+      "path": "/tmp/ict-engine-codex-test-target-20260512-readonly-bbn/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778520705,
+      "path": "/tmp/ict-engine-codex-test-target-branch-candidate/debug/.fingerprint/smallvec-d37cfeb0b273ffb5/lib-smallvec.json",
+      "size": 625
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778514515,
+      "path": "/tmp/ict-engine-oystacher-probe/oystacher.txt",
+      "size": 59124
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778514409,
+      "path": "/tmp/ict-engine-oystacher-probe2/oystacher.txt",
+      "size": 116919
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778514376,
+      "path": "/tmp/ict-engine-r6-oystacher-candidate/raw/enfigorcomplnt101915.txt",
+      "size": 116919
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516395,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorappa101915.headers.txt",
+      "size": 1981
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516398,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915appa.headers.txt",
+      "size": 1987
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516386,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exha.headers.txt",
+      "size": 1996
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516384,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exhibita.headers.txt",
+      "size": 1972
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516392,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexha101915.headers.txt",
+      "size": 1980
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516388,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexhibita101915.headers.txt",
+      "size": 1996
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516376,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.headers.txt",
+      "size": 793
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516380,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.txt",
+      "size": 116919
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516381,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_press_7253_15.headers.txt",
+      "size": 1975
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516413,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/courtlistener_dockets_api.headers.txt",
+      "size": 1693
+    },
+    {
+      "is_required_root_member": false,
+      "mtime": 1778516413,
+      "path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/courtlistener_dockets_api.json",
+      "size": 58
+    }
+  ],
+  "local_required_root_member_count": 0,
+  "required_roots": [
+    {
+      "files": [],
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false
+    },
+    {
+      "files": [],
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    {
+      "files": [],
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    }
+  ],
+  "required_roots_present_all": false,
+  "required_roots_present_any": false,
+  "run_id": "20260512T061659+0800-codex-source-control-arrival-refresh-after-061521-v1",
+  "source_control_evidence_acquired": false,
+  "source_label_equivalence": {
+    "files": [
+      "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+      "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv"
+    ],
+    "path": "/tmp/ict-engine-source-label-equivalence-intake",
+    "present": true,
+    "rows": 248440
+  },
+  "strict_full_objective": false,
+  "target_root_mutated": false,
+  "trade_usable": false,
+  "update_goal": false
+}

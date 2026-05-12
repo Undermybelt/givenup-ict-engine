@@ -1,0 +1,613 @@
+provider,instrument,timeframe,root,data_status,source_rows,source,attachability_status,acceptance_status,reason
+yfinance,CL=F,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,5m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,5m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,5m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,5m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,15m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,15m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,15m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,15m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,30m,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,30m,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,30m,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,30m,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1h,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1h,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1h,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1h,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,CL=F,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,CL=F,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,CL=F,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,DIA,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,DIA,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,DIA,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,DIA,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,ES=F,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,ES=F,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,ES=F,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,ES=F,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GC=F,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GC=F,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GC=F,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GC=F,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GLD,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GLD,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GLD,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GLD,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,NQ=F,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,NQ=F,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,NQ=F,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,NQ=F,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,QQQ,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,QQQ,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,QQQ,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,QQQ,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,SPY,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,SPY,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,SPY,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,SPY,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,USO,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,USO,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,USO,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,USO,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,YM=F,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,YM=F,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,YM=F,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,YM=F,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^DJI,1d,Bull,ok,3262,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^DJI,1d,Bear,ok,968,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^DJI,1d,Sideways,ok,2198,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^DJI,1d,Crisis,ok,131,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^GSPC,1d,Bull,ok,3339,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^GSPC,1d,Bear,ok,1068,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^GSPC,1d,Sideways,ok,1993,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^GSPC,1d,Crisis,ok,159,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^NDX,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^NDX,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^NDX,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^NDX,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^VIX,1d,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^VIX,1d,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^VIX,1d,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^VIX,1d,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,CL=F,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,CL=F,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,CL=F,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,CL=F,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,DIA,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,DIA,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,DIA,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,DIA,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,ES=F,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,ES=F,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,ES=F,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,ES=F,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GC=F,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GC=F,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GC=F,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GC=F,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GLD,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GLD,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GLD,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,GLD,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,NQ=F,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,NQ=F,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,NQ=F,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,NQ=F,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,QQQ,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,QQQ,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,QQQ,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,QQQ,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,SPY,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,SPY,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,SPY,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,SPY,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,USO,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,USO,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,USO,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,USO,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,YM=F,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,YM=F,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,YM=F,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,YM=F,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^DJI,1w,Bull,ok,673,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^DJI,1w,Bear,ok,192,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^DJI,1w,Sideways,ok,467,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^DJI,1w,Crisis,ok,29,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^GSPC,1w,Bull,ok,696,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^GSPC,1w,Bear,ok,223,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^GSPC,1w,Sideways,ok,410,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^GSPC,1w,Crisis,ok,32,kaggle/mafaqbhatti-stock-market-regimes-2000-2026,direct_source_label_attached_candidate,not_accepted_full_panel,direct Kaggle MainRegimeV2 root label exists for this yfinance instrument/timeframe/root slot
+yfinance,^NDX,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^NDX,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^NDX,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^NDX,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^VIX,1w,Bull,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^VIX,1w,Bear,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^VIX,1w,Sideways,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,^VIX,1w,Crisis,ok,0,,missing_instrument_source_label,not_accepted_full_panel,instrument is not in the Kaggle stock/index source-label panel
+yfinance,CL=F,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1mo,Bull,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1mo,Bear,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1mo,Sideways,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,1mo,Crisis,ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,CL=F,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,DIA,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,ES=F,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GC=F,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,GLD,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,NQ=F,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,QQQ,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,SPY,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,USO,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,YM=F,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^DJI,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^GSPC,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^NDX,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,4h,Bull,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,4h,Bear,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,4h,Sideways,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+yfinance,^VIX,4h,Crisis,derived_ok,0,,missing_intraday_or_monthly_source_label,not_accepted_full_panel,Kaggle stock/index source labels are available only for 1d and 1w
+kraken_public_lowpollution_http,XBTUSD,1m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,5m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,5m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,5m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,5m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,15m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,15m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,15m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,15m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,30m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,30m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,30m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,30m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1h,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1h,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1h,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1h,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,4h,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,4h,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,4h,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,4h,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1d,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1d,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1d,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1d,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1w,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1w,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1w,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1w,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1mo,Bull,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1mo,Bear,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1mo,Sideways,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,XBTUSD,1mo,Crisis,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,5m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,5m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,5m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,5m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,15m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,15m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,15m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,15m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,30m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,30m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,30m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,30m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1h,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1h,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1h,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1h,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,4h,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,4h,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,4h,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,4h,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1d,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1d,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1d,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1d,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1w,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1w,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1w,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1w,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1mo,Bull,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1mo,Bear,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1mo,Sideways,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,ETHUSD,1mo,Crisis,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,5m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,5m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,5m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,5m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,15m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,15m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,15m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,15m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,30m,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,30m,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,30m,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,30m,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1h,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1h,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1h,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1h,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,4h,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,4h,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,4h,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,4h,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1d,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1d,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1d,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1d,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1w,Bull,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1w,Bear,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1w,Sideways,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1w,Crisis,usable,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1mo,Bull,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1mo,Bear,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1mo,Sideways,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells
+kraken_public_lowpollution_http,SOLUSD,1mo,Crisis,unsupported_provider_interval,0,,missing_non_yfinance_source_label,not_accepted_full_panel,Kaggle stock/index labels do not cover Kraken or other non-yfinance provider cells

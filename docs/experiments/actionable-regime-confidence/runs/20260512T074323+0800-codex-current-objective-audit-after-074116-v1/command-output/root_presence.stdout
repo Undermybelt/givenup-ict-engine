@@ -1,0 +1,10 @@
+ABSENT /tmp/ict-engine-board-a-r6-owner-export-v1
+ABSENT /tmp/ict-engine-source-panel-recency-extension
+PRESENT /tmp/ict-engine-native-subhour-source-label-intake
+/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json
+/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv
+PRESENT /tmp/ict-engine-source-label-equivalence-intake
+/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json
+/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv
+PRESENT /private/tmp/r6_oystacher_approval_decision_package_v1.json.valid
+/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid

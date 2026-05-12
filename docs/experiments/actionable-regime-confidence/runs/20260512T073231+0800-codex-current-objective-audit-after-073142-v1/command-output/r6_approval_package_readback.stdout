@@ -1,0 +1,16 @@
+r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge
+approval_present	false
+canonical_merge_allowed_now	false
+downstream_rerun_allowed_now	false
+flip_controls_accepted_under_current_contract	false
+public_recap_source_positive_candidate	true
+shared_intake_mutated	false
+strict_full_objective_achieved	false
+trade_usable	false
+update_goal	false
+flip_rows	1553
+isolated_split_axes_pass	true
+isolated_verifier_status	schema_ready_unscored
+matched_groups	1313
+parsed_order_rows	6735
+positive_spoof_rows	5182

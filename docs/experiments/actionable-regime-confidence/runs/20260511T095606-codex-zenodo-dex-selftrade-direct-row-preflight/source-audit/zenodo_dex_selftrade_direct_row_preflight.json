@@ -1,0 +1,91 @@
+{
+  "accepted_direct_manipulation_rows_added": 0,
+  "accepted_parent_root_sources_added": 0,
+  "active_taxonomy": "MainRegimeV2",
+  "candidate_direct_manipulation_rows_exported": 48,
+  "candidate_negative_control_rows": 24,
+  "candidate_positive_self_trade_rows": 24,
+  "candidate_rows_csv": "source-audit/direct_manipulation_rows_candidate_v1.csv",
+  "candidate_schema": "direct_manipulation_rows_schema_v3.csv",
+  "extraction_stats": [
+    {
+      "candidate_negative_control_rows": 12,
+      "candidate_positive_self_trade_rows": 12,
+      "max_scan_rows": 200000,
+      "positive_rule": "maker == taker",
+      "rows_scanned_until_stop": 104,
+      "target_per_class": 12,
+      "venue": "IDEX"
+    },
+    {
+      "candidate_negative_control_rows": 12,
+      "candidate_positive_self_trade_rows": 12,
+      "max_scan_rows": 200000,
+      "positive_rule": "get == give",
+      "rows_scanned_until_stop": 556,
+      "target_per_class": 12,
+      "venue": "EtherDelta"
+    }
+  ],
+  "gate_result": "blocked_candidate_direct_rows_exported_full_acceptance_gate_not_run",
+  "limitations": [
+    "No MainRegimeV2 Bull/Bear/Sideways/Crisis parent-root slots are filled.",
+    "The exported rows are a bounded source-backed preflight sample, not a full chronological 95% acceptance gate.",
+    "Full source CSVs are 1.05GB and 2.10GB; raw files were not downloaded or committed.",
+    "Self-trade mapping is direct order-lifecycle evidence for a wash-trade subtype, but it still needs a full-context gate before acceptance coverage can be claimed."
+  ],
+  "next_action": "If this direct-self-trade lane is pursued, run a full or larger bounded chronological Zenodo DEX gate from raw rows in /tmp, preserving positive self-trades and same-venue non-self controls; otherwise continue acquisition for exact yfinance/Kraken parent-root labels.",
+  "objective": "Bounded preflight for replayable direct Manipulation rows from real DEX trade data.",
+  "raw_data_committed": false,
+  "run_id": "20260511T095606+0800-codex-zenodo-dex-selftrade-direct-row-preflight",
+  "runtime_code_changed": false,
+  "source": {
+    "github_pipeline": "https://github.com/friedhelmvictor/lob-dex-wash-trading-paper",
+    "remote_file_sizes_bytes": {
+      "EtherDeltaTrades.csv": 1051981252,
+      "IDEXTrades.csv": 2098100246
+    },
+    "source_logic_observed": [
+      "Repository pipeline filters self trades before SCC-based wash-trade labeling.",
+      "Pipeline writes self_trades.csv and trades_labeled.csv when run over full preprocessed data.",
+      "This preflight only exports bounded self-trade/non-self direct rows; it does not run the heavy R pipeline."
+    ],
+    "title": "Detecting and Quantifying Wash Trading on Decentralized Cryptocurrency Exchanges",
+    "venues": [
+      "IDEX",
+      "EtherDelta"
+    ],
+    "zenodo_api": "https://zenodo.org/api/records/4540223",
+    "zenodo_record": "https://zenodo.org/records/4540223"
+  },
+  "targeted_near_miss_candidates": [
+    {
+      "decision": "rejected_for_current_slots",
+      "reason": "Herding/risk/signal outputs have no requested exact instrument/timeframe parent-root label panel and are generated signals.",
+      "source_id": "kaggle:igormerlinicomposer/herding-based-market-regime-dataset"
+    },
+    {
+      "decision": "rejected_for_current_slots",
+      "reason": "Daily NIFTY behavior/macro/fast-state predictions are not exact requested yfinance/Kraken instruments and not Bull/Bear/Sideways/Crisis source labels.",
+      "source_id": "kaggle:ahaanverma00/nifty-500-market-and-behavior-regime-dataset"
+    },
+    {
+      "decision": "rejected_for_current_slots",
+      "reason": "Synthetic 10-day LOB data has quiet/normal/volatile regimes, not real exact-underlying parent-root labels.",
+      "source_id": "kaggle:sergionefedov/synthetic-limit-order-book-market-microstructure"
+    },
+    {
+      "decision": "rejected_for_current_slots",
+      "reason": "Synthetic anomaly/fraud sequences; no real transactions, no exact requested parent-root labels, and no accepted direct manipulation coverage.",
+      "source_id": "kaggle:justinsolstice/dark-pool-pack"
+    },
+    {
+      "decision": "rejected_for_current_slots",
+      "reason": "HMM-derived BTCUSD regimes are explicitly forbidden proxy labels.",
+      "source_id": "huggingface:akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD"
+    }
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "v3_direct_row_schema_satisfied_for_candidate_sample": true
+}

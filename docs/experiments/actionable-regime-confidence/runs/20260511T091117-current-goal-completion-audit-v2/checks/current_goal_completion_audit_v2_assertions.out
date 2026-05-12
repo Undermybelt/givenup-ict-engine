@@ -1,0 +1,11 @@
+goal_achieved=false
+accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+missing_or_rejected_parent_root_source_label_slots=564
+missing_by_root=Bull=141,Bear=141,Sideways=141,Crisis=141
+accepted_parent_root_label_slots_added_by_latest_source_probes=0
+accepted_direct_manipulation_rows_or_windows=0
+PASS no_proxy_completion_promoted=true
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

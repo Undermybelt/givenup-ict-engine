@@ -1,0 +1,10 @@
+requirement,evidence,status,notes
+"Use the named Board A plan markdown","docs/plans/2026-05-10-actionable-regime-confidence-todo.md","covered","Append-only registration still required after this run."
+"Do not disturb concurrent agents","new isolated run root 20260512T102528+0800-codex-board-a-102018-run-tomac-followup-v1","covered","Did not edit source 102018 workspace; used shadow config and symlinked provider-owned user_data."
+"Use Auto-Quant directly","command-output/01_auto_quant_run_tomac_recommended.cmd; command-output/02_auto_quant_run_tomac_managed_dir.cmd; command-output/05_auto_quant_run_tomac_shadow_2026_timerange_abs.cmd","covered","Recommended command failed outside managed deps; managed retry exposed timerange mismatch; shadow timerange repair exited 0."
+"Use provider-owned data","source run 102018 provider-data/yahoo_nq_f_1h_candles_summary.json; workspace user_data NQ_USD feathers","covered","Data covers 2026-04-01 to 2026-05-11 and comes from the 102018 provider authority readback."
+"Run filter / Pre-Bayes / BBN / CatBoost / execution tree after Auto-Quant","N/A","blocked","Auto-Quant produced zero trades and zero mature rooted observations, so downstream promotion was fail-closed and not rerun from this packet."
+"Reach every-regime 95 percent confidence","board_a_102018_run_tomac_followup_v1.json","not_achieved","No accepted regime packet added."
+"Verify across other markets and timeframes","provider matrix from 102018; this run only NQ/USD 1h/4h/1d context","not_achieved","This packet is one provider-owned NQ TOMAC follow-up, not cross-regime/cross-market acceptance."
+"Use IBKR TradingViewRemix YF Kraken","102018 provider-status output and provider matrix","partial","YF provider data is primary; IBKR/Kraken are provider-context sidecars; TradingViewRemix remains fail-closed in 102018."
+"Report result honestly","board_a_102018_run_tomac_followup_v1.md; checks/board_a_102018_run_tomac_followup_v1_assertions.out","covered","Terminal result is zero-trade/no-promotion, update_goal=false."

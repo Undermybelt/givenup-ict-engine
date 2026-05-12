@@ -1,0 +1,4 @@
+candidate_set_id,path_id,raw_path_score
+structural-candidates:NQ:af0c00ee702b8d23,path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary,0.8574074074
+structural-candidates:NQ:af0c00ee702b8d23,path:scenario:NQ:belief_regime_node:trend:range_mean_reversion:primary,0.775
+structural-candidates:NQ:af0c00ee702b8d23,path:scenario:NQ:belief_regime_node:trend:stress_de_risk:primary,0.837037037

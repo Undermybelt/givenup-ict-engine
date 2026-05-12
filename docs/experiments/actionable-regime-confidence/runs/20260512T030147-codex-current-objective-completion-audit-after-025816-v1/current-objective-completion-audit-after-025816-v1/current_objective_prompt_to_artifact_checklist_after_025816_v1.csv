@@ -1,0 +1,12 @@
+requirement,evidence,status
+every_mainregimev2_regime_ge_95_confidence,"Board cursor remains blocked; no accepted rows added by 025801 or 025816",blocked
+per_regime_qualifying_conditions,"No current accepted packet with strict fields was created after latest source screens",blocked
+cross_market_cycle_timeframe_validation,"025801 is OHLCV-only futures breadth; 025816 is single-symbol BTCUSDT derived-label evidence",blocked
+provider_context_ibkr_tradingview_yfinance_kraken,"Provider context remains non-promoting and was not rerun for promotion because canonical merge is disallowed",partial
+real_downstream_chain,"Provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree promotion rerun remains disallowed until source/control unlock",blocked
+r6_owner_controls_or_flip_approval,"R6 owner-export root absent; approval_present=false; flip_controls_accepted_under_current_contract=false",blocked
+r3_native_subhour_source_labels,"/tmp/ict-engine-native-subhour-source-label-intake absent",blocked
+r5_source_panel_recency_extension,"/tmp/ict-engine-source-panel-recency-extension absent",blocked
+latest_source_discovery_preserved,"025801 and 025816 artifacts exist with passing assertions and non-promoting gates",pass
+no_proxy_promotion,"OHLCV breadth and single-symbol amplitude labels are explicitly non-promoting",pass
+multi_agent_board_safety,"Latest duplicate registrations are count-onced; audit is append-only and does not edit Current Cursor",pass

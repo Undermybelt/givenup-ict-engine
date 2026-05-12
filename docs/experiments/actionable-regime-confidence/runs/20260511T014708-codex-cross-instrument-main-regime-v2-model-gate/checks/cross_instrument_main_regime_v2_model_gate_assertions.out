@@ -1,0 +1,12 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T014708-codex-cross-instrument-main-regime-v2-model-gate/root-model/cross_instrument_main_regime_v2_model_gate_report.json
+summary: docs/experiments/actionable-regime-confidence/runs/20260511T014708-codex-cross-instrument-main-regime-v2-model-gate/root-model/cross_instrument_main_regime_v2_model_gate_summary.csv
+accepted_root_classes_95_this_run: none
+accepted_root_classes_95_current_evidence: Crisis
+missing_root_classes_95_current_evidence: Bull,Bear,Sideways,Manipulation
+blocked_future_target_predictors: True
+model_and_threshold_fit_on_train_only: True
+thresholds_relaxed: False
+runtime_code_changed: False
+trade_usable: False
+manipulation_input_state: missing_required_inputs
+GATE blocked

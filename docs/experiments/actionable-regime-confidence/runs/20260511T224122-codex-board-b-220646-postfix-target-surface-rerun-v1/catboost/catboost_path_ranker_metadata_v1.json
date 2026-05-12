@@ -1,0 +1,10 @@
+{
+  "branch_score_rows": 4,
+  "catboost_available": true,
+  "features_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224122-codex-board-b-220646-postfix-target-surface-rerun-v1/catboost/catboost_branch_features_v1.csv",
+  "model_family": "catboost",
+  "model_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224122-codex-board-b-220646-postfix-target-surface-rerun-v1/catboost/path_ranker_model/catboost_model.cbm",
+  "positive_rate": 0.5566550409603375,
+  "trainer_note": "uv_offline_catboost_classifier",
+  "training_rows": 12329
+}

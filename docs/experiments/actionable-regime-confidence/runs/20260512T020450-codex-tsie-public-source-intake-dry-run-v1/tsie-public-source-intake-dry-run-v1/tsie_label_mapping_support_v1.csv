@@ -1,0 +1,8 @@
+regime_label,published_label,mapping,mapping_status,support_status,reason
+0,STRONG SELL,Bear,mapped_unambiguous,not_computed_transport_blocked,published high-confidence bearish breakdown
+1,WEAK SELL,Bear,mapped_unambiguous,not_computed_transport_blocked,published mild bearish movement
+2,BEAR TRAP,Abstain,abstain_trap,not_computed_transport_blocked,false-breakdown class is directionally ambiguous
+3,FLAT / NOISE,Sideways,mapped_unambiguous,not_computed_transport_blocked,published sideways / low-volatility class
+4,BULL TRAP,Abstain,abstain_trap,not_computed_transport_blocked,false-breakout class is directionally ambiguous
+5,WEAK BUY,Bull,mapped_unambiguous,not_computed_transport_blocked,published mild bullish movement
+6,STRONG BUY,Bull,mapped_unambiguous,not_computed_transport_blocked,published high-confidence breakout

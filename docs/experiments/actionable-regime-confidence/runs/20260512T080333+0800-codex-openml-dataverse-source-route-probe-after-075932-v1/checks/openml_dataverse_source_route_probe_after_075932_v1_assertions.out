@@ -1,0 +1,20 @@
+PASS openml_dataverse_source_route_probe_after_075932_v1
+gate_result=openml_dataverse_source_route_probe_after_075932_v1=no_required_source_control_unlock
+requests_sent=16
+request_failures=8
+candidate_rows=50
+required_metadata_hits=0
+exact_mainregimev2_hits=0
+r5_post_cutoff_hits=0
+r3_native_subhour_hits=0
+r6_owner_control_hits=0
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

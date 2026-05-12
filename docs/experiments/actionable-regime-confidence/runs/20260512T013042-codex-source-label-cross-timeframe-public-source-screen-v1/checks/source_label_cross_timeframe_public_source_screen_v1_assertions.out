@@ -1,0 +1,17 @@
+PASS decision=source_label_cross_timeframe_public_source_screen_v1=no_ready_source_owned_cross_timeframe_labels_found
+PASS ready_public_cross_timeframe_source_label_exports_found=0
+PASS r3_native_root_present=false
+PASS r5_recency_root_present=false
+PASS r6_owner_export_root_present=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS canonical_merge_allowed=false
+PASS downstream_chain_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS shared_intake_mutated=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS raw_data_downloaded=false
+PASS trade_usable=false

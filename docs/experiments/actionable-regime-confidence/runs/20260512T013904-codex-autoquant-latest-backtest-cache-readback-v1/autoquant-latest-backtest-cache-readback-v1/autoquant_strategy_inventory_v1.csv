@@ -1,0 +1,4 @@
+inventory_type,count,files
+active_default_strategy_py,0,
+external_strategy_py,1,user_data/strategies_external/TomacNQ_KillzoneBreakout.py
+latest_backtest_zip_members,4,backtest-result-2026-05-12_00-27-36.json;backtest-result-2026-05-12_00-27-36_config.json;backtest-result-2026-05-12_00-27-36_TomacNQ_KillzoneBreakout.py;backtest-result-2026-05-12_00-27-36_market_change.feather

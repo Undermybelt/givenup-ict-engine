@@ -1,0 +1,13 @@
+provider_status_exit0=true
+auto_quant_status_exit0=true
+pre_bayes_status_exit0=true
+workflow_bundle_exit0=true
+workflow_execution_candidate_exit0=true
+workflow_status_exit0=true
+blocked_trace_was_block_crowded=true
+latest_trace_observe_or_better=true
+exact_crisis_branch_seen_in_latest_trace=true
+source_crisis_has_nonzero_trades=true
+nursery_status_incubation_only=true
+promotion_allowed_false=true
+PASS

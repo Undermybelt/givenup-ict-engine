@@ -1,0 +1,16 @@
+gate_result=r5_mainregimev2_local_candidate_screen_after_090725_v1=no_required_r5_mainregimev2_source_rows
+files_scanned=22928
+mainregimev2_candidate_files=1463
+r5_required_roots_present=false
+required_r5_candidate_files=0
+source_owned_post_20260130_r5_mainregimev2_rows=0
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

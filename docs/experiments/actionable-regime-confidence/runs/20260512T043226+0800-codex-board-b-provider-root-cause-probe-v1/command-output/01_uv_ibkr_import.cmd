@@ -1,0 +1,1 @@
+env UV_CACHE_DIR=/tmp/ict-engine-provider-deps-uv-cache uv run --with redis --with ib_async --with pandas python -c import sys; sys.path.insert(0, "/Users/thrill3r/projects-ict-engine/ict-engine/scripts"); import redis; import ib_async; import ibkr_bridge; print("ok")

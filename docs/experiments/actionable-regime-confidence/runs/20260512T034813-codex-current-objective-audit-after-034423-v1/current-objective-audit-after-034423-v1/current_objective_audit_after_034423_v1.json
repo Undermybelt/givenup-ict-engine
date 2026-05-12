@@ -1,0 +1,175 @@
+{
+  "autoquant": {
+    "data_ready": true,
+    "dependency_healthy": true,
+    "managed_dir": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant/.deps/auto-quant",
+    "new_autoquant_promotion_run_allowed": false,
+    "status": "dependency_ready_data_ready"
+  },
+  "board": {
+    "board_sha_before_audit": "c205b02cd80077cf063f90cc0ada60e650f90ee9c85f62d19baf7b6e4fe44502  docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "current_cursor_edited": false
+  },
+  "command_exits": {
+    "autoquant_status_prepared": 0,
+    "direct_verifier_required_owner_export": 2,
+    "policy_training_status_nq": 0,
+    "pre_bayes_status_nq": 0,
+    "provider_status_agent": 0,
+    "r6_approval_decision_package": 0,
+    "workflow_status_nq": 0
+  },
+  "downstream": {
+    "policy_training_matched_rows": 0,
+    "policy_training_summary": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+    "pre_bayes_latest_filtered_assignments": null,
+    "pre_bayes_latest_gate_status": null,
+    "pre_bayes_latest_policy": null,
+    "pre_bayes_latest_soft_evidence": null,
+    "structural_path_ranking_runtime_enabled": false,
+    "structural_path_ranking_runtime_ready": false,
+    "structural_path_ranking_target_export_ready": false,
+    "workflow_actionable_artifact_count": 0,
+    "workflow_branch_admission_actionable": false,
+    "workflow_branch_admission_status": "fail_closed",
+    "workflow_blocking_reason": "no workflow phase snapshots available",
+    "workflow_blocking_status": "insufficient_state"
+  },
+  "gate_result": "current_objective_audit_after_034423_v1=not_complete_source_controls_missing_verifier_blocked_pre_bayes_empty_policy_training_empty_workflow_not_actionable_no_promotion",
+  "generated_from_command_outputs": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/board_sha256_before_audit.txt",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/source_root_presence.txt",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/r6_approval_decision_package.pretty.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/direct_verifier_required_owner_export.stdout.txt",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/provider_status_agent.stdout.txt",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/autoquant_status_prepared.stdout.txt",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/pre_bayes_status_nq.stdout.txt",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/policy_training_status_nq.stdout.txt",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/workflow_status_nq.stdout.txt"
+  ],
+  "materialization_readback": {
+    "checked_during_packet_creation": true,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "r6_owner_export_root_exists": false
+  },
+  "next_action": "Record an explicit approval decision or supply verifier-native owner/export rows/source-owned normal controls before verifier rerun, canonical merge, and downstream promotion.",
+  "non_mutations": {
+    "canonical_live_intake_mutated": false,
+    "current_cursor_edited": false,
+    "runtime_code_changed": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "board sha captured before audit; packet materialized under existing 034813 run root",
+      "notes": "c205b02cd80077cf063f90cc0ada60e650f90ee9c85f62d19baf7b6e4fe44502  docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "requirement": "Use the named board as the live contract without disrupting concurrent work",
+      "status": "pass"
+    },
+    {
+      "evidence": "no accepted source/control evidence or downstream promotion rerun was produced",
+      "notes": "accepted_rows_added=0 new_confidence_gate=false",
+      "requirement": "Every active regime has calibrated confidence >=95%",
+      "status": "blocked"
+    },
+    {
+      "evidence": "required owner-export verifier blocked on missing files",
+      "notes": "positive_spoofing_layering_rows.csv; matched_negative_normal_activity_rows.csv; provenance_manifest.json",
+      "requirement": "Each regime has its own qualifying conditions",
+      "status": "blocked"
+    },
+    {
+      "evidence": "R6 owner-export, R3 native-subhour, and R5 recency-extension roots absent",
+      "notes": "root readback absent for all three required source/control roots",
+      "requirement": "Cross-market/cycle/timeframe validation passes",
+      "status": "blocked"
+    },
+    {
+      "evidence": "provider-status --agent executed",
+      "notes": "yfinance=True kraken_cli=True ibkr=configured_runtime_unhealthy tradingview_mcp=configured_runtime_unhealthy",
+      "requirement": "Operate providers: IBKR, TradingViewRemix/TradingView, yfinance, Kraken",
+      "status": "partial"
+    },
+    {
+      "evidence": "autoquant-status executed against prepared workspace",
+      "notes": "dependency_ready_data_ready; no new promotion run allowed",
+      "requirement": "Operate AutoQuant locally",
+      "status": "partial"
+    },
+    {
+      "evidence": "pre-bayes-status executed",
+      "notes": "latest_policy=null latest_gate_status=null latest_soft_evidence=null",
+      "requirement": "Run filter / Pre-Bayes readback",
+      "status": "blocked"
+    },
+    {
+      "evidence": "policy-training-status executed",
+      "notes": "matched_rows=0 for cisd_rb_long_v1 and breaker_rb_long_v1",
+      "requirement": "Run BBN / policy-training readback",
+      "status": "blocked"
+    },
+    {
+      "evidence": "policy-training-status structural path-ranking fields inspected",
+      "notes": "structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+      "requirement": "Run CatBoost / path-ranking readback",
+      "status": "blocked"
+    },
+    {
+      "evidence": "workflow-status executed",
+      "notes": "actionable_artifacts=0 branch_admission=fail_closed",
+      "requirement": "Run execution-tree / workflow readback",
+      "status": "blocked"
+    },
+    {
+      "evidence": "approval package assertions and source/control roots inspected",
+      "notes": "approval_present=false canonical_merge=false downstream_rerun=false update_goal=false",
+      "requirement": "Do not promote proxy/runtime/local-cache evidence into Board A acceptance",
+      "status": "pass"
+    }
+  ],
+  "prompt_to_artifact_counts": {
+    "blocked": 6,
+    "partial": 2,
+    "pass": 2
+  },
+  "provider_summary": {
+    "ibkr_bridge_status": "configured_runtime_unhealthy",
+    "ibkr_status": "configured_runtime_unhealthy",
+    "kraken_cli_ready": true,
+    "kraken_public_status": "configured_runtime_unhealthy",
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "tradingview_mcp_status": "configured_runtime_unhealthy",
+    "yfinance_live_ready": true,
+    "yfinance_market_data_status": "ready"
+  },
+  "run_id": "20260512T034813-codex-current-objective-audit-after-034423-v1",
+  "source_control_status": {
+    "approval_package_present": true,
+    "approval_present": false,
+    "approval_package_gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "owner_export_missing_files": [
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json"
+    ],
+    "owner_export_status": "blocked",
+    "owner_export_verifier_exit": 2,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "r6_owner_export_root_exists": false
+  }
+}

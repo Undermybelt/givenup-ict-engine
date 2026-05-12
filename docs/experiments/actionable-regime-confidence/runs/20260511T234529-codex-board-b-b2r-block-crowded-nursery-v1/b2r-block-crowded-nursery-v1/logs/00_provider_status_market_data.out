@@ -1,0 +1,226 @@
+{
+  "summary_line": "market_data:1/7 ready",
+  "ready_by_domain": {
+    "market_data": "1/7"
+  },
+  "providers": [
+    {
+      "provider_id": "binance_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "crypto"
+      ],
+      "fallback_priority": 2,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto market-data path for broad spot/perp history.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    },
+    {
+      "provider_id": "bybit_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "crypto"
+      ],
+      "fallback_priority": 1,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto market-data path for exchange-style replay and factor work.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    },
+    {
+      "provider_id": "ibkr",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "operator_runtime_required",
+      "user_access": "login_and_local_runtime",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 30,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows.",
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    },
+    {
+      "provider_id": "kraken_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "crypto",
+        "fx",
+        "tokenized_assets"
+      ],
+      "fallback_priority": 3,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    },
+    {
+      "provider_id": "polymarket_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "prediction_market"
+      ],
+      "fallback_priority": 4,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login prediction-market history path when network access is available.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    },
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "operator_runtime_required",
+      "user_access": "local_stdio_or_remote_api_key",
+      "market_fit": [
+        "tradfi",
+        "crypto"
+      ],
+      "fallback_priority": 31,
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_ohlcv_probe_failed",
+      "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.",
+      "install_prompts": [
+        "Consumer agent follow-up: TradingViewRemix MCP is reachable but the OHLCV tool path failed on the built-in smoke check. Retry later or fall back to yfinance / IBKR for OHLCV lanes."
+      ]
+    },
+    {
+      "provider_id": "yfinance",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "public_or_env_ready",
+      "user_access": "free_no_login",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 1,
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints",
+      "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests."
+    }
+  ],
+  "ready_providers": [
+    "yfinance"
+  ],
+  "pending_providers": [
+    "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "polymarket_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_ohlcv_probe_failed"
+  ],
+  "pending_provider_details": [
+    {
+      "provider_id": "binance_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    },
+    {
+      "provider_id": "bybit_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    },
+    {
+      "provider_id": "ibkr",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    },
+    {
+      "provider_id": "kraken_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    },
+    {
+      "provider_id": "polymarket_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    },
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_ohlcv_probe_failed",
+      "install_prompts": [
+        "Consumer agent follow-up: TradingViewRemix MCP is reachable but the OHLCV tool path failed on the built-in smoke check. Retry later or fall back to yfinance / IBKR for OHLCV lanes."
+      ]
+    }
+  ],
+  "selectable_providers": [
+    "binance_public",
+    "bybit_public",
+    "ibkr",
+    "kraken_public",
+    "polymarket_public",
+    "tradingview_mcp",
+    "yfinance"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": [
+    "Consumer agent follow-up: TradingViewRemix MCP is reachable but the OHLCV tool path failed on the built-in smoke check. Retry later or fall back to yfinance / IBKR for OHLCV lanes.",
+    "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+    "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise.",
+    "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+  ]
+}

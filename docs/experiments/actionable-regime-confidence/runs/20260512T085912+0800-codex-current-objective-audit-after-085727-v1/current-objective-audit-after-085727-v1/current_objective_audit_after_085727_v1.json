@@ -1,0 +1,183 @@
+{
+  "board_a_sha256": "d509bfd9cb4edd670881230bf5c8049da705ae83d02ea3a74ddf44d95a680ed8",
+  "board_b_sha256": "01ec1447614be7dfd2214017b7a9d171dc9abbd5cf36b7caf2b0099084a2ef25",
+  "branch_contract_present": true,
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "gap": "",
+      "requirement": "Named Board B file is the active profitability contract",
+      "status": "pass"
+    },
+    {
+      "evidence": "Board B branch-path contract text",
+      "gap": "",
+      "requirement": "Regime-root branch identity is preserved as the downstream contract",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T085612+0800-codex-public-spoofing-source-control-route-triage-after-085131-v1/checks/public_spoofing_source_control_route_triage_after_085131_v1_assertions.out; docs/experiments/actionable-regime-confidence/runs/20260512T085727+0800-codex-official-public-spoofing-source-control-route-triage-after-085131-v1/checks/official_public_spoofing_source_control_route_triage_after_085131_v1_assertions.out; docs/experiments/actionable-regime-confidence/runs/20260512T085808+0800-codex-public-case-attachment-route-refresh-after-085131-v1/checks/public_case_attachment_route_refresh_after_085131_v1_assertions.out; docs/experiments/actionable-regime-confidence/runs/20260512T085131+0800-codex-source-control-dropzone-dispatch-refresh-after-083703-v1/checks/source_control_dropzone_dispatch_refresh_after_083703_v1_assertions.out; docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1/checks/current_objective_audit_after_083703_v1_assertions.out",
+      "gap": "latest settled source/control artifacts remain fail-closed",
+      "requirement": "Source/control unlock is valid before promotion",
+      "status": "blocked"
+    },
+    {
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "gap": "explicit user-selected history remains absent",
+      "requirement": "Exactly one selected historical path exists: HTF, MTF, or LTF",
+      "status": "blocked"
+    },
+    {
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "gap": "selected-data AutoQuant promotion remains false",
+      "requirement": "Selected-data AutoQuant training/promotion has run",
+      "status": "blocked"
+    },
+    {
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "gap": "downstream promotion rerun remains false",
+      "requirement": "Filter / Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution tree rerun is authorized and complete",
+      "status": "blocked"
+    },
+    {
+      "evidence": "Objective audit plus Board A/B gates",
+      "gap": "provider visibility is diagnostic only until source/control and selected-history gates pass",
+      "requirement": "Provider surfaces IBKR, TradingViewRemix, yfinance, and Kraken are not used as proxy completion",
+      "status": "pass"
+    },
+    {
+      "evidence": "085612_public_route:false; 085727_official_route:false; 085808_case_attachment:false; 085131_dropzone:false; 085042_objective_audit:false",
+      "gap": "",
+      "requirement": "No update_goal call unless every objective requirement is complete",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "gap": "",
+      "requirement": "Current cursor remains fail-closed",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T085808+0800-codex-public-case-attachment-route-refresh-after-085131-v1",
+      "gap": "terminal_files=6; no row-level source/control unlock",
+      "requirement": "Count 085808 only as terminal fail-closed public case-route context",
+      "status": "pass"
+    }
+  ],
+  "cursor_fail_closed": true,
+  "downstream_promotion_rerun": false,
+  "explicit_user_selected_history": false,
+  "gate_result": "current_objective_audit_after_085727_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+  "latest_assertions": {
+    "085042_objective_audit": {
+      "accepted_rows_added": "0",
+      "canonical_merge": "false",
+      "counted_latest_roots": "083545,083559,083618,083703",
+      "downstream_promotion_rerun": "false",
+      "explicit_user_selected_history": "false",
+      "gate_result": "current_objective_audit_after_083703_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+      "promotion_allowed": "false",
+      "r3_native_subhour_crisis_present": "false",
+      "r3_native_subhour_required_files_present": "true",
+      "r3_native_subhour_rows": "5032903",
+      "r3_native_subhour_unlock": "false",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "uncounted_empty_roots": "083711",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    "085131_dropzone": {
+      "approved_dispatch_channel_present": "false",
+      "canonical_merge": "false",
+      "current_r6_required_package_complete": "false",
+      "dispatch_ticket_export_license_provenance_present": "false",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "source_control_dropzone_dispatch_refresh_after_083703_v1=no_new_owner_export_or_approved_dispatch_no_unlock",
+      "legacy_r6_required_package_complete": "false",
+      "owner_data_cli_ready": "false",
+      "owner_data_env_names_present_count": "0",
+      "post_083703_dispatch_candidate_files": "0",
+      "post_083703_dropzone_candidates": "0",
+      "promotion_allowed": "false",
+      "r3_native_subhour_root_present": "true",
+      "r5_recency_root_present": "false",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    "085612_public_route": {
+      "accepted_rows_added": "0",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "explicit_flip_as_control_approval_acquired": "false",
+      "gate_result": "public_spoofing_source_control_route_triage_after_085131_v1=no_public_owner_export_or_matched_control_unlock",
+      "official_owner_export_package_hits": "0",
+      "promotion_allowed": "false",
+      "public_academic_methodology_hits": "4",
+      "public_simulated_package_hits": "1",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false",
+      "verifier_native_positive_control_provenance_packages_acquired": "0"
+    },
+    "085727_official_route": {
+      "accepted_rows_added": "0",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "official_public_spoofing_source_control_route_triage_after_085131_v1=public_enforcement_routes_not_row_level_source_control_no_unlock",
+      "official_routes_checked": "4",
+      "promotion_allowed": "false",
+      "row_level_positive_control_package_acquired": "false",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    "085808_case_attachment": {
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "explicit_user_selected_history": "false",
+      "gate_result": "public_case_attachment_route_refresh_after_085131_v1=public_case_narrative_only_no_row_level_source_control_no_unlock",
+      "matched_normal_controls_acquired": "false",
+      "missing_085042_run_root_present": "true",
+      "promotion_allowed": "false",
+      "public_routes_checked": "5",
+      "r3_native_subhour_present": "true",
+      "r3_native_subhour_unlock": "false",
+      "r5_recency_unlock": "false",
+      "r6_owner_export_unlock": "false",
+      "row_level_positive_rows_acquired": "false",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "ticket_export_license_provenance_present": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  },
+  "objective_complete": false,
+  "promotion_allowed": false,
+  "run_id": "20260512T085912+0800-codex-current-objective-audit-after-085727-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "terminal_readback_file_counts": {
+    "085808_case_attachment_refresh": 6
+  },
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

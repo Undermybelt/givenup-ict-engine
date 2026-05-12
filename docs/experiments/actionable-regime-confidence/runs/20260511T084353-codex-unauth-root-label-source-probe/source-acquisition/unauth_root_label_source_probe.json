@@ -1,0 +1,2192 @@
+{
+  "accepted_new_manipulation_sources": 0,
+  "accepted_new_root_label_slots": 0,
+  "candidates": [
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "detecting regime of financial market",
+      "direct_manipulation_hits": [
+        "class",
+        "label"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "regime"
+      ],
+      "proxy_hits": [
+        "hidden markov",
+        "strategy"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:QuhiQuhihi/regime_model",
+      "target_hits": [
+        "cl",
+        "es",
+        "spy"
+      ],
+      "timeframe_hits": [
+        "daily",
+        "hourly"
+      ],
+      "title": "regime_model",
+      "url": "https://github.com/QuhiQuhihi/regime_model"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "",
+      "direct_manipulation_hits": [
+        "class"
+      ],
+      "label_hits": [
+        "class",
+        "regime"
+      ],
+      "proxy_hits": [
+        "clustering",
+        "hidden markov",
+        "kmeans",
+        "technical indicator"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "github:tubakhxn/Market-Regime-Detection-System",
+      "target_hits": [
+        "cl",
+        "es",
+        "spy"
+      ],
+      "timeframe_hits": [],
+      "title": "Market-Regime-Detection-System",
+      "url": "https://github.com/tubakhxn/Market-Regime-Detection-System"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Python implementation of \"Clustering Market Regimes Using the Wasserstein Distance\" (Horvath et al., 2021). Detects bull/bear market regimes using optimal transport distance on return distributions. Includes WK-means algorithm, synthetic data generators, and validation metrics. Reproduces paper results on SPY data.",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "clustering",
+        "k-means",
+        "kmeans",
+        "unsupervised"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": true,
+        "Sideways": false
+      },
+      "source_id": "github:mirkovicdev/CLUSTERING-MARKET-REGIMES",
+      "target_hits": [
+        "cl",
+        "dia",
+        "es",
+        "spy"
+      ],
+      "timeframe_hits": [
+        "1d",
+        "minute"
+      ],
+      "title": "CLUSTERING-MARKET-REGIMES",
+      "url": "https://github.com/mirkovicdev/CLUSTERING-MARKET-REGIMES"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "CryptoMarket Regime Classifier is a machine learning framework that detects market regimes (Trend, Range, Squeeze, etc.) in crypto markets using multi-timeframe data and Hidden Markov Models. The project provides plug-and-play labeled datasets and trained models (HMM + LSTM) for downstream strategy development, position sizing, and risk management.",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset",
+        "label",
+        "labeled"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "labeled",
+        "regime"
+      ],
+      "proxy_hits": [
+        "hidden markov",
+        "hmm",
+        "ohlcv",
+        "prediction",
+        "signal",
+        "strategy",
+        "technical indicator",
+        "unsupervised"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:akash-kumar5/CryptoMarket_Regime_Classifier",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [
+        "15m",
+        "5m"
+      ],
+      "title": "CryptoMarket_Regime_Classifier",
+      "url": "https://github.com/akash-kumar5/CryptoMarket_Regime_Classifier"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Code accompanying the paper \"Pathwise methods for non-parametric online market regime detection and regime clustering for multidimensional and non-Markovian data\"",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "clustering"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:issaz/signature-regime-detection",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "signature-regime-detection",
+      "url": "https://github.com/issaz/signature-regime-detection"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "",
+      "direct_manipulation_hits": [
+        "class"
+      ],
+      "label_hits": [
+        "class",
+        "regime"
+      ],
+      "proxy_hits": [
+        "clustering",
+        "gaussian mixture",
+        "hidden markov",
+        "hmm",
+        "k-means",
+        "strategy",
+        "unsupervised"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": true,
+        "Sideways": false
+      },
+      "source_id": "github:LSEG-API-Samples/Article.RD.Python.MarketRegimeDetectionUsingStatisticalAndMLBasedApproaches",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Article.RD.Python.MarketRegimeDetectionUsingStatisticalAndMLBasedApproaches",
+      "url": "https://github.com/LSEG-API-Samples/Article.RD.Python.MarketRegimeDetectionUsingStatisticalAndMLBasedApproaches"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Fit hidden Markov model to stock returns and backtest strategy with hidden volatility regime filter",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "hidden markov",
+        "hmm",
+        "strategy"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:akeele/StockMarketHMM",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "StockMarketHMM",
+      "url": "https://github.com/akeele/StockMarketHMM"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "This project implements Market Regime Detection using Hidden Markov Models (HMMs) to classify different market states and optimize trading strategies. It applies **backtesting techniques** on major stock indices to analyze performance.",
+      "direct_manipulation_hits": [
+        "class",
+        "label",
+        "labeled"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "labeled",
+        "regime"
+      ],
+      "proxy_hits": [
+        "forecast",
+        "hidden markov",
+        "hmm",
+        "strategy"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:Poulami-Nandi/RegimeDetectionHMM",
+      "target_hits": [
+        "cl",
+        "dia",
+        "es"
+      ],
+      "timeframe_hits": [
+        "daily"
+      ],
+      "title": "RegimeDetectionHMM",
+      "url": "https://github.com/Poulami-Nandi/RegimeDetectionHMM"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "A quantitative trading framework that leverages daily OHLCV stock data and a Hidden Markov Model (HMM) to dynamically identify market regimes and generate momentum-based trading signals.",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "hidden markov",
+        "hmm",
+        "ohlcv",
+        "signal",
+        "strategy",
+        "technical indicator"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:Abdullah-BA/RegimeSwitchingMomentumStrategy",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [
+        "daily"
+      ],
+      "title": "RegimeSwitchingMomentumStrategy",
+      "url": "https://github.com/Abdullah-BA/RegimeSwitchingMomentumStrategy"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "A dashboard for market regime-aware stock classification framework",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset"
+      ],
+      "label_hits": [
+        "class",
+        "regime"
+      ],
+      "proxy_hits": [
+        "prediction",
+        "signal"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "github:CCEW/ECS171",
+      "target_hits": [
+        "cl",
+        "dia",
+        "es"
+      ],
+      "timeframe_hits": [
+        "daily"
+      ],
+      "title": "ECS171",
+      "url": "https://github.com/CCEW/ECS171"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Application to Stock Market Prediction",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "prediction"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:Statallen/Regime-Switching-Models-and-Boosted-Decision-Trees",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Regime-Switching-Models-and-Boosted-Decision-Trees",
+      "url": "https://github.com/Statallen/Regime-Switching-Models-and-Boosted-Decision-Trees"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Real-time crypto market regime detection using LSTM, served via API with Telegram alerts.",
+      "direct_manipulation_hits": [
+        "class",
+        "label"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "regime"
+      ],
+      "proxy_hits": [
+        "ohlcv",
+        "prediction",
+        "signal"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "github:akash-kumar5/regime-service",
+      "target_hits": [
+        "btcusd",
+        "cl",
+        "es",
+        "ym"
+      ],
+      "timeframe_hits": [
+        "15m",
+        "5m"
+      ],
+      "title": "regime-service",
+      "url": "https://github.com/akash-kumar5/regime-service"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Real-time scalping radar for Polymarket crypto Up/Down markets (BTC, ETH, SOL, XRP). Binance WebSocket + 6-component signal engine with regime detection.",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "signal"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:rafaelfariasbsb/polymarket",
+      "target_hits": [
+        "ym"
+      ],
+      "timeframe_hits": [],
+      "title": "polymarket",
+      "url": "https://github.com/rafaelfariasbsb/polymarket"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Hidden Markov Model (HMM) for detecting regime shifts in crypto markets.",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "hidden markov",
+        "hmm"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:tgaye/Crypto_markov_model",
+      "target_hits": [],
+      "timeframe_hits": [],
+      "title": "Crypto_markov_model",
+      "url": "https://github.com/tgaye/Crypto_markov_model"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Provide real-time scalping signals for Polymarket crypto markets using Binance data and a multi-factor engine with market regime detection.",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "signal"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:AbyssTpp/polymarket",
+      "target_hits": [
+        "ym"
+      ],
+      "timeframe_hits": [],
+      "title": "polymarket",
+      "url": "https://github.com/AbyssTpp/polymarket"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "KMeans regime detection for SPY (Bull/Bear/Sideways)",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "kmeans"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "github:Hishamhajaz/market-regime-detection",
+      "target_hits": [
+        "spy"
+      ],
+      "timeframe_hits": [],
+      "title": "market-regime-detection",
+      "url": "https://github.com/Hishamhajaz/market-regime-detection"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Detect market regime shifts (Bull / Bear / Sideways) using unsupervised learning",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "unsupervised"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "github:annet-antony/market-regime-detection",
+      "target_hits": [],
+      "timeframe_hits": [],
+      "title": "market-regime-detection",
+      "url": "https://github.com/annet-antony/market-regime-detection"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "Detect market regimes (bull/bear/sideways) using ML and adapt trading strategies accordingly",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Crisis'].",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "github:alexistan17/market-regime-detector",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "market-regime-detector",
+      "url": "https://github.com/alexistan17/market-regime-detector"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "This project analyzes and visualizes stock market regimes (Bull, Bear, Sideways) using historical SPY data",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Crisis'].",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "github:Swarajaya/3D-Market-Regime-State-Machine",
+      "target_hits": [
+        "es",
+        "spy"
+      ],
+      "timeframe_hits": [],
+      "title": "3D-Market-Regime-State-Machine",
+      "url": "https://github.com/Swarajaya/3D-Market-Regime-State-Machine"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "Quantum machine learning classifier to detect market regimes (bull, bear, sideways, high volatility) using variational quantum circuits.",
+      "direct_manipulation_hits": [
+        "class"
+      ],
+      "label_hits": [
+        "class",
+        "regime"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Crisis'].",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "github:VidushiVS/Quantum-Market-Regime-Detection",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Quantum-Market-Regime-Detection",
+      "url": "https://github.com/VidushiVS/Quantum-Market-Regime-Detection"
+    },
+    {
+      "catalog": "github",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "Wash Trading Detection in ERC20 Token Transactions This repository contains code, datasets, and methodologies for detecting wash trading activities in the transaction history of the NEAR ERC20 token. Wash trading is a manipulative trading practice in cryptocurrency markets that artificially inflates transaction volumes to mislead investors .",
+      "direct_manipulation_hits": [
+        "wash trading",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:Jananigaekwad/Group-3-Wash-Trading-Case-Study-for-ERC20-Token",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Group-3-Wash-Trading-Case-Study-for-ERC20-Token",
+      "url": "https://github.com/Jananigaekwad/Group-3-Wash-Trading-Case-Study-for-ERC20-Token"
+    },
+    {
+      "catalog": "github",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "Graph-based wash trading detection in blockchain wallet networks using GNNs and tabular ML baselines, with sampled graph datasets, engineered wallet features, evaluation metrics, and notebook-based experiments for fraud detection.",
+      "direct_manipulation_hits": [
+        "wash trading",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:divyamg13/BITS-F464-Machine-Learning",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "BITS-F464-Machine-Learning",
+      "url": "https://github.com/divyamg13/BITS-F464-Machine-Learning"
+    },
+    {
+      "catalog": "github",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "Additional material for paper: Pump and Dumps in the Bitcoin Era: Real Time Detection of Cryptocurrency Market Manipulations, ICCCN '20",
+      "direct_manipulation_hits": [
+        "market manipulation",
+        "pump and dump",
+        "pump-and-dump",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:SystemsLab-Sapienza/pump-and-dump-dataset",
+      "target_hits": [
+        "bitcoin"
+      ],
+      "timeframe_hits": [],
+      "title": "pump-and-dump-dataset",
+      "url": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset"
+    },
+    {
+      "catalog": "github",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "Stock Market Manipulation with Deep Learning. Explore code, datasets, and architectures for detecting and understanding manipulation in financial markets. Join us in researching fair and transparent markets.",
+      "direct_manipulation_hits": [
+        "market manipulation",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:karnikkanojia/TadGAN-Research",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "TadGAN-Research",
+      "url": "https://github.com/karnikkanojia/TadGAN-Research"
+    },
+    {
+      "catalog": "github",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "This project detects pump-and-dump schemes and other manipulative trading patterns in cryptocurrency markets using unsupervised learning (UL) techniques. We leverage real-world Binance trading data (Pump-and-Dump Dataset from Sapienza University) to uncover hidden patterns, cluster suspicious traders, and flag anomalous activities in real time.",
+      "direct_manipulation_hits": [
+        "pump-and-dump",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [
+        "unsupervised"
+      ],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:akasshvinod/Market-Manipulation-Detection",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Market-Manipulation-Detection",
+      "url": "https://github.com/akasshvinod/Market-Manipulation-Detection"
+    },
+    {
+      "catalog": "github",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "Quantum Algorithm for Fraud Detection in Stock Market Manipulation Dataset",
+      "direct_manipulation_hits": [
+        "market manipulation",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:Gopal-Dahale/qkrishi-assignment",
+      "target_hits": [],
+      "timeframe_hits": [],
+      "title": "qkrishi-assignment",
+      "url": "https://github.com/Gopal-Dahale/qkrishi-assignment"
+    },
+    {
+      "catalog": "github",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "Analyzing and visualizing results from a marketing campaign dataset using Python. By using data manipulation libraries and visualization tools, I extracted key insights into campaign performance.The visualizations provided a clear representation of the data, facilitating a better understanding of the campaign's effectiveness",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "github:amalfarouq/Marketing-Campaign-Dataset-Python",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Marketing-Campaign-Dataset-Python",
+      "url": "https://github.com/amalfarouq/Marketing-Campaign-Dataset-Python"
+    },
+    {
+      "catalog": "huggingface",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "Multi\u2011Timeframe Market Regimes (HMM\u20116) Dataset Summary This dataset provides labeled crypto market regimes derived from multi-timeframe (5m, 15m) OHLCV data and technical indicators. Market regimes are inferred using a 6-state Hidden Markov Model (HMM). The dataset is suitable for market regime detection, regime-aware modeling, and sequence modeling baselines (LSTM / Transformers). No future leakage: all indicators are computed using information available up to the\u2026 See the full description on the dataset page: https://huggingface.co/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD.",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset",
+        "label",
+        "labeled"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "labeled",
+        "regime"
+      ],
+      "proxy_hits": [
+        "hidden markov",
+        "hmm",
+        "ohlcv",
+        "technical indicator"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "huggingface:akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "target_hits": [
+        "bitcoin",
+        "btcusd",
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [
+        "15m",
+        "1d",
+        "1m",
+        "5m"
+      ],
+      "title": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "url": "https://huggingface.co/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD"
+    },
+    {
+      "catalog": "huggingface",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "\ud83d\udcca NIFTY 50 Market Regime Dataset Dataset for training machine learning models to predict market regimes (RISK_ON/RISK_OFF) in Indian financial markets. \ud83d\udccb Dataset Description This dataset contains technical indicators and corresponding market regime labels for NIFTY 50, used to train binary classification models for regime prediction. Market Regimes RISK_ON (1): Favorable market conditions - lower volatility, bullish momentum RISK_OFF (0): Cautious conditions\u2026 See the full description on the dataset page: https://huggingface.co/datasets/AAdevloper/nifty50-market-regime.",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset",
+        "label"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "regime"
+      ],
+      "proxy_hits": [
+        "forecast",
+        "prediction",
+        "technical indicator"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "huggingface:AAdevloper/nifty50-market-regime",
+      "target_hits": [
+        "cl",
+        "dia",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "AAdevloper/nifty50-market-regime",
+      "url": "https://huggingface.co/datasets/AAdevloper/nifty50-market-regime"
+    },
+    {
+      "catalog": "huggingface",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "What this dataset tests Whether a system can identify the current market regimebased on relationships between assets. Not price prediction.Structure detection. Required outputs regime coherence score dominant driver label cross-asset alignment index dispersion vs concentration index regime stability band Constraints Use relationships across assetsnot single-asset forecasts. Evaluation focus High scores require numeric indices explicit regime driver explicit stability band\u2026 See the full description on the dataset page: https://huggingface.co/datasets/ClarusC64/market-regime-coherence-mapping-v0.1.",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset",
+        "label"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "regime"
+      ],
+      "proxy_hits": [
+        "forecast",
+        "prediction"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "huggingface:ClarusC64/market-regime-coherence-mapping-v0.1",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "ClarusC64/market-regime-coherence-mapping-v0.1",
+      "url": "https://huggingface.co/datasets/ClarusC64/market-regime-coherence-mapping-v0.1"
+    },
+    {
+      "catalog": "huggingface",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "What this dataset tests Whether a system can map regime transitionsbefore price confirms them. Markets move between structural basins.This dataset identifies current regime adjacent regimes triggers transition probabilities Required outputs current regime basin adjacent regime targets trigger condition set transition probability 24h transition probability 72h projected post-shift structure Why it matters Most systems detect regimes after\u2026 See the full description on the dataset page: https://huggingface.co/datasets/ClarusC64/market-regime-transition-breakpoint-mapping-v0.1.",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset"
+      ],
+      "label_hits": [
+        "class",
+        "regime",
+        "target"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "huggingface:ClarusC64/market-regime-transition-breakpoint-mapping-v0.1",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [
+        "4h"
+      ],
+      "title": "ClarusC64/market-regime-transition-breakpoint-mapping-v0.1",
+      "url": "https://huggingface.co/datasets/ClarusC64/market-regime-transition-breakpoint-mapping-v0.1"
+    },
+    {
+      "catalog": "huggingface",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "TSIE: Temporal Signal Intelligence Engine \u2014 Market Regime Dataset (IDX) \ud83d\udcca Overview This dataset provides a multi-class market regime classification for Indonesian stock market (IDX), designed for time-series modeling using architectures such as Temporal Fusion Transformer (TFT). The dataset includes: OHLCV price data Engineered technical indicators Temporal features Session-aware features (IDX trading hours) Multi-class regime labels based on rule-based signal logic \ud83c\udfaf Task Multi-class\u2026 See the full description on the dataset page: https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset.",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset",
+        "label",
+        "labeled"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "labeled",
+        "regime"
+      ],
+      "proxy_hits": [
+        "forecast",
+        "ohlcv",
+        "signal",
+        "technical indicator"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "huggingface:sujinwo/tsie-market-regime-dataset",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [
+        "1d",
+        "1m"
+      ],
+      "title": "sujinwo/tsie-market-regime-dataset",
+      "url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "<p><strong>Abstract: </strong>In this paper, we define an innovative method for predicting the stochastic behavior of the Bull and Bear periods of the stock market. The direct study of the prediction of possible Bull and Bear markets is a different and new approach about the analysis of stock markets. Our work is based on the collection of 40 years of data from the Italian stock market. The proposed solution is defined using the statistical analysis of the Bear and Bull Stock markets and it includes a criterion for statistically generating the most probable values of the next Bear and Bull markets, as well as especially the lengths of the time intervals corresponding to these market situatio",
+      "direct_manipulation_hits": [],
+      "label_hits": [],
+      "proxy_hits": [
+        "forecast",
+        "hidden markov",
+        "prediction",
+        "strategy"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:8089278",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "A Statistic Method for the Prediction of the Succession of Bear and Bull Stock Market",
+      "url": "https://zenodo.org/records/8089278"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "<p><span><strong><span lang=\"EN-US\">Vietnam stock technica analysis with mixed GP artificial intelligence numerical computations</span></strong></span><span><strong><span lang=\"EN-US\"> </span></strong></span></p> <p><span><span lang=\"EN-US\">Quang Long Tr\u1ea7n<span>&nbsp; </span></span></span></p> <p><span><span lang=\"EN-US\">Institute for Northeast Asian Studies, Vietnam Academy of Social Sciences, Hanoi, Vietnam </span></span></p> <p><span><span lang=\"EN-US\">Email</span></span><span><span lang=\"ZH-TW\">:</span></span><span><span lang=\"EN-US\">stockmanvn@gmail.com</span></span></p> <p><span><span lang=\"EN-US\">&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdas",
+      "direct_manipulation_hits": [],
+      "label_hits": [],
+      "proxy_hits": [
+        "prediction",
+        "signal",
+        "technical indicator"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "zenodo:16976263",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Vietnam stock technica analysis with mixed GP artificial intelligence numerical computations",
+      "url": "https://zenodo.org/records/16976263"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "<p><strong><span>Abstract</span></strong></p> <p><em><span>This article presents a quantitative analysis using the Markov Switching Dynamic Regression Model (MS-DR), with the aim of verifying the dynamics of Brazilian Arabica coffee commodity prices from January 2010 to June 2025. Two regimes (regime 1 - low volatility and regime 2 - high volatility) were used in the model so that market parameters would behave differently during economic crises with representative regimes. The Arabica coffee commodity remained in regime 1 (low volatility) for seven periods, totaling 121 months. In regime 2 (high volatility - crises of 2012/2013 and 2017/2019), it remained for about 40 months, i.e., 12 month",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": true,
+        "Sideways": false
+      },
+      "source_id": "zenodo:18073695",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "DYNAMIC BEHAVIOR OF REGIME CHANGE IN ARABICA COFFEE COMMODITY PRICES IN BRAZIL USING MARKOV SWITCHING DYNAMIC REGRESSION MODEL",
+      "url": "https://zenodo.org/records/18073695"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "<p>This paper presents a rigorous, risk-aware framework for dynamic portfolio optimization by comparing four DRL algorithms, PPO, QR-DDPG, DDPG, and SAC, formulated as a Markov Decision Process with a custom reward function that explicitly penalizes maximum drawdown across a 25-asset universe spanning equities, cryptocurrencies, commodities, and fixed income. PPO achieves a walk-forward mean Sharpe of 1.95 across all regimes, while QR-DDPG delivers the lowest tail risk (CVaR -1.73%), validating the efficacy of distributional RL for explicit risk optimization. Regime-stratified evaluation reveals significant performance dependency on market conditions, with Sharpe ratios varying 30-40% betwee",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Sideways'].",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": true,
+        "Sideways": false
+      },
+      "source_id": "zenodo:18666986",
+      "target_hits": [
+        "es",
+        "vix",
+        "ym"
+      ],
+      "timeframe_hits": [],
+      "title": "Deep Reinforcement Learning for Risk-Aware Portfolio Optimization: A Comparative Study of PPO, QR-DDPG, DDPG, and SAC under Market Uncertainty",
+      "url": "https://zenodo.org/records/18666986"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "<p>In this paper evaluate six exchange rate hedging strategies with financial options from the OTC market in Colombia. Three hedging strategies for importers and three for exporters were raised. The coverage for importers was carried out with the traditional strategy of long call, bull call spread and bull put spread, the last two correspond to options portfolios. The coverage for importers was carried out with the traditional strategy of long put, bear call spread and bear put spread, the last two correspond to options portfolios to determine the best hedging strategy, the currency price was modeled with a Wiener process and the VaR for the six covered scenarios was calculated and compared ",
+      "direct_manipulation_hits": [],
+      "label_hits": [],
+      "proxy_hits": [
+        "strategy"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:7063561",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Evaluation of options portfolios for exchange rate hedges",
+      "url": "https://zenodo.org/records/7063561"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:15783940",
+      "target_hits": [
+        "es",
+        "qqq"
+      ],
+      "timeframe_hits": [],
+      "title": "Examle_KG",
+      "url": "https://zenodo.org/records/15783940"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "This dataset provides historical stock market performance data for specific companies. It enables users to analyze and understand the past trends and fluctuations in stock prices over time. This information can be utilized for various purposes such as investment analysis, financial research, and market trend forecasting.",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [
+        "forecast"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:12562597",
+      "target_hits": [
+        "es",
+        "qqq"
+      ],
+      "timeframe_hits": [],
+      "title": "Dataset: Invesco QQQ Trust (QQQ) Stock Performance",
+      "url": "https://zenodo.org/records/12562597"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "<p>tu</p>",
+      "direct_manipulation_hits": [],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:7866406",
+      "target_hits": [
+        "es",
+        "nq",
+        "qqq"
+      ],
+      "timeframe_hits": [],
+      "title": "row",
+      "url": "https://zenodo.org/records/7866406"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "<p>We present the first version of the training set used in the Gravity Spy citizen science project. This training set, discussed in detail <a href=\"https://www.sciencedirect.com/science/article/pii/S0020025518301634\">here</a>, was utilized to train the convolutional neural network employed in the Gravity Spy project. We anticipate moving forward to release more labelled Gravity Spy data sets, including a refined version of this training set which can be found here&nbsp;<a href=\"https://doi.org/10.5281/zenodo.1476551\">10.5281/zenodo.1476551</a>, and data sets containing the annotations provided by our citizen science volunteers.</p> <p><strong>Data Set Information</strong></p> <p>There are t",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset",
+        "label",
+        "labelled"
+      ],
+      "label_hits": [
+        "annotation",
+        "class",
+        "label",
+        "labelled"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:1476156",
+      "target_hits": [
+        "cl",
+        "es",
+        "spy",
+        "ym"
+      ],
+      "timeframe_hits": [
+        "1d"
+      ],
+      "title": "Machine learning for Gravity Spy: Glitch classification and dataset",
+      "url": "https://zenodo.org/records/1476156"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "<p>This data set contains the individual classifications that the&nbsp;<a href=\"https://gravityspy.org/\" target=\"_blank\" rel=\"noopener\">Gravity Spy</a> citizen science volunteers made for glitches through 20 July 2024. Classifications made by science team members or in testing workflows have been removed as have classifications of glitches lacking a Gravity Spy identifier. See <a href=\"https://doi.org/10.1088/1361-6382/aa5cea\">Zevin et al. (2017)</a> for an explanation of the citizen science task and classification interface. Data about glitches with machine-learning labels are provided in an earlier data release (<a href=\"https://doi.org/10.5281/zenodo.5649212\">Glanzer et al., 2021</a>). Fi",
+      "direct_manipulation_hits": [
+        "class",
+        "dataset",
+        "label"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "target"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:13904422",
+      "target_hits": [
+        "cl",
+        "es",
+        "spy",
+        "ym"
+      ],
+      "timeframe_hits": [],
+      "title": "Gravity Spy Volunteer Classifications of LIGO Glitches",
+      "url": "https://zenodo.org/records/13904422"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "<p>This thesis investigates the development of an optimal Bitcoin trading strategy tailored to the prevailing market regime observed in early 2025. Characterized by heightened uncertainty, potential shifts in trend dynamics, and persistent volatility, the current regime presents challenges for traditional quantitative models. A systematic review of recent academic literature on cryptocurrency market regimes, factor investing, arbitrage techniques, and machine learning applications was conducted. Based on this review and the identified regime characteristics, two distinct quantitative strategies-a Volatility-Adjusted Momentum strategy and a Mean Reversion strategy based on Bollinger Bands-wer",
+      "direct_manipulation_hits": [],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [
+        "strategy"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:15787425",
+      "target_hits": [
+        "bitcoin",
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [
+        "daily"
+      ],
+      "title": "Optimal Bitcoin Trading Strategy Development Using Quantitative Models for the Current Market Regime",
+      "url": "https://zenodo.org/records/15787425"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "This dataset provides historical stock market performance data for specific companies. It enables users to analyze and understand the past trends and fluctuations in stock prices over time. This information can be utilized for various purposes such as investment analysis, financial research, and market trend forecasting.",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [
+        "forecast"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:12744140",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Dataset: BTC-USD (BTC-USD) Stock Performance",
+      "url": "https://zenodo.org/records/12744140"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "<p>This repository provides a public replication package for the article &ldquo;An Angle-Based Measure of Price Impact in Cryptocurrency Markets during Crises.&rdquo; Due to redistribution uncertainty regarding Kraken raw tick data and derived minute-level OHLCV files, the repository does not include raw or processed market data. Instead, it provides data source information, study-window metadata, preprocessing code, 1-minute aggregation code, and step-by-step instructions to reproduce the empirical dataset and analysis outputs from user-obtained source data.</p>",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [
+        "ohlcv"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:19176941",
+      "target_hits": [
+        "cl",
+        "es",
+        "kraken"
+      ],
+      "timeframe_hits": [
+        "minute"
+      ],
+      "title": "Replication package for \"An Angle-Based Measure of Price Impact in Cryptocurrency Markets during Crises\"",
+      "url": "https://zenodo.org/records/19176941"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_proxy_or_model_generated",
+      "description": "<p class=\"MsoNoSpacing\"><span>This paper investigates the effectiveness of Time-Series Momentum (TSMOM) as a quantitative trading strategy in cryptocurrency markets, focusing on the structural shift introduced by the first spot Bitcoin ETF launch on January 11, 2024. Using daily price data from January 2018 to March 2026 across six assets: BTC-USD, ETH-USD, IBIT, FBTC, GLD, and SPY, we implement a volatility-scaled TSMOM strategy with monthly rebalancing consistent with Moskowitz, Ooi, and Pedersen (2012). The TSMOM portfolio generated annualized returns of 18.03% pre-ETF and 28.58% post-ETF, with Sharpe ratio improving from 0.82 to 1.22. A two-sample t-test yields p = 0.5835, indicating no ",
+      "direct_manipulation_hits": [
+        "class"
+      ],
+      "label_hits": [
+        "class",
+        "regime"
+      ],
+      "proxy_hits": [
+        "strategy"
+      ],
+      "reason": "Metadata includes model/proxy terms such as HMM/GMM/clustering/future-return/strategy/OHLCV, which cannot count as independent source labels.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:19671502",
+      "target_hits": [
+        "bitcoin",
+        "cl",
+        "es",
+        "gld",
+        "spy"
+      ],
+      "timeframe_hits": [
+        "daily",
+        "monthly"
+      ],
+      "title": "TIME-SERIES MOMENTUM IN CRYPTOCURRENCY MARKETS: A PRE AND POST SPOT BITCOIN ETF ANALYSIS",
+      "url": "https://zenodo.org/records/19671502"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "<p>Interferometric Synthetic Aperture Sonar imagery and bathymetry covering 70 km2 on the Scotian Shelf, offshore Halifax (Canada). The data were collected using Kraken Robotic Systems' KATFISH towed vehicle in 2019. The data consits in: a bathymetric surface GeoTIFF gridded at 25 cm resolution and two acoustic imagery GeoTIFFs separeted by illumination direction (east- and west-looking) gridded at 50 cm resolution.&nbsp;The acoustic imagery was collected at 3 cm resolution and downsampled to 50 cm for ease of use. Refer to the linked publication for further information on location, data processing methods, and interpretation.&nbsp;</p>",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:18611121",
+      "target_hits": [
+        "cl",
+        "es",
+        "kraken",
+        "ym"
+      ],
+      "timeframe_hits": [],
+      "title": "Interferometric Synthetic Aperture Sonar imagery and bathymetry of the Scotian Shelf",
+      "url": "https://zenodo.org/records/18611121"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "<p>Dataset retrieved with an Ethereum client, and used by the code hosted <a href=\"https://github.com/friedhelmvictor/lob-dex-wash-trading-paper\">here</a> for <a href=\"https://arxiv.org/pdf/2102.07001.pdf\">this paper</a> published in the Proceedings of the <a href=\"https://www2021.thewebconf.org/\">Web Conference 2021 (WWW &rsquo;21)</a></p> <p>&nbsp;</p> <p>Abstract:</p> <p>Cryptoassets such as cryptocurrencies and tokens are increasingly traded on decentralized exchanges. The advantage for users is that the funds are not in custody of a centralized external entity. However, these exchanges are prone to manipulative behavior. In this paper, we illustrate how wash trading activity can be iden",
+      "direct_manipulation_hits": [
+        "wash trade",
+        "wash trading",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:4540223",
+      "target_hits": [
+        "cl",
+        "es",
+        "ethereum",
+        "ym"
+      ],
+      "timeframe_hits": [],
+      "title": "Detecting and Quantifying Wash Trading on Decentralized Cryptocurrency Exchanges",
+      "url": "https://zenodo.org/records/4540223"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "<div> <p>This repository contains the data and code used for the paper, &ldquo;A Midsummer Meme&rsquo;s Dream: Investigating Market Manipulations in the Meme Coin Ecosystem.&rdquo;</p> <p>&nbsp;</p> </div> <div> <h3>Abstract</h3> </div> <div> <p>From viral jokes to a billion-dollar phenomenon, meme coins have become one of the most popular segments in cryptocurrency markets. Unlike utility-focused crypto assets like Bitcoin or Ethereum, meme coins derive value primarily from community sentiment, making them vulnerable to manipulation. This study presents a cross-chain analysis of the meme coin ecosystem, examining 34,988 tokens across Ethereum, BNB Smart Chain, Solana, and Base. We character",
+      "direct_manipulation_hits": [
+        "market manipulation",
+        "pump and dump",
+        "wash trading",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [
+        "ohlcv"
+      ],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:17830944",
+      "target_hits": [
+        "bitcoin",
+        "cl",
+        "es",
+        "ethereum",
+        "solana",
+        "ym"
+      ],
+      "timeframe_hits": [
+        "daily",
+        "hourly"
+      ],
+      "title": "Code and Dataset for \"A Midsummer Meme's Dream: Investigating Market Manipulations in the Meme Coin Ecosystem\"",
+      "url": "https://zenodo.org/records/17830944"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "<p>We have constructed a SAR (Synthetic Aperture Radar) image semantic segmentation dataset that includes 12 oceanic and atmospheric phenomena: Atmospheric Front (AF), Oceanic Front (OF), Rainfall (RF), Iceberg (IC), Sea Ice (SI), Pure Ocean Wave (POW), Wind Streak (WS), Low Wind Area (LWA), Biological Slick (BS), Micro Convective Cells (MCC), Internal Wave (IW), and Eddy.</p> <p>This dataset is built using Sentinel-1 IW and WV mode images. For WV mode data, we referenced TenGeoP-SARwv and SAR_WV_SemanticSegmentation and selected 2,383 images for semantic segmentation and annotation. For IW mode images, we incorporated some images from Tao et al.'s internal wave detection dataset. We selecte",
+      "direct_manipulation_hits": [
+        "dataset",
+        "label",
+        "labeled",
+        "labelled"
+      ],
+      "label_hits": [
+        "annotated",
+        "annotation",
+        "label",
+        "labeled",
+        "labelled"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:14279466",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "A dataset for semantic segmentation of typical oceanic and atmospheric phenomena from Sentinel-1 images",
+      "url": "https://zenodo.org/records/14279466"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "<p>This is to meet the publication requirement of the iscience paper</p>",
+      "direct_manipulation_hits": [],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:7121214",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "rosyluo/Sex-Differential-Metabolite-in-Lung-Cancer: Sex Differential metabolite in Lung cancer iscience paper",
+      "url": "https://zenodo.org/records/7121214"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "Urban water and sanitation survey dataset collected by Water and Sanitation for the Urban Poor (WSUP) with technical support from Valid International. These citywide surveys have been collecting data allowing water and sanitation service levels across the entire city to be characterised, while also allowing more detailed data to be collected in areas of the city of particular interest. These surveys are intended to generate useful information for others working in the water and sanitation sector. Current release version includes datasets collected from a survey conducted in Dhaka, Bangladesh in March 2017. This survey in Dhaka is one of a series of surveys to be conducted by WSUP in various ",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:18324097",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "washdata: Urban Water and Sanitation Survey Dataset",
+      "url": "https://zenodo.org/records/18324097"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "Biological market theory is potentially useful for understanding helping behaviour in animal societies. It predicts that competition for trading partners will affect the value of commodities exchanged. It has gained empirical support in cooperative breeders, where subordinates help dominant breeders in exchange for group membership, but so far without considering one crucial aspect: outside options. We find support for the existence of a biological market in paper wasps, Polistes dominula. We first show that females have a choice of cooperative partners. Second, by manipulating entire subpopulations in the field, we increased the supply of outside options for subordinates, freeing up suitabl",
+      "direct_manipulation_hits": [
+        "market manipulation",
+        "class",
+        "dataset"
+      ],
+      "label_hits": [
+        "class"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:5026154",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Data from: Market forces influence helping behaviour in cooperatively breeding paper wasps",
+      "url": "https://zenodo.org/records/5026154"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "<p>VERA Spoofing PalmVein is a dataset for palmvein presentation attack detection (anti-spoofing), The dataset contains 1000 NIR images of presentation attacks (spoofing attacks) to 50 clients of the VERA PalmVein dataset that can be used to study vulnerability of vein recognition systems or to develop presentation attack detection techniques.</p> <p>&nbsp;</p> <p><strong>Database Description</strong></p> <p>All the attacks have been recorded using the same open palm vein sensor used to record the Idiap Research Institute VERA Palmvein Database.</p> <p>Images are labeled as follow: ID_hand_session_shot.png where &quot;ID&quot; is a 3 digits number that stands for client&#39;s ID, &quot;hand&",
+      "direct_manipulation_hits": [
+        "spoofing",
+        "dataset",
+        "label",
+        "labeled"
+      ],
+      "label_hits": [
+        "label",
+        "labeled"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:4580200",
+      "target_hits": [
+        "cl",
+        "dia",
+        "es",
+        "ym"
+      ],
+      "timeframe_hits": [],
+      "title": "VERA Spoofing PalmVein",
+      "url": "https://zenodo.org/records/4580200"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "<p>Tools for singing voice synthesis and vocal conversion focused on music have greatly improved in both quality and ease of use, leading to an explosion of music with synthetic vocals. This proliferation has made it difficult for listeners to discern human from deepfake and synthetic vocals. While there are robust approaches for detecting synthetic speech and vocal spoofing, identifying synthetic singing voices presents a unique set of challenges. In this paper, we present a new, publicly available dataset of labeled music tracks containing human and synthetic vocals. We evaluate existing synthetic speech detection models using this new dataset. We also introduce a novel ensemble approach t",
+      "direct_manipulation_hits": [
+        "spoofing",
+        "class",
+        "dataset",
+        "label",
+        "labeled"
+      ],
+      "label_hits": [
+        "class",
+        "label",
+        "labeled"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:16955639",
+      "target_hits": [
+        "cl",
+        "dia",
+        "es",
+        "ym"
+      ],
+      "timeframe_hits": [],
+      "title": "HuBERT Ensemble Models for Singing Voice Deepfake Detection",
+      "url": "https://zenodo.org/records/16955639"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "<p>The <strong>SARSpoof dataset </strong>is a curated collection of face images and videos from the South Asian region (SAR), developed to improve fairness and robustness in face anti-spoofing (FAS) systems. Existing PAD datasets predominantly represent Western and East Asian facial demographics, resulting in accuracy degradation and demographic bias when applied to South Asian or African populations. SARSpoof addresses this gap by providing real, diverse presentation attack samples and bona fide data collected from<strong> 40 South Asian subjects, each contributing five unique photos or videos, resulting in a total of 200 bona fide samples.</strong></p> <p>Participants represent multiple re",
+      "direct_manipulation_hits": [
+        "spoofing",
+        "dataset"
+      ],
+      "label_hits": [
+        "target"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:17860328",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "SARSpoof: A South Asian Face Anti-Spoofing Dataset",
+      "url": "https://zenodo.org/records/17860328"
+    },
+    {
+      "catalog": "zenodo",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "<p class=\"MsoNormal\">Market manipulation and insider trading erode investor confidence and distort capital allocation. Yet regulatory effectiveness in detecting, prosecuting, and sanctioning these offences varies significantly across jurisdictions. This chapter compares the regulatory frameworks, enforcement outcomes, and persistent challenges in three distinct financial markets: the United States (SEC/CFTC, highly resourced, private rights of action), the United Kingdom (FCA, criminal and civil dual-track, post-Brexit adjustments), and South Africa (FSCA, limited resources, state capture legacy). Using a comparative legal and institutional analysis, we find that the USA leads in detection t",
+      "direct_manipulation_hits": [
+        "layering",
+        "market manipulation",
+        "spoofing",
+        "class"
+      ],
+      "label_hits": [
+        "class"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "zenodo:19653452",
+      "target_hits": [
+        "cl",
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "Chapter 8: Market Manipulation, Insider Trading, and Regulatory Effectiveness: A Comparative Study of South Africa, the USA, and the UK",
+      "url": "https://zenodo.org/records/19653452"
+    },
+    {
+      "catalog": "openml_page",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "Search page metadata only; no dataset schema accepted.",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [
+        "regime"
+      ],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Bull', 'Bear', 'Sideways', 'Crisis'].",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "openml_search_page:market_regime",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "OpenML search page: market regime",
+      "url": "https://www.openml.org/search?type=data&status=active&search=market+regime"
+    },
+    {
+      "catalog": "openml_page",
+      "class": "root_label_catalog_candidate",
+      "decision": "rejected_missing_full_mainregimev2_roots",
+      "description": "Search page metadata only; no dataset schema accepted.",
+      "direct_manipulation_hits": [
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata does not expose all MainRegimeV2 roots; missing root terms: ['Crisis'].",
+      "root_hits": {
+        "Bear": true,
+        "Bull": true,
+        "Crisis": false,
+        "Sideways": true
+      },
+      "source_id": "openml_search_page:bull_bear_sideways",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "OpenML search page: bull bear sideways",
+      "url": "https://www.openml.org/search?type=data&status=active&search=bull+bear+sideways"
+    },
+    {
+      "catalog": "openml_page",
+      "class": "direct_manipulation_candidate_metadata_only",
+      "decision": "sidecar_only_needs_exported_rows_and_controls",
+      "description": "Search page metadata only; no dataset schema accepted.",
+      "direct_manipulation_hits": [
+        "market manipulation",
+        "dataset"
+      ],
+      "label_hits": [],
+      "proxy_hits": [],
+      "reason": "Metadata mentions direct manipulation/wash/spoofing concepts, but no replayable positive/negative windows were exported in this probe.",
+      "root_hits": {
+        "Bear": false,
+        "Bull": false,
+        "Crisis": false,
+        "Sideways": false
+      },
+      "source_id": "openml_search_page:market_manipulation",
+      "target_hits": [
+        "es"
+      ],
+      "timeframe_hits": [],
+      "title": "OpenML search page: market manipulation",
+      "url": "https://www.openml.org/search?type=data&status=active&search=market+manipulation"
+    }
+  ],
+  "catalog_queries": {
+    "github": [
+      "market regime",
+      "market-regime",
+      "stock market regime",
+      "crypto market regime",
+      "bull bear sideways market regime",
+      "wash trading dataset",
+      "market manipulation dataset"
+    ],
+    "huggingface": [
+      "market regime",
+      "market-regime",
+      "bull bear sideways market regime",
+      "BTCUSD regime label",
+      "wash trading label",
+      "market manipulation dataset"
+    ],
+    "zenodo_figshare_mendeley": [
+      "market regime bull bear sideways crisis",
+      "SPY QQQ market regime labels",
+      "BTCUSD Kraken market regime labels",
+      "wash trading labeled dataset",
+      "spoofing market manipulation labeled dataset"
+    ]
+  },
+  "fetch_log": [
+    {
+      "catalog": "github",
+      "ok": true,
+      "query": "market regime",
+      "status": 200,
+      "url": "https://api.github.com/search/repositories?q=market+regime&per_page=5"
+    },
+    {
+      "catalog": "github",
+      "ok": true,
+      "query": "market-regime",
+      "status": 200,
+      "url": "https://api.github.com/search/repositories?q=market-regime&per_page=5"
+    },
+    {
+      "catalog": "github",
+      "ok": true,
+      "query": "stock market regime",
+      "status": 200,
+      "url": "https://api.github.com/search/repositories?q=stock+market+regime&per_page=5"
+    },
+    {
+      "catalog": "github",
+      "ok": true,
+      "query": "crypto market regime",
+      "status": 200,
+      "url": "https://api.github.com/search/repositories?q=crypto+market+regime&per_page=5"
+    },
+    {
+      "catalog": "github",
+      "ok": true,
+      "query": "bull bear sideways market regime",
+      "status": 200,
+      "url": "https://api.github.com/search/repositories?q=bull+bear+sideways+market+regime&per_page=5"
+    },
+    {
+      "catalog": "github",
+      "ok": true,
+      "query": "wash trading dataset",
+      "status": 200,
+      "url": "https://api.github.com/search/repositories?q=wash+trading+dataset&per_page=5"
+    },
+    {
+      "catalog": "github",
+      "ok": true,
+      "query": "market manipulation dataset",
+      "status": 200,
+      "url": "https://api.github.com/search/repositories?q=market+manipulation+dataset&per_page=5"
+    },
+    {
+      "catalog": "huggingface",
+      "ok": true,
+      "query": "market regime",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets?search=market+regime&limit=8&full=true"
+    },
+    {
+      "catalog": "huggingface_detail",
+      "ok": true,
+      "query": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD"
+    },
+    {
+      "catalog": "huggingface_detail",
+      "ok": true,
+      "query": "AAdevloper/nifty50-market-regime",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/AAdevloper/nifty50-market-regime"
+    },
+    {
+      "catalog": "huggingface_detail",
+      "ok": true,
+      "query": "ClarusC64/market-regime-coherence-mapping-v0.1",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/ClarusC64/market-regime-coherence-mapping-v0.1"
+    },
+    {
+      "catalog": "huggingface_detail",
+      "ok": true,
+      "query": "ClarusC64/market-regime-transition-breakpoint-mapping-v0.1",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/ClarusC64/market-regime-transition-breakpoint-mapping-v0.1"
+    },
+    {
+      "catalog": "huggingface_detail",
+      "ok": true,
+      "query": "sujinwo/tsie-market-regime-dataset",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/sujinwo/tsie-market-regime-dataset"
+    },
+    {
+      "catalog": "huggingface",
+      "ok": true,
+      "query": "market-regime",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets?search=market-regime&limit=8&full=true"
+    },
+    {
+      "catalog": "huggingface",
+      "ok": true,
+      "query": "bull bear sideways market regime",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets?search=bull+bear+sideways+market+regime&limit=8&full=true"
+    },
+    {
+      "catalog": "huggingface",
+      "ok": true,
+      "query": "BTCUSD regime label",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets?search=BTCUSD+regime+label&limit=8&full=true"
+    },
+    {
+      "catalog": "huggingface",
+      "ok": true,
+      "query": "wash trading label",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets?search=wash+trading+label&limit=8&full=true"
+    },
+    {
+      "catalog": "huggingface",
+      "ok": true,
+      "query": "market manipulation dataset",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets?search=market+manipulation+dataset&limit=8&full=true"
+    },
+    {
+      "catalog": "zenodo",
+      "ok": true,
+      "query": "market regime bull bear sideways crisis",
+      "status": 200,
+      "url": "https://zenodo.org/api/records?q=market+regime+bull+bear+sideways+crisis&size=5"
+    },
+    {
+      "catalog": "zenodo",
+      "ok": true,
+      "query": "SPY QQQ market regime labels",
+      "status": 200,
+      "url": "https://zenodo.org/api/records?q=SPY+QQQ+market+regime+labels&size=5"
+    },
+    {
+      "catalog": "zenodo",
+      "ok": true,
+      "query": "BTCUSD Kraken market regime labels",
+      "status": 200,
+      "url": "https://zenodo.org/api/records?q=BTCUSD+Kraken+market+regime+labels&size=5"
+    },
+    {
+      "catalog": "zenodo",
+      "ok": true,
+      "query": "wash trading labeled dataset",
+      "status": 200,
+      "url": "https://zenodo.org/api/records?q=wash+trading+labeled+dataset&size=5"
+    },
+    {
+      "catalog": "zenodo",
+      "ok": true,
+      "query": "spoofing market manipulation labeled dataset",
+      "status": 200,
+      "url": "https://zenodo.org/api/records?q=spoofing+market+manipulation+labeled+dataset&size=5"
+    },
+    {
+      "catalog": "figshare",
+      "ok": true,
+      "query": "market regime bull bear sideways crisis",
+      "status": 200,
+      "url": "https://api.figshare.com/v2/articles/search"
+    },
+    {
+      "catalog": "figshare",
+      "ok": true,
+      "query": "SPY QQQ market regime labels",
+      "status": 200,
+      "url": "https://api.figshare.com/v2/articles/search"
+    },
+    {
+      "catalog": "figshare",
+      "ok": true,
+      "query": "BTCUSD Kraken market regime labels",
+      "status": 200,
+      "url": "https://api.figshare.com/v2/articles/search"
+    },
+    {
+      "catalog": "figshare",
+      "ok": true,
+      "query": "wash trading labeled dataset",
+      "status": 200,
+      "url": "https://api.figshare.com/v2/articles/search"
+    },
+    {
+      "catalog": "figshare",
+      "ok": true,
+      "query": "spoofing market manipulation labeled dataset",
+      "status": 200,
+      "url": "https://api.figshare.com/v2/articles/search"
+    },
+    {
+      "catalog": "mendeley",
+      "ok": false,
+      "query": "market regime bull bear sideways crisis",
+      "status": 401,
+      "url": "https://api.mendeley.com/datasets?query=market+regime+bull+bear+sideways+crisis&limit=8"
+    },
+    {
+      "catalog": "mendeley",
+      "ok": false,
+      "query": "SPY QQQ market regime labels",
+      "status": 401,
+      "url": "https://api.mendeley.com/datasets?query=SPY+QQQ+market+regime+labels&limit=8"
+    },
+    {
+      "catalog": "mendeley",
+      "ok": false,
+      "query": "BTCUSD Kraken market regime labels",
+      "status": 401,
+      "url": "https://api.mendeley.com/datasets?query=BTCUSD+Kraken+market+regime+labels&limit=8"
+    },
+    {
+      "catalog": "mendeley",
+      "ok": false,
+      "query": "wash trading labeled dataset",
+      "status": 401,
+      "url": "https://api.mendeley.com/datasets?query=wash+trading+labeled+dataset&limit=8"
+    },
+    {
+      "catalog": "mendeley",
+      "ok": false,
+      "query": "spoofing market manipulation labeled dataset",
+      "status": 401,
+      "url": "https://api.mendeley.com/datasets?query=spoofing+market+manipulation+labeled+dataset&limit=8"
+    },
+    {
+      "catalog": "openml_page",
+      "ok": true,
+      "query": "market regime",
+      "status": 200,
+      "url": "https://www.openml.org/search?type=data&status=active&search=market+regime"
+    },
+    {
+      "catalog": "openml_page",
+      "ok": true,
+      "query": "bull bear sideways",
+      "status": 200,
+      "url": "https://www.openml.org/search?type=data&status=active&search=bull+bear+sideways"
+    },
+    {
+      "catalog": "openml_page",
+      "ok": true,
+      "query": "market manipulation",
+      "status": 200,
+      "url": "https://www.openml.org/search?type=data&status=active&search=market+manipulation"
+    }
+  ],
+  "gate_result": "blocked_no_accepted_unauthenticated_non_kaggle_source_labels",
+  "missing_summary": {
+    "by_instrument": {
+      "CL=F": 36,
+      "DIA": 28,
+      "ES=F": 28,
+      "ETHUSD": 36,
+      "GC=F": 36,
+      "GLD": 36,
+      "NQ=F": 36,
+      "QQQ": 36,
+      "SOLUSD": 36,
+      "SPY": 28,
+      "USO": 36,
+      "XBTUSD": 36,
+      "YM=F": 28,
+      "^DJI": 28,
+      "^GSPC": 28,
+      "^NDX": 36,
+      "^VIX": 36
+    },
+    "by_provider": {
+      "kraken_public_lowpollution_http": 108,
+      "yfinance": 456
+    },
+    "by_reason": {
+      "missing_instrument_source_label": 40,
+      "missing_intraday_or_monthly_source_label": 392,
+      "missing_non_yfinance_source_label": 108,
+      "rejected_near_underlying_proxy_not_accepted": 24
+    },
+    "by_root": {
+      "Bear": 141,
+      "Bull": 141,
+      "Crisis": 141,
+      "Sideways": 141
+    },
+    "by_timeframe": {
+      "15m": 68,
+      "1d": 44,
+      "1h": 68,
+      "1m": 68,
+      "1mo": 68,
+      "1w": 44,
+      "30m": 68,
+      "4h": 68,
+      "5m": 68
+    },
+    "rows": 564
+  },
+  "next_action": "obtain_non_kaggle_exact_label_panel_or_authenticated_direct_manipulation_windows",
+  "objective": "focused_unauthenticated_non_kaggle_source_probe_for_missing_mainregimev2_root_labels_and_direct_manipulation_rows",
+  "raw_data_committed": false,
+  "run_id": "20260511T084353+0800-codex-unauth-root-label-source-probe",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,131 @@
+{
+  "board_a_sha256": "367a295e6e70dcb55b1619d7bf53afe056aeb87a6a3b5855cbc0ab1fa0b32670",
+  "board_b_sha256": "a0448e09eb542a2e4e8e5f8fd63cb14bf5280b765645a1095e3f7b09d32ed016",
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "requirement": "Authoritative Board B markdown updated in-place",
+      "status": "covered_this_run_readonly_no_cursor_edit"
+    },
+    {
+      "evidence": "Board B tail preserves exact branch path contract",
+      "requirement": "Branch path must remain main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor",
+      "status": "contract_present_not_executed_without_unlock"
+    },
+    {
+      "evidence": "new run root used; empty 064220 root was not modified",
+      "requirement": "Do not disturb concurrent multi-agent construction",
+      "status": "covered"
+    },
+    {
+      "evidence": "/tmp/ict-engine-native-subhour-source-label-intake accepted_unlock=False",
+      "requirement": "R3 native subhour source/control unlock",
+      "status": "blocked_quarantined_tsie_root"
+    },
+    {
+      "evidence": "/tmp/ict-engine-source-panel-recency-extension exists=False",
+      "requirement": "R5 source-panel recency unlock",
+      "status": "missing"
+    },
+    {
+      "evidence": "/tmp/ict-engine-board-a-r6-owner-export-v1 exists=False",
+      "requirement": "R6 owner/export control unlock",
+      "status": "missing"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2/command-output/provider_status_agent.out",
+      "requirement": "Provider context must include IBKR, TradingViewRemix, yfinance, Kraken",
+      "status": "diagnostic_only_provider_status_ran"
+    },
+    {
+      "evidence": "Board B blocker remains user_selected_historical_data_missing",
+      "requirement": "Explicit user selection of exactly one HTF=1d, MTF=4h, or LTF=1h",
+      "status": "missing"
+    },
+    {
+      "evidence": "No accepted source/control unlock and no selected history",
+      "requirement": "Selected-data AutoQuant/factor research",
+      "status": "blocked_not_run"
+    },
+    {
+      "evidence": "Downstream promotion rerun remains false",
+      "requirement": "Filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution tree rerun preserving branch path",
+      "status": "blocked_not_run"
+    },
+    {
+      "evidence": "strict_full_objective=false; update_goal=false",
+      "requirement": "Goal completion",
+      "status": "not_complete"
+    }
+  ],
+  "downstream_promotion_rerun": false,
+  "empty_064220_root_left_unmodified": true,
+  "explicit_user_selected_history": false,
+  "gate_result": "source_control_arrival_refresh_after_063906_v2=no_new_unlock_no_selected_history_no_downstream",
+  "generated_at_utc": "2026-05-11T22:46:08.503697+00:00",
+  "promotion_allowed": false,
+  "provider_status": {
+    "exit_code": 0,
+    "mentions": {
+      "ibkr": true,
+      "kraken": true,
+      "tradingview": true,
+      "yfinance": true
+    },
+    "ran": true,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2/command-output/provider_status_agent.err",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2/command-output/provider_status_agent.out"
+  },
+  "required_roots": [
+    {
+      "accepted_unlock": false,
+      "accepted_unlock_rule": "verifier-native or source/control-approved MainRegimeV2 labels including required per-regime coverage",
+      "all_required_files_present": true,
+      "blocker": "present_but_quarantined_tsie_policy_blocked",
+      "hashes": "{\"native_subhour_source_label_provenance.json\": \"60f2422260c404302dbb98dc641f13e50cdae8f09527a848e614a690b87fcc0f\", \"native_subhour_source_label_rows.csv\": \"72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f\"}",
+      "id": "r3_native_subhour",
+      "missing_files": "",
+      "present_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": true,
+      "row_counts": "{\"native_subhour_source_label_rows.csv\": 5032903}",
+      "source_run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1"
+    },
+    {
+      "accepted_unlock": false,
+      "accepted_unlock_rule": "source-owned post-2026-01-30 panel recency rows plus provenance",
+      "all_required_files_present": false,
+      "blocker": "required_root_or_files_absent",
+      "hashes": "{}",
+      "id": "r5_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false,
+      "row_counts": "{}",
+      "source_run_id": ""
+    },
+    {
+      "accepted_unlock": false,
+      "accepted_unlock_rule": "owner/export rows with valid normal controls or explicit source/control approval",
+      "all_required_files_present": false,
+      "blocker": "required_root_or_files_absent",
+      "hashes": "{}",
+      "id": "r6_owner_export",
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "present_files": "",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false,
+      "row_counts": "{}",
+      "source_run_id": ""
+    }
+  ],
+  "run_id": "20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2",
+  "selected_data_autoquant_training": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_unlocks": []
+}

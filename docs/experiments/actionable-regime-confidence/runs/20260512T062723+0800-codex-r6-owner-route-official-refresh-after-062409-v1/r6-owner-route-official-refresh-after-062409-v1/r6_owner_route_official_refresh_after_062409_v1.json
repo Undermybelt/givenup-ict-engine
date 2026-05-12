@@ -1,0 +1,62 @@
+{
+  "run_id": "20260512T062723+0800-codex-r6-owner-route-official-refresh-after-062409-v1",
+  "gate_result": "r6_owner_route_official_refresh_after_062409_v1=official_routes_confirmed_no_dispatch_no_rows_no_approval",
+  "board_sha256_before_artifact": "e892bc5d5cb9a17c7cf7cbe42d51bb12b63a5c7dd9d225704eb0962362f08f36",
+  "scope": {
+    "route_refresh_only": true,
+    "external_requests_sent": false,
+    "vendor_portal_used": false,
+    "licensed_exports_acquired": false,
+    "flip_control_approval_present": false,
+    "target_roots_mutated": false,
+    "canonical_merge_rerun": false,
+    "downstream_promotion_rerun": false,
+    "trade_claim": false,
+    "update_goal": false
+  },
+  "official_routes": [
+    {
+      "owner": "CME Group",
+      "source_urls": [
+        "https://www.cmegroup.com/market-data/datamine-historical-data.html"
+      ],
+      "route_evidence": [
+        "CME DataMine historical futures/options datasets include Market by Order and PCAP.",
+        "CME DataMine order flow requires account/login, license request, and data access after ordering.",
+        "CME lists CMEDataSales@cmegroup.com for Data Sales ordering inquiries."
+      ],
+      "board_relevance": "licensed CME Market Depth / Market by Order owner-export route for R6 normal controls",
+      "dispatch_status": "not_sent_no_ticket_no_export"
+    },
+    {
+      "owner": "Cboe/CFE",
+      "source_urls": [
+        "https://www.cboe.com/en/markets/us/futures/",
+        "https://datashop.cboe.com/futures"
+      ],
+      "route_evidence": [
+        "Cboe Futures Exchange official contacts include CFE Market Data Services.",
+        "Cboe DataShop futures products include CFE VIX Futures Trades and Quotes covering VIX futures trades and quotes on CFE."
+      ],
+      "board_relevance": "licensed CFE/VIX trades-quotes route for R6 validation/control evidence",
+      "dispatch_status": "not_sent_no_ticket_no_export"
+    }
+  ],
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "approval_present": false,
+    "source_control_evidence_acquired": false,
+    "target_root_mutated": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next": "Use existing v5 dispatch drafts through an approved operator mail/vendor-portal path, preserve returned ticket/export/license/order/support identifiers in provenance_manifest.json, or supply explicit approval/verifier-native owner-export rows before any direct verifier or downstream rerun."
+}

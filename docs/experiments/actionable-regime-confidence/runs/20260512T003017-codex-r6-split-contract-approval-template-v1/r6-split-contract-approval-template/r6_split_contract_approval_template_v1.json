@@ -1,0 +1,51 @@
+{
+  "approval_created": false,
+  "board_sha256_at_start": "5dc8f1ec8c95e2d44056db0056b13d11dd18358bb101284eb3336ebcc89642ce",
+  "gate_result": "r6_split_contract_approval_template_v1=template_ready_no_approval_rows_not_acquired",
+  "generated_at_utc": "2026-05-11T16:31:38.957263+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Owner/user must place approved row exports and validation_contract_approval.json under the target root or approve a different split contract before the direct verifier and downstream chain can rerun.",
+  "request_field_rows": 20,
+  "request_matrix_rows": 3,
+  "rows_acquired": false,
+  "run_id": "20260512T003017-codex-r6-split-contract-approval-template-v1",
+  "runtime_code_changed": false,
+  "schema_path": "validation_contract_approval_schema_v1.json",
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "target_files": [
+    {
+      "purpose": "Explicit owner/user approval for a non-exact split contract or adapter branch.",
+      "required_before_use": true,
+      "source_template": "validation_contract_approval_template_v1.json",
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/validation_contract_approval.json"
+    },
+    {
+      "purpose": "Human-readable approval reference matching the JSON approval.",
+      "required_before_use": true,
+      "source_template": "owner_approval_reference_template_v1.md",
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/owner_approval_reference.md"
+    },
+    {
+      "purpose": "Verifier-native positive rows or approved adapter output.",
+      "required_before_use": true,
+      "source_template": "filename_contract_checklist_v1.csv",
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv"
+    },
+    {
+      "purpose": "Verifier-native matched controls or approved adapter output.",
+      "required_before_use": true,
+      "source_template": "filename_contract_checklist_v1.csv",
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv"
+    },
+    {
+      "purpose": "Verifier-native provenance or approved adapter output.",
+      "required_before_use": true,
+      "source_template": "filename_contract_checklist_v1.csv",
+      "target_path": "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json"
+    }
+  ],
+  "target_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "template_path": "validation_contract_approval_template_v1.json",
+  "update_goal": false
+}

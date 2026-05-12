@@ -1,0 +1,11 @@
+name,path,exists,is_dir,is_file,size_bytes,sha256
+r6_owner_export_root,/tmp/ict-engine-board-a-r6-owner-export-v1,False,False,False,,
+r5_recency_root,/tmp/ict-engine-source-panel-recency-extension,False,False,False,,
+r3_native_subhour_root,/tmp/ict-engine-native-subhour-source-label-intake,True,True,False,,
+r6_approval_package,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,True,False,True,7249,71407847f90a15035c53d44091701fd47d5c46bb1fdca894db10ffd59739f54c
+080906_openalex_semantic_pwc_root,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T080906+0800-codex-openalex-semantic-pwc-source-route-after-080700-v1,True,True,False,,
+080906_openalex_semantic_pwc_assertions,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T080906+0800-codex-openalex-semantic-pwc-source-route-after-080700-v1/checks/openalex_semantic_pwc_source_route_after_080700_v1_assertions.out,True,False,True,747,7bc985a8059480105b24136f7e0f59191af78e47b8322ac72a8419bef5166141
+080446_required_root_arrival_poll_root,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T080446+0800-codex-required-root-arrival-poll-after-080054-v1,True,True,False,,
+080446_required_root_arrival_poll_assertions,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T080446+0800-codex-required-root-arrival-poll-after-080054-v1/checks/required_root_arrival_poll_after_080054_v1_assertions.out,True,False,True,446,ab6b6c82efdeff8ce5571f0fcb6f3492f3bb44e56af48b528295c430622fea7b
+080950_current_objective_audit_root,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T080950+0800-codex-current-objective-audit-after-080700-v1,True,True,False,,
+080950_current_objective_audit_assertions,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T080950+0800-codex-current-objective-audit-after-080700-v1/checks/current_objective_audit_after_080700_v1_assertions.out,True,False,True,429,0a6a526f14afa9849dfaa5bfd7667dde9eb5503cf8f29e869391fdeb11c57b14

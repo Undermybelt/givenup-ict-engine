@@ -1,0 +1,90 @@
+{
+  "board_hash_before_artifact": "05ebe2d952c07ebf623341b08bf303592002edd1a95e938937e89f85a9508257",
+  "decision": {
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "external_dispatch_sent_evidence": false,
+    "local_drop_hits_count": 0,
+    "r3_native_subhour_root_exists": true,
+    "r3_quarantine_reason": "tsie_proxy_policy_quarantined",
+    "r3_valid_required_unlock": false,
+    "r5_recency_root_exists": false,
+    "r5_valid_required_unlock": false,
+    "r6_owner_export_root_exists": false,
+    "r6_valid_required_unlock": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_unlock": false
+  },
+  "dispatch_assets": [
+    {
+      "asset_kind": "v5_dispatch_draft",
+      "has_from": false,
+      "mentions_ticket_export_fields": true,
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "present": true,
+      "sent_evidence": false,
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b",
+      "size_bytes": 8735,
+      "to": "CMEDataSales@cmegroup.com"
+    },
+    {
+      "asset_kind": "v5_dispatch_draft",
+      "has_from": false,
+      "mentions_ticket_export_fields": true,
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "present": true,
+      "sent_evidence": false,
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d",
+      "size_bytes": 6357,
+      "to": "marketdata@cboe.com"
+    }
+  ],
+  "gate_result": "source_control_arrival_refresh_after_063906_v1=no_valid_required_unlock_no_downstream",
+  "local_drop_hits": [],
+  "next_action": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, verifier-native R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export before rerunning direct verifier, split calibration, canonical merge, provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback.",
+  "observed_at_utc": "2026-05-11T22:43:48.956134+00:00",
+  "required_roots": [
+    {
+      "acceptance_note": "verifier-native R6 owner/export rows plus valid controls",
+      "accepted_required_unlock": false,
+      "exists": false,
+      "id": "r6_owner_export",
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "present_files": "",
+      "provenance_dataset_id": "",
+      "provenance_run_id": "",
+      "quarantine_reason": "",
+      "required_files_complete": false,
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    {
+      "acceptance_note": "verifier-native R3 MainRegimeV2 labels; TSIE proxy root is quarantined",
+      "accepted_required_unlock": false,
+      "exists": true,
+      "id": "r3_native_subhour",
+      "missing_files": "",
+      "present_files": "native_subhour_source_label_provenance.json;native_subhour_source_label_rows.csv",
+      "provenance_dataset_id": "sujinwo/tsie-market-regime-dataset",
+      "provenance_run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+      "quarantine_reason": "tsie_proxy_policy_quarantined",
+      "required_files_complete": true,
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "acceptance_note": "source-owned post-2026-01-30 R5 recency rows",
+      "accepted_required_unlock": false,
+      "exists": false,
+      "id": "r5_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "provenance_dataset_id": "",
+      "provenance_run_id": "",
+      "quarantine_reason": "",
+      "required_files_complete": false,
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    }
+  ],
+  "run_id": "20260512T064220+0800-codex-source-control-arrival-refresh-after-063906-v1"
+}

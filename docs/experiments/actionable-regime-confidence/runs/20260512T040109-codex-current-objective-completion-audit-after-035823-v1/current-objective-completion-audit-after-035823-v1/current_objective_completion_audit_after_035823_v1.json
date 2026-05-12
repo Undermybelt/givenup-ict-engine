@@ -1,0 +1,58 @@
+{
+  "run_id": "20260512T040109-codex-current-objective-completion-audit-after-035823-v1",
+  "gate_result": "current_objective_completion_audit_after_035823_v1=not_complete_every_regime_95_cross_market_timeframe_and_downstream_chain_blocked",
+  "board_sha256_before_audit": "4164ae7c37a63693265ac6add9680052f4777bde6993f23cf943417cce46b65e",
+  "objective_achieved": false,
+  "update_goal_allowed": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "strict_full_objective_achieved": false,
+  "trade_usable": false,
+  "required_roots": {
+    "r6_owner_export_root": {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "exists": false
+    },
+    "r3_native_subhour_root": {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "exists": false
+    },
+    "r5_recency_extension_root": {
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "exists": false
+    }
+  },
+  "evidence": {
+    "provider_reachability": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T195320-codex-board-a-provider-reachability-after-034813-v1",
+      "status": "partial_non_promoting"
+    },
+    "autoquant": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T034423-codex-autoquant-seeded-threaded-run-settlement-after-033430-v1",
+      "status": "runtime_only_non_promoting",
+      "succeeded_backtests": 3
+    },
+    "downstream": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1",
+      "pre_bayes_empty": true,
+      "policy_training_matched_rows": 0,
+      "path_ranking_target_missing": true,
+      "workflow_actionable_artifacts": 0
+    },
+    "r6_split_calibration": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1",
+      "pooled_lcb": 0.952479911333,
+      "pooled_gate": true,
+      "chronological_gate": false,
+      "heldout_symbol_gate": false,
+      "heldout_venue_gate": false,
+      "broad_normal_controls": false
+    },
+    "r6_acquisition_matrix": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T035823-codex-r6-source-control-acquisition-matrix-after-035433-v1",
+      "rows_acquired": false,
+      "total_additional_pair_rows_if_exact_cells_must_pass": 3717
+    }
+  },
+  "next": "Acquire explicit approval or verifier-native owner/export rows plus source-owned broad normal controls, then rerun verifier, split calibration, providers, AutoQuant, Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback in order."
+}

@@ -1,0 +1,4 @@
+provider,path,exists,row_count,columns,label_like_columns,sha256,source_label_ready
+yfinance,/tmp/ict-engine-board-a-provider-runtime-source-label-readback-v1/yf_spy_1d_2026.csv,True,88,"['date', 'open', 'high', 'low', 'close', 'volume']",[],e6d7298611eb7e5519df584d68b0fb40c6bbef52de00b62187b3c4f0d9a1eb22,False
+kraken_public,/tmp/ict-engine-board-a-provider-runtime-source-label-readback-v1/kraken_xbtusd_1d.csv,True,721,"['date', 'open', 'high', 'low', 'close', 'volume']",[],98d1fd2c1894aa8d5fe110475ffa0904352422776cdf497a75720d13a06b4498,False
+ibkr,/tmp/ict-engine-board-a-provider-runtime-source-label-readback-v1/ibkr_spy_1d_5d.csv,True,5,"['ts', 'open', 'high', 'low', 'close', 'volume', 'wap', 'count']",[],525e9ff677d1e672818a8e8eb7583ab9df7040fb62b331d05006e0e098ff1a26,False

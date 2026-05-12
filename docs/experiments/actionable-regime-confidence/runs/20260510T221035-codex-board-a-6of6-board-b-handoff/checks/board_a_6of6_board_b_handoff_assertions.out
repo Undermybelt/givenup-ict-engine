@@ -1,0 +1,24 @@
+PASS all_required_regimes_present: ["ExtremeStress", "RangeConsolidation", "ReversalBrewing", "SessionLiquidityCoreViable", "ThinLiquidity", "TrendExpansion"]
+PASS no_missing_after_source_loop: []
+PASS thresholds_not_relaxed: {"calibration_support_min_95": 120, "coverage_min_95": 0.03, "ece_max_95": 0.05, "precision_wilson_lcb_95": 0.95, "test_support_min_95": 60, "thresholds_relaxed": false, "validation_instruments_min_95": 2, "validation_market_contexts_min_95": 2}
+PASS source_declares_not_trade_usable: {"accepted_reissued_count": 3, "all_required_regimes_covered_under_current_contract": true, "board_state": "accepted_95", "next_action": "Run Auto-Quant -> Pre-Bayes/filter -> BBN -> CatBoost -> execution tree with the field-complete 6/6 packet set as context/guardrails.", "trade_usable": false, "why_not_trade_usable": ["This closes or audits Board A regime-confidence contracts only.", "Execution promotion still requires Board B non-observe release and path-specific edge gates."]}
+PASS SessionLiquidityCoreViable_output_contract_fields_present: []
+PASS SessionLiquidityCoreViable_95_metrics_pass: {"calibration_support": 792, "coverage": 0.2412771560236998, "ece": 0.010898548927198326, "precision_wilson_lcb": 0.9631734677247024, "test_support": 733}
+PASS SessionLiquidityCoreViable_validation_axes_present: {"instruments": ["NQ", "PF_XBTUSD", "QQQ"], "market_contexts": ["CME_futures_local", "IBKR_US_ETF", "Kraken_crypto", "yfinance_US_ETF"], "periods": ["calibration", "test", "train"], "qualifying_condition": "context_train_stable_high_liquidity_hour AND volume_rank_252 >= 0.55"}
+PASS TrendExpansion_output_contract_fields_present: []
+PASS TrendExpansion_95_metrics_pass: {"calibration_support": 273, "coverage": 0.14310344827586208, "ece": 0.036674169204289675, "precision_wilson_lcb": 0.9536435698638122, "test_support": 581}
+PASS TrendExpansion_validation_axes_present: {"instruments": ["BTC-USD", "NQ", "QQQ", "SPY"], "market_contexts": ["CME_futures_local", "yfinance_ETF", "yfinance_crypto"], "periods": ["calibration", "test", "train"], "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682"}
+PASS RangeConsolidation_output_contract_fields_present: []
+PASS RangeConsolidation_95_metrics_pass: {"calibration_support": 467, "coverage": 0.06341166936790923, "ece": 0.004488121867580741, "precision_wilson_lcb": 0.9676071866741978, "test_support": 313}
+PASS RangeConsolidation_validation_axes_present: {"instruments": ["NQ", "QQQ"], "market_contexts": ["AutoQuant_NQ_15m_cache", "yfinance_QQQ_1h", "IBKR_QQQ_1h"], "periods": ["calibration", "test", "train"], "qualifying_condition": "catboost_isotonic_probability(RangeConsolidation_persists_next_15m) >= 0.9896907216494846"}
+PASS ExtremeStress_output_contract_fields_present: []
+PASS ExtremeStress_95_metrics_pass: {"calibration_support": 445, "coverage": 0.05279960707269155, "ece": 0.015573556310425896, "precision_wilson_lcb": 0.9741288651988539, "test_support": 215}
+PASS ExtremeStress_validation_axes_present: {"instruments": ["NQ", "QQQ", "SPY"], "market_contexts": ["CME_futures_local", "yfinance_ETF"], "periods": ["calibration", "test", "train"], "qualifying_condition": "stress_persistence_16 >= 1 AND jump_intensity_32 >= 0.125"}
+PASS ReversalBrewing_output_contract_fields_present: []
+PASS ReversalBrewing_95_metrics_pass: {"calibration_support": 843, "coverage": 0.22192118226600985, "ece": 0.0013389630343508818, "precision_wilson_lcb": 0.9919428347812438, "test_support": 901}
+PASS ReversalBrewing_validation_axes_present: {"instruments": ["BTC-USD", "NQ", "QQQ", "SPY"], "market_contexts": ["CME_futures_local", "yfinance_ETF", "yfinance_crypto"], "periods": ["calibration", "test", "train"], "qualifying_condition": "ma64_slope16 <= 0.00115583574 AND stretch64 <= 0.005836516932"}
+PASS ThinLiquidity_output_contract_fields_present: []
+PASS ThinLiquidity_95_metrics_pass: {"calibration_support": 1066, "coverage": 0.12242394504416095, "ece": 0.0, "precision_wilson_lcb": 0.9923604970248407, "test_support": 499}
+PASS ThinLiquidity_validation_axes_present: {"instruments": ["BTC-USD", "NQ", "QQQ", "SPY"], "market_contexts": ["CME_futures_local", "yfinance_ETF", "yfinance_crypto"], "periods": ["calibration", "test", "train"], "qualifying_condition": "daily_thin_base_loose AND volume_ratio32_128 <= global_train_q20(0.8383613648201189)"}
+PASS handoff_packet_count_is_6: 6
+OVERALL PASS

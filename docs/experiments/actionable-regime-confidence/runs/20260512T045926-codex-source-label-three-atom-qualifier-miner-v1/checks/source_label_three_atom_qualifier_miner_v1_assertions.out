@@ -1,0 +1,11 @@
+PASS run_id=20260512T045926-codex-source-label-three-atom-qualifier-miner-v1
+PASS row_count=248440
+PASS gate_result=source_label_three_atom_qualifier_miner_v1=three_atom_scored_no_full_acceptance
+PASS accepted_three_atom_confidence_95_labels=none
+PASS new_confidence_gate=false
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

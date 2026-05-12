@@ -1,0 +1,6 @@
+requirement,evidence,coverage,status
+Run Auto-Quant on provider-backed profitability packet,Auto-Quant full-listing compile/run exits 0 and Momentum emits normalized real-trade rows,Covers Binance full-listing provider lane,covered
+Preserve regime-factor branch path,Momentum wire rows carry Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,Covers selected branch,covered
+Run ict-engine ordered chain,Ingest exit 0; bounded 2Y analyze/Pre-Bayes/export/CatBoost/workflow checks are recorded,Covers bounded continuation after full analyze timeout,covered_fail_closed_possible
+Use IBKR/TVR/YF/Kraken provider context,Provider provenance matrix from the parent report records all required provider rows; current AQ uses Binance full listing only,Partial provider authority for current packet,partial
+Do not claim completion,"promotion_allowed=false, trade_usable=false, update_goal=false",Covers accounting,covered

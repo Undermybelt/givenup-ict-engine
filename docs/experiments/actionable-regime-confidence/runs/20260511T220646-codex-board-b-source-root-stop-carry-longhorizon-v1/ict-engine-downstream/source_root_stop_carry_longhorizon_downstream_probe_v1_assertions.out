@@ -1,0 +1,9 @@
+probe_id=20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-downstream-v1
+wire_records=12329
+branch_paths_preserved=True
+ingest_ok=True
+bbn_state_exists=True
+learning_state_exists=True
+command_exits_ok=True
+downstream_consumption=consumed_through_bbn_feedback_readback;pre_bayes_policy_workflow_export_checked
+promotion_status=not_promoted:execution_tree_or_policy_not_calibrated

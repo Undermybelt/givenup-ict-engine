@@ -1,0 +1,17 @@
+PASS gate_result=autoquant_bootstrap_prepare_after_040311_v1=bootstrap_succeeded_prepare_dns_blocked_no_promotion
+PASS auto_quant_status_before_exit=0
+PASS auto_quant_bootstrap_exit=0
+PASS auto_quant_prepare_exit=1
+PASS auto_quant_status_after_exit=0
+PASS dependency_healthy_after=true
+PASS data_ready_after=false
+PASS prepare_blocker=binance_dns_exchange_info_unavailable
+PASS required_source_roots_absent_after=true
+PASS accepted_rows_added=0
+PASS source_control_evidence_acquired=false
+PASS new_confidence_gate=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

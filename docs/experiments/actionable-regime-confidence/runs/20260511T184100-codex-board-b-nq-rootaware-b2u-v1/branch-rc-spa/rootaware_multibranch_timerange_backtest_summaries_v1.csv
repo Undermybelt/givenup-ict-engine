@@ -1,0 +1,2 @@
+variant_id,timerange_label,timerange,trade_count,win_rate,total_profit_pct,profit_factor,sharpe,max_drawdown_pct,extracted_trade_rows
+baseline,nq_full_2011_2025,20110101-20251231,199,0.5979899497487438,162.46458148510004,1.608223479809863,0.1282661153084996,-15.110082918704862,199

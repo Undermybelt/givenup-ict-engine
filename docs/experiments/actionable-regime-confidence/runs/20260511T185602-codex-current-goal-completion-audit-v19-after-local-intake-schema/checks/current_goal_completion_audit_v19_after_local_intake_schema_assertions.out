@@ -1,0 +1,5 @@
+PASS checklist_items=7
+PASS unmet_requirements=5
+PASS scoped_95_present=true
+PASS strict_full_objective=false
+PASS update_goal=false

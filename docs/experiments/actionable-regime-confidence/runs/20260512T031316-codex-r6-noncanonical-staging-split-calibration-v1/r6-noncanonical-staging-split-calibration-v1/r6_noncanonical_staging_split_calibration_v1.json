@@ -1,0 +1,73 @@
+{
+  "board_sha256_at_start": "1bed1f42392d48a299f50a39751f01c37d33861fc2cb4be176a1e2b42c468fd1",
+  "calibration": {
+    "axis_summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1/r6-noncanonical-staging-split-calibration-v1/r6_noncanonical_staging_axis_summary_v1.csv",
+    "chronological_split_gate": false,
+    "combined_split_gate": false,
+    "heldout_symbol_gate": false,
+    "heldout_venue_gate": false,
+    "pooled_gate": true,
+    "split_metrics_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1/r6-noncanonical-staging-split-calibration-v1/r6_noncanonical_staging_split_metrics_v1.csv"
+  },
+  "canonical_owner_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "canonical_owner_root_exists": false,
+  "canonical_owner_root_mutated": false,
+  "counts": {
+    "matched_group_count": 74,
+    "matched_negative_rows": 77,
+    "positive_rows": 77,
+    "symbol_count": 40,
+    "unmatched_group_count": 0,
+    "venue_count": 11
+  },
+  "gate_result": "r6_noncanonical_staging_split_calibration_v1=noncanonical_schema_ready_pooled_pass_split_support_fails_no_promotion",
+  "generated_at_utc": "2026-05-11T19:14:23.130540+00:00",
+  "next_action": "Keep the canonical R6 owner-export blocker open; require owner/operator export or explicit FLIP approval before canonical merge/downstream rerun.",
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "run_id": "20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1",
+  "source_files": {
+    "matched_negative_normal_activity_rows.csv": "a829ce2e8ad4e13f133effdf8e0a41885d057979cd0d47acecb66679a5a8ac58",
+    "positive_spoofing_layering_rows.csv": "1102d09b92c07498676fa5a4ae93b3aa1323086f4edb4453281b25714348e793",
+    "provenance_manifest.json": "d936638ac43fd4d9f23fbc781e0b54be4c1c348683f381bed84ffbbfda47aa6f"
+  },
+  "staging_root": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+  "verifier": {
+    "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1/command-output/direct_manipulation_row_intake_verifier.exit",
+    "payload": {
+      "matched_group_count": 74,
+      "matched_negative_rows": 77,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 77,
+      "provenance_keys": [
+        "artifact_type",
+        "baseline_matched_negative_rows",
+        "baseline_positive_rows",
+        "baseline_provenance",
+        "generated_at_utc",
+        "lock_dir",
+        "policy",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "selected_source_row_ids",
+        "source_candidate_screen_json",
+        "thresholds_relaxed"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  }
+}

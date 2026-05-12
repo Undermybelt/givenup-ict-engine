@@ -1,0 +1,111 @@
+{
+  "run_id": "20260512T031539-codex-current-objective-completion-audit-after-031316-v1",
+  "generated_at_utc": "2026-05-11T19:15:39Z",
+  "board_sha256_before_audit": "3c3869735c19927d5cc904ec0c6c8257de0139950e086925526581d7cc98b2ef",
+  "gate_result": "current_objective_completion_audit_after_031316_v1=not_complete_noncanonical_staging_and_triplet_sweep_no_source_controls_downstream_blocked",
+  "objective": "Every Board A regime reaches calibrated >=95% confidence with per-regime qualifying conditions and cross-market/cycle/timeframe validation, then provider/Auto-Quant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution-tree promotion is rerun only after source/control gates permit it.",
+  "checklist_counts": {
+    "pass": 4,
+    "partial": 2,
+    "blocked": 7
+  },
+  "latest_prior_audit": {
+    "run_id": "20260512T030957-codex-current-objective-completion-audit-after-030617-030623-v1",
+    "gate_result": "current_objective_completion_audit_after_030617_030623_v1=not_complete_source_controls_missing_030722_reference_broken_downstream_blocked",
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "latest_staging_evidence": {
+    "run_id": "20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1",
+    "gate_result": "r6_noncanonical_staging_split_calibration_v1=noncanonical_schema_ready_pooled_pass_split_support_fails_no_promotion",
+    "verifier_status": "schema_ready_unscored",
+    "verifier_returncode": 0,
+    "positive_rows": 77,
+    "matched_negative_rows": 77,
+    "matched_group_count": 74,
+    "pooled_gate": true,
+    "chronological_split_gate": false,
+    "heldout_symbol_gate": false,
+    "heldout_venue_gate": false,
+    "combined_split_gate": false,
+    "canonical_owner_root_exists": false,
+    "canonical_owner_root_mutated": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "latest_triplet_sweep": {
+    "run_id": "20260512T031435-codex-r6-local-triplet-sweep-after-030957-v1",
+    "gate_result": "r6_local_triplet_sweep_after_030957_v1=no_new_owner_export_triplet_only_known_non_promoting_projection_and_sidecars",
+    "canonical_r6_owner_export_root_exists": false,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "only_extra_noncanonical_triplet": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+    "only_extra_noncanonical_triplet_classification": "non_promoting_isolated_projection",
+    "legacy_sidecars_are_owner_export": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "root_status": [
+    {
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "status": "absent",
+      "promotion_use": "blocked"
+    },
+    {
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "status": "absent",
+      "promotion_use": "blocked"
+    },
+    {
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "status": "absent",
+      "promotion_use": "blocked"
+    }
+  ],
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "non_mutations": {
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false
+  },
+  "missing_or_weak_requirements": [
+    "every-regime calibrated >=95% objective is not achieved",
+    "031316 is noncanonical staging evidence only",
+    "031316 chronological split gate is false",
+    "031316 heldout symbol gate is false",
+    "031316 heldout venue gate is false",
+    "031435 found no new owner/operator R6 export triplet",
+    "031435 only found a known isolated projection plus legacy sidecars",
+    "R6 owner-export root is absent",
+    "R3 native-subhour source-label root is absent",
+    "R5 source-panel recency-extension root is absent",
+    "approval/FLIP controls remain false",
+    "canonical merge and downstream promotion rerun remain false"
+  ],
+  "next_action": "Preserve Current Cursor. Continue only from owner/operator R6 export delivery, explicit FLIP approval, or genuinely source-owned cross-timeframe MainRegimeV2 exports before canonical merge and downstream promotion."
+}

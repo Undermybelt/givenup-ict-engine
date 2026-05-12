@@ -1,0 +1,4 @@
+filename,path,sha256,bytes
+BTCLeaderBreakV4BTCOnly.py,/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/strategies/BTCLeaderBreakV4BTCOnly.py,0f44c5562419ed0e2ac9d81a1092167916b559906ec865b99c7dc1efbf3c9f56,325
+MTFTrendStackBTCOnly.py,/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/strategies/MTFTrendStackBTCOnly.py,3846d6f8de215c2a62e51ccb0a88ffecf24cc57c0aa260b533c577d1d9ae1e57,310
+MomentumMTFConfluenceBTCOnly.py,/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/strategies/MomentumMTFConfluenceBTCOnly.py,f0e2ab4afeaae6d3e8f2152672e036b386799f3905e7205917caa299231246f6,350

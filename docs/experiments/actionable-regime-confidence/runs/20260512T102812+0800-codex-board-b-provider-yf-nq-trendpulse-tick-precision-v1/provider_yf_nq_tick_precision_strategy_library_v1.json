@@ -1,0 +1,115 @@
+{
+  "auto_quant_pinned_ref": "local-provider-yf-nq-tick-precision-run",
+  "auto_quant_repo_url": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/workspace/auto-quant-yf-nq-trendpulse",
+  "config_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/workspace/auto-quant-yf-nq-trendpulse/config.tomac.json",
+  "exported_at": "2026-05-12T02:34:04.602264+00:00",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/command-output/01_run_provider_yf_nq_trendpulse_tick_precision_capture.out",
+  "manifest_version": "1.0",
+  "strategies": [
+    {
+      "commit": "local-provider-yf-nq-tick-precision-run",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/workspace/auto-quant-yf-nq-trendpulse/user_data/strategies_external/ProviderNqSampledPulse.py",
+      "metadata": {
+        "asset_class": "provider_yfinance_nq_futures",
+        "base_factor": "provider_yf_nq_sampled_pulse",
+        "created": "2026-05-12",
+        "expected_regime": "diagnostic_only_Bull_provider_yf_nq",
+        "factors_used": [
+          "provider_yf_nq_ohlcv",
+          "ema_guard",
+          "sampled_bar_pulse",
+          "regime_profit_branch_path"
+        ],
+        "hypothesis": "Provider-owned Yahoo NQ data can produce nonzero Freqtrade trades once synthetic-market tick precision is corrected.",
+        "mutation_id": "provider-yf-nq-sampled-pulse-tick-precision-v1",
+        "paradigm": "diagnostic_sampled_pulse",
+        "parent": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "status": "provider_owned_tick_precision_non_promotional",
+        "strategy": "ProviderNqSampledPulse"
+      },
+      "name": "ProviderNqSampledPulse",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 17.04373657861229,
+          "max_drawdown_pct": -0.15513518181420827,
+          "profit_factor": 5.32464414365428,
+          "sharpe": 0.18978977589209955,
+          "sortino": 0.674729601362148,
+          "total_profit_pct": 0.97,
+          "trade_count": 18,
+          "win_rate_pct": 33.33333333333333
+        }
+      },
+      "status": "ok",
+      "timerange": "20240601-20260512",
+      "validation_metrics": {
+        "calmar": 17.04373657861229,
+        "max_drawdown_pct": -0.15513518181420827,
+        "profit_factor": 5.32464414365428,
+        "sharpe": 0.18978977589209955,
+        "sortino": 0.674729601362148,
+        "total_profit_pct": 0.97,
+        "trade_count": 18,
+        "win_rate_pct": 33.33333333333333
+      }
+    },
+    {
+      "commit": "local-provider-yf-nq-tick-precision-run",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/workspace/auto-quant-yf-nq-trendpulse/user_data/strategies_external/ProviderNqTrendPulse.py",
+      "metadata": {
+        "asset_class": "provider_yfinance_nq_futures",
+        "base_factor": "provider_yf_nq_trend_pulse",
+        "created": "2026-05-12",
+        "expected_regime": "diagnostic_only_Bull_provider_yf_nq",
+        "factors_used": [
+          "provider_yf_nq_ohlcv",
+          "ema_trend",
+          "rsi_pulse",
+          "atr_stop_context",
+          "regime_profit_branch_path"
+        ],
+        "hypothesis": "Dense trend-pulse entries on provider-owned Yahoo NQ data should be measured after precision repair.",
+        "mutation_id": "provider-yf-nq-trendpulse-tick-precision-v1",
+        "paradigm": "trend_pulse",
+        "parent": "Bull -> ProviderYfNq -> TrendPulseDiagnostic -> ProviderNqTrendPulse:provider_yf_nq_trend_pulse_h1",
+        "status": "provider_owned_tick_precision_negative_retired",
+        "strategy": "ProviderNqTrendPulse"
+      },
+      "name": "ProviderNqTrendPulse",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -2.5268422631485863,
+          "max_drawdown_pct": -40.97328765567128,
+          "profit_factor": 0.5911684844020071,
+          "sharpe": -3.303801028670409,
+          "sortino": -2.8027203222162558,
+          "total_profit_pct": -38.1,
+          "trade_count": 896,
+          "win_rate_pct": 37.723214285714285
+        }
+      },
+      "status": "ok",
+      "timerange": "20240601-20260512",
+      "validation_metrics": {
+        "calmar": -2.5268422631485863,
+        "max_drawdown_pct": -40.97328765567128,
+        "profit_factor": 0.5911684844020071,
+        "sharpe": -3.303801028670409,
+        "sortino": -2.8027203222162558,
+        "total_profit_pct": -38.1,
+        "trade_count": 896,
+        "win_rate_pct": 37.723214285714285
+      }
+    }
+  ],
+  "timeframe": "1h",
+  "validation_errors": []
+}

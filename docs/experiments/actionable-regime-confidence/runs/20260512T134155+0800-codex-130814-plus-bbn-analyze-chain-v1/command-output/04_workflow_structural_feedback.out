@@ -1,0 +1,91 @@
+{
+  "allowed_outcomes": [
+    "win",
+    "loss",
+    "breakeven",
+    "invalidated",
+    "abandoned",
+    "not_followed"
+  ],
+  "bbn_support_score": 0.367008438103555,
+  "branch_id": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:range_mean_reversion",
+  "candidate_set_id": "structural-candidates:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:b7d77aa214e58a0a",
+  "candidate_set_size": 3,
+  "confirmation_summary": "user confirms the required input",
+  "direction": "Observe",
+  "entry_style": "structural_recommended_path",
+  "feedback_fields": [
+    {
+      "description": "Whether the user actually followed the recommended path.",
+      "field_id": "followed_path",
+      "label": "Followed Path",
+      "required": true,
+      "value_type": "boolean"
+    },
+    {
+      "description": "One of win, loss, breakeven, invalidated, abandoned, or not_followed.",
+      "field_id": "realized_outcome",
+      "label": "Realized Outcome",
+      "required": true,
+      "value_type": "enum"
+    },
+    {
+      "description": "Optional realized PnL from the actual execution.",
+      "field_id": "realized_pnl",
+      "label": "Realized PnL",
+      "required": false,
+      "value_type": "number"
+    },
+    {
+      "description": "Freeform reason such as stop_hit, target_hit, invalidated, timed_out.",
+      "field_id": "exit_reason",
+      "label": "Exit Reason",
+      "required": false,
+      "value_type": "string"
+    },
+    {
+      "description": "Optional operator notes about what actually happened.",
+      "field_id": "notes",
+      "label": "Notes",
+      "required": false,
+      "value_type": "string"
+    }
+  ],
+  "generic_template_path_id": "path:scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:range_mean_reversion:primary",
+  "invalidation_summary": "regime branch range loses posterior support or invalidates before trigger",
+  "node_id": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range",
+  "notes": [
+    "Preserve recommendation_id plus node/branch/scenario/path ids when recording live feedback.",
+    "This is a protocol contract only; canonical persistence wiring comes next."
+  ],
+  "path_id": "path:scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:range_mean_reversion:primary",
+  "path_label": "range_mean_reversion",
+  "path_posterior": 0.367008438103555,
+  "path_ranker_calibrated_path_prob": null,
+  "path_ranker_execution_gate_status": null,
+  "path_ranker_path_prob_lower_bound": null,
+  "path_ranker_raw_score": null,
+  "path_ranker_runtime_source": null,
+  "pre_bayes_gate_status": "observe_only",
+  "protocol_version": "structural-feedback-v1",
+  "recommendation_id": "structural-feedback:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:path:scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:range_mean_reversion:primary",
+  "recommended_at": "2026-05-12T05:42:26Z",
+  "recommended_command": "ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/state_catboost_plus_bbn_v1'",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/state_catboost_plus_bbn_v1'",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1h.json",
+    "user_input_required": true
+  },
+  "scenario_id": "scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:range_mean_reversion",
+  "selected_entry_quality": "medium",
+  "selected_entry_quality_probability": 1.0,
+  "selected_path_probability": 0.33333333333333337,
+  "source_phase": "structural-recommended-path-bundle",
+  "stop_summary": "Use execution candidate 'execution-candidate:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:analyze:v1' once actionable; current candidate_status=no_trade.",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+  "trigger_summary": "regime_posterior=range:0.350",
+  "why_this_path": "posterior=0.367 prior=0.250 invalidation_rate=n/a"
+}

@@ -1,0 +1,11 @@
+gate_result=board_artifact_link_readback_after_064732_v1=no_valid_unlock_064325_reference_missing_064908_no_recency_no_downstream
+missing_referenced_run_count=1
+missing_referenced_runs=20260512T064325+0800-codex-source-control-arrival-refresh-after-063906-v2
+valid_required_root_unlock=false
+accepted_rows_added=0
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

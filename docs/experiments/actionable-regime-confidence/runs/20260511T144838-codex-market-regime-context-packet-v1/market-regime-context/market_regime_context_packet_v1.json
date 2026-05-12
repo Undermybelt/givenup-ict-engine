@@ -1,0 +1,206 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/checks/market_regime_context_packet_v1_assertions.out",
+    "consumer_contract_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1_consumer_contract.csv",
+    "layers_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1_layers.csv",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.md",
+    "script": "scripts/market_regime_context_packet_v1.py"
+  },
+  "board_sha256_at_start": "7616ed898e9b2b8697d429b98e036ffdfb626fef45aa4f2ebc35dde0e3840508",
+  "consumer_contract": [
+    {
+      "allowed_action": "provide context to downstream gates; may size down or suppress incompatible factor paths",
+      "consumer_field": "market_regime_context.root",
+      "must_not_do": "must not execute trades or claim ticker-specific timing from this field alone",
+      "source": "accepted exact-source parent-root context packet",
+      "value_contract": "Bull|Bear|Sideways|Crisis"
+    },
+    {
+      "allowed_action": "audit whether context evidence remains above 0.95",
+      "consumer_field": "market_regime_context.confidence_floor",
+      "must_not_do": "must not reinterpret as alpha edge or profitability",
+      "source": "daily parent root, 1w/1mo source consensus, exact 1h panel context",
+      "value_contract": "minimum accepted split Wilson95 LCB across retained context layers"
+    },
+    {
+      "allowed_action": "unblock market-context consumers from ticker-specific denominator drift",
+      "consumer_field": "market_regime_context.scope",
+      "must_not_do": "must not mark full objective complete",
+      "source": "consumer-unit pivot",
+      "value_contract": "context_ready_not_full_completion"
+    },
+    {
+      "allowed_action": "route to matched-row acquisition",
+      "consumer_field": "direct_manipulation_route",
+      "must_not_do": "must not use OHLCV/session/liquidity proxies as Manipulation labels",
+      "source": "consumer-unit pivot and positive direct varieties",
+      "value_contract": "partial_blocked"
+    }
+  ],
+  "created_at_utc": "2026-05-11T06:57:48.493121+00:00",
+  "decision": {
+    "call_update_goal": false,
+    "direct_manipulation_gate": "partial_blocked",
+    "full_objective_achieved": false,
+    "gate_result": "market_regime_context_packet_v1_price_roots4_context_ready_full_goal_still_blocked",
+    "market_regime_context_ready": true,
+    "raw_data_committed": false,
+    "roots_context_ready": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "roots_context_ready_count": 4,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "ticker_specific_signal_gate": "partial",
+    "trade_usable": false
+  },
+  "inputs": {
+    "consumer_ledger_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T143344-codex-regime-consumer-unit-pivot-v1/consumer-unit-pivot/regime_consumer_unit_pivot_v1_ledger.csv",
+    "exact_1h_panel_json": "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1.json",
+    "positive_index_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T140042-codex-positive-regime-factor-index-v1/positive-factor-index/positive_regime_factor_index_v1.csv"
+  },
+  "market_regime_context_gate": {
+    "accepted_roots": "Bull,Bear,Sideways,Crisis",
+    "accepted_roots_count": 4,
+    "blocker": "needs downstream-facing context packet and full-cycle/species accounting; not ticker-specific",
+    "consumer_unit": "market_regime_context_gate",
+    "evidence": "exact same-source daily panel plus 1w/1mo and 1h panel-context support",
+    "owner": "Board A price-root regime context",
+    "status": "context_ready_not_full_completion"
+  },
+  "root_packets": {
+    "Bear": {
+      "accepted_layer_count": 5,
+      "accepted_layers": [
+        "1h_exact_source_panel_context",
+        "1mo_source_consensus_context",
+        "1w_source_consensus_context",
+        "daily_parent_root_factor",
+        "intraday_parent_day_context_attachment"
+      ],
+      "artifacts": [
+        "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1_summary.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T134756-codex-daily-to-intraday-source-attachment-v1/daily-intraday-attachment/daily_to_intraday_source_attachment_v1_slots.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1.json"
+      ],
+      "consumer_scope": "market_regime_context",
+      "context_ready": true,
+      "disallowed_use": [
+        "ticker_specific_trade_signal",
+        "intraday_transition_timing_signal",
+        "direct_manipulation_acceptance",
+        "full_cycle_full_species_completion_claim"
+      ],
+      "min_split_wilson95_lcb_floor": 0.963920242,
+      "primary_use": [
+        "pre_bayes_regime_context",
+        "bbn_soft_evidence_context",
+        "catboost_path_ranker_context",
+        "execution_tree_sizing_or_suppression_context"
+      ],
+      "root": "Bear"
+    },
+    "Bull": {
+      "accepted_layer_count": 5,
+      "accepted_layers": [
+        "1h_exact_source_panel_context",
+        "1mo_source_consensus_context",
+        "1w_source_consensus_context",
+        "daily_parent_root_factor",
+        "intraday_parent_day_context_attachment"
+      ],
+      "artifacts": [
+        "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1_summary.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T134756-codex-daily-to-intraday-source-attachment-v1/daily-intraday-attachment/daily_to_intraday_source_attachment_v1_slots.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1.json"
+      ],
+      "consumer_scope": "market_regime_context",
+      "context_ready": true,
+      "disallowed_use": [
+        "ticker_specific_trade_signal",
+        "intraday_transition_timing_signal",
+        "direct_manipulation_acceptance",
+        "full_cycle_full_species_completion_claim"
+      ],
+      "min_split_wilson95_lcb_floor": 0.9797225384,
+      "primary_use": [
+        "pre_bayes_regime_context",
+        "bbn_soft_evidence_context",
+        "catboost_path_ranker_context",
+        "execution_tree_sizing_or_suppression_context"
+      ],
+      "root": "Bull"
+    },
+    "Crisis": {
+      "accepted_layer_count": 4,
+      "accepted_layers": [
+        "1h_exact_source_panel_context",
+        "1mo_source_consensus_context",
+        "1w_source_consensus_context",
+        "daily_parent_root_factor"
+      ],
+      "artifacts": [
+        "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1_summary.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1.json"
+      ],
+      "consumer_scope": "market_regime_context",
+      "context_ready": true,
+      "disallowed_use": [
+        "ticker_specific_trade_signal",
+        "intraday_transition_timing_signal",
+        "direct_manipulation_acceptance",
+        "full_cycle_full_species_completion_claim"
+      ],
+      "min_split_wilson95_lcb_floor": 0.9619059575,
+      "primary_use": [
+        "pre_bayes_regime_context",
+        "bbn_soft_evidence_context",
+        "catboost_path_ranker_context",
+        "execution_tree_sizing_or_suppression_context"
+      ],
+      "root": "Crisis"
+    },
+    "Sideways": {
+      "accepted_layer_count": 5,
+      "accepted_layers": [
+        "1h_exact_source_panel_context",
+        "1mo_source_consensus_context",
+        "1w_source_consensus_context",
+        "daily_parent_root_factor",
+        "intraday_parent_day_context_attachment"
+      ],
+      "artifacts": [
+        "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1_summary.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T134756-codex-daily-to-intraday-source-attachment-v1/daily-intraday-attachment/daily_to_intraday_source_attachment_v1_slots.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1.json"
+      ],
+      "consumer_scope": "market_regime_context",
+      "context_ready": true,
+      "disallowed_use": [
+        "ticker_specific_trade_signal",
+        "intraday_transition_timing_signal",
+        "direct_manipulation_acceptance",
+        "full_cycle_full_species_completion_claim"
+      ],
+      "min_split_wilson95_lcb_floor": 0.9529358324,
+      "primary_use": [
+        "pre_bayes_regime_context",
+        "bbn_soft_evidence_context",
+        "catboost_path_ranker_context",
+        "execution_tree_sizing_or_suppression_context"
+      ],
+      "root": "Sideways"
+    }
+  },
+  "run_id": "20260511T144838+0800-codex-market-regime-context-packet-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1",
+  "schema_version": "market-regime-context-packet/v1"
+}

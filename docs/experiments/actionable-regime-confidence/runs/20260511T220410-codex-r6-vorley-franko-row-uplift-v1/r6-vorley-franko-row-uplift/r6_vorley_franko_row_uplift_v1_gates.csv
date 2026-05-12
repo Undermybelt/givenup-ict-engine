@@ -1,0 +1,6 @@
+gate,observed,required,pass
+positive_support,62,50,True
+matched_negative_support,62,50,True
+wilson95_min_lcb,0.941656,>=0.95,False
+broad_normal_sample,False,True,False
+direct_verifier_returncode,0,0,True

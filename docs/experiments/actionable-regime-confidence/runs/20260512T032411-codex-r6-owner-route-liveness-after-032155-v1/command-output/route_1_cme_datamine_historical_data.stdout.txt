@@ -1,0 +1,1 @@
+http_code=000,url_effective=https://www.cmegroup.com/market-data/datamine-historical-data/index.html,content_type=,size_download=0,time_total=0.214640

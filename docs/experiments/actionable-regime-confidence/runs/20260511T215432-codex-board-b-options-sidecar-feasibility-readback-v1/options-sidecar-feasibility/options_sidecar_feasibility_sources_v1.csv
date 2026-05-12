@@ -1,0 +1,3 @@
+path,exists,rows,unique_snapshots,unique_expiries,unique_sides,underlyings,has_iv,has_greeks,has_open_interest,has_volume
+/Users/thrill3r/Auto-Quant/user_data/data/options/binance_BTC.csv,True,538,1,12,CALL;PUT,BTCUSDT,True,True,False,False
+/Users/thrill3r/Auto-Quant/user_data/data/options/bybit_BTC.csv,True,500,1,9,C;P,BTC,True,True,True,True

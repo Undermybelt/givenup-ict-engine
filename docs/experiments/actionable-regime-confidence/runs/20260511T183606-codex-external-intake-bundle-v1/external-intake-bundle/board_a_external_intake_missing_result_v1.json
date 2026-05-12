@@ -1,0 +1,13 @@
+{
+  "missing_files": [
+    "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_rows.csv",
+    "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_provenance.json",
+    "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_rows.csv",
+    "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_provenance.json",
+    "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_positive_rows.csv",
+    "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_matched_controls.csv",
+    "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_provenance.json"
+  ],
+  "reason": "missing_required_files",
+  "status": "blocked"
+}

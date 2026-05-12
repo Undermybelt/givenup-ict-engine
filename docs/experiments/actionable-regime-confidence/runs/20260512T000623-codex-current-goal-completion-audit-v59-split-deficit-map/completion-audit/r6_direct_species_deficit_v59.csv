@@ -1,0 +1,7 @@
+species_or_label,positive_rows,status,note
+positive_spoofing_layering,73,present,current verifier schema labels these as spoofing/layering positives
+quote_stuffing,0,missing,required for direct-species breadth; not closed by spoofing/layering rows
+pinging,0,missing,required for direct-species breadth; not closed by spoofing/layering rows
+bear_raid_or_painting_tape,0,missing,required for direct-species breadth; not closed by spoofing/layering rows
+pump_dump_social_text_or_onchain,0,missing,required for direct-species breadth; not closed by spoofing/layering rows
+distinct_source_reports,15,diagnostic,"CFTC Complaint: CFTC v. Andre Flotron, Case 3:18-cv-00158=10; CFTC Complaint: James Vorley and Cedric Chanu, Case 1:18-cv-00603=9; CFTC Complaint: CFTC v. Daniel Lawrence Shak, Case 2:22-cv-01258, Document 1=8; CFTC Complaint: Navinder Singh Sarao and Nav Sarao Futures Limited PLC, filed Apr. 17 2015=6; CFTC Complaint: Michael Thomas Nowak and Gregg Francis Smith, filed Sep. 16 2019=6; CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1=5; CFTC Complaint: Krishna Mohan, CFTC v. Mohan, Case 4:18-cv-00260=4; CFTC Complaint: CFTC v. David Skudder et al., No. 1:22-cv-01925=4"

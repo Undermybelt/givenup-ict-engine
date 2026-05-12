@@ -1,0 +1,71 @@
+{
+  "artifact_id": "execution-tree-QQQ-1778409394783",
+  "generated_at": "2026-05-10T10:36:34.783595Z",
+  "symbol": "QQQ",
+  "output": {
+    "execution_score": 0.5332605583002843,
+    "branch": "block_crowded",
+    "execution_bias": "skip",
+    "gate_status": "blocked",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.4098 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.4098 < 0.45)",
+      "prediction_vote_score=0.5475 (medium) × execution_readiness=0.4098 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=ExtremeStress secondary_regime=PanicBuying overall_confidence=0.717",
+      "market_state=volatility=CrisisVol:0.849 liquidity=NormalLiquidity:0.412 structure=Trending:0.853 behavior=FOMO:0.650",
+      "market_state=rationale=volatility=CrisisVol conf=0.85",
+      "market_state=rationale=structure=Trending conf=0.85",
+      "market_state=rationale=behavior=FOMO conf=0.65",
+      "market_state=rationale=primary=ExtremeStress secondary=PanicBuying overall=0.72",
+      "path_ranker=Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+      "path_ranker=Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false",
+      "path_ranker=ranker_machine=runtime_source=unknown score_model_family=unknown score_source=unknown validation_ready=false active_match_count=0",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=path:scenario:QQQ:belief_regime_node:range:range_mean_reversion:primary runtime_source=none raw_path_score=none calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)"
+    ],
+    "decision_hint": "execution_blocked_regardless_of_prediction",
+    "consumer_reason": "market_state=ExtremeStress/PanicBuying | execution=blocked/block_crowded/skip | ranker=unknown/unknown/not_ready",
+    "path_ranker_score_visible_to_execution_tree": false,
+    "path_ranker_score_used_by_execution_tree": false,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "unknown",
+    "ranker_validation_ready": false
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "cycle_phase_alignment",
+      "contribution": 0.9524082844957502,
+      "feature_value": "0.9524"
+    },
+    {
+      "feature": "pythagorean_overstretch",
+      "contribution": 0.6066775674480585,
+      "feature_value": "0.0933"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.5778610047875787,
+      "feature_value": "0.2221"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "dominant_cycle_energy",
+      "contribution": 0.39109074111644637,
+      "feature_value": "0.5411"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "b3b31675cd6aa309",
+    "data_fingerprint": "bfbe9777f9525ba2"
+  }
+}

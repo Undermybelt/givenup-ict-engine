@@ -1,0 +1,11 @@
+report_exists=True
+json_exists=True
+provider_csv_exists=True
+provider_matrix_includes_required=True
+yfinance_ready=True
+tradingview_mcp_status_recorded=True
+kraken_cli_ready=True
+promotion_allowed_false=True
+update_goal_false=True
+workflow_mentions_observe_or_not_ready=True
+all=True

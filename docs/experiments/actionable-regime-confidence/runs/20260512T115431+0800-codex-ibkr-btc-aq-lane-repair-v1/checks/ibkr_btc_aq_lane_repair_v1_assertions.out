@@ -1,0 +1,7 @@
+PASS run_id=20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1
+PASS fetch_attempts=4
+PASS startup_floor_met=True
+PASS ibkr_aq_lane_repaired=True
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

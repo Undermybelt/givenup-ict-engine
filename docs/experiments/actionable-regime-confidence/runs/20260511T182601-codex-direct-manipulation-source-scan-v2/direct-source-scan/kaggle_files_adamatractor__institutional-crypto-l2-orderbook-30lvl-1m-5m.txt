@@ -1,0 +1,23 @@
+Next Page Token = CfDJ8OqP5ZkTT9ZGj66XXRbxXyDxV5YElqguyVqd3IRb_tmB6sT4HQi9Z-hkHJazIYDBah5pMBqMlyUaPAi11xIItfjAUnN3mgXhuEi40lhGX2I7Y3J5rCdhWzr1M9WkifFTHW90M2I2USkc
+name                    size  creationDate                
+-------------------  -------  --------------------------  
+ADA_1m_depth30.csv   7260122  2026-04-06 11:55:31.015000  
+ADA_1m_ohlcv.csv      755388  2026-04-06 11:55:31.271000  
+ADA_5m_ohlcv.csv      151964  2026-04-06 11:55:31         
+APT_1m_depth30.csv   6822433  2026-04-06 11:55:31.622000  
+APT_1m_ohlcv.csv      729831  2026-04-06 11:55:31.812000  
+APT_5m_ohlcv.csv      146156  2026-04-06 11:55:31.939000  
+ARB_1m_depth30.csv   7345098  2026-04-06 11:55:32.383000  
+ARB_1m_ohlcv.csv      799055  2026-04-06 11:55:32         
+ARB_5m_ohlcv.csv      160193  2026-04-06 11:55:32.519000  
+ATOM_1m_depth30.csv  6857457  2026-04-06 11:55:32.747000  
+ATOM_1m_ohlcv.csv     747203  2026-04-06 11:55:32.939000  
+ATOM_5m_ohlcv.csv     148993  2026-04-06 11:55:33.053000  
+AVAX_1m_depth30.csv  6727527  2026-04-06 11:55:33.371000  
+AVAX_1m_ohlcv.csv     754567  2026-04-06 11:55:33.196000  
+AVAX_5m_ohlcv.csv     150478  2026-04-06 11:55:33.204000  
+BNB_1m_depth30.csv   6513557  2026-04-06 11:55:33         
+BNB_1m_ohlcv.csv      671451  2026-04-06 11:55:33.265000  
+BNB_5m_ohlcv.csv      133200  2026-04-06 11:55:33.296000  
+BTC_1m_depth30.csv   7589465  2026-04-06 11:55:33.441000  
+BTC_1m_ohlcv.csv      662421  2026-04-06 11:55:33.309000  

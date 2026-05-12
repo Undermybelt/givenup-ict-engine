@@ -1,0 +1,609 @@
+{
+  "artifact_type": "stock_regime_rollup_parent_root_gate_v1",
+  "artifacts": {
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T131000-codex-stock-regime-rollup-parent-root-gate-v1/rollup-parent-root-gate/stock_regime_rollup_parent_root_gate_v1_summary.csv"
+  },
+  "decision": {
+    "accepted_95_rollup_parent_roots": [
+      "Bull"
+    ],
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "full_market_full_timeframe_completion": false,
+    "gate_result": "partial_rollup_stock_regime_roots_full_matrix_still_blocked",
+    "missing_rollup_parent_roots": [
+      "Bear",
+      "Crisis",
+      "Sideways"
+    ],
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "gates": [
+    {
+      "accepted_95_rollup_gate": true,
+      "blockers": [],
+      "gate_id": "bull_stock_regime_rollup_abstain_v1",
+      "regime": "Bull",
+      "rule": "range_pos_52 >= 1",
+      "stats": {
+        "calibration": {
+          "positives": 1596,
+          "precision": 0.9815498155,
+          "support": 1626,
+          "wilson95_lcb": 0.9737836807
+        },
+        "heldout_ticker": {
+          "positives": 2316,
+          "precision": 0.9872122762,
+          "support": 2346,
+          "wilson95_lcb": 0.981803627
+        },
+        "heldout_time": {
+          "positives": 868,
+          "precision": 0.9874857793,
+          "support": 879,
+          "wilson95_lcb": 0.977731107
+        },
+        "train": {
+          "positives": 2954,
+          "precision": 0.9771749917,
+          "support": 3023,
+          "wilson95_lcb": 0.9712146313
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "top_train_candidates": [
+        {
+          "rule": "range_pos_52 >= 1",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "drawdown_52 >= 0",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "range_pos_52 >= 1 AND drawdown_52 >= 0",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "range_pos_52 >= 1 AND drawdown_52 >= -0.00531983877867",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "range_pos_52 >= 1 AND drawdown_52 >= -0.0240598083499",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "range_pos_52 >= 1 AND range_pos_12 >= 1",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "range_pos_52 >= 1 AND drawdown_12 >= 0",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "range_pos_52 >= 1 AND drawdown_12 >= -0.00622547412051",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "range_pos_52 >= 1 AND range_pos_12 >= 0.954870388818",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        },
+        {
+          "rule": "range_pos_52 >= 1 AND range_pos_12 >= 0.95",
+          "train": {
+            "positives": 2954,
+            "precision": 0.9771749917,
+            "support": 3023,
+            "wilson95_lcb": 0.9712146313
+          }
+        }
+      ]
+    },
+    {
+      "accepted_95_rollup_gate": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "heldout_time_wilson95_below_0_95",
+        "heldout_ticker_wilson95_below_0_95"
+      ],
+      "gate_id": "bear_stock_regime_rollup_abstain_v1",
+      "regime": "Bear",
+      "rule": "range_pos_52 <= 0 AND ret_4 <= -0.152861040021",
+      "stats": {
+        "calibration": {
+          "positives": 41,
+          "precision": 0.7884615385,
+          "support": 52,
+          "wilson95_lcb": 0.6596789537
+        },
+        "heldout_ticker": {
+          "positives": 91,
+          "precision": 0.9285714286,
+          "support": 98,
+          "wilson95_lcb": 0.8598398906
+        },
+        "heldout_time": {
+          "positives": 73,
+          "precision": 0.9480519481,
+          "support": 77,
+          "wilson95_lcb": 0.8739071686
+        },
+        "train": {
+          "positives": 292,
+          "precision": 0.9864864865,
+          "support": 296,
+          "wilson95_lcb": 0.9657749546
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "top_train_candidates": [
+        {
+          "rule": "range_pos_52 <= 0 AND ret_4 <= -0.152861040021",
+          "train": {
+            "positives": 292,
+            "precision": 0.9864864865,
+            "support": 296,
+            "wilson95_lcb": 0.9657749546
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0 AND ret_4 <= -0.0507896587521",
+          "train": {
+            "positives": 563,
+            "precision": 0.9791304348,
+            "support": 575,
+            "wilson95_lcb": 0.9638792376
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0 AND ret_4 <= -0.0719444867216",
+          "train": {
+            "positives": 505,
+            "precision": 0.9786821705,
+            "support": 516,
+            "wilson95_lcb": 0.9622341684
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0 AND ret_4 <= -0.03718836236",
+          "train": {
+            "positives": 594,
+            "precision": 0.9769736842,
+            "support": 608,
+            "wilson95_lcb": 0.96172296
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0 AND ret_4 <= -0.122903363873",
+          "train": {
+            "positives": 360,
+            "precision": 0.9809264305,
+            "support": 367,
+            "wilson95_lcb": 0.9611585388
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0 AND ret_4 <= -0.101665664841",
+          "train": {
+            "positives": 418,
+            "precision": 0.9789227166,
+            "support": 427,
+            "wilson95_lcb": 0.9604327807
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0.0249236172816 AND ret_4 <= -0.0719444867216",
+          "train": {
+            "positives": 605,
+            "precision": 0.9695512821,
+            "support": 624,
+            "wilson95_lcb": 0.9529348799
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0.0249236172816 AND ret_4 <= -0.122903363873",
+          "train": {
+            "positives": 428,
+            "precision": 0.970521542,
+            "support": 441,
+            "wilson95_lcb": 0.9502235167
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0 AND ret_12 <= -0.164280671051",
+          "train": {
+            "positives": 448,
+            "precision": 0.9696969697,
+            "support": 462,
+            "wilson95_lcb": 0.9497826139
+          }
+        },
+        {
+          "rule": "range_pos_52 <= 0 AND ret_12 <= -0.112618144625",
+          "train": {
+            "positives": 541,
+            "precision": 0.9677996422,
+            "support": 559,
+            "wilson95_lcb": 0.9496774079
+          }
+        }
+      ]
+    },
+    {
+      "accepted_95_rollup_gate": false,
+      "blockers": [
+        "calibration_support_below_50",
+        "calibration_wilson95_below_0_95",
+        "heldout_time_support_below_50",
+        "heldout_time_wilson95_below_0_95",
+        "heldout_ticker_wilson95_below_0_95"
+      ],
+      "gate_id": "sideways_stock_regime_rollup_abstain_v1",
+      "regime": "Sideways",
+      "rule": "range_width_12 <= 0.0682262708984 AND mean_regime_confidence >= 0.9",
+      "stats": {
+        "calibration": {
+          "positives": 46,
+          "precision": 0.9583333333,
+          "support": 48,
+          "wilson95_lcb": 0.8602434413
+        },
+        "heldout_ticker": {
+          "positives": 164,
+          "precision": 0.9371428571,
+          "support": 175,
+          "wilson95_lcb": 0.8909638799
+        },
+        "heldout_time": {
+          "positives": 17,
+          "precision": 0.9444444444,
+          "support": 18,
+          "wilson95_lcb": 0.7424269922
+        },
+        "train": {
+          "positives": 125,
+          "precision": 0.9689922481,
+          "support": 129,
+          "wilson95_lcb": 0.9229832553
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "top_train_candidates": [
+        {
+          "rule": "range_width_12 <= 0.0682262708984 AND mean_regime_confidence >= 0.9",
+          "train": {
+            "positives": 125,
+            "precision": 0.9689922481,
+            "support": 129,
+            "wilson95_lcb": 0.9229832553
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0772702120981 AND mean_regime_confidence >= 0.9",
+          "train": {
+            "positives": 178,
+            "precision": 0.9569892473,
+            "support": 186,
+            "wilson95_lcb": 0.9174368472
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0682262708984 AND mean_regime_confidence >= 0.90825",
+          "train": {
+            "positives": 101,
+            "precision": 0.9619047619,
+            "support": 105,
+            "wilson95_lcb": 0.9061169787
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0772702120981 AND mean_regime_confidence >= 0.90825",
+          "train": {
+            "positives": 144,
+            "precision": 0.9473684211,
+            "support": 152,
+            "wilson95_lcb": 0.8995892611
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0682262708984 AND mean_regime_confidence >= 0.833",
+          "train": {
+            "positives": 171,
+            "precision": 0.9293478261,
+            "support": 184,
+            "wilson95_lcb": 0.8828860482
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0682262708984 AND mean_regime_confidence >= 0.857",
+          "train": {
+            "positives": 141,
+            "precision": 0.9337748344,
+            "support": 151,
+            "wilson95_lcb": 0.8823933466
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0772702120981 AND mean_regime_confidence >= 0.857",
+          "train": {
+            "positives": 207,
+            "precision": 0.92,
+            "support": 225,
+            "wilson95_lcb": 0.8770999957
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0844523970095 AND mean_regime_confidence >= 0.9",
+          "train": {
+            "positives": 207,
+            "precision": 0.9118942731,
+            "support": 227,
+            "wilson95_lcb": 0.8678379954
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0772702120981 AND mean_regime_confidence >= 0.833",
+          "train": {
+            "positives": 251,
+            "precision": 0.9061371841,
+            "support": 277,
+            "wilson95_lcb": 0.8660240489
+          }
+        },
+        {
+          "rule": "range_width_12 <= 0.0682262708984 AND mean_regime_confidence >= 0.8",
+          "train": {
+            "positives": 209,
+            "precision": 0.8969957082,
+            "support": 233,
+            "wilson95_lcb": 0.8513130698
+          }
+        }
+      ]
+    },
+    {
+      "accepted_95_rollup_gate": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "heldout_time_wilson95_below_0_95",
+        "heldout_ticker_wilson95_below_0_95"
+      ],
+      "gate_id": "crisis_stock_regime_rollup_abstain_v1",
+      "regime": "Crisis",
+      "rule": "mean_daily_volatility >= 0.451649739122 AND drawdown_52 <= -0.260962534771",
+      "stats": {
+        "calibration": {
+          "positives": 200,
+          "precision": 0.6896551724,
+          "support": 290,
+          "wilson95_lcb": 0.6342208395
+        },
+        "heldout_ticker": {
+          "positives": 331,
+          "precision": 0.5942549372,
+          "support": 557,
+          "wilson95_lcb": 0.5529653974
+        },
+        "heldout_time": {
+          "positives": 240,
+          "precision": 0.5741626794,
+          "support": 418,
+          "wilson95_lcb": 0.5262965306
+        },
+        "train": {
+          "positives": 1125,
+          "precision": 0.6104177971,
+          "support": 1843,
+          "wilson95_lcb": 0.587946344
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "top_train_candidates": [
+        {
+          "rule": "mean_daily_volatility >= 0.451649739122 AND drawdown_52 <= -0.260962534771",
+          "train": {
+            "positives": 1125,
+            "precision": 0.6104177971,
+            "support": 1843,
+            "wilson95_lcb": 0.587946344
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.392534615488 AND drawdown_52 <= -0.260962534771",
+          "train": {
+            "positives": 1331,
+            "precision": 0.5963261649,
+            "support": 2232,
+            "wilson95_lcb": 0.5758230877
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.5 AND drawdown_52 <= -0.260962534771",
+          "train": {
+            "positives": 904,
+            "precision": 0.5978835979,
+            "support": 1512,
+            "wilson95_lcb": 0.5729508694
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.392534615488 AND ret_52 <= -0.209915193978",
+          "train": {
+            "positives": 1031,
+            "precision": 0.5884703196,
+            "support": 1752,
+            "wilson95_lcb": 0.5652579109
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.451649739122 AND ret_52 <= -0.209915193978",
+          "train": {
+            "positives": 850,
+            "precision": 0.5906879778,
+            "support": 1439,
+            "wilson95_lcb": 0.5650739398
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.5 AND period_return >= 0.069295473203",
+          "train": {
+            "positives": 271,
+            "precision": 0.608988764,
+            "support": 445,
+            "wilson95_lcb": 0.5629022496
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.451649739122 AND period_return >= 0.069295473203",
+          "train": {
+            "positives": 314,
+            "precision": 0.6026871401,
+            "support": 521,
+            "wilson95_lcb": 0.5600642611
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.392534615488 AND period_return >= 0.069295473203",
+          "train": {
+            "positives": 360,
+            "precision": 0.5970149254,
+            "support": 603,
+            "wilson95_lcb": 0.5573705484
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.451649739122",
+          "train": {
+            "positives": 1535,
+            "precision": 0.5759849906,
+            "support": 2665,
+            "wilson95_lcb": 0.557126094
+          }
+        },
+        {
+          "rule": "mean_daily_volatility >= 0.451649739122 AND drawdown_52 <= -0.318328193597",
+          "train": {
+            "positives": 924,
+            "precision": 0.5807668133,
+            "support": 1591,
+            "wilson95_lcb": 0.5563546182
+          }
+        }
+      ]
+    }
+  ],
+  "generated_at_utc": "2026-05-11T05:09:45.941550+00:00",
+  "inputs": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "436e20ca7634157616bdb413c6865c710052febb6a0f7046c59249a5beeb2b94",
+    "daily_source": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "daily_source_sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+    "rollup_labels": "docs/experiments/actionable-regime-confidence/runs/20260511T130600-codex-stock-regime-same-source-timeframe-rollup-v1/timeframe-rollup/stock_regime_same_source_timeframe_rollup_v1.csv",
+    "rollup_labels_sha256": "7996c1dd166917630a0c4f11252f0bc04efa643a02be5cfbc4dc2812ac420c38"
+  },
+  "panel": {
+    "date_max": "2026-01-30",
+    "date_min": "2001-02-23",
+    "feature_rows": 40337,
+    "root_counts": {
+      "Bear": 9085,
+      "Bull": 19621,
+      "Crisis": 4191,
+      "Sideways": 7440
+    },
+    "tickers": [
+      "AAPL",
+      "ABBV",
+      "AMD",
+      "AMZN",
+      "BA",
+      "BAC",
+      "CAT",
+      "COP",
+      "CSCO",
+      "CVX",
+      "DIS",
+      "GE",
+      "GOOGL",
+      "GS",
+      "HD",
+      "INTC",
+      "JNJ",
+      "JPM",
+      "MCD",
+      "META",
+      "MS",
+      "MSFT",
+      "NFLX",
+      "NKE",
+      "NVDA",
+      "PFE",
+      "SBUX",
+      "T",
+      "TMO",
+      "TSLA",
+      "UNH",
+      "VZ",
+      "WFC",
+      "WMT",
+      "XOM",
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^RUT"
+    ],
+    "timeframes": [
+      "1mo",
+      "1w"
+    ]
+  },
+  "run_id": "20260511T131000+0800-codex-stock-regime-rollup-parent-root-gate-v1"
+}

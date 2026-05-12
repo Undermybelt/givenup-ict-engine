@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/binance_btcusdt_1h.csv ...
+  raw_rows=985 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=985
+  range 2026-04-01 00:00:00+00:00 -> 2026-05-12 00:00:00+00:00
+  after timerange slice: 985 rows
+  cleaning: SKIPPED (--no-clean)
+  gap_audit: median_gap=3600s max_gap=60.0min big_gaps_gt_60x_median=0 (typical for futures session breaks/weekends)
+  wrote   1h:     985 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101623+0800-codex-board-b-provider-btc-pulse-aq-v1/workspace/auto-quant-provider-btc/user_data/data/BTC_USDT-1h.feather
+  wrote   4h:     247 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101623+0800-codex-board-b-provider-btc-pulse-aq-v1/workspace/auto-quant-provider-btc/user_data/data/BTC_USDT-4h.feather
+  wrote   1d:      42 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101623+0800-codex-board-b-provider-btc-pulse-aq-v1/workspace/auto-quant-provider-btc/user_data/data/BTC_USDT-1d.feather
+Done: 3 feather files for pair BTC/USDT in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101623+0800-codex-board-b-provider-btc-pulse-aq-v1/workspace/auto-quant-provider-btc/user_data/data

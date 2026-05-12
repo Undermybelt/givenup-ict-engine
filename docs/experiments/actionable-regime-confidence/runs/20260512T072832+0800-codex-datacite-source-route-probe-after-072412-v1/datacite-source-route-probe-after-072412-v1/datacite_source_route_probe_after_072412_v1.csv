@@ -1,0 +1,12 @@
+query_id,query,http_status,result_count_returned,required_exact_hits,top_titles
+direct_manipulation_positive_rows,"""direct_manipulation_positive_rows""",200,0,0,
+direct_manipulation_matched_controls,"""direct_manipulation_matched_controls""",200,0,0,
+direct_manipulation_provenance,"""direct_manipulation_provenance""",200,0,0,
+stock_market_regimes_2026_extension,"""stock_market_regimes_2026_extension""",200,0,0,
+native_subhour_source_label_rows,"""native_subhour_source_label_rows""",200,0,0,
+mainregimev2,"""MainRegimeV2""",200,0,0,
+oystacher_spoofing_futures,Oystacher spoofing futures,200,0,0,
+three_red_trading_spoofing,"""3Red Trading"" spoofing",200,0,0,
+futures_order_lifecycle_spoofing,"""futures order lifecycle"" spoofing",200,0,0,
+market_regime_crisis_mainregimev2,"""market regime crisis"" MainRegimeV2",200,0,0,
+stock_market_regimes_2026,"""stock market regimes"" 2026",200,0,0,

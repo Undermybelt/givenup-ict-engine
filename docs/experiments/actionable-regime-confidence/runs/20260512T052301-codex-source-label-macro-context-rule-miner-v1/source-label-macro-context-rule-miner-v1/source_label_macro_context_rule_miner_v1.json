@@ -1,0 +1,19 @@
+{
+  "gate_result": "source_label_macro_context_rule_miner_v1=aborted_nonterminal_superseded_no_evidence",
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "reason": "The initial macro/context rule miner was stopped by its owning agent after it remained nonterminal for several minutes and a newer numeric-tree confidence probe was already running in parallel. This root is closed as non-counting to avoid leaving an in-flight marker.",
+  "required_target_roots_mutated": false,
+  "row_count": 0,
+  "run_id": "20260512T052301-codex-source-label-macro-context-rule-miner-v1",
+  "terminal_output_created": false
+}

@@ -1,0 +1,10 @@
+PASS verifier_returncode=2
+PASS verifier_status=blocked
+PASS verifier_reason=missing_required_files
+PASS missing_required_files=2
+PASS target_rows_from_contract=4
+PASS live_intake_file_count=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective=false
+PASS update_goal=false

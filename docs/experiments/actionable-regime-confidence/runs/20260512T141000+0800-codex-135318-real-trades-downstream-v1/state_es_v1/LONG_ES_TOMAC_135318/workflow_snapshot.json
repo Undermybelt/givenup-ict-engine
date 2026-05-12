@@ -1,0 +1,181 @@
+{
+  "symbol": "LONG_ES_TOMAC_135318",
+  "generated_at": "2026-05-12T06:53:42.684881Z",
+  "current_focus_phase": "",
+  "current_focus_reason": "",
+  "blocking_truth": {
+    "stage": "stage_unavailable",
+    "status": "insufficient_state",
+    "reason": "no workflow phase snapshots available",
+    "evidence": [],
+    "next_command": "next_command_unavailable"
+  },
+  "recommended_next_command": "",
+  "recommended_next_command_meta": {
+    "kind": "unavailable",
+    "requires_user_input": false,
+    "blocked": false,
+    "prompt": null,
+    "executable_command": null,
+    "recorded_data_paths": []
+  },
+  "pending_actions": [],
+  "risk_flags": [],
+  "latest_train": null,
+  "latest_analyze": null,
+  "latest_research": null,
+  "latest_backtest": null,
+  "latest_update": null,
+  "latest_pre_bayes_policy": null,
+  "latest_pre_bayes_entry_quality_bridge": null,
+  "latest_pre_bayes_entry_quality_bridge_diff": null,
+  "latest_pre_bayes_policy_diff": null,
+  "latest_pre_bayes_policy_lineage": {
+    "latest_version": null,
+    "previous_version": null,
+    "total_versions": 0,
+    "changed_fields_union": [],
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested"
+  },
+  "latest_pre_bayes_soft_evidence_diff": [],
+  "recent_pre_bayes_policies": [],
+  "latest_pending_update": null,
+  "recent_pending_updates": [],
+  "latest_execution_candidate": null,
+  "recent_execution_candidates": [],
+  "latest_ensemble_vote": null,
+  "recent_ensemble_votes": [],
+  "recent_artifacts": [
+    {
+      "entry_id": "ledger:auto_quant_real_trades_LONG_ES_TOMAC_135318_20260512T063421.338555000Z",
+      "artifact_kind": "auto_quant_real_trades_ingested",
+      "artifact_id": "auto_quant_real_trades_LONG_ES_TOMAC_135318_20260512T063421.338555000Z",
+      "version": 1,
+      "generated_at": "2026-05-12T06:34:21.338555Z",
+      "symbol": "LONG_ES_TOMAC_135318",
+      "source_phase": "auto_quant_real_trades",
+      "source_run_id": "8b4e344ce94d3150",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_es.jsonl",
+      "status": "applied",
+      "promote_candidate": false,
+      "actionable": false,
+      "decision_hint": "ingested 115 trade(s)",
+      "review_reason": "ingested 115/115 (invalid 0) feedback_inserted=115 content_hash=8b4e344ce94d3150 dry_run=false force=true",
+      "review_rule_version": "auto-quant-real-trades-v1",
+      "top_factor_name": null,
+      "top_factor_action": null,
+      "family_scores": {},
+      "supersedes_artifact_id": null,
+      "quality_score": 115,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    }
+  ],
+  "actionable_artifacts": [],
+  "latest_promotable_artifact": null,
+  "artifact_history_summary": {
+    "total_entries": 1,
+    "pending_update_entries": 0,
+    "execution_candidate_entries": 0,
+    "ensemble_vote_entries": 0,
+    "promotable_entries": 0,
+    "actionable_entries": 0,
+    "consumed_entries": 0,
+    "average_quality_score": 115.0,
+    "latest_consumed_artifact_id": null,
+    "statuses_by_kind": {
+      "auto_quant_real_trades_ingested": {
+        "applied": 1
+      }
+    }
+  },
+  "artifact_factor_trends": [],
+  "artifact_family_trends": [],
+  "artifact_decision_summary": {
+    "actionable_artifact_count": 0,
+    "latest_promotable_artifact_id": null,
+    "artifact_rule_break_count": 0,
+    "highlighted_actions": [],
+    "highlighted_factor_targets": [],
+    "highlighted_family_targets": [],
+    "promotion_strength": "low",
+    "rollback_strength": "low",
+    "consumed_trend_status": "no_consumed_validation",
+    "consumed_trend_reason": "no_consumed_artifacts",
+    "consumed_target_kinds": [],
+    "summary": "actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+  },
+  "artifact_review_rules": {
+    "pending_update": {
+      "min_probability_improvement": 0.03,
+      "min_top_factor_score_improvement": 0.05,
+      "min_avg_family_score_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true,
+      "require_same_prompt_version": true
+    },
+    "execution_candidate": {
+      "min_posterior_improvement": 0.03,
+      "min_win_probability_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true
+    }
+  },
+  "artifact_review_rule_sources": {
+    "pending_update": {
+      "min_avg_family_score_improvement": "default",
+      "min_probability_improvement": "default",
+      "min_top_factor_score_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default",
+      "require_same_prompt_version": "default"
+    },
+    "execution_candidate": {
+      "min_posterior_improvement": "default",
+      "min_win_probability_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default"
+    }
+  },
+  "artifact_lineage_summaries": [
+    {
+      "artifact_kind": "auto_quant_real_trades_ingested",
+      "root_artifact_id": "auto_quant_real_trades_LONG_ES_TOMAC_135318_20260512T063421.338555000Z",
+      "latest_artifact_id": "auto_quant_real_trades_LONG_ES_TOMAC_135318_20260512T063421.338555000Z",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "auto-quant-real-trades-v1"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": ""
+    }
+  ],
+  "artifact_rule_break_effects": [],
+  "artifact_factor_rule_break_impacts": [],
+  "artifact_family_rule_break_impacts": [],
+  "artifact_consumed_impact_summary": {
+    "total_consumed": 0,
+    "positive_consumed": 0,
+    "negative_consumed": 0,
+    "neutral_consumed": 0,
+    "cumulative_quality_score": 0,
+    "points": [],
+    "by_kind": {},
+    "recent_windows": [],
+    "trend_comparisons": [],
+    "by_kind_trend_comparisons": {}
+  },
+  "field_diffs": [],
+  "disagreements": []
+}

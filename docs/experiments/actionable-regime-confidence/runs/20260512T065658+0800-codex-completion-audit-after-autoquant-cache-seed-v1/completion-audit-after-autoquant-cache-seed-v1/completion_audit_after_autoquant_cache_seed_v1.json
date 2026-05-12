@@ -1,0 +1,72 @@
+{
+  "run_id": "20260512T065658+0800-codex-completion-audit-after-autoquant-cache-seed-v1",
+  "generated_at_utc": "2026-05-11T22:56:58Z",
+  "gate_result": "completion_audit_after_autoquant_cache_seed_v1=not_complete_autoquant_ready_source_control_unlock_absent",
+  "objective": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "success_criteria": [
+      "Every active regime reaches 95 percent confidence",
+      "Each accepted regime is validated on other markets and other cycles/timeframes",
+      "Real local Auto-Quant and ict-engine provider/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree surfaces are operated",
+      "IBKR, TradingViewRemix, yfinance, and Kraken provider surfaces are checked where available",
+      "No proxy/quarantined data is promoted",
+      "Direct verifier and split calibration run before canonical merge",
+      "Canonical merge and downstream promotion run only after a valid required source/control unlock"
+    ]
+  },
+  "current_evidence": {
+    "r6_owner_export_root": {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "exists": false,
+      "valid_unlock": false
+    },
+    "r5_recency_root": {
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "exists": false,
+      "valid_unlock": false,
+      "latest_probe": "20260512T064908+0800-codex-r5-kaggle-stock-regimes-recency-redownload-v1",
+      "latest_probe_gate": "download_ok_no_post_2026_01_30_recency_no_unlock"
+    },
+    "r3_native_subhour_root": {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "exists": true,
+      "physical_rows": 5032903,
+      "labels": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "valid_unlock": false,
+      "reason": "TSIE-quarantined and Crisis absent"
+    },
+    "auto_quant": {
+      "latest_runtime_readiness_root": "20260512T065454+0800-codex-autoquant-local-cache-seed-after-065116-v1",
+      "status": "dependency_ready_data_ready",
+      "healthy": true,
+      "data_ready": true,
+      "promotion_evidence": false
+    },
+    "provider_downstream_readback": {
+      "latest_readback_root": "20260512T064259+0800-codex-current-objective-arrival-poll-after-063906-v1",
+      "read_only_commands_ran": true,
+      "post_unlock_promotion_rerun": false
+    }
+  },
+  "checklist_summary": {
+    "met": 2,
+    "partial": 3,
+    "not_met": 4,
+    "not_applicable_blocked": 2
+  },
+  "board_a_accounting": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Continue source/control acquisition. Do not run direct verifier, split calibration, canonical merge, or downstream promotion until R6 owner-export controls, R5 post-2026-01-30 source-owned recency rows, verifier-native Crisis-capable R3 labels, explicit source/control approval, or a genuinely new accepted cross-timeframe source export exists."
+}

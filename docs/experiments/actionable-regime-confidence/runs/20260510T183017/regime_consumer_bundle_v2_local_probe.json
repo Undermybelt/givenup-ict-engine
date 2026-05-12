@@ -1,0 +1,88 @@
+{
+  "schema_version": "board-a-regime-consumer-bundle/v2-local-probe",
+  "loop_id": "20260510T183017+0800-board-a-v2-provider-agreement-calibration-local-probe",
+  "latest_decision": {
+    "decision_state": "abstain_no_calibrated_release_rule",
+    "trade_usable": false,
+    "final_label": "",
+    "label_set": [
+      "ProviderAgreementTrendExpansion",
+      "ProviderDisagreementTransitionGuardrail"
+    ],
+    "abstain_reasons": [
+      "support_too_thin",
+      "no calibrated release rule met 95/99 Wilson/support/ECE thresholds",
+      "TradingViewRemix current provider gap",
+      "NQ lacks same-market second provider in refreshed packet"
+    ]
+  },
+  "consumer_hints": {
+    "execution_tree_hint": "transition_guardrail",
+    "bbn_evidence_hint": {
+      "regime_decision_state": "abstain_no_calibrated_release_rule",
+      "regime_trade_usable": false,
+      "regime_label": "ProviderDisagreementTransitionGuardrail",
+      "regime_label_set": [
+        "ProviderAgreementTrendExpansion",
+        "ProviderDisagreementTransitionGuardrail"
+      ],
+      "regime_transition_hazard": null,
+      "regime_decision_reasons": [
+        "support_too_thin",
+        "no calibrated release rule met 95/99 Wilson/support/ECE thresholds",
+        "TradingViewRemix current provider gap",
+        "NQ lacks same-market second provider in refreshed packet"
+      ]
+    },
+    "path_ranker_context": {
+      "regime_trade_usable": false,
+      "regime_confidence_tier": "abstain",
+      "source_calibration": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/calibration/provider_agreement_calibration_v2_local_probe.json"
+    }
+  },
+  "readbacks": {
+    "pre_bayes_status": "{\n  \"latest_bridge\": {\n    \"long_entry_bias\": [\n      0.2233948357811067,\n      0.4610134137719677,\n      0.31559175044692583\n    ],\n    \"long_entry_quality\": {\n      \"high\": 0.0,\n      \"low\": 0.0,\n      \"medium\": 1.0\n    },\n    \"long_signal_probability\": 0.5505761904100303,\n    \"multi_timeframe_alignment_score\": 1.0,\n    \"multi_timeframe_direction_bias\": \"bullish\",\n    \"multi_timeframe_entry_alignment_score\": 0.8387,\n    \"rationale\": [\n      \"factor_alignment=mixed factor_uncertainty=low\",\n      \"long_support=0.087 short_support=0.032 uncertainty=0.314\",\n      \"multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.839\",\n      \"entry_quality_bias combines directional factor support with cascade probability bias\"\n    ],\n    \"selected_entry_quality\": {\n      \"high\": 0.0,\n      \"low\": 0.0,\n      \"medium\": 1.0\n    },\n    \"short_entry_bias\": [\n      0.04221212352050786,\n      0.24663535760956107,\n      0.711152518869931\n    ],\n    \"short_entry_quality\": {\n      \"high\": 0.0,\n      \"low\": 0.0,\n      \"medium\": 1.0\n    },\n    \"short_signal_probability\": 0.5371206612343897\n  },\n  \"latest_bridge_diff\": {\n    \"dominant_long_entry_quality\": \"medium\",\n    \"dominant_long_entry_quality_probability\": 1.0,\n    \"dominant_short_entry_quality\": \"medium\",\n    \"dominant_short_entry_quality_probability\": 1.0,\n    \"long_short_signal_probability_gap\": 0.013455529175640524,\n    \"multi_timeframe_alignment_score\": 1.0,\n    \"multi_timeframe_direction_bias\": \"bullish\",\n    \"multi_timeframe_entry_alignment_score\": 0.8387,\n    \"rationale_summary\": [\n      \"factor_alignment=mixed factor_uncertainty=low\",\n      \"long_support=0.087 short_support=0.032 uncertainty=0.314\",\n      \"multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.839\",\n      \"entry_quality_bias combines directional factor support with cascade probability bias\"\n    ],\n    \"selected_entry_quality\": \"medium\",\n    \"selected_entry_quality_probability\": 1.0\n  },\n  \"latest_canonical_structural_active_regime\": \"trend\",\n  \"latest_canonical_structural_confidence\": 0.5679392993393031,\n  \"latest_canonical_structural_probabilities\": {\n    \"range\": 0.31003477622134984,\n    \"stress\": 0.16415301537393934,\n    \"transition\": 0.07598608951146008,\n    \"trend\": 0.44982611889325086\n  },\n  \"latest_gate_status\": \"pass_neutralized\",\n  \"latest_policy\": {\n    \"directional_conflict_penalty\": 0.2,\n    \"favorable_liquidity_bonus\": 0.05,\n    \"hard_pass_quality_threshold\": 0.75,\n    \"high_uncertainty_threshold\": 0.45,\n    \"hostile_liquidity_forces_high_uncertainty\": true,\n    \"hostile_liquidity_penalty\": 0.1,\n    \"market_overrides\": {\n      \"CL\": {\n        \"favorable_liquidity_bonus\": 0.03,\n        \"hostile_liquidity_forces_high_uncertainty\": true,\n        \"hostile_liquidity_penalty\": 0.14\n      },\n      \"ES\": {\n        \"favorable_liquidity_bonus\": 0.06,\n        \"hostile_liquidity_forces_high_uncertainty\": false,\n        \"hostile_liquidity_penalty\": 0.06\n      },\n      \"GC\": {\n        \"favorable_liquidity_bonus\": 0.07,\n        \"hostile_liquidity_forces_high_uncertainty\": false,\n        \"hostile_liquidity_penalty\": 0.09\n      },\n      \"NQ\": {\n        \"favorable_liquidity_bonus\": 0.04,\n        \"hostile_liquidity_forces_high_uncertainty\": true,\n        \"hostile_liquidity_penalty\": 0.1\n      },\n      \"YM\": {\n        \"favorable_liquidity_bonus\": 0.05,\n        \"hostile_liquidity_forces_high_uncertainty\": false,\n        \"hostile_liquidity_penalty\": 0.07\n      }\n    },\n    \"min_directional_support_gap\": 0.08,\n    \"min_multi_timeframe_alignment_score\": 0.55,\n    \"min_multi_timeframe_entry_alignment_score\": 0.5,\n    \"mixed_alignment_penalty\": 0.1,\n    \"multi_timeframe_alignment_bonus\": 0.05,\n    \"multi_timeframe_alignment_penalty\": 0.1,\n    \"multi_timeframe_direction_conflict_penalty\": 0.18,\n    \"multi_timeframe_entry_penalty\": 0.08,\n    \"neutralized_quality_threshold\": 0.4,\n    \"source\": \"default\",\n    \"version\": \"318900600c5e8cf2\"\n  },\n  \"latest_policy_diff\": {\n    \"changed_fields\": [\n      \"initial_policy\"\n    ],\n    \"previous_version\": null,\n    \"summary\": \"changed_fields=[\\\"initial_policy\\\"]\"\n  },\n  \"latest_policy_lineage\": {\n    \"changed_fields_union\": [\n      \"initial_policy\"\n    ],\n    \"latest_version\": \"318900600c5e8cf2\",\n    \"previous_version\": null,\n    \"rollback_candidate_version\": null,\n    \"rollback_reason\": \"no_policy_rollback_suggested\",\n    \"total_versions\": 1\n  },\n  \"latest_policy_version\": \"318900600c5e8cf2\",\n  \"latest_soft_evidence\": {\n    \"factor_alignment\": {\n      \"bearish\": 0.0,\n      \"bullish\": 0.0,\n      \"mixed\": 1.0\n    },\n    \"factor_uncertainty\": {\n      \"high\": 0.40801517516517416,\n      \"low\": 0.5919848248348258\n    },\n    \"liquidity_context\": {\n      \"favorable\": 0.0,\n      \"hostile\": 0.0,\n      \"neutral\": 1.0\n    },\n    \"market_regime\": {\n      \"range\": 0.31003477622134984,\n      \"stress\": 0.16415301537393934,\n      \"transition\": 0.07598608951146008,\n      \"trend\": 0.44982611889325086\n    },\n    \"multi_timeframe_resonance\": {\n      \"aligned\": 0.5919848248348258,\n      \"dislocated\": 0.0,\n      \"mixed\": 0.40801517516517416\n    }\n  },\n  \"latest_soft_evidence_diff\": [\n    {\n      \"diverges_from_filtered_state\": false,\n      \"dominant_soft_probability\": 0.5919848248348258,\n      \"dominant_soft_state\": \"bull\",\n      \"entropy\": 0.6761279922924959,\n      \"filtered_state\": \"bull\",\n      \"node\": \"market_regime\"\n    },\n    {\n      \"diverges_from_filtered_state\": false,\n      \"dominant_soft_probability\": 1.0,\n      \"dominant_soft_state\": \"neutral\",\n      \"entropy\": -0.0,\n      \"filtered_state\": \"neutral\",\n      \"node\": \"liquidity_context\"\n    },\n    {\n      \"diverges_from_filtered_state\": false,\n      \"dominant_soft_probability\": 1.0,\n      \"dominant_soft_state\": \"mixed\",\n      \"entropy\": -0.0,\n      \"filtered_state\": \"mixed\",\n      \"node\": \"factor_alignment\"\n    },\n    {\n      \"diverges_from_filtered_state\": false,\n      \"dominant_soft_probability\": 0.5919848248348258,\n      \"dominant_soft_state\": \"low\",\n      \"entropy\": 0.6761279922924959,\n      \"filtered_state\": \"low\",\n      \"node\": \"factor_uncertainty\"\n    },\n    {\n      \"diverges_from_filtered_state\": false,\n      \"dominant_soft_probability\": 0.5919848248348258,\n      \"dominant_soft_state\": \"aligned\",\n      \"entropy\": 0.6761279922924959,\n      \"filtered_state\": \"aligned\",\n      \"node\": \"multi_timeframe_resonance\"\n    }\n  ],\n  \"latest_uses_soft_evidence\": true\n}",
+    "auto_quant_prior_init_dry_run": "{\n  \"bbn_contradiction_lift\": 0.08327988578227234,\n  \"bbn_entropy_reduction\": 0.0,\n  \"bbn_log_loss_delta\": 0.004278997741133939,\n  \"command\": \"auto-quant-prior-init\",\n  \"cross_library_apply\": {\n    \"apply_artifact_id\": \"auto_quant_prior_init_QQQ_20260510T093548.477591000Z\",\n    \"library_artifact_id\": \"auto_quant_strategy_library_QQQ_20260510T093339.357276000Z\"\n  },\n  \"dry_run\": true,\n  \"evidence_value_gate_passed\": true,\n  \"existing_apply_artifact_id\": \"auto_quant_prior_init_QQQ_20260510T093548.477591000Z\",\n  \"final_probs\": [\n    0.5315284330755503,\n    2.093991671624033e-7,\n    0.4684713575252826\n  ],\n  \"force\": false,\n  \"initial_probs\": [\n    0.5731664390243902,\n    2.146341463414634e-6,\n    0.4268314146341464\n  ],\n  \"library_artifact_id\": \"auto_quant_strategy_library_QQQ_20260510T093339.357276000Z\",\n  \"library_path\": \"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/strategy_library_qqq_tomac_hist.json\",\n  \"parent_config\": [\n    0,\n    0,\n    0\n  ],\n  \"prior_init_artifact_id\": \"auto_quant_prior_init_QQQ_20260510T103455.570398000Z\",\n  \"prior_init_history_path\": \"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/state/auto-quant/QQQ/auto_quant_prior_init_history.json\",\n  \"prior_init_state_path\": \"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/state/auto-quant/QQQ/auto_quant_prior_init_QQQ_20260510T103455.570398000Z.json\",\n  \"prior_strength\": 4.0,\n  \"strategies_applied\": [\n    {\n      \"after_probs\": [\n        0.5315284330755503,\n        2.093991671624033e-7,\n        0.4684713575252826\n      ],\n      \"bbn_contradiction_after\": 0.009003230895380899,\n      \"bbn_contradiction_before\": 0.09228311667765324,\n      \"bbn_contradiction_lift\": 0.08327988578227234,\n      \"bbn_entropy_after\": 0.6911610477533976,\n      \"bbn_entropy_before\": 0.6824303155704625,\n      \"bbn_entropy_reduction\": 0.0,\n      \"bbn_log_loss_after\": 0.6917264315206988,\n      \"bbn_log_loss_before\": 0.6960054292618327,\n      \"bbn_log_loss_delta\": 0.004278997741133939,\n      \"before_probs\": [\n        0.5731664390243902,\n        2.146341463414634e-6,\n        0.4268314146341464\n      ],\n      \"diff\": [\n        -0.04163800594883993,\n        -1.9369422962522305e-6,\n        0.04163994289113615\n      ],\n      \"evidence_value_gate_passed\": true,\n      \"mutation_id\": \"qqq-regime-branch-20260510-tomac-killzone-breakout\",\n      \"n_breakeven\": 0,\n      \"n_loss\": 35,\n      \"n_win\": 39,\n      \"strategy_name\": \"TomacNQ_KillzoneBreakout\",\n      \"temper\": 0.5,\n      \"trade_count\": 74\n    }\n  ],\n  \"strategies_skipped\": [],\n  \"symbol\": \"QQQ\",\n  \"temper\": 0.5\n}",
+    "policy_training_status": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural_path_ranking_target rows=3 history_rows=3 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=missing trainer_status=missing runtime_selection=disabled runtime_mode=none runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0\nRanker runtime: structural_path_ranking_target rows=3 history_rows=3 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=missing trainer_status=missing runtime_selection=disabled runtime_mode=none runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0\nRanker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 ready=false",
+    "workflow_status": "{\n  \"blocking_reason\": \"market_policy=QQQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true\",\n  \"blocking_status\": \"pass_neutralized\",\n  \"focus_phase\": \"analyze\",\n  \"focus_reason\": \"market_policy=QQQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.839;long/short support gap 0.056 is too small, so alignment is treated as mixed;pre_bayes_quality_score=0.568 gating_status=pass_neutralized;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.718;market_state_source=volatility=NormalVol:0.667 liquidity=NormalLiquidity:0.433 structure=Trending:1.000 behavior=FOMO:0.650;market_state_source=rationale=volatility=NormalVol conf=0.67;market_state_source=rationale=structure=Trending conf=1.00;market_state_source=rationale=behavior=FOMO conf=0.65;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.72\",\n  \"latest_phase\": \"analyze\",\n  \"latest_phase_summary\": \"direction=Bull entry=medium gate=pass_neutralized quality=0.568\",\n  \"next_command\": \"ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state\",\n  \"pda_cluster_label\": null,\n  \"pending_actions\": [\n    \"analyze:Review Pre-Bayes Evidence Gate\",\n    \"promotion:Block Promotion\",\n    \"iteration:TUNE structure_ict\"\n  ],\n  \"risk_flags\": [\n    \"analyze:not_comparable:no_previous_run\",\n    \"analyze:pre_bayes:low_directional_separation\"\n  ],\n  \"symbol\": \"QQQ\",\n  \"top_actionable\": {\n    \"artifact_id\": \"execution-tree-QQQ-1778404704083\",\n    \"artifact_kind\": \"execution_tree_artifact\",\n    \"decision_hint\": \"execution_observe_with_medium_prediction\"\n  },\n  \"top_disagreement\": null\n}",
+    "execution_tree_output": {
+      "execution_score": 0.5665380404532696,
+      "branch": "fill_viable",
+      "execution_bias": "passive",
+      "gate_status": "observe",
+      "branch_probability": 0.0,
+      "posterior_uncertainty": 1.0,
+      "split_reason_lineage": [
+        "execution_readiness=0.4541 \u2192 gate_status=observe",
+        "branch=fill_viable (gate_status=observe, ising_risk=0.2815<0.70, overstretch=0.6722<0.70)",
+        "prediction_vote_score=0.5506 (medium) \u00d7 execution_readiness=0.4541 (medium) \u2192 bias=passive, hint=execution_observe_with_medium_prediction",
+        "mece_recovery_confidence=1.0000",
+        "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.718",
+        "market_state=volatility=NormalVol:0.667 liquidity=NormalLiquidity:0.433 structure=Trending:1.000 behavior=FOMO:0.650",
+        "market_state=rationale=volatility=NormalVol conf=0.67",
+        "market_state=rationale=structure=Trending conf=1.00",
+        "market_state=rationale=behavior=FOMO conf=0.65",
+        "market_state=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.72",
+        "path_ranker=Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+        "path_ranker=Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false",
+        "path_ranker=ranker_machine=runtime_source=unknown score_model_family=unknown score_source=unknown validation_ready=false active_match_count=0",
+        "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+        "path_ranker=ranker_score=path_id=path:scenario:QQQ:belief_regime_node:trend:trend_follow_through:primary runtime_source=none raw_path_score=none calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+        "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)"
+      ],
+      "decision_hint": "execution_observe_with_medium_prediction",
+      "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/fill_viable/passive | ranker=unknown/unknown/not_ready",
+      "path_ranker_score_visible_to_execution_tree": false,
+      "path_ranker_score_used_by_execution_tree": false,
+      "path_ranker_model_family": "unknown",
+      "path_ranker_runtime_source": "unknown",
+      "ranker_validation_ready": false
+    }
+  },
+  "consumer_contract": {
+    "zero_config": true,
+    "main_runtime_mutation": "none",
+    "optional_for_consumers": true,
+    "handoff_allowed": false
+  }
+}

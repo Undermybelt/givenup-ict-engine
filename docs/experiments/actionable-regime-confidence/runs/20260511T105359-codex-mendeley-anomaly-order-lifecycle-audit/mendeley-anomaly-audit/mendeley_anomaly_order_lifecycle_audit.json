@@ -1,0 +1,94 @@
+{
+  "run_id": "20260511T105359+0800-codex-mendeley-anomaly-order-lifecycle-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T105359-codex-mendeley-anomaly-order-lifecycle-audit",
+  "purpose": "Audit a newly found Mendeley order/trade lifecycle dataset as a possible direct Manipulation input source under the active MainRegimeV2 board cursor.",
+  "board_cursor_readback": "20260511T103333+0800-codex-mainregimev2-board-a-top-relock",
+  "active_taxonomy": "MainRegimeV2",
+  "candidate_class": "Manipulation",
+  "source": {
+    "name": "Anomaly bias Stock Trades and Order Dataset",
+    "mendeley_dataset_id": "fsn6fn7ht8",
+    "doi": "10.17632/fsn6fn7ht8.1",
+    "url": "https://data.mendeley.com/datasets/fsn6fn7ht8/1",
+    "downloaded_to_tmp": "/tmp/ict-regime-mendeley-anomaly-bias/Stock_Trades_Orders.zip",
+    "sha256": "406f34f004a68328a6048c38ae0cab37e2283cc6f6943fa98658aab9dd3775da",
+    "zip_size_bytes": 24062365
+  },
+  "files_inspected": [
+    {
+      "filename": "Orders .csv",
+      "line_count_including_header": 602474,
+      "size_bytes": 52921622,
+      "columns": [
+        "ORDER_SEQUENCE",
+        "order_id",
+        "order_time",
+        "order_date",
+        "scrip_code",
+        "member_code",
+        "client_id",
+        "buy_OR_sell",
+        "RATE",
+        "QUANTITY",
+        "AVAILABLE_QUANTITY",
+        "TRADER_ID",
+        "TERMINAL_ID",
+        "LOCATION_ID"
+      ]
+    },
+    {
+      "filename": "Trades .csv",
+      "line_count_including_header": 414958,
+      "size_bytes": 56704737,
+      "columns": [
+        "TRADE_SEQUENCE",
+        "TRADE_NUMBER",
+        "TRADE_TIME",
+        "TRADE_DATE",
+        "SCRIP_CODE",
+        "BUY_MEMBER_CODE",
+        "SELL_MEMBER_CODE",
+        "BUY_CLIENT_ID",
+        "SELL_CLIENT_ID",
+        "BUY_ORDER_id",
+        "SELL_ORDER_id",
+        "BUY_TRADER_ID",
+        "SELL_TRADER_ID",
+        "TRADE_QUANTITY",
+        "TRADE_RATE",
+        "TRADE_VALUE",
+        "BUY_LOCATION_ID",
+        "SELL_LOCATION_ID",
+        "BUY_TIMESTAMP",
+        "SELL_TIMESTAMP"
+      ]
+    }
+  ],
+  "schema_audit": {
+    "has_order_lifecycle_rows": true,
+    "has_trade_execution_rows": true,
+    "has_high_fidelity_timestamps": true,
+    "has_positive_manipulation_label": false,
+    "has_negative_control_label": false,
+    "has_spoofing_or_layering_label": false,
+    "has_wash_or_self_trade_label": false,
+    "has_exportable_direct_event_schema": false,
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_parent_root_slots_added": 0
+  },
+  "decision": {
+    "accepted": false,
+    "gate_result": "blocked_mendeley_anomaly_order_lifecycle_unlabeled_no_positive_negative_manipulation_rows",
+    "reason": "The source has useful real order/trade lifecycle rows, but no row-level positive/negative manipulation labels or explicit event windows. It cannot satisfy the direct Manipulation acceptance gate without an external labeling file or adjudicated event list.",
+    "can_be_used_later_as": "direct_input_candidate_only_after_labels_are_supplied"
+  },
+  "guardrails": {
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "synthetic_source": false,
+    "proxy_only_acceptance": false
+  },
+  "next_action": "Find an accompanying adjudicated label file/event list for this dataset, or move on to another direct Manipulation source with timestamped positives and same-asset/venue negatives."
+}

@@ -1,0 +1,99 @@
+{
+  "bear_bbn_repair_observed": {
+    "analyze_exit": 0,
+    "bbn_evidence_applied": true,
+    "bundle": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/bear_regime_consumer_bundle_v1.json",
+    "market_label_bear_observed": true,
+    "skipped_no_supported_label": false
+  },
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol NQ --demo --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/root-probe-bear-current-bin --regime-consumer-bundle /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/bear_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/01_analyze_demo_bear_bundle_current_bin.exit",
+      "name": "01_analyze_demo_bear_bundle_current_bin",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/01_analyze_demo_bear_bundle_current_bin.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/01_analyze_demo_bear_bundle_current_bin.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/state_exact_branch_feedback_readback_v3",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/02_export_exact_feedback_target_current_rows.exit",
+      "name": "02_export_exact_feedback_target_current_rows",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/02_export_exact_feedback_target_current_rows.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/02_export_exact_feedback_target_current_rows.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine apply-structural-path-ranking-external-scores --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/state_exact_branch_feedback_readback_v3 --scores-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/downstream-repair-readback/exact_branch_runtime_scores_v3.csv",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/03_apply_exact_branch_scores_current_rows.exit",
+      "name": "03_apply_exact_branch_scores_current_rows",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/03_apply_exact_branch_scores_current_rows.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/03_apply_exact_branch_scores_current_rows.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine enable-structural-path-ranking-runtime --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/state_exact_branch_feedback_readback_v3 --reuse-mode prefer_history",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/04_enable_runtime_prefer_history_exact_feedback.exit",
+      "name": "04_enable_runtime_prefer_history_exact_feedback",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/04_enable_runtime_prefer_history_exact_feedback.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/04_enable_runtime_prefer_history_exact_feedback.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/state_exact_branch_feedback_readback_v3 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/05_policy_training_status_exact_feedback.exit",
+      "name": "05_policy_training_status_exact_feedback",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/05_policy_training_status_exact_feedback.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/05_policy_training_status_exact_feedback.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/state_exact_branch_feedback_readback_v3 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/06_workflow_status_execution_candidate_exact_feedback.exit",
+      "name": "06_workflow_status_execution_candidate_exact_feedback",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/06_workflow_status_execution_candidate_exact_feedback.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/command-output/06_workflow_status_execution_candidate_exact_feedback.out"
+    }
+  ],
+  "exact_feedback_target_repair_observed_on_copied_state": {
+    "apply_scores_exit": 0,
+    "current_rows_after_apply": 6,
+    "current_rows_before_apply": 6,
+    "exact_branch_paths": [
+      "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+      "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+      "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+    ],
+    "exact_branch_rows_after_apply": 4,
+    "exact_branch_rows_before_apply": 4,
+    "export_exit": 0,
+    "score_rows_written": 4,
+    "scores_file": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/downstream-repair-readback/exact_branch_runtime_scores_v3.csv",
+    "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/state_exact_branch_feedback_readback_v3"
+  },
+  "generated_at_utc": "2026-05-11T14:43:26.532913+00:00",
+  "next_action": "Rerun B5 downstream on a state where exact Board B feedback rows are surfaced in the current structural target, then require Pre-Bayes, BBN, CatBoost/path-ranker, and execution tree to emit the same exact branch paths before promotion.",
+  "nq_runtime_target_bijection_audit": {
+    "board_b_score_rows_in_scores_file": 4,
+    "branch_path_count": 4,
+    "exact_board_b_rows": 0,
+    "generic_score_rows": 3,
+    "reason": "NQ runtime target exposes generic belief_regime_node paths, while exact Board B branch paths exist only as nonmatching score rows unless feedback rows are surfaced in current export.",
+    "runtime_path_ids": [
+      "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "path:scenario:NQ:belief_regime_node:range:stress_de_risk:primary",
+      "path:scenario:NQ:belief_regime_node:range:transition_confirmation:primary"
+    ],
+    "runtime_target_csv": "/tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-downstream-v1/NQ/policy_training/structural_path_ranking_target.csv",
+    "runtime_target_rows": 3,
+    "status": "fail_closed:no_exact_bijection_in_nq_runtime_target"
+  },
+  "promotion_status": "not_promoted:execution_tree_closed_loop_confidence_still_missing",
+  "run_id": "20260511T223731+0800-codex-board-b-220646-downstream-repair-readback-v3",
+  "runtime_code_changed_by_this_run": false,
+  "source_candidate": "SourceRootStopCarryLongHorizonV1",
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "thresholds_relaxed": false
+}

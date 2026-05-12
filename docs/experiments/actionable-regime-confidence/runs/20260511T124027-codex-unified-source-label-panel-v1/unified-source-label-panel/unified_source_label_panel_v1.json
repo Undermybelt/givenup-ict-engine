@@ -1,0 +1,85 @@
+{
+  "artifact_type": "unified_source_label_panel_v1",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T124027-codex-unified-source-label-panel-v1/checks/unified_source_label_panel_v1_assertions.out",
+    "coverage_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T124027-codex-unified-source-label-panel-v1/unified-source-label-panel/unified_source_label_panel_coverage_v1.csv",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T124027-codex-unified-source-label-panel-v1/unified-source-label-panel/unified_source_label_panel_v1.json",
+    "md": "docs/experiments/actionable-regime-confidence/runs/20260511T124027-codex-unified-source-label-panel-v1/unified-source-label-panel/unified_source_label_panel_v1.md",
+    "panel_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T124027-codex-unified-source-label-panel-v1/unified-source-label-panel/unified_source_label_panel_v1.csv",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T124027-codex-unified-source-label-panel-v1/scripts/unified_source_label_panel_v1.py"
+  },
+  "decision": {
+    "confidence_gate_claimed": false,
+    "full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "main_price_roots_have_some_materialized_source_windows": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "why_not_complete": [
+      "Unified panel gives materialized source windows for all four price roots, but only 67 of the current 564 missing/rejected root slots are covered.",
+      "Bull/Bear/Crisis coverage is restricted to declared S&P 500 same-underlying/proxy crosswalks.",
+      "Sideways coverage is scoped to existing Yahoo 1d/1w crypto/equity ETF windows and does not cover intraday/monthly/full-species cells.",
+      "Open-ended Yardeni Bull rows still require source refresh before current/live use.",
+      "Manipulation is a separate direct-event/order-flow/order-lifecycle class and is not included in this price-root panel."
+    ]
+  },
+  "generated_at_utc": "2026-05-11T04:41:43.342349+00:00",
+  "inputs": {
+    "bbc_report": "docs/experiments/actionable-regime-confidence/runs/20260511T123826-codex-source-window-label-panel-materialization-v1/source-window-label-panel/source_window_label_panel_materialization_v1.json",
+    "bbc_report_sha256": "0b645028af488d10db778f64110688247115f93e7b8b2b12e8223c10ee973388",
+    "bbc_windows": "docs/experiments/actionable-regime-confidence/runs/20260511T123826-codex-source-window-label-panel-materialization-v1/source-window-label-panel/source_window_label_panel_windows_v1.csv",
+    "bbc_windows_sha256": "f8ac678b6d3c59133359e719417757047e3c5599848426a520883f730521e66b",
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "fe02ed8fe9efd8196f3495b14fad80f9e4fbb7f98c2ea8ce7ac41d0229c287d2",
+    "missing_slots": "docs/experiments/actionable-regime-confidence/runs/20260511T094002-codex-external-label-request-package-v3/acquisition-request/missing_parent_root_label_slots_request_v3.csv",
+    "missing_slots_sha256": "76ee8aadddaf83a63208a292d0e21607395267dae07cab3d73c51c7de9d3cc22",
+    "sideways_report": "docs/experiments/actionable-regime-confidence/runs/20260511T123500-codex-sideways-dated-window-materialization-v1/sideways-windows/sideways_dated_window_materialization_v1.json",
+    "sideways_report_sha256": "b036d13918fdbe257dc41481cdfa270f53b19e81acaf6d4ae35d089f45be1089",
+    "sideways_windows": "docs/experiments/actionable-regime-confidence/runs/20260511T123500-codex-sideways-dated-window-materialization-v1/sideways-windows/sideways_dated_windows_v1.csv",
+    "sideways_windows_sha256": "1a3741cc2e5ad5b3c2dd36f720c7ec0d2af2bff5913a5db88c54165ea961274b"
+  },
+  "missing_slot_coverage": {
+    "covered_by_materialized_source_panel": 67,
+    "covered_by_root": {
+      "Bear": 21,
+      "Bull": 21,
+      "Crisis": 21,
+      "Sideways": 4
+    },
+    "still_missing_by_root": {
+      "Bear": 120,
+      "Bull": 120,
+      "Crisis": 120,
+      "Sideways": 137
+    },
+    "still_missing_or_out_of_scope": 497,
+    "total_missing_or_rejected_slots": 564
+  },
+  "next_action": "Run the next calibration/coverage pass only on the remaining high-yield uncovered cells: Sideways intraday/monthly for S&P 500-linked instruments and direct Manipulation variety expansion.",
+  "objective": "Unify materialized Bull/Bear/Crisis source-window labels with scoped Sideways dated windows, then audit current missing-slot coverage.",
+  "run_id": "20260511T124027+0800-codex-unified-source-label-panel-v1",
+  "source_panel": {
+    "deferred_refresh_required_rows": 21,
+    "manipulation_included": false,
+    "materialized_by_lane": {
+      "bull_bear_crisis_source_window_crosswalk": 210,
+      "sideways_scoped_dated_windows_from_accepted_gate": 608
+    },
+    "materialized_by_root": {
+      "Bear": 84,
+      "Bull": 63,
+      "Crisis": 63,
+      "Sideways": 608
+    },
+    "materialized_panel_rows": 818,
+    "price_root_coverage_count": 4,
+    "price_roots_with_materialized_windows": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "total_panel_rows_including_deferred": 839
+  }
+}

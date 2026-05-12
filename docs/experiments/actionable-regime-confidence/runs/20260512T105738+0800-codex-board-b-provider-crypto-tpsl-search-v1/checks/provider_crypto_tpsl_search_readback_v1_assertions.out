@@ -1,0 +1,9 @@
+exit_marker=killed_slow_search
+stdout_empty=true
+stderr_empty=true
+candidate_set_emitted=false
+auto_quant_tomac_completed=false
+provider_matrix_aq_provenance=false
+ordered_downstream_chain_completed=false
+promotion_allowed=false
+update_goal=false

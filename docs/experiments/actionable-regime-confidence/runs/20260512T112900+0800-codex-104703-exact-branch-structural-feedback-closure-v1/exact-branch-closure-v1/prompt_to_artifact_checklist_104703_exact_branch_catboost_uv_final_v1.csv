@@ -1,0 +1,15 @@
+requirement,status,evidence,notes
+catboost_train_with_dependency_wrapper,pass,checks/14_catboost_path_ranker_train_uv.exit,exit 0
+catboost_apply_with_dependency_wrapper,pass,checks/15_catboost_path_ranker_apply_uv.exit,exit 0
+external_scores_applied,pass,checks/16_apply_external_scores_catboost.exit,exit 0
+binary_artifact_register_command,partial,checks/17_register_catboost_trainer_artifact.exit,exit 1 stream did not contain valid UTF-8
+final_policy_status_captured,pass,checks/19_policy_training_status_final.exit,exit 0
+catboost_runtime_ready,pass,command-output/19_policy_training_status_final.out,runtime_selection_ready true active_match_count 3
+raw_scored_mature_gate,pass,command-output/19_policy_training_status_final.out,86 of 30
+production_validation_gate,pass,command-output/19_policy_training_status_final.out,85 of 30
+observation_validation_gate,pass,command-output/19_policy_training_status_final.out,43 of 30
+pre_bayes_gate,partial,command-output/22_pre_bayes_status_final.out,pass_neutralized without policy
+execution_tree_admission,fail_closed,command-output/20_workflow_status_full_final.out,closed_loop_branch_admission fail_closed
+same_root_provider_authority,fail_closed,run_root,not a six-provider AQ packet
+promotion_allowed,fail_closed,104703_exact_branch_catboost_uv_final_readback_v1.json,false
+update_goal,fail_closed,104703_exact_branch_catboost_uv_final_readback_v1.json,false

@@ -1,0 +1,220 @@
+{
+  "auto_quant": {
+    "prior_init_dry_run_exit": 0,
+    "results_import_exit": 0,
+    "status_exit": 0
+  },
+  "branch_rc_spa_gate_result": "pass",
+  "catboost_path_ranker": {
+    "apply_scores_exit": 0,
+    "branch_score_rows": 4,
+    "branch_scores": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/catboost/branch_path_scores_v1.csv",
+    "catboost_available": true,
+    "features_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/catboost/catboost_branch_features_v1.csv",
+    "model_family": "catboost",
+    "model_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/catboost/path_ranker_model/catboost_model.cbm",
+    "policy_training_status_exit": 0,
+    "positive_rate": 0.5566550409603375,
+    "scores_file": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/catboost/path_ranker_scores_for_ict_engine_v1.csv",
+    "structural_diagnostics": {
+      "board_b_branch_paths": [
+        "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+        "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+        "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+        "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+      ],
+      "board_b_exact_target_rows": 0,
+      "export_candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+      "export_target_csv": "/tmp/ict-engine-board-b-220646-target-surface-readback-v1/NQ/policy_training/structural_path_ranking_target.csv",
+      "export_target_rows": 3,
+      "path_mapping_loss": true,
+      "scores_rows_written": 7,
+      "target_path_ids": [
+        "path:scenario:NQ:belief_regime_node:trend:range_mean_reversion:primary",
+        "path:scenario:NQ:belief_regime_node:trend:stress_de_risk:primary",
+        "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+      ]
+    },
+    "trainer_note": "uv_offline_catboost_classifier",
+    "training_rows": 12329
+  },
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/provider_status_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_status_json.exit",
+      "name": "auto_quant_status_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_status_json.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-results-import --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --library /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/autoquant_strategy_library_source_root_stop_carry_longhorizon_v1.json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_results_import.exit",
+      "name": "auto_quant_results_import",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_results_import.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_results_import.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol ^VIX --futures-backend yfinance --aux-backend yfinance --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --regime-consumer-bundle /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/aggregate_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_live_aggregate_bundle.exit",
+      "name": "analyze_live_aggregate_bundle",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_live_aggregate_bundle.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_live_aggregate_bundle.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --refresh --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/pre_bayes_status_json.exit",
+      "name": "pre_bayes_status_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/pre_bayes_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/pre_bayes_status_json.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --library /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/autoquant_strategy_library_source_root_stop_carry_longhorizon_v1.json --dry-run --force",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_prior_init_dry_run.exit",
+      "name": "auto_quant_prior_init_dry_run",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_prior_init_dry_run.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/auto_quant_prior_init_dry_run.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol NQ --demo --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1/root-probe-bull --regime-consumer-bundle /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/bull_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Bull.exit",
+      "name": "analyze_demo_root_bundle_Bull",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Bull.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Bull.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol NQ --demo --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1/root-probe-bear --regime-consumer-bundle /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/bear_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Bear.exit",
+      "name": "analyze_demo_root_bundle_Bear",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Bear.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Bear.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol NQ --demo --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1/root-probe-sideways --regime-consumer-bundle /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/sideways_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Sideways.exit",
+      "name": "analyze_demo_root_bundle_Sideways",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Sideways.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Sideways.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol NQ --demo --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1/root-probe-crisis --regime-consumer-bundle /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/crisis_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Crisis.exit",
+      "name": "analyze_demo_root_bundle_Crisis",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Crisis.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_demo_root_bundle_Crisis.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/export_structural_path_ranking_target.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine apply-structural-path-ranking-external-scores --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --scores-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/catboost/path_ranker_scores_for_ict_engine_v1.csv",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/apply_structural_path_ranking_external_scores.exit",
+      "name": "apply_structural_path_ranking_external_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/apply_structural_path_ranking_external_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/apply_structural_path_ranking_external_scores.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine register-structural-path-ranking-trainer-artifact --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --artifact-uri docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/catboost/path_ranker_model/catboost_model.cbm --model-family catboost --trained-rows 12329 --calibration-rows 0",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/register_structural_path_ranking_trainer_artifact.exit",
+      "name": "register_structural_path_ranking_trainer_artifact",
+      "returncode": 1,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/register_structural_path_ranking_trainer_artifact.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/register_structural_path_ranking_trainer_artifact.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine enable-structural-path-ranking-runtime --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --reuse-mode candidate_set_only",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/enable_structural_path_ranking_runtime.exit",
+      "name": "enable_structural_path_ranking_runtime",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/enable_structural_path_ranking_runtime.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/enable_structural_path_ranking_runtime.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/policy_training_status_json.exit",
+      "name": "policy_training_status_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/policy_training_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/policy_training_status_json.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol ^VIX --futures-backend yfinance --aux-backend yfinance --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --regime-consumer-bundle /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/aggregate_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_live_after_path_ranker.exit",
+      "name": "analyze_live_after_path_ranker",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_live_after_path_ranker.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/analyze_live_after_path_ranker.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/workflow_status_execution_candidate.exit",
+      "name": "workflow_status_execution_candidate",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/workflow_status_execution_candidate.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/workflow_status_execution_candidate.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-b-220646-target-surface-readback-v1 --phase structural-recommended-path-bundle --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/workflow_status_structural_bundle.exit",
+      "name": "workflow_status_structural_bundle",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/workflow_status_structural_bundle.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/command-output/workflow_status_structural_bundle.out"
+    }
+  ],
+  "downstream_consumption": "blocked:downstream_branch_path_or_bbn_mapping_gap",
+  "downstream_promotable": false,
+  "execution_tree": {
+    "analyze_live_after_path_ranker_exit": 0,
+    "workflow_status_execution_candidate_exit": 0,
+    "workflow_status_structural_bundle_exit": 0
+  },
+  "generated_at_utc": "2026-05-11T14:33:40.985883+00:00",
+  "manipulation_component_pass": true,
+  "pre_bayes": {
+    "bbn_roots_applied": [
+      "Bull",
+      "Sideways",
+      "Crisis"
+    ],
+    "bbn_roots_skipped_no_supported_label": [
+      "Bear"
+    ],
+    "root_probe_summary": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/target-surface-readback/root_bbn_probe_summary_v1.csv",
+    "status_exit": 0
+  },
+  "price_root_paths_passed": 4,
+  "primary_blocker": "one_or_more_downstream_commands_failed;bbn_soft_evidence_unsupported_roots=Bear;ict_engine_structural_path_ranker_target_has_no_exact_board_b_branch_path_rows",
+  "provider_readback": {
+    "provider_status_exit": 0
+  },
+  "raw_data_committed": false,
+  "run_id": "20260511T222451+0800-codex-board-b-220646-target-surface-readback-v1",
+  "runtime_code_changed": false,
+  "source_run_id": "20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "stable_profit_score": 85.74074074074075,
+  "state_dir": "/tmp/ict-engine-board-b-220646-target-surface-readback-v1",
+  "thresholds_relaxed": false
+}

@@ -1,0 +1,7 @@
+source_label_blocked=PASS
+direct_manipulation_blocked=PASS
+intake_files_present_zero=PASS
+accepted_rows_added_zero=PASS
+new_confidence_gate_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS

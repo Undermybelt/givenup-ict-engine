@@ -1,0 +1,118 @@
+{
+  "decision": {
+    "accepted_gate": "partial_for_MainRegimeV3Candidate_CrisisCrash_only",
+    "accepted_root_classes_95_effective": [
+      "CrisisCrash"
+    ],
+    "blocker": "missing_root_classes_95=BullExpansion,BearExpansion,SidewaysConsolidation,Manipulation",
+    "board_state": "blocked",
+    "fresh_calibration_rerun": false,
+    "missing_root_classes_95_effective": [
+      "BullExpansion",
+      "BearExpansion",
+      "SidewaysConsolidation",
+      "Manipulation"
+    ],
+    "next_action": "Find materially stronger direct labels/features for BullExpansion/BearExpansion/SidewaysConsolidation and direct-event evidence for Manipulation.",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "loop_id": "20260511T034336+0800-codex-kaggle-v3-candidate-readback",
+  "root_map": {
+    "Bear": "BearExpansion",
+    "Bull": "BullExpansion",
+    "Sideways": "SidewaysConsolidation"
+  },
+  "root_reports": [
+    {
+      "accepted_95": false,
+      "root_class": "BullExpansion",
+      "selected_candidate": {
+        "blockers": [
+          "calibration_coverage_below_0_03"
+        ],
+        "calibration_lcb": 0.9623196841049471,
+        "calibration_support": 1498,
+        "rule": "close_drawdown60 >= 0 AND volatility <= 0.152179344579",
+        "test_coverage": 0.037324145851277635,
+        "test_lcb": 0.9662239127370376,
+        "test_precision": 0.9737556561085973,
+        "test_support": 2210,
+        "train_lcb": 0.9688545251407349,
+        "train_support": 6569
+      },
+      "source_root_class": "Bull",
+      "state": "blocked"
+    },
+    {
+      "accepted_95": false,
+      "root_class": "BearExpansion",
+      "selected_candidate": {
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ],
+        "calibration_lcb": 0.7504657526410464,
+        "calibration_support": 2548,
+        "rule": "ret20 <= -0.043667898623 AND vix >= 29.5200004578",
+        "test_coverage": 0.04298187836719528,
+        "test_lcb": 0.8367203533458685,
+        "test_precision": 0.8510805500982318,
+        "test_support": 2545,
+        "train_lcb": 0.8111305859326102,
+        "train_support": 8074
+      },
+      "source_root_class": "Bear",
+      "state": "blocked"
+    },
+    {
+      "accepted_95": false,
+      "root_class": "SidewaysConsolidation",
+      "selected_candidate": {
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_03"
+        ],
+        "calibration_lcb": 0.7277929561967755,
+        "calibration_support": 2166,
+        "rule": "ret20 <= 0.00252597008559 AND vol20_mean <= 0.129492491459",
+        "test_coverage": 0.028389995102261405,
+        "test_lcb": 0.7453850364867555,
+        "test_precision": 0.7662105889351577,
+        "test_support": 1681,
+        "train_lcb": 0.7333076819298393,
+        "train_support": 6111
+      },
+      "source_root_class": "Sideways",
+      "state": "blocked"
+    },
+    {
+      "accepted_95": true,
+      "root_class": "CrisisCrash",
+      "selected_candidate": {
+        "rule": "preserved_from_20260511T033945_CrisisCrash_readback"
+      },
+      "source_root_class": "not_evaluated_in_kaggle_readback",
+      "state": "preserved_from_v3_crosswalk_not_reissued"
+    },
+    {
+      "accepted_95": false,
+      "root_class": "Manipulation",
+      "selected_candidate": {
+        "blockers": [
+          "missing_required_direct_event_order_lifecycle_inputs"
+        ],
+        "rule": "Kaggle stock-market regime labels are not direct manipulation evidence"
+      },
+      "source_root_class": "not_evaluated",
+      "state": "missing_required_inputs"
+    }
+  ],
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T034336-codex-kaggle-v3-candidate-readback",
+  "schema_version": "kaggle-main-regime-v3-candidate-readback/v1",
+  "source_report": "docs/experiments/actionable-regime-confidence/runs/20260511T033017-codex-kaggle-regime-label-root-gate/kaggle-regime-gate/kaggle_regime_label_root_gate_report.json"
+}

@@ -1,0 +1,1 @@
+python3 scripts/auto_quant_external/fetch_external.py kraken-kline --pair XBTUSD --interval 1h --output docs/experiments/actionable-regime-confidence/runs/20260512T053410+0800-codex-board-b-readonly-regime-root-chain-refresh-v1/command-output/kraken_public_xbtusd_1h.csv

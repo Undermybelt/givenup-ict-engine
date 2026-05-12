@@ -1,0 +1,24 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 73,
+  "matched_negative_rows": 73,
+  "matched_group_count": 70,
+  "provenance_keys": [
+    "artifact_type",
+    "board_current_run_root",
+    "board_current_run_root_exists",
+    "board_sha256_at_start",
+    "current_cursor_root",
+    "current_cursor_root_exists",
+    "generated_at_utc",
+    "policy",
+    "post_thakkar_control_candidate_rows",
+    "post_thakkar_unique_candidate_rows",
+    "run_id",
+    "shared_intake_exists_at_start",
+    "shared_intake_root",
+    "source_snapshot_hashes",
+    "source_snapshot_paths"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

@@ -1,0 +1,15 @@
+{
+  "auto_quant_pinned_ref": "",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_BOARD_A_IBKR_SPY_193417_20260512T114028.466303000Z",
+  "library_source": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json",
+  "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/auto-quant/BOARD_A_IBKR_SPY_193417/auto_quant_strategy_library.json",
+  "log_cross_check": null,
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 12,
+  "n_total_strategies": 12,
+  "symbol": "BOARD_A_IBKR_SPY_193417"
+}

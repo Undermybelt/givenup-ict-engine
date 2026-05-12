@@ -1,0 +1,46 @@
+{
+  "run_id": "20260512T033524-codex-autoquant-noaiodns-prepare-workaround-after-033216-v1",
+  "generated_at_local": "2026-05-12T03:35:24+08:00",
+  "board_sha256_before_artifact": "e4dd10d2aaefd7fe2f0fddd1766bf48dacc23bea7f146eb978e589fb21de9ff3",
+  "gate_result": "autoquant_prepare_retry_after_033216_v1=prepare_succeeded_after_retry_noaiodns_not_applied_source_controls_absent_no_promotion",
+  "inputs": {
+    "resolver_diagnostic": "docs/experiments/actionable-regime-confidence/runs/20260512T033216-codex-autoquant-aiodns-resolver-diagnostic-after-032658-v1",
+    "source_state_dir": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145",
+    "copied_state_dir": "/tmp/ict-engine-board-a-autoquant-noaiodns-20260512T033524"
+  },
+  "commands": {
+    "uv_pip_uninstall_aiodns_exit_code": 2,
+    "uv_pip_uninstall_aiodns_result": "not_applied_unexpected_argument_dash_y",
+    "noaiodns_import_check_exit_code": 0,
+    "aiodns_present_after_uninstall_attempt": true,
+    "auto_quant_prepare_exit_code": 0,
+    "auto_quant_prepare_status": "prepared",
+    "auto_quant_status_exit_code": 0,
+    "auto_quant_status_after_prepare": "dependency_ready_seed_required"
+  },
+  "diagnosis": {
+    "noaiodns_workaround_applied": false,
+    "state_copy_dependency_metadata_points_to_original_managed_dir": true,
+    "managed_dir_used_by_status": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant/.deps/auto-quant",
+    "prepare_retry_succeeded": true,
+    "data_ready_after_retry": true,
+    "seed_strategies_required": true,
+    "data_files_ready_count": 15
+  },
+  "source_control_status": {
+    "r6_owner_export_root_exists": false,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "source_owned_normal_controls_acquired": 0,
+    "explicit_flip_approval_present": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

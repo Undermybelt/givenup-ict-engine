@@ -1,0 +1,10 @@
+materialization_loaded=PASS
+spoof_rows_present=PASS
+flip_rows_present=PASS
+positive_source_candidate_only=PASS
+flip_controls_rejected=PASS
+canonical_merge_false=PASS
+downstream_rerun_false=PASS
+accepted_rows_zero=PASS
+strict_full_objective_false=PASS
+update_goal_false=PASS

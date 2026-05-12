@@ -1,0 +1,45 @@
+{
+  "latest_bridge": null,
+  "latest_bridge_diff": null,
+  "latest_canonical_structural_active_regime": null,
+  "latest_canonical_structural_confidence": null,
+  "latest_canonical_structural_probabilities": {},
+  "latest_filtered_assignments": {
+    "parent_regime_root": "Bull",
+    "pre_bayes_branch_path_gate": "pass_neutralized",
+    "regime_profit_branch_path": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12"
+  },
+  "latest_gate_status": "pass_neutralized",
+  "latest_policy": null,
+  "latest_policy_diff": null,
+  "latest_policy_lineage": {
+    "changed_fields_union": [],
+    "latest_version": null,
+    "previous_version": null,
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested",
+    "total_versions": 0
+  },
+  "latest_policy_version": "",
+  "latest_soft_evidence": {
+    "factor_alignment": {},
+    "factor_uncertainty": {},
+    "liquidity_context": {},
+    "market_regime": {},
+    "multi_timeframe_resonance": {}
+  },
+  "latest_soft_evidence_diff": [],
+  "latest_structural_feedback": {
+    "branch_id": "Bull -> ProviderTrend",
+    "exit_reason": "exact_branch_context_probe",
+    "followed_path": true,
+    "node_id": "Bull",
+    "notes": "append-only isolated probe to preserve exact Board B branch path through update/pre-bayes context",
+    "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+    "protocol_version": "structural-feedback-v1",
+    "recommendation_id": "structural-feedback:B2R_PROVIDER_BTC_EMA_RSI_104703:exact-branch-104703-v1:probe-01",
+    "recommended_at": "2026-05-12T03:29:00Z",
+    "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation"
+  },
+  "latest_uses_soft_evidence": false
+}

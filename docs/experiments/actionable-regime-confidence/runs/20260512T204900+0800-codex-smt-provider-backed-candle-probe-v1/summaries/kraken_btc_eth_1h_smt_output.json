@@ -1,0 +1,42 @@
+{
+  "rows": [
+    {
+      "base_symbol": "BTC",
+      "comparison_symbol": "ETH",
+      "relationship_type": "positive",
+      "relationship_confidence": 0.0,
+      "timeframe": "1h",
+      "session": "crypto_24x7",
+      "comparison_timeframe": "1h",
+      "comparison_session": "crypto_24x7",
+      "timeframe_aligned": true,
+      "session_overlap": true,
+      "correlation_window_bars": 720,
+      "recent_correlation": 0.0,
+      "smt_signal": "none",
+      "base_swing_type": "HL",
+      "base_event_time": "2026-05-12 04:00:00+00:00",
+      "base_level": 80995.9,
+      "comparison_swing_type": "LL",
+      "comparison_event_time": "2026-05-12 01:00:00+00:00",
+      "comparison_level": 2295.0,
+      "event_window_bars": 3,
+      "event_time_delta_bars": 3,
+      "same_event_window_confirmed": true,
+      "swept_side": "none",
+      "normalized_for_inverse_correlation": false,
+      "raw_comparison_swing_type": "LL",
+      "raw_comparison_level": 2295.0,
+      "near_pd_array": false,
+      "pd_array_type": "none",
+      "mss_or_cisd_confirmed": false,
+      "displacement_confirmed": false,
+      "provider_provenance": null,
+      "evidence_source": "factor_fail_closed",
+      "confidence": 0.0,
+      "fail_closed_reason": "no_swing_confirmation_failure_at_latest_event",
+      "confirmation_role": "confirmation_only",
+      "actionable": false
+    }
+  ]
+}

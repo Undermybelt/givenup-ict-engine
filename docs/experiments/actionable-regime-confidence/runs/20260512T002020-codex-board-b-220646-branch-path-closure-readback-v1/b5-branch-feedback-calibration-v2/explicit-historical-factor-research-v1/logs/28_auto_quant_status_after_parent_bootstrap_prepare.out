@@ -1,0 +1,58 @@
+{
+  "status": "dependency_ready_data_missing",
+  "healthy": false,
+  "bootstrap_needed": false,
+  "dependency_healthy": true,
+  "data_ready": false,
+  "update_available": false,
+  "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant",
+  "workspace": {
+    "repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant",
+    "program_md": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant/program.md",
+    "prepare_script": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant/prepare.py",
+    "run_script": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant/run.py",
+    "config_json": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant/config.json",
+    "strategies_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant/user_data/strategies",
+    "data_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant/user_data/data"
+  },
+  "dependency_status": {
+    "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+    "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant",
+    "tracked_branch": "master",
+    "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "bootstrap_needed": false,
+    "config_present": true,
+    "managed_repo_present": true,
+    "healthy": true,
+    "update_available": false,
+    "required_files": [
+      "README.md",
+      "program.md",
+      "prepare.py",
+      "run.py",
+      "versions/README.md"
+    ],
+    "notes": [],
+    "adapter_version": "v1",
+    "last_sync": "2026-05-11T17:04:58.720478Z"
+  },
+  "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant",
+  "recommended_next_command_meta": {
+    "kind": "ict_engine",
+    "requires_user_input": false,
+    "blocked": false,
+    "prompt": null,
+    "executable_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant",
+    "recorded_data_paths": []
+  },
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": "auto_quant_prepare_required",
+    "deferred_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "notes": []
+}

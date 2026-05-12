@@ -1,0 +1,16 @@
+{
+  "_comment": "\u7528\u6237\u53ef\u7f16\u8f91\u6b64\u6587\u4ef6\u81ea\u5b9a\u4e49\u52a0\u6743\u6c42\u548c\u56de\u9000\u6743\u91cd",
+  "evidence_quality_score": 0.2,
+  "risk_reward": 0.15,
+  "kelly_fraction": 0.1,
+  "htf_alignment_score": 0.15,
+  "mtf_alignment_score": 0.1,
+  "hmm_manipulation_expansion_prob": 0.1,
+  "fvgs_open": -0.05,
+  "atr_consumption_ratio": -0.1,
+  "_notes": [
+    "\u6b63\u503c = \u6b63\u5411\u8d21\u732e",
+    "\u8d1f\u503c = \u98ce\u9669\u60e9\u7f5a",
+    "\u603b\u548c\u5e94\u7ea6\u7b49\u4e8e 1.0\uff08\u81ea\u52a8\u5f52\u4e00\u5316\uff09"
+  ]
+}

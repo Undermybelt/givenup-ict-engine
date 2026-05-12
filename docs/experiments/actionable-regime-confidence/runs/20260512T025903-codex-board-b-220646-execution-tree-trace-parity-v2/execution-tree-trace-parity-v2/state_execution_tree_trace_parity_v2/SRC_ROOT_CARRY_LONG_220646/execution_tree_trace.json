@@ -1,0 +1,97 @@
+{
+  "artifact_id": "execution-tree-SRC_ROOT_CARRY_LONG_220646-1778526064200",
+  "generated_at": "2026-05-11T19:01:04.200870Z",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "output": {
+    "execution_score": 0.5566321884166019,
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "gate_status": "observe",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.4421 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.4421 < 0.45)",
+      "path_ranker_score_input=0.2190 visible=true used=true ranker_validation_ready=true effective_prediction_vote_score=0.4641",
+      "prediction_vote_score=0.4641 (medium) × execution_readiness=0.4421 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.678",
+      "market_state=volatility=ElevatedVol:0.801 liquidity=NormalLiquidity:0.433 structure=Trending:0.721 behavior=RiskOn:0.550",
+      "market_state=rationale=volatility=ElevatedVol conf=0.80",
+      "market_state=rationale=structure=Trending conf=0.72",
+      "market_state=rationale=behavior=RiskOn conf=0.55",
+      "market_state=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.68",
+      "path_ranker=Ranker runtime: structural_path_ranking_target rows=4 history_rows=883 mature_rows=4 history_mature_rows=869 raw_scored_mature=869/30 production_validation=869/30 observation_validation=82/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=4",
+      "path_ranker=Ranker validation: calibration=true quality_ready=true raw_scored_mature=869/30 production_validation=869/30 observation_validation=82/30 ready=true",
+      "path_ranker=ranker_machine=runtime_source=candidate_set score_model_family=catboost score_source=external_model validation_ready=true active_match_count=4",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 runtime_source=history_path raw_path_score=0.857407 calibrated_path_prob=0.428571 path_prob_lower_bound=0.219020 execution_gate_status=observe",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "hybrid_transition_hazard=0.600"
+    ],
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=history_path/catboost/ready",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_model_family": "catboost",
+    "path_ranker_runtime_source": "history_path",
+    "ranker_validation_ready": true
+  },
+  "closed_loop_branch_admission": {
+    "actionable": false,
+    "candidate_status": "execution_observe_only",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "evidence": [
+      "pre_bayes_gate_status=pass_neutralized",
+      "execution_gate_status=execution_observe_only",
+      "review_status=observe",
+      "execution_tree_gate_status=observe",
+      "execution_tree_branch=transition_guardrail"
+    ],
+    "execution_gate_status": "execution_observe_only",
+    "execution_tree_bias": "guarded",
+    "execution_tree_branch": "transition_guardrail",
+    "execution_tree_gate_status": "observe",
+    "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "path_label": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "ready": false,
+    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "review_status": "observe",
+    "source_phase": "structural-recommended-path-bundle",
+    "status": "fail_closed"
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "cycle_phase_alignment",
+      "contribution": 0.8308635836558563,
+      "feature_value": "0.8309"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.6271082922832676,
+      "feature_value": "0.1729"
+    },
+    {
+      "feature": "dominant_cycle_energy",
+      "contribution": 0.5696026089169665,
+      "feature_value": "0.7196"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.4443027210884354,
+      "feature_value": "0.2557"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "0739cf78a430efa5",
+    "data_fingerprint": "1d359558494bb239"
+  }
+}

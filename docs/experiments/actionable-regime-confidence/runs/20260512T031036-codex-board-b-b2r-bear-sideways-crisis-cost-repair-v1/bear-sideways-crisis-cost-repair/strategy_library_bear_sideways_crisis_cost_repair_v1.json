@@ -1,0 +1,153 @@
+{
+  "auto_quant_pinned_ref": "local-auto-quant-env",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "exported_at": "2026-05-11T19:23:29.475823+00:00",
+  "manifest_version": "auto-quant-strategy-library/v1",
+  "strategies": [
+    {
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T031036-codex-board-b-b2r-bear-sideways-crisis-cost-repair-v1/scripts/bear_sideways_crisis_cost_repair_v1.py",
+      "metadata": {
+        "base_factor": "BearSidewaysCrisisCostRepairV1",
+        "expected_regime": "MainRegimeV2::Bull",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "source_regime_confidence",
+          "vol_z",
+          "price_z_240"
+        ],
+        "mutation_id": "b2r_bear_sideways_crisis_cost_repair_v1",
+        "parent": "Bull -> TrendExpansion -> CostDurableNQ -> BearSidewaysCrisisCostRepairV1:bull_cost_breakout_h72_r100_v12",
+        "status": "incubation_only_b2r_repeat_next",
+        "strategy": "BearSidewaysCrisisCostRepairV1_Bull"
+      },
+      "name": "BearSidewaysCrisisCostRepairV1_Bull",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "status": "ok",
+      "timerange": "20110101-20251231",
+      "validation_metrics": {
+        "calmar": 12.461706190140077,
+        "max_drawdown_pct": 95.58078636079802,
+        "profit_factor": 0.0,
+        "sharpe": 12.461706190140077,
+        "sortino": 12.461706190140077,
+        "total_profit_pct": 1916.300528360403,
+        "trade_count": 10100,
+        "win_rate_pct": 59.366336633663366
+      }
+    },
+    {
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T031036-codex-board-b-b2r-bear-sideways-crisis-cost-repair-v1/scripts/bear_sideways_crisis_cost_repair_v1.py",
+      "metadata": {
+        "base_factor": "BearSidewaysCrisisCostRepairV1",
+        "expected_regime": "MainRegimeV2::Bear",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "source_regime_confidence",
+          "vol_z",
+          "price_z_240"
+        ],
+        "mutation_id": "b2r_bear_sideways_crisis_cost_repair_v1",
+        "parent": "Bear -> BearMarketDrawdown -> AbstainCarryRepairNQ -> BearSidewaysCrisisCostRepairV1:bear_cap_rebound_h72_r120",
+        "status": "incubation_only_b2r_repeat_next",
+        "strategy": "BearSidewaysCrisisCostRepairV1_Bear"
+      },
+      "name": "BearSidewaysCrisisCostRepairV1_Bear",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "status": "ok",
+      "timerange": "20110101-20251231",
+      "validation_metrics": {
+        "calmar": 6.209229558560067,
+        "max_drawdown_pct": 97.69431571958934,
+        "profit_factor": 0.0,
+        "sharpe": 6.209229558560067,
+        "sortino": 6.209229558560067,
+        "total_profit_pct": 1262.1793128992017,
+        "trade_count": 3032,
+        "win_rate_pct": 53.19920844327177
+      }
+    },
+    {
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T031036-codex-board-b-b2r-bear-sideways-crisis-cost-repair-v1/scripts/bear_sideways_crisis_cost_repair_v1.py",
+      "metadata": {
+        "base_factor": "BearSidewaysCrisisCostRepairV1",
+        "expected_regime": "MainRegimeV2::Sideways",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "source_regime_confidence",
+          "vol_z",
+          "price_z_240"
+        ],
+        "mutation_id": "b2r_bear_sideways_crisis_cost_repair_v1",
+        "parent": "Sideways -> RangeConsolidation -> AbstainCarryRepairNQ -> BearSidewaysCrisisCostRepairV1:side_band_revert_h24_z6_a12",
+        "status": "incubation_only_b2r_repeat_next",
+        "strategy": "BearSidewaysCrisisCostRepairV1_Sideways"
+      },
+      "name": "BearSidewaysCrisisCostRepairV1_Sideways",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "status": "ok",
+      "timerange": "20110101-20251231",
+      "validation_metrics": {
+        "calmar": 1.1659457633614159,
+        "max_drawdown_pct": 97.97162189259303,
+        "profit_factor": 0.0,
+        "sharpe": 1.1659457633614159,
+        "sortino": 1.1659457633614159,
+        "total_profit_pct": 113.36174791512761,
+        "trade_count": 6064,
+        "win_rate_pct": 50.28034300791556
+      }
+    },
+    {
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T031036-codex-board-b-b2r-bear-sideways-crisis-cost-repair-v1/scripts/bear_sideways_crisis_cost_repair_v1.py",
+      "metadata": {
+        "base_factor": "BearSidewaysCrisisCostRepairV1",
+        "expected_regime": "MainRegimeV2::Crisis",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "source_regime_confidence",
+          "vol_z",
+          "price_z_240"
+        ],
+        "mutation_id": "b2r_bear_sideways_crisis_cost_repair_v1",
+        "parent": "Crisis -> ExtremeStress -> CrisisDepthRepairNQ -> BearSidewaysCrisisCostRepairV1:crisis_rebound_h72_r80",
+        "status": "incubation_only_b2r_repeat_next",
+        "strategy": "BearSidewaysCrisisCostRepairV1_Crisis"
+      },
+      "name": "BearSidewaysCrisisCostRepairV1_Crisis",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "status": "ok",
+      "timerange": "20110101-20251231",
+      "validation_metrics": {
+        "calmar": 11.522811132378761,
+        "max_drawdown_pct": 77.50475464533892,
+        "profit_factor": 0.0,
+        "sharpe": 11.522811132378761,
+        "sortino": 11.522811132378761,
+        "total_profit_pct": 969.524486358976,
+        "trade_count": 506,
+        "win_rate_pct": 73.51778656126481
+      }
+    }
+  ],
+  "timeframe": "1h"
+}

@@ -1,0 +1,5 @@
+symbol,required_timeframe,provider_date_min,provider_date_max,source_panel_tail_from_request,source_label_rows_total_for_symbol,source_label_timeframes_present,exact_native_timeframe_rows,latest_source_label_date_for_symbol,latest_exact_native_timeframe_date,post_cutoff_exact_native_rows_after_2026_01_30,r3_native_subhour_satisfied,blocker
+AAPL,15m,2026-02-12,2026-05-08,2026-01-30,6559,1d,0,2026-01-30,,0,False,source_label_root_has_daily_rows_only_for_target
+AAPL,30m,2026-02-12,2026-05-08,2026-01-30,6559,1d,0,2026-01-30,,0,False,source_label_root_has_daily_rows_only_for_target
+^IXIC,15m,2026-02-12,2026-05-08,2026-01-30,6559,1d,0,2026-01-30,,0,False,source_label_root_has_daily_rows_only_for_target
+^IXIC,30m,2026-02-12,2026-05-08,2026-01-30,6559,1d,0,2026-01-30,,0,False,source_label_root_has_daily_rows_only_for_target

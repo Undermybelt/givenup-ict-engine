@@ -1,0 +1,15 @@
+PASS run_id=20260512T062029+0800-codex-r3-tsie-target-cell-disposition-after-061855-empty-v1
+PASS gate_result=r3_tsie_target_cell_disposition_after_061855_empty_v1=tsie_large_support_not_exact_r3_native_subhour_target_no_promotion
+PASS tsie_rows_read=7193996
+PASS unique_group_id=1150
+PASS target_like_rows=0
+PASS r3_target_cells_exact_rows_zero=true
+PASS required_root_present=false
+PASS accepted_rows_added=0
+PASS source_control_evidence_acquired=false
+PASS target_root_mutated=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

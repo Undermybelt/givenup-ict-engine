@@ -1,0 +1,66 @@
+{
+  "run_id": "20260512T033625-codex-autoquant-resolver-readback-after-033430-v1",
+  "generated_at_local": "2026-05-12T03:36:25+08:00",
+  "board_sha256_before_artifact_readback": "420cdfec12382ddac95e030f4025f676de8e29f95a2f45b472b7fb6cf24a539e",
+  "gate_result": "autoquant_resolver_readback_after_033430_v1=threaded_prepare_succeeded_noaiodns_unproven_seed_required_no_source_control_no_promotion",
+  "evidence_read": {
+    "classification_packet_033334": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T033334-codex-autoquant-local-cache-tomac-resolver-readback-after-033216-v1",
+      "gate_result": "autoquant_local_cache_tomac_resolver_readback_after_033216_v1=local_cache_backtest_succeeded_resolver_diagnosed_no_board_a_promotion",
+      "accepted_regime_confidence_added": false
+    },
+    "threaded_prepare_success_root": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-prepare-after-033216-v1",
+      "status_before": "dependency_ready_data_missing",
+      "data_ready_before": false,
+      "prepare_exit_code": 0,
+      "prepare_status": "prepared",
+      "status_after": "dependency_ready_seed_required",
+      "data_ready_after": true,
+      "next_blocker": "auto_quant_seed_strategies_required"
+    },
+    "threaded_prepare_negative_root": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-workaround-run-v1",
+      "prepare_exit_code": 1,
+      "failure_class": "aiodns_loopback_resolver_failure"
+    },
+    "noaiodns_contrast_root_033524": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T033524-codex-autoquant-noaiodns-prepare-workaround-after-033216-v1",
+      "uv_pip_uninstall_aiodns_exit_code": 2,
+      "aiodns_import_check": "aiodns_present True",
+      "prepare_exit_code": 0,
+      "prepare_status": "prepared",
+      "status_after": "dependency_ready_seed_required",
+      "data_ready_after": true,
+      "noaiodns_workaround_proven": false,
+      "interpretation": "uninstall command failed and aiodns was still importable; prepare success should be counted as readiness contrast evidence only"
+    }
+  },
+  "prompt_to_artifact_counts": {
+    "pass": 2,
+    "partial": 1,
+    "blocked": 12
+  },
+  "source_control_status": {
+    "r6_owner_export_root_exists": false,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "source_owned_normal_controls_acquired": 0,
+    "flip_approval": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "non_mutations": {
+    "runtime_code_changed": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "canonical_live_intake_mutated": false
+  }
+}

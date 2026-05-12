@@ -1,0 +1,9 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/SRC_ROOT_CARRY_LONG_220646/policy_training/structural_path_ranking_target_history.csv: 853 rows, 37 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 843 training samples
+[features] label dist: {np.int64(0): np.int64(219), np.int64(1): np.int64(624)}
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 853 training samples
+[features] label dist: {np.int64(0): np.int64(222), np.int64(1): np.int64(631)}

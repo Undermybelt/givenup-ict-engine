@@ -1,0 +1,247 @@
+{
+  "accepted_rows_added": 0,
+  "auto_quant_status": {
+    "data_ready": true,
+    "dependency_healthy": true,
+    "healthy": true,
+    "managed_dir": "/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant",
+    "recommended_next_command": "uv run --with ta-lib /tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/run.py",
+    "status": "dependency_ready_data_ready"
+  },
+  "board_hash_at_audit": "c17bddda18a1d7602950e2ad9e09751994e90bb5e3fee73d645d51819adf4001",
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "evidence": "No accepted current packet proves every strict regime at 95%+ after latest source-control refresh.",
+      "passed": false,
+      "requirement": "all_regimes_95_plus_confidence"
+    },
+    {
+      "evidence": "No new accepted regime packet; legacy gaps remain fail-closed.",
+      "passed": false,
+      "requirement": "per_regime_qualifying_condition"
+    },
+    {
+      "evidence": "Required source/control unlock absent; no valid cross-axis selected-history promotion.",
+      "passed": false,
+      "requirement": "cross_market_period_timeframe_validation"
+    },
+    {
+      "evidence": "Required root /tmp/ict-engine-board-a-r6-owner-export-v1 absent.",
+      "passed": false,
+      "requirement": "r6_owner_export_controls"
+    },
+    {
+      "evidence": "Required root /tmp/ict-engine-source-panel-recency-extension absent.",
+      "passed": false,
+      "requirement": "r5_post_cutoff_source_panel_recency"
+    },
+    {
+      "evidence": "R3 root present but settled as TSIE-derived/quarantined with no Crisis promotion.",
+      "passed": false,
+      "requirement": "r3_crisis_capable_native_subhour_labels"
+    },
+    {
+      "evidence": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+      "passed": true,
+      "requirement": "provider_coverage_readback"
+    },
+    {
+      "evidence": "status=dependency_ready_data_ready healthy=True",
+      "passed": true,
+      "requirement": "autoquant_runtime_readback"
+    },
+    {
+      "evidence": "Not run because valid source/control unlock is false.",
+      "passed": false,
+      "requirement": "direct_verifier_run_after_unlock"
+    },
+    {
+      "evidence": "Not run because valid source/control unlock is false.",
+      "passed": false,
+      "requirement": "split_calibration_after_unlock"
+    },
+    {
+      "evidence": "Not run because valid source/control unlock is false.",
+      "passed": false,
+      "requirement": "canonical_merge_after_unlock"
+    },
+    {
+      "evidence": "Not run because valid source/control unlock is false.",
+      "passed": false,
+      "requirement": "selected_data_autoquant_promotion"
+    },
+    {
+      "evidence": "Not run because valid source/control unlock is false.",
+      "passed": false,
+      "requirement": "filter_pre_bayes_bbn_catboost_execution_tree_promotion"
+    },
+    {
+      "evidence": "Public repository/DataCite/Dataverse/Kaggle/HF/Zenodo/TSIE context remains non-promoting.",
+      "passed": true,
+      "requirement": "proxy_only_evidence_excluded"
+    }
+  ],
+  "direct_verifier_run": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "current_objective_audit_after_072844_v1=not_complete_required_roots_absent_or_nonpromoting_no_selected_history_no_downstream_promotion",
+  "latest_source_control_assertions": {
+    "current_objective_072330": {
+      "auto_quant_dependency_ready_data_ready": "true",
+      "auto_quant_status_exit0": "true",
+      "closed_loop_branch_admission_status": "fail_closed",
+      "current_objective_audit_after_072138_v1": "not_complete_required_roots_absent_no_selected_history_no_downstream_promotion",
+      "downstream_promotion_rerun": "false",
+      "execution_gate_status": "execution_blocked",
+      "explicit_user_selected_history": "false",
+      "path_ranking_calibrated_rows": "0",
+      "path_ranking_mature_rows": "0",
+      "path_ranking_rows": "1",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "pre_bayes_status_exit0": "true",
+      "promotion_allowed": "false",
+      "provider_status_exit0": "true",
+      "provider_summary_entry2_live1_local1_market1": "true",
+      "r3_native_subhour_tsie_quarantined_crisis_absent": "true",
+      "r5_source_panel_recency_root_absent": "true",
+      "r6_owner_export_root_absent": "true",
+      "selected_data_autoquant_training": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "structural_path_ranking_export_exit0": "true",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false",
+      "workflow_blocking_reason": "user_selected_historical_data_missing",
+      "workflow_status_exit0": "true"
+    },
+    "datacite_dataverse_072830": {
+      "accepted_rows_added": "0",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "datacite_dataverse_readback_after_072758_v1=no_required_source_control_unlock_no_downstream",
+      "mainregimev2_hits": "0",
+      "native_subhour_source_label_hits": "0",
+      "owner_export_hits": "0",
+      "queries_checked": "12",
+      "query_exits_zero": "true",
+      "r3_native_subhour_unlock": "false",
+      "r5_recency_extension_hits": "0",
+      "r5_recency_unlock": "false",
+      "r6_owner_export_unlock": "false",
+      "required_filename_hits": "0",
+      "source_control_evidence_acquired": "false",
+      "sources_checked": "DataCite,Harvard Dataverse",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    "datacite_exact_072832": {
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "failed_queries": "0",
+      "gate_result": "datacite_source_route_probe_after_072412_v1=no_exact_required_source_export_no_unlock",
+      "query_count": "11",
+      "r3_native_subhour_unlock": "false",
+      "r5_recency_unlock": "false",
+      "r6_owner_export_unlock": "false",
+      "required_exact_hits": "0",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "total_results_returned": "0",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    "public_repository_072844": {
+      "canonical_merge": "False",
+      "downstream_promotion_rerun": "False",
+      "failed_request_count": "0",
+      "gate_result": "exact_required_queries_no_promoting_hits_no_unlock",
+      "mainregimev2_hits": "0",
+      "owner_hits": "0",
+      "r3_native_subhour_hits": "0",
+      "r3_native_subhour_unlock": "False",
+      "r5_recency_hits": "0",
+      "r5_recency_unlock": "False",
+      "r6_owner_export_unlock": "False",
+      "request_count": "52",
+      "required_filename_hits": "0",
+      "source_control_evidence_acquired": "False",
+      "strict_full_objective": "False",
+      "trade_usable": "False",
+      "update_goal": "False",
+      "valid_required_root_unlock": "False"
+    },
+    "source_control_arrival_072805": {
+      "accepted_rows_added": "0",
+      "broad_local_keyword_hits": "12",
+      "canonical_merge": "false",
+      "databento_cli": "absent",
+      "dbn_cli": "absent",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "source_control_arrival_poll_after_072412_v1=no_new_required_root_no_owner_export_no_unlock",
+      "local_owner_data_env_keys_present": "false",
+      "r3_native_subhour_root": "present_quarantined_non_promoting",
+      "r3_native_subhour_unlock": "false",
+      "r5_recency_root": "absent",
+      "r5_recency_unlock": "false",
+      "r6_owner_export_root": "absent",
+      "r6_owner_export_unlock": "false",
+      "runtime_state_root": "present_runtime_only",
+      "source_control_evidence_acquired": "false",
+      "source_label_equivalence_root": "present_non_target_non_promoting",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false",
+      "valid_unlock_like_files": "0"
+    }
+  },
+  "provider_status": {
+    "pending_providers": [
+      "crypto_public_runtime@live_runtime:operator_runtime_required:explicit_opt_in_required",
+      "external_http_runtime@live_runtime:operator_runtime_required:base_url_and_service_required",
+      "ibkr_bridge@local_runtime:configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "polymarket_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed"
+    ],
+    "ready_by_domain": {
+      "entry_model": "2/2",
+      "live_runtime": "1/3",
+      "local_runtime": "1/2",
+      "market_data": "1/7"
+    },
+    "ready_providers": [
+      "breaker_rb_long_v1",
+      "cisd_rb_long_v1",
+      "yfinance",
+      "kraken_cli",
+      "yfinance"
+    ],
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+  },
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "required_roots": {
+    "r3_native_subhour": true,
+    "r5_recency_extension": false,
+    "r6_owner_export": false,
+    "runtime_state": true,
+    "source_label_equivalence": true
+  },
+  "run_id": "20260512T073320+0800-codex-current-objective-audit-after-072844-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "split_calibration_run": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

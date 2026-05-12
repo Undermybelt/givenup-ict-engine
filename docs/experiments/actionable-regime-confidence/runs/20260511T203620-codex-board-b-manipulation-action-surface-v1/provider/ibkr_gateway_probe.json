@@ -1,0 +1,20 @@
+{
+  "host": "127.0.0.1",
+  "ports": [
+    {
+      "port": 4002,
+      "tcp_connect": true
+    },
+    {
+      "error": "[Errno 61] Connection refused",
+      "port": 7497,
+      "tcp_connect": false
+    },
+    {
+      "error": "[Errno 61] Connection refused",
+      "port": 7496,
+      "tcp_connect": false
+    }
+  ],
+  "probe": "ibkr_gateway_socket"
+}

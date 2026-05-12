@@ -1,0 +1,4 @@
+root_class,state,rule,calibration_support,test_support,calibration_lcb,test_lcb,test_coverage,ece,blockers
+Bull,blocked,breadth_above_ma200 <= 0.318181818182,462,39,0.2794295367966663,0.014177955415274114,0.017105263157894738,0.26906426906426906,test_support_below_60|calibration_wilson95_below_0_95|test_wilson95_below_0_95|coverage_below_0_03|ece_above_0_05|validation_timeframes_below_2
+Bear,blocked,panel_range20_mean <= 0.0127445794453,63,588,0.5599646825583142,0.17188621095779558,0.2578947368421053,0.4801587301587302,calibration_support_below_120|calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05|validation_timeframes_below_2
+Sideways,blocked,vol20 <= 0.00465418081575,15,48,0.6211801716767764,0.504390570103431,0.021052631578947368,0.22083333333333333,calibration_support_below_120|test_support_below_60|calibration_wilson95_below_0_95|test_wilson95_below_0_95|coverage_below_0_03|ece_above_0_05|validation_timeframes_below_2

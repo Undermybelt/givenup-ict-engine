@@ -1,0 +1,38 @@
+{
+  "run_id": "20260511T074500+0800-codex-taxonomy-conflict-resolution",
+  "goal_achieved": false,
+  "objective": "Resolve Board A taxonomy drift before continuing regime-confidence work.",
+  "decision": {
+    "active_taxonomy": "MainRegimeV2",
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "separate_direct_overlay": "Manipulation",
+    "residual": "UnknownOrMixed",
+    "superseded_drift_runs": [
+      "20260511T073701+0800-codex-main-regime-v3-reopened-source-refresh",
+      "20260511T074100+0800-codex-mainregimev3-reassert-after-v2-drift"
+    ],
+    "controlling_provenance": [
+      "latest visible user correction: expanded labels look like subclasses under main-class regime",
+      "20260511T074243+0800-codex-mainregimev2-external-correction-repoint",
+      "20260511T074000+0800-codex-mainregimev2-reassert-after-v3-drift"
+    ]
+  },
+  "completion_accounting": {
+    "accepted_full_cycle_full_universe": false,
+    "gate_result": "taxonomy_conflict_resolved_mainregimev2_full_universe_still_blocked",
+    "why_not_accepted": [
+      "Taxonomy conflict resolution is not a confidence packet.",
+      "Ready OHLCV/cache cells still lack independent source-backed MainRegimeV2 labels across the expanded provider/cycle matrix.",
+      "Manipulation remains a separate direct-event overlay and cannot be accepted from OHLCV proxy labels."
+    ]
+  },
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "next_action": "Attach or acquire an independent MainRegimeV2 four-root label panel for ready yfinance/Kraken/local cells, or run limited sidecar mapping audits only as provenance without promoting subtype/proxy labels."
+}

@@ -1,0 +1,196 @@
+{
+  "artifact_inputs": {
+    "direct_intake_readback": "docs/experiments/actionable-regime-confidence/runs/20260511T193301-codex-direct-manipulation-intake-verifier-readback-v1/direct-manipulation-intake-verifier-readback/direct_manipulation_intake_verifier_readback_v1.json",
+    "direct_missing_species_v2": "docs/experiments/actionable-regime-confidence/runs/20260511T191642-codex-direct-missing-species-source-screen-v2/direct-missing-species-screen/direct_missing_species_source_screen_v2.json",
+    "external_source_second": "docs/experiments/actionable-regime-confidence/runs/20260511T191623-codex-external-source-label-second-screen-v1/external-source-label-second-screen/external_source_label_second_screen_v1.json",
+    "future_tail": "docs/experiments/actionable-regime-confidence/runs/20260511T190440-codex-strict-1h-future-tail-gate-rerun-v1/future-tail-gate-rerun/strict_1h_future_tail_gate_rerun_v1.json",
+    "native_subhour_external": "docs/experiments/actionable-regime-confidence/runs/20260511T192750-codex-native-subhour-external-source-screen-v1/native-subhour-external-source-screen/native_subhour_external_source_screen_v1.json",
+    "native_subhour_quarantine": "docs/experiments/actionable-regime-confidence/runs/20260511T192248-codex-native-subhour-projection-quarantine-v1/native-subhour-projection-quarantine/native_subhour_projection_quarantine_v1.json",
+    "panel_exhaustion": "docs/experiments/actionable-regime-confidence/runs/20260511T192900-codex-strict-1h-contract-panel-exhaustion-v1/strict-1h-contract-panel-exhaustion/strict_1h_contract_panel_exhaustion_v1.json",
+    "stock_recency": "docs/experiments/actionable-regime-confidence/runs/20260511T192218-codex-stock-regime-kaggle-live-recency-check-v1/kaggle-live-recency/stock_regime_kaggle_live_recency_check_v1.json",
+    "strict_intake": "docs/experiments/actionable-regime-confidence/runs/20260511T192432-codex-strict-1h-source-intake-verifier-readback-v1/source-intake-verifier-readback/strict_1h_source_intake_verifier_readback_v1.json",
+    "timeframe": "docs/experiments/actionable-regime-confidence/runs/20260511T185126-codex-timeframe-cycle-coverage-readback-v1/timeframe-cycle-readback/timeframe_cycle_coverage_readback_v1.json",
+    "v22": "docs/experiments/actionable-regime-confidence/runs/20260511T192655-codex-current-goal-completion-audit-v22-after-intake-and-subhour-readbacks/completion-audit/current_goal_completion_audit_v22_after_intake_and_subhour_readbacks.json"
+  },
+  "artifact_type": "current_goal_completion_audit_v23_after_direct_intake_and_panel_exhaustion",
+  "board_sha256_before_audit": "a54f7176a885bfbc688c348e34822b6e251b1cfff63a7a5b71f72a6afa904977",
+  "decision": {
+    "accepted_rows_added": 0,
+    "blocking_requirement_count": 7,
+    "blocking_requirements": [
+      "Other-cycle/timeframe validation has suitable confidence.",
+      "Strict 1h next-source intake has source-owned rows and provenance.",
+      "Existing source panel can supply the strict 1h contract gaps without duplicate evidence.",
+      "XOM/Sideways has recency-tail repair rows for the next strict 1h gap.",
+      "Native sub-hour source labels exist for cross-timeframe validation.",
+      "Other-market/source-label equivalence has suitable confidence.",
+      "Direct Manipulation has full species coverage with real positives and matched controls."
+    ],
+    "direct_intake_missing_files": 3,
+    "gate_result": "current_goal_completion_audit_v23=direct_intake_and_panel_exhaustion_confirm_full_objective_blocked",
+    "native_subhour_eligible_rows": 0,
+    "new_confidence_gate": false,
+    "panel_extra_rows": 0,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_1h_fixed_gate_rows": 41,
+    "strict_1h_future_protocol_rows": 45,
+    "strict_1h_total_slots": 156,
+    "strict_full_objective_achieved": false,
+    "strict_intake_missing_files": 2,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T11:36:21.688742+00:00",
+  "objective": "Every regime must have calibrated >=95% confidence, and the confidence must remain suitable on other markets and other cycles/timeframes.",
+  "prompt_to_artifact_checklist": [
+    {
+      "artifact": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "evidence": "board_sha256_before_audit=a54f7176a885bfbc688c348e34822b6e251b1cfff63a7a5b71f72a6afa904977",
+      "gap": "",
+      "id": "R0",
+      "requirement": "Use the named Board A markdown as the execution contract.",
+      "status": "pass_checked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192655-codex-current-goal-completion-audit-v22-after-intake-and-subhour-readbacks/completion-audit/current_goal_completion_audit_v22_after_intake_and_subhour_readbacks.json",
+      "evidence": "v22_gate=current_goal_completion_audit_v22=intake_and_subhour_readbacks_confirm_full_objective_blocked; scoped_active_lane_95_present=true",
+      "gap": "Scoped active-lane >=95% evidence exists, but full transfer validation is still incomplete.",
+      "id": "R1",
+      "requirement": "Every active regime has calibrated >=95% confidence.",
+      "status": "scoped_pass_not_full"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185126-codex-timeframe-cycle-coverage-readback-v1/timeframe-cycle-readback/timeframe_cycle_coverage_readback_v1.json",
+      "evidence": "strict_1h_fixed=41/156; future_protocol=45/156; native_subhour=0/4",
+      "gap": "Fixed strict 1h remains 41/156, future protocol remains 45/156, and native sub-hour remains 0/4.",
+      "id": "R2",
+      "requirement": "Other-cycle/timeframe validation has suitable confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192432-codex-strict-1h-source-intake-verifier-readback-v1/source-intake-verifier-readback/strict_1h_source_intake_verifier_readback_v1.json",
+      "evidence": "status=blocked; reason=missing_required_files; missing_files=2; live_files=0",
+      "gap": "The source-label equivalence intake files are absent.",
+      "id": "R3",
+      "requirement": "Strict 1h next-source intake has source-owned rows and provenance.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192900-codex-strict-1h-contract-panel-exhaustion-v1/strict-1h-contract-panel-exhaustion/strict_1h_contract_panel_exhaustion_v1.json",
+      "evidence": "targets_materializable=0; extra_rows=0; intake_files_created=False",
+      "gap": "The current source panel has zero extra rows beyond already-counted strict-gate support.",
+      "id": "R4",
+      "requirement": "Existing source panel can supply the strict 1h contract gaps without duplicate evidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192218-codex-stock-regime-kaggle-live-recency-check-v1/kaggle-live-recency/stock_regime_kaggle_live_recency_check_v1.json",
+      "evidence": "gate=stock_regime_kaggle_live_recency_check_v1=upstream_current_file_no_xom_sideways_tail_repair; xom_sideways_2025=68; xom_sideways_tail=0; xom_sideways_after_2026_01_30=0",
+      "gap": "The live source file has no XOM/Sideways Jan-2026 tail or post-2026-01-30 rows.",
+      "id": "R5",
+      "requirement": "XOM/Sideways has recency-tail repair rows for the next strict 1h gap.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192750-codex-native-subhour-external-source-screen-v1/native-subhour-external-source-screen/native_subhour_external_source_screen_v1.json",
+      "evidence": "quarantine_gate=native_subhour_projection_quarantine_v1=projected_subhour_rows_not_native_source_labels; eligible_rows=0; external_gate=native_subhour_external_source_screen_v1=no_ready_native_subhour_source_labels; ready_native_rows=0",
+      "gap": "Projection rows were quarantined and targeted external search found zero ready native sub-hour source labels.",
+      "id": "R6",
+      "requirement": "Native sub-hour source labels exist for cross-timeframe validation.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T191623-codex-external-source-label-second-screen-v1/external-source-label-second-screen/external_source_label_second_screen_v1.json",
+      "evidence": "gate=external_source_label_second_screen_v1=no_promotable_source_label_equivalence; accepted_rows_added=0; full_equivalence=False",
+      "gap": "No owner-approved MainRegimeV2 equivalence rows were promoted.",
+      "id": "R7",
+      "requirement": "Other-market/source-label equivalence has suitable confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T193301-codex-direct-manipulation-intake-verifier-readback-v1/direct-manipulation-intake-verifier-readback/direct_manipulation_intake_verifier_readback_v1.json",
+      "evidence": "species_gate=direct_missing_species_source_screen_v2=no_ready_positive_control_source; ready_sources=0; intake_decision=direct_manipulation_intake_verifier_readback_v1=blocked_missing_direct_intake_files; direct_missing_files=3",
+      "gap": "Direct species source screen found zero ready sources, and direct intake files are absent.",
+      "id": "R8",
+      "requirement": "Direct Manipulation has full species coverage with real positives and matched controls.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192900-codex-strict-1h-contract-panel-exhaustion-v1/strict-1h-contract-panel-exhaustion/strict_1h_contract_panel_exhaustion_v1.json",
+      "evidence": "panel_exhaustion blocks duplicate rows; native subhour quarantine blocks projected rows; HMM-generated labels remain rejected",
+      "gap": "",
+      "id": "R9",
+      "requirement": "Do not promote proxy/generated labels or duplicated rows.",
+      "status": "pass_guardrail"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192655-codex-current-goal-completion-audit-v22-after-intake-and-subhour-readbacks/completion-audit/current_goal_completion_audit_v22_after_intake_and_subhour_readbacks.json",
+      "evidence": "v22_update_goal=False; strict_intake_update_goal=False; direct_intake_update_goal=False",
+      "gap": "",
+      "id": "R10",
+      "requirement": "Do not mark the active goal complete until every requirement is covered.",
+      "status": "pass_guardrail"
+    }
+  ],
+  "run_id": "20260511T193504+0800-codex-current-goal-completion-audit-v23-after-direct-intake-and-panel-exhaustion",
+  "unmet_requirements": [
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185126-codex-timeframe-cycle-coverage-readback-v1/timeframe-cycle-readback/timeframe_cycle_coverage_readback_v1.json",
+      "evidence": "strict_1h_fixed=41/156; future_protocol=45/156; native_subhour=0/4",
+      "gap": "Fixed strict 1h remains 41/156, future protocol remains 45/156, and native sub-hour remains 0/4.",
+      "id": "R2",
+      "requirement": "Other-cycle/timeframe validation has suitable confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192432-codex-strict-1h-source-intake-verifier-readback-v1/source-intake-verifier-readback/strict_1h_source_intake_verifier_readback_v1.json",
+      "evidence": "status=blocked; reason=missing_required_files; missing_files=2; live_files=0",
+      "gap": "The source-label equivalence intake files are absent.",
+      "id": "R3",
+      "requirement": "Strict 1h next-source intake has source-owned rows and provenance.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192900-codex-strict-1h-contract-panel-exhaustion-v1/strict-1h-contract-panel-exhaustion/strict_1h_contract_panel_exhaustion_v1.json",
+      "evidence": "targets_materializable=0; extra_rows=0; intake_files_created=False",
+      "gap": "The current source panel has zero extra rows beyond already-counted strict-gate support.",
+      "id": "R4",
+      "requirement": "Existing source panel can supply the strict 1h contract gaps without duplicate evidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192218-codex-stock-regime-kaggle-live-recency-check-v1/kaggle-live-recency/stock_regime_kaggle_live_recency_check_v1.json",
+      "evidence": "gate=stock_regime_kaggle_live_recency_check_v1=upstream_current_file_no_xom_sideways_tail_repair; xom_sideways_2025=68; xom_sideways_tail=0; xom_sideways_after_2026_01_30=0",
+      "gap": "The live source file has no XOM/Sideways Jan-2026 tail or post-2026-01-30 rows.",
+      "id": "R5",
+      "requirement": "XOM/Sideways has recency-tail repair rows for the next strict 1h gap.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T192750-codex-native-subhour-external-source-screen-v1/native-subhour-external-source-screen/native_subhour_external_source_screen_v1.json",
+      "evidence": "quarantine_gate=native_subhour_projection_quarantine_v1=projected_subhour_rows_not_native_source_labels; eligible_rows=0; external_gate=native_subhour_external_source_screen_v1=no_ready_native_subhour_source_labels; ready_native_rows=0",
+      "gap": "Projection rows were quarantined and targeted external search found zero ready native sub-hour source labels.",
+      "id": "R6",
+      "requirement": "Native sub-hour source labels exist for cross-timeframe validation.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T191623-codex-external-source-label-second-screen-v1/external-source-label-second-screen/external_source_label_second_screen_v1.json",
+      "evidence": "gate=external_source_label_second_screen_v1=no_promotable_source_label_equivalence; accepted_rows_added=0; full_equivalence=False",
+      "gap": "No owner-approved MainRegimeV2 equivalence rows were promoted.",
+      "id": "R7",
+      "requirement": "Other-market/source-label equivalence has suitable confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T193301-codex-direct-manipulation-intake-verifier-readback-v1/direct-manipulation-intake-verifier-readback/direct_manipulation_intake_verifier_readback_v1.json",
+      "evidence": "species_gate=direct_missing_species_source_screen_v2=no_ready_positive_control_source; ready_sources=0; intake_decision=direct_manipulation_intake_verifier_readback_v1=blocked_missing_direct_intake_files; direct_missing_files=3",
+      "gap": "Direct species source screen found zero ready sources, and direct intake files are absent.",
+      "id": "R8",
+      "requirement": "Direct Manipulation has full species coverage with real positives and matched controls.",
+      "status": "fail_blocked"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+PASS gate_result=055212_missing_artifact_correction_v1=prior_registration_artifacts_missing_do_not_count_no_promotion
+PASS prior_055212_root_missing=true
+PASS accepted_rows_added=0
+PASS source_control_evidence_acquired=false
+PASS target_root_mutated=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS required_target_roots_absent=true

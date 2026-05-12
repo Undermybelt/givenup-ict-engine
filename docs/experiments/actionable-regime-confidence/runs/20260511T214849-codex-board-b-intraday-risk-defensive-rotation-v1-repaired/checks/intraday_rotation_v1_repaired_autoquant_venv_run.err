@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T214849-codex-board-b-intraday-risk-defensive-rotation-v1-repaired/scripts/intraday_risk_defensive_rotation_v1_repaired.py", line 44, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T214849-codex-board-b-intraday-risk-defensive-rotation-v1-repaired/scripts/intraday_risk_defensive_rotation_v1_repaired.py", line 37, in main
+    module = load_source()
+             ^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T214849-codex-board-b-intraday-risk-defensive-rotation-v1-repaired/scripts/intraday_risk_defensive_rotation_v1_repaired.py", line 32, in load_source
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1073, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1130, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T214454-codex-board-b-intraday-risk-defensive-rotation-v1/scripts/intraday_risk_defensive_rotation_v1.py'

@@ -1,0 +1,197 @@
+{
+  "schema_version": "board-a-sticky-hazard-contract-audit/v1",
+  "loop_id": "20260510T211206+0800-codex-sticky-hazard-contract-audit",
+  "objective": "Audit the sticky-hazard accepted packets against the current Board A output contract before promoting Board A to accepted_95.",
+  "audited_artifacts": {
+    "per_regime_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_per_regime.json",
+    "cross_context_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json",
+    "cross_context_report": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/cross-context/cross_context_sticky_hazard_report.json",
+    "a10_fail_closed_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T205717-hermes-a10-order-flow-input-audit/evidence_packet_a10_order_flow_input_audit.json"
+  },
+  "required_contract_fields": [
+    "accepted_regime_id",
+    "qualifying_condition",
+    "market",
+    "timeframe",
+    "horizon",
+    "allowed_action",
+    "confidence_lane",
+    "precision_wilson_lcb",
+    "calibration_support",
+    "test_support",
+    "ece",
+    "coverage",
+    "validation_instruments",
+    "validation_periods",
+    "validation_market_contexts",
+    "transition_hazard",
+    "duration_viable",
+    "downstream_evidence_fields",
+    "artifact_path"
+  ],
+  "thresholds_relaxed": false,
+  "field_contract_summary": {
+    "required_regime_count": 6,
+    "field_complete_required_regimes": 3,
+    "legacy_numeric_accepts_missing_contract_fields": 3,
+    "all_required_regimes_covered_under_current_contract": false
+  },
+  "per_regime_audit": [
+    {
+      "required_regime": "SessionLiquidityCoreViable",
+      "source_packet_status": "existing_accepted_regime_packets",
+      "numeric_gate_status": "accepted_95_legacy",
+      "field_contract_status": "fail",
+      "missing_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "precision_wilson_lcb": 0.9899396497369397,
+      "calibration_support": 378,
+      "test_support": 378,
+      "ece": 0.010582010582010581,
+      "coverage": 0.3776223776223776,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json"
+    },
+    {
+      "required_regime": "TrendExpansion",
+      "source_packet_status": "accepted_new_regime_packets",
+      "numeric_gate_status": "accepted_95",
+      "field_contract_status": "pass",
+      "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_periods": [
+        "train",
+        "calibration",
+        "test"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "precision_wilson_lcb": 0.9536435698638122,
+      "calibration_support": 273,
+      "test_support": 581,
+      "ece": 0.036674169204289675,
+      "coverage": 0.14310344827586208,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    {
+      "required_regime": "RangeConsolidation",
+      "source_packet_status": "existing_accepted_regime_packets",
+      "numeric_gate_status": "accepted_95_legacy",
+      "field_contract_status": "fail",
+      "missing_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "precision_wilson_lcb": 0.9676071866741978,
+      "calibration_support": 467,
+      "test_support": 313,
+      "ece": 0.004488121867580741,
+      "coverage": 0.06341166936790923,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json"
+    },
+    {
+      "required_regime": "ExtremeStress",
+      "source_packet_status": "accepted_new_regime_packets",
+      "numeric_gate_status": "accepted_95",
+      "field_contract_status": "pass",
+      "qualifying_condition": "stress_persistence_16 >= 1 AND jump_intensity_32 >= 0.125",
+      "validation_instruments": [
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_periods": [
+        "train",
+        "calibration",
+        "test"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF"
+      ],
+      "precision_wilson_lcb": 0.9741288651988539,
+      "calibration_support": 445,
+      "test_support": 215,
+      "ece": 0.015573556310425896,
+      "coverage": 0.05279960707269155,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    {
+      "required_regime": "ReversalBrewing",
+      "source_packet_status": "accepted_new_regime_packets",
+      "numeric_gate_status": "accepted_95",
+      "field_contract_status": "pass",
+      "qualifying_condition": "ma64_slope16 <= 0.00115583574 AND stretch64 <= 0.005836516932",
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_periods": [
+        "train",
+        "calibration",
+        "test"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "precision_wilson_lcb": 0.9919428347812438,
+      "calibration_support": 843,
+      "test_support": 901,
+      "ece": 0.0013389630343508818,
+      "coverage": 0.22192118226600985,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    {
+      "required_regime": "ThinLiquidity",
+      "source_packet_status": "existing_accepted_regime_packets",
+      "source_regime_id": "ThinLiquidityOffHoursPersistent",
+      "numeric_gate_status": "accepted_95_legacy",
+      "field_contract_status": "fail",
+      "missing_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "precision_wilson_lcb": 0.9775144812786577,
+      "calibration_support": 125,
+      "test_support": 167,
+      "ece": 0.0,
+      "coverage": 0.16683316683316685,
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json"
+    }
+  ],
+  "decision": {
+    "board_state": "active",
+    "accepted_gate": "incomplete_under_current_contract",
+    "trade_usable": false,
+    "why_not_accepted_95": [
+      "The sticky-hazard cross-context packet has field-complete accepted_95 packets for TrendExpansion, ExtremeStress, and ReversalBrewing.",
+      "The carried legacy accepted packets for SessionLiquidityCoreViable, RangeConsolidation, and ThinLiquidity/ThinLiquidityOffHoursPersistent do not expose qualifying_condition, validation_instruments, validation_periods, or validation_market_contexts.",
+      "Board A requires every required regime, including already accepted packets, to satisfy the same explicit rule and cross-context field contract."
+    ],
+    "next_action": "Reissue or enrich SessionLiquidityCoreViable, RangeConsolidation, and ThinLiquidity accepted packets with explicit qualifying conditions plus validation_instruments, validation_periods, and validation_market_contexts; if any cannot be defended from real chronological evidence, mark that regime contract-incomplete instead of promoting Board A."
+  },
+  "a10_order_flow_status": {
+    "status": "blocked",
+    "blocker": "missing_required_inputs",
+    "note": "The A10 order-flow entropy lane remains fail-closed until aligned historical tick/trade tape plus bid/ask or L2 depth is attached."
+  }
+}

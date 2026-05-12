@@ -1,0 +1,6 @@
+   76430 docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv
+    1001 docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/bybit_linear_btcusdt_1h_20200101_20260512.normalized.csv
+   20035 docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/ibkr_spy_1h_5y.normalized.csv
+    2001 docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/kraken_futures_pfxbtusd_1h_20200101_20260512.normalized.csv
+   11384 docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv
+  110851 total

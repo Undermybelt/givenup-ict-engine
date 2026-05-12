@@ -1,0 +1,113 @@
+{
+  "run_id": "20260511T111647+0800-codex-pumpolymp-live-api-direct-preflight",
+  "generated_at_utc": "2026-05-11T03:19:57.208456+00:00",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV2",
+  "objective": "Preflight the live PumpOlymp API for accepted direct Manipulation rows under Board A.",
+  "source": {
+    "app_url": "https://pumpolymp.com/analytics/allPumps",
+    "app_js": "https://pumpolymp.com/assets/index-Bp9XoqCY.js",
+    "api_base": "https://api.pumpolymp.com",
+    "endpoints_probed": [
+      "https://api.pumpolymp.com/api/pumps/summary?limit=25&offset=0",
+      "https://api.pumpolymp.com/api/pumps/latest?limit=1"
+    ],
+    "html_contains_pump_viewer": true
+  },
+  "readback": {
+    "summary_total": 27224,
+    "summary_count": 25,
+    "summary_limit": 25,
+    "summary_offset": 0,
+    "sample_unique_pairs_in_first_page": 15,
+    "first_page_start_time_min": "2026-01-15T00:17:57",
+    "first_page_start_time_max": "2026-01-15T03:08:52",
+    "sample_item_schema": {
+      "id": "str",
+      "dedupe_key": "str",
+      "pair_name": "str",
+      "pair_address": "str",
+      "token0_symbol": "str",
+      "token1_symbol": "str",
+      "token0_address": "str",
+      "token1_address": "str",
+      "token0_decimals": "int",
+      "token1_decimals": "int",
+      "start_block": "int",
+      "start_time_utc": "str",
+      "start_price": "float",
+      "peak_block": "int",
+      "peak_time_utc": "str",
+      "peak_price": "float",
+      "end_block": "int",
+      "end_time_utc": "str",
+      "growth_x": "float",
+      "window_seconds": "int",
+      "points_count": "int",
+      "external_links": {
+        "type": "list",
+        "sample_len": 1
+      }
+    },
+    "latest_detail_schema": {
+      "id": "str",
+      "dedupe_key": "str",
+      "pair_name": "str",
+      "pair_address": "str",
+      "token0_symbol": "str",
+      "token1_symbol": "str",
+      "token0_address": "str",
+      "token1_address": "str",
+      "token0_decimals": "int",
+      "token1_decimals": "int",
+      "start_block": "int",
+      "start_time_utc": "str",
+      "start_price": "float",
+      "peak_block": "int",
+      "peak_time_utc": "str",
+      "peak_price": "float",
+      "end_block": "int",
+      "end_time_utc": "str",
+      "growth_x": "float",
+      "window_seconds": "int",
+      "points_count": "int",
+      "external_links": {
+        "type": "list",
+        "sample_len": 1
+      },
+      "points": {
+        "type": "list",
+        "sample_len": 1343,
+        "point_keys": [
+          "block_number",
+          "log_pos",
+          "price",
+          "receipt_index",
+          "timestamp_utc"
+        ]
+      }
+    },
+    "point_schema": [
+      "block_number",
+      "log_pos",
+      "price",
+      "receipt_index",
+      "timestamp_utc"
+    ],
+    "positive_pump_documents_available": true,
+    "same_asset_venue_negative_controls_available": false,
+    "manual_or_adjudicated_event_label_source_visible": false,
+    "current_provider_exact_match": "BSC/DexScreener-style pair archive; not yfinance/Kraken MainRegimeV2 parent-root slot data"
+  },
+  "result": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_direct_manipulation_sources_added": 0,
+    "gate_result": "blocked_pumpolymp_live_api_positive_only_no_negative_controls",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "Use this live API only as a direct-positive acquisition lead until same-pair non-pump controls or an adjudicated label/export contract is available; do not count positive-only detector output as accepted Manipulation coverage."
+}

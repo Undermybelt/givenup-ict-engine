@@ -1,0 +1,9 @@
+axis,name,positive_support,negative_support,positive_lcb,negative_lcb,min_lcb,positive_rows_needed_for_95,negative_rows_needed_for_95,pair_rows_needed_for_95,pass
+market_family,agriculture_futures,5,5,0.565517535217,0.565517535217,0.565517535217,68,68,68,False
+market_family,energy_futures,14,14,0.784689197262,0.784689197262,0.784689197262,59,59,59,False
+market_family,equity_index_futures,15,15,0.796116698964,0.796116698964,0.796116698964,58,58,58,False
+market_family,metals_futures,39,39,0.910333146292,0.910333146292,0.910333146292,34,34,34,False
+venue_family,agriculture_or_rates_venues_cbot,6,6,0.609665712098,0.609665712098,0.609665712098,67,67,67,False
+venue_family,cme_globex_index_or_generic,19,19,0.831820775947,0.831820775947,0.831820775947,54,54,54,False
+venue_family,energy_venues_nymex_ice,9,9,0.70085495158,0.70085495158,0.70085495158,64,64,64,False
+venue_family,metals_venues_comex_lme,39,39,0.910333146292,0.910333146292,0.910333146292,34,34,34,False

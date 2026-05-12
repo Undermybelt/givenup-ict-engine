@@ -1,0 +1,153 @@
+2026-05-11 18:27:26,396 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-11 18:27:26,397 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-11 18:27:26,405 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-11 18:27:26,943 - ccxt.base.exchange - WARNING - binance requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async 
+coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2026-05-11 18:27:26,945 - asyncio - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x11f870bb0>, 682131.589014)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x11f872820>, 682131.956465916)])', 
+'deque([(<aiohttp.client_proto.ResponseHandler object at 0x11f872b30>, 682132.007353208)])']
+connector: <aiohttp.connector.TCPConnector object at 0x11f114e10>
+2026-05-11 18:27:27,387 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-11 18:27:27,759 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy RootAwareMultiBranchV1 from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/strategies/RootAwareMultiBranchV1.py'..
+.
+2026-05-11 18:27:27,759 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-11 18:27:27,760 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-11 18:27:27,761 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-11 18:27:27,762 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-11 18:27:27,762 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-11 18:27:27,762 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 5.
+2026-05-11 18:27:27,762 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-11 18:27:27,763 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-11 18:27:27,763 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.99
+2026-05-11 18:27:27,763 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-11 18:27:27,763 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-11 18:27:27,763 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-11 18:27:27,763 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-11 18:27:27,764 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-11 18:27:27,765 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-11 18:27:27,765 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-11 18:27:27,765 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-11 18:27:27,766 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-11 18:27:27,766 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 250
+2026-05-11 18:27:27,767 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-11 18:27:27,767 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-11 18:27:27,767 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-11 18:27:27,767 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-11 18:27:27,767 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-11 18:27:27,768 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-11 18:27:27,770 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-11 18:27:27,771 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-11 18:27:27,771 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-11 18:27:27,772 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 5
+2026-05-11 18:27:27,772 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-11 18:27:27,779 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-11 18:27:27,800 - freqtrade.optimize.backtesting - INFO - Using fee 0.1000% from config.
+2026-05-11 18:27:27,923 - freqtrade.optimize.backtesting - INFO - Loading data from 2022-12-21 14:00:00 up to 2025-12-31 00:00:00 (1105 days).
+2026-05-11 18:27:30,610 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-11 18:27:30,615 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy RootAwareMultiBranchV1
+2026-05-11 18:27:30,621 - freqtrade.data.dataprovider - INFO - Loading data for BTC/USDT 4h from 2022-11-20 08:00:00 to 2025-12-31 00:00:00
+2026-05-11 18:27:30,956 - freqtrade.data.dataprovider - INFO - Loading data for ETH/USDT 4h from 2022-11-20 08:00:00 to 2025-12-31 00:00:00
+2026-05-11 18:27:31,235 - freqtrade.data.dataprovider - INFO - Loading data for SOL/USDT 4h from 2022-11-20 08:00:00 to 2025-12-31 00:00:00
+2026-05-11 18:27:33,290 - freqtrade.data.dataprovider - INFO - Loading data for BNB/USDT 4h from 2022-11-20 08:00:00 to 2025-12-31 00:00:00
+2026-05-11 18:27:33,521 - freqtrade.data.dataprovider - INFO - Loading data for AVAX/USDT 4h from 2022-11-20 08:00:00 to 2025-12-31 00:00:00
+2026-05-11 18:27:33,732 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2023-01-01 00:00:00 up to 2025-12-31 00:00:00 (1095 days).
+Result for strategy RootAwareMultiBranchV1
+                                               BACKTESTING REPORT                                               
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  SOL/USDT │    138 │         1.12 │         400.365 │          4.0 │ 1 day, 9:56:00 │   45     0    93  32.6 │
+│  BTC/USDT │    160 │         0.18 │         373.981 │         3.74 │ 1 day, 7:45:00 │   49     0   111  30.6 │
+│  BNB/USDT │    153 │         0.21 │         297.150 │         2.97 │ 1 day, 8:07:00 │   49     0   104  32.0 │
+│ AVAX/USDT │    122 │         0.66 │         197.507 │         1.98 │ 1 day, 6:11:00 │   40     0    82  32.8 │
+│  ETH/USDT │    143 │         0.25 │         171.173 │         1.71 │ 1 day, 6:13:00 │   44     0    99  30.8 │
+│     TOTAL │    716 │         0.46 │        1440.177 │         14.4 │ 1 day, 7:41:00 │  227     0   489  31.7 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                                                     ENTER TAG STATS                                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                         Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Bull->TrendExpansion->Donchian24Ema4hTrendVolumeVolTarget->RootAwareMultiBranchV1 │     716 │         0.46 │        1440.177 │         14.4 │ 1 day, 7:41:00 │  227     0   489  31.7 │
+│                                                                             TOTAL │     716 │         0.46 │        1440.177 │         14.4 │ 1 day, 7:41:00 │  227     0   489  31.7 │
+└───────────────────────────────────────────────────────────────────────────────────┴─────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │   716 │         0.46 │        1440.177 │         14.4 │ 1 day, 7:41:00 │  227     0   489  31.7 │
+│       TOTAL │   716 │         0.46 │        1440.177 │         14.4 │ 1 day, 7:41:00 │  227     0   489  31.7 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                                                           MIXED TAG STATS                                                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                         Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Bull->TrendExpansion->Donchian24Ema4hTrendVolumeVolTarget->RootAwareMultiBranchV1 │ exit_signal │    716 │         0.46 │        1440.177 │         14.4 │ 1 day, 7:41:00 │  227     0   489  31.7 │
+│                                                                             TOTAL │             │    716 │         0.46 │        1440.177 │         14.4 │ 1 day, 7:41:00 │  227     0   489  31.7 │
+└───────────────────────────────────────────────────────────────────────────────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2023-01-01 00:00:00            │
+│ Backtesting to                │ 2025-12-31 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 5                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 716 / 0.65                     │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 11440.177 USDT                 │
+│ Absolute profit               │ 1440.177 USDT                  │
+│ Total profit %                │ 14.40%                         │
+│ CAGR %                        │ 4.59%                          │
+│ Sortino                       │ 7.28                           │
+│ Sharpe                        │ 1.30                           │
+│ Calmar                        │ 9.43                           │
+│ SQN                           │ 2.79                           │
+│ Profit factor                 │ 1.47                           │
+│ Expectancy (Ratio)            │ 2.01 (0.32)                    │
+│ Avg. daily profit             │ 1.315 USDT                     │
+│ Avg. stake amount             │ 397.866 USDT                   │
+│ Total trade volume            │ 572327.112 USDT                │
+│                               │                                │
+│ Best Pair                     │ SOL/USDT 4.00%                 │
+│ Worst Pair                    │ ETH/USDT 1.71%                 │
+│ Best trade                    │ SOL/USDT 50.07%                │
+│ Worst trade                   │ AVAX/USDT -7.27%               │
+│ Best day                      │ 368.405 USDT                   │
+│ Worst day                     │ -49.951 USDT                   │
+│ Days win/draw/lose            │ 120 / 657 / 250                │
+│ Min/Max/Avg. Duration Winners │ 1d 00:00 / 8d 09:00 / 2d 14:54 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 2d 08:00 / 0d 17:11 │
+│ Max Consecutive Wins / Loss   │ 6 / 13                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 9981.002 USDT                  │
+│ Max balance                   │ 11476.371 USDT                 │
+│ Max % of account underwater   │ 2.66%                          │
+│ Absolute drawdown             │ 279.26 USDT (2.66%)            │
+│ Drawdown duration             │ 288 days 06:00:00              │
+│ Profit at drawdown start      │ 483.697 USDT                   │
+│ Profit at drawdown end        │ 204.437 USDT                   │
+│ Drawdown start                │ 2023-01-22 21:00:00            │
+│ Drawdown end                  │ 2023-11-07 03:00:00            │
+│ Market change                 │ 399.71%                        │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2023-01-01 00:00:00 -> 2025-12-31 00:00:00 | Max open trades : 5
+                                                                 STRATEGY SUMMARY                                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃               Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃           Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ RootAwareMultiBranchV1 │    716 │         0.46 │        1440.177 │         14.4 │ 1 day, 7:41:00 │  227     0   489  31.7 │ 279.26 USDT  2.66% │
+└────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┴────────────────────┘

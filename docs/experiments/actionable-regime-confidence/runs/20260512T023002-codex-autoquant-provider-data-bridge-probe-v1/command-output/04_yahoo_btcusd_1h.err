@@ -1,0 +1,14 @@
+  yahoo BTC-USD: HTTP 429, retrying in 5s (attempt 1/5)
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 1685, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 1657, in main
+    return cmd_yahoo(args)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 236, in cmd_yahoo
+    df = _yahoo_chunked(fetcher, args.symbol, args.interval, start, end)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 217, in _yahoo_chunked
+    df = fetcher.fetch(symbol, interval, cursor, nxt)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 173, in fetch
+    raise RuntimeError(f"yahoo {symbol}: HTTP {last_status} {last_text!r}")
+RuntimeError: yahoo BTC-USD: HTTP 422 '{"chart":{"result":null,"error":{"code":"Unprocessable Entity","description":"1h data not available for startTime=1609459200 and endTime=1661299200. The requested range must be within the last 730 day'

@@ -1,0 +1,6 @@
+requirement,artifact,status,note
+source 121607 feedback,docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json,covered,20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1
+provider/cross-context windows,docs/experiments/actionable-regime-confidence/runs/20260512T122215+0800-codex-121607-bbn-calibration-readiness-v1/derived/121607_provider_windows_v1.json,covered,six provider windows
+candidate-only BBN CPD,docs/experiments/actionable-regime-confidence/runs/20260512T122215+0800-codex-121607-bbn-calibration-readiness-v1/derived/121607_bbn_cpd_candidate_smoothed_v1.json,covered,no production overwrite
+gate matrix,docs/experiments/actionable-regime-confidence/runs/20260512T122215+0800-codex-121607-bbn-calibration-readiness-v1/derived/121607_bbn_calibration_gate_matrix_v1.csv,covered,fail-closed gates explicit
+no promotion/update_goal,docs/experiments/actionable-regime-confidence/runs/20260512T122215+0800-codex-121607-bbn-calibration-readiness-v1/121607-bbn-calibration-readiness-v1/121607_bbn_calibration_readiness_v1.md,covered,promotion_allowed=false trade_usable=false update_goal=false

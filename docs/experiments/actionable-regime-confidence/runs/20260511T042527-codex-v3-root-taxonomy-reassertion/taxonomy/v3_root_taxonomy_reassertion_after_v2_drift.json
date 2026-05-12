@@ -1,0 +1,67 @@
+{
+  "schema_version": "board-a-v3-root-taxonomy-reassertion-after-v2-drift/v1",
+  "loop_id": "20260511T042527+0800-codex-v3-root-taxonomy-reassertion",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T042527-codex-v3-root-taxonomy-reassertion",
+  "supersedes": "20260511T042400+0800-codex-main-regime-v2-reassert-after-v3-drift",
+  "reason": "latest_user_correction_places_bull_expansion_bear_expansion_sideways_consolidation_and_manipulation_on_main_regime_layer",
+  "active_axis": "MainRegimeV3SourceBacked",
+  "accepted_roots_after_reassertion": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "CrisisCrash"
+  ],
+  "missing_roots_after_reassertion": [
+    "Manipulation"
+  ],
+  "crosswalked_positive_evidence": [
+    {
+      "loop_id": "20260511T041923+0800-codex-yahoo-sourcebacked-parent-root-gate",
+      "source_root": "Bear",
+      "active_root": "BearExpansion",
+      "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+      "calibration_wilson95_lcb": 0.993968,
+      "test_wilson95_lcb": 0.992722,
+      "test_coverage": 0.065582,
+      "validation_contexts": [
+        "crypto",
+        "equity_etf",
+        "1d",
+        "1w"
+      ],
+      "thresholds_relaxed": false
+    },
+    {
+      "loop_id": "20260511T041923+0800-codex-yahoo-sourcebacked-parent-root-gate",
+      "source_root": "Sideways",
+      "active_root": "SidewaysConsolidation",
+      "rule": "sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236",
+      "calibration_wilson95_lcb": 0.988647,
+      "test_wilson95_lcb": 0.995568,
+      "test_coverage": 0.10801,
+      "validation_contexts": [
+        "crypto",
+        "equity_etf",
+        "1d",
+        "1w"
+      ],
+      "thresholds_relaxed": false
+    }
+  ],
+  "negative_evidence_retained": [
+    {
+      "loop_id": "20260511T042400+0800-codex-main-regime-v2-reassert-after-v3-drift",
+      "source": "SystemsLab direct HGB manipulation gate",
+      "root": "Manipulation",
+      "calibration_wilson95_lcb": 0.863904,
+      "test_wilson95_lcb": 0.832241,
+      "test_coverage": 0.000674,
+      "accepted_95": false
+    }
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "fresh_calibration_rerun": false,
+  "trade_usable": false,
+  "gate_result": "v3_root_taxonomy_reasserted_after_v2_drift_with_bear_crosswalk"
+}

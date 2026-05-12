@@ -1,0 +1,9 @@
+requirement,status,evidence,blocker
+Read latest Board A contract,pass,docs/plans/2026-05-10-actionable-regime-confidence-todo.md sha256=f06120ce0132b05d81db4a1b0d1d6f4cb1351343ce3e1dee050e3aed1231369d,
+Count 075413 latest audit once,pass_fail_closed,board_a_latest_completion_audit_after_075009_v1=not_complete_no_required_root_unlock_no_downstream_promotion,075413 remains not complete with blocked requirements and no required-root unlock.
+Count 075411 Tomac sidecar scan once,pass_fail_closed,tomac_local_source_label_sidecar_scan_after_074844_v1=no_source_label_or_control_sidecar_no_unlock,No source-label or control sidecar; no accepted rows.
+Count 075420 provider/cache sweep once,pass_fail_closed,provider_cache_source_control_sweep_after_075206_v1=no_valid_required_root_no_unlock,Provider/cache inventory yielded no valid required root.
+Count 075426 local/download arrival sweep once,pass_fail_closed,local_download_arrival_sweep_after_075009_v1=no_new_required_source_control_unlock,Local/download candidates were not source labels or order-lifecycle controls.
+Do not promote proxy evidence,pass_fail_closed,"TSIE-derived R3, raw OHLCV, provider/cache inventory, local downloads, and runtime readiness remain non-promoting.","R6 owner/export, R5 source-panel recency, and verifier-native Crisis-capable R3 roots are still absent or quarantined."
+Do not run blocked downstream chain,pass,"No direct verifier, split calibration, canonical merge, selected-data AutoQuant, Pre-Bayes, BBN, CatBoost/path-ranking, or execution-tree promotion was run by this audit.",
+Completion objective,blocked,accepted_rows_added=0; valid_required_root_unlock=false; source_control_evidence_acquired=false; strict_full_objective=false; update_goal=false,Continue source/control acquisition only.

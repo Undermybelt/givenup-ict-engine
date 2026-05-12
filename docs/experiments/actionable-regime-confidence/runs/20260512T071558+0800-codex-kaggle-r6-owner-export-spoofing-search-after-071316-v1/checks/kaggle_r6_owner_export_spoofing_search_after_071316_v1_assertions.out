@@ -1,0 +1,16 @@
+gate_result=kaggle_r6_owner_export_spoofing_search_after_071316_v1=no_oystacher_owner_export_no_normal_controls_no_unlock
+oystacher_owner_export_found=false
+source_owned_normal_control_rows=false
+verifier_native_r6_owner_export_rows=false
+crypto_orderbook_context_hits=3
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+accepted_rows_added=0
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

@@ -1,0 +1,1554 @@
+[
+  {
+    "run_id": "analyze:NQ_LOCAL_AQ_MTF_123820:20260512T044313.602Z",
+    "timestamp": "2026-05-12T04:43:13.602113Z",
+    "symbol": "NQ_LOCAL_AQ_MTF_123820",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "5e87b98f216cf664",
+      "config_hash": "6a8db419e34bb13c",
+      "data_fingerprint": "8baa7c08f3637da8"
+    },
+    "decision_thresholds": {
+      "promotion_min_score_delta": 0.1,
+      "promotion_min_score": 0.7,
+      "rollback_score_delta": -0.1,
+      "rollback_probability_delta": 0.1,
+      "artifact_consumed_min_window": 3,
+      "artifact_consumed_improvement_quality_delta": 5.0,
+      "artifact_consumed_improvement_positive_rate_delta": 0.25,
+      "artifact_consumed_regression_quality_delta": -5.0,
+      "artifact_consumed_regression_positive_rate_delta": -0.25
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "promotion_decision": {
+      "approved": false,
+      "status": "observe",
+      "reason": "no_previous_run",
+      "target_factors": [],
+      "target_families": []
+    },
+    "rollback_recommendation": {
+      "should_rollback": false,
+      "scope": "none",
+      "reason": "analyze_observe_only",
+      "target_factors": [],
+      "target_families": []
+    },
+    "family_history_window": 5,
+    "source_command": "analyze",
+    "data_htf_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+    "data_mtf_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+    "data_ltf_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+    "live_data_source": null,
+    "htf_bars": 1500,
+    "mtf_bars": 1500,
+    "ltf_bars": 1500,
+    "selected_direction": "Bear",
+    "selected_entry_quality": "medium",
+    "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.144|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.3332 mtf_entry_alignment=0.9689",
+    "regime_probs": {
+      "accumulation": 0.2857142583515083,
+      "manipulation_expansion": 0.42857144806271225,
+      "distribution": 0.2857142935857794
+    },
+    "market_state_evidence": [
+      "primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629",
+      "volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550",
+      "rationale=volatility=ElevatedVol conf=0.66",
+      "rationale=structure=Trending conf=0.59",
+      "rationale=behavior=RiskOff conf=0.55",
+      "rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63"
+    ],
+    "entry_model_packets": {
+      "breaker_rb_long_v1": {
+        "atr14_bps": 9.60218383708535,
+        "bars_between_violation_and_retest": 1,
+        "breaker_width_bps": 2.8378950677383727,
+        "direction": "long",
+        "ema19_distance_bps": 12.305898060344285,
+        "evidence_quality_score": 0.14423512439311517,
+        "filtered_liquidity_context_label": "neutral",
+        "filtered_market_regime_label": "range",
+        "filtered_resonance_label": "mixed",
+        "origin_bar": 1392,
+        "rb_close_location_ratio": 0.704,
+        "rb_wick_body_ratio": 2.259259259259259,
+        "realized_vol_zscore": -1.7080430394638664,
+        "retest_bar": 1402,
+        "retest_reclaim_bps": 6.983605984950329,
+        "seq_window_hit": true,
+        "seq_window_limit": 14,
+        "session_label": "dead_zone",
+        "setup_model_id": "breaker_rb_long_v1",
+        "symbol": "NQ_LOCAL_AQ_MTF_123820",
+        "timeframe": "15m",
+        "violation_bar": 1401
+      },
+      "cisd_rb_long_v1": {
+        "atr14_bps": 17.96312879605377,
+        "bars_between_cisd_and_rb": 1,
+        "cisd_bars_required": 3,
+        "cisd_body_ratio_mean": 0.5164342312098323,
+        "cisd_impulse_atr": -0.03219574657080808,
+        "cisd_run_length_observed": 3,
+        "direction": "long",
+        "ema19_distance_bps": 14.34493671120023,
+        "evidence_quality_score": 0.14423512439311517,
+        "filtered_liquidity_context_label": "neutral",
+        "filtered_market_regime_label": "range",
+        "filtered_resonance_label": "mixed",
+        "liquidity_swept": false,
+        "mss_up": false,
+        "rb_bullish": true,
+        "rb_close_location_ratio": 0.9135254988913526,
+        "rb_wick_body_ratio": 1.641025641025641,
+        "realized_vol_zscore": -1.316628706165992,
+        "seq_window_hit": true,
+        "seq_window_limit": 18,
+        "session_label": "dead_zone",
+        "setup_model_id": "cisd_rb_long_v1",
+        "symbol": "NQ_LOCAL_AQ_MTF_123820",
+        "timeframe": "15m"
+      }
+    },
+    "hybrid_regime_label": "range_choppy",
+    "hybrid_regime_age_bars": 1,
+    "hybrid_duration_model": "geometric",
+    "hybrid_remaining_expected_bars": 3.0,
+    "pre_bayes_evidence_filter": {
+      "policy": {
+        "version": "318900600c5e8cf2",
+        "source": "default",
+        "min_directional_support_gap": 0.08,
+        "high_uncertainty_threshold": 0.45,
+        "min_multi_timeframe_alignment_score": 0.55,
+        "min_multi_timeframe_entry_alignment_score": 0.5,
+        "hard_pass_quality_threshold": 0.75,
+        "neutralized_quality_threshold": 0.4,
+        "directional_conflict_penalty": 0.2,
+        "mixed_alignment_penalty": 0.1,
+        "multi_timeframe_direction_conflict_penalty": 0.18,
+        "multi_timeframe_alignment_penalty": 0.1,
+        "multi_timeframe_entry_penalty": 0.08,
+        "multi_timeframe_alignment_bonus": 0.05,
+        "hostile_liquidity_penalty": 0.1,
+        "favorable_liquidity_bonus": 0.05,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "market_overrides": {
+          "CL": {
+            "hostile_liquidity_penalty": 0.14,
+            "favorable_liquidity_bonus": 0.03,
+            "hostile_liquidity_forces_high_uncertainty": true
+          },
+          "ES": {
+            "hostile_liquidity_penalty": 0.06,
+            "favorable_liquidity_bonus": 0.06,
+            "hostile_liquidity_forces_high_uncertainty": false
+          },
+          "GC": {
+            "hostile_liquidity_penalty": 0.09,
+            "favorable_liquidity_bonus": 0.07,
+            "hostile_liquidity_forces_high_uncertainty": false
+          },
+          "NQ": {
+            "hostile_liquidity_penalty": 0.1,
+            "favorable_liquidity_bonus": 0.04,
+            "hostile_liquidity_forces_high_uncertainty": true
+          },
+          "YM": {
+            "hostile_liquidity_penalty": 0.07,
+            "favorable_liquidity_bonus": 0.05,
+            "hostile_liquidity_forces_high_uncertainty": false
+          }
+        }
+      },
+      "entry_logic_id": null,
+      "logic_family": null,
+      "raw_market_regime_label": "bear",
+      "raw_liquidity_context_label": "neutral",
+      "raw_factor_alignment": "mixed",
+      "raw_factor_uncertainty": "high",
+      "raw_multi_timeframe_direction_bias": "bullish",
+      "raw_multi_timeframe_alignment_score": 0.3332,
+      "raw_multi_timeframe_entry_alignment_score": 0.9689,
+      "raw_multi_timeframe_resonance_label": "dislocated",
+      "active_pda_count": 0,
+      "inversed_pda_count": 0,
+      "stale_pda_count": 0,
+      "nearest_active_pda": null,
+      "nearest_inversed_pda": null,
+      "filtered_market_regime_label": "range",
+      "filtered_liquidity_context_label": "neutral",
+      "filtered_factor_alignment": "mixed",
+      "filtered_factor_uncertainty": "high",
+      "filtered_multi_timeframe_direction_bias": "neutral",
+      "filtered_multi_timeframe_alignment_score": 0.3332,
+      "filtered_multi_timeframe_entry_alignment_score": 0.9689,
+      "filtered_multi_timeframe_resonance_label": "mixed",
+      "evidence_quality_score": 0.14423512439311517,
+      "gating_status": "observe_only",
+      "pass_to_bbn": false,
+      "uses_soft_evidence": true,
+      "conflict_flags": [
+        "low_directional_separation",
+        "high_factor_uncertainty",
+        "multi_timeframe_direction_conflict",
+        "multi_timeframe_alignment_weak"
+      ],
+      "rationale": [
+        "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true",
+        "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969",
+        "long/short support gap 0.008 is too small, so alignment is treated as mixed",
+        "factor uncertainty 0.514 exceeds the hard-evidence comfort band",
+        "multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized",
+        "multi-timeframe alignment 0.333 is below the policy support floor 0.550",
+        "evidence quality is too low, so BBN input is downgraded to neutralized defaults",
+        "pre_bayes_quality_score=0.144 gating_status=observe_only",
+        "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629",
+        "market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550",
+        "market_state_source=rationale=volatility=ElevatedVol conf=0.66",
+        "market_state_source=rationale=structure=Trending conf=0.59",
+        "market_state_source=rationale=behavior=RiskOff conf=0.55",
+        "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63"
+      ],
+      "evidence_assignments": {
+        "factor_alignment": "mixed",
+        "factor_uncertainty": "high",
+        "liquidity_context": "neutral",
+        "market_regime": "range",
+        "market_state_primary_regime": "TrendExpansion",
+        "market_state_secondary_regime": "BullTrendAcceleration",
+        "multi_timeframe_resonance": "mixed"
+      },
+      "soft_market_regime_distribution": {
+        "bear": 0.2,
+        "bull": 0.2,
+        "range": 0.6
+      },
+      "soft_liquidity_context_distribution": {
+        "favorable": 0.2,
+        "hostile": 0.2,
+        "neutral": 0.6
+      },
+      "soft_factor_alignment_distribution": {
+        "bearish": 0.2,
+        "bullish": 0.2,
+        "mixed": 0.6
+      },
+      "soft_factor_uncertainty_distribution": {
+        "high": 0.6,
+        "low": 0.4
+      },
+      "soft_multi_timeframe_resonance_distribution": {
+        "aligned": 0.2,
+        "dislocated": 0.2,
+        "mixed": 0.6
+      }
+    },
+    "pre_bayes_entry_quality_bridge": {
+      "long_signal_probability": 0.40054250081261344,
+      "short_signal_probability": 0.4031137375516996,
+      "long_entry_bias": [
+        0.1132024664269248,
+        0.41042804173852954,
+        0.47636949183454563
+      ],
+      "short_entry_bias": [
+        0.056938800020081344,
+        0.29530444624444685,
+        0.6477567537354719
+      ],
+      "long_entry_quality": {
+        "high": 0.0,
+        "low": 0.0,
+        "medium": 1.0
+      },
+      "short_entry_quality": {
+        "high": 0.0,
+        "low": 0.0,
+        "medium": 1.0
+      },
+      "selected_entry_quality": {
+        "high": 0.0,
+        "low": 0.0,
+        "medium": 1.0
+      },
+      "multi_timeframe_direction_bias": "bullish",
+      "multi_timeframe_alignment_score": 0.3332,
+      "multi_timeframe_entry_alignment_score": 0.9689,
+      "rationale": [
+        "factor_alignment=mixed factor_uncertainty=high",
+        "long_support=0.020 short_support=0.028 uncertainty=0.514",
+        "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969",
+        "entry_quality_bias combines directional factor support with cascade probability bias"
+      ]
+    },
+    "canonical_structural_regime_posterior": {
+      "active_regime": "range",
+      "confidence": 0.14423512439311514,
+      "probabilities": {
+        "range": 0.32824868142013397,
+        "stress": 0.23408641001968747,
+        "transition": 0.21883245428008935,
+        "trend": 0.21883245428008935
+      },
+      "evidence": [
+        "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true",
+        "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969",
+        "long/short support gap 0.008 is too small, so alignment is treated as mixed",
+        "factor uncertainty 0.514 exceeds the hard-evidence comfort band",
+        "multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized",
+        "multi-timeframe alignment 0.333 is below the policy support floor 0.550",
+        "evidence quality is too low, so BBN input is downgraded to neutralized defaults",
+        "pre_bayes_quality_score=0.144 gating_status=observe_only",
+        "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629",
+        "market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550",
+        "market_state_source=rationale=volatility=ElevatedVol conf=0.66",
+        "market_state_source=rationale=structure=Trending conf=0.59",
+        "market_state_source=rationale=behavior=RiskOff conf=0.55",
+        "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63",
+        "market_family=futures_index",
+        "market_behavior_profile=index_beta_regime_sensitive",
+        "branch_transition_prior_from=NQ_LOCAL_AQ_MTF_123820:research:actionable:execute_recommended_path weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000"
+      ]
+    },
+    "factor_family_decisions": [
+      {
+        "family": "cross_market_smt",
+        "factor_count": 1,
+        "avg_score": 0.04994151662870251,
+        "actions": [
+          "cross_market_smt:replace"
+        ],
+        "replacement_candidates": [
+          "cross_market_smt"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=f risk_flags=low_family_score,contains_replacement_candidates",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates"
+        ]
+      },
+      {
+        "family": "options_hedging",
+        "factor_count": 1,
+        "avg_score": 0.04994151662870251,
+        "actions": [
+          "options_hedging:replace"
+        ],
+        "replacement_candidates": [
+          "options_hedging"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=f risk_flags=low_family_score,contains_replacement_candidates",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates"
+        ]
+      },
+      {
+        "family": "volatility_mean_reversion",
+        "factor_count": 1,
+        "avg_score": 0.059613379983170664,
+        "actions": [
+          "volatility_mean_reversion:replace"
+        ],
+        "replacement_candidates": [
+          "volatility_mean_reversion"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=f risk_flags=low_family_score,contains_replacement_candidates",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates"
+        ]
+      },
+      {
+        "family": "other",
+        "factor_count": 3,
+        "avg_score": 0.3317791351687056,
+        "actions": [
+          "crowding_herding:replace",
+          "session_liquidity:replace",
+          "spectral_rhythm:replace"
+        ],
+        "replacement_candidates": [
+          "crowding_herding",
+          "session_liquidity",
+          "spectral_rhythm"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=f risk_flags=low_family_score,contains_replacement_candidates",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates"
+        ]
+      },
+      {
+        "family": "trend_momentum",
+        "factor_count": 1,
+        "avg_score": 0.4211663752833844,
+        "actions": [
+          "trend_momentum:replace"
+        ],
+        "replacement_candidates": [
+          "trend_momentum"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=d risk_flags=low_family_score,contains_replacement_candidates",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates"
+        ]
+      },
+      {
+        "family": "structure_ict",
+        "factor_count": 1,
+        "avg_score": 0.4742139348588085,
+        "actions": [
+          "structure_ict:observe"
+        ],
+        "replacement_candidates": [],
+        "dominant_action": "observe",
+        "decision_status": "needs_observation",
+        "decision_reason": "dominant_action=observe avg_score_band=d no_material_family_risks",
+        "risk_flags": []
+      }
+    ],
+    "factor_family_outcomes": [
+      {
+        "family": "cross_market_smt",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "cross_market_smt"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "cross_market_smt"
+          ],
+          "target_families": [
+            "cross_market_smt"
+          ]
+        }
+      },
+      {
+        "family": "options_hedging",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "options_hedging"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "options_hedging"
+          ],
+          "target_families": [
+            "options_hedging"
+          ]
+        }
+      },
+      {
+        "family": "volatility_mean_reversion",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "volatility_mean_reversion"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "volatility_mean_reversion"
+          ],
+          "target_families": [
+            "volatility_mean_reversion"
+          ]
+        }
+      },
+      {
+        "family": "other",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "other"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "crowding_herding",
+            "session_liquidity",
+            "spectral_rhythm"
+          ],
+          "target_families": [
+            "other"
+          ]
+        }
+      },
+      {
+        "family": "trend_momentum",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "trend_momentum"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "trend_momentum"
+          ],
+          "target_families": [
+            "trend_momentum"
+          ]
+        }
+      },
+      {
+        "family": "structure_ict",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "structure_ict"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [],
+          "target_families": [
+            "structure_ict"
+          ]
+        }
+      }
+    ],
+    "factor_family_diffs": [
+      {
+        "family": "structure_ict",
+        "previous_avg_score": null,
+        "new_avg_score": 0.4742139348588085,
+        "avg_score_delta": 0.4742139348588085,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 0
+      },
+      {
+        "family": "trend_momentum",
+        "previous_avg_score": null,
+        "new_avg_score": 0.4211663752833844,
+        "avg_score_delta": 0.4211663752833844,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 1
+      },
+      {
+        "family": "other",
+        "previous_avg_score": null,
+        "new_avg_score": 0.3317791351687056,
+        "avg_score_delta": 0.3317791351687056,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 3
+      },
+      {
+        "family": "volatility_mean_reversion",
+        "previous_avg_score": null,
+        "new_avg_score": 0.059613379983170664,
+        "avg_score_delta": 0.059613379983170664,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 1
+      },
+      {
+        "family": "cross_market_smt",
+        "previous_avg_score": null,
+        "new_avg_score": 0.04994151662870251,
+        "avg_score_delta": 0.04994151662870251,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 1
+      },
+      {
+        "family": "options_hedging",
+        "previous_avg_score": null,
+        "new_avg_score": 0.04994151662870251,
+        "avg_score_delta": 0.04994151662870251,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 1
+      }
+    ],
+    "factor_family_history": [],
+    "decision_history_summary": {
+      "total_runs": 0,
+      "promotion_approved_runs": 0,
+      "rollback_recommended_runs": 0,
+      "latest_promotion_status": null,
+      "latest_rollback_scope": null
+    },
+    "workflow_state": {
+      "phase": "pre_bayes_observe_only",
+      "reason": "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969;long/short support gap 0.008 is too small, so alignment is treated as mixed;factor uncertainty 0.514 exceeds the hard-evidence comfort band;multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized;multi-timeframe alignment 0.333 is below the policy support floor 0.550;evidence quality is too low, so BBN input is downgraded to neutralized defaults;pre_bayes_quality_score=0.144 gating_status=observe_only;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629;market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550;market_state_source=rationale=volatility=ElevatedVol conf=0.66;market_state_source=rationale=structure=Trending conf=0.59;market_state_source=rationale=behavior=RiskOff conf=0.55;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63"
+    },
+    "agent_action_plan": {
+      "summary": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.144|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.3332 mtf_entry_alignment=0.9689",
+      "items": [
+        {
+          "stage": "analyze",
+          "blocking": true,
+          "priority": "high",
+          "title": "Review Pre-Bayes Evidence Gate",
+          "rationale": "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969;long/short support gap 0.008 is too small, so alignment is treated as mixed;factor uncertainty 0.514 exceeds the hard-evidence comfort band;multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized;multi-timeframe alignment 0.333 is below the policy support floor 0.550;evidence quality is too low, so BBN input is downgraded to neutralized defaults;pre_bayes_quality_score=0.144 gating_status=observe_only;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629;market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550;market_state_source=rationale=volatility=ElevatedVol conf=0.66;market_state_source=rationale=structure=Trending conf=0.59;market_state_source=rationale=behavior=RiskOff conf=0.55;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63",
+          "expected_output": "A pre-Bayes gate review confirming whether evidence should pass hard, pass neutralized, or remain observe-only",
+          "expected_state_changes": [
+            {
+              "target": "pre_bayes_evidence_filter",
+              "direction": "observe_only",
+              "rationale": "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969;long/short support gap 0.008 is too small, so alignment is treated as mixed;factor uncertainty 0.514 exceeds the hard-evidence comfort band;multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized;multi-timeframe alignment 0.333 is below the policy support floor 0.550;evidence quality is too low, so BBN input is downgraded to neutralized defaults;pre_bayes_quality_score=0.144 gating_status=observe_only;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629;market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550;market_state_source=rationale=volatility=ElevatedVol conf=0.66;market_state_source=rationale=structure=Trending conf=0.59;market_state_source=rationale=behavior=RiskOff conf=0.55;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63"
+            }
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/factor_lab/engine.rs",
+            "src/bbn/trading/update.rs"
+          ],
+          "suggested_commands": [
+            "ict-engine analyze --symbol NQ_LOCAL_AQ_MTF_123820 --data-htf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json' --data-mtf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json' --data-ltf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+            "blocked: recommended_command_unavailable missing=analyze_input_context"
+          ]
+        },
+        {
+          "stage": "promotion",
+          "blocking": true,
+          "priority": "high",
+          "title": "Block Promotion",
+          "rationale": "no_previous_run",
+          "expected_output": "Promotion decision resolved with explicit hold or approval rationale",
+          "expected_state_changes": [
+            {
+              "target": "promotion_decision",
+              "direction": "hold_until_thresholds_met",
+              "rationale": "no_previous_run"
+            }
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/agent/prompts.rs"
+          ],
+          "suggested_commands": [
+            "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+            "blocked: recommended_command_unavailable missing=research_data_path"
+          ]
+        },
+        {
+          "stage": "iteration",
+          "blocking": false,
+          "priority": "medium",
+          "title": "REPLACE cross_market_smt",
+          "rationale": "Expansion/manipulation objective for 'cross_market_smt'. balanced_accuracy=0.000 directional_accuracy=0.000 gate_status=pass_neutralized bridge_gap=0.014. Keep bull/bear expansion separation and liquidity-sweep manipulation discrimination while improving pre-bayes gate acceptance.",
+          "expected_output": "A revised factor implementation or parameter set benchmarked against the current baseline",
+          "expected_state_changes": [
+            {
+              "target": "factor:cross_market_smt",
+              "direction": "replace",
+              "rationale": "Expansion/manipulation objective for 'cross_market_smt'. balanced_accuracy=0.000 directional_accuracy=0.000 gate_status=pass_neutralized bridge_gap=0.014. Keep bull/bear expansion separation and liquidity-sweep manipulation discrimination while improving pre-bayes gate acceptance."
+            }
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/registry.rs"
+          ],
+          "suggested_commands": [
+            "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-backtest --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+            "blocked: recommended_command_unavailable missing=backtest_data_path"
+          ]
+        },
+        {
+          "stage": "family_review",
+          "blocking": false,
+          "priority": "medium",
+          "title": "Family Review cross_market_smt",
+          "rationale": "no_previous_run",
+          "expected_output": "A family-level decision note covering whether cross_market_smt should be tuned, replaced, or held",
+          "expected_state_changes": [
+            {
+              "target": "family:cross_market_smt",
+              "direction": "hold",
+              "rationale": "no_previous_run"
+            }
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "suggested_commands": [
+            "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+            "blocked: recommended_command_unavailable missing=research_data_path"
+          ]
+        },
+        {
+          "stage": "family_review",
+          "blocking": false,
+          "priority": "medium",
+          "title": "Family Review options_hedging",
+          "rationale": "no_previous_run",
+          "expected_output": "A family-level decision note covering whether options_hedging should be tuned, replaced, or held",
+          "expected_state_changes": [
+            {
+              "target": "family:options_hedging",
+              "direction": "hold",
+              "rationale": "no_previous_run"
+            }
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "suggested_commands": [
+            "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+            "blocked: recommended_command_unavailable missing=research_data_path"
+          ]
+        },
+        {
+          "stage": "artifact_factor_review",
+          "blocking": false,
+          "priority": "medium",
+          "title": "Artifact Factor structure_ict",
+          "rationale": "latest_action=Some(\"observe\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "expected_output": "Factor-level artifact review for structure_ict with explicit keep/tune/rollback conclusion",
+          "expected_state_changes": [
+            {
+              "target": "artifact_factor:structure_ict",
+              "direction": "promotion_supporting",
+              "rationale": "latest_action=Some(\"observe\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+            }
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "suggested_commands": [
+            "ict-engine analyze --symbol NQ_LOCAL_AQ_MTF_123820 --data-htf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json' --data-mtf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json' --data-ltf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+            "ict-engine workflow-status --symbol NQ_LOCAL_AQ_MTF_123820 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1 --phase artifact-factor-trends",
+            "ict-engine artifact-status --symbol NQ_LOCAL_AQ_MTF_123820 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1 --kind pending_update --sort-by improvement --limit 5"
+          ]
+        },
+        {
+          "stage": "artifact_family_review",
+          "blocking": false,
+          "priority": "medium",
+          "title": "Artifact Family cross_market_smt",
+          "rationale": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "expected_output": "Family-level artifact review for cross_market_smt with promotion/rollback linkage",
+          "expected_state_changes": [
+            {
+              "target": "artifact_family:cross_market_smt",
+              "direction": "promotion_supporting",
+              "rationale": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+            }
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factor_lab/factor_definition.rs"
+          ],
+          "suggested_commands": [
+            "ict-engine analyze --symbol NQ_LOCAL_AQ_MTF_123820 --data-htf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json' --data-mtf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json' --data-ltf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+            "ict-engine workflow-status --symbol NQ_LOCAL_AQ_MTF_123820 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1 --phase artifact-family-trends",
+            "ict-engine workflow-status --symbol NQ_LOCAL_AQ_MTF_123820 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1 --phase artifact-family-rule-break-impacts"
+          ]
+        },
+        {
+          "stage": "artifact_family_review",
+          "blocking": false,
+          "priority": "medium",
+          "title": "Artifact Family options_hedging",
+          "rationale": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "expected_output": "Family-level artifact review for options_hedging with promotion/rollback linkage",
+          "expected_state_changes": [
+            {
+              "target": "artifact_family:options_hedging",
+              "direction": "promotion_supporting",
+              "rationale": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+            }
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factor_lab/factor_definition.rs"
+          ],
+          "suggested_commands": [
+            "ict-engine analyze --symbol NQ_LOCAL_AQ_MTF_123820 --data-htf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json' --data-mtf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json' --data-ltf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+            "ict-engine workflow-status --symbol NQ_LOCAL_AQ_MTF_123820 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1 --phase artifact-family-trends",
+            "ict-engine workflow-status --symbol NQ_LOCAL_AQ_MTF_123820 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1 --phase artifact-family-rule-break-impacts"
+          ]
+        }
+      ]
+    },
+    "recommended_commands": {
+      "analyze": {
+        "command": "ict-engine analyze --symbol NQ_LOCAL_AQ_MTF_123820 --data-htf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json' --data-mtf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json' --data-ltf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+        "ready": true,
+        "missing_inputs": [],
+        "rationale": "replay analyze with the same dataset",
+        "user_data_selection_required": false,
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "recorded_data_paths": []
+      },
+      "research": {
+        "command": "ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+        "ready": false,
+        "missing_inputs": [
+          "user_selected_historical_data"
+        ],
+        "rationale": "rerun factor research on the same dataset User must explicitly choose one of the recorded historical datasets before rerun.",
+        "user_data_selection_required": true,
+        "user_data_selection_prompt": "Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+        "recorded_data_paths": [
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+        ]
+      },
+      "backtest": {
+        "command": "ict-engine factor-backtest --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+        "ready": false,
+        "missing_inputs": [
+          "user_selected_historical_data"
+        ],
+        "rationale": "rerun factor backtest on the same dataset User must explicitly choose one of the recorded historical datasets before rerun.",
+        "user_data_selection_required": true,
+        "user_data_selection_prompt": "Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+        "recorded_data_paths": [
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+        ]
+      },
+      "update": {
+        "command": "ict-engine update --symbol NQ_LOCAL_AQ_MTF_123820 --outcome <win|loss|breakeven> --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+        "ready": false,
+        "missing_inputs": [
+          "realized_outcome"
+        ],
+        "rationale": "pending update artifact exists at docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1/NQ_LOCAL_AQ_MTF_123820/pending_update_feedback.json but realized outcome is still missing",
+        "user_data_selection_required": false,
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "recorded_data_paths": [
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+        ]
+      }
+    },
+    "recommended_next_command": "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+    "recommended_next_command_meta": {
+      "kind": "ask_user",
+      "requires_user_input": true,
+      "blocked": true,
+      "prompt": "Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+      "executable_command": "ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+      "recorded_data_paths": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+      ]
+    },
+    "agent_context_bundle": {
+      "workflow_state": {
+        "phase": "pre_bayes_observe_only",
+        "reason": "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969;long/short support gap 0.008 is too small, so alignment is treated as mixed;factor uncertainty 0.514 exceeds the hard-evidence comfort band;multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized;multi-timeframe alignment 0.333 is below the policy support floor 0.550;evidence quality is too low, so BBN input is downgraded to neutralized defaults;pre_bayes_quality_score=0.144 gating_status=observe_only;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629;market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550;market_state_source=rationale=volatility=ElevatedVol conf=0.66;market_state_source=rationale=structure=Trending conf=0.59;market_state_source=rationale=behavior=RiskOff conf=0.55;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63"
+      },
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.144|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.3332 mtf_entry_alignment=0.9689",
+      "recommended_next_command": "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+      "recommended_next_command_meta": {
+        "kind": "ask_user",
+        "requires_user_input": true,
+        "blocked": true,
+        "prompt": "Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+        "executable_command": "ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+        "recorded_data_paths": [
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+        ]
+      },
+      "recommended_commands": {
+        "analyze": {
+          "command": "ict-engine analyze --symbol NQ_LOCAL_AQ_MTF_123820 --data-htf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json' --data-mtf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json' --data-ltf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "ready": true,
+          "missing_inputs": [],
+          "rationale": "replay analyze with the same dataset",
+          "user_data_selection_required": false,
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "recorded_data_paths": []
+        },
+        "research": {
+          "command": "ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "ready": false,
+          "missing_inputs": [
+            "user_selected_historical_data"
+          ],
+          "rationale": "rerun factor research on the same dataset User must explicitly choose one of the recorded historical datasets before rerun.",
+          "user_data_selection_required": true,
+          "user_data_selection_prompt": "Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+          "recorded_data_paths": [
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+          ]
+        },
+        "backtest": {
+          "command": "ict-engine factor-backtest --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "ready": false,
+          "missing_inputs": [
+            "user_selected_historical_data"
+          ],
+          "rationale": "rerun factor backtest on the same dataset User must explicitly choose one of the recorded historical datasets before rerun.",
+          "user_data_selection_required": true,
+          "user_data_selection_prompt": "Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+          "recorded_data_paths": [
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+          ]
+        },
+        "update": {
+          "command": "ict-engine update --symbol NQ_LOCAL_AQ_MTF_123820 --outcome <win|loss|breakeven> --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "ready": false,
+          "missing_inputs": [
+            "realized_outcome"
+          ],
+          "rationale": "pending update artifact exists at docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1/NQ_LOCAL_AQ_MTF_123820/pending_update_feedback.json but realized outcome is still missing",
+          "user_data_selection_required": false,
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "recorded_data_paths": [
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+          ]
+        }
+      },
+      "family_history_window": 5,
+      "comparable_to_last_run": false,
+      "pre_bayes_gate_status": "observe_only",
+      "pre_bayes_uses_soft_evidence": true,
+      "pre_bayes_evidence_quality_score": 0.14423512439311517,
+      "pre_bayes_conflict_flags": [
+        "low_directional_separation",
+        "high_factor_uncertainty",
+        "multi_timeframe_direction_conflict",
+        "multi_timeframe_alignment_weak"
+      ],
+      "pre_bayes_filtered_assignments": {
+        "factor_alignment": "mixed",
+        "factor_uncertainty": "high",
+        "liquidity_context": "neutral",
+        "market_regime": "range",
+        "market_state_primary_regime": "TrendExpansion",
+        "market_state_secondary_regime": "BullTrendAcceleration",
+        "multi_timeframe_resonance": "mixed"
+      },
+      "pre_bayes_soft_evidence": {
+        "factor_alignment": {
+          "bearish": 0.2,
+          "bullish": 0.2,
+          "mixed": 0.6
+        },
+        "factor_uncertainty": {
+          "high": 0.6,
+          "low": 0.4
+        },
+        "liquidity_context": {
+          "favorable": 0.2,
+          "hostile": 0.2,
+          "neutral": 0.6
+        },
+        "market_regime": {
+          "bear": 0.2,
+          "bull": 0.2,
+          "range": 0.6
+        },
+        "multi_timeframe_resonance": {
+          "aligned": 0.2,
+          "dislocated": 0.2,
+          "mixed": 0.6
+        }
+      },
+      "pre_bayes_policy_version": "318900600c5e8cf2",
+      "pre_bayes_multi_timeframe_direction_bias": "neutral",
+      "pre_bayes_multi_timeframe_alignment_score": 0.3332,
+      "pre_bayes_multi_timeframe_entry_alignment_score": 0.9689,
+      "pre_bayes_entry_quality_bridge_summary": [
+        "factor_alignment=mixed factor_uncertainty=high",
+        "long_support=0.020 short_support=0.028 uncertainty=0.514",
+        "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969",
+        "entry_quality_bias combines directional factor support with cascade probability bias",
+        "long_signal_probability=0.401 short_signal_probability=0.403",
+        "selected_entry_quality=Some(\"medium\") selected_probability=1.000 probability_gap=0.003",
+        "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969"
+      ],
+      "pre_bayes_soft_evidence_diff": [
+        {
+          "node": "market_regime",
+          "filtered_state": "range",
+          "dominant_soft_state": "range",
+          "dominant_soft_probability": 0.6,
+          "entropy": 0.9502705392332347,
+          "diverges_from_filtered_state": false
+        },
+        {
+          "node": "liquidity_context",
+          "filtered_state": "neutral",
+          "dominant_soft_state": "neutral",
+          "dominant_soft_probability": 0.6,
+          "entropy": 0.9502705392332347,
+          "diverges_from_filtered_state": false
+        },
+        {
+          "node": "factor_alignment",
+          "filtered_state": "mixed",
+          "dominant_soft_state": "mixed",
+          "dominant_soft_probability": 0.6,
+          "entropy": 0.9502705392332347,
+          "diverges_from_filtered_state": false
+        },
+        {
+          "node": "factor_uncertainty",
+          "filtered_state": "high",
+          "dominant_soft_state": "high",
+          "dominant_soft_probability": 0.6,
+          "entropy": 0.6730116670092565,
+          "diverges_from_filtered_state": false
+        },
+        {
+          "node": "multi_timeframe_resonance",
+          "filtered_state": "mixed",
+          "dominant_soft_state": "mixed",
+          "dominant_soft_probability": 0.6,
+          "entropy": 0.9502705392332347,
+          "diverges_from_filtered_state": false
+        }
+      ],
+      "pre_bayes_entry_quality_bridge_diff": {
+        "dominant_long_entry_quality": "medium",
+        "dominant_long_entry_quality_probability": 1.0,
+        "dominant_short_entry_quality": "medium",
+        "dominant_short_entry_quality_probability": 1.0,
+        "selected_entry_quality": "medium",
+        "selected_entry_quality_probability": 1.0,
+        "long_short_signal_probability_gap": 0.002571236739086158,
+        "multi_timeframe_direction_bias": "bullish",
+        "multi_timeframe_alignment_score": 0.3332,
+        "multi_timeframe_entry_alignment_score": 0.9689,
+        "rationale_summary": [
+          "factor_alignment=mixed factor_uncertainty=high",
+          "long_support=0.020 short_support=0.028 uncertainty=0.514",
+          "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969",
+          "entry_quality_bias combines directional factor support with cascade probability bias"
+        ]
+      },
+      "factor_mutation_evaluation": null,
+      "factor_mutation_priority_markets": [],
+      "factor_mutation_priority_reasons": [],
+      "factor_mutation_recommended_focus": [],
+      "factor_mutation_direction_hints": [],
+      "factor_mutation_step_size_hints": [],
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+        "multi_timeframe_missing=1m,5m,30m,4h",
+        "15m:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+        "1h:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+        "1d:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=0.3332",
+        "lower_timeframe_entry_alignment_score=0.9689"
+      ],
+      "artifact_consumed_gate_status": "no_consumed_validation",
+      "artifact_consumed_gate_reason": "no_consumed_artifacts",
+      "artifact_consumed_gate_targets": [],
+      "pda_sequence_summary": null,
+      "pda_cluster_label": null,
+      "pda_cluster_confidence": null,
+      "top_factor_actions": [
+        "cross_market_smt:replace:0.05",
+        "options_hedging:replace:0.05",
+        "volatility_mean_reversion:replace:0.06"
+      ],
+      "family_actions": [
+        "cross_market_smt:hold:none",
+        "options_hedging:hold:none",
+        "volatility_mean_reversion:hold:none",
+        "other:hold:none",
+        "trend_momentum:hold:none",
+        "structure_ict:hold:none"
+      ],
+      "stage_views": [
+        {
+          "stage": "analyze",
+          "blocking_items": 0,
+          "recommended_command": "ict-engine analyze --symbol NQ_LOCAL_AQ_MTF_123820 --data-htf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json' --data-mtf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json' --data-ltf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "actions": [
+            "observe current market state"
+          ],
+          "gate_status": "observe_only",
+          "gate_reason": "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969;long/short support gap 0.008 is too small, so alignment is treated as mixed;factor uncertainty 0.514 exceeds the hard-evidence comfort band;multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized;multi-timeframe alignment 0.333 is below the policy support floor 0.550;evidence quality is too low, so BBN input is downgraded to neutralized defaults;pre_bayes_quality_score=0.144 gating_status=observe_only;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629;market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550;market_state_source=rationale=volatility=ElevatedVol conf=0.66;market_state_source=rationale=structure=Trending conf=0.59;market_state_source=rationale=behavior=RiskOff conf=0.55;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63"
+        },
+        {
+          "stage": "research",
+          "blocking_items": 6,
+          "recommended_command": "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "actions": [
+            "blocked_by:user_selected_historical_data"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "backtest",
+          "blocking_items": 7,
+          "recommended_command": "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-backtest --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "actions": [
+            "blocked_by:user_selected_historical_data"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "update",
+          "blocking_items": 0,
+          "recommended_command": "blocked: ict-engine update --symbol NQ_LOCAL_AQ_MTF_123820 --outcome <win|loss|breakeven> --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1' missing=realized_outcome",
+          "actions": [
+            "blocked_by:realized_outcome"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "artifact_consumption",
+          "blocking_items": 0,
+          "recommended_command": "ict-engine workflow-status --symbol NQ_LOCAL_AQ_MTF_123820 --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1' --phase artifact-consumed-gate",
+          "actions": [
+            "no_consumed_artifacts"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        }
+      ]
+    },
+    "agent_context_bundle_minimal": {
+      "workflow_phase": "pre_bayes_observe_only",
+      "recommended_next_command": "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+      "recommended_next_command_meta": {
+        "kind": "ask_user",
+        "requires_user_input": true,
+        "blocked": true,
+        "prompt": "Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+        "executable_command": "ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+        "recorded_data_paths": [
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json"
+        ]
+      },
+      "family_history_window": 5,
+      "comparable_to_last_run": false,
+      "pre_bayes_gate_status": "observe_only",
+      "pre_bayes_uses_soft_evidence": true,
+      "pre_bayes_policy_version": "318900600c5e8cf2",
+      "pre_bayes_soft_evidence_divergence_count": 0,
+      "pre_bayes_bridge_selected_entry_quality": "medium",
+      "factor_mutation_acceptance_status": "",
+      "factor_mutation_failure_tags": [],
+      "factor_mutation_priority_markets": [],
+      "factor_mutation_priority_reasons": [],
+      "factor_mutation_direction_hints": [],
+      "factor_mutation_step_size_hints": [],
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+        "multi_timeframe_missing=1m,5m,30m,4h",
+        "15m:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+        "1h:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+        "1d:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=0.3332",
+        "lower_timeframe_entry_alignment_score=0.9689"
+      ],
+      "artifact_consumed_gate_status": "no_consumed_validation",
+      "pda_cluster_label": null,
+      "top_factor_actions": [
+        "cross_market_smt:replace:0.05",
+        "options_hedging:replace:0.05",
+        "volatility_mean_reversion:replace:0.06"
+      ],
+      "stage_views": [
+        {
+          "stage": "analyze",
+          "recommended_command": "ict-engine analyze --symbol NQ_LOCAL_AQ_MTF_123820 --data-htf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json' --data-mtf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json' --data-ltf 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "gate_status": "observe_only"
+        },
+        {
+          "stage": "research",
+          "recommended_command": "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "backtest",
+          "recommended_command": "ask-user: Before using historical data for NQ_LOCAL_AQ_MTF_123820 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-backtest --symbol NQ_LOCAL_AQ_MTF_123820 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1'",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "update",
+          "recommended_command": "blocked: ict-engine update --symbol NQ_LOCAL_AQ_MTF_123820 --outcome <win|loss|breakeven> --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1' missing=realized_outcome",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "artifact_consumption",
+          "recommended_command": "ict-engine workflow-status --symbol NQ_LOCAL_AQ_MTF_123820 --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1' --phase artifact-consumed-gate",
+          "gate_status": "no_consumed_validation"
+        }
+      ]
+    },
+    "feedback_history_summary": {
+      "total_records": 2834,
+      "wins": 886,
+      "losses": 1948,
+      "avg_pnl": -0.00006494836656298011,
+      "factor_success_rates": {
+        "crowding_herding": 0.2976190476190476,
+        "session_liquidity": 0.33067729083665337,
+        "spectral_rhythm": 0.2892561983471074,
+        "structure_ict": 0.3386454183266932,
+        "trend_momentum": 0.34523809523809523,
+        "volatility_mean_reversion": 0.2845849802371542
+      }
+    },
+    "multi_timeframe_summary": [
+      "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+      "multi_timeframe_missing=1m,5m,30m,4h",
+      "15m:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+      "1h:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+      "1d:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=0.3332",
+      "lower_timeframe_entry_alignment_score=0.9689"
+    ],
+    "execution_artifact_id": "execution:NQ_LOCAL_AQ_MTF_123820:8baa7c08f3637da8",
+    "execution_edge_share": 0.23188210091904585,
+    "prediction_edge_share": 0.7681178990809541,
+    "execution_readiness": 0.15492061678908858,
+    "execution_gate_status": "execution_blocked",
+    "artifact_action_summary": [
+      "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"observe\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:other status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+    ],
+    "artifact_decision_summary": {
+      "actionable_artifact_count": 3,
+      "latest_promotable_artifact_id": "pending-update:NQ_LOCAL_AQ_MTF_123820:analyze:v1",
+      "artifact_rule_break_count": 0,
+      "highlighted_actions": [
+        "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"observe\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+        "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+        "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+        "family:other status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+      ],
+      "highlighted_factor_targets": [
+        "structure_ict"
+      ],
+      "highlighted_family_targets": [
+        "cross_market_smt",
+        "options_hedging",
+        "other",
+        "structure_ict",
+        "trend_momentum",
+        "volatility_mean_reversion"
+      ],
+      "promotion_strength": "high",
+      "rollback_strength": "low",
+      "consumed_trend_status": "no_consumed_validation",
+      "consumed_trend_reason": "no_consumed_artifacts",
+      "consumed_target_kinds": [],
+      "summary": "actionable_artifacts=3 latest_promotable=Some(\"pending-update:NQ_LOCAL_AQ_MTF_123820:analyze:v1\") rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+    },
+    "artifact_decision_section": {
+      "summary": {
+        "actionable_artifact_count": 3,
+        "latest_promotable_artifact_id": "pending-update:NQ_LOCAL_AQ_MTF_123820:analyze:v1",
+        "artifact_rule_break_count": 0,
+        "highlighted_actions": [
+          "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"observe\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "family:other status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+        ],
+        "highlighted_factor_targets": [
+          "structure_ict"
+        ],
+        "highlighted_family_targets": [
+          "cross_market_smt",
+          "options_hedging",
+          "other",
+          "structure_ict",
+          "trend_momentum",
+          "volatility_mean_reversion"
+        ],
+        "promotion_strength": "high",
+        "rollback_strength": "low",
+        "consumed_trend_status": "no_consumed_validation",
+        "consumed_trend_reason": "no_consumed_artifacts",
+        "consumed_target_kinds": [],
+        "summary": "actionable_artifacts=3 latest_promotable=Some(\"pending-update:NQ_LOCAL_AQ_MTF_123820:analyze:v1\") rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+      },
+      "action_summary": [
+        "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"observe\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+        "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+        "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+        "family:other status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+      ],
+      "top_factor_trends": [
+        {
+          "factor_name": "structure_ict",
+          "entries": 2,
+          "promotable_entries": 1,
+          "consumed_entries": 0,
+          "average_quality_score": 125.0,
+          "latest_status": "observe",
+          "latest_action": "observe",
+          "decision_status": "promotion_supporting",
+          "decision_reason": "latest_action=Some(\"observe\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "promotion_link_status": "promotion_supporting",
+          "rollback_link_status": "none",
+          "consumed_validation_status": "insufficient_consumed_history",
+          "consumed_validation_reason": "no_comparisons_available min_window=3",
+          "consumed_validation_rank": 0,
+          "consumed_validation_score": 0.0
+        },
+        {
+          "factor_name": "cross_market_smt",
+          "entries": 1,
+          "promotable_entries": 0,
+          "consumed_entries": 0,
+          "average_quality_score": 100.0,
+          "latest_status": "blocked",
+          "latest_action": null,
+          "decision_status": "observe",
+          "decision_reason": "latest_action=None research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "promotion_link_status": "none",
+          "rollback_link_status": "none",
+          "consumed_validation_status": "insufficient_consumed_history",
+          "consumed_validation_reason": "no_comparisons_available min_window=3",
+          "consumed_validation_rank": 0,
+          "consumed_validation_score": 0.0
+        }
+      ],
+      "top_family_trends": [
+        {
+          "family": "cross_market_smt",
+          "entries": 2,
+          "promotable_entries": 1,
+          "consumed_entries": 0,
+          "average_quality_score": 125.0,
+          "latest_status": "observe",
+          "latest_score": 0.04994151662870251,
+          "decision_status": "promotion_supporting",
+          "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "promotion_link_status": "promotion_supporting",
+          "rollback_link_status": "none",
+          "consumed_validation_status": "insufficient_consumed_history",
+          "consumed_validation_reason": "no_comparisons_available min_window=3",
+          "consumed_validation_rank": 0,
+          "consumed_validation_score": 0.0
+        },
+        {
+          "family": "options_hedging",
+          "entries": 2,
+          "promotable_entries": 1,
+          "consumed_entries": 0,
+          "average_quality_score": 125.0,
+          "latest_status": "observe",
+          "latest_score": 0.04994151662870251,
+          "decision_status": "promotion_supporting",
+          "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "promotion_link_status": "promotion_supporting",
+          "rollback_link_status": "none",
+          "consumed_validation_status": "insufficient_consumed_history",
+          "consumed_validation_reason": "no_comparisons_available min_window=3",
+          "consumed_validation_rank": 0,
+          "consumed_validation_score": 0.0
+        },
+        {
+          "family": "other",
+          "entries": 2,
+          "promotable_entries": 1,
+          "consumed_entries": 0,
+          "average_quality_score": 125.0,
+          "latest_status": "observe",
+          "latest_score": 0.3317791351687056,
+          "decision_status": "promotion_supporting",
+          "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+          "promotion_link_status": "promotion_supporting",
+          "rollback_link_status": "none",
+          "consumed_validation_status": "insufficient_consumed_history",
+          "consumed_validation_reason": "no_comparisons_available min_window=3",
+          "consumed_validation_rank": 0,
+          "consumed_validation_score": 0.0
+        }
+      ],
+      "top_rule_break_effects": [],
+      "top_consumed_trend_comparisons": []
+    },
+    "agent_prompts": {
+      "version": "agent-prompts-v1",
+      "workflow": "Use current market analysis plus stored factor scorecards to decide whether the present trade plan is supported, overfit, or missing evidence for NQ_LOCAL_AQ_MTF_123820.",
+      "prompts": [
+        {
+          "id": "dataset_audit",
+          "stage": "dataset_audit",
+          "priority": "high",
+          "objective": "Audit whether the dataset and command context are sufficient for trustworthy iteration.",
+          "system_prompt": "You are the dataset-audit agent. Check whether the current dataset scope, paired market coverage, and command context are sufficient before making factor or model changes.",
+          "user_prompt": "Symbol=NQ_LOCAL_AQ_MTF_123820 data_path=analyze paired_data_path=None candles=0 paired_candles=None source_command=analyze",
+          "success_criteria": [
+            "Flag low sample size or missing paired-market evidence before approving major factor changes",
+            "If this run is not comparable to prior runs, tell the next agent not to over-interpret score deltas"
+          ],
+          "suggested_files": [
+            "src/data/loader.rs",
+            "src/main.rs",
+            "src/factor_lab/research.rs"
+          ]
+        },
+        {
+          "id": "pre_bayes_evidence_review",
+          "stage": "pre_bayes_filter",
+          "priority": "high",
+          "objective": "Review whether raw regime/liquidity/factor evidence should be passed to BBN directly or neutralized first.",
+          "system_prompt": "You are the pre-bayes evidence gate. Compare raw labels with filtered labels, conflicts, and evidence quality before trusting the downstream Bayesian inference.",
+          "user_prompt": "Symbol=NQ_LOCAL_AQ_MTF_123820 raw_market_regime=bear raw_liquidity_context=neutral raw_factor_alignment=mixed raw_factor_uncertainty=high raw_mtf_direction=bullish raw_mtf_alignment=0.333 raw_mtf_entry_alignment=0.969 raw_mtf_resonance=dislocated filtered_market_regime=range filtered_liquidity_context=neutral filtered_factor_alignment=mixed filtered_factor_uncertainty=high filtered_mtf_direction=neutral filtered_mtf_alignment=0.333 filtered_mtf_entry_alignment=0.969 filtered_mtf_resonance=mixed evidence_quality_score=0.144 gating_status=observe_only uses_soft_evidence=true conflict_flags=[\"low_directional_separation\", \"high_factor_uncertainty\", \"multi_timeframe_direction_conflict\", \"multi_timeframe_alignment_weak\"] rationale=[\"market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true\", \"multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.333 multi_timeframe_entry_alignment_score=0.969\", \"long/short support gap 0.008 is too small, so alignment is treated as mixed\", \"factor uncertainty 0.514 exceeds the hard-evidence comfort band\", \"multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized\", \"multi-timeframe alignment 0.333 is below the policy support floor 0.550\", \"evidence quality is too low, so BBN input is downgraded to neutralized defaults\", \"pre_bayes_quality_score=0.144 gating_status=observe_only\", \"market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629\", \"market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550\", \"market_state_source=rationale=volatility=ElevatedVol conf=0.66\", \"market_state_source=rationale=structure=Trending conf=0.59\", \"market_state_source=rationale=behavior=RiskOff conf=0.55\", \"market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63\"] soft_market_regime={\"bear\": 0.2, \"bull\": 0.2, \"range\": 0.6} soft_liquidity_context={\"favorable\": 0.2, \"hostile\": 0.2, \"neutral\": 0.6} soft_factor_alignment={\"bearish\": 0.2, \"bullish\": 0.2, \"mixed\": 0.6} soft_factor_uncertainty={\"high\": 0.6, \"low\": 0.4} soft_mtf_resonance={\"aligned\": 0.2, \"dislocated\": 0.2, \"mixed\": 0.6}",
+          "success_criteria": [
+            "State explicitly whether the filtered evidence should be trusted as hard evidence or soft evidence",
+            "If regime and factor alignment conflict, prefer neutralization over direct Bayesian commitment"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/trading/update.rs",
+            "src/factor_lab/engine.rs"
+          ]
+        },
+        {
+          "id": "pre_bayes_soft_evidence_review",
+          "stage": "pre_bayes_soft_evidence",
+          "priority": "high",
+          "objective": "Review whether soft evidence diverges materially from filtered labels before trusting BBN output.",
+          "system_prompt": "You are the pre-bayes soft-evidence reviewer. Compare filtered states with soft evidence distributions and explain whether the Bayesian layer is receiving stable or ambiguous evidence.",
+          "user_prompt": "Symbol=NQ_LOCAL_AQ_MTF_123820 filtered_assignments={\"factor_alignment\": \"mixed\", \"factor_uncertainty\": \"high\", \"liquidity_context\": \"neutral\", \"market_regime\": \"range\", \"market_state_primary_regime\": \"TrendExpansion\", \"market_state_secondary_regime\": \"BullTrendAcceleration\", \"multi_timeframe_resonance\": \"mixed\"} soft_market_regime={\"bear\": 0.2, \"bull\": 0.2, \"range\": 0.6} soft_liquidity_context={\"favorable\": 0.2, \"hostile\": 0.2, \"neutral\": 0.6} soft_factor_alignment={\"bearish\": 0.2, \"bullish\": 0.2, \"mixed\": 0.6} soft_factor_uncertainty={\"high\": 0.6, \"low\": 0.4} soft_mtf_resonance={\"aligned\": 0.2, \"dislocated\": 0.2, \"mixed\": 0.6}",
+          "success_criteria": [
+            "Call out when the dominant soft-evidence state diverges from the filtered hard label",
+            "If entropy is high, prefer observe-only or neutralized review over confident Bayesian commitment"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/node.rs",
+            "src/bbn/trading/update.rs"
+          ]
+        },
+        {
+          "id": "analysis_market_review",
+          "stage": "market_analysis",
+          "priority": "high",
+          "objective": "Review the current market conclusion and identify whether factor evidence supports the selected direction.",
+          "system_prompt": "You are the market-review agent. Challenge the current trade direction using price-action evidence, factor diagnostics, and uncertainty. Do not change factor definitions here; decide whether the current conclusion is supported or should be downgraded.",
+          "user_prompt": "Symbol=NQ_LOCAL_AQ_MTF_123820 decision_hint=Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.144|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.3332 mtf_entry_alignment=0.9689 dataset_comparability={comparable:false, reason:no_previous_run} canonical_structural_regime=active=range confidence=0.144 probs=range=0.328,stress=0.234,transition=0.219,trend=0.219 evidence_count=17 multi_timeframe_summary=[\"multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d\", \"multi_timeframe_missing=1m,5m,30m,4h\", \"15m:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json\", \"1h:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json\", \"1d:1500 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json\", \"higher_timeframe_direction_bias=bullish\", \"higher_timeframe_alignment_score=0.3332\", \"lower_timeframe_entry_alignment_score=0.9689\"] selected_direction=Bear selected_score=0.173 selected_win_probability=0.403 trade_direction=Neutral posterior=0.000 factor_alignment=mixed factor_uncertainty=high long_support=0.020 short_support=0.028 uncertainty=0.514 bullish_factors=[\"volatility_mean_reversion:0.020\"] bearish_factors=[\"structure_ict:-0.026\", \"trend_momentum:-0.002\"]",
+          "success_criteria": [
+            "Explicitly name which factors support long, which support short, and which only add uncertainty",
+            "If uncertainty is high, recommend what evidence the next agent should wait for"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/factor_lab/engine.rs",
+            "src/bbn/trading/topology.rs"
+          ]
+        },
+        {
+          "id": "factor_triage",
+          "stage": "factor_research",
+          "priority": "high",
+          "objective": "Select which factors to keep, tune, observe, or replace.",
+          "system_prompt": "You are the factor-iteration agent. Use only the supplied scorecards and feedback summary to decide which factor edits are justified. Do not invent success criteria; follow the thresholds embedded in each factor prompt.",
+          "user_prompt": "Symbol=NQ_LOCAL_AQ_MTF_123820 top_scorecards=[structure_ict score=0.47 grade=D action=observe; trend_momentum score=0.42 grade=D action=replace; crowding_herding score=0.39 grade=F action=replace] iteration_queue=[cross_market_smt score=0.05 action=replace prompt=Expansion/manipulation objective for 'cross_market_smt'. balanced_accuracy=0.000 directional_accuracy=0.000 gate_status=pass_neutralized bridge_gap=0.014. Keep bull/bear expansion separation and liquidity-sweep manipulation discrimination while improving pre-bayes gate acceptance. || options_hedging score=0.05 action=replace prompt=Expansion/manipulation objective for 'options_hedging'. balanced_accuracy=0.000 directional_accuracy=0.000 gate_status=pass_neutralized bridge_gap=0.014. Keep bull/bear expansion separation and liquidity-sweep manipulation discrimination while improving pre-bayes gate acceptance. || volatility_mean_reversion score=0.06 action=replace prompt=Expansion/manipulation objective for 'volatility_mean_reversion'. balanced_accuracy=0.021 directional_accuracy=0.024 gate_status=pass_neutralized bridge_gap=0.014. Keep bull/bear expansion separation and liquidity-sweep manipulation discrimination while improving pre-bayes gate acceptance. || spectral_rhythm score=0.25 action=replace prompt=Expansion/manipulation objective for 'spectral_rhythm'. balanced_accuracy=0.500 directional_accuracy=0.336 gate_status=pass_neutralized bridge_gap=0.014. Keep bull/bear expansion separation and liquidity-sweep manipulation discrimination while improving pre-bayes gate acceptance. || session_liquidity score=0.36 action=replace prompt=Expansion/manipulation objective for 'session_liquidity'. balanced_accuracy=0.711 directional_accuracy=0.699 gate_status=pass_neutralized bridge_gap=0.014. Keep bull/bear expansion separation and liquidity-sweep manipulation discrimination while improving pre-bayes gate acceptance.] feedback_summary=records:2834 wins:886 losses:1948 avg_pnl:-0.000065 factor_success_rates:{\"crowding_herding\": 0.2976190476190476, \"session_liquidity\": 0.33067729083665337, \"spectral_rhythm\": 0.2892561983471074, \"structure_ict\": 0.3386454183266932, \"trend_momentum\": 0.34523809523809523, \"volatility_mean_reversion\": 0.2845849802371542}",
+          "success_criteria": [
+            "Prioritize replace > tune > observe > keep",
+            "Only recommend replacing a factor when its action is replace or replacement_candidate=true",
+            "Use the factor-specific agent prompt as the acceptance rule for the next iteration"
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/registry.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        },
+        {
+          "id": "feedback_review",
+          "stage": "feedback_learning",
+          "priority": "medium",
+          "objective": "Review which factors are failing by regime and whether weight updates should be trusted.",
+          "system_prompt": "You are the feedback-diagnostics agent. Compare factor success rates, grading, and weaknesses. Focus on regime-conditional failure and persistent underperformance.",
+          "user_prompt": "Symbol=NQ_LOCAL_AQ_MTF_123820 feedback_total=2834 avg_pnl=-0.000065 weak_factors=[structure_ict weaknesses=[\"bridge_gap_too_small\", \"multi_timeframe_resonance_not_aligned\"] score=0.47; trend_momentum weaknesses=[\"bridge_gap_too_small\", \"multi_timeframe_resonance_not_aligned\"] score=0.42; crowding_herding weaknesses=[\"bridge_gap_too_small\", \"multi_timeframe_resonance_not_aligned\"] score=0.39; session_liquidity weaknesses=[\"bridge_gap_too_small\", \"multi_timeframe_resonance_not_aligned\"] score=0.36; spectral_rhythm weaknesses=[\"expansion_separation_weak\", \"bridge_gap_too_small\", \"multi_timeframe_resonance_not_aligned\"] score=0.25; volatility_mean_reversion weaknesses=[\"expansion_separation_weak\", \"bridge_gap_too_small\", \"multi_timeframe_resonance_not_aligned\"] score=0.06; cross_market_smt weaknesses=[\"expansion_separation_weak\", \"bridge_gap_too_small\", \"multi_timeframe_resonance_not_aligned\"] score=0.05; options_hedging weaknesses=[\"expansion_separation_weak\", \"bridge_gap_too_small\", \"multi_timeframe_resonance_not_aligned\"] score=0.05]",
+          "success_criteria": [
+            "Flag factors with narrow regime coverage or unstable walk-forward",
+            "Do not promote a weaker factor just because it has higher recent win rate on small sample"
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factors/regime_conditional.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        }
+      ]
+    },
+    "prompt_workflow": "Use current market analysis plus stored factor scorecards to decide whether the present trade plan is supported, overfit, or missing evidence for NQ_LOCAL_AQ_MTF_123820."
+  }
+]

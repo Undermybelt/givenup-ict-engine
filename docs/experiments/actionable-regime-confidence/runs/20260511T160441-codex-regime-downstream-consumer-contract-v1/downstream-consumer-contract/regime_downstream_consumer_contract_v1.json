@@ -1,0 +1,133 @@
+{
+  "adapter_notes": {
+    "adapter_path": "src/application/regime/consumer_bundle_adapter.rs",
+    "contract_decision": "read_only_trace_contract_now; do_not_apply_bbn_soft_evidence_from templates until runtime supports MainRegimeV2 mapping without old child-label promotion",
+    "explicit_mainregime_label_mapper_present": false,
+    "legacy_label_mapper_labels_present": [
+      "ExtremeStress",
+      "RangeConsolidation",
+      "ReversalBrewing",
+      "TrendExpansion"
+    ],
+    "mainregime_labels_seen": [],
+    "supports_bundle_schema": true
+  },
+  "artifact_type": "regime_downstream_consumer_contract_v1",
+  "generated_at_utc": "2026-05-11T08:38:37.015678+00:00",
+  "purpose": "Turn the accepted 5/5 regime-factor map into runtime bundle templates without reintroducing child/sub-regime labels as parent evidence.",
+  "rollup": {
+    "active_lane_templates": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "all_templates_schema_valid": true,
+    "all_templates_trade_usable_false": true,
+    "full_objective_achieved": false,
+    "next_action": "Run a no-trade analyze dry-run with one generated bundle template in read-only mode and verify regime_bundle_trace plus read_only regime_bbn diagnostics.",
+    "old_child_labels_used": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "template_count": 5,
+    "thresholds_relaxed": false,
+    "update_goal": false
+  },
+  "run_id": "20260511T160441+0800-codex-regime-downstream-consumer-contract-v1",
+  "source_consumer_map": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+  "surfaces": [
+    {
+      "consumer": "analyze/report trace",
+      "contract_status": "supported_now",
+      "evidence": "schema_version plus latest_decision and consumer_hints are present in all templates",
+      "limit": "trace/report context only; not a completion claim",
+      "runtime_surface": "RegimeConsumerBundleAdapter::trace_entries"
+    },
+    {
+      "consumer": "pre-bayes diagnostics",
+      "contract_status": "supported_now_read_only",
+      "evidence": "read_only regime_bbn_* entries can be appended without opt-in mutation",
+      "limit": "diagnostic assignments only",
+      "runtime_surface": "append_read_only_bbn_diagnostics"
+    },
+    {
+      "consumer": "BBN soft evidence mutation",
+      "contract_status": "intentionally_neutral",
+      "evidence": "templates set trade_usable=false and use MainRegimeV2 or DirectOverlay labels, not old child labels",
+      "limit": "do not enable BBN mutation from these templates until protocol maps MainRegimeV2 directly",
+      "runtime_surface": "apply_bbn_soft_evidence_to_pre_bayes_filter"
+    },
+    {
+      "consumer": "execution tree",
+      "contract_status": "supported_as_transition_guardrail_hint",
+      "evidence": "all templates carry execution_tree_hint=transition_guardrail",
+      "limit": "does not force trade entry or path acceptance",
+      "runtime_surface": "execution_tree_hint trace"
+    },
+    {
+      "consumer": "CatBoost/path-ranker",
+      "contract_status": "template_only_currently_unconsumed",
+      "evidence": "adapter deserializes path_ranker_context but current code search found no active consumer",
+      "limit": "requires later runtime wiring before it can affect ranking",
+      "runtime_surface": "path_ranker_context"
+    }
+  ],
+  "templates": [
+    {
+      "bbn_soft_evidence_application": "neutral_read_only_trade_usable_false",
+      "bundle_template": "docs/experiments/actionable-regime-confidence/runs/20260511T160441-codex-regime-downstream-consumer-contract-v1/downstream-consumer-contract/bundle-templates/bull_regime_consumer_bundle_template_v1.json",
+      "decision_state": "single_label_95",
+      "execution_tree_hint": "transition_guardrail",
+      "final_label": "MainRegimeV2::Bull",
+      "old_child_label_used": false,
+      "regime": "Bull",
+      "schema_version": "regime-consumer-bundle/v1",
+      "trade_usable": false
+    },
+    {
+      "bbn_soft_evidence_application": "neutral_read_only_trade_usable_false",
+      "bundle_template": "docs/experiments/actionable-regime-confidence/runs/20260511T160441-codex-regime-downstream-consumer-contract-v1/downstream-consumer-contract/bundle-templates/bear_regime_consumer_bundle_template_v1.json",
+      "decision_state": "single_label_95",
+      "execution_tree_hint": "transition_guardrail",
+      "final_label": "MainRegimeV2::Bear",
+      "old_child_label_used": false,
+      "regime": "Bear",
+      "schema_version": "regime-consumer-bundle/v1",
+      "trade_usable": false
+    },
+    {
+      "bbn_soft_evidence_application": "neutral_read_only_trade_usable_false",
+      "bundle_template": "docs/experiments/actionable-regime-confidence/runs/20260511T160441-codex-regime-downstream-consumer-contract-v1/downstream-consumer-contract/bundle-templates/sideways_regime_consumer_bundle_template_v1.json",
+      "decision_state": "single_label_95",
+      "execution_tree_hint": "transition_guardrail",
+      "final_label": "MainRegimeV2::Sideways",
+      "old_child_label_used": false,
+      "regime": "Sideways",
+      "schema_version": "regime-consumer-bundle/v1",
+      "trade_usable": false
+    },
+    {
+      "bbn_soft_evidence_application": "neutral_read_only_trade_usable_false",
+      "bundle_template": "docs/experiments/actionable-regime-confidence/runs/20260511T160441-codex-regime-downstream-consumer-contract-v1/downstream-consumer-contract/bundle-templates/crisis_regime_consumer_bundle_template_v1.json",
+      "decision_state": "single_label_95",
+      "execution_tree_hint": "transition_guardrail",
+      "final_label": "MainRegimeV2::Crisis",
+      "old_child_label_used": false,
+      "regime": "Crisis",
+      "schema_version": "regime-consumer-bundle/v1",
+      "trade_usable": false
+    },
+    {
+      "bbn_soft_evidence_application": "neutral_read_only_trade_usable_false",
+      "bundle_template": "docs/experiments/actionable-regime-confidence/runs/20260511T160441-codex-regime-downstream-consumer-contract-v1/downstream-consumer-contract/bundle-templates/manipulation_regime_consumer_bundle_template_v1.json",
+      "decision_state": "single_label_95",
+      "execution_tree_hint": "transition_guardrail",
+      "final_label": "DirectOverlay::Manipulation",
+      "old_child_label_used": false,
+      "regime": "Manipulation",
+      "schema_version": "regime-consumer-bundle/v1",
+      "trade_usable": false
+    }
+  ]
+}

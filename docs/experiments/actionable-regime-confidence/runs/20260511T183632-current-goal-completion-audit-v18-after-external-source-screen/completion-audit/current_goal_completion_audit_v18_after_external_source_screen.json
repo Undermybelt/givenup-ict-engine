@@ -1,0 +1,73 @@
+{
+  "accepted_rows_added": 0,
+  "checklist": [
+    {
+      "coverage": "accepted lanes=['Bull', 'Bear', 'Sideways', 'Crisis', 'Manipulation']; accepted_95_lane_count=5",
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+      "gap": "This is scoped consumer readiness only, not strict full objective closure.",
+      "requirement": "Each active MainRegimeV2/direct lane has its own >=95% calibrated consumer factor.",
+      "status": "pass_scoped"
+    },
+    {
+      "coverage": "intake gate=source_label_equivalence_intake_verifier_v1=ready_rows_not_acquired; external screen=external_source_label_candidate_screen_v1=no_promotable_source_label_equivalence; candidates=6",
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_manifest_v1.json ; docs/experiments/actionable-regime-confidence/runs/20260511T183328-codex-external-source-label-candidate-screen-v1/external-source-label-screen/external_source_label_candidate_screen_v1.json",
+      "gap": "Required source-label equivalence intake files are missing; NIFTY/IDX external candidates lack owner-approved MainRegimeV2 crosswalk.",
+      "requirement": "Validation survives other markets/species with source-owned labels or owner-approved equivalence.",
+      "status": "blocked"
+    },
+    {
+      "coverage": "strict exact 1h accepted=41/156; native subhour gate=native_subhour_overlap_blocker_v1=no_source_overlap_0of4_cells",
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T181859-codex-strict-1h-gap-triage-v1/strict-1h-gap-triage/strict_1h_gap_triage_v1.json ; docs/experiments/actionable-regime-confidence/runs/20260511T180420-codex-native-subhour-overlap-blocker-v1/native-subhour-overlap/native_subhour_overlap_blocker_v1.json",
+      "gap": "Strict exact 1h remains partial and native subhour source overlap remains 0/4.",
+      "requirement": "Validation survives other cycles/timeframes, including strict exact 1h and native sub-hour where claimed.",
+      "status": "blocked"
+    },
+    {
+      "coverage": "stock_regime_upstream_refresh_audit_v1=no_new_upstream_recency_extension",
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T181454-codex-stock-regime-upstream-refresh-audit-v1/upstream-refresh/stock_regime_upstream_refresh_audit_v1.json",
+      "gap": "Known upstream source package still matches local; no newer source-owned recency extension rows.",
+      "requirement": "Source-panel recency extends beyond 2026-01-30 before provider candles after that date are promoted.",
+      "status": "blocked"
+    },
+    {
+      "coverage": "scoped direct ready=True; full species complete=False; source scan=blocked_no_ready_direct_species_source",
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json ; docs/experiments/actionable-regime-confidence/runs/20260511T182601-codex-direct-manipulation-source-scan-v2/direct-source-scan/direct_manipulation_source_scan_v2.json",
+      "gap": "Missing spoofing/layering, quote stuffing, pinging, bear raid/painting tape, and social/text pump-dump matched-negative row sources.",
+      "requirement": "Direct Manipulation full species coverage uses direct positive rows plus matched normal controls.",
+      "status": "blocked"
+    },
+    {
+      "coverage": "External NIFTY/IDX candidates were screened but not promoted.",
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T183328-codex-external-source-label-candidate-screen-v1/external-source-label-screen/external_source_label_candidate_screen_v1.json",
+      "gap": "No proxy promotion occurred; objective remains open.",
+      "requirement": "Do not rely on proxy signals or generated/OHLCV-only labels for completion.",
+      "status": "pass_guardrail"
+    }
+  ],
+  "decision": "current_goal_completion_audit_v18=scoped_95_present_external_source_screen_confirms_full_objective_blocked",
+  "evidence": {
+    "consumer_map": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+    "direct_source_scan": "docs/experiments/actionable-regime-confidence/runs/20260511T182601-codex-direct-manipulation-source-scan-v2/direct-source-scan/direct_manipulation_source_scan_v2.json",
+    "external_source_screen": "docs/experiments/actionable-regime-confidence/runs/20260511T183328-codex-external-source-label-candidate-screen-v1/external-source-label-screen/external_source_label_candidate_screen_v1.json",
+    "native_subhour": "docs/experiments/actionable-regime-confidence/runs/20260511T180420-codex-native-subhour-overlap-blocker-v1/native-subhour-overlap/native_subhour_overlap_blocker_v1.json",
+    "recency_upstream": "docs/experiments/actionable-regime-confidence/runs/20260511T181454-codex-stock-regime-upstream-refresh-audit-v1/upstream-refresh/stock_regime_upstream_refresh_audit_v1.json",
+    "source_intake": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_manifest_v1.json",
+    "strict_1h": "docs/experiments/actionable-regime-confidence/runs/20260511T181859-codex-strict-1h-gap-triage-v1/strict-1h-gap-triage/strict_1h_gap_triage_v1.json"
+  },
+  "generated_at_utc": "2026-05-11T10:37:46.526969+00:00",
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "restated_objective": [
+    "Every active regime/lane must have its own >=95% calibrated confidence evidence.",
+    "The evidence must survive validation on other markets/species and other timeframes/cycles.",
+    "Direct Manipulation must use direct row sources with matched negative controls.",
+    "No source-label proxy, OHLCV-only generated label, or owner-unapproved taxonomy crosswalk can satisfy the strict goal."
+  ],
+  "run_id": "20260511T183632+0800-current-goal-completion-audit-v18-after-external-source-screen",
+  "runtime_code_changed": false,
+  "scoped_active_lane_95_present": true,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

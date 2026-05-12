@@ -1,0 +1,172 @@
+{
+  "active_taxonomy": "MainRegimeV4",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T083327-codex-mainregimev4-crosswalk-attachability/checks/mainregimev4_crosswalk_attachability_assertions.out",
+    "crosswalk_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T083327-codex-mainregimev4-crosswalk-attachability/schema/mainregimev4_crosswalk.csv",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T083327-codex-mainregimev4-crosswalk-attachability/scripts/mainregimev4_crosswalk_attachability.py",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T083327-codex-mainregimev4-crosswalk-attachability/schema/mainregimev4_crosswalk_attachability.json",
+    "summary_md": "docs/experiments/actionable-regime-confidence/runs/20260511T083327-codex-mainregimev4-crosswalk-attachability/schema/mainregimev4_crosswalk_attachability.md"
+  },
+  "completion_accounting": {
+    "accepted_confidence": false,
+    "accepted_full_cycle_full_universe": false,
+    "accepted_gate": "none_for_MainRegimeV4_expanded_full_universe_full_cycle_goal",
+    "accepted_v4_completion_roots": 0,
+    "blocked_v4_completion_roots": [
+      "BullExpansion",
+      "BearExpansion",
+      "Consolidation",
+      "CrisisStress",
+      "Manipulation"
+    ],
+    "goal_achieved": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "created_at_utc": "2026-05-11T00:34:47.755959+00:00",
+  "crosswalk": [
+    {
+      "handling": "reaudit_required",
+      "prior_root": "Bull",
+      "reason": "Raw Bull labels must prove sustained positive expansion rather than weak recovery, correction, or transition.",
+      "v4_root": "BullExpansion"
+    },
+    {
+      "handling": "reaudit_required",
+      "prior_root": "Bear",
+      "reason": "Raw Bear labels must separate ordinary negative expansion from CrisisStress and crash/stress windows.",
+      "v4_root": "BearExpansion"
+    },
+    {
+      "handling": "reaudit_required",
+      "prior_root": "Sideways",
+      "reason": "Sideways/range labels are conceptually close but need V4 range/compression calibration and context validation.",
+      "v4_root": "Consolidation"
+    },
+    {
+      "handling": "preserved_provenance_reaudit_required",
+      "prior_root": "Crisis",
+      "reason": "Prior Crisis evidence is useful stress provenance but does not complete V4 full-universe/full-cycle accounting without rerun.",
+      "v4_root": "CrisisStress"
+    },
+    {
+      "handling": "active_root_output_direct_input_gate",
+      "prior_root": "Manipulation_overlay",
+      "reason": "Direct event/order-flow/order-lifecycle evidence may support this root, but OHLCV proxies remain forbidden.",
+      "v4_root": "Manipulation"
+    }
+  ],
+  "gate_result": "blocked_mainregimev4_crosswalk_all_roots_need_reaudit_or_labels",
+  "input_evidence": {
+    "direct_source_scan": "docs/experiments/actionable-regime-confidence/runs/20260511T082034-codex-direct-manipulation-labeled-source-web-scan/direct-manipulation-source-scan/direct_manipulation_labeled_source_web_scan.json",
+    "mehrnoom_direct_event_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.json",
+    "mendeley_v3_reaudit": "docs/experiments/actionable-regime-confidence/runs/20260511T082521-codex-mendeley-v3-gox-refetch-reaudit/mendeley-v3-reaudit/mendeley_v3_gox_refetch_reaudit.json",
+    "v2_acquisition_package": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/acquisition-package/source_label_acquisition_package_v2.json",
+    "v2_attachability": "docs/experiments/actionable-regime-confidence/runs/20260511T081210-codex-underlying-source-label-attachability/source-label-attachability/underlying_source_label_attachability.json",
+    "v4_taxonomy": "docs/experiments/actionable-regime-confidence/runs/20260511T082635-codex-main-regime-v4-web-research-taxonomy/taxonomy/main_regime_v4_web_research_taxonomy.json"
+  },
+  "manipulation_accounting": {
+    "accepted_v4_manipulation_completion": false,
+    "direct_event_provenance_sources_preserved": [
+      {
+        "accepted_95_provenance": true,
+        "calibration_wilson95_lcb": 0.9997354338315891,
+        "evidence_class": "direct_social_event_confirmed",
+        "limitation": "event-confirmed suppression/abstain provenance only; does not complete all manipulation varieties or Dune/Mendeley wash-trade coverage",
+        "run_id": "20260511T045102+0800-codex-mehrnoom-telegram-direct-manipulation-gate",
+        "test_negative_controls": 11758,
+        "test_support": 12834,
+        "test_wilson95_lcb": 0.9997007706604714
+      }
+    ],
+    "dune_nft_wash_trades_export_materialized": false,
+    "mendeley_v3_gox_reaudit": {
+      "accepted_direct_manipulation_95": false,
+      "blockers": [
+        "test_coverage_below_min",
+        "calibration_ece_above_max",
+        "test_ece_above_max"
+      ],
+      "calibration_ece": 0.08171197215474314,
+      "calibration_wilson95_lcb": 0.9767279547055007,
+      "gate_result": "blocked_mendeley_gox_hgb_wash_below_95",
+      "test_coverage": 0.008994528877575621,
+      "test_ece": 0.11550138174952651,
+      "test_wilson95_lcb": 0.9856146629785103
+    },
+    "new_direct_manipulation_label_sources_added": 0,
+    "v4_root": "Manipulation"
+  },
+  "next_action": "Try a bounded Dune nft.wash_trades export path under the V4 Manipulation root, requiring replayable timestamps, positive/negative windows, and provenance; do not count rule-only labels or OHLCV proxies.",
+  "objective": "Materialize the MainRegimeV4 target schema and crosswalk prior MainRegimeV2 attachability into V4 accounting without promotion.",
+  "price_root_slot_accounting": {
+    "accepted_v4_price_root_slots": 0,
+    "candidate_slots_by_v4_root": {
+      "BearExpansion": 12,
+      "BullExpansion": 12,
+      "Consolidation": 12,
+      "CrisisStress": 12
+    },
+    "candidate_slots_from_prior_exact_underlying_v2": 48,
+    "full_four_price_root_cells_candidate_only": 12,
+    "missing_or_reaudit_required_by_v4_root": {
+      "BearExpansion": 141,
+      "BullExpansion": 141,
+      "Consolidation": 141,
+      "CrisisStress": 141
+    },
+    "missing_or_rejected_slots_from_prior_v2": 564,
+    "prior_v2_slot_universe": 612,
+    "why_zero_accepted": [
+      "Prior Bull/Bear/Sideways/Crisis labels are provenance only after V4 taxonomy reopen.",
+      "No V4 chronological calibration/test gate was rerun for the 48 candidate slots in this crosswalk packet.",
+      "The 564 missing/rejected V2 slots remain missing or require external source labels under V4."
+    ]
+  },
+  "run_id": "20260511T083327+0800-codex-mainregimev4-crosswalk-attachability",
+  "source_declared_active_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "CrisisStress",
+    "Manipulation"
+  ],
+  "v4_label_panel_schema": {
+    "minimum_requirements": [
+      "independent/source-backed labels or direct event/order-flow/order-lifecycle labels",
+      "chronological calibration/test split without future leakage",
+      "root-specific qualifying condition/rule",
+      "cross-context validation across instruments, timeframes, and market periods",
+      "no automatic promotion from child/subtype/proxy labels",
+      "near-proxy mappings remain rejected unless exact-underlying/source evidence is provided"
+    ],
+    "required_fields": [
+      "provider",
+      "instrument",
+      "timeframe",
+      "v4_root",
+      "start_ts",
+      "end_ts",
+      "source_label",
+      "source_label_confidence",
+      "source_name",
+      "source_license_or_access_contract",
+      "labeling_method",
+      "label_timestamp_or_publication_time",
+      "raw_source_reference",
+      "v4_crosswalk_status"
+    ],
+    "residual_only": [
+      "UnknownOrMixed"
+    ],
+    "root_values": [
+      "BullExpansion",
+      "BearExpansion",
+      "Consolidation",
+      "CrisisStress",
+      "Manipulation"
+    ]
+  }
+}

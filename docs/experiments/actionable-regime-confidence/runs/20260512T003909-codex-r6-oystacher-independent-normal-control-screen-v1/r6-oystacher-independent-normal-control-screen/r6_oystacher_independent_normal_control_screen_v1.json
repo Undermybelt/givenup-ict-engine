@@ -1,0 +1,103 @@
+{
+  "decision": {
+    "accepted_rows_added": 0,
+    "all_negative_candidates_are_same_exhibit_flip": true,
+    "canonical_live_intake_merge_approved": false,
+    "external_requests_sent": true,
+    "flip_rows_accepted_as_matched_normal_controls": false,
+    "gate_result": "r6_oystacher_independent_normal_control_screen_v1=no_independent_owner_approved_normal_controls_found",
+    "independent_normal_controls_found": false,
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "rerun_downstream_chain": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T16:41:48.967722+00:00",
+  "next_action": "Source independent owner-approved normal controls for the Oystacher SPOOF positives, or get explicit board/user approval for same-exhibit FLIP rows as controls and public RECAP/PACER provenance; only after that merge through the shared lock and rerun the direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree chain.",
+  "policy_review": "docs/experiments/actionable-regime-confidence/runs/20260512T003358-codex-r6-oystacher-exhibit-a-policy-review-v1/r6-oystacher-exhibit-a-policy-review/r6_oystacher_exhibit_a_policy_review_v1.json",
+  "public_source_probes": [
+    {
+      "bytes_read": 65536,
+      "content_length": "65536",
+      "content_type": "application/pdf",
+      "error": "",
+      "mentions_control": false,
+      "mentions_flip": false,
+      "mentions_non_manipulation": false,
+      "mentions_normal": false,
+      "mentions_spoof": false,
+      "ok": true,
+      "status": 206,
+      "url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf"
+    },
+    {
+      "bytes_read": 0,
+      "content_length": "",
+      "content_type": "",
+      "error": "<HTTPError 403: 'Forbidden'>",
+      "mentions_control": false,
+      "mentions_flip": false,
+      "mentions_non_manipulation": false,
+      "mentions_normal": false,
+      "mentions_spoof": false,
+      "ok": false,
+      "status": null,
+      "url": "https://www.courtlistener.com/docket/4263217/us-commodity-futures-trading-commission-v-oystacher/"
+    },
+    {
+      "bytes_read": 65536,
+      "content_length": "65536",
+      "content_type": "application/pdf",
+      "error": "",
+      "mentions_control": false,
+      "mentions_flip": false,
+      "mentions_non_manipulation": false,
+      "mentions_normal": false,
+      "mentions_spoof": false,
+      "ok": true,
+      "status": 206,
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf"
+    },
+    {
+      "bytes_read": 37641,
+      "content_length": "",
+      "content_type": "text/html; charset=UTF-8",
+      "error": "",
+      "mentions_control": true,
+      "mentions_flip": false,
+      "mentions_non_manipulation": false,
+      "mentions_normal": true,
+      "mentions_spoof": false,
+      "ok": true,
+      "status": 206,
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7253-15"
+    }
+  ],
+  "row_counts": {
+    "independent_normal_rows": 0,
+    "matched_control_candidates": 1553,
+    "negative_activity_counts": {
+      "same_exhibit_flip": 1553
+    },
+    "negative_label_counts": {
+      "matched_negative_normal_activity": 1553
+    },
+    "parsed_order_rows": 6735,
+    "parsed_side_counts": {
+      "FLIP": 1553,
+      "SPOOF": 5182
+    },
+    "parsed_side_types_not_spoof_or_flip": 0,
+    "positive_label_counts": {
+      "positive_spoofing_layering": 5182
+    },
+    "positive_spoof_candidates": 5182
+  },
+  "run_id": "20260512T003909-codex-r6-oystacher-independent-normal-control-screen-v1",
+  "source_materialization_root": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization"
+}

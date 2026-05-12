@@ -1,0 +1,1 @@
+env HOME=/tmp/ict-engine-tv-stdio-home ICT_ENGINE_TRADINGVIEW_MCP_CMD=uv ICT_ENGINE_TRADINGVIEW_MCP_ARGS='--directory /Users/thrill3r/tradingview-mcp/tradingview-mcp run tradingview-mcp' ./target/debug/ict-engine provider-status --provider tradingview_mcp --agent

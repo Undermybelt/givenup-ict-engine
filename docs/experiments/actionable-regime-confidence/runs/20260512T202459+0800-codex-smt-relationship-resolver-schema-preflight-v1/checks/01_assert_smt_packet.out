@@ -1,0 +1,12 @@
+{
+  "packet_assertion": "pass",
+  "rows": 4,
+  "coverage_target": [
+    "NQ/ES/YM",
+    "EURUSD/GBPUSD/DXY",
+    "XAUUSD/XAGUSD/DXY",
+    "BTC/ETH"
+  ],
+  "quality_weight": 0.0,
+  "downstream_allowed": false
+}

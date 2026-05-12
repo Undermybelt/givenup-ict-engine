@@ -1,0 +1,328 @@
+{
+  "candles": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json",
+  "gate_result": "downstream_chain_ran_catboost_registered_fail_closed_maturity_below_30",
+  "generated_at": "2026-05-12T10:01:22.430597+00:00",
+  "library": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json",
+  "maturity_ready_min30": false,
+  "promotion_allowed": false,
+  "run_id": "20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1",
+  "score_families": [
+    "catboost"
+  ],
+  "scores": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1-catboost-scores.csv",
+  "scores_rows": 3,
+  "source_packet": "172142_feasible_window_same_root_aq_packet",
+  "state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+  "steps": [
+    {
+      "argv": [
+        "python3",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/scripts/build_downstream_inputs_172142_v1.py"
+      ],
+      "exit": 0,
+      "name": "00_build_downstream_inputs",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/00_build_downstream_inputs.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/00_build_downstream_inputs.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--library",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "01_auto_quant_results_import",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/01_auto_quant_results_import.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/01_auto_quant_results_import.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--library",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json",
+        "--temper",
+        "0.25"
+      ],
+      "exit": 0,
+      "name": "02_auto_quant_prior_init",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/02_auto_quant_prior_init.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/02_auto_quant_prior_init.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--data-htf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json",
+        "--data-mtf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json",
+        "--data-ltf",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "03_analyze",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/03_analyze.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/03_analyze.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "04_pre_bayes_status",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/04_pre_bayes_status.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/04_pre_bayes_status.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "05_policy_training_status",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/05_policy_training_status.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/05_policy_training_status.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--refresh",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "06_workflow_status",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/06_workflow_status.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/06_workflow_status.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "07_workflow_execution_candidate",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/07_workflow_execution_candidate.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/07_workflow_execution_candidate.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1"
+      ],
+      "exit": 0,
+      "name": "08_export_structural_path_ranking_target",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/08_export_structural_path_ranking_target.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/08_export_structural_path_ranking_target.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/.local/bin/uv",
+        "run",
+        "--offline",
+        "--with",
+        "pandas",
+        "--with",
+        "numpy",
+        "--with",
+        "catboost",
+        "python",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+        "--target-csv",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BTCUSD/policy_training/structural_path_ranking_target_history.csv",
+        "--output-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1-catboost",
+        "--model-family",
+        "catboost"
+      ],
+      "exit": 0,
+      "name": "09_catboost_path_ranker_train",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/09_catboost_path_ranker_train.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/09_catboost_path_ranker_train.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/.local/bin/uv",
+        "run",
+        "--offline",
+        "--with",
+        "pandas",
+        "--with",
+        "numpy",
+        "--with",
+        "catboost",
+        "python",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+        "--apply",
+        "--model-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1-catboost",
+        "--target-csv",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BTCUSD/policy_training/structural_path_ranking_target_history.csv",
+        "--output-scores",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1-catboost-scores.csv"
+      ],
+      "exit": 0,
+      "name": "10_catboost_path_ranker_apply",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/10_catboost_path_ranker_apply.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/10_catboost_path_ranker_apply.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--artifact-uri",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1-catboost/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score",
+        "--trained-rows",
+        "3",
+        "--calibration-rows",
+        "3"
+      ],
+      "exit": 0,
+      "name": "11_register_structural_path_ranking_trainer_artifact",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/11_register_structural_path_ranking_trainer_artifact.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/11_register_structural_path_ranking_trainer_artifact.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "apply-structural-path-ranking-external-scores",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--scores-file",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1-catboost-scores.csv"
+      ],
+      "exit": 0,
+      "name": "12_apply_structural_path_ranking_external_scores",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/12_apply_structural_path_ranking_external_scores.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/12_apply_structural_path_ranking_external_scores.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "13_enable_structural_path_ranking_runtime",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/13_enable_structural_path_ranking_runtime.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/13_enable_structural_path_ranking_runtime.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "14_policy_training_status_after_catboost",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/14_policy_training_status_after_catboost.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/14_policy_training_status_after_catboost.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--refresh",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "15_workflow_status_after_catboost",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/15_workflow_status_after_catboost.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/15_workflow_status_after_catboost.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BTCUSD",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "16_workflow_execution_candidate_after_catboost",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/16_workflow_execution_candidate_after_catboost.err",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output/downstream-v1/16_workflow_execution_candidate_after_catboost.out"
+    }
+  ],
+  "symbol": "BTCUSD",
+  "target_csv": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BTCUSD/policy_training/structural_path_ranking_target_history.csv",
+  "target_rows": 3,
+  "trade_usable": false,
+  "trainer_artifact": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1-catboost/trainer_artifact.json",
+  "trainer_calibration_rows": 3,
+  "trainer_model_family": "catboost",
+  "trainer_trained_rows": 3,
+  "update_goal": false
+}

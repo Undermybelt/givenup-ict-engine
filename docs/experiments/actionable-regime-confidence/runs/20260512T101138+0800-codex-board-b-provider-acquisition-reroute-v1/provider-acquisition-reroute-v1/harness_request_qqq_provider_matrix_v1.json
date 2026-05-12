@@ -1,0 +1,35 @@
+{
+  "market_key": "board-b-provider-acquisition-reroute-v1",
+  "interval": "1d",
+  "count": 30,
+  "related_roles": [
+    "yf_reference",
+    "tv_reference",
+    "ibkr_reference"
+  ],
+  "provider_preferences": {
+    "yf_reference": "yfinance",
+    "tv_reference": "tradingview_mcp",
+    "ibkr_reference": "ibkr"
+  },
+  "symbol_overrides": {
+    "yf_reference": {
+      "display_symbol": "QQQ",
+      "yfinance": "QQQ"
+    },
+    "tv_reference": {
+      "display_symbol": "NASDAQ:QQQ",
+      "tradingview_mcp": "NASDAQ:QQQ"
+    },
+    "ibkr_reference": {
+      "display_symbol": "QQQ",
+      "ibkr": {
+        "symbol": "QQQ",
+        "sec_type": "STK",
+        "exchange": "SMART",
+        "currency": "USD",
+        "primary_exchange": "NASDAQ"
+      }
+    }
+  }
+}

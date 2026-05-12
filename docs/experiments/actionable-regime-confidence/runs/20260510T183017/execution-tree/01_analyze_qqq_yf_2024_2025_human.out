@@ -1,0 +1,10 @@
+market_state=ExtremeStress/PanicBuying | execution=blocked/block_crowded/skip | ranker=unknown/unknown/not_ready
+QQQ | Bull bias | entry=medium | gate=pass_neutralized | quality=0.477
+Decision: Observe only
+Action: TUNE structure_ict
+Next: ict-engine factor-research --symbol QQQ --data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/candles/yf_QQQ_1h_2024_2025.json --state-dir /tmp/ict-board-a-v2-20260510T183017/state
+Structure: bullish_price_action_with_higher_probability_if_execution_confirms
+Technicals: technicals_support_bullish_continuation
+SMT: smt_analysis_unavailable_without_paired_market
+Regime: regime=bull liquidity=neutral direction=Bull subgraph=range_subgraph objective_jump_weight=1.000
+Plan: Bull_bias_exists_but_position_size_is_zero_due_to_probability_risk_constraints

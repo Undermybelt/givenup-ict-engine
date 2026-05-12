@@ -1,0 +1,12 @@
+{
+  "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "full_objective_achieved": false,
+  "json": "docs/experiments/actionable-regime-confidence/runs/20260511T124107-codex-source-window-slot-calibration-v1/source-window-slot-calibration/source_window_slot_calibration_v1.json",
+  "raw_data_committed": false,
+  "run_id": "20260511T124107+0800-codex-source-window-slot-calibration-v1",
+  "runtime_code_changed": false,
+  "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T124107-codex-source-window-slot-calibration-v1/source-window-slot-calibration/source_window_slot_calibration_v1_summary.csv",
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unsupported_timeframes_abstained": true
+}

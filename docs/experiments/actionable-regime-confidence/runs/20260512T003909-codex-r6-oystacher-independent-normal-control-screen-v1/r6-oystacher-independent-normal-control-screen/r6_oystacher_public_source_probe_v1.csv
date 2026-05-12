@@ -1,0 +1,5 @@
+url,ok,status,content_type,content_length,bytes_read,mentions_normal,mentions_control,mentions_non_manipulation,mentions_spoof,mentions_flip,error
+https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf,True,206,application/pdf,65536,65536,False,False,False,False,False,
+https://www.courtlistener.com/docket/4263217/us-commodity-futures-trading-commission-v-oystacher/,False,,,,0,False,False,False,False,False,<HTTPError 403: 'Forbidden'>
+https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf,True,206,application/pdf,65536,65536,False,False,False,False,False,
+https://www.cftc.gov/PressRoom/PressReleases/7253-15,True,206,text/html; charset=UTF-8,,37641,True,True,False,False,False,

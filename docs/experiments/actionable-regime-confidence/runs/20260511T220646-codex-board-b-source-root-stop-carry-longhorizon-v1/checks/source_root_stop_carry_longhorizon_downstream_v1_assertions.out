@@ -1,0 +1,12 @@
+PASS branch_rc_spa_gate_result=pass
+PASS price_root_paths_passed=4
+PASS manipulation_component_pass=True
+PASS downstream_consumption=blocked:downstream_branch_path_or_bbn_mapping_gap
+PASS downstream_promotable=false
+PASS all_command_exits_ok=true
+PASS branch_path_preserved_in_run_local_artifacts=true
+PASS ict_engine_exact_board_b_target_rows=0
+PASS bbn_roots_skipped_no_supported_label=Bear
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false

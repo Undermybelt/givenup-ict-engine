@@ -1,0 +1,96 @@
+{
+  "audit_id": "execution_readiness_blocker_decomposition_v1",
+  "generated_at": "2026-05-12T12:23:14+0800",
+  "source_downstream_root": "20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1",
+  "source_provider_aq_root": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "status": "fail_closed",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "selected_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "execution_readiness": {
+    "value": 0.32853919817900823,
+    "observe_threshold": 0.45,
+    "ready_threshold": 0.65,
+    "gap_to_observe": -0.1214608018209918,
+    "gap_to_ready": -0.3214608018209918,
+    "gate_status": "execution_blocked",
+    "formula": "execution_score*0.50 + evidence_quality*0.30 + reversion_speed*0.20 - min(abs(overextension_distance),1.0)*0.20",
+    "components": {
+      "execution_score": {
+        "value": 0.5473767317816337,
+        "weight": 0.5,
+        "contribution": 0.27368836589081686
+      },
+      "evidence_quality": {
+        "value": 0.5250864595751618,
+        "weight": 0.3,
+        "contribution": 0.15752593787254853
+      },
+      "reversion_speed": {
+        "value": 0.0022770791946434463,
+        "weight": 0.2,
+        "contribution": 0.0004554158389286893
+      },
+      "overextension_distance": {
+        "value": 0.5156526071164288,
+        "weight": -0.2,
+        "contribution": -0.10313052142328577
+      }
+    }
+  },
+  "spectral_penalty": {
+    "applied": false,
+    "spectral_entropy": 0.22620388710604733,
+    "chaos_cap": 0.8,
+    "dominant_cycle_energy": 0.5813130295837036,
+    "dominant_energy_floor": 0.15,
+    "reason": "spectral_entropy_below_cap_and_dominant_cycle_energy_above_floor"
+  },
+  "secondary_blockers": {
+    "pre_bayes_gate_status": "pass_neutralized",
+    "pre_bayes_required_for_actionable": "pass_hard",
+    "path_ranker_execution_gate_status": "observe",
+    "path_ranker_path_prob_lower_bound": 0.2928391743629338,
+    "path_ranker_execution_gate_min_path_prob": 0.5,
+    "pythagorean_normalized_overstretch": 1.0,
+    "pythagorean_wait_threshold": 0.7,
+    "entry_model_matched_rows": 0,
+    "selected_history_source_control_unlock": false
+  },
+  "catboost_path_ranker": {
+    "immediate_blocker": false,
+    "runtime": "enabled_candidate_set_ready",
+    "score_model_family": "catboost",
+    "score_source": "external_model",
+    "raw_scored_mature": "237/30",
+    "production_validation": "237/30",
+    "observation_validation": "237/30"
+  },
+  "classification": {
+    "negative_sample_type": "execution_admissibility_negative_control",
+    "market_factor_positive": false,
+    "provider_authority_failure": false,
+    "recommended_uses": [
+      "execution_readiness_calibration",
+      "execution_tree_observe_block_reason_weighting",
+      "pre_bayes_pass_neutralized_calibration",
+      "catboost_path_ranker_hard_negative_candidate_queue",
+      "selected_history_source_control_gate_tracking"
+    ],
+    "forbidden_uses": [
+      "accepted_market_factor_evidence",
+      "production_bbn_likelihood_overwrite",
+      "live_trade_support",
+      "promotion_quality_path_evidence"
+    ]
+  },
+  "evidence": [
+    "command-output/23_analyze_provider_data.out",
+    "command-output/46_workflow_execution_candidate_augmented.out",
+    "command-output/47_workflow_full_augmented.out",
+    "state_115700_six_provider_1h_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/execution_candidate.json",
+    "state_115700_six_provider_1h_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/execution_tree_trace.json",
+    "path-ranker/catboost_feature_support_v1/structural_path_ranking_target_augmented.csv"
+  ]
+}

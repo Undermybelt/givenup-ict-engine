@@ -1,0 +1,8 @@
+requirement,artifact,status,note
+same-root provider matrix,docs/experiments/actionable-regime-confidence/runs/20260512T172214+0800-codex-board-a-provider-window-aware-same-root-aq-v1/provider-csv,covered,"{""binance_btcusdt_1h"": 46955, ""bybit_btcusdt_linear_1h"": 1000, ""ibkr_btc_paxos_aggtrades_1h"": 6930, ""kraken_xbtusd_1h"": 1993, ""tvr_btc_usd_1h_local_stdio"": 720, ""yfinance_btc_usd_1h"": 17415}"
+provider-specific feasible windows,docs/experiments/actionable-regime-confidence/runs/20260512T172214+0800-codex-board-a-provider-window-aware-same-root-aq-v1/provider-window-aware-same-root-aq-v1/provider_window_aware_same_root_aq_v1.json,covered,"{""binance"": ""2021-01-01_to_2026-05-12_broad_window"", ""bybit"": ""2021-01-01_to_2026-05-12_provider_cap_observed"", ""ibkr"": ""1Y_duration_via_ibkr_bulk_client146"", ""kraken"": ""2026-02-18_to_2026-05-12_current_window_repair"", ""tvr"": ""provider_default_local_stdio_current_window"", ""yfinance"": ""2024-05-15_to_2026-05-12_supported_730d_cap""}"
+Auto-Quant consumes same-root material,docs/experiments/actionable-regime-confidence/runs/20260512T172214+0800-codex-board-a-provider-window-aware-same-root-aq-v1/workspace,covered,run_success=6
+sample adequacy readback,docs/experiments/actionable-regime-confidence/runs/20260512T172214+0800-codex-board-a-provider-window-aware-same-root-aq-v1/provider-window-aware-same-root-aq-v1/provider_window_aware_same_root_aq_v1.md,covered,total_trades=1956
+Pre-Bayes/BBN/CatBoost/execution-tree,N/A,not_run,reserved for downstream slice after provider/AQ readback
+cross-market/timeframe validation,N/A,not_run,not satisfied by this BTC 1h provider/AQ packet
+>=95% calibrated confidence,N/A,not_met,no acceptance from provider/AQ evidence alone

@@ -1,0 +1,44 @@
+{
+  "binance_public": {
+    "first": "2026-04-01T00:00:00Z",
+    "last": "2026-05-12T00:00:00Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+    "rows": 985,
+    "symbol": "BTCUSDT"
+  },
+  "bybit_public": {
+    "first": "2026-04-01T00:00:00Z",
+    "last": "2026-05-12T00:00:00Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+    "rows": 985,
+    "symbol": "BTCUSDT"
+  },
+  "ibkr_paxos_long_midpoint": {
+    "first": "2026-03-31T20:01:00Z",
+    "last": "2026-05-12T04:00:00Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+    "rows": 783,
+    "symbol": "BTC.PAXOS"
+  },
+  "kraken_public": {
+    "first": "2026-04-12T04:00:00Z",
+    "last": "2026-05-12T04:00:00Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+    "rows": 721,
+    "symbol": "XBTUSD"
+  },
+  "tvr_default_binance": {
+    "first": "2026-04-12T05:00:00Z",
+    "last": "2026-05-12T04:00:00Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+    "rows": 720,
+    "symbol": "BINANCE:BTCUSDT"
+  },
+  "yfinance": {
+    "first": "2026-04-01T00:00:00Z",
+    "last": "2026-05-11T23:00:00Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv",
+    "rows": 971,
+    "symbol": "BTC-USD"
+  }
+}

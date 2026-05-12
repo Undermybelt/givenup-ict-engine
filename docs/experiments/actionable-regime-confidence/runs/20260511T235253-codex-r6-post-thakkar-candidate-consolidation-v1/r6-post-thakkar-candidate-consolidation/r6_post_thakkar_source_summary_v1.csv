@@ -1,0 +1,8 @@
+source,run_id,positive_rows,control_rows,positive_csv_exists
+sarao,20260511T225505-codex-r6-sarao-positive-row-candidate-screen-v1,6,0,True
+nowak_smith,20260511T233454-codex-r6-nowak-smith-positive-row-candidate-screen-v1,6,0,True
+oystacher_khara_salim,20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1,4,0,True
+jpmorgan_latest,20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1,8,0,True
+thakkar_backofbook,20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1,4,2,True
+moncada_large_lot,20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1,6,0,True
+trunz_empty_screen,20260511T235000-codex-r6-trunz-positive-row-candidate-screen-v1,0,0,True

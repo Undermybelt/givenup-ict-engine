@@ -1,0 +1,21 @@
+{
+  "accepted_new_roots_95": [],
+  "accepted_root_classes_95_effective": [
+    "Crisis"
+  ],
+  "gate_result": "blocked_persistent_hmm_root_posterior_gate_below_95",
+  "manipulation_blocker": "No direct event/order-lifecycle/L2 evidence in these input panels.",
+  "manipulation_evaluated": false,
+  "missing_root_classes_95_effective": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Manipulation"
+  ],
+  "retained_prior_accepted_root_classes_95": [
+    "Crisis"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

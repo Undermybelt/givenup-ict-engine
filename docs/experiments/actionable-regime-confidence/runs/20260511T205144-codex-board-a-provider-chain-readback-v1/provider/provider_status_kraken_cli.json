@@ -1,0 +1,32 @@
+{
+  "default_enabled_providers": [],
+  "install_prompts": [],
+  "pending_provider_details": [],
+  "pending_providers": [],
+  "providers": [
+    {
+      "access_mode": "local_cli_runtime",
+      "adopted_by_default": false,
+      "domain": "local_runtime",
+      "fallback_priority": 40,
+      "market_fit": [
+        "crypto"
+      ],
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "selectable_by_user": false,
+      "status": "ready",
+      "summary": "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows.",
+      "user_access": "login_and_local_runtime"
+    }
+  ],
+  "ready_by_domain": {
+    "local_runtime": "1/1"
+  },
+  "ready_providers": [
+    "kraken_cli"
+  ],
+  "selectable_providers": [],
+  "summary_line": "local_runtime:1/1 ready"
+}

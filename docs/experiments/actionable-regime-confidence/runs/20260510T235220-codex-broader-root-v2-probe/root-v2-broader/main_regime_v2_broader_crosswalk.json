@@ -1,0 +1,44 @@
+{
+  "schema_version": "main-regime-v2-crosswalk/v2",
+  "rule": "sub-regime packets are evidence only and cannot promote a root class without this root gate",
+  "crosswalk": {
+    "Bull": {
+      "sub_regime_evidence": [
+        "TrendExpansion"
+      ],
+      "promotion_requirement": "signed positive 8h forward root packet"
+    },
+    "Bear": {
+      "sub_regime_evidence": [
+        "TrendExpansion",
+        "ExtremeStress"
+      ],
+      "promotion_requirement": "signed negative 8h forward root packet separate from Crisis"
+    },
+    "Sideways": {
+      "sub_regime_evidence": [
+        "RangeConsolidation"
+      ],
+      "promotion_requirement": "low-forward-absolute-return range/chop root packet plus residual bucket"
+    },
+    "Crisis": {
+      "sub_regime_evidence": [
+        "ExtremeStress"
+      ],
+      "promotion_requirement": "tail/stress/liquidity-cliff root packet, separate from ordinary Bear"
+    },
+    "Manipulation": {
+      "sub_regime_evidence": [],
+      "blocked_context_only": [
+        "ThinLiquidity",
+        "SessionLiquidityCoreViable"
+      ],
+      "promotion_requirement": "direct non-OHLCV manipulation inputs",
+      "failure_state": "missing_required_inputs"
+    },
+    "UnknownOrMixed": {
+      "sub_regime_evidence": [],
+      "promotion_requirement": "explicit residual bucket, not a tradable accepted class"
+    }
+  }
+}

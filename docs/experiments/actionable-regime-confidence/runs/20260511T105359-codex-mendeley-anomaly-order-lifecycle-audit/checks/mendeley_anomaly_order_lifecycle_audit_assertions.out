@@ -1,0 +1,17 @@
+PASS board_cursor_read_before_artifact_write=20260511T103333+0800-codex-mainregimev2-board-a-top-relock
+PASS active_taxonomy=MainRegimeV2
+PASS source_downloaded_to_tmp=true
+PASS sha256_verified=406f34f004a68328a6048c38ae0cab37e2283cc6f6943fa98658aab9dd3775da
+PASS orders_csv_rows_including_header=602474
+PASS trades_csv_rows_including_header=414958
+PASS has_order_lifecycle_rows=true
+PASS has_trade_execution_rows=true
+PASS positive_manipulation_labels=false
+PASS negative_control_labels=false
+PASS accepted_direct_Manipulation_rows_added=0
+PASS accepted_parent_root_slots_added=0
+PASS raw_data_committed=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS trade_usable=false
+GATE blocked_mendeley_anomaly_order_lifecycle_unlabeled_no_positive_negative_manipulation_rows

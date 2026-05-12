@@ -1,0 +1,3 @@
+QQQ | ensemble-vote | action=favor_mean_reversion_only | confidence=0.787 | comparable=different_data_fingerprint
+Policy runtime: catboost_file:sample_file, xgboost_file:sample_file
+Next: ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/structural-replay-qqq-36/windows/qqq_15m_obs_36.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/structural-replay-qqq-36/state

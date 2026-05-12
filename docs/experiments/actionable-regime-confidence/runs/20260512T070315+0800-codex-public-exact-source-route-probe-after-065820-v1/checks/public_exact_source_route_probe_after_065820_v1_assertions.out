@@ -1,0 +1,16 @@
+public_exact_source_route_probe_after_065820_v1 assertions
+
+PASS CFTC press release 7264-15 curl exit 0
+PASS CFTC press release 7504-16 curl exit 0
+PASS CFTC complaint PDF curl exit 0 and SHA-256 recorded
+PASS hidden-regime PyPI summary curl exit 0
+PASS public CFTC pages treated as route/provenance context only
+PASS complaint PDF did not produce verifier-native row/control packet
+PASS hidden-regime package treated as tooling/library context only
+PASS R6 owner-export unlock false
+PASS R5 recency unlock false
+PASS R3 native-subhour unlock false
+PASS canonical merge false
+PASS downstream promotion rerun false
+PASS trade usable false
+PASS update_goal false

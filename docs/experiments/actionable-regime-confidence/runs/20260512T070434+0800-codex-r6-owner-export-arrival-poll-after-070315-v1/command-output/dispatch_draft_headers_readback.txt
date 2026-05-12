@@ -1,0 +1,37 @@
+--- docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml
+1:To: marketdata@cboe.com
+2:Subject: ICT Engine Board A R6 Oystacher verifier-native owner export request v5 - CFE/VIX normal controls
+3:X-ICT-Engine-Run-Id: 20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1
+9:Delivery root after approval/export: /tmp/ict-engine-board-a-r6-owner-export-v1
+15:The provenance manifest must preserve ticket/export/license/order/support identifiers. Same-exhibit FLIP rows remain rejected as controls unless the user or board explicitly approves that exception.
+22:Delivery root after approval/export: `/tmp/ict-engine-board-a-r6-owner-export-v1`
+36:- Please confirm licensed historical coverage and export path for the Oystacher 2014 CFE/VIX cells below.
+38:- If the verifier requires deeper controls, please route to Cboe/CFE market-data services for Top-of-Book, Depth-of-Book, or custom historical order-lifecycle support for the 2014 CFE/VIX window.
+39:- Required support is `73` valid source-owned normal-control rows per cell, outside same-exhibit `FLIP` promotion unless that exception is explicitly approved.
+--- docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml
+1:To: CMEDataSales@cmegroup.com
+2:Cc: marketdata@cmegroup.com
+3:Subject: ICT Engine Board A R6 Oystacher verifier-native owner export request v5 - CME/NYMEX/COMEX normal controls
+4:X-ICT-Engine-Run-Id: 20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1
+10:Delivery root after approval/export: /tmp/ict-engine-board-a-r6-owner-export-v1
+16:The provenance manifest must preserve ticket/export/license/order/support identifiers. Same-exhibit FLIP rows remain rejected as controls unless the user or board explicitly approves that exception.
+21:Purpose: request source-owned normal/non-manipulation order-lifecycle controls for the Board A R6 Oystacher verifier. This is a request draft only; it is not approval, not acquired data, and not a canonical merge.
+23:Delivery root after approval/export: `/tmp/ict-engine-board-a-r6-owner-export-v1`
+37:- Please confirm licensed historical coverage and export path for the Oystacher 2011-2013 CME/NYMEX/COMEX cells below.
+38:- Preferred data shape is Market Depth/FIX-FAST, Market by Order if product/date coverage exists, or a licensed equivalent that can provide verifier-native normal/non-manipulation rows with provenance.
+39:- Required support is `73` valid source-owned normal-control rows per cell, outside same-exhibit `FLIP` promotion unless that exception is explicitly approved.
+--- docs/experiments/actionable-regime-confidence/runs/20260512T052711-codex-r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/cboe_cfe_owner_export_dispatch_v2.eml
+1:To: marketdata@cboe.com
+2:Subject: Request for source-owned CFE/VIX order-lifecycle controls with Bessembinder/CFTC cohort rows
+6:I am requesting availability and licensing guidance for a historical CFE/VIX futures source-owned order-lifecycle, Top-of-Book, Depth-of-Book, MBO/L3, or licensed equivalent export for a compliance research audit.
+9:docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/cboe_cfe_owner_export_request_v5_with_bessembinder_addendum.md
+12:docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/cboe_cfe_owner_export_request_v4.md
+21:Please include ticket/export/order/license identifiers, data-product names, source-owner cohort markers, and product/date entitlement notes in the response so provenance can be preserved.
+--- docs/experiments/actionable-regime-confidence/runs/20260512T052711-codex-r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/cme_group_owner_export_dispatch_v2.eml
+1:To: CMEDataSales@cmegroup.com
+2:Cc: marketdata@cmegroup.com
+3:Subject: Request for source-owned CME/NYMEX/COMEX order-lifecycle controls with Bessembinder/CFTC cohort rows
+7:I am requesting a historical source-owned order-lifecycle, Market Depth, Market by Order, or licensed equivalent export for a compliance research audit.
+10:docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/cme_group_owner_export_request_v5_with_bessembinder_addendum.md
+13:docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/cme_group_owner_export_request_v4.md
+22:Please include ticket/export/order/license identifiers, data-product names, source-owner cohort markers, and product/date entitlement notes in the response so provenance can be preserved.

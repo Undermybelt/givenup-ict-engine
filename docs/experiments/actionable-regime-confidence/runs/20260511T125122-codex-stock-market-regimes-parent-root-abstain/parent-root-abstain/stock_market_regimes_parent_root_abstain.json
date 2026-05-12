@@ -1,0 +1,275 @@
+{
+  "active_taxonomy": {
+    "ignored_residual_source_labels": [
+      "High-volatility"
+    ],
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "name": "MainRegimeV2",
+    "residual": "UnknownOrMixed",
+    "separate_direct_event_class_or_overlay": [
+      "Manipulation"
+    ]
+  },
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "dataset": {
+    "date_max": "2026-01-30",
+    "date_min": "2001-01-02",
+    "feature_rows_after_252d_warmup": 235177,
+    "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "raw_label_counts": {
+      "Bear": 54939,
+      "Bull": 103766,
+      "Crisis": 29632,
+      "High-volatility": 16,
+      "Sideways": 56668
+    },
+    "raw_rows": 245021,
+    "source_columns": [
+      "date",
+      "ticker",
+      "close",
+      "returns",
+      "volatility",
+      "regime_label",
+      "regime_confidence",
+      "macro_context",
+      "unemployment_rate",
+      "fed_funds_rate",
+      "cpi",
+      "10y_treasury",
+      "2y_treasury",
+      "vix"
+    ],
+    "tickers": [
+      "AAPL",
+      "ABBV",
+      "AMD",
+      "AMZN",
+      "BA",
+      "BAC",
+      "CAT",
+      "COP",
+      "CSCO",
+      "CVX",
+      "DIS",
+      "GE",
+      "GOOGL",
+      "GS",
+      "HD",
+      "INTC",
+      "JNJ",
+      "JPM",
+      "MCD",
+      "META",
+      "MS",
+      "MSFT",
+      "NFLX",
+      "NKE",
+      "NVDA",
+      "PFE",
+      "SBUX",
+      "T",
+      "TMO",
+      "TSLA",
+      "UNH",
+      "VZ",
+      "WFC",
+      "WMT",
+      "XOM",
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^RUT"
+    ]
+  },
+  "decision": {
+    "accepted_95_scoped_parent_roots": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "full_market_full_timeframe_completion": false,
+    "gate_result": "accepted_95_scoped_stock_market_regimes_parent_roots_full_matrix_still_blocked",
+    "missing_scoped_parent_roots": [],
+    "per_regime_scoped_parent_root_gate_achieved": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "gates": [
+    {
+      "accepted_95_scoped_parent_root_gate": true,
+      "consumer_use": "allow_or_size_up_bull_continuation_candidates_inside_supported_daily_us_equity_index_scope",
+      "gate_id": "bull_252d_upper_range_abstain_v1",
+      "mode": "feature_only_non_future",
+      "regime": "Bull",
+      "rule": "range_pos_252 >= 0.97",
+      "stats": {
+        "calibration": {
+          "positives": 6214,
+          "precision": 0.9843180738,
+          "support": 6313,
+          "wilson95_lcb": 0.9809455855
+        },
+        "heldout_ticker": {
+          "positives": 10042,
+          "precision": 0.9861533929,
+          "support": 10183,
+          "wilson95_lcb": 0.9836934737
+        },
+        "heldout_time": {
+          "positives": 3411,
+          "precision": 0.9844155844,
+          "support": 3465,
+          "wilson95_lcb": 0.9797225384
+        },
+        "train": {
+          "positives": 13210,
+          "precision": 0.9743324974,
+          "support": 13558,
+          "wilson95_lcb": 0.9715332042
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root"
+    },
+    {
+      "accepted_95_scoped_parent_root_gate": true,
+      "consumer_use": "allow_bear_defensive_short_bias_or_suppress_long_continuation_inside_supported_daily_us_equity_index_scope",
+      "gate_id": "bear_20d_selloff_cross_section_bottom_abstain_v1",
+      "mode": "feature_only_non_future_panel_cross_section",
+      "regime": "Bear",
+      "rule": "ret_sum_20 <= -0.0477408661 AND range_pos_252_date_rank <= 0.05555555556 AND range_pos_252 <= 0.102802065",
+      "stats": {
+        "calibration": {
+          "positives": 561,
+          "precision": 0.9876760563,
+          "support": 568,
+          "wilson95_lcb": 0.9747822597
+        },
+        "heldout_ticker": {
+          "positives": 468,
+          "precision": 0.9936305732,
+          "support": 471,
+          "wilson95_lcb": 0.9814427175
+        },
+        "heldout_time": {
+          "positives": 797,
+          "precision": 0.9767156863,
+          "support": 816,
+          "wilson95_lcb": 0.963920242
+        },
+        "train": {
+          "positives": 2153,
+          "precision": 0.9867094409,
+          "support": 2182,
+          "wilson95_lcb": 0.9809777736
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root"
+    },
+    {
+      "accepted_95_scoped_parent_root_gate": true,
+      "consumer_use": "allow_range_or_mean_reversion_candidates_only_when_the_source_confidence_field_is_available",
+      "gate_id": "sideways_source_confidence_low_range_abstain_v1",
+      "mode": "source_confidence_assisted_non_future_features",
+      "regime": "Sideways",
+      "rule": "regime_confidence >= 0.857 AND volatility <= 0.25 AND range_width_60 <= 0.25 AND abs(ret_sum_20) <= 0.05",
+      "stats": {
+        "calibration": {
+          "positives": 1223,
+          "precision": 1.0,
+          "support": 1223,
+          "wilson95_lcb": 0.9968688221
+        },
+        "heldout_ticker": {
+          "positives": 2994,
+          "precision": 1.0,
+          "support": 2994,
+          "wilson95_lcb": 0.9987185917
+        },
+        "heldout_time": {
+          "positives": 607,
+          "precision": 1.0,
+          "support": 607,
+          "wilson95_lcb": 0.9937112015
+        },
+        "train": {
+          "positives": 3191,
+          "precision": 1.0,
+          "support": 3191,
+          "wilson95_lcb": 0.9987976058
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root"
+    },
+    {
+      "accepted_95_scoped_parent_root_gate": true,
+      "consumer_use": "suppress_risk_or_size_down_execution_inside_supported_daily_us_equity_index_scope",
+      "gate_id": "crisis_deep_drawdown_rebound_high_vol_abstain_v1",
+      "mode": "feature_only_non_future",
+      "regime": "Crisis",
+      "rule": "drawdown_252 <= -0.4112279736 AND ret_sum_20 >= 0.1485748712 AND volatility >= 0.443713301",
+      "stats": {
+        "calibration": {
+          "positives": 97,
+          "precision": 1.0,
+          "support": 97,
+          "wilson95_lcb": 0.9619059575
+        },
+        "heldout_ticker": {
+          "positives": 225,
+          "precision": 0.9955752212,
+          "support": 226,
+          "wilson95_lcb": 0.9753663436
+        },
+        "heldout_time": {
+          "positives": 148,
+          "precision": 1.0,
+          "support": 148,
+          "wilson95_lcb": 0.9747008567
+        },
+        "train": {
+          "positives": 1004,
+          "precision": 0.9691119691,
+          "support": 1036,
+          "wilson95_lcb": 0.9567211916
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T04:54:42.180078+00:00",
+  "guardrails": [
+    "All four accepted price gates target MainRegimeV2 parent roots, not BullExpansion/BearExpansion/RangeConsolidation/CrisisStress child labels.",
+    "The Sideways gate is source-confidence-assisted; consumers must import the source regime_confidence field or keep Sideways abstained.",
+    "The source panel covers daily US equities and US equity indices only; it does not complete intraday, crypto, FX, futures, or direct Manipulation coverage.",
+    "Manipulation remains separate and is not accepted from this OHLCV/source-regime panel."
+  ],
+  "run_id": "20260511T125122+0800-codex-stock-market-regimes-parent-root-abstain",
+  "split_contract": {
+    "calibration": "non-heldout tickers, 2017 <= year <= 2021",
+    "heldout_ticker": "heldout tickers, all post-252d-warmup rows",
+    "heldout_tickers": [
+      "AAPL",
+      "AMZN",
+      "JNJ",
+      "JPM",
+      "TSLA",
+      "XOM",
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^RUT"
+    ],
+    "heldout_time": "non-heldout tickers, year >= 2022",
+    "train": "non-heldout tickers, year <= 2016"
+  }
+}

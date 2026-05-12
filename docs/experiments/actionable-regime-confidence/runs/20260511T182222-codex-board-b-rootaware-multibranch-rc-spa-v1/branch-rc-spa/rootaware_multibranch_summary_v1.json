@@ -1,0 +1,310 @@
+{
+  "schema_version": "board-b-rootaware-multibranch-summary/v1",
+  "run_id": "20260511T182222+0800-codex-board-b-rootaware-multibranch-rc-spa-v1",
+  "generated_at_utc": "2026-05-11T10:27:49.859587+00:00",
+  "inputs": {
+    "board_b": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+    "board_a_map": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+    "board_a_context": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+    "source_regime_csv": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "auto_quant_root": "/Users/thrill3r/Auto-Quant",
+    "strategy_file": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/strategies/RootAwareMultiBranchV1.py"
+  },
+  "timerange_results": [
+    {
+      "label": "bull_2021",
+      "timerange": "20210101-20211231",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/logs/freqtrade_backtest_bull_2021.out",
+      "aggregate_metrics": {
+        "sharpe": 2.54222,
+        "sortino": 20.029023,
+        "calmar": 55.374042,
+        "total_profit_pct": 10.56,
+        "max_drawdown_pct": -1.031641,
+        "trade_count": 275,
+        "win_rate_pct": 37.818182,
+        "profit_factor": 2.156916
+      },
+      "per_pair_metrics": {
+        "BNB/USDT": {
+          "sharpe": 0.837778,
+          "sortino": 7.339453,
+          "calmar": 43.578318,
+          "total_profit_pct": 3.82,
+          "max_drawdown_pct": -0.474871,
+          "trade_count": 56,
+          "win_rate_pct": 42.857143,
+          "profit_factor": 3.317225
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.500792,
+          "sortino": 7.976959,
+          "calmar": 23.134724,
+          "total_profit_pct": 3.51,
+          "max_drawdown_pct": -0.822166,
+          "trade_count": 50,
+          "win_rate_pct": 40.0,
+          "profit_factor": 2.954256
+        },
+        "SOL/USDT": {
+          "sharpe": 0.692435,
+          "sortino": 3.729544,
+          "calmar": 17.070983,
+          "total_profit_pct": 2.19,
+          "max_drawdown_pct": -0.694925,
+          "trade_count": 64,
+          "win_rate_pct": 32.8125,
+          "profit_factor": 1.992214
+        },
+        "ETH/USDT": {
+          "sharpe": 0.636727,
+          "sortino": 2.756936,
+          "calmar": 20.794708,
+          "total_profit_pct": 1.45,
+          "max_drawdown_pct": -0.378522,
+          "trade_count": 51,
+          "win_rate_pct": 41.176471,
+          "profit_factor": 1.944951
+        },
+        "BTC/USDT": {
+          "sharpe": -0.27853,
+          "sortino": -0.848985,
+          "calmar": -3.434338,
+          "total_profit_pct": -0.43,
+          "max_drawdown_pct": -0.676348,
+          "trade_count": 54,
+          "win_rate_pct": 33.333333,
+          "profit_factor": 0.777265
+        }
+      },
+      "backtest_start": "2021-01-11 10:00:00",
+      "backtest_end": "2021-12-31 00:00:00"
+    },
+    {
+      "label": "winter_2022",
+      "timerange": "20220101-20221231",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/logs/freqtrade_backtest_winter_2022.out",
+      "aggregate_metrics": {
+        "sharpe": 0.424948,
+        "sortino": 1.21014,
+        "calmar": 8.382631,
+        "total_profit_pct": 0.95,
+        "max_drawdown_pct": -0.595541,
+        "trade_count": 74,
+        "win_rate_pct": 41.891892,
+        "profit_factor": 1.377844
+      },
+      "per_pair_metrics": {
+        "ETH/USDT": {
+          "sharpe": 0.197803,
+          "sortino": 0.648107,
+          "calmar": 13.919378,
+          "total_profit_pct": 0.38,
+          "max_drawdown_pct": -0.142297,
+          "trade_count": 16,
+          "win_rate_pct": 56.25,
+          "profit_factor": 1.973463
+        },
+        "SOL/USDT": {
+          "sharpe": 0.212878,
+          "sortino": 0.65203,
+          "calmar": 17.645497,
+          "total_profit_pct": 0.35,
+          "max_drawdown_pct": -0.105295,
+          "trade_count": 12,
+          "win_rate_pct": 58.333333,
+          "profit_factor": 2.402201
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.076727,
+          "sortino": 0.335381,
+          "calmar": 4.304664,
+          "total_profit_pct": 0.15,
+          "max_drawdown_pct": -0.179502,
+          "trade_count": 13,
+          "win_rate_pct": 30.769231,
+          "profit_factor": 1.376533
+        },
+        "BTC/USDT": {
+          "sharpe": 0.03412,
+          "sortino": 0.069811,
+          "calmar": 0.871282,
+          "total_profit_pct": 0.06,
+          "max_drawdown_pct": -0.336832,
+          "trade_count": 11,
+          "win_rate_pct": 45.454545,
+          "profit_factor": 1.159323
+        },
+        "BNB/USDT": {
+          "sharpe": 0.005539,
+          "sortino": 0.016991,
+          "calmar": 0.210201,
+          "total_profit_pct": 0.02,
+          "max_drawdown_pct": -0.415564,
+          "trade_count": 22,
+          "win_rate_pct": 27.272727,
+          "profit_factor": 1.01466
+        }
+      },
+      "backtest_start": "2022-01-01 00:00:00",
+      "backtest_end": "2022-12-31 00:00:00"
+    },
+    {
+      "label": "recovery_23_25",
+      "timerange": "20230101-20251231",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/logs/freqtrade_backtest_recovery_23_25.out",
+      "aggregate_metrics": {
+        "sharpe": 1.302908,
+        "sortino": 7.278222,
+        "calmar": 9.433076,
+        "total_profit_pct": 14.4,
+        "max_drawdown_pct": -2.663758,
+        "trade_count": 716,
+        "win_rate_pct": 31.703911,
+        "profit_factor": 1.473785
+      },
+      "per_pair_metrics": {
+        "SOL/USDT": {
+          "sharpe": 0.420105,
+          "sortino": 2.611704,
+          "calmar": 14.094895,
+          "total_profit_pct": 4.0,
+          "max_drawdown_pct": -0.495595,
+          "trade_count": 138,
+          "win_rate_pct": 32.608696,
+          "profit_factor": 1.889109
+        },
+        "BTC/USDT": {
+          "sharpe": 0.251343,
+          "sortino": 1.645814,
+          "calmar": 6.126627,
+          "total_profit_pct": 3.74,
+          "max_drawdown_pct": -1.065027,
+          "trade_count": 160,
+          "win_rate_pct": 30.625,
+          "profit_factor": 1.462854
+        },
+        "BNB/USDT": {
+          "sharpe": 0.280683,
+          "sortino": 1.346251,
+          "calmar": 5.620998,
+          "total_profit_pct": 2.97,
+          "max_drawdown_pct": -0.922348,
+          "trade_count": 153,
+          "win_rate_pct": 32.026144,
+          "profit_factor": 1.440144
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.256312,
+          "sortino": 1.32444,
+          "calmar": 5.33762,
+          "total_profit_pct": 1.98,
+          "max_drawdown_pct": -0.645606,
+          "trade_count": 122,
+          "win_rate_pct": 32.786885,
+          "profit_factor": 1.416519
+        },
+        "ETH/USDT": {
+          "sharpe": 0.166831,
+          "sortino": 0.942637,
+          "calmar": 2.248612,
+          "total_profit_pct": 1.71,
+          "max_drawdown_pct": -1.328168,
+          "trade_count": 143,
+          "win_rate_pct": 30.769231,
+          "profit_factor": 1.270786
+        }
+      },
+      "backtest_start": "2023-01-01 00:00:00",
+      "backtest_end": "2025-12-31 00:00:00"
+    },
+    {
+      "label": "full_5y",
+      "timerange": "20210101-20251231",
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/logs/freqtrade_backtest_full_5y.out",
+      "aggregate_metrics": {
+        "sharpe": 1.352154,
+        "sortino": 7.480139,
+        "calmar": 10.231274,
+        "total_profit_pct": 26.31,
+        "max_drawdown_pct": -2.708717,
+        "trade_count": 1064,
+        "win_rate_pct": 34.022556,
+        "profit_factor": 1.578812
+      },
+      "per_pair_metrics": {
+        "BNB/USDT": {
+          "sharpe": 0.348623,
+          "sortino": 1.749281,
+          "calmar": 7.589157,
+          "total_profit_pct": 7.06,
+          "max_drawdown_pct": -0.980435,
+          "trade_count": 232,
+          "win_rate_pct": 34.051724,
+          "profit_factor": 1.678139
+        },
+        "SOL/USDT": {
+          "sharpe": 0.396935,
+          "sortino": 2.284103,
+          "calmar": 9.969445,
+          "total_profit_pct": 6.58,
+          "max_drawdown_pct": -0.694925,
+          "trade_count": 213,
+          "win_rate_pct": 33.802817,
+          "profit_factor": 1.88178
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.253429,
+          "sortino": 2.156197,
+          "calmar": 7.189463,
+          "total_profit_pct": 5.61,
+          "max_drawdown_pct": -0.822166,
+          "trade_count": 186,
+          "win_rate_pct": 34.946237,
+          "profit_factor": 1.746724
+        },
+        "ETH/USDT": {
+          "sharpe": 0.224928,
+          "sortino": 1.158552,
+          "calmar": 2.77562,
+          "total_profit_pct": 3.79,
+          "max_drawdown_pct": -1.438092,
+          "trade_count": 209,
+          "win_rate_pct": 35.406699,
+          "profit_factor": 1.424574
+        },
+        "BTC/USDT": {
+          "sharpe": 0.156152,
+          "sortino": 0.813445,
+          "calmar": 2.910693,
+          "total_profit_pct": 3.27,
+          "max_drawdown_pct": -1.182676,
+          "trade_count": 224,
+          "win_rate_pct": 32.142857,
+          "profit_factor": 1.293373
+        }
+      },
+      "backtest_start": "2021-01-11 10:00:00",
+      "backtest_end": "2025-12-31 00:00:00"
+    }
+  ],
+  "full_5y_trade_count": 1064,
+  "root_coverage": {
+    "Bull": 1063,
+    "Bear": 0,
+    "Sideways": 1,
+    "Crisis": 0
+  },
+  "root_lookup_status_counts": {
+    "exact_source_date": 764,
+    "previous_source_date_gap_2d": 171,
+    "previous_source_date_gap_1d": 102,
+    "previous_source_date_gap_3d": 27
+  },
+  "manipulation_overlay_state": "not_present_no_direct_source_match",
+  "suppressed_roots": [
+    "Bear",
+    "Crisis",
+    "Sideways"
+  ]
+}

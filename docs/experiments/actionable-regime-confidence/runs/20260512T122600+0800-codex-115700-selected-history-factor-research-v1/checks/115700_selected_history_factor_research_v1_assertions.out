@@ -1,0 +1,16 @@
+PASS run_id=20260512T122600+0800-codex-115700-selected-history-factor-research-v1
+PASS factor_research_selected_history_exit=0
+PASS auto_quant_prepare_exit=0
+PASS factor_research_after_prepare_exit=0
+PASS repo_root_tomac_failed_missing_freqtrade=true
+PASS workspace_tomac_failed_long_pair_whitelist=true
+PASS short_pair_alias=B2R115700/USD
+PASS short_pair_tomac_failed_timerange=true
+PASS final_tomac_exit=0
+PASS strategies_succeeded=3
+PASS strategies_failed=0
+FAIL_CLOSED total_trades=0
+FAIL_CLOSED downstream_ingestion_possible=false
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

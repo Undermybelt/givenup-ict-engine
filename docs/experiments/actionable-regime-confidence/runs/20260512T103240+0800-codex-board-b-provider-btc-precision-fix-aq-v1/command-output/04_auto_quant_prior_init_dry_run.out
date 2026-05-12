@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.31998415999999985,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 3.855131555022495,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": true,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.83997184,
+    0.000014079999999999999,
+    0.16001408
+  ],
+  "force": true,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260512T024520.891837000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T103240+0800-codex-board-b-provider-btc-precision-fix-aq-v1/provider-btc-precision-fix-aq-v1/strategy_library_provider_btc_precision_fix_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260512T024521.008405000Z",
+  "prior_init_history_path": "/tmp/ict-engine-20260512T103240+0800-provider-btc-precision-fix-state/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "/tmp/ict-engine-20260512T103240+0800-provider-btc-precision-fix-state/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260512T024521.008405000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.83997184,
+        0.000014079999999999999,
+        0.16001408
+      ],
+      "bbn_contradiction_after": 0.568860728888889,
+      "bbn_contradiction_before": 0.8888448888888888,
+      "bbn_contradiction_lift": 0.31998415999999985,
+      "bbn_entropy_after": 0.43986213549876607,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.9113231586735019,
+      "bbn_log_loss_before": 4.766454713695997,
+      "bbn_log_loss_delta": 3.855131555022495,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.15998415999999993,
+        -7.92e-6,
+        0.15999208
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "provider_btc_precision_fix_source_root_cross_v1",
+      "n_breakeven": 0,
+      "n_loss": 4,
+      "n_win": 5,
+      "strategy_name": "SourceRootStopCarryProviderBtcCross",
+      "temper": 0.25,
+      "trade_count": 9
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "temper": 0.25
+}

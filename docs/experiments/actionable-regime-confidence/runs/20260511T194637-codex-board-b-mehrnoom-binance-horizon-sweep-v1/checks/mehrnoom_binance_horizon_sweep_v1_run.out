@@ -1,0 +1,13 @@
+{
+  "best_fold_positive_rate_vs_control": 0.75,
+  "best_horizon_hours": 1,
+  "best_positive_minus_control_lcb_5pct": -7.650460789578289e-05,
+  "best_positive_minus_control_return": 0.00041446457912810996,
+  "downstream_consumption": "not_started:diagnostic_only_full_board_b_still_requires_all_root_rc_spa",
+  "gate_result": "fail:no_horizon_positive_vs_controls",
+  "horizons_evaluated": 11,
+  "horizons_passed": [],
+  "next_action": "B2R-repeat: direct Manipulation horizon sweep failed; switch source/family or source-owned exits before promotion.",
+  "primary_blocker": "no swept horizon has positive lower-bound edge versus same-coin controls",
+  "promotion_allowed_for_full_board_b": false
+}

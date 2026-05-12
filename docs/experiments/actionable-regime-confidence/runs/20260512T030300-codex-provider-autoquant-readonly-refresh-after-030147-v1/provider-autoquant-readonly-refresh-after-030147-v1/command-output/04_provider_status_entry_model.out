@@ -1,0 +1,47 @@
+{
+  "summary_line": "entry_model:2/2 ready",
+  "ready_by_domain": {
+    "entry_model": "2/2"
+  },
+  "providers": [
+    {
+      "provider_id": "breaker_rb_long_v1",
+      "domain": "entry_model",
+      "selectable_by_user": false,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "internal_model_registry",
+      "user_access": "builtin_registry",
+      "market_fit": [
+        "entry_model"
+      ],
+      "status": "registered",
+      "reason": "entry_model_registry_member",
+      "summary": "Built-in entry-model registry member used by status and training surfaces."
+    },
+    {
+      "provider_id": "cisd_rb_long_v1",
+      "domain": "entry_model",
+      "selectable_by_user": false,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "internal_model_registry",
+      "user_access": "builtin_registry",
+      "market_fit": [
+        "entry_model"
+      ],
+      "status": "registered",
+      "reason": "entry_model_registry_member",
+      "summary": "Built-in entry-model registry member used by status and training surfaces."
+    }
+  ],
+  "ready_providers": [
+    "breaker_rb_long_v1",
+    "cisd_rb_long_v1"
+  ],
+  "pending_providers": [],
+  "pending_provider_details": [],
+  "selectable_providers": [],
+  "default_enabled_providers": [],
+  "install_prompts": []
+}

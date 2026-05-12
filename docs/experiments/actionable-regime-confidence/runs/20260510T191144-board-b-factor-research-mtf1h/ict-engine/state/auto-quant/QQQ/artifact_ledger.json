@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto_quant_strategy_library_QQQ_20260510T113049.198582000Z",
+    "artifact_kind": "auto_quant_strategy_library_validated",
+    "artifact_id": "auto_quant_strategy_library_QQQ_20260510T113049.198582000Z",
+    "version": 1,
+    "generated_at": "2026-05-10T11:30:49.198582Z",
+    "symbol": "QQQ",
+    "source_phase": "auto_quant_results_import",
+    "source_run_id": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/auto-quant/QQQ/auto_quant_strategy_library.json",
+    "status": "ready_for_prior_init",
+    "promote_candidate": true,
+    "actionable": true,
+    "decision_hint": "review_then_prior_init",
+    "review_reason": "imported 3 ok / 0 error / 0 not_run from /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/auto_quant_strategy_library.measured.json",
+    "review_rule_version": "auto-quant-strategy-library-v1",
+    "top_factor_name": null,
+    "top_factor_action": null,
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 3,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

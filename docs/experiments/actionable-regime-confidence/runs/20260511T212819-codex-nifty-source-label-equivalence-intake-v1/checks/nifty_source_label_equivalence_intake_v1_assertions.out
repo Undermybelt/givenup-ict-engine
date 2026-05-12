@@ -1,0 +1,9 @@
+PASS decision=nifty_source_label_equivalence_intake_v1=partial_schema_ready_no_full_objective
+PASS verifier_status=schema_ready_unscored
+PASS row_count=3435
+PASS source_label_ready_rows_added=3435
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

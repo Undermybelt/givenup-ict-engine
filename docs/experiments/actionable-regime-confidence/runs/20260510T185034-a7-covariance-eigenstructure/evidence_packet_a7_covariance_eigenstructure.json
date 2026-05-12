@@ -1,0 +1,348 @@
+{
+  "schema_version": "board-a-actionable-regime-confidence-evidence/a7-covariance-eigenstructure-v1",
+  "loop_id": "20260510T185034+0800-board-a-a7-covariance-eigenstructure",
+  "durable_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T185034-a7-covariance-eigenstructure",
+  "source_packets": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T184411-a-v2-2-integrated-review/evidence_packet_v2_2_integrated_review.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T184538/evidence_packet_v2.json"
+  ],
+  "provider_packet": {
+    "status": "reused_yfinance_ibkr_nq_autoquant_cache_with_current_provider_status",
+    "provider_status_compact_artifact": "downstream-readback/provider_status_compact.out",
+    "provider_status_compact_preview": [
+      "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:2/2 ready | market_data:6/7 ready",
+      "guide: tradfi free fallback=yfinance | live zero-config=yfinance | crypto public=binance_public, bybit_public, kraken_public | setup required=crypto_public_runtime, external_http_runtime",
+      "details: use ict-engine provider-status --provider <id> --compact for provider-specific setup prompts",
+      "entry_model: ready 2/2 selectable 0 default 0",
+      "  ready: breaker_rb_long_v1, cisd_rb_long_v1",
+      "live_runtime: ready 1/3 selectable 3 default 1",
+      "  ready: yfinance",
+      "  pending: crypto_public_runtime(operator_runtime_required:explicit_opt_in_required), external_http_runtime(operator_runtime_required:base_url_and_service_required)",
+      "local_runtime: ready 2/2 selectable 0 default 0",
+      "  ready: ibkr_bridge, kraken_cli",
+      "market_data: ready 6/7 selectable 7 default 0",
+      "  ready: binance_public, bybit_public, ibkr, kraken_public, polymarket_public, yfinance"
+    ],
+    "tradingview_remix_ready": false
+  },
+  "active_market_timeframe_set": {
+    "primary_chain": [
+      "QQQ 1h",
+      "NQ 15m->1h aggregate"
+    ],
+    "provider_probe_only": [
+      "TradingViewRemix unavailable",
+      "Kraken not same-market for covariance"
+    ]
+  },
+  "candidate_regime": {
+    "regime_id": "ExtremeStress / ReversalBrewing",
+    "horizon": "8 x 1h bars",
+    "allowed_action": "none",
+    "reason": "realized covariance and correlation eigenstructure added as evidence only; no release packet accepted"
+  },
+  "covariance_eigenstructure_packet": {
+    "artifact": "covariance-eigenstructure/covariance_eigenstructure_calibration_report.json",
+    "features_csv": "covariance-eigenstructure/covariance_eigenstructure_features.csv",
+    "rows": 5003,
+    "feature_count": 39,
+    "covariance_features": [
+      "eigen_top_share_32",
+      "eigen_second_share_32",
+      "eigen_ratio_1_2_32",
+      "corr_nq_qqq_yf_32",
+      "corr_nq_qqq_ibkr_32",
+      "corr_qqq_yf_ibkr_32",
+      "realized_vol_nq_32",
+      "realized_vol_qqq_yf_32",
+      "realized_vol_qqq_ibkr_32",
+      "eigen_top_share_pct_rank_32",
+      "realized_vol_nq_pct_rank_32"
+    ],
+    "targets": {
+      "target_extreme_stress_h8": {
+        "target": "target_extreme_stress_h8",
+        "positive": 567,
+        "negative": 4428,
+        "split": {
+          "train": 2497,
+          "calibration": 1249,
+          "test": 1249
+        },
+        "status": "ran_catboost",
+        "feature_count": 39,
+        "top_importances": [
+          {
+            "feature": "vix3m_level",
+            "importance": 14.657465123532862
+          },
+          {
+            "feature": "nq_close",
+            "importance": 10.793999174383742
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 8.202255058047298
+          },
+          {
+            "feature": "nq_volume",
+            "importance": 7.351475936767296
+          },
+          {
+            "feature": "nq_open",
+            "importance": 6.840116200894164
+          },
+          {
+            "feature": "timestamp",
+            "importance": 5.796816437005806
+          },
+          {
+            "feature": "nq_vs_200d_pct",
+            "importance": 5.506385686847747
+          },
+          {
+            "feature": "vvix_over_vix",
+            "importance": 5.307708165159512
+          },
+          {
+            "feature": "nq_low",
+            "importance": 5.135782093827428
+          },
+          {
+            "feature": "nq_high",
+            "importance": 4.8431454348239145
+          },
+          {
+            "feature": "qqq_hv_level",
+            "importance": 3.876181373661845
+          },
+          {
+            "feature": "realized_vol_nq_pct_rank_32",
+            "importance": 2.1739402964238645
+          },
+          {
+            "feature": "qqq_ibkr_high",
+            "importance": 1.7130587348783597
+          },
+          {
+            "feature": "qqq_yf_low",
+            "importance": 1.6020154723755924
+          },
+          {
+            "feature": "qqq_yf_volume",
+            "importance": 1.5718491481603478
+          },
+          {
+            "feature": "provider_return_disagreement",
+            "importance": 1.2155786722763804
+          },
+          {
+            "feature": "realized_vol_qqq_ibkr_32",
+            "importance": 1.1777266218169795
+          },
+          {
+            "feature": "eigen_ratio_1_2_32",
+            "importance": 1.1191810294468723
+          },
+          {
+            "feature": "qqq_ibkr_volume",
+            "importance": 1.1153254133662196
+          },
+          {
+            "feature": "eigen_top_share_pct_rank_32",
+            "importance": 1.070510690752613
+          }
+        ],
+        "admissible_rules": 437,
+        "accepted_95_rules": 0,
+        "accepted_99_rules": 0,
+        "selected_rule": {
+          "threshold": 0.011232240817408225,
+          "calibration_support": 123,
+          "calibration_success": 14,
+          "calibration_precision": 0.11382113821138211,
+          "calibration_wilson_lcb_95": 0.06902284440685469,
+          "test_support": 404,
+          "test_success": 76,
+          "test_precision": 0.18811881188118812,
+          "precision_wilson_lcb_95": 0.15301440944578648,
+          "precision_wilson_lcb_99": 0.14322657974195283,
+          "ece": 0.1428328679998842,
+          "coverage": 0.32345876701361087,
+          "passes_95": false,
+          "passes_99": false
+        }
+      },
+      "target_reversal_brewing_h8": {
+        "target": "target_reversal_brewing_h8",
+        "positive": 46,
+        "negative": 4949,
+        "split": {
+          "train": 2497,
+          "calibration": 1249,
+          "test": 1249
+        },
+        "status": "ran_catboost",
+        "feature_count": 39,
+        "top_importances": [
+          {
+            "feature": "provider_return_disagreement",
+            "importance": 30.56231769802272
+          },
+          {
+            "feature": "qqq_ibkr_count",
+            "importance": 9.486287517036756
+          },
+          {
+            "feature": "qqq_ibkr_volume",
+            "importance": 5.126570484511011
+          },
+          {
+            "feature": "qqq_yf_low",
+            "importance": 4.1563221699787185
+          },
+          {
+            "feature": "ret_qqq_ibkr",
+            "importance": 3.9759687859065393
+          },
+          {
+            "feature": "ret_qqq_yf",
+            "importance": 3.7445097106212373
+          },
+          {
+            "feature": "ret_nq",
+            "importance": 2.694886215634156
+          },
+          {
+            "feature": "qqq_ibkr_low",
+            "importance": 2.6106322863480815
+          },
+          {
+            "feature": "qqq_yf_volume",
+            "importance": 2.5360152277555903
+          },
+          {
+            "feature": "qqq_yf_open",
+            "importance": 2.3272259937566075
+          },
+          {
+            "feature": "qqq_yf_high",
+            "importance": 2.250125814363178
+          },
+          {
+            "feature": "realized_vol_qqq_ibkr_32",
+            "importance": 2.2344598791391435
+          },
+          {
+            "feature": "nq_volume",
+            "importance": 2.2050469550424507
+          },
+          {
+            "feature": "realized_vol_nq_32",
+            "importance": 2.1522910003329216
+          },
+          {
+            "feature": "realized_vol_qqq_yf_32",
+            "importance": 2.1182689189321575
+          },
+          {
+            "feature": "qqq_hv_pct_rank_252",
+            "importance": 2.105689788502855
+          },
+          {
+            "feature": "nq_high",
+            "importance": 1.9294761260091022
+          },
+          {
+            "feature": "nq_open",
+            "importance": 1.4158788242871492
+          },
+          {
+            "feature": "ret_qqq_avg",
+            "importance": 1.3755145970050076
+          },
+          {
+            "feature": "qqq_yf_close",
+            "importance": 1.3446930597833737
+          }
+        ],
+        "admissible_rules": 441,
+        "accepted_95_rules": 0,
+        "accepted_99_rules": 0,
+        "selected_rule": {
+          "threshold": 0.014694382772514917,
+          "calibration_support": 120,
+          "calibration_success": 11,
+          "calibration_precision": 0.09166666666666666,
+          "calibration_wilson_lcb_95": 0.05195718284856543,
+          "test_support": 141,
+          "test_success": 23,
+          "test_precision": 0.16312056737588654,
+          "precision_wilson_lcb_95": 0.1112244648548197,
+          "precision_wilson_lcb_99": 0.09848413843622696,
+          "ece": 0.08139419511626289,
+          "coverage": 0.11289031224979984,
+          "passes_95": false,
+          "passes_99": false
+        }
+      }
+    }
+  },
+  "downstream_chain": {
+    "workflow_status": {
+      "artifact": "downstream-readback/workflow_status_nq.json",
+      "blocking_status": "no_workflow_state",
+      "blocking_reason": "no_workflow_state",
+      "focus_phase": "workflow_status"
+    },
+    "catboost_policy_status": {
+      "artifact": "downstream-readback/policy_training_status_nq.json",
+      "summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0"
+    },
+    "pre_bayes_status": {
+      "artifact": "downstream-readback/pre_bayes_status_nq.json"
+    }
+  },
+  "calibration_result": {
+    "accepted_gate": "none",
+    "board_state": "abstain",
+    "blocker": "abstain_no_calibrated_release_rule;precision_wilson_lcb_below_95;ece_above_95_gate",
+    "accepted_95_rule_count": 0,
+    "accepted_99_rule_count": 0,
+    "best_extreme_stress_rule": {
+      "threshold": 0.011232240817408225,
+      "calibration_support": 123,
+      "calibration_success": 14,
+      "calibration_precision": 0.11382113821138211,
+      "calibration_wilson_lcb_95": 0.06902284440685469,
+      "test_support": 404,
+      "test_success": 76,
+      "test_precision": 0.18811881188118812,
+      "precision_wilson_lcb_95": 0.15301440944578648,
+      "precision_wilson_lcb_99": 0.14322657974195283,
+      "ece": 0.1428328679998842,
+      "coverage": 0.32345876701361087,
+      "passes_95": false,
+      "passes_99": false
+    },
+    "best_reversal_brewing_rule": {
+      "threshold": 0.014694382772514917,
+      "calibration_support": 120,
+      "calibration_success": 11,
+      "calibration_precision": 0.09166666666666666,
+      "calibration_wilson_lcb_95": 0.05195718284856543,
+      "test_support": 141,
+      "test_success": 23,
+      "test_precision": 0.16312056737588654,
+      "precision_wilson_lcb_95": 0.1112244648548197,
+      "precision_wilson_lcb_99": 0.09848413843622696,
+      "ece": 0.08139419511626289,
+      "coverage": 0.11289031224979984,
+      "passes_95": false,
+      "passes_99": false
+    },
+    "thresholds_relaxed": false
+  },
+  "next_action": "A8: add jump-model or persistence-penalty features to transition_hazard, using A7 covariance eigenstructure only as supporting evidence.",
+  "created_at": "2026-05-10T10:54:12.110283+00:00"
+}

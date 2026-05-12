@@ -1,0 +1,13 @@
+metric,value
+rows,245021
+tickers,39
+min_date,2000-01-03
+max_date,2026-01-30
+csv_bytes,37155794
+csv_sha256,2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0
+xom_sideways_2025,68
+label_count_Bull,103766
+label_count_Crisis,29632
+label_count_Bear,54939
+label_count_Sideways,56668
+label_count_High-volatility,16

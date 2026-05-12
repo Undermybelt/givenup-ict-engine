@@ -1,0 +1,47 @@
+{
+  "accepted_rows_added": 0,
+  "aggregate_source_totals": {
+    "flip_sequences": 1316,
+    "spoof_contracts": 359790,
+    "spoof_orders": 5207
+  },
+  "board_sha256_at_start": "207f8740a366ab73680c27c8779932d95209afc8fdfb047f7c49d8ad5a32300f",
+  "candidate_positive_dates": 51,
+  "candidate_rows_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001635-codex-r6-oystacher-exact-date-candidate-extract-v1/r6-oystacher-exact-date-candidate-extract/r6_oystacher_exact_date_positive_candidates_v1.csv",
+  "gate_result": "r6_oystacher_exact_date_candidate_extract_v1=exact_dates_extracted_controls_and_order_times_missing_no_acceptance",
+  "generated_at_utc": "2026-05-11T16:18:17.566790+00:00",
+  "matched_controls_present": false,
+  "new_confidence_gate": false,
+  "post_2020_chronology_help": false,
+  "raw_data_committed": false,
+  "row_materialization_status": "date_level_positive_only_controls_and_order_times_missing",
+  "run_id": "20260512T001635-codex-r6-oystacher-exact-date-candidate-extract-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_fetches": [
+    {
+      "bytes": 2553330,
+      "content_type": "application/pdf",
+      "fetch_status": "ok",
+      "http_status": 200,
+      "sha256": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "tmp_path": "/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1/enfigorcomplnt101915.pdf",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf"
+    },
+    {
+      "bytes": 39058,
+      "content_type": "text/html; charset=UTF-8",
+      "fetch_status": "ok",
+      "http_status": 200,
+      "sha256": "49d51b83e0b8e178f20d9d9f199d8f8a8049f3a6c4f493086a6acd0df5f0f854",
+      "tmp_path": "/tmp/ict-engine-r6-oystacher-exact-date-candidate-extract-v1/press_7253_15.html",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7253-15"
+    }
+  ],
+  "source_group_count": 6,
+  "source_groups_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001635-codex-r6-oystacher-exact-date-candidate-extract-v1/r6-oystacher-exact-date-candidate-extract/r6_oystacher_exact_date_source_groups_v1.csv",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

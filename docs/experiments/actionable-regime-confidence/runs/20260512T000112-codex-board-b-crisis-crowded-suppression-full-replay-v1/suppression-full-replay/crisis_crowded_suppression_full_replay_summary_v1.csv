@@ -1,0 +1,5 @@
+parent_regime_root,source_trade_rows,effective_trade_rows,suppressed_no_trade_rows,source_net_sum,effective_net_sum,source_mean_profit_ratio_net,effective_mean_profit_ratio_net,source_rc_spa,source_hard_gate_result,replay_gate
+Bull,4948,4948,0,14.541217023334,14.541217023334,0.002938806997440142,0.002938806997,85.74074074074075,pass,unchanged_source_branch_replay
+Bear,1349,1349,0,7.259719896934,7.259719896934,0.005381556632271275,0.005381556632,77.5,pass,unchanged_source_branch_replay
+Sideways,5500,5500,0,15.544172028677,15.544172028677,0.0028262130961230294,0.002826213096,83.70370370370371,pass,unchanged_source_branch_replay
+Crisis,532,0,532,2.906877183291,0.000000000000,0.005464054855810504,0.000000000000,83.0,pass,nursery_guard_no_trade_not_profitability_pass

@@ -1,0 +1,8 @@
+indicator_type,name,present
+mail_binary,sendmail,True
+mail_binary,mail,True
+mail_binary,mailx,True
+mail_binary,msmtp,False
+mail_binary,mutt,False
+mail_binary,neomutt,False
+mail_binary,gh,True

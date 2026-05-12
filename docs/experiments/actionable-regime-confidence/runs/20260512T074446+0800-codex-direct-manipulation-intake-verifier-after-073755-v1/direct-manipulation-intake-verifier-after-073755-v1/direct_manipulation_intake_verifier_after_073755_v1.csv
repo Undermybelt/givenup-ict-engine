@@ -1,0 +1,15 @@
+metric,value
+gate_result,direct_manipulation_intake_verifier_after_073755_v1=schema_ready_unscored_non_promoting
+verifier_exit_code,0
+verifier_status,schema_ready_unscored
+positive_rows,73
+matched_negative_rows,73
+matched_group_count,70
+schema_ready_unscored,True
+accepted_rows_added,0
+valid_required_root_unlock,False
+source_control_evidence_acquired,False
+canonical_merge,False
+downstream_promotion_rerun,False
+trade_usable,False
+update_goal,False

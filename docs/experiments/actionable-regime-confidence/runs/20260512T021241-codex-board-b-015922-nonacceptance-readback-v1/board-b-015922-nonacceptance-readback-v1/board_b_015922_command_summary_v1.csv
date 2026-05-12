@@ -1,0 +1,9 @@
+command_id,exit_code,stdout_file
+00_provider_status,0,docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/command-output/00_provider_status.out
+01_auto_quant_status,0,docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/command-output/01_auto_quant_status.out
+02_analyze_recorded_data,143,docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/command-output/02_analyze_recorded_data.out
+03_pre_bayes_status,0,docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/command-output/03_pre_bayes_status.out
+04_policy_training_status,0,docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/command-output/04_policy_training_status.out
+05_workflow_structural_bundle,0,docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/command-output/05_workflow_structural_bundle.out
+06_workflow_execution_candidate,0,docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/command-output/06_workflow_execution_candidate.out
+07_workflow_full,0,docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/command-output/07_workflow_full.out

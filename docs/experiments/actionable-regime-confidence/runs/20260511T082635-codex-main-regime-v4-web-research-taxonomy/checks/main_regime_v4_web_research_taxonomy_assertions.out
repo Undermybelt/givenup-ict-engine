@@ -1,0 +1,11 @@
+PASS web_scan_completed=true
+PASS user_taxonomy_reopen_recorded=true
+PASS active_taxonomy=MainRegimeV4
+PASS active_completion_roots=BullExpansion,BearExpansion,Consolidation,CrisisStress,Manipulation
+PASS unknown_or_mixed_residual_only=true
+PASS manipulation_direct_input_gate=true
+PASS v2_attachability_not_counted_without_v4_reaudit=true
+PASS accepted_gate=none_for_MainRegimeV4
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false

@@ -1,0 +1,34 @@
+{
+  "protocol_version": "board-b-agent-branch-admission-surface-fix-v1",
+  "run_id": "20260512T010454+0800-codex-board-b-220646-real-catboost-explicit-closure-v1",
+  "source_candidate": "SourceRootStopCarryLongHorizonV1",
+  "branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+  "no_new_rc_spa_run": true,
+  "code_verification": {
+    "cargo_test_structural_branch_admission_agent_surface_exit0": true,
+    "cargo_test_execution_candidate_phase_lib_exit0": true,
+    "cargo_build_agent_branch_admission_exit0": true
+  },
+  "workflow_full_json_readback": {
+    "workflow_json_exit0": true,
+    "phase_detail_source_phase": "structural-recommended-path-bundle",
+    "latest_structural_execution_candidate_present": true,
+    "closed_loop_branch_admission_status": "fail_closed",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "execution_gate_status": "execution_observe_only",
+    "ready": false,
+    "actionable": false,
+    "review_status": "observe"
+  },
+  "agent_readback": {
+    "workflow_agent_exit0": true,
+    "blocking_status": "fail_closed",
+    "blocking_reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "hard_block_active": true,
+    "next_command_source": "closed_loop_branch_admission",
+    "closed_loop_branch_admission_status": "fail_closed",
+    "latest_structural_execution_candidate_present": true
+  },
+  "promotion_allowed": false,
+  "fail_closed_reason": "exact structural branch is visible in full JSON and agent surfaces but remains pass_neutralized/execution_observe_only; execution-tree trace parity remains the blocker"
+}

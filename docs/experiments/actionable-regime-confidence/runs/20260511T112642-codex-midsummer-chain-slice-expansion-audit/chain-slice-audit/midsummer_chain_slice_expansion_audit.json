@@ -1,0 +1,182 @@
+{
+  "run_id": "20260511T112642+0800-codex-midsummer-chain-slice-expansion-audit",
+  "generated_at_utc": "2026-05-11T03:29:40.242148+00:00",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV2",
+  "source": {
+    "title": "A Midsummer Meme's Dream direct wash-maker Dune export",
+    "zip_path": "/tmp/ict-regime-midsummer-meme/meme_coin-main.zip",
+    "zip_sha256_from_prior_audit": "4ef60d79cc70bc14287002d0a97a127ca46757690bae075801858356489571c9",
+    "csv_member": "meme_coin_anon-main/data/dune_data_on_potential_wash_trading_makers_HP_coins.csv",
+    "raw_data_committed": false
+  },
+  "method": {
+    "unit": "maker-token-day",
+    "positive_rule": "same platform/address/day paired controls AND is_both_buyer_seller == True",
+    "negative_rule": "same platform/address/day paired controls AND is_both_buyer_seller == False",
+    "split": "per-platform chronological 60/40 by paired token-day",
+    "acceptance_gate": "minimum calibration/test positive/negative Wilson95 LCB >= 0.95"
+  },
+  "input_profile": {
+    "rows_total": 64621,
+    "platform_counts": {
+      "base": 9103,
+      "bsc": 6688,
+      "ethereum": 1559,
+      "solana": 47271
+    }
+  },
+  "platform_summaries": [
+    {
+      "platform": "base",
+      "date_range": [
+        "2023-11-28",
+        "2025-02-04"
+      ],
+      "chronological_cut_date": "2024-10-14",
+      "paired_token_days": 84,
+      "rows_total": 8618,
+      "positive_rows_total": 556,
+      "negative_rows_total": 8062,
+      "calibration": {
+        "rows": 1390,
+        "positive_rows": 367,
+        "negative_rows": 1023,
+        "positive_wilson95_lcb": 0.989641,
+        "negative_wilson95_lcb": 0.996259
+      },
+      "test": {
+        "rows": 7228,
+        "positive_rows": 189,
+        "negative_rows": 7039,
+        "positive_wilson95_lcb": 0.98008,
+        "negative_wilson95_lcb": 0.999455
+      },
+      "minimum_split_class_wilson95_lcb": 0.98008,
+      "accepted_95": true,
+      "already_ledgered_before_this_run": false,
+      "rejection_reasons": []
+    },
+    {
+      "platform": "bsc",
+      "date_range": [
+        "2021-09-28",
+        "2025-02-04"
+      ],
+      "chronological_cut_date": "2024-06-27",
+      "paired_token_days": 298,
+      "rows_total": 4864,
+      "positive_rows_total": 1870,
+      "negative_rows_total": 2994,
+      "calibration": {
+        "rows": 2570,
+        "positive_rows": 897,
+        "negative_rows": 1673,
+        "positive_wilson95_lcb": 0.995736,
+        "negative_wilson95_lcb": 0.997709
+      },
+      "test": {
+        "rows": 2294,
+        "positive_rows": 973,
+        "negative_rows": 1321,
+        "positive_wilson95_lcb": 0.996067,
+        "negative_wilson95_lcb": 0.9971
+      },
+      "minimum_split_class_wilson95_lcb": 0.995736,
+      "accepted_95": true,
+      "already_ledgered_before_this_run": true,
+      "rejection_reasons": []
+    },
+    {
+      "platform": "ethereum",
+      "date_range": [
+        "2023-05-01",
+        "2025-01-31"
+      ],
+      "chronological_cut_date": "2024-09-28",
+      "paired_token_days": 95,
+      "rows_total": 977,
+      "positive_rows_total": 265,
+      "negative_rows_total": 712,
+      "calibration": {
+        "rows": 513,
+        "positive_rows": 149,
+        "negative_rows": 364,
+        "positive_wilson95_lcb": 0.974866,
+        "negative_wilson95_lcb": 0.989557
+      },
+      "test": {
+        "rows": 464,
+        "positive_rows": 116,
+        "negative_rows": 348,
+        "positive_wilson95_lcb": 0.967945,
+        "negative_wilson95_lcb": 0.989082
+      },
+      "minimum_split_class_wilson95_lcb": 0.967945,
+      "accepted_95": true,
+      "already_ledgered_before_this_run": false,
+      "rejection_reasons": []
+    },
+    {
+      "platform": "solana",
+      "date_range": [
+        "2024-02-15",
+        "2025-02-04"
+      ],
+      "chronological_cut_date": "2024-11-11",
+      "paired_token_days": 639,
+      "rows_total": 44669,
+      "positive_rows_total": 4872,
+      "negative_rows_total": 39797,
+      "calibration": {
+        "rows": 5726,
+        "positive_rows": 2636,
+        "negative_rows": 3090,
+        "positive_wilson95_lcb": 0.998545,
+        "negative_wilson95_lcb": 0.998758
+      },
+      "test": {
+        "rows": 38943,
+        "positive_rows": 2236,
+        "negative_rows": 36707,
+        "positive_wilson95_lcb": 0.998285,
+        "negative_wilson95_lcb": 0.999895
+      },
+      "minimum_split_class_wilson95_lcb": 0.998285,
+      "accepted_95": true,
+      "already_ledgered_before_this_run": false,
+      "rejection_reasons": []
+    }
+  ],
+  "decision": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 5693,
+    "accepted_direct_manipulation_sources_added": 3,
+    "accepted_platforms_total": [
+      "base",
+      "bsc",
+      "ethereum",
+      "solana"
+    ],
+    "new_accepted_platforms": [
+      "base",
+      "ethereum",
+      "solana"
+    ],
+    "rejected_platforms": [],
+    "gate_result": "accepted_95_additional_midsummer_chain_wash_slices",
+    "full_objective_achieved": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "artifacts": {
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.json",
+    "md": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.md",
+    "platform_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_platform_summary.csv",
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/checks/midsummer_chain_slice_expansion_audit_assertions.out",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/scripts/midsummer_chain_slice_expansion_audit.py"
+  },
+  "next_action": "Do not generalize direct wash evidence to MainRegimeV2 price roots; continue acquiring full-matrix Bull/Bear/Sideways/Crisis source labels and non-wash direct Manipulation varieties."
+}

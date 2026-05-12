@@ -1,0 +1,199 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_before_artifact": "fd177408440b69c09e6d047283545afada629b711fa7bd92ec712ac66d787038",
+  "canonical_merge": false,
+  "dispatch_drafts": [
+    {
+      "exists": true,
+      "expected_sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b",
+      "owner": "cme_group",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b",
+      "sha256_matches_expected": true,
+      "status": "draft_present_not_sent"
+    },
+    {
+      "exists": true,
+      "expected_sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d",
+      "owner": "cboe_cfe",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d",
+      "sha256_matches_expected": true,
+      "status": "draft_present_not_sent"
+    }
+  ],
+  "downstream_promotion_rerun": false,
+  "gate_result": "post_081705_required_root_dispatch_gate_v1=no_required_root_or_dispatch_unlock",
+  "generated_at": "2026-05-12T00:26:42.500814+00:00",
+  "latest_evidence_checked": [
+    {
+      "accepted_rows_added": "",
+      "assertions_exists": true,
+      "assertions_path": "docs/experiments/actionable-regime-confidence/runs/20260512T081025+0800-codex-r6-direct-intake-approval-gap-readback-after-080950-v1/checks/r6_direct_intake_approval_gap_readback_after_080950_v1_assertions.out",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate": "r6_direct_intake_approval_gap_readback_after_080950_v1=direct_intake_present_but_no_r6_owner_export_or_approval_unlock",
+      "id": "081025",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T081025+0800-codex-r6-direct-intake-approval-gap-readback-after-080950-v1",
+      "root_exists": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions_exists": true,
+      "assertions_path": "docs/experiments/actionable-regime-confidence/runs/20260512T081149+0800-codex-r6-public-docket-attachment-route-probe-after-080700-v1/checks/r6_public_docket_attachment_route_probe_after_080700_v1_assertions.out",
+      "canonical_merge": "",
+      "downstream_promotion_rerun": "",
+      "gate": "r6_public_docket_attachment_route_probe_after_080700_v1=no_new_public_docket_control_attachment_no_unlock",
+      "id": "081149",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T081149+0800-codex-r6-public-docket-attachment-route-probe-after-080700-v1",
+      "root_exists": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "",
+      "valid_required_root_unlock": ""
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions_exists": true,
+      "assertions_path": "docs/experiments/actionable-regime-confidence/runs/20260512T081323+0800-codex-courtlistener-recap-sibling-attachment-probe-after-080906-v1/checks/courtlistener_recap_sibling_attachment_probe_after_080906_v1_assertions.out",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate": "courtlistener_recap_sibling_attachment_probe_after_080906_v1=no_new_public_control_attachment_unlock",
+      "id": "081323",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T081323+0800-codex-courtlistener-recap-sibling-attachment-probe-after-080906-v1",
+      "root_exists": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions_exists": true,
+      "assertions_path": "docs/experiments/actionable-regime-confidence/runs/20260512T081522+0800-codex-r6-courtlistener-recap-control-route-after-080950-v1/checks/r6_courtlistener_recap_control_route_after_080950_v1_assertions.out",
+      "canonical_merge": "False",
+      "downstream_promotion_rerun": "False",
+      "gate": "r6_courtlistener_recap_control_route_after_080950_v1=public_recap_positive_and_context_only_no_source_owned_normal_controls",
+      "id": "081522",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T081522+0800-codex-r6-courtlistener-recap-control-route-after-080950-v1",
+      "root_exists": true,
+      "source_control_evidence_acquired": "False",
+      "update_goal": "False",
+      "valid_required_root_unlock": "False"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions_exists": true,
+      "assertions_path": "docs/experiments/actionable-regime-confidence/runs/20260512T081705+0800-codex-courtlistener-recap-sibling-fast-probe-after-081323-v1/checks/courtlistener_recap_sibling_fast_probe_after_081323_v1_assertions.out",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate": "courtlistener_recap_sibling_fast_probe_after_081323_v1=no_new_public_control_attachment_unlock",
+      "id": "081705",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T081705+0800-codex-courtlistener-recap-sibling-fast-probe-after-081323-v1",
+      "root_exists": true,
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  ],
+  "local_dispatch_probe": {
+    "approved_operator_dispatch_path": false,
+    "env_markers_present": {
+      "MAILGUN_API_KEY": false,
+      "RESEND_API_KEY": false,
+      "SENDGRID_API_KEY": false,
+      "SMTP_HOST": false,
+      "SMTP_PASS": false,
+      "SMTP_USER": false
+    },
+    "external_requests_sent": false,
+    "reason": "No explicit operator approval/ticket/export evidence is present in required roots; this probe does not send external messages.",
+    "tools_present": {
+      "mail": true,
+      "msmtp": false,
+      "mutt": false,
+      "sendmail": true
+    }
+  },
+  "next_action": "Use an approved operator path to send/upload the v5 CME and Cboe/CFE drafts, preserve ticket/export/license identifiers, or supply explicit FLIP-control approval or verifier-native owner-export/source-panel/native-subhour rows before canonical merge or downstream rerun.",
+  "promotion_allowed": false,
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "run_id": "20260512T082337+0800-codex-post-081705-required-root-dispatch-gate-v1",
+  "scope": "post_081705_required_root_and_dispatch_readback_only",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_roots": {
+    "r3_native_subhour": {
+      "accepted_mapping_confidence_95_labels": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "all_required_files_present": true,
+      "any_approval_file_present": false,
+      "approval_files_present": {},
+      "crisis_present": false,
+      "exists": true,
+      "file_count_visible": 2,
+      "limitations": [
+        "Crisis has no direct TSIE source taxonomy class",
+        "trap labels are fail-closed abstain and excluded from accepted rows",
+        "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+        "canonical merge not run",
+        "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+      ],
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "promotion_allowed": false,
+      "quarantine_reason": "crisis_absent_native_subhour_root_is_source_label_material_only",
+      "required_files_present": {
+        "native_subhour_source_label_provenance.json": true,
+        "native_subhour_source_label_rows.csv": true
+      },
+      "root_name": "r3_native_subhour",
+      "visible_files_sample": [
+        "native_subhour_source_label_provenance.json",
+        "native_subhour_source_label_rows.csv"
+      ]
+    },
+    "r5_recency": {
+      "all_required_files_present": false,
+      "any_approval_file_present": false,
+      "approval_files_present": {},
+      "exists": false,
+      "file_count_visible": 0,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "required_files_present": {
+        "source_panel_recency_provenance.json": false,
+        "stock_market_regimes_2026_extension.csv": false
+      },
+      "root_name": "r5_recency",
+      "visible_files_sample": []
+    },
+    "r6_owner_export": {
+      "all_required_files_present": false,
+      "any_approval_file_present": false,
+      "approval_files_present": {
+        "control_policy_approval.json": false,
+        "owner_approval_reference.md": false,
+        "source_policy_approval.json": false
+      },
+      "exists": false,
+      "file_count_visible": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "required_files_present": {
+        "matched_negative_normal_activity_rows.csv": false,
+        "positive_spoofing_layering_rows.csv": false,
+        "provenance_manifest.json": false
+      },
+      "root_name": "r6_owner_export",
+      "visible_files_sample": []
+    }
+  },
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

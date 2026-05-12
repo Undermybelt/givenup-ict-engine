@@ -1,0 +1,219 @@
+{
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "ec8dc4c24b96a491106345f5fda79146612b67e8152b9f08c0b529fa8593878d",
+  "decision": {
+    "accepted_confidence_rows_added": 0,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_gate": "yfinance_native_interval_overlap_preflight_v1=no_new_confidence_gate_1h_only_native_overlap",
+    "alias_source_overlap_intervals": [
+      "60m"
+    ],
+    "blocked_no_source_date_overlap_intervals": [
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "90m"
+    ],
+    "canonical_source_overlap_intervals": [
+      "1h"
+    ],
+    "full_objective_achieved": false,
+    "overlap_intervals": [
+      "60m",
+      "1h"
+    ],
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T06:42:35.201827+00:00",
+  "intervals": {
+    "15m": {
+      "failed_ticker_count": 0,
+      "failed_tickers": [],
+      "has_source_date_overlap": false,
+      "period": "60d",
+      "provider_first_session_date": "2026-02-12",
+      "provider_last_session_date": "2026-05-08",
+      "provider_rows": 60840,
+      "ready_ticker_count": 39,
+      "source_overlap_by_root": {
+        "Bear": 0,
+        "Bull": 0,
+        "Crisis": 0,
+        "Sideways": 0
+      },
+      "source_overlap_ticker_days": 0,
+      "source_overlap_wilson95_by_root": {
+        "Bear": 0.0,
+        "Bull": 0.0,
+        "Crisis": 0.0,
+        "Sideways": 0.0
+      }
+    },
+    "1h": {
+      "failed_ticker_count": 0,
+      "failed_tickers": [],
+      "has_source_date_overlap": true,
+      "period": "730d",
+      "provider_first_session_date": "2023-06-12",
+      "provider_last_session_date": "2026-05-08",
+      "provider_rows": 197694,
+      "ready_ticker_count": 39,
+      "source_overlap_by_root": {
+        "Bear": 5430,
+        "Bull": 12486,
+        "Crisis": 2165,
+        "Sideways": 5731
+      },
+      "source_overlap_ticker_days": 25812,
+      "source_overlap_wilson95_by_root": {
+        "Bear": 0.9992930492,
+        "Bull": 0.9996924333,
+        "Crisis": 0.9982287969,
+        "Sideways": 0.9993301543
+      }
+    },
+    "1m": {
+      "failed_ticker_count": 0,
+      "failed_tickers": [],
+      "has_source_date_overlap": false,
+      "period": "7d",
+      "provider_first_session_date": "2026-04-30",
+      "provider_last_session_date": "2026-05-08",
+      "provider_rows": 106452,
+      "ready_ticker_count": 39,
+      "source_overlap_by_root": {
+        "Bear": 0,
+        "Bull": 0,
+        "Crisis": 0,
+        "Sideways": 0
+      },
+      "source_overlap_ticker_days": 0,
+      "source_overlap_wilson95_by_root": {
+        "Bear": 0.0,
+        "Bull": 0.0,
+        "Crisis": 0.0,
+        "Sideways": 0.0
+      }
+    },
+    "30m": {
+      "failed_ticker_count": 0,
+      "failed_tickers": [],
+      "has_source_date_overlap": false,
+      "period": "60d",
+      "provider_first_session_date": "2026-02-12",
+      "provider_last_session_date": "2026-05-08",
+      "provider_rows": 30420,
+      "ready_ticker_count": 39,
+      "source_overlap_by_root": {
+        "Bear": 0,
+        "Bull": 0,
+        "Crisis": 0,
+        "Sideways": 0
+      },
+      "source_overlap_ticker_days": 0,
+      "source_overlap_wilson95_by_root": {
+        "Bear": 0.0,
+        "Bull": 0.0,
+        "Crisis": 0.0,
+        "Sideways": 0.0
+      }
+    },
+    "5m": {
+      "failed_ticker_count": 0,
+      "failed_tickers": [],
+      "has_source_date_overlap": false,
+      "period": "60d",
+      "provider_first_session_date": "2026-02-12",
+      "provider_last_session_date": "2026-05-08",
+      "provider_rows": 182520,
+      "ready_ticker_count": 39,
+      "source_overlap_by_root": {
+        "Bear": 0,
+        "Bull": 0,
+        "Crisis": 0,
+        "Sideways": 0
+      },
+      "source_overlap_ticker_days": 0,
+      "source_overlap_wilson95_by_root": {
+        "Bear": 0.0,
+        "Bull": 0.0,
+        "Crisis": 0.0,
+        "Sideways": 0.0
+      }
+    },
+    "60m": {
+      "failed_ticker_count": 3,
+      "failed_tickers": [
+        "GOOGL",
+        "JNJ",
+        "XOM"
+      ],
+      "has_source_date_overlap": true,
+      "period": "730d",
+      "provider_first_session_date": "2023-06-12",
+      "provider_last_session_date": "2026-05-08",
+      "provider_rows": 182478,
+      "ready_ticker_count": 36,
+      "source_overlap_by_root": {
+        "Bear": 5023,
+        "Bull": 11483,
+        "Crisis": 2150,
+        "Sideways": 5170
+      },
+      "source_overlap_ticker_days": 23826,
+      "source_overlap_wilson95_by_root": {
+        "Bear": 0.9992358106,
+        "Bull": 0.9996655774,
+        "Crisis": 0.9982164617,
+        "Sideways": 0.9992575229
+      }
+    },
+    "90m": {
+      "failed_ticker_count": 0,
+      "failed_tickers": [],
+      "has_source_date_overlap": false,
+      "period": "60d",
+      "provider_first_session_date": "2026-02-12",
+      "provider_last_session_date": "2026-05-08",
+      "provider_rows": 11700,
+      "ready_ticker_count": 39,
+      "source_overlap_by_root": {
+        "Bear": 0,
+        "Bull": 0,
+        "Crisis": 0,
+        "Sideways": 0
+      },
+      "source_overlap_ticker_days": 0,
+      "source_overlap_wilson95_by_root": {
+        "Bear": 0.0,
+        "Bull": 0.0,
+        "Crisis": 0.0,
+        "Sideways": 0.0
+      }
+    }
+  },
+  "next_action": "Do not rerun native yfinance sub-hour exact-source attachment until source labels extend beyond 2026-01-30 or another source-label panel overlaps the retained sub-hour bars. If another cycle is needed before source extension, materialize a separate 1h-derived 4h parent-day context policy and mark it derived, not provider-native.",
+  "provider": {
+    "name": "yfinance",
+    "raw_provider_rows_committed": false,
+    "version": "1.2.0"
+  },
+  "run_id": "20260511T143726+0800-codex-yfinance-native-interval-overlap-preflight-v1",
+  "source_panel": {
+    "date_max_after_252d_warmup": "2026-01-30",
+    "date_min_after_252d_warmup": "2001-01-02",
+    "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "raw_source_data_committed": false,
+    "roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "ticker_count": 39
+  }
+}

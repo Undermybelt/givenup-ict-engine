@@ -1,0 +1,27 @@
+{
+  "run_id": "20260512T105738+0800-codex-board-b-provider-crypto-tpsl-search-v1",
+  "readback_id": "provider_crypto_tpsl_search_readback_v1",
+  "source_data_root": "docs/experiments/actionable-regime-confidence/runs/20260512T103437+0800-codex-board-b-yahoo-crypto-momentum-market-aq-v1/workspace/auto-quant-yahoo-crypto-momentum/user_data/data",
+  "exit_marker": "killed_slow_search",
+  "exit_note": "killed after exceeding bounded interactive window; no candidate set emitted",
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "candidate_rows_emitted": 0,
+  "auto_quant_tomac_completed": false,
+  "provider_matrix_aq_provenance": false,
+  "ordered_downstream_chain_completed": false,
+  "gate": "105738_provider_crypto_tpsl_search_slow_scan_v1=killed_slow_search_no_candidates_no_promotion",
+  "board_effect": {
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_promoted": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history_approval": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "run_id": "20260511T161237+0800-codex-regime-to-profit-direction-split-v1",
+  "gate_result": "regime_to_profit_direction_split_v1=board_b_unblocked_board_a_parallel_hardening",
+  "decision": "Board B can proceed from the accepted scoped regime consumer map. Board A's full-market/full-timeframe/full-cycle/full-species work is now an elastic quality target, not a hard Board B blocker.",
+  "board_a_contract": {
+    "consumer_ready_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+    "accepted_scoped_lanes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "root_confidence_floors": {
+      "Bull": 0.9797225384,
+      "Bear": 0.963920242,
+      "Sideways": 0.9529358324,
+      "Crisis": 0.9619059575,
+      "Manipulation_scoped_direct_overlay": 0.967945
+    },
+    "older_strict_full_objective_achieved": false,
+    "full_matrix_work_is_elastic": true,
+    "remaining_parallel_work": [
+      "main_regime_confidence_hardening_to_full_matrix",
+      "sub_regime_diversity_under_roots",
+      "direct_manipulation_species_expansion_with_matched_negatives",
+      "bbn_catboost_execution_tree_root_consumption_audit"
+    ]
+  },
+  "board_b_contract": {
+    "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+    "required_root_keys": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "profitability_rule": "Every Auto-Quant recipe or factor must declare its parent regime root first, then optional sub-regime tags and factor family, before RC-SPA scoring.",
+    "downstream_rule": "Pre-Bayes, BBN, CatBoost/path-ranker, and execution tree must consume the parent root before using child/sub-regime context or profitability factors."
+  },
+  "assertions": {
+    "board_b_unblocked": true,
+    "board_a_strict_full_objective_complete": false,
+    "full_matrix_work_is_elastic": true,
+    "root_first_profit_factor_contract_written": true,
+    "sub_regime_packets_preserved": true,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

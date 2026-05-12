@@ -1,0 +1,68 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "qqq_regime_branch_transition_confirmation_tomac_20260510",
+  "display_name": "QQQ regime-branch transition confirmation probe",
+  "family": "transition_confirmation",
+  "status": "probe_only",
+  "promotion_state": "not_promoted_weak_sharpe_provider_disagreement",
+  "strategy_name": "TomacNQ_KillzoneBreakout",
+  "mutation_id": "qqq-regime-branch-20260510-tomac-killzone-breakout",
+  "base_factor": "range_break_displacement_with_4h_trend_alignment",
+  "expression_text": "prior_24h_high_break AND us_am_killzone AND ema21_gt_ema89_4h; evaluate as transition_confirmation evidence against range_mean_reversion under split provider regime likelihood.",
+  "operator_set": [
+    "rolling_high_24h",
+    "session_hour_filter",
+    "close_above_prior_range_high",
+    "4h_ema_alignment",
+    "trailing_stop_follow_through",
+    "stop_loss_failure"
+  ],
+  "complexity": 6,
+  "paradigm": "breakout_transition_confirmation",
+  "expected_regime": "range_consolidation_to_trend_expansion",
+  "target_market_hypothesis": [
+    "QQQ/USD"
+  ],
+  "base_timeframe": "1h",
+  "context_timeframes": [
+    "4h",
+    "1d"
+  ],
+  "regime_role": "branch_separator",
+  "evidence_window": "2024-06-13 23:00:00 -> 2025-12-30 20:00:00",
+  "strategy_source": "/Users/thrill3r/Auto-Quant + ict-engine Auto-Quant handoff",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "market_regime_split_likelihood",
+      "range_boundary_break_confirmation"
+    ],
+    "belief_targets": [
+      "transition_confirmation_prior",
+      "range_mean_reversion_counterevidence",
+      "stress_de_risk_due_provider_disagreement"
+    ],
+    "path_ranking_targets": [
+      "regime_label",
+      "branch_id",
+      "branch_family",
+      "trade_count",
+      "win_rate_pct",
+      "profit_factor",
+      "sharpe",
+      "max_drawdown_pct",
+      "provider_likelihood_disagreement"
+    ],
+    "execution_tree_targets": [
+      "transition_guardrail",
+      "fill_viable",
+      "observe",
+      "guarded"
+    ],
+    "execution_tree_blockers_intended": [
+      "weak_branch_score",
+      "provider_regime_disagreement",
+      "ranker_validation_not_ready"
+    ],
+    "structural_feedback_required": true
+  }
+}

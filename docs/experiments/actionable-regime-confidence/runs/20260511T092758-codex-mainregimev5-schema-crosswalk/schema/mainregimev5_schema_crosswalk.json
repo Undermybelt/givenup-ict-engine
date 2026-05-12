@@ -1,0 +1,82 @@
+{
+  "run_id": "20260511T092758+0800-codex-mainregimev5-schema-crosswalk",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV5",
+  "schema_materialized": true,
+  "calibration_rerun": false,
+  "accepted_95_roots_added": 0,
+  "accepted_gate": "none_for_MainRegimeV5_schema_materialized_calibration_pending",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "mandatory_roots": [
+    {
+      "root": "BullExpansion",
+      "definition": "signed positive directional expansion with action semantics distinct from generic trend or residual bull context",
+      "legacy_inputs": ["Bull", "TrendExpansion", "directional persistence features"],
+      "reuse_policy": "legacy evidence is provenance only until signed positive expansion labels or unchanged chronological calibration pass",
+      "acceptance_requirement": "root-specific qualifying rule, chronological calibration/test Wilson95 >= 0.95, cross-market/timeframe validation, full-cycle/full-universe accounting"
+    },
+    {
+      "root": "BearExpansion",
+      "definition": "signed negative directional expansion distinct from ordinary crisis stress or bullish expansion",
+      "legacy_inputs": ["Bear", "TrendExpansion", "drawdown/persistence features"],
+      "reuse_policy": "legacy evidence is provenance only; crisis/stress cannot substitute for downside expansion",
+      "acceptance_requirement": "separate downside expansion labels/rules, chronological calibration/test Wilson95 >= 0.95, cross-market/timeframe validation"
+    },
+    {
+      "root": "ConsolidationRange",
+      "definition": "range, compression, sideways persistence, and false-break/mean-reversion feasibility as a primary action state",
+      "legacy_inputs": ["Sideways", "RangeConsolidation", "SidewaysConsolidation"],
+      "reuse_policy": "legacy range evidence can be child/provenance only until V5 root rerun passes",
+      "acceptance_requirement": "range-specific qualifying condition plus chronological calibration/test and full provider/timeframe accounting"
+    },
+    {
+      "root": "CrisisStress",
+      "definition": "tail-loss, volatility dislocation, liquidity cliff, or crash/stress state distinct from ordinary bear expansion",
+      "legacy_inputs": ["Crisis", "ExtremeStress", "CrisisStress", "CrisisCrash"],
+      "reuse_policy": "prior Crisis/ExtremeStress packets are provenance only until V5 crisis-stress rerun passes",
+      "acceptance_requirement": "tail/liquidity-stress source labels or calibrated stress rules with cross-context validation"
+    },
+    {
+      "root": "ManipulationLiquidityEngineering",
+      "definition": "spoofing, layering, wash trading, pump/dump, quote stuffing, stop-run, liquidity raid, or comparable execution-trust manipulation",
+      "legacy_inputs": ["Manipulation", "ThinLiquidity", "SessionLiquidityCoreViable", "direct L2/order-flow signatures", "social/event manipulation packets"],
+      "reuse_policy": "OHLCV/session/liquidity proxies are inputs only; accepted evidence requires direct timestamped positive/negative labels",
+      "acceptance_requirement": "direct event/order-flow/order-lifecycle/L2/L3/MBO/social/on-chain labels with positives and negatives; chronological calibration/test Wilson95 >= 0.95 and broad coverage"
+    },
+    {
+      "root": "TransitionAccumulationDistribution",
+      "definition": "accumulation, distribution, reversal, or boundary transition phase that gates trading differently from expansion or consolidation",
+      "legacy_inputs": ["ReversalBrewing", "AccumulationDistribution", "change-point and directional-change features"],
+      "reuse_policy": "legacy reversal evidence is child/provenance only until transition-specific validation passes",
+      "acceptance_requirement": "transition hazard, break recency, duration viability, and post-boundary validation with unchanged 95% gate"
+    }
+  ],
+  "optional_overlays_until_proven": [
+    {
+      "overlay": "CrossAssetMacroRotation",
+      "definition": "risk-on/risk-off, policy/liquidity cycle, or cross-asset rotation that may dominate single-instrument behavior",
+      "promotion_requirement": "prove separability, support, downstream action difference, and root-specific 95% calibration before becoming mandatory"
+    }
+  ],
+  "residual": {
+    "root": "UnknownOrMixed",
+    "policy": "fail closed; do not force weak root labels"
+  },
+  "hard_rejections": [
+    "do not promote subtype/signature packets by wording",
+    "do not accept HMM/GMM/cluster IDs without external labels or unchanged chronological calibration",
+    "do not accept OHLCV/session/liquidity proxies as ManipulationLiquidityEngineering",
+    "do not count document indexes, search surfaces, or methodology papers as source-label panels"
+  ],
+  "next_calibration_matrix": {
+    "market_scope": "expanded full-species/full-universe requirement remains open",
+    "timeframe_scope": ["1m", "5m", "15m", "30m", "1h", "4h", "1d", "1w", "1mo"],
+    "providers_or_sources": ["yfinance", "Kraken", "local cache", "Auto-Quant cache", "IBKR if operator runtime is available", "TradingViewRemix if connectivity is restored", "direct manipulation row sources"],
+    "current_blocker": "source labels/direct positive-negative rows are still insufficient for a full V5 calibration matrix"
+  },
+  "gate_result": "blocked_mainregimev5_schema_materialized_calibration_pending",
+  "next_action": "Run a V5 attachability/calibration preflight that maps existing source-backed packets and missing slots to the six mandatory V5 roots without relaxing thresholds."
+}

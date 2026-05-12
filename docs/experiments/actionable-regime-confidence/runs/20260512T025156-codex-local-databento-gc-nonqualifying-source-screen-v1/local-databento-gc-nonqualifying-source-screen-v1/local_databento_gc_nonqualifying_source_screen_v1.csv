@@ -1,0 +1,13 @@
+field,value
+dataset,GLBX.MDP3
+schema,ohlcv-1m
+symbol,GC.FUT
+range,2021-01-06_to_2026-01-05
+csv_lines,5333533
+qualifies_r6_owner_controls,false
+qualifies_flip_control_approval,false
+qualifies_r3_native_subhour_source_labels,false
+qualifies_r5_recency_extension,false
+accepted_rows_added,0
+canonical_merge_allowed,false
+downstream_promotion_rerun_allowed,false

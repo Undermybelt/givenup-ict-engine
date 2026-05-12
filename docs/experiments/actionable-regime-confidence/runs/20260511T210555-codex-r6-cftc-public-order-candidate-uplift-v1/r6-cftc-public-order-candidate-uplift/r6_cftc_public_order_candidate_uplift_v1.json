@@ -1,0 +1,306 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_artifact_generation": "bf6cf78bf13cbc29d966458769ff8cf8ec212ed7fb1939cb6f54e4390cfeeef7",
+  "candidates": [
+    {
+      "candidate_reason": "Existing R6 seed used Mohan order; complaint may expose more detailed examples.",
+      "download": {
+        "bytes": 892265,
+        "content_type": "application/pdf",
+        "error": "",
+        "ok": true,
+        "path": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1/cftc_mohan_complaint_2018.bin",
+        "sha256": "c801c06b2487d263a351b8239cfa510c749d7714fa172c405fb706c4307ff37a",
+        "status": 200
+      },
+      "id": "cftc_mohan_complaint_2018",
+      "source_type": "pdf",
+      "text_report": {
+        "char_count": 40105,
+        "date_hits": [
+          "December 17, 2013",
+          "December 2, 2013",
+          "December 9, 2013",
+          "March 26, 2014",
+          "November 25, 2013",
+          "November 27, 2013"
+        ],
+        "has_control_terms": true,
+        "has_positive_terms": true,
+        "keyword_counts": {
+          "E-mini": 49,
+          "NASDAQ": 33,
+          "S&P": 0,
+          "cancel": 36,
+          "filled": 30,
+          "genuine": 79,
+          "iceberg": 21,
+          "layer": 0,
+          "order": 332,
+          "spoof": 126
+        },
+        "row_extract_candidate": true,
+        "time_hits": [
+          "3:01:50.862",
+          "3:02:00.909",
+          "3:02:01.327",
+          "3:02:02.279",
+          "3:02:02.283",
+          "3:02:02.735",
+          "3:02:02.736",
+          "3:02:04.670",
+          "3:02:11.103",
+          "3:02:11.104",
+          "3:02:11.109",
+          "3:02:11.878",
+          "3:02:11.879",
+          "5:27:41.553",
+          "5:27:42.713",
+          "5:27:43.225",
+          "5:27:43.228",
+          "5:27:44.208",
+          "5:27:44.772",
+          "5:27:45.480",
+          "5:27:46.505",
+          "5:27:46.833",
+          "5:27:46.834",
+          "5:27:46.835",
+          "5:27:47.568",
+          "5:27:47.976",
+          "8:05:39.461",
+          "8:05:40.703",
+          "8:05:41.333",
+          "8:05:41.335"
+        ]
+      },
+      "text_status": "ok",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfmohancomplaint012818.pdf"
+    },
+    {
+      "candidate_reason": "CFTC order surfaced in prior appendix inventory; may describe multiple traders/commodities.",
+      "download": {
+        "bytes": 142683,
+        "content_type": "application/pdf",
+        "error": "",
+        "ok": true,
+        "path": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1/cftc_geneva_order_2018.bin",
+        "sha256": "7b4b6a7631e476d683923327aae7c1e6300e6903a02b4a2a2e5dc0cf69d2c994",
+        "status": 200
+      },
+      "id": "cftc_geneva_order_2018",
+      "source_type": "pdf",
+      "text_report": {
+        "char_count": 20326,
+        "date_hits": [
+          "April 24, 2013",
+          "December 31, 2013",
+          "January 1, 2013",
+          "June 1, 2015",
+          "May 14, 2018",
+          "May 21, 2013",
+          "October 21, 2016",
+          "September 1, 2015"
+        ],
+        "has_control_terms": true,
+        "has_positive_terms": true,
+        "keyword_counts": {
+          "E-mini": 0,
+          "NASDAQ": 0,
+          "S&P": 0,
+          "cancel": 7,
+          "filled": 4,
+          "genuine": 9,
+          "iceberg": 0,
+          "layer": 0,
+          "order": 64,
+          "spoof": 28
+        },
+        "row_extract_candidate": true,
+        "time_hits": []
+      },
+      "text_status": "ok",
+      "url": "https://www.cftc.gov/sites/default/files/2018-09/enfgenevaorder092018.pdf"
+    },
+    {
+      "candidate_reason": "CFTC order download endpoint for Arab Trading Group spoofing/layering case.",
+      "download": {
+        "bytes": 77223,
+        "content_type": "application/pdf",
+        "error": "",
+        "ok": true,
+        "path": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1/cftc_arab_trading_group_order_2020.bin",
+        "sha256": "cf997cb3ebffdb68ac236a6070972f2dbbe2ab5897f6a4754bf099cc295e04b9",
+        "status": 200
+      },
+      "id": "cftc_arab_trading_group_order_2020",
+      "source_type": "pdf",
+      "text_report": {
+        "char_count": 19268,
+        "date_hits": [
+          "May 20, 2015",
+          "September 30, 2020"
+        ],
+        "has_control_terms": true,
+        "has_positive_terms": true,
+        "keyword_counts": {
+          "E-mini": 0,
+          "NASDAQ": 0,
+          "S&P": 0,
+          "cancel": 15,
+          "filled": 6,
+          "genuine": 15,
+          "iceberg": 2,
+          "layer": 0,
+          "order": 73,
+          "spoof": 25
+        },
+        "row_extract_candidate": true,
+        "time_hits": []
+      },
+      "text_status": "ok",
+      "url": "https://www.cftc.gov/media/4861/enfarbtradinggrouporder093020/download"
+    },
+    {
+      "candidate_reason": "CFTC order download endpoint for FNY Partners/Donino spoofing case.",
+      "download": {
+        "bytes": 69496,
+        "content_type": "application/pdf",
+        "error": "",
+        "ok": true,
+        "path": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1/cftc_fny_order_2020.bin",
+        "sha256": "f59fd4264f75ff09395f16d14c95f9908167544e5363bf5356c2fc22102e81eb",
+        "status": 200
+      },
+      "id": "cftc_fny_order_2020",
+      "source_type": "pdf",
+      "text_report": {
+        "char_count": 14414,
+        "date_hits": [
+          "September 28, 2020"
+        ],
+        "has_control_terms": true,
+        "has_positive_terms": true,
+        "keyword_counts": {
+          "E-mini": 0,
+          "NASDAQ": 0,
+          "S&P": 0,
+          "cancel": 7,
+          "filled": 2,
+          "genuine": 3,
+          "iceberg": 0,
+          "layer": 0,
+          "order": 47,
+          "spoof": 14
+        },
+        "row_extract_candidate": true,
+        "time_hits": []
+      },
+      "text_status": "ok",
+      "url": "https://www.cftc.gov/media/4811/enffnyorder092820/download"
+    },
+    {
+      "candidate_reason": "CFTC complaint download endpoint for a later spoofing case.",
+      "download": {
+        "bytes": 1571506,
+        "content_type": "application/pdf",
+        "error": "",
+        "ok": true,
+        "path": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1/cftc_shak_complaint_2022.bin",
+        "sha256": "74f48d22698215c85904ff012a86606ca4a0ab9b72f55b14eb23ea853d7b8e18",
+        "status": 200
+      },
+      "id": "cftc_shak_complaint_2022",
+      "source_type": "pdf",
+      "text_report": {
+        "char_count": 37933,
+        "date_hits": [
+          "February 26, 2015",
+          "March 1, 2018",
+          "March 3, 2017"
+        ],
+        "has_control_terms": true,
+        "has_positive_terms": true,
+        "keyword_counts": {
+          "E-mini": 0,
+          "NASDAQ": 0,
+          "S&P": 0,
+          "cancel": 43,
+          "filled": 21,
+          "genuine": 46,
+          "iceberg": 7,
+          "layer": 0,
+          "order": 258,
+          "spoof": 111
+        },
+        "row_extract_candidate": true,
+        "time_hits": [
+          "07:52:53.486",
+          "07:53:10.0",
+          "07:53:20",
+          "07:54:00.0",
+          "07:54:03.574",
+          "7:52:56.906",
+          "7:52:57.348",
+          "7:53:00.696",
+          "7:53:21.124",
+          "7:53:50.324"
+        ]
+      },
+      "text_status": "ok",
+      "url": "https://www.cftc.gov/media/7526/enfshakcomplaint080522/download"
+    },
+    {
+      "candidate_reason": "CFTC press release for Tower Research spoofing case; useful for locating linked order/filing surfaces.",
+      "download": {
+        "bytes": 45116,
+        "content_type": "text/html; charset=UTF-8",
+        "error": "",
+        "ok": true,
+        "path": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1/cftc_tower_press_release_2019.bin",
+        "sha256": "c7f3553d12104bde137a41f959488b132942630c7b4d81f2c09ab400c4be871b",
+        "status": 200
+      },
+      "id": "cftc_tower_press_release_2019",
+      "source_type": "html",
+      "text_report": {
+        "char_count": 7052,
+        "date_hits": [
+          "November 7, 2019"
+        ],
+        "has_control_terms": true,
+        "has_positive_terms": true,
+        "keyword_counts": {
+          "E-mini": 0,
+          "NASDAQ": 0,
+          "S&P": 0,
+          "cancel": 3,
+          "filled": 1,
+          "genuine": 4,
+          "iceberg": 0,
+          "layer": 0,
+          "order": 28,
+          "spoof": 11
+        },
+        "row_extract_candidate": true,
+        "time_hits": []
+      },
+      "text_status": "ok",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/8074-19"
+    }
+  ],
+  "decision": "r6_cftc_public_order_candidate_uplift_v1=candidates_found_rows_not_extracted",
+  "download_ok_count": 6,
+  "generated_at_utc": "2026-05-11T13:09:57.184267+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Manually extract only source-owned row-level positives/controls from candidate CFTC orders if the text exposes dates/times/sides; otherwise continue owner-approved source acquisition.",
+  "raw_data_committed": false,
+  "row_extract_candidate_count": 6,
+  "run_id": "20260511T210555-codex-r6-cftc-public-order-candidate-uplift-v1",
+  "runtime_code_changed": false,
+  "source_count": 6,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "tmp_download_root": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1",
+  "trade_usable": false,
+  "update_goal": false
+}

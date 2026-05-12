@@ -1,0 +1,4 @@
+status=200
+content-type=application/pdf
+final-url=https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-1.pdf
+bytes=556530

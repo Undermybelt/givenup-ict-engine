@@ -1,0 +1,12 @@
+pair_whitelist ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']
+stake_currency USD
+pair B2R_NQ_COST_CRISIS_REPAIR_032157/USD
+markets contains True
+markets count 1
+market {'id': 'B2R_NQ_COST_CRISIS_REPAIR_032157USD', 'symbol': 'B2R_NQ_COST_CRISIS_REPAIR_032157/USD', 'base': 'B2R_NQ_COST_CRISIS_REPAIR_032157', 'quote': 'USD', 'active': True, 'type': 'spot', 'spot': True, 'margin': False, 'swap': False, 'future': False, 'option': False, 'contract': False, 'linear': None, 'inverse': None, 'settle': None, 'settleId': None, 'expiry': None, 'expiryDatetime': None, 'strike': None, 'optionType': None, 'taker': 0.0, 'maker': 0.0, 'percentage': True, 'tierBased': False, 'feeSide': 'get', 'precision': {'amount': 8, 'price': 8, 'base': 8, 'quote': 8}, 'limits': {'amount': {'min': 0, 'max': None}, 'price': {'min': 0, 'max': None}, 'cost': {'min': 0, 'max': None}, 'leverage': {'min': 1, 'max': 1}}, 'info': {}}
+market_is_tradable True
+quote USD
+pairlist handlers ['StaticPairList']
+verify []
+active ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']
+whitelist []

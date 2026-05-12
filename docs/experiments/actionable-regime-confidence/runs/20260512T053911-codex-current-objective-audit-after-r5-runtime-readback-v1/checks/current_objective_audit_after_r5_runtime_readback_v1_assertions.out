@@ -1,0 +1,17 @@
+PASS run_id=20260512T053911-codex-current-objective-audit-after-r5-runtime-readback-v1
+PASS gate_result=current_objective_audit_after_r5_runtime_readback_v1=not_complete_source_control_roots_absent_runtime_readbacks_nonpromoting
+PASS hgb_diagnostic_labels=Bear,Bull,Crisis,Sideways
+PASS numeric_tree_diagnostic_labels=Bull,Crisis,Sideways
+PASS required_target_roots_absent=true
+PASS r6_approval_present=false
+PASS provider_status_exit=0
+PASS auto_quant_status_exit=0
+PASS pre_bayes_status_exit=0
+PASS policy_training_status_exit=0
+PASS workflow_status_exit=0
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

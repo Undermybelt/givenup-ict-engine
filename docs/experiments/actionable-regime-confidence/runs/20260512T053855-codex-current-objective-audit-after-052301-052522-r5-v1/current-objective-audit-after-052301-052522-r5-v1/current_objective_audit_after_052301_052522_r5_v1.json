@@ -1,0 +1,70 @@
+{
+  "board_hash_before_artifact": "e87a03c13c35a9ced1ac131464ac7f5bcf8f6568bd54a791dcaf8f6ab4b1d8d7",
+  "gate_result": "current_objective_audit_after_052301_052522_r5_v1=not_complete_source_control_roots_absent_no_downstream_rerun",
+  "run_id": "20260512T053855-codex-current-objective-audit-after-052301-052522-r5-v1",
+  "objective_complete": false,
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "Every active MainRegimeV2 price root reaches calibrated confidence >=95.",
+      "evidence": "051844 HGB accepted Bear, Bull, Crisis, and Sideways over 248440 rows with min Wilson95 above 0.95.",
+      "status": "satisfied_diagnostic"
+    },
+    {
+      "requirement": "Independent/model cross-check reaches all four roots.",
+      "evidence": "052522 numeric-tree accepted Bull, Crisis, and Sideways; Bear heldout-market Wilson95 was 0.9465286635.",
+      "status": "partial_diagnostic"
+    },
+    {
+      "requirement": "Confidence remains suitable across other markets, periods, and cycles/timeframes.",
+      "evidence": "Daily source-label split validation exists, but native subhour and R5 recency-extension target roots remain absent.",
+      "status": "blocked"
+    },
+    {
+      "requirement": "R5 recency extension exists.",
+      "evidence": "053505 current Kaggle screen found 0 post-cutoff target rows and did not populate /tmp/ict-engine-source-panel-recency-extension.",
+      "status": "blocked"
+    },
+    {
+      "requirement": "R6/source-control unlock exists.",
+      "evidence": "Approval marker has approval_present=false, canonical_merge_allowed_now=false, downstream_rerun_allowed_now=false; /tmp/ict-engine-board-a-r6-owner-export-v1 is absent.",
+      "status": "blocked"
+    },
+    {
+      "requirement": "Provider/AutoQuant/filter/Pre-Bayes/BBN/CatBoost/execution-tree reran after unlock.",
+      "evidence": "No source/control unlock or canonical merge exists, so no authorized post-unlock downstream rerun exists.",
+      "status": "blocked"
+    }
+  ],
+  "evidence_roots": {
+    "hgb_051844": "docs/experiments/actionable-regime-confidence/runs/20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1",
+    "numeric_tree_052522": "docs/experiments/actionable-regime-confidence/runs/20260512T052522-codex-source-label-numeric-tree-threshold-screen-v1",
+    "macro_cleanup_052301": "docs/experiments/actionable-regime-confidence/runs/20260512T052301-codex-source-label-macro-context-rule-miner-v1",
+    "r5_screen_053505": "docs/experiments/actionable-regime-confidence/runs/20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1",
+    "latest_verified_current_objective_audit_before_this": "docs/experiments/actionable-regime-confidence/runs/20260512T052940-codex-current-objective-audit-after-051844-hgb-accepted-v1"
+  },
+  "diagnostic_confidence": {
+    "hgb_accepted_labels": ["Bear", "Bull", "Crisis", "Sideways"],
+    "numeric_tree_accepted_labels": ["Bull", "Crisis", "Sideways"],
+    "numeric_tree_bear_min_wilson95": 0.9465286635
+  },
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "source_control_gate": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Send or satisfy the 052650 v5 CME/Cboe/CFE owner-export dispatch drafts with ticket/export/license provenance, or otherwise unlock a required target root before rerunning the ordered downstream chain."
+}

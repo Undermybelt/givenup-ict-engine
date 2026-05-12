@@ -1,0 +1,20 @@
+{
+  "branch_paths_evaluated": 5,
+  "branch_paths_passed": 1,
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "gate_result": "fail:required_root_branch_hard_gates_failed",
+  "manipulation_component_pass": true,
+  "next_action": "B2R-repeat: source a genuinely different family/provider panel; do not keep recombining failed source variants.",
+  "price_root_paths_passed": 0,
+  "primary_blocker": "Bull=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_overfit_risk; Bear=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth; Sideways=fail:reject_fold_trade_depth|reject_fold_inconsistency|reject_cost_fragile|reject_rc_spa_below_60; Crisis=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_overfit_risk",
+  "selected_root_trade_counts": {
+    "Bear": 20,
+    "Bull": 22,
+    "Crisis": 53,
+    "Manipulation(scoped)": 13535,
+    "Sideways": 856
+  },
+  "selected_trade_rows": 951,
+  "stable_profit_score": 83.96258176210746,
+  "variant_trade_rows": 112459
+}

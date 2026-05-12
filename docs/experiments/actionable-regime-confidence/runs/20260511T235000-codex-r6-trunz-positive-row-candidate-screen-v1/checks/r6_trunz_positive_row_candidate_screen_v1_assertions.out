@@ -1,0 +1,5 @@
+PASS proposed_positive_rows=1
+PASS shared_intake_mutated=false
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS additional_positive_rows_needed_after_sarao_nowak_trunz_if_all_accepted=3

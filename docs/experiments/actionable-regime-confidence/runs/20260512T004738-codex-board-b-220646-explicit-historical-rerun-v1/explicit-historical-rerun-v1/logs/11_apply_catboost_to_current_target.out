@@ -1,0 +1,4 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/SRC_ROOT_CARRY_LONG_220646/policy_training/structural_path_ranking_target.csv: 4 rows, 37 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] 1 features, 4 training samples
+[features] label dist: {np.float64(0.0): np.int64(3), np.float64(1.0): np.int64(1)}

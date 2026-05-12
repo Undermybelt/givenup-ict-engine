@@ -1,0 +1,136 @@
+{
+  "run_id": "20260511T014630+0800-codex-provider-export-readiness-contract",
+  "active_axis": "MainRegimeV2",
+  "objective": "Check whether a real provider export path is immediately ready for calibration-grade direct manipulation evidence without exposing secrets.",
+  "env_presence_no_values": {
+    "databento": {
+      "DATABENTO_API_KEY": false,
+      "DATABENTO_KEY": false,
+      "DATABENTO_API_TOKEN": false
+    },
+    "ibkr": {
+      "IBKR_HOST": false,
+      "IBKR_PORT": false,
+      "TWS_HOST": false,
+      "TWS_PORT": false,
+      "IB_GATEWAY_HOST": false,
+      "IB_GATEWAY_PORT": false
+    },
+    "tradingview": {
+      "TRADINGVIEW_USERNAME": false,
+      "TRADINGVIEW_PASSWORD": false,
+      "TVREMIX_MCP_CONFIG": false,
+      "TV_SESSION": false,
+      "TVREMIX_SESSION": false
+    },
+    "kraken": {
+      "KRAKEN_API_KEY": false,
+      "KRAKEN_API_SECRET": false
+    }
+  },
+  "config_presence_no_secret_values": {
+    "tvremix_mcp": {
+      "path": "/Users/thrill3r/.ict-engine/tvremix_mcp.json",
+      "exists": true,
+      "is_file": true,
+      "is_dir": false,
+      "size_bytes": 106
+    },
+    "databento_config_dir": {
+      "path": "/Users/thrill3r/.databento",
+      "exists": false,
+      "is_file": false,
+      "is_dir": false,
+      "size_bytes": null
+    },
+    "databento_config_toml": {
+      "path": "/Users/thrill3r/.databento/config.toml",
+      "exists": false,
+      "is_file": false,
+      "is_dir": false,
+      "size_bytes": null
+    },
+    "ibkr_settings": {
+      "path": "/Users/thrill3r/.ibkr",
+      "exists": false,
+      "is_file": false,
+      "is_dir": false,
+      "size_bytes": null
+    }
+  },
+  "tool_readiness": {
+    "databento_cli": null,
+    "python_databento": false,
+    "python_ib_insync": false,
+    "python_ibapi": false,
+    "python_pyarrow": false,
+    "zstdcat": "/opt/homebrew/bin/zstdcat",
+    "bsdtar": "/usr/bin/bsdtar"
+  },
+  "local_port_readiness": {
+    "ibkr_tws_paper_7497": false,
+    "ibkr_tws_live_7496": false,
+    "ib_gateway_paper_4002": true,
+    "ib_gateway_live_4001": false
+  },
+  "provider_readiness": {
+    "databento_historical_mbo": {
+      "can_acquire_now_without_user_action": false,
+      "credential_present": false,
+      "tool_present": false,
+      "required_export": {
+        "dataset": "market-wide historical direct order-book/order-lifecycle data",
+        "acceptable_schemas": [
+          "MBO/L3 add-cancel-modify-trade messages",
+          "MBP with aligned trades only if sufficient for declared manipulation signature"
+        ],
+        "coverage": "multiple instruments, multiple chronological periods, at least two market contexts before acceptance"
+      }
+    },
+    "ibkr_live_depth": {
+      "can_acquire_now_without_user_action": false,
+      "local_gateway_port_open": true,
+      "tool_present": false,
+      "limitation": "live depth alone is not a historical calibration set unless recorded over enough chronological support and contexts"
+    },
+    "tradingview": {
+      "can_acquire_direct_manipulation_now": false,
+      "config_present": true,
+      "limitation": "chart/bar access is not direct L2/L3/order-lifecycle manipulation evidence"
+    },
+    "kraken_public": {
+      "can_acquire_direct_manipulation_now": false,
+      "public_recent_depth_trades_available_in_prior_probe": true,
+      "limitation": "recent public trades/depth snapshots are not aligned historical order-lifecycle calibration data"
+    }
+  },
+  "required_direct_manipulation_export_contract": {
+    "must_include": [
+      "chronological historical records",
+      "market-wide order book or order lifecycle events, not private account-only logs",
+      "direct L2/L3/MBO/add-cancel-modify/trade messages or equivalent event/social/on-chain evidence for the declared manipulation signature",
+      "enough support to satisfy 120 calibration and 60 test rows after chronological split",
+      "at least two instruments, periods, or market contexts before release-gate acceptance"
+    ],
+    "must_reject": [
+      "OHLCV bars",
+      "single live order book snapshots",
+      "recent trade tape only",
+      "thin fixture samples",
+      "private account order history as market-wide proof",
+      "filename/schema hints without decoded support evidence"
+    ]
+  },
+  "decision": {
+    "board_state": "blocked",
+    "accepted_gate": "partial_for_MainRegimeV2_Crisis_only_prior_evidence_preserved",
+    "provider_export_ready_now": false,
+    "manipulation_input_state": "missing_required_inputs",
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "fresh_calibration_rerun": false,
+    "trade_usable": false,
+    "blocker": "No immediately usable provider export path for calibration-grade direct manipulation evidence was found without additional credentials/tooling/export action.",
+    "next_action": "Provide or enable a Databento-style historical MBO/L3 export with credentials/tooling, or place an already exported calibration-grade direct L2/L3/MBO/order-lifecycle dataset in a documented local path before rerunning the Manipulation gate."
+  }
+}

@@ -1,0 +1,14 @@
+goal_achieved=false
+cell_count=54
+ok_cell_count=54
+failed_cell_count=0
+empty_cell_count=0
+binance.ok_cell_count=27
+bybit.ok_cell_count=27
+actual_data_fetch_attempted=true
+accepted_full_cycle_full_universe=false
+raw_ohlcv_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=binance_bybit_public_matrix_built_root_confidence_pending

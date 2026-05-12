@@ -1,0 +1,189 @@
+{
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "b47b393d9c63a220b7493daf947e72a75a2c2b1800daa556e4d797cc807523d0",
+  "decision": {
+    "accepted_95_source_label_attachment_rows": 8,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_gate": "amd_cvx_exact_intraday_source_attachment_v1=accepted8_blocked0_scoped_1h_2024_2025",
+    "accepted_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "blocked_roots": [],
+    "blocked_source_label_attachment_rows": 0,
+    "full_objective_achieved": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "scoped_slots": 8,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "gate": {
+    "calibration_split": "2024 ticker-days from actual 1h provider overlap",
+    "heldout_time_split": "2025 ticker-days from actual 1h provider overlap",
+    "min_support_per_root_split": 50,
+    "min_wilson95_lcb": 0.95,
+    "source_tail_2026": "reported only, not used as acceptance gate because the source panel ends at 2026-01-30"
+  },
+  "generated_at_utc": "2026-05-11T06:25:09.875675+00:00",
+  "next_action": "Exhaust exact same-source ticker attachments from the stock-market-regimes panel before returning to ETF/futures/index crosswalks. If 2026 recency is required, extend the source panel beyond 2026-01-30 instead of lowering gates or promoting provider OHLCV bars as labels.",
+  "policy": {
+    "consumer_scope": "intraday_parent_day_context_not_intraday_micro_regime",
+    "meaning": "attach source-panel daily MainRegimeV2 root to same ticker 1h bars sharing the exchange-local session date",
+    "not_allowed": [
+      "no ETF/futures/index crosswalk",
+      "no OHLCV-derived label",
+      "no HMM state, generated label, strategy prediction, or future return label",
+      "no intraday transition-timing claim"
+    ],
+    "policy_id": "exact_same_ticker_daily_parent_context_to_1h_session_date_v1"
+  },
+  "provider": {
+    "downloaded_tickers": [
+      "AMD",
+      "CVX"
+    ],
+    "name": "yfinance",
+    "period": "730d",
+    "raw_intraday_data_committed": false,
+    "rows_by_ticker": {
+      "AMD": 5069,
+      "CVX": 5068
+    },
+    "session_date_ranges": {
+      "AMD": {
+        "first_session_date": "2023-06-12",
+        "last_session_date": "2026-05-08"
+      },
+      "CVX": {
+        "first_session_date": "2023-06-12",
+        "last_session_date": "2026-05-08"
+      }
+    },
+    "timeframe": "1h",
+    "version": "1.2.0"
+  },
+  "root_totals": {
+    "Bear": {
+      "all_overlap": {
+        "positives": 293,
+        "precision": 1.0,
+        "support": 293,
+        "wilson95_lcb": 0.9870588871
+      },
+      "calibration_2024": {
+        "positives": 119,
+        "precision": 1.0,
+        "support": 119,
+        "wilson95_lcb": 0.9687283198
+      },
+      "heldout_time_2025": {
+        "positives": 105,
+        "precision": 1.0,
+        "support": 105,
+        "wilson95_lcb": 0.9647059231
+      },
+      "source_tail_2026_not_gate": {
+        "positives": 0,
+        "precision": 0.0,
+        "support": 0,
+        "wilson95_lcb": 0.0
+      }
+    },
+    "Bull": {
+      "all_overlap": {
+        "positives": 441,
+        "precision": 1.0,
+        "support": 441,
+        "wilson95_lcb": 0.9913644317
+      },
+      "calibration_2024": {
+        "positives": 173,
+        "precision": 1.0,
+        "support": 173,
+        "wilson95_lcb": 0.9782773856
+      },
+      "heldout_time_2025": {
+        "positives": 172,
+        "precision": 1.0,
+        "support": 172,
+        "wilson95_lcb": 0.9781538504
+      },
+      "source_tail_2026_not_gate": {
+        "positives": 32,
+        "precision": 1.0,
+        "support": 32,
+        "wilson95_lcb": 0.8928208017
+      }
+    },
+    "Crisis": {
+      "all_overlap": {
+        "positives": 295,
+        "precision": 1.0,
+        "support": 295,
+        "wilson95_lcb": 0.9871454957
+      },
+      "calibration_2024": {
+        "positives": 103,
+        "precision": 1.0,
+        "support": 103,
+        "wilson95_lcb": 0.9640452418
+      },
+      "heldout_time_2025": {
+        "positives": 107,
+        "precision": 1.0,
+        "support": 107,
+        "wilson95_lcb": 0.965342762
+      },
+      "source_tail_2026_not_gate": {
+        "positives": 4,
+        "precision": 1.0,
+        "support": 4,
+        "wilson95_lcb": 0.5101091635
+      }
+    },
+    "Sideways": {
+      "all_overlap": {
+        "positives": 295,
+        "precision": 1.0,
+        "support": 295,
+        "wilson95_lcb": 0.9871454957
+      },
+      "calibration_2024": {
+        "positives": 109,
+        "precision": 1.0,
+        "support": 109,
+        "wilson95_lcb": 0.9659570262
+      },
+      "heldout_time_2025": {
+        "positives": 116,
+        "precision": 1.0,
+        "support": 116,
+        "wilson95_lcb": 0.9679454935
+      },
+      "source_tail_2026_not_gate": {
+        "positives": 4,
+        "precision": 1.0,
+        "support": 4,
+        "wilson95_lcb": 0.5101091635
+      }
+    }
+  },
+  "run_id": "20260511T140643+0800-codex-amd-cvx-exact-intraday-source-attachment-v1",
+  "source_panel": {
+    "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "raw_source_data_committed": false,
+    "selected_exact_source_tickers": [
+      "AMD",
+      "CVX"
+    ],
+    "source_labels": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ]
+  }
+}

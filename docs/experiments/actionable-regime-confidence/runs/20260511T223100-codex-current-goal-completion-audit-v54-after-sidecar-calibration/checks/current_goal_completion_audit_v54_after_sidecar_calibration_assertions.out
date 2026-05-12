@@ -1,0 +1,14 @@
+run_id=20260511T223100+0800-codex-current-goal-completion-audit-v54-after-sidecar-calibration
+board_sha256_at_run=f663c05c3a957651a424d155443671f2e50e50379365c91fee5b1b77e680efc6
+source_label_rows=248440
+accepted_source_confidence_95_labels=0/4
+r5_status=blocked
+native_subhour_root_exists=false
+r6_positive_rows=57
+r6_matched_negative_rows=57
+r6_wilson95_min_lcb=0.936861
+r6_independent_broad_normal_sidecar_axis=true
+additional_positive_rows_needed=16
+strict_full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

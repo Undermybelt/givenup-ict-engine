@@ -1,0 +1,5 @@
+Error: ingesting real trades for symbol 'B2R_PROVIDER_LINKED_MOMENTUM_105637' from 'docs/experiments/actionable-regime-confidence/runs/20260512T110627+0800-codex-105637-provider-linked-momentum-downstream-v1/derived/provider_linked_momentum_105637_real_trades.jsonl'
+
+Caused by:
+    0: reading real-trades JSONL artifact at 'docs/experiments/actionable-regime-confidence/runs/20260512T110627+0800-codex-105637-provider-linked-momentum-downstream-v1/derived/provider_linked_momentum_105637_real_trades.jsonl'
+    1: No such file or directory (os error 2)

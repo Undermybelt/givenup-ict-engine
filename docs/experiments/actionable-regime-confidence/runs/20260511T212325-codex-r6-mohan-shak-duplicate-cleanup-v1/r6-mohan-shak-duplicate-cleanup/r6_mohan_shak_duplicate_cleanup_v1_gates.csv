@@ -1,0 +1,11 @@
+gate,observed,required,pass
+removed_only_211201_positive_rows,11,11,True
+removed_only_211201_negative_rows,11,11,True
+verifier_schema_ready,schema_ready_unscored,schema_ready_unscored,True
+positive_support,24,50,False
+negative_support,24,50,False
+orphan_groups,0,0,True
+chronological_split,20,2,True
+heldout_symbol_or_venue,symbols=13;venues=5,symbol>=2 or venue>=2,True
+wilson95_lcb,0.862024,>=0.95,False
+broad_normal_sample,same-source public CFTC genuine-order counterparts,source-owned broad normal activity sample,False

@@ -1,0 +1,9 @@
+all_required_regimes_have_scoped_gate: PASS
+source_artifact_refs_exist: PASS
+manipulation_has_two_direct_varieties: PASS
+positive_contract_ready: PASS
+full_matrix_completion_false: PASS
+thresholds_relaxed_false: PASS
+runtime_code_changed_false: PASS
+raw_data_committed_false: PASS
+ALL_ASSERTIONS_PASS

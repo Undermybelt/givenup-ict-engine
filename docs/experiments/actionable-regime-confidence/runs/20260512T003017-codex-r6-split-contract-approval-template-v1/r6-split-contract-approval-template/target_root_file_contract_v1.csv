@@ -1,0 +1,6 @@
+target_path,source_template,required_before_use,purpose
+/tmp/ict-engine-board-a-r6-owner-export-v1/validation_contract_approval.json,validation_contract_approval_template_v1.json,True,Explicit owner/user approval for a non-exact split contract or adapter branch.
+/tmp/ict-engine-board-a-r6-owner-export-v1/owner_approval_reference.md,owner_approval_reference_template_v1.md,True,Human-readable approval reference matching the JSON approval.
+/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv,filename_contract_checklist_v1.csv,True,Verifier-native positive rows or approved adapter output.
+/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv,filename_contract_checklist_v1.csv,True,Verifier-native matched controls or approved adapter output.
+/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json,filename_contract_checklist_v1.csv,True,Verifier-native provenance or approved adapter output.

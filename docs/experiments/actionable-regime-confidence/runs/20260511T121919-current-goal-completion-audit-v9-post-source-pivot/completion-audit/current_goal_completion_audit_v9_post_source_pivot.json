@@ -1,0 +1,124 @@
+{
+  "active_taxonomy": {
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "name": "MainRegimeV2",
+    "residual": "UnknownOrMixed",
+    "separate_direct_event_class_or_overlay": [
+      "Manipulation"
+    ]
+  },
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_cursor": {
+    "accepted_gate": "per_regime_scoped_factor_supply=`accepted_95_for_all_active_regimes`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`; scoped_direct_manipulation_gate=`accepted_95_bounded_midsummer_multichain_wash_maker_direct_slices`",
+    "active_market_set": "Per-regime factor supply map now explicitly covers every active `MainRegimeV2` regime with at least one accepted 95% scoped factor/evidence packet: `Bull`, `Bear`, `Sideways`, `Crisis`, and direct `Manipulation`. Source-window acquisition pivot also seeded primary-source windows for S&P 500 `Bull`/`Bear` and US macro `Crisis`; expanded full-species requirement remains open until explicit owner-approved projection maps those windows to provider/instrument/timeframe slots. Prior scoped direct social/event, self-trade/order-lifecycle, and Midsummer wash-maker evidence remains bounded only.",
+    "active_timeframes": "Factor supply spans scoped `1d`/`1w` price-root packets, `15m`/`1h` crisis packet, and direct event/maker-token-day manipulation packets. Source-window seed uses native day-level S&P 500 windows and month-level NBER contraction windows; no full provider/timeframe matrix calibration has been claimed. Intraday/weekly/monthly attachment still requires an explicit projection crosswalk; `Sideways` still needs a dated source or owner-approved adjudication protocol for full-matrix source-window work.",
+    "blocker": "Per-regime scoped factor supply is mapped, but full-cycle/full-universe matrix is still incomplete because primary source windows need explicit projection/crosswalk before attachment, `Sideways` has no dated source window yet, repeated QQQ daily OHLCV modeling is exhausted, and direct `Manipulation` variety coverage remains partial despite scoped social/event, self-trade/order-lifecycle, and Midsummer multichain wash-maker slices.",
+    "board_state": "blocked",
+    "candidate_regime": "Active parent-root taxonomy is `MainRegimeV2`: `Bull`, `Bear`, `Sideways`, and `Crisis`; residual `UnknownOrMixed`. `Manipulation` is separate direct-event/order-flow/order-lifecycle class or overlay. `ActionableRegimeRootV7` is superseded drift/provenance only.",
+    "confidence_lane": "95_parent_root_or_direct_event_gate; no threshold relaxation",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260511T121643-codex-per-regime-factor-supply-map`",
+    "last_loop_id": "20260511T121643+0800-codex-per-regime-factor-supply-map",
+    "next_action": "Run `mainregimev2_source_window_attachability_v1`: apply explicit owner-approved crosswalks to `source_window_seed_v1.csv`, attach only approved `Bull`/`Bear`/`Crisis` slots, keep `Sideways` fail-closed until a dated source/adjudication protocol exists, and preserve the per-regime scoped factor map as downstream gating context only",
+    "provider_status": "Factor-supply map only; no IBKR, TradingView MCP, yfinance, Kraken, local cache, or Auto-Quant runtime readiness change claimed; raw data not committed. Consumes existing accepted scoped packets plus the `120900` source-window pivot as next attachability direction."
+  },
+  "board_sha256_at_audit": "ed5838531f52679f9c2ab3555787198cbd8b37831d7e7e6a708b1304667b3802",
+  "consumed_artifacts": {
+    "audit_v8": "docs/experiments/actionable-regime-confidence/runs/20260511T113606-codex-current-goal-completion-audit-v8-after-chain-expansion/completion-audit/current_goal_completion_audit_v8_after_chain_expansion.json",
+    "cleanup_manifest": "docs/experiments/actionable-regime-confidence/runs/20260511T121520-codex-negative-artifact-cleanup/cleanup/negative_artifact_cleanup_manifest.md",
+    "crystalbull_attachability": "docs/experiments/actionable-regime-confidence/runs/20260511T115235-codex-crystalbull-source-label-attachability/source-label-attachability/crystalbull_source_label_attachability.json",
+    "crystalbull_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T113603-codex-crystalbull-ibd-qqq-source-gate/source-gate/crystalbull_ibd_qqq_source_gate.json",
+    "historyofmarket_hsmm": "docs/experiments/actionable-regime-confidence/runs/20260511T114808-codex-historyofmarket-hsmm-root-source-audit/source-audit/historyofmarket_hsmm_root_source_audit.json",
+    "paper_github_delta": "docs/experiments/actionable-regime-confidence/runs/20260511T114135-codex-paper-github-source-delta-after-v8/source-delta/paper_github_source_delta_after_v8.json",
+    "source_window_pivot": "docs/experiments/actionable-regime-confidence/runs/20260511T120900-codex-exportable-source-scan/source-scan/mainregimev2_positive_acquisition_pivot.json"
+  },
+  "decision": {
+    "accepted_direct_manipulation_rows_added_post_v8": 0,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_parent_root_completion_slots_added_post_v8": 0,
+    "call_update_goal": false,
+    "direct_manipulation_variety_complete": false,
+    "gate_result": "blocked_completion_audit_v9_post_source_pivot_no_full_matrix_95",
+    "goal_achieved": false,
+    "price_roots_still_missing_full_matrix_coverage": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T04:22:45.028690+00:00",
+  "next_action": "Stop broad public-source lottery loops. Use source_window_seed_v1.csv only as a seed contract, then obtain explicit owner-approved crosswalks or real exact provider/instrument/timeframe labels; Sideways still needs dated source/adjudication and Manipulation still needs non-wash direct varieties.",
+  "objective": "Every active Board A regime must reach at least 95% calibrated confidence and validate across other markets, other timeframes, full cycles, and broad universe/full species before reporting success.",
+  "post_v8_deltas": {
+    "accepted_direct_manipulation_rows_added": {
+      "crystalbull_attachability": 0,
+      "historyofmarket_hsmm": 0,
+      "paper_github_delta": 0,
+      "source_window_pivot": 0
+    },
+    "accepted_parent_root_completion_slots_added": {
+      "crystalbull_attachability_completion": 0,
+      "crystalbull_gate": 0,
+      "historyofmarket_hsmm": 0,
+      "paper_github_delta": 0,
+      "source_window_pivot": 0
+    },
+    "cleanup_manifest_exists": true,
+    "crystalbull_attached_source_label_target_slots": 3,
+    "source_window_seed_counts": {
+      "Bear": 4,
+      "Bull": 4,
+      "Crisis": 3,
+      "Manipulation": 0,
+      "Sideways": 0
+    },
+    "source_window_seed_rows": 11
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "requirement": "Named Board A file is the live contract.",
+      "status": "pass"
+    },
+    {
+      "evidence": "v8 full objective false; post-v8 CrystalBull, paper/GitHub, HistoryOfMarket/HSMM, attachability, and source-window pivot added 0 parent-root completion slots.",
+      "requirement": "Every active price root reaches at least 95% calibrated confidence.",
+      "status": "fail"
+    },
+    {
+      "evidence": "CrystalBull adds only QQQ 1d target-label attachment; source-window pivot is a seed contract and claims no confidence gate; v8 missing roots remain Bull/Bear/Sideways/Crisis.",
+      "requirement": "Validated on other markets, other timeframes, full cycles, and full species.",
+      "status": "fail"
+    },
+    {
+      "evidence": "Midsummer multichain wash-maker rows remain scoped; no post-v8 direct rows were added; broader variety coverage remains incomplete.",
+      "requirement": "Manipulation must use direct rows plus matched negatives across varieties.",
+      "status": "fail"
+    },
+    {
+      "evidence": "HistoryOfMarket was blocked as formula-derived two-root SPX daily; HSMM paper blocked as no materialized row export; CrystalBull factor gate remains below held-out 95; Yardeni/NBER seeds are acquisition contract only pending owner-approved crosswalk.",
+      "requirement": "Do not count proxy/formula/methodology-only signals as completion.",
+      "status": "pass_blocked"
+    },
+    {
+      "evidence": "All consumed post-v8 artifacts assert false for threshold/runtime/raw/trade promotion.",
+      "requirement": "Do not relax thresholds, change runtime code, commit raw data, or promote trade usability.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T121520-codex-negative-artifact-cleanup/cleanup/negative_artifact_cleanup_manifest.md",
+      "requirement": "Clean up negative artifacts without losing compact evidence.",
+      "status": "pass"
+    }
+  ],
+  "run_id": "20260511T121919+0800-current-goal-completion-audit-v9-post-source-pivot"
+}

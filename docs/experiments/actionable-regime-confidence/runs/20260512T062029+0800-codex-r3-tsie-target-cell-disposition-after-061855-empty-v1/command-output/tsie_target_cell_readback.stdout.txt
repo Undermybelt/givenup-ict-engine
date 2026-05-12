@@ -1,0 +1,8 @@
+rows 7193996
+unique_group_id 1150
+target_like_rows 0
+target_like_groups []
+sample_groups ['IDX_DLY_AALI_60', 'IDX_DLY_ACES_60', 'IDX_DLY_ADES_60', 'IDX_DLY_ADHI_240', 'IDX_DLY_ADHI_60', 'IDX_DLY_ADMF_1D', 'IDX_DLY_ADMF_240', 'IDX_DLY_ADMF_60', 'IDX_DLY_AIMS_240', 'IDX_DLY_AIMS_60', 'IDX_DLY_AKKU_1D', 'IDX_DLY_AKKU_240', 'IDX_DLY_AKKU_60', 'IDX_DLY_AKRA_1D', 'IDX_DLY_AKRA_240', 'IDX_DLY_AKRA_60', 'IDX_DLY_AKSI_1D', 'IDX_DLY_AKSI_60', 'IDX_DLY_ALDO_1D']
+time_min 1990-06-07 02:00:00
+time_max 2026-04-07 02:00:00
+minute_values [0]

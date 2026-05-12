@@ -1,0 +1,22 @@
+{
+  "auto_quant_pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260511T164020.084475000Z",
+  "library_source": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/measured-recorded-branch/strategy_library_recorded_nq_precision_fixed_v1.json",
+  "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_strategy_library.json",
+  "log_cross_check": {
+    "log_only": [],
+    "manifest_only": [],
+    "matched": 5,
+    "mismatches": [],
+    "n_blocks_in_log": 5,
+    "n_strategies_in_manifest": 5
+  },
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 5,
+  "n_total_strategies": 5,
+  "symbol": "SRC_ROOT_CARRY_LONG_220646"
+}

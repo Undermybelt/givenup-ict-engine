@@ -1,0 +1,40 @@
+{
+  "approval_state": "approved",
+  "approval_timestamp_utc": "<YYYY-MM-DDTHH:MM:SSZ>",
+  "approved_by": "<user-or-source-owner>",
+  "approved_contract_id": "r6_family_contract_export",
+  "approved_split_contract": {
+    "heldout_axes": [
+      "chronological_period",
+      "market_family",
+      "venue_family",
+      "direct_species"
+    ],
+    "matched_control_policy": "Controls must be owner-approved normal/non-manipulation rows matched by symbol or market family, venue or venue family, session, and time window.",
+    "minimum_control_rows_per_accepted_cell": 73,
+    "minimum_positive_rows_per_accepted_cell": 73,
+    "species_policy": "Direct species labels must remain source-owned or explicitly owner-approved; no labels inferred from OHLCV or raw order-book heuristics.",
+    "split_unit": "market_family_venue_family"
+  },
+  "filename_contract": {
+    "adapter_approval_reference": "<approval-reference-for-copy-or-transform-step>",
+    "adapter_required": true,
+    "request_matched_controls": "direct_manipulation_matched_controls.csv",
+    "request_positive_rows": "direct_manipulation_positive_rows.csv",
+    "request_provenance": "direct_manipulation_provenance.json",
+    "verifier_matched_controls": "matched_negative_normal_activity_rows.csv",
+    "verifier_positive_rows": "positive_spoofing_layering_rows.csv",
+    "verifier_provenance": "provenance_manifest.json"
+  },
+  "no_proxy_acceptance": true,
+  "owner_approval_reference": "<ticket/signed-note/source-export-id>",
+  "required_followup_chain": [
+    "direct_manipulation_row_intake_verifier",
+    "split_calibration_chronological_symbol_venue_or_approved_family",
+    "provider_status_ibkr_tradingview_yfinance_kraken",
+    "auto_quant_status_or_prepare",
+    "pre_bayes_bbn_readback",
+    "catboost_or_policy_training_readback",
+    "workflow_execution_tree_and_path_ranking_readback"
+  ]
+}

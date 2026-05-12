@@ -1,0 +1,2328 @@
+Using CPython 3.11.11
+Creating virtual environment at: .venv
+Installed 158 packages in 2.26s
+2026-05-12 09:33:41,896 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:41,924 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:41,925 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:41,938 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:41,939 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:41,940 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20211231 ...
+2026-05-12 09:33:41,948 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:41,950 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:41,951 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:41,952 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20211231
+2026-05-12 09:33:41,964 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:41,995 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:41,996 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:42,003 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:42,003 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:42,196 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:42,534 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:42,606 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:42,882 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:43,189 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:43,193 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:43,279 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:43,287 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:43,288 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:43,289 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:43,290 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:43,290 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:43,290 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20220101-20221231 ...
+2026-05-12 09:33:43,291 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:43,291 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:43,292 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:43,293 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20220101-20221231
+2026-05-12 09:33:43,293 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:43,338 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:43,340 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:43,346 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:43,388 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:43,539 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:43,689 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:43,868 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:44,157 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:44,454 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:44,455 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:44,471 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:44,476 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:44,476 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:44,477 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:44,478 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:44,479 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:44,483 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20230101-20251231 ...
+2026-05-12 09:33:44,483 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:44,485 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:44,485 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:44,486 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20230101-20251231
+2026-05-12 09:33:44,486 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:44,503 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:44,504 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:44,505 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:44,505 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:44,535 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:44,607 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:44,853 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:45,257 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:45,531 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:45,532 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:45,542 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:45,549 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:45,551 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:45,552 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:45,553 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:45,554 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:45,555 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 09:33:45,557 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:45,557 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:45,558 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:45,559 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 09:33:45,560 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:45,604 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:45,621 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:45,622 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:45,623 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:45,723 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:45,808 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:46,093 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:46,409 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:46,656 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:46,657 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:46,681 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:46,687 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:46,688 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:46,693 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:46,693 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:46,694 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:46,694 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20211231 ...
+2026-05-12 09:33:46,695 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:46,695 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:46,696 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:46,696 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20211231
+2026-05-12 09:33:46,696 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:46,716 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:46,718 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:46,719 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:46,720 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:46,786 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:46,889 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:47,171 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:47,482 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:47,819 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:47,823 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:47,841 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:47,856 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:47,857 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:47,857 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:47,858 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:47,859 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:47,859 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20220101-20221231 ...
+2026-05-12 09:33:47,860 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:47,860 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:47,861 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:47,869 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20220101-20221231
+2026-05-12 09:33:47,871 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:47,902 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:47,903 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:47,904 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:47,905 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:47,936 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:48,141 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:48,633 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:48,702 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:49,002 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:49,003 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:49,023 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:49,032 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:49,033 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:49,034 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:49,034 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:49,035 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:49,035 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20230101-20251231 ...
+2026-05-12 09:33:49,036 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:49,037 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:49,037 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:49,038 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20230101-20251231
+2026-05-12 09:33:49,038 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:49,059 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:49,060 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:49,062 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:49,063 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:49,248 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:49,705 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:49,868 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:50,086 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:50,380 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:50,385 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:50,399 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:50,404 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:50,404 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:50,405 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:50,406 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:50,407 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:50,407 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 09:33:50,408 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:50,409 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:50,410 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:50,411 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 09:33:50,413 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:50,444 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:50,445 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:50,446 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:50,446 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:50,494 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:50,608 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:50,811 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:51,118 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:51,471 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:51,474 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:51,506 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:51,528 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:51,529 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:51,532 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:51,533 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:51,534 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:51,535 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20211231 ...
+2026-05-12 09:33:51,535 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:51,536 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:51,540 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:51,541 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20211231
+2026-05-12 09:33:51,542 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:51,591 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:51,592 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:51,595 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:51,597 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:51,701 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:51,931 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:52,156 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:52,451 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:52,657 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:52,660 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:52,681 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:52,685 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:52,686 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:52,688 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:52,688 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:52,689 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:52,690 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20220101-20221231 ...
+2026-05-12 09:33:52,690 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:52,692 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:52,692 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:52,693 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20220101-20221231
+2026-05-12 09:33:52,694 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:52,712 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:52,713 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:52,715 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:52,716 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:52,892 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:53,270 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:53,353 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:53,771 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:54,173 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:54,179 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:54,215 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:54,226 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:54,227 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:54,228 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:54,229 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:54,230 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:54,231 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20230101-20251231 ...
+2026-05-12 09:33:54,233 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:54,234 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:54,234 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:54,235 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20230101-20251231
+2026-05-12 09:33:54,236 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:54,303 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:54,305 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:54,315 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:54,317 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:54,576 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:54,705 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:54,952 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:55,215 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:55,518 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:55,519 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 09:33:55,536 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/config.json ...
+2026-05-12 09:33:55,564 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 09:33:55,566 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 09:33:55,567 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 09:33:55,568 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/strategies
+2026-05-12 09:33:55,584 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 09:33:55,584 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 09:33:55,585 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data ...
+2026-05-12 09:33:55,585 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace
+/user_data/data ...
+2026-05-12 09:33:55,587 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 09:33:55,593 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 09:33:55,596 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 09:33:55,644 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 09:33:55,645 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 09:33:55,646 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 09:33:55,647 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 09:33:55,679 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 09:33:55,777 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 09:33:56,058 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 09:33:56,321 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 09:33:56,591 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 09:33:56,592 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in _api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in load_markets
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in fetch2
+    raise e
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in _load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File 
+"/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspac
+e/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in _api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo

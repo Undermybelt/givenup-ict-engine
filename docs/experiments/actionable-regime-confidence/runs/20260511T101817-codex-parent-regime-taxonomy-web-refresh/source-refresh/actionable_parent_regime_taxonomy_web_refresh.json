@@ -1,0 +1,100 @@
+{
+  "loop_id": "20260511T101817+0800-codex-parent-regime-taxonomy-web-refresh",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T101817-codex-parent-regime-taxonomy-web-refresh",
+  "purpose": "Refresh the parent regime taxonomy from web papers and GitHub sources after the user corrected that previous regimes were child classes.",
+  "latest_user_correction": "These are child regimes; the main categories should include bull expansion, bear expansion, manipulation, consolidation, and possibly other larger classes.",
+  "active_candidate_taxonomy": "ActionableRegimeRootV7",
+  "mandatory_parent_roots": [
+    {
+      "root": "BullExpansion",
+      "evidence_type": "price_root",
+      "definition": "Directional upside expansion or markup regime with positive drift/trend persistence and enough breadth/liquidity participation to permit long-risk continuation logic."
+    },
+    {
+      "root": "BearExpansion",
+      "evidence_type": "price_root",
+      "definition": "Directional downside expansion or markdown regime with negative drift/trend persistence, de-risking pressure, or persistent lower-low/lower-high structure."
+    },
+    {
+      "root": "ConsolidationBalance",
+      "evidence_type": "price_root",
+      "definition": "Range, balance, compression, or accumulation/distribution regime where directional continuation is not the parent claim; allowed actions differ from expansion regimes."
+    },
+    {
+      "root": "CrisisDislocation",
+      "evidence_type": "price_root_or_cross_market_stress",
+      "definition": "High-volatility, jump, correlation, liquidity, or structural-break stress regime that is not safely collapsed into ordinary BearExpansion."
+    },
+    {
+      "root": "ManipulationIntegrityEvent",
+      "evidence_type": "direct_event_order_flow_order_lifecycle_social_or_on_chain",
+      "definition": "Market-integrity event class such as pump-and-dump, spoofing/layering, wash trading, self-trading, or other direct manipulation evidence. It is top-level for gating, but it still cannot be accepted from OHLCV-only proxies."
+    }
+  ],
+  "watchlist_parent_roots": [
+    {
+      "root": "TransitionRotation",
+      "evidence_type": "candidate_parent_or_overlay",
+      "definition": "Accumulation/distribution, macro rotation, or pre-breakout/reversal transition. Promote only if it has source labels and a downstream action difference not already covered by ConsolidationBalance or CrisisDislocation."
+    }
+  ],
+  "compatibility_mapping": {
+    "old_MainRegimeV2_Bull": "candidate input to BullExpansion only after expansion/trend participation validation",
+    "old_MainRegimeV2_Bear": "candidate input to BearExpansion only after expansion/trend participation validation",
+    "old_MainRegimeV2_Sideways": "candidate input to ConsolidationBalance",
+    "old_MainRegimeV2_Crisis": "candidate input to CrisisDislocation",
+    "old_Manipulation_overlay": "candidate input to ManipulationIntegrityEvent only with direct rows/windows and negative controls"
+  },
+  "source_refresh": [
+    {
+      "source_id": "pagan_sossounov_2003_bull_bear_cycles",
+      "url": "https://ideas.repec.org/a/jae/japmet/v18y2003i1p23-46.html",
+      "use": "Bull/bear cycle literature supports directional parent roots, but not enough by itself to distinguish expansion from non-expansion."
+    },
+    {
+      "source_id": "hamilton_markov_switching_and_hmm_family",
+      "url": "https://github.com/hmmlearn/hmmlearn",
+      "use": "HMM posterior/state tooling is useful for persistence/probability features, but state ids are not independent source labels."
+    },
+    {
+      "source_id": "ruptures_change_point_tooling",
+      "url": "https://github.com/deepcharles/ruptures",
+      "use": "Change-point tooling supports boundary timing and crisis/dislocation evidence; it does not assign economic parent labels alone."
+    },
+    {
+      "source_id": "jump_models_market_regime_tooling",
+      "url": "https://github.com/Yizhan-Oliver-Shu/jump-models",
+      "use": "Jump-model tooling supports discontinuous regime/stress separation and the case for CrisisDislocation as a parent class."
+    },
+    {
+      "source_id": "systems_lab_pump_and_dump_dataset",
+      "url": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+      "use": "Direct manipulation candidate with symbol, group, date, UTC hour, and exchange for pump-and-dump events. Needs a formal positive/negative-control gate before acceptance."
+    },
+    {
+      "source_id": "kamps_kleinberg_crypto_pump_dump",
+      "url": "https://link.springer.com/article/10.1186/s40163-018-0093-5",
+      "use": "Crypto pump-and-dump literature supports ManipulationIntegrityEvent as a different evidence family from price-root regimes."
+    },
+    {
+      "source_id": "finra_potential_manipulation_report",
+      "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report",
+      "use": "Regulator/SRO manipulation surfaces support market-integrity events as a separate audit class, but catalog/report pages are not automatically row-level labels."
+    },
+    {
+      "source_id": "persdre_ex_graph_dune_wash_trade_tx",
+      "url": "https://github.com/Persdre/EX-Graph",
+      "use": "Wash-trade positive-list candidate exposes NFT/token and tx_hash fields; current sampled CSV lacks timestamp and negative controls, so it is provenance until formally audited."
+    }
+  ],
+  "gates": {
+    "accepted_95_roots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "gate_result": "taxonomy_reopened_to_ActionableRegimeRootV7_web_sources_only_no_new_95"
+  },
+  "next_action": "Materialize an ActionableRegimeRootV7 schema/crosswalk and then acquire/calibrate source labels separately for BullExpansion, BearExpansion, ConsolidationBalance, CrisisDislocation, and direct ManipulationIntegrityEvent."
+}

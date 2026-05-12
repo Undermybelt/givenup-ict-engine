@@ -1,0 +1,200 @@
+{
+  "auto_quant_status": {
+    "command": "./target/debug/ict-engine auto-quant-status --state-dir /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1",
+    "data_ready": true,
+    "dependency_healthy": true,
+    "healthy": true,
+    "managed_dir": "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant",
+    "returncode": 0,
+    "status": "dependency_ready_data_ready"
+  },
+  "board_file": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_before": "3874ca921c399a3d4e8effc1fa55fa96731672f9cb7a59d9d99ceb25c0f8e762",
+  "checklist": [
+    {
+      "evidence": "prior Board A scoped map exists, but strict current objective remains blocked by source/control and selected-history gates",
+      "requirement": "every active root has >=95 confidence and cross-context validation",
+      "status": "not_complete"
+    },
+    {
+      "evidence": "append-only artifact; no existing root edited; 093435 counted and later roots duplicate-guarded as non-promoting feedback",
+      "requirement": "do not disturb multi-agent construction",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T100356+0800-codex-post-093937-board-a-continuation-audit-v1/command-output/provider_status_agent_fresh.stdout.txt",
+      "requirement": "use provider/readiness surfaces including IBKR, TradingView, yfinance, Kraken",
+      "status": "pass_readonly"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T100356+0800-codex-post-093937-board-a-continuation-audit-v1/command-output/auto_quant_status_local_data_ready_fresh.stdout.txt",
+      "requirement": "use Auto-Quant without inventing status",
+      "status": "pass_readonly"
+    },
+    {
+      "evidence": "093937 confirms execution-candidate branch preservation but observe-only; no new promotion rerun because selected-history/source-control gates are absent",
+      "requirement": "use filter / Pre-Bayes / BBN / CatBoost / execution-tree chain",
+      "status": "blocked_no_promotion"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T100356+0800-codex-post-093937-board-a-continuation-audit-v1/command-output/direct_manipulation_row_intake_verifier_fresh.stdout.txt",
+      "requirement": "R6 direct manipulation verifier",
+      "status": "schema_ready_unscored_non_promoting"
+    },
+    {
+      "evidence": "direct_manipulation_* owner-export triplet absent under /tmp/ict-engine-board-a-r6-owner-export-v1",
+      "requirement": "owner-approved source/control export",
+      "status": "blocked"
+    },
+    {
+      "evidence": "latest board text requires explicit selection and no new user selection is encoded in repo artifacts",
+      "requirement": "explicit selected history HTF/MTF/LTF",
+      "status": "blocked"
+    }
+  ],
+  "direct_intake": {
+    "matched_group_count": 70,
+    "matched_negative_rows": 73,
+    "positive_rows": 73,
+    "root": "/tmp/ict-engine-direct-manipulation-row-intake",
+    "sidecar_files": [
+      "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+    ],
+    "sidecar_triplet_present": true,
+    "verifier_next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "verifier_returncode": 0,
+    "verifier_status": "schema_ready_unscored"
+  },
+  "gate_result": "post_093937_board_a_continuation_audit_v1=093435_counted_later_roots_duplicate_guard_non_promoting_goal_not_complete",
+  "gates": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "explicit_user_selected_history": false,
+    "promotion_allowed": false,
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-12T02:10:02.878176+00:00",
+  "next": "Ask for exactly one explicit selected-history lane: HTF, MTF, or LTF; keep R6/R5/R3 source-control gates fail-closed.",
+  "owner_export": {
+    "missing_files": [
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_positive_rows.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_matched_controls.csv",
+      "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_provenance.json"
+    ],
+    "required_files_present": false,
+    "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+  },
+  "provider_status": {
+    "command": "./target/debug/ict-engine provider-status --agent",
+    "providers": [
+      {
+        "domain": "live_runtime",
+        "provider_id": "yfinance",
+        "ready": true,
+        "reason": "native_yfinance_runtime_available",
+        "status": "ready"
+      },
+      {
+        "domain": "local_runtime",
+        "provider_id": "ibkr_bridge",
+        "ready": false,
+        "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+        "status": "configured_runtime_unhealthy"
+      },
+      {
+        "domain": "local_runtime",
+        "provider_id": "kraken_cli",
+        "ready": true,
+        "reason": "kraken_cli_config_detected",
+        "status": "ready"
+      },
+      {
+        "domain": "market_data",
+        "provider_id": "ibkr",
+        "ready": false,
+        "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+        "status": "configured_runtime_unhealthy"
+      },
+      {
+        "domain": "market_data",
+        "provider_id": "kraken_public",
+        "ready": false,
+        "reason": "python3_provider_dependencies_missing",
+        "status": "configured_runtime_unhealthy"
+      },
+      {
+        "domain": "market_data",
+        "provider_id": "tradingview_mcp",
+        "ready": false,
+        "reason": "tradingview_mcp_connectivity_probe_failed",
+        "status": "configured_runtime_unhealthy"
+      },
+      {
+        "domain": "market_data",
+        "provider_id": "yfinance",
+        "ready": true,
+        "reason": "public_yahoo_http_endpoints",
+        "status": "ready"
+      }
+    ],
+    "returncode": 0
+  },
+  "reviewed_roots": [
+    {
+      "auto_quant_ran": true,
+      "exists": true,
+      "gate": "non_promoting_tomac_smoke_negative_profit",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T093435+0800-codex-board-b-aq-first-tomac-smoke-downstream-v1",
+      "profit_factor": "0.6185",
+      "promotion": false,
+      "reason": "Measured 5 trades but total profit and Sharpe were negative; Board B feedback only.",
+      "run": "093435_tomac_smoke",
+      "sharpe": "-0.0192",
+      "total_profit_pct": "-1.3100",
+      "trade_count": "5",
+      "win_rate_pct": "60.0000"
+    },
+    {
+      "error_seen": true,
+      "exists": true,
+      "exit": "1",
+      "gate": "non_promoting_pair_repair_no_data_found",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T093820+0800-codex-board-b-aq-first-nursery-provider-ltf-pair-repair-v1",
+      "promotion": false,
+      "reason": "Pair whitelist repair moved past the underscore issue but the measured run had no data.",
+      "run": "093820_pair_repair"
+    },
+    {
+      "data_ready": false,
+      "dns_error_seen": true,
+      "exists": true,
+      "factor_exit": "0",
+      "gate": "non_promoting_htf_prepare_dns_blocked",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T093854+0800-codex-board-b-htf-nursery-v1",
+      "prepare_exit": "1",
+      "promotion": false,
+      "reason": "HTF handoff exists, but Auto-Quant prepare failed before data readiness.",
+      "run": "093854_htf_nursery"
+    },
+    {
+      "branch_path_preserved": true,
+      "execution_readiness": "0.4504361163104953",
+      "exists": true,
+      "gate": "incubation_only_execution_candidate_branch_path_preserved_observe_only",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T093937+0800-codex-board-b-execution-candidate-branch-preservation-v1",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "promotion": false,
+      "ready": false,
+      "reason": "Branch path survives to execution-candidate, but execution remains observe-only.",
+      "run": "093937_branch_preservation"
+    }
+  ],
+  "run_id": "20260512T100356+0800-codex-post-093937-board-a-continuation-audit-v1"
+}

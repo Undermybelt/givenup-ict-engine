@@ -1,0 +1,15 @@
+run_id=20260511T183950+0800-codex-external-intake-live-rerun-v1
+verifier_returncode=2
+required_file_count=7
+missing_file_count=7
+verifier_status=blocked
+verifier_reason=missing_required_files
+accepted_rows_added=0
+new_confidence_gate=false
+strict_full_objective_achieved=false
+update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

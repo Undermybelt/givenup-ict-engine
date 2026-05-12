@@ -1,0 +1,22 @@
+[run] /Users/thrill3r/.local/bin/uv run --with pandas --with numpy --with catboost python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --target-csv /tmp/ict-engine-20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1-state/SRC_ROOT_CARRY_LONG_220646/policy_training/structural_path_ranking_target_history.csv --output-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1/catboost_refreshed_history_model_v1 --model-family catboost --output-scores ./scores.csv
+[load] /tmp/ict-engine-20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1-state/SRC_ROOT_CARRY_LONG_220646/policy_training/structural_path_ranking_target_history.csv: 295 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 288 training samples
+[features] label dist: {np.int64(0): np.int64(126), np.int64(1): np.int64(162)}
+[template] User weights template saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1/catboost_refreshed_history_model_v1/user_weights.json
+[train] CatBoost saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1/catboost_refreshed_history_model_v1/catboost_model.cbm
+[train] top features:                   Feature Id  Importances
+0  structural_baseline_score        100.0
+[artifact] Registration metadata saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1/catboost_refreshed_history_model_v1/trainer_artifact.json
+
+[done] Model saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1/catboost_refreshed_history_model_v1
+[done] To apply: python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1/catboost_refreshed_history_model_v1 --target-csv <new_target.csv> --output-scores scores.csv
+
+
+[done] Model: /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1/catboost_refreshed_history_model_v1
+[done] Scores: ./scores.csv
+
+[next] Apply to runtime:
+  ./target/debug/ict-engine apply-structural-path-ranking-external-scores \
+    --symbol NQ --state-dir None --scores-file ./scores.csv

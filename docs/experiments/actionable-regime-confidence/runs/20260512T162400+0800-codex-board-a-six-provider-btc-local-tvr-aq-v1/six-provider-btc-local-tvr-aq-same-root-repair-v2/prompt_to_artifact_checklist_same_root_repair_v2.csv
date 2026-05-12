@@ -1,0 +1,7 @@
+requirement,artifact,status,note
+six existing provider CSV inputs,docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/provider-csv,covered,"{""binance_public"": 985, ""bybit_public"": 985, ""ibkr_aggtrades"": 787, ""kraken_public"": 721, ""tvr_local_stdio"": 720, ""yfinance"": 983}"
+AQ workspaces under 162400 root,docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/workspace/same-root-repair-v2,covered,files=84
+no old 112904 root references,docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/command-output/same-root-repair-v2,covered,refs=0
+AQ on every non-empty provider source,docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/workspace/same-root-repair-v2,covered,run_success=6
+downstream chain,N/A,not_started,requires Board A terminal readback first
+Board A acceptance,N/A,not_claimed,accepted_95_contexts_added=0

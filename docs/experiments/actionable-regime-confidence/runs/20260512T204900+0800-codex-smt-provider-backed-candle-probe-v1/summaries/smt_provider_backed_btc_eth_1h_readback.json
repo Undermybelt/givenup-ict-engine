@@ -1,0 +1,67 @@
+{
+  "rows": [
+    {
+      "provider": "yahoo",
+      "provider_provenance": "yfinance/YF BTC-USD ETH-USD 1h",
+      "aligned_rows": 11868,
+      "first": "2025-01-01 00:00:00+00:00",
+      "last": "2026-05-11 23:00:00+00:00",
+      "relationship_type": "positive",
+      "relationship_confidence": 0.0,
+      "recent_correlation": 0.0,
+      "correlation_window_bars": 11867,
+      "smt_signal": "none",
+      "confidence": 0.0,
+      "fail_closed_reason": "swing_confirmation_failure_not_near_same_event_window",
+      "actionable": false
+    },
+    {
+      "provider": "binance",
+      "provider_provenance": "Binance BTCUSDT ETHUSDT 1h",
+      "aligned_rows": 11905,
+      "first": "2025-01-01 00:00:00+00:00",
+      "last": "2026-05-12 00:00:00+00:00",
+      "relationship_type": "positive",
+      "relationship_confidence": 0.0,
+      "recent_correlation": 0.0,
+      "correlation_window_bars": 11904,
+      "smt_signal": "none",
+      "confidence": 0.0,
+      "fail_closed_reason": "swing_confirmation_failure_not_near_same_event_window",
+      "actionable": false
+    },
+    {
+      "provider": "bybit",
+      "provider_provenance": "Bybit linear BTCUSDT ETHUSDT 1h",
+      "aligned_rows": 1000,
+      "first": "2026-03-31 09:00:00+00:00",
+      "last": "2026-05-12 00:00:00+00:00",
+      "relationship_type": "positive",
+      "relationship_confidence": 0.0,
+      "recent_correlation": 0.0,
+      "correlation_window_bars": 999,
+      "smt_signal": "none",
+      "confidence": 0.0,
+      "fail_closed_reason": "no_swing_confirmation_failure_at_latest_event",
+      "actionable": false
+    },
+    {
+      "provider": "kraken",
+      "provider_provenance": "Kraken spot XBTUSD ETHUSD 1h",
+      "aligned_rows": 721,
+      "first": "2026-04-12 12:00:00+00:00",
+      "last": "2026-05-12 12:00:00+00:00",
+      "relationship_type": "positive",
+      "relationship_confidence": 0.0,
+      "recent_correlation": 0.0,
+      "correlation_window_bars": 720,
+      "smt_signal": "none",
+      "confidence": 0.0,
+      "fail_closed_reason": "no_swing_confirmation_failure_at_latest_event",
+      "actionable": false
+    }
+  ],
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

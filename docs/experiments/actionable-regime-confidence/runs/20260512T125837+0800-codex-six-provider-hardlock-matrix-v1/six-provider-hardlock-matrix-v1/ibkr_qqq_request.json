@@ -1,0 +1,1 @@
+{"market_key":"hardlock-ibkr-qqq-1d","interval":"1d","related_roles":["etf_reference"],"provider_preferences":{"etf_reference":"ibkr"},"symbol_overrides":{"etf_reference":{"display_symbol":"QQQ","ibkr":{"symbol":"QQQ","sec_type":"STK","exchange":"SMART","currency":"USD"}}}}

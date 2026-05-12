@@ -1,0 +1,158 @@
+{
+  "commands": {
+    "analyze_demo_agent": {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "NQ",
+        "--demo",
+        "--state-dir",
+        "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state",
+        "--agent"
+      ],
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/analyze_demo_agent.exit",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/analyze_demo_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/analyze_demo_agent.stdout.txt"
+    },
+    "auto_quant_status_agent": {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-status",
+        "--state-dir",
+        "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state/auto-quant"
+      ],
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/auto_quant_status_agent.exit",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/auto_quant_status_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/auto_quant_status_agent.stdout.txt"
+    },
+    "export_structural_path_ranking_target": {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state"
+      ],
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/export_structural_path_ranking_target.exit",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/export_structural_path_ranking_target.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/export_structural_path_ranking_target.stdout.txt"
+    },
+    "policy_training_status_nq": {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state"
+      ],
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/policy_training_status_nq.exit",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/policy_training_status_nq.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/policy_training_status_nq.stdout.txt"
+    },
+    "pre_bayes_status_nq": {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state",
+        "--refresh"
+      ],
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/pre_bayes_status_nq.exit",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/pre_bayes_status_nq.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/pre_bayes_status_nq.stdout.txt"
+    },
+    "provider_status_agent": {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--agent"
+      ],
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/provider_status_agent.exit",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/provider_status_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/provider_status_agent.stdout.txt"
+    },
+    "workflow_status_execution_candidate": {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state",
+        "--refresh",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/workflow_status_execution_candidate.exit",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/workflow_status_execution_candidate.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/workflow_status_execution_candidate.stdout.txt"
+    },
+    "workflow_status_structural_feedback": {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state",
+        "--refresh",
+        "--phase",
+        "structural-feedback",
+        "--agent"
+      ],
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/workflow_status_structural_feedback.exit",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/workflow_status_structural_feedback.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1/command-output/workflow_status_structural_feedback.stdout.txt"
+    }
+  },
+  "compact": {
+    "auto_quant_bootstrap_needed": true,
+    "auto_quant_status": "missing_dependency",
+    "export_mature_rows": 0,
+    "export_rows": 3,
+    "policy_matched_rows": [
+      0,
+      0
+    ],
+    "pre_bayes_latest_policy": null,
+    "provider_first_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "ranker_runtime_status": "disabled",
+    "workflow_execution_ready": null,
+    "workflow_review_status": "discard",
+    "workflow_trade_direction": "Neutral"
+  },
+  "exit_codes": {
+    "analyze_demo_agent": 0,
+    "auto_quant_status_agent": 0,
+    "export_structural_path_ranking_target": 0,
+    "policy_training_status_nq": 0,
+    "pre_bayes_status_nq": 0,
+    "provider_status_agent": 0,
+    "workflow_status_execution_candidate": 0,
+    "workflow_status_structural_feedback": 0
+  },
+  "gate_result": "r6_jpm_cbot_treasury_chain_readback_v1=surfaces_called_observe_no_trade_autoquant_bootstrap_required_provider_degraded",
+  "generated_at_utc": "2026-05-11T16:16:05.174304+00:00",
+  "raw_data_committed": false,
+  "run_id": "20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1",
+  "runtime_code_changed": false,
+  "state_dir": "/tmp/ict-engine-r6-jpm-cbot-treasury-chain-state",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

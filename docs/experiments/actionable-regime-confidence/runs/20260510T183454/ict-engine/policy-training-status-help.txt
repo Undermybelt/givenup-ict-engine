@@ -1,0 +1,12 @@
+Show a read-only quality summary for internal policy training tables
+
+Usage: ict-engine policy-training-status [OPTIONS] --symbol <SYMBOL>
+
+Options:
+      --symbol <SYMBOL>                Instrument identifier supplied by the caller
+      --state-dir <STATE_DIR>          State directory containing analyze/update histories and policy_training artifacts [default: state]
+      --entry-model <ENTRY_MODEL>      Optional entry-model id filter. Available ids are listed in the command output.
+      --output-format <OUTPUT_FORMAT>  Output format: json (default), compact, agent, or human. `--compact` and `--human` are aliases; do not combine them with `--output-format`. [default: ""]
+      --compact                        Alias for --output-format compact
+      --human                          Alias for --output-format human
+  -h, --help                           Print help

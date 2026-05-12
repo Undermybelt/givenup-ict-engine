@@ -1,0 +1,21 @@
+{
+  "direct_species_closed": false,
+  "label_counts": {
+    "matched_negative_normal_activity": 68,
+    "normal_control": 5,
+    "positive_spoofing_layering": 73
+  },
+  "missing_required_varieties_from_board": [
+    "quote_stuffing",
+    "pinging",
+    "bear_raid_or_painting_tape",
+    "social_or_text_pump_dump"
+  ],
+  "observed_positive_term_flags": {
+    "calendar_spread": true,
+    "cross_market": true,
+    "large_lot": false,
+    "spoof_or_layer": true
+  },
+  "schema_has_direct_species_field": false
+}

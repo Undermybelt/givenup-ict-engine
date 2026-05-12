@@ -1,0 +1,7 @@
+route,url,http_readback,disposition,rows_acquired,target_root_mutated
+existing source-label owner dataset,https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026,200,keep_source_owner_route_rows_not_acquired,0,false
+Nasdaq Data Link public page,https://www.nasdaq.com/nasdaq-data-link,000,local_curl_blocked_or_failed_not_row_evidence,0,false
+Nasdaq Data Link old help root,https://help.data.nasdaq.com/,404,stale_route_do_not_use_as_current_dispatch_target,0,false
+Nasdaq Data official contact,https://www.nasdaq.net/PublicPages/ContactUs.aspx,200,current_replacement_contact_route_rows_not_acquired,0,false
+Nasdaq Indexes contact,https://indexes.nasdaq.com/contactus,200,keep_ixic_index_owner_route_rows_not_acquired,0,false
+Yahoo Finance exchanges and data providers help,https://help.yahoo.com/kb/exchanges-data-providers-yahoo-finance-sln2310.html,200,specific_provider_provenance_route_not_label_rows,0,false

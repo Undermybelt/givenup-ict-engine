@@ -1,0 +1,16 @@
+PASS run_id=20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1
+PASS source_run=20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1
+PASS public_provider_aq_runs=4
+PASS yfinance_rows=983
+PASS kraken_rows=721
+PASS binance_rows=985
+PASS bybit_rows=985
+FAIL_CLOSED tvr_fetch_exit=1
+FAIL_CLOSED ibkr_btc_rows=0
+FAIL_CLOSED six_provider_aq_authority=false
+FAIL_CLOSED no_pre_bayes_bbn_catboost_execution_tree_promotion
+PASS accepted_rows_added=0
+PASS mature_rooted_branch_observations_added=0
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

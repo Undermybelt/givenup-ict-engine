@@ -1,0 +1,1786 @@
+2026-05-12 06:59:54,841 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 06:59:54,843 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 06:59:54,843 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 06:59:54,844 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 06:59:54,844 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 06:59:54,844 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20211231 ...
+2026-05-12 06:59:54,845 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 06:59:54,845 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 06:59:54,846 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 06:59:54,846 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20211231
+2026-05-12 06:59:54,847 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 06:59:54,857 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 06:59:54,859 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 06:59:54,863 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 06:59:54,865 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 06:59:54,892 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 06:59:54,951 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 06:59:55,199 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 06:59:55,499 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 06:59:55,806 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 06:59:55,806 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 06:59:55,824 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 06:59:55,827 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 06:59:55,827 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 06:59:55,828 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 06:59:55,828 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 06:59:55,828 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 06:59:55,828 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20220101-20221231 ...
+2026-05-12 06:59:55,829 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 06:59:55,829 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 06:59:55,829 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 06:59:55,829 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20220101-20221231
+2026-05-12 06:59:55,829 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 06:59:55,839 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 06:59:55,840 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 06:59:55,841 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 06:59:55,841 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 06:59:55,868 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 06:59:55,977 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 06:59:56,189 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 06:59:56,551 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 06:59:56,800 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 06:59:56,801 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 06:59:56,812 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 06:59:56,816 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 06:59:56,816 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 06:59:56,816 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 06:59:56,817 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 06:59:56,817 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 06:59:56,818 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20230101-20251231 ...
+2026-05-12 06:59:56,818 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 06:59:56,818 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 06:59:56,819 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 06:59:56,819 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20230101-20251231
+2026-05-12 06:59:56,820 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 06:59:56,829 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 06:59:56,829 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 06:59:56,830 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 06:59:56,830 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 06:59:56,852 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 06:59:56,910 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 06:59:57,163 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 06:59:57,462 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 06:59:57,763 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 06:59:57,763 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 06:59:57,774 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 06:59:57,778 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 06:59:57,780 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 06:59:57,781 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 06:59:57,781 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 06:59:57,781 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 06:59:57,781 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 06:59:57,783 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 06:59:57,784 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 06:59:57,784 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 06:59:57,784 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 06:59:57,784 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 06:59:57,797 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 06:59:57,797 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 06:59:57,798 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 06:59:57,798 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 06:59:57,818 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 06:59:57,868 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 06:59:58,124 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 06:59:58,425 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 06:59:58,724 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 06:59:58,725 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 06:59:58,731 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 06:59:58,734 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 06:59:58,734 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 06:59:58,735 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 06:59:58,735 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 06:59:58,735 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 06:59:58,735 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20211231 ...
+2026-05-12 06:59:58,736 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 06:59:58,736 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 06:59:58,736 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 06:59:58,736 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20211231
+2026-05-12 06:59:58,737 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 06:59:58,743 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 06:59:58,743 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 06:59:58,744 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 06:59:58,744 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 06:59:58,758 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 06:59:58,790 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 06:59:59,063 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 06:59:59,373 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 06:59:59,665 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 06:59:59,666 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 06:59:59,671 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 06:59:59,673 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 06:59:59,674 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 06:59:59,674 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 06:59:59,675 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 06:59:59,675 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 06:59:59,676 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20220101-20221231 ...
+2026-05-12 06:59:59,677 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 06:59:59,677 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 06:59:59,677 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 06:59:59,678 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20220101-20221231
+2026-05-12 06:59:59,678 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 06:59:59,686 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 06:59:59,687 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 06:59:59,687 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 06:59:59,687 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 06:59:59,701 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 06:59:59,738 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 07:00:00,011 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 07:00:00,320 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 07:00:00,607 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 07:00:00,607 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 07:00:00,612 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 07:00:00,614 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 07:00:00,615 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 07:00:00,615 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 07:00:00,615 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 07:00:00,616 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 07:00:00,616 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20230101-20251231 ...
+2026-05-12 07:00:00,616 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 07:00:00,616 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 07:00:00,616 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 07:00:00,617 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20230101-20251231
+2026-05-12 07:00:00,617 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 07:00:00,625 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 07:00:00,625 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 07:00:00,626 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 07:00:00,626 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 07:00:00,639 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 07:00:00,669 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 07:00:00,944 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 07:00:01,244 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 07:00:01,547 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 07:00:01,547 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 07:00:01,553 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 07:00:01,556 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 07:00:01,557 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 07:00:01,558 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 07:00:01,558 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 07:00:01,558 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 07:00:01,558 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 07:00:01,559 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 07:00:01,559 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 07:00:01,561 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 07:00:01,561 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 07:00:01,561 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 07:00:01,569 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 07:00:01,569 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 07:00:01,569 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 07:00:01,570 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 07:00:01,583 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 07:00:01,610 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 07:00:01,891 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 07:00:02,189 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 07:00:02,488 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 07:00:02,489 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 07:00:02,495 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 07:00:02,497 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 07:00:02,497 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 07:00:02,498 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 07:00:02,498 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 07:00:02,498 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 07:00:02,498 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20211231 ...
+2026-05-12 07:00:02,498 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 07:00:02,499 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 07:00:02,499 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 07:00:02,499 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20211231
+2026-05-12 07:00:02,500 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 07:00:02,507 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 07:00:02,507 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 07:00:02,508 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 07:00:02,508 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 07:00:02,525 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 07:00:02,581 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 07:00:02,832 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 07:00:03,133 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 07:00:03,433 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 07:00:03,434 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 07:00:03,440 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 07:00:03,442 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 07:00:03,442 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 07:00:03,442 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 07:00:03,442 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 07:00:03,442 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 07:00:03,442 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20220101-20221231 ...
+2026-05-12 07:00:03,443 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 07:00:03,443 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 07:00:03,443 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 07:00:03,443 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20220101-20221231
+2026-05-12 07:00:03,443 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 07:00:03,448 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 07:00:03,449 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 07:00:03,449 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 07:00:03,449 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 07:00:03,466 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 07:00:03,514 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 07:00:03,776 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 07:00:04,087 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 07:00:04,380 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 07:00:04,382 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 07:00:04,392 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 07:00:04,396 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 07:00:04,397 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 07:00:04,397 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 07:00:04,448 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 07:00:04,451 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 07:00:04,452 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20230101-20251231 ...
+2026-05-12 07:00:04,452 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 07:00:04,481 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 07:00:04,482 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 07:00:04,484 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20230101-20251231
+2026-05-12 07:00:04,485 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 07:00:04,525 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 07:00:04,526 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 07:00:04,527 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 07:00:04,527 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 07:00:04,547 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 07:00:04,594 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 07:00:04,855 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 07:00:05,161 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 07:00:05,467 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 07:00:05,468 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo
+2026-05-12 07:00:05,480 - freqtrade.configuration.load_config - INFO - Using config: /private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/config.json 
+...
+2026-05-12 07:00:05,482 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 07:00:05,482 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 07:00:05,483 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 07:00:05,483 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/strategies
+2026-05-12 07:00:05,483 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-12 07:00:05,483 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 07:00:05,484 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 07:00:05,484 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 07:00:05,484 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 07:00:05,485 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 07:00:05,485 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 07:00:05,504 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 07:00:05,504 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 07:00:05,505 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 07:00:05,508 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 07:00:05,589 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 07:00:05,689 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 3 times.
+2026-05-12 07:00:05,905 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 2 times.
+2026-05-12 07:00:06,208 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Retrying still for 1 times.
+2026-05-12 07:00:06,505 - freqtrade.exchange.common - WARNING - _load_async_markets() returned exception: "Error in reload_markets due to ExchangeNotAvailable. Message: binance GET 
+https://api.binance.com/api/v3/exchangeInfo". Giving up.
+2026-05-12 07:00:06,505 - freqtrade.exchange.exchange - ERROR - Could not load markets.
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1574, in 
+_create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1190, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1221, in 
+_resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 241, in 
+fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 1521, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 788, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/client.py", line 742, in 
+_connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1251, in 
+_create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/aiohttp/connector.py", line 1580, in 
+_create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.binance.com:443 ssl:default [Could not contact DNS servers]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 680, in 
+_api_reload_markets
+    await self._api_async.load_markets(reload=reload, params={})
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 365, in 
+load_markets
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 357, in 
+load_markets
+    result = await self.markets_loading
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 324, in 
+load_markets_helper
+    markets = await self.fetch_markets(params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 3196, in 
+fetch_markets
+    results = await asyncio.gather(*promisesRaw)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/binance.py", line 11652, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1027, in 
+fetch2
+    raise e
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 1017, in 
+fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/exchange.py", line 281, in 
+fetch
+    raise ExchangeNotAvailable(details) from e
+ccxt.base.errors.ExchangeNotAvailable: binance GET https://api.binance.com/api/v3/exchangeInfo
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 720, in 
+reload_markets
+    retrier(self._load_async_markets, retries=retries)(reload=True)
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 191, in wrapper
+    return wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 194, in wrapper
+    raise ex
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/common.py", line 179, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 693, in 
+_load_async_markets
+    markets = self.loop.run_until_complete(self._api_reload_markets(reload=reload))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 684, in 
+_api_reload_markets
+    raise TemporaryError(
+freqtrade.exceptions.TemporaryError: Error in reload_markets due to ExchangeNotAvailable. Message: binance GET https://api.binance.com/api/v3/exchangeInfo

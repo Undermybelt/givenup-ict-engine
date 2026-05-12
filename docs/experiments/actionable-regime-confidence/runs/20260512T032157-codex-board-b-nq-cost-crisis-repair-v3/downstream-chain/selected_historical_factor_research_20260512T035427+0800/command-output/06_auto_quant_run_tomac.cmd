@@ -1,0 +1,1 @@
+uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/run_tomac.py 

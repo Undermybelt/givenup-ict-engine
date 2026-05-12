@@ -1,0 +1,8 @@
+{
+  "branch_path_fields_emitted": true,
+  "primary_candidate_trades_ge_1000": true,
+  "primary_positive_branch_leaf_candidates_ge_1": true,
+  "promotion_allowed": false,
+  "provider_rows_eq_6": true,
+  "update_goal": false
+}

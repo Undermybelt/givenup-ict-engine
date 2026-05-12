@@ -1,0 +1,35 @@
+{
+  "run_id": "20260511T091339+0800-codex-aimm-direct-manipulation-candidate-audit",
+  "board": "Board A: Actionable Regime Confidence",
+  "artifact_type": "direct_manipulation_source_candidate_audit",
+  "candidate": "AIMM public repositories and arXiv-linked supplementary materials",
+  "sources_checked": [
+    {
+      "name": "sneela/aimm-framework",
+      "url": "https://github.com/sneela/aimm-framework",
+      "evidence": "Public repository exposes illustrative framework code plus data/sample_market_data.csv only; no positive/negative manipulation label rows found in the recursive tree.",
+      "decision": "rejected_demo_framework_no_ground_truth_labels"
+    },
+    {
+      "name": "sneela/aimm-supplementary-material",
+      "url": "https://github.com/sneela/aimm-supplementary-material",
+      "evidence": "Public supplementary README says labels, ground truth, real market data, trading signals, feature engineering, and model weights are intentionally excluded.",
+      "decision": "rejected_supplement_excludes_labels_and_ground_truth"
+    },
+    {
+      "name": "AIMM arXiv page",
+      "url": "https://arxiv.org/abs/2512.16103",
+      "evidence": "Paper/supplementary metadata indicates a framework and methodology, but the public repositories do not materialize replayable labeled market-manipulation rows.",
+      "decision": "methodology_provenance_only"
+    }
+  ],
+  "accepted_direct_manipulation_label_sources": 0,
+  "accepted_label_rows_materialized": 0,
+  "accepted_mainregimev2_root_label_slots": 0,
+  "gate_result": "blocked_aimm_public_materials_no_ground_truth_labels",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Do not count AIMM public materials as accepted Manipulation evidence unless the authors publish ground-truth positive/negative rows; continue with authenticated Dune export or another materialized direct-label dataset."
+}

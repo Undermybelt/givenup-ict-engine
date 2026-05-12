@@ -1,0 +1,11 @@
+PASS decision=r6_shak_duplicate_row_cleanup_v1=duplicate_rows_removed_calibration_still_blocked
+PASS positive_rows_removed=5
+PASS matched_negative_rows_removed=5
+PASS verifier_status=schema_ready_unscored
+PASS positive_rows=32
+PASS matched_negative_rows=32
+PASS combined_min_wilson95_lcb=0.892821
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

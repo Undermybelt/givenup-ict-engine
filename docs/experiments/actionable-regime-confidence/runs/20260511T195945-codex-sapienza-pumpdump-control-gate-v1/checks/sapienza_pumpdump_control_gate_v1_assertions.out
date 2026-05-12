@@ -1,0 +1,7 @@
+PASS gate_pass=true
+PASS new_confidence_gate=true
+PASS accepted_rows_added=317_event_groups
+PASS min_split_wilson95_lcb=0.970640354706
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

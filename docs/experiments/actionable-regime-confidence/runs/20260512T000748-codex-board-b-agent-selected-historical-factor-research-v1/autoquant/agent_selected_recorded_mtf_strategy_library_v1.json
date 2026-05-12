@@ -1,0 +1,158 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-11T16:19:09+00:00",
+  "auto_quant_repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+  "auto_quant_pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/config.json",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/logs/11_auto_quant_run_recorded_mtf_offline_bah_fixed.out",
+  "timeframe": "recorded_mtf_profile_1h_4h_1d",
+  "validation_errors": [],
+  "strategies": [
+    {
+      "name": "RegimeTrendCarry",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/user_data/strategies/RegimeTrendCarry.py",
+      "metadata": {
+        "objective": "board_b_agent_selected_historical_crisis_nursery",
+        "source_recipe": "SourceRootStopCarryLongHorizonV1",
+        "recorded_data_path": "docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json",
+        "recorded_profile_source": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/profile_source.csv",
+        "local_data_alias": "BTC/USDT",
+        "paradigm": "trend-following",
+        "parent_regime_root": "Crisis",
+        "regime_profit_branch_path": "Crisis -> agent_selected_recorded_mtf -> RegimeTrendCarry",
+        "profit_floor_pass": false,
+        "min_position_size_pass": true,
+        "promotion_allowed": false,
+        "status": "incubation_only_agent_selected_historical_probe"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.6185,
+        "sortino": 9.0753,
+        "calmar": 99.7934,
+        "total_profit_pct": 1.32,
+        "max_drawdown_pct": -0.5729,
+        "trade_count": 17,
+        "win_rate_pct": 35.2941,
+        "profit_factor": 2.1478,
+        "bah_sharpe": 10.4942,
+        "bah_profit_pct": 26.4758,
+        "bah_dd_pct": -1.1758
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.6185,
+          "sortino": 9.0753,
+          "calmar": 99.7934,
+          "total_profit_pct": 1.32,
+          "max_drawdown_pct": -0.5729,
+          "trade_count": 17,
+          "win_rate_pct": 35.2941,
+          "profit_factor": 2.1478
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260327-20260512",
+      "commit": "34ba6b6",
+      "error": null
+    },
+    {
+      "name": "RegimeVolBreakout",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/user_data/strategies/RegimeVolBreakout.py",
+      "metadata": {
+        "objective": "board_b_agent_selected_historical_crisis_nursery",
+        "source_recipe": "SourceRootStopCarryLongHorizonV1",
+        "local_data_alias": "BTC/USDT",
+        "paradigm": "volatility breakout",
+        "parent_regime_root": "Crisis",
+        "regime_profit_branch_path": "Crisis -> agent_selected_recorded_mtf -> RegimeVolBreakout",
+        "profit_floor_pass": false,
+        "min_position_size_pass": true,
+        "promotion_allowed": false,
+        "status": "incubation_only_agent_selected_historical_probe"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.1948,
+        "sortino": 6.8672,
+        "calmar": 53.9735,
+        "total_profit_pct": 1.1,
+        "max_drawdown_pct": -0.8667,
+        "trade_count": 13,
+        "win_rate_pct": 23.0769,
+        "profit_factor": 2.0124,
+        "bah_sharpe": 10.4942,
+        "bah_profit_pct": 26.4758,
+        "bah_dd_pct": -1.1758
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.1948,
+          "sortino": 6.8672,
+          "calmar": 53.9735,
+          "total_profit_pct": 1.1,
+          "max_drawdown_pct": -0.8667,
+          "trade_count": 13,
+          "win_rate_pct": 23.0769,
+          "profit_factor": 2.0124
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260327-20260512",
+      "commit": "34ba6b6",
+      "error": null
+    },
+    {
+      "name": "RegimeRsiRelief",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/user_data/strategies/RegimeRsiRelief.py",
+      "metadata": {
+        "objective": "board_b_agent_selected_historical_crisis_nursery",
+        "source_recipe": "SourceRootStopCarryLongHorizonV1",
+        "local_data_alias": "BTC/USDT",
+        "paradigm": "mean-reversion",
+        "parent_regime_root": "Crisis",
+        "regime_profit_branch_path": "Crisis -> agent_selected_recorded_mtf -> RegimeRsiRelief",
+        "profit_floor_pass": false,
+        "min_position_size_pass": true,
+        "promotion_allowed": false,
+        "status": "incubation_only_agent_selected_historical_probe"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -0.3119,
+        "sortino": -100.0,
+        "calmar": -22.8138,
+        "total_profit_pct": 0.0,
+        "max_drawdown_pct": -0.0092,
+        "trade_count": 2,
+        "win_rate_pct": 50.0,
+        "profit_factor": 0.4627,
+        "bah_sharpe": 10.4942,
+        "bah_profit_pct": 26.4758,
+        "bah_dd_pct": -1.1758
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -0.3119,
+          "sortino": -100.0,
+          "calmar": -22.8138,
+          "total_profit_pct": 0.0,
+          "max_drawdown_pct": -0.0092,
+          "trade_count": 2,
+          "win_rate_pct": 50.0,
+          "profit_factor": 0.4627
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260327-20260512",
+      "commit": "34ba6b6",
+      "error": null
+    }
+  ]
+}

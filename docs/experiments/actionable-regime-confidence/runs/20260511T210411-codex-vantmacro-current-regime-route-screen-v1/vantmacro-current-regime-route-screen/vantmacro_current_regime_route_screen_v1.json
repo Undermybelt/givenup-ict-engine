@@ -1,0 +1,90 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before": "8260f757ed16c2ea7b44c91ecc056004121abe86cc062ca0b8c915aad1741a93",
+  "candidate_rows": [
+    {
+      "accepted_rows_added": 0,
+      "blocking_reason": "public page exposes source route and coverage claims but no source-owned row export, MainRegimeV2 crosswalk, split roles, provenance hashes, or owner-approved equivalence file was acquired",
+      "candidate_disposition": "route_found_rows_not_acquired",
+      "intake_files_created": false,
+      "observed_public_surface": "homepage/dashboard marketing surface",
+      "possible_fit": "current macro/asset regime labels with daily/weekly and 2026 coverage if row export or owner approval is available",
+      "requirement": "R2/R5",
+      "rows_acquired": false,
+      "source_owner": "VantMacro",
+      "source_route": "VantMacro public current-regime / dashboard source route",
+      "url": "https://vantmacro.com/"
+    }
+  ],
+  "decision": "vantmacro_current_regime_route_screen_v1=source_route_found_rows_not_acquired",
+  "download": {
+    "bytes": 132432,
+    "content_type": "text/html; charset=utf-8",
+    "path": "/tmp/ict-engine-vantmacro-current-regime-route-screen-v1/vantmacro-homepage.html",
+    "sha256": "11e77fb68d2ba1c58b6d45c052f30547794d9053492646d3e882b9aa50ad4592",
+    "status": 200,
+    "url": "https://vantmacro.com/"
+  },
+  "generated_at_utc": "2026-05-11T13:05:14.183464+00:00",
+  "intake_files_created": false,
+  "new_confidence_gate": false,
+  "next": "Use this as a contact/API route only if owner-approved row export or crosswalk can be acquired; source-label equivalence intake remains blocked until exact rows and provenance exist.",
+  "raw_data_committed": false,
+  "request_sent": false,
+  "rows_acquired": false,
+  "run_id": "20260511T210411+0800-codex-vantmacro-current-regime-route-screen-v1",
+  "runtime_code_changed": false,
+  "snippets": [
+    {
+      "marker": "Current Regime",
+      "snippet": " As of Jan 2026. Historical statistics reflect the 2003 \u2013 2026 sample; see Methodology &amp; validation View Live Snapshot Explore Features Current Regime Loading... Confidence \u2014 Live data from FRED, Yahoo Finance, DBnomics View full snapshot \u2192 From Raw Data to Regime Classification The same process a macro analyst does in Excel, automated and backtested against market history from 2003\u20132026. \ud83d\udce1 12 Core Indicators From FRED, DBnomics, and OECD. Series you can verify yourself. WALCL M2SL VIXCLS \u2193 "
+    },
+    {
+      "marker": "Data from",
+      "snippet": " regime changes ( 2003 \u2013 2026 ). Track Global Liquidity, Market Regimes &amp; Business Cycles 80 % directional accuracy ( see definition ). Data from 2003 \u2013 2026 . One readable snapshot. VantMacro classifies markets into 7 distinct regimes using empirical data from 2003 - 2026 . See where we are today and what has historically tended to follow in similar conditions. The 2008 crisis lasted 246 days. COVID lasted 33. Track global liquidity and market health without the terminal\u2014every threshold is "
+    },
+    {
+      "marker": "Daily",
+      "snippet": "rkspaces \u2713 Asset Performance &amp; global asset tracking \u2713 Correlations, backtests &amp; historical analysis \u2713 Updated as data is released (daily/weekly/monthly) Start Free Trial 30-day money-back guarantee \u00b7 Cancel anytime \u00b7 Taxes may apply based on location Get macro regime updates Weekly snapshots, feature launches, and data updates delivered to your inbox. Frequently Asked Questions How accurate is the regime classification? \u2193 We&#x27;ve backtested 427 regime transitions since 2003. Equities"
+    },
+    {
+      "marker": "Weekly",
+      "snippet": "M2 with proper adjustments 3. Apply z-score normalization, map to 3 dimensions (Growth, Liquidity, Risk) 4. Classify into 7 regimes, update weekly when new data releases 4-8 hrs setup + 1 hr/week Manual process VantMacro Automated &amp; validated Open the dashboard. See today&#x27;s regime with confidence scores. Updated automatically when underlying data releases. Backtested against 427 regime transitions ( 2003 - 2026 ). Full methodology documentation so you can verify our work. Time required:"
+    },
+    {
+      "marker": "Dashboard",
+      "snippet": "o content Vant Macro Features Demo Learn Pricing Contact Sign In View Live Snapshot Free Tier Available Global Liquidity &amp; Macro Regime Dashboard Analyzed across 427 regime changes ( 2003 \u2013 2026 ). Track Global Liquidity, Market Regimes &amp; Business Cycles 80 % directional accuracy ( see definition ). Data from 2003 \u2013 2026 . One readable snapshot. VantMacro classifies markets into 7 distinct regimes using empirical data from 2003 - 2026 . See where we are today and what has historically te"
+    },
+    {
+      "marker": "Market Regime",
+      "snippet": "ee Tier Available Global Liquidity &amp; Macro Regime Dashboard Analyzed across 427 regime changes ( 2003 \u2013 2026 ). Track Global Liquidity, Market Regimes &amp; Business Cycles 80 % directional accuracy ( see definition ). Data from 2003 \u2013 2026 . One readable snapshot. VantMacro classifies markets into 7 distinct regimes using empirical data from 2003 - 2026 . See where we are today and what has historically tended to follow in similar conditions. The 2008 crisis lasted 246 days. COVID lasted 33"
+    }
+  ],
+  "source_label_equivalence_verifier": {
+    "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py --intake-root /tmp/ict-engine-source-label-equivalence-intake",
+    "payload": {
+      "missing_files": [
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr": "",
+    "stdout": "{\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv\",\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json\"\n  ],\n  \"reason\": \"missing_required_files\",\n  \"status\": \"blocked\"\n}\n"
+  },
+  "source_url": "https://vantmacro.com/",
+  "strict_full_objective_achieved": false,
+  "text_checks": {
+    "mentions_2003_2026": true,
+    "mentions_current_regime": true,
+    "mentions_daily_weekly": true,
+    "mentions_dashboard": true,
+    "mentions_market_regime": true,
+    "mentions_pro": true
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

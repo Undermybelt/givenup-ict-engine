@@ -1,0 +1,3 @@
+option_id,decision_before_use,required_payload,acceptance_note
+source_owned_normal_controls,owner/source export required,matched_negative_normal_activity_rows.csv plus provenance_manifest.json,"Preferred branch. Controls must be normal/non-manipulation rows matched by instrument or family, venue or family, session, and time window."
+explicit_flip_as_control_contract,explicit board/user approval required,validation_contract_approval.json and owner_approval_reference.md naming FLIP-as-control exception,Exception branch. Approval must acknowledge FLIP rows are same-sequence counterpart legs and are not source-owned normal controls.

@@ -1,0 +1,7 @@
+PASS board_cursor_read
+PASS scorer_process_absent_at_readback
+PASS no_branch_rc_spa_report_present_before_fail_closed_check
+PASS no_downstream_consumption_started
+SUPERSEDED_AT 20260511T211241+0800
+SUPERSEDED_BY docs/experiments/actionable-regime-confidence/runs/20260511T205958-codex-board-b-root-branch-orthogonal-panel-scan-v1/branch-rc-spa/root_branch_orthogonal_panel_scan_rc_spa_report_v1.md
+RESULT do_not_use_as_final_rejection_evidence

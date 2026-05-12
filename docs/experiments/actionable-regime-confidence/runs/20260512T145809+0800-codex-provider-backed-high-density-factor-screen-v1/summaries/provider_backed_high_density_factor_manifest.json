@@ -1,0 +1,46 @@
+{
+  "protocol": "provider-backed-high-density-factor-screen-v1",
+  "generated_at": "2026-05-12T06:59:35.911683Z",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1",
+  "inputs": [
+    {
+      "provider": "binance",
+      "symbol": "BTCUSDT",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+      "rows": 76429,
+      "start": "2017-08-17 04:00:00+00:00",
+      "end": "2026-05-12 00:00:00+00:00"
+    },
+    {
+      "provider": "ibkr",
+      "symbol": "SPY",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/ibkr_spy_1h_5y.normalized.csv",
+      "rows": 20034,
+      "start": "2021-05-13T08:00:00+00:00",
+      "end": "2026-05-11T23:00:00+00:00"
+    },
+    {
+      "provider": "yahoo",
+      "symbol": "ES",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv",
+      "rows": 11383,
+      "start": "2024-05-13 00:00:00+00:00",
+      "end": "2026-05-11 23:00:00+00:00"
+    }
+  ],
+  "strategies": [
+    "trend_pullback_resume_v1",
+    "volatility_breakout_follow_v1",
+    "range_z_reversion_v1"
+  ],
+  "trade_count_total": 9388,
+  "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_summary.csv",
+  "trades_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_trades.csv",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "notes": [
+    "screen only; not Auto-Quant backtest",
+    "branch path fields populated",
+    "requires downstream AQ/Pre-Bayes/BBN/CatBoost/execution-tree admission before promotion"
+  ]
+}

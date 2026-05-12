@@ -1,0 +1,56 @@
+{
+  "accepted_rows_added": 0,
+  "all_r5_targets_satisfied": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "gate_result": "r5_target_cell_check_against_source_label_root_v1=source_label_root_has_no_post_cutoff_r5_target_rows",
+  "new_confidence_gate": false,
+  "r5_cutoff_exclusive": "2026-01-30",
+  "r5_recency_root": "/tmp/ict-engine-source-panel-recency-extension",
+  "r5_recency_root_files": [],
+  "raw_data_committed": false,
+  "run_id": "20260512T011619-codex-r5-target-cell-check-against-source-label-root-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_label_provenance_present": true,
+  "source_label_root": "/tmp/ict-engine-source-label-equivalence-intake",
+  "source_label_rows_present": true,
+  "source_label_rows_sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25",
+  "strict_full_objective_achieved": false,
+  "target_rows": [
+    {
+      "latest_source_label_date": "2025-12-19",
+      "post_cutoff_rows_after_2026_01_30": 0,
+      "r5_recency_satisfied": false,
+      "required_label": "Sideways",
+      "source_label_rows_total": 2067,
+      "symbol": "XOM"
+    },
+    {
+      "latest_source_label_date": "2025-12-31",
+      "post_cutoff_rows_after_2026_01_30": 0,
+      "r5_recency_satisfied": false,
+      "required_label": "Bear",
+      "source_label_rows_total": 1225,
+      "symbol": "UNH"
+    },
+    {
+      "latest_source_label_date": "2025-12-01",
+      "post_cutoff_rows_after_2026_01_30": 0,
+      "r5_recency_satisfied": false,
+      "required_label": "Sideways",
+      "source_label_rows_total": 2198,
+      "symbol": "^DJI"
+    },
+    {
+      "latest_source_label_date": "2025-12-11",
+      "post_cutoff_rows_after_2026_01_30": 0,
+      "r5_recency_satisfied": false,
+      "required_label": "Bear",
+      "source_label_rows_total": 1667,
+      "symbol": "AMD"
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false
+}

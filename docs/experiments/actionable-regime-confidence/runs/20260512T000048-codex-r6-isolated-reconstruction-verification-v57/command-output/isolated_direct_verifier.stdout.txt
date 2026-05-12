@@ -1,0 +1,17 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 73,
+  "matched_negative_rows": 73,
+  "matched_group_count": 70,
+  "provenance_keys": [
+    "generated_at_utc",
+    "jpm_order_control_complete_json",
+    "raw_data_committed",
+    "run_id",
+    "shared_intake_mutated",
+    "source_negative_rows",
+    "source_positive_rows",
+    "source_reconstruction_json"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

@@ -1,0 +1,1 @@
+cd /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004649-codex-board-b-220646-explicit-history-selection-v1/state_explicit_history_v1/.deps/auto-quant && uv run --with ta-lib ./run_tomac.py after run-local NQ/USD pair + 2026 timerange + precision normalization

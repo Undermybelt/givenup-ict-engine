@@ -1,0 +1,13 @@
+PASS decision=r6_gandhi_expanded_calibration_gate_v1=expanded_rows_schema_ready_calibration_blocked
+PASS positive_rows=4
+PASS matched_negative_rows=4
+PASS matched_group_count=3
+PASS combined_min_wilson95_lcb=0.510109
+PASS chronological_train_calibration_test_ok=true
+PASS heldout_symbol_or_venue_ok=true
+PASS broad_normal_sample=false
+PASS species_coverage_ok=false
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

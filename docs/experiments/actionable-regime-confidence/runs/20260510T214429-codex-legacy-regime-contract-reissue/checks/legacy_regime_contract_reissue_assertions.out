@@ -1,0 +1,6 @@
+accepted_reissued: ['SessionLiquidityCoreViable', 'RangeConsolidation', 'ThinLiquidity']
+per_regime_coverage: {'SessionLiquidityCoreViable': 'accepted_95_reissued_field_complete', 'TrendExpansion': 'accepted_95_existing_field_complete', 'RangeConsolidation': 'accepted_95_reissued_field_complete', 'ExtremeStress': 'accepted_95_existing_field_complete', 'ReversalBrewing': 'accepted_95_existing_field_complete', 'ThinLiquidity': 'accepted_95_reissued_field_complete'}
+missing_after_this_loop: []
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+trade_usable: False

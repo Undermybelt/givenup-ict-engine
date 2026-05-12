@@ -1,0 +1,330 @@
+{
+  "aq_provider_invoked": true,
+  "branch_paths": {
+    "ProviderCryptoMomentumStateV1": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+    "ProviderCryptoPullbackRevertV1": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+  },
+  "count_once_key": "102500_provider_yahoo_crypto_momentum_aq",
+  "exit_files": {
+    "00_fetch_yahoo_btc_1h.exit": "0",
+    "01_fetch_yahoo_eth_1h.exit": "0",
+    "02_fetch_yahoo_sol_1h.exit": "0",
+    "03_prepare_btc.exit": "0",
+    "03_signal_density_precheck.exit": "0",
+    "04_prepare_eth.exit": "0",
+    "04_run_tomac_yahoo_crypto_momentum.exit": "0",
+    "05_prepare_sol.exit": "0",
+    "06_py_compile.exit": "0",
+    "07_run_provider_crypto_momentum.exit": "0"
+  },
+  "gate": {
+    "downstream_promotion_rerun": false,
+    "duplicate_tomac_readback_exit0": true,
+    "nonzero_mature_trades": true,
+    "nonzero_signal_density": true,
+    "profitability_signal": false,
+    "promotion_allowed": false,
+    "tomac_exit0": true,
+    "update_goal": false
+  },
+  "local_cache_replay": false,
+  "prepared_feathers": {
+    "BTC/USDT": {
+      "after_load": 17007,
+      "bad_date": 0,
+      "bars": {
+        "1d": 710,
+        "1h": 17007,
+        "4h": 4254
+      },
+      "duplicate_ts": 0,
+      "nan_ohlc": 0,
+      "raw_rows": 17007
+    },
+    "ETH/USDT": {
+      "after_load": 17004,
+      "bad_date": 0,
+      "bars": {
+        "1d": 710,
+        "1h": 17004,
+        "4h": 4254
+      },
+      "duplicate_ts": 0,
+      "nan_ohlc": 0,
+      "raw_rows": 17004
+    },
+    "SOL/USDT": {
+      "after_load": 17006,
+      "bad_date": 0,
+      "bars": {
+        "1d": 710,
+        "1h": 17006,
+        "4h": 4254
+      },
+      "duplicate_ts": 0,
+      "nan_ohlc": 0,
+      "raw_rows": 17006
+    }
+  },
+  "provider_data_acquired": {
+    "BTC-USD": {
+      "range": "2024-06-01 00:00:00+00:00 -> 2026-05-11 23:00:00+00:00",
+      "rows": 17007
+    },
+    "ETH-USD": {
+      "range": "2024-06-01 00:00:00+00:00 -> 2026-05-11 23:00:00+00:00",
+      "rows": 17004
+    },
+    "SOL-USD": {
+      "range": "2024-06-01 00:00:00+00:00 -> 2026-05-11 23:00:00+00:00",
+      "rows": 17006
+    }
+  },
+  "provider_requested": [
+    "yfinance/Yahoo:BTC-USD:1h",
+    "yfinance/Yahoo:ETH-USD:1h",
+    "yfinance/Yahoo:SOL-USD:1h"
+  ],
+  "provider_unreachable": [],
+  "providers_not_invoked_this_slice": [
+    "IBKR",
+    "TradingViewRemix/TVR",
+    "Kraken",
+    "Binance",
+    "Bybit"
+  ],
+  "run_id": "20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1",
+  "signal_density_precheck": {
+    "nonzero_signal_density": true,
+    "run_root": "20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1",
+    "strategies": {
+      "ProviderCryptoMomentumStateV1": {
+        "expected_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "pairs": {
+          "BTC/USDT": {
+            "entry_candidates": 364,
+            "first_entries": [
+              "2024-06-06 17:00:00+00:00",
+              "2024-06-07 03:00:00+00:00",
+              "2024-06-09 12:00:00+00:00",
+              "2024-06-10 01:00:00+00:00",
+              "2024-06-10 14:00:00+00:00"
+            ],
+            "rows": 17007
+          },
+          "ETH/USDT": {
+            "entry_candidates": 390,
+            "first_entries": [
+              "2024-06-05 06:00:00+00:00",
+              "2024-06-05 11:00:00+00:00",
+              "2024-06-05 17:00:00+00:00",
+              "2024-06-07 11:00:00+00:00",
+              "2024-06-09 14:00:00+00:00"
+            ],
+            "rows": 17004
+          },
+          "SOL/USDT": {
+            "entry_candidates": 331,
+            "first_entries": [
+              "2024-06-07 04:00:00+00:00",
+              "2024-06-07 11:00:00+00:00",
+              "2024-06-10 15:00:00+00:00",
+              "2024-06-12 20:00:00+00:00",
+              "2024-06-16 10:00:00+00:00"
+            ],
+            "rows": 17006
+          }
+        },
+        "total_entry_candidates": 1085
+      },
+      "ProviderCryptoPullbackRevertV1": {
+        "expected_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+        "pairs": {
+          "BTC/USDT": {
+            "entry_candidates": 327,
+            "first_entries": [
+              "2024-06-06 20:00:00+00:00",
+              "2024-06-09 03:00:00+00:00",
+              "2024-06-11 18:00:00+00:00",
+              "2024-06-13 16:00:00+00:00",
+              "2024-06-14 21:00:00+00:00"
+            ],
+            "rows": 17007
+          },
+          "ETH/USDT": {
+            "entry_candidates": 275,
+            "first_entries": [
+              "2024-06-06 22:00:00+00:00",
+              "2024-06-08 07:00:00+00:00",
+              "2024-06-09 03:00:00+00:00",
+              "2024-06-10 08:00:00+00:00",
+              "2024-06-13 16:00:00+00:00"
+            ],
+            "rows": 17004
+          },
+          "SOL/USDT": {
+            "entry_candidates": 329,
+            "first_entries": [
+              "2024-06-06 20:00:00+00:00",
+              "2024-06-06 22:00:00+00:00",
+              "2024-06-10 08:00:00+00:00",
+              "2024-06-13 21:00:00+00:00",
+              "2024-06-14 01:00:00+00:00"
+            ],
+            "rows": 17006
+          }
+        },
+        "total_entry_candidates": 931
+      }
+    }
+  },
+  "status": "fail_closed_no_profitability_signal",
+  "tomac_metrics_duplicate_readback_04": {
+    "ProviderCryptoMomentumStateV1": {
+      "calmar": -2.1604,
+      "max_drawdown_pct": -23.4587,
+      "per_pair": {
+        "BTC/USDT": {
+          "dd_pct": -0.0,
+          "pf": 0.0,
+          "profit_pct": 0.0,
+          "sharpe": 0.0,
+          "trades": 0,
+          "wr": 0.0
+        },
+        "ETH/USDT": {
+          "dd_pct": -0.0,
+          "pf": 0.0,
+          "profit_pct": 0.0,
+          "sharpe": 0.0,
+          "trades": 0,
+          "wr": 0.0
+        },
+        "SOL/USDT": {
+          "dd_pct": -23.46,
+          "pf": 0.73,
+          "profit_pct": -18.73,
+          "sharpe": -1.0287,
+          "trades": 295,
+          "wr": 34.9
+        }
+      },
+      "profit_factor": 0.735,
+      "sharpe": -1.0287,
+      "sortino": -1.9483,
+      "total_profit_pct": -18.73,
+      "trade_count": 295,
+      "win_rate_pct": 34.9153
+    },
+    "ProviderCryptoPullbackRevertV1": {
+      "calmar": -2.215,
+      "max_drawdown_pct": -8.6498,
+      "per_pair": {
+        "BTC/USDT": {
+          "dd_pct": -0.0,
+          "pf": 0.0,
+          "profit_pct": 0.0,
+          "sharpe": 0.0,
+          "trades": 0,
+          "wr": 0.0
+        },
+        "ETH/USDT": {
+          "dd_pct": -0.0,
+          "pf": 0.0,
+          "profit_pct": 0.0,
+          "sharpe": 0.0,
+          "trades": 0,
+          "wr": 0.0
+        },
+        "SOL/USDT": {
+          "dd_pct": -8.65,
+          "pf": 0.69,
+          "profit_pct": -7.08,
+          "sharpe": -0.4663,
+          "trades": 109,
+          "wr": 40.4
+        }
+      },
+      "profit_factor": 0.6898,
+      "sharpe": -0.4663,
+      "sortino": -0.7858,
+      "total_profit_pct": -7.08,
+      "trade_count": 109,
+      "win_rate_pct": 40.367
+    }
+  },
+  "tomac_metrics_primary_07": {
+    "ProviderCryptoMomentumStateV1": {
+      "calmar": -2.1604,
+      "max_drawdown_pct": -23.4587,
+      "per_pair": {
+        "BTC/USDT": {
+          "dd_pct": -0.0,
+          "pf": 0.0,
+          "profit_pct": 0.0,
+          "sharpe": 0.0,
+          "trades": 0,
+          "wr": 0.0
+        },
+        "ETH/USDT": {
+          "dd_pct": -0.0,
+          "pf": 0.0,
+          "profit_pct": 0.0,
+          "sharpe": 0.0,
+          "trades": 0,
+          "wr": 0.0
+        },
+        "SOL/USDT": {
+          "dd_pct": -23.46,
+          "pf": 0.73,
+          "profit_pct": -18.73,
+          "sharpe": -1.0287,
+          "trades": 295,
+          "wr": 34.9
+        }
+      },
+      "profit_factor": 0.735,
+      "sharpe": -1.0287,
+      "sortino": -1.9483,
+      "total_profit_pct": -18.73,
+      "trade_count": 295,
+      "win_rate_pct": 34.9153
+    },
+    "ProviderCryptoPullbackRevertV1": {
+      "calmar": -2.215,
+      "max_drawdown_pct": -8.6498,
+      "per_pair": {
+        "BTC/USDT": {
+          "dd_pct": -0.0,
+          "pf": 0.0,
+          "profit_pct": 0.0,
+          "sharpe": 0.0,
+          "trades": 0,
+          "wr": 0.0
+        },
+        "ETH/USDT": {
+          "dd_pct": -0.0,
+          "pf": 0.0,
+          "profit_pct": 0.0,
+          "sharpe": 0.0,
+          "trades": 0,
+          "wr": 0.0
+        },
+        "SOL/USDT": {
+          "dd_pct": -8.65,
+          "pf": 0.69,
+          "profit_pct": -7.08,
+          "sharpe": -0.4663,
+          "trades": 109,
+          "wr": 40.4
+        }
+      },
+      "profit_factor": 0.6898,
+      "sharpe": -0.4663,
+      "sortino": -0.7858,
+      "total_profit_pct": -7.08,
+      "trade_count": 109,
+      "win_rate_pct": 40.367
+    }
+  }
+}

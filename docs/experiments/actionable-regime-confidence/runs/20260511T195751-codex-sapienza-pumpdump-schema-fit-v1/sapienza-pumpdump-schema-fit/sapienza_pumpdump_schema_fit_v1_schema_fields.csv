@@ -1,0 +1,9 @@
+required_field,fit_status,source_columns,notes
+event_id_or_source_row_id,ready_derived_for_pumpdump,"feature_file,pump_index,symbol,date + pump_telegram source row ordinal via nearest event join","All checked positive feature rows join to a Binance pump event within 180 seconds, but the native feature key is a build-local pump_index rather than an immutable upstream event id."
+timestamp_session_window,ready_for_pumpdump,"date,feature_file granularity,pump_telegram date/hour","Feature timestamps are UTC exchange windows; market session is crypto 24x7 and window size is encoded as 5S, 15S, or 25S."
+symbol_market_venue,ready_for_pumpdump,"symbol,pump_telegram exchange,README pair contract",Feature rows carry symbols; source event table and README constrain the checked labeled feature package to Binance SYM/BTC crypto pairs.
+direct_label_or_species,ready_scoped_to_pumpdump,"gt,pump_telegram event context","gt=1/gt=0 supports a direct pump/dump species package only; it is not a spoofing/layering, quote-stuffing, pinging, bear-raid, or painting-tape label source."
+matched_negative_group_or_controls,ready_scoped_to_pumpdump,"feature_file,pump_index,gt",Each positive pump_index has same-schema gt=0 rows in the same feature file and event window group.
+provenance_hash,ready,source commit plus SHA256 of source CSV/GZ files,The artifact records compact source hashes only; raw rows stay in /tmp.
+spoofing_layering_positive_rows,missing,N/A,No order-book layering/spoofing lifecycle labels are present in this source package.
+full_direct_manipulation_species_coverage,missing,N/A,"The package covers pump/dump only and does not cover quote stuffing, pinging, bear raid, or painting tape."

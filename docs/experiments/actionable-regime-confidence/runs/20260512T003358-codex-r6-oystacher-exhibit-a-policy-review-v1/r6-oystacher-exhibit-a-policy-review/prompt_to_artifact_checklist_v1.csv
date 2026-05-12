@@ -1,0 +1,7 @@
+requirement,evidence,status
+real public source row materialization,docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/r6_oystacher_exhibit_a_row_materialization_v1.json,satisfied_isolated
+source-owned positives,SPOOF rows=5182,candidate_satisfied
+matched normal controls,FLIP rows=1553,not_satisfied_under_current_contract
+cross-market/cycle split confidence,docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/oystacher_exhibit_a_split_metrics_v1.csv,proxy_only_until_controls_accepted
+canonical intake merge,shared_intake_mutated=false,not_done
+provider/Auto-Quant/pre-Bayes/BBN/CatBoost/execution-tree rerun,no accepted canonical row or contract change,not_run_by_policy

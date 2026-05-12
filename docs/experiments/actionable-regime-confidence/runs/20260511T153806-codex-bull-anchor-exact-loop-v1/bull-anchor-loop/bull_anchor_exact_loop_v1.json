@@ -1,0 +1,120 @@
+{
+  "accepted_bull_rows": 2,
+  "accepted_roots_this_loop": [
+    "Bull"
+  ],
+  "accepted_rows": [
+    {
+      "accepted_95_strict_ticker_root_attachment": "True",
+      "attachment_policy": "exact_same_ticker_daily_parent_context_to_1h_session_date_v1",
+      "blocker": "",
+      "calibration_2024_support": "184",
+      "calibration_2024_wilson95_lcb": "0.9795494624",
+      "consumer_scope": "intraday_parent_day_context_not_intraday_micro_regime",
+      "heldout_time_2025_support": "196",
+      "heldout_time_2025_wilson95_lcb": "0.9807774681",
+      "instrument": "GE",
+      "provider": "yfinance",
+      "provider_rows": "5068",
+      "provider_sessions": "730",
+      "root": "Bull",
+      "source_ticker": "GE",
+      "timeframe": "1h"
+    },
+    {
+      "accepted_95_strict_ticker_root_attachment": "True",
+      "attachment_policy": "exact_same_ticker_daily_parent_context_to_1h_session_date_v1",
+      "blocker": "",
+      "calibration_2024_support": "206",
+      "calibration_2024_wilson95_lcb": "0.9816935183",
+      "consumer_scope": "intraday_parent_day_context_not_intraday_micro_regime",
+      "heldout_time_2025_support": "179",
+      "heldout_time_2025_wilson95_lcb": "0.97899022",
+      "instrument": "GS",
+      "provider": "yfinance",
+      "provider_rows": "5078",
+      "provider_sessions": "730",
+      "root": "Bull",
+      "source_ticker": "GS",
+      "timeframe": "1h"
+    }
+  ],
+  "combined_accepted_root_supply": [
+    {
+      "calibration_2024_support": "184",
+      "calibration_2024_wilson95_lcb": "0.9795494624",
+      "heldout_time_2025_support": "196",
+      "heldout_time_2025_wilson95_lcb": "0.9807774681",
+      "instrument": "GE",
+      "root": "Bull",
+      "source_loop": "bull_anchor_exact_loop_v1",
+      "timeframe": "1h"
+    },
+    {
+      "calibration_2024_support": "206",
+      "calibration_2024_wilson95_lcb": "0.9816935183",
+      "heldout_time_2025_support": "179",
+      "heldout_time_2025_wilson95_lcb": "0.97899022",
+      "instrument": "GS",
+      "root": "Bull",
+      "source_loop": "bull_anchor_exact_loop_v1",
+      "timeframe": "1h"
+    },
+    {
+      "calibration_2024_support": "109",
+      "calibration_2024_wilson95_lcb": "0.9659570262",
+      "heldout_time_2025_support": "74",
+      "heldout_time_2025_wilson95_lcb": "0.9506502206",
+      "instrument": "PFE",
+      "root": "Bear",
+      "source_loop": "pfe_tsla_rare_root_exact_loop_v1",
+      "timeframe": "1h"
+    },
+    {
+      "calibration_2024_support": "74",
+      "calibration_2024_wilson95_lcb": "0.9506502206",
+      "heldout_time_2025_support": "92",
+      "heldout_time_2025_wilson95_lcb": "0.9599186107",
+      "instrument": "PFE",
+      "root": "Sideways",
+      "source_loop": "pfe_tsla_rare_root_exact_loop_v1",
+      "timeframe": "1h"
+    },
+    {
+      "calibration_2024_support": "146",
+      "calibration_2024_wilson95_lcb": "0.9743631779",
+      "heldout_time_2025_support": "146",
+      "heldout_time_2025_wilson95_lcb": "0.9743631779",
+      "instrument": "TSLA",
+      "root": "Crisis",
+      "source_loop": "pfe_tsla_rare_root_exact_loop_v1",
+      "timeframe": "1h"
+    }
+  ],
+  "combined_price_root_supply_covers_all_active_mainregimev2_roots": true,
+  "combined_with_pfe_tsla_covered_roots": [
+    "Bear",
+    "Bull",
+    "Crisis",
+    "Sideways"
+  ],
+  "direct_manipulation_lane_state": "separate_waiting_for_external_row_level_positive_and_matched_negative_exports",
+  "full_objective_achieved": false,
+  "gate_result": "bull_anchor_exact_loop_v1=accepted2_bull_anchor_no_new_download",
+  "next_action": "run a completion audit that separates MainRegimeV2 price-root evidence from the direct Manipulation row-intake blocker; do not continue broad negative source sweeps",
+  "non_target_blocked_rows": 6,
+  "purpose": "close abundant Bull exact-source supply after the PFE+TSLA rare-root loop already closed Bear/Sideways/Crisis",
+  "raw_data_committed": false,
+  "run_id": "20260511T153806+0800-codex-bull-anchor-exact-loop-v1",
+  "runtime_code_changed": false,
+  "selected_pair": [
+    "GE",
+    "GS"
+  ],
+  "selected_pair_rows": 8,
+  "source_exact_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1_rows.csv",
+  "source_rare_root_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T144604-codex-pfe-tsla-rare-root-exact-loop-v1/rare-root-loop/pfe_tsla_rare_root_exact_loop_v1_rows.csv",
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

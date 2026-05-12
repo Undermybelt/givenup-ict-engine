@@ -1,0 +1,11 @@
+{
+  "bootstrap_needed": false,
+  "data_ready": false,
+  "dependency_healthy": true,
+  "healthy": false,
+  "notes": [],
+  "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/auto-quant",
+  "status": "dependency_ready_data_missing",
+  "summary_line": "auto_quant_status dependency_ready_data_missing healthy=false dependency_healthy=true data_ready=false bootstrap_needed=false update_available=false",
+  "update_available": false
+}

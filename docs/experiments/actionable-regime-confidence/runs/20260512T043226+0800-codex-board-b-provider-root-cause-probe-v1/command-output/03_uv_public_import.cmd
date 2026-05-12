@@ -1,0 +1,1 @@
+env UV_CACHE_DIR=/tmp/ict-engine-provider-deps-uv-cache uv run --with requests --with pandas --with ccxt --with ib_async --with redis --with pyyaml --with scikit-learn --with pyarrow --with xgboost python -c import requests; import pandas; import ccxt; import ib_async; import redis; import yaml; import sklearn; import pyarrow; import xgboost; print("ok")

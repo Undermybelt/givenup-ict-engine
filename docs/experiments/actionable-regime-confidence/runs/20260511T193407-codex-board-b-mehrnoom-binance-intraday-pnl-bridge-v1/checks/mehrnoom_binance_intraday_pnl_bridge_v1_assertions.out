@@ -1,0 +1,6 @@
+positive_direct_event_rows=3211
+same_coin_control_rows=3211
+monthly_folds=13
+gate_result=diagnostic_only:intraday_rows_reconstructed_but_no_positive_edge_vs_controls
+promotion_allowed=False
+downstream_consumption=not_started:no_rc_spa_promotion

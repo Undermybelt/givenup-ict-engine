@@ -1,0 +1,15 @@
+PASS run_id=20260512T053856-codex-hgb-validation-axis-audit-after-051844-v1
+PASS gate_result=hgb_validation_axis_audit_after_051844_v1=price_roots_95_daily_cross_market_cross_period_only_timeframe_source_control_downstream_blocked
+PASS hgb_price_roots_accepted=Bear,Bull,Crisis,Sideways
+PASS heldout_market_rows=26236
+PASS heldout_time_rows=45384
+PASS test_rows=27844
+PASS timeframe_counts=1d:248440
+PASS native_subhour_root_absent=true
+PASS r6_owner_export_root_absent=true
+PASS r5_recency_extension_root_absent=true
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS trade_usable=false
+PASS update_goal=false

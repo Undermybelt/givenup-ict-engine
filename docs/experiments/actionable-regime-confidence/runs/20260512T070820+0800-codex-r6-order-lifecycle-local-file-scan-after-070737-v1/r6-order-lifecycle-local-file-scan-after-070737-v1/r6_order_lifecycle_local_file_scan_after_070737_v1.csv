@@ -1,0 +1,8 @@
+class,count,decision
+tomac_context_files,20,OHLCV/symbology context only; no owner-export normal controls
+stock_market_regimes_old_file,1,known historical source context only; no R6 direct-event controls
+ictscripts_file,1,script/context only; no verifier-native rows or provenance
+repo_intake_code_files,115,source-code hits only; no data export rows
+external_data_source_code_files,82,source-code hits only; no data export rows
+required_r6_target_contract_hits,0,no direct_manipulation positive/control/provenance packet found
+accepted_rows_added,0,no source/control unlock

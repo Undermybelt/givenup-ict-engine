@@ -1,0 +1,134 @@
+{
+  "artifact_id": "auto-quant-handoff:factor_research:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:20260512T042935.387Z",
+  "handoff_kind": "factor_research",
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1",
+  "objective": "expansion_manipulation",
+  "backend": "auto-quant",
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json",
+  "paired_data_path": null,
+  "mutation_spec_path": null,
+  "iterations": null,
+  "session_id": null,
+  "dependency_status": {
+    "repo_url": "/Users/thrill3r/Auto-Quant",
+    "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant",
+    "tracked_branch": "autoresearch/apr26",
+    "pinned_ref": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+    "current_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+    "upstream_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+    "bootstrap_needed": false,
+    "config_present": true,
+    "managed_repo_present": true,
+    "healthy": true,
+    "update_available": false,
+    "required_files": [
+      "README.md",
+      "program.md",
+      "prepare.py",
+      "run.py",
+      "versions/README.md"
+    ],
+    "notes": [],
+    "adapter_version": "v1",
+    "last_sync": "2026-05-12T04:26:28.653401Z"
+  },
+  "readiness": {
+    "status": "dependency_ready_data_ready",
+    "healthy": true,
+    "bootstrap_needed": false,
+    "dependency_healthy": true,
+    "data_ready": true,
+    "update_available": false,
+    "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant",
+    "workspace": {
+      "repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant",
+      "program_md": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/program.md",
+      "prepare_script": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/prepare_external.py",
+      "run_script": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/run_tomac.py",
+      "config_json": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/config.tomac.json",
+      "strategies_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/user_data/strategies_external",
+      "data_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/user_data/data",
+      "profile_name": "synthetic_ohlcv",
+      "expected_data_files": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_USD-1h.feather",
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_USD-4h.feather",
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_USD-1d.feather"
+      ],
+      "strategy_seed_source_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/user_data/strategies"
+    },
+    "dependency_status": {
+      "repo_url": "/Users/thrill3r/Auto-Quant",
+      "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant",
+      "tracked_branch": "autoresearch/apr26",
+      "pinned_ref": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+      "current_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+      "upstream_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+      "bootstrap_needed": false,
+      "config_present": true,
+      "managed_repo_present": true,
+      "healthy": true,
+      "update_available": false,
+      "required_files": [
+        "README.md",
+        "program.md",
+        "prepare.py",
+        "run.py",
+        "versions/README.md"
+      ],
+      "notes": [],
+      "adapter_version": "v1",
+      "last_sync": "2026-05-12T04:26:28.653401Z"
+    },
+    "recommended_next_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/run_tomac.py",
+    "recommended_next_command_meta": {
+      "kind": "other",
+      "requires_user_input": false,
+      "blocked": false,
+      "prompt": null,
+      "executable_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/run_tomac.py",
+      "recorded_data_paths": []
+    },
+    "next_step": {
+      "action_type": "run_command",
+      "blocked_reason": null,
+      "deferred_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/run_tomac.py",
+      "prompt": null,
+      "user_input_required": false
+    },
+    "notes": [
+      "auto_quant_profile=synthetic_ohlcv"
+    ]
+  },
+  "workspace": {
+    "repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant",
+    "program_md": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/program.md",
+    "prepare_script": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/prepare_external.py",
+    "run_script": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/run_tomac.py",
+    "config_json": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/config.tomac.json",
+    "strategies_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/user_data/strategies_external",
+    "data_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/user_data/data",
+    "profile_name": "synthetic_ohlcv",
+    "expected_data_files": [
+      "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_USD-1h.feather",
+      "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_USD-4h.feather",
+      "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_USD-1d.feather"
+    ],
+    "strategy_seed_source_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/user_data/strategies"
+  },
+  "data_ready": true,
+  "handoff_artifact_path": "",
+  "suggested_commands": [
+    "cat docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/program.md",
+    "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/run_tomac.py"
+  ],
+  "suggested_next_steps": [
+    "open Auto-Quant program.md and stage a research loop for the requested objective",
+    "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
+  ],
+  "agent_prompt": "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, work the 'expansion_manipulation' objective, and read docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/program.md before acting. Run uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T122600+0800-codex-115700-selected-history-factor-research-v1/state_selected_history_factor_research_v1/.deps/auto-quant/run_tomac.py on the current active strategy set, review measured results, and iterate only from backtest evidence. Never treat 'no strategies found' as completion. Export the best measured candidate package back into ict-engine state.",
+  "notes": [
+    "auto_quant_active_strategy_count=3",
+    "requested_at=20260512T042935.390Z"
+  ]
+}

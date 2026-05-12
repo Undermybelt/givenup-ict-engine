@@ -1,0 +1,369 @@
+{
+  "accepted_rows_added": 0,
+  "all_split_axes_pass": true,
+  "board_sha256_at_start": "6b6a6ee0f092d953486e8fa129138344c2f475aef38bb154587472d48b8d32d4",
+  "canonical_merge_allowed": false,
+  "checklist": [
+    {
+      "evidence": "returncode=0; status=schema_ready_unscored; positives=5182; controls=1553",
+      "gap": "",
+      "id": "isolated_verifier_ready",
+      "status": "pass"
+    },
+    {
+      "evidence": "positive_spoofing_layering_rows.csv=True; matched_negative_normal_activity_rows.csv=True; provenance_manifest.json=True",
+      "gap": "",
+      "id": "verifier_native_files_present",
+      "status": "pass"
+    },
+    {
+      "evidence": "field_count=17; contract_rows=3",
+      "gap": "",
+      "id": "headers_match_verifier_contract",
+      "status": "pass"
+    },
+    {
+      "evidence": "axes=17; min_split_wilson95_lcb=0.95771100465",
+      "gap": "",
+      "id": "split_axes_pass",
+      "status": "pass"
+    },
+    {
+      "evidence": "source_policy_gate=False; policy_gate_result=r6_oystacher_exhibit_a_source_policy_review_v1=row_evidence_strong_policy_approval_required_before_canonical_merge",
+      "gap": "explicit board/user approval for RECAP/PACER source provenance and FLIP controls",
+      "id": "source_policy_approval",
+      "status": "blocked"
+    },
+    {
+      "evidence": "owner_target_exists=False; live_root_exists=True",
+      "gap": "",
+      "id": "canonical_target_untouched",
+      "status": "pass_guardrail"
+    },
+    {
+      "evidence": "No canonical merge or policy approval; downstream readback would not cover accepted R6 evidence.",
+      "gap": "approval plus canonical merge",
+      "id": "downstream_chain_not_rerun",
+      "status": "blocked_not_rerun"
+    }
+  ],
+  "contract_files_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T003003-codex-r6-owner-export-verifier-native-contract-v1/r6-owner-export-verifier-native-contract/r6_owner_export_verifier_native_files_v1.csv",
+  "external_requests_sent": false,
+  "gate_result": "r6_oystacher_canonical_merge_preflight_v1=technical_preflight_pass_policy_approval_required_no_canonical_mutation",
+  "generated_at_utc": "2026-05-11T16:35:04.885515+00:00",
+  "header_fields": [
+    "label",
+    "source_report",
+    "source_section",
+    "trade_date",
+    "symbol",
+    "venue_or_market_center",
+    "participant_type_code",
+    "participant_identifier",
+    "side",
+    "earliest_order_received_time",
+    "latest_order_received_time",
+    "order_count",
+    "total_order_quantity",
+    "activity_description",
+    "matched_negative_group_id",
+    "session_bucket",
+    "source_row_id"
+  ],
+  "headers_match": true,
+  "isolated_file_state": [
+    {
+      "exists": true,
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/positive_spoofing_layering_rows.csv",
+      "row_count": 5182,
+      "sha256": "83ca3116fc15fb6dd59ff78c0b98dc2efdd5eb6bc4252fc8c399b786c788f690"
+    },
+    {
+      "exists": true,
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/matched_negative_normal_activity_rows.csv",
+      "row_count": 1553,
+      "sha256": "cbf742b41797fb727f47db2e0a2840f01bb14f9e1d5bea4d4b160fc43a275c0e"
+    },
+    {
+      "exists": true,
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/provenance_manifest.json",
+      "row_count": "",
+      "sha256": "adbec91f711e065abdc87b4eb56aa38e9f07f3c61ae37b08f4299f4b2e6f8a1a"
+    }
+  ],
+  "isolated_intake_root": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake",
+  "isolated_verifier": {
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+      "--intake-root",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake"
+    ],
+    "matched_group_count": 1313,
+    "matched_negative_rows": 1553,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 5182,
+    "provenance_keys": [
+      "cftc_complaint_url_without_exhibit_a",
+      "cftc_press_url",
+      "courtlistener_docket_url",
+      "generated_at_utc",
+      "parser",
+      "raw_data_committed",
+      "raw_pdf_path_tmp",
+      "raw_pdf_sha256",
+      "run_id",
+      "runtime_code_changed",
+      "shared_intake_mutated",
+      "source_pdf_url",
+      "thresholds_relaxed",
+      "unparsed_candidate_lines_csv"
+    ],
+    "returncode": 0,
+    "status": "schema_ready_unscored",
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T003355-codex-r6-oystacher-canonical-merge-preflight-v1/command-output/isolated_oystacher_direct_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T003355-codex-r6-oystacher-canonical-merge-preflight-v1/command-output/isolated_oystacher_direct_verifier.stdout.txt"
+  },
+  "live_direct_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "live_file_state": [
+    {
+      "exists": true,
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "row_count": 73,
+      "sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6"
+    },
+    {
+      "exists": true,
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "row_count": 73,
+      "sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d"
+    },
+    {
+      "exists": true,
+      "filename": "provenance_manifest.json",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+      "row_count": "",
+      "sha256": "9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b"
+    }
+  ],
+  "live_verifier": {
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-direct-manipulation-row-intake"
+    ],
+    "matched_group_count": 70,
+    "matched_negative_rows": 73,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 73,
+    "provenance_keys": [
+      "canonical_intake_root",
+      "generated_at_utc",
+      "materialization_note",
+      "raw_data_committed",
+      "run_id",
+      "runtime_code_changed",
+      "source_v56_json",
+      "source_v56_negative_csv",
+      "source_v56_positive_csv",
+      "thresholds_relaxed",
+      "trade_usable",
+      "v56_gate_result",
+      "v56_negative_sha256",
+      "v56_positive_sha256"
+    ],
+    "returncode": 0,
+    "status": "schema_ready_unscored",
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T003355-codex-r6-oystacher-canonical-merge-preflight-v1/command-output/live_direct_verifier_readback.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T003355-codex-r6-oystacher-canonical-merge-preflight-v1/command-output/live_direct_verifier_readback.stdout.txt"
+  },
+  "matched_control_rows": 1553,
+  "materialization_json": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/r6_oystacher_exhibit_a_row_materialization_v1.json",
+  "min_split_wilson95_lcb": 0.95771100465,
+  "new_confidence_gate": false,
+  "next_action": "If the user/board approves RECAP/PACER Exhibit A provenance and FLIP rows as matched controls, copy the isolated verifier-native intake into /tmp/ict-engine-board-a-r6-owner-export-v1 under a shared lock, rerun direct verifier/split calibration, then rerun provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked.",
+  "owner_target_file_state": [
+    {
+      "exists": false,
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "row_count": "",
+      "sha256": ""
+    },
+    {
+      "exists": false,
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "row_count": "",
+      "sha256": ""
+    },
+    {
+      "exists": false,
+      "filename": "provenance_manifest.json",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json",
+      "row_count": "",
+      "sha256": ""
+    }
+  ],
+  "owner_target_mutated": false,
+  "owner_target_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "policy_review_json": "docs/experiments/actionable-regime-confidence/runs/20260512T003051-codex-r6-oystacher-exhibit-a-source-policy-review-v1/r6-oystacher-exhibit-a-source-policy-review/r6_oystacher_exhibit_a_source_policy_review_v1.json",
+  "positive_rows": 5182,
+  "provenance_sha256": "adbec91f711e065abdc87b4eb56aa38e9f07f3c61ae37b08f4299f4b2e6f8a1a",
+  "raw_data_committed": false,
+  "raw_pdf_sha256": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+  "run_id": "20260512T003355-codex-r6-oystacher-canonical-merge-preflight-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_pdf_url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf",
+  "source_policy_gate": false,
+  "split_axes": [
+    {
+      "axis": "contract_family",
+      "bucket": "energy",
+      "min_wilson95_lcb": "0.99517896656",
+      "negative_support": "793",
+      "pooled95_pass": "True",
+      "positive_support": "2657"
+    },
+    {
+      "axis": "contract_family",
+      "bucket": "equity_index",
+      "min_wilson95_lcb": "0.986699976735",
+      "negative_support": "285",
+      "pooled95_pass": "True",
+      "positive_support": "614"
+    },
+    {
+      "axis": "contract_family",
+      "bucket": "metals",
+      "min_wilson95_lcb": "0.990196038399",
+      "negative_support": "388",
+      "pooled95_pass": "True",
+      "positive_support": "1633"
+    },
+    {
+      "axis": "contract_family",
+      "bucket": "volatility_index",
+      "min_wilson95_lcb": "0.95771100465",
+      "negative_support": "87",
+      "pooled95_pass": "True",
+      "positive_support": "278"
+    },
+    {
+      "axis": "venue_exact",
+      "bucket": "CFE/CBOE Futures Exchange",
+      "min_wilson95_lcb": "0.95771100465",
+      "negative_support": "87",
+      "pooled95_pass": "True",
+      "positive_support": "278"
+    },
+    {
+      "axis": "venue_exact",
+      "bucket": "CME Globex",
+      "min_wilson95_lcb": "0.986699976735",
+      "negative_support": "285",
+      "pooled95_pass": "True",
+      "positive_support": "614"
+    },
+    {
+      "axis": "venue_exact",
+      "bucket": "COMEX/CME Globex",
+      "min_wilson95_lcb": "0.990196038399",
+      "negative_support": "388",
+      "pooled95_pass": "True",
+      "positive_support": "1633"
+    },
+    {
+      "axis": "venue_exact",
+      "bucket": "NYMEX/CME Globex",
+      "min_wilson95_lcb": "0.99517896656",
+      "negative_support": "793",
+      "pooled95_pass": "True",
+      "positive_support": "2657"
+    },
+    {
+      "axis": "symbol_exact",
+      "bucket": "Crude Oil futures",
+      "min_wilson95_lcb": "0.988282146012",
+      "negative_support": "324",
+      "pooled95_pass": "True",
+      "positive_support": "1101"
+    },
+    {
+      "axis": "symbol_exact",
+      "bucket": "E-mini S&P 500 futures",
+      "min_wilson95_lcb": "0.986699976735",
+      "negative_support": "285",
+      "pooled95_pass": "True",
+      "positive_support": "614"
+    },
+    {
+      "axis": "symbol_exact",
+      "bucket": "High-Grade Copper futures",
+      "min_wilson95_lcb": "0.990196038399",
+      "negative_support": "388",
+      "pooled95_pass": "True",
+      "positive_support": "1633"
+    },
+    {
+      "axis": "symbol_exact",
+      "bucket": "Natural Gas futures",
+      "min_wilson95_lcb": "0.99187550334",
+      "negative_support": "469",
+      "pooled95_pass": "True",
+      "positive_support": "1556"
+    },
+    {
+      "axis": "symbol_exact",
+      "bucket": "VIX futures",
+      "min_wilson95_lcb": "0.95771100465",
+      "negative_support": "87",
+      "pooled95_pass": "True",
+      "positive_support": "278"
+    },
+    {
+      "axis": "chronological_year",
+      "bucket": "2011",
+      "min_wilson95_lcb": "0.990196038399",
+      "negative_support": "388",
+      "pooled95_pass": "True",
+      "positive_support": "1633"
+    },
+    {
+      "axis": "chronological_year",
+      "bucket": "2012",
+      "min_wilson95_lcb": "0.99517896656",
+      "negative_support": "793",
+      "pooled95_pass": "True",
+      "positive_support": "2657"
+    },
+    {
+      "axis": "chronological_year",
+      "bucket": "2013",
+      "min_wilson95_lcb": "0.979870216976",
+      "negative_support": "187",
+      "pooled95_pass": "True",
+      "positive_support": "542"
+    },
+    {
+      "axis": "chronological_year",
+      "bucket": "2014",
+      "min_wilson95_lcb": "0.979657024723",
+      "negative_support": "185",
+      "pooled95_pass": "True",
+      "positive_support": "350"
+    }
+  ],
+  "strict_full_objective_achieved": false,
+  "technical_preflight_pass": true,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

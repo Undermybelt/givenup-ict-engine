@@ -1,0 +1,2097 @@
+{
+  "board_hash_before_artifact": "daae8edfa8c7da836b832814138231cc1c3af00537ed3df2a2a9602f48d5b0f9",
+  "candidate_file_results": {
+    "marketsignal/marketsignal-ai-feature-feed-mag-7-stocks": {
+      "exit": 0,
+      "files": [
+        {
+          "creationDate": "2026-03-15 18:27:33.137000",
+          "name": "AAPL_Features_Sample.csv",
+          "size": "23244"
+        },
+        {
+          "creationDate": "2026-03-15 18:27:33.191000",
+          "name": "AMZN_Features_Sample.csv",
+          "size": "23294"
+        },
+        {
+          "creationDate": "2026-03-15 18:27:33.185000",
+          "name": "GOOG_Features_Sample.csv",
+          "size": "21453"
+        },
+        {
+          "creationDate": "2026-03-15 18:27:33.214000",
+          "name": "META_Features_Sample.csv",
+          "size": "23305"
+        },
+        {
+          "creationDate": "2026-03-15 18:27:33.216000",
+          "name": "MSFT_Features_Sample.csv",
+          "size": "21229"
+        },
+        {
+          "creationDate": "2026-03-15 18:27:33",
+          "name": "NVDA_Features_Sample.csv",
+          "size": "23612"
+        },
+        {
+          "creationDate": "2026-03-15 18:27:33.234000",
+          "name": "TSLA_Features_Sample.csv",
+          "size": "23517"
+        }
+      ],
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/command-output/kaggle_files_marketsignal_marketsignal_ai_feature_feed_mag_7_stocks.stdout"
+    },
+    "quantiota/ska-engine-applied-to-crypto-from-binance": {
+      "exit": 0,
+      "files": [
+        {
+          "creationDate": "2026-04-08 07:39:05",
+          "name": "20260406/binance_trades_20260406_000116.csv",
+          "size": "718569"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.946000",
+          "name": "20260406/binance_trades_20260406_000510.csv",
+          "size": "719468"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.794000",
+          "name": "20260406/binance_trades_20260406_000946.csv",
+          "size": "717841"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.931000",
+          "name": "20260406/binance_trades_20260406_001708.csv",
+          "size": "718588"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.926000",
+          "name": "20260406/binance_trades_20260406_002327.csv",
+          "size": "717404"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.947000",
+          "name": "20260406/binance_trades_20260406_002939.csv",
+          "size": "718213"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.917000",
+          "name": "20260406/binance_trades_20260406_003354.csv",
+          "size": "718291"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05",
+          "name": "20260406/binance_trades_20260406_004046.csv",
+          "size": "719037"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.947000",
+          "name": "20260406/binance_trades_20260406_004442.csv",
+          "size": "719190"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.945000",
+          "name": "20260406/binance_trades_20260406_005333.csv",
+          "size": "716748"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.979000",
+          "name": "20260406/binance_trades_20260406_010248.csv",
+          "size": "718584"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.985000",
+          "name": "20260406/binance_trades_20260406_010919.csv",
+          "size": "718220"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.954000",
+          "name": "20260406/binance_trades_20260406_011737.csv",
+          "size": "720171"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.947000",
+          "name": "20260406/binance_trades_20260406_012317.csv",
+          "size": "720651"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.987000",
+          "name": "20260406/binance_trades_20260406_013113.csv",
+          "size": "720000"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.996000",
+          "name": "20260406/binance_trades_20260406_013946.csv",
+          "size": "720399"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.948000",
+          "name": "20260406/binance_trades_20260406_014819.csv",
+          "size": "719540"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.959000",
+          "name": "20260406/binance_trades_20260406_015754.csv",
+          "size": "719858"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:06.004000",
+          "name": "20260406/binance_trades_20260406_020513.csv",
+          "size": "720541"
+        },
+        {
+          "creationDate": "2026-04-08 07:39:05.947000",
+          "name": "20260406/binance_trades_20260406_021040.csv",
+          "size": "721198"
+        }
+      ],
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/command-output/kaggle_files_quantiota_ska_engine_applied_to_crypto_from_binance.stdout"
+    },
+    "sergionefedov/crypto-microstructure": {
+      "exit": 0,
+      "files": [
+        {
+          "creationDate": "2026-03-17 15:13:08.975000",
+          "name": "cross_exchange_spread.csv",
+          "size": "488881"
+        },
+        {
+          "creationDate": "2026-03-17 15:13:09.021000",
+          "name": "funding_rates.csv",
+          "size": "741636"
+        },
+        {
+          "creationDate": "2026-03-17 15:13:09.072000",
+          "name": "liquidations.csv",
+          "size": "1036941"
+        },
+        {
+          "creationDate": "2026-03-17 15:13:09.113000",
+          "name": "ohlcv_daily.csv",
+          "size": "1072987"
+        },
+        {
+          "creationDate": "2026-03-17 15:13:09.088000",
+          "name": "on_chain_metrics.csv",
+          "size": "194467"
+        },
+        {
+          "creationDate": "2026-03-17 15:13:09.083000",
+          "name": "regime_features.csv",
+          "size": "154495"
+        }
+      ],
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/command-output/kaggle_files_sergionefedov_crypto_microstructure.stdout"
+    },
+    "sergionefedov/synthetic-limit-order-book-market-microstructure": {
+      "exit": 0,
+      "files": [
+        {
+          "creationDate": "2026-03-16 17:19:21.294000",
+          "name": "daily_stats.csv",
+          "size": "1026"
+        },
+        {
+          "creationDate": "2026-03-16 17:19:21.556000",
+          "name": "lob_snapshots.csv",
+          "size": "6044396"
+        },
+        {
+          "creationDate": "2026-03-16 17:19:21.422000",
+          "name": "market_impact.csv",
+          "size": "1338686"
+        },
+        {
+          "creationDate": "2026-03-16 17:19:23.775000",
+          "name": "order_flow.csv",
+          "size": "92919712"
+        },
+        {
+          "creationDate": "2026-03-16 17:19:22.691000",
+          "name": "trades.csv",
+          "size": "30279123"
+        }
+      ],
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/command-output/kaggle_files_sergionefedov_synthetic_limit_order_book_market_microstructure.stdout"
+    }
+  },
+  "candidate_summary": [
+    {
+      "disposition": "not_r5_or_r3_compatible_exact_mainregimev2_absent",
+      "downloaded": true,
+      "label_columns": "cross_exchange_spread.csv:regime;funding_rates.csv:regime;liquidations.csv:regime;ohlcv_daily.csv:regime;on_chain_metrics.csv:regime;regime_features.csv:regime;regime_features.csv:regime_label",
+      "max_date": "2024-12-31",
+      "post_cutoff_rows": 0,
+      "r3_compatible": false,
+      "r5_compatible": false,
+      "ref": "sergionefedov/crypto-microstructure"
+    },
+    {
+      "disposition": "raw_binance_trade_files_file_listing_only_no_source_regime_labels",
+      "downloaded": false,
+      "label_columns": "",
+      "max_date": null,
+      "post_cutoff_rows": 0,
+      "r3_compatible": false,
+      "r5_compatible": false,
+      "ref": "quantiota/ska-engine-applied-to-crypto-from-binance"
+    },
+    {
+      "disposition": "synthetic_dataset_not_source_owned_market_label_evidence",
+      "downloaded": false,
+      "label_columns": "",
+      "max_date": null,
+      "post_cutoff_rows": 0,
+      "r3_compatible": false,
+      "r5_compatible": false,
+      "ref": "sergionefedov/synthetic-limit-order-book-market-microstructure"
+    },
+    {
+      "disposition": "not_r5_or_r3_compatible_exact_mainregimev2_absent",
+      "downloaded": true,
+      "label_columns": "AAPL_Features_Sample.csv:tech_macd_signal;AAPL_Features_Sample.csv:vol_regime;AAPL_Features_Sample.csv:sent_vol_regime_interaction;AAPL_Features_Sample.csv:attention_google_trends;AAPL_Features_Sample.csv:attention_google_trends_change;AAPL_Features_Sample.csv:label_dir_1d;AAPL_Features_Sample.csv:label_dir_3d;AAPL_Features_Sample.csv:label_dir_5d;AAPL_Features_Sample.csv:label_flat_1d;AMZN_Features_Sample.csv:tech_macd_signal;AMZN_Features_Sample.csv:vol_regime;AMZN_Features_Sample.csv:sent_vol_regime_interaction;AMZN_Features_Sample.csv:attention_google_trends;AMZN_Features_Sample.csv:attention_google_trends_change;AMZN_Features_Sample.csv:label_dir_1d;AMZN_Features_Sample.csv:label_dir_3d;AMZN_Features_Sample.csv:label_dir_5d;AMZN_Features_Sample.csv:label_flat_1d;GOOG_Features_Sample.csv:tech_macd_signal;GOOG_Features_Sample.csv:vol_regime",
+      "max_date": "2024-07-16",
+      "post_cutoff_rows": 0,
+      "r3_compatible": false,
+      "r5_compatible": false,
+      "ref": "marketsignal/marketsignal-ai-feature-feed-mag-7-stocks"
+    }
+  ],
+  "canonical_merge": false,
+  "decision": "No screened crypto/native microstructure candidate satisfies the R3 native AAPL/IXIC 15m/30m source-label intake or the R5 source-owned MainRegimeV2 post-cutoff stock-panel extension contract.",
+  "download_results": {
+    "marketsignal/marketsignal-ai-feature-feed-mag-7-stocks": {
+      "download_root": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks",
+      "exit": 0,
+      "inspection": {
+        "csv_inspections": [
+          {
+            "columns": [
+              "date",
+              "year",
+              "day_of_week",
+              "price_close",
+              "price_return_1d",
+              "price_return_3d",
+              "price_return_5d",
+              "price_return_10d",
+              "price_return_20d",
+              "price_log_return_1d",
+              "price_dist_high_10d",
+              "price_dist_high_20d",
+              "price_dist_low_10d",
+              "price_dist_low_20d",
+              "tech_rsi_14",
+              "tech_sma_5",
+              "tech_sma_20",
+              "tech_sma_5_dist",
+              "tech_sma_20_dist",
+              "tech_ema_20",
+              "tech_ema_20_dist",
+              "tech_bollinger_pos",
+              "tech_bollinger_bw",
+              "tech_bollinger_squeeze",
+              "tech_macd",
+              "tech_macd_signal",
+              "tech_macd_hist",
+              "tech_adx",
+              "tech_roc_5",
+              "tech_roc_10",
+              "tech_roc_20",
+              "tech_streak",
+              "tech_vol_5d",
+              "tech_vol_10d",
+              "tech_vol_20d",
+              "tech_momentum_quality",
+              "sent_overall",
+              "sent_aapl",
+              "sent_spread",
+              "sent_overall_ma3",
+              "sent_aapl_ma3",
+              "sent_overall_ma5",
+              "sent_aapl_ma5",
+              "sent_overall_mom3",
+              "sent_aapl_mom3",
+              "sent_overall_mom5",
+              "sent_aapl_mom5",
+              "sent_overall_vol5",
+              "sent_overall_vol10",
+              "sent_aapl_vol5",
+              "sent_price_corr_10d",
+              "sent_price_corr_20d",
+              "sent_price_diverge",
+              "news_count",
+              "news_count_ma20",
+              "news_count_zscore",
+              "news_count_mom5",
+              "news_spike",
+              "mkt_sp100_breadth",
+              "mkt_sp100_return",
+              "mkt_dispersion",
+              "mkt_tech_return",
+              "mkt_finance_return",
+              "mkt_health_return",
+              "mkt_energy_return",
+              "mkt_consumer_return",
+              "mkt_industrial_return",
+              "mkt_aapl_vs_tech",
+              "mkt_aapl_vs_market",
+              "mkt_aapl_beta_20d",
+              "vol_of_vol_20d",
+              "vol_regime",
+              "sent_vol_regime_interaction",
+              "macro_vix",
+              "macro_vix_change_1d",
+              "macro_vix_ma5",
+              "macro_yield_spread",
+              "macro_credit_spread",
+              "macro_dxy_change",
+              "options_iv_atm",
+              "options_iv_rv_spread",
+              "earnings_days_to_next",
+              "earnings_is_earnings_day",
+              "attention_wikipedia_views",
+              "attention_wikipedia_zscore",
+              "attention_google_trends",
+              "attention_google_trends_change",
+              "label_return_1d",
+              "label_dir_1d",
+              "label_return_3d",
+              "label_dir_3d",
+              "label_return_5d",
+              "label_dir_5d",
+              "label_flat_1d"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "attention_google_trends": [
+                "100.0",
+                "44.0",
+                "49.0",
+                "52.0",
+                "53.0"
+              ],
+              "attention_google_trends_change": [
+                "-10.204082",
+                "-16.981132",
+                "-47.0",
+                "-51.0",
+                "-7.54717",
+                "10.0",
+                "127.272727",
+                "18.181818",
+                "20.454545",
+                "212.5",
+                "37.5",
+                "8.163265"
+              ],
+              "label_dir_1d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_3d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_5d": [
+                "DOWN",
+                "UP"
+              ],
+              "label_flat_1d": [
+                "0.0",
+                "1.0"
+              ],
+              "sent_vol_regime_interaction": [
+                "-0.1",
+                "-0.8",
+                "0.0",
+                "0.1",
+                "0.15",
+                "0.2",
+                "0.3",
+                "0.6",
+                "0.7",
+                "0.8",
+                "0.9",
+                "1.2",
+                "2.1"
+              ],
+              "tech_macd_signal": [
+                "4.297943",
+                "4.324576",
+                "4.327377",
+                "4.336429",
+                "4.340894",
+                "4.34742",
+                "4.425449",
+                "4.740767",
+                "5.165134",
+                "5.596072",
+                "6.061993",
+                "6.473949",
+                "6.541717",
+                "6.556506",
+                "6.600849",
+                "6.622172",
+                "6.707925",
+                "6.742657",
+                "6.751524",
+                "6.776973",
+                "6.802666",
+                "6.857506",
+                "6.86448",
+                "6.987534",
+                "7.219643"
+              ],
+              "vol_regime": [
+                "0.0",
+                "1.0",
+                "2.0",
+                "3.0"
+              ]
+            },
+            "max_date": "2024-07-16",
+            "min_date": "2024-06-03",
+            "name": "AAPL_Features_Sample.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks/AAPL_Features_Sample.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 30,
+            "sha256": "cfae12ce036cdfd12b63d15848684b4da2c357a55b7882f1ee0525cd77f7952e",
+            "size_bytes": 23244
+          },
+          {
+            "columns": [
+              "date",
+              "year",
+              "day_of_week",
+              "price_close",
+              "price_return_1d",
+              "price_return_3d",
+              "price_return_5d",
+              "price_return_10d",
+              "price_return_20d",
+              "price_log_return_1d",
+              "price_dist_high_10d",
+              "price_dist_high_20d",
+              "price_dist_low_10d",
+              "price_dist_low_20d",
+              "tech_rsi_14",
+              "tech_sma_5",
+              "tech_sma_20",
+              "tech_sma_5_dist",
+              "tech_sma_20_dist",
+              "tech_ema_20",
+              "tech_ema_20_dist",
+              "tech_bollinger_pos",
+              "tech_bollinger_bw",
+              "tech_bollinger_squeeze",
+              "tech_macd",
+              "tech_macd_signal",
+              "tech_macd_hist",
+              "tech_adx",
+              "tech_roc_5",
+              "tech_roc_10",
+              "tech_roc_20",
+              "tech_streak",
+              "tech_vol_5d",
+              "tech_vol_10d",
+              "tech_vol_20d",
+              "tech_momentum_quality",
+              "sent_overall",
+              "sent_amzn",
+              "sent_spread",
+              "sent_overall_ma3",
+              "sent_amzn_ma3",
+              "sent_overall_ma5",
+              "sent_amzn_ma5",
+              "sent_overall_mom3",
+              "sent_amzn_mom3",
+              "sent_overall_mom5",
+              "sent_amzn_mom5",
+              "sent_overall_vol5",
+              "sent_overall_vol10",
+              "sent_amzn_vol5",
+              "sent_price_corr_10d",
+              "sent_price_corr_20d",
+              "sent_price_diverge",
+              "news_count",
+              "news_count_ma20",
+              "news_count_zscore",
+              "news_count_mom5",
+              "news_spike",
+              "mkt_sp100_breadth",
+              "mkt_sp100_return",
+              "mkt_dispersion",
+              "mkt_tech_return",
+              "mkt_finance_return",
+              "mkt_health_return",
+              "mkt_energy_return",
+              "mkt_consumer_return",
+              "mkt_industrial_return",
+              "mkt_amzn_vs_tech",
+              "mkt_amzn_vs_market",
+              "mkt_amzn_beta_20d",
+              "vol_of_vol_20d",
+              "vol_regime",
+              "sent_vol_regime_interaction",
+              "macro_vix",
+              "macro_vix_change_1d",
+              "macro_vix_ma5",
+              "macro_yield_spread",
+              "macro_credit_spread",
+              "macro_dxy_change",
+              "options_iv_atm",
+              "options_iv_rv_spread",
+              "earnings_days_to_next",
+              "earnings_is_earnings_day",
+              "attention_wikipedia_views",
+              "attention_wikipedia_zscore",
+              "attention_google_trends",
+              "attention_google_trends_change",
+              "label_return_1d",
+              "label_dir_1d",
+              "label_return_3d",
+              "label_dir_3d",
+              "label_return_5d",
+              "label_dir_5d",
+              "label_flat_1d"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "attention_google_trends": [
+                "56.0",
+                "59.0",
+                "63.0",
+                "67.0",
+                "68.0",
+                "71.0",
+                "72.0"
+              ],
+              "attention_google_trends_change": [
+                "-11.111111",
+                "-5.084746",
+                "-5.555556",
+                "-6.944444",
+                "0.0",
+                "1.492537",
+                "14.285714",
+                "19.642857",
+                "25.531915",
+                "28.571429",
+                "34.042553",
+                "5.970149",
+                "6.779661"
+              ],
+              "label_dir_1d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_3d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_5d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_flat_1d": [
+                "0.0",
+                "1.0"
+              ],
+              "sent_vol_regime_interaction": [
+                "0.0",
+                "0.1",
+                "0.3",
+                "0.5",
+                "0.7",
+                "0.8",
+                "0.9",
+                "1.4"
+              ],
+              "tech_macd_signal": [
+                "-0.060614",
+                "-0.163578",
+                "-0.212826",
+                "-0.305853",
+                "-0.316957",
+                "-0.34077",
+                "0.04228",
+                "0.108469",
+                "0.230194",
+                "0.312619",
+                "0.371759",
+                "0.392415",
+                "0.439462",
+                "0.547126",
+                "0.629894",
+                "0.703568",
+                "0.882064",
+                "1.18254",
+                "1.467634",
+                "1.787816",
+                "2.153804",
+                "2.485958",
+                "2.812277",
+                "3.100096",
+                "3.323859"
+              ],
+              "vol_regime": [
+                "0.0",
+                "1.0",
+                "2.0"
+              ]
+            },
+            "max_date": "2024-07-16",
+            "min_date": "2024-06-03",
+            "name": "AMZN_Features_Sample.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks/AMZN_Features_Sample.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 30,
+            "sha256": "662dee868d88541b06f63fe8aba96baa7c2fe8fce5cabd6a21bf881478ae246d",
+            "size_bytes": 23294
+          },
+          {
+            "columns": [
+              "date",
+              "year",
+              "day_of_week",
+              "price_close",
+              "price_return_1d",
+              "price_return_3d",
+              "price_return_5d",
+              "price_return_10d",
+              "price_return_20d",
+              "price_log_return_1d",
+              "price_dist_high_10d",
+              "price_dist_high_20d",
+              "price_dist_low_10d",
+              "price_dist_low_20d",
+              "tech_rsi_14",
+              "tech_sma_5",
+              "tech_sma_20",
+              "tech_sma_5_dist",
+              "tech_sma_20_dist",
+              "tech_ema_20",
+              "tech_ema_20_dist",
+              "tech_bollinger_pos",
+              "tech_bollinger_bw",
+              "tech_bollinger_squeeze",
+              "tech_macd",
+              "tech_macd_signal",
+              "tech_macd_hist",
+              "tech_adx",
+              "tech_roc_5",
+              "tech_roc_10",
+              "tech_roc_20",
+              "tech_streak",
+              "tech_vol_5d",
+              "tech_vol_10d",
+              "tech_vol_20d",
+              "tech_momentum_quality",
+              "sent_overall",
+              "sent_goog",
+              "sent_spread",
+              "sent_overall_ma3",
+              "sent_goog_ma3",
+              "sent_overall_ma5",
+              "sent_goog_ma5",
+              "sent_overall_mom3",
+              "sent_goog_mom3",
+              "sent_overall_mom5",
+              "sent_goog_mom5",
+              "sent_overall_vol5",
+              "sent_overall_vol10",
+              "sent_goog_vol5",
+              "sent_price_corr_10d",
+              "sent_price_corr_20d",
+              "sent_price_diverge",
+              "news_count",
+              "news_count_ma20",
+              "news_count_zscore",
+              "news_count_mom5",
+              "news_spike",
+              "mkt_sp100_breadth",
+              "mkt_sp100_return",
+              "mkt_dispersion",
+              "mkt_tech_return",
+              "mkt_finance_return",
+              "mkt_health_return",
+              "mkt_energy_return",
+              "mkt_consumer_return",
+              "mkt_industrial_return",
+              "mkt_goog_vs_tech",
+              "mkt_goog_vs_market",
+              "mkt_goog_beta_20d",
+              "vol_of_vol_20d",
+              "vol_regime",
+              "sent_vol_regime_interaction",
+              "macro_vix",
+              "macro_vix_change_1d",
+              "macro_vix_ma5",
+              "macro_yield_spread",
+              "macro_credit_spread",
+              "macro_dxy_change",
+              "options_iv_atm",
+              "options_iv_rv_spread",
+              "earnings_days_to_next",
+              "earnings_is_earnings_day",
+              "attention_wikipedia_views",
+              "attention_wikipedia_zscore",
+              "attention_google_trends",
+              "attention_google_trends_change",
+              "label_return_1d",
+              "label_dir_1d",
+              "label_return_3d",
+              "label_dir_3d",
+              "label_return_5d",
+              "label_dir_5d",
+              "label_flat_1d"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "attention_google_trends": [
+                "42.0",
+                "51.0",
+                "55.0",
+                "56.0",
+                "58.0",
+                "65.0"
+              ],
+              "attention_google_trends_change": [
+                "-12.068966",
+                "-15.384615",
+                "-17.647059",
+                "-35.384615",
+                "-8.928571",
+                "0.0",
+                "12.068966",
+                "21.73913",
+                "26.086957",
+                "27.45098",
+                "3.571429",
+                "30.952381",
+                "33.333333"
+              ],
+              "label_dir_1d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_3d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_5d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_flat_1d": [
+                "0.0",
+                "1.0"
+              ],
+              "sent_vol_regime_interaction": [
+                "0.0"
+              ],
+              "tech_macd_signal": [
+                "2.47457",
+                "2.510167",
+                "2.52708",
+                "2.571196",
+                "2.622952",
+                "2.66333",
+                "2.742336",
+                "2.758611",
+                "2.830455",
+                "2.851245",
+                "2.922468",
+                "2.935717",
+                "3.003541",
+                "3.059381",
+                "3.079692",
+                "3.171501",
+                "3.226624",
+                "3.303606",
+                "3.37941",
+                "3.46808",
+                "3.519517",
+                "3.544811",
+                "3.642999",
+                "3.667043",
+                "3.671409"
+              ],
+              "vol_regime": [
+                "0.0",
+                "1.0"
+              ]
+            },
+            "max_date": "2024-07-16",
+            "min_date": "2024-06-03",
+            "name": "GOOG_Features_Sample.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks/GOOG_Features_Sample.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 30,
+            "sha256": "e4b48569b7698414606b3a5d8639dda5fe4ad6563b0f31529e025ec4fc4a120e",
+            "size_bytes": 21453
+          },
+          {
+            "columns": [
+              "date",
+              "year",
+              "day_of_week",
+              "price_close",
+              "price_return_1d",
+              "price_return_3d",
+              "price_return_5d",
+              "price_return_10d",
+              "price_return_20d",
+              "price_log_return_1d",
+              "price_dist_high_10d",
+              "price_dist_high_20d",
+              "price_dist_low_10d",
+              "price_dist_low_20d",
+              "tech_rsi_14",
+              "tech_sma_5",
+              "tech_sma_20",
+              "tech_sma_5_dist",
+              "tech_sma_20_dist",
+              "tech_ema_20",
+              "tech_ema_20_dist",
+              "tech_bollinger_pos",
+              "tech_bollinger_bw",
+              "tech_bollinger_squeeze",
+              "tech_macd",
+              "tech_macd_signal",
+              "tech_macd_hist",
+              "tech_adx",
+              "tech_roc_5",
+              "tech_roc_10",
+              "tech_roc_20",
+              "tech_streak",
+              "tech_vol_5d",
+              "tech_vol_10d",
+              "tech_vol_20d",
+              "tech_momentum_quality",
+              "sent_overall",
+              "sent_meta",
+              "sent_spread",
+              "sent_overall_ma3",
+              "sent_meta_ma3",
+              "sent_overall_ma5",
+              "sent_meta_ma5",
+              "sent_overall_mom3",
+              "sent_meta_mom3",
+              "sent_overall_mom5",
+              "sent_meta_mom5",
+              "sent_overall_vol5",
+              "sent_overall_vol10",
+              "sent_meta_vol5",
+              "sent_price_corr_10d",
+              "sent_price_corr_20d",
+              "sent_price_diverge",
+              "news_count",
+              "news_count_ma20",
+              "news_count_zscore",
+              "news_count_mom5",
+              "news_spike",
+              "mkt_sp100_breadth",
+              "mkt_sp100_return",
+              "mkt_dispersion",
+              "mkt_tech_return",
+              "mkt_finance_return",
+              "mkt_health_return",
+              "mkt_energy_return",
+              "mkt_consumer_return",
+              "mkt_industrial_return",
+              "mkt_meta_vs_tech",
+              "mkt_meta_vs_market",
+              "mkt_meta_beta_20d",
+              "vol_of_vol_20d",
+              "vol_regime",
+              "sent_vol_regime_interaction",
+              "macro_vix",
+              "macro_vix_change_1d",
+              "macro_vix_ma5",
+              "macro_yield_spread",
+              "macro_credit_spread",
+              "macro_dxy_change",
+              "options_iv_atm",
+              "options_iv_rv_spread",
+              "earnings_days_to_next",
+              "earnings_is_earnings_day",
+              "attention_wikipedia_views",
+              "attention_wikipedia_zscore",
+              "attention_google_trends",
+              "attention_google_trends_change",
+              "label_return_1d",
+              "label_dir_1d",
+              "label_return_3d",
+              "label_dir_3d",
+              "label_return_5d",
+              "label_dir_5d",
+              "label_flat_1d"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "attention_google_trends": [
+                "22.0",
+                "23.0",
+                "27.0",
+                "29.0"
+              ],
+              "attention_google_trends_change": [
+                "-4.347826",
+                "0.0",
+                "10.0",
+                "15.0",
+                "17.391304",
+                "26.086957",
+                "4.545455"
+              ],
+              "label_dir_1d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_3d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_5d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_flat_1d": [
+                "0.0",
+                "1.0"
+              ],
+              "sent_vol_regime_interaction": [
+                "-0.0",
+                "-0.2",
+                "-0.3",
+                "0.0",
+                "0.05",
+                "0.1",
+                "0.2",
+                "0.6"
+              ],
+              "tech_macd_signal": [
+                "-0.171084",
+                "-0.928757",
+                "-1.55141",
+                "-1.87711",
+                "0.619126",
+                "1.539736",
+                "2.567529",
+                "3.624629",
+                "4.561118",
+                "5.371455",
+                "6.08725",
+                "6.578954",
+                "6.924532",
+                "7.034855",
+                "7.041482",
+                "7.152266",
+                "7.346272",
+                "7.503942",
+                "7.65556",
+                "7.667793",
+                "7.72763",
+                "7.773758",
+                "7.791283",
+                "8.029159",
+                "8.476051"
+              ],
+              "vol_regime": [
+                "0.0",
+                "1.0",
+                "2.0"
+              ]
+            },
+            "max_date": "2024-07-16",
+            "min_date": "2024-06-03",
+            "name": "META_Features_Sample.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks/META_Features_Sample.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 30,
+            "sha256": "b0dd4226d0f58503cdf7cb53538ccd4a2fcf05e4c58ca611c76bf11a529b6fb2",
+            "size_bytes": 23305
+          },
+          {
+            "columns": [
+              "date",
+              "year",
+              "day_of_week",
+              "price_close",
+              "price_return_1d",
+              "price_return_3d",
+              "price_return_5d",
+              "price_return_10d",
+              "price_return_20d",
+              "price_log_return_1d",
+              "price_dist_high_10d",
+              "price_dist_high_20d",
+              "price_dist_low_10d",
+              "price_dist_low_20d",
+              "tech_rsi_14",
+              "tech_sma_5",
+              "tech_sma_20",
+              "tech_sma_5_dist",
+              "tech_sma_20_dist",
+              "tech_ema_20",
+              "tech_ema_20_dist",
+              "tech_bollinger_pos",
+              "tech_bollinger_bw",
+              "tech_bollinger_squeeze",
+              "tech_macd",
+              "tech_macd_signal",
+              "tech_macd_hist",
+              "tech_adx",
+              "tech_roc_5",
+              "tech_roc_10",
+              "tech_roc_20",
+              "tech_streak",
+              "tech_vol_5d",
+              "tech_vol_10d",
+              "tech_vol_20d",
+              "tech_momentum_quality",
+              "sent_overall",
+              "sent_msft",
+              "sent_spread",
+              "sent_overall_ma3",
+              "sent_msft_ma3",
+              "sent_overall_ma5",
+              "sent_msft_ma5",
+              "sent_overall_mom3",
+              "sent_msft_mom3",
+              "sent_overall_mom5",
+              "sent_msft_mom5",
+              "sent_overall_vol5",
+              "sent_overall_vol10",
+              "sent_msft_vol5",
+              "sent_price_corr_10d",
+              "sent_price_corr_20d",
+              "sent_price_diverge",
+              "news_count",
+              "news_count_ma20",
+              "news_count_zscore",
+              "news_count_mom5",
+              "news_spike",
+              "mkt_sp100_breadth",
+              "mkt_sp100_return",
+              "mkt_dispersion",
+              "mkt_tech_return",
+              "mkt_finance_return",
+              "mkt_health_return",
+              "mkt_energy_return",
+              "mkt_consumer_return",
+              "mkt_industrial_return",
+              "mkt_msft_vs_tech",
+              "mkt_msft_vs_market",
+              "mkt_msft_beta_20d",
+              "vol_of_vol_20d",
+              "vol_regime",
+              "sent_vol_regime_interaction",
+              "macro_vix",
+              "macro_vix_change_1d",
+              "macro_vix_ma5",
+              "macro_yield_spread",
+              "macro_credit_spread",
+              "macro_dxy_change",
+              "options_iv_atm",
+              "options_iv_rv_spread",
+              "earnings_days_to_next",
+              "earnings_is_earnings_day",
+              "attention_wikipedia_views",
+              "attention_wikipedia_zscore",
+              "attention_google_trends",
+              "attention_google_trends_change",
+              "label_return_1d",
+              "label_dir_1d",
+              "label_return_3d",
+              "label_dir_3d",
+              "label_return_5d",
+              "label_dir_5d",
+              "label_flat_1d"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "attention_google_trends": [
+                "100.0",
+                "39.0",
+                "41.0",
+                "45.0",
+                "46.0",
+                "47.0"
+              ],
+              "attention_google_trends_change": [
+                "-10.869565",
+                "-13.333333",
+                "-2.173913",
+                "-4.878049",
+                "-8.888889",
+                "0.0",
+                "12.195122",
+                "13.888889",
+                "14.634146",
+                "156.410256",
+                "20.512821",
+                "27.777778",
+                "9.756098"
+              ],
+              "label_dir_1d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_3d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_5d": [
+                "DOWN",
+                "UP"
+              ],
+              "label_flat_1d": [
+                "0.0",
+                "1.0"
+              ],
+              "sent_vol_regime_interaction": [
+                "0.0"
+              ],
+              "tech_macd_signal": [
+                "2.331021",
+                "2.394841",
+                "2.453467",
+                "2.566604",
+                "2.649618",
+                "2.923114",
+                "2.972677",
+                "3.268537",
+                "3.378204",
+                "3.863526",
+                "4.440446",
+                "5.034412",
+                "5.554332",
+                "6.052224",
+                "6.514761",
+                "6.916044",
+                "7.261279",
+                "7.547587",
+                "7.764749",
+                "7.926667",
+                "7.970595",
+                "8.140392",
+                "8.260138",
+                "8.340261",
+                "8.493804"
+              ],
+              "vol_regime": [
+                "0.0",
+                "1.0",
+                "2.0"
+              ]
+            },
+            "max_date": "2024-07-16",
+            "min_date": "2024-06-03",
+            "name": "MSFT_Features_Sample.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks/MSFT_Features_Sample.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 30,
+            "sha256": "d7862d713cc02b29595c0bba93136576672fe4817fa7359a93de7a7297d36492",
+            "size_bytes": 21229
+          },
+          {
+            "columns": [
+              "date",
+              "year",
+              "day_of_week",
+              "price_close",
+              "price_return_1d",
+              "price_return_3d",
+              "price_return_5d",
+              "price_return_10d",
+              "price_return_20d",
+              "price_log_return_1d",
+              "price_dist_high_10d",
+              "price_dist_high_20d",
+              "price_dist_low_10d",
+              "price_dist_low_20d",
+              "tech_rsi_14",
+              "tech_sma_5",
+              "tech_sma_20",
+              "tech_sma_5_dist",
+              "tech_sma_20_dist",
+              "tech_ema_20",
+              "tech_ema_20_dist",
+              "tech_bollinger_pos",
+              "tech_bollinger_bw",
+              "tech_bollinger_squeeze",
+              "tech_macd",
+              "tech_macd_signal",
+              "tech_macd_hist",
+              "tech_adx",
+              "tech_roc_5",
+              "tech_roc_10",
+              "tech_roc_20",
+              "tech_streak",
+              "tech_vol_5d",
+              "tech_vol_10d",
+              "tech_vol_20d",
+              "tech_momentum_quality",
+              "sent_overall",
+              "sent_nvda",
+              "sent_spread",
+              "sent_overall_ma3",
+              "sent_nvda_ma3",
+              "sent_overall_ma5",
+              "sent_nvda_ma5",
+              "sent_overall_mom3",
+              "sent_nvda_mom3",
+              "sent_overall_mom5",
+              "sent_nvda_mom5",
+              "sent_overall_vol5",
+              "sent_overall_vol10",
+              "sent_nvda_vol5",
+              "sent_price_corr_10d",
+              "sent_price_corr_20d",
+              "sent_price_diverge",
+              "news_count",
+              "news_count_ma20",
+              "news_count_zscore",
+              "news_count_mom5",
+              "news_spike",
+              "mkt_sp100_breadth",
+              "mkt_sp100_return",
+              "mkt_dispersion",
+              "mkt_tech_return",
+              "mkt_finance_return",
+              "mkt_health_return",
+              "mkt_energy_return",
+              "mkt_consumer_return",
+              "mkt_industrial_return",
+              "mkt_nvda_vs_tech",
+              "mkt_nvda_vs_market",
+              "mkt_nvda_beta_20d",
+              "vol_of_vol_20d",
+              "vol_regime",
+              "sent_vol_regime_interaction",
+              "macro_vix",
+              "macro_vix_change_1d",
+              "macro_vix_ma5",
+              "macro_yield_spread",
+              "macro_credit_spread",
+              "macro_dxy_change",
+              "options_iv_atm",
+              "options_iv_rv_spread",
+              "earnings_days_to_next",
+              "earnings_is_earnings_day",
+              "attention_wikipedia_views",
+              "attention_wikipedia_zscore",
+              "attention_google_trends",
+              "attention_google_trends_change",
+              "label_return_1d",
+              "label_dir_1d",
+              "label_return_3d",
+              "label_dir_3d",
+              "label_return_5d",
+              "label_dir_5d",
+              "label_flat_1d"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "attention_google_trends": [
+                "100.0",
+                "51.0",
+                "55.0",
+                "60.0",
+                "82.0",
+                "86.0",
+                "91.0"
+              ],
+              "attention_google_trends_change": [
+                "-14.0",
+                "-18.0",
+                "-30.232558",
+                "-37.804878",
+                "-40.697674",
+                "-9.89011",
+                "17.647059",
+                "24.657534",
+                "4.878049",
+                "46.774194",
+                "61.290323",
+                "7.843137",
+                "9.89011"
+              ],
+              "label_dir_1d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_3d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_5d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_flat_1d": [
+                "0.0",
+                "1.0"
+              ],
+              "sent_vol_regime_interaction": [
+                "-0.1",
+                "-0.2",
+                "-0.3",
+                "-0.4",
+                "-1.0",
+                "0.0",
+                "0.1",
+                "0.2",
+                "0.3",
+                "0.4",
+                "0.6",
+                "0.7",
+                "0.8",
+                "0.9",
+                "1.0",
+                "1.4",
+                "1.5",
+                "1.6",
+                "1.7"
+              ],
+              "tech_macd_signal": [
+                "4.480682",
+                "4.71172",
+                "4.894274",
+                "4.961195",
+                "5.054284",
+                "5.202851",
+                "5.292533",
+                "5.388241",
+                "5.490594",
+                "5.774395",
+                "5.868053",
+                "6.110528",
+                "6.319436",
+                "6.462714",
+                "6.71318",
+                "6.895639",
+                "7.049214",
+                "7.301515",
+                "7.30187",
+                "7.539911",
+                "7.698106",
+                "7.810107",
+                "8.052459",
+                "8.104488",
+                "8.349803"
+              ],
+              "vol_regime": [
+                "1.0",
+                "2.0"
+              ]
+            },
+            "max_date": "2024-07-16",
+            "min_date": "2024-06-03",
+            "name": "NVDA_Features_Sample.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks/NVDA_Features_Sample.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 30,
+            "sha256": "b5417f8a1d7a7dc70bec1754682747375803e14ef97430c4bcb664b1b6607f09",
+            "size_bytes": 23612
+          },
+          {
+            "columns": [
+              "date",
+              "year",
+              "day_of_week",
+              "price_close",
+              "price_return_1d",
+              "price_return_3d",
+              "price_return_5d",
+              "price_return_10d",
+              "price_return_20d",
+              "price_log_return_1d",
+              "price_dist_high_10d",
+              "price_dist_high_20d",
+              "price_dist_low_10d",
+              "price_dist_low_20d",
+              "tech_rsi_14",
+              "tech_sma_5",
+              "tech_sma_20",
+              "tech_sma_5_dist",
+              "tech_sma_20_dist",
+              "tech_ema_20",
+              "tech_ema_20_dist",
+              "tech_bollinger_pos",
+              "tech_bollinger_bw",
+              "tech_bollinger_squeeze",
+              "tech_macd",
+              "tech_macd_signal",
+              "tech_macd_hist",
+              "tech_adx",
+              "tech_roc_5",
+              "tech_roc_10",
+              "tech_roc_20",
+              "tech_streak",
+              "tech_vol_5d",
+              "tech_vol_10d",
+              "tech_vol_20d",
+              "tech_momentum_quality",
+              "sent_overall",
+              "sent_tsla",
+              "sent_spread",
+              "sent_overall_ma3",
+              "sent_tsla_ma3",
+              "sent_overall_ma5",
+              "sent_tsla_ma5",
+              "sent_overall_mom3",
+              "sent_tsla_mom3",
+              "sent_overall_mom5",
+              "sent_tsla_mom5",
+              "sent_overall_vol5",
+              "sent_overall_vol10",
+              "sent_tsla_vol5",
+              "sent_price_corr_10d",
+              "sent_price_corr_20d",
+              "sent_price_diverge",
+              "news_count",
+              "news_count_ma20",
+              "news_count_zscore",
+              "news_count_mom5",
+              "news_spike",
+              "mkt_sp100_breadth",
+              "mkt_sp100_return",
+              "mkt_dispersion",
+              "mkt_tech_return",
+              "mkt_finance_return",
+              "mkt_health_return",
+              "mkt_energy_return",
+              "mkt_consumer_return",
+              "mkt_industrial_return",
+              "mkt_tsla_vs_tech",
+              "mkt_tsla_vs_market",
+              "mkt_tsla_beta_20d",
+              "vol_of_vol_20d",
+              "vol_regime",
+              "sent_vol_regime_interaction",
+              "macro_vix",
+              "macro_vix_change_1d",
+              "macro_vix_ma5",
+              "macro_yield_spread",
+              "macro_credit_spread",
+              "macro_dxy_change",
+              "options_iv_atm",
+              "options_iv_rv_spread",
+              "earnings_days_to_next",
+              "earnings_is_earnings_day",
+              "attention_wikipedia_views",
+              "attention_wikipedia_zscore",
+              "attention_google_trends",
+              "attention_google_trends_change",
+              "label_return_1d",
+              "label_dir_1d",
+              "label_return_3d",
+              "label_dir_3d",
+              "label_return_5d",
+              "label_dir_5d",
+              "label_flat_1d"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "attention_google_trends": [
+                "34.0",
+                "36.0",
+                "38.0",
+                "43.0",
+                "50.0",
+                "62.0",
+                "66.0"
+              ],
+              "attention_google_trends_change": [
+                "-11.627907",
+                "-16.27907",
+                "-19.354839",
+                "-5.555556",
+                "21.428571",
+                "26.470588",
+                "5.555556",
+                "5.882353",
+                "53.571429",
+                "6.451613",
+                "63.157895",
+                "72.222222",
+                "73.684211"
+              ],
+              "label_dir_1d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_3d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_dir_5d": [
+                "DOWN",
+                "FLAT",
+                "UP"
+              ],
+              "label_flat_1d": [
+                "0.0",
+                "1.0"
+              ],
+              "sent_vol_regime_interaction": [
+                "-0.1",
+                "-0.15",
+                "-0.2",
+                "-0.3",
+                "-0.4",
+                "-1.4",
+                "-1.6",
+                "0.0",
+                "0.05",
+                "0.1",
+                "0.2",
+                "0.25",
+                "0.4",
+                "0.6",
+                "0.7",
+                "1.4"
+              ],
+              "tech_macd_signal": [
+                "0.761147",
+                "0.762737",
+                "0.768014",
+                "0.89398",
+                "0.92852",
+                "1.092021",
+                "1.133632",
+                "1.21456",
+                "1.290033",
+                "1.300876",
+                "1.382446",
+                "1.455628",
+                "1.510558",
+                "1.584258",
+                "1.615101",
+                "1.762266",
+                "11.766561",
+                "13.621358",
+                "14.953325",
+                "15.968559",
+                "16.766014",
+                "17.409494",
+                "2.101782",
+                "2.536693",
+                "3.010155"
+              ],
+              "vol_regime": [
+                "0.0",
+                "1.0",
+                "2.0"
+              ]
+            },
+            "max_date": "2024-07-16",
+            "min_date": "2024-06-03",
+            "name": "TSLA_Features_Sample.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks/TSLA_Features_Sample.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 30,
+            "sha256": "826e9c5d804ae3ca4c9ca7be1462c73ef8dd017f40c97c111035b7e4d141c199",
+            "size_bytes": 23517
+          }
+        ],
+        "disposition": "not_r5_or_r3_compatible_exact_mainregimev2_absent",
+        "download_root": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks",
+        "exact_mainregimev2_labels_present": false,
+        "files": [
+          {
+            "path": "AAPL_Features_Sample.csv",
+            "sha256": "cfae12ce036cdfd12b63d15848684b4da2c357a55b7882f1ee0525cd77f7952e",
+            "size_bytes": 23244
+          },
+          {
+            "path": "AMZN_Features_Sample.csv",
+            "sha256": "662dee868d88541b06f63fe8aba96baa7c2fe8fce5cabd6a21bf881478ae246d",
+            "size_bytes": 23294
+          },
+          {
+            "path": "GOOG_Features_Sample.csv",
+            "sha256": "e4b48569b7698414606b3a5d8639dda5fe4ad6563b0f31529e025ec4fc4a120e",
+            "size_bytes": 21453
+          },
+          {
+            "path": "META_Features_Sample.csv",
+            "sha256": "b0dd4226d0f58503cdf7cb53538ccd4a2fcf05e4c58ca611c76bf11a529b6fb2",
+            "size_bytes": 23305
+          },
+          {
+            "path": "MSFT_Features_Sample.csv",
+            "sha256": "d7862d713cc02b29595c0bba93136576672fe4817fa7359a93de7a7297d36492",
+            "size_bytes": 21229
+          },
+          {
+            "path": "NVDA_Features_Sample.csv",
+            "sha256": "b5417f8a1d7a7dc70bec1754682747375803e14ef97430c4bcb664b1b6607f09",
+            "size_bytes": 23612
+          },
+          {
+            "path": "TSLA_Features_Sample.csv",
+            "sha256": "826e9c5d804ae3ca4c9ca7be1462c73ef8dd017f40c97c111035b7e4d141c199",
+            "size_bytes": 23517
+          }
+        ],
+        "r3_compatible": false,
+        "r5_compatible": false,
+        "ref": "marketsignal/marketsignal-ai-feature-feed-mag-7-stocks"
+      }
+    },
+    "sergionefedov/crypto-microstructure": {
+      "download_root": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/sergionefedov_crypto_microstructure",
+      "exit": 0,
+      "inspection": {
+        "csv_inspections": [
+          {
+            "columns": [
+              "date",
+              "symbol",
+              "exchange",
+              "regime",
+              "price",
+              "spread_to_ref_bps",
+              "max_cross_spread_bps",
+              "is_stress",
+              "shock_event"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "regime": [
+                "bear",
+                "bull",
+                "crab"
+              ]
+            },
+            "max_date": "2024-12-31",
+            "min_date": "2022-01-01",
+            "name": "cross_exchange_spread.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/sergionefedov_crypto_microstructure/cross_exchange_spread.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 8768,
+            "sha256": "16b16c518a583ac4bb82115b86bd8bc5d01aeaa19021e4e42673bed961bc9e44",
+            "size_bytes": 488881
+          },
+          {
+            "columns": [
+              "datetime",
+              "symbol",
+              "regime",
+              "funding_rate",
+              "funding_rate_annualised",
+              "sign"
+            ],
+            "date_columns": [
+              "datetime"
+            ],
+            "label_like_columns": {
+              "regime": [
+                "bear",
+                "bull",
+                "crab"
+              ]
+            },
+            "max_date": "2024-12-31",
+            "min_date": "2022-01-01",
+            "name": "funding_rates.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/sergionefedov_crypto_microstructure/funding_rates.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 13152,
+            "sha256": "055996bc1a6459608fcc8ebf48d5d874f05c42d14a56489ae082a1b33a1b52b2",
+            "size_bytes": 741636
+          },
+          {
+            "columns": [
+              "date",
+              "regime",
+              "symbol",
+              "side",
+              "liq_usd",
+              "btc_price",
+              "btc_return",
+              "is_cascade",
+              "shock_event"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "regime": [
+                "bear",
+                "bull",
+                "crab"
+              ]
+            },
+            "max_date": "2024-12-31",
+            "min_date": "2022-01-02",
+            "name": "liquidations.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/sergionefedov_crypto_microstructure/liquidations.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 16430,
+            "sha256": "7984211d0048dde004a34b72363606bae912a3cd92a4716abcded5b1747f6bfa",
+            "size_bytes": 1036941
+          },
+          {
+            "columns": [
+              "date",
+              "symbol",
+              "sector",
+              "regime",
+              "open",
+              "high",
+              "low",
+              "close",
+              "volume_coins",
+              "volume_usd",
+              "daily_return",
+              "shock_event"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "regime": [
+                "bear",
+                "bull",
+                "crab"
+              ]
+            },
+            "max_date": "2024-12-31",
+            "min_date": "2022-01-01",
+            "name": "ohlcv_daily.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/sergionefedov_crypto_microstructure/ohlcv_daily.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 10960,
+            "sha256": "bf33186be26fb87cdd632df2adf5ffbb9478f3091f7ab316939d2ebeb5ccb20a",
+            "size_bytes": 1072987
+          },
+          {
+            "columns": [
+              "date",
+              "symbol",
+              "regime",
+              "price",
+              "active_addresses",
+              "exchange_holdings_pct",
+              "exchange_inflow",
+              "exchange_outflow",
+              "realized_price",
+              "mvrv",
+              "nvt",
+              "sopr"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "regime": [
+                "bear",
+                "bull",
+                "crab"
+              ]
+            },
+            "max_date": "2024-12-31",
+            "min_date": "2022-01-01",
+            "name": "on_chain_metrics.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/sergionefedov_crypto_microstructure/on_chain_metrics.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 2192,
+            "sha256": "3181a6ddbde2f759301d3929d8388afa50852be672ee852da82881b3ecec9510",
+            "size_bytes": 194467
+          },
+          {
+            "columns": [
+              "date",
+              "regime",
+              "regime_label",
+              "close",
+              "daily_return",
+              "ret_7d",
+              "ret_30d",
+              "ret_90d",
+              "vol_7d",
+              "vol_30d",
+              "high_low_range",
+              "funding_rate_8h",
+              "funding_annualised",
+              "mvrv",
+              "nvt",
+              "sopr",
+              "exchange_holdings",
+              "active_addresses",
+              "shock_event"
+            ],
+            "date_columns": [
+              "date"
+            ],
+            "label_like_columns": {
+              "regime": [
+                "bear",
+                "bull",
+                "crab"
+              ],
+              "regime_label": [
+                "0",
+                "1",
+                "2"
+              ]
+            },
+            "max_date": "2024-12-31",
+            "min_date": "2022-01-01",
+            "name": "regime_features.csv",
+            "path": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/sergionefedov_crypto_microstructure/regime_features.csv",
+            "post_cutoff_rows": 0,
+            "rows_scanned": 1096,
+            "sha256": "05e8ead75b4698928ea573d7fa9b192c65fee98e74183f2314a69648af45a010",
+            "size_bytes": 154495
+          }
+        ],
+        "disposition": "not_r5_or_r3_compatible_exact_mainregimev2_absent",
+        "download_root": "/tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/sergionefedov_crypto_microstructure",
+        "exact_mainregimev2_labels_present": false,
+        "files": [
+          {
+            "path": "cross_exchange_spread.csv",
+            "sha256": "16b16c518a583ac4bb82115b86bd8bc5d01aeaa19021e4e42673bed961bc9e44",
+            "size_bytes": 488881
+          },
+          {
+            "path": "funding_rates.csv",
+            "sha256": "055996bc1a6459608fcc8ebf48d5d874f05c42d14a56489ae082a1b33a1b52b2",
+            "size_bytes": 741636
+          },
+          {
+            "path": "liquidations.csv",
+            "sha256": "7984211d0048dde004a34b72363606bae912a3cd92a4716abcded5b1747f6bfa",
+            "size_bytes": 1036941
+          },
+          {
+            "path": "ohlcv_daily.csv",
+            "sha256": "bf33186be26fb87cdd632df2adf5ffbb9478f3091f7ab316939d2ebeb5ccb20a",
+            "size_bytes": 1072987
+          },
+          {
+            "path": "on_chain_metrics.csv",
+            "sha256": "3181a6ddbde2f759301d3929d8388afa50852be672ee852da82881b3ecec9510",
+            "size_bytes": 194467
+          },
+          {
+            "path": "regime_features.csv",
+            "sha256": "05e8ead75b4698928ea573d7fa9b192c65fee98e74183f2314a69648af45a010",
+            "size_bytes": 154495
+          }
+        ],
+        "r3_compatible": false,
+        "r5_compatible": false,
+        "ref": "sergionefedov/crypto-microstructure"
+      }
+    }
+  },
+  "downstream_promotion_rerun": false,
+  "gate_result": "r3_r5_crypto_microstructure_source_screen_v1=crypto_native_candidates_screened_no_required_root_unlock_no_promotion",
+  "next": "Keep Board A blocked until R6 owner/export rows plus normal controls, source-owned R3 native sub-hour labels, source-owned R5 MainRegimeV2 recency rows, or explicit source/control approval unlock a required root.",
+  "queries": {
+    "binance trades regime": {
+      "exit": 0,
+      "rows": [
+        {
+          "downloadCount": "0",
+          "lastUpdated": "2026-04-08 07:39:03.617000",
+          "ref": "quantiota/ska-engine-applied-to-crypto-from-binance",
+          "size": "31538507",
+          "title": "SKA Engine applied to Crypto from Binance",
+          "usabilityRating": "0.8235294",
+          "voteCount": "0"
+        },
+        {
+          "downloadCount": "73",
+          "lastUpdated": "2026-01-05 13:21:04",
+          "ref": "sid17a/btcusdt-1min-perpetual-dataset-binance-apis",
+          "size": "584039555",
+          "title": "BTCUSDT 1min Perpetual Dataset ( Binance APIs )",
+          "usabilityRating": "0.7647059",
+          "voteCount": "3"
+        }
+      ],
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/command-output/kaggle_list_binance_trades_regime.stdout"
+    },
+    "crypto microstructure regime": {
+      "exit": 0,
+      "rows": [
+        {
+          "downloadCount": "116",
+          "lastUpdated": "2026-05-09 10:41:59.257000",
+          "ref": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+          "size": "18264837966",
+          "title": "Bybit Full-Lifetime Multi-Crypto Historical Data",
+          "usabilityRating": "0.7647059",
+          "voteCount": "1"
+        },
+        {
+          "downloadCount": "30",
+          "lastUpdated": "2026-03-17 15:13:07",
+          "ref": "sergionefedov/crypto-microstructure",
+          "size": "973212",
+          "title": "Crypto Microstructure 10 assets, 3 years ",
+          "usabilityRating": "0.9411765",
+          "voteCount": "3"
+        },
+        {
+          "downloadCount": "35",
+          "lastUpdated": "2026-03-07 06:01:29",
+          "ref": "krupalpatel07/bitcoin-market-microstructure-dataset",
+          "size": "116169",
+          "title": "Bitcoin Historical Dataset",
+          "usabilityRating": "1.0",
+          "voteCount": "5"
+        },
+        {
+          "downloadCount": "37",
+          "lastUpdated": "2025-12-21 18:25:33",
+          "ref": "denisgorobets/cryptocurrency-real-time-market-data-bybit",
+          "size": "3926042444",
+          "title": "Cryptocurrency Real-Time Market Data - Bybit",
+          "usabilityRating": "0.8235294",
+          "voteCount": "0"
+        },
+        {
+          "downloadCount": "9",
+          "lastUpdated": "2025-11-25 16:56:47",
+          "ref": "toocool69/synthetic-stock-price-data-1m-instances",
+          "size": "40833341",
+          "title": "Synthetic Stock Price Data (1M instances)",
+          "usabilityRating": "0.9411765",
+          "voteCount": "0"
+        }
+      ],
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/command-output/kaggle_list_crypto_microstructure_regime.stdout"
+    },
+    "crypto regime features": {
+      "exit": 0,
+      "rows": [
+        {
+          "downloadCount": "116",
+          "lastUpdated": "2026-05-09 10:41:59.257000",
+          "ref": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+          "size": "18264837966",
+          "title": "Bybit Full-Lifetime Multi-Crypto Historical Data",
+          "usabilityRating": "0.7647059",
+          "voteCount": "1"
+        },
+        {
+          "downloadCount": "0",
+          "lastUpdated": "2026-04-08 07:39:03.617000",
+          "ref": "quantiota/ska-engine-applied-to-crypto-from-binance",
+          "size": "31538507",
+          "title": "SKA Engine applied to Crypto from Binance",
+          "usabilityRating": "0.8235294",
+          "voteCount": "0"
+        },
+        {
+          "downloadCount": "30",
+          "lastUpdated": "2026-03-17 15:13:07",
+          "ref": "sergionefedov/crypto-microstructure",
+          "size": "973212",
+          "title": "Crypto Microstructure 10 assets, 3 years ",
+          "usabilityRating": "0.9411765",
+          "voteCount": "3"
+        },
+        {
+          "downloadCount": "360",
+          "lastUpdated": "2026-02-25 04:11:37.147000",
+          "ref": "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+          "size": "382546",
+          "title": "Algorithmic Trading: Macro Stress & Asset Regimes",
+          "usabilityRating": "1.0",
+          "voteCount": "35"
+        },
+        {
+          "downloadCount": "682",
+          "lastUpdated": "2026-01-24 17:37:58.133000",
+          "ref": "ranodipghosh/top-50-crypto-market-data-daily-usd",
+          "size": "5050",
+          "title": "Top 50 Crypto Market Data (Daily, USD)",
+          "usabilityRating": "0.9411765",
+          "voteCount": "34"
+        },
+        {
+          "downloadCount": "242",
+          "lastUpdated": "2022-03-03 21:51:11",
+          "ref": "kaushiksuresh147/india-wants-crypto-tweets",
+          "size": "4550830",
+          "title": "#IndiaWantsCrypto tweets",
+          "usabilityRating": "1.0",
+          "voteCount": "14"
+        }
+      ],
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/command-output/kaggle_list_crypto_regime_features.stdout"
+    },
+    "limit order book market regimes": {
+      "exit": 0,
+      "rows": [
+        {
+          "downloadCount": "3",
+          "lastUpdated": "2026-03-16 17:19:19",
+          "ref": "sergionefedov/synthetic-limit-order-book-market-microstructure",
+          "size": "16204538",
+          "title": "Limit Order Book 10 days \u00b7 3 market regimes ",
+          "usabilityRating": "0.9411765",
+          "voteCount": "1"
+        }
+      ],
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/command-output/kaggle_list_limit_order_book_market_regimes.stdout"
+    }
+  },
+  "required_root_status": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "run_id": "20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1",
+  "scope": "Read-only R3/R5 source-acquisition screen for fresh crypto/native microstructure regime-like candidates.",
+  "source_control_evidence_acquired": false,
+  "target_root_mutated": false,
+  "trade_usable": false,
+  "update_goal": false
+}

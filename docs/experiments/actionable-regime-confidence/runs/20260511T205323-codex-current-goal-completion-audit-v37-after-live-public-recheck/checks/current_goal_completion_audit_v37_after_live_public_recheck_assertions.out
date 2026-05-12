@@ -1,0 +1,14 @@
+PASS decision=current_goal_completion_audit_v37=live_public_v37_and_finra_addendum_rows_not_acquired_blocked
+PASS board_hash_before_artifact_generation=cbb4807438c152e43c188cec767855ae9e55c37589a397fa11824b7886e0d2b6
+PASS outbox_v2_rows=9
+PASS live_public_v37_post_cutoff_target_rows=0
+PASS finra_official_route_count=2
+PASS ready_intake_roots=0_of_4
+PASS request_sent=false
+PASS rows_acquired=false
+PASS accepted_rows_added_since_v36=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS unmet_ids=R2,R3,R4,R5,R6,R8

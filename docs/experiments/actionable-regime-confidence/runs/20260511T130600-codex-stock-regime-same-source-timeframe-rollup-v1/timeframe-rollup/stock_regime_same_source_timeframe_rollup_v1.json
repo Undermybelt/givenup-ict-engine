@@ -1,0 +1,70 @@
+{
+  "artifact_type": "stock_regime_same_source_timeframe_rollup_v1",
+  "decision": {
+    "confidence_gate_claimed": false,
+    "exact_same_source_weekly_monthly_labels_materialized": true,
+    "full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "next_action": "Train/evaluate abstaining parent-root gates on this 1w/1mo same-source rollup panel; keep non-US/non-equity/full-species cells separate."
+  },
+  "generated_at_utc": "2026-05-11T05:04:47.717260+00:00",
+  "guardrails": {
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_board_modified": false,
+    "source_window_projection_used": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "inputs": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "bc199ae38c6a2822a9c2ee0ce7b6c521780dcaf7a248c09669c9fb233ca4df9b",
+    "dataset": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "dataset_sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+    "source_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json",
+    "source_gate_sha256": "29c0851c616d70051ffb58d4c72f1beb79f0a0a57d7d646b21096e04c9e950d9"
+  },
+  "materialized_labels": {
+    "by_root": {
+      "Bear": 10021,
+      "Bull": 21314,
+      "Crisis": 5119,
+      "Sideways": 7942
+    },
+    "by_root_timeframe": {
+      "Bear:1mo": 1133,
+      "Bear:1w": 8888,
+      "Bull:1mo": 2977,
+      "Bull:1w": 18337,
+      "Crisis:1mo": 560,
+      "Crisis:1w": 4559,
+      "Sideways:1mo": 530,
+      "Sideways:1w": 7412
+    },
+    "by_timeframe": {
+      "1mo": 5200,
+      "1w": 39196
+    },
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260511T130600-codex-stock-regime-same-source-timeframe-rollup-v1/timeframe-rollup/stock_regime_same_source_timeframe_rollup_v1.csv",
+    "rows": 44396,
+    "tickers_by_root_count": {
+      "Bear": 39,
+      "Bull": 39,
+      "Crisis": 39,
+      "Sideways": 39
+    }
+  },
+  "rollup_policy": {
+    "abstain_policy": "Periods with low dominant-label consensus or too few source days are not emitted.",
+    "min_days": {
+      "1mo": 10,
+      "1w": 3
+    },
+    "min_label_share": 0.8,
+    "source": "same stock-market-regimes parent-label panel; no S&P source-window projection",
+    "timeframes": [
+      "1w",
+      "1mo"
+    ]
+  },
+  "run_id": "20260511T130600+0800-codex-stock-regime-same-source-timeframe-rollup-v1"
+}

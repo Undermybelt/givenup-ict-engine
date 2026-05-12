@@ -1,0 +1,8 @@
+gate,observed,required,pass
+positive_support,34,50,False
+negative_support,34,50,False
+chronological_split,28,2,True
+heldout_symbol_or_venue,symbols=16;venues=5,symbol>=2 or venue>=2,True
+wilson95_lcb,0.898485,>=0.95,False
+broad_normal_sample,same-complaint CFTC genuine-order legs are source-described control seeds only; not broad normal-market calibration,source-owned broad normal activity sample,False
+direct_species_closed,spoofing/layering row support only; other direct species still absent,broad direct manipulation species closure,False

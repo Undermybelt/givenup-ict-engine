@@ -1,0 +1,12 @@
+cached_sources_present=true
+row_materializable_candidates=0
+positive_rows_added=0
+matched_controls_added=0
+intake_unchanged=true
+external_requests_sent=false
+raw_data_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+strict_full_objective_achieved=false
+update_goal=false
+gate_result=r6_arab_fny_tower_cached_screen_v1=cached_candidates_fail_closed_no_row_level_events

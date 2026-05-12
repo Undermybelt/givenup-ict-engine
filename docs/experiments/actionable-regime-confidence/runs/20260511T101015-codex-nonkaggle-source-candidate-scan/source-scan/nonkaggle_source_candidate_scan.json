@@ -1,0 +1,49 @@
+{
+  "run_id": "20260511T101015+0800-codex-nonkaggle-source-candidate-scan",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "active_taxonomy": {
+    "name": "MainRegimeV2",
+    "parent_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "separate_direct_event_lane": "Manipulation"
+  },
+  "search_scope": "Outside current Kaggle public market-regime hits; candidate must fill exact-underlying intraday/monthly MainRegimeV2 parent-root labels, Kraken crypto parent-root labels, or real direct Manipulation positive/negative rows.",
+  "candidates": [
+    {
+      "name": "hidden-regime",
+      "url": "https://pypi.org/project/hidden-regime/",
+      "observed_shape": "Python tool/package for regime detection using market data such as yfinance and HMM-style classification.",
+      "rejection_reason": "method_or_proxy_not_source_label_panel; labels are generated from OHLCV/model logic rather than independent source-backed exact-underlying parent-root rows.",
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0
+    },
+    {
+      "name": "Abraxasccs/kraken-market-data",
+      "url": "https://huggingface.co/datasets/Abraxasccs/kraken-market-data",
+      "observed_shape": "Raw Kraken historical OHLC/trade/order-book style market data candidate.",
+      "rejection_reason": "raw_market_data_without_MainRegimeV2_root_labels_or_direct_Manipulation_positive_negative_rows.",
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0
+    },
+    {
+      "name": "non-Kaggle web hits for bull/bear/sideways/crisis datasets",
+      "url": "mixed search results across GitHub, HuggingFace, Zenodo, Mendeley and web snippets",
+      "observed_shape": "Mostly daily/monthly crisis, volatility, herding, HMM, sentiment, or methodology/proxy artifacts.",
+      "rejection_reason": "no_attachable_exact_underlying_intraday_monthly_or_Kraken_parent_root_label_panel_found.",
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0
+    }
+  ],
+  "accepted_parent_root_slots_added": 0,
+  "accepted_direct_manipulation_rows_added": 0,
+  "gate_result": "blocked_nonkaggle_source_scan_no_attachable_parent_root_or_direct_rows",
+  "next_action": "Use the Zenodo DEX self-trade preflight candidate for a full or larger bounded chronological direct-Manipulation gate, or acquire authenticated exact-underlying intraday/monthly MainRegimeV2 parent-root labels; do not promote HMM/yfinance/raw-Kraken proxy outputs."
+}

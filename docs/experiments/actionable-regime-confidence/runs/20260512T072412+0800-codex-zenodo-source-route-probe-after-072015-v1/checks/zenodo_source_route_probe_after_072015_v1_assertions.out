@@ -1,0 +1,16 @@
+gate_result=exact_required_queries_zero_generic_l4_context_only_no_unlock
+query_count=12
+failed_query_count=0
+required_filename_hits_in_top_10=0
+owner_or_mainregime_hits_in_top_10=0
+unique_order_lifecycle_context_hits=1
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

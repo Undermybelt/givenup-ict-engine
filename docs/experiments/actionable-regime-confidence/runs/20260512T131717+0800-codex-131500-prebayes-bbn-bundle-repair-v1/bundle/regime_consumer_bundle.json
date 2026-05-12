@@ -1,0 +1,39 @@
+{
+  "schema_version": "regime-consumer-bundle/v1",
+  "latest_decision": {
+    "decision_state": "single_label_95",
+    "trade_usable": true,
+    "final_label": "Bull",
+    "label_set": [
+      "Bull",
+      "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+    ],
+    "abstain_reasons": [
+      "same_root_six_provider_eth_aq_authority",
+      "path_ranker_runtime_ready_but_execution_fail_closed"
+    ]
+  },
+  "consumer_hints": {
+    "execution_tree_hint": "accept_regime",
+    "bbn_evidence_hint": {
+      "regime_decision_state": "single_label_95",
+      "regime_trade_usable": true,
+      "regime_label": "Bull",
+      "regime_label_set": [
+        "Bull",
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "regime_transition_hazard": 0.15,
+      "regime_decision_reasons": [
+        "same_root_six_provider_eth_aq_authority",
+        "exact_branch_path_preserved",
+        "catboost_runtime_candidate_set_ready"
+      ]
+    },
+    "path_ranker_context": {
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "stable_profit_score": 0.6632710958496916
+    },
+    "trade_usable": true
+  }
+}

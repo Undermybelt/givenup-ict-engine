@@ -1,0 +1,11 @@
+run_id=20260511T131000+0800-codex-stock-regime-rollup-parent-root-gate-v1
+board_sha256_at_run=436e20ca7634157616bdb413c6865c710052febb6a0f7046c59249a5beeb2b94
+accepted_95_rollup_parent_roots=Bull
+missing_rollup_parent_roots=Bear,Crisis,Sideways
+gate_result=partial_rollup_stock_regime_roots_full_matrix_still_blocked
+accepted_full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

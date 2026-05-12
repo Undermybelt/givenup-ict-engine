@@ -1,0 +1,6 @@
+searched_missing_regimes: ['TrendExpansion', 'ExtremeStress', 'ReversalBrewing']
+accepted_by_missing_regime: {'TrendExpansion': 0, 'ExtremeStress': 0, 'ReversalBrewing': 0}
+blocked_future_target_predictors: True
+sidecar_feature_count: 20
+thresholds_relaxed: False
+missing_regime_acceptance_complete: False

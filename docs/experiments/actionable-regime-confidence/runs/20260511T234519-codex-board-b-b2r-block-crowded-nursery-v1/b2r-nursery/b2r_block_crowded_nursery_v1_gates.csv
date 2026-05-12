@@ -1,0 +1,12 @@
+gate,value,pass,source
+nursery_status,incubation_only,True,Board B nursery contract
+exact_branch_path_preserved_previous,true,True,231800 exact-branch readback
+exact_branch_path_preserved_live_replay,true,True,233426 workflow structural bundle
+previous_block_crowded_observed,block_crowded,True,231800 execution tree
+fresh_execution_not_block_crowded,fill_viable,True,233426 analyze-live execution triage
+fresh_execution_gate_observe_only,observe,True,233426 analyze-live execution triage
+pre_bayes_live_gate,pass_neutralized,True,233426 analyze-live
+catboost_ranker_history_ready,enabled_candidate_set_ready,True,231800 closed-loop readback
+provider_status_exit0,0,True,fresh provider-status
+local_auto_quant_healthy,true,True,fresh local Auto-Quant status
+promotion_allowed,false,True,"nursery feedback only; live replay is observe, not execute"

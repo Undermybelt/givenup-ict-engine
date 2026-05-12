@@ -1,0 +1,23 @@
+PASS r6_recap_novel_pdf_single_retry_after_081323_v1
+gate_result=r6_recap_novel_pdf_single_retry_after_081323_v1=rate_limited_no_body_no_control_unlock
+http_status=429
+content_type=text/html
+body_bytes=964
+body_is_pdf=false
+body_is_html=true
+cloudfront_rate_limited=true
+pdf_acquired=false
+source_owned_normal_control_document=false
+accepted_rows_added=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

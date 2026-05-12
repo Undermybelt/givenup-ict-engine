@@ -1,0 +1,36 @@
+{
+  "accepted_rows_added": 0,
+  "board_a_hash_before_artifact": "0f9f0dbc60d6de676882d2d1ebb2b92f0b4864827e6a7ca10a356dd9aa910fe6",
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "exact_required_files_found": 0,
+  "exact_required_package_present": false,
+  "files_scanned": 215,
+  "gate_result": "tomac_local_schema_classifier_after_083108_v1=no_verifier_native_source_control_schema_no_unlock",
+  "observed_at_utc": "2026-05-12T00:36:10.469205+00:00",
+  "promotion_allowed": false,
+  "run_id": "20260512T083450+0800-codex-tomac-local-schema-classifier-after-083108-v1",
+  "scan_root": "/Users/thrill3r/Downloads/Tomac",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "strong_lifecycle_hint_files": 5,
+  "target_roots": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "has_exact_required_package": false,
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "has_exact_required_package": false,
+      "root": "/private/tmp/ict-engine-board-a-r6-owner-export-v1"
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false,
+  "verifier_native_hint_files": 0
+}

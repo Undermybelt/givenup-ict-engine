@@ -1,0 +1,250 @@
+{
+  "accepted_rows_added": 0,
+  "blocked_ids": [
+    "r6_owner_export_files",
+    "r6_direct_confidence_and_splits",
+    "r5_post_2026_01_30_recency",
+    "r3_native_subhour",
+    "source_label_equivalence_context",
+    "provider_autoquant_chain"
+  ],
+  "board_cursor_is_v62": true,
+  "board_sha256_at_run": "6500f3adb22862ca88f1c04f8f1eda464403aecd1370d7b93d02c09381bced9a",
+  "checklist": [
+    {
+      "evidence": "board_sha256=6500f3adb22862ca88f1c04f8f1eda464403aecd1370d7b93d02c09381bced9a; cursor=20260512T001636+0800-codex-r6-owner-export-request-package-v1",
+      "gap": "",
+      "id": "objective_named_board",
+      "requirement": "Use the named Board A markdown as the authoritative state.",
+      "status": "pass"
+    },
+    {
+      "evidence": "root_exists=False; present=0/3",
+      "gap": "direct_manipulation_positive_rows.csv;direct_manipulation_matched_controls.csv;direct_manipulation_provenance.json",
+      "id": "r6_owner_export_files",
+      "requirement": "Owner/user-approved R6 positive/control/provenance export files are present.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "direct={'status': 'schema_ready_unscored', 'positive_rows': 73, 'matched_negative_rows': 73, 'matched_group_count': 70}; v62_gate=r6_owner_export_request_package_v1=request_package_ready_rows_not_acquired",
+      "gap": "owner export absent; exact split debt and direct species blockers remain per V62",
+      "id": "r6_direct_confidence_and_splits",
+      "requirement": "R6 direct Manipulation passes strict split/species validation, not only pooled support.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "root_exists=False; verifier=blocked/missing_required_files; kaggle_decision=r5_kaggle_stock_regime_recency_refresh_v1=latest_public_dataset_no_post_2026_01_30_rows",
+      "gap": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "id": "r5_post_2026_01_30_recency",
+      "requirement": "Post-2026-01-30 source-panel recency extension rows and provenance are accepted.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "root_exists=False; prior_gate=native_subhour_overlap_blocker_v1=no_source_overlap_0of4_cells",
+      "gap": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "id": "r3_native_subhour",
+      "requirement": "Native sub-hour source-label rows and provenance are accepted.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "root_exists=False; verifier=blocked/missing_required_files",
+      "gap": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "id": "source_label_equivalence_context",
+      "requirement": "Other-market/source-label equivalence root remains real-evidence only.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "No accepted row or validation-contract change since V62/002009; downstream rerun would be a proxy signal only.",
+      "gap": "await owner export files or explicit split-contract approval",
+      "id": "provider_autoquant_chain",
+      "requirement": "Rerun provider/Auto-Quant/pre-Bayes/BBN/CatBoost/execution-tree after accepted row/contract change.",
+      "status": "blocked_not_rerun"
+    },
+    {
+      "evidence": "No proxy labels written; no live intake mutation; no threshold relaxation.",
+      "gap": "",
+      "id": "no_proxy_promotion",
+      "requirement": "Do not promote OHLCV/proxy/generated labels as completion.",
+      "status": "pass_guardrail"
+    },
+    {
+      "evidence": "This run creates a unique run root and leaves Current Cursor unchanged.",
+      "gap": "",
+      "id": "multi_agent_append_only",
+      "requirement": "Do not disturb concurrent agents or rewrite the active cursor without new acceptance evidence.",
+      "status": "pass_guardrail"
+    }
+  ],
+  "cursor": {
+    "accepted_gate": "r6_owner_export_request_package_v1=`request_package_ready_rows_not_acquired`; r6_bulk_order_lifecycle_source_scan_v1=`public_bulk_source_not_found_owner_export_or_protocol_pivot_required`; r6_grouped_heldout_contract_dryrun_v1=`grouped_contract_still_fails_owner_approval_required`; r6_family_heldout_contract_readback_v1=`family_contract_draft_reduces_exact_debt_but_gates_still_blocked`; r6_exact_split_support_debt_audit_v1=`pooled95_passed_exact_split_row_debt_structural_blocker_quantified`; r6_live_intake_rehydrate_calibration_v1=`live_intake_rehydrated_pooled_and_sidecar_axes_pass_split_species_full_goal_still_blocked`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "active_market_set": "V62 owner-export request package after V61 public bulk source exhaustion: live R6 direct intake remains schema-ready at positives `73`, matched controls `73`, matched groups `70`, and pooled Wilson95 passes, but acceptance now requires owner/user-approved direct export files or explicit split-contract approval.",
+    "active_timeframes": "Event/order-lifecycle rows only for R6; no OHLCV proxy timeframe promotion. The request package preserves exact-contract debt (`2559` exact-symbol pairwise rows and `732` exact-venue pairwise rows) and the failed grouped-family dry-run as input requirements for any future export/contract.",
+    "blocker": "Strict objective remains blocked: pooled R6 is no longer the binding issue; owner/user-approved export rows are not acquired, exact split debt is structural, grouped market/venue family gates still fail and are not owner-approved, direct species coverage remains incomplete, source-label confidence is `0/4`, R5 post-`2026-01-30` source-panel rows are absent, and R3 native-subhour root remains absent.",
+    "board_state": "blocked",
+    "candidate_regime": "DirectOverlay::Manipulation / R6 owner-export request package for direct order-lifecycle positives, matched controls, provenance, split contract, and missing species coverage; strict price-root and direct-species blockers remain tracked separately.",
+    "confidence_lane": "`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1`",
+    "last_loop_id": "20260512T001636+0800-codex-r6-owner-export-request-package-v1",
+    "next_action": "Place owner/user-approved R6 export files under `/tmp/ict-engine-board-a-r6-owner-export-v1` or record explicit approval for a different split contract; then rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked.",
+    "provider_status": "V62 sent no provider requests. Latest provider/downstream command bundle remains V57/V60 context: yfinance/kraken_cli usable context exists, while IBKR/TradingView MCP/Kraken public remain non-promoting for the direct order-lifecycle gate; rerun provider/Auto-Quant/pre-Bayes/BBN/CatBoost/workflow/execution-tree only after accepted owner export files or explicit validation-contract approval."
+  },
+  "external_requests_sent": false,
+  "gate_result": "current_state_audit_after_v62_owner_export_v1=not_complete_owner_export_r5_r3_roots_absent_no_downstream_rerun",
+  "generated_at_utc": "2026-05-11T16:31:01.405984+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Place owner/user-approved R6 export files under /tmp/ict-engine-board-a-r6-owner-export-v1 or record explicit approval for a different split contract; separately populate R5 and R3 intake roots with source-owned rows before rerunning acceptance/downstream chain.",
+  "r3_native_subhour_state": {
+    "missing_files": [
+      "native_subhour_source_label_rows.csv",
+      "native_subhour_source_label_provenance.json"
+    ],
+    "present_count": 0,
+    "present_files": [],
+    "required_count": 2,
+    "required_files": [
+      "native_subhour_source_label_rows.csv",
+      "native_subhour_source_label_provenance.json"
+    ],
+    "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+    "root_exists": false
+  },
+  "r5_source_panel_recency_state": {
+    "missing_files": [
+      "stock_market_regimes_2026_extension.csv",
+      "source_panel_recency_provenance.json"
+    ],
+    "present_count": 0,
+    "present_files": [],
+    "required_count": 2,
+    "required_files": [
+      "stock_market_regimes_2026_extension.csv",
+      "source_panel_recency_provenance.json"
+    ],
+    "root": "/tmp/ict-engine-source-panel-recency-extension",
+    "root_exists": false
+  },
+  "r6_owner_export_state": {
+    "missing_files": [
+      "direct_manipulation_positive_rows.csv",
+      "direct_manipulation_matched_controls.csv",
+      "direct_manipulation_provenance.json"
+    ],
+    "present_count": 0,
+    "present_files": [],
+    "required_count": 3,
+    "required_files": [
+      "direct_manipulation_positive_rows.csv",
+      "direct_manipulation_matched_controls.csv",
+      "direct_manipulation_provenance.json"
+    ],
+    "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "root_exists": false
+  },
+  "raw_data_committed": false,
+  "reference_gate_results": {
+    "owner_export_presence_sweep": "r6_owner_export_presence_sweep_v1=no_owner_export_files_present_request_package_still_blocked",
+    "oystacher_exhibit_a_probe": "r6_oystacher_exhibit_a_public_acquisition_probe_v1=appendix_not_publicly_materialized_owner_or_pacer_export_required",
+    "oystacher_public_trace": "r6_oystacher_public_appendix_trace_v1=public_sources_confirm_large_aggregate_but_no_row_appendix_materialized",
+    "r3_native_subhour_overlap": "native_subhour_overlap_blocker_v1=no_source_overlap_0of4_cells",
+    "r5_kaggle_recency_refresh": "r5_kaggle_stock_regime_recency_refresh_v1=latest_public_dataset_no_post_2026_01_30_rows",
+    "v62_request_package": "r6_owner_export_request_package_v1=request_package_ready_rows_not_acquired"
+  },
+  "references": {
+    "owner_export_presence_sweep": "docs/experiments/actionable-regime-confidence/runs/20260512T002009-codex-r6-owner-export-presence-sweep-v1/r6-owner-export-presence-sweep/r6_owner_export_presence_sweep_v1.json",
+    "oystacher_exhibit_a_probe": "docs/experiments/actionable-regime-confidence/runs/20260512T001633-codex-r6-oystacher-exhibit-a-public-acquisition-probe-v1/r6-oystacher-exhibit-a-public-acquisition-probe/r6_oystacher_exhibit_a_public_acquisition_probe_v1.json",
+    "oystacher_public_trace": "docs/experiments/actionable-regime-confidence/runs/20260512T001700-codex-r6-oystacher-public-appendix-trace-v1/r6-oystacher-public-appendix-trace/r6_oystacher_public_appendix_trace_v1.json",
+    "r3_native_subhour_overlap": "docs/experiments/actionable-regime-confidence/runs/20260511T180420-codex-native-subhour-overlap-blocker-v1/native-subhour-overlap/native_subhour_overlap_blocker_v1.json",
+    "r5_kaggle_recency_refresh": "docs/experiments/actionable-regime-confidence/runs/20260511T215621-codex-r5-kaggle-stock-regime-recency-refresh-v1/r5-kaggle-stock-regime-recency-refresh/r5_kaggle_stock_regime_recency_refresh_v1.json",
+    "v62_request_package": "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_package_v1.json"
+  },
+  "run_id": "20260512T002805-codex-current-state-audit-after-v62-owner-export-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_label_equivalence_state": {
+    "missing_files": [
+      "source_label_equivalence_rows.csv",
+      "source_label_equivalence_provenance.json"
+    ],
+    "present_count": 0,
+    "present_files": [],
+    "required_count": 2,
+    "required_files": [
+      "source_label_equivalence_rows.csv",
+      "source_label_equivalence_provenance.json"
+    ],
+    "root": "/tmp/ict-engine-source-label-equivalence-intake",
+    "root_exists": false
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifiers": {
+    "direct_manipulation": {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+        "--intake-root",
+        "/tmp/ict-engine-direct-manipulation-row-intake"
+      ],
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "canonical_intake_root",
+        "generated_at_utc",
+        "materialization_note",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "source_v56_json",
+        "source_v56_negative_csv",
+        "source_v56_positive_csv",
+        "thresholds_relaxed",
+        "trade_usable",
+        "v56_gate_result",
+        "v56_negative_sha256",
+        "v56_positive_sha256"
+      ],
+      "returncode": 0,
+      "status": "schema_ready_unscored",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002805-codex-current-state-audit-after-v62-owner-export-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002805-codex-current-state-audit-after-v62-owner-export-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+    },
+    "source_label_equivalence": {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py",
+        "--intake-root",
+        "/tmp/ict-engine-source-label-equivalence-intake"
+      ],
+      "missing_files": [
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "returncode": 2,
+      "status": "blocked",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002805-codex-current-state-audit-after-v62-owner-export-v1/command-output/source_label_equivalence_verifier.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002805-codex-current-state-audit-after-v62-owner-export-v1/command-output/source_label_equivalence_verifier.stdout.txt"
+    },
+    "source_panel_recency": {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py",
+        "--intake-root",
+        "/tmp/ict-engine-source-panel-recency-extension"
+      ],
+      "missing_files": [
+        "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+        "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "returncode": 2,
+      "status": "blocked",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002805-codex-current-state-audit-after-v62-owner-export-v1/command-output/source_panel_recency_verifier.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002805-codex-current-state-audit-after-v62-owner-export-v1/command-output/source_panel_recency_verifier.stdout.txt"
+    }
+  }
+}

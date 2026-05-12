@@ -1,0 +1,23 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T023858-codex-board-b-220646-promotion-rejection-v1",
+  "decision": "reject_220646_for_promotion_current_context",
+  "source_recipe": "SourceRootStopCarryLongHorizonV1",
+  "source_recipe_id": "220646",
+  "source_rc_spa_score": 85.7407,
+  "source_rc_spa_price_roots_passed": "4/4",
+  "exact_branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+  "latest_verified_current_binary_anchor": "20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1",
+  "fail_closed_diagnosis_anchor": "20260512T023559-codex-board-b-220646-fail-closed-cause-diagnosis-v1",
+  "catboost_path_ranker_ready": true,
+  "pre_bayes_gate_status": "pass_neutralized",
+  "pre_bayes_directional_gap": 0.007747,
+  "pre_bayes_min_directional_support_gap": 0.08,
+  "execution_readiness": 0.4421,
+  "execution_readiness_threshold": 0.45,
+  "execution_tree_gate_status": "observe",
+  "execution_tree_branch": "transition_guardrail",
+  "execution_tree_bias": "guarded",
+  "workflow_blocker": "user_selected_historical_data_missing",
+  "promotion_allowed": false,
+  "next_action": "B2R-repeat-next materially different root-aware family/provider panel"
+}

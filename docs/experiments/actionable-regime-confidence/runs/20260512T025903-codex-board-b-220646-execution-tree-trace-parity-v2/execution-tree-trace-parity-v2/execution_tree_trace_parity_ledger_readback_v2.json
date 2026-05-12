@@ -1,0 +1,7 @@
+{
+  "status": "observe",
+  "promote_candidate": false,
+  "actionable": false,
+  "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000;branch_admission_status=fail_closed",
+  "path": "docs/experiments/actionable-regime-confidence/runs/20260512T025903-codex-board-b-220646-execution-tree-trace-parity-v2/execution-tree-trace-parity-v2/state_execution_tree_trace_parity_v2/SRC_ROOT_CARRY_LONG_220646/execution_tree_trace.json"
+}

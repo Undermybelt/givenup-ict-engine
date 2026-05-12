@@ -1,0 +1,1 @@
+uv run --with pandas --with requests python scripts/auto_quant_external/fetch_external.py yahoo --symbol 'NQ=F' --interval 1h --start 2024-05-13 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T102315+0800-codex-board-b-provider-yahoo-nq-long-aq-preseed-v1/provider-csv/yahoo_nq_f_1h_2y.csv

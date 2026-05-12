@@ -1,0 +1,94 @@
+{
+  "run_id": "20260512T043222-codex-autoquant-offline-market-metadata-run-after-042222-v1",
+  "gate_result": "autoquant_offline_market_metadata_run_after_042222_v1=offline_metadata_backtests_succeeded_no_source_control_promotion",
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1",
+  "autoquant_root": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant",
+  "mode": "offline_market_metadata_injected",
+  "source_control_promotion": false,
+  "success_count": 3,
+  "failure_count": 0,
+  "results": [
+    {
+      "strategy": "BTCLeaderBreakV4BTCOnly",
+      "timerange_label": "full",
+      "timerange": "20210101-20251231",
+      "status": "OK",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "aggregate": {
+        "sharpe": 0.24637822688339933,
+        "sortino": 1.9303088885633912,
+        "calmar": 9.59134538292958,
+        "total_profit_pct": 14.81,
+        "max_drawdown_pct": -1.6266294649832893,
+        "trade_count": 116,
+        "win_rate_pct": 35.3448275862069,
+        "profit_factor": 2.345710713877559
+      },
+      "buy_and_hold": {
+        "sharpe": 0.6659388627822675,
+        "profit_total_pct": 198.8174905707783,
+        "max_drawdown_pct": -76.62925431645941
+      }
+    },
+    {
+      "strategy": "MTFTrendStackBTCOnly",
+      "timerange_label": "full",
+      "timerange": "20210101-20251231",
+      "status": "OK",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "aggregate": {
+        "sharpe": -0.07958490061452665,
+        "sortino": -0.22179686338134555,
+        "calmar": -0.5943900013700079,
+        "total_profit_pct": -4.27,
+        "max_drawdown_pct": -7.564812678340751,
+        "trade_count": 150,
+        "win_rate_pct": 22.0,
+        "profit_factor": 0.8512927195576306
+      },
+      "buy_and_hold": {
+        "sharpe": 0.6659388627822675,
+        "profit_total_pct": 198.8174905707783,
+        "max_drawdown_pct": -76.62925431645941
+      }
+    },
+    {
+      "strategy": "MomentumMTFConfluenceBTCOnly",
+      "timerange_label": "full",
+      "timerange": "20210101-20251231",
+      "status": "OK",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "aggregate": {
+        "sharpe": 0.0410871829112733,
+        "sortino": 0.09325548606266265,
+        "calmar": 0.3001779459775581,
+        "total_profit_pct": 2.86,
+        "max_drawdown_pct": -10.025760193166423,
+        "trade_count": 169,
+        "win_rate_pct": 30.76923076923077,
+        "profit_factor": 1.0709180215586471
+      },
+      "buy_and_hold": {
+        "sharpe": 0.6659388627822675,
+        "profit_total_pct": 198.8174905707783,
+        "max_drawdown_pct": -76.62925431645941
+      }
+    }
+  ],
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

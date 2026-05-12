@@ -1,0 +1,6 @@
+PASS decision=github_source_label_candidate_screen_v1=no_promotable_source_label_equivalence
+PASS candidate_records=6
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

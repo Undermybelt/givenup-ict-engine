@@ -1,0 +1,80 @@
+{
+  "board_sha256_before_artifact": "90aab01df5201094582aaa6a48e7c933976a1c209556d030695a17db1fa96db6",
+  "checklist": [
+    {
+      "evidence": "053852 plus 055058 HGB field/readback packets",
+      "gap": "daily/source-label-equivalence context is not source/control promotion evidence",
+      "requirement": "Each active regime has diagnostic >=95 confidence evidence with per-regime fields",
+      "status": "diagnostic_only"
+    },
+    {
+      "evidence": "061229 current source-label-equivalence verifier",
+      "gap": "schema_ready_unscored; verifier says to rerun unchanged chronological and heldout-market/timeframe gates",
+      "requirement": "Validate across other markets, periods, and timeframes",
+      "status": "blocked"
+    },
+    {
+      "evidence": "060446 source-arrival sweep, 060807 route check, 061314 dispatch handoff",
+      "gap": "no approval, no sent export response, no verifier-native R6 rows, no target root",
+      "requirement": "Acquire source/control evidence or explicit approval before promotion",
+      "status": "missing"
+    },
+    {
+      "evidence": "live filesystem root check",
+      "gap": "R6 owner export, R3 native sub-hour, and R5 recency-extension roots are absent",
+      "requirement": "Unlock one required target root",
+      "status": "missing"
+    },
+    {
+      "evidence": "board and recent audit assertions",
+      "gap": "no required root or approval exists, so canonical merge remains false",
+      "requirement": "Run canonical merge after source/control unlock",
+      "status": "not_allowed"
+    },
+    {
+      "evidence": "060056 local AutoQuant cache readback and older downstream readbacks",
+      "gap": "post-unlock downstream promotion rerun has not occurred and must not run from proxy evidence",
+      "requirement": "Run provider/AutoQuant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution tree after merge",
+      "status": "not_allowed"
+    },
+    {
+      "evidence": "all recent gates have trade_usable=false and update_goal=false",
+      "gap": "strict full objective remains incomplete",
+      "requirement": "Do not claim tradable strategy or call update_goal until complete",
+      "status": "blocked"
+    }
+  ],
+  "decision": {
+    "approval_present": false,
+    "canonical_merge": false,
+    "diagnostic_confidence_present": true,
+    "downstream_promotion_rerun": false,
+    "missing_requirement_count": 6,
+    "non_target_equivalence_root_present": true,
+    "objective_complete": false,
+    "required_roots": {
+      "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+      "/tmp/ict-engine-native-subhour-source-label-intake": false,
+      "/tmp/ict-engine-source-panel-recency-extension": false
+    },
+    "required_roots_absent": true,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "evidence_exists": {
+    "hgb_aggregate_readback": true,
+    "hgb_field_materialization": true,
+    "operator_dispatch_handoff": true,
+    "provider_autoquant_cache": true,
+    "route_contact_recency": true,
+    "source_arrival_sweep": true,
+    "source_label_equivalence_verifier": true
+  },
+  "gate_result": "current_objective_audit_after_061229_v1=not_complete_equivalence_schema_ready_unscored_required_roots_absent_no_downstream_rerun",
+  "generated_at_epoch": 1778537805,
+  "next_action": "Use approved operator dispatch or source/control approval to unlock R6, or acquire R3 native sub-hour/R5 recency source rows; only then rerun direct verifier, split calibration, canonical merge, providers, AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback.",
+  "objective": "Every active regime must reach 95% calibrated confidence across markets/periods/timeframes, then pass the ordered provider/AutoQuant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution-tree chain after source/control unlock.",
+  "run_id": "20260512T061356+0800-codex-current-objective-audit-after-061229-v1"
+}

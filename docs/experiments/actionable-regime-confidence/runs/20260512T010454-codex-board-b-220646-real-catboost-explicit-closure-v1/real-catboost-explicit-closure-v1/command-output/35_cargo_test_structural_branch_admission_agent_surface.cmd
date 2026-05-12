@@ -1,0 +1,1 @@
+cargo test --lib structural_branch_admission 

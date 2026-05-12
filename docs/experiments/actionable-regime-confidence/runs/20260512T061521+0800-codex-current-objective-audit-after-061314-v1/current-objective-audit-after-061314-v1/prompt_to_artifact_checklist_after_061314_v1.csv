@@ -1,0 +1,9 @@
+requirement_id,requirement,evidence,status,gap
+active_roots_ge_95,"Bear/Bull/Crisis/Sideways each have >=95% calibrated confidence evidence","053852 and 055058 assertions","diagnostic_only_pass","source_control_evidence_acquired=false and downstream_promotion_rerun=false"
+other_markets_periods,"Regime confidence survives other markets and chronological periods","053856 heldout_market_rows=26236 heldout_time_rows=45384 test_rows=27844","partial_diagnostic","daily HGB/source-label-equivalence evidence only"
+other_cycles_timeframes,"Regime confidence survives other cycles/timeframes with source-owned validation","053856 timeframe_counts=1d:248440; 061229 status=schema_ready_unscored row_count=248440","blocked","native sub-hour root absent and equivalence verifier unscored"
+r3_native_subhour,"R3 native sub-hour source-owned labels exist","/tmp/ict-engine-native-subhour-source-label-intake","blocked","required root absent"
+r5_recency_extension,"R5 post-cutoff source-owned MainRegimeV2 rows exist","/tmp/ict-engine-source-panel-recency-extension and 060446 sweep","blocked","required root absent"
+r6_owner_export_controls,"R6 verifier-native owner/export rows plus valid controls exist","/tmp/ict-engine-board-a-r6-owner-export-v1 060807 061314 approval package","blocked","required root absent v5 drafts not sent approval_present=false controls not acquired"
+ordered_downstream_chain,"Post-unlock direct verifier split calibration canonical merge provider/AutoQuant filter Pre-Bayes BBN CatBoost path-ranking execution-tree readback","060807 061229 061314 approval package assertions","blocked","no source/control unlock so downstream rerun not allowed"
+no_proxy_promotion,"Do not accept proxy/schema/provider/cache/dispatch evidence as completion","060056 060802 060807 061229 061314 gates","pass","no promotion or trade claim made"

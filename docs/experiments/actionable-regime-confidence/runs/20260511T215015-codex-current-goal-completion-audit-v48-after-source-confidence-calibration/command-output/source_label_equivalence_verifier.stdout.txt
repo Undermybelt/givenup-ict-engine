@@ -1,0 +1,30 @@
+{
+  "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+  "package_counts": {
+    "price_root_equivalence_us_index_futures": 248440
+  },
+  "provenance_keys": [
+    "created_at_utc",
+    "date_max",
+    "date_min",
+    "invalid_rows_removed",
+    "label_counts",
+    "limitations",
+    "market_family_counts",
+    "package_counts",
+    "previous_provenance_path",
+    "raw_payload_committed_to_repo",
+    "repair_reason",
+    "row_count",
+    "rows_path",
+    "rows_sha256",
+    "run_id",
+    "source_owner_counts",
+    "split_counts",
+    "symbol_count",
+    "updated_at_utc",
+    "updated_by"
+  ],
+  "row_count": 248440,
+  "status": "schema_ready_unscored"
+}

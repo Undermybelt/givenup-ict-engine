@@ -1,0 +1,336 @@
+2026-05-11 18:44:15,498 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-11 18:44:15,499 - freqtrade.loggers - INFO - Logfile configured
+2026-05-11 18:44:15,499 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-11 18:44:15,499 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy
+2026-05-11 18:44:15,499 - freqtrade.configuration.configuration - INFO - Parameter -i/--timeframe detected ... Using timeframe: 1d ...
+2026-05-11 18:44:15,500 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-11 18:44:15,500 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20110101-20251231 ...
+2026-05-11 18:44:15,500 - freqtrade.configuration.configuration - INFO - Using user-data directory: /Users/thrill3r/Auto-Quant/user_data ...
+2026-05-11 18:44:15,500 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/freqtrade-adapter-data ...
+2026-05-11 18:44:15,501 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-11 18:44:15,501 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20110101-20251231
+2026-05-11 18:44:15,501 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-11 18:44:15,507 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-11 18:44:15,507 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-11 18:44:15,507 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-11 18:44:15,507 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-11 18:44:15,518 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-11 18:44:16,833 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-11 18:44:16,848 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy NQRootAwareB2UV1 from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy/NQRootAwareB2UV1.py'...
+2026-05-11 18:44:16,848 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-11 18:44:16,849 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1d.
+2026-05-11 18:44:16,849 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-11 18:44:16,849 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-11 18:44:16,849 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-11 18:44:16,849 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-11 18:44:16,850 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-11 18:44:16,850 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1d
+2026-05-11 18:44:16,850 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.2
+2026-05-11 18:44:16,850 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-11 18:44:16,851 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-11 18:44:16,851 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-11 18:44:16,851 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-11 18:44:16,851 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-11 18:44:16,851 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60}
+2026-05-11 18:44:16,851 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-11 18:44:16,851 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-11 18:44:16,851 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 220
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-11 18:44:16,852 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-11 18:44:16,853 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-11 18:44:16,853 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-11 18:44:16,853 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-11 18:44:16,859 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-11 18:44:16,864 - freqtrade.optimize.backtesting - INFO - Using fee 0.1000% from config.
+2026-05-11 18:44:16,935 - freqtrade.data.history.datahandlers.idatahandler - WARNING - BTC/USDT, spot, 1d, data starts at 2011-01-02 00:00:00
+2026-05-11 18:44:16,946 - freqtrade.data.converter.converter - INFO - Missing data fillup for BTC/USDT, 1d: before: 4651 - after: 5478 - 17.78%
+2026-05-11 18:44:16,946 - freqtrade.optimize.backtesting - INFO - Loading data from 2011-01-02 00:00:00 up to 2025-12-31 00:00:00 (5477 days).
+2026-05-11 18:44:16,946 - freqtrade.configuration.timerange - WARNING - Moving start-date by 220 candles to account for startup time.
+2026-05-11 18:44:16,983 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-11 18:44:16,985 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy NQRootAwareB2UV1
+2026-05-11 18:44:17,043 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2011-08-10 00:00:00 up to 2025-12-31 00:00:00 (5257 days).
+2026-05-11 18:44:20,644 - freqtrade.configuration.load_config - INFO - Using config: /Users/thrill3r/Auto-Quant/config.json ...
+2026-05-11 18:44:20,645 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-11 18:44:20,646 - freqtrade.loggers - INFO - Logfile configured
+2026-05-11 18:44:20,646 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-11 18:44:20,646 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy
+2026-05-11 18:44:20,646 - freqtrade.configuration.configuration - INFO - Parameter -i/--timeframe detected ... Using timeframe: 1d ...
+2026-05-11 18:44:20,646 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-11 18:44:20,646 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20110101-20251231 ...
+2026-05-11 18:44:20,646 - freqtrade.configuration.configuration - INFO - Using user-data directory: /Users/thrill3r/Auto-Quant/user_data ...
+2026-05-11 18:44:20,647 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/freqtrade-adapter-data ...
+2026-05-11 18:44:20,647 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-11 18:44:20,647 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20110101-20251231
+2026-05-11 18:44:20,647 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-11 18:44:20,651 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-11 18:44:20,652 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-11 18:44:20,652 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-11 18:44:20,652 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-11 18:44:20,660 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-11 18:44:21,822 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-11 18:44:21,825 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy NQRootAwareB2UV1 from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy/NQRootAwareB2UV1.py'...
+2026-05-11 18:44:21,826 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-11 18:44:21,826 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1d.
+2026-05-11 18:44:21,826 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-11 18:44:21,826 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-11 18:44:21,826 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-11 18:44:21,826 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-11 18:44:21,827 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-11 18:44:21,827 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1d
+2026-05-11 18:44:21,827 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.2
+2026-05-11 18:44:21,827 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-11 18:44:21,827 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-11 18:44:21,827 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-11 18:44:21,827 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-11 18:44:21,827 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 220
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-11 18:44:21,828 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-11 18:44:21,829 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-11 18:44:21,829 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-11 18:44:21,829 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-11 18:44:21,829 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-11 18:44:21,829 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-11 18:44:21,829 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-11 18:44:21,829 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-11 18:44:21,842 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-11 18:44:21,847 - freqtrade.optimize.backtesting - INFO - Using fee 0.1000% from config.
+2026-05-11 18:44:21,852 - freqtrade.data.history.datahandlers.idatahandler - WARNING - BTC/USDT, spot, 1d, data starts at 2011-01-02 00:00:00
+2026-05-11 18:44:21,859 - freqtrade.data.converter.converter - INFO - Missing data fillup for BTC/USDT, 1d: before: 4651 - after: 5478 - 17.78%
+2026-05-11 18:44:21,859 - freqtrade.optimize.backtesting - INFO - Loading data from 2011-01-02 00:00:00 up to 2025-12-31 00:00:00 (5477 days).
+2026-05-11 18:44:21,859 - freqtrade.configuration.timerange - WARNING - Moving start-date by 220 candles to account for startup time.
+2026-05-11 18:44:21,889 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-11 18:44:21,890 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy NQRootAwareB2UV1
+2026-05-11 18:44:21,909 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2011-08-10 00:00:00 up to 2025-12-31 00:00:00 (5257 days).
+2026-05-11 18:44:25,473 - freqtrade.configuration.load_config - INFO - Using config: /Users/thrill3r/Auto-Quant/config.json ...
+2026-05-11 18:44:25,475 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-11 18:44:25,475 - freqtrade.loggers - INFO - Logfile configured
+2026-05-11 18:44:25,476 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-11 18:44:25,476 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy
+2026-05-11 18:44:25,476 - freqtrade.configuration.configuration - INFO - Parameter -i/--timeframe detected ... Using timeframe: 1d ...
+2026-05-11 18:44:25,476 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-11 18:44:25,476 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20110101-20251231 ...
+2026-05-11 18:44:25,476 - freqtrade.configuration.configuration - INFO - Using user-data directory: /Users/thrill3r/Auto-Quant/user_data ...
+2026-05-11 18:44:25,476 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/freqtrade-adapter-data ...
+2026-05-11 18:44:25,477 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-11 18:44:25,477 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20110101-20251231
+2026-05-11 18:44:25,477 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-11 18:44:25,483 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-11 18:44:25,483 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-11 18:44:25,483 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-11 18:44:25,483 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-11 18:44:25,491 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-11 18:44:27,077 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-11 18:44:27,079 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy NQRootAwareB2UV1 from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy/NQRootAwareB2UV1.py'...
+2026-05-11 18:44:27,079 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-11 18:44:27,080 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1d.
+2026-05-11 18:44:27,080 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-11 18:44:27,080 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-11 18:44:27,080 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-11 18:44:27,080 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-11 18:44:27,080 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-11 18:44:27,080 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1d
+2026-05-11 18:44:27,080 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.2
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-11 18:44:27,081 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 220
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-11 18:44:27,082 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-11 18:44:27,083 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-11 18:44:27,083 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-11 18:44:27,091 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-11 18:44:27,095 - freqtrade.optimize.backtesting - INFO - Using fee 0.1000% from config.
+2026-05-11 18:44:27,101 - freqtrade.data.history.datahandlers.idatahandler - WARNING - BTC/USDT, spot, 1d, data starts at 2011-01-02 00:00:00
+2026-05-11 18:44:27,106 - freqtrade.data.converter.converter - INFO - Missing data fillup for BTC/USDT, 1d: before: 4651 - after: 5478 - 17.78%
+2026-05-11 18:44:27,107 - freqtrade.optimize.backtesting - INFO - Loading data from 2011-01-02 00:00:00 up to 2025-12-31 00:00:00 (5477 days).
+2026-05-11 18:44:27,107 - freqtrade.configuration.timerange - WARNING - Moving start-date by 220 candles to account for startup time.
+2026-05-11 18:44:27,136 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-11 18:44:27,137 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy NQRootAwareB2UV1
+2026-05-11 18:44:27,154 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2011-08-10 00:00:00 up to 2025-12-31 00:00:00 (5257 days).
+2026-05-11 18:44:30,149 - freqtrade.configuration.load_config - INFO - Using config: /Users/thrill3r/Auto-Quant/config.json ...
+2026-05-11 18:44:30,154 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-11 18:44:30,155 - freqtrade.loggers - INFO - Logfile configured
+2026-05-11 18:44:30,156 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-11 18:44:30,156 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy
+2026-05-11 18:44:30,157 - freqtrade.configuration.configuration - INFO - Parameter -i/--timeframe detected ... Using timeframe: 1d ...
+2026-05-11 18:44:30,157 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-11 18:44:30,158 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20110101-20251231 ...
+2026-05-11 18:44:30,158 - freqtrade.configuration.configuration - INFO - Using user-data directory: /Users/thrill3r/Auto-Quant/user_data ...
+2026-05-11 18:44:30,159 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/freqtrade-adapter-data ...
+2026-05-11 18:44:30,159 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-11 18:44:30,159 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20110101-20251231
+2026-05-11 18:44:30,159 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-11 18:44:30,166 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-11 18:44:30,166 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-11 18:44:30,169 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-11 18:44:30,169 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-11 18:44:30,179 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-11 18:44:31,470 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-11 18:44:31,476 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy NQRootAwareB2UV1 from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy/NQRootAwareB2UV1.py'...
+2026-05-11 18:44:31,476 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-11 18:44:31,476 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1d.
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1d
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.2
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-11 18:44:31,477 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 220
+2026-05-11 18:44:31,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-11 18:44:31,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-11 18:44:31,480 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-11 18:44:31,484 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-11 18:44:31,488 - freqtrade.optimize.backtesting - INFO - Using fee 0.1000% from config.
+2026-05-11 18:44:31,500 - freqtrade.data.history.datahandlers.idatahandler - WARNING - BTC/USDT, spot, 1d, data starts at 2011-01-02 00:00:00
+2026-05-11 18:44:31,506 - freqtrade.data.converter.converter - INFO - Missing data fillup for BTC/USDT, 1d: before: 4651 - after: 5478 - 17.78%
+2026-05-11 18:44:31,506 - freqtrade.optimize.backtesting - INFO - Loading data from 2011-01-02 00:00:00 up to 2025-12-31 00:00:00 (5477 days).
+2026-05-11 18:44:31,507 - freqtrade.configuration.timerange - WARNING - Moving start-date by 220 candles to account for startup time.
+2026-05-11 18:44:31,534 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-11 18:44:31,535 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy NQRootAwareB2UV1
+2026-05-11 18:44:31,551 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2011-08-10 00:00:00 up to 2025-12-31 00:00:00 (5257 days).
+2026-05-11 18:44:33,961 - freqtrade.configuration.load_config - INFO - Using config: /Users/thrill3r/Auto-Quant/config.json ...
+2026-05-11 18:44:33,963 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-11 18:44:33,963 - freqtrade.loggers - INFO - Logfile configured
+2026-05-11 18:44:33,964 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-11 18:44:33,964 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy
+2026-05-11 18:44:33,964 - freqtrade.configuration.configuration - INFO - Parameter -i/--timeframe detected ... Using timeframe: 1d ...
+2026-05-11 18:44:33,964 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-05-11 18:44:33,964 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20110101-20251231 ...
+2026-05-11 18:44:33,964 - freqtrade.configuration.configuration - INFO - Using user-data directory: /Users/thrill3r/Auto-Quant/user_data ...
+2026-05-11 18:44:33,965 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/freqtrade-adapter-data ...
+2026-05-11 18:44:33,965 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-11 18:44:33,965 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20110101-20251231
+2026-05-11 18:44:33,965 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-11 18:44:33,976 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-11 18:44:33,977 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-11 18:44:33,977 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-11 18:44:33,977 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-11 18:44:33,987 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-11 18:44:36,111 - ccxt.base.exchange - WARNING - binance requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async 
+coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2026-05-11 18:44:36,113 - asyncio - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x116bb4fa0>, 683154.807117833)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x116bb4c90>, 683154.972779125)])', 
+'deque([(<aiohttp.client_proto.ResponseHandler object at 0x116bb5630>, 683155.163163291)])']
+connector: <aiohttp.connector.TCPConnector object at 0x122e20450>
+2026-05-11 18:44:36,118 - ccxt.base.exchange - WARNING - binance requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async 
+coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2026-05-11 18:44:36,118 - asyncio - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x11d8256a0>, 683159.546551416)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x11d825710>, 683159.546595041)])', 
+'deque([(<aiohttp.client_proto.ResponseHandler object at 0x11d825860>, 683159.56602275)])']
+connector: <aiohttp.connector.TCPConnector object at 0x11ba29a50>
+2026-05-11 18:44:36,734 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-11 18:44:36,736 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy NQRootAwareB2UV1 from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T184100-codex-board-b-nq-rootaware-b2u-v1/strategy/NQRootAwareB2UV1.py'...
+2026-05-11 18:44:36,736 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-11 18:44:36,737 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1d.
+2026-05-11 18:44:36,737 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-11 18:44:36,737 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-11 18:44:36,737 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-11 18:44:36,737 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-11 18:44:36,738 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-11 18:44:36,738 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1d
+2026-05-11 18:44:36,738 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.2
+2026-05-11 18:44:36,738 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-11 18:44:36,738 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-11 18:44:36,738 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-11 18:44:36,738 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-11 18:44:36,739 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-11 18:44:36,739 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-11 18:44:36,739 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-11 18:44:36,739 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-11 18:44:36,739 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-11 18:44:36,739 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 220
+2026-05-11 18:44:36,740 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-11 18:44:36,740 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-11 18:44:36,740 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-11 18:44:36,740 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-11 18:44:36,740 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-11 18:44:36,740 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-11 18:44:36,741 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-11 18:44:36,742 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-11 18:44:36,742 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-11 18:44:36,743 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-11 18:44:36,743 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-11 18:44:36,750 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-11 18:44:36,756 - freqtrade.optimize.backtesting - INFO - Using fee 0.1000% from config.
+2026-05-11 18:44:36,768 - freqtrade.data.history.datahandlers.idatahandler - WARNING - BTC/USDT, spot, 1d, data starts at 2011-01-02 00:00:00
+2026-05-11 18:44:36,777 - freqtrade.data.converter.converter - INFO - Missing data fillup for BTC/USDT, 1d: before: 4651 - after: 5478 - 17.78%
+2026-05-11 18:44:36,778 - freqtrade.optimize.backtesting - INFO - Loading data from 2011-01-02 00:00:00 up to 2025-12-31 00:00:00 (5477 days).
+2026-05-11 18:44:36,778 - freqtrade.configuration.timerange - WARNING - Moving start-date by 220 candles to account for startup time.
+2026-05-11 18:44:36,821 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-11 18:44:36,823 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy NQRootAwareB2UV1
+2026-05-11 18:44:36,855 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2011-08-10 00:00:00 up to 2025-12-31 00:00:00 (5257 days).

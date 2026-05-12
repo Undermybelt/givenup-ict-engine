@@ -1,0 +1,13 @@
+slug,query,route,exit_code,total,required_filename_hits_in_top_10,owner_or_mainregime_hits_in_top_10,order_lifecycle_context_hits_in_top_10,api_url
+oystacher_exact,"""Oystacher""",r6_owner_export_exact,0,0,0,0,0,https://zenodo.org/api/records?q=%22Oystacher%22&size=10&sort=bestmatch
+three_red_exact,"""3Red Trading""",r6_owner_export_exact,0,0,0,0,0,https://zenodo.org/api/records?q=%223Red+Trading%22&size=10&sort=bestmatch
+positive_filename,"""direct_manipulation_positive_rows""",required_filename,0,0,0,0,0,https://zenodo.org/api/records?q=%22direct_manipulation_positive_rows%22&size=10&sort=bestmatch
+controls_filename,"""direct_manipulation_matched_controls""",required_filename,0,0,0,0,0,https://zenodo.org/api/records?q=%22direct_manipulation_matched_controls%22&size=10&sort=bestmatch
+provenance_filename,"""direct_manipulation_provenance""",required_filename,0,0,0,0,0,https://zenodo.org/api/records?q=%22direct_manipulation_provenance%22&size=10&sort=bestmatch
+mainregimev2_exact,"""MainRegimeV2""",r5_r3_exact,0,0,0,0,0,https://zenodo.org/api/records?q=%22MainRegimeV2%22&size=10&sort=bestmatch
+native_subhour_label_exact,"""native subhour source label""",r3_exact,0,0,0,0,0,https://zenodo.org/api/records?q=%22native+subhour+source+label%22&size=10&sort=bestmatch
+stock_regime_2026_exact,"""stock market regimes 2026""",r5_context,0,0,0,0,0,https://zenodo.org/api/records?q=%22stock+market+regimes+2026%22&size=10&sort=bestmatch
+market_regime_crisis_exact,"""market regime crisis""",r3_context,0,0,0,0,0,https://zenodo.org/api/records?q=%22market+regime+crisis%22&size=10&sort=bestmatch
+futures_order_lifecycle_spoofing_exact,"""futures order lifecycle spoofing""",r6_context,0,0,0,0,0,https://zenodo.org/api/records?q=%22futures+order+lifecycle+spoofing%22&size=10&sort=bestmatch
+level4_order_book_broad,"""Level 4 Order Book""",order_lifecycle_context,0,1,0,0,1,https://zenodo.org/api/records?q=%22Level+4+Order+Book%22&size=10&sort=bestmatch
+hyperliquid_order_book_broad,Hyperliquid order book,order_lifecycle_context,0,259177,0,0,1,https://zenodo.org/api/records?q=Hyperliquid+order+book&size=10&sort=bestmatch

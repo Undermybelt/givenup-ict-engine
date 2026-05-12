@@ -1,0 +1,9 @@
+PASS loop_id=20260511T012129+0800-codex-direct-l2-parquet-dbn-readability-audit
+PASS report=docs/experiments/actionable-regime-confidence/runs/20260511T012129-codex-direct-l2-parquet-dbn-readability-audit/input-audit/direct_l2_parquet_dbn_readability_report.json
+PASS parquet_decoded=true
+PASS dbn_header_decoded=true
+QUALIFYING_DIRECT_INPUT_SETS=0
+MANIPULATION_INPUT_STATE=missing_required_inputs
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+GATE blocked_missing_required_inputs

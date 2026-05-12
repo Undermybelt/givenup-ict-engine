@@ -1,0 +1,10 @@
+aq_provider_hard_gate_matrix_readback_v1_report_assertions
+report_exists=true
+json_exists=true
+csv_exists=true
+six_provider_matrix_recorded=true
+six_provider_matrix_promotable=false
+promotion_allowed=false
+update_goal=false
+provider_rows=9
+all=true

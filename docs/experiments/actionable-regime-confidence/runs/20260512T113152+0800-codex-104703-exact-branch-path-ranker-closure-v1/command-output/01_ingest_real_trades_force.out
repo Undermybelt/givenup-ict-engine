@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "fcfeca43ac0febb3",
+  "dry_run": false,
+  "feedback_records_inserted": 42,
+  "force": true,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T033152.611968000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": "auto_quant_real_trades_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T033152.528517000Z",
+  "source": "auto_quant_real_trades",
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "trades_applied": 42,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/provider_btc_ema_rsi_real_trades_v1.jsonl",
+  "trades_total": 42
+}

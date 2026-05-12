@@ -1,0 +1,5 @@
+strategy,robust_sharpe,binding_slice,full_sharpe,full_profit_pct,full_trade_count,full_win_rate_pct,profit_floor,min_position_size,pareto_dominated_by
+CrashRebound,0.0847,winter_2022,0.2903,55.69,207,68.5990,FAIL,PASS,none
+PerPairMR,0.0520,winter_2022,0.3512,35.78,519,58.1888,FAIL,PASS,none
+RegimeAdaptiveBNB,0.0967,recovery_23_25,0.1380,16.41,115,69.5652,FAIL,PASS,none
+

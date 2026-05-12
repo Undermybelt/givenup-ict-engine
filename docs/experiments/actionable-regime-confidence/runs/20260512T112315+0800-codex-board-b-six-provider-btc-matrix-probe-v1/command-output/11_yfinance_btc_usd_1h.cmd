@@ -1,0 +1,1 @@
+uv run --with yfinance --with pandas scripts/auto_quant_external/fetch_external.py yahoo --symbol BTC-USD --interval 1h --start 2026-04-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/yfinance_btc_usd_1h.csv 

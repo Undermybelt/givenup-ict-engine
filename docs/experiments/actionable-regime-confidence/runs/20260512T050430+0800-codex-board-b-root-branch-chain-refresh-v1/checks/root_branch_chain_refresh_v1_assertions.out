@@ -1,0 +1,13 @@
+all_commands_exit_zero=True
+branch_path_count=5
+pre_bayes_gate_status=observe_only
+bbn_application_status=skipped
+structural_candidate_set_size=5
+structural_runtime_match_count=5
+execution_phase_candidate_status=execution_blocked
+execution_phase_ready=False
+promotion_allowed=false
+update_goal=false
+policy_training_ready=False
+policy_training_matched_rows={'cisd_rb_long_v1': 0, 'breaker_rb_long_v1': 0}
+structural_validation_summary=Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 ready=false

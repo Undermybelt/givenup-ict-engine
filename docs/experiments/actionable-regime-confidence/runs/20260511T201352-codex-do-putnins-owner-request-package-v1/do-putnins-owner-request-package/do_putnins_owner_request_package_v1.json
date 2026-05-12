@@ -1,0 +1,81 @@
+{
+  "acceptance_conditions": [
+    "All three required files are placed under the intake root.",
+    "Positive rows and matched negative rows include every verifier-required field.",
+    "Every positive matched_negative_group_id has at least one same-group normal-control row.",
+    "provenance_manifest.json identifies source owner, report/section provenance, export or hash ids, and redaction/matching policy.",
+    "After schema readiness, rerun chronological and heldout-symbol/venue Wilson95 calibration before any confidence claim."
+  ],
+  "accepted_rows_added": 0,
+  "decision": "do_putnins_owner_request_package_v1=owner_request_ready_rows_not_acquired",
+  "explicit_non_acceptance": [
+    "Do not use public paper text alone as rows.",
+    "Do not use positive-only regulatory cases without matched controls.",
+    "Do not use synthetic, injected, or simulated spoofing labels.",
+    "Do not use raw order-book panels without source-owned manipulation labels."
+  ],
+  "generated_at_utc": "2026-05-11T12:14:37.650760+00:00",
+  "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "new_confidence_gate": false,
+  "purpose": "Convert the closest R6 spoofing/layering source target into a concrete owner request package.",
+  "raw_data_committed": false,
+  "request_fields": [
+    {
+      "file": "positive_spoofing_layering_rows.csv",
+      "required_content": "Source-owned prosecuted-case positive rows for layering/spoofing events, with the verifier-required fields and stable source_row_id values."
+    },
+    {
+      "file": "matched_negative_normal_activity_rows.csv",
+      "required_content": "Matched same-venue/symbol/session normal-control rows sharing matched_negative_group_id with the positive rows."
+    },
+    {
+      "file": "provenance_manifest.json",
+      "required_content": "Owner/source attribution, pull/export date, source report sections, redaction policy, source hashes or export ids, and matched-control policy."
+    }
+  ],
+  "required_fields": [
+    "label",
+    "source_report",
+    "source_section",
+    "trade_date",
+    "symbol",
+    "venue_or_market_center",
+    "participant_type_code",
+    "participant_identifier",
+    "side",
+    "earliest_order_received_time",
+    "latest_order_received_time",
+    "order_count",
+    "total_order_quantity",
+    "activity_description",
+    "matched_negative_group_id",
+    "session_bucket",
+    "source_row_id"
+  ],
+  "required_files": [
+    "positive_spoofing_layering_rows.csv",
+    "matched_negative_normal_activity_rows.csv",
+    "provenance_manifest.json"
+  ],
+  "run_id": "20260511T201352-codex-do-putnins-owner-request-package-v1",
+  "runtime_code_changed": false,
+  "source_candidate": {
+    "candidate_id": "do_putnins_2023_detecting_layering_spoofing",
+    "disposition": "blocked_owner_approval_or_export_required",
+    "has_matched_controls": "False",
+    "has_public_row_export": "False",
+    "has_row_level_positive_hint": "True",
+    "mirror_or_readback_url": "https://studylib.net/doc/28317823/ssrn-4525036",
+    "name": "Detecting Layering and Spoofing in Markets",
+    "reason": "High-value owner/contact target, but no public owner-approved positive/control row package or provenance manifest was found.",
+    "source_owned_or_owner_approved": "False",
+    "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036",
+    "target_species": "spoofing_layering"
+  },
+  "strict_full_objective_achieved": false,
+  "target_species": "spoofing_layering",
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verification_command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake"
+}

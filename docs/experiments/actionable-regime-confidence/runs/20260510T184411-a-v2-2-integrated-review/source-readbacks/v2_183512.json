@@ -1,0 +1,354 @@
+{
+  "schema_version": "board-a-actionable-regime-confidence-evidence/v2",
+  "loop_id": "20260510T183512+0800-board-a-v2-provider-agreement-calibration-codex",
+  "board": "Actionable Regime Confidence",
+  "durable_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T183512",
+  "source_run_roots": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T174651",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T183017"
+  ],
+  "scope": {
+    "markets": [
+      "QQQ",
+      "NQ"
+    ],
+    "timeframes": [
+      "1h",
+      "15m"
+    ],
+    "profitability_evaluated": false,
+    "regime_confidence_only": true
+  },
+  "provider_packet": {
+    "artifact": "provider/provider_status_codex.json",
+    "providers": {
+      "yfinance_nq_15m": {
+        "artifact": "provider/yf_nq_15m.csv",
+        "rows": 519,
+        "first": "2026-05-01 00:00:00+00:00",
+        "last": "2026-05-08 20:59:59+00:00",
+        "ready": true
+      },
+      "yfinance_qqq_1h": {
+        "artifact": "provider/yf_qqq_1h.csv",
+        "rows": 43,
+        "first": "2026-05-01 13:30:00+00:00",
+        "last": "2026-05-08 20:00:00+00:00",
+        "ready": true
+      },
+      "ibkr_qqq_1h": {
+        "artifact": "provider/ibkr_qqq_1h.csv",
+        "rows": 160,
+        "first": "2026-04-27T08:00:00+00:00",
+        "last": "2026-05-08T23:00:00+00:00",
+        "ready": true
+      },
+      "kraken_pf_xbtusd_15m": {
+        "artifact": "provider/kraken_pf_xbtusd_15m.csv",
+        "rows": 865,
+        "first": "2026-05-01 00:00:00+00:00",
+        "last": "2026-05-10 00:00:00+00:00",
+        "ready": true
+      },
+      "auto_quant_cache_nq_15m": {
+        "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+        "rows": 351288,
+        "first_ms": 1294009200000,
+        "last_ms": 1767217500000,
+        "ready": true
+      },
+      "auto_quant_cache_nq_1h": {
+        "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+        "rows": 89250,
+        "first_ms": 1294009200000,
+        "last_ms": 1767214800000,
+        "ready": true
+      },
+      "auto_quant_cache_nq_4h": {
+        "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-4h.feather",
+        "rows": 23879,
+        "first_ms": 1293998400000,
+        "last_ms": 1767211200000,
+        "ready": true
+      },
+      "auto_quant_cache_nq_1d": {
+        "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1d.feather",
+        "rows": 4651,
+        "first_ms": 1293926400000,
+        "last_ms": 1767139200000,
+        "ready": true
+      },
+      "tradingview_remix": {
+        "status_artifact": "provider/tradingviewremix_status_agent.json",
+        "fetch_artifact": "provider/tradingviewremix_qqq_1d_fetch.json",
+        "ready": false,
+        "reason": "tradingview_mcp_connectivity_probe_failed in provider-status; copied durable fetch/status evidence from 20260510T174651 for this run packet",
+        "fetch_top_level_keys": [
+          "plan",
+          "results"
+        ],
+        "status_pending": []
+      }
+    }
+  },
+  "filter_and_label_packet": {
+    "artifact": "provider-agreement-v2/provider_agreement_v2_probe_report.json",
+    "regime_families": [
+      "ProviderAgreementTrendExpansion",
+      "ProviderDisagreementTransitionGuardrail"
+    ],
+    "blocked_leakage_fields": [
+      "branch",
+      "decision_hint",
+      "duration_remaining_expected_bars",
+      "execution_readiness",
+      "gate_status",
+      "hybrid_transition_hazard",
+      "readiness_gap_to_observe",
+      "readiness_gap_to_ready",
+      "same_surface_execution_tree_categorical"
+    ],
+    "threshold_policy": {
+      "precision_wilson_lcb_95": 0.95,
+      "thresholds_relaxed": false,
+      "calibration_support_min": 120,
+      "test_support_min": 60,
+      "ece_max": 0.05,
+      "coverage_min": 0.03
+    },
+    "overall_decision": "no_95_candidate",
+    "accepted_95_count": 0,
+    "lanes": [
+      {
+        "lane_id": "qqq_nq_related_provider_agreement_1h",
+        "market": "QQQ,NQ",
+        "timeframe": "1h/15m",
+        "provider_observations": [
+          "qqq_yfinance_1h",
+          "nq_autoquant_1h",
+          "nq_autoquant_15m",
+          "nq_autoquant_4h"
+        ],
+        "board_eligible": true,
+        "row_count": 2754,
+        "split": {
+          "train": 1377,
+          "calibration": 688,
+          "test": 689
+        },
+        "accepted_95_count": 0,
+        "selected_candidate": {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h4",
+          "threshold": 0.6086956521739131,
+          "calibration_support": 221,
+          "calibration_success": 145,
+          "calibration_precision": 0.6561085972850679,
+          "calibration_wilson_lcb_95": 0.5912960851806123,
+          "test_support": 94,
+          "test_success": 66,
+          "test_precision": 0.7021276595744681,
+          "precision_wilson_lcb_95": 0.6032278520902813,
+          "ece": 0.0771029471253517,
+          "coverage": 0.13642960812772134,
+          "accepted_95": false,
+          "board_eligible": true
+        },
+        "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T183512/provider-agreement-v2/qqq_nq_related_provider_agreement_1h/provider_agreement_v2_features.csv",
+        "lane_summary": "provider-agreement-v2/qqq_nq_related_provider_agreement_1h/provider_agreement_v2_lane_summary.json"
+      },
+      {
+        "lane_id": "nq_autoquant_multitimeframe_agreement_15m",
+        "market": "NQ",
+        "timeframe": "15m",
+        "provider_observations": [
+          "nq_autoquant_15m",
+          "nq_autoquant_1h",
+          "nq_autoquant_4h",
+          "nq_autoquant_1d"
+        ],
+        "board_eligible": false,
+        "row_count": 87822,
+        "split": {
+          "train": 43911,
+          "calibration": 21955,
+          "test": 21956
+        },
+        "accepted_95_count": 0,
+        "selected_candidate": {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h16",
+          "threshold": 0.9762470308788599,
+          "calibration_support": 521,
+          "calibration_success": 510,
+          "calibration_precision": 0.9788867562380038,
+          "calibration_wilson_lcb_95": 0.9625927245954594,
+          "test_support": 392,
+          "test_success": 387,
+          "test_precision": 0.9872448979591837,
+          "precision_wilson_lcb_95": 0.9704930122116464,
+          "ece": 0.008790719375636136,
+          "coverage": 0.01785388959737657,
+          "accepted_95": false,
+          "board_eligible": false
+        },
+        "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T183512/provider-agreement-v2/nq_autoquant_multitimeframe_agreement_15m/provider_agreement_v2_features.csv",
+        "lane_summary": "provider-agreement-v2/nq_autoquant_multitimeframe_agreement_15m/provider_agreement_v2_lane_summary.json"
+      }
+    ]
+  },
+  "calibration_result": {
+    "accepted_gate": "none",
+    "board_state": "abstain",
+    "blocker": "abstain_no_calibrated_release_rule",
+    "eligible_lane_best": {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h4",
+      "threshold": 0.6086956521739131,
+      "calibration_support": 221,
+      "calibration_success": 145,
+      "calibration_precision": 0.6561085972850679,
+      "calibration_wilson_lcb_95": 0.5912960851806123,
+      "test_support": 94,
+      "test_success": 66,
+      "test_precision": 0.7021276595744681,
+      "precision_wilson_lcb_95": 0.6032278520902813,
+      "ece": 0.0771029471253517,
+      "coverage": 0.13642960812772134,
+      "accepted_95": false,
+      "board_eligible": true
+    },
+    "sidecar_note": "NQ Auto-Quant multi-timeframe sidecar is not board-eligible by itself because all observations come from one local cache; it also misses coverage_min=0.03 despite high Wilson LCB.",
+    "sidecar_best": {
+      "candidate_kind": "catboost_isotonic",
+      "target": "target_release_long_h16",
+      "threshold": 0.9762470308788599,
+      "calibration_support": 521,
+      "calibration_success": 510,
+      "calibration_precision": 0.9788867562380038,
+      "calibration_wilson_lcb_95": 0.9625927245954594,
+      "test_support": 392,
+      "test_success": 387,
+      "test_precision": 0.9872448979591837,
+      "precision_wilson_lcb_95": 0.9704930122116464,
+      "ece": 0.008790719375636136,
+      "coverage": 0.01785388959737657,
+      "accepted_95": false,
+      "board_eligible": false
+    }
+  },
+  "downstream_chain_readback": {
+    "artifacts": {
+      "pre_bayes": "downstream-readback/pre_bayes_status_qqq.json",
+      "policy_training_status": "downstream-readback/policy_training_status_qqq.json",
+      "workflow_status": "downstream-readback/workflow_status_qqq.json",
+      "execution_tree_trace": "downstream-readback/execution_tree_trace_qqq.json",
+      "auto_quant_status_nested": "downstream-readback/auto_quant_status_nested.json",
+      "provider_status_agent": "downstream-readback/logs/provider_status_agent.out"
+    },
+    "pre_bayes": {
+      "latest_gate_status": "pass_neutralized",
+      "latest_uses_soft_evidence": true,
+      "latest_canonical_structural_active_regime": "range",
+      "latest_canonical_structural_confidence": 0.787391520271245
+    },
+    "bbn_soft_evidence": {
+      "uses_soft_evidence": true,
+      "latest_soft_evidence": {
+        "factor_alignment": {
+          "bearish": 0.0,
+          "bullish": 0.0,
+          "mixed": 1.0
+        },
+        "factor_uncertainty": {
+          "high": 0.4136368201448699,
+          "low": 0.5863631798551301
+        },
+        "liquidity_context": {
+          "favorable": 0.0,
+          "hostile": 0.0,
+          "neutral": 1.0
+        },
+        "market_regime": {
+          "range": 1.0,
+          "stress": 0.0,
+          "transition": 0.0,
+          "trend": 0.0
+        },
+        "multi_timeframe_resonance": {
+          "aligned": 0.5863631798551301,
+          "dislocated": 0.0,
+          "mixed": 0.4136368201448699
+        }
+      }
+    },
+    "catboost": {
+      "provider_agreement_probe_used_catboost_isotonic": true,
+      "policy_training_summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural_path_ranking_target rows=1 history_rows=1375 mature_rows=1 history_mature_rows=1367 raw_scored_mature=1367/30 production_validation=1367/30 observation_validation=36/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=1",
+      "structural_path_ranking_runtime_summary": "Ranker runtime: structural_path_ranking_target rows=1 history_rows=1375 mature_rows=1 history_mature_rows=1367 raw_scored_mature=1367/30 production_validation=1367/30 observation_validation=36/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=1",
+      "path_ranker_model_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/catboost-path-ranker-qqq-replay-36-mature-only/catboost_model.cbm",
+      "path_ranker_trainer_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/catboost-path-ranker-qqq-replay-36-mature-only/trainer_artifact.json"
+    },
+    "execution_tree": {
+      "gate_status": "observe",
+      "branch": "transition_guardrail",
+      "execution_bias": "guarded",
+      "decision_hint": "execution_guarded_due_to_low_remaining_regime_duration",
+      "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/ready",
+      "path_ranker_score_visible_to_execution_tree": false,
+      "path_ranker_score_used_by_execution_tree": false,
+      "path_ranker_model_family_in_trace": "unknown",
+      "ranker_validation_ready": true
+    },
+    "auto_quant_status_note": {
+      "ict_engine_managed_dependency_status": "missing_dependency",
+      "local_auto_quant_cache_used": true,
+      "reason": "The Board A v2 probe consumed the existing /Users/thrill3r/Auto-Quant/user_data/data feather cache directly; managed dependency bootstrap status is not treated as a data blocker for this loop."
+    },
+    "workflow_latest_execution_candidate": {
+      "actionable": false,
+      "artifact_id": "execution-candidate:QQQ:analyze:v37",
+      "candidate_status": "no_trade",
+      "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=5|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.545|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9972",
+      "generated_at": "2026-05-10T09:46:00.638872Z",
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+        "multi_timeframe_missing=1m,5m,30m,4h",
+        "15m:120 bars path=<local-path>",
+        "1h:120 bars path=<local-path>",
+        "1d:120 bars path=<local-path>",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=1.0000",
+        "lower_timeframe_entry_alignment_score=0.9972"
+      ],
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/structural-replay-qqq-36/state/QQQ/execution_candidate.json",
+      "posterior_delta": -0.03392996555647254,
+      "pre_bayes_bridge_selected_entry_quality": "medium",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "review_reason": "candidate_not_actionable",
+      "review_rule_version": "7bfaf4a346c607e8",
+      "review_status": "observe",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:QQQ:20260510T094600.638Z",
+      "symbol": "QQQ",
+      "top_factor_action": "tune",
+      "top_factor_name": "structure_ict",
+      "trade_direction": "Bull",
+      "version": 37,
+      "win_probability_delta": -0.07916991963741737
+    }
+  },
+  "board_b_handoff": {
+    "emitted": false,
+    "reason": "No accepted 95% or 99% regime packet. Board B remains blocked.",
+    "accepted_regime_packet": null
+  },
+  "commands": [
+    "uv run --python 3.11 --with pandas --with numpy --with pyarrow --with scikit-learn --with catboost python .../provider_agreement_v2_probe.py",
+    "./target/debug/ict-engine provider-status --agent",
+    "./target/debug/ict-engine pre-bayes-status --symbol QQQ --state-dir <structural-replay-state> --refresh --output-format json",
+    "./target/debug/ict-engine policy-training-status --symbol QQQ --state-dir <structural-replay-state> --output-format json",
+    "./target/debug/ict-engine workflow-status --symbol QQQ --state-dir <structural-replay-state> --refresh --output-format json"
+  ],
+  "next_action": "A-v2-2. Repair fresh Auto-Quant tmp runner data binding, extend QQQ/NQ chronological support with longer yfinance+IBKR same-market windows, and restore TradingViewRemix health before rerunning provider-agreement calibration."
+}

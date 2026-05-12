@@ -1,0 +1,5 @@
+instrument,root,fixed_gate_current_acceptance,calibration_2024_support,calibration_2024_wilson95_lcb,calibration_2024_passes,heldout_2025_support,heldout_2025_wilson95_lcb,heldout_2025_passes,jan2026_source_tail_sessions,jan2026_tail_wilson95_lcb,future_heldout_2025_plus_jan2026_support,future_heldout_2025_plus_jan2026_wilson95_lcb,future_heldout_2025_plus_jan2026_passes,provider_1h_covers_tail,eligible_for_future_rerun,accepted_now,allowed_use
+ABBV,Sideways,blocked,75,0.9512761575,true,67,0.9457738606,false,19,0.8318207759,86,0.9572418027,true,true,true,false,predeclared_future_chronological_gate_only
+TMO,Bull,blocked,118,0.9684716610,true,67,0.9457738606,false,18,0.8241207764,85,0.9567605162,true,true,true,false,predeclared_future_chronological_gate_only
+HD,Bull,blocked,162,0.9768365592,true,69,0.9472627418,false,15,0.7961166990,84,0.9562682716,true,true,true,false,predeclared_future_chronological_gate_only
+AMD,Bull,blocked,76,0.9518864149,true,62,0.9416559279,false,12,0.7575059933,74,0.9506502206,true,true,true,false,predeclared_future_chronological_gate_only

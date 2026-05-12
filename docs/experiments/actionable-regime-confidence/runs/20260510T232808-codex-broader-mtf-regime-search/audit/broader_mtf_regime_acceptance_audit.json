@@ -1,0 +1,1267 @@
+{
+  "schema_version": "board-a-broader-mtf-regime-search/v1",
+  "loop_id": "20260510T232808+0800-codex-broader-mtf-regime-search",
+  "objective": "Build broader aligned multi-timeframe evidence for TrendExpansion, ExtremeStress, ReversalBrewing, and ThinLiquidity under unchanged 95% gates.",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T232808-codex-broader-mtf-regime-search",
+  "input_source_manifest": [
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+      "rows_used": 80000,
+      "first_ts": "2022-08-10T17:15:00+00:00",
+      "last_ts": "2025-12-31T21:45:00+00:00",
+      "context": "NQ:AQ_futures:15m"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+      "rows_used": 80000,
+      "first_ts": "2012-07-09T15:00:00+00:00",
+      "last_ts": "2025-12-31T21:00:00+00:00",
+      "context": "NQ:AQ_futures:1h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-4h.feather",
+      "rows_used": 23879,
+      "first_ts": "2011-01-02T20:00:00+00:00",
+      "last_ts": "2025-12-31T20:00:00+00:00",
+      "context": "NQ:AQ_futures:4h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-15m.feather",
+      "rows_used": 6490,
+      "first_ts": "2025-05-07T13:30:00+00:00",
+      "last_ts": "2026-05-06T19:45:00+00:00",
+      "context": "SPY:AQ_ETF:15m"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-1h.feather",
+      "rows_used": 1746,
+      "first_ts": "2025-05-07T13:00:00+00:00",
+      "last_ts": "2026-05-06T17:00:00+00:00",
+      "context": "SPY:AQ_ETF:1h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-15m.feather",
+      "rows_used": 6490,
+      "first_ts": "2025-05-07T13:30:00+00:00",
+      "last_ts": "2026-05-06T19:45:00+00:00",
+      "context": "IWM:AQ_ETF:15m"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-1h.feather",
+      "rows_used": 1746,
+      "first_ts": "2025-05-07T13:00:00+00:00",
+      "last_ts": "2026-05-06T17:00:00+00:00",
+      "context": "IWM:AQ_ETF:1h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-1h.feather",
+      "rows_used": 2755,
+      "first_ts": "2024-06-03T13:00:00+00:00",
+      "last_ts": "2026-05-08T20:00:00+00:00",
+      "context": "QQQ:AQ_ETF:1h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-4h.feather",
+      "rows_used": 913,
+      "first_ts": "2024-06-03T12:00:00+00:00",
+      "last_ts": "2026-05-08T20:00:00+00:00",
+      "context": "QQQ:AQ_ETF:4h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1h.feather",
+      "rows_used": 44504,
+      "first_ts": "2021-01-01T00:00:00+00:00",
+      "last_ts": "2026-01-29T21:00:00+00:00",
+      "context": "BTCT:AQ_crypto:1h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-4h.feather",
+      "rows_used": 11377,
+      "first_ts": "2021-01-01T00:00:00+00:00",
+      "last_ts": "2026-03-12T00:00:00+00:00",
+      "context": "BTCT:AQ_crypto:4h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1h.feather",
+      "rows_used": 44504,
+      "first_ts": "2021-01-01T00:00:00+00:00",
+      "last_ts": "2026-01-29T21:00:00+00:00",
+      "context": "ETHT:AQ_crypto:1h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-4h.feather",
+      "rows_used": 11377,
+      "first_ts": "2021-01-01T00:00:00+00:00",
+      "last_ts": "2026-03-12T00:00:00+00:00",
+      "context": "ETHT:AQ_crypto:4h"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-15m.feather",
+      "rows_used": 6487,
+      "first_ts": "2025-05-07T13:30:00+00:00",
+      "last_ts": "2026-05-06T19:45:00+00:00",
+      "context": "GLD:AQ_ETF:15m"
+    },
+    {
+      "source_file": "/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-1h.feather",
+      "rows_used": 1742,
+      "first_ts": "2025-05-07T13:00:00+00:00",
+      "last_ts": "2026-05-06T17:00:00+00:00",
+      "context": "GLD:AQ_ETF:1h"
+    }
+  ],
+  "source_policy": {
+    "source": "local Auto-Quant feather data only",
+    "tail_rows_per_source": 80000,
+    "network_fetch": false,
+    "runtime_code_changed": false
+  },
+  "threshold_policy": {
+    "thresholds_relaxed": false,
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2,
+    "segment_floor_min_support": 60,
+    "segment_floor_wilson_lcb_95_min": 0.95,
+    "blocked_predictor_prefixes": [
+      "future_",
+      "target_"
+    ]
+  },
+  "inherited_strict_pass_regimes": [
+    "SessionLiquidityCoreViable",
+    "RangeConsolidation"
+  ],
+  "new_broader_mtf_packets": [
+    {
+      "accepted_regime_id": "TrendExpansion",
+      "qualifying_condition": "trend_base AND drawdown64 >= -0.001320604675",
+      "target_label": "target_trend_structural_next",
+      "predictor_fields": [
+        "trend_base",
+        "drawdown64"
+      ],
+      "blocked_predictor_fields": [],
+      "confidence_lane": "95",
+      "calibration_support": 5621,
+      "test_support": 5562,
+      "precision_wilson_lcb": 0.9910527961060215,
+      "ece": 0.0002458418471186219,
+      "coverage": 0.06867260133591792,
+      "validation_instruments": [
+        "BTCT",
+        "ETHT",
+        "GLD",
+        "IWM",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "AQ_ETF",
+        "AQ_crypto",
+        "AQ_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "validation_contexts": [
+        "BTCT:AQ_crypto:1h",
+        "BTCT:AQ_crypto:4h",
+        "ETHT:AQ_crypto:1h",
+        "ETHT:AQ_crypto:4h",
+        "GLD:AQ_ETF:15m",
+        "GLD:AQ_ETF:1h",
+        "IWM:AQ_ETF:15m",
+        "IWM:AQ_ETF:1h",
+        "NQ:AQ_futures:15m",
+        "NQ:AQ_futures:1h",
+        "NQ:AQ_futures:4h",
+        "QQQ:AQ_ETF:1h",
+        "QQQ:AQ_ETF:4h",
+        "SPY:AQ_ETF:15m",
+        "SPY:AQ_ETF:1h"
+      ],
+      "validation_periods": {
+        "train": {
+          "support": 10602,
+          "success": 10553,
+          "precision": 0.9953782305225429,
+          "precision_wilson_lcb_95": 0.993895549020956,
+          "coverage": 0.06544363649831483,
+          "ece": 0.0
+        },
+        "calibration": {
+          "support": 5621,
+          "success": 5586,
+          "precision": 0.9937733499377335,
+          "precision_wilson_lcb_95": 0.9913529351037209,
+          "coverage": 0.06939506172839506,
+          "ece": 0.0016048805848094538
+        },
+        "test": {
+          "support": 5562,
+          "success": 5526,
+          "precision": 0.9935275080906149,
+          "precision_wilson_lcb_95": 0.9910527961060215,
+          "coverage": 0.06867260133591792,
+          "ece": 0.0002458418471186219
+        }
+      },
+      "segment_metrics": {
+        "by_timeframe": [
+          {
+            "timeframe": "15m",
+            "support": 3125,
+            "success": 3095,
+            "precision": 0.9904,
+            "precision_wilson_lcb_95": 0.9863286371829538,
+            "passes_segment_floor": true
+          },
+          {
+            "timeframe": "1h",
+            "support": 2050,
+            "success": 2044,
+            "precision": 0.9970731707317073,
+            "precision_wilson_lcb_95": 0.9936289737572072,
+            "passes_segment_floor": true
+          },
+          {
+            "timeframe": "4h",
+            "support": 387,
+            "success": 387,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9901713118350207,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_context": [
+          {
+            "context": "BTCT:AQ_crypto:1h",
+            "support": 163,
+            "success": 163,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9769753941984973,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "BTCT:AQ_crypto:4h",
+            "support": 19,
+            "success": 19,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8318207759473837,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "ETHT:AQ_crypto:1h",
+            "support": 64,
+            "success": 63,
+            "precision": 0.984375,
+            "precision_wilson_lcb_95": 0.9166589839990573,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "ETHT:AQ_crypto:4h",
+            "support": 4,
+            "success": 4,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.5101091635454027,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "GLD:AQ_ETF:15m",
+            "support": 74,
+            "success": 74,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9506502206036139,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "GLD:AQ_ETF:1h",
+            "support": 7,
+            "success": 7,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.6456695649333126,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "IWM:AQ_ETF:15m",
+            "support": 123,
+            "success": 121,
+            "precision": 0.983739837398374,
+            "precision_wilson_lcb_95": 0.9426495637343935,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "IWM:AQ_ETF:1h",
+            "support": 13,
+            "success": 13,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.7719046276458015,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "NQ:AQ_futures:15m",
+            "support": 2756,
+            "success": 2729,
+            "precision": 0.9902031930333817,
+            "precision_wilson_lcb_95": 0.9857834580015983,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "NQ:AQ_futures:1h",
+            "support": 1695,
+            "success": 1690,
+            "precision": 0.9970501474926253,
+            "precision_wilson_lcb_95": 0.9931130515196123,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "NQ:AQ_futures:4h",
+            "support": 348,
+            "success": 348,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9890818471661355,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "QQQ:AQ_ETF:1h",
+            "support": 67,
+            "success": 67,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9457738606086981,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "QQQ:AQ_ETF:4h",
+            "support": 16,
+            "success": 16,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8063923194655636,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "SPY:AQ_ETF:15m",
+            "support": 172,
+            "success": 171,
+            "precision": 0.9941860465116279,
+            "precision_wilson_lcb_95": 0.9678070122483098,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "SPY:AQ_ETF:1h",
+            "support": 41,
+            "success": 41,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.914332429815568,
+            "passes_segment_floor": false
+          }
+        ],
+        "by_market": [
+          {
+            "market": "AQ_ETF",
+            "support": 513,
+            "success": 510,
+            "precision": 0.9941520467836257,
+            "precision_wilson_lcb_95": 0.98294924079554,
+            "passes_segment_floor": true
+          },
+          {
+            "market": "AQ_crypto",
+            "support": 250,
+            "success": 249,
+            "precision": 0.996,
+            "precision_wilson_lcb_95": 0.9776942144345839,
+            "passes_segment_floor": true
+          },
+          {
+            "market": "AQ_futures",
+            "support": 4799,
+            "success": 4767,
+            "precision": 0.9933319441550323,
+            "precision_wilson_lcb_95": 0.990602100779657,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_instrument": [
+          {
+            "instrument": "BTCT",
+            "support": 182,
+            "success": 182,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.979329376528407,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "ETHT",
+            "support": 68,
+            "success": 67,
+            "precision": 0.9852941176470589,
+            "precision_wilson_lcb_95": 0.9212902687183915,
+            "passes_segment_floor": false
+          },
+          {
+            "instrument": "GLD",
+            "support": 81,
+            "success": 81,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9547219145675847,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "IWM",
+            "support": 136,
+            "success": 134,
+            "precision": 0.9852941176470589,
+            "precision_wilson_lcb_95": 0.9479682711340823,
+            "passes_segment_floor": false
+          },
+          {
+            "instrument": "NQ",
+            "support": 4799,
+            "success": 4767,
+            "precision": 0.9933319441550323,
+            "precision_wilson_lcb_95": 0.990602100779657,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "QQQ",
+            "support": 83,
+            "success": 83,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9557646903580262,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "SPY",
+            "support": 213,
+            "success": 212,
+            "precision": 0.9953051643192489,
+            "precision_wilson_lcb_95": 0.9738903883606694,
+            "passes_segment_floor": true
+          }
+        ],
+        "strong_timeframes": [
+          "15m",
+          "1h",
+          "4h"
+        ],
+        "strong_contexts": [
+          "BTCT:AQ_crypto:1h",
+          "GLD:AQ_ETF:15m",
+          "NQ:AQ_futures:15m",
+          "NQ:AQ_futures:1h",
+          "NQ:AQ_futures:4h",
+          "SPY:AQ_ETF:15m"
+        ],
+        "weak_segments": [
+          {
+            "segment_type": "context",
+            "context": "IWM:AQ_ETF:15m",
+            "support": 123,
+            "success": 121,
+            "precision": 0.983739837398374,
+            "precision_wilson_lcb_95": 0.9426495637343935,
+            "passes_segment_floor": false
+          }
+        ]
+      },
+      "passes_board_gate_95_cross_market_timeframe": true,
+      "passes_segment_floor": true,
+      "passes_broader_mtf_gate": true,
+      "trade_usable": false
+    },
+    {
+      "accepted_regime_id": "ExtremeStress",
+      "qualifying_condition": "stress_base AND range_ratio32_128 >= 1.399149536",
+      "target_label": "target_stress_next",
+      "predictor_fields": [
+        "stress_base",
+        "range_ratio32_128"
+      ],
+      "blocked_predictor_fields": [],
+      "confidence_lane": "95",
+      "calibration_support": 7117,
+      "test_support": 5294,
+      "precision_wilson_lcb": 0.996526155221351,
+      "ece": 0.0004997160366541076,
+      "coverage": 0.0653636734038744,
+      "validation_instruments": [
+        "BTCT",
+        "ETHT",
+        "GLD",
+        "IWM",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "AQ_ETF",
+        "AQ_crypto",
+        "AQ_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "validation_contexts": [
+        "BTCT:AQ_crypto:1h",
+        "BTCT:AQ_crypto:4h",
+        "ETHT:AQ_crypto:1h",
+        "ETHT:AQ_crypto:4h",
+        "GLD:AQ_ETF:15m",
+        "GLD:AQ_ETF:1h",
+        "IWM:AQ_ETF:15m",
+        "IWM:AQ_ETF:1h",
+        "NQ:AQ_futures:15m",
+        "NQ:AQ_futures:1h",
+        "NQ:AQ_futures:4h",
+        "QQQ:AQ_ETF:1h",
+        "SPY:AQ_ETF:15m",
+        "SPY:AQ_ETF:1h"
+      ],
+      "validation_periods": {
+        "train": {
+          "support": 11258,
+          "success": 11236,
+          "precision": 0.9980458340735477,
+          "precision_wilson_lcb_95": 0.9970428026906659,
+          "coverage": 0.06949296922260219,
+          "ece": 0.0
+        },
+        "calibration": {
+          "support": 7117,
+          "success": 7100,
+          "precision": 0.9976113530982156,
+          "precision_wilson_lcb_95": 0.996177755518369,
+          "coverage": 0.08786419753086419,
+          "ece": 0.00043448097533216323
+        },
+        "test": {
+          "support": 5294,
+          "success": 5284,
+          "precision": 0.9981110691348697,
+          "precision_wilson_lcb_95": 0.996526155221351,
+          "coverage": 0.0653636734038744,
+          "ece": 0.0004997160366541076
+        }
+      },
+      "segment_metrics": {
+        "by_timeframe": [
+          {
+            "timeframe": "15m",
+            "support": 2222,
+            "success": 2213,
+            "precision": 0.995949594959496,
+            "precision_wilson_lcb_95": 0.9923197337947789,
+            "passes_segment_floor": true
+          },
+          {
+            "timeframe": "1h",
+            "support": 2355,
+            "success": 2354,
+            "precision": 0.9995753715498938,
+            "precision_wilson_lcb_95": 0.997598551177877,
+            "passes_segment_floor": true
+          },
+          {
+            "timeframe": "4h",
+            "support": 717,
+            "success": 717,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.994670868644294,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_context": [
+          {
+            "context": "BTCT:AQ_crypto:1h",
+            "support": 812,
+            "success": 812,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9952914150425171,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "BTCT:AQ_crypto:4h",
+            "support": 216,
+            "success": 216,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9825262312154358,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "ETHT:AQ_crypto:1h",
+            "support": 635,
+            "success": 634,
+            "precision": 0.9984251968503937,
+            "precision_wilson_lcb_95": 0.9911342137760469,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "ETHT:AQ_crypto:4h",
+            "support": 220,
+            "success": 220,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9828384838048643,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "GLD:AQ_ETF:15m",
+            "support": 127,
+            "success": 127,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9706403547062368,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "GLD:AQ_ETF:1h",
+            "support": 34,
+            "success": 34,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.898485445846676,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "IWM:AQ_ETF:15m",
+            "support": 20,
+            "success": 20,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8388748419471806,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "IWM:AQ_ETF:1h",
+            "support": 9,
+            "success": 9,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.700854951580456,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "NQ:AQ_futures:15m",
+            "support": 2049,
+            "success": 2040,
+            "precision": 0.9956076134699854,
+            "precision_wilson_lcb_95": 0.9916729578291772,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "NQ:AQ_futures:1h",
+            "support": 801,
+            "success": 801,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9952270614559009,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "NQ:AQ_futures:4h",
+            "support": 281,
+            "success": 281,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9865136948932972,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "QQQ:AQ_ETF:1h",
+            "support": 60,
+            "success": 60,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.93982814785791,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "SPY:AQ_ETF:15m",
+            "support": 26,
+            "success": 26,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8712710781407846,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "SPY:AQ_ETF:1h",
+            "support": 4,
+            "success": 4,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.5101091635454027,
+            "passes_segment_floor": false
+          }
+        ],
+        "by_market": [
+          {
+            "market": "AQ_ETF",
+            "support": 280,
+            "success": 280,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9864661813793707,
+            "passes_segment_floor": true
+          },
+          {
+            "market": "AQ_crypto",
+            "support": 1883,
+            "success": 1882,
+            "precision": 0.9994689325544344,
+            "precision_wilson_lcb_95": 0.9969978598316777,
+            "passes_segment_floor": true
+          },
+          {
+            "market": "AQ_futures",
+            "support": 3131,
+            "success": 3122,
+            "precision": 0.9971255190035132,
+            "precision_wilson_lcb_95": 0.9945457061945863,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_instrument": [
+          {
+            "instrument": "BTCT",
+            "support": 1028,
+            "success": 1028,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9962770842479185,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "ETHT",
+            "support": 855,
+            "success": 854,
+            "precision": 0.9988304093567252,
+            "precision_wilson_lcb_95": 0.9934049346789208,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "GLD",
+            "support": 161,
+            "success": 161,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9766960396481769,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "IWM",
+            "support": 29,
+            "success": 29,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8830302015002593,
+            "passes_segment_floor": false
+          },
+          {
+            "instrument": "NQ",
+            "support": 3131,
+            "success": 3122,
+            "precision": 0.9971255190035132,
+            "precision_wilson_lcb_95": 0.9945457061945863,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "QQQ",
+            "support": 60,
+            "success": 60,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.93982814785791,
+            "passes_segment_floor": false
+          },
+          {
+            "instrument": "SPY",
+            "support": 30,
+            "success": 30,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8864866068260312,
+            "passes_segment_floor": false
+          }
+        ],
+        "strong_timeframes": [
+          "15m",
+          "1h",
+          "4h"
+        ],
+        "strong_contexts": [
+          "BTCT:AQ_crypto:1h",
+          "BTCT:AQ_crypto:4h",
+          "ETHT:AQ_crypto:1h",
+          "ETHT:AQ_crypto:4h",
+          "GLD:AQ_ETF:15m",
+          "NQ:AQ_futures:15m",
+          "NQ:AQ_futures:1h",
+          "NQ:AQ_futures:4h"
+        ],
+        "weak_segments": []
+      },
+      "passes_board_gate_95_cross_market_timeframe": true,
+      "passes_segment_floor": true,
+      "passes_broader_mtf_gate": true,
+      "trade_usable": false
+    },
+    {
+      "accepted_regime_id": "ReversalBrewing",
+      "qualifying_condition": "stretch64 <= -0.03869250919",
+      "target_label": "target_reversal_next",
+      "predictor_fields": [
+        "stretch64"
+      ],
+      "blocked_predictor_fields": [],
+      "confidence_lane": "95",
+      "calibration_support": 2625,
+      "test_support": 3229,
+      "precision_wilson_lcb": 0.9828207633459932,
+      "ece": 0.0001260009733221601,
+      "coverage": 0.03986764288271826,
+      "validation_instruments": [
+        "BTCT",
+        "ETHT",
+        "GLD",
+        "IWM",
+        "NQ",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "AQ_ETF",
+        "AQ_crypto",
+        "AQ_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "validation_contexts": [
+        "BTCT:AQ_crypto:1h",
+        "BTCT:AQ_crypto:4h",
+        "ETHT:AQ_crypto:1h",
+        "ETHT:AQ_crypto:4h",
+        "GLD:AQ_ETF:15m",
+        "GLD:AQ_ETF:1h",
+        "IWM:AQ_ETF:1h",
+        "NQ:AQ_futures:15m",
+        "NQ:AQ_futures:1h",
+        "NQ:AQ_futures:4h",
+        "QQQ:AQ_ETF:1h",
+        "QQQ:AQ_ETF:4h"
+      ],
+      "validation_periods": {
+        "train": {
+          "support": 8086,
+          "success": 7921,
+          "precision": 0.9795943606232995,
+          "precision_wilson_lcb_95": 0.9762773289536673,
+          "coverage": 0.049912964037481015,
+          "ece": 0.0
+        },
+        "calibration": {
+          "support": 2625,
+          "success": 2592,
+          "precision": 0.9874285714285714,
+          "precision_wilson_lcb_95": 0.9823981231474428,
+          "coverage": 0.032407407407407406,
+          "ece": 0.007834210805271913
+        },
+        "test": {
+          "support": 3229,
+          "success": 3188,
+          "precision": 0.9873025704552493,
+          "precision_wilson_lcb_95": 0.9828207633459932,
+          "coverage": 0.03986764288271826,
+          "ece": 0.0001260009733221601
+        }
+      },
+      "segment_metrics": {
+        "by_timeframe": [
+          {
+            "timeframe": "15m",
+            "support": 53,
+            "success": 53,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.932418011423458,
+            "passes_segment_floor": false
+          },
+          {
+            "timeframe": "1h",
+            "support": 1643,
+            "success": 1639,
+            "precision": 0.9975654290931223,
+            "precision_wilson_lcb_95": 0.9937567457711326,
+            "passes_segment_floor": true
+          },
+          {
+            "timeframe": "4h",
+            "support": 1533,
+            "success": 1496,
+            "precision": 0.9758643183300717,
+            "precision_wilson_lcb_95": 0.9669103345630757,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_context": [
+          {
+            "context": "BTCT:AQ_crypto:1h",
+            "support": 388,
+            "success": 388,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9901963951638616,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "BTCT:AQ_crypto:4h",
+            "support": 437,
+            "success": 423,
+            "precision": 0.9679633867276888,
+            "precision_wilson_lcb_95": 0.9469489562904884,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "ETHT:AQ_crypto:1h",
+            "support": 1129,
+            "success": 1125,
+            "precision": 0.9964570416297609,
+            "precision_wilson_lcb_95": 0.9909257410503044,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "ETHT:AQ_crypto:4h",
+            "support": 781,
+            "success": 759,
+            "precision": 0.971830985915493,
+            "precision_wilson_lcb_95": 0.9577179902617572,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "GLD:AQ_ETF:15m",
+            "support": 32,
+            "success": 32,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8928208017449293,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "GLD:AQ_ETF:1h",
+            "support": 52,
+            "success": 52,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9312077638761377,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "IWM:AQ_ETF:1h",
+            "support": 6,
+            "success": 6,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.6096657120978346,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "NQ:AQ_futures:15m",
+            "support": 21,
+            "success": 21,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.8453609810751531,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "NQ:AQ_futures:1h",
+            "support": 65,
+            "success": 65,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9441984686771432,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "NQ:AQ_futures:4h",
+            "support": 311,
+            "success": 310,
+            "precision": 0.9967845659163987,
+            "precision_wilson_lcb_95": 0.9820141768805297,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "QQQ:AQ_ETF:1h",
+            "support": 3,
+            "success": 3,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.4385029682449545,
+            "passes_segment_floor": false
+          },
+          {
+            "context": "QQQ:AQ_ETF:4h",
+            "support": 4,
+            "success": 4,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.5101091635454027,
+            "passes_segment_floor": false
+          }
+        ],
+        "by_market": [
+          {
+            "market": "AQ_ETF",
+            "support": 97,
+            "success": 97,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.9619059574740523,
+            "passes_segment_floor": true
+          },
+          {
+            "market": "AQ_crypto",
+            "support": 2735,
+            "success": 2695,
+            "precision": 0.9853747714808044,
+            "precision_wilson_lcb_95": 0.980146840937978,
+            "passes_segment_floor": true
+          },
+          {
+            "market": "AQ_futures",
+            "support": 397,
+            "success": 396,
+            "precision": 0.9974811083123426,
+            "precision_wilson_lcb_95": 0.9858717940804801,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_instrument": [
+          {
+            "instrument": "BTCT",
+            "support": 825,
+            "success": 811,
+            "precision": 0.983030303030303,
+            "precision_wilson_lcb_95": 0.9717181529173435,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "ETHT",
+            "support": 1910,
+            "success": 1884,
+            "precision": 0.9863874345549738,
+            "precision_wilson_lcb_95": 0.9801287073632613,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "GLD",
+            "support": 84,
+            "success": 84,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.95626827158534,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "IWM",
+            "support": 6,
+            "success": 6,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.6096657120978346,
+            "passes_segment_floor": false
+          },
+          {
+            "instrument": "NQ",
+            "support": 397,
+            "success": 396,
+            "precision": 0.9974811083123426,
+            "precision_wilson_lcb_95": 0.9858717940804801,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "QQQ",
+            "support": 7,
+            "success": 7,
+            "precision": 1.0,
+            "precision_wilson_lcb_95": 0.6456695649333126,
+            "passes_segment_floor": false
+          }
+        ],
+        "strong_timeframes": [
+          "1h",
+          "4h"
+        ],
+        "strong_contexts": [
+          "BTCT:AQ_crypto:1h",
+          "ETHT:AQ_crypto:1h",
+          "ETHT:AQ_crypto:4h",
+          "NQ:AQ_futures:4h"
+        ],
+        "weak_segments": [
+          {
+            "segment_type": "context",
+            "context": "BTCT:AQ_crypto:4h",
+            "support": 437,
+            "success": 423,
+            "precision": 0.9679633867276888,
+            "precision_wilson_lcb_95": 0.9469489562904884,
+            "passes_segment_floor": false
+          }
+        ]
+      },
+      "passes_board_gate_95_cross_market_timeframe": true,
+      "passes_segment_floor": true,
+      "passes_broader_mtf_gate": true,
+      "trade_usable": false
+    },
+    {
+      "accepted_regime_id": "ThinLiquidity",
+      "qualifying_condition": "volume_mean16 <= 718.8075 AND thin_base",
+      "target_label": "target_thin_soft_next",
+      "predictor_fields": [
+        "volume_mean16",
+        "thin_base"
+      ],
+      "blocked_predictor_fields": [],
+      "confidence_lane": "95",
+      "calibration_support": 3781,
+      "test_support": 6355,
+      "precision_wilson_lcb": 0.9826254367533229,
+      "ece": 0.004087063334395236,
+      "coverage": 0.07846357092588248,
+      "validation_instruments": [
+        "BTCT",
+        "NQ"
+      ],
+      "validation_market_contexts": [
+        "AQ_crypto",
+        "AQ_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "validation_contexts": [
+        "BTCT:AQ_crypto:1h",
+        "NQ:AQ_futures:15m"
+      ],
+      "validation_periods": {
+        "train": {
+          "support": 3013,
+          "success": 2897,
+          "precision": 0.9615001659475606,
+          "precision_wilson_lcb_95": 0.9540218570395815,
+          "coverage": 0.018598535820545426,
+          "ece": 0.0
+        },
+        "calibration": {
+          "support": 3781,
+          "success": 3712,
+          "precision": 0.9817508595609628,
+          "precision_wilson_lcb_95": 0.976969677217536,
+          "coverage": 0.04667901234567901,
+          "ece": 0.02025069361340215
+        },
+        "test": {
+          "support": 6355,
+          "success": 6265,
+          "precision": 0.985837922895358,
+          "precision_wilson_lcb_95": 0.9826254367533229,
+          "coverage": 0.07846357092588248,
+          "ece": 0.004087063334395236
+        }
+      },
+      "segment_metrics": {
+        "by_timeframe": [
+          {
+            "timeframe": "15m",
+            "support": 1436,
+            "success": 1398,
+            "precision": 0.9735376044568245,
+            "precision_wilson_lcb_95": 0.9638879893677441,
+            "passes_segment_floor": true
+          },
+          {
+            "timeframe": "1h",
+            "support": 4919,
+            "success": 4867,
+            "precision": 0.9894287456800163,
+            "precision_wilson_lcb_95": 0.9861645089016706,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_context": [
+          {
+            "context": "BTCT:AQ_crypto:1h",
+            "support": 4919,
+            "success": 4867,
+            "precision": 0.9894287456800163,
+            "precision_wilson_lcb_95": 0.9861645089016706,
+            "passes_segment_floor": true
+          },
+          {
+            "context": "NQ:AQ_futures:15m",
+            "support": 1436,
+            "success": 1398,
+            "precision": 0.9735376044568245,
+            "precision_wilson_lcb_95": 0.9638879893677441,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_market": [
+          {
+            "market": "AQ_crypto",
+            "support": 4919,
+            "success": 4867,
+            "precision": 0.9894287456800163,
+            "precision_wilson_lcb_95": 0.9861645089016706,
+            "passes_segment_floor": true
+          },
+          {
+            "market": "AQ_futures",
+            "support": 1436,
+            "success": 1398,
+            "precision": 0.9735376044568245,
+            "precision_wilson_lcb_95": 0.9638879893677441,
+            "passes_segment_floor": true
+          }
+        ],
+        "by_instrument": [
+          {
+            "instrument": "BTCT",
+            "support": 4919,
+            "success": 4867,
+            "precision": 0.9894287456800163,
+            "precision_wilson_lcb_95": 0.9861645089016706,
+            "passes_segment_floor": true
+          },
+          {
+            "instrument": "NQ",
+            "support": 1436,
+            "success": 1398,
+            "precision": 0.9735376044568245,
+            "precision_wilson_lcb_95": 0.9638879893677441,
+            "passes_segment_floor": true
+          }
+        ],
+        "strong_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "strong_contexts": [
+          "BTCT:AQ_crypto:1h",
+          "NQ:AQ_futures:15m"
+        ],
+        "weak_segments": []
+      },
+      "passes_board_gate_95_cross_market_timeframe": true,
+      "passes_segment_floor": true,
+      "passes_broader_mtf_gate": true,
+      "trade_usable": false
+    }
+  ],
+  "new_missing_regimes": [],
+  "all_required_sub_regime_missing_after_this_loop": [],
+  "decision": {
+    "sub_regime_cross_timeframe_complete": true,
+    "board_state": "blocked",
+    "why_board_still_blocked": [
+      "The six execution-native sub-regime/signature packets now have 95% cross-market/cross-timeframe evidence under this board gate.",
+      "MainRegimeV2 root labels are still not materialized/calibrated, so this is not full parent/main-regime completion.",
+      "trade_usable remains false; Board B must separately prove profitability, non-observe release, and execution/path gates."
+    ],
+    "trade_usable": false,
+    "next_action": "Build MainRegimeV2 target schema and calibrate Bull/Bear/Sideways/Crisis plus Manipulation/UnknownOrMixed without treating sub-regime packets as root acceptance."
+  },
+  "artifacts": {
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260510T232808-codex-broader-mtf-regime-search/audit/broader_mtf_regime_candidate_summary.csv",
+    "checks": "docs/experiments/actionable-regime-confidence/runs/20260510T232808-codex-broader-mtf-regime-search/checks/broader_mtf_regime_acceptance_assertions.out"
+  }
+}

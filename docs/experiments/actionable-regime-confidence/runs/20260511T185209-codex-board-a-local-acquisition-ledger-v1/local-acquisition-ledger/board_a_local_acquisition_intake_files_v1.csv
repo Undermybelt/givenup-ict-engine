@@ -1,0 +1,13 @@
+name,path,exists,size,sha256
+external_bundle_price_rows,/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_rows.csv,False,0,
+external_bundle_price_provenance,/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_provenance.json,False,0,
+external_bundle_recency_rows,/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_rows.csv,False,0,
+external_bundle_recency_provenance,/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_provenance.json,False,0,
+external_bundle_direct_positive,/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_positive_rows.csv,False,0,
+external_bundle_direct_controls,/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_matched_controls.csv,False,0,
+external_bundle_direct_provenance,/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_provenance.json,False,0,
+source_equivalence_rows,/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv,False,0,
+source_equivalence_provenance,/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json,False,0,
+direct_intake_positive,/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,False,0,
+direct_intake_controls,/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,False,0,
+direct_intake_provenance,/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,False,0,

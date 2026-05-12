@@ -1,0 +1,249 @@
+[run] /Users/thrill3r/.local/bin/uv run --with pandas --with numpy --with catboost python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --target-csv docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target.csv --output-dir docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model --model-family catboost --output-scores docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/path_ranker_scores_172142.csv
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target.csv: 3 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] No mature samples, using all 3 samples
+[features] 1 features, 3 training samples
+[features] label dist: {np.int64(0): np.int64(1), np.int64(1): np.int64(2)}
+[template] User weights template saved to docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model/user_weights.json
+[train] CatBoost saved to docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model/catboost_model.cbm
+[train] top features:                   Feature Id  Importances
+0  structural_baseline_score        100.0
+[artifact] Registration metadata saved to docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model/trainer_artifact.json
+
+[done] Model saved to docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model
+[done] To apply: python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model --target-csv <new_target.csv> --output-scores scores.csv
+
+[run] /Users/thrill3r/.local/bin/uv run --with pandas --with numpy --with catboost python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model --target-csv docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target.csv --output-scores docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/path_ranker_scores_172142.csv
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target.csv: 3 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] No mature samples, using all 3 samples
+[features] 1 features, 3 training samples
+[features] label dist: {np.int64(0): np.int64(1), np.int64(1): np.int64(2)}
+[apply] CatBoost predictions: 3
+[apply] Scores saved to docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/path_ranker_scores_172142.csv
+
+[run] /Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine register-structural-path-ranking-trainer-artifact --symbol BOARD_A_BTC_172142 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1 --artifact-uri docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model/trainer_artifact.json --model-family catboost --score-column raw_path_score
+{
+  "export_ready": true,
+  "calibration_ready": false,
+  "calibration_quality_ready": false,
+  "trainer_manifest_ready": true,
+  "trainer_manifest_protocol_version": "structural-path-ranking-trainer-manifest-v1",
+  "trainer_manifest_dataset_role": "external_path_ranker_training_dataset",
+  "trainer_feature_columns": 18,
+  "trainer_calibration_columns": 3,
+  "trainer_guardrail_columns": 7,
+  "trainer_artifact_ready": true,
+  "trainer_artifact_status": "present_validation_insufficient",
+  "trainer_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_trainer_artifact.json",
+  "trainer_artifact_protocol_version": "structural-path-ranking-trainer-artifact-v1",
+  "trainer_artifact_dataset_role": "external_path_ranker_training_dataset",
+  "trainer_artifact_model_family": "catboost",
+  "trainer_artifact_score_column": "raw_path_score",
+  "trainer_artifact_trained_rows": 3,
+  "trainer_artifact_history_rows": 3,
+  "trainer_artifact_calibration_rows": 3,
+  "trainer_artifact_feature_columns": 1,
+  "trainer_artifact_uri_present": true,
+  "runtime_selection_enabled": true,
+  "runtime_selection_ready": false,
+  "runtime_selection_status": "enabled_no_matching_scores",
+  "runtime_selection_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_runtime_selection.json",
+  "runtime_selection_mode": "candidate_set_only",
+  "runtime_active_match_count": 0,
+  "runtime_artifact_match_count": 0,
+  "runtime_candidate_set_match_count": 0,
+  "runtime_history_match_count": 0,
+  "rows": 3,
+  "candidate_set_id": "structural-candidates:BOARD_A_BTC_172142:d1e19e99d67dd66f",
+  "candidate_set_size": 3,
+  "mature_rows": 0,
+  "rows_with_propensity_estimate": 1,
+  "rows_with_calibrated_path_prob": 0,
+  "rows_with_execution_gate_status": 0,
+  "rows_with_training_weight": 0,
+  "history_rows": 4,
+  "history_mature_rows": 0,
+  "history_rows_with_raw_path_score": 0,
+  "history_rows_with_calibrated_path_prob": 0,
+  "history_rows_with_path_prob_lower_bound": 0,
+  "history_rows_with_propensity_estimate": 2,
+  "history_rows_with_training_weight": 0,
+  "update_runs_with_structural_feedback": 0,
+  "feedback_rows_with_structural_feedback": 0,
+  "feedback_rows_total": 0,
+  "feedback_rows_without_structural_feedback": 0,
+  "feedback_rows_without_structural_feedback_dominant_count": 0,
+  "feedback_rows_matured": 0,
+  "feedback_rows_pending": 0,
+  "pending_update_artifact_present": true,
+  "pending_update_history_rows": 3,
+  "pending_update_templates_with_structural_feedback": 0,
+  "calibration_evaluation_rows": 0,
+  "calibration_propensity_weighted_rows": 0,
+  "raw_scored_mature_rows": 0,
+  "raw_scored_mature_min_rows": 30,
+  "raw_scored_mature_shortfall_rows": 30,
+  "production_validation_ready": false,
+  "production_validation_rows": 0,
+  "production_validation_min_rows": 30,
+  "production_validation_shortfall_rows": 30,
+  "observation_validation_ready": false,
+  "observation_validation_rows": 0,
+  "observation_validation_min_rows": 30,
+  "observation_validation_shortfall_rows": 30,
+  "target_row_validation": {
+    "raw_scored_mature_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_shortfall_rows": 30,
+    "production_validation_ready": false,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 30,
+    "production_validation_shortfall_rows": 30,
+    "summary_line": "target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"
+  },
+  "feedback_observation_validation": {
+    "ready": false,
+    "mature_observations": 0,
+    "min_observations": 30,
+    "shortfall_observations": 30,
+    "pending_observations": 0,
+    "total_observations": 0,
+    "summary_line": "observations mature=0/30 pending=0 total=0 ready=false"
+  },
+  "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target_summary.json",
+  "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target.csv",
+  "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target.jsonl",
+  "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target_history.csv",
+  "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target_history.jsonl",
+  "warnings": [
+    "structural_path_ranking_target_mature_rows_missing",
+    "structural_path_ranking_target_update_runs_missing",
+    "structural_path_ranking_target_structural_feedback_missing",
+    "structural_path_ranking_target_pending_update_templates_present",
+    "structural_path_ranking_target_calibration_not_fitted",
+    "structural_path_probability_calibration_evaluation_insufficient_rows",
+    "structural_path_ranking_target_raw_scored_mature_rows_insufficient:min=30 observed=0",
+    "structural_path_ranking_target_production_validation_insufficient_rows:min=30 observed=0",
+    "structural_path_ranking_observation_validation_insufficient_rows:min=30 observed=0"
+  ],
+  "summary_line": "structural_path_ranking_target rows=3 history_rows=4 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=candidate_set_only runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0"
+}
+
+[run] /Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine enable-structural-path-ranking-runtime --symbol BOARD_A_BTC_172142 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1 --reuse-mode prefer_history
+{
+  "export_ready": true,
+  "calibration_ready": false,
+  "calibration_quality_ready": false,
+  "trainer_manifest_ready": true,
+  "trainer_manifest_protocol_version": "structural-path-ranking-trainer-manifest-v1",
+  "trainer_manifest_dataset_role": "external_path_ranker_training_dataset",
+  "trainer_feature_columns": 18,
+  "trainer_calibration_columns": 3,
+  "trainer_guardrail_columns": 7,
+  "trainer_artifact_ready": true,
+  "trainer_artifact_status": "present_validation_insufficient",
+  "trainer_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_trainer_artifact.json",
+  "trainer_artifact_protocol_version": "structural-path-ranking-trainer-artifact-v1",
+  "trainer_artifact_dataset_role": "external_path_ranker_training_dataset",
+  "trainer_artifact_model_family": "catboost",
+  "trainer_artifact_score_column": "raw_path_score",
+  "trainer_artifact_trained_rows": 3,
+  "trainer_artifact_history_rows": 3,
+  "trainer_artifact_calibration_rows": 3,
+  "trainer_artifact_feature_columns": 1,
+  "trainer_artifact_uri_present": true,
+  "runtime_selection_enabled": true,
+  "runtime_selection_ready": false,
+  "runtime_selection_status": "enabled_no_matching_scores",
+  "runtime_selection_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_runtime_selection.json",
+  "runtime_selection_mode": "prefer_history",
+  "runtime_active_match_count": 0,
+  "runtime_artifact_match_count": 0,
+  "runtime_candidate_set_match_count": 0,
+  "runtime_history_match_count": 0,
+  "rows": 3,
+  "candidate_set_id": "structural-candidates:BOARD_A_BTC_172142:d1e19e99d67dd66f",
+  "candidate_set_size": 3,
+  "mature_rows": 0,
+  "rows_with_propensity_estimate": 1,
+  "rows_with_calibrated_path_prob": 0,
+  "rows_with_execution_gate_status": 0,
+  "rows_with_training_weight": 0,
+  "history_rows": 4,
+  "history_mature_rows": 0,
+  "history_rows_with_raw_path_score": 0,
+  "history_rows_with_calibrated_path_prob": 0,
+  "history_rows_with_path_prob_lower_bound": 0,
+  "history_rows_with_propensity_estimate": 2,
+  "history_rows_with_training_weight": 0,
+  "update_runs_with_structural_feedback": 0,
+  "feedback_rows_with_structural_feedback": 0,
+  "feedback_rows_total": 0,
+  "feedback_rows_without_structural_feedback": 0,
+  "feedback_rows_without_structural_feedback_dominant_count": 0,
+  "feedback_rows_matured": 0,
+  "feedback_rows_pending": 0,
+  "pending_update_artifact_present": true,
+  "pending_update_history_rows": 3,
+  "pending_update_templates_with_structural_feedback": 0,
+  "calibration_evaluation_rows": 0,
+  "calibration_propensity_weighted_rows": 0,
+  "raw_scored_mature_rows": 0,
+  "raw_scored_mature_min_rows": 30,
+  "raw_scored_mature_shortfall_rows": 30,
+  "production_validation_ready": false,
+  "production_validation_rows": 0,
+  "production_validation_min_rows": 30,
+  "production_validation_shortfall_rows": 30,
+  "observation_validation_ready": false,
+  "observation_validation_rows": 0,
+  "observation_validation_min_rows": 30,
+  "observation_validation_shortfall_rows": 30,
+  "target_row_validation": {
+    "raw_scored_mature_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_shortfall_rows": 30,
+    "production_validation_ready": false,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 30,
+    "production_validation_shortfall_rows": 30,
+    "summary_line": "target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"
+  },
+  "feedback_observation_validation": {
+    "ready": false,
+    "mature_observations": 0,
+    "min_observations": 30,
+    "shortfall_observations": 30,
+    "pending_observations": 0,
+    "total_observations": 0,
+    "summary_line": "observations mature=0/30 pending=0 total=0 ready=false"
+  },
+  "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target_summary.json",
+  "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target.csv",
+  "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target.jsonl",
+  "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target_history.csv",
+  "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1/BOARD_A_BTC_172142/policy_training/structural_path_ranking_target_history.jsonl",
+  "warnings": [
+    "structural_path_ranking_target_mature_rows_missing",
+    "structural_path_ranking_target_update_runs_missing",
+    "structural_path_ranking_target_structural_feedback_missing",
+    "structural_path_ranking_target_pending_update_templates_present",
+    "structural_path_ranking_target_calibration_not_fitted",
+    "structural_path_probability_calibration_evaluation_insufficient_rows",
+    "structural_path_ranking_target_raw_scored_mature_rows_insufficient:min=30 observed=0",
+    "structural_path_ranking_target_production_validation_insufficient_rows:min=30 observed=0",
+    "structural_path_ranking_observation_validation_insufficient_rows:min=30 observed=0"
+  ],
+  "summary_line": "structural_path_ranking_target rows=3 history_rows=4 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0"
+}
+
+
+[done] Model: docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/model
+[done] Scores: docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/path_ranker_scores_172142.csv
+
+[next] Apply to runtime:
+  ./target/debug/ict-engine apply-structural-path-ranking-external-scores \
+    --symbol BOARD_A_BTC_172142 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1 --scores-file docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/path-ranker/downstream-v1/path_ranker_scores_172142.csv

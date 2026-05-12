@@ -1,0 +1,207 @@
+{
+  "run_id": "20260512T080837+0800-codex-current-objective-audit-after-080700-v1",
+  "gate_result": "current_objective_audit_after_080700_v1=not_complete_source_control_unlock_absent_no_selected_history_no_downstream_promotion",
+  "blocked_requirements": 6,
+  "partial_requirements": 2,
+  "accepted_rows_added": 0,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "counted_evidence_ids": [
+    "080333",
+    "080336",
+    "080411",
+    "080425",
+    "080446",
+    "080452",
+    "080700"
+  ],
+  "absent_or_stale_evidence_ids": [],
+  "evidence": [
+    {
+      "id": "080333",
+      "kind": "source_control_probe",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T080333+0800-codex-openml-dataverse-source-route-probe-after-075932-v1/checks/openml_dataverse_source_route_probe_after_075932_v1_assertions.out",
+      "exists": true,
+      "gate_result": "openml_dataverse_source_route_probe_after_075932_v1=no_required_source_control_unlock",
+      "accepted_rows_added": "0",
+      "valid_required_root_unlock": "false",
+      "source_control_evidence_acquired": "false",
+      "selected_data_autoquant_promotion": "false",
+      "downstream_promotion_rerun": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "raw": "PASS openml_dataverse_source_route_probe_after_075932_v1\ngate_result=openml_dataverse_source_route_probe_after_075932_v1=no_required_source_control_unlock\nrequests_sent=16\nrequest_failures=8\ncandidate_rows=50\nrequired_metadata_hits=0\nexact_mainregimev2_hits=0\nr5_post_cutoff_hits=0\nr3_native_subhour_hits=0\nr6_owner_control_hits=0\naccepted_rows_added=0\nvalid_required_root_unlock=false\nsource_control_evidence_acquired=false\ncanonical_merge=false\nselected_data_autoquant_promotion=false\ndownstream_promotion_rerun=false\nstrict_full_objective=false\ntrade_usable=false\npromotion_allowed=false\nupdate_goal=false\n"
+    },
+    {
+      "id": "080336",
+      "kind": "arrival_poll",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T080336+0800-codex-source-control-arrival-poll-after-080054-v1/checks/source_control_arrival_poll_after_080054_v1_assertions.out",
+      "exists": true,
+      "gate_result": "source_control_arrival_poll_after_080054_v1=no_new_required_root_no_unlock",
+      "accepted_rows_added": "0",
+      "valid_required_root_unlock": "false",
+      "source_control_evidence_acquired": "false",
+      "selected_data_autoquant_promotion": "false",
+      "downstream_promotion_rerun": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "raw": "PASS source_control_arrival_poll_after_080054_v1\ngate_result=source_control_arrival_poll_after_080054_v1=no_new_required_root_no_unlock\nr6_owner_export_root_present=false\nr6_approval_present=false\nr6_canonical_merge_allowed_now=false\nr5_recency_root_present=false\nknown_r5_rows_after_cutoff=0\nr3_native_subhour_root_present=true\nr3_crisis_present=false\nvalid_required_root_unlock=false\nsource_control_evidence_acquired=false\naccepted_rows_added=0\ncanonical_merge=false\nselected_data_autoquant_promotion=false\ndownstream_promotion_rerun=false\nstrict_full_objective=false\ntrade_usable=false\nupdate_goal=false\n"
+    },
+    {
+      "id": "080411",
+      "kind": "source_control_probe",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T080411+0800-codex-r6-regulator-exchange-source-route-probe-after-080054-v1/checks/r6_regulator_exchange_source_route_probe_after_080054_v1_assertions.out",
+      "exists": true,
+      "gate_result": "r6_regulator_exchange_source_route_probe_after_080054_v1=official_context_only_no_owner_export_control_unlock",
+      "accepted_rows_added": "0",
+      "valid_required_root_unlock": "false",
+      "source_control_evidence_acquired": "false",
+      "selected_data_autoquant_promotion": "false",
+      "downstream_promotion_rerun": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "raw": "gate_result=r6_regulator_exchange_source_route_probe_after_080054_v1=official_context_only_no_owner_export_control_unlock\nsources_checked=6\nstatus_failures=2\nofficial_context_hits=3\npossible_r6_exports=0\naccepted_rows_added=0\nr6_owner_export_unlock=false\nr5_recency_unlock=false\nr3_native_subhour_unlock=false\nvalid_required_root_unlock=false\nsource_control_evidence_acquired=false\ncanonical_merge=false\nselected_data_autoquant_promotion=false\ndownstream_promotion_rerun=false\nstrict_full_objective=false\ntrade_usable=false\nupdate_goal=false\n"
+    },
+    {
+      "id": "080425",
+      "kind": "approval_readback",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T080425+0800-codex-target-root-approval-readback-after-075925-v1/checks/target_root_approval_readback_after_075925_v1_assertions.out",
+      "exists": true,
+      "gate_result": "target_root_approval_readback_after_075925_v1=no_target_root_or_approval_unlock",
+      "accepted_rows_added": "0",
+      "valid_required_root_unlock": "false",
+      "source_control_evidence_acquired": "false",
+      "selected_data_autoquant_promotion": "false",
+      "downstream_promotion_rerun": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "raw": "PASS target_root_approval_readback_after_075925_v1\ngate_result=target_root_approval_readback_after_075925_v1=no_target_root_or_approval_unlock\nr6_owner_export_complete=false\nr5_recency_complete=false\nr3_native_subhour_complete=true\nr3_crisis_supported=false\ndirect_intake_present=true\napproval_present=false\ncanonical_merge_allowed_now=false\ndownstream_rerun_allowed_now=false\naccepted_rows_added=0\nr6_owner_export_unlock=false\nr5_recency_unlock=false\nr3_native_subhour_unlock=false\nvalid_required_root_unlock=false\nsource_control_evidence_acquired=false\ncanonical_merge=false\nselected_data_autoquant_promotion=false\ndownstream_promotion_rerun=false\nstrict_full_objective=false\ntrade_usable=false\nupdate_goal=false\n"
+    },
+    {
+      "id": "080446",
+      "kind": "absent_or_stale_arrival_poll",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T080446+0800-codex-required-root-arrival-poll-after-080054-v1/checks/required_root_arrival_poll_after_080054_v1_assertions.out",
+      "exists": true,
+      "gate_result": "required_root_arrival_poll_after_080054_v1=no_new_required_root_no_unlock",
+      "accepted_rows_added": "0",
+      "valid_required_root_unlock": "false",
+      "source_control_evidence_acquired": "false",
+      "selected_data_autoquant_promotion": "false",
+      "downstream_promotion_rerun": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "raw": "gate_result=required_root_arrival_poll_after_080054_v1=no_new_required_root_no_unlock\nr6_owner_export_unlock=false\nr5_recency_unlock=false\nr3_native_subhour_unlock=false\napproval_unlock=false\nvalid_required_root_unlock=false\naccepted_rows_added=0\nsource_control_evidence_acquired=false\ncanonical_merge=false\nselected_data_autoquant_promotion=false\ndownstream_promotion_rerun=false\nstrict_full_objective=false\ntrade_usable=false\nupdate_goal=false\n"
+    },
+    {
+      "id": "080452",
+      "kind": "source_control_probe",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T080452+0800-codex-dryad-source-route-probe-after-080054-v1/checks/dryad_source_route_probe_after_080054_v1_assertions.out",
+      "exists": true,
+      "gate_result": "dryad_source_route_probe_after_080054_v1=no_required_source_control_unlock",
+      "accepted_rows_added": "0",
+      "valid_required_root_unlock": "false",
+      "source_control_evidence_acquired": "false",
+      "selected_data_autoquant_promotion": "false",
+      "downstream_promotion_rerun": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "raw": "PASS dryad_source_route_probe_after_080054_v1\ngate_result=dryad_source_route_probe_after_080054_v1=no_required_source_control_unlock\nrequests_sent=9\nfailed_or_parse_failed=0\ntop_metadata_rows_scanned=45\nrequired_filename_or_token_hits=0\nexact_mainregimev2_hits=0\nr5_post_cutoff_hits=0\nr3_native_subhour_crisis_hits=0\nr6_owner_control_hits=0\naccepted_rows_added=0\nr6_owner_export_unlock=false\nr5_recency_unlock=false\nr3_native_subhour_unlock=false\nvalid_required_root_unlock=false\nsource_control_evidence_acquired=false\ncanonical_merge=false\nselected_data_autoquant_promotion=false\ndownstream_promotion_rerun=false\nstrict_full_objective=false\ntrade_usable=false\nupdate_goal=false\n"
+    },
+    {
+      "id": "080700",
+      "kind": "exact_web_search",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T080700+0800-codex-openml-dryad-mendeley-exact-web-search-after-080054-v1/checks/openml_dryad_mendeley_exact_web_search_after_080054_v1_assertions.out",
+      "exists": true,
+      "gate_result": "openml_dryad_mendeley_exact_web_search_after_080054_v1=no_exact_public_research_route_no_unlock",
+      "accepted_rows_added": "0",
+      "valid_required_root_unlock": "false",
+      "source_control_evidence_acquired": "false",
+      "selected_data_autoquant_promotion": "missing",
+      "downstream_promotion_rerun": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "raw": "gate_result=openml_dryad_mendeley_exact_web_search_after_080054_v1=no_exact_public_research_route_no_unlock\nqueries_sent=8\nsearch_result_pages_with_hits=0\nexact_mainregimev2_hits=0\nr5_route_hits=0\nr3_route_hits=0\nr6_route_hits=0\naccepted_rows_added=0\nr6_owner_export_unlock=false\nr5_recency_unlock=false\nr3_native_subhour_unlock=false\nvalid_required_root_unlock=false\nsource_control_evidence_acquired=false\ncanonical_merge=false\ndownstream_promotion_rerun=false\nstrict_full_objective=false\ntrade_usable=false\nupdate_goal=false\n"
+    }
+  ],
+  "checklist": [
+    {
+      "requirement": "board_a_authoritative_file",
+      "status": "covered",
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "blocker": ""
+    },
+    {
+      "requirement": "board_b_dependency_mirror",
+      "status": "covered",
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "blocker": ""
+    },
+    {
+      "requirement": "all_regimes_95_confidence",
+      "status": "blocked",
+      "evidence": "075925/075932 plus counted latest 080333/080336/080411/080425/080452/080700 remain fail-closed; 080446 is absent/stale; no accepted rows added",
+      "blocker": "no_accepted_rows_and_no_per_regime_95_cross_market_unlock"
+    },
+    {
+      "requirement": "cross_market_cross_timeframe_validation",
+      "status": "blocked",
+      "evidence": "latest route probes and exact web search remain negative",
+      "blocker": "no_new_required_root_and_no_selected_history"
+    },
+    {
+      "requirement": "ibkr_tradingview_yfinance_kraken_provider_use",
+      "status": "partial",
+      "evidence": "board text shows diagnostic provider visibility including IBKR, TradingView, yfinance, Kraken, but no promoted source/control root",
+      "blocker": "diagnostic_only"
+    },
+    {
+      "requirement": "auto_quant_operated",
+      "status": "partial",
+      "evidence": "prior board readbacks show AutoQuant read-only status; current run adds no new promotion evidence",
+      "blocker": "selected_history_gate_missing"
+    },
+    {
+      "requirement": "filter_prebayes_bbn_catboost_execution_tree",
+      "status": "blocked",
+      "evidence": "latest evidence stays upstream and fail-closed",
+      "blocker": "no_promotion_allowed"
+    },
+    {
+      "requirement": "source_control_unlock",
+      "status": "blocked",
+      "evidence": "080333/080336/080411/080425/080452/080700 fail closed; 080446 absent/stale",
+      "blocker": "valid_required_root_unlock_false"
+    },
+    {
+      "requirement": "user_selected_history",
+      "status": "blocked",
+      "evidence": "no HTF/MTF/LTF selection in the objective file or latest readbacks",
+      "blocker": "user_selected_historical_data_missing"
+    },
+    {
+      "requirement": "multi_agent_append_only",
+      "status": "covered",
+      "evidence": "all new evidence was appended as new artifacts or tail pointers",
+      "blocker": ""
+    },
+    {
+      "requirement": "update_goal_allowed",
+      "status": "blocked",
+      "evidence": "all acceptance fields remain false",
+      "blocker": "objective_incomplete"
+    }
+  ]
+}

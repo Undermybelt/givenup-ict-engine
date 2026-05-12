@@ -1,0 +1,3 @@
+file,destination,purpose,required
+source_label_equivalence_rows.csv,/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv,source-owned or owner-approved price-root/direct-Manipulation label rows using the request schema,True
+source_label_equivalence_provenance.json,/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json,"source owner, pull/approval date, export identity, hashes, and non-proxy attestation",True

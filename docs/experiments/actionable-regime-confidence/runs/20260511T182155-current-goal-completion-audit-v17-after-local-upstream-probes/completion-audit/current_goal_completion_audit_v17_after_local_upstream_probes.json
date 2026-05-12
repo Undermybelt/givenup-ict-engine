@@ -1,0 +1,114 @@
+{
+  "artifact_type": "current_goal_completion_audit_v17_after_local_upstream_probes",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "c2ce907f3bc6661a55502c54f155ee659ad05c0ec3906d512b1a7e3e387c56be",
+  "checklist": [
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T180401-codex-board-a-shared-state-audit-v16/shared-state-audit/board_a_shared_state_audit_v16.json",
+      "notes": "Bull/Bear/Sideways/Crisis plus scoped direct Manipulation have 95% evidence in the active lane.",
+      "requirement": "scoped_95_for_active_regimes",
+      "status": "pass_scoped"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T180346-codex-autoquant-local-source-label-equivalence-audit-v1/autoquant-local-audit/autoquant_local_source_label_equivalence_audit_v1.json",
+      "notes": "Auto-Quant cache has provider/OHLCV rows only; exact source-panel overlap is AAPL and adds no QQQ/NQ/crypto/FX/futures labels.",
+      "requirement": "owner_approved_other_market_source_label_equivalence",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T181454-codex-stock-regime-upstream-refresh-audit-v1/upstream-refresh/stock_regime_upstream_refresh_audit_v1.json",
+      "notes": "Upstream CSV/parquet sizes match local package; no source-owned labels newer than 2026-01-30 are exposed.",
+      "requirement": "source_panel_recency_after_2026_01_30",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T180420-codex-native-subhour-overlap-blocker-v1/native-subhour-overlap/native_subhour_overlap_blocker_v1.json",
+      "notes": "AAPL/^IXIC 15m/30m provider rows start after the source labels end; ready overlap cells are 0/4.",
+      "requirement": "native_subhour_source_overlap",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T181859-codex-strict-1h-gap-triage-v1/strict-1h-gap-triage/strict_1h_gap_triage_v1.json",
+      "notes": "Strict 1h support remains 41/156; provider rows are ready but source-label support/recency is the blocker.",
+      "requirement": "strict_exact_1h_full_support",
+      "status": "partial_blocked"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T181211-codex-direct-manipulation-local-intake-probe-v1/local-intake-probe/direct_manipulation_local_intake_probe_v1.json",
+      "notes": "Spoofing/layering intake has 0 candidate files and all 3 required files are missing.",
+      "requirement": "direct_manipulation_full_species_with_matched_negatives",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T181835-current-goal-completion-audit-v17-after-local-probes/completion-audit/current_goal_completion_audit_v17_after_local_probes.json",
+      "notes": "Prior and current completion audits agree: strict_full_objective_achieved=false and update_goal=false.",
+      "requirement": "do_not_mark_full_objective_complete",
+      "status": "pass_guardrail"
+    }
+  ],
+  "coordination_mode": "additive_multi_agent_safe_readback",
+  "decision": {
+    "blocking_requirements": [
+      "owner_approved_other_market_source_label_equivalence",
+      "source_panel_recency_after_2026_01_30",
+      "native_subhour_source_overlap",
+      "strict_exact_1h_full_support",
+      "direct_manipulation_full_species_with_matched_negatives"
+    ],
+    "gate_result": "current_goal_completion_audit_v17=scoped_95_present_upstream_probe_confirms_full_objective_blocked",
+    "scoped_active_lane_status": "accepted_95",
+    "strict_full_objective_achieved": false,
+    "update_goal": false
+  },
+  "evidence_gates": {
+    "autoquant_local_source_label_equivalence": "autoquant_local_source_label_equivalence_audit_v1=no_new_source_labels_exact_daily_aapl_only",
+    "board_a_shared_state_v16": "",
+    "direct_manipulation_local_intake": "direct_manipulation_local_intake_probe_v1=missing_required_files",
+    "native_subhour_overlap": "native_subhour_overlap_blocker_v1=no_source_overlap_0of4_cells",
+    "prior_completion_audit_v17": "current_goal_completion_audit_v17=scoped_95_present_local_probes_confirm_full_objective_blocked",
+    "stock_regime_upstream_refresh": "stock_regime_upstream_refresh_audit_v1=no_new_upstream_recency_extension",
+    "strict_1h_gap_triage": "strict_1h_gap_triage_v1=provider_ready_source_label_support_blocked"
+  },
+  "generated_at_utc": "2026-05-11T10:28:44.075240+00:00",
+  "key_counts": {
+    "accepted_95_lanes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "autoquant_exact_source_panel_subhour_files": 0,
+    "autoquant_exact_source_panel_symbols": [
+      "AAPL"
+    ],
+    "autoquant_feather_files": 40,
+    "direct_candidate_file_count": 0,
+    "direct_required_files_missing": 3,
+    "min_main_root_confidence_floor": 0.9529358324,
+    "native_subhour_cells_checked": 4,
+    "native_subhour_ready_overlap_cells": 0,
+    "scoped_direct_manipulation_confidence_floor": 0.967945,
+    "source_panel_date_max": "2026-01-30",
+    "strict_1h_accepted_rows": 41,
+    "strict_1h_blocked_rows": 115,
+    "strict_1h_near_miss_count": 34,
+    "upstream_same_csv_size": true,
+    "upstream_same_parquet_size": true
+  },
+  "next_action": "Acquire source-owned or owner-approved equivalence inputs first. More provider/OHLCV scans do not close the strict Board A objective.",
+  "raw_data_committed": false,
+  "run_id": "20260511T182155+0800-current-goal-completion-audit-v17-after-local-upstream-probes",
+  "runtime_code_changed": false,
+  "source_evidence": {
+    "autoquant_local_source_label_equivalence": "docs/experiments/actionable-regime-confidence/runs/20260511T180346-codex-autoquant-local-source-label-equivalence-audit-v1/autoquant-local-audit/autoquant_local_source_label_equivalence_audit_v1.json",
+    "board_a_shared_state_v16": "docs/experiments/actionable-regime-confidence/runs/20260511T180401-codex-board-a-shared-state-audit-v16/shared-state-audit/board_a_shared_state_audit_v16.json",
+    "direct_manipulation_local_intake": "docs/experiments/actionable-regime-confidence/runs/20260511T181211-codex-direct-manipulation-local-intake-probe-v1/local-intake-probe/direct_manipulation_local_intake_probe_v1.json",
+    "native_subhour_overlap": "docs/experiments/actionable-regime-confidence/runs/20260511T180420-codex-native-subhour-overlap-blocker-v1/native-subhour-overlap/native_subhour_overlap_blocker_v1.json",
+    "prior_completion_audit_v17": "docs/experiments/actionable-regime-confidence/runs/20260511T181835-current-goal-completion-audit-v17-after-local-probes/completion-audit/current_goal_completion_audit_v17_after_local_probes.json",
+    "stock_regime_upstream_refresh": "docs/experiments/actionable-regime-confidence/runs/20260511T181454-codex-stock-regime-upstream-refresh-audit-v1/upstream-refresh/stock_regime_upstream_refresh_audit_v1.json",
+    "strict_1h_gap_triage": "docs/experiments/actionable-regime-confidence/runs/20260511T181859-codex-strict-1h-gap-triage-v1/strict-1h-gap-triage/strict_1h_gap_triage_v1.json"
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

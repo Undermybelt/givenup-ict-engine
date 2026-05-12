@@ -1,0 +1,98 @@
+{
+  "acceptance_conditions": [
+    "Place both required files under /tmp/ict-engine-source-label-equivalence-intake.",
+    "Rows include source-owned or owner-approved labels for the target symbol/root cells.",
+    "Rows include post-2026-01-30 source-owned sessions where R5 recency-tail repair is claimed.",
+    "Rows use package_id native_subhour_overlap_after_recency unless the verifier is changed first.",
+    "No equivalence_policy contains ohlcv_proxy, generated_label, future_return, or unapproved_ixic.",
+    "The unchanged source-label equivalence verifier returns schema_ready_unscored before any confidence audit."
+  ],
+  "accepted_rows_added": 0,
+  "dataset_url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+  "decision": "stock_regime_owner_recency_request_package_v1=owner_request_ready_rows_not_acquired",
+  "explicit_non_acceptance": [
+    "Do not use provider candles or OHLCV-only rows without source-owned regime labels.",
+    "Do not forward-fill the current panel past 2026-01-30.",
+    "Do not reuse already-counted source-panel rows as new strict 1h support.",
+    "Do not use HMM/model-generated labels or future-return labels."
+  ],
+  "generated_at_utc": "2026-05-11T12:17:50.822850+00:00",
+  "intake_root": "/tmp/ict-engine-source-label-equivalence-intake",
+  "known_current_gap": {
+    "kaggle_dataset_updated_at_seen": "2026-02-01T02:25:29.437Z",
+    "kaggle_dataset_version_seen": "1",
+    "local_panel_max_date": "2026-01-30",
+    "post_2026_01_30_rows_for_targets": 0
+  },
+  "local_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "new_confidence_gate": false,
+  "purpose": "Convert R4/R5 strict 1h recency/source-label gaps into an owner request package for the existing stock-regime source panel.",
+  "r4_strict_1h_source_rows_acquired": false,
+  "r5_recency_tail_repair_closed": false,
+  "raw_data_committed": false,
+  "required_fields": [
+    "package_id",
+    "source_owner",
+    "source_report_or_dataset",
+    "source_pull_date",
+    "market_family",
+    "symbol",
+    "source_symbol",
+    "equivalence_policy",
+    "event_species",
+    "timestamp_or_date",
+    "timeframe",
+    "main_regime_v2_label",
+    "direct_label",
+    "matched_negative_group_id",
+    "split_role",
+    "source_row_id",
+    "provenance_hash"
+  ],
+  "required_files": [
+    "source_label_equivalence_rows.csv",
+    "source_label_equivalence_provenance.json"
+  ],
+  "run_id": "20260511T201655-codex-stock-regime-owner-recency-request-package-v1",
+  "runtime_code_changed": false,
+  "source_owner_or_dataset": "mafaqbhatti/stock-market-regimes-20002026",
+  "strict_full_objective_achieved": false,
+  "target_rows": [
+    {
+      "main_regime_v2_label": "Sideways",
+      "min_new_source_sessions": 5,
+      "package_id": "native_subhour_overlap_after_recency",
+      "priority": 1,
+      "split_role": "heldout_time",
+      "symbol": "XOM"
+    },
+    {
+      "main_regime_v2_label": "Bear",
+      "min_new_source_sessions": 7,
+      "package_id": "native_subhour_overlap_after_recency",
+      "priority": 2,
+      "split_role": "calibration",
+      "symbol": "UNH"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "min_new_source_sessions": 7,
+      "package_id": "native_subhour_overlap_after_recency",
+      "priority": 3,
+      "split_role": "calibration",
+      "symbol": "^DJI"
+    },
+    {
+      "main_regime_v2_label": "Bear",
+      "min_new_source_sessions": 10,
+      "package_id": "native_subhour_overlap_after_recency",
+      "priority": 4,
+      "split_role": "calibration",
+      "symbol": "AMD"
+    }
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verification_command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py --intake-root /tmp/ict-engine-source-label-equivalence-intake"
+}

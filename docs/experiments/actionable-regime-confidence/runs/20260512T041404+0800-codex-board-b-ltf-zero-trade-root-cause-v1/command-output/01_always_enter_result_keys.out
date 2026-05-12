@@ -1,0 +1,67 @@
+Result for strategy AlwaysEnterProbe
+                                                        BACKTESTING REPORT                                                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                            Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ B2RNQCOSTCRISISREPAIR032157/USD │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+│                           TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└─────────────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                               ENTER TAG STATS                                                
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     TOTAL │       0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                              EXIT REASON STATS                                               
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│       TOTAL │     0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└─────────────┴───────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                      MIXED TAG STATS                                                      
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     TOTAL │             │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────────┴─────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+No trades made. Your starting balance was 100000 USD, and your stake was unlimited.
+
+Backtested 2025-12-15 13:00:00 -> 2025-12-31 00:00:00 | Max open trades : 1
+                                                         STRATEGY SUMMARY                                                          
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃         Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃     Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ AlwaysEnterProbe │      0 │         0.00 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │ 0 USD  0.00% │
+└──────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┴──────────────┘
+top_keys ['avg_stake_amount', 'backtest_best_day', 'backtest_best_day_abs', 'backtest_days', 'backtest_end', 'backtest_end_ts', 'backtest_run_end_ts', 'backtest_run_start_ts', 'backtest_start', 'backtest_start_ts', 'backtest_worst_day', 'backtest_worst_day_abs', 'best_pair', 'cagr', 'calmar', 'canceled_entry_orders', 'canceled_trade_entries', 'csum_max', 'csum_min', 'daily_profit_list', 'draw_days', 'drawdown_end', 'drawdown_end_ts', 'drawdown_start', 'drawdown_start_ts', 'draws', 'dry_run_wallet', 'enable_protections', 'exit_profit_offset', 'exit_profit_only', 'exit_reason_summary', 'expectancy', 'expectancy_ratio', 'final_balance', 'freqai_identifier', 'freqaimodel', 'holding_avg', 'ignore_roi_if_entry_signal', 'left_open_trades', 'locks', 'loser_holding_avg', 'losing_days', 'losses', 'margin_mode', 'market_change', 'max_consecutive_losses', 'max_consecutive_wins', 'max_drawdown_abs', 'max_drawdown_account', 'max_drawdown_high', 'max_drawdown_low', 'max_open_trades', 'max_open_trades_setting', 'max_relative_drawdown', 'minimal_roi', 'mix_tag_stats', 'pairlist', 'periodic_breakdown', 'profit_factor', 'profit_mean', 'profit_median', 'profit_total', 'profit_total_abs', 'profit_total_long', 'profit_total_long_abs', 'profit_total_short', 'profit_total_short_abs', 'rejected_signals', 'replaced_entry_orders', 'results_per_enter_tag', 'results_per_pair', 'sharpe', 'sortino', 'sqn', 'stake_amount', 'stake_currency', 'stake_currency_decimals', 'starting_balance', 'stoploss', 'strategy_name', 'timedout_entry_orders', 'timedout_exit_orders', 'timeframe', 'timeframe_detail', 'timerange', 'total_trades', 'total_volume', 'trade_count_long', 'trade_count_short', 'trades', 'trades_per_day', 'trading_mode', 'trailing_only_offset_is_reached', 'trailing_stop', 'trailing_stop_positive', 'trailing_stop_positive_offset', 'use_custom_stoploss', 'use_exit_signal', 'winner_holding_avg', 'winning_days', 'winrate', 'wins', 'worst_pair']
+avg_stake_amount int 0
+canceled_entry_orders int 0
+canceled_trade_entries int 0
+dry_run_wallet int 100000
+exit_profit_offset float 0.0
+exit_profit_only bool False
+exit_reason_summary list list_len=1
+ignore_roi_if_entry_signal bool False
+left_open_trades list list_len=1
+max_open_trades int 1
+max_open_trades_setting int 1
+rejected_signals int 0
+replaced_entry_orders int 0
+stake_amount str unlimited
+stake_currency str USD
+stake_currency_decimals int 3
+timedout_entry_orders int 0
+timedout_exit_orders int 0
+total_trades int 0
+trade_count_long int 0
+trade_count_short int 0
+trades list list_len=0
+trades_per_day float 0.0
+use_exit_signal bool True
+results_per_pair [{'key': 'B2RNQCOSTCRISISREPAIR032157/USD', 'trades': 0, 'profit_mean': 0.0, 'profit_mean_pct': 0.0, 'profit_total_abs': 0, 'profit_total': 0.0, 'profit_total_pct': 0.0, 'duration_avg': '0:00', 'wins': 0, 'draws': 0, 'losses': 0, 'winrate': 0.0, 'cagr': 0.0, 'expectancy': 0.0, 'expectancy_ratio': 100.0, 'sortino': 0, 'sharpe': 0, 'calmar': 0, 'sqn': 0.0, 'profit_factor': 0.0, 'max_drawdown_account': 0.0, 'max_drawdown_abs': 0.0}, {'key': 'TOTAL', 'trades': 0, 'profit_mean': 0.0, 'profit_mean_pct': 0.0, 'profit_total_abs': 0, 'profit_total': 0.0, 'profit_total_pct': 0.0, 'duration_avg': '0:00', 'wins': 0, 'draws': 0, 'losses': 0, 'winrate': 0.0, 'cagr': 0.0, 'expectancy': 0.0, 'expectancy_ratio': 100.0, 'sortino': 0, 'sharpe': 0, 'calmar': 0, 'sqn': 0.0, 'profit_factor': 0.0, 'max_drawdown_account': 0.0, 'max_drawdown_abs': 0.0}]

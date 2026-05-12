@@ -1,0 +1,12 @@
+requirement,evidence,status,notes
+Named board is updated append-only,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,met,"Recent sections register 064259/0643xx, 064908, 065116, and 065454 with count-once/fail-closed wording."
+Every active regime reaches 95 percent confidence,064259 and 065025 completion/readback artifacts,not_met,"Current strict readback keeps accepted roots none and Bull/Bear/Sideways/Crisis missing or blocked under valid source/control gate."
+Other markets and cycles are validated,065025 board-artifact link readback plus 064908 R5 redownload,not_met,"R5 recency remains absent; Kaggle redownload has zero rows after 2026-01-30; R3 TSIE lacks Crisis and is policy-quarantined."
+Do not disturb concurrent agents,board append-only sections and count-once corrections,met,"No deletions or rewrites; duplicate sections are reconciled by count-once notes."
+Operate Auto-Quant locally,065116 and 065454 Auto-Quant artifacts,partial,"Bootstrap succeeded; local cache seed made Auto-Quant data_ready=true in isolated /tmp state, but no selected-data research is promoted."
+Operate ict-engine provider/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree chain,064259 current-objective arrival poll,partial,"Provider/analyze-live/Pre-Bayes/policy-training/workflow/path-ranking commands ran read-only; no post-unlock promotion rerun is allowed."
+Use IBKR TradingViewRemix yfinance Kraken surfaces,064259 provider-status output,partial,"Provider status was called; yfinance/Kraken/local surfaces were present in readback, but this is readiness evidence only and not source/control evidence."
+No proxy or quarantined data is promoted,063734/063906/064315/065025 readbacks,met,"TSIE and source-label equivalence roots remain non-promoting; no required target roots were mutated."
+Run direct verifier and split calibration before merge,required root readback in 065025,not_applicable_blocked,"Skipped because no valid required-root unlock exists."
+Run canonical merge and downstream promotion only after unlock,064259/065025/065454 accounting,not_applicable_blocked,"Canonical merge and downstream promotion remain false by design."
+Call update_goal only when complete,current audit,not_met,"Strict full objective is false; update_goal must remain false."

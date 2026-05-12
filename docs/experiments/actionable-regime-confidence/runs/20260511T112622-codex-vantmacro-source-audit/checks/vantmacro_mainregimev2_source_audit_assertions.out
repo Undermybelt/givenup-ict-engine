@@ -1,0 +1,10 @@
+PASS active_taxonomy=MainRegimeV2
+PASS candidate_source=VantMacro
+PASS candidate_labels_are_exact_mainregimev2_roots=false
+PASS public_history_export_found=false
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS no_raw_data_committed
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS gate_result=blocked_vantmacro_macro_model_output_not_exact_mainregimev2_label_panel

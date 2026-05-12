@@ -1,0 +1,222 @@
+{
+  "latest_bridge": {
+    "long_entry_bias": [
+      0.18348470606559952,
+      0.48491861994126273,
+      0.33159667399313775
+    ],
+    "long_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "long_signal_probability": 0.5361933770026824,
+    "multi_timeframe_alignment_score": 0.8691,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.9938,
+    "rationale": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.035 short_support=0.105 uncertainty=0.302",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.869 multi_timeframe_entry_alignment_score=0.994",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_entry_bias": [
+      0.08068807056701656,
+      0.32244007039769523,
+      0.596871859035288
+    ],
+    "short_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_signal_probability": 0.5531263706210107
+  },
+  "latest_bridge_diff": {
+    "dominant_long_entry_quality": "medium",
+    "dominant_long_entry_quality_probability": 1.0,
+    "dominant_short_entry_quality": "medium",
+    "dominant_short_entry_quality_probability": 1.0,
+    "long_short_signal_probability_gap": 0.01693299361832823,
+    "multi_timeframe_alignment_score": 0.8691,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.9938,
+    "rationale_summary": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.035 short_support=0.105 uncertainty=0.302",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.869 multi_timeframe_entry_alignment_score=0.994",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": "medium",
+    "selected_entry_quality_probability": 1.0
+  },
+  "latest_canonical_structural_active_regime": "range",
+  "latest_canonical_structural_confidence": 0.3993185754313692,
+  "latest_canonical_structural_probabilities": {
+    "range": 0.3528704545302174,
+    "stress": 0.1766356060961594,
+    "transition": 0.23524696968681164,
+    "trend": 0.23524696968681164
+  },
+  "latest_filtered_assignments": {
+    "__policy_version": "318900600c5e8cf2",
+    "factor_alignment": "mixed",
+    "factor_uncertainty": "high",
+    "liquidity_context": "neutral",
+    "market_regime": "range",
+    "market_state_primary_regime": "TrendExpansion",
+    "market_state_secondary_regime": "BullTrendAcceleration",
+    "multi_timeframe_resonance": "mixed",
+    "read_only_regime_bbn_decision_state": "accepted",
+    "read_only_regime_bbn_label": "NQRootAdaptiveCostCrisisRepairV3",
+    "read_only_regime_bbn_label_set": "Bull_->_TrendExpansion_->_NQSourceRootCarry_->_NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72,Bear_->_BearMarketDrawdown_->_NQHighVixOversoldRebound_->_NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72,Sideways_->_RangeConsolidation_->_NQCalmVixZReversion_->_NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72,Crisis_->_ExtremeStress_->_NQFlushRebound_->_NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72,Manipulation(scoped)_->_TelegramPumpEvent_->_ProviderStopTakeShort_->_ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72",
+    "read_only_regime_bbn_reasons": "branch_rc_spa_all_price_roots_passed,scoped_manipulation_component_passed",
+    "read_only_regime_bbn_soft_evidence_strength": "moderate",
+    "read_only_regime_bbn_soft_evidence_weight": "0.650",
+    "read_only_regime_bbn_trade_usable": "true",
+    "read_only_regime_bbn_transition_hazard": "0.000",
+    "regime_bundle_bbn_application_status": "skipped",
+    "regime_bundle_branch_path_count": "5",
+    "regime_bundle_branch_paths_json": "[\"Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72\",\"Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72\",\"Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72\",\"Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72\",\"Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72\"]",
+    "regime_bundle_stable_profit_score": "0.900000"
+  },
+  "latest_gate_status": "observe_only",
+  "latest_policy": {
+    "directional_conflict_penalty": 0.2,
+    "favorable_liquidity_bonus": 0.05,
+    "hard_pass_quality_threshold": 0.75,
+    "high_uncertainty_threshold": 0.45,
+    "hostile_liquidity_forces_high_uncertainty": true,
+    "hostile_liquidity_penalty": 0.1,
+    "market_overrides": {
+      "CL": {
+        "favorable_liquidity_bonus": 0.03,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.14
+      },
+      "ES": {
+        "favorable_liquidity_bonus": 0.06,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.06
+      },
+      "GC": {
+        "favorable_liquidity_bonus": 0.07,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.09
+      },
+      "NQ": {
+        "favorable_liquidity_bonus": 0.04,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.1
+      },
+      "YM": {
+        "favorable_liquidity_bonus": 0.05,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.07
+      }
+    },
+    "min_directional_support_gap": 0.08,
+    "min_multi_timeframe_alignment_score": 0.55,
+    "min_multi_timeframe_entry_alignment_score": 0.5,
+    "mixed_alignment_penalty": 0.1,
+    "multi_timeframe_alignment_bonus": 0.05,
+    "multi_timeframe_alignment_penalty": 0.1,
+    "multi_timeframe_direction_conflict_penalty": 0.18,
+    "multi_timeframe_entry_penalty": 0.08,
+    "neutralized_quality_threshold": 0.4,
+    "source": "default",
+    "version": "318900600c5e8cf2"
+  },
+  "latest_policy_diff": {
+    "changed_fields": [],
+    "previous_version": "318900600c5e8cf2",
+    "summary": "policy_unchanged"
+  },
+  "latest_policy_lineage": {
+    "changed_fields_union": [
+      "initial_policy"
+    ],
+    "latest_version": "318900600c5e8cf2",
+    "previous_version": "318900600c5e8cf2",
+    "rollback_candidate_version": "318900600c5e8cf2",
+    "rollback_reason": "latest_gate_status=observe_only suggests reverting to previous stable policy version",
+    "total_versions": 2
+  },
+  "latest_policy_version": "318900600c5e8cf2",
+  "latest_soft_evidence": {
+    "factor_alignment": {
+      "bearish": 0.2,
+      "bullish": 0.2,
+      "mixed": 0.6
+    },
+    "factor_uncertainty": {
+      "high": 0.6,
+      "low": 0.4
+    },
+    "liquidity_context": {
+      "favorable": 0.2,
+      "hostile": 0.2,
+      "neutral": 0.6
+    },
+    "market_regime": {
+      "range": 0.3528704545302174,
+      "stress": 0.1766356060961594,
+      "transition": 0.23524696968681164,
+      "trend": 0.23524696968681164
+    },
+    "multi_timeframe_resonance": {
+      "aligned": 0.2,
+      "dislocated": 0.2,
+      "mixed": 0.6
+    }
+  },
+  "latest_soft_evidence_diff": [
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "range",
+      "entropy": 0.9502705392332347,
+      "filtered_state": "range",
+      "node": "market_regime"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "neutral",
+      "entropy": 0.9502705392332347,
+      "filtered_state": "neutral",
+      "node": "liquidity_context"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "mixed",
+      "entropy": 0.9502705392332347,
+      "filtered_state": "mixed",
+      "node": "factor_alignment"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "high",
+      "entropy": 0.6730116670092565,
+      "filtered_state": "high",
+      "node": "factor_uncertainty"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.6,
+      "dominant_soft_state": "mixed",
+      "entropy": 0.9502705392332347,
+      "filtered_state": "mixed",
+      "node": "multi_timeframe_resonance"
+    }
+  ],
+  "latest_structural_feedback": null,
+  "latest_uses_soft_evidence": true
+}

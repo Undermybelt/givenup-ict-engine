@@ -1,0 +1,15 @@
+run_id=20260512T030913+0800-codex-board-b-b2r-vol-carry-long-history-v1
+recipe_id=RootLiquidityVolCarryLongHistoryV1
+selected_variant_id=balanced_vol_carry
+gate_result=fail:required_root_branch_hard_gates_failed
+downstream_consumption=not_started:blocked_by_branch_rc_spa_hard_gates
+stable_profit_score=58.82231206655986
+selected_trade_rows=63290
+variant_trade_rows=305856
+branch_paths_evaluated=5
+branch_paths_passed=0
+Bull|34575|16|232|0.000456741|-0.000530345|58.8223|fail:reject_fold_inconsistency|reject_cost_fragile|reject_rc_spa_below_60|Bull -> TrendExpansion -> LiquidityVolCarryContinuation -> RootLiquidityVolCarryLongHistoryV1:balanced_vol_carry
+Bear|22632|13|142|-0.000555775|-0.001509841|23.0769|fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60|Bear -> BearMarketDrawdown -> DefensiveVolCarryShort -> RootLiquidityVolCarryLongHistoryV1:balanced_vol_carry
+Sideways|5868|16|49|-0.002448977|-0.003517232|15.9375|fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60|Sideways -> RangeConsolidation -> LiquidityMeanReversionCarry -> RootLiquidityVolCarryLongHistoryV1:balanced_vol_carry
+Crisis|215|4|12|-0.018896849|-0.019636660|18.7500|fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60|Crisis -> ExtremeStress -> VolatilityShockShort -> RootLiquidityVolCarryLongHistoryV1:balanced_vol_carry
+Manipulation(scoped)|3211|13|1|-0.001004220|-0.002004220|30.0000|fail:reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60|Manipulation(scoped) -> TelegramPumpEvent -> SourceBuyBinanceIntradayExit -> pnl_bridge

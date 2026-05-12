@@ -1,0 +1,94 @@
+{
+  "run_id": "20260511T125337+0800-codex-post-calibration-acquisition-request-v4",
+  "artifact_type": "post_calibration_acquisition_request",
+  "trigger": {
+    "latest_calibration_run": "docs/experiments/actionable-regime-confidence/runs/20260511T124107-codex-source-window-slot-calibration-v1/source-window-slot-calibration/source_window_slot_calibration_v1.json",
+    "accepted_crosswalk_slots": 0,
+    "reason": "Monthly overlap had inadequate support and Wilson95 lower bounds; intraday source-window slots lacked long historical yfinance overlap."
+  },
+  "objective_restated": "Every active MainRegimeV2 regime must reach at least 95% calibrated held-out confidence and survive other-market, other-timeframe, full-cycle, full-species validation. Source labels, scoped factor maps, and coverage panels are inputs only.",
+  "acquisition_priorities": [
+    {
+      "request_id": "v4-price-root-exact-label-panel",
+      "target": "Exact provider/instrument/timeframe MainRegimeV2 labels",
+      "roots": ["Bull", "Bear", "Sideways", "Crisis"],
+      "required_scope": "Enough chronological rows per root/context for calibration support >= 60 and test support >= 60 after split.",
+      "acceptable_sources": [
+        "Independent dated label panel from provider or research source",
+        "Owner-approved adjudicated label windows with explicit source_id and crosswalk",
+        "Manual/official market-regime annotations mapped to exact provider/instrument/timeframe"
+      ],
+      "forbidden_sources": [
+        "HMM/GMM state ids without source relabeling and held-out calibration",
+        "OHLCV-only proxy labels treated as independent source labels",
+        "Future-return labels",
+        "Strategy prediction labels"
+      ],
+      "why": "The 124107 run accepted 0 Bull/Bear/Crisis crosswalk slots after calibration."
+    },
+    {
+      "request_id": "v4-historical-source-window-bar-overlap",
+      "target": "Historical bar overlap for approved source-window labels",
+      "roots": ["Bull", "Bear", "Crisis"],
+      "required_scope": "^GSPC/SPY/ES=F historical monthly and, if feasible, intraday bars spanning 2000-2024 source windows.",
+      "acceptable_sources": [
+        "Existing local cache with full source-window span",
+        "Provider export from IBKR, TradingView, yfinance, or licensed archive with timestamps",
+        "Compact derived support counts committed to repo, raw bars kept outside repo"
+      ],
+      "forbidden_sources": [
+        "Recent-only intraday cache used as proof of historical windows",
+        "Synthetic backfilled bars",
+        "Bar data without source labels"
+      ],
+      "why": "Current intraday/monthly overlap is too sparse for Bear/Crisis and weak for Bull test split."
+    },
+    {
+      "request_id": "v4-sideways-expanded-dated-windows",
+      "target": "Sideways dated windows beyond scoped Yahoo 1d/1w",
+      "roots": ["Sideways"],
+      "required_scope": "Intraday/monthly and broader-market Sideways windows with explicit horizon and overlap policy.",
+      "acceptable_sources": [
+        "Dated range-bound/sideways label source",
+        "Owner-approved Sideways adjudication protocol with source seed and chronological validation",
+        "Existing accepted Sideways gate expanded only if it preserves held-out Wilson95 >= 0.95"
+      ],
+      "forbidden_sources": [
+        "Complement of Bull/Bear/Crisis",
+        "Unlabeled range statistic promoted as source",
+        "Single-symbol short window with no other-market validation"
+      ],
+      "why": "The 123500 Sideways windows are accepted only in scoped Yahoo 1d/1w context."
+    },
+    {
+      "request_id": "v4-direct-manipulation-variety-rows",
+      "target": "Direct Manipulation positive/negative rows across varieties",
+      "roots": ["Manipulation"],
+      "required_scope": "Replayable event/order-flow/order-lifecycle/on-chain/social rows with matched negatives and source URL/id.",
+      "acceptable_sources": [
+        "Spoofing/layering/quote-stuffing datasets with timestamped positives and same-venue negatives",
+        "Order-lifecycle wash/self-trade event rows with matched controls",
+        "Official enforcement/case event windows only if mapped to exact asset/venue/time and paired with controls"
+      ],
+      "forbidden_sources": [
+        "OHLCV liquidity or volume proxies",
+        "Positive-only event lists",
+        "Methodology papers without public row export",
+        "Synthetic rows without real event provenance"
+      ],
+      "why": "Existing direct evidence is scoped social/event, self-trade/order-lifecycle, and wash-maker; broader direct variety coverage remains partial."
+    }
+  ],
+  "expected_next_loop": {
+    "name": "acquire_or_attach_v4_exact_labels_then_calibrate",
+    "success_condition": "At least one blocked root/context gains enough exact labels and bar overlap to run chronological calibration/test with Wilson95 >= 0.95.",
+    "abstain_condition": "If labels or support remain missing, write explicit abstain per cell instead of reusing source-window projections."
+  },
+  "safety_flags": {
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "goal_complete": false
+  }
+}

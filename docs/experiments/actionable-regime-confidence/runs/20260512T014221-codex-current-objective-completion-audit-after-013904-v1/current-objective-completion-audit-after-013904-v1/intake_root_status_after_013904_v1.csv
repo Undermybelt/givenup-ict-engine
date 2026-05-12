@@ -1,0 +1,5 @@
+root,path,present,file_count,status
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,true,2,present_confidence_blocked
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,false,0,absent
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,false,0,absent
+r5_recency_extension,/tmp/ict-engine-source-panel-recency-extension,false,0,absent

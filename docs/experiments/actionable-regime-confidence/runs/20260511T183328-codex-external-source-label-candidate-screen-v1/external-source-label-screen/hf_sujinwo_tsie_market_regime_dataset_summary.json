@@ -1,0 +1,83 @@
+{
+  "feature_names": [
+    "group_id",
+    "time_idx",
+    "time",
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "log_return",
+    "price_norm",
+    "volume_norm",
+    "volatility",
+    "momentum_3",
+    "momentum_10",
+    "future_volatility",
+    "trend_return",
+    "target_return",
+    "macd_norm",
+    "atr_norm",
+    "bb_pos",
+    "is_opening",
+    "is_closing",
+    "is_session_1",
+    "is_session_2",
+    "hour",
+    "day_of_week",
+    "month",
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "regime_label"
+  ],
+  "first_row_group_id": "IDX_DLY_AALI_60",
+  "first_row_time": "2013-01-07T02:00:00",
+  "id": "sujinwo/tsie-market-regime-dataset",
+  "lastModified": "2026-04-13T13:27:46.000Z",
+  "readme_labeling_mentions": [
+    "- Multi-class regime labels based on rule-based signal logic",
+    "Each timestep is labeled with a market regime:",
+    "Class| Label| Description",
+    "(available in future)",
+    "\u2699\ufe0f Labeling Methodology",
+    "Labels are generated using:",
+    "- Rule-based signal classification",
+    "This is not future-leakage-based labeling.",
+    "- \"target\" (main label)"
+  ],
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "tft_dataset_labeled.parquet"
+    }
+  ],
+  "tags": [
+    "task_categories:tabular-classification",
+    "task_categories:time-series-forecasting",
+    "license:mit",
+    "size_categories:1M<n<10M",
+    "format:parquet",
+    "modality:tabular",
+    "modality:text",
+    "library:datasets",
+    "library:pandas",
+    "library:polars",
+    "library:mlcroissant",
+    "region:us",
+    "finance",
+    "trading",
+    "Temporal Fusion Transformer",
+    "time-series",
+    "stock-market",
+    "IDX",
+    "TFT"
+  ]
+}

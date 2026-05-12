@@ -1,0 +1,12 @@
+PASS candidate_sweep_artifact_exists
+PASS current_blocker_596_missing_slots_recorded
+PASS kaggle_source_marked_partial_only
+PASS hf_btc_hmm_source_rejected_proxy_only
+PASS hf_tsie_source_rejected_sidecar_only
+PASS new_accepted_source_label_slots_zero
+PASS proxy_promoted_false
+PASS goal_achieved_false
+PASS accepted_full_panel_false
+PASS runtime_code_changed_false
+PASS thresholds_relaxed_false
+PASS trade_usable_false

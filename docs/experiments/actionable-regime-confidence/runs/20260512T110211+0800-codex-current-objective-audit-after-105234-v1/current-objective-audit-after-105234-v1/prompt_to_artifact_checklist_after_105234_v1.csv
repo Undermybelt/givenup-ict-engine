@@ -1,0 +1,9 @@
+requirement,evidence,status
+"every active regime >=95 calibrated confidence","latest sections report accepted rows added 0 and strict full objective false","not_achieved"
+"cross-market/timeframe/period validation","104703 single Binance BTCUSDT 1h only; 104610 aggregate crypto negative; 104803 panel negative","not_achieved"
+"real Auto-Quant execution","104703/104610/104803 real TOMAC/AQ roots exist but are incubation or non-promoting","partial"
+"IBKR/TVR/YF/Kraken/Binance/Bybit provider matrix","105207 has ad hoc yfinance/Kraken/Binance/Bybit/IBKR; TVR failed; 105636 TVR HTTP 429; 105234 forbids substitution","not_achieved"
+"provider/AQ -> Pre-Bayes -> BBN -> CatBoost/path-ranker -> execution tree","ordered surfaces called but Pre-Bayes empty/not ready, CatBoost/path-ranker immature, execution tree fail_closed","partial_fail_closed"
+"source/control unlock","source/control evidence acquired false, explicit selected-history false, canonical merge false","not_achieved"
+"multi-agent safety","new run root only and append-only board writeback; Current Cursor untouched","achieved_for_this_slice"
+"completion/update_goal","objective not achieved; update_goal false","not_complete"

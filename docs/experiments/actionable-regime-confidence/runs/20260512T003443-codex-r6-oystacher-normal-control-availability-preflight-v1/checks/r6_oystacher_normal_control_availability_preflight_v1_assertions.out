@@ -1,0 +1,6 @@
+gate_result=r6_oystacher_normal_control_availability_preflight_v1=no_source_owned_normal_controls_found_no_merge_or_chain_rerun
+source_policy_approval_present=false
+normal_control_ready=false
+shared_intake_mutated=false
+downstream_chain_rerun=false
+update_goal=false

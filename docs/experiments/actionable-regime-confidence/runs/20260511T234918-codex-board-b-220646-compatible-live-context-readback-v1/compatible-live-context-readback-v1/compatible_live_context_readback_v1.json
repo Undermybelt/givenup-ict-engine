@@ -1,0 +1,67 @@
+{
+  "schema_version": "board-b-compatible-live-context-readback/v1",
+  "run_id": "20260511T234918+0800-codex-board-b-220646-compatible-live-context-readback-v1",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "recipe_id": "SourceRootStopCarryLongHorizonV1",
+  "branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "source_artifacts": {
+    "rc_spa_report": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_rc_spa_report_v1.md",
+        "block_crowded_nursery_packet": "docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/b2r_block_crowded_nursery_v1.md",
+    "live_replay_stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/logs/03_analyze_live_crisis_bundle.out",
+    "live_replay_state": "docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1",
+    "provider_harness_root": "docs/experiments/actionable-regime-confidence/runs/20260511T234653-codex-board-b-220646-b2r-block-crowded-live-context-v1/provider"
+  },
+  "provider_readback": {
+    "provider_status_agent_exit": 0,
+    "yfinance_ready": true,
+    "yfinance_harness_exit": 0,
+    "tradingview_mcp_ready": false,
+    "tradingview_mcp_harness_exit": 1,
+    "ibkr_recorded": true,
+    "ibkr_harness_exit": 1,
+    "ibkr_blocker": "explicit_ibkr_contract_required_and_runtime_dependencies_missing_with_gateway_reachable",
+    "kraken_cli_ready": true,
+    "kraken_cli_ohlc_exit": 0,
+    "kraken_public_ready": false
+  },
+  "downstream_readback": {
+    "analyze_live_exit": 0,
+    "live_data_fingerprint_changed": true,
+    "candidate_status": "ready",
+    "execution_candidate_actionable": true,
+    "decision_summary": "Observe only",
+    "pre_bayes_gate": "pass_neutralized",
+    "pre_bayes_quality_score": 0.5619249343265972,
+    "bbn_soft_evidence_status": "applied",
+    "bbn_soft_market_regime": {
+      "bear": 0.175,
+      "bull": 0.175,
+      "range": 0.65
+    },
+    "catboost_path_ranker_validation_ready": true,
+    "catboost_path_ranker_score_visible_to_execution_tree": true,
+    "catboost_path_ranker_score_used_by_execution_tree": true,
+    "execution_tree_branch": "fill_viable",
+    "execution_tree_gate_status": "observe",
+    "execution_tree_bias": "passive",
+    "execution_readiness": 0.4504,
+    "execution_score": 0.5637168720248323,
+    "market_state": "RangeConsolidation/WideRange",
+    "workflow_blocker": "user_selected_historical_data_missing",
+    "recorded_data_paths": [
+      "docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_htf.json",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json",
+      "docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json"
+    ]
+  },
+  "decision": {
+    "block_crowded_repeated": false,
+    "compatible_context_observed": true,
+    "promotion_allowed": false,
+    "promotion_status": "not_promoted:observe_only_and_historical_data_selection_blocked",
+    "nursery_status": "incubation_only_repeat_evidence",
+    "interpretation": "The exact Crisis branch no longer hit block_crowded on the latest live replay, but it remained observe/passive and workflow-blocked by the required user-selected historical data step. Treat block_crowded as context-sensitive nursery feedback, not a permanent profitability rejection and not a promotion signal."
+  },
+  "next_action": "Do not promote 220646. Either ask/select the recorded historical data path before factor-research, or design a sibling Crisis leaf that explicitly suppresses crowded RangeConsolidation/WideRange states and rerun the full nursery backtest/downstream chain."
+}

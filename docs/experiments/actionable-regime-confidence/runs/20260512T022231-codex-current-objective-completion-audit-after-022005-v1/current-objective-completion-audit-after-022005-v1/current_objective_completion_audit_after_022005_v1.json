@@ -1,0 +1,151 @@
+{
+  "run_id": "20260512T022231-codex-current-objective-completion-audit-after-022005-v1",
+  "gate_result": "current_objective_completion_audit_after_022005_v1=not_complete_r6_source_controls_autoquant_data_cross_validation_and_downstream_blocked",
+  "board_sha256_at_generation": "dcab39cd3fd8009d256092a3f5d7324d9085ce5de42a72ecca124a63a3ca85e5",
+  "objective_restatement": [
+    "Every MainRegimeV2 regime must have accepted calibrated confidence >=95%.",
+    "Each accepted regime needs its own qualifying condition.",
+    "Confidence must validate across other markets and cycles/timeframes.",
+    "Provider context must include IBKR, TradingViewRemix, yfinance, and Kraken where available.",
+    "Auto-Quant -> filter/Pre-Bayes/BBN -> CatBoost/path-ranking -> execution-tree must be operated on real artifacts.",
+    "No proxy signal can substitute for source/control roots, canonical merge, and downstream promotion evidence."
+  ],
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "Use the named Board A markdown and preserve multi-agent coordination",
+      "status": "pass",
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md; sha256_at_generation=dcab39cd3fd8009d256092a3f5d7324d9085ce5de42a72ecca124a63a3ca85e5",
+      "gap": "none"
+    },
+    {
+      "requirement": "Every MainRegimeV2 regime reaches accepted calibrated confidence >=95%",
+      "status": "blocked",
+      "evidence": "021256 audit and 022005 TSIE dry run both report accepted_rows_added=0, new_confidence_gate=false, strict_full_objective_achieved=false",
+      "gap": "No accepted Bull/Bear/Sideways/Crisis packet at >=95%; TSIE is candidate-only."
+    },
+    {
+      "requirement": "Each accepted regime has its own qualifying condition",
+      "status": "blocked",
+      "evidence": "022005 maps Bear/Bull/Sideways support but does not create accepted rows; Crisis absent",
+      "gap": "No accepted per-regime qualifying_condition packet exists."
+    },
+    {
+      "requirement": "Validate accepted confidence across other markets",
+      "status": "blocked",
+      "evidence": "022005 provides IDX support only and explicitly requires cross-market transfer; R6 owner-export controls remain absent",
+      "gap": "No accepted cross-market transfer/calibration artifact."
+    },
+    {
+      "requirement": "Validate accepted confidence across other cycles/timeframes",
+      "status": "blocked",
+      "evidence": "r3={'path': '/tmp/ict-engine-native-subhour-source-label-intake', 'present': False, 'kind': 'absent', 'file_count': 0}; r5={'path': '/tmp/ict-engine-source-panel-recency-extension', 'present': False, 'kind': 'absent', 'file_count': 0}; TSIE hours are hourly/session only",
+      "gap": "Native sub-hour and recency-extension roots remain absent; no accepted cross-timeframe packet."
+    },
+    {
+      "requirement": "Record IBKR/TradingViewRemix/yfinance/Kraken provider context",
+      "status": "partial",
+      "evidence": "021456 maps providers: yfinance ready, TradingViewRemix/MCP not ready, IBKR not ready as market-data provider, Kraken partial",
+      "gap": "Provider context is read-only/non-promoting and does not supply source/control roots."
+    },
+    {
+      "requirement": "Operate Auto-Quant on real artifacts",
+      "status": "partial",
+      "evidence": "021808 Auto-Quant readiness: bootstrap_exit=0, prepare_exit=1, after_prepare_status=dependency_ready_data_missing, data_ready=False",
+      "gap": "Dependency readiness improved, but prepare failed and data_ready=false; no promotion evidence."
+    },
+    {
+      "requirement": "Operate filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution tree",
+      "status": "partial",
+      "evidence": "021456 runtime chain: pre_bayes_confidence=0.5822867835012198, policy_matched_rows=0, execution_actionable=False, export_mature_rows=0",
+      "gap": "Surfaces are callable/read-only only; no accepted downstream promotion rerun is allowed."
+    },
+    {
+      "requirement": "R6 has source-owned normal controls or explicit FLIP approval",
+      "status": "blocked",
+      "evidence": "r6={'path': '/tmp/ict-engine-board-a-r6-owner-export-v1', 'present': False, 'kind': 'absent', 'file_count': 0}; legacy_direct={'path': '/tmp/ict-engine-direct-manipulation-row-intake', 'present': True, 'kind': 'dir', 'file_count': 3}",
+      "gap": "Owner-export root absent; legacy direct rows are explicitly non-promoting; FLIP approval false."
+    },
+    {
+      "requirement": "Canonical merge and downstream promotion rerun are allowed",
+      "status": "blocked",
+      "evidence": "latest_audit canonical=False; tsie canonical=False; provider canonical=False",
+      "gap": "Canonical merge and downstream rerun remain false across current evidence."
+    },
+    {
+      "requirement": "Goal can be marked complete",
+      "status": "blocked",
+      "evidence": "strict_full_objective_achieved=false and update_goal=false in current evidence",
+      "gap": "Objective is not achieved."
+    }
+  ],
+  "checklist_counts": {
+    "pass": 1,
+    "partial": 3,
+    "blocked": 7
+  },
+  "root_status": {
+    "r6_owner_export": {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "kind": "absent",
+      "file_count": 0
+    },
+    "r3_native_subhour": {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false,
+      "kind": "absent",
+      "file_count": 0
+    },
+    "r5_recency_extension": {
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false,
+      "kind": "absent",
+      "file_count": 0
+    },
+    "source_label_equivalence": {
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "kind": "dir",
+      "file_count": 2
+    },
+    "legacy_direct_intake": {
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "present": true,
+      "kind": "dir",
+      "file_count": 3
+    }
+  },
+  "evidence_refs": {
+    "latest_completion_audit": "docs/experiments/actionable-regime-confidence/runs/20260512T021256-codex-current-objective-completion-audit-after-020037-v1/current-objective-completion-audit-after-020037-v1/current_objective_completion_audit_after_020037_v1.json",
+    "provider_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T021456-codex-required-provider-status-readback-v1/required-provider-status-readback-v1/required_provider_status_readback_v1.json",
+    "tsie_full_parquet_dryrun": "docs/experiments/actionable-regime-confidence/runs/20260512T022005-codex-tsie-source-label-intake-dryrun-v1/tsie-source-label-intake-dryrun-v1/tsie_source_label_intake_dryrun_v1.json",
+    "autoquant_bootstrap_prepare_readiness": "docs/experiments/actionable-regime-confidence/runs/20260512T021808-codex-autoquant-bootstrap-prepare-readiness-v1/autoquant-bootstrap-prepare-readiness-v1/autoquant_bootstrap_prepare_readiness_v1.json"
+  },
+  "tsie_mapped_counts": {
+    "ABSTAIN_TRAP": 2161093,
+    "Bear": 1435764,
+    "Bull": 1435055,
+    "Sideways": 2162084
+  },
+  "autoquant_readiness": {
+    "gate_result": "autoquant_bootstrap_prepare_readiness_v1=dependency_ready_prepare_failed_data_missing_no_promotion",
+    "bootstrap_exit": 0,
+    "prepare_exit": 1,
+    "after_prepare_status": "dependency_ready_data_missing",
+    "final_dependency_healthy": true,
+    "final_data_ready": false,
+    "final_healthy": false
+  },
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false
+}

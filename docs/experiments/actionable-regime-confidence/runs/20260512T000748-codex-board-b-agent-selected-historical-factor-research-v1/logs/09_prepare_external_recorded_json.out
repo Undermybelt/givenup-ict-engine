@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/factor-research/agent_selected_mtf_candles.csv ...
+  raw_rows=1,874 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=1,874
+  range 2026-01-11 23:00:00+00:00 -> 2026-05-11 15:36:13+00:00
+  after timerange slice: 1,874 rows
+  cleaning: dropped 66 (3.5219%) | ohlc_inconsistent=0 nonpositive_price=0 negative_volume=0 ghost_bar=66 jump_outlier=0 -> after_clean=1,808
+  gap_audit: median_gap=3600s max_gap=4,500.0min big_gaps_gt_60x_median=2 (typical for futures session breaks/weekends)
+  wrote   1h:   1,807 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/user_data/data/SRC_ROOT_CARRY_LONG_220646_USD-1h.feather
+  wrote   4h:     506 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/user_data/data/SRC_ROOT_CARRY_LONG_220646_USD-4h.feather
+  wrote   1d:     101 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/user_data/data/SRC_ROOT_CARRY_LONG_220646_USD-1d.feather
+Done: 3 feather files for pair SRC_ROOT_CARRY_LONG_220646/USD in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/.deps/auto-quant/user_data/data

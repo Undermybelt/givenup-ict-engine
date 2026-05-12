@@ -1,0 +1,9 @@
+exit=0
+active_external_strategies:
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/RegimeRootPulseBranch.py
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/RegimeTrendCarry.py
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/RegimeVolBreakout.py
+disabled_external_strategies:
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/_disabled_current_probe/RecordedBranchDailyPulse.py
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/_disabled_current_probe/RegimeRsiRelief.py
+"20210101-20251231"

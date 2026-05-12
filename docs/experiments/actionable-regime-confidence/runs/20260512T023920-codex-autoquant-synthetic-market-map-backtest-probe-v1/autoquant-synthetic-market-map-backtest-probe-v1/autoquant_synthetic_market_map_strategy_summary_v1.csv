@@ -1,0 +1,4 @@
+strategy,robust_sharpe,full_profit_pct,full_trades,full_win_rate_pct,worst_timerange_profit_pct,profit_floor,min_position_size,pareto_dominated_by,promotion_use
+CrashRebound,0.1516,40.58,176,65.3409,8.63,FAIL,PASS,none,diagnostic_only
+PerPairMR,-0.2159,23.97,287,64.1115,-2.48,FAIL,PASS,none,diagnostic_only
+RegimeAdaptiveBNB,-0.0390,15.96,30,60.0000,-0.76,FAIL,PASS,none,diagnostic_only

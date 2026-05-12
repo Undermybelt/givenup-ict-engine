@@ -1,0 +1,10 @@
+requirement,status,evidence,missing_or_next
+named_board_authoritative_append_only,partial,docs/plans/2026-05-10-actionable-regime-confidence-todo.md append-only through 040919,continue append-only and preserve Current Cursor
+every_regime_95_confidence_with_qualifying_condition,blocked,040109 not complete and 040919 adds zero recency-tail target rows,source-owned rows and per-regime qualifying evidence still required
+cross_market_period_timeframe_validation,blocked,R3/R5/R6 source roots absent,cross-market and cross-timeframe source-owned validation still required
+providers_ibkr_tradingview_yfinance_kraken,diagnostic_only,195320 plus 040824 provider diagnostics,provider reachability cannot replace source/control evidence
+autoquant,blocked,040757 bootstrap succeeded but prepare exited 1 and data_ready=false,prepare data without Binance DNS blocker or provide local prepared data
+filter_pre_bayes_bbn_catboost_path_ranking_execution_tree,blocked,040311 Pre-Bayes empty CatBoost matched_rows=0 path export missing workflow observe,no mature rows to consume until source/control gate unlocks
+do_not_promote_proxy_signals,satisfied,040611 040824 040757 040919 non-promoting,no proxy promotion
+source_control_gate_before_downstream_rerun,blocked,040738 and live readback show target roots absent,unlock owner-export native-subhour or recency-extension roots before rerun
+completion_update_goal,not_complete,strict_full_objective=false trade_usable=false update_goal=false,do not call update_goal

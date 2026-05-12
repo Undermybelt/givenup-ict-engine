@@ -1,0 +1,333 @@
+{
+  "accepted_rows_added": 0,
+  "artifact_decisions": {
+    "current_cursor_root": "r6_mohan_shak_duplicate_cleanup_v1=duplicate_rows_removed_calibration_still_blocked",
+    "previous_shak_duplicate_cleanup": "r6_shak_duplicate_row_cleanup_v1=duplicate_rows_removed_calibration_still_blocked",
+    "provider_chain_gap_recheck": null,
+    "r2_r3_r5_gap_readback": "r2_r3_r5_source_intake_gap_readback_v1=no_required_source_label_or_recency_rows_found",
+    "r2_r3_r5_public_route_readback_unregistered": "r2_r3_r5_public_route_and_root_readback_v1=rows_not_acquired_blocked",
+    "v41_completion_audit": "current_goal_completion_audit_v41=post_source_gap_still_blocked"
+  },
+  "board_hash_before": "6708d8692af19d62917367c10ee8173ae08148de57abd6d9c51fbd8e31adce48",
+  "broad_normal_sample": false,
+  "checked_artifacts": {
+    "current_cursor_root": "docs/experiments/actionable-regime-confidence/runs/20260511T212325-codex-r6-mohan-shak-duplicate-cleanup-v1/r6-mohan-shak-duplicate-cleanup/r6_mohan_shak_duplicate_cleanup_v1.json",
+    "previous_shak_duplicate_cleanup": "docs/experiments/actionable-regime-confidence/runs/20260511T212004-codex-r6-shak-duplicate-row-cleanup-v1/r6-shak-duplicate-row-cleanup/r6_shak_duplicate_row_cleanup_v1.json",
+    "provider_chain_gap_recheck": "docs/experiments/actionable-regime-confidence/runs/20260511T205142-codex-provider-chain-intake-readback-v37/provider-chain-intake-readback/provider_chain_intake_gap_recheck_v1.json",
+    "r2_r3_r5_gap_readback": "docs/experiments/actionable-regime-confidence/runs/20260511T211112-codex-r2-r3-r5-source-intake-gap-readback-v1/r2-r3-r5-source-intake-gap-readback/r2_r3_r5_source_intake_gap_readback_v1.json",
+    "r2_r3_r5_public_route_readback_unregistered": "docs/experiments/actionable-regime-confidence/runs/20260511T212118-codex-r2-r3-r5-public-route-and-root-readback-v1/r2-r3-r5-public-route-and-root-readback/r2_r3_r5_public_route_and_root_readback_v1.json",
+    "v41_completion_audit": "docs/experiments/actionable-regime-confidence/runs/20260511T211552-codex-current-goal-completion-audit-v41-post-source-gap/completion-audit/current_goal_completion_audit_v41_post_source_gap.json"
+  },
+  "checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "gap": "",
+      "id": "R0_named_board",
+      "requirement": "Use the named Board A markdown and produce repo-local artifacts.",
+      "status": "pass_checked"
+    },
+    {
+      "evidence": "cursor=20260511T212401+0800-codex-current-goal-completion-audit-v43-post-cleanup; ready_roots=1/4; direct_min_wilson95_lcb=0.862024",
+      "gap": "Strict all-regime 95% objective is still not achieved; R6 direct confidence is below 0.95 and R2/R3/R4/R5 source roots are absent.",
+      "id": "R1_every_regime_95",
+      "requirement": "Every active regime must have its own source-owned or owner-approved >=95 confidence gate.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "source_label_equivalence_status=blocked; root=/tmp/ict-engine-source-label-equivalence-intake",
+      "gap": "source_label_equivalence_rows.csv and source_label_equivalence_provenance.json are absent.",
+      "id": "R2_other_market_validation",
+      "requirement": "Validate regimes on other markets/species with suitable confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "native_subhour_ready=False; recency_status=blocked",
+      "gap": "native sub-hour source-label rows/provenance and recency-extension rows/provenance are absent.",
+      "id": "R3_other_cycle_timeframe",
+      "requirement": "Validate regimes on other cycles/timeframes with suitable confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "provider_chain_gap_recheck artifact is checked if present; this slice reruns verifiers only and makes no completion claim.",
+      "gap": "Fresh provider/Auto-Quant/BBN/CatBoost/execution-tree rerun was not performed in this slice; strict completion remains blocked before that can matter.",
+      "id": "R4_provider_and_full_chain",
+      "requirement": "When claiming chain evidence, use real provider/Auto-Quant/ict-engine/filter/BBN/CatBoost/execution-tree artifacts including IBKR, TradingViewRemix, yfinance, and Kraken status.",
+      "status": "partial_guardrail"
+    },
+    {
+      "evidence": "positives=24; controls=24; matched_groups=23; min_lcb=0.862024; broad_normal_sample=False; species_closed=False",
+      "gap": "R6 is 24/24 after duplicate cleanup; support is below 50/50, Wilson95 is below 0.95, controls are same-source/event seeds, and species coverage is incomplete.",
+      "id": "R5_r6_direct_confidence",
+      "requirement": "Direct Manipulation must pass support, Wilson95, broad-normal, and direct-species gates.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "This audit keeps VantMacro drafts, missing intake roots, same-event controls, schema-ready verifier output, and OHLCV/provider proxies fail-closed.",
+      "gap": "",
+      "id": "R6_no_proxy_acceptance",
+      "requirement": "Do not accept proxy signals, generated labels, no-send drafts, same-event controls, or schema readiness as completion.",
+      "status": "pass_guardrail"
+    },
+    {
+      "evidence": "board_hash_before=6708d8692af19d62917367c10ee8173ae08148de57abd6d9c51fbd8e31adce48; cursor_before=20260511T212401+0800-codex-current-goal-completion-audit-v43-post-cleanup; append-only registration expected",
+      "gap": "",
+      "id": "R7_multi_agent_safety",
+      "requirement": "Do not disturb concurrent board sections or in-progress artifacts.",
+      "status": "pass_guardrail"
+    },
+    {
+      "evidence": "failures_present=true",
+      "gap": "Missing and failed requirements remain; update_goal=false.",
+      "id": "R8_update_goal_gate",
+      "requirement": "Only call update_goal when every checklist item is covered by real evidence.",
+      "status": "fail_blocked"
+    }
+  ],
+  "created_at_utc": "2026-05-11T13:27:39.479465+00:00",
+  "current_cursor": {
+    "accepted_gate": "current_goal_completion_audit_v43=`post_cleanup_live_24x24_still_blocked`; r6_mohan_shak_duplicate_cleanup_v1=`duplicate_rows_removed_calibration_still_blocked`; r6_mohan_shak_row_uplift_v1=`duplicate_rows_superseded_by_cleanup`; current_goal_completion_audit_v42=`duplicate_cleanup_still_blocked`; r2_r3_r5_public_route_and_root_readback_v1=`rows_not_acquired_blocked`; r6_shak_duplicate_row_cleanup_v1=`duplicate_rows_removed_calibration_still_blocked`; r6_shak_cftc_row_uplift_v1=`duplicate_inflated_superseded_by_cleanup`; r6_cftc_vorley_chanu_calibration_gate_v3=`schema_ready_but_calibration_blocked`; current_goal_completion_audit_v41=`post_source_gap_still_blocked`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "active_market_set": "Fresh V43 completion audit after the `212325` Mohan/Shak duplicate cleanup: exact source-owned or owner-approved R2/R3/R4/R5 row files remain absent, while the corrected R6 direct root is schema-ready at `24/24` but still below support/Wilson95/broad-normal/direct-species gates.",
+    "active_timeframes": "V43 post-cleanup audit: R2/R4 source-label equivalence files absent, R3 native sub-hour files absent, and R5 post-2026-01-30 recency-extension files absent; R6 direct readback is `24/24`, chronological split previously preserved by cleanup artifact, heldout symbol/venue previously preserved, Wilson95 min LCB `0.862024`, broad-normal sample `false`.",
+    "blocker": "Strict objective remains blocked: R2/R3/R4/R5 source-owned/provenance files remain absent, and R6 direct root is schema-ready but fails calibration after duplicate cleanup with `24/24`, Wilson95 min LCB `0.862024`, support below `50/50`, no broad normal sample, and limited direct species coverage.",
+    "board_state": "blocked",
+    "candidate_regime": "Strict Board A objective across active lanes: scoped `>=95%` evidence persists; R6 spoofing/layering has public regulator schema-ready seeds but fails strict confidence gates after duplicate cleanup; broader direct species remain absent, and R2/R3/R4/R5 still lack source-owned rows/provenance after fresh verifier readbacks.",
+    "confidence_lane": "`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260511T212401-codex-current-goal-completion-audit-v43-post-cleanup`",
+    "last_loop_id": "20260511T212401+0800-codex-current-goal-completion-audit-v43-post-cleanup",
+    "next_action": "Populate the existing fail-closed R2/R3/R4/R5 roots with required source-owned/provenance files, or acquire additional source-owned/owner-approved R6 positives plus broad same-schema normal controls/direct species rows, then rerun unchanged verifiers before another completion audit.",
+    "provider_status": "V43 reran unchanged fail-closed verifiers after the `212325` cleanup: source-label equivalence `blocked/missing_required_files`, source-panel recency `blocked/missing_required_files`, direct files `3/3` present and verifier `schema_ready_unscored` with positive rows `24`, matched negatives `24`, matched groups `23`, ready intake roots `1/4`, Wilson95 min LCB `0.862024`, broad-normal sample `false`; no raw data commit, threshold relaxation, external request send, or runtime code change."
+  },
+  "decision": "current_goal_completion_audit_v44=post_cleanup_live_24x24_still_blocked",
+  "direct_species_closed": false,
+  "external_requests_sent": false,
+  "gates": [
+    {
+      "gate": "ready_intake_roots",
+      "observed": "1",
+      "pass": "false",
+      "required": "4"
+    },
+    {
+      "gate": "r6_positive_support",
+      "observed": "24",
+      "pass": "false",
+      "required": ">=50"
+    },
+    {
+      "gate": "r6_negative_support",
+      "observed": "24",
+      "pass": "false",
+      "required": ">=50"
+    },
+    {
+      "gate": "r6_wilson95_lcb",
+      "observed": "0.862024",
+      "pass": "false",
+      "required": ">=0.95"
+    },
+    {
+      "gate": "r6_broad_normal_sample",
+      "observed": "false",
+      "pass": "false",
+      "required": "true"
+    },
+    {
+      "gate": "r6_direct_species_coverage",
+      "observed": "false",
+      "pass": "false",
+      "required": "true"
+    },
+    {
+      "gate": "source_label_equivalence_verifier",
+      "observed": "blocked",
+      "pass": "false",
+      "required": "not_blocked"
+    },
+    {
+      "gate": "source_panel_recency_verifier",
+      "observed": "blocked",
+      "pass": "false",
+      "required": "not_blocked"
+    },
+    {
+      "gate": "native_subhour_root_ready",
+      "observed": "false",
+      "pass": "false",
+      "required": "true"
+    }
+  ],
+  "intake_roots": [
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "file_hashes": {},
+      "id": "source_label_equivalence",
+      "missing_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "requirements": "R2 other-market validation; R4 strict 1h transfer",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "file_hashes": {},
+      "id": "native_subhour_source_label",
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "requirements": "R3 native sub-hour / other-cycle validation",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "file_hashes": {},
+      "id": "source_panel_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "requirements": "R5 post-cutoff recency extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "csv_row_counts": "{\"matched_negative_normal_activity_rows.csv\": 24, \"positive_spoofing_layering_rows.csv\": 24}",
+      "exists": true,
+      "file_hashes": {
+        "matched_negative_normal_activity_rows.csv": "096acb732c234dece992e4f48582f8b547b25990742db708df06a1416d450347",
+        "positive_spoofing_layering_rows.csv": "c7e0b2950b67de2018c9b9f2cea922aedf2b92cfcfc4d7e7a8a9da7031d183e5",
+        "provenance_manifest.json": "dd6adbdabf133826e3c4961b7e2300a15fc1e5ba7b463eb20a8f59da204c667e"
+      },
+      "id": "direct_manipulation_row_intake",
+      "missing_files": "",
+      "present_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "ready": true,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "requirements": "R6 direct Manipulation source rows",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "new_confidence_gate": false,
+  "next_action": "R6 needs at least 50/50 source-owned rows plus broad same-schema normal-market controls and broader direct species coverage; R2/R3/R4/R5 still need required source-owned rows/provenance before another completion audit can pass.",
+  "objective_restatement": "Every active regime must have source-owned or owner-approved >=95 confidence, and must keep suitable confidence when validated on other markets/species and other cycles/timeframes before completion can be reported.",
+  "r6_combined_min_wilson95_lcb": 0.8620237953250198,
+  "r6_matched_group_count": 23,
+  "r6_matched_negative_rows": 24,
+  "r6_negative_wilson95_lcb": 0.8620237953250198,
+  "r6_positive_rows": 24,
+  "r6_positive_wilson95_lcb": 0.8620237953250198,
+  "raw_data_committed": false,
+  "ready_root_count": 1,
+  "ready_roots": [
+    "direct_manipulation_row_intake"
+  ],
+  "run_id": "20260511T212711-codex-current-goal-completion-audit-v44-post-212325",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "support_ok": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_readbacks": [
+    {
+      "id": "source_label_equivalence",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "status": "blocked",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212711-codex-current-goal-completion-audit-v44-post-212325/command-output/source_label_equivalence_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212711-codex-current-goal-completion-audit-v44-post-212325/command-output/source_label_equivalence_verifier.stdout.txt"
+    },
+    {
+      "id": "source_panel_recency_extension",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "status": "blocked",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212711-codex-current-goal-completion-audit-v44-post-212325/command-output/source_panel_recency_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212711-codex-current-goal-completion-audit-v44-post-212325/command-output/source_panel_recency_verifier.stdout.txt"
+    },
+    {
+      "id": "direct_manipulation_row_intake",
+      "parsed": {
+        "matched_group_count": 23,
+        "matched_negative_rows": 24,
+        "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+        "positive_rows": 24,
+        "provenance_keys": [
+          "cftc_gandhi_order",
+          "cftc_geneva_order_2018",
+          "cftc_geneva_order_examples",
+          "cftc_geneva_order_rows_added",
+          "cftc_genuine_order_text_checks",
+          "cftc_genuine_order_text_status",
+          "cftc_mohan_additional_examples",
+          "cftc_mohan_complaint",
+          "cftc_mohan_complaint_rows_added",
+          "cftc_mohan_complaint_text_checks",
+          "cftc_order",
+          "cftc_shak_complaint",
+          "cftc_shak_complaint_examples",
+          "cftc_shak_rows_added",
+          "cftc_text_checks",
+          "cftc_text_extraction_status",
+          "cftc_vorley_chanu_complaint",
+          "created_at_utc",
+          "finra_public_schema",
+          "gandhi_matched_negative_rows_added",
+          "gandhi_positive_rows_added",
+          "gandhi_rows_materialized_at_utc",
+          "license_or_permission",
+          "matched_control_limitations",
+          "matched_control_policy",
+          "matched_negative_control_policy",
+          "matched_negative_materialized_at_utc",
+          "matched_negative_rows_acquired",
+          "matched_negative_rows_count",
+          "matched_negative_rows_path",
+          "matched_negative_rows_sha256",
+          "mohan_additional_matched_negative_rows_added",
+          "mohan_additional_positive_rows_added",
+          "mohan_additional_rows_materialized_at_utc",
+          "mohan_complaint_control_policy",
+          "positive_rows_count",
+          "positive_rows_path",
+          "positive_rows_sha256",
+          "r6_geneva_cftc_row_uplift_v1",
+          "r6_mohan_shak_duplicate_cleanup_v1",
+          "r6_mohan_shak_row_uplift_v1",
+          "r6_shak_duplicate_row_cleanup_v1",
+          "shak_complaint_matched_negative_rows_added",
+          "shak_complaint_positive_rows_added",
+          "shak_complaint_rows_materialized_at_utc",
+          "source",
+          "updated_at_utc",
+          "updated_by",
+          "vorley_chanu_matched_negative_rows_added",
+          "vorley_chanu_positive_rows_added",
+          "vorley_chanu_rows_materialized_at_utc"
+        ],
+        "status": "schema_ready_unscored"
+      },
+      "returncode": 0,
+      "status": "schema_ready_unscored",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212711-codex-current-goal-completion-audit-v44-post-212325/command-output/direct_manipulation_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212711-codex-current-goal-completion-audit-v44-post-212325/command-output/direct_manipulation_verifier.stdout.txt"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "auto_quant_status": {
+    "data_ready": true,
+    "healthy": true,
+    "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+    "status": "dependency_ready_data_ready"
+  },
+  "catboost_path_ranker": {
+    "runtime": {
+      "active_match_count": 4,
+      "enabled": true,
+      "model_family": "catboost",
+      "ready": true,
+      "reuse_mode": "prefer_history",
+      "score_model_artifact_uri": "docs/experiments/actionable-regime-confidence/runs/20260512T010454-codex-board-b-220646-real-catboost-explicit-closure-v1/real-catboost-explicit-closure-v1/catboost/path_ranker_model/catboost_model.cbm",
+      "score_model_family": "catboost",
+      "score_source_kind": "external_model",
+      "source_kind": "candidate_set",
+      "status": "enabled_candidate_set_ready",
+      "summary_line": "Ranker runtime: structural_path_ranking_target rows=4 history_rows=883 mature_rows=4 history_mature_rows=869 raw_scored_mature=869/30 production_validation=869/30 observation_validation=82/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=4"
+    },
+    "summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural_path_ranking_target rows=4 history_rows=883 mature_rows=4 history_mature_rows=869 raw_scored_mature=869/30 production_validation=869/30 observation_validation=82/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=4",
+    "validation": {
+      "calibration_quality_ready": true,
+      "calibration_ready": true,
+      "calibration_status": "evaluated",
+      "feedback_observation_validation": {
+        "mature_observations": 82,
+        "min_observations": 30,
+        "outcome_distribution": {
+          "loss": 38,
+          "win": 44
+        },
+        "pending_observations": 0,
+        "ready": true,
+        "shortfall_observations": 0,
+        "summary_line": "observations mature=82/30 pending=0 total=82 ready=true",
+        "total_observations": 82
+      },
+      "observation_validation_min_rows": 30,
+      "observation_validation_ready": true,
+      "observation_validation_rows": 82,
+      "observation_validation_shortfall_rows": 0,
+      "production_validation_min_rows": 30,
+      "production_validation_ready": true,
+      "production_validation_rows": 869,
+      "production_validation_shortfall_rows": 0,
+      "raw_scored_mature_min_rows": 30,
+      "raw_scored_mature_rows": 869,
+      "raw_scored_mature_shortfall_rows": 0,
+      "summary_line": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=869/30 production_validation=869/30 observation_validation=82/30 ready=true",
+      "target_row_validation": {
+        "production_validation_min_rows": 30,
+        "production_validation_ready": true,
+        "production_validation_rows": 869,
+        "production_validation_shortfall_rows": 0,
+        "raw_scored_mature_min_rows": 30,
+        "raw_scored_mature_rows": 869,
+        "raw_scored_mature_shortfall_rows": 0,
+        "summary_line": "target_rows raw_scored_mature=869/30 production_validation=869/30 ready=true"
+      }
+    }
+  },
+  "check_counts": {
+    "fail": 0,
+    "pass": 14
+  },
+  "command_exits": {
+    "00_provider_status": 0,
+    "01_auto_quant_status": 0,
+    "02_analyze_recorded_data": 143,
+    "03_pre_bayes_status": 0,
+    "04_policy_training_status": 0,
+    "05_workflow_structural_bundle": 0,
+    "06_workflow_execution_candidate": 0,
+    "07_workflow_full": 0
+  },
+  "current_cursor_changed": false,
+  "execution_tree_trace": {
+    "closed_loop_branch_admission": null,
+    "closed_loop_branch_admission_present": false,
+    "output_branch": "transition_guardrail",
+    "output_execution_bias": "guarded",
+    "output_gate_status": "observe",
+    "score_line": "path_ranker=ranker_score=path_id=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 runtime_source=history_path raw_path_score=0.989590 calibrated_path_prob=0.580402 path_prob_lower_bound=0.551734 execution_gate_status=pass"
+  },
+  "gate_result": "board_b_220646_execution_tree_trace_parity_v1=workflow_branch_fail_closed_visible_trace_parity_not_verified_analyze_interrupted",
+  "notes": [
+    "analyze replay was interrupted with exit 143 after source drift was observed",
+    "workflow-status preserves the exact Sideways branch and explicit fail-closed reason",
+    "persisted execution_tree_trace.json still lacks closed_loop_branch_admission in this slice"
+  ],
+  "pre_bayes": {
+    "latest_filtered_assignments": {
+      "parent_regime_root": "Sideways",
+      "pre_bayes_branch_path_gate": "pass_neutralized",
+      "regime_profit_branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+    },
+    "latest_gate_status": "pass_neutralized"
+  },
+  "promotion_allowed": false,
+  "provider_status": {
+    "providers": {
+      "ibkr_bridge": {
+        "ready": false,
+        "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+        "status": "configured_runtime_unhealthy"
+      },
+      "kraken_cli": {
+        "ready": true,
+        "reason": "kraken_cli_config_detected",
+        "status": "ready"
+      },
+      "kraken_public": {
+        "ready": false,
+        "reason": "python3_provider_dependencies_missing",
+        "status": "configured_runtime_unhealthy"
+      },
+      "tradingview_mcp": {
+        "ready": false,
+        "reason": "tradingview_mcp_connectivity_probe_failed",
+        "status": "configured_runtime_unhealthy"
+      },
+      "yfinance": {
+        "ready": true,
+        "reason": "public_yahoo_http_endpoints",
+        "status": "ready"
+      }
+    },
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+  },
+  "rc_spa_rerun": false,
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1",
+  "runtime_code_changed_by_this_slice": false,
+  "workflow_closed_loop_branch_admission": {
+    "actionable": false,
+    "execution_gate_status": "execution_observe_only",
+    "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "ready": false,
+    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "review_status": "observe",
+    "status": "fail_closed"
+  },
+  "workflow_execution_candidate": {
+    "actionable": false,
+    "execution_gate_status": "execution_observe_only",
+    "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "ready": false,
+    "source_phase": "structural-recommended-path-bundle"
+  },
+  "workflow_structural_bundle": {
+    "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "path_ranker_calibrated_path_prob": 0.42857142857142855,
+    "path_ranker_execution_gate_status": "observe",
+    "path_ranker_raw_score": 0.857407
+  }
+}

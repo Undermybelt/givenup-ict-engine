@@ -1,0 +1,12 @@
+[load] /tmp/ict-regime-branch-iteration-20260510-1/structural-replay-qqq-36/state/QQQ/policy_training/structural_path_ranking_target_history_mature_only.csv: 1367 rows, 37 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] 1 features, 1367 training samples
+[features] label dist: {np.float64(0.0): np.int64(486), np.float64(1.0): np.int64(881)}
+[template] User weights template saved to /tmp/ict-regime-branch-iteration-20260510-1/catboost-path-ranker-qqq-replay-36-mature-only/user_weights.json
+[train] CatBoost saved to /tmp/ict-regime-branch-iteration-20260510-1/catboost-path-ranker-qqq-replay-36-mature-only/catboost_model.cbm
+[train] top features:                   Feature Id  Importances
+0  structural_baseline_score        100.0
+[artifact] Registration metadata saved to /tmp/ict-regime-branch-iteration-20260510-1/catboost-path-ranker-qqq-replay-36-mature-only/trainer_artifact.json
+
+[done] Model saved to /tmp/ict-regime-branch-iteration-20260510-1/catboost-path-ranker-qqq-replay-36-mature-only
+[done] To apply: python scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir /tmp/ict-regime-branch-iteration-20260510-1/catboost-path-ranker-qqq-replay-36-mature-only --target-csv <new_target.csv> --output-scores scores.csv

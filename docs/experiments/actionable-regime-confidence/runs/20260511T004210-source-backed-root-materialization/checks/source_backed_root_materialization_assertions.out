@@ -1,0 +1,16 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T004210-source-backed-root-materialization/root-v3/source_backed_root_materialization_report.json
+target_schema: docs/experiments/actionable-regime-confidence/runs/20260511T004210-source-backed-root-materialization/root-v3/source_backed_root_target_schema.json
+crosswalk: docs/experiments/actionable-regime-confidence/runs/20260511T004210-source-backed-root-materialization/root-v3/source_backed_root_crosswalk.json
+accepted_root_classes_95: ['CrisisStress', 'TransitionRecovery']
+missing_root_classes_95: ['BullExpansion', 'BearExpansion', 'Consolidation', 'Manipulation']
+accepted_gate: main_regime_v2_source_backed_partial_95
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+trade_usable: False
+manipulation_direct_probe_calibration_usable: False
+BullExpansion: state=blocked test_lcb=0.749574 cal=765 test=930 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+BearExpansion: state=blocked test_lcb=0.756410 cal=1059 test=1277 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+Consolidation: state=blocked test_lcb=0.806122 cal=1120 test=871 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+CrisisStress: state=accepted_95 test_lcb=0.958326 cal=1854 test=1518 blockers=
+TransitionRecovery: state=accepted_95 test_lcb=0.995355 cal=2870 test=3106 blockers=
+Manipulation: state=missing_required_inputs test_lcb=0.000000 cal=0 test=0 blockers=direct_inputs_live_snapshot_only,calibration_support_below_120,proxy_only_low_confidence

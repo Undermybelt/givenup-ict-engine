@@ -1,0 +1,134 @@
+{
+  "schema_version": "main-regime-v3-reopened-source-refresh/v1",
+  "loop_id": "20260511T073701+0800-codex-main-regime-v3-reopened-source-refresh",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T073701-codex-main-regime-v3-reopened-source-refresh",
+  "purpose": "Reopen the main-regime taxonomy after the user correction that BullExpansion, BearExpansion, Manipulation, and Consolidation are top-level classes rather than only child regimes.",
+  "source_refresh": {
+    "web_search_performed": true,
+    "paper_or_github_sources_used": true,
+    "raw_market_dataset_committed": false,
+    "runtime_code_changed": false
+  },
+  "sources": [
+    {
+      "id": "pagan_sossounov_bull_bear_cycles",
+      "type": "paper",
+      "url": "https://ideas.repec.org/a/jae/japmet/v18y2003i1p23-46.html",
+      "used_for": "Bull and bear cycles as primary market-state objects, not merely feature labels."
+    },
+    {
+      "id": "oelschlager_adam_hierarchical_hmm_bull_bear",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/2007.14874",
+      "used_for": "Hierarchical HMM framing where bullish and bearish market states are modeled at multiple temporal scales."
+    },
+    {
+      "id": "guidolin_timmermann_regime_allocation",
+      "type": "paper",
+      "url": "https://www.nber.org/papers/w17182",
+      "used_for": "Multiple asset-allocation regimes beyond a simple bull/bear split, supporting crisis/recovery-style state separation."
+    },
+    {
+      "id": "hidden_regime_github",
+      "type": "github",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "used_for": "Executable HMM/event-study pattern for regimes, crashes, bubbles, and sector rotations."
+    },
+    {
+      "id": "hmmlearn",
+      "type": "github",
+      "url": "https://github.com/hmmlearn/hmmlearn",
+      "used_for": "Implementation primitive for posterior hidden-state evidence; not a taxonomy source by itself."
+    },
+    {
+      "id": "ruptures",
+      "type": "github",
+      "url": "https://github.com/deepcharles/ruptures",
+      "used_for": "Implementation primitive for change-point evidence; useful for expansion/consolidation/stress boundaries."
+    },
+    {
+      "id": "xu_livshits_crypto_pump_dump",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/1811.10109",
+      "used_for": "Manipulation as a direct event class with labeled pump-and-dump mechanics."
+    },
+    {
+      "id": "kamps_kleinberg_pump_dump",
+      "type": "paper",
+      "url": "https://doi.org/10.1186/s40163-018-0093-5",
+      "used_for": "Criteria for defining and detecting crypto pump-and-dump manipulation."
+    },
+    {
+      "id": "payi_hu_pump_dump_github",
+      "type": "github",
+      "url": "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+      "used_for": "Executable/public source for event-social manipulation data already probed in this lane."
+    },
+    {
+      "id": "mendeley_wash_trading_dataset",
+      "type": "dataset",
+      "url": "https://data.mendeley.com/datasets/4hyxfwzpgg/3",
+      "used_for": "Candidate direct manipulation rows for wash-trading style regimes."
+    }
+  ],
+  "active_taxonomy_after_user_correction": {
+    "name": "MainRegimeV3",
+    "completion_roots": [
+      "BullExpansion",
+      "BearExpansion",
+      "SidewaysConsolidation",
+      "CrisisStress",
+      "Manipulation"
+    ],
+    "residual": "UnknownOrMixed",
+    "candidate_big_classes_to_preflight": [
+      "TransitionRecovery",
+      "BubbleEuphoria",
+      "LiquidityDrought",
+      "VolatilityDislocation",
+      "CrossAssetRotationOrRiskOnRiskOff",
+      "MacroPolicyRegime"
+    ],
+    "root_aliases": {
+      "BullExpansion": [
+        "bull market expansion",
+        "risk-on trend expansion",
+        "positive drift and breadth expansion"
+      ],
+      "BearExpansion": [
+        "bear market expansion",
+        "risk-off downside expansion",
+        "negative drift and deleveraging"
+      ],
+      "SidewaysConsolidation": [
+        "consolidation",
+        "range",
+        "sideways",
+        "compression"
+      ],
+      "CrisisStress": [
+        "crash",
+        "stress",
+        "volatility dislocation",
+        "correlation/liquidity shock"
+      ],
+      "Manipulation": [
+        "pump-and-dump",
+        "wash trading",
+        "spoofing",
+        "layering",
+        "quote-stuffing-like order-lifecycle distortion"
+      ]
+    }
+  },
+  "accounting_reset": {
+    "supersedes_prior_statement": "BullExpansion/BearExpansion/Consolidation are child-only under MainRegimeV2.",
+    "accepted_95_roots_from_this_scan": [],
+    "prior_accepted_packets": "remain source/provenance evidence but must be remapped and re-audited under MainRegimeV3 before claiming full-universe/full-cycle completion.",
+    "manipulation_handling": "top-level decision class with direct event/order-flow/order-lifecycle evidence only; OHLCV proxy evidence remains fail-closed.",
+    "full_universe_full_cycle_goal_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "next_action": "Materialize a MainRegimeV3 crosswalk and rerun attachability/full-coverage disposition against BullExpansion, BearExpansion, SidewaysConsolidation, CrisisStress, and Manipulation without promoting OHLCV proxies or weakening 95% gates."
+}

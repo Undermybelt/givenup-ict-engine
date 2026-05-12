@@ -1,0 +1,9 @@
+PASS completed_artifacts_read=1
+PASS source_readback_gate=source_label_other_market_readback_v1=partial_sources_no_full_equivalence
+PASS accepted_factor_or_gate_total=0
+PASS accepted_rows_added=0
+PASS external_intake_return_code=2
+PASS external_intake_missing_file_count=7
+PASS strict_full_objective=false
+PASS update_goal=false
+PASS current_cursor_edited=false

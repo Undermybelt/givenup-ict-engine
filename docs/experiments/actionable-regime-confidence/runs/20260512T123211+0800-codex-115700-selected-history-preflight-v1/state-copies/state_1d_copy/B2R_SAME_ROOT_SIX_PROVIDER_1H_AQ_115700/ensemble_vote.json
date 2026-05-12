@@ -1,0 +1,110 @@
+{
+  "artifact_id": "ensemble-vote:factor-research:2026-05-12T04:35:40Z",
+  "generated_at": "2026-05-12T04:35:40.045958Z",
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+  "source_phase": "factor-research",
+  "source_run_id": "research:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:20260512T043539.639Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "c0035361d056c1c9",
+    "config_hash": "836576ac3d4bc42f",
+    "data_fingerprint": "0873ff79880470c5"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/state-copies/state_1d_copy' --objective expansion_manipulation --backend native",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.660 regime=research_iteration jump_gate_bias=relax_if_other_gates_clear command=ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/state-copies/state_1d_copy' --objective expansion_manipulation --backend native",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.6600000000000001,
+  "consensus_strength": 0.6600000000000001,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=relax_if_other_gates_clear adjusted_confidence=0.660",
+    "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=relax_if_other_gates_clear adjusted_confidence=0.660"
+  ],
+  "split_explanations": [
+    "gating_status=research_iteration",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "gating_status=research_iteration",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [
+    {
+      "executor": "catboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.55,
+      "last_outcome": null,
+      "last_updated_at": null
+    },
+    {
+      "executor": "xgboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.45,
+      "last_outcome": null,
+      "last_updated_at": null
+    }
+  ],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "0873ff79880470c5",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "research_iteration",
+  "posterior_confidence": 0.5,
+  "posterior_probabilities": {
+    "fallback": 0.5096448664014077,
+    "research_iteration": 0.49035513359859223
+  },
+  "posterior_evidence": [
+    "multi_timeframe_source=explicit covered_intervals=1h,4h,1d",
+    "multi_timeframe_missing=1m,5m,15m,30m",
+    "1h:971 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json",
+    "4h:243 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json",
+    "1d:41 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json",
+    "higher_timeframe_direction_bias=bullish",
+    "higher_timeframe_alignment_score=0.8004",
+    "lower_timeframe_entry_alignment_score=1.0000",
+    "market_state_primary_regime=TrendExpansion",
+    "market_state_secondary_regime=BullTrendExhaustion",
+    "market_state_overall_confidence=0.686",
+    "market_state_bbn_market_regime=passthrough",
+    "market_state_bbn_liquidity_context=neutral",
+    "market_state_evidence=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.686",
+    "market_state_evidence=volatility=LowVol:0.678 liquidity=NormalLiquidity:0.489 structure=Trending:0.865 behavior=Exhaustion:0.650",
+    "market_state_evidence=rationale=volatility=LowVol conf=0.68",
+    "market_state_evidence=rationale=structure=Trending conf=0.87",
+    "market_state_evidence=rationale=behavior=Exhaustion conf=0.65",
+    "market_state_evidence=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.69",
+    "structure_ict_pda_context_events=m1:0|m5:0|m15:0|m30:0|h1:2464|h4:465|d1:33|w1:5"
+  ]
+}

@@ -1,0 +1,4 @@
+regime_profit_branch_path,parent_regime_root,branch_path_source,trades,net_profit_ratio_sum,mean_profit_ratio,win_rate
+Bear -> BearMarketCapitulation -> ReboundAttempt -> CrashRebound,Bear,auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label,32,0.105628803772774,0.0033009001178991816,0.6875
+Bull -> BullPullback -> CapitulationMeanReversionSetup -> CrashRebound,Bull,auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label,159,1.2266258671008383,0.007714628094973828,0.6729559748427673
+Sideways -> RangeConsolidation -> MeanReversionSetup -> CrashRebound,Sideways,auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label,16,0.37840729786559973,0.02365045611659998,0.8125

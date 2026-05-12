@@ -1,0 +1,26 @@
+PASS courtlistener_recap_sibling_attachment_probe_after_080906_v1
+gate_result=courtlistener_recap_sibling_attachment_probe_after_080906_v1=no_new_public_control_attachment_unlock
+requests_sent=122
+failed_or_parse_failed=0
+api_status=401
+html_status=403
+storage_head_requests=120
+storage_pdf_hits=2
+known_exhibit_a_present=true
+novel_public_pdf_hits=1
+novel_public_pdf_get_status=429
+novel_public_pdf_text_classification_accepted=false
+possible_control_name_hits=0
+accepted_rows_added=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

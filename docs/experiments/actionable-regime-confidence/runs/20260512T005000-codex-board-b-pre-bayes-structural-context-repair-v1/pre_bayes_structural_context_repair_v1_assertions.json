@@ -1,0 +1,16 @@
+{
+  "pre_bayes_latest_gate_status": "pass_neutralized",
+  "pre_bayes_latest_filtered_assignments": {
+    "parent_regime_root": "Sideways",
+    "pre_bayes_branch_path_gate": "pass_neutralized",
+    "regime_profit_branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+  },
+  "policy_runtime_ready": true,
+  "policy_production_validation_rows": 893,
+  "execution_candidate_actionable": true,
+  "execution_candidate_ready": null,
+  "execution_candidate_status": "ready",
+  "execution_candidate_pre_bayes_gate_status": "pass_neutralized",
+  "execution_candidate_path_id": null,
+  "promotion_allowed": false
+}

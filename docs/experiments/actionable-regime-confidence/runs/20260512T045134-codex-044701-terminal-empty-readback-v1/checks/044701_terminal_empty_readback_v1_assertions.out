@@ -1,0 +1,15 @@
+PASS run_id=20260512T045134-codex-044701-terminal-empty-readback-v1
+PASS gate_result=044701_terminal_empty_readback_v1=single_atom_scan_no_terminal_artifacts_no_promotion
+PASS writer_processes_present=false
+PASS exit_file_present=false
+PASS stdout_bytes=0
+PASS stderr_bytes=0
+PASS single_atom_payload_present=false
+PASS accepted_regime_confidence_labels=0
+PASS source_control_evidence_acquired=false
+PASS new_confidence_gate=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

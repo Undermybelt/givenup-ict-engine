@@ -1,0 +1,1027 @@
+{
+  "accepted_rows_added": 0,
+  "approval_package": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "exists": true,
+    "flip_controls_accepted_under_current_contract": false,
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "is_dir": false,
+    "is_file": true,
+    "json_parse_ok": true,
+    "mtime": 1778517559.8749485,
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "row_counts": {
+      "flip_rows": 1553,
+      "isolated_split_axes_pass": true,
+      "isolated_verifier_status": "schema_ready_unscored",
+      "matched_groups": 1313,
+      "parsed_order_rows": 6735,
+      "positive_spoof_rows": 5182
+    },
+    "sha256": "71407847f90a15035c53d44091701fd47d5c46bb1fdca894db10ffd59739f54c",
+    "size": 7249
+  },
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "local_required_source_control_sweep_after_073650_v1=no_new_required_root_no_unlock",
+  "known_r3_disposition": "present_but_prior_settled_board_evidence_keeps_tsie_derived_root_quarantined_and_non_promoting",
+  "known_r3_required_file_present": true,
+  "manual_r3_review": {
+    "canonical_merge": false,
+    "crisis_absent": true,
+    "dataset_id": "sujinwo/tsie-market-regime-dataset",
+    "decision": "known_tsie_root_non_promoting",
+    "downstream_promotion_rerun": false,
+    "trap_labels_fail_closed": true
+  },
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "recent_candidate_count": 84,
+  "recent_candidates": [
+    {
+      "keyword_hits": [
+        "databento"
+      ],
+      "mtime": 1778540282.1267238,
+      "name": "ict-engine-local-databento-jsoncheck.out",
+      "path": "/tmp/ict-engine-local-databento-jsoncheck.out",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 2990
+    },
+    {
+      "keyword_hits": [
+        "databento"
+      ],
+      "mtime": 1778540282.1267238,
+      "name": "ict-engine-local-databento-jsoncheck.out",
+      "path": "/private/tmp/ict-engine-local-databento-jsoncheck.out",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 2990
+    },
+    {
+      "keyword_hits": [
+        "native_subhour_source_label_rows"
+      ],
+      "mtime": 1778538923.1504507,
+      "name": "native_subhour_source_label_rows.csv",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "required_filename": true,
+      "root": "/tmp",
+      "size": 2786719721
+    },
+    {
+      "keyword_hits": [
+        "native_subhour_source_label_rows"
+      ],
+      "mtime": 1778538923.1504507,
+      "name": "native_subhour_source_label_rows.csv",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "required_filename": true,
+      "root": "/private/tmp",
+      "size": 2786719721
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778537074.3291917,
+      "name": "4495qk6aqmboy80a2hxi2b89e.o",
+      "path": "/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifsowuuhz-0n67hsm-0e5ykjs766udkitz9eivd7ehj/4495qk6aqmboy80a2hxi2b89e.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 198560
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778537074.3291917,
+      "name": "4495qk6aqmboy80a2hxi2b89e.o",
+      "path": "/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifsmcwfo1-1uzlvvv-7op5gcrml26rmxa0qx4tj4efc/4495qk6aqmboy80a2hxi2b89e.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 198560
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778537074.3291917,
+      "name": "ict_engine-97d28a47a09f25ad.4495qk6aqmboy80a2hxi2b89e.105hmvn.rcgu.o",
+      "path": "/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/deps/ict_engine-97d28a47a09f25ad.4495qk6aqmboy80a2hxi2b89e.105hmvn.rcgu.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 198560
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778537074.3291917,
+      "name": "ict_engine-97d28a47a09f25ad.4495qk6aqmboy80a2hxi2b89e.0dyao9m.rcgu.o",
+      "path": "/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/deps/ict_engine-97d28a47a09f25ad.4495qk6aqmboy80a2hxi2b89e.0dyao9m.rcgu.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 198560
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778537074.3291917,
+      "name": "4495qk6aqmboy80a2hxi2b89e.o",
+      "path": "/private/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifsowuuhz-0n67hsm-0e5ykjs766udkitz9eivd7ehj/4495qk6aqmboy80a2hxi2b89e.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 198560
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778537074.3291917,
+      "name": "4495qk6aqmboy80a2hxi2b89e.o",
+      "path": "/private/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifsmcwfo1-1uzlvvv-7op5gcrml26rmxa0qx4tj4efc/4495qk6aqmboy80a2hxi2b89e.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 198560
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778537074.3291917,
+      "name": "ict_engine-97d28a47a09f25ad.4495qk6aqmboy80a2hxi2b89e.105hmvn.rcgu.o",
+      "path": "/private/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/deps/ict_engine-97d28a47a09f25ad.4495qk6aqmboy80a2hxi2b89e.105hmvn.rcgu.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 198560
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778537074.3291917,
+      "name": "ict_engine-97d28a47a09f25ad.4495qk6aqmboy80a2hxi2b89e.0dyao9m.rcgu.o",
+      "path": "/private/tmp/ict-engine-codex-branch-segment-catboost-target-local/debug/deps/ict_engine-97d28a47a09f25ad.4495qk6aqmboy80a2hxi2b89e.0dyao9m.rcgu.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 198560
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778536061.3089914,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-r3scan/archive-v0/SitVkev-c-TzTnjEHyC_s/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778536061.3089914,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-r3scan/archive-v0/SitVkev-c-TzTnjEHyC_s/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778536061.1759758,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-r3scan/archive-v0/SitVkev-c-TzTnjEHyC_s/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778536061.1759758,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-r3scan/archive-v0/SitVkev-c-TzTnjEHyC_s/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778536001.6536994,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-autoquant-local-readonly/archive-v0/XNeiH9NwAS-5NHV2w8DmI/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778536001.6536994,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-autoquant-local-readonly/archive-v0/XNeiH9NwAS-5NHV2w8DmI/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778536001.6384304,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-autoquant-local-readonly/archive-v0/XNeiH9NwAS-5NHV2w8DmI/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778536001.6384304,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-autoquant-local-readonly/archive-v0/XNeiH9NwAS-5NHV2w8DmI/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535907.959014,
+      "name": "latex_symbols.py",
+      "path": "/tmp/ict-engine-uv-cache-autoquant-local-readonly/archive-v0/XXtGrwbW9HW6HGKK5ikIx/IPython/core/latex_symbols.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 30127
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535907.959014,
+      "name": "latex_symbols.py",
+      "path": "/private/tmp/ict-engine-uv-cache-autoquant-local-readonly/archive-v0/XXtGrwbW9HW6HGKK5ikIx/IPython/core/latex_symbols.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 30127
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535051.3929322,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-numeric-tree-rerun/archive-v0/YjWa-0_h_yIzSdu5pNjkI/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535051.3929322,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-numeric-tree-rerun/archive-v0/YjWa-0_h_yIzSdu5pNjkI/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535051.2674184,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-numeric-tree-rerun/archive-v0/YjWa-0_h_yIzSdu5pNjkI/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535051.2674184,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-numeric-tree-rerun/archive-v0/YjWa-0_h_yIzSdu5pNjkI/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535022.8407166,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-macro-context/archive-v0/di_3XAbtKN-MPBxnbx96t/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535022.8407166,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-macro-context/archive-v0/di_3XAbtKN-MPBxnbx96t/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535022.8397987,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-macro-context/archive-v0/di_3XAbtKN-MPBxnbx96t/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778535022.8397987,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-macro-context/archive-v0/di_3XAbtKN-MPBxnbx96t/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "owner-export"
+      ],
+      "mtime": 1778534901.0111196,
+      "name": "ict-engine-r6-owner-export-v5-dispatch-jsoncheck.out",
+      "path": "/tmp/ict-engine-r6-owner-export-v5-dispatch-jsoncheck.out",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 5212
+    },
+    {
+      "keyword_hits": [
+        "owner-export"
+      ],
+      "mtime": 1778534901.0111196,
+      "name": "ict-engine-r6-owner-export-v5-dispatch-jsoncheck.out",
+      "path": "/private/tmp/ict-engine-r6-owner-export-v5-dispatch-jsoncheck.out",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 5212
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534786.8165126,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-numeric-tree/archive-v0/j-bhbb-a1KoIPZuvceL3B/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534786.8165126,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-numeric-tree/archive-v0/j-bhbb-a1KoIPZuvceL3B/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534786.8137538,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-numeric-tree/archive-v0/j-bhbb-a1KoIPZuvceL3B/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534786.8137538,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-numeric-tree/archive-v0/j-bhbb-a1KoIPZuvceL3B/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "owner-export"
+      ],
+      "mtime": 1778534578.4571073,
+      "name": "ict-engine-r6-owner-export-local-arrival-scan-after-051754-final-jsoncheck.out",
+      "path": "/tmp/ict-engine-r6-owner-export-local-arrival-scan-after-051754-final-jsoncheck.out",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 152821
+    },
+    {
+      "keyword_hits": [
+        "owner-export"
+      ],
+      "mtime": 1778534578.4571073,
+      "name": "ict-engine-r6-owner-export-local-arrival-scan-after-051754-final-jsoncheck.out",
+      "path": "/private/tmp/ict-engine-r6-owner-export-local-arrival-scan-after-051754-final-jsoncheck.out",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 152821
+    },
+    {
+      "keyword_hits": [
+        "owner-export"
+      ],
+      "mtime": 1778534497.7443593,
+      "name": "ict-engine-r6-owner-export-local-arrival-scan-after-051754-jsoncheck.out",
+      "path": "/tmp/ict-engine-r6-owner-export-local-arrival-scan-after-051754-jsoncheck.out",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 152821
+    },
+    {
+      "keyword_hits": [
+        "owner-export"
+      ],
+      "mtime": 1778534497.7443593,
+      "name": "ict-engine-r6-owner-export-local-arrival-scan-after-051754-jsoncheck.out",
+      "path": "/private/tmp/ict-engine-r6-owner-export-local-arrival-scan-after-051754-jsoncheck.out",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 152821
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534491.7517443,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-051844/archive-v0/c6oIXJOLnjFaffbOJy-gm/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534491.7517443,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-051844/archive-v0/c6oIXJOLnjFaffbOJy-gm/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534491.744647,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-051844/archive-v0/c6oIXJOLnjFaffbOJy-gm/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534491.744647,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-051844/archive-v0/c6oIXJOLnjFaffbOJy-gm/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534429.1434278,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-hgb-screen/archive-v0/3UepjuBP_Lb771EqXU_1t/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534429.1434278,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-hgb-screen/archive-v0/3UepjuBP_Lb771EqXU_1t/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534429.1382647,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-hgb-screen/archive-v0/3UepjuBP_Lb771EqXU_1t/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778534429.1382647,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-hgb-screen/archive-v0/3UepjuBP_Lb771EqXU_1t/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533839.3031235,
+      "name": "0eq36ysi2k5feg44xkkkmbpi7.o",
+      "path": "/tmp/ict-engine-codex-branch-path-wire-target-v2/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifr1eh6xa-0o6xcxn-cl3iohkvhlaip9ttoh2momtc6/0eq36ysi2k5feg44xkkkmbpi7.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533839.3031235,
+      "name": "ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.01rrfq9.rcgu.o",
+      "path": "/tmp/ict-engine-codex-branch-path-wire-target-v2/debug/deps/ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.01rrfq9.rcgu.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533839.3031235,
+      "name": "0eq36ysi2k5feg44xkkkmbpi7.o",
+      "path": "/private/tmp/ict-engine-codex-branch-path-wire-target-v2/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifr1eh6xa-0o6xcxn-cl3iohkvhlaip9ttoh2momtc6/0eq36ysi2k5feg44xkkkmbpi7.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533839.3031235,
+      "name": "ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.01rrfq9.rcgu.o",
+      "path": "/private/tmp/ict-engine-codex-branch-path-wire-target-v2/debug/deps/ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.01rrfq9.rcgu.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778533637.604793,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-extra-trees-light/archive-v0/OgP5uRA5AGYAROA4Mym7l/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778533637.604793,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-extra-trees-light/archive-v0/OgP5uRA5AGYAROA4Mym7l/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778533637.5870976,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-extra-trees-light/archive-v0/OgP5uRA5AGYAROA4Mym7l/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778533637.5870976,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-extra-trees-light/archive-v0/OgP5uRA5AGYAROA4Mym7l/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533554.3638923,
+      "name": "0eq36ysi2k5feg44xkkkmbpi7.o",
+      "path": "/tmp/ict-engine-codex-auto-quant-config-target/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifqyu6pcu-191z17o-8oj22u1yjvobuzlim6mnoge7c/0eq36ysi2k5feg44xkkkmbpi7.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533554.3638923,
+      "name": "ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.1wqjqew.rcgu.o",
+      "path": "/tmp/ict-engine-codex-auto-quant-config-target/debug/deps/ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.1wqjqew.rcgu.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533554.3638923,
+      "name": "0eq36ysi2k5feg44xkkkmbpi7.o",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-config-target/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifqyu6pcu-191z17o-8oj22u1yjvobuzlim6mnoge7c/0eq36ysi2k5feg44xkkkmbpi7.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533554.3638923,
+      "name": "ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.1wqjqew.rcgu.o",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-config-target/debug/deps/ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.1wqjqew.rcgu.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533526.6366904,
+      "name": "0eq36ysi2k5feg44xkkkmbpi7.o",
+      "path": "/tmp/ict-engine-codex-branch-path-wire-target/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifqy1v7bb-096ubd1-4662oioujddro3htnihqajfp6/0eq36ysi2k5feg44xkkkmbpi7.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533526.6366904,
+      "name": "ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.0p9koxa.rcgu.o",
+      "path": "/tmp/ict-engine-codex-branch-path-wire-target/debug/deps/ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.0p9koxa.rcgu.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533526.6366904,
+      "name": "0eq36ysi2k5feg44xkkkmbpi7.o",
+      "path": "/private/tmp/ict-engine-codex-branch-path-wire-target/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifqy1v7bb-096ubd1-4662oioujddro3htnihqajfp6/0eq36ysi2k5feg44xkkkmbpi7.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533526.6366904,
+      "name": "ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.0p9koxa.rcgu.o",
+      "path": "/private/tmp/ict-engine-codex-branch-path-wire-target/debug/deps/ict_engine-97d28a47a09f25ad.0eq36ysi2k5feg44xkkkmbpi7.0p9koxa.rcgu.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 245496
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778533198.688907,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-extra-trees/archive-v0/BA_fbFhoRuExgVMhp8NN2/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778533198.688907,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-extra-trees/archive-v0/BA_fbFhoRuExgVMhp8NN2/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778533198.675738,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-extra-trees/archive-v0/BA_fbFhoRuExgVMhp8NN2/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778533198.675738,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-extra-trees/archive-v0/BA_fbFhoRuExgVMhp8NN2/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533044.5975444,
+      "name": "7mbp0awsfy3482r0ap0kys1hv.o",
+      "path": "/tmp/ict-engine-codex-auto-quant-config-target/debug/incremental/ict_engine-3jp12vtcozkyn/s-hifr3calxo-1m8da26-ektd9vd7lc8bxs09r2mc86d80/7mbp0awsfy3482r0ap0kys1hv.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 814696
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533044.5975444,
+      "name": "7mbp0awsfy3482r0ap0kys1hv.o",
+      "path": "/tmp/ict-engine-codex-auto-quant-config-target/debug/incremental/ict_engine-3jp12vtcozkyn/s-hifqsek6xq-0sb7oac-bqmivqw48am57j00p9rve0jam/7mbp0awsfy3482r0ap0kys1hv.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 814696
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533044.5975444,
+      "name": "ict_engine-39e052bf7f877c26.7mbp0awsfy3482r0ap0kys1hv.0sxa065.rcgu.o",
+      "path": "/tmp/ict-engine-codex-auto-quant-config-target/debug/deps/ict_engine-39e052bf7f877c26.7mbp0awsfy3482r0ap0kys1hv.0sxa065.rcgu.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 814696
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533044.5975444,
+      "name": "ict_engine-39e052bf7f877c26.7mbp0awsfy3482r0ap0kys1hv.0sqkdd3.rcgu.o",
+      "path": "/tmp/ict-engine-codex-auto-quant-config-target/debug/deps/ict_engine-39e052bf7f877c26.7mbp0awsfy3482r0ap0kys1hv.0sqkdd3.rcgu.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 814696
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533044.5975444,
+      "name": "7mbp0awsfy3482r0ap0kys1hv.o",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-config-target/debug/incremental/ict_engine-3jp12vtcozkyn/s-hifr3calxo-1m8da26-ektd9vd7lc8bxs09r2mc86d80/7mbp0awsfy3482r0ap0kys1hv.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 814696
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533044.5975444,
+      "name": "7mbp0awsfy3482r0ap0kys1hv.o",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-config-target/debug/incremental/ict_engine-3jp12vtcozkyn/s-hifqsek6xq-0sb7oac-bqmivqw48am57j00p9rve0jam/7mbp0awsfy3482r0ap0kys1hv.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 814696
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533044.5975444,
+      "name": "ict_engine-39e052bf7f877c26.7mbp0awsfy3482r0ap0kys1hv.0sxa065.rcgu.o",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-config-target/debug/deps/ict_engine-39e052bf7f877c26.7mbp0awsfy3482r0ap0kys1hv.0sxa065.rcgu.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 814696
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778533044.5975444,
+      "name": "ict_engine-39e052bf7f877c26.7mbp0awsfy3482r0ap0kys1hv.0sqkdd3.rcgu.o",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-config-target/debug/deps/ict_engine-39e052bf7f877c26.7mbp0awsfy3482r0ap0kys1hv.0sqkdd3.rcgu.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 814696
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778532748.872281,
+      "name": "symbolic.pyi",
+      "path": "/tmp/ict-engine-uv-cache-single-atom/archive-v0/NDTEPMI8NElj2Hr9MQ9Be/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778532748.872281,
+      "name": "symbolic.pyi",
+      "path": "/private/tmp/ict-engine-uv-cache-single-atom/archive-v0/NDTEPMI8NElj2Hr9MQ9Be/numpy/f2py/symbolic.pyi",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 6064
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778532748.8698623,
+      "name": "symbolic.py",
+      "path": "/tmp/ict-engine-uv-cache-single-atom/archive-v0/NDTEPMI8NElj2Hr9MQ9Be/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbo"
+      ],
+      "mtime": 1778532748.8698623,
+      "name": "symbolic.py",
+      "path": "/private/tmp/ict-engine-uv-cache-single-atom/archive-v0/NDTEPMI8NElj2Hr9MQ9Be/numpy/f2py/symbolic.py",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 53310
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778532162.3679624,
+      "name": "c609j0avjcbimhcmbp9zalzyg.o",
+      "path": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifqat8eg0-1n6roek-206zgsm1jdzo23xhyztq246fk/c609j0avjcbimhcmbp9zalzyg.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 152800
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778532162.3679624,
+      "name": "ict_engine-97d28a47a09f25ad.c609j0avjcbimhcmbp9zalzyg.1qrqlhu.rcgu.o",
+      "path": "/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps/ict_engine-97d28a47a09f25ad.c609j0avjcbimhcmbp9zalzyg.1qrqlhu.rcgu.o",
+      "required_filename": false,
+      "root": "/tmp",
+      "size": 152800
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778532162.3679624,
+      "name": "c609j0avjcbimhcmbp9zalzyg.o",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-prepare-target/debug/incremental/ict_engine-1wt3w0scfj12f/s-hifqat8eg0-1n6roek-206zgsm1jdzo23xhyztq246fk/c609j0avjcbimhcmbp9zalzyg.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 152800
+    },
+    {
+      "keyword_hits": [
+        "mbp"
+      ],
+      "mtime": 1778532162.3679624,
+      "name": "ict_engine-97d28a47a09f25ad.c609j0avjcbimhcmbp9zalzyg.1qrqlhu.rcgu.o",
+      "path": "/private/tmp/ict-engine-codex-auto-quant-prepare-target/debug/deps/ict_engine-97d28a47a09f25ad.c609j0avjcbimhcmbp9zalzyg.1qrqlhu.rcgu.o",
+      "required_filename": false,
+      "root": "/private/tmp",
+      "size": 152800
+    }
+  ],
+  "recent_required_filename_count": 2,
+  "recent_unlock_like_count": 2,
+  "required_files_in_target_roots": [
+    {
+      "keyword_hit": true,
+      "mtime": 1778538923.1504507,
+      "name": "native_subhour_source_label_rows.csv",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "required_filename": true,
+      "size": 2786719721
+    }
+  ],
+  "run_id": "20260512T073755+0800-codex-local-required-source-control-sweep-after-073650-v1",
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_file_counts": {
+    "r3_native_subhour": 2,
+    "r5_recency_extension": 0,
+    "r6_owner_export": 0,
+    "source_label_equivalence": 2
+  },
+  "target_roots": {
+    "r3_native_subhour": {
+      "exists": true,
+      "is_dir": true,
+      "is_file": false,
+      "mtime": 1778538929.9845335,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "size": 128
+    },
+    "r5_recency_extension": {
+      "exists": false,
+      "is_dir": false,
+      "is_file": false,
+      "mtime": null,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "size": null
+    },
+    "r6_owner_export": {
+      "exists": false,
+      "is_dir": false,
+      "is_file": false,
+      "mtime": null,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "size": null
+    },
+    "source_label_equivalence": {
+      "exists": true,
+      "is_dir": true,
+      "is_file": false,
+      "mtime": 1778519358.4138389,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "size": 128
+    }
+  },
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

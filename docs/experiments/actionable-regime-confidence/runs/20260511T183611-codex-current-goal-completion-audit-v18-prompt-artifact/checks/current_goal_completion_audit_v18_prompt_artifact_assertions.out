@@ -1,0 +1,15 @@
+run_id=20260511T183611+0800-codex-current-goal-completion-audit-v18-prompt-artifact
+scoped_95_ok=true
+strict_full_objective_achieved=false
+update_goal=false
+blocking_requirement_count=5
+strict_1h_accepted_rows=41
+strict_1h_total_rows=156
+native_subhour_ready_overlap_cells=0
+source_label_equivalence_missing_files=2
+direct_manipulation_full_species_complete=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

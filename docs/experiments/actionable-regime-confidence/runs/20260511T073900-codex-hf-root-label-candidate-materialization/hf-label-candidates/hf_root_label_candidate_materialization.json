@@ -1,0 +1,79 @@
+{
+  "run_id": "20260511T073900+0800-codex-hf-root-label-candidate-materialization",
+  "source_board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "goal_achieved": false,
+  "objective": "Materialize public Hugging Face regime-label candidates and test whether they can satisfy the expanded MainRegimeV2 full-universe/full-cycle label blocker.",
+  "materialized_under": "/private/tmp/ict-regime-hf-label-candidates",
+  "raw_data_committed": false,
+  "candidates": [
+    {
+      "dataset": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "url": "https://huggingface.co/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "license": "cc-by-4.0",
+      "downloaded_files": [
+        "/private/tmp/ict-regime-hf-label-candidates/btc_hmm6_train.csv"
+      ],
+      "rows_in_downloaded_train": 220717,
+      "labels": {
+        "Choppy High-Vol": 32204,
+        "Range": 47151,
+        "Squeeze": 39677,
+        "Strong Trend": 40758,
+        "Volatility Spike": 17547,
+        "Weak Trend": 43380
+      },
+      "coverage_fit": "BTC only, 5m/15m columns only",
+      "label_fit": "HMM-derived six-state semantic labels; not direct Bull/Bear/Sideways/Crisis ground truth",
+      "mainregimev2_status": "candidate_submapping_only_not_full_root_panel"
+    },
+    {
+      "dataset": "AAdevloper/nifty50-market-regime",
+      "url": "https://huggingface.co/datasets/AAdevloper/nifty50-market-regime",
+      "license": "mit",
+      "downloaded_files": [
+        "/private/tmp/ict-regime-hf-label-candidates/nifty50_market_regime.csv"
+      ],
+      "rows_in_downloaded_csv": 2235,
+      "labels": {
+        "0_RISK_OFF": 1216,
+        "1_RISK_ON": 1019
+      },
+      "coverage_fit": "NIFTY 50 daily-like Indian market only",
+      "label_fit": "binary risk_on/risk_off, not four MainRegimeV2 roots",
+      "mainregimev2_status": "candidate_sidecar_only_not_full_root_panel"
+    },
+    {
+      "dataset": "sujinwo/tsie-market-regime-dataset",
+      "url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+      "license": "mit",
+      "downloaded_files": [],
+      "labels_from_readme": [
+        "STRONG SELL",
+        "WEAK SELL",
+        "BEAR TRAP",
+        "FLAT / NOISE",
+        "BULL TRAP",
+        "WEAK BUY",
+        "STRONG BUY"
+      ],
+      "coverage_fit": "IDX market, not ready yfinance/Kraken matrix",
+      "label_fit": "rule-based signal labels; partial mapping to bull/bear/sideways possible, crisis absent",
+      "mainregimev2_status": "candidate_mapping_audit_needed_not_full_root_panel"
+    }
+  ],
+  "completion_accounting": {
+    "independent_full_root_label_panel_ready": false,
+    "accepted_full_cycle_full_universe": false,
+    "why_not_accepted": [
+      "BTC HMM6 is public and materialized, but it covers one crypto symbol and two timeframes, and labels are HMM-derived six-state semantics rather than direct four-root MainRegimeV2 labels.",
+      "NIFTY50 is public and materialized, but it is binary risk_on/risk_off and one market only.",
+      "TSIE appears public and multi-class, but the README describes rule-based IDX labels with no direct Crisis root and no ready yfinance/Kraken full-matrix coverage.",
+      "None of the public HF candidates attaches all four MainRegimeV2 roots to every ready yfinance/Kraken symbol/timeframe cell."
+    ]
+  },
+  "gate_result": "blocked_hf_candidates_materialized_but_not_full_mainregimev2_panel",
+  "next_action": "Either build an explicit mapping audit for the HF candidates as limited sidecars, or obtain a true four-root multi-asset multi-timeframe label panel before rerunning accepted 95% calibration.",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

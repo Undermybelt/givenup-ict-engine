@@ -1,0 +1,8 @@
+loop_id=20260511T042030+0800-codex-bear-expansion-legacy-reissue-audit
+trend_packets_found=3
+accepted_bear_expansion_reissues=0
+gate_result=blocked_bear_expansion_legacy_reissue_missing_directional_bear_semantics
+accepted_new_roots_95=none
+missing_root_classes_95_effective=BearExpansion,Manipulation
+runtime_code_changed=false
+thresholds_relaxed=false

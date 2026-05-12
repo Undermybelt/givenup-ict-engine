@@ -1,0 +1,63 @@
+{
+  "branch_path_contract": [
+    "main_regime",
+    "sub_regime",
+    "sub_sub_regime_or_profit_factor",
+    "profit_factor"
+  ],
+  "consumer_mapping": {
+    "Execution tree features": [
+      "smt_signal",
+      "mss_or_cisd_confirmed",
+      "displacement_confirmed",
+      "near_pd_array",
+      "pd_array_type"
+    ],
+    "Feedback/update learning fields": [
+      "base_symbol",
+      "comparison_symbol",
+      "base_level",
+      "comparison_level",
+      "swept_side",
+      "per_regime_stats",
+      "fail_closed_reason"
+    ],
+    "Regime posterior evidence": [
+      "per_regime_stats",
+      "confidence",
+      "quality_weight"
+    ],
+    "SMT": [
+      "relationship_type",
+      "relationship_confidence",
+      "smt_signal",
+      "normalized_for_inverse_correlation",
+      "fail_closed_reason"
+    ],
+    "Structure": [
+      "base_swing_type",
+      "comparison_swing_type",
+      "base_level",
+      "comparison_level",
+      "swept_side"
+    ],
+    "Technicals": [
+      "timeframe",
+      "session",
+      "near_pd_array",
+      "pd_array_type"
+    ]
+  },
+  "factor": "smt_divergence_confirmation_failure",
+  "gates": {
+    "low_sample_fail_closed": true,
+    "requires_base_and_comparison_levels": true,
+    "requires_mss_or_cisd_or_displacement_for_trade_plan": true,
+    "requires_pda_entry_model_for_trade_plan": true,
+    "requires_same_timeframe": true,
+    "requires_session_overlap": true,
+    "requires_stable_recent_correlation": true,
+    "smt_confirmation_only": true,
+    "standalone_actionable_allowed": false
+  }
+}

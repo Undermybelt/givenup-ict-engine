@@ -1,0 +1,40 @@
+{
+  "decision": {
+    "accepted_regime_roots_after_quarantine": [],
+    "accepted_rows_added_for_board_a": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "missing_or_blocked_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "r3_counts_as_unlock": false,
+    "r3_policy_state": "present_quarantined_proxy_tsie_not_accepted",
+    "r5_recency_evidence_acquired": false,
+    "r6_source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "gate_result": "current_objective_audit_after_r3_tsie_quarantine_v1=not_complete_tsie_root_present_policy_quarantined_no_unlock",
+  "next_action": "Treat the TSIE root as quarantined/proxy evidence only. Replace it with explicit source/control-approved R3 MainRegimeV2 labels or obtain R6 owner/export controls, source-owned R5 recency, or a genuine Crisis-capable source packet before canonical merge and downstream readback.",
+  "observed_at_utc": "2026-05-11T22:39:57.490079+00:00",
+  "readback": {
+    "materialization_assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1/checks/r3_tsie_native_subhour_intake_materialization_v1_assertions.out",
+    "quarantine_assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T063707+0800-codex-r3-tsie-target-root-policy-quarantine-v1/checks/r3_tsie_target_root_policy_quarantine_v1_assertions.out",
+    "r3_file_count": 2,
+    "r3_physical_mapping_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "r3_physical_row_count": 5032903,
+    "r3_required_files_complete": true,
+    "r3_root_present": true,
+    "r5_root_present": false,
+    "r6_root_present": false
+  },
+  "run_id": "20260512T063906+0800-codex-current-objective-audit-after-r3-tsie-quarantine-v1"
+}

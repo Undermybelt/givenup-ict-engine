@@ -1,0 +1,6 @@
+PASS provider_rows=6
+PASS tvr_row_present=True
+FAIL same_root_six_provider_authority=False
+PASS auto_quant_ran_false=True
+PASS promotion_allowed_false=True
+PASS update_goal_false=True

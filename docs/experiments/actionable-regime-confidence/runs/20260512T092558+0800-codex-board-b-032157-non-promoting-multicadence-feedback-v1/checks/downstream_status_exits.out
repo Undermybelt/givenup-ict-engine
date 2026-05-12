@@ -1,0 +1,4 @@
+pre_bayes_status_exit=2
+policy_training_status_exit=2
+export_structural_path_ranking_target_exit=0
+workflow_status_exit=0

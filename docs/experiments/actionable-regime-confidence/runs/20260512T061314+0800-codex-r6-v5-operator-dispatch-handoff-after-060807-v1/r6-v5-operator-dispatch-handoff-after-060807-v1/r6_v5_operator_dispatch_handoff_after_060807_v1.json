@@ -1,0 +1,48 @@
+{
+  "run_id": "20260512T061314+0800-codex-r6-v5-operator-dispatch-handoff-after-060807-v1",
+  "gate_result": "r6_v5_operator_dispatch_handoff_after_060807_v1=operator_dispatch_ready_not_sent_no_approval_no_rows",
+  "board_sha256_before_artifact": "927d76d7635aad6ef4e0416920a46408eae477c022bf6a395a1f63190f87f72d",
+  "scope": "operator_dispatch_handoff_only",
+  "inputs": {
+    "v5_dispatch_manifest": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/r6_owner_export_v5_dispatch_manifest_v1.md",
+    "dispatch_feasibility_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T055516-codex-r6-owner-export-dispatch-feasibility-readback-v1/r6-owner-export-dispatch-feasibility-readback-v1/r6_owner_export_dispatch_feasibility_readback_v1.md",
+    "route_public_contact_recency_check": "docs/experiments/actionable-regime-confidence/runs/20260512T060807-codex-r6-owner-route-public-contact-recency-check-v1/r6-owner-route-public-contact-recency-check-v1/r6_owner_route_public_contact_recency_check_v1.md"
+  },
+  "dispatch_assets": [
+    {
+      "owner": "CME Group",
+      "draft_path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b",
+      "primary_route": "CMEDataSales@cmegroup.com",
+      "fallback_route": "marketdata@cmegroup.com",
+      "status": "draft_not_sent"
+    },
+    {
+      "owner": "Cboe/CFE",
+      "draft_path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d",
+      "primary_route": "marketdata@cboe.com",
+      "fallback_route": "DataShop contact form or phone from prior contact-route evidence",
+      "status": "draft_not_sent"
+    }
+  ],
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "required_files_after_operator_delivery": [
+    "positive_spoofing_layering_rows.csv",
+    "matched_negative_normal_activity_rows.csv",
+    "provenance_manifest.json"
+  ],
+  "external_requests_sent": false,
+  "approval_present": false,
+  "source_control_evidence_acquired": false,
+  "target_root_mutated": false,
+  "canonical_merge_allowed_now": false,
+  "downstream_rerun_allowed_now": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "next_action": "Use the v5 drafts through an approved operator dispatch path, or supply explicit source/control approval or verifier-native owner-export rows before rerunning direct verifier, split calibration, canonical merge, providers, AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback."
+}

@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/yahoo_nq_f_1h_20240601_20260512.csv ...
+  raw_rows=11,086 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=11,086
+  range 2024-06-02 22:00:00+00:00 -> 2026-05-11 23:00:00+00:00
+  after timerange slice: 11,086 rows
+  cleaning: dropped 395 (3.5631%) | ohlc_inconsistent=0 nonpositive_price=0 negative_volume=0 ghost_bar=394 jump_outlier=1 -> after_clean=10,691
+  gap_audit: median_gap=3600s max_gap=4,800.0min big_gaps_gt_60x_median=3 (typical for futures session breaks/weekends)
+  wrote   1h:  10,691 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/state_provider_owned_aq_long_yf_v1/.deps/auto-quant/user_data/data/NQ_USD-1h.feather
+  wrote   4h:   3,002 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/state_provider_owned_aq_long_yf_v1/.deps/auto-quant/user_data/data/NQ_USD-4h.feather
+  wrote   1d:     596 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/state_provider_owned_aq_long_yf_v1/.deps/auto-quant/user_data/data/NQ_USD-1d.feather
+Done: 3 feather files for pair NQ/USD in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/state_provider_owned_aq_long_yf_v1/.deps/auto-quant/user_data/data

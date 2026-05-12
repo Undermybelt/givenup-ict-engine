@@ -1,0 +1,22 @@
+{
+  "accepted_new_roots_95": [],
+  "accepted_root_classes_95_effective": [
+    "Bull",
+    "Crisis"
+  ],
+  "fresh_calibration_rerun": true,
+  "gate_result": "blocked_kaggle_bear_sideways_root_gate_below_95",
+  "missing_root_classes_95_effective": [
+    "Bear",
+    "Sideways",
+    "Manipulation"
+  ],
+  "next_action": "Continue MainRegimeV2 root gates for any missing Bear/Sideways root; keep Manipulation blocked until direct event/order-lifecycle labels exist.",
+  "retained_prior_accepted_root_classes_95": [
+    "Bull",
+    "Crisis"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

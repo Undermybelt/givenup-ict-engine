@@ -1,0 +1,77 @@
+{
+  "run_id": "20260512T034423-codex-autoquant-seeded-threaded-run-settlement-after-033430-v1",
+  "generated_at_utc": "2026-05-11T19:44:23Z",
+  "board_sha256_before_artifact": "3d01441f635d2e17f848d55a969d6a2e9c5ff6954b0cc773f3b61546bea458dc",
+  "gate_result": "autoquant_seeded_threaded_run_settlement_after_033430_v1=seeded_threaded_backtests_succeeded_runtime_only_source_controls_absent_no_promotion",
+  "source_command_root": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-workaround-run-v1/command-output",
+  "command_result": {
+    "exit": 0,
+    "completion_line": "Done: 3 backtests succeeded, 0 failed.",
+    "strategy_count": 3,
+    "success_count": 3,
+    "failure_count": 0
+  },
+  "workspace": {
+    "path": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant/.deps/auto-quant",
+    "commit": "34ba6b6",
+    "timerange": "20210101-20251231",
+    "pairs": [
+      "BTC/USDT",
+      "ETH/USDT",
+      "SOL/USDT",
+      "BNB/USDT",
+      "AVAX/USDT"
+    ]
+  },
+  "strategies": [
+    {
+      "name": "BTCLeaderBreakV4",
+      "robust_sharpe": 0.9415,
+      "worst_profit_pct": 42.46,
+      "worst_dd_pct": -5.7458,
+      "avg_position_pct": 6.9583,
+      "trade_count": 600,
+      "win_rate_pct": 31.8333,
+      "profit_floor": "PASS",
+      "min_position_size": "PASS"
+    },
+    {
+      "name": "MomentumMTFConfluence",
+      "robust_sharpe": 0.3993,
+      "worst_profit_pct": 53.24,
+      "worst_dd_pct": -23.1801,
+      "avg_position_pct": 21.5841,
+      "trade_count": 854,
+      "win_rate_pct": 34.8,
+      "profit_floor": "PASS",
+      "min_position_size": "PASS"
+    },
+    {
+      "name": "VolBreakoutSized",
+      "robust_sharpe": 1.339,
+      "worst_profit_pct": 25.02,
+      "worst_dd_pct": -4.2529,
+      "avg_position_pct": 3.6641,
+      "trade_count": 1221,
+      "win_rate_pct": 32.8419,
+      "profit_floor": "PASS",
+      "min_position_size": "FAIL"
+    }
+  ],
+  "board_a_promotion": {
+    "source_control_evidence_acquired": false,
+    "r6_owner_export_root_present": false,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_extension_root_present": false,
+    "approval_present": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Continue only from verifier-native owner/export rows, explicit FLIP approval/source-owned controls, or genuinely source-owned cross-timeframe MainRegimeV2 exports before verifier rerun, canonical merge, and downstream promotion."
+}

@@ -1,0 +1,1 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/workspace/auto-quant-yf-nq-trendpulse && /Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py

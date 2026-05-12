@@ -1,0 +1,45 @@
+{
+  "schema_version": "provider-status-v2",
+  "providers": {
+    "yfinance_nq_15m": {
+      "artifact": "provider/yf_nq_15m.csv",
+      "rows": 519,
+      "first": "2026-05-01T00:00:00+00:00",
+      "last": "2026-05-08T20:59:59+00:00",
+      "ready": true
+    },
+    "yfinance_qqq_1h": {
+      "artifact": "provider/yf_qqq_1h.csv",
+      "rows": 43,
+      "first": "2026-05-01T13:30:00+00:00",
+      "last": "2026-05-08T20:00:00+00:00",
+      "ready": true
+    },
+    "ibkr_qqq_1h": {
+      "artifact": "provider/ibkr_qqq_1h.csv",
+      "rows": 160,
+      "first": "2026-04-27T08:00:00+00:00",
+      "last": "2026-05-08T23:00:00+00:00",
+      "ready": true
+    },
+    "kraken_pf_xbtusd_15m": {
+      "artifact": "provider/kraken_pf_xbtusd_15m.csv",
+      "rows": 865,
+      "first": "2026-05-01T00:00:00+00:00",
+      "last": "2026-05-10T00:00:00+00:00",
+      "ready": true
+    },
+    "auto_quant_cache_nq_15m": {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+      "ready": true,
+      "rows": 351288,
+      "first": "2011-01-02 23:00:00+00:00",
+      "last": "2025-12-31 21:45:00+00:00"
+    },
+    "tradingview_remix": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "provider-status probe returned tradingview_mcp_connectivity_probe_failed; durable 2026-only tv_QQQ_1h artifact not chronologically aligned with 2024-2025 replay labels"
+    }
+  }
+}

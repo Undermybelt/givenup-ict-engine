@@ -1,0 +1,38 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "external_requests_sent": false,
+  "gate_result": "non_r6_source_intake_outbound_request_messages_v1=outbound_messages_ready_not_sent_rows_not_acquired",
+  "generated_at_utc": "2026-05-11T17:03:21.482210+00:00",
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "request_count": 3,
+  "required_files": {
+    "r3_native_subhour_source_labels": [
+      "native_subhour_source_label_rows.csv",
+      "native_subhour_source_label_provenance.json"
+    ],
+    "r5_source_panel_recency_extension": [
+      "stock_market_regimes_2026_extension.csv",
+      "source_panel_recency_provenance.json"
+    ],
+    "source_label_equivalence": [
+      "source_label_equivalence_rows.csv",
+      "source_label_equivalence_provenance.json"
+    ]
+  },
+  "roots": [
+    "/tmp/ict-engine-source-label-equivalence-intake",
+    "/tmp/ict-engine-native-subhour-source-label-intake",
+    "/tmp/ict-engine-source-panel-recency-extension"
+  ],
+  "run_id": "20260512T010201-codex-non-r6-source-intake-outbound-request-messages-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_rows_acquired": 0,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

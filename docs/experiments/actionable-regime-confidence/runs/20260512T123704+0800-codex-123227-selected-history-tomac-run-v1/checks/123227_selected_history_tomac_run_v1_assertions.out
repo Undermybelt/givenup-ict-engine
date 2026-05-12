@@ -1,0 +1,13 @@
+PASS run_id=20260512T123704+0800-codex-123227-selected-history-tomac-run-v1
+PASS source_run_id=20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1
+PASS root_cause=outer_uv_missing_freqtrade
+PASS venv_tomac_exit=0
+PASS tomac_succeeded=3
+PASS tomac_failed=0
+FAIL_CLOSED total_trades=0
+FAIL_CLOSED candidate_package_available=false
+FAIL_CLOSED pre_bayes_bbn_catboost_execution_ready=false
+PASS production_likelihood_mutation=false
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

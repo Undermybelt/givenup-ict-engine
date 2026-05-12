@@ -1,0 +1,1 @@
+uv run --with pandas scripts/auto_quant_external/fetch_external.py kraken-kline --market spot --pair XBTUSD --interval 1h --output docs/experiments/actionable-regime-confidence/runs/20260512T171227+0800-codex-board-a-kraken-current-window-repair-v1/provider-csv/kraken_spot_xbtusd_1h_default.csv

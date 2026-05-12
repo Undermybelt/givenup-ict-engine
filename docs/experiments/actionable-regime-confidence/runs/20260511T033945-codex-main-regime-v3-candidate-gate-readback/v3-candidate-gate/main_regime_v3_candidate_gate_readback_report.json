@@ -1,0 +1,174 @@
+{
+  "crosswalk": {
+    "crosswalk": {
+      "BearExpansion": "same source-backed expanded root label",
+      "BullExpansion": "same source-backed expanded root label",
+      "CrisisCrash": "crosswalk from source root CrisisStress",
+      "Manipulation": "direct event/order-lifecycle/L2/L3/MBO/social/on-chain evidence only",
+      "SidewaysConsolidation": "source labels Consolidation/ConsolidationRange collapsed to SidewaysConsolidation",
+      "UnknownOrMixed": "residual abstain bucket, not release confidence"
+    },
+    "schema_id": "MainRegimeV3CandidateCrosswalk"
+  },
+  "decision": {
+    "accepted_95_all_required_roots": false,
+    "accepted_gate": "partial_for_MainRegimeV3Candidate_CrisisCrash_only",
+    "accepted_root_classes_95": [
+      "CrisisCrash"
+    ],
+    "blocker": "missing_root_classes_95=BullExpansion,BearExpansion,SidewaysConsolidation,Manipulation",
+    "board_state": "blocked",
+    "fresh_calibration_rerun": false,
+    "missing_root_classes_95": [
+      "BullExpansion",
+      "BearExpansion",
+      "SidewaysConsolidation",
+      "Manipulation"
+    ],
+    "next_action": "Run a fresh MainRegimeV3Candidate gate with materially stronger signed expansion/consolidation inputs and a direct Manipulation evidence source.",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "loop_id": "20260511T033945+0800-codex-main-regime-v3-candidate-gate-readback",
+  "objective": "Reissue the latest expanded-root calibration result through the current MainRegimeV3Candidate taxonomy without relaxing thresholds.",
+  "root_reports": [
+    {
+      "accepted_95": false,
+      "root_class": "BullExpansion",
+      "selected_candidate": {
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95"
+        ],
+        "calibration_precision": 0.807570977917981,
+        "calibration_support": 317,
+        "calibration_wilson95_lcb": 0.7605966267520854,
+        "ece": 0.026866108174734227,
+        "method": "rule_pair",
+        "rule": "BullExpansion_base AND drawdown64 >= -0.00158986511419",
+        "test_precision": 0.8344370860927153,
+        "test_support": 302,
+        "test_wilson95_lcb": 0.7883691312523797
+      },
+      "source_root_class": "BullExpansion",
+      "state": "blocked"
+    },
+    {
+      "accepted_95": false,
+      "root_class": "BearExpansion",
+      "selected_candidate": {
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05",
+          "coverage_below_0_03",
+          "validation_timeframes_below_2"
+        ],
+        "calibration_precision": 0.5201793721973094,
+        "calibration_support": 223,
+        "calibration_wilson95_lcb": 0.4548233429277408,
+        "ece": 0.09603684401890689,
+        "method": "decile_log_odds_score",
+        "rule": "expanded_root_decile_log_odds_score_BearExpansion >= 1.55898213987",
+        "test_precision": 0.6162162162162163,
+        "test_support": 185,
+        "test_wilson95_lcb": 0.5444518072082913
+      },
+      "source_root_class": "BearExpansion",
+      "state": "blocked"
+    },
+    {
+      "accepted_95": false,
+      "root_class": "SidewaysConsolidation",
+      "selected_candidate": {
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95"
+        ],
+        "calibration_precision": 0.8114478114478114,
+        "calibration_support": 297,
+        "calibration_wilson95_lcb": 0.7630920593631111,
+        "ece": 0.015600060582759534,
+        "method": "decile_log_odds_score",
+        "rule": "expanded_root_decile_log_odds_score_SidewaysConsolidation >= 1.43914039008",
+        "test_precision": 0.7958477508650519,
+        "test_support": 289,
+        "test_wilson95_lcb": 0.7456378472663694
+      },
+      "source_root_class": "SidewaysConsolidation",
+      "state": "blocked"
+    },
+    {
+      "accepted_95": true,
+      "root_class": "CrisisCrash",
+      "selected_candidate": {
+        "blockers": [],
+        "calibration_precision": 0.996309963099631,
+        "calibration_support": 542,
+        "calibration_wilson95_lcb": 0.9866467075949192,
+        "ece": 0.0012850874777404764,
+        "method": "rule_pair",
+        "rule": "range_ratio32_128 >= 1.354447594 AND vol_ratio32_128 >= 1.34848093042",
+        "test_precision": 0.9950248756218906,
+        "test_support": 402,
+        "test_wilson95_lcb": 0.982043937572714
+      },
+      "source_root_class": "CrisisStress",
+      "state": "accepted_95"
+    },
+    {
+      "accepted_95": false,
+      "root_class": "Manipulation",
+      "selected_candidate": {
+        "blockers": [
+          "missing_required_direct_event_order_lifecycle_inputs"
+        ],
+        "calibration_precision": 0.0,
+        "calibration_support": 0,
+        "calibration_wilson95_lcb": 0.0,
+        "ece": 1.0,
+        "method": "required_input_gate",
+        "rule": "calibration_grade_direct_L2_L3_MBO_order_lifecycle_or_event_data_present == true",
+        "test_precision": 0.0,
+        "test_support": 0,
+        "test_wilson95_lcb": 0.0
+      },
+      "source_root_class": "Manipulation",
+      "state": "missing_required_inputs"
+    }
+  ],
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T033945-codex-main-regime-v3-candidate-gate-readback",
+  "schema_version": "main-regime-v3-candidate-gate-readback/v1",
+  "source_report": "docs/experiments/actionable-regime-confidence/runs/20260511T032456-codex-expanded-root-schema-gate/expanded-root-gate/expanded_root_schema_gate_report.json",
+  "source_taxonomy_refresh": "docs/experiments/actionable-regime-confidence/runs/20260511T033340-codex-main-regime-v3-taxonomy-source-refresh/source-refresh/main_regime_v3_taxonomy_source_refresh.json",
+  "target_schema": {
+    "gate_note": "Readback/crosswalk only; does not relax thresholds or introduce a fresh calibration rerun.",
+    "optional_preflight_roots": [
+      "TransitionRecovery",
+      "BubbleEuphoria",
+      "LiquidityDrought",
+      "VolatilityDislocation",
+      "CrossAssetRotation"
+    ],
+    "required_roots": [
+      "BullExpansion",
+      "BearExpansion",
+      "SidewaysConsolidation",
+      "CrisisCrash",
+      "Manipulation"
+    ],
+    "residual_root": "UnknownOrMixed",
+    "root_map": {
+      "BearExpansion": "BearExpansion",
+      "BullExpansion": "BullExpansion",
+      "CrisisStress": "CrisisCrash",
+      "Manipulation": "Manipulation",
+      "SidewaysConsolidation": "SidewaysConsolidation"
+    },
+    "schema_id": "MainRegimeV3Candidate",
+    "source_calibration_report": "docs/experiments/actionable-regime-confidence/runs/20260511T032456-codex-expanded-root-schema-gate/expanded-root-gate/expanded_root_schema_gate_report.json",
+    "source_taxonomy_refresh": "docs/experiments/actionable-regime-confidence/runs/20260511T033340-codex-main-regime-v3-taxonomy-source-refresh/source-refresh/main_regime_v3_taxonomy_source_refresh.json"
+  }
+}

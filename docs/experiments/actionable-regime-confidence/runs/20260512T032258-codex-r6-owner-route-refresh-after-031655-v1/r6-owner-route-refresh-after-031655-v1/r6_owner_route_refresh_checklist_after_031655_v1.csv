@@ -1,0 +1,13 @@
+requirement,status,evidence,reason
+latest_board_read,pass,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,board hash and tail read before packet
+latest_031655_audit_read,pass,20260512T031655-codex-current-objective-completion-audit-after-031435-v1,latest durable current-objective audit remains not complete
+official_routes_refreshed,pass,r6_owner_route_refresh_after_031655_v1.csv,official CME and Cboe routes rechecked after 031655
+cme_oystacher_date_route,partial,CME Market Depth official page,exchange-level date route fits but licensed verifier-native export is not acquired
+cboe_legacy_vix_date_route,partial,Cboe DataShop legacy VIX trades/quotes page,date window fits but order-lifecycle/control-field sufficiency is unproven
+cboe_current_cfe_trade_schema,partial,Cboe DataShop CFE Futures Trades page,schema is useful but starts after the Oystacher VIX date window
+source_owned_normal_controls,blocked,live gate status,source-owned normal controls acquired equals 0
+flip_control_approval,blocked,approval package,explicit FLIP-as-control approval remains false
+r6_owner_export_root,blocked,/tmp/ict-engine-board-a-r6-owner-export-v1,root absent or incomplete
+canonical_merge,blocked,live gate status,canonical merge allowed false
+downstream_chain_rerun,blocked,live gate status,provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree rerun still disallowed
+update_goal,blocked,live gate status,update_goal false

@@ -1,0 +1,207 @@
+{
+  "active_taxonomy": {
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "name": "MainRegimeV2",
+    "residual": "UnknownOrMixed",
+    "separate_direct_event_class_or_overlay": [
+      "Manipulation"
+    ]
+  },
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_audit": "137044d1a06d801a94ec63a413011e24fe0433eb24af8aebe52a236ee06c6429",
+  "coverage": {
+    "all_required_regimes_have_scoped_gate": true,
+    "broken_source_artifact_refs": [],
+    "direct_manipulation_variety_count": 2,
+    "missing_regimes": [],
+    "regimes_with_accepted_95_scoped_gate": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Manipulation",
+      "Sideways"
+    ],
+    "required_regimes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ]
+  },
+  "decision": {
+    "accepted_95_scoped_gate_regimes": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Manipulation",
+      "Sideways"
+    ],
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_parent_root_full_matrix_completion": false,
+    "gate_result": "positive_scoped_regime_gate_contract_ready_full_matrix_still_blocked",
+    "positive_scoped_gate_contract_ready": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "gates": [
+    {
+      "accepted_95_scoped_gate": true,
+      "calibration_support": 2202,
+      "calibration_wilson95_lcb": 0.952516,
+      "consumer_action": "allow_or_size_up_bull_continuation_inside_supported_scope",
+      "gate_id": "bull_sourcebacked_drawdown_volatility_v1",
+      "guardrail": "abstain outside supported index/single-stock daily-weekly scope",
+      "qualifying_condition": "close_drawdown60 >= -0.0032047199531 AND volatility <= 0.152179344579",
+      "regime": "Bull",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T035045-codex-kaggle-bull-coverage-buffer-gate/kaggle-bull-gate/kaggle_bull_coverage_buffer_gate_report.json",
+      "source_artifact_exists": true,
+      "source_artifact_sha256": "d00209e939a129862e0081af03f2b0a4f599caab1cf01307970d125c0af36b21",
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "test_support": 3125,
+      "test_wilson95_lcb": 0.961931,
+      "validation_contexts": [
+        "index",
+        "single_stock"
+      ],
+      "validation_timeframes": [
+        "1d",
+        "1w"
+      ]
+    },
+    {
+      "accepted_95_scoped_gate": true,
+      "calibration_support": 633,
+      "calibration_wilson95_lcb": 0.993968,
+      "consumer_action": "allow_bear_defensive_or_short_bias_inside_supported_scope",
+      "gate_id": "bear_sourcebacked_drawdown_return_ratio_v1",
+      "guardrail": "abstain outside supported crypto/equity-ETF daily-weekly scope",
+      "qualifying_condition": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+      "regime": "Bear",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "source_artifact_exists": true,
+      "source_artifact_sha256": "a336c2fc364fdf9ecb90fde3138323c6eadb8cfa3dc2a01041cc39268143f392",
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "test_support": 524,
+      "test_wilson95_lcb": 0.992722,
+      "validation_contexts": [
+        "crypto",
+        "equity_etf"
+      ],
+      "validation_timeframes": [
+        "1d",
+        "1w"
+      ]
+    },
+    {
+      "accepted_95_scoped_gate": true,
+      "calibration_support": 495,
+      "calibration_wilson95_lcb": 0.988647,
+      "consumer_action": "allow_mean_reversion_or_range_logic_inside_supported_scope",
+      "gate_id": "sideways_sourcebacked_abs_return_range_v1",
+      "guardrail": "do not substitute old RangeConsolidation subtype for this parent-root gate",
+      "qualifying_condition": "sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236",
+      "regime": "Sideways",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "source_artifact_exists": true,
+      "source_artifact_sha256": "a336c2fc364fdf9ecb90fde3138323c6eadb8cfa3dc2a01041cc39268143f392",
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "test_support": 863,
+      "test_wilson95_lcb": 0.995568,
+      "validation_contexts": [
+        "crypto",
+        "equity_etf"
+      ],
+      "validation_timeframes": [
+        "1d",
+        "1w"
+      ]
+    },
+    {
+      "accepted_95_scoped_gate": true,
+      "calibration_support": 1020,
+      "calibration_wilson95_lcb": 0.996248,
+      "consumer_action": "suppress_risk_or_size_down_execution_inside_supported_scope",
+      "gate_id": "crisis_range_ratio_intraday_v1",
+      "guardrail": "price-stress crisis evidence is not direct manipulation evidence",
+      "qualifying_condition": "range_ratio32_128 >= 1.43116959912",
+      "regime": "Crisis",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T235220-codex-broader-root-v2-probe/root-v2-broader/main_regime_v2_broader_root_calibration_report.json",
+      "source_artifact_exists": true,
+      "source_artifact_sha256": "04116a1034bb26cae6693df42e5ece113728ce977cc862560345f741b3a09a8e",
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "test_support": 952,
+      "test_wilson95_lcb": 0.995981,
+      "validation_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    {
+      "accepted_95_scoped_gate": true,
+      "calibration_support": 14516,
+      "calibration_wilson95_lcb": 0.999735,
+      "consumer_action": "suppress_entry_or_route_to_abstain_cooldown_on_direct_event",
+      "gate_id": "manipulation_telegram_pump_event_v1",
+      "guardrail": "not an automatic trade entry and not an OHLCV proxy",
+      "qualifying_condition": "classified_telegram_coin_pump_event_present == 1",
+      "regime": "Manipulation",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.json",
+      "source_artifact_exists": true,
+      "source_artifact_sha256": "8931eb58202b7061d2ca9208544c546238ac689f34c41495c4198688687f2316",
+      "taxonomy_role": "separate_direct_event_order_flow_overlay_or_class",
+      "test_support": 12834,
+      "test_wilson95_lcb": 0.999701,
+      "validation_contexts": [
+        "crypto_telegram_event",
+        "same_coin_non_event_controls"
+      ],
+      "validation_timeframes": [
+        "event_window"
+      ]
+    },
+    {
+      "accepted_95_scoped_gate": true,
+      "calibration_support": 7563,
+      "calibration_wilson95_lcb": 0.967945,
+      "consumer_action": "suppress_or_abstain_on_direct_wash_maker_evidence",
+      "gate_id": "manipulation_multichain_wash_maker_v1",
+      "guardrail": "wash-maker scope only; not full spoofing/layering/quote-stuffing coverage",
+      "qualifying_condition": "same platform/address/day paired controls AND is_both_buyer_seller == True",
+      "regime": "Manipulation",
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.json",
+      "source_artifact_exists": true,
+      "source_artifact_sha256": "be739119c76ba016941bdda967d604d98d6df751fdef55e26181c0a09b5eb611",
+      "taxonomy_role": "separate_direct_event_order_flow_overlay_or_class",
+      "test_support": 7563,
+      "test_wilson95_lcb": 0.967945,
+      "validation_contexts": [
+        "base",
+        "bsc",
+        "ethereum",
+        "solana"
+      ],
+      "validation_timeframes": [
+        "maker_token_day"
+      ]
+    }
+  ],
+  "generated_at_utc": "2026-05-11T04:21:52.410943+00:00",
+  "next_action": "Use this contract to feed downstream gating within supported scopes. The next useful expansion is targeted matrix filling for unsupported contexts/timeframes, not another broad negative source sweep.",
+  "purpose": "Positive scoped gate contract for downstream consumers; no negative source-candidate audit.",
+  "run_id": "20260511T121842+0800-codex-positive-regime-gate-contract"
+}

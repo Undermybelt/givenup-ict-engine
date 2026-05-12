@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "e5c252f47211f294",
+  "dry_run": false,
+  "feedback_records_inserted": 237,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_BTC_USDT_20260512T042428.069143000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades_115700_enriched",
+  "symbol": "BTC_USDT",
+  "trades_applied": 237,
+  "trades_invalid": 0,
+  "trades_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/115700-enriched-downstream-readback-v1/115700_enriched_real_trades.jsonl",
+  "trades_total": 237
+}

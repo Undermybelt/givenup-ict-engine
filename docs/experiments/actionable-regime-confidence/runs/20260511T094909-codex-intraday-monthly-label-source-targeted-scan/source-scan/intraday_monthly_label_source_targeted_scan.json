@@ -1,0 +1,41 @@
+{
+  "run_id": "20260511T094909+0800-codex-intraday-monthly-label-source-targeted-scan",
+  "purpose": "Targeted scan for exact-underlying intraday/monthly MainRegimeV2 parent-root labels after the daily Kaggle panel failed to fill current missing slots.",
+  "queries": [
+    "\"stock_market_regimes\" \"1m\" kaggle \"regime_label\"",
+    "site:kaggle.com/datasets \"market regimes\" \"1m\" \"Bull\" \"Bear\" \"Sideways\"",
+    "\"market regime\" \"intraday\" \"Kaggle\"",
+    "\"regime_label\" \"Bull\" \"Bear\" \"Sideways\" \"1m\""
+  ],
+  "candidate_classifications": [
+    {
+      "source": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+      "decision": "rejected_already_audited_proxy_off_contract",
+      "reason": "IDX-only, rule-based OHLCV/technical labels with integer regimes and prior Board A audits added zero accepted MainRegimeV2 slots."
+    },
+    {
+      "source": "https://www.kaggle.com/datasets/vivek468/sip-dataset-nifty-banknifty-gold-and-silver",
+      "decision": "rejected_ohlcv_monthly_no_parent_root_labels_off_universe",
+      "reason": "Monthly OHLCV/calculated metrics for Indian ETF proxies; no explicit Bull/Bear/Sideways/Crisis source labels for current yfinance/Kraken slots."
+    },
+    {
+      "source": "https://huggingface.co/JonusNattapong/xauusd-trading-ai-smc-v2",
+      "decision": "rejected_model_artifact_not_source_label_panel",
+      "reason": "Trading model/pkl artifacts and validation accuracy claims, not independent downloadable parent-root label rows."
+    },
+    {
+      "source": "https://www.technical-analysis-pro.com/strategies-xgboost-trading-gradient-boosting-python/",
+      "decision": "rejected_methodology_article_no_label_rows",
+      "reason": "Article mentions intraday regime classification as a target, but provides no exact-underlying source-label panel."
+    }
+  ],
+  "accepted_parent_root_label_sources": 0,
+  "accepted_parent_root_slots_added": 0,
+  "accepted_direct_manipulation_rows_added": 0,
+  "gate_result": "blocked_targeted_intraday_monthly_scan_no_exact_parent_root_label_panel",
+  "next_action": "A new source must be a real row-level export for current missing instruments/timeframes or direct Manipulation rows; public search results seen here are proxy, model, methodology, or off-contract data.",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false
+}

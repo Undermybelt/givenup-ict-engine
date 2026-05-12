@@ -1,0 +1,22 @@
+{
+  "accepted_95_contexts": 0,
+  "board_a_hash_before_writeback": "9c30382165613518b2c2d56d4850de6df196b2ccbb8c69bbca43b8babe3a13da",
+  "cross_market_timeframe_validation": false,
+  "evidence_roots": {
+    "150515": "20260512T150515+0800-codex-btc-binance-full-provider-aq-chain-v1",
+    "151021": "20260512T151021+0800-codex-143900-binance-btc-fullchain-v1",
+    "153551": "20260512T153551+0800-codex-board-b-lowpollution-provider-adapter-smoke-v1",
+    "154536": "20260512T154536+0800-codex-board-b-tvr-mcp-redacted-health-probe-v1",
+    "155014": "20260512T155014+0800-codex-board-b-ote-branch-continuation-contract-v1"
+  },
+  "objective_complete": false,
+  "pre_bayes_bbn_catboost_execution_promotion": false,
+  "primary_blocker": "tvr_rate_limited_no_current_same_root_six_provider_authority",
+  "promotion_allowed": false,
+  "run_id": "20260512T160421+0800-codex-board-a-current-tail-tvr-blocker-audit-v1",
+  "same_root_six_provider_aq_authority": false,
+  "trade_usable": false,
+  "tvr_latest_http_status": 429,
+  "tvr_latest_retry_after_seconds": 58271,
+  "update_goal": false
+}

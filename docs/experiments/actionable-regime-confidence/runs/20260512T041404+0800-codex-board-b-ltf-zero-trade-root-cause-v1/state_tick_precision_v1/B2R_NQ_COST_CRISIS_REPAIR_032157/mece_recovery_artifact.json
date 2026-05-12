@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-B2R_NQ_COST_CRISIS_REPAIR_032157-1778528792552",
+  "generated_at": "2026-05-11T19:46:32.552961Z",
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "61a2024277021399",
+  "execution_validity_summary": "execution_blocked=131;execution_observe_only=77;execution_ready=52",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        78
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.43895760520368415,
+      "execution_readiness_drift": 0.0010512162469546423,
+      "sample_count": 78
+    },
+    {
+      "horizon_bars": [
+        78,
+        208
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4474661408396981,
+      "execution_readiness_drift": -0.00031171586069425714,
+      "sample_count": 130
+    },
+    {
+      "horizon_bars": [
+        208,
+        260
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4532555863551689,
+      "execution_readiness_drift": 0.005904481904554168,
+      "sample_count": 52
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "18f35e7365e0b192",
+    "data_fingerprint": "06c8bb057ee4b218"
+  }
+}

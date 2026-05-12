@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-prior-init --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1-state --strategies RegimeRootPulseBranch,RegimeTrendCarry,RegimeVolBreakout --temper 0.25 --dry-run --force 

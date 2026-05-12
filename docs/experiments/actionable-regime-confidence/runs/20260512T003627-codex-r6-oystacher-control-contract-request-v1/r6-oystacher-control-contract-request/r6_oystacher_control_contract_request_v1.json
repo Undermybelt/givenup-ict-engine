@@ -1,0 +1,29 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "fae4f120f878870e820f902624a2ea2252f567580e33a0c367460a2b06dffb40",
+  "canonical_merge_allowed": false,
+  "control_options": [
+    "source_owned_normal_controls",
+    "explicit_flip_as_control_contract"
+  ],
+  "downstream_chain_rerun_allowed": false,
+  "external_requests_sent": false,
+  "flip_as_control_approved": false,
+  "flip_rows_rejected_as_controls": true,
+  "gate_result": "r6_oystacher_control_contract_request_v1=control_request_ready_no_controls_or_approval",
+  "generated_at_utc": "2026-05-11T16:37:25.285518+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Supply source-owned normal controls for each required cell or explicitly approve the same-exhibit FLIP-as-control exception before canonical merge and downstream rerun.",
+  "policy_review_run": "20260512T003334-codex-r6-oystacher-exhibit-a-policy-review-v1",
+  "positive_rows": 5182,
+  "raw_data_committed": false,
+  "required_cell_count": 17,
+  "run_id": "20260512T003627-codex-r6-oystacher-control-contract-request-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_owned_normal_controls_acquired": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

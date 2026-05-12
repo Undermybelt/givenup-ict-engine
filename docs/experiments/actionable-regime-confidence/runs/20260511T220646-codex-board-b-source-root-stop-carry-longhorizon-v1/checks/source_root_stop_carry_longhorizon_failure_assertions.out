@@ -1,0 +1,12 @@
+run_id=20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-v1
+process_exit=1
+scored_artifacts_emitted=false
+rc_spa_report_exists=false
+variant_rows=0
+selected_rows=0
+gate_result=fail:wrapper_expected_missing_patch_module
+downstream_consumption=not_started:no_rc_spa_report
+pre_bayes_started=false
+bbn_started=false
+catboost_started=false
+execution_tree_started=false

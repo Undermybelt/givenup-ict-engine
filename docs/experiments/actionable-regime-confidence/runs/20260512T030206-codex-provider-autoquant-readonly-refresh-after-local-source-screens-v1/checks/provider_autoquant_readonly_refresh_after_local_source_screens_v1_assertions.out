@@ -1,0 +1,17 @@
+provider_autoquant_readonly_refresh_after_local_source_screens_v1
+provider_status_exit_0=PASS
+auto_quant_status_exit_0=PASS
+yfinance_ready=PASS
+kraken_cli_ready=PASS
+ibkr_not_promotion_ready=PASS
+tradingview_mcp_not_promotion_ready=PASS
+auto_quant_dependency_ready_seed_required=PASS
+auto_quant_data_ready_true=PASS
+accepted_rows_added_0=PASS
+new_confidence_gate_false=PASS
+canonical_merge_allowed_false=PASS
+downstream_promotion_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+trade_usable_false=PASS
+update_goal_false=PASS
+raw_data_not_committed=PASS

@@ -1,0 +1,57 @@
+{
+  "schema_version": "root-taxonomy-v3-transition-contract-audit/v1",
+  "loop_id": "20260511T012153+0800-codex-root-taxonomy-v3-transition-contract-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T012153-codex-root-taxonomy-v3-transition-contract-audit",
+  "objective": "Resolve whether TransitionRecovery is required release-gate coverage or optional overlay under RootTaxonomyV3.",
+  "source_artifacts": {
+    "web_backed_refresh": "docs/experiments/actionable-regime-confidence/runs/20260511T005646-codex-web-backed-root-taxonomy-refresh/web_backed_root_taxonomy_refresh.md",
+    "source_backed_004210_materialization": "docs/experiments/actionable-regime-confidence/runs/20260511T004210-source-backed-root-materialization/root-v3/source_backed_root_materialization_report.json",
+    "source_backed_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T003739-source-backed-root-gate-mtf/root-v2-source-backed/source_backed_root_gate_report.json",
+    "cross_asset_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T010240-root-taxonomy-v3-cross-asset-gate/root-v3/root_taxonomy_v3_cross_asset_gate_report.json",
+    "schema_input_audit": "docs/experiments/actionable-regime-confidence/runs/20260511T010718-codex-root-taxonomy-v3-schema-input-audit/checks/root_taxonomy_v3_schema_input_audit_assertions.json"
+  },
+  "required_release_gate_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "Manipulation",
+    "CrisisStress"
+  ],
+  "optional_or_overlay_roots": [
+    "TransitionRecovery"
+  ],
+  "residual_roots": [
+    "UnknownOrMixed"
+  ],
+  "decision": {
+    "transition_recovery_release_required_now": false,
+    "transition_recovery_tracking_required": true,
+    "transition_recovery_optional_overlay_accepted_95": true,
+    "transition_recovery_optional_overlay_rule": "reversal_persistence16 >= 1",
+    "reason": "The user explicitly named BullExpansion, BearExpansion, Manipulation, and Consolidation as main classes and asked for other large classes. CrisisStress is source-supported as a required large stress/turbulent root. TransitionRecovery is source-supported and has a prior accepted optional-overlay packet from 004210, but no downstream release action contract currently requires a distinct recovery/turning-point release gate. Optional overlay evidence cannot compensate for missing required roots.",
+    "completion_impact": "No completion impact. The objective is not achieved even if TransitionRecovery is optional because BullExpansion, BearExpansion, Consolidation, and Manipulation remain below the 95 gate; CrisisStress is the only prior accepted root."
+  },
+  "current_gate_state": {
+    "accepted_95": [
+      "CrisisStress"
+    ],
+    "accepted_optional_overlay_95": [
+      "TransitionRecovery"
+    ],
+    "missing_required_release_gate_95": [
+      "BullExpansion",
+      "BearExpansion",
+      "Consolidation",
+      "Manipulation"
+    ],
+    "missing_tracked_optional_95": [],
+    "residual_not_release_gate": [
+      "UnknownOrMixed"
+    ],
+    "board_state": "blocked",
+    "trade_usable": false,
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false
+  },
+  "next_action": "Acquire direct manipulation inputs and genuinely new signed-direction/range evidence before rerunning unchanged RootTaxonomyV3 gates."
+}

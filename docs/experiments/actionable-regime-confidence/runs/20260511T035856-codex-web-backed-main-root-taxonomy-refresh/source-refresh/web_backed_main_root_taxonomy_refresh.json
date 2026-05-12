@@ -1,0 +1,82 @@
+{
+  "run_id": "20260511T035856+0800-codex-web-backed-main-root-taxonomy-refresh",
+  "type": "source_refresh_only",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "fresh_calibration_rerun": false,
+  "trade_usable": false,
+  "active_taxonomy": "MainRegimeV3SourceBacked",
+  "accepted_95_roots_after_refresh": [
+    "BullExpansion",
+    "CrisisCrash"
+  ],
+  "missing_roots_after_refresh": [
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "Manipulation"
+  ],
+  "active_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "CrisisCrash",
+    "Manipulation",
+    "UnknownOrMixed"
+  ],
+  "preflight_only_roots": [
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "VolatilityDislocation",
+    "TransitionRecovery",
+    "CrossAssetRotation",
+    "RiskOnRiskOff"
+  ],
+  "sources": [
+    {
+      "name": "Not all bull and bear markets are alike: insights from a five-state hidden semi-Markov model",
+      "url": "https://ideas.repec.org/a/pal/risman/v25y2023i1d10.1057_s41283-022-00112-y.html",
+      "taxonomy_use": "multiple bull states and multiple bear/crash states"
+    },
+    {
+      "name": "Detecting bearish and bullish markets in financial time series using hierarchical hidden Markov models",
+      "url": "https://arxiv.org/abs/2007.14874",
+      "taxonomy_use": "short and long trend separation for bull/bear roots"
+    },
+    {
+      "name": "Classification of Normal and Abnormal Regimes in Financial Markets",
+      "url": "https://www.mdpi.com/1999-4893/11/12/202",
+      "taxonomy_use": "directional-change normal/abnormal regime features"
+    },
+    {
+      "name": "Predicting Risk-adjusted Returns using an Asset Independent Regime-switching Model",
+      "url": "https://arxiv.org/abs/2107.05535",
+      "taxonomy_use": "cross-asset bull, bear, and high-volatility regimes"
+    },
+    {
+      "name": "hidden-regime/hidden-regime",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "taxonomy_use": "open-source HMM pipeline with bull, bear, sideways, crisis implementation prior art"
+    },
+    {
+      "name": "Detecting Layering and Spoofing in Markets",
+      "url": "https://ssrn.com/abstract=4525036",
+      "taxonomy_use": "direct manipulation order-book indicators"
+    },
+    {
+      "name": "Learning the Spoofability of Limit Order Books With Interpretable Probabilistic Neural Networks",
+      "url": "https://arxiv.org/abs/2504.15908",
+      "taxonomy_use": "L3/order-placement manipulation evidence"
+    },
+    {
+      "name": "SystemsLab-Sapienza/pump-and-dump-dataset",
+      "url": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+      "taxonomy_use": "public pump-and-dump event dataset candidate"
+    },
+    {
+      "name": "Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+      "url": "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+      "taxonomy_use": "public pump-and-dump event/social dataset candidate"
+    }
+  ],
+  "decision": "Supersede MainRegimeV2 demotion wording. Treat BullExpansion, BearExpansion, SidewaysConsolidation, CrisisCrash, and Manipulation as active main roots or root-or-overlay labels. Existing sub-signatures remain evidence features unless reissued through a source-backed root gate."
+}

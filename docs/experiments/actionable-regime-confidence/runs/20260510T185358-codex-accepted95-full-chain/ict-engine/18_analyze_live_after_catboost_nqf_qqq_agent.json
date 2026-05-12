@@ -1,0 +1,46 @@
+{
+  "decision_hint_raw": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.565|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7583 mtf_entry_alignment=0.8781",
+  "decision_summary": "Observe only",
+  "direction": "Bull",
+  "entry_state": "medium",
+  "evidence": [
+    "multi_timeframe_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d",
+    "1m:6467 bars source=live",
+    "5m:4003 bars source=live"
+  ],
+  "execution_triage": {
+    "branch": "transition_guardrail",
+    "branch_probability": 0.0,
+    "consumer_reason": "market_state=TrendExpansion/BullTrendExhaustion | execution=observe/transition_guardrail/guarded | ranker=candidate_set/catboost/not_ready",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "execution_bias": "guarded",
+    "execution_score": 0.5649977203649474,
+    "gate_status": "observe",
+    "one_line": "execution observe | branch=transition_guardrail | bias=guarded | score=0.565 | confidence=0.000 | hint=execution_guarded_due_to_high_transition_hazard",
+    "posterior_uncertainty": 1.0,
+    "reason_summary": [
+      "branch=fill_viable (gate_status=observe, ising_risk=0.2815<0.70, overstretch=0.6791<0.70)",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.550",
+      "market_state=volatility=LowVol:0.890 liquidity=NormalLiquidity:0.433 structure=Trending:0.576 behavior=Neutral:0.450",
+      "market_state=rationale=volatility=LowVol conf=0.89",
+      "market_state=rationale=structure=Trending conf=0.58"
+    ]
+  },
+  "next_command": "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_htf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state",
+  "next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state",
+    "prompt": "Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_htf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json",
+    "user_input_required": true
+  },
+  "pre_bayes_gate": "pass_neutralized",
+  "recommended_next_actions": [
+    "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_htf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state"
+  ],
+  "risks": [
+    "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+  ]
+}

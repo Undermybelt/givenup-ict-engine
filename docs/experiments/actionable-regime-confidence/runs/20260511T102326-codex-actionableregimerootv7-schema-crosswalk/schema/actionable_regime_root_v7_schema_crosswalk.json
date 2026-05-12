@@ -1,0 +1,69 @@
+{
+  "run_id": "20260511T102326+0800-codex-actionableregimerootv7-schema-crosswalk",
+  "active_candidate_taxonomy": "ActionableRegimeRootV7",
+  "source_taxonomy_refresh": "20260511T101817+0800-codex-parent-regime-taxonomy-web-refresh",
+  "purpose": "Materialize the reopened parent taxonomy into an explicit schema/crosswalk before calibration or source-label acquisition continues.",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "accepted_95_roots_added": 0,
+  "accepted_direct_manipulation_rows_added": 0,
+  "mandatory_roots": [
+    {
+      "root": "BullExpansion",
+      "evidence_requirement": "Directional upside expansion or markup labels with expansion/trend participation validation across instruments, timeframes, and chronological periods.",
+      "forbidden_sources": ["generic Bull label without expansion validation", "HMM/GMM state id", "future-return target", "strategy prediction", "OHLCV proxy only"]
+    },
+    {
+      "root": "BearExpansion",
+      "evidence_requirement": "Directional downside expansion or markdown labels with expansion/trend participation validation across instruments, timeframes, and chronological periods.",
+      "forbidden_sources": ["generic Bear label without expansion validation", "ordinary crisis label", "HMM/GMM state id", "future-return target", "strategy prediction", "OHLCV proxy only"]
+    },
+    {
+      "root": "ConsolidationBalance",
+      "evidence_requirement": "Range, balance, compression, accumulation/distribution, or non-directional labels where continuation logic should not be assumed.",
+      "forbidden_sources": ["not-trend residual only", "single indicator proxy", "future-return target", "strategy prediction"]
+    },
+    {
+      "root": "CrisisDislocation",
+      "evidence_requirement": "High-volatility, jump, liquidity, correlation, or structural-break stress labels that are not ordinary bearish expansion.",
+      "forbidden_sources": ["ordinary BearExpansion evidence only", "volatility spike proxy only", "future-return target", "strategy prediction"]
+    },
+    {
+      "root": "ManipulationIntegrityEvent",
+      "evidence_requirement": "Direct timestamped event/order-flow/order-lifecycle/social/on-chain positive and negative rows, including pump-and-dump, spoofing/layering, wash trading, self-trade, or comparable market-integrity evidence.",
+      "forbidden_sources": ["OHLCV/session/liquidity proxy", "synthetic rows without real transaction provenance", "unlabeled order-book samples", "document indexes without timestamped positive/negative rows"]
+    }
+  ],
+  "watchlist_roots": [
+    {
+      "root": "TransitionRotation",
+      "status": "watchlist_only",
+      "promotion_rule": "Promote only if source labels and downstream action differences cannot be represented by ConsolidationBalance or CrisisDislocation."
+    }
+  ],
+  "residual": {
+    "root": "UnknownOrMixed",
+    "status": "residual_not_completion_target"
+  },
+  "compatibility_crosswalk": [
+    {"source_label": "Bull", "source_context": "MainRegimeV2", "v7_candidate": "BullExpansion", "status": "compatibility_input_only", "promotion_rule": "Requires expansion/trend participation validation and V7 chronological calibration."},
+    {"source_label": "Bear", "source_context": "MainRegimeV2", "v7_candidate": "BearExpansion", "status": "compatibility_input_only", "promotion_rule": "Requires downside expansion validation and V7 chronological calibration."},
+    {"source_label": "Sideways", "source_context": "MainRegimeV2", "v7_candidate": "ConsolidationBalance", "status": "compatibility_input_only", "promotion_rule": "Requires consolidation/balance source labels and V7 chronological calibration."},
+    {"source_label": "Crisis", "source_context": "MainRegimeV2", "v7_candidate": "CrisisDislocation", "status": "compatibility_input_only", "promotion_rule": "Requires crisis/dislocation evidence and V7 chronological calibration."},
+    {"source_label": "Manipulation", "source_context": "MainRegimeV2 overlay", "v7_candidate": "ManipulationIntegrityEvent", "status": "direct_rows_required", "promotion_rule": "Requires direct timestamped positive/negative rows and unchanged 95 gate."},
+    {"source_label": "BullExpansion", "source_context": "MainRegimeV5/V6", "v7_candidate": "BullExpansion", "status": "name_provenance_only", "promotion_rule": "Name match alone does not accept the V7 root."},
+    {"source_label": "BearExpansion", "source_context": "MainRegimeV5/V6", "v7_candidate": "BearExpansion", "status": "name_provenance_only", "promotion_rule": "Name match alone does not accept the V7 root."},
+    {"source_label": "ConsolidationRange", "source_context": "MainRegimeV5/V6", "v7_candidate": "ConsolidationBalance", "status": "name_provenance_only", "promotion_rule": "Requires V7 consolidation/balance calibration."},
+    {"source_label": "CrisisStress", "source_context": "MainRegimeV5/V6", "v7_candidate": "CrisisDislocation", "status": "name_provenance_only", "promotion_rule": "Requires V7 crisis/dislocation calibration."},
+    {"source_label": "ManipulationLiquidityEngineering", "source_context": "MainRegimeV5/V6", "v7_candidate": "ManipulationIntegrityEvent", "status": "direct_rows_required", "promotion_rule": "Requires direct timestamped positive/negative rows and unchanged 95 gate."},
+    {"source_label": "TransitionAccumulationDistribution", "source_context": "MainRegimeV5/V6", "v7_candidate": "TransitionRotation", "status": "watchlist_provenance_only", "promotion_rule": "Do not add to mandatory denominator unless separability is proven."},
+    {"source_label": "RangeConsolidation", "source_context": "old subtype packet", "v7_candidate": "ConsolidationBalance", "status": "sub_regime_provenance_only", "promotion_rule": "Requires V7 parent-root source labels."},
+    {"source_label": "ExtremeStress", "source_context": "old subtype packet", "v7_candidate": "CrisisDislocation", "status": "sub_regime_provenance_only", "promotion_rule": "Requires V7 parent-root source labels."},
+    {"source_label": "ReversalBrewing", "source_context": "old subtype packet", "v7_candidate": "TransitionRotation", "status": "watchlist_provenance_only", "promotion_rule": "Not a mandatory root until separately proven."},
+    {"source_label": "SessionLiquidityCoreViable", "source_context": "old subtype packet", "v7_candidate": "ManipulationIntegrityEvent", "status": "not_promotable_proxy_only", "promotion_rule": "OHLCV/session/liquidity proxy evidence cannot accept manipulation."},
+    {"source_label": "ThinLiquidity", "source_context": "old subtype packet", "v7_candidate": "ManipulationIntegrityEvent", "status": "not_promotable_proxy_only", "promotion_rule": "Thin-liquidity proxy evidence cannot accept manipulation."}
+  ],
+  "gate_result": "blocked_actionableregimerootv7_schema_crosswalk_materialized_no_calibration"
+}

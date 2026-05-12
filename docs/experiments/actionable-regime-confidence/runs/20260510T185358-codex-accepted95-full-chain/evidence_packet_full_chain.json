@@ -1,0 +1,132 @@
+{
+  "schema_version": "accepted95-full-chain-evidence/v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain",
+  "objective": "Board A accepted regime packet plus real Auto-Quant -> ict-engine filter -> BBN -> CatBoost/path-ranker -> execution-tree handoff with provider artifacts kept durable.",
+  "accepted_regime_packet": {
+    "accepted_regime_id": "SessionLiquidityCoreViable",
+    "market": "QQQ",
+    "timeframe": "1h",
+    "horizon": "4 observed IBKR bars",
+    "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+    "confidence_lane": "95",
+    "precision_wilson_lcb": 0.9899396497369397,
+    "calibration_support": 378,
+    "test_support": 378,
+    "ece": 0.010582010582010581,
+    "coverage": 0.3776223776223776,
+    "transition_hazard": 0.0,
+    "duration_viable": true,
+    "downstream_evidence_fields": [
+      "hour_utc",
+      "session_core_utc_13_18",
+      "qqq_ibkr_1h_count",
+      "qqq_ibkr_1h_volume",
+      "qqq_yfinance_current_bar_present"
+    ],
+    "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json"
+  },
+  "provider_matrix": {
+    "yfinance": {
+      "ready": true,
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints"
+    },
+    "ibkr_bridge": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable"
+    },
+    "kraken_cli": {
+      "ready": true,
+      "status": "ready",
+      "reason": "kraken_cli_config_detected"
+    },
+    "ibkr": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable"
+    },
+    "kraken_public": {
+      "ready": true,
+      "status": "ready",
+      "reason": "fetch_external_script_available"
+    },
+    "tradingview_mcp": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_connectivity_probe_failed"
+    }
+  },
+  "provider_artifacts": {
+    "yfinance_QQQ_1h": "provider/yf_QQQ_1h_20240601_20260509.csv",
+    "ibkr_QQQ_1h": "provider/ibkr_QQQ_1h.csv",
+    "kraken_PF_XBTUSD_1h": "provider/kraken_PF_XBTUSD_1h_2024_2025.csv",
+    "tradingviewremix_health": "provider/provider-tvremix-tools-list-health.json",
+    "provider_status": "provider/provider-status-agent.json",
+    "provider_csv_readback_summary": "provider/provider_csv_readback_summary.json"
+  },
+  "auto_quant": {
+    "command_artifact": "ict-engine/01_auto_quant_results_import_nq.json",
+    "n_total_strategies": 1,
+    "n_ok": 1,
+    "n_error": 0,
+    "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/auto-quant/NQ/auto_quant_strategy_library.json",
+    "library_artifact": "autoquant/strategy_library_nq_scratch_no_rsi_2025.json"
+  },
+  "filter_pre_bayes": {
+    "analyze_artifact": "ict-engine/18_analyze_live_after_catboost_nqf_qqq_agent.json",
+    "pre_bayes_artifact": "ict-engine/03_pre_bayes_status_nq.json",
+    "gate": "pass_neutralized",
+    "latest_gate_status": "pass_neutralized",
+    "uses_soft_evidence": true,
+    "regime_bundle_trace": "state/NQ/analyze_runs.json contains accepted_session_liquidity_95; BBN evidence skipped as no_supported_label because packet is liquidity guardrail, not directional release."
+  },
+  "bbn": {
+    "artifact": "ict-engine/04_auto_quant_prior_init_nq_dry_run.json",
+    "dry_run": true,
+    "evidence_value_gate_passed": true,
+    "bbn_log_loss_delta": 6.7286527442285795,
+    "bbn_contradiction_lift": 1.3608378659320477,
+    "strategies_applied": 1,
+    "trade_count": 1081
+  },
+  "catboost_path_ranker": {
+    "train_artifact": "catboost/10_path_ranker_train_nq.out",
+    "scores_artifact": "catboost/path_ranker_scores_nq.csv",
+    "apply_scores_artifact": "ict-engine/12_apply_structural_path_ranker_scores_nq.json",
+    "register_artifact": "ict-engine/13_register_catboost_path_ranker_artifact_nq.json",
+    "enable_artifact": "ict-engine/14_enable_structural_path_ranking_runtime_nq.json",
+    "policy_after_artifact": "ict-engine/15_policy_training_status_after_catboost_nq_agent.json",
+    "runtime_summary": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=3 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+    "validation_summary": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 ready=false",
+    "score_model_family": "catboost",
+    "runtime_source": "candidate_set",
+    "runtime_matches": 3,
+    "validation_ready": false,
+    "blocker": "raw_scored_mature=0/30; CatBoost score is visible and used by execution tree, but validation is not ready."
+  },
+  "execution_tree": {
+    "workflow_artifact": "ict-engine/16_workflow_status_after_catboost_nq_agent.json",
+    "trace_artifact": "ict-engine/19_execution_tree_trace_after_catboost_analyze_nq.json",
+    "gate_status": "observe",
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_model_family": "catboost",
+    "path_ranker_runtime_source": "candidate_set",
+    "ranker_validation_ready": false
+  },
+  "decision": {
+    "board_a_confidence_goal": "accepted_95",
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "accepted packet is a liquidity guardrail, not path-specific edge",
+      "TradingViewRemix live provider remains unhealthy/rate-limited",
+      "CatBoost/path-ranker validation has 0/30 mature rows",
+      "execution tree stays observe/transition_guardrail"
+    ],
+    "next_action": "Collect or replay at least 30 mature structural-path observations before treating CatBoost path-ranker as validation-ready; keep SessionLiquidityCoreViable as Board-B guardrail input only."
+  }
+}

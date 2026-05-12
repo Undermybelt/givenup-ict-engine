@@ -1,0 +1,8 @@
+PASS route_liveness_packet_created=true
+PASS all_routes_observed_via_web_or_curl=true
+PASS cme_cli_curl_blocked_or_transport_failed_recorded=true
+PASS cboe_cli_curl_http_200=true
+PASS rows_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS update_goal=false

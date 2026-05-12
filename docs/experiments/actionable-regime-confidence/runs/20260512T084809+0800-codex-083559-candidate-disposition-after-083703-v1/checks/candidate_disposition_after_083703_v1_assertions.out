@@ -1,0 +1,17 @@
+gate_result=candidate_disposition_after_083703_v1=all_083559_hints_disposed_no_source_control_unlock
+candidate_files_scanned=580
+verifier_native_hint_rows=70
+hint_rows_disposed=70
+accepted_hint_rows=0
+exact_required_packages=2
+r3_crisis_present=false
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

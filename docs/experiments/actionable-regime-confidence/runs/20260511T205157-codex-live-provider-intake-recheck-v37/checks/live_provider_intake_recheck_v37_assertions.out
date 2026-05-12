@@ -1,0 +1,13 @@
+PASS decision=live_provider_intake_recheck_v37=providers_rechecked_r6_schema_ready_remaining_intakes_blocked
+PASS ready_intake_roots=1_of_4
+PASS yfinance_ready=True
+PASS tradingview_mcp_ready=True
+PASS kraken_lowpollution_rows=721
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

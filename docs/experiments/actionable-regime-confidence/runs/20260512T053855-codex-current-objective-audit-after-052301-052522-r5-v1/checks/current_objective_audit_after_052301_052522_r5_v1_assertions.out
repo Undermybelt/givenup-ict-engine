@@ -1,0 +1,17 @@
+PASS gate_result=current_objective_audit_after_052301_052522_r5_v1=not_complete_source_control_roots_absent_no_downstream_rerun
+PASS objective_complete=false
+PASS hgb_accepted_labels=Bear,Bull,Crisis,Sideways
+PASS numeric_tree_accepted_labels=Bull,Crisis,Sideways
+PASS numeric_tree_bear_min_wilson95=0.9465286635
+PASS r6_owner_export_root_absent=true
+PASS native_subhour_root_absent=true
+PASS r5_recency_extension_root_absent=true
+PASS approval_present=false
+PASS canonical_merge_allowed_now=false
+PASS downstream_rerun_allowed_now=false
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

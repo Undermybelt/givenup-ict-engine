@@ -1,0 +1,13 @@
+gate=110250_provider_matrix_root_readback_v1:missing_root_not_artifact_backed_no_promotion
+checked_root_exists=false
+accepted_rows_added=0
+mature_rooted_branch_observations_promoted=0
+source_control_evidence_acquired=false
+explicit_selected_history=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

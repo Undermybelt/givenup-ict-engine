@@ -1,0 +1,8 @@
+{
+  "report": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185034-a7-covariance-eigenstructure/covariance-eigenstructure/covariance_eigenstructure_calibration_report.json",
+  "rows": 5003,
+  "feature_count": 39,
+  "accepted_95_rule_count": 0,
+  "accepted_99_rule_count": 0,
+  "decision": "abstain_no_calibrated_release_rule"
+}

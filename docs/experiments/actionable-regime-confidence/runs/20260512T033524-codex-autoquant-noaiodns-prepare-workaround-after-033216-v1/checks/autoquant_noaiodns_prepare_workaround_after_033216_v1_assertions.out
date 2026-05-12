@@ -1,0 +1,17 @@
+PASS gate_result=true
+PASS uninstall_exit_code_2=true
+PASS aiodns_still_importable_true=true
+PASS prepare_exit_code_0=true
+PASS status_after_exit_code_0=true
+PASS status_after_data_ready_true=true
+PASS status_after_dependency_ready_seed_required=true
+PASS accepted_rows_added_0=true
+PASS canonical_merge_allowed_false=true
+PASS downstream_promotion_rerun_allowed_false=true
+PASS strict_full_objective_false=true
+PASS trade_usable_false=true
+PASS update_goal_false=true
+PASS runtime_code_changed_false=true
+PASS source_roots_mutated_false=true
+PASS thresholds_relaxed_false=true
+PASS raw_data_committed_false=true

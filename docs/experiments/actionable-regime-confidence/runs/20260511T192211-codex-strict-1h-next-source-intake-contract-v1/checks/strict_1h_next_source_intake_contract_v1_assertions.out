@@ -1,0 +1,8 @@
+PASS target_rows=4
+PASS first_target=XOM/Sideways
+PASS min_new_source_sessions_first_target=5
+PASS verifier_package_id=native_subhour_overlap_after_recency
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective=false
+PASS update_goal=false

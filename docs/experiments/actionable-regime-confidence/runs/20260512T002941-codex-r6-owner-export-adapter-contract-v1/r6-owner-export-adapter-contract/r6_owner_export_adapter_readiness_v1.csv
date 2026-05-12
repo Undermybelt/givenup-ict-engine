@@ -1,0 +1,7 @@
+check,status,detail
+target_root_exists,False,/tmp/ict-engine-board-a-r6-owner-export-v1
+request_files_present,False,"direct_manipulation_positive_rows.csv,direct_manipulation_matched_controls.csv,direct_manipulation_provenance.json"
+positive_mapping_complete,False,"label,source_report,source_section,trade_date,symbol,venue_or_market_center,participant_type_code,participant_identifier,side,earliest_order_received_time,latest_order_received_time,order_count,total_order_quantity,activity_description,matched_negative_group_id,session_bucket,source_row_id"
+control_mapping_complete,False,"label,source_report,source_section,trade_date,symbol,venue_or_market_center,participant_type_code,participant_identifier,side,earliest_order_received_time,latest_order_received_time,order_count,total_order_quantity,activity_description,matched_negative_group_id,session_bucket,source_row_id"
+approval_or_provenance_present,False,"{""owner_approval_reference.md"": false, ""owner_approval_reference.txt"": false, ""validation_contract_approval.json"": false}"
+staging_written,False,/tmp/ict-engine-board-a-r6-owner-export-v1-verifier-native-staging

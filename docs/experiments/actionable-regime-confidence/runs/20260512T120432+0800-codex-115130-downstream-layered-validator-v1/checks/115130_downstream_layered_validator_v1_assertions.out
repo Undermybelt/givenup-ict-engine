@@ -1,0 +1,5 @@
+PASS rows_total == 211
+PASS branch_complete_rows == 211
+PASS market_factor_rows_accepted == 0
+PASS chain_contract_negative_samples == 211
+PASS update_goal == false

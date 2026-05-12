@@ -1,0 +1,50 @@
+{
+  "error_providers": [],
+  "generated_at": "2026-05-12T02:50:42.879685+00:00",
+  "ok_providers": [
+    "yfinance",
+    "kraken_public_ccxt",
+    "binance_public_ccxt",
+    "bybit_public_ccxt"
+  ],
+  "promotion_allowed": false,
+  "providers": {
+    "binance_public_ccxt": {
+      "first": "2026-05-07 03:00:00+00:00",
+      "last": "2026-05-12 02:00:00+00:00",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104905+0800-codex-public-provider-ohlcv-matrix-probe-v1/provider-csv/binance_public_ccxt_btc_1h_120.csv",
+      "rows": 120,
+      "status": "ok",
+      "symbol": "BTC/USDT",
+      "timeframe": "1h"
+    },
+    "bybit_public_ccxt": {
+      "first": "2026-05-07 03:00:00+00:00",
+      "last": "2026-05-12 02:00:00+00:00",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104905+0800-codex-public-provider-ohlcv-matrix-probe-v1/provider-csv/bybit_public_ccxt_btc_1h_120.csv",
+      "rows": 120,
+      "status": "ok",
+      "symbol": "BTC/USDT",
+      "timeframe": "1h"
+    },
+    "kraken_public_ccxt": {
+      "first": "2026-05-07 03:00:00+00:00",
+      "last": "2026-05-12 02:00:00+00:00",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104905+0800-codex-public-provider-ohlcv-matrix-probe-v1/provider-csv/kraken_public_ccxt_btc_1h_120.csv",
+      "rows": 120,
+      "status": "ok",
+      "symbol": "BTC/USD",
+      "timeframe": "1h"
+    },
+    "yfinance": {
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104905+0800-codex-public-provider-ohlcv-matrix-probe-v1/provider-csv/yfinance_btc_usd_1h_7d.csv",
+      "rows": 146,
+      "status": "ok",
+      "symbol": "BTC-USD",
+      "timeframe": "1h"
+    }
+  },
+  "purpose": "ad_hoc_public_provider_ohlcv_matrix_probe_no_promotion",
+  "run_id": "20260512T104905+0800-codex-public-provider-ohlcv-matrix-probe-v1",
+  "update_goal": false
+}

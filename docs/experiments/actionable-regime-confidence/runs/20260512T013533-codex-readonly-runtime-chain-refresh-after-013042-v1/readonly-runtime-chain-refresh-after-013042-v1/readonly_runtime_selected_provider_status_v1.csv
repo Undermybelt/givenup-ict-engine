@@ -1,0 +1,7 @@
+provider_id,domain,ready,status,reason,summary
+yfinance,live_runtime,true,ready,native_yfinance_runtime_available,Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows.
+ibkr_bridge,local_runtime,false,configured_runtime_unhealthy,ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable,Local IBKR bridge reused by broker-linked workflows after the user enables the local API.
+kraken_cli,local_runtime,true,ready,kraken_cli_config_detected,Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows.
+kraken_public,market_data,false,configured_runtime_unhealthy,python3_provider_dependencies_missing,"Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately."
+tradingview_mcp,market_data,false,configured_runtime_unhealthy,tradingview_mcp_connectivity_probe_failed,"Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes."
+yfinance,market_data,true,ready,public_yahoo_http_endpoints,"Free historical tradfi fallback for replay, factor research, and factor backtests."

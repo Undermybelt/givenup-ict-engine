@@ -1,0 +1,2 @@
+accepted_mapping_confidence_95_labels=Bear|Bull|Sideways
+limitations=Crisis has no direct TSIE source taxonomy class; trap labels are fail-closed abstain and excluded from accepted rows; source_confidence is deterministic taxonomy mapping confidence, not downstream profitability; canonical merge not run; downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun

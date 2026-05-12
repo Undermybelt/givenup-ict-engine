@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto_quant_real_trades_B2R_VOL_BREAKOUT_150654_20260512T072116.613436000Z",
+    "artifact_kind": "auto_quant_real_trades_ingested",
+    "artifact_id": "auto_quant_real_trades_B2R_VOL_BREAKOUT_150654_20260512T072116.613436000Z",
+    "version": 1,
+    "generated_at": "2026-05-12T07:21:16.613436Z",
+    "symbol": "B2R_VOL_BREAKOUT_150654",
+    "source_phase": "auto_quant_real_trades",
+    "source_run_id": "9ed49ddb8fa04383",
+    "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/volatility_breakout_real_trades.jsonl",
+    "status": "applied",
+    "promote_candidate": false,
+    "actionable": false,
+    "decision_hint": "ingested 348 trade(s)",
+    "review_reason": "ingested 348/348 (invalid 0) feedback_inserted=348 content_hash=9ed49ddb8fa04383 dry_run=false force=true",
+    "review_rule_version": "auto-quant-real-trades-v1",
+    "top_factor_name": null,
+    "top_factor_action": null,
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 348,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

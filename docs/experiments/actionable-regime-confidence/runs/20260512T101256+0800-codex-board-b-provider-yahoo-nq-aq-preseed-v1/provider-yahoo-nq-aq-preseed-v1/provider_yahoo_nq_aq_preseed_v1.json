@@ -1,0 +1,33 @@
+{
+  "run_id": "20260512T101256+0800-codex-board-b-provider-yahoo-nq-aq-preseed-v1",
+  "mode": "incubation_only",
+  "source_provider_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/yahoo_nq_f_1h.csv",
+  "initial_relative_prepare_exit": 2,
+  "initial_relative_run_exit": 2,
+  "absolute_prepare_exit": 0,
+  "absolute_run_exit": 0,
+  "prepared_pair": "NQ/USD",
+  "prepared_bars": {
+    "1h": 642,
+    "4h": 173,
+    "1d": 34
+  },
+  "prepared_range": {
+    "start": "2026-04-01 00:00:00+00:00",
+    "end": "2026-05-11 23:00:00+00:00"
+  },
+  "backtest": {
+    "strategy": "TomacNQ_KillzoneBreakout",
+    "window": "2026-04-11 10:00:00 -> 2026-05-11 23:00:00",
+    "succeeded": 1,
+    "failed": 0,
+    "trade_count": 0,
+    "sharpe": 0.0,
+    "total_profit_pct": 0.0,
+    "win_rate_pct": 0.0,
+    "profit_factor": 0.0
+  },
+  "gate": "provider_yahoo_nq_aq_preseed_v1=prepared_and_backtested_zero_trades",
+  "promotion_allowed": false,
+  "update_goal": false
+}

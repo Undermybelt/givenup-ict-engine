@@ -1,0 +1,8 @@
+PASS materials_repaired_6
+PASS repair_failures_empty
+PASS batch_exit_0
+PASS dispatch_exit_0
+PASS rank_exit_0
+PASS promotion_allowed_false
+PASS trade_usable_false
+PASS update_goal_false

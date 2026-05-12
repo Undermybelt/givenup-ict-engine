@@ -1,0 +1,10 @@
+{
+  "protocol_version": "structural-path-ranking-runtime-selection-v1",
+  "enabled": true,
+  "reuse_mode": "candidate_set_only",
+  "selected_at": "2026-05-11T15:22:20.554456+00:00",
+  "notes": [
+    "opt_in_runtime_reuse=true",
+    "zero_config_default_preserved=true"
+  ]
+}

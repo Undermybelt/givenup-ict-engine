@@ -1,0 +1,8 @@
+PASS all_required_regimes_above_95=true
+PASS all_required_regimes_cross_market=true
+PASS all_required_regimes_chronological_train_calibration_test=true
+FAIL all_required_regimes_cross_trading_timeframe=false
+PASS strict_timeframe_pass_count=2/6
+FAIL strict_timeframe_missing_regimes=TrendExpansion,ExtremeStress,ReversalBrewing,ThinLiquidity
+PASS trade_usable=false
+OVERALL FAIL strict_per_regime_cross_timeframe_requirement

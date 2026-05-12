@@ -1,0 +1,104 @@
+{
+  "accepted_rows_added": 0,
+  "board_file": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+  "board_sha256_before_artifact": "92eaff288853168f05d160b29402bd3c25b4d263cd6622e754642b3762837a25",
+  "canonical_merge": false,
+  "current_cursor": "20260512T034002+0800-codex-board-b-nq-cost-crisis-repair-v3-downstream-combined-v1",
+  "downstream_promotion_rerun": false,
+  "explicit_user_selected_history": false,
+  "gate_result": "current_objective_audit_after_083703_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+  "latest_terminal_roots": {
+    "083545": {
+      "accepted_rows_added": 0,
+      "approved_dispatch_channel_present": false,
+      "gate": "r6_approved_dispatch_channel_readback_after_083108_v1=no_approved_dispatch_channel_no_rows_no_unlock",
+      "source_control_evidence_acquired": false
+    },
+    "083559": {
+      "accepted_rows_added": 0,
+      "candidate_files_scanned": 580,
+      "exact_required_packages": 2,
+      "gate": "local_order_lifecycle_source_sweep_after_083108_v1=no_accepted_owner_export_or_required_source_control_package",
+      "source_control_evidence_acquired": false,
+      "valid_required_root_unlock": false,
+      "verifier_native_candidate_files": 70
+    },
+    "083618": {
+      "accepted_rows_added": 0,
+      "files_indexed": 13,
+      "gate": "tomac_futures_header_inventory_after_083108_v1=ohlcv_symbology_only_no_source_control_unlock",
+      "matched_control_header_hits": 0,
+      "order_lifecycle_header_hits": 0,
+      "source_control_package_hits": 0
+    },
+    "083703": {
+      "accepted_rows_added": 0,
+      "candidate_rows_scanned": 243,
+      "exact_required_package_present": false,
+      "gate": "local_order_lifecycle_zip_header_sweep_after_083450_v1=no_verifier_native_order_lifecycle_package_no_unlock",
+      "order_lifecycle_candidate_rows": 0,
+      "source_control_evidence_acquired": false,
+      "valid_required_root_unlock": false,
+      "zip_member_rows_scanned": 34
+    },
+    "083711": {
+      "counted": false,
+      "reason": "empty_root_no_terminal_markdown_json_assertions"
+    }
+  },
+  "promotion_allowed": false,
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "named_board_file_live_contract",
+      "status": "partial",
+      "evidence": "board hash recorded; cursor remains 034002 fail-closed"
+    },
+    {
+      "requirement": "root_first_branch_identity",
+      "status": "partial",
+      "evidence": "contract present; current cursor rejected promotion"
+    },
+    {
+      "requirement": "real_autoquant_ict_downstream_chain",
+      "status": "blocked",
+      "evidence": "prior 034002 chain evidence exists; no rerun allowed while source/control and selected-history gates are false"
+    },
+    {
+      "requirement": "provider_surfaces_ibkr_tradingviewremix_yfinance_kraken",
+      "status": "partial",
+      "evidence": "082430 observed runtime surfaces; provider visibility is non-promoting"
+    },
+    {
+      "requirement": "source_control_unlock",
+      "status": "blocked",
+      "evidence": "R6 absent; R5 absent; R3 present but TSIE-derived/quarantined and Crisis-absent"
+    },
+    {
+      "requirement": "explicit_user_selected_history",
+      "status": "blocked",
+      "evidence": "no exact HTF/MTF/LTF user selection recorded"
+    }
+  ],
+  "r3_native_subhour": {
+    "accepted_mapping_confidence_95_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "crisis_present": false,
+    "data_rows": 5032903,
+    "provenance_sha256": "60f2422260c404302dbb98dc641f13e50cdae8f09527a848e614a690b87fcc0f",
+    "quarantine_reason": "tsie_proxy_policy_quarantined_crisis_absent_no_downstream_promotion",
+    "required_files_present": true,
+    "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+    "rows_size_bytes": 2786719721,
+    "unlock": false
+  },
+  "run_id": "20260512T085042+0800-codex-current-objective-audit-after-083703-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

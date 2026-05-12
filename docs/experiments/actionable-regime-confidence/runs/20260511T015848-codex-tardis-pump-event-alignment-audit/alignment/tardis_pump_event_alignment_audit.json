@@ -1,0 +1,565 @@
+{
+  "schema_version": "tardis-pump-event-alignment-audit/v1",
+  "loop_id": "20260511T015848+0800-codex-tardis-pump-event-alignment-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T015848-codex-tardis-pump-event-alignment-audit",
+  "pump_dataset": {
+    "path": "/tmp/ict-regime-manipulation-datasets/pump-and-dump-dataset",
+    "pump_telegram_rows": 1110,
+    "binance_events": 520
+  },
+  "tardis_metadata": {
+    "url": "https://api.tardis.dev/v1/exchanges/binance",
+    "available_symbol_count": 3284,
+    "downloaded_at_local": "2026-05-11T02:00:48"
+  },
+  "alignment_counts": {
+    "binance_events": 520,
+    "binance_first_day_events": 15,
+    "binance_events_with_any_candidate_pair_in_tardis_metadata": 452,
+    "binance_events_with_candidate_pair_available_on_exact_date": 9,
+    "public_first_day_events_with_candidate_pair_available_on_exact_date": 0
+  },
+  "notable_alignment_rows": [
+    {
+      "symbol": "CLOAK",
+      "group": "BPS",
+      "event_dt": "2018-07-01T19:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "CLOAK",
+      "group": "CCB",
+      "event_dt": "2018-10-01T19:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "NAV",
+      "group": "CPS",
+      "event_dt": "2019-08-01T20:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "navbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        },
+        {
+          "pair": "naveth",
+          "available_since": "2021-04-02T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "YOYOW",
+      "group": "CPS",
+      "event_dt": "2020-11-01T18:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "STEEM",
+      "group": "TCC",
+      "event_dt": "2021-01-18T17:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "steembtc",
+          "available_since": "2020-05-19T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "steemusdt",
+          "available_since": "2022-04-22T00:00:00",
+          "available_on_event_date": false
+        },
+        {
+          "pair": "steemeth",
+          "available_since": "2020-05-19T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "steembnb",
+          "available_since": "2020-11-23T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "steembtc",
+          "available_since": "2020-05-19T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "steemeth",
+          "available_since": "2020-05-19T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "steembnb",
+          "available_since": "2020-11-23T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "AMB",
+      "group": "WCG",
+      "event_dt": "2019-01-01T14:30:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "ambbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        },
+        {
+          "pair": "ambusdt",
+          "available_since": "2023-03-03T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "YOYOW",
+      "group": "TWP",
+      "event_dt": "2020-11-01T18:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "CLOAK",
+      "group": "BPF",
+      "event_dt": "2018-10-01T19:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "AMB",
+      "group": "BPF",
+      "event_dt": "2019-01-01T14:30:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "ambbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        },
+        {
+          "pair": "ambusdt",
+          "available_since": "2023-03-03T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "NAV",
+      "group": "BPF",
+      "event_dt": "2019-08-01T20:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "navbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        },
+        {
+          "pair": "naveth",
+          "available_since": "2021-04-02T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "RDN",
+      "group": "BPF",
+      "event_dt": "2020-02-01T13:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "rdnbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "DNT",
+      "group": "BPF",
+      "event_dt": "2020-02-27T16:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "dntbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "dntusdt",
+          "available_since": "2020-11-10T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "dntbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "DNT",
+      "group": "BPF",
+      "event_dt": "2020-03-04T19:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "dntbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "dntusdt",
+          "available_since": "2020-11-10T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "dntbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "YOYOW",
+      "group": "BPF",
+      "event_dt": "2020-11-01T18:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "RDN",
+      "group": "CW",
+      "event_dt": "2020-02-01T13:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "rdnbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "DNT",
+      "group": "CW",
+      "event_dt": "2020-02-27T16:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "dntbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "dntusdt",
+          "available_since": "2020-11-10T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "dntbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "DNT",
+      "group": "CW",
+      "event_dt": "2020-03-04T19:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "dntbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "dntusdt",
+          "available_since": "2020-11-10T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "dntbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "SNGLS",
+      "group": "CW",
+      "event_dt": "2020-04-01T11:58:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "snglsbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "GNT",
+      "group": "CW",
+      "event_dt": "2020-04-10T16:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "gntbtc",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "gnteth",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "gntbtc",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "gnteth",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "NAV",
+      "group": "SE",
+      "event_dt": "2019-08-01T20:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "navbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        },
+        {
+          "pair": "naveth",
+          "available_since": "2021-04-02T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "NAV",
+      "group": "CPI",
+      "event_dt": "2019-08-01T20:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": true,
+      "candidate_pairs": [
+        {
+          "pair": "navbtc",
+          "available_since": "2021-03-04T00:00:00",
+          "available_on_event_date": false
+        },
+        {
+          "pair": "naveth",
+          "available_since": "2021-04-02T00:00:00",
+          "available_on_event_date": false
+        }
+      ],
+      "exact_date_available_pairs": [],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "GNT",
+      "group": "CPI",
+      "event_dt": "2020-01-10T18:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "gntbtc",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "gnteth",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "gntbtc",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "gnteth",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "GNT",
+      "group": "CPI",
+      "event_dt": "2020-04-10T16:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "gntbtc",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "gnteth",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "gntbtc",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "gnteth",
+          "available_since": "2019-03-30T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    },
+    {
+      "symbol": "CVC",
+      "group": "CPI",
+      "event_dt": "2020-05-05T16:00:00",
+      "exchange": "binance",
+      "first_day_public_dataset_date": false,
+      "candidate_pairs": [
+        {
+          "pair": "cvcbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "cvcusdt",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "cvceth",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "exact_date_available_pairs": [
+        {
+          "pair": "cvcbtc",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "cvcusdt",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        },
+        {
+          "pair": "cvceth",
+          "available_since": "2019-11-13T00:00:00",
+          "available_on_event_date": true
+        }
+      ],
+      "public_first_day_direct_l2_alignment": false
+    }
+  ],
+  "decision": {
+    "board_state": "blocked",
+    "active_axis": "MainRegimeV2",
+    "candidate_regime": "Manipulation",
+    "accepted_95": false,
+    "manipulation_input_state": "pump_labels_do_not_align_with_public_tardis_first_day_l2",
+    "qualifying_direct_manipulation_input_sets": 0,
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "fresh_calibration_rerun": false,
+    "trade_usable": false,
+    "blocker": "Pump-and-dump labels are useful event supervision, and Tardis has direct L2 fields, but the public no-key first-day Tardis samples do not align with any Binance pump event that also has Tardis symbol availability on the event date.",
+    "next_action": "Use a credentialed historical Tardis/Binance export for the nine Binance pump events whose symbols are available on their exact event dates, or provide another labeled direct L2/L3/order-lifecycle manipulation dataset before rerunning the unchanged gate."
+  }
+}

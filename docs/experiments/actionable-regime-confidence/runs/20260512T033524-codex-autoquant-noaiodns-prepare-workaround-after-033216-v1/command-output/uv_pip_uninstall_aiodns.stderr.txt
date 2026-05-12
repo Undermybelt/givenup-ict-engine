@@ -1,0 +1,7 @@
+error: unexpected argument '-y' found
+
+  tip: to pass '-y' as a value, use '-- -y'
+
+Usage: uv pip uninstall [OPTIONS] <PACKAGE|--requirements <REQUIREMENTS>>
+
+For more information, try '--help'.

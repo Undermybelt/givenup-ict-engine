@@ -1,0 +1,8 @@
+PASS active_taxonomy=MainRegimeV2
+PASS target_lane=Manipulation
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS no_raw_data_committed
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS local_spoofing_sources_rejected_without_positive_negative_rows

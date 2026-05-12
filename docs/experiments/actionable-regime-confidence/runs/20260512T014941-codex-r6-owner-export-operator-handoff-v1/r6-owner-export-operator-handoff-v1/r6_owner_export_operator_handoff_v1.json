@@ -1,0 +1,95 @@
+{
+  "run_id": "20260512T014941-codex-r6-owner-export-operator-handoff-v1",
+  "gate_result": "r6_owner_export_operator_handoff_v1=operator_submission_packet_ready_no_request_sent_no_controls_acquired",
+  "board_hash_before_artifact": "77e45489c4e605c501d233294a85a6c7338f9f63d66f2e824be5f338d88c7d7c",
+  "current_cursor_preserved": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "source_artifacts": {
+    "sendable_request_bundle_v3": "docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3",
+    "current_send_channel_preflight_v1": "docs/experiments/actionable-regime-confidence/runs/20260512T014300-codex-r6-owner-export-current-send-channel-preflight-v1",
+    "reference_restoration_readback_v1": "docs/experiments/actionable-regime-confidence/runs/20260512T014854-codex-reference-restoration-readback-after-014726-v1"
+  },
+  "request_drafts": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3/r6-owner-export-sendable-requests-v3/cme_group_owner_export_request_v3.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3/r6-owner-export-sendable-requests-v3/cboe_cfe_owner_export_request_v3.md"
+  ],
+  "handoff_artifacts": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T014941-codex-r6-owner-export-operator-handoff-v1/r6-owner-export-operator-handoff-v1/r6_owner_export_operator_action_queue_v1.csv",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T014941-codex-r6-owner-export-operator-handoff-v1/r6-owner-export-operator-handoff-v1/r6_owner_export_post_arrival_drop_contract_v1.csv",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T014941-codex-r6-owner-export-operator-handoff-v1/r6-owner-export-operator-handoff-v1/r6_owner_export_post_arrival_validation_commands_v1.csv"
+  ],
+  "operator_handoff_summary": {
+    "required_oystacher_control_cells": 17,
+    "cme_group_cells": 13,
+    "cboe_cfe_cells": 4,
+    "required_support_per_cell": 73,
+    "delivery_root_after_approval": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "required_verifier_native_files": [
+      "positive_spoofing_layering_rows.csv",
+      "matched_negative_normal_activity_rows.csv",
+      "provenance_manifest.json"
+    ]
+  },
+  "current_send_channels": [
+    {
+      "owner": "CME Group",
+      "route": "DataMine historical data",
+      "url": "https://www.cmegroup.com/market-data/datamine-historical-data/index.html",
+      "action": "submit CME request draft through owner/operator account and preserve ticket/export/license identifiers"
+    },
+    {
+      "owner": "CME Group",
+      "route": "Market Depth Files FAQ",
+      "url": "https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf",
+      "action": "attach as scope evidence for Market Depth/FIX-FAST/Market by Order coverage confirmation"
+    },
+    {
+      "owner": "Cboe/CFE",
+      "route": "Cboe U.S. Futures historical data",
+      "url": "https://www.cboe.com/markets/us/futures/market-statistics/historical-data/oof/",
+      "action": "route VIX/CFE historical request to DataShop or support"
+    },
+    {
+      "owner": "Cboe/CFE",
+      "route": "Cboe Market Data Services U.S. Futures",
+      "url": "https://res.cboe.com/market_data_services/us/futures/",
+      "action": "ask for historical depth/order-lifecycle availability and licensing"
+    },
+    {
+      "owner": "Cboe/CFE",
+      "route": "Cboe DataShop CFE futures trades",
+      "url": "https://datashop.cboe.com/cfe-futures-trades",
+      "action": "ask whether trades/quotes or custom export can satisfy matched normal controls for 2014 VIX futures cells"
+    }
+  ],
+  "current_root_state": {
+    "r6_owner_export_root_present": false,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_extension_root_present": false,
+    "source_label_equivalence_root_present": true,
+    "source_label_equivalence_ready_for_promotion": false
+  },
+  "policy_state": {
+    "owner_or_vendor_request_submitted": false,
+    "ticket_or_export_identifier_received": false,
+    "source_owned_normal_controls_acquired": 0,
+    "flip_as_control_approved": false,
+    "canonical_merge_allowed": false,
+    "downstream_chain_rerun_allowed": false
+  },
+  "result": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_root_mutated": false,
+    "r5_root_mutated": false,
+    "r6_owner_export_root_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "external_contact_submitted": false,
+    "trade_usable": false
+  },
+  "next_action": "Submit the CME and Cboe/CFE request drafts through an owner/operator account, or record explicit FLIP-as-control approval; only after ticket/export identifiers and verifier-native rows arrive should /tmp/ict-engine-board-a-r6-owner-export-v1 be populated under shared lock and the direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback be rerun."
+}

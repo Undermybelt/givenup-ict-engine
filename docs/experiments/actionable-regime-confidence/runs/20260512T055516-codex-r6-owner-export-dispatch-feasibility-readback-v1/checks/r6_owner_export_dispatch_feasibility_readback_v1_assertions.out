@@ -1,0 +1,14 @@
+gate_result=r6_owner_export_dispatch_feasibility_readback_v1=drafts_parseable_not_sent_no_transport_identity_no_rows
+drafts_parseable=true
+cli_transport_present=true
+explicit_user_mail_config_present=false
+sender_identity_present=false
+external_requests_sent=false
+accepted_rows_added=0
+source_control_evidence_acquired=false
+target_root_mutated=false
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+strict_full_objective_achieved=false
+trade_usable=false
+update_goal=false

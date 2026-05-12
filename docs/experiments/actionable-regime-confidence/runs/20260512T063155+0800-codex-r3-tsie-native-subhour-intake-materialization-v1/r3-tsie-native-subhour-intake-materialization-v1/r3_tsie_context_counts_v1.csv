@@ -1,0 +1,10 @@
+main_regime_v2_label,timeframe,symbols,rows
+Bear,1D,381,303202
+Bear,240,383,430328
+Bear,60,386,702234
+Bull,1D,381,287381
+Bull,240,383,419051
+Bull,60,386,728623
+Sideways,1D,381,156431
+Sideways,240,383,378435
+Sideways,60,386,1627218

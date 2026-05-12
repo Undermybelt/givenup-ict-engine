@@ -1,0 +1,1 @@
+cd /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035139-codex-board-b-032157-agent-selected-ltf-factor-research-v1/state_agent_selected_ltf_synth_v1/.deps/auto-quant && uv run --with ta-lib run_tomac.py

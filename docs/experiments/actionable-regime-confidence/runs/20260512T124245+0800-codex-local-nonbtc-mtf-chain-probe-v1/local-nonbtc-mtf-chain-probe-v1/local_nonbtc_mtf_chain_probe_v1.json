@@ -1,0 +1,517 @@
+{
+  "all_command_exits": {
+    "eth_usdt_crypto_nonbtc_1h_4h_1d_01_analyze": 0,
+    "eth_usdt_crypto_nonbtc_1h_4h_1d_02_factor_research_auto_quant": 0,
+    "eth_usdt_crypto_nonbtc_1h_4h_1d_03_pre_bayes_status": 0,
+    "eth_usdt_crypto_nonbtc_1h_4h_1d_04_policy_training_status": 0,
+    "eth_usdt_crypto_nonbtc_1h_4h_1d_05_export_structural_path_ranking_target": 0,
+    "eth_usdt_crypto_nonbtc_1h_4h_1d_06_train_catboost": 0,
+    "eth_usdt_crypto_nonbtc_1h_4h_1d_07_workflow_status": 0,
+    "spy_usd_equity_etf_15m_4h_1d_01_analyze": 1,
+    "spy_usd_equity_etf_15m_4h_1d_02_factor_research_auto_quant": 0,
+    "spy_usd_equity_etf_15m_4h_1d_03_pre_bayes_status": 0,
+    "spy_usd_equity_etf_15m_4h_1d_04_policy_training_status": 0,
+    "spy_usd_equity_etf_15m_4h_1d_05_export_structural_path_ranking_target": 0,
+    "spy_usd_equity_etf_15m_4h_1d_06_train_catboost": 1,
+    "spy_usd_equity_etf_15m_4h_1d_07_workflow_status": 0
+  },
+  "bounded_window_rows_by_timeframe": {
+    "15m": 3000,
+    "1d": 800,
+    "1h": 2000,
+    "4h": 1000
+  },
+  "decision": {
+    "accepted_panels": 0,
+    "gate": "local_nonbtc_mtf_chain_probe_v1=nonbtc_mtf_chain_exercised_no_95_confidence_no_promotion",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next": [
+    "use this as non-BTC/non-1h local data coverage only",
+    "do not treat local feather availability or command exits as regime acceptance",
+    "continue only when a panel yields >=0.95 calibrated confidence and execution readiness after full downstream chain"
+  ],
+  "objective_coverage": {
+    "auto_quant_local_data_used": true,
+    "catboost_attempted_or_skipped_with_target_reason": true,
+    "cross_market_acceptance": false,
+    "every_regime_95_confidence": false,
+    "execution_tree_readback_invoked": true,
+    "factor_research_auto_quant_invoked": true,
+    "ict_engine_analyze_ran": false,
+    "non_1h_timeframe_context": true,
+    "non_btc_instrument_context": true,
+    "pre_bayes_status_invoked": true,
+    "trade_usable": false
+  },
+  "panels": [
+    {
+      "accepted_95_confidence": false,
+      "auto_quant_handoff": {
+        "active_strategy_count": null,
+        "data_ready": false,
+        "dependency_status": {
+          "adapter_version": "v1",
+          "bootstrap_needed": false,
+          "config_present": true,
+          "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+          "healthy": true,
+          "last_sync": "2026-05-12T04:50:17.862293Z",
+          "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d/.deps/auto-quant",
+          "managed_repo_present": true,
+          "notes": [],
+          "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+          "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+          "required_files": [
+            "README.md",
+            "program.md",
+            "prepare.py",
+            "run.py",
+            "versions/README.md"
+          ],
+          "tracked_branch": "master",
+          "update_available": false,
+          "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+        },
+        "exists": true,
+        "next_action": null,
+        "path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d/B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245/auto_quant_handoff.factor_research.json"
+      },
+      "command_exit_summary": {
+        "eth_usdt_crypto_nonbtc_1h_4h_1d_01_analyze": 0,
+        "eth_usdt_crypto_nonbtc_1h_4h_1d_02_factor_research_auto_quant": 0,
+        "eth_usdt_crypto_nonbtc_1h_4h_1d_03_pre_bayes_status": 0,
+        "eth_usdt_crypto_nonbtc_1h_4h_1d_04_policy_training_status": 0,
+        "eth_usdt_crypto_nonbtc_1h_4h_1d_05_export_structural_path_ranking_target": 0,
+        "eth_usdt_crypto_nonbtc_1h_4h_1d_06_train_catboost": 0,
+        "eth_usdt_crypto_nonbtc_1h_4h_1d_07_workflow_status": 0
+      },
+      "commands": [
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "analyze",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245",
+            "--data-htf",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1d.json",
+            "--data-mtf",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-4h.json",
+            "--data-ltf",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1h.json",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d",
+            "--output-format",
+            "json"
+          ],
+          "exit": 0,
+          "label": "eth_usdt_crypto_nonbtc_1h_4h_1d_01_analyze",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_01_analyze.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_01_analyze.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "factor-research",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245",
+            "--data",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1h.json",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d",
+            "--backend",
+            "auto-quant",
+            "--auto-quant-profile",
+            "synthetic_ohlcv",
+            "--output-format",
+            "json",
+            "--data-1h",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1h.json",
+            "--data-4h",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-4h.json",
+            "--data-1d",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1d.json"
+          ],
+          "exit": 0,
+          "label": "eth_usdt_crypto_nonbtc_1h_4h_1d_02_factor_research_auto_quant",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_02_factor_research_auto_quant.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_02_factor_research_auto_quant.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "pre-bayes-status",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d",
+            "--refresh",
+            "--output-format",
+            "json"
+          ],
+          "exit": 0,
+          "label": "eth_usdt_crypto_nonbtc_1h_4h_1d_03_pre_bayes_status",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_03_pre_bayes_status.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_03_pre_bayes_status.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "policy-training-status",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d",
+            "--output-format",
+            "json"
+          ],
+          "exit": 0,
+          "label": "eth_usdt_crypto_nonbtc_1h_4h_1d_04_policy_training_status",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_04_policy_training_status.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_04_policy_training_status.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "export-structural-path-ranking-target",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d"
+          ],
+          "exit": 0,
+          "label": "eth_usdt_crypto_nonbtc_1h_4h_1d_05_export_structural_path_ranking_target",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_05_export_structural_path_ranking_target.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_05_export_structural_path_ranking_target.out"
+        },
+        {
+          "cmd": [
+            "/Users/thrill3r/.local/bin/uv",
+            "run",
+            "--offline",
+            "--python",
+            "3.11",
+            "--with",
+            "pandas",
+            "--with",
+            "numpy",
+            "--with",
+            "catboost",
+            "python",
+            "scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+            "--target-csv",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d/B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245/policy_training/structural_path_ranking_target_history.csv",
+            "--output-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/path-ranker/eth_usdt_crypto_nonbtc_1h_4h_1d/catboost_model",
+            "--model-family",
+            "catboost",
+            "--output-scores",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/path-ranker/eth_usdt_crypto_nonbtc_1h_4h_1d/history_scores.csv"
+          ],
+          "exit": 0,
+          "label": "eth_usdt_crypto_nonbtc_1h_4h_1d_06_train_catboost",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_06_train_catboost.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_06_train_catboost.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "workflow-status",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d",
+            "--phase",
+            "structural-ranker-runtime",
+            "--agent"
+          ],
+          "exit": 0,
+          "label": "eth_usdt_crypto_nonbtc_1h_4h_1d_07_workflow_status",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_07_workflow_status.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/eth_usdt_crypto_nonbtc_1h_4h_1d_07_workflow_status.out"
+        }
+      ],
+      "execution_candidate_exists": true,
+      "execution_promoted": false,
+      "max_observed_confidence_like_value": 0.92,
+      "panel": {
+        "asset_class": "crypto_non_btc",
+        "htf": "1d",
+        "ltf": "1h",
+        "mtf": "4h",
+        "panel_id": "eth_usdt_crypto_nonbtc_1h_4h_1d",
+        "symbol": "B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245"
+      },
+      "provider_json": {
+        "1d": {
+          "bounded_rows": 800,
+          "first_ts": "2024-02-14T00:00:00+00:00",
+          "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1d.json",
+          "last_ts": "2026-04-23T00:00:00+00:00",
+          "rows": 800,
+          "source_feather": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1d.feather"
+        },
+        "1h": {
+          "bounded_rows": 2000,
+          "first_ts": "2025-11-07T14:00:00+00:00",
+          "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1h.json",
+          "last_ts": "2026-01-29T21:00:00+00:00",
+          "rows": 2000,
+          "source_feather": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1h.feather"
+        },
+        "4h": {
+          "bounded_rows": 1000,
+          "first_ts": "2025-09-26T12:00:00+00:00",
+          "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-4h.json",
+          "last_ts": "2026-03-12T00:00:00+00:00",
+          "rows": 1000,
+          "source_feather": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-4h.feather"
+        }
+      },
+      "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_eth_usdt_crypto_nonbtc_1h_4h_1d",
+      "structural_target_rows": 3,
+      "workflow_snapshot_exists": true
+    },
+    {
+      "accepted_95_confidence": false,
+      "auto_quant_handoff": {
+        "active_strategy_count": null,
+        "data_ready": false,
+        "dependency_status": {
+          "adapter_version": "v1",
+          "bootstrap_needed": false,
+          "config_present": true,
+          "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+          "healthy": true,
+          "last_sync": "2026-05-12T04:50:37.407856Z",
+          "managed_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d/.deps/auto-quant",
+          "managed_repo_present": true,
+          "notes": [],
+          "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+          "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+          "required_files": [
+            "README.md",
+            "program.md",
+            "prepare.py",
+            "run.py",
+            "versions/README.md"
+          ],
+          "tracked_branch": "master",
+          "update_available": false,
+          "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+        },
+        "exists": true,
+        "next_action": null,
+        "path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d/B2R_LOCAL_NONBTC_SPY_USD_MTF_124245/auto_quant_handoff.factor_research.json"
+      },
+      "command_exit_summary": {
+        "spy_usd_equity_etf_15m_4h_1d_01_analyze": 1,
+        "spy_usd_equity_etf_15m_4h_1d_02_factor_research_auto_quant": 0,
+        "spy_usd_equity_etf_15m_4h_1d_03_pre_bayes_status": 0,
+        "spy_usd_equity_etf_15m_4h_1d_04_policy_training_status": 0,
+        "spy_usd_equity_etf_15m_4h_1d_05_export_structural_path_ranking_target": 0,
+        "spy_usd_equity_etf_15m_4h_1d_06_train_catboost": 1,
+        "spy_usd_equity_etf_15m_4h_1d_07_workflow_status": 0
+      },
+      "commands": [
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "analyze",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245",
+            "--data-htf",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-1d.json",
+            "--data-mtf",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-4h.json",
+            "--data-ltf",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-15m.json",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d",
+            "--output-format",
+            "json"
+          ],
+          "exit": 1,
+          "label": "spy_usd_equity_etf_15m_4h_1d_01_analyze",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_01_analyze.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_01_analyze.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "factor-research",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245",
+            "--data",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-15m.json",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d",
+            "--backend",
+            "auto-quant",
+            "--auto-quant-profile",
+            "synthetic_ohlcv",
+            "--output-format",
+            "json",
+            "--data-15m",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-15m.json",
+            "--data-1h",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-1h.json",
+            "--data-4h",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-4h.json",
+            "--data-1d",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-1d.json"
+          ],
+          "exit": 0,
+          "label": "spy_usd_equity_etf_15m_4h_1d_02_factor_research_auto_quant",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_02_factor_research_auto_quant.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_02_factor_research_auto_quant.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "pre-bayes-status",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d",
+            "--refresh",
+            "--output-format",
+            "json"
+          ],
+          "exit": 0,
+          "label": "spy_usd_equity_etf_15m_4h_1d_03_pre_bayes_status",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_03_pre_bayes_status.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_03_pre_bayes_status.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "policy-training-status",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d",
+            "--output-format",
+            "json"
+          ],
+          "exit": 0,
+          "label": "spy_usd_equity_etf_15m_4h_1d_04_policy_training_status",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_04_policy_training_status.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_04_policy_training_status.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "export-structural-path-ranking-target",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d"
+          ],
+          "exit": 0,
+          "label": "spy_usd_equity_etf_15m_4h_1d_05_export_structural_path_ranking_target",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_05_export_structural_path_ranking_target.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_05_export_structural_path_ranking_target.out"
+        },
+        {
+          "cmd": [
+            "/Users/thrill3r/.local/bin/uv",
+            "run",
+            "--offline",
+            "--python",
+            "3.11",
+            "--with",
+            "pandas",
+            "--with",
+            "numpy",
+            "--with",
+            "catboost",
+            "python",
+            "scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+            "--target-csv",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d/B2R_LOCAL_NONBTC_SPY_USD_MTF_124245/policy_training/structural_path_ranking_target_history.csv",
+            "--output-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/path-ranker/spy_usd_equity_etf_15m_4h_1d/catboost_model",
+            "--model-family",
+            "catboost",
+            "--output-scores",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/path-ranker/spy_usd_equity_etf_15m_4h_1d/history_scores.csv"
+          ],
+          "exit": 1,
+          "label": "spy_usd_equity_etf_15m_4h_1d_06_train_catboost",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_06_train_catboost.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_06_train_catboost.out"
+        },
+        {
+          "cmd": [
+            "target/debug/ict-engine",
+            "workflow-status",
+            "--symbol",
+            "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245",
+            "--state-dir",
+            "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d",
+            "--phase",
+            "structural-ranker-runtime",
+            "--agent"
+          ],
+          "exit": 0,
+          "label": "spy_usd_equity_etf_15m_4h_1d_07_workflow_status",
+          "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_07_workflow_status.err",
+          "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output/spy_usd_equity_etf_15m_4h_1d_07_workflow_status.out"
+        }
+      ],
+      "execution_candidate_exists": false,
+      "execution_promoted": false,
+      "max_observed_confidence_like_value": null,
+      "panel": {
+        "asset_class": "equity_etf",
+        "htf": "1d",
+        "ltf": "15m",
+        "mtf": "4h",
+        "panel_id": "spy_usd_equity_etf_15m_4h_1d",
+        "symbol": "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245"
+      },
+      "provider_json": {
+        "15m": {
+          "bounded_rows": 3000,
+          "first_ts": "1970-01-01T00:29:23.406000+00:00",
+          "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-15m.json",
+          "last_ts": "1970-01-01T00:29:38.096700+00:00",
+          "rows": 3000,
+          "source_feather": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-15m.feather"
+        },
+        "1d": {
+          "bounded_rows": 800,
+          "first_ts": "1970-01-01T00:27:52.704000+00:00",
+          "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-1d.json",
+          "last_ts": "1970-01-01T00:29:27.052800+00:00",
+          "rows": 749,
+          "source_feather": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-1d.feather"
+        },
+        "1h": {
+          "bounded_rows": 2000,
+          "first_ts": "1970-01-01T00:29:06.622800+00:00",
+          "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-1h.json",
+          "last_ts": "1970-01-01T00:29:38.086800+00:00",
+          "rows": 1746,
+          "source_feather": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-1h.feather"
+        },
+        "4h": {
+          "bounded_rows": 1000,
+          "first_ts": "1970-01-01T00:29:06.619200+00:00",
+          "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-4h.json",
+          "last_ts": "1970-01-01T00:29:38.083200+00:00",
+          "rows": 585,
+          "source_feather": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-4h.feather"
+        }
+      },
+      "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/state_bounded_spy_usd_equity_etf_15m_4h_1d",
+      "structural_target_rows": 1,
+      "workflow_snapshot_exists": true
+    }
+  ],
+  "run_id": "20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1",
+  "scope": "local Auto-Quant feather data -> ict-engine non-BTC/non-1h MTF chain probe"
+}

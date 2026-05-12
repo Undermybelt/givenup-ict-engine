@@ -1,0 +1,12 @@
+PASS run_id=20260512T052650-codex-current-objective-audit-after-052020-052102-052231-052444-051910-v1
+PASS gate_result=current_objective_audit_after_052020_052102_052231_052444_051910_v1=not_complete_no_source_control_unlock_active_probes_inflight_no_promotion
+PASS required_r6_owner_export_root=absent
+PASS required_native_subhour_root=absent
+PASS required_recency_extension_root=absent
+PASS accepted_regime_confidence_labels=0
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

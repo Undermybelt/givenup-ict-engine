@@ -1,0 +1,12 @@
+requirement_id,requirement,evidence,status,finding
+objective_restated,"Every required Board A regime must reach calibrated >=95% confidence, with qualifying condition and cross-market/cycle/context validation, then pass provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree promotion.",Current board and latest artifacts,blocked,Current Cursor remains blocked; accepted rows 0; canonical merge and downstream rerun false.
+every_regime_confidence_95,Every regime gets >=95% calibrated confidence.,"Current Cursor, audits, root status",blocked,No accepted confidence gate after source-control reset; R6/R3/R5 roots remain absent or non-promoting.
+per_regime_qualifying_conditions,Each accepted regime has its own qualifying condition.,Output contract plus latest audit,blocked,No current accepted packet exists to carry qualifying conditions.
+cross_market_cycle_context_validation,Validate accepted regimes in other markets/cycles/contexts.,Root status and evidence presence,blocked,025816 is single-symbol derived BTCUSDT only; 025801 is OHLCV only; no accepted cross-context packet.
+provider_autoquant_operated,Operate Auto-Quant/local/provider data on real artifacts.,"025256, 025801, 025816",pass,"Auto-Quant and local/public source screens exist, but are non-promoting."
+ict_engine_downstream_chain,Run downstream promotion after valid source/control evidence.,Approval package and board cursor,blocked,Downstream rerun is explicitly disallowed until source/control approval or owner export.
+ibkr_tv_yf_kraken_context,Respect requested provider context without pretending unhealthy/proxy paths qualify.,Board provider status and source screens,partial,"Provider context is mapped, but no provider evidence creates accepted regime confidence."
+multi_agent_board_safety,Preserve shared board and count duplicate races once.,025801 and 025816 count-once notes,pass,Cursor not moved; duplicate sections are count-once.
+r6_controls_or_flip_approval,Obtain R6 owner controls or explicit FLIP approval before merge.,Root status and approval JSON,blocked,Owner-export root absent; approval_present=false; flip_controls=false.
+no_proxy_promotion,"Do not promote local OHLCV, NinjaTrader cache, HF derived labels, or Auto-Quant diagnostics.",Recent source screens and audit,pass,All recent evidence is explicitly non-promoting.
+update_goal_authority,Do not mark goal complete until all criteria pass.,This audit,blocked,Strict full objective false; update_goal=false.

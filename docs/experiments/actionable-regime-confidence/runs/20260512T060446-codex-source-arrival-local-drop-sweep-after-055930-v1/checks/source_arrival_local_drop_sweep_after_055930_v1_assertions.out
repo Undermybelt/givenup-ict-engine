@@ -1,0 +1,12 @@
+gate_result=source_arrival_local_drop_sweep_after_055930_v1=no_required_root_or_approved_source_drop_no_promotion
+required_root_unlocked=false
+source_control_evidence_acquired=false
+accepted_rows_added=0
+downloads_regime_rows=245021
+downloads_regime_max_date=2026-01-30
+downloads_regime_rows_after_2026_01_30=0
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

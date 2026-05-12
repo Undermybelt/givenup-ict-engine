@@ -1,0 +1,77 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-10T09:19:04Z",
+  "generated_at": "2026-05-10T09:19:04.932739Z",
+  "symbol": "QQQ",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:QQQ:20260510T091904.925Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "b3b31675cd6aa309",
+    "data_fingerprint": "11a739724ccf4d1f"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_tv_QQQ_1h",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_tv_QQQ_1h",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.6000000000000001,
+  "consensus_strength": 0.6000000000000001,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600",
+    "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600"
+  ],
+  "split_explanations": [
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=low",
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=low"
+  ],
+  "executor_scorecards": [],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "11a739724ccf4d1f",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "trend",
+  "posterior_confidence": 0.6440961494649609,
+  "posterior_probabilities": {
+    "range": 0.3043744877588675,
+    "stress": 0.139247746139017,
+    "transition": 0.07825020489645301,
+    "trend": 0.4781275612056625
+  },
+  "posterior_evidence": [
+    "market_policy=QQQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.839",
+    "pre_bayes_quality_score=0.644 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.876",
+    "market_state_source=volatility=ElevatedVol:0.748 liquidity=HighLiquidity:0.769 structure=Trending:1.000 behavior=FOMO:0.800",
+    "market_state_source=rationale=volatility=ElevatedVol conf=0.75",
+    "market_state_source=rationale=liquidity=HighLiquidity conf=0.77",
+    "market_state_source=rationale=structure=Trending conf=1.00",
+    "market_state_source=rationale=behavior=FOMO conf=0.80",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.88"
+  ]
+}

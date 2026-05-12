@@ -1,0 +1,4 @@
+split,positive_support,positive_wilson95_lcb,support_ok,wilson_ok
+chronological_train,29,0.883026405534,False,False
+chronological_calibration,14,0.784682988073,False,False
+chronological_test,14,0.784682988073,False,False

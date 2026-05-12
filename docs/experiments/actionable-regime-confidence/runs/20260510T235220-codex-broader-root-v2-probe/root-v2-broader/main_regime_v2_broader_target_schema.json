@@ -1,0 +1,129 @@
+{
+  "schema_version": "main-regime-v2-broader-target-schema/v1",
+  "root_axis": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "manipulation_treatment": "fifth_main_class_or_overlay_fail_closed",
+  "residual_bucket": "UnknownOrMixed",
+  "input_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/cross_timeframe_regime_features.csv",
+  "chronological_split": "source split column from 224014 cross-timeframe table",
+  "forward_horizon": "8h derived per context from close[t + round(480 / timeframe_minutes)]",
+  "blocked_predictor_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "predictor_features_used": {
+    "numeric": [
+      "hour_utc",
+      "timeframe_minutes",
+      "ret1",
+      "ret4",
+      "ret16",
+      "range_pct",
+      "stretch16",
+      "vol16",
+      "range_mean16",
+      "stretch32",
+      "vol32",
+      "range_mean32",
+      "stretch64",
+      "vol64",
+      "range_mean64",
+      "stretch128",
+      "vol128",
+      "range_mean128",
+      "ma64_slope16",
+      "ma32_slope8",
+      "vol_rank",
+      "range_rank",
+      "volume_rank",
+      "vol_ratio32_128",
+      "range_ratio32_128",
+      "volume_ratio32_128",
+      "drawdown64",
+      "rally64",
+      "trend_persistence16",
+      "stress_persistence16",
+      "reversal_persistence16",
+      "thin_persistence16"
+    ],
+    "boolean": [
+      "trend_base",
+      "stress_base",
+      "reversal_base",
+      "thin_base"
+    ],
+    "excluded_current_fields": [
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "count",
+      "raw moving averages and raw volume means"
+    ]
+  },
+  "target_definitions": {
+    "Crisis": "target_stress_next == true OR derived_future_absret_8h >= train_q90; evaluated before Bull/Bear/Sideways",
+    "Sideways": "derived_future_absret_8h <= train_q35 AND target_trend_structural_next == false AND NOT Crisis",
+    "Bull": "derived_future_ret_8h >= train_q65 AND NOT Crisis AND NOT Sideways",
+    "Bear": "derived_future_ret_8h <= train_q35 AND NOT Crisis AND NOT Sideways",
+    "Manipulation": "not materialized from this OHLCV-derived table; requires direct tick/order-flow/L2/order-lifecycle or crypto event/social evidence",
+    "UnknownOrMixed": "residual bucket after Crisis/Sideways/Bull/Bear"
+  },
+  "train_thresholds": {
+    "bull_future_ret_8h_train_q65": 0.0026272661618893522,
+    "bear_future_ret_8h_train_q35": -0.001286841012868356,
+    "sideways_future_absret_8h_train_q35": 0.0024073842480643037,
+    "crisis_future_absret_8h_train_q90": 0.01606016062823823
+  },
+  "row_counts_by_split_and_root": {
+    "train": {
+      "Bull": 6468,
+      "Bear": 5739,
+      "Sideways": 3314,
+      "Crisis": 11255,
+      "Manipulation": 0,
+      "UnknownOrMixed": 4223
+    },
+    "calibration": {
+      "Bull": 3257,
+      "Bear": 3131,
+      "Sideways": 1687,
+      "Crisis": 5437,
+      "Manipulation": 0,
+      "UnknownOrMixed": 1988
+    },
+    "test": {
+      "Bull": 3209,
+      "Bear": 2846,
+      "Sideways": 1492,
+      "Crisis": 6169,
+      "Manipulation": 0,
+      "UnknownOrMixed": 1699
+    }
+  },
+  "context_counts": {
+    "QQQ:IBKR_US_ETF:1h": 3999,
+    "QQQ:yfinance_US_ETF:1h": 3361,
+    "NQ:CME_futures_local:15m": 2754,
+    "PF_XBTUSD:Kraken_crypto:1h": 1992,
+    "SPY:yfinance_ETF:1h": 5060,
+    "BTC-USD:yfinance_crypto:1h": 17471,
+    "ES=F:yfinance_futures:1h": 13640,
+    "NQ=F:yfinance_futures:1h": 13637
+  },
+  "acceptance_95": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  }
+}

@@ -1,0 +1,5 @@
+source_id,url,http_status,content_type,sample_bytes,term_hits,fetch_error
+cftc_oystacher_press_release_7264_15,https://www.cftc.gov/PressRoom/PressReleases/7264-15,200,text/html; charset=UTF-8,40699,oystacher;spoof;market depth;2011;2014;comex;nymex;normal,
+cme_historical_market_depth_page,https://www.cmegroup.com/market-data/historical-data/market-depth.html,403,application/json,0,,HTTPError:403
+cme_market_depth_faq_pdf,https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf,403,application/json,0,,HTTPError:403
+databento_cme_10_year_backfill,https://databento.com/blog/cme-10-year-backfill,200,text/html,17648,normal,

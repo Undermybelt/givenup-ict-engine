@@ -1,0 +1,123 @@
+{
+  "run_id": "20260511T092356+0800-mainregimev5-schema-crosswalk",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV5",
+  "mandatory_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "ConsolidationRange",
+    "CrisisStress",
+    "ManipulationLiquidityEngineering",
+    "TransitionAccumulationDistribution"
+  ],
+  "optional_overlays_until_proven": [
+    "CrossAssetMacroRotation"
+  ],
+  "residual": "UnknownOrMixed",
+  "required_label_panel_fields": [
+    "provider",
+    "instrument",
+    "timeframe",
+    "v5_root",
+    "start_ts",
+    "end_ts",
+    "source_label",
+    "source_label_confidence",
+    "source_name",
+    "source_license_or_access_contract",
+    "labeling_method",
+    "label_timestamp_or_publication_time",
+    "raw_source_reference",
+    "crosswalk_status",
+    "chronological_split",
+    "validation_market_context"
+  ],
+  "manipulation_additional_required_fields": [
+    "direct_evidence_channel",
+    "positive_or_negative_label",
+    "venue_or_source",
+    "event_type"
+  ],
+  "crosswalk": [
+    {
+      "v5_root": "BullExpansion",
+      "prior_provenance_only": [
+        "Bull",
+        "TrendExpansion"
+      ],
+      "required_reaudit": "signed positive expansion source labels or calibrated parent-root gate across markets/timeframes",
+      "forbidden_shortcut": "generic trend, future return target, or HMM state id"
+    },
+    {
+      "v5_root": "BearExpansion",
+      "prior_provenance_only": [
+        "Bear",
+        "TrendExpansion",
+        "stress sidecars"
+      ],
+      "required_reaudit": "signed negative expansion labels separated from crisis/stress",
+      "forbidden_shortcut": "generic drawdown proxy, future return target, or crisis bucket reuse"
+    },
+    {
+      "v5_root": "ConsolidationRange",
+      "prior_provenance_only": [
+        "Sideways",
+        "RangeConsolidation"
+      ],
+      "required_reaudit": "range/compression persistence with false-break/mean-reversion context and cross-context calibration",
+      "forbidden_shortcut": "absence-of-trend proxy alone"
+    },
+    {
+      "v5_root": "CrisisStress",
+      "prior_provenance_only": [
+        "Crisis",
+        "ExtremeStress",
+        "CrisisStress",
+        "CrisisCrash"
+      ],
+      "required_reaudit": "tail/loss/liquidity-cliff labels with chronological support and enough non-crisis controls",
+      "forbidden_shortcut": "ordinary bear expansion or volatility-only proxy"
+    },
+    {
+      "v5_root": "ManipulationLiquidityEngineering",
+      "prior_provenance_only": [
+        "Manipulation overlay",
+        "ThinLiquidity",
+        "SessionLiquidityCoreViable"
+      ],
+      "required_reaudit": "direct event/order-flow/order-lifecycle/L2/L3/MBO/wash-trade/social positive and negative rows",
+      "forbidden_shortcut": "OHLCV sweeps, thin-liquidity, volume-ratio, or indicator proxy"
+    },
+    {
+      "v5_root": "TransitionAccumulationDistribution",
+      "prior_provenance_only": [
+        "ReversalBrewing",
+        "transition hazard",
+        "accumulation/distribution clues"
+      ],
+      "required_reaudit": "boundary/transition labels with post-boundary validation and duration viability",
+      "forbidden_shortcut": "reversal-looking candle pattern without source labels or calibration"
+    },
+    {
+      "v5_root": "CrossAssetMacroRotation",
+      "prior_provenance_only": [
+        "macro sidecars",
+        "breadth sidecars",
+        "rotation sidecars"
+      ],
+      "required_reaudit": "separability and downstream action difference before mandatory use",
+      "forbidden_shortcut": "treating macro context as a substitute for price-root labels"
+    }
+  ],
+  "accepted_95_roots_added": 0,
+  "accepted_gate": "none_for_MainRegimeV5_schema_crosswalk_no_calibration",
+  "prior_v2_exact_underlying_slots_auto_promoted": false,
+  "prior_subtype_packets_auto_promoted": false,
+  "manipulation_fail_closed_without_direct_rows": true,
+  "gate_result": "blocked_mainregimev5_schema_materialized_calibration_not_run",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Run V5 attachability/calibration readiness audit and fail closed where labels are missing."
+}

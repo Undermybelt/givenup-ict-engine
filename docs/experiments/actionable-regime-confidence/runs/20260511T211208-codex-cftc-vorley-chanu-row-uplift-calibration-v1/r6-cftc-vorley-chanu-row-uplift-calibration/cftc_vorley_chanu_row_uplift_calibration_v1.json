@@ -1,0 +1,184 @@
+{
+  "artifact_type": "cftc_vorley_chanu_row_uplift_calibration_v1",
+  "board_hash_before_writeback": "7a81d776bd41d7ae5c49827dc85603d393a03a2acef57a24ef49b787b5ba5686",
+  "broad_normal_sample": false,
+  "chronological_split_ok": true,
+  "combined_min_wilson95_lcb": 0.7719046276458015,
+  "decision": "r6_cftc_vorley_chanu_calibration_gate_v3=schema_ready_but_calibration_blocked",
+  "gate_rows": [
+    {
+      "gate": "positive_support",
+      "observed": 13,
+      "pass": false,
+      "required": 50
+    },
+    {
+      "gate": "negative_support",
+      "observed": 13,
+      "pass": false,
+      "required": 50
+    },
+    {
+      "gate": "chronological_split",
+      "observed": 10,
+      "pass": true,
+      "required": 2
+    },
+    {
+      "gate": "heldout_symbol_or_venue",
+      "observed": "symbols=6;venues=3",
+      "pass": true,
+      "required": "symbol>=2 or venue>=2"
+    },
+    {
+      "gate": "wilson95_lcb",
+      "observed": "0.771905",
+      "pass": false,
+      "required": ">=0.95"
+    },
+    {
+      "gate": "broad_normal_sample",
+      "observed": "same-report or same-complaint genuine-order control seeds only; not a broad source-owned normal-market sample",
+      "pass": false,
+      "required": "source-owned broad normal activity sample"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T13:15:58.895875+00:00",
+  "heldout_symbol_or_venue_ok": true,
+  "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "labels": {
+    "matched_negative_normal_activity": 10,
+    "normal_control": 3,
+    "positive_spoofing_layering": 13
+  },
+  "matched_groups": [
+    "cftc_gandhi_20131216_es_example",
+    "cftc_gandhi_20140917_es_example",
+    "cftc_mohan_20131127_dow_first_example",
+    "cftc_mohan_20131127_dow_second_example",
+    "cftc_mohan_20131202_nq_example",
+    "cftc_mohan_20131209_nq_first_example",
+    "cftc_mohan_20131209_nq_second_example",
+    "cftc_mohan_complaint_20131203_nq_no_fill_leg",
+    "cftc_vorley_chanu_20120106_gold_example",
+    "cftc_vorley_chanu_20120606_gold_example",
+    "cftc_vorley_chanu_20130128_gold_example",
+    "cftc_vorley_chanu_20130523_gold_example"
+  ],
+  "matched_negative_row_ids_added_this_run": [
+    "cftc_vorley_chanu_20120106_gold_sell_genuine_iceberg_control",
+    "cftc_vorley_chanu_20120606_gold_sell_genuine_iceberg_control",
+    "cftc_vorley_chanu_20130128_gold_buy_genuine_iceberg_control",
+    "cftc_vorley_chanu_20130523_gold_buy_genuine_iceberg_control"
+  ],
+  "matched_negative_rows": 13,
+  "matched_negative_rows_added_this_run": 4,
+  "min_support_required_per_class": 50,
+  "negative_wilson95_lcb": 0.7719046276458015,
+  "new_confidence_gate": false,
+  "next_action": "Acquire broad source-owned or owner-approved same-schema normal controls and more direct positives across venues/symbols until support and Wilson95 gates can pass.",
+  "positive_row_ids_added_this_run": [
+    "cftc_vorley_chanu_20120106_gold_buy_spoof_orders",
+    "cftc_vorley_chanu_20120606_gold_buy_spoof_orders",
+    "cftc_vorley_chanu_20130128_gold_sell_spoof_order",
+    "cftc_vorley_chanu_20130523_gold_sell_spoof_order"
+  ],
+  "positive_rows": 13,
+  "positive_rows_added_this_run": 4,
+  "positive_wilson95_lcb": 0.7719046276458015,
+  "raw_data_committed": false,
+  "run_id": "20260511T211208-codex-cftc-vorley-chanu-row-uplift-calibration-v1",
+  "runtime_code_changed": false,
+  "session_buckets": [
+    "overnight_central_time",
+    "overnight_source_time",
+    "regular_source_time",
+    "regular_us_central_time"
+  ],
+  "source_hashes": {
+    "matched_negative_normal_activity_rows.csv": "bd51840f9415e888d5a968340a4f4206b9bdce9abef597c9b11ec972bb2b5679",
+    "positive_spoofing_layering_rows.csv": "a325124bd783ac916dfdcfa7cfc0756a994db221c112bf23fbbaa291da51a26d",
+    "provenance_manifest.json": "6639ecbaa903f0d133b9dd28b58ac2fc1e98c1005cd5b96a3580859f6316df02"
+  },
+  "source_pdf_local_raw_path": "/tmp/ict-engine-r6-vorley-chanu-row-uplift-v1/raw/enfvorleychanucomplaint012618.pdf",
+  "source_pdf_sha256": "2a109b1b86b529737396f57461dded471bbae4f4ddfcedc124cd7961f2b91493",
+  "source_url": "https://www.cftc.gov/idc/groups/public/@lrenforcementactions/documents/legalpleading/enfvorleychanucomplaint012618.pdf",
+  "strict_full_objective_achieved": false,
+  "support_ok": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unique_dates": [
+    "2012-01-06",
+    "2012-06-06",
+    "2013-01-28",
+    "2013-05-23",
+    "2013-11-27",
+    "2013-12-02",
+    "2013-12-03",
+    "2013-12-09",
+    "2013-12-16",
+    "2014-09-17"
+  ],
+  "unique_symbols": [
+    "COMEX Gold Futures",
+    "COMEX Gold Futures June delivery",
+    "December 2013 E-mini Dow futures",
+    "December 2013 E-mini NASDAQ futures",
+    "December 2014 E-mini S&P 500 futures",
+    "March 2014 E-mini S&P 500 futures"
+  ],
+  "unique_venues": [
+    "CBOT",
+    "CME",
+    "COMEX/CME Globex"
+  ],
+  "update_goal": false,
+  "verifier": {
+    "matched_group_count": 12,
+    "matched_negative_rows": 13,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 13,
+    "provenance_keys": [
+      "cftc_gandhi_order",
+      "cftc_genuine_order_text_checks",
+      "cftc_genuine_order_text_status",
+      "cftc_mohan_additional_examples",
+      "cftc_mohan_complaint",
+      "cftc_mohan_complaint_rows_added",
+      "cftc_mohan_complaint_text_checks",
+      "cftc_order",
+      "cftc_text_checks",
+      "cftc_text_extraction_status",
+      "cftc_vorley_chanu_complaint",
+      "created_at_utc",
+      "finra_public_schema",
+      "gandhi_matched_negative_rows_added",
+      "gandhi_positive_rows_added",
+      "gandhi_rows_materialized_at_utc",
+      "license_or_permission",
+      "matched_control_limitations",
+      "matched_control_policy",
+      "matched_negative_control_policy",
+      "matched_negative_materialized_at_utc",
+      "matched_negative_rows_acquired",
+      "matched_negative_rows_count",
+      "matched_negative_rows_path",
+      "matched_negative_rows_sha256",
+      "mohan_additional_matched_negative_rows_added",
+      "mohan_additional_positive_rows_added",
+      "mohan_additional_rows_materialized_at_utc",
+      "mohan_complaint_control_policy",
+      "positive_rows_count",
+      "positive_rows_path",
+      "positive_rows_sha256",
+      "source",
+      "updated_at_utc",
+      "updated_by",
+      "vorley_chanu_matched_negative_rows_added",
+      "vorley_chanu_positive_rows_added",
+      "vorley_chanu_rows_materialized_at_utc"
+    ],
+    "returncode": 0,
+    "status": "schema_ready_unscored"
+  }
+}

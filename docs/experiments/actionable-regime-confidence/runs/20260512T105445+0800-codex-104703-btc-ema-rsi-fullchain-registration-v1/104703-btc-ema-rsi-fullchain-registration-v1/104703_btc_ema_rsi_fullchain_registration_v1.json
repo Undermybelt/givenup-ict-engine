@@ -1,0 +1,72 @@
+{
+  "run_id": "20260512T105445+0800-codex-104703-btc-ema-rsi-fullchain-registration-v1",
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+  "gate": "104703_btc_ema_rsi_fullchain_registration_v1=provider_owned_noncanary_profitable_single_provider_window_downstream_fail_closed_no_promotion",
+  "branch_path": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+  "provider": {
+    "provider_requested": [
+      "Binance BTCUSDT 1h provider-acquired source CSV"
+    ],
+    "provider_data_acquired": true,
+    "provider_unreachable": [],
+    "providers_not_invoked_this_slice": [
+      "IBKR",
+      "TradingViewRemix/TVR",
+      "yfinance/YF",
+      "Kraken",
+      "Bybit"
+    ],
+    "local_cache_replay": "provider-provenanced run-local feather replay from 100419 acquisition"
+  },
+  "auto_quant": {
+    "strategy": "ProviderBtcEmaRsiHold12",
+    "trade_count": 42,
+    "total_profit_pct": 22.6,
+    "sharpe": 9.297840154632286,
+    "sortino": 15.570866878678723,
+    "calmar": 398.61127074495835,
+    "win_rate_pct": 69.04761904761905,
+    "profit_factor": 2.930855342178945,
+    "max_drawdown_pct": -2.927395513956268,
+    "status": "provider_owned_noncanary_profitable_incubation_single_provider_window"
+  },
+  "downstream": {
+    "all_source_exit_files_zero": true,
+    "real_trade_rows": 42,
+    "auto_quant_results_import_exit": 0,
+    "auto_quant_prior_init_exit": 0,
+    "auto_quant_ingest_real_trades_exit": 0,
+    "pre_bayes_status_exit": 0,
+    "policy_training_status_exit": 0,
+    "structural_path_ranking_target_export_exit": 0,
+    "workflow_structural_bundle_exit": 0,
+    "workflow_execution_candidate_exit": 0,
+    "workflow_full_exit": 0,
+    "policy_training_ready": false,
+    "entry_model_matched_rows": 0,
+    "path_ranker_runtime_enabled": false,
+    "path_ranker_runtime_status": "disabled",
+    "raw_scored_mature_rows": 0,
+    "trainer_artifact_ready": false,
+    "execution_candidate_ready": false,
+    "execution_candidate_actionable": false,
+    "closed_loop_branch_admission_status": "fail_closed",
+    "workflow_reason": "bootstrap/no_workflow_state and pre_bayes/execution gate not ready"
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_added": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "six_provider_matrix_satisfied": false,
+    "cross_market_timeframe_period_validation": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "next": "Do not promote the single-provider/single-window 104703 branch. Continue from cross-provider/cross-window validation plus source/control unlock, or a rooted branch with enough mature observations that survives Pre-Bayes/filter -> BBN -> CatBoost/path-ranker -> execution-tree."
+}

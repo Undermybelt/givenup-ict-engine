@@ -1,0 +1,1 @@
+sh -c csv=/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv; awk -F, "NR==1{for(i=1;i<=NF;i++){if(\$i==\"main_regime_v2_label\") c=i} next} c{count[\$c]++; n++} END{print \"data_rows\t\" n; for(k in count) print k \"\t\" count[k]; if(!(\"Crisis\" in count)) print \"Crisis\t0\"}" "$csv" | sort

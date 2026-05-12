@@ -1,0 +1,36 @@
+{
+  "run_id": "20260512T055200-codex-autoquant-local-reuse-readiness-after-054116-v1",
+  "gate_result": "autoquant_local_reuse_readiness_after_054116_v1=bootstrap_ok_prepare_dns_blocked_data_missing_no_promotion",
+  "scope": "Read-only Auto-Quant local reuse readiness check after the 054116 runtime-chain readback.",
+  "commands": {
+    "auto_quant_bootstrap_local_reuse": {
+      "exit": 0,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055200-codex-autoquant-local-reuse-readiness-after-054116-v1/command-output/auto_quant_bootstrap_local_reuse.stdout.txt"
+    },
+    "auto_quant_prepare_local_reuse": {
+      "exit": 1,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055200-codex-autoquant-local-reuse-readiness-after-054116-v1/command-output/auto_quant_prepare_local_reuse.stderr.txt",
+      "blocker": "Binance market loading failed because DNS resolution could not contact DNS servers for api.binance.com; Freqtrade raised ExchangeNotAvailable and OperationalException: Markets were not loaded."
+    },
+    "auto_quant_status_local_reuse": {
+      "exit": 0,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055200-codex-autoquant-local-reuse-readiness-after-054116-v1/command-output/auto_quant_status_local_reuse.stdout.json",
+      "status": "dependency_ready_data_missing",
+      "healthy": false,
+      "dependency_healthy": true,
+      "bootstrap_needed": false,
+      "data_ready": false,
+      "recommended_next_command": "ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-local-reuse-20260512T055200/auto-quant"
+    }
+  },
+  "managed_dir": "/tmp/ict-engine-board-a-autoquant-local-reuse-20260512T055200/auto-quant/.deps/auto-quant",
+  "target_root_mutated": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "decision": "Auto-Quant dependency reuse is callable after bootstrap, but data preparation failed before usable local data or strategies were produced. This is runtime readiness evidence only and cannot unlock Board A promotion.",
+  "next": "Do not rerun promotion from this readback. Continue only after a required source/control target root or explicit approval unlocks the Board A chain."
+}

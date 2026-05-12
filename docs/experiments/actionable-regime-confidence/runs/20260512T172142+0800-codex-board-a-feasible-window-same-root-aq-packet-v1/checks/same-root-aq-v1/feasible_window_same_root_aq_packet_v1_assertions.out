@@ -1,0 +1,14 @@
+PASS run_id=20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1
+PASS provider_csvs_present=6
+PASS provider_runs=6
+PASS compile_success=6
+PASS run_success=6
+PASS strategies_with_metrics=12
+PASS total_trades=1953
+PASS workspace_file_count=84
+PASS same_root_six_provider_aq_authority=True
+FAIL_CLOSED downstream_chain_not_started_in_this_step
+FAIL_CLOSED no_calibrated_95_regime_acceptance
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

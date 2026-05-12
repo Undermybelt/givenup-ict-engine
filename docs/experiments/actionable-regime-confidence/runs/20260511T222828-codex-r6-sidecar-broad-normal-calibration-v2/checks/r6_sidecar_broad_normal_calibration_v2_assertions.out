@@ -1,0 +1,15 @@
+run_id=20260511T222828+0800-codex-r6-sidecar-broad-normal-calibration-v2
+board_sha256_at_run=1ddc9dc0b8b291e617be3f66dbfa5b5fae443f9ac8fa2c2678d2ba7717f93045
+positive_rows=57
+same_event_control_seed_rows=57
+sidecar_broad_normal_control_rows=80
+direct_positive_wilson95_lcb=0.936861
+sidecar_control_wilson95_lcb=0.954182
+sidecar_control_axis_pass=true
+direct_positive_axis_pass=false
+additional_positive_rows_needed_for_pooled_wilson95=16
+shared_intake_mutated=false
+accepted_rows_added=0
+strict_full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

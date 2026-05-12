@@ -1,0 +1,6 @@
+strategy,outcome,trade_count,sharpe,total_profit_pct,win_rate_pct,profit_factor,error_msg
+NQMeanRevertFeedback,succeeded,0,0.0,0.0,0.0,0.0,
+NQTrendCarryFeedback,succeeded,0,0.0,0.0,0.0,0.0,
+TomacNQ_CompressionMeanRevert,failed,0,,,,,No data left after adjusting for startup candles.
+TomacNQ_KillzoneBreakout,succeeded,0,0.0,0.0,0.0,0.0,
+TomacNQ_MulticadenceTrendPullback,failed,0,,,,,No data left after adjusting for startup candles.

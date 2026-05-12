@@ -1,0 +1,201 @@
+{
+  "board_hash_before_artifact": "4119bfff4469c7aadd62553ef654dbcf35b69f3fb10df9c3c71a9f806da7e176",
+  "commands": [
+    {
+      "command": [
+        "bash",
+        "-lc",
+        "find /Users/thrill3r/Downloads /Users/thrill3r/Desktop -maxdepth 5 \\( -iname 'positive_spoofing_layering_rows.csv' -o -iname 'matched_negative_normal_activity_rows.csv' -o -iname 'provenance_manifest.json' -o -iname '*owner*export*' -o -iname '*native*subhour*' -o -iname '*recency*extension*' -o -iname '*MainRegimeV2*' \\) 2>/dev/null | sort"
+      ],
+      "exit_code": 0,
+      "key": "downloads_desktop_arrival_sweep",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T060446-codex-source-arrival-local-drop-sweep-after-055930-v1/command-output/downloads_desktop_arrival_sweep.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T060446-codex-source-arrival-local-drop-sweep-after-055930-v1/command-output/downloads_desktop_arrival_sweep.stdout"
+    },
+    {
+      "command": [
+        "bash",
+        "-lc",
+        "find /private/tmp -maxdepth 4 \\( -iname 'positive_spoofing_layering_rows.csv' -o -iname 'matched_negative_normal_activity_rows.csv' -o -iname 'provenance_manifest.json' \\) 2>/dev/null | sort"
+      ],
+      "exit_code": 0,
+      "key": "private_tmp_near_triplet_sweep",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T060446-codex-source-arrival-local-drop-sweep-after-055930-v1/command-output/private_tmp_near_triplet_sweep.stderr",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T060446-codex-source-arrival-local-drop-sweep-after-055930-v1/command-output/private_tmp_near_triplet_sweep.stdout"
+    }
+  ],
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "required_root_unlocked": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "downloads_regime_dataset": {
+    "columns": [
+      "date",
+      "ticker",
+      "close",
+      "returns",
+      "volatility",
+      "regime_label",
+      "regime_confidence",
+      "macro_context",
+      "unemployment_rate",
+      "fed_funds_rate",
+      "cpi",
+      "10y_treasury",
+      "2y_treasury",
+      "vix"
+    ],
+    "csv_exists": true,
+    "disposition": "daily_stock_panel_through_2026_01_30_no_post_cutoff_rows_no_native_subhour_labels",
+    "exists": true,
+    "max_date": "2026-01-30",
+    "min_date": "2000-01-03",
+    "r3_unlock": false,
+    "r5_unlock": false,
+    "regime_counts": {
+      "Bear": 54939,
+      "Bull": 103766,
+      "Crisis": 29632,
+      "High-volatility": 16,
+      "Sideways": 56668
+    },
+    "root": "/Users/thrill3r/Downloads/stock-market-regimes-20002026",
+    "rows": 245021,
+    "rows_after_2026_01_30": 0,
+    "sample_rows": [
+      {
+        "10y_treasury": "6.58",
+        "2y_treasury": "6.38",
+        "close": "0.8392807245254517",
+        "cpi": "169.3",
+        "date": "2000-01-03",
+        "fed_funds_rate": "5.45",
+        "macro_context": "High Rates",
+        "regime_confidence": "0.0",
+        "regime_label": "Bull",
+        "returns": "0.0",
+        "ticker": "AAPL",
+        "unemployment_rate": "4.0",
+        "vix": "24.209999084472656",
+        "volatility": "0.8630192539158436"
+      },
+      {
+        "10y_treasury": "6.58",
+        "2y_treasury": "6.38",
+        "close": "15.5",
+        "cpi": "169.3",
+        "date": "2000-01-03",
+        "fed_funds_rate": "5.45",
+        "macro_context": "High Rates",
+        "regime_confidence": "0.0",
+        "regime_label": "Bull",
+        "returns": "0.0",
+        "ticker": "AMD",
+        "unemployment_rate": "4.0",
+        "vix": "24.209999084472656",
+        "volatility": "0.9329491552398492"
+      },
+      {
+        "10y_treasury": "6.58",
+        "2y_treasury": "6.38",
+        "close": "4.46875",
+        "cpi": "169.3",
+        "date": "2000-01-03",
+        "fed_funds_rate": "5.45",
+        "macro_context": "High Rates",
+        "regime_confidence": "0.0",
+        "regime_label": "Bull",
+        "returns": "0.0",
+        "ticker": "AMZN",
+        "unemployment_rate": "4.0",
+        "vix": "24.209999084472656",
+        "volatility": "1.0041596245698854"
+      }
+    ],
+    "sample_tickers": [
+      "AAPL",
+      "ABBV",
+      "AMD",
+      "AMZN",
+      "BA",
+      "BAC",
+      "CAT",
+      "COP",
+      "CSCO",
+      "CVX",
+      "DIS",
+      "GE"
+    ],
+    "summary_exists": true,
+    "summary_text": "STOCK MARKET REGIMES DATASET (2000-2026)\n============================================================\n\nTotal Rows: 245,021\nTotal Tickers: 39\nDate Range: 2000-01-03 00:00:00 to 2026-01-30 00:00:00\n\nRegime Distribution:\nregime_label\nBull               103766\nSideways            56668\nBear                54939\nCrisis              29632\nHigh-volatility        16\nName: count, dtype: int64\n\nColumns:\n['date', 'ticker', 'close', 'returns', 'volatility', 'regime_label', 'regime_confidence', 'macro_context', 'unemployment_rate', 'fed_funds_rate', 'cpi', '10y_treasury', '2y_treasury', 'vix']\n",
+    "ticker_count": 39
+  },
+  "gate_result": "source_arrival_local_drop_sweep_after_055930_v1=no_required_root_or_approved_source_drop_no_promotion",
+  "generated_at_epoch": 1778537177,
+  "known_side_roots": [
+    {
+      "disposition": "known_non_target_sidecar_do_not_copy_without_explicit_approval",
+      "exists": true,
+      "manifest_summary": {},
+      "matched_control_rows": 77,
+      "positive_rows": 77,
+      "required_files_present": {
+        "matched_negative_normal_activity_rows.csv": true,
+        "positive_spoofing_layering_rows.csv": true,
+        "provenance_manifest.json": true
+      },
+      "root": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging"
+    },
+    {
+      "disposition": "known_non_target_sidecar_do_not_copy_without_explicit_approval",
+      "exists": true,
+      "manifest_summary": {},
+      "matched_control_rows": 73,
+      "positive_rows": 73,
+      "required_files_present": {
+        "matched_negative_normal_activity_rows.csv": true,
+        "positive_spoofing_layering_rows.csv": true,
+        "provenance_manifest.json": true
+      },
+      "root": "/private/tmp/ict-engine-direct-manipulation-row-intake"
+    },
+    {
+      "disposition": "known_non_target_sidecar_do_not_copy_without_explicit_approval",
+      "exists": true,
+      "manifest_summary": {},
+      "matched_control_rows": 73,
+      "positive_rows": 73,
+      "required_files_present": {
+        "matched_negative_normal_activity_rows.csv": true,
+        "positive_spoofing_layering_rows.csv": true,
+        "provenance_manifest.json": true
+      },
+      "root": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake"
+    },
+    {
+      "disposition": "known_non_target_sidecar_do_not_copy_without_explicit_approval",
+      "exists": true,
+      "manifest_summary": {},
+      "matched_control_rows": 73,
+      "positive_rows": 73,
+      "required_files_present": {
+        "matched_negative_normal_activity_rows.csv": true,
+        "positive_spoofing_layering_rows.csv": true,
+        "provenance_manifest.json": true
+      },
+      "root": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake"
+    }
+  ],
+  "run_id": "20260512T060446-codex-source-arrival-local-drop-sweep-after-055930-v1",
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  }
+}

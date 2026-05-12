@@ -1,0 +1,147 @@
+{
+  "schema_version": "regime-rooted-branch-ranking-rows/v1",
+  "symbol": "QQQ",
+  "run_id": "ict-regime-branch-iteration-20260510-1",
+  "generated_at": "2026-05-10T09:30:35Z",
+  "row_identity_contract": [
+    "symbol",
+    "timeframe",
+    "run_id",
+    "regime_label",
+    "market_state_primary",
+    "market_state_secondary",
+    "branch_id"
+  ],
+  "provider_regime_evidence": {
+    "IBKR_QQQ_1h": {
+      "market_state": "RangeConsolidation/WideRange",
+      "execution": "observe/transition_guardrail/guarded",
+      "trace_branch": "transition_guardrail",
+      "gate_status": "observe",
+      "execution_score": 0.562319777656996
+    },
+    "YF_QQQ_1h": {
+      "market_state": "TrendExpansion/BullTrendAcceleration",
+      "execution": "observe/fill_viable/passive",
+      "trace_branch": "fill_viable",
+      "gate_status": "observe",
+      "execution_score": 0.5665380404532696
+    },
+    "TradingView_QQQ_1h": {
+      "market_state": "TrendExpansion/BullTrendAcceleration",
+      "execution": "observe/fill_viable/passive",
+      "trace_branch": "fill_viable",
+      "gate_status": "observe",
+      "execution_score": 0.5958030951277176
+    },
+    "Kraken_PF_XBTUSD_1h": {
+      "market_state": "provider_reachability_only",
+      "execution": "not_a_QQQ_branch_proxy",
+      "trace_branch": null,
+      "gate_status": null,
+      "execution_score": null
+    }
+  },
+  "rows": [
+    {
+      "symbol": "QQQ",
+      "timeframe": "1h",
+      "run_id": "ict-regime-branch-iteration-20260510-1",
+      "regime_label": "range_consolidation_with_provider_disagreement",
+      "market_state_primary": "RangeConsolidation",
+      "market_state_secondary": "WideRange",
+      "branch_id": "range_mean_reversion",
+      "branch_family": "range_response",
+      "factor_family": "range_mean_reversion_viability",
+      "factor_variant": "volatility_mean_reversion_native_control",
+      "bbn_prior_evidence": {
+        "source": "ict-engine native factor-research on IBKR+TV paired data",
+        "best_factor": "volatility_mean_reversion",
+        "return_pct": -0.86,
+        "evidence_status": "negative_or_insufficient"
+      },
+      "market_likelihood_evidence": {
+        "likelihood": 0.45,
+        "reason": "IBKR supports range/WideRange, but YF and TradingView classify trend expansion; execution remains observe."
+      },
+      "catboost_feature_vector": {
+        "trade_count": 0,
+        "sharpe": null,
+        "win_rate_pct": null,
+        "profit_factor": null,
+        "provider_disagreement": 1.0,
+        "native_return_pct": -0.86
+      },
+      "realized_branch_outcome": "not_validated",
+      "stopping_layer": "factor_iteration"
+    },
+    {
+      "symbol": "QQQ",
+      "timeframe": "1h",
+      "run_id": "ict-regime-branch-iteration-20260510-1",
+      "regime_label": "range_to_trend_transition_candidate",
+      "market_state_primary": "TrendExpansion",
+      "market_state_secondary": "BullTrendAcceleration",
+      "branch_id": "transition_confirmation",
+      "branch_family": "breakout_follow_through",
+      "factor_family": "range_break_displacement",
+      "factor_variant": "TomacNQ_KillzoneBreakout_QQQ_1h",
+      "bbn_prior_evidence": {
+        "source": "Auto-Quant run_tomac.py historical QQQ 1h",
+        "trade_count": 74,
+        "win_rate_pct": 52.7027,
+        "profit_factor": 1.2501,
+        "total_profit_pct": 6.98,
+        "max_drawdown_pct": -4.2049,
+        "evidence_status": "positive_but_weak"
+      },
+      "market_likelihood_evidence": {
+        "likelihood": 0.6,
+        "reason": "YF and TradingView both classify trend expansion while IBKR marks transition_guardrail; this supports transition testing but not execution."
+      },
+      "catboost_feature_vector": {
+        "trade_count": 74,
+        "sharpe": 0.2207,
+        "sortino": 0.3825,
+        "calmar": 5.6268,
+        "win_rate_pct": 52.7027,
+        "profit_factor": 1.2501,
+        "provider_disagreement": 1.0,
+        "execution_gate_observe": 1.0
+      },
+      "realized_branch_outcome": "probe_profitable_weak_sharpe",
+      "stopping_layer": "path_ranking_or_execution_tree_pending"
+    },
+    {
+      "symbol": "QQQ",
+      "timeframe": "1h",
+      "run_id": "ict-regime-branch-iteration-20260510-1",
+      "regime_label": "wide_range_transition_hazard",
+      "market_state_primary": "RangeConsolidation",
+      "market_state_secondary": "WideRange",
+      "branch_id": "stress_de_risk",
+      "branch_family": "risk_control",
+      "factor_family": "stress_de_risk",
+      "factor_variant": "provider_disagreement_wide_range_guardrail",
+      "bbn_prior_evidence": {
+        "source": "execution-tree observe/guardrail plus provider disagreement",
+        "evidence_status": "risk_prior_only"
+      },
+      "market_likelihood_evidence": {
+        "likelihood": 0.65,
+        "reason": "All provider-specific workflow outputs remain observe; IBKR explicitly reports transition_guardrail/guarded."
+      },
+      "catboost_feature_vector": {
+        "trade_count": 0,
+        "sharpe": null,
+        "win_rate_pct": null,
+        "profit_factor": null,
+        "provider_disagreement": 1.0,
+        "execution_gate_observe": 1.0,
+        "guarded_execution": 1.0
+      },
+      "realized_branch_outcome": "risk_branch_only",
+      "stopping_layer": "execution_tree_observe"
+    }
+  ]
+}

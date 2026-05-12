@@ -1,0 +1,12 @@
+PASS latest_board_artifacts_read
+PASS rooted_branch_path_schema_visibility_improved_by_044611
+FAIL no_user_selected_historical_data
+FAIL no_fresh_selected_data_auto_quant_training
+FAIL no_nonzero_mature_rooted_selected_observations
+FAIL pre_bayes_observe_only
+FAIL bbn_application_skipped
+FAIL catboost_validation_zero_of_30
+FAIL execution_candidate_blocked
+FAIL provider_set_not_all_ready
+PASS promotion_allowed=false
+PASS update_goal=false

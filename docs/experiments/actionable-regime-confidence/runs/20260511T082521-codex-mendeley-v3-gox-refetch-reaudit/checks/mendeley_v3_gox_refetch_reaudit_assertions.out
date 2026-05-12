@@ -1,0 +1,14 @@
+run_id=20260511T082521+0800-codex-mendeley-v3-gox-refetch-reaudit
+mendeley_version=3
+gox_sha256_matches_current_v3=true
+gate_result=blocked_mendeley_gox_hgb_wash_below_95
+accepted_direct_manipulation_95=false
+blockers=test_coverage_below_min,calibration_ece_above_max,test_ece_above_max
+mainregimev2_root_slots_added=0
+manipulation_label_slots_added=0
+accepted_full_cycle_full_universe=false
+fresh_calibration_rerun=true
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false

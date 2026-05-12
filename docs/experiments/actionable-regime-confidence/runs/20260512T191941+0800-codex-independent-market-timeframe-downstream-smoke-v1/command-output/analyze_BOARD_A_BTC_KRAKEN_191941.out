@@ -1,0 +1,46 @@
+{
+  "decision_hint_raw": "Comparable run, but factor backlog remains: tune structure_ict first.|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.449|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bearish mtf_alignment=0.9924 mtf_entry_alignment=0.9173",
+  "decision_summary": "Comparable run, but factor backlog remains",
+  "direction": "Bear",
+  "entry_state": "medium",
+  "evidence": [
+    "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+    "multi_timeframe_missing=1m,5m,30m,4h",
+    "15m:2000 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1h.json"
+  ],
+  "execution_triage": {
+    "branch": "transition_guardrail",
+    "branch_probability": 0.0,
+    "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "execution_bias": "guarded",
+    "execution_score": 0.5231373099565243,
+    "gate_status": "observe",
+    "one_line": "execution observe | branch=transition_guardrail | bias=guarded | score=0.523 | confidence=0.000 | hint=execution_guarded_due_to_high_transition_hazard",
+    "posterior_uncertainty": 1.0,
+    "reason_summary": [
+      "branch=block_crowded (gate_status=blocked, readiness 0.3302 < 0.45)",
+      "market_state=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.590",
+      "market_state=volatility=NormalVol:0.530 liquidity=ThinLiquidity:0.643 structure=Trending:0.830 behavior=Exhaustion:0.650",
+      "market_state=rationale=volatility=NormalVol conf=0.53",
+      "market_state=rationale=liquidity=ThinLiquidity conf=0.64"
+    ]
+  },
+  "next_command": "ask-user: Before using historical data for BOARD_A_BTC_KRAKEN_191941 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_BTC_KRAKEN_191941 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state'",
+  "next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol BOARD_A_BTC_KRAKEN_191941 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state'",
+    "prompt": "Before using historical data for BOARD_A_BTC_KRAKEN_191941 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1h.json",
+    "user_input_required": true
+  },
+  "pre_bayes_gate": "pass_neutralized",
+  "recommended_next_actions": [
+    "ask-user: Before using historical data for BOARD_A_BTC_KRAKEN_191941 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_BTC_KRAKEN_191941 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_BTC_KRAKEN_191941/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state'"
+  ],
+  "risks": [
+    "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+  ]
+}

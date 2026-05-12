@@ -1,0 +1,4 @@
+source_id,url,status,bytes,sha256,purpose,error
+cftc_press_5521_08,https://www.cftc.gov/PressRoom/PressReleases/5521-08,http_200,46122,56eb273880fb1a8fa5e4a539f221ea6d1272cc26c7566dd558b9532a089b96c7,CFTC press release describing the Optiver NYMEX energy futures manipulation complaint.,
+cftc_optiver_complaint_pdf,https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfoptiveruscomplaint072408.pdf,http_200,2423973,3ce2407ab94fcb5f93cce6dfbbc13a74cad200d84dde4f33faafbd655ea0e07d,Official CFTC complaint; paragraph 256 lists the March 2007 futures-contract instances.,
+cftc_optiver_chart_pdf,https://www.cftc.gov/sites/default/files/idc/groups/public/%40newsroom/documents/file/enfoptiverchart.pdf,http_200,48178,6538dbd7cf4f747bc8ababa5115898cde2182d71ccbafbfca8144213f8dff18e,Official CFTC chart link from the press packet; retained as source provenance only.,

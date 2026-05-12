@@ -1,0 +1,25 @@
+{
+  "provider": "yfinance",
+  "role": "yf_spy",
+  "symbol": "SPY",
+  "ok": true,
+  "error": null
+}
+{
+  "provider": "tradingview_mcp",
+  "role": "tvr_spy",
+  "symbol": "AMEX:SPY",
+  "ok": true,
+  "error": null
+}
+{
+  "provider": "ibkr",
+  "role": "ibkr_spy",
+  "symbol": "SPY",
+  "ok": false,
+  "error": {
+    "category": "fetch_failed",
+    "message": "ibkr historical fetch failed for 'SPY'",
+    "retryable": true
+  }
+}

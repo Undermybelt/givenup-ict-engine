@@ -1,0 +1,437 @@
+Discovered 3 strategies: CrashRebound, PerPairMR, RegimeAdaptiveBNB
+Whitelist:   BTC/USDT,ETH/USDT,SOL/USDT,BNB/USDT,AVAX/USDT
+Default TR:  20210101-20251231
+
+---
+strategy:         CrashRebound
+timerange_label:  bull_2021
+timerange:        20210101-20211231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         CrashRebound
+timerange_label:  winter_2022
+timerange:        20220101-20221231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         CrashRebound
+timerange_label:  recovery_23_25
+timerange:        20230101-20251231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         CrashRebound
+timerange_label:  full_5y
+timerange:        20210101-20251231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         PerPairMR
+timerange_label:  bull_2021
+timerange:        20210101-20211231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         PerPairMR
+timerange_label:  winter_2022
+timerange:        20220101-20221231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         PerPairMR
+timerange_label:  recovery_23_25
+timerange:        20230101-20251231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         PerPairMR
+timerange_label:  full_5y
+timerange:        20210101-20251231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         RegimeAdaptiveBNB
+timerange_label:  bull_2021
+timerange:        20210101-20211231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         RegimeAdaptiveBNB
+timerange_label:  winter_2022
+timerange:        20220101-20221231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         RegimeAdaptiveBNB
+timerange_label:  recovery_23_25
+timerange:        20230101-20251231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+---
+strategy:         RegimeAdaptiveBNB
+timerange_label:  full_5y
+timerange:        20210101-20251231
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1/auto-quant-v041-workspace/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+Done: 0 backtests succeeded, 12 failed.

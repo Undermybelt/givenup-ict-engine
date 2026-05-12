@@ -1,0 +1,59 @@
+{
+  "run_id": "20260511T082034+0800-codex-direct-manipulation-labeled-source-web-scan",
+  "objective": "Find explicit direct Manipulation label sources without counting unlabeled or rule-only sources as accepted labels.",
+  "active_taxonomy": "MainRegimeV2",
+  "direct_event_class": "Manipulation",
+  "candidate_sources_seen": 5,
+  "accepted_direct_manipulation_label_sources_added": 0,
+  "mainregimev2_root_slots_added": 0,
+  "manipulation_label_slots_added": 0,
+  "sources": [
+    {
+      "name": "Mendeley Data: Detecting Crypto Wash Trades via Machine Learning",
+      "url": "https://data.mendeley.com/datasets/4hyxfwzpgg",
+      "decision": "candidate_reaudit_required",
+      "reason": "Public page describes trade rows with a binary legitimate/wash label; must re-fetch current files and rerun unchanged chronological support, coverage, ECE, and positive/negative control gates before acceptance."
+    },
+    {
+      "name": "GitHub: nft_wash_trading",
+      "url": "https://github.com/niuniu-zhang/nft_wash_trading",
+      "decision": "candidate_code_provenance_only",
+      "reason": "Related repository may explain feature/label construction, but code alone is not an accepted label panel."
+    },
+    {
+      "name": "Dune nft.wash_trades",
+      "url": "https://docs.dune.com/data-catalog/curated/nft-trades/evm/nft-wash-trades",
+      "decision": "candidate_export_required",
+      "reason": "Curated wash-trade table is relevant, but it must be exported with timestamps, positive/negative windows, and replayable provenance before calibration."
+    },
+    {
+      "name": "Bitquery wash-trading detector label module",
+      "url": "https://docs.bitquery.io/docs/usecases/wash-trading-detector/prepare-data/label/",
+      "decision": "rule_label_sidecar_only",
+      "reason": "Rule-generated labels are sidecar/provenance only until validated against accepted source windows."
+    },
+    {
+      "name": "NFT Wash Trading Detection paper",
+      "url": "https://arxiv.org/abs/2305.01543",
+      "decision": "paper_method_provenance_only",
+      "reason": "Definition and method provenance only; no Board A source-label panel was materialized."
+    }
+  ],
+  "completion_accounting": {
+    "accepted_confidence": false,
+    "accepted_full_cycle_full_universe": false,
+    "goal_achieved": false,
+    "why_not_accepted": [
+      "No source was exported or re-audited into a chronological positive/negative label window panel in this run.",
+      "Mendeley v3 is a candidate, not accepted evidence until unchanged gates pass.",
+      "Dune requires export and replayable provenance before calibration.",
+      "Bitquery rule labels and papers are not independent accepted labels by themselves."
+    ]
+  },
+  "gate_result": "blocked_direct_manipulation_labeled_sources_need_reaudit_or_export",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Run a bounded Mendeley v3 re-fetch/re-audit first; if it still fails, try a Dune nft.wash_trades export path. Do not count Bitquery rule labels or paper definitions as accepted labels without independent validation."
+}

@@ -1,0 +1,13 @@
+PASS active_taxonomy=MainRegimeV2
+PASS direct_event_class=Manipulation
+PASS candidate_sources_seen=5
+PASS accepted_direct_manipulation_label_sources_added=0
+PASS mainregimev2_root_slots_added=0
+PASS manipulation_label_slots_added=0
+PASS accepted_full_cycle_full_universe=false
+PASS goal_achieved=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+PASS gate_result=blocked_direct_manipulation_labeled_sources_need_reaudit_or_export

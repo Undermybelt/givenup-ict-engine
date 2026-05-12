@@ -1,0 +1,43 @@
+{
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T100328+0800-codex-post-093937-full-chain-readback-v1/state_copy",
+  "artifact_id": "auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T161707.987Z",
+  "handoff_kind": "factor_research",
+  "backend": "auto-quant",
+  "data_ready": false,
+  "dependency_healthy": true,
+  "workspace_repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1/.deps/auto-quant",
+  "suggested_commands": [
+    "cat docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1/.deps/auto-quant/program.md",
+    "cat docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1/.deps/auto-quant/user_data/strategies/_template.py.example",
+    "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1"
+  ],
+  "suggested_next_steps": [
+    "prepare Auto-Quant market data before attempting the research loop",
+    "re-run factor-research with backend=auto-quant after data becomes ready"
+  ],
+  "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1",
+  "recommended_next_command_meta": {
+    "kind": "ict_engine",
+    "requires_user_input": false,
+    "blocked": false,
+    "prompt": null,
+    "executable_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1",
+    "recorded_data_paths": []
+  },
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": "auto_quant_prepare_required",
+    "deferred_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "review_status": "prepare_required",
+  "review_summary": "Auto-Quant workspace is healthy but research data is not ready yet",
+  "notes": [
+    "auto_quant_prepare_required_before_run",
+    "auto_quant_seed_strategies_required",
+    "auto_quant_active_strategy_count=0",
+    "requested_at=20260511T161707.993Z"
+  ]
+}

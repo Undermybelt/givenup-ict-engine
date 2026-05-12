@@ -1,0 +1,6 @@
+decision=native_subhour_source_recheck_v2=no_ready_native_subhour_source_owned_labels
+candidate_records=11
+ready_native_subhour_source_owned_label_sources=0
+native_subhour_source_overlap_closed=false
+strict_full_objective_achieved=false
+update_goal=false

@@ -1,0 +1,7 @@
+requirement,status,evidence
+"Preserve Board B append-only/current-cursor safety","covered","Read current board tail and did not edit Current Cursor"
+"Inspect actual 122600 selected-history command outputs","covered","Read sanitized-pair selected-window command, exit, stdout, stderr, alias map, and config"
+"Determine whether pair construction remains blocked","covered","Selected-window run exited 0 after sanitized pair mapping"
+"Determine whether profitability evidence exists","covered","Three TOMAC strategies succeeded but all trade_count=0 and total_profit_pct=0"
+"Avoid proxy completion claim","covered","promotion_allowed=false; trade_usable=false; update_goal=false"
+"Identify remaining blocker","covered","no-trade / no measured profitability; needs nonzero-trade recipe or wider provider-provenanced history"

@@ -1,0 +1,15 @@
+evidence,path,present,notes
+board,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,true,named_authoritative_board
+autoquant_seed_run_report,docs/experiments/actionable-regime-confidence/runs/20260512T023312-codex-autoquant-seed-and-run-after-threaded-prepare-v1/autoquant-seed-and-run-after-threaded-prepare-v1/autoquant_seed_and_run_after_threaded_prepare_v1.md,true,new_autoquant_oracle_evidence
+autoquant_seed_run_json,docs/experiments/actionable-regime-confidence/runs/20260512T023312-codex-autoquant-seed-and-run-after-threaded-prepare-v1/autoquant-seed-and-run-after-threaded-prepare-v1/autoquant_seed_and_run_after_threaded_prepare_v1.json,true,new_autoquant_oracle_evidence
+autoquant_run_stdout,docs/experiments/actionable-regime-confidence/runs/20260512T023312-codex-autoquant-seed-and-run-after-threaded-prepare-v1/command-output/01_autoquant_run.stdout.txt,true,run_py_exit_0
+threaded_prepare_root,docs/experiments/actionable-regime-confidence/runs/20260512T022850-codex-autoquant-threaded-dns-prepare-run-v1,true,data_ready_predecessor
+provider_readback,docs/experiments/actionable-regime-confidence/runs/20260512T021456-codex-required-provider-status-readback-v1,true,non_promoting_provider_context
+runtime_chain_readback,docs/experiments/actionable-regime-confidence/runs/20260512T020037-codex-readonly-runtime-chain-refresh-after-015533-v1,true,callability_only
+tsie_full_parquet,docs/experiments/actionable-regime-confidence/runs/20260512T022005-codex-tsie-source-label-intake-dryrun-v1,true,candidate_only
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,false,required_source_control_absent
+native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,false,required_cross_timeframe_root_absent
+recency_extension,/tmp/ict-engine-source-panel-recency-extension,false,required_recency_root_absent
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,true,present_but_confidence_blocked
+legacy_direct_intake,/tmp/ict-engine-direct-manipulation-row-intake,true,legacy_non_promoting
+

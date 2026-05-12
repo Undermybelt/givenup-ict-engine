@@ -1,0 +1,13 @@
+package,canonical_path,filename,exists,size_bytes,sha256
+external_bundle_price_root_equivalence,/tmp/ict-engine-board-a-external-intake-bundle-v1/price_root_equivalence_rows.csv,price_root_equivalence_rows.csv,False,0,
+external_bundle_price_root_equivalence,/tmp/ict-engine-board-a-external-intake-bundle-v1/price_root_equivalence_provenance.json,price_root_equivalence_provenance.json,False,0,
+external_bundle_source_panel_recency_extension,/tmp/ict-engine-board-a-external-intake-bundle-v1/source_panel_recency_extension_rows.csv,source_panel_recency_extension_rows.csv,False,0,
+external_bundle_source_panel_recency_extension,/tmp/ict-engine-board-a-external-intake-bundle-v1/source_panel_recency_extension_provenance.json,source_panel_recency_extension_provenance.json,False,0,
+external_bundle_direct_manipulation_species,/tmp/ict-engine-board-a-external-intake-bundle-v1/direct_manipulation_positive_rows.csv,direct_manipulation_positive_rows.csv,False,0,
+external_bundle_direct_manipulation_species,/tmp/ict-engine-board-a-external-intake-bundle-v1/direct_manipulation_matched_controls.csv,direct_manipulation_matched_controls.csv,False,0,
+external_bundle_direct_manipulation_species,/tmp/ict-engine-board-a-external-intake-bundle-v1/direct_manipulation_provenance.json,direct_manipulation_provenance.json,False,0,
+strict_1h_source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv,source_label_equivalence_rows.csv,False,0,
+strict_1h_source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json,source_label_equivalence_provenance.json,False,0,
+direct_manipulation_row_intake,/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,positive_spoofing_layering_rows.csv,False,0,
+direct_manipulation_row_intake,/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,matched_negative_normal_activity_rows.csv,False,0,
+direct_manipulation_row_intake,/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,provenance_manifest.json,False,0,

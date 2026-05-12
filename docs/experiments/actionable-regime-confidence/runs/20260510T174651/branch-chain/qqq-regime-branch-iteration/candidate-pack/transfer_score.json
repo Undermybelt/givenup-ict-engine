@@ -1,0 +1,84 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "TomacNQ_KillzoneBreakout",
+  "covered_market_count": 1,
+  "covered_markets": [
+    "QQQ/USD"
+  ],
+  "markets_without_trade_counts": [],
+  "status": "single_market_only",
+  "overall_transfer_score": 0.0,
+  "average_sharpe": 0.2207,
+  "average_trade_count": 74,
+  "timeframe": "1h",
+  "market_evidence": {
+    "QQQ/USD": {
+      "sharpe": 0.2207,
+      "sortino": 0.3825,
+      "calmar": 5.6268,
+      "total_profit_pct": 6.98,
+      "max_drawdown_pct": -4.2049,
+      "trade_count": 74,
+      "win_rate_pct": 52.7027,
+      "profit_factor": 1.2501,
+      "evidence_source": "manifest"
+    },
+    "IBKR_QQQ_1h_regime_probe": {
+      "trade_count": null,
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "window": "480 rows via IBKR gateway 127.0.0.1:4002",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=RangeConsolidation/WideRange",
+        "execution=observe/transition_guardrail/guarded"
+      ]
+    },
+    "YF_QQQ_1h_regime_probe": {
+      "trade_count": null,
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "window": "historical QQQ 1h Yahoo/YF artifact",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=TrendExpansion/BullTrendAcceleration",
+        "execution=observe/fill_viable/passive"
+      ]
+    },
+    "TradingView_QQQ_1h_regime_probe": {
+      "trade_count": null,
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "window": "147 rows via TradingViewRemix/MCP harness",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=TrendExpansion/BullTrendAcceleration",
+        "execution=observe/fill_viable/passive"
+      ]
+    },
+    "Kraken_PF_XBTUSD_1h_provider_probe": {
+      "trade_count": null,
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "window": "721 rows, provider reachability evidence only",
+      "evidence_source": "provider probe",
+      "notes": [
+        "provider path reachable",
+        "not a QQQ branch-performance substitute"
+      ]
+    }
+  },
+  "evidence_source": "manifest+candidate_spec"
+}

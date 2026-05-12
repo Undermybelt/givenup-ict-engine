@@ -1,0 +1,10 @@
+policy_review_loaded=PASS
+required_cells_present=PASS
+all_cells_need_valid_controls=PASS
+source_controls_not_acquired=PASS
+flip_control_not_approved=PASS
+canonical_merge_false=PASS
+downstream_rerun_false=PASS
+accepted_rows_zero=PASS
+strict_full_objective_false=PASS
+update_goal_false=PASS

@@ -1,0 +1,122 @@
+{
+  "auto_quant_pinned_ref": "screen-145809-volatility-breakout-150654",
+  "auto_quant_repo_url": "provider-backed volatility breakout packet derived from settled 145809 screen; not an Auto-Quant-native backtest yet",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_manifest.json",
+  "exported_at": "2026-05-12T15:06:54+08:00",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/checks/volatility_breakout_packet_assertions.out",
+  "manifest_version": "1.0",
+  "source_manifest": {
+    "generated_at": "2026-05-12T06:59:35.911683Z",
+    "inputs": [
+      {
+        "end": "2026-05-12 00:00:00+00:00",
+        "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+        "provider": "binance",
+        "rows": 76429,
+        "start": "2017-08-17 04:00:00+00:00",
+        "symbol": "BTCUSDT"
+      },
+      {
+        "end": "2026-05-11T23:00:00+00:00",
+        "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/ibkr_spy_1h_5y.normalized.csv",
+        "provider": "ibkr",
+        "rows": 20034,
+        "start": "2021-05-13T08:00:00+00:00",
+        "symbol": "SPY"
+      },
+      {
+        "end": "2026-05-11 23:00:00+00:00",
+        "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv",
+        "provider": "yahoo",
+        "rows": 11383,
+        "start": "2024-05-13 00:00:00+00:00",
+        "symbol": "ES"
+      }
+    ],
+    "notes": [
+      "screen only; not Auto-Quant backtest",
+      "branch path fields populated",
+      "requires downstream AQ/Pre-Bayes/BBN/CatBoost/execution-tree admission before promotion"
+    ],
+    "promotion_allowed": false,
+    "protocol": "provider-backed-high-density-factor-screen-v1",
+    "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1",
+    "strategies": [
+      "trend_pullback_resume_v1",
+      "volatility_breakout_follow_v1",
+      "range_z_reversion_v1"
+    ],
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_summary.csv",
+    "trade_count_total": 9388,
+    "trade_usable": false,
+    "trades_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_trades.csv"
+  },
+  "strategies": [
+    {
+      "commit": "provider-backed-screen-145809-volatility-breakout-150654",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_trades.csv",
+      "metadata": {
+        "asset_class": "multi_asset_provider_backed",
+        "base_factor": "volatility_breakout_follow_v1",
+        "expected_regime": "trend_expansion",
+        "factors_used": [
+          "volatility_breakout_follow_v1",
+          "high_volatility",
+          "up_momentum"
+        ],
+        "hypothesis": "Trend-expansion plus high-volatility plus up-momentum continuation can be a branch-local profit factor when provider-backed 1h data agrees.",
+        "mutation_id": "150654_145809_volatility_breakout_follow_v1",
+        "paradigm": "provider_backed_branch_factor_seed",
+        "parent": "145809_provider_backed_high_density_factor_screen_v1",
+        "provider_counts": {
+          "binance": 269,
+          "ibkr": 47,
+          "yahoo": 32
+        },
+        "regime_profit_branch_path": "trend_expansion->high_volatility->up_momentum->volatility_breakout_follow",
+        "status": "support_only_branch_seed_not_auto_quant_native_backtest",
+        "strategy": "volatility_breakout_follow_v1"
+      },
+      "name": "volatility_breakout_follow_v1",
+      "pairs": [
+        "PROVIDER_BACKED/VOL_BREAKOUT"
+      ],
+      "per_pair_metrics": {
+        "PROVIDER_BACKED/VOL_BREAKOUT": {
+          "profit_factor": 1.3270317756098415,
+          "total_profit_pct": 85.34661669245051,
+          "trade_count": 348,
+          "win_rate_pct": 52.29885057471264
+        }
+      },
+      "status": "ok",
+      "timerange": "2017-10-19 -> 2026-04-30",
+      "validation_metrics": {
+        "avg_return": 0.0024524889854152443,
+        "calmar": 0.0,
+        "max_drawdown_pct": 0.0,
+        "profit_factor": 1.3270317756098415,
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "total_profit_pct": 85.34661669245051,
+        "trade_count": 348,
+        "win_rate_pct": 52.29885057471264
+      }
+    }
+  ],
+  "timeframe": "1h_provider_backed",
+  "validation_errors": [
+    {
+      "error": "not_auto_quant_native_backtest",
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T145809+0800-codex-provider-backed-high-density-factor-screen-v1/summaries/provider_backed_high_density_factor_trades.csv"
+    },
+    {
+      "error": "missing_provider_data_rows_for_tvr_kraken_bybit",
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/aq_provider_provenance_volatility_breakout.csv"
+    },
+    {
+      "error": "branch_seed_requires_walk_forward_and_downstream_readback",
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/summaries/volatility_breakout_walkforward_summary.csv"
+    }
+  ]
+}

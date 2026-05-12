@@ -1,0 +1,123 @@
+{
+  "canonical_merge_allowed_now": false,
+  "decision": "blocked_source_label_schema_ready_unscored_no_r6_r3_r5",
+  "downstream_rerun_allowed_now": false,
+  "input_cursor": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "latest_observed_append": "20260512T010506-codex-r6-owner-export-official-contact-route-check-v1",
+  "non_r6_source_label_equivalence_rows_acquired_now": true,
+  "r3_native_subhour_rows_acquired_now": false,
+  "r5_panel_recency_extension_rows_acquired_now": false,
+  "root_readback": [
+    {
+      "branch": "r6_owner_export",
+      "file_count": 0,
+      "missing_required_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "present_files": [],
+      "promotion_use": "R6 direct verifier source-owned normal controls",
+      "required_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "required_files_complete": false,
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false
+    },
+    {
+      "branch": "source_label_equivalence",
+      "file_count": 2,
+      "missing_required_files": [],
+      "present_files": [
+        "source_label_equivalence_provenance.json",
+        "source_label_equivalence_rows.csv"
+      ],
+      "promotion_use": "source-label confidence equivalence",
+      "required_files": [
+        "source_label_equivalence_rows.csv",
+        "source_label_equivalence_provenance.json"
+      ],
+      "required_files_complete": true,
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_exists": true
+    },
+    {
+      "branch": "r3_native_subhour",
+      "file_count": 0,
+      "missing_required_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "present_files": [],
+      "promotion_use": "R3 native sub-hour source labels",
+      "required_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "required_files_complete": false,
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": false
+    },
+    {
+      "branch": "r5_panel_recency_extension",
+      "file_count": 0,
+      "missing_required_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "present_files": [],
+      "promotion_use": "R5 post-2026-01-30 source-panel recency extension",
+      "required_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "required_files_complete": false,
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false
+    }
+  ],
+  "run_id": "20260512T010855-codex-source-root-presence-readback-v1",
+  "same_exhibit_flip_approval_acquired_now": false,
+  "source_label_confidence_gate_now": false,
+  "source_label_schema_ready_unscored": true,
+  "source_label_verifier": {
+    "exit": "docs/experiments/actionable-regime-confidence/runs/20260512T010855-codex-source-root-presence-readback-v1/command-output/source_label_equivalence_verifier.exit",
+    "parsed": {
+      "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+      "package_counts": {
+        "price_root_equivalence_us_index_futures": 248440
+      },
+      "provenance_keys": [
+        "created_at_utc",
+        "date_max",
+        "date_min",
+        "label_counts",
+        "limitations",
+        "market_family_counts",
+        "package_counts",
+        "raw_payload_committed_to_repo",
+        "reconstruction_reason",
+        "row_count",
+        "rows_path",
+        "rows_sha256",
+        "run_id",
+        "source_owner_counts",
+        "sources",
+        "split_counts",
+        "symbol_count",
+        "updated_at_utc",
+        "updated_by"
+      ],
+      "row_count": 248440,
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T010855-codex-source-root-presence-readback-v1/command-output/source_label_equivalence_verifier.stderr.txt",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T010855-codex-source-root-presence-readback-v1/command-output/source_label_equivalence_verifier.stdout.txt"
+  },
+  "strict_full_objective_achieved": false,
+  "valid_source_owned_normal_controls_acquired_now": false
+}

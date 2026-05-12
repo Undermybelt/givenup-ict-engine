@@ -1,0 +1,15 @@
+run_id=20260511T124000+0800-codex-unified-source-label-panel-v1
+board_sha256_at_run=ddb0f825a9c809e77da52e1189169f46a2c4c15aba98fac1e34cb064fe3597d1
+total_label_windows=839
+crosswalk_source_windows=231
+sideways_scoped_dated_windows=608
+by_root={'Bear': 84, 'Bull': 84, 'Crisis': 63, 'Sideways': 608}
+all_active_price_roots_represented=true
+manipulation_represented=false
+confidence_gate_claimed=false
+full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

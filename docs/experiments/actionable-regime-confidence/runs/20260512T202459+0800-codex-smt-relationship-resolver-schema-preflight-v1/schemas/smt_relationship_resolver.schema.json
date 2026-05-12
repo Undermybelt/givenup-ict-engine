@@ -1,0 +1,390 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ict-engine smt_relationship_resolver packet",
+  "type": "object",
+  "required": [
+    "factor_name",
+    "factor_version",
+    "promotion_allowed",
+    "trade_usable",
+    "actionable",
+    "branch_path_contract",
+    "coverage_target",
+    "rows",
+    "per_regime_statistics",
+    "quality_gate"
+  ],
+  "properties": {
+    "factor_name": {
+      "const": "smt_relationship_resolver"
+    },
+    "factor_version": {
+      "type": "string"
+    },
+    "promotion_allowed": {
+      "const": false
+    },
+    "trade_usable": {
+      "const": false
+    },
+    "actionable": {
+      "const": false
+    },
+    "branch_path_contract": {
+      "type": "object",
+      "required": [
+        "main_regime",
+        "sub_regime",
+        "sub_sub_regime_or_profit_factor",
+        "profit_factor",
+        "regime_profit_branch_path"
+      ],
+      "properties": {
+        "main_regime": {
+          "type": "string"
+        },
+        "sub_regime": {
+          "type": "string"
+        },
+        "sub_sub_regime_or_profit_factor": {
+          "type": "string"
+        },
+        "profit_factor": {
+          "type": "string"
+        },
+        "regime_profit_branch_path": {
+          "type": "string"
+        }
+      }
+    },
+    "coverage_target": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 4
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "base_symbol",
+          "comparison_symbol",
+          "relationship_type",
+          "relationship_confidence",
+          "timeframe",
+          "session",
+          "comparison_timeframe",
+          "comparison_session",
+          "timeframe_aligned",
+          "session_overlap",
+          "correlation_window_bars",
+          "recent_correlation",
+          "smt_signal",
+          "base_swing_type",
+          "base_event_time",
+          "base_level",
+          "comparison_swing_type",
+          "comparison_event_time",
+          "comparison_level",
+          "event_window_bars",
+          "event_time_delta_bars",
+          "same_event_window_confirmed",
+          "swept_side",
+          "normalized_for_inverse_correlation",
+          "raw_comparison_swing_type",
+          "raw_comparison_level",
+          "near_pd_array",
+          "pd_array_type",
+          "mss_or_cisd_confirmed",
+          "displacement_confirmed",
+          "provider_provenance",
+          "evidence_source",
+          "confidence",
+          "fail_closed_reason",
+          "confirmation_role",
+          "actionable"
+        ],
+        "properties": {
+          "base_symbol": {
+            "type": "string"
+          },
+          "comparison_symbol": {
+            "type": "string"
+          },
+          "relationship_type": {
+            "enum": [
+              "positive",
+              "negative",
+              "uncertain"
+            ]
+          },
+          "relationship_confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "timeframe": {
+            "type": "string"
+          },
+          "session": {
+            "type": "string"
+          },
+          "comparison_timeframe": {
+            "type": "string"
+          },
+          "comparison_session": {
+            "type": "string"
+          },
+          "timeframe_aligned": {
+            "type": "boolean"
+          },
+          "session_overlap": {
+            "type": "boolean"
+          },
+          "correlation_window_bars": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "recent_correlation": {
+            "type": "number",
+            "minimum": -1,
+            "maximum": 1
+          },
+          "smt_signal": {
+            "enum": [
+              "bullish_smt",
+              "bearish_smt",
+              "none"
+            ]
+          },
+          "base_swing_type": {
+            "enum": [
+              "HH",
+              "LH",
+              "LL",
+              "HL",
+              "equal_high",
+              "equal_low",
+              "n/a"
+            ]
+          },
+          "base_event_time": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "base_level": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "comparison_swing_type": {
+            "enum": [
+              "HH",
+              "LH",
+              "LL",
+              "HL",
+              "equal_high",
+              "equal_low",
+              "n/a"
+            ]
+          },
+          "comparison_event_time": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "comparison_level": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "event_window_bars": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "event_time_delta_bars": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "same_event_window_confirmed": {
+            "type": "boolean"
+          },
+          "swept_side": {
+            "enum": [
+              "buy_side_liquidity",
+              "sell_side_liquidity",
+              "none"
+            ]
+          },
+          "normalized_for_inverse_correlation": {
+            "type": "boolean"
+          },
+          "raw_comparison_swing_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "raw_comparison_level": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "near_pd_array": {
+            "type": "boolean"
+          },
+          "pd_array_type": {
+            "enum": [
+              "FVG",
+              "IFVG",
+              "OB",
+              "breaker",
+              "mitigation",
+              "rejection",
+              "session_high_low",
+              "previous_day_high_low",
+              "none"
+            ]
+          },
+          "mss_or_cisd_confirmed": {
+            "type": "boolean"
+          },
+          "displacement_confirmed": {
+            "type": "boolean"
+          },
+          "provider_provenance": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "fail_closed_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confirmation_role": {
+            "const": "confirmation_only"
+          },
+          "actionable": {
+            "const": false
+          }
+        }
+      }
+    },
+    "per_regime_statistics": {
+      "type": "object",
+      "required": [
+        "trend",
+        "range",
+        "transition",
+        "stress",
+        "other"
+      ],
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "win_rate",
+          "trade_count",
+          "expectancy",
+          "sample_window",
+          "instrument_coverage",
+          "confidence",
+          "fail_closed_reason"
+        ],
+        "properties": {
+          "win_rate": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "trade_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "expectancy": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "sample_window": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "instrument_coverage": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "fail_closed_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "required": [
+        "quality_weight",
+        "allowed_feedback_targets",
+        "downstream_allowed",
+        "fail_closed_reason"
+      ],
+      "properties": {
+        "quality_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "allowed_feedback_targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "downstream_allowed": {
+          "const": false
+        },
+        "fail_closed_reason": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

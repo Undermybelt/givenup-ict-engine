@@ -1,0 +1,16 @@
+PASS run_id=20260512T122136+0800-codex-121607-chronological-calibration-audit-v1
+PASS source_feedback_run_id=20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1
+PASS rows=237
+PASS providers=6
+PASS branches=2
+PASS chronological_periods=3
+PASS cross_provider_ready=True
+PASS cross_period_ready=True
+FAIL_CLOSED cross_instrument_ready=False
+FAIL_CLOSED board_regime_95_ready=False active_confidence=0.5250864595751618 max_market_prob=0.7476877176681956
+FAIL_CLOSED execution_ready=False actionable=False review=observe
+PASS cpd_loss_probability_delta=0.362116
+PASS production_mutation_allowed=false
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

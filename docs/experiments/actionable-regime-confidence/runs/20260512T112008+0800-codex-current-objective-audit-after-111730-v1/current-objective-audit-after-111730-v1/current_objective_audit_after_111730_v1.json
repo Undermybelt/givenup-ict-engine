@@ -1,0 +1,87 @@
+{
+  "artifact_id": "current_objective_audit_after_111730_v1",
+  "artifact_type": "board_b_current_objective_audit",
+  "generated_at_local": "2026-05-12T11:20:08+08:00",
+  "board": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+  "audited_latest_board_markers": [
+    "111403_105014_ingest_bridge_fix",
+    "111538_ibkr_hmds_spy_spotcheck",
+    "111602_tvr_current_provider_fetch_readback",
+    "111730_provider_bridge_duplicate_guard"
+  ],
+  "decision": {
+    "objective_achieved": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "reason": "provider reachability and branch preservation improved, but no same-root six-provider positive AQ branch has survived Pre-Bayes, CatBoost/path-ranker production validation, and execution-tree release"
+  },
+  "requirements": {
+    "regime_rooted_profitable_factor_training": {
+      "status": "partial_fail_closed",
+      "evidence": [
+        "104703 positive BTC EMA/RSI source branch",
+        "104902/105014 BTC pullback positive sleeve",
+        "105637 provider-linked momentum negative or low-support"
+      ],
+      "gap": "no provider-matrix-backed profitable rooted branch"
+    },
+    "branch_path_shape": {
+      "status": "partial",
+      "required_shape": "main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor",
+      "new_positive_evidence": "111403 preserves Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1 into structural target columns and execution candidate",
+      "remaining_gap": "branch preservation is repaired for a replayed BTC pullback sleeve, not yet for a promotable provider-matrix AQ branch"
+    },
+    "ordered_downstream_chain": {
+      "status": "partial_fail_closed",
+      "evidence": [
+        "111403 fixed ingest bridge and carried exact branch into structural target/workflow",
+        "111309/110913 carried provider-linked momentum downstream but source edge was negative/low-support",
+        "110224 exact 104902 downstream remained bootstrap/fail-closed"
+      ],
+      "gap": "Pre-Bayes policy remains absent and CatBoost/path-ranker production validation remains 0/30 in the key repaired branch"
+    },
+    "provider_matrix": {
+      "status": "partial_fail_closed",
+      "required_providers": [
+        "IBKR",
+        "TradingViewRemix/TVR",
+        "yfinance/YF",
+        "Kraken",
+        "Binance",
+        "Bybit"
+      ],
+      "settled_evidence": [
+        "111602 TVR provider-status ready and QQQ 1d rows=21",
+        "111538 direct IBKR SPY daily rows=2 with ushmds activated",
+        "105637 yfinance/Kraken/Binance/Bybit public BTC rows"
+      ],
+      "gap": "not a same-root AQ/provider matrix; IBKR is SPY provider-health only and TVR is QQQ provider-health only"
+    },
+    "catboost_path_ranker_validation": {
+      "status": "not_achieved",
+      "latest_key_branch": "111403_105014_ingest_bridge_fix",
+      "latest_values": {
+        "observation_validation": "146/30",
+        "raw_scored_mature": "0/30",
+        "production_validation": "0/30",
+        "trainer_artifact": "missing",
+        "runtime_selection": "disabled"
+      }
+    },
+    "execution_tree_release": {
+      "status": "not_achieved",
+      "evidence": "111403 exact branch selected but execution candidate stayed ready=false/actionable=false and full workflow fail_closed"
+    },
+    "source_control_and_selected_history": {
+      "status": "not_achieved",
+      "evidence": "latest effective board gates keep selected-history/source-control absent"
+    }
+  },
+  "next_concrete_actions": [
+    "Do not repeat 111403, 111538, or 111602.",
+    "Build a fresh provider-matrix AQ packet that uses current TVR reachability and exact IBKR contract rows inside the same workflow, plus YF/Kraken/Binance/Bybit, and emits valid real trades.",
+    "For the branch-preserved 105014/111403 lane, train/register a path-ranker/CatBoost artifact or otherwise produce raw_scored_mature and production_validation rows, then rerun workflow-status to test execution-tree release.",
+    "Only consider promotion after same-root provider authority, Pre-Bayes policy evidence, CatBoost/path-ranker readiness, execution-tree actionable release, selected-history approval, and source/control unlock all pass."
+  ]
+}

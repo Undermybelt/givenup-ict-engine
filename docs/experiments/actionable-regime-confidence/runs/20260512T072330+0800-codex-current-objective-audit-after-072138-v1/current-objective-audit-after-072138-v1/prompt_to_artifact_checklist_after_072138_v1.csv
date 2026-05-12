@@ -1,0 +1,11 @@
+requirement,evidence,status,gap
+named_board_file,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,present_fail_closed,none
+accepted_regime_root_before_profit_training,root_presence shows R6 owner/export absent and R5 source-panel recency absent; R3 intake remains TSIE-quarantined/Crisis-absent,blocked,required root unlock absent
+branch_path_preserved_through_downstream,workflow closed_loop_branch_admission.status=fail_closed,not_promotable,downstream branch not ready/actionable
+real_chain_provider_autoquant_filter_bbn_catboost_execution_tree,provider AutoQuant Pre-Bayes workflow and path-ranking commands exited 0,partial_diagnostic_only,no selected-data downstream promotion rerun and no mature CatBoost/path-ranking rows
+provider_surfaces_ibkr_tradingviewremix_yfinance_kraken,provider summary entry_model 2/2 live_runtime 1/3 local_runtime 1/2 market_data 1/7,partial_provider_breadth,required provider breadth not all ready
+explicit_user_selected_historical_path,workflow blocking_reason=user_selected_historical_data_missing,blocked,user selection absent
+catboost_path_ranking_maturity,path-ranking rows=1 mature_rows=0 calibrated_rows=0 history_mature_rows=0,blocked,no mature/calibrated ranker rows
+post_072138_hf_exact_source_probe,072333 all exact Hugging Face queries zero rows,negative_evidence,no R5/R3 source route acquired
+post_071839_zenodo_oystacher_probe,072254 required owner/export filename hits zero,negative_evidence,no R6 owner/export controls acquired
+multi_agent_append_only,audit artifact is additive and Current Cursor not edited,pass,none

@@ -1,0 +1,173 @@
+{
+  "candidate_file_hit_count": 119,
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "direct_verifier_run": false,
+    "downstream_promotion_rerun": false,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "source_control_evidence_acquired": false,
+    "split_calibration_run": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "gate_result": "local_required_source_control_sweep_v1=no_new_required_source_control_unlock",
+  "generated_at_utc": "2026-05-11T23:38:02.679625+00:00",
+  "native_subhour_summary": {
+    "dataset_id": "sujinwo/tsie-market-regime-dataset",
+    "limitations": [
+      "Crisis has no direct TSIE source taxonomy class",
+      "trap labels are fail-closed abstain and excluded from accepted rows",
+      "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+      "canonical merge not run",
+      "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+    ],
+    "provenance_run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+    "row_count": 5032903,
+    "sample": {
+      "columns": [
+        "package_id",
+        "source_owner",
+        "source_report_or_dataset",
+        "source_pull_date",
+        "market_family",
+        "symbol",
+        "source_symbol",
+        "equivalence_policy",
+        "event_species",
+        "timestamp_or_date",
+        "timeframe",
+        "main_regime_v2_label",
+        "direct_label",
+        "matched_negative_group_id",
+        "split_role",
+        "source_row_id",
+        "provenance_hash",
+        "source_confidence",
+        "native_timeframe_minutes",
+        "source_regime_label",
+        "source_regime_name",
+        "redaction_notes"
+      ],
+      "exists": true,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "sample_event_species_counts": {
+        "tsie_native_subhour_source_regime_label": 10000
+      },
+      "sample_label_counts": {
+        "Bear": 1685,
+        "Bull": 1992,
+        "Sideways": 6323
+      },
+      "sample_rows_seen": 10000,
+      "sample_split_counts": {
+        "heldout_market": 10000
+      },
+      "sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f"
+    }
+  },
+  "next": "Continue source/control acquisition only before direct verifier, split calibration, canonical merge, selected-data AutoQuant, or downstream promotion.",
+  "r6_approval_decision_summary": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "exists": true,
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "update_goal": false
+  },
+  "run_id": "20260512T073629+0800-codex-local-required-source-control-sweep-v1",
+  "scope": "bounded local filesystem and known target-root sweep only",
+  "source_label_equivalence_summary": {
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 104979,
+      "Crisis": 30623,
+      "Sideways": 57899
+    },
+    "limitations": [
+      "schema readiness is not Board A confidence acceptance",
+      "source confidence calibration remains fail-closed at 0 accepted labels",
+      "daily source-label equivalence rows do not satisfy native sub-hour validation",
+      "R5 source-panel recency extension remains a separate missing intake root",
+      "R6 direct Manipulation controls remain a separate direct-event root"
+    ],
+    "provenance_run_id": "20260512T010053-codex-source-label-equivalence-reconstruction-v1",
+    "row_count": 248440,
+    "sample": {
+      "columns": [
+        "package_id",
+        "source_owner",
+        "source_report_or_dataset",
+        "source_pull_date",
+        "market_family",
+        "symbol",
+        "source_symbol",
+        "equivalence_policy",
+        "event_species",
+        "timestamp_or_date",
+        "timeframe",
+        "main_regime_v2_label",
+        "direct_label",
+        "matched_negative_group_id",
+        "split_role",
+        "source_row_id",
+        "provenance_hash",
+        "redaction_notes"
+      ],
+      "exists": true,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+      "sample_event_species_counts": {
+        "source_panel_daily_market_regime_label": 10000
+      },
+      "sample_label_counts": {
+        "Bear": 2142,
+        "Bull": 3256,
+        "Crisis": 2522,
+        "Sideways": 2080
+      },
+      "sample_rows_seen": 10000,
+      "sample_split_counts": {
+        "calibration": 8824,
+        "heldout_market": 1176
+      },
+      "sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25"
+    }
+  },
+  "target_roots": [
+    {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "path_type": "missing",
+      "status": "absent"
+    },
+    {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "path_type": "missing",
+      "status": "absent"
+    },
+    {
+      "file_count": 2,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "path_type": "directory",
+      "status": "exists"
+    },
+    {
+      "file_count": 2,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "path_type": "directory",
+      "status": "exists"
+    },
+    {
+      "file_count": 1,
+      "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "path_type": "file",
+      "status": "exists"
+    }
+  ]
+}

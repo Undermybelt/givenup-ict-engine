@@ -1,0 +1,84 @@
+{
+  "scan": {
+    "windows": 512,
+    "gate_status_counts": {
+      "blocked": 105,
+      "observe": 407
+    },
+    "decision_hint_counts": {
+      "execution_blocked_regardless_of_prediction": 105,
+      "execution_guarded_due_to_high_transition_hazard": 107,
+      "execution_guarded_due_to_low_remaining_regime_duration": 291,
+      "execution_observe_with_medium_prediction": 9
+    }
+  },
+  "joint_overall": "candidate_found",
+  "joint_targets": {
+    "AvoidBadLossCluster": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "AnyWinCluster": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "ExecutionObserveOrBetter": {
+      "accepted_rules": 35,
+      "selected_rule": {
+        "threshold": 0.9960211614238486,
+        "calibration_success": 107,
+        "calibration_total": 107,
+        "calibration_precision": 1.0,
+        "calibration_wilson_lower": 0.9653427619812514,
+        "test_success": 98,
+        "test_total": 98,
+        "test_precision": 1.0,
+        "test_wilson_lower": 0.9622800098783192,
+        "passes": true
+      }
+    },
+    "LowTransitionHazard": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "DurationViable": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "ReadinessObserveOrReady": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    }
+  },
+  "leaksafe_overall": "no_95_candidate",
+  "leaksafe_targets": {
+    "AvoidBadLossCluster": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "AnyWinCluster": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "RepresentativeWin": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "MaterialWin": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "LowTransitionHazard": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "DurationViable": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "ReadinessObserveOrReady": {
+      "accepted_rules": 0,
+      "selected_rule": null
+    }
+  }
+}

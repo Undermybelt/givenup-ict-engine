@@ -1,0 +1,7 @@
+label,timerange,trade_count,win_rate_pct,total_profit_pct,sharpe,log_path
+full_2011_2025,20110101-20251231,450,52.22222222222223,19.54,0.083910868328626,docs/experiments/actionable-regime-confidence/runs/20260511T183756-codex-board-b-tomac-nq-branch-rc-spa-v1/logs/freqtrade_backtest_full_2011_2025.out
+fold_2011_2014,20110101-20141231,138,47.10144927536232,0.96,0.01708483137128096,docs/experiments/actionable-regime-confidence/runs/20260511T183756-codex-board-b-tomac-nq-branch-rc-spa-v1/logs/freqtrade_backtest_fold_2011_2014.out
+fold_2015_2018,20150101-20181231,136,45.588235294117645,11.76,0.223368427424793,docs/experiments/actionable-regime-confidence/runs/20260511T183756-codex-board-b-tomac-nq-branch-rc-spa-v1/logs/freqtrade_backtest_fold_2015_2018.out
+fold_2019_2021,20190101-20211231,102,62.745098039215684,10.9,0.27016136585842315,docs/experiments/actionable-regime-confidence/runs/20260511T183756-codex-board-b-tomac-nq-branch-rc-spa-v1/logs/freqtrade_backtest_fold_2019_2021.out
+fold_2022_2023,20220101-20231231,9,44.44444444444444,-5.81,-0.14097429561614502,docs/experiments/actionable-regime-confidence/runs/20260511T183756-codex-board-b-tomac-nq-branch-rc-spa-v1/logs/freqtrade_backtest_fold_2022_2023.out
+fold_2024_2025,20240101-20251231,0,0.0,0.0,0.0,docs/experiments/actionable-regime-confidence/runs/20260511T183756-codex-board-b-tomac-nq-branch-rc-spa-v1/logs/freqtrade_backtest_fold_2024_2025.out

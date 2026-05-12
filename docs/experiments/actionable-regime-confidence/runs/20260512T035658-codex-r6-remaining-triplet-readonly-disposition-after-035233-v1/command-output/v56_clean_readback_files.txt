@@ -1,0 +1,6 @@
+total 248
+drwxr-xr-x@ 5 thrill3r  wheel    160 May 11 23:58 .
+drwxr-xr-x@ 3 thrill3r  wheel     96 May 11 23:58 ..
+-rw-r--r--@ 1 thrill3r  wheel  58890 May 11 23:55 matched_negative_normal_activity_rows.csv
+-rw-r--r--@ 1 thrill3r  wheel  58924 May 11 23:55 positive_spoofing_layering_rows.csv
+-rw-r--r--@ 1 thrill3r  wheel   1458 May 11 23:58 provenance_manifest.json

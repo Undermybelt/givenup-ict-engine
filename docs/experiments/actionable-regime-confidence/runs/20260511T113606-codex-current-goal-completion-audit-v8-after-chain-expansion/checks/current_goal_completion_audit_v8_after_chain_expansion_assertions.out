@@ -1,0 +1,15 @@
+PASS objective_restated_as_deliverables=true
+PASS active_taxonomy=MainRegimeV2
+PASS target_price_roots=Bull,Bear,Sideways,Crisis
+PASS targeted_full_matrix_roots_accepted=0
+PASS accepted_parent_root_slots_added_after_v6=0
+PASS midsummer_bsc_direct_rows_added=1870
+PASS midsummer_chain_direct_rows_added=5693
+PASS midsummer_total_direct_rows_after_v6=7563
+PASS full_objective_achieved=false
+PASS call_update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+GATE blocked_completion_audit_v8_parent_root_full_matrix_still_incomplete_after_chain_expansion

@@ -1,0 +1,100 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_before_artifact": "b286771cfbc8c5ffbae3e3d2b0d4974267f6810b9607ef8669fd322a73a18dde",
+  "candidates": [
+    {
+      "decision": "rejected_known_sidecar_no_crisis_single_idx_rule_labels",
+      "id": "tsie_idx",
+      "last_modified": "2026-04-13T13:27:46.000Z",
+      "license": "mit",
+      "notes": "TSIE: Temporal Signal Intelligence Engine \u2014 Market Regime Dataset (IDX)\n\ud83d\udcca Overview\nThis dataset provides a multi-class market regime classification for Indonesian stock market (IDX), designed for time-series modeling using architectures such as Temporal Fusion Transformer (TFT).\nThe dataset includes:\n\nOHLCV price data\nEngineered technical indicators\nTemporal features\nSession-aware features (IDX trading hours)\nMulti-class regime labels based on rule-based signal logic\n\n\n\ud83c\udfaf Task\nMulti-class\u2026 See th",
+      "reason": "TSIE has full parquet support and native subhour timestamps but no Crisis semantic, single IDX market context, rule/OHLCV-derived labels, and prior full-parquet Board A gates accepted 0 roots.",
+      "siblings": ".gitattributes,README.md,tft_dataset_labeled.parquet",
+      "source": "sujinwo/tsie-market-regime-dataset",
+      "unlock": false
+    },
+    {
+      "decision": "rejected_hmm_proxy_single_crypto_no_mainregimev2",
+      "id": "btc_hmm6",
+      "last_modified": "2025-12-13T08:25:14.000Z",
+      "license": "cc-by-4.0",
+      "notes": "\n\t\n\t\t\n\t\tMulti\u2011Timeframe Market Regimes (HMM\u20116)\n\t\n\n\n\t\n\t\t\n\t\tDataset Summary\n\t\n\nThis dataset provides labeled crypto market regimes derived from multi-timeframe (5m, 15m) OHLCV data and technical indicators.\nMarket regimes are inferred using a 6-state Hidden Markov Model (HMM).\nThe dataset is suitable for market regime detection, regime-aware modeling, and sequence modeling baselines (LSTM / Transformers).\nNo future leakage: all indicators are computed using information available up to the\u2026 See the",
+      "reason": "Multi-timeframe BTC rows are HMM-inferred labels, not source-owned MainRegimeV2 labels, and do not cover equity/index cross-market roots or Crisis/Sideways/Bull/Bear as accepted source labels.",
+      "siblings": ".gitattributes,README.md,data/test.csv,data/test.parquet,data/train.csv,data/train.parquet,data/validation.csv,data/validation.parquet",
+      "source": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "unlock": false
+    },
+    {
+      "decision": "rejected_binary_risk_on_off_small_single_market",
+      "id": "nifty50_binary",
+      "last_modified": "2025-11-05T02:35:05.000Z",
+      "license": "mit",
+      "notes": "\n\t\n\t\t\n\t\t\ud83d\udcca NIFTY 50 Market Regime Dataset\n\t\n\nDataset for training machine learning models to predict market regimes (RISK_ON/RISK_OFF) in Indian financial markets.\n\n\t\n\t\t\n\t\t\ud83d\udccb Dataset Description\n\t\n\nThis dataset contains technical indicators and corresponding market regime labels for NIFTY 50, used to train binary classification models for regime prediction.\n\n\t\n\t\t\n\t\tMarket Regimes\n\t\n\n\nRISK_ON (1): Favorable market conditions - lower volatility, bullish momentum\nRISK_OFF (0): Cautious conditions\u2026 Se",
+      "reason": "Binary RISK_ON/RISK_OFF NIFTY50 labels cannot cover Bull/Bear/Sideways/Crisis roots and are a small single-market technical-indicator label panel.",
+      "siblings": ".gitattributes,README.md,dataset_info.json,market_regime_data_nifty50.csv",
+      "source": "AAdevloper/nifty50-market-regime",
+      "unlock": false
+    },
+    {
+      "decision": "rejected_daily_hmm_labels_not_r5_existing_panel",
+      "id": "nifty500_behavior",
+      "last_modified": "",
+      "license": "",
+      "notes": "name                                size  creationDate                \n-------------------------------  -------  --------------------------  \nbehavior_regime_predictions.csv   373941  2026-04-15 15:25:34.251000  \nfinal_features_matrix.csv        2561196  2026-04-15 15:25:34.339000  \nregime_timeline_history.csv      1401545  2026-04-15 15:25:34.321000  \n",
+      "reason": "Known daily NIFTY behavior labels reach 2026-03-20 but are HMM/behavior labels such as Calm/Stress, not the existing 39-ticker R5 panel recency extension or accepted MainRegimeV2 source labels.",
+      "siblings": "behavior_regime_predictions.csv   373941  2026-04-15 15:25:34.251000; final_features_matrix.csv        2561196  2026-04-15 15:25:34.339000; regime_timeline_history.csv      1401545  2026-04-15 15:25:34.321000",
+      "source": "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+      "unlock": false
+    },
+    {
+      "decision": "rejected_stale_weekly_unsupervised",
+      "id": "us_market_regimes",
+      "last_modified": "",
+      "license": "",
+      "notes": "name                              size  creationDate                \n------------------------------  ------  --------------------------  \ngmm_regimes.csv                 122780  2026-01-23 12:42:23.815000  \nhmm_regimes.csv                 115919  2026-01-23 12:42:23.828000  \nmarket_features_weekly.csv      113620  2026-01-23 12:42:23.836000  \nmarket_features_weekly_std.csv  109453  2026-01-23 12:42:23.856000  \n",
+      "reason": "Known US market-regimes files are weekly HMM/GMM/feature tables stale to 2023/2024, not post-cutoff MainRegimeV2 rows or native subhour source labels.",
+      "siblings": "gmm_regimes.csv                 122780  2026-01-23 12:42:23.815000; hmm_regimes.csv                 115919  2026-01-23 12:42:23.828000; market_features_weekly.csv      113620  2026-01-23 12:42:23.836000; market_features_weekly_std.csv  109453  2026-01-23 12:42:23.856000",
+      "source": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "unlock": false
+    },
+    {
+      "decision": "rejected_known_daily_no_post_cutoff_rows",
+      "id": "stock_market_regimes",
+      "last_modified": "",
+      "license": "",
+      "notes": "name                                        size  creationDate                \n--------------------------------------  --------  --------------------------  \ndataset_summary.txt                          588  2026-02-01 02:25:30.808000  \nregime_analysis_by_ticker.csv               1278  2026-02-01 02:25:30.838000  \nregime_by_year.csv                           758  2026-02-01 02:25:30.861000  \nstock_market_regimes_2000_2026.csv      37155794  2026-02-01 02:25:31.845000  \nstock_market_regimes_2000_",
+      "reason": "Known source panel remains daily and already counted; latest local/live checks show no rows after 2026-01-30 for the R5 recency tail.",
+      "siblings": "dataset_summary.txt                          588  2026-02-01 02:25:30.808000; regime_analysis_by_ticker.csv               1278  2026-02-01 02:25:30.838000; regime_by_year.csv                           758  2026-02-01 02:25:30.861000; stock_market_regimes_2000_2026.csv      37155794  2026-02-01 02:25:31.845000; stock_market_regimes_2000_2026.parquet   6583934  2026-02-01 02:25:31.457000",
+      "source": "mafaqbhatti/stock-market-regimes-20002026",
+      "unlock": false
+    }
+  ],
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "r3_r5_source_selection_readback_after_061855_v1=no_candidate_selected_no_required_root_no_promotion",
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "run_id": "20260512T062409+0800-codex-r3-r5-source-selection-readback-after-061855-v1",
+  "screen_061855_present": true,
+  "selected_unlock_count": 0,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_root_mutated": false,
+  "trade_usable": false,
+  "tsie_mapped_counts": {
+    "ABSTAIN_TRAP": 2161093,
+    "Bear": 1435764,
+    "Bull": 1435055,
+    "Sideways": 2162084
+  },
+  "tsie_parquet_present": true,
+  "tsie_parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+  "tsie_rows": 7193996,
+  "tsie_summary_present": true,
+  "tsie_time_max": "2026-04-07T02:00:00",
+  "tsie_time_min": "1990-06-07T02:00:00",
+  "update_goal": false
+}

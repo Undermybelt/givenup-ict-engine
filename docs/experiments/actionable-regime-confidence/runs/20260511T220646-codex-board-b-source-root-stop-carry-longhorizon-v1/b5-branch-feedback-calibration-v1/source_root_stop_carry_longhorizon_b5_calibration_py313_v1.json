@@ -1,0 +1,49 @@
+{
+  "run_id": "20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-b5-calibration-py313-v1",
+  "selected_total": 48,
+  "root_counts": {
+    "Bull": 12,
+    "Bear": 12,
+    "Sideways": 12,
+    "Crisis": 12
+  },
+  "required_branch_paths": [
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+  ],
+  "catboost_trained": true,
+  "catboost_model": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/catboost/path_ranker_model_py313/catboost_model.cbm",
+  "policy_training": {
+    "trainer_artifact_ready": true,
+    "trainer_artifact_status": "runtime_eligible",
+    "runtime_selection_ready": true,
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "runtime_active_match_count": 2,
+    "runtime_history_match_count": 6,
+    "raw_scored_mature_rows": 274,
+    "production_validation_ready": true,
+    "production_validation_rows": 274,
+    "observation_validation_ready": true,
+    "observation_validation_rows": 48,
+    "summary_line": "Ranker runtime: structural_path_ranking_target rows=50 history_rows=276 mature_rows=48 history_mature_rows=274 raw_scored_mature=274/30 production_validation=274/30 observation_validation=48/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=2"
+  },
+  "pre_bayes_gate_status": null,
+  "pre_bayes_policy_present": false,
+  "workflow_structural_path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:update:actionable:execute_recommended_path:primary",
+  "workflow_path_is_required_branch_path": false,
+  "workflow_path_ranker_raw_score": 0.030246474815095604,
+  "workflow_runtime_source": "candidate_set",
+  "execution_candidate_raw": "null",
+  "execution_candidate_ready": false,
+  "closed_loop_confidence_ready": false,
+  "promotion_allowed": false,
+  "decision": "b5_catboost_runtime_ready_but_execution_tree_branch_path_not_consumed",
+  "artifact_paths": {
+    "readback_md": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/source_root_stop_carry_longhorizon_b5_calibration_py313_v1.md",
+    "readback_json": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/source_root_stop_carry_longhorizon_b5_calibration_py313_v1.json",
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/source_root_stop_carry_longhorizon_b5_calibration_py313_v1_assertions.out",
+    "commands": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/command-output"
+  }
+}

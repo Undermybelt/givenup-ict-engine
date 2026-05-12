@@ -1,0 +1,8 @@
+gate,observed,required,pass
+positive_support,13,50,False
+negative_support,13,50,False
+chronological_split,10,2,True
+heldout_symbol_or_venue,symbols=6;venues=3,symbol>=2 or venue>=2,True
+wilson95_lcb,0.771905,>=0.95,False
+broad_normal_sample,same-event CFTC genuine-order control seeds; not broad normal-market calibration,source-owned broad normal activity sample,False
+direct_species_coverage,spoofing_layering,spoofing_layering;quote_spoofing;quote_stuffing;pinging;bear_raid;painting_tape,False

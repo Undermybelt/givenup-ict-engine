@@ -1,0 +1,10 @@
+PASS decision=us_panel_source_label_duplicate_cleanup_v1=duplicate_extension_removed_schema_ready_unscored
+PASS rows_before_cleanup=493445
+PASS rows_after_cleanup=248440
+PASS rows_removed=245005
+PASS verifier_status=schema_ready_unscored
+PASS oversized_repo_snapshot_removed=true
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

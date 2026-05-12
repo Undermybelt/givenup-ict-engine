@@ -1,0 +1,208 @@
+{
+  "bbn_posterior": {
+    "confidence": 0.50735,
+    "dominant_state": "range",
+    "node": "market_regime",
+    "posterior": {
+      "bear": 0.263604,
+      "bull": 0.229046,
+      "range": 0.50735
+    },
+    "source": "docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/state_115700_six_provider_1h_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/bbn_network.json"
+  },
+  "branch_path_counts": {
+    "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": 164,
+    "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": 73
+  },
+  "catboost_score_paths": 2,
+  "classification": "layer_contract_complete_but_execution_fail_closed",
+  "examples": [
+    {
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "failures": [
+        "execution_not_ready_or_actionable",
+        "execution_review_not_promotional",
+        "blocking_truth_user_selected_historical_data_missing"
+      ],
+      "provider": "yfinance",
+      "trade_id": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_yfinance_ProviderCryptoMomentumStateV1_00001"
+    },
+    {
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "failures": [
+        "execution_not_ready_or_actionable",
+        "execution_review_not_promotional",
+        "blocking_truth_user_selected_historical_data_missing"
+      ],
+      "provider": "yfinance",
+      "trade_id": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_yfinance_ProviderCryptoMomentumStateV1_00002"
+    },
+    {
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "failures": [
+        "execution_not_ready_or_actionable",
+        "execution_review_not_promotional",
+        "blocking_truth_user_selected_historical_data_missing"
+      ],
+      "provider": "yfinance",
+      "trade_id": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_yfinance_ProviderCryptoMomentumStateV1_00003"
+    },
+    {
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "failures": [
+        "execution_not_ready_or_actionable",
+        "execution_review_not_promotional",
+        "blocking_truth_user_selected_historical_data_missing"
+      ],
+      "provider": "yfinance",
+      "trade_id": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_yfinance_ProviderCryptoMomentumStateV1_00004"
+    },
+    {
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "failures": [
+        "execution_not_ready_or_actionable",
+        "execution_review_not_promotional",
+        "blocking_truth_user_selected_historical_data_missing"
+      ],
+      "provider": "yfinance",
+      "trade_id": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_yfinance_ProviderCryptoMomentumStateV1_00005"
+    },
+    {
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "failures": [
+        "execution_not_ready_or_actionable",
+        "execution_review_not_promotional",
+        "blocking_truth_user_selected_historical_data_missing"
+      ],
+      "provider": "yfinance",
+      "trade_id": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_yfinance_ProviderCryptoMomentumStateV1_00006"
+    },
+    {
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "failures": [
+        "execution_not_ready_or_actionable",
+        "execution_review_not_promotional",
+        "blocking_truth_user_selected_historical_data_missing"
+      ],
+      "provider": "yfinance",
+      "trade_id": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_yfinance_ProviderCryptoMomentumStateV1_00007"
+    },
+    {
+      "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "failures": [
+        "execution_not_ready_or_actionable",
+        "execution_review_not_promotional",
+        "blocking_truth_user_selected_historical_data_missing"
+      ],
+      "provider": "yfinance",
+      "trade_id": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_yfinance_ProviderCryptoMomentumStateV1_00008"
+    }
+  ],
+  "execution_tree_decision": {
+    "actionable": false,
+    "artifact_id": "execution-candidate:structural-recommended-path:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:structural-candidates:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:dccb4f37f5bf6553",
+    "candidate_set_id": "structural-candidates:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:dccb4f37f5bf6553",
+    "candidate_set_size": 3,
+    "candidate_status": "execution_blocked",
+    "decision_hint": "posterior=0.384 prior=0.384 invalidation_rate=0.000",
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.32853919817900823,
+    "generated_at": "2026-05-12T04:12:53.394164Z",
+    "path": "structural-recommended-path-bundle:Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+    "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+    "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+    "path_ranker_calibrated_path_prob": 0.34309623430962344,
+    "path_ranker_path_prob_lower_bound": 0.2928391743629338,
+    "path_ranker_raw_score": 0.9868275780976984,
+    "path_ranker_runtime_source": "history_path",
+    "persisted": false,
+    "pre_bayes_gate_status": "pass_neutralized",
+    "pre_bayes_policy_version": "318900600c5e8cf2",
+    "ready": false,
+    "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+    "review_status": "observe",
+    "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+    "selected_path_probability": 0.3119273253369391,
+    "source_phase": "structural-recommended-path-bundle",
+    "source_run_id": "analyze:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:20260512T041253.394Z",
+    "structural_recommended_path_bundle": {
+      "candidate_set_id": "structural-candidates:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:dccb4f37f5bf6553",
+      "candidate_set_size": 3,
+      "composite_score": 0.36588490804331847,
+      "confirmation_summary": "history_records=164 followed=164",
+      "current_posterior": 0.38414634146341464,
+      "direction": "bull",
+      "experience_prior": 0.38414634146341464,
+      "historical_invalidation_rate": 0.0,
+      "historical_total_records": 164,
+      "invalidation_summary": "do not collapse exact feedback path into a generic structural path",
+      "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "path_ranker_calibrated_path_prob": 0.34309623430962344,
+      "path_ranker_execution_gate_status": "observe",
+      "path_ranker_path_prob_lower_bound": 0.2928391743629338,
+      "path_ranker_raw_score": 0.9868275780976984,
+      "path_ranker_runtime": {
+        "applied_path_count": 5,
+        "artifact_match_count": 0,
+        "candidate_set_match_count": 0,
+        "enabled": true,
+        "history_match_count": 5,
+        "reuse_mode": "prefer_history",
+        "score_generator": "pandas_path_ranker_trainer.py",
+        "score_model_artifact_uri": "docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/path-ranker/catboost_feature_support_v1/catboost_model_augmented/catboost_model.cbm",
+        "score_model_family": "catboost",
+        "score_source_kind": "external_model",
+        "status": "using_history_scores"
+      },
+      "path_ranker_runtime_source": "history_path",
+      "rank": 1,
+      "recommended_command": "ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/state_115700_six_provider_1h_chain_v1'",
+      "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+      "selected_path_probability": 0.3119273253369391,
+      "stop_summary": "use the recorded branch feedback stop/exit contract",
+      "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+      "trigger_summary": "preserve exact structural feedback path Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "why_this_path": "posterior=0.384 prior=0.384 invalidation_rate=0.000"
+    },
+    "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+    "trade_direction": "bull",
+    "version": 0
+  },
+  "failure_counts": {
+    "blocking_truth_user_selected_historical_data_missing": 237,
+    "execution_not_ready_or_actionable": 237,
+    "execution_review_not_promotional": 237
+  },
+  "gate_result": "fail_closed:execution_observe_and_user_selected_history_missing",
+  "layer_contract_complete_rows": 237,
+  "layered_rows_jsonl": "docs/experiments/actionable-regime-confidence/runs/20260512T121542+0800-codex-120630-115700-layered-postchain-validator-v1/derived/115700_layered_postchain_rows.jsonl",
+  "promotion_allowed": false,
+  "promotion_quality_market_factor_rows": 0,
+  "provider_counts": {
+    "binance_public": 52,
+    "bybit_public": 51,
+    "ibkr_paxos_long_midpoint": 44,
+    "kraken_public": 32,
+    "tvr_default_binance": 37,
+    "yfinance": 21
+  },
+  "run_id": "20260512T121542+0800-codex-120630-115700-layered-postchain-validator-v1",
+  "source_aq_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "source_chain_run_id": "20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1",
+  "source_report": "docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/115700-six-provider-1h-downstream-chain-v1/115700_six_provider_1h_downstream_chain_v1.json",
+  "source_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.jsonl",
+  "total_rows": 237,
+  "trade_usable": false,
+  "update_goal": false,
+  "workflow_blocking_truth": {
+    "evidence": [
+      "historical data reuse requires explicit user path selection",
+      "ask-user: Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/state_115700_six_provider_1h_chain_v1'"
+    ],
+    "next_command": "ask-user: Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/state_115700_six_provider_1h_chain_v1'",
+    "reason": "user_selected_historical_data_missing",
+    "stage": "analyze",
+    "status": "blocked"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-11T19:32:59Z",
+  "generated_at": "2026-05-11T19:32:59.081936Z",
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:B2R_NQ_COST_CRISIS_REPAIR_032157:20260511T193259.009Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "18f35e7365e0b192",
+    "data_fingerprint": "06c8bb057ee4b218"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ask-user: Before using historical data for B2R_NQ_COST_CRISIS_REPAIR_032157 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --data docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-chain/state_bundle_v1",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.350 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for B2R_NQ_COST_CRISIS_REPAIR_032157 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --data docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-chain/state_bundle_v1",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.35,
+  "consensus_strength": 0.35,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.350 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350",
+    "executor=xgboost_file action=Observe confidence=0.350 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350"
+  ],
+  "split_explanations": [
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "06c8bb057ee4b218",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "range",
+  "posterior_confidence": 0.39931857543136917,
+  "posterior_probabilities": {
+    "range": 0.3528704545302174,
+    "stress": 0.1766356060961594,
+    "transition": 0.23524696968681164,
+    "trend": 0.23524696968681164
+  },
+  "posterior_evidence": [
+    "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.869 multi_timeframe_entry_alignment_score=0.994",
+    "long/short support gap 0.070 is too small, so alignment is treated as mixed",
+    "multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized",
+    "evidence quality is too low, so BBN input is downgraded to neutralized defaults",
+    "pre_bayes_quality_score=0.399 gating_status=observe_only",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629",
+    "market_state_source=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550",
+    "market_state_source=rationale=volatility=ElevatedVol conf=0.66",
+    "market_state_source=rationale=structure=Trending conf=0.59",
+    "market_state_source=rationale=behavior=RiskOff conf=0.55",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63",
+    "read_only_regime_bbn_soft_evidence_strength=moderate",
+    "read_only_regime_bbn_soft_evidence_weight=0.650",
+    "read_only_regime_bbn_decision_state=accepted",
+    "read_only_regime_bbn_trade_usable=true",
+    "read_only_regime_bbn_label=NQRootAdaptiveCostCrisisRepairV3",
+    "read_only_regime_bbn_label_set=Bull_->_TrendExpansion_->_NQSourceRootCarry_->_NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72,Bear_->_BearMarketDrawdown_->_NQHighVixOversoldRebound_->_NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72,Sideways_->_RangeConsolidation_->_NQCalmVixZReversion_->_NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72,Crisis_->_ExtremeStress_->_NQFlushRebound_->_NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72,Manipulation(scoped)_->_TelegramPumpEvent_->_ProviderStopTakeShort_->_ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72",
+    "read_only_regime_bbn_transition_hazard=0.000",
+    "read_only_regime_bbn_reasons=branch_rc_spa_all_price_roots_passed,scoped_manipulation_component_passed",
+    "regime_bundle_bbn_evidence_skipped=no_supported_label"
+  ]
+}

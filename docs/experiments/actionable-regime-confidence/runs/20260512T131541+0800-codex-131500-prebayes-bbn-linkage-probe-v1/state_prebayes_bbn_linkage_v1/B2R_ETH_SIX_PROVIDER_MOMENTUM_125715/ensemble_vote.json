@@ -1,0 +1,77 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-12T05:20:28Z",
+  "generated_at": "2026-05-12T05:20:28.297281Z",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:20260512T052028.239Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "b3f8c0bf78541ed0",
+    "data_fingerprint": "5a7b1342fd5ec9b0"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "favor_mean_reversion_only",
+  "recommended_command": "ask-user: Before using historical data for B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/state_prebayes_bbn_linkage_v1'",
+  "human_next_triage": "hard_blocked=false ensemble_action=favor_mean_reversion_only consensus=0.695 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/state_prebayes_bbn_linkage_v1'",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.6947079454968121,
+  "consensus_strength": 0.6947079454968121,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=favor_mean_reversion_only confidence=0.647 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.647",
+    "executor=xgboost_file action=favor_mean_reversion_only confidence=0.753 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.753"
+  ],
+  "split_explanations": [
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "posterior_override=range:0.753",
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "posterior_override=range:0.753"
+  ],
+  "executor_scorecards": [],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "5a7b1342fd5ec9b0",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "range",
+  "posterior_confidence": 0.5422810893194534,
+  "posterior_probabilities": {
+    "range": 0.7525250288744311,
+    "stress": 0.17222246823812573,
+    "transition": 0.0752525028874431,
+    "trend": 0.0
+  },
+  "posterior_evidence": [
+    "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.946",
+    "long/short support gap 0.026 is too small, so alignment is treated as mixed",
+    "pre_bayes_quality_score=0.542 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=RangeConsolidation secondary_regime=TightRange overall_confidence=0.412",
+    "market_state_source=volatility=LowVol:0.784 liquidity=NormalLiquidity:0.489 structure=Unknown:0.300 behavior=Neutral:0.450",
+    "market_state_source=rationale=volatility=LowVol conf=0.78",
+    "market_state_source=rationale=primary=RangeConsolidation secondary=TightRange overall=0.41"
+  ]
+}

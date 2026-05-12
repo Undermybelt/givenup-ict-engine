@@ -1,0 +1,13 @@
+PASS gate_result=unshimmed_run_failed_aiodns_no_promotion
+PASS exit_code=1
+PASS strategies_discovered=3
+PASS backtests_succeeded=0
+PASS backtests_failed=3
+PASS aiodns_binance_market_load_failure=true
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS canonical_merge_allowed=false
+PASS downstream_promotion_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS trade_usable=false
+PASS update_goal=false

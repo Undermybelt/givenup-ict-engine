@@ -1,0 +1,1 @@
+/Users/thrill3r/.cache/uv/builds-v0/.tmpBpnvrm/bin/python scripts/auto_quant_external/fetch_external.py binance-kline --symbol BTCUSDT --interval 1h --start 2026-02-12 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/data/raw/binance_btcusdt_1h.csv

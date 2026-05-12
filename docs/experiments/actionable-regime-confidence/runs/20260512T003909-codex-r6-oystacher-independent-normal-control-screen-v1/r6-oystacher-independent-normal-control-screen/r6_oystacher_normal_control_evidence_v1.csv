@@ -1,0 +1,4 @@
+evidence,value,decision
+parsed_side_counts,"{""FLIP"": 1553, ""SPOOF"": 5182}",only SPOOF/FLIP labels are materialized from Exhibit A
+negative_activity_counts,"{""same_exhibit_flip"": 1553}",candidate controls are same-exhibit FLIP rows
+independent_normal_rows,0,no independent normal rows found in materialized Exhibit A

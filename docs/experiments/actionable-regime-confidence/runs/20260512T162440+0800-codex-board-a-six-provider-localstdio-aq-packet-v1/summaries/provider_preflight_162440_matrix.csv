@@ -1,0 +1,7 @@
+provider,provider_symbol,timeframe,exit,rows,first_timestamp,last_timestamp,same_symbol_as_crypto_packet,usable_for_current_aq_authority,notes
+IBKR,SPY STK SMART/ARCA,1h,0,17,2026-05-11T08:00:00+00:00,2026-05-12T08:00:00+00:00,False,False,"Current reachable IBKR row is SPY context, not BTC/crypto same-symbol AQ input."
+TradingViewRemix/TVR,BTC-USD,1h,0,720,2026-04-12T09:00:00Z,2026-05-12T08:38:22Z,True,True,Local-stdio tradingview_mcp route; remote HTTP API key path intentionally unset.
+yfinance/YF,BTC-USD,1h,0,263,2026-05-01 00:00:00+00:00,2026-05-11 23:00:00+00:00,True,True,Public Yahoo HTTP OHLCV.
+Kraken,PF_XBTUSD,1h,0,265,2026-05-01 00:00:00+00:00,2026-05-12 00:00:00+00:00,False,True,"Kraken futures BTC-perp public OHLCV; related instrument, not exact spot BTCUSDT."
+Binance,BTCUSDT,1h,0,265,2026-05-01 00:00:00+00:00,2026-05-12 00:00:00+00:00,True,True,Public Binance spot OHLCV.
+Bybit,BTCUSDT linear,1h,0,265,2026-05-01 00:00:00+00:00,2026-05-12 00:00:00+00:00,False,True,"Public Bybit linear-perp OHLCV; related instrument, not exact spot BTCUSDT."

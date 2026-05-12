@@ -1,0 +1,3 @@
+status 429
+content_type application/json
+body_prefix {"error": "Rate limit exceeded. Retry after 12183s."}

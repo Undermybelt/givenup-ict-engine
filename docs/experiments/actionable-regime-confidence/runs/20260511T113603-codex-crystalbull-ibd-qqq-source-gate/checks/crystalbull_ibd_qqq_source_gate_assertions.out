@@ -1,0 +1,17 @@
+PASS active_taxonomy=MainRegimeV2
+PASS source=CrystalBull_IBD_Market_Pulse
+PASS raw_page_committed=false
+PASS qqq_daily_points_parsed=4957
+PASS train_only_selection=true
+PASS no_future_or_target_predictors
+PASS thresholds_relaxed=false
+PASS bull_calibration_wilson95=0.797578
+PASS bull_test_wilson95=0.910274
+PASS bear_calibration_wilson95=0.686054
+PASS bear_test_wilson95=0.597406
+PASS sideways_calibration_wilson95=0.000000
+PASS sideways_test_wilson95=0.287556
+PASS crisis_missing_from_source_axis
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS gate_result=blocked_crystalbull_ibd_qqq_daily_source_gate_below_95_and_incomplete_roots

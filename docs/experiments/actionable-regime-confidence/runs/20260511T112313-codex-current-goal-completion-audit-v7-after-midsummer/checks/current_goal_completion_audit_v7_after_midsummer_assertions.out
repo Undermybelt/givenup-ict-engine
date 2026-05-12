@@ -1,0 +1,12 @@
+PASS active_taxonomy=MainRegimeV2
+PASS objective_restated_as_deliverables=true
+PASS prompt_to_artifact_checklist_present=true
+PASS latest_targeted_gap_roots_accepted=0
+PASS latest_direct_manipulation_rows_added=1870
+PASS accepted_parent_root_slots_added_after_v6=0
+PASS goal_achieved=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+GATE blocked_completion_audit_v7_parent_root_full_matrix_still_incomplete

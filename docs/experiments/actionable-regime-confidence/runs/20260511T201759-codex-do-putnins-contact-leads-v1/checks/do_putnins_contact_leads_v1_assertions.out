@@ -1,0 +1,8 @@
+PASS decision=do_putnins_contact_leads_v1=public_contact_paths_ready_rows_not_acquired
+PASS contact_lead_count=4
+PASS request_template_available=true
+PASS request_sent=false
+PASS rows_acquired=false
+PASS accepted_rows_added=0
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

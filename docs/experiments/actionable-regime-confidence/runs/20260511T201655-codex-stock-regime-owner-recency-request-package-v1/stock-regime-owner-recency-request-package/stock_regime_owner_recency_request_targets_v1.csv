@@ -1,0 +1,5 @@
+priority,symbol,main_regime_v2_label,split_role,min_new_source_sessions,package_id
+1,XOM,Sideways,heldout_time,5,native_subhour_overlap_after_recency
+2,UNH,Bear,calibration,7,native_subhour_overlap_after_recency
+3,^DJI,Sideways,calibration,7,native_subhour_overlap_after_recency
+4,AMD,Bear,calibration,10,native_subhour_overlap_after_recency

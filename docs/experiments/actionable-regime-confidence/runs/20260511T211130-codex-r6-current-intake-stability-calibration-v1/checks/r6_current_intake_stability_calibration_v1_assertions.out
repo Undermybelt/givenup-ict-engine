@@ -1,0 +1,14 @@
+PASS decision=r6_current_intake_stability_calibration_v1=stable_snapshot_support_wilson_broad_control_blocked
+PASS stable_snapshot=true
+PASS verifier_returncode=0
+PASS positive_rows=9
+PASS matched_negative_rows=9
+PASS chronological_split_ok=true
+PASS heldout_symbol_or_venue_ok=true
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS combined_min_wilson95_lcb=0.700855
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

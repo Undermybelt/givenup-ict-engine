@@ -1,0 +1,32 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:TPR150352:20260512T072043.838Z",
+  "generated_at": "2026-05-12T07:20:43.838215Z",
+  "symbol": "TPR150352",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:TPR150352:20260512T071834.199Z",
+  "ranking": [
+    {
+      "unit_label": "ibkr SPY 1h trend-expansion normal-vol pullback-resume",
+      "status": "completed",
+      "win_rate_pct": 40.0943,
+      "sharpe": 0.1225,
+      "total_profit_pct": 3.99,
+      "trade_count": 212
+    },
+    {
+      "unit_label": "yfinance ES 1h trend-expansion normal-vol pullback-resume",
+      "status": "completed",
+      "win_rate_pct": 34.1463,
+      "sharpe": 0.0397,
+      "total_profit_pct": 0.56,
+      "trade_count": 164
+    },
+    {
+      "unit_label": "binance BTCUSDT 1h trend-expansion normal-vol pullback-resume",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    }
+  ]
+}

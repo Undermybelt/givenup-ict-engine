@@ -1,0 +1,9 @@
+PASS branch_path_parity_audit_v1 recorded as diagnostic/non-promoting evidence
+PASS catboost target and current scores preserve all five exact rooted branch paths
+PASS execution tree trace preserves the Bull path but remains fail_closed and not actionable
+PASS workflow snapshot remains blocked by user_selected_historical_data_missing
+FAIL auto_quant trade wire does not preserve full main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor strings
+FAIL pre_bayes policy history does not preserve full branch-path strings
+FAIL bbn_network does not preserve all exact Board B branch paths as first-class evidence
+FAIL promotion_allowed=false
+FAIL update_goal=false

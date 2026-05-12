@@ -1,0 +1,322 @@
+{
+  "accepted_rows_added": 0,
+  "accepted_source_confidence_95_labels": [],
+  "board_hash_before": "306dd381a11274f8bdea1b87963b4569b86fd8f1953cd5fcf6d8486d3b0cb609",
+  "calibration_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T214328-codex-source-label-equivalence-confidence-calibration-v1/source-label-equivalence-confidence-calibration/source_label_equivalence_confidence_calibration_v1.json",
+  "calibration_decision": "source_label_equivalence_confidence_calibration_v1=source_confidence_scored_no_acceptance",
+  "checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "gap": "",
+      "id": "R0_named_board",
+      "requirement": "Use the named Board A markdown and produce repo-local artifacts.",
+      "status": "pass_checked"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T214328-codex-source-label-equivalence-confidence-calibration-v1/source-label-equivalence-confidence-calibration/source_label_equivalence_confidence_calibration_v1.json; accepted_labels=none",
+      "gap": "Source-confidence calibration accepted zero labels at the required 0.95 Wilson lower-bound gate.",
+      "id": "R1_every_regime_95",
+      "requirement": "Every active regime has source-owned or owner-approved >=95 confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "source_label_status=schema_ready_unscored; rows=248440; all_roots_present=True",
+      "gap": "Other-market/source-label rows are schema-ready with all roots, but calibrated confidence remains below acceptance.",
+      "id": "R2_other_market_validation",
+      "requirement": "Validate regimes on other markets/species with suitable confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "native_subhour_root_ready=false; source_panel_recency_status=blocked",
+      "gap": "Native sub-hour source-label root and R5 recency-extension root are still absent.",
+      "id": "R3_other_cycle_timeframe",
+      "requirement": "Validate regimes on other cycles/timeframes with suitable confidence.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "positives=41; controls=41; matched_groups=40; min_lcb=0.914332",
+      "gap": "R6 remains below 50/50 support, below 0.95 Wilson LCB, lacks broad-normal sample, and direct species are incomplete.",
+      "id": "R4_r6_direct_confidence",
+      "requirement": "Direct Manipulation passes support, Wilson95, broad-normal, and direct-species gates.",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "schema-ready roots and source confidence screen are kept fail-closed",
+      "gap": "",
+      "id": "R5_no_proxy_acceptance",
+      "requirement": "Do not accept proxy/schema readiness/generated labels as completion.",
+      "status": "pass_guardrail"
+    },
+    {
+      "evidence": "failures_present=true",
+      "gap": "Strict objective remains incomplete; update_goal=false.",
+      "id": "R6_update_goal_gate",
+      "requirement": "Only call update_goal when every requirement is covered by real evidence.",
+      "status": "fail_blocked"
+    }
+  ],
+  "cursor_before": {
+    "accepted_gate": "source_label_equivalence_confidence_calibration_v1=`source_confidence_scored_no_acceptance`; current_goal_completion_audit_v47=`after_source_label_cleanup_2of4_roots_still_blocked`; source_label_truncated_row_repair_v1=`removed_truncated_rows_verifier_schema_ready_unscored`; source_label_equivalence_duplicate_cleanup_v1=`duplicates_removed_schema_ready_unscored`; us_panel_source_label_duplicate_cleanup_v1=`duplicate_extension_removed_schema_ready_unscored`; current_goal_completion_audit_v46_after_us_panel_source_label_extension=`superseded_by_v47_source_label_cleanup`; us_panel_source_label_equivalence_extension_v1=`schema_ready_unscored_full_root_labels_no_confidence_gate`; current_goal_completion_audit_v46=`after_flotron_r6_uplift_2of4_roots_still_blocked`; current_goal_completion_audit_v45_post_nifty_equivalence=`post_nifty_equivalence_schema_ready_still_blocked`; r6_flotron_cftc_row_uplift_v1=`no_new_unique_rows_calibration_still_blocked`; current_goal_completion_audit_v45=`after_nifty_source_label_2of4_roots_still_blocked`; nifty_source_label_equivalence_intake_v1=`partial_schema_ready_no_full_objective`; r6_tower_linked_order_fetch_screen_v1=`official_order_fetched_no_row_level_events`; current_goal_completion_audit_v44=`post_cleanup_live_24x24_still_blocked`; current_goal_completion_audit_v43=`post_cleanup_live_24x24_still_blocked`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "active_market_set": "Source-label confidence calibration over the cleaned R2/R4 root: all four labels are present with `248440` daily source-label rows, but source-owned confidence `>=0.95` accepted `0/4` labels under Wilson95 split gates; R3 native sub-hour and R5 recency roots remain absent, and R6 direct remains blocked at `41/41`.",
+    "active_timeframes": "Source-label confidence was scored on daily rows across `calibration`, `heldout_market`, `heldout_time`, and `test` splits; R3 native sub-hour files and R5 post-2026-01-30 recency-extension files remain absent; R6 direct readback is `41/41`, Wilson95 min LCB `0.914332`, broad-normal sample `false`.",
+    "blocker": "Strict objective remains blocked: source-label confidence scoring is complete but accepted `0/4` labels because source-confidence `>=0.95` Wilson95 gates are below `0.95` in required splits; R3 native-subhour and R5 recency roots remain absent; R6 direct root still fails calibration with `41/41`, Wilson95 min LCB `0.914332`, support below `50/50`, no broad normal sample, and limited direct species coverage.",
+    "board_state": "blocked",
+    "candidate_regime": "Strict Board A objective across active lanes: scoped `>=95%` evidence persists; source-label equivalence has all four daily labels but source-owned confidence scoring accepted no labels; native sub-hour, R5 recency, and R6 support/Wilson95/broad-normal/direct-species gates remain open.",
+    "confidence_lane": "`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260511T214328-codex-source-label-equivalence-confidence-calibration-v1`",
+    "last_loop_id": "20260511T214328+0800-codex-source-label-equivalence-confidence-calibration-v1",
+    "next_action": "Populate `/tmp/ict-engine-source-panel-recency-extension` with post-2026-01-30 source-owned rows plus provenance, then rerun the unchanged R5 recency verifier.",
+    "provider_status": "Source-label confidence calibration reran the unchanged verifier: source-label equivalence `schema_ready_unscored` with `248440` rows and all four labels, but source-confidence Wilson95 gates failed for Bull/Bear/Sideways/Crisis across required splits; source-panel recency remains `blocked/missing_required_files`; native sub-hour root absent; direct R6 remains `schema_ready_unscored` with positives `41`, matched negatives `41`, matched groups `40`, Wilson95 min LCB `0.914332`, broad-normal sample `false`; no raw data commit, threshold relaxation, external request send, or runtime code change was introduced."
+  },
+  "decision": "current_goal_completion_audit_v48=source_confidence_calibrated_no_labels_accepted_still_blocked",
+  "external_requests_sent": false,
+  "gates": [
+    {
+      "gate": "ready_intake_roots",
+      "observed": "2",
+      "pass": false,
+      "required": "4"
+    },
+    {
+      "gate": "source_confidence_accepted_labels",
+      "observed": "none",
+      "pass": false,
+      "required": "Bear;Bull;Crisis;Sideways accepted at >=0.95"
+    },
+    {
+      "gate": "native_subhour_root_ready",
+      "observed": "false",
+      "pass": false,
+      "required": "true"
+    },
+    {
+      "gate": "source_panel_recency_verifier",
+      "observed": "blocked",
+      "pass": false,
+      "required": "not_blocked"
+    },
+    {
+      "gate": "r6_support",
+      "observed": "41/41",
+      "pass": false,
+      "required": ">=50/50"
+    },
+    {
+      "gate": "r6_wilson95_min_lcb",
+      "observed": "0.914332",
+      "pass": false,
+      "required": ">=0.95"
+    },
+    {
+      "gate": "strict_full_objective",
+      "observed": "false",
+      "pass": false,
+      "required": "true"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T13:53:10.128861+00:00",
+  "intake_roots": [
+    {
+      "csv_row_counts": "{\"source_label_equivalence_rows.csv\": 248440}",
+      "exists": true,
+      "file_hashes": {
+        "source_label_equivalence_provenance.json": "4d3541870e38d423585759d1f44897dd20226940f0ead285a4e786f1986a7b3d",
+        "source_label_equivalence_rows.csv": "915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f"
+      },
+      "id": "source_label_equivalence",
+      "missing_files": "",
+      "present_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "ready": true,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "file_hashes": {},
+      "id": "native_subhour_source_label",
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "file_hashes": {},
+      "id": "source_panel_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "csv_row_counts": "{\"matched_negative_normal_activity_rows.csv\": 41, \"positive_spoofing_layering_rows.csv\": 41}",
+      "exists": true,
+      "file_hashes": {
+        "matched_negative_normal_activity_rows.csv": "e8275f60bfee0892cf18a7ddade59191f6f65b99b1fb83b7019a3f3c298ffd4e",
+        "positive_spoofing_layering_rows.csv": "456621bb910eaae72af29e9d63cafd4859d795b9ace3ddc3bff2e05b0c5590e9",
+        "provenance_manifest.json": "6e13fa01b21c95845a81a9947748a94366c6c0234578bcdebd7964e5d63ee01d"
+      },
+      "id": "direct_manipulation_row_intake",
+      "missing_files": "",
+      "present_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "ready": true,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Acquire native sub-hour/R5 recency roots or expand R6 to 50/50 broad-normal/direct-species coverage; do not rerun unchanged source-label confidence calibration as an acceptance path.",
+  "objective_restatement": "Every active regime must have source-owned or owner-approved >=95 confidence and retain suitable confidence across other markets/species and other cycles/timeframes before completion.",
+  "r6_matched_group_count": 40,
+  "r6_matched_negative_rows": 41,
+  "r6_positive_rows": 41,
+  "r6_wilson95_min_lcb": 0.914332429815568,
+  "raw_data_committed": false,
+  "ready_root_count": 2,
+  "ready_roots": [
+    "source_label_equivalence",
+    "direct_manipulation_row_intake"
+  ],
+  "run_id": "20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration",
+  "runtime_code_changed": false,
+  "source_label_all_roots_present": true,
+  "source_label_equivalence_rows": 248440,
+  "source_label_equivalence_status": "schema_ready_unscored",
+  "strict_full_objective_achieved": false,
+  "support_ok": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_readbacks": [
+    {
+      "exit_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/source_label_equivalence_verifier.exit",
+      "id": "source_label_equivalence_verifier",
+      "parsed": {
+        "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+        "package_counts": {
+          "price_root_equivalence_us_index_futures": 248440
+        },
+        "provenance_keys": [
+          "created_at_utc",
+          "date_max",
+          "date_min",
+          "invalid_rows_removed",
+          "label_counts",
+          "limitations",
+          "market_family_counts",
+          "package_counts",
+          "previous_provenance_path",
+          "raw_payload_committed_to_repo",
+          "repair_reason",
+          "row_count",
+          "rows_path",
+          "rows_sha256",
+          "run_id",
+          "source_owner_counts",
+          "split_counts",
+          "symbol_count",
+          "updated_at_utc",
+          "updated_by"
+        ],
+        "row_count": 248440,
+        "status": "schema_ready_unscored"
+      },
+      "returncode": 0,
+      "status": "schema_ready_unscored",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/source_label_equivalence_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/source_label_equivalence_verifier.stdout.txt"
+    },
+    {
+      "exit_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/source_panel_recency_verifier.exit",
+      "id": "source_panel_recency_verifier",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "status": "blocked",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/source_panel_recency_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/source_panel_recency_verifier.stdout.txt"
+    },
+    {
+      "exit_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/direct_manipulation_verifier.exit",
+      "id": "direct_manipulation_verifier",
+      "parsed": {
+        "matched_group_count": 40,
+        "matched_negative_rows": 41,
+        "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+        "positive_rows": 41,
+        "provenance_keys": [
+          "cftc_flotron_complaint_examples",
+          "cftc_gandhi_order",
+          "cftc_geneva_order_2018",
+          "cftc_geneva_order_examples",
+          "cftc_geneva_order_rows_added",
+          "cftc_genuine_order_text_checks",
+          "cftc_genuine_order_text_status",
+          "cftc_mohan_additional_examples",
+          "cftc_mohan_complaint",
+          "cftc_mohan_complaint_rows_added",
+          "cftc_mohan_complaint_text_checks",
+          "cftc_order",
+          "cftc_shak_complaint",
+          "cftc_shak_complaint_examples",
+          "cftc_shak_rows_added",
+          "cftc_text_checks",
+          "cftc_text_extraction_status",
+          "cftc_vorley_chanu_complaint",
+          "cftc_zhao_skudder_examples",
+          "created_at_utc",
+          "finra_public_schema",
+          "gandhi_matched_negative_rows_added",
+          "gandhi_positive_rows_added",
+          "gandhi_rows_materialized_at_utc",
+          "license_or_permission",
+          "matched_control_limitations",
+          "matched_control_policy",
+          "matched_negative_control_policy",
+          "matched_negative_materialized_at_utc",
+          "matched_negative_rows_acquired",
+          "matched_negative_rows_count",
+          "matched_negative_rows_path",
+          "matched_negative_rows_sha256",
+          "mohan_additional_matched_negative_rows_added",
+          "mohan_additional_positive_rows_added",
+          "mohan_additional_rows_materialized_at_utc",
+          "mohan_complaint_control_policy",
+          "positive_rows_count",
+          "positive_rows_path",
+          "positive_rows_sha256",
+          "r6_flotron_cftc_row_uplift_v1",
+          "r6_geneva_cftc_row_uplift_v1",
+          "r6_mohan_shak_duplicate_cleanup_v1",
+          "r6_mohan_shak_row_uplift_v1",
+          "r6_shak_duplicate_row_cleanup_v1",
+          "r6_zhao_skudder_cftc_row_uplift_v1",
+          "shak_complaint_matched_negative_rows_added",
+          "shak_complaint_positive_rows_added",
+          "shak_complaint_rows_materialized_at_utc",
+          "source",
+          "updated_at_utc",
+          "updated_by",
+          "vorley_chanu_matched_negative_rows_added",
+          "vorley_chanu_positive_rows_added",
+          "vorley_chanu_rows_materialized_at_utc"
+        ],
+        "status": "schema_ready_unscored"
+      },
+      "returncode": 0,
+      "status": "schema_ready_unscored",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/direct_manipulation_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T215015-codex-current-goal-completion-audit-v48-after-source-confidence-calibration/command-output/direct_manipulation_verifier.stdout.txt"
+    }
+  ]
+}

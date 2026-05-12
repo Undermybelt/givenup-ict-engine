@@ -1,0 +1,88 @@
+{
+  "run_id": "20260512T055116-codex-r3-r5-current-source-label-search-v1",
+  "gate_result": "r3_r5_current_source_label_search_v1=no_exact_native_subhour_or_mainregime_source_rows_no_promotion",
+  "board_hash_before_artifact": "879d26294e01cd2e829858fef422df671249d41032f1397a51507ad60a1e51cc",
+  "kaggle_searches": {
+    "Bull Bear Sideways Crisis market regime labels": {
+      "exit": 0,
+      "result": "No datasets found",
+      "compatible_source_rows_found": false
+    },
+    "AAPL 15m regime label": {
+      "exit": 0,
+      "result": "No datasets found",
+      "compatible_source_rows_found": false
+    },
+    "IXIC 15m regime label": {
+      "exit": 0,
+      "result": "No datasets found",
+      "compatible_source_rows_found": false
+    },
+    "NQ futures 15m regime label": {
+      "exit": 0,
+      "result": "No datasets found",
+      "compatible_source_rows_found": false
+    },
+    "crypto market regime labels 15m": {
+      "exit": 0,
+      "result": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+      "compatible_source_rows_found": false,
+      "blocker": "raw_5m_market_data_not_source_labels"
+    },
+    "market regime labels intraday": {
+      "exit": 0,
+      "result": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+      "compatible_source_rows_found": false,
+      "blocker": "raw_5m_market_data_not_source_labels"
+    }
+  },
+  "huggingface_searches": {
+    "AAPL 15m regime label": {
+      "exit": 0,
+      "rows": 0,
+      "compatible_source_rows_found": false
+    },
+    "IXIC 15m regime label": {
+      "exit": 0,
+      "rows": 0,
+      "compatible_source_rows_found": false
+    },
+    "Bull Bear Sideways Crisis market regime labels": {
+      "exit": 0,
+      "rows": 0,
+      "compatible_source_rows_found": false
+    },
+    "market regime labels intraday": {
+      "exit": 0,
+      "rows": 0,
+      "compatible_source_rows_found": false
+    }
+  },
+  "bybit_candidate": {
+    "ref": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+    "files_exit": 0,
+    "sample_files": [
+      "BYBIT_0GUSDT_SPOT_5m.csv",
+      "BYBIT_AAPLXUSDT_SPOT_5m.csv",
+      "BYBIT_ADAUSDT_SPOT_5m.csv"
+    ],
+    "assessment": "raw_5m_market_data_not_source_owned_regime_labels",
+    "downloaded_large_package": false,
+    "compatible_source_rows_found": false
+  },
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "target_root_mutated": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

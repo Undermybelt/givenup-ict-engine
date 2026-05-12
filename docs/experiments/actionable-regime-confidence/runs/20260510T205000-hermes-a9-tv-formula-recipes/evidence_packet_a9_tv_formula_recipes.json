@@ -1,0 +1,130 @@
+{
+  "accepted_95_candidates": 0,
+  "accepted_99_candidates": 0,
+  "assertions": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/checks/a9_tv_formula_recipe_assertions.out",
+  "best_candidate_by_missing_regime": {
+    "ExtremeStress": {
+      "blocker": "wilson95_below_0_95;ece_above_0_05;coverage_below_0_03",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.04473684210526316,
+        "ece": 0.0,
+        "precision": 0.16911764705882354,
+        "precision_wilson_lcb_95": 0.11541666026262919,
+        "precision_wilson_lcb_99": 0.10220929013822727,
+        "success": 23,
+        "support": 136
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 4,
+        "test_contexts_with_support": 4,
+        "test_instruments_with_support": 3,
+        "test_markets_with_support": 4,
+        "test_timeframes_with_support": 2
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "tv_volatility_pctile_63 >= 0.9950653563 AND realized_vol_rank_252 >= 0.9126984127",
+      "test": {
+        "calibrated_probability": 0.16911764705882354,
+        "coverage": 0.025117213663764234,
+        "ece": 0.15088235294117647,
+        "precision": 0.32,
+        "precision_wilson_lcb_95": 0.2254299503477284,
+        "precision_wilson_lcb_99": 0.20084046500857983,
+        "success": 24,
+        "support": 75
+      }
+    },
+    "ReversalBrewing": {
+      "blocker": "wilson95_below_0_95;cross_market_timeframe_support_below_2",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.05526315789473684,
+        "ece": 0.0,
+        "precision": 0.4166666666666667,
+        "precision_wilson_lcb_95": 0.34479424061158126,
+        "precision_wilson_lcb_99": 0.3236848189185626,
+        "success": 70,
+        "support": 168
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 3,
+        "test_contexts_with_support": 3,
+        "test_instruments_with_support": 2,
+        "test_markets_with_support": 3,
+        "test_timeframes_with_support": 1
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "tv_ma_slope_50 <= -0.005695598597 AND tv_rsi_14 <= 48.85302216",
+      "test": {
+        "calibrated_probability": 0.4166666666666667,
+        "coverage": 0.09544541192230409,
+        "ece": 0.016666666666666663,
+        "precision": 0.4,
+        "precision_wilson_lcb_95": 0.3448174898534317,
+        "precision_wilson_lcb_99": 0.3283471129851743,
+        "success": 114,
+        "support": 285
+      }
+    },
+    "TrendExpansion": {
+      "blocker": "wilson95_below_0_95;ece_above_0_05;cross_market_context_support_below_3;cross_market_market_support_below_3;cross_market_timeframe_support_below_2",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.06480263157894736,
+        "ece": 0.0,
+        "precision": 0.24873096446700507,
+        "precision_wilson_lcb_95": 0.1935602018449258,
+        "precision_wilson_lcb_99": 0.17846100193588574,
+        "success": 49,
+        "support": 197
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 1,
+        "test_contexts_with_support": 1,
+        "test_instruments_with_support": 1,
+        "test_markets_with_support": 1,
+        "test_timeframes_with_support": 1
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "tv_atr_pct_14 <= 0.001082437454 AND tv_ma_spread_20_50 <= 0.001689815458",
+      "test": {
+        "calibrated_probability": 0.24873096446700507,
+        "coverage": 0.039852645679839246,
+        "ece": 0.19664718679349916,
+        "precision": 0.44537815126050423,
+        "precision_wilson_lcb_95": 0.3591798565575445,
+        "precision_wilson_lcb_99": 0.3340109050387276,
+        "success": 53,
+        "support": 119
+      }
+    }
+  },
+  "blocked_feature_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "candidate_rule_table": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/recipes/a9_tv_formula_candidate_rules.csv",
+  "candidate_search_report": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/recipes/a9_tv_formula_candidate_report.json",
+  "live_tradingview_data_used": false,
+  "loop_id": "20260510T205000+0800-hermes-a9-tv-formula-recipes",
+  "missing_regime_acceptance_complete": false,
+  "objective": "Normalize TradingView-style regime formulas into non-leaky feature recipes without trusting script profitability, then rerun missing-regime calibration.",
+  "profitability_trusted": false,
+  "provider_status_source": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/provider/provider-status-agent.json",
+  "recipe_manifest": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/recipes/tradingview_formula_recipe_manifest.json",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes",
+  "schema_version": "board-a-a9-tv-formula-recipes-evidence/v1",
+  "searched_missing_regimes": [
+    "TrendExpansion",
+    "ExtremeStress",
+    "ReversalBrewing"
+  ],
+  "source_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/cross_market_regime_features_and_labels.csv",
+  "source_research_note": "docs/market-regime-profitable-strategy-research-2026-05-10.md",
+  "thresholds_relaxed": false,
+  "tv_formula_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/recipes/a9_tv_formula_features.csv"
+}

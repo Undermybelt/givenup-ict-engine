@@ -1,0 +1,108 @@
+{
+  "schema_version": "board-a-actionable-regime-confidence-evidence/v2-local-probe",
+  "loop_id": "20260510T183017+0800-board-a-v2-provider-agreement-calibration-local-probe",
+  "board": "Actionable Regime Confidence",
+  "durable_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T183017",
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T174651",
+  "provider_packet": {
+    "provider_status_compact": [
+      "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:2/2 ready | market_data:6/7 ready",
+      "guide: tradfi free fallback=yfinance | live zero-config=yfinance | crypto public=binance_public, bybit_public, kraken_public | setup required=crypto_public_runtime, external_http_runtime",
+      "details: use ict-engine provider-status --provider <id> --compact for provider-specific setup prompts",
+      "entry_model: ready 2/2 selectable 0 default 0",
+      "  ready: breaker_rb_long_v1, cisd_rb_long_v1",
+      "live_runtime: ready 1/3 selectable 3 default 1",
+      "  ready: yfinance",
+      "  pending: crypto_public_runtime(operator_runtime_required:explicit_opt_in_required), external_http_runtime(operator_runtime_required:base_url_and_service_required)",
+      "local_runtime: ready 2/2 selectable 0 default 0",
+      "  ready: ibkr_bridge, kraken_cli",
+      "market_data: ready 6/7 selectable 7 default 0",
+      "  ready: binance_public, bybit_public, ibkr, kraken_public, polymarket_public, yfinance",
+      "  pending: tradingview_mcp(configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed)"
+    ],
+    "yfinance": {
+      "qqq_1h_rows": 43,
+      "nq_15m_rows": 519,
+      "qqq_1h_first": "2026-05-01 13:30:00+00:00",
+      "qqq_1h_last": "2026-05-08 20:00:00+00:00",
+      "nq_15m_first": "2026-05-01 00:00:00+00:00",
+      "nq_15m_last": "2026-05-08 20:59:59+00:00"
+    },
+    "ibkr": {
+      "qqq_1h_rows": 160,
+      "first": "2026-04-27 08:00:00+00:00",
+      "last": "2026-05-08 23:00:00+00:00"
+    },
+    "kraken": {
+      "pf_xbtusd_15m_rows": 865,
+      "first": "2026-05-01 00:00:00+00:00",
+      "last": "2026-05-10 00:00:00+00:00",
+      "scope": "provider_probe_only_cross_asset_context_not_same_market_agreement"
+    },
+    "tradingview_remix": {
+      "status": "configured_runtime_unhealthy_in_current_provider_status",
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "prior_artifact_available": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T174651/provider/full-chain/loop4_tradingview_qqq_1d_fetch.json"
+    },
+    "auto_quant_cache": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T174651/provider/full-chain/loop_autoquant_nq_15m_summary.json",
+      "summary": {
+        "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+        "exists": true,
+        "rows": 351288,
+        "columns": [
+          "date",
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume"
+        ],
+        "first_index": "0",
+        "last_index": "351287"
+      }
+    }
+  },
+  "active_market_timeframe_set": {
+    "primary_chain": [
+      "QQQ 1h",
+      "NQ 15m"
+    ],
+    "provider_probe_only": [
+      "PF_XBTUSD 15m"
+    ]
+  },
+  "candidate_regime": {
+    "regime_id": "ProviderAgreementTrendExpansion / ProviderDisagreementTransitionGuardrail",
+    "horizon": "4-8 bars on QQQ 1h with NQ 15m cross-market context",
+    "allowed_action": "none accepted; release_long tested but not accepted",
+    "reason": "Same-market QQQ provider agreement exists only over a thin refreshed overlap and fails Board A support/calibration gates."
+  },
+  "artifacts": {
+    "labels_qqq": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/labels/provider_agreement_trend_expansion_labels_v2_local_probe.csv",
+    "labels_nq": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/labels/nq_provider_disagreement_transition_guardrail_labels_v2_local_probe.csv",
+    "calibration": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/calibration/provider_agreement_calibration_v2_local_probe.json",
+    "catboost_probe": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/catboost/provider_agreement_catboost_probe_v2_local_probe.json",
+    "consumer_bundle": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/regime_consumer_bundle_v2_local_probe.json",
+    "provider_status": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/provider/provider_status_compact_local_probe.out",
+    "bbn_pre_bayes_readback": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/bbn/pre_bayes_status_readback.out",
+    "bbn_prior_dry_run_readback": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/bbn/auto_quant_prior_init_dry_run_readback.out",
+    "policy_training_readback": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/catboost/policy_training_status_readback.out",
+    "workflow_readback": "docs/experiments/actionable-regime-confidence/runs/20260510T183017/execution-tree/workflow_status_readback.out"
+  },
+  "calibration_result": {
+    "accepted_gate": "none",
+    "board_state": "abstain",
+    "blocker": "support_too_thin; no calibrated release rule met 95/99 Wilson/support/ECE thresholds; TradingViewRemix current provider gap; NQ lacks same-market second provider in refreshed packet",
+    "deterministic_rule_test": {
+      "support": 3,
+      "success": 0,
+      "precision": 0.0,
+      "precision_wilson_lcb_95": 4.8683609171202235e-17,
+      "precision_wilson_lcb_99": 0.0,
+      "coverage": 0.3333333333333333
+    },
+    "catboost_overall_decision": "no_95_candidate"
+  },
+  "next_action": "A-v2-2: extend QQQ/NQ chronological support with longer yfinance+IBKR same-market windows and restore TradingViewRemix health before rerunning provider-agreement calibration."
+}

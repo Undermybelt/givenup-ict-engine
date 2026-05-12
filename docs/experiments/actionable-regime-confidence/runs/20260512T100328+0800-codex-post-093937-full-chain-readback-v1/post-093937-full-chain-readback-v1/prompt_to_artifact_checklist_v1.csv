@@ -1,0 +1,9 @@
+requirement,evidence,status
+"Use real provider status including IBKR TradingViewRemix yfinance Kraken","command-output/00_provider_status.out","covered_non_promoting"
+"Touch Auto-Quant surface","command-output/01_auto_quant_status.out and command-output/11_auto_quant_adoption_review.out","covered_prepare_required"
+"Run filter / Pre-Bayes","command-output/02_pre_bayes_status.out and command-output/04_evidence_quality.out","covered_pass_neutralized"
+"Run BBN readback","command-output/02_pre_bayes_status.out filtered assignments include regime_bundle_bbn_application_status=applied","covered_soft_evidence"
+"Run CatBoost / path-ranking readback","command-output/05_policy_training_status.out and command-output/09_export_structural_path_target.out","covered_structural_ranker_ready_entry_models_not_ready"
+"Run execution-tree / execution-candidate readback","command-output/08_workflow_execution_candidate.out and command-output/10_artifact_status_latest.out","covered_observe_only"
+"Do not mutate shared concurrent state","state copied to run-local state_copy before readback","covered"
+"Do not claim completion without 95 percent per-regime cross-market validation","post_093937_full_chain_readback_v1 gate records accepted_rows_added=0 and update_goal=false","covered_blocked"

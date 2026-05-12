@@ -1,0 +1,253 @@
+{
+  "approval": {
+    "approval_slots": [
+      {
+        "current_evidence": "CourtListener/RECAP mirror of court-filed CFTC Exhibit A with stable PDF SHA-256.",
+        "current_state": "pending_explicit_user_or_board_approval",
+        "merge_effect_if_approved": "Allows source provenance to be used for canonical R6 intake, subject to control-policy approval or separate normal controls.",
+        "minimum_approval_value": "approved",
+        "slot_id": "public_recap_pacer_provenance"
+      },
+      {
+        "current_evidence": "FLIP rows are same-exhibit sequence counterpart legs, not source-owned normal/non-manipulation labels.",
+        "current_state": "rejected_under_current_contract",
+        "merge_effect_if_approved": "Allows isolated FLIP rows to populate matched_negative_normal_activity_rows.csv after verifier-native copy under lock.",
+        "minimum_approval_value": "explicitly_approved_as_matched_controls",
+        "slot_id": "same_exhibit_flip_as_matched_controls"
+      },
+      {
+        "current_evidence": "No independent owner-approved normal controls are present in the target root.",
+        "current_state": "not_supplied",
+        "merge_effect_if_approved": "Allows R6 to proceed without approving same-exhibit FLIP rows as controls.",
+        "minimum_approval_value": "source_owned_normal_controls_supplied",
+        "slot_id": "source_owned_normal_controls_alternative"
+      }
+    ],
+    "assertions": {
+      "approval_present": false,
+      "canonical_merge_allowed_now": false,
+      "downstream_rerun_allowed_now": false,
+      "flip_controls_accepted_under_current_contract": false,
+      "public_recap_source_positive_candidate": true,
+      "shared_intake_mutated": false,
+      "strict_full_objective_achieved": false,
+      "trade_usable": false,
+      "update_goal": false
+    },
+    "control_policy_json": "docs/experiments/actionable-regime-confidence/runs/20260512T003334-codex-r6-oystacher-exhibit-a-policy-review-v1/r6-oystacher-exhibit-a-policy-review/r6_oystacher_exhibit_a_policy_review_v1.json",
+    "decision_options": [
+      {
+        "canonical_merge_allowed_after_lock": "true",
+        "decision_id": "approve_recap_and_flip_controls",
+        "downstream_rerun_required": "true",
+        "flip_control_policy": "explicitly_approved_as_matched_controls",
+        "gate_if_chosen": "approval_ready_merge_then_rerun_full_chain",
+        "public_recap_pacer_provenance": "approved",
+        "source_owned_normal_controls_required": "false"
+      },
+      {
+        "canonical_merge_allowed_after_lock": "only_after_controls_supplied",
+        "decision_id": "approve_recap_reject_flip_supply_controls",
+        "downstream_rerun_required": "true_after_controls",
+        "flip_control_policy": "rejected",
+        "gate_if_chosen": "source_positive_ready_controls_still_required",
+        "public_recap_pacer_provenance": "approved",
+        "source_owned_normal_controls_required": "true"
+      },
+      {
+        "canonical_merge_allowed_after_lock": "false_until_owner_export",
+        "decision_id": "reject_recap_use_owner_export_only",
+        "downstream_rerun_required": "false_until_owner_export",
+        "flip_control_policy": "not_applicable",
+        "gate_if_chosen": "owner_export_required",
+        "public_recap_pacer_provenance": "rejected",
+        "source_owned_normal_controls_required": "true"
+      },
+      {
+        "canonical_merge_allowed_after_lock": "false",
+        "decision_id": "no_decision_keep_blocked",
+        "downstream_rerun_required": "false",
+        "flip_control_policy": "pending_or_rejected",
+        "gate_if_chosen": "decision_package_ready_no_approval_no_merge",
+        "public_recap_pacer_provenance": "pending",
+        "source_owned_normal_controls_required": "true_if_flip_rejected"
+      }
+    ],
+    "followup_chain": [
+      {
+        "allowed_before_approval": "false",
+        "command_or_artifact": "/tmp/ict-engine-direct-manipulation-row-intake.lock",
+        "required_after_approval": "true",
+        "step_id": "shared_lock",
+        "step_order": 1
+      },
+      {
+        "allowed_before_approval": "false",
+        "command_or_artifact": "/tmp/ict-engine-board-a-r6-owner-export-v1/{positive_spoofing_layering_rows.csv,matched_negative_normal_activity_rows.csv,provenance_manifest.json}",
+        "required_after_approval": "true",
+        "step_id": "verifier_native_copy",
+        "step_order": 2
+      },
+      {
+        "allowed_before_approval": "false",
+        "command_or_artifact": "direct_manipulation_row_intake_verifier",
+        "required_after_approval": "true",
+        "step_id": "direct_verifier",
+        "step_order": 3
+      },
+      {
+        "allowed_before_approval": "false",
+        "command_or_artifact": "chronological plus symbol/venue or explicitly approved family split calibration",
+        "required_after_approval": "true",
+        "step_id": "split_calibration",
+        "step_order": 4
+      },
+      {
+        "allowed_before_approval": "false",
+        "command_or_artifact": "provider status, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, workflow/execution-tree readback",
+        "required_after_approval": "true",
+        "step_id": "provider_and_downstream_chain",
+        "step_order": 5
+      }
+    ],
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "generated_at_utc": "2026-05-11T16:36:53+00:00",
+    "next_action": "Record one explicit decision option. Do not merge isolated rows or rerun downstream chain until RECAP/PACER provenance plus FLIP-as-control approval exist, or source-owned normal controls are supplied.",
+    "row_counts": {
+      "flip_rows": 1553,
+      "isolated_split_axes_pass": true,
+      "isolated_verifier_status": "schema_ready_unscored",
+      "matched_groups": 1313,
+      "parsed_order_rows": 6735,
+      "positive_spoof_rows": 5182
+    },
+    "run_id": "20260512T003653-codex-r6-oystacher-approval-decision-package-v1",
+    "source": {
+      "courtlistener_docket_url": "https://www.courtlistener.com/docket/4263217/us-commodity-futures-trading-commission-v-oystacher/",
+      "raw_data_committed": false,
+      "raw_pdf_sha256": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "source_pdf_url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf"
+    },
+    "source_materialization_json": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/r6_oystacher_exhibit_a_row_materialization_v1.json",
+    "source_policy_json": "docs/experiments/actionable-regime-confidence/runs/20260512T003051-codex-r6-oystacher-exhibit-a-source-policy-review-v1/r6-oystacher-exhibit-a-source-policy-review/r6_oystacher_exhibit_a_source_policy_review_v1.json"
+  },
+  "board_hash_before_artifact": "613708a9a0e72fb9ca6a4dd4d0cd4bf4184e1703063771d280d7d2929561a6e1",
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "evidence": "053852 HGB field materialization present",
+      "gap": "source/control roots and canonical merge absent",
+      "requirement": "Every active regime reaches calibrated 95% confidence",
+      "status": "diagnostic_only_not_promoting"
+    },
+    {
+      "evidence": "053852 reports instruments/periods/contexts; R3 native sub-hour root absent",
+      "gap": "native sub-hour/source-owned cross-timeframe validation root absent",
+      "requirement": "Validated across other markets, cycles, and timeframes",
+      "status": "partial_diagnostic_only"
+    },
+    {
+      "evidence": "054116 and 055129 provider/runtime readbacks present",
+      "gap": "provider bars and runtime readiness are not source labels or promotion evidence",
+      "requirement": "Use IBKR, TradingViewRemix, yfinance, Kraken, and Auto-Quant/ict-engine runtime surfaces",
+      "status": "diagnostic_runtime_readback_only"
+    },
+    {
+      "evidence": "required roots: /tmp/ict-engine-board-a-r6-owner-export-v1=False, /tmp/ict-engine-native-subhour-source-label-intake=False, /tmp/ict-engine-source-panel-recency-extension=False",
+      "gap": "all required roots are absent",
+      "requirement": "Acquire source/control evidence or valid source-owned R3/R5 rows",
+      "status": "blocked"
+    },
+    {
+      "evidence": "055516 dispatch feasibility present; approval_present=False",
+      "gap": "drafts not sent; no ticket/export/license ids; no approval",
+      "requirement": "R6 owner/export dispatch or approval path",
+      "status": "blocked"
+    },
+    {
+      "evidence": "055116/055103/055509 present",
+      "gap": "no exact native sub-hour labels or post-cutoff MainRegimeV2 rows acquired",
+      "requirement": "R3/R5 source-search does not rely on proxy mappings",
+      "status": "screened_no_unlock"
+    },
+    {
+      "evidence": "canonical_allowed=False; downstream_allowed=False",
+      "gap": "source/control gate remains closed",
+      "requirement": "Canonical merge and downstream promotion rerun",
+      "status": "not_allowed"
+    },
+    {
+      "evidence": "trade usable false; update_goal=false",
+      "gap": "objective not achieved",
+      "requirement": "Trade usability and update_goal",
+      "status": "false"
+    }
+  ],
+  "decision": "Board A remains incomplete: diagnostic 95% HGB evidence exists, but source/control roots, approval, canonical merge, downstream promotion rerun, and trade usability are absent.",
+  "downstream_promotion_rerun": false,
+  "evidence": {
+    "autoquant_local_reuse": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055200-codex-autoquant-local-reuse-readiness-after-054116-v1/autoquant-local-reuse-readiness-after-054116-v1/autoquant_local_reuse_readiness_after_054116_v1.json",
+      "sha256": "9ed0186bef0edf59fae5d3f89e52c370d6ac7cf27b81c146951fd27f68b504ec"
+    },
+    "hgb_field_assertions": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T053852-codex-hgb-per-regime-field-materialization-v1/checks/hgb_per_regime_field_materialization_v1_assertions.out",
+      "sha256": "06e56e4e52da8615002d9c4b6f0786ea5177519a16e2f3f49f0364c595b7e871"
+    },
+    "hgb_field_materialization": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T053852-codex-hgb-per-regime-field-materialization-v1/hgb-per-regime-field-materialization-v1/hgb_per_regime_field_materialization_v1.json",
+      "sha256": "c35ebe0f0a5f065e1dc5fc585153fa6274b2db8bd4a68efe6b1026802d37a12f"
+    },
+    "missing_055212_correction": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055509-codex-055212-missing-artifact-correction-v1/055212-missing-artifact-correction-v1/055212_missing_artifact_correction_v1.json",
+      "sha256": "22c0c51f41b13aa818e275b71689f7ee2c4891be18b3faa2de21c56296a7fadc"
+    },
+    "provider_autoquant_correction": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055129-codex-054718-provider-autoquant-rerun-correction-v1/054718-provider-autoquant-rerun-correction-v1/054718_provider_autoquant_rerun_correction_v1.json",
+      "sha256": "9eddbea49e7c5f6463da959303ab4f884bcfae7b7af1ea618ed6e97cf13aeaf9"
+    },
+    "r3_r5_crypto_microstructure_screen": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055103-codex-r3-r5-crypto-microstructure-source-screen-v1/r3-r5-crypto-microstructure-source-screen-v1/r3_r5_crypto_microstructure_source_screen_v1.json",
+      "sha256": "9d65ce9d07abd43e36f5a96bc155fd0f08604d2f9075d1163f7d1e24c5de8cb5"
+    },
+    "r3_r5_current_source_search": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055116-codex-r3-r5-current-source-label-search-v1/r3-r5-current-source-label-search-v1/r3_r5_current_source_label_search_v1.json",
+      "sha256": "ffa75eb0cc2f8db0c8e23777666f7491f33d992ab5a19ceaae106fae37a0b3fe"
+    },
+    "r6_dispatch_feasibility": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055516-codex-r6-owner-export-dispatch-feasibility-readback-v1/r6-owner-export-dispatch-feasibility-readback-v1/r6_owner_export_dispatch_feasibility_readback_v1.json",
+      "sha256": "56b07866ff0a57cc174dd0b9deb0f5d9c3ba944711755d02f040d0d42ed15942"
+    },
+    "readonly_runtime_chain": {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T054116-codex-readonly-runtime-chain-after-053933-v1/readonly-runtime-chain-after-053933-v1/readonly_runtime_chain_after_053933_v1.json",
+      "sha256": "016a4778aaf77d7dfb40767f215b4a223db25a48f21660d606288dfd385dd6fb"
+    }
+  },
+  "gate_result": "current_objective_audit_after_055516_v1=not_complete_source_control_roots_absent_no_downstream_rerun",
+  "next": "Continue only after explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, or source-owned R3 native sub-hour labels unlock a required target root.",
+  "objective_restated": {
+    "cross_market_cycle_timeframe": "validated on other markets/cycles/timeframes with source-owned provenance",
+    "multi_agent_safety": "append-only board updates; no partial active-writer outputs; no target-root mutation without approval",
+    "regimes_95_confidence": "all active regimes require calibrated 95% confidence",
+    "runtime_chain": "provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree readback after source/control unlock"
+  },
+  "required_root_status": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "run_id": "20260512T055811-codex-current-objective-audit-after-055516-v1",
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

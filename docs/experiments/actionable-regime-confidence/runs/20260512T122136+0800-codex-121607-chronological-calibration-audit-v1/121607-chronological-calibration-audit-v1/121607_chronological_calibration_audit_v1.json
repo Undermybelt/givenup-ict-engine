@@ -1,0 +1,189 @@
+{
+  "branch_summary": [
+    {
+      "avg_pnl": 2.125252,
+      "breakeven": 0,
+      "first_ts": "2026-04-05T03:00:00Z",
+      "last_ts": "2026-05-11T16:00:00Z",
+      "loss_rate": 0.615854,
+      "losses": 101,
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 164,
+      "total_pnl": 348.541397,
+      "win_rate": 0.384146,
+      "wins": 63
+    },
+    {
+      "avg_pnl": -7.295071,
+      "breakeven": 0,
+      "first_ts": "2026-04-05T09:00:00Z",
+      "last_ts": "2026-05-08T00:00:00Z",
+      "loss_rate": 0.753425,
+      "losses": 55,
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 73,
+      "total_pnl": -532.540152,
+      "win_rate": 0.246575,
+      "wins": 18
+    }
+  ],
+  "derived_artifacts": {
+    "branch_period_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T122136+0800-codex-121607-chronological-calibration-audit-v1/derived/branch_period_summary.csv",
+    "branch_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T122136+0800-codex-121607-chronological-calibration-audit-v1/derived/branch_summary.csv",
+    "chronological_period_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T122136+0800-codex-121607-chronological-calibration-audit-v1/derived/chronological_period_summary.csv",
+    "provider_period_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T122136+0800-codex-121607-chronological-calibration-audit-v1/derived/provider_period_summary.csv",
+    "provider_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T122136+0800-codex-121607-chronological-calibration-audit-v1/derived/provider_summary.csv"
+  },
+  "gate": {
+    "active_confidence": 0.5250864595751618,
+    "active_regime": "range",
+    "board_regime_95_ready": false,
+    "branches": 2,
+    "chronological_periods": 3,
+    "cpd_loss_probability_delta": 0.362116,
+    "cross_instrument_ready": false,
+    "cross_period_ready": true,
+    "cross_provider_ready": true,
+    "execution_actionable": false,
+    "execution_ready": false,
+    "execution_review_status": "observe",
+    "max_market_regime_probability": 0.7476877176681956,
+    "production_mutation_allowed": false,
+    "promotion_allowed": false,
+    "providers": 6,
+    "rows": 237,
+    "symbols": [
+      "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+    ],
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "input_feedback": "docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json",
+  "input_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T121542+0800-codex-120630-115700-layered-postchain-validator-v1/derived/115700_layered_postchain_rows.jsonl",
+  "period_summary": [
+    {
+      "avg_pnl": 12.28959,
+      "breakeven": 0,
+      "chronological_period": "early",
+      "first_ts": "2026-04-05T03:00:00Z",
+      "last_ts": "2026-04-19T12:00:00Z",
+      "loss_rate": 0.518987,
+      "losses": 41,
+      "rows": 79,
+      "total_pnl": 970.877636,
+      "win_rate": 0.481013,
+      "wins": 38
+    },
+    {
+      "avg_pnl": -2.683655,
+      "breakeven": 0,
+      "chronological_period": "late",
+      "first_ts": "2026-04-29T04:00:00Z",
+      "last_ts": "2026-05-11T16:00:00Z",
+      "loss_rate": 0.658228,
+      "losses": 52,
+      "rows": 79,
+      "total_pnl": -212.008732,
+      "win_rate": 0.341772,
+      "wins": 27
+    },
+    {
+      "avg_pnl": -11.935034,
+      "breakeven": 0,
+      "chronological_period": "middle",
+      "first_ts": "2026-04-19T12:00:00Z",
+      "last_ts": "2026-04-28T08:00:00Z",
+      "loss_rate": 0.797468,
+      "losses": 63,
+      "rows": 79,
+      "total_pnl": -942.867659,
+      "win_rate": 0.202532,
+      "wins": 16
+    }
+  ],
+  "provider_summary": [
+    {
+      "avg_pnl": -0.399159,
+      "breakeven": 0,
+      "first_ts": "2026-04-05T03:00:00Z",
+      "last_ts": "2026-05-11T12:00:00Z",
+      "loss_rate": 0.653846,
+      "losses": 34,
+      "rows": 52,
+      "source_provider": "binance_public",
+      "total_pnl": -20.756286,
+      "win_rate": 0.346154,
+      "wins": 18
+    },
+    {
+      "avg_pnl": -0.456712,
+      "breakeven": 0,
+      "first_ts": "2026-04-05T03:00:00Z",
+      "last_ts": "2026-05-11T16:00:00Z",
+      "loss_rate": 0.647059,
+      "losses": 33,
+      "rows": 51,
+      "source_provider": "bybit_public",
+      "total_pnl": -23.292335,
+      "win_rate": 0.352941,
+      "wins": 18
+    },
+    {
+      "avg_pnl": 1.625112,
+      "breakeven": 0,
+      "first_ts": "2026-04-05T09:00:00Z",
+      "last_ts": "2026-05-11T10:00:00Z",
+      "loss_rate": 0.659091,
+      "losses": 29,
+      "rows": 44,
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "total_pnl": 71.504938,
+      "win_rate": 0.340909,
+      "wins": 15
+    },
+    {
+      "avg_pnl": -3.954539,
+      "breakeven": 0,
+      "first_ts": "2026-04-16T12:00:00Z",
+      "last_ts": "2026-05-11T16:00:00Z",
+      "loss_rate": 0.6875,
+      "losses": 22,
+      "rows": 32,
+      "source_provider": "kraken_public",
+      "total_pnl": -126.545257,
+      "win_rate": 0.3125,
+      "wins": 10
+    },
+    {
+      "avg_pnl": -6.749075,
+      "breakeven": 0,
+      "first_ts": "2026-04-16T12:00:00Z",
+      "last_ts": "2026-05-11T12:00:00Z",
+      "loss_rate": 0.72973,
+      "losses": 27,
+      "rows": 37,
+      "source_provider": "tvr_default_binance",
+      "total_pnl": -249.715776,
+      "win_rate": 0.27027,
+      "wins": 10
+    },
+    {
+      "avg_pnl": 7.847903,
+      "breakeven": 0,
+      "first_ts": "2026-04-05T03:00:00Z",
+      "last_ts": "2026-05-10T23:00:00Z",
+      "loss_rate": 0.52381,
+      "losses": 11,
+      "rows": 21,
+      "source_provider": "yfinance",
+      "total_pnl": 164.805961,
+      "win_rate": 0.47619,
+      "wins": 10
+    }
+  ],
+  "run_id": "20260512T122136+0800-codex-121607-chronological-calibration-audit-v1",
+  "source_aq_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "source_downstream_run_id": "20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1",
+  "source_feedback_run_id": "20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1",
+  "source_postchain_run_id": "20260512T121542+0800-codex-120630-115700-layered-postchain-validator-v1"
+}

@@ -1,0 +1,249 @@
+{
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "branch_summary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/b2r-suppression-full-replay/crisis_crowded_suppression_full_replay_branch_summary_v1.csv",
+  "decision": "nursery_feedback_full_replay_recorded_not_promotion",
+  "downstream_readback": {
+    "auto_quant_readback": {
+      "healthy": false,
+      "library_source": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/autoquant/strategy_library_source_root_stop_carry_longhorizon_v1.json",
+      "results_import_exit": 0,
+      "status": "missing_dependency"
+    },
+    "bbn_probe": {
+      "bundle": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/aggregate_regime_consumer_bundle_v1.json",
+      "exit_code": 0,
+      "soft_evidence_application_status": "skipped",
+      "soft_evidence_market_regime": null
+    },
+    "catboost_path_ranker_probe": {
+      "exit_code": 0,
+      "export_rows": 5,
+      "history_rows": 321,
+      "mature_rows": 4,
+      "runtime_ready": true,
+      "runtime_status": "enabled_candidate_set_ready",
+      "validation_summary": "Ranker runtime: structural_path_ranking_target rows=5 history_rows=300 mature_rows=4 history_mature_rows=291 raw_scored_mature=291/30 production_validation=290/30 observation_validation=48/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=4"
+    },
+    "commands": [
+      {
+        "cmd": "./target/debug/ict-engine provider-status --agent",
+        "exit_code": 0,
+        "name": "provider_status_agent",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_agent.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_agent.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine provider-status --provider yfinance --agent",
+        "exit_code": 0,
+        "name": "provider_status_yfinance",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_yfinance.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_yfinance.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine provider-status --provider tradingview_mcp --agent",
+        "exit_code": 0,
+        "name": "provider_status_tradingview_mcp",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_tradingview_mcp.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_tradingview_mcp.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine provider-status --provider ibkr --agent",
+        "exit_code": 0,
+        "name": "provider_status_ibkr",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_ibkr.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_ibkr.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine provider-status --provider kraken_cli --agent",
+        "exit_code": 0,
+        "name": "provider_status_kraken_cli",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_kraken_cli.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/provider_status_kraken_cli.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine auto-quant-status --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1",
+        "exit_code": 0,
+        "name": "auto_quant_status",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/auto_quant_status.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/auto_quant_status.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine auto-quant-results-import --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1 --library docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/autoquant/strategy_library_source_root_stop_carry_longhorizon_v1.json",
+        "exit_code": 0,
+        "name": "auto_quant_results_import",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/auto_quant_results_import.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/auto_quant_results_import.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine analyze-live --symbol SRC_ROOT_CARRY_LONG_220646 --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol \\^VIX --futures-backend yfinance --aux-backend yfinance --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1 --regime-consumer-bundle docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/regime-bundles/aggregate_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence --output-format json",
+        "exit_code": 0,
+        "name": "analyze_live",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/analyze_live.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/analyze_live.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine pre-bayes-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1 --refresh --output-format json",
+        "exit_code": 0,
+        "name": "pre_bayes_status",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/pre_bayes_status.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/pre_bayes_status.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1 --phase structural-recommended-path-bundle --agent",
+        "exit_code": 0,
+        "name": "workflow_structural_recommended_path_bundle",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/workflow_structural_recommended_path_bundle.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/workflow_structural_recommended_path_bundle.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine policy-training-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1 --output-format json",
+        "exit_code": 0,
+        "name": "policy_training_status",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/policy_training_status.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/policy_training_status.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine export-structural-path-ranking-target --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1",
+        "exit_code": 0,
+        "name": "export_structural_path_ranking_target",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/export_structural_path_ranking_target.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/export_structural_path_ranking_target.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1 --phase execution-candidate --agent",
+        "exit_code": 0,
+        "name": "workflow_execution_candidate",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/workflow_execution_candidate.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/workflow_execution_candidate.out"
+      },
+      {
+        "cmd": "./target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_crisis_crowded_suppression_full_replay_v1 --agent",
+        "exit_code": 0,
+        "name": "workflow_status_agent",
+        "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/workflow_status_agent.err",
+        "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/command-output/workflow_status_agent.out"
+      }
+    ],
+    "execution_tree_probe": {
+      "branch": "block_crowded",
+      "candidate_status": "ready",
+      "consumer_reason": "market_state=TrendExpansion/BullTrendExhaustion | execution=blocked/block_crowded/skip | ranker=history_path/unknown/ready",
+      "exit_code": 0,
+      "gate_status": "blocked",
+      "one_line": "execution blocked | branch=block_crowded | bias=skip | score=0.563 | confidence=0.000 | hint=execution_blocked_regardless_of_prediction",
+      "review_status": "observe",
+      "sibling_action_result": "no_trade",
+      "sibling_overlay_path": "Crisis -> CrisisReliefCarry -> BlockCrowdedSuppression -> SourceRootStopCarryLongHorizonV1:crisis_carry_no_trade_when_block_crowded_v1",
+      "source_runtime_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "workflow_blocker": "user_selected_historical_data_missing"
+    },
+    "pre_bayes_probe": {
+      "exit_code": 0,
+      "gate_from_execution_candidate": "pass_neutralized",
+      "latest_gate_status": "pass_neutralized",
+      "quality_from_execution_candidate": null
+    },
+    "provider_readback": {
+      "ibkr": {
+        "exit_code": 0,
+        "ready": false,
+        "statuses": [
+          {
+            "domain": "market_data",
+            "ready": false,
+            "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+            "status": "configured_runtime_unhealthy"
+          }
+        ],
+        "summary_line": "market_data:0/1 ready"
+      },
+      "kraken_cli": {
+        "exit_code": 0,
+        "ready": true,
+        "statuses": [
+          {
+            "domain": "local_runtime",
+            "ready": true,
+            "reason": "kraken_cli_config_detected",
+            "status": "ready"
+          }
+        ],
+        "summary_line": "local_runtime:1/1 ready"
+      },
+      "summary": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+      "tradingview_mcp": {
+        "exit_code": 0,
+        "ready": false,
+        "statuses": [
+          {
+            "domain": "market_data",
+            "ready": false,
+            "reason": "tradingview_mcp_connectivity_probe_failed",
+            "status": "configured_runtime_unhealthy"
+          }
+        ],
+        "summary_line": "market_data:0/1 ready"
+      },
+      "yfinance": {
+        "exit_code": 0,
+        "ready": true,
+        "statuses": [
+          {
+            "domain": "live_runtime",
+            "ready": true,
+            "reason": "native_yfinance_runtime_available",
+            "status": "ready"
+          },
+          {
+            "domain": "market_data",
+            "ready": true,
+            "reason": "public_yahoo_http_endpoints",
+            "status": "ready"
+          }
+        ],
+        "summary_line": "live_runtime:1/1 ready | market_data:1/1 ready"
+      }
+    }
+  },
+  "fold_summary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/b2r-suppression-full-replay/crisis_crowded_suppression_full_replay_fold_summary_v1.csv",
+  "full_replay_backtest": {
+    "crisis_decision_rows": 532,
+    "crisis_suppressed_rows": 532,
+    "executed_trade_rows": 11797,
+    "full_replay_rows": 12329,
+    "full_rows_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/b2r-suppression-full-replay/crisis_crowded_suppression_full_replay_rows_v1.csv",
+    "input_selected_rows": 12329,
+    "no_trade_rows": 532,
+    "prevented_crisis_source_net": 2.9068771832980005,
+    "replay_total_net": 37.34510894889001,
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_selected_rows_v1.csv",
+    "source_total_net": 40.25198613218801
+  },
+  "full_rows_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T235839-codex-board-b-crisis-crowded-suppression-full-replay-v1/b2r-suppression-full-replay/crisis_crowded_suppression_full_replay_rows_v1.csv",
+  "generated_at_utc": "2026-05-11T16:02:47Z",
+  "hard_gate_result": "pass:nursery_gate;fail_closed:promotion_gate_not_applicable_no_trade_sibling",
+  "next_action": "Keep the sibling leaf as incubation feedback and collect repeated compatible/non-compatible execution-context observations; do not promote from this no-trade overlay.",
+  "nursery_status": "incubation_only",
+  "promotion_allowed": false,
+  "recipe_id": "CrisisCrowdedSuppressionSiblingV1",
+  "run_id": "20260511T235839+0800-codex-board-b-crisis-crowded-suppression-full-replay-v1",
+  "schema_version": "board-b-crisis-crowded-suppression-full-replay/v1",
+  "sibling_branch_path": "Crisis -> CrisisReliefCarry -> BlockCrowdedSuppression -> SourceRootStopCarryLongHorizonV1:crisis_carry_no_trade_when_block_crowded_v1",
+  "source_branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "source_rc_spa": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_rc_spa_report_v1.md",
+    "crisis_rc_spa": 83.0,
+    "crisis_trade_count": 532,
+    "gate_result": "pass",
+    "manipulation_component_pass": true,
+    "price_root_paths_passed": 4,
+    "stable_profit_score": 85.74074074074075
+  },
+  "source_recipe_id": "SourceRootStopCarryLongHorizonV1",
+  "source_sibling_packet": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T234938-codex-board-b-crisis-crowded-suppression-sibling-v1/crisis-crowded-suppression-sibling/crisis_crowded_suppression_sibling_v1.json",
+    "current_runtime_suppression_action": "no_trade",
+    "decision": "sibling_suppression_leaf_tested_current_context_no_trade"
+  },
+  "suppression_rule": "if execution_tree_branch=block_crowded or execution_readiness<0.45 or live_context=RangeConsolidation/WideRange then no_trade"
+}

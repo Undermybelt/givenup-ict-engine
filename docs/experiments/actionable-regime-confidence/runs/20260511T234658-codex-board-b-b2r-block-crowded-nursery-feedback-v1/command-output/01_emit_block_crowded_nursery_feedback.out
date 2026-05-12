@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "output_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234658-codex-board-b-b2r-block-crowded-nursery-feedback-v1/b2r-block-crowded-nursery-feedback-v1/block_crowded_nursery_structural_feedback_v1.json",
+  "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "realized_outcome": "not_followed",
+  "followed_path": false
+}

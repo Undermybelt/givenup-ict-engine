@@ -1,0 +1,7 @@
+PASS active_taxonomy_mainregimev2
+PASS no_raw_data_committed
+PASS thresholds_relaxed_false
+PASS runtime_code_changed_false
+PASS manipulation_not_inferred_from_ohlcv
+PASS expanded_or_child_labels_not_promoted
+PASS only_bull_accepted_in_this_probe

@@ -1,0 +1,602 @@
+{
+  "active_axis": "MainRegimeV2",
+  "best_rules": [
+    {
+      "calibration": {
+        "positives": 200,
+        "precision": 0.9216589861751152,
+        "support": 217,
+        "wilson95_lcb": 0.8781338511426455
+      },
+      "feature": "sellerFee_amount",
+      "min_support": 217,
+      "min_wilson95_lcb": 0.8781338511426455,
+      "op": ">=",
+      "test": {
+        "positives": 2338,
+        "precision": 0.9953171562366965,
+        "support": 2349,
+        "wilson95_lcb": 0.9916337713491278
+      },
+      "threshold": 1.76300712182e+20,
+      "train": {
+        "positives": 12022,
+        "precision": 0.9989198171998338,
+        "support": 12035,
+        "wilson95_lcb": 0.9981526319686317
+      }
+    },
+    {
+      "calibration": {
+        "positives": 1293,
+        "precision": 0.7215401785714286,
+        "support": 1792,
+        "wilson95_lcb": 0.7003296130473672
+      },
+      "feature": "buyer_7d_trade_count",
+      "min_support": 1507,
+      "min_wilson95_lcb": 0.7003296130473672,
+      "op": ">=",
+      "test": {
+        "positives": 1137,
+        "precision": 0.7544790975447909,
+        "support": 1507,
+        "wilson95_lcb": 0.7321200806526125
+      },
+      "threshold": 5362.0,
+      "train": {
+        "positives": 3594,
+        "precision": 0.7357215967246673,
+        "support": 4885,
+        "wilson95_lcb": 0.723174583226834
+      }
+    },
+    {
+      "calibration": {
+        "positives": 2992,
+        "precision": 0.7103513770180437,
+        "support": 4212,
+        "wilson95_lcb": 0.6964660043400165
+      },
+      "feature": "buyer_7d_trade_count",
+      "min_support": 4212,
+      "min_wilson95_lcb": 0.6964660043400165,
+      "op": ">=",
+      "test": {
+        "positives": 3111,
+        "precision": 0.7311398354876616,
+        "support": 4255,
+        "wilson95_lcb": 0.7176139608061955
+      },
+      "threshold": 3937.0,
+      "train": {
+        "positives": 8679,
+        "precision": 0.710927260812582,
+        "support": 12208,
+        "wilson95_lcb": 0.7028203098692216
+      }
+    },
+    {
+      "calibration": {
+        "positives": 837,
+        "precision": 0.7361477572559367,
+        "support": 1137,
+        "wilson95_lcb": 0.7097662573026156
+      },
+      "feature": "buyer_7d_trade_count",
+      "min_support": 910,
+      "min_wilson95_lcb": 0.6950787887174084,
+      "op": ">=",
+      "test": {
+        "positives": 699,
+        "precision": 0.7681318681318682,
+        "support": 910,
+        "wilson95_lcb": 0.7396193291612132
+      },
+      "threshold": 5778.0,
+      "train": {
+        "positives": 1730,
+        "precision": 0.7134020618556701,
+        "support": 2425,
+        "wilson95_lcb": 0.6950787887174084
+      }
+    },
+    {
+      "calibration": {
+        "positives": 568,
+        "precision": 0.7135678391959799,
+        "support": 796,
+        "wilson95_lcb": 0.6811943062881067
+      },
+      "feature": "buyer_24h_trade_count",
+      "min_support": 796,
+      "min_wilson95_lcb": 0.6811943062881067,
+      "op": ">=",
+      "test": {
+        "positives": 628,
+        "precision": 0.7251732101616628,
+        "support": 866,
+        "wilson95_lcb": 0.694494792876163
+      },
+      "threshold": 987.0,
+      "train": {
+        "positives": 2040,
+        "precision": 0.7132867132867133,
+        "support": 2860,
+        "wilson95_lcb": 0.6964355062937413
+      }
+    },
+    {
+      "calibration": {
+        "positives": 2769,
+        "precision": 0.693116395494368,
+        "support": 3995,
+        "wilson95_lcb": 0.6786351113675185
+      },
+      "feature": "buyer_24h_trade_count",
+      "min_support": 3995,
+      "min_wilson95_lcb": 0.6786351113675185,
+      "op": ">=",
+      "test": {
+        "positives": 3272,
+        "precision": 0.7295429208472687,
+        "support": 4485,
+        "wilson95_lcb": 0.7163506181371767
+      },
+      "threshold": 659.0,
+      "train": {
+        "positives": 8596,
+        "precision": 0.6986913760871332,
+        "support": 12303,
+        "wilson95_lcb": 0.6905228083132698
+      }
+    },
+    {
+      "calibration": {
+        "positives": 5417,
+        "precision": 0.6852624920936117,
+        "support": 7905,
+        "wilson95_lcb": 0.674936957247865
+      },
+      "feature": "buyer_7d_trade_count",
+      "min_support": 7905,
+      "min_wilson95_lcb": 0.674936957247865,
+      "op": ">=",
+      "test": {
+        "positives": 5674,
+        "precision": 0.6918668455066456,
+        "support": 8201,
+        "wilson95_lcb": 0.6817859670639924
+      },
+      "threshold": 3122.0,
+      "train": {
+        "positives": 17103,
+        "precision": 0.7006267666216051,
+        "support": 24411,
+        "wilson95_lcb": 0.6948503650424035
+      }
+    },
+    {
+      "calibration": {
+        "positives": 963,
+        "precision": 0.7251506024096386,
+        "support": 1328,
+        "wilson95_lcb": 0.7005160384419833
+      },
+      "feature": "buyer_24h_trade_count",
+      "min_support": 1142,
+      "min_wilson95_lcb": 0.6715349057349588,
+      "op": ">=",
+      "test": {
+        "positives": 798,
+        "precision": 0.6987740805604203,
+        "support": 1142,
+        "wilson95_lcb": 0.6715349057349588
+      },
+      "threshold": 893.0,
+      "train": {
+        "positives": 3438,
+        "precision": 0.7065351418002466,
+        "support": 4866,
+        "wilson95_lcb": 0.6935822124020031
+      }
+    },
+    {
+      "calibration": {
+        "positives": 5660,
+        "precision": 0.6802884615384616,
+        "support": 8320,
+        "wilson95_lcb": 0.6701862006520478
+      },
+      "feature": "buyer_24h_trade_count",
+      "min_support": 8320,
+      "min_wilson95_lcb": 0.6701862006520478,
+      "op": ">=",
+      "test": {
+        "positives": 5879,
+        "precision": 0.6963989575929874,
+        "support": 8442,
+        "wilson95_lcb": 0.6865028734552628
+      },
+      "threshold": 436.0,
+      "train": {
+        "positives": 16858,
+        "precision": 0.6977360208600637,
+        "support": 24161,
+        "wilson95_lcb": 0.6919142840467167
+      }
+    },
+    {
+      "calibration": {
+        "positives": 4848,
+        "precision": 0.6808032579693863,
+        "support": 7121,
+        "wilson95_lcb": 0.6698810187993204
+      },
+      "feature": "buyer_24h_trade_count",
+      "min_support": 7121,
+      "min_wilson95_lcb": 0.6698810187993204,
+      "op": ">=",
+      "test": {
+        "positives": 5118,
+        "precision": 0.7116240266963293,
+        "support": 7192,
+        "wilson95_lcb": 0.7010436858707241
+      },
+      "threshold": 500.0,
+      "train": {
+        "positives": 14840,
+        "precision": 0.6987475280158207,
+        "support": 21238,
+        "wilson95_lcb": 0.6925415904667823
+      }
+    },
+    {
+      "calibration": {
+        "positives": 10591,
+        "precision": 0.6267976563887081,
+        "support": 16897,
+        "wilson95_lcb": 0.6194770623389246
+      },
+      "feature": "buyer_24h_trade_count",
+      "min_support": 16882,
+      "min_wilson95_lcb": 0.6194770623389246,
+      "op": ">=",
+      "test": {
+        "positives": 10788,
+        "precision": 0.6390238123445089,
+        "support": 16882,
+        "wilson95_lcb": 0.6317480143217324
+      },
+      "threshold": 200.0,
+      "train": {
+        "positives": 30350,
+        "precision": 0.6568979697848578,
+        "support": 46202,
+        "wilson95_lcb": 0.6525561783983517
+      }
+    },
+    {
+      "calibration": {
+        "positives": 11150,
+        "precision": 0.617865454948465,
+        "support": 18046,
+        "wilson95_lcb": 0.6107516273874075
+      },
+      "feature": "buyer_7d_trade_count",
+      "min_support": 18046,
+      "min_wilson95_lcb": 0.6107516273874075,
+      "op": ">=",
+      "test": {
+        "positives": 11366,
+        "precision": 0.627678374199249,
+        "support": 18108,
+        "wilson95_lcb": 0.6206108879053619
+      },
+      "threshold": 1000.0,
+      "train": {
+        "positives": 30916,
+        "precision": 0.6436274305700129,
+        "support": 48034,
+        "wilson95_lcb": 0.6393331497683457
+      }
+    },
+    {
+      "calibration": {
+        "positives": 11014,
+        "precision": 0.6147920736812726,
+        "support": 17915,
+        "wilson95_lcb": 0.6076420938841736
+      },
+      "feature": "buyer_24h_trade_count",
+      "min_support": 17850,
+      "min_wilson95_lcb": 0.6076420938841736,
+      "op": ">=",
+      "test": {
+        "positives": 11182,
+        "precision": 0.6264425770308123,
+        "support": 17850,
+        "wilson95_lcb": 0.6193195159237104
+      },
+      "threshold": 173.0,
+      "train": {
+        "positives": 31303,
+        "precision": 0.6480147393698505,
+        "support": 48306,
+        "wilson95_lcb": 0.6437441757557653
+      }
+    },
+    {
+      "calibration": {
+        "positives": 11156,
+        "precision": 0.6141818982602951,
+        "support": 18164,
+        "wilson95_lcb": 0.6070792957236895
+      },
+      "feature": "buyer_7d_trade_count",
+      "min_support": 18164,
+      "min_wilson95_lcb": 0.6070792957236895,
+      "op": ">=",
+      "test": {
+        "positives": 11383,
+        "precision": 0.6261965012652657,
+        "support": 18178,
+        "wilson95_lcb": 0.6191373459587955
+      },
+      "threshold": 989.0,
+      "train": {
+        "positives": 30918,
+        "precision": 0.6419317332447471,
+        "support": 48164,
+        "wilson95_lcb": 0.6376388902370654
+      }
+    },
+    {
+      "calibration": {
+        "positives": 250,
+        "precision": 0.6561679790026247,
+        "support": 381,
+        "wilson95_lcb": 0.607127884801078
+      },
+      "feature": "buyer_24h_trade_count",
+      "min_support": 381,
+      "min_wilson95_lcb": 0.5996937811135024,
+      "op": ">=",
+      "test": {
+        "positives": 312,
+        "precision": 0.643298969072165,
+        "support": 485,
+        "wilson95_lcb": 0.5996937811135024
+      },
+      "threshold": 1000.0,
+      "train": {
+        "positives": 1176,
+        "precision": 0.702928870292887,
+        "support": 1673,
+        "wilson95_lcb": 0.6805870674638959
+      }
+    },
+    {
+      "calibration": {
+        "positives": 1008,
+        "precision": 0.6176470588235294,
+        "support": 1632,
+        "wilson95_lcb": 0.5938197643820678
+      },
+      "feature": "buyer_nft_all_trade_count",
+      "min_support": 1632,
+      "min_wilson95_lcb": 0.5938197643820678,
+      "op": ">=",
+      "test": {
+        "positives": 1687,
+        "precision": 0.7200170721297482,
+        "support": 2343,
+        "wilson95_lcb": 0.7014880306260636
+      },
+      "threshold": 183.0,
+      "train": {
+        "positives": 17634,
+        "precision": 0.731974596322278,
+        "support": 24091,
+        "wilson95_lcb": 0.7263447835275387
+      }
+    },
+    {
+      "calibration": {
+        "positives": 812,
+        "precision": 0.617490494296578,
+        "support": 1315,
+        "wilson95_lcb": 0.59091665964218
+      },
+      "feature": "buyer_nft_all_trade_count",
+      "min_support": 1315,
+      "min_wilson95_lcb": 0.59091665964218,
+      "op": ">=",
+      "test": {
+        "positives": 1481,
+        "precision": 0.7178865729520116,
+        "support": 2063,
+        "wilson95_lcb": 0.6980759250404083
+      },
+      "threshold": 200.0,
+      "train": {
+        "positives": 16794,
+        "precision": 0.7317965924441152,
+        "support": 22949,
+        "wilson95_lcb": 0.7260263134028591
+      }
+    },
+    {
+      "calibration": {
+        "positives": 6097,
+        "precision": 0.5983316977428852,
+        "support": 10190,
+        "wilson95_lcb": 0.5887779236313054
+      },
+      "feature": "buyer_7d_nfttrade_count",
+      "min_support": 10167,
+      "min_wilson95_lcb": 0.5887779236313054,
+      "op": ">=",
+      "test": {
+        "positives": 6381,
+        "precision": 0.6276187665978165,
+        "support": 10167,
+        "wilson95_lcb": 0.6181751238087947
+      },
+      "threshold": 37.0,
+      "train": {
+        "positives": 33427,
+        "precision": 0.6916408028139872,
+        "support": 48330,
+        "wilson95_lcb": 0.6875084456178115
+      }
+    },
+    {
+      "calibration": {
+        "positives": 4673,
+        "precision": 0.5996407031951752,
+        "support": 7793,
+        "wilson95_lcb": 0.5887157491273961
+      },
+      "feature": "buyer_7d_nfttrade_count",
+      "min_support": 7508,
+      "min_wilson95_lcb": 0.5887157491273961,
+      "op": ">=",
+      "test": {
+        "positives": 4739,
+        "precision": 0.6311933937133724,
+        "support": 7508,
+        "wilson95_lcb": 0.6202153255360436
+      },
+      "threshold": 50.0,
+      "train": {
+        "positives": 28282,
+        "precision": 0.6944969673157675,
+        "support": 40723,
+        "wilson95_lcb": 0.6900050510433519
+      }
+    },
+    {
+      "calibration": {
+        "positives": 2370,
+        "precision": 0.6024402643619725,
+        "support": 3934,
+        "wilson95_lcb": 0.5870545920492658
+      },
+      "feature": "buyer_7d_nfttrade_count",
+      "min_support": 3873,
+      "min_wilson95_lcb": 0.5870545920492658,
+      "op": ">=",
+      "test": {
+        "positives": 2486,
+        "precision": 0.6418796798347535,
+        "support": 3873,
+        "wilson95_lcb": 0.6266463162292455
+      },
+      "threshold": 100.0,
+      "train": {
+        "positives": 16380,
+        "precision": 0.6915769474350855,
+        "support": 23685,
+        "wilson95_lcb": 0.6856645458134547
+      }
+    }
+  ],
+  "candidate_regime": "Manipulation",
+  "downloaded_file": {
+    "actual_sha256": "b50e57907f9c5602f251c261cc4f29889d2f3ceeeaf9cbcfcca447a1fa566c3f",
+    "expected_sha256": "b50e57907f9c5602f251c261cc4f29889d2f3ceeeaf9cbcfcca447a1fa566c3f",
+    "filename": "LooksRare_ml_samples.csv",
+    "local_path": "/tmp/LooksRare_ml_samples.csv",
+    "raw_committed_to_repo": false,
+    "sha256_matches_metadata": true,
+    "size": 38651230
+  },
+  "file_inventory": [
+    {
+      "filename": "Blur_ml_samples.csv",
+      "id": "54078a82-be05-4131-b103-1f1c23580e74",
+      "sha256": "51e41acafc574fd4f7853b4a64676775e9695e8dd9fd2eb937e1587f9a41678b",
+      "size": 346004976
+    },
+    {
+      "filename": "gox_ml_samples.csv",
+      "id": "32c0bbb6-ea90-4fa3-a6da-b1216faf162e",
+      "sha256": "28cd2a2cca5aed49964e7e75043f9a79f773018d1e891add17319f7541716bff",
+      "size": 986063630
+    },
+    {
+      "filename": "LooksRare_ml_samples.csv",
+      "id": "34c45754-393a-4a58-84b9-ff6227d349f9",
+      "sha256": "b50e57907f9c5602f251c261cc4f29889d2f3ceeeaf9cbcfcca447a1fa566c3f",
+      "size": 38651230
+    },
+    {
+      "filename": "OpenSea_ml_samples.csv",
+      "id": "83fb5bdf-7bd8-4acc-a528-75631a2a64cf",
+      "sha256": "9b04bec65d083053b02ea82eb8432f48fdc2d8e27fe1a45565847a35c355e32f",
+      "size": 2127010916
+    }
+  ],
+  "gate_result": {
+    "accepted_95": false,
+    "diagnostic_best_min_wilson95_lcb": 0.8781338511426455,
+    "diagnostic_best_rule": {
+      "feature": "sellerFee_amount",
+      "op": ">=",
+      "threshold": 1.76300712182e+20
+    },
+    "fresh_calibration_rerun": true,
+    "gate": "blocked_no_accepted_95_and_no_explicit_timestamp",
+    "reason": "LooksRare raw row-level file was acquired and verified, but no train-selected single-threshold rule passed the unchanged train/calibration/test 95% lower-bound gate; the file also lacks an explicit timestamp for chronological validation.",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "next_action": "Acquire or derive an explicit chronological key for the Mendeley raw files and expand the unchanged gate across additional downloaded files before considering Manipulation acceptance.",
+  "run_id": "20260511T021618+0800-codex-mendeley-looksrare-manipulation-smoke",
+  "schema": {
+    "chronology_status": "blocked_explicit_timestamp_absent_file_order_split_only",
+    "columns": [
+      "sellerFee_amount",
+      "round_level",
+      "cumu_wash_percent_opt",
+      "buyer_24h_trade_count",
+      "buyer_7d_trade_count",
+      "seller_24h_trade_count",
+      "seller_7d_trade_count",
+      "buyer_24h_nfttrade_count",
+      "buyer_7d_nfttrade_count",
+      "seller_24h_nfttrade_count",
+      "seller_7d_nfttrade_count",
+      "buyer_nft_all_trade_count",
+      "seller_nft_all_trade_count",
+      "price_deviation",
+      "time_since_last_trade",
+      "hours",
+      "filter_1234"
+    ],
+    "explicit_timestamp_column_present": false,
+    "label_column": "filter_1234"
+  },
+  "source": {
+    "doi": "10.17632/4hyxfwzpgg.3",
+    "file_list_endpoint": "https://data.mendeley.com/public-api/datasets/4hyxfwzpgg/files?folder_id=root&version=3",
+    "license": "CC BY 4.0",
+    "name": "Mendeley Data: Detecting Crypto Wash Trades via Machine Learning",
+    "url": "https://data.mendeley.com/datasets/4hyxfwzpgg/3"
+  },
+  "support": {
+    "calibration_positive_rate": 0.3696104705515737,
+    "calibration_rows": 80225,
+    "label_counts": {
+      "False": 237930,
+      "True": 163195
+    },
+    "rows": 401125,
+    "test_positive_rate": 0.3855032720473668,
+    "test_rows": 80225,
+    "train_positive_rate": 0.4263675080502753,
+    "train_rows": 240675
+  }
+}

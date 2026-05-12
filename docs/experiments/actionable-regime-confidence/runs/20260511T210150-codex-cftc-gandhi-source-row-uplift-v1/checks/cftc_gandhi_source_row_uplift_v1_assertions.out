@@ -1,0 +1,5 @@
+source_pdf_present=PASS
+positive_rows_added=FAIL
+matched_negative_rows_added=FAIL
+verifier_schema_ready_unscored=PASS
+strict_full_objective_not_claimed=PASS

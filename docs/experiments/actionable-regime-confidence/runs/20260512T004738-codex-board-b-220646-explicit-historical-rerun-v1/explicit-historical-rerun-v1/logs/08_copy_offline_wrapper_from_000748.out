@@ -1,0 +1,8 @@
+exit=0
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/config.tomac.json
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run_recorded_branch.py
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/RecordedBranchDailyPulse.py
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/RegimeRootPulseBranch.py
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/RegimeRsiRelief.py
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/RegimeTrendCarry.py
+docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies_external/RegimeVolBreakout.py

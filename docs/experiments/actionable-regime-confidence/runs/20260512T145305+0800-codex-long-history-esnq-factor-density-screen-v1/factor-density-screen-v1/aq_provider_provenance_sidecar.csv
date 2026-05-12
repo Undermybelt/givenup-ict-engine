@@ -1,0 +1,7 @@
+provider,aq_provider_invoked,provider_requested,provider_data_acquired,provider_unreachable,local_cache_replay,context_source,note
+IBKR,False,False,False,False,True,20260512T141554+0800-codex-provider-longspan-capability-matrix-v1,prior 141554 SPY 1h 5y probe succeeded through isolated runtime; not invoked in this local factor-density screen
+TradingViewRemix/TVR,False,False,False,False,True,20260512T141554+0800-codex-provider-longspan-capability-matrix-v1,prior 141554 QQQ 1h 2y harness fetch failed; not invoked in this local factor-density screen
+yfinance/YF,False,False,False,False,True,20260512T141554+0800-codex-provider-longspan-capability-matrix-v1,prior 141554 ES 1h/1d probe succeeded; not invoked in this local factor-density screen
+Kraken,False,False,False,False,True,20260512T141554+0800-codex-provider-longspan-capability-matrix-v1,prior 141554 public probes returned windowed rows; not invoked in this local factor-density screen
+Binance,False,False,False,False,True,20260512T141554+0800-codex-provider-longspan-capability-matrix-v1,prior 141554 BTCUSDT 1m/1h probes succeeded; not invoked in this local factor-density screen
+Bybit,False,False,False,False,True,20260512T141554+0800-codex-provider-longspan-capability-matrix-v1,prior 141554 public probes returned capped rows; not invoked in this local factor-density screen

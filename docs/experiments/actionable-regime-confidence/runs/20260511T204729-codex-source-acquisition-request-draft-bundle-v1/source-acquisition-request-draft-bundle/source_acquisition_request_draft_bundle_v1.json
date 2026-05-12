@@ -1,0 +1,83 @@
+{
+  "accepted_rows_added": 0,
+  "created_at": "2026-05-11T12:48:33.993685+00:00",
+  "decision": "source_acquisition_request_draft_bundle_v1=drafts_ready_not_sent_rows_not_acquired",
+  "draft_count": 5,
+  "drafts": [
+    {
+      "accepted_rows_added": 0,
+      "draft_path": "docs/experiments/actionable-regime-confidence/runs/20260511T204729-codex-source-acquisition-request-draft-bundle-v1/source-acquisition-request-draft-bundle/drafts/r2-source-label-equivalence-crossmarket.md",
+      "outbox_id": "R2-source-label-equivalence-crossmarket",
+      "primary_contact_surface": "Kaggle owner, Nasdaq indexes/licensing, CME, Kraken public data/contact surfaces",
+      "request_sent": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "required_intake_root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "requirements": "R2",
+      "rows_acquired": false
+    },
+    {
+      "accepted_rows_added": 0,
+      "draft_path": "docs/experiments/actionable-regime-confidence/runs/20260511T204729-codex-source-acquisition-request-draft-bundle-v1/source-acquisition-request-draft-bundle/drafts/r3-native-subhour-source-labels.md",
+      "outbox_id": "R3-native-subhour-source-labels",
+      "primary_contact_surface": "Kaggle stock-regime owner, Yahoo/Yahoo terms, Nasdaq, CME, Cboe, Polygon",
+      "request_sent": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "required_intake_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "requirements": "R3",
+      "rows_acquired": false
+    },
+    {
+      "accepted_rows_added": 0,
+      "draft_path": "docs/experiments/actionable-regime-confidence/runs/20260511T204729-codex-source-acquisition-request-draft-bundle-v1/source-acquisition-request-draft-bundle/drafts/r4-r5-stock-regime-owner-recency-and-1h.md",
+      "outbox_id": "R4-R5-stock-regime-owner-recency-and-1h",
+      "primary_contact_surface": "Kaggle stock-regime owner discussion/profile and collaborator profile",
+      "request_sent": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "required_intake_root": "/tmp/ict-engine-source-panel-recency-extension",
+      "requirements": "R4;R5",
+      "rows_acquired": false
+    },
+    {
+      "accepted_rows_added": 0,
+      "draft_path": "docs/experiments/actionable-regime-confidence/runs/20260511T204729-codex-source-acquisition-request-draft-bundle-v1/source-acquisition-request-draft-bundle/drafts/r6-do-putnins-spoofing-layering.md",
+      "outbox_id": "R6-do-putnins-spoofing-layering",
+      "primary_contact_surface": "SSRN author email links, SSRN contact-author, UTS profile, RePEc fallback",
+      "request_sent": false,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "required_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "requirements": "R6",
+      "rows_acquired": false
+    },
+    {
+      "accepted_rows_added": 0,
+      "draft_path": "docs/experiments/actionable-regime-confidence/runs/20260511T204729-codex-source-acquisition-request-draft-bundle-v1/source-acquisition-request-draft-bundle/drafts/r6-direct-manipulation-remaining-species.md",
+      "outbox_id": "R6-direct-manipulation-remaining-species",
+      "primary_contact_surface": "direct species matrix candidates plus no-candidate placeholders for bear_raid and painting_tape",
+      "request_sent": false,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "required_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "requirements": "R6",
+      "rows_acquired": false
+    }
+  ],
+  "new_confidence_gate": false,
+  "r6_uplift": "docs/experiments/actionable-regime-confidence/runs/20260511T204159-codex-r6-bear-raid-painting-tape-source-uplift-v1/r6-source-uplift/r6_bear_raid_painting_tape_source_uplift_v1.json",
+  "raw_data_committed": false,
+  "request_sent": false,
+  "requirements_covered": [
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6"
+  ],
+  "rows_acquired": false,
+  "run_id": "20260511T204729-codex-source-acquisition-request-draft-bundle-v1",
+  "runtime_code_changed": false,
+  "source_outbox": "docs/experiments/actionable-regime-confidence/runs/20260511T204131-codex-source-acquisition-outbox-v1/source-acquisition-outbox/source_acquisition_outbox_v1.json",
+  "source_outbox_decision": "source_acquisition_outbox_v1=outbox_ready_rows_not_acquired",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

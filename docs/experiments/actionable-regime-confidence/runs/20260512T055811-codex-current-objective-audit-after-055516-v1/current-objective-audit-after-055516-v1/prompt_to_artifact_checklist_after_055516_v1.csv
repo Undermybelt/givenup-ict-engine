@@ -1,0 +1,9 @@
+requirement,status,evidence,gap
+Every active regime reaches calibrated 95% confidence,diagnostic_only_not_promoting,053852 HGB field materialization present,source/control roots and canonical merge absent
+"Validated across other markets, cycles, and timeframes",partial_diagnostic_only,053852 reports instruments/periods/contexts; R3 native sub-hour root absent,native sub-hour/source-owned cross-timeframe validation root absent
+"Use IBKR, TradingViewRemix, yfinance, Kraken, and Auto-Quant/ict-engine runtime surfaces",diagnostic_runtime_readback_only,054116 and 055129 provider/runtime readbacks present,provider bars and runtime readiness are not source labels or promotion evidence
+Acquire source/control evidence or valid source-owned R3/R5 rows,blocked,"required roots: /tmp/ict-engine-board-a-r6-owner-export-v1=False, /tmp/ict-engine-native-subhour-source-label-intake=False, /tmp/ict-engine-source-panel-recency-extension=False",all required roots are absent
+R6 owner/export dispatch or approval path,blocked,055516 dispatch feasibility present; approval_present=False,drafts not sent; no ticket/export/license ids; no approval
+R3/R5 source-search does not rely on proxy mappings,screened_no_unlock,055116/055103/055509 present,no exact native sub-hour labels or post-cutoff MainRegimeV2 rows acquired
+Canonical merge and downstream promotion rerun,not_allowed,canonical_allowed=False; downstream_allowed=False,source/control gate remains closed
+Trade usability and update_goal,false,trade usable false; update_goal=false,objective not achieved

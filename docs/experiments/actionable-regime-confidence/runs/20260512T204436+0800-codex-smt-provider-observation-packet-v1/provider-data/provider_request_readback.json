@@ -1,0 +1,12 @@
+{
+  "fetch_performed": false,
+  "reused_existing_local_provider_artifacts": true,
+  "btc_1h_path": "docs/experiments/actionable-regime-confidence/runs/20260512T200516+0800-codex-native-crypto-full-chain-retry-v1/data/BOARD_A_NATIVE_BINANCE_BTC_200516/1h.json",
+  "eth_1h_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/eth_usdt_crypto_nonbtc_1h_4h_1d/eth_usdt_crypto_nonbtc_1h_4h_1d-1h.json",
+  "btc_rows": 11905,
+  "eth_rows": 2000,
+  "aligned_rows": 2000,
+  "requested_timeframe": "1h",
+  "returned_timeframe": "1h",
+  "provider_cap_or_error": null
+}

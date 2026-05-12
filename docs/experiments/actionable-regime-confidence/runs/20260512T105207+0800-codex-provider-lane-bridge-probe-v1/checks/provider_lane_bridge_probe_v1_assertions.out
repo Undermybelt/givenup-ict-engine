@@ -1,0 +1,5 @@
+pass:artifact_json_written
+pass:checklist_written
+pass:no_promotion
+pass:some_provider_fetch_ok
+fail_closed:six_provider_promotion_matrix_not_passed

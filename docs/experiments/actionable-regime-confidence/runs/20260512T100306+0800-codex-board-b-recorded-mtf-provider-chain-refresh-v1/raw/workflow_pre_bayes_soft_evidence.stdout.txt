@@ -1,0 +1,26 @@
+{
+  "factor_alignment": {
+    "bearish": 0.0,
+    "bullish": 0.0,
+    "mixed": 1.0
+  },
+  "factor_uncertainty": {
+    "high": 0.4095187664183507,
+    "low": 0.5904812335816493
+  },
+  "liquidity_context": {
+    "favorable": 0.0,
+    "hostile": 0.0,
+    "neutral": 1.0
+  },
+  "market_regime": {
+    "bear": 0.175,
+    "bull": 0.175,
+    "range": 0.65
+  },
+  "multi_timeframe_resonance": {
+    "aligned": 0.5904812335816493,
+    "dislocated": 0.0,
+    "mixed": 0.4095187664183507
+  }
+}

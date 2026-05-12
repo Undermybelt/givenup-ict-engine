@@ -1,0 +1,6 @@
+{
+  "ok": false,
+  "attempt": "analyze-live with futures-symbol QQQ",
+  "error": "Error: yahoo chart returned error for 'QQQ=F'\n\nCaused by:\n    HTTP status client error (404 Not Found) for url (https://query1.finance.yahoo.com/v8/finance/chart/QQQ%3DF?interval=1d&period1=1742122320&period2=1778410320&includePrePost=true&events=div%2Csplits)",
+  "root_cause": "Yahoo futures mapping tried QQQ=F, which does not exist; rerun uses NQ=F futures and QQQ spot/options context."
+}

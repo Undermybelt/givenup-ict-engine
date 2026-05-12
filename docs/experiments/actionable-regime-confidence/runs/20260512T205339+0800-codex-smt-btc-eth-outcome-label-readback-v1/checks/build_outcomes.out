@@ -1,0 +1,9 @@
+{
+  "event_count": 127,
+  "outcome_6h_count": 127,
+  "outcome_12h_count": 124,
+  "hit_rate_6h": 0.622047,
+  "hit_rate_12h": 0.516129,
+  "mean_forward_6h_return": 0.00034318,
+  "mean_forward_12h_return": -0.00200802
+}

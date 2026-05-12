@@ -1,0 +1,67 @@
+{
+  "accepted_rows_added": 0,
+  "after_bootstrap_status": "dependency_ready_data_missing",
+  "after_prepare_status": "dependency_ready_data_missing",
+  "before_status": "missing_dependency",
+  "bootstrap_exit": 0,
+  "canonical_merge_allowed": false,
+  "command_summary": [
+    {
+      "cmd": "./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808 --output-format json",
+      "command_id": "00_auto_quant_status_before",
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 2674
+    },
+    {
+      "cmd": "./target/debug/ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808",
+      "command_id": "01_auto_quant_bootstrap",
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 735
+    },
+    {
+      "cmd": "./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808 --output-format json",
+      "command_id": "02_auto_quant_status_after_bootstrap",
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 2736
+    },
+    {
+      "cmd": "./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808",
+      "command_id": "03_auto_quant_prepare",
+      "exit": 1,
+      "stderr_bytes": 15195,
+      "stdout_bytes": 0
+    },
+    {
+      "cmd": "./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808 --output-format json",
+      "command_id": "04_auto_quant_status_after_prepare",
+      "exit": 0,
+      "stderr_bytes": 0,
+      "stdout_bytes": 2736
+    }
+  ],
+  "downstream_promotion_rerun_allowed": false,
+  "final_bootstrap_needed": false,
+  "final_data_ready": false,
+  "final_dependency_healthy": true,
+  "final_healthy": false,
+  "gate_result": "autoquant_bootstrap_prepare_readiness_v1=dependency_ready_prepare_failed_data_missing_no_promotion",
+  "managed_dir": "/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant",
+  "new_confidence_gate": false,
+  "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "prepare_error_contains_binance_exchange_info": true,
+  "prepare_error_summary": "Markets were not loaded",
+  "prepare_exit": 1,
+  "r3_r5_r6_roots_mutated": false,
+  "raw_data_committed": false,
+  "run_id": "20260512T021808-codex-autoquant-bootstrap-prepare-readiness-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "state_dir": "/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

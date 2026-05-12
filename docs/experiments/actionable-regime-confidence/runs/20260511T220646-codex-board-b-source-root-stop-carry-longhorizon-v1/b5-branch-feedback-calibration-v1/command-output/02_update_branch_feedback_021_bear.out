@@ -1,0 +1,888 @@
+{
+  "ensemble": null,
+  "reflection_bundle": {
+    "postmortem": {
+      "deviations": [
+        "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1"
+      ],
+      "evidence_drift": [
+        "dataset_audit:dataset_audit:Audit whether the dataset and command context are sufficient for trustworthy iteration.",
+        "feedback_update:update_feedback_review:Review the newly realized outcome and decide what the next agent iteration should target.",
+        "factor_research:factor_triage:Select which factors to keep, tune, observe, or replace.",
+        "feedback_learning:feedback_review:Review which factors are failing by regime and whether weight updates should be trusted.",
+        "update_diff:update_diff_review:Review whether the realized update materially changed model state.",
+        "artifact_decision:artifact_decision_review:Review artifact-driven actions and ensure they align with the next code or model iteration.",
+        "promotion_gate:promotion_gate:Decide whether a factor iteration is strong enough to promote.",
+        "rollback_review:rollback_review:Decide whether recent changes should be rolled back or isolated.",
+        "artifact_decision:artifact_decision_review:Review artifact-driven actions and ensure they align with the next code or model iteration.",
+        "learning_semantics:class=negative_executed success_credit=0.000 observation_weight=1.000"
+      ],
+      "expected_outcome": "unknown_expected_outcome",
+      "next_candidates": [
+        "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1"
+      ],
+      "realized_outcome": "loss",
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "timestamp": "6c214ccee5d53cef",
+      "what_failed": [
+        "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1"
+      ],
+      "what_worked": [
+        "dataset_audit:dataset_audit:Audit whether the dataset and command context are sufficient for trustworthy iteration.",
+        "feedback_update:update_feedback_review:Review the newly realized outcome and decide what the next agent iteration should target.",
+        "factor_research:factor_triage:Select which factors to keep, tune, observe, or replace.",
+        "feedback_learning:feedback_review:Review which factors are failing by regime and whether weight updates should be trusted.",
+        "update_diff:update_diff_review:Review whether the realized update materially changed model state.",
+        "artifact_decision:artifact_decision_review:Review artifact-driven actions and ensure they align with the next code or model iteration.",
+        "promotion_gate:promotion_gate:Decide whether a factor iteration is strong enough to promote.",
+        "rollback_review:rollback_review:Decide whether recent changes should be rolled back or isolated.",
+        "artifact_decision:artifact_decision_review:Review artifact-driven actions and ensure they align with the next code or model iteration.",
+        "learning_semantics:class=negative_executed success_credit=0.000 observation_weight=1.000"
+      ]
+    },
+    "prior": {
+      "expected_direction": "Block Promotion",
+      "expected_key_evidence": [
+        "dataset_audit:dataset_audit:Audit whether the dataset and command context are sufficient for trustworthy iteration.",
+        "feedback_update:update_feedback_review:Review the newly realized outcome and decide what the next agent iteration should target.",
+        "factor_research:factor_triage:Select which factors to keep, tune, observe, or replace.",
+        "feedback_learning:feedback_review:Review which factors are failing by regime and whether weight updates should be trusted.",
+        "update_diff:update_diff_review:Review whether the realized update materially changed model state.",
+        "artifact_decision:artifact_decision_review:Review artifact-driven actions and ensure they align with the next code or model iteration.",
+        "promotion_gate:promotion_gate:Decide whether a factor iteration is strong enough to promote.",
+        "rollback_review:rollback_review:Decide whether recent changes should be rolled back or isolated.",
+        "artifact_decision:artifact_decision_review:Review artifact-driven actions and ensure they align with the next code or model iteration.",
+        "learning_semantics:class=negative_executed success_credit=0.000 observation_weight=1.000"
+      ],
+      "expected_regime": "research_iteration",
+      "freshness_expectation": "fresh_required",
+      "invalidation_conditions": [
+        "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1"
+      ],
+      "notes": [
+        "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1"
+      ],
+      "objective": "Use the realized update for SRC_ROOT_CARRY_LONG_220646 to review whether the latest result should change factor weights, factor evidence interpretation, or future trade acceptance thresholds.",
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "timestamp": "6c214ccee5d53cef"
+    }
+  },
+  "report": {
+    "agent_action_plan": {
+      "items": [
+        {
+          "blocking": true,
+          "expected_output": "Promotion decision resolved with explicit hold or approval rationale",
+          "expected_state_changes": [
+            {
+              "direction": "hold_until_thresholds_met",
+              "rationale": "insufficient_improvement",
+              "target": "promotion_decision"
+            }
+          ],
+          "priority": "high",
+          "rationale": "insufficient_improvement",
+          "stage": "promotion",
+          "suggested_commands": [
+            "blocked: recommended_command_unavailable missing=research_data_path"
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/agent/prompts.rs"
+          ],
+          "title": "Block Promotion"
+        }
+      ],
+      "summary": "update_result:applied"
+    },
+    "agent_context_bundle": {
+      "artifact_consumed_gate_reason": "no_consumed_artifacts",
+      "artifact_consumed_gate_status": "no_consumed_validation",
+      "artifact_consumed_gate_targets": [],
+      "comparable_to_last_run": true,
+      "decision_hint": "update_result:applied",
+      "factor_mutation_direction_hints": [],
+      "factor_mutation_evaluation": null,
+      "factor_mutation_priority_markets": [],
+      "factor_mutation_priority_reasons": [],
+      "factor_mutation_recommended_focus": [],
+      "factor_mutation_step_size_hints": [],
+      "family_actions": [],
+      "family_history_window": 5,
+      "multi_timeframe_summary": [],
+      "pda_cluster_confidence": null,
+      "pda_cluster_label": null,
+      "pda_sequence_summary": null,
+      "pre_bayes_conflict_flags": [],
+      "pre_bayes_entry_quality_bridge_diff": null,
+      "pre_bayes_entry_quality_bridge_summary": [],
+      "pre_bayes_evidence_quality_score": 0.0,
+      "pre_bayes_filtered_assignments": {},
+      "pre_bayes_gate_status": "",
+      "pre_bayes_multi_timeframe_alignment_score": null,
+      "pre_bayes_multi_timeframe_direction_bias": "",
+      "pre_bayes_multi_timeframe_entry_alignment_score": null,
+      "pre_bayes_policy_version": "",
+      "pre_bayes_soft_evidence": {},
+      "pre_bayes_soft_evidence_diff": [],
+      "pre_bayes_uses_soft_evidence": false,
+      "recommended_commands": {
+        "analyze": {
+          "command": "recommended_command_unavailable",
+          "missing_inputs": [
+            "analyze_input_context"
+          ],
+          "rationale": "analyze inputs are not available in this run context",
+          "ready": false,
+          "recorded_data_paths": [],
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "user_data_selection_required": false
+        },
+        "backtest": {
+          "command": "recommended_command_unavailable",
+          "missing_inputs": [
+            "backtest_data_path"
+          ],
+          "rationale": "factor backtest requires a persisted data path",
+          "ready": false,
+          "recorded_data_paths": [],
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "user_data_selection_required": false
+        },
+        "research": {
+          "command": "recommended_command_unavailable",
+          "missing_inputs": [
+            "research_data_path"
+          ],
+          "rationale": "factor research requires a persisted data path",
+          "ready": false,
+          "recorded_data_paths": [],
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "user_data_selection_required": false
+        },
+        "update": {
+          "command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+          "missing_inputs": [],
+          "rationale": "apply the persisted pending feedback artifact at /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/feedback/feedback_021_bear.json",
+          "ready": true,
+          "recorded_data_paths": [],
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "user_data_selection_required": false
+        }
+      },
+      "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+      "recommended_next_command_meta": {
+        "blocked": false,
+        "executable_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+        "kind": "ict_engine",
+        "prompt": null,
+        "recorded_data_paths": [],
+        "requires_user_input": false
+      },
+      "stage_views": [
+        {
+          "actions": [
+            "blocked_by:analyze_input_context"
+          ],
+          "blocking_items": 0,
+          "gate_reason": "",
+          "gate_status": "",
+          "recommended_command": "blocked: recommended_command_unavailable missing=analyze_input_context",
+          "stage": "analyze"
+        },
+        {
+          "actions": [
+            "blocked_by:research_data_path"
+          ],
+          "blocking_items": 0,
+          "gate_reason": "no_consumed_artifacts",
+          "gate_status": "no_consumed_validation",
+          "recommended_command": "blocked: recommended_command_unavailable missing=research_data_path",
+          "stage": "research"
+        },
+        {
+          "actions": [
+            "blocked_by:backtest_data_path"
+          ],
+          "blocking_items": 0,
+          "gate_reason": "no_consumed_artifacts",
+          "gate_status": "no_consumed_validation",
+          "recommended_command": "blocked: recommended_command_unavailable missing=backtest_data_path",
+          "stage": "backtest"
+        },
+        {
+          "actions": [],
+          "blocking_items": 0,
+          "gate_reason": "no_consumed_artifacts",
+          "gate_status": "no_consumed_validation",
+          "recommended_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+          "stage": "update"
+        },
+        {
+          "actions": [
+            "no_consumed_artifacts"
+          ],
+          "blocking_items": 0,
+          "gate_reason": "no_consumed_artifacts",
+          "gate_status": "no_consumed_validation",
+          "recommended_command": "ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1 --phase artifact-consumed-gate",
+          "stage": "artifact_consumption"
+        }
+      ],
+      "top_factor_actions": [],
+      "workflow_state": {
+        "phase": "research_iteration",
+        "reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts"
+      }
+    },
+    "agent_context_bundle_minimal": {
+      "artifact_consumed_gate_status": "no_consumed_validation",
+      "comparable_to_last_run": true,
+      "factor_mutation_acceptance_status": "",
+      "factor_mutation_direction_hints": [],
+      "factor_mutation_failure_tags": [],
+      "factor_mutation_priority_markets": [],
+      "factor_mutation_priority_reasons": [],
+      "factor_mutation_step_size_hints": [],
+      "family_history_window": 5,
+      "multi_timeframe_summary": [],
+      "pda_cluster_label": null,
+      "pre_bayes_bridge_selected_entry_quality": "",
+      "pre_bayes_gate_status": "",
+      "pre_bayes_policy_version": "",
+      "pre_bayes_soft_evidence_divergence_count": 0,
+      "pre_bayes_uses_soft_evidence": false,
+      "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+      "recommended_next_command_meta": {
+        "blocked": false,
+        "executable_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+        "kind": "ict_engine",
+        "prompt": null,
+        "recorded_data_paths": [],
+        "requires_user_input": false
+      },
+      "stage_views": [
+        {
+          "gate_status": "",
+          "recommended_command": "blocked: recommended_command_unavailable missing=analyze_input_context",
+          "stage": "analyze"
+        },
+        {
+          "gate_status": "no_consumed_validation",
+          "recommended_command": "blocked: recommended_command_unavailable missing=research_data_path",
+          "stage": "research"
+        },
+        {
+          "gate_status": "no_consumed_validation",
+          "recommended_command": "blocked: recommended_command_unavailable missing=backtest_data_path",
+          "stage": "backtest"
+        },
+        {
+          "gate_status": "no_consumed_validation",
+          "recommended_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+          "stage": "update"
+        },
+        {
+          "gate_status": "no_consumed_validation",
+          "recommended_command": "ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1 --phase artifact-consumed-gate",
+          "stage": "artifact_consumption"
+        }
+      ],
+      "top_factor_actions": [],
+      "workflow_phase": "research_iteration"
+    },
+    "agent_prompts": {
+      "prompts": [
+        {
+          "id": "dataset_audit",
+          "objective": "Audit whether the dataset and command context are sufficient for trustworthy iteration.",
+          "priority": "high",
+          "stage": "dataset_audit",
+          "success_criteria": [
+            "Flag low sample size or missing paired-market evidence before approving major factor changes",
+            "If this run is not comparable to prior runs, tell the next agent not to over-interpret score deltas"
+          ],
+          "suggested_files": [
+            "src/data/loader.rs",
+            "src/main.rs",
+            "src/factor_lab/research.rs"
+          ],
+          "system_prompt": "You are the dataset-audit agent. Check whether the current dataset scope, paired market coverage, and command context are sufficient before making factor or model changes.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 data_path=update-command paired_data_path=None candles=1 paired_candles=None source_command=update"
+        },
+        {
+          "id": "update_feedback_review",
+          "objective": "Review the newly realized outcome and decide what the next agent iteration should target.",
+          "priority": "high",
+          "stage": "feedback_update",
+          "success_criteria": [
+            "If duplicate_feedback_skipped is true, do not infer a new learning event",
+            "If factor_alignment and realized_outcome disagree repeatedly, prioritize evidence-mapping review or factor replacement",
+            "If updated_trade_outcome improves while factor scores stay weak, review BBN calibration before editing factor code"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/factors/weight_updater.rs",
+            "src/bbn/trading/topology.rs",
+            "src/agent/prompts.rs"
+          ],
+          "system_prompt": "You are the realized-feedback agent. Use the updated trade_outcome distribution plus factor scorecards to decide whether the latest result strengthens confidence, exposes a factor weakness, or suggests a problem in evidence mapping.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 entry_quality=medium factor_alignment=bullish factor_uncertainty=high realized_outcome=loss structural_learning_semantics=class=negative_executed success_credit=0.000 observation_weight=1.000 feedback_records_applied=1 updated_trade_outcome={\"breakeven\": 0.10689977326830301, \"loss\": 0.473810676838768, \"win\": 0.4192895498929291} iteration_queue=[]"
+        },
+        {
+          "id": "factor_triage",
+          "objective": "Select which factors to keep, tune, observe, or replace.",
+          "priority": "high",
+          "stage": "factor_research",
+          "success_criteria": [
+            "Prioritize replace > tune > observe > keep",
+            "Only recommend replacing a factor when its action is replace or replacement_candidate=true",
+            "Use the factor-specific agent prompt as the acceptance rule for the next iteration"
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/registry.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "system_prompt": "You are the factor-iteration agent. Use only the supplied scorecards and feedback summary to decide which factor edits are justified. Do not invent success criteria; follow the thresholds embedded in each factor prompt.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 top_scorecards=[] iteration_queue=[] feedback_summary=records:21 wins:9 losses:12 avg_pnl:-0.003087 factor_success_rates:{}"
+        },
+        {
+          "id": "feedback_review",
+          "objective": "Review which factors are failing by regime and whether weight updates should be trusted.",
+          "priority": "medium",
+          "stage": "feedback_learning",
+          "success_criteria": [
+            "Flag factors with narrow regime coverage or unstable walk-forward",
+            "Do not promote a weaker factor just because it has higher recent win rate on small sample"
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factors/regime_conditional.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "system_prompt": "You are the feedback-diagnostics agent. Compare factor success rates, grading, and weaknesses. Focus on regime-conditional failure and persistent underperformance.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 feedback_total=21 avg_pnl=-0.003087 weak_factors=[]"
+        },
+        {
+          "id": "update_diff_review",
+          "objective": "Review whether the realized update materially changed model state.",
+          "priority": "high",
+          "stage": "update_diff",
+          "success_criteria": [
+            "If duplicate_feedback_skipped is true, recommend no model change",
+            "If outcome probabilities changed materially but factor scores did not, investigate BBN evidence mapping"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/trading/topology.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "system_prompt": "You are the update-diff agent. Use the trade_outcome probability deltas and factor score deltas to judge whether this realized result should change factor code, evidence mapping, or neither.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 duplicate_feedback_skipped=false trade_outcome_deltas=[ProbabilityDiff { state: \"breakeven\", previous: Some(0.11877752585367), new: 0.10689977326830301, delta: -0.011877752585366996 }, ProbabilityDiff { state: \"loss\", previous: Some(0.41534519648752), new: 0.473810676838768, delta: 0.05846548035124799 }, ProbabilityDiff { state: \"win\", previous: Some(0.4658772776588101), new: 0.4192895498929291, delta: -0.04658772776588099 }] factor_score_deltas=[]"
+        },
+        {
+          "id": "artifact_decision_review",
+          "objective": "Review artifact-driven actions and ensure they align with the next code or model iteration.",
+          "priority": "high",
+          "stage": "artifact_decision",
+          "success_criteria": [
+            "Explicitly state whether artifact evidence strengthens promotion, rollback review, or observation only",
+            "Do not ignore rule-break effects when artifact review versions changed",
+            "Use consumed validation trends when realized artifact outcomes are available",
+            "Name the artifact-driven factor/family targets before recommending code edits"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/state/types.rs",
+            "src/agent/prompts.rs"
+          ],
+          "system_prompt": "You are the artifact-decision agent. Use the artifact decision section to validate whether the current pending/execution artifacts strengthen promotion, trigger rollback review, or should only be observed.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 artifact_summary=actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[] consumed_trend_status=no_consumed_validation consumed_trend_reason=no_consumed_artifacts highlighted_actions=[\"learning_semantics=class=negative_executed success_credit=0.000 observation_weight=1.000\"] top_factor_trends=[] top_family_trends=[] top_rule_break_effects=[] top_consumed_trends=[]"
+        },
+        {
+          "id": "promotion_gate",
+          "objective": "Decide whether a factor iteration is strong enough to promote.",
+          "priority": "high",
+          "stage": "promotion_gate",
+          "success_criteria": [
+            "Only promote replace/tune outcomes when score delta is material and stability is not worse",
+            "If trade_count is low or dataset coverage changed, recommend holdout validation before promotion",
+            "Use learning_semantics to distinguish full-credit, fractional-credit, and no-credit feedback before approving promotion or rollback."
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factors/weight_updater.rs",
+            "src/factor_lab/research.rs"
+          ],
+          "system_prompt": "You are the promotion-gate agent. Only approve factor promotion when score deltas, grading, and supporting metrics clear the configured improvement thresholds. Reject cosmetic ranking changes.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 thresholds={promotion_min_score_delta:0.100, promotion_min_score:0.700} top_rankings=[] score_deltas=[] learning_semantics=class=negative_executed success_credit=0.000 observation_weight=1.000"
+        },
+        {
+          "id": "rollback_review",
+          "objective": "Decide whether recent changes should be rolled back or isolated.",
+          "priority": "high",
+          "stage": "rollback_review",
+          "success_criteria": [
+            "Recommend rollback when strong factors degrade materially or outcome calibration shifts against realized performance",
+            "If only one factor family regressed, prefer targeted rollback over full revert",
+            "Use learning_semantics to distinguish full-credit, fractional-credit, and no-credit feedback before approving promotion or rollback."
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/trading/topology.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "system_prompt": "You are the rollback-review agent. Look for score degradation, action downgrades, and harmful probability shifts. Recommend rollback when the latest iteration weakened factor quality or destabilized outcome calibration.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 thresholds={rollback_score_delta:-0.100, rollback_probability_delta:0.100} score_deltas=[] trade_outcome_deltas=[ProbabilityDiff { state: \"breakeven\", previous: Some(0.11877752585367), new: 0.10689977326830301, delta: -0.011877752585366996 }, ProbabilityDiff { state: \"loss\", previous: Some(0.41534519648752), new: 0.473810676838768, delta: 0.05846548035124799 }, ProbabilityDiff { state: \"win\", previous: Some(0.4658772776588101), new: 0.4192895498929291, delta: -0.04658772776588099 }] learning_semantics=class=negative_executed success_credit=0.000 observation_weight=1.000"
+        },
+        {
+          "id": "artifact_decision_review",
+          "objective": "Review artifact-driven actions and ensure they align with the next code or model iteration.",
+          "priority": "high",
+          "stage": "artifact_decision",
+          "success_criteria": [
+            "Explicitly state whether artifact evidence strengthens promotion, rollback review, or observation only",
+            "Do not ignore rule-break effects when artifact review versions changed",
+            "Use consumed validation trends when realized artifact outcomes are available",
+            "Name the artifact-driven factor/family targets before recommending code edits"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/state/types.rs",
+            "src/agent/prompts.rs"
+          ],
+          "system_prompt": "You are the artifact-decision agent. Use the artifact decision section to validate whether the current pending/execution artifacts strengthen promotion, trigger rollback review, or should only be observed.",
+          "user_prompt": "Symbol=SRC_ROOT_CARRY_LONG_220646 artifact_summary=actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[] consumed_trend_status=no_consumed_validation consumed_trend_reason=no_consumed_artifacts highlighted_actions=[] top_factor_trends=[] top_family_trends=[] top_rule_break_effects=[] top_consumed_trends=[]"
+        }
+      ],
+      "version": "agent-prompts-v1",
+      "workflow": "Use the realized update for SRC_ROOT_CARRY_LONG_220646 to review whether the latest result should change factor weights, factor evidence interpretation, or future trade acceptance thresholds."
+    },
+    "artifact_action_summary": [
+      "learning_semantics=class=negative_executed success_credit=0.000 observation_weight=1.000"
+    ],
+    "artifact_decision_section": {
+      "action_summary": [],
+      "summary": {
+        "actionable_artifact_count": 0,
+        "artifact_rule_break_count": 0,
+        "consumed_target_kinds": [],
+        "consumed_trend_reason": "no_consumed_artifacts",
+        "consumed_trend_status": "no_consumed_validation",
+        "highlighted_actions": [],
+        "highlighted_factor_targets": [],
+        "highlighted_family_targets": [],
+        "latest_promotable_artifact_id": null,
+        "promotion_strength": "low",
+        "rollback_strength": "low",
+        "summary": "actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+      },
+      "top_consumed_trend_comparisons": [],
+      "top_factor_trends": [],
+      "top_family_trends": [],
+      "top_rule_break_effects": []
+    },
+    "artifact_decision_summary": {
+      "actionable_artifact_count": 0,
+      "artifact_rule_break_count": 0,
+      "consumed_target_kinds": [],
+      "consumed_trend_reason": "no_consumed_artifacts",
+      "consumed_trend_status": "no_consumed_validation",
+      "highlighted_actions": [
+        "learning_semantics=class=negative_executed success_credit=0.000 observation_weight=1.000"
+      ],
+      "highlighted_factor_targets": [],
+      "highlighted_family_targets": [],
+      "latest_promotable_artifact_id": null,
+      "promotion_strength": "low",
+      "rollback_strength": "low",
+      "summary": "actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation"
+    },
+    "consumed_analyze_run_id": null,
+    "consumed_artifact_path": null,
+    "consumed_canonical_structural_regime_posterior": null,
+    "consumed_execution_candidate_artifact_id": null,
+    "consumed_multi_timeframe_summary": [],
+    "consumed_pending_update_artifact_id": null,
+    "consumed_pre_bayes_entry_quality_bridge": null,
+    "consumed_pre_bayes_evidence_filter": null,
+    "dataset_comparability": {
+      "comparable": true,
+      "comparison_class": "same_data_same_config",
+      "previous_run_id": "update:SRC_ROOT_CARRY_LONG_220646:20260511T143539.637Z",
+      "reason": "same_data_same_config",
+      "same_config": true,
+      "same_data": true,
+      "same_factor_version": true,
+      "same_prompt_version": true
+    },
+    "decision_history_summary": {
+      "latest_promotion_status": "hold",
+      "latest_rollback_scope": "none",
+      "promotion_approved_runs": 0,
+      "rollback_recommended_runs": 0,
+      "total_runs": 20
+    },
+    "decision_thresholds": {
+      "artifact_consumed_improvement_positive_rate_delta": 0.25,
+      "artifact_consumed_improvement_quality_delta": 5.0,
+      "artifact_consumed_min_window": 3,
+      "artifact_consumed_regression_positive_rate_delta": -0.25,
+      "artifact_consumed_regression_quality_delta": -5.0,
+      "promotion_min_score": 0.7,
+      "promotion_min_score_delta": 0.1,
+      "rollback_probability_delta": 0.1,
+      "rollback_score_delta": -0.1
+    },
+    "duplicate_feedback_skipped": false,
+    "factor_alignment": "bullish",
+    "factor_family_decisions": [],
+    "factor_family_diffs": [],
+    "factor_family_history": [],
+    "factor_family_outcomes": [],
+    "factor_iteration_queue": [],
+    "factor_ranking": [],
+    "factor_score_deltas": [],
+    "factor_uncertainty": "high",
+    "feedback_history_summary": {
+      "avg_pnl": -0.0030867641105740556,
+      "factor_success_rates": {},
+      "losses": 12,
+      "total_records": 21,
+      "wins": 9
+    },
+    "feedback_records_applied": 1,
+    "normalized_entry_quality": "medium",
+    "promotion_decision": {
+      "approved": false,
+      "reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "status": "hold",
+      "target_factors": [],
+      "target_families": []
+    },
+    "provenance": {
+      "config_hash": "ad0f6b3d46d8f3c9",
+      "data_fingerprint": "6c214ccee5d53cef",
+      "factor_version": "d1fba762150c532c",
+      "prompt_version": "agent-prompts-v1"
+    },
+    "realized_outcome": "loss",
+    "recommended_commands": {
+      "analyze": {
+        "command": "recommended_command_unavailable",
+        "missing_inputs": [
+          "analyze_input_context"
+        ],
+        "rationale": "analyze inputs are not available in this run context",
+        "ready": false,
+        "recorded_data_paths": [],
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "user_data_selection_required": false
+      },
+      "backtest": {
+        "command": "recommended_command_unavailable",
+        "missing_inputs": [
+          "backtest_data_path"
+        ],
+        "rationale": "factor backtest requires a persisted data path",
+        "ready": false,
+        "recorded_data_paths": [],
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "user_data_selection_required": false
+      },
+      "research": {
+        "command": "recommended_command_unavailable",
+        "missing_inputs": [
+          "research_data_path"
+        ],
+        "rationale": "factor research requires a persisted data path",
+        "ready": false,
+        "recorded_data_paths": [],
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "user_data_selection_required": false
+      },
+      "update": {
+        "command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+        "missing_inputs": [],
+        "rationale": "apply the persisted pending feedback artifact at /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/feedback/feedback_021_bear.json",
+        "ready": true,
+        "recorded_data_paths": [],
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "user_data_selection_required": false
+      }
+    },
+    "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+    "rollback_recommendation": {
+      "reason": "no_material_regression|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_rollback_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_rollback_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "scope": "none",
+      "should_rollback": false,
+      "target_factors": [],
+      "target_families": []
+    },
+    "state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+    "structural_feedback": {
+      "branch_id": "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+      "exit_reason": "time_stop",
+      "followed_path": true,
+      "node_id": "Bear",
+      "notes": "b5_branch_feedback_calibration_v1; exact Board B regime_profit_branch_path; source_trade_id=SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12:UUP/USD:1d:4387",
+      "path_id": "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+      "protocol_version": "board-b-source-root-stop-carry-longhorizon/v1",
+      "recommendation_id": "SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12:UUP/USD:1d:4387",
+      "recommended_at": "2024-08-05T00:00:00+00:00",
+      "scenario_id": "BearReliefCarry"
+    },
+    "structural_learning_credit_class": "negative_executed",
+    "structural_learning_observation_weight": 1.0,
+    "structural_learning_success_credit": 0.0,
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "timestamp": "2026-05-11T14:35:43.852451Z",
+    "trade_outcome_deltas": [
+      {
+        "delta": -0.011877752585366996,
+        "new": 0.10689977326830301,
+        "previous": 0.11877752585367,
+        "state": "breakeven"
+      },
+      {
+        "delta": 0.05846548035124799,
+        "new": 0.473810676838768,
+        "previous": 0.41534519648752,
+        "state": "loss"
+      },
+      {
+        "delta": -0.04658772776588099,
+        "new": 0.4192895498929291,
+        "previous": 0.4658772776588101,
+        "state": "win"
+      }
+    ],
+    "updated_trade_outcome": {
+      "breakeven": 0.10689977326830301,
+      "loss": 0.473810676838768,
+      "win": 0.4192895498929291
+    },
+    "workflow_snapshot": {
+      "actionable_artifacts": [],
+      "artifact_consumed_impact_summary": {
+        "by_kind": {},
+        "by_kind_trend_comparisons": {},
+        "cumulative_quality_score": 0,
+        "negative_consumed": 0,
+        "neutral_consumed": 0,
+        "points": [],
+        "positive_consumed": 0,
+        "recent_windows": [],
+        "total_consumed": 0,
+        "trend_comparisons": []
+      },
+      "artifact_decision_summary": {
+        "actionable_artifact_count": 0,
+        "artifact_rule_break_count": 0,
+        "consumed_target_kinds": [],
+        "consumed_trend_reason": "no_consumed_artifacts",
+        "consumed_trend_status": "no_consumed_validation",
+        "highlighted_actions": [],
+        "highlighted_factor_targets": [],
+        "highlighted_family_targets": [],
+        "latest_promotable_artifact_id": null,
+        "promotion_strength": "low",
+        "rollback_strength": "low",
+        "summary": "actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+      },
+      "artifact_factor_rule_break_impacts": [],
+      "artifact_factor_trends": [],
+      "artifact_family_rule_break_impacts": [],
+      "artifact_family_trends": [],
+      "artifact_history_summary": {
+        "actionable_entries": 0,
+        "average_quality_score": 0.0,
+        "consumed_entries": 0,
+        "ensemble_vote_entries": 0,
+        "execution_candidate_entries": 0,
+        "latest_consumed_artifact_id": null,
+        "pending_update_entries": 0,
+        "promotable_entries": 0,
+        "statuses_by_kind": {},
+        "total_entries": 0
+      },
+      "artifact_lineage_summaries": [],
+      "artifact_review_rule_sources": {
+        "execution_candidate": {
+          "min_posterior_improvement": "default",
+          "min_win_probability_improvement": "default",
+          "require_same_data": "default",
+          "require_same_factor_version": "default"
+        },
+        "pending_update": {
+          "min_avg_family_score_improvement": "default",
+          "min_probability_improvement": "default",
+          "min_top_factor_score_improvement": "default",
+          "require_same_data": "default",
+          "require_same_factor_version": "default",
+          "require_same_prompt_version": "default"
+        }
+      },
+      "artifact_review_rules": {
+        "execution_candidate": {
+          "min_posterior_improvement": 0.03,
+          "min_win_probability_improvement": 0.03,
+          "require_same_data": true,
+          "require_same_factor_version": true
+        },
+        "pending_update": {
+          "min_avg_family_score_improvement": 0.03,
+          "min_probability_improvement": 0.03,
+          "min_top_factor_score_improvement": 0.05,
+          "require_same_data": true,
+          "require_same_factor_version": true,
+          "require_same_prompt_version": true
+        }
+      },
+      "artifact_rule_break_effects": [],
+      "blocking_truth": {
+        "evidence": [
+          "promotion:Block Promotion"
+        ],
+        "next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+        "reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+        "stage": "update",
+        "status": "follow_current_focus"
+      },
+      "current_focus_phase": "update",
+      "current_focus_reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "disagreements": [],
+      "field_diffs": [],
+      "generated_at": "2026-05-11T14:35:43.979631Z",
+      "latest_analyze": null,
+      "latest_backtest": null,
+      "latest_ensemble_vote": null,
+      "latest_execution_candidate": null,
+      "latest_pending_update": null,
+      "latest_pre_bayes_entry_quality_bridge": null,
+      "latest_pre_bayes_entry_quality_bridge_diff": null,
+      "latest_pre_bayes_policy": null,
+      "latest_pre_bayes_policy_diff": null,
+      "latest_pre_bayes_policy_lineage": {
+        "changed_fields_union": [],
+        "latest_version": null,
+        "previous_version": null,
+        "rollback_candidate_version": null,
+        "rollback_reason": "no_policy_rollback_suggested",
+        "total_versions": 0
+      },
+      "latest_pre_bayes_soft_evidence_diff": [],
+      "latest_promotable_artifact": null,
+      "latest_research": null,
+      "latest_train": null,
+      "latest_update": {
+        "canonical_structural_active_regime": null,
+        "canonical_structural_confidence": null,
+        "canonical_structural_probabilities": {},
+        "comparable_to_previous": true,
+        "comparison_class": "same_data_same_config",
+        "execution_edge_share": 0.6,
+        "execution_gate_status": "execution_blocked",
+        "execution_readiness": 0.37,
+        "factor_actions": [],
+        "factor_score_map": {},
+        "family_score_map": {},
+        "family_states": [],
+        "hybrid_duration_model": null,
+        "hybrid_remaining_expected_bars": null,
+        "market_state_evidence": [],
+        "multi_timeframe_summary": [],
+        "objective_market_credibility_shrink": null,
+        "pda_cluster_label": null,
+        "phase": "update",
+        "phase_summary": "realized_outcome=loss learning_credit_class=negative_executed success_credit=0.000 observation_weight=1.000 feedback_applied=1 duplicate_feedback_skipped=false consumed_pre_bayes_gate_status= mtf_source=primary_only execution_readiness=0.370 execution_gate=execution_blocked execution_edge=0.600",
+        "pre_bayes_bridge_probability_gap": null,
+        "pre_bayes_bridge_rationale_summary": [],
+        "pre_bayes_bridge_selected_entry_quality": null,
+        "pre_bayes_conflict_flags": [],
+        "pre_bayes_evidence_quality_score": 0.0,
+        "pre_bayes_filtered_assignments": {},
+        "pre_bayes_gate_status": "",
+        "pre_bayes_long_signal_probability": null,
+        "pre_bayes_multi_timeframe_alignment_score": null,
+        "pre_bayes_multi_timeframe_direction_bias": "direction_bias_unavailable",
+        "pre_bayes_multi_timeframe_entry_alignment_score": null,
+        "pre_bayes_policy_version": "",
+        "pre_bayes_selected_entry_quality_probability": null,
+        "pre_bayes_short_signal_probability": null,
+        "pre_bayes_soft_evidence": {},
+        "pre_bayes_uses_soft_evidence": false,
+        "prediction_edge_share": 0.4,
+        "promotion_status": "hold",
+        "realized_outcome": "loss",
+        "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+        "recommended_next_command_meta": {
+          "blocked": false,
+          "executable_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+          "kind": "ict_engine",
+          "prompt": null,
+          "recorded_data_paths": [],
+          "requires_user_input": false
+        },
+        "risk_flags": [
+          "promotion_blocked:insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts"
+        ],
+        "rollback_scope": "none",
+        "run_id": "update:SRC_ROOT_CARRY_LONG_220646:20260511T143543.804Z",
+        "segments_gate": null,
+        "selected_direction": null,
+        "selected_entry_quality": "medium",
+        "source_command": "update",
+        "sparsity_ratio": null,
+        "spectral_entropy": null,
+        "structural_feedback": {
+          "branch_id": "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+          "exit_reason": "time_stop",
+          "followed_path": true,
+          "node_id": "Bear",
+          "notes": "b5_branch_feedback_calibration_v1; exact Board B regime_profit_branch_path; source_trade_id=SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12:UUP/USD:1d:4387",
+          "path_id": "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+          "protocol_version": "board-b-source-root-stop-carry-longhorizon/v1",
+          "recommendation_id": "SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12:UUP/USD:1d:4387",
+          "recommended_at": "2024-08-05T00:00:00+00:00",
+          "scenario_id": "BearReliefCarry"
+        },
+        "structural_learning_credit_class": "negative_executed",
+        "structural_learning_observation_weight": 1.0,
+        "structural_learning_success_credit": 0.0,
+        "timestamp": "2026-05-11T14:35:43.852826Z",
+        "top_actions": [
+          "promotion:Block Promotion"
+        ],
+        "workflow_phase": "research_iteration",
+        "workflow_reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts"
+      },
+      "pending_actions": [
+        "promotion:Block Promotion"
+      ],
+      "recent_artifacts": [],
+      "recent_ensemble_votes": [],
+      "recent_execution_candidates": [],
+      "recent_pending_updates": [],
+      "recent_pre_bayes_policies": [],
+      "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+      "recommended_next_command_meta": {
+        "blocked": false,
+        "executable_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+        "kind": "ict_engine",
+        "prompt": null,
+        "recorded_data_paths": [],
+        "requires_user_input": false
+      },
+      "risk_flags": [
+        "update:promotion_blocked:insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts"
+      ],
+      "symbol": "SRC_ROOT_CARRY_LONG_220646"
+    },
+    "workflow_state": {
+      "phase": "research_iteration",
+      "reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts"
+    }
+  }
+}

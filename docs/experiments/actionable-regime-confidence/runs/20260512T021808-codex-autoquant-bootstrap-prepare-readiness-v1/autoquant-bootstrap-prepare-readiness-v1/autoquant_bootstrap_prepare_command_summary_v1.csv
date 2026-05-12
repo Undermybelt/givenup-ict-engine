@@ -1,0 +1,6 @@
+command_id,exit,cmd,stdout_bytes,stderr_bytes
+00_auto_quant_status_before,0,./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808 --output-format json,2674,0
+01_auto_quant_bootstrap,0,./target/debug/ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808,735,0
+02_auto_quant_status_after_bootstrap,0,./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808 --output-format json,2736,0
+03_auto_quant_prepare,1,./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808,0,15195
+04_auto_quant_status_after_prepare,0,./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808 --output-format json,2736,0

@@ -1,0 +1,11 @@
+{
+  "accepted_95_direct_gate_added": 0,
+  "assertion_status": "PASS",
+  "full_objective_achieved": false,
+  "positive_case_rows": 204,
+  "raw_data_committed": false,
+  "run_id": "20260511T130457+0800-codex-spoofing-appendix-direct-case-inventory",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

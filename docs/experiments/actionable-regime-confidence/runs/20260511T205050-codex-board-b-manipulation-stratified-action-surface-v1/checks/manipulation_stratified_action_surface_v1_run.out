@@ -1,0 +1,22 @@
+{
+  "best_specificity_action": "event_short",
+  "best_specificity_edge": 0.06858065280432034,
+  "best_specificity_horizon": "48h",
+  "best_specificity_lcb_5pct": 0.04473504672670521,
+  "best_specificity_stratum": "coin_trx",
+  "best_trade_action": "event_short",
+  "best_trade_horizon": "48h",
+  "best_trade_lcb_5pct": 0.0037601344544536553,
+  "best_trade_mean_net": 0.013324551515445673,
+  "best_trade_specificity_lcb_5pct": 0.0195937212652764,
+  "best_trade_stratum": "coin_neo",
+  "branch_rows": 734208,
+  "downstream_consumption": "not_started:diagnostic_only_full_board_b_still_requires_all_root_rc_spa",
+  "gate_result": "fail:no_tradeable_manipulation_stratified_action_surface",
+  "next_action": "B2R-repeat: scoped Manipulation remains fail-closed; use a new source-owned exit dataset or stop treating direct-event overlay as a tradable branch until source/PnL changes.",
+  "primary_blocker": "no predeclared stratum/action passed both absolute after-cost and specificity gates",
+  "promotion_allowed_for_full_board_b": false,
+  "strata_evaluated": 13,
+  "summary_rows": 429,
+  "tradeable_candidates": []
+}

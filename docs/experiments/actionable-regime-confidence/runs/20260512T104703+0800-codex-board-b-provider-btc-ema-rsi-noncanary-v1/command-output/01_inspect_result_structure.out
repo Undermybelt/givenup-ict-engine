@@ -1,0 +1,130 @@
+Result for strategy ProviderBtcEmaRsiHold12
+                                             BACKTESTING REPORT                                              
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │     42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+│    TOTAL │     42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                           LEFT OPEN TRADES REPORT                                           
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │      1 │         0.37 │          44.510 │         0.45 │      8:00:00 │    1     0     0   100 │
+│    TOTAL │      1 │         0.37 │          44.510 │         0.45 │      8:00:00 │    1     0     0   100 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                            ENTER TAG STATS                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                         Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ provider_btc_ema_rsi_continuation │      42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+│                             TOTAL │      42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+└───────────────────────────────────┴─────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                        EXIT REASON STATS                                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                   Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│   provider_btc_rsi_exhaustion │     7 │         2.22 │        1655.158 │        16.55 │      6:43:00 │    7     0     0   100 │
+│ provider_btc_12h_risk_horizon │    33 │         0.23 │         844.253 │         8.44 │     12:00:00 │   21     0    12  63.6 │
+│                    force_exit │     1 │         0.37 │          44.510 │         0.45 │      8:00:00 │    1     0     0   100 │
+│                     stop_loss │     1 │         -2.5 │        -284.037 │        -2.84 │     11:00:00 │    0     0     1     0 │
+│                         TOTAL │    42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+└───────────────────────────────┴───────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                                           MIXED TAG STATS                                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                         Enter Tag ┃                   Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ provider_btc_ema_rsi_continuation │   provider_btc_rsi_exhaustion │      7 │         2.22 │        1655.158 │        16.55 │      6:43:00 │    7     0     0   100 │
+│ provider_btc_ema_rsi_continuation │ provider_btc_12h_risk_horizon │     33 │         0.23 │         844.253 │         8.44 │     12:00:00 │   21     0    12  63.6 │
+│ provider_btc_ema_rsi_continuation │                    force_exit │      1 │         0.37 │          44.510 │         0.45 │      8:00:00 │    1     0     0   100 │
+│ provider_btc_ema_rsi_continuation │                     stop_loss │      1 │         -2.5 │        -284.037 │        -2.84 │     11:00:00 │    0     0     1     0 │
+│                             TOTAL │                               │     42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+└───────────────────────────────────┴───────────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-04-04 08:00:00            │
+│ Backtesting to                │ 2026-05-12 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 42 / 1.14                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 12259.885 USDT                 │
+│ Absolute profit               │ 2259.885 USDT                  │
+│ Total profit %                │ 22.60%                         │
+│ CAGR %                        │ 646.29%                        │
+│ Sortino                       │ 15.57                          │
+│ Sharpe                        │ 9.30                           │
+│ Calmar                        │ 398.61                         │
+│ SQN                           │ 2.75                           │
+│ Profit factor                 │ 2.93                           │
+│ Expectancy (Ratio)            │ 53.81 (0.60)                   │
+│ Avg. daily profit             │ 61.078 USDT                    │
+│ Avg. stake amount             │ 11081.878 USDT                 │
+│ Total trade volume            │ 933137.601 USDT                │
+│                               │                                │
+│ Best Pair                     │ BTC/USDT 22.60%                │
+│ Worst Pair                    │ BTC/USDT 22.60%                │
+│ Best trade                    │ BTC/USDT 3.17%                 │
+│ Worst trade                   │ BTC/USDT -2.50%                │
+│ Best day                      │ 378.463 USDT                   │
+│ Worst day                     │ -284.037 USDT                  │
+│ Days win/draw/lose            │ 20 / 9 / 10                    │
+│ Min/Max/Avg. Duration Winners │ 0d 02:00 / 0d 12:00 / 0d 10:35 │
+│ Min/Max/Avg. Duration Losers  │ 0d 11:00 / 0d 12:00 / 0d 11:55 │
+│ Max Consecutive Wins / Loss   │ 10 / 3                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 10004.012 USDT                 │
+│ Max balance                   │ 12277.509 USDT                 │
+│ Max % of account underwater   │ 2.93%                          │
+│ Absolute drawdown             │ 337.522 USDT (2.93%)           │
+│ Drawdown duration             │ 7 days 07:00:00                │
+│ Profit at drawdown start      │ 1529.763 USDT                  │
+│ Profit at drawdown end        │ 1192.241 USDT                  │
+│ Drawdown start                │ 2026-04-22 11:00:00            │
+│ Drawdown end                  │ 2026-04-29 18:00:00            │
+│ Market change                 │ 21.82%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-04-04 08:00:00 -> 2026-05-12 00:00:00 | Max open trades : 1
+                                                                 STRATEGY SUMMARY                                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃                Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ ProviderBtcEmaRsiHold12 │     42 │         0.50 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │ 337.522 USDT  2.93% │
+└─────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┴─────────────────────┘
+top_keys ['metadata', 'strategy', 'strategy_comparison']
+strategy_keys ['avg_stake_amount', 'backtest_best_day', 'backtest_best_day_abs', 'backtest_days', 'backtest_end', 'backtest_end_ts', 'backtest_run_end_ts', 'backtest_run_start_ts', 'backtest_start', 'backtest_start_ts', 'backtest_worst_day', 'backtest_worst_day_abs', 'best_pair', 'cagr', 'calmar', 'canceled_entry_orders', 'canceled_trade_entries', 'csum_max', 'csum_min', 'daily_profit', 'draw_days', 'drawdown_duration', 'drawdown_duration_s', 'drawdown_end', 'drawdown_end_ts', 'drawdown_start', 'drawdown_start_ts', 'draws', 'dry_run_wallet', 'enable_protections', 'exit_profit_offset', 'exit_profit_only', 'exit_reason_summary', 'expectancy', 'expectancy_ratio', 'final_balance', 'freqai_identifier', 'freqaimodel', 'holding_avg', 'holding_avg_s', 'ignore_roi_if_entry_signal', 'left_open_trades', 'locks', 'loser_holding_avg', 'loser_holding_avg_s', 'loser_holding_max', 'loser_holding_max_s', 'loser_holding_min', 'loser_holding_min_s', 'losing_days', 'losses', 'margin_mode', 'market_change', 'max_consecutive_losses', 'max_consecutive_wins', 'max_drawdown_abs', 'max_drawdown_account', 'max_drawdown_high', 'max_drawdown_low', 'max_open_trades', 'max_open_trades_setting', 'max_relative_drawdown', 'minimal_roi', 'mix_tag_stats', 'pairlist', 'periodic_breakdown', 'profit_factor', 'profit_mean', 'profit_median', 'profit_total', 'profit_total_abs', 'profit_total_long', 'profit_total_long_abs', 'profit_total_short', 'profit_total_short_abs', 'rejected_signals', 'replaced_entry_orders', 'results_per_enter_tag', 'results_per_pair', 'sharpe', 'sortino', 'sqn', 'stake_amount', 'stake_currency', 'stake_currency_decimals', 'starting_balance', 'stoploss', 'strategy_name', 'timedout_entry_orders', 'timedout_exit_orders', 'timeframe', 'timeframe_detail', 'timerange', 'total_trades', 'total_volume', 'trade_count_long', 'trade_count_short', 'trades', 'trades_per_day', 'trading_mode', 'trailing_only_offset_is_reached', 'trailing_stop', 'trailing_stop_positive', 'trailing_stop_positive_offset', 'use_custom_stoploss', 'use_exit_signal', 'winner_holding_avg', 'winner_holding_avg_s', 'winner_holding_max', 'winner_holding_max_s', 'winner_holding_min', 'winner_holding_min_s', 'winning_days', 'winrate', 'wins', 'worst_pair']
+key trades type list
+len 42
+repr [{'pair': 'BTC/USDT', 'stake_amount': 9899.9995922, 'max_stake_amount': 9899.9995922, 'amount': 0.14789363, 'open_date': Timestamp('2026-04-04 09:00:00+0000', tz='UTC'), 'close_date': Timestamp('2026-04-04 21:00:00+0000', tz='UTC'), 'open_rate': 66940.0, 'close_rate': 67268.4, 'fee_open': 0.0, 'fee_close': 0.0, 'trade_duration': 720, 'profit_ratio': 0.00490588586773942, 'profit_abs': 48.56826809, 'exit_reason': 'provider_btc_12h_risk_horizon', 'initial_stop_loss_abs': 65266.5, 'initial_stop_loss_ratio': -0.025, 'stop_loss_abs': 65266.5, 'stop_loss_ratio': -0.025, 'min_rate': 66918.0, 'max_rate': 67562.93, 'is_open': False, 'enter_tag': 'provider_btc_ema_rsi_continuation', 'leverage': 1.0, 'is_short': False, 'open_timestamp': 1775293200000, 'close_timestamp': 1775336400000, 'orders': [{'amount': 0.14789363, 'safe_price': 66940.0, 'ft_order_side': 'buy', 'order_filled_timestamp': 1775293200000, 'ft_is_entry': True, 'ft_order_tag': 'provider_btc_ema_rsi_continuation', 'cost': 9899.9995922}, {'amount': 0.14789363, 'safe_price': 67268.4, 'ft_order_side': 'sell', 'order_filled_timestamp': 1775336400000, 'ft_is_entry': False, 'ft_order_tag': 'provider_btc_12h_risk_horizon', 'cost': 9948.5
+key results_per_pair type list
+len 2
+repr [{'key': 'BTC/USDT', 'trades': 42, 'profit_mean': np.float64(0.00497756417434268), 'profit_mean_pct': np.float64(0.5), 'profit_total_abs': np.float64(2259.8846331699997), 'profit_total': np.float64(0.22598846331699998), 'profit_total_pct': np.float64(22.6), 'duration_avg': '11:00:00', 'wins': 29, 'draws': 0, 'losses': 13, 'winrate': 0.6904761904761905, 'cagr': np.float64(6.462875818344397), 'expectancy': np.float64(53.8067769802381), 'expectancy_ratio': np.float64(0.5976457011506258), 'sortino': np.float64(15.570866878678723), 'sharpe': np.float64(9.297840154632286), 'calmar': np.float64(398.61127074495835), 'sqn': np.float64(2.7452), 'profit_factor': np.float64(2.930855342178945), 'max_drawdown_account': np.float64(0.029273955139562678), 'max_drawdown_abs': np.float64(337.52176970999994)}, {'key': 'TOTAL', 'trades': 42, 'profit_mean': np.float64(0.00497756417434268), 'profit_mean_pct': np.float64(0.5), 'profit_total_abs': np.float64(2259.8846331699997), 'profit_total': np.float64(0.22598846331699998), 'profit_total_pct': np.float64(22.6), 'duration_avg': '11:00:00', 'wins': 29, 'draws': 0, 'losses': 13, 'winrate': 0.6904761904761905, 'cagr': np.float64(6.462875818344397), 'expecta
+key results_per_enter_tag type list
+len 2
+repr [{'key': 'provider_btc_ema_rsi_continuation', 'trades': 42, 'profit_mean': np.float64(0.00497756417434268), 'profit_mean_pct': np.float64(0.5), 'profit_total_abs': np.float64(2259.8846331699997), 'profit_total': np.float64(0.22598846331699998), 'profit_total_pct': np.float64(22.6), 'duration_avg': '11:00:00', 'wins': 29, 'draws': 0, 'losses': 13, 'winrate': 0.6904761904761905, 'cagr': np.float64(6.462875818344397), 'expectancy': np.float64(53.8067769802381), 'expectancy_ratio': np.float64(0.5976457011506258), 'sortino': np.float64(15.570866878678723), 'sharpe': np.float64(9.297840154632286), 'calmar': np.float64(398.61127074495835), 'sqn': np.float64(2.7452), 'profit_factor': np.float64(2.930855342178945), 'max_drawdown_account': np.float64(0.029273955139562678), 'max_drawdown_abs': np.float64(337.52176970999994)}, {'key': 'TOTAL', 'trades': 42, 'profit_mean': np.float64(0.00497756417434268), 'profit_mean_pct': np.float64(0.5), 'profit_total_abs': np.float64(2259.8846331699997), 'profit_total': np.float64(0.22598846331699998), 'profit_total_pct': np.float64(22.6), 'duration_avg': '11:00:00', 'wins': 29, 'draws': 0, 'losses': 13, 'winrate': 0.6904761904761905, 'cagr': np.float64(6.4
+key exit_reason_summary type list
+len 5
+repr [{'key': 'provider_btc_rsi_exhaustion', 'trades': 7, 'profit_mean': np.float64(0.022203512558783473), 'profit_mean_pct': np.float64(2.22), 'profit_total_abs': np.float64(1655.15768276), 'profit_total': np.float64(0.165515768276), 'profit_total_pct': np.float64(16.55), 'duration_avg': '6:43:00', 'wins': 7, 'draws': 0, 'losses': 0, 'winrate': 1.0, 'cagr': np.float64(3.530984693496559), 'expectancy': np.float64(236.45109753714286), 'expectancy_ratio': 100.0, 'sortino': -100, 'sharpe': np.float64(16.24101386547051), 'calmar': -100, 'sqn': np.float64(11.0064), 'profit_factor': 0.0, 'max_drawdown_account': np.float64(0.0), 'max_drawdown_abs': np.float64(0.0)}, {'key': 'provider_btc_12h_risk_horizon', 'trades': 33, 'profit_mean': np.float64(0.0022712853522929097), 'profit_mean_pct': np.float64(0.23), 'profit_total_abs': np.float64(844.25348827), 'profit_total': np.float64(0.08442534882700001), 'profit_total_pct': np.float64(8.44), 'duration_avg': '12:00:00', 'wins': 21, 'draws': 0, 'losses': 12, 'winrate': 0.6363636363636364, 'cagr': np.float64(1.2245383502192237), 'expectancy': np.float64(25.583439038484844), 'expectancy_ratio': np.float64(0.34635827244907946), 'sortino': np.float64(8.41
+key left_open_trades type list
+len 2
+repr [{'key': 'BTC/USDT', 'trades': 1, 'profit_mean': np.float64(0.0036806031586938586), 'profit_mean_pct': np.float64(0.37), 'profit_total_abs': np.float64(44.51034422), 'profit_total': np.float64(0.0044510344220000005), 'profit_total_pct': np.float64(0.45), 'duration_avg': '8:00:00', 'wins': 1, 'draws': 0, 'losses': 0, 'winrate': 1.0, 'cagr': np.float64(0.04478531297228128), 'expectancy': np.float64(44.51034422), 'expectancy_ratio': 100.0, 'sortino': -100, 'sharpe': -100, 'calmar': -100, 'sqn': -100.0, 'profit_factor': 0.0, 'max_drawdown_account': np.float64(0.0), 'max_drawdown_abs': np.float64(0.0)}, {'key': 'TOTAL', 'trades': 1, 'profit_mean': np.float64(0.0036806031586938586), 'profit_mean_pct': np.float64(0.37), 'profit_total_abs': np.float64(44.51034422), 'profit_total': np.float64(0.0044510344220000005), 'profit_total_pct': np.float64(0.45), 'duration_avg': '8:00:00', 'wins': 1, 'draws': 0, 'losses': 0, 'winrate': 1.0, 'cagr': np.float64(0.04478531297228128), 'expectancy': np.float64(44.51034422), 'expectancy_ratio': 100.0, 'sortino': -100, 'sharpe': -100, 'calmar': -100, 'sqn': -100.0, 'profit_factor': 0.0, 'max_drawdown_account': np.float64(0.0), 'max_drawdown_abs': np.float64
+key total_trades type int
+repr 42
+key trade_count_long type int
+repr 42
+key trade_count_short type int
+repr 0
+key trades_per_day type float
+repr 1.14
+key canceled_trade_entries type int
+repr 0
+key max_open_trades type int
+repr 1
+key max_open_trades_setting type int
+repr 1

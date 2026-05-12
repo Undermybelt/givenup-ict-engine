@@ -1,0 +1,725 @@
+{
+  "auto_quant_data_root": "/Users/thrill3r/Auto-Quant/user_data/data",
+  "files": [
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.052800+00:00",
+      "file": "AAPL_USD-1d.feather",
+      "instrument": "AAPL_USD",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/AAPL_USD-1d.feather",
+      "rows": 744,
+      "start": "1970-01-01 00:27:52.704000+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-04-23 00:00:00+00:00",
+      "file": "AVAX_USDT-1d.feather",
+      "instrument": "AVAX_USDT",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/AVAX_USDT-1d.feather",
+      "rows": 1939,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-01-29 20:00:00+00:00",
+      "file": "AVAX_USDT-1h.feather",
+      "instrument": "AVAX_USDT",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/AVAX_USDT-1h.feather",
+      "rows": 44503,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-03-12 00:00:00+00:00",
+      "file": "AVAX_USDT-4h.feather",
+      "instrument": "AVAX_USDT",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/AVAX_USDT-4h.feather",
+      "rows": 11377,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-04-23 00:00:00+00:00",
+      "file": "BNB_USDT-1d.feather",
+      "instrument": "BNB_USDT",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BNB_USDT-1d.feather",
+      "rows": 1939,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-01-29 21:00:00+00:00",
+      "file": "BNB_USDT-1h.feather",
+      "instrument": "BNB_USDT",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BNB_USDT-1h.feather",
+      "rows": 44504,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-03-12 00:00:00+00:00",
+      "file": "BNB_USDT-4h.feather",
+      "instrument": "BNB_USDT",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BNB_USDT-4h.feather",
+      "rows": 11377,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.139200+00:00",
+      "file": "BTCY_USD-1d.feather",
+      "instrument": "BTCY_USD",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BTCY_USD-1d.feather",
+      "rows": 1032,
+      "start": "1970-01-01 00:27:52.531200+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-04-23 00:00:00+00:00",
+      "file": "BTC_USDT-1d.feather",
+      "instrument": "BTC_USDT",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1d.feather",
+      "rows": 1939,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-01-29 21:00:00+00:00",
+      "file": "BTC_USDT-1h.feather",
+      "instrument": "BTC_USDT",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1h.feather",
+      "rows": 44504,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-03-12 00:00:00+00:00",
+      "file": "BTC_USDT-4h.feather",
+      "instrument": "BTC_USDT",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-4h.feather",
+      "rows": 11377,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.096700+00:00",
+      "file": "DIA_USD-15m.feather",
+      "instrument": "DIA_USD",
+      "interval": "15m",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/DIA_USD-15m.feather",
+      "rows": 6490,
+      "start": "1970-01-01 00:29:06.624600+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.086800+00:00",
+      "file": "DIA_USD-1h.feather",
+      "instrument": "DIA_USD",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/DIA_USD-1h.feather",
+      "rows": 1746,
+      "start": "1970-01-01 00:29:06.622800+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.083200+00:00",
+      "file": "DIA_USD-4h.feather",
+      "instrument": "DIA_USD",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/DIA_USD-4h.feather",
+      "rows": 585,
+      "start": "1970-01-01 00:29:06.619200+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.052800+00:00",
+      "file": "ES_USD-1d.feather",
+      "instrument": "ES_USD",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/ES_USD-1d.feather",
+      "rows": 746,
+      "start": "1970-01-01 00:27:52.704000+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-04-23 00:00:00+00:00",
+      "file": "ETH_USDT-1d.feather",
+      "instrument": "ETH_USDT",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1d.feather",
+      "rows": 1939,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-01-29 21:00:00+00:00",
+      "file": "ETH_USDT-1h.feather",
+      "instrument": "ETH_USDT",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1h.feather",
+      "rows": 44504,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-03-12 00:00:00+00:00",
+      "file": "ETH_USDT-4h.feather",
+      "instrument": "ETH_USDT",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-4h.feather",
+      "rows": 11377,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.139200+00:00",
+      "file": "EUR_USD-1d.feather",
+      "instrument": "EUR_USD",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/EUR_USD-1d.feather",
+      "rows": 757,
+      "start": "1970-01-01 00:27:52.617600+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.096700+00:00",
+      "file": "GLD_USD-15m.feather",
+      "instrument": "GLD_USD",
+      "interval": "15m",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-15m.feather",
+      "rows": 6487,
+      "start": "1970-01-01 00:29:06.624600+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.086800+00:00",
+      "file": "GLD_USD-1h.feather",
+      "instrument": "GLD_USD",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-1h.feather",
+      "rows": 1742,
+      "start": "1970-01-01 00:29:06.622800+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.083200+00:00",
+      "file": "GLD_USD-4h.feather",
+      "instrument": "GLD_USD",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-4h.feather",
+      "rows": 585,
+      "start": "1970-01-01 00:29:06.619200+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.096700+00:00",
+      "file": "IWM_USD-15m.feather",
+      "instrument": "IWM_USD",
+      "interval": "15m",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-15m.feather",
+      "rows": 6490,
+      "start": "1970-01-01 00:29:06.624600+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.086800+00:00",
+      "file": "IWM_USD-1h.feather",
+      "instrument": "IWM_USD",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-1h.feather",
+      "rows": 1746,
+      "start": "1970-01-01 00:29:06.622800+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.083200+00:00",
+      "file": "IWM_USD-4h.feather",
+      "instrument": "IWM_USD",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-4h.feather",
+      "rows": 585,
+      "start": "1970-01-01 00:29:06.619200+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.217500+00:00",
+      "file": "NQ_USD-15m.feather",
+      "instrument": "NQ_USD",
+      "interval": "15m",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+      "rows": 351288,
+      "start": "1970-01-01 00:21:34.009200+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.139200+00:00",
+      "file": "NQ_USD-1d.feather",
+      "instrument": "NQ_USD",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1d.feather",
+      "rows": 4651,
+      "start": "1970-01-01 00:21:33.926400+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.214800+00:00",
+      "file": "NQ_USD-1h.feather",
+      "instrument": "NQ_USD",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+      "rows": 89250,
+      "start": "1970-01-01 00:21:34.009200+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.211200+00:00",
+      "file": "NQ_USD-4h.feather",
+      "instrument": "NQ_USD",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-4h.feather",
+      "rows": 23879,
+      "start": "1970-01-01 00:21:33.998400+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.218100+00:00",
+      "file": "NQ_USD-5m.feather",
+      "instrument": "NQ_USD",
+      "interval": "5m",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-5m.feather",
+      "rows": 1053341,
+      "start": "1970-01-01 00:21:34.009200+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.198400+00:00",
+      "file": "QQQ_USD-1d.feather",
+      "instrument": "QQQ_USD",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-1d.feather",
+      "rows": 397,
+      "start": "1970-01-01 00:28:37.372800+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.270400+00:00",
+      "file": "QQQ_USD-1h.feather",
+      "instrument": "QQQ_USD",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-1h.feather",
+      "rows": 2755,
+      "start": "1970-01-01 00:28:37.419600+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.270400+00:00",
+      "file": "QQQ_USD-4h.feather",
+      "instrument": "QQQ_USD",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-4h.feather",
+      "rows": 913,
+      "start": "1970-01-01 00:28:37.416000+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-04-23 00:00:00+00:00",
+      "file": "SOL_USDT-1d.feather",
+      "instrument": "SOL_USDT",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SOL_USDT-1d.feather",
+      "rows": 1939,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-01-29 21:00:00+00:00",
+      "file": "SOL_USDT-1h.feather",
+      "instrument": "SOL_USDT",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SOL_USDT-1h.feather",
+      "rows": 44504,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "2026-03-12 00:00:00+00:00",
+      "file": "SOL_USDT-4h.feather",
+      "instrument": "SOL_USDT",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SOL_USDT-4h.feather",
+      "rows": 11377,
+      "start": "2021-01-01 00:00:00+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.096700+00:00",
+      "file": "SPY_USD-15m.feather",
+      "instrument": "SPY_USD",
+      "interval": "15m",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-15m.feather",
+      "rows": 6490,
+      "start": "1970-01-01 00:29:06.624600+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:27.052800+00:00",
+      "file": "SPY_USD-1d.feather",
+      "instrument": "SPY_USD",
+      "interval": "1d",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-1d.feather",
+      "rows": 749,
+      "start": "1970-01-01 00:27:52.704000+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.086800+00:00",
+      "file": "SPY_USD-1h.feather",
+      "instrument": "SPY_USD",
+      "interval": "1h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-1h.feather",
+      "rows": 1746,
+      "start": "1970-01-01 00:29:06.622800+00:00"
+    },
+    {
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "end": "1970-01-01 00:29:38.083200+00:00",
+      "file": "SPY_USD-4h.feather",
+      "instrument": "SPY_USD",
+      "interval": "4h",
+      "ok": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-4h.feather",
+      "rows": 585,
+      "start": "1970-01-01 00:29:06.619200+00:00"
+    }
+  ]
+}

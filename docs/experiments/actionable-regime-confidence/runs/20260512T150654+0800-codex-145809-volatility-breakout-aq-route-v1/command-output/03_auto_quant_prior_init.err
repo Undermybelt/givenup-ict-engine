@@ -1,0 +1,5 @@
+Error: loading strategy library from 'docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/strategy_library_volatility_breakout_v1.json'
+
+Caused by:
+    0: failed to parse strategy library manifest 'docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/strategy_library_volatility_breakout_v1.json'
+    1: invalid type: string "not_auto_quant_native_backtest", expected struct StrategyLibraryValidationError at line 109 column 36

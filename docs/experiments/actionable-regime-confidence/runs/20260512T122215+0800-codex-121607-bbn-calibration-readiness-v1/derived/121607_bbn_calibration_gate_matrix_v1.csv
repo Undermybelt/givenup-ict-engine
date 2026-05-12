@@ -1,0 +1,10 @@
+gate,status,evidence,blocker
+exact_root_feedback,pass,20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1 -> 20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1 -> 20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1,
+row_volume,pass,237 rows >= 30,
+provider_context,pass,"6 providers: binance_public, bybit_public, ibkr_paxos_long_midpoint, kraken_public, tvr_default_binance, yfinance",
+branch_attribution,pass,2 branch paths,
+chronological_holdout,fail_closed,provider windows overlap=True; no held-out chronological update artifact,needs disjoint calibration/test periods before BBN CPD mutation
+cross_instrument,fail_closed,"symbols=['BINANCE:BTCUSDT', 'BTC-USD', 'BTC.PAXOS', 'BTCUSDT', 'XBTUSD']",only BTC-like instruments are represented
+execution_admissibility,fail_closed,ready=False actionable=False review=observe readiness=0.32853919817900823,execution tree stayed observe/execution_blocked
+selected_history_source_control,fail_closed,no selected-history/source-control unlock in source packet,cannot promote or mutate production likelihoods
+bbn_cpd_update_authority,fail_closed,candidate_only_chronological_smoothing_required,candidate-only chronological smoothing required

@@ -1,0 +1,138 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T02:28:51Z",
+  "auto_quant_repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+  "auto_quant_pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-quant/config.json",
+  "timeframe": "1h",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/command-output/06_auto_quant_run_threaded_dns.out",
+  "strategies": [
+    {
+      "name": "BNBMeanRevertSharp",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-quant/user_data/strategies/BNBMeanRevertSharp.py",
+      "metadata": {
+        "strategy": "BNBMeanRevertSharp",
+        "mutation_id": "board_b_093854_local_cache_seed_bnb_mr_v2",
+        "base_factor": "unmapped_crypto_local_cache_seed",
+        "hypothesis": "BNB 1h RSI washouts below 25 can recover with a daily EMA200 floor, but this run is crypto local-cache evidence and not Board B branch-rooted.",
+        "paradigm": "mean-reversion",
+        "expected_regime": "unmapped_crypto_local_cache_seed_not_mainregimev2",
+        "factors_used": [
+          "rsi14",
+          "daily_ema200_floor",
+          "local_auto_quant_cache_seed",
+          "threaded_dns_binance_market_metadata"
+        ],
+        "parent": "093854 AQ-first nursery local-cache seed v2",
+        "asset_class": "crypto_spot_local_cache",
+        "status": "research_only_fail_profit_floor_not_branch_rooted",
+        "created": "2026-05-12T02:12:21Z"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.1848,
+        "sortino": 0.2063,
+        "calmar": 5.523,
+        "total_profit_pct": 16.25,
+        "max_drawdown_pct": -3.097,
+        "trade_count": 125,
+        "win_rate_pct": 70.4,
+        "profit_factor": 1.4785
+      },
+      "per_pair_metrics": {
+        "BNB/USDT": {
+          "sharpe": 0.1848,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 16.25,
+          "max_drawdown_pct": -3.1,
+          "trade_count": 125,
+          "win_rate_pct": 70.4,
+          "profit_factor": 1.48
+        }
+      },
+      "pairs": [
+        "BNB/USDT"
+      ],
+      "timerange": "20210101-20251231",
+      "commit": "34ba6b6",
+      "error": null
+    },
+    {
+      "name": "CrashReboundVolume",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-quant/user_data/strategies/CrashReboundVolume.py",
+      "metadata": {
+        "strategy": "CrashReboundVolume",
+        "mutation_id": "board_b_093854_local_cache_seed_crash_rebound_v2",
+        "base_factor": "unmapped_crypto_local_cache_seed",
+        "hypothesis": "SOL/BNB/AVAX 1h selloffs deeper than 20 percent from a 30-day high can rebound when daily EMA200 slope and volume confirm capitulation; this is not Board B branch-rooted.",
+        "paradigm": "drawdown-rebound-volume",
+        "expected_regime": "unmapped_crypto_local_cache_seed_not_mainregimev2",
+        "factors_used": [
+          "drawdown_30d",
+          "rsi14",
+          "daily_ema200_slope",
+          "volume_sma20",
+          "local_auto_quant_cache_seed",
+          "threaded_dns_binance_market_metadata"
+        ],
+        "parent": "093854 AQ-first nursery local-cache seed v2",
+        "asset_class": "crypto_spot_local_cache",
+        "status": "research_only_fail_profit_floor_not_branch_rooted",
+        "created": "2026-05-12T02:12:21Z"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.2802,
+        "sortino": 0.3051,
+        "calmar": 3.5884,
+        "total_profit_pct": 38.01,
+        "max_drawdown_pct": -11.1503,
+        "trade_count": 208,
+        "win_rate_pct": 69.2308,
+        "profit_factor": 1.396
+      },
+      "per_pair_metrics": {
+        "AVAX/USDT": {
+          "sharpe": 0.0327,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 5.25,
+          "max_drawdown_pct": -10.78,
+          "trade_count": 76,
+          "win_rate_pct": 60.5,
+          "profit_factor": 1.11
+        },
+        "BNB/USDT": {
+          "sharpe": 0.0727,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 9.13,
+          "max_drawdown_pct": -5.6,
+          "trade_count": 39,
+          "win_rate_pct": 82.1,
+          "profit_factor": 1.59
+        },
+        "SOL/USDT": {
+          "sharpe": 0.2047,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 23.63,
+          "max_drawdown_pct": -4.77,
+          "trade_count": 93,
+          "win_rate_pct": 71.0,
+          "profit_factor": 1.69
+        }
+      },
+      "pairs": [
+        "SOL/USDT",
+        "BNB/USDT",
+        "AVAX/USDT"
+      ],
+      "timerange": "20210101-20251231",
+      "commit": "34ba6b6",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

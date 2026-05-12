@@ -1,0 +1,8 @@
+requirement,evidence,status
+Use provider-owned Auto-Quant evidence,102315/102332/102352 command outputs,pass
+Avoid local-cache-only promotion,provider-backed run roots referenced; promotion false,pass
+Do not edit Current Cursor,Board section states Current Cursor not edited,pass
+Do not approve source/control evidence,decision source_control_evidence_acquired=false,pass
+Do not claim trade evidence,all three AQ runs produced zero trades,pass
+Do not run downstream promotion without unlock,downstream_promotion=false,pass
+Do not call update_goal,update_goal=false,pass

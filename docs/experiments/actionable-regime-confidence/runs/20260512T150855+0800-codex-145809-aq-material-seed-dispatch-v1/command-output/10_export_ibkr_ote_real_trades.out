@@ -1,0 +1,123 @@
+Result for strategy ProviderOteTrendRetracementV1
+                                            BACKTESTING REPORT                                             
+┏━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃    Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ SPY/USD │    162 │         0.04 │       5962.080 │         5.96 │     13:31:00 │   56     0   106  34.6 │
+│   TOTAL │    162 │         0.04 │       5962.080 │         5.96 │     13:31:00 │   56     0   106  34.6 │
+└─────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                               ENTER TAG STATS                                                
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  ote_0618 │      27 │         0.14 │       3712.880 │         3.71 │     12:40:00 │   13     0    14  48.1 │
+│  ote_0705 │      27 │         0.07 │       1887.760 │         1.89 │     13:20:00 │    8     0    19  29.6 │
+│   ote_050 │      76 │         0.01 │        873.920 │         0.87 │     15:21:00 │   26     0    50  34.2 │
+│  ote_0786 │      32 │        -0.01 │       -512.480 │        -0.51 │     10:04:00 │    9     0    23  28.1 │
+│     TOTAL │     162 │         0.04 │       5962.080 │         5.96 │     13:31:00 │   56     0   106  34.6 │
+└───────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                   EXIT REASON STATS                                                   
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│        exit_signal │   161 │         0.03 │       4375.680 │         4.38 │       13:26:00 │   55     0   106  34.2 │
+│ trailing_stop_loss │     1 │         1.64 │       1586.400 │         1.59 │ 1 day, 4:00:00 │    1     0     0   100 │
+│              TOTAL │   162 │         0.04 │       5962.080 │         5.96 │       13:31:00 │   56     0   106  34.6 │
+└────────────────────┴───────┴──────────────┴────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                          MIXED TAG STATS                                                           
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃        Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  ote_0618 │        exit_signal │     27 │         0.14 │       3712.880 │         3.71 │       12:40:00 │   13     0    14  48.1 │
+│  ote_0705 │ trailing_stop_loss │      1 │         1.64 │       1586.400 │         1.59 │ 1 day, 4:00:00 │    1     0     0   100 │
+│   ote_050 │        exit_signal │     76 │         0.01 │        873.920 │         0.87 │       15:21:00 │   26     0    50  34.2 │
+│  ote_0705 │        exit_signal │     26 │         0.01 │        301.360 │          0.3 │       12:46:00 │    7     0    19  26.9 │
+│  ote_0786 │        exit_signal │     32 │        -0.01 │       -512.480 │        -0.51 │       10:04:00 │    9     0    23  28.1 │
+│     TOTAL │                    │    162 │         0.04 │       5962.080 │         5.96 │       13:31:00 │   56     0   106  34.6 │
+└───────────┴────────────────────┴────────┴──────────────┴────────────────┴──────────────┴────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2023-01-01 05:00:00            │
+│ Backtesting to                │ 2025-12-31 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 162 / 0.15                     │
+│ Starting balance              │ 100000 USD                     │
+│ Final balance                 │ 105962.08 USD                  │
+│ Absolute profit               │ 5962.08 USD                    │
+│ Total profit %                │ 5.96%                          │
+│ CAGR %                        │ 1.95%                          │
+│ Sortino                       │ 0.62                           │
+│ Sharpe                        │ 0.25                           │
+│ Calmar                        │ 2.80                           │
+│ SQN                           │ 1.11                           │
+│ Profit factor                 │ 1.26                           │
+│ Expectancy (Ratio)            │ 36.80 (0.17)                   │
+│ Avg. daily profit             │ 5.45 USD                       │
+│ Avg. stake amount             │ 98924.675 USD                  │
+│ Total trade volume            │ 32057556.64 USD                │
+│                               │                                │
+│ Best Pair                     │ SPY/USD 5.96%                  │
+│ Worst Pair                    │ SPY/USD 5.96%                  │
+│ Best trade                    │ SPY/USD 1.64%                  │
+│ Worst trade                   │ SPY/USD -0.75%                 │
+│ Best day                      │ 1586.4 USD                     │
+│ Worst day                     │ -773.52 USD                    │
+│ Days win/draw/lose            │ 56 / 940 / 78                  │
+│ Min/Max/Avg. Duration Winners │ 0d 01:00 / 4d 20:00 / 1d 04:55 │
+│ Min/Max/Avg. Duration Losers  │ 0d 01:00 / 1d 04:00 / 0d 05:24 │
+│ Max Consecutive Wins / Loss   │ 3 / 7                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 97095.76 USD                   │
+│ Max balance                   │ 106405.92 USD                  │
+│ Max % of account underwater   │ 3.72%                          │
+│ Absolute drawdown             │ 3750.8 USD (3.72%)             │
+│ Drawdown duration             │ 103 days 22:00:00              │
+│ Profit at drawdown start      │ 846.56 USD                     │
+│ Profit at drawdown end        │ -2904.24 USD                   │
+│ Drawdown start                │ 2023-02-01 20:00:00            │
+│ Drawdown end                  │ 2023-05-16 18:00:00            │
+│ Market change                 │ 78.97%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2023-01-01 05:00:00 -> 2025-12-31 00:00:00 | Max open trades : 1
+                                                                  STRATEGY SUMMARY                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
+┃                      Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃          Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩
+│ ProviderOteTrendRetracementV1 │    162 │         0.04 │       5962.080 │         5.96 │     13:31:00 │   56     0   106  34.6 │ 3750.8 USD  3.72% │
+└───────────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┴───────────────────┘
+{
+  "branch_paths": {
+    "ote_050": "TrendExpansion -> NormalVolatility -> OTERetracement050 -> OTEContinuationLong",
+    "ote_0618": "TrendExpansion -> NormalVolatility -> OTERetracement0618 -> OTEContinuationLong",
+    "ote_0705": "TrendExpansion -> NormalVolatility -> OTERetracement0705 -> OTEContinuationLong",
+    "ote_0786": "TrendExpansion -> NormalVolatility -> OTERetracement0786 -> OTEContinuationLong"
+  },
+  "counts_by_ote_tag": {
+    "ote_050": 76,
+    "ote_0618": 27,
+    "ote_0705": 27,
+    "ote_0786": 32
+  },
+  "jsonl": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/summaries/ibkr_spy_ote_real_trades.jsonl",
+  "pnl_ratio_sum_by_ote_tag": {
+    "ote_050": 0.00951618,
+    "ote_0618": 0.03758052,
+    "ote_0705": 0.01995716,
+    "ote_0786": -0.0044121
+  },
+  "records": 162,
+  "source": "Freqtrade Backtesting result via Auto-Quant agent material dispatch"
+}

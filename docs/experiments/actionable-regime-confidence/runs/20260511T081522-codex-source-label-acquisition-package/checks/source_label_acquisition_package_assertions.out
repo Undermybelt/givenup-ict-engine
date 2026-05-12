@@ -1,0 +1,13 @@
+PASS acquisition_package_created
+PASS missing_slot_csv_created
+PASS missing_slot_rows_596
+PASS missing_intraday_or_monthly_source_label_392
+PASS missing_instrument_source_label_96
+PASS missing_non_yfinance_source_label_108
+PASS price_root_label_panel_schema_recorded
+PASS manipulation_label_schema_recorded
+PASS proxy_hmm_ohlcv_labels_forbidden_for_completion
+PASS goal_achieved_false
+PASS runtime_code_changed_false
+PASS thresholds_relaxed_false
+PASS trade_usable_false

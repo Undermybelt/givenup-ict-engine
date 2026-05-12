@@ -1,0 +1,4 @@
+strategy,timerange,sharpe,total_profit_pct,max_drawdown_pct,trade_count,win_rate_pct,profit_factor,summary_robust_sharpe,summary_profit_floor,summary_min_position_size,summary_avg_position_pct
+BTCLeaderBreakV4,20210101-20251231,0.9415,42.46,-5.7458,600,31.8333,1.7469,0.9415,PASS,PASS,6.9583
+MomentumMTFConfluence,20210101-20251231,0.3993,53.24,-23.1801,854,34.7775,1.1682,0.3993,PASS,PASS,21.5841
+VolBreakoutSized,20210101-20251231,1.339,25.02,-4.2529,1221,32.8419,1.4751,1.339,PASS,FAIL,3.6641

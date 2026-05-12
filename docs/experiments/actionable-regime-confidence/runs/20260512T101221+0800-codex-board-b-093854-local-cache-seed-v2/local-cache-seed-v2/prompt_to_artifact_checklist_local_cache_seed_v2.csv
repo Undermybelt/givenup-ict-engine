@@ -1,0 +1,8 @@
+requirement,status,evidence
+routing_completed,pass,~/.hermes routing and aegis long-task continuation read before work
+board_reread_before_write,pass,docs/plans/2026-05-10-actionable-regime-confidence-todo.md sha256 358481873b8d1ce48bef5b2c3546ca4bca454dc17908224e91737e9609db0abb
+101221_counted_once,pass,existing board section counts 101221; this packet refines without second count
+local_cache_seed_verified,pass,15 source and destination hashes match
+strategy_seed_verified,pass,2 active non-underscore strategy files compile
+autoquant_run_attempted,pass,05_auto_quant_run.exit equals 1 with 0 succeeded and 8 failed backtests
+promotion_claim_blocked,pass,no source/control unlock, selected-history approval, canonical merge, downstream promotion, trade claim, or update_goal

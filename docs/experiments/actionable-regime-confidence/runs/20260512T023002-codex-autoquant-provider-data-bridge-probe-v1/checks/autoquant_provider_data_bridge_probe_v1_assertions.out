@@ -1,0 +1,10 @@
+gate_result=autoquant_provider_data_bridge_probe_v1=partial_provider_data_no_autoquant_prepare_coverage_no_promotion
+yahoo_daily_exit=0
+yahoo_1h_blocked=true
+kraken_futures_partial=true
+autoquant_fixed_contract_satisfied=false
+accepted_rows_added=0
+canonical_merge_allowed=false
+downstream_promotion_rerun_allowed=false
+strict_full_objective_achieved=false
+update_goal=false

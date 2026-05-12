@@ -1,0 +1,10 @@
+PASS run_id=20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1
+PASS pairlist_fixed=true pair=B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD
+PASS data_loaded=true timerange=20260401-20260512
+PASS run_tomac_exit=0
+PASS strategies_succeeded=3
+FAIL_CLOSED total_trades=0
+PASS production_likelihood_mutation=false
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

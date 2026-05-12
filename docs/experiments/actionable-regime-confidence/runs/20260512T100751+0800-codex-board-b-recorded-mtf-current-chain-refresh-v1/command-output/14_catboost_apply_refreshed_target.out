@@ -1,0 +1,30 @@
+[run] /Users/thrill3r/.local/bin/uv run --with pandas --with numpy --with catboost python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/catboost/path_ranker_model --target-csv /tmp/ict-engine-20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1-state/SRC_ROOT_CARRY_LONG_220646/policy_training/structural_path_ranking_target.csv --output-scores docs/experiments/actionable-regime-confidence/runs/20260512T100751+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1/command-output/14_refreshed_catboost_scores.csv
+[error] Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 690, in <module>
+    main()
+    ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 635, in main
+    apply_model(
+    ~~~~~~~~~~~^
+        model_dir,
+        ^^^^^^^^^^
+    ...<3 lines>...
+        allow_direct_fallback=args.allow_direct_fallback,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 349, in apply_model
+    scores = model.predict_proba(X)[:, 1] if model.classes_.shape[0] == 2 else model.predict_proba(X).argmax(axis=1)
+             ~~~~~~~~~~~~~~~~~~~^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/pQ6K1V8vzp7nerayIes5I/lib/python3.13/site-packages/catboost/core.py", line 5653, in predict_proba
+    return self._predict(X, 'Probability', ntree_start, ntree_end, thread_count, verbose, 'predict_proba', task_type)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/pQ6K1V8vzp7nerayIes5I/lib/python3.13/site-packages/catboost/core.py", line 2929, in _predict
+    predictions = self._base_predict(data, prediction_type, ntree_start, ntree_end, thread_count, verbose, task_type)
+  File "/Users/thrill3r/.cache/uv/archive-v0/pQ6K1V8vzp7nerayIes5I/lib/python3.13/site-packages/catboost/core.py", line 1876, in _base_predict
+    return self._object._base_predict(pool, prediction_type, ntree_start, ntree_end, thread_count, verbose, task_type)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "_catboost.pyx", line 5565, in _catboost._CatBoost._base_predict
+  File "_catboost.pyx", line 5572, in _catboost._CatBoost._base_predict
+_catboost.CatBoostError: catboost/libs/data/model_dataset_compatibility.cpp:72: Feature year_fold is present in model but not in pool.
+

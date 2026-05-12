@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "1f5025866f93f77a",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": true,
+  "ledger_artifact_id": "auto_quant_real_trades_SAPIENZA_BINANCE_PNL_200931_20260511T121548.134022000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "board_b_sapienza_binance_pnl_bridge_v1",
+  "symbol": "SAPIENZA_BINANCE_PNL_200931",
+  "trades_applied": 96,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260511T200931-codex-board-b-sapienza-binance-pnl-bridge-v1/ict-engine-fail-closed/sapienza_binance_real_trades_wire_v1.jsonl",
+  "trades_total": 96
+}

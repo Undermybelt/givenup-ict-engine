@@ -1,0 +1,14 @@
+prior_request_template_available=PASS
+prior_request_targets_available=PASS
+contact_lead_count_ge_8=PASS
+has_us_index_futures_leads=PASS
+has_crypto_leads=PASS
+has_fx_rates_commodities_leads=PASS
+request_sent_false=PASS
+rows_acquired_false=PASS
+accepted_rows_added_zero=PASS
+new_confidence_gate_false=PASS
+r2_closed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+raw_data_committed_false=PASS

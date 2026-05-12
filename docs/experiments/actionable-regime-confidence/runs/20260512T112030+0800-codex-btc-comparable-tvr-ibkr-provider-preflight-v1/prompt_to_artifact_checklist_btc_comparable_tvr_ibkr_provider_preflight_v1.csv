@@ -1,0 +1,11 @@
+requirement,evidence,status
+TradingViewRemix or tradingview_mcp provider readiness,00_provider_status_tvr.stdout ready=true,PASS
+TVR BTC-comparable Binance OHLCV,01_tvr_btc_binance_1h.stdout has 720 rows for BINANCE:BTCUSDT 1h,PASS
+TVR BTC-comparable Coinbase OHLCV,02_tvr_btc_coinbase_1h.stdout has 715 rows for COINBASE:BTCUSD 1h,PASS
+TVR local stdio fallback,03_tvr_btc_binance_1h_local_stdio.stderr get_ohlcv HTTP 404,FAIL_CLOSED
+IBKR BTC-comparable historical rows,04_ibkr_btc_paxos_bulk.stderr and derived CSV show 45 BTC PAXOS 1h MIDPOINT rows,PASS
+repo default IBKR provider gate,market-data-harness provider summary reports configured_runtime_unhealthy due dependency gap,FAIL_CLOSED
+same-root six-provider AQ packet,no Auto-Quant run in this preflight,FAIL_CLOSED
+Pre-Bayes/filter to BBN to CatBoost/path-ranker to execution tree,no downstream chain run in this preflight,FAIL_CLOSED
+per-regime 95 confidence and cross-market/timeframe validation,not proven by this provider-layer preflight,FAIL_CLOSED
+promotion/update_goal authorization,strict_full_objective=false and update_goal=false,FAIL_CLOSED

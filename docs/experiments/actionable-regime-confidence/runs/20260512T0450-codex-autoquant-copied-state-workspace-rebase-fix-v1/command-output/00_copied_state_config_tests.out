@@ -1,0 +1,9 @@
+
+running 4 tests
+test application::auto_quant::config::tests::copied_state_config_preserves_external_custom_managed_dir ... ok
+test application::auto_quant::config::tests::copied_state_config_rebases_even_before_local_workspace_exists ... ok
+test application::auto_quant::config::tests::copied_state_config_rebases_absolute_managed_dir_to_local_workspace ... ok
+test application::auto_quant::tests::status_rebases_copied_state_config_to_state_local_workspace ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 933 filtered out; finished in 0.70s
+

@@ -1,0 +1,81 @@
+{
+  "run_id": "20260512T045327+0800-codex-050430-root-branch-chain-refresh-readback-v1",
+  "source_run": "20260512T050430+0800-codex-board-b-root-branch-chain-refresh-v1",
+  "gate_result": "root_branch_chain_refresh_readback_v1=chain_operated_no_promotion",
+  "command_exits": {
+    "00_provider_status_agent": 0,
+    "01_provider_status_compact": 0,
+    "02_auto_quant_status": 0,
+    "03_pre_bayes_status": 0,
+    "04_policy_training_status": 0,
+    "05_export_structural_path_target": 0,
+    "06_workflow_structural_bundle": 0,
+    "07_workflow_execution_candidate": 0,
+    "08_workflow_full": 0
+  },
+  "providers": {
+    "yfinance": "ready",
+    "kraken_cli": "ready",
+    "ibkr": "configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "ibkr_bridge": "configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+    "tradingview_mcp": "configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed",
+    "kraken_public": "configured_runtime_unhealthy:python3_provider_dependencies_missing"
+  },
+  "auto_quant_status": {
+    "status": "missing_dependency",
+    "healthy": false,
+    "bootstrap_needed": true,
+    "data_ready": false,
+    "fresh_selected_data_backtest": false
+  },
+  "pre_bayes": {
+    "latest_gate_status": "observe_only",
+    "pass_to_bbn": false,
+    "evidence_quality_score": 0.39931857543136917,
+    "branch_path_count": 5
+  },
+  "bbn": {
+    "read_only_regime_bbn_decision_state": "accepted",
+    "read_only_regime_bbn_trade_usable": true,
+    "regime_bundle_bbn_application_status": "skipped"
+  },
+  "catboost_path_ranker": {
+    "runtime_selection_enabled": true,
+    "runtime_active_match_count": 5,
+    "mature_rows": 0,
+    "raw_scored_mature_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 0,
+    "observation_validation_min_rows": 30,
+    "calibration_status": "not_fitted"
+  },
+  "workflow_structural_bundle": {
+    "selected_path": "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72",
+    "direction": "Observe",
+    "recommended_next_step": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing"
+  },
+  "execution_candidate": {
+    "actionable": false,
+    "ready": false,
+    "candidate_status": "execution_blocked",
+    "pre_bayes_gate_status": "observe_only",
+    "execution_readiness": 0.3210541039505038
+  },
+  "execution_tree": {
+    "closed_loop_status": "fail_closed",
+    "path_id": "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+    "execution_tree_branch": "transition_guardrail",
+    "execution_tree_gate_status": "observe",
+    "path_ranker_score_visible_to_execution_tree": false,
+    "path_ranker_score_used_by_execution_tree": false
+  },
+  "promotion_status": {
+    "strict_full_objective": false,
+    "promotion_allowed": false,
+    "update_goal": false,
+    "blocked_reason": "user_selected_historical_data_missing"
+  }
+}

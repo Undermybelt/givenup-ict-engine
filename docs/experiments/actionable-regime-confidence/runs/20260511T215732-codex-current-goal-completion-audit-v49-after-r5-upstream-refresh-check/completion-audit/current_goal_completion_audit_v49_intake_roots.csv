@@ -1,0 +1,5 @@
+root,path,ready,status
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,True,schema_ready_unscored
+direct_manipulation_row_intake,/tmp/ict-engine-direct-manipulation-row-intake,True,schema_ready_unscored
+native_subhour_source_label,/tmp/ict-engine-native-subhour-source-label-intake,False,missing
+source_panel_recency_extension,/tmp/ict-engine-source-panel-recency-extension,False,blocked

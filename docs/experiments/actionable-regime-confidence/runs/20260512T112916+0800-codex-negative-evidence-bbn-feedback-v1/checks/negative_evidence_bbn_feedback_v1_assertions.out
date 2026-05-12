@@ -1,0 +1,8 @@
+pass:json_schema_readable
+pass:evidence_sources_nonempty
+pass:classified_evidence_nonempty
+pass:all_classified_evidence_has_bbn_feedback
+pass:active_roots_excluded
+pass:market_prior_update_allowed_false_for_all_classified_evidence
+pass:promotion_allowed_false
+pass:update_goal_false

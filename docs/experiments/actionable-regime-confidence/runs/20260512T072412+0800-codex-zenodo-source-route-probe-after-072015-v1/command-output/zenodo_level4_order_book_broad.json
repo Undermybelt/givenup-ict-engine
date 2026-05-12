@@ -1,0 +1,415 @@
+{
+  "aggregations": {
+    "access_status": {
+      "buckets": [
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "open",
+          "label": "Open"
+        }
+      ],
+      "label": "Access status"
+    },
+    "file_type": {
+      "buckets": [
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "md",
+          "label": "MD"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "py",
+          "label": "PY"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "tar",
+          "label": "TAR"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "xz",
+          "label": "XZ"
+        }
+      ],
+      "label": "File type"
+    },
+    "publication_date": {
+      "buckets": [
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "2026",
+          "label": "2026"
+        }
+      ],
+      "label": "Publication date"
+    },
+    "resource_type": {
+      "buckets": [
+        {
+          "doc_count": 1,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "dataset",
+          "label": "Dataset"
+        }
+      ],
+      "label": "Resource types"
+    },
+    "subject": {
+      "buckets": [
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "Hyperliquid",
+          "label": "Hyperliquid"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "cryptocurrency",
+          "label": "cryptocurrency"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "high-frequency trading",
+          "label": "high-frequency trading"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "limit order book",
+          "label": "limit order book"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "market microstructure",
+          "label": "market microstructure"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "order flow",
+          "label": "order flow"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "perpetual futures",
+          "label": "perpetual futures"
+        },
+        {
+          "doc_count": 1,
+          "is_selected": false,
+          "key": "rejected orders",
+          "label": "rejected orders"
+        }
+      ],
+      "label": "Subjects"
+    }
+  },
+  "hits": {
+    "hits": [
+      {
+        "conceptdoi": "10.5281/zenodo.18184440",
+        "conceptrecid": "18184440",
+        "created": "2026-03-25T16:59:52.400350+00:00",
+        "doi": "10.5281/zenodo.18184441",
+        "doi_url": "https://doi.org/10.5281/zenodo.18184441",
+        "files": [
+          {
+            "checksum": "md5:5b2b2007dbd59196ba010e2b3923f5e0",
+            "id": "faaef2e5-0840-4110-b0b8-ac61b37bd72e",
+            "key": "btc_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/btc_orders_202512.tar.xz/content"
+            },
+            "size": 19268354932
+          },
+          {
+            "checksum": "md5:3cbb57a28ef63339bb1c60252cbd3024",
+            "id": "5d90bcd4-f279-4f87-962b-927179279a26",
+            "key": "eth_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/eth_orders_202512.tar.xz/content"
+            },
+            "size": 12120113008
+          },
+          {
+            "checksum": "md5:df9b9220373a6f11403a75796a084c6d",
+            "id": "d59f1002-353b-4fad-9f0b-92a78e71337a",
+            "key": "btc_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/btc_rejected_202512.tar.xz/content"
+            },
+            "size": 46038646232
+          },
+          {
+            "checksum": "md5:b2a54cf4796f95b524bbdf108d835522",
+            "id": "d42bb177-d349-41c0-a186-03fa97ffe1a1",
+            "key": "eth_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/eth_rejected_202512.tar.xz/content"
+            },
+            "size": 24087215608
+          },
+          {
+            "checksum": "md5:5abed7980b4d8c57651dbb9237c02d88",
+            "id": "8d1f05ae-12d8-40f6-baa2-943579646de0",
+            "key": "sol_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/sol_orders_202512.tar.xz/content"
+            },
+            "size": 6271301388
+          },
+          {
+            "checksum": "md5:7bbe3626b137d356ea4c5c3009cb3e56",
+            "id": "31aaeb73-55bd-467e-a91b-5f125f5c2fd2",
+            "key": "sol_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/sol_rejected_202512.tar.xz/content"
+            },
+            "size": 8529075876
+          },
+          {
+            "checksum": "md5:350656ae19550b14d2e1ebe025b25dc7",
+            "id": "97753436-5bc1-49cf-b570-11443f0203e1",
+            "key": "book_diffs_202512.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/book_diffs_202512.tar/content"
+            },
+            "size": 49555435520
+          },
+          {
+            "checksum": "md5:582490cf94b58068a6ae59aedb63c952",
+            "id": "c4d844ac-26ab-47fd-a7ef-34287d4a721e",
+            "key": "trades_2025_10.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_10.tar/content"
+            },
+            "size": 10049740800
+          },
+          {
+            "checksum": "md5:6fbab17d761b67e279ac0592e8520af7",
+            "id": "605f1cf0-0ce2-4792-a1ba-a24998a39720",
+            "key": "trades_2025_11.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_11.tar/content"
+            },
+            "size": 8847390720
+          },
+          {
+            "checksum": "md5:434b242b9b897e689576b3eea8450e0c",
+            "id": "ef9ee6b5-a3c9-45fa-a356-e998b471afdf",
+            "key": "trades_2026_01.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2026_01.tar/content"
+            },
+            "size": 3847168000
+          },
+          {
+            "checksum": "md5:83f0ecdcc34a5d55e93048ac844bed3f",
+            "id": "5dbbba8c-a7c9-4109-b7f4-7f37412c3f54",
+            "key": "mapdir.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/mapdir.tar.xz/content"
+            },
+            "size": 10188884
+          },
+          {
+            "checksum": "md5:03ccb90a9042880ef7360a54f49c9a6b",
+            "id": "56b03cfe-4a0f-4ffe-a48d-4d5c30244f31",
+            "key": "read_data.py",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/read_data.py/content"
+            },
+            "size": 24427
+          },
+          {
+            "checksum": "md5:44f6eaf275db120e32678c263809610d",
+            "id": "49831920-4e96-4e7e-87d4-98c8710b07c0",
+            "key": "SCHEMA.md",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/SCHEMA.md/content"
+            },
+            "size": 16136
+          },
+          {
+            "checksum": "md5:79c1f3018c90cfdce86bc68fccd1a6d8",
+            "id": "d21e3597-8b05-44e0-a824-c6af2756fee4",
+            "key": "README.md",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/README.md/content"
+            },
+            "size": 5407
+          },
+          {
+            "checksum": "md5:7949be6a52ec7fb3b591ee633bae3329",
+            "id": "0db63fc7-e146-4bbb-8b0b-aacbca3fb9df",
+            "key": "trades_2025_12.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_12.tar/content"
+            },
+            "size": 6694522880
+          }
+        ],
+        "id": 18184441,
+        "links": {
+          "access": "https://zenodo.org/api/records/18184441/access",
+          "access_grants": "https://zenodo.org/api/records/18184441/access/grants",
+          "access_links": "https://zenodo.org/api/records/18184441/access/links",
+          "access_request": "https://zenodo.org/api/records/18184441/access/request",
+          "access_users": "https://zenodo.org/api/records/18184441/access/users",
+          "archive": "https://zenodo.org/api/records/18184441/files-archive",
+          "archive_media": "https://zenodo.org/api/records/18184441/media-files-archive",
+          "communities": "https://zenodo.org/api/records/18184441/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/18184441/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.18184441",
+          "draft": "https://zenodo.org/api/records/18184441/draft",
+          "file_modification": "https://zenodo.org/api/records/18184441/file-modification",
+          "files": "https://zenodo.org/api/records/18184441/files",
+          "latest": "https://zenodo.org/api/records/18184441/versions/latest",
+          "latest_html": "https://zenodo.org/records/18184441/latest",
+          "media_files": "https://zenodo.org/api/records/18184441/media-files",
+          "parent": "https://zenodo.org/api/records/18184440",
+          "parent_doi": "https://doi.org/10.5281/zenodo.18184440",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18184440",
+          "parent_html": "https://zenodo.org/records/18184440",
+          "preview_html": "https://zenodo.org/records/18184441?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/18184441/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/18184441/request-deletion",
+          "requests": "https://zenodo.org/api/records/18184441/requests",
+          "reserve_doi": "https://zenodo.org/api/records/18184441/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/18184441",
+          "self_doi": "https://doi.org/10.5281/zenodo.18184441",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18184441",
+          "self_html": "https://zenodo.org/records/18184441",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:18184441/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:18184441/sequence/default",
+          "versions": "https://zenodo.org/api/records/18184441/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "contributors": [
+            {
+              "affiliation": "University of Oxford",
+              "name": "Albers, Jakob",
+              "type": "DataCollector"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "University of Oxford",
+              "name": "Albers, Jakob"
+            },
+            {
+              "affiliation": "University of California, Los Angeles",
+              "name": "Cucuringu, Mihai"
+            },
+            {
+              "affiliation": "University of Oxford",
+              "name": "Howison, Sam"
+            },
+            {
+              "affiliation": "Queen Mary University of London",
+              "name": "Shestopaloff, Alexander Y."
+            }
+          ],
+          "description": "<div>This dataset accompanies the paper \"An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange.\"</div>\n<div>&nbsp;</div>\n<div>It contains three data streams from the Hyperliquid decentralized perpetual futures exchange:</div>\n<div>&nbsp;</div>\n<div>- Order statuses (Dec 2025): Complete order lifecycle events for BTC, ETH, and SOL perpetual contracts, including rejected orders &mdash; data typically unavailable from any exchange. Custom binary format, 54 bytes per&nbsp;record. ~880 million records per day.</div>\n<div>- Raw book diffs (Dec 2025): Every change to the visible limit order book for BTC, ETH, and SOL. Gzip-compressed JSON lines.</div>\n<div>- Trades (Oct 2025 &ndash; Jan 2026): Trade execution data for all 250+ perpetual contracts. Gzip-compressed JSON lines.</div>\n<div>&nbsp;</div>\n<div>Includes lookup tables, a Python reader (read_data.py), and full schema documentation (SCHEMA.md). See README.md for quick start instructions.</div>",
+          "doi": "10.5281/zenodo.18184441",
+          "keywords": [
+            "market microstructure",
+            "high-frequency trading",
+            "order flow",
+            "limit order book",
+            "rejected orders",
+            "Hyperliquid",
+            "cryptocurrency",
+            "perpetual futures"
+          ],
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2026-03-25",
+          "related_identifiers": [
+            {
+              "identifier": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6250738",
+              "relation": "isSupplementTo",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            },
+            {
+              "identifier": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6250378",
+              "relation": "isSupplementTo",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            },
+            {
+              "identifier": "https://papers.ssrn.com/abstract=6465720",
+              "relation": "isDescribedBy",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            }
+          ],
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "18184440"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Dataset",
+            "type": "dataset"
+          },
+          "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+          "version": "1.0"
+        },
+        "modified": "2026-03-25T16:59:53.103968+00:00",
+        "owners": [
+          {
+            "id": "1438183"
+          }
+        ],
+        "recid": "18184441",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 186,
+          "unique_downloads": 181,
+          "unique_views": 183,
+          "version_downloads": 186,
+          "version_unique_downloads": 181,
+          "version_unique_views": 183,
+          "version_views": 197,
+          "views": 197
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+        "updated": "2026-03-25T16:59:53.103968+00:00"
+      }
+    ],
+    "total": 1
+  },
+  "links": {
+    "self": "https://zenodo.org/api/records?page=1&q=%22Level+4+Order+Book%22&size=10&sort=bestmatch"
+  }
+}

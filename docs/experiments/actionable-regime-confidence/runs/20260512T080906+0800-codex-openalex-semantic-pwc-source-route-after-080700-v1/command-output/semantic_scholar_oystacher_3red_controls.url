@@ -1,0 +1,1 @@
+https://api.semanticscholar.org/graph/v1/paper/search?limit=8&fields=title,year,url,abstract,externalIds&query=%22Oystacher%22%20%223Red%20Trading%22%20%22matched%20controls%22

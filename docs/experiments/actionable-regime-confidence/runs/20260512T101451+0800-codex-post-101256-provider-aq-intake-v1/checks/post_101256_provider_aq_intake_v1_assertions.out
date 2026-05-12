@@ -1,0 +1,10 @@
+all_roots_present=True
+auto_quant_data_ready_true=True
+auto_quant_seed_exit_0=True
+bybit_fetch_exit_0=True
+kraken_fetch_exit_0=True
+promotion_allowed_false=True
+provider_nq_feathers_present=True
+provider_nq_run_exit_0=True
+provider_nq_trade_count_zero=True
+update_goal_false=True

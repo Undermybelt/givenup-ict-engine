@@ -1,0 +1,299 @@
+{
+  "by_branch": {
+    "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+      "avg_pnl": 2.125252,
+      "breakeven": 0,
+      "loss_rate": 0.615854,
+      "losses": 101,
+      "rows": 164,
+      "total_pnl": 348.541397,
+      "win_rate": 0.384146,
+      "wins": 63
+    },
+    "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+      "avg_pnl": -7.295071,
+      "breakeven": 0,
+      "loss_rate": 0.753425,
+      "losses": 55,
+      "rows": 73,
+      "total_pnl": -532.540152,
+      "win_rate": 0.246575,
+      "wins": 18
+    }
+  },
+  "by_provider": {
+    "binance_public": {
+      "avg_pnl": -0.399159,
+      "breakeven": 0,
+      "loss_rate": 0.653846,
+      "losses": 34,
+      "rows": 52,
+      "total_pnl": -20.756286,
+      "win_rate": 0.346154,
+      "wins": 18
+    },
+    "bybit_public": {
+      "avg_pnl": -0.456712,
+      "breakeven": 0,
+      "loss_rate": 0.647059,
+      "losses": 33,
+      "rows": 51,
+      "total_pnl": -23.292335,
+      "win_rate": 0.352941,
+      "wins": 18
+    },
+    "ibkr_paxos_long_midpoint": {
+      "avg_pnl": 1.625112,
+      "breakeven": 0,
+      "loss_rate": 0.659091,
+      "losses": 29,
+      "rows": 44,
+      "total_pnl": 71.504938,
+      "win_rate": 0.340909,
+      "wins": 15
+    },
+    "kraken_public": {
+      "avg_pnl": -3.954539,
+      "breakeven": 0,
+      "loss_rate": 0.6875,
+      "losses": 22,
+      "rows": 32,
+      "total_pnl": -126.545257,
+      "win_rate": 0.3125,
+      "wins": 10
+    },
+    "tvr_default_binance": {
+      "avg_pnl": -6.749075,
+      "breakeven": 0,
+      "loss_rate": 0.72973,
+      "losses": 27,
+      "rows": 37,
+      "total_pnl": -249.715776,
+      "win_rate": 0.27027,
+      "wins": 10
+    },
+    "yfinance": {
+      "avg_pnl": 7.847903,
+      "breakeven": 0,
+      "loss_rate": 0.52381,
+      "losses": 11,
+      "rows": 21,
+      "total_pnl": 164.805961,
+      "win_rate": 0.47619,
+      "wins": 10
+    }
+  },
+  "catboost_path_ranker_readback": {
+    "observation_validation_rows": 237,
+    "production_validation_min_rows": 30,
+    "production_validation_rows": 237,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_rows": 237,
+    "runtime_selection_ready": true,
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model"
+  },
+  "cpd_candidate": {
+    "candidate_probs": [
+      0.351456,
+      0.031003,
+      0.617541
+    ],
+    "current_probs": [
+      0.427961,
+      0.275927,
+      0.296112
+    ],
+    "empirical_probs": [
+      0.341772,
+      0.0,
+      0.658228
+    ],
+    "empirical_weight": 0.88764,
+    "mode": "candidate_only_do_not_overwrite",
+    "smoothing_alpha": 30.0,
+    "source_rows": 237,
+    "states": [
+      "win",
+      "breakeven",
+      "loss"
+    ]
+  },
+  "execution_tree_readback": {
+    "actionable": false,
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.32853919817900823,
+    "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "ready": false,
+    "review_status": "observe",
+    "selected_path_probability": 0.3119273253369391
+  },
+  "gate_matrix": [
+    {
+      "blocker": "",
+      "evidence": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1 -> 20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1 -> 20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1",
+      "gate": "exact_root_feedback",
+      "status": "pass"
+    },
+    {
+      "blocker": "",
+      "evidence": "237 rows >= 30",
+      "gate": "row_volume",
+      "status": "pass"
+    },
+    {
+      "blocker": "",
+      "evidence": "6 providers: binance_public, bybit_public, ibkr_paxos_long_midpoint, kraken_public, tvr_default_binance, yfinance",
+      "gate": "provider_context",
+      "status": "pass"
+    },
+    {
+      "blocker": "",
+      "evidence": "2 branch paths",
+      "gate": "branch_attribution",
+      "status": "pass"
+    },
+    {
+      "blocker": "needs disjoint calibration/test periods before BBN CPD mutation",
+      "evidence": "provider windows overlap=True; no held-out chronological update artifact",
+      "gate": "chronological_holdout",
+      "status": "fail_closed"
+    },
+    {
+      "blocker": "only BTC-like instruments are represented",
+      "evidence": "symbols=['BINANCE:BTCUSDT', 'BTC-USD', 'BTC.PAXOS', 'BTCUSDT', 'XBTUSD']",
+      "gate": "cross_instrument",
+      "status": "fail_closed"
+    },
+    {
+      "blocker": "execution tree stayed observe/execution_blocked",
+      "evidence": "ready=False actionable=False review=observe readiness=0.32853919817900823",
+      "gate": "execution_admissibility",
+      "status": "fail_closed"
+    },
+    {
+      "blocker": "cannot promote or mutate production likelihoods",
+      "evidence": "no selected-history/source-control unlock in source packet",
+      "gate": "selected_history_source_control",
+      "status": "fail_closed"
+    },
+    {
+      "blocker": "candidate-only chronological smoothing required",
+      "evidence": "candidate_only_chronological_smoothing_required",
+      "gate": "bbn_cpd_update_authority",
+      "status": "fail_closed"
+    }
+  ],
+  "overall": {
+    "avg_pnl": -0.776366,
+    "breakeven": 0,
+    "loss_rate": 0.658228,
+    "losses": 156,
+    "rows": 237,
+    "total_pnl": -183.998755,
+    "win_rate": 0.341772,
+    "wins": 81
+  },
+  "pre_bayes_bbn_readback": {
+    "latest_canonical_structural_active_regime": "range",
+    "latest_canonical_structural_confidence": 0.5250864595751618,
+    "latest_canonical_structural_probabilities": {
+      "range": 0.7476877176681956,
+      "stress": 0.17754351056498482,
+      "transition": 0.07476877176681956,
+      "trend": 0.0
+    },
+    "latest_filtered_assignments": {
+      "__policy_version": "318900600c5e8cf2",
+      "factor_alignment": "mixed",
+      "factor_uncertainty": "low",
+      "liquidity_context": "neutral",
+      "market_regime": "range",
+      "market_state_primary_regime": "RangeConsolidation",
+      "market_state_secondary_regime": "WideRange",
+      "multi_timeframe_resonance": "aligned"
+    },
+    "latest_gate_status": "pass_neutralized",
+    "latest_soft_evidence": {
+      "factor_alignment": {
+        "bearish": 0.0,
+        "bullish": 0.0,
+        "mixed": 1.0
+      },
+      "factor_uncertainty": {
+        "high": 0.4187283851062096,
+        "low": 0.5812716148937904
+      },
+      "liquidity_context": {
+        "favorable": 0.0,
+        "hostile": 0.0,
+        "neutral": 1.0
+      },
+      "market_regime": {
+        "range": 0.7476877176681956,
+        "stress": 0.17754351056498482,
+        "transition": 0.07476877176681956,
+        "trend": 0.0
+      },
+      "multi_timeframe_resonance": {
+        "aligned": 0.5812716148937904,
+        "dislocated": 0.0,
+        "mixed": 0.4187283851062096
+      }
+    },
+    "latest_uses_soft_evidence": true
+  },
+  "promotion_allowed": false,
+  "provider_windows": {
+    "binance_public": {
+      "first": "2026-04-01T00:00:00Z",
+      "last": "2026-05-12T00:00:00Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+      "rows": 985,
+      "symbol": "BTCUSDT"
+    },
+    "bybit_public": {
+      "first": "2026-04-01T00:00:00Z",
+      "last": "2026-05-12T00:00:00Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+      "rows": 985,
+      "symbol": "BTCUSDT"
+    },
+    "ibkr_paxos_long_midpoint": {
+      "first": "2026-03-31T20:01:00Z",
+      "last": "2026-05-12T04:00:00Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+      "rows": 783,
+      "symbol": "BTC.PAXOS"
+    },
+    "kraken_public": {
+      "first": "2026-04-12T04:00:00Z",
+      "last": "2026-05-12T04:00:00Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+      "rows": 721,
+      "symbol": "XBTUSD"
+    },
+    "tvr_default_binance": {
+      "first": "2026-04-12T05:00:00Z",
+      "last": "2026-05-12T04:00:00Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+      "rows": 720,
+      "symbol": "BINANCE:BTCUSDT"
+    },
+    "yfinance": {
+      "first": "2026-04-01T00:00:00Z",
+      "last": "2026-05-11T23:00:00Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv",
+      "rows": 971,
+      "symbol": "BTC-USD"
+    }
+  },
+  "run_id": "20260512T122215+0800-codex-121607-bbn-calibration-readiness-v1",
+  "source_aq_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "source_chain_run_id": "20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1",
+  "source_feedback_run_id": "20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1",
+  "trade_usable": false,
+  "update_goal": false
+}

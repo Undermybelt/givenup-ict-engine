@@ -1,0 +1,12 @@
+requirement,evidence,status,decision
+every_regime_95_confidence,"No artifact proves every MainRegimeV2 root at 95%+. Latest strict roots still rely on missing R6/R5/R3 source-control unlocks.",blocked,"not achieved"
+cross_market_cross_period_validation,"Current target roots do not supply verifier-native rows for all required regimes across markets and periods.",blocked,"not achieved"
+ibkr_tradingview_yfinance_kraken_provider_use,"provider-status --agent exited 0; yfinance and kraken_cli ready; IBKR/TradingView market-data paths unhealthy.",partial,"not sufficient for promotion"
+auto_quant_operated,"auto-quant-status exited 0 and reports dependency_ready_data_ready on /tmp/ict-engine-board-a-064259-runtime-v1.",partial,"runtime ready but promotion blocked"
+pre_bayes_bbn_catboost_execution_tree_chain,"pre-bayes-status, workflow-status, and structural path-ranking export exited 0; workflow remains user_selected_historical_data_missing and execution_blocked; path-ranking mature/calibrated rows remain 0.",blocked,"downstream promotion not allowed"
+r6_owner_export_controls,"/tmp/ict-engine-board-a-r6-owner-export-v1 absent; approval package present but approval_present=false.",blocked,"not achieved"
+r5_post_2026_01_30_recency,"/tmp/ict-engine-source-panel-recency-extension absent; Kaggle redownload exists but stock_market_regimes_2000_2026 ends at 2026-01-30.",blocked,"not achieved"
+r3_crisis_native_subhour,"/tmp/ict-engine-native-subhour-source-label-intake present but settled 071032/071346 counts show Crisis=0 and TSIE-quarantined status.",blocked,"not achieved"
+hf_exact_source_probe_072138,"072333 readback of raw 072138 HF exact queries reports six exact queries exited 0 with result counts 0.",blocked,"no unlock"
+multi_agent_board_safety,"Board hash read before audit; this packet is separate and does not modify peer run roots.",pass,"append-only"
+update_goal,"Strict objective not achieved.",blocked,"do not call update_goal"

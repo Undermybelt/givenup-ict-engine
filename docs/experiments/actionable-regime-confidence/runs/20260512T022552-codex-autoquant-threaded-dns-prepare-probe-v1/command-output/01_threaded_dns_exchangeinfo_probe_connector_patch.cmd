@@ -1,0 +1,1 @@
+cd '/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant' && PYTHONPATH='/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T022552-codex-autoquant-threaded-dns-prepare-probe-v1/scripts' uv run --with ta-lib python -

@@ -1,0 +1,79 @@
+{
+  "run_id": "20260512T070031+0800-codex-autoquant-run-readback-after-data-ready-v1",
+  "gate_result": "autoquant_run_readback_after_data_ready_v1=data_ready_prepare_ok_run_market_load_blocked_no_source_control_unlock_no_downstream",
+  "scope": {
+    "mode": "read_only_runtime_consolidation",
+    "reran_autoquant": false,
+    "mutated_required_roots": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "update_goal": false
+  },
+  "inputs": {
+    "threaded_prepare_root": "docs/experiments/actionable-regime-confidence/runs/20260512T065652+0800-codex-autoquant-threaded-dns-prepare-after-065116-v1",
+    "local_cache_data_ready_root": "docs/experiments/actionable-regime-confidence/runs/20260512T065613+0800-codex-autoquant-local-cache-data-ready-after-065116-v1",
+    "managed_state_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T065824+0800-codex-autoquant-local-run-readback-after-065116-v1",
+    "empty_placeholder_root": "docs/experiments/actionable-regime-confidence/runs/20260512T065822+0800-codex-source-control-provider-refresh-after-065506-v1"
+  },
+  "runtime_observations": {
+    "threaded_prepare": {
+      "state_dir": "/tmp/ict-engine-board-a-064259-runtime-v1",
+      "prepare_exit": 0,
+      "status_exit": 0,
+      "status": "dependency_ready_data_ready",
+      "healthy": true,
+      "data_ready": true,
+      "note": "run-local aiohttp threaded resolver shim made prepare healthy"
+    },
+    "local_cache_run": {
+      "auto_quant_run_after_cache_exit": 1,
+      "auto_quant_run_threaded_resolver_after_cache_exit": 1,
+      "strategies_discovered": [
+        "CrashRebound",
+        "PerPairMR",
+        "RegimeAdaptiveBNB"
+      ],
+      "timerange_attempts": 12,
+      "successful_backtests": 0,
+      "failed_backtests": 12,
+      "error_type": "OperationalException",
+      "error_summary": "Could not load markets"
+    },
+    "managed_state_run": {
+      "auto_quant_status_064259_state_exit": 0,
+      "status": "dependency_ready_data_ready",
+      "healthy": true,
+      "data_ready": true,
+      "autoquant_run_exit": 1,
+      "strategies_discovered": [
+        "TomacNQ_KillzoneBreakout"
+      ],
+      "successful_backtests": 0,
+      "failed_backtests": 1,
+      "error_type": "OperationalException",
+      "error_summary": "Could not load markets"
+    },
+    "empty_placeholder": {
+      "root_exists": true,
+      "report_json_assertions_observed": false,
+      "count_as_evidence": false
+    }
+  },
+  "gate": {
+    "autoquant_data_ready": true,
+    "autoquant_prepare_healthy": true,
+    "autoquant_selected_run_success": false,
+    "successful_backtests": 0,
+    "r6_owner_export_unlock": false,
+    "r5_recency_unlock": false,
+    "r3_native_subhour_unlock": false,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next": "Keep Auto-Quant as runtime-ready but not promotion-ready. Continue only from a valid R6/R5/R3/source-control unlock before canonical merge or downstream promotion."
+}

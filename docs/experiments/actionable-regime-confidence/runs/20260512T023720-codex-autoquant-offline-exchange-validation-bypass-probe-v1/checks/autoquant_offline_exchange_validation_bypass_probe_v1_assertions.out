@@ -1,0 +1,12 @@
+status_before_exit_zero=PASS
+offline_bypass_run_exit_nonzero=PASS
+status_after_exit_zero=PASS
+status_after_data_ready=PASS
+backtests_succeeded_zero=PASS
+backtests_failed_twelve=PASS
+market_metadata_still_blocked=PASS
+accepted_rows_added_zero=PASS
+canonical_merge_allowed_false=PASS
+downstream_chain_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS

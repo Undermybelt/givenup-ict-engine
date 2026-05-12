@@ -1,0 +1,1 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/.deps/auto-quant && uv run --with ta-lib ./run_tomac.py

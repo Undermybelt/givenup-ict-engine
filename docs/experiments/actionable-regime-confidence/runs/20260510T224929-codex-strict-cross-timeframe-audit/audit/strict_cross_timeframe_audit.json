@@ -1,0 +1,367 @@
+{
+  "decision": {
+    "accepted_95_all_regimes_cross_timeframes": false,
+    "accepted_95_all_regimes_market_contexts": true,
+    "board_state": "blocked",
+    "next_action": "Build or ingest broader aligned multi-timeframe evidence for TrendExpansion, ExtremeStress, ReversalBrewing, and ThinLiquidity; do not tell the user the stricter goal is complete until those regimes pass >=2 timeframes at 95%+.",
+    "trade_usable": false,
+    "why_not_complete": [
+      "The stricter user requirement adds per-regime cross-timeframe validation.",
+      "Current accepted packets are multi-market for all six regimes, but only SessionLiquidityCoreViable and RangeConsolidation expose >=2 validation timeframes.",
+      "TrendExpansion, ExtremeStress, ReversalBrewing, and ThinLiquidity remain accepted_95 on market/context axes but have only 1d accepted evidence.",
+      "A fresh non-leaky 15m/1h cross-timeframe candidate search accepted 0 candidates under unchanged 95% gates."
+    ]
+  },
+  "handoff_packet_audit": [
+    {
+      "calibration_support": 792,
+      "confidence_lane": "95",
+      "coverage": 0.2412771560236998,
+      "ece": 0.010898548927198326,
+      "passes_95": true,
+      "passes_cross_market": true,
+      "passes_cross_timeframe": true,
+      "precision_wilson_lcb": 0.9631734677247024,
+      "regime_id": "SessionLiquidityCoreViable",
+      "test_support": 733,
+      "validation_contexts": [
+        "NQ:CME_futures_local:15m",
+        "PF_XBTUSD:Kraken_crypto:1h",
+        "QQQ:IBKR_US_ETF:1h",
+        "QQQ:yfinance_US_ETF:1h"
+      ],
+      "validation_instruments": [
+        "NQ",
+        "PF_XBTUSD",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_US_ETF"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    {
+      "calibration_support": 273,
+      "confidence_lane": "95",
+      "coverage": 0.14310344827586208,
+      "ece": 0.036674169204289675,
+      "passes_95": true,
+      "passes_cross_market": true,
+      "passes_cross_timeframe": false,
+      "precision_wilson_lcb": 0.9536435698638122,
+      "regime_id": "TrendExpansion",
+      "test_support": 581,
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1d",
+        "NQ:CME_futures_local:1d",
+        "QQQ:yfinance_ETF:1d",
+        "SPY:yfinance_ETF:1d"
+      ],
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "validation_timeframes": [
+        "1d"
+      ]
+    },
+    {
+      "calibration_support": 467,
+      "confidence_lane": "95",
+      "coverage": 0.06341166936790923,
+      "ece": 0.004488121867580741,
+      "passes_95": true,
+      "passes_cross_market": true,
+      "passes_cross_timeframe": true,
+      "precision_wilson_lcb": 0.9676071866741978,
+      "regime_id": "RangeConsolidation",
+      "test_support": 313,
+      "validation_contexts": [
+        "NQ:AutoQuant_NQ_15m_cache:15m",
+        "QQQ:yfinance_QQQ_1h:1h",
+        "QQQ:IBKR_QQQ_1h:1h"
+      ],
+      "validation_instruments": [
+        "NQ",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "AutoQuant_NQ_15m_cache",
+        "yfinance_QQQ_1h",
+        "IBKR_QQQ_1h"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ]
+    },
+    {
+      "calibration_support": 445,
+      "confidence_lane": "95",
+      "coverage": 0.05279960707269155,
+      "ece": 0.015573556310425896,
+      "passes_95": true,
+      "passes_cross_market": true,
+      "passes_cross_timeframe": false,
+      "precision_wilson_lcb": 0.9741288651988539,
+      "regime_id": "ExtremeStress",
+      "test_support": 215,
+      "validation_contexts": [
+        "NQ:CME_futures_local:1d",
+        "QQQ:yfinance_ETF:1d",
+        "SPY:yfinance_ETF:1d"
+      ],
+      "validation_instruments": [
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF"
+      ],
+      "validation_timeframes": [
+        "1d"
+      ]
+    },
+    {
+      "calibration_support": 843,
+      "confidence_lane": "95",
+      "coverage": 0.22192118226600985,
+      "ece": 0.0013389630343508818,
+      "passes_95": true,
+      "passes_cross_market": true,
+      "passes_cross_timeframe": false,
+      "precision_wilson_lcb": 0.9919428347812438,
+      "regime_id": "ReversalBrewing",
+      "test_support": 901,
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1d",
+        "NQ:CME_futures_local:1d",
+        "QQQ:yfinance_ETF:1d",
+        "SPY:yfinance_ETF:1d"
+      ],
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "validation_timeframes": [
+        "1d"
+      ]
+    },
+    {
+      "calibration_support": 1066,
+      "confidence_lane": "95",
+      "coverage": 0.12242394504416095,
+      "ece": 0.0,
+      "passes_95": true,
+      "passes_cross_market": true,
+      "passes_cross_timeframe": false,
+      "precision_wilson_lcb": 0.9923604970248407,
+      "regime_id": "ThinLiquidity",
+      "test_support": 499,
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1d",
+        "NQ:CME_futures_local:1d",
+        "QQQ:yfinance_ETF:1d",
+        "SPY:yfinance_ETF:1d"
+      ],
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "validation_timeframes": [
+        "1d"
+      ]
+    }
+  ],
+  "loop_id": "20260510T224929+0800-codex-strict-cross-timeframe-audit",
+  "nonleaky_cross_timeframe_search": {
+    "accepted_candidate_count_total": 0,
+    "candidate_selection": "current condition, nonfuture numeric threshold, and condition+threshold conjunctions only",
+    "input_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/cross_market_regime_features_and_labels.csv",
+    "results": [
+      {
+        "accepted_candidate_count": 0,
+        "best_blocker": "wilson95_below_0_95;ece_above_0_05;coverage_below_0_03",
+        "best_ece": 0.2876831065268267,
+        "best_rule": "NOT condition_trend_expansion AND realized_vol_rank_252 >= 0.968537415",
+        "best_test_contexts": [
+          "NQ:CME futures:15m",
+          "PF_XBTUSD:Kraken crypto:1h",
+          "QQQ:US ETF / IBKR:1h",
+          "QQQ:US ETF / yfinance:1h"
+        ],
+        "best_test_coverage": 0.027796383121232417,
+        "best_test_markets": [
+          "CME futures",
+          "Kraken crypto",
+          "US ETF / IBKR",
+          "US ETF / yfinance"
+        ],
+        "best_test_support": 83,
+        "best_test_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "best_test_wilson95": 0.37763185922155507,
+        "regime_id": "TrendExpansion"
+      },
+      {
+        "accepted_candidate_count": 0,
+        "best_blocker": "wilson95_below_0_95",
+        "best_ece": 0.037319985950122925,
+        "best_rule": "condition_range_consolidation AND volume_rank_252 <= 0.09920634921",
+        "best_test_contexts": [
+          "NQ:CME futures:15m",
+          "PF_XBTUSD:Kraken crypto:1h",
+          "QQQ:US ETF / IBKR:1h",
+          "QQQ:US ETF / yfinance:1h"
+        ],
+        "best_test_coverage": 0.048894842598794376,
+        "best_test_markets": [
+          "CME futures",
+          "Kraken crypto",
+          "US ETF / IBKR",
+          "US ETF / yfinance"
+        ],
+        "best_test_support": 146,
+        "best_test_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "best_test_wilson95": 0.3409187965919966,
+        "regime_id": "RangeConsolidation"
+      },
+      {
+        "accepted_candidate_count": 0,
+        "best_blocker": "calibration_support_below_120;wilson95_below_0_95;ece_above_0_05;test_timeframes_below_2",
+        "best_ece": 0.13243330118932822,
+        "best_rule": "condition_extreme_stress AND stretch_32 <= -0.01932940278",
+        "best_test_contexts": [
+          "PF_XBTUSD:Kraken crypto:1h",
+          "QQQ:US ETF / IBKR:1h",
+          "QQQ:US ETF / yfinance:1h"
+        ],
+        "best_test_coverage": 0.04085733422638982,
+        "best_test_markets": [
+          "Kraken crypto",
+          "US ETF / IBKR",
+          "US ETF / yfinance"
+        ],
+        "best_test_support": 122,
+        "best_test_timeframes": [
+          "1h"
+        ],
+        "best_test_wilson95": 0.4365832905642544,
+        "regime_id": "ExtremeStress"
+      },
+      {
+        "accepted_candidate_count": 0,
+        "best_blocker": "calibration_support_below_120;test_support_below_60;wilson95_below_0_95;ece_above_0_05;coverage_below_0_03",
+        "best_ece": 0.4940711462450593,
+        "best_rule": "condition_reversal_brewing AND realized_vol_rank_252 >= 0.968537415",
+        "best_test_contexts": [
+          "NQ:CME futures:15m",
+          "PF_XBTUSD:Kraken crypto:1h",
+          "QQQ:US ETF / IBKR:1h",
+          "QQQ:US ETF / yfinance:1h"
+        ],
+        "best_test_coverage": 0.015405224380442064,
+        "best_test_markets": [
+          "CME futures",
+          "Kraken crypto",
+          "US ETF / IBKR",
+          "US ETF / yfinance"
+        ],
+        "best_test_support": 46,
+        "best_test_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "best_test_wilson95": 0.4860009642338971,
+        "regime_id": "ReversalBrewing"
+      },
+      {
+        "accepted_candidate_count": 0,
+        "best_blocker": "wilson95_below_0_95;ece_above_0_05",
+        "best_ece": 0.09417685118619701,
+        "best_rule": "condition_thin_liquidity AND range_pct <= 0.0006251299854",
+        "best_test_contexts": [
+          "NQ:CME futures:15m",
+          "QQQ:US ETF / IBKR:1h"
+        ],
+        "best_test_coverage": 0.03583389149363697,
+        "best_test_markets": [
+          "CME futures",
+          "US ETF / IBKR"
+        ],
+        "best_test_support": 107,
+        "best_test_timeframes": [
+          "15m",
+          "1h"
+        ],
+        "best_test_wilson95": 0.5033945894801658,
+        "regime_id": "ThinLiquidity"
+      }
+    ],
+    "split": "chronological train/calibration/test per context",
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260510T224929-codex-strict-cross-timeframe-audit/audit/strict_cross_timeframe_candidate_summary.csv"
+  },
+  "objective": "Audit the stricter user requirement: every required regime must be accepted at 95%+ and validated on other markets plus at least two timeframes/cycles.",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T224929-codex-strict-cross-timeframe-audit",
+  "schema_version": "board-a-strict-cross-timeframe-audit/v1",
+  "source_handoff_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T221035-codex-board-a-6of6-board-b-handoff/board_a_6of6_regime_context_handoff_to_board_b.json",
+  "strict_cross_timeframe_gate_complete": false,
+  "strict_cross_timeframe_missing_regimes": [
+    "TrendExpansion",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "ThinLiquidity"
+  ],
+  "strict_cross_timeframe_pass_regimes": [
+    "SessionLiquidityCoreViable",
+    "RangeConsolidation"
+  ],
+  "strict_gate": {
+    "blocked_feature_prefixes": [
+      "future_",
+      "target_"
+    ],
+    "calibration_support_min": 120,
+    "coverage_min": 0.03,
+    "ece_max": 0.05,
+    "precision_wilson_lcb_min": 0.95,
+    "test_support_min": 60,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  }
+}

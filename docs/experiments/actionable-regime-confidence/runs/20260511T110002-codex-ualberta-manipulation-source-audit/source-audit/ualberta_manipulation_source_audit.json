@@ -1,0 +1,81 @@
+{
+  "run_id": "20260511T110002+0800-codex-ualberta-manipulation-source-audit",
+  "generated_at_utc": "2026-05-11T03:01:15.034439+00:00",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV2",
+  "objective": "Audit newly surfaced UAlberta/Golmohammadi-Zaiane manipulation/anomaly sources for attachable MainRegimeV2 parent-root labels or direct Manipulation rows.",
+  "missing_slot_contract": {
+    "required_parent_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "separate_direct_class_or_overlay": "Manipulation",
+    "required_parent_root_source": "independent exact provider or exact underlying label windows by provider/instrument/timeframe/root",
+    "required_direct_manipulation_source": "timestamped direct event/order-flow/order-lifecycle positives with same-asset/venue negative controls",
+    "forbidden_sources": [
+      "synthetic anomaly rows",
+      "artificial outlier injection",
+      "OHLCV-derived proxies",
+      "methodology-only papers",
+      "unlabeled order/trade rows"
+    ]
+  },
+  "network_probes": [
+    {
+      "url": "https://www.ualberta.ca/~golmoham/DSAA2015/",
+      "reachable": true,
+      "status": 202,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": "2032",
+      "waf_challenge": true,
+      "error": null
+    },
+    {
+      "url": "https://webdocs.cs.ualberta.ca/~zaiane/postscript/DSAA2015.pdf",
+      "reachable": true,
+      "status": 200,
+      "content_type": "application/pdf",
+      "content_length": "7624118",
+      "waf_challenge": false,
+      "error": null
+    },
+    {
+      "url": "https://webdocs.cs.ualberta.ca/~zaiane/postscript/DSAA2014.pdf",
+      "reachable": true,
+      "status": 200,
+      "content_type": "application/pdf",
+      "content_length": "3900539",
+      "waf_challenge": false,
+      "error": null
+    }
+  ],
+  "candidates": [
+    {
+      "source_id": "Golmohammadi-Zaiane DSAA2015 S&P outlier CSV package",
+      "source_url": "https://www.ualberta.ca/~golmoham/DSAA2015/",
+      "observed_shape": "Paper-advertised downloadable S&P CSVs for unsupervised outlier detection experiments; local probe currently receives CloudFront/WAF challenge for the dataset directory.",
+      "decision": "rejected",
+      "reason": "The paper/data framing is synthetic or artificial outlier injection for anomaly-detection benchmarking, not adjudicated timestamped manipulation positives with same-venue negatives and not MainRegimeV2 Bull/Bear/Sideways/Crisis label windows."
+    },
+    {
+      "source_id": "Golmohammadi-Zaiane DSAA2014 SEC/Diaz manipulation case study",
+      "source_url": "https://webdocs.cs.ualberta.ca/~zaiane/postscript/DSAA2014.pdf",
+      "observed_shape": "Academic paper over SEC/Diaz manipulated-stock cases and S&P comparison time series; no replayable public row-level label panel was located in this bounded audit.",
+      "decision": "rejected",
+      "reason": "Methodology/case-study provenance only; no materialized positive/negative manipulation rows, no exact provider/instrument/timeframe label windows for the Board A missing-slot matrix."
+    }
+  ],
+  "result": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_direct_manipulation_sources_added": 0,
+    "gate_result": "blocked_ualberta_sources_synthetic_or_methodology_only_no_attachable_labels",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "Do not spend another loop on synthetic/anomaly-benchmark sources; only continue this branch if a public row-level ground-truth file for the SEC/Diaz manipulation cases is located."
+}

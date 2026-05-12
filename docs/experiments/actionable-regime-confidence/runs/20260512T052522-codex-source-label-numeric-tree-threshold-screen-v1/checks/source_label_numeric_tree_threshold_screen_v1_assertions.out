@@ -1,0 +1,12 @@
+PASS run_id=20260512T052522-codex-source-label-numeric-tree-threshold-screen-v1
+PASS gate_result=source_label_numeric_tree_threshold_screen_v1=numeric_tree_scored_no_full_acceptance
+PASS row_count=248440
+PASS accepted_numeric_tree_confidence_95_labels=Bull,Crisis,Sideways
+PASS accepted_regime_confidence_labels=3
+PASS new_confidence_gate=true
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

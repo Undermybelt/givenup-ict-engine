@@ -1,0 +1,80 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_before_artifact": "ddc79029bea6d590860441390ce729e4d7730b0b40fcc9bf975741b0428cda9a",
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "findings": [
+    {
+      "evidence": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1/scripts/r3_hf_tsie_native_intraday_intake_v1.py",
+      "finding": "materializer_script_present",
+      "value": true
+    },
+    {
+      "evidence": "script contains final TMP_TARGET_ROOT to TARGET_ROOT rename",
+      "finding": "would_write_target_root",
+      "value": true
+    },
+    {
+      "evidence": "script result declares target_root_mutated true",
+      "finding": "declares_target_root_mutated_true",
+      "value": true
+    },
+    {
+      "evidence": "script equivalence policy says crisis_no_direct_mapping",
+      "finding": "crisis_missing_or_no_direct_mapping",
+      "value": true
+    },
+    {
+      "evidence": "script provenance marks source_confidence_available false",
+      "finding": "source_confidence_absent",
+      "value": true
+    },
+    {
+      "evidence": "script itself does not allow downstream rerun",
+      "finding": "downstream_blocked_in_script",
+      "value": true
+    }
+  ],
+  "gate_result": "r3_tsie_native_intraday_materializer_preflight_v1=do_not_run_target_root_materializer_proxy_blocked",
+  "generated_at_utc": "2026-05-11T22:32:53.229148+00:00",
+  "materializer": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1/scripts/r3_hf_tsie_native_intraday_intake_v1.py",
+  "materializer_sha256": "6f9e12e11b136b7f7af3c74b0d9569e5305901a223c108172a2f6c8e17eed1f9",
+  "policy_blockers_present": true,
+  "prior_blockers": [
+    {
+      "gate": "r3_hf_tsie_provenance_decision_v1=rejected_rule_based_proxy_labels_no_intake_no_promotion",
+      "reason": "TSIE labels are README-described rule-based price/volatility/RSI/volume signal labels.",
+      "source": "062201"
+    },
+    {
+      "gate": "tsie_prior_evidence_reconciliation_v1=duplicate_candidate_prior_full_data_and_mapping_failures_no_intake",
+      "reason": "Prior full-data gates accepted zero roots and direct Crisis evidence is absent.",
+      "source": "062253"
+    },
+    {
+      "gate": "r3_r5_source_selection_readback_after_061855_v1=no_candidate_selected_no_required_root_no_promotion",
+      "reason": "TSIE and five other candidates selected zero target-root unlocks.",
+      "source": "062409"
+    },
+    {
+      "gate": "tsie_negative_packet_reconciliation_after_062409_v1=tsie_packets_counted_or_scoped_no_required_root_no_promotion",
+      "reason": "TSIE remains non-promoting for policy and validation reasons, not transport.",
+      "source": "062657"
+    }
+  ],
+  "recommended_action": "do_not_run_or_count_062902_as_unlock_without_explicit_source_control_policy_change",
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-label-equivalence-intake": true,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "risky_target_root_mutation": true,
+  "run_id": "20260512T063215+0800-codex-r3-tsie-native-intraday-materializer-preflight-v1",
+  "source_control_evidence_acquired": false,
+  "source_label_equivalence_rows": 248440,
+  "strict_full_objective": false,
+  "target_root_mutated": false,
+  "trade_usable": false,
+  "update_goal": false
+}

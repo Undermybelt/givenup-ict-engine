@@ -1,0 +1,7 @@
+field,value
+gate_result,autoquant_threaded_resolver_workaround_run_v1=prepare_retry_failed_aiodns_loopback_no_promotion
+inferred_exit_code,1
+aiodns_dns_error,True
+exchange_not_available_api_binance,True
+data_ready,False
+update_goal,False

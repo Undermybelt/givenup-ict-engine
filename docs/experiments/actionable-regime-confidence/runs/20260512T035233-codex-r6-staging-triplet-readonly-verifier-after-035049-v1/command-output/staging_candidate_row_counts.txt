@@ -1,0 +1,3 @@
+      78 /private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/matched_negative_normal_activity_rows.csv
+      78 /private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging/positive_spoofing_layering_rows.csv
+     156 total

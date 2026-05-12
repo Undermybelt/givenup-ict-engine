@@ -1,0 +1,4 @@
+strategy,robust_sharpe,worst_profit_pct,profit_floor,full_5y_profit_pct,full_5y_trades,full_5y_win_rate_pct
+CrashRebound,0.0847,2.9900,FAIL,55.6900,207,68.5990
+PerPairMR,0.0520,0.8400,FAIL,35.7800,519,58.1888
+RegimeAdaptiveBNB,0.0967,3.7100,FAIL,16.4100,115,69.5652

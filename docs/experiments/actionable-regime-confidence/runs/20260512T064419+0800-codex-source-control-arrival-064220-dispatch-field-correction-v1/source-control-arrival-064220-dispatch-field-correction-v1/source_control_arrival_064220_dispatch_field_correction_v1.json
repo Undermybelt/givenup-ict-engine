@@ -1,0 +1,26 @@
+{
+  "run_id": "20260512T064419+0800-codex-source-control-arrival-064220-dispatch-field-correction-v1",
+  "board_hash_before_artifact": "af02c186d44e1d96eee16bc2873c78f22c50ef3bec0a1e9e653678df6083d524",
+  "gate_result": "source_control_arrival_064220_dispatch_field_correction_v1=dispatch_sent_field_false_no_unlock",
+  "corrected_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T064220+0800-codex-source-control-arrival-refresh-after-063906-v1/source-control-arrival-refresh-after-063906-v1/source_control_arrival_refresh_after_063906_v1.json",
+  "corrected_board_section": "2026-05-12 Supplemental 064220 Source/Control Arrival Refresh After 063906 v1",
+  "observed_values": {
+    "json_decision_external_dispatch_sent_evidence": false,
+    "dispatch_csv_cme_sent_evidence": false,
+    "dispatch_csv_cboe_sent_evidence": false,
+    "valid_required_unlock": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "correction": {
+    "previous_board_sentence": "The refresh observed the two v5 dispatch draft assets and reported external_dispatch_sent_evidence=true",
+    "corrected_sentence": "The refresh observed the two v5 dispatch draft assets, but both the JSON decision and dispatch-assets CSV report no sent evidence.",
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "target_root_unlocked": false
+  },
+  "next_action": "Use only explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, verifier-native R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export before any direct verifier, canonical merge, or downstream chain rerun."
+}

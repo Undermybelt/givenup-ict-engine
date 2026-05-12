@@ -1,0 +1,7 @@
+markets contains True ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']
+get_markets {} contains True count 1 keys ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']
+get_markets {'quote_currencies': ['USD']} contains True count 1 keys ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']
+get_markets {'tradable_only': True} contains True count 1 keys ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']
+get_markets {'active_only': True} contains True count 1 keys ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']
+get_markets {'tradable_only': True, 'active_only': True} contains True count 1 keys ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']
+get_markets {'quote_currencies': ['USD'], 'tradable_only': True, 'active_only': True} contains True count 1 keys ['B2R_NQ_COST_CRISIS_REPAIR_032157/USD']

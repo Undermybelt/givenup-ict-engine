@@ -1,0 +1,25 @@
+---
+strategy:         RegimeRsiRelief
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No pair in whitelist.
+traceback:
+
+---
+strategy:         RegimeTrendCarry
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No pair in whitelist.
+traceback:
+
+---
+strategy:         RegimeVolBreakout
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No pair in whitelist.
+traceback:
+
+Done: 0 succeeded, 3 failed.

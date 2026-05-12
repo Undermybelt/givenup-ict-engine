@@ -1,0 +1,14 @@
+run_id=20260511T184530+0800-codex-strict-1h-jan2026-tail-support-probe-v1
+candidate_rows=13
+provider_ready_for_tail=13
+tail_covers_missing_extra_rows=4
+standalone_tail_gate_passes=0
+accepted_rows_added=0
+new_confidence_gate=false
+full_objective_achieved=false
+update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

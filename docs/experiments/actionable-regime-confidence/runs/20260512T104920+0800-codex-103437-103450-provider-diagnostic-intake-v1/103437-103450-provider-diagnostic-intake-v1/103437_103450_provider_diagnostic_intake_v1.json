@@ -1,0 +1,87 @@
+{
+  "run_id": "20260512T104920+0800-codex-103437-103450-provider-diagnostic-intake-v1",
+  "purpose": "count-once intake for unregistered provider/AQ diagnostics 103437 and 103450 without editing their source run roots",
+  "source_roots": {
+    "103437": "docs/experiments/actionable-regime-confidence/runs/20260512T103437+0800-codex-board-b-yahoo-crypto-momentum-market-aq-v1",
+    "103450": "docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1"
+  },
+  "gates": {
+    "103437": "yahoo_crypto_momentum_market_aq_v1=nonzero_crypto_market_trades_unprofitable_slow_scans_killed_no_promotion",
+    "103450": "provider_yf_nq_tickfix_rerun_v1=entry_wire_repaired_nonzero_trades_no_promotion"
+  },
+  "readback": {
+    "103437": {
+      "signal_probe_exit": 0,
+      "tomac_run_exit": 0,
+      "regime_candidate_scan_exit": "killed_slow_scan",
+      "small_grid_scan_exit": "killed_slow_scan",
+      "strategies_succeeded": 2,
+      "strategies_failed": 0,
+      "results": {
+        "ProviderCryptoMomentumStateV1": {
+          "trade_count": 295,
+          "total_profit_pct": -18.73,
+          "sharpe": -1.0287,
+          "win_rate_pct": 34.9153,
+          "profit_factor": 0.735,
+          "gate": "fail_closed:unprofitable"
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "trade_count": 109,
+          "total_profit_pct": -7.08,
+          "sharpe": -0.4663,
+          "win_rate_pct": 40.367,
+          "profit_factor": 0.6898,
+          "gate": "fail_closed:unprofitable"
+        }
+      }
+    },
+    "103450": {
+      "precheck_exit": 1,
+      "precheck_failure": "market exit orders require exit_pricing.price_side=other",
+      "rerun_exit": 0,
+      "strategies_succeeded": 3,
+      "strategies_failed": 0,
+      "results": {
+        "ProviderNqAlwaysInDiagnostic": {
+          "trade_count": 2782,
+          "total_profit_pct": -61.3,
+          "sharpe": -5.4536,
+          "win_rate_pct": 29.3314,
+          "profit_factor": 0.6067,
+          "gate": "fail_closed:diagnostic_always_in_unprofitable"
+        },
+        "ProviderNqSampledPulse": {
+          "trade_count": 18,
+          "total_profit_pct": 0.97,
+          "sharpe": 0.1898,
+          "win_rate_pct": 33.3333,
+          "profit_factor": 5.3246,
+          "gate": "fail_closed:profitable_but_probe_only_trade_count_18"
+        },
+        "ProviderNqTrendPulse": {
+          "trade_count": 896,
+          "total_profit_pct": -38.1,
+          "sharpe": -3.3038,
+          "win_rate_pct": 37.7232,
+          "profit_factor": 0.5912,
+          "gate": "fail_closed:dense_provider_nq_strategy_unprofitable"
+        }
+      }
+    }
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_added": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "next": "Do not repeat these provider crypto/NQ diagnostic shapes. Continue from source/control unlock, explicit selected-history approval, or a materially different provider-owned branch-specific recipe with enough mature rooted observations and ordered downstream readback."
+}

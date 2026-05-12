@@ -1,0 +1,122 @@
+{
+  "after_cleanup": {
+    "matched_negative_rows": 53,
+    "positive_rows": 53
+  },
+  "artifact_type": "r6_direct_intake_reconstruction_v55",
+  "before_cleanup": {
+    "matched_negative_rows": 72,
+    "positive_rows": 72
+  },
+  "board_hash_before": "18486811d9381f23e361fde7aa671678be66d6499dba02f092b6513067ab4de8",
+  "cleanup_removed_source_row_ids": [
+    "cftc_logista_serotta_20200129_cl_buy_genuine_orders_control",
+    "cftc_logista_serotta_20200129_cl_sell_spoof_order",
+    "cftc_logista_serotta_20200220_ng_buy_spoof_order",
+    "cftc_logista_serotta_20200220_ng_sell_genuine_orders_control",
+    "cftc_logista_serotta_20200311_cl_buy_spoof_order",
+    "cftc_logista_serotta_20200311_cl_sell_genuine_orders_control",
+    "cftc_mohan_complaint_20131127_ym_buy_genuine_iceberg_control",
+    "cftc_mohan_complaint_20131127_ym_buy_spoof_second_third_groups",
+    "cftc_mohan_complaint_20131127_ym_sell_genuine_iceberg_control",
+    "cftc_mohan_complaint_20131127_ym_sell_spoof_first_group",
+    "cftc_mohan_complaint_20131203_nq_buy_genuine_iceberg_control",
+    "cftc_mohan_complaint_20131203_nq_sell_spoof_no_fill_event",
+    "cftc_mohan_complaint_20131209_nq_buy_genuine_iceberg_control",
+    "cftc_mohan_complaint_20131209_nq_buy_spoof_third_fourth_groups",
+    "cftc_mohan_complaint_20131209_nq_sell_genuine_iceberg_control",
+    "cftc_mohan_complaint_20131209_nq_sell_spoof_first_second_groups",
+    "cftc_shak_20170303_gold_buy_spoof_series",
+    "cftc_shak_20170303_gold_sell_genuine_order_control",
+    "cftc_shak_20170324_gold_buy_spoof_series",
+    "cftc_shak_20170324_gold_sell_genuine_order_control",
+    "cftc_shak_20170918_silver_buy_spoof_series",
+    "cftc_shak_20170918_silver_sell_genuine_orders_control",
+    "cftc_shak_20171005_gold_buy_spoof_second_series",
+    "cftc_shak_20171005_gold_sell_iceberg_genuine_order_control",
+    "cftc_shak_20180122_silver_buy_spoof_series",
+    "cftc_shak_20180122_silver_sell_genuine_order_control",
+    "cftc_shak_complaint_20170303_gold_buy_spoof_orders",
+    "cftc_shak_complaint_20170303_gold_sell_genuine_control",
+    "cftc_shak_complaint_20170324_gold_buy_spoof_orders",
+    "cftc_shak_complaint_20170324_gold_sell_genuine_control",
+    "cftc_shak_complaint_20170918_silver_buy_spoof_orders",
+    "cftc_shak_complaint_20170918_silver_sell_genuine_control",
+    "cftc_shak_complaint_20180122_silver_buy_spoof_orders",
+    "cftc_shak_complaint_20180122_silver_sell_genuine_control",
+    "cftc_shak_complaint_20180221_silver_buy_genuine_control",
+    "cftc_shak_complaint_20180221_silver_buy_spoof_orders",
+    "cftc_shak_complaint_20180221_silver_sell_genuine_control",
+    "cftc_shak_complaint_20180221_silver_sell_spoof_orders"
+  ],
+  "created_at_utc": "2026-05-11T15:56:16.956259+00:00",
+  "policy": "isolated reconstruction only; does not mutate canonical /tmp shared intake",
+  "run_id": "20260511T234414+0800-codex-r6-direct-intake-reconstruction-v55",
+  "source_steps": [
+    {
+      "negative_added": 0,
+      "positive_added": 2,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T205239-codex-cftc-finra-direct-public-positive-probe-v1/scripts/cftc_finra_direct_public_positive_probe_v1.py"
+    },
+    {
+      "negative_added": 2,
+      "positive_added": 0,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T205654-codex-cftc-matched-control-seed-v1/scripts/cftc_matched_control_seed_v1.py"
+    },
+    {
+      "negative_added": 2,
+      "positive_added": 2,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T210150-codex-cftc-gandhi-source-row-uplift-v1/scripts/cftc_gandhi_source_row_uplift_v1.py"
+    },
+    {
+      "negative_added": 4,
+      "positive_added": 4,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T210744-codex-r6-mohan-additional-row-uplift-v1/scripts/r6_mohan_additional_row_uplift_v1.py"
+    },
+    {
+      "negative_added": 11,
+      "positive_added": 11,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T211201-codex-r6-mohan-shak-row-uplift-v1/scripts/r6_mohan_shak_row_uplift_v1.py"
+    },
+    {
+      "negative_added": 4,
+      "positive_added": 4,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T211208-codex-cftc-vorley-chanu-row-uplift-calibration-v1/scripts/cftc_vorley_chanu_row_uplift_calibration_v1.py"
+    },
+    {
+      "negative_added": 8,
+      "positive_added": 8,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T211606-codex-r6-shak-complaint-row-uplift-gate-v1/scripts/r6_shak_complaint_row_uplift_gate_v1.py"
+    },
+    {
+      "negative_added": 5,
+      "positive_added": 5,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T211628-codex-r6-shak-cftc-row-uplift-v1/scripts/r6_shak_cftc_row_uplift_v1.py"
+    },
+    {
+      "negative_added": 3,
+      "positive_added": 3,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T212137-codex-r6-geneva-cftc-row-uplift-v1/scripts/r6_geneva_cftc_row_uplift_v1.py"
+    },
+    {
+      "negative_added": 7,
+      "positive_added": 7,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T213113-codex-r6-zhao-skudder-cftc-row-uplift-v1/scripts/r6_zhao_skudder_cftc_row_uplift_v1.py"
+    },
+    {
+      "negative_added": 10,
+      "positive_added": 10,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T213312-codex-r6-flotron-cftc-row-uplift-v1/scripts/r6_flotron_cftc_row_uplift_v1.py"
+    },
+    {
+      "negative_added": 7,
+      "positive_added": 7,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T220410-codex-r6-vorley-franko-row-uplift-v1/scripts/r6_vorley_franko_row_uplift_v1.py"
+    },
+    {
+      "negative_added": 9,
+      "positive_added": 9,
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260511T220755-codex-r6-official-rowlevel-support-extension-v1/scripts/r6_official_rowlevel_support_extension_v1.py"
+    }
+  ]
+}

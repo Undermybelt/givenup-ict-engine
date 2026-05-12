@@ -1,0 +1,230 @@
+{
+  "artifact_type": "current_goal_completion_audit_v49_after_r5_upstream_refresh_check",
+  "blocker": "R5 owner source and bounded candidate screen found no acceptable post-cutoff source-panel rows; source-confidence labels remain 0/4 accepted; R3 native sub-hour root is absent; R6 direct remains 41/41 with support below 50/50 and broad-normal/direct-species gates open.",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "f3452065f45273f55890c63533edf0fc7b443ad5346d3ca568f5dc94818ed684",
+  "decision": {
+    "accepted_rows_added": 0,
+    "board_state": "blocked",
+    "external_requests_sent": true,
+    "gate_result": "current_goal_completion_audit_v49_after_r5_acquisition_screen=2of4_roots_still_blocked",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "direct_manipulation_verifier": {
+    "args": [
+      "python3",
+      "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-direct-manipulation-row-intake"
+    ],
+    "name": "direct_manipulation_row_intake_verifier",
+    "payload": {
+      "matched_group_count": 40,
+      "matched_negative_rows": 41,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 41,
+      "provenance_keys": [
+        "cftc_flotron_complaint_examples",
+        "cftc_gandhi_order",
+        "cftc_geneva_order_2018",
+        "cftc_geneva_order_examples",
+        "cftc_geneva_order_rows_added",
+        "cftc_genuine_order_text_checks",
+        "cftc_genuine_order_text_status",
+        "cftc_mohan_additional_examples",
+        "cftc_mohan_complaint",
+        "cftc_mohan_complaint_rows_added",
+        "cftc_mohan_complaint_text_checks",
+        "cftc_order",
+        "cftc_shak_complaint",
+        "cftc_shak_complaint_examples",
+        "cftc_shak_rows_added",
+        "cftc_text_checks",
+        "cftc_text_extraction_status",
+        "cftc_vorley_chanu_complaint",
+        "cftc_zhao_skudder_examples",
+        "created_at_utc",
+        "finra_public_schema",
+        "gandhi_matched_negative_rows_added",
+        "gandhi_positive_rows_added",
+        "gandhi_rows_materialized_at_utc",
+        "license_or_permission",
+        "matched_control_limitations",
+        "matched_control_policy",
+        "matched_negative_control_policy",
+        "matched_negative_materialized_at_utc",
+        "matched_negative_rows_acquired",
+        "matched_negative_rows_count",
+        "matched_negative_rows_path",
+        "matched_negative_rows_sha256",
+        "mohan_additional_matched_negative_rows_added",
+        "mohan_additional_positive_rows_added",
+        "mohan_additional_rows_materialized_at_utc",
+        "mohan_complaint_control_policy",
+        "positive_rows_count",
+        "positive_rows_path",
+        "positive_rows_sha256",
+        "r6_flotron_cftc_row_uplift_v1",
+        "r6_geneva_cftc_row_uplift_v1",
+        "r6_mohan_shak_duplicate_cleanup_v1",
+        "r6_mohan_shak_row_uplift_v1",
+        "r6_shak_duplicate_row_cleanup_v1",
+        "r6_zhao_skudder_cftc_row_uplift_v1",
+        "shak_complaint_matched_negative_rows_added",
+        "shak_complaint_positive_rows_added",
+        "shak_complaint_rows_materialized_at_utc",
+        "source",
+        "updated_at_utc",
+        "updated_by",
+        "vorley_chanu_matched_negative_rows_added",
+        "vorley_chanu_positive_rows_added",
+        "vorley_chanu_rows_materialized_at_utc"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215732-codex-current-goal-completion-audit-v49-after-r5-upstream-refresh-check/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215732-codex-current-goal-completion-audit-v49-after-r5-upstream-refresh-check/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "generated_at_utc": "2026-05-11T14:00:28.199377+00:00",
+  "native_subhour_root_exists": false,
+  "next_action": "Switch to native sub-hour acquisition or expand R6 direct to 50/50 with broad normal controls and direct species coverage.",
+  "r5_acquisition_screen": {
+    "accepted_candidate_count": 0,
+    "accepted_extension_rows": 0,
+    "candidate_count": 16,
+    "decision": "r5_source_panel_recency_extension_acquisition_screen_v1=no_acceptable_post_cutoff_source_owned_rows",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T215539-codex-r5-source-panel-recency-extension-acquisition-screen-v1/r5-source-panel-recency-extension-acquisition-screen/r5_source_panel_recency_extension_acquisition_screen_v1.json",
+    "verifier_status": "blocked"
+  },
+  "r5_refresh_check": {
+    "decision": {
+      "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+      "extension_rows_added": 0,
+      "external_requests_sent": true,
+      "full_objective_achieved": false,
+      "gate_result": "source_panel_recency_upstream_refresh_check_v1=upstream_not_refreshed_r5_still_missing_required_files",
+      "raw_data_committed": false,
+      "runtime_code_changed": false,
+      "source_has_required_recency": false,
+      "thresholds_relaxed": false,
+      "trade_usable": false,
+      "update_goal": false,
+      "upstream_packaged_after_source_max": true,
+      "upstream_updated_on_or_after_audit_date": false
+    },
+    "kaggle_last_updated": "2026-02-01 02:25:29.437000",
+    "local_source_panel_date_max": "2026-01-30",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-source-panel-recency-upstream-refresh-check-v1/source-panel-recency-refresh/source_panel_recency_upstream_refresh_check_v1.json"
+  },
+  "ready_roots": {
+    "ready": 2,
+    "roots": [
+      {
+        "path": "/tmp/ict-engine-source-label-equivalence-intake",
+        "ready": true,
+        "root": "source_label_equivalence",
+        "status": "schema_ready_unscored"
+      },
+      {
+        "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+        "ready": true,
+        "root": "direct_manipulation_row_intake",
+        "status": "schema_ready_unscored"
+      },
+      {
+        "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+        "ready": false,
+        "root": "native_subhour_source_label",
+        "status": "missing"
+      },
+      {
+        "path": "/tmp/ict-engine-source-panel-recency-extension",
+        "ready": false,
+        "root": "source_panel_recency_extension",
+        "status": "blocked"
+      }
+    ],
+    "total": 4
+  },
+  "run_id": "20260511T215732+0800-codex-current-goal-completion-audit-v49-after-r5-upstream-refresh-check",
+  "source_confidence_calibration": {
+    "accepted_source_confidence_95_labels": [],
+    "decision": "source_label_equivalence_confidence_calibration_v1=source_confidence_scored_no_acceptance",
+    "label_counts": {
+      "Bear": 54939,
+      "Bull": 104979,
+      "Crisis": 30623,
+      "Sideways": 57899
+    },
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T214328-codex-source-label-equivalence-confidence-calibration-v1/source-label-equivalence-confidence-calibration/source_label_equivalence_confidence_calibration_v1.json"
+  },
+  "source_label_verifier": {
+    "args": [
+      "python3",
+      "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-source-label-equivalence-intake"
+    ],
+    "name": "source_label_equivalence_verifier",
+    "payload": {
+      "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+      "package_counts": {
+        "price_root_equivalence_us_index_futures": 248440
+      },
+      "provenance_keys": [
+        "created_at_utc",
+        "date_max",
+        "date_min",
+        "invalid_rows_removed",
+        "label_counts",
+        "limitations",
+        "market_family_counts",
+        "package_counts",
+        "previous_provenance_path",
+        "raw_payload_committed_to_repo",
+        "repair_reason",
+        "row_count",
+        "rows_path",
+        "rows_sha256",
+        "run_id",
+        "source_owner_counts",
+        "split_counts",
+        "symbol_count",
+        "updated_at_utc",
+        "updated_by"
+      ],
+      "row_count": 248440,
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215732-codex-current-goal-completion-audit-v49-after-r5-upstream-refresh-check/command-output/source_label_equivalence_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215732-codex-current-goal-completion-audit-v49-after-r5-upstream-refresh-check/command-output/source_label_equivalence_verifier.stdout.txt"
+  },
+  "source_panel_recency_verifier": {
+    "args": [
+      "python3",
+      "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-source-panel-recency-extension"
+    ],
+    "name": "source_panel_recency_extension_verifier",
+    "payload": {
+      "missing_files": [
+        "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+        "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215732-codex-current-goal-completion-audit-v49-after-r5-upstream-refresh-check/command-output/source_panel_recency_extension_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T215732-codex-current-goal-completion-audit-v49-after-r5-upstream-refresh-check/command-output/source_panel_recency_extension_verifier.stdout.txt"
+  }
+}

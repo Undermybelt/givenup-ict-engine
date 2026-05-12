@@ -1,0 +1,7 @@
+query_name,query,exit_code,result_count,board_a_use
+hf_mainregimev2,MainRegimeV2,0,0,route_disposition_only
+hf_mainregimev2_crisis,MainRegimeV2 Crisis,0,0,route_disposition_only
+hf_market_regime_crisis,market regime crisis,0,0,route_disposition_only
+hf_native_subhour_source_label_rows,native subhour source label rows,0,0,route_disposition_only
+hf_stock_market_regimes_2000_2026,stock market regimes 2000 2026,0,0,route_disposition_only
+hf_stock_market_regimes_2026_extension,stock market regimes 2026 extension,0,0,route_disposition_only

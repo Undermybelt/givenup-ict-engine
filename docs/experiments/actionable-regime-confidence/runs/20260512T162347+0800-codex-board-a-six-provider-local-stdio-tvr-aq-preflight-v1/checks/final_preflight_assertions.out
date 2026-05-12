@@ -1,0 +1,8 @@
+PASS six_required_provider_rows_acquired=True
+PASS auto_quant_agent_material_batch_exit=0
+FAIL auto_quant_agent_material_dispatch_exit=1
+FAIL auto_quant_agent_material_rank_exit=-1
+PASS remote_http_api_called=False
+PASS promotion_allowed=False
+PASS trade_usable=False
+PASS update_goal=False

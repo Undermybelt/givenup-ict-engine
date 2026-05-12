@@ -1,0 +1,16 @@
+requirement,status,evidence,reason
+named_board_file,pass,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,board read and audited
+every_active_regime_ge_95,blocked,none,no new accepted regime-confidence gate after latest R6 packets
+per_regime_qualifying_condition,blocked,none,no new accepted per-regime packet from 031316 031353 or 031435
+cross_market_cycle_timeframe_provider_validation,blocked,031316,chronological split heldout-symbol and heldout-venue gates fail
+repo_artifacts_present,pass,docs/experiments/actionable-regime-confidence/runs/latest R6 packets,reports JSON CSV and assertions exist
+concurrent_board_safety,partial,append-only board notes,duplicate sections exist and require count-once reading
+downstream_chain_rerun,blocked,approval package,source/control gates still false
+verifier_manifest_coverage,partial,031316 verifier,return code 0 covers schema readiness only not promotion
+r6_owner_export_root,blocked,/tmp/ict-engine-board-a-r6-owner-export-v1,absent
+r3_native_subhour_root,blocked,/tmp/ict-engine-native-subhour-source-label-intake,absent
+r5_recency_extension_root,blocked,/tmp/ict-engine-source-panel-recency-extension,absent
+explicit_flip_approval,blocked,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,flip_controls_accepted_under_current_contract=false
+canonical_merge,blocked,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,canonical_merge_allowed_now=false
+downstream_promotion_permission,blocked,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,downstream_rerun_allowed_now=false
+update_goal,blocked,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,update_goal=false

@@ -1,0 +1,11 @@
+PASS decision=r6_cftc_gandhi_calibration_gate_v2=schema_ready_but_calibration_blocked
+PASS positive_rows=4
+PASS matched_negative_rows=4
+PASS chronological_split_ok=true
+PASS heldout_symbol_or_venue_ok=true
+PASS combined_min_wilson95_lcb=0.510109
+PASS support_ok=false
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

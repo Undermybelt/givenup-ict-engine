@@ -1,0 +1,181 @@
+{
+  "artifact_id": "auto-quant-seed-material-evidence:ES_LONG_1M_135603:20260512T055618.951Z",
+  "generated_at": "2026-05-12T05:56:18.951167Z",
+  "symbol": "ES_LONG_1M_135603",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m",
+  "strategy_material_root": "/Users/thrill3r/Downloads/Tomac",
+  "workspace_repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant",
+  "strategies_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies",
+  "strategy_template_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/_template.py.example",
+  "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/ES_LONG_1M_135603/auto_quant_seed_material_evidence.20260512T055618.951Z.json",
+  "active_strategy_count": 0,
+  "selected_materials": [
+    {
+      "summary": {
+        "name": "ultimate_ict_strategy",
+        "strategy_path": "ultimate_ict_strategy.py",
+        "evidence_csv_path": "ultimate_ict_results.csv",
+        "trade_rows": 629,
+        "total_net_pnl": 121863.95714285687,
+        "tp_count": 364,
+        "sl_count": 249,
+        "be_count": 16,
+        "average_score": 5.049284578696343
+      },
+      "evidence_strength_score": 95.0,
+      "inferred_tags": [
+        "ict-structure",
+        "break-even-management"
+      ],
+      "seed_strategy_name": "TomacUltimateIctStrategySeed",
+      "seed_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacUltimateIctStrategySeed.py",
+      "authoring_focus": [
+        "re-express only the underlying trading idea as Auto-Quant-native strategy logic; never copy maintainer-local paths or execute the external script directly",
+        "preserve the strongest visible ideas from this material: ict-structure, break-even-management",
+        "measured evidence exists with 629 trade rows, total net pnl 121863.96",
+        "csv evidence includes score-like signal with average 5.05; keep only the structural idea if backtests confirm it",
+        "the external evidence shows explicit break-even management; keep it only if it survives Auto-Quant backtests"
+      ],
+      "strategy_excerpt": "import pandas as pd\nimport numpy as np\nfrom datetime import time\nimport warnings\nwarnings.filterwarnings('ignore')\n\n# ==========================================\n# ULTIMATE ICT STRATEGY v2\n# Fusion: 98% Win Rate Framework + ICT Concepts\n# Goal: 90% Win Rate + 1.5 RRR AT ALL COSTS\n# ==========================================\n\nES_PATH = '/Users/thrill3r/Downloads/Tomac/es future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv'\nEUR_PATH = '/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/glbx-mdp3-20150101-20251231.ohlcv-1m.csv'\n\nCONTRACT = {\n    'multiplier': 50.0,\n    'tick': 0.25,\n    'commission': 4.10,\n    'max_daily_loss': 2000\n}\n\n# ULTRA STRICT PARAMETERS\nRISK_REWARD = 1.5\nBE_TRIGGER_R = 0.3  # Ultra aggressive BE at 0.3R\nMIN_STOP_POINTS = 1.5\nMAX_STOP_POINTS = 6.0\n",
+      "evidence_excerpt": "Time,Net PnL,Result,Direction,Entry,Exit,Score\n2024-01-02 10:05:00-05:00,434.5160714286234,TP,Long,4786.5,4795.2723214285725,5\n2024-01-02 13:52:00-05:00,358.1767857142662,TP,Long,4787.75,4794.995535714285,5\n2024-01-03 15:01:00-05:00,155.275,TP,Long,4757.0,4760.1875,5\n2024-01-03 15:02:00-05:00,-278.65357142857795,SL,Short,4759.25,4764.741071428572,5\n2024-01-09 11:01:00-05:00,20.9,SL,Long,4778.25,4778.75,5\n2024-01-09 11:06:00-05:00,20.9,SL,Long,4779.75,4780.25,5\n2024-01-10 11:12:00-05:00,324.025,TP,Long,4801.0,4807.5625,5\n2024-01-11 13:52:00-05:00,20.9,SL,Long,4799.0,4799.5,5\n2024-01-12 14:08:00-05:00,397.68571428573375,TP,Long,4820.25,4828.285714285715,5\n2024-01-15 10:46:00-05:00,315.9892857142662,TP,Long,4812.5,4818.901785714285,5\n2024-01-15 12:30:00-05:00,326.7035714286234,TP,Long,4813.0,4819.6160714285725,5",
+      "materialized_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacUltimateIctStrategySeed.py",
+      "materialization_status": "materialized"
+    },
+    {
+      "summary": {
+        "name": "ict_90wr_1.5rrr_strategy",
+        "strategy_path": "ict_90wr_1.5rrr_strategy.py",
+        "evidence_csv_path": "ict_90wr_1.5rrr_results.csv",
+        "trade_rows": 158,
+        "total_net_pnl": 8450.414285714352,
+        "tp_count": 46,
+        "sl_count": 89,
+        "be_count": 23,
+        "average_score": 3.0
+      },
+      "evidence_strength_score": 85.0,
+      "inferred_tags": [
+        "ict-structure",
+        "session-timing",
+        "break-even-management"
+      ],
+      "seed_strategy_name": "TomacIctN90wrN1N5rrrStrategySeed",
+      "seed_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacIctN90wrN1N5rrrStrategySeed.py",
+      "authoring_focus": [
+        "re-express only the underlying trading idea as Auto-Quant-native strategy logic; never copy maintainer-local paths or execute the external script directly",
+        "preserve the strongest visible ideas from this material: ict-structure, session-timing, break-even-management",
+        "measured evidence exists with 158 trade rows, total net pnl 8450.41",
+        "csv evidence includes score-like signal with average 3.00; keep only the structural idea if backtests confirm it",
+        "the external evidence shows explicit break-even management; keep it only if it survives Auto-Quant backtests"
+      ],
+      "strategy_excerpt": "import pandas as pd\nimport numpy as np\nfrom datetime import time\nimport warnings\nwarnings.filterwarnings('ignore')\n\n# ==========================================\n# ICT STRATEGY - 90% Win Rate + 1.5 RRR\n# Based on Inner Circle Trader Concepts\n# ==========================================\n\nES_PATH = '/Users/thrill3r/Downloads/Tomac/es future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv'\n\nCONTRACT = {\n    'multiplier': 50.0,\n    'tick': 0.25,\n    'commission': 4.10,\n    'max_daily_loss': 2000\n}\n\n# ICT Parameters\nRISK_REWARD = 1.5\nBE_TRIGGER_R = 0.4  # Move to BE at 0.4R (aggressive)\nMIN_STOP_POINTS = 2.0\nMAX_STOP_POINTS = 8.0\n\n# Kill Zones (NY Time)\nAM_KILLZONE = (time(9, 30), time(11, 30))",
+      "evidence_excerpt": "Time,Net PnL,Result,Direction,Entry,Exit,Score\n2023-01-03 14:36:00-05:00,525.5875,TP,Short,3852.0,3841.40625,3\n2023-01-04 15:48:00-05:00,548.3553571428669,TP,Short,3886.25,3875.2008928571427,3\n2023-01-06 09:30:00-05:00,468.66785714286686,TP,Short,3890.0,3880.5446428571427,3\n2023-01-06 09:32:00-05:00,449.2482142856883,TP,Short,3890.75,3881.6830357142862,3\n2023-01-06 15:40:00-05:00,-284.90357142857795,SL,Short,3923.75,3929.3660714285716,3\n2023-01-10 14:01:00-05:00,422.4625,TP,Long,3927.0,3935.53125,3\n2023-01-10 14:30:00-05:00,20.9,SL,Long,3932.5,3933.0,3\n2023-01-20 14:59:00-05:00,-366.6,SL,Short,3969.25,3976.5,3\n2023-01-25 11:15:00-05:00,-386.689285714289,SL,Long,4016.25,4008.598214285714,3\n2023-02-06 13:44:00-05:00,-383.1178571428442,SL,Long,4157.5,4149.919642857143,3\n2023-02-06 14:14:00-05:00,-368.8321428571559,SL,Long,4167.0,4159.705357142857,3",
+      "materialized_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacIctN90wrN1N5rrrStrategySeed.py",
+      "materialization_status": "materialized"
+    },
+    {
+      "summary": {
+        "name": "no_be_strategy",
+        "strategy_path": "no_be_strategy.py",
+        "evidence_csv_path": "no_be_results.csv",
+        "trade_rows": 20851,
+        "total_net_pnl": 6939821.614285769,
+        "tp_count": 16598,
+        "sl_count": 3486,
+        "be_count": 0
+      },
+      "evidence_strength_score": 80.0,
+      "inferred_tags": [
+        "break-even-management"
+      ],
+      "seed_strategy_name": "TomacNoBeStrategySeed",
+      "seed_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacNoBeStrategySeed.py",
+      "authoring_focus": [
+        "re-express only the underlying trading idea as Auto-Quant-native strategy logic; never copy maintainer-local paths or execute the external script directly",
+        "preserve the strongest visible ideas from this material: break-even-management",
+        "measured evidence exists with 20851 trade rows, total net pnl 6939821.61"
+      ],
+      "strategy_excerpt": "import pandas as pd\nimport numpy as np\nfrom datetime import time\nimport warnings\nwarnings.filterwarnings('ignore')\n\n# ==========================================\n# NO BE STRATEGY - Fixed 1.5R Target\n# Let winners run to full target\n# ==========================================\n\nES_PATH = '/Users/thrill3r/Downloads/Tomac/es future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv'\n\nCONTRACT = {'multiplier': 50.0, 'tick': 0.25, 'commission': 4.10, 'max_daily_loss': 2000}\n\n# KEY: No BE, fixed 1.5R target\nRISK_REWARD = 1.5\nATR_STOP_MULT = 2.0\nFRACTAL_DIST = 3\nWPR_OVERBOUGHT = -20\nWPR_OVERSOLD = -80\nTRADING_WINDOWS = [(time(9, 30), time(11, 30)), (time(13, 30), time(16, 0))]\n\ndef scrub_data(df):\n    df = df[(df['high'] >= df['low']) & (df['close'] > 100)].copy()\n    df['bar_range'] = df['high'] - df['low']\n    df = df[df['bar_range'] <= 40.0].copy()\n    df['range_ma'] = df['bar_range'].rolling(60).mean()",
+      "evidence_excerpt": "Net PnL,Result\n195.45357142856656,TP\n265.0964285714334,TP\n289.20357142856653,TP\n242.32857142856656,TP\n121.79285714284416,TP\n116.43571428571104,TP\n234.29285714284416,TP\n274.4714285714334,TP\n329.3821428571558,TP\n178.04285714284416,TP\n171.34642857143345,TP",
+      "materialized_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacNoBeStrategySeed.py",
+      "materialization_status": "materialized"
+    },
+    {
+      "summary": {
+        "name": "optimal_be_1.0",
+        "strategy_path": "optimal_be_1.0.py",
+        "evidence_csv_path": "optimal_be_1.0_results.csv",
+        "trade_rows": 28766,
+        "total_net_pnl": 4713785.739284792,
+        "tp_count": 10517,
+        "sl_count": 1604,
+        "be_count": 16461
+      },
+      "evidence_strength_score": 80.0,
+      "inferred_tags": [
+        "break-even-management"
+      ],
+      "seed_strategy_name": "TomacOptimalBeN1N0Seed",
+      "seed_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacOptimalBeN1N0Seed.py",
+      "authoring_focus": [
+        "re-express only the underlying trading idea as Auto-Quant-native strategy logic; never copy maintainer-local paths or execute the external script directly",
+        "preserve the strongest visible ideas from this material: break-even-management",
+        "measured evidence exists with 28766 trade rows, total net pnl 4713785.74",
+        "the external evidence shows explicit break-even management; keep it only if it survives Auto-Quant backtests"
+      ],
+      "strategy_excerpt": "import pandas as pd\nimport numpy as np\nfrom datetime import time\nimport warnings\nwarnings.filterwarnings('ignore')\n\nES_PATH = '/Users/thrill3r/Downloads/Tomac/es future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv'\nCONTRACT = {'multiplier': 50.0, 'tick': 0.25, 'commission': 4.10, 'max_daily_loss': 2000}\nRISK_REWARD = 1.5\nBE_TRIGGER_R = 1.0  # Sweet spot: 2/3 of target\nATR_STOP_MULT = 2.0\nFRACTAL_DIST = 3\nWPR_OVERBOUGHT = -20\nWPR_OVERSOLD = -80\nTRADING_WINDOWS = [(time(9, 30), time(11, 30)), (time(13, 30), time(16, 0))]\n\ndef scrub_data(df):\n    df = df[(df['high'] >= df['low']) & (df['close'] > 100)].copy()\n    df['bar_range'] = df['high'] - df['low']\n    df = df[df['bar_range'] <= 40.0].copy()\n    df['range_ma'] = df['bar_range'].rolling(60).mean()\n    df['range_std'] = df['bar_range'].rolling(60).std()\n    df = df[df['bar_range'] < (df['range_ma'] + 5.0 * df['range_std'])].copy()\n    return df.drop(columns=['bar_range', 'range_ma', 'range_std'])\n\ndef calc_features(df):\n    tr = pd.concat([df['high'] - df['low'], (df['high'] - df['close'].shift(1)).abs(),\n                    (df['low'] - df['close'].shift(1)).abs()], axis=1).max(axis=1)",
+      "evidence_excerpt": "Net PnL,Result\n195.45357142856656,TP\n265.0964285714334,TP\n20.9,BE\n20.9,BE\n121.79285714284416,TP\n116.43571428571104,TP\n234.29285714284416,TP\n274.4714285714334,TP\n20.9,BE\n178.04285714284416,TP\n171.34642857143345,TP",
+      "materialized_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacOptimalBeN1N0Seed.py",
+      "materialization_status": "materialized"
+    },
+    {
+      "summary": {
+        "name": "90wr1.5rrr_balanced",
+        "strategy_path": "90wr1.5rrr_balanced.py",
+        "evidence_csv_path": "90wr1.5rrr_balanced.csv",
+        "trade_rows": 410,
+        "total_net_pnl": 301702.03571428615,
+        "tp_count": 372,
+        "sl_count": 35,
+        "be_count": 3
+      },
+      "evidence_strength_score": 80.0,
+      "inferred_tags": [
+        "volatility",
+        "rsi-gating",
+        "break-even-management"
+      ],
+      "seed_strategy_name": "TomacN90wr1N5rrrBalancedSeed",
+      "seed_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacN90wr1N5rrrBalancedSeed.py",
+      "authoring_focus": [
+        "re-express only the underlying trading idea as Auto-Quant-native strategy logic; never copy maintainer-local paths or execute the external script directly",
+        "preserve the strongest visible ideas from this material: volatility, rsi-gating, break-even-management",
+        "measured evidence exists with 410 trade rows, total net pnl 301702.04",
+        "the external evidence shows explicit break-even management; keep it only if it survives Auto-Quant backtests"
+      ],
+      "strategy_excerpt": "import pandas as pd\nimport numpy as np\nfrom datetime import datetime, time\nimport os\nimport warnings\nwarnings.filterwarnings('ignore')\n\n# ==========================================\n# 90% Win Rate + 1.5 RRR - Balanced Version\n# 基于98%胜率策略，优化盈亏比到1.5\n# ==========================================\nES_PATH = '/Users/thrill3r/Downloads/Tomac/es future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv'\n\n# 合约规格\nCONTRACT_MULTIPLIER = 50.0\nTICK_SIZE = 0.25\nCOMMISSION = 4.10\nMAX_DAILY_LOSS = 2000\n\n# 策略参数 - 参考98%胜率策略\nRISK_REWARD_MIN = 1.5           # 目标盈亏比1.5\nBE_TRIGGER_R = 0.6              # 0.6R移动保本\nATR_STOP_MULT = 2.0\nFRACTAL_DIST = 3                # 分形确认\nMAX_MIN_RANGE_POINTS = 40.0\nVOLATILITY_Z_LIMIT = 5.0\n\n# 交易时间窗口 (纽约时间)",
+      "evidence_excerpt": "Time,Net PnL,Result,Direction\n2024-01-02 13:33:00-05:00,152.5964285713766,TP,Long\n2024-01-03 13:49:00-05:00,944.1142857142662,TP,Long\n2024-01-03 15:01:00-05:00,1060.632142857156,TP,Long\n2024-01-04 14:04:00-05:00,1015.0964285713766,TP,Long\n2024-01-05 14:34:00-05:00,1029.8285714286235,TP,Long\n2024-01-09 11:04:00-05:00,772.6857142857338,TP,Long\n2024-01-09 15:33:00-05:00,219.56071428573378,TP,Long\n2024-01-09 15:40:00-05:00,815.5428571428441,TP,Long\n2024-01-12 15:03:00-05:00,810.1857142857338,TP,Long\n2024-01-16 14:12:00-05:00,737.8642857142662,TP,Long\n2024-01-16 15:19:00-05:00,765.9892857142662,TP,Long",
+      "materialized_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacN90wr1N5rrrBalancedSeed.py",
+      "materialization_status": "materialized"
+    }
+  ],
+  "suggested_next_steps": [
+    "read docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/program.md and the strategy template before authoring any seed strategy descendants",
+    "author 2-3 active non-underscore strategy files under docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies from these seed packets before any run.py execution",
+    "run uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/run.py only after the seed descendants are written and reviewed"
+  ],
+  "notes": [
+    "external_seed_material_root=/Users/thrill3r/Downloads/Tomac",
+    "seed_materials_are_read_only_reference_inputs",
+    "do_not_execute_or_copy_external_scripts_directly_into_the_managed_workspace",
+    "re-express_external_logic_as_auto_quant_native_strategy_code_before_any_run",
+    "workspace_currently_has_no_active_strategies_so_seed_authoring_is_required"
+  ],
+  "materialized_strategy_paths": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacUltimateIctStrategySeed.py",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacIctN90wrN1N5rrrStrategySeed.py",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacNoBeStrategySeed.py",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacOptimalBeN1N0Seed.py",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant/user_data/strategies/TomacN90wr1N5rrrBalancedSeed.py"
+  ]
+}

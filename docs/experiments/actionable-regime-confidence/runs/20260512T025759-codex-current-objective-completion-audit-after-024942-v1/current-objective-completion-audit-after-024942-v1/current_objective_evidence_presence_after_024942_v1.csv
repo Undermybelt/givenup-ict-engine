@@ -1,0 +1,9 @@
+evidence_id,path,present,promoting,classification
+024942_ninjatrader_local_cache,docs/experiments/actionable-regime-confidence/runs/20260512T024942-codex-r6-ninjatrader-local-cache-owner-export-screen-v1,true,false,local_cache_no_owner_export_no_depth_controls
+025156_databento_gc_screen,docs/experiments/actionable-regime-confidence/runs/20260512T025156-codex-local-databento-gc-nonqualifying-source-screen-v1,true,false,ohlcv_not_r6_r3_r5_qualifying
+025256_autoquant_seeded_readback,docs/experiments/actionable-regime-confidence/runs/20260512T025256-codex-autoquant-seeded-strategy-readback-settlement-v1,true,false,connector_patch_backtests_succeeded_profit_floor_failed
+025558_current_objective_audit,docs/experiments/actionable-regime-confidence/runs/20260512T025558-codex-current-objective-completion-audit-after-025156-v1,true,false,not_complete_audit
+r6_approval_decision_package,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,true,false,approval_present_false
+r6_owner_export_target,/tmp/ict-engine-board-a-r6-owner-export-v1,false,false,target_absent
+r3_native_subhour_target,/tmp/ict-engine-native-subhour-source-label-intake,false,false,target_absent
+r5_recency_extension_target,/tmp/ict-engine-source-panel-recency-extension,false,false,target_absent

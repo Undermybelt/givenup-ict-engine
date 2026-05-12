@@ -1,0 +1,1 @@
+curl -L --http1.1 --fail --retry 2 --retry-delay 2 --range 0-1048575 --output /tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/range_0_1m_http1.parquet.part https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet

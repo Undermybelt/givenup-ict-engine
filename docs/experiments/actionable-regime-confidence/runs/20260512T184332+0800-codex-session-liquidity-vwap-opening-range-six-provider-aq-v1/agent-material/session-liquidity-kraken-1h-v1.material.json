@@ -1,0 +1,41 @@
+{
+  "consumer_evidence_profile": {
+    "branch_paths": [
+      "Bull -> SessionLiquidityExpansion -> OpeningRangeBreakout -> session_orb_vwap_continuation_long_v1",
+      "Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1",
+      "Bear -> LiquiditySweepRelief -> SweepReclaim -> session_sweep_reclaim_long_v1",
+      "Transition -> LateSessionCompression -> RangeCompressionRelease -> session_late_compression_release_v1"
+    ],
+    "main_regime": "mixed_board_a_roots",
+    "promotion_allowed": false
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "sample_adequacy"
+  ],
+  "negative_evidence_contract": {
+    "loss_after_full_chain": "market_factor_negative_sample",
+    "missing_branch_fields": "chain_contract_negative_sample",
+    "provider_or_fetch_fault": "infrastructure_negative_sample"
+  },
+  "notes": [
+    "source_provider=Kraken futures PF_XBTUSD 1h current fetch",
+    "branch_matrix=Bull -> SessionLiquidityExpansion -> OpeningRangeBreakout -> session_orb_vwap_continuation_long_v1 | Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1 | Bear -> LiquiditySweepRelief -> SweepReclaim -> session_sweep_reclaim_long_v1 | Transition -> LateSessionCompression -> RangeCompressionRelease -> session_late_compression_release_v1",
+    "timerange=20250101-20260512",
+    "provider_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+  ],
+  "package_id": "session-liquidity-kraken-1h-v1",
+  "strategy_brief": "Board B session/liquidity VWAP opening-range profitability factor.",
+  "strategy_class_name": "ProviderSessionLiquidityVwapOpeningRangeV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/ProviderSessionLiquidityVwapOpeningRangeV1.py",
+  "symbol": "BTC",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "Session liquidity VWAP OR - Kraken XBTUSD 1h"
+}

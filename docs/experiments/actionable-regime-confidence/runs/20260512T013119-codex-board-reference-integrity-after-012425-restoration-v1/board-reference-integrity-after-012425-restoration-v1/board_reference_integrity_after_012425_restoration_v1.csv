@@ -1,0 +1,8 @@
+run_id,board_reference_count,root_present,expected_files,present_files,missing_files,artifact_status
+20260512T012425-codex-source-label-qualifying-condition-failclosed-v1,23,True,8,8,,complete
+20260512T012616-codex-current-objective-completion-audit-after-012318-v1,17,True,7,7,,complete
+20260512T012658-codex-current-objective-completion-audit-after-012425-v1,13,True,5,5,,complete
+20260512T012926-codex-board-reference-integrity-after-012616-v1,0,False,6,0,board-reference-integrity-after-012616-v1/board_reference_integrity_after_012616_v1.md;board-reference-integrity-after-012616-v1/board_reference_integrity_after_012616_v1.json;board-reference-integrity-after-012616-v1/board_reference_integrity_after_012616_v1.csv;board-reference-integrity-after-012616-v1/tmp_root_status_after_012616_v1.csv;checks/board_reference_integrity_after_012616_v1_assertions.out;scripts/board_reference_integrity_after_012616_v1.py,missing_files
+20260512T013042-codex-source-label-cross-timeframe-public-source-screen-v1,7,True,6,6,,complete
+20260512T013106-codex-012425-artifact-restoration-readback-v1,0,True,8,8,,complete
+20260512T013127-codex-012425-restoration-readback-v1,0,True,7,7,,complete

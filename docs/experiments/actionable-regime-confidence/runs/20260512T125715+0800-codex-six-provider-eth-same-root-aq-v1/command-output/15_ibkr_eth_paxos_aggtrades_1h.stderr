@@ -1,0 +1,4 @@
+ibkr-bulk: 1 task(s) -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/provider-csv
+  [1/1] OK   ETH      1 hour   AGGTRADES     784 rows -> ETH_1h_aggtrades.csv
+
+ibkr-bulk done: ok=1 skip=0 empty=0 fail=0  (1 total)

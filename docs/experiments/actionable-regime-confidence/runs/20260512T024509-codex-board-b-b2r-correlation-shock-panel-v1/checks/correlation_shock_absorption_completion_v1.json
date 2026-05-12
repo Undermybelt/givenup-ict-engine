@@ -1,0 +1,46 @@
+{
+  "artifact_packet_verified": true,
+  "branch_paths_passed": 0,
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "gate_result": "fail:required_root_branch_hard_gates_failed",
+  "initial_py314_pyarrow_failure_recorded": true,
+  "provider_focus": {
+    "ibkr": [
+      false,
+      "configured_runtime_unhealthy",
+      "ibkr_runtime_dependencies_missing_with_gateway_reachable"
+    ],
+    "ibkr_bridge": [
+      false,
+      "configured_runtime_unhealthy",
+      "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable"
+    ],
+    "kraken_cli": [
+      true,
+      "ready",
+      "kraken_cli_config_detected"
+    ],
+    "kraken_public": [
+      false,
+      "configured_runtime_unhealthy",
+      "python3_provider_dependencies_missing"
+    ],
+    "tradingview_mcp": [
+      false,
+      "configured_runtime_unhealthy",
+      "tradingview_mcp_connectivity_probe_failed"
+    ],
+    "yfinance": [
+      true,
+      "ready",
+      "public_yahoo_http_endpoints"
+    ]
+  },
+  "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "py313_rerun_exit": "0",
+  "recipe_id": "CorrelationShockAbsorptionV1",
+  "run_id": "20260512T024509+0800-codex-board-b-b2r-correlation-shock-panel-v1",
+  "selected_trade_rows": 13275,
+  "stable_profit_score": 75.88863517875106,
+  "variant_trade_rows": 47843
+}

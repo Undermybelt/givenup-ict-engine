@@ -1,0 +1,5 @@
+regime,accepted_95,rule,cal_lcb,time_lcb,ticker_lcb,cal_support,time_support,ticker_support,blockers
+Bull,True,range_pos_52 >= 1,0.9737836807,0.977731107,0.981803627,1626,879,2346,
+Bear,False,range_pos_52 <= 0 AND ret_4 <= -0.152861040021,0.6596789537,0.8739071686,0.8598398906,52,77,98,calibration_wilson95_below_0_95;heldout_time_wilson95_below_0_95;heldout_ticker_wilson95_below_0_95
+Sideways,False,range_width_12 <= 0.0682262708984 AND mean_regime_confidence >= 0.9,0.8602434413,0.7424269922,0.8909638799,48,18,175,calibration_support_below_50;calibration_wilson95_below_0_95;heldout_time_support_below_50;heldout_time_wilson95_below_0_95;heldout_ticker_wilson95_below_0_95
+Crisis,False,mean_daily_volatility >= 0.451649739122 AND drawdown_52 <= -0.260962534771,0.6342208395,0.5262965306,0.5529653974,290,418,557,calibration_wilson95_below_0_95;heldout_time_wilson95_below_0_95;heldout_ticker_wilson95_below_0_95

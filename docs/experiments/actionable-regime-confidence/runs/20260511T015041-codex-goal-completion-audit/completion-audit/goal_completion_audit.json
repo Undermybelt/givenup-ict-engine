@@ -1,0 +1,92 @@
+{
+  "run_id": "20260511T015041+0800-codex-goal-completion-audit",
+  "active_axis": "MainRegimeV2",
+  "objective": "Every active MainRegimeV2 regime must have calibrated confidence at or above 95 before reporting success.",
+  "success_criteria": [
+    "Bull accepted_95",
+    "Bear accepted_95",
+    "Sideways accepted_95",
+    "Crisis accepted_95",
+    "Manipulation accepted_95 using direct L2/L3/MBO/order-lifecycle or event/social/on-chain evidence",
+    "UnknownOrMixed remains residual_not_release_gate",
+    "thresholds_relaxed=false",
+    "runtime_code_changed=false"
+  ],
+  "evidence": {
+    "active_root_summary": "docs/experiments/actionable-regime-confidence/runs/20260510T235220-codex-broader-root-v2-probe/root-v2-broader/main_regime_v2_broader_root_probe_summary.csv",
+    "tomac_root_gate_assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T012949-codex-tomac-gc-nq-main-regime-v2-root-gate/checks/tomac_gc_nq_main_regime_v2_root_gate_assertions.out",
+    "provider_export_assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T014630-codex-provider-export-readiness-contract/checks/provider_export_readiness_contract_assertions.out",
+    "pump_dump_event_assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T014742-codex-pump-dump-manipulation-event-gate/checks/pump_dump_manipulation_event_gate_assertions.out"
+  },
+  "root_audit": {
+    "Bull": {
+      "accepted_95": false,
+      "test_wilson95_lcb": 0.3362347730812829,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05"
+      ]
+    },
+    "Bear": {
+      "accepted_95": false,
+      "test_wilson95_lcb": 0.26396770345110193,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05",
+        "validation_timeframes_below_2"
+      ]
+    },
+    "Sideways": {
+      "accepted_95": false,
+      "test_wilson95_lcb": 0.4574348340085442,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05",
+        "coverage_below_0_03"
+      ]
+    },
+    "Crisis": {
+      "accepted_95": true,
+      "selected_rule": "range_ratio32_128 >= 1.43116959912",
+      "calibration_support": 1020,
+      "test_support": 952,
+      "test_wilson95_lcb": 0.9959810711439178
+    },
+    "Manipulation": {
+      "accepted_95": false,
+      "input_state": "partial_event_social_dataset_not_release_complete",
+      "provider_export_ready_now": false,
+      "pump_dump_event_gate_accepted_95": false,
+      "best_test_wilson95_lcb_observed": 0.058929,
+      "blockers": [
+        "event_social_gate_below_95",
+        "single_domain_crypto_dataset",
+        "no_ready_calibration_grade_l2_l3_mbo_order_lifecycle_export"
+      ]
+    },
+    "UnknownOrMixed": {
+      "accepted_95": false,
+      "state": "residual_not_release_gate"
+    }
+  },
+  "decision": {
+    "goal_achieved": false,
+    "board_state": "blocked",
+    "accepted_95_roots": [
+      "Crisis"
+    ],
+    "missing_95_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ],
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "trade_usable": false,
+    "next_action": "Acquire broader calibration-grade direct manipulation data plus materially new non-OHLCV signed-direction/sideways evidence, then rerun unchanged MainRegimeV2 gates."
+  }
+}

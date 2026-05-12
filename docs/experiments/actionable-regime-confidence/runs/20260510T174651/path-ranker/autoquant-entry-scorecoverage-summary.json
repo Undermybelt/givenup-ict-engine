@@ -1,0 +1,36 @@
+{
+  "baseline_first64": {
+    "rows": 64,
+    "gate_status": {
+      "blocked": 18,
+      "observe": 46
+    },
+    "decision_hint": {
+      "execution_blocked_regardless_of_prediction": 18,
+      "execution_guarded_due_to_high_transition_hazard": 20,
+      "execution_observe_with_medium_prediction": 1,
+      "execution_guarded_due_to_low_remaining_regime_duration": 25
+    },
+    "raw_score_nonempty": 0,
+    "score_used_true": 0,
+    "raw_values": {}
+  },
+  "scorecoverage_64": {
+    "rows": 64,
+    "gate_status": {
+      "blocked": 12,
+      "observe": 52
+    },
+    "decision_hint": {
+      "execution_blocked_regardless_of_prediction": 12,
+      "execution_guarded_due_to_low_remaining_regime_duration": 44,
+      "execution_guarded_due_to_high_transition_hazard": 8
+    },
+    "raw_score_nonempty": 64,
+    "score_used_true": 64,
+    "raw_values": {
+      "0.647750": 64
+    }
+  },
+  "interpretation": "score coverage improved raw_score_nonempty, but no pass/actionable and validation is insufficient"
+}

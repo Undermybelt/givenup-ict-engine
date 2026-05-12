@@ -1,0 +1,7 @@
+target,target_role,source_anchor,split,overlap_rows,return_correlation,direction_agreement,source_rows_in_split,target_covered_rows_in_split
+QQQ,nasdaq_100_etf_crossmarket,^IXIC,train_2000_2015,4024,0.954400827722,0.921471172962,4025,4025
+QQQ,nasdaq_100_etf_crossmarket,^IXIC,calibration_2016_2021,1511,0.988426313510,0.939113170086,1511,1511
+QQQ,nasdaq_100_etf_crossmarket,^IXIC,test_2022_2026,1023,0.994706863605,0.966764418377,1023,1023
+NQ=F,nasdaq_100_futures_crossmarket,^IXIC,train_2000_2015,3845,0.953384189336,0.904031209363,4025,3846
+NQ=F,nasdaq_100_futures_crossmarket,^IXIC,calibration_2016_2021,1509,0.961138338437,0.918489065606,1511,1509
+NQ=F,nasdaq_100_futures_crossmarket,^IXIC,test_2022_2026,1023,0.982631385580,0.951124144673,1023,1023

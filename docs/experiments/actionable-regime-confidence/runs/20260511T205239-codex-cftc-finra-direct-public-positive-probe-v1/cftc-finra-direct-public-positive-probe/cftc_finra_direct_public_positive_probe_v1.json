@@ -1,0 +1,58 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before": "cbb4807438c152e43c188cec767855ae9e55c37589a397fa11824b7886e0d2b6",
+  "cftc_download": {
+    "bytes": 503821,
+    "content_type": "application/pdf",
+    "path": "/tmp/ict-engine-cftc-finra-direct-public-positive-probe/enfkrishnamohanorder022519.pdf",
+    "sha256": "cc56f4f993b80334145757edc42fd568349722ebb894c3df5ef4832a8bb0fda8",
+    "status": 200,
+    "url": "https://www.cftc.gov/sites/default/files/2019-02/enfkrishnamohanorder022519.pdf"
+  },
+  "cftc_text_checks": {
+    "contains_example_date": true,
+    "contains_first_spoof_time": true,
+    "contains_relevant_markets": true,
+    "contains_second_spoof_time": true,
+    "contains_thousands_occasions": true
+  },
+  "cftc_text_extraction_status": "ok",
+  "created_at_utc": "2026-05-11T12:55:41.743396+00:00",
+  "decision": "cftc_finra_direct_public_positive_probe_v1=public_positives_extracted_controls_absent_blocked",
+  "finra_download": {
+    "bytes": 92282,
+    "content_type": "text/html; charset=UTF-8",
+    "path": "/tmp/ict-engine-cftc-finra-direct-public-positive-probe/finra-potential-manipulation-report.html",
+    "sha256": "68e251d9bd6ea7affc605d05622036f19aa9cffe82ab265781cca568d26039d4",
+    "status": 200,
+    "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report"
+  },
+  "finra_layering_spoofing_field_count": 38,
+  "matched_negative_rows_acquired": false,
+  "matched_negative_rows_path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+  "new_confidence_gate": false,
+  "positive_rows_extracted": 2,
+  "positive_rows_path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+  "provenance_manifest_path": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+  "raw_data_committed": false,
+  "run_id": "20260511T205239+0800-codex-cftc-finra-direct-public-positive-probe-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_command": [
+    "python3",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+    "--intake-root",
+    "/tmp/ict-engine-direct-manipulation-row-intake"
+  ],
+  "verifier_output": {
+    "missing_files": [
+      "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv"
+    ],
+    "reason": "missing_required_files",
+    "status": "blocked"
+  },
+  "verifier_returncode": 2
+}

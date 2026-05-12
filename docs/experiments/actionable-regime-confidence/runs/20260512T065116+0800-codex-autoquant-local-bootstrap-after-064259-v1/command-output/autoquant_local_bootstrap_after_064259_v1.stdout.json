@@ -1,0 +1,45 @@
+{
+  "board_a_accounting": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "bootstrap": {
+    "bootstrap_needed": false,
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "healthy": true,
+    "managed_dir": "/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant",
+    "repo_url": "/Users/thrill3r/Auto-Quant",
+    "update_available": false
+  },
+  "commands": {
+    "bootstrap_exit": "0",
+    "prepare_exit": "1",
+    "status_after_bootstrap_exit": "0",
+    "status_after_prepare_exit": "0"
+  },
+  "gate_result": "autoquant_local_bootstrap_after_064259_v1=dependency_bootstrapped_prepare_dns_blocked_no_board_a_promotion",
+  "next_action": "Treat this as runtime dependency improvement only. Auto-Quant dependency is now bootstrapped from the local checkout in the isolated state, but data preparation is blocked by Binance DNS/network. Board A still requires a real R3/R5/R6 source/control unlock before canonical merge or downstream promotion.",
+  "observed_at_utc": "2026-05-11T22:53:33.768976+00:00",
+  "prepare_blocker": "binance_dns_or_network_unavailable",
+  "run_id": "20260512T065116+0800-codex-autoquant-local-bootstrap-after-064259-v1",
+  "state_dir": "/tmp/ict-engine-board-a-064259-runtime-v1",
+  "status_after_bootstrap": {
+    "bootstrap_needed": false,
+    "data_ready": false,
+    "dependency_healthy": true,
+    "healthy": false,
+    "status": "dependency_ready_data_missing"
+  },
+  "status_after_prepare": {
+    "bootstrap_needed": false,
+    "data_ready": false,
+    "dependency_healthy": true,
+    "healthy": false,
+    "status": "dependency_ready_data_missing"
+  }
+}

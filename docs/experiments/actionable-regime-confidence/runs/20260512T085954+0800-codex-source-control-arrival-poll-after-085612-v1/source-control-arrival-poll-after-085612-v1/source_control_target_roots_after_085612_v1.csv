@@ -1,0 +1,7 @@
+name,path,exists,is_dir,file_count,complete_required_file_set,row_count,accepted_mapping_confidence_95_labels,crisis_label_present,unlocking
+r6_owner_export_tmp,/tmp/ict-engine-board-a-r6-owner-export-v1,False,False,0,False,,,,False
+r6_owner_export_private_tmp,/private/tmp/ict-engine-board-a-r6-owner-export-v1,False,False,0,False,,,,False
+r5_recency_tmp,/tmp/ict-engine-source-panel-recency-extension,False,False,0,False,,,,False
+r5_recency_private_tmp,/private/tmp/ict-engine-source-panel-recency-extension,False,False,0,False,,,,False
+r3_native_subhour_tmp,/tmp/ict-engine-native-subhour-source-label-intake,True,True,2,True,5032903,"['Bear', 'Bull', 'Sideways']",False,False
+r3_native_subhour_private_tmp,/private/tmp/ict-engine-native-subhour-source-label-intake,True,True,2,True,5032903,"['Bear', 'Bull', 'Sideways']",False,False

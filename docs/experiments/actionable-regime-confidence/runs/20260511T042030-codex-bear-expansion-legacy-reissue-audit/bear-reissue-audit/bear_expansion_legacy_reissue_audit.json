@@ -1,0 +1,153 @@
+{
+  "accepted_bear_expansion_reissues": [],
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T042030-codex-bear-expansion-legacy-reissue-audit/checks/bear_expansion_legacy_reissue_audit_assertions.out",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T042030-codex-bear-expansion-legacy-reissue-audit/bear-reissue-audit/bear_expansion_legacy_reissue_audit.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T042030-codex-bear-expansion-legacy-reissue-audit/bear-reissue-audit/bear_expansion_legacy_reissue_audit.md"
+  },
+  "decision": {
+    "accepted_new_roots_95": [],
+    "accepted_root_classes_95_effective": [
+      "BullExpansion",
+      "SidewaysConsolidation",
+      "CrisisCrash"
+    ],
+    "fresh_calibration_rerun": false,
+    "gate_result": "blocked_bear_expansion_legacy_reissue_missing_directional_bear_semantics",
+    "missing_root_classes_95_effective": [
+      "BearExpansion",
+      "Manipulation"
+    ],
+    "next_action": "Acquire or build directional BearExpansion evidence with explicit down-expansion target labels; keep Manipulation direct-input gated.",
+    "raw_committed_to_repo": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "loop_id": "20260511T042030+0800-codex-bear-expansion-legacy-reissue-audit",
+  "objective": "Audit whether existing accepted TrendExpansion packets can be reissued as active BearExpansion evidence.",
+  "packet_audits": [
+    {
+      "accepted_as_bear_expansion": false,
+      "has_bearish_semantic_marker": true,
+      "has_positive_or_directionless_blocker": true,
+      "qualifying_condition": "trend_base AND drawdown64 >= -0.001320604675",
+      "reason": "accepted TrendExpansion packet is directionless or non-bearish; it does not prove directional BearExpansion under the active root contract",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260510T232808-codex-broader-mtf-regime-search/audit/broader_mtf_regime_acceptance_audit.json",
+      "target_label": "target_trend_structural_next",
+      "target_name": null,
+      "target_semantics": null
+    },
+    {
+      "accepted_as_bear_expansion": false,
+      "has_bearish_semantic_marker": true,
+      "has_positive_or_directionless_blocker": false,
+      "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+      "reason": "accepted TrendExpansion packet is directionless or non-bearish; it does not prove directional BearExpansion under the active root contract",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260510T214429-codex-legacy-regime-contract-reissue/legacy-contract/legacy_regime_contract_reissue_report.json",
+      "target_label": null,
+      "target_name": null,
+      "target_semantics": null
+    },
+    {
+      "accepted_as_bear_expansion": false,
+      "has_bearish_semantic_marker": true,
+      "has_positive_or_directionless_blocker": false,
+      "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+      "reason": "accepted TrendExpansion packet is directionless or non-bearish; it does not prove directional BearExpansion under the active root contract",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json",
+      "target_label": null,
+      "target_name": null,
+      "target_semantics": null
+    }
+  ],
+  "source_paths": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T232808-codex-broader-mtf-regime-search/audit/broader_mtf_regime_acceptance_audit.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T214429-codex-legacy-regime-contract-reissue/legacy-contract/legacy_regime_contract_reissue_report.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+  ],
+  "trend_packets_found": [
+    {
+      "accepted_regime_id": "TrendExpansion",
+      "calibration_support": 5621,
+      "coverage": 0.06867260133591792,
+      "ece": 0.0002458418471186219,
+      "precision_wilson_lcb": 0.9910527961060215,
+      "qualifying_condition": "trend_base AND drawdown64 >= -0.001320604675",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260510T232808-codex-broader-mtf-regime-search/audit/broader_mtf_regime_acceptance_audit.json",
+      "target_label": "target_trend_structural_next",
+      "target_name": null,
+      "target_semantics": null,
+      "test_support": 5562,
+      "validation_instruments": [
+        "BTCT",
+        "ETHT",
+        "GLD",
+        "IWM",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "AQ_ETF",
+        "AQ_crypto",
+        "AQ_futures"
+      ],
+      "validation_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ]
+    },
+    {
+      "accepted_regime_id": "TrendExpansion",
+      "calibration_support": 273,
+      "coverage": 0.14310344827586208,
+      "ece": 0.036674169204289675,
+      "precision_wilson_lcb": 0.9536435698638122,
+      "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260510T214429-codex-legacy-regime-contract-reissue/legacy-contract/legacy_regime_contract_reissue_report.json",
+      "target_label": null,
+      "target_name": null,
+      "target_semantics": null,
+      "test_support": 581,
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "validation_timeframes": null
+    },
+    {
+      "accepted_regime_id": "TrendExpansion",
+      "calibration_support": 273,
+      "coverage": 0.14310344827586208,
+      "ece": 0.036674169204289675,
+      "precision_wilson_lcb": 0.9536435698638122,
+      "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json",
+      "target_label": null,
+      "target_name": null,
+      "target_semantics": null,
+      "test_support": 581,
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "validation_timeframes": null
+    }
+  ]
+}

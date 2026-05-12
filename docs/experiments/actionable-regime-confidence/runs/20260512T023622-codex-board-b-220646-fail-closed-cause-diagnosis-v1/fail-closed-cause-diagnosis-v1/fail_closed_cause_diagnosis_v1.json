@@ -1,0 +1,122 @@
+{
+  "run_id": "20260512T023622+0800-codex-board-b-220646-fail-closed-cause-diagnosis-v1",
+  "scope": "non-superseding regime-root addendum to the current 220646 fail-closed branch admission state",
+  "source_branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+  "source_score": 85.7407,
+  "source_evidence": {
+    "current_cursor_readback": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+    "full_chain_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1",
+    "artifact_integrity_correction": "docs/experiments/actionable-regime-confidence/runs/20260512T023723-codex-board-b-022732-artifact-integrity-correction-v1",
+    "existing_fail_closed_diagnosis": "docs/experiments/actionable-regime-confidence/runs/20260512T023559-codex-board-b-220646-fail-closed-cause-diagnosis-v1/fail-closed-cause-diagnosis-v1",
+    "prior_trace_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T022335-codex-board-b-220646-execution-tree-branch-admission-readback-shared-target-v1/execution-tree-branch-admission-readback-shared-target-v1"
+  },
+  "command_exit_evidence": {
+    "022415_provider_status": 0,
+    "022415_auto_quant_status": 0,
+    "022415_analyze_replay": 0,
+    "022415_pre_bayes_status": 0,
+    "022415_policy_training_status": 0,
+    "022415_workflow_structural_bundle": 0,
+    "022415_workflow_execution_candidate": 0,
+    "022415_workflow_full": 0
+  },
+  "provider_readback": {
+    "yfinance": "ready",
+    "kraken_cli": "ready",
+    "ibkr": "configured_runtime_unhealthy: ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "tradingview_mcp": "configured_runtime_unhealthy: tradingview_mcp_connectivity_probe_failed",
+    "auto_quant": "dependency_ready_data_ready"
+  },
+  "catboost_path_ranker_readback": {
+    "score_model_family": "catboost",
+    "score_source": "external_model",
+    "runtime_source": "history_path",
+    "ranker_validation_ready": true,
+    "production_validation": "869/30",
+    "observation_validation": "82/30",
+    "raw_path_score": 0.857407,
+    "calibrated_path_probability": 0.428571,
+    "path_probability_lower_bound": 0.219020
+  },
+  "pre_bayes_fail_closed_cause": {
+    "gate_status": "pass_neutralized",
+    "policy_version": "318900600c5e8cf2",
+    "quality": 0.5458617984369726,
+    "hard_pass_threshold": 0.75,
+    "neutralized_threshold": 0.4,
+    "conflict_flags": [
+      "low_directional_separation"
+    ],
+    "support_gap": 0.032,
+    "minimum_directional_support_gap": 0.08,
+    "owner": "Pre-Bayes evidence filter",
+    "why_not_hard_pass": "quality is below 0.75 and conflict_flags is not empty"
+  },
+  "regime_root_fail_closed_cause": {
+    "path_root": "Sideways",
+    "path_child": "RangeCarry",
+    "current_market_state": "TrendExpansion/BullTrendAcceleration",
+    "canonical_structural_active_regime": "trend",
+    "canonical_structural_confidence": 0.5458617984369726,
+    "canonical_probabilities": {
+      "trend": 0.441925329482747,
+      "range": 0.3116149341034506,
+      "stress": 0.1711057100551827,
+      "transition": 0.07535402635861976
+    },
+    "branch_transition_prior": "weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000",
+    "owner": "regime-rooted branch admission",
+    "diagnosis": "exact branch identity is preserved, but the current filter/regime context does not support promoting this Sideways-root branch"
+  },
+  "execution_fail_closed_cause": {
+    "workflow_execution_gate_status": "execution_blocked",
+    "execution_tree_gate_status": "observe",
+    "execution_tree_branch": "transition_guardrail",
+    "execution_tree_bias": "guarded",
+    "execution_readiness": 0.4420748337394927,
+    "observe_threshold": 0.45,
+    "ready_threshold": 0.65,
+    "hybrid_transition_hazard": 0.600,
+    "hybrid_regime_label": "range_choppy",
+    "hybrid_regime_age_bars": 1,
+    "hybrid_remaining_expected_bars": 3.0,
+    "owner": "execution tree and temporal guardrail",
+    "why_not_ready": "readiness is below observe threshold, and the post-scorer guardrail maps the branch to observe/transition_guardrail because transition hazard is high"
+  },
+  "data_selection_blocker": {
+    "status": "blocked",
+    "reason": "user_selected_historical_data_missing",
+    "dataset_comparable": false,
+    "comparison_class": "different_data_fingerprint",
+    "owner": "workflow blocking truth"
+  },
+  "admission_result": {
+    "closed_loop_branch_admission": "fail_closed",
+    "ready": false,
+    "actionable": false,
+    "promote_candidate": false,
+    "artifact_ledger_actionable": false,
+    "artifact_ledger_review_reason": "branch_admission_status=fail_closed",
+    "decision": "do_not_promote"
+  },
+  "recommended_next_action": {
+    "primary": "reject 220646 for promotion or feed this fail-closed packet into B2R-repeat-next as root-mismatch evidence",
+    "optional_single_retry": "only rerun the same branch if an explicit user-selected historical data path is recorded; the retry still needs pass_hard Pre-Bayes, execution readiness at least 0.65, fill_viable/ready execution tree, and no transition guardrail",
+    "do_not_do": [
+      "do not rerun RC-SPA for 220646",
+      "do not promote from CatBoost/path-ranker readiness alone",
+      "do not relax pass_neutralized into pass_hard without new evidence",
+      "do not map transition_guardrail/observe to ready"
+    ]
+  },
+  "nursery_feedback": {
+    "failure_tags": [
+      "pre_bayes_low_directional_separation",
+      "regime_root_context_mismatch",
+      "execution_readiness_below_observe_threshold",
+      "transition_guardrail_high_hazard",
+      "user_selected_historical_data_missing"
+    ],
+    "successor_requirement": "mine a materially different root-aware family/provider panel where the selected root agrees with current regime evidence and passes hard Pre-Bayes plus execution-tree ready/fill_viable admission"
+  }
+}

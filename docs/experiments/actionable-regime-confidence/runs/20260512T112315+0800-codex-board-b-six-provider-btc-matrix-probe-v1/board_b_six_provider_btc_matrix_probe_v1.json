@@ -1,0 +1,118 @@
+{
+  "run_id": "20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1",
+  "scope": "provider_layer_btc_matrix_probe_only",
+  "provider_status": {
+    "yfinance": {
+      "exit": 0,
+      "ready": true,
+      "status": "ready"
+    },
+    "tradingview_mcp": {
+      "exit": 0,
+      "ready": false,
+      "status": "configured_runtime_unhealthy"
+    },
+    "ibkr": {
+      "exit": 0,
+      "ready": false,
+      "status": "configured_runtime_unhealthy"
+    },
+    "ibkr_bridge": {
+      "exit": 0,
+      "ready": false,
+      "status": "configured_runtime_unhealthy"
+    },
+    "kraken_public": {
+      "exit": 0,
+      "ready": false,
+      "status": "configured_runtime_unhealthy"
+    },
+    "binance_public": {
+      "exit": 0,
+      "ready": false,
+      "status": "configured_runtime_unhealthy"
+    },
+    "bybit_public": {
+      "exit": 0,
+      "ready": false,
+      "status": "configured_runtime_unhealthy"
+    }
+  },
+  "raw_fetches": {
+    "yfinance_btc_usd_1h": {
+      "exit": 0,
+      "rows": 983,
+      "first": "2026-04-01T00:00:00+00:00",
+      "last": "2026-05-11T23:00:00+00:00",
+      "path": "provider-csv/yfinance_btc_usd_1h.csv"
+    },
+    "kraken_xbtusd_1h": {
+      "exit": 0,
+      "rows": 721,
+      "first": "2026-04-12T03:00:00+00:00",
+      "last": "2026-05-12T03:00:00+00:00",
+      "path": "provider-csv/kraken_xbtusd_1h.csv"
+    },
+    "binance_btcusdt_1h": {
+      "exit": 0,
+      "rows": 985,
+      "first": "2026-04-01T00:00:00+00:00",
+      "last": "2026-05-12T00:00:00+00:00",
+      "path": "provider-csv/binance_btcusdt_1h.csv"
+    },
+    "bybit_btcusdt_linear_1h": {
+      "exit": 0,
+      "rows": 985,
+      "first": "2026-04-01T00:00:00+00:00",
+      "last": "2026-05-12T00:00:00+00:00",
+      "path": "provider-csv/bybit_btcusdt_linear_1h.csv"
+    },
+    "ibkr_btc_paxos_trades_1d": {
+      "exit": 0,
+      "rows": 0,
+      "error": "IBKR expected AGGTRADES instead of TRADES for the qualified PAXOS BTC contract",
+      "path": "provider-csv/ibkr_btc_paxos_1d_result.json"
+    },
+    "ibkr_btc_paxos_aggtrades_1d": {
+      "exit": 0,
+      "rows": 30,
+      "first": "2026-04-01",
+      "last": "2026-05-12",
+      "path": "provider-csv/ibkr_btc_paxos_aggtrades_1d.csv"
+    },
+    "tvr_binance_btcusdt_1d_default": {
+      "exit": 1,
+      "ok": false,
+      "symbol": "BINANCE:BTCUSDT"
+    },
+    "tvr_btc_usd_1d_local_stdio_alias": {
+      "exit": 0,
+      "ok": true,
+      "symbol": "BTC-USD",
+      "rows": 29,
+      "first": "2026-04-13T00:00:00Z",
+      "last": "2026-05-12T00:00:00Z",
+      "path": "command-output/18_tvr_alias_BTC_USD_1d_local_stdio.stdout"
+    }
+  },
+  "six_provider_raw_rows_present_via_mixed_paths": true,
+  "default_provider_status_all_ready": false,
+  "same_root_aq_provider_matrix": false,
+  "pre_bayes_filter": false,
+  "bbn": false,
+  "catboost_path_ranker": false,
+  "execution_tree": false,
+  "accepted_rows_added": 0,
+  "mature_rooted_branch_observations_added": 0,
+  "source_control_evidence_acquired": false,
+  "explicit_selected_history": false,
+  "canonical_merge": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "gate": "112315_board_b_six_provider_btc_matrix_probe_v1=six_provider_raw_rows_present_via_mixed_ad_hoc_paths_but_default_provider_status_mixed_no_aq_no_promotion"
+}
+

@@ -1,0 +1,9 @@
+---
+strategy:         ProviderBtcAlwaysEntryCanary
+commit:           1fe86ab
+status:           ERROR
+error_type:       ConfigurationError
+error_msg:        Market entry orders require entry_pricing.price_side = "other".
+traceback:
+
+Done: 0 succeeded, 1 failed.

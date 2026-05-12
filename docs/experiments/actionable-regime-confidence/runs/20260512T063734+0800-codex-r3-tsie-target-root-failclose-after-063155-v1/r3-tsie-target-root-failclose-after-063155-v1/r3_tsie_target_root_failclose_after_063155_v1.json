@@ -1,0 +1,239 @@
+{
+  "board_hash_before_artifact": "1d6e0879fa2b8d20ad173b23c10cdca98a587e2f37bacb94254e675e83868278",
+  "decision": {
+    "accepted_rows_added_by_audit": 0,
+    "canonical_merge_allowed_now": false,
+    "disqualified_reasons": [
+      "target_root_created_by_tsie_materializer_after_preflight_warned_do_not_run",
+      "tsie_labels_are_rule_ohlcv_derived_idx_labels_not_verifier_native_source_control",
+      "crisis_absent_from_tsie_source_taxonomy",
+      "prior_tsie_policy_packets_count_tsie_as_non_promoting",
+      "063155_claimed_accepted_rows_but_board_contract_requires_zero_promotion_without_source_control_approval",
+      "canonical_merge_not_allowed",
+      "downstream_provider_autoquant_prebayes_bbn_catboost_execution_tree_rerun_not_allowed",
+      "concurrent_062902_materializer_still_active_at_audit",
+      "concurrent_public_source_candidate_sweep_still_active_at_audit"
+    ],
+    "downstream_rerun_allowed_now": false,
+    "gate_result": "r3_tsie_target_root_failclose_after_063155_v1=target_root_present_but_tsie_policy_blocked_no_unlock",
+    "logical_quarantine": true,
+    "materializer_claimed_accepted_rows": 5032903,
+    "materializer_claimed_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "strict_full_objective": false,
+    "target_root_mutated_by_063155": true,
+    "target_root_present": true,
+    "target_root_valid_required_unlock": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "gate_result": "r3_tsie_target_root_failclose_after_063155_v1=target_root_present_but_tsie_policy_blocked_no_unlock",
+  "generated_at_utc": "2026-05-11T22:39:16.015571+00:00",
+  "intraday_062902_snapshot": {
+    "exit_file": "",
+    "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1",
+    "stderr_excerpt": "",
+    "stdout_excerpt": ""
+  },
+  "materializer_063155": {
+    "assertions_excerpt": "gate_result=r3_tsie_native_subhour_intake_materialization_v1=target_root_materialized_bull_bear_sideways_crisis_absent_no_downstream\nschema_ready=true\nraw_parquet_sha256_verified=true\ntarget_root_mutated=true\nmapped_rows=5032903\naccepted_mapping_confidence_95_labels=Bear,Bull,Sideways\ncrisis_present=false\ncanonical_merge=false\ndownstream_promotion_rerun=false\nstrict_full_objective=false\ntrade_usable=false\nupdate_goal=false\n",
+    "decision": {
+      "accepted_mapping_confidence_95_labels": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "accepted_rows_added": 5032903,
+      "canonical_merge": false,
+      "downstream_promotion_rerun": false,
+      "gate_result": "r3_tsie_native_subhour_intake_materialization_v1=target_root_materialized_bull_bear_sideways_crisis_absent_no_downstream",
+      "mapped_rows": 5032903,
+      "raw_parquet_sha256_verified": true,
+      "schema_ready": true,
+      "strict_full_objective": false,
+      "target_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "target_root_mutated": true,
+      "trade_usable": false,
+      "update_goal": false
+    },
+    "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1"
+  },
+  "next_action": "Treat /tmp/ict-engine-native-subhour-source-label-intake as TSIE-quarantined and non-promoting. Do not run canonical merge or downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree until explicit source/control approval or a verifier-native R3/R5/R6 target root unlock is available.",
+  "preflight_063215": {
+    "gate_result": "r3_tsie_native_intraday_materializer_preflight_v1=do_not_run_target_root_materializer_proxy_blocked",
+    "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T063215+0800-codex-r3-tsie-native-intraday-materializer-preflight-v1"
+  },
+  "process_snapshot": " 6818  4488 Ss      02:42   0.0  0.0 /bin/zsh -lc sleep 180; ps -eo pid,ppid,stat,etime,command | rg -i '062902|063155|063217|native-subhour-intake|source-label-intake|target/debug/ict-engine|cargo|rustc|python|duckdb|uv run|shasum|auto.?quant|catboost|pre-bayes|bbn|execution-tree|workflow-status' | rg -v 'rg -i|zsh -lc ps'; printf '\\n--- roots ---\\n'; find /tmp/ict-engine-native-subhour-source-label-intake -maxdepth 3 -type f -print 2>/dev/null | sort | sed -n '1,120p'; printf '\\n--- board ---\\n'; sha256sum docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md\n 7939  5043 Ss      01:52   0.0  0.0 /bin/zsh -lc while ps -p 98181 >/dev/null 2>&1 || ps -p 5381 >/dev/null 2>&1 || ps -p 7319 >/dev/null 2>&1 || ps -p 7411 >/dev/null 2>&1; do sleep 20; done; echo settled; ps -axo pid,ppid,stat,lstart,etime,command | rg -i '062902|063155|063217|native-subhour-intake|source-label-intake|public-source|target/debug/ict-engine|cargo|rustc|python|duckdb|pyarrow|uv run|shasum|auto-quant|catboost|pre-bayes|bbn|execution-tree|path-ranker' | rg -v 'rg -i' || true; echo '--- board'; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; echo '--- target root'; find /tmp/ict-engine-native-subhour-source-label-intake -maxdepth 3 -type f -print 2>/dev/null | sort | xargs -r ls -lT\n 8455  5119 Ss      01:33   0.0  0.0 /bin/zsh -lc sleep 120\\012ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '98181|5381|063155|062902|063217|native-subhour-source-label-intake|r3_hf_tsie_native_intraday|public_source_candidate_sweep|shasum|wc -l|sed -n|target/debug/ict-engine|auto.?quant|catboost|pre.?bayes|bbn|path.?rank|execution.?tree|apply_patch' | rg -v 'rg -i'\n 9138  4412 Ss      01:07   0.0  0.0 /bin/zsh -lc sleep 180; ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '98181|062902|063155|063217|native-subhour-source-label-intake|r3_hf_tsie_native_intraday|public_source_candidate_sweep|shasum|wc -l|auto-quant|catboost|pre-bayes|bbn|execution-tree|apply_patch|target/debug/ict-engine' | rg -v 'rg -i' || true; echo '--- board-hash'; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; echo '--- tail'; tail -n 240 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; echo '--- root stats'; if [ -e /tmp/ict-engine-native-subhour-source-label-intake ]; then find /tmp/ict-engine-native-subhour-source-label-intake -maxdepth 2 -type f -print -exec ls -lhT {} \\; 2>/dev/null | sed -n '1,80p'; else echo absent; fi; echo '--- terminal files'; find docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1 docs/experiments/actionable-regime-confidence/runs/20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1 docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1 -maxdepth 4 -type f -print 2>/dev/null | sort | sed -n '1,280p'\n 9391  3195 Rs      00:56  54.1  0.1 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python docs/experiments/actionable-regime-confidence/runs/20260512T063217+0800-codex-public-source-candidate-sweep-after-062842-v1/scripts/public_source_candidate_sweep_after_062842_v1.py\n10250  4717 Ss      00:29   0.0  0.0 /bin/zsh -lc sleep 240; ps -axo pid,ppid,stat,lstart,etime,command | rg '062902|063155|063217|native_subhour|source-label-intake|target/debug/ict-engine|cargo|rustc|python|duckdb|uv run|shasum|sed -n 1,8p' | rg -v 'rg ' || true; echo '--- target root stat'; find /tmp/ict-engine-native-subhour-source-label-intake -maxdepth 2 -type f -print -exec ls -lhT {} \\; 2>/dev/null | sed -n '1,120p'; echo '--- board'; sha256sum docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md\n11581  3946 Ss      00:00   0.1  0.0 /bin/zsh -lc wc -l /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv; shasum -a 256 /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json; jq -S . /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json | sed -n '1,240p'\n11629 11581 R       00:00  40.5  0.0 wc -l /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv\n11635  3568 Ss      00:00   1.1  0.0 /bin/zsh -lc python3 docs/experiments/actionable-regime-confidence/runs/20260512T063734+0800-codex-r3-tsie-target-root-failclose-after-063155-v1/scripts/r3_tsie_target_root_failclose_after_063155_v1.py && cat docs/experiments/actionable-regime-confidence/runs/20260512T063734+0800-codex-r3-tsie-target-root-failclose-after-063155-v1/checks/r3_tsie_target_root_failclose_after_063155_v1_assertions.out\n11667 11635 S       00:00  22.2  0.3 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python docs/experiments/actionable-regime-confidence/runs/20260512T063734+0800-codex-r3-tsie-target-root-failclose-after-063155-v1/scripts/r3_tsie_target_root_failclose_after_063155_v1.py\n",
+  "required_root_rows": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "reason": "absent",
+      "root_name": "r6_owner_export",
+      "valid_required_unlock": false
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "reason": "present_but_tsie_policy_blocked_logical_quarantine",
+      "root_name": "r3_native_subhour",
+      "valid_required_unlock": false
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "reason": "absent",
+      "root_name": "r5_source_panel_recency",
+      "valid_required_unlock": false
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "reason": "present_but_non_target_equivalence_only",
+      "root_name": "source_label_equivalence_non_target",
+      "valid_required_unlock": false
+    }
+  ],
+  "root_statuses": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "files": [],
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_name": "r6_owner_export"
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "files": [
+        {
+          "mtime_utc": "2026-05-11T22:35:34.137892+00:00",
+          "name": "native_subhour_source_label_provenance.json",
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "sha256": "60f2422260c404302dbb98dc641f13e50cdae8f09527a848e614a690b87fcc0f",
+          "size_bytes": 2400
+        },
+        {
+          "mtime_utc": "2026-05-11T22:35:23.150451+00:00",
+          "name": "native_subhour_source_label_rows.csv",
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size_bytes": 2786719721
+        }
+      ],
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_name": "r3_native_subhour"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "files": [],
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_name": "r5_source_panel_recency"
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "files": [
+        {
+          "mtime_utc": "2026-05-11T17:09:18.280069+00:00",
+          "name": "source_label_equivalence_provenance.json",
+          "path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+          "sha256": "a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b",
+          "size_bytes": 3365
+        },
+        {
+          "mtime_utc": "2026-05-11T17:09:17.709460+00:00",
+          "name": "source_label_equivalence_rows.csv",
+          "path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "size_bytes": 148968262
+        }
+      ],
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_name": "source_label_equivalence_non_target"
+    }
+  ],
+  "run_id": "20260512T063734+0800-codex-r3-tsie-target-root-failclose-after-063155-v1",
+  "target_provenance": {
+    "accepted_mapping_confidence_95_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "created_at_utc": "2026-05-11T22:35:29.972642+00:00",
+    "dataset_id": "sujinwo/tsie-market-regime-dataset",
+    "dataset_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+    "date_max": "2026-04-07 02:00:00",
+    "date_min": "1990-06-07 02:00:00",
+    "excluded_trap_rows": 2161093,
+    "group_count": 1150,
+    "label_mapping": {
+      "0": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Bear",
+        "source_label": "STRONG SELL"
+      },
+      "1": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Bear",
+        "source_label": "WEAK SELL"
+      },
+      "2": {
+        "decision": "abstain_trap",
+        "main_regime_v2_label": "Abstain",
+        "source_label": "BEAR TRAP"
+      },
+      "3": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Sideways",
+        "source_label": "FLAT / NOISE"
+      },
+      "4": {
+        "decision": "abstain_trap",
+        "main_regime_v2_label": "Abstain",
+        "source_label": "BULL TRAP"
+      },
+      "5": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Bull",
+        "source_label": "WEAK BUY"
+      },
+      "6": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Bull",
+        "source_label": "STRONG BUY"
+      }
+    },
+    "limitations": [
+      "Crisis has no direct TSIE source taxonomy class",
+      "trap labels are fail-closed abstain and excluded from accepted rows",
+      "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+      "canonical merge not run",
+      "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+    ],
+    "raw_parquet_committed_to_repo": false,
+    "raw_parquet_path": "/tmp/ict-engine-tsie-hf-download-v1/default/train/0000.parquet",
+    "raw_parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+    "raw_row_count": 7193996,
+    "row_count": 5032903,
+    "rows_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+    "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+    "run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+    "symbol_count": 386,
+    "target_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+    "timeframe_count": 3
+  },
+  "target_rows_status": {
+    "exists": true,
+    "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+    "row_count_from_provenance": 5032903,
+    "sha256_from_provenance": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+    "size_bytes": 2786719721
+  }
+}

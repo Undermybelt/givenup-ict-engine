@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approval_state": {
+      "const": "approved",
+      "description": "Only an explicit approved value can unblock the split-contract branch."
+    },
+    "approval_timestamp_utc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "approved_by": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "approved_contract_id": {
+      "enum": [
+        "r6_exact_contract_bulk_export",
+        "r6_family_contract_export",
+        "r6_species_completion_export",
+        "r6_other_owner_approved_contract"
+      ]
+    },
+    "approved_split_contract": {
+      "additionalProperties": false,
+      "properties": {
+        "heldout_axes": {
+          "items": {
+            "enum": [
+              "chronological_period",
+              "symbol_or_instrument",
+              "venue_or_market_center",
+              "market_family",
+              "venue_family",
+              "direct_species",
+              "owner_native_split"
+            ]
+          },
+          "minItems": 2,
+          "type": "array"
+        },
+        "matched_control_policy": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "minimum_control_rows_per_accepted_cell": {
+          "minimum": 73,
+          "type": "integer"
+        },
+        "minimum_positive_rows_per_accepted_cell": {
+          "minimum": 73,
+          "type": "integer"
+        },
+        "species_policy": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "split_unit": {
+          "enum": [
+            "exact_symbol_exact_venue",
+            "market_family_venue_family",
+            "owner_defined_documented_split"
+          ]
+        }
+      },
+      "required": [
+        "split_unit",
+        "heldout_axes",
+        "minimum_positive_rows_per_accepted_cell",
+        "minimum_control_rows_per_accepted_cell",
+        "matched_control_policy",
+        "species_policy"
+      ],
+      "type": "object"
+    },
+    "filename_contract": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_approval_reference": {
+          "type": "string"
+        },
+        "adapter_required": {
+          "type": "boolean"
+        },
+        "request_matched_controls": {
+          "const": "direct_manipulation_matched_controls.csv"
+        },
+        "request_positive_rows": {
+          "const": "direct_manipulation_positive_rows.csv"
+        },
+        "request_provenance": {
+          "const": "direct_manipulation_provenance.json"
+        },
+        "verifier_matched_controls": {
+          "const": "matched_negative_normal_activity_rows.csv"
+        },
+        "verifier_positive_rows": {
+          "const": "positive_spoofing_layering_rows.csv"
+        },
+        "verifier_provenance": {
+          "const": "provenance_manifest.json"
+        }
+      },
+      "required": [
+        "request_positive_rows",
+        "request_matched_controls",
+        "request_provenance",
+        "verifier_positive_rows",
+        "verifier_matched_controls",
+        "verifier_provenance",
+        "adapter_required",
+        "adapter_approval_reference"
+      ],
+      "type": "object"
+    },
+    "no_proxy_acceptance": {
+      "const": true,
+      "description": "OHLCV proxies and inferred labels cannot satisfy direct Manipulation."
+    },
+    "owner_approval_reference": {
+      "description": "Ticket, signed note, source-owner export id, or user approval reference.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "required_followup_chain": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 7,
+      "type": "array"
+    }
+  },
+  "required": [
+    "approval_state",
+    "approved_by",
+    "approval_timestamp_utc",
+    "owner_approval_reference",
+    "approved_contract_id",
+    "approved_split_contract",
+    "filename_contract",
+    "required_followup_chain",
+    "no_proxy_acceptance"
+  ],
+  "title": "Board A R6 validation_contract_approval.json",
+  "type": "object"
+}

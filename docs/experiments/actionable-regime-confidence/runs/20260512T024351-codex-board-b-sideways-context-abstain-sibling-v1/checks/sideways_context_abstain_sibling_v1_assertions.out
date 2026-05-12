@@ -1,0 +1,9 @@
+PASS exact_source_branch_preserved=true
+PASS sibling_branch_path_encoded=true
+PASS sibling_action_no_trade=true
+PASS runtime_context_not_sideways=true
+PASS pre_bayes_neutralized=true
+PASS catboost_ready_not_promotional=true
+PASS execution_tree_fail_closed=true
+PASS promotion_allowed_false=true
+PASS rc_spa_not_rerun=true

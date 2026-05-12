@@ -1,0 +1,3830 @@
+{
+  "schema_version": "sector-index-breadth-root-probe/v1",
+  "loop_id": "20260511T001100+0800-sector-index-breadth-root-probe",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T001100-sector-index-breadth-root-probe",
+  "objective": "Ingest a broader yfinance sector/index breadth universe plus existing NQ 15m context for corrected MainRegimeV2 root gates.",
+  "input_sources": {
+    "sector_symbols": [
+      "XLK",
+      "XLF",
+      "XLE",
+      "XLY",
+      "XLP",
+      "XLU",
+      "XLV",
+      "XLI",
+      "XLB",
+      "XLRE",
+      "XLC"
+    ],
+    "index_symbols": [
+      "SPY",
+      "QQQ",
+      "IWM",
+      "DIA"
+    ],
+    "existing_nq_15m": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/cross_timeframe_regime_features.csv",
+    "provider_errors": {}
+  },
+  "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260511T001100-sector-index-breadth-root-probe/sector_index_breadth_features.csv",
+  "root_reports": [
+    {
+      "root_class": "Bull",
+      "state": "blocked",
+      "rule": "sector breadth bull >= 0.55, panel_ret8 >= q0.6",
+      "train": {
+        "support": 11836,
+        "success": 3072,
+        "precision": 0.2595471443055086,
+        "precision_wilson_lcb_95": 0.25172832264647327,
+        "coverage": 0.3003832195518108,
+        "ece": 0.0,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "NQ",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local_existing",
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 3934,
+        "success": 1113,
+        "precision": 0.28291814946619215,
+        "precision_wilson_lcb_95": 0.2690602792714357,
+        "coverage": 0.1996852951626821,
+        "ece": 0.023371005160683522,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "NQ",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local_existing",
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 4089,
+        "success": 997,
+        "precision": 0.243824896062607,
+        "precision_wilson_lcb_95": 0.23090829148980918,
+        "coverage": 0.20753184794193777,
+        "ece": 0.03909325340358516,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "NQ",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local_existing",
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "ece": 0.03909325340358516,
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95"
+      ],
+      "candidate_count": 9,
+      "top_candidates": [
+        {
+          "root_class": "Bull",
+          "state": "blocked",
+          "rule": "sector breadth bull >= 0.55, panel_ret8 >= q0.6",
+          "train": {
+            "support": 11836,
+            "success": 3072,
+            "precision": 0.2595471443055086,
+            "precision_wilson_lcb_95": 0.25172832264647327,
+            "coverage": 0.3003832195518108,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 3934,
+            "success": 1113,
+            "precision": 0.28291814946619215,
+            "precision_wilson_lcb_95": 0.2690602792714357,
+            "coverage": 0.1996852951626821,
+            "ece": 0.023371005160683522,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 4089,
+            "success": 997,
+            "precision": 0.243824896062607,
+            "precision_wilson_lcb_95": 0.23090829148980918,
+            "coverage": 0.20753184794193777,
+            "ece": 0.03909325340358516,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.03909325340358516,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        },
+        {
+          "root_class": "Bull",
+          "state": "blocked",
+          "rule": "sector breadth bull >= 0.55, panel_ret8 >= q0.7",
+          "train": {
+            "support": 8515,
+            "success": 2213,
+            "precision": 0.25989430416911335,
+            "precision_wilson_lcb_95": 0.2506886583648706,
+            "coverage": 0.2161002969317057,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 3165,
+            "success": 895,
+            "precision": 0.28278041074249605,
+            "precision_wilson_lcb_95": 0.26736143576063226,
+            "coverage": 0.16065174356631642,
+            "ece": 0.022886106573382692,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 2985,
+            "success": 754,
+            "precision": 0.2525963149078727,
+            "precision_wilson_lcb_95": 0.23733390766968598,
+            "coverage": 0.15149977160838451,
+            "ece": 0.030184095834623337,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.030184095834623337,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        },
+        {
+          "root_class": "Bull",
+          "state": "blocked",
+          "rule": "sector breadth bull >= 0.65, panel_ret8 >= q0.6",
+          "train": {
+            "support": 11446,
+            "success": 2945,
+            "precision": 0.25729512493447493,
+            "precision_wilson_lcb_95": 0.24936909414731195,
+            "coverage": 0.2904854960282212,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 3829,
+            "success": 1085,
+            "precision": 0.283363802559415,
+            "precision_wilson_lcb_95": 0.26931304373623743,
+            "coverage": 0.19435561646616922,
+            "ece": 0.026068677624940084,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 3894,
+            "success": 940,
+            "precision": 0.241397021058038,
+            "precision_wilson_lcb_95": 0.22821534577609798,
+            "coverage": 0.19763487793736995,
+            "ece": 0.041966781501377004,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.041966781501377004,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        },
+        {
+          "root_class": "Bull",
+          "state": "blocked",
+          "rule": "sector breadth bull >= 0.65, panel_ret8 >= q0.7",
+          "train": {
+            "support": 8380,
+            "success": 2144,
+            "precision": 0.2558472553699284,
+            "precision_wilson_lcb_95": 0.24661843181080878,
+            "coverage": 0.21267416186584778,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 3150,
+            "success": 891,
+            "precision": 0.28285714285714286,
+            "precision_wilson_lcb_95": 0.2674007775473407,
+            "coverage": 0.15989036089538602,
+            "ece": 0.027009887487214446,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 2955,
+            "success": 746,
+            "precision": 0.25245346869712354,
+            "precision_wilson_lcb_95": 0.23711857889843171,
+            "coverage": 0.149977160838451,
+            "ece": 0.030403674160019323,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.030403674160019323,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        },
+        {
+          "root_class": "Bull",
+          "state": "blocked",
+          "rule": "sector breadth bull >= 0.75, panel_ret8 >= q0.6",
+          "train": {
+            "support": 9076,
+            "success": 2282,
+            "precision": 0.251432349052446,
+            "precision_wilson_lcb_95": 0.24261339570013216,
+            "coverage": 0.23033779153871534,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 3169,
+            "success": 849,
+            "precision": 0.26790785736825495,
+            "precision_wilson_lcb_95": 0.2527764080272873,
+            "coverage": 0.1608547789452312,
+            "ece": 0.016475508315808962,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 2709,
+            "success": 658,
+            "precision": 0.24289405684754523,
+            "precision_wilson_lcb_95": 0.22711702492645275,
+            "coverage": 0.13749175252499618,
+            "ece": 0.025013800520709728,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.025013800520709728,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        },
+        {
+          "root_class": "Bull",
+          "state": "blocked",
+          "rule": "sector breadth bull >= 0.75, panel_ret8 >= q0.7",
+          "train": {
+            "support": 7405,
+            "success": 1814,
+            "precision": 0.2449696151249156,
+            "precision_wilson_lcb_95": 0.23530805601990748,
+            "coverage": 0.18792985305687385,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 2790,
+            "success": 761,
+            "precision": 0.27275985663082436,
+            "precision_wilson_lcb_95": 0.25655443480760115,
+            "coverage": 0.1416171767930562,
+            "ece": 0.027790241505908753,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 2430,
+            "success": 609,
+            "precision": 0.2506172839506173,
+            "precision_wilson_lcb_95": 0.23378932696623783,
+            "coverage": 0.12333147236461453,
+            "ece": 0.022142572680207084,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.022142572680207084,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        },
+        {
+          "root_class": "Bull",
+          "state": "blocked",
+          "rule": "sector breadth bull >= 0.55, panel_ret8 >= q0.8",
+          "train": {
+            "support": 5300,
+            "success": 1277,
+            "precision": 0.24094339622641509,
+            "precision_wilson_lcb_95": 0.22962023558630512,
+            "coverage": 0.13450752480775577,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 1976,
+            "success": 548,
+            "precision": 0.2773279352226721,
+            "precision_wilson_lcb_95": 0.25803554929894335,
+            "coverage": 0.1002994771838993,
+            "ece": 0.03638453899625699,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 1784,
+            "success": 491,
+            "precision": 0.27522421524663676,
+            "precision_wilson_lcb_95": 0.25499876488686807,
+            "coverage": 0.09054458711871288,
+            "ece": 0.002103719976035312,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.002103719976035312,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        },
+        {
+          "root_class": "Bull",
+          "state": "blocked",
+          "rule": "sector breadth bull >= 0.65, panel_ret8 >= q0.8",
+          "train": {
+            "support": 5270,
+            "success": 1253,
+            "precision": 0.23776091081593928,
+            "precision_wilson_lcb_95": 0.22646085719560022,
+            "coverage": 0.13374616145978732,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 1976,
+            "success": 548,
+            "precision": 0.2773279352226721,
+            "precision_wilson_lcb_95": 0.25803554929894335,
+            "coverage": 0.1002994771838993,
+            "ece": 0.03956702440673279,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 1784,
+            "success": 491,
+            "precision": 0.27522421524663676,
+            "precision_wilson_lcb_95": 0.25499876488686807,
+            "coverage": 0.09054458711871288,
+            "ece": 0.002103719976035312,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.002103719976035312,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        }
+      ]
+    },
+    {
+      "root_class": "Bear",
+      "state": "blocked",
+      "rule": "sector breadth bear >= 0.75, panel_ret8 <= q0.3",
+      "train": {
+        "support": 8173,
+        "success": 2058,
+        "precision": 0.25180472286797995,
+        "precision_wilson_lcb_95": 0.24251265790714205,
+        "coverage": 0.20742075476486563,
+        "ece": 0.0,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "NQ",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local_existing",
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 4579,
+        "success": 665,
+        "precision": 0.14522821576763487,
+        "precision_wilson_lcb_95": 0.135320530794367,
+        "coverage": 0.23242475001268972,
+        "ece": 0.10657650710034508,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "NQ",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local_existing",
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 3393,
+        "success": 712,
+        "precision": 0.20984379605069262,
+        "precision_wilson_lcb_95": 0.1964744835313531,
+        "coverage": 0.17220727807948027,
+        "ece": 0.06461558028305775,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "NQ",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local_existing",
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "ece": 0.06461558028305775,
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05"
+      ],
+      "candidate_count": 9,
+      "top_candidates": [
+        {
+          "root_class": "Bear",
+          "state": "blocked",
+          "rule": "sector breadth bear >= 0.75, panel_ret8 <= q0.3",
+          "train": {
+            "support": 8173,
+            "success": 2058,
+            "precision": 0.25180472286797995,
+            "precision_wilson_lcb_95": 0.24251265790714205,
+            "coverage": 0.20742075476486563,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 4579,
+            "success": 665,
+            "precision": 0.14522821576763487,
+            "precision_wilson_lcb_95": 0.135320530794367,
+            "coverage": 0.23242475001268972,
+            "ece": 0.10657650710034508,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 3393,
+            "success": 712,
+            "precision": 0.20984379605069262,
+            "precision_wilson_lcb_95": 0.1964744835313531,
+            "coverage": 0.17220727807948027,
+            "ece": 0.06461558028305775,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.06461558028305775,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05"
+          ]
+        },
+        {
+          "root_class": "Bear",
+          "state": "blocked",
+          "rule": "sector breadth bear >= 0.55, panel_ret8 <= q0.3",
+          "train": {
+            "support": 11443,
+            "success": 2862,
+            "precision": 0.2501092370881762,
+            "precision_wilson_lcb_95": 0.2422590764797834,
+            "coverage": 0.29040935969342435,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 6334,
+            "success": 1019,
+            "precision": 0.16087780233659615,
+            "precision_wilson_lcb_95": 0.1520353997747793,
+            "coverage": 0.32150652251154765,
+            "ece": 0.08923143475158002,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 5673,
+            "success": 1225,
+            "precision": 0.21593513132381456,
+            "precision_wilson_lcb_95": 0.20542196781932548,
+            "coverage": 0.28792569659442724,
+            "ece": 0.05505732898721841,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.05505732898721841,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05"
+          ]
+        },
+        {
+          "root_class": "Bear",
+          "state": "blocked",
+          "rule": "sector breadth bear >= 0.65, panel_ret8 <= q0.3",
+          "train": {
+            "support": 10888,
+            "success": 2714,
+            "precision": 0.24926524614254225,
+            "precision_wilson_lcb_95": 0.24122916604005226,
+            "coverage": 0.27632413775600845,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 6064,
+            "success": 985,
+            "precision": 0.162434036939314,
+            "precision_wilson_lcb_95": 0.15336462152891167,
+            "coverage": 0.30780163443480024,
+            "ece": 0.08683120920322826,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 5268,
+            "success": 1129,
+            "precision": 0.21431283219438116,
+            "precision_wilson_lcb_95": 0.20344221042372004,
+            "coverage": 0.2673704512003248,
+            "ece": 0.05187879525506717,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.05187879525506717,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05"
+          ]
+        },
+        {
+          "root_class": "Bear",
+          "state": "blocked",
+          "rule": "sector breadth bear >= 0.55, panel_ret8 <= q0.4",
+          "train": {
+            "support": 13910,
+            "success": 3434,
+            "precision": 0.2468727534148095,
+            "precision_wilson_lcb_95": 0.23977764251895534,
+            "coverage": 0.35301880567469485,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 7555,
+            "success": 1262,
+            "precision": 0.1670416942422237,
+            "precision_wilson_lcb_95": 0.1588001999992407,
+            "coverage": 0.38348307192528297,
+            "ece": 0.07983105917258579,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 7024,
+            "success": 1541,
+            "precision": 0.21939066059225512,
+            "precision_wilson_lcb_95": 0.20986755847337113,
+            "coverage": 0.3564939349337664,
+            "ece": 0.05234896635003142,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.05234896635003142,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05"
+          ]
+        },
+        {
+          "root_class": "Bear",
+          "state": "blocked",
+          "rule": "sector breadth bear >= 0.75, panel_ret8 <= q0.4",
+          "train": {
+            "support": 8660,
+            "success": 2133,
+            "precision": 0.24630484988452656,
+            "precision_wilson_lcb_95": 0.2373441340750507,
+            "coverage": 0.21978021978021978,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 4765,
+            "success": 689,
+            "precision": 0.14459601259181531,
+            "precision_wilson_lcb_95": 0.13489647609674363,
+            "coverage": 0.24186589513222678,
+            "ece": 0.10170883729271124,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 3604,
+            "success": 732,
+            "precision": 0.20310765815760268,
+            "precision_wilson_lcb_95": 0.19029230880247497,
+            "coverage": 0.182916307161346,
+            "ece": 0.05851164556578736,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.05851164556578736,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05"
+          ]
+        },
+        {
+          "root_class": "Bear",
+          "state": "blocked",
+          "rule": "sector breadth bear >= 0.65, panel_ret8 <= q0.4",
+          "train": {
+            "support": 12395,
+            "success": 3023,
+            "precision": 0.24388866478418716,
+            "precision_wilson_lcb_95": 0.23640891320898233,
+            "coverage": 0.31456995660228915,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 6895,
+            "success": 1157,
+            "precision": 0.1678027556200145,
+            "precision_wilson_lcb_95": 0.1591677392980751,
+            "coverage": 0.34998223440434495,
+            "ece": 0.07608590916417265,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 6184,
+            "success": 1316,
+            "precision": 0.2128072445019405,
+            "precision_wilson_lcb_95": 0.20278604225566288,
+            "coverage": 0.3138608333756281,
+            "ece": 0.045004488881925986,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.045004488881925986,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95"
+          ]
+        },
+        {
+          "root_class": "Bear",
+          "state": "blocked",
+          "rule": "sector breadth bear >= 0.75, panel_ret8 <= q0.2",
+          "train": {
+            "support": 6875,
+            "success": 1683,
+            "precision": 0.2448,
+            "precision_wilson_lcb_95": 0.23478073379789988,
+            "coverage": 0.17447910057609828,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 4008,
+            "success": 545,
+            "precision": 0.13597804391217566,
+            "precision_wilson_lcb_95": 0.12571435810786097,
+            "coverage": 0.20344144967260544,
+            "ece": 0.10882195608782433,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 2976,
+            "success": 635,
+            "precision": 0.2133736559139785,
+            "precision_wilson_lcb_95": 0.1990287405100238,
+            "coverage": 0.15104298837740446,
+            "ece": 0.07739561200180284,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.07739561200180284,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05"
+          ]
+        },
+        {
+          "root_class": "Bear",
+          "state": "blocked",
+          "rule": "sector breadth bear >= 0.55, panel_ret8 <= q0.2",
+          "train": {
+            "support": 7835,
+            "success": 1882,
+            "precision": 0.24020421186981494,
+            "precision_wilson_lcb_95": 0.2308735054478468,
+            "coverage": 0.198842727711088,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 4488,
+            "success": 615,
+            "precision": 0.13703208556149732,
+            "precision_wilson_lcb_95": 0.12728126731455777,
+            "coverage": 0.22780569514237856,
+            "ece": 0.10317212630831762,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 3921,
+            "success": 837,
+            "precision": 0.21346595256312165,
+            "precision_wilson_lcb_95": 0.20092415613027828,
+            "coverage": 0.19900522763031012,
+            "ece": 0.07643386700162433,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "NQ",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "CME_futures_local_existing",
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "15m",
+              "1h"
+            ]
+          },
+          "ece": 0.07643386700162433,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05"
+          ]
+        }
+      ]
+    },
+    {
+      "root_class": "Sideways",
+      "state": "blocked",
+      "rule": "sector low dispersion/range q0.25",
+      "train": {
+        "support": 3450,
+        "success": 1128,
+        "precision": 0.3269565217391304,
+        "precision_wilson_lcb_95": 0.3115032380545066,
+        "coverage": 0.0875567850163693,
+        "ece": 0.0,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 990,
+        "success": 271,
+        "precision": 0.2737373737373737,
+        "precision_wilson_lcb_95": 0.24687749441232953,
+        "coverage": 0.05025125628140704,
+        "ece": 0.0532191480017567,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 1245,
+        "success": 446,
+        "precision": 0.3582329317269076,
+        "precision_wilson_lcb_95": 0.33207252205444765,
+        "coverage": 0.06318834695224078,
+        "ece": 0.0844955579895339,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "ece": 0.0844955579895339,
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05",
+        "validation_timeframes_below_2"
+      ],
+      "candidate_count": 3,
+      "top_candidates": [
+        {
+          "root_class": "Sideways",
+          "state": "blocked",
+          "rule": "sector low dispersion/range q0.25",
+          "train": {
+            "support": 3450,
+            "success": 1128,
+            "precision": 0.3269565217391304,
+            "precision_wilson_lcb_95": 0.3115032380545066,
+            "coverage": 0.0875567850163693,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 990,
+            "success": 271,
+            "precision": 0.2737373737373737,
+            "precision_wilson_lcb_95": 0.24687749441232953,
+            "coverage": 0.05025125628140704,
+            "ece": 0.0532191480017567,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 1245,
+            "success": 446,
+            "precision": 0.3582329317269076,
+            "precision_wilson_lcb_95": 0.33207252205444765,
+            "coverage": 0.06318834695224078,
+            "ece": 0.0844955579895339,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.0844955579895339,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Sideways",
+          "state": "blocked",
+          "rule": "sector low dispersion/range q0.35",
+          "train": {
+            "support": 5490,
+            "success": 1764,
+            "precision": 0.32131147540983607,
+            "precision_wilson_lcb_95": 0.30908745274745075,
+            "coverage": 0.13932949267822248,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 2025,
+            "success": 552,
+            "precision": 0.2725925925925926,
+            "precision_wilson_lcb_95": 0.2536421293393909,
+            "coverage": 0.1027866605756053,
+            "ece": 0.04871888281724346,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 2130,
+            "success": 681,
+            "precision": 0.31971830985915495,
+            "precision_wilson_lcb_95": 0.30025250852635677,
+            "coverage": 0.1081053646652794,
+            "ece": 0.04712571726656234,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.04712571726656234,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Sideways",
+          "state": "blocked",
+          "rule": "sector low dispersion/range q0.45",
+          "train": {
+            "support": 7650,
+            "success": 2357,
+            "precision": 0.3081045751633987,
+            "precision_wilson_lcb_95": 0.2978566973842842,
+            "coverage": 0.19414765373194934,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 2865,
+            "success": 748,
+            "precision": 0.26108202443280976,
+            "precision_wilson_lcb_95": 0.24532633325239087,
+            "coverage": 0.14542409014770824,
+            "ece": 0.04702255073058892,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 3135,
+            "success": 976,
+            "precision": 0.3113237639553429,
+            "precision_wilson_lcb_95": 0.2953544436511751,
+            "coverage": 0.15911282545805208,
+            "ece": 0.050241739522533135,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.050241739522533135,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        }
+      ]
+    },
+    {
+      "root_class": "Crisis",
+      "state": "blocked",
+      "rule": "sector crisis breadth >= 0.6, panel_vol >= q0.9",
+      "train": {
+        "support": 3405,
+        "success": 1439,
+        "precision": 0.4226138032305433,
+        "precision_wilson_lcb_95": 0.40611829188451676,
+        "coverage": 0.08641473999441666,
+        "ece": 0.0,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 5610,
+        "success": 3516,
+        "precision": 0.6267379679144385,
+        "precision_wilson_lcb_95": 0.6139986911846709,
+        "coverage": 0.2847571189279732,
+        "ece": 0.20412416468389516,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 3526,
+        "success": 1790,
+        "precision": 0.5076574021554169,
+        "precision_wilson_lcb_95": 0.4911564501990961,
+        "coverage": 0.17895751915951885,
+        "ece": 0.1190805657590216,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "ece": 0.1190805657590216,
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05",
+        "validation_timeframes_below_2"
+      ],
+      "candidate_count": 9,
+      "top_candidates": [
+        {
+          "root_class": "Crisis",
+          "state": "blocked",
+          "rule": "sector crisis breadth >= 0.6, panel_vol >= q0.9",
+          "train": {
+            "support": 3405,
+            "success": 1439,
+            "precision": 0.4226138032305433,
+            "precision_wilson_lcb_95": 0.40611829188451676,
+            "coverage": 0.08641473999441666,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 5610,
+            "success": 3516,
+            "precision": 0.6267379679144385,
+            "precision_wilson_lcb_95": 0.6139986911846709,
+            "coverage": 0.2847571189279732,
+            "ece": 0.20412416468389516,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 3526,
+            "success": 1790,
+            "precision": 0.5076574021554169,
+            "precision_wilson_lcb_95": 0.4911564501990961,
+            "coverage": 0.17895751915951885,
+            "ece": 0.1190805657590216,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.1190805657590216,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Crisis",
+          "state": "blocked",
+          "rule": "sector crisis breadth >= 0.6, panel_vol >= q0.7",
+          "train": {
+            "support": 5070,
+            "success": 2086,
+            "precision": 0.411439842209073,
+            "precision_wilson_lcb_95": 0.397966427274093,
+            "coverage": 0.12867040580666447,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 6885,
+            "success": 4102,
+            "precision": 0.5957879448075527,
+            "precision_wilson_lcb_95": 0.5841459534939967,
+            "coverage": 0.349474645957058,
+            "ece": 0.18434810259847972,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 4456,
+            "success": 2128,
+            "precision": 0.47755834829443444,
+            "precision_wilson_lcb_95": 0.4629181202856947,
+            "coverage": 0.22615845302745774,
+            "ece": 0.11822959651311826,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.11822959651311826,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Crisis",
+          "state": "blocked",
+          "rule": "sector crisis breadth >= 0.6, panel_vol >= q0.8",
+          "train": {
+            "support": 4590,
+            "success": 1882,
+            "precision": 0.41002178649237475,
+            "precision_wilson_lcb_95": 0.3958741455574069,
+            "coverage": 0.1164885922391696,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 6390,
+            "success": 3847,
+            "precision": 0.6020344287949921,
+            "precision_wilson_lcb_95": 0.5899751981085635,
+            "coverage": 0.3243490178163545,
+            "ece": 0.1920126423026174,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 4231,
+            "success": 2050,
+            "precision": 0.48451902623493265,
+            "precision_wilson_lcb_95": 0.4694811651444754,
+            "coverage": 0.2147388722529564,
+            "ece": 0.11751540256005949,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.11751540256005949,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Crisis",
+          "state": "blocked",
+          "rule": "sector crisis breadth >= 0.45, panel_vol >= q0.9",
+          "train": {
+            "support": 4770,
+            "success": 1767,
+            "precision": 0.370440251572327,
+            "precision_wilson_lcb_95": 0.3568450221559465,
+            "coverage": 0.12105677232698019,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 6000,
+            "success": 3633,
+            "precision": 0.6055,
+            "precision_wilson_lcb_95": 0.5930695924939245,
+            "coverage": 0.30455306837216384,
+            "ece": 0.23505974842767302,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 4081,
+            "success": 1925,
+            "precision": 0.4716981132075472,
+            "precision_wilson_lcb_95": 0.4564161704196216,
+            "coverage": 0.20712581840328884,
+            "ece": 0.13380188679245286,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.13380188679245286,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Crisis",
+          "state": "blocked",
+          "rule": "sector crisis breadth >= 0.45, panel_vol >= q0.8",
+          "train": {
+            "support": 7170,
+            "success": 2501,
+            "precision": 0.3488145048814505,
+            "precision_wilson_lcb_95": 0.33786652806549855,
+            "coverage": 0.1819658401644545,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 7050,
+            "success": 4019,
+            "precision": 0.5700709219858155,
+            "precision_wilson_lcb_95": 0.558479610522237,
+            "coverage": 0.3578498553372925,
+            "ece": 0.22125641710436506,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 5656,
+            "success": 2378,
+            "precision": 0.42043847241867044,
+            "precision_wilson_lcb_95": 0.4076321818789769,
+            "coverage": 0.2870628838247983,
+            "ece": 0.1496324495671451,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.1496324495671451,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Crisis",
+          "state": "blocked",
+          "rule": "sector crisis breadth >= 0.3, panel_vol >= q0.9",
+          "train": {
+            "support": 5565,
+            "success": 1942,
+            "precision": 0.34896675651392633,
+            "precision_wilson_lcb_95": 0.3365518064333911,
+            "coverage": 0.14123290104814354,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 6120,
+            "success": 3665,
+            "precision": 0.5988562091503268,
+            "precision_wilson_lcb_95": 0.5865183073595867,
+            "coverage": 0.31064412973960714,
+            "ece": 0.24988945263640044,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 4711,
+            "success": 2083,
+            "precision": 0.44215665463808107,
+            "precision_wilson_lcb_95": 0.4280275398114204,
+            "coverage": 0.23910064457189262,
+            "ece": 0.1566995545122457,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.1566995545122457,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Crisis",
+          "state": "blocked",
+          "rule": "sector crisis breadth >= 0.45, panel_vol >= q0.7",
+          "train": {
+            "support": 8265,
+            "success": 2865,
+            "precision": 0.3466424682395644,
+            "precision_wilson_lcb_95": 0.3364559527710865,
+            "coverage": 0.20975560236530214,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 8010,
+            "success": 4426,
+            "precision": 0.5525593008739076,
+            "precision_wilson_lcb_95": 0.5416476617346321,
+            "coverage": 0.40657834627683875,
+            "ece": 0.20591683263434318,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 6301,
+            "success": 2559,
+            "precision": 0.40612601174416757,
+            "precision_wilson_lcb_95": 0.39406067440655845,
+            "coverage": 0.3197990153783688,
+            "ece": 0.14643328912974002,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.14643328912974002,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        },
+        {
+          "root_class": "Crisis",
+          "state": "blocked",
+          "rule": "sector crisis breadth >= 0.3, panel_vol >= q0.8",
+          "train": {
+            "support": 9690,
+            "success": 3012,
+            "precision": 0.3108359133126935,
+            "precision_wilson_lcb_95": 0.30169701889387723,
+            "coverage": 0.2459203613938025,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 7530,
+            "success": 4148,
+            "precision": 0.550863213811421,
+            "precision_wilson_lcb_95": 0.5396054053159753,
+            "coverage": 0.38221410080706564,
+            "ece": 0.2400273004987275,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 6991,
+            "success": 2693,
+            "precision": 0.38520955514232585,
+            "precision_wilson_lcb_95": 0.373868053763394,
+            "coverage": 0.3548190630868396,
+            "ece": 0.16565365866909515,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.16565365866909515,
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "ece_above_0_05",
+            "validation_timeframes_below_2"
+          ]
+        }
+      ]
+    },
+    {
+      "root_class": "UnknownOrMixed",
+      "state": "residual_not_release",
+      "rule": "mixed sector breadth residual",
+      "train": {
+        "support": 4680,
+        "success": 543,
+        "precision": 0.11602564102564103,
+        "precision_wilson_lcb_95": 0.10716358032176992,
+        "coverage": 0.11877268228307489,
+        "ece": 0.0,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 1770,
+        "success": 196,
+        "precision": 0.11073446327683616,
+        "precision_wilson_lcb_95": 0.09694995814693323,
+        "coverage": 0.08984315516978833,
+        "ece": 0.005291177748804873,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 2670,
+        "success": 358,
+        "precision": 0.13408239700374533,
+        "precision_wilson_lcb_95": 0.12168211126719727,
+        "coverage": 0.13551235852408264,
+        "ece": 0.023347933726909173,
+        "validation_instruments": [
+          "DIA",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "XLB",
+          "XLC",
+          "XLE",
+          "XLF",
+          "XLI",
+          "XLK",
+          "XLP",
+          "XLRE",
+          "XLU",
+          "XLV",
+          "XLY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_index_ETF",
+          "yfinance_sector_ETF"
+        ],
+        "validation_timeframes": [
+          "1h"
+        ]
+      },
+      "ece": 0.023347933726909173,
+      "accepted_95": false,
+      "blockers": [
+        "residual_or_non_release_gate",
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "validation_timeframes_below_2"
+      ],
+      "candidate_count": 1,
+      "top_candidates": [
+        {
+          "root_class": "UnknownOrMixed",
+          "state": "residual_not_release",
+          "rule": "mixed sector breadth residual",
+          "train": {
+            "support": 4680,
+            "success": 543,
+            "precision": 0.11602564102564103,
+            "precision_wilson_lcb_95": 0.10716358032176992,
+            "coverage": 0.11877268228307489,
+            "ece": 0.0,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "calibration": {
+            "support": 1770,
+            "success": 196,
+            "precision": 0.11073446327683616,
+            "precision_wilson_lcb_95": 0.09694995814693323,
+            "coverage": 0.08984315516978833,
+            "ece": 0.005291177748804873,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "test": {
+            "support": 2670,
+            "success": 358,
+            "precision": 0.13408239700374533,
+            "precision_wilson_lcb_95": 0.12168211126719727,
+            "coverage": 0.13551235852408264,
+            "ece": 0.023347933726909173,
+            "validation_instruments": [
+              "DIA",
+              "IWM",
+              "QQQ",
+              "SPY",
+              "XLB",
+              "XLC",
+              "XLE",
+              "XLF",
+              "XLI",
+              "XLK",
+              "XLP",
+              "XLRE",
+              "XLU",
+              "XLV",
+              "XLY"
+            ],
+            "validation_market_contexts": [
+              "yfinance_index_ETF",
+              "yfinance_sector_ETF"
+            ],
+            "validation_timeframes": [
+              "1h"
+            ]
+          },
+          "ece": 0.023347933726909173,
+          "accepted_95": false,
+          "blockers": [
+            "residual_or_non_release_gate",
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "validation_timeframes_below_2"
+          ]
+        }
+      ]
+    },
+    {
+      "root_class": "Manipulation",
+      "state": "missing_required_inputs",
+      "rule": "requires direct tick/order-flow/L2/order-lifecycle or crypto event/social evidence",
+      "train": {},
+      "calibration": {
+        "support": 0
+      },
+      "test": {
+        "support": 0,
+        "precision_wilson_lcb_95": 0.0,
+        "coverage": 0.0,
+        "validation_instruments": [],
+        "validation_market_contexts": [],
+        "validation_timeframes": []
+      },
+      "ece": 1.0,
+      "accepted_95": false,
+      "blockers": [
+        "missing_required_inputs",
+        "proxy_only_low_confidence"
+      ]
+    }
+  ],
+  "accepted_root_classes_95": [],
+  "blocked_root_classes": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "UnknownOrMixed",
+    "Manipulation"
+  ],
+  "threshold_policy": {
+    "thresholds_relaxed": false,
+    "blocked_predictor_prefixes": [
+      "future_",
+      "target_"
+    ],
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  },
+  "decision": {
+    "board_state": "blocked",
+    "accepted_gate": "none_for_MainRegimeV2",
+    "trade_usable": false,
+    "next_action": "If still blocked, Bull/Bear/Sideways need different labels or non-OHLCV inputs; Manipulation needs direct inputs."
+  }
+}

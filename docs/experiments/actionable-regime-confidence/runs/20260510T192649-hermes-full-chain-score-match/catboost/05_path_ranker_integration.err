@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/path_ranker_integration.py", line 358, in <module>
+    main()
+    ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/path_ranker_integration.py", line 316, in main
+    run_trainer(
+    ~~~~~~~~~~~^
+        target_csv,
+        ^^^^^^^^^^^
+    ...<4 lines>...
+        allow_direct_fallback=args.allow_direct_fallback,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/path_ranker_integration.py", line 110, in run_trainer
+    raise RuntimeError("Trainer failed")
+RuntimeError: Trainer failed

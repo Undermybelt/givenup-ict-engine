@@ -1,0 +1,5 @@
+root_id,path,exists,complete,accepted_for_promotion,row_count,labels,notes
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,False,False,False,,,target root absent; no verifier-native owner/export rows with controls
+r5_source_panel_recency,/tmp/ict-engine-source-panel-recency-extension,False,False,False,,,required recency extension target root absent or incomplete
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,True,True,False,5032903,"Bear,Bull,Sideways",TSIE root present but policy-quarantined; Crisis absent; accepted rows remain zero
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,True,True,False,,,non-target equivalence root; prior calibration accepted 0/4 labels

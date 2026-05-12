@@ -1,0 +1,21 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "official_public_spoofing_source_control_route_triage_after_085131_v1=public_enforcement_routes_not_row_level_source_control_no_unlock",
+  "official_routes_checked": [
+    "https://www.cftc.gov/solr-search/content?keys=spoofing&page=0",
+    "https://www.cftc.gov/PressRoom/PressReleases?combine=spoofing&field_press_release_types_value=All&prtid=All&year=all",
+    "https://www.cmegroup.com/tools-information/lookups/advisories/disciplinary/CME-08-04912-BC-JEFFREY-COBURN.html",
+    "https://www.cmegroup.com/tools-information/lookups/advisories/disciplinary/COMEX-10-07585-BC-ANDREW-MORAN.html"
+  ],
+  "promotion_allowed": false,
+  "row_level_positive_control_package_acquired": false,
+  "run_id": "20260512T085727+0800-codex-official-public-spoofing-source-control-route-triage-after-085131-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

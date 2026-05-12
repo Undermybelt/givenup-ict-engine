@@ -1,0 +1,18 @@
+{
+  "execution-tree/entry_scan_512_summary.json": {
+    "copied_to": "ict-engine/legacy_entry_scan_512_summary.json",
+    "bytes": 4188
+  },
+  "execution-tree/entry_scan_512.tsv": {
+    "copied_to": "ict-engine/legacy_entry_scan_512.tsv",
+    "bytes": 253811
+  },
+  "path-ranker/autoquant-entry-scorecoverage-summary.json": {
+    "copied_to": "ict-engine/legacy_autoquant-entry-scorecoverage-summary.json",
+    "bytes": 1011
+  },
+  "structural-feedback/feedback_vs_scorecoverage_summary.json": {
+    "copied_to": "ict-engine/legacy_feedback_vs_scorecoverage_summary.json",
+    "bytes": 25297
+  }
+}

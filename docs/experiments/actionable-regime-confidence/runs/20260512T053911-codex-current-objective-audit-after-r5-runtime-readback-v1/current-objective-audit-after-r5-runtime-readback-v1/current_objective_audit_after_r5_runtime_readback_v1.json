@@ -1,0 +1,121 @@
+{
+  "run_id": "20260512T053911-codex-current-objective-audit-after-r5-runtime-readback-v1",
+  "gate_result": "current_objective_audit_after_r5_runtime_readback_v1=not_complete_source_control_roots_absent_runtime_readbacks_nonpromoting",
+  "board_sha256_before_artifact": "e87a03c13c35a9ced1ac131464ac7f5bcf8f6568bd54a791dcaf8f6ab4b1d8d7",
+  "objective_status": {
+    "achieved": false,
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent",
+    "/tmp/ict-engine-source-label-equivalence-intake": "present_non_promoting_sidecar"
+  },
+  "confidence_screen_evidence": {
+    "hgb_051844": {
+      "gate_result": "source_label_hgb_numeric_threshold_screen_v1=all_root_labels_hgb_numeric_accepted_source_control_absent_no_promotion",
+      "accepted_labels": [
+        "Bear",
+        "Bull",
+        "Crisis",
+        "Sideways"
+      ],
+      "source_control_evidence_acquired": false,
+      "promoting": false
+    },
+    "numeric_tree_052522": {
+      "gate_result": "source_label_numeric_tree_threshold_screen_v1=numeric_tree_scored_no_full_acceptance",
+      "accepted_labels": [
+        "Bull",
+        "Crisis",
+        "Sideways"
+      ],
+      "rejected_labels": {
+        "Bear": "heldout_market_wilson95_below_0.95"
+      },
+      "promoting": false
+    },
+    "macro_context_052301": {
+      "gate_result": "source_label_macro_context_rule_miner_v1=aborted_nonterminal_superseded_no_evidence",
+      "accepted_labels": [],
+      "promoting": false
+    }
+  },
+  "source_acquisition_evidence": {
+    "r5_053505": {
+      "gate_result": "r5_current_kaggle_recency_candidate_screen_v1=current_candidates_screened_no_r5_compatible_rows_no_promotion",
+      "compatible_r5_rows_acquired": 0,
+      "promoting": false
+    },
+    "r6_approval_package": {
+      "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+      "approval_present": false,
+      "canonical_merge_allowed_now": false,
+      "downstream_rerun_allowed_now": false,
+      "update_goal": false
+    }
+  },
+  "runtime_readbacks": {
+    "provider_status": {
+      "command": "./target/debug/ict-engine provider-status --agent",
+      "exit": 0,
+      "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+      "ready": [
+        "yfinance",
+        "kraken_cli"
+      ],
+      "blocked_or_unhealthy": [
+        "ibkr: dependencies missing with gateway reachable",
+        "tradingview_mcp: connectivity probe failed",
+        "kraken_public: python3 provider dependencies missing"
+      ]
+    },
+    "auto_quant_status": {
+      "command": "./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-current-readiness-20260512T0538 --output-format agent",
+      "exit": 0,
+      "status": "missing_dependency",
+      "healthy": false,
+      "bootstrap_needed": true,
+      "data_ready": false
+    },
+    "pre_bayes_status": {
+      "command": "./target/debug/ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-board-a-current-readiness-20260512T0538 --refresh --output-format json",
+      "exit": 0,
+      "latest_policy": null,
+      "latest_gate_status": null
+    },
+    "policy_training_status": {
+      "command": "./target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-a-current-readiness-20260512T0538 --output-format json",
+      "exit": 0,
+      "matched_rows": 0,
+      "catboost_ready": false,
+      "bbn_ready": false,
+      "structural_path_ranking_target_export_ready": false
+    },
+    "workflow_status": {
+      "command": "./target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-a-current-readiness-20260512T0538 --phase execution-candidate --output-format json",
+      "exit": 0,
+      "actionable": false,
+      "ready": false,
+      "review_status": "observe",
+      "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready"
+    }
+  },
+  "prompt_to_artifact_checklist": {
+    "every_regime_confidence_95": "diagnostic_only_hgb_4of4_yes_but_not_promoting_source_control_absent",
+    "cross_market_cross_period_validation": "not_complete_required_source_control_roots_absent",
+    "provider_ibkr_tradingview_yfinance_kraken": "readback_complete_but_ibkr_tradingview_kraken_public_not_ready_yfinance_and_kraken_cli_ready",
+    "auto_quant_filter_bbn_catboost_execution_tree": "readback_complete_but_downstream_not_ready_and_not_allowed_for_promotion_without_source_control_unlock",
+    "same_board_writeback": "this_artifact_and_board_section",
+    "multi_agent_safe": "append_only_current_cursor_not_edited"
+  },
+  "next": "Continue only after explicit approval, verifier-native R6 owner/export rows plus source-owned normal controls, source-owned R5 recency-extension rows, native sub-hour source-label rows, or genuinely source-owned cross-timeframe MainRegimeV2 exports unlock a target root."
+}

@@ -1,0 +1,35 @@
+archive,member,columns_or_keys,schema_class,order_lifecycle_hits,control_hits,ohlcv_hits,exact_required_name,verifier_native_hint
+/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,condition.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,metadata.json,customizations|job_id|query|version,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,glbx-mdp3-20100606-20260403.ohlcv-1m.csv,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol,ohlcv_or_bar_context,,,close|high|low|open|ts_event|volume,False,False
+/Users/thrill3r/Downloads/Tomac/GLBX-20260404-NQ.zip,manifest.json,files|job_id,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,condition.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,metadata.json,customizations|job_id|query|version,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,symbology.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,symbology.csv,raw_symbol|instrument_id|date,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,glbx-mdp3-20110101-20251231.ohlcv-1m.csv,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol,ohlcv_or_bar_context,,,close|high|low|open|ts_event|volume,False,False
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025.zip,manifest.json,files|job_id,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,condition.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,metadata.json,customizations|job_id|query|version,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,symbology.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,symbology.csv,raw_symbol|instrument_id|date,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,glbx-mdp3-20150101-20251231.ohlcv-1m.csv,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol,ohlcv_or_bar_context,,,close|high|low|open|ts_event|volume,False,False
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025.zip,manifest.json,files|job_id,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,condition.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,metadata.json,customizations|job_id|query|version,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,symbology.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,symbology.csv,raw_symbol|instrument_id|date,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,glbx-mdp3-20110101-20251231.ohlcv-1m.csv,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol,ohlcv_or_bar_context,,,close|high|low|open|ts_event|volume,False,False
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025.zip,manifest.json,files|job_id,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,condition.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,metadata.json,customizations|job_id|query|version,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,symbology.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,symbology.csv,raw_symbol|instrument_id|date,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,glbx-mdp3-20210106-20260105.ohlcv-1m.csv,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol,ohlcv_or_bar_context,,,close|high|low|open|ts_event|volume,False,False
+/Users/thrill3r/Downloads/Tomac/xau future 2021-2025.zip,manifest.json,files|job_id,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,condition.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,metadata.json,customizations|job_id|query|version,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,symbology.json,,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,symbology.csv,raw_symbol|instrument_id|date,other,,,,False,False
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,glbx-mdp3-20110101-20251231.ohlcv-1m.csv,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol,ohlcv_or_bar_context,,,close|high|low|open|ts_event|volume,False,False
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025.zip,manifest.json,files|job_id,other,,,,False,False

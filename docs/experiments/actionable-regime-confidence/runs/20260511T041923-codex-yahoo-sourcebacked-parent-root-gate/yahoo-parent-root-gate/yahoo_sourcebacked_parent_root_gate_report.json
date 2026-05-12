@@ -1,0 +1,687 @@
+{
+  "acceptance_95": {
+    "coverage_min": 0.03,
+    "ece_max": 0.05,
+    "precision_wilson_lcb_95_min": 0.95,
+    "support_min": 250,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  },
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/checks/yahoo_sourcebacked_parent_root_gate_assertions.out",
+    "feature_sample": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_feature_sample.csv",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.md",
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_summary.csv"
+  },
+  "decision": {
+    "accepted_new_roots_95": [
+      "Bear",
+      "Sideways"
+    ],
+    "accepted_root_classes_95_effective": [
+      "Bull",
+      "Crisis",
+      "Bear",
+      "Sideways"
+    ],
+    "fresh_calibration_rerun": true,
+    "gate_result": "accepted_95",
+    "manipulation_blocker": "Yahoo OHLCV is not direct event/order-lifecycle/L2/L3/MBO/social/on-chain manipulation evidence.",
+    "missing_root_classes_95_effective": [
+      "Manipulation"
+    ],
+    "next_action": "Use the preserved Hyperliquid L4/order-lifecycle source path to acquire explicit direct manipulation positives/negatives; keep Manipulation fail-closed until then.",
+    "retained_prior_accepted_root_classes_95": [
+      "Bull",
+      "Crisis"
+    ],
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "label_policy": {
+    "active_roots_evaluated": [
+      "Bear",
+      "Sideways"
+    ],
+    "bear_definition": "context-normalized trailing drawdown and trailing return are both beyond source-backed bear thresholds",
+    "crisis_reissued": false,
+    "future_target_next_predictors_absent": true,
+    "manipulation_evaluated": false,
+    "observed_current_or_trailing_inputs_only": true,
+    "sideways_definition": "context-normalized trailing absolute return, range, and moving-average gap are all inside source-backed sideways thresholds"
+  },
+  "loop_id": "20260511T041923+0800-codex-yahoo-sourcebacked-parent-root-gate",
+  "objective": "Bounded source-backed observed parent-root gate for missing MainRegimeV2 Bear and Sideways roots.",
+  "panel_profile": {
+    "instruments": [
+      "BNB-USD",
+      "BTC-USD",
+      "EEM",
+      "EFA",
+      "ETH-USD",
+      "GLD",
+      "HYG",
+      "IWM",
+      "QQQ",
+      "SOL-USD",
+      "SPY",
+      "TLT"
+    ],
+    "label_counts": {
+      "Bear": 3460,
+      "Bull": 10030,
+      "Sideways": 13335,
+      "UnknownOrMixed": 13066
+    },
+    "label_counts_by_split": {
+      "calibration": {
+        "Bear": 633,
+        "Bull": 1882,
+        "Sideways": 2653,
+        "UnknownOrMixed": 2809
+      },
+      "test": {
+        "Bear": 524,
+        "Bull": 2278,
+        "Sideways": 2929,
+        "UnknownOrMixed": 2259
+      },
+      "train": {
+        "Bear": 2303,
+        "Bull": 5870,
+        "Sideways": 7753,
+        "UnknownOrMixed": 7998
+      }
+    },
+    "market_contexts": [
+      "crypto",
+      "equity_etf"
+    ],
+    "rows": 39891,
+    "split_counts": {
+      "calibration": 7977,
+      "test": 7990,
+      "train": 23924
+    },
+    "timeframes": [
+      "1d",
+      "1w"
+    ]
+  },
+  "root_reports": {
+    "Bear": {
+      "accepted_95": true,
+      "blockers": [],
+      "calibration": {
+        "coverage": 0.07935314027830011,
+        "ece": 0.0,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9939679511007218,
+        "success": 633,
+        "support": 633,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "IWM",
+          "QQQ",
+          "SOL-USD",
+          "SPY",
+          "TLT"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "root_class": "Bear",
+      "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+      "rule_name": "source_observed_bear_definition",
+      "source_definition_candidate": true,
+      "state": "accepted_95",
+      "test": {
+        "coverage": 0.0655819774718398,
+        "ece": 0.0,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9927223245607182,
+        "success": 524,
+        "support": 524,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "ETH-USD",
+          "IWM",
+          "QQQ",
+          "SOL-USD"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "threshold_selected_on": "train_split_only_candidate_library",
+      "top_train_candidates": [
+        {
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+          "rule_name": "source_observed_bear_definition",
+          "source_definition_candidate": true,
+          "train_coverage": 0.09626316669453269,
+          "train_lcb": 0.9983347538661552,
+          "train_precision": 1.0,
+          "train_support": 2303
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1_train_atom_bear_return_ratio_>=_1",
+          "source_definition_candidate": false,
+          "train_coverage": 0.09626316669453269,
+          "train_lcb": 0.9983347538661552,
+          "train_precision": 1.0,
+          "train_support": 2303
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1.11025420143",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1_train_atom_bear_return_ratio_>=_1.1102542",
+          "source_definition_candidate": false,
+          "train_coverage": 0.09442400936298277,
+          "train_lcb": 0.998302373855791,
+          "train_precision": 1.0,
+          "train_support": 2259
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1.5",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1_train_atom_bear_return_ratio_>=_1.5",
+          "source_definition_candidate": false,
+          "train_coverage": 0.08869754221702056,
+          "train_lcb": 0.9981929702213892,
+          "train_precision": 1.0,
+          "train_support": 2122
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 2",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1_train_atom_bear_return_ratio_>=_2",
+          "source_definition_candidate": false,
+          "train_coverage": 0.080086941982946,
+          "train_lcb": 0.9979990749741106,
+          "train_precision": 1.0,
+          "train_support": 1916
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1.1422839378 AND bear_return_ratio >= 1",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1.1422839_train_atom_bear_return_ratio_>=_1",
+          "source_definition_candidate": false,
+          "train_coverage": 0.07900016719612105,
+          "train_lcb": 0.9979716048548826,
+          "train_precision": 1.0,
+          "train_support": 1890
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1.1422839378 AND bear_return_ratio >= 1.11025420143",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1.1422839_train_atom_bear_return_ratio_>=_1.1102542",
+          "source_definition_candidate": false,
+          "train_coverage": 0.07774619628824611,
+          "train_lcb": 0.997938956233367,
+          "train_precision": 1.0,
+          "train_support": 1860
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1.1422839378 AND bear_return_ratio >= 1.5",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1.1422839_train_atom_bear_return_ratio_>=_1.5",
+          "source_definition_candidate": false,
+          "train_coverage": 0.07431867580672129,
+          "train_lcb": 0.997844107397054,
+          "train_precision": 1.0,
+          "train_support": 1778
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 2.32735912118",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1_train_atom_bear_return_ratio_>=_2.3273591",
+          "source_definition_candidate": false,
+          "train_coverage": 0.07352449423173382,
+          "train_lcb": 0.9978208710706953,
+          "train_precision": 1.0,
+          "train_support": 1759
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1.1422839378 AND bear_return_ratio >= 2",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1.1422839_train_atom_bear_return_ratio_>=_2",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06771442902524662,
+          "train_lcb": 0.9976343387466632,
+          "train_precision": 1.0,
+          "train_support": 1620
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1.1422839378 AND bear_return_ratio >= 2.32735912118",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1.1422839_train_atom_bear_return_ratio_>=_2.3273591",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06324193278715934,
+          "train_lcb": 0.9974674618772085,
+          "train_precision": 1.0,
+          "train_support": 1513
+        },
+        {
+          "rule": "ret_trend <= -0.315472161393 AND bear_drawdown_ratio >= 1",
+          "rule_name": "train_pair_train_atom_ret_trend_<=_-0.31547216_train_atom_bear_drawdown_ratio_>=_1",
+          "source_definition_candidate": false,
+          "train_coverage": 0.048863066376860054,
+          "train_lcb": 0.9967246563533346,
+          "train_precision": 1.0,
+          "train_support": 1169
+        },
+        {
+          "rule": "ret_trend <= -0.315472161393 AND bear_drawdown_ratio >= 1.1422839378",
+          "rule_name": "train_pair_train_atom_ret_trend_<=_-0.31547216_train_atom_bear_drawdown_ratio_>=_1.1422839",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04723290419662264,
+          "train_lcb": 0.9966119965090273,
+          "train_precision": 1.0,
+          "train_support": 1130
+        },
+        {
+          "rule": "bear_return_ratio >= 3.48438709139 AND bear_drawdown_ratio >= 1",
+          "rule_name": "train_pair_train_atom_bear_return_ratio_>=_3.4843871_train_atom_bear_drawdown_ratio_>=_1",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04564454104664772,
+          "train_lcb": 0.9964945122400934,
+          "train_precision": 1.0,
+          "train_support": 1092
+        },
+        {
+          "rule": "bear_return_ratio >= 3.48438709139 AND drawdown_long <= -0.209955481407",
+          "rule_name": "train_pair_train_atom_bear_return_ratio_>=_3.4843871_train_atom_drawdown_long_<=_-0.20995548",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04468316335061027,
+          "train_lcb": 0.9964193602054523,
+          "train_precision": 1.0,
+          "train_support": 1069
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1.41627416138 AND bear_return_ratio >= 1",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1.4162742_train_atom_bear_return_ratio_>=_1",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04418157498746029,
+          "train_lcb": 0.9963788568133786,
+          "train_precision": 1.0,
+          "train_support": 1057
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1.41627416138 AND bear_return_ratio >= 1.11025420143",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1.4162742_train_atom_bear_return_ratio_>=_1.1102542",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04372178565457281,
+          "train_lcb": 0.9963409152987638,
+          "train_precision": 1.0,
+          "train_support": 1046
+        },
+        {
+          "rule": "drawdown_long <= -0.507914013431 AND bear_return_ratio >= 1",
+          "rule_name": "train_pair_train_atom_drawdown_long_<=_-0.50791401_train_atom_bear_return_ratio_>=_1",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04259321183748537,
+          "train_lcb": 0.996244326246686,
+          "train_precision": 1.0,
+          "train_support": 1019
+        },
+        {
+          "rule": "bear_drawdown_ratio >= 1.41627416138 AND bear_return_ratio >= 1.5",
+          "rule_name": "train_pair_train_atom_bear_drawdown_ratio_>=_1.4162742_train_atom_bear_return_ratio_>=_1.5",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04238421668617288,
+          "train_lcb": 0.9962258770387041,
+          "train_precision": 1.0,
+          "train_support": 1014
+        },
+        {
+          "rule": "drawdown_long <= -0.507914013431 AND bear_return_ratio >= 1.11025420143",
+          "rule_name": "train_pair_train_atom_drawdown_long_<=_-0.50791401_train_atom_bear_return_ratio_>=_1.1102542",
+          "source_definition_candidate": false,
+          "train_coverage": 0.0420080254138104,
+          "train_lcb": 0.9961922076188414,
+          "train_precision": 1.0,
+          "train_support": 1005
+        }
+      ],
+      "train": {
+        "coverage": 0.09626316669453269,
+        "ece": 0.0,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9983347538661552,
+        "success": 2303,
+        "support": 2303,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "HYG",
+          "IWM",
+          "QQQ",
+          "SOL-USD",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      }
+    },
+    "Sideways": {
+      "accepted_95": true,
+      "blockers": [],
+      "calibration": {
+        "coverage": 0.062053403535163594,
+        "ece": 0.002020202020202033,
+        "precision": 0.997979797979798,
+        "precision_wilson_lcb_95": 0.9886466535263686,
+        "success": 494,
+        "support": 495,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "GLD",
+          "HYG",
+          "SPY",
+          "TLT"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "root_class": "Sideways",
+      "rule": "sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236",
+      "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.50520486_train_atom_sideways_range_ratio_<=_0.35722219",
+      "source_definition_candidate": false,
+      "state": "accepted_95",
+      "test": {
+        "coverage": 0.10801001251564456,
+        "ece": 0.0,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9955684412857684,
+        "success": 863,
+        "support": 863,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "GLD",
+          "HYG",
+          "IWM",
+          "QQQ",
+          "SOL-USD",
+          "SPY",
+          "TLT"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "threshold_selected_on": "train_split_only_candidate_library",
+      "top_train_candidates": [
+        {
+          "rule": "sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.50520486_train_atom_sideways_range_ratio_<=_0.35722219",
+          "source_definition_candidate": false,
+          "train_coverage": 0.10453937468650727,
+          "train_lcb": 0.9984663864424766,
+          "train_precision": 1.0,
+          "train_support": 2501
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.5 AND sideways_range_ratio <= 0.357222193236",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.5_train_atom_sideways_range_ratio_<=_0.35722219",
+          "source_definition_candidate": false,
+          "train_coverage": 0.10311820765758234,
+          "train_lcb": 0.9984452831617423,
+          "train_precision": 1.0,
+          "train_support": 2467
+        },
+        {
+          "rule": "range_trend <= 0.0528587977056 AND sideways_abs_return_ratio <= 1",
+          "rule_name": "train_pair_train_atom_range_trend_<=_0.052858798_train_atom_sideways_abs_return_ratio_<=_1",
+          "source_definition_candidate": false,
+          "train_coverage": 0.09220866075907039,
+          "train_lcb": 0.9982616586337628,
+          "train_precision": 1.0,
+          "train_support": 2206
+        },
+        {
+          "rule": "range_trend <= 0.0528587977056 AND sideways_abs_return_ratio <= 0.787186081738",
+          "rule_name": "train_pair_train_atom_range_trend_<=_0.052858798_train_atom_sideways_abs_return_ratio_<=_0.78718608",
+          "source_definition_candidate": false,
+          "train_coverage": 0.0842250459789333,
+          "train_lcb": 0.9980971963876063,
+          "train_precision": 1.0,
+          "train_support": 2015
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 1 AND vol_trend <= 0.0834425774129",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_1_train_atom_vol_trend_<=_0.083442577",
+          "source_definition_candidate": false,
+          "train_coverage": 0.07043136599230898,
+          "train_lcb": 0.9977253881347888,
+          "train_precision": 1.0,
+          "train_support": 1685
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.505204858191 AND vol_trend <= 0.106642516594",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.50520486_train_atom_vol_trend_<=_0.10664252",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06679485035947166,
+          "train_lcb": 0.9976018482980691,
+          "train_precision": 1.0,
+          "train_support": 1598
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.505204858191 AND range_trend <= 0.0724456559182",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.50520486_train_atom_range_trend_<=_0.072445656",
+          "source_definition_candidate": false,
+          "train_coverage": 0.0980605249958201,
+          "train_lcb": 0.9975893540045893,
+          "train_precision": 0.9995737425404945,
+          "train_support": 2346
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.5 AND vol_trend <= 0.106642516594",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.5_train_atom_vol_trend_<=_0.10664252",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06587527169369671,
+          "train_lcb": 0.9975684529613739,
+          "train_precision": 1.0,
+          "train_support": 1576
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.5 AND range_trend <= 0.0724456559182",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.5_train_atom_range_trend_<=_0.072445656",
+          "source_definition_candidate": false,
+          "train_coverage": 0.09689015214847016,
+          "train_lcb": 0.9975602846280498,
+          "train_precision": 0.9995685936151855,
+          "train_support": 2318
+        },
+        {
+          "rule": "sideways_range_ratio <= 0.27194408486 AND sideways_abs_return_ratio <= 0.505204858191",
+          "rule_name": "train_pair_train_atom_sideways_range_ratio_<=_0.27194408_train_atom_sideways_abs_return_ratio_<=_0.50520486",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06541548236080923,
+          "train_lcb": 0.9975514040637465,
+          "train_precision": 1.0,
+          "train_support": 1565
+        },
+        {
+          "rule": "range_trend <= 0.0528587977056 AND sideways_abs_return_ratio <= 0.505204858191",
+          "rule_name": "train_pair_train_atom_range_trend_<=_0.052858798_train_atom_sideways_abs_return_ratio_<=_0.50520486",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06524828623975924,
+          "train_lcb": 0.9975451450375112,
+          "train_precision": 1.0,
+          "train_support": 1561
+        },
+        {
+          "rule": "sideways_range_ratio <= 0.27194408486 AND sideways_abs_return_ratio <= 0.5",
+          "rule_name": "train_pair_train_atom_sideways_range_ratio_<=_0.27194408_train_atom_sideways_abs_return_ratio_<=_0.5",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06441230563450928,
+          "train_lcb": 0.9975133637184835,
+          "train_precision": 1.0,
+          "train_support": 1541
+        },
+        {
+          "rule": "range_trend <= 0.0528587977056 AND sideways_abs_return_ratio <= 0.5",
+          "rule_name": "train_pair_train_atom_range_trend_<=_0.052858798_train_atom_sideways_abs_return_ratio_<=_0.5",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06441230563450928,
+          "train_lcb": 0.9975133637184835,
+          "train_precision": 1.0,
+          "train_support": 1541
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.787186081738 AND vol_trend <= 0.0834425774129",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.78718608_train_atom_vol_trend_<=_0.083442577",
+          "source_definition_candidate": false,
+          "train_coverage": 0.06127737836482194,
+          "train_lcb": 0.9973864808359834,
+          "train_precision": 1.0,
+          "train_support": 1466
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.5 AND sideways_range_ratio <= 0.433799124883",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.5_train_atom_sideways_range_ratio_<=_0.43379912",
+          "source_definition_candidate": false,
+          "train_coverage": 0.12665106169536866,
+          "train_lcb": 0.9970928852894569,
+          "train_precision": 0.999009900990099,
+          "train_support": 3030
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.251789890313 AND sideways_range_ratio <= 0.357222193236",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.25178989_train_atom_sideways_range_ratio_<=_0.35722219",
+          "source_definition_candidate": false,
+          "train_coverage": 0.0520815917070724,
+          "train_lcb": 0.996926443115178,
+          "train_precision": 1.0,
+          "train_support": 1246
+        },
+        {
+          "rule": "range_trend <= 0.0380117527973 AND sideways_abs_return_ratio <= 1",
+          "rule_name": "train_pair_train_atom_range_trend_<=_0.038011753_train_atom_sideways_abs_return_ratio_<=_1",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04982444407289751,
+          "train_lcb": 0.9967876520818383,
+          "train_precision": 1.0,
+          "train_support": 1192
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.251789890313 AND range_trend <= 0.0724456559182",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.25178989_train_atom_range_trend_<=_0.072445656",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04861227219528507,
+          "train_lcb": 0.9967078142521808,
+          "train_precision": 1.0,
+          "train_support": 1163
+        },
+        {
+          "rule": "range_trend <= 0.0380117527973 AND sideways_abs_return_ratio <= 0.787186081738",
+          "rule_name": "train_pair_train_atom_range_trend_<=_0.038011753_train_atom_sideways_abs_return_ratio_<=_0.78718608",
+          "source_definition_candidate": false,
+          "train_coverage": 0.048152482862397594,
+          "train_lcb": 0.9966764829281918,
+          "train_precision": 1.0,
+          "train_support": 1152
+        },
+        {
+          "rule": "sideways_abs_return_ratio <= 0.251789890313 AND vol_trend <= 0.128573603579",
+          "rule_name": "train_pair_train_atom_sideways_abs_return_ratio_<=_0.25178989_train_atom_vol_trend_<=_0.1285736",
+          "source_definition_candidate": false,
+          "train_coverage": 0.04811068383213509,
+          "train_lcb": 0.9966736050291986,
+          "train_precision": 1.0,
+          "train_support": 1151
+        }
+      ],
+      "train": {
+        "coverage": 0.10453937468650727,
+        "ece": 0.0,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9984663864424766,
+        "success": 2501,
+        "support": 2501,
+        "validation_instruments": [
+          "BNB-USD",
+          "BTC-USD",
+          "EEM",
+          "EFA",
+          "ETH-USD",
+          "GLD",
+          "HYG",
+          "IWM",
+          "QQQ",
+          "SPY",
+          "TLT"
+        ],
+        "validation_market_contexts": [
+          "crypto",
+          "equity_etf"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      }
+    }
+  },
+  "source_review": {
+    "human_approval_required": false,
+    "risk": "low",
+    "safe_next_action": "absorb",
+    "why": [
+      "Public Yahoo/yfinance market data only; raw cache stays under /private/tmp.",
+      "Public regime-definition and HMM/GMM method references only; no external code executed.",
+      "No credentials, local config, wallet, browser, or destructive operations involved."
+    ]
+  },
+  "sources": {
+    "cache_dir": "/private/tmp/ict-regime-yahoo-sourcebacked-parent-root-gate",
+    "definition_and_method_references": [
+      "https://www.nasdaq.com/glossary/b/bear-market",
+      "https://www.investopedia.com/terms/s/sidewaysmarket.asp",
+      "https://doi.org/10.1016/j.physa.2024.130491",
+      "https://doi.org/10.1007/s10614-024-10746-3"
+    ],
+    "provider": "Yahoo public market data via yfinance",
+    "raw_or_full_feature_table_committed": false
+  }
+}

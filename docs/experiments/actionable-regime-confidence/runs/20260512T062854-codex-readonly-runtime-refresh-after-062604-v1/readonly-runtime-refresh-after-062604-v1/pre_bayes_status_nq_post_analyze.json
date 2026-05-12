@@ -1,0 +1,212 @@
+{
+  "latest_bridge": {
+    "long_entry_bias": [
+      0.1605671141628202,
+      0.4405197777773341,
+      0.3989131080598456
+    ],
+    "long_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "long_signal_probability": 0.5332752619109659,
+    "multi_timeframe_alignment_score": 0.7739,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.8579,
+    "rationale": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.001 short_support=0.079 uncertainty=0.331",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.774 multi_timeframe_entry_alignment_score=0.858",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_entry_bias": [
+      0.0932072092415058,
+      0.3515819134116388,
+      0.5552108773468553
+    ],
+    "short_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_signal_probability": 0.552115353727082
+  },
+  "latest_bridge_diff": {
+    "dominant_long_entry_quality": "medium",
+    "dominant_long_entry_quality_probability": 1.0,
+    "dominant_short_entry_quality": "medium",
+    "dominant_short_entry_quality_probability": 1.0,
+    "long_short_signal_probability_gap": 0.018840091816116122,
+    "multi_timeframe_alignment_score": 0.7739,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.8579,
+    "rationale_summary": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.001 short_support=0.079 uncertainty=0.331",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.774 multi_timeframe_entry_alignment_score=0.858",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": "medium",
+    "selected_entry_quality_probability": 1.0
+  },
+  "latest_canonical_structural_active_regime": "range",
+  "latest_canonical_structural_confidence": 0.573271485537414,
+  "latest_canonical_structural_probabilities": {
+    "range": 0.7614033917049812,
+    "stress": 0.16245626912452055,
+    "transition": 0.07614033917049813,
+    "trend": 0.0
+  },
+  "latest_filtered_assignments": {
+    "__policy_version": "318900600c5e8cf2",
+    "factor_alignment": "mixed",
+    "factor_uncertainty": "low",
+    "liquidity_context": "neutral",
+    "market_regime": "range",
+    "market_state_primary_regime": "RangeConsolidation",
+    "market_state_secondary_regime": "TightRange",
+    "multi_timeframe_resonance": "aligned"
+  },
+  "latest_gate_status": "pass_neutralized",
+  "latest_policy": {
+    "directional_conflict_penalty": 0.2,
+    "favorable_liquidity_bonus": 0.05,
+    "hard_pass_quality_threshold": 0.75,
+    "high_uncertainty_threshold": 0.45,
+    "hostile_liquidity_forces_high_uncertainty": true,
+    "hostile_liquidity_penalty": 0.1,
+    "market_overrides": {
+      "CL": {
+        "favorable_liquidity_bonus": 0.03,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.14
+      },
+      "ES": {
+        "favorable_liquidity_bonus": 0.06,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.06
+      },
+      "GC": {
+        "favorable_liquidity_bonus": 0.07,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.09
+      },
+      "NQ": {
+        "favorable_liquidity_bonus": 0.04,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.1
+      },
+      "YM": {
+        "favorable_liquidity_bonus": 0.05,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.07
+      }
+    },
+    "min_directional_support_gap": 0.08,
+    "min_multi_timeframe_alignment_score": 0.55,
+    "min_multi_timeframe_entry_alignment_score": 0.5,
+    "mixed_alignment_penalty": 0.1,
+    "multi_timeframe_alignment_bonus": 0.05,
+    "multi_timeframe_alignment_penalty": 0.1,
+    "multi_timeframe_direction_conflict_penalty": 0.18,
+    "multi_timeframe_entry_penalty": 0.08,
+    "neutralized_quality_threshold": 0.4,
+    "source": "default",
+    "version": "318900600c5e8cf2"
+  },
+  "latest_policy_diff": {
+    "changed_fields": [
+      "initial_policy"
+    ],
+    "previous_version": null,
+    "summary": "changed_fields=[\"initial_policy\"]"
+  },
+  "latest_policy_lineage": {
+    "changed_fields_union": [
+      "initial_policy"
+    ],
+    "latest_version": "318900600c5e8cf2",
+    "previous_version": null,
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested",
+    "total_versions": 1
+  },
+  "latest_policy_version": "318900600c5e8cf2",
+  "latest_soft_evidence": {
+    "factor_alignment": {
+      "bearish": 0.0,
+      "bullish": 0.0,
+      "mixed": 1.0
+    },
+    "factor_uncertainty": {
+      "high": 0.40668212861564645,
+      "low": 0.5933178713843535
+    },
+    "liquidity_context": {
+      "favorable": 0.0,
+      "hostile": 0.0,
+      "neutral": 1.0
+    },
+    "market_regime": {
+      "range": 0.7614033917049812,
+      "stress": 0.16245626912452055,
+      "transition": 0.07614033917049813,
+      "trend": 0.0
+    },
+    "multi_timeframe_resonance": {
+      "aligned": 0.5933178713843535,
+      "dislocated": 0.0,
+      "mixed": 0.40668212861564645
+    }
+  },
+  "latest_soft_evidence_diff": [
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 1.0,
+      "dominant_soft_state": "range",
+      "entropy": -0.0,
+      "filtered_state": "range",
+      "node": "market_regime"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 1.0,
+      "dominant_soft_state": "neutral",
+      "entropy": -0.0,
+      "filtered_state": "neutral",
+      "node": "liquidity_context"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 1.0,
+      "dominant_soft_state": "mixed",
+      "entropy": -0.0,
+      "filtered_state": "mixed",
+      "node": "factor_alignment"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.5933178713843535,
+      "dominant_soft_state": "low",
+      "entropy": 0.6756281837405564,
+      "filtered_state": "low",
+      "node": "factor_uncertainty"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.5933178713843535,
+      "dominant_soft_state": "aligned",
+      "entropy": 0.6756281837405564,
+      "filtered_state": "aligned",
+      "node": "multi_timeframe_resonance"
+    }
+  ],
+  "latest_structural_feedback": null,
+  "latest_uses_soft_evidence": true
+}

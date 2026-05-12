@@ -1,0 +1,6 @@
+requirement,artifact,status,note
+negative 120630 rows,docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.jsonl,covered,rows=237
+BBN/Pre-Bayes evidence,docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/115700-six-provider-1h-downstream-chain-v1/115700_six_provider_1h_downstream_chain_v1.json,covered,pass_neutralized
+CatBoost/path-ranker hard negatives,docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/115700-six-provider-1h-downstream-chain-v1/115700_six_provider_1h_downstream_chain_v1.json,covered,237
+execution-tree block reason,docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/115700-six-provider-1h-downstream-chain-v1/115700_six_provider_1h_downstream_chain_v1.json,covered,observe
+CPD update candidate,docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json,covered,candidate_only

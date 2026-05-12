@@ -1,0 +1,15 @@
+PASS target_root_r6_owner_export=missing
+PASS target_root_native_subhour=missing
+PASS target_root_source_panel_recency=missing
+PASS numeric_tree_052522_countable=false
+PASS macro_context_052301_countable=false
+PASS hgb_051844_count_once_diagnostic_only=true
+PASS approval_present=false
+PASS canonical_merge_allowed_now=false
+PASS downstream_rerun_allowed_now=false
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective_achieved=false
+PASS trade_usable=false
+PASS update_goal=false

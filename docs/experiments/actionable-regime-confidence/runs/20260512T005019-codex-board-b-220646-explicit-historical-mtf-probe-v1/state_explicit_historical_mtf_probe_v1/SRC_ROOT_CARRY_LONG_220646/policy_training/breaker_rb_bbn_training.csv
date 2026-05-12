@@ -1,0 +1,2 @@
+analyze_run_id,update_run_id,symbol,timeframe,setup_model_id,trend_alignment,breaker_retest_quality,session_quality,entry_quality,evidence_quality_score,gating_status,realized_outcome
+analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z,update:SRC_ROOT_CARRY_LONG_220646:20260511T164934.714Z,SRC_ROOT_CARRY_LONG_220646,5m,breaker_rb_long_v1,aligned,high,medium,medium,0.558445,pass_neutralized,loss

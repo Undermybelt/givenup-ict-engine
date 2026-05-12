@@ -1,0 +1,202 @@
+{
+  "artifact_type": "targeted_calibration_overlap_v1",
+  "decision": {
+    "calibration_preflight": "overlap_ready",
+    "confidence_gate_claimed": false,
+    "full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "next_action": "Run held-out calibration only on overlap-ready windows; abstain no-overlap windows instead of counting them as failures."
+  },
+  "generated_at_utc": "2026-05-11T04:52:04.109836+00:00",
+  "guardrails": {
+    "proxy_promoted_beyond_declared_crosswalk": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_board_modified": false,
+    "targeted_approved_instruments_only": true,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "inputs": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "b802c63a51b770776f2f17a02763d299fbb755cf7d280ad4ece5fde3a0b49de6",
+    "unified_panel": "docs/experiments/actionable-regime-confidence/runs/20260511T124000-codex-unified-source-label-panel-v1/unified-panel/unified_source_label_panel_v1.csv",
+    "unified_panel_sha256": "93abc8e11e85bf32f7e7ce06b69e483e442a34465c6743405c99952b77976d06"
+  },
+  "overlap": {
+    "bar_overlap_by_root": {
+      "Bear": 160,
+      "Bull": 61560,
+      "Crisis": 87,
+      "Sideways": 4049
+    },
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260511T124600-codex-targeted-calibration-overlap-v1/calibration-overlap/targeted_calibration_overlap_v1.csv",
+    "no_bar_overlap_by_root": {
+      "Bear": 73,
+      "Bull": 54,
+      "Crisis": 54
+    },
+    "no_bar_overlap_windows": 181,
+    "overlap_ready_by_root": {
+      "Bear": 11,
+      "Bull": 30,
+      "Crisis": 9,
+      "Sideways": 608
+    },
+    "overlap_ready_windows": 658,
+    "total_label_windows_checked": 839
+  },
+  "provider_fetch": {
+    "cache_dir": "/private/tmp/ict-regime-targeted-calibration-overlap-v1",
+    "downloaded_or_cached_series": [
+      {
+        "bars": 3745,
+        "first_ts": "2026-03-12 04:45:00+00:00",
+        "instrument": "ES=F",
+        "last_ts": "2026-05-11 04:30:00+00:00",
+        "timeframe": "15m"
+      },
+      {
+        "bars": 11358,
+        "first_ts": "2024-05-12 22:00:00+00:00",
+        "instrument": "ES=F",
+        "last_ts": "2026-05-11 04:00:00+00:00",
+        "timeframe": "1h"
+      },
+      {
+        "bars": 6857,
+        "first_ts": "2026-05-04 04:32:00+00:00",
+        "instrument": "ES=F",
+        "last_ts": "2026-05-11 04:41:00+00:00",
+        "timeframe": "1m"
+      },
+      {
+        "bars": 263,
+        "first_ts": "2000-09-01 00:00:00",
+        "instrument": "ES=F",
+        "last_ts": "2026-05-01 00:00:00",
+        "timeframe": "1mo"
+      },
+      {
+        "bars": 1874,
+        "first_ts": "2026-03-12 04:30:00+00:00",
+        "instrument": "ES=F",
+        "last_ts": "2026-05-11 04:30:00+00:00",
+        "timeframe": "30m"
+      },
+      {
+        "bars": 3085,
+        "first_ts": "2024-05-12 20:00:00+00:00",
+        "instrument": "ES=F",
+        "last_ts": "2026-05-11 04:00:00+00:00",
+        "timeframe": "4h"
+      },
+      {
+        "bars": 11181,
+        "first_ts": "2026-03-12 04:50:00+00:00",
+        "instrument": "ES=F",
+        "last_ts": "2026-05-11 04:40:00+00:00",
+        "timeframe": "5m"
+      },
+      {
+        "bars": 1066,
+        "first_ts": "2026-03-12 13:30:00+00:00",
+        "instrument": "SPY",
+        "last_ts": "2026-05-08 19:45:00+00:00",
+        "timeframe": "15m"
+      },
+      {
+        "bars": 3459,
+        "first_ts": "2024-05-13 13:30:00+00:00",
+        "instrument": "SPY",
+        "last_ts": "2026-05-08 19:30:00+00:00",
+        "timeframe": "1h"
+      },
+      {
+        "bars": 1950,
+        "first_ts": "2026-05-04 13:30:00+00:00",
+        "instrument": "SPY",
+        "last_ts": "2026-05-08 19:59:00+00:00",
+        "timeframe": "1m"
+      },
+      {
+        "bars": 401,
+        "first_ts": "1993-01-01 00:00:00",
+        "instrument": "SPY",
+        "last_ts": "2026-05-01 00:00:00",
+        "timeframe": "1mo"
+      },
+      {
+        "bars": 533,
+        "first_ts": "2026-03-12 13:30:00+00:00",
+        "instrument": "SPY",
+        "last_ts": "2026-05-08 19:30:00+00:00",
+        "timeframe": "30m"
+      },
+      {
+        "bars": 1158,
+        "first_ts": "2024-05-13 12:00:00+00:00",
+        "instrument": "SPY",
+        "last_ts": "2026-05-08 16:00:00+00:00",
+        "timeframe": "4h"
+      },
+      {
+        "bars": 3198,
+        "first_ts": "2026-03-12 13:30:00+00:00",
+        "instrument": "SPY",
+        "last_ts": "2026-05-08 19:55:00+00:00",
+        "timeframe": "5m"
+      },
+      {
+        "bars": 1066,
+        "first_ts": "2026-03-12 13:30:00+00:00",
+        "instrument": "^GSPC",
+        "last_ts": "2026-05-08 19:45:00+00:00",
+        "timeframe": "15m"
+      },
+      {
+        "bars": 3460,
+        "first_ts": "2024-05-13 13:30:00+00:00",
+        "instrument": "^GSPC",
+        "last_ts": "2026-05-08 19:30:00+00:00",
+        "timeframe": "1h"
+      },
+      {
+        "bars": 1950,
+        "first_ts": "2026-05-04 13:30:00+00:00",
+        "instrument": "^GSPC",
+        "last_ts": "2026-05-08 19:59:00+00:00",
+        "timeframe": "1m"
+      },
+      {
+        "bars": 497,
+        "first_ts": "1985-01-01 00:00:00",
+        "instrument": "^GSPC",
+        "last_ts": "2026-05-01 00:00:00",
+        "timeframe": "1mo"
+      },
+      {
+        "bars": 533,
+        "first_ts": "2026-03-12 13:30:00+00:00",
+        "instrument": "^GSPC",
+        "last_ts": "2026-05-08 19:30:00+00:00",
+        "timeframe": "30m"
+      },
+      {
+        "bars": 1158,
+        "first_ts": "2024-05-13 12:00:00+00:00",
+        "instrument": "^GSPC",
+        "last_ts": "2026-05-08 16:00:00+00:00",
+        "timeframe": "4h"
+      },
+      {
+        "bars": 3198,
+        "first_ts": "2026-03-12 13:30:00+00:00",
+        "instrument": "^GSPC",
+        "last_ts": "2026-05-08 19:55:00+00:00",
+        "timeframe": "5m"
+      }
+    ],
+    "raw_data_committed": false
+  },
+  "run_id": "20260511T124600+0800-codex-targeted-calibration-overlap-v1"
+}

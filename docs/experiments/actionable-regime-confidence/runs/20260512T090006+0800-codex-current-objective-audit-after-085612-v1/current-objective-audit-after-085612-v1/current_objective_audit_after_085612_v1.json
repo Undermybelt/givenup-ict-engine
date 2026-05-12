@@ -1,0 +1,208 @@
+{
+  "assertion_files": {
+    "085042_current_objective_audit": "docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1/checks/current_objective_audit_after_083703_v1_assertions.out",
+    "085131_dropzone_dispatch_refresh": "docs/experiments/actionable-regime-confidence/runs/20260512T085131+0800-codex-source-control-dropzone-dispatch-refresh-after-083703-v1/checks/source_control_dropzone_dispatch_refresh_after_083703_v1_assertions.out",
+    "085612_public_route_triage": "docs/experiments/actionable-regime-confidence/runs/20260512T085612+0800-codex-public-spoofing-source-control-route-triage-after-085131-v1/checks/public_spoofing_source_control_route_triage_after_085131_v1_assertions.out"
+  },
+  "board_a_sha256_before_artifact": "aa7f2b5cec956edbd32895debc96c393e786b433d3c6c536c4fc588bc8bab40e",
+  "board_b_sha256_before_artifact": "2eb4c1e95e68f729447375bd7a96ea0e30a15f6998892ea3bfd4476176309015",
+  "checklist": [
+    {
+      "evidence": "085042/085131/085612 all keep valid_required_root_unlock=false and source_control_evidence_acquired=false",
+      "gap": "No accepted R6/R5/R3 source-control root; R3 Crisis absent",
+      "requirement": "Every regime reaches >=95 calibrated confidence",
+      "status": "blocked"
+    },
+    {
+      "evidence": "source-control unlock false; explicit selected history false; canonical merge false",
+      "gap": "No qualifying source-owned cross-axis packet after 085612",
+      "requirement": "Validate confidence across other markets / periods / timeframes",
+      "status": "blocked"
+    },
+    {
+      "evidence": "selected_data_autoquant_promotion=false and downstream_promotion_rerun=false in latest assertion set",
+      "gap": "Chain is intentionally not authorized until source/control and selected-history gates unlock",
+      "requirement": "Use real AutoQuant -> filter / Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution tree chain",
+      "status": "blocked"
+    },
+    {
+      "evidence": "Provider surfaces are historically observed in earlier Board A packets, but 085612 is only source/control triage",
+      "gap": "Provider operation is not sufficient without source/control unlock and selected-history gate",
+      "requirement": "Remember IBKR, TradingViewRemix, yfinance, Kraken provider surfaces",
+      "status": "partial"
+    },
+    {
+      "evidence": "085612 official_owner_export_package_hits=0 and verifier_native_positive_control_provenance_packages_acquired=0",
+      "gap": "Need owner-approved/authenticated FINRA / venue-surveillance / CAT-like / CME-Cboe-CFE rows or explicit FLIP approval",
+      "requirement": "Acquire source/control evidence",
+      "status": "blocked"
+    },
+    {
+      "evidence": "latest board gates still include no_explicit_user_selected_history / user_selected_historical_data_missing",
+      "gap": "No explicit HTF/MTF/LTF selection in current evidence",
+      "requirement": "Explicit user-selected historical path before non-promotional factor research",
+      "status": "blocked"
+    },
+    {
+      "evidence": "This audit is append-only and reads current hashes/tails; it does not rewrite cursor or older sections",
+      "gap": "",
+      "requirement": "Do not disturb concurrent work",
+      "status": "pass"
+    },
+    {
+      "evidence": "trade_usable=false, strict_full_objective=false, update_goal=false",
+      "gap": "",
+      "requirement": "Do not make trade claim or complete goal prematurely",
+      "status": "pass"
+    }
+  ],
+  "decision": "Objective is not complete after 085612. The latest route triage adds no owner-export, no matched-control source rows, no FLIP approval, no selected-history gate, and no downstream promotion authorization.",
+  "gate_result": "current_objective_audit_after_085612_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+  "generated_at_local": "2026-05-12T09:02:00.732600+08:00",
+  "next": "Continue source/control acquisition only: obtain owner-approved/authenticated FINRA, venue-surveillance, CAT-like, CME/Cboe/CFE order-lifecycle export rows with positives and matched normal controls, source-owned post-2026-01-30 R5 MainRegimeV2 rows, verifier-native Crisis-capable R3 native-subhour labels, or explicit same-exhibit FLIP-as-control approval before verifier, split calibration, canonical merge, selected-data AutoQuant, Pre-Bayes/BBN, CatBoost/path-ranking, execution-tree promotion, trade claims, or update_goal.",
+  "run_id": "20260512T090006+0800-codex-current-objective-audit-after-085612-v1",
+  "scope": {
+    "mode": "read_only_current_objective_audit_after_085612",
+    "no_downstream_promotion": true,
+    "no_external_requests": true,
+    "no_root_mutation": true,
+    "no_selected_data_autoquant": true,
+    "no_verifier": true,
+    "update_goal": false
+  },
+  "source_files": {
+    "085042_json": "docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1/current-objective-audit-after-083703-v1/current_objective_audit_after_083703_v1.json",
+    "085042_report": "docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1/current-objective-audit-after-083703-v1/current_objective_audit_after_083703_v1.md",
+    "085131_report": "docs/experiments/actionable-regime-confidence/runs/20260512T085131+0800-codex-source-control-dropzone-dispatch-refresh-after-083703-v1/source-control-dropzone-dispatch-refresh-after-083703-v1/source_control_dropzone_dispatch_refresh_after_083703_v1.md",
+    "085612_report": "docs/experiments/actionable-regime-confidence/runs/20260512T085612+0800-codex-public-spoofing-source-control-route-triage-after-085131-v1/public-spoofing-source-control-route-triage-after-085131-v1/public_spoofing_source_control_route_triage_after_085131_v1.md"
+  },
+  "status": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "merged_assertions": {
+      "085042_current_objective_audit.accepted_rows_added": "0",
+      "085042_current_objective_audit.canonical_merge": "false",
+      "085042_current_objective_audit.counted_latest_roots": "083545,083559,083618,083703",
+      "085042_current_objective_audit.downstream_promotion_rerun": "false",
+      "085042_current_objective_audit.explicit_user_selected_history": "false",
+      "085042_current_objective_audit.gate_result": "current_objective_audit_after_083703_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+      "085042_current_objective_audit.promotion_allowed": "false",
+      "085042_current_objective_audit.r3_native_subhour_crisis_present": "false",
+      "085042_current_objective_audit.r3_native_subhour_required_files_present": "true",
+      "085042_current_objective_audit.r3_native_subhour_rows": "5032903",
+      "085042_current_objective_audit.r3_native_subhour_unlock": "false",
+      "085042_current_objective_audit.selected_data_autoquant_promotion": "false",
+      "085042_current_objective_audit.source_control_evidence_acquired": "false",
+      "085042_current_objective_audit.strict_full_objective": "false",
+      "085042_current_objective_audit.trade_usable": "false",
+      "085042_current_objective_audit.uncounted_empty_roots": "083711",
+      "085042_current_objective_audit.update_goal": "false",
+      "085042_current_objective_audit.valid_required_root_unlock": "false",
+      "085131_dropzone_dispatch_refresh.approved_dispatch_channel_present": "false",
+      "085131_dropzone_dispatch_refresh.canonical_merge": "false",
+      "085131_dropzone_dispatch_refresh.current_r6_required_package_complete": "false",
+      "085131_dropzone_dispatch_refresh.dispatch_ticket_export_license_provenance_present": "false",
+      "085131_dropzone_dispatch_refresh.downstream_promotion_rerun": "false",
+      "085131_dropzone_dispatch_refresh.gate_result": "source_control_dropzone_dispatch_refresh_after_083703_v1=no_new_owner_export_or_approved_dispatch_no_unlock",
+      "085131_dropzone_dispatch_refresh.legacy_r6_required_package_complete": "false",
+      "085131_dropzone_dispatch_refresh.owner_data_cli_ready": "false",
+      "085131_dropzone_dispatch_refresh.owner_data_env_names_present_count": "0",
+      "085131_dropzone_dispatch_refresh.post_083703_dispatch_candidate_files": "0",
+      "085131_dropzone_dispatch_refresh.post_083703_dropzone_candidates": "0",
+      "085131_dropzone_dispatch_refresh.promotion_allowed": "false",
+      "085131_dropzone_dispatch_refresh.r3_native_subhour_root_present": "true",
+      "085131_dropzone_dispatch_refresh.r5_recency_root_present": "false",
+      "085131_dropzone_dispatch_refresh.selected_data_autoquant_promotion": "false",
+      "085131_dropzone_dispatch_refresh.source_control_evidence_acquired": "false",
+      "085131_dropzone_dispatch_refresh.strict_full_objective": "false",
+      "085131_dropzone_dispatch_refresh.trade_usable": "false",
+      "085131_dropzone_dispatch_refresh.update_goal": "false",
+      "085131_dropzone_dispatch_refresh.valid_required_root_unlock": "false",
+      "085612_public_route_triage.accepted_rows_added": "0",
+      "085612_public_route_triage.canonical_merge": "false",
+      "085612_public_route_triage.downstream_promotion_rerun": "false",
+      "085612_public_route_triage.explicit_flip_as_control_approval_acquired": "false",
+      "085612_public_route_triage.gate_result": "public_spoofing_source_control_route_triage_after_085131_v1=no_public_owner_export_or_matched_control_unlock",
+      "085612_public_route_triage.official_owner_export_package_hits": "0",
+      "085612_public_route_triage.promotion_allowed": "false",
+      "085612_public_route_triage.public_academic_methodology_hits": "4",
+      "085612_public_route_triage.public_simulated_package_hits": "1",
+      "085612_public_route_triage.selected_data_autoquant_promotion": "false",
+      "085612_public_route_triage.source_control_evidence_acquired": "false",
+      "085612_public_route_triage.strict_full_objective": "false",
+      "085612_public_route_triage.trade_usable": "false",
+      "085612_public_route_triage.update_goal": "false",
+      "085612_public_route_triage.valid_required_root_unlock": "false",
+      "085612_public_route_triage.verifier_native_positive_control_provenance_packages_acquired": "0"
+    },
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "target_roots": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": []
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": []
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "name": "r5_recency_tmp",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": []
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "name": "r5_recency_private_tmp",
+      "path": "/private/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": []
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "name": "r3_native_subhour_tmp",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "sample_files": [
+        {
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "size": 2400
+        },
+        {
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size": 2786719721
+        }
+      ]
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "sample_files": [
+        {
+          "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "size": 2400
+        },
+        {
+          "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size": 2786719721
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "artifact_type": "direct_manipulation_web_source_screen_v1",
+  "candidate_count": 5,
+  "candidates": [
+    {
+      "candidate_type": "limit_order_book_simulator",
+      "disposition": "blocked_simulator_no_source_rows",
+      "matched_negative_controls": false,
+      "positive_labels": false,
+      "provenance_rows": false,
+      "reason": "Repository provides simulated LOB machinery/sample data, not real direct manipulation positives with matched normal controls.",
+      "ref": "kpetridis24/lobsim",
+      "source_family": "github",
+      "synthetic_or_simulated": true,
+      "url": "https://github.com/kpetridis24/lobsim"
+    },
+    {
+      "candidate_type": "agent_based_spoofing_model",
+      "disposition": "blocked_paper_simulation_no_row_export",
+      "matched_negative_controls": false,
+      "positive_labels": false,
+      "provenance_rows": false,
+      "reason": "Useful model/background source; it describes an agent-based spoofing simulation, not a real row dataset with positives and matched normal controls.",
+      "ref": "Spoofing the Limit Order Book: A Strategic Agent-Based Analysis",
+      "source_family": "paper",
+      "synthetic_or_simulated": true,
+      "url": "https://www.mdpi.com/2073-4336/12/2/46"
+    },
+    {
+      "candidate_type": "level3_spoofability_method",
+      "disposition": "blocked_method_only_no_public_matched_rows",
+      "matched_negative_controls": false,
+      "positive_labels": false,
+      "provenance_rows": false,
+      "reason": "Uses Level-3 data and computes spoofability probabilities, but the public record is a method/paper, not an export with accepted positives plus matched normal controls.",
+      "ref": "arXiv 2504.15908 spoofability",
+      "source_family": "paper",
+      "synthetic_or_simulated": false,
+      "url": "https://ideas.repec.org/p/arx/papers/2504.15908.html"
+    },
+    {
+      "candidate_type": "raw_tick_orderbook",
+      "disposition": "blocked_raw_lob_no_direct_labels",
+      "matched_negative_controls": false,
+      "positive_labels": false,
+      "provenance_rows": true,
+      "reason": "Tick/orderbook rows may support future feature work, but no source-owned direct Manipulation labels or matched control groups were exposed in the public dataset page.",
+      "ref": "marvingozo/polymarket-tick-level-orderbook-dataset",
+      "source_family": "kaggle",
+      "synthetic_or_simulated": false,
+      "url": "https://www.kaggle.com/datasets/marvingozo/polymarket-tick-level-orderbook-dataset"
+    },
+    {
+      "candidate_type": "synthetic_financial_fraud_sequences",
+      "disposition": "blocked_synthetic_not_source_owned_market_rows",
+      "matched_negative_controls": true,
+      "positive_labels": true,
+      "provenance_rows": true,
+      "reason": "Dataset has fraudulent/benign spoofing-like sequences, but the card states it is 100% synthetic and contains no real transactions or order books.",
+      "ref": "solsticestudioai/dark-pool-pack",
+      "source_family": "huggingface",
+      "synthetic_or_simulated": true,
+      "url": "https://huggingface.co/datasets/solsticestudioai/dark-pool-pack"
+    }
+  ],
+  "current_cursor_edited": false,
+  "decision": {
+    "accepted_rows_added": 0,
+    "full_objective_achieved": false,
+    "gate_result": "direct_manipulation_web_source_screen_v1=no_ready_real_matched_negative_source",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T10:43:54.344155+00:00",
+  "next": "Acquire real direct Manipulation positive rows plus matched normal controls, then run the external intake verifier before any confidence claim.",
+  "ready_source_candidate_count": 0,
+  "run_id": "20260511T184212+0800-codex-direct-manipulation-web-source-screen-v1"
+}

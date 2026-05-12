@@ -1,0 +1,14 @@
+PASS gate_result=split_gap_matrix_ready_no_rows_acquired_no_promotion
+PASS pooled_lcb=0.952479911333
+PASS total_additional_pair_rows=3717
+PASS family_count=3
+PASS rows_acquired=false
+PASS active_owner_export_root_complete=false
+PASS explicit_approval_present=false
+PASS flip_controls_accepted=false
+PASS canonical_merge_allowed=false
+PASS downstream_promotion_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS source_roots_mutated=false

@@ -1,0 +1,12 @@
+requirement,evidence,status,notes
+Use the named board as the live contract without disrupting concurrent work,board sha captured before audit; append-only packet generated under new run root,pass,d4bdd2ad485f47bedb3f3ca41a9ea6d00883ff3dcd16301a0a9986be9806d89c  docs/plans/2026-05-10-actionable-regime-confidence-todo.md
+Every active regime has calibrated confidence >=95%,live R6 verifier is schema_ready_unscored; no accepted per-regime calibration packet added,blocked,live_verifier_status=schema_ready_unscored
+Each regime has its own qualifying conditions,source/control gates absent; no canonical split-calibrated accepted rows,blocked,accepted_rows_added=0
+Cross-market/cycle/timeframe validation passes,owner-export root and R3/R5 source roots are absent; downstream validation is blocked,blocked,"{'/tmp/ict-engine-board-a-r6-owner-export-v1': False, '/tmp/ict-engine-native-subhour-source-label-intake': False, '/tmp/ict-engine-source-panel-recency-extension': False, '/private/tmp/ict-engine-direct-manipulation-row-intake': True, '/private/tmp/ict-engine-source-label-equivalence-intake': True, '/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid': True}"
+"Operate providers: IBKR, TradingViewRemix/TradingView, yfinance, Kraken",provider-status --agent executed,partial,yfinance=True kraken_cli=True ibkr=configured_runtime_unhealthy tradingview_mcp=configured_runtime_unhealthy
+Operate AutoQuant locally,AutoQuant status and oracle run executed in isolated /tmp workspace,pass,3 backtests succeeded with absolute threaded-resolver shim
+Run filter / Pre-Bayes readback,pre-bayes-status --refresh executed,blocked,latest_gate_status=None
+Run BBN / policy-training readback,policy-training-status executed,blocked,"entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0"
+Run CatBoost / path-ranking readback,policy-training-status structural path-ranking fields inspected,blocked,structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0
+Run execution-tree / workflow readback,workflow-status --refresh executed,blocked,no workflow phase snapshots available
+Do not promote proxy/runtime/local-cache evidence into Board A acceptance,source/control roots and approval package inspected,pass,owner_export=False approval_present=False canonical_merge=False

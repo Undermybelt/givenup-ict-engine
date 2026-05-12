@@ -1,0 +1,107 @@
+{
+  "accepted_rows_added": 0,
+  "active_request_package": "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_package_v1.json",
+  "approval_files": {
+    "owner_approval_reference.md": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/owner_approval_reference.md",
+      "size_bytes": 0
+    },
+    "owner_approval_reference.txt": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/owner_approval_reference.txt",
+      "size_bytes": 0
+    },
+    "validation_contract_approval.json": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/validation_contract_approval.json",
+      "size_bytes": 0
+    }
+  },
+  "approval_present": false,
+  "board_sha256_at_start": "409a61d4b10139a8868740700455b8ffd31f51e0938896d7597282eb23c21eb0",
+  "direct_verifier": {
+    "cmd": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-board-a-r6-owner-export-v1",
+    "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002004-codex-r6-owner-export-target-readback-v1/command-output/direct_manipulation_row_intake_verifier_owner_export_target.exit",
+    "name": "direct_manipulation_row_intake_verifier_owner_export_target",
+    "parsed": {
+      "missing_files": [
+        "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002004-codex-r6-owner-export-target-readback-v1/command-output/direct_manipulation_row_intake_verifier_owner_export_target.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002004-codex-r6-owner-export-target-readback-v1/command-output/direct_manipulation_row_intake_verifier_owner_export_target.stdout.txt",
+    "timed_out": false
+  },
+  "external_requests_sent": false,
+  "files_ready_for_calibration": false,
+  "gate_result": "r6_owner_export_target_readback_v1=target_root_missing_request_verifier_names_mismatch_no_chain_rerun",
+  "generated_at_utc": "2026-05-11T16:27:49.674267+00:00",
+  "missing_required_files": [
+    "direct_manipulation_positive_rows.csv",
+    "direct_manipulation_matched_controls.csv",
+    "direct_manipulation_provenance.json"
+  ],
+  "missing_verifier_expected_files": [
+    "positive_spoofing_layering_rows.csv",
+    "matched_negative_normal_activity_rows.csv",
+    "provenance_manifest.json"
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Place owner/user-approved R6 export files under /tmp/ict-engine-board-a-r6-owner-export-v1 or record explicit split-contract approval, then rerun the direct verifier and downstream provider/Auto-Quant/BBN/CatBoost/execution-tree chain.",
+  "raw_data_committed": false,
+  "request_field_rows": 20,
+  "request_gate_result": null,
+  "request_matrix_rows": 3,
+  "request_vs_verifier_filename_mismatch": true,
+  "required_files": {
+    "direct_manipulation_matched_controls.csv": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_matched_controls.csv",
+      "size_bytes": 0
+    },
+    "direct_manipulation_positive_rows.csv": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_positive_rows.csv",
+      "size_bytes": 0
+    },
+    "direct_manipulation_provenance.json": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/direct_manipulation_provenance.json",
+      "size_bytes": 0
+    }
+  },
+  "run_id": "20260512T002004-codex-r6-owner-export-target-readback-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "should_rerun_provider_autoquant_bbn_catboost_execution_tree": false,
+  "strict_full_objective_achieved": false,
+  "target_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "target_root_exists": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_expected_files": {
+    "matched_negative_normal_activity_rows.csv": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 0
+    },
+    "positive_spoofing_layering_rows.csv": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "size_bytes": 0
+    },
+    "provenance_manifest.json": {
+      "exists": false,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json",
+      "size_bytes": 0
+    }
+  },
+  "verifier_files_ready": false
+}

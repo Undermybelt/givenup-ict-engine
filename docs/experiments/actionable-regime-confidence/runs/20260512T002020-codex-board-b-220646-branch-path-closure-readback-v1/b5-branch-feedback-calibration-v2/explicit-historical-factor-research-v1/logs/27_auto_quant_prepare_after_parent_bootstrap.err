@@ -1,0 +1,10 @@
+Error: auto-quant prepare failed with status exit status: 2 while running uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant/prepare.py.
+stdout:
+
+stderr:
+Using CPython 3.11.11
+Creating virtual environment at: .venv
+Installed 158 packages in 2.40s
+error: Failed to spawn: `docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/auto-quant/.deps/auto-quant/prepare.py`
+  Caused by: No such file or directory (os error 2)
+

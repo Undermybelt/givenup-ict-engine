@@ -1,0 +1,16 @@
+feature,feature_bin,rows,wins,losses,win_rate,loss_rate,avg_pnl,wilson_win_lower_95,meets_min_rows,meets_95_gate
+provider_rv_median_24h,high,78,48,30,0.615385,0.384615,23.0331,0.504426,True,False
+provider_rv_median_24h,low,80,21,59,0.2625,0.7375,-8.658247,0.178573,True,False
+provider_rv_median_24h,mid,79,12,67,0.151899,0.848101,-16.302794,0.089082,True,False
+provider_return_dispersion_24h,high,76,36,40,0.473684,0.526316,6.143126,0.365419,True,False
+provider_return_dispersion_24h,low,79,8,71,0.101266,0.898734,-14.896473,0.052211,True,False
+provider_return_dispersion_24h,mid,82,37,45,0.45122,0.54878,6.413963,0.348111,True,False
+provider_range_pos_median_24h,high,81,42,39,0.518519,0.481481,13.619044,0.411355,True,False
+provider_range_pos_median_24h,low,80,14,66,0.175,0.825,-9.647738,0.107205,True,False
+provider_range_pos_median_24h,mid,76,25,51,0.328947,0.671053,-6.780556,0.233791,True,False
+provider_return_median_abs_1h,high,80,32,48,0.4,0.6,8.956794,0.299617,True,False
+provider_return_median_abs_1h,low,82,18,64,0.219512,0.780488,-11.040633,0.143607,True,False
+provider_return_median_abs_1h,mid,75,31,44,0.413333,0.586667,0.063862,0.308776,True,False
+provider_return_dispersion_4h,high,79,35,44,0.443038,0.556962,10.04565,0.338676,True,False
+provider_return_dispersion_4h,low,80,21,59,0.2625,0.7375,-7.40606,0.178573,True,False
+provider_return_dispersion_4h,mid,78,25,53,0.320513,0.679487,-4.93744,0.22748,True,False

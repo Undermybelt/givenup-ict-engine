@@ -1,0 +1,33 @@
+{
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/provider-csv",
+  "providers": [
+    "yfinance",
+    "kraken",
+    "binance",
+    "bybit",
+    "tvr",
+    "ibkr_aggtrades"
+  ],
+  "source_counts": {
+    "yfinance": 983,
+    "kraken": 721,
+    "binance": 985,
+    "bybit": 985,
+    "tvr": 720,
+    "ibkr_aggtrades": 784
+  },
+  "strict_overlap_1h_rows": 572,
+  "strict_overlap_requires_provider_count": 6,
+  "rows": {
+    "1h": 572,
+    "4h": 147,
+    "1d": 26
+  },
+  "first_timestamp": "2026-04-12T07:00:00Z",
+  "last_timestamp": "2026-05-11T23:00:00Z",
+  "outputs": {
+    "1h": "docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_1h.json",
+    "4h": "docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_4h.json",
+    "1d": "docs/experiments/actionable-regime-confidence/runs/20260512T131541+0800-codex-131500-prebayes-bbn-linkage-probe-v1/provider-data-json/eth_six_provider_consensus_1d.json"
+  }
+}

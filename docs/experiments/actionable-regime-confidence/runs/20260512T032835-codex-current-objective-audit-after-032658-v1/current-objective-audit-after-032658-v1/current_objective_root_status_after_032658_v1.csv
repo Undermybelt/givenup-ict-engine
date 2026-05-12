@@ -1,0 +1,9 @@
+root,status,evidence,promotion_decision
+/tmp/ict-engine-board-a-r6-owner-export-v1,absent,live ls readback,blocked
+/tmp/ict-engine-native-subhour-source-label-intake,absent,live ls readback,blocked
+/tmp/ict-engine-source-panel-recency-extension,absent,live ls readback,blocked
+/private/tmp/ict-engine-direct-manipulation-row-intake,present,legacy V56/direct sidecar,non_promoting
+/private/tmp/ict-engine-source-label-equivalence-intake,present,daily source-label sidecar,non_promoting
+/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,present_non_approving,approval false flip false merge false rerun false,blocked
+20260512T032536-codex-r6-owner-export-targeted-dispatch-addendum-v1,present_non_promoting,dispatch addendum ready rows not acquired,non_promoting
+20260512T032658-codex-autoquant-bootstrap-prepare-readback-after-032145-v1,present_non_promoting,bootstrap succeeded prepare failed DNS source controls absent,non_promoting

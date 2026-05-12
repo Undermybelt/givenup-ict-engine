@@ -1,0 +1,255 @@
+{
+  "artifacts": {
+    "rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1_rows.csv",
+    "ticker_summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1_tickers.csv"
+  },
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "e793d306a7799b5d48d404f6a179944b6cb5912174633cb6331303e9d9d1ce18",
+  "decision": {
+    "accepted_95_strict_ticker_root_rows": 41,
+    "accepted_by_root": {
+      "Bear": 4,
+      "Bull": 27,
+      "Crisis": 3,
+      "Sideways": 7
+    },
+    "accepted_by_ticker_count": {
+      "AAPL": 1,
+      "ABBV": 1,
+      "AMD": 1,
+      "AMZN": 1,
+      "BAC": 1,
+      "CAT": 1,
+      "COP": 1,
+      "CSCO": 1,
+      "CVX": 2,
+      "DIS": 1,
+      "GE": 1,
+      "GOOGL": 1,
+      "GS": 1,
+      "INTC": 1,
+      "JNJ": 1,
+      "JPM": 1,
+      "MCD": 2,
+      "META": 1,
+      "MS": 1,
+      "MSFT": 2,
+      "NFLX": 1,
+      "NKE": 1,
+      "NVDA": 1,
+      "PFE": 2,
+      "SBUX": 1,
+      "T": 1,
+      "TSLA": 1,
+      "VZ": 2,
+      "WFC": 1,
+      "WMT": 1,
+      "XOM": 1,
+      "^DJI": 1,
+      "^GSPC": 1,
+      "^IXIC": 1,
+      "^RUT": 2
+    },
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_gate": "exact_1h_source_universe_expansion_v1=accepted41_strict_ticker_root_rows_full_goal_still_blocked",
+    "accepted_ticker_count": 35,
+    "blocked_by_reason": {
+      "calibration_support_below_73": 101,
+      "calibration_wilson95_below_0_95": 101,
+      "heldout_time_support_below_73": 103,
+      "heldout_time_wilson95_below_0_95": 103
+    },
+    "blocked_strict_ticker_root_rows": 115,
+    "full_objective_achieved": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "scoped_slots": 156,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "gate": {
+    "calibration_split": "2024",
+    "heldout_time_split": "2025",
+    "min_support_per_ticker_root_split": 73,
+    "min_wilson95_lcb": 0.95,
+    "threshold_selection": "fixed_before_evaluation"
+  },
+  "generated_at_utc": "2026-05-11T06:21:52.138150+00:00",
+  "next_action": "Use strict accepted exact-source ticker/root rows as the next positive supply. For full objective, repeat this attachment for additional provider-native timeframes only when source labels and provider session coverage exist; do not promote pooled panel context as per-ticker support.",
+  "policy": {
+    "consumer_scope": "intraday_parent_day_context_not_intraday_micro_regime",
+    "not_allowed": [
+      "no ETF/futures/index crosswalk",
+      "no OHLCV-derived label",
+      "no HMM state, generated label, strategy prediction, or future return label",
+      "no intraday transition-timing claim"
+    ],
+    "panel_context_gate": "reported separately; not used to accept ticker/root rows",
+    "policy_id": "exact_same_ticker_daily_parent_context_to_1h_session_date_v1",
+    "strict_ticker_root_gate": "same ticker/root must pass 2024 calibration and 2025 heldout-time support/Wilson gates"
+  },
+  "pooled_panel_context": {
+    "Bear": {
+      "accepted_95_panel_context": true,
+      "calibration_2024": {
+        "positives": 1846,
+        "precision": 1.0,
+        "support": 1846,
+        "wilson95_lcb": 0.9979233578
+      },
+      "heldout_time_2025": {
+        "positives": 2053,
+        "precision": 1.0,
+        "support": 2053,
+        "wilson95_lcb": 0.9981323505
+      }
+    },
+    "Bull": {
+      "accepted_95_panel_context": true,
+      "calibration_2024": {
+        "positives": 5262,
+        "precision": 1.0,
+        "support": 5262,
+        "wilson95_lcb": 0.9992704948
+      },
+      "heldout_time_2025": {
+        "positives": 4538,
+        "precision": 1.0,
+        "support": 4538,
+        "wilson95_lcb": 0.9991542068
+      }
+    },
+    "Crisis": {
+      "accepted_95_panel_context": true,
+      "calibration_2024": {
+        "positives": 562,
+        "precision": 1.0,
+        "support": 562,
+        "wilson95_lcb": 0.9932110686
+      },
+      "heldout_time_2025": {
+        "positives": 1025,
+        "precision": 1.0,
+        "support": 1025,
+        "wilson95_lcb": 0.9962662286
+      }
+    },
+    "Sideways": {
+      "accepted_95_panel_context": true,
+      "calibration_2024": {
+        "positives": 2158,
+        "precision": 1.0,
+        "support": 2158,
+        "wilson95_lcb": 0.9982230617
+      },
+      "heldout_time_2025": {
+        "positives": 2134,
+        "precision": 1.0,
+        "support": 2134,
+        "wilson95_lcb": 0.9982031133
+      }
+    }
+  },
+  "provider": {
+    "downloaded_tickers": [
+      "AAPL",
+      "ABBV",
+      "AMD",
+      "AMZN",
+      "BA",
+      "BAC",
+      "CAT",
+      "COP",
+      "CSCO",
+      "CVX",
+      "DIS",
+      "GE",
+      "GOOGL",
+      "GS",
+      "HD",
+      "INTC",
+      "JNJ",
+      "JPM",
+      "MCD",
+      "META",
+      "MS",
+      "MSFT",
+      "NFLX",
+      "NKE",
+      "NVDA",
+      "PFE",
+      "SBUX",
+      "T",
+      "TMO",
+      "TSLA",
+      "UNH",
+      "VZ",
+      "WFC",
+      "WMT",
+      "XOM",
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^RUT"
+    ],
+    "name": "yfinance",
+    "period": "730d",
+    "raw_intraday_data_committed": false,
+    "ready_ticker_count": 39,
+    "timeframe": "1h",
+    "version": "1.2.0"
+  },
+  "run_id": "20260511T141910+0800-codex-exact-1h-source-universe-expansion-v1",
+  "source_panel": {
+    "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "raw_source_data_committed": false,
+    "source_labels": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "source_ticker_count": 39,
+    "source_tickers": [
+      "AAPL",
+      "ABBV",
+      "AMD",
+      "AMZN",
+      "BA",
+      "BAC",
+      "CAT",
+      "COP",
+      "CSCO",
+      "CVX",
+      "DIS",
+      "GE",
+      "GOOGL",
+      "GS",
+      "HD",
+      "INTC",
+      "JNJ",
+      "JPM",
+      "MCD",
+      "META",
+      "MS",
+      "MSFT",
+      "NFLX",
+      "NKE",
+      "NVDA",
+      "PFE",
+      "SBUX",
+      "T",
+      "TMO",
+      "TSLA",
+      "UNH",
+      "VZ",
+      "WFC",
+      "WMT",
+      "XOM",
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^RUT"
+    ]
+  }
+}

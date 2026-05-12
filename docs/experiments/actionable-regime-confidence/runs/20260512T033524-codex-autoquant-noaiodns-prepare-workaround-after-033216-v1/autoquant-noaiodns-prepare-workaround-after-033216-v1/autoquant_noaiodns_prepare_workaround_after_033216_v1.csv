@@ -1,0 +1,8 @@
+field,value
+gate_result,autoquant_noaiodns_prepare_workaround_after_033216_v1=prepare_succeeded_but_noaiodns_uninstall_failed_state_already_data_ready_no_promotion
+uninstall_exit_code,2
+aiodns_still_importable,True
+prepare_exit_code,0
+status_after,dependency_ready_seed_required
+data_ready,True
+update_goal,False

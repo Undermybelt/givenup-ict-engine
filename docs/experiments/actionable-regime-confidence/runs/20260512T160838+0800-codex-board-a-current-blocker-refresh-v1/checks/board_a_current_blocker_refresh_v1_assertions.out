@@ -1,0 +1,10 @@
+pass:board_hash_captured:e9f63d9dba25e7435e1a951c6b6001d1aa6b662c1fe4b4cafc687b14d85d1773
+pass:cursor_observed:20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1
+fail_closed:owner_files_all_present_false
+fail_closed:direct_verifier_exit_2
+fail_closed:same_root_six_provider_aq_authority_false
+fail_closed:accepted_95_contexts_added_0
+fail_closed:strict_full_objective_achieved_false
+promotion_allowed=false
+trade_usable=false
+update_goal=false

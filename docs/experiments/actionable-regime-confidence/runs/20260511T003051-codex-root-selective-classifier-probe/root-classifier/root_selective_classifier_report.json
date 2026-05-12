@@ -1,0 +1,2400 @@
+{
+  "schema_version": "main-regime-v2-root-selective-classifier/v1",
+  "loop_id": "20260511T003051+0800-codex-root-selective-classifier-probe",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T003051-codex-root-selective-classifier-probe",
+  "objective": "Train current-feature classifiers for corrected MainRegimeV2 root labels, select thresholds on calibration only, and audit on held-out test.",
+  "input_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/cross_timeframe_regime_features.csv",
+  "blocked_predictor_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "predictor_features_used": [
+    "timeframe_minutes",
+    "hour_utc",
+    "ret1",
+    "ret4",
+    "ret16",
+    "range_pct",
+    "ma16",
+    "stretch16",
+    "vol16",
+    "volume_mean16",
+    "range_mean16",
+    "ma32",
+    "stretch32",
+    "vol32",
+    "volume_mean32",
+    "range_mean32",
+    "ma64",
+    "stretch64",
+    "vol64",
+    "volume_mean64",
+    "range_mean64",
+    "ma128",
+    "stretch128",
+    "vol128",
+    "volume_mean128",
+    "range_mean128",
+    "ma64_slope16",
+    "ma32_slope8",
+    "vol_rank",
+    "range_rank",
+    "volume_rank",
+    "vol_ratio32_128",
+    "range_ratio32_128",
+    "volume_ratio32_128",
+    "drawdown64",
+    "rally64",
+    "trend_base",
+    "trend_structural_next_base",
+    "stress_base",
+    "reversal_base",
+    "thin_base",
+    "thin_soft_next_base",
+    "trend_persistence16",
+    "stress_persistence16",
+    "reversal_persistence16",
+    "thin_persistence16"
+  ],
+  "target_thresholds": {
+    "bull_future_ret_8h_train_q65": 0.002627823501128002,
+    "bear_future_ret_8h_train_q35": -0.0012866327948062978,
+    "sideways_future_absret_8h_train_q35": 0.0024075619457415427,
+    "crisis_future_absret_8h_train_q90": 0.016060696914542708
+  },
+  "target_counts": {
+    "train": {
+      "Crisis": 11254,
+      "Bull": 6468,
+      "Bear": 5739,
+      "UnknownOrMixed": 4224,
+      "Sideways": 3314
+    },
+    "calibration": {
+      "Crisis": 5436,
+      "Bull": 3258,
+      "Bear": 3131,
+      "UnknownOrMixed": 1988,
+      "Sideways": 1687
+    },
+    "test": {
+      "Crisis": 6169,
+      "Bull": 3208,
+      "Bear": 2846,
+      "UnknownOrMixed": 1700,
+      "Sideways": 1492
+    }
+  },
+  "acceptance_95": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  },
+  "selected_by_root": {
+    "Bull": {
+      "model": "hgb",
+      "rule": "hgb_p_Bull >= 0.41975047025",
+      "threshold": 0.4197504702503045,
+      "train": {
+        "support": 3026,
+        "success": 2500,
+        "precision": 0.8261731658955717,
+        "precision_wilson_lcb_95": 0.8122595513312948,
+        "coverage": 0.09761605213071389,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 861,
+        "success": 324,
+        "precision": 0.37630662020905925,
+        "precision_wilson_lcb_95": 0.34456372545463315,
+        "coverage": 0.05554838709677419,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 1074,
+        "success": 407,
+        "precision": 0.3789571694599628,
+        "precision_wilson_lcb_95": 0.35042349430560166,
+        "coverage": 0.06967239701589362,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "ece": 0.0026505492509035222,
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95"
+      ]
+    },
+    "Bear": {
+      "model": "hgb",
+      "rule": "hgb_p_Bear >= 0.400649610262",
+      "threshold": 0.40064961026155876,
+      "train": {
+        "support": 2310,
+        "success": 1922,
+        "precision": 0.832034632034632,
+        "precision_wilson_lcb_95": 0.8162412408387381,
+        "coverage": 0.07451853285589857,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 1901,
+        "success": 668,
+        "precision": 0.35139400315623354,
+        "precision_wilson_lcb_95": 0.33025251064364697,
+        "coverage": 0.12264516129032257,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 783,
+        "success": 293,
+        "precision": 0.37420178799489145,
+        "precision_wilson_lcb_95": 0.3409980851598,
+        "coverage": 0.050794680506000646,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "ece": 0.02280778483865792,
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95"
+      ]
+    },
+    "Sideways": {
+      "model": "et",
+      "rule": "et_p_Sideways >= 0.491133193184",
+      "threshold": 0.4911331931836709,
+      "train": {
+        "support": 1631,
+        "success": 991,
+        "precision": 0.6076026977314531,
+        "precision_wilson_lcb_95": 0.5836793334249419,
+        "coverage": 0.05261460047098294,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 471,
+        "success": 258,
+        "precision": 0.5477707006369427,
+        "precision_wilson_lcb_95": 0.5026161320878098,
+        "coverage": 0.03038709677419355,
+        "validation_instruments": [
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "QQQ"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 449,
+        "success": 278,
+        "precision": 0.6191536748329621,
+        "precision_wilson_lcb_95": 0.5734065999267554,
+        "coverage": 0.029127473240350307,
+        "validation_instruments": [
+          "ES=F",
+          "NQ",
+          "NQ=F"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "ece": 0.07138297419601947,
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "test_coverage_below_0_03",
+        "ece_above_0_05"
+      ]
+    },
+    "Crisis": {
+      "model": "rf",
+      "rule": "rf_p_Crisis >= 0.929129890382",
+      "threshold": 0.9291298903824294,
+      "train": {
+        "support": 2939,
+        "success": 2939,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9986946429583624,
+        "coverage": 0.09480950998419303,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 1381,
+        "success": 1381,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9972260659902792,
+        "coverage": 0.08909677419354839,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 1375,
+        "success": 1375,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9972139952739892,
+        "coverage": 0.08919883230619527,
+        "validation_instruments": [
+          "BTC-USD",
+          "ES=F",
+          "NQ",
+          "NQ=F",
+          "PF_XBTUSD",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "IBKR_US_ETF",
+          "Kraken_crypto",
+          "yfinance_ETF",
+          "yfinance_US_ETF",
+          "yfinance_crypto",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "ece": 0.0,
+      "accepted_95": true,
+      "blockers": []
+    },
+    "UnknownOrMixed": {
+      "model": "rf",
+      "rule": "rf_p_UnknownOrMixed >= 0.58437387827",
+      "threshold": 0.5843738782702594,
+      "train": {
+        "support": 1449,
+        "success": 1109,
+        "precision": 0.7653554175293306,
+        "precision_wilson_lcb_95": 0.7428515655757895,
+        "coverage": 0.04674344333688184,
+        "validation_instruments": [
+          "ES=F",
+          "NQ",
+          "NQ=F"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "calibration": {
+        "support": 471,
+        "success": 314,
+        "precision": 0.6666666666666666,
+        "precision_wilson_lcb_95": 0.6228967409425462,
+        "coverage": 0.03038709677419355,
+        "validation_instruments": [
+          "ES=F",
+          "NQ",
+          "NQ=F"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "test": {
+        "support": 378,
+        "success": 249,
+        "precision": 0.6587301587301587,
+        "precision_wilson_lcb_95": 0.6095500409713583,
+        "coverage": 0.02452156989944859,
+        "validation_instruments": [
+          "ES=F",
+          "NQ",
+          "NQ=F"
+        ],
+        "validation_market_contexts": [
+          "CME_futures_local",
+          "yfinance_futures"
+        ],
+        "validation_timeframes": [
+          "15m",
+          "1h"
+        ]
+      },
+      "ece": 0.007936507936507908,
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "test_coverage_below_0_03"
+      ]
+    },
+    "Manipulation": {
+      "model": "required_input_gate",
+      "rule": "direct_manipulation_inputs_present == true",
+      "accepted_95": false,
+      "train": {
+        "support": 0,
+        "success": 0,
+        "precision": 0.0,
+        "precision_wilson_lcb_95": 0.0,
+        "coverage": 0.0,
+        "validation_instruments": [],
+        "validation_market_contexts": [],
+        "validation_timeframes": []
+      },
+      "calibration": {
+        "support": 0,
+        "success": 0,
+        "precision": 0.0,
+        "precision_wilson_lcb_95": 0.0,
+        "coverage": 0.0,
+        "validation_instruments": [],
+        "validation_market_contexts": [],
+        "validation_timeframes": []
+      },
+      "test": {
+        "support": 0,
+        "success": 0,
+        "precision": 0.0,
+        "precision_wilson_lcb_95": 0.0,
+        "coverage": 0.0,
+        "validation_instruments": [],
+        "validation_market_contexts": [],
+        "validation_timeframes": []
+      },
+      "ece": 1.0,
+      "blockers": [
+        "missing_required_inputs",
+        "proxy_only_low_confidence"
+      ]
+    }
+  },
+  "per_model": {
+    "hgb": {
+      "Bull": {
+        "model": "hgb",
+        "rule": "hgb_p_Bull >= 0.41975047025",
+        "threshold": 0.4197504702503045,
+        "train": {
+          "support": 3026,
+          "success": 2500,
+          "precision": 0.8261731658955717,
+          "precision_wilson_lcb_95": 0.8122595513312948,
+          "coverage": 0.09761605213071389,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 861,
+          "success": 324,
+          "precision": 0.37630662020905925,
+          "precision_wilson_lcb_95": 0.34456372545463315,
+          "coverage": 0.05554838709677419,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 1074,
+          "success": 407,
+          "precision": 0.3789571694599628,
+          "precision_wilson_lcb_95": 0.35042349430560166,
+          "coverage": 0.06967239701589362,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.0026505492509035222,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95"
+        ]
+      },
+      "Bear": {
+        "model": "hgb",
+        "rule": "hgb_p_Bear >= 0.400649610262",
+        "threshold": 0.40064961026155876,
+        "train": {
+          "support": 2310,
+          "success": 1922,
+          "precision": 0.832034632034632,
+          "precision_wilson_lcb_95": 0.8162412408387381,
+          "coverage": 0.07451853285589857,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 1901,
+          "success": 668,
+          "precision": 0.35139400315623354,
+          "precision_wilson_lcb_95": 0.33025251064364697,
+          "coverage": 0.12264516129032257,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 783,
+          "success": 293,
+          "precision": 0.37420178799489145,
+          "precision_wilson_lcb_95": 0.3409980851598,
+          "coverage": 0.050794680506000646,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.02280778483865792,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95"
+        ]
+      },
+      "Sideways": {
+        "model": "hgb",
+        "rule": "hgb_p_Sideways >= 0.505942091421",
+        "threshold": 0.5059420914214847,
+        "train": {
+          "support": 1599,
+          "success": 1289,
+          "precision": 0.8061288305190745,
+          "precision_wilson_lcb_95": 0.7860276483082137,
+          "coverage": 0.051582309106745376,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 471,
+          "success": 257,
+          "precision": 0.5456475583864119,
+          "precision_wilson_lcb_95": 0.5004923936314587,
+          "coverage": 0.03038709677419355,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 468,
+          "success": 277,
+          "precision": 0.5918803418803419,
+          "precision_wilson_lcb_95": 0.5467793533354853,
+          "coverage": 0.030360038923126824,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.04623278349393001,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95"
+        ]
+      },
+      "Crisis": {
+        "model": "hgb",
+        "rule": "hgb_p_Crisis >= 0.985426097295",
+        "threshold": 0.9854260972953499,
+        "train": {
+          "support": 3302,
+          "success": 3302,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9988379785090888,
+          "coverage": 0.10651956514726281,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 1771,
+          "success": 1769,
+          "precision": 0.9988706945228685,
+          "precision_wilson_lcb_95": 0.9958916330422134,
+          "coverage": 0.11425806451612903,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 1816,
+          "success": 1815,
+          "precision": 0.9994493392070485,
+          "precision_wilson_lcb_95": 0.9968873393934302,
+          "coverage": 0.11780733052221862,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.0005786446841800075,
+        "accepted_95": true,
+        "blockers": []
+      },
+      "UnknownOrMixed": {
+        "model": "hgb",
+        "rule": "hgb_p_UnknownOrMixed >= 0.624349993721",
+        "threshold": 0.6243499937209379,
+        "train": {
+          "support": 1368,
+          "success": 1198,
+          "precision": 0.8757309941520468,
+          "precision_wilson_lcb_95": 0.8571904566174089,
+          "coverage": 0.044130455821155525,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 471,
+          "success": 320,
+          "precision": 0.6794055201698513,
+          "precision_wilson_lcb_95": 0.6359515721987716,
+          "coverage": 0.03038709677419355,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 379,
+          "success": 242,
+          "precision": 0.6385224274406333,
+          "precision_wilson_lcb_95": 0.5889877894000645,
+          "coverage": 0.02458644177748946,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_US_ETF",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.040883092729218085,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_03"
+        ]
+      }
+    },
+    "rf": {
+      "Bull": {
+        "model": "rf",
+        "rule": "rf_p_Bull >= 0.300016931041",
+        "threshold": 0.30001693104064414,
+        "train": {
+          "support": 2340,
+          "success": 1495,
+          "precision": 0.6388888888888888,
+          "precision_wilson_lcb_95": 0.6192145150627258,
+          "coverage": 0.07548630600987129,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 861,
+          "success": 324,
+          "precision": 0.37630662020905925,
+          "precision_wilson_lcb_95": 0.34456372545463315,
+          "coverage": 0.05554838709677419,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 1136,
+          "success": 357,
+          "precision": 0.3142605633802817,
+          "precision_wilson_lcb_95": 0.2879297888867944,
+          "coverage": 0.0736944534544275,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.06204605682877756,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ]
+      },
+      "Bear": {
+        "model": "rf",
+        "rule": "rf_p_Bear >= 0.351551444616",
+        "threshold": 0.3515514446158453,
+        "train": {
+          "support": 841,
+          "success": 476,
+          "precision": 0.5659928656361475,
+          "precision_wilson_lcb_95": 0.5322708400585922,
+          "coverage": 0.02712990741636827,
+          "validation_instruments": [
+            "BTC-USD",
+            "NQ",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 536,
+          "success": 240,
+          "precision": 0.44776119402985076,
+          "precision_wilson_lcb_95": 0.4061842003306214,
+          "coverage": 0.03458064516129032,
+          "validation_instruments": [
+            "BTC-USD",
+            "PF_XBTUSD",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 297,
+          "success": 100,
+          "precision": 0.3367003367003367,
+          "precision_wilson_lcb_95": 0.28534302132709033,
+          "coverage": 0.01926694777813818,
+          "validation_instruments": [
+            "BTC-USD",
+            "PF_XBTUSD"
+          ],
+          "validation_market_contexts": [
+            "Kraken_crypto",
+            "yfinance_crypto"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ]
+        },
+        "ece": 0.11106085732951404,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_03",
+          "ece_above_0_05",
+          "validation_timeframes_below_2"
+        ]
+      },
+      "Sideways": {
+        "model": "rf",
+        "rule": "rf_p_Sideways >= 0.532808618763",
+        "threshold": 0.5328086187633675,
+        "train": {
+          "support": 1834,
+          "success": 1229,
+          "precision": 0.6701199563794984,
+          "precision_wilson_lcb_95": 0.6482658901898756,
+          "coverage": 0.05916319881286493,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 471,
+          "success": 258,
+          "precision": 0.5477707006369427,
+          "precision_wilson_lcb_95": 0.5026161320878098,
+          "coverage": 0.03038709677419355,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 500,
+          "success": 299,
+          "precision": 0.598,
+          "precision_wilson_lcb_95": 0.5544343695956807,
+          "coverage": 0.032435939020434644,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.05022929936305731,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ]
+      },
+      "Crisis": {
+        "model": "rf",
+        "rule": "rf_p_Crisis >= 0.929129890382",
+        "threshold": 0.9291298903824294,
+        "train": {
+          "support": 2939,
+          "success": 2939,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9986946429583624,
+          "coverage": 0.09480950998419303,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 1381,
+          "success": 1381,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9972260659902792,
+          "coverage": 0.08909677419354839,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 1375,
+          "success": 1375,
+          "precision": 1.0,
+          "precision_wilson_lcb_95": 0.9972139952739892,
+          "coverage": 0.08919883230619527,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.0,
+        "accepted_95": true,
+        "blockers": []
+      },
+      "UnknownOrMixed": {
+        "model": "rf",
+        "rule": "rf_p_UnknownOrMixed >= 0.58437387827",
+        "threshold": 0.5843738782702594,
+        "train": {
+          "support": 1449,
+          "success": 1109,
+          "precision": 0.7653554175293306,
+          "precision_wilson_lcb_95": 0.7428515655757895,
+          "coverage": 0.04674344333688184,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 471,
+          "success": 314,
+          "precision": 0.6666666666666666,
+          "precision_wilson_lcb_95": 0.6228967409425462,
+          "coverage": 0.03038709677419355,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 378,
+          "success": 249,
+          "precision": 0.6587301587301587,
+          "precision_wilson_lcb_95": 0.6095500409713583,
+          "coverage": 0.02452156989944859,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.007936507936507908,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_03"
+        ]
+      }
+    },
+    "et": {
+      "Bull": {
+        "model": "et",
+        "rule": "et_p_Bull >= 0.280076986159",
+        "threshold": 0.2800769861588893,
+        "train": {
+          "support": 1911,
+          "success": 1105,
+          "precision": 0.5782312925170068,
+          "precision_wilson_lcb_95": 0.5559545799546549,
+          "coverage": 0.06164714990806155,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 601,
+          "success": 214,
+          "precision": 0.3560732113144759,
+          "precision_wilson_lcb_95": 0.3188157684034004,
+          "coverage": 0.0387741935483871,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 898,
+          "success": 242,
+          "precision": 0.26948775055679286,
+          "precision_wilson_lcb_95": 0.2414951460741301,
+          "coverage": 0.05825494648070061,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.08658546075768303,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ]
+      },
+      "Bear": {
+        "model": "et",
+        "rule": "et_p_Bear >= 0.315718711663",
+        "threshold": 0.3157187116634546,
+        "train": {
+          "support": 2226,
+          "success": 961,
+          "precision": 0.43171608265947886,
+          "precision_wilson_lcb_95": 0.41127481260187054,
+          "coverage": 0.071808768024775,
+          "validation_instruments": [
+            "BTC-USD",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "Kraken_crypto",
+            "yfinance_US_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 991,
+          "success": 416,
+          "precision": 0.41977800201816345,
+          "precision_wilson_lcb_95": 0.38941872535957867,
+          "coverage": 0.06393548387096774,
+          "validation_instruments": [
+            "BTC-USD",
+            "PF_XBTUSD",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 925,
+          "success": 326,
+          "precision": 0.35243243243243244,
+          "precision_wilson_lcb_95": 0.3223140878613876,
+          "coverage": 0.06000648718780409,
+          "validation_instruments": [
+            "BTC-USD",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "Kraken_crypto",
+            "yfinance_US_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ]
+        },
+        "ece": 0.06734556958573101,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05",
+          "validation_timeframes_below_2"
+        ]
+      },
+      "Sideways": {
+        "model": "et",
+        "rule": "et_p_Sideways >= 0.491133193184",
+        "threshold": 0.4911331931836709,
+        "train": {
+          "support": 1631,
+          "success": 991,
+          "precision": 0.6076026977314531,
+          "precision_wilson_lcb_95": 0.5836793334249419,
+          "coverage": 0.05261460047098294,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 471,
+          "success": 258,
+          "precision": 0.5477707006369427,
+          "precision_wilson_lcb_95": 0.5026161320878098,
+          "coverage": 0.03038709677419355,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 449,
+          "success": 278,
+          "precision": 0.6191536748329621,
+          "precision_wilson_lcb_95": 0.5734065999267554,
+          "coverage": 0.029127473240350307,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.07138297419601947,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_03",
+          "ece_above_0_05"
+        ]
+      },
+      "Crisis": {
+        "model": "et",
+        "rule": "et_p_Crisis >= 0.832959419098",
+        "threshold": 0.8329594190977618,
+        "train": {
+          "support": 3283,
+          "success": 3274,
+          "precision": 0.9972586049345111,
+          "precision_wilson_lcb_95": 0.994797826739884,
+          "coverage": 0.10590664214974677,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 1706,
+          "success": 1701,
+          "precision": 0.9970691676436108,
+          "precision_wilson_lcb_95": 0.9931573352816565,
+          "coverage": 0.11006451612903226,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 1819,
+          "success": 1809,
+          "precision": 0.994502473886751,
+          "precision_wilson_lcb_95": 0.9899096111889325,
+          "coverage": 0.11800194615634123,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.002566693756859806,
+        "accepted_95": true,
+        "blockers": []
+      },
+      "UnknownOrMixed": {
+        "model": "et",
+        "rule": "et_p_UnknownOrMixed >= 0.528177631579",
+        "threshold": 0.5281776315788896,
+        "train": {
+          "support": 1266,
+          "success": 915,
+          "precision": 0.7227488151658767,
+          "precision_wilson_lcb_95": 0.6974448578842425,
+          "coverage": 0.040840027097648314,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 471,
+          "success": 293,
+          "precision": 0.6220806794055201,
+          "precision_wilson_lcb_95": 0.5774708035028076,
+          "coverage": 0.03038709677419355,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 374,
+          "success": 235,
+          "precision": 0.6283422459893048,
+          "precision_wilson_lcb_95": 0.5782936882706653,
+          "coverage": 0.02426208238728511,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.006261566583784628,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "test_coverage_below_0_03"
+        ]
+      }
+    },
+    "lr": {
+      "Bull": {
+        "model": "lr",
+        "rule": "lr_p_Bull >= 0.344243321806",
+        "threshold": 0.34424332180633554,
+        "train": {
+          "support": 2158,
+          "success": 810,
+          "precision": 0.3753475440222428,
+          "precision_wilson_lcb_95": 0.35515647052147503,
+          "coverage": 0.06961514887577018,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 731,
+          "success": 274,
+          "precision": 0.3748290013679891,
+          "precision_wilson_lcb_95": 0.3404772918078284,
+          "coverage": 0.047161290322580644,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 1144,
+          "success": 346,
+          "precision": 0.30244755244755245,
+          "precision_wilson_lcb_95": 0.2765286959886446,
+          "coverage": 0.07421342847875446,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.07238144892043663,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ]
+      },
+      "Bear": {
+        "model": "lr",
+        "rule": "lr_p_Bear >= 0.374920450008",
+        "threshold": 0.3749204500079292,
+        "train": {
+          "support": 1452,
+          "success": 525,
+          "precision": 0.3615702479338843,
+          "precision_wilson_lcb_95": 0.33725288137443926,
+          "coverage": 0.04684022065227911,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 666,
+          "success": 293,
+          "precision": 0.43993993993993996,
+          "precision_wilson_lcb_95": 0.402692474448494,
+          "coverage": 0.04296774193548387,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 690,
+          "success": 216,
+          "precision": 0.3130434782608696,
+          "precision_wilson_lcb_95": 0.27955781305525945,
+          "coverage": 0.0447615958481998,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "1h"
+          ]
+        },
+        "ece": 0.12689646167907037,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05",
+          "validation_timeframes_below_2"
+        ]
+      },
+      "Sideways": {
+        "model": "lr",
+        "rule": "lr_p_Sideways >= 0.629056787242",
+        "threshold": 0.629056787242069,
+        "train": {
+          "support": 1085,
+          "success": 686,
+          "precision": 0.632258064516129,
+          "precision_wilson_lcb_95": 0.6031468944406676,
+          "coverage": 0.03500112906867964,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 536,
+          "success": 288,
+          "precision": 0.5373134328358209,
+          "precision_wilson_lcb_95": 0.4949867854918904,
+          "coverage": 0.03458064516129032,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 467,
+          "success": 280,
+          "precision": 0.5995717344753747,
+          "precision_wilson_lcb_95": 0.5544937091845686,
+          "coverage": 0.030295167045085954,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.062258301639553815,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95",
+          "ece_above_0_05"
+        ]
+      },
+      "Crisis": {
+        "model": "lr",
+        "rule": "lr_p_Crisis >= 0.969808749435",
+        "threshold": 0.9698087494353089,
+        "train": {
+          "support": 1234,
+          "success": 1230,
+          "precision": 0.9967585089141004,
+          "precision_wilson_lcb_95": 0.9916950365548175,
+          "coverage": 0.03980773573341075,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 601,
+          "success": 600,
+          "precision": 0.9983361064891847,
+          "precision_wilson_lcb_95": 0.9906359437829056,
+          "coverage": 0.0387741935483871,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 607,
+          "success": 606,
+          "precision": 0.9983525535420099,
+          "precision_wilson_lcb_95": 0.9907279035213493,
+          "coverage": 0.039377229970807656,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "PF_XBTUSD",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "Kraken_crypto",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 1.644705282521919e-05,
+        "accepted_95": true,
+        "blockers": []
+      },
+      "UnknownOrMixed": {
+        "model": "lr",
+        "rule": "lr_p_UnknownOrMixed >= 0.62961832284",
+        "threshold": 0.6296183228398384,
+        "train": {
+          "support": 1230,
+          "success": 841,
+          "precision": 0.683739837398374,
+          "precision_wilson_lcb_95": 0.6572145368253826,
+          "coverage": 0.03967869931288106,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "calibration": {
+          "support": 471,
+          "success": 289,
+          "precision": 0.613588110403397,
+          "precision_wilson_lcb_95": 0.5688632390885795,
+          "coverage": 0.03038709677419355,
+          "validation_instruments": [
+            "BTC-USD",
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_ETF",
+            "yfinance_US_ETF",
+            "yfinance_crypto",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "test": {
+          "support": 482,
+          "success": 272,
+          "precision": 0.5643153526970954,
+          "precision_wilson_lcb_95": 0.5197131020020008,
+          "coverage": 0.03126824521569899,
+          "validation_instruments": [
+            "ES=F",
+            "NQ",
+            "NQ=F",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "IBKR_US_ETF",
+            "yfinance_ETF",
+            "yfinance_futures"
+          ],
+          "validation_timeframes": [
+            "15m",
+            "1h"
+          ]
+        },
+        "ece": 0.04927275770630157,
+        "accepted_95": false,
+        "blockers": [
+          "calibration_wilson95_below_0_95",
+          "test_wilson95_below_0_95"
+        ]
+      }
+    }
+  },
+  "decision": {
+    "board_state": "blocked",
+    "accepted_95_root_classes": [
+      "Crisis"
+    ],
+    "blocked_root_classes": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ],
+    "accepted_95_all_main_regime_v2_roots": false,
+    "thresholds_relaxed": false,
+    "predictor_leakage_guard": {
+      "future_prefix_blocked": true,
+      "target_prefix_blocked": true,
+      "future_fields_used_only_for_target": [
+        "_future_ret_8h",
+        "_future_absret_8h"
+      ]
+    },
+    "trade_usable": false,
+    "why_not_complete": [
+      "Selective classifiers still did not make every MainRegimeV2 root class pass the unchanged 95% gate.",
+      "Bull, Bear, and Sideways remain far below 95% held-out Wilson LCB.",
+      "Manipulation remains fail-closed because direct order-flow/L2/order-lifecycle or event/social inputs are not in the source table."
+    ],
+    "next_action": "Stop repeating current OHLCV-derived model searches; ingest materially new signed-direction, sideways, and direct manipulation inputs."
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "run_id": "20260512T015639-codex-public-source-candidate-readback-v1",
+  "gate_result": "public_source_candidate_readback_v1=candidates_found_no_acceptance_no_intake_mutation",
+  "board_hash_before_artifact": "e9d69fcc5dd1e91c94d4ef6450df549d36897d54801645b8b5a11d3fdef0d5a1",
+  "external_requests_sent": true,
+  "external_vendor_contact_sent": false,
+  "raw_dataset_files_downloaded": false,
+  "raw_data_committed": false,
+  "candidate_count": 2,
+  "prior_board_history_checked": true,
+  "prior_board_history": [
+    {
+      "line_ref": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md:2405",
+      "summary": "BTC HMM dataset already rejected as proxy_only"
+    },
+    {
+      "line_ref": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md:2406",
+      "summary": "IDX TSIE dataset already kept as sidecar_only"
+    },
+    {
+      "line_ref": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md:3424",
+      "summary": "IDX TSIE raw parquet was already downloaded to private tmp and not committed"
+    },
+    {
+      "line_ref": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md:6485",
+      "summary": "IDX TSIE still lacks source-owner approved MainRegimeV2 crosswalk"
+    }
+  ],
+  "ready_acceptance_source_count": 0,
+  "candidates": [
+    {
+      "id": "sujinwo/tsie-market-regime-dataset",
+      "url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+      "api_url": "https://huggingface.co/api/datasets/sujinwo/tsie-market-regime-dataset",
+      "license": "mit",
+      "format": "parquet",
+      "market_family": "indonesia_equity_idx",
+      "timeframe_evidence": "hourly rows observed from group_id suffix IDX_DLY_AALI_60 and first-row timestamps",
+      "source_label_fields": [
+        "regime_label"
+      ],
+      "published_label_semantics": [
+        "STRONG SELL",
+        "WEAK SELL",
+        "BEAR TRAP",
+        "FLAT / NOISE",
+        "BULL TRAP",
+        "WEAK BUY",
+        "STRONG BUY"
+      ],
+      "candidate_use": "Bull/Bear/Sideways source-owned mapping candidate after abstain rules and calibration",
+      "acceptance_status": "known_prior_sidecar_only_do_not_redownload_without_new_crosswalk"
+    },
+    {
+      "id": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "url": "https://huggingface.co/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "api_url": "https://huggingface.co/api/datasets/akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "license": "cc-by-4.0",
+      "format": "csv_and_parquet",
+      "market_family": "crypto_btc",
+      "timeframe_evidence": "5m and 15m fields observed in first-row API",
+      "source_label_fields": [
+        "state",
+        "regime"
+      ],
+      "published_label_semantics": [
+        "Choppy High-Vol",
+        "Range",
+        "Squeeze",
+        "Strong Trend",
+        "Volatility Spike",
+        "Weak Trend"
+      ],
+      "candidate_use": "crypto multi-timeframe exploratory source-label candidate",
+      "acceptance_status": "known_prior_proxy_only_hmm_posthoc_single_asset_no_mainregime_mapping"
+    }
+  ],
+  "source_roots": [
+    {
+      "id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false
+    },
+    {
+      "id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    {
+      "id": "r5_recency_extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    },
+    {
+      "id": "source_label_equivalence",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "acceptance_status": "confidence_blocked_daily_only"
+    }
+  ],
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

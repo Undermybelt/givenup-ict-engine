@@ -1,0 +1,9 @@
+PASS kaggle_files_seen
+PASS local_source_tail_2026_01_30
+PASS upstream_csv_size_matches_local
+PASS upstream_parquet_size_matches_local
+PASS accepted_rows_added_zero
+PASS new_confidence_gate_false
+PASS full_objective_false
+PASS no_raw_data_commit
+ALL_ASSERTIONS_PASS

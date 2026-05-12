@@ -1,0 +1,13 @@
+goal_achieved=false
+ibkr_manifest_cells=90
+attempted_count=1
+ok_count=0
+failed_count=1
+accepted_full_cycle_full_universe=false
+raw_ohlcv_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=ibkr_ready_lane_blocked_by_operator_runtime_fetch
+status.fetch_failed=1
+status.not_attempted_after_operator_fetch_blocker=89

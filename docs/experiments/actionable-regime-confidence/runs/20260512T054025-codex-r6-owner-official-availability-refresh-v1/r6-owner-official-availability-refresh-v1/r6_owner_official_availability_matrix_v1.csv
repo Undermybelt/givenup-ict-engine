@@ -1,0 +1,5 @@
+owner,official_surface,local_evidence,fit_for_r6,rows_acquired,target_root_mutated
+Cboe DataShop,https://datashop.cboe.com/mdr-quotes-trades-data,/tmp/cboe_mdr_quotes_trades.html,date_fit_for_2011_2013_vix_trade_quote_context_not_full_order_lifecycle_controls,0,false
+Cboe DataShop,https://datashop.cboe.com/cfe-futures-trades,/tmp/cboe_cfe_futures_trades.html and /tmp/cfe_futures_trades_sample_226.zip,schema_fit_for_order_side_order_linkage_but_historical_availability_starts_2018_03,0,false
+Cboe DataShop,https://datashop.cboe.com/cboe-us-futures-multicast-pitch,/tmp/cboe_futures_pitch.html,depth_order_book_fit_but_historical_availability_starts_2018_08,0,false
+CME Group,https://www.cmegroup.com/market-data/datamine-historical-data/market-depth.html,official product surface located by web search and local curl blocked,licensed_owner_export_route_requires_ticket_export_license_provenance,0,false

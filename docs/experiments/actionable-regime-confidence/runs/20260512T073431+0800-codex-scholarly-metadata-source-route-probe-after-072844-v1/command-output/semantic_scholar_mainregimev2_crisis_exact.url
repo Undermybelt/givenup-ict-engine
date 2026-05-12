@@ -1,0 +1,1 @@
+https://api.semanticscholar.org/graph/v1/paper/search?query=%22MainRegimeV2%22+%22Crisis%22&limit=10&fields=title,year,venue,url,externalIds

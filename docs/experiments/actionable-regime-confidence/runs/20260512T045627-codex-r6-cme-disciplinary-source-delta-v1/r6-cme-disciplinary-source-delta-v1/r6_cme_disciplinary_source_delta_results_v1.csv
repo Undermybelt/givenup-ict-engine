@@ -1,0 +1,9 @@
+surface,identifier,official_context,accepted_rows_added,disposition
+cme_group_disciplinary,COMEX 11-08380-BC,"COMEX metals event-level context for Oystacher, May-July 2011, Silver/Gold/Copper futures",0,official_exchange_context_only_no_owner_export_no_normal_controls
+cme_group_disciplinary,NYMEX 10-07963-BC,"NYMEX crude oil event-level context for Oystacher, December 2010-July 2011, Crude Oil futures",0,official_exchange_context_only_no_owner_export_no_normal_controls
+local_required_root,/tmp/ict-engine-board-a-r6-owner-export-v1,absent,0,blocked_required_owner_export_root_absent
+local_required_root,/tmp/ict-engine-native-subhour-source-label-intake,absent,0,blocked_required_r3_intake_root_absent
+local_required_root,/tmp/ict-engine-source-panel-recency-extension,absent,0,blocked_required_r5_intake_root_absent
+credential_presence,DATABENTO_API_KEY,missing,0,blocked_no_local_databento_credential
+credential_presence,CME_API_KEY,missing,0,blocked_no_local_cme_credential
+credential_presence,CBOE_API_KEY,missing,0,blocked_no_local_cboe_credential

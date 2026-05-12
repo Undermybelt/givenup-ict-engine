@@ -1,0 +1,377 @@
+{
+  "accepted_strict_rows": 41,
+  "artifact_type": "strict_1h_gap_triage_v1",
+  "blocked_strict_rows": 115,
+  "blocker_by_root": {
+    "Bear": {
+      "calibration_support_below_73": 31,
+      "calibration_wilson95_below_0_95": 31,
+      "heldout_time_support_below_73": 29,
+      "heldout_time_wilson95_below_0_95": 29
+    },
+    "Bull": {
+      "calibration_support_below_73": 7,
+      "calibration_wilson95_below_0_95": 7,
+      "heldout_time_support_below_73": 10,
+      "heldout_time_wilson95_below_0_95": 10
+    },
+    "Crisis": {
+      "calibration_support_below_73": 36,
+      "calibration_wilson95_below_0_95": 36,
+      "heldout_time_support_below_73": 35,
+      "heldout_time_wilson95_below_0_95": 35
+    },
+    "Sideways": {
+      "calibration_support_below_73": 27,
+      "calibration_wilson95_below_0_95": 27,
+      "heldout_time_support_below_73": 29,
+      "heldout_time_wilson95_below_0_95": 29
+    }
+  },
+  "blocker_counts": {
+    "calibration_support_below_73": 101,
+    "calibration_wilson95_below_0_95": 101,
+    "heldout_time_support_below_73": 103,
+    "heldout_time_wilson95_below_0_95": 103
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "full_objective_achieved": false,
+    "gate_result": "strict_1h_gap_triage_v1=provider_ready_source_label_support_blocked",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T10:20:35.920007+00:00",
+  "near_miss_count": 34,
+  "next_action": "Do not refetch yfinance 1h for this gap. Acquire source-owned recency extension rows or an owner-approved broader label/equivalence panel, then rerun strict ticker/root gates.",
+  "provider_not_ready_tickers": 0,
+  "provider_ready_tickers": 39,
+  "recency_extension_candidate_count": 0,
+  "root_summary": {
+    "Bear": {
+      "accepted": 4,
+      "accepted_tickers": [
+        "COP",
+        "NKE",
+        "PFE",
+        "SBUX"
+      ],
+      "blocked": 35,
+      "total": 39
+    },
+    "Bull": {
+      "accepted": 27,
+      "accepted_tickers": [
+        "AAPL",
+        "ABBV",
+        "AMZN",
+        "BAC",
+        "CAT",
+        "CSCO",
+        "CVX",
+        "GE",
+        "GOOGL",
+        "GS",
+        "JNJ",
+        "JPM",
+        "MCD",
+        "META",
+        "MS",
+        "MSFT",
+        "NFLX",
+        "NVDA",
+        "T",
+        "VZ",
+        "WFC",
+        "WMT",
+        "XOM",
+        "^DJI",
+        "^GSPC",
+        "^IXIC",
+        "^RUT"
+      ],
+      "blocked": 12,
+      "total": 39
+    },
+    "Crisis": {
+      "accepted": 3,
+      "accepted_tickers": [
+        "AMD",
+        "INTC",
+        "TSLA"
+      ],
+      "blocked": 36,
+      "total": 39
+    },
+    "Sideways": {
+      "accepted": 7,
+      "accepted_tickers": [
+        "CVX",
+        "DIS",
+        "MCD",
+        "MSFT",
+        "PFE",
+        "VZ",
+        "^RUT"
+      ],
+      "blocked": 32,
+      "total": 39
+    }
+  },
+  "run_id": "20260511T181859+0800-codex-strict-1h-gap-triage-v1",
+  "source_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1_rows.csv",
+  "source_tickers": "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1_tickers.csv",
+  "strict_slots": 156,
+  "top_near_misses": [
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 162,
+      "calibration_2024_wilson95_lcb": 0.9768365592,
+      "heldout_time_2025_support": 69,
+      "heldout_time_2025_wilson95_lcb": 0.9472627418,
+      "instrument": "HD",
+      "lcb_gap_to_095": "0.002737258200",
+      "one_split_passes": true,
+      "root": "Bull",
+      "support_gap_to_73": 4
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 100,
+      "calibration_2024_wilson95_lcb": 0.9630065018,
+      "heldout_time_2025_support": 68,
+      "heldout_time_2025_wilson95_lcb": 0.9465286635,
+      "instrument": "XOM",
+      "lcb_gap_to_095": "0.003471336500",
+      "one_split_passes": true,
+      "root": "Sideways",
+      "support_gap_to_73": 5
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 118,
+      "calibration_2024_wilson95_lcb": 0.968471661,
+      "heldout_time_2025_support": 67,
+      "heldout_time_2025_wilson95_lcb": 0.9457738606,
+      "instrument": "TMO",
+      "lcb_gap_to_095": "0.004226139400",
+      "one_split_passes": true,
+      "root": "Bull",
+      "support_gap_to_73": 6
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 75,
+      "calibration_2024_wilson95_lcb": 0.9512761575,
+      "heldout_time_2025_support": 67,
+      "heldout_time_2025_wilson95_lcb": 0.9457738606,
+      "instrument": "ABBV",
+      "lcb_gap_to_095": "0.004226139400",
+      "one_split_passes": true,
+      "root": "Sideways",
+      "support_gap_to_73": 6
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 66,
+      "calibration_2024_wilson95_lcb": 0.944997443,
+      "heldout_time_2025_support": 151,
+      "heldout_time_2025_wilson95_lcb": 0.9751910189,
+      "instrument": "UNH",
+      "lcb_gap_to_095": "0.005002557000",
+      "one_split_passes": true,
+      "root": "Bear",
+      "support_gap_to_73": 7
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 66,
+      "calibration_2024_wilson95_lcb": 0.944997443,
+      "heldout_time_2025_support": 87,
+      "heldout_time_2025_wilson95_lcb": 0.9577124931,
+      "instrument": "^DJI",
+      "lcb_gap_to_095": "0.005002557000",
+      "one_split_passes": true,
+      "root": "Sideways",
+      "support_gap_to_73": 7
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 63,
+      "calibration_2024_wilson95_lcb": 0.9425288004,
+      "heldout_time_2025_support": 76,
+      "heldout_time_2025_wilson95_lcb": 0.9518864149,
+      "instrument": "AMD",
+      "lcb_gap_to_095": "0.007471199600",
+      "one_split_passes": true,
+      "root": "Bear",
+      "support_gap_to_73": 10
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 76,
+      "calibration_2024_wilson95_lcb": 0.9518864149,
+      "heldout_time_2025_support": 62,
+      "heldout_time_2025_wilson95_lcb": 0.9416559279,
+      "instrument": "AMD",
+      "lcb_gap_to_095": "0.008344072100",
+      "one_split_passes": true,
+      "root": "Bull",
+      "support_gap_to_73": 11
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 62,
+      "calibration_2024_wilson95_lcb": 0.9416559279,
+      "heldout_time_2025_support": 80,
+      "heldout_time_2025_wilson95_lcb": 0.9541818705,
+      "instrument": "HD",
+      "lcb_gap_to_095": "0.008344072100",
+      "one_split_passes": true,
+      "root": "Sideways",
+      "support_gap_to_73": 11
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 99,
+      "calibration_2024_wilson95_lcb": 0.9626467879,
+      "heldout_time_2025_support": 61,
+      "heldout_time_2025_wilson95_lcb": 0.9407561321,
+      "instrument": "JNJ",
+      "lcb_gap_to_095": "0.009243867900",
+      "one_split_passes": true,
+      "root": "Sideways",
+      "support_gap_to_73": 12
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 59,
+      "calibration_2024_wilson95_lcb": 0.9388706295,
+      "heldout_time_2025_support": 98,
+      "heldout_time_2025_wilson95_lcb": 0.9622800099,
+      "instrument": "TMO",
+      "lcb_gap_to_095": "0.011129370500",
+      "one_split_passes": true,
+      "root": "Bear",
+      "support_gap_to_73": 14
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 88,
+      "calibration_2024_wilson95_lcb": 0.9581729333,
+      "heldout_time_2025_support": 55,
+      "heldout_time_2025_wilson95_lcb": 0.9347150989,
+      "instrument": "DIS",
+      "lcb_gap_to_095": "0.015284901100",
+      "one_split_passes": true,
+      "root": "Bull",
+      "support_gap_to_73": 18
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 89,
+      "calibration_2024_wilson95_lcb": 0.9586234548,
+      "heldout_time_2025_support": 53,
+      "heldout_time_2025_wilson95_lcb": 0.9324180114,
+      "instrument": "INTC",
+      "lcb_gap_to_095": "0.017581988600",
+      "one_split_passes": true,
+      "root": "Bear",
+      "support_gap_to_73": 20
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 93,
+      "calibration_2024_wilson95_lcb": 0.9603324974,
+      "heldout_time_2025_support": 51,
+      "heldout_time_2025_wilson95_lcb": 0.9299533801,
+      "instrument": "UNH",
+      "lcb_gap_to_095": "0.020046619900",
+      "one_split_passes": true,
+      "root": "Bull",
+      "support_gap_to_73": 22
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 50,
+      "calibration_2024_wilson95_lcb": 0.9286524009,
+      "heldout_time_2025_support": 81,
+      "heldout_time_2025_wilson95_lcb": 0.9547219146,
+      "instrument": "AAPL",
+      "lcb_gap_to_095": "0.021347599100",
+      "one_split_passes": true,
+      "root": "Bear",
+      "support_gap_to_73": 23
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 49,
+      "calibration_2024_wilson95_lcb": 0.9273021808,
+      "heldout_time_2025_support": 92,
+      "heldout_time_2025_wilson95_lcb": 0.9599186107,
+      "instrument": "BA",
+      "lcb_gap_to_095": "0.022697819200",
+      "one_split_passes": true,
+      "root": "Crisis",
+      "support_gap_to_73": 24
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 75,
+      "calibration_2024_wilson95_lcb": 0.9512761575,
+      "heldout_time_2025_support": 43,
+      "heldout_time_2025_wilson95_lcb": 0.9179901968,
+      "instrument": "TMO",
+      "lcb_gap_to_095": "0.032009803200",
+      "one_split_passes": true,
+      "root": "Sideways",
+      "support_gap_to_73": 30
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 43,
+      "calibration_2024_wilson95_lcb": 0.9179901968,
+      "heldout_time_2025_support": 75,
+      "heldout_time_2025_wilson95_lcb": 0.9512761575,
+      "instrument": "WMT",
+      "lcb_gap_to_095": "0.032009803200",
+      "one_split_passes": true,
+      "root": "Sideways",
+      "support_gap_to_73": 30
+    },
+    {
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95",
+      "calibration_2024_support": 42,
+      "calibration_2024_wilson95_lcb": 0.9162012091,
+      "heldout_time_2025_support": 76,
+      "heldout_time_2025_wilson95_lcb": 0.9518864149,
+      "instrument": "TSLA",
+      "lcb_gap_to_095": "0.033798790900",
+      "one_split_passes": true,
+      "root": "Bull",
+      "support_gap_to_73": 31
+    },
+    {
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95",
+      "calibration_2024_support": 138,
+      "calibration_2024_wilson95_lcb": 0.9729172355,
+      "heldout_time_2025_support": 40,
+      "heldout_time_2025_wilson95_lcb": 0.9123783988,
+      "instrument": "BA",
+      "lcb_gap_to_095": "0.037621601200",
+      "one_split_passes": true,
+      "root": "Bear",
+      "support_gap_to_73": 33
+    }
+  ],
+  "zero_accepted_root_tickers": [
+    "BA",
+    "HD",
+    "TMO",
+    "UNH"
+  ]
+}

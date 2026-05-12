@@ -1,0 +1,614 @@
+{
+  "plan": {
+    "request": {
+      "market_key": "board-b-provider-matrix-spy-1d-after-125425",
+      "primary_data_path": null,
+      "interval": "1d",
+      "start": "2026-04-01T00:00:00Z",
+      "end": "2026-05-09T00:00:00Z",
+      "count": 40,
+      "related_roles": [
+        "yf_spy",
+        "tvr_spy",
+        "ibkr_spy"
+      ],
+      "provider_preferences": {
+        "ibkr_spy": "ibkr",
+        "tvr_spy": "tradingview_mcp",
+        "yf_spy": "yfinance"
+      },
+      "symbol_overrides": {
+        "ibkr_spy": {
+          "display_symbol": "SPY",
+          "yfinance": null,
+          "tradingview_mcp": null,
+          "ibkr": {
+            "symbol": "SPY",
+            "sec_type": "STK",
+            "exchange": "SMART",
+            "currency": "USD",
+            "primary_exchange": "ARCA"
+          }
+        },
+        "tvr_spy": {
+          "display_symbol": "AMEX:SPY",
+          "yfinance": null,
+          "tradingview_mcp": "AMEX:SPY",
+          "ibkr": null
+        },
+        "yf_spy": {
+          "display_symbol": "SPY",
+          "yfinance": "SPY",
+          "tradingview_mcp": null,
+          "ibkr": null
+        }
+      },
+      "options_volatility_proxy_symbol": null
+    },
+    "provider_summary": {
+      "required_requirements": [],
+      "provider_statuses": [
+        {
+          "provider": "ibkr",
+          "status": "configured_runtime_unhealthy",
+          "healthy": false,
+          "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+          "supported_requirements": [],
+          "install_prompts": [
+            "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+            "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+          ],
+          "redacted_config": [
+            "consent_path=<local-path>",
+            "capabilities_path=<local-path>",
+            "consent_present=true",
+            "capabilities_present=true",
+            "reachable_gateway_ports=IB Gateway paper:4002",
+            "ibkr_runtime_missing_modules=redis"
+          ]
+        },
+        {
+          "provider": "yfinance",
+          "status": "ready",
+          "healthy": true,
+          "reason": "public_yahoo_http_endpoints",
+          "supported_requirements": [],
+          "install_prompts": [],
+          "redacted_config": [
+            "provider_mode=public_http"
+          ]
+        },
+        {
+          "provider": "tradingview_mcp",
+          "status": "ready",
+          "healthy": true,
+          "reason": "mcp_url_and_api_key_available",
+          "supported_requirements": [],
+          "install_prompts": [],
+          "redacted_config": [
+            "mcp_url=https://tvremix.xyz/api/mcp/v1",
+            "credential_source=local_config",
+            "local_config=<set>",
+            "ICT_ENGINE_TVREMIX_MCP_API_KEY=<set>",
+            "stdio_cmd_env=<unset>",
+            "stdio_args_env=<unset>",
+            "probe_connectivity=true",
+            "probe_ohlcv=<skipped>",
+            "probe_options=<skipped>"
+          ]
+        }
+      ],
+      "actionable_install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    },
+    "tasks": [
+      {
+        "role": "yf_spy",
+        "provider": "yfinance",
+        "operation": "Ohlcv",
+        "symbol": "SPY",
+        "request": {
+          "YahooFinance": {
+            "symbol": "SPY"
+          }
+        }
+      },
+      {
+        "role": "tvr_spy",
+        "provider": "tradingview_mcp",
+        "operation": "Ohlcv",
+        "symbol": "AMEX:SPY",
+        "request": {
+          "TradingViewMcp": {
+            "symbol": "AMEX:SPY"
+          }
+        }
+      },
+      {
+        "role": "ibkr_spy",
+        "provider": "ibkr",
+        "operation": "Ohlcv",
+        "symbol": "SPY",
+        "request": {
+          "Ibkr": {
+            "contract": {
+              "symbol": "SPY",
+              "sec_type": "STK",
+              "exchange": "SMART",
+              "currency": "USD",
+              "primary_exchange": "ARCA"
+            }
+          }
+        }
+      }
+    ],
+    "missing_roles": [],
+    "warnings": []
+  },
+  "results": [
+    {
+      "ok": true,
+      "provider": "yfinance",
+      "operation": "ohlcv.fetch",
+      "role": "yf_spy",
+      "symbol": "SPY",
+      "data": [
+        {
+          "close": 655.239990234375,
+          "high": 658.52001953125,
+          "low": 653.0,
+          "open": 653.9000244140625,
+          "timestamp": "2026-04-01T13:30:00Z",
+          "volume": 97841500.0
+        },
+        {
+          "close": 655.8300170898438,
+          "high": 658.2000122070312,
+          "low": 645.1099853515625,
+          "open": 646.4199829101562,
+          "timestamp": "2026-04-02T13:30:00Z",
+          "volume": 68358700.0
+        },
+        {
+          "close": 658.9299926757812,
+          "high": 659.719970703125,
+          "low": 655.52001953125,
+          "open": 655.8599853515625,
+          "timestamp": "2026-04-06T13:30:00Z",
+          "volume": 39105800.0
+        },
+        {
+          "close": 659.219970703125,
+          "high": 659.6099853515625,
+          "low": 651.0599975585938,
+          "open": 656.6500244140625,
+          "timestamp": "2026-04-07T13:30:00Z",
+          "volume": 69980400.0
+        },
+        {
+          "close": 676.010009765625,
+          "high": 677.0800170898438,
+          "low": 671.4600219726562,
+          "open": 676.3900146484375,
+          "timestamp": "2026-04-08T13:30:00Z",
+          "volume": 93606100.0
+        },
+        {
+          "close": 679.9099731445312,
+          "high": 681.1599731445312,
+          "low": 673.77001953125,
+          "open": 674.8400268554688,
+          "timestamp": "2026-04-09T13:30:00Z",
+          "volume": 57134400.0
+        },
+        {
+          "close": 679.4600219726562,
+          "high": 682.030029296875,
+          "low": 678.4500122070312,
+          "open": 681.3200073242188,
+          "timestamp": "2026-04-10T13:30:00Z",
+          "volume": 42253500.0
+        },
+        {
+          "close": 686.0999755859375,
+          "high": 686.2999877929688,
+          "low": 676.5800170898438,
+          "open": 677.4099731445312,
+          "timestamp": "2026-04-13T13:30:00Z",
+          "volume": 54185800.0
+        },
+        {
+          "close": 694.4600219726562,
+          "high": 694.5800170898438,
+          "low": 687.6599731445312,
+          "open": 687.6900024414062,
+          "timestamp": "2026-04-14T13:30:00Z",
+          "volume": 63480500.0
+        },
+        {
+          "close": 699.9400024414062,
+          "high": 700.280029296875,
+          "low": 694.2000122070312,
+          "open": 695.260009765625,
+          "timestamp": "2026-04-15T13:30:00Z",
+          "volume": 58240400.0
+        },
+        {
+          "close": 701.6599731445312,
+          "high": 702.780029296875,
+          "low": 698.530029296875,
+          "open": 701.0599975585938,
+          "timestamp": "2026-04-16T13:30:00Z",
+          "volume": 49972400.0
+        },
+        {
+          "close": 710.1400146484375,
+          "high": 712.3900146484375,
+          "low": 705.760009765625,
+          "open": 706.1400146484375,
+          "timestamp": "2026-04-17T13:30:00Z",
+          "volume": 70661900.0
+        },
+        {
+          "close": 708.719970703125,
+          "high": 709.9099731445312,
+          "low": 706.1400146484375,
+          "open": 708.780029296875,
+          "timestamp": "2026-04-20T13:30:00Z",
+          "volume": 43546800.0
+        },
+        {
+          "close": 704.0800170898438,
+          "high": 711.280029296875,
+          "low": 702.6400146484375,
+          "open": 710.280029296875,
+          "timestamp": "2026-04-21T13:30:00Z",
+          "volume": 58941400.0
+        },
+        {
+          "close": 711.2100219726562,
+          "high": 711.4500122070312,
+          "low": 708.219970703125,
+          "open": 709.1500244140625,
+          "timestamp": "2026-04-22T13:30:00Z",
+          "volume": 42518500.0
+        },
+        {
+          "close": 708.4500122070312,
+          "high": 712.3599853515625,
+          "low": 702.280029296875,
+          "open": 709.5,
+          "timestamp": "2026-04-23T13:30:00Z",
+          "volume": 56174000.0
+        },
+        {
+          "close": 713.9400024414062,
+          "high": 714.469970703125,
+          "low": 709.010009765625,
+          "open": 710.75,
+          "timestamp": "2026-04-24T13:30:00Z",
+          "volume": 45182000.0
+        },
+        {
+          "close": 715.1699829101562,
+          "high": 715.6300048828125,
+          "low": 712.2999877929688,
+          "open": 713.1699829101562,
+          "timestamp": "2026-04-27T13:30:00Z",
+          "volume": 33135900.0
+        },
+        {
+          "close": 711.6900024414062,
+          "high": 712.8800048828125,
+          "low": 709.25,
+          "open": 711.8200073242188,
+          "timestamp": "2026-04-28T13:30:00Z",
+          "volume": 43117400.0
+        },
+        {
+          "close": 711.5800170898438,
+          "high": 712.2000122070312,
+          "low": 708.3699951171875,
+          "open": 711.0,
+          "timestamp": "2026-04-29T13:30:00Z",
+          "volume": 41859200.0
+        },
+        {
+          "close": 718.6599731445312,
+          "high": 719.7899780273438,
+          "low": 710.4500122070312,
+          "open": 714.6300048828125,
+          "timestamp": "2026-04-30T13:30:00Z",
+          "volume": 67240900.0
+        },
+        {
+          "close": 720.6500244140625,
+          "high": 724.8699951171875,
+          "low": 720.469970703125,
+          "open": 721.25,
+          "timestamp": "2026-05-01T13:30:00Z",
+          "volume": 43049800.0
+        },
+        {
+          "close": 718.010009765625,
+          "high": 722.1199951171875,
+          "low": 714.989990234375,
+          "open": 720.0700073242188,
+          "timestamp": "2026-05-04T13:30:00Z",
+          "volume": 51950600.0
+        },
+        {
+          "close": 723.77001953125,
+          "high": 725.0399780273438,
+          "low": 721.489990234375,
+          "open": 721.77001953125,
+          "timestamp": "2026-05-05T13:30:00Z",
+          "volume": 36933200.0
+        },
+        {
+          "close": 733.8300170898438,
+          "high": 734.5900268554688,
+          "low": 727.8200073242188,
+          "open": 728.1599731445312,
+          "timestamp": "2026-05-06T13:30:00Z",
+          "volume": 53288900.0
+        },
+        {
+          "close": 731.5800170898438,
+          "high": 736.1300048828125,
+          "low": 729.75,
+          "open": 735.0499877929688,
+          "timestamp": "2026-05-07T13:30:00Z",
+          "volume": 51724600.0
+        },
+        {
+          "close": 737.6199951171875,
+          "high": 738.0800170898438,
+          "low": 734.5700073242188,
+          "open": 734.9299926757812,
+          "timestamp": "2026-05-08T13:30:00Z",
+          "volume": 47227100.0
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "provider": "tradingview_mcp",
+      "operation": "ohlcv.fetch",
+      "role": "tvr_spy",
+      "symbol": "AMEX:SPY",
+      "data": [
+        {
+          "close": 655.24,
+          "high": 658.52,
+          "low": 653.0,
+          "open": 653.9,
+          "timestamp": "2026-04-01T13:30:00Z",
+          "volume": 97841472.0
+        },
+        {
+          "close": 655.83,
+          "high": 658.2,
+          "low": 645.11,
+          "open": 646.42,
+          "timestamp": "2026-04-02T13:30:00Z",
+          "volume": 68358713.0
+        },
+        {
+          "close": 658.93,
+          "high": 659.72,
+          "low": 655.52,
+          "open": 655.86,
+          "timestamp": "2026-04-06T13:30:00Z",
+          "volume": 39105758.0
+        },
+        {
+          "close": 659.22,
+          "high": 659.61,
+          "low": 651.06,
+          "open": 656.65,
+          "timestamp": "2026-04-07T13:30:00Z",
+          "volume": 69980362.0
+        },
+        {
+          "close": 676.01,
+          "high": 677.08,
+          "low": 671.46,
+          "open": 676.39,
+          "timestamp": "2026-04-08T13:30:00Z",
+          "volume": 93606114.0
+        },
+        {
+          "close": 679.91,
+          "high": 681.16,
+          "low": 673.77,
+          "open": 674.84,
+          "timestamp": "2026-04-09T13:30:00Z",
+          "volume": 57134445.0
+        },
+        {
+          "close": 679.46,
+          "high": 682.03,
+          "low": 678.45,
+          "open": 681.32,
+          "timestamp": "2026-04-10T13:30:00Z",
+          "volume": 42253456.0
+        },
+        {
+          "close": 686.1,
+          "high": 686.3,
+          "low": 676.58,
+          "open": 677.41,
+          "timestamp": "2026-04-13T13:30:00Z",
+          "volume": 54185819.0
+        },
+        {
+          "close": 694.46,
+          "high": 694.58,
+          "low": 687.66,
+          "open": 687.69,
+          "timestamp": "2026-04-14T13:30:00Z",
+          "volume": 63480529.0
+        },
+        {
+          "close": 699.94,
+          "high": 700.28,
+          "low": 694.2,
+          "open": 695.26,
+          "timestamp": "2026-04-15T13:30:00Z",
+          "volume": 58240384.0
+        },
+        {
+          "close": 701.66,
+          "high": 702.78,
+          "low": 698.53,
+          "open": 701.06,
+          "timestamp": "2026-04-16T13:30:00Z",
+          "volume": 49972363.0
+        },
+        {
+          "close": 710.14,
+          "high": 712.39,
+          "low": 705.76,
+          "open": 706.14,
+          "timestamp": "2026-04-17T13:30:00Z",
+          "volume": 70661926.0
+        },
+        {
+          "close": 708.72,
+          "high": 709.91,
+          "low": 706.14,
+          "open": 708.78,
+          "timestamp": "2026-04-20T13:30:00Z",
+          "volume": 43546812.0
+        },
+        {
+          "close": 704.08,
+          "high": 711.275,
+          "low": 702.64,
+          "open": 710.28,
+          "timestamp": "2026-04-21T13:30:00Z",
+          "volume": 58941384.0
+        },
+        {
+          "close": 711.21,
+          "high": 711.45,
+          "low": 708.22,
+          "open": 709.15,
+          "timestamp": "2026-04-22T13:30:00Z",
+          "volume": 42518498.0
+        },
+        {
+          "close": 708.45,
+          "high": 712.3598,
+          "low": 702.2803,
+          "open": 709.5,
+          "timestamp": "2026-04-23T13:30:00Z",
+          "volume": 56173990.0
+        },
+        {
+          "close": 713.94,
+          "high": 714.47,
+          "low": 709.01,
+          "open": 710.75,
+          "timestamp": "2026-04-24T13:30:00Z",
+          "volume": 45181957.0
+        },
+        {
+          "close": 715.17,
+          "high": 715.63,
+          "low": 712.295,
+          "open": 713.17,
+          "timestamp": "2026-04-27T13:30:00Z",
+          "volume": 33135943.0
+        },
+        {
+          "close": 711.69,
+          "high": 712.88,
+          "low": 709.25,
+          "open": 711.815,
+          "timestamp": "2026-04-28T13:30:00Z",
+          "volume": 43117436.0
+        },
+        {
+          "close": 711.58,
+          "high": 712.2,
+          "low": 708.37,
+          "open": 711.0,
+          "timestamp": "2026-04-29T13:30:00Z",
+          "volume": 41859227.0
+        },
+        {
+          "close": 718.66,
+          "high": 719.79,
+          "low": 710.445,
+          "open": 714.63,
+          "timestamp": "2026-04-30T13:30:00Z",
+          "volume": 67240949.0
+        },
+        {
+          "close": 720.65,
+          "high": 724.87,
+          "low": 720.47,
+          "open": 721.25,
+          "timestamp": "2026-05-01T13:30:00Z",
+          "volume": 43049849.0
+        },
+        {
+          "close": 718.01,
+          "high": 722.12,
+          "low": 714.99,
+          "open": 720.07,
+          "timestamp": "2026-05-04T13:30:00Z",
+          "volume": 51950558.0
+        },
+        {
+          "close": 723.77,
+          "high": 725.04,
+          "low": 721.4898,
+          "open": 721.77,
+          "timestamp": "2026-05-05T13:30:00Z",
+          "volume": 36933226.0
+        },
+        {
+          "close": 733.83,
+          "high": 734.59,
+          "low": 727.82,
+          "open": 728.16,
+          "timestamp": "2026-05-06T13:30:00Z",
+          "volume": 53288940.0
+        },
+        {
+          "close": 731.58,
+          "high": 736.13,
+          "low": 729.75,
+          "open": 735.05,
+          "timestamp": "2026-05-07T13:30:00Z",
+          "volume": 51724642.0
+        },
+        {
+          "close": 737.62,
+          "high": 738.08,
+          "low": 734.57,
+          "open": 734.93,
+          "timestamp": "2026-05-08T13:30:00Z",
+          "volume": 47227085.0
+        }
+      ]
+    },
+    {
+      "ok": false,
+      "provider": "ibkr",
+      "operation": "ohlcv.fetch",
+      "role": "ibkr_spy",
+      "symbol": "SPY",
+      "error": {
+        "category": "fetch_failed",
+        "message": "ibkr historical fetch failed for 'SPY'",
+        "retryable": true
+      }
+    }
+  ]
+}

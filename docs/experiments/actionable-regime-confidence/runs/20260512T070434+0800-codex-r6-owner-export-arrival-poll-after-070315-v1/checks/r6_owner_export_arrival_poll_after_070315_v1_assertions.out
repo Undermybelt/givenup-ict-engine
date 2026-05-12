@@ -1,0 +1,16 @@
+gate_result=r6_owner_export_arrival_poll_after_070315_v1=no_r6_r5_arrival_r3_tsie_only_no_downstream
+r6_owner_export_root_exists=false
+r6_valid_unlock=false
+r5_recency_root_exists=false
+r5_valid_unlock=false
+r3_native_subhour_root_exists=true
+r3_tsie_data_rows=5032903
+r3_valid_unlock=false
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

@@ -1,0 +1,87 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-11T10:06:06.995260+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "34ba6b6",
+  "config_path": "/Users/thrill3r/Auto-Quant/config.json",
+  "timeframe": "1h",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T180235-codex-board-b-crashrebound-branch-rc-spa-v1/logs/freqtrade_backtest_full_5y.out",
+  "strategies": [
+    {
+      "name": "CrashRebound",
+      "file_path": "/Users/thrill3r/Auto-Quant/versions/0.4.1/strategies/CrashRebound.py",
+      "metadata": {
+        "strategy": "CrashRebound",
+        "mutation_id": "board-b-crashrebound-branch-rc-spa-v1",
+        "base_factor": "auto_quant_v0_4_1_crashrebound",
+        "hypothesis": "Counter-trend drawdown rebound after rolling drawdown, oversold confirmation, daily EMA slope-up, and volume confirmation.",
+        "paradigm": "counter-trend drawdown-rebound",
+        "expected_regime": "rooted_market_regime_context_then_drawdown_rebound_branch",
+        "factors_used": [
+          "market_regime_context.root",
+          "rolling_30d_drawdown",
+          "rsi14",
+          "ema200_1d_slope",
+          "volume_sma20",
+          "regime_profit_branch_path"
+        ],
+        "parent": "versions/0.4.1/CrashRebound",
+        "asset_class": "crypto_spot",
+        "status": "active",
+        "created": "34ba6b6"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.290306,
+        "sortino": 0.314815,
+        "calmar": 5.247333,
+        "total_profit_pct": 55.69,
+        "max_drawdown_pct": -11.308629,
+        "trade_count": 207,
+        "win_rate_pct": 68.599034,
+        "profit_factor": 1.416099
+      },
+      "per_pair_metrics": {
+        "SOL/USDT": {
+          "sharpe": 0.20157,
+          "sortino": 0.254004,
+          "calmar": 4.752877,
+          "total_profit_pct": 32.03,
+          "max_drawdown_pct": -7.180654,
+          "trade_count": 92,
+          "win_rate_pct": 69.565217,
+          "profit_factor": 1.659838
+        },
+        "BNB/USDT": {
+          "sharpe": 0.087175,
+          "sortino": 0.123597,
+          "calmar": 2.450653,
+          "total_profit_pct": 13.82,
+          "max_drawdown_pct": -6.009702,
+          "trade_count": 39,
+          "win_rate_pct": 82.051282,
+          "profit_factor": 1.747656
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.041394,
+          "sortino": 0.044802,
+          "calmar": 0.857744,
+          "total_profit_pct": 9.84,
+          "max_drawdown_pct": -12.222395,
+          "trade_count": 76,
+          "win_rate_pct": 60.526316,
+          "profit_factor": 1.147265
+        }
+      },
+      "pairs": [
+        "SOL/USDT",
+        "AVAX/USDT",
+        "BNB/USDT"
+      ],
+      "timerange": "20210101-20251231",
+      "commit": "34ba6b6",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

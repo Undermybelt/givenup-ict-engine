@@ -1,0 +1,104 @@
+{
+  "schema_version": "bayi-hu-event-social-manipulation-gate/v1",
+  "loop_id": "20260511T021647+0800-codex-bayi-hu-event-social-manipulation-gate",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T021647-codex-bayi-hu-event-social-manipulation-gate",
+  "sources": {
+    "pd_logs_cleaned": "https://raw.githubusercontent.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency/master/Data/Telegram/Labeled/PD_logs_cleaned.txt",
+    "label_txt": "https://raw.githubusercontent.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency/master/Data/Telegram/Labeled/label.txt",
+    "pred_pump_message": "https://raw.githubusercontent.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency/master/Data/Telegram/Labeled/pred_pump_message.csv"
+  },
+  "event_support": {
+    "positive_events": 1335,
+    "exchanges": 14,
+    "coins": 277,
+    "pairs": {
+      "BTC": 1211,
+      "USDT": 122,
+      "ETH": 2
+    },
+    "top_exchanges": [
+      [
+        "binance",
+        1003
+      ],
+      [
+        "yobit",
+        207
+      ],
+      [
+        "hotbit",
+        63
+      ],
+      [
+        "kucoin",
+        26
+      ],
+      [
+        "gate.io",
+        16
+      ],
+      [
+        "bittrex",
+        10
+      ],
+      [
+        "UNISWAP",
+        2
+      ],
+      [
+        "cryptopia",
+        2
+      ],
+      [
+        "coineal",
+        1
+      ],
+      [
+        "CREX24",
+        1
+      ]
+    ],
+    "first_timestamp": "2019-01-01T14:30:04",
+    "last_timestamp": "2022-01-19T18:00:28",
+    "train_positive_events": 667,
+    "calibration_positive_events": 334,
+    "test_positive_events": 334
+  },
+  "message_support": {
+    "manual_label_rows": 5146,
+    "manual_label_counts": {
+      "0": 3654,
+      "1": 847,
+      "2": 630,
+      "?": 15
+    },
+    "pred_pump_message_rows": 36696,
+    "pred_label_counts": {
+      "1.0": 36696
+    }
+  },
+  "calibration_attempt": {
+    "chronological_split_materialized_for_positive_events": true,
+    "precision_wilson_lcb_95": null,
+    "ece": null,
+    "reason_not_computed": "missing_negative_controls_or_aligned_market_features"
+  },
+  "raw_data_policy": "no_raw_event_or_message_files_committed; counts_only",
+  "decision": {
+    "board_state": "blocked",
+    "active_axis": "MainRegimeV2",
+    "candidate_regime": "Manipulation",
+    "accepted_95": false,
+    "manipulation_input_state": "event_social_positive_events_available_negative_controls_missing",
+    "positive_event_source_ready": true,
+    "message_labels_available": true,
+    "negative_event_controls_available": false,
+    "aligned_market_features_available": false,
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "fresh_calibration_rerun": false,
+    "trade_usable": false,
+    "blocker": "Bayi-Hu provides directly downloadable positive pump/dump event and message-label evidence, but this source does not include explicit negative event controls or aligned market features. A calibrated 95% Manipulation precision gate cannot be computed without them.",
+    "next_action": "Add explicit negative controls or aligned market features for the Bayi-Hu event windows, then rerun the unchanged chronological Manipulation gate."
+  }
+}

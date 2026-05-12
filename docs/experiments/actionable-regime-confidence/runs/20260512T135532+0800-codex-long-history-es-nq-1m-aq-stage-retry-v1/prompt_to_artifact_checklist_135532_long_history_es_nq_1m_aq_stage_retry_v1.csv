@@ -1,0 +1,11 @@
+requirement,evidence,result
+"real local artifact under docs/experiments","run root docs/experiments/actionable-regime-confidence/runs/20260512T135532+0800-codex-long-history-es-nq-1m-aq-stage-retry-v1","pass"
+"repair failed long-history staging command","135257 failed with repo-relative script path under Auto-Quant cwd; 135532 runs copied script by absolute path","pass"
+"stage ES/NQ long-history 1m data","long_history_es_nq_aq_stage_manifest.json and long_history_es_nq_aq_stage_rows.csv","pass"
+"include 1m plus MTF contexts","workspace has 1m,5m,15m,1h,4h,1d feather files for ES and NQ","pass"
+"keep workspace isolated","workspace/auto-quant lives under this run root","pass"
+"run Auto-Quant measured candidate","no backtest or strategy metrics in this packet","fail_closed"
+"feed filter/Pre-Bayes then BBN","no downstream consumption in this packet","fail_closed"
+"feed CatBoost/path-ranker","no path-ranker training or scoring in this packet","fail_closed"
+"feed execution tree","no execution-candidate admission in this packet","fail_closed"
+"satisfy per-regime >=95 confidence and cross-market/provider validation","not present; accepted_95_contexts remains 0","fail_closed"

@@ -1,0 +1,9 @@
+verifier_native_positive_filename=PASS
+verifier_native_negative_filename=PASS
+verifier_native_provenance_filename=PASS
+required_fields_count_17=PASS
+adapter_created_false=PASS
+runtime_code_changed_false=PASS
+shared_intake_mutated_false=PASS
+strict_full_objective_false=PASS
+update_goal_false=PASS

@@ -1,0 +1,38 @@
+{
+  "context_hits": 0,
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "direct_verifier_run": false,
+    "downstream_promotion_rerun": false,
+    "promotion_allowed": false,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "source_control_evidence_acquired": false,
+    "split_calibration_run": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "failed_or_parse": 0,
+  "gate_result": "open_data_catalog_source_route_probe_after_074116_v1=no_required_source_control_unlock",
+  "generated_at_utc": "2026-05-11T23:50:45.194458+00:00",
+  "mainregimev2_hits": 0,
+  "next": "Continue source/control acquisition only before direct verifier, split calibration, canonical merge, selected-data AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, or execution-tree promotion.",
+  "owner_hits": 0,
+  "r3_hits": 0,
+  "r5_hits": 0,
+  "r6_hits": 0,
+  "requests_sent": 36,
+  "required_filename_hits": 0,
+  "run_id": "20260512T074447+0800-codex-open-data-catalog-source-route-probe-after-074116-v1",
+  "surfaces": [
+    "Data.gov dataset HTML search",
+    "GitLab public project search",
+    "OpenML dataset-name API",
+    "AWS Open Data Registry HTML search"
+  ],
+  "top_rows_scanned": 93
+}

@@ -1,0 +1,171 @@
+{
+  "all_passed": true,
+  "checklist": [
+    {
+      "evidence": "Board A Current Cursor contains handoff loop id and run root.",
+      "name": "board_a_cursor_points_to_handoff",
+      "passed": true,
+      "requirement": "Update Board A Current Cursor to the latest concrete action."
+    },
+    {
+      "evidence": "Board A Next marks the 6/6 Board B handoff as checked.",
+      "name": "board_a_next_handoff_checked",
+      "passed": true,
+      "requirement": "Complete the remaining Board A Next item."
+    },
+    {
+      "evidence": "Board A Evidence Ledger contains the handoff row.",
+      "name": "board_a_ledger_has_handoff_row",
+      "passed": true,
+      "requirement": "Record artifact path, gate state, and next action in Board A Evidence Ledger."
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260510T221035-codex-board-a-6of6-board-b-handoff/board_a_6of6_regime_context_handoff_to_board_b.json exists; assertion output ends OVERALL PASS.",
+      "name": "handoff_json_exists_and_passes_assertions",
+      "passed": true,
+      "requirement": "Produce one regime-confidence evidence packet/handoff artifact with verification."
+    },
+    {
+      "evidence": [
+        "ExtremeStress",
+        "RangeConsolidation",
+        "ReversalBrewing",
+        "SessionLiquidityCoreViable",
+        "ThinLiquidity",
+        "TrendExpansion"
+      ],
+      "name": "all_six_regimes_present",
+      "passed": true,
+      "requirement": "Hand all six field-complete accepted regimes to Board B."
+    },
+    {
+      "evidence": {
+        "accepted_regime_count": 6,
+        "board_a_handoff_complete": true,
+        "board_b_state_after_handoff": "active_waiting_recipe_selection",
+        "context_guardrails_only": true,
+        "execution_promotion_blocked": true,
+        "execution_promotion_blocked_until": [
+          "Board B selects exactly one Auto-Quant recipe.",
+          "Board B computes RC-SPA on net returns with costs/slippage and passes hard gates.",
+          "Pre-Bayes/filter, BBN, CatBoost/path-ranker, and execution tree consumption checks pass.",
+          "Execution tree emits a non-observe release candidate with path-specific edge."
+        ],
+        "field_contract_verified": true,
+        "next_action": "Board B B2: select exactly one Auto-Quant recipe for the accepted regime context set.",
+        "required_regimes": [
+          "SessionLiquidityCoreViable",
+          "TrendExpansion",
+          "RangeConsolidation",
+          "ExtremeStress",
+          "ReversalBrewing",
+          "ThinLiquidity"
+        ],
+        "trade_usable": false
+      },
+      "name": "handoff_is_context_only_not_trade_usable",
+      "passed": true,
+      "requirement": "Keep execution promotion blocked until non-observe release plus path-specific edge gates pass."
+    },
+    {
+      "evidence": {
+        "ExtremeStress": {
+          "blocked_runtime_fields": [],
+          "consumer_guardrail_fields": [
+            "ExtremeStressPersistsNext2dAcrossContexts",
+            "stress_persistence_16 >= 1 AND jump_intensity_32 >= 0.125",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ]
+        },
+        "RangeConsolidation": {
+          "blocked_runtime_fields": [],
+          "consumer_guardrail_fields": [
+            "catboost_isotonic",
+            "RangeConsolidation_persists_next_15m"
+          ]
+        },
+        "ReversalBrewing": {
+          "blocked_runtime_fields": [],
+          "consumer_guardrail_fields": [
+            "TrendExpansionFailureHazardWithin5dAcrossContexts",
+            "ma64_slope16 <= 0.00115583574 AND stretch64 <= 0.005836516932",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ]
+        },
+        "SessionLiquidityCoreViable": {
+          "blocked_runtime_fields": [
+            "future_median_volume_h4"
+          ],
+          "consumer_guardrail_fields": [
+            "hour_utc",
+            "context_train_stable_high_liquidity_hour",
+            "volume_rank_252"
+          ]
+        },
+        "ThinLiquidity": {
+          "blocked_runtime_fields": [
+            "target_daily_thin_next1"
+          ],
+          "consumer_guardrail_fields": [
+            "volume_ratio32_128",
+            "daily_thin_base_loose"
+          ]
+        },
+        "TrendExpansion": {
+          "blocked_runtime_fields": [],
+          "consumer_guardrail_fields": [
+            "TrendExpansionPersistsNext5dAcrossContexts",
+            "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ]
+        }
+      },
+      "name": "blocked_runtime_fields_sanitized",
+      "passed": true,
+      "requirement": "Do not pass `future_` or `target_` leakage fields as Board B runtime consumer inputs."
+    },
+    {
+      "evidence": "Board B Current Cursor names the accepted context set and artifact path.",
+      "name": "board_b_cursor_received_handoff",
+      "passed": true,
+      "requirement": "Confirm the accepted regime packet from Board A in Board B."
+    },
+    {
+      "evidence": "Board B has B1 checked and B2 as the single cursor next action.",
+      "name": "board_b_b1_checked_and_b2_next",
+      "passed": true,
+      "requirement": "Leave Board B at recipe selection, not execution promotion."
+    },
+    {
+      "evidence": "Board B Evidence Ledger contains the intake row.",
+      "name": "board_b_ledger_has_handoff_row",
+      "passed": true,
+      "requirement": "Record Board B intake in its Evidence Ledger."
+    },
+    {
+      "evidence": "A10 remains Not Yet because required inputs are missing; it is not the active Board A next action.",
+      "name": "a10_unfinished_scope_is_explicitly_fail_closed",
+      "passed": true,
+      "requirement": "Identify any missing or blocked requirement instead of treating it as done."
+    }
+  ],
+  "concrete_deliverables": [
+    "Board A handoff of all six field-complete accepted_95 regime packets to Board B.",
+    "Durable handoff artifact with assertion evidence.",
+    "Board A and Board B markdown cursors, next actions, and evidence ledgers updated.",
+    "Execution promotion remains blocked and trade_usable=false until Board B proves recipe profitability and downstream gates."
+  ],
+  "objective": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "residual_risk": [
+    "Board B has not selected or evaluated an Auto-Quant recipe yet.",
+    "No profitability, RC-SPA, or execution-tree-ready claim is made by this handoff.",
+    "A10 order-flow entropy remains fail-closed until aligned tick/trade tape plus bid/ask or L2 data is available."
+  ],
+  "schema_version": "prompt-to-artifact-completion-audit/v1"
+}

@@ -1,0 +1,154 @@
+{
+  "schema_version": "board-a-loop-readback-evidence/v1",
+  "loop_id": "20260510T195718+0800-hermes-loop-readback",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T195718-hermes-loop-readback",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state",
+  "objective": "Run Board A without hallucination by operating provider checks, Auto-Quant dependency/status, BBN prior-init dry-run, CatBoost path-ranker scoring/apply, Pre-Bayes, workflow, and a fresh execution-tree analyze pass.",
+  "accepted_regime_context": {
+    "accepted_regime_id": "SessionLiquidityCoreViable",
+    "confidence_lane": 95,
+    "accepted_packet_calibration_support": 378,
+    "accepted_packet_test_support": 378,
+    "accepted_packet_test_wilson95": 0.98994,
+    "accepted_packet_ece": 0.010582,
+    "accepted_packet_coverage": 0.377622,
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json",
+    "trade_use": "guardrail_only_not_standalone_edge"
+  },
+  "provider_status": {
+    "provider_status_artifact": "provider/01_provider_status_agent.json",
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:2/2 ready | market_data:6/7 ready",
+    "key_readiness": {
+      "yfinance": true,
+      "ibkr_market_data_catalog": true,
+      "ibkr_bridge_catalog": true,
+      "kraken_public": true,
+      "kraken_cli": true,
+      "tradingview_mcp": false
+    },
+    "market_data_harness": {
+      "request_artifact": "provider/04_market_data_harness_request.json",
+      "plan_artifact": "provider/05_market_data_harness_plan.json",
+      "fetch_artifact": "provider/06_market_data_harness_fetch.json",
+      "fetch_stderr_artifact": "provider/06_market_data_harness_fetch.err",
+      "yfinance_fetch_ok": true,
+      "tradingview_mcp_fetch_ok": false,
+      "tradingview_mcp_failure": "get_ohlcv returned error; provider-status also reports configured_runtime_unhealthy/tradingview_mcp_connectivity_probe_failed",
+      "ibkr_plan_ready": true,
+      "ibkr_fetch_ok": false,
+      "ibkr_fetch_failure": "ConnectionRefusedError on 127.0.0.1:7497 for historical fetch; provider catalog saw consent/capabilities and a reachable paper gateway candidate but this fetch path did not connect",
+      "kraken_note": "kraken_public and kraken_cli are ready in provider-status; market-data-harness supports yfinance/tradingview_mcp/ibkr for this request and rejected kraken_public as unsupported"
+    }
+  },
+  "auto_quant": {
+    "status_before_artifact": "autoquant/01_auto_quant_status_before_bootstrap.json",
+    "bootstrap_artifacts": [
+      "autoquant/02_auto_quant_bootstrap.out",
+      "autoquant/02_auto_quant_bootstrap.err"
+    ],
+    "prepare_artifact": "autoquant/09_auto_quant_prepare_state_auto_quant.out",
+    "status_after_prepare_artifact": "autoquant/10_auto_quant_status_after_prepare.json",
+    "dependency_healthy_after_prepare": true,
+    "data_ready_after_prepare": true,
+    "status_after_prepare": "dependency_ready_seed_required",
+    "remaining_blocker": "auto_quant_seed_strategies_required",
+    "no_heavy_training_started": true
+  },
+  "bbn_prior_init": {
+    "artifact": "autoquant/04_auto_quant_prior_init_dry_run.json",
+    "dry_run": true,
+    "evidence_value_gate_passed": true,
+    "trade_count": 1081,
+    "strategies_considered": [
+      "TomacNQ_ScratchNoRSINoConflict15m"
+    ],
+    "bbn_log_loss_delta": 0.00005862449705473782,
+    "bbn_contradiction_lift": 0.009996972385175662,
+    "note": "Strict dry_run=false apply already exists in prior closure; this loop used dry-run to verify without double-applying the same prior."
+  },
+  "catboost_path_ranker": {
+    "apply_scores_artifact": "catboost/01_path_ranker_apply_scores_nq.csv",
+    "apply_stdout_artifact": "catboost/01_path_ranker_apply.out",
+    "ict_engine_apply_artifact": "ict-engine/07_apply_catboost_scores_current_nq.json",
+    "policy_after_apply_artifact": "ict-engine/08_policy_training_status_after_apply_nq_agent.json",
+    "runtime_ready": true,
+    "runtime_status": "enabled_candidate_set_ready",
+    "runtime_source": "candidate_set",
+    "runtime_matches": 3,
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "raw_scored_mature_rows": 1397,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_ready": true,
+    "production_validation_rows": 1395,
+    "production_validation_min_rows": 30,
+    "observation_validation_ready": true,
+    "observation_validation_rows": 40,
+    "observation_validation_min_rows": 30,
+    "entry_model_pending": [
+      "cisd_rb_long_v1",
+      "breaker_rb_long_v1"
+    ]
+  },
+  "filter_and_belief_readback": {
+    "pre_bayes_after_analyze_artifact": "ict-engine/17_pre_bayes_status_after_analyze_nq.json",
+    "latest_gate_status": "pass_neutralized",
+    "latest_canonical_structural_active_regime": "range",
+    "latest_canonical_structural_confidence": 0.6488770449019781,
+    "range_probability": 0.7748180685431559,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_alignment_score": 0.9079,
+    "multi_timeframe_entry_alignment_score": 0.7861,
+    "factor_pipeline_debug_artifact": "ict-engine/16_factor_pipeline_debug_structure_ict_nq.json",
+    "structure_ict_latest_signal": "Neutral",
+    "structure_ict_latest_signal_reason": "paired_market_unavailable",
+    "market_state_validation_artifact": "ict-engine/15_validate_market_state_nq_ltf.txt",
+    "market_state_samples": 109,
+    "market_state_average_confidence": 0.5905,
+    "market_state_high_confidence_ratio": 0.0826,
+    "market_state_tradeable_ratio": 0.6422
+  },
+  "fresh_analyze_and_execution_tree": {
+    "analyze_artifact": "ict-engine/14_analyze_live_replay_inputs_after_apply_nq_agent.json",
+    "workflow_after_analyze_artifact": "ict-engine/18_workflow_status_after_analyze_refresh_nq_agent.json",
+    "latest_promotable_artifact": "ict-engine/19_latest_promotable_after_analyze_nq_agent.json",
+    "recommended_path_artifact": "ict-engine/20_structural_recommended_path_bundle_after_analyze_nq_agent.json",
+    "execution_tree_artifact": "ict-engine/21_execution_tree_trace_after_analyze_nq.json",
+    "execution_tree_id": "execution-tree-NQ-1778414772372",
+    "execution_score": 0.5587712479093853,
+    "execution_gate_status": "observe",
+    "execution_branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "execution_readiness": 0.444,
+    "readiness_threshold": 0.45,
+    "hybrid_transition_hazard": 0.612,
+    "path_ranker_visible_to_execution_tree": true,
+    "path_ranker_used_by_execution_tree": true,
+    "path_ranker_model_family": "catboost",
+    "ranker_validation_ready": true,
+    "latest_promotable_kind": "ensemble_vote",
+    "latest_promotable_status": "consensus",
+    "latest_promotable_promote_candidate": true,
+    "latest_promotable_is_execution_candidate": false,
+    "workflow_blocking_status": "blocked",
+    "workflow_blocking_reason": "user_selected_historical_data_missing"
+  },
+  "decision": {
+    "board_a_confidence_goal": "accepted_95",
+    "catboost_runtime_goal": "met",
+    "provider_goal": "partially_met_with_explicit_failures_recorded",
+    "auto_quant_goal": "dependency_bootstrapped_and_prepared_but_seed_strategies_required",
+    "fresh_execution_tree_goal": "met",
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "SessionLiquidityCoreViable remains a calibrated guardrail, not standalone path-specific edge.",
+      "Fresh analyze generated execution-tree-NQ-1778414772372 and it remains observe/transition_guardrail/guarded.",
+      "Execution readiness is 0.4440 below the 0.45 threshold and hybrid_transition_hazard is 0.612.",
+      "Latest workflow is blocked by user_selected_historical_data_missing before deferred factor-research.",
+      "Auto-Quant dependency/data are ready after bootstrap/prepare, but new run is blocked until active seed strategies exist.",
+      "TradingViewRemix and IBKR fetch probes failed even though yfinance and Kraken readiness paths are available."
+    ],
+    "next_action": "Resolve user_selected_historical_data_missing for NQ factor-research; until then keep CatBoost-ready ranker as downstream context only and do not promote execute."
+  }
+}

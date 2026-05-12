@@ -1,0 +1,3 @@
+root_class,state,method,rule,train_support,train_lcb,calibration_support,calibration_lcb,calibration_coverage,test_support,test_lcb,test_precision,test_coverage,blockers
+Bear,blocked,rule_pair,ret20 <= -0.0620298245081 AND ret5 <= -0.01290654584,17103,0.8256296981968371,6040,0.8299292851294129,0.10207530588791996,5469,0.8255614423897437,0.8356189431340282,0.092364594416578,calibration_wilson95_below_0_95;test_wilson95_below_0_95
+Sideways,blocked,rule_pair,ret20 <= 0.00252597008559 AND vol20_mean <= 0.14444726432,9299,0.7088002498073318,3227,0.7110419610880127,0.05453592915568174,2694,0.7115487219155149,0.728656273199703,0.045498302680245226,calibration_wilson95_below_0_95;test_wilson95_below_0_95

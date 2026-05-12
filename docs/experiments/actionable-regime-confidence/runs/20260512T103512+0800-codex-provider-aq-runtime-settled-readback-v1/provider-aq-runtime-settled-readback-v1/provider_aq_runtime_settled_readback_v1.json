@@ -1,0 +1,62 @@
+{
+  "run_id": "20260512T103512+0800-codex-provider-aq-runtime-settled-readback-v1",
+  "gate_result": "provider_aq_runtime_settled_readback_v1=latest_unregistered_provider_aq_roots_settled_no_board_a_promotion",
+  "registered_roots": [
+    {
+      "root": "20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1",
+      "gate": "yahoo_crypto_momentum_provider_aq_v1=nonzero_crypto_trades_unprofitable_no_promotion",
+      "summary": "Yahoo BTC/ETH/SOL 1h provider fetch/prepare exits 0; ProviderCryptoMomentumStateV1 295 trades -18.73% profit Sharpe -1.0287 PF 0.7350; ProviderCryptoPullbackRevertV1 109 trades -7.08% profit Sharpe -0.4663 PF 0.6898."
+    },
+    {
+      "root": "20260512T102601+0800-codex-board-b-nq-canary-engine-debug-v1",
+      "gate": "nq_canary_engine_debug_v1=market_price_side_repaired_but_zero_trades_no_promotion",
+      "summary": "Limit-order canary run exited 0 with 4 succeeded/0 failed and 0 trades; first market-order retry failed on entry_pricing.price_side; repaired price_side=other retry exited 0 with 4 succeeded/0 failed and 0 trades."
+    },
+    {
+      "root": "20260512T102611+0800-codex-board-b-provider-yf-nq-signal-plumbing-diagnostic-v1",
+      "gate": "provider_yf_nq_signal_plumbing_diagnostic_v1=market_price_side_repaired_zero_trades_no_promotion",
+      "summary": "Initial and first market retry failed; probe exited 0; second market retry exited 0 with ProviderYfNqSignalPlumbingDiagnostic 0 trades."
+    },
+    {
+      "root": "20260512T102728+0800-codex-board-b-provider-yahoo-nq-dense-aq-v1",
+      "gate": "provider_yahoo_nq_dense_aq_v1=three_dense_nq_strategies_zero_trades_no_promotion",
+      "summary": "Dense Yahoo NQ provider TOMAC exited 0 with 3 succeeded/0 failed and 0 trades across all strategies."
+    },
+    {
+      "root": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "gate": "provider_yf_nq_trendpulse_tick_precision_v1=nonzero_nq_tick_precision_results_not_mature_no_promotion",
+      "summary": "Tick precision capture exited 0: ProviderNqSampledPulse 18 trades +0.97% profit Sharpe 0.1898 PF 5.3246; ProviderNqTrendPulse 896 trades -38.10% profit Sharpe -3.3038 PF 0.5912."
+    },
+    {
+      "root": "20260512T102828+0800-codex-board-a-provider-nq-entry-wire-v1",
+      "gate": "provider_nq_entry_wire_v1=entry_wire_and_forced_canary_zero_trades_no_promotion",
+      "summary": "Entry-wire probes and TOMAC runs exited 0; ProviderNqEntryWireCanary and ProviderNqForcedEntryCanary both produced 0 trades."
+    },
+    {
+      "root": "20260512T102928+0800-codex-board-b-provider-btc-tickfix-factor-v1",
+      "gate": "provider_btc_tickfix_factor_v1=nonzero_provider_btc_factor_trades_incubation_only_no_promotion",
+      "summary": "BTC tick-size repair enabled nonzero trades: MomentumCross 9 trades +2.14% Sharpe 1.2260 PF 1.7770; MomentumPulse 57 trades -3.61%; TrendPullback 16 trades -5.21%. Profitable branch is below maturity."
+    },
+    {
+      "root": "20260512T103010+0800-codex-board-b-provider-btc-always-entry-canary-v1",
+      "gate": "provider_btc_always_entry_canary_v1=forced_always_entry_canary_nonzero_trades_diagnostic_only_no_promotion",
+      "summary": "Final price_side=other retry exited 0 and produced 81 BTC/USDT canary trades, +4.41% profit, Sharpe 2.5645, PF 1.1993; this is forced always-entry plumbing evidence, not a strategy acceptance packet."
+    },
+    {
+      "root": "20260512T103114+0800-codex-board-b-btc-signal-consumption-diagnostic-v1",
+      "gate": "btc_signal_consumption_diagnostic_v1=probe_signals_present_market_price_side_blocker_no_promotion",
+      "summary": "Probe found 985 rows, 81 entry signals, and 80 exit signals; TOMAC run exited 1 on Freqtrade ConfigurationError requiring entry_pricing.price_side=other."
+    }
+  ],
+  "accepted_rows_added": 0,
+  "mature_rooted_branch_observations_added": 0,
+  "source_control_evidence_acquired": false,
+  "explicit_selected_history": false,
+  "canonical_merge": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

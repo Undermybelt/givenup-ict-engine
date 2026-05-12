@@ -1,0 +1,13 @@
+PASS run_id=20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1
+PASS source_run=20260512T113833+0800-codex-112904-provider-matrix-aq-date-contract-repair-v1
+PASS ibkr_14d_fetch_exit=0
+PASS ibkr_14d_rows=359
+PASS provider_runs=6
+PASS compile_success=6
+PASS run_success=6
+PASS strategies_with_metrics=12
+FAIL_CLOSED no_pre_bayes_bbn_catboost_execution_tree_promotion
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS six_provider_aq_runtime_ran=true

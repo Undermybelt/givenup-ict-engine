@@ -1,0 +1,213 @@
+{
+  "accepted_rows_added": 0,
+  "assertions_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/checks/r6_post_jpm_provider_chain_readback_v1_assertions.out",
+  "autoquant_state_dir": "/tmp/ict-engine-board-a-r6-post-jpm-autoquant-status-v1",
+  "blocker": "Runtime surfaces can be called, but the live direct intake is missing and proposed sidecar rows are not accepted or calibrated.",
+  "board_sha256_at_start": "7871c50ca903897c2c56941e3a1efe22bf77a0ca8abc90e53527938968240e12",
+  "commands": [
+    {
+      "cmd": "/opt/homebrew/opt/python@3.14/bin/python3.14 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/direct_manipulation_verifier.exit",
+      "name": "direct_manipulation_verifier",
+      "returncode": 2,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/direct_manipulation_verifier.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/direct_manipulation_verifier.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider ibkr --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_ibkr_agent.exit",
+      "name": "provider_status_ibkr_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_ibkr_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_ibkr_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider tradingview_mcp --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_tradingview_mcp_agent.exit",
+      "name": "provider_status_tradingview_mcp_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_tradingview_mcp_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_tradingview_mcp_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider yfinance --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_yfinance_agent.exit",
+      "name": "provider_status_yfinance_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_yfinance_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_yfinance_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_public --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_kraken_public_agent.exit",
+      "name": "provider_status_kraken_public_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_kraken_public_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_kraken_public_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_cli --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_kraken_cli_agent.exit",
+      "name": "provider_status_kraken_cli_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_kraken_cli_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/provider_status_kraken_cli_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-r6-post-jpm-autoquant-status-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/auto_quant_status.exit",
+      "name": "auto_quant_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/auto_quant_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/auto_quant_status.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol ^VIX --futures-backend yfinance --aux-backend yfinance --state-dir /tmp/ict-engine-board-a-r6-post-jpm-chain-readback-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/analyze_live_nq_yfinance.exit",
+      "name": "analyze_live_nq_yfinance",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/analyze_live_nq_yfinance.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/analyze_live_nq_yfinance.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-post-jpm-chain-readback-v1 --refresh",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/pre_bayes_status.exit",
+      "name": "pre_bayes_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/pre_bayes_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/pre_bayes_status.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-post-jpm-chain-readback-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/policy_training_status.exit",
+      "name": "policy_training_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/policy_training_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/policy_training_status.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-post-jpm-chain-readback-v1 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/workflow_status_execution_candidate.exit",
+      "name": "workflow_status_execution_candidate",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/workflow_status_execution_candidate.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/workflow_status_execution_candidate.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-post-jpm-chain-readback-v1",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/command-output/export_structural_path_ranking_target.out",
+      "timed_out": false
+    }
+  ],
+  "decision": "r6_post_jpm_provider_chain_readback_v1=runtime_chain_checked_candidate_gate_still_unaccepted",
+  "direct_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "direct_matched_negative_rows_csv": 0,
+  "direct_positive_rows_csv": 0,
+  "direct_verifier": {
+    "missing_files": [
+      "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+    ],
+    "reason": "missing_required_files",
+    "status": "blocked"
+  },
+  "downstream_statuses": {
+    "analyze_live_nq_yfinance_exit": 0,
+    "auto_quant_status_exit": 0,
+    "export_structural_path_ranking_target_exit": 0,
+    "policy_training_status_exit": 0,
+    "pre_bayes_status_exit": 0,
+    "workflow_execution_candidate_exit": 0
+  },
+  "external_requests_sent": true,
+  "generated_at_utc": "2026-05-11T15:53:20.519444+00:00",
+  "json_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/r6-post-jpm-provider-chain-readback/r6_post_jpm_provider_chain_readback_v1.json",
+  "new_confidence_gate": false,
+  "providers": [
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "tradingview_mcp",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "live_runtime",
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available;public_yahoo_http_endpoints",
+      "status": "ready"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "local_runtime"
+      ],
+      "observed": true,
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    }
+  ],
+  "raw_data_committed": false,
+  "report_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1/r6-post-jpm-provider-chain-readback/r6_post_jpm_provider_chain_readback_v1.md",
+  "run_id": "20260511T234818-codex-r6-post-jpm-provider-chain-readback-v1",
+  "runtime_code_changed": false,
+  "state_dir": "/tmp/ict-engine-board-a-r6-post-jpm-chain-readback-v1",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

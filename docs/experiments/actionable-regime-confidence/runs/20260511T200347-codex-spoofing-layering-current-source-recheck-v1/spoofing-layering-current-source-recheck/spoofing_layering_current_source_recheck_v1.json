@@ -1,0 +1,246 @@
+{
+  "candidate_dispositions": [
+    {
+      "disposition": "no_exact_dataset_hits",
+      "reason": "Exact API searches returned zero dataset hits for spoofing/layering matched-control terms.",
+      "source_id": "huggingface_exact_queries",
+      "source_url": "https://huggingface.co/datasets"
+    },
+    {
+      "disposition": "no_exact_dataset_hits",
+      "reason": "Kaggle CLI exact searches returned no datasets for spoofing/layering matched-control terms.",
+      "source_id": "kaggle_exact_queries",
+      "source_url": "https://www.kaggle.com/datasets"
+    },
+    {
+      "disposition": "no_ready_repo_source",
+      "reason": "GitHub API returned zero hits for two exact queries and transport errors for the other two; no ready source-owned row package was materialized.",
+      "source_id": "github_exact_repo_queries",
+      "source_url": "https://api.github.com/search/repositories"
+    },
+    {
+      "disposition": "repository_not_public_or_not_found",
+      "reason": "The repo URL surfaced in web snippets was not cloneable/readable from this environment.",
+      "source_id": "sneela_aimm_repo_probe",
+      "source_url": "https://github.com/sneela/aimm"
+    },
+    {
+      "disposition": "guidance_no_exportable_rows",
+      "reason": "Official spoofing/layering guidance supports taxonomy only; it does not expose source-owned row-level positives plus matched normal controls.",
+      "source_id": "cftc_spoofing_guidance",
+      "source_url": "https://www.cftc.gov/sites/default/files/idc/groups/public/@newsroom/documents/file/dtpinterpretiveorder_qa.pdf"
+    },
+    {
+      "disposition": "case_narrative_positive_only",
+      "reason": "Enforcement/court narrative is useful positive provenance, but not a structured export with matched same-session normal controls.",
+      "source_id": "justia_cftc_oystacher",
+      "source_url": "https://law.justia.com/cases/federal/district-courts/illinois/ilndce/1:2015cv09196/316583/80/"
+    },
+    {
+      "disposition": "pdf_only_not_spoofing_layering_rows",
+      "reason": "AIMM is a social-media-influenced manipulation framework/preprint surface; checked Zenodo metadata exposes PDF files, not spoofing/layering CSV rows and controls.",
+      "source_id": "zenodo_aimm_preprint",
+      "source_url": "https://doi.org/10.5281/zenodo.17705751"
+    }
+  ],
+  "decision": {
+    "accepted_candidate_count": 0,
+    "accepted_rows_added": 0,
+    "candidate_records": 7,
+    "gate_result": "spoofing_layering_current_source_recheck_v1=no_source_owned_matched_control_rows",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "ready_spoofing_layering_intake_source": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T12:06:53.079500+00:00",
+  "git_repo_probe": [
+    {
+      "repo_url": "https://github.com/sneela/aimm.git",
+      "returncode": 128,
+      "status": "error",
+      "stderr_head": [
+        "ERROR: Repository not found.",
+        "fatal: Could not read from remote repository.",
+        "",
+        "Please make sure you have the correct access rights",
+        "and the repository exists."
+      ],
+      "stdout": ""
+    }
+  ],
+  "github_repo_search": [
+    {
+      "query": "spoofing layering market manipulation dataset",
+      "status": "ok",
+      "top": [],
+      "total_count": 0
+    },
+    {
+      "query": "order book spoofing dataset labels",
+      "status": "ok",
+      "top": [],
+      "total_count": 0
+    },
+    {
+      "query": "financial market spoofing matched controls",
+      "status": "ok",
+      "top": [],
+      "total_count": 0
+    },
+    {
+      "query": "spoofing_layering dataset csv",
+      "status": "ok",
+      "top": [],
+      "total_count": 0
+    }
+  ],
+  "huggingface": [
+    {
+      "count": 0,
+      "query": "spoofing layering market manipulation dataset",
+      "status": "ok",
+      "top": []
+    },
+    {
+      "count": 0,
+      "query": "order book spoofing labels",
+      "status": "ok",
+      "top": []
+    },
+    {
+      "count": 0,
+      "query": "market manipulation spoofing matched controls",
+      "status": "ok",
+      "top": []
+    }
+  ],
+  "kaggle": [
+    {
+      "header": "No datasets found",
+      "query": "spoofing layering market manipulation dataset",
+      "returncode": 0,
+      "status": "ok",
+      "stderr_head": [],
+      "stdout_lines": 1,
+      "top": []
+    },
+    {
+      "header": "No datasets found",
+      "query": "order book spoofing labels",
+      "returncode": 0,
+      "status": "ok",
+      "stderr_head": [],
+      "stdout_lines": 1,
+      "top": []
+    },
+    {
+      "header": "No datasets found",
+      "query": "market manipulation spoofing matched controls",
+      "returncode": 0,
+      "status": "ok",
+      "stderr_head": [],
+      "stdout_lines": 1,
+      "top": []
+    }
+  ],
+  "manual_candidates": [
+    {
+      "disposition": "guidance_no_exportable_rows",
+      "reason": "Official spoofing/layering guidance supports taxonomy only; it does not expose source-owned row-level positives plus matched normal controls.",
+      "source_id": "cftc_spoofing_guidance",
+      "source_url": "https://www.cftc.gov/sites/default/files/idc/groups/public/@newsroom/documents/file/dtpinterpretiveorder_qa.pdf"
+    },
+    {
+      "disposition": "case_narrative_positive_only",
+      "reason": "Enforcement/court narrative is useful positive provenance, but not a structured export with matched same-session normal controls.",
+      "source_id": "justia_cftc_oystacher",
+      "source_url": "https://law.justia.com/cases/federal/district-courts/illinois/ilndce/1:2015cv09196/316583/80/"
+    },
+    {
+      "disposition": "pdf_only_not_spoofing_layering_rows",
+      "reason": "AIMM is a social-media-influenced manipulation framework/preprint surface; checked Zenodo metadata exposes PDF files, not spoofing/layering CSV rows and controls.",
+      "source_id": "zenodo_aimm_preprint",
+      "source_url": "https://doi.org/10.5281/zenodo.17705751"
+    }
+  ],
+  "purpose": "Recheck current public/source paths for spoofing/layering positives plus matched normal controls.",
+  "run_id": "20260511T200347-codex-spoofing-layering-current-source-recheck-v1",
+  "zenodo": [
+    {
+      "created": "2025-11-25T02:53:52.372553+00:00",
+      "doi": "10.5281/zenodo.17705751",
+      "files": [
+        {
+          "checksum": "md5:fb4ffbd82df086c749a6cce62b79182b",
+          "key": "AIMM_v1.0_Multimodal_Market_Manipulation_Detection_Preprint.pdf",
+          "size": 2176683
+        }
+      ],
+      "keywords": [
+        "market manipulation",
+        "social media analytics",
+        "multimodal AI",
+        "financial anomaly detection",
+        "Reddit data mining",
+        "coordination detection",
+        "bot detection",
+        "sentiment analysis",
+        "OHLCV time series",
+        "risk scoring",
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Financial Technology (FinTech)",
+        "Computational Finance",
+        "Social Network Analysis",
+        "Data Mining"
+      ],
+      "modified": "2025-11-25T02:53:53.717022+00:00",
+      "record_id": "17705751",
+      "related_identifiers": [
+        {
+          "identifier": "10.5281/zenodo.17618798",
+          "relation": "isSupplementTo",
+          "resource_type": "publication-preprint",
+          "scheme": "doi"
+        }
+      ],
+      "status": "ok",
+      "title": "AIMM: An AI-Driven Multimodal Framework for Detecting Social-Media-Influenced Stock Market Manipulation"
+    },
+    {
+      "created": "2025-11-25T02:06:33.770350+00:00",
+      "doi": "10.5281/zenodo.17618798",
+      "files": [
+        {
+          "checksum": "md5:685785ad49cc32e4aed28cae6e5f415d",
+          "key": "Stock_Pattern_Assistant_Preprint_Zenodo.pdf",
+          "size": 31722
+        }
+      ],
+      "keywords": [
+        "Explainable AI",
+        "Time-series segmentation",
+        "Financial markets",
+        "Stock pattern analysis",
+        "OHLCV",
+        "Event correlation",
+        "LLM safety",
+        "Large language models",
+        "Deterministic algorithms",
+        "Market data analysis",
+        "AI interpretability",
+        "Historical stock behavior"
+      ],
+      "modified": "2025-11-25T02:06:34.895154+00:00",
+      "record_id": "17618798",
+      "related_identifiers": null,
+      "status": "ok",
+      "title": "Stock Pattern Assistant: An Explainable AI Framework for Historical Stock Pattern Extraction and Event Correlation Using Public Market Data"
+    }
+  ]
+}

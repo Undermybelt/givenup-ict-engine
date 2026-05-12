@@ -1,0 +1,7 @@
+PASS decision=external_metadata_search_readback_v1=no_promotable_source_owned_labels
+PASS candidate_records=6
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS full_other_market_source_label_equivalence=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

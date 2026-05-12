@@ -1,0 +1,69 @@
+{
+  "accepted_mapping_confidence_95_labels": [
+    "Bear",
+    "Bull",
+    "Sideways"
+  ],
+  "created_at_utc": "2026-05-11T22:35:29.972642+00:00",
+  "dataset_id": "sujinwo/tsie-market-regime-dataset",
+  "dataset_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+  "date_max": "2026-04-07 02:00:00",
+  "date_min": "1990-06-07 02:00:00",
+  "excluded_trap_rows": 2161093,
+  "group_count": 1150,
+  "label_mapping": {
+    "0": {
+      "decision": "mapped_unambiguous",
+      "main_regime_v2_label": "Bear",
+      "source_label": "STRONG SELL"
+    },
+    "1": {
+      "decision": "mapped_unambiguous",
+      "main_regime_v2_label": "Bear",
+      "source_label": "WEAK SELL"
+    },
+    "2": {
+      "decision": "abstain_trap",
+      "main_regime_v2_label": "Abstain",
+      "source_label": "BEAR TRAP"
+    },
+    "3": {
+      "decision": "mapped_unambiguous",
+      "main_regime_v2_label": "Sideways",
+      "source_label": "FLAT / NOISE"
+    },
+    "4": {
+      "decision": "abstain_trap",
+      "main_regime_v2_label": "Abstain",
+      "source_label": "BULL TRAP"
+    },
+    "5": {
+      "decision": "mapped_unambiguous",
+      "main_regime_v2_label": "Bull",
+      "source_label": "WEAK BUY"
+    },
+    "6": {
+      "decision": "mapped_unambiguous",
+      "main_regime_v2_label": "Bull",
+      "source_label": "STRONG BUY"
+    }
+  },
+  "limitations": [
+    "Crisis has no direct TSIE source taxonomy class",
+    "trap labels are fail-closed abstain and excluded from accepted rows",
+    "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+    "canonical merge not run",
+    "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+  ],
+  "raw_parquet_committed_to_repo": false,
+  "raw_parquet_path": "/tmp/ict-engine-tsie-hf-download-v1/default/train/0000.parquet",
+  "raw_parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+  "raw_row_count": 7193996,
+  "row_count": 5032903,
+  "rows_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+  "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+  "run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+  "symbol_count": 386,
+  "target_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+  "timeframe_count": 3
+}

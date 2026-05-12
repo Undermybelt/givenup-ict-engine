@@ -1,0 +1,98 @@
+{
+  "artifact_count": 5,
+  "artifacts": {
+    "branch_rc_spa_report": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/nq_cost_crisis_repair_rc_spa_v3.json",
+      "schema_version": "board-b-nq-cost-crisis-repair/v3",
+      "status": "present"
+    },
+    "branch_summary": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/nq_cost_crisis_repair_branch_summary_v3.csv",
+      "schema_version": "board-b-nq-cost-crisis-repair/v3",
+      "status": "present"
+    },
+    "real_trades": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/nq_cost_crisis_repair_real_trades_v3.jsonl",
+      "schema_version": "1.0",
+      "status": "present"
+    },
+    "strategy_library": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/strategy_library_nq_cost_crisis_repair_v3.json",
+      "schema_version": "1.0",
+      "status": "present"
+    },
+    "selected_rows": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/nq_cost_crisis_repair_selected_rows_v3.csv",
+      "schema_version": "board-b-nq-cost-crisis-repair/v3",
+      "status": "present"
+    }
+  },
+  "consumer_contract": {
+    "hotplug_scope": "include_artifact",
+    "main_runtime_mutation": "none",
+    "optional_for_consumers": true,
+    "token_friendly": true,
+    "zero_config": true
+  },
+  "consumer_hints": {
+    "bbn_evidence_hint": {
+      "regime_decision_reasons": [
+        "branch_rc_spa_all_price_roots_passed",
+        "scoped_manipulation_component_passed"
+      ],
+      "regime_decision_state": "accepted",
+      "regime_label": "NQRootAdaptiveCostCrisisRepairV3",
+      "regime_label_set": [
+        "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+        "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+        "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+        "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72",
+        "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72"
+      ],
+      "regime_trade_usable": true,
+      "regime_transition_hazard": 0.0
+    },
+    "execution_tree_hint": "accept_regime",
+    "path_ranker_context": {
+      "branch_paths": [
+        "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+        "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+        "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+        "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72",
+        "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72"
+      ],
+      "branch_trade_counts": {
+        "Bear": 762,
+        "Bull": 10663,
+        "Crisis": 584,
+        "Manipulation(scoped)": 13535,
+        "Sideways": 3406
+      },
+      "manipulation_component_pass": true,
+      "minimum_required_branch_score": 85.8501013275014,
+      "price_root_paths_passed": 4,
+      "recipe_id": "NQRootAdaptiveCostCrisisRepairV3",
+      "run_id": "20260512T032157+0800-codex-board-b-nq-cost-crisis-repair-v3",
+      "stable_profit_score": 90.0
+    },
+    "trade_usable": true
+  },
+  "latest_decision": {
+    "abstain_reasons": [
+      "downstream_consumption_probe_before_promotion"
+    ],
+    "decision_state": "accepted",
+    "final_label": "NQRootAdaptiveCostCrisisRepairV3",
+    "label_set": [
+      "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+      "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+      "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+      "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72",
+      "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72"
+    ],
+    "timestamp": "2026-05-11T19:21:57Z",
+    "trade_usable": true
+  },
+  "missing_artifacts": [],
+  "schema_version": "regime-consumer-bundle/v1"
+}

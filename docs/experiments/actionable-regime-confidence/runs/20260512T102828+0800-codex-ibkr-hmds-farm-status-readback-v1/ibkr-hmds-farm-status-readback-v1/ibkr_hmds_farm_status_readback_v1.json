@@ -1,0 +1,45 @@
+{
+  "run_id": "20260512T102828+0800-codex-ibkr-hmds-farm-status-readback-v1",
+  "mode": "provider_health_readback_only",
+  "source_control_evidence_acquired": false,
+  "selected_history_approved": false,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "provider_status": {
+    "full_summary": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "ibkr_market_data_ready": false,
+    "ibkr_market_data_reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "ibkr_bridge_ready": false,
+    "ibkr_bridge_reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable"
+  },
+  "direct_ibkr_historical_probe": {
+    "command_exit": 0,
+    "host": "127.0.0.1",
+    "port": 4002,
+    "client_id": 383,
+    "readonly": true,
+    "connected": true,
+    "managed_accounts_seen": 1,
+    "contract": "QQQ SMART USD",
+    "qualified_con_id": 320227571,
+    "historical_rows": 5,
+    "first_bar": "2026-05-05",
+    "last_bar": "2026-05-11",
+    "farm_messages": [
+      "2104:hfarm:market_data_farm_ok",
+      "2107:apachmds:historical_farm_inactive_available_on_demand",
+      "2107:ushmds:historical_farm_inactive_available_on_demand",
+      "2158:secdefhk:security_definition_farm_ok",
+      "2106:ushmds:historical_farm_ok_after_request"
+    ]
+  },
+  "gate": [
+    "ibkr_hmds_farm_status_readback_v1=ad_hoc_historical_probe_pass_default_provider_gate_fail_closed",
+    "pass:ibkr_direct_historical_probe_rows_returned",
+    "pass:ushmds_activated_on_demand_for_us_qqq_request",
+    "partial:apachmds_inactive_no_apac_contract_requested",
+    "fail_closed:ibkr_default_provider_status_not_ready",
+    "fail_closed:ibkr_bridge_default_provider_status_not_ready",
+    "fail_closed:not_source_control_or_promotion_evidence"
+  ]
+}

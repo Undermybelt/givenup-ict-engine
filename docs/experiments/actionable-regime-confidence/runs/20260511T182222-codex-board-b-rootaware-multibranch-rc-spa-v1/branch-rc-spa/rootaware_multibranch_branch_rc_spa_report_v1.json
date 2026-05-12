@@ -1,0 +1,321 @@
+{
+  "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "all_branch_gate_failures": [
+    "fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+    "fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+    "fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+    "fail:reject_thin_trades|reject_insufficient_test_folds|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_rc_spa_below_60",
+    "fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60"
+  ],
+  "artifacts": {
+    "backtest_stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/checks/rootaware_multibranch_freqtrade_backtests.err",
+    "backtest_stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/checks/rootaware_multibranch_freqtrade_backtests.out",
+    "branch_summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/branch-rc-spa/rootaware_multibranch_branch_rc_spa_summary_v1.csv",
+    "root_schedule": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/strategy/board_a_root_schedule_v1.json",
+    "timerange_summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/branch-rc-spa/rootaware_multibranch_timerange_backtest_summaries_v1.csv",
+    "trade_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/branch-rc-spa/rootaware_multibranch_branch_path_trades_v1.csv",
+    "variant_branch_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/branch-rc-spa/rootaware_multibranch_variant_branch_rows_v1.csv"
+  },
+  "auto_quant": {
+    "config": "/Users/thrill3r/Auto-Quant/config.json",
+    "generated_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/strategy/RootAwareMultiBranchV1.py",
+    "pairs": [
+      "BTC/USDT",
+      "ETH/USDT",
+      "SOL/USDT",
+      "BNB/USDT",
+      "AVAX/USDT"
+    ],
+    "root": "/Users/thrill3r/Auto-Quant",
+    "timeranges": [
+      [
+        "bull_2021",
+        "20210101-20211231"
+      ],
+      [
+        "winter_2022",
+        "20220101-20221231"
+      ],
+      [
+        "recovery_23_25",
+        "20230101-20251231"
+      ],
+      [
+        "full_5y",
+        "20210101-20251231"
+      ]
+    ],
+    "variant_matrix": [
+      {
+        "bear_rsi": 35.0,
+        "bull_volume_mult": 1.1,
+        "crisis_rsi": 70.0,
+        "hold_hours": 6.0,
+        "sideways_rsi": 42.0,
+        "variant_id": "baseline"
+      },
+      {
+        "bear_rsi": 45.0,
+        "bull_volume_mult": 1.0,
+        "crisis_rsi": 90.0,
+        "hold_hours": 3.0,
+        "sideways_rsi": 55.0,
+        "variant_id": "dense"
+      },
+      {
+        "bear_rsi": 30.0,
+        "bull_volume_mult": 1.3,
+        "crisis_rsi": 50.0,
+        "hold_hours": 8.0,
+        "sideways_rsi": 35.0,
+        "variant_id": "conservative"
+      },
+      {
+        "bear_rsi": 42.0,
+        "bull_volume_mult": 1.2,
+        "crisis_rsi": 80.0,
+        "hold_hours": 4.0,
+        "sideways_rsi": 50.0,
+        "variant_id": "bear_sideways_bias"
+      }
+    ]
+  },
+  "branch_summaries": [
+    {
+      "bootstrap_edge_lcb_5pct": -0.0016133954478929693,
+      "bootstrap_edge_lcb_5pct_stressed_2x_cost": -0.0036133954478929694,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": -1.763201190917012,
+      "dsr_method": "trade_return_sharpe_proxy_not_full_deflated_sharpe",
+      "fold_positive_rate": 0.2,
+      "folds": "2021,2022,2023,2024,2025",
+      "hard_gate_result": "fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.963111240329726,
+      "mean_profit_ratio_net": -0.0008227401883854692,
+      "min_trades_per_test_fold": 197,
+      "outside_mean_profit_ratio_net": -0.004196790753770945,
+      "parent_regime_root": "Bull",
+      "pbo": 0.0,
+      "pbo_method": "simple_cscv_variant_fold_proxy",
+      "promotion_level": "reject",
+      "rc_spa": 28.000000000000004,
+      "recipe_id": "RootAwareMultiBranchV1",
+      "regime_profit_branch_path": "Bull -> TrendExpansion -> RootGatedDonchianMomentum -> RootAwareMultiBranchV1",
+      "regime_specificity_ratio": 0.0,
+      "tail_loss_p95": 0.03464802576851588,
+      "test_folds": 5,
+      "total_trades": 2550,
+      "win_rate": 0.45019607843137255
+    },
+    {
+      "bootstrap_edge_lcb_5pct": -0.005223622303105387,
+      "bootstrap_edge_lcb_5pct_stressed_2x_cost": -0.007223622303105387,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": -5.671350141540219,
+      "dsr_method": "trade_return_sharpe_proxy_not_full_deflated_sharpe",
+      "fold_positive_rate": 0.0,
+      "folds": "2021,2022,2023,2024,2025",
+      "hard_gate_result": "fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.9989676458457996,
+      "mean_profit_ratio_net": -0.004060367778780266,
+      "min_trades_per_test_fold": 38,
+      "outside_mean_profit_ratio_net": -0.0019707165565114957,
+      "parent_regime_root": "Bear",
+      "pbo": 0.0,
+      "pbo_method": "simple_cscv_variant_fold_proxy",
+      "promotion_level": "reject",
+      "rc_spa": 25.0,
+      "recipe_id": "RootAwareMultiBranchV1",
+      "regime_profit_branch_path": "Bear -> BearMarketDrawdown -> RootGatedCapitulationMeanReversion -> RootAwareMultiBranchV1",
+      "regime_specificity_ratio": 0.0,
+      "tail_loss_p95": 0.051837962148208905,
+      "test_folds": 5,
+      "total_trades": 1420,
+      "win_rate": 0.4788732394366197
+    },
+    {
+      "bootstrap_edge_lcb_5pct": -0.0060123202774487955,
+      "bootstrap_edge_lcb_5pct_stressed_2x_cost": -0.008012320277448795,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": -5.952694351276776,
+      "dsr_method": "trade_return_sharpe_proxy_not_full_deflated_sharpe",
+      "fold_positive_rate": 0.0,
+      "folds": "2021,2022,2023,2024,2025",
+      "hard_gate_result": "fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.996714129753608,
+      "mean_profit_ratio_net": -0.00472361016900843,
+      "min_trades_per_test_fold": 62,
+      "outside_mean_profit_ratio_net": -0.001932705576947059,
+      "parent_regime_root": "Sideways",
+      "pbo": 0.0,
+      "pbo_method": "simple_cscv_variant_fold_proxy",
+      "promotion_level": "reject",
+      "rc_spa": 25.0,
+      "recipe_id": "RootAwareMultiBranchV1",
+      "regime_profit_branch_path": "Sideways -> RangeConsolidation -> RootGatedRangeMeanReversion -> RootAwareMultiBranchV1",
+      "regime_specificity_ratio": 0.0,
+      "tail_loss_p95": 0.0422727749061334,
+      "test_folds": 5,
+      "total_trades": 1134,
+      "win_rate": 0.49029982363315694
+    },
+    {
+      "bootstrap_edge_lcb_5pct": -0.003227770786078162,
+      "bootstrap_edge_lcb_5pct_stressed_2x_cost": -0.005227770786078162,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": 0.048555687202541255,
+      "dsr_method": "trade_return_sharpe_proxy_not_full_deflated_sharpe",
+      "fold_positive_rate": 1.0,
+      "folds": "2022",
+      "hard_gate_result": "fail:reject_thin_trades|reject_insufficient_test_folds|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.28008872198692636,
+      "mean_profit_ratio_net": 9.781129295825327e-05,
+      "min_trades_per_test_fold": 94,
+      "outside_mean_profit_ratio_net": -0.0025901809674581666,
+      "parent_regime_root": "Crisis",
+      "pbo": 1.0,
+      "pbo_method": "not_identifiable_lt4_folds_or_lt3_variants",
+      "promotion_level": "reject",
+      "rc_spa": 34.82833530803811,
+      "recipe_id": "RootAwareMultiBranchV1",
+      "regime_profit_branch_path": "Crisis -> ExtremeStress -> RootGatedStressReboundOrAbstain -> RootAwareMultiBranchV1",
+      "regime_specificity_ratio": 999.0,
+      "tail_loss_p95": 0.034742688306356254,
+      "test_folds": 1,
+      "total_trades": 94,
+      "win_rate": 0.4787234042553192
+    },
+    {
+      "bootstrap_edge_lcb_5pct": 0.0,
+      "bootstrap_edge_lcb_5pct_stressed_2x_cost": 0.0,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": 0.0,
+      "dsr_method": "trade_return_sharpe_proxy_not_full_deflated_sharpe",
+      "fold_positive_rate": 0.0,
+      "folds": "",
+      "hard_gate_result": "fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.0,
+      "mean_profit_ratio_net": 0.0,
+      "min_trades_per_test_fold": 0,
+      "outside_mean_profit_ratio_net": -0.0025415716422409404,
+      "parent_regime_root": "Manipulation(scoped)",
+      "pbo": 1.0,
+      "pbo_method": "not_identifiable_lt4_folds_or_lt3_variants",
+      "promotion_level": "reject",
+      "rc_spa": 10.0,
+      "recipe_id": "RootAwareMultiBranchV1",
+      "regime_profit_branch_path": "Manipulation(scoped) -> DirectEventOverlayMissing -> no_direct_event_rows -> suppress_or_abstain",
+      "regime_specificity_ratio": 0.0,
+      "tail_loss_p95": 0.0,
+      "test_folds": 0,
+      "total_trades": 0,
+      "win_rate": 0.0
+    }
+  ],
+  "completion": {
+    "auto_quant_checkout_changed": false,
+    "downstream_runtime_consumed_branch_path": false,
+    "raw_auto_quant_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false
+  },
+  "decision": {
+    "board_state": "rejected",
+    "branch_paths_evaluated": 5,
+    "branch_paths_passed": 0,
+    "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+    "gate_result": "fail:all_branch_paths_failed_rc_spa_hard_gates",
+    "next_action": "B2R-repeat: either acquire a broader crisis-capable Board A root panel / market set, or synthesize a second root-aware recipe with enough Bear/Sideways/Crisis trade and fold depth before attempting downstream branch consumption.",
+    "primary_blocker": "RootAwareMultiBranchV1 emits root-first branches and real Auto-Quant/Freqtrade trade rows, but required root branches still fail RC-SPA hard gates; crisis support is structurally thin in the current Board A panel (8 dominant Crisis sessions in 2021-2025), so downstream runtime promotion remains blocked.",
+    "required_root_failures": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation(scoped)"
+    ],
+    "required_roots_covered_before_rc_spa": true,
+    "root_trade_counts": {
+      "Bear": 1420,
+      "Bull": 2550,
+      "Crisis": 94,
+      "Sideways": 1134
+    },
+    "stable_profit_score": 34.82833530803811,
+    "total_trade_rows": 5198
+  },
+  "generated_at_utc": "2026-05-11T10:37:47.242553+00:00",
+  "rc_spa_parameters": {
+    "drawdown_budget": 0.25,
+    "extra_round_trip_cost_for_2x_fee": 0.002,
+    "fold_positive_rate_min": 0.75,
+    "min_test_folds": 4,
+    "min_trades_per_test_fold": 10,
+    "pbo_policy": "simple_cscv_proxy_from_same_recipe_parameter_variants",
+    "required_trades": 100,
+    "tail_loss_budget": 0.25,
+    "target_dsr": 1.0,
+    "target_edge": 0.005
+  },
+  "recipe_id": "RootAwareMultiBranchV1",
+  "run_id": "20260511T182222+0800-codex-board-b-rootaware-multibranch-rc-spa-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1",
+  "schema_version": "board-b-rootaware-multibranch-rc-spa/v1",
+  "strategy_class": "RootAwareMultiBranchV1",
+  "timerange_summaries": [
+    {
+      "extracted_trade_rows": 1048,
+      "max_drawdown_pct": -50.40451088372271,
+      "profit_factor": 0.8103682360935343,
+      "sharpe": -3.777049694089197,
+      "timerange": "20210101-20211231",
+      "timerange_label": "bull_2021",
+      "total_profit_pct": -40.73988172669999,
+      "trade_count": 1048,
+      "variant_id": "baseline",
+      "win_rate": 0.5028625954198473
+    },
+    {
+      "extracted_trade_rows": 1349,
+      "max_drawdown_pct": -69.48387712273336,
+      "profit_factor": 0.5688356449713338,
+      "sharpe": -12.360881757412885,
+      "timerange": "20220101-20221231",
+      "timerange_label": "winter_2022",
+      "total_profit_pct": -69.22170564100001,
+      "trade_count": 1349,
+      "variant_id": "baseline",
+      "win_rate": 0.458117123795404
+    },
+    {
+      "extracted_trade_rows": 2796,
+      "max_drawdown_pct": -68.33677649088662,
+      "profit_factor": 0.7415521512040856,
+      "sharpe": -4.7696513236299625,
+      "timerange": "20230101-20251231",
+      "timerange_label": "recovery_23_25",
+      "total_profit_pct": -65.63467123549998,
+      "trade_count": 2796,
+      "variant_id": "baseline",
+      "win_rate": 0.45886981402002863
+    },
+    {
+      "extracted_trade_rows": 5198,
+      "max_drawdown_pct": -94.4025811734452,
+      "profit_factor": 0.7362761189960474,
+      "sharpe": -3.543361946569942,
+      "timerange": "20210101-20251231",
+      "timerange_label": "full_5y",
+      "total_profit_pct": -93.7817744232,
+      "trade_count": 5198,
+      "variant_id": "baseline",
+      "win_rate": 0.4672951135051943
+    }
+  ]
+}

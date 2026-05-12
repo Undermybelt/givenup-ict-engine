@@ -1,0 +1,16 @@
+gate_result=autoquant_local_run_readback_after_065116_v1=status_data_ready_but_run_dns_blocked_no_promotion
+status_064259_data_ready=true
+autoquant_run_exit=1
+active_state_strategy_count=1
+autoquant_discovered_strategy_count=1
+backtests_succeeded=0
+backtests_failed=1
+dns_error_present=true
+exchange_info_error_present=true
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

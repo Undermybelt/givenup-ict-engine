@@ -1,0 +1,14 @@
+PASS gate_result=board_a_readonly_gate_chain_refresh_after_092249_v1=source_control_and_user_history_still_block_promotion
+PASS source_control_evidence_acquired=false
+PASS explicit_user_selected_history=false
+PASS canonical_merge=false
+PASS selected_data_autoquant_promotion=false
+PASS downstream_promotion_rerun=false
+PASS update_goal=false
+INFO provider_status_agent_exit=0
+INFO auto_quant_status_exit=0
+INFO analyze_live_nq_yfinance_exit=0
+INFO pre_bayes_status_exit=0
+INFO policy_training_status_exit=0
+INFO export_structural_path_ranking_target_exit=0
+INFO workflow_status_execution_candidate_exit=0

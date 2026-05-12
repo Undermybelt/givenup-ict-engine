@@ -1,0 +1,17 @@
+requirement,evidence,verdict
+authoritative_board_append_only,"Board rows through 044701 Count-Once Reconciliation v1 plus v11 audit packet",pass
+multi_agent_safety,"050430 and 044701 duplicate readbacks reconciled count-once",pass
+auto_quant_full_branch_path_rows,"044611 enriched 15415/15415 trade rows",partial
+explicit_user_historical_data_selection,"No explicit user choice among HTF=1d MTF=4h LTF=1h",fail
+fresh_selected_data_auto_quant_training,"050430 Auto-Quant status missing_dependency; no fresh selected-data training/backtest",fail
+nonzero_mature_rooted_observations,"CatBoost validation raw_scored_mature=0/30 production=0/30 observation=0/30",fail
+pre_bayes_branch_admission,"Pre-Bayes latest gate observe_only",fail
+bbn_branch_application,"BBN read-only paths visible but application skipped",fail
+catboost_branch_continuation,"Candidate-set exact branch matches=5 external CatBoost score source visible",partial
+catboost_validation_ready,"calibration not_fitted validation 0/30",fail
+execution_candidate_ready,"execution_blocked ready=false",fail
+execution_tree_full_branch_admission,"execution tree trace contains only one exact target branch string",fail
+source_confidence_043932_044701,"both source-label scans accepted zero confidence-95 labels",fail
+r3_native_subhour_source_rows,"044947 required intake root/files absent and no source-owned AAPL/IXIC rows",fail
+provider_coverage,"yfinance ready Kraken CLI ready IBKR dependency-unhealthy TradingView MCP failed",partial
+goal_complete,"required selected-data and downstream promotion evidence missing",fail

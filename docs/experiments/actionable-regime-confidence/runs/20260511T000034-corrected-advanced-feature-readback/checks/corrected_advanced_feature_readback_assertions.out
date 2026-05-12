@@ -1,0 +1,8 @@
+readback: docs/experiments/actionable-regime-confidence/runs/20260511T000034-corrected-advanced-feature-readback/corrected_advanced_feature_readback.md
+source_report: docs/experiments/actionable-regime-confidence/runs/20260510T234600-main-regime-v2-corrected-advanced-features/root-v2/corrected_advanced_root_feature_report.json
+accepted_root_classes_95: []
+blocked_root_classes: ['Bull', 'Bear', 'Sideways', 'Crisis', 'Manipulation']
+accepted_gate: none_for_MainRegimeV2
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+next_action: ingest materially new root evidence rather than repeating OHLCV-derived root threshold searches

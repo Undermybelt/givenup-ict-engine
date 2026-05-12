@@ -1,0 +1,6 @@
+run_id,root,exists,file_count
+20260512T010127-codex-r6-owner-route-entitlement-readback-v1,docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1,True,0
+20260512T005913-codex-r6-owner-export-sendable-requests-v3,docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3,True,0
+20260512T010201-codex-non-r6-source-intake-outbound-request-messages-v1,docs/experiments/actionable-regime-confidence/runs/20260512T010201-codex-non-r6-source-intake-outbound-request-messages-v1,True,0
+20260512T010212-codex-r6-owner-export-access-route-preflight-v1,docs/experiments/actionable-regime-confidence/runs/20260512T010212-codex-r6-owner-export-access-route-preflight-v1,True,0
+20260512T010506-codex-r6-owner-export-official-contact-route-check-v1,docs/experiments/actionable-regime-confidence/runs/20260512T010506-codex-r6-owner-export-official-contact-route-check-v1,True,0

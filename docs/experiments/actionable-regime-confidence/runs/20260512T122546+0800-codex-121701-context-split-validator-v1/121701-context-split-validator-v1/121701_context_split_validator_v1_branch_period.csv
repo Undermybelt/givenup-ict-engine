@@ -1,0 +1,9 @@
+split_id,regime_profit_branch_path,rows,wins,losses,win_rate,wilson_95_low,wilson_95_high,total_pnl,avg_pnl,open_start_utc,open_end_utc,meets_min_context_rows
+chronological_q1,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,46,20,26,0.434783,0.302093,0.577526,504.055937,10.957738,2026-04-05T03:00:00+00:00,2026-04-16T13:00:00+00:00,True
+chronological_q1,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,17,13,4,0.764706,0.527382,0.90445,519.603219,30.564895,2026-04-05T09:00:00+00:00,2026-04-16T15:00:00+00:00,False
+chronological_q2,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,37,16,21,0.432432,0.286717,0.590858,62.953969,1.701459,2026-04-16T16:00:00+00:00,2026-04-23T15:00:00+00:00,True
+chronological_q2,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,19,5,14,0.263158,0.118064,0.487916,-234.383568,-12.335977,2026-04-18T22:00:00+00:00,2026-04-21T21:00:00+00:00,False
+chronological_q3,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,33,3,30,0.090909,0.031404,0.235726,-349.749548,-10.598471,2026-04-23T23:00:00+00:00,2026-04-30T08:00:00+00:00,True
+chronological_q3,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,26,0,26,0.0,0.0,0.128729,-627.41546,-24.131364,2026-04-27T09:00:00+00:00,2026-04-29T22:00:00+00:00,False
+chronological_q4,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,48,24,24,0.5,0.363893,0.636107,131.281039,2.735022,2026-04-30T13:00:00+00:00,2026-05-11T16:00:00+00:00,True
+chronological_q4,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,11,0,11,0.0,0.0,0.258833,-190.344343,-17.304031,2026-05-07T19:00:00+00:00,2026-05-08T00:00:00+00:00,False

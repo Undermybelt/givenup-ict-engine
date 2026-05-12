@@ -1,0 +1,1 @@
+HTTPError: 429 Client Error: Too Many Requests for url: https://query1.finance.yahoo.com/v8/finance/chart/ETH-USD?period1=1775001600&period2=1778562000&interval=1h&includePrePost=false

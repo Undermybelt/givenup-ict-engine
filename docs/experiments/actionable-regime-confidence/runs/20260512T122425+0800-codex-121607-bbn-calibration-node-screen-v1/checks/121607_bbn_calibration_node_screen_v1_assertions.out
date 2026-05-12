@@ -1,0 +1,13 @@
+PASS run_id=20260512T122425+0800-codex-121607-bbn-calibration-node-screen-v1
+PASS rows=237
+PASS provider_count=6
+PASS branch_count=2
+PASS active_regime=range
+PASS active_confidence=0.5250864595751618
+PASS accepted_candidate_nodes=0
+PASS weighted_score_equals_pnl_rows=237/237
+PASS leakage_guard=factor_weighted_score_sign_rejected
+FAIL_CLOSED bbn_likelihood_mutation_allowed=False
+FAIL_CLOSED promotion_allowed=False
+PASS trade_usable=false
+PASS update_goal=false

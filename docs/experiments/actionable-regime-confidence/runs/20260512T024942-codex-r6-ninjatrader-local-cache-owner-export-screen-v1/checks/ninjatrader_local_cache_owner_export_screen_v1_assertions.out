@@ -1,0 +1,20 @@
+assertion_status=PASS
+gate_result=r6_ninjatrader_local_cache_owner_export_screen_v1=non_promoting_local_last_cache_no_owner_export_no_order_lifecycle_no_depth_controls
+sqlite_exists=true
+orders_empty=true
+order_updates_empty=true
+executions_empty=true
+market_data_entitlement_empty=true
+owner_export_root_present=false
+ncd_file_count=2440
+ncd_types=["Last"]
+all_ncd_last_only=true
+no_depth_bid_ask_order_ncd_candidates=true
+ntb_market_data_types=["Last"]
+ntb_built_from=["Minute", "Tick"]
+promoting=false
+accepted_rows_added=0
+canonical_merge_allowed=false
+downstream_rerun_allowed=false
+strict_full_objective_achieved=false
+update_goal=false

@@ -1,0 +1,7 @@
+records_inspected=6
+accepted_direct_manipulation_sources=0
+accepted_label_rows_materialized=0
+gate_result=blocked_zenodo_candidates_false_positive_or_no_rows
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false

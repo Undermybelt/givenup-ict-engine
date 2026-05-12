@@ -1,0 +1,38 @@
+{
+  "run_id": "20260512T122446+0800-codex-121347-execution-readiness-diagnostic-v1",
+  "source_downstream_root": "20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+  "source_aq_root": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+  "support_only": true,
+  "commands": {
+    "workflow_execution_candidate_no_refresh_exit": 0,
+    "workflow_full_no_refresh_exit": 0
+  },
+  "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "pre_bayes_gate_status": "pass_neutralized",
+  "execution": {
+    "candidate_status": "execution_blocked",
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.32853919817900823,
+    "actionable": false,
+    "review_status": "observe",
+    "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready"
+  },
+  "path_ranker": {
+    "runtime_source": "history_path",
+    "raw_path_score": 0.9868275780976984,
+    "calibrated_path_prob": 0.34309623430962344,
+    "path_prob_lower_bound": 0.2928391743629338,
+    "execution_gate_status": "observe"
+  },
+  "workflow_blocker": {
+    "status": "blocked",
+    "reason": "user_selected_historical_data_missing",
+    "requires_user_input": true,
+    "required_selection": "exactly one of HTF=1d, MTF=4h, or LTF=1h before factor-research"
+  },
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "decision": "fail_closed_execution_readiness_and_selected_history_source_control_blocker"
+}

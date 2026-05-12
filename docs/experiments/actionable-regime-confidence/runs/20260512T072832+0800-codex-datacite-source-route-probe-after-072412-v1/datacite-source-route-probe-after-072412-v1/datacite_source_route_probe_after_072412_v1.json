@@ -1,0 +1,40 @@
+{
+  "run_id": "20260512T072832+0800-codex-datacite-source-route-probe-after-072412-v1",
+  "gate_result": "datacite_source_route_probe_after_072412_v1=no_exact_required_source_export_no_unlock",
+  "scope": {
+    "metadata_only": true,
+    "raw_row_downloaded": false,
+    "mutated_required_roots": false,
+    "direct_verifier_run": false,
+    "split_calibration_run": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "trade_claim": false,
+    "update_goal": false
+  },
+  "query_count": 11,
+  "failed_queries": 0,
+  "total_results_returned": 0,
+  "required_exact_hits": 0,
+  "required_hits": [],
+  "decision": {
+    "accepted_rows_added": 0,
+    "r6_owner_export_unlock": false,
+    "r5_recency_unlock": false,
+    "r3_native_subhour_unlock": false,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "artifacts": {
+    "report": "docs/experiments/actionable-regime-confidence/runs/20260512T072832+0800-codex-datacite-source-route-probe-after-072412-v1/datacite-source-route-probe-after-072412-v1/datacite_source_route_probe_after_072412_v1.md",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260512T072832+0800-codex-datacite-source-route-probe-after-072412-v1/datacite-source-route-probe-after-072412-v1/datacite_source_route_probe_after_072412_v1.json",
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T072832+0800-codex-datacite-source-route-probe-after-072412-v1/datacite-source-route-probe-after-072412-v1/datacite_source_route_probe_after_072412_v1.csv",
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T072832+0800-codex-datacite-source-route-probe-after-072412-v1/checks/datacite_source_route_probe_after_072412_v1_assertions.out",
+    "command_output": "docs/experiments/actionable-regime-confidence/runs/20260512T072832+0800-codex-datacite-source-route-probe-after-072412-v1/command-output"
+  }
+}

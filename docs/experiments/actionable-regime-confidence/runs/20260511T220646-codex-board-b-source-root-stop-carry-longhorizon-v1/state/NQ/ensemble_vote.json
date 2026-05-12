@@ -1,0 +1,107 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-11T14:19:38Z",
+  "generated_at": "2026-05-11T14:19:38.747715Z",
+  "symbol": "NQ",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:NQ:20260511T141938.713Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "54390626044676e4",
+    "data_fingerprint": "937fe89c23713ba0"
+  },
+  "dataset_comparability": {
+    "comparable": true,
+    "previous_run_id": "analyze:NQ:20260511T141537.837Z",
+    "reason": "same_data_same_config",
+    "comparison_class": "same_data_same_config",
+    "same_data": true,
+    "same_config": true,
+    "same_prompt_version": true,
+    "same_factor_version": true
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/state --backend native",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.642 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/state --backend native",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.642,
+  "consensus_strength": 0.642,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.642",
+    "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.642"
+  ],
+  "split_explanations": [
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=index_beta_regime_sensitive",
+    "factor_uncertainty=high",
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=index_beta_regime_sensitive",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [
+    {
+      "executor": "catboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.55,
+      "last_outcome": null,
+      "last_updated_at": null
+    },
+    {
+      "executor": "xgboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.45,
+      "last_outcome": null,
+      "last_updated_at": null
+    }
+  ],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "937fe89c23713ba0",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "trend",
+  "posterior_confidence": 0.5777152955289298,
+  "posterior_probabilities": {
+    "range": 0.31025216776560793,
+    "stress": 0.1602217619308039,
+    "transition": 0.07671376226673535,
+    "trend": 0.45281230803685285
+  },
+  "posterior_evidence": [
+    "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.860",
+    "pre_bayes_quality_score=0.582 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.837",
+    "market_state_source=volatility=ElevatedVol:0.741 liquidity=NormalLiquidity:0.419 structure=Trending:1.000 behavior=FOMO:0.650",
+    "market_state_source=rationale=volatility=ElevatedVol conf=0.74",
+    "market_state_source=rationale=structure=Trending conf=1.00",
+    "market_state_source=rationale=behavior=FOMO conf=0.65",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.84",
+    "market_family=futures_index",
+    "market_behavior_profile=index_beta_regime_sensitive",
+    "branch_transition_prior_from=NQ:belief_regime_node:trend:trend_follow_through weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000",
+    "duration_persistence_prior=0.500 observations=1 streaks=1 weighted_streak_mass=1.000 expected_dwell=1.000 break_hazard=0.667 sticky_self_transition=0.383 duration_outcome_support=0.500 duration_temporal_posterior_support=0.500",
+    "duration_posterior_blend_weight=0.056",
+    "node_temporal_summary=duration_mass=1.000 expected_dwell=1.000 break_hazard=0.667 sequence_break=0.432 sequence_reset=0.000 sticky_self_transition=0.383 duration_support=0.500 duration_temporal=0.500 blend=0.056"
+  ]
+}

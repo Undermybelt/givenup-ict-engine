@@ -1,0 +1,40 @@
+{
+  "accepted_rows_added": 0,
+  "external_requests_sent": true,
+  "gate_result": "r6_bulk_order_lifecycle_source_scan_v1=public_bulk_source_not_found_owner_export_or_protocol_pivot_required",
+  "new_confidence_gate": false,
+  "next_action": "Do not keep adding sparse sidecar case examples as if they can satisfy exact split validation. Either obtain an owner-approved/authenticated FINRA, venue-surveillance, CAT-like, or exchange order-lifecycle export with both positive rows and matched normal controls, or predeclare a less fragmented family-level validation protocol before the next R6 acceptance rerun.",
+  "raw_data_committed": false,
+  "run_id": "20260512T001121-codex-r6-bulk-order-lifecycle-source-scan-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_classes": [
+    {
+      "acceptance_status": "owner_export_required",
+      "observed_utility": "closest source class for direct manipulation positive rows plus matched negatives, but authenticated/export path required",
+      "source_class": "FINRA Potential Manipulation Report",
+      "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report"
+    },
+    {
+      "acceptance_status": "controls_only_no_positive_labels",
+      "observed_utility": "real order-lifecycle normal-market messages usable as controls only",
+      "source_class": "Nasdaq TotalView-ITCH / order-by-order feeds",
+      "url": "https://www.nasdaqtrader.com/Trader.aspx?id=TotalViewITCH"
+    },
+    {
+      "acceptance_status": "positive_inventory_not_bulk_split_support",
+      "observed_utility": "official sparse positive examples, not a split-balanced bulk export",
+      "source_class": "CFTC enforcement orders and complaints",
+      "url": "https://www.cftc.gov/LawRegulation/Enforcement/EnforcementActions/index.htm"
+    },
+    {
+      "acceptance_status": "not_accepted_for_direct_positive_rows",
+      "observed_utility": "public data or papers, often unlabeled, synthetic, or not direct positive-plus-control order-lifecycle exports",
+      "source_class": "public Kaggle/HuggingFace/research LOB datasets"
+    }
+  ],
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

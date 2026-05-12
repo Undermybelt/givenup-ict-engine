@@ -1,0 +1,24 @@
+PASS courtlistener_recap_sibling_fast_probe_after_081323_v1
+gate_result=courtlistener_recap_sibling_fast_probe_after_081323_v1=no_new_public_control_attachment_unlock
+requests_sent=402
+failed_or_parse_failed=3
+api_status=401
+html_status=403
+storage_head_requests=400
+storage_pdf_hits=0
+known_exhibit_a_present=false
+novel_public_pdf_hits=0
+possible_control_name_hits=0
+accepted_rows_added=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

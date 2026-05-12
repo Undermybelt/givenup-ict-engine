@@ -1,0 +1,5 @@
+PASS workspaces_seen_6
+PASS direct_run_successes_6
+PASS promotion_allowed_false
+PASS trade_usable_false
+PASS update_goal_false

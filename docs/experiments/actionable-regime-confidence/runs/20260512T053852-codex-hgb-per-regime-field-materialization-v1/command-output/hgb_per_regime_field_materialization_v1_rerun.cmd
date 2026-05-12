@@ -1,0 +1,1 @@
+UV_PROJECT_ENVIRONMENT=/tmp/ict-engine-uv-env-hgb-field-materialization-defaultcache uv run --offline --with scikit-learn --with pandas --with numpy python docs/experiments/actionable-regime-confidence/runs/20260512T053852-codex-hgb-per-regime-field-materialization-v1/scripts/hgb_per_regime_field_materialization_v1.py

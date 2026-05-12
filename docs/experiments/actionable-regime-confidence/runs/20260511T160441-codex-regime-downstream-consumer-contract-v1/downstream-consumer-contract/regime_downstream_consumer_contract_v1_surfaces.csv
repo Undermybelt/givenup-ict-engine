@@ -1,0 +1,6 @@
+consumer,runtime_surface,contract_status,evidence,limit
+analyze/report trace,RegimeConsumerBundleAdapter::trace_entries,supported_now,schema_version plus latest_decision and consumer_hints are present in all templates,trace/report context only; not a completion claim
+pre-bayes diagnostics,append_read_only_bbn_diagnostics,supported_now_read_only,read_only regime_bbn_* entries can be appended without opt-in mutation,diagnostic assignments only
+BBN soft evidence mutation,apply_bbn_soft_evidence_to_pre_bayes_filter,intentionally_neutral,"templates set trade_usable=false and use MainRegimeV2 or DirectOverlay labels, not old child labels",do not enable BBN mutation from these templates until protocol maps MainRegimeV2 directly
+execution tree,execution_tree_hint trace,supported_as_transition_guardrail_hint,all templates carry execution_tree_hint=transition_guardrail,does not force trade entry or path acceptance
+CatBoost/path-ranker,path_ranker_context,template_only_currently_unconsumed,adapter deserializes path_ranker_context but current code search found no active consumer,requires later runtime wiring before it can affect ranking

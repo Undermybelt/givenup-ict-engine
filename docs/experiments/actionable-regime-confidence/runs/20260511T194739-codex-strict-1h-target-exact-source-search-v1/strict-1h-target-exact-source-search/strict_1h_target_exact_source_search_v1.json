@@ -1,0 +1,97 @@
+{
+  "accepted_rows_added": 0,
+  "artifact_type": "strict_1h_target_exact_source_search_v1",
+  "board_hash_before_run": "bb573dd78cf510955ca550aec506d9b38ad6b57f10ad01889bfafd163dae816c",
+  "candidate_records": 2,
+  "decision": "strict_1h_target_exact_source_search_v1=no_ready_exact_target_source_owned_rows",
+  "disposition_counts": {
+    "blocked_metadata_not_regime_label_source": 2
+  },
+  "generated_at_utc": "2026-05-11T11:51:28.379345+00:00",
+  "local_source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "local_source_panel_counts": [
+    {
+      "relevant_split_year": 2025,
+      "root": "Sideways",
+      "rows_after_2026_01_30": 0,
+      "rows_jan_2026": 0,
+      "rows_relevant_split_year": 68,
+      "rows_total": 2067,
+      "source_panel_exists": true,
+      "symbol": "XOM"
+    },
+    {
+      "relevant_split_year": 2024,
+      "root": "Bear",
+      "rows_after_2026_01_30": 0,
+      "rows_jan_2026": 0,
+      "rows_relevant_split_year": 66,
+      "rows_total": 1225,
+      "source_panel_exists": true,
+      "symbol": "UNH"
+    },
+    {
+      "relevant_split_year": 2024,
+      "root": "Sideways",
+      "rows_after_2026_01_30": 0,
+      "rows_jan_2026": 0,
+      "rows_relevant_split_year": 66,
+      "rows_total": 2198,
+      "source_panel_exists": true,
+      "symbol": "^DJI"
+    },
+    {
+      "relevant_split_year": 2024,
+      "root": "Bear",
+      "rows_after_2026_01_30": 0,
+      "rows_jan_2026": 0,
+      "rows_relevant_split_year": 63,
+      "rows_total": 1667,
+      "source_panel_exists": true,
+      "symbol": "AMD"
+    }
+  ],
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "readback_count": 48,
+  "ready_source_owned_exact_target_sources": 0,
+  "run_id": "20260511T194739-codex-strict-1h-target-exact-source-search-v1",
+  "runtime_code_changed": false,
+  "strict_1h_source_extension_closed": false,
+  "strict_full_objective_achieved": false,
+  "surfaces": [
+    "github_repositories",
+    "huggingface_datasets",
+    "kaggle_datasets",
+    "local_source_panel_counts"
+  ],
+  "targets": [
+    {
+      "needed_source_owned_sessions": 5,
+      "root": "Sideways",
+      "split_side": "heldout",
+      "symbol": "XOM"
+    },
+    {
+      "needed_source_owned_sessions": 7,
+      "root": "Bear",
+      "split_side": "calibration",
+      "symbol": "UNH"
+    },
+    {
+      "needed_source_owned_sessions": 7,
+      "root": "Sideways",
+      "split_side": "calibration",
+      "symbol": "^DJI"
+    },
+    {
+      "needed_source_owned_sessions": 10,
+      "root": "Bear",
+      "split_side": "calibration",
+      "symbol": "AMD"
+    }
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

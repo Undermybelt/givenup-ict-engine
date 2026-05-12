@@ -1,0 +1,7 @@
+provider,provider_requested,provider_data_acquired,provider_unreachable,local_cache_replay,aq_provider_invoked,aq_material_created,source_or_blocker
+IBKR,True,True,False,False,True,True,docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv
+TradingViewRemix/TVR,True,True,False,False,True,True,docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/tvr_btc_usd_1h.normalized.csv
+yfinance/YF,True,True,False,False,True,True,docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/yahoo_spy_1h.normalized.csv
+Kraken,True,True,False,False,True,True,docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv
+Binance,True,True,False,False,True,True,docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/binance_btcusdt_1h.normalized.csv
+Bybit,True,True,False,False,True,True,docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv

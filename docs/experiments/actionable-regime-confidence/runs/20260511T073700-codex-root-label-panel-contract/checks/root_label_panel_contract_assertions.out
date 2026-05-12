@@ -1,0 +1,8 @@
+goal_achieved=false
+total_slots=612
+accepted_full_panel_label_slots=0
+missing_independent_source_label_slots=582
+provider_interval_unsupported_slots=12
+thresholds_relaxed=false
+runtime_code_changed=false
+gate_result=blocked_root_label_panel_contract_requires_external_labels

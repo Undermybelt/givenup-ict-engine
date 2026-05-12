@@ -1,0 +1,71 @@
+{
+  "accepted_rows_added": 0,
+  "analyze_runs": 2,
+  "board_hash_before_artifact": "7475689be362a3664077092ced438478f47c68baa116639a7de5d4df0f600fbe",
+  "closed_loop_branch_admission": {
+    "actionable": false,
+    "candidate_status": "execution_blocked",
+    "evidence": [
+      "pre_bayes_gate_status=observe_only",
+      "execution_gate_status=execution_blocked",
+      "review_status=observe"
+    ],
+    "execution_gate_status": "execution_blocked",
+    "path_id": "path:scenario:B2R_PROVIDER_BTC_EMA_RSI_104703:belief_regime_node:trend:trend_follow_through:primary",
+    "path_label": "path:scenario:B2R_PROVIDER_BTC_EMA_RSI_104703:belief_regime_node:trend:trend_follow_through:primary",
+    "pre_bayes_gate_status": "observe_only",
+    "ready": false,
+    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "review_status": "observe",
+    "source_phase": "structural-recommended-path-bundle",
+    "status": "fail_closed"
+  },
+  "corrected_materialization_exit": "0",
+  "corrected_replay_exit": "143",
+  "corrected_replay_exit_meaning": "terminated_by_operator_due_to_runtime_estimate_after_partial_observation",
+  "downstream_promotion": false,
+  "early_failures": {
+    "00_materialize_btc_candles_json.exit": "1",
+    "02_structural_feedback_replay_harness.exit": "127"
+  },
+  "entry_model_matched_rows": [
+    {
+      "entry_model_id": "cisd_rb_long_v1",
+      "matched_rows": 0,
+      "ready": false
+    },
+    {
+      "entry_model_id": "breaker_rb_long_v1",
+      "matched_rows": 0,
+      "ready": false
+    }
+  ],
+  "execution_candidate_actionable": false,
+  "execution_candidate_ready": false,
+  "execution_review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+  "execution_review_status": "observe",
+  "gate": "104703_structural_feedback_replay_corrected_partial_v1=one_structural_feedback_partial_replay_mature_floor_not_met_fail_closed",
+  "history_mature_rows": 4,
+  "materialized_candles_rows": 985,
+  "mature_rooted_branch_observations_promoted": 0,
+  "mature_rows": 1,
+  "partial_feedback_files": 1,
+  "promotion_allowed": false,
+  "ranker_runtime_summary": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=10 mature_rows=1 history_mature_rows=4 raw_scored_mature=3/30 production_validation=2/30 observation_validation=1/30 calibration=evaluated trainer_artifact=missing trainer_status=missing runtime_selection=disabled runtime_mode=none runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0",
+  "ranker_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=3/30 production_validation=2/30 observation_validation=1/30 ready=false",
+  "run_id": "20260512T110221+0800-codex-104703-structural-feedback-replay-v1",
+  "selected_data_autoquant_promotion": false,
+  "six_provider_matrix_satisfied": false,
+  "source_branch": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+  "source_control_evidence_acquired": false,
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+  "strict_full_objective": false,
+  "target_history_rows": 10,
+  "target_rows": 3,
+  "target_summary_line": "structural_path_ranking_target rows=3 history_rows=10 candidate_set_size=3 mature_rows=1 history_mature_rows=4 propensity_rows=1 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=1",
+  "trade_usable": false,
+  "update_goal": false,
+  "update_runs": 1,
+  "workflow_blocking_reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+  "workflow_blocking_status": "fail_closed"
+}

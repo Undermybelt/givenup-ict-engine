@@ -1,0 +1,333 @@
+{
+  "active_taxonomy": {
+    "name": "MainRegimeV2",
+    "price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "separate_direct_event_class_or_overlay": [
+      "Manipulation"
+    ]
+  },
+  "aggregation_protocol": {
+    "1mo": "month-end period, source_label is majority daily parent label within period",
+    "1w": "weekly Friday period, source_label is majority daily parent label within period",
+    "guardrail": "derived timeframe labels are not native source labels and do not close full matrix without owner-approved aggregation protocol"
+  },
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "dataset": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "decision": {
+    "accepted_by_timeframe_root": [
+      "1w:Bull",
+      "1w:Sideways"
+    ],
+    "accepted_derived_timeframe_gates": [
+      "derived_1w_bull_source_conf_momentum_v1",
+      "derived_1w_sideways_source_conf_low_range_v1"
+    ],
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "full_objective_achieved": false,
+    "gate_result": "partial_derived_weekly_parent_roots_bull_sideways_only_full_matrix_still_blocked",
+    "new_accepted_count": 2,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T05:13:18.889521+00:00",
+  "input_row_counts": {
+    "monthly_rows_after_24mo_warmup": 10759,
+    "weekly_rows_after_52w_warmup": 48816
+  },
+  "remaining_blockers": [
+    "Derived weekly stock-panel labels accepted Bull and Sideways only; weekly Bear and Crisis remain below 95.",
+    "Derived monthly stock-panel labels did not accept any root at 95.",
+    "Derived labels are aggregation outputs, not native weekly/monthly labels.",
+    "Full objective still needs exact/direct labels or approved crosswalks for unsupported cells."
+  ],
+  "reports": [
+    {
+      "accepted_95": true,
+      "label_source": "derived_majority_from_daily_stock_market_regimes_parent_labels",
+      "root": "Bull",
+      "rule": "avg_regime_confidence >= 0.9666 AND ret_sum_4 >= 0.02710841687",
+      "rule_id": "derived_1w_bull_source_conf_momentum_v1",
+      "stats": {
+        "calibration": {
+          "positives": 235,
+          "precision": 1.0,
+          "support": 235,
+          "wilson95_lcb": 0.9839162814
+        },
+        "heldout_ticker": {
+          "positives": 267,
+          "precision": 1.0,
+          "support": 267,
+          "wilson95_lcb": 0.9858165776
+        },
+        "heldout_time": {
+          "positives": 113,
+          "precision": 1.0,
+          "support": 113,
+          "wilson95_lcb": 0.9671224678
+        },
+        "train": {
+          "positives": 361,
+          "precision": 1.0,
+          "support": 361,
+          "wilson95_lcb": 0.9894708819
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "timeframe": "1w"
+    },
+    {
+      "accepted_95": false,
+      "label_source": "derived_majority_from_daily_stock_market_regimes_parent_labels",
+      "root": "Bear",
+      "rule": "range_pos_52 <= 0.1104018897 AND runup_13 <= 0.0216180473 AND runup_52 <= 0.03326387538",
+      "rule_id": "derived_1w_bear_lower_range_probe_v1",
+      "stats": {
+        "calibration": {
+          "positives": 256,
+          "precision": 0.9110320285,
+          "support": 281,
+          "wilson95_lcb": 0.8719651622
+        },
+        "heldout_ticker": {
+          "positives": 591,
+          "precision": 0.9321766562,
+          "support": 634,
+          "wilson95_lcb": 0.9098877193
+        },
+        "heldout_time": {
+          "positives": 457,
+          "precision": 0.9085487078,
+          "support": 503,
+          "wilson95_lcb": 0.8801672671
+        },
+        "train": {
+          "positives": 1287,
+          "precision": 0.9186295503,
+          "support": 1401,
+          "wilson95_lcb": 0.9031423049
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "timeframe": "1w"
+    },
+    {
+      "accepted_95": true,
+      "label_source": "derived_majority_from_daily_stock_market_regimes_parent_labels",
+      "root": "Sideways",
+      "rule": "avg_regime_confidence >= 0.833 AND ret_sum_4 <= 0.002940090941 AND range_width_13 <= 0.1248950282",
+      "rule_id": "derived_1w_sideways_source_conf_low_range_v1",
+      "stats": {
+        "calibration": {
+          "positives": 164,
+          "precision": 1.0,
+          "support": 164,
+          "wilson95_lcb": 0.9771125749
+        },
+        "heldout_ticker": {
+          "positives": 493,
+          "precision": 0.986,
+          "support": 500,
+          "wilson95_lcb": 0.9713869309
+        },
+        "heldout_time": {
+          "positives": 83,
+          "precision": 1.0,
+          "support": 83,
+          "wilson95_lcb": 0.9557646904
+        },
+        "train": {
+          "positives": 487,
+          "precision": 0.9918533605,
+          "support": 491,
+          "wilson95_lcb": 0.9792426953
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "timeframe": "1w"
+    },
+    {
+      "accepted_95": false,
+      "label_source": "derived_majority_from_daily_stock_market_regimes_parent_labels",
+      "root": "Crisis",
+      "rule": "ret_sum_4 >= 0.1464923854 AND drawdown_52 <= -0.2754686015 AND volatility >= 0.3911786717",
+      "rule_id": "derived_1w_crisis_rebound_probe_v1",
+      "stats": {
+        "calibration": {
+          "positives": 51,
+          "precision": 0.9622641509,
+          "support": 53,
+          "wilson95_lcb": 0.872457128
+        },
+        "heldout_ticker": {
+          "positives": 81,
+          "precision": 0.9759036145,
+          "support": 83,
+          "wilson95_lcb": 0.9163369076
+        },
+        "heldout_time": {
+          "positives": 48,
+          "precision": 0.96,
+          "support": 50,
+          "wilson95_lcb": 0.8653990931
+        },
+        "train": {
+          "positives": 331,
+          "precision": 0.9484240688,
+          "support": 349,
+          "wilson95_lcb": 0.9199540208
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "timeframe": "1w"
+    },
+    {
+      "accepted_95": false,
+      "label_source": "derived_majority_from_daily_stock_market_regimes_parent_labels",
+      "root": "Bull",
+      "rule": "range_pos_24 >= 1 AND runup_3 >= 0.0984973185 AND ret_sum_3 >= 0.07753638232",
+      "rule_id": "derived_1mo_bull_upper_range_probe_v1",
+      "stats": {
+        "calibration": {
+          "positives": 255,
+          "precision": 0.9622641509,
+          "support": 265,
+          "wilson95_lcb": 0.931942072
+        },
+        "heldout_ticker": {
+          "positives": 244,
+          "precision": 0.9644268775,
+          "support": 253,
+          "wilson95_lcb": 0.933787328
+        },
+        "heldout_time": {
+          "positives": 171,
+          "precision": 0.9827586207,
+          "support": 174,
+          "wilson95_lcb": 0.9505422776
+        },
+        "train": {
+          "positives": 455,
+          "precision": 0.9498956159,
+          "support": 479,
+          "wilson95_lcb": 0.9265307649
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "timeframe": "1mo"
+    },
+    {
+      "accepted_95": false,
+      "label_source": "derived_majority_from_daily_stock_market_regimes_parent_labels",
+      "root": "Bear",
+      "rule": "runup_12 <= 0.007596319686 AND ret_sum_3 <= -0.06931598493",
+      "rule_id": "derived_1mo_bear_lower_range_probe_v1",
+      "stats": {
+        "calibration": {
+          "positives": 86,
+          "precision": 0.9052631579,
+          "support": 95,
+          "wilson95_lcb": 0.8296695633
+        },
+        "heldout_ticker": {
+          "positives": 169,
+          "precision": 0.8848167539,
+          "support": 191,
+          "wilson95_lcb": 0.8317663752
+        },
+        "heldout_time": {
+          "positives": 133,
+          "precision": 0.8866666667,
+          "support": 150,
+          "wilson95_lcb": 0.8259972502
+        },
+        "train": {
+          "positives": 340,
+          "precision": 0.8564231738,
+          "support": 397,
+          "wilson95_lcb": 0.8185099011
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "timeframe": "1mo"
+    },
+    {
+      "accepted_95": false,
+      "label_source": "derived_majority_from_daily_stock_market_regimes_parent_labels",
+      "root": "Sideways",
+      "rule": "avg_regime_confidence >= 0.7909090909 AND runup_3 <= 0.02124159043 AND range_width_6 <= 0.1694708623",
+      "rule_id": "derived_1mo_sideways_low_range_probe_v1",
+      "stats": {
+        "calibration": {
+          "positives": 29,
+          "precision": 0.8529411765,
+          "support": 34,
+          "wilson95_lcb": 0.698719435
+        },
+        "heldout_ticker": {
+          "positives": 91,
+          "precision": 0.9381443299,
+          "support": 97,
+          "wilson95_lcb": 0.871562168
+        },
+        "heldout_time": {
+          "positives": 13,
+          "precision": 0.9285714286,
+          "support": 14,
+          "wilson95_lcb": 0.6853129558
+        },
+        "train": {
+          "positives": 94,
+          "precision": 0.9591836735,
+          "support": 98,
+          "wilson95_lcb": 0.8997117889
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "timeframe": "1mo"
+    },
+    {
+      "accepted_95": false,
+      "label_source": "derived_majority_from_daily_stock_market_regimes_parent_labels",
+      "root": "Crisis",
+      "rule": "max_regime_confidence <= 0.455 AND avg_daily_abs_ret >= 0.02073235445",
+      "rule_id": "derived_1mo_crisis_absret_probe_v1",
+      "stats": {
+        "calibration": {
+          "positives": 64,
+          "precision": 0.8101265823,
+          "support": 79,
+          "wilson95_lcb": 0.7100735816
+        },
+        "heldout_ticker": {
+          "positives": 89,
+          "precision": 0.7672413793,
+          "support": 116,
+          "wilson95_lcb": 0.6825321925
+        },
+        "heldout_time": {
+          "positives": 53,
+          "precision": 0.803030303,
+          "support": 66,
+          "wilson95_lcb": 0.6916121201
+        },
+        "train": {
+          "positives": 259,
+          "precision": 0.8274760383,
+          "support": 313,
+          "wilson95_lcb": 0.7817131511
+        }
+      },
+      "taxonomy_role": "MainRegimeV2_price_root",
+      "timeframe": "1mo"
+    }
+  ],
+  "run_id": "20260511T130655+0800-codex-stock-panel-derived-timeframe-probe-v1"
+}

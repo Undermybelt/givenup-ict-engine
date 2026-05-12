@@ -1,0 +1,110 @@
+{
+  "accepted_rows_added": 0,
+  "blocker": "Source posterior/confidence fields can score partial NIFTY labels, but the NIFTY subset still lacks Bear and source confidence is not cross-market/cross-cycle calibrated Board A acceptance.",
+  "board_hash_before_writeback": "ebd9e16c424cf46db8dc81cce8b488f35f1889784b3ded8d495513ed487683b2",
+  "confidence_summaries": [
+    {
+      "confidence_field": "macro_confidence",
+      "confidence_max": 0.9999972111034446,
+      "confidence_mean": 0.930208961555979,
+      "confidence_median": 0.9911904636586424,
+      "confidence_min": 0.5005807666155165,
+      "date_max": "2025-07-17",
+      "date_min": "2012-02-02",
+      "label": "Bull",
+      "policy": "source_owner_describes_Durable_as_trending_bull_low_vol",
+      "rows": 1213,
+      "rows_at_or_above_0_95": 837,
+      "share_at_or_above_0_95": 0.6900247320692497,
+      "source_field": "macro_state",
+      "source_state": "Durable",
+      "split_counts": {
+        "calibration": 372,
+        "heldout_time": 541,
+        "test": 300
+      }
+    },
+    {
+      "confidence_field": "fast_confidence",
+      "confidence_max": 0.9958733727030026,
+      "confidence_mean": 0.8161819977526381,
+      "confidence_median": 0.8602598035096306,
+      "confidence_min": 0.3528485152717333,
+      "date_max": "2026-02-03",
+      "date_min": "2012-02-02",
+      "label": "Sideways",
+      "policy": "source_owner_describes_Calm_as_sideways_low_vol",
+      "rows": 1231,
+      "rows_at_or_above_0_95": 328,
+      "share_at_or_above_0_95": 0.26645004061738425,
+      "source_field": "fast_state",
+      "source_state": "Calm",
+      "split_counts": {
+        "calibration": 533,
+        "heldout_time": 465,
+        "test": 233
+      }
+    },
+    {
+      "confidence_field": "fast_confidence",
+      "confidence_max": 0.997705692337894,
+      "confidence_mean": 0.8275488297398509,
+      "confidence_median": 0.8805300135868666,
+      "confidence_min": 0.3642152606668727,
+      "date_max": "2026-03-20",
+      "date_min": "2013-03-19",
+      "label": "Crisis",
+      "policy": "source_owner_describes_Stress_as_crisis_high_volatility",
+      "rows": 991,
+      "rows_at_or_above_0_95": 276,
+      "share_at_or_above_0_95": 0.2785065590312815,
+      "source_field": "fast_state",
+      "source_state": "Stress",
+      "split_counts": {
+        "calibration": 387,
+        "heldout_time": 313,
+        "test": 291
+      }
+    }
+  ],
+  "confidence_threshold": 0.95,
+  "decision": "nifty_source_confidence_screen_v1=partial_source_confidence_scored_no_acceptance",
+  "external_requests_sent": false,
+  "generated_at_utc": "2026-05-11T13:41:41.270541+00:00",
+  "high_confidence_rows": 1441,
+  "intake_label_counts": {
+    "": 1,
+    "Bear": 54939,
+    "Bull": 104979,
+    "Crisis": 30623,
+    "Sideways": 57899
+  },
+  "intake_row_count": 248441,
+  "intake_rows": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+  "intake_rows_sha256": "4e59aa598eaed6d75cd93988383837bb6c364eb73aaf90ee32968a434d80bf5b",
+  "live_intake_missing_roots": [],
+  "new_confidence_gate": false,
+  "nifty_mapped_labels": [
+    "Bull",
+    "Crisis",
+    "Sideways"
+  ],
+  "nifty_missing_roots": [
+    "Bear"
+  ],
+  "raw_data_committed": false,
+  "run_id": "20260511T213820-codex-nifty-source-confidence-screen-v1",
+  "runtime_code_changed": false,
+  "source_csv": "/tmp/ict-engine-public-source-intake-scout/nifty/regime_timeline_history.csv",
+  "source_csv_sha256": "4bfb78601e36557e177701bf8ee6a0c9b8e243206e0f9eafe8ee6c7115f0b732",
+  "source_metadata": "/tmp/ict-engine-public-source-intake-scout/nifty/dataset-metadata.json",
+  "source_metadata_sha256": "ca4e59c603ba1f6169107c3e18018a077343ec773f9c5ea337715eca9a27bc0a",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unmapped_source_state_counts": {
+    "fast_Choppy": 1242,
+    "macro_Fragile": 2251
+  },
+  "update_goal": false
+}

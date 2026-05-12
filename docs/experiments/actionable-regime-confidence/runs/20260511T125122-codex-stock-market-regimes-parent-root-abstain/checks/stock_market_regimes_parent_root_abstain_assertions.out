@@ -1,0 +1,8 @@
+PASS active_taxonomy_is_MainRegimeV2_parent_roots
+PASS no_subregime_labels_promoted
+PASS manipulation_not_accepted_from_ohlcv_panel
+PASS raw_data_not_committed
+PASS runtime_code_unchanged
+PASS thresholds_not_relaxed
+PASS heldout_time_and_ticker_validated
+PASS accepted_95_scoped_parent_roots_all_four

@@ -1,0 +1,11 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1/B2R_PROVIDER_BTC_EMA_RSI_104703/policy_training/structural_path_ranking_target.csv: 3 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 1 training samples
+[features] label dist: {np.int64(1): np.int64(1)}
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 3 training samples
+[features] label dist: {np.int64(0): np.int64(1), np.int64(1): np.int64(2)}
+[apply] CatBoost predictions: 3
+[apply] Scores saved to docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/exact-branch-closure-v1/path_ranker_scores_104703_exact_branch_catboost_v2.csv

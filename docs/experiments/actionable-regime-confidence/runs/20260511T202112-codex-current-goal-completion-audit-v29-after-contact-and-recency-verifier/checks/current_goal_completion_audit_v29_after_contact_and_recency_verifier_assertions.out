@@ -1,0 +1,10 @@
+PASS contact_paths_ready_rows_not_acquired
+PASS contact_request_sent=false
+PASS contact_rows_acquired=false
+PASS recency_extension_missing_files
+PASS recency_intake_files_present=0
+PASS new_confidence_gate_since_v28=false
+PASS accepted_rows_added_since_v28=0
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS unmet_ids=R2,R3,R4,R5,R6,R8

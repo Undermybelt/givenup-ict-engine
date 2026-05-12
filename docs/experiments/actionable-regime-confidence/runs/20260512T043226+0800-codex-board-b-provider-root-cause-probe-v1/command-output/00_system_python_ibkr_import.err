@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sys; sys.path.insert(0, "/Users/thrill3r/projects-ict-engine/ict-engine/scripts"); import redis; import ib_async; import ibkr_bridge; print("ok")
+                                                                                              ^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'redis'

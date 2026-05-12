@@ -1,0 +1,14 @@
+run_id=20260511T142858+0800-codex-positive-target-selector-v1
+board_sha256_at_run=1eff0564f1c51cbf5520797089e0e500e32532e3108a6ec23bb0fd9bfbccf36d
+accepted_strict_rows_consumed=41
+accepted_roots_present=['Bull', 'Bear', 'Sideways', 'Crisis']
+top_pair=PFE+TSLA
+top_pair_roots=['Bear', 'Sideways', 'Crisis']
+two_market_pair_can_cover_all_four_roots=false
+new_provider_downloads=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

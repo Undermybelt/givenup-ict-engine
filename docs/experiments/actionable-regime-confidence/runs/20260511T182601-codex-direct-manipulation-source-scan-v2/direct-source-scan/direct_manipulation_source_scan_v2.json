@@ -1,0 +1,127 @@
+{
+  "accepted_rows_added": 0,
+  "candidate_needs_row_schema_audit": 0,
+  "candidate_rows": [
+    {
+      "files_summary": [
+        "Next Page Token = CfDJ8OqP5ZkTT9ZGj66XXRbxXyDxV5YElqguyVqd3IRb_tmB6sT4HQi9Z-hkHJazIYDBah5pMBqMlyUaPAi11xIItfjAUnN3mgXhuEi40lhGX2I7Y3J5rCdhWzr1M9WkifFTHW90M2I2USkc",
+        "name                    size  creationDate                ",
+        "-------------------  -------  --------------------------  ",
+        "ADA_1m_depth30.csv   7260122  2026-04-06 11:55:31.015000  ",
+        "ADA_1m_ohlcv.csv      755388  2026-04-06 11:55:31.271000  ",
+        "ADA_5m_ohlcv.csv      151964  2026-04-06 11:55:31         ",
+        "APT_1m_depth30.csv   6822433  2026-04-06 11:55:31.622000  ",
+        "APT_1m_ohlcv.csv      729831  2026-04-06 11:55:31.812000  "
+      ],
+      "id": "adamatractor/institutional-crypto-l2-orderbook-30lvl-1m-5m",
+      "note": "recent_crypto_l2_orderbook_control_candidate",
+      "reason": "Metadata has manipulation-like topic or positive labels, but no matched negative/control-row evidence.",
+      "source": "kaggle",
+      "status": "blocked_positive_or_topic_only_no_matched_negatives",
+      "title": "24 Crypto - Order book - 30 lvl"
+    },
+    {
+      "files_summary": [
+        "name                                      size  creationDate                ",
+        "-----------------------------------  ---------  --------------------------  ",
+        "Test_Dst_NoAuction_DecPre_CF_7.txt   132259850  2021-03-30 17:03:24.743000  ",
+        "Test_Dst_NoAuction_DecPre_CF_8.txt   124378346  2021-03-30 17:03:24         ",
+        "Test_Dst_NoAuction_DecPre_CF_9.txt    76138106  2021-03-30 17:03:24         ",
+        "Train_Dst_NoAuction_DecPre_CF_7.txt  607324298  2021-03-30 17:03:33.714000  "
+      ],
+      "id": "praanj/limit-orderbook-data",
+      "note": "legacy_lob_control_candidate",
+      "reason": "Metadata has L2/order-lifecycle or orderbook rows but no direct positive manipulation labels.",
+      "source": "kaggle",
+      "status": "control_only_not_direct_positive_source",
+      "title": "Limit Orderbook data"
+    },
+    {
+      "files_summary": [
+        "name                            size  creationDate                ",
+        "------------------------  ----------  --------------------------  ",
+        "order_classification.csv  3175920165  2023-02-01 07:35:22.618000  ",
+        "product_info.csv            12020551  2023-02-01 07:34:13.491000  "
+      ],
+      "id": "a53e93e57a1/maker-order-dataset-osaka-20210301",
+      "note": "order_lifecycle_control_candidate",
+      "reason": "Metadata has L2/order-lifecycle or orderbook rows but no direct positive manipulation labels.",
+      "source": "kaggle",
+      "status": "control_only_not_direct_positive_source",
+      "title": "Maker Order Events in Osaka Exchange"
+    },
+    {
+      "files_summary": [
+        ".gitattributes",
+        "README.md",
+        "data1.zip",
+        "data2.zip"
+      ],
+      "id": "Go3x3/pump_and_dump_dataset",
+      "note": "social_text_pump_dump_candidate",
+      "reason": "HF metadata exposes pump/dump package files, but README has no schema detail and metadata does not show matched negative/control rows.",
+      "source": "huggingface",
+      "status": "blocked_positive_or_topic_only_no_matched_negatives",
+      "title": "pump_and_dump_dataset"
+    },
+    {
+      "files_summary": [
+        "High-Frequency Market Microstructure Analysis using TEN and GNN for Detecting Algorithmic Spoofing.pdf"
+      ],
+      "id": "18667008",
+      "note": "spoofing_preprint_no_data_files",
+      "reason": "Zenodo record is a preprint/PDF record, not a row dataset with positive and matched negative controls.",
+      "source": "zenodo",
+      "status": "blocked_preprint_only_no_rows",
+      "title": "High-Frequency Market Microstructure Analysis using Transformer-Encoder Networks (TEN) and Graph Neural Networks (GNN) for Detecting Algorithmic Spoofing"
+    }
+  ],
+  "decision": "blocked_no_ready_direct_species_source",
+  "full_objective_achieved": false,
+  "gate_result": "direct_manipulation_source_scan_v2=no_ready_matched_negative_source",
+  "hf_search_rows": [
+    {
+      "downloads": 5,
+      "id": "Go3x3/pump_and_dump_dataset",
+      "lastModified": "2025-02-20T07:44:45.000Z",
+      "likes": 0,
+      "query": "pump dump",
+      "source": "huggingface",
+      "tags": [
+        "license:mit",
+        "size_categories:1M<n<10M",
+        "format:csv",
+        "modality:tabular",
+        "modality:text",
+        "library:datasets",
+        "library:dask",
+        "library:mlcroissant",
+        "library:polars",
+        "region:us"
+      ]
+    }
+  ],
+  "hf_searches": [
+    "spoofing order book",
+    "quote stuffing",
+    "market manipulation",
+    "wash trading",
+    "pump dump"
+  ],
+  "kaggle_searches": [
+    "spoofing order book",
+    "quote stuffing",
+    "limit orderbook",
+    "market manipulation"
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Do not claim full direct Manipulation species coverage; acquire row-level positive plus matched-negative exports for spoofing/layering, quote stuffing, pinging, bear raid, or painting tape.",
+  "purpose": "Scan public metadata for missing direct Manipulation species sources without downloading raw rows or promoting topic hits into accepted gates.",
+  "raw_data_committed": false,
+  "reason": "Current metadata scan found control-only L2/order-lifecycle datasets and topic/positive-only pump-dump or spoofing records, but no ready source with direct positive rows, matched normal controls, event/order lifecycle provenance, and row schema.",
+  "run_id": "20260511T182601+0800-codex-direct-manipulation-source-scan-v2",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

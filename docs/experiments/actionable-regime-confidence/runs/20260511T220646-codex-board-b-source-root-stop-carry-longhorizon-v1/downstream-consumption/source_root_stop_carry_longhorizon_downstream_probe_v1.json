@@ -1,0 +1,91 @@
+{
+  "branch_path_preserved": true,
+  "closed_loop_confidence_ready": false,
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-ingest-real-trades --symbol SRC_STOP_CARRY_LH_220646 --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-220646 --trades /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/source_root_stop_carry_longhorizon_real_trades_wire_v1.jsonl --source board_b_220646_source_root_stop_carry_longhorizon --dry-run",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/auto_quant_ingest_real_trades_dry_run.exit",
+      "name": "auto_quant_ingest_real_trades_dry_run",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/auto_quant_ingest_real_trades_dry_run.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/auto_quant_ingest_real_trades_dry_run.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-ingest-real-trades --symbol SRC_STOP_CARRY_LH_220646 --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-220646 --trades /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/source_root_stop_carry_longhorizon_real_trades_wire_v1.jsonl --source board_b_220646_source_root_stop_carry_longhorizon",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/auto_quant_ingest_real_trades_apply.exit",
+      "name": "auto_quant_ingest_real_trades_apply",
+      "returncode": 1,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/auto_quant_ingest_real_trades_apply.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/auto_quant_ingest_real_trades_apply.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol SRC_STOP_CARRY_LH_220646 --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-220646 --refresh",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/pre_bayes_status_refresh.exit",
+      "name": "pre_bayes_status_refresh",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/pre_bayes_status_refresh.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/pre_bayes_status_refresh.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_STOP_CARRY_LH_220646 --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-220646 --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/workflow_status_agent.exit",
+      "name": "workflow_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/workflow_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/workflow_status_agent.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol SRC_STOP_CARRY_LH_220646 --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-220646 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/workflow_status_execution_candidate.exit",
+      "name": "workflow_status_execution_candidate",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/workflow_status_execution_candidate.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/workflow_status_execution_candidate.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol SRC_STOP_CARRY_LH_220646 --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-220646 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/policy_training_status.exit",
+      "name": "policy_training_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/policy_training_status.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/policy_training_status.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol SRC_STOP_CARRY_LH_220646 --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-220646",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/command-output/export_structural_path_ranking_target.out"
+    }
+  ],
+  "decision": "downstream_probe_partial_fail_closed",
+  "downstream_status": {
+    "apply_counts": {},
+    "apply_exit": 1,
+    "dry_run_counts": {
+      "dry_run": true,
+      "feedback_records_inserted": 0,
+      "force": false,
+      "trades_invalid": 0
+    },
+    "dry_run_exit": 0,
+    "export_structural_path_ranking_target_exit": 0,
+    "policy_training_status_exit": 0,
+    "pre_bayes_status_exit": 0,
+    "unique_branch_paths": 4,
+    "wire_records": 12329,
+    "workflow_execution_candidate_exit": 0
+  },
+  "execution_candidate_observed": true,
+  "generated_at_utc": "2026-05-11T14:16:29.984059+00:00",
+  "ingest_applied": false,
+  "path_ranker_target_observed": true,
+  "pre_bayes_observed": true,
+  "promotion_allowed": false,
+  "run_id": "20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "state_dir": "/tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-220646",
+  "unique_branch_paths": 4,
+  "wire_jsonl": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-consumption/source_root_stop_carry_longhorizon_real_trades_wire_v1.jsonl",
+  "wire_records": 12329
+}

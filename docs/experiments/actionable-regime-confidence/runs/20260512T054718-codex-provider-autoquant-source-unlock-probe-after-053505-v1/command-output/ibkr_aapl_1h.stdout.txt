@@ -1,0 +1,1 @@
+ibkr historical AAPL (STK) 1 hour 2 W TRADES: 158 rows (2026-04-28T08:00:00+00:00 -> 2026-05-11T21:00:00+00:00) -> /private/tmp/20260512T054718-codex-provider-autoquant-source-unlock-probe-after-053505-v1/provider-bars/AAPL_ibkr_1h_2w.csv

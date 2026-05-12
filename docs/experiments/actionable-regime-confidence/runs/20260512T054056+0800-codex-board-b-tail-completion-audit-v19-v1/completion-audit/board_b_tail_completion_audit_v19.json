@@ -1,0 +1,21 @@
+{
+  "run_id": "20260512T054056+0800-codex-board-b-tail-completion-audit-v19-v1",
+  "board_hash_observed_before_audit": "46a060282af06b20894efd57cecb590316fc3e7f713c9ecee926ae3297efd341",
+  "strict_full_objective": false,
+  "goal_complete": false,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "blocking_requirement": "user_selected_historical_data_missing",
+  "selected_historical_dataset": false,
+  "selected_data_auto_quant_factor_research": false,
+  "nonzero_mature_rooted_observations": false,
+  "selected_data_downstream_chain": false,
+  "trade_usable_execution_tree_packet": false,
+  "count_once_evidence": {
+    "053410": "copied_state_provider_runtime_visibility_only",
+    "052522": "numeric_tree_source_label_diagnostic_only",
+    "052828": "branch_path_assignment_wiring_only",
+    "051844_052911": "hgb_source_label_diagnostic_only"
+  },
+  "next_action": "explicit_user_reply_exactly_one_of_HTF_MTF_LTF"
+}

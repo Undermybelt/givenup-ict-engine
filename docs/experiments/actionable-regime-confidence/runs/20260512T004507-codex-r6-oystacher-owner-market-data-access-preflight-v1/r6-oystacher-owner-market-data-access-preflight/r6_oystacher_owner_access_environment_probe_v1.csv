@@ -1,0 +1,5 @@
+probe,value,decision
+python_module_databento,false,no_local_databento_client
+databento_cli,false,no_local_databento_cli
+python_module_pyarrow,false,no_pyarrow_reader_in_system_python
+visible_owner_route_env_var_names,[],no_databento_cme_cftc_cboe_cfe_env_var_names_visible

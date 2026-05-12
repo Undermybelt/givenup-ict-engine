@@ -1,0 +1,11 @@
+field,required,description
+event_id,True,Stable event or row id.
+instrument_or_asset,True,Exact traded asset/instrument/collection/token/contract.
+venue_or_chain,True,"Exchange, venue, chain, or data source."
+event_start,True,Timestamp for positive/negative window start.
+event_end,True,Timestamp for positive/negative window end.
+is_manipulation_positive,True,Boolean positive/negative label.
+manipulation_type,True,"wash_trade, spoofing, layering, pump_dump, quote_stuffing, stop_run, liquidity_raid, or other direct class."
+negative_control_type,True,For negatives: same asset/venue/time controls or documented non-event controls.
+source_id,True,Stable dataset/source identifier and version.
+source_url_or_private_ref,True,"Public URL, authenticated export id, or private handoff reference."

@@ -1,0 +1,108 @@
+{
+  "accepted_scoped_variety_count": 5,
+  "artifact_type": "direct_manipulation_coverage_readback_v2",
+  "coverage_rows": [
+    {
+      "accepted_scoped_95": true,
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.md",
+      "remaining_gap": "Event-confirmed suppression/cooldown signal only; does not cover spoofing, layering, quote stuffing, or order-book behavior.",
+      "state": "accepted_95_scoped_direct_event",
+      "variety": "pump_dump_telegram_event"
+    },
+    {
+      "accepted_scoped_95": false,
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T050029-codex-mehrnoom-twitter-social-direct-gate/mehrnoom-social-gate/mehrnoom_twitter_social_direct_gate_report.md",
+      "remaining_gap": "Needs stronger direct controls or a different text/event construction before acceptance.",
+      "state": "blocked_below_95",
+      "variety": "pump_dump_social_text_or_twitter"
+    },
+    {
+      "accepted_scoped_95": true,
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T101019-codex-zenodo-dex-selftrade-direct-gate/direct-gate/zenodo_dex_selftrade_direct_gate_report.md",
+      "remaining_gap": "Bounded DEX self-trade/wash-trade slice only; not spoofing/layering/quote stuffing.",
+      "state": "accepted_95_scoped_direct_order_lifecycle",
+      "variety": "dex_self_trade_order_lifecycle"
+    },
+    {
+      "accepted_scoped_95": true,
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T102332-codex-zenodo-dex-consecutive-selftrade-gate/direct-gate/zenodo_dex_consecutive_selftrade_gate.md",
+      "remaining_gap": "Confirms bounded self-trade context; still not full direct Manipulation variety coverage.",
+      "state": "accepted_95_scoped_direct_order_lifecycle_context",
+      "variety": "dex_consecutive_self_trade_order_lifecycle"
+    },
+    {
+      "accepted_scoped_95": true,
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T111122-codex-midsummer-meme-direct-wash-audit/midsummer-meme-audit/midsummer_meme_direct_wash_audit.md",
+      "remaining_gap": "BSC wash-maker only; not centralized spoofing/layering/quote stuffing.",
+      "state": "accepted_95_scoped_direct_onchain_wash",
+      "variety": "midsummer_bsc_wash_maker"
+    },
+    {
+      "accepted_scoped_95": true,
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.md",
+      "remaining_gap": "Direct on-chain wash-maker evidence only; full manipulation class remains incomplete.",
+      "state": "accepted_95_scoped_direct_onchain_wash",
+      "variety": "midsummer_multichain_wash_maker"
+    },
+    {
+      "accepted_scoped_95": false,
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T130457-codex-spoofing-appendix-direct-case-inventory/direct-case-inventory/spoofing_appendix_direct_case_inventory.md",
+      "remaining_gap": "Acquire matched negative order-lifecycle/order-book rows before any spoofing/layering Wilson95 gate claim.",
+      "state": "positive_only_no_95_gate",
+      "variety": "spoofing_layering_enforcement_cases"
+    },
+    {
+      "accepted_scoped_95": false,
+      "primary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T110827-codex-local-spoofing-source-audit/source-audit/local_spoofing_source_audit.md",
+      "remaining_gap": "Need exportable direct order-book/order-lifecycle rows with controls.",
+      "state": "rejected_no_replayable_positive_negative_rows",
+      "variety": "local_spoofing_repos"
+    },
+    {
+      "accepted_scoped_95": false,
+      "primary_artifact": null,
+      "remaining_gap": "Acquire quote-message/order-book bursts and matched normal-period controls.",
+      "state": "missing_direct_rows",
+      "variety": "quote_stuffing"
+    },
+    {
+      "accepted_scoped_95": false,
+      "primary_artifact": null,
+      "remaining_gap": "Acquire order-lifecycle probe rows and matched controls.",
+      "state": "missing_direct_rows",
+      "variety": "pinging"
+    },
+    {
+      "accepted_scoped_95": false,
+      "primary_artifact": null,
+      "remaining_gap": "Acquire direct event/order-flow rows and same-venue non-event controls.",
+      "state": "missing_direct_rows",
+      "variety": "bear_raid_or_painting_tape"
+    }
+  ],
+  "current_cursor_edited": false,
+  "decision": {
+    "accepted_rows_added": 0,
+    "full_direct_manipulation_variety_coverage": false,
+    "full_objective_achieved": false,
+    "gate_result": "direct_manipulation_coverage_readback_v2=scoped_varieties_present_full_species_blocked",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T10:47:23.064917+00:00",
+  "remaining_unaccepted_variety_count": 6,
+  "row_intake_gate": "direct_manipulation_row_intake_manifest_v1_ready_rows_not_acquired",
+  "run_id": "20260511T184630+0800-codex-direct-manipulation-coverage-readback-v2",
+  "source_artifacts": {
+    "row_intake_manifest": "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_manifest_v1.json",
+    "spoofing_layering_readiness": "docs/experiments/actionable-regime-confidence/runs/20260511T151720-codex-spoofing-layering-matched-row-readiness-v1/matched-row-readiness/spoofing_layering_matched_row_readiness_v1.json",
+    "variety_matrix": "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.json",
+    "web_source_screen": "docs/experiments/actionable-regime-confidence/runs/20260511T184212-codex-direct-manipulation-web-source-screen-v1/direct-web-source-screen/direct_manipulation_web_source_screen_v1.json"
+  },
+  "spoofing_layering_matched_negative_cases_available": 0,
+  "web_screen_ready_source_candidate_count": 0
+}

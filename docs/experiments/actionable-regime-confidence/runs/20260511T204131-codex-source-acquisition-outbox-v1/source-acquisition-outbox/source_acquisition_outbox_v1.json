@@ -1,0 +1,91 @@
+{
+  "accepted_rows_added": 0,
+  "created_at": "2026-05-11T12:43:24.982988+00:00",
+  "decision": "source_acquisition_outbox_v1=outbox_ready_rows_not_acquired",
+  "new_confidence_gate": false,
+  "operator_boundary": "Do not send external requests or post authenticated messages without explicit user approval.",
+  "outbox_row_count": 5,
+  "outbox_rows": [
+    {
+      "gate_after_request": "rerun source_label_equivalence_intake_verifier_v1.py",
+      "lead_count": 9,
+      "outbox_id": "R2-source-label-equivalence-crossmarket",
+      "primary_contact_surface": "Kaggle owner, Nasdaq indexes/licensing, CME, Kraken public data/contact surfaces",
+      "request_payload": "owner-approved or source-owned cross-market/species equivalence rows and provenance",
+      "request_sent": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "required_intake_root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "requirements": "R2",
+      "rows_acquired": false,
+      "source_artifacts": "docs/experiments/actionable-regime-confidence/runs/20260511T202712-codex-source-label-equivalence-contact-leads-v1/source-label-equivalence-contact-leads/source_label_equivalence_contact_leads_v1.json"
+    },
+    {
+      "gate_after_request": "rerun native-subhour intake package check and source-label verifier if crosswalk rows are also supplied",
+      "lead_count": 9,
+      "outbox_id": "R3-native-subhour-source-labels",
+      "primary_contact_surface": "Kaggle stock-regime owner, Yahoo/Yahoo terms, Nasdaq, CME, Cboe, Polygon",
+      "request_payload": "source-native 1m/5m/15m/30m/1h/4h Bull/Bear/Sideways/Crisis labels with per-row provenance",
+      "request_sent": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "required_intake_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "requirements": "R3",
+      "rows_acquired": false,
+      "source_artifacts": "docs/experiments/actionable-regime-confidence/runs/20260511T203100-codex-native-subhour-intake-request-package-v1/native-subhour-intake-request-package/native_subhour_intake_request_package_v1.json;docs/experiments/actionable-regime-confidence/runs/20260511T203505-codex-native-subhour-contact-leads-v1/native-subhour-contact-leads/native_subhour_contact_leads_v1.json"
+    },
+    {
+      "gate_after_request": "rerun source_panel_recency_extension_verifier_v1.py and strict 1h source gates",
+      "lead_count": 4,
+      "outbox_id": "R4-R5-stock-regime-owner-recency-and-1h",
+      "primary_contact_surface": "Kaggle stock-regime owner discussion/profile and collaborator profile",
+      "request_payload": "post-2026-01-30 source-owned extension rows for XOM/Sideways, UNH/Bear, ^DJI/Sideways, AMD/Bear and strict 1h source/provenance if available",
+      "request_sent": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "required_intake_root": "/tmp/ict-engine-source-panel-recency-extension",
+      "requirements": "R4;R5",
+      "rows_acquired": false,
+      "source_artifacts": "docs/experiments/actionable-regime-confidence/runs/20260511T202304-codex-stock-regime-owner-contact-leads-v1/stock-regime-owner-contact-leads/stock_regime_owner_contact_leads_v1.json;docs/experiments/actionable-regime-confidence/runs/20260511T202501-codex-kaggle-stock-regime-live-refresh-v1/kaggle-stock-regime-live-refresh/kaggle_stock_regime_live_refresh_v1.json"
+    },
+    {
+      "gate_after_request": "rerun direct_manipulation_row_intake_verifier_v1.py then chronological/heldout calibration",
+      "lead_count": 4,
+      "outbox_id": "R6-do-putnins-spoofing-layering",
+      "primary_contact_surface": "SSRN author email links, SSRN contact-author, UTS profile, RePEc fallback",
+      "request_payload": "owner-approved prosecuted-case spoofing/layering positives, matched same-schema controls, and provenance manifest",
+      "request_sent": false,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "required_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "requirements": "R6",
+      "rows_acquired": false,
+      "source_artifacts": "docs/experiments/actionable-regime-confidence/runs/20260511T201759-codex-do-putnins-contact-leads-v1/do-putnins-contact-leads/do_putnins_contact_leads_v1.json"
+    },
+    {
+      "gate_after_request": "extend direct verifier package and rerun strict R6 calibration",
+      "lead_count": 14,
+      "outbox_id": "R6-direct-manipulation-remaining-species",
+      "primary_contact_surface": "direct species matrix candidates plus no-candidate placeholders for bear_raid and painting_tape",
+      "request_payload": "source-owned positives, matched controls, and provenance for spoofing_layering, quote_spoofing, quote_stuffing, pinging, bear_raid, painting_tape",
+      "request_sent": false,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "required_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "requirements": "R6",
+      "rows_acquired": false,
+      "source_artifacts": "docs/experiments/actionable-regime-confidence/runs/20260511T203523-codex-direct-manipulation-species-request-matrix-v1/direct-manipulation-species-request-matrix/direct_manipulation_species_request_matrix_v1.json"
+    }
+  ],
+  "prior_v34_decision": "current_goal_completion_audit_v34=request_matrices_ready_rows_not_acquired_blocked",
+  "raw_data_committed": false,
+  "request_sent": false,
+  "required_intake_roots": [
+    "/tmp/ict-engine-direct-manipulation-row-intake",
+    "/tmp/ict-engine-native-subhour-source-label-intake",
+    "/tmp/ict-engine-source-label-equivalence-intake",
+    "/tmp/ict-engine-source-panel-recency-extension"
+  ],
+  "rows_acquired": false,
+  "run_id": "20260511T204131-codex-source-acquisition-outbox-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

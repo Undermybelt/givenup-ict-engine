@@ -1,0 +1,90 @@
+{
+  "run_id": "20260512T111309+0800-codex-105637-provider-linked-momentum-materialized-downstream-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1",
+  "gate": "105637_materialized_momentum_downstream_v1=ingest_repaired_observation_7_of_30_but_pre_bayes_empty_path_ranker_unready_execution_fail_closed_no_promotion",
+  "materialization": {
+    "source_strategy": "ProviderCryptoMomentumStateV1",
+    "source_files": 4,
+    "output_trades": 7,
+    "normalized_symbol": "B2R_PROVIDER_LINKED_MOMENTUM_105637",
+    "normalized_auto_quant_run_id": "20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1",
+    "normalization_reason": "source TOMAC helper exported stale 104902 symbol and run-id fields"
+  },
+  "exit_markers": {
+    "01_ingest_real_trades_dry_run": 0,
+    "02_ingest_real_trades_force": 0,
+    "03_pre_bayes_status": 0,
+    "04_policy_training_status_before_export": 0,
+    "05_export_structural_path_ranking_target": 0,
+    "06_policy_training_status_after_export": 0,
+    "07_workflow_structural_bundle": 0,
+    "08_workflow_execution_candidate": 0,
+    "09_workflow_full": 0
+  },
+  "real_trade_ingest": {
+    "trades_total": 7,
+    "trades_applied": 7,
+    "trades_invalid": 0,
+    "feedback_records_inserted": 7,
+    "ledger_status": "applied"
+  },
+  "pre_bayes": {
+    "latest_bridge": null,
+    "latest_filtered_assignments": null,
+    "latest_policy": null,
+    "latest_gate_status": null,
+    "latest_canonical_structural_confidence": null,
+    "latest_canonical_structural_probabilities": {}
+  },
+  "policy_training": {
+    "entry_model_ready": false,
+    "matched_rows": 0,
+    "rows": 2,
+    "history_rows": 2,
+    "candidate_set_size": 2,
+    "mature_rows": 1,
+    "history_mature_rows": 1,
+    "feedback_rows_with_structural_feedback": 7,
+    "feedback_rows_total": 7,
+    "feedback_rows_matured": 7,
+    "observation_validation_rows": 7,
+    "observation_validation_min_rows": 30,
+    "observation_validation_shortfall_rows": 23,
+    "raw_scored_mature_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 30,
+    "calibration_status": "not_fitted",
+    "trainer_artifact_status": "missing",
+    "runtime_selection_status": "disabled",
+    "runtime_active_match_count": 0,
+    "outcome_distribution": {
+      "loss": 4,
+      "win": 3
+    }
+  },
+  "execution_tree": {
+    "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+    "direction": "bull",
+    "current_posterior": 0.42857142857142855,
+    "selected_path_probability": 0.7407407407407408,
+    "review_status": "observe",
+    "ready": false,
+    "actionable": false,
+    "closed_loop_branch_admission": "fail_closed"
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_promoted": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "six_provider_aq_matrix_satisfied": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

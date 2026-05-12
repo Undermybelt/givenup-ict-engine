@@ -1,0 +1,8 @@
+PASS decision=strict_1h_target_exact_source_search_v1=no_ready_exact_target_source_owned_rows
+PASS targets_checked=4
+PASS readback_count=48
+PASS candidate_records=2
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS update_goal=false
+PASS raw_data_committed=false

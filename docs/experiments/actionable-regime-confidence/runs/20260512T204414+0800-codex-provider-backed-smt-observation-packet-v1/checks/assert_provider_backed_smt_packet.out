@@ -1,0 +1,11 @@
+{
+  "provider_backed_smt_assertion": "pass",
+  "rows": 11,
+  "successful_provider_symbols": 13,
+  "smt_signal_counts": {
+    "bullish_smt": 0,
+    "bearish_smt": 2,
+    "none": 9
+  },
+  "downstream_allowed": false
+}

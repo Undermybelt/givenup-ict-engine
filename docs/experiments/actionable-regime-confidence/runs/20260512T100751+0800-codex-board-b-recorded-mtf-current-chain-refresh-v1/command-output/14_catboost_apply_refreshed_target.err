@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/path_ranker_integration.py", line 358, in <module>
+    main()
+    ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/path_ranker_integration.py", line 295, in main
+    run_apply(
+    ~~~~~~~~~^
+        model_dir,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        allow_direct_fallback=args.allow_direct_fallback,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/path_ranker_integration.py", line 144, in run_apply
+    raise RuntimeError("Apply failed")
+RuntimeError: Apply failed

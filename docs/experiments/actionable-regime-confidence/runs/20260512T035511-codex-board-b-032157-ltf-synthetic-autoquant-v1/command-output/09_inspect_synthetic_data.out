@@ -1,0 +1,24 @@
+B2RNQCOSTCRISISREPAIR032157_USD-1d.feather 15 ['date', 'open', 'high', 'low', 'close', 'volume']
+         date     open    high      low    close  volume
+1765756800000 28450.50 28504.0 28116.25 28142.25  279035
+1765843200000 28143.25 28280.0 27909.25 28152.00  545555
+         date     open     high      low    close  volume
+1767052800000 28543.50 28629.75 28479.75 28493.00  296382
+1767139200000 28492.75 28552.75 28265.00 28270.75  315683
+close min/max 27768.0 28723.75 vol min/max 2666.0 660983.0
+B2RNQCOSTCRISISREPAIR032157_USD-1h.feather 260 ['date', 'open', 'high', 'low', 'close', 'volume']
+         date     open     high      low    close  volume
+1765800000000 28450.50 28457.00 28420.50 28447.75    4633
+1765803600000 28447.25 28478.75 28431.25 28475.75    5299
+         date     open    high     low    close  volume
+1767211200000 28371.75 28375.5 28280.5 28291.25   57540
+1767214800000 28291.00 28307.5 28265.0 28270.75   16348
+close min/max 27728.25 28739.25 vol min/max 917.0 123453.0
+B2RNQCOSTCRISISREPAIR032157_USD-4h.feather 71 ['date', 'open', 'high', 'low', 'close', 'volume']
+         date    open    high      low   close  volume
+1765800000000 28450.5 28504.0 28121.75 28238.5  128057
+1765814400000 28240.5 28353.0 28165.75 28237.0  106048
+         date     open    high     low    close  volume
+1767196800000 28390.25 28470.5 28368.0 28371.75   98647
+1767211200000 28371.75 28375.5 28265.0 28270.75   73888
+close min/max 27768.0 28735.5 vol min/max 2666.0 267503.0

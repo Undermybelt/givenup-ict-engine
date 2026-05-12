@@ -1,0 +1,37 @@
+{
+  "run_id": "20260512T065547+0800-codex-crisis-capable-public-source-search-after-065134-v1",
+  "gate_result": "crisis_capable_public_source_search_after_065134_v1=no_new_crisis_capable_r3_r5_r6_unlock_no_downstream",
+  "searches": {
+    "huggingface_market_regime_crisis": {
+      "exit": 0,
+      "result_count": 0
+    },
+    "huggingface_bull_bear_sideways_crisis": {
+      "exit": 0,
+      "result_count": 0
+    },
+    "kaggle_market_regime_crisis": {
+      "exit": 0,
+      "new_selected_candidate": false,
+      "known_candidate_seen": "mafaqbhatti/stock-market-regimes-20002026"
+    },
+    "kaggle_bull_bear_sideways_crisis": {
+      "exit": 0,
+      "new_selected_candidate": false,
+      "known_candidate_seen": "mafaqbhatti/stock-market-regimes-20002026"
+    },
+    "github_market_regime_crisis_dataset": {
+      "exit": 0,
+      "total_count": 0
+    }
+  },
+  "accepted_rows_added": 0,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

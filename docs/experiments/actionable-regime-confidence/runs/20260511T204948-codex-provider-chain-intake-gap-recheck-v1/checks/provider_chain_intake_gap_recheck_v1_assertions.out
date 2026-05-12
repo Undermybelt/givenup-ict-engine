@@ -1,0 +1,15 @@
+PASS decision=provider_chain_intake_gap_recheck_v1=real_chain_ran_r6_schema_ready_unscored_remaining_intakes_blocked
+PASS yfinance_rows=3369
+PASS tradingview_mcp_rows=140
+PASS ibkr_rows=325
+PASS kraken_rows=721
+PASS autoquant_trade_count=3925
+PASS pre_bayes_gate_status=pass_neutralized
+PASS execution_candidate_status=no_trade
+PASS direct_manipulation_verifier_status=schema_ready_unscored
+PASS ready_intake_root_count=1
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

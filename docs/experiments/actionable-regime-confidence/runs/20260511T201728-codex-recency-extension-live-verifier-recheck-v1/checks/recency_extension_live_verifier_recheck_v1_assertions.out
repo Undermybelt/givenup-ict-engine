@@ -1,0 +1,9 @@
+PASS decision=recency_extension_live_verifier_recheck_v1=missing_recency_extension_intake_files
+PASS verifier_status=blocked
+PASS verifier_returncode=2
+PASS intake_files_present=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

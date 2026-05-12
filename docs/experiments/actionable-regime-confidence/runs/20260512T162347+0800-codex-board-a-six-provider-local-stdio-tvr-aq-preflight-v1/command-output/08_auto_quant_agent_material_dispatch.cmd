@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-dispatch --symbol BOARD_A_6PROV_162347 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state --group-indices 0,1,2,3,4,5

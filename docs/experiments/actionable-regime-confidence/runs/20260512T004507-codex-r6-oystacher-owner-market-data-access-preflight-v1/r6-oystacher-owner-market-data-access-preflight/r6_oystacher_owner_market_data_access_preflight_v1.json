@@ -1,0 +1,93 @@
+{
+  "run_id": "20260512T004507-codex-r6-oystacher-owner-market-data-access-preflight-v1",
+  "board_hash_observed_before_writeback": "f814a3146ee11840f4160ac96833abf6e6181f8272de45d215dab86b94ae8a2d",
+  "purpose": "Check whether mapped source-owner market-data routes are locally actionable without approving FLIP controls or mutating canonical intake.",
+  "required_normal_control_cells": 17,
+  "required_support_per_cell": 73,
+  "total_normal_control_shortfall": 1241,
+  "source_owned_normal_controls_acquired": 0,
+  "cells_with_valid_controls": 0,
+  "canonical_merge_allowed": false,
+  "downstream_rerun_allowed": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "owner_export_root_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "local_environment": {
+    "databento_python_module_available": false,
+    "databento_cli_available": false,
+    "pyarrow_python_module_available": false,
+    "visible_owner_route_env_var_names": []
+  },
+  "source_owner_access_probes": [
+    {
+      "source_id": "databento_historical_metadata_get_dataset_range",
+      "owner": "Databento",
+      "url": "https://hist.databento.com/v0/metadata.get_dataset_range?dataset=GLBX.MDP3",
+      "status": "http_401",
+      "result": "authentication_required_no_control_download",
+      "source_owned_normal_controls_acquired": 0
+    },
+    {
+      "source_id": "cme_datamine_public_landing_page",
+      "owner": "CME Group",
+      "url": "https://www.cmegroup.com/datamine.html",
+      "status": "http_403",
+      "result": "akamai_blocked_from_this_environment_no_control_export",
+      "source_owned_normal_controls_acquired": 0
+    },
+    {
+      "source_id": "cme_datamine_historical_data_page",
+      "owner": "CME Group",
+      "url": "https://www.cmegroup.com/market-data/datamine-historical-data.html",
+      "status": "http_403",
+      "result": "akamai_blocked_from_this_environment_no_control_export",
+      "source_owned_normal_controls_acquired": 0
+    },
+    {
+      "source_id": "cboe_cfe_market_data_services",
+      "owner": "Cboe",
+      "url": "https://www.cboe.com/market_data_services/us/futures/",
+      "status": "http_200",
+      "result": "official_cfe_top_of_book_depth_of_book_route_observed_no_historical_control_rows_downloaded",
+      "source_owned_normal_controls_acquired": 0
+    },
+    {
+      "source_id": "cboe_cfe_historical_oof",
+      "owner": "Cboe",
+      "url": "https://www.cboe.com/markets/us/futures/market-statistics/historical-data/oof/",
+      "status": "http_200",
+      "result": "public_daily_volume_open_interest_and_datashop_route_observed_no_order_lifecycle_controls",
+      "source_owned_normal_controls_acquired": 0
+    },
+    {
+      "source_id": "cftc_press_release_7264_15",
+      "owner": "CFTC",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7264-15",
+      "status": "http_200",
+      "result": "positive_case_provenance_only_no_row_level_normal_controls",
+      "source_owned_normal_controls_acquired": 0
+    },
+    {
+      "source_id": "cftc_consent_order_7504_16",
+      "owner": "CFTC",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7504-16",
+      "status": "http_200",
+      "result": "positive_order_provenance_only_no_row_level_normal_controls",
+      "source_owned_normal_controls_acquired": 0
+    },
+    {
+      "source_id": "courtlistener_recap_exhibit_a",
+      "owner": "CourtListener RECAP/PACER mirror",
+      "url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf",
+      "status": "http_200",
+      "sha256": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+      "result": "row_level_spoof_flip_source_only_no_independent_normal_controls",
+      "source_owned_normal_controls_acquired": 0
+    }
+  ],
+  "gate_result": "r6_oystacher_owner_market_data_access_preflight_v1=owner_data_access_not_available_locally_no_controls_acquired",
+  "next_action": "Supply source-owned normal controls through CME/Cboe/Databento owner routes or explicitly approve the same-exhibit FLIP-as-control exception before canonical merge and downstream rerun."
+}

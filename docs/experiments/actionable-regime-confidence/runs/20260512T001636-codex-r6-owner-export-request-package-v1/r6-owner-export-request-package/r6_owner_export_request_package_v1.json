@@ -1,0 +1,41 @@
+{
+  "board_sha256_at_start": "207f8740a366ab73680c27c8779932d95209afc8fdfb047f7c49d8ad5a32300f",
+  "decision": {
+    "accepted_rows_added": 0,
+    "external_requests_sent": false,
+    "gate_result": "r6_owner_export_request_package_v1=request_package_ready_rows_not_acquired",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "field_schema_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_fields_v1.csv",
+  "generated_at_utc": "2026-05-11T16:17:46.464380+00:00",
+  "input_refs": {
+    "debt_audit": {
+      "gate_result": "r6_exact_split_support_debt_audit_v1=pooled95_passed_exact_split_row_debt_structural_blocker_quantified",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000801-codex-r6-exact-split-support-debt-audit-v1/r6-exact-split-support-debt-audit/r6_exact_split_support_debt_audit_v1.json"
+    },
+    "grouped_dryrun": {
+      "gate_result": "r6_grouped_heldout_contract_dryrun_v1=grouped_contract_still_fails_owner_approval_required",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T001116-codex-r6-grouped-heldout-contract-dryrun-v1/r6-grouped-heldout-contract-dryrun/r6_grouped_heldout_contract_dryrun_v1.json"
+    },
+    "source_scan": {
+      "gate_result": "r6_bulk_order_lifecycle_source_scan_v1=public_bulk_source_not_found_owner_export_or_protocol_pivot_required",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T001121-codex-r6-bulk-order-lifecycle-source-scan-v1/r6-bulk-order-lifecycle-source-scan/r6_bulk_order_lifecycle_source_scan_v1.json"
+    }
+  },
+  "intake_target_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "next_action": "Place owner/user-approved R6 export files under /tmp/ict-engine-board-a-r6-owner-export-v1 or record explicit approval for a different split contract; then rerun direct verifier, split calibration, provider, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback.",
+  "request_matrix_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001636-codex-r6-owner-export-request-package-v1/r6-owner-export-request-package/r6_owner_export_request_matrix_v1.csv",
+  "required_files": [
+    "direct_manipulation_matched_controls.csv",
+    "direct_manipulation_positive_rows.csv",
+    "direct_manipulation_provenance.json"
+  ],
+  "run_id": "20260512T001636-codex-r6-owner-export-request-package-v1"
+}

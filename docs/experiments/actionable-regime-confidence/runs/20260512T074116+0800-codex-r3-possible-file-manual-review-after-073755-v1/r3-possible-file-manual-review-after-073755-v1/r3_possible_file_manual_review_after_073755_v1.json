@@ -1,0 +1,39 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge": false,
+  "decision": "tsie_existing_native_subhour_root_non_promoting_no_unlock",
+  "direct_verifier_run": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "r3_possible_file_manual_review_after_073755_v1=tsie_existing_native_subhour_root_non_promoting_no_unlock",
+  "manual_review_of": "20260512T073755+0800-codex-local-required-source-control-sweep-after-073650-v1",
+  "reviewed_candidates": [
+    "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+    "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+  ],
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "run_id": "20260512T074116+0800-codex-r3-possible-file-manual-review-after-073755-v1",
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "tsie_provenance": {
+    "accepted_mapping_confidence_95_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "dataset_id": "sujinwo/tsie-market-regime-dataset",
+    "limitations": [
+      "Crisis has no direct TSIE source taxonomy class",
+      "trap labels are fail-closed abstain and excluded from accepted rows",
+      "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+      "canonical merge not run",
+      "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+    ],
+    "row_count": 5032903,
+    "run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1"
+  },
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

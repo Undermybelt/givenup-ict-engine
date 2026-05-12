@@ -1,0 +1,27 @@
+HTTP/2 302 
+content-type: text/plain; charset=utf-8
+content-length: 1343
+location: https://cas-bridge.xethub.hf.co/xet-bridge-us/69db153a61f7dc0587c18e6e/c2c9c64568d08ce3fcd37c3de85f8c155bb0dec0c678cb4140b8e6e2eb85bff3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cas%2F20260511%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260511T222206Z&X-Amz-Expires=3600&X-Amz-Signature=72333a043327a5d91b8062b0df61f25373776a98ce70e7b89871856da28dabb0&X-Amz-SignedHeaders=host&X-Xet-Cas-Uid=public&response-content-disposition=inline%3B+filename*%3DUTF-8%27%270000.parquet%3B+filename%3D%220000.parquet%22%3B&x-amz-checksum-mode=ENABLED&x-id=GetObject&Expires=1778541726&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc3ODU0MTcyNn19LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2FzLWJyaWRnZS54ZXRodWIuaGYuY28veGV0LWJyaWRnZS11cy82OWRiMTUzYTYxZjdkYzA1ODdjMThlNmUvYzJjOWM2NDU2OGQwOGNlM2ZjZDM3YzNkZTg1ZjhjMTU1YmIwZGVjMGM2NzhjYjQxNDBiOGU2ZTJlYjg1YmZmMyoifV19&Signature=gOSTJsFM%7E2A9tiT8sA7SJsXb7yKign4LoH633uKP-4PhRv6JeiN8tCV3t-ki0ktzyM7zbSpPyOw9R5PHfukMwWLhIKb1-1lu1A8ZRSNMrZCD18obJlSfBmC6c7Yj0Hkny2xW7zyvCbwZmoEzJ03%7EnkxLklo9lVakPM6QGy2ZhqSCF%7EuAwukFoAx0Mnw7pLYzHqqgOf1s8YcLfUVqTpmv8oqodiwvxUHG1JEGQQ87MnQjYj4%7EPbm5BXeSHsgxXBvrREtRAHlMPMsutVN7EXZuS9NZepo0XyRyJupTt3w0MCtbhYgag%7E1eREBir%7E0wvWftDaKY2d%7EMFxNv3z2-LLHSgQ__&Key-Pair-Id=K2L8F4GPSG1IFC
+date: Mon, 11 May 2026 22:22:06 GMT
+x-powered-by: huggingface-moon
+x-request-id: Root=1-6a02568e-2f08b3c25cc71ed751fcd11c
+ratelimit: "resolvers";r=2998;t=167
+ratelimit-policy: "fixed window";"resolvers";q=3000;w=300
+cross-origin-opener-policy: same-origin
+referrer-policy: strict-origin-when-cross-origin
+access-control-max-age: 86400
+access-control-allow-origin: https://huggingface.co
+vary: Origin, Accept
+access-control-expose-headers: X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash
+x-repo-commit: b11febf3b6ee6c1251beff71bb92d550f2791581
+accept-ranges: bytes
+x-hub-cache: MISS
+x-linked-size: 591890794
+x-linked-etag: "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158"
+x-xet-hash: c2c9c64568d08ce3fcd37c3de85f8c155bb0dec0c678cb4140b8e6e2eb85bff3
+link: <https://huggingface.co/api/datasets/sujinwo/tsie-market-regime-dataset/xet-read-token/b11febf3b6ee6c1251beff71bb92d550f2791581>; rel="xet-auth", <https://cas-server.xethub.hf.co/v1/reconstructions/c2c9c64568d08ce3fcd37c3de85f8c155bb0dec0c678cb4140b8e6e2eb85bff3>; rel="xet-reconstruction-info"
+x-cache: Miss from cloudfront
+via: 1.1 bb1084139629d83977ea8b21c49ea966.cloudfront.net (CloudFront)
+x-amz-cf-pop: NRT20-P2
+x-amz-cf-id: _LuivDbUTlg1ZgJWZ4Bs0p0y4pH6Ny8J7B9SRVH5--RLfrO9Fc_nrw==
+

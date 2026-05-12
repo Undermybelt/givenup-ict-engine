@@ -1,0 +1,1074 @@
+{
+  "accepted_rows_added": 0,
+  "all_headers": [
+    "amount",
+    "btc_volume",
+    "datetime",
+    "price",
+    "side",
+    "symbol",
+    "timestamp"
+  ],
+  "dataset": "Go3x3/pump_and_dump_dataset",
+  "dataset_url": "https://huggingface.co/datasets/Go3x3/pump_and_dump_dataset",
+  "decision": "blocked_schema_missing_labels_and_controls",
+  "full_objective_achieved": false,
+  "gate_result": "hf_pumpdump_schema_audit_v1=blocked_no_labels_or_matched_negatives",
+  "has_explicit_labels": false,
+  "has_matched_negatives": false,
+  "has_timestamp": true,
+  "has_trade_fields": true,
+  "label_like_fields": [],
+  "new_confidence_gate": false,
+  "next_action": "Keep HF pump/dump as positive-window provenance only unless a separate manifest supplies labels and matched negative/control windows.",
+  "purpose": "Inspect downloaded /tmp zip headers/samples for direct Manipulation schema without committing raw rows.",
+  "raw_data_committed": false,
+  "reason": "The files expose event-window trade rows with symbol/timestamp/datetime/side/price/amount/btc_volume, but no explicit manipulation label, event id, matched negative group, or control-row field. File-name event windows are not enough for a direct confidence gate.",
+  "run_id": "20260511T183018+0800-codex-hf-pumpdump-schema-audit-v1",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "zip_reports": [
+    {
+      "csv_count": 351,
+      "csv_total_uncompressed_size": 162349990,
+      "first_files": [
+        {
+          "filename": "data1/ADX_2021-10-23 16.15.csv",
+          "size": 339923
+        },
+        {
+          "filename": "data1/ADX_2021-10-9 6.27.csv",
+          "size": 702311
+        },
+        {
+          "filename": "data1/ADX_2021-12-6 6.45.csv",
+          "size": 407411
+        },
+        {
+          "filename": "data1/ADX_2021-6-26 16.08.csv",
+          "size": 293410
+        },
+        {
+          "filename": "data1/ADX_2021-8-15 17.31.csv",
+          "size": 434445
+        },
+        {
+          "filename": "data1/ADX_2021-9-7 14.28.csv",
+          "size": 768012
+        },
+        {
+          "filename": "data1/ADX_2022-7-11 14.09.csv",
+          "size": 273869
+        },
+        {
+          "filename": "data1/ADX_2022-8-26 14.08.csv",
+          "size": 482700
+        },
+        {
+          "filename": "data1/ADX_2022-9-20 15.56.csv",
+          "size": 556892
+        },
+        {
+          "filename": "data1/AGIX_2021-10-22 13.28.csv",
+          "size": 266732
+        },
+        {
+          "filename": "data1/AGIX_2021-12-24 17.21.csv",
+          "size": 232852
+        },
+        {
+          "filename": "data1/AGIX_2022-2-3 14.40.csv",
+          "size": 141255
+        },
+        {
+          "filename": "data1/AGIX_2022-7-29 8.32.csv",
+          "size": 84115
+        },
+        {
+          "filename": "data1/AGIX_2022-9-11 9.19.csv",
+          "size": 237002
+        },
+        {
+          "filename": "data1/AION_2021-8-20 13.41.csv",
+          "size": 176387
+        },
+        {
+          "filename": "data1/AION_2021-9-18 12.47.csv",
+          "size": 300458
+        },
+        {
+          "filename": "data1/AION_2022-8-23 10.43.csv",
+          "size": 107981
+        },
+        {
+          "filename": "data1/AION_2022-8-29 10.29.csv",
+          "size": 94054
+        },
+        {
+          "filename": "data1/ALGO_2021-9-11 7.24.csv",
+          "size": 10963267
+        },
+        {
+          "filename": "data1/ALGO_2021-9-6 16.53.csv",
+          "size": 2365031
+        }
+      ],
+      "headers_seen": [
+        "amount",
+        "btc_volume",
+        "datetime",
+        "price",
+        "side",
+        "symbol",
+        "timestamp"
+      ],
+      "required_negative_fields_seen": [],
+      "samples": [
+        {
+          "file": "data1/ADX_2021-10-23 16.15.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1634919320762",
+              "2021-10-22T16:15:20.762Z",
+              "sell",
+              "9.13e-06",
+              "4.0",
+              "3.652e-05"
+            ],
+            [
+              "ADX/BTC",
+              "1634919320762",
+              "2021-10-22T16:15:20.762Z",
+              "sell",
+              "9.11e-06",
+              "109.0",
+              "0.00099299"
+            ],
+            [
+              "ADX/BTC",
+              "1634919332228",
+              "2021-10-22T16:15:32.228Z",
+              "buy",
+              "9.13e-06",
+              "14.0",
+              "0.00012782"
+            ]
+          ],
+          "size": 339923
+        },
+        {
+          "file": "data1/ADX_2021-10-9 6.27.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1633674432836",
+              "2021-10-08T06:27:12.836Z",
+              "buy",
+              "9.84e-06",
+              "15.0",
+              "0.0001476"
+            ],
+            [
+              "ADX/BTC",
+              "1633674441819",
+              "2021-10-08T06:27:21.819Z",
+              "buy",
+              "9.84e-06",
+              "11.0",
+              "0.00010824000000000001"
+            ],
+            [
+              "ADX/BTC",
+              "1633674442419",
+              "2021-10-08T06:27:22.419Z",
+              "buy",
+              "9.84e-06",
+              "11.0",
+              "0.00010824000000000001"
+            ]
+          ],
+          "size": 702311
+        },
+        {
+          "file": "data1/ADX_2021-12-6 6.45.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1638686776025",
+              "2021-12-05T06:46:16.025Z",
+              "buy",
+              "1.279e-05",
+              "235.0",
+              "0.00300565"
+            ],
+            [
+              "ADX/BTC",
+              "1638686827222",
+              "2021-12-05T06:47:07.222Z",
+              "sell",
+              "1.276e-05",
+              "1257.0",
+              "0.01603932"
+            ],
+            [
+              "ADX/BTC",
+              "1638686827289",
+              "2021-12-05T06:47:07.289Z",
+              "buy",
+              "1.277e-05",
+              "400.0",
+              "0.005108"
+            ]
+          ],
+          "size": 407411
+        },
+        {
+          "file": "data1/ADX_2021-6-26 16.08.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1624637323497",
+              "2021-06-25T16:08:43.497Z",
+              "sell",
+              "1.152e-05",
+              "297.0",
+              "0.00342144"
+            ],
+            [
+              "ADX/BTC",
+              "1624637542290",
+              "2021-06-25T16:12:22.290Z",
+              "sell",
+              "1.151e-05",
+              "11.0",
+              "0.00012661"
+            ],
+            [
+              "ADX/BTC",
+              "1624637554101",
+              "2021-06-25T16:12:34.101Z",
+              "buy",
+              "1.153e-05",
+              "1488.0",
+              "0.01715664"
+            ]
+          ],
+          "size": 293410
+        },
+        {
+          "file": "data1/ADX_2021-8-15 17.31.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1628962296696",
+              "2021-08-14T17:31:36.696Z",
+              "buy",
+              "1.195e-05",
+              "3710.0",
+              "0.044334500000000006"
+            ],
+            [
+              "ADX/BTC",
+              "1628962338558",
+              "2021-08-14T17:32:18.558Z",
+              "buy",
+              "1.196e-05",
+              "238.0",
+              "0.00284648"
+            ],
+            [
+              "ADX/BTC",
+              "1628962341385",
+              "2021-08-14T17:32:21.385Z",
+              "sell",
+              "1.194e-05",
+              "119.0",
+              "0.00142086"
+            ]
+          ],
+          "size": 434445
+        },
+        {
+          "file": "data1/ADX_2021-9-7 14.28.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1630938500265",
+              "2021-09-06T14:28:20.265Z",
+              "buy",
+              "1.153e-05",
+              "4316.0",
+              "0.04976348"
+            ],
+            [
+              "ADX/BTC",
+              "1630938524830",
+              "2021-09-06T14:28:44.830Z",
+              "buy",
+              "1.154e-05",
+              "550.0",
+              "0.006347"
+            ],
+            [
+              "ADX/BTC",
+              "1630938575383",
+              "2021-09-06T14:29:35.383Z",
+              "sell",
+              "1.152e-05",
+              "2677.0",
+              "0.030839039999999998"
+            ]
+          ],
+          "size": 768012
+        },
+        {
+          "file": "data1/ADX_2022-7-11 14.09.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1657462143755",
+              "2022-07-10T14:09:03.755Z",
+              "sell",
+              "8.28e-06",
+              "13.0",
+              "0.00010764"
+            ],
+            [
+              "ADX/BTC",
+              "1657462170207",
+              "2022-07-10T14:09:30.207Z",
+              "buy",
+              "8.29e-06",
+              "184.0",
+              "0.0015253600000000001"
+            ],
+            [
+              "ADX/BTC",
+              "1657462235136",
+              "2022-07-10T14:10:35.136Z",
+              "sell",
+              "8.28e-06",
+              "13.0",
+              "0.00010764"
+            ]
+          ],
+          "size": 273869
+        },
+        {
+          "file": "data1/ADX_2022-8-26 14.08.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1661436485701",
+              "2022-08-25T14:08:05.701Z",
+              "buy",
+              "7.65e-06",
+              "306.0",
+              "0.0023409"
+            ],
+            [
+              "ADX/BTC",
+              "1661436626539",
+              "2022-08-25T14:10:26.539Z",
+              "sell",
+              "7.64e-06",
+              "290.0",
+              "0.0022156"
+            ],
+            [
+              "ADX/BTC",
+              "1661436716608",
+              "2022-08-25T14:11:56.608Z",
+              "buy",
+              "7.64e-06",
+              "290.0",
+              "0.0022156"
+            ]
+          ],
+          "size": 482700
+        },
+        {
+          "file": "data1/ADX_2022-9-20 15.56.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1663602963725",
+              "2022-09-19T15:56:03.725Z",
+              "sell",
+              "8.23e-06",
+              "694.0",
+              "0.005711620000000001"
+            ],
+            [
+              "ADX/BTC",
+              "1663602965541",
+              "2022-09-19T15:56:05.541Z",
+              "sell",
+              "8.23e-06",
+              "192.0",
+              "0.0015801600000000002"
+            ],
+            [
+              "ADX/BTC",
+              "1663602970102",
+              "2022-09-19T15:56:10.102Z",
+              "sell",
+              "8.23e-06",
+              "705.0",
+              "0.005802150000000001"
+            ]
+          ],
+          "size": 556892
+        },
+        {
+          "file": "data1/AGIX_2021-10-22 13.28.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "AGIX/BTC",
+              "1634822912645",
+              "2021-10-21T13:28:32.645Z",
+              "buy",
+              "5.04e-06",
+              "651.0",
+              "0.00328104"
+            ],
+            [
+              "AGIX/BTC",
+              "1634822912658",
+              "2021-10-21T13:28:32.658Z",
+              "buy",
+              "5.04e-06",
+              "5928.0",
+              "0.02987712"
+            ],
+            [
+              "AGIX/BTC",
+              "1634822914065",
+              "2021-10-21T13:28:34.065Z",
+              "sell",
+              "5.03e-06",
+              "318.0",
+              "0.00159954"
+            ]
+          ],
+          "size": 266732
+        }
+      ],
+      "zip": "/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip",
+      "zip_size": 32205726
+    },
+    {
+      "csv_count": 351,
+      "csv_total_uncompressed_size": 407924478,
+      "first_files": [
+        {
+          "filename": "data2/ADX_2021-10-23 16.15.csv",
+          "size": 732469
+        },
+        {
+          "filename": "data2/ADX_2021-10-9 6.27.csv",
+          "size": 1209964
+        },
+        {
+          "filename": "data2/ADX_2021-12-6 6.45.csv",
+          "size": 1182329
+        },
+        {
+          "filename": "data2/ADX_2021-6-26 16.08.csv",
+          "size": 554593
+        },
+        {
+          "filename": "data2/ADX_2021-8-15 17.31.csv",
+          "size": 1161635
+        },
+        {
+          "filename": "data2/ADX_2021-9-7 14.28.csv",
+          "size": 1538890
+        },
+        {
+          "filename": "data2/ADX_2022-7-11 14.09.csv",
+          "size": 590730
+        },
+        {
+          "filename": "data2/ADX_2022-8-26 14.08.csv",
+          "size": 2194371
+        },
+        {
+          "filename": "data2/ADX_2022-9-20 15.56.csv",
+          "size": 1127277
+        },
+        {
+          "filename": "data2/AGIX_2021-10-22 13.28.csv",
+          "size": 867107
+        },
+        {
+          "filename": "data2/AGIX_2021-12-24 17.21.csv",
+          "size": 354051
+        },
+        {
+          "filename": "data2/AGIX_2022-2-3 14.40.csv",
+          "size": 301816
+        },
+        {
+          "filename": "data2/AGIX_2022-7-29 8.32.csv",
+          "size": 176105
+        },
+        {
+          "filename": "data2/AGIX_2022-9-11 9.19.csv",
+          "size": 626078
+        },
+        {
+          "filename": "data2/AION_2021-8-20 13.41.csv",
+          "size": 458520
+        },
+        {
+          "filename": "data2/AION_2021-9-18 12.47.csv",
+          "size": 672994
+        },
+        {
+          "filename": "data2/AION_2022-8-23 10.43.csv",
+          "size": 357105
+        },
+        {
+          "filename": "data2/AION_2022-8-29 10.29.csv",
+          "size": 170039
+        },
+        {
+          "filename": "data2/ALGO_2021-9-11 7.24.csv",
+          "size": 16039559
+        },
+        {
+          "filename": "data2/ALGO_2021-9-6 16.53.csv",
+          "size": 6078946
+        }
+      ],
+      "headers_seen": [
+        "amount",
+        "btc_volume",
+        "datetime",
+        "price",
+        "side",
+        "symbol",
+        "timestamp"
+      ],
+      "required_negative_fields_seen": [],
+      "samples": [
+        {
+          "file": "data2/ADX_2021-10-23 16.15.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1634919320762",
+              "2021-10-22T16:15:20.762Z",
+              "sell",
+              "9.13e-06",
+              "4.0",
+              "3.652e-05"
+            ],
+            [
+              "ADX/BTC",
+              "1634919320762",
+              "2021-10-22T16:15:20.762Z",
+              "sell",
+              "9.11e-06",
+              "109.0",
+              "0.00099299"
+            ],
+            [
+              "ADX/BTC",
+              "1634919332228",
+              "2021-10-22T16:15:32.228Z",
+              "buy",
+              "9.13e-06",
+              "14.0",
+              "0.00012782"
+            ]
+          ],
+          "size": 732469
+        },
+        {
+          "file": "data2/ADX_2021-10-9 6.27.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1633674432836",
+              "2021-10-08T06:27:12.836Z",
+              "buy",
+              "9.84e-06",
+              "15.0",
+              "0.0001476"
+            ],
+            [
+              "ADX/BTC",
+              "1633674441819",
+              "2021-10-08T06:27:21.819Z",
+              "buy",
+              "9.84e-06",
+              "11.0",
+              "0.00010824000000000001"
+            ],
+            [
+              "ADX/BTC",
+              "1633674442419",
+              "2021-10-08T06:27:22.419Z",
+              "buy",
+              "9.84e-06",
+              "11.0",
+              "0.00010824000000000001"
+            ]
+          ],
+          "size": 1209964
+        },
+        {
+          "file": "data2/ADX_2021-12-6 6.45.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1638686776025",
+              "2021-12-05T06:46:16.025Z",
+              "buy",
+              "1.279e-05",
+              "235.0",
+              "0.00300565"
+            ],
+            [
+              "ADX/BTC",
+              "1638686827222",
+              "2021-12-05T06:47:07.222Z",
+              "sell",
+              "1.276e-05",
+              "1257.0",
+              "0.01603932"
+            ],
+            [
+              "ADX/BTC",
+              "1638686827289",
+              "2021-12-05T06:47:07.289Z",
+              "buy",
+              "1.277e-05",
+              "400.0",
+              "0.005108"
+            ]
+          ],
+          "size": 1182329
+        },
+        {
+          "file": "data2/ADX_2021-6-26 16.08.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1624637323497",
+              "2021-06-25T16:08:43.497Z",
+              "sell",
+              "1.152e-05",
+              "297.0",
+              "0.00342144"
+            ],
+            [
+              "ADX/BTC",
+              "1624637542290",
+              "2021-06-25T16:12:22.290Z",
+              "sell",
+              "1.151e-05",
+              "11.0",
+              "0.00012661"
+            ],
+            [
+              "ADX/BTC",
+              "1624637554101",
+              "2021-06-25T16:12:34.101Z",
+              "buy",
+              "1.153e-05",
+              "1488.0",
+              "0.01715664"
+            ]
+          ],
+          "size": 554593
+        },
+        {
+          "file": "data2/ADX_2021-8-15 17.31.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1628962296696",
+              "2021-08-14T17:31:36.696Z",
+              "buy",
+              "1.195e-05",
+              "3710.0",
+              "0.044334500000000006"
+            ],
+            [
+              "ADX/BTC",
+              "1628962338558",
+              "2021-08-14T17:32:18.558Z",
+              "buy",
+              "1.196e-05",
+              "238.0",
+              "0.00284648"
+            ],
+            [
+              "ADX/BTC",
+              "1628962341385",
+              "2021-08-14T17:32:21.385Z",
+              "sell",
+              "1.194e-05",
+              "119.0",
+              "0.00142086"
+            ]
+          ],
+          "size": 1161635
+        },
+        {
+          "file": "data2/ADX_2021-9-7 14.28.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1630938500265",
+              "2021-09-06T14:28:20.265Z",
+              "buy",
+              "1.153e-05",
+              "4316.0",
+              "0.04976348"
+            ],
+            [
+              "ADX/BTC",
+              "1630938524830",
+              "2021-09-06T14:28:44.830Z",
+              "buy",
+              "1.154e-05",
+              "550.0",
+              "0.006347"
+            ],
+            [
+              "ADX/BTC",
+              "1630938575383",
+              "2021-09-06T14:29:35.383Z",
+              "sell",
+              "1.152e-05",
+              "2677.0",
+              "0.030839039999999998"
+            ]
+          ],
+          "size": 1538890
+        },
+        {
+          "file": "data2/ADX_2022-7-11 14.09.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1657462143755",
+              "2022-07-10T14:09:03.755Z",
+              "sell",
+              "8.28e-06",
+              "13.0",
+              "0.00010764"
+            ],
+            [
+              "ADX/BTC",
+              "1657462170207",
+              "2022-07-10T14:09:30.207Z",
+              "buy",
+              "8.29e-06",
+              "184.0",
+              "0.0015253600000000001"
+            ],
+            [
+              "ADX/BTC",
+              "1657462235136",
+              "2022-07-10T14:10:35.136Z",
+              "sell",
+              "8.28e-06",
+              "13.0",
+              "0.00010764"
+            ]
+          ],
+          "size": 590730
+        },
+        {
+          "file": "data2/ADX_2022-8-26 14.08.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1661436485701",
+              "2022-08-25T14:08:05.701Z",
+              "buy",
+              "7.65e-06",
+              "306.0",
+              "0.0023409"
+            ],
+            [
+              "ADX/BTC",
+              "1661436626539",
+              "2022-08-25T14:10:26.539Z",
+              "sell",
+              "7.64e-06",
+              "290.0",
+              "0.0022156"
+            ],
+            [
+              "ADX/BTC",
+              "1661436716608",
+              "2022-08-25T14:11:56.608Z",
+              "buy",
+              "7.64e-06",
+              "290.0",
+              "0.0022156"
+            ]
+          ],
+          "size": 2194371
+        },
+        {
+          "file": "data2/ADX_2022-9-20 15.56.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "ADX/BTC",
+              "1663602963725",
+              "2022-09-19T15:56:03.725Z",
+              "sell",
+              "8.23e-06",
+              "694.0",
+              "0.005711620000000001"
+            ],
+            [
+              "ADX/BTC",
+              "1663602965541",
+              "2022-09-19T15:56:05.541Z",
+              "sell",
+              "8.23e-06",
+              "192.0",
+              "0.0015801600000000002"
+            ],
+            [
+              "ADX/BTC",
+              "1663602970102",
+              "2022-09-19T15:56:10.102Z",
+              "sell",
+              "8.23e-06",
+              "705.0",
+              "0.005802150000000001"
+            ]
+          ],
+          "size": 1127277
+        },
+        {
+          "file": "data2/AGIX_2021-10-22 13.28.csv",
+          "header": [
+            "symbol",
+            "timestamp",
+            "datetime",
+            "side",
+            "price",
+            "amount",
+            "btc_volume"
+          ],
+          "sample_rows": [
+            [
+              "AGIX/BTC",
+              "1634822912645",
+              "2021-10-21T13:28:32.645Z",
+              "buy",
+              "5.04e-06",
+              "651.0",
+              "0.00328104"
+            ],
+            [
+              "AGIX/BTC",
+              "1634822912658",
+              "2021-10-21T13:28:32.658Z",
+              "buy",
+              "5.04e-06",
+              "5928.0",
+              "0.02987712"
+            ],
+            [
+              "AGIX/BTC",
+              "1634822914065",
+              "2021-10-21T13:28:34.065Z",
+              "sell",
+              "5.03e-06",
+              "318.0",
+              "0.00159954"
+            ]
+          ],
+          "size": 867107
+        }
+      ],
+      "zip": "/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip",
+      "zip_size": 64768371
+    }
+  ]
+}

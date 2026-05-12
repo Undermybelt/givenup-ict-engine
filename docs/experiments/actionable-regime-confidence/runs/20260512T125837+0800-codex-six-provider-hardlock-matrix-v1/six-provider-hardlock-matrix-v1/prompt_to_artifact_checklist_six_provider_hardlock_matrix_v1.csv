@@ -1,0 +1,12 @@
+prompt_requirement,status,evidence,notes
+"Create explicit six-row provider-provenance matrix",done,"six-provider-hardlock-matrix-v1/six_provider_hardlock_matrix_v1.csv","Rows are IBKR, TradingViewRemix/TVR, yfinance/YF, Kraken, Binance, and Bybit."
+"Distinguish provider_requested",done,"six-provider-hardlock-matrix-v1/six_provider_hardlock_matrix_v1.csv","All six rows were explicitly requested."
+"Distinguish provider_data_acquired",done,"six-provider-hardlock-matrix-v1/six_provider_hardlock_matrix_v1.csv","Only yfinance acquired data in this hard-lock harness run."
+"Distinguish provider_unreachable",done,"six-provider-hardlock-matrix-v1/six_provider_hardlock_matrix_v1.csv","TVR fetch is marked unreachable/fetch failed; IBKR is dependency-missing with gateway reachable; crypto rows are unsupported harness mappings."
+"Distinguish aq_provider_invoked",done,"six-provider-hardlock-matrix-v1/six_provider_hardlock_matrix_v1.csv","No Auto-Quant provider-owned run was invoked in this root."
+"Distinguish local_cache_replay",done,"six-provider-hardlock-matrix-v1/six_provider_hardlock_matrix_v1.csv","All rows are marked local_cache_replay=false."
+"Record provider-status command exits",done,"checks/00_provider_status_agent.exit through checks/06_provider_status_bybit.exit","All provider-status probes exited 0, but fetch acquisition still failed for five rows."
+"Record fetch command exits",done,"checks/10_fetch_yfinance_qqq.exit through checks/15_fetch_bybit_btc.exit","Fetch exits were 0 for yfinance and 1 for TVR, IBKR, Kraken, Binance, and Bybit."
+"Avoid promoting local-cache-only replay",done,"six_provider_hardlock_matrix_v1.md","This root is support/debug only and not acceptance evidence."
+"Preserve ordered downstream chain status",done,"six_provider_hardlock_matrix_v1.md","Auto-Quant, filter/Pre-Bayes, BBN, CatBoost/path-ranker, and execution tree were not run."
+"Append Board A fail-closed count-once note",done,"docs/plans/2026-05-10-actionable-regime-confidence-todo.md","Same patch appends a Board A section without editing the Current Cursor."

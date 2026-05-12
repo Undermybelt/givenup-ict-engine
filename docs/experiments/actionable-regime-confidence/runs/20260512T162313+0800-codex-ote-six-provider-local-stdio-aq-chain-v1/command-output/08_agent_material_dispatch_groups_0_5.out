@@ -1,0 +1,106 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_OTE_162313:20260512T083642.983Z",
+  "generated_at": "2026-05-12T08:36:42.983428Z",
+  "symbol": "PROVIDER_OTE_162313",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:PROVIDER_OTE_162313:20260512T083626.903Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "OTE_six-provider_local-stdio_packet_-_yfinance_SPY_1h",
+          "title": "OTE six-provider local-stdio packet - yfinance SPY 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:36:29,624 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_yfinance_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_yfinance_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_yfinance_SPY_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "OTE_six-provider_local-stdio_packet_-_Binance_BTCUSDT_1h",
+          "title": "OTE six-provider local-stdio packet - Binance BTCUSDT 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:36:32,480 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "OTE_six-provider_local-stdio_packet_-_Bybit_BTCUSDT_linear_1h",
+          "title": "OTE six-provider local-stdio packet - Bybit BTCUSDT linear 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:36:35,071 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Bybit_BTCUSDT_linear_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Bybit_BTCUSDT_linear_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Bybit_BTCUSDT_linear_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_results": [
+        {
+          "job_id": "OTE_six-provider_local-stdio_packet_-_Kraken_PF_XBTUSD_1h",
+          "title": "OTE six-provider local-stdio packet - Kraken PF_XBTUSD 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:36:37,567 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Kraken_PF_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Kraken_PF_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_Kraken_PF_XBTUSD_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_results": [
+        {
+          "job_id": "OTE_six-provider_local-stdio_packet_-_IBKR_SPY_1h",
+          "title": "OTE six-provider local-stdio packet - IBKR SPY 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:36:40,118 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_results": [
+        {
+          "job_id": "OTE_six-provider_local-stdio_packet_-_TVR_BTC-USD_1h",
+          "title": "OTE six-provider local-stdio packet - TVR BTC-USD 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:36:42,590 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_TVR_BTC-USD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_TVR_BTC-USD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state/auto-quant/agent_material_units/OTE_six-provider_local-stdio_packet_-_TVR_BTC-USD_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 6,
+    "completed_jobs": 0,
+    "blocked_jobs": 0,
+    "failed_jobs": 6
+  }
+}

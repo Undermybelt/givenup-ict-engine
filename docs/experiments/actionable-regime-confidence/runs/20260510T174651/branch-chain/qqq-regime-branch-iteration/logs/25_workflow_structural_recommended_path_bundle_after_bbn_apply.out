@@ -1,0 +1,4 @@
+QQQ | structural-path | trend_follow_through | posterior=0.568 | selected_prob=0.367
+Trigger: regime_posterior=trend:0.450
+Stop: Use execution candidate 'execution-candidate:QQQ:analyze:v1' once actionable; current candidate_status=no_trade.
+Next: ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state

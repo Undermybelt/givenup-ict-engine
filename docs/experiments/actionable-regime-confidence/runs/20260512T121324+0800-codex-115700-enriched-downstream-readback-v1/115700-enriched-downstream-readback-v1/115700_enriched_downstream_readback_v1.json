@@ -1,0 +1,192 @@
+{
+  "command_exits": {
+    "analyze_btc_usdt_ibkr_midpoint": 0,
+    "apply_structural_path_ranking_external_scores": 0,
+    "auto_quant_ingest_real_trades_enriched": 0,
+    "enable_structural_path_ranking_runtime": 0,
+    "export_structural_path_ranking_target": 0,
+    "policy_training_status_after_ingest": 0,
+    "pre_bayes_status_after_ingest": 0,
+    "pre_bayes_status_before_ingest": 0,
+    "register_structural_path_ranking_trainer_artifact": 0,
+    "workflow_status_execution_candidate": 0,
+    "workflow_status_structural_ranker_runtime": 0
+  },
+  "commands": [
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol BTC_USDT --data-htf /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/derived-data/btc_usdt_ibkr_midpoint_1d.json --data-mtf /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/derived-data/btc_usdt_ibkr_midpoint_4h.json --data-ltf /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/derived-data/btc_usdt_ibkr_midpoint_1h.json --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/analyze_btc_usdt_ibkr_midpoint.exit",
+      "name": "analyze_btc_usdt_ibkr_midpoint",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/analyze_btc_usdt_ibkr_midpoint.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/analyze_btc_usdt_ibkr_midpoint.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --refresh",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/pre_bayes_status_before_ingest.exit",
+      "name": "pre_bayes_status_before_ingest",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/pre_bayes_status_before_ingest.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/pre_bayes_status_before_ingest.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-ingest-real-trades --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --trades /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/115700-enriched-downstream-readback-v1/115700_enriched_real_trades.jsonl --source auto_quant_real_trades_115700_enriched",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/auto_quant_ingest_real_trades_enriched.exit",
+      "name": "auto_quant_ingest_real_trades_enriched",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/auto_quant_ingest_real_trades_enriched.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/auto_quant_ingest_real_trades_enriched.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --refresh",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/pre_bayes_status_after_ingest.exit",
+      "name": "pre_bayes_status_after_ingest",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/pre_bayes_status_after_ingest.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/pre_bayes_status_after_ingest.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/policy_training_status_after_ingest.exit",
+      "name": "policy_training_status_after_ingest",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/policy_training_status_after_ingest.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/policy_training_status_after_ingest.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/export_structural_path_ranking_target.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine apply-structural-path-ranking-external-scores --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --scores-file /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/115700-enriched-downstream-readback-v1/115700_external_path_scores.jsonl",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/apply_structural_path_ranking_external_scores.exit",
+      "name": "apply_structural_path_ranking_external_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/apply_structural_path_ranking_external_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/apply_structural_path_ranking_external_scores.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine register-structural-path-ranking-trainer-artifact --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --artifact-uri docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/115700-enriched-downstream-readback-v1/115700_external_path_scores.jsonl --model-family catboost --score-column raw_path_score --trained-rows 237 --calibration-rows 2",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/register_structural_path_ranking_trainer_artifact.exit",
+      "name": "register_structural_path_ranking_trainer_artifact",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/register_structural_path_ranking_trainer_artifact.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/register_structural_path_ranking_trainer_artifact.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine enable-structural-path-ranking-runtime --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --reuse-mode prefer_history",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/enable_structural_path_ranking_runtime.exit",
+      "name": "enable_structural_path_ranking_runtime",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/enable_structural_path_ranking_runtime.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/enable_structural_path_ranking_runtime.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --phase structural-ranker-runtime --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/workflow_status_structural_ranker_runtime.exit",
+      "name": "workflow_status_structural_ranker_runtime",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/workflow_status_structural_ranker_runtime.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/workflow_status_structural_ranker_runtime.out"
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol BTC_USDT --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/workflow_status_execution_candidate.exit",
+      "name": "workflow_status_execution_candidate",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/workflow_status_execution_candidate.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/command-output/workflow_status_execution_candidate.out"
+    }
+  ],
+  "decision": "115700_enriched_rows_schema_valid_downstream_readback_fail_closed",
+  "enriched_rows_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/115700-enriched-downstream-readback-v1/115700_enriched_real_trades.jsonl",
+  "execution_candidate_exit": 0,
+  "generated_at_utc": "2026-05-12T04:24:43.396473+00:00",
+  "ingest_summary": {
+    "command": "auto-quant-ingest-real-trades",
+    "content_hash": "e5c252f47211f294",
+    "dry_run": false,
+    "feedback_records_inserted": 237,
+    "force": false,
+    "ledger_artifact_id": "auto_quant_real_trades_BTC_USDT_20260512T042428.069143000Z",
+    "ledger_status": "applied",
+    "previous_artifact_id": null,
+    "source": "auto_quant_real_trades_115700_enriched",
+    "symbol": "BTC_USDT",
+    "trades_applied": 237,
+    "trades_invalid": 0,
+    "trades_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/115700-enriched-downstream-readback-v1/115700_enriched_real_trades.jsonl",
+    "trades_total": 237
+  },
+  "notes": [
+    "Rows were enriched from 115700 in a run-local artifact and ingested only into an isolated /tmp state dir.",
+    "External path scores are branch outcome-rate scores registered through the path-ranker surface; this is not a live CatBoost package training claim.",
+    "Execution remains fail-closed because selected-history/source-control gates are still locked."
+  ],
+  "promotion_allowed": false,
+  "row_stats": {
+    "branch_counts": {
+      "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+        "losses": 101,
+        "rows": 164,
+        "wins": 63
+      },
+      "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+        "losses": 55,
+        "rows": 73,
+        "wins": 18
+      }
+    },
+    "provider_counts": {
+      "binance_public": 52,
+      "bybit_public": 51,
+      "ibkr_paxos_long_midpoint": 44,
+      "kraken_public": 32,
+      "tvr_default_binance": 37,
+      "yfinance": 21
+    },
+    "total_rows": 237
+  },
+  "run_id": "20260512T121324+0800-codex-115700-enriched-downstream-readback-v1",
+  "schema_gate": {
+    "accepted_schema_rows": 237,
+    "checked_rows": 237,
+    "market_factor_training_scope": "isolated_downstream_readback_only",
+    "missing_by_field": {
+      "auto_quant_run_id": 0,
+      "bbn_posterior": 0,
+      "catboost_path_ranker_label": 0,
+      "execution_tree_decision": 0,
+      "failure_reason": 0,
+      "main_regime": 0,
+      "pre_bayes_filter_state": 0,
+      "profit_factor": 0,
+      "provider_provenance": 0,
+      "quality_weight": 0,
+      "regime_profit_branch_path": 0,
+      "structural_feedback": 0,
+      "sub_regime": 0,
+      "sub_sub_regime_or_profit_factor": 0
+    },
+    "promotion_allowed": false,
+    "rejected_rows": 0,
+    "stale_or_wrong_auto_quant_run_id_rows": 0,
+    "stale_symbol_namespace_rows": 0,
+    "trade_usable": false
+  },
+  "score_summary": {
+    "score_rows": 2,
+    "scores_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/115700-enriched-downstream-readback-v1/115700_external_path_scores.jsonl"
+  },
+  "source_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "state_dir": "/tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2",
+  "structural_path_export_history_rows": 240,
+  "structural_path_export_rows": 5,
+  "symbol": "BTC_USDT",
+  "trade_usable": false,
+  "update_goal": false
+}

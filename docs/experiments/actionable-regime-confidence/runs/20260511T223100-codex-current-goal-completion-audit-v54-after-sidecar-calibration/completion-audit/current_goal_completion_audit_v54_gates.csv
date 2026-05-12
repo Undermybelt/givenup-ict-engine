@@ -1,0 +1,11 @@
+gate,status,evidence
+source_label_schema,pass,status=schema_ready_unscored; rows=248440
+source_label_confidence_95,fail,accepted=0/4
+r5_source_panel_recency,fail,status=blocked; reason=missing_required_files
+r3_native_subhour,fail,exists=False; path=/tmp/ict-engine-native-subhour-source-label-intake
+r6_direct_schema,pass,status=schema_ready_unscored; positives=57; controls=57
+r6_direct_support_50_50,pass,57/57
+r6_direct_wilson95,fail,min_lcb=0.936861
+r6_independent_broad_normal_sidecar,pass,rows=80; lcb=0.954181870464
+r6_direct_species_closed,fail,non-spoofing direct species still missing
+strict_full_objective,fail,source labels 0/4 accepted; R3/R5 missing; R6 positive Wilson95/species gates open

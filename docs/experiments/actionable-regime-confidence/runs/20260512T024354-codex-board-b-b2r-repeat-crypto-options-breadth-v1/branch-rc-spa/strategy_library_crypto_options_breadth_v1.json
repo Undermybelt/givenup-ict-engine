@@ -1,0 +1,168 @@
+{
+  "manifest_version": "auto-quant-strategy-library/v1",
+  "exported_at": "2026-05-11T18:56:35.666239+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "local-auto-quant-env",
+  "config_path": "/Users/thrill3r/Auto-Quant/config.json",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/branch-rc-spa/auto_quant_crypto_options_breadth_v1.out",
+  "timeframe": "1h",
+  "validation_errors": [],
+  "strategies": [
+    {
+      "name": "CryptoOptionsBreadthRootV1_Bull",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/scripts/b2r_repeat_crypto_options_breadth_v1.py",
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SPY/USD",
+        "QQQ/USD",
+        "GLD/USD"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "CryptoOptionsBreadthRootV1_Bull",
+        "mutation_id": "b2r_repeat_crypto_options_breadth_v1",
+        "status": "incubation_only_b2r_repeat_next",
+        "base_factor": "CryptoOptionsBreadthRootV1",
+        "parent": "Bull -> CryptoEquityRiskOn -> BreadthMomentum -> CryptoOptionsBreadthRootV1:crypto_equity_risk_on_h12",
+        "expected_regime": "MainRegimeV2::Bull",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "crypto_breadth",
+          "equity_breadth",
+          "btc_options_iv_skew"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 183,
+        "win_rate_pct": 40.98360655737705,
+        "total_profit_pct": -68.28197462629333,
+        "sharpe": -1.7801321715428706,
+        "profit_factor": 0.7158303202772791,
+        "max_drawdown_pct": 0.0,
+        "sortino": -1.7801321715428706,
+        "calmar": -1.7801321715428706
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "trade_count": 183,
+          "win_rate_pct": 40.98360655737705,
+          "total_profit_pct": -68.28197462629333,
+          "sharpe": -1.7801321715428706,
+          "profit_factor": 0.7158303202772791,
+          "max_drawdown_pct": 0.0,
+          "sortino": -1.7801321715428706,
+          "calmar": -1.7801321715428706
+        }
+      }
+    },
+    {
+      "name": "CryptoOptionsBreadthRootV1_Bear",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/scripts/b2r_repeat_crypto_options_breadth_v1.py",
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SPY/USD",
+        "QQQ/USD",
+        "GLD/USD"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "CryptoOptionsBreadthRootV1_Bear",
+        "mutation_id": "b2r_repeat_crypto_options_breadth_v1",
+        "status": "incubation_only_b2r_repeat_next",
+        "base_factor": "CryptoOptionsBreadthRootV1",
+        "parent": "Bear -> RiskOffDeleveraging -> EquityCryptoBreakdown -> CryptoOptionsBreadthRootV1:equity_crypto_breakdown_h16",
+        "expected_regime": "MainRegimeV2::Bear",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "crypto_breadth",
+          "equity_breadth",
+          "btc_options_iv_skew"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 2,
+        "win_rate_pct": 0.0,
+        "total_profit_pct": -17.035144968712174,
+        "sharpe": -26.774311836681953,
+        "profit_factor": 0.0,
+        "max_drawdown_pct": 0.0,
+        "sortino": -26.774311836681953,
+        "calmar": -26.774311836681953
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "trade_count": 2,
+          "win_rate_pct": 0.0,
+          "total_profit_pct": -17.035144968712174,
+          "sharpe": -26.774311836681953,
+          "profit_factor": 0.0,
+          "max_drawdown_pct": 0.0,
+          "sortino": -26.774311836681953,
+          "calmar": -26.774311836681953
+        }
+      }
+    },
+    {
+      "name": "CryptoOptionsBreadthRootV1_Sideways",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/scripts/b2r_repeat_crypto_options_breadth_v1.py",
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SPY/USD",
+        "QQQ/USD",
+        "GLD/USD"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "CryptoOptionsBreadthRootV1_Sideways",
+        "mutation_id": "b2r_repeat_crypto_options_breadth_v1",
+        "status": "incubation_only_b2r_repeat_next",
+        "base_factor": "CryptoOptionsBreadthRootV1",
+        "parent": "Sideways -> CrossAssetRange -> LowVolRangeFade -> CryptoOptionsBreadthRootV1:low_vol_range_fade_h6",
+        "expected_regime": "MainRegimeV2::Sideways",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "crypto_breadth",
+          "equity_breadth",
+          "btc_options_iv_skew"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 307,
+        "win_rate_pct": 51.465798045602604,
+        "total_profit_pct": 21.31082600652729,
+        "sharpe": 0.5377690087330157,
+        "profit_factor": 1.0802736863594342,
+        "max_drawdown_pct": 0.0,
+        "sortino": 0.5377690087330157,
+        "calmar": 0.5377690087330157
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "trade_count": 307,
+          "win_rate_pct": 51.465798045602604,
+          "total_profit_pct": 21.31082600652729,
+          "sharpe": 0.5377690087330157,
+          "profit_factor": 1.0802736863594342,
+          "max_drawdown_pct": 0.0,
+          "sortino": 0.5377690087330157,
+          "calmar": 0.5377690087330157
+        }
+      }
+    }
+  ]
+}

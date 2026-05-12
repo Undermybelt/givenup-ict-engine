@@ -1,0 +1,16 @@
+verifier_ok=ok
+baseline_positive_rows_73=ok
+baseline_matched_negative_rows_73=ok
+moncada_positive_rows_6=ok
+positive_rows_79=ok
+matched_negative_rows_79=ok
+pooled_wilson95_passed=ok
+moncada_species_present=ok
+chronological_split_still_blocked=ok
+heldout_symbol_still_blocked=ok
+heldout_venue_still_blocked=ok
+direct_species_not_closed=ok
+chain_commands_called=ok
+strict_full_objective_not_complete=ok
+shared_intake_not_mutated=ok
+no_runtime_code_changed=ok

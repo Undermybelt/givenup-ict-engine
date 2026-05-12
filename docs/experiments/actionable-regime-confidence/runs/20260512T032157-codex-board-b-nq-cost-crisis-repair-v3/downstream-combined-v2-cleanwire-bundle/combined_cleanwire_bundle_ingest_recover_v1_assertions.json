@@ -1,0 +1,52 @@
+{
+  "artifact": "combined_cleanwire_bundle_ingest_recover_v1_assertions",
+  "run_id": "20260512T034813+0800-codex-board-b-nq-cost-crisis-repair-v3-combined-ingest-recover-v1",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v2-cleanwire-bundle/state_combined_v2",
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "commands": {
+    "validate_bundle_exit": 0,
+    "auto_quant_results_import_exit": 0,
+    "auto_quant_prior_init_exit": 0,
+    "original_ingest_exit_present": false,
+    "recovery_ingest_exit": 0
+  },
+  "bundle_visibility": {
+    "rooted_branch_paths_visible": true,
+    "branch_path_count": 5,
+    "roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation(scoped)"
+    ]
+  },
+  "cleanwire_ingest": {
+    "trades_total": 15415,
+    "trades_applied": 15415,
+    "trades_invalid": 0,
+    "feedback_records_inserted": 15415,
+    "content_hash": "d2aec06adb0f4871",
+    "ledger_status": "applied",
+    "source": "board_b_032157_combined_cleanwire_bundle_v2_recover"
+  },
+  "state_ledger": {
+    "strategy_library_validated": true,
+    "prior_init_applied": true,
+    "real_trades_ingested": true
+  },
+  "downstream_not_run_in_this_slice": {
+    "pre_bayes": true,
+    "bbn": true,
+    "catboost_path_ranker": true,
+    "workflow_execution_candidate": true,
+    "execution_tree": true
+  },
+  "verdict": {
+    "status": "partial_sidecar_recovery",
+    "promotion_allowed": false,
+    "completion_achieved": false,
+    "superseding_decision_anchor": "20260512T034002+0800-codex-board-b-nq-cost-crisis-repair-v3-downstream-combined-v1",
+    "next_action": "use the 034002 combined v1 fail-closed decision as the current promotion anchor; select explicit historical data before any further admission rerun"
+  }
+}

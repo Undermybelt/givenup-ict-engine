@@ -1,0 +1,15 @@
+{
+  "best_positive_lcb_5pct": 0.0019923542108578815,
+  "best_positive_mean_net": 0.0027672454133634006,
+  "best_specificity_edge": 0.007462784884873166,
+  "best_specificity_lcb_5pct": 0.0061328389859506205,
+  "best_specificity_variant": "short_tp080_sl050_h48",
+  "best_variant": "short_tp080_sl050_h48",
+  "branch_rows": 108280,
+  "downstream_consumption": "not_started:full_board_b_branch_gate_not_satisfied",
+  "gate_result": "fail:no_tradeable_stop_tp_action_surface",
+  "next_action": "B2R-repeat: if a direct Manipulation stop/take-profit candidate passed, combine it only with a separate root-branch candidate that passes Bull/Bear/Sideways/Crisis RC-SPA; otherwise switch source.",
+  "primary_blocker": "full Board B still requires Bull/Bear/Sideways/Crisis plus scoped Manipulation branch gates; this run only evaluates direct Manipulation stop/take-profit action paths",
+  "promotion_allowed_for_full_board_b": false,
+  "tradeable_candidates": []
+}

@@ -1,0 +1,188 @@
+{
+  "artifact_type": "strict_1h_jan2026_tail_support_probe_v1",
+  "candidate_source": "docs/experiments/actionable-regime-confidence/runs/20260511T184151-codex-strict-1h-near-miss-extension-requirements-v1/strict-1h-extension-requirements/strict_1h_near_miss_extension_candidates_v1.csv",
+  "counts": {
+    "accepted_rows_added": 0,
+    "candidate_rows": 13,
+    "provider_ready_for_tail": 13,
+    "standalone_tail_gate_passes": 0,
+    "tail_covers_missing_extra_rows": 4
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "full_objective_achieved": false,
+    "gate_result": "strict_1h_jan2026_tail_support_probe_v1=tail_support_found_future_gate_only_no_current_acceptance",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T10:46:48.194903+00:00",
+  "guardrail": "Jan-2026 source labels are source-owned tail evidence, but they are not a retroactive repair for the fixed 2024/2025 strict gate. They can only seed a predeclared future chronological gate.",
+  "next_action": "For strict 1h, use the rows with tail_covers_missing_extra=true as the first future-gate targets if a predeclared 2026-tail validation protocol is opened; otherwise keep strict support at 41/156.",
+  "rows": [
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "ABBV",
+      "jan2026_source_tail_sessions": 19,
+      "jan2026_tail_wilson95_lcb": "0.8318207759",
+      "missing_extra_sessions_from_184151": 6,
+      "provider_1h_covers_tail": "true",
+      "root": "Sideways",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "true"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "TMO",
+      "jan2026_source_tail_sessions": 18,
+      "jan2026_tail_wilson95_lcb": "0.8241207764",
+      "missing_extra_sessions_from_184151": 6,
+      "provider_1h_covers_tail": "true",
+      "root": "Bull",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "true"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "HD",
+      "jan2026_source_tail_sessions": 15,
+      "jan2026_tail_wilson95_lcb": "0.7961166990",
+      "missing_extra_sessions_from_184151": 4,
+      "provider_1h_covers_tail": "true",
+      "root": "Bull",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "true"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "AMD",
+      "jan2026_source_tail_sessions": 12,
+      "jan2026_tail_wilson95_lcb": "0.7575059933",
+      "missing_extra_sessions_from_184151": 11,
+      "provider_1h_covers_tail": "true",
+      "root": "Bull",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "true"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "DIS",
+      "jan2026_source_tail_sessions": 6,
+      "jan2026_tail_wilson95_lcb": "0.6096657121",
+      "missing_extra_sessions_from_184151": 18,
+      "provider_1h_covers_tail": "true",
+      "root": "Bull",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "JNJ",
+      "jan2026_source_tail_sessions": 2,
+      "jan2026_tail_wilson95_lcb": "0.3423802275",
+      "missing_extra_sessions_from_184151": 12,
+      "provider_1h_covers_tail": "true",
+      "root": "Sideways",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "HD",
+      "jan2026_source_tail_sessions": 1,
+      "jan2026_tail_wilson95_lcb": "0.2065493144",
+      "missing_extra_sessions_from_184151": 11,
+      "provider_1h_covers_tail": "true",
+      "root": "Sideways",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "XOM",
+      "jan2026_source_tail_sessions": 0,
+      "jan2026_tail_wilson95_lcb": "0.0000000000",
+      "missing_extra_sessions_from_184151": 5,
+      "provider_1h_covers_tail": "true",
+      "root": "Sideways",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "UNH",
+      "jan2026_source_tail_sessions": 0,
+      "jan2026_tail_wilson95_lcb": "0.0000000000",
+      "missing_extra_sessions_from_184151": 7,
+      "provider_1h_covers_tail": "true",
+      "root": "Bear",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "^DJI",
+      "jan2026_source_tail_sessions": 0,
+      "jan2026_tail_wilson95_lcb": "0.0000000000",
+      "missing_extra_sessions_from_184151": 7,
+      "provider_1h_covers_tail": "true",
+      "root": "Sideways",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "AMD",
+      "jan2026_source_tail_sessions": 0,
+      "jan2026_tail_wilson95_lcb": "0.0000000000",
+      "missing_extra_sessions_from_184151": 10,
+      "provider_1h_covers_tail": "true",
+      "root": "Bear",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "TMO",
+      "jan2026_source_tail_sessions": 0,
+      "jan2026_tail_wilson95_lcb": "0.0000000000",
+      "missing_extra_sessions_from_184151": 14,
+      "provider_1h_covers_tail": "true",
+      "root": "Bear",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    },
+    {
+      "allowed_use": "future_chronological_gate_preflight_only",
+      "instrument": "INTC",
+      "jan2026_source_tail_sessions": 0,
+      "jan2026_tail_wilson95_lcb": "0.0000000000",
+      "missing_extra_sessions_from_184151": 20,
+      "provider_1h_covers_tail": "true",
+      "root": "Bear",
+      "standalone_tail_gate_passes": "false",
+      "tail_covers_missing_extra": "false"
+    }
+  ],
+  "run_id": "20260511T184530+0800-codex-strict-1h-jan2026-tail-support-probe-v1",
+  "source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "tail_summary": {
+    "date_max": "2026-01-30",
+    "date_min": "2026-01-02",
+    "roots": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "row_count": 780,
+    "ticker_count": 39
+  },
+  "tail_window": {
+    "end": "2026-01-30",
+    "start": "2026-01-01"
+  }
+}

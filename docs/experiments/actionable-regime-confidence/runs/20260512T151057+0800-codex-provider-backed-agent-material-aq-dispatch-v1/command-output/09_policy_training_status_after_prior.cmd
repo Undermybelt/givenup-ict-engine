@@ -1,0 +1,1 @@
+./target/debug/ict-engine policy-training-status --symbol PROVIDER_AQ_SPY_151057 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state_spy_downstream_v1 --output-format json

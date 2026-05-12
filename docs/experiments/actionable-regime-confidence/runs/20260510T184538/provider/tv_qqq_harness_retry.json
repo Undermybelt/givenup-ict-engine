@@ -1,0 +1,114 @@
+{
+  "plan": {
+    "request": {
+      "market_key": "QQQ-regime-branch-iteration-20260510",
+      "primary_data_path": null,
+      "interval": "1h",
+      "start": null,
+      "end": null,
+      "count": null,
+      "related_roles": [
+        "qqq_tv_reference"
+      ],
+      "provider_preferences": {
+        "qqq_tv_reference": "tradingview_mcp"
+      },
+      "symbol_overrides": {
+        "qqq_tv_reference": {
+          "display_symbol": "NASDAQ:QQQ",
+          "yfinance": null,
+          "tradingview_mcp": "NASDAQ:QQQ",
+          "ibkr": null
+        }
+      },
+      "options_volatility_proxy_symbol": null
+    },
+    "provider_summary": {
+      "required_requirements": [],
+      "provider_statuses": [
+        {
+          "provider": "ibkr",
+          "status": "ready",
+          "healthy": true,
+          "reason": "local_ibkr_runtime_ready",
+          "supported_requirements": [],
+          "install_prompts": [],
+          "redacted_config": [
+            "consent_path=<local-path>",
+            "capabilities_path=<local-path>",
+            "consent_present=true",
+            "capabilities_present=true",
+            "reachable_gateway_ports=IB Gateway paper:4002",
+            "ibkr_runtime_missing_modules=<none>"
+          ]
+        },
+        {
+          "provider": "yfinance",
+          "status": "ready",
+          "healthy": true,
+          "reason": "public_yahoo_http_endpoints",
+          "supported_requirements": [],
+          "install_prompts": [],
+          "redacted_config": [
+            "provider_mode=public_http"
+          ]
+        },
+        {
+          "provider": "tradingview_mcp",
+          "status": "configured_runtime_unhealthy",
+          "healthy": false,
+          "reason": "tradingview_mcp_connectivity_probe_failed",
+          "supported_requirements": [],
+          "install_prompts": [
+            "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+            "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+          ],
+          "redacted_config": [
+            "mcp_url=https://tvremix.xyz/api/mcp/v1",
+            "credential_source=local_config",
+            "local_config=<set>",
+            "ICT_ENGINE_TVREMIX_MCP_API_KEY=<set>",
+            "stdio_cmd_env=<unset>",
+            "stdio_args_env=<unset>",
+            "probe_connectivity=false",
+            "probe_ohlcv=<skipped>",
+            "probe_options=<skipped>"
+          ]
+        }
+      ],
+      "actionable_install_prompts": [
+        "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable.",
+        "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1."
+      ]
+    },
+    "tasks": [
+      {
+        "role": "qqq_tv_reference",
+        "provider": "tradingview_mcp",
+        "operation": "Ohlcv",
+        "symbol": "NASDAQ:QQQ",
+        "request": {
+          "TradingViewMcp": {
+            "symbol": "NASDAQ:QQQ"
+          }
+        }
+      }
+    ],
+    "missing_roles": [],
+    "warnings": []
+  },
+  "results": [
+    {
+      "ok": false,
+      "provider": "tradingview_mcp",
+      "operation": "ohlcv.fetch",
+      "role": "qqq_tv_reference",
+      "symbol": "NASDAQ:QQQ",
+      "error": {
+        "category": "fetch_failed",
+        "message": "tradingview MCP call 'get_ohlcv' returned error",
+        "retryable": true
+      }
+    }
+  ]
+}

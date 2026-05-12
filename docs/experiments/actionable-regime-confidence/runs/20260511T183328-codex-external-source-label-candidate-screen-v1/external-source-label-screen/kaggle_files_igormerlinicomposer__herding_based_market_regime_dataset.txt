@@ -1,0 +1,4 @@
+name                        size  creationDate                
+-------------------------  -----  --------------------------  
+alpha_trading_signals.csv  49582  2026-04-13 08:46:59.773000  
+risk_analysis_output.csv   39765  2026-04-13 08:46:59.751000  

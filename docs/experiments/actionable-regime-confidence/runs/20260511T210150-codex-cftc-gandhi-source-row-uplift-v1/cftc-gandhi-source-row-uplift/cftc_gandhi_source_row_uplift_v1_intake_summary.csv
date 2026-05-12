@@ -1,0 +1,4 @@
+file,rows,rows_added_this_run,sha256
+/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,4,0,dd76b7f640c75022c320695aeb36508582e296c22b60dcc41bbe4adb0c65be79
+/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,4,0,b3e918c6169ed1527fb8d611780cb0224de12b32ccae06e839f476715e6704e7
+/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,,,07fd70fddcee3ab594c6048aa1d0bb071c32f33a25ff219ad77684b092017f22

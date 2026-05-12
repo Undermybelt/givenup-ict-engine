@@ -1,0 +1,32 @@
+{
+  "provider_data": {
+    "end": "2026-05-12T00:00:00Z",
+    "paths": {
+      "htf_1d": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/provider-data-json/BYBIT_BTCUSDT-1d.json",
+      "ltf_1h": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/provider-data-json/BYBIT_BTCUSDT-1h.json",
+      "mtf_4h": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/provider-data-json/BYBIT_BTCUSDT-4h.json"
+    },
+    "rows": {
+      "htf_1d": 42,
+      "ltf_1h": 985,
+      "mtf_4h": 247
+    },
+    "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/provider-csv/bybit_btcusdt_linear_1h.csv",
+    "start": "2026-04-01T00:00:00Z"
+  },
+  "source_json": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/ibkr-longer-duration-six-provider-aq-v1/ibkr_longer_duration_six_provider_aq_v1.json",
+  "strategy_library": {
+    "library": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/115130-bybit-momentum-downstream-v1/115130_bybit_momentum_strategy_library_v1.json",
+    "profit_factor": 1.288511226299377,
+    "total_profit_pct": 1.48,
+    "trade_count": 34,
+    "win_rate_pct": 41.17647058823529
+  },
+  "trades": {
+    "losses": 20,
+    "normalized_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/115130-bybit-momentum-downstream-v1/115130_bybit_momentum_real_trades_v1.jsonl",
+    "source_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+    "trade_rows": 34,
+    "wins": 14
+  }
+}

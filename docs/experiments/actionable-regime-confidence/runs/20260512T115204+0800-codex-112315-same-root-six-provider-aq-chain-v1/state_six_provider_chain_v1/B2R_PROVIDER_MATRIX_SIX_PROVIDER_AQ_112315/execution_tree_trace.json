@@ -1,0 +1,70 @@
+{
+  "artifact_id": "execution-tree-B2R_PROVIDER_MATRIX_SIX_PROVIDER_AQ_112315-1778558459977",
+  "generated_at": "2026-05-12T04:00:59.977888Z",
+  "symbol": "B2R_PROVIDER_MATRIX_SIX_PROVIDER_AQ_112315",
+  "output": {
+    "execution_score": 0.5465966729013458,
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "gate_status": "observe",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.3282 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.3282 < 0.45)",
+      "prediction_vote_score=0.5410 (medium) × execution_readiness=0.3282 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.398",
+      "market_state=volatility=NormalVol:0.701 liquidity=NormalLiquidity:0.335 structure=Unknown:0.300 behavior=Neutral:0.450",
+      "market_state=rationale=volatility=NormalVol conf=0.70",
+      "market_state=rationale=primary=RangeConsolidation secondary=WideRange overall=0.40",
+      "path_ranker=Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+      "path_ranker=Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false",
+      "path_ranker=ranker_machine=runtime_source=unknown score_model_family=unknown score_source=unknown validation_ready=false active_match_count=0",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=path:scenario:B2R_PROVIDER_MATRIX_SIX_PROVIDER_AQ_112315:belief_regime_node:range:range_mean_reversion:primary runtime_source=none raw_path_score=none calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "hybrid_transition_hazard=0.608"
+    ],
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+    "path_ranker_score_visible_to_execution_tree": false,
+    "path_ranker_score_used_by_execution_tree": false,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "unknown",
+    "ranker_validation_ready": false
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.5673543484341441,
+      "feature_value": "0.2326"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.41845238095238085,
+      "feature_value": "0.2815"
+    },
+    {
+      "feature": "dominant_cycle_energy",
+      "contribution": 0.4158663090968352,
+      "feature_value": "0.5659"
+    },
+    {
+      "feature": "execution_readiness",
+      "contribution": -0.32179465133197,
+      "feature_value": "0.3282"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "c0c6f4dad1356785",
+    "data_fingerprint": "38e87d9798c1bcb5"
+  }
+}

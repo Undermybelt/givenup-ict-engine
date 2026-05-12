@@ -1,0 +1,10 @@
+gate_result=r6_oystacher_local_control_path_disposition_v1=no_local_path_satisfies_source_owned_normal_control_contract
+local_paths_checked=6
+existing_paths_checked=6
+valid_source_owned_normal_controls_found=0
+required_cells_still_short=17
+canonical_merge_allowed=False
+downstream_chain_rerun=False
+shared_intake_mutated=False
+strict_full_objective_achieved=False
+update_goal=False

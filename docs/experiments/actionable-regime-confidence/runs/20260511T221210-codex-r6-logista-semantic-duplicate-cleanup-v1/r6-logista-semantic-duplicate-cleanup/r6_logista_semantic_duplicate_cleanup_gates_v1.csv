@@ -1,0 +1,7 @@
+gate,observed,required,pass
+positive_rows,57,>=50,true
+matched_negative_rows,57,>=50,true
+wilson95_min_lcb,0.936861,>=0.95,false
+broad_normal_sample,False,True,false
+direct_species_coverage,False,True,false
+semantic_logista_duplicates_removed,3,>0,true

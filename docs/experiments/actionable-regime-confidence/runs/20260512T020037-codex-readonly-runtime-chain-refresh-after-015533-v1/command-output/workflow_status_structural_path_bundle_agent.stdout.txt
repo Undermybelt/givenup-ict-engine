@@ -1,0 +1,42 @@
+{
+  "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+  "candidate_set_size": 3,
+  "composite_score": 0.5576007484508538,
+  "confirmation_summary": "recommended command remains valid on next refresh",
+  "current_posterior": 0.5822867835012198,
+  "direction": "Observe",
+  "experience_prior": 0.5,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 1,
+  "invalidation_summary": "regime branch trend loses posterior support or invalidates before trigger",
+  "path_id": "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+  "path_label": "trend_follow_through",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T020037 --backend native",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T020037 --backend native",
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+      "candidate_set_size": 3,
+      "confirmation": "recommended command remains valid on next refresh",
+      "invalidation": "regime branch trend loses posterior support or invalidates before trigger",
+      "path_id": "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+      "path_label": "trend_follow_through",
+      "recommended_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T020037 --backend native",
+      "selected_path_probability": 0.3661675376120536,
+      "stop": "Use execution candidate 'execution-candidate:NQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+      "trigger": "regime_posterior=trend:0.455",
+      "why": "posterior=0.582 prior=0.500 invalidation_rate=0.000"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "scenario:NQ:belief_regime_node:trend:trend_follow_through",
+  "selected_path_probability": 0.3661675376120536,
+  "stop_summary": "Use execution candidate 'execution-candidate:NQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+  "symbol": "NQ",
+  "trigger_summary": "regime_posterior=trend:0.455",
+  "why_this_path": "posterior=0.582 prior=0.500 invalidation_rate=0.000"
+}

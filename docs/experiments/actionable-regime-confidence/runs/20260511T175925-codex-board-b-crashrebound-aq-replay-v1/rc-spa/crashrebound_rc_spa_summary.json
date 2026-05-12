@@ -1,0 +1,54 @@
+{
+  "schema_version": "crashrebound-branch-rc-spa/v1",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "recipe_id": "CrashRebound",
+  "total_nonoverlap_trades": 205,
+  "test_folds": 3,
+  "min_trades_per_test_fold": 32,
+  "fold_positive_rate": 1.0,
+  "bootstrap_edge_lcb_5pct": 0.007685235556722617,
+  "cost_stress_survival": true,
+  "pbo": 1.0,
+  "dsr": 0.05766787742432156,
+  "tail_loss_p95": 0.10345622960421638,
+  "regime_specificity_ratio": 2.1623878969741943,
+  "roots_with_rows": [
+    "Bear",
+    "Bull",
+    "Sideways"
+  ],
+  "missing_roots": [
+    "Crisis"
+  ],
+  "manipulation_overlay_state": "not_observed",
+  "hard_failures": [
+    "reject_missing_branch_path:branch_path_is_proxy_not_recipe_or_board_a_trade_root",
+    "reject_missing_branch_path:missing_roots=Crisis",
+    "manipulation_overlay_not_observed",
+    "reject_overfit_risk:min_test_folds_lt_4",
+    "reject_overfit_risk:pbo_gt_0_25"
+  ],
+  "diagnostic_rc_spa_before_hard_fail_zeroing": 66.73003632272965,
+  "rc_spa": 0.0,
+  "promotion_level": "reject",
+  "downstream_consumption_status": "research_watch_branch_path_not_consumed",
+  "score_components": {
+    "edge_score": 1.0,
+    "fold_score": 1.0,
+    "depth_score": 1.0,
+    "dsr_score": 0.11533575484864313,
+    "pbo_score": 0.0,
+    "cost_score": 1.0,
+    "drawdown_score": 0.0,
+    "specificity_score": 1.0
+  },
+  "artifacts": {
+    "trades_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_trades_with_branch_paths.csv",
+    "folds_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_branch_fold_metrics.csv",
+    "path_ranker_target_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_path_ranker_target.csv",
+    "bbn_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_bbn_evidence_rows.csv",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_rc_spa_summary.json",
+    "bundle_json": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_regime_consumer_bundle.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_branch_rc_spa_v1.md"
+  }
+}

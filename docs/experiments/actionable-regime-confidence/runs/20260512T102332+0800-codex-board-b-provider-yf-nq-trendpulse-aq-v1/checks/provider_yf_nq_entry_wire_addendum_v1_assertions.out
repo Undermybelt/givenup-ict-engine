@@ -1,0 +1,11 @@
+provider_yf_nq_entry_wire_addendum_v1
+sampled_pulse_exit=0
+always_in_diagnostic_exit=0
+always_in_instrumented_exit=0
+instrumented_enter_long_sum=16994
+provider_nq_always_in_trades=0
+provider_nq_sampled_pulse_trades=0
+provider_nq_trendpulse_trades=0
+mature_rooted_branch_observations=0
+promotion_allowed=false
+update_goal=false

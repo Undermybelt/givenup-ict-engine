@@ -1,0 +1,6 @@
+priority,gap,next_artifact,acceptance
+P0,full_species_cross_market_equivalence,source_label_equivalence_request_v1,owner-approved or source-native labels for NQ/QQQ/futures/crypto/FX; no OHLCV proxy labels
+P0,source_recency_after_2026_01_30,source_panel_recency_extension_v1,"source-owned labels beyond 2026-01-30, then rerun exact same gates"
+P1,ticker_specific_strict_support,strict_ticker_root_gap_selector_v1,increase strict ticker/root accepted rows beyond 41/156 without pooled-context promotion
+P1,native_subhour_timeframe_overlap,native_subhour_source_overlap_after_recency_v1,source-date overlap exists for 1m/5m/15m/30m/90m before calibration
+P2,direct_manipulation_missing_varieties,direct_row_intake_positive_negative_exports_v1,source-owned positive rows plus matched negatives for spoofing/layering/quote-stuffing/pinging/bear-raid varieties

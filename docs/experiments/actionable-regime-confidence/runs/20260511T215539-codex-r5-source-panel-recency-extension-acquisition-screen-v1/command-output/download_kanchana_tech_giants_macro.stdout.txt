@@ -1,0 +1,4 @@
+Dataset URL: https://www.kaggle.com/datasets/kanchana1990/tech-giants-and-global-macroeconomic-indicators
+License(s): CC0-1.0
+Downloading tech-giants-and-global-macroeconomic-indicators.zip to /tmp/ict-engine-r5-source-panel-recency-extension-acquisition-screen-v1/kanchana_tech_giants_macro
+

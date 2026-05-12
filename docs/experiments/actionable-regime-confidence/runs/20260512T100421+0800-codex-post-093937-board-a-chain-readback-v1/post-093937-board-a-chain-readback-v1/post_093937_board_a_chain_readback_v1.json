@@ -1,0 +1,80 @@
+{
+  "run_id": "20260512T100421+0800-codex-post-093937-board-a-chain-readback-v1",
+  "mode": "append_only_non_promoting_readback",
+  "source_state": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1",
+  "copied_state": "docs/experiments/actionable-regime-confidence/runs/20260512T100421+0800-codex-post-093937-board-a-chain-readback-v1/state_readback_v1",
+  "command_exits": {
+    "provider_status_agent": 0,
+    "auto_quant_status": 0,
+    "pre_bayes_status": 0,
+    "workflow_status_agent": 0,
+    "structural_recommended_path_bundle": 0,
+    "execution_candidate": 0,
+    "policy_training_status_bad_alias": 2,
+    "policy_training_status_output_format_agent": 0,
+    "export_structural_path_ranking_target": 0
+  },
+  "provider_status": {
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:2/7 ready",
+    "requested_provider_readiness": {
+      "ibkr": false,
+      "ibkr_bridge": false,
+      "tradingview_mcp": true,
+      "yfinance_live_runtime": true,
+      "yfinance_market_data": true,
+      "kraken_cli": true,
+      "kraken_public": false
+    }
+  },
+  "auto_quant": {
+    "status": "dependency_ready_data_missing",
+    "dependency_healthy": true,
+    "data_ready": false,
+    "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T100421+0800-codex-post-093937-board-a-chain-readback-v1/state_readback_v1"
+  },
+  "pre_bayes_bbn": {
+    "latest_gate_status": "pass_neutralized",
+    "latest_canonical_structural_active_regime": "range",
+    "latest_canonical_structural_confidence": 0.5619249343265972,
+    "read_only_regime_bbn_decision_state": "single_label_95",
+    "read_only_regime_bbn_label_set": "primary::ExtremeStress,Crisis_->_CrisisReliefCarry_->_StopManagedPanicRecovery_->_SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "root_acceptance_packet": false
+  },
+  "catboost_path_ranking": {
+    "entry_model_training_ready": false,
+    "entry_model_matched_rows": 0,
+    "structural_runtime_status": "enabled_candidate_set_ready",
+    "structural_runtime_ready": true,
+    "structural_target_rows": 6,
+    "structural_target_mature_rows": 4,
+    "structural_history_rows": 295,
+    "structural_history_mature_rows": 288,
+    "trainer_artifact_ready": true,
+    "trainer_artifact_model_family": "catboost",
+    "trainer_artifact_trained_rows": 12329,
+    "trainer_artifact_calibration_rows": 275
+  },
+  "execution_candidate": {
+    "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "path_ranker_runtime_source": "history_path",
+    "path_ranker_raw_score": 0.65,
+    "candidate_status": "execution_observe_only",
+    "review_status": "observe",
+    "execution_readiness": 0.4504361163104953,
+    "ready": false
+  },
+  "decision": {
+    "gate": "post_093937_board_a_chain_readback_v1=path_ranker_catboost_ready_execution_observe_only_selected_history_and_source_control_blocked",
+    "accepted_rows_added": 0,
+    "accepted_main_regime_v2_root_packet": false,
+    "every_regime_95_99": false,
+    "cross_market_period_context_validation_complete": false,
+    "explicit_selected_history": false,
+    "source_control_unlock": false,
+    "canonical_merge": false,
+    "selected_data_auto_quant_promotion": false,
+    "downstream_promotion": false,
+    "trade_claim": false,
+    "update_goal": false
+  }
+}

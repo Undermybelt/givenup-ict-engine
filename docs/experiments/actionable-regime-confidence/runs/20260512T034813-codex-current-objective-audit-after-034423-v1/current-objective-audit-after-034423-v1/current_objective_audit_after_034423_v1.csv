@@ -1,0 +1,15 @@
+requirement,status,evidence,blocking_reason
+board_file_concurrent_safe,pass,board_sha256_before_audit,"cursor not edited; audit packet only"
+every_active_regime_confidence_gte_95,blocked,board_tail_and_034423,"no new per-regime calibrated confidence packet"
+per_regime_qualifying_conditions,blocked,source_roots_and_board_tail,"required source/control roots absent"
+cross_market_cycle_timeframe_provider_validation,blocked,provider_status_agent,"provider coverage partial and source-owned validation roots absent"
+r6_owner_export,blocked,direct_verifier_required_owner_export,"missing required owner-export files"
+approval_or_source_owned_controls,blocked,r6_approval_decision_package,"approval false and FLIP controls false"
+provider_ibkr_tradingview_yfinance_kraken,partial,provider_status_agent,"yfinance and kraken_cli ready; ibkr and tradingview_mcp unhealthy"
+autoquant_runtime,pass_runtime_only,034423_and_autoquant_status,"runtime strategy backtests succeeded but not regime-confidence evidence"
+filter_prebayes,blocked,pre_bayes_status_nq,"no latest policy soft evidence bridge or filtered assignments"
+bbn_policy_training,blocked,policy_training_status_nq,"matched_rows=0 and outcome coverage missing"
+catboost_path_ranking,blocked,policy_training_status_nq,"runtime disabled target export missing validation rows 0"
+execution_tree_workflow,blocked,workflow_status_nq,"actionable_artifacts=0 observe fail-closed"
+canonical_merge_downstream_promotion,blocked,approval_and_verifier,"source/control gates closed"
+

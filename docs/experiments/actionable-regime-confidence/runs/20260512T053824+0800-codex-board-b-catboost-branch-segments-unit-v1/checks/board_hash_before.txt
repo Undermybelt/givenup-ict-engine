@@ -1,0 +1,1 @@
+e3bc353342e6a08abcd61a9556afc8637f320633f9d1e2bc10a13814c668dd88  docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md

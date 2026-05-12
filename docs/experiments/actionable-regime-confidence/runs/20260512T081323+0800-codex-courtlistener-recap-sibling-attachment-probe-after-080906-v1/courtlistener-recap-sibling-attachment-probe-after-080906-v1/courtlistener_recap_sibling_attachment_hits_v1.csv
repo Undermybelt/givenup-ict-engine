@@ -1,0 +1,3 @@
+storage_name,url,status,content_length,content_type,known_exhibit_a,novel_public_pdf
+gov.uscourts.ilnd.316889.1.1.pdf,https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf,200,1132071,application/pdf,True,False
+gov.uscourts.ilnd.316889.1.0.pdf,https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.0.pdf,200,381634,application/pdf,False,True

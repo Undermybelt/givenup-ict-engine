@@ -1,0 +1,17 @@
+PASS gate_result=r6_staging_triplet_split_calibration_after_035233_v1=staging_pooled95_pass_split_support_broad_controls_and_policy_blocked_no_promotion
+PASS verifier_status=schema_ready_unscored
+PASS positive_rows=77
+PASS matched_negative_rows=77
+PASS pooled_gate=true
+PASS chronological_split_gate=false
+PASS heldout_symbol_gate=false
+PASS heldout_venue_gate=false
+PASS broad_normal_controls_present=false
+PASS source_control_evidence_acquired=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS canonical_merge_allowed=false
+PASS downstream_promotion_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS trade_usable=false
+PASS update_goal=false

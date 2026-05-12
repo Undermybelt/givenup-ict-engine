@@ -1,0 +1,10 @@
+requirement,status,evidence,notes
+route_completed,covered,conversation routing readback,"aegis/long-task-continuation routed before main work"
+multi_agent_safety_readback,covered,git status/hash/tail/ps outputs,"Board was not edited while overlapping agents were active"
+long_history_1m_substrate,covered,long_history_es_nq_aq_stage_rows.csv,"ES and NQ staged from cleaned 1m JSON into 1m/5m/15m/1h/4h/1d feathers"
+isolated_auto_quant_workspace,covered,workspace/auto-quant/,"run_tomac.py config strategy and data copied under run root; main Auto-Quant data dir not mutated"
+real_auto_quant_run,covered,command-output/02_run_tomac_long_history_es_nq.out,"Freqtrade backtest exited 0"
+cross_instrument_check,partial,command-output/02_run_tomac_long_history_es_nq.out,"NQ and ES both ran; ES was negative, so no acceptance"
+pre_bayes_bbn_catboost_execution_chain,not_covered,N/A,"This run root only completed Auto-Quant staging and backtest; downstream chain remains required"
+per_regime_95_confidence,not_covered,long_history_es_nq_1m_aq_stage_v1.metrics.json,"No calibrated >=0.95 posterior or lower bound produced"
+board_a_promotion,not_covered,long_history_es_nq_1m_aq_stage_v1.metrics.json,"Fail-closed; no production BBN update, no execution promotion, update_goal=false"

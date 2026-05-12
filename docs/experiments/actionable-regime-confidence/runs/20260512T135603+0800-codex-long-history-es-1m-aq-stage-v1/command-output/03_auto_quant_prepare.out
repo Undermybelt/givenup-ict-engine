@@ -1,0 +1,16 @@
+{
+  "data_ready": true,
+  "dependency_status_after": "dependency_ready_data_ready",
+  "dependency_status_before": "dependency_ready_data_missing",
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine auto-quant-status --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "prepare_command": "ict-engine auto-quant-prepare",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m",
+  "status": "prepared",
+  "workspace_repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m/.deps/auto-quant"
+}

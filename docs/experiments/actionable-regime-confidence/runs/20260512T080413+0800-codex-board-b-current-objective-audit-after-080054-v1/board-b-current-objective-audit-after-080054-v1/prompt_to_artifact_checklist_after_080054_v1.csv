@@ -1,0 +1,9 @@
+requirement,evidence,status
+board_b_authoritative_file,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,pass
+rooted_profitability_factor_training,080054 accepted_rows_added=0 and valid_required_root_unlock=false,blocked
+branch_path_preserved_through_downstream_chain,075108 branch labels preserved but workflow blocked and mature rows zero,partial_fail_closed
+real_autoquant_filter_bbn_catboost_execution_tree_operation,prior real readbacks exist but selected-data AutoQuant and downstream promotion are blocked,partial_fail_closed
+ibkr_tradingview_yfinance_kraken_visibility,075108 provider status and 075420 provider/cache sweep covered provider surfaces,partial_non_promoting
+source_control_unlock,075925 075932 and 080054 all report no required source/control unlock,blocked
+explicit_user_selected_history,no explicit HTF MTF or LTF selection present,blocked
+completion_update_goal,strict_full_objective=false promotion_allowed=false update_goal=false,blocked

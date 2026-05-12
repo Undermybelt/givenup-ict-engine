@@ -1,0 +1,15 @@
+{
+  "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1/provider-csv/yfinance_btc_usd_1h.csv",
+  "rows": {
+    "ltf_1h": 983,
+    "mtf_4h": 246,
+    "htf_1d": 41
+  },
+  "start": "2026-04-01T00:00:00Z",
+  "end": "2026-05-11T23:00:00Z",
+  "paths": {
+    "ltf_1h": "docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/provider-data-json/BTC_USD-1h.json",
+    "mtf_4h": "docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/provider-data-json/BTC_USD-4h.json",
+    "htf_1d": "docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/provider-data-json/BTC_USD-1d.json"
+  }
+}

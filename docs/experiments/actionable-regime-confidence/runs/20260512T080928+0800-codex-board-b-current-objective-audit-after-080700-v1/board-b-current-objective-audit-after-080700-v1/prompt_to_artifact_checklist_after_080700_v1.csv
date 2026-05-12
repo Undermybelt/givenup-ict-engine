@@ -1,0 +1,9 @@
+requirement,status,evidence,blocker
+Use Board B markdown as active contract,covered,/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,
+Profitability-factor training rooted in accepted regime-identification roots,blocked,080054/080336/080425/080446 all report valid_required_root_unlock=false,No valid R3/R5/R6 source-control root or approval unlock
+"Preserve branch path through filter, BBN, CatBoost/path-ranking, and execution tree",partial_fail_closed,Prior 075108/080413 readbacks preserved branch labels but downstream stayed blocked/observe-only,Downstream promotion forbidden until source/control and selected-history gates pass
+Personally operate AutoQuant and ict-engine chain on real artifacts,partial_fail_closed,Prior readbacks exercised provider/AutoQuant/pre-Bayes/workflow/path-ranking surfaces,Selected-data AutoQuant and promotion rerun remain blocked
+"Use IBKR, TradingViewRemix, yfinance, and Kraken visibly",partial_non_promoting,Prior 075108/075420 provider/cache readbacks covered these surfaces diagnostically,Provider visibility did not produce accepted source/control evidence
+Continue source/control acquisition without promoting proxies,covered_fail_closed,080333/080411/080452/080700 route probes all no_unlock,
+Explicit user-selected historical path before selected-data factor research,blocked,No explicit HTF/MTF/LTF selection found in latest Board B tail,user_selected_historical_data_missing
+Canonical merge / selected-data AutoQuant / downstream promotion,blocked,080425 approval_present=false; canonical_merge_allowed_now=false; downstream_rerun_allowed_now=false,source_control_unlock_absent

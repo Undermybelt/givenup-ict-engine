@@ -1,0 +1,15 @@
+{
+  "auto_quant_pinned_ref": "34ba6b6",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_ROOTAWARE_MULTIBRANCH_B_182222_20260511T102854.884784000Z",
+  "library_source": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/branch-rc-spa/rootaware_multibranch_strategy_library_for_import_v1.json",
+  "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/ict-engine-fail-closed/state/auto-quant/ROOTAWARE_MULTIBRANCH_B_182222/auto_quant_strategy_library.json",
+  "log_cross_check": null,
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 1,
+  "n_total_strategies": 1,
+  "symbol": "ROOTAWARE_MULTIBRANCH_B_182222"
+}

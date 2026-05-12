@@ -1,0 +1,76 @@
+{
+  "run_id": "20260512T122232+0800-codex-115700-execution-blocker-readback-v1",
+  "source_enriched_downstream_root": "20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+  "source_provider_aq_root": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+  "readback_files": {
+    "workflow_full": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/command-output/47_workflow_full_augmented.out",
+    "execution_candidate": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/command-output/46_workflow_execution_candidate_augmented.out",
+    "state_execution_candidate": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/execution_candidate.json"
+  },
+  "blocking_truth": {
+    "status": "blocked",
+    "stage": "analyze",
+    "reason": "user_selected_historical_data_missing",
+    "recorded_paths": [
+      "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json"
+    ],
+    "next_command": "ask-user: Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use."
+  },
+  "execution_candidate": {
+    "ready": false,
+    "actionable": false,
+    "review_status": "observe",
+    "candidate_status": "execution_blocked",
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.32853919817900823,
+    "pre_bayes_gate_status": "pass_neutralized",
+    "selected_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+    "path_ranker_calibrated_path_prob": 0.34309623430962344,
+    "selected_path_probability": 0.3119619111854532,
+    "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready"
+  },
+  "baseline_execution_candidate": {
+    "candidate_status": "no_trade",
+    "trade_direction": "Neutral",
+    "actionable": false,
+    "selected_direction": "Bear",
+    "posterior": 0.0,
+    "win_probability": 0.0,
+    "review_status": "observe",
+    "review_reason": "first_execution_candidate_artifact",
+    "decision_hint_contains": [
+      "no_previous_run",
+      "low_directional_separation",
+      "pre_bayes_gating_status=pass_neutralized"
+    ]
+  },
+  "pre_bayes_context": {
+    "gate": "pass_neutralized",
+    "quality_score": 0.5250864595751618,
+    "active_regime": "range",
+    "confidence": 0.5250864595751618,
+    "conflict_flag": "low_directional_separation",
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_alignment_score": 0.9974,
+    "multi_timeframe_entry_alignment_score": 0.8022,
+    "covered_intervals": ["15m", "1h", "1d"],
+    "missing_intervals": ["1m", "5m", "30m", "4h"]
+  },
+  "path_ranker_context": {
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "score_model_family": "catboost",
+    "score_source": "external_model",
+    "raw_scored_mature": "237/30",
+    "production_validation": "237/30",
+    "observation_validation": "237/30"
+  },
+  "decision": {
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "recommended_next": "Stop duplicate provider/downstream probes; ask the user to choose or approve the historical dataset before running factor-research/source-control unlock against 1h, 4h, or 1d recorded data."
+  }
+}

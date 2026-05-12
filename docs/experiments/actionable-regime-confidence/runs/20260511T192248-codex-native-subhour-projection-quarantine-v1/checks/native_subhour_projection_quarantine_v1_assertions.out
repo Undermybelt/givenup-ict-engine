@@ -1,0 +1,5 @@
+PASS decision=native_subhour_projection_quarantine_v1=projected_subhour_rows_not_native_source_labels
+PASS subhour_rows_read=264
+PASS native_subhour_eligible_rows=0
+PASS quarantined_subhour_rows=264
+PASS update_goal=false

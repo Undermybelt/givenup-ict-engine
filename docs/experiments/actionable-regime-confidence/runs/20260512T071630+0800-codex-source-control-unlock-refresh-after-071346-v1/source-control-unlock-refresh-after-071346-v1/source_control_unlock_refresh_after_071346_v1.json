@@ -1,0 +1,108 @@
+{
+  "assertions": {
+    "canonical_merge": false,
+    "dispatch_sent_evidence": false,
+    "downstream_promotion_rerun": false,
+    "owner_data_cli_ready": false,
+    "owner_data_env_ready": false,
+    "r3_crisis_rows": 0,
+    "r3_native_subhour_unlock": false,
+    "r3_source_status": "tsie_quarantined",
+    "r5_recency_unlock": false,
+    "r6_depth_or_order_lifecycle_files_found": 0,
+    "r6_owner_export_unlock": false,
+    "r6_required_files_present_count": 0,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "board_sha256_before_artifact": "56f88f9e42df17fa1756e3d18a3e09083bb1131d520096c5ca38a09e20425f44",
+  "decision": "No fresh Board A source/control unlock appeared after the 071346 R3 readback. R6 required files remain absent, R5 recency root remains absent, R3 remains TSIE-quarantined and Crisis-absent, v5 dispatch assets remain drafts without sent/ticket/export evidence, and no owner-data CLI/env path is ready in this shell.",
+  "dispatch_assets": [
+    {
+      "exists": true,
+      "has_from": false,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "sent_evidence": false,
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b"
+    },
+    {
+      "exists": true,
+      "has_from": false,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "sent_evidence": false,
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d"
+    }
+  ],
+  "env_keys_present_without_values": [],
+  "gate_result": "source_control_unlock_refresh_after_071346_v1=no_required_unlock_no_dispatch_no_downstream",
+  "generated_at_local": "2026-05-12T07:17:21.645969+08:00",
+  "inputs": {
+    "dispatch_assets_checked": [
+      "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml"
+    ],
+    "r3_settled_readback_json": "docs/experiments/actionable-regime-confidence/runs/20260512T071346+0800-codex-r3-label-count-settled-readback-after-071032-v1/r3-label-count-settled-readback-after-071032-v1/r3_label_count_settled_readback_after_071032_v1.json",
+    "r6_depth_scan_json": "docs/experiments/actionable-regime-confidence/runs/20260512T071316+0800-codex-local-order-lifecycle-depth-source-scan-after-070840-v1/local-order-lifecycle-depth-source-scan-after-070840-v1/local_order_lifecycle_depth_source_scan_after_070840_v1.json"
+  },
+  "next": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned post-2026-01-30 R5 rows matching the source-panel schema, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export. After that, rerun the ordered chain.",
+  "run_id": "20260512T071630+0800-codex-source-control-unlock-refresh-after-071346-v1",
+  "scope": {
+    "mode": "read_only_unlock_refresh_after_071346",
+    "no_canonical_merge": true,
+    "no_dispatch": true,
+    "no_downstream_promotion": true,
+    "no_root_mutation": true,
+    "update_goal": false
+  },
+  "target_roots": {
+    "r3_native_subhour": {
+      "accepted_unlock": false,
+      "exists": true,
+      "file_count": 2,
+      "required_r6_files_present": [],
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    "r5_kaggle_redownload": {
+      "accepted_unlock": false,
+      "exists": true,
+      "file_count": 1,
+      "required_r6_files_present": [],
+      "root": "/tmp/ict-engine-board-a-r5-kaggle-stock-regimes-recency-redownload-v1"
+    },
+    "r5_recency_extension": {
+      "accepted_unlock": false,
+      "exists": false,
+      "file_count": 0,
+      "required_r6_files_present": [],
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    "r6_owner_export": {
+      "accepted_unlock": false,
+      "exists": false,
+      "file_count": 0,
+      "required_r6_files_present": [],
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    "source_label_equivalence": {
+      "accepted_unlock": false,
+      "exists": true,
+      "file_count": 2,
+      "required_r6_files_present": [],
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    }
+  },
+  "tool_paths": {
+    "databento": null,
+    "dbn": null,
+    "huggingface-cli": null,
+    "kaggle": "/Users/thrill3r/.local/bin/kaggle",
+    "mail": "/usr/bin/mail",
+    "msmtp": null,
+    "mutt": null,
+    "sendmail": "/usr/sbin/sendmail",
+    "swaks": null
+  }
+}

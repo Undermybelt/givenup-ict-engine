@@ -1,0 +1,1 @@
+./target/debug/ict-engine workflow-status --symbol B2R_PROVIDER_BTC_CANARY_103010 --phase execution-candidate --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T103010+0800-codex-board-b-provider-btc-always-entry-canary-v1/state_ingest --agent

@@ -1,0 +1,5 @@
+candidate_set_id,path_id,raw_path_score
+structural-candidates:NQ:af0c00ee702b8d23,Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12,0.5506854256388609
+structural-candidates:NQ:af0c00ee702b8d23,Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12,0.5893175560225903
+structural-candidates:NQ:af0c00ee702b8d23,Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12,0.5757819264860429
+structural-candidates:NQ:af0c00ee702b8d23,Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12,0.5852012726553506

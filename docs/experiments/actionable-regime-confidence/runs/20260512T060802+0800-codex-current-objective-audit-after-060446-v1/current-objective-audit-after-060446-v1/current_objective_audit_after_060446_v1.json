@@ -1,0 +1,79 @@
+{
+  "run_id": "20260512T060802+0800-codex-current-objective-audit-after-060446-v1",
+  "gate_result": "current_objective_audit_after_060446_v1=not_complete_source_control_roots_absent_after_060446_no_downstream_rerun",
+  "generated_at_local": "2026-05-12T06:08:02+08:00",
+  "objective": "Every active MainRegimeV2 root must reach at least 95% calibrated confidence, survive cross-market/cycle/timeframe validation, and pass provider/AutoQuant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution-tree readback after source/control unlock.",
+  "active_roots": {
+    "Bear": {
+      "diagnostic_confidence_present": true,
+      "promotion_accepted": false,
+      "blocker": "source/control roots absent and downstream promotion not rerun"
+    },
+    "Bull": {
+      "diagnostic_confidence_present": true,
+      "promotion_accepted": false,
+      "blocker": "source/control roots absent and downstream promotion not rerun"
+    },
+    "Crisis": {
+      "diagnostic_confidence_present": true,
+      "promotion_accepted": false,
+      "blocker": "source/control roots absent and downstream promotion not rerun"
+    },
+    "Sideways": {
+      "diagnostic_confidence_present": true,
+      "promotion_accepted": false,
+      "blocker": "source/control roots absent and downstream promotion not rerun"
+    }
+  },
+  "evidence_readback": {
+    "diagnostic_hgb_packets": [
+      "053852",
+      "055058"
+    ],
+    "provider_runtime_evidence": [
+      "055129"
+    ],
+    "autoquant_readiness_evidence": [
+      "055200",
+      "060056"
+    ],
+    "dispatch_or_source_search_evidence": [
+      "055516",
+      "055658",
+      "055930",
+      "060032",
+      "060446"
+    ],
+    "latest_source_arrival_sweep": "docs/experiments/actionable-regime-confidence/runs/20260512T060446-codex-source-arrival-local-drop-sweep-after-055930-v1"
+  },
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "approval_decision_package": {
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "present": true,
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "update_goal": false
+  },
+  "downstream_chain": {
+    "canonical_merge": false,
+    "provider_autoquant_rerun_after_unlock": false,
+    "filter_pre_bayes": false,
+    "bbn": false,
+    "catboost_path_ranking": false,
+    "execution_tree_readback": false
+  },
+  "assertions": {
+    "source_control_evidence_acquired": false,
+    "accepted_rows_added": 0,
+    "required_root_unlocked": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Wait for explicit source/control approval or required target-root unlock, then rerun direct verifier, split calibration, canonical merge, provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback in order."
+}

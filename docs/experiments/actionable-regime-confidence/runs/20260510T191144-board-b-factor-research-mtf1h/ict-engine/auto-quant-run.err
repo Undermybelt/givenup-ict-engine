@@ -1,0 +1,6 @@
+warning: The `tool.uv.dev-dependencies` field (used in `pyproject.toml`) is deprecated and will be removed in a future release; use `dependency-groups.dev` instead
+Installed 5 packages in 72ms
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/run.py", line 56, in <module>
+    from freqtrade.configuration import Configuration
+ModuleNotFoundError: No module named 'freqtrade'

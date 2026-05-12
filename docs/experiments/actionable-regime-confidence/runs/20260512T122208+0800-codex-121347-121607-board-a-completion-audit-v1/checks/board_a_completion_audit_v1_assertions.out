@@ -1,0 +1,14 @@
+PASS run_id=20260512T122208+0800-codex-121347-121607-board-a-completion-audit-v1
+PASS source_enriched=20260512T121347+0800-codex-115700-enriched-downstream-chain-v1
+PASS source_feedback=20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1
+PASS enriched_rows=237
+PASS required_provider_coverage=True
+PASS ordered_local_chain=True
+FAIL_CLOSED active_regime_95_confidence=False
+FAIL_CLOSED other_market_or_instrument_validation=False
+FAIL_CLOSED other_cycle_or_timeframe_validation=False
+FAIL_CLOSED direct_manipulation_gate=False
+FAIL_CLOSED execution_admissibility=False
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

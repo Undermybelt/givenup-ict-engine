@@ -1,0 +1,76 @@
+{
+  "schema_version": "board-a-a-v2-2-data-binding-repair/v1",
+  "loop_id": "20260510T184555+0800-board-a-v2-2-autoquant-data-binding-repair-codex",
+  "board": "Actionable Regime Confidence",
+  "durable_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T184555",
+  "source_blocker": "docs/experiments/actionable-regime-confidence/runs/20260510T183454/autoquant/fresh_tomac_scratch_no_rsi_2025.json",
+  "objective_slice": "A-v2-2 data binding repair for fresh Auto-Quant tmp runner; TradingViewRemix health probe; no threshold relaxation.",
+  "root_cause": {
+    "symptom": "Freqtrade OperationalException: No data found. Terminating.",
+    "cause": "Runner config paired TomacNQ_ScratchNoRSINoConflict15m timeframe 15m with QQQ/USD while data dir has no QQQ_USD-15m.feather.",
+    "evidence": [
+      "docs/experiments/actionable-regime-confidence/runs/20260510T183454/autoquant/fresh_tomac_scratch_no_rsi_2025.err",
+      "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather exists",
+      "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-15m.feather missing"
+    ]
+  },
+  "repair": {
+    "patched_config": "autoquant/config.tomac.nq-15m.json",
+    "patched_runner": "tmp-scripts/fresh_tomac_backtest_runner_nq.py",
+    "scratch_user_data": "/tmp/ict-board-a-v2-2-codex-20260510T184555/autoquant-fresh-user-data",
+    "output": "autoquant/fresh_tomac_scratch_no_rsi_nq_2025.json",
+    "summary": "autoquant/fresh_tomac_scratch_no_rsi_nq_2025_summary.json",
+    "errors": 0
+  },
+  "fresh_autoquant_result": {
+    "schema_version": "fresh-tomac-nq-data-binding-repair-summary/v1",
+    "source": "docs/experiments/actionable-regime-confidence/runs/20260510T184555/autoquant/fresh_tomac_scratch_no_rsi_nq_2025.json",
+    "data_binding_fix": {
+      "old_pair": "QQQ/USD",
+      "old_missing_file": "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-15m.feather",
+      "new_pair": "NQ/USD",
+      "new_data_file": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+      "timerange": "20250101-20251231",
+      "strategy": "TomacNQ_ScratchNoRSINoConflict15m"
+    },
+    "run_result": {
+      "strategy": "TomacNQ_ScratchNoRSINoConflict15m",
+      "timeframe": "15m",
+      "timerange": "20250101-20251231",
+      "total_trades": 1081,
+      "wins": 340,
+      "losses": 725,
+      "winrate": 0.3145235892691952,
+      "profit_total": -0.10881613010630001,
+      "profit_factor": 0.9015821223976574,
+      "first_open": "2025-01-02T08:45:00+00:00",
+      "last_open": "2025-12-29T23:45:00+00:00"
+    },
+    "profit_ratio_distribution": {
+      "count": 1081,
+      "min": -0.02199989894400741,
+      "max": 0.031850012841416545,
+      "mean": -9.940943068986848e-05,
+      "positive_count": 340,
+      "non_positive_count": 741
+    },
+    "decision": "data_binding_repaired_but_strategy_not_accepted_for_profitability_or_regime_confidence",
+    "board_a_use": "Fresh Auto-Quant runner no longer blocked by missing data; result can be consumed as negative/no-edge context only. It is not a 95% actionable regime packet."
+  },
+  "tradingview_remix_health": {
+    "artifact": "provider-tvremix-tools-list-health.json",
+    "ok": false,
+    "http_status": 429,
+    "body_prefix": "{\"error\": \"Rate limit exceeded. Retry after 47475s.\"}",
+    "api_key_present": true,
+    "decision": "blocked_rate_limited"
+  },
+  "board_a_decision": {
+    "accepted_gate": "none",
+    "board_state": "blocked",
+    "blocker": "tradingviewremix_rate_limited; fresh Auto-Quant runner repaired but strategy negative/no-edge; provider-agreement calibration still needs rerun after TV health or explicit TV-fallback decision",
+    "thresholds_relaxed": false,
+    "board_b_handoff_emitted": false
+  },
+  "next_action": "A-v2-2b: after the TradingViewRemix 429 retry window clears, rerun provider-agreement calibration using repaired NQ/USD fresh runner evidence plus the longer yfinance+IBKR QQQ windows; if TV remains rate-limited, record explicit TV-fallback gating before rerun."
+}

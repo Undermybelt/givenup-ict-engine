@@ -1,0 +1,5 @@
+evidence,path,present,kind
+latest_completion_audit,docs/experiments/actionable-regime-confidence/runs/20260512T021256-codex-current-objective-completion-audit-after-020037-v1/current-objective-completion-audit-after-020037-v1/current_objective_completion_audit_after_020037_v1.json,True,file
+provider_readback,docs/experiments/actionable-regime-confidence/runs/20260512T021456-codex-required-provider-status-readback-v1/required-provider-status-readback-v1/required_provider_status_readback_v1.json,True,file
+tsie_full_parquet_dryrun,docs/experiments/actionable-regime-confidence/runs/20260512T022005-codex-tsie-source-label-intake-dryrun-v1/tsie-source-label-intake-dryrun-v1/tsie_source_label_intake_dryrun_v1.json,True,file
+autoquant_bootstrap_prepare_readiness,docs/experiments/actionable-regime-confidence/runs/20260512T021808-codex-autoquant-bootstrap-prepare-readiness-v1/autoquant-bootstrap-prepare-readiness-v1/autoquant_bootstrap_prepare_readiness_v1.json,True,file

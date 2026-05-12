@@ -1,0 +1,10 @@
+all_exit_markers_zero=true
+auto_quant_status=missing_dependency
+auto_quant_data_ready=false
+pre_bayes_gate_status=observe_only
+policy_training_matched_rows=0
+catboost_path_ranker_validation=0_of_30
+execution_candidate_ready=false
+blocked=user_selected_historical_data_missing
+promotion_allowed=false
+update_goal=false

@@ -1,0 +1,6 @@
+assert accepted_rows_added == 0: ok
+assert new_confidence_gate is false: ok
+assert strict_full_objective_achieved is false: ok
+assert update_goal is false: ok
+assert match_count >= 1: ok (8962)
+json_sha256=13b435575d147710e78a1bdfdbd03385fda33286aab180bcf15cd22538852588

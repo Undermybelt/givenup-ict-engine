@@ -1,0 +1,30 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 79,
+  "matched_negative_rows": 79,
+  "matched_group_count": 76,
+  "provenance_keys": [
+    "artifact_type",
+    "baseline_matched_negative_rows",
+    "baseline_positive_rows",
+    "baseline_source_v57_json",
+    "canonical_shared_intake_mutated",
+    "external_requests_sent",
+    "generated_at_utc",
+    "matched_control_policy",
+    "moncada_candidate_csv",
+    "moncada_matched_controls_generated_isolated_only",
+    "moncada_positive_rows_added_isolated_only",
+    "raw_data_committed",
+    "run_id",
+    "runtime_code_changed",
+    "sidecar_broad_normal_controls_path",
+    "source_v57_negative_csv",
+    "source_v57_negative_sha256",
+    "source_v57_positive_csv",
+    "source_v57_positive_sha256",
+    "thresholds_relaxed",
+    "trade_usable"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

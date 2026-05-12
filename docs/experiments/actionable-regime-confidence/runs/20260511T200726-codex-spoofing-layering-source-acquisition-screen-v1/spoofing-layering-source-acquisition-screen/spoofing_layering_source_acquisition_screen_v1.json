@@ -1,0 +1,99 @@
+{
+  "accepted_rows_added": 0,
+  "candidate_count": 5,
+  "candidates": [
+    {
+      "candidate_id": "do_putnins_2023_detecting_layering_spoofing",
+      "disposition": "blocked_owner_approval_or_export_required",
+      "evidence_readback": "SSRN page describes a global prosecuted-case sample; the text mirror says case information was hand collected from regulatory/court documents and FOI requests, with some cases down to individual trades and orders.",
+      "has_matched_controls": false,
+      "has_public_row_export": false,
+      "has_row_level_positive_hint": true,
+      "mirror_or_readback_url": "https://studylib.net/doc/28317823/ssrn-4525036",
+      "name": "Detecting Layering and Spoofing in Markets",
+      "reason": "High-value owner/contact target, but no public owner-approved positive/control row package or provenance manifest was found.",
+      "source_owned_or_owner_approved": false,
+      "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036",
+      "target_species": "spoofing_layering"
+    },
+    {
+      "candidate_id": "delise_2023_deep_sad_tmx_fraud",
+      "disposition": "blocked_proprietary_no_public_rows",
+      "evidence_readback": "arXiv abstract and extracted PDF text state the data is exclusive proprietary TMX limit order book data with a small set of true labeled fraud instances.",
+      "has_matched_controls": false,
+      "has_public_row_export": false,
+      "has_row_level_positive_hint": true,
+      "mirror_or_readback_url": "/tmp/ict-engine-spoofing-layering-source-acquisition-screen-v1/deep-sad-futures-fraud-2309.00088.clean.txt",
+      "name": "Deep Semi-Supervised Anomaly Detection for Finding Fraud in the Futures Market",
+      "reason": "Real-label evidence exists in the paper, but the row panel is proprietary and not an exportable Board A intake package.",
+      "source_owned_or_owner_approved": false,
+      "source_url": "https://arxiv.org/abs/2309.00088",
+      "target_species": "spoofing_layering_or_futures_fraud"
+    },
+    {
+      "candidate_id": "lin_2025_multilevel_manipulation_lob",
+      "disposition": "blocked_injected_synthetic_labels",
+      "evidence_readback": "Extracted PDF text says raw data comes from LOBSTER and selected data contained no reported manipulation before multilevel manipulation was injected.",
+      "has_matched_controls": true,
+      "has_public_row_export": false,
+      "has_row_level_positive_hint": true,
+      "mirror_or_readback_url": "/tmp/ict-engine-spoofing-layering-source-acquisition-screen-v1/decoupled-lob-2508.17086.clean.txt",
+      "name": "Detecting Multilevel Manipulation from Limit Order Book via Cascaded Contrastive Representation Learning",
+      "reason": "Useful method source, but injected manipulation labels violate the no generated/synthetic label rule for strict direct species closure.",
+      "source_owned_or_owner_approved": false,
+      "source_url": "https://arxiv.org/abs/2508.17086",
+      "target_species": "multilevel_spoofing_layering"
+    },
+    {
+      "candidate_id": "veryzhenko_spoofing_hft_ml",
+      "disposition": "blocked_simulated_or_unreachable_source_rows",
+      "evidence_readback": "Primary PDF URL currently returned a small 404 HTML response in the local readback; public comparative tables describe the study as using simulated order book data.",
+      "has_matched_controls": false,
+      "has_public_row_export": false,
+      "has_row_level_positive_hint": true,
+      "mirror_or_readback_url": "https://www.preprints.org/manuscript/202505.0199/v1",
+      "name": "Detecting Spoofing in High Frequency Trading Using Machine Learning Techniques",
+      "reason": "No reachable owner-approved real positive/control row package was found; simulated order-book evidence is disallowed for strict R6.",
+      "source_owned_or_owner_approved": false,
+      "source_url": "https://www.institutlouisbachelier.org/wp-content/uploads/2024/03/detecting-spoofing-in-high-frequency-trading-using-machine-learning-techniques.pdf",
+      "target_species": "spoofing_layering"
+    },
+    {
+      "candidate_id": "tao_day_ling_drapeau_2020_spoofing_hft",
+      "disposition": "blocked_method_source_no_row_export",
+      "evidence_readback": "Public event/readback pages describe spoofing mechanics around order-book imbalance, order placement, cancellation, and execution.",
+      "has_matched_controls": false,
+      "has_public_row_export": false,
+      "has_row_level_positive_hint": false,
+      "mirror_or_readback_url": "https://www.maths.ox.ac.uk/events/past/661",
+      "name": "On Detecting Spoofing Strategies in High-Frequency Trading",
+      "reason": "Method/provenance only in public surfaces; no source-owned labeled positive/control rows or provenance manifest were found.",
+      "source_owned_or_owner_approved": false,
+      "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3746263",
+      "target_species": "spoofing_layering_pinging"
+    }
+  ],
+  "decision": "spoofing_layering_source_acquisition_screen_v1=no_ready_positive_control_intake_source",
+  "direct_species_coverage_closed": false,
+  "new_confidence_gate": false,
+  "owner_approval_targets": [
+    "do_putnins_2023_detecting_layering_spoofing"
+  ],
+  "raw_data_committed": false,
+  "ready_positive_control_sources": 0,
+  "requirements": {
+    "chronological_validation_possible": true,
+    "matched_same_schema_normal_controls": true,
+    "no_generated_proxy_synthetic_or_ohlcv_only_labels": true,
+    "row_level_direct_manipulation_positive_rows": true,
+    "source_owned_or_owner_approved_provenance": true,
+    "venue_symbol_timestamp_fields": true
+  },
+  "run_id": "20260511T200726-codex-spoofing-layering-source-acquisition-screen-v1",
+  "runtime_code_changed": false,
+  "scope": "R6 direct Manipulation: spoofing/layering positives plus matched normal controls",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

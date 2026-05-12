@@ -1,0 +1,12 @@
+surface,query_id,title,url,year,required_filename_or_token_hit,r3_native_subhour_crisis_hit,r5_post_cutoff_route_hit,r6_owner_control_route_hit,broad_context_hit
+openalex,bull_bear_sideways_crisis,Robust technical trading strategies using GP for algorithmic portfolio selection,https://openalex.org/W1943807073,2015,False,False,False,False,False
+openalex,bull_bear_sideways_crisis,"Deep Reinforcement Learning for Risk-Aware Portfolio Optimization: A Comparative Study of PPO, QR-DDPG, DDPG, and SAC under Market Uncertainty",https://openalex.org/W7135167156,2026,False,False,False,False,False
+openalex,bull_bear_sideways_crisis,Opening the Selective Gate: Mechanistic Interpretability of Mamba’s Latent State Dynamics for Financial Market Regime Discovery,https://openalex.org/W7159989521,2026,False,False,False,False,True
+openalex,bull_bear_sideways_crisis,Nudging Deliberation: Affective–Cognitive Integration in Cryptocurrency DSS,https://openalex.org/W7127226524,2025,False,False,False,False,True
+openalex,bull_bear_sideways_crisis,A Novel Linear-Model-Based Methodology for Predicting the Directional Movement of the Euro-Dollar Exchange Rate,https://openalex.org/W4379984205,2023,False,False,False,False,False
+openalex,bull_bear_sideways_crisis,Looking for the Optimal Cryptocurrency Portfolio: Benefits of Diversification,https://openalex.org/W3148723717,2021,False,False,False,False,False
+openalex,bull_bear_sideways_crisis,Price Transmission from Bitcoin to Altcoins: High-Frequency Evidence and Implications for Trading Strategy,https://openalex.org/W7151150477,2026,False,False,False,False,False
+openalex,bull_bear_sideways_crisis,Price Transmission from Bitcoin to Altcoins: High-Frequency Evidence and Implications for Trading Strategy,https://openalex.org/W7134839761,2026,False,False,False,False,False
+openalex,lob_spoofing_controls,"AI-Driven Predictive Modeling for Detecting Suspicious Trading Patterns, Anomalous Order Activity, and Market Manipulation in U.S. Equity Markets",https://openalex.org/W7140205675,2026,False,False,False,False,True
+openalex,lob_spoofing_controls,When do Regulatory Interventions Work?,https://openalex.org/W2943612201,2020,False,False,False,False,False
+openalex,lob_spoofing_controls,"Market microstructure studies: liquidity, price discovery and manipulation",https://openalex.org/W47254165,2013,False,False,False,False,False

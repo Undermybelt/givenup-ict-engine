@@ -1,0 +1,10 @@
+PASS candidates_inspected=6
+PASS accepted_independent_parent_root_label_sources=0
+PASS new_attached_parent_root_slots=0
+PASS accepted_direct_manipulation_rows_or_windows=0
+PASS gate_result=blocked_public_external_candidates_no_accepted_source_label_panel
+PASS accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

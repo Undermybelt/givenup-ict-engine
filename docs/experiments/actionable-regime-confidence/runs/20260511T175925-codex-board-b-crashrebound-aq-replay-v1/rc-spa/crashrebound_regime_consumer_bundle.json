@@ -1,0 +1,64 @@
+{
+  "schema_version": "regime-consumer-bundle/v1",
+  "latest_decision": {
+    "timestamp": "20260511T175925-codex-board-b-crashrebound-aq-replay-v1",
+    "decision_state": "rejected_branch_path_proxy",
+    "trade_usable": false,
+    "final_label": "MainRegimeV2::BranchProxyCrashRebound",
+    "label_set": [
+      "MainRegimeV2::Bear",
+      "MainRegimeV2::Bull",
+      "MainRegimeV2::Sideways"
+    ],
+    "abstain_reasons": [
+      "reject_missing_branch_path:branch_path_is_proxy_not_recipe_or_board_a_trade_root",
+      "reject_missing_branch_path:missing_roots=Crisis",
+      "manipulation_overlay_not_observed",
+      "reject_overfit_risk:min_test_folds_lt_4",
+      "reject_overfit_risk:pbo_gt_0_25"
+    ]
+  },
+  "consumer_hints": {
+    "execution_tree_hint": "unknown_abstain",
+    "trade_usable": false,
+    "bbn_evidence_hint": {
+      "regime_decision_state": "rejected_branch_path_proxy",
+      "regime_trade_usable": false,
+      "regime_label": "MainRegimeV2::BranchProxyCrashRebound",
+      "regime_label_set": [
+        "MainRegimeV2::Bear",
+        "MainRegimeV2::Bull",
+        "MainRegimeV2::Sideways"
+      ],
+      "regime_transition_hazard": null,
+      "regime_decision_reasons": [
+        "reject_missing_branch_path:branch_path_is_proxy_not_recipe_or_board_a_trade_root",
+        "reject_missing_branch_path:missing_roots=Crisis",
+        "manipulation_overlay_not_observed",
+        "reject_overfit_risk:min_test_folds_lt_4",
+        "reject_overfit_risk:pbo_gt_0_25"
+      ]
+    },
+    "path_ranker_context": {
+      "recipe_id": "CrashRebound",
+      "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+      "downstream_consumption_status": "research_watch_branch_path_not_consumed",
+      "rc_spa": 0.0,
+      "diagnostic_rc_spa_before_hard_fail_zeroing": 66.73003632272965,
+      "roots_with_rows": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "missing_roots": [
+        "Crisis"
+      ],
+      "branch_path_source": "auto_quant_timerange_label_proxy_not_board_a_trade_label"
+    },
+    "user_vrp_nq_context": {}
+  },
+  "provenance": {
+    "run_id": "20260511T175925-codex-board-b-crashrebound-aq-replay-v1",
+    "source": "isolated Auto-Quant CrashRebound replay plus Board B RC-SPA diagnostic"
+  }
+}

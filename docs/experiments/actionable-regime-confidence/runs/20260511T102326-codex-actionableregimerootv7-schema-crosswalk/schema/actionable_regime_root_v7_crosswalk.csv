@@ -1,0 +1,17 @@
+source_label,source_context,v7_candidate,status,promotion_rule
+Bull,MainRegimeV2,BullExpansion,compatibility_input_only,Requires expansion/trend participation validation and V7 chronological calibration.
+Bear,MainRegimeV2,BearExpansion,compatibility_input_only,Requires downside expansion validation and V7 chronological calibration.
+Sideways,MainRegimeV2,ConsolidationBalance,compatibility_input_only,Requires consolidation/balance source labels and V7 chronological calibration.
+Crisis,MainRegimeV2,CrisisDislocation,compatibility_input_only,Requires crisis/dislocation evidence and V7 chronological calibration.
+Manipulation,MainRegimeV2 overlay,ManipulationIntegrityEvent,direct_rows_required,Requires direct timestamped positive/negative rows and unchanged 95 gate.
+BullExpansion,MainRegimeV5/V6,BullExpansion,name_provenance_only,Name match alone does not accept the V7 root.
+BearExpansion,MainRegimeV5/V6,BearExpansion,name_provenance_only,Name match alone does not accept the V7 root.
+ConsolidationRange,MainRegimeV5/V6,ConsolidationBalance,name_provenance_only,Requires V7 consolidation/balance calibration.
+CrisisStress,MainRegimeV5/V6,CrisisDislocation,name_provenance_only,Requires V7 crisis/dislocation calibration.
+ManipulationLiquidityEngineering,MainRegimeV5/V6,ManipulationIntegrityEvent,direct_rows_required,Requires direct timestamped positive/negative rows and unchanged 95 gate.
+TransitionAccumulationDistribution,MainRegimeV5/V6,TransitionRotation,watchlist_provenance_only,Do not add to mandatory denominator unless separability is proven.
+RangeConsolidation,old subtype packet,ConsolidationBalance,sub_regime_provenance_only,Requires V7 parent-root source labels.
+ExtremeStress,old subtype packet,CrisisDislocation,sub_regime_provenance_only,Requires V7 parent-root source labels.
+ReversalBrewing,old subtype packet,TransitionRotation,watchlist_provenance_only,Not a mandatory root until separately proven.
+SessionLiquidityCoreViable,old subtype packet,ManipulationIntegrityEvent,not_promotable_proxy_only,OHLCV/session/liquidity proxy evidence cannot accept manipulation.
+ThinLiquidity,old subtype packet,ManipulationIntegrityEvent,not_promotable_proxy_only,Thin-liquidity proxy evidence cannot accept manipulation.

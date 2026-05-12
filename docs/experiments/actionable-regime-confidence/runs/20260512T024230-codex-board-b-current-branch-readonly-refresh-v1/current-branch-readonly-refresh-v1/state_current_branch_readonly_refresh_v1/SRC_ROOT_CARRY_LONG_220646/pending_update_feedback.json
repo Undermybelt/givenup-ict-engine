@@ -1,0 +1,345 @@
+{
+  "artifact_id": "pending-update:SRC_ROOT_CARRY_LONG_220646:analyze:v2",
+  "version": 2,
+  "generated_at": "2026-05-11T18:27:56.671367Z",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:SRC_ROOT_CARRY_LONG_220646:20260511T182756.671Z",
+  "source_command": "analyze",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "0739cf78a430efa5",
+    "data_fingerprint": "1d359558494bb239"
+  },
+  "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.546|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.9435 mtf_entry_alignment=0.7447",
+  "entry_quality": "medium",
+  "factor_alignment": "mixed",
+  "factor_uncertainty": "low",
+  "selected_win_probability": 0.5457345754748034,
+  "top_factor_score": 0.571875,
+  "avg_family_score": 0.26144298482963085,
+  "top_factor_name": "structure_ict",
+  "top_factor_action": "tune",
+  "family_scores": {
+    "cross_market_smt": 0.12250000000000001,
+    "options_hedging": 0.1473755049339573,
+    "other": 0.25969793489233367,
+    "structure_ict": 0.571875,
+    "trend_momentum": 0.1801439149035265,
+    "volatility_mean_reversion": 0.2870655542479674
+  },
+  "review_rule_version": "55f482c1291f879a",
+  "review_rule_snapshot": {
+    "min_probability_improvement": 0.03,
+    "min_top_factor_score_improvement": 0.05,
+    "min_avg_family_score_improvement": 0.03,
+    "require_same_data": true,
+    "require_same_factor_version": true,
+    "require_same_prompt_version": true
+  },
+  "pre_bayes_evidence_filter": {
+    "policy": {
+      "version": "318900600c5e8cf2",
+      "source": "default",
+      "min_directional_support_gap": 0.08,
+      "high_uncertainty_threshold": 0.45,
+      "min_multi_timeframe_alignment_score": 0.55,
+      "min_multi_timeframe_entry_alignment_score": 0.5,
+      "hard_pass_quality_threshold": 0.75,
+      "neutralized_quality_threshold": 0.4,
+      "directional_conflict_penalty": 0.2,
+      "mixed_alignment_penalty": 0.1,
+      "multi_timeframe_direction_conflict_penalty": 0.18,
+      "multi_timeframe_alignment_penalty": 0.1,
+      "multi_timeframe_entry_penalty": 0.08,
+      "multi_timeframe_alignment_bonus": 0.05,
+      "hostile_liquidity_penalty": 0.1,
+      "favorable_liquidity_bonus": 0.05,
+      "hostile_liquidity_forces_high_uncertainty": true,
+      "market_overrides": {
+        "CL": {
+          "hostile_liquidity_penalty": 0.14,
+          "favorable_liquidity_bonus": 0.03,
+          "hostile_liquidity_forces_high_uncertainty": true
+        },
+        "ES": {
+          "hostile_liquidity_penalty": 0.06,
+          "favorable_liquidity_bonus": 0.06,
+          "hostile_liquidity_forces_high_uncertainty": false
+        },
+        "GC": {
+          "hostile_liquidity_penalty": 0.09,
+          "favorable_liquidity_bonus": 0.07,
+          "hostile_liquidity_forces_high_uncertainty": false
+        },
+        "NQ": {
+          "hostile_liquidity_penalty": 0.1,
+          "favorable_liquidity_bonus": 0.04,
+          "hostile_liquidity_forces_high_uncertainty": true
+        },
+        "YM": {
+          "hostile_liquidity_penalty": 0.07,
+          "favorable_liquidity_bonus": 0.05,
+          "hostile_liquidity_forces_high_uncertainty": false
+        }
+      }
+    },
+    "entry_logic_id": null,
+    "logic_family": null,
+    "raw_market_regime_label": "bull",
+    "raw_liquidity_context_label": "neutral",
+    "raw_factor_alignment": "mixed",
+    "raw_factor_uncertainty": "low",
+    "raw_multi_timeframe_direction_bias": "bullish",
+    "raw_multi_timeframe_alignment_score": 0.9435,
+    "raw_multi_timeframe_entry_alignment_score": 0.7447,
+    "raw_multi_timeframe_resonance_label": "aligned",
+    "active_pda_count": 0,
+    "inversed_pda_count": 0,
+    "stale_pda_count": 0,
+    "nearest_active_pda": null,
+    "nearest_inversed_pda": null,
+    "filtered_market_regime_label": "bull",
+    "filtered_liquidity_context_label": "neutral",
+    "filtered_factor_alignment": "mixed",
+    "filtered_factor_uncertainty": "low",
+    "filtered_multi_timeframe_direction_bias": "bullish",
+    "filtered_multi_timeframe_alignment_score": 0.9435,
+    "filtered_multi_timeframe_entry_alignment_score": 0.7447,
+    "filtered_multi_timeframe_resonance_label": "aligned",
+    "evidence_quality_score": 0.5458617984369726,
+    "gating_status": "pass_neutralized",
+    "pass_to_bbn": true,
+    "uses_soft_evidence": true,
+    "conflict_flags": [
+      "low_directional_separation"
+    ],
+    "rationale": [
+      "market_policy=SRC hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.944 multi_timeframe_entry_alignment_score=0.745",
+      "long/short support gap 0.032 is too small, so alignment is treated as mixed",
+      "pre_bayes_quality_score=0.546 gating_status=pass_neutralized",
+      "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.678",
+      "market_state_source=volatility=ElevatedVol:0.801 liquidity=NormalLiquidity:0.433 structure=Trending:0.721 behavior=RiskOn:0.550",
+      "market_state_source=rationale=volatility=ElevatedVol conf=0.80",
+      "market_state_source=rationale=structure=Trending conf=0.72",
+      "market_state_source=rationale=behavior=RiskOn conf=0.55",
+      "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.68"
+    ],
+    "evidence_assignments": {
+      "factor_alignment": "mixed",
+      "factor_uncertainty": "low",
+      "liquidity_context": "neutral",
+      "market_regime": "bull",
+      "market_state_primary_regime": "TrendExpansion",
+      "market_state_secondary_regime": "BullTrendAcceleration",
+      "multi_timeframe_resonance": "aligned"
+    },
+    "soft_market_regime_distribution": {
+      "bear": 0.0,
+      "bull": 0.5864654496092432,
+      "range": 0.4135345503907568
+    },
+    "soft_liquidity_context_distribution": {
+      "favorable": 0.0,
+      "hostile": 0.0,
+      "neutral": 1.0
+    },
+    "soft_factor_alignment_distribution": {
+      "bearish": 0.0,
+      "bullish": 0.0,
+      "mixed": 1.0
+    },
+    "soft_factor_uncertainty_distribution": {
+      "high": 0.4135345503907568,
+      "low": 0.5864654496092432
+    },
+    "soft_multi_timeframe_resonance_distribution": {
+      "aligned": 0.5864654496092432,
+      "dislocated": 0.0,
+      "mixed": 0.4135345503907568
+    }
+  },
+  "pre_bayes_entry_quality_bridge": {
+    "long_signal_probability": 0.5457345754748034,
+    "short_signal_probability": 0.5379874082535356,
+    "long_entry_bias": [
+      0.2164426122979231,
+      0.5140746509728531,
+      0.2694827367292238
+    ],
+    "short_entry_bias": [
+      0.05463659206374927,
+      0.3231669026348702,
+      0.6221965053013805
+    ],
+    "long_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "selected_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_alignment_score": 0.9435,
+    "multi_timeframe_entry_alignment_score": 0.7447,
+    "rationale": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.067 short_support=0.035 uncertainty=0.343",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.944 multi_timeframe_entry_alignment_score=0.745",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ]
+  },
+  "multi_timeframe_summary": [
+    "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+    "multi_timeframe_missing=1m,5m,30m,4h",
+    "15m:2746 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T022335-codex-board-b-220646-execution-tree-branch-admission-readback-shared-target-v1/execution-tree-branch-admission-readback-shared-target-v1/state_execution_tree_branch_admission_shared_target_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json",
+    "1h:1875 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T022335-codex-board-b-220646-execution-tree-branch-admission-readback-shared-target-v1/execution-tree-branch-admission-readback-shared-target-v1/state_execution_tree_branch_admission_shared_target_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json",
+    "1d:291 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T022335-codex-board-b-220646-execution-tree-branch-admission-readback-shared-target-v1/execution-tree-branch-admission-readback-shared-target-v1/state_execution_tree_branch_admission_shared_target_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json",
+    "higher_timeframe_direction_bias=bullish",
+    "higher_timeframe_alignment_score=0.9435",
+    "lower_timeframe_entry_alignment_score=0.7447"
+  ],
+  "template_feedback": {
+    "timestamp": "2026-05-11T18:27:56.671367Z",
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "source": "analyze",
+    "run_id": null,
+    "trade_id": null,
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "data_fingerprint": "1d359558494bb239",
+    "factors_used": [
+      {
+        "factor_name": "structure_ict",
+        "category": "structure_ict",
+        "direction": "Bull",
+        "value": 1.0,
+        "confidence": 1.0,
+        "weight": 0.0625,
+        "long_support": 0.0625,
+        "short_support": 0.0,
+        "uncertainty_contribution": 0.0
+      },
+      {
+        "factor_name": "session_liquidity",
+        "category": "session_liquidity",
+        "direction": "Bull",
+        "value": 0.15999999999999998,
+        "confidence": 0.26,
+        "weight": 0.0026,
+        "long_support": 0.0026,
+        "short_support": 0.0,
+        "uncertainty_contribution": 0.041625
+      },
+      {
+        "factor_name": "trend_momentum",
+        "category": "trend_momentum",
+        "direction": "Bull",
+        "value": 0.1472344641019985,
+        "confidence": 0.17683196149665983,
+        "weight": 0.0016272349429416215,
+        "long_support": 0.0016272349429416215,
+        "short_support": 0.0,
+        "uncertainty_contribution": 0.046303202165812886
+      },
+      {
+        "factor_name": "volatility_mean_reversion",
+        "category": "volatility_mean_reversion",
+        "direction": "Bear",
+        "value": -0.9049792800963441,
+        "confidence": 0.3981842891657321,
+        "weight": 0.022521783209679923,
+        "long_support": 0.0,
+        "short_support": 0.022521783209679923,
+        "uncertainty_contribution": 0.03385213373442757
+      },
+      {
+        "factor_name": "spectral_rhythm",
+        "category": "spectral_rhythm",
+        "direction": "Bear",
+        "value": -0.31874644003748387,
+        "confidence": 0.5812535599625162,
+        "weight": 0.011579531437322887,
+        "long_support": 0.0,
+        "short_support": 0.011579531437322887,
+        "uncertainty_contribution": 0.02355448725210847
+      },
+      {
+        "factor_name": "crowding_herding",
+        "category": "crowding_herding",
+        "direction": "Bear",
+        "value": -0.03802097362316627,
+        "confidence": 0.21197902637683375,
+        "weight": 0.0005037280606586289,
+        "long_support": 0.0,
+        "short_support": 0.0005037280606586289,
+        "uncertainty_contribution": 0.044326179766303105
+      },
+      {
+        "factor_name": "cross_market_smt",
+        "category": "cross_market_smt",
+        "direction": "Neutral",
+        "value": 0.0,
+        "confidence": 0.05,
+        "weight": 0.0,
+        "long_support": 0.0,
+        "short_support": 0.0,
+        "uncertainty_contribution": 0.0784375
+      },
+      {
+        "factor_name": "options_hedging",
+        "category": "options_hedging",
+        "direction": "Neutral",
+        "value": 0.0,
+        "confidence": 0.10527889985323842,
+        "weight": 0.0,
+        "long_support": 0.0,
+        "short_support": 0.0,
+        "uncertainty_contribution": 0.07532806188325533
+      }
+    ],
+    "model_probabilities_before_trade": {
+      "selected_direction": "Bull",
+      "selected_probability": 0.5457345754748034,
+      "long_score": 0.23388624802396557,
+      "short_score": 0.2305660334808058,
+      "win_prob_long": 0.5457345754748034,
+      "win_prob_short": 0.5379874082535356,
+      "uncertainty": 0.34342656480190736
+    },
+    "realized_outcome": "pending",
+    "pnl": 0.0,
+    "regime_at_entry": "ManipulationExpansion",
+    "structural_feedback": null,
+    "reflection_mismatch_tags": []
+  },
+  "diff_from_previous": {
+    "previous_artifact_id": "pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+    "changed_fields": [
+      "data_fingerprint"
+    ],
+    "quality_delta": -6,
+    "exact_duplicate": false,
+    "comparable_same_data": false,
+    "comparable_same_factor_version": true,
+    "comparable_same_prompt_version": true,
+    "selected_probability_delta": -0.062452713529813075,
+    "top_factor_score_delta": 0.0,
+    "avg_family_score_delta": -0.014604082511007088
+  },
+  "review_decision": {
+    "status": "observe",
+    "reason": "artifact_not_comparable_same_data_factor_prompt_required",
+    "supersedes_artifact_id": null
+  }
+}

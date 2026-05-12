@@ -1,0 +1,487 @@
+{
+  "board_sha256_at_start": "8593cb09cabc29d6b9b99367d6d1f755bb76a939a67eafb7399ced39a7a3fe96",
+  "decision": {
+    "accepted_rows_added": 0,
+    "chronological_split_gate": false,
+    "direct_species_closed": false,
+    "gate_result": "r6_split_species_gap_audit_v1=pooled95_live_ready_split_species_targets_quantified_still_blocked",
+    "heldout_symbol_gate": false,
+    "heldout_venue_gate": false,
+    "new_confidence_gate": false,
+    "pooled_live_schema_ready": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T16:09:23.677513+00:00",
+  "latest_chain_readback": {
+    "auto_quant_status_returncode": 0,
+    "gate_result": "r6_isolated_reconstruction_verification_v57=isolated_pooled95_verified_split_species_full_objective_still_blocked",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/r6-isolated-reconstruction-verification/r6_isolated_reconstruction_verification_v57.json",
+    "path_ranking_export_returncode": 0,
+    "policy_training_returncode": 0,
+    "pre_bayes_returncode": 0,
+    "providers": [
+      {
+        "observed": true,
+        "provider_id": "ibkr",
+        "ready": false,
+        "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+        "status": "configured_runtime_unhealthy"
+      },
+      {
+        "observed": true,
+        "provider_id": "tradingview_mcp",
+        "ready": false,
+        "reason": "tradingview_mcp_connectivity_probe_failed",
+        "status": "configured_runtime_unhealthy"
+      },
+      {
+        "observed": true,
+        "provider_id": "yfinance",
+        "ready": true,
+        "reason": "native_yfinance_runtime_available;public_yahoo_http_endpoints",
+        "status": "ready"
+      },
+      {
+        "observed": true,
+        "provider_id": "kraken_public",
+        "ready": false,
+        "reason": "python3_provider_dependencies_missing",
+        "status": "configured_runtime_unhealthy"
+      },
+      {
+        "observed": true,
+        "provider_id": "kraken_cli",
+        "ready": true,
+        "reason": "kraken_cli_config_detected",
+        "status": "ready"
+      }
+    ],
+    "workflow_status_returncode": 0
+  },
+  "live_hashes": {
+    "matched_negative_rows": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+    "positive_rows": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+    "provenance": "9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b"
+  },
+  "live_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "minimum_all_success_support_for_wilson95_ge_095": 73,
+  "next_action": "Acquire source-owned direct rows that specifically fill chronological calibration/test, exact-symbol, exact-venue, and missing quote_spoofing/quote_stuffing/pinging/bear_raid/painting_tape species cells; then rerun the unchanged direct verifier, split calibration, and provider/Auto-Quant/pre-Bayes/CatBoost/workflow readback.",
+  "run_id": "20260512T000657-codex-r6-split-species-gap-audit-v1",
+  "sidecar_metrics": [
+    {
+      "axis": "direct_positive_all_correct",
+      "pass": "True",
+      "successes": "73",
+      "support_ok": "True",
+      "total": "73",
+      "wilson95_lcb": "0.950006246616",
+      "wilson_ok": "True"
+    },
+    {
+      "axis": "same_event_control_seed_all_correct",
+      "pass": "True",
+      "successes": "73",
+      "support_ok": "True",
+      "total": "73",
+      "wilson95_lcb": "0.950006246616",
+      "wilson_ok": "True"
+    },
+    {
+      "axis": "independent_broad_normal_sidecar_all_correct",
+      "pass": "True",
+      "successes": "80",
+      "support_ok": "True",
+      "total": "80",
+      "wilson95_lcb": "0.954180263735",
+      "wilson_ok": "True"
+    }
+  ],
+  "species_gap_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000657-codex-r6-split-species-gap-audit-v1/r6-split-species-gap-audit/r6_split_species_gap_audit_v1_species_gaps.csv",
+  "species_summary": {
+    "missing_species": [
+      "quote_spoofing",
+      "quote_stuffing",
+      "pinging",
+      "bear_raid",
+      "painting_tape"
+    ],
+    "observed_species": [
+      "spoofing_layering"
+    ],
+    "required_species": [
+      "spoofing_layering",
+      "quote_spoofing",
+      "quote_stuffing",
+      "pinging",
+      "bear_raid",
+      "painting_tape"
+    ]
+  },
+  "split_gap_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000657-codex-r6-split-species-gap-audit-v1/r6-split-species-gap-audit/r6_split_species_gap_audit_v1_split_gaps.csv",
+  "split_summary": {
+    "chronological_group_split": {
+      "cells": 3,
+      "failing_cells": 3,
+      "max_pair_rows_needed_min": 56,
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 146,
+      "worst_cells": [
+        {
+          "additional_negative_rows_needed_min": 56,
+          "additional_pair_rows_needed_min": 56,
+          "additional_positive_rows_needed_min": 56,
+          "current_min_wilson95_lcb": "0.815676339628",
+          "current_pass": "False",
+          "negative_support": 17,
+          "positive_support": 17,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "chronological_group_split",
+          "split_name": "chronological_calibration"
+        },
+        {
+          "additional_negative_rows_needed_min": 55,
+          "additional_pair_rows_needed_min": 55,
+          "additional_positive_rows_needed_min": 55,
+          "current_min_wilson95_lcb": "0.824115449418",
+          "current_pass": "False",
+          "negative_support": 18,
+          "positive_support": 18,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "chronological_group_split",
+          "split_name": "chronological_test"
+        },
+        {
+          "additional_negative_rows_needed_min": 35,
+          "additional_pair_rows_needed_min": 35,
+          "additional_positive_rows_needed_min": 35,
+          "current_min_wilson95_lcb": "0.908187067416",
+          "current_pass": "False",
+          "negative_support": 38,
+          "positive_support": 38,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "chronological_group_split",
+          "split_name": "chronological_train"
+        }
+      ]
+    },
+    "heldout_symbol_exact": {
+      "cells": 36,
+      "failing_cells": 36,
+      "max_pair_rows_needed_min": 73,
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 2559,
+      "worst_cells": [
+        {
+          "additional_negative_rows_needed_min": 71,
+          "additional_pair_rows_needed_min": 73,
+          "additional_positive_rows_needed_min": 73,
+          "current_min_wilson95_lcb": "0.0",
+          "current_pass": "False",
+          "negative_support": 2,
+          "positive_support": 0,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "CBOT soybean call options"
+        },
+        {
+          "additional_negative_rows_needed_min": 71,
+          "additional_pair_rows_needed_min": 73,
+          "additional_positive_rows_needed_min": 73,
+          "current_min_wilson95_lcb": "0.0",
+          "current_pass": "False",
+          "negative_support": 2,
+          "positive_support": 0,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "COMEX copper futures"
+        },
+        {
+          "additional_negative_rows_needed_min": 73,
+          "additional_pair_rows_needed_min": 73,
+          "additional_positive_rows_needed_min": 71,
+          "current_min_wilson95_lcb": "0.0",
+          "current_pass": "False",
+          "negative_support": 0,
+          "positive_support": 2,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "LME copper futures / COMEX copper futures cross-market example"
+        },
+        {
+          "additional_negative_rows_needed_min": 72,
+          "additional_pair_rows_needed_min": 72,
+          "additional_positive_rows_needed_min": 72,
+          "current_min_wilson95_lcb": "0.206543291474",
+          "current_pass": "False",
+          "negative_support": 1,
+          "positive_support": 1,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "COMEX Gold Futures June delivery"
+        },
+        {
+          "additional_negative_rows_needed_min": 72,
+          "additional_pair_rows_needed_min": 72,
+          "additional_positive_rows_needed_min": 72,
+          "current_min_wilson95_lcb": "0.206543291474",
+          "current_pass": "False",
+          "negative_support": 1,
+          "positive_support": 1,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "COMEX Silver Futures"
+        },
+        {
+          "additional_negative_rows_needed_min": 72,
+          "additional_pair_rows_needed_min": 72,
+          "additional_positive_rows_needed_min": 72,
+          "current_min_wilson95_lcb": "0.206543291474",
+          "current_pass": "False",
+          "negative_support": 1,
+          "positive_support": 1,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "December 2014 E-mini S&P 500 futures"
+        },
+        {
+          "additional_negative_rows_needed_min": 72,
+          "additional_pair_rows_needed_min": 72,
+          "additional_positive_rows_needed_min": 72,
+          "current_min_wilson95_lcb": "0.206543291474",
+          "current_pass": "False",
+          "negative_support": 1,
+          "positive_support": 1,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "December 2017 Gold futures"
+        },
+        {
+          "additional_negative_rows_needed_min": 72,
+          "additional_pair_rows_needed_min": 72,
+          "additional_positive_rows_needed_min": 72,
+          "current_min_wilson95_lcb": "0.206543291474",
+          "current_pass": "False",
+          "negative_support": 1,
+          "positive_support": 1,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "December 2017 Silver futures"
+        },
+        {
+          "additional_negative_rows_needed_min": 72,
+          "additional_pair_rows_needed_min": 72,
+          "additional_positive_rows_needed_min": 72,
+          "current_min_wilson95_lcb": "0.206543291474",
+          "current_pass": "False",
+          "negative_support": 1,
+          "positive_support": 1,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "Gold Futures contract, April 2014 expiry"
+        },
+        {
+          "additional_negative_rows_needed_min": 72,
+          "additional_pair_rows_needed_min": 72,
+          "additional_positive_rows_needed_min": 72,
+          "current_min_wilson95_lcb": "0.206543291474",
+          "current_pass": "False",
+          "negative_support": 1,
+          "positive_support": 1,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_symbol_exact",
+          "split_name": "Gold Futures contract, August 2015 expiry"
+        }
+      ]
+    },
+    "heldout_venue_exact": {
+      "cells": 11,
+      "failing_cells": 11,
+      "max_pair_rows_needed_min": 73,
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 732,
+      "worst_cells": [
+        {
+          "additional_negative_rows_needed_min": 73,
+          "additional_pair_rows_needed_min": 73,
+          "additional_positive_rows_needed_min": 71,
+          "current_min_wilson95_lcb": "0.0",
+          "current_pass": "False",
+          "negative_support": 0,
+          "positive_support": 2,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "LME and COMEX"
+        },
+        {
+          "additional_negative_rows_needed_min": 72,
+          "additional_pair_rows_needed_min": 72,
+          "additional_positive_rows_needed_min": 72,
+          "current_min_wilson95_lcb": "0.206543291474",
+          "current_pass": "False",
+          "negative_support": 1,
+          "positive_support": 1,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "IFEU electronic market"
+        },
+        {
+          "additional_negative_rows_needed_min": 71,
+          "additional_pair_rows_needed_min": 71,
+          "additional_positive_rows_needed_min": 71,
+          "current_min_wilson95_lcb": "0.34237195289",
+          "current_pass": "False",
+          "negative_support": 2,
+          "positive_support": 2,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "CBOT"
+        },
+        {
+          "additional_negative_rows_needed_min": 70,
+          "additional_pair_rows_needed_min": 70,
+          "additional_positive_rows_needed_min": 70,
+          "current_min_wilson95_lcb": "0.438493919551",
+          "current_pass": "False",
+          "negative_support": 3,
+          "positive_support": 3,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "CME Group registered futures market (source order)"
+        },
+        {
+          "additional_negative_rows_needed_min": 70,
+          "additional_pair_rows_needed_min": 70,
+          "additional_positive_rows_needed_min": 70,
+          "current_min_wilson95_lcb": "0.438493919551",
+          "current_pass": "False",
+          "negative_support": 3,
+          "positive_support": 3,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "US futures exchange / CFTC complaint"
+        },
+        {
+          "additional_negative_rows_needed_min": 69,
+          "additional_pair_rows_needed_min": 69,
+          "additional_positive_rows_needed_min": 69,
+          "current_min_wilson95_lcb": "0.510099979596",
+          "current_pass": "False",
+          "negative_support": 4,
+          "positive_support": 4,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "CBOT/CME Globex"
+        },
+        {
+          "additional_negative_rows_needed_min": 69,
+          "additional_pair_rows_needed_min": 69,
+          "additional_positive_rows_needed_min": 69,
+          "current_min_wilson95_lcb": "0.510099979596",
+          "current_pass": "False",
+          "negative_support": 4,
+          "positive_support": 4,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "CME"
+        },
+        {
+          "additional_negative_rows_needed_min": 63,
+          "additional_pair_rows_needed_min": 65,
+          "additional_positive_rows_needed_min": 65,
+          "current_min_wilson95_lcb": "0.675584380489",
+          "current_pass": "False",
+          "negative_support": 10,
+          "positive_support": 8,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "COMEX"
+        },
+        {
+          "additional_negative_rows_needed_min": 65,
+          "additional_pair_rows_needed_min": 65,
+          "additional_positive_rows_needed_min": 65,
+          "current_min_wilson95_lcb": "0.675584380489",
+          "current_pass": "False",
+          "negative_support": 8,
+          "positive_support": 8,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "NYMEX/CME Globex"
+        },
+        {
+          "additional_negative_rows_needed_min": 64,
+          "additional_pair_rows_needed_min": 64,
+          "additional_positive_rows_needed_min": 64,
+          "current_min_wilson95_lcb": "0.700847246449",
+          "current_pass": "False",
+          "negative_support": 9,
+          "positive_support": 9,
+          "required_negative_support_for_95_if_all_correct": 73,
+          "required_positive_support_for_95_if_all_correct": 73,
+          "split_family": "heldout_venue_exact",
+          "split_name": "CME Globex"
+        }
+      ]
+    },
+    "pooled_all_source_rows": {
+      "cells": 1,
+      "failing_cells": 0,
+      "max_pair_rows_needed_min": 0,
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 0,
+      "worst_cells": []
+    }
+  },
+  "verifier": {
+    "payload": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "canonical_intake_root",
+        "generated_at_utc",
+        "materialization_note",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "source_v56_json",
+        "source_v56_negative_csv",
+        "source_v56_positive_csv",
+        "thresholds_relaxed",
+        "trade_usable",
+        "v56_gate_result",
+        "v56_negative_sha256",
+        "v56_positive_sha256"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000657-codex-r6-split-species-gap-audit-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000657-codex-r6-split-species-gap-audit-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  }
+}

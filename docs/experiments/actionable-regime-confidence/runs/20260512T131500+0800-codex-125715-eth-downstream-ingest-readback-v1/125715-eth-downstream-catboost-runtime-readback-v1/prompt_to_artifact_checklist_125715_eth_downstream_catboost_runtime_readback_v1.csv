@@ -1,0 +1,6 @@
+requirement,evidence,status
+Use same-root 125715 six-provider ETH AQ packet,docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/derived/125715_eth_six_provider_momentum_trades_summary.json,PASS
+Run ordered downstream surfaces through ict-engine,docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/command-output,PASS
+CatBoost/path-ranker artifact and runtime readback,docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/path-ranker/catboost_history_runtime_v1,PASS
+Do not claim accepted >=95% regime confidence,docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/125715-eth-downstream-catboost-runtime-readback-v1/125715_eth_downstream_catboost_runtime_readback_v1.json,PASS
+Do not promote execution or trade usable signal,docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/command-output/17_workflow_execution_candidate_after_runtime.out,PASS

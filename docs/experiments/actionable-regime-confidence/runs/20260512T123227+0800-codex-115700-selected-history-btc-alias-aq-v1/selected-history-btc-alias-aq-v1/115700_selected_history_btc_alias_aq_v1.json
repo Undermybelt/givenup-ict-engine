@@ -1,0 +1,109 @@
+{
+  "artifact": "115700_selected_history_btc_alias_aq_v1",
+  "generated_at": "2026-05-12T12:41:29+0800",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T123227+0800-codex-115700-selected-history-btc-alias-aq-v1",
+  "board_hash_before_registration": "563e8d8418751c88ddfbcbd596f2d0328660a9a6216e6a0d1ed3e1e9928237c2",
+  "selected_dataset_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json",
+  "symbol": "BTC",
+  "prepared_pair": "BTC/USD",
+  "objective": "expansion_manipulation",
+  "auto_quant_commit": "b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f",
+  "commands": {
+    "factor_research_initial_exit": 0,
+    "auto_quant_prepare_exit": 0,
+    "factor_research_after_prepare_exit": 0,
+    "run_tomac_autoquant_venv_exit": 1,
+    "run_tomac_timerange_patched_exit": 0
+  },
+  "prepared_data_files": [
+    "BTC_USD-1h.feather",
+    "BTC_USD-4h.feather",
+    "BTC_USD-1d.feather"
+  ],
+  "isolated_workspace_patch": {
+    "file": "state_btc_alias_aq_v1/.deps/auto-quant/config.tomac.json",
+    "pair_whitelist": [
+      "BTC/USD"
+    ],
+    "timerange": "20260401-20260512",
+    "repo_runtime_code_changed": false
+  },
+  "initial_tomac_result": {
+    "successful_backtests": 0,
+    "failed_backtests": 3,
+    "failed_strategies": [
+      "TomacAggressiveBE",
+      "TomacKillzoneBreakout",
+      "TomacRRWinRate"
+    ],
+    "error_type": "OperationalException",
+    "error": "No data found. Terminating."
+  },
+  "patched_tomac_result": {
+    "successful_backtests": 3,
+    "failed_backtests": 0,
+    "strategies": [
+      {
+        "name": "TomacAggressiveBE",
+        "pair": "BTC/USD",
+        "backtested_window": "2026-04-09 08:00:00 -> 2026-05-11 23:00:00",
+        "trade_count": 0,
+        "total_profit_pct": 0.0,
+        "sharpe": 0.0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0
+      },
+      {
+        "name": "TomacKillzoneBreakout",
+        "pair": "BTC/USD",
+        "backtested_window": "2026-04-11 10:00:00 -> 2026-05-11 23:00:00",
+        "trade_count": 0,
+        "total_profit_pct": 0.0,
+        "sharpe": 0.0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0
+      },
+      {
+        "name": "TomacRRWinRate",
+        "pair": "BTC/USD",
+        "backtested_window": "2026-04-13 12:00:00 -> 2026-05-11 23:00:00",
+        "trade_count": 0,
+        "total_profit_pct": 0.0,
+        "sharpe": 0.0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0
+      }
+    ]
+  },
+  "promotion": {
+    "nonzero_provider_rooted_observations": false,
+    "measured_profitability_packet": false,
+    "rc_spa_surface": false,
+    "downstream_promotion_artifact": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "gate": [
+    "support_once:123227_115700_selected_history_btc_alias_aq_v1",
+    "supporting_only:selected_history_btc_alias_timerange_repair_readback",
+    "pass:factor_research_initial_exit0",
+    "pass:auto_quant_prepare_exit0_data_ready_true",
+    "pass:factor_research_after_prepare_exit0",
+    "pass:prepared_btc_usd_1h_4h_1d_feathers",
+    "pass:auto_quant_venv_freqtrade_loaded",
+    "pass:isolated_config_pair_btc_usd_timerange_20260401_20260512",
+    "pass:patched_tomac_exit0",
+    "pass:strategies_succeeded_3_failed_0",
+    "fail_closed:initial_tomac_no_data_found_before_timerange_patch",
+    "fail_closed:total_trades_0",
+    "fail_closed:total_profit_pct_0",
+    "fail_closed:sharpe_0",
+    "fail_closed:no_measured_profitability_packet",
+    "fail_closed:no_rc_spa_no_downstream_promotion",
+    "promotion_allowed=false",
+    "trade_usable=false",
+    "update_goal=false"
+  ]
+}

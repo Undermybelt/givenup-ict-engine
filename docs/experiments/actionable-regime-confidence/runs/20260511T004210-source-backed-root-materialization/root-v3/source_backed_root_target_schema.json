@@ -1,0 +1,55 @@
+{
+  "schema_version": "main-regime-v2-source-backed-root-target-schema/v1",
+  "root_classes": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "CrisisStress",
+    "Manipulation",
+    "TransitionRecovery",
+    "UnknownOrMixed"
+  ],
+  "release_gate_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "CrisisStress",
+    "Manipulation",
+    "TransitionRecovery"
+  ],
+  "residual_bucket": "UnknownOrMixed",
+  "target_mapping": {
+    "BullExpansion": "target_BullExpansion_next",
+    "BearExpansion": "target_BearExpansion_next",
+    "Consolidation": "target_ConsolidationRange_next",
+    "CrisisStress": "target_CrisisStress_next",
+    "TransitionRecovery": "target_TransitionAccumulationDistribution_next",
+    "UnknownOrMixed": "target_UnknownOrMixed_next"
+  },
+  "manipulation_target": {
+    "state": "not_materialized_from_ohlcv",
+    "required_inputs": [
+      "tick_trade_prints",
+      "order_flow",
+      "l2_depth_time_series",
+      "level3_order_messages",
+      "order_lifecycle_cancel_replace",
+      "venue_event_or_social_context"
+    ]
+  },
+  "chronological_split": "input table split column; train/calibration/test retained from current Board A evidence table",
+  "predictor_blocklist": [
+    "future_",
+    "target_"
+  ],
+  "acceptance_95": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  }
+}

@@ -1,0 +1,11 @@
+goal_achieved=false
+catalog_rows=20
+active_rows=20
+closed_rows=0
+rows_with_clob_token_ids=20
+accepted_full_cycle_full_universe=false
+raw_data_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=polymarket_catalog_materialized_root_confidence_pending

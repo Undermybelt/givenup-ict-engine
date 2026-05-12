@@ -1,0 +1,10 @@
+loop_id=20260511T031605+0800-codex-persistent-hmm-root-posterior-gate
+rows=32948
+source_panels=breadth_sector,cboe_options_vol
+runtime_code_changed=false
+thresholds_relaxed=false
+accepted_new_roots_95=none
+gate_result=blocked_persistent_hmm_root_posterior_gate_below_95
+Bull:cal_lcb=0.374831:test_lcb=0.286552:accepted=false
+Bear:cal_lcb=0.231563:test_lcb=0.157002:accepted=false
+Sideways:cal_lcb=0.317025:test_lcb=0.215677:accepted=false

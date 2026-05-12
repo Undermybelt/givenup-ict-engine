@@ -1,0 +1,3 @@
+   Compiling ict-engine v0.1.1 (/Users/thrill3r/projects-ict-engine/ict-engine)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 7m 30s
+     Running `projects-ict-engine/ict-engine/target/debug/ict-engine factor-research --symbol NQ --data /tmp/ict-board-a-v2-20260510T184538-state/NQ/analyze_live_20260510T105018_ltf.json --paired-data /tmp/ict-board-a-v2-20260510T184538-state/NQ/analyze_live_20260510T105018_spot.json --state-dir /tmp/ict-board-a-v2-20260510T184538-state`

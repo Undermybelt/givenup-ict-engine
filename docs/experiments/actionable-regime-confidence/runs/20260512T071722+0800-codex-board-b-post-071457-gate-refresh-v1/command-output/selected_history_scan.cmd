@@ -1,0 +1,1 @@
+sh -c rg -n "user_selected_historical_data|explicit user-selected|HTF=1d|MTF=4h|LTF=1h|analyze_nq_htf|analyze_nq_mtf|analyze_nq_ltf" docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3 -g "*.md" -g "*.json" -g "*.out" | tail -n 160 || true

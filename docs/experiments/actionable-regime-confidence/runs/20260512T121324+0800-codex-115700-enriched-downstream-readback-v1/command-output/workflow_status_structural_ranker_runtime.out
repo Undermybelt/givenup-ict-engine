@@ -1,0 +1,22 @@
+{
+  "applied_path_count": 2,
+  "artifact_match_count": 0,
+  "calibrated_path_prob": 0.34309623430962344,
+  "candidate_set_match_count": 0,
+  "execution_gate_status": "observe",
+  "history_match_count": 2,
+  "path_prob_lower_bound": 0.2928391743629338,
+  "raw_path_score": 0.38414634146341464,
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol BTC_USDT --data '/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T121324+0800-codex-115700-enriched-downstream-readback-v1/derived-data/btc_usdt_ibkr_midpoint_1h.json' --state-dir /tmp/ict-engine-board-b-115700-enriched-downstream-121324-r2",
+    "execution_contract": null,
+    "prompt": "Before using historical data for BTC_USDT again, ask the user which dataset to use. recorded_paths=<local-path>, <local-path>, <local-path>",
+    "user_input_required": true
+  },
+  "reuse_mode": "prefer_history",
+  "runtime_enabled": true,
+  "runtime_source": "history_path",
+  "status": "using_history_scores"
+}

@@ -1,0 +1,17 @@
+goal_achieved=false
+cell_count=126
+cells_with_any_existing_root_packet_overlap=14
+full_main_roots_attached_cells=0
+unsupported_full_root_label_cells=126
+previous_readiness_label_ready_cells=0
+Bull.existing_packet_overlap_cells=4
+Bear.existing_packet_overlap_cells=4
+Sideways.existing_packet_overlap_cells=6
+Crisis.existing_packet_overlap_cells=4
+Manipulation.bar_matrix_attachable_cells=0
+accepted_full_cycle_full_universe=false
+raw_ohlcv_committed=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=blocked_existing_packets_do_not_form_full_yfinance_label_panel

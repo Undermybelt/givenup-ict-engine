@@ -1,0 +1,4 @@
+Dataset URL: https://www.kaggle.com/datasets/franekwodarczyk/trading-dataset-us-stocks-various-sectors-from-09
+License(s): MIT
+Downloading trading-dataset-us-stocks-various-sectors-from-09.zip to /tmp/ict-engine-r5-source-panel-recency-extension-acquisition-screen-v1/franek_us_stocks_various_sectors
+

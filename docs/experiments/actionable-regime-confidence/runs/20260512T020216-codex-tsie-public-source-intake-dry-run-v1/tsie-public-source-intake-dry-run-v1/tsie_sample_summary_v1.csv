@@ -1,0 +1,18 @@
+kind,name,count
+source_label,BEAR TRAP,96
+source_label,BULL TRAP,35
+source_label,FLAT / NOISE,151
+source_label,STRONG BUY,10
+source_label,STRONG SELL,24
+source_label,WEAK BUY,61
+source_label,WEAK SELL,123
+main_regime_v2,Abstain,131
+main_regime_v2,Bear,147
+main_regime_v2,Bull,71
+main_regime_v2,Sideways,151
+year,2012,100
+year,2013,100
+year,2017,100
+year,2020,43
+year,2021,57
+year,2024,100

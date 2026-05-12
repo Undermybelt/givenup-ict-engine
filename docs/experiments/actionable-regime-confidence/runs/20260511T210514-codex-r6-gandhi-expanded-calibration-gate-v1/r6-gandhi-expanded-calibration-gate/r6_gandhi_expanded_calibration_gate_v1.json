@@ -1,0 +1,152 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_artifact_generation": "09e677d0ad0d05321819daaeb51a7a99b21897eebd51f0e39b070fd9fd845489",
+  "broad_normal_sample": false,
+  "chronological_train_calibration_test_ok": true,
+  "combined_min_wilson95_lcb": 0.5101091635454027,
+  "decision": "r6_gandhi_expanded_calibration_gate_v1=expanded_rows_schema_ready_calibration_blocked",
+  "gate_rows": [
+    {
+      "gate": "positive_support",
+      "observed": 4,
+      "pass": false,
+      "required": 73
+    },
+    {
+      "gate": "negative_support",
+      "observed": 4,
+      "pass": false,
+      "required": 73
+    },
+    {
+      "gate": "chronological_train_calibration_test",
+      "observed": 3,
+      "pass": true,
+      "required": 3
+    },
+    {
+      "gate": "heldout_symbol_or_venue",
+      "observed": "symbols=3;venues=1",
+      "pass": true,
+      "required": "symbol>=2 or venue>=2"
+    },
+    {
+      "gate": "wilson95_lcb",
+      "observed": "0.510109",
+      "pass": false,
+      "required": ">=0.95"
+    },
+    {
+      "gate": "broad_normal_sample",
+      "observed": "Derived only from public CFTC facts describing genuine iceberg order legs in the same examples; schema-ready/unscored seed, not a broad normal-activity calibration sample.",
+      "pass": false,
+      "required": "source-owned broad normal activity sample"
+    },
+    {
+      "gate": "direct_species_coverage",
+      "observed": "spoofing_layering",
+      "pass": false,
+      "required": "spoofing_layering;quote_spoofing;quote_stuffing;pinging;bear_raid;painting_tape"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T13:06:32.679343+00:00",
+  "heldout_symbol_or_venue_ok": true,
+  "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "labels": {
+    "matched_negative_normal_activity": 2,
+    "normal_control": 2,
+    "positive_spoofing_layering": 4
+  },
+  "matched_groups": [
+    "cftc_gandhi_20131216_es_example",
+    "cftc_gandhi_20140917_es_example",
+    "cftc_mohan_20131202_nq_example"
+  ],
+  "matched_negative_rows": 4,
+  "missing_species": [
+    "quote_spoofing",
+    "quote_stuffing",
+    "pinging",
+    "bear_raid",
+    "painting_tape"
+  ],
+  "negative_wilson95_lcb": 0.5101091635454027,
+  "new_confidence_gate": false,
+  "next_action": "Keep extracting only source-stated row facts, but acquire enough source-owned or owner-approved positive/control rows, broad normal controls, and direct-species coverage before another completion audit.",
+  "observed_species": [
+    "spoofing_layering"
+  ],
+  "positive_rows": 4,
+  "positive_wilson95_lcb": 0.5101091635454027,
+  "raw_data_committed": false,
+  "run_id": "20260511T210514-codex-r6-gandhi-expanded-calibration-gate-v1",
+  "runtime_code_changed": false,
+  "session_buckets": [
+    "overnight_central_time",
+    "regular_us_central_time"
+  ],
+  "source_hashes": {
+    "matched_negative_normal_activity_rows.csv": "b3e918c6169ed1527fb8d611780cb0224de12b32ccae06e839f476715e6704e7",
+    "positive_spoofing_layering_rows.csv": "dd76b7f640c75022c320695aeb36508582e296c22b60dcc41bbe4adb0c65be79",
+    "provenance_manifest.json": "07fd70fddcee3ab594c6048aa1d0bb071c32f33a25ff219ad77684b092017f22"
+  },
+  "species_coverage_ok": false,
+  "strict_full_objective_achieved": false,
+  "support_required_per_class_for_wilson95_lcb_ge_0_95": 73,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unique_dates": [
+    "2013-12-02",
+    "2013-12-16",
+    "2014-09-17"
+  ],
+  "unique_symbols": [
+    "December 2013 E-mini NASDAQ futures",
+    "December 2014 E-mini S&P 500 futures",
+    "March 2014 E-mini S&P 500 futures"
+  ],
+  "unique_venues": [
+    "CME"
+  ],
+  "update_goal": false,
+  "verifier": {
+    "command": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T210514-codex-r6-gandhi-expanded-calibration-gate-v1/r6-gandhi-expanded-calibration-gate/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout": {
+      "matched_group_count": 3,
+      "matched_negative_rows": 4,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 4,
+      "provenance_keys": [
+        "cftc_gandhi_order",
+        "cftc_genuine_order_text_checks",
+        "cftc_genuine_order_text_status",
+        "cftc_order",
+        "cftc_text_checks",
+        "cftc_text_extraction_status",
+        "created_at_utc",
+        "finra_public_schema",
+        "gandhi_matched_negative_rows_added",
+        "gandhi_positive_rows_added",
+        "gandhi_rows_materialized_at_utc",
+        "license_or_permission",
+        "matched_control_limitations",
+        "matched_control_policy",
+        "matched_negative_control_policy",
+        "matched_negative_materialized_at_utc",
+        "matched_negative_rows_acquired",
+        "matched_negative_rows_count",
+        "matched_negative_rows_path",
+        "matched_negative_rows_sha256",
+        "positive_rows_count",
+        "positive_rows_path",
+        "source",
+        "updated_at_utc",
+        "updated_by"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T210514-codex-r6-gandhi-expanded-calibration-gate-v1/r6-gandhi-expanded-calibration-gate/direct_manipulation_row_intake_verifier.stdout.txt"
+  }
+}

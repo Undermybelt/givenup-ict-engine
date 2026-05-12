@@ -1,0 +1,12 @@
+PASS run_id=20260512T005842-codex-r6-owner-export-outbound-request-messages-v1
+PASS input_bundle=docs/experiments/actionable-regime-confidence/runs/20260512T005126-codex-r6-owner-export-request-bundle-v2
+PASS cme_message_materialized=true
+PASS cboe_cfe_message_materialized=true
+PASS represented_cells=17
+PASS required_support_per_cell=73
+PASS external_requests_sent=false
+PASS valid_source_owned_normal_controls_acquired_now=0
+PASS same_exhibit_flip_approval_acquired_now=false
+PASS canonical_merge_allowed_now=false
+PASS downstream_rerun_allowed_now=false
+PASS strict_full_objective_achieved=false

@@ -1,0 +1,5 @@
+gate,value,passed
+live_intake_exists,False,False
+direct_verifier_success,2,False
+what_if_both_sidecars_wilson95_ge_095,0.947260905856,False
+strict_full_objective_achieved,False,False

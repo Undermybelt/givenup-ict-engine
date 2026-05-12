@@ -1,0 +1,7 @@
+Error: auto-quant prepare failed with status exit status: 2 while running uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T004649-codex-board-b-220646-explicit-history-selection-v1/state_explicit_history_v1/.deps/auto-quant/prepare_external.py.
+stdout:
+
+stderr:
+error: Failed to spawn: `docs/experiments/actionable-regime-confidence/runs/20260512T004649-codex-board-b-220646-explicit-history-selection-v1/state_explicit_history_v1/.deps/auto-quant/prepare_external.py`
+  Caused by: No such file or directory (os error 2)
+

@@ -1,0 +1,205 @@
+{
+  "acceptance_gates_after_intake": [
+    "verifier_passes_without missing files, empty rows, missing columns, proxy/generated labels, or unmatched direct controls",
+    "rerun unchanged chronological calibration for every regime label",
+    "rerun heldout market, heldout timeframe, and market-context validation",
+    "rerun Pre-Bayes/BBN consistency checks",
+    "rerun CatBoost/path-ranking checks",
+    "rerun execution-tree consumer check without relaxing thresholds"
+  ],
+  "artifact_type": "board_a_external_intake_bundle_manifest_v1",
+  "current_cursor_edited": false,
+  "decision": {
+    "accepted_rows_added": 0,
+    "full_objective_achieved": false,
+    "gate_result": "board_a_external_intake_bundle_v1=ready_for_rows_not_acquired",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T10:37:26.364976+00:00",
+  "guardrails": {
+    "allowed_equivalence_types": [
+      "owner_approved_crosswalk",
+      "source_owned_label"
+    ],
+    "fail_closed_unsupported_tokens": [
+      "provider_ohlcv",
+      "ohlcv_proxy",
+      "hmm",
+      "generated_label",
+      "future_return",
+      "unapproved_ixic"
+    ],
+    "main_regime_v2_labels": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "required_direct_species": [
+      "bear_raid",
+      "painting_tape",
+      "pinging",
+      "quote_stuffing",
+      "social_text_pump_dump",
+      "spoofing_layering"
+    ],
+    "required_price_packages": [
+      "crypto_equivalence",
+      "fx_rates_commodities_equivalence",
+      "us_index_futures_equivalence"
+    ],
+    "schema_readiness_is_confidence_acceptance": false,
+    "source_panel_recency_must_be_after": "2026-01-30"
+  },
+  "intake_root": "/tmp/ict-engine-board-a-external-intake-bundle-v1",
+  "required_files": [
+    {
+      "destination": "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_rows.csv",
+      "file": "source_label_equivalence_rows.csv",
+      "package": "price_root_equivalence",
+      "purpose": "source-owned or owner-approved MainRegimeV2 crosswalk rows for QQQ/NQ/NDX/futures, crypto, FX/rates/commodities",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_provenance.json",
+      "file": "source_label_equivalence_provenance.json",
+      "package": "price_root_equivalence",
+      "purpose": "owner, approval, export identity, hashes, source URLs, and non-proxy attestation for price-root equivalence",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_rows.csv",
+      "file": "source_panel_recency_extension_rows.csv",
+      "package": "source_panel_recency_extension",
+      "purpose": "source-owned MainRegimeV2 rows strictly after 2026-01-30",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_provenance.json",
+      "file": "source_panel_recency_extension_provenance.json",
+      "package": "source_panel_recency_extension",
+      "purpose": "source revision identity proving labels are not provider-only candles or generated future-return labels",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_positive_rows.csv",
+      "file": "direct_manipulation_positive_rows.csv",
+      "package": "direct_manipulation_species",
+      "purpose": "direct Manipulation positives for missing species: spoofing/layering, quote stuffing, pinging, bear raid, painting tape, social/text pump-dump",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_matched_controls.csv",
+      "file": "direct_manipulation_matched_controls.csv",
+      "package": "direct_manipulation_species",
+      "purpose": "matched normal controls for every positive event group",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_provenance.json",
+      "file": "direct_manipulation_provenance.json",
+      "package": "direct_manipulation_species",
+      "purpose": "source owner, row provenance, event taxonomy, matched-negative policy, and hashes",
+      "required": true
+    }
+  ],
+  "run_id": "20260511T183606+0800-codex-external-intake-bundle-v1",
+  "schema": {
+    "direct_control_fields": [
+      "matched_control_group_id",
+      "control_row_id",
+      "control_symbol",
+      "control_start",
+      "control_end",
+      "matching_dimensions",
+      "normal_label",
+      "source_owner",
+      "source_dataset",
+      "source_row_id",
+      "provenance_hash"
+    ],
+    "direct_positive_fields": [
+      "event_id",
+      "species",
+      "market_family",
+      "symbol",
+      "timeframe",
+      "event_start",
+      "event_end",
+      "positive_label",
+      "source_owner",
+      "source_dataset",
+      "source_row_id",
+      "evidence_type",
+      "matched_control_group_id",
+      "provenance_hash",
+      "source_url_or_record"
+    ],
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T183606-codex-external-intake-bundle-v1/external-intake-bundle/board_a_external_intake_schema_v1.csv",
+    "price_fields": [
+      "package_id",
+      "market_family",
+      "root_symbol",
+      "source_symbol",
+      "source_timeframe",
+      "source_start",
+      "source_end",
+      "source_label_column",
+      "main_regime_v2_label",
+      "qualifying_condition_id",
+      "validation_instrument",
+      "validation_period",
+      "validation_market_context",
+      "equivalence_type",
+      "owner_approval_reference",
+      "source_row_id",
+      "provenance_hash"
+    ],
+    "recency_fields": [
+      "package_id",
+      "source_dataset",
+      "market_family",
+      "symbol",
+      "timeframe",
+      "timestamp",
+      "main_regime_v2_label",
+      "qualifying_condition_id",
+      "validation_instrument",
+      "validation_period",
+      "validation_market_context",
+      "source_revision_date",
+      "source_row_id",
+      "provenance_hash",
+      "non_proxy_attestation"
+    ]
+  },
+  "source_evidence_refs": [
+    "20260511T182922-codex-source-label-equivalence-intake-verifier-v1",
+    "20260511T183328-codex-external-source-label-candidate-screen-v1",
+    "20260511T182601-codex-direct-manipulation-source-scan-v2",
+    "20260511T183018-codex-hf-pumpdump-schema-audit-v1"
+  ],
+  "verifier": {
+    "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T183606-codex-external-intake-bundle-v1/external-intake-bundle/board_a_external_intake_verifier_v1.py --intake-root /tmp/ict-engine-board-a-external-intake-bundle-v1",
+    "missing_result": {
+      "missing_files": [
+        "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_rows.csv",
+        "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_provenance.json",
+        "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_rows.csv",
+        "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_provenance.json",
+        "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_positive_rows.csv",
+        "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_matched_controls.csv",
+        "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "missing_result_path": "docs/experiments/actionable-regime-confidence/runs/20260511T183606-codex-external-intake-bundle-v1/external-intake-bundle/board_a_external_intake_missing_result_v1.json",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T183606-codex-external-intake-bundle-v1/external-intake-bundle/board_a_external_intake_verifier_v1.py"
+  }
+}

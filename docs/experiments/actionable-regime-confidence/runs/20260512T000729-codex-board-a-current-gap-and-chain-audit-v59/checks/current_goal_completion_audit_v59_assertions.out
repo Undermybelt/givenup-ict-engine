@@ -1,0 +1,12 @@
+board_cursor_present=ok
+direct_r6_verifier_called=ok
+direct_r6_verifier_ok=ok
+provider_status_called=ok
+auto_quant_status_called=ok
+analyze_surface_called=ok
+pre_bayes_called=ok
+policy_training_called=ok
+workflow_called=ok
+export_path_ranking_called=ok
+strict_full_objective_not_complete=ok
+update_goal_false=ok

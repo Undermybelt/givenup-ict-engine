@@ -1,0 +1,10 @@
+loop_id=20260511T033017+0800-codex-kaggle-regime-label-root-gate
+rows=295865
+raw_committed_to_repo=false
+runtime_code_changed=false
+thresholds_relaxed=false
+accepted_new_roots_95=none
+gate_result=blocked_kaggle_regime_label_root_gate_below_95
+Bull:cal_lcb=0.962320:test_lcb=0.966224:accepted=false
+Bear:cal_lcb=0.750466:test_lcb=0.836720:accepted=false
+Sideways:cal_lcb=0.727793:test_lcb=0.745385:accepted=false

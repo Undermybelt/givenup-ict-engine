@@ -1,0 +1,41 @@
+Discovered 1 strategies: TomacNQ_KillzoneBreakout
+Whitelist:   BTC/USDT,ETH/USDT,SOL/USDT,BNB/USDT,AVAX/USDT
+Default TR:  20210101-20251231
+
+---
+strategy:         TomacNQ_KillzoneBreakout
+timerange_label:  full
+timerange:        20210101-20251231
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        Could not load markets, therefore cannot start. Please investigate the above error for more details.
+traceback:
+Traceback (most recent call last):
+  File "/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/run.py", line 524, in main
+    results = run_backtest(name, timerange, pair_basket)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/run.py", line 165, in run_backtest
+    bt = Backtesting(config)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 144, in __init__
+    exchange = ExchangeResolver.load_exchange(self.config, load_leverage_tiers=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 44, in load_exchange
+    exchange = ExchangeResolver._load_exchange(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/resolvers/exchange_resolver.py", line 77, in _load_exchange
+    exchange = ex_class(**kwargs)
+               ^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/binance.py", line 82, in __init__
+    super().__init__(*args, **kwargs)
+  File "/private/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 301, in __init__
+    self.validate_config(self._config)
+  File "/private/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 361, in validate_config
+    self.validate_stakecurrency(config["stake_currency"])
+  File "/private/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/exchange.py", line 749, in validate_stakecurrency
+    raise OperationalException(
+freqtrade.exceptions.OperationalException: Could not load markets, therefore cannot start. Please investigate the above error for more details.
+
+
+Done: 0 backtests succeeded, 1 failed.

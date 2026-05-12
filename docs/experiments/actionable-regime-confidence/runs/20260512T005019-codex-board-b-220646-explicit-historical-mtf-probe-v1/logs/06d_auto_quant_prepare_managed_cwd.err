@@ -1,0 +1,22 @@
+2026-05-12 00:58:14,063 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 00:58:14,070 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 00:58:14,071 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 00:58:14,072 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20210101-20251231 ...
+2026-05-12 00:58:14,073 - freqtrade.configuration.configuration - INFO - Using exchange binance
+2026-05-12 00:58:14,075 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T005019-codex-board-b-220646-explicit-historical-mtf-probe-v1/state_explicit_historical_mtf_pr
+obe_v1/auto-quant/.deps/auto-quant/user_data ...
+2026-05-12 00:58:14,076 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T005019-codex-board-b-220646-explicit-historical-mtf-probe-v1/state_explicit_historical_mtf_pr
+obe_v1/auto-quant/.deps/auto-quant/user_data/data ...
+2026-05-12 00:58:14,076 - freqtrade.configuration.configuration - INFO - Using pairs ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'BNB/USDT', 'AVAX/USDT']
+2026-05-12 00:58:14,076 - freqtrade.configuration.configuration - INFO - Prepend detected. Allowing data prepending.
+2026-05-12 00:58:14,077 - freqtrade.configuration.configuration - INFO - timeframes --timeframes: ['1h', '4h', '1d']
+2026-05-12 00:58:14,077 - freqtrade.configuration.configuration - INFO - Using "feather" to store OHLCV data.
+2026-05-12 00:58:14,077 - freqtrade.configuration.configuration - INFO - Using "feather" to store trades data.
+2026-05-12 00:58:14,078 - freqtrade.configuration.configuration - INFO - Detected --new-pairs-days: 30
+2026-05-12 00:58:14,078 - freqtrade.configuration.configuration - INFO - Detected --trading-mode: spot
+2026-05-12 00:58:14,079 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20210101-20251231
+2026-05-12 00:58:14,085 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 00:58:14,109 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 00:58:14,110 - freqtrade.configuration.config_validation - INFO - Validating configuration ...

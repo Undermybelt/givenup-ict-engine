@@ -1,0 +1,3 @@
+label,qualifying_condition,allowed_action,abstain_condition,acceptance_state
+Bull,"main_regime_v2_label == 'Bull' AND source_confidence >= 0.95 AND source_owner in {source-owned-stock-market-regimes-2000-2026, ahaanverma00} AND timeframe == '1d'",support_only_no_trade_promotion,source_confidence < 0.95 OR non_1d_timeframe_required OR source_owner_not_in_contract OR active_board_blocker_present,blocked_no_acceptance
+Sideways,"main_regime_v2_label == 'Sideways' AND source_confidence >= 0.95 AND source_owner in {source-owned-stock-market-regimes-2000-2026, ahaanverma00} AND timeframe == '1d'",support_only_no_trade_promotion,source_confidence < 0.95 OR non_1d_timeframe_required OR source_owner_not_in_contract OR active_board_blocker_present,blocked_no_acceptance

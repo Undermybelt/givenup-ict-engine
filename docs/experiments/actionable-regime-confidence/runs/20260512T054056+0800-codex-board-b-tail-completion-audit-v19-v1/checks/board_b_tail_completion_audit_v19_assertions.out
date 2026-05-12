@@ -1,0 +1,10 @@
+strict_full_objective=false
+goal_complete=false
+promotion_allowed=false
+update_goal=false
+blocking_requirement=user_selected_historical_data_missing
+selected_historical_dataset=false
+selected_data_auto_quant_factor_research=false
+nonzero_mature_rooted_observations=false
+selected_data_downstream_chain=false
+trade_usable_execution_tree_packet=false

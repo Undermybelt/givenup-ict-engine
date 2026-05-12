@@ -1,0 +1,44 @@
+{
+  "run_id": "20260512T022552-codex-autoquant-threaded-dns-prepare-probe-v1",
+  "correction_version": "v2",
+  "gate_result": "autoquant_threaded_dns_prepare_probe_v2=threaded_connector_resolver_prepare_succeeded_data_ready_seed_required_no_promotion",
+  "source_failed_state_dir": "/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808",
+  "isolated_success_state_dir": "/tmp/ict-engine-board-a-autoquant-threaded-dns-20260512T022552",
+  "managed_dir": "/tmp/ict-engine-board-a-autoquant-threaded-dns-20260512T022552/auto-quant/.deps/auto-quant",
+  "resolver_probe": {
+    "shallow_patch_exit": 1,
+    "connector_patch_exit": 0,
+    "connector_patch_http_status": 200,
+    "resolver_default": "ThreadedResolver",
+    "connector_default": "ThreadedResolver"
+  },
+  "prepare": {
+    "status_before": "dependency_ready_data_missing",
+    "prepare_exit": 0,
+    "status_after": "dependency_ready_seed_required",
+    "healthy_after": true,
+    "dependency_healthy_after": true,
+    "data_ready_after": true,
+    "bootstrap_needed_after": false,
+    "blocked_reason_after": "auto_quant_seed_strategies_required",
+    "data_file_count": 15,
+    "data_size_human": "7.5M"
+  },
+  "decisions": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_chain_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false
+  },
+  "mutation_flags": {
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "Preserve the R6 owner/export blocker; use isolated strategy seeding only as non-promoting Auto-Quant readiness work until source/control roots and canonical merge pass."
+}

@@ -1,0 +1,48 @@
+{
+  "accepted_rows_added": 0,
+  "artifact_type": "web_source_label_broad_recheck_v1",
+  "board_sha256_observed": "f59430166fdc4f1197d8dc2806297fbce789932c5c1f5b1a75735981cb5b79a6",
+  "created_at_utc": "2026-05-11T11:39:08Z",
+  "decision": "web_source_label_broad_recheck_v1=no_new_promotable_source_label_equivalence",
+  "full_other_market_source_label_equivalence": false,
+  "new_confidence_gate": false,
+  "queries": [
+    "site:kaggle.com/datasets \"market regime\" \"label\" \"2026\" Bull Bear Sideways",
+    "site:huggingface.co/datasets \"market regime\" \"regime_label\" finance",
+    "\"market regime\" \"bull\" \"bear\" \"sideways\" dataset",
+    "\"regime_label\" stock bull bear sideways dataset"
+  ],
+  "raw_data_committed": false,
+  "runtime_code_changed": false,
+  "run_id": "20260511T193908+0800-codex-web-source-label-broad-recheck-v1",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "web_results_screened": [
+    {
+      "accepted_rows_added": 0,
+      "disposition": "known_source_no_new_strict_or_transfer_closure",
+      "reason": "Already screened and live-recency-checked; still no XOM/Sideways tail repair rows and no new strict 1h source-owned sessions beyond already-counted support.",
+      "ref": "mafaqbhatti/stock-market-regimes-20002026",
+      "source": "kaggle",
+      "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026"
+    },
+    {
+      "accepted_rows_added": 0,
+      "disposition": "known_rule_or_generated_label_surface_no_mainregimev2_crosswalk",
+      "reason": "Already screened; has regime_label-style fields but no source-owner approved MainRegimeV2 crosswalk and remains proxy/rule-generated evidence.",
+      "ref": "sujinwo/tsie-market-regime-dataset",
+      "source": "huggingface",
+      "url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset"
+    },
+    {
+      "accepted_rows_added": 0,
+      "disposition": "method_or_article_not_row_level_source_labels",
+      "reason": "Search results include method pages, blog/model descriptions, and papers about regimes, but not row-level source-owned labels with provenance and MainRegimeV2 equivalence.",
+      "ref": "general web results",
+      "source": "web",
+      "url": ""
+    }
+  ]
+}

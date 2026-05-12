@@ -1,0 +1,165 @@
+{
+  "blocked_requirements": 4,
+  "board_a_hash": "31ea5b9fb4ec086586d91075b9e452e8b19e392c16f46de7decdc746e74fbca4",
+  "board_b_hash": "cce25d7574bc68777f5dfcfb4dd8e3bc28f248e12dd88e56b71fa43e17d70d05",
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "blocker": "",
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "requirement": "Board B markdown is the active contract",
+      "status": "covered"
+    },
+    {
+      "blocker": "valid_required_root_unlock=false; source_control_evidence_acquired=false",
+      "evidence": "081025/081149/081152/081155/081227/081323/081522/081705 assertion files all remain no-unlock or not-complete",
+      "requirement": "Profitability factors must be rooted in accepted regime-identification roots",
+      "status": "blocked"
+    },
+    {
+      "blocker": "canonical_merge=false; downstream_promotion_rerun=false",
+      "evidence": "Prior branch artifacts exist, but latest source/control gates forbid canonical merge and downstream rerun",
+      "requirement": "Preserve branch path main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor through filter/Pre-Bayes/BBN/CatBoost/execution tree",
+      "status": "partial_fail_closed"
+    },
+    {
+      "blocker": "selected_data_autoquant_promotion=false and downstream_promotion_rerun=false",
+      "evidence": "Prior real-chain readbacks exist; selected-data AutoQuant promotion remains false in latest gates",
+      "requirement": "Operate AutoQuant and ict-engine through filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution tree on real artifacts",
+      "status": "partial_fail_closed"
+    },
+    {
+      "blocker": "provider diagnostics are not accepted source/control evidence",
+      "evidence": "Prior provider/runtime readbacks cover provider surfaces diagnostically",
+      "requirement": "Use IBKR, TradingViewRemix, yfinance, and Kraken visibly",
+      "status": "partial_non_promoting"
+    },
+    {
+      "blocker": "",
+      "evidence": "Latest CourtListener/RECAP probes 081323, 081522, 081705 are counted as fail-closed",
+      "requirement": "Continue source/control acquisition without promoting proxies",
+      "status": "covered_fail_closed"
+    },
+    {
+      "blocker": "",
+      "evidence": "Audit is an additive run root; board markers are checked before mirroring",
+      "requirement": "Do not disturb concurrent multi-agent board work",
+      "status": "covered"
+    },
+    {
+      "blocker": "user_selected_historical_data_missing",
+      "evidence": "No explicit user-selected history marker found in current Board B text",
+      "requirement": "Require exactly one explicit user-selected historical path HTF/MTF/LTF before selected-data factor research",
+      "status": "blocked"
+    },
+    {
+      "blocker": "source/control unlock and selected-history gates are both unsatisfied",
+      "evidence": "Latest assertion files report selected_data_autoquant_promotion=false and downstream_promotion_rerun=false",
+      "requirement": "Do not run selected-data AutoQuant or downstream promotion before both gates pass",
+      "status": "blocked"
+    },
+    {
+      "blocker": "objective incomplete",
+      "evidence": "Latest assertion files report strict_full_objective=false and update_goal=false",
+      "requirement": "Do not call update_goal before the objective is actually complete",
+      "status": "blocked"
+    }
+  ],
+  "covered_requirements": 3,
+  "downstream_promotion_rerun": false,
+  "explicit_user_selected_history": false,
+  "gate_result": "board_b_current_objective_audit_after_081705_v1=not_complete_latest_recap_routes_no_required_unlock_no_selected_history_no_downstream_promotion",
+  "missing_assertion_files": [],
+  "missing_board_markers": [],
+  "partial_requirements": 3,
+  "promotion_allowed": false,
+  "route_rows": [
+    {
+      "accepted_rows_added": "0",
+      "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T081025+0800-codex-r6-direct-intake-approval-gap-readback-after-080950-v1/checks/r6_direct_intake_approval_gap_readback_after_080950_v1_assertions.out",
+      "gate": "r6_direct_intake_approval_gap_readback_after_080950_v1=direct_intake_present_but_no_r6_owner_export_or_approval_unlock",
+      "promotion_allowed": "false",
+      "route": "081025_r6_direct_intake_approval_gap",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T081149+0800-codex-r6-public-docket-attachment-route-probe-after-080700-v1/checks/r6_public_docket_attachment_route_probe_after_080700_v1_assertions.out",
+      "gate": "r6_public_docket_attachment_route_probe_after_080700_v1=no_new_public_docket_control_attachment_no_unlock",
+      "promotion_allowed": "false",
+      "route": "081149_r6_public_docket_attachment_route",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T081152+0800-codex-post-080906-source-control-root-consistency-v1/checks/post_080906_source_control_root_consistency_v1_assertions.out",
+      "gate": "post_080906_source_control_root_consistency_v1=no_required_source_control_unlock",
+      "promotion_allowed": "false",
+      "route": "081152_post_080906_source_control_consistency",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T081155+0800-codex-source-control-arrival-poll-after-080837-v1/checks/source_control_arrival_poll_after_080837_v1_assertions.out",
+      "gate": "source_control_arrival_poll_after_080837_v1=no_new_required_root_no_unlock",
+      "promotion_allowed": "false",
+      "route": "081155_source_control_arrival_poll",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T081227+0800-codex-current-objective-audit-after-080906-v1/checks/current_objective_audit_after_080906_v1_assertions.out",
+      "gate": "current_objective_audit_after_080906_v1=not_complete_latest_public_routes_no_required_unlock_no_downstream_promotion",
+      "promotion_allowed": "false",
+      "route": "081227_current_objective_audit_after_080906",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T081323+0800-codex-courtlistener-recap-sibling-attachment-probe-after-080906-v1/checks/courtlistener_recap_sibling_attachment_probe_after_080906_v1_assertions.out",
+      "gate": "courtlistener_recap_sibling_attachment_probe_after_080906_v1=no_new_public_control_attachment_unlock",
+      "promotion_allowed": "false",
+      "route": "081323_courtlistener_recap_sibling_attachment",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T081522+0800-codex-r6-courtlistener-recap-control-route-after-080950-v1/checks/r6_courtlistener_recap_control_route_after_080950_v1_assertions.out",
+      "gate": "r6_courtlistener_recap_control_route_after_080950_v1=public_recap_positive_and_context_only_no_source_owned_normal_controls",
+      "promotion_allowed": "False",
+      "route": "081522_r6_courtlistener_recap_control_route",
+      "source_control_evidence_acquired": "False",
+      "update_goal": "False",
+      "valid_required_root_unlock": "False"
+    },
+    {
+      "accepted_rows_added": "0",
+      "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T081705+0800-codex-courtlistener-recap-sibling-fast-probe-after-081323-v1/checks/courtlistener_recap_sibling_fast_probe_after_081323_v1_assertions.out",
+      "gate": "courtlistener_recap_sibling_fast_probe_after_081323_v1=no_new_public_control_attachment_unlock",
+      "promotion_allowed": "false",
+      "route": "081705_courtlistener_recap_sibling_fast",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  ],
+  "run_id": "20260512T082113+0800-codex-board-b-current-objective-audit-after-081705-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

@@ -1,0 +1,8 @@
+requirement,status,evidence,next_action
+Bull branch passes RC-SPA,missing,"latest root-family artifacts still reject; no accepted Bull branch packet exists","run or repair materially different root-branch candidate"
+Bear branch passes RC-SPA,missing,"latest root-family artifacts still reject or stay thin/negative","run or repair materially different root-branch candidate"
+Sideways branch passes RC-SPA,missing,"latest root-family artifacts still reject","run or repair materially different root-branch candidate"
+Crisis branch passes RC-SPA,missing,"latest root-family artifacts remain thin or failed","run or repair materially different root-branch candidate"
+All five Board B branches pass together,missing,"205047 passes scoped Manipulation component only","combine only after Bull/Bear/Sideways/Crisis pass"
+Downstream Pre-Bayes BBN CatBoost execution tree for promoted packet,missing_by_gate,"no promoted full five-branch packet exists","do not start downstream until full gate passes"
+204732 crypto-liquidity artifact usable,missing,"run directory/report/assertions unavailable; board records operational failure only","repair or narrow crypto-liquidity script before retry"

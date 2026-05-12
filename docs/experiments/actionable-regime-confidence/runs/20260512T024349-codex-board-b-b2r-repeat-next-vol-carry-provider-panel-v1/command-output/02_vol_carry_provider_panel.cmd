@@ -1,0 +1,1 @@
+uv run --with pandas --with numpy --with pyarrow python docs/experiments/actionable-regime-confidence/runs/20260512T024349-codex-board-b-b2r-repeat-next-vol-carry-provider-panel-v1/scripts/board_b_b2r_repeat_next_vol_carry_provider_panel_v1.py 

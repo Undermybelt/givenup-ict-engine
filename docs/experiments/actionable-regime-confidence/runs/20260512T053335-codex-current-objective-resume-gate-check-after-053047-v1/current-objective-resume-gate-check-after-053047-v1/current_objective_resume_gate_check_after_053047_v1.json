@@ -1,0 +1,61 @@
+{
+  "run_id": "20260512T053335-codex-current-objective-resume-gate-check-after-053047-v1",
+  "generated_at_local": "2026-05-12T05:33:35+0800",
+  "board_path": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_before_writeback": "ff7c1a6b9755048c326f7d8328f500e6dd4ffcefe0ee759658b4d6400de7010d",
+  "scope": "resume gate check after 053047 current-objective audit",
+  "freshest_prior_objective_audit": "20260512T053047-codex-current-objective-audit-after-hgb-052711-v1",
+  "prior_hgb_only_objective_audit": "20260512T052940-codex-current-objective-audit-after-051844-hgb-accepted-v1",
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "missing",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "missing",
+    "/tmp/ict-engine-source-panel-recency-extension": "missing"
+  },
+  "pending_roots": {
+    "20260512T052522-codex-source-label-numeric-tree-threshold-screen-v1": {
+      "status": "non_countable_no_terminal_result",
+      "stdout_json_files": 2,
+      "zero_byte_stdout_json_files": 2,
+      "terminal_report_present": false,
+      "terminal_result_json_present": false,
+      "assertions_present": false,
+      "countable": false
+    },
+    "20260512T052301-codex-source-label-macro-context-rule-miner-v1": {
+      "status": "terminal_cleanup_non_counting",
+      "rows_scored": 0,
+      "accepted_regime_confidence_labels": 0,
+      "source_control_evidence_acquired": false,
+      "countable_as_confidence_or_source_control": false
+    }
+  },
+  "diagnostic_confidence_screen": {
+    "root": "20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1",
+    "count_once": true,
+    "accepted_labels": ["Bear", "Bull", "Crisis", "Sideways"],
+    "accepted_label_count": 4,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "approval_package": {
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "update_goal": false
+  },
+  "decision": {
+    "board_state": "blocked",
+    "confidence_screen_labels_accepted": 4,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Send or otherwise satisfy the v5 CME/Cboe/CFE owner-export dispatch drafts and preserve ticket/export/license identifiers, or otherwise unlock a required source/control target root before rerunning direct verifier, split calibration, canonical merge, provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback in order."
+}

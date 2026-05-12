@@ -1,0 +1,130 @@
+{
+  "schema_version": "root-taxonomy-v3-input-inventory/v1",
+  "direct_manipulation_sources": {
+    "kraken_public_recent_trade_l2_probe": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T004210-source-backed-root-materialization/root-v3/direct_manipulation_input_probe.json",
+      "tick_trade_prints_seen": true,
+      "l2_order_book_snapshot_seen": true,
+      "calibration_usable": false,
+      "blocker": [
+        "public Kraken probe gives recent trades and current L2 snapshots, but not enough aligned historical order-lifecycle / L2 time series for chronological 120/60 support gates",
+        "no cancel/replace/posting-distance/order-lifecycle fields were available from this public probe"
+      ]
+    },
+    "repo_local_artifact_scan": {
+      "scan_root": "docs/experiments/actionable-regime-confidence/runs",
+      "max_matches": 250,
+      "matched_file_count": 250,
+      "direct_candidate_file_count": 28,
+      "trade_like_only_file_count": 146,
+      "direct_candidate_files_sample": [
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas_ta/overlap/hl2.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/3/nturl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/3/macurl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/2/nturl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/third_party/2and3/markdown/extensions/nl2br.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/order_book_side.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/order_book.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/__pycache__/order_book_side.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/__pycache__/order_book.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/pygments/formatters/terminal256.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas_ta/overlap/hl2.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/3/nturl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/3/macurl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/2/nturl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/third_party/2and3/markdown/extensions/nl2br.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/order_book_side.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/order_book.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/__pycache__/order_book_side.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/__pycache__/order_book.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/pygments/formatters/terminal256.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas_ta/overlap/hl2.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/3/nturl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/3/macurl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/stdlib/2/nturl2path.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/jedi/third_party/typeshed/third_party/2and3/markdown/extensions/nl2br.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/order_book_side.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/order_book.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/base/ws/__pycache__/order_book_side.cpython-311.pyc"
+      ],
+      "trade_like_only_files_sample": [
+        "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_per_regime.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/bin/freqtrade-client",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/bin/freqtrade",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/modetrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/bittrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/matplotlib/ticker.pyi",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/matplotlib/ticker.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/freqtradebot.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas/tests/tseries/offsets/test_ticks.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/modetrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/persistence/trade_model.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/commands/trade_commands.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/data/converter/trade_converter.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/data/converter/trade_converter_kraken.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/data/btanalysis/trade_parallelism.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/data/btanalysis/__pycache__/trade_parallelism.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/data/converter/__pycache__/trade_converter.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/commands/__pycache__/trade_commands.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/persistence/__pycache__/trade_model.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/FullTradesFilter.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/hyperopt_loss/hyperopt_loss_short_trade_dur.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/exchange/__pycache__/modetrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/matplotlib/tests/test_ticker.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/matplotlib/mpl-data/stylelib/seaborn-v0_8-ticks.mplstyle",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/telegram/_inline/inlinequeryresultcachedsticker.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/telegram/_files/sticker.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/telegram/_files/inputsticker.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/pandas_ta/trend/qstick.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/markdown_it/rules_inline/backticks.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/abstract/modetrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/abstract/bittrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/pro/modetrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/pro/bittrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/__pycache__/modetrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/__pycache__/bittrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/modetrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/bittrade.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/protobuf/mexc/PublicMiniTickersV3Api_pb2.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/protobuf/mexc/PublicBookTickerBatchV3Api_pb2.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/protobuf/mexc/PublicBookTickerV3Api_pb2.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/protobuf/mexc/PublicAggreBookTickerV3Api_pb2.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/protobuf/mexc/PublicMiniTickerV3Api_pb2.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/__pycache__/modetrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/async_support/__pycache__/bittrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/pro/__pycache__/modetrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/pro/__pycache__/bittrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/abstract/__pycache__/modetrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/.venv/lib/python3.11/site-packages/ccxt/abstract/__pycache__/bittrade.cpython-311.pyc",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/.deps/auto-quant/.venv/bin/freqtrade-client"
+      ],
+      "interpretation": "Repo-local experiment files contain many trade/backtest artifacts, but this bounded scan does not expose an aligned historical Level-2/Level-3/order-lifecycle dataset that can calibrate Manipulation under the 120/60 chronological support gate."
+    }
+  },
+  "signed_direction_and_range_inputs": {
+    "source_backed_15m_1h_gate": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T003739-source-backed-root-gate-mtf/root-v2-source-backed/source_backed_root_gate_report.json",
+      "accepted": [],
+      "missing": []
+    },
+    "cross_asset_1h_1d_gate": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T010240-root-taxonomy-v3-cross-asset-gate/root-v3/root_taxonomy_v3_cross_asset_gate_report.json",
+      "accepted": [],
+      "missing": [
+        "BullExpansion",
+        "BearExpansion",
+        "Consolidation",
+        "CrisisStress",
+        "TransitionRecovery",
+        "Manipulation"
+      ]
+    }
+  },
+  "fresh_gate_supported_now": false,
+  "why_no_fresh_completion_gate": [
+    "Manipulation still lacks aligned historical direct order-flow/L2/order-lifecycle calibration support.",
+    "The richer cross-asset RootTaxonomyV3 gate accepted zero classes.",
+    "The source-backed 15m/1h gate accepted only CrisisStress; BullExpansion, BearExpansion, Consolidation, TransitionRecovery, and Manipulation remain blocked."
+  ]
+}

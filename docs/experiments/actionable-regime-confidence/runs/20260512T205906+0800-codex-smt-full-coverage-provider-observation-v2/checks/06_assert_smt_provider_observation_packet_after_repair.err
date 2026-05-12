@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T205906+0800-codex-smt-full-coverage-provider-observation-v2/scripts/assert_smt_provider_observation_packet.py", line 128, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T205906+0800-codex-smt-full-coverage-provider-observation-v2/scripts/assert_smt_provider_observation_packet.py", line 102, in main
+    assert_true(row["normalized_for_inverse_correlation"] is False, "positive rows must not be inverse-normalized")
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T205906+0800-codex-smt-full-coverage-provider-observation-v2/scripts/assert_smt_provider_observation_packet.py", line 55, in assert_true
+    raise AssertionError(message)
+AssertionError: positive rows must not be inverse-normalized

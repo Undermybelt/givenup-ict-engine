@@ -1,0 +1,33 @@
+section,model,feature_set,rule,accepted_95,cal_lcb,test_lcb,cal_precision,test_precision,cal_support,test_support,cal_coverage,test_coverage
+row_gate,sequence_tail_logodds,sequence_tail,"calibrated_probability >= 0.0294950966776",false,0.0286826893873,0.0400381163523,0.035228182546,0.048031155344,2498,2311,0.0500110112315,0.035941460987
+row_gate,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,"calibrated_probability >= 0.0226907095905",false,0.0247340468665,0.0239151462028,0.0308246597278,0.0283925776884,2498,4473,0.0500110112315,0.0695656231046
+event_top1_gate,sequence_tail_logodds,sequence_tail,"event_top1_score >= 0.013 AND event_top1_margin >= 0",false,0.0404503817703,0.0241019272929,0.0660792951542,0.0440528634361,227,227,1,1
+event_top1_gate,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,"event_top1_score >= 0.031012404962 AND event_top1_margin >= 0",false,0.0241019272929,0.00241951146547,0.0440528634361,0.00881057268722,227,227,1,1
+event_hit_at_1_diagnostic,sequence_tail_logodds,sequence_tail,calibration,false,0.0404503817703,,0.0660792951542,,227,,1,
+event_hit_at_3_diagnostic,sequence_tail_logodds,sequence_tail,calibration,false,0.11300025434,,0.154185022026,,227,,1,
+event_hit_at_5_diagnostic,sequence_tail_logodds,sequence_tail,calibration,false,0.155501798016,,0.202643171806,,227,,1,
+event_hit_at_10_diagnostic,sequence_tail_logodds,sequence_tail,calibration,false,0.297365421317,,0.356828193833,,227,,1,
+event_hit_at_20_diagnostic,sequence_tail_logodds,sequence_tail,calibration,false,0.520916331607,,0.5859030837,,227,,1,
+event_hit_at_30_diagnostic,sequence_tail_logodds,sequence_tail,calibration,false,0.660882314663,,0.722466960352,,227,,1,
+event_hit_at_50_diagnostic,sequence_tail_logodds,sequence_tail,calibration,false,0.862720422272,,0.907488986784,,227,,1,
+event_hit_at_1_diagnostic,sequence_tail_logodds,sequence_tail,test,false,0.0241019272929,,0.0440528634361,,227,,1,
+event_hit_at_3_diagnostic,sequence_tail_logodds,sequence_tail,test,false,0.0979039019853,,0.136563876652,,227,,1,
+event_hit_at_5_diagnostic,sequence_tail_logodds,sequence_tail,test,false,0.195141189943,,0.246696035242,,227,,1,
+event_hit_at_10_diagnostic,sequence_tail_logodds,sequence_tail,test,false,0.381735871408,,0.444933920705,,227,,1,
+event_hit_at_20_diagnostic,sequence_tail_logodds,sequence_tail,test,false,0.583445620716,,0.647577092511,,227,,1,
+event_hit_at_30_diagnostic,sequence_tail_logodds,sequence_tail,test,false,0.674740563727,,0.735682819383,,227,,1,
+event_hit_at_50_diagnostic,sequence_tail_logodds,sequence_tail,test,false,0.745066969304,,0.801762114537,,227,,1,
+event_hit_at_1_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,calibration,false,0.0241019272929,,0.0440528634361,,227,,1,
+event_hit_at_3_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,calibration,false,0.054237502708,,0.0837004405286,,227,,1,
+event_hit_at_5_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,calibration,false,0.0941654348337,,0.132158590308,,227,,1,
+event_hit_at_10_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,calibration,false,0.195141189943,,0.246696035242,,227,,1,
+event_hit_at_20_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,calibration,false,0.347737244007,,0.409691629956,,227,,1,
+event_hit_at_30_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,calibration,false,0.476876127651,,0.541850220264,,227,,1,
+event_hit_at_50_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,calibration,false,0.674740563727,,0.735682819383,,227,,1,
+event_hit_at_1_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,test,false,0.00241951146547,,0.00881057268722,,227,,1,
+event_hit_at_3_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,test,false,0.0577582074998,,0.0881057268722,,227,,1,
+event_hit_at_5_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,test,false,0.090442361316,,0.127753303965,,227,,1,
+event_hit_at_10_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,test,false,0.203165357445,,0.25550660793,,227,,1,
+event_hit_at_20_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,test,false,0.46812823673,,0.533039647577,,227,,1,
+event_hit_at_30_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,test,false,0.596984596632,,0.660792951542,,227,,1,
+event_hit_at_50_diagnostic,combined_target_sequence_logodds,target_pre_features_plus_sequence_tail,test,false,0.684014857214,,0.74449339207,,227,,1,

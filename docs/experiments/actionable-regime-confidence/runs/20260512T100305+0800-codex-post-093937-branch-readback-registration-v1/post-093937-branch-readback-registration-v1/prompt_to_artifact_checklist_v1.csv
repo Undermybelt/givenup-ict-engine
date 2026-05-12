@@ -1,0 +1,7 @@
+requirement,evidence,status
+"Use real ict-engine downstream surfaces","command-output/00_workflow_structural_bundle_agent.out and command-output/01_workflow_execution_candidate_agent.out","covered"
+"Use provider readback including yfinance TradingView IBKR Kraken","command-output/02_provider_status_agent.out","covered"
+"Use Auto-Quant readback","command-output/03_auto_quant_status_htf_agent.out plus prior 093854 prepare logs","covered"
+"Do not overwrite concurrent Board A work","append-only registration; Current Cursor not edited","covered"
+"Do not promote without source/control unlock or selected-history approval","JSON fields source_control_evidence_acquired=false explicit_user_selected_history=false promotion_allowed=false","covered"
+"Do not call update_goal unless strict objective is complete","JSON field strict_full_objective_achieved=false update_goal=false","covered"

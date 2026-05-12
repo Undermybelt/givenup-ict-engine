@@ -1,0 +1,14 @@
+requirement,evidence,status,notes
+provider-backed evidence exists,data/kraken_ethusd_1h.json plus provenance sidecars,partial,Kraken-only provider data is present but six-provider authority is not met
+Auto-Quant produced measured profitability or factor packet,command-output/auto_quant_run_tomac_pair_alias_timerange.out,fail_closed,TOMAC ran but produced only 1 trade with Sharpe -100 and PF 0
+PFETHUSD continuation inspected,command-output/auto_quant_run_tomac_pfethusd.out,fail_closed,PFETHUSD TOMAC exited 0 but produced 0 trades
+real trade rows exported,derived/eth_kraken_tomac_real_trades_pair_alias_timerange.jsonl,partial,Exactly 1 rooted ETH_KRAKEN trade row exists
+real trade rows ingested,command-output/ingest_eth_kraken_tomac_real_trades.out,partial,trades_applied=1 trades_invalid=0 feedback_records_inserted=1
+branch path is regime rooted,derived/eth_kraken_tomac_real_trades_pair_alias_timerange.jsonl,pass,TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance -> TomacNQ_KillzoneBreakout
+filter or Pre-Bayes consumed current state,command-output/pre_bayes_status_eth_kraken_after_one_trade_ingest.out,fail_closed,Pre-Bayes stayed pass_neutralized and confidence stayed below acceptance
+BBN consumed or updated posterior,state_eth_kraken_mtf/ETH_KRAKEN/bbn_network.json,fail_closed,BBN structure exists but no Auto-Quant prior/posterior mutation was applied from one trade
+CatBoost or path-ranker consumed current state,command-output/policy_training_status_eth_kraken_after_one_trade_ingest.out,fail_closed,entry models ready=false matched_rows=0
+structural path ranking target exported,command-output/export_structural_path_ranking_target_eth_kraken_after_one_trade_ingest.out,partial,rows=3 mature_rows=1 calibrated_rows=0 lower_bound_rows=0 execution_gate_rows=0
+execution tree consumed current state,command-output/workflow_status_full_eth_kraken_after_one_trade_ingest.out,fail_closed,execution_candidate null and execution_gate_status execution_blocked
+Board B append-only behavior,this report plus planned board row,partial,Report is additive and does not edit prior rows or current cursor
+completion claim allowed,this checklist,fail_closed,objective not complete; no promotion/trade-usable/update_goal claim

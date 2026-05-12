@@ -1,0 +1,22 @@
+{
+  "auto_quant_pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260511T165911.746863000Z",
+  "library_source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004649-codex-board-b-220646-explicit-history-selection-v1/measured-explicit-history/strategy_library_explicit_history_tomac_v1.json",
+  "library_state_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004649-codex-board-b-220646-explicit-history-selection-v1/state_explicit_history_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_strategy_library.json",
+  "log_cross_check": {
+    "log_only": [],
+    "manifest_only": [],
+    "matched": 1,
+    "mismatches": [],
+    "n_blocks_in_log": 1,
+    "n_strategies_in_manifest": 1
+  },
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 1,
+  "n_total_strategies": 1,
+  "symbol": "SRC_ROOT_CARRY_LONG_220646"
+}

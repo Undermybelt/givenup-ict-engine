@@ -1,0 +1,6 @@
+PASS wrapper_invalid=0538_branch_segment_catboost_feature_unit
+PASS cargo_stdout_reports_pass=true
+PASS authoritative_exit_marker_present=false
+PASS count_as_board_b_evidence=false
+PASS promotion_allowed=false
+PASS update_goal=false

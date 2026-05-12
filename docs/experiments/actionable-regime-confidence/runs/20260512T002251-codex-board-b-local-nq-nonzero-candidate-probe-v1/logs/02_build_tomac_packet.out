@@ -1,0 +1,5 @@
+{
+  "ok": true,
+  "report": "docs/experiments/actionable-regime-confidence/runs/20260512T002251-codex-board-b-local-nq-nonzero-candidate-probe-v1/branch-rc-spa/tomac_nq_nonzero_candidate_report_v1.json",
+  "gate_result": "fail:measured_nonzero_but_branch_rc_spa_rejected"
+}

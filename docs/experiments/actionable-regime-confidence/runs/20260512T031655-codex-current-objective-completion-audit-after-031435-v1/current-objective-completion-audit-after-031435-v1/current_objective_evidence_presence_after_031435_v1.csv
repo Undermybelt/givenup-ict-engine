@@ -1,0 +1,7 @@
+artifact_id,path,present,promotion_use
+prior_current_objective_audit_030957,docs/experiments/actionable-regime-confidence/runs/20260512T030957-codex-current-objective-completion-audit-after-030617-030623-v1,true,not_complete_baseline
+intermediate_current_objective_audit_031539,docs/experiments/actionable-regime-confidence/runs/20260512T031539-codex-current-objective-completion-audit-after-031316-v1,true,not_complete_intermediate
+r6_owner_export_dispatch_readiness_031353,docs/experiments/actionable-regime-confidence/runs/20260512T031353-codex-r6-owner-export-dispatch-readiness-after-030957-v1,true,request_ready_only
+r6_noncanonical_staging_split_031316,docs/experiments/actionable-regime-confidence/runs/20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1,true,non_promoting_staging
+r6_local_triplet_sweep_031435,docs/experiments/actionable-regime-confidence/runs/20260512T031435-codex-r6-local-triplet-sweep-after-030957-v1,true,non_promoting_sweep
+approval_decision_package,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,true,non_approving

@@ -1,0 +1,24 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 73,
+  "matched_negative_rows": 73,
+  "matched_group_count": 70,
+  "provenance_keys": [
+    "accepted_jpm_cftc_positive_rows",
+    "accepted_nowak_smith_positive_rows",
+    "accepted_sarao_positive_rows",
+    "generated_at_utc",
+    "jpm_source_url",
+    "raw_data_committed",
+    "run_id",
+    "runtime_code_changed",
+    "source_v55_json",
+    "source_v55_negative_csv",
+    "source_v55_positive_csv",
+    "thresholds_relaxed",
+    "v55_generation_note",
+    "v55_negative_sha256",
+    "v55_positive_sha256"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

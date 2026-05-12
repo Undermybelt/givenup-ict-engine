@@ -1,0 +1,60 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.6976727813953488,
+    8.186046511627906e-7,
+    0.3023264
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "CrashRebound",
+      "mutation_id": "board-b-crashrebound-branch-rc-spa-v1",
+      "trade_count": 207,
+      "n_win": 142,
+      "n_loss": 65,
+      "n_breakeven": 0,
+      "temper": 0.5,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.6976727813953488,
+        8.186046511627906e-7,
+        0.3023264
+      ],
+      "diff": [
+        -0.3022832186046511,
+        -0.000021181395348837207,
+        0.3023044
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.6128345858850257,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 3.3676167871345277,
+      "bbn_log_loss_after": 0.6225934528736107,
+      "bbn_log_loss_delta": 2.745023334260917,
+      "bbn_contradiction_before": 0.6279753236714976,
+      "bbn_contradiction_after": 0.02336652367149754,
+      "bbn_contradiction_lift": 0.6046088000000001,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [],
+  "temper": 0.5,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 2.745023334260917,
+  "bbn_contradiction_lift": 0.6046088000000001,
+  "evidence_value_gate_passed": true
+}

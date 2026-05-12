@@ -1,0 +1,8 @@
+pdf_downloaded=ok
+parsed_rows_ge_6000=ok
+positive_candidates_ge_5000=ok
+matched_controls_ge_1000=ok
+isolated_verifier_schema_ready=ok
+canonical_live_intake_not_mutated=ok
+accepted_rows_added_zero=ok
+policy_review_required_no_goal_update=ok

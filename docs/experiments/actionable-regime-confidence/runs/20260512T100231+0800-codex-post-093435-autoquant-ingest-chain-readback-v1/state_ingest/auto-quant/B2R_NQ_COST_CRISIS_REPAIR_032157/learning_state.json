@@ -1,0 +1,315 @@
+{
+  "factor_profiles": {},
+  "factor_rankings": [],
+  "feedback_history": [
+    {
+      "timestamp": "2023-01-10T13:00:00Z",
+      "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+      "source": "auto_quant_post_093435_non_promoting_v2",
+      "run_id": "20260512T100231+0800-codex-post-093435-autoquant-ingest-chain-readback-v1-v2",
+      "trade_id": "tomac_nq_v2_1673276400000_1673355600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "TomacNQ_KillzoneBreakout",
+          "category": "structure_ict",
+          "direction": "Bull",
+          "value": -0.016895275419116045,
+          "confidence": 0.0,
+          "weight": 1552.0,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -1552.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_NQ_COST_CRISIS_REPAIR_032157:tomac_nq_v2_1673276400000_1673355600000",
+        "recommended_at": "2023-01-09T15:00:00+00:00",
+        "node_id": "Crisis",
+        "branch_id": "Crisis -> NQCostCrisisRepair",
+        "scenario_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout",
+        "path_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-01-11T20:00:00Z",
+      "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+      "source": "auto_quant_post_093435_non_promoting_v2",
+      "run_id": "20260512T100231+0800-codex-post-093435-autoquant-ingest-chain-readback-v1-v2",
+      "trade_id": "tomac_nq_v2_1673449200000_1673467200000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "TomacNQ_KillzoneBreakout",
+          "category": "structure_ict",
+          "direction": "Bull",
+          "value": 0.007298635850204188,
+          "confidence": 0.0,
+          "weight": 672.0,
+          "long_support": 672.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 672.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_NQ_COST_CRISIS_REPAIR_032157:tomac_nq_v2_1673449200000_1673467200000",
+        "recommended_at": "2023-01-11T15:00:00+00:00",
+        "node_id": "Crisis",
+        "branch_id": "Crisis -> NQCostCrisisRepair",
+        "scenario_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout",
+        "path_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-01-12T14:00:00Z",
+      "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+      "source": "auto_quant_post_093435_non_promoting_v2",
+      "run_id": "20260512T100231+0800-codex-post-093435-autoquant-ingest-chain-readback-v1-v2",
+      "trade_id": "tomac_nq_v2_1673532000000_1673532000000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "TomacNQ_KillzoneBreakout",
+          "category": "structure_ict",
+          "direction": "Bull",
+          "value": -0.02,
+          "confidence": 0.0,
+          "weight": 1874.88,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -1874.88,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_NQ_COST_CRISIS_REPAIR_032157:tomac_nq_v2_1673532000000_1673532000000",
+        "recommended_at": "2023-01-12T14:00:00+00:00",
+        "node_id": "Crisis",
+        "branch_id": "Crisis -> NQCostCrisisRepair",
+        "scenario_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout",
+        "path_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-01-18T15:00:00Z",
+      "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+      "source": "auto_quant_post_093435_non_promoting_v2",
+      "run_id": "20260512T100231+0800-codex-post-093435-autoquant-ingest-chain-readback-v1-v2",
+      "trade_id": "tomac_nq_v2_1673967600000_1674054000000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "TomacNQ_KillzoneBreakout",
+          "category": "structure_ict",
+          "direction": "Bull",
+          "value": 0.007262854233836755,
+          "confidence": 0.0,
+          "weight": 684.8,
+          "long_support": 684.8,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 684.8,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_NQ_COST_CRISIS_REPAIR_032157:tomac_nq_v2_1673967600000_1674054000000",
+        "recommended_at": "2023-01-17T15:00:00+00:00",
+        "node_id": "Crisis",
+        "branch_id": "Crisis -> NQCostCrisisRepair",
+        "scenario_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout",
+        "path_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-01-23T16:00:00Z",
+      "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+      "source": "auto_quant_post_093435_non_promoting_v2",
+      "run_id": "20260512T100231+0800-codex-post-093435-autoquant-ingest-chain-readback-v1-v2",
+      "trade_id": "tomac_nq_v2_1674486000000_1674489600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "TomacNQ_KillzoneBreakout",
+          "category": "structure_ict",
+          "direction": "Bull",
+          "value": 0.007964753293938318,
+          "confidence": 0.0,
+          "weight": 762.88,
+          "long_support": 762.88,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 762.88,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_NQ_COST_CRISIS_REPAIR_032157:tomac_nq_v2_1674486000000_1674489600000",
+        "recommended_at": "2023-01-23T15:00:00+00:00",
+        "node_id": "Crisis",
+        "branch_id": "Crisis -> NQCostCrisisRepair",
+        "scenario_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout",
+        "path_id": "Crisis -> NQCostCrisisRepair -> TomacNQ_KillzoneBreakout -> killzone_breakout",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    }
+  ],
+  "structural_prior_state": {
+    "nodes": {},
+    "branches": {},
+    "scenarios": {},
+    "paths": {},
+    "event_ledger": [],
+    "node_duration_priors": {},
+    "branch_transition_priors": {},
+    "node_temporal_posteriors": {},
+    "node_transition_posteriors": {},
+    "branch_temporal_posteriors": {},
+    "source_reliability_posteriors": {}
+  },
+  "last_updated": "2026-05-12T02:11:07.225845Z"
+}

@@ -1,0 +1,8 @@
+adapter_contract_written=PASS
+request_package_loaded=PASS
+shared_intake_not_mutated=PASS
+accepted_rows_zero=PASS
+strict_full_objective_false=PASS
+update_goal_false=PASS
+no_raw_data_committed=PASS
+no_external_requests=PASS

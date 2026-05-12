@@ -1,0 +1,197 @@
+{
+  "root_status": [
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": false,
+      "file_count": 0,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": []
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": false,
+      "file_count": 0,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": []
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": false,
+      "file_count": 0,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r5_recency_tmp",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": []
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": false,
+      "file_count": 0,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r5_recency_private_tmp",
+      "path": "/private/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": []
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": true,
+      "file_count": 2,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r3_native_subhour_tmp",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "sample_files": [
+        {
+          "mtime": "2026-05-12T06:35:34.137892",
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "size": 2400
+        },
+        {
+          "mtime": "2026-05-12T06:35:23.150451",
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size": 2786719721
+        }
+      ]
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": true,
+      "file_count": 2,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "sample_files": [
+        {
+          "mtime": "2026-05-12T06:35:34.137892",
+          "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "size": 2400
+        },
+        {
+          "mtime": "2026-05-12T06:35:23.150451",
+          "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size": 2786719721
+        }
+      ]
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": true,
+      "file_count": 4,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "missing_085042_run_root",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1",
+      "sample_files": [
+        {
+          "mtime": "2026-05-12T08:57:52.524961",
+          "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1/checks/current_objective_audit_after_083703_v1_assertions.out",
+          "size": 671
+        },
+        {
+          "mtime": "2026-05-12T08:57:52.524648",
+          "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1/current-objective-audit-after-083703-v1/current_objective_audit_after_083703_v1.json",
+          "size": 4174
+        },
+        {
+          "mtime": "2026-05-12T08:57:52.524364",
+          "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1/current-objective-audit-after-083703-v1/current_objective_audit_after_083703_v1.md",
+          "size": 5099
+        },
+        {
+          "mtime": "2026-05-12T08:57:52.524768",
+          "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T085042+0800-codex-current-objective-audit-after-083703-v1/current-objective-audit-after-083703-v1/prompt_to_artifact_checklist_after_083703_v1.csv",
+          "size": 1006
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "gate_disposition": "no_source_control_unlock",
+      "limitation": "Narrative case context only; no row-level positives or matched normal controls.",
+      "observed_signal": "Official CFTC release confirms alleged spoofing/layering across CME, NYMEX, COMEX, and CFE products with flip/cancel pattern context.",
+      "owner": "CFTC",
+      "route_id": "cftc_release_7264_15",
+      "route_type": "official_public_case_context",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7264-15"
+    },
+    {
+      "gate_disposition": "no_source_control_unlock",
+      "limitation": "PDF/order text only; no verifier-native row export package or matched controls.",
+      "observed_signal": "Administrative order text discusses book imbalance, trade-side/cancel-side behavior, and product coverage.",
+      "owner": "CFTC",
+      "route_id": "cftc_order_122016",
+      "route_type": "official_public_case_order",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfoystacherorder122016.pdf"
+    },
+    {
+      "gate_disposition": "no_source_control_unlock",
+      "limitation": "Court opinion summarizes data categories; underlying row-level data/exhibits are not exposed.",
+      "observed_signal": "Public opinion says data illustrated order imbalance, cancellation speed, iceberg usage, fill/cancellation rates, and market reaction categories.",
+      "owner": "N.D. Ill. / Justia mirror",
+      "route_id": "justia_doc_195",
+      "route_type": "public_court_order_context",
+      "url": "https://law.justia.com/cases/federal/district-courts/illinois/ilndce/1%3A2015cv09196/316889/195/"
+    },
+    {
+      "gate_disposition": "no_source_control_unlock",
+      "limitation": "Opinion-level data description only; no source-owned positive/control rows.",
+      "observed_signal": "Public opinion confirms CFTC allegations rely on examples, flip behavior, cancellation speeds, and market reaction summaries.",
+      "owner": "N.D. Ill. / Justia mirror",
+      "route_id": "justia_doc_237",
+      "route_type": "public_court_order_context",
+      "url": "https://law.justia.com/cases/federal/district-courts/illinois/ilndce/1%3A2015cv09196/316889/237/"
+    },
+    {
+      "gate_disposition": "no_source_control_unlock",
+      "limitation": "Resolution context only; no row-level source/control package acquired locally.",
+      "observed_signal": "Official settlement/resolution route for the Oystacher matter.",
+      "owner": "CFTC",
+      "route_id": "cftc_release_7515_16",
+      "route_type": "official_public_case_resolution",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7515-16"
+    }
+  ],
+  "summary": {
+    "board_a_sha256_before_artifact": "9afc53556f3088d68f14f4cf128208a11ae6651f2dca914e83db5e78c477d9ef",
+    "board_b_sha256_before_artifact": "3d58c1fe7432f36f6a34d5a32127335bf2f1eff0d33d63c6d69f1040f0c3d6e4",
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "explicit_user_selected_history": false,
+    "gate_result": "public_case_attachment_route_refresh_after_085131_v1=public_case_narrative_only_no_row_level_source_control_no_unlock",
+    "generated_at": "2026-05-12T08:59:54.098010+08:00",
+    "matched_normal_controls_acquired": false,
+    "missing_085042_run_root_present": true,
+    "promotion_allowed": false,
+    "public_routes_checked": 5,
+    "r3_native_subhour_present": true,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "row_level_positive_rows_acquired": false,
+    "run_id": "20260512T085808+0800-codex-public-case-attachment-route-refresh-after-085131-v1",
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "ticket_export_license_provenance_present": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  }
+}

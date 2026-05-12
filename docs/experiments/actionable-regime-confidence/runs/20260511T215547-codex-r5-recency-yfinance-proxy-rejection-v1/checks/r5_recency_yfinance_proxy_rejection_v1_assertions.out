@@ -1,0 +1,13 @@
+PASS decision=r5_recency_yfinance_proxy_rejection_v1=provider_ohlc_available_source_owned_rows_not_acquired
+PASS source_panel_date_max=2026-01-30
+PASS provider_rows_available_for_all_targets=true
+PASS verifier_before_status=blocked
+PASS verifier_after_status=blocked
+PASS extension_files_created=false
+PASS source_owned_rows_acquired=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=true

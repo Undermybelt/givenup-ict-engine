@@ -1,0 +1,14 @@
+gate_result=missing_artifact_reconciliation_after_061659_v1=061621_non_counting_missing_artifacts_061748_absent_no_promotion
+061421_count_once_valid=true
+061659_count_once_valid=true
+061621_files_observed=0
+061621_counting=false
+061748_present=false
+061748_counting=false
+required_target_roots_absent=true
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

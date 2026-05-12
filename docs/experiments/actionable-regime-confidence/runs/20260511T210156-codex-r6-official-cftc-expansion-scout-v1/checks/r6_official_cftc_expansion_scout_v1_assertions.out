@@ -1,0 +1,10 @@
+PASS decision=r6_official_cftc_expansion_scout_v1=official_candidates_found_rows_not_acquired
+PASS official_sources_checked=9
+PASS candidate_sources=9
+PASS same_schema_positive_rows_added=0
+PASS same_schema_normal_controls_added=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

@@ -1,0 +1,503 @@
+{
+  "board_hash_before_artifact": "b2f483d59d80b9129b0c70204ba6fde219d1f6ab8349ac0caeb6026a20194bd9",
+  "candidate_file_listings": {
+    "marketsignal/marketsignal-ai-feature-feed-mag-7-stocks": {
+      "compatible_source_rows_found": false,
+      "downloaded_row_data": false,
+      "exact_r3_file_candidates": [],
+      "exact_r5_file_candidates": [],
+      "exit": 0,
+      "file_count": 7,
+      "ref": "marketsignal/marketsignal-ai-feature-feed-mag-7-stocks",
+      "sample_files": [
+        {
+          "label_named": false,
+          "name": "AAPL_Features_Sample.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-15 18:27:33.137000",
+            "name": "AAPL_Features_Sample.csv",
+            "size": "23244"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "AMZN_Features_Sample.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-15 18:27:33.191000",
+            "name": "AMZN_Features_Sample.csv",
+            "size": "23294"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "GOOG_Features_Sample.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-15 18:27:33.185000",
+            "name": "GOOG_Features_Sample.csv",
+            "size": "21453"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "META_Features_Sample.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-15 18:27:33.214000",
+            "name": "META_Features_Sample.csv",
+            "size": "23305"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "MSFT_Features_Sample.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-15 18:27:33.216000",
+            "name": "MSFT_Features_Sample.csv",
+            "size": "21229"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "NVDA_Features_Sample.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-15 18:27:33",
+            "name": "NVDA_Features_Sample.csv",
+            "size": "23612"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "TSLA_Features_Sample.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-15 18:27:33.234000",
+            "name": "TSLA_Features_Sample.csv",
+            "size": "23517"
+          }
+        }
+      ]
+    },
+    "sergionefedov/crypto-microstructure": {
+      "compatible_source_rows_found": false,
+      "downloaded_row_data": false,
+      "exact_r3_file_candidates": [],
+      "exact_r5_file_candidates": [],
+      "exit": 0,
+      "file_count": 6,
+      "ref": "sergionefedov/crypto-microstructure",
+      "sample_files": [
+        {
+          "label_named": false,
+          "name": "cross_exchange_spread.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-17 15:13:08.975000",
+            "name": "cross_exchange_spread.csv",
+            "size": "488881"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "funding_rates.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-17 15:13:09.021000",
+            "name": "funding_rates.csv",
+            "size": "741636"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "liquidations.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-17 15:13:09.072000",
+            "name": "liquidations.csv",
+            "size": "1036941"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "ohlcv_daily.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-17 15:13:09.113000",
+            "name": "ohlcv_daily.csv",
+            "size": "1072987"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "on_chain_metrics.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-17 15:13:09.088000",
+            "name": "on_chain_metrics.csv",
+            "size": "194467"
+          }
+        },
+        {
+          "label_named": true,
+          "name": "regime_features.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-03-17 15:13:09.083000",
+            "name": "regime_features.csv",
+            "size": "154495"
+          }
+        }
+      ]
+    },
+    "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026": {
+      "compatible_source_rows_found": false,
+      "downloaded_row_data": false,
+      "exact_r3_file_candidates": [],
+      "exact_r5_file_candidates": [],
+      "exit": 0,
+      "file_count": 20,
+      "ref": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+      "sample_files": [
+        {
+          "label_named": false,
+          "name": "BYBIT_0GUSDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:43:24.267000",
+            "name": "BYBIT_0GUSDT_SPOT_5m.csv",
+            "size": "25199303"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_1INCHUSDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:43:32.657000",
+            "name": "BYBIT_1INCHUSDT_SPOT_5m.csv",
+            "size": "166013502"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_2ZUSDC_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:29.544000",
+            "name": "BYBIT_2ZUSDC_SPOT_5m.csv",
+            "size": "22867963"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_2ZUSDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:47.719000",
+            "name": "BYBIT_2ZUSDT_SPOT_5m.csv",
+            "size": "24521053"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_A8USDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:45.216000",
+            "name": "BYBIT_A8USDT_SPOT_5m.csv",
+            "size": "72874495"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_AAPLXUSDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:44",
+            "name": "BYBIT_AAPLXUSDT_SPOT_5m.csv",
+            "size": "31881534"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_AAVEUSDC_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:43.081000",
+            "name": "BYBIT_AAVEUSDC_SPOT_5m.csv",
+            "size": "34510188"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_AAVEUSDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:46.157000",
+            "name": "BYBIT_AAVEUSDT_SPOT_5m.csv",
+            "size": "171610005"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_ACHUSDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:44.958000",
+            "name": "BYBIT_ACHUSDT_SPOT_5m.csv",
+            "size": "166317093"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_ACSUSDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:46.478000",
+            "name": "BYBIT_ACSUSDT_SPOT_5m.csv",
+            "size": "129433330"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_ADAEUR_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:44.364000",
+            "name": "BYBIT_ADAEUR_SPOT_5m.csv",
+            "size": "101175149"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_ADAMNT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:42.951000",
+            "name": "BYBIT_ADAMNT_SPOT_5m.csv",
+            "size": "21795195"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_ADAUSDC_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:46.995000",
+            "name": "BYBIT_ADAUSDC_SPOT_5m.csv",
+            "size": "151564527"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_ADAUSDT_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:45.239000",
+            "name": "BYBIT_ADAUSDT_SPOT_5m.csv",
+            "size": "168558317"
+          }
+        },
+        {
+          "label_named": false,
+          "name": "BYBIT_AEDZUSDC_SPOT_5m.csv",
+          "r3_name_match": false,
+          "r5_name_match": false,
+          "raw": {
+            "creationDate": "2026-05-09 10:44:46.208000",
+            "name": "BYBIT_AEDZUSDC_SPOT_5m.csv",
+            "size": "5442217"
+          }
+        }
+      ]
+    }
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "target_root_mutated": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "gate_result": "r3_r5_public_source_live_search_rerun_v2=no_exact_r3_r5_rows_no_promotion",
+  "generated_at": "2026-05-11T22:02:48.947882+00:00",
+  "huggingface_results": {
+    "AAPL 15m regime label": {
+      "exit": 0,
+      "query": "AAPL 15m regime label",
+      "rows": 0,
+      "summaries": []
+    },
+    "Bull Bear Sideways Crisis market regime labels": {
+      "exit": 0,
+      "query": "Bull Bear Sideways Crisis market regime labels",
+      "rows": 0,
+      "summaries": []
+    },
+    "IXIC 15m regime label": {
+      "exit": 0,
+      "query": "IXIC 15m regime label",
+      "rows": 0,
+      "summaries": []
+    },
+    "MainRegimeV2 market regime labels": {
+      "exit": 0,
+      "query": "MainRegimeV2 market regime labels",
+      "rows": 0,
+      "summaries": []
+    },
+    "NQ futures 15m regime label": {
+      "exit": 0,
+      "query": "NQ futures 15m regime label",
+      "rows": 0,
+      "summaries": []
+    },
+    "market regime labels intraday": {
+      "exit": 0,
+      "query": "market regime labels intraday",
+      "rows": 0,
+      "summaries": []
+    },
+    "post 2026 stock market regime labels": {
+      "exit": 0,
+      "query": "post 2026 stock market regime labels",
+      "rows": 0,
+      "summaries": []
+    }
+  },
+  "kaggle_results": {
+    "AAPL 15m regime label": {
+      "exit": 0,
+      "r3_metadata_hits": 0,
+      "r5_metadata_hits": 0,
+      "rows": 0,
+      "summaries": []
+    },
+    "Bull Bear Sideways Crisis market regime labels": {
+      "exit": 0,
+      "r3_metadata_hits": 0,
+      "r5_metadata_hits": 0,
+      "rows": 0,
+      "summaries": []
+    },
+    "IXIC 15m regime label": {
+      "exit": 0,
+      "r3_metadata_hits": 0,
+      "r5_metadata_hits": 0,
+      "rows": 0,
+      "summaries": []
+    },
+    "MainRegimeV2 market regime labels": {
+      "exit": 0,
+      "r3_metadata_hits": 0,
+      "r5_metadata_hits": 0,
+      "rows": 0,
+      "summaries": []
+    },
+    "NQ futures 15m regime label": {
+      "exit": 0,
+      "r3_metadata_hits": 0,
+      "r5_metadata_hits": 0,
+      "rows": 0,
+      "summaries": []
+    },
+    "market regime labels intraday": {
+      "exit": 0,
+      "r3_metadata_hits": 0,
+      "r5_metadata_hits": 0,
+      "rows": 1,
+      "summaries": [
+        {
+          "r3_metadata_match": false,
+          "r5_metadata_match": false,
+          "raw": {
+            "downloadCount": "116",
+            "lastUpdated": "2026-05-09 10:41:59.257000",
+            "ref": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026",
+            "size": "18264837966",
+            "title": "Bybit Full-Lifetime Multi-Crypto Historical Data",
+            "usabilityRating": "0.7647059",
+            "voteCount": "1"
+          },
+          "ref": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026"
+        }
+      ]
+    },
+    "post 2026 stock market regime labels": {
+      "exit": 0,
+      "r3_metadata_hits": 0,
+      "r5_metadata_hits": 0,
+      "rows": 1,
+      "summaries": [
+        {
+          "r3_metadata_match": false,
+          "r5_metadata_match": false,
+          "raw": {
+            "downloadCount": "4",
+            "lastUpdated": "2026-05-06 15:14:26.307000",
+            "ref": "svenneawolf/geopolitics-nationfiles-stability-index-nfsi",
+            "size": "1424752",
+            "title": "Geopolitics - NationFiles Stability Index (NFSI)",
+            "usabilityRating": "0.625",
+            "voteCount": "1"
+          },
+          "ref": "svenneawolf/geopolitics-nationfiles-stability-index-nfsi"
+        }
+      ]
+    }
+  },
+  "run_id": "20260512T055829+0800-codex-r3-r5-public-source-live-search-rerun-v2",
+  "scope": "durable 055829 public-source search artifact restoration",
+  "target_roots_after": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "target_roots_before": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "totals": {
+    "candidate_file_rows": 33,
+    "compatible_source_rows_found": false,
+    "huggingface_rows": 0,
+    "kaggle_rows": 2,
+    "r3_metadata_hits": 0,
+    "r5_metadata_hits": 0
+  }
+}

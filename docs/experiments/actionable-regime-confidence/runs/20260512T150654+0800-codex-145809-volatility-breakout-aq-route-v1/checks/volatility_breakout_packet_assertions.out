@@ -1,0 +1,8 @@
+pass:branch_path_present:all selected rows preserve exact branch path
+pass:trade_count_ge_300:selected rows=348
+pass:six_provider_rows_emitted:provider matrix contains six required provider rows
+fail_closed:all_six_providers_acquired:TVR/Kraken/Bybit absent from this 145809 seed
+pass:walk_forward_any_pass:passing folds=2/10
+fail_closed:walk_forward_all_pass:passing folds=2/10
+fail_closed:auto_quant_native_backtest:this packet is derived from provider-backed screen rows, not AQ-native backtest
+fail_closed:promotion_allowed:screen/packet only

@@ -1,0 +1,4 @@
+commit	event	strategy_name	sharpe	max_dd	note
+4126343	init	TomacKillzoneBreakout	-0.8525	-32.6499	high-wr-61pct-but-near-breakeven-sol-positive
+4126343	init	TomacAggressiveBE	-5.0550	-51.7646	trailing-stop-too-tight-1379-trades-pf-0.52
+91267fc	fix	TomacRRWinRate	-0.8480	-26.2574	low-wr-38pct-rsi-lt-25-mean-rev-too-shallow-on-1h-crypto

@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "fb64e9907b7375bc",
+  "dry_run": false,
+  "feedback_records_inserted": 11425,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_NQ_COST_CRISIS_REPAIR_032157_20260511T192502.761803000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "board_b_032157_real_trades",
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "trades_applied": 11425,
+  "trades_invalid": 3990,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/nq_cost_crisis_repair_real_trades_v3.jsonl",
+  "trades_total": 15415
+}

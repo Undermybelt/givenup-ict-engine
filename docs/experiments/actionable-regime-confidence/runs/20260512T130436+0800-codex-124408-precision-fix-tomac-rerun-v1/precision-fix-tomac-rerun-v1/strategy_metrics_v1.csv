@@ -1,0 +1,4 @@
+strategy,trade_csv,trade_rows,trade_count,total_profit_pct,win_rate_pct,sharpe,profit_factor,max_drawdown_pct
+TomacAggressiveBE,docs/experiments/actionable-regime-confidence/runs/20260512T130436+0800-codex-124408-precision-fix-tomac-rerun-v1/trade-exports/TomacAggressiveBE_trades.csv,94,94,2.72,24.46808510638298,3.175190735078109,1.472592122842784,-3.632529542484822
+TomacKillzoneBreakout,docs/experiments/actionable-regime-confidence/runs/20260512T130436+0800-codex-124408-precision-fix-tomac-rerun-v1/trade-exports/TomacKillzoneBreakout_trades.csv,49,49,-2.25,20.408163265306122,-2.4521679209406284,0.6449873917038034,-3.8927271036548814
+TomacRRWinRate,docs/experiments/actionable-regime-confidence/runs/20260512T130436+0800-codex-124408-precision-fix-tomac-rerun-v1/trade-exports/TomacRRWinRate_trades.csv,1,1,0.0,0.0,-100.0,0.0,-0.0

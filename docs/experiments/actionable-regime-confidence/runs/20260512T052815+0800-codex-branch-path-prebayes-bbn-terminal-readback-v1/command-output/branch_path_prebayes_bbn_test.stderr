@@ -1,0 +1,4 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on artifact directory
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.29s
+     Running tests/regime_consumer_bundle_adapter.rs (/tmp/ict-engine-codex-regime-bundle-bbn-target/debug/deps/regime_consumer_bundle_adapter-a6418140b6c67f0e)

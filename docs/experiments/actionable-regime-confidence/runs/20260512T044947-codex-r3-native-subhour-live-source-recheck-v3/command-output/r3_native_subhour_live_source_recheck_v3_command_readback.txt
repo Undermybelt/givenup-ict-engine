@@ -1,0 +1,30 @@
+Commands/readbacks used for this packet:
+
+1. Required root precheck:
+   ABSENT /tmp/ict-engine-native-subhour-source-label-intake
+
+2. Kaggle CLI:
+   kaggle datasets list -s 'AAPL 15m regime label' --csv
+   No datasets found
+
+   kaggle datasets list -s 'IXIC 15m regime label' --csv
+   No datasets found
+
+   kaggle datasets list -s 'intraday market regime labels' --csv
+   ref,title,size,lastUpdated,downloadCount,voteCount,usabilityRating
+   thisathdamiru/bybit-multi-crypto-historical-data-2020-2026,Bybit Full-Lifetime Multi-Crypto Historical Data,18264837966,2026-05-09 10:41:59.257000,116,1,0.7647059
+
+3. Hugging Face API:
+   GET https://huggingface.co/api/datasets?search=AAPL%2015m%20regime%20label&limit=5
+   STATUS 200, zero dataset rows
+
+   GET https://huggingface.co/api/datasets?search=IXIC%2015m%20regime%20label&limit=5
+   STATUS 200, zero dataset rows
+
+   GET https://huggingface.co/api/datasets?search=intraday%20market%20regime%20labels&limit=5
+   STATUS 200, zero dataset rows
+
+4. Hugging Face first rows:
+   GET https://datasets-server.huggingface.co/first-rows?dataset=akashkumar5%2FMulti_Timeframe_Market_Regimes_HMM6_BTCUSD&config=default&split=train
+   STATUS 200
+   First schema fields include timestamp, open_5m, high_5m, low_5m, close_5m, volume_5m, open_15m, high_15m, low_15m, close_15m, volume_15m.

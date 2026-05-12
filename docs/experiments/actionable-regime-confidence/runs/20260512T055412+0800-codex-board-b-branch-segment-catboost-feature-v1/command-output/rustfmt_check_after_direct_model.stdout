@@ -1,0 +1,16 @@
+Diff in /Users/thrill3r/projects-ict-engine/ict-engine/src/belief_core/ranking_label.rs:1850:
+     #[test]
+     fn branch_segment_fields_are_direct_model_categorical_features() {
+         let branch_path = "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12";
+-        let mut row =
+-            test_target_row("structural-candidates:NQ:test", branch_path, "unobserved", 0.5, None);
++        let mut row = test_target_row(
++            "structural-candidates:NQ:test",
++            branch_path,
++            "unobserved",
++            0.5,
++            None,
++        );
+         row.regime_profit_branch_path = Some(branch_path.to_string());
+         row.parent_regime_root = Some("Crisis".to_string());
+         row.main_regime = Some("Crisis".to_string());

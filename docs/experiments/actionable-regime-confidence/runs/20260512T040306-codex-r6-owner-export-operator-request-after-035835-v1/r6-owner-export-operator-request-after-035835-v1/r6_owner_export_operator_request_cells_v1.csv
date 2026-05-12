@@ -1,0 +1,12 @@
+priority,split_family,cell,additional_pair_rows_needed_min,route_hint
+1,chronological_group_split,chronological_calibration,55,"Same approved owner/export family, balanced by chronological split bucket"
+2,chronological_group_split,chronological_test,54,"Same approved owner/export family, balanced by chronological split bucket"
+3,chronological_group_split,chronological_train,33,"Same approved owner/export family, balanced by chronological split bucket"
+4,heldout_symbol_exact,CBOT soybean call options,73,"CME/CBOT owner export with source-owned broad normal controls"
+5,heldout_symbol_exact,COMEX copper futures,73,"CME/COMEX owner export with source-owned broad normal controls"
+6,heldout_symbol_exact,LME copper futures / COMEX copper futures cross-market example,73,"LME plus linked COMEX owner export or licensed cross-market support route"
+7,heldout_venue_exact,LME and COMEX,73,"LME plus COMEX owner export or licensed cross-venue support route"
+8,heldout_symbol_exact,"10-Year T-Note Futures contract, December 2011 expiry",72,"CME DataMine Market Depth or Market-by-Order owner export"
+9,heldout_symbol_exact,"10-Year T-Note Futures contract, March 2010 expiry",72,"CME DataMine Market Depth or Market-by-Order owner export"
+10,heldout_symbol_exact,COMEX Gold Futures June delivery,72,"CME/COMEX owner export with source-owned broad normal controls"
+11,heldout_symbol_exact,COMEX Silver Futures,72,"CME/COMEX owner export with source-owned broad normal controls"

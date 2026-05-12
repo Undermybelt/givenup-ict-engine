@@ -1,0 +1,18 @@
+autoquant_run_readback_after_data_ready_v1 assertions
+
+PASS threaded prepare root inspected
+PASS local cache run root inspected
+PASS managed state run root inspected
+PASS empty 065822 placeholder not counted as evidence
+PASS /tmp/ict-engine-board-a-064259-runtime-v1 status reached dependency_ready_data_ready
+PASS Auto-Quant prepare healthy with run-local resolver shim
+PASS Auto-Quant selected run success false
+PASS successful backtests 0
+PASS visible run failures are market-load/runtime failures, not source/control unlocks
+PASS R6 owner-export unlock false
+PASS R5 recency unlock false
+PASS R3 native-subhour unlock false
+PASS canonical merge false
+PASS downstream promotion rerun false
+PASS trade usable false
+PASS update_goal false

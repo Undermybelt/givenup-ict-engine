@@ -1,0 +1,380 @@
+{
+  "accepted_rows_added": 0,
+  "audit_id": "current_goal_strict_gap_audit_v59",
+  "auto_quant": {
+    "data_ready": true,
+    "healthy": true,
+    "managed_dir": "/Users/thrill3r/Auto-Quant",
+    "next_step": {
+      "action_type": "run_command",
+      "blocked_reason": "auto_quant_seed_strategies_required",
+      "deferred_command": "blocked: create 2-3 active non-underscore strategy files under /Users/thrill3r/Auto-Quant/user_data/strategies before uv run --with ta-lib /Users/thrill3r/Auto-Quant/run.py",
+      "prompt": null,
+      "user_input_required": false
+    },
+    "status": "dependency_ready_seed_required",
+    "strategy_files": {
+      "active_count": 0,
+      "active_non_underscore_strategy_files": [],
+      "python_files": [],
+      "strategies_dir": "/Users/thrill3r/Auto-Quant/user_data/strategies"
+    }
+  },
+  "blocker": "Scoped consumer 95 is preserved, but strict completion is blocked by R6 chronological/symbol/venue/species deficits plus provider/runtime readiness gaps: IBKR and TradingView MCP are not ready, kraken_public is not ready, and local Auto-Quant has no active non-underscore strategy files.",
+  "board_sha256_at_start": "fe14bbcbfe974bf6cb5830e9ad84436014209f1bb535db9ca30f9d7cdf2757a8",
+  "checklist_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/current-goal-strict-gap-audit/prompt_to_artifact_checklist_v59.csv",
+  "checklist_status": "blocked",
+  "commands": [
+    {
+      "cmd": "/opt/homebrew/opt/python@3.14/bin/python3.14 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_direct_manipulation_verifier.exit",
+      "name": "direct_manipulation_verifier",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_direct_manipulation_verifier.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_direct_manipulation_verifier.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider ibkr --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_ibkr_agent.exit",
+      "name": "provider_status_ibkr_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_ibkr_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_ibkr_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider tradingview_mcp --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_tradingview_mcp_agent.exit",
+      "name": "provider_status_tradingview_mcp_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_tradingview_mcp_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_tradingview_mcp_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider yfinance --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_yfinance_agent.exit",
+      "name": "provider_status_yfinance_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_yfinance_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_yfinance_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_public --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_kraken_public_agent.exit",
+      "name": "provider_status_kraken_public_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_kraken_public_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_kraken_public_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_cli --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_kraken_cli_agent.exit",
+      "name": "provider_status_kraken_cli_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_kraken_cli_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_provider_status_kraken_cli_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-v59-autoquant --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_auto_quant_status_local.exit",
+      "name": "auto_quant_status_local",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_auto_quant_status_local.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_auto_quant_status_local.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-board-a-v59-demo-chain --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_demo_agent.exit",
+      "name": "analyze_demo_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_demo_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_demo_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol DEMO --state-dir /tmp/ict-engine-board-a-v59-demo-chain --refresh",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_pre_bayes_status_demo.exit",
+      "name": "pre_bayes_status_demo",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_pre_bayes_status_demo.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_pre_bayes_status_demo.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-board-a-v59-demo-chain --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_policy_training_status_demo.exit",
+      "name": "policy_training_status_demo",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_policy_training_status_demo.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_policy_training_status_demo.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-board-a-v59-demo-chain --refresh --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_workflow_status_demo_agent.exit",
+      "name": "workflow_status_demo_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_workflow_status_demo_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_workflow_status_demo_agent.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-board-a-v59-demo-chain --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_workflow_status_execution_candidate_demo.exit",
+      "name": "workflow_status_execution_candidate_demo",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_workflow_status_execution_candidate_demo.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_workflow_status_execution_candidate_demo.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol DEMO --state-dir /tmp/ict-engine-board-a-v59-demo-chain",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_export_structural_path_ranking_target_demo.exit",
+      "name": "export_structural_path_ranking_target_demo",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_export_structural_path_ranking_target_demo.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_export_structural_path_ranking_target_demo.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol ^VIX --futures-backend yfinance --aux-backend yfinance --state-dir /tmp/ict-engine-board-a-v59-yfinance-live --compact",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_live_nq_yfinance_compact.exit",
+      "name": "analyze_live_nq_yfinance_compact",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_live_nq_yfinance_compact.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_live_nq_yfinance_compact.out",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze-live --symbol BTCUSD --futures-symbol BTC/USD --spot-symbol BTC/USD --futures-backend kraken_public --aux-backend kraken_public --state-dir /tmp/ict-engine-board-a-v59-kraken-live --compact",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_live_btc_kraken_public_compact.exit",
+      "name": "analyze_live_btc_kraken_public_compact",
+      "returncode": 1,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_live_btc_kraken_public_compact.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/command-output/current_goal_strict_gap_audit_v59_analyze_live_btc_kraken_public_compact.out",
+      "timed_out": false
+    }
+  ],
+  "consumer_map": {
+    "accepted_95_count": 5,
+    "active_lane_count": 5,
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+    "lanes": [
+      {
+        "abstain_or_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion.",
+        "accepted_95": true,
+        "confidence_floor": 0.9797225384,
+        "consumer_factor": "market_regime_context",
+        "regime": "Bull",
+        "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+        "taxonomy_role": "MainRegimeV2_price_root"
+      },
+      {
+        "abstain_or_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion.",
+        "accepted_95": true,
+        "confidence_floor": 0.963920242,
+        "consumer_factor": "market_regime_context",
+        "regime": "Bear",
+        "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+        "taxonomy_role": "MainRegimeV2_price_root"
+      },
+      {
+        "abstain_or_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion.",
+        "accepted_95": true,
+        "confidence_floor": 0.9529358324,
+        "consumer_factor": "market_regime_context",
+        "regime": "Sideways",
+        "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+        "taxonomy_role": "MainRegimeV2_price_root"
+      },
+      {
+        "abstain_or_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion.",
+        "accepted_95": true,
+        "confidence_floor": 0.9619059575,
+        "consumer_factor": "market_regime_context",
+        "regime": "Crisis",
+        "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+        "taxonomy_role": "MainRegimeV2_price_root"
+      },
+      {
+        "abstain_or_limit": "Scoped direct coverage only. Missing or blocked varieties remain abstain: pump_dump_social_text_or_twitter, spoofing_layering_enforcement_cases, local_spoofing_repos, quote_stuffing, pinging, bear_raid_or_painting_tape",
+        "accepted_95": true,
+        "confidence_floor": 0.967945,
+        "consumer_factor": "direct_manipulation_overlay",
+        "regime": "Manipulation",
+        "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.md | docs/experiments/actionable-regime-confidence/runs/20260511T101019-codex-zenodo-dex-selftrade-direct-gate/direct-gate/zenodo_dex_selftrade_direct_gate_report.md | docs/experiments/actionable-regime-confidence/runs/20260511T102332-codex-zenodo-dex-consecutive-selftrade-gate/direct-gate/zenodo_dex_consecutive_selftrade_gate.md | docs/experiments/actionable-regime-confidence/runs/20260511T111122-codex-midsummer-meme-direct-wash-audit/midsummer-meme-audit/midsummer_meme_direct_wash_audit.md | docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.md",
+        "taxonomy_role": "separate_direct_overlay"
+      }
+    ]
+  },
+  "external_requests_sent": true,
+  "gate_result": "current_goal_strict_gap_audit_v59=scoped_consumer_95_passes_strict_full_goal_still_blocked",
+  "generated_at_utc": "2026-05-11T16:13:10.885203+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Do not chase more pooled R6 rows. Either redesign the validation axis away from impossible exact-symbol/exact-venue all-bucket closure, or acquire bulk direct rows and matched controls that raise each chosen validation bucket to at least 73 all-correct rows; then rerun the direct verifier and downstream chain.",
+  "objective_restatement": {
+    "board_file": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "success_criteria": [
+      "Every active regime lane has >=95% calibrated confidence.",
+      "The same confidence is validated across other markets and other periods/timeframes.",
+      "Provider paths IBKR, TradingViewRemix, yfinance, Kraken, local cache, and Auto-Quant cache are checked.",
+      "ict-engine downstream chain is exercised through filter/pre-Bayes, BBN, CatBoost/policy-training, and execution tree/workflow surfaces.",
+      "Do not overwrite concurrent board edits or mutate unrelated runtime code."
+    ]
+  },
+  "providers": [
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "tradingview_mcp",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "live_runtime",
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available;public_yahoo_http_endpoints",
+      "status": "ready"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "local_runtime"
+      ],
+      "observed": true,
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    }
+  ],
+  "r6_current": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T235815-codex-r6-live-intake-rehydrate-calibration-v1/r6-live-intake-rehydrate-calibration/r6_live_intake_rehydrate_calibration_v1.json",
+    "chronological_split_gate": false,
+    "direct_species_closed": false,
+    "direct_verifier": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "canonical_intake_root",
+        "generated_at_utc",
+        "materialization_note",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "source_v56_json",
+        "source_v56_negative_csv",
+        "source_v56_positive_csv",
+        "thresholds_relaxed",
+        "trade_usable",
+        "v56_gate_result",
+        "v56_negative_sha256",
+        "v56_positive_sha256"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "heldout_symbol_gate": false,
+    "heldout_venue_gate": false,
+    "matched_negative_rows": 73,
+    "negative_labels": {
+      "matched_negative_normal_activity": 68,
+      "normal_control": 5
+    },
+    "pooled_direct_gate": true,
+    "pooled_min_wilson95_lcb": 0.950006246616,
+    "positive_labels": {
+      "positive_spoofing_layering": 73
+    },
+    "positive_rows": 73,
+    "required_all_correct_rows_for_wilson95": 73,
+    "sidecar_axis_gate": true,
+    "split_deficit_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000724-codex-current-goal-strict-gap-audit-v59/current-goal-strict-gap-audit/r6_split_deficits_v59.csv",
+    "split_summary": {
+      "chronological_group_split": {
+        "bucket_count": 3,
+        "failing_bucket_count": 3,
+        "passes": false,
+        "total_negative_deficit_to_wilson95": 146,
+        "total_positive_deficit_to_wilson95": 146,
+        "worst_min_wilson95_lcb": 0.815676339628
+      },
+      "heldout_symbol_exact": {
+        "bucket_count": 36,
+        "failing_bucket_count": 36,
+        "passes": false,
+        "total_negative_deficit_to_wilson95": 2555,
+        "total_positive_deficit_to_wilson95": 2555,
+        "worst_min_wilson95_lcb": 0.0
+      },
+      "heldout_venue_exact": {
+        "bucket_count": 11,
+        "failing_bucket_count": 11,
+        "passes": false,
+        "total_negative_deficit_to_wilson95": 730,
+        "total_positive_deficit_to_wilson95": 730,
+        "worst_min_wilson95_lcb": 0.0
+      },
+      "pooled_all_source_rows": {
+        "bucket_count": 1,
+        "failing_bucket_count": 0,
+        "passes": true,
+        "total_negative_deficit_to_wilson95": 0,
+        "total_positive_deficit_to_wilson95": 0,
+        "worst_min_wilson95_lcb": 0.950006246616
+      }
+    }
+  },
+  "raw_data_committed": false,
+  "run_id": "20260512T000724-codex-current-goal-strict-gap-audit-v59",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

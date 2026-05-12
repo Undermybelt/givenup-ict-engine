@@ -1,0 +1,21 @@
+ref,title,size,lastUpdated,downloadCount,voteCount,usabilityRating
+mafaqbhatti/stock-market-regimes-20002026,Stock Market Regimes (2000–2026),14239487,2026-02-01 02:25:29.437000,229,45,1.0
+krupalpatel07/gold-price-dynamics,Gold Price Dynamics,85982,2026-03-03 05:42:46,2889,60,1.0
+rifatalam3/gold-price-trends,Gold Price Trends,85994,2026-04-06 14:00:56.563000,1614,47,1.0
+bsthere/mercedes-stock-data-1996-2026,Mercedes-Benz Stock Data (1996-2026),194202,2026-02-26 13:52:53,498,37,1.0
+ranodipghosh/top-50-crypto-market-data-daily-usd,"Top 50 Crypto Market Data (Daily, USD)",5050,2026-01-24 17:37:58.133000,682,34,0.9411765
+kanchana1990/world-bank-commodity-price-intelligence-19602026,World Bank Commodity Price Intelligence 1960–2026,2231883,2026-03-16 11:22:36.463000,552,44,1.0
+igormerlinicomposer/herding-based-market-regime-dataset,Herding-Based Market Regime Dataset,39816,2026-04-13 08:46:58,4,1,1.0
+krupalpatel07/wti-crude-oil,WTI Crude Oil,117856,2026-03-03 05:30:18.767000,133,16,1.0
+nickdatak/us-market-regimes-dataset-1995-2024,US Market Regimes Dataset (1995-2024),163252,2026-01-23 12:42:22,31,1,1.0
+sergionefedov/oil-and-geopolitics-9k-daily-obs-brent-35-years,Oil and Geopolitics 9K daily obs Brent 35 years,229563,2026-05-07 10:55:18,565,27,1.0
+darkmatternet/s-and-p-500-stocks-25-years-of-data-updated-daily,S&P 500 Stocks: 25 Years of Data (Updated Daily),104570337,2026-05-10 22:34:10,876,31,1.0
+kaushalnandania/crypto-data-2014-2026,Top 50 Cryptocurrency Data (2014 - 2026),8925801,2026-02-17 08:59:51,710,26,1.0
+aaronnorman/2023-global-prosperity-index-w-region-politics,2023 Global Prosperity Index w/ region politics,5940,2024-07-14 17:10:00.013000,1057,24,1.0
+rockyt07/stock-market-sensex-nifty-all-time-dataset,Stock Market Sensex & Nifty All-time Dataset,59549439,2025-11-13 12:17:40,1281,67,1.0
+kanchana1990/tech-giants-and-global-macroeconomic-indicators,Tech Giants & Global Macroeconomic Indicators,878030,2026-03-12 05:32:05.367000,184,32,1.0
+kanchana1990/bis-global-debt-securities-intelligence-19622025,BIS Global Debt Securities Intelligence 1962–2025,28925723,2026-03-18 19:20:43.603000,182,31,1.0
+ahaanverma00/nifty-500-market-and-behavior-regime-dataset,NIFTY 500 Market & Behavior Regime Dataset,1655332,2026-04-15 15:25:28.867000,14,1,0.7647059
+sergionefedov/synthetic-limit-order-book-market-microstructure,Limit Order Book 10 days · 3 market regimes ,16204538,2026-03-16 17:19:19,3,1,0.9411765
+krupalpatel07/silver-market-intelligence-dataset,Silver Price Historical Dataset,82974,2026-03-05 04:31:17.297000,48,7,1.0
+darkmatternet/daily-crypto-market-tracker,Daily Crypto Market Tracker CoinGecko,33338,2026-05-10 22:27:46,54,13,0.9411765

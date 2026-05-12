@@ -1,0 +1,7 @@
+provider_status_exit_zero=PASS
+auto_quant_status_exit_zero=PASS
+provider_json_parsed=PASS
+auto_quant_json_parsed=PASS
+downstream_chain_not_rerun_without_canonical_merge=PASS
+accepted_rows_zero=PASS
+update_goal_false=PASS

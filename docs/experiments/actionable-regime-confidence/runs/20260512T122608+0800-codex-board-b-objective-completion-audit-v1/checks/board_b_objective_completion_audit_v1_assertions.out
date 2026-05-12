@@ -1,0 +1,14 @@
+PASS run_id=20260512T122608+0800-codex-board-b-objective-completion-audit-v1
+PASS checklist_rows=8
+FAIL_CLOSED completion_achieved=false
+FAIL_CLOSED missing_requirements=2
+PASS partial_requirements=0
+PASS update_goal_not_called=true
+PASS requirement=Use the authoritative Board B markdown and preserve multi-agent append-only behavior status=covered
+PASS requirement=Regime-profit branch path is rooted as main -> sub -> sub_sub_or_profit_factor -> profit_factor status=covered
+PASS requirement=Required provider evidence includes IBKR, TradingViewRemix/TVR, YF, and Kraken status=covered
+PASS requirement=Operate real chain Auto-Quant -> Pre-Bayes/filter -> BBN -> CatBoost/path-ranker -> execution tree status=covered
+PASS requirement=CatBoost/path-ranker is trained/applied/registered and consumed by runtime status=covered
+FAIL_CLOSED requirement=Execution tree emits non-observe ready/actionable candidate status=missing
+FAIL_CLOSED requirement=Selected-history/source-control unlock is satisfied before further factor-research reuse status=missing
+PASS requirement=No live trade or goal completion claim before gates pass status=covered

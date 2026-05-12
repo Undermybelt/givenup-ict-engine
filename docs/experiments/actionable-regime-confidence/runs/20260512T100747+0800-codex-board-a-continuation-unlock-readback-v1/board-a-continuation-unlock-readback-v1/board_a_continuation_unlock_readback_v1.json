@@ -1,0 +1,176 @@
+{
+  "auto_quant_status": {
+    "existing_ready_state": {
+      "data_ready": true,
+      "dependency_healthy": true,
+      "exit_code": 0,
+      "healthy": true,
+      "recommended_next_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1/state_b2r_nq_ltf_nursery_v1/.deps/auto-quant/run_tomac.py",
+      "status": "dependency_ready_data_ready"
+    },
+    "fresh_isolated": {
+      "data_ready": false,
+      "dependency_healthy": false,
+      "exit_code": 0,
+      "healthy": false,
+      "recommended_next_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-a-continuation-unlock-readback-v1/auto-quant",
+      "status": "missing_dependency"
+    }
+  },
+  "board_hash_at_run": "7caaf26f2172a16526ee7d8f46394c564edba5ef98a4f36ec00f7df430ee0ecd",
+  "decision": {
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "explicit_user_selected_history": false,
+    "gate_result": "board_a_continuation_unlock_readback_v1=no_required_root_unlock_no_selected_history_no_promotion",
+    "selected_data_autoquant_promotion_allowed": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "generated_at_utc": "2026-05-12T02:11:29.500074+00:00",
+  "next_action": "Obtain a real R6/R5/R3 source-control unlock or explicit source/control approval, and provide exactly one selected-history choice (HTF, MTF, or LTF) before any canonical merge, selected-data Auto-Quant promotion, Pre-Bayes/BBN/CatBoost/path-ranking, execution-tree promotion, trade claim, or update_goal.",
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "gap": "absent_or_missing_owner_export_positive_control_provenance_triplet",
+      "requirement": "R6 direct Manipulation source/control owner-export rows",
+      "status": "blocked"
+    },
+    {
+      "evidence": "/tmp/ict-engine-source-panel-recency-extension",
+      "gap": "absent_or_missing_post_2026_01_30_source_panel_recency_package",
+      "requirement": "R5 post-2026-01-30 source-panel recency package",
+      "status": "blocked"
+    },
+    {
+      "evidence": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "gap": "present_but_tsie_quarantined_crisis_absent",
+      "requirement": "R3 native sub-hour MainRegimeV2 labels including Crisis",
+      "status": "blocked"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T092249+0800-codex-selected-history-decision-request-after-091346-v1/selected-history-decision-request-after-091346-v1/selected_history_options_after_091346_v1.csv",
+      "gap": "awaiting exactly one of HTF/MTF/LTF",
+      "requirement": "Explicit selected-history choice",
+      "status": "blocked"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T100747+0800-codex-board-a-continuation-unlock-readback-v1/command-output/provider_status_agent.stdout.txt",
+      "gap": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+      "requirement": "Provider readback: IBKR, TradingViewRemix, yfinance, Kraken",
+      "status": "read_only_non_promoting"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T100747+0800-codex-board-a-continuation-unlock-readback-v1/command-output/auto_quant_status_existing_ready_state.stdout.txt",
+      "gap": "existing_ready_state=dependency_ready_data_ready; fresh_isolated=missing_dependency",
+      "requirement": "Auto-Quant readiness before selected-data promotion",
+      "status": "read_only_non_promoting"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T100747+0800-codex-board-a-continuation-unlock-readback-v1/board-a-continuation-unlock-readback-v1/board_a_continuation_unlock_readback_v1.json",
+      "gap": "blocked until required source/control unlock plus explicit selected-history choice",
+      "requirement": "Auto-Quant -> filter/Pre-Bayes -> BBN -> CatBoost -> execution tree promotion rerun",
+      "status": "not_run"
+    }
+  ],
+  "provider_status": {
+    "exit_code": 0,
+    "pending_providers": [
+      "crypto_public_runtime@live_runtime:operator_runtime_required:explicit_opt_in_required",
+      "external_http_runtime@live_runtime:operator_runtime_required:base_url_and_service_required",
+      "ibkr_bridge@local_runtime:configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "polymarket_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+      "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed"
+    ],
+    "ready_by_domain": {
+      "entry_model": "2/2",
+      "live_runtime": "1/3",
+      "local_runtime": "1/2",
+      "market_data": "1/7"
+    },
+    "ready_providers": [
+      "breaker_rb_long_v1",
+      "cisd_rb_long_v1",
+      "yfinance",
+      "kraken_cli",
+      "yfinance"
+    ],
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+  },
+  "run_id": "20260512T100747+0800-codex-board-a-continuation-unlock-readback-v1",
+  "selected_history": {
+    "explicit_user_selected_history": false,
+    "options": [
+      {
+        "meaning": "Higher-timeframe history",
+        "option": "HTF",
+        "selected": "false",
+        "tradeoff": "Cleaner context, fewer samples"
+      },
+      {
+        "meaning": "Mid-timeframe history",
+        "option": "MTF",
+        "selected": "false",
+        "tradeoff": "Balanced sample count and noise"
+      },
+      {
+        "meaning": "Lower-timeframe history",
+        "option": "LTF",
+        "selected": "false",
+        "tradeoff": "More samples, noisier regime behavior"
+      }
+    ],
+    "options_file": "docs/experiments/actionable-regime-confidence/runs/20260512T092249+0800-codex-selected-history-decision-request-after-091346-v1/selected-history-decision-request-after-091346-v1/selected_history_options_after_091346_v1.csv",
+    "selected": []
+  },
+  "source_control_roots": [
+    {
+      "crisis_present": false,
+      "exists": false,
+      "file_count": 0,
+      "files": "",
+      "id": "R6_owner_export",
+      "labels_from_provenance": "",
+      "missing_by_set": "direct_manipulation_positive_rows.csv;direct_manipulation_matched_controls.csv;direct_manipulation_provenance.json|positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "reason": "absent_or_missing_owner_export_positive_control_provenance_triplet",
+      "required_set_complete": false,
+      "tsie_quarantined": false,
+      "valid_required_unlock": false
+    },
+    {
+      "crisis_present": false,
+      "exists": false,
+      "file_count": 0,
+      "files": "",
+      "id": "R5_source_panel_recency",
+      "labels_from_provenance": "",
+      "missing_by_set": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "reason": "absent_or_missing_post_2026_01_30_source_panel_recency_package",
+      "required_set_complete": false,
+      "tsie_quarantined": false,
+      "valid_required_unlock": false
+    },
+    {
+      "crisis_present": false,
+      "exists": true,
+      "file_count": 2,
+      "files": "native_subhour_source_label_provenance.json;native_subhour_source_label_rows.csv",
+      "id": "R3_native_subhour",
+      "labels_from_provenance": "Bear;Bull;Sideways",
+      "missing_by_set": "",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "reason": "present_but_tsie_quarantined_crisis_absent",
+      "required_set_complete": true,
+      "tsie_quarantined": true,
+      "valid_required_unlock": false
+    }
+  ]
+}

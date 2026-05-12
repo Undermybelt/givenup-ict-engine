@@ -1,0 +1,11 @@
+goal_achieved=false
+total_cells=126
+ok_cells=126
+blocked_cells=0
+avg_confidence_pct_ge_95_cells=0
+high_confidence_pct_ge_95_cells=5
+mainregimev2_root_calibration_executed=false
+raw_ohlcv_committed=false
+thresholds_relaxed=false
+runtime_code_changed=false
+trade_usable=false

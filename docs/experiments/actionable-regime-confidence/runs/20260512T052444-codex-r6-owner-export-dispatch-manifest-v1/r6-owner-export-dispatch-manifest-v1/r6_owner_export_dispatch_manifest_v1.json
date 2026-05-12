@@ -1,0 +1,60 @@
+{
+  "run_id": "20260512T052444-codex-r6-owner-export-dispatch-manifest-v1",
+  "gate_result": "r6_owner_export_dispatch_manifest_v1=dispatch_manifest_ready_not_sent_controls_not_acquired",
+  "board_sha256_before_artifact": "6f7e2dcbe697b7e4a3255a5500c68066807f2b1a19b21a422ea2d43532cbd802",
+  "inputs": {
+    "sendable_requests_v3_root": "docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3",
+    "official_contact_route_check_root": "docs/experiments/actionable-regime-confidence/runs/20260512T010506-codex-r6-owner-export-official-contact-route-check-v1"
+  },
+  "dispatch_items": [
+    {
+      "owner": "CME Group",
+      "primary_contact": "CMEDataSales@cmegroup.com",
+      "fallback_contact": "marketdata@cmegroup.com",
+      "request_draft": "docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3/r6-owner-export-sendable-requests-v3/cme_group_owner_export_request_v3.md",
+      "dispatch_draft": "docs/experiments/actionable-regime-confidence/runs/20260512T052444-codex-r6-owner-export-dispatch-manifest-v1/r6-owner-export-dispatch-manifest-v1/cme_group_owner_export_dispatch_v1.eml",
+      "sent_by_this_artifact": false
+    },
+    {
+      "owner": "Cboe/CFE",
+      "primary_contact": "marketdata@cboe.com",
+      "fallback_contact": "DataShop contact form or phone from 010506 contact-route check",
+      "request_draft": "docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3/r6-owner-export-sendable-requests-v3/cboe_cfe_owner_export_request_v3.md",
+      "dispatch_draft": "docs/experiments/actionable-regime-confidence/runs/20260512T052444-codex-r6-owner-export-dispatch-manifest-v1/r6-owner-export-dispatch-manifest-v1/cboe_cfe_owner_export_dispatch_v1.eml",
+      "sent_by_this_artifact": false
+    }
+  ],
+  "required_delivery": {
+    "target_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "files": [
+      "positive_spoofing_layering_rows.csv",
+      "matched_negative_normal_activity_rows.csv",
+      "provenance_manifest.json"
+    ],
+    "provenance_must_include": [
+      "ticket_id",
+      "export_id_or_order_id",
+      "license_or_entitlement_id",
+      "source_owner",
+      "source_contact_route",
+      "data_product",
+      "date_scope",
+      "product_scope"
+    ]
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "accepted_regime_confidence_labels": 0,
+    "source_control_evidence_acquired": false,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "external_requests_sent_by_this_artifact": false,
+  "runtime_code_changed": false,
+  "target_roots_mutated": false,
+  "raw_data_committed": false
+}

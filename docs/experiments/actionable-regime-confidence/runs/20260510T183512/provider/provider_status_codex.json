@@ -1,0 +1,78 @@
+{
+  "schema_version": "board-a-provider-status-codex/v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T183512",
+  "providers": {
+    "yfinance_nq_15m": {
+      "artifact": "provider/yf_nq_15m.csv",
+      "rows": 519,
+      "first": "2026-05-01 00:00:00+00:00",
+      "last": "2026-05-08 20:59:59+00:00",
+      "ready": true
+    },
+    "yfinance_qqq_1h": {
+      "artifact": "provider/yf_qqq_1h.csv",
+      "rows": 43,
+      "first": "2026-05-01 13:30:00+00:00",
+      "last": "2026-05-08 20:00:00+00:00",
+      "ready": true
+    },
+    "ibkr_qqq_1h": {
+      "artifact": "provider/ibkr_qqq_1h.csv",
+      "rows": 160,
+      "first": "2026-04-27T08:00:00+00:00",
+      "last": "2026-05-08T23:00:00+00:00",
+      "ready": true
+    },
+    "kraken_pf_xbtusd_15m": {
+      "artifact": "provider/kraken_pf_xbtusd_15m.csv",
+      "rows": 865,
+      "first": "2026-05-01 00:00:00+00:00",
+      "last": "2026-05-10 00:00:00+00:00",
+      "ready": true
+    },
+    "auto_quant_cache_nq_15m": {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+      "rows": 351288,
+      "first_ms": 1294009200000,
+      "last_ms": 1767217500000,
+      "ready": true
+    },
+    "auto_quant_cache_nq_1h": {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+      "rows": 89250,
+      "first_ms": 1294009200000,
+      "last_ms": 1767214800000,
+      "ready": true
+    },
+    "auto_quant_cache_nq_4h": {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-4h.feather",
+      "rows": 23879,
+      "first_ms": 1293998400000,
+      "last_ms": 1767211200000,
+      "ready": true
+    },
+    "auto_quant_cache_nq_1d": {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1d.feather",
+      "rows": 4651,
+      "first_ms": 1293926400000,
+      "last_ms": 1767139200000,
+      "ready": true
+    },
+    "tradingview_remix": {
+      "status_artifact": "provider/tradingviewremix_status_agent.json",
+      "fetch_artifact": "provider/tradingviewremix_qqq_1d_fetch.json",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed in provider-status; copied durable fetch/status evidence from 20260510T174651 for this run packet",
+      "fetch_top_level_keys": [
+        "plan",
+        "results"
+      ],
+      "status_pending": []
+    }
+  },
+  "notes": [
+    "CSV row counts exclude header rows.",
+    "Auto-Quant cache is the local user_data/data feather cache used by provider_agreement_v2_probe.py.",
+    "TradingViewRemix is recorded as probed but not usable for chronological QQQ/NQ v2 labels in this loop."
+  ]
+}

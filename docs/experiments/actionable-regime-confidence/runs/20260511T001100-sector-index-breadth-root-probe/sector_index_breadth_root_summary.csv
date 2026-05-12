@@ -1,0 +1,7 @@
+root_class,state,rule,cal_support,test_support,test_lcb,ece,blockers
+Bull,blocked,"sector breadth bull >= 0.55, panel_ret8 >= q0.6",3934,4089,0.23090829148980918,0.03909325340358516,calibration_wilson95_below_0_95|test_wilson95_below_0_95
+Bear,blocked,"sector breadth bear >= 0.75, panel_ret8 <= q0.3",4579,3393,0.1964744835313531,0.06461558028305775,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05
+Sideways,blocked,sector low dispersion/range q0.25,990,1245,0.33207252205444765,0.0844955579895339,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05|validation_timeframes_below_2
+Crisis,blocked,"sector crisis breadth >= 0.6, panel_vol >= q0.9",5610,3526,0.4911564501990961,0.1190805657590216,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05|validation_timeframes_below_2
+UnknownOrMixed,residual_not_release,mixed sector breadth residual,1770,2670,0.12168211126719727,0.023347933726909173,residual_or_non_release_gate|calibration_wilson95_below_0_95|test_wilson95_below_0_95|validation_timeframes_below_2
+Manipulation,missing_required_inputs,requires direct tick/order-flow/L2/order-lifecycle or crypto event/social evidence,0,0,0.0,1.0,missing_required_inputs|proxy_only_low_confidence

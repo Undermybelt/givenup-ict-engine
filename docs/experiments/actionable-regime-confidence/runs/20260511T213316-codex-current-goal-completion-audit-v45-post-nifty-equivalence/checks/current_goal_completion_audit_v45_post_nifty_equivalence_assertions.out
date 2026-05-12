@@ -1,0 +1,14 @@
+PASS decision=current_goal_completion_audit_v45=post_nifty_equivalence_schema_ready_still_blocked
+PASS ready_roots=2
+PASS source_label_status=schema_ready_unscored
+PASS source_label_rows=3435
+PASS source_label_missing_bear=true
+PASS source_label_proxy_guardrail=true
+PASS r6_positive_rows=34
+PASS r6_matched_negative_rows=34
+PASS r6_combined_min_wilson95_lcb=0.898485
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

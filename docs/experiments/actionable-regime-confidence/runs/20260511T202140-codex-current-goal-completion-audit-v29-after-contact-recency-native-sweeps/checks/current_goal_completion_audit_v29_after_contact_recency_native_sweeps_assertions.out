@@ -1,0 +1,8 @@
+PASS decision=current_goal_completion_audit_v29=post_v28_contact_recency_native_evidence_strict_objective_blocked
+PASS checklist_rows=9
+PASS unmet_ids=R2,R3,R4,R5,R6,R8
+PASS accepted_rows_added_since_v28=0
+PASS new_confidence_gate_since_v28=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

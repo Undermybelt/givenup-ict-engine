@@ -1,0 +1,11 @@
+board_cursor_observed=PASS
+source_label_verifier_ran=PASS
+r5_verifier_fail_closed=PASS
+r3_required_files_missing=PASS
+r6_owner_files_missing=PASS
+r6_live_schema_ready=PASS
+provider_status_ran=PASS
+auto_quant_checked=PASS
+downstream_chain_commands_ran=PASS
+strict_objective_false=PASS
+update_goal_false=PASS

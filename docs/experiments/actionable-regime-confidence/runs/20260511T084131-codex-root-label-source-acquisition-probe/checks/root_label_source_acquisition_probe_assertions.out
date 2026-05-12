@@ -1,0 +1,7 @@
+PASS missing_slots_input_rows=564
+PASS accepted_new_root_label_slots=0
+PASS accepted_new_manipulation_sources=0
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS gate_result=blocked_no_new_unauthenticated_source_labels_for_564_slots

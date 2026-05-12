@@ -1,0 +1,8 @@
+all_command_exits_zero: PASS
+mode_non_promoting: PASS
+branch_path_preserved_to_execution_candidate: PASS
+execution_observe_only: PASS
+execution_not_ready: PASS
+selected_history_missing: PASS
+no_source_control_evidence: PASS
+no_update_goal: PASS

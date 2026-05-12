@@ -1,0 +1,12 @@
+requirement,evidence,status,notes
+every_MainRegimeV2_price_root_95,20260512T051844 HGB and 20260512T053856 axis audit,partial,"Bear/Bull/Crisis/Sideways accepted at 95 on daily diagnostic screen"
+other_markets_validation,20260512T051844 heldout_market rows and 20260512T053856 audit,partial,"heldout_market_rows=26236 but still daily and non-promoting"
+other_periods_validation,20260512T051844 heldout_time/test rows and 20260512T053856 audit,partial,"heldout_time_rows=45384 test_rows=27844 but still daily and non-promoting"
+other_timeframes_validation,R3 scan in this root,missing,"Auto-Quant/provider sub-hour files are OHLCV only and no source-owned sub-hour label root exists"
+source_control_target_root,live /tmp root check,missing,"R6/R3/R5 required roots absent"
+provider_surfaces,20260512T054116 provider-status,partial,"yfinance and kraken_cli ready; IBKR and TradingView MCP unhealthy"
+auto_quant_surface,20260512T054116 auto-quant-status,partial,"callable but isolated state missing_dependency/bootstrap_needed"
+filter_prebayes,20260512T054116 pre-bayes-status,partial,"observe_only"
+bbn_catboost_path_ranking,20260512T054116 policy-training-status and path-ranking export,partial,"matched_rows=0 mature_rows=0 calibration not fitted"
+execution_tree,20260512T054116 workflow-status execution-candidate,partial,"actionable=false ready=false trade_direction=observe"
+multi_agent_safety,this root,pass,"Current Cursor and target roots not edited; 053852 in-flight root not counted"

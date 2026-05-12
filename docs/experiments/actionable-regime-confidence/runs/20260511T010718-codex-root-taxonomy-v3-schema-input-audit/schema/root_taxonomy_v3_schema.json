@@ -1,0 +1,66 @@
+{
+  "acceptance_95": {
+    "calibration_support_min": 120,
+    "coverage_min": 0.03,
+    "ece_max": 0.05,
+    "precision_wilson_lcb_95_min": 0.95,
+    "requires_explicit_qualifying_condition": true,
+    "test_support_min": 60,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  },
+  "blocked_predictor_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "created_by": "20260511T010718-codex-root-taxonomy-v3-schema-input-audit",
+  "historical_aliases": {
+    "Bear": "BearExpansion when ordinary bearish expansion is separated from CrisisStress",
+    "Bull": "BullExpansion when expansion/persistence is directly materialized",
+    "Crisis": "CrisisStress / turbulent high-volatility stress",
+    "Sideways": "Consolidation / range-bound behavior"
+  },
+  "prior_relevant_gate": {
+    "accepted_95": [
+      "CrisisStress"
+    ],
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T003739-source-backed-root-gate-mtf/root-v2-source-backed/source_backed_root_gate_report.json",
+    "interpretation": "partial evidence only; not completion",
+    "missing_95": [
+      "BullExpansion",
+      "BearExpansion",
+      "Consolidation",
+      "Manipulation",
+      "TransitionRecovery"
+    ]
+  },
+  "priority_order": [
+    "Manipulation direct overlay if direct evidence is present",
+    "CrisisStress",
+    "BullExpansion if bull and not bear",
+    "BearExpansion if bear and not bull",
+    "Consolidation",
+    "TransitionRecovery",
+    "UnknownOrMixed residual"
+  ],
+  "root_axis": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "Manipulation",
+    "CrisisStress",
+    "TransitionRecovery",
+    "UnknownOrMixed"
+  ],
+  "schema_version": "root-taxonomy-v3-schema/v1",
+  "target_definitions": {
+    "BearExpansion": "persistent negative/risk-off expansion; must be separated from CrisisStress",
+    "BullExpansion": "persistent positive/risk-on expansion; cannot be inherited from generic TrendExpansion without a root gate",
+    "Consolidation": "sideways/range/chop with low directional conviction; must be separated from low-vol bull drift and post-crisis compression",
+    "CrisisStress": "turbulent/high-volatility/liquidity-break stress state",
+    "Manipulation": "direct market-microstructure/order-flow/order-lifecycle/event evidence only; OHLCV proxies are fail-closed",
+    "TransitionRecovery": "turning-point, recovery, accumulation/distribution, or post-crisis transition state; optional root until consumer contract decides",
+    "UnknownOrMixed": "residual bucket for overlap, weak confidence, or mixed signals; never release confidence"
+  }
+}

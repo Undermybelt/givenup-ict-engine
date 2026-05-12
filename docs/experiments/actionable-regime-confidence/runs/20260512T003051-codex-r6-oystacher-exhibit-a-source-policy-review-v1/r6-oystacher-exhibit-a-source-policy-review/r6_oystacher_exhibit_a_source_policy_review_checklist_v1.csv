@@ -1,0 +1,9 @@
+requirement,evidence,status
+Public Exhibit A source acquired and hash-provenanced.,https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf sha256=3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66,pass
+Row-level direct order-lifecycle rows parsed from the source.,parsed_order_rows=6735 positives=5182 controls=1553,pass
+Isolated verifier accepts the candidate schema.,status=schema_ready_unscored matched_groups=1313,pass
+Chronological and split axes pass in isolated materialization.,all_materialized_split_axes_pass=True,pass
+Canonical live intake must not be mutated without approval.,shared_intake_mutated=False,pass
+Explicit board/user approval exists for promoting RECAP/PACER mirror rows into canonical R6.,No approval artifact was present in the source materialization or current board cursor.,blocked
+Full provider/Auto-Quant/pre-Bayes/BBN/CatBoost/execution-tree rerun after accepted rows.,Not run because rows are not yet policy-approved for canonical promotion.,blocked
+Strict full objective including R3/R5/source-label blockers.,Out of scope for this R6 provenance review; current board still records R3/R5 blockers.,blocked

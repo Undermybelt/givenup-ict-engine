@@ -1,0 +1,337 @@
+{
+  "run_id": "20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1",
+  "scope": "non_btc_local_auto_quant_mtf_data_through_ict_engine_readback_chain",
+  "data_source": "local_auto_quant_feather_files_under_/Users/thrill3r/Auto-Quant/user_data/data",
+  "provider_status_commands": [
+    {
+      "name": "00_provider_status_compact",
+      "exit": 0,
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/00_provider_status_compact.cmd",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/00_provider_status_compact.out",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/00_provider_status_compact.err",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/00_provider_status_compact.exit"
+    },
+    {
+      "name": "01_provider_yfinance_compact",
+      "exit": 0,
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/01_provider_yfinance_compact.cmd",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/01_provider_yfinance_compact.out",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/01_provider_yfinance_compact.err",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/01_provider_yfinance_compact.exit"
+    },
+    {
+      "name": "02_provider_kraken_cli_compact",
+      "exit": 0,
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/02_provider_kraken_cli_compact.cmd",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/02_provider_kraken_cli_compact.out",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/02_provider_kraken_cli_compact.err",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/02_provider_kraken_cli_compact.exit"
+    },
+    {
+      "name": "03_provider_ibkr_compact",
+      "exit": 0,
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/03_provider_ibkr_compact.cmd",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/03_provider_ibkr_compact.out",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/03_provider_ibkr_compact.err",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/03_provider_ibkr_compact.exit"
+    },
+    {
+      "name": "04_provider_tradingview_mcp_compact",
+      "exit": 0,
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/04_provider_tradingview_mcp_compact.cmd",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/04_provider_tradingview_mcp_compact.out",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/04_provider_tradingview_mcp_compact.err",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/04_provider_tradingview_mcp_compact.exit"
+    }
+  ],
+  "provider_statuses": {
+    "00_provider_status_compact": null,
+    "01_provider_yfinance_compact": null,
+    "02_provider_kraken_cli_compact": null,
+    "03_provider_ibkr_compact": null,
+    "04_provider_tradingview_mcp_compact": null
+  },
+  "conversions": [
+    {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1h.feather",
+      "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/ETH_USDT-1h.json",
+      "rows": 1500,
+      "first_ts": "2025-11-28T10:00:00Z",
+      "last_ts": "2026-01-29T21:00:00Z"
+    },
+    {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-4h.feather",
+      "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/ETH_USDT-4h.json",
+      "rows": 1500,
+      "first_ts": "2025-07-05T04:00:00Z",
+      "last_ts": "2026-03-12T00:00:00Z"
+    },
+    {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1d.feather",
+      "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/ETH_USDT-1d.json",
+      "rows": 1500,
+      "first_ts": "2022-03-16T00:00:00Z",
+      "last_ts": "2026-04-23T00:00:00Z"
+    },
+    {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+      "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1h.json",
+      "rows": 1500,
+      "first_ts": "1970-01-01T00:29:19.172400Z",
+      "last_ts": "1970-01-01T00:29:27.214800Z"
+    },
+    {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-4h.feather",
+      "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-4h.json",
+      "rows": 1500,
+      "first_ts": "1970-01-01T00:28:57.633600Z",
+      "last_ts": "1970-01-01T00:29:27.211200Z"
+    },
+    {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1d.feather",
+      "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/provider-data-json/NQ_USD-1d.json",
+      "rows": 1500,
+      "first_ts": "1970-01-01T00:26:55.248000Z",
+      "last_ts": "1970-01-01T00:29:27.139200Z"
+    }
+  ],
+  "markets": [
+    {
+      "state_symbol": "ETH_LOCAL_AQ_MTF_123820",
+      "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_eth_usdt_local_aq_mtf_v1",
+      "state_files": {
+        "workflow_snapshot": true,
+        "bbn_network": true,
+        "execution_candidate": true,
+        "execution_tree_trace": true,
+        "pre_bayes_policy_history": true
+      },
+      "command_exits": {
+        "10_ETH_USDT_factor_research_native": 0,
+        "11_ETH_USDT_analyze_mtf": 0,
+        "12_ETH_USDT_pre_bayes_status": 0,
+        "13_ETH_USDT_policy_training_status": 0,
+        "14_ETH_USDT_workflow_status": 0,
+        "15_ETH_USDT_export_path_ranking_target": 0,
+        "16_ETH_USDT_validate_market_state_1h": 0,
+        "17_ETH_USDT_validate_market_state_4h": 0
+      },
+      "active_regime": "range",
+      "canonical_structural_confidence": 0.504871249965485,
+      "market_regime_probabilities": {
+        "range": 0.7420795759662269,
+        "stress": 0.1837124664371504,
+        "transition": 0.0742079575966227,
+        "trend": 0.0
+      },
+      "max_regime_probability": 0.7420795759662269,
+      "pre_bayes_gate_status": "pass_neutralized",
+      "selected_direction": "Bear",
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.2517218878368103,
+      "execution_candidate_status": "no_trade",
+      "actionable": false,
+      "found_fields": {
+        "promotion_status": "observe",
+        "selected_direction": "Bear",
+        "pre_bayes_gate_status": "pass_neutralized",
+        "canonical_structural_active_regime": "range",
+        "canonical_structural_confidence": 0.504871249965485,
+        "execution_readiness": 0.2517218878368103,
+        "execution_gate_status": "execution_blocked",
+        "candidate_status": "no_trade"
+      },
+      "source_symbol": "ETH_USDT",
+      "family": "crypto_non_btc"
+    },
+    {
+      "state_symbol": "NQ_LOCAL_AQ_MTF_123820",
+      "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/state_nq_usd_local_aq_mtf_v1",
+      "state_files": {
+        "workflow_snapshot": true,
+        "bbn_network": true,
+        "execution_candidate": true,
+        "execution_tree_trace": true,
+        "pre_bayes_policy_history": true
+      },
+      "command_exits": {
+        "10_NQ_USD_factor_research_native": 0,
+        "11_NQ_USD_analyze_mtf": 0,
+        "12_NQ_USD_pre_bayes_status": 0,
+        "13_NQ_USD_policy_training_status": 0,
+        "14_NQ_USD_workflow_status": 0,
+        "15_NQ_USD_export_path_ranking_target": 0,
+        "16_NQ_USD_validate_market_state_1h": 0,
+        "17_NQ_USD_validate_market_state_4h": 0
+      },
+      "active_regime": "range",
+      "canonical_structural_confidence": 0.14423512439311514,
+      "market_regime_probabilities": {
+        "range": 0.32824868142013397,
+        "stress": 0.23408641001968747,
+        "transition": 0.21883245428008935,
+        "trend": 0.21883245428008935
+      },
+      "max_regime_probability": 0.32824868142013397,
+      "pre_bayes_gate_status": "observe_only",
+      "selected_direction": "Bear",
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.15492061678908858,
+      "execution_candidate_status": "no_trade",
+      "actionable": false,
+      "found_fields": {
+        "promotion_status": "observe",
+        "selected_direction": "Bear",
+        "pre_bayes_gate_status": "observe_only",
+        "canonical_structural_active_regime": "range",
+        "canonical_structural_confidence": 0.14423512439311514,
+        "execution_readiness": 0.15492061678908858,
+        "execution_gate_status": "execution_blocked",
+        "candidate_status": "no_trade"
+      },
+      "source_symbol": "NQ_USD",
+      "family": "tradfi_futures"
+    }
+  ],
+  "market_commands": {
+    "ETH_USDT": [
+      {
+        "name": "10_ETH_USDT_factor_research_native",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/10_ETH_USDT_factor_research_native.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/10_ETH_USDT_factor_research_native.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/10_ETH_USDT_factor_research_native.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/10_ETH_USDT_factor_research_native.exit"
+      },
+      {
+        "name": "11_ETH_USDT_analyze_mtf",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/11_ETH_USDT_analyze_mtf.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/11_ETH_USDT_analyze_mtf.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/11_ETH_USDT_analyze_mtf.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/11_ETH_USDT_analyze_mtf.exit"
+      },
+      {
+        "name": "12_ETH_USDT_pre_bayes_status",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/12_ETH_USDT_pre_bayes_status.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/12_ETH_USDT_pre_bayes_status.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/12_ETH_USDT_pre_bayes_status.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/12_ETH_USDT_pre_bayes_status.exit"
+      },
+      {
+        "name": "13_ETH_USDT_policy_training_status",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/13_ETH_USDT_policy_training_status.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/13_ETH_USDT_policy_training_status.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/13_ETH_USDT_policy_training_status.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/13_ETH_USDT_policy_training_status.exit"
+      },
+      {
+        "name": "14_ETH_USDT_workflow_status",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/14_ETH_USDT_workflow_status.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/14_ETH_USDT_workflow_status.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/14_ETH_USDT_workflow_status.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/14_ETH_USDT_workflow_status.exit"
+      },
+      {
+        "name": "15_ETH_USDT_export_path_ranking_target",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/15_ETH_USDT_export_path_ranking_target.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/15_ETH_USDT_export_path_ranking_target.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/15_ETH_USDT_export_path_ranking_target.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/15_ETH_USDT_export_path_ranking_target.exit"
+      },
+      {
+        "name": "16_ETH_USDT_validate_market_state_1h",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/16_ETH_USDT_validate_market_state_1h.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/16_ETH_USDT_validate_market_state_1h.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/16_ETH_USDT_validate_market_state_1h.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/16_ETH_USDT_validate_market_state_1h.exit"
+      },
+      {
+        "name": "17_ETH_USDT_validate_market_state_4h",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/17_ETH_USDT_validate_market_state_4h.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/17_ETH_USDT_validate_market_state_4h.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/17_ETH_USDT_validate_market_state_4h.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/17_ETH_USDT_validate_market_state_4h.exit"
+      }
+    ],
+    "NQ_USD": [
+      {
+        "name": "10_NQ_USD_factor_research_native",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/10_NQ_USD_factor_research_native.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/10_NQ_USD_factor_research_native.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/10_NQ_USD_factor_research_native.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/10_NQ_USD_factor_research_native.exit"
+      },
+      {
+        "name": "11_NQ_USD_analyze_mtf",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/11_NQ_USD_analyze_mtf.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/11_NQ_USD_analyze_mtf.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/11_NQ_USD_analyze_mtf.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/11_NQ_USD_analyze_mtf.exit"
+      },
+      {
+        "name": "12_NQ_USD_pre_bayes_status",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/12_NQ_USD_pre_bayes_status.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/12_NQ_USD_pre_bayes_status.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/12_NQ_USD_pre_bayes_status.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/12_NQ_USD_pre_bayes_status.exit"
+      },
+      {
+        "name": "13_NQ_USD_policy_training_status",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/13_NQ_USD_policy_training_status.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/13_NQ_USD_policy_training_status.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/13_NQ_USD_policy_training_status.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/13_NQ_USD_policy_training_status.exit"
+      },
+      {
+        "name": "14_NQ_USD_workflow_status",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/14_NQ_USD_workflow_status.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/14_NQ_USD_workflow_status.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/14_NQ_USD_workflow_status.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/14_NQ_USD_workflow_status.exit"
+      },
+      {
+        "name": "15_NQ_USD_export_path_ranking_target",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/15_NQ_USD_export_path_ranking_target.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/15_NQ_USD_export_path_ranking_target.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/15_NQ_USD_export_path_ranking_target.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/15_NQ_USD_export_path_ranking_target.exit"
+      },
+      {
+        "name": "16_NQ_USD_validate_market_state_1h",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/16_NQ_USD_validate_market_state_1h.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/16_NQ_USD_validate_market_state_1h.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/16_NQ_USD_validate_market_state_1h.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/16_NQ_USD_validate_market_state_1h.exit"
+      },
+      {
+        "name": "17_NQ_USD_validate_market_state_4h",
+        "exit": 0,
+        "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/17_NQ_USD_validate_market_state_4h.cmd",
+        "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/17_NQ_USD_validate_market_state_4h.out",
+        "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/17_NQ_USD_validate_market_state_4h.err",
+        "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1/command-output/17_NQ_USD_validate_market_state_4h.exit"
+      }
+    ]
+  },
+  "gate": "non_btc_local_aq_mtf_chain_probe_fail_closed",
+  "accepted_95_count": 0,
+  "max_regime_probability": 0.7420795759662269,
+  "production_likelihood_mutation": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

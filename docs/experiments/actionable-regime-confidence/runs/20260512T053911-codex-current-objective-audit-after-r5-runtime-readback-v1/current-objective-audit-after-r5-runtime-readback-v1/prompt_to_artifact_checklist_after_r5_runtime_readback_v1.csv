@@ -1,0 +1,13 @@
+requirement,evidence,status,notes
+each_regime_confidence_95,20260512T051844 HGB screen,partial_non_promoting,"Bear/Bull/Crisis/Sideways pass diagnostic HGB split gate; source/control evidence remains absent."
+cross_market_cross_period_validation,required target roots readback,missing,"R6/R3/R5 target roots remain absent; no canonical source/control merge."
+same authoritative board,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,done,"Append-only section added; Current Cursor not edited."
+do not disturb concurrent work,board/process/root readbacks,done,"052301 already closed as non-counting cleanup; no running source-label writer counted."
+provider ibkr/tradingview/yfinance/kraken,provider-status --agent,partial,"yfinance and kraken_cli ready; IBKR gateway reachable but dependencies missing; TradingView MCP failed; kraken_public dependencies missing."
+Auto-Quant operation,auto-quant-status isolated tmp state,blocked,"Bootstrap required in isolated state; no data ready."
+filter/pre-bayes/BBN,pre-bayes-status isolated tmp state,blocked,"No policy/gate state exists in the isolated audit state."
+CatBoost/path-ranking,policy-training-status isolated tmp state,blocked,"matched_rows=0; structural path ranking target export missing."
+execution tree,workflow-status execution-candidate isolated tmp state,blocked,"review_status=observe; actionable=false; ready=false."
+R5 recency,20260512T053505 R5 current candidate screen,blocked,"Current candidate datasets are not schema-compatible four-root MainRegimeV2 R5 extension rows."
+R6 approval/source controls,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,blocked,"approval_present=false; canonical_merge_allowed_now=false; downstream_rerun_allowed_now=false."
+update_goal,completion audit,not_allowed,"Objective not achieved; update_goal remains false."

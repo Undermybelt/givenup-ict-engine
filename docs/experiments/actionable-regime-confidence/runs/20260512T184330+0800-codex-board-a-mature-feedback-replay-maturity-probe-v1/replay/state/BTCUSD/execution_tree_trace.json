@@ -1,0 +1,73 @@
+{
+  "artifact_id": "execution-tree-BTCUSD-1778584110163",
+  "generated_at": "2026-05-12T11:08:30.163360Z",
+  "symbol": "BTCUSD",
+  "output": {
+    "execution_score": 0.4376010667255047,
+    "branch": "block_crowded",
+    "execution_bias": "passive",
+    "gate_status": "blocked",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.2772 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.2772 < 0.45)",
+      "path_ranker_score_input=0.2220 visible=true used=true ranker_validation_ready=true effective_prediction_vote_score=0.2556",
+      "prediction_vote_score=0.2556 (weak) × execution_readiness=0.2772 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.766",
+      "market_state=volatility=ElevatedVol:0.805 liquidity=NormalLiquidity:0.419 structure=Trending:0.636 behavior=FOMO:0.800",
+      "market_state=rationale=volatility=ElevatedVol conf=0.81",
+      "market_state=rationale=structure=Trending conf=0.64",
+      "market_state=rationale=behavior=FOMO conf=0.80",
+      "market_state=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.77",
+      "path_ranker=Ranker runtime: structural_path_ranking_target rows=1 history_rows=1097 mature_rows=1 history_mature_rows=1087 raw_scored_mature=1087/30 production_validation=1087/30 observation_validation=32/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=1",
+      "path_ranker=Ranker validation: calibration=true quality_ready=true raw_scored_mature=1087/30 production_validation=1087/30 observation_validation=32/30 ready=true",
+      "path_ranker=ranker_machine=runtime_source=candidate_set score_model_family=catboost score_source=external_model validation_ready=true active_match_count=1",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=path:scenario:BTCUSD:belief_regime_node:range:range_mean_reversion:primary runtime_source=candidate_set raw_path_score=0.774957 calibrated_path_prob=0.317460 path_prob_lower_bound=0.222035 execution_gate_status=observe",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "duration_remaining_expected_bars=2.167 → execution_bias=passive"
+    ],
+    "decision_hint": "execution_blocked_regardless_of_prediction",
+    "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=blocked/block_crowded/passive | ranker=candidate_set/catboost/ready",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_model_family": "catboost",
+    "path_ranker_runtime_source": "candidate_set",
+    "ranker_validation_ready": true
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.44084464790408534,
+      "feature_value": "0.3592"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.41845238095238085,
+      "feature_value": "0.2815"
+    },
+    {
+      "feature": "prediction_vote_score",
+      "contribution": -0.3832215986287122,
+      "feature_value": "0.2668"
+    },
+    {
+      "feature": "execution_readiness",
+      "contribution": -0.3727831225404898,
+      "feature_value": "0.2772"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "77a67daecf93eafe",
+    "data_fingerprint": "30c3bf432f833b9e"
+  }
+}

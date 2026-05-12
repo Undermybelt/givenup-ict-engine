@@ -1,0 +1,5476 @@
+{
+  "bbn_feedback_candidate_readback": {
+    "context": "entry_quality=medium,factor_alignment=mixed,factor_uncertainty=low",
+    "current_cpd": {
+      "current_probs": [
+        0.427961,
+        0.275927,
+        0.296112
+      ],
+      "parent_indexes": [
+        1,
+        1,
+        0
+      ],
+      "parent_state_names": [
+        "medium",
+        "mixed",
+        "low"
+      ],
+      "parents": [
+        "entry_quality",
+        "factor_alignment",
+        "factor_uncertainty"
+      ],
+      "states": [
+        "win",
+        "breakeven",
+        "loss"
+      ]
+    },
+    "empirical_outcome_from_120630": {
+      "probs": [
+        0.341772,
+        0.0,
+        0.658228
+      ],
+      "rows": 237,
+      "states": [
+        "win",
+        "breakeven",
+        "loss"
+      ]
+    },
+    "recommended_update_mode": "candidate_only_chronological_smoothing_required",
+    "safety_note": "Do not directly overwrite priors. Treat this as likelihood/CPD evidence gated by chronological and cross-context validation.",
+    "target_node": "trade_outcome"
+  },
+  "blockers": [
+    "no_regime_probability_meets_95",
+    "cross_instrument_validation_missing_single_symbol_namespace",
+    "cross_timeframe_validation_missing_single_aq_timeframe",
+    "provider_chronological_cells_below_min_context_rows",
+    "branch_chronological_cells_below_min_context_rows",
+    "no_context_has_positive_wilson_lower_bound_above_0_5",
+    "execution_not_ready",
+    "execution_not_actionable",
+    "execution_review_observe"
+  ],
+  "branch_period_contexts": [
+    {
+      "avg_pnl": 10.957738,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 46
+      },
+      "loss_rate": 0.565217,
+      "losses": 26,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 46
+      },
+      "open_end_ms": 1776344400000,
+      "open_end_utc": "2026-04-16T13:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 46,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 504.055937,
+      "wilson_95_high": 0.577526,
+      "wilson_95_low": 0.302093,
+      "win_rate": 0.434783,
+      "wins": 20
+    },
+    {
+      "avg_pnl": 30.564895,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 17
+      },
+      "loss_rate": 0.235294,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 17
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 17,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 519.603219,
+      "wilson_95_high": 0.90445,
+      "wilson_95_low": 0.527382,
+      "win_rate": 0.764706,
+      "wins": 13
+    },
+    {
+      "avg_pnl": 1.701459,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 37
+      },
+      "loss_rate": 0.567568,
+      "losses": 21,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 37
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 37,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 62.953969,
+      "wilson_95_high": 0.590858,
+      "wilson_95_low": 0.286717,
+      "win_rate": 0.432432,
+      "wins": 16
+    },
+    {
+      "avg_pnl": -12.335977,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 19
+      },
+      "loss_rate": 0.736842,
+      "losses": 14,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 19
+      },
+      "open_end_ms": 1776805200000,
+      "open_end_utc": "2026-04-21T21:00:00+00:00",
+      "open_start_ms": 1776549600000,
+      "open_start_utc": "2026-04-18T22:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "tradingview_relay"
+      ],
+      "provider_count": 5,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 19,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -234.383568,
+      "wilson_95_high": 0.487916,
+      "wilson_95_low": 0.118064,
+      "win_rate": 0.263158,
+      "wins": 5
+    },
+    {
+      "avg_pnl": -10.598471,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 33
+      },
+      "loss_rate": 0.909091,
+      "losses": 30,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 33
+      },
+      "open_end_ms": 1777536000000,
+      "open_end_utc": "2026-04-30T08:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 33,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -349.749548,
+      "wilson_95_high": 0.235726,
+      "wilson_95_low": 0.031404,
+      "win_rate": 0.090909,
+      "wins": 3
+    },
+    {
+      "avg_pnl": -24.131364,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 26
+      },
+      "loss_rate": 1.0,
+      "losses": 26,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 26
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1777280400000,
+      "open_start_utc": "2026-04-27T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 26,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -627.41546,
+      "wilson_95_high": 0.128729,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": 2.735022,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 48
+      },
+      "loss_rate": 0.5,
+      "losses": 24,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 48
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1777554000000,
+      "open_start_utc": "2026-04-30T13:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 48,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 131.281039,
+      "wilson_95_high": 0.636107,
+      "wilson_95_low": 0.363893,
+      "win_rate": 0.5,
+      "wins": 24
+    },
+    {
+      "avg_pnl": -17.304031,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 11
+      },
+      "loss_rate": 1.0,
+      "losses": 11,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 11
+      },
+      "open_end_ms": 1778198400000,
+      "open_end_utc": "2026-05-08T00:00:00+00:00",
+      "open_start_ms": 1778180400000,
+      "open_start_utc": "2026-05-07T19:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 11,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -190.344343,
+      "wilson_95_high": 0.258833,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    }
+  ],
+  "by_branch": [
+    {
+      "avg_pnl": 2.125252,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 164
+      },
+      "loss_rate": 0.615854,
+      "losses": 101,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 164
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 164,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 348.541397,
+      "wilson_95_high": 0.46043,
+      "wilson_95_low": 0.313166,
+      "win_rate": 0.384146,
+      "wins": 63
+    },
+    {
+      "avg_pnl": -7.295071,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 73
+      },
+      "loss_rate": 0.753425,
+      "losses": 55,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 73
+      },
+      "open_end_ms": 1778198400000,
+      "open_end_utc": "2026-05-08T00:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 73,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -532.540152,
+      "wilson_95_high": 0.356444,
+      "wilson_95_low": 0.162045,
+      "win_rate": 0.246575,
+      "wins": 18
+    }
+  ],
+  "by_entry_regime": [
+    {
+      "avg_pnl": 2.125252,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 164
+      },
+      "loss_rate": 0.615854,
+      "losses": 101,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 164
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_at_entry": "Bull",
+      "rows": 164,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 348.541397,
+      "wilson_95_high": 0.46043,
+      "wilson_95_low": 0.313166,
+      "win_rate": 0.384146,
+      "wins": 63
+    },
+    {
+      "avg_pnl": -7.295071,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 73
+      },
+      "loss_rate": 0.753425,
+      "losses": 55,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 73
+      },
+      "open_end_ms": 1778198400000,
+      "open_end_utc": "2026-05-08T00:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "regime_at_entry": "Range",
+      "rows": 73,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -532.540152,
+      "wilson_95_high": 0.356444,
+      "wilson_95_low": 0.162045,
+      "win_rate": 0.246575,
+      "wins": 18
+    }
+  ],
+  "by_provider": [
+    {
+      "avg_pnl": -0.399159,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 37,
+        "Range": 15
+      },
+      "loss_rate": 0.653846,
+      "losses": 34,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 52
+      },
+      "open_end_ms": 1778500800000,
+      "open_end_utc": "2026-05-11T12:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "rows": 52,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -20.756286,
+      "wilson_95_high": 0.481964,
+      "wilson_95_low": 0.23151,
+      "win_rate": 0.346154,
+      "wins": 18
+    },
+    {
+      "avg_pnl": -0.456712,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 34,
+        "Range": 17
+      },
+      "loss_rate": 0.647059,
+      "losses": 33,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 51
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "rows": 51,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -23.292335,
+      "wilson_95_high": 0.490139,
+      "wilson_95_low": 0.236345,
+      "win_rate": 0.352941,
+      "wins": 18
+    },
+    {
+      "avg_pnl": 1.625112,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 32,
+        "Range": 12
+      },
+      "loss_rate": 0.659091,
+      "losses": 29,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 44
+      },
+      "open_end_ms": 1778493600000,
+      "open_end_utc": "2026-05-11T10:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 44,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 71.504938,
+      "wilson_95_high": 0.488609,
+      "wilson_95_low": 0.218758,
+      "win_rate": 0.340909,
+      "wins": 15
+    },
+    {
+      "avg_pnl": -3.954539,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 23,
+        "Range": 9
+      },
+      "loss_rate": 0.6875,
+      "losses": 22,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 32
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1776340800000,
+      "open_start_utc": "2026-04-16T12:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "rows": 32,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -126.545257,
+      "wilson_95_high": 0.485667,
+      "wilson_95_low": 0.179525,
+      "win_rate": 0.3125,
+      "wins": 10
+    },
+    {
+      "avg_pnl": -6.749075,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 25,
+        "Range": 12
+      },
+      "loss_rate": 0.72973,
+      "losses": 27,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 37
+      },
+      "open_end_ms": 1778500800000,
+      "open_end_utc": "2026-05-11T12:00:00+00:00",
+      "open_start_ms": 1776340800000,
+      "open_start_utc": "2026-04-16T12:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 37,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -249.715776,
+      "wilson_95_high": 0.429782,
+      "wilson_95_low": 0.153975,
+      "win_rate": 0.27027,
+      "wins": 10
+    },
+    {
+      "avg_pnl": 7.847903,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 13,
+        "Range": 8
+      },
+      "loss_rate": 0.52381,
+      "losses": 11,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 21
+      },
+      "open_end_ms": 1778454000000,
+      "open_end_utc": "2026-05-10T23:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 21,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 164.805961,
+      "wilson_95_high": 0.676305,
+      "wilson_95_low": 0.28344,
+      "win_rate": 0.47619,
+      "wins": 10
+    }
+  ],
+  "by_provider_class": [
+    {
+      "avg_pnl": 1.625112,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 32,
+        "Range": 12
+      },
+      "loss_rate": 0.659091,
+      "losses": 29,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 44
+      },
+      "open_end_ms": 1778493600000,
+      "open_end_utc": "2026-05-11T10:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_class": "broker_crypto_midpoint",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 44,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 71.504938,
+      "wilson_95_high": 0.488609,
+      "wilson_95_low": 0.218758,
+      "win_rate": 0.340909,
+      "wins": 15
+    },
+    {
+      "avg_pnl": -1.263658,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 94,
+        "Range": 41
+      },
+      "loss_rate": 0.659259,
+      "losses": 89,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 135
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_class": "crypto_exchange_public",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 3,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "kraken_public"
+      ],
+      "rows": 135,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -170.593877,
+      "wilson_95_high": 0.424107,
+      "wilson_95_low": 0.266187,
+      "win_rate": 0.340741,
+      "wins": 46
+    },
+    {
+      "avg_pnl": 7.847903,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 13,
+        "Range": 8
+      },
+      "loss_rate": 0.52381,
+      "losses": 11,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 21
+      },
+      "open_end_ms": 1778454000000,
+      "open_end_utc": "2026-05-10T23:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_class": "public_aggregator",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 21,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 164.805961,
+      "wilson_95_high": 0.676305,
+      "wilson_95_low": 0.28344,
+      "win_rate": 0.47619,
+      "wins": 10
+    },
+    {
+      "avg_pnl": -6.749075,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 25,
+        "Range": 12
+      },
+      "loss_rate": 0.72973,
+      "losses": 27,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 37
+      },
+      "open_end_ms": 1778500800000,
+      "open_end_utc": "2026-05-11T12:00:00+00:00",
+      "open_start_ms": 1776340800000,
+      "open_start_utc": "2026-04-16T12:00:00+00:00",
+      "provider_class": "tradingview_relay",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 37,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -249.715776,
+      "wilson_95_high": 0.429782,
+      "wilson_95_low": 0.153975,
+      "win_rate": 0.27027,
+      "wins": 10
+    }
+  ],
+  "chronological_splits": [
+    {
+      "avg_pnl": 14.276092,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 46,
+        "Range": 14
+      },
+      "loss_rate": 0.5,
+      "losses": 30,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 60
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 60,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "split_index": 1,
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 856.565513,
+      "wilson_95_high": 0.62265,
+      "wilson_95_low": 0.37735,
+      "win_rate": 0.5,
+      "wins": 30
+    },
+    {
+      "avg_pnl": -0.073491,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 37,
+        "Range": 22
+      },
+      "loss_rate": 0.59322,
+      "losses": 35,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 59
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776351600000,
+      "open_start_utc": "2026-04-16T15:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 59,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "split_index": 2,
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -4.335955,
+      "wilson_95_high": 0.534066,
+      "wilson_95_low": 0.29089,
+      "win_rate": 0.40678,
+      "wins": 24
+    },
+    {
+      "avg_pnl": -16.562119,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 33,
+        "Range": 26
+      },
+      "loss_rate": 0.949153,
+      "losses": 56,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 59
+      },
+      "open_end_ms": 1777536000000,
+      "open_end_utc": "2026-04-30T08:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 59,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "split_index": 3,
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -977.165008,
+      "wilson_95_high": 0.139165,
+      "wilson_95_low": 0.017443,
+      "win_rate": 0.050847,
+      "wins": 3
+    },
+    {
+      "avg_pnl": -1.001073,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 48,
+        "Range": 11
+      },
+      "loss_rate": 0.59322,
+      "losses": 35,
+      "meets_min_context_rows": true,
+      "model_selected_direction_counts": {
+        "Bull": 59
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1777554000000,
+      "open_start_utc": "2026-04-30T13:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint",
+        "crypto_exchange_public",
+        "public_aggregator",
+        "tradingview_relay"
+      ],
+      "provider_count": 6,
+      "provider_keys": [
+        "binance_btcusdt_1h",
+        "bybit_btcusdt_linear_1h",
+        "ibkr_paxos_btc_30d_1h_midpoint",
+        "kraken_xbtusd_1h",
+        "tvr_default_binance_btcusdt_1h",
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 59,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "split_index": 4,
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -59.063304,
+      "wilson_95_high": 0.534066,
+      "wilson_95_low": 0.29089,
+      "win_rate": 0.40678,
+      "wins": 24
+    }
+  ],
+  "coverage": {
+    "active_confidence": 0.5250864595751618,
+    "active_regime": "range",
+    "chronological_min_rows": 59,
+    "chronological_splits": 4,
+    "contexts_with_positive_wilson_lower_bound_gt_0_5": 0,
+    "cross_branch_period_min_rows_met": false,
+    "cross_instrument_available": false,
+    "cross_provider_available": true,
+    "cross_provider_period_min_rows_met": false,
+    "cross_timeframe_available": false,
+    "model_selected_direction_counts": {
+      "Bull": 237
+    },
+    "provider_classes": [
+      "broker_crypto_midpoint",
+      "crypto_exchange_public",
+      "public_aggregator",
+      "tradingview_relay"
+    ],
+    "provider_count": 6,
+    "range_probability": 0.7476877176681956,
+    "regime_95_met": false,
+    "row_branch_regimes": [
+      "Bull",
+      "Range"
+    ],
+    "source_rows": 237,
+    "source_timeframe_count": 1,
+    "source_timeframes": [
+      "1h"
+    ],
+    "symbol_count": 1,
+    "symbols": [
+      "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+    ]
+  },
+  "gate": "121701_context_split_validator_v1=context_split_validation_failed_no_promotion",
+  "input_artifacts": {
+    "feedback_json": "docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json",
+    "gap_map_json": "docs/experiments/actionable-regime-confidence/runs/20260512T121701+0800-codex-120630-regime-confidence-gap-map-v1/120630-regime-confidence-gap-map-v1/120630_regime_confidence_gap_map_v1.json",
+    "layered_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T121542+0800-codex-120630-115700-layered-postchain-validator-v1/derived/115700_layered_postchain_rows.jsonl"
+  },
+  "overall": {
+    "avg_pnl": -0.776366,
+    "branch_count": 2,
+    "branch_paths": [
+      "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+    ],
+    "breakeven": 0,
+    "entry_regime_counts": {
+      "Bull": 164,
+      "Range": 73
+    },
+    "loss_rate": 0.658228,
+    "losses": 156,
+    "model_selected_direction_counts": {
+      "Bull": 237
+    },
+    "open_end_ms": 1778515200000,
+    "open_end_utc": "2026-05-11T16:00:00+00:00",
+    "open_start_ms": 1775358000000,
+    "open_start_utc": "2026-04-05T03:00:00+00:00",
+    "provider_classes": [
+      "broker_crypto_midpoint",
+      "crypto_exchange_public",
+      "public_aggregator",
+      "tradingview_relay"
+    ],
+    "provider_count": 6,
+    "provider_keys": [
+      "binance_btcusdt_1h",
+      "bybit_btcusdt_linear_1h",
+      "ibkr_paxos_btc_30d_1h_midpoint",
+      "kraken_xbtusd_1h",
+      "tvr_default_binance_btcusdt_1h",
+      "yfinance_btc_usd_1h"
+    ],
+    "providers": [
+      "binance_public",
+      "bybit_public",
+      "ibkr_paxos_long_midpoint",
+      "kraken_public",
+      "tvr_default_binance",
+      "yfinance"
+    ],
+    "rows": 237,
+    "source_csvs": [
+      "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+    ],
+    "source_timeframe_count": 1,
+    "source_timeframes": [
+      "1h"
+    ],
+    "symbol_count": 1,
+    "symbols": [
+      "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+    ],
+    "total_pnl": -183.998755,
+    "wilson_95_high": 0.404251,
+    "wilson_95_low": 0.284341,
+    "win_rate": 0.341772,
+    "wins": 81
+  },
+  "promotion_allowed": false,
+  "provider_branch_period_contexts": [
+    {
+      "avg_pnl": 10.751642,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 13
+      },
+      "loss_rate": 0.538462,
+      "losses": 7,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 13
+      },
+      "open_end_ms": 1776340800000,
+      "open_end_utc": "2026-04-16T12:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 13,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 139.77135,
+      "wilson_95_high": 0.708562,
+      "wilson_95_low": 0.232061,
+      "win_rate": 0.461538,
+      "wins": 6
+    },
+    {
+      "avg_pnl": 26.091127,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 4
+      },
+      "loss_rate": 0.25,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 4
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 4,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 104.364508,
+      "wilson_95_high": 0.954413,
+      "wilson_95_low": 0.300642,
+      "win_rate": 0.75,
+      "wins": 3
+    },
+    {
+      "avg_pnl": 11.82818,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 13
+      },
+      "loss_rate": 0.538462,
+      "losses": 7,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 13
+      },
+      "open_end_ms": 1776344400000,
+      "open_end_utc": "2026-04-16T13:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 13,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 153.766343,
+      "wilson_95_high": 0.708562,
+      "wilson_95_low": 0.232061,
+      "win_rate": 0.461538,
+      "wins": 6
+    },
+    {
+      "avg_pnl": 15.115529,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 5
+      },
+      "loss_rate": 0.4,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 5
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 5,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 75.577647,
+      "wilson_95_high": 0.882379,
+      "wilson_95_low": 0.230724,
+      "win_rate": 0.6,
+      "wins": 3
+    },
+    {
+      "avg_pnl": 7.747305,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 13
+      },
+      "loss_rate": 0.615385,
+      "losses": 8,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 13
+      },
+      "open_end_ms": 1776344400000,
+      "open_end_utc": "2026-04-16T13:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 13,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 100.714964,
+      "wilson_95_high": 0.644771,
+      "wilson_95_low": 0.177097,
+      "win_rate": 0.384615,
+      "wins": 5
+    },
+    {
+      "avg_pnl": 36.7226,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 3
+      },
+      "loss_rate": 0.333333,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 3
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 3,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 110.167799,
+      "wilson_95_high": 0.938508,
+      "wilson_95_low": 0.20766,
+      "win_rate": 0.666667,
+      "wins": 2
+    },
+    {
+      "avg_pnl": -41.16973,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 1
+      },
+      "loss_rate": 1.0,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 1
+      },
+      "open_end_ms": 1776340800000,
+      "open_end_utc": "2026-04-16T12:00:00+00:00",
+      "open_start_ms": 1776340800000,
+      "open_start_utc": "2026-04-16T12:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 1,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -41.16973,
+      "wilson_95_high": 0.793451,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": 55.827731,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 1
+      },
+      "loss_rate": 0.0,
+      "losses": 0,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 1
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1776351600000,
+      "open_start_utc": "2026-04-16T15:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 1,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 55.827731,
+      "wilson_95_high": 1.0,
+      "wilson_95_low": 0.206549,
+      "win_rate": 1.0,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -41.380441,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 1
+      },
+      "loss_rate": 1.0,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 1
+      },
+      "open_end_ms": 1776340800000,
+      "open_end_utc": "2026-04-16T12:00:00+00:00",
+      "open_start_ms": 1776340800000,
+      "open_start_utc": "2026-04-16T12:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 1,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -41.380441,
+      "wilson_95_high": 0.793451,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": 54.440795,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 1
+      },
+      "loss_rate": 0.0,
+      "losses": 0,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 1
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1776351600000,
+      "open_start_utc": "2026-04-16T15:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 1,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 54.440795,
+      "wilson_95_high": 1.0,
+      "wilson_95_low": 0.206549,
+      "win_rate": 1.0,
+      "wins": 1
+    },
+    {
+      "avg_pnl": 38.47069,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 5
+      },
+      "loss_rate": 0.4,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 5
+      },
+      "open_end_ms": 1776340800000,
+      "open_end_utc": "2026-04-16T12:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 5,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 192.353452,
+      "wilson_95_high": 0.882379,
+      "wilson_95_low": 0.230724,
+      "win_rate": 0.6,
+      "wins": 3
+    },
+    {
+      "avg_pnl": 39.741579,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 3
+      },
+      "loss_rate": 0.0,
+      "losses": 0,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 3
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775397600000,
+      "open_start_utc": "2026-04-05T14:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 3,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 119.224738,
+      "wilson_95_high": 1.0,
+      "wilson_95_low": 0.438503,
+      "win_rate": 1.0,
+      "wins": 3
+    },
+    {
+      "avg_pnl": 1.685159,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 7
+      },
+      "loss_rate": 0.571429,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 7
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 7,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 11.796115,
+      "wilson_95_high": 0.749542,
+      "wilson_95_low": 0.15822,
+      "win_rate": 0.428571,
+      "wins": 3
+    },
+    {
+      "avg_pnl": -17.515523,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 5
+      },
+      "loss_rate": 0.8,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 5
+      },
+      "open_end_ms": 1776805200000,
+      "open_end_utc": "2026-04-21T21:00:00+00:00",
+      "open_start_ms": 1776549600000,
+      "open_start_utc": "2026-04-18T22:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 5,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -87.577613,
+      "wilson_95_high": 0.624465,
+      "wilson_95_low": 0.036224,
+      "win_rate": 0.2,
+      "wins": 1
+    },
+    {
+      "avg_pnl": 1.650654,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 7
+      },
+      "loss_rate": 0.571429,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 7
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 7,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 11.554576,
+      "wilson_95_high": 0.749542,
+      "wilson_95_low": 0.15822,
+      "win_rate": 0.428571,
+      "wins": 3
+    },
+    {
+      "avg_pnl": -16.355175,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 4
+      },
+      "loss_rate": 0.75,
+      "losses": 3,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 4
+      },
+      "open_end_ms": 1776805200000,
+      "open_end_utc": "2026-04-21T21:00:00+00:00",
+      "open_start_ms": 1776549600000,
+      "open_start_utc": "2026-04-18T22:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 4,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -65.420701,
+      "wilson_95_high": 0.699358,
+      "wilson_95_low": 0.045587,
+      "win_rate": 0.25,
+      "wins": 1
+    },
+    {
+      "avg_pnl": 5.896237,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 6
+      },
+      "loss_rate": 0.5,
+      "losses": 3,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 6
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 6,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 35.377421,
+      "wilson_95_high": 0.812384,
+      "wilson_95_low": 0.187616,
+      "win_rate": 0.5,
+      "wins": 3
+    },
+    {
+      "avg_pnl": 14.678532,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 2
+      },
+      "loss_rate": 0.5,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 2
+      },
+      "open_end_ms": 1776805200000,
+      "open_end_utc": "2026-04-21T21:00:00+00:00",
+      "open_start_ms": 1776610800000,
+      "open_start_utc": "2026-04-19T15:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 2,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 29.357063,
+      "wilson_95_high": 0.905469,
+      "wilson_95_low": 0.094531,
+      "win_rate": 0.5,
+      "wins": 1
+    },
+    {
+      "avg_pnl": 5.225127,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 7
+      },
+      "loss_rate": 0.571429,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 7
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 7,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 36.575891,
+      "wilson_95_high": 0.749542,
+      "wilson_95_low": 0.15822,
+      "win_rate": 0.428571,
+      "wins": 3
+    },
+    {
+      "avg_pnl": -7.865803,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 3
+      },
+      "loss_rate": 0.666667,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 3
+      },
+      "open_end_ms": 1776805200000,
+      "open_end_utc": "2026-04-21T21:00:00+00:00",
+      "open_start_ms": 1776549600000,
+      "open_start_utc": "2026-04-18T22:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 3,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -23.597409,
+      "wilson_95_high": 0.79234,
+      "wilson_95_low": 0.061492,
+      "win_rate": 0.333333,
+      "wins": 1
+    },
+    {
+      "avg_pnl": 1.655052,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 7
+      },
+      "loss_rate": 0.571429,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 7
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 7,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 11.585365,
+      "wilson_95_high": 0.749542,
+      "wilson_95_low": 0.15822,
+      "win_rate": 0.428571,
+      "wins": 3
+    },
+    {
+      "avg_pnl": -17.428982,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 5
+      },
+      "loss_rate": 0.8,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 5
+      },
+      "open_end_ms": 1776805200000,
+      "open_end_utc": "2026-04-21T21:00:00+00:00",
+      "open_start_ms": 1776549600000,
+      "open_start_utc": "2026-04-18T22:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 5,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -87.144908,
+      "wilson_95_high": 0.624465,
+      "wilson_95_low": 0.036224,
+      "win_rate": 0.2,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -14.645133,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 3
+      },
+      "loss_rate": 0.666667,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 3
+      },
+      "open_end_ms": 1776679200000,
+      "open_end_utc": "2026-04-20T10:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 3,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -43.935399,
+      "wilson_95_high": 0.79234,
+      "wilson_95_low": 0.061492,
+      "win_rate": 0.333333,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -6.716359,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 8
+      },
+      "loss_rate": 0.875,
+      "losses": 7,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 8
+      },
+      "open_end_ms": 1777536000000,
+      "open_end_utc": "2026-04-30T08:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 8,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -53.730876,
+      "wilson_95_high": 0.470888,
+      "wilson_95_low": 0.022417,
+      "win_rate": 0.125,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -20.388092,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 4
+      },
+      "loss_rate": 1.0,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 4
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1777330800000,
+      "open_start_utc": "2026-04-27T23:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 4,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -81.55237,
+      "wilson_95_high": 0.489891,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -2.466763,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 6
+      },
+      "loss_rate": 0.833333,
+      "losses": 5,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 6
+      },
+      "open_end_ms": 1777536000000,
+      "open_end_utc": "2026-04-30T08:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 6,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -14.800576,
+      "wilson_95_high": 0.563503,
+      "wilson_95_low": 0.030053,
+      "win_rate": 0.166667,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -24.694003,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 6
+      },
+      "loss_rate": 1.0,
+      "losses": 6,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 6
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1777280400000,
+      "open_start_utc": "2026-04-27T09:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 6,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -148.164018,
+      "wilson_95_high": 0.390334,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -22.479613,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 4
+      },
+      "loss_rate": 1.0,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 4
+      },
+      "open_end_ms": 1777435200000,
+      "open_end_utc": "2026-04-29T04:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 4,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -89.918454,
+      "wilson_95_high": 0.489891,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -26.204281,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 5
+      },
+      "loss_rate": 1.0,
+      "losses": 5,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 5
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1777280400000,
+      "open_start_utc": "2026-04-27T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 5,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -131.021407,
+      "wilson_95_high": 0.434482,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -18.390739,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 6
+      },
+      "loss_rate": 1.0,
+      "losses": 6,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 6
+      },
+      "open_end_ms": 1777435200000,
+      "open_end_utc": "2026-04-29T04:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 6,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -110.344436,
+      "wilson_95_high": 0.390334,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -22.31623,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 3
+      },
+      "loss_rate": 1.0,
+      "losses": 3,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 3
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1777363200000,
+      "open_start_utc": "2026-04-28T08:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 3,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -66.94869,
+      "wilson_95_high": 0.561497,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -6.596368,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 8
+      },
+      "loss_rate": 0.875,
+      "losses": 7,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 8
+      },
+      "open_end_ms": 1777536000000,
+      "open_end_utc": "2026-04-30T08:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 8,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -52.77094,
+      "wilson_95_high": 0.470888,
+      "wilson_95_low": 0.022417,
+      "win_rate": 0.125,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -20.28736,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 4
+      },
+      "loss_rate": 1.0,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 4
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1777330800000,
+      "open_start_utc": "2026-04-27T23:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 4,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -81.149441,
+      "wilson_95_high": 0.489891,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -28.184267,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 1
+      },
+      "loss_rate": 1.0,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 1
+      },
+      "open_end_ms": 1777032000000,
+      "open_end_utc": "2026-04-24T12:00:00+00:00",
+      "open_start_ms": 1777032000000,
+      "open_start_utc": "2026-04-24T12:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 1,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -28.184267,
+      "wilson_95_high": 0.793451,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -29.644884,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 4
+      },
+      "loss_rate": 1.0,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 4
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1777280400000,
+      "open_start_utc": "2026-04-27T09:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 4,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -118.579534,
+      "wilson_95_high": 0.489891,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -2.280295,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 9
+      },
+      "loss_rate": 0.555556,
+      "losses": 5,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 9
+      },
+      "open_end_ms": 1778500800000,
+      "open_end_utc": "2026-05-11T12:00:00+00:00",
+      "open_start_ms": 1777795200000,
+      "open_start_utc": "2026-05-03T08:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 9,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -20.522658,
+      "wilson_95_high": 0.733349,
+      "wilson_95_low": 0.188779,
+      "win_rate": 0.444444,
+      "wins": 4
+    },
+    {
+      "avg_pnl": -16.652371,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 2
+      },
+      "loss_rate": 1.0,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 2
+      },
+      "open_end_ms": 1778198400000,
+      "open_end_utc": "2026-05-08T00:00:00+00:00",
+      "open_start_ms": 1778180400000,
+      "open_start_utc": "2026-05-07T19:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 2,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -33.304742,
+      "wilson_95_high": 0.65762,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -0.309972,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 8
+      },
+      "loss_rate": 0.5,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 8
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1777795200000,
+      "open_start_utc": "2026-05-03T08:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 8,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -2.479778,
+      "wilson_95_high": 0.784784,
+      "wilson_95_low": 0.215216,
+      "win_rate": 0.5,
+      "wins": 4
+    },
+    {
+      "avg_pnl": -16.662914,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 2
+      },
+      "loss_rate": 1.0,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 2
+      },
+      "open_end_ms": 1778198400000,
+      "open_end_utc": "2026-05-08T00:00:00+00:00",
+      "open_start_ms": 1778180400000,
+      "open_start_utc": "2026-05-07T19:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 2,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -33.325827,
+      "wilson_95_high": 0.65762,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": 5.782977,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 9
+      },
+      "loss_rate": 0.555556,
+      "losses": 5,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 9
+      },
+      "open_end_ms": 1778493600000,
+      "open_end_utc": "2026-05-11T10:00:00+00:00",
+      "open_start_ms": 1777554000000,
+      "open_start_utc": "2026-04-30T13:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 9,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 52.046795,
+      "wilson_95_high": 0.733349,
+      "wilson_95_low": 0.188779,
+      "win_rate": 0.444444,
+      "wins": 4
+    },
+    {
+      "avg_pnl": -17.609622,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 2
+      },
+      "loss_rate": 1.0,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 2
+      },
+      "open_end_ms": 1778198400000,
+      "open_end_utc": "2026-05-08T00:00:00+00:00",
+      "open_start_ms": 1778180400000,
+      "open_start_utc": "2026-05-07T19:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 2,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -35.219243,
+      "wilson_95_high": 0.65762,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": 6.61663,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 9
+      },
+      "loss_rate": 0.444444,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 9
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1777554000000,
+      "open_start_utc": "2026-04-30T13:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 9,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 59.549666,
+      "wilson_95_high": 0.811221,
+      "wilson_95_low": 0.266651,
+      "win_rate": 0.555556,
+      "wins": 5
+    },
+    {
+      "avg_pnl": -18.21914,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 2
+      },
+      "loss_rate": 1.0,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 2
+      },
+      "open_end_ms": 1778198400000,
+      "open_end_utc": "2026-05-08T00:00:00+00:00",
+      "open_start_ms": 1778180400000,
+      "open_start_utc": "2026-05-07T19:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 2,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -36.43828,
+      "wilson_95_high": 0.65762,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -2.239557,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 9
+      },
+      "loss_rate": 0.555556,
+      "losses": 5,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 9
+      },
+      "open_end_ms": 1778500800000,
+      "open_end_utc": "2026-05-11T12:00:00+00:00",
+      "open_start_ms": 1777795200000,
+      "open_start_utc": "2026-05-03T08:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 9,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -20.156014,
+      "wilson_95_high": 0.733349,
+      "wilson_95_low": 0.188779,
+      "win_rate": 0.444444,
+      "wins": 4
+    },
+    {
+      "avg_pnl": -16.570096,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 2
+      },
+      "loss_rate": 1.0,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 2
+      },
+      "open_end_ms": 1778198400000,
+      "open_end_utc": "2026-05-08T00:00:00+00:00",
+      "open_start_ms": 1778180400000,
+      "open_start_utc": "2026-05-07T19:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 2,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -33.140192,
+      "wilson_95_high": 0.65762,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": 15.710757,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 4
+      },
+      "loss_rate": 0.25,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 4
+      },
+      "open_end_ms": 1778454000000,
+      "open_end_utc": "2026-05-10T23:00:00+00:00",
+      "open_start_ms": 1777795200000,
+      "open_start_utc": "2026-05-03T08:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": 4,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 62.843029,
+      "wilson_95_high": 0.954413,
+      "wilson_95_low": 0.300642,
+      "win_rate": 0.75,
+      "wins": 3
+    },
+    {
+      "avg_pnl": -18.916059,
+      "branch_count": 1,
+      "branch_paths": [
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Range": 1
+      },
+      "loss_rate": 1.0,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 1
+      },
+      "open_end_ms": 1778180400000,
+      "open_end_utc": "2026-05-07T19:00:00+00:00",
+      "open_start_ms": 1778180400000,
+      "open_start_utc": "2026-05-07T19:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "regime_profit_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": 1,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -18.916059,
+      "wilson_95_high": 0.793451,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    }
+  ],
+  "provider_period_contexts": [
+    {
+      "avg_pnl": 14.360933,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 13,
+        "Range": 4
+      },
+      "loss_rate": 0.470588,
+      "losses": 8,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 17
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "rows": 17,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 244.135858,
+      "wilson_95_high": 0.738349,
+      "wilson_95_low": 0.309632,
+      "win_rate": 0.529412,
+      "wins": 9
+    },
+    {
+      "avg_pnl": 12.741333,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 13,
+        "Range": 5
+      },
+      "loss_rate": 0.5,
+      "losses": 9,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 18
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "rows": 18,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 229.34399,
+      "wilson_95_high": 0.70969,
+      "wilson_95_low": 0.29031,
+      "win_rate": 0.5,
+      "wins": 9
+    },
+    {
+      "avg_pnl": 13.180173,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 13,
+        "Range": 3
+      },
+      "loss_rate": 0.5625,
+      "losses": 9,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 16
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775379600000,
+      "open_start_utc": "2026-04-05T09:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 16,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 210.882763,
+      "wilson_95_high": 0.668214,
+      "wilson_95_low": 0.230987,
+      "win_rate": 0.4375,
+      "wins": 7
+    },
+    {
+      "avg_pnl": 7.329001,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 1,
+        "Range": 1
+      },
+      "loss_rate": 0.5,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 2
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1776340800000,
+      "open_start_utc": "2026-04-16T12:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "rows": 2,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 14.658001,
+      "wilson_95_high": 0.905469,
+      "wilson_95_low": 0.094531,
+      "win_rate": 0.5,
+      "wins": 1
+    },
+    {
+      "avg_pnl": 6.530177,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 1,
+        "Range": 1
+      },
+      "loss_rate": 0.5,
+      "losses": 1,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 2
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1776340800000,
+      "open_start_utc": "2026-04-16T12:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 2,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 13.060354,
+      "wilson_95_high": 0.905469,
+      "wilson_95_low": 0.094531,
+      "win_rate": 0.5,
+      "wins": 1
+    },
+    {
+      "avg_pnl": 38.947274,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 5,
+        "Range": 3
+      },
+      "loss_rate": 0.25,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 8
+      },
+      "open_end_ms": 1776351600000,
+      "open_end_utc": "2026-04-16T15:00:00+00:00",
+      "open_start_ms": 1775358000000,
+      "open_start_utc": "2026-04-05T03:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 8,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q1",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 311.578191,
+      "wilson_95_high": 0.928521,
+      "wilson_95_low": 0.409275,
+      "win_rate": 0.75,
+      "wins": 6
+    },
+    {
+      "avg_pnl": -6.315125,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 7,
+        "Range": 5
+      },
+      "loss_rate": 0.666667,
+      "losses": 8,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 12
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "rows": 12,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -75.781498,
+      "wilson_95_high": 0.609378,
+      "wilson_95_low": 0.13812,
+      "win_rate": 0.333333,
+      "wins": 4
+    },
+    {
+      "avg_pnl": -4.89692,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 7,
+        "Range": 4
+      },
+      "loss_rate": 0.636364,
+      "losses": 7,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 11
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "rows": 11,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -53.866125,
+      "wilson_95_high": 0.646199,
+      "wilson_95_low": 0.151665,
+      "win_rate": 0.363636,
+      "wins": 4
+    },
+    {
+      "avg_pnl": 8.09181,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 6,
+        "Range": 2
+      },
+      "loss_rate": 0.5,
+      "losses": 4,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 8
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 8,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 64.734484,
+      "wilson_95_high": 0.784784,
+      "wilson_95_low": 0.215216,
+      "win_rate": 0.5,
+      "wins": 4
+    },
+    {
+      "avg_pnl": 1.297848,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 7,
+        "Range": 3
+      },
+      "loss_rate": 0.6,
+      "losses": 6,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 10
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "rows": 10,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 12.978482,
+      "wilson_95_high": 0.687326,
+      "wilson_95_low": 0.16818,
+      "win_rate": 0.4,
+      "wins": 4
+    },
+    {
+      "avg_pnl": -6.296629,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 7,
+        "Range": 5
+      },
+      "loss_rate": 0.666667,
+      "losses": 8,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 12
+      },
+      "open_end_ms": 1776956400000,
+      "open_end_utc": "2026-04-23T15:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 12,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -75.559543,
+      "wilson_95_high": 0.609378,
+      "wilson_95_low": 0.13812,
+      "win_rate": 0.333333,
+      "wins": 4
+    },
+    {
+      "avg_pnl": -14.645133,
+      "branch_count": 1,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 3
+      },
+      "loss_rate": 0.666667,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 3
+      },
+      "open_end_ms": 1776679200000,
+      "open_end_utc": "2026-04-20T10:00:00+00:00",
+      "open_start_ms": 1776355200000,
+      "open_start_utc": "2026-04-16T16:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 3,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q2",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -43.935399,
+      "wilson_95_high": 0.79234,
+      "wilson_95_low": 0.061492,
+      "win_rate": 0.333333,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -11.273604,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 8,
+        "Range": 4
+      },
+      "loss_rate": 0.916667,
+      "losses": 11,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 12
+      },
+      "open_end_ms": 1777536000000,
+      "open_end_utc": "2026-04-30T08:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "rows": 12,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -135.283246,
+      "wilson_95_high": 0.35388,
+      "wilson_95_low": 0.014865,
+      "win_rate": 0.083333,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -13.580383,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 6,
+        "Range": 6
+      },
+      "loss_rate": 0.916667,
+      "losses": 11,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 12
+      },
+      "open_end_ms": 1777536000000,
+      "open_end_utc": "2026-04-30T08:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "rows": 12,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -162.964594,
+      "wilson_95_high": 0.35388,
+      "wilson_95_low": 0.014865,
+      "win_rate": 0.083333,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -24.548873,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 4,
+        "Range": 5
+      },
+      "loss_rate": 1.0,
+      "losses": 9,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 9
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 9,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -220.93986,
+      "wilson_95_high": 0.299145,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -19.699236,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 6,
+        "Range": 3
+      },
+      "loss_rate": 1.0,
+      "losses": 9,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 9
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "rows": 9,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -177.293126,
+      "wilson_95_high": 0.299145,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -11.160032,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 8,
+        "Range": 4
+      },
+      "loss_rate": 0.916667,
+      "losses": 11,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 12
+      },
+      "open_end_ms": 1777536000000,
+      "open_end_utc": "2026-04-30T08:00:00+00:00",
+      "open_start_ms": 1776985200000,
+      "open_start_utc": "2026-04-23T23:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 12,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -133.920381,
+      "wilson_95_high": 0.35388,
+      "wilson_95_low": 0.014865,
+      "win_rate": 0.083333,
+      "wins": 1
+    },
+    {
+      "avg_pnl": -29.35276,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 1,
+        "Range": 4
+      },
+      "loss_rate": 1.0,
+      "losses": 5,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 5
+      },
+      "open_end_ms": 1777500000000,
+      "open_end_utc": "2026-04-29T22:00:00+00:00",
+      "open_start_ms": 1777032000000,
+      "open_start_utc": "2026-04-24T12:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 5,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q3",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -146.763801,
+      "wilson_95_high": 0.434482,
+      "wilson_95_low": 0.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    {
+      "avg_pnl": -4.8934,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 9,
+        "Range": 2
+      },
+      "loss_rate": 0.636364,
+      "losses": 7,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 11
+      },
+      "open_end_ms": 1778500800000,
+      "open_end_utc": "2026-05-11T12:00:00+00:00",
+      "open_start_ms": 1777795200000,
+      "open_start_utc": "2026-05-03T08:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "binance_btcusdt_1h"
+      ],
+      "providers": [
+        "binance_public"
+      ],
+      "rows": 11,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "binance_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -53.8274,
+      "wilson_95_high": 0.646199,
+      "wilson_95_low": 0.151665,
+      "win_rate": 0.363636,
+      "wins": 4
+    },
+    {
+      "avg_pnl": -3.580561,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 8,
+        "Range": 2
+      },
+      "loss_rate": 0.6,
+      "losses": 6,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 10
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1777795200000,
+      "open_start_utc": "2026-05-03T08:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "bybit_btcusdt_linear_1h"
+      ],
+      "providers": [
+        "bybit_public"
+      ],
+      "rows": 10,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/bybit_btcusdt_linear_1h.csv"
+      ],
+      "source_provider": "bybit_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -35.805606,
+      "wilson_95_high": 0.687326,
+      "wilson_95_low": 0.16818,
+      "win_rate": 0.4,
+      "wins": 4
+    },
+    {
+      "avg_pnl": 1.529777,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 9,
+        "Range": 2
+      },
+      "loss_rate": 0.636364,
+      "losses": 7,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 11
+      },
+      "open_end_ms": 1778493600000,
+      "open_end_utc": "2026-05-11T10:00:00+00:00",
+      "open_start_ms": 1777554000000,
+      "open_start_utc": "2026-04-30T13:00:00+00:00",
+      "provider_classes": [
+        "broker_crypto_midpoint"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "ibkr_paxos_btc_30d_1h_midpoint"
+      ],
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 11,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv"
+      ],
+      "source_provider": "ibkr_paxos_long_midpoint",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 16.827552,
+      "wilson_95_high": 0.646199,
+      "wilson_95_low": 0.151665,
+      "win_rate": 0.363636,
+      "wins": 4
+    },
+    {
+      "avg_pnl": 2.101035,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 9,
+        "Range": 2
+      },
+      "loss_rate": 0.545455,
+      "losses": 6,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 11
+      },
+      "open_end_ms": 1778515200000,
+      "open_end_utc": "2026-05-11T16:00:00+00:00",
+      "open_start_ms": 1777554000000,
+      "open_start_utc": "2026-04-30T13:00:00+00:00",
+      "provider_classes": [
+        "crypto_exchange_public"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "kraken_xbtusd_1h"
+      ],
+      "providers": [
+        "kraken_public"
+      ],
+      "rows": 11,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/kraken_xbtusd_1h.csv"
+      ],
+      "source_provider": "kraken_public",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 23.111386,
+      "wilson_95_high": 0.719908,
+      "wilson_95_low": 0.212713,
+      "win_rate": 0.454545,
+      "wins": 5
+    },
+    {
+      "avg_pnl": -4.84511,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 9,
+        "Range": 2
+      },
+      "loss_rate": 0.636364,
+      "losses": 7,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 11
+      },
+      "open_end_ms": 1778500800000,
+      "open_end_utc": "2026-05-11T12:00:00+00:00",
+      "open_start_ms": 1777795200000,
+      "open_start_utc": "2026-05-03T08:00:00+00:00",
+      "provider_classes": [
+        "tradingview_relay"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "tvr_default_binance_btcusdt_1h"
+      ],
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 11,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/tvr_default_binance_btcusdt_1h.csv"
+      ],
+      "source_provider": "tvr_default_binance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": -53.296206,
+      "wilson_95_high": 0.646199,
+      "wilson_95_low": 0.151665,
+      "win_rate": 0.363636,
+      "wins": 4
+    },
+    {
+      "avg_pnl": 8.785394,
+      "branch_count": 2,
+      "branch_paths": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "entry_regime_counts": {
+        "Bull": 4,
+        "Range": 1
+      },
+      "loss_rate": 0.4,
+      "losses": 2,
+      "meets_min_context_rows": false,
+      "model_selected_direction_counts": {
+        "Bull": 5
+      },
+      "open_end_ms": 1778454000000,
+      "open_end_utc": "2026-05-10T23:00:00+00:00",
+      "open_start_ms": 1777795200000,
+      "open_start_utc": "2026-05-03T08:00:00+00:00",
+      "provider_classes": [
+        "public_aggregator"
+      ],
+      "provider_count": 1,
+      "provider_keys": [
+        "yfinance_btc_usd_1h"
+      ],
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 5,
+      "source_csvs": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/yfinance_btc_usd_1h.csv"
+      ],
+      "source_provider": "yfinance",
+      "source_timeframe_count": 1,
+      "source_timeframes": [
+        "1h"
+      ],
+      "split_id": "chronological_q4",
+      "symbol_count": 1,
+      "symbols": [
+        "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700"
+      ],
+      "total_pnl": 43.92697,
+      "wilson_95_high": 0.882379,
+      "wilson_95_low": 0.230724,
+      "win_rate": 0.6,
+      "wins": 3
+    }
+  ],
+  "regime_confidence_readback": [
+    {
+      "gap_to_95": 0.95,
+      "is_active": false,
+      "meets_95": false,
+      "probability": 0.0,
+      "regime": "trend"
+    },
+    {
+      "gap_to_95": 0.202312,
+      "is_active": true,
+      "meets_95": false,
+      "probability": 0.747688,
+      "regime": "range"
+    },
+    {
+      "gap_to_95": 0.772456,
+      "is_active": false,
+      "meets_95": false,
+      "probability": 0.177544,
+      "regime": "stress"
+    },
+    {
+      "gap_to_95": 0.875231,
+      "is_active": false,
+      "meets_95": false,
+      "probability": 0.074769,
+      "regime": "transition"
+    }
+  ],
+  "row_bbn_legacy_posterior_mean": {
+    "bear": 0.263604,
+    "bull": 0.229046,
+    "range": 0.50735
+  },
+  "run_id": "20260512T122546+0800-codex-121701-context-split-validator-v1",
+  "source_aq_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "source_downstream_run_id": "20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1",
+  "source_feedback_run_id": "20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1",
+  "source_gap_run_id": "20260512T121701+0800-codex-120630-regime-confidence-gap-map-v1",
+  "source_layered_run_id": "20260512T121542+0800-codex-120630-115700-layered-postchain-validator-v1",
+  "trade_usable": false,
+  "update_goal": false
+}

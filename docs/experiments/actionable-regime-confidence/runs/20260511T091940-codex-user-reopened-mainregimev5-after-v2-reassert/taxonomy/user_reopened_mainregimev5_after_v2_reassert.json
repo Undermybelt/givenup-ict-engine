@@ -1,0 +1,25 @@
+{
+  "run_id": "20260511T091940+0800-codex-user-reopened-mainregimev5-after-v2-reassert",
+  "purpose": "resolve taxonomy conflict after V2 reassertion",
+  "user_explicitly_reopened_taxonomy": true,
+  "supersedes_loop": "20260511T091507+0800-codex-mainregimev2-reassert-after-v5-drift",
+  "active_candidate_taxonomy": "MainRegimeV5",
+  "candidate_main_classes": [
+    "BullExpansion",
+    "BearExpansion",
+    "ConsolidationRange",
+    "CrisisStress",
+    "ManipulationLiquidityEngineering",
+    "TransitionAccumulationDistribution",
+    "CrossAssetMacroRotation",
+    "UnknownOrMixed"
+  ],
+  "accepted_95_roots_added": 0,
+  "accepted_gate": "none_for_MainRegimeV5_taxonomy_reset_no_calibration",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "gate_result": "mainregimev5_user_reopened_after_v2_reassert_no_new_95",
+  "next_action": "materialize MainRegimeV5 schema/crosswalk and rerun unchanged 95-99 chronological calibration across full market/timeframe coverage"
+}

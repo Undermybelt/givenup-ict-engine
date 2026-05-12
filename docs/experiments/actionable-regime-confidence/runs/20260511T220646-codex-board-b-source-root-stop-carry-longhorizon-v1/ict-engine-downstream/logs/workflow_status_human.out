@@ -1,0 +1,6 @@
+SRC_ROOT_CARRY_LONG_220646 | workflow_status | no_workflow_state
+Block: no_workflow_state
+Latest: no_workflow_state | No workflow phase summary available yet.
+Next: Start with ict-engine provider-status --compact. Then choose replay, factors/backtest, or live from the routes below.
+Provider: tradfi free fallback=yfinance | live zero-config=none | crypto public=none | setup required=crypto_public_runtime, external_http_runtime, ibkr Check: ict-engine provider-status --compact
+Routes: replay=ict-engine analyze --symbol SRC_ROOT_CARRY_LONG_220646 --demo --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2 --human | factors/backtest=ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data <historical-data.json> --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2 --human | live bootstrap=ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/state_fresh_downstream_v2 --phase bootstrap --human

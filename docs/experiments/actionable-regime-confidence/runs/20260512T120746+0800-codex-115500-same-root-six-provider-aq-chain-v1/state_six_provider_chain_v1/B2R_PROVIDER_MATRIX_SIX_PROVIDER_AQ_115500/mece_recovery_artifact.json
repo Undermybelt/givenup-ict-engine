@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-B2R_PROVIDER_MATRIX_SIX_PROVIDER_AQ_115500-1778559016723",
+  "generated_at": "2026-05-12T04:10:16.723914Z",
+  "symbol": "B2R_PROVIDER_MATRIX_SIX_PROVIDER_AQ_115500",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "d93e0a76b8c4fcbe",
+  "execution_validity_summary": "execution_blocked=451;execution_observe_only=306;execution_ready=226",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        295
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.515730272364398,
+      "execution_readiness_drift": -0.000029306371077339778,
+      "sample_count": 295
+    },
+    {
+      "horizon_bars": [
+        295,
+        786
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4632006619949918,
+      "execution_readiness_drift": -0.000028885782350759648,
+      "sample_count": 491
+    },
+    {
+      "horizon_bars": [
+        786,
+        983
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4359536254281502,
+      "execution_readiness_drift": -0.0005091713693518417,
+      "sample_count": 197
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "1f53b5008a5eb2c1",
+    "data_fingerprint": "38e87d9798c1bcb5"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "run_id": "20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1",
+  "scope": "selected_history_btc_nonzero_trade_density_probe",
+  "source_lineage": [
+    "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+    "20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+    "20260512T122600+0800-codex-115700-selected-history-factor-research-v1"
+  ],
+  "strategy": "B2R115700SelectedHistoryMomentumProbeV1",
+  "pair": "B2RSAMEROOTSIXPROVIDER1HAQ115700/USD",
+  "command_exit": 0,
+  "trade_count": 0,
+  "total_profit_pct": 0.0,
+  "win_rate_pct": 0.0,
+  "profit_factor": 0.0,
+  "gate": "selected_history_nonzero_probe_zero_trades_no_promotion",
+  "production_likelihood_mutation": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "artifacts": {
+    "strategy": "docs/experiments/actionable-regime-confidence/runs/20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1/strategies_external/B2R115700SelectedHistoryMomentumProbeV1.py",
+    "command": "docs/experiments/actionable-regime-confidence/runs/20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1/command-output/run_nonzero_probe.cmd",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1/command-output/run_nonzero_probe.out",
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1/command-output/run_nonzero_probe.err",
+    "exit": "docs/experiments/actionable-regime-confidence/runs/20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1/command-output/run_nonzero_probe.exit"
+  }
+}

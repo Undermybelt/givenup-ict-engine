@@ -1,0 +1,4 @@
+Using CPython 3.13.12 interpreter at: /opt/homebrew/opt/python@3.13/bin/python3.13
+Resolved 1 package in 444ms
+Installed 1 package in 6ms
+ + pypdf==6.11.0

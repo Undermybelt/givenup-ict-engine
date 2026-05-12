@@ -1,0 +1,4 @@
+{
+  "gate_result": "blocked_systemslab_event_rank_below_95",
+  "report": "docs/experiments/actionable-regime-confidence/runs/20260511T043321-codex-systemslab-event-rank-manipulation-gate/event-rank-gate/systemslab_event_rank_manipulation_gate_report.json"
+}

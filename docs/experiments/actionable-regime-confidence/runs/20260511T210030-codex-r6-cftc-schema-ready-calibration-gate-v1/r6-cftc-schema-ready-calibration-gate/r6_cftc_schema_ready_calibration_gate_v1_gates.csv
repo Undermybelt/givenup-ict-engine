@@ -1,0 +1,7 @@
+gate,observed,required,pass
+positive_support,9,50,False
+negative_support,9,50,False
+chronological_split,6,2,True
+heldout_symbol_or_venue,symbols=4;venues=2,symbol>=2 or venue>=2,True
+wilson95_lcb,0.700855,>=0.95,False
+broad_normal_sample,"Derived only from public CFTC facts describing genuine iceberg order legs in the same examples; schema-ready/unscored seed, not a broad normal-activity calibration sample.",source-owned broad normal activity sample,False

@@ -1,0 +1,7 @@
+all_six_materials=true
+batch_exit=0
+dispatch_exit=0
+rank_exit=0
+promotion_allowed=false
+trade_usable=false
+update_goal=false

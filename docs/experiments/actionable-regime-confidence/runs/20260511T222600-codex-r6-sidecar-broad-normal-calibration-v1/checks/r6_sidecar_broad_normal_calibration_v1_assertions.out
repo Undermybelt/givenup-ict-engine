@@ -1,0 +1,7 @@
+PASS broad_normal_sidecar_rows=80
+PASS broad_normal_sidecar_gate=true
+PASS positive_rows=57
+PASS pooled_sidecar_gate=false
+PASS accepted_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

@@ -1,0 +1,1 @@
+uv run --with pandas python scripts/auto_quant_external/fetch_external.py kraken-kline --pair XBT/USD --interval 60 --output docs/experiments/actionable-regime-confidence/runs/20260511T195320-codex-board-a-provider-reachability-after-034813-v1/command-output/11b_fetch_external_kraken_xbtusd_1h_corrected.csv 

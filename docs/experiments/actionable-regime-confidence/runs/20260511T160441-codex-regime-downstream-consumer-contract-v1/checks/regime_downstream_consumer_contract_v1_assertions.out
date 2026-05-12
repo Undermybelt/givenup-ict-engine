@@ -1,0 +1,12 @@
+template_count=5
+all_templates_schema_valid=true
+all_templates_trade_usable_false=true
+old_child_labels_used=false
+supports_bundle_schema=true
+explicit_mainregime_label_mapper_present=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

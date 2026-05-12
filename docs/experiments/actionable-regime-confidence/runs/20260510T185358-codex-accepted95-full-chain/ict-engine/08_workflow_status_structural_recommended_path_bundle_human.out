@@ -1,0 +1,4 @@
+NQ | structural-path | trend_follow_through | posterior=0.571 | selected_prob=0.367
+Trigger: regime_posterior=trend:0.451
+Stop: Use execution candidate 'execution-candidate:NQ:analyze-live:v1' once actionable; current candidate_status=no_trade.
+Next: ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state

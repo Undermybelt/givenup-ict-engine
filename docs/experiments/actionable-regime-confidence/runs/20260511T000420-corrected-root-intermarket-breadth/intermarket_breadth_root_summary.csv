@@ -1,0 +1,7 @@
+root_class,state,rule,cal_support,test_support,test_lcb,ece,blockers
+Bull,blocked,breadth_pos_ret4 >= 0.6 AND panel_ret4_mean >= train_q0.85,837,933,0.2829931762037233,0.06219579189188151,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05
+Bear,blocked,breadth_neg_ret4 >= 0.5 AND panel_ret4_mean <= train_q0.45,4703,4899,0.15023159397042465,0.02241258972386151,calibration_wilson95_below_0_95|test_wilson95_below_0_95
+Sideways,blocked,breadth_stress <= .25 AND panel_dispersion/range <= train_q0.25,859,419,0.45589135250183377,0.006315274740845922,calibration_wilson95_below_0_95|test_wilson95_below_0_95|coverage_below_0_03|validation_timeframes_below_2
+Crisis,blocked,breadth_stress >= 0.55 AND panel stress/range >= train_q0.9,1903,2275,0.853605802520444,0.054621678899135495,calibration_wilson95_below_0_95|test_wilson95_below_0_95|ece_above_0_05
+UnknownOrMixed,residual_not_release,mixed breadth/dispersion residual,645,760,0.05833673271574366,0.022286821705426355,residual_or_non_release_gate|calibration_wilson95_below_0_95|test_wilson95_below_0_95|validation_timeframes_below_2
+Manipulation,missing_required_inputs,requires direct tick/order-flow/L2/order-lifecycle or crypto event/social evidence,0,0,0.0,1.0,missing_required_inputs|proxy_only_low_confidence

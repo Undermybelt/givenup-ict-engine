@@ -1,0 +1,49 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1",
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+  "exits": {
+    "14_catboost_path_ranker_train_uv": 0,
+    "15_catboost_path_ranker_apply_uv": 0,
+    "16_apply_external_scores_catboost": 0,
+    "17_register_catboost_trainer_artifact": 1,
+    "18_enable_path_ranker_runtime_after_catboost": 0,
+    "19_policy_training_status_final": 0,
+    "20_workflow_status_full_final": 0,
+    "21_workflow_status_execution_candidate_final": 0,
+    "22_pre_bayes_status_final": 0
+  },
+  "catboost_path_ranker": {
+    "trainer_artifact_ready": true,
+    "trainer_artifact_status": "runtime_eligible",
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "runtime_selection_ready": true,
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "runtime_active_match_count": 3,
+    "raw_scored_mature_rows": 86,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 85,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 43,
+    "observation_validation_min_rows": 30
+  },
+  "pre_bayes": {
+    "latest_gate_status": "pass_neutralized",
+    "latest_policy": null
+  },
+  "execution": {
+    "ready": false,
+    "actionable": false,
+    "review_status": "observe",
+    "execution_gate_status": "execution_observe_only",
+    "closed_loop_branch_admission_status": "fail_closed",
+    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable"
+  },
+  "gate": {
+    "same_root_six_provider_aq_packet": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "run_id": "20260512T040306-codex-r6-owner-export-operator-request-after-035835-v1",
+  "gate_result": "r6_owner_export_operator_request_after_035835_v1=operator_request_ready_no_rows_acquired_no_promotion",
+  "board_sha256_before_request_artifact": "4c9de6acc66964b31ca28e839461fbe437ab3f6a1d5c04be841ebcd1309f57be",
+  "source_artifacts": {
+    "acquisition_matrix": "docs/experiments/actionable-regime-confidence/runs/20260512T035823-codex-r6-source-control-acquisition-matrix-after-035433-v1",
+    "owner_export_gap_addendum": "docs/experiments/actionable-regime-confidence/runs/20260512T035835-codex-r6-owner-export-gap-addendum-after-035433-v1"
+  },
+  "required_delivery_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "required_files": [
+    "positive_spoofing_layering_rows.csv",
+    "matched_negative_normal_activity_rows.csv",
+    "provenance_manifest.json"
+  ],
+  "split_gap_summary": [
+    {
+      "split_family": "chronological_group_split",
+      "failing_cells": 3,
+      "max_pair_rows_needed_min": 55,
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 142
+    },
+    {
+      "split_family": "heldout_symbol_exact",
+      "failing_cells": 40,
+      "max_pair_rows_needed_min": 73,
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 2847
+    },
+    {
+      "split_family": "heldout_venue_exact",
+      "failing_cells": 11,
+      "max_pair_rows_needed_min": 73,
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 728
+    }
+  ],
+  "total_additional_pair_rows_if_exact_cells_must_all_pass": 3717,
+  "policy": {
+    "source_owned_broad_normal_controls_required": true,
+    "same_exhibit_flip_controls_approved": false,
+    "local_triplets_promoting_without_approval": false,
+    "copy_local_triplets_to_owner_export_root_allowed": false
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_approval": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

@@ -1,0 +1,6 @@
+PASS sapienza_gate_added=true
+PASS sapienza_accepted_event_groups=317
+PASS new_confidence_gate_since_v25=true
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS unmet_ids=R2,R3,R4,R5,R6,R8

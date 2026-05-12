@@ -1,0 +1,16 @@
+gate_result=board_a_current_objective_audit_after_074219_v1=not_complete_source_control_unlock_absent_after_manual_review_no_downstream_promotion
+accepted_rows_added=0
+r3_manual_review_counted_once=true
+local_manual_review_counted_once=true
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+direct_verifier_run=false
+split_calibration_run=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

@@ -1,0 +1,17 @@
+board_present=PASS
+current_cursor_010127=PASS
+source_json_present=PASS
+source_decision_no_acceptance=PASS
+accepted_source_confidence_labels_zero=PASS
+label_split_rows_16=PASS
+all_splits_have_min_support=PASS
+all_label_splits_fail_wilson95=PASS
+new_confidence_gate_false=PASS
+accepted_rows_added_zero=PASS
+downstream_chain_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+runtime_code_changed_false=PASS
+thresholds_relaxed_false=PASS
+shared_intake_mutated_false=PASS
+external_requests_sent_false=PASS

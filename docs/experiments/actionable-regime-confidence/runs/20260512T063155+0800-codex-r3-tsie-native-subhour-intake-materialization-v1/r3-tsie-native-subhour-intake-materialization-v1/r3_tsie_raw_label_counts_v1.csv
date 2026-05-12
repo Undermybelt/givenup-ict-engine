@@ -1,0 +1,8 @@
+regime_label,source_regime_name,main_regime_v2_label,rows
+0,STRONG SELL,Bear,356398
+1,WEAK SELL,Bear,1079366
+2,BEAR TRAP,Abstain,1080804
+3,FLAT / NOISE,Sideways,2162084
+4,BULL TRAP,Abstain,1080289
+5,WEAK BUY,Bull,1078955
+6,STRONG BUY,Bull,356100

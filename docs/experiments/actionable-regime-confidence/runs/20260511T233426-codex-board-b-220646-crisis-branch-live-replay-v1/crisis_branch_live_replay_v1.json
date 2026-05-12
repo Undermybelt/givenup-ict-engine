@@ -1,0 +1,79 @@
+{
+  "run_id": "20260511T233426+0800-codex-board-b-220646-crisis-branch-live-replay-v1",
+  "purpose": "Replay the existing SourceRootStopCarryLongHorizonV1 220646 exact Crisis branch after the block_crowded feedback packet, using the same rooted branch path through provider status, Auto-Quant status, analyze-live, Pre-Bayes, CatBoost/path-ranker status, and execution-candidate workflow surfaces.",
+  "board_b_context": {
+    "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+    "recipe_id": "SourceRootStopCarryLongHorizonV1",
+    "regime_profit_branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "rc_spa": 85.7407,
+    "price_roots_passed": "4/4",
+    "scoped_manipulation_component": "pass_from_205047"
+  },
+  "commands": {
+    "cargo_build": "cargo build --quiet --bin ict-engine",
+    "provider_status": "./target/debug/ict-engine provider-status --agent",
+    "auto_quant_status": "./target/debug/ict-engine auto-quant-status --state-dir <run_root>/state_crisis_branch_live_replay_v1/auto-quant --output-format json",
+    "analyze_live": "./target/debug/ict-engine analyze-live --symbol SRC_ROOT_CARRY_LONG_220646 --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --spot-kind etf --state-dir <run_root>/state_crisis_branch_live_replay_v1 --agent --regime-consumer-bundle <220646>/downstream-chain/regime-bundles/crisis_regime_consumer_bundle_v1.json --regime-consumer-bundle-strict --apply-regime-bundle-bbn-soft-evidence",
+    "pre_bayes_status": "./target/debug/ict-engine pre-bayes-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir <run_root>/state_crisis_branch_live_replay_v1 --refresh --output-format json",
+    "workflow_bundle": "./target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir <run_root>/state_crisis_branch_live_replay_v1 --refresh --phase structural-recommended-path-bundle --output-format json",
+    "workflow_execution_candidate": "./target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir <run_root>/state_crisis_branch_live_replay_v1 --refresh --phase execution-candidate --output-format json",
+    "policy_training_status": "./target/debug/ict-engine policy-training-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir <run_root>/state_crisis_branch_live_replay_v1 --output-format json",
+    "workflow_status": "./target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir <run_root>/state_crisis_branch_live_replay_v1 --refresh --output-format json"
+  },
+  "exit_codes": {
+    "provider_status": 0,
+    "auto_quant_status_json": 0,
+    "analyze_live": 0,
+    "pre_bayes_status": 0,
+    "workflow_bundle": 0,
+    "workflow_execution_candidate": 0,
+    "policy_training_status": 0,
+    "workflow_status": 0
+  },
+  "provider_readback": {
+    "yfinance_live_runtime": "ready:native_yfinance_runtime_available",
+    "yfinance_market_data": "ready:public_yahoo_http_endpoints",
+    "tradingview_mcp": "ready:mcp_url_and_api_key_available",
+    "kraken_cli": "ready:kraken_cli_config_detected",
+    "kraken_public": "configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "ibkr": "configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "ibkr_bridge": "configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable"
+  },
+  "auto_quant_readback": {
+    "status": "missing_dependency",
+    "bootstrap_needed": true,
+    "note": "This isolated replay state did not bootstrap Auto-Quant; it consumed the existing 220646 recipe/backtest artifacts and only refreshed downstream ict-engine surfaces."
+  },
+  "downstream_readback": {
+    "analyze_live_decision": "Observe only",
+    "analyze_live_direction": "Bull",
+    "analyze_live_pre_bayes_gate": "pass_neutralized",
+    "analyze_live_execution_branch": "fill_viable",
+    "analyze_live_execution_gate": "observe",
+    "analyze_live_execution_reason": "market_state=RangeConsolidation/WideRange | execution=observe/fill_viable/passive | ranker=history_path/unknown/ready",
+    "pre_bayes_latest_gate_status": "pass_neutralized",
+    "pre_bayes_policy_version": "318900600c5e8cf2",
+    "pre_bayes_canonical_structural_active_regime": "range",
+    "pre_bayes_canonical_structural_confidence": 0.5619249343265972,
+    "bbn_market_regime_soft_evidence": {
+      "range": 0.65,
+      "bull": 0.175,
+      "bear": 0.175
+    },
+    "structural_bundle_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "structural_bundle_path_ranker_raw_score": 0.5372559832604725,
+    "path_ranker_runtime": "using_history_scores",
+    "path_ranker_validation": "production_validation=274/30 observation_validation=48/30 raw_scored_mature=275/30 ready=true",
+    "execution_candidate_status": "ready",
+    "execution_candidate_actionable": true,
+    "execution_candidate_review_status": "observe",
+    "execution_candidate_review_reason": "candidate_not_comparable_same_data_factor_required",
+    "workflow_latest_promotable_artifact": null
+  },
+  "promotion": {
+    "promotion_allowed": false,
+    "promotion_status": "not_promoted:observe_not_comparable_same_data_factor_required",
+    "reason": "The exact Crisis branch path and downstream identity are preserved, but the live replay changed the data fingerprint and the review layer remains observe-only. This is execution-admissibility/nursery feedback, not a production promotion."
+  },
+  "next_action": "Use the block_crowded -> fill_viable context delta as B2R nursery execution-admissibility feedback for the exact Crisis branch, and only rerun promotion after same-data comparability or an explicit dataset selection closes the review blocker."
+}

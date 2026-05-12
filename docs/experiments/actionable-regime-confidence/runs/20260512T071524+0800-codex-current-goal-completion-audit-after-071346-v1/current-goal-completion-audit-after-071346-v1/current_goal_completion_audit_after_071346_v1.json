@@ -1,0 +1,38 @@
+{
+  "run_id": "20260512T071524+0800-codex-current-goal-completion-audit-after-071346-v1",
+  "gate_result": "current_goal_completion_audit_after_071346_v1=not_complete_source_control_unlock_absent_no_selected_history_no_promotion",
+  "board_b_sha256_before": "c53fa4fee0cc716c450832d7094108afca92bbda0606bfeea4d4b136b426d810",
+  "board_a_sha256_before": "9fe7c293cc5475d182369bbe7f7cc259e61f8f27e937c7713a04e97335640247",
+  "checklist": {
+    "pass": 1,
+    "partial_diagnostic_only": 3,
+    "blocked_not_complete": 9
+  },
+  "current_state": {
+    "r6_owner_export_unlock": false,
+    "r5_recency_unlock": false,
+    "r3_native_subhour_unlock": false,
+    "r3_crisis_rows": 0,
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "explicit_user_selected_history": false,
+    "selected_data_autoquant_training": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "latest_evidence": {
+    "r3_label_rows": 5032903,
+    "r3_label_counts": {
+      "Bear": 1435764,
+      "Bull": 1435055,
+      "Sideways": 2162084,
+      "Crisis": 0
+    },
+    "r6_local_scan_required_files_found": 0,
+    "local_order_lifecycle_depth_scan_result": "ohlcv_and_code_only"
+  }
+}

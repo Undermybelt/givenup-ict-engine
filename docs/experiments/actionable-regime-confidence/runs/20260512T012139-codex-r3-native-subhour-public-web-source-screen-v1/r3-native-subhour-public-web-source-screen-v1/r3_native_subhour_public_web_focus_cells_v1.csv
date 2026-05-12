@@ -1,0 +1,5 @@
+symbol,timeframe,required_after,intake_rows_file_exists,intake_provenance_file_exists,public_web_ready_source_rows_found,blocker
+AAPL,15m,2026-01-30,False,False,False,no_ready_source_owned_native_subhour_label_export_after_public_web_screen
+AAPL,30m,2026-01-30,False,False,False,no_ready_source_owned_native_subhour_label_export_after_public_web_screen
+^IXIC,15m,2026-01-30,False,False,False,no_ready_source_owned_native_subhour_label_export_after_public_web_screen
+^IXIC,30m,2026-01-30,False,False,False,no_ready_source_owned_native_subhour_label_export_after_public_web_screen

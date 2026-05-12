@@ -1,0 +1,81 @@
+{
+  "schema_version": "regime-consumer-bundle/v1",
+  "artifact_count": 2,
+  "missing_artifacts": [],
+  "latest_decision": {
+    "timestamp": "2026-05-10T10:51:25Z",
+    "decision_state": "accepted_session_liquidity_95",
+    "trade_usable": false,
+    "final_label": "SessionLiquidityCoreViable",
+    "label_set": [
+      "SessionLiquidityCoreViable"
+    ],
+    "abstain_reasons": [
+      "liquidity_guardrail_not_directional_release",
+      "board_b_must_combine_with_path_specific_edge"
+    ]
+  },
+  "consumer_hints": {
+    "execution_tree_hint": "accept_regime",
+    "bbn_evidence_hint": {
+      "regime_decision_state": "accepted_session_liquidity_95",
+      "regime_trade_usable": false,
+      "regime_label": "SessionLiquidityCoreViable",
+      "regime_label_set": [
+        "SessionLiquidityCoreViable"
+      ],
+      "regime_transition_hazard": 0.0,
+      "regime_decision_reasons": [
+        "liquidity_guardrail_not_directional_release",
+        "unsupported_bbn_market_regime_label"
+      ]
+    },
+    "path_ranker_context": {
+      "regime_label": "SessionLiquidityCoreViable",
+      "regime_confidence_tier": "95",
+      "precision_wilson_lcb": 0.9899396497369397,
+      "calibration_support": 378,
+      "test_support": 378,
+      "ece": 0.010582010582010581,
+      "coverage": 0.3776223776223776,
+      "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+      "regime_trade_usable": false
+    },
+    "user_vrp_nq_context": {},
+    "trade_usable": false
+  },
+  "artifacts": {
+    "decision": {
+      "status": "present",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/regime-sidecar/regime_high_confidence_decision.json",
+      "schema_version": "regime-high-confidence-decision/v1",
+      "timestamp": "2026-05-10T10:51:25Z",
+      "confidence_95": true,
+      "confidence_99": false,
+      "decision_state": "accepted_session_liquidity_95",
+      "trade_usable": false,
+      "final_label": "SessionLiquidityCoreViable",
+      "execution_tree_hint": "accept_regime",
+      "transition_hazard": 0.0,
+      "label_set": [
+        "SessionLiquidityCoreViable"
+      ],
+      "abstain_reasons": [
+        "liquidity_guardrail_not_directional_release",
+        "board_b_must_combine_with_path_specific_edge"
+      ]
+    },
+    "accepted_packet": {
+      "status": "present",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json",
+      "schema_version": "board-a-session-liquidity-regime-probe/v1"
+    }
+  },
+  "consumer_contract": {
+    "zero_config": true,
+    "hotplug_scope": "include_artifact",
+    "main_runtime_mutation": "none",
+    "optional_for_consumers": true,
+    "token_friendly": true
+  }
+}

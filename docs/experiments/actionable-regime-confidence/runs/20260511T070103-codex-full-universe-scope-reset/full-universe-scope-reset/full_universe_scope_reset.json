@@ -1,0 +1,136 @@
+{
+  "run_id": "20260511T070103+0800-codex-full-universe-scope-reset",
+  "objective": "Extend Board A from sampled cross-market/cross-timeframe validation to the stronger full-universe/full-timeframe requirement: every active regime should be tried across all available species/instruments and all available cycles/timeframes before final reporting.",
+  "goal_achieved": false,
+  "prior_cross_context_gate_preserved": true,
+  "prior_cross_context_gate": "all_active_MainRegimeV2_roots_accepted_95_cross_market_timeframe_audited",
+  "active_main_price_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "separate_overlay_gates": [
+    "Manipulation"
+  ],
+  "new_requirement_interpretation": {
+    "full_species": "enumerate the provider-available instrument universe by market family, not just the symbols already used by accepted packets",
+    "full_cycles": "enumerate every provider-available timeframe/cycle family and record attempted/pass/fail/unsupported per root",
+    "completion_standard": "do not mark complete from at-least-two-context validation; completion now requires a coverage matrix or an explicit unsupported-provider reason for every main price root x instrument-family x timeframe-family cell; Manipulation is accounted separately as a direct-event overlay gate"
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "Named TODO board remains the active contract",
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "status": "pass"
+    },
+    {
+      "requirement": "Every active main price root has prior >=95 cross-context evidence",
+      "evidence": "20260511T065805-codex-cross-market-timeframe-completion-audit",
+      "status": "pass_but_prior_scope_only"
+    },
+    {
+      "requirement": "All available species/instruments were tried",
+      "evidence": "No provider-universe coverage matrix exists yet for all available symbols/families.",
+      "status": "blocked"
+    },
+    {
+      "requirement": "All available cycles/timeframes were tried",
+      "evidence": "Accepted packets cover 1d/1w for Bull/Bear/Sideways and 15m/1h for Crisis; they do not enumerate all provider-supported bar cycles. Manipulation has chronological event windows but is an overlay, not a bar-cycle root.",
+      "status": "blocked"
+    },
+    {
+      "requirement": "Unsupported provider/timeframe/instrument cells are explicitly explained",
+      "evidence": "No full coverage matrix with unsupported reasons exists yet.",
+      "status": "blocked"
+    },
+    {
+      "requirement": "No thresholds relaxed and no trade usability claimed",
+      "evidence": "Prior accepted packets and completion audits retain thresholds_relaxed=false and trade_usable=false.",
+      "status": "pass"
+    }
+  ],
+  "current_coverage_summary": [
+    {
+      "root": "Bull",
+      "prior_status": "accepted_95",
+      "covered_contexts": [
+        "index",
+        "single_stock"
+      ],
+      "covered_timeframes": [
+        "1d",
+        "1w"
+      ],
+      "full_universe_status": "not_attempted"
+    },
+    {
+      "root": "Bear",
+      "prior_status": "accepted_95",
+      "covered_contexts": [
+        "crypto",
+        "equity_etf"
+      ],
+      "covered_timeframes": [
+        "1d",
+        "1w"
+      ],
+      "full_universe_status": "not_attempted"
+    },
+    {
+      "root": "Sideways",
+      "prior_status": "accepted_95",
+      "covered_contexts": [
+        "crypto",
+        "equity_etf"
+      ],
+      "covered_timeframes": [
+        "1d",
+        "1w"
+      ],
+      "full_universe_status": "not_attempted"
+    },
+    {
+      "root": "Crisis",
+      "prior_status": "accepted_95",
+      "covered_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_ETF",
+        "yfinance_US_ETF",
+        "yfinance_crypto",
+        "yfinance_futures"
+      ],
+      "covered_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "full_universe_status": "not_attempted"
+    },
+    {
+      "overlay": "Manipulation",
+      "prior_status": "accepted_95",
+      "covered_contexts": [
+        "Telegram classified pump-attempt events",
+        "cross-coin",
+        "cross-channel"
+      ],
+      "covered_timeframes": [
+        "chronological event train",
+        "chronological event calibration",
+        "chronological event test"
+      ],
+      "full_universe_status": "not a main price root; still needs explicit direct-event universe coverage accounting in the overlay lane"
+    }
+  ],
+  "gate_result": "blocked_full_universe_full_cycle_not_yet_attempted",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "next_actions": [
+    "Build a provider-universe manifest covering yfinance, IBKR/local cache, Kraken, TradingViewRemix if reachable, and Auto-Quant cache.",
+    "Define the timeframe/cycle ladder per provider, including unsupported cells rather than silently skipping them.",
+    "Run the first full-universe coverage matrix for the four active main price roots without relaxing thresholds; preserve prior accepted cross-context evidence as baseline only and account for Manipulation separately as an overlay gate."
+  ]
+}

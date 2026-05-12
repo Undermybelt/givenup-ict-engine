@@ -1,0 +1,55 @@
+ M DEBUG.md
+ M README.md
+ D docs/2026-04-25-auto-quant-parallel-try-plan.md
+ D docs/2026-04-25-auto-quant-parallel-try-report.md
+ D docs/2026-04-25-auto-quant-seeded-strategy-backtest-report.md
+ D docs/2026-04-25-auto-quant-tomac-live-handoff-validation-plan.md
+ D docs/2026-04-25-auto-quant-tomac-live-handoff-validation-report.md
+ D docs/2026-04-25-auto-quant-tomac-material-ingestion-plan.md
+ D docs/2026-04-25-auto-quant-tomac-material-ranking-fix-plan.md
+ D docs/2026-04-25-auto-quant-tomac-seed-evidence-plan.md
+ D docs/2026-04-25-live-factor-evidence-validation-plan.md
+ D docs/2026-04-25-live-factor-evidence-validation-report.md
+ D docs/audit-2026-04-21-cross-surface-review.md
+ D docs/audit-2026-04-21-full-codebase-shakedown.md
+ M docs/audits/2026-04-24-open-source-shakedown-follow-up.md
+ D docs/ict-engine-docs-catalog-2026-04-25.md
+ D docs/ict-engine-docs-classification-plan-2026-04-25.md
+ D docs/ict-engine-first-run-fix-plan-2026-04-25.md
+ D docs/ict-engine-first-run-trial-plan-2026-04-25.md
+ D docs/ict-engine-first-run-trial-report-2026-04-25.md
+ D docs/ict-engine-post-remediation-small-followup-fix-plan-2026-04-25.md
+ D docs/ict-engine-post-remediation-ten-run-trial-plan-2026-04-25.md
+ D docs/ict-engine-post-remediation-ten-run-trial-report-2026-04-25.md
+ D docs/ict-engine-postfix-trial-log-2026-04-25.md
+ D docs/ict-engine-report-driven-remediation-plan-2026-04-25.md
+ D docs/ict-engine-smoke-bug-hunt-plan-2026-04-25.md
+ D docs/ict-engine-ten-run-user-trial-plan-2026-04-25.md
+ D docs/ict-engine-ten-run-user-trial-report-2026-04-25.md
+ M docs/plans/2026-04-21-shakedown-remediation-plan.md
+ M docs/plans/2026-04-23-open-source-shakedown-plan.md
+ M docs/plans/2026-05-09-factor-iteration-pre-bayes-bbn-catboost-execution-tree-todo.md
+ M docs/plans/2026-05-10-actionable-regime-confidence-todo.md
+ M docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md
+ M src/application/auto_quant/command_entry.rs
+ M src/application/auto_quant/config.rs
+ M src/application/auto_quant/mod.rs
+ M src/application/auto_quant/real_trades/wire.rs
+ M src/application/auto_quant/status.rs
+ M src/application/entry_models/training_export.rs
+ M src/application/orchestration/execution_tree.rs
+ M src/application/orchestration/structural_playbook.rs
+ M src/application/orchestration/workflow_status.rs
+ M src/application/provider_catalog.rs
+ M src/application/regime/consumer_bundle_adapter.rs
+ M src/auto_quant_command.rs
+ M src/belief_core/ranking_label.rs
+ M src/main.rs
+ M src/state/types.rs
+ M src/update_command.rs
+ M src/workflow_snapshot_runtime.rs
+ M tests/regime_consumer_bundle_adapter.rs
+?? docs/README.md
+?? docs/audits/2026-04-21-cross-surface-review.md
+?? docs/audits/2026-04-21-full-codebase-shakedown.md
+?? docs/experiments/actionable-regime-confidence/

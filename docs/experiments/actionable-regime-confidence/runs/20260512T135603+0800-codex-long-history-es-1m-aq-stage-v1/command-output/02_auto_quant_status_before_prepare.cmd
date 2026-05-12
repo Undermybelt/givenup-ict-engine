@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-status --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T135603+0800-codex-long-history-es-1m-aq-stage-v1/state_es_long_1m --output-format json

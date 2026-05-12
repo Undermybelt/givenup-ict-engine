@@ -1,0 +1,351 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "a5ea880e59eb283e5a2080c7c3accaf8bdf9c389c9cc2447a66e5cb93c073bd7",
+  "debt_reference": {
+    "additional_positive_control_rows_for_chrono_quantiles_before_exact_splits": 219,
+    "source": "docs/experiments/actionable-regime-confidence/runs/20260512T000801-codex-r6-exact-split-support-debt-audit-v1/r6-exact-split-support-debt-audit/r6_exact_split_support_debt_audit_v1.json",
+    "total_pairwise_rows_if_existing_exact_buckets_are_filled": 3291
+  },
+  "downloads": [
+    {
+      "bytes": 2553330,
+      "content_type": "application/pdf",
+      "effective_url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.headers.txt",
+      "http_status": "200",
+      "label": "cftc_oystacher_complaint",
+      "looks_pdf": true,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "stderr": "",
+      "text_probe": {
+        "document_line": ".   Case: 1:15-cv-09196 Document#:  1 Filed: 10/19/15 Page 1 of 36 PageiD #:1",
+        "needles": {
+          "appendix": true,
+          "complaint_doc1": true,
+          "court_order": false,
+          "exhibit_a": true,
+          "flip": true,
+          "oystacher": true,
+          "spoof": true,
+          "three_red": true
+        },
+        "returncode": 0,
+        "stderr": "",
+        "text_bytes": 116919,
+        "text_extracted": true,
+        "text_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_oystacher_complaint.txt",
+        "text_sha256": "967928fce3754a7d2ebc1d31e04f96dd4db2d3cd6712795c4159b0d50e0f7a6d"
+      },
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf"
+    },
+    {
+      "bytes": 38560,
+      "content_type": "text/html;",
+      "effective_url": "charset=UTF-8 https://www.cftc.gov/PressRoom/PressReleases/7253-15",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_press_7253_15.headers.txt",
+      "http_status": "200",
+      "label": "cftc_press_7253_15",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_press_7253_15.html",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "daf95ce749e88813991dacc492f6c908ca7d922afd724d0419030d3e432ca129",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7253-15"
+    },
+    {
+      "bytes": 32765,
+      "content_type": "text/html;",
+      "effective_url": "charset=UTF-8 https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915exhibita.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exhibita.headers.txt",
+      "http_status": "404",
+      "label": "cftc_candidate_enfigorcomplnt101915exhibita",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exhibita.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "058b62102339f7fb9200759f5281d4475046048944ef5cf46182e85c4516c2a2",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915exhibita.pdf"
+    },
+    {
+      "bytes": 32765,
+      "content_type": "text/html;",
+      "effective_url": "charset=UTF-8 https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915exha.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exha.headers.txt",
+      "http_status": "404",
+      "label": "cftc_candidate_enfigorcomplnt101915exha",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915exha.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "9aa6b38b797cfe52a75f90d768ec6b6db5517e64339767e591af9f2b44016e61",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915exha.pdf"
+    },
+    {
+      "bytes": 32765,
+      "content_type": "text/html;",
+      "effective_url": "charset=UTF-8 https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorexhibita101915.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexhibita101915.headers.txt",
+      "http_status": "404",
+      "label": "cftc_candidate_enfigorexhibita101915",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexhibita101915.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "c0fc91729fc6a62bca737595849cfa5c69aae92dcbfae82fd3759ed9bfc0f2db",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorexhibita101915.pdf"
+    },
+    {
+      "bytes": 32765,
+      "content_type": "text/html;",
+      "effective_url": "charset=UTF-8 https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorexha101915.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexha101915.headers.txt",
+      "http_status": "404",
+      "label": "cftc_candidate_enfigorexha101915",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorexha101915.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "29304557298b2e022a1101f35b095f151b1bd94224f11b906287f8cd0c0a349d",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorexha101915.pdf"
+    },
+    {
+      "bytes": 32765,
+      "content_type": "text/html;",
+      "effective_url": "charset=UTF-8 https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorappa101915.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorappa101915.headers.txt",
+      "http_status": "404",
+      "label": "cftc_candidate_enfigorappa101915",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorappa101915.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "7bd92c9f8a83843bf4619fffb3bebbb1f2a0c30c72d7e6d16cb88641f1440e37",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorappa101915.pdf"
+    },
+    {
+      "bytes": 32765,
+      "content_type": "text/html;",
+      "effective_url": "charset=UTF-8 https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915appa.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915appa.headers.txt",
+      "http_status": "404",
+      "label": "cftc_candidate_enfigorcomplnt101915appa",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/cftc_candidate_enfigorcomplnt101915appa.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "54e7570ea0da0be6cb22e47477c71e0eb062982aa935a3ebde972c0d721b35c2",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915appa.pdf"
+    },
+    {
+      "bytes": 175942,
+      "content_type": "application/pdf",
+      "effective_url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-0.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.headers.txt",
+      "http_status": "200",
+      "label": "govinfo_0",
+      "looks_pdf": true,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "f4234cde0c2da6869e4b1fcc441ed2f52454a7500c76e37d71a081b0e363e375",
+      "stderr": "",
+      "text_probe": {
+        "document_line": "Case: 1:15-cv-09196 Document #: 50 Filed: 12/18/15 Page 1 of 13 PageID #:<pageID>",
+        "needles": {
+          "appendix": false,
+          "complaint_doc1": false,
+          "court_order": true,
+          "exhibit_a": false,
+          "flip": true,
+          "oystacher": true,
+          "spoof": true,
+          "three_red": true
+        },
+        "returncode": 0,
+        "stderr": "",
+        "text_bytes": 34515,
+        "text_extracted": true,
+        "text_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_0.txt",
+        "text_sha256": "9dbbe57d13ef7ab9ab0cfa029633a5ee23c3287f51ffd8135c8d01d8fc8f4083"
+      },
+      "url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-0.pdf"
+    },
+    {
+      "bytes": 556530,
+      "content_type": "application/pdf",
+      "effective_url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-1.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.headers.txt",
+      "http_status": "200",
+      "label": "govinfo_1",
+      "looks_pdf": true,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+      "stderr": "",
+      "text_probe": {
+        "document_line": "Case: 1:15-cv-09196 Document #: 195 Filed: 07/12/16 Page 1 of 99 PageID #:<pageID>",
+        "needles": {
+          "appendix": false,
+          "complaint_doc1": true,
+          "court_order": true,
+          "exhibit_a": false,
+          "flip": true,
+          "oystacher": true,
+          "spoof": true,
+          "three_red": true
+        },
+        "returncode": 0,
+        "stderr": "",
+        "text_bytes": 271777,
+        "text_extracted": true,
+        "text_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_1.txt",
+        "text_sha256": "9c10a8dd97f70ad944fcda2e6efc1e4cd71549ea12cd213f9739d3af93726152"
+      },
+      "url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-1.pdf"
+    },
+    {
+      "bytes": 217542,
+      "content_type": "application/pdf",
+      "effective_url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-2.pdf",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.headers.txt",
+      "http_status": "200",
+      "label": "govinfo_2",
+      "looks_pdf": true,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "36b62f65019d703d2e107909bb7c37d1f46c7aa3729bb8a8a605d2884eb3d83d",
+      "stderr": "",
+      "text_probe": {
+        "document_line": "Case: 1:15-cv-09196 Document #: 236 Filed: 08/23/16 Page 1 of 26 PageID #:<pageID>",
+        "needles": {
+          "appendix": false,
+          "complaint_doc1": false,
+          "court_order": true,
+          "exhibit_a": false,
+          "flip": true,
+          "oystacher": true,
+          "spoof": true,
+          "three_red": true
+        },
+        "returncode": 0,
+        "stderr": "",
+        "text_bytes": 69948,
+        "text_extracted": true,
+        "text_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_2.txt",
+        "text_sha256": "86907034fc478b036a11923b50b5795e4a92664883908588922f79d8acb9ef5c"
+      },
+      "url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-2.pdf"
+    },
+    {
+      "bytes": 44165,
+      "content_type": "text/html",
+      "effective_url": "https://www.govinfo.gov/error",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_3.headers.txt",
+      "http_status": "200",
+      "label": "govinfo_3",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/govinfo_3.pdf",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "aa3ddc6268e610f9051c55051868d452f86b25ec78f5182270954788b184667b",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-3.pdf"
+    },
+    {
+      "bytes": 58,
+      "content_type": "application/json",
+      "effective_url": "https://www.courtlistener.com/api/rest/v4/dockets/?docket_number=1%3A15-cv-09196",
+      "headers_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/courtlistener_dockets_api.headers.txt",
+      "http_status": "401",
+      "label": "courtlistener_dockets_api",
+      "looks_pdf": false,
+      "raw_path": "/tmp/ict-engine-r6-oystacher-exhibit-a-public-acquisition-probe-v1/raw/courtlistener_dockets_api.json",
+      "raw_payload_committed": false,
+      "returncode": 0,
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "stderr": "",
+      "text_probe": {
+        "reason": "not_pdf",
+        "text_extracted": false
+      },
+      "url": "https://www.courtlistener.com/api/rest/v4/dockets/?docket_number=1%3A15-cv-09196"
+    }
+  ],
+  "external_requests_sent": true,
+  "gate_result": "r6_oystacher_exhibit_a_public_acquisition_probe_v1=appendix_not_publicly_materialized_owner_or_pacer_export_required",
+  "generated_at_utc": "2026-05-11T16:20:13.552343+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Acquire Oystacher Exhibit A through owner/PACER/RECAP export or obtain explicit owner approval for a less fragmented validation contract before rerunning R6 split acceptance.",
+  "public_acquisition_result": {
+    "cftc_attachment_candidate_pdf_hits": 0,
+    "courtlistener_api_auth_required": true,
+    "govinfo_pdf_count": 3,
+    "official_cftc_complaint_available": true,
+    "row_level_materialization_status": "public_sources_checked_appendix_not_found_owner_or_pacer_export_required",
+    "visible_public_row_appendix_found": false
+  },
+  "raw_data_committed": false,
+  "run_id": "20260512T001633-codex-r6-oystacher-exhibit-a-public-acquisition-probe-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_totals": {
+    "flip_sequences": 1316,
+    "market_families": [
+      "metals",
+      "energy",
+      "volatility_index",
+      "equity_index"
+    ],
+    "spoof_contracts": 359790,
+    "spoof_orders": 5207,
+    "trading_days": 51
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

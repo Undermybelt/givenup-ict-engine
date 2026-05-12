@@ -1,0 +1,10 @@
+surface,query,url,status,error,records_scanned
+dryad_api_v2_search,MainRegimeV2,https://datadryad.org/api/v2/search?query=MainRegimeV2&per_page=5,200,,5
+dryad_api_v2_search,stock_market_regimes_2026_extension,https://datadryad.org/api/v2/search?query=stock_market_regimes_2026_extension&per_page=5,200,,5
+dryad_api_v2_search,native_subhour_source_label_rows,https://datadryad.org/api/v2/search?query=native_subhour_source_label_rows&per_page=5,200,,5
+dryad_api_v2_search,"""Bull"" ""Bear"" ""Sideways"" ""Crisis"" market regime",https://datadryad.org/api/v2/search?query=%22Bull%22%20%22Bear%22%20%22Sideways%22%20%22Crisis%22%20market%20regime&per_page=5,200,,5
+dryad_api_v2_search,market regime crisis labels,https://datadryad.org/api/v2/search?query=market%20regime%20crisis%20labels&per_page=5,200,,5
+dryad_api_v2_search,Oystacher spoofing futures order book,https://datadryad.org/api/v2/search?query=Oystacher%20spoofing%20futures%20order%20book&per_page=5,200,,5
+dryad_api_v2_search,3Red Trading matched controls,https://datadryad.org/api/v2/search?query=3Red%20Trading%20matched%20controls&per_page=5,200,,5
+dryad_api_v2_search,futures order lifecycle spoofing controls,https://datadryad.org/api/v2/search?query=futures%20order%20lifecycle%20spoofing%20controls&per_page=5,200,,5
+dryad_api_v2_search,CME market depth Oystacher controls,https://datadryad.org/api/v2/search?query=CME%20market%20depth%20Oystacher%20controls&per_page=5,200,,5

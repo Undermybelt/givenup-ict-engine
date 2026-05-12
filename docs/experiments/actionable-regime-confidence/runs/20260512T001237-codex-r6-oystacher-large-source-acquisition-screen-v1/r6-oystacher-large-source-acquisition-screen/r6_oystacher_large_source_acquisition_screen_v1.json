@@ -1,0 +1,125 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "4ae8f7cd5ecaad2f25f13d033d7f2782edc58519bcf33df376154a41f4cd4e00",
+  "debt_reference": {
+    "additional_positive_rows_for_chrono_quantiles_before_symbol_venue": 219,
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260512T000801-codex-r6-exact-split-support-debt-audit-v1/r6-exact-split-support-debt-audit/r6_exact_split_support_debt_audit_v1.json",
+    "total_pairwise_rows_needed_if_existing_exact_buckets_are_filled": 3291
+  },
+  "downloads": {
+    "complaint": {
+      "bytes": 2553330,
+      "content_type": "application/pdf",
+      "http_status": 200,
+      "path": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/enfigorcomplnt101915.pdf",
+      "sha256": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf"
+    },
+    "press_release": {
+      "bytes": 39058,
+      "content_type": "text/html; charset=UTF-8",
+      "http_status": 200,
+      "path": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/press_7253_15.html",
+      "sha256": "be6247e4deae4a3e6a99fda7c7a9ae735e2e84a08fcc535af6401820e3b49b2f",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/7253-15"
+    },
+    "raw_payload_committed": false
+  },
+  "external_requests_sent": true,
+  "gate_result": "r6_oystacher_large_source_acquisition_screen_v1=official_large_row_source_found_appendix_required_not_materialized",
+  "generated_at_utc": "2026-05-11T16:14:46.001872+00:00",
+  "market_counts": {
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001237-codex-r6-oystacher-large-source-acquisition-screen-v1/r6-oystacher-large-source-acquisition-screen/r6_oystacher_large_source_market_counts_v1.csv",
+    "rows": [
+      {
+        "flip_sequences": 288,
+        "instrument_scope": "High-Grade Copper futures",
+        "market_family": "metals",
+        "spoof_contracts": 24354,
+        "spoof_orders": 1633,
+        "trading_days": 14
+      },
+      {
+        "flip_sequences": 324,
+        "instrument_scope": "Crude Oil futures",
+        "market_family": "energy",
+        "spoof_contracts": 26204,
+        "spoof_orders": 1102,
+        "trading_days": 4
+      },
+      {
+        "flip_sequences": 330,
+        "instrument_scope": "Natural Gas futures",
+        "market_family": "energy",
+        "spoof_contracts": 29590,
+        "spoof_orders": 1574,
+        "trading_days": 3
+      },
+      {
+        "flip_sequences": 89,
+        "instrument_scope": "VIX futures",
+        "market_family": "volatility_index",
+        "spoof_contracts": 37694,
+        "spoof_orders": 284,
+        "trading_days": 19
+      },
+      {
+        "flip_sequences": 59,
+        "instrument_scope": "E-mini S&P 500 futures, June 2013 contract",
+        "market_family": "equity_index",
+        "spoof_contracts": 35523,
+        "spoof_orders": 202,
+        "trading_days": 2
+      },
+      {
+        "flip_sequences": 226,
+        "instrument_scope": "E-mini S&P 500 futures, December 2013 and January 2014 contracts",
+        "market_family": "equity_index",
+        "spoof_contracts": 206425,
+        "spoof_orders": 412,
+        "trading_days": 9
+      }
+    ],
+    "totals": {
+      "flip_sequences": 1316,
+      "spoof_contracts": 359790,
+      "spoof_orders": 5207,
+      "trading_days": 51
+    }
+  },
+  "materialization_assessment": {
+    "appendix_exhibit_a_referenced": true,
+    "appendix_rows_visible_in_public_pdf": false,
+    "flip_sequences_cover_chronological_debt": true,
+    "matched_control_feasibility": "same-source flip orders are plausible matched controls but require Exhibit A timestamps/order legs before acceptance",
+    "public_pdf_page_count": 36,
+    "row_level_materialization_status": "source_owner_appendix_required",
+    "spoof_orders_cover_exact_bucket_debt_if_appendix_has_timestamps": true
+  },
+  "new_confidence_gate": false,
+  "next_action": "Acquire the Oystacher Exhibit A row appendix or an owner-approved equivalent row export; if unavailable, get owner approval for a market-family/venue-family heldout split contract before continuing R6 split acceptance.",
+  "pdf_extraction": {
+    "page_count": 36,
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001237-codex-r6-oystacher-large-source-acquisition-screen-v1/command-output/extract_oystacher_pdf.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001237-codex-r6-oystacher-large-source-acquisition-screen-v1/command-output/extract_oystacher_pdf.stdout.txt",
+    "text_path": "/tmp/ict-engine-r6-oystacher-large-source-acquisition-screen-v1/enfigorcomplnt101915.txt",
+    "text_sha256": "109ee804f0d3b2bcee88288558203bef995e5c5d0476cb8deeb2178519b684f7"
+  },
+  "raw_data_committed": false,
+  "run_id": "20260512T001237-codex-r6-oystacher-large-source-acquisition-screen-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "snippet_checks": {
+    "appendix_exhibit_a_attached": true,
+    "fifty_one_trading_days": true,
+    "five_thousand_two_hundred_seven": true,
+    "market_table_total": true,
+    "one_thousand_three_hundred_sixteen": true
+  },
+  "source_report": "CFTC Complaint: CFTC v. Igor B. Oystacher and 3 Red Trading LLC, filed Oct. 19 2015",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

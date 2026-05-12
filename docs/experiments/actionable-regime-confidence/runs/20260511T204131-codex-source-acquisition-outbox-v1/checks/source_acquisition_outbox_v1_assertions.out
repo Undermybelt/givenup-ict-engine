@@ -1,0 +1,11 @@
+outbox_row_count_5=PASS
+has_R2=PASS
+has_R3=PASS
+has_R4_R5=PASS
+has_R6=PASS
+request_sent_false=PASS
+rows_acquired_false=PASS
+accepted_rows_added_zero=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+raw_data_committed_false=PASS

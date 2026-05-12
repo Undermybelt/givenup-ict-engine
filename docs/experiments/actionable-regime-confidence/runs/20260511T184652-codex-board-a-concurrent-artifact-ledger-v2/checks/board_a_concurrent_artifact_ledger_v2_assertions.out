@@ -1,0 +1,7 @@
+PASS completed_artifacts_read=1
+PASS concurrent_artifact_status=already_registered_by_other_agent
+PASS external_intake_return_code=2
+PASS external_intake_missing_file_count=7
+PASS accepted_rows_added=0
+PASS strict_full_objective=false
+PASS update_goal=false

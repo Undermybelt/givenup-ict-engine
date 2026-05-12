@@ -1,0 +1,9 @@
+metric,value
+row_count,3435
+date_min,2012-02-02
+date_max,2026-03-20
+present_root_labels,Bull;Crisis;Sideways
+missing_root_labels,Bear
+label_count:Bull,1213
+label_count:Crisis,991
+label_count:Sideways,1231

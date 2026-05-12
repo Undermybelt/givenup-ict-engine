@@ -1,0 +1,268 @@
+{
+  "aq_result": {
+    "compile_exit": 0,
+    "first_time": "2026-03-31 20:01:00+00:00",
+    "last_time": "2026-05-12 03:00:00+00:00",
+    "metrics": {
+      "ProviderCryptoMomentumStateV1": {
+        "aggregate": {
+          "calmar": 2.3191797869722004,
+          "max_drawdown_pct": -1.835425186149842,
+          "profit_factor": 1.0144516414659697,
+          "sharpe": 0.11084481510724015,
+          "sortino": 0.363588122671581,
+          "total_profit_pct": 0.08,
+          "trade_count": 34,
+          "win_rate_pct": 38.23529411764706
+        },
+        "per_pair": {
+          "BTC/USDT": {
+            "calmar": 2.3191797869722004,
+            "max_drawdown_pct": -1.835425186149842,
+            "profit_factor": 1.0144516414659697,
+            "sharpe": 0.11084481510724015,
+            "sortino": 0.363588122671581,
+            "total_profit_pct": 0.08,
+            "trade_count": 34,
+            "win_rate_pct": 38.23529411764706
+          }
+        }
+      },
+      "ProviderCryptoPullbackRevertV1": {
+        "aggregate": {
+          "calmar": 49.71120813523814,
+          "max_drawdown_pct": -1.3636999361312538,
+          "profit_factor": 1.6850347091222428,
+          "sharpe": 2.1333084826074815,
+          "sortino": 10.269443154333993,
+          "total_profit_pct": 1.31,
+          "trade_count": 17,
+          "win_rate_pct": 52.94117647058824
+        },
+        "per_pair": {
+          "BTC/USDT": {
+            "calmar": 49.71120813523814,
+            "max_drawdown_pct": -1.3636999361312538,
+            "profit_factor": 1.6850347091222428,
+            "sharpe": 2.1333084826074815,
+            "sortino": 10.269443154333993,
+            "total_profit_pct": 1.31,
+            "trade_count": 17,
+            "win_rate_pct": 52.94117647058824
+          }
+        }
+      }
+    },
+    "provider": "ibkr_paxos_1h_repair",
+    "rows": 782,
+    "run_tomac_exit": 0,
+    "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/provider-csv/ibkr_btc_paxos_aggtrades_30d_1h.csv",
+    "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/workspace/auto-quant-112315-ibkr_paxos_1h_repair"
+  },
+  "fetch_attempts": [
+    {
+      "bar_size": "1 hour",
+      "connected": true,
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/provider-csv/ibkr_btc_paxos_aggtrades_30d_1h.csv",
+      "duration": "30 D",
+      "first_time": "2026-03-31 16:01:00-04:00",
+      "last_time": "2026-05-11 23:00:00-04:00",
+      "messages": [
+        {
+          "contract": "None",
+          "errorCode": 2104,
+          "errorString": "Market data farm connection is OK:hfarm",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2107,
+          "errorString": "HMDS data farm connection is inactive but should be available upon demand.apachmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2106,
+          "errorString": "HMDS data farm connection is OK:ushmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2158,
+          "errorString": "Sec-def data farm connection is OK:secdefhk",
+          "reqId": -1
+        }
+      ],
+      "qualified": true,
+      "qualified_contract": "Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')",
+      "rows": 782,
+      "what_to_show": "AGGTRADES"
+    },
+    {
+      "bar_size": "1 hour",
+      "connected": true,
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/provider-csv/ibkr_btc_paxos_aggtrades_60d_1h.csv",
+      "duration": "60 D",
+      "first_time": "2026-02-17 16:01:00-05:00",
+      "last_time": "2026-05-11 23:00:00-04:00",
+      "messages": [
+        {
+          "contract": "None",
+          "errorCode": 2104,
+          "errorString": "Market data farm connection is OK:hfarm",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2107,
+          "errorString": "HMDS data farm connection is inactive but should be available upon demand.apachmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2106,
+          "errorString": "HMDS data farm connection is OK:ushmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2158,
+          "errorString": "Sec-def data farm connection is OK:secdefhk",
+          "reqId": -1
+        }
+      ],
+      "qualified": true,
+      "qualified_contract": "Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')",
+      "rows": 1580,
+      "what_to_show": "AGGTRADES"
+    },
+    {
+      "bar_size": "1 hour",
+      "connected": true,
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/provider-csv/ibkr_btc_paxos_midpoint_30d_1h.csv",
+      "duration": "30 D",
+      "first_time": "2026-03-31 16:01:00-04:00",
+      "last_time": "2026-05-11 23:00:00-04:00",
+      "messages": [
+        {
+          "contract": "None",
+          "errorCode": 2104,
+          "errorString": "Market data farm connection is OK:hfarm",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2107,
+          "errorString": "HMDS data farm connection is inactive but should be available upon demand.apachmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2106,
+          "errorString": "HMDS data farm connection is OK:ushmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2158,
+          "errorString": "Sec-def data farm connection is OK:secdefhk",
+          "reqId": -1
+        }
+      ],
+      "qualified": true,
+      "qualified_contract": "Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')",
+      "rows": 782,
+      "what_to_show": "MIDPOINT"
+    },
+    {
+      "bar_size": "1 hour",
+      "connected": true,
+      "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/provider-csv/ibkr_btc_paxos_midpoint_60d_1h.csv",
+      "duration": "60 D",
+      "first_time": "2026-02-17 16:01:00-05:00",
+      "last_time": "2026-05-11 23:00:00-04:00",
+      "messages": [
+        {
+          "contract": "None",
+          "errorCode": 2104,
+          "errorString": "Market data farm connection is OK:hfarm",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2107,
+          "errorString": "HMDS data farm connection is inactive but should be available upon demand.apachmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2106,
+          "errorString": "HMDS data farm connection is OK:ushmds",
+          "reqId": -1
+        },
+        {
+          "contract": "None",
+          "errorCode": 2158,
+          "errorString": "Sec-def data farm connection is OK:secdefhk",
+          "reqId": -1
+        }
+      ],
+      "qualified": true,
+      "qualified_contract": "Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')",
+      "rows": 1580,
+      "what_to_show": "MIDPOINT"
+    }
+  ],
+  "gate_result": "ibkr_btc_aq_lane_repaired_nonpromoting",
+  "ibkr_aq_lane_repaired": true,
+  "mature_rooted_branch_observations_added": 51,
+  "metric_summary": {
+    "positive_profit_metric_count": 2,
+    "strategies_with_metrics": 2,
+    "total_trades": 51
+  },
+  "promotion_allowed": false,
+  "run_id": "20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1",
+  "selected_fetch": {
+    "bar_size": "1 hour",
+    "connected": true,
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/provider-csv/ibkr_btc_paxos_aggtrades_30d_1h.csv",
+    "duration": "30 D",
+    "first_time": "2026-03-31 16:01:00-04:00",
+    "last_time": "2026-05-11 23:00:00-04:00",
+    "messages": [
+      {
+        "contract": "None",
+        "errorCode": 2104,
+        "errorString": "Market data farm connection is OK:hfarm",
+        "reqId": -1
+      },
+      {
+        "contract": "None",
+        "errorCode": 2107,
+        "errorString": "HMDS data farm connection is inactive but should be available upon demand.apachmds",
+        "reqId": -1
+      },
+      {
+        "contract": "None",
+        "errorCode": 2106,
+        "errorString": "HMDS data farm connection is OK:ushmds",
+        "reqId": -1
+      },
+      {
+        "contract": "None",
+        "errorCode": 2158,
+        "errorString": "Sec-def data farm connection is OK:secdefhk",
+        "reqId": -1
+      }
+    ],
+    "qualified": true,
+    "qualified_contract": "Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')",
+    "rows": 782,
+    "what_to_show": "AGGTRADES"
+  },
+  "source_aq_root": "20260512T113833+0800-codex-112904-provider-matrix-aq-date-contract-repair-v1",
+  "startup_floor_met": true,
+  "trade_usable": false,
+  "update_goal": false
+}

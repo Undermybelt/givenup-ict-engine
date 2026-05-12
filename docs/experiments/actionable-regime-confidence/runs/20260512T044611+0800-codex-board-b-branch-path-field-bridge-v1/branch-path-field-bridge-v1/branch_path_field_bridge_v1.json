@@ -1,0 +1,69 @@
+{
+  "branch_path_counts": {
+    "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72": 762,
+    "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72": 10663,
+    "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72": 584,
+    "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72": 3406
+  },
+  "catboost_score_paths": [
+    "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+    "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+    "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72",
+    "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72",
+    "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72"
+  ],
+  "catboost_target_paths": [
+    "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+    "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+    "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72",
+    "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72",
+    "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72"
+  ],
+  "existing_layer_path_presence": {
+    "bbn_all_target_paths": false,
+    "execution_tree_all_target_paths": false,
+    "pre_bayes_all_target_paths": false,
+    "workflow_all_target_paths": true
+  },
+  "gate_result": "branch_path_field_bridge_v1=enriched_wire_schema_bridge_ready_no_promotion",
+  "generated_at_utc": "2026-05-11T20:47:50.883440+00:00",
+  "inputs": {
+    "catboost_scores": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/catboost/scores/current_scores.csv",
+    "catboost_target": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/B2R_NQ_COST_CRISIS_REPAIR_032157/policy_training/structural_path_ranking_target.csv",
+    "manifest": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-v2/strategy_library_nq_cost_crisis_repair_v3_manifest_1_0.json",
+    "wire": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-v2/nq_cost_crisis_repair_real_trades_v3_wire_fixed.jsonl"
+  },
+  "manifest_paths": [
+    "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+    "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+    "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+    "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72"
+  ],
+  "missing_strategy_rows": 0,
+  "missing_target_paths_from_enriched_wire": [
+    "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72"
+  ],
+  "outputs": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T044611+0800-codex-board-b-branch-path-field-bridge-v1/checks/branch_path_field_bridge_v1_assertions.out",
+    "counts_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T044611+0800-codex-board-b-branch-path-field-bridge-v1/branch-path-field-bridge-v1/branch_path_field_bridge_counts_v1.csv",
+    "enriched_wire": "docs/experiments/actionable-regime-confidence/runs/20260512T044611+0800-codex-board-b-branch-path-field-bridge-v1/branch-path-field-bridge-v1/nq_cost_crisis_repair_real_trades_v3_full_branch_path_enriched.jsonl",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260512T044611+0800-codex-board-b-branch-path-field-bridge-v1/branch-path-field-bridge-v1/branch_path_field_bridge_v1.json",
+    "summary_md": "docs/experiments/actionable-regime-confidence/runs/20260512T044611+0800-codex-board-b-branch-path-field-bridge-v1/branch-path-field-bridge-v1/branch_path_field_bridge_v1.md"
+  },
+  "promotion_status": {
+    "downstream_promotion_rerun": false,
+    "promotion_allowed": false,
+    "selected_historical_data": false,
+    "update_goal": false
+  },
+  "root_counts": {
+    "Bear": 762,
+    "Bull": 10663,
+    "Crisis": 584,
+    "Sideways": 3406
+  },
+  "rows_enriched": 15415,
+  "rows_total": 15415,
+  "run_id": "20260512T044611+0800-codex-board-b-branch-path-field-bridge-v1",
+  "source_run": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3"
+}

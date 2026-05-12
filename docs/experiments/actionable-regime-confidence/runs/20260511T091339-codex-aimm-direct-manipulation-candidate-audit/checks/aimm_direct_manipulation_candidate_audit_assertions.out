@@ -1,0 +1,9 @@
+PASS sources_checked=3
+PASS accepted_direct_manipulation_label_sources=0
+PASS accepted_label_rows_materialized=0
+PASS accepted_mainregimev2_root_label_slots=0
+PASS gate_result=blocked_aimm_public_materials_no_ground_truth_labels
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

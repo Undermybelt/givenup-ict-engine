@@ -1,0 +1,21 @@
+{
+  "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+  "full_rows_1h": 76429,
+  "full_rows_4h": 19124,
+  "full_rows_1d": 3191,
+  "slice_rows_1h": 4000,
+  "slice_rows_4h": 1000,
+  "slice_rows_1d": 168,
+  "first_full_1h": "2017-08-17T04:00:00Z",
+  "last_full_1h": "2026-05-12T00:00:00Z",
+  "first_slice_1h": "2025-11-26T09:00:00Z",
+  "last_slice_1h": "2026-05-12T00:00:00Z",
+  "paths": {
+    "full_1h": "docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-1h-full.json",
+    "full_4h": "docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-4h-full.json",
+    "full_1d": "docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-1d-full.json",
+    "slice_1h": "docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-1h-slice4000.json",
+    "slice_4h": "docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-4h-slice1200.json",
+    "slice_1d": "docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1/provider-data-json/BTCUSDT-binance-1d-slice700.json"
+  }
+}

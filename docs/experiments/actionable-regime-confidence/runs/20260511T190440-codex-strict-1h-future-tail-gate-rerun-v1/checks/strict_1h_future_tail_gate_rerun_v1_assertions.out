@@ -1,0 +1,7 @@
+PASS source_spec_candidate_rows=4
+PASS accepted_future_protocol_rows_added=4
+PASS accepted_rows_added_to_fixed_gate=0
+PASS strict_1h_future_protocol_rows_after=45/156
+PASS new_confidence_gate=true_scope_future_tail_only
+PASS strict_full_objective=false
+PASS update_goal=false

@@ -1,0 +1,71 @@
+{
+  "run_id": "20260511T133057+0800-codex-targeted-native-source-label-probe-v1",
+  "artifact_type": "targeted_native_source_label_probe_v1",
+  "purpose": "Target the current Board A next action: unsupported intraday/full-species MainRegimeV2 source-label cells and direct Manipulation matched-negative rows, without repeating broad negative sweeps.",
+  "active_taxonomy": {
+    "price_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "separate_direct_class_or_overlay": "Manipulation"
+  },
+  "scope": {
+    "fresh_provider_download": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "internet_probe_type": "targeted source-readback from current gap audit rows, not a broad source lottery"
+  },
+  "candidate_sources": [
+    {
+      "name": "Kaggle Stock Market Regimes 2000-2026",
+      "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+      "observed_claim": "Labeled daily Bull, Bear, Sideways, Crisis, and High-Volatility regimes with macro context.",
+      "decision": "already_consumed_same_source_daily_weekly_monthly_stock_index_panel",
+      "accepted_new_parent_root_slots_added": 0,
+      "blocker": "Does not add unsupported native intraday/full-species cells beyond the already accepted stock/index daily and same-source 1w/1mo gates."
+    },
+    {
+      "name": "MarketIndicator.io RegimeScore",
+      "url": "https://www.marketindicator.io/about",
+      "observed_claim": "Daily post-close model output combining risk-on momentum, breadth, and correlation/liquidity stress signals.",
+      "decision": "rejected_model_output_not_independent_exact_label_panel",
+      "accepted_new_parent_root_slots_added": 0,
+      "blocker": "Daily model score, not an exportable provider/instrument/timeframe panel with exact Bull/Bear/Sideways/Crisis source labels."
+    },
+    {
+      "name": "FINRA Potential Manipulation Report",
+      "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report",
+      "observed_claim": "Monthly firm report includes Layering Detail Data and Spoofing Detail Data fields such as trade date, symbol, timestamps, PBBO prices, side, order count, quantity, market center, and activity description.",
+      "decision": "useful_schema_and_acquisition_target_not_public_rows",
+      "accepted_direct_manipulation_rows_added": 0,
+      "blocker": "The public page exposes schema/field definitions, not exportable row-level positive and matched negative controls."
+    },
+    {
+      "name": "lobflow",
+      "url": "https://pypi.org/project/lobflow/",
+      "observed_claim": "Open-source L2 order-book metrics and manipulation detectors for spoofing, layering, and quote stuffing, including synthetic data generation.",
+      "decision": "rejected_detector_or_synthetic_proxy_not_direct_evidence_rows",
+      "accepted_direct_manipulation_rows_added": 0,
+      "blocker": "Detector confidence and synthetic injected rows cannot replace timestamped real positive/negative order-lifecycle labels."
+    },
+    {
+      "name": "ETF trend versus oscillation paper",
+      "url": "https://www.mdpi.com/1911-8074/19/4/262",
+      "observed_claim": "Binary next-day ETF classification distinguishing trending days from oscillating days.",
+      "decision": "rejected_binary_research_label_not_exact_mainregimev2_panel",
+      "accepted_new_parent_root_slots_added": 0,
+      "blocker": "Not an exportable four-root Bull/Bear/Sideways/Crisis panel and not native intraday/full-species coverage."
+    }
+  ],
+  "accepted_new_parent_root_slots_added": 0,
+  "accepted_direct_manipulation_rows_added": 0,
+  "targeted_positive_path": {
+    "price_root_lane": "No new public attachable native intraday/full-species source-label panel was accepted in this targeted probe. Continue with authenticated/user-provided source-label exports or explicit owner-approved crosswalks only.",
+    "direct_manipulation_lane": "FINRA Potential Manipulation Report is the most useful concrete schema target for spoofing/layering matched-negative acquisition, but the public page does not provide rows."
+  },
+  "gate_result": "targeted_probe_no_new_attachable_native_source_label_panel_finra_schema_target_identified",
+  "full_objective_achieved": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Acquire authenticated or user-provided row exports matching the FINRA spoofing/layering schema, or an exact native intraday/full-species MainRegimeV2 label panel; keep proxy/model/synthetic sources rejected."
+}

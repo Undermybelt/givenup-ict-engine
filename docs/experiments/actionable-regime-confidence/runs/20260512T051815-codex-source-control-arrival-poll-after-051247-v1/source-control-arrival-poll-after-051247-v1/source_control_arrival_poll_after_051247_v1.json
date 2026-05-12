@@ -1,0 +1,74 @@
+{
+  "run_id": "20260512T051815-codex-source-control-arrival-poll-after-051247-v1",
+  "created_at_local": "2026-05-12T05:18:15+08:00",
+  "board_sha256_before_poll": "ae2ccacdb08f43ed38dce0d0658185a314e4a7cc729425c7f680f72d00fc5fd3",
+  "gate_result": "source_control_arrival_poll_after_051247_v1=no_required_unlock_root_no_control_approval_no_promotion",
+  "target_roots": [
+    {
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "status": "absent",
+      "decision": "missing_target_root_no_promotion"
+    },
+    {
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "status": "absent",
+      "decision": "missing_target_root_no_promotion"
+    },
+    {
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "status": "absent",
+      "decision": "missing_target_root_no_promotion"
+    },
+    {
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "status": "present",
+      "decision": "known_equivalence_sidecar_not_required_unlock_root"
+    }
+  ],
+  "local_hints": [
+    {
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "classification": "r6_local_sidecar",
+      "row_count": "73 positive data rows and 73 matched-negative data rows",
+      "decision": "non_target_sidecar_no_explicit_control_approval_no_promotion"
+    },
+    {
+      "path": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+      "classification": "r6_local_sidecar",
+      "row_count": "77 positive data rows and 77 matched-negative data rows",
+      "decision": "non_target_sidecar_no_explicit_control_approval_no_promotion"
+    },
+    {
+      "path": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "classification": "r6_local_sidecar",
+      "row_count": "73 positive data rows and 73 matched-negative data rows",
+      "decision": "non_target_sidecar_no_explicit_control_approval_no_promotion"
+    },
+    {
+      "path": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "classification": "r6_local_sidecar",
+      "row_count": "73 positive data rows and 73 matched-negative data rows",
+      "decision": "non_target_sidecar_no_explicit_control_approval_no_promotion"
+    },
+    {
+      "path": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/databento.rar",
+      "classification": "downloaded_ohlcv_hint",
+      "sha256": "60daf9e15e42a8c1884c7dbe36629dcea06fd13f0e20ec0ed0c9d1a74ee51112",
+      "metadata_schema": "GLBX.MDP3 ohlcv-1m csv for GC.FUT",
+      "decision": "ohlcv_bar_archive_not_mbo_depth_order_lifecycle_or_source_label_no_promotion"
+    }
+  ],
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "accepted_regime_confidence_labels": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_control_approval": false,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Preserve the Current Cursor next action: send or satisfy CME/Cboe/CFE owner-export requests, preserve ticket/export/license identifiers, or obtain explicit FLIP-as-control approval before copying verifier-native files into the approved target root and rerunning the direct verifier, split calibration, provider/AutoQuant, Pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree chain."
+}

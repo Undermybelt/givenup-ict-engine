@@ -1,0 +1,4 @@
+Error: ingesting real trades for symbol 'BOARD_A_BTC_172142' from 'docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/derived/downstream-v1/real_trades_172142_same_root.jsonl'
+
+Caused by:
+    refusing to re-ingest the same JSONL: a prior auto_quant_real_trades_ingested entry with content_hash 'd56f172efc2f8c42' exists (auto_quant_real_trades_BOARD_A_BTC_172142_20260512T095011.302759000Z); pass --force after rolling back the BBN to override

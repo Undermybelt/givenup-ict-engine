@@ -1,0 +1,12 @@
+PASS source_pooled_gate_true
+PASS chronological_gate_false
+PASS heldout_symbol_gate_false
+PASS heldout_venue_gate_false
+PASS broad_normal_controls_false
+PASS gap_families_present
+PASS accepted_rows_added_zero
+PASS canonical_merge_false
+PASS downstream_rerun_false
+PASS strict_objective_false
+PASS update_goal_false
+PASS source_roots_mutated_false

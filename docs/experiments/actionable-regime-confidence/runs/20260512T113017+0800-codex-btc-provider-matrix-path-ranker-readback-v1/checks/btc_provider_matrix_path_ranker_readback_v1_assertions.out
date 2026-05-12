@@ -1,0 +1,8 @@
+PASS source_roots_inspected
+PASS provider_layer_rows_recorded
+FAIL_CLOSED same_root_six_provider_aq_authority=false
+PASS 112740_pre_bayes_and_path_ranker_readback_recorded
+PASS 112954_path_ranker_validation_floors_met
+FAIL_CLOSED pre_bayes_or_execution_not_promotable
+FAIL_CLOSED promotion_allowed=false
+PASS update_goal=false

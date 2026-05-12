@@ -1,0 +1,2026 @@
+{
+  "factor_profiles": {},
+  "factor_rankings": [],
+  "feedback_history": [
+    {
+      "timestamp": "2026-04-05T05:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0001",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.003083179420870176,
+          "confidence": 0.0,
+          "weight": 10.18466538,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -10.18466538,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0001",
+        "recommended_at": "2026-04-05T03:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-05T23:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0002",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.013105122401869156,
+          "confidence": 0.0,
+          "weight": 43.24606056,
+          "long_support": 43.24606056,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 43.24606056,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0002",
+        "recommended_at": "2026-04-05T16:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-07T11:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0003",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.012201736502403053,
+          "confidence": 0.0,
+          "weight": 40.43925004,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -40.43925004,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0003",
+        "recommended_at": "2026-04-07T09:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-07T22:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0004",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.026721479960126075,
+          "confidence": 0.0,
+          "weight": 88.20393746,
+          "long_support": 88.20393746,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 88.20393746,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0004",
+        "recommended_at": "2026-04-07T18:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-09T05:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0005",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.005887341541653765,
+          "confidence": 0.0,
+          "weight": 19.60484291,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -19.60484291,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0005",
+        "recommended_at": "2026-04-09T03:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-09T14:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0006",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.005010714080143307,
+          "confidence": 0.0,
+          "weight": 16.65322393,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -16.65322393,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0006",
+        "recommended_at": "2026-04-09T07:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-09T22:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0007",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.014507540392742817,
+          "confidence": 0.0,
+          "weight": 48.13633953,
+          "long_support": 48.13633953,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 48.13633953,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0007",
+        "recommended_at": "2026-04-09T15:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-11T23:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0008",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.014312652482627228,
+          "confidence": 0.0,
+          "weight": 47.71727375,
+          "long_support": 47.71727375,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 47.71727375,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0008",
+        "recommended_at": "2026-04-10T10:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-13T22:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0009",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.02909667460501304,
+          "confidence": 0.0,
+          "weight": 97.46469077,
+          "long_support": 97.46469077,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 97.46469077,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0009",
+        "recommended_at": "2026-04-13T14:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-15T07:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0010",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.0052873102921037005,
+          "confidence": 0.0,
+          "weight": 17.88105197,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -17.88105197,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0010",
+        "recommended_at": "2026-04-15T00:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-15T16:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0011",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.006838765215884063,
+          "confidence": 0.0,
+          "weight": 23.08749273,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -23.08749273,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0011",
+        "recommended_at": "2026-04-15T12:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-16T11:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0012",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0003591436510335598,
+          "confidence": 0.0,
+          "weight": 1.20972069,
+          "long_support": 1.20972069,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 1.20972069,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0012",
+        "recommended_at": "2026-04-15T18:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-16T14:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0013",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.013168442748115508,
+          "confidence": 0.0,
+          "weight": 44.36115316,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -44.36115316,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0013",
+        "recommended_at": "2026-04-16T13:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-16T17:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0014",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.009006754660834506,
+          "confidence": 0.0,
+          "weight": 30.20949749,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -30.20949749,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0014",
+        "recommended_at": "2026-04-16T16:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-17T13:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0015",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0175638809231094,
+          "confidence": 0.0,
+          "weight": 58.73562045,
+          "long_support": 58.73562045,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 58.73562045,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0015",
+        "recommended_at": "2026-04-16T19:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-19T17:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0016",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.009096745021849229,
+          "confidence": 0.0,
+          "weight": 30.5970498,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -30.5970498,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0016",
+        "recommended_at": "2026-04-19T14:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-21T15:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0017",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0058113276212389845,
+          "confidence": 0.0,
+          "weight": 19.48775909,
+          "long_support": 19.48775909,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 19.48775909,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0017",
+        "recommended_at": "2026-04-20T10:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-22T05:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0018",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.013648020927329798,
+          "confidence": 0.0,
+          "weight": 45.8552522,
+          "long_support": 45.8552522,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 45.8552522,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0018",
+        "recommended_at": "2026-04-22T00:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-23T10:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0019",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.006797005259565261,
+          "confidence": 0.0,
+          "weight": 22.93985369,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -22.93985369,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0019",
+        "recommended_at": "2026-04-23T06:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-23T19:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0020",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.008545916206365424,
+          "confidence": 0.0,
+          "weight": 28.77765433,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -28.77765433,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0020",
+        "recommended_at": "2026-04-23T15:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-24T04:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0021",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.00830552808758619,
+          "confidence": 0.0,
+          "weight": 27.88921878,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -27.88921878,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0021",
+        "recommended_at": "2026-04-23T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-24T17:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0022",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.008037062680670478,
+          "confidence": 0.0,
+          "weight": 26.91369219,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -26.91369219,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0022",
+        "recommended_at": "2026-04-24T12:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-26T02:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0023",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.0031927144288717876,
+          "confidence": 0.0,
+          "weight": 10.66304915,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -10.66304915,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0023",
+        "recommended_at": "2026-04-25T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-27T06:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0024",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.0018426541623420907,
+          "confidence": 0.0,
+          "weight": 6.14761819,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -6.14761819,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0024",
+        "recommended_at": "2026-04-26T05:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-29T14:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0025",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.0048498179276230706,
+          "confidence": 0.0,
+          "weight": 16.17052637,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -16.17052637,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0025",
+        "recommended_at": "2026-04-29T04:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-01T13:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0026",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.02192413541716575,
+          "confidence": 0.0,
+          "weight": 72.98352893,
+          "long_support": 72.98352893,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 72.98352893,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0026",
+        "recommended_at": "2026-04-30T08:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-04T06:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0027",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.014740682254752675,
+          "confidence": 0.0,
+          "weight": 49.42582077,
+          "long_support": 49.42582077,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 49.42582077,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0027",
+        "recommended_at": "2026-05-03T08:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-06T13:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0028",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.018433580053561795,
+          "confidence": 0.0,
+          "weight": 62.1091368,
+          "long_support": 62.1091368,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 62.1091368,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0028",
+        "recommended_at": "2026-05-04T15:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-07T10:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0029",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.00823131521379617,
+          "confidence": 0.0,
+          "weight": 27.90304496,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -27.90304496,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0029",
+        "recommended_at": "2026-05-07T07:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-08T14:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0030",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.009037160071810548,
+          "confidence": 0.0,
+          "weight": 30.55145123,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -30.55145123,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0030",
+        "recommended_at": "2026-05-08T11:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-08T17:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0031",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.00632081074889042,
+          "confidence": 0.0,
+          "weight": 21.30464201,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -21.30464201,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0031",
+        "recommended_at": "2026-05-08T15:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-10T21:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0032",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.006279163815327675,
+          "confidence": 0.0,
+          "weight": 21.12007887,
+          "long_support": 21.12007887,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 21.12007887,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0032",
+        "recommended_at": "2026-05-08T18:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-11T04:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0033",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.018050746509325668,
+          "confidence": 0.0,
+          "weight": 60.8399286,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -60.8399286,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0033",
+        "recommended_at": "2026-05-10T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-12T00:00:00Z",
+      "symbol": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315",
+      "source": "provider_matrix_bybit_momentum_112315",
+      "run_id": "20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1",
+      "trade_id": "B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0034",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderCryptoMomentumStateV1",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0016309267679557894,
+          "confidence": 0.0,
+          "weight": 5.46425211,
+          "long_support": 5.46425211,
+          "short_support": 0.0,
+          "uncertainty_contribution": 1.0
+        },
+        {
+          "factor_name": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 1.0
+      },
+      "realized_outcome": "win",
+      "pnl": 5.46425211,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315:B2R_PROVIDER_MATRIX_BYBIT_MOMENTUM_112315_ProviderCryptoMomentumStateV1_0034",
+        "recommended_at": "2026-05-11T16:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderCryptoMomentum",
+        "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    }
+  ],
+  "structural_prior_state": {
+    "nodes": {},
+    "branches": {},
+    "scenarios": {},
+    "paths": {},
+    "event_ledger": [],
+    "node_duration_priors": {},
+    "branch_transition_priors": {},
+    "node_temporal_posteriors": {},
+    "node_transition_posteriors": {},
+    "branch_temporal_posteriors": {},
+    "source_reliability_posteriors": {}
+  },
+  "last_updated": "2026-05-12T03:41:53.385110Z"
+}

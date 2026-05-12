@@ -1,0 +1,11 @@
+{
+  "built": [
+    "NQ",
+    "ES"
+  ],
+  "records": 192,
+  "split_paths": {
+    "ES": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_es.jsonl",
+    "NQ": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_nq.jsonl"
+  }
+}

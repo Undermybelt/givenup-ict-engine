@@ -1,0 +1,118 @@
+{
+  "run_id": "20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+  "pathranker_source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1",
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "gate": "104703_provider_data_prebayes_pathranker_readback_v1=pre_bayes_populated_catboost_pathranker_ready_but_execution_blocked_no_promotion",
+  "exits": {
+    "00_prepare_state_and_data": 0,
+    "01_analyze_provider_btc": 0,
+    "02_pre_bayes_status": 0,
+    "03_policy_training_status": 0,
+    "04_export_structural_path_ranking_target": 2,
+    "04b_export_structural_path_ranking_target_corrected": 0,
+    "05_workflow_structural_bundle": 0,
+    "06_workflow_execution_candidate": 0,
+    "07_workflow_full": 0
+  },
+  "core_commands_all_exit0": true,
+  "stale_export_flag_exit": 2,
+  "provider_data": [
+    {
+      "frame": "1d",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary/user_data/data/BTC_USDT-1d.feather",
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1/provider-data-json/BTC_USDT-1d.json",
+      "rows": 42,
+      "first": "2026-04-01T00:00:00Z",
+      "last": "2026-05-12T00:00:00Z"
+    },
+    {
+      "frame": "4h",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary/user_data/data/BTC_USDT-4h.feather",
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1/provider-data-json/BTC_USDT-4h.json",
+      "rows": 247,
+      "first": "2026-04-01T00:00:00Z",
+      "last": "2026-05-12T00:00:00Z"
+    },
+    {
+      "frame": "1h",
+      "source": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary/user_data/data/BTC_USDT-1h.feather",
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1/provider-data-json/BTC_USDT-1h.json",
+      "rows": 985,
+      "first": "2026-04-01T00:00:00Z",
+      "last": "2026-05-12T00:00:00Z"
+    }
+  ],
+  "pre_bayes": {
+    "latest_gate_status": "pass_neutralized",
+    "latest_policy_version": "318900600c5e8cf2",
+    "latest_canonical_structural_active_regime": "range",
+    "latest_canonical_structural_confidence": 0.5345590139527494,
+    "latest_canonical_structural_probabilities": {
+      "range": 0.7503448811920331,
+      "stress": 0.1746206306887635,
+      "transition": 0.07503448811920331,
+      "trend": 0.0
+    },
+    "market_state_primary_regime": "RangeConsolidation",
+    "market_state_secondary_regime": "WideRange",
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_alignment_score": 0.9967,
+    "uses_soft_evidence": true
+  },
+  "path_ranking": {
+    "runtime_status": "enabled_candidate_set_ready",
+    "runtime_ready": true,
+    "runtime_source_kind": "candidate_set",
+    "runtime_active_match_count": 3,
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "raw_scored_mature_rows": 86,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 85,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 43,
+    "observation_validation_min_rows": 30,
+    "calibration_status": "evaluated",
+    "calibration_ready": true,
+    "calibration_quality_ready": true,
+    "trainer_artifact_status": "runtime_eligible",
+    "rows": 3,
+    "history_rows": 90,
+    "history_mature_rows": 87,
+    "calibration_brier_score": 0.2123382527803036,
+    "calibration_expected_error": 0.0044624746450300234
+  },
+  "execution": {
+    "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+    "candidate_status": "execution_blocked",
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.3363756308524155,
+    "ready": false,
+    "actionable": false,
+    "review_status": "observe",
+    "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "path_ranker_raw_score": 0.9009131229620996,
+    "selected_path_probability": 0.46779206320093897,
+    "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T032935.776Z",
+    "closed_loop_status": "fail_closed",
+    "closed_loop_reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "blocking_truth_status": "blocked",
+    "blocking_truth_reason": "user_selected_historical_data_missing"
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_promoted": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "same_root_six_provider_aq_matrix": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

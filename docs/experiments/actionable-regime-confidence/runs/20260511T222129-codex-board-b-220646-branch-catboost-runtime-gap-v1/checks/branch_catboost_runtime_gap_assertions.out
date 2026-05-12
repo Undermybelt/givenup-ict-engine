@@ -1,0 +1,4 @@
+branch_score_rows 4
+runtime_matches_exact_branch_paths 0
+apply_returncode 1
+promotion_status not_promoted:exact_regime_profit_branch_paths_not_consumed_by_runtime_target

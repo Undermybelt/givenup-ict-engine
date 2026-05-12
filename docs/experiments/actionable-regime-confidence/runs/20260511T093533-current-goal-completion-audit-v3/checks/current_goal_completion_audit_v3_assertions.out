@@ -1,0 +1,13 @@
+PASS named_board_audited=docs/plans/2026-05-10-actionable-regime-confidence-todo.md
+PASS current_taxonomy=MainRegimeV2
+PASS active_parent_roots=Bull,Bear,Sideways,Crisis
+PASS manipulation_separate_direct_event_lane=true
+FAIL goal_achieved=false
+FAIL accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+FAIL missing_or_rejected_parent_root_source_label_slots=564
+FAIL accepted_direct_manipulation_rows_or_windows=0
+PASS no_proxy_or_subtype_promotion=true
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

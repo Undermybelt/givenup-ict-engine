@@ -1,0 +1,14 @@
+gate_result=provider_ltf_nursery_v1=data_ready_then_autoq_cwd_pair_whitelist_blocked
+prepare_exit=0
+data_ready_after_prepare=true
+auto_quant_status_after_prepare=dependency_ready_data_ready
+wrong_cwd_run_exit=1
+wrong_cwd_run_error=No module named 'freqtrade'
+corrected_autoq_cwd_run_exit=1
+corrected_autoq_cwd_run_error=No pair in whitelist.
+source_control_evidence_acquired=false
+selected_history=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+promotion_allowed=false
+update_goal=false

@@ -1,0 +1,6 @@
+prior_root,v4_root,handling,reason
+Bull,BullExpansion,reaudit_required,"Raw Bull labels must prove sustained positive expansion rather than weak recovery, correction, or transition."
+Bear,BearExpansion,reaudit_required,Raw Bear labels must separate ordinary negative expansion from CrisisStress and crash/stress windows.
+Sideways,Consolidation,reaudit_required,Sideways/range labels are conceptually close but need V4 range/compression calibration and context validation.
+Crisis,CrisisStress,preserved_provenance_reaudit_required,Prior Crisis evidence is useful stress provenance but does not complete V4 full-universe/full-cycle accounting without rerun.
+Manipulation_overlay,Manipulation,active_root_output_direct_input_gate,"Direct event/order-flow/order-lifecycle evidence may support this root, but OHLCV proxies remain forbidden."

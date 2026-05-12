@@ -1,0 +1,72 @@
+{
+  "accepted_rows_added": 0,
+  "additional_positive_rows_needed_after_moncada_if_all_accepted": 10,
+  "additional_positive_rows_needed_after_sarao_nowak_moncada_if_all_accepted": 0,
+  "additional_positive_rows_needed_now": 16,
+  "all_candidate_snippets_verified": true,
+  "assertions_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1/checks/r6_moncada_large_lot_positive_row_candidate_screen_v1_assertions.out",
+  "board_sha256_at_start": "85e792994d35df2fcf6ccae2e5c71e4bfeea81cda099e0ed29ac343e54ff83d0",
+  "current_min_wilson95_lcb": 0.936858991217,
+  "current_positive_rows": 57,
+  "current_positive_rows_source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T233454-codex-r6-nowak-smith-positive-row-candidate-screen-v1/r6-nowak-smith-positive-row-candidate-screen/r6_nowak_smith_positive_row_candidate_screen_v1.json",
+  "current_same_event_negative_rows": 57,
+  "direct_verifier": {
+    "payload": {
+      "missing_files": [
+        "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "end_hashes": {
+    "positive_rows": "missing",
+    "same_event_negatives": "missing"
+  },
+  "external_requests_sent": true,
+  "gate_result": "r6_moncada_large_lot_positive_row_candidate_screen_v1=proposed_rows_only_pooled_whatif_passes_if_sarao_nowak_also_accepted",
+  "generated_at_utc": "2026-05-11T15:52:46.914245+00:00",
+  "json_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1/r6-moncada-large-lot-positive-row-candidate-screen/r6_moncada_large_lot_positive_row_candidate_screen_v1.json",
+  "live_intake_available": false,
+  "new_confidence_gate": false,
+  "next_action": "Restore or reacquire the shared direct intake under a fresh lock/readback, then decide whether to accept Sarao, Nowak/Smith, and Moncada sidecar positives with matched-control policy. Rerun direct calibration with the sidecar broad-normal controls and split/species gates.",
+  "nowak_smith_sidecar_positive_rows": 6,
+  "proposed_positive_rows": 6,
+  "proposed_rows_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1/r6-moncada-large-lot-positive-row-candidate-screen/r6_moncada_large_lot_positive_row_candidates_v1.csv",
+  "raw_data_committed": false,
+  "raw_text_path": "/tmp/ict-engine-r6-moncada-large-lot-positive-row-candidate-screen-v1/raw/enfmoncadaorder100114.txt",
+  "report_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1/r6-moncada-large-lot-positive-row-candidate-screen/r6_moncada_large_lot_positive_row_candidate_screen_v1.md",
+  "run_id": "20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1",
+  "runtime_code_changed": false,
+  "sarao_sidecar_positive_rows": 6,
+  "shared_intake_mutated": false,
+  "sidecar_broad_normal_control_rows": 80,
+  "source": {
+    "bytes": 891658,
+    "case_id": "moncada_2014_cftc_order",
+    "content_type": "application/pdf",
+    "expected_use": "primary candidate: exact row-level large-lot manipulative order-lifecycle examples",
+    "http_status": 200,
+    "pdf_path": "/tmp/ict-engine-r6-moncada-large-lot-positive-row-candidate-screen-v1/raw/enfmoncadaorder100114.pdf",
+    "sha256": "9ca542a6147493de56b68a0123869ea69b9ece3e8ed6e8f7bb1277d8bdc2bc25",
+    "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfmoncadaorder100114.pdf"
+  },
+  "source_screen_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1/r6-moncada-large-lot-positive-row-candidate-screen/r6_moncada_large_lot_positive_row_source_screen_v1_cases.csv",
+  "start_hashes": {
+    "positive_rows": "missing",
+    "same_event_negatives": "missing"
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "what_if_min_wilson95_lcb_moncada_only": 0.942526809651,
+  "what_if_min_wilson95_lcb_sarao_nowak_moncada": 0.951274454095,
+  "what_if_positive_rows_moncada_only": 63,
+  "what_if_positive_rows_sarao_nowak_moncada": 75
+}

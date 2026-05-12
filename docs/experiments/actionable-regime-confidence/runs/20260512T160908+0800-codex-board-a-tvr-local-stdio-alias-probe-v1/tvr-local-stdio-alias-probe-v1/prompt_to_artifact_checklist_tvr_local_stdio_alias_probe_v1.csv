@@ -1,0 +1,7 @@
+requirement,evidence,coverage,status
+Avoid TVR remote API while rate-limited,"ICT_ENGINE_TVREMIX_MCP_URL and ICT_ENGINE_TVREMIX_MCP_API_KEY were empty in the command shape",remote not used,covered
+Test BTC-comparable TVR local stdio route,"BTC-USD 1h fetch exited 0 with 720 rows",TVR local stdio BTC route,covered
+Test known TVR preset sanity route,"NASDAQ:QQQ 1h fetch exited 0 with 148 rows",TVR local stdio preset route,covered
+Test futures-style sanity route,"ES=F 1h fetch exited 0 with 487 rows",TVR local stdio futures-style route,covered
+Do not claim same-root AQ authority,"No Auto-Quant or downstream chain was run",Board A acceptance,fail_closed
+Do not claim completion,"promotion_allowed=false trade_usable=false update_goal=false",Objective completion,covered_fail_closed

@@ -1,0 +1,114 @@
+{
+  "accepted_histgb_confidence_95_labels": [],
+  "gate_result": "source_label_histgb_confidence_screen_v1=histgb_confidence_scored_no_full_acceptance",
+  "gates": [
+    {
+      "accepted_histgb_confidence_95": false,
+      "blockers": "calibration_high_confidence_support_below_50;calibration_high_confidence_precision_wilson95_below_0.95;heldout_market_high_confidence_support_below_50;heldout_market_high_confidence_precision_wilson95_below_0.95;heldout_time_high_confidence_precision_wilson95_below_0.95;test_high_confidence_support_below_50;test_high_confidence_precision_wilson95_below_0.95",
+      "confidence_threshold": 0.95,
+      "label": "Bear",
+      "min_support": 50,
+      "required_splits": "calibration;heldout_market;heldout_time;test",
+      "wilson_threshold": 0.95
+    },
+    {
+      "accepted_histgb_confidence_95": false,
+      "blockers": "calibration_high_confidence_support_below_50;calibration_high_confidence_precision_wilson95_below_0.95;heldout_market_high_confidence_support_below_50;heldout_market_high_confidence_precision_wilson95_below_0.95;heldout_time_high_confidence_support_below_50;heldout_time_high_confidence_precision_wilson95_below_0.95;test_high_confidence_support_below_50;test_high_confidence_precision_wilson95_below_0.95",
+      "confidence_threshold": 0.95,
+      "label": "Bull",
+      "min_support": 50,
+      "required_splits": "calibration;heldout_market;heldout_time;test",
+      "wilson_threshold": 0.95
+    },
+    {
+      "accepted_histgb_confidence_95": false,
+      "blockers": "heldout_market_high_confidence_support_below_50;heldout_market_high_confidence_precision_wilson95_below_0.95",
+      "confidence_threshold": 0.95,
+      "label": "Crisis",
+      "min_support": 50,
+      "required_splits": "calibration;heldout_market;heldout_time;test",
+      "wilson_threshold": 0.95
+    },
+    {
+      "accepted_histgb_confidence_95": false,
+      "blockers": "heldout_market_high_confidence_support_below_50;heldout_market_high_confidence_precision_wilson95_below_0.95;test_high_confidence_precision_wilson95_below_0.95",
+      "confidence_threshold": 0.95,
+      "label": "Sideways",
+      "min_support": 50,
+      "required_splits": "calibration;heldout_market;heldout_time;test",
+      "wilson_threshold": 0.95
+    }
+  ],
+  "label_counts": {
+    "Bear": 54939,
+    "Bull": 104979,
+    "Crisis": 30623,
+    "Sideways": 57899
+  },
+  "model": {
+    "classes": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "feature_count": 70,
+    "kind": "HistGradientBoostingClassifier",
+    "parameters": {
+      "l2_regularization": 0.05,
+      "learning_rate": 0.045,
+      "max_iter": 240,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 80,
+      "random_state": 20260512
+    },
+    "train_split": "calibration"
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provenance_sha256": "a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b",
+  "row_count": 248440,
+  "rows_sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25",
+  "run_id": "20260512T042448-codex-source-label-histgb-confidence-screen-v1",
+  "split_counts": {
+    "calibration": 148976,
+    "heldout_market": 26236,
+    "heldout_time": 45384,
+    "test": 27844
+  },
+  "verifier": {
+    "next": "rerun unchanged chronological and heldout-market/timeframe gates; do not treat schema readiness as confidence acceptance",
+    "package_counts": {
+      "price_root_equivalence_us_index_futures": 248440
+    },
+    "provenance_keys": [
+      "created_at_utc",
+      "date_max",
+      "date_min",
+      "label_counts",
+      "limitations",
+      "market_family_counts",
+      "package_counts",
+      "raw_payload_committed_to_repo",
+      "reconstruction_reason",
+      "row_count",
+      "rows_path",
+      "rows_sha256",
+      "run_id",
+      "source_owner_counts",
+      "sources",
+      "split_counts",
+      "symbol_count",
+      "updated_at_utc",
+      "updated_by"
+    ],
+    "return_code": 0,
+    "row_count": 248440,
+    "status": "schema_ready_unscored"
+  }
+}

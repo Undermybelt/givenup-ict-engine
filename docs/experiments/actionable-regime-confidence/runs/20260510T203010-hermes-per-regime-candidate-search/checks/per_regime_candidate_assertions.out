@@ -1,0 +1,7 @@
+covered_regimes: ['ExtremeStress', 'RangeConsolidation', 'ReversalBrewing', 'ThinLiquidity', 'TrendExpansion']
+accepted_by_regime: {'TrendExpansion': 0, 'RangeConsolidation': 0, 'ExtremeStress': 0, 'ReversalBrewing': 0, 'ThinLiquidity': 0}
+blocked_future_target_predictors: True
+every_regime_has_candidates: True
+every_regime_has_context_validation: True
+accepted_regime_count: 0
+per_regime_acceptance_complete: False

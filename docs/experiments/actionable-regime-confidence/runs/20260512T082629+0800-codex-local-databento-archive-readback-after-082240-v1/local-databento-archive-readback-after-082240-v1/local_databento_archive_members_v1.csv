@@ -1,0 +1,3 @@
+member,header,has_order_lifecycle_columns,sample_rows
+gc_201101_202604.csv,"ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",False,4
+nq_201101_202604.csv,"ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol",False,4

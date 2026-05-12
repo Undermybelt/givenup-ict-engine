@@ -1,0 +1,12 @@
+PASS decision=current_goal_completion_audit_v43=post_cleanup_live_24x24_still_blocked
+PASS objective_restatement_present
+PASS checklist_rows=9
+PASS failures_present=true
+PASS r6_positive_rows=24
+PASS r6_matched_negative_rows=24
+PASS r6_combined_min_wilson95_lcb=0.862024
+PASS update_goal=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS external_requests_sent=false
+PASS raw_data_committed=false

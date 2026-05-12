@@ -1,0 +1,12 @@
+gate_result=local_download_arrival_sweep_after_071837_v1=known_stock_regime_download_only_no_vendor_export_no_unlock
+recent_candidate_file_count=4
+candidate_unlock_file_count=0
+stock_profile_max_date=2026-01-30
+stock_profile_post_2026_01_30_rows=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

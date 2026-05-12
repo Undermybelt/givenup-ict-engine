@@ -1,0 +1,15 @@
+PASS post_081705_required_root_dispatch_gate_v1
+gate_result=post_081705_required_root_dispatch_gate_v1=no_required_root_or_dispatch_unlock
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+accepted_rows_added=0
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

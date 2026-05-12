@@ -1,0 +1,99 @@
+{
+  "run_id": "20260511T111122+0800-codex-midsummer-meme-direct-wash-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T111122-codex-midsummer-meme-direct-wash-audit",
+  "purpose": "Audit the Zenodo Midsummer meme-coin dataset as a direct Manipulation source under the active MainRegimeV2 Board A contract.",
+  "board_cursor_readback": "20260511T110628+0800-codex-aimmgt-public-direct-source-audit",
+  "source": {
+    "title": "Code and Dataset for \"A Midsummer Meme's Dream: Investigating Market Manipulations in the Meme Coin Ecosystem\"",
+    "zenodo_record": "17830944",
+    "doi": "10.5281/zenodo.17830944",
+    "url": "https://zenodo.org/records/17830944",
+    "api_url": "https://zenodo.org/api/records/17830944",
+    "github": "https://github.com/Alb4tro/Code-and-Dataset-for-A-Midsummer-Meme-s-Dream-",
+    "downloaded_to_tmp": "/tmp/ict-regime-midsummer-meme/meme_coin-main.zip",
+    "zip_sha256": "4ef60d79cc70bc14287002d0a97a127ca46757690bae075801858356489571c9",
+    "zip_bytes": 26446048,
+    "archive_commit_or_folder_marker": "cfafc5fa89b590c22b8399da907bbd24b9709a93"
+  },
+  "active_taxonomy": {
+    "price_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "direct_class_or_overlay": "Manipulation",
+    "accepted_gate_scope": "direct Manipulation bounded slice only; no parent price-root slots"
+  },
+  "inspected_files": [
+    {
+      "path": "data/wash_trading_detected.csv",
+      "rows_including_header": 1044,
+      "fields": ["platform", "address", "day", "unique_maker_count"],
+      "decision": "positive_token_day_provenance_only"
+    },
+    {
+      "path": "data/lpi_operations_detected.csv",
+      "rows_including_header": 73,
+      "fields": ["day", "token_address", "platform", "unique_maker_count", "buy_volume", "sell_volume", "volume", "buy_ratio"],
+      "decision": "positive_only_no_explicit_negative_controls"
+    },
+    {
+      "path": "data/pump_and_dumps_on_performing_tokens_after_mid_january.csv",
+      "rows_including_header": 92,
+      "fields": ["pump_start", "pump_peak", "dump_end", "pump_price_increase", "dump_price_decrease", "address", "platform"],
+      "decision": "ohlcv_derived_profit_extraction_event_not_direct_wash_or_order_lifecycle_acceptance"
+    },
+    {
+      "path": "data/rug_pulls_detected_on_performing_tokens_after_mid_january.csv",
+      "rows_including_header": 3,
+      "fields": ["timestamp", "rug_pull", "address", "platform"],
+      "decision": "sparse_ohlcv_derived_profit_extraction_event_not_accepted"
+    },
+    {
+      "path": "data/dune_data_on_potential_wash_trading_makers_HP_coins.csv",
+      "rows_including_header": 64622,
+      "fields": ["buy_volume", "day", "maker", "sell_volume", "address", "volume_percentage", "platform", "total_volume", "is_both_buyer_seller"],
+      "decision": "usable_direct_onchain_maker_token_day_source_labels_for_bounded_bsc_slice"
+    }
+  ],
+  "strict_bsc_same_token_day_slice": {
+    "unit": "maker-token-day",
+    "platform": "bsc",
+    "manipulation_type": "wash_trade_maker_direct_signal",
+    "source_label": "is_both_buyer_seller",
+    "positive_rule": "platform == 'bsc' AND token-day has both True and False controls AND is_both_buyer_seller == True",
+    "negative_rule": "platform == 'bsc' AND same token-day paired controls AND is_both_buyer_seller == False",
+    "date_range": ["2021-09-18", "2025-02-05"],
+    "chronological_cut_date": "2024-06-27",
+    "paired_token_days": 298,
+    "rows_total": 4864,
+    "positive_rows_total": 1870,
+    "negative_rows_total": 2994,
+    "calibration": {
+      "positive_rows": 897,
+      "negative_rows": 1673,
+      "positive_wilson95_lcb": 0.995736,
+      "negative_wilson95_lcb": 0.997709
+    },
+    "test": {
+      "positive_rows": 973,
+      "negative_rows": 1321,
+      "positive_wilson95_lcb": 0.996067,
+      "negative_wilson95_lcb": 0.9971
+    },
+    "minimum_split_class_wilson95_lcb": 0.995736,
+    "accepted_95": true
+  },
+  "rejected_broader_scope": {
+    "all_chain_minimum_split_class_wilson95_lcb": 0.722467,
+    "reason": "base and solana calibration classes are too sparse under the unchanged per-chain support check; do not generalize the BSC slice across all chains.",
+    "pump_rug_lpi_reason": "pump/rug outputs are OHLCV-derived and LPI has positive rows without explicit negative controls in this bounded audit."
+  },
+  "decision": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 1870,
+    "accepted_gate": "accepted_95_bounded_bsc_meme_wash_maker_direct_slice",
+    "gate_result": "accepted_95_bounded_bsc_meme_wash_maker_direct_slice_not_full_manipulation_coverage",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "full_objective_achieved": false
+  }
+}

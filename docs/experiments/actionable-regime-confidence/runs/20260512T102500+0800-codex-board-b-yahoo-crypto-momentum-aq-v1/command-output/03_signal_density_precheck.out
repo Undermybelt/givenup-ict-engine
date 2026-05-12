@@ -1,0 +1,84 @@
+{
+  "nonzero_signal_density": true,
+  "run_root": "20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1",
+  "strategies": {
+    "ProviderCryptoMomentumStateV1": {
+      "expected_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "pairs": {
+        "BTC/USDT": {
+          "entry_candidates": 364,
+          "first_entries": [
+            "2024-06-06 17:00:00+00:00",
+            "2024-06-07 03:00:00+00:00",
+            "2024-06-09 12:00:00+00:00",
+            "2024-06-10 01:00:00+00:00",
+            "2024-06-10 14:00:00+00:00"
+          ],
+          "rows": 17007
+        },
+        "ETH/USDT": {
+          "entry_candidates": 390,
+          "first_entries": [
+            "2024-06-05 06:00:00+00:00",
+            "2024-06-05 11:00:00+00:00",
+            "2024-06-05 17:00:00+00:00",
+            "2024-06-07 11:00:00+00:00",
+            "2024-06-09 14:00:00+00:00"
+          ],
+          "rows": 17004
+        },
+        "SOL/USDT": {
+          "entry_candidates": 331,
+          "first_entries": [
+            "2024-06-07 04:00:00+00:00",
+            "2024-06-07 11:00:00+00:00",
+            "2024-06-10 15:00:00+00:00",
+            "2024-06-12 20:00:00+00:00",
+            "2024-06-16 10:00:00+00:00"
+          ],
+          "rows": 17006
+        }
+      },
+      "total_entry_candidates": 1085
+    },
+    "ProviderCryptoPullbackRevertV1": {
+      "expected_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "pairs": {
+        "BTC/USDT": {
+          "entry_candidates": 327,
+          "first_entries": [
+            "2024-06-06 20:00:00+00:00",
+            "2024-06-09 03:00:00+00:00",
+            "2024-06-11 18:00:00+00:00",
+            "2024-06-13 16:00:00+00:00",
+            "2024-06-14 21:00:00+00:00"
+          ],
+          "rows": 17007
+        },
+        "ETH/USDT": {
+          "entry_candidates": 275,
+          "first_entries": [
+            "2024-06-06 22:00:00+00:00",
+            "2024-06-08 07:00:00+00:00",
+            "2024-06-09 03:00:00+00:00",
+            "2024-06-10 08:00:00+00:00",
+            "2024-06-13 16:00:00+00:00"
+          ],
+          "rows": 17004
+        },
+        "SOL/USDT": {
+          "entry_candidates": 329,
+          "first_entries": [
+            "2024-06-06 20:00:00+00:00",
+            "2024-06-06 22:00:00+00:00",
+            "2024-06-10 08:00:00+00:00",
+            "2024-06-13 21:00:00+00:00",
+            "2024-06-14 01:00:00+00:00"
+          ],
+          "rows": 17006
+        }
+      },
+      "total_entry_candidates": 931
+    }
+  }
+}

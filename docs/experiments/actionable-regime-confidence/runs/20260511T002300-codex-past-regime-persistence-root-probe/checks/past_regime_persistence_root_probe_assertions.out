@@ -1,0 +1,13 @@
+loop_id: 20260511T002300+0800-codex-past-regime-persistence-root-probe
+report: docs/experiments/actionable-regime-confidence/runs/20260511T002300-codex-past-regime-persistence-root-probe/past_regime_persistence_root_probe_report.json
+accepted_root_classes_95: ['Crisis']
+missing_root_classes_95: ['Bull', 'Bear', 'Sideways', 'Manipulation']
+accepted_gate: partial_for_MainRegimeV2
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+Bull: state=blocked cal_lcb=0.434707 test_lcb=0.320015 test_support=587 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05']
+Bear: state=blocked cal_lcb=0.320983 test_lcb=0.286665 test_support=726 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95']
+Sideways: state=blocked cal_lcb=0.268399 test_lcb=0.340324 test_support=467 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05']
+Crisis: state=accepted_95 cal_lcb=0.996244 test_lcb=0.995968 test_support=949 blockers=[]
+Manipulation: state=missing_required_inputs test_lcb=0.000000 test_support=0 blockers=['missing_required_inputs', 'proxy_only_low_confidence']
+OVERALL: BLOCKED_NOT_COMPLETE

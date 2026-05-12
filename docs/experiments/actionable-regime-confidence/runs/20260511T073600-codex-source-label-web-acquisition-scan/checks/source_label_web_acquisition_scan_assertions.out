@@ -1,0 +1,8 @@
+goal_achieved=false
+candidate_sources_checked=5
+full_matrix_source_label_panels_found=0
+root_panel_cells_added=0
+accepted_full_cycle_full_universe=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=blocked_no_public_full_matrix_source_label_panel_found

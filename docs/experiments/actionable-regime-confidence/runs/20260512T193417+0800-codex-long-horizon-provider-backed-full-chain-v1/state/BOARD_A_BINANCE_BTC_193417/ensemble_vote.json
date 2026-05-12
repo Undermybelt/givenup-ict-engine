@@ -1,0 +1,77 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-12T11:46:51Z",
+  "generated_at": "2026-05-12T11:46:51.670806Z",
+  "symbol": "BOARD_A_BINANCE_BTC_193417",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:BOARD_A_BINANCE_BTC_193417:20260512T114651.385Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "8cfa165e86c6f994",
+    "data_fingerprint": "c613c3b646101049"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "favor_mean_reversion_only",
+  "recommended_command": "ask-user: Before using historical data for BOARD_A_BINANCE_BTC_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_BINANCE_BTC_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'",
+  "human_next_triage": "hard_blocked=false ensemble_action=favor_mean_reversion_only consensus=0.691 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for BOARD_A_BINANCE_BTC_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_BINANCE_BTC_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.6910037677012302,
+  "consensus_strength": 0.6910037677012302,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=favor_mean_reversion_only confidence=0.642 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.642",
+    "executor=xgboost_file action=favor_mean_reversion_only confidence=0.750 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.750"
+  ],
+  "split_explanations": [
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "posterior_override=range:0.750",
+    "gating_status=range",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "posterior_override=range:0.750"
+  ],
+  "executor_scorecards": [],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "c613c3b646101049",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "range",
+  "posterior_confidence": 0.5345590139527494,
+  "posterior_probabilities": {
+    "range": 0.7503448811920331,
+    "stress": 0.1746206306887635,
+    "transition": 0.07503448811920331,
+    "trend": 0.0
+  },
+  "posterior_evidence": [
+    "market_policy=BOARD hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bearish multi_timeframe_alignment_score=0.998 multi_timeframe_entry_alignment_score=0.864",
+    "long/short support gap 0.029 is too small, so alignment is treated as mixed",
+    "pre_bayes_quality_score=0.535 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.406",
+    "market_state_source=volatility=NormalVol:0.727 liquidity=NormalLiquidity:0.447 structure=Unknown:0.300 behavior=Neutral:0.450",
+    "market_state_source=rationale=volatility=NormalVol conf=0.73",
+    "market_state_source=rationale=primary=RangeConsolidation secondary=WideRange overall=0.41"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "560c801ec43f0bfa",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_VRP_PANEL_V25_190356_SELECTED_20260511T111955.404387000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades",
+  "symbol": "VRP_PANEL_V25_190356_SELECTED",
+  "trades_applied": 1184,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260511T190356-codex-board-b-vrp-v25-root-branch-rc-spa-v1/ict-engine-fail-closed/vrp_v25_selected_real_trades_wire_v1.jsonl",
+  "trades_total": 1184
+}

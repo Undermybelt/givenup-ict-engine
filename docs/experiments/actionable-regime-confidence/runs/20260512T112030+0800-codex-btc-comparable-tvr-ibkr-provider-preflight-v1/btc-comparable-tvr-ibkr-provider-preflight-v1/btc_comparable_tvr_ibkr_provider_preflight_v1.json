@@ -1,0 +1,72 @@
+{
+  "run_id": "20260512T112030+0800-codex-btc-comparable-tvr-ibkr-provider-preflight-v1",
+  "scope": "btc_comparable_provider_preflight_only",
+  "provider_status_tvr": {
+    "exit": 0,
+    "ready": true,
+    "status": "ready",
+    "reason": "mcp_url_and_api_key_available"
+  },
+  "tvr_binance_btc_1h": {
+    "exit": 0,
+    "ok": true,
+    "provider": "tradingview_mcp",
+    "symbol": "BINANCE:BTCUSDT",
+    "rows": 720,
+    "first": "2026-04-12T04:00:00Z",
+    "last": "2026-05-12T03:00:00Z",
+    "error": null
+  },
+  "tvr_coinbase_btc_1h": {
+    "exit": 0,
+    "ok": true,
+    "provider": "tradingview_mcp",
+    "symbol": "COINBASE:BTCUSD",
+    "rows": 715,
+    "first": "2026-04-12T04:00:00Z",
+    "last": "2026-05-12T03:00:00Z",
+    "error": null
+  },
+  "tvr_binance_btc_1h_local_stdio": {
+    "exit": 1,
+    "ok": false,
+    "provider": "tradingview_mcp",
+    "symbol": "BINANCE:BTCUSDT",
+    "rows": 0,
+    "first": null,
+    "last": null,
+    "error": {
+      "category": "fetch_failed",
+      "message": "tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'BINANCE:BTCUSDT': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+      "retryable": true
+    }
+  },
+  "ibkr_btc_paxos_1h_midpoint": {
+    "exit": 0,
+    "rows": 45,
+    "symbol": "BTC",
+    "exchange": "PAXOS",
+    "bar_size": "1 hour",
+    "what_to_show": "MIDPOINT",
+    "first": "2026-05-10T07:00:00+00:00",
+    "last": "2026-05-12T03:00:00+00:00",
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T112030+0800-codex-btc-comparable-tvr-ibkr-provider-preflight-v1/derived/ibkr_btc_paxos/BTC_1h_midpoint.csv"
+  },
+  "gate": "btc_comparable_tvr_ibkr_provider_preflight_v1=tvr_btc_and_ibkr_paxos_btc_rows_present_provider_layer_only_no_aq_no_promotion",
+  "same_root_aq_provider_matrix": false,
+  "pre_bayes_filter": false,
+  "bbn": false,
+  "catboost_path_ranker": false,
+  "execution_tree": false,
+  "accepted_rows_added": 0,
+  "mature_rooted_branch_observations_added": 0,
+  "source_control_evidence_acquired": false,
+  "explicit_selected_history": false,
+  "canonical_merge": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

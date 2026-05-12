@@ -1,0 +1,11 @@
+PASS gate_result=stock_regime_kaggle_live_recency_recheck_after_040311_v1=upstream_unchanged_no_r5_recency_tail_repair_no_promotion
+PASS total_rows=245021
+PASS max_date=2026-01-30
+PASS any_target_rows_after_2026_01_30=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS r5_recency_tail_repair_closed=false
+PASS strict_full_objective=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+PASS update_goal=false

@@ -1,0 +1,15 @@
+PASS run_id=20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1
+PASS source_run_id=20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1
+PASS rows=237
+PASS wins=81
+PASS losses=156
+PASS win_rate=0.341772
+PASS loss_rate=0.658228
+PASS pre_bayes_gate=pass_neutralized
+PASS raw_scored_mature=237
+PASS production_validation=237
+FAIL_CLOSED execution_ready=False actionable=False review=observe
+PASS cpd_update_candidate_only=true
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

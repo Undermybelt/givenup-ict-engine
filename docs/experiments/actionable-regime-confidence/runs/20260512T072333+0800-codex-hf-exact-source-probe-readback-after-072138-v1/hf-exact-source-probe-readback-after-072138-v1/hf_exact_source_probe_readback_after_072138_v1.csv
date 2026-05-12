@@ -1,0 +1,7 @@
+query_key,query,exit_code,json_type,result_count,summary_data_rows,json_path
+hf_mainregimev2,MainRegimeV2,0,array,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_mainregimev2.json
+hf_mainregimev2_crisis,MainRegimeV2 Crisis,0,array,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_mainregimev2_crisis.json
+hf_market_regime_crisis,market regime crisis,0,array,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_market_regime_crisis.json
+hf_native_subhour_source_label_rows,native_subhour_source_label_rows,0,array,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_native_subhour_source_label_rows.json
+hf_stock_market_regimes_2000_2026,stock_market_regimes_2000_2026,0,array,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_stock_market_regimes_2000_2026.json
+hf_stock_market_regimes_2026_extension,stock_market_regimes_2026_extension,0,array,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_stock_market_regimes_2026_extension.json

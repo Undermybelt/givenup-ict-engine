@@ -1,0 +1,7 @@
+requirement,status,evidence,gap
+autoquant_command_operated,pass,exit_code=0; strategy=TomacNQ_KillzoneBreakout,
+local_cache_backtest_metrics_recorded,pass,trades=74; win_rate_pct=52.7027; total_profit_pct=6.98; sharpe=0.2207,
+every_regime_95_confidence,blocked,no accepted regime-confidence labels in this packet,Backtest metrics are not regime-confidence evidence.
+cross_market_cycle_timeframe_validation,blocked,pairs=QQQ/USD; timeframe=1h,Single-pair local-cache run only.
+source_control_unlock,blocked,source_roots_mutated=false; accepted_rows_added=0,No verifier-native owner rows or matched controls.
+downstream_chain_promotion,blocked,canonical_merge=false; downstream_promotion_rerun=false,Do not run BBN/CatBoost/execution-tree promotion from this packet.

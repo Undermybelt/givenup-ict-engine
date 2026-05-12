@@ -1,0 +1,6 @@
+gate,observed,required,pass
+source_confidence_fields_present,true,true,true
+all_main_roots_present,"Bear,Bull,Crisis,Sideways","Bull,Bear,Sideways,Crisis",false
+bear_root_present,true,true,false
+accepted_confidence_gate,source posterior screen only,cross-market/cross-cycle calibrated >=0.95,false
+strict_full_objective,false,true,false

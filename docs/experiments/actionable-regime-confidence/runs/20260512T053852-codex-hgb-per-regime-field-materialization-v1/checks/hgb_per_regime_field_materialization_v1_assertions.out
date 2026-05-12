@@ -1,0 +1,10 @@
+PASS run_id=20260512T053852-codex-hgb-per-regime-field-materialization-v1
+PASS gate_result=hgb_per_regime_field_materialization_v1=all_hgb_labels_field_complete_diagnostic_source_control_absent
+PASS diagnostic_field_complete_labels=Bear,Bull,Crisis,Sideways
+PASS diagnostic_field_complete_label_count=4
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

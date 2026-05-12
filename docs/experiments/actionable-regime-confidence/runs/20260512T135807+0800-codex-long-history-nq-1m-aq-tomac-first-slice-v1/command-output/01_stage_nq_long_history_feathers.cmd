@@ -1,0 +1,1 @@
+/Users/thrill3r/.local/bin/uv run --offline --with pandas --with pyarrow python - docs/experiments/actionable-regime-confidence/runs/20260512T135807+0800-codex-long-history-nq-1m-aq-tomac-first-slice-v1/auto_quant_workspace

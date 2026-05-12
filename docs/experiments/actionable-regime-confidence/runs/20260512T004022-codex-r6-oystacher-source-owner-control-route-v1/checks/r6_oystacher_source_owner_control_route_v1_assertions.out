@@ -1,0 +1,13 @@
+gate_result=r6_oystacher_source_owner_control_route_v1=routes_identified_controls_not_acquired_no_merge_or_chain_rerun
+required_cells=17
+source_owner_routes_checked=6
+local_paths_checked=6
+valid_source_owned_normal_controls_found=0
+canonical_merge_allowed=False
+downstream_chain_rerun=False
+accepted_rows_added=0
+new_confidence_gate=False
+strict_full_objective_achieved=False
+shared_intake_mutated=False
+owner_export_root_mutated=False
+update_goal=False

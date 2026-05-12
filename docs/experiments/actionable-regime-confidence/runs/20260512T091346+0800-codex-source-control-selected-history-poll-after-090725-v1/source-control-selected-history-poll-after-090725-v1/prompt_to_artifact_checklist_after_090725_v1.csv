@@ -1,0 +1,8 @@
+requirement,status,evidence,gap
+owner_export_dropzone_populated,blocked,no /tmp or /private/tmp owner-export root currently exposes all three required direct_manipulation files,needs owner-approved source/export files in the documented dropzone
+explicit_user_selected_history,blocked,090725 audit keeps explicit selected-history false; only agent-side candidates exist,"need exactly one explicit user choice from HTF=1d, MTF=4h, or LTF=1h"
+source_control_unlock,blocked,source_control_selected_history_poll_after_090725_v1=no_owner_export_no_explicit_user_selected_history_no_unlock,needs owner export or FLIP control approval plus user-selected history
+canonical_merge,blocked,false by current ledger,blocked until source/control and selected-history gates pass
+selected_data_autoquant,not_run,false by current ledger,blocked until source/control and selected-history gates pass
+downstream_promotion,not_run,false by current ledger,blocked until source/control and selected-history gates pass
+completion_update_goal,blocked,false by current ledger,do not call update_goal

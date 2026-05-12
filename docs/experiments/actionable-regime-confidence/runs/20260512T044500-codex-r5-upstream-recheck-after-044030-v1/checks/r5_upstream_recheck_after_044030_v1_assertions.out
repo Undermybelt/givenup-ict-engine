@@ -1,0 +1,13 @@
+PASS run_id=20260512T044500-codex-r5-upstream-recheck-after-044030-v1
+PASS kaggle_files_exit=0
+PASS live_kaggle_file_creation_window=2026-02-01
+PASS post_2026_01_30_required_rows=0
+PASS required_target_files_present=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

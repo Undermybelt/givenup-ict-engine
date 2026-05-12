@@ -1,0 +1,9 @@
+request_fields_loaded=PASS
+verifier_required_fields_loaded=PASS
+filename_mismatch_recorded=PASS
+schema_gaps_recorded=PASS
+hard_missing_rows_recorded=PASS
+adapter_not_ready=PASS
+accepted_rows_zero=PASS
+strict_full_objective_false=PASS
+update_goal_false=PASS

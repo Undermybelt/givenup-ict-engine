@@ -1,0 +1,49 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "flip_rows_promoted_as_controls": false,
+  "gate_result": "r6_oystacher_public_normal_control_source_probe_v1=no_public_source_owned_normal_controls_found",
+  "generated_at_utc": "2026-05-11T16:42:42.029010+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Supply source-owned normal controls for the 17 Oystacher cells or explicitly approve the same-exhibit FLIP-as-control exception before canonical merge and downstream rerun.",
+  "parsed_exhibit": {
+    "accepted_control_labels": [],
+    "contract_roots": [
+      "CLM",
+      "ESH",
+      "ESM",
+      "HGH",
+      "NGF",
+      "VX"
+    ],
+    "flip_candidate_rows": 1553,
+    "parsed_rows": 6735,
+    "row_level_normal_controls_found": 0,
+    "side_counts": {
+      "FLIP": 1553,
+      "SPOOF": 5182
+    },
+    "spoof_positive_rows": 5182
+  },
+  "raw_data_committed": false,
+  "raw_download_root_tmp": "/tmp/ict-engine-r6-oystacher-public-normal-control-source-probe-v1",
+  "required_cells": {
+    "cells_with_valid_normal_controls": 0,
+    "required_cell_shortfall_total": 1241,
+    "required_cells": 17
+  },
+  "required_cells_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T004116-codex-r6-oystacher-public-normal-control-source-probe-v1/r6-oystacher-public-normal-control-source-probe/r6_oystacher_public_normal_control_required_cells_v1.csv",
+  "run_id": "20260512T004116-codex-r6-oystacher-public-normal-control-source-probe-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_owned_normal_controls_acquired": false,
+  "source_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T004116-codex-r6-oystacher-public-normal-control-source-probe-v1/r6-oystacher-public-normal-control-source-probe/r6_oystacher_public_sources_checked_v1.csv",
+  "sources_checked": 5,
+  "sources_downloaded_ok": 5,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_source_owned_normal_controls_found": 0
+}

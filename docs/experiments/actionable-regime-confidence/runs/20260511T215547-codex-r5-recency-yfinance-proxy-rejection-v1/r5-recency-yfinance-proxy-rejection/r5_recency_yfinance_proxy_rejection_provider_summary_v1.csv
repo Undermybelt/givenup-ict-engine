@@ -1,0 +1,5 @@
+symbol,provider,status,rows,date_min,date_max,raw_rows_written,source_owned_regime_labels,usable_for_r5_intake,reason
+AMD,yfinance,ok,68,2026-02-02,2026-05-08,False,False,False,provider_ohlc_only_not_source_owned_regime_labels
+XOM,yfinance,ok,68,2026-02-02,2026-05-08,False,False,False,provider_ohlc_only_not_source_owned_regime_labels
+UNH,yfinance,ok,68,2026-02-02,2026-05-08,False,False,False,provider_ohlc_only_not_source_owned_regime_labels
+^DJI,yfinance,ok,68,2026-02-02,2026-05-08,False,False,False,provider_ohlc_only_not_source_owned_regime_labels

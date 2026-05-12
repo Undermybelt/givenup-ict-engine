@@ -1,0 +1,130 @@
+{
+  "run_id": "20260512T032145-codex-provider-autoquant-readonly-refresh-after-031655-v1",
+  "generated_at_utc": "2026-05-11T19:23:15.950284+00:00",
+  "gate_result": "provider_autoquant_readonly_refresh_after_031655_v1=runtime_readiness_refreshed_no_source_control_unlock_no_promotion",
+  "commands": {
+    "provider_status_agent": 0,
+    "auto_quant_status_json": 0,
+    "pre_bayes_status_nq_json": 0,
+    "workflow_status_nq_json": 0
+  },
+  "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "ready_by_domain": {
+    "entry_model": "2/2",
+    "live_runtime": "1/3",
+    "local_runtime": "1/2",
+    "market_data": "1/7"
+  },
+  "provider_focus": [
+    {
+      "surface": "yfinance_market_data",
+      "provider_key": "yfinance@market_data",
+      "ready": "true",
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints",
+      "promotion_use": "readiness_only_no_promotion"
+    },
+    {
+      "surface": "yfinance_live_runtime",
+      "provider_key": "yfinance@live_runtime",
+      "ready": "true",
+      "status": "ready",
+      "reason": "native_yfinance_runtime_available",
+      "promotion_use": "readiness_only_no_promotion"
+    },
+    {
+      "surface": "ibkr_market_data",
+      "provider_key": "ibkr@market_data",
+      "ready": "false",
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "promotion_use": "readiness_only_no_promotion"
+    },
+    {
+      "surface": "ibkr_bridge_local_runtime",
+      "provider_key": "ibkr_bridge@local_runtime",
+      "ready": "false",
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "promotion_use": "readiness_only_no_promotion"
+    },
+    {
+      "surface": "kraken_public_market_data",
+      "provider_key": "kraken_public@market_data",
+      "ready": "false",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "promotion_use": "readiness_only_no_promotion"
+    },
+    {
+      "surface": "kraken_cli_local_runtime",
+      "provider_key": "kraken_cli@local_runtime",
+      "ready": "true",
+      "status": "ready",
+      "reason": "kraken_cli_config_detected",
+      "promotion_use": "readiness_only_no_promotion"
+    },
+    {
+      "surface": "tradingview_mcp_market_data",
+      "provider_key": "tradingview_mcp@market_data",
+      "ready": "false",
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "promotion_use": "readiness_only_no_promotion"
+    }
+  ],
+  "auto_quant": {
+    "status": "missing_dependency",
+    "healthy": false,
+    "bootstrap_needed": true,
+    "data_ready": false,
+    "recommended_next_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant"
+  },
+  "pre_bayes": {
+    "latest_policy_version": null,
+    "latest_gate_status": null,
+    "latest_soft_evidence": null,
+    "latest_bridge": null
+  },
+  "workflow": {
+    "blocking_truth_status": "insufficient_state",
+    "blocking_truth_reason": "no workflow phase snapshots available",
+    "closed_loop_branch_admission_status": "fail_closed",
+    "closed_loop_branch_admission_actionable": false,
+    "latest_structural_execution_candidate_ready": false,
+    "latest_structural_execution_candidate_actionable": false
+  },
+  "source_control_roots": [
+    {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "exists": false,
+      "promotion_use": "blocked"
+    },
+    {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "exists": false,
+      "promotion_use": "blocked"
+    },
+    {
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "exists": false,
+      "promotion_use": "blocked"
+    }
+  ],
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "non_mutations": {
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false
+  }
+}

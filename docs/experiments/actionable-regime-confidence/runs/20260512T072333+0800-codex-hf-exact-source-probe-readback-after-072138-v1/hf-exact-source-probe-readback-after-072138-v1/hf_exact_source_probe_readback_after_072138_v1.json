@@ -1,0 +1,94 @@
+{
+  "assertions": {
+    "accepted_rows_added": 0,
+    "all_exit_zero": true,
+    "all_json_arrays": true,
+    "all_result_counts_zero": true,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "mainregimev2_dataset_found": false,
+    "r3_native_subhour_rows_found": false,
+    "r3_native_subhour_unlock": false,
+    "r5_post_cutoff_source_rows_found": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "source_control_evidence_acquired": false,
+    "source_run_present": true,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "board_sha256_before_artifact": "aeb6333396de368cde1cfe57a3b3607a298fc36e7bab15d328bece354e08d295",
+  "decision": "The 072138 Hugging Face exact-source probe is a raw command-output root: every checked JSON payload is an array, every query exited 0, and every exact query returned 0 rows. It therefore supplies no MainRegimeV2 dataset, no source-owned post-2026-01-30 R5 rows, and no verifier-native native-subhour R3 labels.",
+  "gate_result": "hf_exact_source_probe_readback_after_072138_v1=all_exact_queries_zero_no_r5_r3_unlock_no_downstream",
+  "generated_at_local": "2026-05-12T07:24:26.593296+08:00",
+  "next": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned post-2026-01-30 R5 rows matching the source-panel schema, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export.",
+  "queries": [
+    {
+      "exit_code": 0,
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_mainregimev2.json",
+      "json_type": "array",
+      "query": "MainRegimeV2",
+      "query_key": "hf_mainregimev2",
+      "result_count": 0,
+      "summary_data_rows": 0
+    },
+    {
+      "exit_code": 0,
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_mainregimev2_crisis.json",
+      "json_type": "array",
+      "query": "MainRegimeV2 Crisis",
+      "query_key": "hf_mainregimev2_crisis",
+      "result_count": 0,
+      "summary_data_rows": 0
+    },
+    {
+      "exit_code": 0,
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_market_regime_crisis.json",
+      "json_type": "array",
+      "query": "market regime crisis",
+      "query_key": "hf_market_regime_crisis",
+      "result_count": 0,
+      "summary_data_rows": 0
+    },
+    {
+      "exit_code": 0,
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_native_subhour_source_label_rows.json",
+      "json_type": "array",
+      "query": "native_subhour_source_label_rows",
+      "query_key": "hf_native_subhour_source_label_rows",
+      "result_count": 0,
+      "summary_data_rows": 0
+    },
+    {
+      "exit_code": 0,
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_stock_market_regimes_2000_2026.json",
+      "json_type": "array",
+      "query": "stock_market_regimes_2000_2026",
+      "query_key": "hf_stock_market_regimes_2000_2026",
+      "result_count": 0,
+      "summary_data_rows": 0
+    },
+    {
+      "exit_code": 0,
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1/command-output/hf_stock_market_regimes_2026_extension.json",
+      "json_type": "array",
+      "query": "stock_market_regimes_2026_extension",
+      "query_key": "hf_stock_market_regimes_2026_extension",
+      "result_count": 0,
+      "summary_data_rows": 0
+    }
+  ],
+  "run_id": "20260512T072333+0800-codex-hf-exact-source-probe-readback-after-072138-v1",
+  "scope": {
+    "mode": "settled_readback_of_raw_huggingface_exact_source_probe",
+    "no_canonical_merge": true,
+    "no_downstream_promotion": true,
+    "no_root_mutation": true,
+    "read_only": true,
+    "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1",
+    "update_goal": false
+  },
+  "source_run_id": "20260512T072138+0800-codex-hf-r5-r3-exact-source-route-probe-after-071538-v1"
+}

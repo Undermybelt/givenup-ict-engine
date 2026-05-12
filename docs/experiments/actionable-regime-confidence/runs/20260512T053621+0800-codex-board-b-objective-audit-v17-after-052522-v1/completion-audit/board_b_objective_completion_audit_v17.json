@@ -1,0 +1,38 @@
+{
+  "run_id": "20260512T053621+0800-codex-board-b-objective-audit-v17-after-052522-v1",
+  "board_file": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+  "board_hash_observed_before_audit": "c9852776ef75a652dc1b5b66f6409f0d68340dcfcf67f3972bdb01d49a5030a3",
+  "current_cursor": "20260512T034002+0800-codex-board-b-nq-cost-crisis-repair-v3-downstream-combined-v1",
+  "strict_full_objective": false,
+  "goal_complete": false,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "blocking_requirement": "user_selected_historical_data_missing",
+  "selected_historical_dataset": false,
+  "selected_data_auto_quant_factor_research": false,
+  "nonzero_mature_rooted_observations": false,
+  "selected_data_downstream_chain": false,
+  "trade_usable_execution_tree_packet": false,
+  "evidence_families": {
+    "branch_path_assignment_wiring": {
+      "runs": ["052749", "052815", "052828"],
+      "count_once": true,
+      "scope": "plumbing_only"
+    },
+    "hgb_source_label_diagnostic": {
+      "runs": ["051844", "052911"],
+      "count_once": true,
+      "scope": "diagnostic_only"
+    },
+    "numeric_tree_source_label_diagnostic": {
+      "runs": ["052522"],
+      "count_once": true,
+      "gate_result": "source_label_numeric_tree_threshold_screen_v1=numeric_tree_scored_no_full_acceptance",
+      "accepted_labels": ["Bull", "Crisis", "Sideways"],
+      "failed_label": "Bear",
+      "bear_heldout_market_wilson95": 0.9465286635,
+      "scope": "diagnostic_only"
+    }
+  },
+  "next_action": "explicit_user_reply_exactly_one_of_HTF_MTF_LTF"
+}

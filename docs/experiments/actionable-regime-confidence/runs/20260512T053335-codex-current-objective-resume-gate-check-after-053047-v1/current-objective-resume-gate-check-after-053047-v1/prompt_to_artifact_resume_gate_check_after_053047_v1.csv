@@ -1,0 +1,11 @@
+check_id,status,evidence
+target_root_r6_owner_export,missing,/tmp/ict-engine-board-a-r6-owner-export-v1
+target_root_native_subhour,missing,/tmp/ict-engine-native-subhour-source-label-intake
+target_root_source_panel_recency,missing,/tmp/ict-engine-source-panel-recency-extension
+numeric_tree_052522,count_false,"zero-byte stdout JSON files and no terminal report/result JSON/assertions"
+macro_context_052301,count_false,"terminal cleanup root with rows_scored=0 and accepted_labels=0"
+hgb_051844,count_once_diagnostic_only,"accepted Bear/Bull/Crisis/Sideways but source_control_evidence_acquired=false"
+approval_package,non_approving,"approval_present=false; canonical_merge_allowed_now=false; downstream_rerun_allowed_now=false"
+canonical_merge,false,"required roots missing and approval false"
+downstream_promotion_rerun,false,"source/control gate locked"
+update_goal,false,"strict full objective incomplete"

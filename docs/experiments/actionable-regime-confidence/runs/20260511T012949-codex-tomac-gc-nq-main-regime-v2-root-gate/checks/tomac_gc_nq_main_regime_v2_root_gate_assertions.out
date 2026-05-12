@@ -1,0 +1,11 @@
+PASS run_id=20260511T012949+0800-codex-tomac-gc-nq-main-regime-v2-root-gate
+PASS active_axis=MainRegimeV2
+PASS fresh_calibration_rerun=true
+PASS target_future_columns_used_as_predictors=false
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+NEWLY_ACCEPTED_95_ROOTS=none
+ACCEPTED_95_PRIOR=Crisis
+MISSING_95=Bull,Bear,Sideways,Manipulation
+MANIPULATION_INPUT_STATE=missing_required_inputs
+GATE blocked

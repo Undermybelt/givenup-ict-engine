@@ -1,0 +1,297 @@
+{
+  "context_counts": [
+    {
+      "main_regime_v2_label": "Bear",
+      "rows": 303202,
+      "symbols": 381,
+      "timeframe": "1D"
+    },
+    {
+      "main_regime_v2_label": "Bear",
+      "rows": 430328,
+      "symbols": 383,
+      "timeframe": "240"
+    },
+    {
+      "main_regime_v2_label": "Bear",
+      "rows": 702234,
+      "symbols": 386,
+      "timeframe": "60"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "rows": 287381,
+      "symbols": 381,
+      "timeframe": "1D"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "rows": 419051,
+      "symbols": 383,
+      "timeframe": "240"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "rows": 728623,
+      "symbols": 386,
+      "timeframe": "60"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "rows": 156431,
+      "symbols": 381,
+      "timeframe": "1D"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "rows": 378435,
+      "symbols": 383,
+      "timeframe": "240"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "rows": 1627218,
+      "symbols": 386,
+      "timeframe": "60"
+    }
+  ],
+  "decision": {
+    "accepted_mapping_confidence_95_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "accepted_rows_added": 5032903,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "gate_result": "r3_tsie_native_subhour_intake_materialization_v1=target_root_materialized_bull_bear_sideways_crisis_absent_no_downstream",
+    "mapped_rows": 5032903,
+    "raw_parquet_sha256_verified": true,
+    "schema_ready": true,
+    "strict_full_objective": false,
+    "target_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+    "target_root_mutated": true,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provenance": {
+    "accepted_mapping_confidence_95_labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "created_at_utc": "2026-05-11T22:35:29.972642+00:00",
+    "dataset_id": "sujinwo/tsie-market-regime-dataset",
+    "dataset_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+    "date_max": "2026-04-07 02:00:00",
+    "date_min": "1990-06-07 02:00:00",
+    "excluded_trap_rows": 2161093,
+    "group_count": 1150,
+    "label_mapping": {
+      "0": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Bear",
+        "source_label": "STRONG SELL"
+      },
+      "1": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Bear",
+        "source_label": "WEAK SELL"
+      },
+      "2": {
+        "decision": "abstain_trap",
+        "main_regime_v2_label": "Abstain",
+        "source_label": "BEAR TRAP"
+      },
+      "3": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Sideways",
+        "source_label": "FLAT / NOISE"
+      },
+      "4": {
+        "decision": "abstain_trap",
+        "main_regime_v2_label": "Abstain",
+        "source_label": "BULL TRAP"
+      },
+      "5": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Bull",
+        "source_label": "WEAK BUY"
+      },
+      "6": {
+        "decision": "mapped_unambiguous",
+        "main_regime_v2_label": "Bull",
+        "source_label": "STRONG BUY"
+      }
+    },
+    "limitations": [
+      "Crisis has no direct TSIE source taxonomy class",
+      "trap labels are fail-closed abstain and excluded from accepted rows",
+      "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+      "canonical merge not run",
+      "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+    ],
+    "raw_parquet_committed_to_repo": false,
+    "raw_parquet_path": "/tmp/ict-engine-tsie-hf-download-v1/default/train/0000.parquet",
+    "raw_parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+    "raw_row_count": 7193996,
+    "row_count": 5032903,
+    "rows_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+    "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+    "run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+    "symbol_count": 386,
+    "target_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+    "timeframe_count": 3
+  },
+  "provenance_file": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+  "raw_label_counts": [
+    {
+      "main_regime_v2_label": "Bear",
+      "regime_label": 0,
+      "rows": 356398,
+      "source_regime_name": "STRONG SELL"
+    },
+    {
+      "main_regime_v2_label": "Bear",
+      "regime_label": 1,
+      "rows": 1079366,
+      "source_regime_name": "WEAK SELL"
+    },
+    {
+      "main_regime_v2_label": "Abstain",
+      "regime_label": 2,
+      "rows": 1080804,
+      "source_regime_name": "BEAR TRAP"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "regime_label": 3,
+      "rows": 2162084,
+      "source_regime_name": "FLAT / NOISE"
+    },
+    {
+      "main_regime_v2_label": "Abstain",
+      "regime_label": 4,
+      "rows": 1080289,
+      "source_regime_name": "BULL TRAP"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "regime_label": 5,
+      "rows": 1078955,
+      "source_regime_name": "WEAK BUY"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "regime_label": 6,
+      "rows": 356100,
+      "source_regime_name": "STRONG BUY"
+    }
+  ],
+  "rows_file": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+  "run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+  "split_counts": [
+    {
+      "main_regime_v2_label": "Bear",
+      "rows": 346801,
+      "split_role": "calibration"
+    },
+    {
+      "main_regime_v2_label": "Bear",
+      "rows": 254759,
+      "split_role": "heldout_market"
+    },
+    {
+      "main_regime_v2_label": "Bear",
+      "rows": 232620,
+      "split_role": "heldout_time"
+    },
+    {
+      "main_regime_v2_label": "Bear",
+      "rows": 601584,
+      "split_role": "test"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "rows": 380914,
+      "split_role": "calibration"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "rows": 261647,
+      "split_role": "heldout_market"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "rows": 223964,
+      "split_role": "heldout_time"
+    },
+    {
+      "main_regime_v2_label": "Bull",
+      "rows": 568530,
+      "split_role": "test"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "rows": 492100,
+      "split_role": "calibration"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "rows": 375651,
+      "split_role": "heldout_market"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "rows": 327992,
+      "split_role": "heldout_time"
+    },
+    {
+      "main_regime_v2_label": "Sideways",
+      "rows": 966341,
+      "split_role": "test"
+    }
+  ],
+  "split_gates": [
+    {
+      "accepted_mapping_confidence_95": true,
+      "blockers": "",
+      "calibration_rows": 346801,
+      "heldout_market_rows": 254759,
+      "heldout_time_rows": 232620,
+      "main_regime_v2_label": "Bear",
+      "min_required_split_wilson95_lcb": 0.9999834864,
+      "test_rows": 601584
+    },
+    {
+      "accepted_mapping_confidence_95": true,
+      "blockers": "",
+      "calibration_rows": 380914,
+      "heldout_market_rows": 261647,
+      "heldout_time_rows": 223964,
+      "main_regime_v2_label": "Bull",
+      "min_required_split_wilson95_lcb": 0.9999828482,
+      "test_rows": 568530
+    },
+    {
+      "accepted_mapping_confidence_95": true,
+      "blockers": "",
+      "calibration_rows": 492100,
+      "heldout_market_rows": 375651,
+      "heldout_time_rows": 327992,
+      "main_regime_v2_label": "Sideways",
+      "min_required_split_wilson95_lcb": 0.9999882881,
+      "test_rows": 966341
+    },
+    {
+      "accepted_mapping_confidence_95": false,
+      "blockers": "calibration_support_below_50;calibration_source_mapping_wilson95_below_0.95;heldout_market_support_below_50;heldout_market_source_mapping_wilson95_below_0.95;heldout_time_support_below_50;heldout_time_source_mapping_wilson95_below_0.95;test_support_below_50;test_source_mapping_wilson95_below_0.95;crisis_absent_from_tsie_source_taxonomy",
+      "calibration_rows": 0,
+      "heldout_market_rows": 0,
+      "heldout_time_rows": 0,
+      "main_regime_v2_label": "Crisis",
+      "min_required_split_wilson95_lcb": 0.0,
+      "test_rows": 0
+    }
+  ]
+}

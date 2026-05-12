@@ -1,0 +1,13 @@
+provider_owned_aq_pair_timerange_repair_v1=completed_zero_trades_no_promotion
+run_tomac_exit=0
+pair=NQ/USD
+strategy=TomacNQ_KillzoneBreakout
+trade_count=0
+sharpe=0.0000
+total_profit_pct=0.0000
+win_rate_pct=0.0000
+profit_factor=0.0000
+mature_rooted_branch_observations=0
+downstream_promotion_run=false
+promotion_allowed=false
+update_goal=false

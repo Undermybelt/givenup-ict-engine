@@ -1,0 +1,1 @@
+env ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR=/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant ./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145 --output-format json 

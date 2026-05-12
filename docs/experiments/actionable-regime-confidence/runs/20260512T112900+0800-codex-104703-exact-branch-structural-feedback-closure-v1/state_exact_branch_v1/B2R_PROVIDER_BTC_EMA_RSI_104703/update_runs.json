@@ -1,0 +1,754 @@
+[
+  {
+    "run_id": "update:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T032628.418Z",
+    "timestamp": "2026-05-12T03:26:28.517124Z",
+    "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+    "ensemble_executor_scorecards": [],
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "d1fba762150c532c",
+      "config_hash": "4cd73ada7fa078c0",
+      "data_fingerprint": "a751d9cfc815c43a"
+    },
+    "decision_thresholds": {
+      "promotion_min_score_delta": 0.1,
+      "promotion_min_score": 0.7,
+      "rollback_score_delta": -0.1,
+      "rollback_probability_delta": 0.1,
+      "artifact_consumed_min_window": 3,
+      "artifact_consumed_improvement_quality_delta": 5.0,
+      "artifact_consumed_improvement_positive_rate_delta": 0.25,
+      "artifact_consumed_regression_quality_delta": -5.0,
+      "artifact_consumed_regression_positive_rate_delta": -0.25
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "promotion_decision": {
+      "approved": false,
+      "status": "hold",
+      "reason": "no_previous_run|artifact_actionable_count=1 artifact_latest_promotable=Some(\"auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=medium|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "target_factors": [],
+      "target_families": []
+    },
+    "rollback_recommendation": {
+      "should_rollback": false,
+      "scope": "none",
+      "reason": "no_previous_run|artifact_actionable_count=1 artifact_latest_promotable=Some(\"auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_rollback_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "target_factors": [],
+      "target_families": []
+    },
+    "family_history_window": 5,
+    "source_command": "update",
+    "normalized_entry_quality": "medium",
+    "factor_alignment": "bullish",
+    "factor_uncertainty": "low",
+    "realized_outcome": "win",
+    "structural_learning_credit_class": "positive_executed",
+    "structural_learning_success_credit": 1.0,
+    "structural_learning_observation_weight": 1.0,
+    "feedback_records_applied": 1,
+    "duplicate_feedback_skipped": false,
+    "consumed_pending_update_artifact_id": null,
+    "consumed_execution_candidate_artifact_id": null,
+    "consumed_artifact_path": null,
+    "consumed_analyze_run_id": "structural-feedback:B2R_PROVIDER_BTC_EMA_RSI_104703:exact-branch-104703-v1:probe-01",
+    "consumed_pre_bayes_evidence_filter": {
+      "policy": {
+        "version": "",
+        "source": "",
+        "min_directional_support_gap": 0.0,
+        "high_uncertainty_threshold": 0.0,
+        "min_multi_timeframe_alignment_score": 0.0,
+        "min_multi_timeframe_entry_alignment_score": 0.0,
+        "hard_pass_quality_threshold": 0.0,
+        "neutralized_quality_threshold": 0.0,
+        "directional_conflict_penalty": 0.0,
+        "mixed_alignment_penalty": 0.0,
+        "multi_timeframe_direction_conflict_penalty": 0.0,
+        "multi_timeframe_alignment_penalty": 0.0,
+        "multi_timeframe_entry_penalty": 0.0,
+        "multi_timeframe_alignment_bonus": 0.0,
+        "hostile_liquidity_penalty": 0.0,
+        "favorable_liquidity_bonus": 0.0,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "market_overrides": {}
+      },
+      "entry_logic_id": null,
+      "logic_family": null,
+      "raw_market_regime_label": "Bull",
+      "raw_liquidity_context_label": "structural_feedback",
+      "raw_factor_alignment": "Bull",
+      "raw_factor_uncertainty": "structural_feedback",
+      "raw_multi_timeframe_direction_bias": "",
+      "raw_multi_timeframe_alignment_score": null,
+      "raw_multi_timeframe_entry_alignment_score": null,
+      "raw_multi_timeframe_resonance_label": "",
+      "active_pda_count": 0,
+      "inversed_pda_count": 0,
+      "stale_pda_count": 0,
+      "nearest_active_pda": null,
+      "nearest_inversed_pda": null,
+      "filtered_market_regime_label": "Bull",
+      "filtered_liquidity_context_label": "structural_feedback",
+      "filtered_factor_alignment": "Bull",
+      "filtered_factor_uncertainty": "structural_feedback",
+      "filtered_multi_timeframe_direction_bias": "",
+      "filtered_multi_timeframe_alignment_score": null,
+      "filtered_multi_timeframe_entry_alignment_score": null,
+      "filtered_multi_timeframe_resonance_label": "",
+      "evidence_quality_score": 0.690476,
+      "gating_status": "pass_neutralized",
+      "pass_to_bbn": true,
+      "uses_soft_evidence": false,
+      "conflict_flags": [],
+      "rationale": [
+        "structural_feedback_submission_pre_bayes_gate=pass_neutralized",
+        "structural_feedback_branch_path_consumed=Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12"
+      ],
+      "evidence_assignments": {
+        "parent_regime_root": "Bull",
+        "pre_bayes_branch_path_gate": "pass_neutralized",
+        "regime_profit_branch_path": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12"
+      },
+      "soft_market_regime_distribution": {},
+      "soft_liquidity_context_distribution": {},
+      "soft_factor_alignment_distribution": {},
+      "soft_factor_uncertainty_distribution": {},
+      "soft_multi_timeframe_resonance_distribution": {}
+    },
+    "consumed_pre_bayes_entry_quality_bridge": null,
+    "consumed_canonical_structural_regime_posterior": null,
+    "consumed_multi_timeframe_summary": [],
+    "structural_feedback": {
+      "protocol_version": "structural-feedback-v1",
+      "recommendation_id": "structural-feedback:B2R_PROVIDER_BTC_EMA_RSI_104703:exact-branch-104703-v1:probe-01",
+      "recommended_at": "2026-05-12T03:29:00Z",
+      "node_id": "Bull",
+      "branch_id": "Bull -> ProviderTrend",
+      "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+      "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+      "followed_path": true,
+      "exit_reason": "exact_branch_context_probe",
+      "notes": "append-only isolated probe to preserve exact Board B branch path through update/pre-bayes context"
+    },
+    "trade_outcome_deltas": [
+      {
+        "state": "breakeven",
+        "previous": 0.275927,
+        "new": 0.24833429999999998,
+        "delta": -0.027592699999999998
+      },
+      {
+        "state": "loss",
+        "previous": 0.296112,
+        "new": 0.2665008,
+        "delta": -0.029611200000000004
+      },
+      {
+        "state": "win",
+        "previous": 0.427961,
+        "new": 0.4851649,
+        "delta": 0.05720390000000003
+      }
+    ],
+    "factor_score_deltas": [],
+    "factor_family_decisions": [],
+    "factor_family_outcomes": [],
+    "factor_family_diffs": [],
+    "factor_family_history": [],
+    "decision_history_summary": {
+      "total_runs": 0,
+      "promotion_approved_runs": 0,
+      "rollback_recommended_runs": 0,
+      "latest_promotion_status": null,
+      "latest_rollback_scope": null
+    },
+    "workflow_state": {
+      "phase": "research_iteration",
+      "reason": "no_previous_run|artifact_actionable_count=1 artifact_latest_promotable=Some(\"auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=medium|artifact_consumed_trend_reason=no_consumed_artifacts"
+    },
+    "agent_action_plan": {
+      "summary": "update_result:applied",
+      "items": [
+        {
+          "stage": "update",
+          "blocking": false,
+          "priority": "high",
+          "title": "Review Consumed Pre-Bayes",
+          "rationale": "consumed_gate_status=pass_neutralized consumed_quality=0.690 consumed_bridge_selected_entry_quality=None",
+          "expected_output": "A feedback note that judges whether the realized outcome confirms or invalidates the consumed pre-bayes gate and bridge",
+          "expected_state_changes": [
+            {
+              "target": "consumed_pre_bayes_context",
+              "direction": "review_against_realized_outcome",
+              "rationale": "structural_feedback_submission_pre_bayes_gate=pass_neutralized;structural_feedback_branch_path_consumed=Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12"
+            }
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/trading/update.rs",
+            "src/state/types.rs"
+          ],
+          "suggested_commands": [
+            "blocked: recommended_command_unavailable missing=analyze_input_context"
+          ]
+        },
+        {
+          "stage": "promotion",
+          "blocking": true,
+          "priority": "high",
+          "title": "Block Promotion",
+          "rationale": "no_previous_run",
+          "expected_output": "Promotion decision resolved with explicit hold or approval rationale",
+          "expected_state_changes": [
+            {
+              "target": "promotion_decision",
+              "direction": "hold_until_thresholds_met",
+              "rationale": "no_previous_run"
+            }
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/agent/prompts.rs"
+          ],
+          "suggested_commands": [
+            "blocked: recommended_command_unavailable missing=research_data_path"
+          ]
+        }
+      ]
+    },
+    "recommended_commands": {
+      "analyze": {
+        "command": "recommended_command_unavailable",
+        "ready": false,
+        "missing_inputs": [
+          "analyze_input_context"
+        ],
+        "rationale": "analyze inputs are not available in this run context",
+        "user_data_selection_required": false,
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "recorded_data_paths": []
+      },
+      "research": {
+        "command": "recommended_command_unavailable",
+        "ready": false,
+        "missing_inputs": [
+          "research_data_path"
+        ],
+        "rationale": "factor research requires a persisted data path",
+        "user_data_selection_required": false,
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "recorded_data_paths": []
+      },
+      "backtest": {
+        "command": "recommended_command_unavailable",
+        "ready": false,
+        "missing_inputs": [
+          "backtest_data_path"
+        ],
+        "rationale": "factor backtest requires a persisted data path",
+        "user_data_selection_required": false,
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "recorded_data_paths": []
+      },
+      "update": {
+        "command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+        "ready": true,
+        "missing_inputs": [],
+        "rationale": "apply the persisted pending feedback artifact at docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/exact-branch-closure-v1/exact_branch_feedback_probe_01.json",
+        "user_data_selection_required": false,
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "recorded_data_paths": []
+      }
+    },
+    "recommended_next_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+    "recommended_next_command_meta": {
+      "kind": "ict_engine",
+      "requires_user_input": false,
+      "blocked": false,
+      "prompt": null,
+      "executable_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+      "recorded_data_paths": []
+    },
+    "agent_context_bundle": {
+      "workflow_state": {
+        "phase": "research_iteration",
+        "reason": "no_previous_run|artifact_actionable_count=1 artifact_latest_promotable=Some(\"auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=medium|artifact_consumed_trend_reason=no_consumed_artifacts"
+      },
+      "decision_hint": "update_result:applied",
+      "recommended_next_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+      "recommended_next_command_meta": {
+        "kind": "ict_engine",
+        "requires_user_input": false,
+        "blocked": false,
+        "prompt": null,
+        "executable_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+        "recorded_data_paths": []
+      },
+      "recommended_commands": {
+        "analyze": {
+          "command": "recommended_command_unavailable",
+          "ready": false,
+          "missing_inputs": [
+            "analyze_input_context"
+          ],
+          "rationale": "analyze inputs are not available in this run context",
+          "user_data_selection_required": false,
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "recorded_data_paths": []
+        },
+        "research": {
+          "command": "recommended_command_unavailable",
+          "ready": false,
+          "missing_inputs": [
+            "research_data_path"
+          ],
+          "rationale": "factor research requires a persisted data path",
+          "user_data_selection_required": false,
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "recorded_data_paths": []
+        },
+        "backtest": {
+          "command": "recommended_command_unavailable",
+          "ready": false,
+          "missing_inputs": [
+            "backtest_data_path"
+          ],
+          "rationale": "factor backtest requires a persisted data path",
+          "user_data_selection_required": false,
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "recorded_data_paths": []
+        },
+        "update": {
+          "command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+          "ready": true,
+          "missing_inputs": [],
+          "rationale": "apply the persisted pending feedback artifact at docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/exact-branch-closure-v1/exact_branch_feedback_probe_01.json",
+          "user_data_selection_required": false,
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "recorded_data_paths": []
+        }
+      },
+      "family_history_window": 5,
+      "comparable_to_last_run": false,
+      "pre_bayes_gate_status": "pass_neutralized",
+      "pre_bayes_uses_soft_evidence": false,
+      "pre_bayes_evidence_quality_score": 0.690476,
+      "pre_bayes_conflict_flags": [],
+      "pre_bayes_filtered_assignments": {
+        "parent_regime_root": "Bull",
+        "pre_bayes_branch_path_gate": "pass_neutralized",
+        "regime_profit_branch_path": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12"
+      },
+      "pre_bayes_soft_evidence": {
+        "factor_alignment": {},
+        "factor_uncertainty": {},
+        "liquidity_context": {},
+        "market_regime": {},
+        "multi_timeframe_resonance": {}
+      },
+      "pre_bayes_policy_version": "",
+      "pre_bayes_multi_timeframe_direction_bias": "",
+      "pre_bayes_multi_timeframe_alignment_score": null,
+      "pre_bayes_multi_timeframe_entry_alignment_score": null,
+      "pre_bayes_entry_quality_bridge_summary": [],
+      "pre_bayes_soft_evidence_diff": [
+        {
+          "node": "market_regime",
+          "filtered_state": "Bull",
+          "dominant_soft_state": null,
+          "dominant_soft_probability": 0.0,
+          "entropy": -0.0,
+          "diverges_from_filtered_state": false
+        },
+        {
+          "node": "liquidity_context",
+          "filtered_state": "structural_feedback",
+          "dominant_soft_state": null,
+          "dominant_soft_probability": 0.0,
+          "entropy": -0.0,
+          "diverges_from_filtered_state": false
+        },
+        {
+          "node": "factor_alignment",
+          "filtered_state": "Bull",
+          "dominant_soft_state": null,
+          "dominant_soft_probability": 0.0,
+          "entropy": -0.0,
+          "diverges_from_filtered_state": false
+        },
+        {
+          "node": "factor_uncertainty",
+          "filtered_state": "structural_feedback",
+          "dominant_soft_state": null,
+          "dominant_soft_probability": 0.0,
+          "entropy": -0.0,
+          "diverges_from_filtered_state": false
+        },
+        {
+          "node": "multi_timeframe_resonance",
+          "filtered_state": "",
+          "dominant_soft_state": null,
+          "dominant_soft_probability": 0.0,
+          "entropy": -0.0,
+          "diverges_from_filtered_state": false
+        }
+      ],
+      "pre_bayes_entry_quality_bridge_diff": null,
+      "factor_mutation_evaluation": null,
+      "factor_mutation_priority_markets": [],
+      "factor_mutation_priority_reasons": [],
+      "factor_mutation_recommended_focus": [],
+      "factor_mutation_direction_hints": [],
+      "factor_mutation_step_size_hints": [],
+      "multi_timeframe_summary": [],
+      "artifact_consumed_gate_status": "no_consumed_validation",
+      "artifact_consumed_gate_reason": "no_consumed_artifacts",
+      "artifact_consumed_gate_targets": [],
+      "pda_sequence_summary": null,
+      "pda_cluster_label": null,
+      "pda_cluster_confidence": null,
+      "top_factor_actions": [],
+      "family_actions": [],
+      "stage_views": [
+        {
+          "stage": "analyze",
+          "blocking_items": 0,
+          "recommended_command": "blocked: recommended_command_unavailable missing=analyze_input_context",
+          "actions": [
+            "blocked_by:analyze_input_context"
+          ],
+          "gate_status": "pass_neutralized",
+          "gate_reason": "structural_feedback_submission_pre_bayes_gate=pass_neutralized;structural_feedback_branch_path_consumed=Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12"
+        },
+        {
+          "stage": "research",
+          "blocking_items": 0,
+          "recommended_command": "blocked: recommended_command_unavailable missing=research_data_path",
+          "actions": [
+            "blocked_by:research_data_path"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "backtest",
+          "blocking_items": 0,
+          "recommended_command": "blocked: recommended_command_unavailable missing=backtest_data_path",
+          "actions": [
+            "blocked_by:backtest_data_path"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "update",
+          "blocking_items": 0,
+          "recommended_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+          "actions": [],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "artifact_consumption",
+          "blocking_items": 0,
+          "recommended_command": "ict-engine workflow-status --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1' --phase artifact-consumed-gate",
+          "actions": [
+            "no_consumed_artifacts"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        }
+      ]
+    },
+    "agent_context_bundle_minimal": {
+      "workflow_phase": "research_iteration",
+      "recommended_next_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+      "recommended_next_command_meta": {
+        "kind": "ict_engine",
+        "requires_user_input": false,
+        "blocked": false,
+        "prompt": null,
+        "executable_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+        "recorded_data_paths": []
+      },
+      "family_history_window": 5,
+      "comparable_to_last_run": false,
+      "pre_bayes_gate_status": "pass_neutralized",
+      "pre_bayes_uses_soft_evidence": false,
+      "pre_bayes_policy_version": "",
+      "pre_bayes_soft_evidence_divergence_count": 0,
+      "pre_bayes_bridge_selected_entry_quality": "",
+      "factor_mutation_acceptance_status": "",
+      "factor_mutation_failure_tags": [],
+      "factor_mutation_priority_markets": [],
+      "factor_mutation_priority_reasons": [],
+      "factor_mutation_direction_hints": [],
+      "factor_mutation_step_size_hints": [],
+      "multi_timeframe_summary": [],
+      "artifact_consumed_gate_status": "no_consumed_validation",
+      "pda_cluster_label": null,
+      "top_factor_actions": [],
+      "stage_views": [
+        {
+          "stage": "analyze",
+          "recommended_command": "blocked: recommended_command_unavailable missing=analyze_input_context",
+          "gate_status": "pass_neutralized"
+        },
+        {
+          "stage": "research",
+          "recommended_command": "blocked: recommended_command_unavailable missing=research_data_path",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "backtest",
+          "recommended_command": "blocked: recommended_command_unavailable missing=backtest_data_path",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "update",
+          "recommended_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1'",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "artifact_consumption",
+          "recommended_command": "ict-engine workflow-status --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1' --phase artifact-consumed-gate",
+          "gate_status": "no_consumed_validation"
+        }
+      ]
+    },
+    "feedback_history_summary": {
+      "total_records": 43,
+      "wins": 30,
+      "losses": 13,
+      "avg_pnl": 52.55565221813304,
+      "factor_success_rates": {
+        "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12": 0.6904761904761905,
+        "ProviderBtcEmaRsiHold12": 0.6904761904761905
+      }
+    },
+    "artifact_action_summary": [
+      "learning_semantics=class=positive_executed success_credit=1.000 observation_weight=1.000"
+    ],
+    "duration_sizing_scale": null,
+    "hybrid_duration_model": null,
+    "hybrid_remaining_expected_bars": null,
+    "execution_artifact_id": null,
+    "execution_edge_share": 0.6,
+    "prediction_edge_share": 0.4,
+    "execution_readiness": 0.57,
+    "execution_gate_status": "execution_observe_only",
+    "artifact_decision_summary": {
+      "actionable_artifact_count": 1,
+      "latest_promotable_artifact_id": "auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z",
+      "artifact_rule_break_count": 0,
+      "highlighted_actions": [],
+      "highlighted_factor_targets": [],
+      "highlighted_family_targets": [],
+      "promotion_strength": "medium",
+      "rollback_strength": "low",
+      "consumed_trend_status": "no_consumed_validation",
+      "consumed_trend_reason": "no_consumed_artifacts",
+      "consumed_target_kinds": [],
+      "summary": "actionable_artifacts=1 latest_promotable=Some(\"auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z\") rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+    },
+    "artifact_decision_section": {
+      "summary": {
+        "actionable_artifact_count": 1,
+        "latest_promotable_artifact_id": "auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z",
+        "artifact_rule_break_count": 0,
+        "highlighted_actions": [],
+        "highlighted_factor_targets": [],
+        "highlighted_family_targets": [],
+        "promotion_strength": "medium",
+        "rollback_strength": "low",
+        "consumed_trend_status": "no_consumed_validation",
+        "consumed_trend_reason": "no_consumed_artifacts",
+        "consumed_target_kinds": [],
+        "summary": "actionable_artifacts=1 latest_promotable=Some(\"auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z\") rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+      },
+      "action_summary": [
+        "learning_semantics=class=positive_executed success_credit=1.000 observation_weight=1.000"
+      ],
+      "top_factor_trends": [],
+      "top_family_trends": [],
+      "top_rule_break_effects": [],
+      "top_consumed_trend_comparisons": []
+    },
+    "agent_prompts": {
+      "version": "agent-prompts-v1",
+      "workflow": "Use the realized update for B2R_PROVIDER_BTC_EMA_RSI_104703 to review whether the latest result should change factor weights, factor evidence interpretation, or future trade acceptance thresholds.",
+      "prompts": [
+        {
+          "id": "dataset_audit",
+          "stage": "dataset_audit",
+          "priority": "high",
+          "objective": "Audit whether the dataset and command context are sufficient for trustworthy iteration.",
+          "system_prompt": "You are the dataset-audit agent. Check whether the current dataset scope, paired market coverage, and command context are sufficient before making factor or model changes.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 data_path=update-command paired_data_path=None candles=1 paired_candles=None source_command=update",
+          "success_criteria": [
+            "Flag low sample size or missing paired-market evidence before approving major factor changes",
+            "If this run is not comparable to prior runs, tell the next agent not to over-interpret score deltas"
+          ],
+          "suggested_files": [
+            "src/data/loader.rs",
+            "src/main.rs",
+            "src/factor_lab/research.rs"
+          ]
+        },
+        {
+          "id": "update_feedback_review",
+          "stage": "feedback_update",
+          "priority": "high",
+          "objective": "Review the newly realized outcome and decide what the next agent iteration should target.",
+          "system_prompt": "You are the realized-feedback agent. Use the updated trade_outcome distribution plus factor scorecards to decide whether the latest result strengthens confidence, exposes a factor weakness, or suggests a problem in evidence mapping.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 entry_quality=medium factor_alignment=bullish factor_uncertainty=low realized_outcome=win structural_learning_semantics=class=positive_executed success_credit=1.000 observation_weight=1.000 feedback_records_applied=1 updated_trade_outcome={\"breakeven\": 0.24833429999999998, \"loss\": 0.2665008, \"win\": 0.4851649} iteration_queue=[]",
+          "success_criteria": [
+            "If duplicate_feedback_skipped is true, do not infer a new learning event",
+            "If factor_alignment and realized_outcome disagree repeatedly, prioritize evidence-mapping review or factor replacement",
+            "If updated_trade_outcome improves while factor scores stay weak, review BBN calibration before editing factor code"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/factors/weight_updater.rs",
+            "src/bbn/trading/topology.rs",
+            "src/agent/prompts.rs"
+          ]
+        },
+        {
+          "id": "update_consumed_pre_bayes_review",
+          "stage": "feedback_update",
+          "priority": "high",
+          "objective": "Review the consumed analyze pre-bayes evidence against the realized outcome.",
+          "system_prompt": "You are the update-pre-bayes reviewer. Compare the realized outcome with the consumed analyze pre-bayes gate, bridge, and multi-timeframe summary before deciding whether to revise factor logic, evidence mapping, or BBN calibration.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 realized_outcome=win consumed_pre_bayes_gate_status=pass_neutralized consumed_pre_bayes_quality=0.690 consumed_pre_bayes_conflicts=[] consumed_pre_bayes_filtered_assignments={\"parent_regime_root\": \"Bull\", \"pre_bayes_branch_path_gate\": \"pass_neutralized\", \"regime_profit_branch_path\": \"Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12\"} consumed_canonical_structural_regime=unavailable consumed_multi_timeframe_summary=[] consumed_bridge_selected_entry_quality=None consumed_bridge_probability_gap=0.000",
+          "success_criteria": [
+            "If the consumed pre-bayes gate was weak or soft-evidence-heavy, prefer calibration review over factor churn",
+            "Use the consumed multi-timeframe context to judge whether the realized outcome invalidates the previous resonance mapping or only the execution result"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/trading/update.rs",
+            "src/state/types.rs"
+          ]
+        },
+        {
+          "id": "factor_triage",
+          "stage": "factor_research",
+          "priority": "high",
+          "objective": "Select which factors to keep, tune, observe, or replace.",
+          "system_prompt": "You are the factor-iteration agent. Use only the supplied scorecards and feedback summary to decide which factor edits are justified. Do not invent success criteria; follow the thresholds embedded in each factor prompt.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 top_scorecards=[] iteration_queue=[] feedback_summary=records:43 wins:30 losses:13 avg_pnl:52.555652 factor_success_rates:{\"Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12\": 0.6904761904761905, \"ProviderBtcEmaRsiHold12\": 0.6904761904761905}",
+          "success_criteria": [
+            "Prioritize replace > tune > observe > keep",
+            "Only recommend replacing a factor when its action is replace or replacement_candidate=true",
+            "Use the factor-specific agent prompt as the acceptance rule for the next iteration"
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/registry.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        },
+        {
+          "id": "feedback_review",
+          "stage": "feedback_learning",
+          "priority": "medium",
+          "objective": "Review which factors are failing by regime and whether weight updates should be trusted.",
+          "system_prompt": "You are the feedback-diagnostics agent. Compare factor success rates, grading, and weaknesses. Focus on regime-conditional failure and persistent underperformance.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 feedback_total=43 avg_pnl=52.555652 weak_factors=[]",
+          "success_criteria": [
+            "Flag factors with narrow regime coverage or unstable walk-forward",
+            "Do not promote a weaker factor just because it has higher recent win rate on small sample"
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factors/regime_conditional.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        },
+        {
+          "id": "update_diff_review",
+          "stage": "update_diff",
+          "priority": "high",
+          "objective": "Review whether the realized update materially changed model state.",
+          "system_prompt": "You are the update-diff agent. Use the trade_outcome probability deltas and factor score deltas to judge whether this realized result should change factor code, evidence mapping, or neither.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 duplicate_feedback_skipped=false trade_outcome_deltas=[ProbabilityDiff { state: \"breakeven\", previous: Some(0.275927), new: 0.24833429999999998, delta: -0.027592699999999998 }, ProbabilityDiff { state: \"loss\", previous: Some(0.296112), new: 0.2665008, delta: -0.029611200000000004 }, ProbabilityDiff { state: \"win\", previous: Some(0.427961), new: 0.4851649, delta: 0.05720390000000003 }] factor_score_deltas=[]",
+          "success_criteria": [
+            "If duplicate_feedback_skipped is true, recommend no model change",
+            "If outcome probabilities changed materially but factor scores did not, investigate BBN evidence mapping"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/trading/topology.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        },
+        {
+          "id": "artifact_decision_review",
+          "stage": "artifact_decision",
+          "priority": "high",
+          "objective": "Review artifact-driven actions and ensure they align with the next code or model iteration.",
+          "system_prompt": "You are the artifact-decision agent. Use the artifact decision section to validate whether the current pending/execution artifacts strengthen promotion, trigger rollback review, or should only be observed.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 artifact_summary=actionable_artifacts=1 latest_promotable=Some(\"auto_quant_strategy_library_B2R_PROVIDER_BTC_EMA_RSI_104703_20260512T025200.702486000Z\") rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[] consumed_trend_status=no_consumed_validation consumed_trend_reason=no_consumed_artifacts highlighted_actions=[\"learning_semantics=class=positive_executed success_credit=1.000 observation_weight=1.000\"] top_factor_trends=[] top_family_trends=[] top_rule_break_effects=[] top_consumed_trends=[]",
+          "success_criteria": [
+            "Explicitly state whether artifact evidence strengthens promotion, rollback review, or observation only",
+            "Do not ignore rule-break effects when artifact review versions changed",
+            "Use consumed validation trends when realized artifact outcomes are available",
+            "Name the artifact-driven factor/family targets before recommending code edits"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/state/types.rs",
+            "src/agent/prompts.rs"
+          ]
+        },
+        {
+          "id": "promotion_gate",
+          "stage": "promotion_gate",
+          "priority": "high",
+          "objective": "Decide whether a factor iteration is strong enough to promote.",
+          "system_prompt": "You are the promotion-gate agent. Only approve factor promotion when score deltas, grading, and supporting metrics clear the configured improvement thresholds. Reject cosmetic ranking changes.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 thresholds={promotion_min_score_delta:0.100, promotion_min_score:0.700} top_rankings=[] score_deltas=[] learning_semantics=class=positive_executed success_credit=1.000 observation_weight=1.000",
+          "success_criteria": [
+            "Only promote replace/tune outcomes when score delta is material and stability is not worse",
+            "If trade_count is low or dataset coverage changed, recommend holdout validation before promotion",
+            "Use learning_semantics to distinguish full-credit, fractional-credit, and no-credit feedback before approving promotion or rollback."
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factors/weight_updater.rs",
+            "src/factor_lab/research.rs"
+          ]
+        },
+        {
+          "id": "rollback_review",
+          "stage": "rollback_review",
+          "priority": "high",
+          "objective": "Decide whether recent changes should be rolled back or isolated.",
+          "system_prompt": "You are the rollback-review agent. Look for score degradation, action downgrades, and harmful probability shifts. Recommend rollback when the latest iteration weakened factor quality or destabilized outcome calibration.",
+          "user_prompt": "Symbol=B2R_PROVIDER_BTC_EMA_RSI_104703 thresholds={rollback_score_delta:-0.100, rollback_probability_delta:0.100} score_deltas=[] trade_outcome_deltas=[ProbabilityDiff { state: \"breakeven\", previous: Some(0.275927), new: 0.24833429999999998, delta: -0.027592699999999998 }, ProbabilityDiff { state: \"loss\", previous: Some(0.296112), new: 0.2665008, delta: -0.029611200000000004 }, ProbabilityDiff { state: \"win\", previous: Some(0.427961), new: 0.4851649, delta: 0.05720390000000003 }] learning_semantics=class=positive_executed success_credit=1.000 observation_weight=1.000",
+          "success_criteria": [
+            "Recommend rollback when strong factors degrade materially or outcome calibration shifts against realized performance",
+            "If only one factor family regressed, prefer targeted rollback over full revert",
+            "Use learning_semantics to distinguish full-credit, fractional-credit, and no-credit feedback before approving promotion or rollback."
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/trading/topology.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        }
+      ]
+    },
+    "prompt_workflow": "Use the realized update for B2R_PROVIDER_BTC_EMA_RSI_104703 to review whether the latest result should change factor weights, factor evidence interpretation, or future trade acceptance thresholds."
+  }
+]

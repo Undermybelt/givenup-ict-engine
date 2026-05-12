@@ -1,0 +1,11 @@
+check,result,evidence
+r6_owner_export_root,absent,/tmp/ict-engine-board-a-r6-owner-export-v1
+r3_native_subhour_source_label_root,absent,/tmp/ict-engine-native-subhour-source-label-intake
+r5_source_panel_recency_extension_root,absent,/tmp/ict-engine-source-panel-recency-extension
+source_label_equivalence_sidecar,present_non_promoting,/private/tmp/ict-engine-source-label-equivalence-intake
+direct_manipulation_sidecar,present_legacy_non_promoting,/private/tmp/ict-engine-direct-manipulation-row-intake
+r6_approval_package,non_approving,approval_present=false canonical_merge_allowed_now=false downstream_rerun_allowed_now=false update_goal=false
+tomac_databento_candidate_scan,no_qualifying_depth_order_files,only symbology csv/json matched depth/order/control terms under Tomac
+ninjatrader_cache_kind,non_qualifying_last_cache,2440 Last ncd files
+ninjatrader_order_lifecycle_tables,empty,Orders=0 OrderUpdates=0 Executions=0 Positions=0 User2MarketDataEntitlement=0
+ict_institutional_order_flow_candidate,non_data_script,Pine Script indicator not source-owned labels controls depth or order lifecycle data

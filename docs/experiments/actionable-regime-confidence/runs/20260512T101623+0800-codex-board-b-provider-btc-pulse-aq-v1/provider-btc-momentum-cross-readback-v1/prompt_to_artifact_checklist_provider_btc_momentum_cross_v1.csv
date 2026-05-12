@@ -1,0 +1,7 @@
+requirement,status,evidence,notes
+close_unregistered_101623_retry,pass,command-output/03_run_provider_btc_momentum_cross.out,Retry was recorded as exit 0 and measured all three strategies.
+record_failed_shell_wrapper_attempt,pass,checks/02_run_provider_btc_momentum_cross.exit,Exit 127 is recorded as wrapper failure and not strategy evidence.
+record_provider_provenance_fields,pass,provider-btc-momentum-cross-readback-v1/provider_btc_momentum_cross_readback_v1.md,Provider fields split aq_provider_invoked/provider_requested/provider_data_acquired/provider_unreachable/local_cache_replay.
+record_all_three_strategy_results,pass,command-output/03_run_provider_btc_momentum_cross.out,ProviderBtcMomentumCross ProviderBtcMomentumPulse ProviderBtcTrendPullback all produced zero trades.
+avoid_cursor_or_runtime_mutation,pass,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,Append-only Board B section; no Current Cursor or Rust runtime edit.
+preserve_promotion_block,pass,provider-btc-momentum-cross-readback-v1/provider_btc_momentum_cross_readback_v1.json,promotion_allowed=false and update_goal=false.

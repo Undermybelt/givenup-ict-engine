@@ -1,0 +1,10 @@
+requirement,evidence,status,details
+Every active MainRegimeV2 regime reaches >=95% accepted confidence,latest board 063906 plus R3 provenance,blocked,"R3 physical labels=Bear,Bull,Sideways; Crisis absent; Board A accepted TSIE rows=0"
+Cross-market/cycle/timeframe validation is accepted for each regime,063217 public sweep and 063906 current audit,blocked,No accepted R3/R5/R6 source/control unlock; public candidates accepted=0
+R6 owner/export controls available,/tmp/ict-engine-board-a-r6-owner-export-v1,blocked,R6 owner/export root absent
+R5 post-cutoff source-panel recency rows available,/tmp/ict-engine-source-panel-recency-extension,blocked,R5 recency root absent
+R3 native-subhour labels accepted under current policy,/tmp/ict-engine-native-subhour-source-label-intake,blocked,Root present but TSIE-quarantined/proxy; not an accepted unlock
+Provider/AutoQuant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree promotion rerun,062854 read-only runtime correction,blocked,Read-only runtime evidence only; canonical merge false; downstream promotion false
+Latest source/control arrival refresh after 063906 changes the unlock state,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T064220+0800-codex-source-control-arrival-refresh-after-063906-v1/checks/source_control_arrival_refresh_after_063906_v1_assertions.out,blocked,064220 reports no valid required unlock and no downstream rerun
+Do not accept proxy signals as completion,063734/063906 quarantine and fail-close readbacks,pass,TSIE physical rows are explicitly quarantined and count as 0 accepted rows
+Board A markdown remains the authoritative ledger,/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md,pass,Latest relevant roots are registered through 063906/063217/063734 in board tail

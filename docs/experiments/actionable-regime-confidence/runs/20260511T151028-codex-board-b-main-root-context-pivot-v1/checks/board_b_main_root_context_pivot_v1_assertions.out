@@ -1,0 +1,17 @@
+run_id=20260511T151028+0800-codex-board-b-main-root-context-pivot-v1
+accepted_regime_id=BoardA_market_regime_context_MainRegimeV2_price_roots4
+board_a_artifact=docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json
+main_price_roots=Bull,Bear,Sideways,Crisis
+source_panel_rows=245021
+source_panel_tickers=39
+source_panel_date_range=2000-01-03..2026-01-30
+source_panel_root_counts=Bull:103766,Sideways:56668,Bear:54939,Crisis:29632
+residual_high_volatility_rows=16
+child_subregime_parent_claim=false
+auto_quant_recipe_selected=false
+rc_spa_computed=false
+downstream_consumption_verified=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+assertion_status=PASS

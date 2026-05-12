@@ -1,0 +1,224 @@
+{
+  "after": {
+    "matched_group_count": 61,
+    "matched_negative_rows": 62,
+    "matched_negative_sha256": "014764ac3d7901ca223ad683f681d3df72ce44fe2d711f8ff18d8602276238e3",
+    "positive_rows": 62,
+    "positive_sha256": "9320131271de4775fb3bd60065fff78f212d1f2abc31e81a50bffe658d6c1edc",
+    "provenance_sha256": "675469c81eb7623c59354bd00bfbd7a6adb701e4ab4b4dfe283709a84bfb4ab3"
+  },
+  "before": {
+    "matched_negative_rows": 53,
+    "matched_negative_sha256": "bb006af63095338c796f63ae05c16293a8c31ad603d90a23f69ecd6d134d008a",
+    "positive_rows": 53,
+    "positive_sha256": "7f7a97b5557866197b3ee2e38caec89345bd49127dbd063cd6839a147c07ff04",
+    "provenance_sha256": "0d8642d5ba7f6c54e022aef6b3aa7f4e03754e28c125382b884326ed1570ceb1"
+  },
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "bb76a0323b63ea25f9212d7bbbd662e2b07b9833c5a9121108a3af3c162d7e6a",
+  "broad_normal_sample": false,
+  "decision": {
+    "accepted_rows_added": 0,
+    "board_state": "blocked",
+    "external_requests_sent": true,
+    "gate_result": "r6_official_rowlevel_support_extension_v1=support_50x50_reached_confidence_still_blocked",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "direct_species_closed": false,
+  "direct_verifier": {
+    "payload": {
+      "matched_group_count": 61,
+      "matched_negative_rows": 62,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 62,
+      "provenance_keys": [
+        "cftc_flotron_complaint_examples",
+        "cftc_gandhi_order",
+        "cftc_geneva_order_2018",
+        "cftc_geneva_order_examples",
+        "cftc_geneva_order_rows_added",
+        "cftc_genuine_order_text_checks",
+        "cftc_genuine_order_text_status",
+        "cftc_mohan_additional_examples",
+        "cftc_mohan_complaint",
+        "cftc_mohan_complaint_rows_added",
+        "cftc_mohan_complaint_text_checks",
+        "cftc_order",
+        "cftc_shak_complaint",
+        "cftc_shak_complaint_examples",
+        "cftc_shak_rows_added",
+        "cftc_text_checks",
+        "cftc_text_extraction_status",
+        "cftc_vorley_chanu_complaint",
+        "cftc_zhao_skudder_examples",
+        "created_at_utc",
+        "finra_public_schema",
+        "gandhi_matched_negative_rows_added",
+        "gandhi_positive_rows_added",
+        "gandhi_rows_materialized_at_utc",
+        "license_or_permission",
+        "matched_control_limitations",
+        "matched_control_policy",
+        "matched_negative_control_policy",
+        "matched_negative_materialized_at_utc",
+        "matched_negative_rows_acquired",
+        "matched_negative_rows_count",
+        "matched_negative_rows_path",
+        "matched_negative_rows_sha256",
+        "mohan_additional_matched_negative_rows_added",
+        "mohan_additional_positive_rows_added",
+        "mohan_additional_rows_materialized_at_utc",
+        "mohan_complaint_control_policy",
+        "positive_rows_count",
+        "positive_rows_path",
+        "positive_rows_sha256",
+        "r6_flotron_cftc_row_uplift_v1",
+        "r6_geneva_cftc_row_uplift_v1",
+        "r6_logista_cftc_row_repair_v1",
+        "r6_logista_cftc_row_uplift_v1",
+        "r6_mohan_shak_duplicate_cleanup_v1",
+        "r6_mohan_shak_row_uplift_v1",
+        "r6_official_rowlevel_support_extension_v1",
+        "r6_shak_duplicate_row_cleanup_v1",
+        "r6_vorley_franko_row_uplift_v1",
+        "r6_zhao_skudder_cftc_row_uplift_v1",
+        "shak_complaint_matched_negative_rows_added",
+        "shak_complaint_positive_rows_added",
+        "shak_complaint_rows_materialized_at_utc",
+        "source",
+        "updated_at_utc",
+        "updated_by",
+        "vorley_chanu_matched_negative_rows_added",
+        "vorley_chanu_positive_rows_added",
+        "vorley_chanu_rows_materialized_at_utc"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0
+  },
+  "gates": [
+    {
+      "gate": "source_text_checks",
+      "observed": true,
+      "pass": true,
+      "required": true
+    },
+    {
+      "gate": "positive_rows_added",
+      "observed": 9,
+      "pass": true,
+      "required": 9
+    },
+    {
+      "gate": "matched_negative_rows_added",
+      "observed": 9,
+      "pass": true,
+      "required": 9
+    },
+    {
+      "gate": "positive_support",
+      "observed": 62,
+      "pass": true,
+      "required": ">=50"
+    },
+    {
+      "gate": "matched_negative_support",
+      "observed": 62,
+      "pass": true,
+      "required": ">=50"
+    },
+    {
+      "gate": "wilson95_min_lcb",
+      "observed": "0.941656",
+      "pass": false,
+      "required": ">=0.95"
+    },
+    {
+      "gate": "broad_normal_sample",
+      "observed": false,
+      "pass": false,
+      "required": true
+    },
+    {
+      "gate": "direct_species_coverage",
+      "observed": false,
+      "pass": false,
+      "required": true
+    },
+    {
+      "gate": "unchanged_verifier_schema_ready",
+      "observed": "schema_ready_unscored",
+      "pass": true,
+      "required": "schema_ready_unscored"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T14:10:34.760126+00:00",
+  "matched_negative_rows_added_this_run": 9,
+  "next_action": "Acquire broad source-owned normal-market order-lifecycle controls and enough additional direct rows for Wilson95 >=0.95; keep R5 blocked until source-owner post-cutoff source-panel rows exist.",
+  "positive_rows_added_this_run": 9,
+  "run_id": "20260511T220755+0800-codex-r6-official-rowlevel-support-extension-v1",
+  "source_records": [
+    {
+      "extract_returncode": 0,
+      "extract_stderr_path": "",
+      "extract_stdout": "31 60404",
+      "id": "roman_banoczay_complaint",
+      "pdf_bytes": 101240,
+      "pdf_path": "/tmp/ict-engine-r6-official-rowlevel-support-extension-v1/raw/roman_banoczay_complaint.pdf",
+      "pdf_sha256": "f83be67555e9016e9f023f4339a5b2e0fb290b74104594449fa26e7ae93966b6",
+      "text_chars": 59980,
+      "text_checks": {
+        "02:10:35.632": true,
+        "03:02:13.105": true,
+        "03:02:22.251": true,
+        "06:31:45.692": true,
+        "Event Example 1:  January 25, 2018": true,
+        "Event Example 2:  February 1, 2018": true,
+        "Event Example 3:  February 12, 2018": true
+      },
+      "text_path": "/tmp/ict-engine-r6-official-rowlevel-support-extension-v1/raw/roman_banoczay_complaint.txt",
+      "text_sha256": "43058acabb45a427da387c5c72c010d96f7a79dfc44de7387ae8e060f1d2b681",
+      "title": "CFTC Complaint: CFTC v. Roman/Banoczay et al., Case 1:20-cv-05777",
+      "url": "https://www.cftc.gov/media/4831/enfromancomplaint092920/download"
+    },
+    {
+      "extract_returncode": 0,
+      "extract_stderr_path": "",
+      "extract_stdout": "34 61962",
+      "id": "logista_serotta_complaint",
+      "pdf_bytes": 406583,
+      "pdf_path": "/tmp/ict-engine-r6-official-rowlevel-support-extension-v1/raw/logista_serotta_complaint.pdf",
+      "pdf_sha256": "d8e9193adce9e69a6db7a49624eca2cc5485d77a503f90b1ad45eca64d707a92",
+      "text_chars": 61372,
+      "text_checks": {
+        "10:56:22.803": true,
+        "11:29:48.415 AM": true,
+        "12:00:06.610 PM": true,
+        "1:06:29.086 PM": true,
+        "8:23": true,
+        "Spoof Event Example 1: January 29, 2020": true,
+        "Spoof Event Example 2: February 20, 2020": true,
+        "Spoof Event Example 3: March 11, 2020": true
+      },
+      "text_path": "/tmp/ict-engine-r6-official-rowlevel-support-extension-v1/raw/logista_serotta_complaint.txt",
+      "text_sha256": "75ee5f1d08b37880f1ebb7084e9c440696d09d0b8e728b791561cf7d7ce7c02b",
+      "title": "CFTC Complaint: CFTC v. Logista Advisors LLC and Nicholas Serotta, Case 1:23-cv-07485",
+      "url": "https://www.cftc.gov/media/9206/enflogistaadvisorscomplaint090723/download"
+    }
+  ],
+  "support_50x50": true,
+  "unique_positive_dates": 49,
+  "unique_positive_symbols": 26,
+  "unique_positive_venues": 11,
+  "wilson95_lcb": {
+    "matched_negative": 0.9416559278986275,
+    "min": 0.9416559278986275,
+    "positive": 0.9416559278986275
+  }
+}

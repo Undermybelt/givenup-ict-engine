@@ -1,0 +1,139 @@
+{
+  "bbn_contradiction_lift": 1.307830861321083,
+  "bbn_entropy_reduction": 0.02050912099402502,
+  "bbn_log_loss_delta": 6.32458911672613,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.34606244282457066,
+    1.2651488773825433e-7,
+    0.6539374306605416
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260511T164020.084475000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/measured-recorded-branch/strategy_library_recorded_nq_precision_fixed_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260511T164020.326159000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260511T164020.326159000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.38290916455696206,
+        1.1139240506329113e-6,
+        0.6170897215189873
+      ],
+      "bbn_contradiction_after": 0.0658205569620254,
+      "bbn_contradiction_before": 1.299956,
+      "bbn_contradiction_lift": 1.2341354430379745,
+      "bbn_entropy_after": 0.6654862049246972,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6497666725989033,
+      "bbn_log_loss_before": 6.970919668332682,
+      "bbn_log_loss_delta": 6.321152995733779,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.6170468354430378,
+        -0.00002088607594936709,
+        0.6170677215189874
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "recorded_nq_precision_fixed_v1",
+      "n_breakeven": 0,
+      "n_loss": 195,
+      "n_win": 105,
+      "strategy_name": "RegimeRootPulseBranch",
+      "temper": 0.25,
+      "trade_count": 300
+    },
+    {
+      "after_probs": [
+        0.37231623115024765,
+        3.874518436984039e-7,
+        0.6276833813979086
+      ],
+      "bbn_contradiction_after": 0.011299903870849427,
+      "bbn_contradiction_before": 0.03248722362869202,
+      "bbn_contradiction_lift": 0.02118731975784259,
+      "bbn_entropy_after": 0.6601828471407472,
+      "bbn_entropy_before": 0.6654862049246972,
+      "bbn_entropy_reduction": 0.00530335778395008,
+      "bbn_log_loss_after": 0.6572265833849484,
+      "bbn_log_loss_before": 0.6577202832037754,
+      "bbn_log_loss_delta": 0.0004936998188269648,
+      "before_probs": [
+        0.38290916455696206,
+        1.1139240506329113e-6,
+        0.6170897215189873
+      ],
+      "diff": [
+        -0.010592933406714411,
+        -7.264722069345074e-7,
+        0.010593659878921247
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "recorded_nq_precision_fixed_v1",
+      "n_breakeven": 0,
+      "n_loss": 19,
+      "n_win": 11,
+      "strategy_name": "RegimeTrendCarry",
+      "temper": 0.25,
+      "trade_count": 30
+    },
+    {
+      "after_probs": [
+        0.34606244282457066,
+        1.2651488773825433e-7,
+        0.6539374306605416
+      ],
+      "bbn_contradiction_after": 0.025458472012250162,
+      "bbn_contradiction_before": 0.07796657053751607,
+      "bbn_contradiction_lift": 0.05250809852526591,
+      "bbn_entropy_after": 0.6449770839306722,
+      "bbn_entropy_before": 0.6601828471407472,
+      "bbn_entropy_reduction": 0.01520576321007494,
+      "bbn_log_loss_after": 0.6368744191217731,
+      "bbn_log_loss_before": 0.639816840295298,
+      "bbn_log_loss_delta": 0.002942421173524834,
+      "before_probs": [
+        0.37231623115024765,
+        3.874518436984039e-7,
+        0.6276833813979086
+      ],
+      "diff": [
+        -0.026253788325676986,
+        -2.6093695596014956e-7,
+        0.026254049262632972
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "recorded_nq_precision_fixed_v1",
+      "n_breakeven": 0,
+      "n_loss": 22,
+      "n_win": 11,
+      "strategy_name": "RegimeVolBreakout",
+      "temper": 0.25,
+      "trade_count": 33
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "temper": 0.25
+}

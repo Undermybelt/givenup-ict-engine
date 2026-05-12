@@ -1,0 +1,83 @@
+{
+  "accepted_rows_added": 0,
+  "additional_positive_rows_needed_after_all_sidecars_if_accepted": 0,
+  "additional_positive_rows_needed_now_from_durable_baseline": 16,
+  "assertions_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/checks/r6_oystacher_khara_salim_positive_row_candidate_screen_v1_assertions.out",
+  "board_sha256_at_start": "f94ce004f6e64c0d5e7ee3ee040fdb71515f8b8b8aea8e9e6e35ed1cfd105ef2",
+  "direct_verifier_now": {
+    "payload": {
+      "missing_files": [
+        "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "durable_baseline_source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T233454-codex-r6-nowak-smith-positive-row-candidate-screen-v1/r6-nowak-smith-positive-row-candidate-screen/r6_nowak_smith_positive_row_candidate_screen_v1.json",
+  "durable_current_min_wilson95_lcb": 0.936858991217,
+  "durable_current_positive_rows": 57,
+  "durable_current_same_event_negative_rows": 57,
+  "external_requests_sent": true,
+  "gate_result": "r6_oystacher_khara_salim_positive_row_candidate_screen_v1=candidate_rows_found_live_intake_missing_no_acceptance",
+  "generated_at_utc": "2026-05-11T15:53:09.642291+00:00",
+  "json_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/r6-oystacher-khara-salim-positive-row-candidate-screen/r6_oystacher_khara_salim_positive_row_candidate_screen_v1.json",
+  "live_intake_available_now": false,
+  "live_intake_reason_now": "missing_required_files",
+  "live_intake_status_now": "blocked",
+  "new_confidence_gate": false,
+  "next_action": "Restore or lock the shared direct intake, decide whether to accept Sarao, Nowak/Smith, and Oystacher/Khara/Salim sidecar positives with matched-control policy, then rerun direct calibration with sidecar broad-normal controls and chronological/symbol/venue split checks.",
+  "nowak_smith_sidecar_positive_rows": 6,
+  "official_sources": [
+    {
+      "bytes": 2553330,
+      "case_id": "oystacher_3red_2015_complaint",
+      "content_type": "application/pdf",
+      "http_status": 200,
+      "pdf_path": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfigorcomplnt101915.pdf",
+      "sha256": "6a2a951e3c02285cb1df085e314c7ae2a2a0c089f283998641ea66fce5ce8591",
+      "title": "CFTC Complaint: CFTC v. Igor B. Oystacher and 3 Red Trading LLC, filed Oct. 19 2015",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf"
+    },
+    {
+      "bytes": 1982589,
+      "case_id": "khara_salim_2016_order",
+      "content_type": "application/pdf",
+      "http_status": 200,
+      "pdf_path": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw/enfheetsalimorder033116.pdf",
+      "sha256": "2969b46f868464895fcdaee3e084151925e6e990317bae62cafac5e938358f4c",
+      "title": "CFTC Consent Order: Heet Khara and Nasim Salim, entered Mar. 31 2016",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfheetsalimorder033116.pdf"
+    }
+  ],
+  "official_sources_screened": 2,
+  "pooled_wilson95_would_pass_if_all_sidecars_accepted": true,
+  "proposed_positive_rows": 4,
+  "proposed_rows_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/r6-oystacher-khara-salim-positive-row-candidate-screen/r6_oystacher_khara_salim_positive_row_candidates_v1.csv",
+  "raw_data_committed": false,
+  "raw_root": "/tmp/ict-engine-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/raw",
+  "report_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/r6-oystacher-khara-salim-positive-row-candidate-screen/r6_oystacher_khara_salim_positive_row_candidate_screen_v1.md",
+  "row_materializable_sources": [
+    "cftc_oystacher_20121130_ng_sell_spoof_orders",
+    "cftc_oystacher_20140106_es_sell_spoof_orders",
+    "cftc_khara_20150220_gold_layered_bids",
+    "cftc_salim_20150424_silver_layered_offers"
+  ],
+  "run_id": "20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1",
+  "runtime_code_changed": false,
+  "sarao_sidecar_positive_rows": 6,
+  "shared_intake_mutated": false,
+  "sidecar_broad_normal_control_rows": 80,
+  "source_screen_count": 4,
+  "source_screen_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1/r6-oystacher-khara-salim-positive-row-candidate-screen/r6_oystacher_khara_salim_positive_row_source_screen_v1_cases.csv",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "what_if_min_wilson95_lcb_with_all_sidecars": 0.950006246616416,
+  "what_if_positive_rows_with_all_sidecars": 73
+}

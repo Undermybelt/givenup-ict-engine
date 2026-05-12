@@ -1,0 +1,15 @@
+gate_result=board_b_current_objective_audit_after_080054_v1=not_complete_no_source_control_unlock_no_selected_history_no_downstream_promotion
+blocked_requirements=4
+partial_requirements=3
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+explicit_user_selected_history_present=false
+selected_data_autoquant_run=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

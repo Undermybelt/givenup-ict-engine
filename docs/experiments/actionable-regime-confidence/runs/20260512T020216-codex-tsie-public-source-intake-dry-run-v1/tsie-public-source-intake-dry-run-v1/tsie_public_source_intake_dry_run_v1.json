@@ -1,0 +1,126 @@
+{
+  "abstain_rows": 131,
+  "accepted_rows_added": 0,
+  "api_url": "https://huggingface.co/api/datasets/sujinwo/tsie-market-regime-dataset",
+  "blockers": [
+    "full parquet not downloaded or calibrated in this dry run",
+    "sample is API-offset derived and cannot support 95% acceptance",
+    "trap classes require abstain behavior",
+    "Crisis regime has no TSIE semantic equivalent",
+    "R6 owner-export/control gate remains absent",
+    "canonical merge is false"
+  ],
+  "canonical_merge_allowed": false,
+  "dataset": "sujinwo/tsie-market-regime-dataset",
+  "dataset_total_rows": 7193996,
+  "dataset_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+  "decision_counts": {
+    "abstain_trap": 131,
+    "map": 369
+  },
+  "downstream_chain_rerun_allowed": false,
+  "gate_result": "tsie_public_source_intake_dry_run_v1=sample_mapping_ready_no_acceptance_no_canonical_merge",
+  "label_counts": {
+    "BEAR TRAP": 96,
+    "BULL TRAP": 35,
+    "FLAT / NOISE": 151,
+    "STRONG BUY": 10,
+    "STRONG SELL": 24,
+    "WEAK BUY": 61,
+    "WEAK SELL": 123
+  },
+  "license": "mit",
+  "license_verified": true,
+  "main_regime_counts": {
+    "Abstain": 131,
+    "Bear": 147,
+    "Bull": 71,
+    "Sideways": 151
+  },
+  "mapped_regimes": [
+    "Bear",
+    "Bull",
+    "Sideways"
+  ],
+  "mapped_regimes_from_contract": [
+    "Bear",
+    "Bull",
+    "Sideways"
+  ],
+  "mapped_rows": 369,
+  "mapping_decision": {
+    "Abstain": "BEAR TRAP + BULL TRAP",
+    "Bear": "STRONG SELL + WEAK SELL",
+    "Bull": "WEAK BUY + STRONG BUY",
+    "Crisis": "not represented by TSIE label semantics",
+    "Sideways": "FLAT / NOISE"
+  },
+  "new_confidence_gate": false,
+  "observed_at": "2026-05-11T18:07:46.588539+00:00",
+  "parquet_file_size_bytes": 591890794,
+  "r3_r5_r6_roots_mutated": false,
+  "raw_data_committed": false,
+  "raw_parquet_downloaded": false,
+  "root_status": {
+    "r3_native_subhour": {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    "r5_recency_extension": {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    },
+    "r6_owner_export": {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false
+    },
+    "source_label_equivalence": {
+      "file_count": 2,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true
+    }
+  },
+  "row_api_errors": [],
+  "run_id": "20260512T020216-codex-tsie-public-source-intake-dry-run-v1",
+  "runtime_code_changed": false,
+  "sample_strategy": {
+    "offsets": [
+      0,
+      500000,
+      2000000,
+      4000000,
+      6000000
+    ],
+    "page_length": 100
+  },
+  "sampled_rows": 500,
+  "shared_intake_mutated": false,
+  "split_status": [
+    {
+      "config": "default",
+      "dataset": "sujinwo/tsie-market-regime-dataset",
+      "split": "train"
+    }
+  ],
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unique_symbol_count_in_sample": 5,
+  "unique_timeframes_in_sample": [
+    "1D",
+    "240",
+    "60"
+  ],
+  "update_goal": false,
+  "year_counts": {
+    "2012": 100,
+    "2013": 100,
+    "2017": 100,
+    "2020": 43,
+    "2021": 57,
+    "2024": 100
+  }
+}

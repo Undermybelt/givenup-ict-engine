@@ -1,0 +1,45 @@
+{
+  "run_id": "20260512T041649-codex-current-objective-audit-after-041410-041426-v1",
+  "gate_result": "current_objective_audit_after_041410_041426_v1=not_complete_source_confidence_no_acceptance_autoquant_data_missing_source_roots_absent_downstream_blocked",
+  "board_sha256_before": "07e0cdf5baf39fd82a29f6fa923a89ded078348756eac110ddcfb008606178da",
+  "objective_restated": true,
+  "prompt_to_artifact_checklist_present": true,
+  "evidence_roots": {
+    "source_label_schema_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T041351-codex-source-label-equivalence-live-verifier-readback-after-200909-v1",
+    "source_label_confidence_calibration": "docs/experiments/actionable-regime-confidence/runs/20260512T041410-codex-source-label-equivalence-live-calibration-after-200909-v1",
+    "autoquant_threaded_prepare": "docs/experiments/actionable-regime-confidence/runs/20260512T041426-codex-autoquant-threaded-prepare-after-040757-v1",
+    "source_unlock_scan": "docs/experiments/actionable-regime-confidence/runs/20260512T040738-codex-source-unlock-scan-after-040311-v1",
+    "tradingview_stdio_confirmation": "docs/experiments/actionable-regime-confidence/runs/20260512T040824-codex-tradingview-stdio-provider-confirmation-after-040611-v1",
+    "r5_recency_recheck": "docs/experiments/actionable-regime-confidence/runs/20260512T040919-codex-stock-regime-kaggle-live-recency-recheck-after-040311-v1",
+    "downstream_audit": "docs/experiments/actionable-regime-confidence/runs/20260512T040311-codex-current-objective-audit-after-035835-v1"
+  },
+  "source_label_confidence": {
+    "verifier_status": "schema_ready_unscored",
+    "rows": 248440,
+    "labels_present": ["Bear", "Bull", "Crisis", "Sideways"],
+    "accepted_source_confidence_95_labels": [],
+    "new_confidence_gate": false
+  },
+  "autoquant": {
+    "bootstrap_succeeded": true,
+    "threaded_prepare_succeeded": false,
+    "status_after": "dependency_ready_data_missing",
+    "dependency_healthy": true,
+    "data_ready": false
+  },
+  "roots": {
+    "r6_owner_export_root_present": false,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_extension_root_present": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Wait for verifier-native owner/export controls, source-owned broad normal controls, source-owned recency-extension rows, native sub-hour source-label rows, or explicit approval before rerunning the full chain."
+}

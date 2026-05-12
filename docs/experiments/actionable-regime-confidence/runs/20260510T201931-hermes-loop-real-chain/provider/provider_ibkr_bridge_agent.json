@@ -1,0 +1,32 @@
+{
+  "summary_line": "local_runtime:1/1 ready",
+  "ready_by_domain": {
+    "local_runtime": "1/1"
+  },
+  "providers": [
+    {
+      "provider_id": "ibkr_bridge",
+      "domain": "local_runtime",
+      "selectable_by_user": false,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "local_consent_runtime",
+      "user_access": "login_and_local_runtime",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 40,
+      "status": "ready",
+      "reason": "local_ibkr_bridge_ready",
+      "summary": "Local IBKR bridge reused by broker-linked workflows after the user enables the local API."
+    }
+  ],
+  "ready_providers": [
+    "ibkr_bridge"
+  ],
+  "pending_providers": [],
+  "pending_provider_details": [],
+  "selectable_providers": [],
+  "default_enabled_providers": [],
+  "install_prompts": []
+}

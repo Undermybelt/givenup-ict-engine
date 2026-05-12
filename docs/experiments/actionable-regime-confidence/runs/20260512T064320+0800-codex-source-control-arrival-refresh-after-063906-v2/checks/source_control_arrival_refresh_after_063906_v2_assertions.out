@@ -1,0 +1,14 @@
+gate_result=source_control_arrival_refresh_after_063906_v2=no_new_unlock_no_selected_history_no_downstream
+r3_root_exists=True
+r3_accepted_unlock=False
+r5_root_exists=False
+r6_root_exists=False
+valid_required_unlocks=none
+provider_status_exit_code=0
+explicit_user_selected_history=false
+selected_data_autoquant_training=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+promotion_allowed=false
+update_goal=false

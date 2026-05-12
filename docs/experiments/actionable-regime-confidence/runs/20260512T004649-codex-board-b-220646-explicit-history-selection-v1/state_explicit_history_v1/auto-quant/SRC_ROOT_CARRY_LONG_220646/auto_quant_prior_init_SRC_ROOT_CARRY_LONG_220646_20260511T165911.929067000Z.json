@@ -1,0 +1,60 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.8799718400000001,
+    0.000014079999999999999,
+    0.12001408
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "TomacNQ_KillzoneBreakout",
+      "mutation_id": "explicit_history_tomac_v1",
+      "trade_count": 9,
+      "n_win": 6,
+      "n_loss": 3,
+      "n_breakeven": 0,
+      "temper": 0.25,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.8799718400000001,
+        0.000014079999999999999,
+        0.12001408
+      ],
+      "diff": [
+        -0.1199841599999999,
+        -7.92e-6,
+        0.11999208
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.36712260775231625,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 3.5748520355140045,
+      "bbn_log_loss_after": 0.7919589845978555,
+      "bbn_log_loss_delta": 2.782893050916149,
+      "bbn_contradiction_before": 0.6666226666666666,
+      "bbn_contradiction_after": 0.42663850666666675,
+      "bbn_contradiction_lift": 0.23998415999999984,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [],
+  "temper": 0.25,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 2.782893050916149,
+  "bbn_contradiction_lift": 0.23998415999999984,
+  "evidence_value_gate_passed": true
+}

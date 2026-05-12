@@ -1,0 +1,83 @@
+[
+  {
+    "artifact_id": "ensemble-vote:analyze:2026-05-11T14:42:41Z",
+    "generated_at": "2026-05-11T14:42:41.983222Z",
+    "symbol": "NQ",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:NQ:20260511T144241.955Z",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "d1fba762150c532c",
+      "config_hash": "54390626044676e4",
+      "data_fingerprint": "937fe89c23713ba0"
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "final_action": "execute_follow_through",
+    "recommended_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/root-probe-bear-current-bin --backend native",
+    "human_next_triage": "hard_blocked=false ensemble_action=execute_follow_through consensus=0.660 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223731-codex-board-b-220646-downstream-repair-readback-v3/state/root-probe-bear-current-bin --backend native",
+    "hard_block": {
+      "active": false,
+      "stage": null,
+      "status": null,
+      "reason": null,
+      "evidence": [],
+      "command": null,
+      "human_action": null
+    },
+    "confidence": 0.6603095166778657,
+    "consensus_strength": 0.6603095166778657,
+    "disagreement_flags": [],
+    "executor_summaries": [
+      "executor=catboost_file action=execute_follow_through confidence=0.606 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.649",
+      "executor=xgboost_file action=execute_follow_through confidence=0.630 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.674"
+    ],
+    "split_explanations": [
+      "gating_status=trend",
+      "selected_entry_quality=medium",
+      "factor_alignment=index_beta_regime_sensitive",
+      "factor_uncertainty=high",
+      "posterior_override=trend:0.630",
+      "gating_status=trend",
+      "selected_entry_quality=medium",
+      "factor_alignment=index_beta_regime_sensitive",
+      "factor_uncertainty=high",
+      "posterior_override=trend:0.630"
+    ],
+    "executor_scorecards": [],
+    "executor_scorecards_source": "persisted",
+    "posterior_fingerprint": "937fe89c23713ba0",
+    "posterior_normalization_status": "normalized",
+    "posterior_active_regime": "trend",
+    "posterior_confidence": 0.5822867835012198,
+    "posterior_probabilities": {
+      "range": 0.13370448595898093,
+      "stress": 0.15957180254354839,
+      "transition": 0.07640256340513198,
+      "trend": 0.6303211480923387
+    },
+    "posterior_evidence": [
+      "market_policy=NQ hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.040 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.860",
+      "pre_bayes_quality_score=0.582 gating_status=pass_neutralized",
+      "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.837",
+      "market_state_source=volatility=ElevatedVol:0.741 liquidity=NormalLiquidity:0.419 structure=Trending:1.000 behavior=FOMO:0.650",
+      "market_state_source=rationale=volatility=ElevatedVol conf=0.74",
+      "market_state_source=rationale=structure=Trending conf=1.00",
+      "market_state_source=rationale=behavior=FOMO conf=0.65",
+      "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.84",
+      "regime_bundle_bbn_evidence_applied=strength:moderate label:primary::BearReliefCarry",
+      "market_family=futures_index",
+      "market_behavior_profile=index_beta_regime_sensitive"
+    ]
+  }
+]

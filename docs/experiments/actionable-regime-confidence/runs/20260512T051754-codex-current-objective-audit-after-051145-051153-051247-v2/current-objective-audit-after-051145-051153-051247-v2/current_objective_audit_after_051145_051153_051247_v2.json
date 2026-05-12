@@ -1,0 +1,62 @@
+{
+  "accepted_regime_confidence_labels": 0,
+  "board_hash_before_artifact": "ae2ccacdb08f43ed38dce0d0658185a314e4a7cc729425c7f680f72d00fc5fd3",
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "current_objective_audit_after_051145_051153_051247_v2=not_complete_no_accepted_regimes_no_source_control_unlock_no_promotion",
+  "latest_evidence": {
+    "extra_trees_light_050609": {
+      "accepted_labels": [],
+      "gate": "source_label_extra_trees_light_threshold_screen_v1=extra_trees_light_scored_no_full_acceptance",
+      "rows_scored": 248440
+    },
+    "official_owner_route_051247": {
+      "gate": "official_owner_data_route_refresh_after_050609_v1=routes_confirmed_external_license_export_required_no_local_unlock",
+      "licensed_or_owner_export_required": true,
+      "source_control_evidence_acquired": false
+    },
+    "provider_refresh_051153": {
+      "gate": "provider_source_root_readonly_refresh_after_050609_v1=providers_refreshed_no_source_control_unlock_no_promotion",
+      "ibkr_spy_retry_rows": 21,
+      "kraken_helper_rows": 721,
+      "tradingview_harness_exit": 1,
+      "yfinance_rows": 197
+    },
+    "runtime_chain_051145": {
+      "command_failures": 0,
+      "gate": "post_050609_readonly_runtime_chain_v1=runtime_readback_no_source_unlock_no_promotion",
+      "source_control_evidence_acquired": false
+    },
+    "three_atom_045926": {
+      "accepted_labels": [],
+      "best_min_wilson95_lcb": {
+        "Bear": 0.6435280915,
+        "Bull": 0.7986296577,
+        "Crisis": 0.4324193032,
+        "Sideways": 0.3659108855
+      },
+      "gate": "source_label_three_atom_qualifier_miner_v1=three_atom_scored_no_full_acceptance",
+      "rows_scored": 248440
+    }
+  },
+  "objective_complete": false,
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "run_id": "20260512T051754-codex-current-objective-audit-after-051145-051153-051247-v2",
+  "strict_full_objective": false,
+  "update_goal": false
+}

@@ -1,0 +1,12 @@
+columns ['date', 'open', 'high', 'low', 'close', 'volume']
+rows 11086
+head_date ['1717365600000', '1717369200000', '1717372800000']
+tail_date ['1778529600000', '1778536800000', '1778540400000']
+volume_nonzero 10691
+trend_count 3963
+pulse_count 3962
+tradable_count 11080
+all_count_with_volume 1945
+all_count_no_volume 2024
+close_gt_prev_count 5824
+rsi_stats 0.0 99.81818181818181 53.195634824727684

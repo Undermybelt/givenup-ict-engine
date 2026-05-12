@@ -1,0 +1,1 @@
+./target/debug/ict-engine policy-training-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/state_recorded_mtf_chain_readback_v1 --output-format json

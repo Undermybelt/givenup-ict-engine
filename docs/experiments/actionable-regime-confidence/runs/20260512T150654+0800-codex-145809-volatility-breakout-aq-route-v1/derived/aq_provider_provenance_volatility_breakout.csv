@@ -1,0 +1,7 @@
+provider,aq_provider_invoked,provider_requested,provider_data_acquired,provider_unreachable,local_cache_replay,context_source,branch_seed_rows,note
+IBKR,True,True,True,False,False,143900,47,SPY 1h 5Y rows present in this branch seed
+TradingViewRemix/TVR,False,False,False,True,False,141554/150346,0,TVR was not acquired for 145809 branch rows
+yfinance/YF,True,True,True,False,False,143900,32,Yahoo ES 1h rows present in this branch seed
+Kraken,False,False,False,False,False,141554,0,Kraken rows were not acquired for this branch seed
+Binance,True,True,True,False,False,143900,269,BTCUSDT 1h rows present in this branch seed
+Bybit,False,False,False,False,False,141554,0,Bybit rows were not acquired for this branch seed

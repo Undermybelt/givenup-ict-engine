@@ -1,0 +1,10 @@
+ASSERT board_cursor_observed=true
+ASSERT matching_scorer_process_active=false
+ASSERT branch_rc_spa_report_present=false
+ASSERT branch_rows_present=false
+ASSERT scorer_assertions_present=false
+ASSERT fail_closed_summary_present=false
+ASSERT downstream_packet_present=false
+ASSERT hard_gate_result=fail:run_marked_running_without_process_or_artifacts
+ASSERT downstream_consumption=not_started:no_rc_spa_report
+ASSERT combine_with_205047_allowed=false

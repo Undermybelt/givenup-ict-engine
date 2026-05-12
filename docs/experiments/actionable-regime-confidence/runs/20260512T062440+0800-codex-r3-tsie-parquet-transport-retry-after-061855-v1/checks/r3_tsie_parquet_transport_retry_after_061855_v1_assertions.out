@@ -1,0 +1,13 @@
+gate_result=r3_tsie_parquet_transport_retry_after_061855_v1=partial_range_downloaded_not_intaked_no_promotion
+curl_head_ok=true
+curl_range_ok=true
+uvx_hf_xet_help_ok=true
+row_api_length_cap_confirmed=true
+raw_parquet_downloaded=false
+target_root_mutated=false
+accepted_rows_added=0
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

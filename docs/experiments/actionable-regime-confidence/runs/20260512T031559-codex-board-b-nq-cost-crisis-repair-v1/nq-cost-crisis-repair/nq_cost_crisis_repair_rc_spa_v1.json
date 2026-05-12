@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/checks/nq_cost_crisis_repair_v1_assertions.out",
+    "branch_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/nq-cost-crisis-repair/nq_cost_crisis_repair_branch_summary_v1.csv",
+    "input_manifest": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/nq-cost-crisis-repair/nq_cost_crisis_repair_inputs_v1.json",
+    "real_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/nq-cost-crisis-repair/nq_cost_crisis_repair_real_trades_v1.jsonl",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/nq-cost-crisis-repair/nq_cost_crisis_repair_rc_spa_v1.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/nq-cost-crisis-repair/nq_cost_crisis_repair_rc_spa_v1.md",
+    "selected_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/nq-cost-crisis-repair/nq_cost_crisis_repair_selected_rows_v1.csv",
+    "strategy_library": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/nq-cost-crisis-repair/strategy_library_nq_cost_crisis_repair_v1.json",
+    "variant_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T031559-codex-board-b-nq-cost-crisis-repair-v1/nq-cost-crisis-repair/nq_cost_crisis_repair_variant_rows_v1.csv"
+  },
+  "board_state": "rejected",
+  "decision": {
+    "all_required_branches_passed": false,
+    "branch_paths_evaluated": 20,
+    "direct_manipulation_gate": "pass:direct_manipulation_stop_tp_candidate",
+    "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+    "failure_tags": [
+      "Bear=fail:reject_fold_inconsistency",
+      "Sideways=fail:reject_cost_fragile|reject_no_regime_specificity|reject_rc_spa_below_60"
+    ],
+    "gate_result": "fail:required_root_or_scoped_manipulation_hard_gates_failed",
+    "minimum_required_branch_score": 59.38686212994534,
+    "next_action": "Do not run downstream. Use this as nursery feedback: keep the NQ long-history source-root join, but repair the failing price-root gate(s) before another downstream attempt.",
+    "price_roots_passed": 2,
+    "primary_blocker": "NQ long-history root-adaptive panel repaired row supply and combined the scoped Manipulation component, but at least one required price-root RC-SPA gate still failed.",
+    "root_trade_counts": {
+      "Bear": 1587,
+      "Bull": 10663,
+      "Crisis": 584,
+      "Sideways": 2693
+    },
+    "selected_price_root_rows": 15527,
+    "stable_profit_score": 90.0,
+    "variant_trade_rows": 71326
+  },
+  "recipe_id": "NQRootAdaptiveCostCrisisRepairV1",
+  "run_id": "20260512T031559+0800-codex-board-b-nq-cost-crisis-repair-v1",
+  "schema_version": "board-b-nq-cost-crisis-repair/v1"
+}

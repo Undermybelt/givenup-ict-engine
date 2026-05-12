@@ -1,0 +1,2 @@
+Using CPython 3.13.12 interpreter at: /opt/homebrew/opt/python@3.13/bin/python3.13
+Checked 1 package in 83ms

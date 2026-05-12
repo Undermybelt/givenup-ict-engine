@@ -1,0 +1,72 @@
+{
+  "default_state_dir": "state",
+  "state_dir_env_var": "ICT_ENGINE_STATE_DIR",
+  "variables": [
+    {
+      "description": "default state directory for CLI commands",
+      "name": "ICT_ENGINE_STATE_DIR",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "enable staged orchestration flow",
+      "name": "ICT_ENGINE_STAGED_ORCHESTRATION",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "select the primary belief engine",
+      "name": "ICT_ENGINE_BELIEF_PRIMARY",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "override family history window length",
+      "name": "ICT_ENGINE_FAMILY_HISTORY_WINDOW",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "set the TOMAC root for futures cleaning commands",
+      "name": "ICT_ENGINE_TOMAC_ROOT",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "override auto-quant output dir (default: <state-dir>/auto-quant/)",
+      "name": "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "override the Auto-Quant upstream repository URL",
+      "name": "ICT_ENGINE_AUTO_QUANT_REPO_URL",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "override the tracked Auto-Quant branch",
+      "name": "ICT_ENGINE_AUTO_QUANT_BRANCH",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "override the managed Auto-Quant checkout directory",
+      "name": "ICT_ENGINE_AUTO_QUANT_DIR",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "enable execution-focus reporting surfaces",
+      "name": "ICT_EXECUTION_FOCUS",
+      "set": false,
+      "value": null
+    },
+    {
+      "description": "OS-provided home directory used for path discovery",
+      "name": "HOME",
+      "set": true,
+      "value": "/Users/thrill3r"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+PASS run_id=20260512T054833-codex-r3-native-subhour-contact-route-refresh-v1
+PASS gate_result=r3_native_subhour_contact_route_refresh_v1=current_routes_refreshed_rows_not_acquired_no_promotion
+PASS stale_nasdaq_data_link_help_root_detected=true
+PASS current_nasdaq_data_contact_route_detected=true
+PASS target_root_mutated=false
+PASS accepted_rows_added=0
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS required_target_roots_absent=true

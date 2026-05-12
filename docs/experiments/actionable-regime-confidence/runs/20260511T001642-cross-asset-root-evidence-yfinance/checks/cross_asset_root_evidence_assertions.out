@@ -1,0 +1,13 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T001642-cross-asset-root-evidence-yfinance/root-v2/cross_asset_root_evidence_report.json
+feature_table: docs/experiments/actionable-regime-confidence/runs/20260511T001642-cross-asset-root-evidence-yfinance/root-v2/cross_asset_root_feature_table.csv
+accepted_root_classes_95: []
+missing_root_classes_95: ['Bull', 'Bear', 'Sideways', 'Crisis', 'Manipulation']
+accepted_gate: none_for_MainRegimeV2
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+trade_usable: False
+Bull: state=blocked test_lcb=0.183720 cal=206 test=212 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95,coverage_below_0_03
+Bear: state=blocked test_lcb=0.192437 cal=189 test=153 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95,ece_above_0_05,coverage_below_0_03
+Sideways: state=blocked test_lcb=0.571726 cal=496 test=368 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+Crisis: state=blocked test_lcb=0.160325 cal=418 test=527 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+Manipulation: state=missing_required_inputs test_lcb=0.000000 cal=0 test=0 blockers=missing_required_inputs,proxy_only_low_confidence

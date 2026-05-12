@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto_quant_real_trades_B2R_BTC_BINANCE_FULL_MOMENTUM_150515_20260512T071547.113384000Z",
+    "artifact_kind": "auto_quant_real_trades_ingested",
+    "artifact_id": "auto_quant_real_trades_B2R_BTC_BINANCE_FULL_MOMENTUM_150515_20260512T071547.113384000Z",
+    "version": 1,
+    "generated_at": "2026-05-12T07:15:47.113384Z",
+    "symbol": "B2R_BTC_BINANCE_FULL_MOMENTUM_150515",
+    "source_phase": "auto_quant_real_trades",
+    "source_run_id": "73cdc3df383ef6fc",
+    "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150515+0800-codex-btc-binance-full-provider-aq-chain-v1/derived/ProviderCryptoMomentumStateV1.real_trades.normalized.jsonl",
+    "status": "applied",
+    "promote_candidate": false,
+    "actionable": false,
+    "decision_hint": "ingested 2758 trade(s)",
+    "review_reason": "ingested 2758/2758 (invalid 0) feedback_inserted=2758 content_hash=73cdc3df383ef6fc dry_run=false force=false",
+    "review_rule_version": "auto-quant-real-trades-v1",
+    "top_factor_name": null,
+    "top_factor_action": null,
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 2758,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

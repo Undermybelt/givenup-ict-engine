@@ -1,0 +1,12 @@
+aq_provider_invoked=true
+managed_run_tomac_exit=1
+managed_run_tomac_terminal_reason=no_data_timerange_mismatch
+shadow_timerange_run_exit=0
+shadow_timerange=20260401-20260512
+shadow_backtest_window=2026-04-11 10:00:00..2026-05-11 23:00:00
+successful_backtests=1
+failed_backtests=0
+trade_count=0
+mature_rooted_branch_observations=0
+promotion_allowed=false
+update_goal=false

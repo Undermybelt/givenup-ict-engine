@@ -1,0 +1,11 @@
+assert_smt_packet_failed: row missing fields: ['comparison_session', 'comparison_timeframe', 'confirmation_role', 'correlation_window_bars', 'event_window_bars', 'recent_correlation', 'session_overlap', 'timeframe_aligned']
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T202459+0800-codex-smt-relationship-resolver-schema-preflight-v1/scripts/assert_smt_packet.py", line 145, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T202459+0800-codex-smt-relationship-resolver-schema-preflight-v1/scripts/assert_smt_packet.py", line 76, in main
+    assert_true(not missing, f"row missing fields: {sorted(missing)}")
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T202459+0800-codex-smt-relationship-resolver-schema-preflight-v1/scripts/assert_smt_packet.py", line 56, in assert_true
+    raise AssertionError(message)
+AssertionError: row missing fields: ['comparison_session', 'comparison_timeframe', 'confirmation_role', 'correlation_window_bars', 'event_window_bars', 'recent_correlation', 'session_overlap', 'timeframe_aligned']

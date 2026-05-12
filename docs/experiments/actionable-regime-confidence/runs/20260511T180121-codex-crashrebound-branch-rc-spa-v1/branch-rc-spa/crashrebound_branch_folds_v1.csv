@@ -1,0 +1,6 @@
+fold_id,fold_kind,trades,net_profit_ratio_sum,win_rate,positive_edge
+2021,calendar_year_from_full_5y_trades,52,0.9661116972737112,0.7307692307692307,True
+2022,calendar_year_from_full_5y_trades,32,0.105628803772774,0.6875,True
+2023,calendar_year_from_full_5y_trades,16,0.37840729786559973,0.8125,True
+2024,calendar_year_from_full_5y_trades,68,0.31181423020983934,0.6323529411764706,True
+2025,calendar_year_from_full_5y_trades,39,-0.051300060382711815,0.6666666666666666,False

@@ -1,0 +1,9 @@
+artifact,exists,nonempty,contains_update_goal_false,contains_strict_false
+docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1/r6-owner-route-entitlement-readback/r6_owner_route_entitlement_readback_v1.json,true,true,true,true
+docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1/checks/r6_owner_route_entitlement_readback_v1_assertions.out,true,true,false,false
+docs/experiments/actionable-regime-confidence/runs/20260512T005842-codex-r6-owner-export-outbound-request-messages-v1/checks/r6_owner_export_outbound_request_messages_v1_assertions.out,true,true,false,true
+docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3/checks/r6_owner_export_sendable_requests_v3_assertions.out,true,true,true,true
+docs/experiments/actionable-regime-confidence/runs/20260512T005248-codex-v71-provider-autoquant-readonly-refresh-v1/checks/v71_provider_autoquant_readonly_refresh_v1_assertions.out,true,true,false,false
+docs/experiments/actionable-regime-confidence/runs/20260512T005039-codex-current-objective-reconciliation-after-v71-v1/checks/current_objective_reconciliation_after_v71_v1_assertions.out,true,true,false,false
+docs/experiments/actionable-regime-confidence/runs/20260512T005050-codex-r5-kaggle-stock-regime-recency-refresh-v2/checks/r5_kaggle_stock_regime_recency_refresh_v2_assertions.out,true,true,true,true
+docs/experiments/actionable-regime-confidence/runs/20260512T004636-codex-v69-r3-r5-source-label-current-readback-v1/checks/v69_r3_r5_source_label_current_readback_v1_assertions.out,true,true,false,false

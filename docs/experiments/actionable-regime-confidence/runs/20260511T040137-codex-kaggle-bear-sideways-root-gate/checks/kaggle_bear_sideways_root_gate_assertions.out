@@ -1,0 +1,9 @@
+loop_id=20260511T040137+0800-codex-kaggle-bear-sideways-root-gate
+gate_result=blocked_kaggle_bear_sideways_root_gate_below_95
+accepted_new_roots_95=none
+missing_root_classes_95_effective=Bear,Sideways,Manipulation
+thresholds_relaxed=false
+runtime_code_changed=false
+raw_or_full_feature_table_committed=false
+Bear:cal_lcb=0.829929:test_lcb=0.825561:accepted=false:blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+Sideways:cal_lcb=0.711042:test_lcb=0.711549:accepted=false:blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95

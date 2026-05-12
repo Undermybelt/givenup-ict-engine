@@ -1,0 +1,272 @@
+{
+  "artifacts": {
+    "pair_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T135908-codex-crosswalk-tracking-source-attachment-v1/crosswalk-attachment/crosswalk_tracking_source_attachment_v1_pairs.csv",
+    "row_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T135908-codex-crosswalk-tracking-source-attachment-v1/crosswalk-attachment/crosswalk_tracking_source_attachment_v1_rows.csv"
+  },
+  "decision": {
+    "accepted_95_crosswalk_source_attachment_rows": 36,
+    "accepted_by_instrument": {
+      "DIA": 18,
+      "SPY": 18
+    },
+    "accepted_by_root": {
+      "Bear": 12,
+      "Bull": 12,
+      "Sideways": 12
+    },
+    "accepted_confidence_added": 36,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "blocked_by_reason": {
+      "source_root_support_short_after_tracking_pass": 12,
+      "tracking_relation_below_fixed_95_sign_or_corr_gate": 120
+    },
+    "blocked_crosswalk_rows": 132,
+    "candidate_crosswalk_rows": 168,
+    "full_objective_achieved": false,
+    "gate_result": "crosswalk_tracking_source_attachment_v1_accepted36_blocked132_full_matrix_still_blocked",
+    "raw_data_committed": false,
+    "remaining_active_source_label_requests_after_crosswalk": 484,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "tracking_blocked_targets": [
+      "ES=F",
+      "NQ=F",
+      "QQQ",
+      "YM=F",
+      "^NDX"
+    ],
+    "tracking_pass_targets": [
+      "DIA",
+      "SPY"
+    ],
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T06:02:10.844202+00:00",
+  "inputs": {
+    "attack_map": "docs/experiments/actionable-regime-confidence/runs/20260511T134237-codex-yfinance-intraday-source-label-attack-map-v1/source-label-attack/yfinance_intraday_source_label_attack_map_v1.csv",
+    "attack_map_sha256": "6750ef0a31a4791e438fd2352e3e3a2c72f78adc409803dd362aafb79f71cda5",
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "3718ef087e979ec6dec6cf29436153533bf1a3854d4b79cba059e6f0a0db35e8",
+    "exact_attachment_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T134756-codex-daily-to-intraday-source-attachment-v1/daily-intraday-attachment/daily_to_intraday_source_attachment_v1.json",
+    "exact_attachment_gate_sha256": "051c86c60d8a2bbea63a7ea987e5a119387b646c5c57b9d4392d916b36445fc4",
+    "raw_yfinance_cache_root": "/private/tmp/ict-crosswalk-tracking-source-attachment-v1",
+    "source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "source_panel_sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0"
+  },
+  "policy": {
+    "label_source_rule": "Yfinance target/source prices validate only the tracking relation. The attached root label still comes from the stock-market-regimes source ticker daily MainRegimeV2 label. No target OHLCV, future return, model state, or strategy prediction is used as a label.",
+    "policy_id": "strict_daily_tracking_crosswalk_to_source_root_v1",
+    "source_root_support_gate": {
+      "min_root_support": 50,
+      "min_root_wilson95_lcb": 0.95,
+      "splits": [
+        "calibration_2017_2021",
+        "heldout_time_2022plus"
+      ]
+    },
+    "tracking_gate": {
+      "min_all_return_correlation": 0.95,
+      "min_calibration_same_sign_wilson95_lcb": 0.95,
+      "min_heldout_time_same_sign_wilson95_lcb": 0.95,
+      "min_split_observations": 500,
+      "threshold_selection": "fixed_before_evaluation"
+    }
+  },
+  "run_id": "20260511T135908+0800-codex-crosswalk-tracking-source-attachment-v1",
+  "source_root_stats_for_tracking_pass_sources": {
+    "Bear": {
+      "all_source_tickers": {
+        "positives": 1906,
+        "precision": 1.0,
+        "support": 1906,
+        "wilson95_lcb": 0.9979885981
+      },
+      "calibration_2017_2021": {
+        "positives": 125,
+        "precision": 1.0,
+        "support": 125,
+        "wilson95_lcb": 0.9701846063
+      },
+      "heldout_time_2022plus": {
+        "positives": 293,
+        "precision": 1.0,
+        "support": 293,
+        "wilson95_lcb": 0.9870588871
+      }
+    },
+    "Bull": {
+      "all_source_tickers": {
+        "positives": 6490,
+        "precision": 1.0,
+        "support": 6490,
+        "wilson95_lcb": 0.9994084459
+      },
+      "calibration_2017_2021": {
+        "positives": 1665,
+        "precision": 1.0,
+        "support": 1665,
+        "wilson95_lcb": 0.9976981284
+      },
+      "heldout_time_2022plus": {
+        "positives": 1135,
+        "precision": 1.0,
+        "support": 1135,
+        "wilson95_lcb": 0.9966268713
+      }
+    },
+    "Crisis": {
+      "all_source_tickers": {
+        "positives": 290,
+        "precision": 1.0,
+        "support": 290,
+        "wilson95_lcb": 0.9869267637
+      },
+      "calibration_2017_2021": {
+        "positives": 28,
+        "precision": 1.0,
+        "support": 28,
+        "wilson95_lcb": 0.8793566952
+      },
+      "heldout_time_2022plus": {
+        "positives": 2,
+        "precision": 1.0,
+        "support": 2,
+        "wilson95_lcb": 0.3423802275
+      }
+    },
+    "Sideways": {
+      "all_source_tickers": {
+        "positives": 3928,
+        "precision": 1.0,
+        "support": 3928,
+        "wilson95_lcb": 0.9990229874
+      },
+      "calibration_2017_2021": {
+        "positives": 700,
+        "precision": 1.0,
+        "support": 700,
+        "wilson95_lcb": 0.9945421532
+      },
+      "heldout_time_2022plus": {
+        "positives": 616,
+        "precision": 1.0,
+        "support": 616,
+        "wilson95_lcb": 0.9938025139
+      }
+    }
+  },
+  "tracking_pairs": [
+    {
+      "all_return_correlation": 0.9992438598,
+      "blocker": "",
+      "calibration_observations": 1258,
+      "calibration_same_sign_lcb": 0.9727144319,
+      "candidate_relation": "index_etf_tracks_dow",
+      "date_max": "2026-01-30",
+      "date_min": "2017-01-03",
+      "heldout_time_observations": 1023,
+      "heldout_time_same_sign_lcb": 0.9747452027,
+      "overlap_days": 2282,
+      "raw_cache_path": "/private/tmp/ict-crosswalk-tracking-source-attachment-v1/DIA_1d.csv",
+      "source_ticker": "^DJI",
+      "target": "DIA",
+      "tracking_relation_pass": true
+    },
+    {
+      "all_return_correlation": 0.9724147908,
+      "blocker": "tracking_relation_below_fixed_95_sign_or_corr_gate",
+      "calibration_observations": 1258,
+      "calibration_same_sign_lcb": 0.9355571436,
+      "candidate_relation": "index_future_tracks_sp500",
+      "date_max": "2026-01-30",
+      "date_min": "2017-01-03",
+      "heldout_time_observations": 1023,
+      "heldout_time_same_sign_lcb": 0.9653289178,
+      "overlap_days": 2282,
+      "raw_cache_path": "/private/tmp/ict-crosswalk-tracking-source-attachment-v1/ES_F_1d.csv",
+      "source_ticker": "^GSPC",
+      "target": "ES=F",
+      "tracking_relation_pass": false
+    },
+    {
+      "all_return_correlation": 0.9712612449,
+      "blocker": "tracking_relation_below_fixed_95_sign_or_corr_gate",
+      "calibration_observations": 1258,
+      "calibration_same_sign_lcb": 0.8990949095,
+      "candidate_relation": "nasdaq_future_candidate_requires_ndx_vs_ixic_policy",
+      "date_max": "2026-01-30",
+      "date_min": "2017-01-03",
+      "heldout_time_observations": 1023,
+      "heldout_time_same_sign_lcb": 0.9361414264,
+      "overlap_days": 2282,
+      "raw_cache_path": "/private/tmp/ict-crosswalk-tracking-source-attachment-v1/NQ_F_1d.csv",
+      "source_ticker": "^IXIC",
+      "target": "NQ=F",
+      "tracking_relation_pass": false
+    },
+    {
+      "all_return_correlation": 0.9916358094,
+      "blocker": "tracking_relation_below_fixed_95_sign_or_corr_gate",
+      "calibration_observations": 1258,
+      "calibration_same_sign_lcb": 0.9224193838,
+      "candidate_relation": "nasdaq_etf_candidate_requires_ndx_vs_ixic_policy",
+      "date_max": "2026-01-30",
+      "date_min": "2017-01-03",
+      "heldout_time_observations": 1023,
+      "heldout_time_same_sign_lcb": 0.9539163153,
+      "overlap_days": 2282,
+      "raw_cache_path": "/private/tmp/ict-crosswalk-tracking-source-attachment-v1/QQQ_1d.csv",
+      "source_ticker": "^IXIC",
+      "target": "QQQ",
+      "tracking_relation_pass": false
+    },
+    {
+      "all_return_correlation": 0.9985030294,
+      "blocker": "",
+      "calibration_observations": 1258,
+      "calibration_same_sign_lcb": 0.9708275673,
+      "candidate_relation": "index_etf_tracks_sp500",
+      "date_max": "2026-01-30",
+      "date_min": "2017-01-03",
+      "heldout_time_observations": 1023,
+      "heldout_time_same_sign_lcb": 0.9653289178,
+      "overlap_days": 2282,
+      "raw_cache_path": "/private/tmp/ict-crosswalk-tracking-source-attachment-v1/SPY_1d.csv",
+      "source_ticker": "^GSPC",
+      "target": "SPY",
+      "tracking_relation_pass": true
+    },
+    {
+      "all_return_correlation": 0.973115622,
+      "blocker": "tracking_relation_below_fixed_95_sign_or_corr_gate",
+      "calibration_observations": 1258,
+      "calibration_same_sign_lcb": 0.9302832058,
+      "candidate_relation": "index_future_tracks_dow",
+      "date_max": "2026-01-30",
+      "date_min": "2017-01-03",
+      "heldout_time_observations": 1023,
+      "heldout_time_same_sign_lcb": 0.9618717963,
+      "overlap_days": 2282,
+      "raw_cache_path": "/private/tmp/ict-crosswalk-tracking-source-attachment-v1/YM_F_1d.csv",
+      "source_ticker": "^DJI",
+      "target": "YM=F",
+      "tracking_relation_pass": false
+    },
+    {
+      "all_return_correlation": 0.9930866753,
+      "blocker": "tracking_relation_below_fixed_95_sign_or_corr_gate",
+      "calibration_observations": 1258,
+      "calibration_same_sign_lcb": 0.9224193838,
+      "candidate_relation": "nasdaq100_vs_composite_candidate_requires_policy",
+      "date_max": "2026-01-30",
+      "date_min": "2017-01-03",
+      "heldout_time_observations": 1023,
+      "heldout_time_same_sign_lcb": 0.9561753943,
+      "overlap_days": 2282,
+      "raw_cache_path": "/private/tmp/ict-crosswalk-tracking-source-attachment-v1/_NDX_1d.csv",
+      "source_ticker": "^IXIC",
+      "target": "^NDX",
+      "tracking_relation_pass": false
+    }
+  ]
+}

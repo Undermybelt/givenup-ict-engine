@@ -1,0 +1,9 @@
+requirement,evidence,status
+provider readback ibkr/tradingview/yfinance/kraken,01_provider_status_agent.out,partial_fail_closed
+Auto-Quant operation,"02 status, 03 adoption review, 04 prior-init dry-run, 10 prepare isolated",partial_dns_blocked
+filter / Pre-Bayes,05_pre_bayes_status_refresh.out,readback_only
+BBN / belief network,04 prior-init dry-run plus 05 status,readback_only
+CatBoost / path-ranking,06_policy_training_status_agent.out,ranker_ready_entry_models_pending
+execution tree,08 execution-candidate and 09 full workflow,observe_only
+every regime 95 percent cross-market/time validation,"no accepted packet, no source/control unlock, no selected history",not_complete
+multi-agent safe update,packaged existing outputs only; board append still requires fresh hash check,pass

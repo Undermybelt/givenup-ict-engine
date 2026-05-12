@@ -1,0 +1,185 @@
+{
+  "accepted_rows_added": 0,
+  "assertion_rows": [
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "post_081705_required_root_dispatch_gate_v1=no_required_root_or_dispatch_unlock",
+      "name": "082337_required_root_dispatch_gate_corrected",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082337+0800-codex-post-081705-required-root-dispatch-gate-v1/checks/post_081705_required_root_dispatch_gate_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "runtime_readiness_after_082215_v1=readiness_observed_but_source_control_and_selected_history_gates_block_promotion",
+      "name": "082430_runtime_readiness",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/checks/runtime_readiness_after_082215_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "source_control_selected_history_poll_after_082215_v1_correction=parser_false_positive_no_merge_no_rerun",
+      "name": "082523_selected_history_correction",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082523+0800-codex-source-control-selected-history-poll-after-082215-v1/checks/source_control_selected_history_poll_after_082215_v1_correction_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "local_databento_archive_readback_after_082240_v1=ohlcv_only_no_source_control_unlock",
+      "name": "082629_local_databento_archive",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082629+0800-codex-local-databento-archive-readback-after-082240-v1/checks/local_databento_archive_readback_after_082240_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "current_objective_audit_after_082458_v1=not_complete_source_control_roots_absent_no_downstream_promotion",
+      "name": "082720_current_objective_audit",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T082720+0800-codex-current-objective-audit-after-082458-v1/checks/current_objective_audit_after_082458_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  ],
+  "board_sha256_before_artifact": "c9db5795f351f18d83e0ec9306e67f9f2010ec8603f2b423253629fd93e685ec",
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "source_control_arrival_poll_after_082720_v1=no_new_required_root_no_unlock",
+  "observed_at_utc": "2026-05-12T00:35:11.491403+00:00",
+  "owner_env_names_present": [],
+  "owner_env_names_present_count": 0,
+  "prior_assertion_any_downstream": false,
+  "prior_assertion_any_source_control": false,
+  "prior_assertion_any_update_goal": false,
+  "prior_assertion_any_valid_unlock": false,
+  "promotion_allowed": false,
+  "r3_native_subhour_roots_present": true,
+  "r3_native_subhour_unlock": false,
+  "r5_recency_roots_present": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_roots_present": false,
+  "r6_owner_export_unlock": false,
+  "run_id": "20260512T083108+0800-codex-source-control-arrival-poll-after-082720-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_roots": [
+    {
+      "exists": false,
+      "file_count_sampled": 0,
+      "is_dir": false,
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": []
+    },
+    {
+      "exists": false,
+      "file_count_sampled": 0,
+      "is_dir": false,
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": []
+    },
+    {
+      "exists": false,
+      "file_count_sampled": 0,
+      "is_dir": false,
+      "name": "r5_recency_tmp",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": []
+    },
+    {
+      "exists": false,
+      "file_count_sampled": 0,
+      "is_dir": false,
+      "name": "r5_recency_private_tmp",
+      "path": "/private/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": []
+    },
+    {
+      "exists": true,
+      "file_count_sampled": 2,
+      "is_dir": true,
+      "labels": [
+        "0",
+        "1",
+        "3",
+        "5",
+        "6",
+        "Bear",
+        "Bull",
+        "FLAT / NOISE",
+        "STRONG BUY",
+        "STRONG SELL",
+        "Sideways",
+        "WEAK BUY",
+        "WEAK SELL"
+      ],
+      "main_regime_v2_hits": 0,
+      "name": "r3_native_subhour_tmp",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "rows": 20000,
+      "sample_files": [
+        "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+        "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+      ]
+    },
+    {
+      "exists": true,
+      "file_count_sampled": 2,
+      "is_dir": true,
+      "labels": [
+        "0",
+        "1",
+        "3",
+        "5",
+        "6",
+        "Bear",
+        "Bull",
+        "FLAT / NOISE",
+        "STRONG BUY",
+        "STRONG SELL",
+        "Sideways",
+        "WEAK BUY",
+        "WEAK SELL"
+      ],
+      "main_regime_v2_hits": 0,
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "rows": 20000,
+      "sample_files": [
+        "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+        "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+      ]
+    },
+    {
+      "exists": true,
+      "file_count_sampled": 1,
+      "is_dir": false,
+      "name": "r6_approval_decision_package",
+      "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "sample_files": [
+        "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid"
+      ]
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

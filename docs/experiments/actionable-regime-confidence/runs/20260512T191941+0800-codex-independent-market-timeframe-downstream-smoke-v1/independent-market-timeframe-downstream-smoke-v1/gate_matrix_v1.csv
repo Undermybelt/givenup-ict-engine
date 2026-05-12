@@ -1,0 +1,7 @@
+symbol,provider,market,source_native_timeframe,derived_timeframes_tested,native_cross_timeframe,canonical_confidence,mature_rows,execution_ready,execution_actionable,accepted_95
+BOARD_A_SPY_YF_191941,yfinance/YF,equity,1h,"1h,4h,1d",False,0.9777421652421652,0,False,False,False
+BOARD_A_SPY_IBKR_191941,IBKR,equity,1h,"1h,4h,1d",False,0.9777421652421652,0,False,False,False
+BOARD_A_BTC_BINANCE_191941,Binance,crypto,1h,"1h,4h,1d",False,0.7301300631798637,0,False,False,False
+BOARD_A_BTC_BYBIT_191941,Bybit,crypto,1h,"1h,4h,1d",False,0.7268587284313216,0,False,False,False
+BOARD_A_BTC_KRAKEN_191941,Kraken,crypto,1h,"1h,4h,1d",False,0.5445413345719458,0,False,False,False
+BOARD_A_BTC_TVR_191941,TradingViewRemix/TVR,crypto,1h,"1h,4h,1d",False,0.45333124389593066,0,False,False,False

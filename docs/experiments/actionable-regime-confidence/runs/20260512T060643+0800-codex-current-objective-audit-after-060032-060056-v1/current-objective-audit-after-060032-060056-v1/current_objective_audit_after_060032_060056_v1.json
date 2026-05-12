@@ -1,0 +1,77 @@
+{
+  "run_id": "20260512T060643+0800-codex-current-objective-audit-after-060032-060056-v1",
+  "gate_result": "current_objective_audit_after_060032_060056_v1=not_complete_source_control_roots_absent_no_downstream_rerun",
+  "board_hash_before_artifact": "a964278338ca1e9088bb537c5a7866f2d9563ecf616cfd3e5588aa6e9030225b",
+  "objective_complete": false,
+  "accepted_regime_confidence_evidence": {
+    "status": "diagnostic_only",
+    "labels": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "primary_artifacts": [
+      "docs/experiments/actionable-regime-confidence/runs/20260512T053852-codex-hgb-per-regime-field-materialization-v1",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T055058-codex-hgb-aggregate-field-readback-v1"
+    ],
+    "promotion_blocker": "source_control_evidence_absent"
+  },
+  "latest_post_055930_artifacts": {
+    "r6_local_search": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T060032-codex-r6-local-owner-export-intake-search-v1",
+      "gate_result": "r6_local_owner_export_intake_search_v1=no_local_owner_export_or_control_rows_no_promotion",
+      "files_visited": 25000,
+      "keyword_candidates": 130,
+      "manual_review_candidates": 5,
+      "possible_control_files": 0,
+      "source_control_evidence_acquired": false,
+      "target_root_mutated": false
+    },
+    "autoquant_local_cache": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T060056-codex-autoquant-local-cache-isolated-backtest-after-055200-v1",
+      "gate_result": "autoquant_local_cache_isolated_backtest_after_055200_v1=isolated_local_cache_backtest_succeeded_status_data_missing_no_promotion",
+      "backtest_succeeded": 3,
+      "backtest_failed": 0,
+      "total_trade_count": 26,
+      "best_visible_sharpe": 0.1722,
+      "best_visible_trade_count": 2,
+      "canonical_autoquant_status": "dependency_ready_data_missing",
+      "canonical_autoquant_data_ready": false,
+      "source_control_evidence_acquired": false,
+      "target_root_mutated": false
+    },
+    "transient_missing": {
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T060205+0800-codex-autoquant-tomac-local-readback-v1",
+      "durable_artifacts_present_on_recheck": false,
+      "countable": false
+    }
+  },
+  "required_root_status": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "approval_assertions": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "assertions": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "target_root_mutated": false,
+    "canonical_merge": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_promotion_rerun": false,
+    "downstream_rerun_allowed_now": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Continue only after explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, or source-owned R3 native sub-hour labels unlock a required target root; then rerun direct verifier, split calibration, canonical merge, providers, AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback in order."
+}

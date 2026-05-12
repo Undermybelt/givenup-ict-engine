@@ -1,0 +1,15 @@
+{
+  "auto_quant_pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260512T022923.980165000Z",
+  "library_source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/local-cache-seed-v2/strategy_library_local_cache_seed_v2.json",
+  "library_state_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/SRC_ROOT_CARRY_LONG_220646/auto_quant_strategy_library.json",
+  "log_cross_check": null,
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 2,
+  "n_total_strategies": 2,
+  "symbol": "SRC_ROOT_CARRY_LONG_220646"
+}

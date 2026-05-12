@@ -1,0 +1,1 @@
+sh -c ls -ld /tmp/ict-engine-board-a-r6-owner-export-v1 /tmp/ict-engine-source-panel-recency-extension /tmp/ict-engine-native-subhour-source-label-intake 2>&1; printf "\nR3 file rows:\n"; wc -l /tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv 2>&1 || true

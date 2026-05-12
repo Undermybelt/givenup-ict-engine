@@ -1,0 +1,4 @@
+regime_id,selected,rule,train_rank,cal_support,cal_success,cal_wilson95,test_support,test_success,test_wilson95,test_ece,test_coverage,test_instruments,test_market_contexts,passes_95,passes_99,blocker
+TrendExpansion,True,trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682,3,273,255,0.8981955919622417,581,564,0.9536435698638122,0.036674169204289675,0.14310344827586208,4,3,True,False,none
+ExtremeStress,True,stress_persistence_16 >= 1 AND jump_intensity_32 >= 0.125,120,445,436,0.9620141961475877,215,214,0.9741288651988539,0.015573556310425896,0.05279960707269155,3,2,True,False,none
+ReversalBrewing,True,ma64_slope16 <= 0.00115583574 AND stretch64 <= 0.005836516932,1,843,840,0.9895896367375854,901,899,0.9919428347812438,0.0013389630343508818,0.22192118226600985,4,3,True,False,none

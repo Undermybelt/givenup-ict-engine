@@ -1,0 +1,12 @@
+requirement,status,evidence,gap,next
+authoritative_board_file_updated,pass,Board append includes 022826 local cache data-ready probe,none,preserve cursor unless source/control input changes
+every_regime_confidence_ge_95,blocked,No accepted rows added and strict objective false,no accepted per-regime 95% packet,obtain source-owned labels/controls then calibrate per regime
+per_regime_qualifying_condition,blocked,No canonical accepted MainRegimeV2 labels or rows,qualifying conditions cannot be accepted from non-canonical dry runs,canonical merge source-owned rows first
+cross_market_cross_cycle_validation,partial,TSIE and Auto-Quant cache cover broad assets/timeframes but remain non-promoting,no approved crosswalk/calibration/downstream rerun,validate after canonical source/control merge
+providers_ibkr_tradingviewremix_yfinance_kraken,partial,Required-provider readback is non-promoting: yfinance ready; TradingViewRemix/MCP not ready; IBKR not market-data ready; Kraken partial,provider coverage incomplete,repair provider/runtime dependencies or use approved local/cache alternatives
+autoquant_operated_real_artifacts,partial,022826 bootstrapped local Auto-Quant and seeded 15 cached feathers; status dependency_ready_seed_required,no active strategies/backtest/run evidence,seed isolated strategies only after source/control unlock or keep non-promoting
+filter_prebayes_bbn_chain,blocked,Latest readback still has Pre-Bayes confidence below 95 and downstream rerun disallowed,no canonical source/control merge,rerun after source/control unlock
+catboost_path_ranking_execution_tree,blocked,Latest readback has policy/CatBoost matched rows 0 execution candidate false mature rows 0,no promoted training/evaluation rows,rerun after canonical merge and split calibration
+r6_r3_r5_source_control_roots,blocked,R6 owner-export absent; R3 native sub-hour absent; R5 recency extension absent,source/control roots missing,obtain owner exports or approved source-owned MainRegimeV2 labels
+multi_agent_append_only_safety,pass,022826 append leaves Current Cursor unchanged and records non-promoting status,none,continue append-only with pre-edit hash/root readback
+goal_update_not_called,pass,Strict objective false and update_goal false,none,do not call update_goal until all gates pass

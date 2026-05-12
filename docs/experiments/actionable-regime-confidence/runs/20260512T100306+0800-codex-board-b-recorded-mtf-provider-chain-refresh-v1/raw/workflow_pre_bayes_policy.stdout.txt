@@ -1,0 +1,46 @@
+{
+  "directional_conflict_penalty": 0.2,
+  "favorable_liquidity_bonus": 0.05,
+  "hard_pass_quality_threshold": 0.75,
+  "high_uncertainty_threshold": 0.45,
+  "hostile_liquidity_forces_high_uncertainty": true,
+  "hostile_liquidity_penalty": 0.1,
+  "market_overrides": {
+    "CL": {
+      "favorable_liquidity_bonus": 0.03,
+      "hostile_liquidity_forces_high_uncertainty": true,
+      "hostile_liquidity_penalty": 0.14
+    },
+    "ES": {
+      "favorable_liquidity_bonus": 0.06,
+      "hostile_liquidity_forces_high_uncertainty": false,
+      "hostile_liquidity_penalty": 0.06
+    },
+    "GC": {
+      "favorable_liquidity_bonus": 0.07,
+      "hostile_liquidity_forces_high_uncertainty": false,
+      "hostile_liquidity_penalty": 0.09
+    },
+    "NQ": {
+      "favorable_liquidity_bonus": 0.04,
+      "hostile_liquidity_forces_high_uncertainty": true,
+      "hostile_liquidity_penalty": 0.1
+    },
+    "YM": {
+      "favorable_liquidity_bonus": 0.05,
+      "hostile_liquidity_forces_high_uncertainty": false,
+      "hostile_liquidity_penalty": 0.07
+    }
+  },
+  "min_directional_support_gap": 0.08,
+  "min_multi_timeframe_alignment_score": 0.55,
+  "min_multi_timeframe_entry_alignment_score": 0.5,
+  "mixed_alignment_penalty": 0.1,
+  "multi_timeframe_alignment_bonus": 0.05,
+  "multi_timeframe_alignment_penalty": 0.1,
+  "multi_timeframe_direction_conflict_penalty": 0.18,
+  "multi_timeframe_entry_penalty": 0.08,
+  "neutralized_quality_threshold": 0.4,
+  "source": "default",
+  "version": "318900600c5e8cf2"
+}

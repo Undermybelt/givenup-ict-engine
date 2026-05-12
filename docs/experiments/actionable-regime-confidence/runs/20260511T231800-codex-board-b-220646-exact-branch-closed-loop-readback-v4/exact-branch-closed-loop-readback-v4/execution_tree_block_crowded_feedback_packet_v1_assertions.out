@@ -1,0 +1,13 @@
+blocker_classification=downstream_execution_admissibility
+feedback_scope=nursery_context_feedback
+exact_branch_path_preserved=true
+path_ranker_score_consumed=true
+pre_bayes_gate_live=true
+execution_candidate_ready=true
+execution_tree_blocked=true
+execution_tree_branch=block_crowded
+execution_readiness_below_threshold=true
+market_state_context=RangeConsolidation/WideRange
+profitability_rejection=false
+branch_routing_failure=false
+promotion_allowed=false

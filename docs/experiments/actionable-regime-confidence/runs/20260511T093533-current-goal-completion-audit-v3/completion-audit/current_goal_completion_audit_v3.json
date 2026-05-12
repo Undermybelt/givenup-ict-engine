@@ -1,0 +1,101 @@
+{
+  "run_id": "20260511T093533+0800-current-goal-completion-audit-v3",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "objective": "Every active regime must reach 95%-99% calibrated confidence and validate across other markets and other timeframes before reporting the result.",
+  "objective_deliverables": [
+    "Use the named Board A TODO as the authoritative artifact.",
+    "Prove each active MainRegimeV2 parent root at 95%-99% calibrated confidence: Bull, Bear, Sideways, Crisis.",
+    "Validate each accepted root across other markets and other timeframes/full-cycle/full-universe slots.",
+    "Keep Manipulation separate and require direct timestamped positive/negative event, order-flow, order-lifecycle, L2/L3/MBO, wash-trade, spoofing/layering, or comparable labels.",
+    "Do not promote subtype, OHLCV proxy, HMM/GMM/cluster ID, future target, model-generated, Pine indicator, service API, or methodology-only evidence.",
+    "Report the result from concrete repo artifacts."
+  ],
+  "current_taxonomy_evidence": {
+    "latest_lock": "docs/experiments/actionable-regime-confidence/runs/20260511T093157-codex-mainregimev2-current-user-lock/taxonomy/mainregimev2_current_user_lock.json",
+    "active_taxonomy": "MainRegimeV2",
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "residual": "UnknownOrMixed",
+    "separate_overlay_or_class": "Manipulation"
+  },
+  "goal_achieved": false,
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "missing_or_rejected_parent_root_source_label_slots": 564,
+  "missing_by_root": {
+    "Bull": 141,
+    "Bear": 141,
+    "Sideways": 141,
+    "Crisis": 141
+  },
+  "missing_by_provider": {
+    "yfinance": 456,
+    "kraken_public_lowpollution_http": 108
+  },
+  "missing_by_timeframe": {
+    "1m": 68,
+    "5m": 68,
+    "15m": 68,
+    "30m": 68,
+    "1h": 68,
+    "4h": 68,
+    "1d": 44,
+    "1w": 44,
+    "1mo": 68
+  },
+  "source_label_contract_evidence": {
+    "root_label_panel_contract": "docs/experiments/actionable-regime-confidence/runs/20260511T073700-codex-root-label-panel-contract/label-panel-contract/root_label_panel_contract.json",
+    "source_label_acquisition_package": "docs/experiments/actionable-regime-confidence/runs/20260511T081715-codex-source-label-acquisition-package-v2/acquisition-package/source_label_acquisition_package_v2.json",
+    "latest_goal_audit": "docs/experiments/actionable-regime-confidence/runs/20260511T091117-current-goal-completion-audit-v2/completion-audit/current_goal_completion_audit_v2.json"
+  },
+  "latest_source_probe_additions": {
+    "accepted_parent_root_label_slots": 0,
+    "accepted_direct_manipulation_rows_or_windows": 0
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "Use named Board A TODO as authoritative artifact",
+      "status": "pass",
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md"
+    },
+    {
+      "requirement": "Every active parent-root regime reaches 95%-99% calibrated confidence",
+      "status": "fail",
+      "evidence": "accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal"
+    },
+    {
+      "requirement": "Validate across other markets and other timeframes",
+      "status": "fail",
+      "evidence": "564 missing/rejected parent-root source-label slots across yfinance and kraken_public_lowpollution_http"
+    },
+    {
+      "requirement": "Full-cycle/full-universe coverage",
+      "status": "fail",
+      "evidence": "141 missing/rejected slots for each active parent root: Bull, Bear, Sideways, Crisis"
+    },
+    {
+      "requirement": "Direct Manipulation evidence",
+      "status": "fail",
+      "evidence": "0 accepted timestamped direct positive/negative rows/windows in the latest current lock and completion audit"
+    },
+    {
+      "requirement": "No proxy/subtype promotion",
+      "status": "pass",
+      "evidence": "20260511T093157 MainRegimeV2 current user lock demotes subtype packets and blocks OHLCV manipulation promotion"
+    },
+    {
+      "requirement": "Report the result from concrete artifacts",
+      "status": "pass",
+      "evidence": "this v3 audit plus Board A Current Cursor"
+    }
+  ],
+  "single_blocker": "564 missing/rejected parent-root source-label slots plus incomplete direct Manipulation label coverage",
+  "next_action": "Obtain a downloadable/authenticated exact-underlying parent-root label panel for Bull, Bear, Sideways, and Crisis, or authenticated timestamped direct Manipulation positive/negative rows; do not repeat proxy or metadata-only searches.",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false
+}

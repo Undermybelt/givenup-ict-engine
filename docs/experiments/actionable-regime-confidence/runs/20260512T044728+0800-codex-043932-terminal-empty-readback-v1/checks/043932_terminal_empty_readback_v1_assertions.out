@@ -1,0 +1,12 @@
+043932_terminal_empty_readback_v1=not_consumed_empty_terminal_packet
+writer_processes_present=false
+exit_file_present=false
+stdout_bytes=0
+stderr_bytes=0
+rule_qualifier_payload_present=false
+accepted_rows_added=0
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false
+blocked=user_selected_historical_data_missing

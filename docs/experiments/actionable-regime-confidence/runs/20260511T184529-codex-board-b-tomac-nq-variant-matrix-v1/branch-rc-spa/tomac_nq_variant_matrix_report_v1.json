@@ -1,0 +1,1985 @@
+{
+  "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "auto_quant": {
+    "config": "/Users/thrill3r/Auto-Quant/config.tomac.json",
+    "data_path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+    "generated_strategy_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/strategy/TomacNQRootAwareVariantMatrixV1.py",
+    "pinned_ref": "34ba6b6",
+    "root": "/Users/thrill3r/Auto-Quant"
+  },
+  "board_b": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+  "branch_summaries": [
+    {
+      "bootstrap_edge_lcb_5pct": 0.00024410481447754469,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": 4.001352930655465,
+      "failure_reasons": [
+        "reject_cost_fragile"
+      ],
+      "fold_net_returns": [
+        -0.2776722929754948,
+        0.8249542245119088,
+        0.8824437756874628,
+        0.18966925872854756,
+        0.051629012677604606
+      ],
+      "fold_positive_rate": 0.8,
+      "fold_trade_counts": [
+        1378,
+        1437,
+        908,
+        150,
+        76
+      ],
+      "hard_gate_result": "fail:reject_cost_fragile",
+      "max_drawdown_trade_equity_proxy": 0.1984378950504424,
+      "mean_R": 0.00042315117210180533,
+      "min_trades_per_test_fold": 76,
+      "net_return_R": 1.6710239786300292,
+      "outside_mean_R": -0.0005657504672404896,
+      "parent_regime_root": "Bull",
+      "pbo": 0.0,
+      "pbo_method": "simple_variant_fold_proxy",
+      "promotion_level": "reject",
+      "rc_spa": 60.03890345589249,
+      "regime_profit_branch_path": "Bull -> TrendExpansion -> TomacVariantMatrix -> TomacNQRootAwareVariantMatrixV1",
+      "regime_specificity_ratio": 999.0,
+      "stressed_2x_cost_net_R": -6.226976021369971,
+      "tail_loss_p95": 0.010061104615559046,
+      "test_folds": 5,
+      "total_trades": 3949,
+      "variant_count": 7,
+      "win_rate": 0.5107622182831096
+    },
+    {
+      "bootstrap_edge_lcb_5pct": -0.0038069450666366298,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": -5.338301009705744,
+      "failure_reasons": [
+        "reject_fold_inconsistency",
+        "reject_no_positive_edge",
+        "reject_cost_fragile",
+        "reject_overfit_risk",
+        "reject_dsr_nonpositive",
+        "reject_no_regime_specificity",
+        "reject_rc_spa_below_60"
+      ],
+      "fold_net_returns": [
+        -0.3722320820235191,
+        -0.21662407782203158,
+        -0.1680379365587816,
+        -0.22810404510805257,
+        0.03766766134811664
+      ],
+      "fold_positive_rate": 0.2,
+      "fold_trade_counts": [
+        90,
+        104,
+        42,
+        81,
+        10
+      ],
+      "hard_gate_result": "fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.9731062317492535,
+      "mean_R": -0.002939489623668246,
+      "min_trades_per_test_fold": 10,
+      "net_return_R": -0.9670920861868529,
+      "outside_mean_R": 0.0003589008264113365,
+      "parent_regime_root": "Bear",
+      "pbo": 1.0,
+      "pbo_method": "simple_variant_fold_proxy",
+      "promotion_level": "reject",
+      "rc_spa": 18.0,
+      "regime_profit_branch_path": "Bear -> BearMarketDrawdown -> TomacVariantMatrix -> TomacNQRootAwareVariantMatrixV1",
+      "regime_specificity_ratio": 0.0,
+      "stressed_2x_cost_net_R": -1.625092086186853,
+      "tail_loss_p95": 0.01999885998365003,
+      "test_folds": 5,
+      "total_trades": 329,
+      "variant_count": 7,
+      "win_rate": 0.44680851063829785
+    },
+    {
+      "bootstrap_edge_lcb_5pct": -0.00019744954444368158,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": 0.8604227788450498,
+      "failure_reasons": [
+        "reject_fold_inconsistency",
+        "reject_no_positive_edge",
+        "reject_cost_fragile",
+        "reject_rc_spa_below_60"
+      ],
+      "fold_net_returns": [
+        0.13013585958246685,
+        -0.13620944189035586,
+        0.2165669914562936,
+        0.01976560867865266,
+        -0.024300586558469554
+      ],
+      "fold_positive_rate": 0.6,
+      "fold_trade_counts": [
+        384,
+        313,
+        200,
+        75,
+        13
+      ],
+      "hard_gate_result": "fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.31681927605898963,
+      "mean_R": 0.0002090948540797844,
+      "min_trades_per_test_fold": 13,
+      "net_return_R": 0.20595843126858765,
+      "outside_mean_R": 0.00014638687008096388,
+      "parent_regime_root": "Sideways",
+      "pbo": 0.2,
+      "pbo_method": "simple_variant_fold_proxy",
+      "promotion_level": "reject",
+      "rc_spa": 43.19005810916522,
+      "regime_profit_branch_path": "Sideways -> RangeConsolidation -> TomacVariantMatrix -> TomacNQRootAwareVariantMatrixV1",
+      "regime_specificity_ratio": 1.4283716426489472,
+      "stressed_2x_cost_net_R": -1.7640415687314124,
+      "tail_loss_p95": 0.011999704903616392,
+      "test_folds": 5,
+      "total_trades": 985,
+      "variant_count": 7,
+      "win_rate": 0.5137055837563452
+    },
+    {
+      "bootstrap_edge_lcb_5pct": -0.0018658142095546093,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": -0.4980323995712023,
+      "failure_reasons": [
+        "reject_fold_trade_depth",
+        "reject_fold_inconsistency",
+        "reject_no_positive_edge",
+        "reject_cost_fragile",
+        "reject_overfit_risk",
+        "reject_dsr_nonpositive",
+        "reject_no_regime_specificity",
+        "reject_rc_spa_below_60"
+      ],
+      "fold_net_returns": [
+        -0.11079831919912365,
+        0.0,
+        0.010413018022690453,
+        0.04231227953046962,
+        0.0
+      ],
+      "fold_positive_rate": 0.4,
+      "fold_trade_counts": [
+        54,
+        0,
+        35,
+        45,
+        0
+      ],
+      "hard_gate_result": "fail:reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.11490941992898723,
+      "mean_R": -0.0004333807585519668,
+      "min_trades_per_test_fold": 0,
+      "net_return_R": -0.058073021645963556,
+      "outside_mean_R": 0.0001728843480356762,
+      "parent_regime_root": "Crisis",
+      "pbo": 0.8,
+      "pbo_method": "simple_variant_fold_proxy",
+      "promotion_level": "reject",
+      "rc_spa": 26.40362320284051,
+      "regime_profit_branch_path": "Crisis -> ExtremeStress -> TomacVariantMatrix -> TomacNQRootAwareVariantMatrixV1",
+      "regime_specificity_ratio": 0.0,
+      "stressed_2x_cost_net_R": -0.3260730216459636,
+      "tail_loss_p95": 0.019999576340231383,
+      "test_folds": 5,
+      "total_trades": 134,
+      "variant_count": 7,
+      "win_rate": 0.5671641791044776
+    },
+    {
+      "bootstrap_edge_lcb_5pct": 0.0,
+      "cost_stress_result": "fail",
+      "downstream_consumption_status": "not_started:blocked_by_branch_rc_spa_hard_gates",
+      "dsr": 0.0,
+      "failure_reasons": [
+        "reject_thin_trades",
+        "reject_fold_trade_depth",
+        "reject_fold_inconsistency",
+        "reject_no_positive_edge",
+        "reject_cost_fragile",
+        "reject_overfit_risk",
+        "reject_dsr_nonpositive",
+        "reject_no_regime_specificity",
+        "reject_rc_spa_below_60"
+      ],
+      "fold_net_returns": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fold_positive_rate": 0.0,
+      "fold_trade_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "hard_gate_result": "fail:reject_thin_trades|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+      "max_drawdown_trade_equity_proxy": 0.0,
+      "mean_R": 0.0,
+      "min_trades_per_test_fold": 0,
+      "net_return_R": 0.0,
+      "outside_mean_R": 0.00015783162906536971,
+      "parent_regime_root": "Manipulation(scoped)",
+      "pbo": 1.0,
+      "pbo_method": "simple_variant_fold_proxy",
+      "promotion_level": "reject",
+      "rc_spa": 10.0,
+      "regime_profit_branch_path": "Manipulation(scoped) -> DirectEventOverlayMissing -> no_direct_event_rows -> suppress_or_abstain",
+      "regime_specificity_ratio": 0.0,
+      "stressed_2x_cost_net_R": 0.0,
+      "tail_loss_p95": 0.0,
+      "test_folds": 5,
+      "total_trades": 0,
+      "variant_count": 7,
+      "win_rate": 0.0
+    }
+  ],
+  "completion": {
+    "auto_quant_checkout_changed": false,
+    "downstream_runtime_consumed_branch_path": false,
+    "raw_auto_quant_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false
+  },
+  "decision": {
+    "board_state": "rejected",
+    "branch_paths_evaluated": 5,
+    "branch_paths_passed": 0,
+    "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+    "gate_result": "fail:all_branch_paths_failed_rc_spa_hard_gates",
+    "next_action": "B2R-repeat: extend direct Crisis/scoped Manipulation rows or test a different root-aware NQ family before downstream branch consumption.",
+    "primary_blocker": "Tomac NQ variant matrix ran real Auto-Quant/Freqtrade variants and estimated PBO, but no root branch passed RC-SPA hard gates; downstream promotion remains blocked.",
+    "root_trade_counts": {
+      "Bear": 329,
+      "Bull": 3949,
+      "Crisis": 134,
+      "Manipulation(scoped)": 0,
+      "Sideways": 985
+    },
+    "stable_profit_score": 60.03890345589249,
+    "total_variant_trade_rows": 5397
+  },
+  "generated_at_utc": "2026-05-11T10:49:52.905236+00:00",
+  "pair": "NQ/USD",
+  "recipe_id": "TomacNQRootAwareVariantMatrixV1",
+  "run_id": "20260511T184529+0800-codex-board-b-tomac-nq-variant-matrix-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1",
+  "schema_version": "board-b-tomac-nq-variant-matrix/v1",
+  "source_ticker": "^IXIC",
+  "variant_fold_matrix": [
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0001650849920946327,
+      "net_return_R": 0.018159349130409598,
+      "parent_regime_root": "Bull",
+      "trades": 110,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0008538041034780851,
+      "net_return_R": 0.09647986369302362,
+      "parent_regime_root": "Bull",
+      "trades": 113,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0012223536182465586,
+      "net_return_R": 0.13079183715238177,
+      "parent_regime_root": "Bull",
+      "trades": 107,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.001640902621449869,
+      "net_return_R": 0.041022565536246725,
+      "parent_regime_root": "Bull",
+      "trades": 25,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bull",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.000530959952715384,
+      "net_return_R": -0.08176783271816915,
+      "parent_regime_root": "Bull",
+      "trades": 154,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.00027269233992750866,
+      "net_return_R": 0.04417615906825641,
+      "parent_regime_root": "Bull",
+      "trades": 162,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.001218096167031298,
+      "net_return_R": 0.13764486687453667,
+      "parent_regime_root": "Bull",
+      "trades": 113,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.00017224927948787183,
+      "net_return_R": -0.0013779942359029747,
+      "parent_regime_root": "Bull",
+      "trades": 8,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bull",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.0004258292912126278,
+      "net_return_R": -0.08516585824252557,
+      "parent_regime_root": "Bull",
+      "trades": 200,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0005039037157003778,
+      "net_return_R": 0.11337833603258499,
+      "parent_regime_root": "Bull",
+      "trades": 225,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0010990291723708737,
+      "net_return_R": 0.1549631133042932,
+      "parent_regime_root": "Bull",
+      "trades": 141,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0005759407130263465,
+      "net_return_R": 0.013822577112632316,
+      "parent_regime_root": "Bull",
+      "trades": 24,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bull",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.00010009095468378153,
+      "net_return_R": -0.011610550743318657,
+      "parent_regime_root": "Bull",
+      "trades": 116,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0006180067571394396,
+      "net_return_R": 0.0685987500424778,
+      "parent_regime_root": "Bull",
+      "trades": 111,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.001475324622048147,
+      "net_return_R": 0.12982856674023693,
+      "parent_regime_root": "Bull",
+      "trades": 88,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0018291253928126542,
+      "net_return_R": 0.029266006285002467,
+      "parent_regime_root": "Bull",
+      "trades": 16,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bull",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0002993817131962538,
+      "net_return_R": 0.06316954148440955,
+      "parent_regime_root": "Bull",
+      "trades": 211,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0008257225528204543,
+      "net_return_R": 0.18909046459588405,
+      "parent_regime_root": "Bull",
+      "trades": 229,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0018356845985221454,
+      "net_return_R": 0.3726439734999955,
+      "parent_regime_root": "Bull",
+      "trades": 203,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0013887805718255722,
+      "net_return_R": 0.10693610403056907,
+      "parent_regime_root": "Bull",
+      "trades": 77,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0006793291141790079,
+      "net_return_R": 0.051629012677604606,
+      "parent_regime_root": "Bull",
+      "trades": 76,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.00010728941486432818,
+      "net_return_R": -0.036692979883600235,
+      "parent_regime_root": "Bull",
+      "trades": 342,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0005699498709613783,
+      "net_return_R": 0.20233220419128928,
+      "parent_regime_root": "Bull",
+      "trades": 355,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 6.189120010644943e-05,
+      "net_return_R": 0.007983964813731977,
+      "parent_regime_root": "Bull",
+      "trades": 129,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bull",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bull",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.0005867916816436748,
+      "net_return_R": -0.14376396200270034,
+      "parent_regime_root": "Bull",
+      "trades": 245,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0004582580449933587,
+      "net_return_R": 0.11089844688839282,
+      "parent_regime_root": "Bull",
+      "trades": 242,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.0004048232023441984,
+      "net_return_R": -0.051412546697713196,
+      "parent_regime_root": "Bull",
+      "trades": 127,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bull",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bull",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.0069918067706206365,
+      "net_return_R": -0.013983613541241273,
+      "parent_regime_root": "Bear",
+      "trades": 2,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.003923423316475742,
+      "net_return_R": -0.011770269949427226,
+      "parent_regime_root": "Bear",
+      "trades": 3,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.005303993604142079,
+      "net_return_R": 0.005303993604142079,
+      "parent_regime_root": "Bear",
+      "trades": 1,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.011811399590398765,
+      "net_return_R": -0.10630259631358888,
+      "parent_regime_root": "Bear",
+      "trades": 9,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bear",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.003903041668611396,
+      "net_return_R": -0.011709125005834188,
+      "parent_regime_root": "Bear",
+      "trades": 3,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.004804538465004822,
+      "net_return_R": -0.014413615395014465,
+      "parent_regime_root": "Bear",
+      "trades": 3,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.006065660703858712,
+      "net_return_R": -0.018196982111576138,
+      "parent_regime_root": "Bear",
+      "trades": 3,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.0028430522253248586,
+      "net_return_R": -0.028430522253248585,
+      "parent_regime_root": "Bear",
+      "trades": 10,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bear",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.004458356064829078,
+      "net_return_R": -0.062416984907607095,
+      "parent_regime_root": "Bear",
+      "trades": 14,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0010904771983206412,
+      "net_return_R": 0.010904771983206413,
+      "parent_regime_root": "Bear",
+      "trades": 10,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.004200202804806152,
+      "net_return_R": -0.03360162243844922,
+      "parent_regime_root": "Bear",
+      "trades": 8,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.002968389945509662,
+      "net_return_R": -0.05046262907366426,
+      "parent_regime_root": "Bear",
+      "trades": 17,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bear",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.011997552411807458,
+      "net_return_R": -0.023995104823614916,
+      "parent_regime_root": "Bear",
+      "trades": 2,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.0079654494272828,
+      "net_return_R": -0.0159308988545656,
+      "parent_regime_root": "Bear",
+      "trades": 2,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.011999847717668558,
+      "net_return_R": -0.011999847717668558,
+      "parent_regime_root": "Bear",
+      "trades": 1,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.011999751845324641,
+      "net_return_R": -0.023999503690649283,
+      "parent_regime_root": "Bear",
+      "trades": 2,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bear",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.006098637721160612,
+      "net_return_R": -0.12807139214437285,
+      "parent_regime_root": "Bear",
+      "trades": 21,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.0021486465613504554,
+      "net_return_R": -0.05801345715646229,
+      "parent_regime_root": "Bear",
+      "trades": 27,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.0009603244590465829,
+      "net_return_R": -0.007682595672372663,
+      "parent_regime_root": "Bear",
+      "trades": 8,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.0004397393901605015,
+      "net_return_R": -0.018908793776901564,
+      "parent_regime_root": "Bear",
+      "trades": 43,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.003766766134811664,
+      "net_return_R": 0.03766766134811664,
+      "parent_regime_root": "Bear",
+      "trades": 10,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.004075459712452638,
+      "net_return_R": -0.15486746907320023,
+      "parent_regime_root": "Bear",
+      "trades": 38,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.0020866276022125122,
+      "net_return_R": -0.0834651040885005,
+      "parent_regime_root": "Bear",
+      "trades": 40,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.004551561803119937,
+      "net_return_R": -0.05917030344055918,
+      "parent_regime_root": "Bear",
+      "trades": 13,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bear",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bear",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0022811607472351505,
+      "net_return_R": 0.022811607472351503,
+      "parent_regime_root": "Bear",
+      "trades": 10,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.002312394966382523,
+      "net_return_R": -0.04393550436126793,
+      "parent_regime_root": "Bear",
+      "trades": 19,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.005336322347787239,
+      "net_return_R": -0.042690578782297914,
+      "parent_regime_root": "Bear",
+      "trades": 8,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bear",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Bear",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0011442206383813287,
+      "net_return_R": 0.0240286334060079,
+      "parent_regime_root": "Sideways",
+      "trades": 21,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.002963990034730141,
+      "net_return_R": 0.05927980069460282,
+      "parent_regime_root": "Sideways",
+      "trades": 20,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0012188546656841973,
+      "net_return_R": 0.01828281998526296,
+      "parent_regime_root": "Sideways",
+      "trades": 15,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.0012011479432352653,
+      "net_return_R": -0.014413775318823183,
+      "parent_regime_root": "Sideways",
+      "trades": 12,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Sideways",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0010215513630905347,
+      "net_return_R": 0.026560335440353904,
+      "parent_regime_root": "Sideways",
+      "trades": 26,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0013418950015071937,
+      "net_return_R": 0.034889270039187036,
+      "parent_regime_root": "Sideways",
+      "trades": 26,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0005809402109479061,
+      "net_return_R": 0.01045692379706231,
+      "parent_regime_root": "Sideways",
+      "trades": 18,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.003316516184514063,
+      "net_return_R": -0.026532129476112505,
+      "parent_regime_root": "Sideways",
+      "trades": 8,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Sideways",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0007792506582148584,
+      "net_return_R": 0.046755039492891504,
+      "parent_regime_root": "Sideways",
+      "trades": 60,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.0015403267817966164,
+      "net_return_R": -0.06931470518084774,
+      "parent_regime_root": "Sideways",
+      "trades": 45,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0011589140704974122,
+      "net_return_R": 0.02665502362144048,
+      "parent_regime_root": "Sideways",
+      "trades": 23,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0005270628022018834,
+      "net_return_R": 0.007905942033028251,
+      "parent_regime_root": "Sideways",
+      "trades": 15,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Sideways",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0015155959069323437,
+      "net_return_R": 0.01970274679012047,
+      "parent_regime_root": "Sideways",
+      "trades": 13,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.0006524707288688739,
+      "net_return_R": -0.00978706093303311,
+      "parent_regime_root": "Sideways",
+      "trades": 15,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.001030255376178511,
+      "net_return_R": 0.012363064514142132,
+      "parent_regime_root": "Sideways",
+      "trades": 12,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.0009739081783860558,
+      "net_return_R": -0.005843449070316335,
+      "parent_regime_root": "Sideways",
+      "trades": 6,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Sideways",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0016576257700012765,
+      "net_return_R": 0.11106092659008553,
+      "parent_regime_root": "Sideways",
+      "trades": 67,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0006894022156754103,
+      "net_return_R": 0.04136413294052462,
+      "parent_regime_root": "Sideways",
+      "trades": 60,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0012911815004799279,
+      "net_return_R": 0.055520804520636895,
+      "parent_regime_root": "Sideways",
+      "trades": 43,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0017249711914963653,
+      "net_return_R": 0.05864902051087642,
+      "parent_regime_root": "Sideways",
+      "trades": 34,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": -0.0018692758891130426,
+      "net_return_R": -0.024300586558469554,
+      "parent_regime_root": "Sideways",
+      "trades": 13,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.0004626867998454303,
+      "net_return_R": -0.05783584998067879,
+      "parent_regime_root": "Sideways",
+      "trades": 125,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.0011106617384834907,
+      "net_return_R": -0.10662352689441511,
+      "parent_regime_root": "Sideways",
+      "trades": 96,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.00011250647367897145,
+      "net_return_R": 0.005850336631306515,
+      "parent_regime_root": "Sideways",
+      "trades": 52,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Sideways",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Sideways",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.0005574440577265789,
+      "net_return_R": -0.040135972156313676,
+      "parent_regime_root": "Sideways",
+      "trades": 72,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": -0.0016866147560073421,
+      "net_return_R": -0.08601735255637445,
+      "parent_regime_root": "Sideways",
+      "trades": 51,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0023631896861200617,
+      "net_return_R": 0.08743801838644229,
+      "parent_regime_root": "Sideways",
+      "trades": 37,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Sideways",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Sideways",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.0027130641954217815,
+      "net_return_R": -0.013565320977108906,
+      "parent_regime_root": "Crisis",
+      "trades": 5,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.005729552258022983,
+      "net_return_R": 0.005729552258022983,
+      "parent_regime_root": "Crisis",
+      "trades": 1,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.0015063989747317048,
+      "net_return_R": -0.009038393848390228,
+      "parent_regime_root": "Crisis",
+      "trades": 6,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.003556444260854042,
+      "net_return_R": -0.021338665565124253,
+      "parent_regime_root": "Crisis",
+      "trades": 6,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0033997758058641383,
+      "net_return_R": 0.006799551611728277,
+      "parent_regime_root": "Crisis",
+      "trades": 2,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": -0.001197821893872327,
+      "net_return_R": -0.00838475325710629,
+      "parent_regime_root": "Crisis",
+      "trades": 7,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.004116667792869885,
+      "net_return_R": -0.03705001013582897,
+      "parent_regime_root": "Crisis",
+      "trades": 9,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0068644868331396505,
+      "net_return_R": 0.03432243416569825,
+      "parent_regime_root": "Crisis",
+      "trades": 5,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.003207188958570619,
+      "net_return_R": 0.03848626750284743,
+      "parent_regime_root": "Crisis",
+      "trades": 12,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.0028204676832523463,
+      "net_return_R": -0.014102338416261732,
+      "parent_regime_root": "Crisis",
+      "trades": 5,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.002534801260209195,
+      "net_return_R": 0.01013920504083678,
+      "parent_regime_root": "Crisis",
+      "trades": 4,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0016743983239417921,
+      "net_return_R": 0.011720788267592545,
+      "parent_regime_root": "Crisis",
+      "trades": 7,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.00401841364633118,
+      "net_return_R": -0.03214730917064944,
+      "parent_regime_root": "Crisis",
+      "trades": 8,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0006943721307676215,
+      "net_return_R": 0.011109954092281944,
+      "parent_regime_root": "Crisis",
+      "trades": 16,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.00026549108036420766,
+      "net_return_R": 0.0034513840447346995,
+      "parent_regime_root": "Crisis",
+      "trades": 13,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": -0.0007711981986726944,
+      "net_return_R": -0.010025576582745027,
+      "parent_regime_root": "Crisis",
+      "trades": 13,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": -0.004434906268569669,
+      "net_return_R": -0.03991415641712702,
+      "parent_regime_root": "Crisis",
+      "trades": 9,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0009557276234392351,
+      "net_return_R": 0.005734365740635411,
+      "parent_regime_root": "Crisis",
+      "trades": 6,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Crisis",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "baseline"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "tight_trail"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "dense_session"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "conservative_trend"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "loose_crisis"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "fold": "2011_2014",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2015_2018",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2019_2021",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2022_2023",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    },
+    {
+      "fold": "2024_2025",
+      "mean_R": 0.0,
+      "net_return_R": 0.0,
+      "parent_regime_root": "Manipulation(scoped)",
+      "trades": 0,
+      "variant_id": "full_day_trend"
+    }
+  ],
+  "variant_results": [
+    {
+      "aggregate_metrics": {
+        "calmar": 0.44189073565341364,
+        "max_drawdown_pct": -15.458322822091002,
+        "profit_factor": 1.1379464588275159,
+        "sharpe": 0.083910868328626,
+        "sortino": 0.13551893323730999,
+        "total_profit_pct": 19.54,
+        "trade_count": 450,
+        "win_rate_pct": 52.22222222222223
+      },
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_baseline.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.44189073565341364,
+          "max_drawdown_pct": -15.458322822091002,
+          "profit_factor": 1.1379464588275159,
+          "sharpe": 0.083910868328626,
+          "sortino": 0.13551893323730999,
+          "total_profit_pct": 19.54,
+          "trade_count": 450,
+          "win_rate_pct": 52.22222222222223
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_baseline.err",
+      "strategy_name": "TomacNQVariantBaseline",
+      "variant_id": "baseline"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.017067083749544184,
+        "max_drawdown_pct": -12.037543161583528,
+        "profit_factor": 1.0053578122971492,
+        "sharpe": 0.004168984226740593,
+        "sortino": 0.005465931462104389,
+        "total_profit_pct": 0.59,
+        "trade_count": 549,
+        "win_rate_pct": 59.01639344262295
+      },
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_tight_trail.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.017067083749544184,
+          "max_drawdown_pct": -12.037543161583528,
+          "profit_factor": 1.0053578122971492,
+          "sharpe": 0.004168984226740593,
+          "sortino": 0.005465931462104389,
+          "total_profit_pct": 0.59,
+          "trade_count": 549,
+          "win_rate_pct": 59.01639344262295
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_tight_trail.err",
+      "strategy_name": "TomacNQVariantTightTrail",
+      "variant_id": "tight_trail"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.10679025928769667,
+        "max_drawdown_pct": -20.123428183025922,
+        "profit_factor": 1.034319275561362,
+        "sharpe": 0.037060982784473694,
+        "sortino": 0.05106427083765223,
+        "total_profit_pct": 6.15,
+        "trade_count": 809,
+        "win_rate_pct": 51.29789864029666
+      },
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_dense_session.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.10679025928769667,
+          "max_drawdown_pct": -20.123428183025922,
+          "profit_factor": 1.034319275561362,
+          "sharpe": 0.037060982784473694,
+          "sortino": 0.05106427083765223,
+          "total_profit_pct": 6.15,
+          "trade_count": 809,
+          "win_rate_pct": 51.29789864029666
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_dense_session.err",
+      "strategy_name": "TomacNQVariantDenseSession",
+      "variant_id": "dense_session"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 0.46217254889819526,
+        "max_drawdown_pct": -8.591808172653417,
+        "profit_factor": 1.1190797683905422,
+        "sharpe": 0.06643171861847724,
+        "sortino": 0.1195087175546779,
+        "total_profit_pct": 11.36,
+        "trade_count": 393,
+        "win_rate_pct": 54.4529262086514
+      },
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_conservative_trend.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 0.46217254889819526,
+          "max_drawdown_pct": -8.591808172653417,
+          "profit_factor": 1.1190797683905422,
+          "sharpe": 0.06643171861847724,
+          "sortino": 0.1195087175546779,
+          "total_profit_pct": 11.36,
+          "trade_count": 393,
+          "win_rate_pct": 54.4529262086514
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_conservative_trend.err",
+      "strategy_name": "TomacNQVariantConservativeTrend",
+      "variant_id": "conservative_trend"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": 2.5896527787936403,
+        "max_drawdown_pct": -11.63962168719601,
+        "profit_factor": 1.2783785808191297,
+        "sharpe": 0.356250261491131,
+        "sortino": 0.5909319956366492,
+        "total_profit_pct": 86.22,
+        "trade_count": 1153,
+        "win_rate_pct": 49.17606244579358
+      },
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_loose_crisis.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": 2.5896527787936403,
+          "max_drawdown_pct": -11.63962168719601,
+          "profit_factor": 1.2783785808191297,
+          "sharpe": 0.356250261491131,
+          "sortino": 0.5909319956366492,
+          "total_profit_pct": 86.22,
+          "trade_count": 1153,
+          "win_rate_pct": 49.17606244579358
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_loose_crisis.err",
+      "strategy_name": "TomacNQVariantLooseCrisis",
+      "variant_id": "loose_crisis"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.30556592440651476,
+        "max_drawdown_pct": -28.843751971235726,
+        "profit_factor": 0.8706977018988025,
+        "sharpe": -0.2278444104880279,
+        "sortino": -0.30279811928271044,
+        "total_profit_pct": -25.21,
+        "trade_count": 1217,
+        "win_rate_pct": 50.4519309778143
+      },
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_bear_sideways_dense.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.30556592440651476,
+          "max_drawdown_pct": -28.843751971235726,
+          "profit_factor": 0.8706977018988025,
+          "sharpe": -0.2278444104880279,
+          "sortino": -0.30279811928271044,
+          "total_profit_pct": -25.21,
+          "trade_count": 1217,
+          "win_rate_pct": 50.4519309778143
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_bear_sideways_dense.err",
+      "strategy_name": "TomacNQVariantBearSidewaysDense",
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "aggregate_metrics": {
+        "calmar": -0.28927271552042816,
+        "max_drawdown_pct": -24.566702338848582,
+        "profit_factor": 0.8860367657479714,
+        "sharpe": -0.14115023868963164,
+        "sortino": -0.21105742985141138,
+        "total_profit_pct": -20.33,
+        "trade_count": 826,
+        "win_rate_pct": 45.64164648910412
+      },
+      "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_full_day_trend.out",
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "calmar": -0.28927271552042816,
+          "max_drawdown_pct": -24.566702338848582,
+          "profit_factor": 0.8860367657479714,
+          "sharpe": -0.14115023868963164,
+          "sortino": -0.21105742985141138,
+          "total_profit_pct": -20.33,
+          "trade_count": 826,
+          "win_rate_pct": 45.64164648910412
+        }
+      },
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184529-codex-board-b-tomac-nq-variant-matrix-v1/logs/freqtrade_backtest_full_day_trend.err",
+      "strategy_name": "TomacNQVariantFullDayTrend",
+      "variant_id": "full_day_trend"
+    }
+  ],
+  "variant_specs": [
+    {
+      "breakdown_window": 24,
+      "breakout_window": 24,
+      "class_name": "TomacNQVariantBaseline",
+      "ema_fast": 21,
+      "ema_slow": 89,
+      "killzone_end": 15,
+      "killzone_start": 13,
+      "stoploss": -0.02,
+      "trail": 0.005,
+      "trail_offset": 0.01,
+      "trend_mode": "strict",
+      "variant_id": "baseline"
+    },
+    {
+      "breakdown_window": 18,
+      "breakout_window": 24,
+      "class_name": "TomacNQVariantTightTrail",
+      "ema_fast": 21,
+      "ema_slow": 89,
+      "killzone_end": 16,
+      "killzone_start": 13,
+      "stoploss": -0.015,
+      "trail": 0.003,
+      "trail_offset": 0.006,
+      "trend_mode": "strict",
+      "variant_id": "tight_trail"
+    },
+    {
+      "breakdown_window": 12,
+      "breakout_window": 12,
+      "class_name": "TomacNQVariantDenseSession",
+      "ema_fast": 13,
+      "ema_slow": 55,
+      "killzone_end": 17,
+      "killzone_start": 12,
+      "stoploss": -0.02,
+      "trail": 0.004,
+      "trail_offset": 0.008,
+      "trend_mode": "strict",
+      "variant_id": "dense_session"
+    },
+    {
+      "breakdown_window": 24,
+      "breakout_window": 48,
+      "class_name": "TomacNQVariantConservativeTrend",
+      "ema_fast": 34,
+      "ema_slow": 144,
+      "killzone_end": 15,
+      "killzone_start": 13,
+      "stoploss": -0.012,
+      "trail": 0.004,
+      "trail_offset": 0.008,
+      "trend_mode": "strict",
+      "variant_id": "conservative_trend"
+    },
+    {
+      "breakdown_window": 8,
+      "breakout_window": 8,
+      "class_name": "TomacNQVariantLooseCrisis",
+      "ema_fast": 8,
+      "ema_slow": 34,
+      "killzone_end": 20,
+      "killzone_start": 13,
+      "stoploss": -0.03,
+      "trail": 0.006,
+      "trail_offset": 0.012,
+      "trend_mode": "loose",
+      "variant_id": "loose_crisis"
+    },
+    {
+      "breakdown_window": 6,
+      "breakout_window": 6,
+      "class_name": "TomacNQVariantBearSidewaysDense",
+      "ema_fast": 8,
+      "ema_slow": 34,
+      "killzone_end": 20,
+      "killzone_start": 10,
+      "stoploss": -0.018,
+      "trail": 0.003,
+      "trail_offset": 0.006,
+      "trend_mode": "loose",
+      "variant_id": "bear_sideways_dense"
+    },
+    {
+      "breakdown_window": 18,
+      "breakout_window": 24,
+      "class_name": "TomacNQVariantFullDayTrend",
+      "ema_fast": 21,
+      "ema_slow": 89,
+      "killzone_end": 23,
+      "killzone_start": 0,
+      "stoploss": -0.02,
+      "trail": 0.004,
+      "trail_offset": 0.008,
+      "trend_mode": "strict",
+      "variant_id": "full_day_trend"
+    }
+  ]
+}

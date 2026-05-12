@@ -1,0 +1,10 @@
+direct_verifier_schema_ready=ok
+canonical_positive_rows_73=ok
+canonical_matched_negative_rows_73=ok
+providers_checked=ok
+pooled_gate_true=ok
+chronological_gate_false=ok
+symbol_gate_false=ok
+venue_gate_false=ok
+direct_species_false=ok
+strict_full_objective_not_complete=ok

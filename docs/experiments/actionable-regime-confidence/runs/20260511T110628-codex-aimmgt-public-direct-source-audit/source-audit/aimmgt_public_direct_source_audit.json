@@ -1,0 +1,49 @@
+{
+  "run_id": "20260511T110628+0800-codex-aimmgt-public-direct-source-audit",
+  "generated_at_utc": "2026-05-11T03:06:28+00:00",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV2",
+  "objective": "Audit AIMM-GT public paper/code surfaces for attachable MainRegimeV2 parent-root labels or direct Manipulation rows without reusing OHLCV/proxy outputs.",
+  "candidate_source": {
+    "source_id": "AIMM-GT / AIMM arXiv 2512.16103",
+    "source_url": "https://arxiv.org/abs/2512.16103",
+    "code_finder_url": "https://www.catalyzex.com/paper/aimm-an-ai-driven-multimodal-framework-for",
+    "observed_shape": "Paper-level social-media-influenced stock manipulation benchmark: 33 labeled ticker-days across eight equities, 3 positive manipulation events and 30 controls, synthetic social features due to Reddit API limits, real Yahoo Finance OHLCV, released schema/dashboard/code claim but no row-level CSV/parquet URL located in this bounded public audit.",
+    "public_code_status": "no_public_code_link_found_in_catalyzex_page; arXiv exposes paper/PDF/TeX/source links but no direct row-level dataset URL in the abstract page"
+  },
+  "board_contract": {
+    "parent_roots_required": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "separate_direct_class_or_overlay": "Manipulation",
+    "required_parent_root_source": "independent exact provider or exact underlying Bull/Bear/Sideways/Crisis label windows by provider/instrument/timeframe/root",
+    "required_direct_manipulation_source": "timestamped direct event/order-flow/order-lifecycle/social/on-chain positives with same-asset/venue negative controls and enough chronological calibration/test support for unchanged 95%-99% gates",
+    "forbidden_sources": [
+      "OHLCV-derived risk score only",
+      "synthetic social features used as direct evidence",
+      "schema-only release without row materialization",
+      "small positive support below gate minimum"
+    ]
+  },
+  "assessment": {
+    "can_fill_parent_root_slots": false,
+    "parent_root_reason": "AIMM-GT is a daily manipulation benchmark over equities, not Bull/Bear/Sideways/Crisis source-label windows for the missing provider/instrument/timeframe matrix.",
+    "can_fill_direct_manipulation_variety": false,
+    "direct_manipulation_reason": "Even if treated as social-media Manipulation provenance, the public paper-level shape has only 3 positive events, uses synthetic social features, and this audit did not locate row-level positive/negative files. It cannot satisfy the Board A unchanged support and chronological 95% gate.",
+    "candidate_value": "Keep as watchlist/provenance only; useful if the author releases real row-level AIMM-GT data with timestamps, tickers, source labels, positive/control flag, and non-synthetic direct social evidence."
+  },
+  "result": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_direct_manipulation_sources_added": 0,
+    "gate_result": "blocked_aimmgt_public_source_schema_small_synthetic_no_row_level_direct_rows",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next_action": "Do not spend another loop on AIMM-GT unless a row-level data/code release is located; continue exact MainRegimeV2 label-window acquisition or direct Manipulation sources with materialized positives and same-asset/venue negatives."
+}

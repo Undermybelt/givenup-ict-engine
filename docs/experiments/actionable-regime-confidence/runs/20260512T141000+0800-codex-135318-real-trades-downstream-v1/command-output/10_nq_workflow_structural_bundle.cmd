@@ -1,0 +1,1 @@
+./target/debug/ict-engine workflow-status --symbol LONG_NQ_TOMAC_135318 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/state_nq_v1 --phase structural-recommended-path-bundle --agent

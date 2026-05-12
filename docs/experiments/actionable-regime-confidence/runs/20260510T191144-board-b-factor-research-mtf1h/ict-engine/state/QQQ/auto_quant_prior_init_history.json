@@ -1,0 +1,69 @@
+[
+  {
+    "run_id": "auto_quant_prior_init_QQQ_20260510T113544.174428000Z",
+    "timestamp": "2026-05-10T11:35:44.174428Z",
+    "library_artifact_id": "auto_quant_strategy_library_QQQ_20260510T113339.782267000Z",
+    "library_state_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/QQQ/auto_quant_strategy_library.json",
+    "dry_run": true,
+    "outcome": {
+      "parent_config": [
+        0,
+        0,
+        0
+      ],
+      "initial_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "final_probs": [
+        0.33279060048820175,
+        1.4320585842148087e-7,
+        0.6672092563059397
+      ],
+      "strategies_applied": [
+        {
+          "strategy_name": "VolBreakoutSized",
+          "mutation_id": "board-b-volbreakoutsized-seed",
+          "trade_count": 1221,
+          "n_win": 401,
+          "n_loss": 820,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.999956,
+            0.000022,
+            0.000022
+          ],
+          "after_probs": [
+            0.33279060048820175,
+            1.4320585842148087e-7,
+            0.6672092563059397
+          ],
+          "diff": [
+            -0.6671653995117982,
+            -0.00002185679414157852,
+            0.6671872563059398
+          ],
+          "bbn_entropy_before": 0.0005158756285885085,
+          "bbn_entropy_after": 0.6361396536517671,
+          "bbn_entropy_reduction": 0.0,
+          "bbn_log_loss_before": 7.20235994280513,
+          "bbn_log_loss_after": 0.6330968405489288,
+          "bbn_log_loss_delta": 6.569263102256201,
+          "bbn_contradiction_before": 1.3431173431613432,
+          "bbn_contradiction_after": 0.008742830549463593,
+          "bbn_contradiction_lift": 1.3343745126118796,
+          "evidence_value_gate_passed": true
+        }
+      ],
+      "strategies_skipped": [],
+      "temper": 0.5,
+      "prior_strength": 4.0,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_delta": 6.569263102256201,
+      "bbn_contradiction_lift": 1.3343745126118796,
+      "evidence_value_gate_passed": true
+    }
+  }
+]

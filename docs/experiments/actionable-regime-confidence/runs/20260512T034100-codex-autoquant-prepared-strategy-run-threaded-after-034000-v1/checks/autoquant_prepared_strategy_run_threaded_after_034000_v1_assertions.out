@@ -1,0 +1,16 @@
+PASS gate_result=shimmed_run_succeeded_three_backtests_no_board_a_promotion
+PASS exit_code=0
+PASS strategies_discovered=3
+PASS backtests_succeeded=3
+PASS backtests_failed=0
+PASS btc_leader_break_v4_robust_sharpe=0.9415
+PASS momentum_mtf_confluence_robust_sharpe=0.3993
+PASS vol_breakout_sized_robust_sharpe=1.3390
+PASS source_control_evidence_acquired=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS canonical_merge_allowed=false
+PASS downstream_promotion_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS trade_usable=false
+PASS update_goal=false

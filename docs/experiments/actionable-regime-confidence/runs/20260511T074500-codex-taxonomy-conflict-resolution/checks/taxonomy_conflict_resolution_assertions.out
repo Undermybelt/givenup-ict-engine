@@ -1,0 +1,7 @@
+goal_achieved=false
+active_taxonomy=MainRegimeV2
+main_price_roots=Bull,Bear,Sideways,Crisis
+separate_direct_overlay=Manipulation
+thresholds_relaxed=false
+runtime_code_changed=false
+gate_result=taxonomy_conflict_resolved_mainregimev2_full_universe_still_blocked

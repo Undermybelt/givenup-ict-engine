@@ -1,0 +1,49 @@
+{
+  "schema_id": "ExpandedMainRegimeRootCrosswalk",
+  "rule": "sub-regime packets remain context/guardrails until the expanded root label itself passes this gate",
+  "crosswalk": {
+    "BullExpansion": {
+      "sub_regime_context": [
+        "TrendExpansion"
+      ],
+      "promotion_requirement": "signed positive expansion target passes V4 root gate directly"
+    },
+    "BearExpansion": {
+      "sub_regime_context": [
+        "TrendExpansion",
+        "ExtremeStress"
+      ],
+      "promotion_requirement": "signed negative expansion target passes V4 root gate directly and stays separated from CrisisStress"
+    },
+    "SidewaysConsolidation": {
+      "sub_regime_context": [
+        "RangeConsolidation"
+      ],
+      "promotion_requirement": "range/chop/compression target passes expanded root gate directly"
+    },
+    "Manipulation": {
+      "sub_regime_context": [
+        "ThinLiquidity",
+        "SessionLiquidityCoreViable",
+        "sweep-like OHLCV shapes"
+      ],
+      "promotion_requirement": "blocked; requires direct market microstructure/order-lifecycle/event evidence"
+    },
+    "CrisisStress": {
+      "sub_regime_context": [
+        "ExtremeStress"
+      ],
+      "promotion_requirement": "stress/crash target passes V4 root gate directly across contexts/timeframes"
+    },
+    "TransitionRecovery": {
+      "sub_regime_context": [
+        "ReversalBrewing"
+      ],
+      "promotion_requirement": "optional only unless downstream contract activates it"
+    },
+    "UnknownOrMixed": {
+      "sub_regime_context": [],
+      "promotion_requirement": "residual abstention only"
+    }
+  }
+}

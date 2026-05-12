@@ -1,0 +1,120 @@
+{
+  "run_id": "20260511T122239+0800-codex-source-window-attachability-v1",
+  "artifact_type": "source_window_attachability_preflight",
+  "inputs": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "missing_slot_request": "docs/experiments/actionable-regime-confidence/runs/20260511T094002-codex-external-label-request-package-v3/acquisition-request/missing_parent_root_label_slots_request_v3.csv",
+    "source_window_seed": "docs/experiments/actionable-regime-confidence/runs/20260511T120900-codex-exportable-source-scan/source-scan/source_window_seed_v1.csv"
+  },
+  "current_missing_slot_shape": {
+    "total_missing_or_rejected_slots": 564,
+    "by_root": {
+      "Bull": 141,
+      "Bear": 141,
+      "Sideways": 141,
+      "Crisis": 141
+    },
+    "by_timeframe": {
+      "1m": 68,
+      "5m": 68,
+      "15m": 68,
+      "30m": 68,
+      "1h": 68,
+      "4h": 68,
+      "1d": 44,
+      "1w": 44,
+      "1mo": 68
+    }
+  },
+  "attachability_result": {
+    "strict_native_no_projection_slots_added": 0,
+    "approved_crosswalk_slots_added": 0,
+    "candidate_slots_pending_owner_crosswalk": 63,
+    "still_blocked_without_crosswalk_or_sideways_source": 501,
+    "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal"
+  },
+  "candidate_crosswalk_layers": [
+    {
+      "layer": "strict_native_no_projection",
+      "status": "no_current_missing_slot",
+      "reason": "The seed windows are native S&P 500 day-level Bull/Bear and NBER month-level Crisis. The current missing request no longer contains yfinance ^GSPC 1d/1w Bull/Bear slots, so strict native attachment adds nothing."
+    },
+    {
+      "layer": "same_underlying_spx_to_gspc_time_projection",
+      "status": "pending_owner_crosswalk",
+      "target_provider": "yfinance",
+      "target_instruments": ["^GSPC"],
+      "target_timeframes": ["1m", "5m", "15m", "30m", "1h", "4h", "1mo"],
+      "roots": ["Bull", "Bear"],
+      "candidate_slots": 14,
+      "decision_needed": "Approve or reject calendar-date S&P 500 source-window membership as the label for intraday/monthly ^GSPC bars."
+    },
+    {
+      "layer": "macro_crisis_to_gspc_time_projection",
+      "status": "pending_owner_crosswalk",
+      "target_provider": "yfinance",
+      "target_instruments": ["^GSPC"],
+      "target_timeframes": ["1m", "5m", "15m", "30m", "1h", "4h", "1mo"],
+      "roots": ["Crisis"],
+      "candidate_slots": 7,
+      "decision_needed": "Approve or reject NBER contraction months as Crisis labels for same-underlying S&P 500 bars."
+    },
+    {
+      "layer": "spx_tradable_proxy_time_projection",
+      "status": "pending_owner_crosswalk",
+      "target_provider": "yfinance",
+      "target_instruments": ["SPY", "ES=F"],
+      "target_timeframes": ["1m", "5m", "15m", "30m", "1h", "4h", "1mo"],
+      "roots": ["Bull", "Bear"],
+      "candidate_slots": 28,
+      "decision_needed": "Approve or reject S&P 500 index windows as labels for SPY and ES futures."
+    },
+    {
+      "layer": "macro_crisis_to_spx_tradable_proxy",
+      "status": "pending_owner_crosswalk",
+      "target_provider": "yfinance",
+      "target_instruments": ["SPY", "ES=F"],
+      "target_timeframes": ["1m", "5m", "15m", "30m", "1h", "4h", "1mo"],
+      "roots": ["Crisis"],
+      "candidate_slots": 14,
+      "decision_needed": "Approve or reject NBER contraction months as Crisis labels for SPY and ES futures."
+    },
+    {
+      "layer": "sideways_source_gap",
+      "status": "blocked",
+      "candidate_slots": 0,
+      "decision_needed": "Provide a dated Sideways/range-bound source or approve an adjudication protocol. Do not infer Sideways as the complement of Bull/Bear/Crisis."
+    },
+    {
+      "layer": "broad_us_equity_family_projection",
+      "status": "fail_closed_by_default",
+      "target_examples": ["QQQ", "^NDX", "NQ=F", "^DJI", "DIA", "YM=F"],
+      "candidate_slots": 0,
+      "reason": "Broader index-family projection is not exact same-underlying and is not applied without an explicit owner decision."
+    },
+    {
+      "layer": "non_equity_projection",
+      "status": "fail_closed_by_default",
+      "target_examples": ["CL=F", "GC=F", "GLD", "USO", "Kraken crypto pairs"],
+      "candidate_slots": 0,
+      "reason": "S&P 500 and NBER US macro windows are not direct labels for commodities, vol, or crypto instruments."
+    }
+  ],
+  "next_action": {
+    "recommended_loop": "owner_crosswalk_decision_then_attach",
+    "minimal_positive_decision_set": [
+      "Approve same_underlying_spx_to_gspc_time_projection for Bull/Bear",
+      "Approve or reject macro_crisis_to_gspc_time_projection for Crisis",
+      "Choose whether SPY and ES=F count as S&P 500 tradable proxies",
+      "Provide or approve a Sideways dated-window protocol"
+    ],
+    "why": "Without explicit crosswalk decisions, the current seed windows are useful but cannot close current missing intraday/monthly/full-universe slots."
+  },
+  "safety_flags": {
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "proxy_promoted": false
+  }
+}

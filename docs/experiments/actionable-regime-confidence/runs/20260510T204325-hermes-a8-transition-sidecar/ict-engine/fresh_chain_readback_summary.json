@@ -1,0 +1,30 @@
+{
+  "auto_quant_status_current_managed": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/autoquant/auto-quant-status-current-managed.json",
+    "blocked_reason": "auto_quant_seed_strategies_required",
+    "data_ready": true,
+    "healthy": true,
+    "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/auto-quant/.deps/auto-quant",
+    "status": "dependency_ready_seed_required"
+  },
+  "catboost_policy_training_status_current": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/ict-engine/policy-training-status-nq-current.json",
+    "structural_path_ranking_runtime": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=1462 mature_rows=1 history_mature_rows=1436 raw_scored_mature=1436/30 production_validation=1434/30 observation_validation=40/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+    "structural_path_ranking_validation": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=1436/30 production_validation=1434/30 observation_validation=40/30 ready=true"
+  },
+  "pre_bayes_status_current": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/ict-engine/pre-bayes-status-nq-current.json",
+    "latest_canonical_structural_active_regime": "range",
+    "latest_canonical_structural_confidence": 0.6488770449019781,
+    "latest_gate_status": "pass_neutralized"
+  },
+  "provider_status_current": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/provider/provider-status-agent-current.json",
+    "compact_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/provider/provider-status-compact-current.out",
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:2/2 ready | market_data:6/7 ready"
+  },
+  "workflow_status_current": {
+    "actionable_artifacts_count": 114,
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/ict-engine/workflow-status-nq-current.json"
+  }
+}

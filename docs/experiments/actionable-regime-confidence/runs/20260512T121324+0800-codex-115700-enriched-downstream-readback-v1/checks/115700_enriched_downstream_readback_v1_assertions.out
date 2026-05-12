@@ -1,0 +1,13 @@
+PASS decision=115700_enriched_rows_schema_valid_downstream_readback_fail_closed
+PASS enriched_rows=237
+PASS accepted_schema_rows=237
+PASS stale_or_wrong_auto_quant_run_id_rows=0
+PASS stale_symbol_namespace_rows=0
+PASS ingest_exit=0
+PASS feedback_records_inserted=237
+PASS structural_path_export_rows=5
+PASS structural_path_export_history_rows=240
+PASS external_path_score_rows=2
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

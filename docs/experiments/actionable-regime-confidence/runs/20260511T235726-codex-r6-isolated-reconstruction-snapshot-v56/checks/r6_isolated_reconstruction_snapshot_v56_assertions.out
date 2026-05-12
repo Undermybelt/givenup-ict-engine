@@ -1,0 +1,10 @@
+source_snapshot_exists=ok
+durable_snapshot_files_present=ok
+verifier_schema_ready=ok
+rows_73x73=ok
+pooled_wilson95_passed=ok
+chronological_split_still_blocked=ok
+heldout_symbol_still_blocked=ok
+heldout_venue_still_blocked=ok
+accepted_confidence_gate_false=ok
+strict_full_objective_not_complete=ok

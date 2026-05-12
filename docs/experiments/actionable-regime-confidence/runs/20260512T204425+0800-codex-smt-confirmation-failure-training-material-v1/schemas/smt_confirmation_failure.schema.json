@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ict-engine smt_confirmation_failure_v1 packet",
+  "type": "object",
+  "required": [
+    "factor_name",
+    "factor_version",
+    "promotion_allowed",
+    "trade_usable",
+    "actionable",
+    "branch_path_contract",
+    "coverage_target",
+    "rows",
+    "per_regime_statistics",
+    "quality_gate"
+  ],
+  "properties": {
+    "factor_name": { "const": "smt_confirmation_failure_v1" },
+    "factor_version": { "type": "string" },
+    "promotion_allowed": { "const": false },
+    "trade_usable": { "const": false },
+    "actionable": { "const": false },
+    "branch_path_contract": {
+      "type": "object",
+      "required": ["main_regime", "sub_regime", "sub_sub_regime_or_profit_factor", "profit_factor", "regime_profit_branch_path"]
+    },
+    "coverage_target": { "type": "array", "items": { "type": "string" } },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "base_symbol",
+          "comparison_symbol",
+          "relationship_type",
+          "relationship_confidence",
+          "timeframe",
+          "session",
+          "smt_signal",
+          "base_swing_type",
+          "base_level",
+          "comparison_swing_type",
+          "comparison_level",
+          "swept_side",
+          "normalized_for_inverse_correlation",
+          "near_pd_array",
+          "pd_array_type",
+          "mss_or_cisd_confirmed",
+          "displacement_confirmed",
+          "confidence",
+          "fail_closed_reason",
+          "actionable"
+        ],
+        "properties": {
+          "relationship_type": { "enum": ["positive", "negative", "uncertain"] },
+          "smt_signal": { "enum": ["bullish_smt", "bearish_smt", "none"] },
+          "base_swing_type": { "enum": ["HH", "LH", "LL", "HL", "equal_high", "equal_low", "n/a"] },
+          "comparison_swing_type": { "enum": ["HH", "LH", "LL", "HL", "equal_high", "equal_low", "n/a"] },
+          "swept_side": { "enum": ["buy_side_liquidity", "sell_side_liquidity", "none"] },
+          "pd_array_type": { "enum": ["FVG", "IFVG", "OB", "breaker", "mitigation", "rejection", "session_high_low", "previous_day_high_low", "none"] },
+          "actionable": { "const": false }
+        }
+      }
+    },
+    "per_regime_statistics": {
+      "type": "object",
+      "required": ["trend", "range", "transition", "stress", "other"]
+    },
+    "quality_gate": {
+      "type": "object",
+      "required": ["quality_weight", "allowed_feedback_targets", "downstream_allowed", "fail_closed_reason"],
+      "properties": {
+        "downstream_allowed": { "const": false }
+      }
+    }
+  }
+}

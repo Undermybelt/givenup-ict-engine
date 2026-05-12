@@ -1,0 +1,1 @@
+target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T022732-codex-board-b-220646-execution-tree-trace-parity-current-binary-v1/execution-tree-trace-parity-current-binary-v1/state_execution_tree_trace_parity_current_binary_v1 --refresh --output-format json 

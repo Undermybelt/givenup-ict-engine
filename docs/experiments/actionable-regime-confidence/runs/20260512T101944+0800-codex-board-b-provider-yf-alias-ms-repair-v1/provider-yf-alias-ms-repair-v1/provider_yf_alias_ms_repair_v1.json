@@ -1,0 +1,52 @@
+{
+  "run_id": "20260512T101944+0800-codex-board-b-provider-yf-alias-ms-repair-v1",
+  "gate_result": "provider_yf_alias_ms_repair_v1=alias_ms_repair_reached_measurement_zero_trades",
+  "source_state": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/state_provider_owned_aq_long_yf_v1",
+  "state_copy": "docs/experiments/actionable-regime-confidence/runs/20260512T101944+0800-codex-board-b-provider-yf-alias-ms-repair-v1/state_provider_yf_alias_ms_repair_v1",
+  "alias_copy_exit": 0,
+  "feather_probe_exit": 0,
+  "tomac_exit": 0,
+  "prepared_rows": {
+    "1h": 11086,
+    "4h": 3006,
+    "1d": 596
+  },
+  "strategies": [
+    {
+      "name": "TomacNQ_KillzoneBreakout",
+      "backtest_start": "2024-06-13 08:00:00",
+      "backtest_end": "2025-12-31 00:00:00",
+      "trades": 0,
+      "total_profit_pct": 0.0,
+      "sharpe": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    {
+      "name": "TomacNQ_RegimePersistenceClusterDense",
+      "backtest_start": "2024-06-12 02:00:00",
+      "backtest_end": "2025-12-31 00:00:00",
+      "trades": 0,
+      "total_profit_pct": 0.0,
+      "sharpe": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    {
+      "name": "TomacNQ_RegimeTrendPullbackDense",
+      "backtest_start": "2024-06-12 22:00:00",
+      "backtest_end": "2025-12-31 00:00:00",
+      "trades": 0,
+      "total_profit_pct": 0.0,
+      "sharpe": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0
+    }
+  ],
+  "mature_rooted_branch_observations": 0,
+  "profitability_signal": false,
+  "downstream_promotion_rerun": false,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "next": "do not rerun this same Yahoo NQ alias/MS repair shape; require a changed branch-specific strategy, different provider-provenanced market family, or explicit selected-history/source-control unlock"
+}

@@ -1,0 +1,16 @@
+PASS run_id
+PASS gate_result
+PASS license_mit
+PASS rows_full_match
+PASS group_support_full
+PASS trap_abstain_present
+PASS accepted_rows_zero
+PASS canonical_merge_false
+PASS downstream_chain_rerun_false
+PASS strict_full_objective_false
+PASS update_goal_false
+PASS repo_runtime_code_changed_false
+PASS shared_intake_mutated_false
+PASS raw_data_committed_false
+PASS external_requests_sent_false
+PASS trade_usable_false

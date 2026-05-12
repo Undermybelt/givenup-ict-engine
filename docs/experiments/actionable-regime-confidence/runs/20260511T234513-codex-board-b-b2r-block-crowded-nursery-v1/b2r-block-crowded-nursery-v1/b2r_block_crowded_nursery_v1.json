@@ -1,0 +1,162 @@
+{
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "action_leaf": "suppress_or_wait_when_block_crowded",
+  "auto_quant_recipe": "SourceRootStopCarryLongHorizonV1",
+  "backtest_artifact": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_rc_spa_report_v1.md",
+  "bbn_probe_result": {
+    "soft_market_regime_distribution": {
+      "bear": 0.0,
+      "bull": 0.0,
+      "range": 1.0
+    },
+    "status": "skipped"
+  },
+  "branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "catboost_probe_result": {
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_score_visible_to_execution_tree": true,
+    "policy_training_exit": 0,
+    "policy_training_status_shape": [
+      "analyze_runs",
+      "entry_models",
+      "factor_hotplug_summary",
+      "structural_path_ranking_runtime",
+      "structural_path_ranking_runtime_summary",
+      "structural_path_ranking_target",
+      "structural_path_ranking_validation",
+      "structural_path_ranking_validation_summary",
+      "summary_line",
+      "symbol",
+      "update_runs"
+    ],
+    "ranker_validation_ready": true
+  },
+  "child_child_or_profit_factor": "StopManagedPanicRecovery",
+  "child_regime_hypothesis": "RangeConsolidation/WideRange is a negative live-context condition for Crisis carry execution",
+  "command_exits": {
+    "01_provider_status": 0,
+    "01b_provider_yfinance": 0,
+    "01c_provider_tradingview_mcp": 0,
+    "01d_provider_ibkr": 0,
+    "01e_provider_kraken_cli": 0,
+    "01f_provider_kraken_public": 0,
+    "02_auto_quant_status": 0,
+    "03_auto_quant_results_import": 0,
+    "04_auto_quant_prior_init_dry_run": 0,
+    "05_analyze_live_exact_branch_state": 0,
+    "06_pre_bayes_status": 0,
+    "07_policy_training_status": 0,
+    "08_workflow_structural_recommended_path_bundle": 0,
+    "09_workflow_execution_candidate": 0,
+    "10_workflow_status": 0,
+    "11_build_nursery_packet": 0
+  },
+  "edge_lcb": 0.002745,
+  "execution_tree_probe_result": {
+    "analyze_live_exit": 0,
+    "branch": "block_crowded",
+    "branch_path_preserved": true,
+    "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=blocked/block_crowded/skip | ranker=history_path/unknown/ready",
+    "decision_hint": "execution_blocked_regardless_of_prediction",
+    "execution_bias": "skip",
+    "gate_status": "blocked",
+    "readiness_line": "execution_readiness=0.4471 -> gate_status=blocked",
+    "workflow_bundle_exit": 0,
+    "workflow_bundle_keys": [
+      "candidate_set_id",
+      "candidate_set_size",
+      "composite_score",
+      "confirmation_summary",
+      "current_posterior",
+      "direction",
+      "experience_prior",
+      "historical_invalidation_rate",
+      "historical_total_records",
+      "invalidation_summary",
+      "path_id",
+      "path_label"
+    ],
+    "workflow_candidate_keys": [
+      "actionable",
+      "artifact_id",
+      "candidate_status",
+      "decision_hint",
+      "generated_at",
+      "multi_timeframe_summary",
+      "path",
+      "posterior_delta",
+      "pre_bayes_bridge_selected_entry_quality",
+      "pre_bayes_gate_status",
+      "review_reason",
+      "review_rule_version"
+    ],
+    "workflow_execution_candidate_exit": 0
+  },
+  "feedback_to_board_a": "nursery_feedback only: if repeated across contexts, propose a qualifying negative condition for Crisis carry promotion replay: require non-crowded execution readiness and live context compatible with Crisis rather than RangeConsolidation/WideRange.",
+  "filter_probe_result": {
+    "exit": 0,
+    "gating_status": "pass_neutralized",
+    "policy": "318900600c5e8cf2"
+  },
+  "max_drawdown_or_tail_loss": "tail_loss_p95=0.100 from 220646 Crisis RC-SPA row",
+  "nursery_branch_id": "B2R_BLOCK_CROWDED_CRISIS_CARRY_V1",
+  "nursery_status": "incubation_only",
+  "parent_regime_root": "Crisis",
+  "profit_factor_leaf": "SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "promotion_blocker": "promotion_not_allowed: execution_tree_block_crowded; source readiness 0.4433 < 0.45; current execution_readiness=0.4471 -> gate_status=blocked; incubation_only until repeated and admitted by execution tree",
+  "provider_panel": {
+    "ibkr_bridge": {
+      "domain": "local_runtime",
+      "ready": false,
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    "kraken_cli": {
+      "domain": "local_runtime",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    },
+    "kraken_public": {
+      "domain": "market_data",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    "tradingview_mcp": {
+      "domain": "market_data",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy"
+    },
+    "yfinance": {
+      "domain": "market_data",
+      "ready": true,
+      "reason": "public_yahoo_http_endpoints",
+      "status": "ready"
+    }
+  },
+  "rc_spa_score_if_available": {
+    "crisis_branch_score": 83.0,
+    "price_root_paths_passed": "4/4",
+    "stable_profit_score": 85.7407
+  },
+  "root_confidence_source": "Board A MainRegimeV2 root map plus 220646 RC-SPA pass",
+  "run_id": "20260511T234513+0800-codex-board-b-b2r-block-crowded-nursery-v1",
+  "source_artifacts": {
+    "block_crowded_diagnosis": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/execution_tree_block_crowded_diagnosis_v1.md",
+    "block_crowded_feedback_packet": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/execution_tree_block_crowded_feedback_packet_v1.md",
+    "current_execution_candidate": "docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1/SRC_ROOT_CARRY_LONG_220646/execution_candidate.json",
+    "current_execution_tree_trace": "docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1/SRC_ROOT_CARRY_LONG_220646/execution_tree_trace.json",
+    "exact_readback": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/exact_branch_closed_loop_readback_v4.md"
+  },
+  "source_feedback_id": "20260511T233358+0800-codex-board-b-220646-block-crowded-feedback-packet-v1",
+  "source_run_id": "20260511T231800+0800-codex-board-b-220646-exact-branch-closed-loop-readback-v4",
+  "trade_count": {
+    "auto_quant_total": 12329,
+    "b5_exact_branch_feedback_rows": 12,
+    "crisis_branch_selected_rows": 532
+  },
+  "why_keep_exploring": "The exact Crisis branch passed RC-SPA and preserved identity through Pre-Bayes, BBN soft evidence, CatBoost/path-ranker, and execution-candidate, but execution-tree blocked it under RangeConsolidation/WideRange with crowded readiness. Treat this as negative execution-admissibility feedback, not a profitability rejection.",
+  "win_rate_net": 55.66550409603374
+}

@@ -1,0 +1,90 @@
+{
+  "run_id": "20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1",
+  "gate_result": "autoquant_data_ready_local_cache_run_after_041649_v1=threaded_resolver_run_succeeded_three_backtests_no_board_a_promotion",
+  "status_before": {
+    "exit": 0,
+    "status": "dependency_ready_data_ready",
+    "dependency_healthy": true,
+    "data_ready": true,
+    "healthy": true,
+    "bootstrap_needed": false
+  },
+  "plain_run": {
+    "exit": 1,
+    "failure": "ModuleNotFoundError",
+    "message": "No module named 'pandas'"
+  },
+  "uv_directory_run": {
+    "exit": 1,
+    "attempted_backtests": 3,
+    "succeeded_backtests": 0,
+    "failed_backtests": 3,
+    "failure": "OperationalException",
+    "message": "Could not load markets, therefore cannot start",
+    "root_cause": "Binance market loading failed because api.binance.com DNS/market metadata was unavailable"
+  },
+  "threaded_resolver_run": {
+    "exit": 0,
+    "shim": "docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-workaround-run-v1/threaded-resolver-workaround/sitecustomize.py",
+    "shim_status": "ict_engine_autoquant_threaded_resolver_sitecustomize=applied",
+    "attempted_backtests": 3,
+    "succeeded_backtests": 3,
+    "failed_backtests": 0,
+    "strategies": [
+      {
+        "strategy": "BTCLeaderBreakV4BTCOnly",
+        "robust_sharpe": 0.2464,
+        "total_profit_pct": 14.81,
+        "trade_count": 116,
+        "win_rate_pct": 35.3448,
+        "profit_factor": 2.346,
+        "profit_floor": "FAIL",
+        "min_position_size": "PASS",
+        "promotion_decision": "runtime_only_non_promoting"
+      },
+      {
+        "strategy": "MTFTrendStackBTCOnly",
+        "robust_sharpe": -0.0796,
+        "total_profit_pct": -4.27,
+        "trade_count": 150,
+        "win_rate_pct": 22.0,
+        "profit_factor": 0.8513,
+        "profit_floor": "FAIL",
+        "min_position_size": "PASS",
+        "promotion_decision": "runtime_only_non_promoting"
+      },
+      {
+        "strategy": "MomentumMTFConfluenceBTCOnly",
+        "robust_sharpe": 0.0411,
+        "total_profit_pct": 2.86,
+        "trade_count": 169,
+        "win_rate_pct": 30.7692,
+        "profit_factor": 1.0709,
+        "profit_floor": "FAIL",
+        "min_position_size": "PASS",
+        "promotion_decision": "runtime_only_non_promoting"
+      }
+    ],
+    "nonfatal_warnings": [
+      "freqtrade exchange destructor emitted event-loop-closed warning after backtest path completed"
+    ]
+  },
+  "status_after": {
+    "exit": 0,
+    "status": "dependency_ready_data_ready",
+    "dependency_healthy": true,
+    "data_ready": true,
+    "healthy": true,
+    "bootstrap_needed": false
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next": "Do not promote AutoQuant runtime success until source/control evidence unlocks canonical and downstream reruns."
+}

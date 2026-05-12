@@ -1,0 +1,1 @@
+/tmp/ict-engine-codex-auto-quant-prepare-target/debug/ict-engine auto-quant-status --state-dir /tmp/20260512T043449+0800-codex-board-b-agent-selected-mtf-after-cli-fix-v1/state_mtf_after_cli_fix_v1 --output-format json

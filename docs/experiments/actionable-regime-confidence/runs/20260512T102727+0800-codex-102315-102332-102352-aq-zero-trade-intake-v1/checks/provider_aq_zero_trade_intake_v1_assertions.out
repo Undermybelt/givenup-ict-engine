@@ -1,0 +1,12 @@
+102315_fetch_exit_zero: PASS
+102315_prepare_exit_zero: PASS
+102315_run_exit_zero: PASS
+102315_trade_count_zero: PASS
+102332_run_exit_zero: PASS
+102332_probe_exit_zero: PASS
+102332_trade_count_zero: PASS
+102352_run_exit_zero: PASS
+102352_trade_count_zero: PASS
+accepted_rows_added_zero: PASS
+promotion_allowed_false: PASS
+update_goal_false: PASS

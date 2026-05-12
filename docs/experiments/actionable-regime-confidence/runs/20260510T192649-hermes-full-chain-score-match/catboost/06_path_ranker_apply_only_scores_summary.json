@@ -1,0 +1,32 @@
+{
+  "rows": 3,
+  "sample": [
+    {
+      "candidate_set_id": "structural-candidates:NQ:8f288754c638a9e8",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "raw_path_score": "0.405144071613999",
+      "score_model_family": "catboost",
+      "score_source_kind": "external_model",
+      "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+      "score_generator": "pandas_path_ranker_trainer.py"
+    },
+    {
+      "candidate_set_id": "structural-candidates:NQ:8f288754c638a9e8",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:trend_follow_through:primary",
+      "raw_path_score": "0.3630173590379622",
+      "score_model_family": "catboost",
+      "score_source_kind": "external_model",
+      "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+      "score_generator": "pandas_path_ranker_trainer.py"
+    },
+    {
+      "candidate_set_id": "structural-candidates:NQ:8f288754c638a9e8",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:transition_confirmation:primary",
+      "raw_path_score": "0.3630173590379622",
+      "score_model_family": "catboost",
+      "score_source_kind": "external_model",
+      "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+      "score_generator": "pandas_path_ranker_trainer.py"
+    }
+  ]
+}

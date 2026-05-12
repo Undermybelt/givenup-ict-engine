@@ -1,0 +1,8 @@
+direct_verifier_schema_ready=ok
+pooled_wilson_pass_present=ok
+split_gates_blocked=ok
+direct_species_not_closed=ok
+strict_full_objective_not_complete=ok
+update_goal_false=ok
+deficit_csv_written=ok
+checklist_written=ok

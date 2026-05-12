@@ -1,0 +1,6 @@
+requirement,artifact,status,note
+same-root provider fetches,docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-six-provider-aq-first-class-ibkr-v1/provider-csv,covered,all fetches attempted inside this root
+first-class TVR input,20_tvr_binance_btcusdt_1h,covered,{}
+first-class IBKR input,21_ibkr_btc_paxos_extended_bulk,covered,"{'source': 'docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-six-provider-aq-first-class-ibkr-v1/provider-csv/ibkr_BTC_1h_aggtrades.csv', 'symbol': 'BTC.PAXOS.AGGTRADES'}"
+same-root AQ,command-output/aq_*_run_tomac.*,covered,4 provider AQ runs exited 0
+downstream chain,N/A,not_run,requires accepted six-provider AQ authority before promotion chain

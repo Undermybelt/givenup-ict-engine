@@ -1,0 +1,14 @@
+PASS active_taxonomy=MainRegimeV2
+PASS history_public_json_rows=24705
+PASS history_page_declares_bull_bear=true
+PASS history_formula_derived_price_only=true
+PASS history_missing_sideways_crisis=true
+PASS hsmm_four_state_terms_found=true
+PASS hsmm_row_level_export_found=true
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+GATE blocked_historyofmarket_hsmm_no_attachable_full_matrix_mainregimev2_panel

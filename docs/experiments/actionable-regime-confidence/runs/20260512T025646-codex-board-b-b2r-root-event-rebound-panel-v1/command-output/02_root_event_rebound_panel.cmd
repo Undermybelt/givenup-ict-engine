@@ -1,0 +1,1 @@
+uv run --with pandas --with numpy --with pyarrow python docs/experiments/actionable-regime-confidence/runs/20260512T025646-codex-board-b-b2r-root-event-rebound-panel-v1/scripts/root_event_rebound_panel_v1.py

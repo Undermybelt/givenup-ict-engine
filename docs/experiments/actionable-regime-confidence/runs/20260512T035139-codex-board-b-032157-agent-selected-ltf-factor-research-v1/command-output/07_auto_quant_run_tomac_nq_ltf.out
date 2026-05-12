@@ -1,0 +1,25 @@
+---
+strategy:         NqLtfExpansionBreakout
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data found. Terminating.
+traceback:
+
+---
+strategy:         NqLtfRangeSnapback
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data found. Terminating.
+traceback:
+
+---
+strategy:         NqLtfSweepReclaim
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data found. Terminating.
+traceback:
+
+Done: 0 succeeded, 3 failed.

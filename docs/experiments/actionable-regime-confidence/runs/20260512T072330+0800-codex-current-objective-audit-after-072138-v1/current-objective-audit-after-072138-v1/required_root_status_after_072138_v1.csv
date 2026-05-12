@@ -1,0 +1,8 @@
+root_or_requirement,status,evidence
+R6 owner/export rows with valid controls,absent,/tmp/ict-engine-board-a-r6-owner-export-v1 absent; 072254 Zenodo/Oystacher required_filename_hit_count=0
+R5 source-owned post-2026-01-30 MainRegimeV2 rows,absent,/tmp/ict-engine-source-panel-recency-extension absent; 072333 exact Hugging Face source probe all zero rows
+R3 verifier-native Crisis-capable MainRegimeV2 labels,not_accepted,/tmp/ict-engine-native-subhour-source-label-intake present but prior readbacks keep TSIE quarantine and Crisis absent
+source-label equivalence intake,non_target_context,/tmp/ict-engine-source-label-equivalence-intake present but not source/control unlock
+Oystacher approval decision package,non_unlock_context,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid present but not owner/export rows with controls
+explicit user-selected historical path,absent,workflow_status_nq_agent blocking_reason=user_selected_historical_data_missing
+path-ranking maturity,absent,structural path-ranking target rows=1 mature_rows=0 calibrated_rows=0 history_mature_rows=0

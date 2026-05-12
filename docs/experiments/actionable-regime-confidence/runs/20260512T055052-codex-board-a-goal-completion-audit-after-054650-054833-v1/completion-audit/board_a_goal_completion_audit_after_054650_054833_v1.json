@@ -1,0 +1,64 @@
+{
+  "run_id": "20260512T055052-codex-board-a-goal-completion-audit-after-054650-054833-v1",
+  "gate_result": "board_a_goal_completion_audit_after_054650_054833_v1=not_complete_source_control_and_cross_timeframe_downstream_blocked",
+  "board_a_sha256_before_artifact": "aab0840f6ca87435aca2b219944d43cb11114ca9d123e1370a291e31dad938f2",
+  "board_b_sha256_before_artifact": "4acf1acb834d490103738d15c394e3bbe06401257679dbd27358c54a7a9d62af",
+  "strict_full_objective": false,
+  "goal_complete": false,
+  "promotion_allowed": false,
+  "update_goal_allowed": false,
+  "strongest_current_evidence": {
+    "run": "20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1",
+    "type": "diagnostic_hgb_numeric_source_label_screen",
+    "accepted_roots": ["Bear", "Bull", "Crisis", "Sideways"],
+    "boundary": "diagnostic_only_no_source_control_no_canonical_merge_no_downstream_rerun"
+  },
+  "blocking_requirements": [
+    "per_regime_source_control_accepted_packets_missing",
+    "cross_timeframe_native_subhour_validation_missing",
+    "required_source_control_target_roots_absent",
+    "canonical_merge_false",
+    "downstream_promotion_rerun_false",
+    "auto_quant_missing_dependency_in_latest_readonly_state",
+    "pre_bayes_observe_only",
+    "catboost_path_ranking_mature_rows_zero",
+    "execution_candidate_not_ready",
+    "trade_usable_false"
+  ],
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "counted_evidence": [
+    "051844_hgb_all_roots_diagnostic_only",
+    "052522_numeric_tree_partial_diagnostic_only",
+    "053856_hgb_validation_axis_daily_only_blocked",
+    "054025_r6_owner_official_availability_no_export_rows",
+    "052650_r6_owner_export_v5_drafts_not_sent",
+    "054650_current_blocker_artifact_correction_no_unlock",
+    "054116_readonly_runtime_chain_callable_no_source_unlock",
+    "054718_provider_autoquant_probe_no_source_unlock",
+    "054833_r3_native_subhour_contact_route_refresh_no_rows"
+  ],
+  "in_flight_not_consumed": [
+    "053852_hgb_per_regime_field_materialization",
+    "board_b_branch_segment_cargo_runs"
+  ],
+  "next_unlocks": [
+    "verifier_native_r6_owner_export_rows_with_source_owned_normal_controls",
+    "native_subhour_source_label_rows",
+    "source_owned_r5_recency_extension_rows",
+    "explicit_control_policy_approval_for_alternative_source_control_path"
+  ],
+  "post_unlock_chain_order": [
+    "direct_verifier",
+    "split_calibration",
+    "canonical_merge",
+    "providers_auto_quant",
+    "filter_pre_bayes",
+    "bbn",
+    "catboost_path_ranking",
+    "execution_tree"
+  ]
+}

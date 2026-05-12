@@ -1,0 +1,5 @@
+source,gate,reason
+062201,r3_hf_tsie_provenance_decision_v1=rejected_rule_based_proxy_labels_no_intake_no_promotion,TSIE labels are README-described rule-based price/volatility/RSI/volume signal labels.
+062253,tsie_prior_evidence_reconciliation_v1=duplicate_candidate_prior_full_data_and_mapping_failures_no_intake,Prior full-data gates accepted zero roots and direct Crisis evidence is absent.
+062409,r3_r5_source_selection_readback_after_061855_v1=no_candidate_selected_no_required_root_no_promotion,TSIE and five other candidates selected zero target-root unlocks.
+062657,tsie_negative_packet_reconciliation_after_062409_v1=tsie_packets_counted_or_scoped_no_required_root_no_promotion,"TSIE remains non-promoting for policy and validation reasons, not transport."

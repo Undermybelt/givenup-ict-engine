@@ -1,0 +1,10 @@
+d0601aa145798bdb341a1055f9af840f5974d536714744d833068579e15d4aec  docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md
+caef65ad750d6a6b5fd96737b1b8cd44b9a6fa45534553dcc4d939f1d8fdfdc0  docs/plans/2026-05-10-actionable-regime-confidence-todo.md
+14179  3646    00:24 /bin/zsh -lc find /Users/thrill3r -path '*/docs/plans/2026-05-10-actionable-regime-confidence-todo.md' -print 2>/dev/null | head -20
+14220 14179    00:24 find /Users/thrill3r -path */docs/plans/2026-05-10-actionable-regime-confidence-todo.md -print
+14539  3722    00:16 /bin/zsh -lc find /Users/thrill3r/projects-ict-engine/ict-engine -name AGENTS.md -o -name CLAUDE.md | sort
+14558 14539    00:16 find /Users/thrill3r/projects-ict-engine/ict-engine -name AGENTS.md -o -name CLAUDE.md
+14605  4899    00:15 /bin/zsh -lc find /Users/thrill3r/projects-ict-engine/ict-engine -name AGENTS.md -o -name CLAUDE.md | sort
+14735 14605    00:15 find /Users/thrill3r/projects-ict-engine/ict-engine -name AGENTS.md -o -name CLAUDE.md
+15566  4268    00:02 /bin/zsh -lc find /Users/thrill3r/projects-ict-engine/ict-engine -name AGENTS.md -o -name CLAUDE.md | sed -n '1,40p'
+15588 15566    00:02 find /Users/thrill3r/projects-ict-engine/ict-engine -name AGENTS.md -o -name CLAUDE.md

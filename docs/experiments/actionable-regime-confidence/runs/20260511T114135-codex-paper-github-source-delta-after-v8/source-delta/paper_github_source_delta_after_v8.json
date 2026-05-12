@@ -1,0 +1,74 @@
+{
+  "run_id": "20260511T114135+0800-codex-paper-github-source-delta-after-v8",
+  "board_cursor_seen_before_write": "20260511T113606+0800-codex-current-goal-completion-audit-v8-after-chain-expansion",
+  "objective": "Search papers, GitHub, and public dataset APIs for non-repeated MainRegimeV2 parent-root label panels or direct Manipulation row sources after the v8 completion audit.",
+  "active_taxonomy": {
+    "price_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "direct_class_or_overlay": "Manipulation",
+    "residual": "UnknownOrMixed"
+  },
+  "search_surfaces": [
+    "web_search",
+    "github_repository_search_api",
+    "huggingface_dataset_api",
+    "paper_source_pages"
+  ],
+  "audited_sources": [
+    {
+      "source_id": "github:Hasan8123/Market-Regime-Detection-System",
+      "url": "https://github.com/Hasan8123/Market-Regime-Detection-System",
+      "source_type": "github_repo",
+      "decision": "rejected_proxy_or_model_generated",
+      "reason": "README describes yfinance historical stock data, technical indicators, and KMeans or optional HMM classification for Bull/Bear/Sideways. It provides code-level model output, not an independent historical source-label panel, no Crisis root, and no direct Manipulation rows.",
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0
+    },
+    {
+      "source_id": "github:rapmd73/fwoba",
+      "url": "https://github.com/rapmd73/fwoba",
+      "source_type": "github_repo",
+      "decision": "tooling_candidate_not_label_source",
+      "reason": "Order-book analysis/collector code can inform future direct-input acquisition, but the repository does not provide materialized timestamped spoofing/layering/quote-stuffing positive rows with matched negatives.",
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0
+    },
+    {
+      "source_id": "paper:Order spoofing, price impact, and market quality",
+      "url": "https://doi.org/10.1016/j.pacfin.2026.103077",
+      "source_type": "paper",
+      "decision": "methodology_only_no_public_row_export",
+      "reason": "Useful direct Manipulation ontology for aggressive order revisions, opposite-side executions, price reversal, opening/closing session effects, and illiquid contracts. The paper relies on complete millisecond Taiwan derivatives order/trade data, but no public replayable row export was found in this pass.",
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0
+    },
+    {
+      "source_id": "paper:Cross-market spoofing",
+      "url": "https://doi.org/10.1016/j.intfin.2023.101735",
+      "source_type": "paper",
+      "decision": "methodology_only_no_public_row_export",
+      "reason": "Useful direct Manipulation ontology for cross-market spoofing across related FX limit order books. The public surface describes high-frequency EBS limit order book snapshots, but no public timestamped positive/negative source-label export was found.",
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0
+    },
+    {
+      "source_id": "huggingface_market_regime_recheck",
+      "url": "https://huggingface.co/api/datasets?search=market%20regime&limit=10",
+      "source_type": "dataset_api_metadata",
+      "decision": "already_consumed_or_rejected",
+      "reason": "Current public hits such as akashkumar5 HMM6 BTCUSD, AAdevloper NIFTY50, ClarusC64 mapping sets, and sujinwo TSIE are already ledgered or remain HMM/technical/rule/tiny mapping/proxy-only sources. No new exact MainRegimeV2 label panel surfaced.",
+      "accepted_parent_root_slots_added": 0,
+      "accepted_direct_manipulation_rows_added": 0
+    }
+  ],
+  "accepted_parent_root_slots_added": 0,
+  "accepted_direct_manipulation_rows_added": 0,
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "preserved_scoped_direct_gate": "accepted_95_bounded_midsummer_multichain_wash_maker_direct_slices",
+  "gate_result": "blocked_paper_github_source_delta_after_v8_no_new_exportable_label_source",
+  "blocker": "No new source in this pass provides exact provider/instrument/timeframe Bull/Bear/Sideways/Crisis label windows or materialized direct Manipulation positives with matched negatives beyond already accepted scoped social/event, self-trade, and wash-maker slices.",
+  "thresholds_relaxed": false,
+  "runtime_code_changed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Parent-root acquisition remains blocking: obtain exact provider/instrument/timeframe MainRegimeV2 label panels or an explicit owner-approved crosswalk; for Manipulation, acquire replayable direct spoofing/layering/quote-stuffing/order-lifecycle positives plus matched negatives."
+}

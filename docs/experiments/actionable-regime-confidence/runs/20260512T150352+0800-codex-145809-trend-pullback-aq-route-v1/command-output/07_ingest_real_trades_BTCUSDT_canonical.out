@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "7c9c599ae06cbd99",
+  "dry_run": false,
+  "feedback_records_inserted": 254,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_BTCUSDT_20260512T072618.964057000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "150352_145809_screen_branch_probe",
+  "symbol": "BTCUSDT",
+  "trades_applied": 254,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/derived/selected_branch_real_trades_BTCUSDT.jsonl",
+  "trades_total": 254
+}

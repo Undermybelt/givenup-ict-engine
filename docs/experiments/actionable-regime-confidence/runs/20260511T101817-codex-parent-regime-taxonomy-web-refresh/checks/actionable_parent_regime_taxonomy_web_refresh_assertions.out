@@ -1,0 +1,15 @@
+PASS source_refresh_used_web_papers_or_github=true
+PASS latest_user_correction_reopens_parent_taxonomy=true
+PASS active_candidate_taxonomy=ActionableRegimeRootV7
+PASS mandatory_roots_include_BullExpansion=true
+PASS mandatory_roots_include_BearExpansion=true
+PASS mandatory_roots_include_ConsolidationBalance=true
+PASS mandatory_roots_include_CrisisDislocation=true
+PASS mandatory_roots_include_ManipulationIntegrityEvent=true
+PASS manipulation_requires_direct_rows_not_ohlcv_proxy=true
+PASS accepted_95_roots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

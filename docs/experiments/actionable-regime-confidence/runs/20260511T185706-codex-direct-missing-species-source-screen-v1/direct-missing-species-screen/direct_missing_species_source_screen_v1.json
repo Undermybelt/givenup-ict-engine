@@ -1,0 +1,119 @@
+{
+  "artifact_type": "direct_missing_species_source_screen_v1",
+  "candidate_count": 7,
+  "candidates": [
+    {
+      "disposition": "blocked_paper_method_no_exported_labeled_rows",
+      "explicit_positive_labels": false,
+      "matched_negative_controls": false,
+      "provenance_rows": false,
+      "real_market_rows": false,
+      "reason": "Paper is useful for order-event modeling, but this screen found no public source-owned positive spoofing/layering rows plus matched normal controls.",
+      "ref": "Learning from the Sequence of Order Events in the Stock Market",
+      "row_surface": "method_and_prediction_task",
+      "source_family": "paper",
+      "species": "spoofing_layering",
+      "url": "https://arxiv.org/abs/2204.12270"
+    },
+    {
+      "disposition": "blocked_restricted_data_no_public_controls",
+      "explicit_positive_labels": true,
+      "matched_negative_controls": false,
+      "provenance_rows": false,
+      "real_market_rows": true,
+      "reason": "The study discusses real EBS order-book behavior, but the public surface is a paper/abstract rather than exportable row-level positives and matched controls.",
+      "ref": "FX spoofing and pinging case study",
+      "row_surface": "restricted_ebs_fx_order_book_study",
+      "source_family": "paper",
+      "species": "spoofing_layering,pinging",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0304405X21002368"
+    },
+    {
+      "disposition": "blocked_restricted_case_data_no_public_row_export",
+      "explicit_positive_labels": true,
+      "matched_negative_controls": false,
+      "provenance_rows": false,
+      "real_market_rows": true,
+      "reason": "The article is relevant to spoofing mechanics, but no public source-owned row table with matched normal controls was located.",
+      "ref": "Cross-market spoofing article",
+      "row_surface": "restricted_high_frequency_cross_market_study",
+      "source_family": "paper",
+      "species": "spoofing_layering",
+      "url": "https://www.sciencedirect.com/science/article/pii/S1386418124000624"
+    },
+    {
+      "disposition": "blocked_visual_case_no_machine_readable_labels_controls",
+      "explicit_positive_labels": false,
+      "matched_negative_controls": false,
+      "provenance_rows": false,
+      "real_market_rows": true,
+      "reason": "A useful case-study/visualization surface, but not a replayable labeled positive/control dataset for the Board A verifier.",
+      "ref": "parasec Bitstamp spoofing visualisation",
+      "row_surface": "visualized_bitstamp_orderbook_case",
+      "source_family": "web_dataset_or_demo",
+      "species": "spoofing_layering",
+      "url": "https://parasec.net/transmission/order-book-visualisation/"
+    },
+    {
+      "disposition": "blocked_detection_project_no_source_owned_labels",
+      "explicit_positive_labels": false,
+      "matched_negative_controls": false,
+      "provenance_rows": false,
+      "real_market_rows": true,
+      "reason": "Project describes quote-stuffing detection over collected market data, but does not provide Board A direct positives, matched normal controls, and provenance files.",
+      "ref": "codyrodgers/capstone-quote-stuffing",
+      "row_surface": "detection_project",
+      "source_family": "github",
+      "species": "quote_stuffing",
+      "url": "https://github.com/codyrodgers/capstone-quote-stuffing"
+    },
+    {
+      "disposition": "blocked_feature_library_no_direct_labels",
+      "explicit_positive_labels": false,
+      "matched_negative_controls": false,
+      "provenance_rows": false,
+      "real_market_rows": false,
+      "reason": "A potentially useful feature library for future probes, but it is not a source-owned manipulation label dataset with controls.",
+      "ref": "microalpha PyPI",
+      "row_surface": "feature_engineering_library",
+      "source_family": "python_package",
+      "species": "quote_stuffing,spoofing_layering",
+      "url": "https://pypi.org/project/microalpha/"
+    },
+    {
+      "disposition": "blocked_text_instruction_dataset_no_market_rows",
+      "explicit_positive_labels": false,
+      "matched_negative_controls": false,
+      "provenance_rows": false,
+      "real_market_rows": false,
+      "reason": "Hugging Face surface is not a real market row dataset with positive and matched-control event groups.",
+      "ref": "nguyentranai07/HTrade_Analyze_all",
+      "row_surface": "text_or_instruction_dataset",
+      "source_family": "huggingface",
+      "species": "quote_stuffing,spoofing_layering,pinging",
+      "url": "https://huggingface.co/datasets/nguyentranai07/HTrade_Analyze_all"
+    }
+  ],
+  "current_cursor_edited": false,
+  "decision": {
+    "accepted_rows_added": 0,
+    "full_direct_species_coverage": false,
+    "gate_result": "direct_missing_species_source_screen_v1=no_ready_positive_control_source",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T10:59:31.054331+00:00",
+  "missing_species_screened": [
+    "quote_stuffing",
+    "pinging",
+    "spoofing_layering"
+  ],
+  "next": "Only promote a missing direct Manipulation species after acquiring real row-level positives, matched normal controls, provenance, and a verifier pass.",
+  "ready_source_candidate_count": 0,
+  "run_id": "20260511T185706+0800-codex-direct-missing-species-source-screen-v1"
+}

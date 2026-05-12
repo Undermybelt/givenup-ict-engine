@@ -1,0 +1,1 @@
+cd /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000604-codex-board-b-user-selected-historical-path-probe-v1/state_user_selected_historical_path_probe_v1/auto-quant/auto-quant/.deps/auto-quant && uv run --with ta-lib prepare.py

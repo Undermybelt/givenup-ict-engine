@@ -1,0 +1,34 @@
+{
+  "applied_path_count": null,
+  "artifact_match_count": null,
+  "calibrated_path_prob": null,
+  "candidate_set_match_count": null,
+  "execution_gate_status": null,
+  "history_match_count": null,
+  "path_prob_lower_bound": null,
+  "raw_path_score": null,
+  "recommended_next_step": {
+    "action_type": "none",
+    "blocked_reason": null,
+    "deferred_command": null,
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:B2R_LOCAL_NONBTC_SPY_USD_MTF_124245:3c865ea3121b6918",
+      "candidate_set_size": 1,
+      "confirmation": "recommended command remains valid on next refresh",
+      "invalidation": "Required market data or state inputs stay missing.",
+      "path_id": "path:scenario:B2R_LOCAL_NONBTC_SPY_USD_MTF_124245:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+      "path_label": "bootstrap_readiness",
+      "recommended_command": null,
+      "selected_path_probability": 1.0,
+      "stop": "No trade until preconditions are satisfied.",
+      "trigger": "No workflow snapshot exists yet.",
+      "why": "posterior=0.000 prior=0.500 invalidation_rate=n/a"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "reuse_mode": null,
+  "runtime_enabled": null,
+  "runtime_source": null,
+  "status": null
+}

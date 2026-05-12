@@ -1,0 +1,95 @@
+{
+  "accepted_rows_added": 0,
+  "all_command_outputs_present": true,
+  "all_exit_zero": true,
+  "auto_quant_data_ready": false,
+  "auto_quant_healthy": false,
+  "auto_quant_recommended_next_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-a-readonly-runtime-20260512T013050/auto-quant",
+  "auto_quant_status": "missing_dependency",
+  "canonical_merge_allowed": false,
+  "command_status": [
+    {
+      "command_id": "provider_status",
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/provider_status_exit_code.txt",
+      "exit_present": "true",
+      "output_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/provider_status_agent.json",
+      "output_present": "true",
+      "output_sha256": "eb98b1b317d3b86baa0516f4784dc252ca03849261df79c515463bd6e03a5cdd"
+    },
+    {
+      "command_id": "auto_quant_status",
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/auto_quant_status_exit_code.txt",
+      "exit_present": "true",
+      "output_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/auto_quant_status.json",
+      "output_present": "true",
+      "output_sha256": "469d010a24b50f1d3c8616bd808807b5b9b0f1116576e509bf73dd1c7a87ee88"
+    },
+    {
+      "command_id": "pre_bayes_status",
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/pre_bayes_status_nq_exit_code.txt",
+      "exit_present": "true",
+      "output_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/pre_bayes_status_nq.json",
+      "output_present": "true",
+      "output_sha256": "b0694cbc9bb60a23d0700c117a1ac3d652ccb3e82a3d6b3e28b860eac245686f"
+    },
+    {
+      "command_id": "policy_training_status",
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/policy_training_status_nq_exit_code.txt",
+      "exit_present": "true",
+      "output_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/policy_training_status_nq.json",
+      "output_present": "true",
+      "output_sha256": "82121da5f2c4d4fd53751011f97821ec83b719e70ba23bcd7871b60223bac546"
+    },
+    {
+      "command_id": "workflow_status",
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/workflow_status_structural_path_bundle_exit_code.txt",
+      "exit_present": "true",
+      "output_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/workflow_status_structural_path_bundle_agent.json",
+      "output_present": "true",
+      "output_sha256": "eb30f6820eaf430aca9fd85dc1b8442124060f836a023cfc25c6178ca3ec10cb"
+    },
+    {
+      "command_id": "path_ranking_export",
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/export_structural_path_ranking_target_exit_code.txt",
+      "exit_present": "true",
+      "output_path": "docs/experiments/actionable-regime-confidence/runs/20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1/command-output/export_structural_path_ranking_target.stdout.txt",
+      "output_present": "true",
+      "output_sha256": "c4f00567e66e1efefc72b309d793aaffc2da1580292de0351287f3ba99ae4b49"
+    }
+  ],
+  "downstream_chain_rerun_allowed": false,
+  "external_requests_sent": false,
+  "gate_result": "readonly_runtime_surface_013050_summary_v1=surfaces_callable_non_promoting_roots_blocked",
+  "new_confidence_gate": false,
+  "path_ranking_mature_rows": 0,
+  "path_ranking_rows": 1,
+  "path_ranking_training_weight_rows": 0,
+  "policy_training_pending_models": [
+    null,
+    null
+  ],
+  "policy_training_ready_models": [],
+  "policy_training_summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+  "pre_bayes_latest_gate_status": null,
+  "pre_bayes_latest_policy": null,
+  "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "raw_data_committed": false,
+  "run_id": "20260512T013601-codex-readonly-runtime-surface-013050-summary-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_run_id": "20260512T013050-codex-readonly-runtime-surface-refresh-after-012425-v1",
+  "state_dir": "/tmp/ict-engine-board-a-readonly-runtime-20260512T013050",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "workflow_candidate_set_size": 1,
+  "workflow_direction": "observe",
+  "workflow_stop_summary": "No trade until preconditions are satisfied."
+}

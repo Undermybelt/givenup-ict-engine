@@ -1,0 +1,11 @@
+gate_result=source_control_unlock_refresh_after_062604_v1=no_required_root_no_approval_no_downstream
+required_root_unlocked_false=True
+source_label_equivalence_rows=248440
+external_requests_sent_false=True
+approval_present_false=True
+source_control_evidence_acquired_false=True
+target_root_mutated_false=True
+canonical_merge_false=True
+downstream_promotion_rerun_false=True
+strict_full_objective_false=True
+update_goal_false=True

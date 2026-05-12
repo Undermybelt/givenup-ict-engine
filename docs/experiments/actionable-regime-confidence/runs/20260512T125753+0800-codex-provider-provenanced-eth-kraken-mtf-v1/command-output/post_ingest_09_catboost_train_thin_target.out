@@ -1,0 +1,6 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf/ETH_KRAKEN/policy_training/structural_path_ranking_target.csv: 3 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 1 training samples
+[features] label dist: {np.int64(1): np.int64(1)}
+[template] User weights template saved to docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/path-ranker/catboost_thin_target_v1/user_weights.json

@@ -1,0 +1,242 @@
+{
+  "checklist": [
+    {
+      "blocker": "",
+      "evidence": "provider_status_agent/provider_status_market_data_agent/provider_status_live_runtime_agent command outputs",
+      "requirement": "Run real provider status surfaces including IBKR, TradingViewRemix, yfinance, and Kraken visibility",
+      "status": "covered_non_promoting"
+    },
+    {
+      "blocker": "selected-data AutoQuant promotion still blocked by source/control and selected-history gates",
+      "evidence": "auto_quant_status_json command output",
+      "requirement": "Run Auto-Quant readiness surface",
+      "status": "covered_non_promoting"
+    },
+    {
+      "blocker": "no canonical source/control merge input",
+      "evidence": "pre_bayes_status_nq_json command output",
+      "requirement": "Run filter / Pre-Bayes readiness surface",
+      "status": "covered_non_promoting"
+    },
+    {
+      "blocker": "no accepted source/control root and no selected historical path",
+      "evidence": "policy_training_status_nq_agent and export_structural_path_ranking_target_nq command outputs",
+      "requirement": "Run BBN / policy-training / CatBoost-path-ranking readiness surfaces",
+      "status": "covered_non_promoting"
+    },
+    {
+      "blocker": "promotion remains fail-closed before downstream rerun",
+      "evidence": "workflow_status_nq_agent and workflow_status_nq_execution_candidate_agent command outputs",
+      "requirement": "Run execution-tree/workflow branch surfaces",
+      "status": "covered_non_promoting"
+    },
+    {
+      "blocker": "source/control unlock and selected-history gates are false",
+      "evidence": "No selected-data promotion or canonical merge was allowed in this slice",
+      "requirement": "Preserve branch order main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor",
+      "status": "blocked"
+    },
+    {
+      "blocker": "",
+      "evidence": "This artifact records readiness only and keeps promotion_allowed=false",
+      "requirement": "Do not use proxy runtime readiness as completion proof",
+      "status": "covered_fail_closed"
+    }
+  ],
+  "commands": [
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--agent"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "started_at": "2026-05-12T00:26:58.667453+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_agent.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_agent.stdout.txt",
+      "stdout_preview": "{\n  \"summary_line\": \"entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:2/7 ready\",\n  \"ready_by_domain\": {\n    \"entry_model\": \"2/2\",\n    \"live_runtime\": \"1/3\",\n    \"local_runtime\": \"1/2\",\n    \"market_data\": \"2/7\"\n  },\n  \"providers\": [\n    {\n      \"provider_id\": \"breaker_rb_long_v1\",\n      \"domain\": \"entry_model\",\n      \"selectable_by_user\": false,\n      \"adopted_by_default\": false,\n      \"ready\": true,\n      \"access_mode\": \"internal_model_registry\",\n      \"user_access\": \"builtin_registry\",\n      \"market_fit\": [\n        \"entry_model\"\n      ],\n      \"status\": \"registered\",\n      \"reason\": \"entry_model_registry_member\",\n      \"summary\": \"Built-in entry-model registry member used by status and training surfaces.\"\n    },\n    {\n      \"provider_id\": \"cisd_rb_long_v1\",\n      \"domain\": \"entry_model\",\n      \"selectable_by_user\": false,\n      \"adopted_by_default\": false,\n      \"ready\": true,\n      \"access_mode\": \"internal_model_registry\",\n      \"user_access\": \"builtin_registry\",\n      \"market_fit\": [\n        \"entry_model\"\n      ],\n      \"status\": \"registered\",\n      \"reason\": \"entry_model_registry_member\",\n      \"summary\": \"Built-in entry-model registry member used by status and training surfaces.\"\n    },\n    {\n      \"provider_id\": \"crypto_public_runtime\",\n      \"domain\": \"live_runtime\",\n      \"selectable_by_user\": true,\n      \"adopted_by_default\": false,\n      \"ready\": false,\n      \"access_mode\": \"public_runtime_bundle\",\n      \"user_access\": \"operator_runtime_optional\",\n      \"market_fit\": [\n        \"crypto\"\n      ],\n      \"fallback_priority\": 21,\n      \"status\": \"operator_runtime_required\",\n      \"reason\": \"explicit_opt_in_required\",\n      \"summary\": \"Optional crypto-public runtime bundle for CoinAnk/Hyperliquid-style futures observation when the user explicitly wants that lane.\",\n      \"install_prompts\": [\n        \"Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane.\"\n      ]\n"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--domain",
+        "market_data",
+        "--agent"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_market_data_agent.exit",
+      "name": "provider_status_market_data_agent",
+      "started_at": "2026-05-12T00:27:23.666523+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_market_data_agent.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_market_data_agent.stdout.txt",
+      "stdout_preview": "{\n  \"summary_line\": \"market_data:2/7 ready\",\n  \"ready_by_domain\": {\n    \"market_data\": \"2/7\"\n  },\n  \"providers\": [\n    {\n      \"provider_id\": \"binance_public\",\n      \"domain\": \"market_data\",\n      \"selectable_by_user\": true,\n      \"adopted_by_default\": false,\n      \"ready\": false,\n      \"access_mode\": \"public_script_adapter\",\n      \"user_access\": \"public_no_login\",\n      \"market_fit\": [\n        \"crypto\"\n      ],\n      \"fallback_priority\": 2,\n      \"status\": \"configured_runtime_unhealthy\",\n      \"reason\": \"python3_provider_dependencies_missing\",\n      \"summary\": \"Public no-login crypto market-data path for broad spot/perp history.\",\n      \"install_prompts\": [\n        \"System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost\"\n      ]\n    },\n    {\n      \"provider_id\": \"bybit_public\",\n      \"domain\": \"market_data\",\n      \"selectable_by_user\": true,\n      \"adopted_by_default\": false,\n      \"ready\": false,\n      \"access_mode\": \"public_script_adapter\",\n      \"user_access\": \"public_no_login\",\n      \"market_fit\": [\n        \"crypto\"\n      ],\n      \"fallback_priority\": 1,\n      \"status\": \"configured_runtime_unhealthy\",\n      \"reason\": \"python3_provider_dependencies_missing\",\n      \"summary\": \"Public no-login crypto market-data path for exchange-style replay and factor work.\",\n      \"install_prompts\": [\n        \"System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost\"\n      ]\n    },\n    {\n      \"provider_id\": \"ibkr\",\n      \"domain\": \"market_data\",\n      \"selectable_by_user\": true,\n      \"adopted_by_default\": false,\n      \"ready\": false,\n      \"access_mode\": \"operator_runtime_required\",\n      \"user_access\": \"login_and_local_runtime\",\n      \"market_fit\": [\n      "
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--domain",
+        "live_runtime",
+        "--agent"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_live_runtime_agent.exit",
+      "name": "provider_status_live_runtime_agent",
+      "started_at": "2026-05-12T00:27:37.893605+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_live_runtime_agent.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/provider_status_live_runtime_agent.stdout.txt",
+      "stdout_preview": "{\n  \"summary_line\": \"live_runtime:1/3 ready\",\n  \"ready_by_domain\": {\n    \"live_runtime\": \"1/3\"\n  },\n  \"providers\": [\n    {\n      \"provider_id\": \"crypto_public_runtime\",\n      \"domain\": \"live_runtime\",\n      \"selectable_by_user\": true,\n      \"adopted_by_default\": false,\n      \"ready\": false,\n      \"access_mode\": \"public_runtime_bundle\",\n      \"user_access\": \"operator_runtime_optional\",\n      \"market_fit\": [\n        \"crypto\"\n      ],\n      \"fallback_priority\": 21,\n      \"status\": \"operator_runtime_required\",\n      \"reason\": \"explicit_opt_in_required\",\n      \"summary\": \"Optional crypto-public runtime bundle for CoinAnk/Hyperliquid-style futures observation when the user explicitly wants that lane.\",\n      \"install_prompts\": [\n        \"Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane.\"\n      ]\n    },\n    {\n      \"provider_id\": \"external_http_runtime\",\n      \"domain\": \"live_runtime\",\n      \"selectable_by_user\": true,\n      \"adopted_by_default\": false,\n      \"ready\": false,\n      \"access_mode\": \"external_http_runtime\",\n      \"user_access\": \"operator_runtime_optional\",\n      \"market_fit\": [\n        \"tradfi\",\n        \"crypto\"\n      ],\n      \"fallback_priority\": 20,\n      \"status\": \"operator_runtime_required\",\n      \"reason\": \"base_url_and_service_required\",\n      \"summary\": \"Optional external HTTP runtime when the user already has a compatible market-data service.\",\n      \"install_prompts\": [\n        \"Consumer agent request: ask whether the user wants zero-config yfinance or a generic external HTTP runtime.\",\n        \"Consumer agent follow-up: if the user chooses the external HTTP runtime, keep the external_http_runtime backend and pass --external-http-base-url <url> (default http://127.0.0.1:6901/api/v1).\"\n      ]\n    },\n    {\n      \"provider_id\": \"yfinance\",\n      \"domain\": \"live_runtime\",\n      \"selectable_by_user\": true,\n      \"adopted_by_default\": true,\n      \"ready\": true,\n      \"access_mode\": \"local_li"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-status",
+        "--state-dir",
+        "/tmp/ict-engine-board-b-runtime-readiness-20260512T082430",
+        "--output-format",
+        "json"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/auto_quant_status_json.exit",
+      "name": "auto_quant_status_json",
+      "started_at": "2026-05-12T00:27:37.985509+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/auto_quant_status_json.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/auto_quant_status_json.stdout.txt",
+      "stdout_preview": "{\n  \"status\": \"missing_dependency\",\n  \"healthy\": false,\n  \"bootstrap_needed\": true,\n  \"dependency_healthy\": false,\n  \"data_ready\": false,\n  \"update_available\": false,\n  \"managed_dir\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant\",\n  \"workspace\": {\n    \"repo_root\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant\",\n    \"program_md\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant/program.md\",\n    \"prepare_script\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant/prepare.py\",\n    \"run_script\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant/run.py\",\n    \"config_json\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant/config.json\",\n    \"strategies_dir\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant/user_data/strategies\",\n    \"data_dir\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant/user_data/data\"\n  },\n  \"dependency_status\": {\n    \"repo_url\": \"https://github.com/TraderAlice/Auto-Quant.git\",\n    \"managed_dir\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant/.deps/auto-quant\",\n    \"tracked_branch\": \"master\",\n    \"pinned_ref\": null,\n    \"current_commit\": null,\n    \"upstream_commit\": null,\n    \"bootstrap_needed\": true,\n    \"config_present\": false,\n    \"managed_repo_present\": false,\n    \"healthy\": false,\n    \"update_available\": false,\n    \"required_files\": [\n      \"README.md\",\n      \"program.md\",\n      \"prepare.py\",\n      \"run.py\",\n      \"versions/README.md\"\n    ],\n    \"notes\": [\n      \"auto_quant_not_bootstrapped\"\n    ],\n    \"adapter_version\": \"v1\",\n    \"last_sync\": null\n  },\n  \"recommended_next_command\": \"ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-b-runtime-readiness-20260512T082430/auto-quant\",\n  \"recommended_next_com"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-b-runtime-readiness-20260512T082430",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/pre_bayes_status_nq_json.exit",
+      "name": "pre_bayes_status_nq_json",
+      "started_at": "2026-05-12T00:27:38.145148+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/pre_bayes_status_nq_json.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/pre_bayes_status_nq_json.stdout.txt",
+      "stdout_preview": "{\n  \"latest_bridge\": null,\n  \"latest_bridge_diff\": null,\n  \"latest_canonical_structural_active_regime\": null,\n  \"latest_canonical_structural_confidence\": null,\n  \"latest_canonical_structural_probabilities\": {},\n  \"latest_filtered_assignments\": null,\n  \"latest_gate_status\": null,\n  \"latest_policy\": null,\n  \"latest_policy_diff\": null,\n  \"latest_policy_lineage\": {\n    \"changed_fields_union\": [],\n    \"latest_version\": null,\n    \"previous_version\": null,\n    \"rollback_candidate_version\": null,\n    \"rollback_reason\": \"no_policy_rollback_suggested\",\n    \"total_versions\": 0\n  },\n  \"latest_policy_version\": null,\n  \"latest_soft_evidence\": null,\n  \"latest_soft_evidence_diff\": [],\n  \"latest_structural_feedback\": null,\n  \"latest_uses_soft_evidence\": null\n}\n"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-b-runtime-readiness-20260512T082430",
+        "--output-format",
+        "agent"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/policy_training_status_nq_agent.exit",
+      "name": "policy_training_status_nq_agent",
+      "started_at": "2026-05-12T00:27:38.215594+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/policy_training_status_nq_agent.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/policy_training_status_nq_agent.stdout.txt",
+      "stdout_preview": "{\n  \"symbol\": \"NQ\",\n  \"analyze_runs\": 0,\n  \"update_runs\": 0,\n  \"entry_models\": [\n    {\n      \"entry_model_id\": \"cisd_rb_long_v1\",\n      \"consumer_adopted_by_default\": false,\n      \"consumer_effect\": \"internal_training_only\",\n      \"ready\": false,\n      \"matched_rows\": 0,\n      \"summary_line\": \"policy training is not ready for either BBN or CatBoost: matched_rows=0 bbn_warnings=matched_rows_below_minimum: 0; outcome_labels_do_not_cover_win_loss; entry_quality_bins_have_low_diversity; trigger_confirmation_bins_have_low_diversity catboost_warnings=matched_rows_below_recommended_minimum: 0; outcome_labels_do_not_cover_win_loss; numeric_feature_variation_too_low: 0/5 varying\"\n    },\n    {\n      \"entry_model_id\": \"breaker_rb_long_v1\",\n      \"consumer_adopted_by_default\": false,\n      \"consumer_effect\": \"internal_training_only\",\n      \"ready\": false,\n      \"matched_rows\": 0,\n      \"summary_line\": \"Breaker RB policy training is not ready for either BBN or CatBoost: matched_rows=0 bbn_warnings=matched_rows_below_minimum: 0; outcome_labels_do_not_cover_win_loss; entry_quality_bins_have_low_diversity; trigger_confirmation_bins_have_low_diversity catboost_warnings=matched_rows_below_recommended_minimum: 0; outcome_labels_do_not_cover_win_loss; numeric_feature_variation_too_low: 0/5 varying\"\n    }\n  ],\n  \"structural_path_ranking_runtime\": {\n    \"enabled\": false,\n    \"ready\": false,\n    \"status\": \"disabled\",\n    \"active_match_count\": 0,\n    \"summary_line\": \"Ranker runtime: structural_path_ranking_target rows=1 history_rows=1 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=missing trainer_status=missing runtime_selection=disabled runtime_mode=none runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0\"\n  },\n  \"structural_path_ranking_validation\": {\n    \"calibration_ready\": false,\n    \"calibration_quality_ready\": false,\n    \"calibration_status\": \""
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-b-runtime-readiness-20260512T082430",
+        "--agent"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/workflow_status_nq_agent.exit",
+      "name": "workflow_status_nq_agent",
+      "started_at": "2026-05-12T00:27:38.269193+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/workflow_status_nq_agent.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/workflow_status_nq_agent.stdout.txt",
+      "stdout_preview": "{\n  \"auto_quant_handoff\": null,\n  \"available_opt_in_profiles\": [],\n  \"blocking_reason\": \"exact_structural_branch_visible_but_not_ready_or_actionable\",\n  \"blocking_status\": \"fail_closed\",\n  \"closed_loop_branch_admission\": {\n    \"actionable\": false,\n    \"candidate_status\": \"execution_candidate_observed\",\n    \"evidence\": [\n      \"execution_gate_status=execution_candidate_observed\",\n      \"review_status=observe\"\n    ],\n    \"execution_gate_status\": \"execution_candidate_observed\",\n    \"path_id\": \"path:scenario:NQ:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary\",\n    \"path_label\": \"bootstrap_readiness\",\n    \"pre_bayes_gate_status\": \"\",\n    \"ready\": false,\n    \"reason\": \"exact_structural_branch_visible_but_not_ready_or_actionable\",\n    \"review_status\": \"observe\",\n    \"source_phase\": \"structural-recommended-path-bundle\",\n    \"status\": \"fail_closed\"\n  },\n  \"dataset_resolution_line\": null,\n  \"ensemble\": null,\n  \"evidence_review\": null,\n  \"experience_prior_surface\": {\n    \"branch\": {\n      \"composite_score\": 1.0,\n      \"current_posterior\": 1.0,\n      \"entity_id\": \"NQ:bootstrap:no_workflow_state:bootstrap_collect_inputs\",\n      \"entity_kind\": \"branch\",\n      \"experience_prior\": 1.0,\n      \"historical_followed_count\": 0,\n      \"historical_total_records\": 0,\n      \"source_panel_count\": 0\n    },\n    \"node\": {\n      \"composite_score\": 0.15,\n      \"current_posterior\": 0.0,\n      \"entity_id\": \"NQ:bootstrap:no_workflow_state\",\n      \"entity_kind\": \"node\",\n      \"experience_prior\": 0.5,\n      \"historical_followed_count\": 0,\n      \"historical_total_records\": 0,\n      \"source_panel_count\": 0\n    },\n    \"path\": {\n      \"composite_score\": 0.15,\n      \"current_posterior\": 0.0,\n      \"entity_id\": \"path:scenario:NQ:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary\",\n      \"entity_kind\": \"path\",\n      \"experience_prior\": 0.5,\n      \"historical_followed_count\": 0,\n      \"historical_total_records\": 0,\n      \"source_panel_count\": 0\n    },\n    \"scenario\": {\n      \"composite_"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-b-runtime-readiness-20260512T082430",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/workflow_status_nq_execution_candidate_agent.exit",
+      "name": "workflow_status_nq_execution_candidate_agent",
+      "started_at": "2026-05-12T00:27:51.349503+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/workflow_status_nq_execution_candidate_agent.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/workflow_status_nq_execution_candidate_agent.stdout.txt",
+      "stdout_preview": "{\n  \"actionable\": false,\n  \"artifact_id\": \"execution-candidate:structural-recommended-path:NQ:structural-candidates:NQ:b6eb93ad4c6f4534\",\n  \"candidate_set_id\": \"structural-candidates:NQ:b6eb93ad4c6f4534\",\n  \"candidate_set_size\": 1,\n  \"candidate_status\": \"execution_candidate_observed\",\n  \"decision_hint\": \"posterior=0.000 prior=0.500 invalidation_rate=n/a\",\n  \"execution_gate_status\": \"execution_candidate_observed\",\n  \"execution_readiness\": null,\n  \"generated_at\": null,\n  \"path\": \"structural-recommended-path-bundle:path:scenario:NQ:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary\",\n  \"path_id\": \"path:scenario:NQ:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary\",\n  \"path_label\": \"bootstrap_readiness\",\n  \"path_ranker_calibrated_path_prob\": null,\n  \"path_ranker_path_prob_lower_bound\": null,\n  \"path_ranker_raw_score\": null,\n  \"path_ranker_runtime_source\": null,\n  \"persisted\": false,\n  \"pre_bayes_gate_status\": \"\",\n  \"pre_bayes_policy_version\": \"\",\n  \"ready\": false,\n  \"review_reason\": \"structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready\",\n  \"review_status\": \"observe\",\n  \"scenario_id\": \"scenario:NQ:bootstrap:no_workflow_state:bootstrap_collect_inputs\",\n  \"selected_path_probability\": 1.0,\n  \"source_phase\": \"structural-recommended-path-bundle\",\n  \"source_run_id\": null,\n  \"structural_recommended_path_bundle\": {\n    \"candidate_set_id\": \"structural-candidates:NQ:b6eb93ad4c6f4534\",\n    \"candidate_set_size\": 1,\n    \"composite_score\": 0.15,\n    \"confirmation_summary\": \"recommended command remains valid on next refresh\",\n    \"current_posterior\": 0.0,\n    \"direction\": \"observe\",\n    \"experience_prior\": 0.5,\n    \"historical_total_records\": 0,\n    \"invalidation_summary\": \"Required market data or state inputs stay missing.\",\n    \"path_id\": \"path:scenario:NQ:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary\",\n    \"path_label\": \"bootstrap_readiness\",\n    \"rank\": 1,\n    \"scenario_id\": \"scenario:NQ:bootstrap:no_workflow_state:bootst"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-b-runtime-readiness-20260512T082430"
+      ],
+      "exit_code": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/export_structural_path_ranking_target_nq.exit",
+      "name": "export_structural_path_ranking_target_nq",
+      "started_at": "2026-05-12T00:28:01.718680+00:00",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/export_structural_path_ranking_target_nq.stderr.txt",
+      "stderr_preview": "",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T082430+0800-codex-runtime-readiness-after-082215-v1/command-output/export_structural_path_ranking_target_nq.stdout.txt",
+      "stdout_preview": "{\n  \"symbol\": \"NQ\",\n  \"rows\": 1,\n  \"candidate_set_id\": \"structural-candidates:NQ:b6eb93ad4c6f4534\",\n  \"candidate_set_size\": 1,\n  \"pending_reward_states\": {\n    \"unobserved\": 1\n  },\n  \"mature_rows\": 0,\n  \"rows_with_raw_path_score\": 0,\n  \"rows_with_calibrated_path_prob\": 0,\n  \"rows_with_path_prob_lower_bound\": 0,\n  \"rows_with_propensity_estimate\": 0,\n  \"rows_with_execution_gate_status\": 0,\n  \"rows_with_training_weight\": 0,\n  \"csv_path\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/NQ/policy_training/structural_path_ranking_target.csv\",\n  \"jsonl_path\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/NQ/policy_training/structural_path_ranking_target.jsonl\",\n  \"history_csv_path\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/NQ/policy_training/structural_path_ranking_target_history.csv\",\n  \"history_jsonl_path\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/NQ/policy_training/structural_path_ranking_target_history.jsonl\",\n  \"history_rows\": 1,\n  \"history_mature_rows\": 0,\n  \"history_rows_with_raw_path_score\": 0,\n  \"history_rows_with_calibrated_path_prob\": 0,\n  \"history_rows_with_path_prob_lower_bound\": 0,\n  \"history_rows_with_propensity_estimate\": 0,\n  \"history_rows_with_training_weight\": 0,\n  \"summary_path\": \"/tmp/ict-engine-board-b-runtime-readiness-20260512T082430/NQ/policy_training/structural_path_ranking_target_summary.json\",\n  \"trainer_manifest\": {\n    \"protocol_version\": \"structural-path-ranking-trainer-manifest-v1\",\n    \"dataset_role\": \"external_path_ranker_training_dataset\",\n    \"group_id_column\": \"candidate_set_id\",\n    \"label_column\": \"calibrated_label\",\n    \"weight_column\": \"training_weight\",\n    \"maturity_column\": \"maturity_mask\",\n    \"raw_score_column\": \"raw_path_score\",\n    \"feature_columns\": [\n      \"rank\",\n      \"direction\",\n      \"regime_calibration_bucket\",\n      \"behavior_policy_probability\",\n      \"execution_propensity\",\n      \"target_policy_probability_confidence\",\n      \"target_policy_probability_lowe"
+    }
+  ],
+  "metrics": {
+    "accepted_rows_added": 0,
+    "all_commands_exit0": true,
+    "canonical_merge": false,
+    "commands_exit0": 9,
+    "commands_run": 9,
+    "downstream_promotion_rerun": false,
+    "explicit_user_selected_history": false,
+    "gate_result": "runtime_readiness_after_082215_v1=readiness_observed_but_source_control_and_selected_history_gates_block_promotion",
+    "generated_at": "2026-05-12T00:28:12.926463+00:00",
+    "missing_board_markers": [],
+    "promotion_allowed": false,
+    "provider_mentions": {
+      "ibkr": true,
+      "kraken": true,
+      "tradingviewremix": true,
+      "yfinance": true
+    },
+    "provider_surface_mentions_all": true,
+    "run_id": "20260512T082430+0800-codex-runtime-readiness-after-082215-v1",
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "tmp_state_dir": "/tmp/ict-engine-board-b-runtime-readiness-20260512T082430",
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  }
+}

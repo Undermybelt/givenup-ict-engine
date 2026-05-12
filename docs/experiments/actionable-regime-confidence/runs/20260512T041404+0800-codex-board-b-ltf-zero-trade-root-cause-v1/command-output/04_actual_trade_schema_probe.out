@@ -1,0 +1,98 @@
+Result for strategy NQRootPulseMeanRevert
+                                                        BACKTESTING REPORT                                                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                            Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ B2RNQCOSTCRISISREPAIR032157/USD │     11 │         0.04 │        458.454 │         0.46 │      9:22:00 │    9     0     2  81.8 │
+│                           TOTAL │     11 │         0.04 │        458.454 │         0.46 │      9:22:00 │    9     0     2  81.8 │
+└─────────────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                      LEFT OPEN TRADES REPORT                                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                            Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ B2RNQCOSTCRISISREPAIR032157/USD │      1 │        -0.19 │       -191.101 │        -0.19 │      4:00:00 │    0     0     1     0 │
+│                           TOTAL │      1 │        -0.19 │       -191.101 │        -0.19 │      4:00:00 │    0     0     1     0 │
+└─────────────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                      ENTER TAG STATS                                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃              Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ root_pulse_mean_revert │      11 │         0.04 │        458.454 │         0.46 │      9:22:00 │    9     0     2  81.8 │
+│                  TOTAL │      11 │         0.04 │        458.454 │         0.46 │      9:22:00 │    9     0     2  81.8 │
+└────────────────────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                              EXIT REASON STATS                                               
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │    10 │         0.07 │        649.555 │         0.65 │      9:54:00 │    9     0     1  90.0 │
+│  force_exit │     1 │        -0.19 │       -191.101 │        -0.19 │      4:00:00 │    0     0     1     0 │
+│       TOTAL │    11 │         0.04 │        458.454 │         0.46 │      9:22:00 │    9     0     2  81.8 │
+└─────────────┴───────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                            MIXED TAG STATS                                                             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃              Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ root_pulse_mean_revert │ exit_signal │     10 │         0.07 │        649.555 │         0.65 │      9:54:00 │    9     0     1  90.0 │
+│ root_pulse_mean_revert │  force_exit │      1 │        -0.19 │       -191.101 │        -0.19 │      4:00:00 │    0     0     1     0 │
+│                  TOTAL │             │     11 │         0.04 │        458.454 │         0.46 │      9:22:00 │    9     0     2  81.8 │
+└────────────────────────┴─────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                             SUMMARY METRICS                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                                  ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2025-12-16 18:00:00                    │
+│ Backtesting to                │ 2025-12-31 00:00:00                    │
+│ Trading Mode                  │ Spot                                   │
+│ Max open trades               │ 1                                      │
+│                               │                                        │
+│ Total/Daily Avg Trades        │ 11 / 0.79                              │
+│ Starting balance              │ 100000 USD                             │
+│ Final balance                 │ 100458.454 USD                         │
+│ Absolute profit               │ 458.454 USD                            │
+│ Total profit %                │ 0.46%                                  │
+│ CAGR %                        │ 12.67%                                 │
+│ Sortino                       │ 16.62                                  │
+│ Sharpe                        │ 4.66                                   │
+│ Calmar                        │ 236.13                                 │
+│ SQN                           │ 0.98                                   │
+│ Profit factor                 │ 2.00                                   │
+│ Expectancy (Ratio)            │ 41.68 (0.18)                           │
+│ Avg. daily profit             │ 32.747 USD                             │
+│ Avg. stake amount             │ 99362.112 USD                          │
+│ Total trade volume            │ 2186424.908 USD                        │
+│                               │                                        │
+│ Best Pair                     │ B2RNQCOSTCRISISREPAIR032157/USD 0.46%  │
+│ Worst Pair                    │ B2RNQCOSTCRISISREPAIR032157/USD 0.46%  │
+│ Best trade                    │ B2RNQCOSTCRISISREPAIR032157/USD 0.15%  │
+│ Worst trade                   │ B2RNQCOSTCRISISREPAIR032157/USD -0.27% │
+│ Best day                      │ 368.238 USD                            │
+│ Worst day                     │ -255.127 USD                           │
+│ Days win/draw/lose            │ 6 / 6 / 2                              │
+│ Min/Max/Avg. Duration Winners │ 0d 01:00 / 2d 03:00 / 0d 09:00         │
+│ Min/Max/Avg. Duration Losers  │ 0d 04:00 / 0d 18:00 / 0d 11:00         │
+│ Max Consecutive Wins / Loss   │ 6 / 1                                  │
+│ Rejected Entry signals        │ 0                                      │
+│ Entry/Exit Timeouts           │ 0 / 0                                  │
+│                               │                                        │
+│ Min balance                   │ 100070.153 USD                         │
+│ Max balance                   │ 100649.555 USD                         │
+│ Max % of account underwater   │ 0.26%                                  │
+│ Absolute drawdown             │ 266.397 USD (0.26%)                    │
+│ Drawdown duration             │ 0 days 20:00:00                        │
+│ Profit at drawdown start      │ 547.713 USD                            │
+│ Profit at drawdown end        │ 281.316 USD                            │
+│ Drawdown start                │ 2025-12-29 00:00:00                    │
+│ Drawdown end                  │ 2025-12-29 20:00:00                    │
+│ Market change                 │ 1.06%                                  │
+└───────────────────────────────┴────────────────────────────────────────┘
+
+Backtested 2025-12-16 18:00:00 -> 2025-12-31 00:00:00 | Max open trades : 1
+                                                               STRATEGY SUMMARY                                                               
+┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃              Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃           Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ NQRootPulseMeanRevert │     11 │         0.04 │        458.454 │         0.46 │      9:22:00 │    9     0     2  81.8 │ 266.397 USD  0.26% │
+└───────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┴────────────────────┘
+trade_count 11
+trade_type dict
+{"amount": 3.552047, "close_date": "2025-12-18 09:00:00+00:00", "close_rate": 27891.0, "close_timestamp": 1766048400000, "enter_tag": "root_pulse_mean_revert", "exit_reason": "exit_signal", "fee_close": 0.0, "fee_open": 0.0, "funding_fees": 0.0, "initial_stop_loss_abs": 27453.19, "initial_stop_loss_ratio": -0.015, "is_open": false, "is_short": false, "leverage": 1.0, "max_rate": 27933.25, "max_stake_amount": 98999.98994875, "min_rate": 27723.75, "open_date": "2025-12-17 17:00:00+00:00", "open_rate": 27871.25, "open_timestamp": 1765990800000, "orders": [{"amount": 3.552047, "cost": 98999.98994875, "ft_is_entry": true, "ft_order_side": "buy", "ft_order_tag": "root_pulse_mean_revert", "order_filled_timestamp": 1765990800000, "safe_price": 27871.25}, {"amount": 3.552047, "cost": 99070.142877, "ft_is_entry": false, "ft_order_side": "sell", "ft_order_tag": "exit_signal", "order_filled_timestamp": 1766048400000, "safe_price": 27891.0}], "pair": "B2RNQCOSTCRISISREPAIR032157/USD", "profit_abs": 70.15292825, "profit_ratio": 0.0007086155088128448, "stake_amount": 98999.98994875, "stop_loss_abs": 27453.19, "stop_loss_ratio": -0.015, "trade_duration": 960, "weekday": 3}

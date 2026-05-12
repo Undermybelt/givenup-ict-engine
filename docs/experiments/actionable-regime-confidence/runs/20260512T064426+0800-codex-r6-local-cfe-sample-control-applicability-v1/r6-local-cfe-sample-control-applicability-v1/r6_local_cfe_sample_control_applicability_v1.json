@@ -1,0 +1,247 @@
+{
+  "board_sha256_before_artifact": "4d5a43c14701aa9ec3de96d704107cd7a3aff009360ded12fbdbb10127f8badb",
+  "cfe_sample": {
+    "columns": [
+      "trade_datetime",
+      "session",
+      "symbol_id",
+      "symbol",
+      "futures_root",
+      "is_tas_trade",
+      "contract_settlement_date",
+      "contract_settlement_price",
+      "trade_id",
+      "side_added_liquidity",
+      "was_canceled",
+      "canceled_at_datetime",
+      "trade_price",
+      "trade_size",
+      "bid",
+      "ask",
+      "off_order_book_type",
+      "buy_order_datetime",
+      "sell_order_datetime",
+      "buy_order_id",
+      "sell_order_id",
+      "buy_order_num_legs",
+      "sell_order_num_legs",
+      "buy_order_fill_count",
+      "sell_order_fill_count"
+    ],
+    "contract_fit": false,
+    "csv_rows": 48599,
+    "date_max": "2022-11-01",
+    "date_min": "2022-11-01",
+    "futures_roots": [
+      "IBHY",
+      "IBIG",
+      "VX",
+      "VXM"
+    ],
+    "has_bid_ask": true,
+    "has_order_ids": true,
+    "label_columns_present": [],
+    "members": [
+      {
+        "file_size": 9312993,
+        "filename": "Cboe_CFE_Trades_RTH_20221101.csv"
+      }
+    ],
+    "normal_control_columns_present": [],
+    "order_lifecycle_columns_present": [
+      "buy_order_datetime",
+      "sell_order_datetime",
+      "buy_order_id",
+      "sell_order_id",
+      "buy_order_fill_count",
+      "sell_order_fill_count"
+    ],
+    "rejection_reasons": [
+      "single_day_sample_not_cross_period",
+      "no_source_manipulation_or_normal_control_labels",
+      "no_explicit_normal_control_column",
+      "not_oystacher_2011_2013_control_window",
+      "below_board_broad_control_support_floor"
+    ],
+    "sample_rows": [
+      {
+        "canceled_at_datetime": "",
+        "contract_settlement_date": "2022-11-16",
+        "contract_settlement_price": "25.634",
+        "futures_root": "VX",
+        "is_tas_trade": "F",
+        "session": "RTH",
+        "side_added_liquidity": "B",
+        "symbol": "VX/X2",
+        "symbol_id": "0007fD",
+        "trade_datetime": "2022-11-01 08:30:00.002016",
+        "trade_id": "110003SKA",
+        "was_canceled": "F"
+      },
+      {
+        "canceled_at_datetime": "",
+        "contract_settlement_date": "2022-12-21",
+        "contract_settlement_price": "26.0041",
+        "futures_root": "VX",
+        "is_tas_trade": "F",
+        "session": "RTH",
+        "side_added_liquidity": "S",
+        "symbol": "VX/Z2",
+        "symbol_id": "0007oD",
+        "trade_datetime": "2022-11-01 08:30:00.002016",
+        "trade_id": "110003SKB",
+        "was_canceled": "F"
+      },
+      {
+        "canceled_at_datetime": "",
+        "contract_settlement_date": "2022-11-16",
+        "contract_settlement_price": "25.634",
+        "futures_root": "VX",
+        "is_tas_trade": "F",
+        "session": "RTH",
+        "side_added_liquidity": "B",
+        "symbol": "VX/X2",
+        "symbol_id": "0007fD",
+        "trade_datetime": "2022-11-01 08:30:00.002016",
+        "trade_id": "110003SKC",
+        "was_canceled": "F"
+      },
+      {
+        "canceled_at_datetime": "",
+        "contract_settlement_date": "2022-12-21",
+        "contract_settlement_price": "26.0041",
+        "futures_root": "VX",
+        "is_tas_trade": "F",
+        "session": "RTH",
+        "side_added_liquidity": "S",
+        "symbol": "VX/Z2",
+        "symbol_id": "0007oD",
+        "trade_datetime": "2022-11-01 08:30:00.002016",
+        "trade_id": "110003SKD",
+        "was_canceled": "F"
+      },
+      {
+        "canceled_at_datetime": "",
+        "contract_settlement_date": "2022-11-16",
+        "contract_settlement_price": "25.634",
+        "futures_root": "VX",
+        "is_tas_trade": "F",
+        "session": "RTH",
+        "side_added_liquidity": "B",
+        "symbol": "VX/X2",
+        "symbol_id": "0007fD",
+        "trade_datetime": "2022-11-01 08:30:00.002016",
+        "trade_id": "110003SKE",
+        "was_canceled": "F"
+      }
+    ],
+    "symbol_count": 20,
+    "symbols_sample": [
+      "IBHY/F3",
+      "IBHY/Z2",
+      "IBIG/F3",
+      "IBIG/Z2",
+      "VX/F3",
+      "VX/G3",
+      "VX/H3",
+      "VX/J3",
+      "VX/K3",
+      "VX/M3",
+      "VX/N3",
+      "VX/X2",
+      "VX/Z2",
+      "VX47/X2",
+      "VXM/F3",
+      "VXM/G3",
+      "VXM/H3",
+      "VXM/J3",
+      "VXM/X2",
+      "VXM/Z2"
+    ],
+    "zip_exists": true,
+    "zip_path": "/tmp/cfe_futures_trades_sample_226.zip",
+    "zip_sha256": "c66702f13a9b8848bf44553ecfc79fab56aab0f693d6d458efa7c72d95e9f9aa",
+    "zip_size_bytes": 1064511
+  },
+  "commands": [
+    {
+      "args": [
+        "unzip",
+        "-l",
+        "/tmp/cfe_futures_trades_sample_226.zip"
+      ],
+      "name": "cfe_zip_listing",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T064426+0800-codex-r6-local-cfe-sample-control-applicability-v1/command-output/cfe_zip_listing.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T064426+0800-codex-r6-local-cfe-sample-control-applicability-v1/command-output/cfe_zip_listing.out"
+    }
+  ],
+  "decision": "The local CFE sample is useful schema context for VX trades/order IDs/bid-ask, but it is a one-day 2022 sample with no source normal-control labels, no Oystacher-era date fit, and no ticket/license/export provenance. It does not satisfy the R6 owner-export control contract.",
+  "gate_result": "r6_local_cfe_sample_control_applicability_v1=cfe_sample_schema_context_only_no_controls_no_promotion",
+  "generated_at_utc": "2026-05-11T22:45:15.389308+00:00",
+  "header_readback": [
+    {
+      "canonical_or_matched_path": "Link: <https://www.cboe.com/market_data_services/us/futures/>; rel=\"canonical\"",
+      "exists": true,
+      "http_200": true,
+      "not_authenticated": false,
+      "path": "/tmp/ict-engine-cboe-futures-market-data-headers.txt",
+      "sha256": "c20170b9841335fde9e9afbdfc9ab2f63a1cfcb86c0e43ca58919c8cae954cd7",
+      "size_bytes": 1174
+    },
+    {
+      "canonical_or_matched_path": "x-matched-path: /en/markets/us/futures/market-statistics/historical-data/oof",
+      "exists": true,
+      "http_200": true,
+      "not_authenticated": false,
+      "path": "/tmp/ict-engine-cboe-oof-headers.txt",
+      "sha256": "51eba963c962c530db294e417d2b75733ae0e1cd05bdc8e59564cc5520bc21ca",
+      "size_bytes": 1878
+    },
+    {
+      "canonical_or_matched_path": "",
+      "exists": true,
+      "http_200": true,
+      "not_authenticated": false,
+      "path": "/tmp/ict-engine-databento-docs-headers.txt",
+      "sha256": "b56d86549a06ac15628d401c27a1150858e23d731551ddea8c8952bb3c5045fd",
+      "size_bytes": 468
+    },
+    {
+      "canonical_or_matched_path": "",
+      "exists": true,
+      "http_200": false,
+      "not_authenticated": true,
+      "path": "/tmp/ict-engine-databento-metadata-range-response.json",
+      "sha256": "cfec9feffbcc0dabaa0f92491e3609eeb1e9bc8d17625cd7f043be03b609c812",
+      "size_bytes": 30
+    }
+  ],
+  "next": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, verifier-native R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export.",
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "target_root_mutated": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "r6_target_root": {
+    "exists": false,
+    "files": [],
+    "path": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+  },
+  "run_id": "20260512T064426+0800-codex-r6-local-cfe-sample-control-applicability-v1",
+  "scope": {
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "external_requests_sent": false,
+    "read_only_local_sample_applicability": true,
+    "target_root_mutated": false,
+    "trade_claim": false,
+    "update_goal": false,
+    "vendor_portal_used": false
+  }
+}

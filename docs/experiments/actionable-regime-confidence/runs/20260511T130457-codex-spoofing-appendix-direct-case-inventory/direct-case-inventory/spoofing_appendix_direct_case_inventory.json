@@ -1,0 +1,79 @@
+{
+  "artifact_type": "direct_manipulation_spoofing_case_inventory",
+  "decision": {
+    "accepted_95_direct_gate_added": 0,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "blockers": [
+      "case inventory is positive direct enforcement evidence but has no matched negative rows",
+      "rows are case-level, not replayable order-book event rows",
+      "cannot compute chronological calibration/test Wilson95 without controls",
+      "does not close quote-stuffing/order-book full variety coverage"
+    ],
+    "direct_manipulation_positive_case_inventory_added": 204,
+    "full_objective_achieved": false,
+    "gate_result": "direct_spoofing_case_inventory_attached_no_matched_negative_95_gate",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T05:06:28.625935+00:00",
+  "inventory": {
+    "by_instrument": {
+      "Futures": 198,
+      "Futures\r\nStock index": 1,
+      "Futures and options": 2,
+      "NA": 3
+    },
+    "by_market_category": {
+      "Agriculture": 53,
+      "Agriculture and Equity index": 1,
+      "Agriculture and Metals": 1,
+      "Agriculture, Metals and Energy": 2,
+      "Energy": 27,
+      "Energy and Equity index": 1,
+      "Energy and Metals": 1,
+      "Energy, Metals, Interest rates, Agricultural, Equity index and FX": 1,
+      "Equity index": 33,
+      "FX": 1,
+      "Interest rates": 7,
+      "Metals": 61,
+      "Metals and Agriculture": 1,
+      "Metals and Energy": 2,
+      "Metals and Interest rates": 1,
+      "Metals and energy": 1,
+      "Metals, Energy and Agriculture": 1,
+      "Metals, Enery, Equity index": 1,
+      "NA": 3,
+      "Precious metals": 2,
+      "Treasury": 3
+    },
+    "by_regulator": {
+      "CFTC": 62,
+      "CME Group": 115,
+      "ICE": 27
+    },
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260511T130457-codex-spoofing-appendix-direct-case-inventory/direct-case-inventory/spoofing_appendix_direct_case_inventory.csv",
+    "positive_case_rows": 204,
+    "variety_tags": {
+      "algorithmic": 4,
+      "flash_spoofing": 2,
+      "flipping": 6,
+      "iceberg_context": 5,
+      "layering": 116,
+      "manual": 32,
+      "single_spoof_order": 78,
+      "spoofing_case_unspecified_pattern": 50,
+      "spread_squeezing": 4
+    }
+  },
+  "next_action": "Use this as direct Manipulation provenance; acquire matched negative order-lifecycle/order-book rows before any 95 gate claim.",
+  "run_id": "20260511T130457+0800-codex-spoofing-appendix-direct-case-inventory",
+  "source": {
+    "file_url": "https://zenodo.org/records/16629490/files/Online%20Appendix%20C.xlsx?download=1",
+    "raw_data_committed": false,
+    "raw_xlsx_path": "/private/tmp/ict-regime-spoofing-appendix-c/online_appendix_c.xlsx",
+    "raw_xlsx_sha256": "02fa42618261f1f322ce6779e02db916f93159bcdabc0a525efe135b6ac26a01",
+    "record_url": "https://zenodo.org/records/16629490"
+  }
+}

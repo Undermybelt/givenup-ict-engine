@@ -1,0 +1,5 @@
+Factor research | objective=generic | best=volatility_mean_reversion | return=-0.86%
+Market State: RangeConsolidation/WideRange | bbn_regime=range | liquidity=neutral
+Evidence: feedback=1021/849
+Action: review top factors: volatility_mean_reversion=0.406 replace D; trend_momentum=0.385 replace F; crowding_herding=0.325 replace F
+Next: Ask the user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=<local-path>, <local-path> Then run: ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control

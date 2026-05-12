@@ -1,0 +1,255 @@
+{
+  "active_confidence": 0.5250864595751618,
+  "active_regime": "range",
+  "blockers": [
+    "active_range_probability_below_95",
+    "pre_bayes_pass_neutralized",
+    "factor_alignment_soft_evidence_is_mixed_1_0",
+    "long_short_signal_gap_below_policy_minimum",
+    "execution_tree_review_observe_not_actionable",
+    "provider_path_win_rates_do_not_supply_regime_qualifying_condition"
+  ],
+  "directional_gap_required": 0.08,
+  "directional_gap_shortfall": 0.0762866318583341,
+  "execution": {
+    "actionable": false,
+    "candidate_status": "execution_blocked",
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.32853919817900823,
+    "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+    "path_ranker_raw_score": 0.9868275780976984,
+    "path_ranker_runtime_source": "history_path",
+    "ready": false,
+    "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+    "review_status": "observe",
+    "selected_path_probability": 0.3119273253369391
+  },
+  "latest_filtered_assignments": {
+    "__policy_version": "318900600c5e8cf2",
+    "factor_alignment": "mixed",
+    "factor_uncertainty": "low",
+    "liquidity_context": "neutral",
+    "market_regime": "range",
+    "market_state_primary_regime": "RangeConsolidation",
+    "market_state_secondary_regime": "WideRange",
+    "multi_timeframe_resonance": "aligned"
+  },
+  "long_short_signal_probability_gap": 0.003713368141665896,
+  "next_evidence_needs": [
+    "hard or soft BBN node that separates trend/range/stress/transition beyond current OHLCV-derived range prior",
+    "provider/context features that turn factor_alignment away from mixed=1.0",
+    "directional evidence gap above 0.08 without relaxing policy thresholds",
+    "cross-provider and cross-period validation for any candidate regime lift",
+    "execution-tree candidate must become ready/actionable from evidence, not from assertion"
+  ],
+  "outcomes_by_path": [
+    {
+      "losses": 101,
+      "path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "trades": 164,
+      "win_rate": 0.38414634146341464,
+      "wins": 63
+    },
+    {
+      "losses": 55,
+      "path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "trades": 73,
+      "win_rate": 0.2465753424657534,
+      "wins": 18
+    }
+  ],
+  "outcomes_by_provider": [
+    {
+      "losses": 11,
+      "provider": "yfinance",
+      "trades": 21,
+      "win_rate": 0.47619047619047616,
+      "wins": 10
+    },
+    {
+      "losses": 22,
+      "provider": "kraken_public",
+      "trades": 32,
+      "win_rate": 0.3125,
+      "wins": 10
+    },
+    {
+      "losses": 34,
+      "provider": "binance_public",
+      "trades": 52,
+      "win_rate": 0.34615384615384615,
+      "wins": 18
+    },
+    {
+      "losses": 33,
+      "provider": "bybit_public",
+      "trades": 51,
+      "win_rate": 0.35294117647058826,
+      "wins": 18
+    },
+    {
+      "losses": 27,
+      "provider": "tvr_default_binance",
+      "trades": 37,
+      "win_rate": 0.2702702702702703,
+      "wins": 10
+    },
+    {
+      "losses": 29,
+      "provider": "ibkr_paxos_long_midpoint",
+      "trades": 44,
+      "win_rate": 0.3409090909090909,
+      "wins": 15
+    }
+  ],
+  "outcomes_by_provider_path": [
+    {
+      "losses": 23,
+      "path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "provider": "binance_public",
+      "trades": 37,
+      "win_rate": 0.3783783783783784,
+      "wins": 14
+    },
+    {
+      "losses": 11,
+      "path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "provider": "binance_public",
+      "trades": 15,
+      "win_rate": 0.26666666666666666,
+      "wins": 4
+    },
+    {
+      "losses": 20,
+      "path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "provider": "bybit_public",
+      "trades": 34,
+      "win_rate": 0.4117647058823529,
+      "wins": 14
+    },
+    {
+      "losses": 13,
+      "path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "provider": "bybit_public",
+      "trades": 17,
+      "win_rate": 0.23529411764705882,
+      "wins": 4
+    },
+    {
+      "losses": 20,
+      "path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "provider": "ibkr_paxos_long_midpoint",
+      "trades": 32,
+      "win_rate": 0.375,
+      "wins": 12
+    },
+    {
+      "losses": 9,
+      "path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "provider": "ibkr_paxos_long_midpoint",
+      "trades": 12,
+      "win_rate": 0.25,
+      "wins": 3
+    },
+    {
+      "losses": 15,
+      "path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "provider": "kraken_public",
+      "trades": 23,
+      "win_rate": 0.34782608695652173,
+      "wins": 8
+    },
+    {
+      "losses": 7,
+      "path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "provider": "kraken_public",
+      "trades": 9,
+      "win_rate": 0.2222222222222222,
+      "wins": 2
+    },
+    {
+      "losses": 17,
+      "path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "provider": "tvr_default_binance",
+      "trades": 25,
+      "win_rate": 0.32,
+      "wins": 8
+    },
+    {
+      "losses": 10,
+      "path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "provider": "tvr_default_binance",
+      "trades": 12,
+      "win_rate": 0.16666666666666666,
+      "wins": 2
+    },
+    {
+      "losses": 6,
+      "path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "provider": "yfinance",
+      "trades": 13,
+      "win_rate": 0.5384615384615384,
+      "wins": 7
+    },
+    {
+      "losses": 5,
+      "path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "provider": "yfinance",
+      "trades": 8,
+      "win_rate": 0.375,
+      "wins": 3
+    }
+  ],
+  "pre_bayes_gate_status": "pass_neutralized",
+  "promotion_allowed": false,
+  "range_gap_to_95": 0.20231228233180432,
+  "ranker": {
+    "observation_validation_rows": 237,
+    "production_validation_rows": 237,
+    "raw_scored_mature_rows": 237,
+    "runtime_active_match_count": 3,
+    "runtime_selection_ready": true,
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model"
+  },
+  "regime_probabilities": {
+    "range": 0.7476877176681956,
+    "stress": 0.17754351056498482,
+    "transition": 0.07476877176681956,
+    "trend": 0.0
+  },
+  "run_id": "20260512T121701+0800-codex-120630-regime-confidence-gap-map-v1",
+  "runtime_summary": "Ranker runtime: structural_path_ranking_target rows=5 history_rows=241 mature_rows=2 history_mature_rows=237 raw_scored_mature=237/30 production_validation=237/30 observation_validation=237/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+  "soft_evidence": {
+    "factor_alignment": {
+      "bearish": 0.0,
+      "bullish": 0.0,
+      "mixed": 1.0
+    },
+    "factor_uncertainty": {
+      "high": 0.4187283851062096,
+      "low": 0.5812716148937904
+    },
+    "liquidity_context": {
+      "favorable": 0.0,
+      "hostile": 0.0,
+      "neutral": 1.0
+    },
+    "market_regime": {
+      "range": 0.7476877176681956,
+      "stress": 0.17754351056498482,
+      "transition": 0.07476877176681956,
+      "trend": 0.0
+    },
+    "multi_timeframe_resonance": {
+      "aligned": 0.5812716148937904,
+      "dislocated": 0.0,
+      "mixed": 0.4187283851062096
+    }
+  },
+  "source_run_id": "20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1",
+  "source_state": "docs/experiments/actionable-regime-confidence/runs/20260512T120630+0800-codex-115700-six-provider-1h-downstream-chain-v1/state_115700_six_provider_1h_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+  "trade_usable": false,
+  "update_goal": false
+}

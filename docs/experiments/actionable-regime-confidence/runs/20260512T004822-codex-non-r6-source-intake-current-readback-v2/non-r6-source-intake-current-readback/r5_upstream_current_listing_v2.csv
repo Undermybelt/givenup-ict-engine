@@ -1,0 +1,6 @@
+name,size,creation_date,accepted_as_r5_extension,reason
+dataset_summary.txt,588,2026-02-01 02:25:30.808000,false,metadata_only_not_extension_rows
+regime_analysis_by_ticker.csv,1278,2026-02-01 02:25:30.838000,false,summary_only_not_extension_rows
+regime_by_year.csv,758,2026-02-01 02:25:30.861000,false,year_summary_only_not_extension_rows
+stock_market_regimes_2000_2026.csv,37155794,2026-02-01 02:25:31.845000,false,current_source_panel_still_max_date_2026_01_30
+stock_market_regimes_2000_2026.parquet,6583934,2026-02-01 02:25:31.457000,false,current_source_panel_package_no_post_cutoff_extension

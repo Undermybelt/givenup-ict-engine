@@ -1,0 +1,744 @@
+Result for strategy TomacNQ_KillzoneBreakout
+                                              BACKTESTING REPORT                                               
+┏━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃   Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃      Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ NQ/USD │     77 │         0.13 │       9500.480 │          9.5 │  8 days, 22:29:00 │   56     0    21  72.7 │
+│ ES/USD │    115 │         0.03 │       2137.360 │         2.14 │ 10 days, 16:23:00 │   59     3    53  51.3 │
+│  TOTAL │    192 │         0.07 │      11637.840 │        11.64 │  9 days, 23:35:00 │  115     3    74  59.9 │
+└────────┴────────┴──────────────┴────────────────┴──────────────┴───────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                  
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃     Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │     192 │         0.07 │      11637.840 │        11.64 │ 9 days, 23:35:00 │  115     3    74  59.9 │
+│     TOTAL │     192 │         0.07 │      11637.840 │        11.64 │ 9 days, 23:35:00 │  115     3    74  59.9 │
+└───────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────────┴────────────────────────┘
+                                                    EXIT REASON STATS                                                     
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃      Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ trailing_stop_loss │    88 │         0.86 │      71390.720 │        71.39 │  10 days, 1:08:00 │   88     0     0   100 │
+│        exit_signal │    87 │        -0.32 │     -27688.000 │       -27.69 │ 11 days, 18:46:00 │   27     3    57  31.0 │
+│          stop_loss │    17 │        -2.03 │     -32064.880 │       -32.06 │          10:39:00 │    0     0    17     0 │
+│              TOTAL │   192 │         0.07 │      11637.840 │        11.64 │  9 days, 23:35:00 │  115     3    74  59.9 │
+└────────────────────┴───────┴──────────────┴────────────────┴──────────────┴───────────────────┴────────────────────────┘
+                                                            MIXED TAG STATS                                                            
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃        Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃      Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ trailing_stop_loss │     88 │         0.86 │      71390.720 │        71.39 │  10 days, 1:08:00 │   88     0     0   100 │
+│           │        exit_signal │     87 │        -0.32 │     -27688.000 │       -27.69 │ 11 days, 18:46:00 │   27     3    57  31.0 │
+│           │          stop_loss │     17 │        -2.03 │     -32064.880 │       -32.06 │          10:39:00 │    0     0    17     0 │
+│     TOTAL │                    │    192 │         0.07 │      11637.840 │        11.64 │  9 days, 23:35:00 │  115     3    74  59.9 │
+└───────────┴────────────────────┴────────┴──────────────┴────────────────┴──────────────┴───────────────────┴────────────────────────┘
+                           SUMMARY METRICS                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                             ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2012-05-03 23:00:00               │
+│ Backtesting to                │ 2025-08-04 12:00:00               │
+│ Trading Mode                  │ Spot                              │
+│ Max open trades               │ 1                                 │
+│                               │                                   │
+│ Total/Daily Avg Trades        │ 192 / 0.04                        │
+│ Starting balance              │ 100000 USD                        │
+│ Final balance                 │ 111637.84 USD                     │
+│ Absolute profit               │ 11637.84 USD                      │
+│ Total profit %                │ 11.64%                            │
+│ CAGR %                        │ 0.83%                             │
+│ Sortino                       │ 0.06                              │
+│ Sharpe                        │ 0.04                              │
+│ Calmar                        │ 0.61                              │
+│ SQN                           │ 0.82                              │
+│ Profit factor                 │ 1.16                              │
+│ Expectancy (Ratio)            │ 60.61 (0.05)                      │
+│ Avg. daily profit             │ 2.405 USD                         │
+│ Avg. stake amount             │ 93801.45 USD                      │
+│ Total trade volume            │ 36031394.64 USD                   │
+│                               │                                   │
+│ Best Pair                     │ NQ/USD 9.50%                      │
+│ Worst Pair                    │ ES/USD 2.14%                      │
+│ Best trade                    │ NQ/USD 2.85%                      │
+│ Worst trade                   │ ES/USD -2.74%                     │
+│ Best day                      │ 3378.48 USD                       │
+│ Worst day                     │ -2842 USD                         │
+│ Days win/draw/lose            │ 91 / 4120 / 72                    │
+│ Min/Max/Avg. Duration Winners │ 0d 00:00 / 570d 16:00 / 12d 23:08 │
+│ Min/Max/Avg. Duration Losers  │ 0d 00:00 / 191d 22:00 / 5d 00:19  │
+│ Max Consecutive Wins / Loss   │ 9 / 5                             │
+│ Rejected Entry signals        │ 54                                │
+│ Entry/Exit Timeouts           │ 0 / 7633                          │
+│                               │                                   │
+│ Min balance                   │ 98191.2 USD                       │
+│ Max balance                   │ 113515.84 USD                     │
+│ Max % of account underwater   │ 7.48%                             │
+│ Absolute drawdown             │ 8422.96 USD (7.48%)               │
+│ Drawdown duration             │ 120 days 16:00:00                 │
+│ Profit at drawdown start      │ 12680.24 USD                      │
+│ Profit at drawdown end        │ 4257.28 USD                       │
+│ Drawdown start                │ 2023-08-01 22:00:00               │
+│ Drawdown end                  │ 2023-11-30 14:00:00               │
+│ Market change                 │ 69.30%                            │
+└───────────────────────────────┴───────────────────────────────────┘
+
+Backtested 2012-05-03 23:00:00 -> 2025-08-04 12:00:00 | Max open trades : 1
+                                                                  STRATEGY SUMMARY                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃                 Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃     Avg Duration ┃  Win  Draw  Loss  Win% ┃           Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ TomacNQ_KillzoneBreakout │    192 │         0.07 │      11637.840 │        11.64 │ 9 days, 23:35:00 │  115     3    74  59.9 │ 8422.96 USD  7.48% │
+└──────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────────┴────────────────────────┴────────────────────┘
+{
+  "top_level": {
+    "type": "dict",
+    "len": 3,
+    "keys": [
+      "metadata",
+      "strategy",
+      "strategy_comparison"
+    ]
+  },
+  "strategy": {
+    "type": "dict",
+    "len": 116,
+    "keys": [
+      "trades",
+      "locks",
+      "best_pair",
+      "worst_pair",
+      "results_per_pair",
+      "results_per_enter_tag",
+      "exit_reason_summary",
+      "mix_tag_stats",
+      "left_open_trades",
+      "total_trades",
+      "trade_count_long",
+      "trade_count_short",
+      "total_volume",
+      "avg_stake_amount",
+      "profit_mean",
+      "profit_median",
+      "profit_total",
+      "profit_total_long",
+      "profit_total_short",
+      "profit_total_abs",
+      "profit_total_long_abs",
+      "profit_total_short_abs",
+      "cagr",
+      "expectancy",
+      "expectancy_ratio",
+      "sortino",
+      "sharpe",
+      "calmar",
+      "sqn",
+      "profit_factor",
+      "backtest_start",
+      "backtest_start_ts",
+      "backtest_end",
+      "backtest_end_ts",
+      "backtest_days",
+      "backtest_run_start_ts",
+      "backtest_run_end_ts",
+      "trades_per_day",
+      "market_change",
+      "pairlist"
+    ]
+  },
+  "strategy_children": {
+    "trades": {
+      "type": "list",
+      "len": 192,
+      "sample_types": [
+        "dict",
+        "dict",
+        "dict",
+        "dict",
+        "dict"
+      ]
+    },
+    "locks": {
+      "type": "list",
+      "len": 0,
+      "sample_types": []
+    },
+    "best_pair": {
+      "type": "dict",
+      "len": 22,
+      "keys": [
+        "key",
+        "trades",
+        "profit_mean",
+        "profit_mean_pct",
+        "profit_total_abs",
+        "profit_total",
+        "profit_total_pct",
+        "duration_avg",
+        "wins",
+        "draws",
+        "losses",
+        "winrate",
+        "cagr",
+        "expectancy",
+        "expectancy_ratio",
+        "sortino",
+        "sharpe",
+        "calmar",
+        "sqn",
+        "profit_factor",
+        "max_drawdown_account",
+        "max_drawdown_abs"
+      ]
+    },
+    "worst_pair": {
+      "type": "dict",
+      "len": 22,
+      "keys": [
+        "key",
+        "trades",
+        "profit_mean",
+        "profit_mean_pct",
+        "profit_total_abs",
+        "profit_total",
+        "profit_total_pct",
+        "duration_avg",
+        "wins",
+        "draws",
+        "losses",
+        "winrate",
+        "cagr",
+        "expectancy",
+        "expectancy_ratio",
+        "sortino",
+        "sharpe",
+        "calmar",
+        "sqn",
+        "profit_factor",
+        "max_drawdown_account",
+        "max_drawdown_abs"
+      ]
+    },
+    "results_per_pair": {
+      "type": "list",
+      "len": 3,
+      "sample_types": [
+        "dict",
+        "dict",
+        "dict"
+      ]
+    },
+    "results_per_enter_tag": {
+      "type": "list",
+      "len": 2,
+      "sample_types": [
+        "dict",
+        "dict"
+      ]
+    },
+    "exit_reason_summary": {
+      "type": "list",
+      "len": 4,
+      "sample_types": [
+        "dict",
+        "dict",
+        "dict",
+        "dict"
+      ]
+    },
+    "mix_tag_stats": {
+      "type": "list",
+      "len": 4,
+      "sample_types": [
+        "dict",
+        "dict",
+        "dict",
+        "dict"
+      ]
+    },
+    "left_open_trades": {
+      "type": "list",
+      "len": 1,
+      "sample_types": [
+        "dict"
+      ]
+    },
+    "total_trades": {
+      "type": "int",
+      "repr": "192"
+    },
+    "trade_count_long": {
+      "type": "int",
+      "repr": "192"
+    },
+    "trade_count_short": {
+      "type": "int",
+      "repr": "0"
+    },
+    "total_volume": {
+      "type": "float",
+      "repr": "36031394.640000015"
+    },
+    "avg_stake_amount": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_mean": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_median": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_total": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_total_long": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_total_short": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_total_abs": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_total_long_abs": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_total_short_abs": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "cagr": {
+      "type": "float",
+      "repr": "0.008336791381308162"
+    },
+    "expectancy": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "expectancy_ratio": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "sortino": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "sharpe": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "calmar": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "sqn": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "profit_factor": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "backtest_start": {
+      "type": "str",
+      "repr": "'2012-05-03 23:00:00'"
+    },
+    "backtest_start_ts": {
+      "type": "int",
+      "repr": "1336086000000"
+    },
+    "backtest_end": {
+      "type": "str",
+      "repr": "'2025-08-04 12:00:00'"
+    },
+    "backtest_end_ts": {
+      "type": "int",
+      "repr": "1754308800000"
+    },
+    "backtest_days": {
+      "type": "int",
+      "repr": "4840"
+    },
+    "backtest_run_start_ts": {
+      "type": "int",
+      "repr": "1778565733"
+    },
+    "backtest_run_end_ts": {
+      "type": "int",
+      "repr": "1778565750"
+    },
+    "trades_per_day": {
+      "type": "float",
+      "repr": "0.04"
+    },
+    "market_change": {
+      "type": "float",
+      "repr": "0.69303632104631"
+    },
+    "pairlist": {
+      "type": "list",
+      "len": 2,
+      "sample_types": [
+        "str",
+        "str"
+      ]
+    },
+    "stake_amount": {
+      "type": "str",
+      "repr": "'unlimited'"
+    },
+    "stake_currency": {
+      "type": "str",
+      "repr": "'USD'"
+    },
+    "stake_currency_decimals": {
+      "type": "int",
+      "repr": "3"
+    },
+    "starting_balance": {
+      "type": "int",
+      "repr": "100000"
+    },
+    "dry_run_wallet": {
+      "type": "int",
+      "repr": "100000"
+    },
+    "final_balance": {
+      "type": "float",
+      "repr": "111637.84"
+    },
+    "rejected_signals": {
+      "type": "int",
+      "repr": "54"
+    },
+    "timedout_entry_orders": {
+      "type": "int",
+      "repr": "0"
+    },
+    "timedout_exit_orders": {
+      "type": "int",
+      "repr": "7633"
+    },
+    "canceled_trade_entries": {
+      "type": "int",
+      "repr": "0"
+    },
+    "canceled_entry_orders": {
+      "type": "int",
+      "repr": "0"
+    },
+    "replaced_entry_orders": {
+      "type": "int",
+      "repr": "0"
+    },
+    "max_open_trades": {
+      "type": "int",
+      "repr": "1"
+    },
+    "max_open_trades_setting": {
+      "type": "int",
+      "repr": "1"
+    },
+    "timeframe": {
+      "type": "str",
+      "repr": "'1h'"
+    },
+    "timeframe_detail": {
+      "type": "str",
+      "repr": "''"
+    },
+    "timerange": {
+      "type": "str",
+      "repr": "'20120101-20251231'"
+    },
+    "enable_protections": {
+      "type": "bool",
+      "repr": "False"
+    },
+    "strategy_name": {
+      "type": "str",
+      "repr": "'TomacNQ_KillzoneBreakout'"
+    },
+    "freqaimodel": {
+      "type": "NoneType",
+      "repr": "None"
+    },
+    "freqai_identifier": {
+      "type": "NoneType",
+      "repr": "None"
+    },
+    "stoploss": {
+      "type": "float",
+      "repr": "-0.02"
+    },
+    "trailing_stop": {
+      "type": "bool",
+      "repr": "True"
+    },
+    "trailing_stop_positive": {
+      "type": "float",
+      "repr": "0.005"
+    },
+    "trailing_stop_positive_offset": {
+      "type": "float",
+      "repr": "0.01"
+    },
+    "trailing_only_offset_is_reached": {
+      "type": "bool",
+      "repr": "True"
+    },
+    "use_custom_stoploss": {
+      "type": "bool",
+      "repr": "False"
+    },
+    "minimal_roi": {
+      "type": "dict",
+      "len": 1,
+      "keys": [
+        "0"
+      ]
+    },
+    "use_exit_signal": {
+      "type": "bool",
+      "repr": "True"
+    },
+    "exit_profit_only": {
+      "type": "bool",
+      "repr": "False"
+    },
+    "exit_profit_offset": {
+      "type": "float",
+      "repr": "0.0"
+    },
+    "ignore_roi_if_entry_signal": {
+      "type": "bool",
+      "repr": "False"
+    },
+    "trading_mode": {
+      "type": "TradingMode",
+      "repr": "<TradingMode.SPOT: 'spot'>"
+    },
+    "margin_mode": {
+      "type": "MarginMode",
+      "repr": "<MarginMode.NONE: ''>"
+    },
+    "periodic_breakdown": {
+      "type": "dict",
+      "len": 5,
+      "keys": [
+        "day",
+        "week",
+        "month",
+        "year",
+        "weekday"
+      ]
+    },
+    "backtest_best_day": {
+      "type": "float",
+      "repr": "0.03692030193249618"
+    },
+    "backtest_worst_day": {
+      "type": "float",
+      "repr": "-0.027427984651137674"
+    },
+    "backtest_best_day_abs": {
+      "type": "float",
+      "repr": "3378.48"
+    },
+    "backtest_worst_day_abs": {
+      "type": "float",
+      "repr": "-2842.0"
+    },
+    "winning_days": {
+      "type": "int",
+      "repr": "91"
+    },
+    "draw_days": {
+      "type": "int",
+      "repr": "4120"
+    },
+    "losing_days": {
+      "type": "int",
+      "repr": "72"
+    },
+    "daily_profit": {
+      "type": "list",
+      "len": 4283,
+      "sample_types": [
+        "tuple",
+        "tuple",
+        "tuple",
+        "tuple",
+        "tuple"
+      ]
+    },
+    "wins": {
+      "type": "int",
+      "repr": "115"
+    },
+    "losses": {
+      "type": "int",
+      "repr": "74"
+    },
+    "draws": {
+      "type": "int",
+      "repr": "3"
+    },
+    "winrate": {
+      "type": "float",
+      "repr": "0.5989583333333334"
+    },
+    "holding_avg": {
+      "type": "timedelta",
+      "repr": "datetime.timedelta(days=9, seconds=84900)"
+    },
+    "holding_avg_s": {
+      "type": "float",
+      "repr": "862500.0"
+    },
+    "winner_holding_min": {
+      "type": "str",
+      "repr": "'0d 00:00'"
+    },
+    "winner_holding_min_s": {
+      "type": "float",
+      "repr": "0.0"
+    },
+    "winner_holding_max": {
+      "type": "str",
+      "repr": "'570d 16:00'"
+    },
+    "winner_holding_max_s": {
+      "type": "float",
+      "repr": "49305600.0"
+    },
+    "winner_holding_avg": {
+      "type": "str",
+      "repr": "'12d 23:08'"
+    },
+    "winner_holding_avg_s": {
+      "type": "float",
+      "repr": "1120080.0"
+    },
+    "loser_holding_min": {
+      "type": "str",
+      "repr": "'0d 00:00'"
+    },
+    "loser_holding_min_s": {
+      "type": "float",
+      "repr": "0.0"
+    },
+    "loser_holding_max": {
+      "type": "str",
+      "repr": "'191d 22:00'"
+    },
+    "loser_holding_max_s": {
+      "type": "float",
+      "repr": "16581600.0"
+    },
+    "loser_holding_avg": {
+      "type": "str",
+      "repr": "'5d 00:19'"
+    },
+    "loser_holding_avg_s": {
+      "type": "float",
+      "repr": "433140.0"
+    },
+    "max_consecutive_wins": {
+      "type": "int",
+      "repr": "9"
+    },
+    "max_consecutive_losses": {
+      "type": "int",
+      "repr": "5"
+    },
+    "max_drawdown_account": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "max_relative_drawdown": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "max_drawdown_abs": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "drawdown_start": {
+      "type": "str",
+      "repr": "'2023-08-01 22:00:00'"
+    },
+    "drawdown_start_ts": {
+      "type": "float",
+      "repr": "1690927200000.0"
+    },
+    "drawdown_end": {
+      "type": "str",
+      "repr": "'2023-11-30 14:00:00'"
+    },
+    "drawdown_end_ts": {
+      "type": "float",
+      "repr": "1701352800000.0"
+    },
+    "drawdown_duration": {
+      "type": "Timedelta",
+      "repr": "Timedelta('120 days 16:00:00')"
+    },
+    "drawdown_duration_s": {
+      "type": "float",
+      "repr": "10425600.0"
+    },
+    "max_drawdown_low": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "max_drawdown_high": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "csum_min": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    },
+    "csum_max": {
+      "type": "float64",
+      "shape": [],
+      "columns": []
+    }
+  }
+}

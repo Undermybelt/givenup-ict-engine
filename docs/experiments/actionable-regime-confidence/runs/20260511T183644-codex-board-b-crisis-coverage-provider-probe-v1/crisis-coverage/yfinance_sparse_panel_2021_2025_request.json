@@ -1,0 +1,36 @@
+{
+  "market_key": "current_sparse_panel_2021_2025",
+  "interval": "1d",
+  "start": "2021-01-01T00:00:00Z",
+  "end": "2025-12-31T00:00:00Z",
+  "related_roles": [
+    "etf_reference",
+    "qqq_reference",
+    "volatility_reference",
+    "gold_reference"
+  ],
+  "provider_preferences": {
+    "etf_reference": "yfinance",
+    "qqq_reference": "yfinance",
+    "volatility_reference": "yfinance",
+    "gold_reference": "yfinance"
+  },
+  "symbol_overrides": {
+    "etf_reference": {
+      "display_symbol": "SPY",
+      "yfinance": "SPY"
+    },
+    "qqq_reference": {
+      "display_symbol": "QQQ",
+      "yfinance": "QQQ"
+    },
+    "volatility_reference": {
+      "display_symbol": "^VIX",
+      "yfinance": "^VIX"
+    },
+    "gold_reference": {
+      "display_symbol": "GLD",
+      "yfinance": "GLD"
+    }
+  }
+}

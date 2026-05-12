@@ -1,0 +1,5 @@
+9d2af6747d5e770a8d896c79f9b3247d3c4a593c77fd97477a03ebd1c132ca74  docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/summaries/ote_six_provider_local_stdio_aq_chain_summary_v1.json
+9f28b53eb01918ac4cd89fcf375e3641f3413d3add638cb5cbeda58558c1d687  docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/summaries/provider_provenance_matrix.csv
+7423191a91adb9cedbaceded69fd86fef6201e3d9a49fd6920b1c10144d8efc5  docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/summaries/fetch_summary.csv
+dce2afed6ab4a2d1fe9025a058f52f5261d777e7380ac7e920c5f1f47ea8e31b  docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/summaries/material_paths.txt
+bfc5bd7a49e9e8dc13daf9439fb0d7e468bbf919f2b4daf2fb29e139cadef19c  docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/checks/ote_six_provider_local_stdio_aq_chain_v1_assertions.out

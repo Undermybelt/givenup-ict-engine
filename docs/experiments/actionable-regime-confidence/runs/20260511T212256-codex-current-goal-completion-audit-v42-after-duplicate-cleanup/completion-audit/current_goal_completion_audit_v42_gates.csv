@@ -1,0 +1,9 @@
+requirement,observed,required,pass
+R1 active-regime confidence,`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.,all active regimes >=95 source-owned/owner-approved,False
+R2 other-market/source-label equivalence,source_label_equivalence_rows.csv;source_label_equivalence_provenance.json,required files present,False
+R3 other-cycle/native-subhour validation,native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json,required files present,False
+R5 source-panel recency extension,stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json,required files present,False
+R6 direct support,35/35,>=50/50,False
+R6 direct Wilson95,0.901099,>=0.95,False
+R6 broad normal sample,CFTC public order/complaint same-event genuine-order legs are source-described schema/control seeds only; they are not a broad normal-market calibration sample.,broad source-owned normal controls,False
+R8 completion gate,blocked gates remain,all rows pass,False

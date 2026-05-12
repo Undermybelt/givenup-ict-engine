@@ -1,0 +1,10 @@
+all_command_outputs_present=PASS
+all_exit_zero=PASS
+accepted_rows_added_zero=PASS
+new_confidence_gate_false=PASS
+canonical_merge_allowed_false=PASS
+downstream_chain_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+raw_data_committed_false=PASS
+trade_usable_false=PASS

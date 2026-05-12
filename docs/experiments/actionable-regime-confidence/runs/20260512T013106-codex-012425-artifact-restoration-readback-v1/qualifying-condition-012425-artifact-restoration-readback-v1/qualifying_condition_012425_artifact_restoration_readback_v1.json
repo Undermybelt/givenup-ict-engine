@@ -1,0 +1,82 @@
+{
+  "accepted_rows_added": 0,
+  "all_expected_files_present": true,
+  "assertion_failures": [],
+  "canonical_merge_allowed": false,
+  "decision": "qualifying_condition_012425_artifact_restoration_readback_v1=restored_failclosed_artifact_present_no_acceptance",
+  "downstream_chain_rerun_allowed": false,
+  "external_requests_sent": false,
+  "file_status": [
+    {
+      "artifact_id": "target_script",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/scripts/source_label_qualifying_condition_failclosed_v1.py",
+      "present": "true",
+      "sha256": "5918572b15ea5f5399c4c9e2c9fa43d7fd2da52739b7262f17c517a581678e6c"
+    },
+    {
+      "artifact_id": "report",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/source-label-qualifying-condition-failclosed-v1/source_label_qualifying_condition_failclosed_v1.md",
+      "present": "true",
+      "sha256": "b38e66a70f65a70a5ff2e39a690a1a6b26a31932c722d06b161fc05676f29deb"
+    },
+    {
+      "artifact_id": "json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/source-label-qualifying-condition-failclosed-v1/source_label_qualifying_condition_failclosed_v1.json",
+      "present": "true",
+      "sha256": "35f5a51aeb3f1b6b957a000afff869bbd9309ced820b2b3c8b8a79624229eece"
+    },
+    {
+      "artifact_id": "conditions_csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/source-label-qualifying-condition-failclosed-v1/source_label_qualifying_condition_failclosed_conditions_v1.csv",
+      "present": "true",
+      "sha256": "be292f409d4be2bc30a939dba3f2a4b55837ec0ca7e47a18f60c7344344bad8f"
+    },
+    {
+      "artifact_id": "split_validation_csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/source-label-qualifying-condition-failclosed-v1/source_label_qualifying_condition_failclosed_split_validation_v1.csv",
+      "present": "true",
+      "sha256": "370862d6f324d2987f2f512aee026f23e50325fe87be0e92894ceeaefd6a3852"
+    },
+    {
+      "artifact_id": "market_contexts_csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/source-label-qualifying-condition-failclosed-v1/source_label_qualifying_condition_failclosed_market_contexts_v1.csv",
+      "present": "true",
+      "sha256": "d7a262fb89583cd54c8419ffc1c3861111d9b5ea35370dad8f5fdafc5a0836a3"
+    },
+    {
+      "artifact_id": "sample_rows_csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/source-label-qualifying-condition-failclosed-v1/source_label_qualifying_condition_failclosed_sample_rows_v1.csv",
+      "present": "true",
+      "sha256": "8e5e928fd3e967cdb204a8a6f0888cfd6b0b5edc7194773aabb7edccd3ff408a"
+    },
+    {
+      "artifact_id": "assertions",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T012425-codex-source-label-qualifying-condition-failclosed-v1/checks/source_label_qualifying_condition_failclosed_v1_assertions.out",
+      "present": "true",
+      "sha256": "effc593cc0adb65f60e8275c264b73ac9eee31d3b3dcb5d432eeb2ba15829fdd"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T17:32:52.452229+00:00",
+  "new_confidence_gate": false,
+  "r3_root_mutated": false,
+  "r5_root_mutated": false,
+  "r6_owner_export_root_mutated": false,
+  "raw_data_committed": false,
+  "run_id": "20260512T013106-codex-012425-artifact-restoration-readback-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "target_accepted_labels": [],
+  "target_current_cursor_observed": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "target_decision": "source_label_qualifying_condition_failclosed_v1=conditions_present_but_no_acceptance",
+  "target_field_complete_labels": [
+    "Bull",
+    "Sideways"
+  ],
+  "target_run_id": "20260512T012425-codex-source-label-qualifying-condition-failclosed-v1",
+  "target_script_exit_code": 0,
+  "target_strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

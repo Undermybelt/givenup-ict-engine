@@ -1,0 +1,19 @@
+field,required,description
+source_row_id,True,Stable row identifier from the owner/source package.
+source_name,True,"Dataset, licensor, venue, or owner-approved source name."
+owner_or_licensor,True,Entity approving the label export or source-native label policy.
+license_or_permission,True,"License, written permission, or export approval reference."
+instrument,True,"Board A target instrument, for example QQQ, NQ=F, SPY, ES=F."
+timeframe,True,"Native sub-hour timeframe: 1m, 5m, 15m, 30m, or exact 1h/4h if source-native."
+timestamp_start_utc,True,Start timestamp for the source-labeled interval in UTC.
+timestamp_end_utc,True,End timestamp for the source-labeled interval in UTC.
+root_label,True,"One of Bull, Bear, Sideways, Crisis using the accepted MainRegimeV2 root vocabulary."
+source_label,True,Original owner/source label before normalization.
+qualifying_condition,True,"Per-root condition that makes this row eligible for Board A, not borrowed from another regime."
+confidence_or_quality_flag,True,"Source confidence, adjudication flag, or source quality marker; may be categorical."
+validation_instrument_group,True,Instrument/species group used for cross-market validation.
+validation_period,True,Chronological period bucket used for train/calibration/test separation.
+validation_market_context,True,Market context or provider/source context for the row.
+provenance_url_or_path,True,"Owner-approved URL, local intake path, or manifest reference."
+source_version_hash,True,"Dataset hash, source package version, or signed export id."
+forbidden_proxy_flag,True,Must be false. True means HMM/KMeans/classifier/future-return/generated/OHLCV-only proxy.

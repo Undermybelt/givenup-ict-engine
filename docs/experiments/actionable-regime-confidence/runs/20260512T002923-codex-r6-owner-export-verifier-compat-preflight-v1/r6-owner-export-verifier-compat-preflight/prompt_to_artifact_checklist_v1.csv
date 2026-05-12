@@ -1,0 +1,6 @@
+requirement,status,evidence,notes
+each regime reaches 95 confidence,blocked,Board Current Cursor V62 plus prior strict gap audit,"Scoped consumer lanes pass, strict full objective still blocked."
+validate across other markets and periods,blocked,V59 exact split debt and V60 grouped dry-run,Exact and grouped split gates remain false.
+personally operate provider/Auto-Quant/filter/BBN/CatBoost/execution-tree chain,deferred,V62 Current Cursor next_action,Rerun only after owner-export files or explicit split-contract approval.
+do not disturb multi-agent work,pass,20260512T002923-codex-r6-owner-export-verifier-compat-preflight-v1,New unique run root; Current Cursor not edited.
+owner-export files can feed unchanged verifier,blocked,docs/experiments/actionable-regime-confidence/runs/20260512T002923-codex-r6-owner-export-verifier-compat-preflight-v1/r6-owner-export-verifier-compat-preflight/r6_owner_export_verifier_field_compat_v1.csv,Filename adapter plus augmented fields are required.

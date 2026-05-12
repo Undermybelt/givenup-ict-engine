@@ -1,0 +1,9 @@
+PASS run_id_matches
+PASS source_owned_normal_controls_acquired_is_zero
+PASS cells_with_valid_controls_zero
+PASS total_normal_control_shortfall_is_1241
+PASS canonical_merge_blocked
+PASS downstream_rerun_blocked
+PASS no_runtime_code_or_intake_mutation
+PASS gate_result_owner_data_access_not_available_locally
+PASS source_csv_zero_controls

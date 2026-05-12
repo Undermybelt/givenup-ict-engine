@@ -1,0 +1,6 @@
+requirement,artifact,status,note
+single provider root,docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1,covered,all input CSVs are under 112315 provider-csv
+run AQ for six requested providers,docs/experiments/actionable-regime-confidence/runs/20260512T115108+0800-codex-112315-same-root-six-provider-aq-readback-v1/workspace,covered,6 provider workspaces
+TVR included,docs/experiments/actionable-regime-confidence/runs/20260512T115108+0800-codex-112315-same-root-six-provider-aq-readback-v1/provider-csv/tvr_btc_usd_1d.csv,covered_partial,daily rows only
+IBKR included,docs/experiments/actionable-regime-confidence/runs/20260512T115108+0800-codex-112315-same-root-six-provider-aq-readback-v1/provider-csv/ibkr_btc_paxos_aggtrades_1d.csv,covered_partial,daily AGGTRADES rows only
+downstream chain,N/A,not_run,blocked by daily TVR/IBKR AQ authority and no selected-history approval

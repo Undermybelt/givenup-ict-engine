@@ -1,0 +1,6 @@
+requirement,status,evidence
+source_owned_or_owner_approved_95_all_active_regimes,fail,accepted_source_confidence_95_labels=0/4
+r6_direct_support_floor,pass,57/57
+r6_direct_confidence,fail,wilson95_min_lcb=0.936861
+r6_broad_normal_controls,fail,broad_normal_sample=false
+native_subhour_and_recency,fail,R3 absent; R5 missing_required_files

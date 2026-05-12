@@ -1,0 +1,13 @@
+check,status,evidence
+provider_requested,pass,kraken-spot ETHUSD requested for 1h 4h 1d
+provider_data_acquired,pass,721 rows for each fetched timeframe
+provider_unreachable,pass_false,no provider transport failure recorded
+local_cache_replay,pass_false,provider fetch commands produced fresh run-local data
+auto_quant_prepare,pass,auto_quant_prepare and auto_quant_prepare_ethkraken exited 0
+tomac_backtest,fail_closed,auto_quant_run_tomac variants exited 1
+pair_whitelist,fail_closed,Freqtrade OperationalException No pair in whitelist
+python_context,fail_closed,one run_tomac invocation failed with ModuleNotFoundError freqtrade
+strategy_metrics,fail_closed,no TOMAC metrics artifact
+real_trades,fail_closed,no real-trade artifact
+downstream_chain,fail_closed,no Pre-Bayes BBN CatBoost execution-tree closure
+promotion,fail_closed,promotion_allowed=false trade_usable=false update_goal=false

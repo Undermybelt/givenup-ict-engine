@@ -1,0 +1,136 @@
+{
+  "apply_scores_exit_zero": true,
+  "commands": [
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/03_export_exact_branch_target_before_scores.exit",
+      "name": "03_export_exact_branch_target_before_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/03_export_exact_branch_target_before_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/03_export_exact_branch_target_before_scores.out",
+      "timed_out": false
+    },
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/04_apply_exact_branch_scores.exit",
+      "name": "04_apply_exact_branch_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/04_apply_exact_branch_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/04_apply_exact_branch_scores.out",
+      "timed_out": false
+    },
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/05_export_exact_branch_target_after_scores.exit",
+      "name": "05_export_exact_branch_target_after_scores",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/05_export_exact_branch_target_after_scores.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/05_export_exact_branch_target_after_scores.out",
+      "timed_out": false
+    },
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/06_register_branch_catboost_trainer_json.exit",
+      "name": "06_register_branch_catboost_trainer_json",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/06_register_branch_catboost_trainer_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/06_register_branch_catboost_trainer_json.out",
+      "timed_out": false
+    },
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/07_enable_branch_path_ranking_runtime_prefer_history.exit",
+      "name": "07_enable_branch_path_ranking_runtime_prefer_history",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/07_enable_branch_path_ranking_runtime_prefer_history.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/07_enable_branch_path_ranking_runtime_prefer_history.out",
+      "timed_out": false
+    },
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/08_policy_training_status_final.exit",
+      "name": "08_policy_training_status_final",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/08_policy_training_status_final.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/08_policy_training_status_final.out",
+      "timed_out": false
+    },
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/09_workflow_structural_recommended_path_bundle_final.exit",
+      "name": "09_workflow_structural_recommended_path_bundle_final",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/09_workflow_structural_recommended_path_bundle_final.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/09_workflow_structural_recommended_path_bundle_final.out",
+      "timed_out": false
+    },
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/10_workflow_execution_candidate_final.exit",
+      "name": "10_workflow_execution_candidate_final",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/10_workflow_execution_candidate_final.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/10_workflow_execution_candidate_final.out",
+      "timed_out": false
+    },
+    {
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/11_pre_bayes_status_final.exit",
+      "name": "11_pre_bayes_status_final",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/11_pre_bayes_status_final.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/logs/11_pre_bayes_status_final.out",
+      "timed_out": false
+    }
+  ],
+  "current_exact_paths": [
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+  ],
+  "exact_branch_paths_preserved_current": true,
+  "exact_branch_paths_preserved_history": true,
+  "feedback_rows_replayed": 48,
+  "history_exact_paths": [
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+  ],
+  "observation_validation_ready": true,
+  "observation_validation_rows": 48,
+  "policy_summary_line": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural_path_ranking_target rows=6 history_rows=279 mature_rows=4 history_mature_rows=275 raw_scored_mature=275/30 production_validation=274/30 observation_validation=48/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=1",
+  "policy_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=275/30 production_validation=274/30 observation_validation=48/30 ready=true",
+  "pre_bayes_gate_status": null,
+  "production_validation_ready": true,
+  "production_validation_rows": 274,
+  "promotion_allowed": false,
+  "promotion_status": "not_promoted:exact_branch_runtime_selected_but_pre_bayes_or_execution_gate_missing",
+  "recipe_id": "SourceRootStopCarryLongHorizonV1",
+  "required_branch_paths": [
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+  ],
+  "run_id": "20260511T224858+0800-codex-board-b-220646-exact-branch-runtime-repair-v3",
+  "runtime_active_match_count": 1,
+  "runtime_artifact_match_count": 0,
+  "runtime_history_match_count": 6,
+  "runtime_selection_ready": true,
+  "runtime_selection_status": "enabled_candidate_set_ready",
+  "runtime_source_kind": "candidate_set",
+  "schema_version": "board-b-exact-branch-feedback-runtime-repair/v3",
+  "score_export": {
+    "export_rows_seen": 6,
+    "matched_path_ids": [
+      "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+      "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+      "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+    ],
+    "score_rows_written": 4,
+    "scores_file": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/exact_branch_runtime_scores_v3.csv"
+  },
+  "source_run_id": "20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/state_exact_branch_feedback_v3",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "trainer_artifact_json": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/catboost/path_ranker_model/trainer_artifact.json",
+  "trainer_artifact_ready": true,
+  "workflow_bundle_path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "workflow_bundle_path_is_required_branch_path": true,
+  "workflow_execution_candidate_observed": false,
+  "workflow_execution_candidate_ready": false
+}

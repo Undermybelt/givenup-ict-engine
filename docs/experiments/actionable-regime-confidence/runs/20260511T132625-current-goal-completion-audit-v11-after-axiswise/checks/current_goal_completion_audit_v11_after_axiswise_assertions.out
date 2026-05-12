@@ -1,0 +1,13 @@
+run_id=20260511T132625+0800-current-goal-completion-audit-v11-after-axiswise
+axiswise_same_source_timeframe_cells_8of8=true
+daily_parent_roots_4of4=true
+scoped_cross_context_price_roots_pass=true
+expanded_full_cycle_full_species_complete=false
+direct_manipulation_full_variety_coverage=false
+goal_achieved=false
+call_update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

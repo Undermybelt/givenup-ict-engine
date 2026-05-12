@@ -1,0 +1,63 @@
+{
+  "auto_quant_run_id": "20260511T193803+0800-codex-board-b-root-transition-triad-clean-v1",
+  "close_ts_ms": 1294138800000,
+  "direction": "long",
+  "entry_signal": "trend_follow_slow",
+  "factors_used": [
+    {
+      "category": "regime_context",
+      "confidence": 0.444,
+      "direction": "Bull",
+      "factor_name": "market_regime_context.root",
+      "uncertainty_contribution": 0.556,
+      "value": 0.444,
+      "weighted_score": 0.444
+    },
+    {
+      "category": "branch_path",
+      "confidence": 0.444,
+      "direction": "Bull",
+      "factor_name": "regime_profit_branch_path",
+      "uncertainty_contribution": 0.556,
+      "value": 0.000977382803821448,
+      "weighted_score": 0.000977382803821448
+    },
+    {
+      "category": "root_transition_directional",
+      "confidence": 0.6,
+      "direction": "Bull",
+      "factor_name": "RootTransitionTriadV1:trend_follow_slow",
+      "uncertainty_contribution": 0.4,
+      "value": 0.000977382803821448,
+      "weighted_score": 0.000977382803821448
+    }
+  ],
+  "open_ts_ms": 1294081200000,
+  "pnl": 0.000977382803821448,
+  "realized_outcome": "win",
+  "regime_at_entry": "Bull",
+  "schema_version": "1.0",
+  "strategy_mutation_id": "board-b-root-transition-triad-clean-trend_follow_slow",
+  "strategy_name": "RootTransitionTriadV1",
+  "structural_feedback": {
+    "branch_id": "Bull -> TrendExpansion -> TransitionContinuation -> RootTransitionTriadV1:trend_follow_slow",
+    "candidate_set_id": "20260511T193803+0800-codex-board-b-root-transition-triad-clean-v1",
+    "candidate_set_size": 11633,
+    "direction": "long",
+    "entry_style": "trend_follow_slow",
+    "exit_reason": null,
+    "followed_path": true,
+    "node_id": "Bull",
+    "notes": "diagnostic_dry_run_only_root_transition_triad_clean_rc_spa_rejected",
+    "path_id": "Bull -> TrendExpansion -> TransitionContinuation -> RootTransitionTriadV1:trend_follow_slow",
+    "protocol_version": "board-b-root-transition-triad/v1",
+    "realized_outcome": "win",
+    "realized_pnl": 0.000977382803821448,
+    "recommendation_id": "RootTransitionTriadV1:trend_follow_slow:NQ/USD:1h:20",
+    "recommended_at": "2011-01-03T19:00:00+00:00",
+    "scenario_id": "TrendExpansion",
+    "symbol": "ROOT_TRIAD_CLEAN_193803_SELECTED"
+  },
+  "symbol": "ROOT_TRIAD_CLEAN_193803_SELECTED",
+  "trade_id": "RootTransitionTriadV1:trend_follow_slow:NQ/USD:1h:20"
+}

@@ -1,0 +1,133 @@
+{
+  "artifact_type": "board_a_local_acquisition_ledger_v1",
+  "decision": {
+    "accepted_rows_added": 0,
+    "bad_completion_signals": [],
+    "gate_result": "board_a_local_acquisition_ledger_v1=readbacks_registered_no_ready_local_intake",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "existing_source_panel_count": 4,
+  "generated_at_utc": "2026-05-11T10:53:14.768650+00:00",
+  "intake_rows": [
+    {
+      "exists": false,
+      "name": "external_bundle_price_rows",
+      "path": "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_rows.csv",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "external_bundle_price_provenance",
+      "path": "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_provenance.json",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "external_bundle_recency_rows",
+      "path": "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_rows.csv",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "external_bundle_recency_provenance",
+      "path": "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_provenance.json",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "external_bundle_direct_positive",
+      "path": "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_positive_rows.csv",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "external_bundle_direct_controls",
+      "path": "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_matched_controls.csv",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "external_bundle_direct_provenance",
+      "path": "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_provenance.json",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "source_equivalence_rows",
+      "path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "source_equivalence_provenance",
+      "path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "direct_intake_positive",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "direct_intake_controls",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "sha256": "",
+      "size": 0
+    },
+    {
+      "exists": false,
+      "name": "direct_intake_provenance",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+      "sha256": "",
+      "size": 0
+    }
+  ],
+  "local_candidate_count": 515,
+  "next": "Acquire source-owned or owner-approved rows for the missing external bundle files; current local files are either already-known stock-regime panels or scripts/documents.",
+  "readback_rows": [
+    {
+      "accepted_rows_added": 0,
+      "full_objective_achieved": false,
+      "gate_result": "direct_manipulation_coverage_readback_v2=scoped_varieties_present_full_species_blocked",
+      "kind": "direct_manipulation_coverage",
+      "new_confidence_gate": false,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T184630-codex-direct-manipulation-coverage-readback-v2",
+      "registered_in_todo_before_this_ledger": false,
+      "run_id": "20260511T184630-codex-direct-manipulation-coverage-readback-v2",
+      "update_goal": false
+    },
+    {
+      "accepted_rows_added": 0,
+      "full_objective_achieved": false,
+      "gate_result": "source_label_other_market_readback_v1=partial_sources_no_full_equivalence",
+      "kind": "source_label_other_market",
+      "new_confidence_gate": false,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T184856-codex-source-label-other-market-readback-v1",
+      "registered_in_todo_before_this_ledger": true,
+      "run_id": "20260511T184856-codex-source-label-other-market-readback-v1",
+      "update_goal": false
+    }
+  ],
+  "ready_intake_file_count": 0,
+  "ready_row_candidate_count": 179,
+  "run_id": "20260511T185209-codex-board-a-local-acquisition-ledger-v1",
+  "todo_hash_before_append": "152a2b8bd137d3a3cc22a08302b7e8d24d7fbac0aaba4fb82bce6db51e123c39"
+}

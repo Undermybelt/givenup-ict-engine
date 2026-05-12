@@ -1,0 +1,13 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T032456-codex-expanded-root-schema-gate/expanded-root-gate/expanded_root_schema_gate_report.json
+summary: docs/experiments/actionable-regime-confidence/runs/20260511T032456-codex-expanded-root-schema-gate/expanded-root-gate/expanded_root_schema_gate_summary.csv
+target_schema: docs/experiments/actionable-regime-confidence/runs/20260511T032456-codex-expanded-root-schema-gate/expanded-root-gate/expanded_root_target_schema.json
+crosswalk: docs/experiments/actionable-regime-confidence/runs/20260511T032456-codex-expanded-root-schema-gate/expanded-root-gate/expanded_root_crosswalk.json
+runtime_code_changed: False
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+fresh_calibration_rerun: True
+trade_usable: False
+accepted_root_classes_95: CrisisStress
+missing_root_classes_95: BullExpansion,BearExpansion,SidewaysConsolidation,Manipulation
+manipulation_input_state: missing_required_inputs
+GATE blocked

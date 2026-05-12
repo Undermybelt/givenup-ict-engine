@@ -1,0 +1,14 @@
+PASS shallow_patch_failed_as_expected
+PASS connector_patch_exit_0
+PASS connector_patch_http_200
+PASS prepare_exit_0
+PASS status_after_dependency_ready_seed_required
+PASS healthy_after_true
+PASS data_ready_after_true
+PASS data_file_count_15
+PASS accepted_rows_added_0
+PASS new_confidence_gate_false
+PASS canonical_merge_false
+PASS downstream_promotion_rerun_false
+PASS strict_objective_false
+PASS update_goal_false

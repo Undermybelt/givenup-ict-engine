@@ -1,0 +1,41 @@
+{
+  "candidate_set_id": "structural-candidates:SRC_ROOT_CARRY_LONG_220646:21c78877a12536a2",
+  "candidate_set_size": 3,
+  "composite_score": 0.5717018506534797,
+  "confirmation_summary": "same rooted branch path must reach downstream runtime",
+  "current_posterior": 0.5822259824430701,
+  "direction": "bull",
+  "experience_prior": 0.5599032718085117,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 15,
+  "invalidation_summary": "do not collapse this branch into a generic structural runtime path",
+  "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "path_label": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "path_ranker_raw_score": 0.5372559832604725,
+  "path_ranker_runtime": {
+    "applied_path_count": 4,
+    "artifact_match_count": 0,
+    "candidate_set_match_count": 0,
+    "enabled": true,
+    "history_match_count": 4,
+    "reuse_mode": "prefer_history",
+    "status": "using_history_scores"
+  },
+  "path_ranker_runtime_source": "history_path",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160302_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160302_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160302_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160302_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1",
+    "execution_contract": null,
+    "prompt": "Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160302_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160302_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160302_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T000112-codex-board-b-crisis-crowded-suppression-full-replay-v1/state_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160302_spot.json",
+    "user_input_required": true
+  },
+  "scenario_id": "regime-bundle-branch:a60d5382295d93c1",
+  "selected_path_probability": 0.3852046921463843,
+  "stop_summary": "use the branch-specific stop contract",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "trigger_summary": "preserve exact regime_profit_branch_path Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "why_this_path": "posterior=0.582 prior=0.560 invalidation_rate=0.000"
+}

@@ -1,0 +1,5 @@
+6f9b9958bff8c85762acebd2f9891b30b336cbb59778f2c140e140e7b105e622  docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv
+7d600ecdfc66002013e776edaab03c41cd4e9652fe036db4395856eedc848a62  docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/bybit_linear_btcusdt_1h_20200101_20260512.normalized.csv
+dc44b4db82d6a988d7b32ed45951edd43751336c1c113a72b0f625e32862a127  docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/ibkr_spy_1h_5y.normalized.csv
+700e2e0330cc344ecbf895c8f889385b3eef9f07e796b3fd710063cf52443cdd  docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/kraken_futures_pfxbtusd_1h_20200101_20260512.normalized.csv
+a508ec6b7615a47d20e6a3fc33e7baf6ad203bef6c5fdee35f5c0360dccfecb4  docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv

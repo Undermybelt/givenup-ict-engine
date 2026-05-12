@@ -1,0 +1,37 @@
+{
+  "board_cursor_should_advance": false,
+  "closed_loop_branch_admission": "fail_closed",
+  "downstream_consumption": "execution_tree:fail_closed",
+  "execution_candidate_actionable": false,
+  "execution_candidate_ready": false,
+  "ingest_real_trades_applied": 4,
+  "ingest_real_trades_invalid": 11,
+  "materialized_trade_rows": 15,
+  "measured_strategies": [
+    {
+      "name": "NQRootPulseMeanRevert",
+      "rooted_branch": "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+      "sharpe": 4.6585,
+      "total_profit_pct": 0.46,
+      "trade_count": 11,
+      "win_rate_pct": 81.8182
+    },
+    {
+      "name": "NQRootTrendPulse",
+      "rooted_branch": "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+      "sharpe": 3.3511,
+      "total_profit_pct": 0.25,
+      "trade_count": 4,
+      "win_rate_pct": 75.0
+    }
+  ],
+  "path_ranker_observation_validation_rows": 0,
+  "path_ranker_production_validation_rows": 0,
+  "pre_bayes_gate_status": "observe_only",
+  "precision_root_cause": "synthetic_market_precision_8_8_suppressed_freqtrade_execution_for_non_crypto_price_scale",
+  "promotion_allowed": false,
+  "rooted_branch_contract_preserved": true,
+  "run_id": "20260512T041404+0800-codex-board-b-ltf-zero-trade-root-cause-v1",
+  "user_selected_historical_data_gate_satisfied": false,
+  "workflow_blocker": "user_selected_historical_data_missing"
+}

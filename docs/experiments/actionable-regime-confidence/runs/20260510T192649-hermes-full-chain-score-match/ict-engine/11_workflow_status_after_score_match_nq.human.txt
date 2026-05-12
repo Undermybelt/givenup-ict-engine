@@ -1,0 +1,10 @@
+NQ | update | observe_only
+Block: none
+Latest: update | entry=medium
+Next: Review the latest ensemble, pre-bayes evidence, and structural path before rerunning update. Start with ict-engine workflow-status --symbol NQ --state-dir <local-path> --phase ensemble-vote --human.
+Evidence: ict-engine workflow-status --symbol NQ --state-dir <local-path> --phase ensemble-vote --human | ict-engine pre-bayes-status --symbol NQ --state-dir <local-path> --human | ict-engine workflow-status --symbol NQ --state-dir <local-path> --phase structural-recommended-path-bundle --human
+Feedback: recommendation=structural-feedback:NQ:structural-candidates:NQ:8f288754c638a9e8:path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary path=path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary followed=true exit=forward_16_bar_close
+Path: path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary total=38 wins=20 losses=10 invalidated=3 avg_pnl=0.0017
+Validation: em=needs_multi_source_overlap holdout=unavailable split=unavailable holdout_brier=n/a holdout_cov=n/a holdout_reason=status=unavailable train=0 eval=0 obs=0 sources=0 replay=unavailable replay_brier=n/a replay_cov=n/a replay_reason=status=unavailable train=0 eval=0 obs=0 sources=0 calib=unavailable calib_brier=n/a calib_obs=0 multi_source_items=0 target_policy=bucket_posterior contexts=2 live_truth=retrospective_not_sufficient current_state_branch=temporal_hmm_pre_bayes_nowcast | replay=ready overall_brier=0.001 reason=ready eval=13 train_until=2026-05-10T11:20:08+00:00 eval_range=2026-05-10T11:20:22+00:00..2026-05-10T11:22:17+00:00 obs=13 obs_1h=13 obs_4h=13 obs_24h=13
+Ranker: status=using_candidate_set_scores source=candidate_set applied=3 artifact=0 candidate=3 history=0 lb=0.439 gate=observe
+History: nodes=3 branches=3 scenarios=3 paths=3 latest_path=path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary

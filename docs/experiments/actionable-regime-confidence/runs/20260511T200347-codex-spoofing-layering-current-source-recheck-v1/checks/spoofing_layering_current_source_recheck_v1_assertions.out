@@ -1,0 +1,7 @@
+PASS gate_result=spoofing_layering_current_source_recheck_v1=no_source_owned_matched_control_rows
+PASS ready_spoofing_layering_intake_source=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

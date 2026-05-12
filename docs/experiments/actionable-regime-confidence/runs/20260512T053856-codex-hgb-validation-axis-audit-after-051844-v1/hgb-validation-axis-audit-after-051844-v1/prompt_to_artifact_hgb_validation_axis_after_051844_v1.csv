@@ -1,0 +1,10 @@
+requirement,evidence,status,next
+"Every active price root >=95%","051844 HGB accepted Bear/Bull/Crisis/Sideways; min Wilson95 LCBs Bear 0.9787578642, Bull 0.9908918883, Crisis 0.9930261988, Sideways 0.990666799",satisfied_diagnostic,"Keep as diagnostic confidence evidence only"
+"Other markets","heldout_market split has 26236 rows; intake market families us_single_stock, us_index, india_equity_index",satisfied_daily_diagnostic_not_promotion,"Do not treat as source/control unlock"
+"Other periods","heldout_time split has 45384 rows and test split has 27844 rows; intake spans 2000-01-03 to 2026-03-20",satisfied_daily_diagnostic_not_promotion,"Preserve as daily chronological validation"
+"Other timeframes/cycles","timeframe_counts show 1d=248440 and no other timeframe",blocked,"Acquire native sub-hour or genuinely source-owned cross-timeframe MainRegimeV2 rows"
+"R6 owner/control root","/tmp/ict-engine-board-a-r6-owner-export-v1 absent",blocked,"Send or satisfy CME/Cboe/CFE owner-export request or explicit approval path"
+"R3 native sub-hour root","/tmp/ict-engine-native-subhour-source-label-intake absent",blocked,"Acquire native sub-hour source-label rows"
+"R5 recency-extension root","/tmp/ict-engine-source-panel-recency-extension absent",blocked,"Acquire source-owned post-cutoff MainRegimeV2 panel extension"
+"Full downstream chain","051844 canonical_merge=false and downstream_promotion_rerun=false",blocked,"Rerun only after valid source/control unlock"
+"Goal completion","trade_usable=false and update_goal=false",not_allowed,"Do not call update_goal"

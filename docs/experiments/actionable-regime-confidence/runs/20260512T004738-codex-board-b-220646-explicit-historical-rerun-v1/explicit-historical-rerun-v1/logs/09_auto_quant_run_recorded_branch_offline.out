@@ -1,0 +1,41 @@
+---
+strategy:         RecordedBranchDailyPulse
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data found. Terminating.
+traceback:
+
+---
+strategy:         RegimeRootPulseBranch
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data left after adjusting for startup candles.
+traceback:
+
+---
+strategy:         RegimeRsiRelief
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data left after adjusting for startup candles.
+traceback:
+
+---
+strategy:         RegimeTrendCarry
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data left after adjusting for startup candles.
+traceback:
+
+---
+strategy:         RegimeVolBreakout
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data left after adjusting for startup candles.
+traceback:
+
+Done: 0 succeeded, 5 failed.

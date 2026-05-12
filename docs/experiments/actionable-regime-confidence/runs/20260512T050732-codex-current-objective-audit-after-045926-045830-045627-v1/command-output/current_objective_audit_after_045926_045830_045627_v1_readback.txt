@@ -1,0 +1,10 @@
+date=2026-05-12T05:07:32+0800
+board_hash_before_artifact=b190e632a5a14bf4877f302cd4fdd3065139a225d097064177f80fa27e6a0cef
+045926_exit=0
+045926_accepted_labels=[]
+045830_exit=143
+045830_scored_rows=0
+045627_verifier_native_rows_acquired=false
+required_root:/tmp/ict-engine-board-a-r6-owner-export-v1=missing
+required_root:/tmp/ict-engine-native-subhour-source-label-intake=missing
+required_root:/tmp/ict-engine-source-panel-recency-extension=missing

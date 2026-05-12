@@ -1,0 +1,1 @@
+PYTHONPATH=docs/experiments/actionable-regime-confidence/runs/20260512T022552-codex-autoquant-threaded-dns-prepare-probe-v1/scripts ./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-autoquant-bootstrap-prepare-after-040311-v1/autoquant-state

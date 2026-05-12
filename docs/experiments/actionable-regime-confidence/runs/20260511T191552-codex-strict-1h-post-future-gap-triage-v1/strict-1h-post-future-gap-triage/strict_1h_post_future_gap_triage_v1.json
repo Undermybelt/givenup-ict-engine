@@ -1,0 +1,121 @@
+{
+  "artifact_type": "strict_1h_post_future_gap_triage_v1",
+  "run_id": "20260511T191552+0800-codex-strict-1h-post-future-gap-triage-v1",
+  "generated_at_utc": "2026-05-11T11:15:52+00:00",
+  "current_cursor_edited": false,
+  "inputs": {
+    "near_miss_candidates_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T184151-codex-strict-1h-near-miss-extension-requirements-v1/strict-1h-extension-requirements/strict_1h_near_miss_extension_candidates_v1.csv",
+    "jan2026_tail_support_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T184530-codex-strict-1h-jan2026-tail-support-probe-v1/jan2026-tail-support/strict_1h_jan2026_tail_support_probe_v1_rows.csv",
+    "future_tail_rerun_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T190440-codex-strict-1h-future-tail-gate-rerun-v1/future-tail-gate-rerun/strict_1h_future_tail_gate_rerun_v1_rows.csv"
+  },
+  "decision": {
+    "gate_result": "strict_1h_post_future_gap_triage_v1=9_near_miss_targets_remaining_no_existing_tail_ready",
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "counts": {
+    "strict_1h_fixed_gate_rows": 41,
+    "strict_1h_future_protocol_rows": 45,
+    "strict_1h_total_slots": 156,
+    "near_miss_candidates_before_future_tail": 13,
+    "future_protocol_accepted_rows": 4,
+    "remaining_near_miss_targets_after_future_tail": 9,
+    "remaining_targets_ready_with_existing_tail": 0,
+    "minimum_new_source_sessions_needed_for_next_target": 5
+  },
+  "remaining_targets": [
+    {
+      "instrument": "XOM",
+      "root": "Sideways",
+      "missing_extra_sessions_from_184151": 5,
+      "existing_jan2026_tail_sessions": 0,
+      "new_source_sessions_needed_after_current_tail": 5,
+      "repair_split": "heldout_2025",
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95"
+    },
+    {
+      "instrument": "UNH",
+      "root": "Bear",
+      "missing_extra_sessions_from_184151": 7,
+      "existing_jan2026_tail_sessions": 0,
+      "new_source_sessions_needed_after_current_tail": 7,
+      "repair_split": "calibration_2024",
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95"
+    },
+    {
+      "instrument": "^DJI",
+      "root": "Sideways",
+      "missing_extra_sessions_from_184151": 7,
+      "existing_jan2026_tail_sessions": 0,
+      "new_source_sessions_needed_after_current_tail": 7,
+      "repair_split": "calibration_2024",
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95"
+    },
+    {
+      "instrument": "AMD",
+      "root": "Bear",
+      "missing_extra_sessions_from_184151": 10,
+      "existing_jan2026_tail_sessions": 0,
+      "new_source_sessions_needed_after_current_tail": 10,
+      "repair_split": "calibration_2024",
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95"
+    },
+    {
+      "instrument": "HD",
+      "root": "Sideways",
+      "missing_extra_sessions_from_184151": 11,
+      "existing_jan2026_tail_sessions": 1,
+      "new_source_sessions_needed_after_current_tail": 10,
+      "repair_split": "calibration_2024",
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95"
+    },
+    {
+      "instrument": "JNJ",
+      "root": "Sideways",
+      "missing_extra_sessions_from_184151": 12,
+      "existing_jan2026_tail_sessions": 2,
+      "new_source_sessions_needed_after_current_tail": 10,
+      "repair_split": "heldout_2025",
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95"
+    },
+    {
+      "instrument": "DIS",
+      "root": "Bull",
+      "missing_extra_sessions_from_184151": 18,
+      "existing_jan2026_tail_sessions": 6,
+      "new_source_sessions_needed_after_current_tail": 12,
+      "repair_split": "heldout_2025",
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95"
+    },
+    {
+      "instrument": "TMO",
+      "root": "Bear",
+      "missing_extra_sessions_from_184151": 14,
+      "existing_jan2026_tail_sessions": 0,
+      "new_source_sessions_needed_after_current_tail": 14,
+      "repair_split": "calibration_2024",
+      "blocker": "calibration_support_below_73|calibration_wilson95_below_0_95"
+    },
+    {
+      "instrument": "INTC",
+      "root": "Bear",
+      "missing_extra_sessions_from_184151": 20,
+      "existing_jan2026_tail_sessions": 0,
+      "new_source_sessions_needed_after_current_tail": 20,
+      "repair_split": "heldout_2025",
+      "blocker": "heldout_time_support_below_73|heldout_time_wilson95_below_0_95"
+    }
+  ],
+  "next_acquisition_targets": [
+    "XOM/Sideways needs 5 new source-owned heldout sessions beyond current tail",
+    "UNH/Bear needs 7 new source-owned calibration sessions beyond current tail",
+    "^DJI/Sideways needs 7 new source-owned calibration sessions beyond current tail",
+    "AMD/Bear needs 10 new source-owned calibration sessions beyond current tail"
+  ]
+}

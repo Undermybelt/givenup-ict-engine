@@ -1,0 +1,6 @@
+check,evidence,decision,required_root_unlock
+r6_owner_export_target_root,"/tmp/ict-engine-board-a-r6-owner-export-v1 absent; 0 files","no verifier-native R6 owner/export rows or normal controls arrived",false
+r5_recency_target_root,"/tmp/ict-engine-source-panel-recency-extension absent; 0 files","no source-owned post-2026-01-30 source-panel recency rows arrived",false
+r3_native_subhour_target_root,"/tmp/ict-engine-native-subhour-source-label-intake exists with 2 files and 5032904 CSV lines; provenance labels Bear|Bull|Sideways; Crisis absent","TSIE-derived native-subhour packet remains quarantined/non-promoting",false
+local_drop_scan,"Downloads/Documents/Desktop bounded scan found Tomac Databento/symbology OHLCV files only","local hits are OHLCV/context assets, not R6 owner-approved normal controls or R5/R3 source labels",false
+dispatch_drafts,"052650 and 052711 CME/Cboe .eml drafts remain present; no From/sent/ticket/export/license response artifact observed by this poll","operator/vendor action still required before root mutation or downstream promotion",false

@@ -1,0 +1,12 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T001100-sector-index-breadth-root-probe/sector_index_breadth_root_report.json
+accepted_root_classes_95: []
+blocked_root_classes: ['Bull', 'Bear', 'Sideways', 'Crisis', 'UnknownOrMixed', 'Manipulation']
+accepted_gate: none_for_MainRegimeV2
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+Bull: state=blocked test_lcb=0.230908 test_support=4089 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95']
+Bear: state=blocked test_lcb=0.196474 test_support=3393 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05']
+Sideways: state=blocked test_lcb=0.332073 test_support=1245 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05', 'validation_timeframes_below_2']
+Crisis: state=blocked test_lcb=0.491156 test_support=3526 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05', 'validation_timeframes_below_2']
+UnknownOrMixed: state=residual_not_release test_lcb=0.121682 test_support=2670 blockers=['residual_or_non_release_gate', 'calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'validation_timeframes_below_2']
+Manipulation: state=missing_required_inputs test_lcb=0.000000 test_support=0 blockers=['missing_required_inputs', 'proxy_only_low_confidence']

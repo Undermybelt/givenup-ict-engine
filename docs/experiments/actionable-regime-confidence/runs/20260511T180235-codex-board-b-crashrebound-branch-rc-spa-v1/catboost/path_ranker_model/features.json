@@ -1,0 +1,19 @@
+{
+  "features": [
+    "evidence_quality_score",
+    "risk_reward",
+    "kelly_fraction",
+    "setup_quality",
+    "gating_status",
+    "selected_direction",
+    "factor_alignment",
+    "setup_family",
+    "entry_style",
+    "session_model",
+    "htf_rb_type",
+    "ltf_path_label",
+    "pda_survival_regime"
+  ],
+  "created_at": "2026-05-11T18:12:40.619557",
+  "n_samples": 207
+}

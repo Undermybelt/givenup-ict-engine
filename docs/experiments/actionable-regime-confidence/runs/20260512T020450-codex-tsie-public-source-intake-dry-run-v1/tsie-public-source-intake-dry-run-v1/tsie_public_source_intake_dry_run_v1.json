@@ -1,0 +1,423 @@
+{
+  "run_id": "20260512T020450-codex-tsie-public-source-intake-dry-run-v1",
+  "gate_result": "tsie_public_source_intake_dry_run_v1=metadata_mapping_transport_blocked_no_acceptance_no_merge",
+  "board_hash_before_artifact": "968acaf8c749ed01a0fb14330562408afe12757b173452862ffdf0f9b7af39a8",
+  "dataset": {
+    "id": "sujinwo/tsie-market-regime-dataset",
+    "url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+    "api_url": "https://huggingface.co/api/datasets/sujinwo/tsie-market-regime-dataset",
+    "size_api_url": "https://datasets-server.huggingface.co/size",
+    "first_rows_api_url": "https://datasets-server.huggingface.co/first-rows",
+    "parquet_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet",
+    "license_tags": [
+      "license:mit"
+    ],
+    "private": false,
+    "gated": false,
+    "disabled": false,
+    "tags": [
+      "task_categories:tabular-classification",
+      "task_categories:time-series-forecasting",
+      "license:mit",
+      "size_categories:1M<n<10M",
+      "format:parquet",
+      "modality:tabular",
+      "modality:text",
+      "library:datasets",
+      "library:pandas",
+      "library:polars",
+      "library:mlcroissant",
+      "region:us",
+      "finance",
+      "trading",
+      "Temporal Fusion Transformer",
+      "time-series",
+      "stock-market",
+      "IDX",
+      "TFT"
+    ]
+  },
+  "size": {
+    "dataset_num_rows": 7193996,
+    "dataset_num_bytes_parquet_files": 591890794,
+    "split_num_rows": 7193996,
+    "split_num_columns": 32
+  },
+  "schema": {
+    "feature_count": 32,
+    "feature_names": [
+      "group_id",
+      "time_idx",
+      "time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "log_return",
+      "price_norm",
+      "volume_norm",
+      "volatility",
+      "momentum_3",
+      "momentum_10",
+      "future_volatility",
+      "trend_return",
+      "target_return",
+      "macd_norm",
+      "atr_norm",
+      "bb_pos",
+      "is_opening",
+      "is_closing",
+      "is_session_1",
+      "is_session_2",
+      "hour",
+      "day_of_week",
+      "month",
+      "hour_sin",
+      "hour_cos",
+      "dow_sin",
+      "dow_cos",
+      "regime_label"
+    ],
+    "features": [
+      {
+        "name": "group_id",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "time_idx",
+        "type": {
+          "dtype": "int64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "time",
+        "type": {
+          "dtype": "timestamp[ns]",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "open",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "high",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "low",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "close",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "volume",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "log_return",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "price_norm",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "volume_norm",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "volatility",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "momentum_3",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "momentum_10",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "future_volatility",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "trend_return",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "target_return",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "macd_norm",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "atr_norm",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "bb_pos",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "is_opening",
+        "type": {
+          "dtype": "int8",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "is_closing",
+        "type": {
+          "dtype": "int8",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "is_session_1",
+        "type": {
+          "dtype": "int8",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "is_session_2",
+        "type": {
+          "dtype": "int8",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "hour",
+        "type": {
+          "dtype": "int32",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "day_of_week",
+        "type": {
+          "dtype": "int32",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "month",
+        "type": {
+          "dtype": "int32",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "hour_sin",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "hour_cos",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "dow_sin",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "dow_cos",
+        "type": {
+          "dtype": "float64",
+          "_type": "Value"
+        }
+      },
+      {
+        "name": "regime_label",
+        "type": {
+          "dtype": "int8",
+          "_type": "Value"
+        }
+      }
+    ]
+  },
+  "tmp_root": "/tmp/ict-engine-tsie-market-regime-dry-run-v1",
+  "tmp_sample_rows": "/tmp/ict-engine-tsie-market-regime-dry-run-v1/first_rows_sample.json",
+  "label_mapping_rows": [
+    {
+      "regime_label": 0,
+      "published_label": "STRONG SELL",
+      "mapping": "Bear",
+      "mapping_status": "mapped_unambiguous",
+      "support_status": "not_computed_transport_blocked",
+      "reason": "published high-confidence bearish breakdown"
+    },
+    {
+      "regime_label": 1,
+      "published_label": "WEAK SELL",
+      "mapping": "Bear",
+      "mapping_status": "mapped_unambiguous",
+      "support_status": "not_computed_transport_blocked",
+      "reason": "published mild bearish movement"
+    },
+    {
+      "regime_label": 2,
+      "published_label": "BEAR TRAP",
+      "mapping": "Abstain",
+      "mapping_status": "abstain_trap",
+      "support_status": "not_computed_transport_blocked",
+      "reason": "false-breakdown class is directionally ambiguous"
+    },
+    {
+      "regime_label": 3,
+      "published_label": "FLAT / NOISE",
+      "mapping": "Sideways",
+      "mapping_status": "mapped_unambiguous",
+      "support_status": "not_computed_transport_blocked",
+      "reason": "published sideways / low-volatility class"
+    },
+    {
+      "regime_label": 4,
+      "published_label": "BULL TRAP",
+      "mapping": "Abstain",
+      "mapping_status": "abstain_trap",
+      "support_status": "not_computed_transport_blocked",
+      "reason": "false-breakout class is directionally ambiguous"
+    },
+    {
+      "regime_label": 5,
+      "published_label": "WEAK BUY",
+      "mapping": "Bull",
+      "mapping_status": "mapped_unambiguous",
+      "support_status": "not_computed_transport_blocked",
+      "reason": "published mild bullish movement"
+    },
+    {
+      "regime_label": 6,
+      "published_label": "STRONG BUY",
+      "mapping": "Bull",
+      "mapping_status": "mapped_unambiguous",
+      "support_status": "not_computed_transport_blocked",
+      "reason": "published high-confidence breakout"
+    }
+  ],
+  "candidate_rows": [
+    {
+      "main_regime_v2_candidate": "Bear",
+      "source_labels": "0 STRONG SELL; 1 WEAK SELL",
+      "support_status": "metadata_mapping_only_transport_blocked",
+      "acceptance_status": "blocked_no_aggregate_no_canonical_merge"
+    },
+    {
+      "main_regime_v2_candidate": "Sideways",
+      "source_labels": "3 FLAT / NOISE",
+      "support_status": "metadata_mapping_only_transport_blocked",
+      "acceptance_status": "blocked_no_aggregate_no_canonical_merge"
+    },
+    {
+      "main_regime_v2_candidate": "Bull",
+      "source_labels": "5 WEAK BUY; 6 STRONG BUY",
+      "support_status": "metadata_mapping_only_transport_blocked",
+      "acceptance_status": "blocked_no_aggregate_no_canonical_merge"
+    },
+    {
+      "main_regime_v2_candidate": "Crisis",
+      "source_labels": "none",
+      "support_status": "no_candidate_class",
+      "acceptance_status": "blocked_no_source_label"
+    }
+  ],
+  "transport_blocker": {
+    "status": "full_parquet_aggregate_blocked",
+    "observed_error": "DuckDB/httpfs and curl attempts hit SSL connect errors against the Hugging Face/Xet Parquet transport",
+    "fallback_used": "Hugging Face dataset metadata, size API, and first-rows API only"
+  },
+  "acceptance_blockers": [
+    "full Parquet aggregate support was not produced in this artifact",
+    "dataset labels are rule-based source labels, not accepted MainRegimeV2 rows",
+    "trap classes are abstained rather than force-mapped",
+    "Crisis has no candidate class",
+    "dataset is IDX hourly/session-aware only, not cross-market or cross-timeframe evidence by itself",
+    "R6 owner-export/control root is absent and canonical merge remains blocked",
+    "no downstream provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree promotion rerun is allowed"
+  ],
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "raw_dataset_files_committed": false,
+  "external_vendor_contact_sent": false,
+  "trade_usable": false
+}

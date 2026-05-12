@@ -1,0 +1,1 @@
+curl -L --fail --silent --show-error --max-time 45 -r 0-1048575 -o /tmp/ict-engine-tsie-transport-retry-after-061855-v1/0000.parquet.head1m https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet

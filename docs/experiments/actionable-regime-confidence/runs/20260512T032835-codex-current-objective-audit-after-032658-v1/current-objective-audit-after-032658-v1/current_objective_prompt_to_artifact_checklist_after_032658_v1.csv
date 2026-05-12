@@ -1,0 +1,16 @@
+requirement,status,evidence,gap
+named_board_file_preserved,pass,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,board remains coordination surface
+multi_agent_append_only,pass,20260512T032835 new run root,no other agent run root edited
+every_active_regime_calibrated_95,blocked,032349 accepted_source_confidence_95_labels empty,no active source-label regime accepted at 95
+per_regime_qualifying_conditions,blocked,032349 field_complete Bull and Sideways only accepted_labels empty,field complete does not equal accepted
+cross_market_cycle_timeframe_validation,blocked,032349 sidecar rows 1d only ready cross-timeframe exports 0,cross-timeframe source-owned validation missing
+r6_owner_export_or_flip_approval,blocked,032417 and 032536 requests ready but rows acquired false and approval false,owner export delivery or approval missing
+r3_native_subhour_source_labels,blocked,/tmp/ict-engine-native-subhour-source-label-intake absent,native sub-hour root absent
+r5_source_panel_recency_extension,blocked,/tmp/ict-engine-source-panel-recency-extension absent,recency extension root absent
+provider_coverage_ibkr_tv_yf_kraken,partial,032145 and 032302 provider readbacks,provider readiness is non-promoting while source controls absent
+autoquant_operated_locally,partial,032658 bootstrap succeeded prepare failed DNS,no promotable Auto-Quant output
+filter_prebayes_bbn_evidence,blocked,032145 pre-bayes no latest gate and 032658 no soft evidence,no promoted filter or BBN evidence
+catboost_path_ranking,blocked,no post-source-unlock rerun allowed,source controls must unlock first
+execution_tree_promotion,blocked,032145 and 032658 workflow fail-closed/actionable_artifacts 0,no execution-tree promotion packet
+canonical_merge_and_downstream_rerun,blocked,approval assertions false roots absent,merge and rerun disallowed
+goal_completion_update_goal,blocked,strict objective false update_goal false,do not call update_goal

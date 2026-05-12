@@ -1,0 +1,4 @@
+requirement,evidence,status
+fetch_ibkr_btc_1h,docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/provider-csv,PASS
+run_aq_if_startup_floor_met,docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/workspace,PASS
+do_not_promote,docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-ibkr-btc-aq-lane-repair-v1/ibkr-btc-aq-lane-repair-v1/ibkr_btc_aq_lane_repair_v1.md,PASS

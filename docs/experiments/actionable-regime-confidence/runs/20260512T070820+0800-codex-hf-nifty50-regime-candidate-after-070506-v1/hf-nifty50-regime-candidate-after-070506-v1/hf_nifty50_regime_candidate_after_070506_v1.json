@@ -1,0 +1,36 @@
+{
+  "run_id": "20260512T070820+0800-codex-hf-nifty50-regime-candidate-after-070506-v1",
+  "gate_result": "hf_nifty50_regime_candidate_after_070506_v1=binary_risk_on_off_no_r3_r5_r6_unlock_no_downstream",
+  "dataset_id": "AAdevloper/nifty50-market-regime",
+  "dataset_url": "https://huggingface.co/datasets/AAdevloper/nifty50-market-regime",
+  "dataset_sha": "51f6a4fb6b500627f5a7779d8e78d9d1fc567a10",
+  "profile": {
+    "rows": 2235,
+    "date_min": "2015-10-23",
+    "date_max": "2024-11-14",
+    "post_2026_01_30_rows": 0,
+    "label_column": "regime",
+    "label_counts": {
+      "0": 1216,
+      "1": 1019
+    },
+    "readme_label_vocab": [
+      "RISK_OFF",
+      "RISK_ON"
+    ],
+    "main_regime_v2_labels_present": false,
+    "native_subhour": false,
+    "r6_owner_export_controls": false
+  },
+  "accepted_rows_added": 0,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "r6_owner_export_unlock": false,
+  "r5_recency_unlock": false,
+  "r3_native_subhour_unlock": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "mainregimev3-reassert-after-v2-drift/v1",
+  "loop_id": "20260511T074100+0800-codex-mainregimev3-reassert-after-v2-drift",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T074100-codex-mainregimev3-reassert-after-v2-drift",
+  "purpose": "Reassert the active user-corrected MainRegimeV3 taxonomy after a conflicting MainRegimeV2 reassertion was written into the board.",
+  "user_correction_basis": "The latest user message says the main categories should be bull expansion, bear expansion, manipulation, consolidation, and possibly other large classes; prior lists are only sub-class regimes.",
+  "supersedes": [
+    "20260511T074000+0800-codex-mainregimev2-reassert-after-v3-drift"
+  ],
+  "active_taxonomy": "MainRegimeV3",
+  "active_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "CrisisStress",
+    "Manipulation"
+  ],
+  "residual": "UnknownOrMixed",
+  "candidate_big_classes_to_preflight": [
+    "TransitionRecovery",
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "VolatilityDislocation",
+    "CrossAssetRotationOrRiskOnRiskOff",
+    "MacroPolicyRegime"
+  ],
+  "non_completion_inputs": [
+    "TrendExpansion",
+    "RangeConsolidation",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "SessionLiquidityCoreViable",
+    "ThinLiquidity",
+    "HMM state ids without source labels",
+    "change-point boundaries without source labels",
+    "raw L2 signatures without labeled manipulation windows"
+  ],
+  "acceptance_state": {
+    "accepted_95_roots_from_this_reassertion": [],
+    "full_universe_full_cycle_goal_achieved": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "next_action": "Rerun the attachability/full-coverage disposition matrix against MainRegimeV3 and keep missing source-label cells blocked."
+}

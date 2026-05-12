@@ -1,0 +1,1 @@
+uv --directory docs/experiments/actionable-regime-confidence/runs/20260512T102018+0800-codex-board-a-aq-provider-authority-readback-v1/state_board_a_aq_provider_readback_v1/.deps/auto-quant run --with ta-lib python run_tomac.py

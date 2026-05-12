@@ -1,0 +1,68 @@
+{
+  "run_id": "20260512T110121+0800-codex-104902-yahoo-btc-pullback-exact-downstream-v1",
+  "artifact_type": "exact_root_downstream_readback",
+  "source_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+  "source_branch_path": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+  "source_strategy": "ProviderCryptoPullbackRevertV1",
+  "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+  "source_metrics": {
+    "trade_count": 146,
+    "total_profit_pct": 2.83,
+    "win_rate_pct": 45.2055,
+    "profit_factor": 1.1186,
+    "sharpe": 0.1875,
+    "max_drawdown_pct": -4.2915
+  },
+  "command_exits_all_zero": true,
+  "ingest": {
+    "trades_total": 146,
+    "trades_applied": 146,
+    "trades_invalid": 0,
+    "feedback_records_inserted": 146,
+    "bbn_network_written": true
+  },
+  "pre_bayes": {
+    "latest_policy_present": false,
+    "latest_bridge_present": false,
+    "latest_soft_evidence_present": false,
+    "latest_gate_status": null
+  },
+  "path_ranking": {
+    "rows": 1,
+    "history_rows": 1,
+    "candidate_set_size": 1,
+    "mature_rows": 0,
+    "history_mature_rows": 0,
+    "raw_scored_mature": "0/30",
+    "production_validation": "0/30",
+    "observation_validation": "0/30",
+    "calibration": "not_fitted",
+    "trainer_artifact": "missing",
+    "runtime_selection": "disabled"
+  },
+  "workflow": {
+    "path_label": "bootstrap_readiness",
+    "latest_phase": "no_workflow_state",
+    "execution_candidate_ready": false,
+    "execution_candidate_actionable": false,
+    "review_status": "observe",
+    "closed_loop_branch_admission_status": "fail_closed",
+    "closed_loop_branch_admission_reason": "exact_structural_branch_visible_but_not_ready_or_actionable"
+  },
+  "gate": {
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "fail_closed_reasons": [
+      "six_provider_authority_gate_unsatisfied",
+      "pre_bayes_policy_absent",
+      "structural_target_mature_rows_0",
+      "source_branch_collapsed_to_bootstrap_no_workflow_state",
+      "catboost_path_ranker_validation_0_30",
+      "trainer_artifact_missing",
+      "runtime_selection_disabled",
+      "execution_candidate_ready_false",
+      "closed_loop_branch_admission_fail_closed"
+    ]
+  }
+}

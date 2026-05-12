@@ -1,0 +1,93 @@
+
+running 8 tests
+test application::orchestration::execution_tree::tests::execution_tree_closed_loop_branch_admission_fails_closed_when_not_ready ... ok
+test application::orchestration::execution_tree::tests::execution_tree_closed_loop_branch_admission_blocks_neutralized_pre_bayes ... ok
+test application::orchestration::execution_tree::tests::execution_tree_branch_admission_reads_ranker_lineage_path_with_spaces ... ok
+test application::orchestration::execution_tree::tests::execution_tree_branch_admission_falls_back_to_output_split_reason_lineage ... ok
+test application::orchestration::execution_tree::tests::execution_tree_artifact_serializes_closed_loop_branch_admission ... ok
+test application::orchestration::workflow_status::tests::full_json_status_surfaces_structural_branch_admission_fail_closed_reason ... ok
+test application::orchestration::workflow_status::tests::agent_status_surfaces_structural_branch_admission_fail_closed_reason ... ok
+test application::orchestration::execution_tree::tests::execution_tree_artifact_ledger_marks_fail_closed_branch_admission_not_actionable ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 919 filtered out; finished in 0.04s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 238 filtered out; finished in 0.01s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+

@@ -1,0 +1,11 @@
+requirement,status,evidence,blocker
+authoritative_board_b_file,covered,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,
+multi_agent_append_only_coordination,covered,latest Board B tail has count-once corrections through 083108,
+regime_rooted_branch_identity_preserved,partial,Board B branch path contract and cursor preserve identity,no selected-data promotion or downstream rerun allowed
+real_provider_surfaces_ibkr_tv_yfinance_kraken,covered_non_promoting,082430 runtime readiness provider visibility,provider visibility is not source/control evidence
+autoquant_filter_prebayes_bbn_catboost_execution_tree_operated,partial_blocked,082430 readiness commands exit zero,no source/control unlock and no selected history
+source_control_unlock,blocked,083108 and 083006/083046 fail-closed,missing owner-approved source/control package or FLIP approval
+selected_history_gate,blocked,explicit user selected history false,user has not selected exactly one of HTF MTF LTF
+local_archive_context_not_proxy_unlock,covered_fail_closed,082629 Databento archive is OHLCV only,market context only
+canonical_merge_and_downstream_promotion,blocked,canonical_merge=false downstream_promotion_rerun=false,requires source/control unlock plus selected-history gate
+completion_or_update_goal,blocked,strict_full_objective=false update_goal=false,objective incomplete

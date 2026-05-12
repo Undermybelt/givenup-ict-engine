@@ -1,0 +1,1183 @@
+{
+  "catboost_info_cleanup": "catboost_info_absent",
+  "chain_exits": {
+    "20_auto_quant_results_import": 0,
+    "21_auto_quant_prior_init": 0,
+    "22_ingest_real_trades": 0,
+    "23_analyze_provider_data": 0,
+    "24_pre_bayes_status": 0,
+    "25_policy_training_status_before_export": 0,
+    "26_export_structural_path_ranking_target": 0,
+    "27_train_catboost": 1,
+    "28_apply_catboost_history": 1,
+    "29_apply_external_scores": 1,
+    "30_register_trainer_artifact": 0,
+    "31_enable_runtime": 0,
+    "32_policy_training_status_final": 0,
+    "33_workflow_execution_candidate": 0,
+    "34_workflow_full": 0
+  },
+  "final_enrichment": {
+    "counts": {
+      "provider:binance_public": 52,
+      "provider:bybit_public": 51,
+      "provider:ibkr_paxos_long_midpoint": 44,
+      "provider:kraken_public": 32,
+      "provider:tvr_default_binance": 37,
+      "provider:yfinance": 21,
+      "rows": 237
+    },
+    "examples": [
+      {
+        "auto_quant_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+        "bbn_posterior": {
+          "canonical_probabilities": {
+            "range": 0.7476877176681956,
+            "stress": 0.17754351056498482,
+            "transition": 0.07476877176681956,
+            "trend": 0.0
+          },
+          "filtered_assignments": {
+            "__policy_version": "318900600c5e8cf2",
+            "factor_alignment": "mixed",
+            "factor_uncertainty": "low",
+            "liquidity_context": "neutral",
+            "market_regime": "range",
+            "market_state_primary_regime": "RangeConsolidation",
+            "market_state_secondary_regime": "WideRange",
+            "multi_timeframe_resonance": "aligned"
+          },
+          "soft_evidence": {
+            "factor_alignment": {
+              "bearish": 0.0,
+              "bullish": 0.0,
+              "mixed": 1.0
+            },
+            "factor_uncertainty": {
+              "high": 0.4187283851062096,
+              "low": 0.5812716148937904
+            },
+            "liquidity_context": {
+              "favorable": 0.0,
+              "hostile": 0.0,
+              "neutral": 1.0
+            },
+            "market_regime": {
+              "range": 0.7476877176681956,
+              "stress": 0.17754351056498482,
+              "transition": 0.07476877176681956,
+              "trend": 0.0
+            },
+            "multi_timeframe_resonance": {
+              "aligned": 0.5812716148937904,
+              "dislocated": 0.0,
+              "mixed": 0.4187283851062096
+            }
+          }
+        },
+        "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "catboost_path_ranker_label": {
+          "apply_exit": 1,
+          "external_score_exit": 1,
+          "observation_validation": 237,
+          "production_validation": 0,
+          "raw_scored_mature": 0,
+          "runtime": {
+            "active_match_count": 0,
+            "enabled": true,
+            "ready": false,
+            "reuse_mode": "prefer_history",
+            "status": "enabled_no_matching_scores",
+            "summary_line": "Ranker runtime: structural_path_ranking_target rows=5 history_rows=240 mature_rows=2 history_mature_rows=237 raw_scored_mature=0/30 production_validation=0/30 observation_validation=237/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0"
+          },
+          "score_model_family": "catboost_unavailable_or_failed",
+          "train_exit": 1,
+          "validation": {
+            "calibration_quality_ready": false,
+            "calibration_ready": false,
+            "calibration_status": "not_fitted",
+            "feedback_observation_validation": {
+              "mature_observations": 237,
+              "min_observations": 30,
+              "outcome_distribution": {
+                "loss": 156,
+                "win": 81
+              },
+              "pending_observations": 0,
+              "ready": true,
+              "shortfall_observations": 0,
+              "summary_line": "observations mature=237/30 pending=0 total=237 ready=true",
+              "total_observations": 237
+            },
+            "observation_validation_min_rows": 30,
+            "observation_validation_ready": true,
+            "observation_validation_rows": 237,
+            "observation_validation_shortfall_rows": 0,
+            "production_validation_min_rows": 30,
+            "production_validation_ready": false,
+            "production_validation_rows": 0,
+            "production_validation_shortfall_rows": 30,
+            "raw_scored_mature_min_rows": 30,
+            "raw_scored_mature_rows": 0,
+            "raw_scored_mature_shortfall_rows": 30,
+            "summary_line": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=237/30 ready=true",
+            "target_row_validation": {
+              "production_validation_min_rows": 30,
+              "production_validation_ready": false,
+              "production_validation_rows": 0,
+              "production_validation_shortfall_rows": 30,
+              "raw_scored_mature_min_rows": 30,
+              "raw_scored_mature_rows": 0,
+              "raw_scored_mature_shortfall_rows": 30,
+              "summary_line": "target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"
+            }
+          }
+        },
+        "close_ts_ms": 1775368800000,
+        "direction": "Bull",
+        "entry_signal": "provider_crypto_momentum_state",
+        "execution_tree_decision": {
+          "actionable": false,
+          "candidate_status": "execution_blocked",
+          "closed_loop_branch_admission": {
+            "actionable": false,
+            "candidate_status": "execution_blocked",
+            "evidence": [
+              "pre_bayes_gate_status=pass_neutralized",
+              "execution_gate_status=execution_blocked",
+              "review_status=observe"
+            ],
+            "execution_gate_status": "execution_blocked",
+            "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+            "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+            "pre_bayes_gate_status": "pass_neutralized",
+            "ready": false,
+            "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+            "review_status": "observe",
+            "source_phase": "structural-recommended-path-bundle",
+            "status": "fail_closed"
+          },
+          "execution_gate_status": "execution_blocked",
+          "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "ready": false,
+          "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+          "review_status": "observe"
+        },
+        "factors_used": [
+          {
+            "category": "trend_momentum",
+            "confidence": 0.0,
+            "direction": "Bull",
+            "factor_name": "ProviderCryptoMomentumStateV1",
+            "uncertainty_contribution": 1.0,
+            "value": -0.005541888167836367,
+            "weighted_score": -18.30651876
+          }
+        ],
+        "failure_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+        "layer_contract_version": "board-b-layered-feedback-v1",
+        "main_regime": "Bull",
+        "model_probabilities_before_trade": {
+          "long_score": 0.0,
+          "selected_direction": "Bull",
+          "selected_probability": 0.0,
+          "short_score": 0.0,
+          "uncertainty": 1.0,
+          "win_prob_long": 0.0,
+          "win_prob_short": 0.0
+        },
+        "open_ts_ms": 1775358000000,
+        "parent_regime_root": "Bull",
+        "pnl": -18.30651876,
+        "pre_bayes_filter_state": {
+          "canonical_regime": "range",
+          "confidence": 0.5250864595751618,
+          "policy_version": "318900600c5e8cf2",
+          "status": "pass_neutralized",
+          "uses_soft_evidence": true
+        },
+        "profit_factor": "ProviderCryptoMomentumStateV1",
+        "provider_provenance": {
+          "first_ts_ms": 1775001600000,
+          "last_ts_ms": 1778544000000,
+          "provider": "binance_public",
+          "provider_symbol": "BTCUSDT",
+          "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/binance_btcusdt_1h.csv",
+          "source_rows": 985,
+          "timeframe": "1h"
+        },
+        "quality_weight": 0.0,
+        "realized_outcome": "loss",
+        "regime_at_entry": "Bull",
+        "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "schema_version": "1.0",
+        "strategy_mutation_id": "provider-owned-yahoo-crypto-momentum-state-v1",
+        "strategy_name": "ProviderCryptoMomentumStateV1",
+        "sub_regime": "ProviderCryptoMomentum",
+        "sub_sub_regime_or_profit_factor": "RsiMidlineExpansion",
+        "symbol": "B2R_SIX_PROVIDER_BTC_115700",
+        "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775358000000_1775368800000_1"
+      },
+      {
+        "auto_quant_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+        "bbn_posterior": {
+          "canonical_probabilities": {
+            "range": 0.7476877176681956,
+            "stress": 0.17754351056498482,
+            "transition": 0.07476877176681956,
+            "trend": 0.0
+          },
+          "filtered_assignments": {
+            "__policy_version": "318900600c5e8cf2",
+            "factor_alignment": "mixed",
+            "factor_uncertainty": "low",
+            "liquidity_context": "neutral",
+            "market_regime": "range",
+            "market_state_primary_regime": "RangeConsolidation",
+            "market_state_secondary_regime": "WideRange",
+            "multi_timeframe_resonance": "aligned"
+          },
+          "soft_evidence": {
+            "factor_alignment": {
+              "bearish": 0.0,
+              "bullish": 0.0,
+              "mixed": 1.0
+            },
+            "factor_uncertainty": {
+              "high": 0.4187283851062096,
+              "low": 0.5812716148937904
+            },
+            "liquidity_context": {
+              "favorable": 0.0,
+              "hostile": 0.0,
+              "neutral": 1.0
+            },
+            "market_regime": {
+              "range": 0.7476877176681956,
+              "stress": 0.17754351056498482,
+              "transition": 0.07476877176681956,
+              "trend": 0.0
+            },
+            "multi_timeframe_resonance": {
+              "aligned": 0.5812716148937904,
+              "dislocated": 0.0,
+              "mixed": 0.4187283851062096
+            }
+          }
+        },
+        "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "catboost_path_ranker_label": {
+          "apply_exit": 1,
+          "external_score_exit": 1,
+          "observation_validation": 237,
+          "production_validation": 0,
+          "raw_scored_mature": 0,
+          "runtime": {
+            "active_match_count": 0,
+            "enabled": true,
+            "ready": false,
+            "reuse_mode": "prefer_history",
+            "status": "enabled_no_matching_scores",
+            "summary_line": "Ranker runtime: structural_path_ranking_target rows=5 history_rows=240 mature_rows=2 history_mature_rows=237 raw_scored_mature=0/30 production_validation=0/30 observation_validation=237/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0"
+          },
+          "score_model_family": "catboost_unavailable_or_failed",
+          "train_exit": 1,
+          "validation": {
+            "calibration_quality_ready": false,
+            "calibration_ready": false,
+            "calibration_status": "not_fitted",
+            "feedback_observation_validation": {
+              "mature_observations": 237,
+              "min_observations": 30,
+              "outcome_distribution": {
+                "loss": 156,
+                "win": 81
+              },
+              "pending_observations": 0,
+              "ready": true,
+              "shortfall_observations": 0,
+              "summary_line": "observations mature=237/30 pending=0 total=237 ready=true",
+              "total_observations": 237
+            },
+            "observation_validation_min_rows": 30,
+            "observation_validation_ready": true,
+            "observation_validation_rows": 237,
+            "observation_validation_shortfall_rows": 0,
+            "production_validation_min_rows": 30,
+            "production_validation_ready": false,
+            "production_validation_rows": 0,
+            "production_validation_shortfall_rows": 30,
+            "raw_scored_mature_min_rows": 30,
+            "raw_scored_mature_rows": 0,
+            "raw_scored_mature_shortfall_rows": 30,
+            "summary_line": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=237/30 ready=true",
+            "target_row_validation": {
+              "production_validation_min_rows": 30,
+              "production_validation_ready": false,
+              "production_validation_rows": 0,
+              "production_validation_shortfall_rows": 30,
+              "raw_scored_mature_min_rows": 30,
+              "raw_scored_mature_rows": 0,
+              "raw_scored_mature_shortfall_rows": 30,
+              "summary_line": "target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"
+            }
+          }
+        },
+        "close_ts_ms": 1775430000000,
+        "direction": "Bull",
+        "entry_signal": "provider_crypto_momentum_state",
+        "execution_tree_decision": {
+          "actionable": false,
+          "candidate_status": "execution_blocked",
+          "closed_loop_branch_admission": {
+            "actionable": false,
+            "candidate_status": "execution_blocked",
+            "evidence": [
+              "pre_bayes_gate_status=pass_neutralized",
+              "execution_gate_status=execution_blocked",
+              "review_status=observe"
+            ],
+            "execution_gate_status": "execution_blocked",
+            "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+            "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+            "pre_bayes_gate_status": "pass_neutralized",
+            "ready": false,
+            "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+            "review_status": "observe",
+            "source_phase": "structural-recommended-path-bundle",
+            "status": "fail_closed"
+          },
+          "execution_gate_status": "execution_blocked",
+          "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "ready": false,
+          "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+          "review_status": "observe"
+        },
+        "factors_used": [
+          {
+            "category": "trend_momentum",
+            "confidence": 0.0,
+            "direction": "Bull",
+            "factor_name": "ProviderCryptoMomentumStateV1",
+            "uncertainty_contribution": 1.0,
+            "value": 0.012828499659946145,
+            "weighted_score": 42.29880216
+          }
+        ],
+        "failure_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+        "layer_contract_version": "board-b-layered-feedback-v1",
+        "main_regime": "Bull",
+        "model_probabilities_before_trade": {
+          "long_score": 0.0,
+          "selected_direction": "Bull",
+          "selected_probability": 0.0,
+          "short_score": 0.0,
+          "uncertainty": 1.0,
+          "win_prob_long": 0.0,
+          "win_prob_short": 0.0
+        },
+        "open_ts_ms": 1775404800000,
+        "parent_regime_root": "Bull",
+        "pnl": 42.29880216,
+        "pre_bayes_filter_state": {
+          "canonical_regime": "range",
+          "confidence": 0.5250864595751618,
+          "policy_version": "318900600c5e8cf2",
+          "status": "pass_neutralized",
+          "uses_soft_evidence": true
+        },
+        "profit_factor": "ProviderCryptoMomentumStateV1",
+        "provider_provenance": {
+          "first_ts_ms": 1775001600000,
+          "last_ts_ms": 1778544000000,
+          "provider": "binance_public",
+          "provider_symbol": "BTCUSDT",
+          "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/binance_btcusdt_1h.csv",
+          "source_rows": 985,
+          "timeframe": "1h"
+        },
+        "quality_weight": 0.0,
+        "realized_outcome": "win",
+        "regime_at_entry": "Bull",
+        "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "schema_version": "1.0",
+        "strategy_mutation_id": "provider-owned-yahoo-crypto-momentum-state-v1",
+        "strategy_name": "ProviderCryptoMomentumStateV1",
+        "sub_regime": "ProviderCryptoMomentum",
+        "sub_sub_regime_or_profit_factor": "RsiMidlineExpansion",
+        "symbol": "B2R_SIX_PROVIDER_BTC_115700",
+        "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775404800000_1775430000000_2"
+      },
+      {
+        "auto_quant_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+        "bbn_posterior": {
+          "canonical_probabilities": {
+            "range": 0.7476877176681956,
+            "stress": 0.17754351056498482,
+            "transition": 0.07476877176681956,
+            "trend": 0.0
+          },
+          "filtered_assignments": {
+            "__policy_version": "318900600c5e8cf2",
+            "factor_alignment": "mixed",
+            "factor_uncertainty": "low",
+            "liquidity_context": "neutral",
+            "market_regime": "range",
+            "market_state_primary_regime": "RangeConsolidation",
+            "market_state_secondary_regime": "WideRange",
+            "multi_timeframe_resonance": "aligned"
+          },
+          "soft_evidence": {
+            "factor_alignment": {
+              "bearish": 0.0,
+              "bullish": 0.0,
+              "mixed": 1.0
+            },
+            "factor_uncertainty": {
+              "high": 0.4187283851062096,
+              "low": 0.5812716148937904
+            },
+            "liquidity_context": {
+              "favorable": 0.0,
+              "hostile": 0.0,
+              "neutral": 1.0
+            },
+            "market_regime": {
+              "range": 0.7476877176681956,
+              "stress": 0.17754351056498482,
+              "transition": 0.07476877176681956,
+              "trend": 0.0
+            },
+            "multi_timeframe_resonance": {
+              "aligned": 0.5812716148937904,
+              "dislocated": 0.0,
+              "mixed": 0.4187283851062096
+            }
+          }
+        },
+        "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "catboost_path_ranker_label": {
+          "apply_exit": 1,
+          "external_score_exit": 1,
+          "observation_validation": 237,
+          "production_validation": 0,
+          "raw_scored_mature": 0,
+          "runtime": {
+            "active_match_count": 0,
+            "enabled": true,
+            "ready": false,
+            "reuse_mode": "prefer_history",
+            "status": "enabled_no_matching_scores",
+            "summary_line": "Ranker runtime: structural_path_ranking_target rows=5 history_rows=240 mature_rows=2 history_mature_rows=237 raw_scored_mature=0/30 production_validation=0/30 observation_validation=237/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0"
+          },
+          "score_model_family": "catboost_unavailable_or_failed",
+          "train_exit": 1,
+          "validation": {
+            "calibration_quality_ready": false,
+            "calibration_ready": false,
+            "calibration_status": "not_fitted",
+            "feedback_observation_validation": {
+              "mature_observations": 237,
+              "min_observations": 30,
+              "outcome_distribution": {
+                "loss": 156,
+                "win": 81
+              },
+              "pending_observations": 0,
+              "ready": true,
+              "shortfall_observations": 0,
+              "summary_line": "observations mature=237/30 pending=0 total=237 ready=true",
+              "total_observations": 237
+            },
+            "observation_validation_min_rows": 30,
+            "observation_validation_ready": true,
+            "observation_validation_rows": 237,
+            "observation_validation_shortfall_rows": 0,
+            "production_validation_min_rows": 30,
+            "production_validation_ready": false,
+            "production_validation_rows": 0,
+            "production_validation_shortfall_rows": 30,
+            "raw_scored_mature_min_rows": 30,
+            "raw_scored_mature_rows": 0,
+            "raw_scored_mature_shortfall_rows": 30,
+            "summary_line": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=237/30 ready=true",
+            "target_row_validation": {
+              "production_validation_min_rows": 30,
+              "production_validation_ready": false,
+              "production_validation_rows": 0,
+              "production_validation_shortfall_rows": 30,
+              "raw_scored_mature_min_rows": 30,
+              "raw_scored_mature_rows": 0,
+              "raw_scored_mature_shortfall_rows": 30,
+              "summary_line": "target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"
+            }
+          }
+        },
+        "close_ts_ms": 1775559600000,
+        "direction": "Bull",
+        "entry_signal": "provider_crypto_momentum_state",
+        "execution_tree_decision": {
+          "actionable": false,
+          "candidate_status": "execution_blocked",
+          "closed_loop_branch_admission": {
+            "actionable": false,
+            "candidate_status": "execution_blocked",
+            "evidence": [
+              "pre_bayes_gate_status=pass_neutralized",
+              "execution_gate_status=execution_blocked",
+              "review_status=observe"
+            ],
+            "execution_gate_status": "execution_blocked",
+            "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+            "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+            "pre_bayes_gate_status": "pass_neutralized",
+            "ready": false,
+            "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+            "review_status": "observe",
+            "source_phase": "structural-recommended-path-bundle",
+            "status": "fail_closed"
+          },
+          "execution_gate_status": "execution_blocked",
+          "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+          "ready": false,
+          "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+          "review_status": "observe"
+        },
+        "factors_used": [
+          {
+            "category": "trend_momentum",
+            "confidence": 0.0,
+            "direction": "Bull",
+            "factor_name": "ProviderCryptoMomentumStateV1",
+            "uncertainty_contribution": 1.0,
+            "value": -0.012114293248521537,
+            "weighted_score": -40.11314965
+          }
+        ],
+        "failure_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+        "layer_contract_version": "board-b-layered-feedback-v1",
+        "main_regime": "Bull",
+        "model_probabilities_before_trade": {
+          "long_score": 0.0,
+          "selected_direction": "Bull",
+          "selected_probability": 0.0,
+          "short_score": 0.0,
+          "uncertainty": 1.0,
+          "win_prob_long": 0.0,
+          "win_prob_short": 0.0
+        },
+        "open_ts_ms": 1775552400000,
+        "parent_regime_root": "Bull",
+        "pnl": -40.11314965,
+        "pre_bayes_filter_state": {
+          "canonical_regime": "range",
+          "confidence": 0.5250864595751618,
+          "policy_version": "318900600c5e8cf2",
+          "status": "pass_neutralized",
+          "uses_soft_evidence": true
+        },
+        "profit_factor": "ProviderCryptoMomentumStateV1",
+        "provider_provenance": {
+          "first_ts_ms": 1775001600000,
+          "last_ts_ms": 1778544000000,
+          "provider": "binance_public",
+          "provider_symbol": "BTCUSDT",
+          "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/binance_btcusdt_1h.csv",
+          "source_rows": 985,
+          "timeframe": "1h"
+        },
+        "quality_weight": 0.0,
+        "realized_outcome": "loss",
+        "regime_at_entry": "Bull",
+        "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "schema_version": "1.0",
+        "strategy_mutation_id": "provider-owned-yahoo-crypto-momentum-state-v1",
+        "strategy_name": "ProviderCryptoMomentumStateV1",
+        "sub_regime": "ProviderCryptoMomentum",
+        "sub_sub_regime_or_profit_factor": "RsiMidlineExpansion",
+        "symbol": "B2R_SIX_PROVIDER_BTC_115700",
+        "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775552400000_1775559600000_3"
+      }
+    ],
+    "files": [
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "binance_public",
+        "rows": 37,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-binance_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "binance_public",
+        "rows": 15,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "bybit_public",
+        "rows": 34,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "bybit_public",
+        "rows": 17,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-ibkr_paxos_long_midpoint/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "ibkr_paxos_long_midpoint",
+        "rows": 32,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-ibkr_paxos_long_midpoint/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-ibkr_paxos_long_midpoint/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "ibkr_paxos_long_midpoint",
+        "rows": 12,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-ibkr_paxos_long_midpoint/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-kraken_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "kraken_public",
+        "rows": 23,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-kraken_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-kraken_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "kraken_public",
+        "rows": 9,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-kraken_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-tvr_default_binance/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "tvr_default_binance",
+        "rows": 25,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-tvr_default_binance/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-tvr_default_binance/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "tvr_default_binance",
+        "rows": 12,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-tvr_default_binance/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-yfinance/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "yfinance",
+        "rows": 13,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-yfinance/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-yfinance/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "yfinance",
+        "rows": 8,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-yfinance/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      }
+    ],
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/derived/115700_postchain_layer_contract_real_trades.jsonl",
+    "rows": 237
+  },
+  "final_layer_context": {
+    "bbn_posterior": {
+      "canonical_probabilities": {
+        "range": 0.7476877176681956,
+        "stress": 0.17754351056498482,
+        "transition": 0.07476877176681956,
+        "trend": 0.0
+      },
+      "filtered_assignments": {
+        "__policy_version": "318900600c5e8cf2",
+        "factor_alignment": "mixed",
+        "factor_uncertainty": "low",
+        "liquidity_context": "neutral",
+        "market_regime": "range",
+        "market_state_primary_regime": "RangeConsolidation",
+        "market_state_secondary_regime": "WideRange",
+        "multi_timeframe_resonance": "aligned"
+      },
+      "soft_evidence": {
+        "factor_alignment": {
+          "bearish": 0.0,
+          "bullish": 0.0,
+          "mixed": 1.0
+        },
+        "factor_uncertainty": {
+          "high": 0.4187283851062096,
+          "low": 0.5812716148937904
+        },
+        "liquidity_context": {
+          "favorable": 0.0,
+          "hostile": 0.0,
+          "neutral": 1.0
+        },
+        "market_regime": {
+          "range": 0.7476877176681956,
+          "stress": 0.17754351056498482,
+          "transition": 0.07476877176681956,
+          "trend": 0.0
+        },
+        "multi_timeframe_resonance": {
+          "aligned": 0.5812716148937904,
+          "dislocated": 0.0,
+          "mixed": 0.4187283851062096
+        }
+      }
+    },
+    "catboost_path_ranker_label": {
+      "apply_exit": 1,
+      "external_score_exit": 1,
+      "observation_validation": 237,
+      "production_validation": 0,
+      "raw_scored_mature": 0,
+      "runtime": {
+        "active_match_count": 0,
+        "enabled": true,
+        "ready": false,
+        "reuse_mode": "prefer_history",
+        "status": "enabled_no_matching_scores",
+        "summary_line": "Ranker runtime: structural_path_ranking_target rows=5 history_rows=240 mature_rows=2 history_mature_rows=237 raw_scored_mature=0/30 production_validation=0/30 observation_validation=237/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_no_matching_scores runtime_mode=prefer_history runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0"
+      },
+      "score_model_family": "catboost_unavailable_or_failed",
+      "train_exit": 1,
+      "validation": {
+        "calibration_quality_ready": false,
+        "calibration_ready": false,
+        "calibration_status": "not_fitted",
+        "feedback_observation_validation": {
+          "mature_observations": 237,
+          "min_observations": 30,
+          "outcome_distribution": {
+            "loss": 156,
+            "win": 81
+          },
+          "pending_observations": 0,
+          "ready": true,
+          "shortfall_observations": 0,
+          "summary_line": "observations mature=237/30 pending=0 total=237 ready=true",
+          "total_observations": 237
+        },
+        "observation_validation_min_rows": 30,
+        "observation_validation_ready": true,
+        "observation_validation_rows": 237,
+        "observation_validation_shortfall_rows": 0,
+        "production_validation_min_rows": 30,
+        "production_validation_ready": false,
+        "production_validation_rows": 0,
+        "production_validation_shortfall_rows": 30,
+        "raw_scored_mature_min_rows": 30,
+        "raw_scored_mature_rows": 0,
+        "raw_scored_mature_shortfall_rows": 30,
+        "summary_line": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=237/30 ready=true",
+        "target_row_validation": {
+          "production_validation_min_rows": 30,
+          "production_validation_ready": false,
+          "production_validation_rows": 0,
+          "production_validation_shortfall_rows": 30,
+          "raw_scored_mature_min_rows": 30,
+          "raw_scored_mature_rows": 0,
+          "raw_scored_mature_shortfall_rows": 30,
+          "summary_line": "target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"
+        }
+      }
+    },
+    "execution_tree_decision": {
+      "actionable": false,
+      "candidate_status": "execution_blocked",
+      "closed_loop_branch_admission": {
+        "actionable": false,
+        "candidate_status": "execution_blocked",
+        "evidence": [
+          "pre_bayes_gate_status=pass_neutralized",
+          "execution_gate_status=execution_blocked",
+          "review_status=observe"
+        ],
+        "execution_gate_status": "execution_blocked",
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "pre_bayes_gate_status": "pass_neutralized",
+        "ready": false,
+        "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+        "review_status": "observe",
+        "source_phase": "structural-recommended-path-bundle",
+        "status": "fail_closed"
+      },
+      "execution_gate_status": "execution_blocked",
+      "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "ready": false,
+      "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+      "review_status": "observe"
+    },
+    "failure_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+    "pre_bayes_filter_state": {
+      "canonical_regime": "range",
+      "confidence": 0.5250864595751618,
+      "policy_version": "318900600c5e8cf2",
+      "status": "pass_neutralized",
+      "uses_soft_evidence": true
+    },
+    "quality_weight": 0.0
+  },
+  "prechain_enrichment": {
+    "counts": {
+      "provider:binance_public": 52,
+      "provider:bybit_public": 51,
+      "provider:ibkr_paxos_long_midpoint": 44,
+      "provider:kraken_public": 32,
+      "provider:tvr_default_binance": 37,
+      "provider:yfinance": 21,
+      "rows": 237
+    },
+    "examples": [
+      {
+        "auto_quant_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+        "bbn_posterior": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "catboost_path_ranker_label": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "close_ts_ms": 1775368800000,
+        "direction": "Bull",
+        "entry_signal": "provider_crypto_momentum_state",
+        "execution_tree_decision": {
+          "actionable": false,
+          "ready": false,
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "factors_used": [
+          {
+            "category": "trend_momentum",
+            "confidence": 0.0,
+            "direction": "Bull",
+            "factor_name": "ProviderCryptoMomentumStateV1",
+            "uncertainty_contribution": 1.0,
+            "value": -0.005541888167836367,
+            "weighted_score": -18.30651876
+          }
+        ],
+        "failure_reason": "pending_downstream_readback",
+        "layer_contract_version": "board-b-layered-feedback-v1",
+        "main_regime": "Bull",
+        "model_probabilities_before_trade": {
+          "long_score": 0.0,
+          "selected_direction": "Bull",
+          "selected_probability": 0.0,
+          "short_score": 0.0,
+          "uncertainty": 1.0,
+          "win_prob_long": 0.0,
+          "win_prob_short": 0.0
+        },
+        "open_ts_ms": 1775358000000,
+        "parent_regime_root": "Bull",
+        "pnl": -18.30651876,
+        "pre_bayes_filter_state": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "profit_factor": "ProviderCryptoMomentumStateV1",
+        "provider_provenance": {
+          "first_ts_ms": 1775001600000,
+          "last_ts_ms": 1778544000000,
+          "provider": "binance_public",
+          "provider_symbol": "BTCUSDT",
+          "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/binance_btcusdt_1h.csv",
+          "source_rows": 985,
+          "timeframe": "1h"
+        },
+        "quality_weight": 0.0,
+        "realized_outcome": "loss",
+        "regime_at_entry": "Bull",
+        "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "schema_version": "1.0",
+        "strategy_mutation_id": "provider-owned-yahoo-crypto-momentum-state-v1",
+        "strategy_name": "ProviderCryptoMomentumStateV1",
+        "sub_regime": "ProviderCryptoMomentum",
+        "sub_sub_regime_or_profit_factor": "RsiMidlineExpansion",
+        "symbol": "B2R_SIX_PROVIDER_BTC_115700",
+        "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775358000000_1775368800000_1"
+      },
+      {
+        "auto_quant_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+        "bbn_posterior": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "catboost_path_ranker_label": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "close_ts_ms": 1775430000000,
+        "direction": "Bull",
+        "entry_signal": "provider_crypto_momentum_state",
+        "execution_tree_decision": {
+          "actionable": false,
+          "ready": false,
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "factors_used": [
+          {
+            "category": "trend_momentum",
+            "confidence": 0.0,
+            "direction": "Bull",
+            "factor_name": "ProviderCryptoMomentumStateV1",
+            "uncertainty_contribution": 1.0,
+            "value": 0.012828499659946145,
+            "weighted_score": 42.29880216
+          }
+        ],
+        "failure_reason": "pending_downstream_readback",
+        "layer_contract_version": "board-b-layered-feedback-v1",
+        "main_regime": "Bull",
+        "model_probabilities_before_trade": {
+          "long_score": 0.0,
+          "selected_direction": "Bull",
+          "selected_probability": 0.0,
+          "short_score": 0.0,
+          "uncertainty": 1.0,
+          "win_prob_long": 0.0,
+          "win_prob_short": 0.0
+        },
+        "open_ts_ms": 1775404800000,
+        "parent_regime_root": "Bull",
+        "pnl": 42.29880216,
+        "pre_bayes_filter_state": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "profit_factor": "ProviderCryptoMomentumStateV1",
+        "provider_provenance": {
+          "first_ts_ms": 1775001600000,
+          "last_ts_ms": 1778544000000,
+          "provider": "binance_public",
+          "provider_symbol": "BTCUSDT",
+          "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/binance_btcusdt_1h.csv",
+          "source_rows": 985,
+          "timeframe": "1h"
+        },
+        "quality_weight": 0.0,
+        "realized_outcome": "win",
+        "regime_at_entry": "Bull",
+        "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "schema_version": "1.0",
+        "strategy_mutation_id": "provider-owned-yahoo-crypto-momentum-state-v1",
+        "strategy_name": "ProviderCryptoMomentumStateV1",
+        "sub_regime": "ProviderCryptoMomentum",
+        "sub_sub_regime_or_profit_factor": "RsiMidlineExpansion",
+        "symbol": "B2R_SIX_PROVIDER_BTC_115700",
+        "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775404800000_1775430000000_2"
+      },
+      {
+        "auto_quant_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+        "bbn_posterior": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "catboost_path_ranker_label": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "close_ts_ms": 1775559600000,
+        "direction": "Bull",
+        "entry_signal": "provider_crypto_momentum_state",
+        "execution_tree_decision": {
+          "actionable": false,
+          "ready": false,
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "factors_used": [
+          {
+            "category": "trend_momentum",
+            "confidence": 0.0,
+            "direction": "Bull",
+            "factor_name": "ProviderCryptoMomentumStateV1",
+            "uncertainty_contribution": 1.0,
+            "value": -0.012114293248521537,
+            "weighted_score": -40.11314965
+          }
+        ],
+        "failure_reason": "pending_downstream_readback",
+        "layer_contract_version": "board-b-layered-feedback-v1",
+        "main_regime": "Bull",
+        "model_probabilities_before_trade": {
+          "long_score": 0.0,
+          "selected_direction": "Bull",
+          "selected_probability": 0.0,
+          "short_score": 0.0,
+          "uncertainty": 1.0,
+          "win_prob_long": 0.0,
+          "win_prob_short": 0.0
+        },
+        "open_ts_ms": 1775552400000,
+        "parent_regime_root": "Bull",
+        "pnl": -40.11314965,
+        "pre_bayes_filter_state": {
+          "source_run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+          "status": "pending_downstream_readback"
+        },
+        "profit_factor": "ProviderCryptoMomentumStateV1",
+        "provider_provenance": {
+          "first_ts_ms": 1775001600000,
+          "last_ts_ms": 1778544000000,
+          "provider": "binance_public",
+          "provider_symbol": "BTCUSDT",
+          "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv/binance_btcusdt_1h.csv",
+          "source_rows": 985,
+          "timeframe": "1h"
+        },
+        "quality_weight": 0.0,
+        "realized_outcome": "loss",
+        "regime_at_entry": "Bull",
+        "regime_profit_branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "schema_version": "1.0",
+        "strategy_mutation_id": "provider-owned-yahoo-crypto-momentum-state-v1",
+        "strategy_name": "ProviderCryptoMomentumStateV1",
+        "sub_regime": "ProviderCryptoMomentum",
+        "sub_sub_regime_or_profit_factor": "RsiMidlineExpansion",
+        "symbol": "B2R_SIX_PROVIDER_BTC_115700",
+        "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775552400000_1775559600000_3"
+      }
+    ],
+    "files": [
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "binance_public",
+        "rows": 37,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-binance_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "binance_public",
+        "rows": 15,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "bybit_public",
+        "rows": 34,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "bybit_public",
+        "rows": 17,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-bybit_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-ibkr_paxos_long_midpoint/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "ibkr_paxos_long_midpoint",
+        "rows": 32,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-ibkr_paxos_long_midpoint/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-ibkr_paxos_long_midpoint/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "ibkr_paxos_long_midpoint",
+        "rows": 12,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-ibkr_paxos_long_midpoint/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-kraken_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "kraken_public",
+        "rows": 23,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-kraken_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-kraken_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "kraken_public",
+        "rows": 9,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-kraken_public/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-tvr_default_binance/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "tvr_default_binance",
+        "rows": 25,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-tvr_default_binance/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-tvr_default_binance/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "tvr_default_binance",
+        "rows": 12,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-tvr_default_binance/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-yfinance/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+        "provider": "yfinance",
+        "rows": 13,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-yfinance/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl"
+      },
+      {
+        "output": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/enriched-workspace/auto-quant-112315-yfinance/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl",
+        "provider": "yfinance",
+        "rows": 8,
+        "source": "docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace/auto-quant-112315-yfinance/derived/ProviderCryptoPullbackRevertV1.real_trades.jsonl"
+      }
+    ],
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/derived/115700_prechain_layer_contract_real_trades.jsonl",
+    "rows": 237
+  },
+  "promotion_allowed": false,
+  "provider_json": {
+    "1d": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/provider-data-json/BTC_USD-1d.json",
+      "rows": 41
+    },
+    "1h": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/provider-data-json/BTC_USD-1h.json",
+      "rows": 971
+    },
+    "4h": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/provider-data-json/BTC_USD-4h.json",
+      "rows": 243
+    }
+  },
+  "run_id": "20260512T121354+0800-codex-115700-layer-contract-downstream-v1",
+  "source_run_id": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "strategy_library": "docs/experiments/actionable-regime-confidence/runs/20260512T121354+0800-codex-115700-layer-contract-downstream-v1/derived/strategy_library_115700_layer_contract_v1.json",
+  "symbol": "B2R_SIX_PROVIDER_BTC_115700",
+  "trade_usable": false,
+  "update_goal": false,
+  "validation": {
+    "command_exits": {
+      "20_auto_quant_results_import": 0,
+      "21_auto_quant_prior_init": 0,
+      "22_ingest_real_trades": 0,
+      "23_analyze_provider_data": 0,
+      "24_pre_bayes_status": 0,
+      "25_policy_training_status_before_export": 0,
+      "26_export_structural_path_ranking_target": 0,
+      "27_train_catboost": 1,
+      "28_apply_catboost_history": 1,
+      "29_apply_external_scores": 1,
+      "30_register_trainer_artifact": 0,
+      "31_enable_runtime": 0,
+      "32_policy_training_status_final": 0,
+      "33_workflow_execution_candidate": 0,
+      "34_workflow_full": 0
+    },
+    "contract_complete_rows": 237,
+    "contract_rejected_rows": 0,
+    "examples": [],
+    "failure_counts": {},
+    "gate_result": "fail_closed:schema_complete_but_no_trainable_market_factor_rows",
+    "market_factor_trainable_rows": 0,
+    "promotion_allowed": false,
+    "provider_counts": {
+      "binance_public": 52,
+      "bybit_public": 51,
+      "ibkr_paxos_long_midpoint": 44,
+      "kraken_public": 32,
+      "tvr_default_binance": 37,
+      "yfinance": 21
+    },
+    "schema_complete_but_not_trainable_rows": 237,
+    "total_rows": 237,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

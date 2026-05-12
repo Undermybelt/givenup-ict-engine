@@ -1,0 +1,113 @@
+{
+  "artifact_type": "current_goal_completion_audit_v19_after_local_intake_schema",
+  "checklist": [
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T183611-codex-current-goal-completion-audit-v18-prompt-artifact/completion-audit/current_goal_completion_audit_v18_prompt_artifact.json",
+      "evidence": "scoped_active_lane_status=accepted_95; accepted lanes Bull/Bear/Sideways/Crisis/scoped direct Manipulation remain present",
+      "gap": "This is scoped evidence only; the objective also requires other-market and other-cycle validation.",
+      "requirement": "every active regime has calibrated confidence >=95",
+      "status": "pass_scoped_not_full"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184856-codex-source-label-other-market-readback-v1/source-label-readback/source_label_other_market_readback_v1.json",
+      "evidence": "source_label_other_market_gate=source_label_other_market_readback_v1=partial_sources_no_full_equivalence; accepted_factor_or_gate_total=0",
+      "gap": "No full source-label equivalence; public/partial slots do not form owner-approved MainRegimeV2 cross-market evidence.",
+      "requirement": "validated on other markets/species with source-owned or owner-approved labels",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185420-codex-local-intake-schema-sweep-v1/local-intake-schema-sweep/local_intake_schema_sweep_v1.json",
+      "evidence": "required_intake_present=0/12; exact_schema_matches=0; strong_partial_schema_matches=0",
+      "gap": "No local file matches the external price-root, recency, direct-positive, or direct-control required schemas.",
+      "requirement": "local intake files can supply missing source-owned rows/provenance",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185126-codex-timeframe-cycle-coverage-readback-v1/timeframe-cycle-readback/timeframe_cycle_coverage_readback_v1.json",
+      "evidence": "timeframe_gate=timeframe_cycle_coverage_readback_v1=strict_1h_partial_native_subhour_recency_blocked; strict_1h_accepted=41/156; native_subhour_ready=0/4",
+      "gap": "Strict exact 1h remains partial and native sub-hour source overlap remains zero.",
+      "requirement": "validated on other cycles/timeframes with suitable confidence",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184530-codex-strict-1h-jan2026-tail-support-probe-v1/jan2026-tail-support/strict_1h_jan2026_tail_support_probe_v1.json",
+      "evidence": "provider_ready_tail=13; standalone_tail_gate_passes=0; gate=strict_1h_jan2026_tail_support_probe_v1=tail_support_found_future_gate_only_no_current_acceptance",
+      "gap": "Tail support is future-gate preflight only and cannot retroactively accept the fixed 2024/2025 strict gate.",
+      "requirement": "Jan-2026 source tail can promote current strict-1h gate",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184630-codex-direct-manipulation-coverage-readback-v2/direct-manipulation-readback/direct_manipulation_coverage_readback_v2.json",
+      "evidence": "accepted_scoped_varieties=5; remaining_unaccepted=6; web_ready=0; spoofing_matched_negatives=0; missing_species_screen_gate=direct_missing_species_source_screen_v1=no_ready_positive_control_source; ready_missing_species_sources=0",
+      "gap": "Scoped direct varieties exist, but spoofing/layering lacks matched negatives and quote stuffing/pinging/bear raid/painting tape remain missing.",
+      "requirement": "direct Manipulation full species/variety coverage with matched controls",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184856-codex-source-label-other-market-readback-v1/source-label-readback/source_label_other_market_readback_v1.json",
+      "evidence": "source-label readbacks and schema sweep add zero accepted rows and keep proxy/candidate mappings blocked",
+      "gap": "Guardrail preserved; it also means the full objective remains blocked until proper rows arrive.",
+      "requirement": "do not rely on proxy/generated/OHLCV-only labels",
+      "status": "pass_guardrail"
+    }
+  ],
+  "decision": {
+    "accepted_rows_added": 0,
+    "blocking_requirements": [
+      "validated on other markets/species with source-owned or owner-approved labels",
+      "local intake files can supply missing source-owned rows/provenance",
+      "validated on other cycles/timeframes with suitable confidence",
+      "Jan-2026 source tail can promote current strict-1h gate",
+      "direct Manipulation full species/variety coverage with matched controls"
+    ],
+    "gate_result": "current_goal_completion_audit_v19=scoped_95_present_local_schema_sweep_confirms_full_objective_blocked",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T11:00:54.410498+00:00",
+  "objective": "Every active regime must have calibrated >=95% confidence and must retain suitable confidence on other markets/species and other cycles/timeframes.",
+  "run_id": "20260511T185602-codex-current-goal-completion-audit-v19-after-local-intake-schema",
+  "todo_hash_before_append": "716ae720534485af089201f9cfd4451700817c31ad34c9fc7e7a6db26c6f4fb9",
+  "unmet_requirements": [
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184856-codex-source-label-other-market-readback-v1/source-label-readback/source_label_other_market_readback_v1.json",
+      "evidence": "source_label_other_market_gate=source_label_other_market_readback_v1=partial_sources_no_full_equivalence; accepted_factor_or_gate_total=0",
+      "gap": "No full source-label equivalence; public/partial slots do not form owner-approved MainRegimeV2 cross-market evidence.",
+      "requirement": "validated on other markets/species with source-owned or owner-approved labels",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185420-codex-local-intake-schema-sweep-v1/local-intake-schema-sweep/local_intake_schema_sweep_v1.json",
+      "evidence": "required_intake_present=0/12; exact_schema_matches=0; strong_partial_schema_matches=0",
+      "gap": "No local file matches the external price-root, recency, direct-positive, or direct-control required schemas.",
+      "requirement": "local intake files can supply missing source-owned rows/provenance",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T185126-codex-timeframe-cycle-coverage-readback-v1/timeframe-cycle-readback/timeframe_cycle_coverage_readback_v1.json",
+      "evidence": "timeframe_gate=timeframe_cycle_coverage_readback_v1=strict_1h_partial_native_subhour_recency_blocked; strict_1h_accepted=41/156; native_subhour_ready=0/4",
+      "gap": "Strict exact 1h remains partial and native sub-hour source overlap remains zero.",
+      "requirement": "validated on other cycles/timeframes with suitable confidence",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184530-codex-strict-1h-jan2026-tail-support-probe-v1/jan2026-tail-support/strict_1h_jan2026_tail_support_probe_v1.json",
+      "evidence": "provider_ready_tail=13; standalone_tail_gate_passes=0; gate=strict_1h_jan2026_tail_support_probe_v1=tail_support_found_future_gate_only_no_current_acceptance",
+      "gap": "Tail support is future-gate preflight only and cannot retroactively accept the fixed 2024/2025 strict gate.",
+      "requirement": "Jan-2026 source tail can promote current strict-1h gate",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184630-codex-direct-manipulation-coverage-readback-v2/direct-manipulation-readback/direct_manipulation_coverage_readback_v2.json",
+      "evidence": "accepted_scoped_varieties=5; remaining_unaccepted=6; web_ready=0; spoofing_matched_negatives=0; missing_species_screen_gate=direct_missing_species_source_screen_v1=no_ready_positive_control_source; ready_missing_species_sources=0",
+      "gap": "Scoped direct varieties exist, but spoofing/layering lacks matched negatives and quote stuffing/pinging/bear raid/painting tape remain missing.",
+      "requirement": "direct Manipulation full species/variety coverage with matched controls",
+      "status": "fail_blocked"
+    }
+  ]
+}

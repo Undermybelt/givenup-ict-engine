@@ -1,0 +1,187 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:TPR150352:20260512T071633.448Z",
+  "generated_at": "2026-05-12T07:16:33.448902Z",
+  "symbol": "TPR150352",
+  "shared_workspace_root": "/tmp/ict-engine-150352-aq-route-state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "binance_BTCUSDT_1h_trend-expansion_normal-vol_pullback-resume",
+      "isolated_state_dir": "/tmp/ict-engine-150352-aq-route-state/auto-quant/agent_material_units/binance_BTCUSDT_1h_trend-expansion_normal-vol_pullback-resume",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/material_binance_btcusdt.json",
+      "package": {
+        "package_id": "150352-binance_btcusdt-trend-pullback-resume-1h",
+        "generated_at": "2026-05-12T07:16:05.032374Z",
+        "title": "binance BTCUSDT 1h trend-expansion normal-vol pullback-resume",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/ProviderBackedTrendPullbackResume1h.py",
+        "strategy_class_name": "ProviderBackedTrendPullbackResume1h",
+        "strategy_brief": "Portable AQ-routed recipe from 145809 branch seed: trend_expansion -> normal_volatility -> down_or_flat_momentum -> trend_pullback_resume.",
+        "evaluation_priority": [
+          "branch_keyed_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "trade_density",
+          "drawdown"
+        ],
+        "consumer_evidence_profile": {
+          "required_surfaces": [
+            "ohlcv"
+          ],
+          "required_indicators": [
+            "ema20",
+            "ema50",
+            "ema100",
+            "ema200",
+            "rsi14",
+            "atr14",
+            "atr_pct_med120"
+          ],
+          "notes": [
+            "branch_path=trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+            "screen_source=145809_provider_backed_high_density_factor_screen_v1",
+            "dispatch is AQ-routed through ict-engine auto-quant-agent-material-* public surface"
+          ],
+          "provider_guidance": [
+            "primary provider source=binance",
+            "six-provider provenance matrix is stored separately under derived/six_provider_provenance_matrix.csv"
+          ]
+        },
+        "notes": [
+          "Do not promote from this package alone; require AQ dispatch result plus downstream admission.",
+          "The branch seed is positive locally but aggregate 145809 trend_pullback_resume_v1 was weak."
+        ]
+      }
+    },
+    {
+      "job_id": "ibkr_SPY_1h_trend-expansion_normal-vol_pullback-resume",
+      "isolated_state_dir": "/tmp/ict-engine-150352-aq-route-state/auto-quant/agent_material_units/ibkr_SPY_1h_trend-expansion_normal-vol_pullback-resume",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/material_ibkr_spy.json",
+      "package": {
+        "package_id": "150352-ibkr_spy-trend-pullback-resume-1h",
+        "generated_at": "2026-05-12T07:16:05.032952Z",
+        "title": "ibkr SPY 1h trend-expansion normal-vol pullback-resume",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/ibkr_spy_1h_5y.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/ProviderBackedTrendPullbackResume1h.py",
+        "strategy_class_name": "ProviderBackedTrendPullbackResume1h",
+        "strategy_brief": "Portable AQ-routed recipe from 145809 branch seed: trend_expansion -> normal_volatility -> down_or_flat_momentum -> trend_pullback_resume.",
+        "evaluation_priority": [
+          "branch_keyed_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "trade_density",
+          "drawdown"
+        ],
+        "consumer_evidence_profile": {
+          "required_surfaces": [
+            "ohlcv"
+          ],
+          "required_indicators": [
+            "ema20",
+            "ema50",
+            "ema100",
+            "ema200",
+            "rsi14",
+            "atr14",
+            "atr_pct_med120"
+          ],
+          "notes": [
+            "branch_path=trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+            "screen_source=145809_provider_backed_high_density_factor_screen_v1",
+            "dispatch is AQ-routed through ict-engine auto-quant-agent-material-* public surface"
+          ],
+          "provider_guidance": [
+            "primary provider source=ibkr",
+            "six-provider provenance matrix is stored separately under derived/six_provider_provenance_matrix.csv"
+          ]
+        },
+        "notes": [
+          "Do not promote from this package alone; require AQ dispatch result plus downstream admission.",
+          "The branch seed is positive locally but aggregate 145809 trend_pullback_resume_v1 was weak."
+        ]
+      }
+    },
+    {
+      "job_id": "yfinance_ES_1h_trend-expansion_normal-vol_pullback-resume",
+      "isolated_state_dir": "/tmp/ict-engine-150352-aq-route-state/auto-quant/agent_material_units/yfinance_ES_1h_trend-expansion_normal-vol_pullback-resume",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/material_yahoo_es.json",
+      "package": {
+        "package_id": "150352-yahoo_es-trend-pullback-resume-1h",
+        "generated_at": "2026-05-12T07:16:05.033197Z",
+        "title": "yfinance ES 1h trend-expansion normal-vol pullback-resume",
+        "symbol": "ES",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/ProviderBackedTrendPullbackResume1h.py",
+        "strategy_class_name": "ProviderBackedTrendPullbackResume1h",
+        "strategy_brief": "Portable AQ-routed recipe from 145809 branch seed: trend_expansion -> normal_volatility -> down_or_flat_momentum -> trend_pullback_resume.",
+        "evaluation_priority": [
+          "branch_keyed_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "trade_density",
+          "drawdown"
+        ],
+        "consumer_evidence_profile": {
+          "required_surfaces": [
+            "ohlcv"
+          ],
+          "required_indicators": [
+            "ema20",
+            "ema50",
+            "ema100",
+            "ema200",
+            "rsi14",
+            "atr14",
+            "atr_pct_med120"
+          ],
+          "notes": [
+            "branch_path=trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+            "screen_source=145809_provider_backed_high_density_factor_screen_v1",
+            "dispatch is AQ-routed through ict-engine auto-quant-agent-material-* public surface"
+          ],
+          "provider_guidance": [
+            "primary provider source=yfinance",
+            "six-provider provenance matrix is stored separately under derived/six_provider_provenance_matrix.csv"
+          ]
+        },
+        "notes": [
+          "Do not promote from this package alone; require AQ dispatch result plus downstream admission.",
+          "The branch seed is positive locally but aggregate 145809 trend_pullback_resume_v1 was weak."
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "binance_BTCUSDT_1h_trend-expansion_normal-vol_pullback-resume"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "ibkr_SPY_1h_trend-expansion_normal-vol_pullback-resume"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "yfinance_ES_1h_trend-expansion_normal-vol_pullback-resume"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

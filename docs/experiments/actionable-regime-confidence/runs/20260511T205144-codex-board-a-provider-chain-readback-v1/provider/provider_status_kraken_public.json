@@ -1,0 +1,51 @@
+{
+  "default_enabled_providers": [],
+  "install_prompts": [
+    "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+  ],
+  "pending_provider_details": [
+    {
+      "domain": "market_data",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ],
+      "provider_id": "kraken_public",
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    }
+  ],
+  "pending_providers": [
+    "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing"
+  ],
+  "providers": [
+    {
+      "access_mode": "public_script_adapter",
+      "adopted_by_default": false,
+      "domain": "market_data",
+      "fallback_priority": 3,
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ],
+      "market_fit": [
+        "crypto",
+        "fx",
+        "tokenized_assets"
+      ],
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "selectable_by_user": true,
+      "status": "configured_runtime_unhealthy",
+      "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately.",
+      "user_access": "public_no_login"
+    }
+  ],
+  "ready_by_domain": {
+    "market_data": "0/1"
+  },
+  "ready_providers": [],
+  "selectable_providers": [
+    "kraken_public"
+  ],
+  "summary_line": "market_data:0/1 ready"
+}

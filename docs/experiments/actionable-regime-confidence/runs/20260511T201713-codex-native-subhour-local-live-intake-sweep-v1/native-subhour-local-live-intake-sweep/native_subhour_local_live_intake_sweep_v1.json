@@ -1,0 +1,63 @@
+{
+  "accepted_rows_added": 0,
+  "candidate_csv_row_policy": "bounded sample of first non-exact candidate rows plus all exact R3 filename/schema hits; full raw/provider rows are not committed",
+  "candidate_csv_rows_written": 500,
+  "candidate_files_classified": 18086,
+  "complete_native_subhour_package_present": false,
+  "decision": "native_subhour_local_live_intake_sweep_v1=no_native_subhour_source_owned_intake_package",
+  "disposition_counts": {
+    "blocked_daily_source_panel_not_native_subhour": 11,
+    "blocked_direct_manipulation_not_price_root_native_subhour": 12148,
+    "blocked_generated_or_model_derived_regime_labels": 296,
+    "blocked_no_r3_native_subhour_source_label_schema": 4392,
+    "blocked_price_or_feature_panel_not_source_owned_labels": 1239
+  },
+  "exact_required_intake_files_present": 0,
+  "finished_at": "2026-05-11T12:20:21.198022+00:00",
+  "intake_roots": [
+    {
+      "complete_native_subhour_package": false,
+      "exists": false,
+      "present_files": "",
+      "required_provenance_present": false,
+      "required_rows_present": false,
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "complete_native_subhour_package": false,
+      "exists": false,
+      "present_files": "",
+      "required_provenance_present": false,
+      "required_rows_present": false,
+      "root": "/private/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "complete_native_subhour_package": false,
+      "exists": false,
+      "present_files": "",
+      "required_provenance_present": false,
+      "required_rows_present": false,
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "complete_native_subhour_package": false,
+      "exists": false,
+      "present_files": "",
+      "required_provenance_present": false,
+      "required_rows_present": false,
+      "root": "/private/tmp/ict-engine-source-label-equivalence-intake"
+    }
+  ],
+  "intake_roots_checked": 4,
+  "native_subhour_source_overlap_closed": false,
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "ready_native_subhour_source_owned_label_sources": 0,
+  "run_id": "20260511T201713-codex-native-subhour-local-live-intake-sweep-v1",
+  "runtime_code_changed": false,
+  "started_at": "2026-05-11T12:19:51.374937+00:00",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

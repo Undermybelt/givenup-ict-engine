@@ -1,0 +1,5 @@
+platform,accepted_95,already_ledgered_before_this_run,paired_token_days,rows_total,positive_rows_total,negative_rows_total,minimum_split_class_wilson95_lcb,chronological_cut_date,rejection_reasons
+base,True,False,84,8618,556,8062,0.98008,2024-10-14,
+bsc,True,True,298,4864,1870,2994,0.995736,2024-06-27,
+ethereum,True,False,95,977,265,712,0.967945,2024-09-28,
+solana,True,False,639,44669,4872,39797,0.998285,2024-11-11,

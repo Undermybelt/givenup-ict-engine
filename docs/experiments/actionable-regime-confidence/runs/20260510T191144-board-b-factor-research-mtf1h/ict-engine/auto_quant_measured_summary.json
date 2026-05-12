@@ -1,0 +1,38 @@
+{
+  "source_stdout": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/auto-quant-run-project.out",
+  "source_stderr": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/auto-quant-run-project.err",
+  "command": "uv run --directory <auto-quant-workspace> --with ta-lib run.py",
+  "backtests_succeeded": 9,
+  "backtests_failed": 0,
+  "summary_by_strategy": {
+    "CrashRebound": {
+      "robust_sharpe": 0.0847,
+      "worst_profit_pct": 2.99,
+      "worst_dd_pct": -12.807,
+      "avg_position_pct": 29.5993,
+      "profit_floor": "FAIL",
+      "min_position_size": "PASS",
+      "pareto_dominated_by": "none (non-dominated)"
+    },
+    "PerPairMR": {
+      "robust_sharpe": 0.052,
+      "worst_profit_pct": 0.84,
+      "worst_dd_pct": -14.5454,
+      "avg_position_pct": 22.4248,
+      "profit_floor": "FAIL",
+      "min_position_size": "PASS",
+      "pareto_dominated_by": "none (non-dominated)"
+    },
+    "VolBreakoutSized": {
+      "robust_sharpe": 1.339,
+      "worst_profit_pct": 25.02,
+      "worst_dd_pct": -4.2529,
+      "avg_position_pct": 3.6641,
+      "profit_floor": "PASS",
+      "min_position_size": "FAIL",
+      "pareto_dominated_by": "none (non-dominated)"
+    }
+  },
+  "selected_for_prior_init": "VolBreakoutSized",
+  "selection_reason": "Only seeded candidate with profit_floor=PASS; min_position_size=FAIL means trade-use remains blocked by size/robustness review."
+}

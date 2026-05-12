@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "b4de6e9d5e8bbbf9",
+  "dry_run": false,
+  "feedback_records_inserted": 245,
+  "force": true,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_PROVIDER_MATRIX_SIX_PROVIDER_AQ_115500_20260512T041015.156115000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "same_root_six_provider_aq_115500",
+  "symbol": "B2R_PROVIDER_MATRIX_SIX_PROVIDER_AQ_115500",
+  "trades_applied": 245,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120746+0800-codex-115500-same-root-six-provider-aq-chain-v1/derived/same_root_six_provider_aq_real_trades.jsonl",
+  "trades_total": 245
+}

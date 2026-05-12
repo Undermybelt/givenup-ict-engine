@@ -1,0 +1,14 @@
+provider_status_exit_zero=PASS
+auto_quant_status_exit_zero=PASS
+provider_json_parsed=PASS
+auto_quant_json_parsed=PASS
+source_label_root_ready=PASS
+r6_owner_export_not_ready=PASS
+r3_native_subhour_not_ready=PASS
+r5_recency_extension_not_ready=PASS
+downstream_chain_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+runtime_code_changed_false=PASS
+raw_data_committed_false=PASS
+external_requests_sent_false=PASS

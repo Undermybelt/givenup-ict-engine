@@ -1,0 +1,87 @@
+{
+  "artifact": "nq_cost_crisis_repair_cleanwire_apply_v2_assertions",
+  "run_id": "20260512T033508+0800-codex-board-b-nq-cost-crisis-repair-v3-cleanwire-apply-v2",
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3",
+  "inputs": {
+    "fixed_manifest": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-v2/strategy_library_nq_cost_crisis_repair_v3_manifest_1_0.json",
+    "fixed_wire": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-v2/nq_cost_crisis_repair_real_trades_v3_wire_fixed.jsonl",
+    "clean_apply_state": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/state_nq_cost_crisis_repair_v3_cleanwire_apply"
+  },
+  "upstream_rc_spa": {
+    "score": 90.0,
+    "price_roots_passed": 4,
+    "price_roots_required": 4,
+    "manipulation_component_only": true,
+    "promotion_allowed_from_rc_spa_alone": false
+  },
+  "command_exits": {
+    "range": "26-35",
+    "all_zero": true
+  },
+  "wire_fixed_ingest": {
+    "trades_total": 15415,
+    "trades_applied": 15415,
+    "trades_invalid": 0,
+    "content_hash": "d2aec06adb0f4871",
+    "ledger_status": "applied"
+  },
+  "pre_bayes": {
+    "latest_gate_status": "observe_only",
+    "canonical_structural_active_regime": "range",
+    "canonical_structural_confidence": 0.3993185754313692
+  },
+  "policy_training_status_before_export": {
+    "structural_target_missing": true,
+    "runtime_selection": "disabled",
+    "runtime_source": "none",
+    "runtime_matches": 0
+  },
+  "structural_target_export": {
+    "rows": 3,
+    "candidate_set_size": 3,
+    "mature_rows": 0,
+    "history_rows": 3,
+    "history_mature_rows": 0,
+    "rows_with_raw_path_score": 0,
+    "rows_with_calibrated_path_prob": 0,
+    "rows_with_path_prob_lower_bound": 0,
+    "rows_with_training_weight": 0,
+    "exact_aggregate_regime_bundle_paths_consumed": false,
+    "target_surface": "generic_structural_rows"
+  },
+  "structural_bundle": {
+    "candidate_set_id": "structural-candidates:B2R_NQ_COST_CRISIS_REPAIR_032157:838d3a5e1604c214",
+    "candidate_set_size": 3,
+    "rank": 1,
+    "path_id": "path:scenario:B2R_NQ_COST_CRISIS_REPAIR_032157:belief_regime_node:range:range_mean_reversion:primary",
+    "path_label": "range_mean_reversion",
+    "direction": "Observe",
+    "current_posterior": 0.3993185754313692,
+    "selected_path_probability": 0.3751781148747944,
+    "path_ranker_runtime_source": null,
+    "path_ranker_raw_score": null,
+    "path_ranker_calibrated_path_prob": null
+  },
+  "execution_candidate": {
+    "ready": false,
+    "actionable": false,
+    "candidate_status": "execution_blocked",
+    "execution_readiness": 0.3210541039505038,
+    "execution_gate_status": "execution_blocked",
+    "pre_bayes_gate_status": "observe_only",
+    "review_status": "observe"
+  },
+  "workflow_full": {
+    "current_focus_phase": "analyze",
+    "closed_loop_branch_admission_status": "fail_closed",
+    "blocking_truth_status": "blocked",
+    "blocking_truth_stage": "analyze",
+    "blocking_truth_reason": "user_selected_historical_data_missing"
+  },
+  "verdict": {
+    "status": "fail_closed",
+    "promotion_allowed": false,
+    "root_cause": "cleanwire fixed trade ingestion but clean state emitted only generic structural target rows while Pre-Bayes stayed observe_only and workflow blocked on missing user-selected historical data",
+    "next_action": "run one combined closure state using the wire-fixed trade JSONL plus exact aggregate-regime-bundle branch paths, then train/apply/register CatBoost and rerun admission only after explicit historical data selection"
+  }
+}

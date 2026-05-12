@@ -1,0 +1,74 @@
+{
+  "artifact_id": "execution-tree-NQ-1778412135021",
+  "generated_at": "2026-05-10T11:22:15.021390Z",
+  "symbol": "NQ",
+  "output": {
+    "execution_score": 0.452920991625086,
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "gate_status": "observe",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.3314 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.3314 < 0.45)",
+      "path_ranker_score_input=0.4900 visible=true used=true ranker_validation_ready=true effective_prediction_vote_score=0.5326",
+      "prediction_vote_score=0.5326 (medium) × execution_readiness=0.3314 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.673",
+      "market_state=volatility=ElevatedVol:0.814 liquidity=NormalLiquidity:0.377 structure=Trending:0.707 behavior=RiskOff:0.550",
+      "market_state=rationale=volatility=ElevatedVol conf=0.81",
+      "market_state=rationale=structure=Trending conf=0.71",
+      "market_state=rationale=behavior=RiskOff conf=0.55",
+      "market_state=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.67",
+      "path_ranker=Ranker runtime: structural_path_ranking_target rows=3 history_rows=1342 mature_rows=1 history_mature_rows=1320 raw_scored_mature=1315/30 production_validation=1313/30 observation_validation=39/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=1",
+      "path_ranker=Ranker validation: calibration=true quality_ready=true raw_scored_mature=1315/30 production_validation=1313/30 observation_validation=39/30 ready=true",
+      "path_ranker=ranker_machine=runtime_source=candidate_set score_model_family=unknown score_source=unknown validation_ready=true active_match_count=1",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary runtime_source=candidate_set raw_path_score=0.387350 calibrated_path_prob=0.513189 path_prob_lower_bound=0.490023 execution_gate_status=observe",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "hybrid_transition_hazard=0.608",
+      "duration_remaining_expected_bars=1.000"
+    ],
+    "decision_hint": "execution_guarded_due_to_low_remaining_regime_duration",
+    "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=candidate_set/unknown/ready",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "candidate_set",
+    "ranker_validation_ready": true
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.4055740610151709,
+      "feature_value": "0.2944"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.3864544341830595,
+      "feature_value": "0.4135"
+    },
+    {
+      "feature": "dominant_cycle_energy",
+      "contribution": 0.3621954693970023,
+      "feature_value": "0.5122"
+    },
+    {
+      "feature": "execution_readiness",
+      "contribution": -0.3186458838212551,
+      "feature_value": "0.3314"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "54390626044676e4",
+    "data_fingerprint": "1e08326e4cd91082"
+  }
+}

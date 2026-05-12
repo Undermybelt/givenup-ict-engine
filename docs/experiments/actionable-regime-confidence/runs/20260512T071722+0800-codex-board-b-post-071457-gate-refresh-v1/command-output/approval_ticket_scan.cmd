@@ -1,0 +1,1 @@
+sh -c rg -n "approval_present=true|external_requests_sent=true|ticket_id|export_id|license_id|support_id|sent_at|dispatch_sent=true|approval received" docs/experiments/actionable-regime-confidence/runs -g "*.json" -g "*.csv" -g "*.md" | head -n 200 || true

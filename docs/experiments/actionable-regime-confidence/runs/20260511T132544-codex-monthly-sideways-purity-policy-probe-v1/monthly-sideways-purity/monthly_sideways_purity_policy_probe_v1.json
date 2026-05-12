@@ -1,0 +1,164 @@
+{
+  "artifact_type": "monthly_sideways_purity_policy_probe_v1",
+  "artifacts": {
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T132544-codex-monthly-sideways-purity-policy-probe-v1/monthly-sideways-purity/monthly_sideways_purity_policy_probe_v1_summary.csv"
+  },
+  "decision": {
+    "current_blocker_reframed": "The remaining same-source 1mo:Sideways miss is a validation-support/purity problem, not another broad negative source-search problem.",
+    "full_objective_achieved": false,
+    "min_all_success_daily_support_for_wilson95_lcb_0_95": 73,
+    "next_action": "Choose one of two explicit paths before more broad searching: either relock validation to two-axis chronological-plus-heldout-ticker validation for rare monthly Sideways, or acquire at least 13 more non-heldout post-2022 pure Sideways source-days from native/broader monthly panels to satisfy the prior cross-product split.",
+    "positive_candidate": "pure_month_1_00_two_axis_validation_split",
+    "positive_candidate_accepted_95": true,
+    "prior_cross_product_split_still_closed": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "source_threshold_moved": "0.95_to_1.00_stricter_pure_months",
+    "strict_threshold_relaxed": false,
+    "support_gap_for_prior_cross_product_split_if_all_successes": 13,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T05:27:11.904238+00:00",
+  "inputs": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "28f8ce29e2292291761ca66d967f3c257a9f9e99ad5e6eb9ef26b323c6152081",
+    "rollup_labels": "docs/experiments/actionable-regime-confidence/runs/20260511T130600-codex-stock-regime-same-source-timeframe-rollup-v1/timeframe-rollup/stock_regime_same_source_timeframe_rollup_v1.csv",
+    "rollup_labels_sha256": "7996c1dd166917630a0c4f11252f0bc04efa643a02be5cfbc4dc2812ac420c38"
+  },
+  "panel": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-02-01",
+    "source_rows_1mo_sideways": 530,
+    "tickers": 37,
+    "total_days": 11104,
+    "total_source_days": 9908
+  },
+  "policies": [
+    {
+      "accepted_95": false,
+      "blockers": [
+        "heldout_time_nonheldout_2022_plus_source_consensus_wilson95_below_0_95"
+      ],
+      "label_share_threshold": 0.95,
+      "policy_id": "baseline_0_95_prior_cross_product_split",
+      "qualifying_condition": "same_source_rollup.root == 'Sideways' AND timeframe == '1mo' AND label_share >= 0.95 AND status == 'accepted_same_source_rollup'",
+      "stats": {
+        "calibration_nonheldout_2017_2021": {
+          "agreeing_source_days": 559,
+          "daily_support": 573,
+          "periods": 27,
+          "precision": 0.9755671902,
+          "tickers": 13,
+          "wilson95_lcb": 0.9594092375
+        },
+        "heldout_ticker_all_years": {
+          "agreeing_source_days": 1141,
+          "daily_support": 1168,
+          "periods": 56,
+          "precision": 0.9768835616,
+          "tickers": 9,
+          "wilson95_lcb": 0.9665754996
+        },
+        "heldout_time_nonheldout_2022_plus": {
+          "agreeing_source_days": 100,
+          "daily_support": 102,
+          "periods": 5,
+          "precision": 0.9803921569,
+          "tickers": 5,
+          "wilson95_lcb": 0.931306916
+        }
+      }
+    },
+    {
+      "accepted_95": false,
+      "blockers": [
+        "heldout_time_nonheldout_2022_plus_source_consensus_wilson95_below_0_95"
+      ],
+      "label_share_threshold": 1.0,
+      "policy_id": "pure_month_1_00_prior_cross_product_split",
+      "qualifying_condition": "same_source_rollup.root == 'Sideways' AND timeframe == '1mo' AND label_share >= 1.0 AND status == 'accepted_same_source_rollup'",
+      "stats": {
+        "calibration_nonheldout_2017_2021": {
+          "agreeing_source_days": 269,
+          "daily_support": 269,
+          "periods": 13,
+          "precision": 1.0,
+          "tickers": 9,
+          "wilson95_lcb": 0.9859205458
+        },
+        "heldout_ticker_all_years": {
+          "agreeing_source_days": 602,
+          "daily_support": 602,
+          "periods": 29,
+          "precision": 1.0,
+          "tickers": 8,
+          "wilson95_lcb": 0.9936593002
+        },
+        "heldout_time_nonheldout_2022_plus": {
+          "agreeing_source_days": 60,
+          "daily_support": 60,
+          "periods": 3,
+          "precision": 1.0,
+          "tickers": 3,
+          "wilson95_lcb": 0.9398281479
+        }
+      }
+    },
+    {
+      "accepted_95": true,
+      "blockers": [],
+      "label_share_threshold": 1.0,
+      "policy_id": "pure_month_1_00_two_axis_validation_split",
+      "qualifying_condition": "same_source_rollup.root == 'Sideways' AND timeframe == '1mo' AND label_share >= 1.0 AND status == 'accepted_same_source_rollup'",
+      "stats": {
+        "calibration_nonheldout_2017_2021": {
+          "agreeing_source_days": 269,
+          "daily_support": 269,
+          "periods": 13,
+          "precision": 1.0,
+          "tickers": 9,
+          "wilson95_lcb": 0.9859205458
+        },
+        "heldout_ticker_all_years": {
+          "agreeing_source_days": 602,
+          "daily_support": 602,
+          "periods": 29,
+          "precision": 1.0,
+          "tickers": 8,
+          "wilson95_lcb": 0.9936593002
+        },
+        "heldout_time_all_tickers_2022_plus": {
+          "agreeing_source_days": 140,
+          "daily_support": 140,
+          "periods": 7,
+          "precision": 1.0,
+          "tickers": 6,
+          "wilson95_lcb": 0.9732937996
+        }
+      }
+    }
+  ],
+  "run_id": "20260511T132544+0800-codex-monthly-sideways-purity-policy-probe-v1",
+  "web_research_direction_refresh": [
+    {
+      "source": "hidden-regime GitHub project",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "use": "treats bull, bear, sideways, and crisis-like states as separate regime outputs; supports keeping Sideways as a root, not a complement."
+    },
+    {
+      "source": "hmmlearn GitHub project",
+      "url": "https://github.com/hmmlearn/hmmlearn",
+      "use": "method source for HMM posterior/probability features when rebuilding root-state confidence rather than threshold-spamming OHLCV rules."
+    },
+    {
+      "source": "ruptures GitHub project",
+      "url": "https://github.com/deepcharles/ruptures",
+      "use": "method source for change-point/boundary timing; useful for abstaining months that straddle regime transitions."
+    },
+    {
+      "source": "FINRA Cross Market Equities Supervision Potential Manipulation Report",
+      "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report",
+      "use": "confirms Manipulation needs direct surveillance/order-lifecycle style fields and should remain separate from OHLCV Sideways work."
+    }
+  ]
+}

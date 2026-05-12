@@ -1,0 +1,7 @@
+error: unexpected argument '--output-dir' found
+
+  tip: a similar argument exists: '--state-dir'
+
+Usage: ict-engine export-structural-path-ranking-target --symbol <SYMBOL> --state-dir <STATE_DIR>
+
+For more information, try '--help'.

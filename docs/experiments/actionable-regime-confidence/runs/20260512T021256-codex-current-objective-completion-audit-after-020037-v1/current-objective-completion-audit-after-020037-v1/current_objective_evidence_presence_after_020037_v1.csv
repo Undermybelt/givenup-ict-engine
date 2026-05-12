@@ -1,0 +1,9 @@
+artifact,path,present
+020037_runtime_chain,docs/experiments/actionable-regime-confidence/runs/20260512T020037-codex-readonly-runtime-chain-refresh-after-015533-v1/checks/readonly_runtime_chain_refresh_after_015533_v1_assertions.out,True
+020037_runtime_json,docs/experiments/actionable-regime-confidence/runs/20260512T020037-codex-readonly-runtime-chain-refresh-after-015533-v1/readonly-runtime-chain-refresh-after-015533-v1/readonly_runtime_chain_refresh_after_015533_v1.json,True
+020104_public_source_screen,docs/experiments/actionable-regime-confidence/runs/20260512T020104-codex-public-source-label-expansion-screen-v1/checks/public_source_label_expansion_screen_v1_assertions.out,True
+020216_tsie_dry_run,docs/experiments/actionable-regime-confidence/runs/20260512T020216-codex-tsie-public-source-intake-dry-run-v1/checks/tsie_public_source_intake_dry_run_v1_assertions.out,True
+020235_new_source_search,docs/experiments/actionable-regime-confidence/runs/20260512T020235-codex-new-source-label-web-search-v1/checks/new_source_label_web_search_v1_assertions.out,True
+020708_coordination,docs/experiments/actionable-regime-confidence/runs/20260512T020708-codex-current-coordination-readback-after-020235-v1/checks/current_coordination_readback_after_020235_v1_assertions.out,True
+020729_source_poll,docs/experiments/actionable-regime-confidence/runs/20260512T020729-codex-current-source-control-arrival-poll-after-020235-v1/checks/current_source_control_arrival_poll_after_020235_v1_assertions.out,True
+approval_decision_package,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,True

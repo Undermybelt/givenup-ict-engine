@@ -1,0 +1,13 @@
+PASS decision=r6_shak_complaint_row_uplift_gate_v1=schema_ready_but_calibration_blocked
+PASS positive_rows=21
+PASS matched_negative_rows=21
+PASS positive_rows_added_this_run=8
+PASS matched_negative_rows_added_this_run=8
+PASS verifier_returncode=0
+PASS combined_min_wilson95_lcb=0.845361
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

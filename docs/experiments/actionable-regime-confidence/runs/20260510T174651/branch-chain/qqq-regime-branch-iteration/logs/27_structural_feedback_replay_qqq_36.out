@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "symbol": "QQQ",
+  "candles_path": "/tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h_2024_2025.json",
+  "output_root": "/tmp/ict-regime-branch-iteration-20260510-1/structural-replay-qqq-36",
+  "count": 36,
+  "lookback": 120,
+  "horizon": 16,
+  "threshold": 0.001,
+  "final_mature_rows": 1
+}
+[done] observations=36 final_mature_rows=1

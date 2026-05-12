@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 1.3096578208955225,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 6.434505977036176,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": true,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.3451489253731343,
+    1.6417910447761193e-7,
+    0.6548509104477612
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_ROOTAWARE_MULTIBRANCH_B_182222_20260511T102854.884784000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/branch-rc-spa/rootaware_multibranch_strategy_library_for_import_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_ROOTAWARE_MULTIBRANCH_B_182222_20260511T102854.957580000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/ict-engine-fail-closed/state/auto-quant/ROOTAWARE_MULTIBRANCH_B_182222/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/ict-engine-fail-closed/state/auto-quant/ROOTAWARE_MULTIBRANCH_B_182222/auto_quant_prior_init_ROOTAWARE_MULTIBRANCH_B_182222_20260511T102854.957580000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.3451489253731343,
+        1.6417910447761193e-7,
+        0.6548509104477612
+      ],
+      "bbn_contradiction_after": 0.009847051284928687,
+      "bbn_contradiction_before": 1.3195048721804512,
+      "bbn_contradiction_lift": 1.3096578208955225,
+      "bbn_entropy_after": 0.6443944609152483,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6412388893019896,
+      "bbn_log_loss_before": 7.075744866338166,
+      "bbn_log_loss_delta": 6.434505977036176,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.6548070746268657,
+        -0.00002183582089552239,
+        0.6548289104477613
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "board-b-rootaware-multibranch-rc-spa-v1",
+      "n_breakeven": 0,
+      "n_loss": 702,
+      "n_win": 362,
+      "strategy_name": "RootAwareMultiBranchV1",
+      "temper": 0.5,
+      "trade_count": 1064
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "ROOTAWARE_MULTIBRANCH_B_182222",
+  "temper": 0.5
+}

@@ -1,0 +1,236 @@
+{
+  "artifact_version": "structural-playbook-v1",
+  "branch_history": {
+    "summary": {
+      "distinct_entities": 0,
+      "total_records": 0
+    }
+  },
+  "branch_set": {
+    "branches": [
+      {
+        "activation_conditions": [
+          "No workflow snapshot exists yet."
+        ],
+        "branch_id": "SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs",
+        "branch_label": "collect_initial_inputs",
+        "composite_branch_score": 1.0,
+        "failure_conditions": [
+          "Required market data or state inputs stay missing."
+        ],
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "posterior_probability": 1.0,
+        "prior_probability": 1.0,
+        "supporting_evidence": [
+          "workflow_status has no persisted phase state"
+        ],
+        "target_node_id": "SRC_ROOT_CARRY_LONG_220646:bootstrap_ready"
+      }
+    ],
+    "from_node_id": "SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state"
+  },
+  "feedback_template": {
+    "allowed_outcomes": [
+      "win",
+      "loss",
+      "breakeven",
+      "invalidated",
+      "abandoned",
+      "not_followed"
+    ],
+    "bbn_support_score": 0.0,
+    "branch_id": "SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs",
+    "candidate_set_id": "structural-candidates:SRC_ROOT_CARRY_LONG_220646:42928493c7191e58",
+    "candidate_set_size": 1,
+    "direction": "observe",
+    "entry_style": "non_trading_precondition",
+    "feedback_fields": [
+      {
+        "description": "Whether the user actually followed the recommended path.",
+        "field_id": "followed_path",
+        "label": "Followed Path",
+        "required": true,
+        "value_type": "boolean"
+      },
+      {
+        "description": "One of win, loss, breakeven, invalidated, abandoned, or not_followed.",
+        "field_id": "realized_outcome",
+        "label": "Realized Outcome",
+        "required": true,
+        "value_type": "enum"
+      },
+      {
+        "description": "Optional realized PnL from the actual execution.",
+        "field_id": "realized_pnl",
+        "label": "Realized PnL",
+        "required": false,
+        "value_type": "number"
+      },
+      {
+        "description": "Freeform reason such as stop_hit, target_hit, invalidated, timed_out.",
+        "field_id": "exit_reason",
+        "label": "Exit Reason",
+        "required": false,
+        "value_type": "string"
+      },
+      {
+        "description": "Optional operator notes about what actually happened.",
+        "field_id": "notes",
+        "label": "Notes",
+        "required": false,
+        "value_type": "string"
+      }
+    ],
+    "node_id": "SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state",
+    "notes": [
+      "Preserve recommendation_id plus node/branch/scenario/path ids when recording live feedback.",
+      "This is a protocol contract only; canonical persistence wiring comes next."
+    ],
+    "path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+    "path_posterior": 0.0,
+    "protocol_version": "structural-feedback-v1",
+    "recommendation_id": "structural-feedback:SRC_ROOT_CARRY_LONG_220646:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:path:scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+    "recommended_at": "2026-05-11T14:22:40Z",
+    "scenario_id": "scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs",
+    "selected_path_probability": 1.0,
+    "symbol": "SRC_ROOT_CARRY_LONG_220646"
+  },
+  "history_summary": {
+    "distinct_branches": 0,
+    "distinct_nodes": 0,
+    "distinct_paths": 0,
+    "distinct_scenarios": 0,
+    "total_records": 0
+  },
+  "node": {
+    "belief_posterior": 0.0,
+    "belief_prior": 0.5,
+    "focus_phase": "workflow_status",
+    "node_family": "bootstrap",
+    "node_id": "SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state",
+    "node_label": "no_workflow_state",
+    "posterior_confidence": 0.0,
+    "supporting_evidence": [
+      "workflow snapshot not initialized"
+    ]
+  },
+  "node_history": {
+    "summary": {
+      "distinct_entities": 0,
+      "total_records": 0
+    }
+  },
+  "path_history": {
+    "summary": {
+      "distinct_branches": 0,
+      "distinct_paths": 0,
+      "distinct_scenarios": 0,
+      "total_records": 0
+    }
+  },
+  "path_plan": {
+    "paths": [
+      {
+        "bbn_support_score": 0.0,
+        "composite_preference_score": 0.15,
+        "confirmation_conditions": [
+          "recommended command remains valid on next refresh"
+        ],
+        "direction": "observe",
+        "entry_style": "non_trading_precondition",
+        "expected_failure_mode": "structural_invalidation_before_path_completion",
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "invalidation_conditions": [
+          "Required market data or state inputs stay missing."
+        ],
+        "max_time_in_trade": "re-evaluate on next structural node update",
+        "path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+        "path_label": "bootstrap_readiness",
+        "path_posterior": 0.0,
+        "path_prior": 0.5,
+        "scenario_id": "scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs",
+        "stop_definition": "No trade until preconditions are satisfied.",
+        "target_definition": "Reach the first valid workflow snapshot.",
+        "trigger_conditions": [
+          "No workflow snapshot exists yet."
+        ]
+      }
+    ]
+  },
+  "recommended_next_step": {
+    "action_type": "none",
+    "blocked_reason": null,
+    "deferred_command": null,
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:SRC_ROOT_CARRY_LONG_220646:42928493c7191e58",
+      "candidate_set_size": 1,
+      "confirmation": "recommended command remains valid on next refresh",
+      "invalidation": "Required market data or state inputs stay missing.",
+      "path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+      "path_label": "bootstrap_readiness",
+      "recommended_command": null,
+      "selected_path_probability": 1.0,
+      "stop": "No trade until preconditions are satisfied.",
+      "trigger": "No workflow snapshot exists yet.",
+      "why": "posterior=0.000 prior=0.500 invalidation_rate=n/a"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "recommended_path_bundle": {
+    "candidate_set_id": "structural-candidates:SRC_ROOT_CARRY_LONG_220646:42928493c7191e58",
+    "candidate_set_size": 1,
+    "composite_score": 0.15,
+    "confirmation_summary": "recommended command remains valid on next refresh",
+    "current_posterior": 0.0,
+    "direction": "observe",
+    "experience_prior": 0.5,
+    "historical_total_records": 0,
+    "invalidation_summary": "Required market data or state inputs stay missing.",
+    "path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+    "path_label": "bootstrap_readiness",
+    "rank": 1,
+    "scenario_id": "scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs",
+    "selected_path_probability": 1.0,
+    "stop_summary": "No trade until preconditions are satisfied.",
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "trigger_summary": "No workflow snapshot exists yet.",
+    "why_this_path": "posterior=0.000 prior=0.500 invalidation_rate=n/a"
+  },
+  "scenario_history": {
+    "summary": {
+      "distinct_entities": 0,
+      "total_records": 0
+    }
+  },
+  "scenario_playbook": {
+    "scenarios": [
+      {
+        "branch_id": "SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs",
+        "composite_scenario_score": 1.0,
+        "hard_invalidations": [
+          "Required market data or state inputs stay missing."
+        ],
+        "historical_followed_count": 0,
+        "historical_total_records": 0,
+        "narrative": "Collect the minimum inputs needed to create the first workflow state.",
+        "path_ids": [
+          "path:scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary"
+        ],
+        "posterior_probability": 1.0,
+        "prior_probability": 1.0,
+        "required_confirmations": [
+          "No workflow snapshot exists yet."
+        ],
+        "scenario_id": "scenario:SRC_ROOT_CARRY_LONG_220646:bootstrap:no_workflow_state:bootstrap_collect_inputs",
+        "scenario_label": "bootstrap_readiness",
+        "timing_constraints": [
+          "re-evaluate on the next workflow refresh"
+        ]
+      }
+    ]
+  },
+  "symbol": "SRC_ROOT_CARRY_LONG_220646"
+}

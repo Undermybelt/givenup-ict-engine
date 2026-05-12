@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-autoquant-threaded-dns-20260512T022552 --output-format json 

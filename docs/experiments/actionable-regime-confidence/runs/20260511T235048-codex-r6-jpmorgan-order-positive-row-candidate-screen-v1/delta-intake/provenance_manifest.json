@@ -1,0 +1,16 @@
+{
+  "candidate_policy": "delta candidate stack only; does not mutate missing shared intake",
+  "created_at_utc": "2026-05-11T15:58:15.618556+00:00",
+  "matched_negative_control_policy": "same-source genuine-order legs; sidecar Nasdaq ITCH controls remain the independent broad-normal axis",
+  "raw_payload_committed_to_repo": false,
+  "run_id": "20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1",
+  "source": {
+    "bytes": 127456,
+    "content_type": "application/pdf",
+    "http_status": 200,
+    "pdf_path": "/tmp/ict-engine-r6-jpmorgan-order-positive-row-candidate-screen-v1/raw/enfjpmorganchaseorder092920.pdf",
+    "sha256": "2db112d846bbce7d9c55e0a7fa2b7e007c6fab30873352abd2ecce9af107d2cd",
+    "url": "https://www.cftc.gov/media/4826/enfjpmorganchaseorder092920/download"
+  },
+  "source_text_path": "/tmp/ict-engine-r6-jpmorgan-order-positive-row-candidate-screen-v1/raw/enfjpmorganchaseorder092920.txt"
+}

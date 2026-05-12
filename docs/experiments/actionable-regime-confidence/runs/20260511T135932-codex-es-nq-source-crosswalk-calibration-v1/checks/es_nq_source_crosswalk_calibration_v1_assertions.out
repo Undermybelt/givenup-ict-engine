@@ -1,0 +1,12 @@
+run_id=20260511T135932+0800-codex-es-nq-source-crosswalk-calibration-v1
+board_sha256_at_run=3718ef087e979ec6dec6cf29436153533bf1a3854d4b79cba059e6f0a0db35e8
+input_scoped_es_nq_15m_1h_slots=16
+accepted_95_source_label_crosswalk_attachment_rows=2
+blocked_crosswalk_attachment_rows=14
+accepted_slots=ES=F:15m:Bull,ES=F:1h:Bull
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

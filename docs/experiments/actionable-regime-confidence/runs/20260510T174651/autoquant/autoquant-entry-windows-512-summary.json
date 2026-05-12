@@ -1,0 +1,15 @@
+{
+  "source_trades": "/tmp/ict-regime-chain-20260509T231052/autoquant-trade-execution-deduped-entryonly-plus-precisionfix-all.csv",
+  "source_candles": "/tmp/ict-regime-chain-20260509T231052/input/nq_auto_quant_15m_candles_20k.json",
+  "out_dir": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-windows-512",
+  "selected_trades_csv": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-windows-512-selected-trades.csv",
+  "lookback": 120,
+  "candidate_trade_rows_in_candle_range": 3257,
+  "unique_open_timestamps_in_range": 1991,
+  "windows_written": 512,
+  "missing": 0,
+  "first_open_timestamp": "1740645000000",
+  "last_open_timestamp": "1767121200000",
+  "safe_clusters": 331,
+  "bad_clusters": 181
+}

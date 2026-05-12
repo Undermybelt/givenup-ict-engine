@@ -1,0 +1,211 @@
+{
+  "schema_version": "board-a-strict-market-timeframe-audit/v1",
+  "loop_id": "20260510T224034+0800-codex-strict-market-timeframe-audit",
+  "objective": "Audit whether every required Board A regime is accepted above 95% and also validated across different markets plus different trading timeframes/cycles.",
+  "source_board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "source_handoff_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T221035-codex-board-a-6of6-board-b-handoff/board_a_6of6_regime_context_handoff_to_board_b.json",
+  "source_full_chain_audit": "docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain/completion-audit/field_complete_full_chain_completion_audit.json",
+  "strict_gate": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "chronological_periods_required": [
+      "train",
+      "calibration",
+      "test"
+    ],
+    "distinct_trading_timeframes_min": 2,
+    "note": "This stricter audit treats the user's 'bie de zhouqi' as trading timeframe/cycle, not merely chronological train/calibration/test periods."
+  },
+  "per_regime": [
+    {
+      "regime": "SessionLiquidityCoreViable",
+      "status": "strict_market_timeframe_pass",
+      "precision_wilson_lcb_95": 0.9631734677247024,
+      "calibration_support": 792,
+      "test_support": 733,
+      "ece": 0.010898548927198326,
+      "validation_instruments": [
+        "NQ",
+        "PF_XBTUSD",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "IBKR_US_ETF",
+        "Kraken_crypto",
+        "yfinance_US_ETF"
+      ],
+      "distinct_trading_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "validation_contexts": [
+        "NQ:CME_futures_local:15m",
+        "PF_XBTUSD:Kraken_crypto:1h",
+        "QQQ:IBKR_US_ETF:1h",
+        "QQQ:yfinance_US_ETF:1h"
+      ]
+    },
+    {
+      "regime": "TrendExpansion",
+      "status": "strict_timeframe_gap",
+      "precision_wilson_lcb_95": 0.9536435698638122,
+      "calibration_support": 273,
+      "test_support": 581,
+      "ece": 0.036674169204289675,
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "distinct_trading_timeframes": [
+        "1d"
+      ],
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1d",
+        "NQ:CME_futures_local:1d",
+        "QQQ:yfinance_ETF:1d",
+        "SPY:yfinance_ETF:1d"
+      ],
+      "missing": "Needs at least one additional non-1d timeframe/cycle with 95% accepted evidence."
+    },
+    {
+      "regime": "RangeConsolidation",
+      "status": "strict_market_timeframe_pass",
+      "precision_wilson_lcb_95": 0.9676071866741978,
+      "calibration_support": 467,
+      "test_support": 313,
+      "ece": 0.004488121867580741,
+      "validation_instruments": [
+        "NQ",
+        "QQQ"
+      ],
+      "validation_market_contexts": [
+        "AutoQuant_NQ_15m_cache",
+        "IBKR_QQQ_1h",
+        "yfinance_QQQ_1h"
+      ],
+      "distinct_trading_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "validation_contexts": [
+        "NQ:AutoQuant_NQ_15m_cache:15m",
+        "QQQ:IBKR_QQQ_1h:1h",
+        "QQQ:yfinance_QQQ_1h:1h"
+      ]
+    },
+    {
+      "regime": "ExtremeStress",
+      "status": "strict_timeframe_gap",
+      "precision_wilson_lcb_95": 0.9741288651988539,
+      "calibration_support": 445,
+      "test_support": 215,
+      "ece": 0.015573556310425896,
+      "validation_instruments": [
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF"
+      ],
+      "distinct_trading_timeframes": [
+        "1d"
+      ],
+      "validation_contexts": [
+        "NQ:CME_futures_local:1d",
+        "QQQ:yfinance_ETF:1d",
+        "SPY:yfinance_ETF:1d"
+      ],
+      "missing": "Needs at least one additional non-1d timeframe/cycle with 95% accepted evidence."
+    },
+    {
+      "regime": "ReversalBrewing",
+      "status": "strict_timeframe_gap",
+      "precision_wilson_lcb_95": 0.9919428347812438,
+      "calibration_support": 843,
+      "test_support": 901,
+      "ece": 0.0013389630343508818,
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "distinct_trading_timeframes": [
+        "1d"
+      ],
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1d",
+        "NQ:CME_futures_local:1d",
+        "QQQ:yfinance_ETF:1d",
+        "SPY:yfinance_ETF:1d"
+      ],
+      "missing": "Needs at least one additional non-1d timeframe/cycle with 95% accepted evidence."
+    },
+    {
+      "regime": "ThinLiquidity",
+      "status": "strict_timeframe_gap",
+      "precision_wilson_lcb_95": 0.9923604970248407,
+      "calibration_support": 1066,
+      "test_support": 499,
+      "ece": 0.0,
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "distinct_trading_timeframes": [
+        "1d"
+      ],
+      "validation_contexts": [
+        "BTC-USD:yfinance_crypto:1d",
+        "NQ:CME_futures_local:1d",
+        "QQQ:yfinance_ETF:1d",
+        "SPY:yfinance_ETF:1d"
+      ],
+      "missing": "Needs at least one additional non-1d timeframe/cycle with 95% accepted evidence. Existing intraday thin-liquidity candidate search failed Wilson95 under the unchanged gate."
+    }
+  ],
+  "summary": {
+    "all_required_regimes_above_95": true,
+    "all_required_regimes_cross_market": true,
+    "all_required_regimes_chronological_train_calibration_test": true,
+    "all_required_regimes_cross_trading_timeframe": false,
+    "strict_timeframe_pass_count": 2,
+    "strict_timeframe_required_count": 6,
+    "strict_timeframe_missing_regimes": [
+      "TrendExpansion",
+      "ExtremeStress",
+      "ReversalBrewing",
+      "ThinLiquidity"
+    ],
+    "trade_usable": false,
+    "decision": "not_complete_under_strict_per_regime_cross_timeframe_requirement"
+  },
+  "notes": [
+    "The 20260510T221112 full-chain readback proves the 6/6 accepted bundle was consumed through NQ 15m/1h/1d downstream machinery, but it is not per-regime cross-timeframe 95% confidence evidence.",
+    "Do not lower thresholds or promote execution from this audit.",
+    "Next work should search non-1d accepted packets for TrendExpansion, ExtremeStress, ReversalBrewing, and ThinLiquidity using existing intraday provider/cache data first."
+  ]
+}

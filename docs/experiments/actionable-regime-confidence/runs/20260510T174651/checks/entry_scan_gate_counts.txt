@@ -1,0 +1,7 @@
+rows 512
+gate observe 407
+gate blocked 105
+branch block_crowded 105
+branch wait_for_reversion 9
+branch transition_guardrail 398
+pass_actionable_like 0

@@ -1,0 +1,80 @@
+{
+  "branch_complete_rows": 211,
+  "chain_contract_negative_samples": 211,
+  "decision": "fail_closed_layered_validator_rejected_market_factor_training_use",
+  "market_factor_rows_accepted": 0,
+  "missing_field_counts": {
+    "bbn_posterior": 211,
+    "catboost_path_ranker_label": 211,
+    "execution_tree_decision": 211,
+    "failure_reason": 211,
+    "pre_bayes_filter_state": 211,
+    "provider_provenance": 211,
+    "quality_weight": 211
+  },
+  "outcome_rows": 211,
+  "promotion_allowed": false,
+  "provider_summary": {
+    "binance_public": {
+      "chain_contract_negative_sample": 52,
+      "rows": 52
+    },
+    "bybit_public": {
+      "chain_contract_negative_sample": 51,
+      "rows": 51
+    },
+    "ibkr_midpoint_14d": {
+      "chain_contract_negative_sample": 17,
+      "rows": 17
+    },
+    "kraken_public": {
+      "chain_contract_negative_sample": 32,
+      "rows": 32
+    },
+    "tvr_binance": {
+      "chain_contract_negative_sample": 37,
+      "rows": 37
+    },
+    "yfinance": {
+      "chain_contract_negative_sample": 22,
+      "rows": 22
+    }
+  },
+  "real_trade_files": 12,
+  "row_symbol_by_provider": {
+    "binance_public": {
+      "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902": 52
+    },
+    "bybit_public": {
+      "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902": 51
+    },
+    "ibkr_midpoint_14d": {
+      "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902": 17
+    },
+    "kraken_public": {
+      "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902": 32
+    },
+    "tvr_binance": {
+      "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902": 37
+    },
+    "yfinance": {
+      "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902": 22
+    }
+  },
+  "rows_total": 211,
+  "run_id": "20260512T120432+0800-codex-115130-downstream-layered-validator-v1",
+  "source_gate_result": "ibkr_longer_duration_six_provider_aq_v1=six_provider_aq_ran_no_downstream_promotion",
+  "source_metric_totals": {
+    "compile_success": 6,
+    "positive_profit_metric_count": 4,
+    "provider_runs": 6,
+    "run_success": 6,
+    "strategies_with_metrics": 12,
+    "total_trades": 211
+  },
+  "source_report": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/ibkr-longer-duration-six-provider-aq-v1/ibkr_longer_duration_six_provider_aq_v1.json",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1",
+  "source_run_id": "20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1",
+  "trade_usable": false,
+  "update_goal": false
+}

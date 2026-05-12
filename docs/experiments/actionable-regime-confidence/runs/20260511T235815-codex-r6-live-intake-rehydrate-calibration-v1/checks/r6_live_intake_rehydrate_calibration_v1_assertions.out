@@ -1,0 +1,17 @@
+run_id=20260511T235815-codex-r6-live-intake-rehydrate-calibration-v1
+board_sha256_at_start=4aa8122e88a5f6b53ddc8c2bc9fd77849542d245d7f384e580fa11d801559cba
+live_status=existing_live_root_not_overwritten
+verifier_status=schema_ready_unscored
+positive_rows=73
+matched_negative_rows=73
+sidecar_broad_normal_control_rows=80
+direct_pooled_wilson95_lcb=0.950006246616
+direct_pooled_gate=true
+sidecar_axis_gate=true
+chronological_split_gate=false
+heldout_symbol_gate=false
+heldout_venue_gate=false
+new_confidence_gate=false
+strict_full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

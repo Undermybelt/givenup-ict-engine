@@ -1,0 +1,15 @@
+local_databento_gc_ohlcv_applicability_v1 assertions
+
+PASS local root inspected read-only
+PASS databento.rar SHA-256 recorded
+PASS manifest/metadata identify Databento GLBX.MDP3 ohlcv-1m GC.FUT batch
+PASS visible CSV headers are OHLCV-only: ts_event,rtype,publisher_id,instrument_id,open,high,low,close,volume,symbol
+PASS no visible manipulation label, normal-control label, MBO/depth/order-lifecycle, or MainRegimeV2 label fields accepted
+PASS R6 owner/export unlock false
+PASS R5 recency unlock false
+PASS R3 native-subhour unlock false
+PASS accepted rows added 0
+PASS canonical merge false
+PASS downstream promotion rerun false
+PASS trade usable false
+PASS update_goal false

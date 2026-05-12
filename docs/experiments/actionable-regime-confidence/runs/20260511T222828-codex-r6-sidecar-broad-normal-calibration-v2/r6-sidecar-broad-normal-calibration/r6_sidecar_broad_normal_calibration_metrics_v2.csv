@@ -1,0 +1,4 @@
+axis,successes,total,wilson95_lcb,support_ok,wilson_ok,pass
+direct_positive_all_correct,57,57,0.936861165147,True,False,False
+same_event_control_schema_seed_all_correct,57,57,0.936861165147,True,False,False
+independent_broad_normal_sidecar_all_correct,80,80,0.954181870464,True,True,True

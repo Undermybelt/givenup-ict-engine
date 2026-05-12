@@ -1,0 +1,46 @@
+{
+  "decision_hint_raw": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.562|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7702 mtf_entry_alignment=0.8625",
+  "decision_summary": "Observe only",
+  "direction": "Bull",
+  "entry_state": "medium",
+  "evidence": [
+    "multi_timeframe_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d",
+    "1m:6838 bars source=live",
+    "5m:4045 bars source=live"
+  ],
+  "execution_triage": {
+    "branch": "fill_viable",
+    "branch_probability": 0.0,
+    "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=observe/fill_viable/passive | ranker=history_path/unknown/ready",
+    "decision_hint": "execution_observe_with_medium_prediction",
+    "execution_bias": "passive",
+    "execution_score": 0.5637168720248323,
+    "gate_status": "observe",
+    "one_line": "execution observe | branch=fill_viable | bias=passive | score=0.564 | confidence=0.000 | hint=execution_observe_with_medium_prediction",
+    "posterior_uncertainty": 1.0,
+    "reason_summary": [
+      "branch=fill_viable (gate_status=observe, ising_risk=0.2557<0.70, overstretch=0.6814<0.70)",
+      "market_state=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.435",
+      "market_state=volatility=ElevatedVol:0.811 liquidity=NormalLiquidity:0.433 structure=Unknown:0.300 behavior=Neutral:0.450",
+      "market_state=rationale=volatility=ElevatedVol conf=0.81",
+      "market_state=rationale=primary=RangeConsolidation secondary=WideRange overall=0.44"
+    ]
+  },
+  "next_command": "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_htf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1",
+  "next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1",
+    "prompt": "Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_htf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json",
+    "user_input_required": true
+  },
+  "pre_bayes_gate": "pass_neutralized",
+  "recommended_next_actions": [
+    "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_htf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1"
+  ],
+  "risks": [
+    "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+  ]
+}

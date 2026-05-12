@@ -1,0 +1,7 @@
+requirement,artifact,status,note
+copy source state before mutation,source_run_root.txt and state_provider_momentum_fallback_v1,covered,child state copied from 130000 source state
+carry provider-momentum target through path-ranker fallback,path-ranker/fallback_path_scores.csv,covered_fail_closed,weighted_feature_sum_v1 direct fallback generated score rows
+apply scores into ict-engine copied state,command-output/02_apply_scores_to_ict.out,covered,command exited 0
+register and enable runtime,command-output/03_register_fallback_artifact.out and command-output/04_enable_runtime.out,covered_fail_closed,runtime enabled but invalid for direct fallback model
+run Pre-Bayes and workflow execution readback,command-output/06_pre_bayes_refresh.out and command-output/07_workflow_execution_candidate.out,covered_fail_closed,Pre-Bayes pass_neutralized and execution stayed blocked
+do not promote or call update_goal,130000_provider_momentum_fallback_runtime_v1.md,covered,promotion_allowed false and update_goal false

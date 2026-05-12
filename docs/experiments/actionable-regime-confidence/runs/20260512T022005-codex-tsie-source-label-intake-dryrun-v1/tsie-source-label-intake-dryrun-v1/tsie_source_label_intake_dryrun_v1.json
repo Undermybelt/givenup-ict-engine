@@ -1,0 +1,103 @@
+{
+  "abstain_trap_rows": 2161093,
+  "acceptance_blockers": [
+    "R6 owner-export/control gate remains current board blocker",
+    "IDX dataset is rule-based public labels, not source-owned MainRegimeV2 acceptance labels",
+    "Trap labels 2 and 4 are abstain-only and cannot be forced into Bear/Bull",
+    "No direct source-label canonical intake mutation or downstream promotion rerun was performed",
+    "Needs chronological split calibration, cross-market transfer, and board approval before acceptance"
+  ],
+  "accepted_rows_added": 0,
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "canonical_merge_allowed": false,
+  "dataset": "sujinwo/tsie-market-regime-dataset",
+  "dataset_sha": "75e7e2f86c37f8f28204651dcccf8338ca50aa6b",
+  "dataset_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+  "downstream_chain_rerun_allowed": false,
+  "dry_run_decision": "candidate_has_large_support_but_not_accepted",
+  "external_requests_sent": false,
+  "feature_count_api": 32,
+  "gate_result": "tsie_source_label_intake_dryrun_v1=full_parquet_support_screen_passed_acceptance_blocked_no_intake_mutation",
+  "group_ids_total": 1150,
+  "group_ids_with_bear_bull_sideways": 1150,
+  "label_counts": {
+    "0": 356398,
+    "1": 1079366,
+    "2": 1080804,
+    "3": 2162084,
+    "4": 1080289,
+    "5": 1078955,
+    "6": 356100
+  },
+  "label_mapping": {
+    "0": {
+      "mapped_regime": "Bear",
+      "source_label": "STRONG_SELL"
+    },
+    "1": {
+      "mapped_regime": "Bear",
+      "source_label": "WEAK_SELL"
+    },
+    "2": {
+      "mapped_regime": "ABSTAIN_TRAP",
+      "source_label": "BEAR_TRAP_ABSTAIN"
+    },
+    "3": {
+      "mapped_regime": "Sideways",
+      "source_label": "FLAT_NOISE"
+    },
+    "4": {
+      "mapped_regime": "ABSTAIN_TRAP",
+      "source_label": "BULL_TRAP_ABSTAIN"
+    },
+    "5": {
+      "mapped_regime": "Bull",
+      "source_label": "WEAK_BUY"
+    },
+    "6": {
+      "mapped_regime": "Bull",
+      "source_label": "STRONG_BUY"
+    }
+  },
+  "last_modified": "2026-04-13T13:27:46.000Z",
+  "license": "mit",
+  "mapped_counts": {
+    "ABSTAIN_TRAP": 2161093,
+    "Bear": 1435764,
+    "Bull": 1435055,
+    "Sideways": 2162084
+  },
+  "new_confidence_gate": false,
+  "non_abstain_rows": 5032903,
+  "num_rows_api": 7193996,
+  "num_rows_read": 7193996,
+  "parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+  "parquet_size_api": 591890794,
+  "parquet_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet",
+  "raw_data_committed": false,
+  "raw_dataset_location": "/tmp/ict-engine-board-a-tsie-market-regime-dryrun-20260512T0200/0000.parquet",
+  "repo_raw_dataset_committed": false,
+  "repo_runtime_code_changed": false,
+  "run_id": "20260512T022005-codex-tsie-source-label-intake-dryrun-v1",
+  "run_tmp": "/tmp/ict-engine-board-a-tsie-market-regime-dryrun-20260512T0200",
+  "shared_intake_mutated": false,
+  "source_candidate_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T015639-codex-public-source-candidate-readback-v1",
+  "strict_full_objective_achieved": false,
+  "time_max": "2026-04-07T02:00:00",
+  "time_min": "1990-06-07T02:00:00",
+  "trade_usable": false,
+  "unique_group_id": 1150,
+  "unique_hours": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "update_goal": false,
+  "year_max": 2026,
+  "year_min": 1990
+}

@@ -1,0 +1,7 @@
+provider,aq_provider_invoked,provider_requested,provider_unreachable,provider_data_acquired,local_cache_replay,authority_status,evidence
+IBKR,false,false,false,false,true,fail_closed_aq_provider_authority_missing,"No AQ-owned provider request in this root; chain consumed local TOMAC-derived replay from 135318."
+TradingViewRemix/TVR,false,false,false,false,true,fail_closed_aq_provider_authority_missing,"No AQ-owned provider request in this root; chain consumed local TOMAC-derived replay from 135318."
+yfinance/YF,false,false,false,false,true,fail_closed_aq_provider_authority_missing,"No AQ-owned provider request in this root; chain consumed local TOMAC-derived replay from 135318."
+Kraken,false,false,false,false,true,fail_closed_aq_provider_authority_missing,"No AQ-owned provider request in this root; chain consumed local TOMAC-derived replay from 135318."
+Binance,false,false,false,false,true,fail_closed_aq_provider_authority_missing,"No AQ-owned provider request in this root; chain consumed local TOMAC-derived replay from 135318."
+Bybit,false,false,false,false,true,fail_closed_aq_provider_authority_missing,"No AQ-owned provider request in this root; chain consumed local TOMAC-derived replay from 135318."

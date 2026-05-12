@@ -1,0 +1,27 @@
+{
+  "consumer_evidence_profile": {
+    "board": "A",
+    "promotion_allowed": false,
+    "root": "MainRegimeV2"
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "provider_route_validity",
+    "trade_density_for_downstream_rows",
+    "regime_conditioned_outcome_rows",
+    "fail_closed_downstream_readback"
+  ],
+  "notes": [
+    "Board A confidence packet: provider/AQ routing evidence only until downstream calibrated posterior/lower-bound evidence exists",
+    "source_provider=IBKR gateway SPY 1h 90D current fetch",
+    "promotion_allowed=false"
+  ],
+  "package_id": "board-a-162255-ibkr-spy-1h-v1",
+  "strategy_brief": "Board A provider-backed regime-probe material for validating provider routing before BBN/CatBoost/execution-tree admission.",
+  "strategy_class_name": "ProviderRegimeProbeV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162255+0800-codex-board-a-six-provider-current-aq-packet-v1/agent-material/ProviderRegimeProbeV1.py",
+  "symbol": "SPY",
+  "timeframe": "1h",
+  "title": "Board A provider regime probe - IBKR SPY 1h"
+}

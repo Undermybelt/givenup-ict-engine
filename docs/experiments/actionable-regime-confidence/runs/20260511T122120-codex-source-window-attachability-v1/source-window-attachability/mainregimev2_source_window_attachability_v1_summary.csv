@@ -1,0 +1,9 @@
+root,rule_name,scope,calibration_lcb,test_lcb,calibration_support,test_support,accepted_95_source_window_gate
+Bull,existing_scoped_bull_factor_rule,native_gspc_1d,0.989265,0.940972,354,92,False
+Bull,train_atom_vol20_<=_0.10967017,native_gspc_1d,0.994911,0.962280,751,98,True
+Bear,existing_scoped_bear_factor_rule,native_gspc_1d,0.203052,0.675592,18,8,False
+Bear,train_pair_ma_gap20_<=_-0.066403764_AND_ret40_<=_-0.10179836,native_gspc_1d,0.524108,0.565518,14,5,False
+Bull,existing_scoped_bull_factor_rule,nonaccepted_1d_crosswalk_stress,0.997381,0.972116,1463,312,True
+Bull,train_atom_vol20_<=_0.10967017,nonaccepted_1d_crosswalk_stress,0.998664,0.989500,2872,362,True
+Bear,existing_scoped_bear_factor_rule,nonaccepted_1d_crosswalk_stress,0.225491,0.970414,139,126,False
+Bear,train_pair_ma_gap20_<=_-0.066403764_AND_ret40_<=_-0.10179836,nonaccepted_1d_crosswalk_stress,0.534883,0.908190,91,38,False

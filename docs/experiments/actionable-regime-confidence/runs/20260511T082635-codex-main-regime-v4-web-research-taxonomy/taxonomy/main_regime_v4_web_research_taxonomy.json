@@ -1,0 +1,99 @@
+{
+  "run_id": "20260511T082635+0800-codex-main-regime-v4-web-research-taxonomy",
+  "trigger": "user_reopened_taxonomy_and_requested_paper_github_web_scan",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "accepted_gate": "none_for_MainRegimeV4",
+  "active_taxonomy": "MainRegimeV4",
+  "active_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "CrisisStress",
+    "Manipulation",
+    "UnknownOrMixed"
+  ],
+  "completion_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "CrisisStress",
+    "Manipulation"
+  ],
+  "residual_only": [
+    "UnknownOrMixed"
+  ],
+  "preflight_future_roots_or_overlays": [
+    "TransitionRecovery",
+    "AccumulationDistribution",
+    "BubbleEuphoria",
+    "LiquidityDrought",
+    "CrossAssetRotationRiskOnRiskOff",
+    "MacroPolicyRegime",
+    "LowUncertainty",
+    "HighUncertainty"
+  ],
+  "crosswalk": {
+    "Bull": "BullExpansion_reaudit_required",
+    "Bear": "BearExpansion_reaudit_required",
+    "Sideways": "Consolidation_reaudit_required",
+    "Crisis": "CrisisStress_preserved_reaudit_required",
+    "Manipulation_overlay": "Manipulation_active_root_output_direct_input_gate"
+  },
+  "source_scan": [
+    {
+      "name": "Pagan_Sossounov_2003_bull_bear_markets",
+      "url": "https://www.econbiz.de/10001738239",
+      "secondary_url": "https://www.researchgate.net/publication/5139690_A_Simple_Framework_for_Analyzing_Bull_and_Bear_Markets",
+      "implication": "bull_bear_parent_directional_cycles"
+    },
+    {
+      "name": "Maheu_McCurdy_Song_2012_components_of_bull_bear",
+      "url": "https://ideas.repec.org/a/taf/jnlbes/v30y2012i3p391-403.html",
+      "implication": "corrections_and_rallies_are_child_or_transition_states"
+    },
+    {
+      "name": "hidden_regime_github",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "implication": "bull_bear_sideways_crisis_core_concepts"
+    },
+    {
+      "name": "Sakeeb91_market_regime_detection_github",
+      "url": "https://github.com/Sakeeb91/market-regime-detection",
+      "implication": "bull_calm_bear_crisis_transition_open_source_pattern"
+    },
+    {
+      "name": "Adaptive_Hierarchical_HMM_2026",
+      "url": "https://www.mdpi.com/1911-8074/19/1/15",
+      "implication": "bull_bear_turbulent_fast_states_with_uncertainty_meta_regime"
+    },
+    {
+      "name": "Market_manipulation_detection_systematic_review_2022",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0957417422014555",
+      "implication": "manipulation_is_independent_trade_based_taxonomy"
+    },
+    {
+      "name": "Siering_Clapham_Engel_Gomber_2017_manipulation_taxonomy",
+      "url": "https://journals.sagepub.com/doi/10.1057/s41265-016-0029-z",
+      "implication": "automated_fraud_detection_taxonomy_for_market_manipulation"
+    },
+    {
+      "name": "Doge_of_Wall_Street_pump_dump",
+      "url": "https://arxiv.org/abs/2105.00733",
+      "implication": "pump_dump_is_direct_manipulation_event_family"
+    },
+    {
+      "name": "Pump_and_Dumps_in_the_Bitcoin_Era",
+      "url": "https://arxiv.org/abs/2005.06610",
+      "implication": "real_time_crypto_pump_dump_manipulation_detection"
+    },
+    {
+      "name": "Crypto_pump_dump_detection_survey",
+      "url": "https://www.mdpi.com/1999-5903/15/8/267",
+      "implication": "crypto_manipulation_includes_pump_dump_wash_trading_front_running_order_book"
+    }
+  ],
+  "next_action": "materialize_v4_target_schema_crosswalk_and_rerun_source_label_attachability_completion_accounting"
+}

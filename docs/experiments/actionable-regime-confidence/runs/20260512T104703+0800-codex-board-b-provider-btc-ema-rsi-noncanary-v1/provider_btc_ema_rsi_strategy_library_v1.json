@@ -1,0 +1,65 @@
+{
+  "auto_quant_pinned_ref": "local-provider-btc-ema-rsi-noncanary-run",
+  "auto_quant_repo_url": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary",
+  "config_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary/config.tomac.json",
+  "exported_at": "2026-05-12T02:51:43.443566+00:00",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/command-output/00_run_provider_btc_ema_rsi_noncanary.out",
+  "manifest_version": "1.0",
+  "strategies": [
+    {
+      "commit": "local-provider-btc-ema-rsi-noncanary-run",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary/user_data/strategies_external/ProviderBtcEmaRsiHold12.py",
+      "metadata": {
+        "asset_class": "crypto_provider_ohlcv",
+        "base_factor": "provider_owned_btc_ema_rsi_continuation",
+        "created": "2026-05-12",
+        "expected_regime": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "factors_used": [
+          "provider_binance_btc_ohlcv",
+          "ema8",
+          "ema24",
+          "rsi14_midband",
+          "fixed_12h_risk_horizon",
+          "regime_profit_branch_path"
+        ],
+        "hypothesis": "Provider-owned Binance BTCUSDT 1h bars can produce a non-canary EMA/RSI continuation branch after precision and price-side repairs.",
+        "mutation_id": "provider-owned-btc-ema-rsi-hold12-v1",
+        "paradigm": "ema_rsi_continuation",
+        "parent": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "status": "incubation_only_provider_owned_noncanary",
+        "strategy": "ProviderBtcEmaRsiHold12"
+      },
+      "name": "ProviderBtcEmaRsiHold12",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": 398.61127074495835,
+          "max_drawdown_pct": -2.927395513956268,
+          "profit_factor": 2.930855342178945,
+          "sharpe": 9.297840154632286,
+          "sortino": 15.570866878678723,
+          "total_profit_pct": 22.6,
+          "trade_count": 42,
+          "win_rate_pct": 69.04761904761905
+        }
+      },
+      "status": "ok",
+      "timerange": "20260401-20260512",
+      "validation_metrics": {
+        "calmar": 398.61127074495835,
+        "max_drawdown_pct": -2.927395513956268,
+        "profit_factor": 2.930855342178945,
+        "sharpe": 9.297840154632286,
+        "sortino": 15.570866878678723,
+        "total_profit_pct": 22.6,
+        "trade_count": 42,
+        "win_rate_pct": 69.04761904761905
+      }
+    }
+  ],
+  "timeframe": "1h",
+  "validation_errors": []
+}

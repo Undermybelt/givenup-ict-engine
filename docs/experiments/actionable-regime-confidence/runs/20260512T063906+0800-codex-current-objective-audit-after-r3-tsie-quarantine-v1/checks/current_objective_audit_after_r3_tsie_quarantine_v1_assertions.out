@@ -1,0 +1,9 @@
+gate_result=current_objective_audit_after_r3_tsie_quarantine_v1=not_complete_tsie_root_present_policy_quarantined_no_unlock
+r3_root_present=true
+r3_counts_as_unlock=false
+accepted_rows_added_for_board_a=0
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

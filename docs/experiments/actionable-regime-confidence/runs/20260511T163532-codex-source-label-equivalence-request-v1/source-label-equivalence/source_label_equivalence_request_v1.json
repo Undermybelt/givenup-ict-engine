@@ -1,0 +1,75 @@
+{
+  "schema_version": "source-label-equivalence-request/v1",
+  "run_id": "20260511T163532+0800-codex-source-label-equivalence-request-v1",
+  "purpose": "Turn the full-objective other-market/full-species source-label gap into a concrete source-owned acquisition request without using proxy labels or downloading raw data.",
+  "current_cursor_observed": "20260511T162942+0800-codex-daily-main-root-source-inventory-v1",
+  "source_of_gap": "docs/experiments/actionable-regime-confidence/runs/20260511T162537-current-goal-full-objective-coverage-audit-v15/completion-audit/current_goal_full_objective_coverage_audit_v15.md",
+  "request_state": "ready_to_send_or_fulfill",
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "non_proxy_policy": {
+    "reject_ohlcv_only_labels": true,
+    "reject_hmm_generated_future_return_labels": true,
+    "reject_ixic_to_ndx_promotion_without_owner_policy": true,
+    "require_source_owned_or_owner_approved_equivalence": true
+  },
+  "target_packages": [
+    {
+      "package_id": "price_root_equivalence_us_index_futures",
+      "market_family": "US equity index ETF/futures/index",
+      "required_symbols": ["SPY", "QQQ", "ES=F", "NQ=F", "MNQ=F", "^GSPC", "^NDX"],
+      "label_scope": "MainRegimeV2 price roots: Bull, Bear, Sideways, Crisis",
+      "needed_timeframes": ["1d", "1w", "1mo", "1h exact source-date", "15m/5m only after source-date overlap is proven"],
+      "needed_period": "2000-01-03 through latest available 2026+ extension",
+      "acceptance_gate": "chronological calibration/heldout-time/heldout-market splits with Wilson95 LCB >= 0.95 per root; no pooled context promoted as ticker-specific support",
+      "why_needed": "Current daily stock denominator is strong, but NQ/QQQ/futures/source-label equivalence and native sub-hour coverage are not closed."
+    },
+    {
+      "package_id": "price_root_equivalence_crypto",
+      "market_family": "crypto spot/perpetual",
+      "required_symbols": ["BTC-USD", "ETH-USD", "PF_XBTUSD", "BTC perpetual or spot venue-native equivalent"],
+      "label_scope": "MainRegimeV2 price roots: Bull, Bear, Sideways, Crisis",
+      "needed_timeframes": ["1d", "1w", "1mo", "1h exact source-date", "native sub-hour only after overlap proof"],
+      "needed_period": "2000-01-03 through latest available 2026+ extension where source-owned labels exist",
+      "acceptance_gate": "same source-owned label policy and chronological/market/timeframe splits as price roots",
+      "why_needed": "Full-market/full-species objective still needs cross-market equivalence beyond the stock source panel."
+    },
+    {
+      "package_id": "price_root_equivalence_fx_rates_commodities",
+      "market_family": "FX/rates/commodities",
+      "required_symbols": ["EURUSD", "GBPUSD", "USDJPY", "GC=F", "CL=F", "ZN=F or owner-approved equivalents"],
+      "label_scope": "MainRegimeV2 price roots: Bull, Bear, Sideways, Crisis",
+      "needed_timeframes": ["1d", "1w", "1mo", "1h if source-date overlap exists"],
+      "needed_period": "2000-01-03 through latest available 2026+ extension",
+      "acceptance_gate": "source-owned regime labels or owner-approved equivalence manifest; no OHLCV-derived backfill",
+      "why_needed": "The objective asks other markets/full species, and current accepted root denominator is concentrated in stock-market-regimes source labels."
+    },
+    {
+      "package_id": "native_subhour_overlap_after_recency",
+      "market_family": "source-panel native sub-hour extension",
+      "required_symbols": ["source-owned symbols with post-2026-01-30 labels and native provider overlap"],
+      "label_scope": "Exact source-date labels for 1m/5m/15m/30m/90m only when overlap exists",
+      "needed_timeframes": ["1m", "5m", "15m", "30m", "90m"],
+      "needed_period": "post-2026-01-30 source-owned extension first; sub-hour overlap second",
+      "acceptance_gate": "source-date overlap exists before calibration; no broad sub-hour sweep without labels",
+      "why_needed": "Native sub-hour source overlap remains blocked until recency labels exist."
+    },
+    {
+      "package_id": "direct_manipulation_species_exports",
+      "market_family": "direct Manipulation overlay",
+      "required_symbols": ["spoofing/layering", "quote stuffing", "pinging", "bear raid or painting tape", "social/text pump-dump variants"],
+      "label_scope": "Direct timestamped event/order-flow/order-lifecycle/social rows with matched normal controls",
+      "needed_timeframes": ["event time", "order lifecycle time", "session/date grouping"],
+      "needed_period": "source-owned periods sufficient for chronological calibration and heldout validation",
+      "acceptance_gate": "positive rows plus matched negative controls and provenance manifest; missing varieties remain abstain",
+      "why_needed": "Scoped direct Manipulation factor exists, but full species coverage is incomplete."
+    }
+  ],
+  "next_action": "Use the required schema and target package CSV to request or import source-owned labels; after data arrives, run exact same gates without threshold relaxation."
+}

@@ -1,0 +1,61 @@
+{
+  "run_id": "20260512T101833+0800-codex-board-b-provider-yahoo-nq-long-aq-preseed-v1",
+  "gate": "provider_yahoo_nq_long_aq_preseed_v1",
+  "gate_result": "prepared_and_backtested_zero_trades_no_promotion",
+  "scope": "provider_owned_auto_quant_nursery_feedback",
+  "source_provider_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/yahoo_nq_f_1h_20240601_20260512.csv",
+  "pair": "NQ/USD",
+  "timerange": "20240601-20260512",
+  "strategy": "TomacNQ_KillzoneBreakout",
+  "command_exits": {
+    "prepare_provider_csv_long": 0,
+    "run_tomac_provider_yahoo_nq_long": 0
+  },
+  "prepared_data": {
+    "raw_rows": 11086,
+    "range_start_utc": "2024-06-02T22:00:00Z",
+    "range_end_utc": "2026-05-11T23:00:00Z",
+    "cleaning": "skipped_no_clean",
+    "gap_audit": {
+      "median_gap_seconds": 3600,
+      "max_gap_minutes": 4800.0,
+      "big_gaps_gt_60x_median": 3,
+      "note": "typical for futures session breaks/weekends"
+    },
+    "feather_bars": {
+      "1h": 11086,
+      "4h": 3006,
+      "1d": 596
+    }
+  },
+  "backtest": {
+    "start": "2024-06-13 08:00:00",
+    "end": "2026-05-11 23:00:00",
+    "succeeded_strategies": 1,
+    "failed_strategies": 0,
+    "trades": 0,
+    "sharpe": 0.0,
+    "sortino": 0.0,
+    "calmar": 0.0,
+    "total_profit_pct": 0.0,
+    "max_drawdown_pct": 0.0,
+    "win_rate_pct": 0.0,
+    "profit_factor": 0.0
+  },
+  "acceptance": {
+    "accepted_regime_packets_added": 0,
+    "mature_rooted_branch_observations_added": 0,
+    "every_regime_95_99_objective": false,
+    "cross_context_full_validation": false,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal_allowed": false
+  },
+  "do_not_repeat": "same_yahoo_nq_long_window_tomac_preseed"
+}

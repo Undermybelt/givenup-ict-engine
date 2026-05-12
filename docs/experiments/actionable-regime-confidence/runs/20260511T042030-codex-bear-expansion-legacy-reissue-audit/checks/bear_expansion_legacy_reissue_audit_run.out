@@ -1,0 +1,19 @@
+{
+  "accepted_new_roots_95": [],
+  "accepted_root_classes_95_effective": [
+    "BullExpansion",
+    "SidewaysConsolidation",
+    "CrisisCrash"
+  ],
+  "fresh_calibration_rerun": false,
+  "gate_result": "blocked_bear_expansion_legacy_reissue_missing_directional_bear_semantics",
+  "missing_root_classes_95_effective": [
+    "BearExpansion",
+    "Manipulation"
+  ],
+  "next_action": "Acquire or build directional BearExpansion evidence with explicit down-expansion target labels; keep Manipulation direct-input gated.",
+  "raw_committed_to_repo": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

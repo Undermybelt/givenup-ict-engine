@@ -1,0 +1,7 @@
+selection_readiness_inventory_v1=pass_non_selecting_inventory
+candidate_options_present=HTF_1d,MTF_4h,LTF_1h
+explicit_user_selection_present=false
+selected_data_auto_quant_started=false
+nonzero_mature_rooted_observations=false
+promotion_allowed=false
+update_goal=false

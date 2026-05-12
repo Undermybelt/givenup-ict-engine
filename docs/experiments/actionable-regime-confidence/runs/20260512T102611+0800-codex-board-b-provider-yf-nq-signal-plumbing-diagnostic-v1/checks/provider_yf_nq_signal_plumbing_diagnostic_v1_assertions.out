@@ -1,0 +1,16 @@
+PASS count_once=102611_provider_yf_nq_signal_plumbing_diagnostic
+PASS v1_probe_exit=0
+PASS v1_method_entry_labels=223
+PASS v1_method_exit_labels=230
+PASS v1_entry_exit_overlap=0
+PASS market_order_entry_price_side_guard_observed=true
+PASS market_order_exit_price_side_guard_observed=true
+PASS v2_probe_exit=0
+PASS v2_method_entry_labels=222
+PASS v2_method_exit_labels=222
+PASS v2_entry_exit_overlap=0
+PASS v2_provider_present_rows=10691
+PASS v2_tomac_exit=0
+PASS v2_tomac_trade_count=0
+PASS promotion_allowed=false
+PASS update_goal=false

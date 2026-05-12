@@ -1,0 +1,4 @@
+QQQ | structural-path | range_mean_reversion | posterior=0.787 | selected_prob=1.000
+Trigger: regime_posterior=range:1.000
+Stop: Use execution candidate 'execution-candidate:QQQ:analyze:v37' once actionable; current candidate_status=no_trade.
+Next: ict-engine update --symbol QQQ --outcome win --state-dir /tmp/ict-regime-branch-iteration-20260510-1/structural-replay-qqq-36/state

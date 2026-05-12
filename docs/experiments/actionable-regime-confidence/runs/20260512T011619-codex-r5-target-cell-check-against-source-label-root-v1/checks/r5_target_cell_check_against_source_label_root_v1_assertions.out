@@ -1,0 +1,10 @@
+run_id=20260512T011619-codex-r5-target-cell-check-against-source-label-root-v1
+source_label_rows_present=true
+all_r5_targets_satisfied=false
+r5_root_file_count=0
+accepted_rows_added=0
+new_confidence_gate=false
+canonical_merge_allowed=false
+downstream_chain_rerun_allowed=false
+strict_full_objective_achieved=false
+update_goal=false

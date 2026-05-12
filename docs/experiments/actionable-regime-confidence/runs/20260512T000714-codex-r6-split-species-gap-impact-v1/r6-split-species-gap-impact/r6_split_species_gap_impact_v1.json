@@ -1,0 +1,166 @@
+{
+  "accepted_rows_added": 0,
+  "all_sidecar_what_if_deficits_with_missing_controls": {
+    "chronological_group_split": {
+      "failing_rows": 3,
+      "max_negative_support": 47,
+      "max_positive_support": 49,
+      "negative_deficit_sum": 128,
+      "positive_deficit_sum": 126,
+      "rows": 3,
+      "worst_min_wilson95_lcb": 0.851340474274
+    },
+    "heldout_symbol_exact": {
+      "failing_rows": 47,
+      "max_negative_support": 9,
+      "max_positive_support": 9,
+      "negative_deficit_sum": 3340,
+      "positive_deficit_sum": 3338,
+      "rows": 47,
+      "worst_min_wilson95_lcb": 0.0
+    },
+    "heldout_venue_exact": {
+      "failing_rows": 11,
+      "max_negative_support": 32,
+      "max_positive_support": 32,
+      "negative_deficit_sum": 712,
+      "positive_deficit_sum": 710,
+      "rows": 11,
+      "worst_min_wilson95_lcb": 0.0
+    }
+  },
+  "all_success_rows_required_for_wilson95": 73,
+  "base_snapshot": {
+    "base_json": "docs/experiments/actionable-regime-confidence/runs/20260511T235815-codex-r6-live-intake-rehydrate-calibration-v1/r6-live-intake-rehydrate-calibration/r6_live_intake_rehydrate_calibration_v1.json",
+    "base_split_metrics": "docs/experiments/actionable-regime-confidence/runs/20260511T235815-codex-r6-live-intake-rehydrate-calibration-v1/r6-live-intake-rehydrate-calibration/r6_live_intake_rehydrate_split_metrics_v1.csv",
+    "matched_negative_rows": 73,
+    "matched_negative_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+    "positive_rows": 73,
+    "positive_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6"
+  },
+  "board_sha256_at_start": "8593cb09cabc29d6b9b99367d6d1f755bb76a939a67eafb7399ced39a7a3fe96",
+  "control_ready_sidecar_deficits": {
+    "chronological_group_split": {
+      "failing_rows": 3,
+      "max_negative_support": 39,
+      "max_positive_support": 41,
+      "negative_deficit_sum": 144,
+      "positive_deficit_sum": 142,
+      "rows": 3,
+      "worst_min_wilson95_lcb": 0.824115449418
+    },
+    "heldout_symbol_exact": {
+      "failing_rows": 37,
+      "max_negative_support": 9,
+      "max_positive_support": 9,
+      "negative_deficit_sum": 2626,
+      "positive_deficit_sum": 2624,
+      "rows": 37,
+      "worst_min_wilson95_lcb": 0.0
+    },
+    "heldout_venue_exact": {
+      "failing_rows": 11,
+      "max_negative_support": 29,
+      "max_positive_support": 29,
+      "negative_deficit_sum": 728,
+      "positive_deficit_sum": 726,
+      "rows": 11,
+      "worst_min_wilson95_lcb": 0.0
+    }
+  },
+  "current_deficits": {
+    "chronological_group_split": {
+      "failing_rows": 3,
+      "max_negative_support": 38,
+      "max_positive_support": 38,
+      "negative_deficit_sum": 146,
+      "positive_deficit_sum": 146,
+      "rows": 3,
+      "worst_min_wilson95_lcb": 0.815676339628
+    },
+    "heldout_symbol_exact": {
+      "failing_rows": 36,
+      "max_negative_support": 9,
+      "max_positive_support": 9,
+      "negative_deficit_sum": 2555,
+      "positive_deficit_sum": 2555,
+      "rows": 36,
+      "worst_min_wilson95_lcb": 0.0
+    },
+    "heldout_venue_exact": {
+      "failing_rows": 11,
+      "max_negative_support": 29,
+      "max_positive_support": 29,
+      "negative_deficit_sum": 730,
+      "positive_deficit_sum": 730,
+      "rows": 11,
+      "worst_min_wilson95_lcb": 0.0
+    }
+  },
+  "external_requests_sent": false,
+  "gate_result": "r6_split_species_gap_impact_v1=remaining_sidecars_do_not_close_exact_split_gates_missing_controls_and_bulk_support_required",
+  "generated_at_utc": "2026-05-11T16:09:21.798632+00:00",
+  "live_verifier": {
+    "parsed": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "canonical_intake_root",
+        "generated_at_utc",
+        "materialization_note",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "source_v56_json",
+        "source_v56_negative_csv",
+        "source_v56_positive_csv",
+        "thresholds_relaxed",
+        "trade_usable",
+        "v56_gate_result",
+        "v56_negative_sha256",
+        "v56_positive_sha256"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000714-codex-r6-split-species-gap-impact-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000714-codex-r6-split-species-gap-impact-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "new_confidence_gate": false,
+  "next_action": "Do not mutate the 73x73 live intake with remaining sidecars alone. Either acquire a bulk owner-approved direct order-lifecycle export with split-balanced controls, or predeclare a less fragmented family-level validation protocol before rerunning R6 acceptance; continue R5 source-owner recency and R3 native-subhour acquisition separately.",
+  "raw_data_committed": false,
+  "run_id": "20260512T000714-codex-r6-split-species-gap-impact-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "sidecar_inventory": {
+    "candidate_control_rows": 2,
+    "candidate_inventory_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000714-codex-r6-split-species-gap-impact-v1/r6-split-species-gap-impact/r6_split_species_gap_impact_candidate_inventory_v1.csv",
+    "control_ready_unaccepted_positive_rows": 4,
+    "duplicate_candidate_rows": 0,
+    "missing_control_unaccepted_positive_rows": 16,
+    "placeholder_controls_needed_for_all_unaccepted_candidates": 16,
+    "source_summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T000714-codex-r6-split-species-gap-impact-v1/r6-split-species-gap-impact/r6_split_species_gap_impact_source_summary_v1.csv",
+    "unaccepted_candidate_positive_rows": 20,
+    "unique_candidate_positive_rows": 23
+  },
+  "species": {
+    "base_positive_label_counts": {
+      "positive_spoofing_layering": 73
+    },
+    "control_ready_unaccepted_label_counts": {
+      "positive_spoofing_layering": 4
+    },
+    "non_spoofing_species_candidates_exist": true,
+    "non_spoofing_species_control_ready": false,
+    "unaccepted_candidate_label_counts": {
+      "positive_order_lifecycle_large_lot_quote_pressure": 6,
+      "positive_spoofing_layering": 14
+    }
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

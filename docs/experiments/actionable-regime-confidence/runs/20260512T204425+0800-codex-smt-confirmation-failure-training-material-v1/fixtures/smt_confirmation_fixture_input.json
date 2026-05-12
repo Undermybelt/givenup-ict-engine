@@ -1,0 +1,98 @@
+{
+  "coverage_target": [
+    "NQ/ES/YM",
+    "EURUSD/GBPUSD/DXY",
+    "XAUUSD/XAGUSD/DXY",
+    "BTC/ETH"
+  ],
+  "scenarios": [
+    {
+      "base_symbol": "NQ",
+      "timeframe": "15m",
+      "session": "NY_AM",
+      "provider_universe": ["NQ", "ES", "YM"],
+      "candles": {
+        "NQ": { "synthetic_pattern": "base_LL" },
+        "ES": { "synthetic_pattern": "comparison_HL" },
+        "YM": { "synthetic_pattern": "comparison_HL" }
+      },
+      "pd_array": {
+        "ES": { "near_pd_array": true, "pd_array_type": "FVG" },
+        "YM": { "near_pd_array": true, "pd_array_type": "session_high_low" }
+      },
+      "confirmations": {
+        "ES": { "mss_or_cisd_confirmed": false, "displacement_confirmed": false },
+        "YM": { "mss_or_cisd_confirmed": false, "displacement_confirmed": false }
+      },
+      "provider_provenance": {
+        "ES": "synthetic_fixture_same_timeframe_session_aligned",
+        "YM": "synthetic_fixture_same_timeframe_session_aligned"
+      }
+    },
+    {
+      "base_symbol": "EURUSD",
+      "timeframe": "15m",
+      "session": "LONDON_NY_OVERLAP",
+      "provider_universe": ["EURUSD", "GBPUSD", "DXY"],
+      "candles": {
+        "EURUSD": { "synthetic_pattern": "base_HH" },
+        "GBPUSD": { "synthetic_pattern": "comparison_LH" },
+        "DXY": { "synthetic_pattern": "comparison_HL", "close_path": "inverse_zigzag" }
+      },
+      "pd_array": {
+        "GBPUSD": { "near_pd_array": true, "pd_array_type": "OB" },
+        "DXY": { "near_pd_array": true, "pd_array_type": "breaker" }
+      },
+      "confirmations": {
+        "GBPUSD": { "mss_or_cisd_confirmed": false, "displacement_confirmed": false },
+        "DXY": { "mss_or_cisd_confirmed": false, "displacement_confirmed": false }
+      },
+      "provider_provenance": {
+        "GBPUSD": "synthetic_fixture_same_timeframe_session_aligned",
+        "DXY": "synthetic_fixture_inverse_normalization"
+      }
+    },
+    {
+      "base_symbol": "XAUUSD",
+      "timeframe": "15m",
+      "session": "NY_AM",
+      "provider_universe": ["XAUUSD", "XAGUSD", "DXY"],
+      "candles": {
+        "XAUUSD": { "synthetic_pattern": "base_LL" },
+        "XAGUSD": { "synthetic_pattern": "comparison_HL" },
+        "DXY": { "synthetic_pattern": "comparison_LH", "close_path": "inverse_zigzag" }
+      },
+      "pd_array": {
+        "XAGUSD": { "near_pd_array": true, "pd_array_type": "previous_day_high_low" },
+        "DXY": { "near_pd_array": true, "pd_array_type": "IFVG" }
+      },
+      "confirmations": {
+        "XAGUSD": { "mss_or_cisd_confirmed": false, "displacement_confirmed": false },
+        "DXY": { "mss_or_cisd_confirmed": false, "displacement_confirmed": false }
+      },
+      "provider_provenance": {
+        "XAGUSD": "synthetic_fixture_same_timeframe_session_aligned",
+        "DXY": "synthetic_fixture_inverse_normalization"
+      }
+    },
+    {
+      "base_symbol": "BTC",
+      "timeframe": "1h",
+      "session": "CRYPTO_UTC",
+      "provider_universe": ["BTC", "ETH"],
+      "candles": {
+        "BTC": { "synthetic_pattern": "base_HH" },
+        "ETH": { "synthetic_pattern": "comparison_LH" }
+      },
+      "pd_array": {
+        "ETH": { "near_pd_array": true, "pd_array_type": "mitigation" }
+      },
+      "confirmations": {
+        "ETH": { "mss_or_cisd_confirmed": false, "displacement_confirmed": false }
+      },
+      "provider_provenance": {
+        "ETH": "synthetic_fixture_same_timeframe_session_aligned"
+      }
+    }
+  ]
+}

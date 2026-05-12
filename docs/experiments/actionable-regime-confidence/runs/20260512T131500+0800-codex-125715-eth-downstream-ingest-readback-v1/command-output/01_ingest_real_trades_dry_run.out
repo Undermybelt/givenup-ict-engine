@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "8524b84c82fb3ee9",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_ETH_SIX_PROVIDER_MOMENTUM_125715_20260512T050529.511362000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+  "trades_applied": 162,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1/derived/125715_eth_six_provider_momentum_trades.jsonl",
+  "trades_total": 162
+}

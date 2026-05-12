@@ -1,0 +1,78 @@
+{
+  "run_id": "20260512T041423-codex-current-objective-audit-after-040919-v1",
+  "board_sha256_before_audit_artifact": "4aea97f2b8dc89274bf317725767fca4c86895e5edd04e073e1e01787c438abf",
+  "gate_result": "current_objective_audit_after_040919_v1=not_complete_source_roots_absent_r5_recency_unrepaired_autoquant_prepare_blocked_downstream_chain_blocked",
+  "objective_restatement": "Every target regime must reach at least 95 percent confidence with its own qualifying condition, cross-market and cross-period/timeframe validation, and real provider plus AutoQuant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution-tree evidence.",
+  "checklist": [
+    {
+      "requirement": "named_board_authoritative_append_only",
+      "status": "partial",
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md has append-only registrations through 040919; Current Cursor not edited by this audit"
+    },
+    {
+      "requirement": "every_regime_95_confidence_with_qualifying_condition",
+      "status": "blocked",
+      "evidence": "040109 remains not complete and 040919 added zero recency-tail target rows"
+    },
+    {
+      "requirement": "cross_market_period_timeframe_validation",
+      "status": "blocked",
+      "evidence": "R3/R5/R6 source/control roots absent; no new source-owned recency/native-subhour/owner-export rows arrived"
+    },
+    {
+      "requirement": "providers_ibkr_tradingview_yfinance_kraken",
+      "status": "diagnostic_only",
+      "evidence": "195320 records yfinance/direct IBKR/Kraken diagnostics; 040824 confirms TradingView local stdio OHLCV; provider reachability is not source/control evidence"
+    },
+    {
+      "requirement": "autoquant",
+      "status": "blocked",
+      "evidence": "040757 auto_quant_bootstrap exited 0 but auto_quant_prepare exited 1; final status dependency_ready_data_missing and data_ready=false"
+    },
+    {
+      "requirement": "filter_pre_bayes_bbn_catboost_path_ranking_execution_tree",
+      "status": "blocked",
+      "evidence": "040311 shows Pre-Bayes empty, policy/CatBoost matched_rows=0, path-ranking export missing, workflow observe/actionable=false/ready=false"
+    },
+    {
+      "requirement": "do_not_promote_proxy_signals",
+      "status": "satisfied",
+      "evidence": "040611, 040824, 040757, and 040919 are non-promoting diagnostics"
+    },
+    {
+      "requirement": "source_control_gate_before_downstream_rerun",
+      "status": "blocked",
+      "evidence": "040738 and live readback show owner-export, native-subhour, and recency-extension roots absent"
+    }
+  ],
+  "evidence_roots": {
+    "source_unlock_scan": "docs/experiments/actionable-regime-confidence/runs/20260512T040738-codex-source-unlock-scan-after-040311-v1",
+    "autoquant_bootstrap_prepare": "docs/experiments/actionable-regime-confidence/runs/20260512T040757-codex-autoquant-bootstrap-prepare-after-040311-v1",
+    "tradingview_stdio_confirmation": "docs/experiments/actionable-regime-confidence/runs/20260512T040824-codex-tradingview-stdio-provider-confirmation-after-040611-v1",
+    "stock_regime_kaggle_recency_recheck": "docs/experiments/actionable-regime-confidence/runs/20260512T040919-codex-stock-regime-kaggle-live-recency-recheck-after-040311-v1",
+    "current_objective_audit_after_035835": "docs/experiments/actionable-regime-confidence/runs/20260512T040311-codex-current-objective-audit-after-035835-v1",
+    "provider_reachability_after_034813": "docs/experiments/actionable-regime-confidence/runs/20260511T195320-codex-board-a-provider-reachability-after-034813-v1"
+  },
+  "required_source_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "latest_gates": {
+    "source_unlock": "source_unlock_scan_after_040311_v1=no_new_unlock_required_roots_absent_no_promotion",
+    "autoquant": "autoquant_bootstrap_prepare_after_040311_v1=bootstrap_succeeded_prepare_dns_blocked_no_promotion",
+    "tradingview": "tradingview_stdio_provider_confirmation_after_040611_v1=stdio_ohlcv_ready_provider_layer_only_no_promotion",
+    "r5_recency": "stock_regime_kaggle_live_recency_recheck_after_040311_v1=upstream_unchanged_no_r5_recency_tail_repair_no_promotion",
+    "downstream": "current_objective_audit_after_035835_v1=not_complete_owner_export_missing_autoquant_bootstrap_needed_downstream_blocked_no_promotion"
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

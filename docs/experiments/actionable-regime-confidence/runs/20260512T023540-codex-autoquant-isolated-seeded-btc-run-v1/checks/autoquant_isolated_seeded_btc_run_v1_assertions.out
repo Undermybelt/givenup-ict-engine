@@ -1,0 +1,11 @@
+workspace_present=PASS
+data_files_ge_3=PASS
+three_wrappers_seeded=PASS
+autoquant_run_exit_zero=PASS
+autoquant_done_all_succeeded=PASS
+three_trade_result_rows=PASS
+accepted_rows_added_zero=PASS
+canonical_merge_allowed_false=PASS
+downstream_chain_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS

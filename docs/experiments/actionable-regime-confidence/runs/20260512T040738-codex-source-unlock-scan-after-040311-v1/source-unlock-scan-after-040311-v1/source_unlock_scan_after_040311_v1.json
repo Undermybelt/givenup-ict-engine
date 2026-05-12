@@ -1,0 +1,41 @@
+{
+  "run_id": "20260512T040738-codex-source-unlock-scan-after-040311-v1",
+  "generated_at_utc": "2026-05-11T20:07:38Z",
+  "board_sha256_before_scan_artifact": "dcbc9d4563dd78d2c3ee8bbf20b9de801d0fa6db26aabcabb0a7585cfbd88156",
+  "gate_result": "source_unlock_scan_after_040311_v1=no_new_unlock_required_roots_absent_no_promotion",
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "missing",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "missing",
+    "/tmp/ict-engine-source-panel-recency-extension": "missing"
+  },
+  "approval_package": {
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "present": true,
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+    "public_recap_pacer_provenance": "pending_explicit_user_or_board_approval",
+    "same_exhibit_flip_as_matched_controls": "rejected_under_current_contract",
+    "source_owned_normal_controls_alternative": "not_supplied"
+  },
+  "non_target_local_triplets_observed": [
+    "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+    "/private/tmp/ict-engine-direct-manipulation-row-intake",
+    "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+    "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake"
+  ],
+  "decision": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "new_source_unlock": false,
+    "owner_export_root_present": false,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_root_present": false,
+    "explicit_approval": false,
+    "flip_controls_approved": false,
+    "source_owned_normal_controls_supplied": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

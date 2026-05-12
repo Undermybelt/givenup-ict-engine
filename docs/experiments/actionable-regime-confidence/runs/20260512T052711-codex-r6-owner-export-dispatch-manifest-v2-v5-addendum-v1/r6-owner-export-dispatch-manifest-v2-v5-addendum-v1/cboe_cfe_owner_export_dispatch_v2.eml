@@ -1,0 +1,23 @@
+To: marketdata@cboe.com
+Subject: Request for source-owned CFE/VIX order-lifecycle controls with Bessembinder/CFTC cohort rows
+
+Hello Cboe/CFE Market Data Services team,
+
+I am requesting availability and licensing guidance for a historical CFE/VIX futures source-owned order-lifecycle, Top-of-Book, Depth-of-Book, MBO/L3, or licensed equivalent export for a compliance research audit.
+
+The current request wrapper is:
+docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/cboe_cfe_owner_export_request_v5_with_bessembinder_addendum.md
+
+The base route/cell request is:
+docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/cboe_cfe_owner_export_request_v4.md
+
+Please include, if available, Bessembinder/CFTC comparison-cohort rows for Oystacher flip/spoof rows, other flipping market participants, broader market-participant activity, and non-flip normal-control rows for the same products/date windows. The needed output is verifier-native rows with source-owner provenance, not derived OHLCV bars and not same-exhibit FLIP rows unless explicitly source-approved as controls.
+
+Required post-delivery files for the local verifier are:
+- positive_spoofing_layering_rows.csv
+- matched_negative_normal_activity_rows.csv
+- provenance_manifest.json
+
+Please include ticket/export/order/license identifiers, data-product names, source-owner cohort markers, and product/date entitlement notes in the response so provenance can be preserved.
+
+Thank you.

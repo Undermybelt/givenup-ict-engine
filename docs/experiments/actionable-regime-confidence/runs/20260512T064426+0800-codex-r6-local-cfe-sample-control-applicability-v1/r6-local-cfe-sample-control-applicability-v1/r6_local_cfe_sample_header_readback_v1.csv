@@ -1,0 +1,5 @@
+path,exists,size_bytes,sha256,http_200,not_authenticated,canonical_or_matched_path
+/tmp/ict-engine-cboe-futures-market-data-headers.txt,True,1174,c20170b9841335fde9e9afbdfc9ab2f63a1cfcb86c0e43ca58919c8cae954cd7,True,False,"Link: <https://www.cboe.com/market_data_services/us/futures/>; rel=""canonical"""
+/tmp/ict-engine-cboe-oof-headers.txt,True,1878,51eba963c962c530db294e417d2b75733ae0e1cd05bdc8e59564cc5520bc21ca,True,False,x-matched-path: /en/markets/us/futures/market-statistics/historical-data/oof
+/tmp/ict-engine-databento-docs-headers.txt,True,468,b56d86549a06ac15628d401c27a1150858e23d731551ddea8c8952bb3c5045fd,True,False,
+/tmp/ict-engine-databento-metadata-range-response.json,True,30,cfec9feffbcc0dabaa0f92491e3609eeb1e9bc8d17625cd7f043be03b609c812,False,True,

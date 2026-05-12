@@ -1,0 +1,13 @@
+PASS decision=r6_shak_cftc_row_uplift_v1=direct_intake_rows_uplifted_schema_ready_calibration_still_blocked
+PASS source_pdf_sha256=74f48d22698215c85904ff012a86606ca4a0ab9b72f55b14eb23ea853d7b8e18
+PASS positive_rows_added=5
+PASS matched_negative_rows_added=5
+PASS verifier_status=schema_ready_unscored
+PASS positive_rows=37
+PASS matched_negative_rows=37
+PASS combined_min_wilson95_lcb=0.905942
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

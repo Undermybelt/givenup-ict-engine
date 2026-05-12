@@ -1,0 +1,94 @@
+{
+  "gate_result": "autoquant_provider_data_bridge_probe_v1=partial_provider_data_no_autoquant_prepare_coverage_no_promotion",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T023002-codex-autoquant-provider-data-bridge-probe-v1",
+  "tmp_data_root": "/private/tmp/ict-engine-board-a-autoquant-provider-data-bridge-20260512T023002",
+  "autoquant_required_pairs": [
+    "BTC/USDT",
+    "ETH/USDT",
+    "SOL/USDT",
+    "BNB/USDT",
+    "AVAX/USDT"
+  ],
+  "autoquant_required_timeframes": [
+    "1h",
+    "4h",
+    "1d"
+  ],
+  "autoquant_required_timerange": "20210101-20251231",
+  "probe_rows": [
+    {
+      "command": "00_kraken_pf_xbtusd_1d",
+      "provider": "kraken_futures",
+      "symbol": "PF_XBTUSD",
+      "interval": "1d",
+      "exit_code": 0,
+      "rows": 1380,
+      "start": "2022-03-23 00:00:00+00:00",
+      "end": "2025-12-31 00:00:00+00:00",
+      "output_path": "/private/tmp/ict-engine-board-a-autoquant-provider-data-bridge-20260512T023002/PF_XBTUSD-1d.csv",
+      "autoquant_fixed_timerange_compatible": false,
+      "blocker": "starts_after_autoquant_required_20210101"
+    },
+    {
+      "command": "01_kraken_pf_xbtusd_1h",
+      "provider": "kraken_futures",
+      "symbol": "PF_XBTUSD",
+      "interval": "1h",
+      "exit_code": 0,
+      "rows": 2000,
+      "start": "2022-03-23 10:00:00+00:00",
+      "end": "2022-06-14 17:00:00+00:00",
+      "output_path": "/private/tmp/ict-engine-board-a-autoquant-provider-data-bridge-20260512T023002/PF_XBTUSD-1h.csv",
+      "autoquant_fixed_timerange_compatible": false,
+      "blocker": "starts_after_autoquant_required_20210101"
+    },
+    {
+      "command": "02_kraken_pf_xbtusd_4h",
+      "provider": "kraken_futures",
+      "symbol": "PF_XBTUSD",
+      "interval": "4h",
+      "exit_code": 0,
+      "rows": 2000,
+      "start": "2022-03-23 08:00:00+00:00",
+      "end": "2023-02-19 12:00:00+00:00",
+      "output_path": "/private/tmp/ict-engine-board-a-autoquant-provider-data-bridge-20260512T023002/PF_XBTUSD-4h.csv",
+      "autoquant_fixed_timerange_compatible": false,
+      "blocker": "starts_after_autoquant_required_20210101"
+    },
+    {
+      "command": "03_yahoo_btcusd_1d",
+      "provider": "yahoo",
+      "symbol": "BTC-USD",
+      "interval": "1d",
+      "exit_code": 0,
+      "rows": 1826,
+      "start": "2021-01-01 00:00:00+00:00",
+      "end": "2025-12-31 00:00:00+00:00",
+      "output_path": "/private/tmp/ict-engine-board-a-autoquant-provider-data-bridge-20260512T023002/BTC-USD-1d.csv",
+      "autoquant_fixed_timerange_compatible": false,
+      "blocker": "daily_only_not_enough_for_autoquant_1h_4h_1d_contract"
+    },
+    {
+      "command": "04_yahoo_btcusd_1h",
+      "provider": "yahoo",
+      "symbol": "BTC-USD",
+      "interval": "1h",
+      "exit_code": 1,
+      "rows": "",
+      "start": "",
+      "end": "",
+      "output_path": "",
+      "autoquant_fixed_timerange_compatible": false,
+      "blocker": "yahoo_1h_730_day_limit_for_20210101_20251231"
+    }
+  ],
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "raw_data_committed": false
+}

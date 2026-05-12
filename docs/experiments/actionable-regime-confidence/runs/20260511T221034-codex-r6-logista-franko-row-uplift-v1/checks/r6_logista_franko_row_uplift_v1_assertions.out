@@ -1,0 +1,15 @@
+PASS decision=r6_logista_franko_row_uplift_v1=support_50_50_reached_confidence_still_blocked
+PASS positive_rows_after=65
+PASS matched_negative_rows_after=65
+PASS verifier_status=schema_ready_unscored
+PASS support_floor_ok_50_50=true
+PASS min_wilson95_lcb=0.944198
+PASS wilson95_ok=false
+PASS broad_normal_sample=false
+PASS direct_species_closed=false
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false

@@ -1,0 +1,11 @@
+
+running 1 test
+test application::orchestration::structural_playbook::tests::target_export_surfaces_branch_segments_as_catboost_features ... FAILED
+
+failures:
+
+failures:
+    application::orchestration::structural_playbook::tests::target_export_surfaces_branch_segments_as_catboost_features
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 937 filtered out; finished in 0.18s
+

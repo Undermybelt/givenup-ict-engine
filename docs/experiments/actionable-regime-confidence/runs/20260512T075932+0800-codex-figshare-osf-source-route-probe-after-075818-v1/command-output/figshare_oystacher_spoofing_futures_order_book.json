@@ -1,0 +1,14 @@
+{
+  "body": {
+    "order": "published_date",
+    "order_direction": "desc",
+    "page_size": 10,
+    "search_for": "Oystacher spoofing futures order book"
+  },
+  "error": null,
+  "payload": [],
+  "provider": "figshare",
+  "query": "Oystacher spoofing futures order book",
+  "status": 200,
+  "url": "https://api.figshare.com/v2/articles/search"
+}

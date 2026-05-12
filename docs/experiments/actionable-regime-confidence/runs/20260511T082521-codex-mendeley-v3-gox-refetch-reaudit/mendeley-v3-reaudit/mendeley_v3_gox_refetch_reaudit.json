@@ -1,0 +1,77 @@
+{
+  "active_taxonomy": "MainRegimeV2",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T082521-codex-mendeley-v3-gox-refetch-reaudit/checks/mendeley_v3_gox_refetch_reaudit_assertions.out",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T082521-codex-mendeley-v3-gox-refetch-reaudit/scripts/mendeley_v3_gox_refetch_reaudit.py",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T082521-codex-mendeley-v3-gox-refetch-reaudit/mendeley-v3-reaudit/mendeley_v3_gox_refetch_reaudit.json",
+    "summary_md": "docs/experiments/actionable-regime-confidence/runs/20260511T082521-codex-mendeley-v3-gox-refetch-reaudit/mendeley-v3-reaudit/mendeley_v3_gox_refetch_reaudit.md"
+  },
+  "candidate_regime": "Manipulation",
+  "created_at_utc": "2026-05-11T00:30:09.142958+00:00",
+  "dataset": {
+    "doi": "10.17632/4hyxfwzpgg.3",
+    "files_seen": 4,
+    "id": "4hyxfwzpgg",
+    "license": "CC BY 4.0",
+    "name": "Detecting Crypto Wash Trades via Machine Learning",
+    "size": 3497730752,
+    "url": "https://data.mendeley.com/public-api/datasets/4hyxfwzpgg",
+    "version": 3
+  },
+  "decision": {
+    "accepted_direct_manipulation_95": false,
+    "accepted_full_cycle_full_universe": false,
+    "blockers": [
+      "test_coverage_below_min",
+      "calibration_ece_above_max",
+      "test_ece_above_max"
+    ],
+    "fresh_calibration_rerun": true,
+    "gate_result": "blocked_mendeley_gox_hgb_wash_below_95",
+    "mainregimev2_root_slots_added": 0,
+    "manipulation_label_slots_added": 0,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "gate_reused": {
+    "hgb_assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T082521-codex-mendeley-v3-gox-refetch-reaudit/checks/mendeley_gox_hgb_wash_gate_assertions.out",
+    "hgb_report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T082521-codex-mendeley-v3-gox-refetch-reaudit/gox-hgb-wash-gate/mendeley_gox_hgb_wash_gate_report.json",
+    "hgb_report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T082521-codex-mendeley-v3-gox-refetch-reaudit/gox-hgb-wash-gate/mendeley_gox_hgb_wash_gate_report.md",
+    "method": "old gate source executed with only RUN_ID and RUN_ROOT changed",
+    "source_script": "docs/experiments/actionable-regime-confidence/runs/20260511T043249-codex-mendeley-gox-hgb-wash-gate/tmp-scripts/mendeley_gox_hgb_wash_gate.py"
+  },
+  "gox_file": {
+    "actual_sha256": "28cd2a2cca5aed49964e7e75043f9a79f773018d1e891add17319f7541716bff",
+    "expected_sha256": "28cd2a2cca5aed49964e7e75043f9a79f773018d1e891add17319f7541716bff",
+    "filename": "gox_ml_samples.csv",
+    "local_path": "/private/tmp/gox_ml_samples.csv",
+    "mendeley_size": 986063630,
+    "raw_data_committed": false,
+    "sha256_matches_current_mendeley_v3": true
+  },
+  "metrics": {
+    "calibration": {
+      "coverage": 0.030348999954851234,
+      "ece_10bin": 0.08171197215474314,
+      "precision": 0.9783397798274324,
+      "rows": 1107450,
+      "successes": 32882,
+      "support": 33610,
+      "wilson_lcb_95": 0.9767279547055007
+    },
+    "test": {
+      "coverage": 0.008994528877575621,
+      "ece_10bin": 0.11550138174952651,
+      "precision": 0.987953016765385,
+      "rows": 1107451,
+      "successes": 9841,
+      "support": 9961,
+      "wilson_lcb_95": 0.9856146629785103
+    }
+  },
+  "next_action": "If Mendeley remains blocked, try the Dune nft.wash_trades export path with replayable timestamps and positive/negative windows; keep Bitquery rule labels sidecar-only.",
+  "objective": "Re-fetch current Mendeley v3 metadata and rerun the unchanged Mt. Gox HGB wash-trading gate.",
+  "run_id": "20260511T082521+0800-codex-mendeley-v3-gox-refetch-reaudit"
+}

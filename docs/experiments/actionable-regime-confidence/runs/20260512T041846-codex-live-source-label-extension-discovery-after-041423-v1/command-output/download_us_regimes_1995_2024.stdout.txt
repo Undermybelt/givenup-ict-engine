@@ -1,0 +1,4 @@
+Dataset URL: https://www.kaggle.com/datasets/nickdatak/us-market-regimes-dataset-1995-2024
+License(s): MIT
+Downloading us-market-regimes-dataset-1995-2024.zip to /tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/data-us_regimes_1995_2024
+

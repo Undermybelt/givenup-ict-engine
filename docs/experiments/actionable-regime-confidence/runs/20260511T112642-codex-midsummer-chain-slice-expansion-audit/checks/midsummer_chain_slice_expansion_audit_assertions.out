@@ -1,0 +1,11 @@
+PASS active_taxonomy=MainRegimeV2
+PASS source_zip_exists=true
+PASS raw_data_committed=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS trade_usable=false
+PASS accepted_parent_root_slots_added=0
+PASS new_accepted_platform_count=3
+PASS accepted_direct_manipulation_rows_added=5693
+GATE accepted_95_additional_midsummer_chain_wash_slices
+PASS full_objective_achieved=false

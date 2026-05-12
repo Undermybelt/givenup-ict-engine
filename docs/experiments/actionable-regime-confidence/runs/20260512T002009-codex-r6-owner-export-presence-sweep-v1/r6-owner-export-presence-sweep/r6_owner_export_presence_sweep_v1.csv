@@ -1,0 +1,4 @@
+scope,maxdepth,candidate_hits,required_data_exports_present,decision
+"/tmp /private/tmp",5,0,0,no_required_owner_export_files_seen
+"/Users/thrill3r/Downloads",5,0,0,no_required_owner_export_files_seen
+docs/experiments/actionable-regime-confidence/runs,all,7,0,only_request_package_files_seen_no_required_data_exports

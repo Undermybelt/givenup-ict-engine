@@ -1,0 +1,60 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.4805171948051948,
+    1.1428571428571428e-6,
+    0.5194816623376624
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "ProviderCryptoPullbackRevertV1",
+      "mutation_id": "provider-owned-yahoo-crypto-pullback-revert-v1",
+      "trade_count": 146,
+      "n_win": 66,
+      "n_loss": 80,
+      "n_breakeven": 0,
+      "temper": 0.5,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.4805171948051948,
+        1.1428571428571428e-6,
+        0.5194816623376624
+      ],
+      "diff": [
+        -0.5194388051948051,
+        -0.000020857142857142857,
+        0.5194596623376624
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.6924038598607091,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 5.876440770084702,
+      "bbn_log_loss_after": 0.6901698011910298,
+      "bbn_log_loss_delta": 5.186270968893672,
+      "bbn_contradiction_before": 1.0958464109589041,
+      "bbn_contradiction_after": 0.056927086283579384,
+      "bbn_contradiction_lift": 1.0389193246753248,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [],
+  "temper": 0.5,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 5.186270968893672,
+  "bbn_contradiction_lift": 1.0389193246753248,
+  "evidence_value_gate_passed": true
+}

@@ -1,0 +1,103 @@
+{
+  "run_id": "20260512T093239+0800-codex-post-092330-board-b-feedback-completion-audit-v1",
+  "gate_result": "post_092330_board_b_feedback_completion_audit_v1=latest_feedback_non_promoting_goal_not_complete",
+  "objective_complete": false,
+  "objective_success_criteria": [
+    "every active regime has >=95% calibrated confidence",
+    "each regime has its own qualifying condition",
+    "each regime is validated on other markets, periods, and contexts",
+    "real provider and Auto-Quant evidence exists",
+    "ict-engine downstream filter, Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree evidence exists",
+    "multi-agent-safe board writeback does not overwrite concurrent work"
+  ],
+  "latest_roots_read": [
+    {
+      "run_id": "20260512T092407+0800-codex-board-b-aq-first-root-gate-repair-v1",
+      "status": "script_only_no_report_or_assertions",
+      "promotion_allowed": false
+    },
+    {
+      "run_id": "20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1",
+      "status": "tomac_zero_trade_and_v041_negative_sharpe_feedback",
+      "run_tomac_exit": 0,
+      "trades": 0,
+      "v041_results_sharpe_values": [-0.8525, -5.055, -0.848],
+      "promotion_allowed": false
+    },
+    {
+      "run_id": "20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1",
+      "status": "prepare_ok_tomac_no_pair_in_whitelist",
+      "auto_quant_prepare_exit": 0,
+      "run_tomac_exit": 1,
+      "promotion_allowed": false
+    },
+    {
+      "run_id": "20260512T092732+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1",
+      "status": "file_backed_zero_trade_direct_tomac",
+      "trades": 0,
+      "promotion_allowed": false,
+      "update_goal": false
+    },
+    {
+      "run_id": "20260512T092800+0800-codex-board-b-aq-first-nursery-provider-ltf-v1",
+      "status": "factor_research_and_prepare_ok_tomac_module_missing_or_incomplete",
+      "factor_research_exit": 0,
+      "auto_quant_prepare_exit": 0,
+      "run_tomac_exit": 1,
+      "promotion_allowed": false
+    },
+    {
+      "run_id": "20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1",
+      "status": "handoff_ready_after_prepare_tomac_module_missing",
+      "after_prepare_status": "dependency_ready_data_ready",
+      "run_tomac_error": "ModuleNotFoundError: No module named 'freqtrade'",
+      "promotion_allowed": false
+    }
+  ],
+  "provider_runtime_reference": {
+    "run_id": "20260512T091715+0800-codex-provider-autoquant-runtime-gate-after-091246-v1",
+    "status": "partial_non_promoting",
+    "yfinance_live": true,
+    "yfinance_market_data": true,
+    "tradingviewremix": false,
+    "kraken_cli": true,
+    "kraken_public_market_data": false,
+    "ibkr_gateway": true,
+    "ibkr_market_data": false
+  },
+  "live_readonly_ict_engine_checks": {
+    "command_output_root": "docs/experiments/actionable-regime-confidence/runs/20260512T093239+0800-codex-post-092330-board-b-feedback-completion-audit-v1/command-output",
+    "auto_quant_status": {
+      "exit": 0,
+      "status": "dependency_ready_data_ready",
+      "dependency_healthy": true,
+      "data_ready": true
+    },
+    "workflow_status": {
+      "exit": 0,
+      "status": "no_workflow_state",
+      "promotion_ready": false
+    },
+    "auto_quant_adoption_review": {
+      "exit": 0,
+      "review_status": "ready_for_external_execution",
+      "data_ready": true,
+      "dependency_healthy": true,
+      "promotion_ready": false
+    }
+  },
+  "completion_gates": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "explicit_user_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "next": "Keep Board A production gates fail-closed; use post-092330 roots only as non-promoting discovery feedback."
+}

@@ -1,0 +1,49 @@
+{
+  "run_id": "20260512T012714+0800-codex-board-b-selected-auto-quant-completion-addendum-v1",
+  "promotion_allowed": false,
+  "source_auto_quant_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1",
+  "active_board_b_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T010454-codex-board-b-220646-real-catboost-explicit-closure-v1",
+  "auto_quant_selected_run": {
+    "command_stem": "13_auto_quant_run_recorded_branch_offline_2021_2025_selected",
+    "exit_code": 0,
+    "strategies_succeeded": 3,
+    "strategies_failed": 0
+  },
+  "measured_strategies": {
+    "RegimeRootPulseBranch": {
+      "trades": 4705,
+      "sharpe": 1.148,
+      "total_profit_pct": 59.59,
+      "win_rate_pct": 35.7705,
+      "profit_factor": 1.0872,
+      "max_drawdown_pct": -25.1489
+    },
+    "RegimeTrendCarry": {
+      "trades": 556,
+      "sharpe": 0.4874,
+      "total_profit_pct": 70.45,
+      "win_rate_pct": 34.7122,
+      "profit_factor": 1.2951,
+      "max_drawdown_pct": -18.5655
+    },
+    "RegimeVolBreakout": {
+      "trades": 515,
+      "sharpe": 0.2928,
+      "total_profit_pct": 37.35,
+      "win_rate_pct": 36.5049,
+      "profit_factor": 1.1837,
+      "max_drawdown_pct": -17.9457
+    }
+  },
+  "remaining_blocker": {
+    "exact_sideways_structural_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+    "execution_candidate_exact_structural_branch": false,
+    "execution_candidate_artifact_id": "execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+    "execution_candidate_trade_direction": "Bull",
+    "workflow_reasons": [
+      "pass_neutralized",
+      "different_data_fingerprint",
+      "no_consumed_validation"
+    ]
+  }
+}

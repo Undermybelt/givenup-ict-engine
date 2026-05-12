@@ -1,0 +1,13 @@
+{
+  "bootstrap_needed": false,
+  "data_ready": true,
+  "dependency_healthy": true,
+  "healthy": true,
+  "notes": [
+    "auto_quant_profile=synthetic_ohlcv"
+  ],
+  "recommended_next_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/run_tomac.py",
+  "status": "dependency_ready_data_ready",
+  "summary_line": "auto_quant_status dependency_ready_data_ready healthy=true dependency_healthy=true data_ready=true bootstrap_needed=false update_available=false",
+  "update_available": false
+}

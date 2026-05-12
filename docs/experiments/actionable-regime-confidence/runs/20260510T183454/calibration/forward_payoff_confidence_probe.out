@@ -1,0 +1,27 @@
+{
+  "output": "/tmp/ict-regime-chain-20260509T231052/forward-payoff-confidence-probe-20k.json",
+  "truth_output": "/tmp/ict-regime-chain-20260509T231052/input/nq_forward_payoff_truth_20k.jsonl",
+  "feature_count": 152,
+  "label_counts": {
+    "train": {
+      "ForwardWin": 3974,
+      "NoEdge": 1995,
+      "Invalidated": 3821,
+      "ForwardLoss": 210
+    },
+    "calibration": {
+      "NoEdge": 1639,
+      "ForwardWin": 1800,
+      "Invalidated": 1368,
+      "ForwardLoss": 193
+    },
+    "test": {
+      "ForwardWin": 1917,
+      "Invalidated": 1665,
+      "NoEdge": 1268,
+      "ForwardLoss": 134
+    }
+  },
+  "pass_count": 0,
+  "passes_preview": []
+}

@@ -1,0 +1,14 @@
+source,query,exit,row_count,r3_exact_metadata_hits,r5_exact_metadata_hits,artifact
+kaggle,AAPL 15m regime label,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/kaggle_aapl_15m_regime_label.csv
+kaggle,AAPL 30m regime label,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/kaggle_aapl_30m_regime_label.csv
+kaggle,IXIC 15m regime label,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/kaggle_ixic_15m_regime_label.csv
+kaggle,IXIC 30m regime label,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/kaggle_ixic_30m_regime_label.csv
+kaggle,NQ futures 15m regime label,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/kaggle_nq_futures_15m_regime_label.csv
+kaggle,MainRegimeV2 market regime labels,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/kaggle_mainregimev2_market_regime_labels.csv
+kaggle,Bull Bear Sideways Crisis market regime labels,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/kaggle_bull_bear_sideways_crisis_market_regime_labels.csv
+kaggle,market regime labels intraday,0,1,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/kaggle_market_regime_labels_intraday.csv
+huggingface,AAPL 15m regime label,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/hf_aapl_15m_regime_label.json
+huggingface,IXIC 15m regime label,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/hf_ixic_15m_regime_label.json
+huggingface,MainRegimeV2 market regime labels,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/hf_mainregimev2_market_regime_labels.json
+huggingface,Bull Bear Sideways Crisis market regime labels,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/hf_bull_bear_sideways_crisis_market_regime_labels.json
+huggingface,market regime labels intraday,0,0,0,0,docs/experiments/actionable-regime-confidence/runs/20260512T055912-codex-r3-r5-public-source-durable-rerun-v1/command-output/hf_market_regime_labels_intraday.json

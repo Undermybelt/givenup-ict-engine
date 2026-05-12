@@ -1,0 +1,48 @@
+{
+  "run_id": "20260511T093157+0800-codex-mainregimev2-current-user-lock",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "user_correction": {
+    "main_axis": ["Bull", "Bear", "Sideways", "Crisis"],
+    "manipulation_handling": "separate_direct_event_or_order_lifecycle_class_or_overlay",
+    "rejected_completion_basis": "OHLCV_subfactor_proxy",
+    "accepted_packets_demoted_to": "sub_regime_evidence_only"
+  },
+  "active_taxonomy": {
+    "name": "MainRegimeV2",
+    "main_price_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "residual": "UnknownOrMixed",
+    "separate_overlay_or_class": ["Manipulation"]
+  },
+  "demoted_packets": [
+    "TrendExpansion",
+    "RangeConsolidation",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "SessionLiquidityCoreViable",
+    "ThinLiquidity"
+  ],
+  "blocked_as_main_or_manipulation_completion": [
+    "BullExpansion",
+    "BearExpansion",
+    "ConsolidationRange",
+    "CrisisStress",
+    "ManipulationLiquidityEngineering",
+    "TransitionAccumulationDistribution",
+    "CrossAssetMacroRotation",
+    "TrendExpansion",
+    "RangeConsolidation",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "SessionLiquidityCoreViable",
+    "ThinLiquidity"
+  ],
+  "gate_result": "mainregimev2_current_user_lock_no_subtype_or_ohlcv_manipulation_promotion",
+  "accepted_parent_root_slots_added": 0,
+  "accepted_direct_manipulation_rows_added": 0,
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "blocker": "missing_or_rejected_independent_parent_root_source_label_coverage_for_Bull_Bear_Sideways_Crisis_plus_incomplete_direct_Manipulation_label_coverage"
+}

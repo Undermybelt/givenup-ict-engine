@@ -1,0 +1,26 @@
+{
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.aq.iso.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "provider_row_materialized",
+    "auto_quant_dispatch_exit",
+    "trade_density_diagnostic",
+    "regime_conditioned_confidence_not_claimed"
+  ],
+  "notes": [
+    "board=Board A actionable-regime-confidence",
+    "branch_path=BoardAProviderBreadth -> CurrentProviderRow -> AQPlumbingProbe",
+    "source_provider=Bybit public linear BTCUSDT 1h current fetch",
+    "promotion_allowed=false",
+    "trade_usable=false",
+    "accepted_95_context=false",
+    "data_path_repaired_for_ict_engine_loader=iso_utc_timestamp"
+  ],
+  "package_id": "board-a-sixprov-bybit-btcusdt-1h-v1-iso-v2",
+  "strategy_brief": "Board A non-promotional provider-breadth probe for current same-root provider/AQ plumbing. It is not a profitability factor or acceptance claim.",
+  "strategy_class_name": "BoardAProviderBreadthProbeV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/agent-material/BoardAProviderBreadthProbeV1.py",
+  "symbol": "BTCUSDT",
+  "timeframe": "1h",
+  "title": "Board A six-provider preflight - Bybit BTCUSDT linear 1h ISO timestamp retry"
+}

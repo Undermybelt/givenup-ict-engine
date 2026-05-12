@@ -1,0 +1,182 @@
+{
+  "factor_name": "smt_relationship_resolver",
+  "factor_version": "2026-05-12.provider-backed-observation.v1",
+  "branch_path_contract": {
+    "main_regime": "Transition",
+    "sub_regime": "LiquiditySweepConfirmationFailure",
+    "sub_sub_regime_or_profit_factor": "smt_divergence_confirmation_only",
+    "profit_factor": "smt_relationship_resolver:btc_eth_1h_v1",
+    "regime_profit_branch_path": "Transition -> LiquiditySweepConfirmationFailure -> smt_divergence_confirmation_only -> smt_relationship_resolver:btc_eth_1h_v1"
+  },
+  "input_policy": "reuse_existing_provider_csv_only_no_new_fetch",
+  "provider_packets": [
+    {
+      "provider_id": "binance",
+      "provider_provenance": "Binance BTCUSDT/ETHUSDT 1h",
+      "btc_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv/binance_btcusdt_1h.csv",
+      "eth_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/binance_ethusdt_1h.csv",
+      "btc_rows": 985,
+      "eth_rows": 990,
+      "aligned_rows": 985,
+      "returned_span": {
+        "start": "2026-04-01T00:00:00+00:00",
+        "end": "2026-05-12T00:00:00+00:00"
+      },
+      "relationship_type": "positive",
+      "relationship_confidence": 0.9022,
+      "correlation": 0.902152,
+      "correlation_stable": true,
+      "smt_event_count": 25,
+      "provider_cap_or_error": null
+    },
+    {
+      "provider_id": "bybit",
+      "provider_provenance": "Bybit linear BTCUSDT/ETHUSDT 1h",
+      "btc_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv/bybit_btcusdt_linear_1h.csv",
+      "eth_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/bybit_ethusdt_linear_1h.csv",
+      "btc_rows": 985,
+      "eth_rows": 990,
+      "aligned_rows": 985,
+      "returned_span": {
+        "start": "2026-04-01T00:00:00+00:00",
+        "end": "2026-05-12T00:00:00+00:00"
+      },
+      "relationship_type": "positive",
+      "relationship_confidence": 0.9029,
+      "correlation": 0.902941,
+      "correlation_stable": true,
+      "smt_event_count": 25,
+      "provider_cap_or_error": null
+    },
+    {
+      "provider_id": "kraken",
+      "provider_provenance": "Kraken XBTUSD/ETHUSD 1h",
+      "btc_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv/kraken_xbtusd_1h.csv",
+      "eth_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/kraken_ethusd_1h.csv",
+      "btc_rows": 721,
+      "eth_rows": 721,
+      "aligned_rows": 720,
+      "returned_span": {
+        "start": "2026-04-12T05:00:00+00:00",
+        "end": "2026-05-12T04:00:00+00:00"
+      },
+      "relationship_type": "positive",
+      "relationship_confidence": 0.8862,
+      "correlation": 0.886224,
+      "correlation_stable": true,
+      "smt_event_count": 18,
+      "provider_cap_or_error": null
+    },
+    {
+      "provider_id": "tradingviewremix",
+      "provider_provenance": "TradingViewRemix BTC/ETH 1h",
+      "btc_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv/tvr_binance_btcusdt_1h.csv",
+      "eth_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/tvr_eth_usd_1h.csv",
+      "btc_rows": 720,
+      "eth_rows": 707,
+      "aligned_rows": 707,
+      "returned_span": {
+        "start": "2026-04-12T05:00:00+00:00",
+        "end": "2026-05-12T04:00:00+00:00"
+      },
+      "relationship_type": "positive",
+      "relationship_confidence": 0.8892,
+      "correlation": 0.889249,
+      "correlation_stable": true,
+      "smt_event_count": 16,
+      "provider_cap_or_error": null
+    },
+    {
+      "provider_id": "yfinance",
+      "provider_provenance": "YF BTC-USD/ETH-USD 1h",
+      "btc_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv/yfinance_btc_usd_1h.csv",
+      "eth_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/yfinance_eth_usd_1h.csv",
+      "btc_rows": 983,
+      "eth_rows": 983,
+      "aligned_rows": 983,
+      "returned_span": {
+        "start": "2026-04-01T00:00:00+00:00",
+        "end": "2026-05-11T23:00:00+00:00"
+      },
+      "relationship_type": "positive",
+      "relationship_confidence": 0.9007,
+      "correlation": 0.900728,
+      "correlation_stable": true,
+      "smt_event_count": 23,
+      "provider_cap_or_error": null
+    },
+    {
+      "provider_id": "ibkr",
+      "provider_provenance": "IBKR PAXOS BTC/ETH aggtrades 1h",
+      "btc_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv/BTC_1h_aggtrades.csv",
+      "eth_path": "docs/experiments/actionable-regime-confidence/runs/20260512T125500+0800-codex-eth-six-provider-aq-authority-probe-v1/provider-csv/ibkr_eth_paxos_aggtrades_1h.csv",
+      "btc_rows": 783,
+      "eth_rows": 784,
+      "aligned_rows": 783,
+      "returned_span": {
+        "start": "2026-03-31T20:00:00+00:00",
+        "end": "2026-05-12T04:00:00+00:00"
+      },
+      "relationship_type": "positive",
+      "relationship_confidence": 0.9056,
+      "correlation": 0.905607,
+      "correlation_stable": true,
+      "smt_event_count": 20,
+      "provider_cap_or_error": null
+    }
+  ],
+  "aggregate": {
+    "provider_count": 6,
+    "providers_with_overlap": 6,
+    "providers_with_stable_relationship": 6,
+    "total_aligned_rows": 5163,
+    "smt_event_count": 127,
+    "branch_keyed_trade_count": 0,
+    "fold_count": 2,
+    "fold_keys": [
+      "2026-04",
+      "2026-05"
+    ]
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "event_count": 13,
+      "trade_count": 0,
+      "confidence": 0.0
+    },
+    "range": {
+      "event_count": 45,
+      "trade_count": 0,
+      "confidence": 0.0
+    },
+    "transition": {
+      "event_count": 63,
+      "trade_count": 0,
+      "confidence": 0.0
+    },
+    "stress": {
+      "event_count": 0,
+      "trade_count": 0,
+      "confidence": 0.0
+    },
+    "other": {
+      "event_count": 6,
+      "trade_count": 0,
+      "confidence": 0.0
+    }
+  },
+  "quality_gate": {
+    "runtime_provider_observations_present": true,
+    "per_regime_profitability_statistics_present": false,
+    "observation_quality_weight": 0.2,
+    "learning_quality_weight": 0.0,
+    "auto_quant_dispatch_allowed": false,
+    "pre_bayes_filter_allowed": false,
+    "bbn_learning_allowed": false,
+    "catboost_learning_allowed": false,
+    "execution_tree_branch_weight_update_allowed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "fail_closed_reason": "provider_backed_smt_events_are_confirmation_only_without_mss_cisd_displacement_pda_or_outcome_labels"
+  }
+}

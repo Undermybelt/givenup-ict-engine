@@ -1,0 +1,42 @@
+{
+  "accepted_rows_added": 0,
+  "blocked_requirements": 4,
+  "canonical_merge": false,
+  "covered_requirements": 8,
+  "downstream_promotion_rerun": false,
+  "explicit_selected_history": false,
+  "gate_result": "current_objective_audit_after_083618_v1=not_complete_source_control_and_selected_history_absent_no_downstream_promotion",
+  "partial_requirements": 2,
+  "pass_requirements": 2,
+  "promotion_allowed": false,
+  "run_id": "20260512T084654+0800-codex-current-objective-audit-after-083618-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false,
+  "counted_or_referenced_artifacts": [
+    {
+      "run_id": "20260512T083447+0800-codex-current-objective-audit-after-083108-v1",
+      "gate_result": "current_objective_audit_after_083108_v1=not_complete_source_control_and_selected_history_absent_no_downstream_promotion"
+    },
+    {
+      "run_id": "20260512T083545+0800-codex-r6-approved-dispatch-channel-readback-after-083108-v1",
+      "gate_result": "r6_approved_dispatch_channel_readback_after_083108_v1=no_approved_dispatch_channel_no_rows_no_unlock"
+    },
+    {
+      "run_id": "20260512T083559+0800-codex-local-order-lifecycle-source-sweep-after-083108-v1",
+      "gate_result": "local_order_lifecycle_source_sweep_after_083108_v1=no_accepted_owner_export_or_required_source_control_package"
+    },
+    {
+      "run_id": "20260512T083618+0800-codex-tomac-futures-header-inventory-after-083108-v1",
+      "gate_result": "tomac_futures_header_inventory_after_083108_v1=ohlcv_symbology_only_no_source_control_unlock"
+    },
+    {
+      "run_id": "20260512T083703+0800-codex-local-order-lifecycle-zip-header-sweep-after-083450-v1",
+      "gate_result": "local_order_lifecycle_zip_header_sweep_after_083450_v1=no_verifier_native_order_lifecycle_package_no_unlock"
+    }
+  ],
+  "next_action": "Continue source/control acquisition only: owner-approved order-lifecycle export with positives and matched controls, or explicit same-exhibit FLIP-as-control approval. Do not run selected-data AutoQuant or downstream promotion until source/control and selected-history gates are satisfied."
+}

@@ -1,0 +1,6 @@
+dataset,context,rejection_reason,unlock
+sujinwo/tsie-market-regime-dataset,large TSIE market-regime parquet already materialized,TSIE quarantined Bear/Bull/Sideways only and Crisis=0,false
+akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD,multi-timeframe BTC 5m/15m HMM state/regime dataset,single crypto asset model-derived HMM states no MainRegimeV2 no Crisis source label,false
+AAdevloper/nifty50-market-regime,Nifty50 daily binary risk-on/risk-off labels,daily technical data max sample date 2024-11-14 no MainRegimeV2 no Crisis no post-2026-01-30,false
+ClarusC64/market-regime-coherence-mapping-v0.1,small cross-asset macro regime-coherence examples,relationship examples only no source-panel row export no MainRegimeV2 no native Crisis labels,false
+ClarusC64/market-regime-transition-breakpoint-mapping-v0.1,small macro transition breakpoint examples,relationship examples only no source-panel row export no MainRegimeV2 no native Crisis labels,false

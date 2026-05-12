@@ -1,0 +1,24 @@
+{
+  "run_id": "20260512T034000-codex-autoquant-prepared-strategy-run-after-033430-v1",
+  "gate_result": "autoquant_prepared_strategy_run_after_033430_v1=unshimmed_run_failed_aiodns_no_promotion",
+  "workspace": "/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant/.deps/auto-quant",
+  "command": "uv run --with ta-lib run.py",
+  "exit_code": 1,
+  "strategies_discovered": 3,
+  "backtests_succeeded": 0,
+  "backtests_failed": 3,
+  "failed_strategies": [
+    "BTCLeaderBreakV4",
+    "MomentumMTFConfluence",
+    "VolBreakoutSized"
+  ],
+  "failure_class": "aiodns_binance_market_load_failure",
+  "source_control_evidence_acquired": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "trade_usable": false,
+  "update_goal": false
+}

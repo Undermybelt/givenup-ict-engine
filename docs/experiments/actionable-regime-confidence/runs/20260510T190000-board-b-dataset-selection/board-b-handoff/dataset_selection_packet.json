@@ -1,0 +1,47 @@
+{
+  "schema_version": "board-b-handoff-dataset-selection/v1",
+  "loop_id": "20260510T190000+0800-board-b-dataset-selection",
+  "generated_at": "2026-05-10T11:00:19.033837+00:00",
+  "board_a_status": "accepted_95",
+  "accepted_regime": "SessionLiquidityCoreViable",
+  "current_blocker": "user_selected_historical_data_missing",
+  "reason_user_confirmation_required": "ict-engine workflow_snapshot explicitly blocks historical-data reuse until user_selected_historical_data; running factor-research without selection would violate the recorded command contract.",
+  "dataset_options": [
+    {
+      "id": "live_nq_ltf_15m_recorded",
+      "label": "Recorded NQ LTF JSON (recommended)",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_ltf.json",
+      "paired_data": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_spot.json",
+      "why": "This is the exact path emitted by ict-engine workflow as the deferred Board B factor-research command after accepted SessionLiquidityCoreViable handoff.",
+      "command": "ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state"
+    },
+    {
+      "id": "autoquant_nq_15m_full_history",
+      "label": "Auto-Quant NQ 15m full history",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+      "why": "Longest NQ 15m history found: 351288 rows, 2011-01-02 through 2025-12-31. Requires conversion to ict-engine candle JSON before factor-research.",
+      "command": "convert feather to candle JSON, then ict-engine factor-research --symbol NQ --data <converted-json> --state-dir <selected-state>"
+    },
+    {
+      "id": "autoquant_nq_5m_full_history",
+      "label": "Auto-Quant NQ 5m full history",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-5m.feather",
+      "why": "Most granular NQ history found: 1053341 rows, 2011-01-02 through 2025-12-31. Heavier conversion/runtime cost.",
+      "command": "convert feather to candle JSON, then ict-engine factor-research --symbol NQ --data <converted-json> --data-5m <converted-json> --state-dir <selected-state>"
+    },
+    {
+      "id": "live_nq_mtf_bundle_recorded",
+      "label": "Recorded NQ multi-timeframe bundle",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_mtf.json",
+      "paired_data": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_spot.json",
+      "why": "Recorded live multi-timeframe artifact from the accepted95 full-chain run; useful if Board B should research MTF context instead of LTF trigger data.",
+      "command": "ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_mtf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state"
+    }
+  ],
+  "recommended_option_id": "live_nq_ltf_15m_recorded",
+  "artifact_refs": {
+    "accepted95_full_chain": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain",
+    "board_a_accepted_run": "docs/experiments/actionable-regime-confidence/runs/20260510T184538",
+    "workflow_status": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/ict-engine/07_workflow_status_nq_agent.json"
+  }
+}

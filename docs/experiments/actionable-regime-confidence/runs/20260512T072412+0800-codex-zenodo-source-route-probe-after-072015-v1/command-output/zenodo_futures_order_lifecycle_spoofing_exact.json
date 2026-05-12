@@ -1,0 +1,31 @@
+{
+  "aggregations": {
+    "access_status": {
+      "buckets": [],
+      "label": "Access status"
+    },
+    "file_type": {
+      "buckets": [],
+      "label": "File type"
+    },
+    "publication_date": {
+      "buckets": [],
+      "label": "Publication date"
+    },
+    "resource_type": {
+      "buckets": [],
+      "label": "Resource types"
+    },
+    "subject": {
+      "buckets": [],
+      "label": "Subjects"
+    }
+  },
+  "hits": {
+    "hits": [],
+    "total": 0
+  },
+  "links": {
+    "self": "https://zenodo.org/api/records?page=1&q=%22futures+order+lifecycle+spoofing%22&size=10&sort=bestmatch"
+  }
+}

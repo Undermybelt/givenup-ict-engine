@@ -1,0 +1,46 @@
+{
+  "protocol": "tomac-real-trade-export-v1",
+  "strategy": "TomacNQ_KillzoneBreakout",
+  "run_id": "20260512T135318-long-history-es-nq-tomac",
+  "records": 192,
+  "raw_trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_raw_trades.json",
+  "all_trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_all.jsonl",
+  "split_paths": {
+    "ES": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_es.jsonl",
+    "NQ": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_nq.jsonl"
+  },
+  "aggregate_metrics": {
+    "sharpe": 0.0448679173799532,
+    "sortino": 0.06455361635106481,
+    "calmar": 0.6145489454246446,
+    "total_profit_pct": 11.64,
+    "max_drawdown_pct": -7.475099449557431,
+    "trade_count": 192,
+    "win_rate_pct": 59.895833333333336,
+    "profit_factor": 1.1615431511314005
+  },
+  "per_pair_metrics": {
+    "NQ/USD": {
+      "sharpe": 0.03357919416689083,
+      "sortino": 0.06699265514375707,
+      "calmar": 0.5328470448089402,
+      "total_profit_pct": 9.5,
+      "max_drawdown_pct": -7.03791564412842,
+      "trade_count": 77,
+      "win_rate_pct": 72.72727272727273,
+      "profit_factor": 1.3085853861344974
+    },
+    "ES/USD": {
+      "sharpe": 0.008841057929702766,
+      "sortino": 0.0125949374031921,
+      "calmar": 0.07478661216189522,
+      "total_profit_pct": 2.14,
+      "max_drawdown_pct": -11.281189329114827,
+      "trade_count": 115,
+      "win_rate_pct": 51.30434782608696,
+      "profit_factor": 1.0518091610898985
+    }
+  },
+  "backtest_start": "2012-05-03 23:00:00",
+  "backtest_end": "2025-08-04 12:00:00"
+}

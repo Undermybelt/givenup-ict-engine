@@ -1,0 +1,78 @@
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/00_build_downstream_inputs.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/00_build_downstream_inputs.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/01_auto_quant_results_import.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/01_auto_quant_results_import.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/01_combine_real_trades.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/01_combine_real_trades.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/02_auto_quant_prior_init.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/02_auto_quant_prior_init.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/02_auto_quant_results_import.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/02_auto_quant_results_import.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/03_auto_quant_prior_init_dry_run.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/03_auto_quant_prior_init_dry_run.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/04_auto_quant_prior_init_apply.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/04_auto_quant_prior_init_apply.exit 1
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/05_auto_quant_ingest_real_trades_dry_run.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/05_auto_quant_ingest_real_trades_dry_run.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/06_auto_quant_ingest_real_trades_apply.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/06_auto_quant_ingest_real_trades_apply.exit 1
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/07_analyze_agent.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/07_analyze_agent.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/08_pre_bayes_status_json.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/08_pre_bayes_status_json.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/09_policy_training_status_agent.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/09_policy_training_status_agent.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/10_workflow_status_agent.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/10_workflow_status_agent.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/11_workflow_structural_bundle_agent.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/11_workflow_structural_bundle_agent.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/12_workflow_execution_candidate_agent.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/12_workflow_execution_candidate_agent.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/13_export_structural_path_ranking_target.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/13_export_structural_path_ranking_target.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/14_path_ranker_train_apply.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/14_path_ranker_train_apply.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/15_apply_structural_path_scores.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/15_apply_structural_path_scores.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/16_register_trainer_artifact.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/16_register_trainer_artifact.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/17_enable_path_ranking_runtime.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/17_enable_path_ranking_runtime.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/18_policy_training_status_after_catboost.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/18_policy_training_status_after_catboost.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/19_workflow_status_after_catboost.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/19_workflow_status_after_catboost.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/20_build_downstream_inputs.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/20_build_downstream_inputs.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/20_workflow_structural_after_catboost.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/20_workflow_structural_after_catboost.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/21_auto_quant_results_import.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/21_auto_quant_results_import.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/21_workflow_execution_after_catboost.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/21_workflow_execution_after_catboost.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/22_auto_quant_prior_init.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/22_auto_quant_prior_init.exit 1
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/23_analyze_yfinance_candles.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/23_analyze_yfinance_candles.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/24_pre_bayes_status.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/24_pre_bayes_status.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/25_policy_training_status.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/25_policy_training_status.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/26_workflow_status.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/26_workflow_status.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/27_export_structural_path_ranking_target.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/27_export_structural_path_ranking_target.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/28_policy_training_status_after_export.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/28_policy_training_status_after_export.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/29_workflow_status_after_export.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/29_workflow_status_after_export.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/30_train_catboost_path_ranker_uv.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/30_train_catboost_path_ranker_uv.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/31_register_structural_path_ranker.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/31_register_structural_path_ranker.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/32_enable_structural_path_ranker_runtime.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/32_enable_structural_path_ranker_runtime.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/33_policy_training_status_after_register.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/33_policy_training_status_after_register.exit 0
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/34_workflow_status_after_register.exit
+docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks/downstream-v1/34_workflow_status_after_register.exit 0

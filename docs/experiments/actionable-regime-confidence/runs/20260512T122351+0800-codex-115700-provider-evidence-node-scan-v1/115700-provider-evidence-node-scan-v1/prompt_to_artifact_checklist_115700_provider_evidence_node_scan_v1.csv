@@ -1,0 +1,5 @@
+requirement,artifact,status,note
+six provider 1h data,docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/provider-csv,covered,providers=6
+enriched downstream rows,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.enriched_layer_contract.jsonl,covered,rows=237
+candidate BBN evidence nodes,docs/experiments/actionable-regime-confidence/runs/20260512T122351+0800-codex-115700-provider-evidence-node-scan-v1/115700-provider-evidence-node-scan-v1/115700_provider_evidence_node_scan_v1.json,covered,features=17
+no runtime mutation,docs/experiments/actionable-regime-confidence/runs/20260512T122351+0800-codex-115700-provider-evidence-node-scan-v1/115700-provider-evidence-node-scan-v1/115700_provider_evidence_node_scan_v1.json,covered,candidate only

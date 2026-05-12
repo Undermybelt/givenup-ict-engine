@@ -1,0 +1,10 @@
+requirement,status,evidence,notes
+real provider-owned NQ data,pass,command-output/05_direct_strategy_signal_counts.out,11086 rows on copied provider NQ data
+Auto-Quant/Freqtrade execution path exercised,pass,command-output/00_run_modulo_canary.out,default config ran and exited 0
+market-order diagnostic attempted,pass,command-output/01_run_modulo_canary_market_orders.err,validator required entry_pricing price_side other
+market-order diagnostic repaired and rerun,pass,command-output/02_run_modulo_canary_market_orders_price_side_other.out,market config exited 0
+direct entry signals exist,pass,command-output/05_direct_strategy_signal_counts.out,forced-entry and pulse strategies emit nonzero entries
+nonzero Freqtrade trades,fail,command-output/02_run_modulo_canary_market_orders_price_side_other.out,all strategies still produced 0 trades
+accepted regime packet,fail,nq-canary-engine-debug-v1/nq_canary_engine_debug_v1.json,accepted rows added 0
+promotion allowed,fail,nq-canary-engine-debug-v1/nq_canary_engine_debug_v1.json,strict objective false
+update_goal allowed,fail,nq-canary-engine-debug-v1/nq_canary_engine_debug_v1.json,update_goal_allowed false

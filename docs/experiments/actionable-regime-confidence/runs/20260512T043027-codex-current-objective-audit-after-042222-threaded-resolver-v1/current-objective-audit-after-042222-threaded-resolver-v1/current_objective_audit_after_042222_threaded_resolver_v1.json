@@ -1,0 +1,42 @@
+{
+  "run_id": "20260512T043027-codex-current-objective-audit-after-042222-threaded-resolver-v1",
+  "gate_result": "current_objective_audit_after_042222_threaded_resolver_v1=not_complete_source_roots_absent_source_confidence_failed_autoquant_runtime_succeeded_non_promoting_downstream_blocked",
+  "board_sha256_before_audit": "600e7ea59e8c01eb8ed3fc7945a42b162097c38322f13a2a13024c3468c9092f",
+  "objective_restated": true,
+  "prompt_to_artifact_checklist_present": true,
+  "evidence_roots": {
+    "source_label_calibration": "docs/experiments/actionable-regime-confidence/runs/20260512T041410-codex-source-label-equivalence-live-calibration-after-200909-v1",
+    "predictive_confidence_screen": "docs/experiments/actionable-regime-confidence/runs/20260512T041656-codex-source-label-predictive-confidence-screen-v1",
+    "source_extension_discovery": "docs/experiments/actionable-regime-confidence/runs/20260512T041846-codex-live-source-label-extension-discovery-after-041423-v1",
+    "source_target_local_scan": "docs/experiments/actionable-regime-confidence/runs/20260512T042436-codex-source-target-local-scan-after-041656-v1",
+    "autoquant_local_cache_run": "docs/experiments/actionable-regime-confidence/runs/20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1",
+    "autoquant_local_cache_readback": "docs/experiments/actionable-regime-confidence/runs/20260512T042603-codex-autoquant-local-cache-run-readback-after-042222-v1",
+    "previous_current_objective_audit": "docs/experiments/actionable-regime-confidence/runs/20260512T042825-codex-current-objective-audit-after-042603-v1"
+  },
+  "confidence_status": {
+    "source_label_calibration_accepted_labels": 0,
+    "predictive_confidence_accepted_labels": [],
+    "new_confidence_gate": false
+  },
+  "target_roots": {
+    "r6_owner_export_root_present": false,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_extension_root_present": false
+  },
+  "autoquant_status": {
+    "data_ready": true,
+    "threaded_resolver_runtime_successful_backtests": 3,
+    "threaded_resolver_runtime_failed_backtests": 0,
+    "runtime_promotion_decision": "runtime_only_non_promoting",
+    "pre_shim_failed_runtime_interpretation_superseded": true
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

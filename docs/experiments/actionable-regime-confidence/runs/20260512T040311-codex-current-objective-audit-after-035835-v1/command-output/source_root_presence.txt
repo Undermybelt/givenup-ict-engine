@@ -1,0 +1,7 @@
+MISSING /tmp/ict-engine-board-a-r6-owner-export-v1
+MISSING /tmp/ict-engine-native-subhour-source-label-intake
+MISSING /tmp/ict-engine-source-panel-recency-extension
+drwxr-xr-x@ 5 thrill3r  wheel  160 May 12 00:11 /tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging
+drwxr-xr-x@ 5 thrill3r  wheel  160 May 11 23:58 /tmp/ict-engine-direct-manipulation-row-intake
+drwxr-xr-x@ 5 thrill3r  wheel  160 May 11 23:55 /tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake
+drwxr-xr-x@ 5 thrill3r  wheel  160 May 11 23:58 /tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake

@@ -1,0 +1,11 @@
+decision=current_goal_completion_audit_v50=r5_live_refresh_no_post_cutoff_rows_2of4_roots_still_blocked
+ready_roots=2/4
+source_label_status=schema_ready_unscored
+source_panel_recency_status=blocked
+r5_intake_populated=false
+r5_any_source_owned_post_cutoff_rows=false
+r6_positive_rows=46
+r6_matched_negative_rows=46
+r6_wilson95_min_lcb=0.922926
+strict_full_objective_achieved=false
+update_goal=false

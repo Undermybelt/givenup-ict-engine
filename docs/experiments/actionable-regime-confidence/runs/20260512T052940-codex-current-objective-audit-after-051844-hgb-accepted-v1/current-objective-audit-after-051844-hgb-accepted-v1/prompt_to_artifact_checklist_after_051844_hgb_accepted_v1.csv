@@ -1,0 +1,12 @@
+requirement,evidence,status,notes
+Bull 95 confidence,"051844 accepted Bull; min Wilson95 0.9908918883; support 618",satisfied_diagnostic,"Diagnostic screen only"
+Bear 95 confidence,"051844 accepted Bear; min Wilson95 0.9787578642; support 177",satisfied_diagnostic,"Diagnostic screen only"
+Crisis 95 confidence,"051844 accepted Crisis; min Wilson95 0.9930261988; support 547",satisfied_diagnostic,"Diagnostic screen only"
+Sideways 95 confidence,"051844 accepted Sideways; min Wilson95 0.990666799; support 534",satisfied_diagnostic,"Diagnostic screen only"
+source-control validity,"051844 source_control_evidence_acquired=false",blocked,"Existing equivalence package is not source/control unlock"
+R6 owner export root,"/tmp/ict-engine-board-a-r6-owner-export-v1 absent",blocked,"No verifier-native owner/export rows"
+R3 native subhour root,"/tmp/ict-engine-native-subhour-source-label-intake absent",blocked,"No native sub-hour rows"
+R5 recency extension root,"/tmp/ict-engine-source-panel-recency-extension absent",blocked,"No recency-extension rows"
+approval and canonical merge,"approval_present=false; canonical_merge_allowed_now=false; downstream_rerun_allowed_now=false",blocked,"No merge/rerun authorization"
+ordered full chain rerun,"canonical_merge=false; downstream_promotion_rerun=false",blocked,"Must rerun only after unlock"
+goal completion,"trade_usable=false; update_goal=false",not_allowed,"Do not mark complete"

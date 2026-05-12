@@ -1,0 +1,5 @@
+Auto-Quant handoff | status=dependency_ready_data_missing | objective=generic | data_ready=false
+Next: prepare Auto-Quant market data before attempting the research loop
+Run: ict-engine auto-quant-prepare --state-dir <local-path>
+Review: ict-engine auto-quant-adoption-review --symbol QQQ --state-dir <local-path> --artifact-id auto-quant-handoff:factor_research:QQQ:20260510T092108.761Z
+Workflow: ict-engine workflow-status --symbol QQQ --state-dir <local-path> --human

@@ -1,0 +1,34 @@
+[
+  {
+    "timeframe": "1m",
+    "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json",
+    "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T135807+0800-codex-long-history-nq-1m-aq-tomac-first-slice-v1/auto_quant_workspace/user_data/data/NQ_USD-1m.feather",
+    "rows": 301577,
+    "first_date_ms": 1341578760,
+    "last_date_ms": 1698337140
+  },
+  {
+    "timeframe": "1h",
+    "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/nq.continuous-1h.json",
+    "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T135807+0800-codex-long-history-nq-1m-aq-tomac-first-slice-v1/auto_quant_workspace/user_data/data/NQ_USD-1h.feather",
+    "rows": 8880,
+    "first_date_ms": 1341576000,
+    "last_date_ms": 1698336000
+  },
+  {
+    "timeframe": "4h",
+    "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-4h/nq.continuous-4h.json",
+    "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T135807+0800-codex-long-history-nq-1m-aq-tomac-first-slice-v1/auto_quant_workspace/user_data/data/NQ_USD-4h.feather",
+    "rows": 2912,
+    "first_date_ms": 1341576000,
+    "last_date_ms": 1698336000
+  },
+  {
+    "timeframe": "1d",
+    "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1d/nq.continuous-1d.json",
+    "dest": "docs/experiments/actionable-regime-confidence/runs/20260512T135807+0800-codex-long-history-nq-1m-aq-tomac-first-slice-v1/auto_quant_workspace/user_data/data/NQ_USD-1d.feather",
+    "rows": 724,
+    "first_date_ms": 1341532800,
+    "last_date_ms": 1698278400
+  }
+]

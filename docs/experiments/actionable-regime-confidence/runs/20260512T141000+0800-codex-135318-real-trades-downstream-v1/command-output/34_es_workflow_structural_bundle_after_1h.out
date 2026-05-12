@@ -1,0 +1,41 @@
+{
+  "candidate_set_id": "structural-candidates:LONG_ES_TOMAC_135318:fc4186820d15fa6e",
+  "candidate_set_size": 2,
+  "composite_score": 0.5130434782608696,
+  "confirmation_summary": "history_records=115 followed=115",
+  "current_posterior": 0.5130434782608696,
+  "direction": "bull",
+  "experience_prior": 0.5130434782608696,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 115,
+  "invalidation_summary": "do not collapse exact feedback path into a generic structural path",
+  "path_id": "TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout",
+  "path_label": "TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout",
+  "rank": 1,
+  "recommended_next_step": {
+    "action_type": "none",
+    "blocked_reason": null,
+    "deferred_command": null,
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:LONG_ES_TOMAC_135318:fc4186820d15fa6e",
+      "candidate_set_size": 2,
+      "confirmation": "history_records=115 followed=115",
+      "invalidation": "do not collapse exact feedback path into a generic structural path",
+      "path_id": "TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout",
+      "path_label": "TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout",
+      "recommended_command": null,
+      "selected_path_probability": 0.7737704918032787,
+      "stop": "use the recorded branch feedback stop/exit contract",
+      "trigger": "preserve exact structural feedback path TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout",
+      "why": "posterior=0.513 prior=0.513 invalidation_rate=0.000"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation",
+  "selected_path_probability": 0.7737704918032787,
+  "stop_summary": "use the recorded branch feedback stop/exit contract",
+  "symbol": "LONG_ES_TOMAC_135318",
+  "trigger_summary": "preserve exact structural feedback path TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout",
+  "why_this_path": "posterior=0.513 prior=0.513 invalidation_rate=0.000"
+}

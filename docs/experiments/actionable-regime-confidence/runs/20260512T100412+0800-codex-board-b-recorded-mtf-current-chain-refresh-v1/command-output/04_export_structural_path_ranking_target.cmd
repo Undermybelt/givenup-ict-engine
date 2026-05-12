@@ -1,0 +1,1 @@
+./target/debug/ict-engine export-structural-path-ranking-target --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir /tmp/ict-engine-20260512T100412+0800-codex-board-b-recorded-mtf-current-chain-refresh-v1-state

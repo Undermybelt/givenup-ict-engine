@@ -1,0 +1,15 @@
+PASS run_id=20260512T122232+0800-codex-115700-execution-blocker-readback-v1
+PASS source_enriched_downstream_root=20260512T121347+0800-codex-115700-enriched-downstream-chain-v1
+PASS blocking_truth_status=blocked
+PASS blocking_truth_reason=user_selected_historical_data_missing
+PASS next_command=ask-user
+PASS recorded_paths=3
+FAIL_CLOSED execution_ready=false actionable=false review=observe
+FAIL_CLOSED execution_gate_status=execution_blocked
+FAIL_CLOSED execution_readiness=0.32853919817900823
+FAIL_CLOSED baseline_candidate_status=no_trade
+FAIL_CLOSED baseline_posterior=0.0 win_probability=0.0
+FAIL_CLOSED no_selected_history_or_source_control_unlock
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

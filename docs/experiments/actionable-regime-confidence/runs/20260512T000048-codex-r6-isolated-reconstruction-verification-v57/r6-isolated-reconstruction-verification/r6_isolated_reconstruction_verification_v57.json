@@ -1,0 +1,199 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "4c93ac99448ea53b9d96da8896ca335106370ceeab5e660c755e0277d5c58b3e",
+  "chain_readback": {
+    "analyze_live_nq_yfinance": {
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/analyze_live_nq_yfinance.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/analyze_live_nq_yfinance.stdout.txt",
+      "timed_out": false
+    },
+    "auto_quant_status": {
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/auto_quant_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/auto_quant_status.stdout.txt",
+      "timed_out": false
+    },
+    "export_structural_path_ranking_target": {
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/export_structural_path_ranking_target.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/export_structural_path_ranking_target.stdout.txt",
+      "timed_out": false
+    },
+    "policy_training_status": {
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/policy_training_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/policy_training_status.stdout.txt",
+      "timed_out": false
+    },
+    "pre_bayes_status": {
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/pre_bayes_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/pre_bayes_status.stdout.txt",
+      "timed_out": false
+    },
+    "workflow_status_execution_candidate": {
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/workflow_status_execution_candidate.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/workflow_status_execution_candidate.stdout.txt",
+      "timed_out": false
+    }
+  },
+  "chronological_split_gate": false,
+  "direct_species_closed": false,
+  "external_requests_sent": true,
+  "gate_result": "r6_isolated_reconstruction_verification_v57=isolated_pooled95_verified_split_species_full_objective_still_blocked",
+  "generated_at_utc": "2026-05-11T16:07:25.467189+00:00",
+  "heldout_symbol_gate": false,
+  "heldout_venue_gate": false,
+  "isolated_intake_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake",
+  "isolated_verifier": {
+    "cmd": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake",
+    "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/isolated_direct_verifier.exit",
+    "name": "isolated_direct_verifier",
+    "parsed": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "generated_at_utc",
+        "jpm_order_control_complete_json",
+        "raw_data_committed",
+        "run_id",
+        "shared_intake_mutated",
+        "source_negative_rows",
+        "source_positive_rows",
+        "source_reconstruction_json"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/isolated_direct_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/isolated_direct_verifier.stdout.txt",
+    "timed_out": false
+  },
+  "jpm_order_control_complete_readback": {
+    "candidate_delta": {
+      "control_complete_matched_negative_rows_total": 16,
+      "control_complete_positive_rows_total": 16,
+      "jpm_semantic_duplicate_rows_excluded": [
+        "cftc_jpm_20140303_trader3_gold_buy_layered_spoof"
+      ],
+      "jpmorgan_control_complete_positive_rows": 8,
+      "nowak_smith_control_complete_positive_rows": 6,
+      "sarao_control_complete_positive_rows": 2
+    },
+    "composite_readback": {
+      "composite_min_wilson95_lcb": 0.950006246616,
+      "direct_species_closed": false,
+      "matched_negative_rows": 73,
+      "matched_negative_wilson95_lcb": 0.950006246616,
+      "pooled_95_pass": true,
+      "positive_rows": 73,
+      "positive_wilson95_lcb": 0.950006246616,
+      "sidecar_broad_normal_rows": 80,
+      "sidecar_wilson95_lcb": 0.954180263735,
+      "split_support_still_blocked": true
+    },
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/r6-jpmorgan-order-positive-row-candidate-screen/r6_jpmorgan_order_positive_row_candidate_screen_v1.json"
+  },
+  "live_shared_intake_verifier": {
+    "cmd": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+    "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/live_direct_verifier.exit",
+    "name": "live_direct_verifier",
+    "parsed": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "canonical_intake_root",
+        "generated_at_utc",
+        "materialization_note",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "source_v56_json",
+        "source_v56_negative_csv",
+        "source_v56_positive_csv",
+        "thresholds_relaxed",
+        "trade_usable",
+        "v56_gate_result",
+        "v56_negative_sha256",
+        "v56_positive_sha256"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/live_direct_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/command-output/live_direct_verifier.stdout.txt",
+    "timed_out": false
+  },
+  "matched_negative_rows": 73,
+  "matched_negative_wilson95_lcb": 0.950006246616,
+  "new_confidence_gate": true,
+  "next_action": "Source non-spoofing direct Manipulation species and enough split-balanced rows to pass chronological, symbol, and venue Wilson95 gates; keep R5 source-owner recency and R3 native-subhour blockers open.",
+  "pooled_95_gate": true,
+  "pooled_min_wilson95_lcb": 0.950006246616,
+  "positive_rows": 73,
+  "positive_wilson95_lcb": 0.950006246616,
+  "providers": [
+    {
+      "observed": true,
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "observed": true,
+      "provider_id": "tradingview_mcp",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "observed": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available;public_yahoo_http_endpoints",
+      "status": "ready"
+    },
+    {
+      "observed": true,
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "observed": true,
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    }
+  ],
+  "raw_data_committed": false,
+  "run_id": "20260512T000048-codex-r6-isolated-reconstruction-verification-v57",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "sidecar_broad_normal_control_rows": 80,
+  "sidecar_broad_normal_wilson95_lcb": 0.954180263735,
+  "source_reconstruction": {
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction-v55/r6_direct_intake_reconstruction_v55.json",
+    "matched_negative_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction-v55/matched_negative_normal_activity_rows_v55.csv",
+    "positive_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction-v55/positive_spoofing_layering_rows_v55.csv",
+    "stale_assertion_check": {
+      "assertions_file_mentions_53": true,
+      "assertions_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/checks/r6_direct_intake_reconstruction_v55_assertions.out",
+      "source_json_positive_rows": 73,
+      "stale_assertions_detected": true
+    }
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

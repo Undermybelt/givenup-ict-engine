@@ -1,0 +1,1 @@
+jq -e . docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/materials/ibkr_spy_provider_trend_pullback_resume.json docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/materials/yahoo_es_provider_trend_pullback_resume.json

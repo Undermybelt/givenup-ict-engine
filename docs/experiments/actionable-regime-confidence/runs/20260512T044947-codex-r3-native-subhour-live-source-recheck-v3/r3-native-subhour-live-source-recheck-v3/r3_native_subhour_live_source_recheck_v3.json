@@ -1,0 +1,90 @@
+{
+  "run_id": "20260512T044947-codex-r3-native-subhour-live-source-recheck-v3",
+  "gate": "r3_native_subhour_live_source_recheck_v3=no_ready_source_owned_native_subhour_rows_no_promotion",
+  "target": "R3 native sub-hour source-label rows",
+  "required_intake_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+  "required_files": [
+    "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+    "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json"
+  ],
+  "focus_cells": [
+    {"symbol": "AAPL", "timeframe": "15m", "required_after": "2026-01-30"},
+    {"symbol": "AAPL", "timeframe": "30m", "required_after": "2026-01-30"},
+    {"symbol": "^IXIC", "timeframe": "15m", "required_after": "2026-01-30"},
+    {"symbol": "^IXIC", "timeframe": "30m", "required_after": "2026-01-30"}
+  ],
+  "prior_packets_read": [
+    "20260511T192750-codex-native-subhour-external-source-screen-v1",
+    "20260511T194400-codex-native-subhour-source-recheck-v2",
+    "20260511T201713-codex-native-subhour-local-live-intake-sweep-v1",
+    "20260512T010401-codex-r3-native-subhour-sendable-requests-v2",
+    "20260512T012139-codex-r3-native-subhour-public-web-source-screen-v1"
+  ],
+  "checks": [
+    {
+      "surface": "local_required_root",
+      "query_or_path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "result": "absent",
+      "accepted_rows_added": 0
+    },
+    {
+      "surface": "kaggle_cli",
+      "query_or_path": "AAPL 15m regime label",
+      "result": "No datasets found",
+      "accepted_rows_added": 0
+    },
+    {
+      "surface": "kaggle_cli",
+      "query_or_path": "IXIC 15m regime label",
+      "result": "No datasets found",
+      "accepted_rows_added": 0
+    },
+    {
+      "surface": "kaggle_cli",
+      "query_or_path": "intraday market regime labels",
+      "result": "thisathdamiru/bybit-multi-crypto-historical-data-2020-2026 raw Bybit data panel",
+      "accepted_rows_added": 0
+    },
+    {
+      "surface": "huggingface_api",
+      "query_or_path": "AAPL 15m regime label",
+      "result": "HTTP 200, zero dataset rows",
+      "accepted_rows_added": 0
+    },
+    {
+      "surface": "huggingface_api",
+      "query_or_path": "IXIC 15m regime label",
+      "result": "HTTP 200, zero dataset rows",
+      "accepted_rows_added": 0
+    },
+    {
+      "surface": "huggingface_api",
+      "query_or_path": "intraday market regime labels",
+      "result": "HTTP 200, zero dataset rows",
+      "accepted_rows_added": 0
+    },
+    {
+      "surface": "huggingface_dataset_schema",
+      "query_or_path": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "result": "5m/15m BTCUSD OHLCV and generated HMM-style fields; proxy/model-derived, not source-owned AAPL/IXIC MainRegimeV2 rows",
+      "accepted_rows_added": 0
+    }
+  ],
+  "promotion": {
+    "ready_source_owned_native_subhour_exports": 0,
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge_allowed": false,
+    "downstream_rerun_allowed": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "boundary": {
+    "raw_rows_downloaded": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "thresholds_relaxed": false,
+    "proxy_labels_approved": false
+  }
+}

@@ -1,0 +1,60 @@
+2026-05-11 19:12:02,179 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-11 19:12:02,180 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-11 19:12:02,197 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-11 19:12:02,198 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-11 19:12:02,200 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy CrossPanelRootAwareDailyV1 from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T190239-codex-board-b-crosspanel-rootaware-daily-v1/strategy/CrossPanelRootAwareDailyV1.py'..
+.
+2026-05-11 19:12:02,201 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-11 19:12:02,202 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1d.
+2026-05-11 19:12:02,202 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-11 19:12:02,202 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-11 19:12:02,202 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-11 19:12:02,203 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 5.
+2026-05-11 19:12:02,203 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-11 19:12:02,203 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1d
+2026-05-11 19:12:02,204 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.08
+2026-05-11 19:12:02,204 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-11 19:12:02,204 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-11 19:12:02,204 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-11 19:12:02,205 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-11 19:12:02,205 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-11 19:12:02,205 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-11 19:12:02,205 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-11 19:12:02,206 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-11 19:12:02,206 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-11 19:12:02,206 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 220
+2026-05-11 19:12:02,206 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-11 19:12:02,207 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-11 19:12:02,207 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-11 19:12:02,207 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-11 19:12:02,207 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-11 19:12:02,208 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-11 19:12:02,208 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-11 19:12:02,208 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-11 19:12:02,208 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-11 19:12:02,209 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 5
+2026-05-11 19:12:02,209 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-11 19:12:02,220 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-11 19:12:02,227 - freqtrade.data.history.datahandlers.idatahandler - WARNING - SPY/USD, spot, 1d, data starts at 2023-01-03 00:00:00
+2026-05-11 19:12:02,227 - freqtrade.data.history.datahandlers.idatahandler - WARNING - SPY/USD, spot, 1d, data ends at 2025-12-30 00:00:00
+2026-05-11 19:12:02,237 - freqtrade.data.converter.converter - INFO - Missing data fillup for SPY/USD, 1d: before: 749 - after: 1093 - 45.93%
+2026-05-11 19:12:02,241 - freqtrade.data.history.datahandlers.idatahandler - WARNING - QQQ/USD, spot, 1d, data starts at 2024-06-03 00:00:00
+2026-05-11 19:12:02,250 - freqtrade.data.converter.converter - INFO - Missing data fillup for QQQ/USD, 1d: before: 396 - after: 576 - 45.45%
+2026-05-11 19:12:02,255 - freqtrade.data.history.datahandlers.idatahandler - WARNING - NQ/USD, spot, 1d, data starts at 2011-01-02 00:00:00
+2026-05-11 19:12:02,274 - freqtrade.data.converter.converter - INFO - Missing data fillup for NQ/USD, 1d: before: 4651 - after: 5478 - 17.78%
+2026-05-11 19:12:02,278 - freqtrade.data.history.datahandlers.idatahandler - WARNING - AAPL/USD, spot, 1d, data starts at 2023-01-03 00:00:00
+2026-05-11 19:12:02,279 - freqtrade.data.history.datahandlers.idatahandler - WARNING - AAPL/USD, spot, 1d, data ends at 2025-12-30 00:00:00
+2026-05-11 19:12:02,281 - freqtrade.data.history.datahandlers.idatahandler - INFO - Price jump in AAPL/USD, 1d, spot between two candles of 20.85% detected.
+2026-05-11 19:12:02,288 - freqtrade.data.converter.converter - INFO - Missing data fillup for AAPL/USD, 1d: before: 744 - after: 1093 - 46.91%
+2026-05-11 19:12:02,292 - freqtrade.data.history.datahandlers.idatahandler - WARNING - ES/USD, spot, 1d, data starts at 2023-01-03 00:00:00
+2026-05-11 19:12:02,292 - freqtrade.data.history.datahandlers.idatahandler - WARNING - ES/USD, spot, 1d, data ends at 2025-12-30 00:00:00
+2026-05-11 19:12:02,299 - freqtrade.data.converter.converter - INFO - Missing data fillup for ES/USD, 1d: before: 746 - after: 1093 - 46.51%
+2026-05-11 19:12:02,300 - freqtrade.optimize.backtesting - INFO - Loading data from 2011-01-02 00:00:00 up to 2025-12-31 00:00:00 (5477 days).
+2026-05-11 19:12:02,301 - freqtrade.configuration.timerange - WARNING - Moving start-date by 220 candles to account for startup time.
+2026-05-11 19:12:02,422 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-11 19:12:02,427 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy CrossPanelRootAwareDailyV1
+2026-05-11 19:12:02,547 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2011-08-10 00:00:00 up to 2025-12-31 00:00:00 (5257 days).

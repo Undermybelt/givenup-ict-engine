@@ -1,0 +1,10 @@
+PASS decision=vantmacro_source_label_request_draft_v1=draft_ready_not_sent_rows_not_acquired
+PASS source_route_decision=vantmacro_current_regime_route_screen_v1=source_route_found_rows_not_acquired
+PASS required_field_count=16
+PASS request_sent=false
+PASS rows_acquired=false
+PASS intake_files_created=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

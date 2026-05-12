@@ -1,0 +1,66 @@
+{
+  "info": {
+    "name": "hidden-regime",
+    "version": "2.0.2",
+    "summary": "Market regime detection using Hidden Markov Models with Bayesian uncertainty quantification",
+    "project_urls": {
+      "Bug Reports": "https://github.com/hidden-regime/hidden-regime/issues",
+      "Changelog": "https://github.com/hidden-regime/hidden-regime/blob/main/CHANGELOG.md",
+      "Documentation": "https://docs.hiddenregime.com",
+      "Feature Requests": "https://github.com/hidden-regime/hidden-regime/issues",
+      "Homepage": "https://hiddenregime.com",
+      "Issues": "https://github.com/hidden-regime/hidden-regime/issues",
+      "Repository": "https://github.com/hidden-regime/hidden-regime",
+      "Source Code": "https://github.com/hidden-regime/hidden-regime"
+    },
+    "requires_dist": [
+      "numpy>=2.3.2",
+      "pandas>=2.3.2",
+      "scipy>=1.7.0",
+      "matplotlib>=3.4.0",
+      "seaborn>=0.11.0",
+      "tqdm>=4.50.0",
+      "yfinance>=0.2.0",
+      "ta>=0.10.2",
+      "scikit-learn>=1.0.0",
+      "plotly>=5.0.0; extra == \"visualization\"",
+      "Pillow>=9.0.0; extra == \"visualization\"",
+      "fastmcp>=2.0.0; extra == \"mcp\"",
+      "pydantic>=2.0.0; extra == \"mcp\"",
+      "pytest>=8.4.2; extra == \"dev\"",
+      "pytest-cov>=7.0.0; extra == \"dev\"",
+      "pytest-xdist>=3.0.0; extra == \"dev\"",
+      "pytest-benchmark>=5.1.0; extra == \"dev\"",
+      "pytest-asyncio>=0.23.0; extra == \"dev\"",
+      "pytest-timeout>=2.2.0; extra == \"dev\"",
+      "psutil>=7.0.0; extra == \"dev\"",
+      "black>=25.1.0; extra == \"dev\"",
+      "isort>=6.0.1; extra == \"dev\"",
+      "flake8>=7.3.0; extra == \"dev\"",
+      "mypy>=1.0.0; extra == \"dev\"",
+      "bandit[toml]>=1.7.0; extra == \"dev\"",
+      "tox>=4.0.0; extra == \"dev\"",
+      "build>=1.3.0; extra == \"dev\"",
+      "twine>=6.2.0; extra == \"dev\"",
+      "sphinx>=8.2.3; extra == \"docs\"",
+      "sphinx-rtd-theme>=3.0.2; extra == \"docs\"",
+      "myst-parser>=4.0.1; extra == \"docs\"",
+      "sphinx-autodoc-typehints>=3.2.0; extra == \"docs\"",
+      "hidden-regime[dev,docs,mcp,visualization]; extra == \"all\""
+    ]
+  },
+  "urls": [
+    {
+      "filename": "hidden_regime-2.0.2-py3-none-any.whl",
+      "packagetype": "bdist_wheel",
+      "upload_time_iso_8601": "2025-11-24T22:09:08.548299Z",
+      "size": 433207
+    },
+    {
+      "filename": "hidden_regime-2.0.2.tar.gz",
+      "packagetype": "sdist",
+      "upload_time_iso_8601": "2025-11-24T22:09:11.544783Z",
+      "size": 4401341
+    }
+  ]
+}

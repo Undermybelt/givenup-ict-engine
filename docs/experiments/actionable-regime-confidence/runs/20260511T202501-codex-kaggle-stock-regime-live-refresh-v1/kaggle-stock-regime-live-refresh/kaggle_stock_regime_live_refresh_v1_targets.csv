@@ -1,0 +1,5 @@
+symbol,main_regime_v2_label,split_role,min_new_source_sessions,post_cutoff_rows
+XOM,Sideways,heldout_time,5,0
+UNH,Bear,calibration,7,0
+^DJI,Sideways,calibration,7,0
+AMD,Bear,calibration,10,0

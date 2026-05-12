@@ -1,0 +1,41 @@
+provider,slug,route,query,status,failed,parse_error,records_scanned,required_filename_hit,owner_hit,mainregime_hit,r3_native_hit,crisis_context_hit,r5_hit,r6_hit,accepted_unlock
+openalex,mainregimev2_exact,r5_r3_exact,"""MainRegimeV2""",200,False,,0,False,False,False,False,False,False,False,False
+crossref,mainregimev2_exact,r5_r3_exact,"""MainRegimeV2""",200,False,,0,False,False,False,False,False,False,False,False
+semantic_scholar,mainregimev2_exact,r5_r3_exact,"""MainRegimeV2""",429,True,,0,False,False,False,False,False,False,False,False
+europe_pmc,mainregimev2_exact,r5_r3_exact,"""MainRegimeV2""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,mainregimev2_crisis_exact,r3_exact,"""MainRegimeV2"" ""Crisis""",200,False,,0,False,False,False,False,False,False,False,False
+crossref,mainregimev2_crisis_exact,r3_exact,"""MainRegimeV2"" ""Crisis""",200,False,,10,False,False,False,False,True,False,False,False
+semantic_scholar,mainregimev2_crisis_exact,r3_exact,"""MainRegimeV2"" ""Crisis""",429,True,,0,False,False,False,False,False,False,False,False
+europe_pmc,mainregimev2_crisis_exact,r3_exact,"""MainRegimeV2"" ""Crisis""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,native_subhour_rows_exact,r3_exact,"""native_subhour_source_label_rows""",200,False,,0,False,False,False,False,False,False,False,False
+crossref,native_subhour_rows_exact,r3_exact,"""native_subhour_source_label_rows""",200,False,,0,False,False,False,False,False,False,False,False
+semantic_scholar,native_subhour_rows_exact,r3_exact,"""native_subhour_source_label_rows""",429,True,,0,False,False,False,False,False,False,False,False
+europe_pmc,native_subhour_rows_exact,r3_exact,"""native_subhour_source_label_rows""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,stock_regimes_extension_exact,r5_exact,"""stock_market_regimes_2026_extension""",200,False,,0,False,False,False,False,False,False,False,False
+crossref,stock_regimes_extension_exact,r5_exact,"""stock_market_regimes_2026_extension""",200,False,,0,False,False,False,False,False,False,False,False
+semantic_scholar,stock_regimes_extension_exact,r5_exact,"""stock_market_regimes_2026_extension""",200,False,,0,False,False,False,False,False,False,False,False
+europe_pmc,stock_regimes_extension_exact,r5_exact,"""stock_market_regimes_2026_extension""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,positive_rows_exact,r6_filename,"""direct_manipulation_positive_rows""",200,False,,0,False,False,False,False,False,False,False,False
+crossref,positive_rows_exact,r6_filename,"""direct_manipulation_positive_rows""",200,False,,0,False,False,False,False,False,False,False,False
+semantic_scholar,positive_rows_exact,r6_filename,"""direct_manipulation_positive_rows""",429,True,,0,False,False,False,False,False,False,False,False
+europe_pmc,positive_rows_exact,r6_filename,"""direct_manipulation_positive_rows""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,matched_controls_exact,r6_filename,"""direct_manipulation_matched_controls""",200,False,,0,False,False,False,False,False,False,False,False
+crossref,matched_controls_exact,r6_filename,"""direct_manipulation_matched_controls""",200,False,,0,False,False,False,False,False,False,False,False
+semantic_scholar,matched_controls_exact,r6_filename,"""direct_manipulation_matched_controls""",429,True,,0,False,False,False,False,False,False,False,False
+europe_pmc,matched_controls_exact,r6_filename,"""direct_manipulation_matched_controls""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,provenance_exact,r6_filename,"""direct_manipulation_provenance""",200,False,,0,False,False,False,False,False,False,False,False
+crossref,provenance_exact,r6_filename,"""direct_manipulation_provenance""",200,False,,0,False,False,False,False,False,False,False,False
+semantic_scholar,provenance_exact,r6_filename,"""direct_manipulation_provenance""",429,True,,0,False,False,False,False,False,False,False,False
+europe_pmc,provenance_exact,r6_filename,"""direct_manipulation_provenance""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,oystacher_3red_exact,r6_owner,"""Oystacher"" ""3Red Trading""",200,False,,5,False,False,False,False,False,False,False,False
+crossref,oystacher_3red_exact,r6_owner,"""Oystacher"" ""3Red Trading""",200,False,,10,False,False,False,False,False,False,False,False
+semantic_scholar,oystacher_3red_exact,r6_owner,"""Oystacher"" ""3Red Trading""",200,False,,1,False,False,False,False,False,False,False,False
+europe_pmc,oystacher_3red_exact,r6_owner,"""Oystacher"" ""3Red Trading""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,oystacher_order_lifecycle,r6_owner,"""Oystacher"" ""order lifecycle""",200,False,,0,False,False,False,False,False,False,False,False
+crossref,oystacher_order_lifecycle,r6_owner,"""Oystacher"" ""order lifecycle""",200,False,,10,False,False,False,False,False,False,False,False
+semantic_scholar,oystacher_order_lifecycle,r6_owner,"""Oystacher"" ""order lifecycle""",429,True,,0,False,False,False,False,False,False,False,False
+europe_pmc,oystacher_order_lifecycle,r6_owner,"""Oystacher"" ""order lifecycle""",200,False,,0,False,False,False,False,False,False,False,False
+openalex,spoofing_matched_controls,r6_context,"""spoofing"" ""matched controls"" ""futures""",200,False,,2,False,False,False,False,False,False,False,False
+crossref,spoofing_matched_controls,r6_context,"""spoofing"" ""matched controls"" ""futures""",200,False,,10,False,False,False,False,False,False,False,False
+semantic_scholar,spoofing_matched_controls,r6_context,"""spoofing"" ""matched controls"" ""futures""",429,True,,0,False,False,False,False,False,False,False,False
+europe_pmc,spoofing_matched_controls,r6_context,"""spoofing"" ""matched controls"" ""futures""",200,False,,0,False,False,False,False,False,False,False,False

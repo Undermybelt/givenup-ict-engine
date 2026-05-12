@@ -1,0 +1,10 @@
+requirement,status,evidence
+every_regime_calibrated_ge_95,blocked,owner-export verifier blocked and split calibration remains incomplete
+cross_market_cycle_timeframe_validation,blocked,required R6/R3/R5 source roots absent
+real_provider_checks,partial,provider-status exited 0 but readiness is partial
+autoquant_check,blocked,auto_quant_status exited 0 but status is missing_dependency and data_ready false
+filter_pre_bayes_check,blocked,pre_bayes_status exited 0 but latest bridge/policy/gate/assignments are null or empty
+bbn_catboost_policy_training,blocked,policy_training_status exited 0 but matched_rows is 0 for both entry models
+path_ranking_execution_tree_check,blocked,workflow_status exited 0 but actionable false and ready false
+multi_agent_safe_non_destructive_work,pass,report files added under existing 040311 run root only
+update_goal_eligibility,blocked,strict objective false and downstream promotion rerun false

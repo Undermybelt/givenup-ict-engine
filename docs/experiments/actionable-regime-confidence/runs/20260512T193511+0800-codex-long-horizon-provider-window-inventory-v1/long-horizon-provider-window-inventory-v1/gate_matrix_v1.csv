@@ -1,0 +1,7 @@
+gate,status,evidence
+six_provider_rows_present,pass,6/6
+long_span_candidates_present,pass,2/6
+native_cross_timeframe_provider_fetch_present,fail_closed,0/6
+all_rows_training_adequate,fail_closed,0/6
+accepted_95_contexts_added,fail_closed,0
+promotion_allowed,fail_closed,false

@@ -1,0 +1,102 @@
+{
+  "run_id": "20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1",
+  "schema_version": "non-promoting-multicadence-rerun-readback/v1",
+  "mode": "incubation_only",
+  "feedback_label": "non_promoting_aq_feedback",
+  "parent_candidate": "032157/034002-downstream-combined-v1",
+  "auto_quant_prepare_exit": 0,
+  "run_tomac_initial_exit": 1,
+  "run_tomac_rerun_exit": 1,
+  "normalized_pair": "NQ/USD",
+  "strategies_discovered": 5,
+  "strategies_succeeded": 3,
+  "strategies_failed": 2,
+  "successful_strategy_trades_total": 0,
+  "successful_strategy_max_sharpe": 0.0,
+  "successful_strategy_max_profit_pct": 0.0,
+  "first_failure_reason": "No data left after adjusting for startup candles.",
+  "data_window_observation": {
+    "nq_1h_start": "2025-12-15T12:00:00Z",
+    "nq_4h_start": "2025-12-15T12:00:00Z",
+    "nq_1d_start": "2025-12-15T00:00:00Z",
+    "short_window": true
+  },
+  "strategies": [
+    {
+      "strategy": "NQMeanRevertFeedback",
+      "commit": "34ba6b6",
+      "sharpe": 0.0,
+      "sortino": 0.0,
+      "calmar": 0.0,
+      "total_profit_pct": 0.0,
+      "max_drawdown_pct": -0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0,
+      "outcome": "succeeded"
+    },
+    {
+      "strategy": "NQTrendCarryFeedback",
+      "commit": "34ba6b6",
+      "sharpe": 0.0,
+      "sortino": 0.0,
+      "calmar": 0.0,
+      "total_profit_pct": 0.0,
+      "max_drawdown_pct": -0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0,
+      "outcome": "succeeded"
+    },
+    {
+      "strategy": "TomacNQ_CompressionMeanRevert",
+      "commit": "34ba6b6",
+      "status": "ERROR",
+      "error_type": "OperationalException",
+      "error_msg": "No data left after adjusting for startup candles.",
+      "outcome": "failed",
+      "trade_count": 0
+    },
+    {
+      "strategy": "TomacNQ_KillzoneBreakout",
+      "commit": "34ba6b6",
+      "sharpe": 0.0,
+      "sortino": 0.0,
+      "calmar": 0.0,
+      "total_profit_pct": 0.0,
+      "max_drawdown_pct": -0.0,
+      "trade_count": 0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0,
+      "outcome": "succeeded"
+    },
+    {
+      "strategy": "TomacNQ_MulticadenceTrendPullback",
+      "commit": "34ba6b6",
+      "status": "ERROR",
+      "error_type": "OperationalException",
+      "error_msg": "No data left after adjusting for startup candles.",
+      "outcome": "failed",
+      "trade_count": 0
+    }
+  ],
+  "source_control_evidence_acquired": false,
+  "explicit_user_selected_history": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion_rerun": false,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "gate_result": "fail_closed:incubation_only_zero_trade_short_window",
+  "board_a_feedback": "Synthetic multicadence staging works after NQ/USD normalization, but this 032157/034002 slice is too short and produced zero successful-strategy trades; use as negative search feedback only.",
+  "next": "Prefer recorded historical replay or a longer explicit historical path before another Auto-Quant feedback loop; do not run production promotion from this packet.",
+  "source_artifacts": [
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1/raw/auto_quant_prepare.stdout.txt",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1/raw/run_tomac.stdout.txt",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1/raw/run_tomac.stderr.txt",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1/raw/run_tomac_rerun.stdout.txt",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1/raw/run_tomac_rerun.stderr.txt",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1/raw/pre_bayes_status_json.stdout.txt",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1/raw/policy_training_status_json.stdout.txt",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T092558+0800-codex-board-b-032157-non-promoting-multicadence-feedback-v1/raw/workflow_status_execution_candidate_agent.stdout.txt"
+  ]
+}

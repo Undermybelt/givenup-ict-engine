@@ -1,0 +1,95 @@
+{
+  "schema_version": "board-b-handoff-evidence/v1",
+  "run_id": "20260510T185125-board-b-handoff-codex",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex",
+  "generated_at": "2026-05-10T10:53:40Z",
+  "purpose": "consume Board A accepted SessionLiquidityCoreViable packet through pre-Bayes, BBN soft evidence routing, CatBoost/path-ranker context, and execution tree without claiming a tradable directional strategy",
+  "catboost_runtime_probe": {
+    "available": true,
+    "version": "1.2.10",
+    "probe": "offline uv --python 3.11 --with numpy --with catboost minimal CatBoostClassifier fit",
+    "prediction_rows": 4,
+    "blocker": false,
+    "note": "default python environments do not import catboost directly, but uv offline provisioning from local cache succeeds; CatBoost absence is not the handoff blocker"
+  },
+  "accepted_regime_packet": {
+    "accepted_regime_id": "SessionLiquidityCoreViable",
+    "market": "QQQ",
+    "timeframe": "1h",
+    "horizon": "4 observed IBKR bars",
+    "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+    "confidence_lane": "95",
+    "precision_wilson_lcb": 0.9899396497369397,
+    "calibration_support": 378,
+    "test_support": 378,
+    "ece": 0.010582010582010581,
+    "coverage": 0.3776223776223776,
+    "transition_hazard": 0.0,
+    "duration_viable": true,
+    "trade_usable": false,
+    "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json"
+  },
+  "consumer_bundle": {
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/regime-sidecar/regime_consumer_bundle.json",
+    "strict_load": true,
+    "decision_state": "accepted_session_liquidity_95",
+    "final_label": "SessionLiquidityCoreViable",
+    "trade_usable": false,
+    "execution_tree_hint": "accept_regime",
+    "path_ranker_context_present": true
+  },
+  "analyze_live": {
+    "corrected_command_output": "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/ict-engine/analyze-live-nqf-qqq-session-liquidity-bundle.json",
+    "failed_first_attempt": {
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/ict-engine/analyze-live-qqq-session-liquidity-bundle.json",
+      "error": "Yahoo futures mapping tried invalid QQQ=F; corrected run used NQ=F futures with QQQ spot/options context"
+    },
+    "symbol": "QQQ",
+    "futures_symbol": "NQ=F",
+    "spot_symbol": "QQQ",
+    "options_symbol": "QQQ",
+    "pre_bayes_gate": "pass_neutralized",
+    "bbn_soft_evidence_status": "skipped_no_supported_label",
+    "decision_summary": "Observe only"
+  },
+  "execution_tree": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/ict-engine/execution_tree_trace_qqq.json",
+    "gate_status": "observe",
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "execution_score": 0.5677200754449443,
+    "consumer_reason": "market_state=TrendExpansion/BullTrendExhaustion | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+    "path_ranker_score_used_by_execution_tree": false,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "unknown",
+    "ranker_validation_ready": false
+  },
+  "policy_training": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/ict-engine/policy-training-status-qqq.json",
+    "cisd_rb_ready": false,
+    "cisd_rb_matched_rows": 0,
+    "breaker_rb_ready": false,
+    "breaker_rb_matched_rows": 0,
+    "ranker_runtime_summary": "Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+    "ranker_validation_summary": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false"
+  },
+  "workflow_status": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/ict-engine/workflow-status-qqq.json",
+    "execution_tree_status": "observe",
+    "latest_pending_update_status": "promote_latest",
+    "ensemble_vote_status": "consensus",
+    "actionability": "not_trade_release"
+  },
+  "blocker": {
+    "status": "blocked",
+    "reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol QQQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/ict-engine/state/QQQ/analyze_live_20260510T105338_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/ict-engine/state/QQQ/analyze_live_20260510T105338_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/ict-engine/state"
+  },
+  "verdict": {
+    "board_b_handoff_completed": true,
+    "tradable_strategy_claimed": false,
+    "downstream_state": "observe_transition_guardrail_guarded",
+    "next_action": "ask user which QQQ historical dataset to use, then run deferred factor-research command"
+  }
+}
+

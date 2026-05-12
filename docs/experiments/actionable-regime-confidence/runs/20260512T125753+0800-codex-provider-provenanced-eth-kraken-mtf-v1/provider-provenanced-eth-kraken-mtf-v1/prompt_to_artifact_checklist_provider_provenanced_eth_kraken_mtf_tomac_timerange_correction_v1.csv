@@ -1,0 +1,9 @@
+requirement,evidence,status
+Provider-owned ETH/Kraken data,"Kraken ETHUSD 1h/4h/1d fetch and JSON conversion exited 0 with 721 rows per timeframe",covered
+Auto-Quant TOMAC actually executed,"`auto_quant_run_tomac_pair_alias_timerange.exit=0` and output reports `TomacNQ_KillzoneBreakout` on `ETHKRAKEN/USD`",covered
+Measured TOMAC metrics,"Output reports 1 trade, 0.77% total profit, 100% win rate, Sharpe -100.0000, Profit factor 0.00",covered_low_sample
+Enough mature observations for downstream,"Only 1 trade; no real-trade export/ingest or mature downstream observations",missing
+Six-provider authority,"This is Kraken-only, not the required six-provider packet",missing
+Calibrated >=95 confidence,"No Pre-Bayes/BBN/CatBoost/execution-tree promotion or >=95 calibrated confidence from this TOMAC output",missing
+No duplicate counting,"Treat as a correction under already-counted `125753`, not a new packet",covered
+No live-trade claim,"Fail-closed diagnostic; `trade_usable=false`, `promotion_allowed=false`, `update_goal=false`",covered

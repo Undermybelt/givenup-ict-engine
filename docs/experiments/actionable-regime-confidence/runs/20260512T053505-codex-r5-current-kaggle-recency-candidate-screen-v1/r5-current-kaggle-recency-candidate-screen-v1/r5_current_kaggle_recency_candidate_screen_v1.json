@@ -1,0 +1,114 @@
+{
+  "board_hash_before_run": "b915e15f19a3d590407f7387edfb5a3aadc18c800f852450e50e3ae1decc7b47",
+  "commands": [
+    {
+      "cmd": [
+        "kaggle",
+        "datasets",
+        "files",
+        "mafaqbhatti/stock-market-regimes-20002026",
+        "-v"
+      ],
+      "name": "kaggle_files",
+      "return_code": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1/command-output/kaggle_files.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1/command-output/kaggle_files.stdout.txt"
+    },
+    {
+      "cmd": [
+        "kaggle",
+        "datasets",
+        "download",
+        "mafaqbhatti/stock-market-regimes-20002026",
+        "-p",
+        "/tmp/ict-engine-kaggle-stock-regimes-current-20260512T053505",
+        "--force",
+        "--unzip"
+      ],
+      "name": "kaggle_download",
+      "return_code": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1/command-output/kaggle_download.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1/command-output/kaggle_download.stdout.txt"
+    }
+  ],
+  "dataset_id": "mafaqbhatti/stock-market-regimes-20002026",
+  "dataset_url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+  "download_matches_local_reference": true,
+  "download_root": "/tmp/ict-engine-kaggle-stock-regimes-current-20260512T053505",
+  "downloaded_csv": "/tmp/ict-engine-kaggle-stock-regimes-current-20260512T053505/stock_market_regimes_2000_2026.csv",
+  "downloaded_csv_sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+  "fieldnames": [
+    "date",
+    "ticker",
+    "close",
+    "returns",
+    "volatility",
+    "regime_label",
+    "regime_confidence",
+    "macro_context",
+    "unemployment_rate",
+    "fed_funds_rate",
+    "cpi",
+    "10y_treasury",
+    "2y_treasury",
+    "vix"
+  ],
+  "gate_result": "r5_current_kaggle_recency_candidate_screen_v1=no_current_post_cutoff_target_rows_no_promotion",
+  "generated_at_utc": "2026-05-11T21:38:51.947149+00:00",
+  "local_reference_csv": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "local_reference_csv_sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_target_files_present": false,
+  "run_id": "20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1",
+  "stats": {
+    "all_target_cells_met": false,
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "post_cutoff_root_rows": 0,
+    "row_count": 245021,
+    "target_counts": [
+      {
+        "main_regime_v2_label": "Sideways",
+        "meets_min_sessions": false,
+        "min_new_source_sessions": 5,
+        "post_cutoff_rows": 0,
+        "split_role": "heldout_time",
+        "ticker": "XOM"
+      },
+      {
+        "main_regime_v2_label": "Bear",
+        "meets_min_sessions": false,
+        "min_new_source_sessions": 7,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "ticker": "UNH"
+      },
+      {
+        "main_regime_v2_label": "Sideways",
+        "meets_min_sessions": false,
+        "min_new_source_sessions": 7,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "ticker": "^DJI"
+      },
+      {
+        "main_regime_v2_label": "Bear",
+        "meets_min_sessions": false,
+        "min_new_source_sessions": 10,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "ticker": "AMD"
+      }
+    ],
+    "target_rows_found": 0
+  },
+  "target_root_mutated": false
+}

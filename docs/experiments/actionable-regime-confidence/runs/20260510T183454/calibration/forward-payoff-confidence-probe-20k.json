@@ -1,0 +1,476 @@
+{
+  "schema_version": "forward-payoff-confidence-probe/v1",
+  "input": "/tmp/ict-regime-chain-20260509T231052/input/nq_auto_quant_15m_ohlcv_20k.csv",
+  "auxiliary_evidence": "/tmp/ict-regime-chain-20260509T231052/provider-probes/provider_auxiliary_evidence_20k.csv",
+  "truth_output": "/tmp/ict-regime-chain-20260509T231052/input/nq_forward_payoff_truth_20k.jsonl",
+  "horizon_bars": 16,
+  "threshold_return": 0.001,
+  "rows": 20000,
+  "feature_count": 152,
+  "splits": {
+    "train": [
+      0,
+      10000
+    ],
+    "calibration": [
+      10000,
+      15000
+    ],
+    "test": [
+      15000,
+      19984
+    ]
+  },
+  "label_counts": {
+    "train": {
+      "ForwardWin": 3974,
+      "NoEdge": 1995,
+      "Invalidated": 3821,
+      "ForwardLoss": 210
+    },
+    "calibration": {
+      "NoEdge": 1639,
+      "ForwardWin": 1800,
+      "Invalidated": 1368,
+      "ForwardLoss": 193
+    },
+    "test": {
+      "ForwardWin": 1917,
+      "Invalidated": 1665,
+      "NoEdge": 1268,
+      "ForwardLoss": 134
+    }
+  },
+  "one_vs_rest_rules": {
+    "ForwardWin": [
+      {
+        "target": 0.95,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 500,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 500,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 500,
+        "rules": []
+      }
+    ],
+    "ForwardLoss": [
+      {
+        "target": 0.95,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 500,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 500,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 500,
+        "rules": []
+      }
+    ],
+    "Invalidated": [
+      {
+        "target": 0.95,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 500,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 500,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 500,
+        "rules": []
+      }
+    ],
+    "NoEdge": [
+      {
+        "target": 0.95,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 0.95,
+        "min_support": 500,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 0.99,
+        "min_support": 500,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 20,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 30,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 50,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 80,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 100,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 200,
+        "rules": []
+      },
+      {
+        "target": 1.0,
+        "min_support": 500,
+        "rules": []
+      }
+    ]
+  },
+  "passes": [],
+  "pass_count": 0
+}

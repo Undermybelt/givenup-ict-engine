@@ -1,0 +1,8 @@
+sources_fetched=ok
+candidate_rows_19=ok
+source_dates_present=ok
+products_present=ok
+controls_missing_fail_closed=ok
+chain_commands_attempted=ok
+no_shared_intake_mutation=ok
+strict_full_objective_not_complete=ok

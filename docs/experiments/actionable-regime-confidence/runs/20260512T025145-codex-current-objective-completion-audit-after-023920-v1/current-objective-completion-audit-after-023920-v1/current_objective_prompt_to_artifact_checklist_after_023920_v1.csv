@@ -1,0 +1,11 @@
+requirement,status,evidence,reason
+every_MainRegimeV2_regime_confidence_95,blocked,"accepted_rows_added=0; no new confidence gate; current board remains blocked","No accepted MainRegimeV2 packet exists under the current source/control contract."
+per_regime_qualifying_condition,blocked,"no accepted regimes","A qualifying condition cannot be accepted without an accepted regime packet."
+cross_market_cross_cycle_validation,blocked,"R3 native-subhour root absent; R5 recency-extension root absent; TSIE candidate-only","Cross-context support is not canonical accepted validation."
+provider_context_ibkr_tradingview_yf_kraken,partial,"021456 provider mapping; board provider_status","yfinance and Kraken CLI usable, but IBKR/TradingViewRemix/Kraken public remain non-promoting or not ready."
+real_chain_provider_autoquant_filter_bbn_catboost_execution_tree,partial,"023312 Auto-Quant run; 020037 read-only runtime chain; 024014 audit","Auto-Quant ran, but source/control gates prevent canonical downstream promotion; Pre-Bayes confidence below 95 and CatBoost matched rows 0."
+multi_agent_append_only_coordination,pass,"023312 count-once notes; 023920 supersession notes","Board was noisy but append-only; conflicting entries were superseded instead of rewritten."
+writeback_to_board,pass,"docs/plans/2026-05-10-actionable-regime-confidence-todo.md","Current board has appended evidence and non-promotion status."
+autoquant_not_data_blocked,pass,"023312 seeded run; 023920 diagnostic run","Auto-Quant can execute in prepared/diagnostic workspaces, but this is not regime acceptance."
+source_control_unlock,blocked,"R6 owner export absent; approval_present=false; FLIP approval false","Canonical merge and downstream rerun are not allowed."
+no_proxy_promotion,partial,"accepted rows 0; synthetic probes noncanonical","Proxy/runtime/synthetic evidence is correctly not promoted, but objective remains unachieved."

@@ -1,0 +1,6 @@
+requirement,evidence,status
+real provider data beyond yfinance only,101138 acquired Kraken XBTUSD 1h and Bybit BTCUSDT 1h CSVs; yfinance QQQ harness succeeded while TradingView/IBKR failed,partial_non_promoting
+Auto-Quant data readiness,"101221 status_after is dependency_ready_seed_required with data_ready true, but seed strategies are still required",partial_non_promoting
+Auto-Quant measured provider NQ run,"101256 generated NQ_USD 1h/4h/1d feathers and ran TOMAC successfully, but trade_count=0",non_promoting
+every regime 95%-99% plus cross-market/timeframe validation,"no new accepted regime packet, no source/control unlock, no selected-history approval",not_complete
+do not disturb concurrent agents,append-only aggregation; no existing root edited; promotion flags false,pass

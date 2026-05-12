@@ -1,0 +1,11 @@
+PASS command_exit_zero_count=8
+PASS branch_path_preserved=true
+PASS pre_bayes_gate_status=pass_neutralized
+PASS bbn_evidence_application=applied
+PASS path_ranker_runtime_ready=true
+PASS path_ranker_validation_ready=true
+PASS execution_candidate_ready=false
+PASS closed_loop_branch_admission=fail_closed
+PASS promotion=false
+PASS update_goal=false
+PASS sidecar_093435_count_once=true

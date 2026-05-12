@@ -1,0 +1,7 @@
+artifact_id,path,exists
+025816_btcusdt_hf_screen,docs/experiments/actionable-regime-confidence/runs/20260512T025816-codex-btcusdt-amplitude-hf-source-screen-v1/btcusdt-amplitude-hf-source-screen-v1/btcusdt_amplitude_hf_source_screen_v1.md,True
+025816_btcusdt_hf_assertions,docs/experiments/actionable-regime-confidence/runs/20260512T025816-codex-btcusdt-amplitude-hf-source-screen-v1/checks/btcusdt_amplitude_hf_source_screen_v1_assertions.out,True
+025801_databento_multi_json,docs/experiments/actionable-regime-confidence/runs/20260512T025801-codex-local-databento-multi-futures-nonqualifying-source-screen-v1/local-databento-multi-futures-nonqualifying-source-screen-v1/local_databento_multi_futures_nonqualifying_source_screen_v1.json,True
+025256_autoquant_settlement_json,docs/experiments/actionable-regime-confidence/runs/20260512T025256-codex-autoquant-seeded-strategy-readback-settlement-v1/autoquant-seeded-strategy-readback-settlement-v1/autoquant_seeded_strategy_readback_settlement_v1.json,True
+025156_databento_gc_json,docs/experiments/actionable-regime-confidence/runs/20260512T025156-codex-local-databento-gc-nonqualifying-source-screen-v1/local-databento-gc-nonqualifying-source-screen-v1/local_databento_gc_nonqualifying_source_screen_v1.json,True
+024942_ninjatrader_screen_json,docs/experiments/actionable-regime-confidence/runs/20260512T024942-codex-r6-ninjatrader-local-cache-owner-export-screen-v1/r6-ninjatrader-local-cache-owner-export-screen-v1/ninjatrader_local_cache_owner_export_screen_v1.json,True

@@ -1,0 +1,67 @@
+[
+  {
+    "family": "NQ/ES/YM",
+    "provider": "Yahoo chart",
+    "base_symbol": "NQ",
+    "comparison_symbol": "ES",
+    "base_rows": 1135,
+    "comparison_rows": 1135,
+    "aligned_rows": 500,
+    "first_aligned_time": "1775818800",
+    "last_aligned_time": "1778587200",
+    "base_error": null,
+    "comparison_error": null
+  },
+  {
+    "family": "EURUSD/GBPUSD/DXY",
+    "provider": "Yahoo chart",
+    "base_symbol": "EURUSD",
+    "comparison_symbol": "DXY",
+    "base_rows": 1409,
+    "comparison_rows": 1180,
+    "aligned_rows": 500,
+    "first_aligned_time": "1776038400",
+    "last_aligned_time": "1778587200",
+    "base_error": null,
+    "comparison_error": null
+  },
+  {
+    "family": "XAUUSD/XAGUSD/DXY",
+    "provider": "Yahoo chart",
+    "base_symbol": "XAUUSD",
+    "comparison_symbol": "XAGUSD",
+    "base_rows": 1131,
+    "comparison_rows": 1131,
+    "aligned_rows": 500,
+    "first_aligned_time": "1775826000",
+    "last_aligned_time": "1778587200",
+    "base_error": null,
+    "comparison_error": null
+  },
+  {
+    "family": "BTC/ETH",
+    "provider": "Yahoo chart",
+    "base_symbol": "BTC",
+    "comparison_symbol": "ETH",
+    "base_rows": 1429,
+    "comparison_rows": 1429,
+    "aligned_rows": 500,
+    "first_aligned_time": "1776787200",
+    "last_aligned_time": "1778587200",
+    "base_error": null,
+    "comparison_error": null
+  },
+  {
+    "family": "BTC/ETH",
+    "provider": "Kraken OHLC",
+    "base_symbol": "BTC",
+    "comparison_symbol": "ETH",
+    "base_rows": 721,
+    "comparison_rows": 721,
+    "aligned_rows": 500,
+    "first_aligned_time": "1776790800",
+    "last_aligned_time": "1778587200",
+    "base_error": null,
+    "comparison_error": null
+  }
+]

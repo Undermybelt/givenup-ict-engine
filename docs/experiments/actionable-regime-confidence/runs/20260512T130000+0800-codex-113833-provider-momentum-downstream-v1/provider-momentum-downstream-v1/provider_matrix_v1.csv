@@ -1,0 +1,7 @@
+provider,provider_requested,provider_data_acquired,provider_unreachable,local_cache_replay,provider_symbol,timeframe,rows,notes
+IBKR,True,True,False,False,BTC PAXOS USD,1h,45,midpoint 1h fetched in provider matrix; AQ run_tomac stayed non-promotable/thin
+TradingViewRemix/TVR,True,True,False,False,BINANCE:BTCUSDT,1h,720,TVR-routed Binance BTCUSDT 1h provider CSV
+yfinance/YF,True,True,False,False,BTC-USD,1h,983,YF BTC-USD 1h provider CSV
+Kraken,True,True,False,False,XBTUSD,1h,721,Kraken public XBTUSD 1h provider CSV
+Binance,True,True,False,False,BTCUSDT,1h,985,Binance public BTCUSDT 1h provider CSV
+Bybit,True,True,False,False,BTCUSDT linear,1h,985,Bybit public linear BTCUSDT 1h provider CSV

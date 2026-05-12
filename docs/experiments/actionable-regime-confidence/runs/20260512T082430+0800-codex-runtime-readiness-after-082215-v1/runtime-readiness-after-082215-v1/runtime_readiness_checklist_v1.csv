@@ -1,0 +1,8 @@
+requirement,status,evidence,blocker
+"Run real provider status surfaces including IBKR, TradingViewRemix, yfinance, and Kraken visibility",covered_non_promoting,provider_status_agent/provider_status_market_data_agent/provider_status_live_runtime_agent command outputs,
+Run Auto-Quant readiness surface,covered_non_promoting,auto_quant_status_json command output,selected-data AutoQuant promotion still blocked by source/control and selected-history gates
+Run filter / Pre-Bayes readiness surface,covered_non_promoting,pre_bayes_status_nq_json command output,no canonical source/control merge input
+Run BBN / policy-training / CatBoost-path-ranking readiness surfaces,covered_non_promoting,policy_training_status_nq_agent and export_structural_path_ranking_target_nq command outputs,no accepted source/control root and no selected historical path
+Run execution-tree/workflow branch surfaces,covered_non_promoting,workflow_status_nq_agent and workflow_status_nq_execution_candidate_agent command outputs,promotion remains fail-closed before downstream rerun
+Preserve branch order main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor,blocked,No selected-data promotion or canonical merge was allowed in this slice,source/control unlock and selected-history gates are false
+Do not use proxy runtime readiness as completion proof,covered_fail_closed,This artifact records readiness only and keeps promotion_allowed=false,

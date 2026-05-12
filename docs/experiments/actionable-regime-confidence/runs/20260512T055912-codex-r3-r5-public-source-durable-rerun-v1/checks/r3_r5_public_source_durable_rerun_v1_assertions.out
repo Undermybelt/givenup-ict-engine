@@ -1,0 +1,13 @@
+r3_r5_public_source_durable_rerun_v1=metadata_search_no_required_root_unlock_no_promotion
+kaggle_rows_scanned=1
+huggingface_rows_scanned=0
+r3_exact_metadata_hits=0
+r5_exact_metadata_hits=0
+required_roots_present=0
+accepted_rows_added=0
+source_control_evidence_acquired=false
+target_root_mutated=false
+canonical_merge=false
+downstream_promotion_rerun=false
+trade_usable=false
+update_goal=false

@@ -1,0 +1,16 @@
+gate_result=tomac_local_schema_classifier_after_083108_v1=no_verifier_native_source_control_schema_no_unlock
+files_scanned=215
+exact_required_files_found=0
+exact_required_package_present=false
+verifier_native_hint_files=0
+strong_lifecycle_hint_files=5
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

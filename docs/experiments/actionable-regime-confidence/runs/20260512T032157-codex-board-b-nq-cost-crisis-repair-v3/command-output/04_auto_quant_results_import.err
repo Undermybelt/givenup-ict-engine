@@ -1,0 +1,4 @@
+Error: loading strategy library from 'docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/strategy_library_nq_cost_crisis_repair_v3.json'
+
+Caused by:
+    manifest at 'docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/nq-cost-crisis-repair-v3/strategy_library_nq_cost_crisis_repair_v3.json' has unsupported manifest_version='auto-quant-strategy-library/v1'; supported: ["1.0"]

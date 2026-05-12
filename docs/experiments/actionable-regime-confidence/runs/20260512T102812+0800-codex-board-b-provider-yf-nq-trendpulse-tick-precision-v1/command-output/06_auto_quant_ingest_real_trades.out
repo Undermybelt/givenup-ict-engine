@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "2f6938fc925013b3",
+  "dry_run": false,
+  "feedback_records_inserted": 18,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812_20260512T023603.296928000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "board_b_provider_yf_nq_tick_precision_v1",
+  "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+  "trades_applied": 18,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1/provider_yf_nq_sampled_pulse_real_trades_v1.jsonl",
+  "trades_total": 18
+}

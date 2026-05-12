@@ -1,0 +1,14 @@
+[bayi-sequence-gate] loading train from /private/tmp/ict-regime-bayi-gdrive/train_sample.tar.gz
+[bayi-sequence-gate] train rows_seen=25000 parsed=25000
+[bayi-sequence-gate] train rows_seen=50000 parsed=50000
+[bayi-sequence-gate] train rows_seen=75000 parsed=75000
+[bayi-sequence-gate] train rows_seen=100000 parsed=100000
+[bayi-sequence-gate] train rows_seen=125000 parsed=125000
+[bayi-sequence-gate] loading test from /private/tmp/ict-regime-bayi-gdrive/test_sample.tar.gz
+[bayi-sequence-gate] test rows_seen=25000 parsed=25000
+[bayi-sequence-gate] test rows_seen=50000 parsed=50000
+[bayi-sequence-gate] fitting sequence_tail_logodds fit_rows=82365 cal_rows=49949 test_rows=64299
+[bayi-sequence-gate] sequence_tail_logodds row_cal_lcb=0.028683 row_test_lcb=0.040038 event_cal_lcb=0.040450 event_test_lcb=0.024102
+[bayi-sequence-gate] fitting combined_target_sequence_logodds fit_rows=82365 cal_rows=49949 test_rows=64299
+[bayi-sequence-gate] combined_target_sequence_logodds row_cal_lcb=0.024734 row_test_lcb=0.023915 event_cal_lcb=0.024102 event_test_lcb=0.002420
+[bayi-sequence-gate] done accepted_95=False best_row_min_lcb=0.028636 best_event_min_lcb=0.024102 elapsed=95.533s

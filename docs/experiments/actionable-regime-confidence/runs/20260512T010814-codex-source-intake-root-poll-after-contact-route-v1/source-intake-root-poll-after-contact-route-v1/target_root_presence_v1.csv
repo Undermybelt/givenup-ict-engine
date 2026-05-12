@@ -1,0 +1,6 @@
+request_id,root,exists,is_dir,required_file_count,present_required_file_count,all_required_files_present,verifier,verifier_rerun_allowed
+r6_oystacher_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,false,false,3,0,false,direct_manipulation_row_intake_verifier,false
+r6_oystacher_owner_export_private_tmp_alias,/private/tmp/ict-engine-board-a-r6-owner-export-v1,false,false,3,0,false,direct_manipulation_row_intake_verifier,false
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,true,true,2,2,true,source_label_equivalence_verifier,true
+r3_native_subhour_source_labels,/tmp/ict-engine-native-subhour-source-label-intake,false,false,2,0,false,native_subhour_source_label_readback,false
+r5_source_panel_recency_extension,/tmp/ict-engine-source-panel-recency-extension,false,false,2,0,false,source_panel_recency_extension_verifier,false

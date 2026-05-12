@@ -1,0 +1,14 @@
+run_id=20260511T125200+0800-codex-accepted-root-dated-window-inventory-v1
+board_sha256_at_run=67a8d28541f216dc36ff7952666114a8fc6bb3fc09bbee7e35245df59cf9e53c
+total_windows=5968
+windows_by_root={'Bear': 325, 'Bull': 5035, 'Sideways': 608}
+selected_rows_by_root={'Bear': 3465, 'Bull': 14134, 'Sideways': 4049}
+materialized_roots=Bear,Bull,Sideways
+crisis_dated_windows_materialized=false
+confidence_gate_claimed=false
+full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

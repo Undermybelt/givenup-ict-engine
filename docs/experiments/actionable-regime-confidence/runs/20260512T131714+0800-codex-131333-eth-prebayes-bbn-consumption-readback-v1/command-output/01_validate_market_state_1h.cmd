@@ -1,0 +1,1 @@
+./target/debug/ict-engine validate-market-state --data docs/experiments/actionable-regime-confidence/runs/20260512T131714+0800-codex-131333-eth-prebayes-bbn-consumption-readback-v1/data/eth_six_provider_composite_1h.json --compact 

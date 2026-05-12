@@ -1,0 +1,1 @@
+/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /tmp/20260512T054718-codex-provider-autoquant-source-unlock-probe-after-053505-v1/autoquant-state --output-format json

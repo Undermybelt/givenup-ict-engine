@@ -1,0 +1,6 @@
+market_data:0/1 ready
+guide: ibkr: access=login_and_local_runtime fit=tradfi fallback=30 summary=Setup-required IBKR market-data path for broker-linked futures and equities workflows.
+detail: ibkr | access=login_and_local_runtime | Setup-required IBKR market-data path for broker-linked futures and equities workflows.
+setup: Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches. | Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise.
+market_data: ready 0/1 selectable 1 default 0
+  pending: ibkr(configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable)

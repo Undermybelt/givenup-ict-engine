@@ -1,0 +1,21 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "official_order_lifecycle_source_route_refresh_after_082629_v1=official_routes_confirmed_rows_not_acquired_no_unlock",
+  "notes": [
+    "This artifact is a current source-route disposition after the local Databento OHLCV-only readback.",
+    "Official CME/Cboe/CFE routes exist for order book, trade, or quote data, but verifier-native positive/control rows and provenance were not acquired.",
+    "FINRA CAT is lifecycle-relevant but not a public futures/Oystacher owner-export source for the current R6 route.",
+    "No direct verifier, split calibration, canonical merge, selected-data AutoQuant, Pre-Bayes/BBN, CatBoost/path-ranking, or execution-tree promotion was run."
+  ],
+  "promotion_allowed": false,
+  "routes_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T083046+0800-codex-official-order-lifecycle-source-route-refresh-after-082629-v1/official-order-lifecycle-source-route-refresh-after-082629-v1/official_order_lifecycle_source_routes_v1.csv",
+  "run_id": "20260512T083046+0800-codex-official-order-lifecycle-source-route-refresh-after-082629-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

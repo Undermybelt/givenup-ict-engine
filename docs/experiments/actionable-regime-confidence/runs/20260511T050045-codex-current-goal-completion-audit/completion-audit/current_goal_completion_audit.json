@@ -1,0 +1,274 @@
+{
+  "accepted_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "Manipulation"
+  ],
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T050045-codex-current-goal-completion-audit/checks/current_goal_completion_audit_assertions.out",
+    "audit_json": "docs/experiments/actionable-regime-confidence/runs/20260511T050045-codex-current-goal-completion-audit/completion-audit/current_goal_completion_audit.json",
+    "audit_md": "docs/experiments/actionable-regime-confidence/runs/20260511T050045-codex-current-goal-completion-audit/completion-audit/current_goal_completion_audit.md",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T050045-codex-current-goal-completion-audit/scripts/current_goal_completion_audit.py"
+  },
+  "checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "passed": true,
+      "requirement": "Named board exists and is the active contract"
+    },
+    {
+      "evidence": "Board Active MainRegimeV2 Root Ledger",
+      "passed": true,
+      "requirement": "Active roots are MainRegimeV2 parent roots plus direct-input-gated Manipulation"
+    },
+    {
+      "evidence": "Board research guidance and root ledger",
+      "passed": true,
+      "requirement": "Expanded labels are not counted as completion roots"
+    },
+    {
+      "evidence": "Per-root artifact audit",
+      "passed": true,
+      "requirement": "Every active root has accepted 95 evidence under concrete artifacts"
+    },
+    {
+      "evidence": "Per-root reports",
+      "passed": true,
+      "requirement": "No trade-usable strategy is claimed by Board A"
+    },
+    {
+      "evidence": "Per-root reports",
+      "passed": true,
+      "requirement": "No runtime code changes or threshold relaxation are needed for accepted evidence"
+    }
+  ],
+  "goal_achieved": true,
+  "missing_roots": [],
+  "objective": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md every regime confidence >=95 before reporting result",
+  "residual_risk": [
+    "Manipulation acceptance is direct event-confirmation for suppression/abstain/cooldown, not pre-event prediction.",
+    "Board B profitability and execution promotion remain outside Board A."
+  ],
+  "root_results": [
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T035045-codex-kaggle-bull-coverage-buffer-gate/kaggle-bull-gate/kaggle_bull_coverage_buffer_gate_report.json",
+      "blockers": [],
+      "calibration": {
+        "coverage": 0.03721354694788075,
+        "ece": 0.007246891655341425,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_ece": true,
+        "passes_lcb": true,
+        "passes_support_cal": true,
+        "passes_support_test": true,
+        "passes_timeframes": true,
+        "support": 2202,
+        "validation_instruments": 34,
+        "validation_market_contexts": 2,
+        "validation_timeframes": 2,
+        "wilson95": 0.9525159363146446
+      },
+      "passed": true,
+      "raw_committed": false,
+      "root": "Bull",
+      "rule": "close_drawdown60 >= -0.0032047199531 AND volatility <= 0.152179344579",
+      "runtime_code_changed": false,
+      "state": "accepted_95",
+      "test": {
+        "coverage": 0.05277735555893331,
+        "ece": 5.620084042701201e-06,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_ece": true,
+        "passes_lcb": true,
+        "passes_support_cal": true,
+        "passes_support_test": true,
+        "passes_timeframes": true,
+        "support": 3125,
+        "validation_instruments": 36,
+        "validation_market_contexts": 2,
+        "validation_timeframes": 2,
+        "wilson95": 0.9619306121174673
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    },
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "blockers": [],
+      "calibration": {
+        "coverage": 0.07935314027830011,
+        "ece": 0.0,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_ece": true,
+        "passes_lcb": true,
+        "passes_support_cal": true,
+        "passes_support_test": true,
+        "passes_timeframes": true,
+        "support": 633,
+        "validation_instruments": 10,
+        "validation_market_contexts": 2,
+        "validation_timeframes": 2,
+        "wilson95": 0.9939679511007218
+      },
+      "passed": true,
+      "raw_committed": false,
+      "root": "Bear",
+      "rule": "bear_drawdown_ratio >= 1 AND bear_return_ratio >= 1",
+      "runtime_code_changed": false,
+      "state": "accepted_95",
+      "test": {
+        "coverage": 0.0655819774718398,
+        "ece": 0.0,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_ece": true,
+        "passes_lcb": true,
+        "passes_support_cal": true,
+        "passes_support_test": true,
+        "passes_timeframes": true,
+        "support": 524,
+        "validation_instruments": 6,
+        "validation_market_contexts": 2,
+        "validation_timeframes": 2,
+        "wilson95": 0.9927223245607182
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    },
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T041923-codex-yahoo-sourcebacked-parent-root-gate/yahoo-parent-root-gate/yahoo_sourcebacked_parent_root_gate_report.json",
+      "blockers": [],
+      "calibration": {
+        "coverage": 0.062053403535163594,
+        "ece": 0.002020202020202033,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_ece": true,
+        "passes_lcb": true,
+        "passes_support_cal": true,
+        "passes_support_test": true,
+        "passes_timeframes": true,
+        "support": 495,
+        "validation_instruments": 9,
+        "validation_market_contexts": 2,
+        "validation_timeframes": 2,
+        "wilson95": 0.9886466535263686
+      },
+      "passed": true,
+      "raw_committed": false,
+      "root": "Sideways",
+      "rule": "sideways_abs_return_ratio <= 0.505204858191 AND sideways_range_ratio <= 0.357222193236",
+      "runtime_code_changed": false,
+      "state": "accepted_95",
+      "test": {
+        "coverage": 0.10801001251564456,
+        "ece": 0.0,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_ece": true,
+        "passes_lcb": true,
+        "passes_support_cal": true,
+        "passes_support_test": true,
+        "passes_timeframes": true,
+        "support": 863,
+        "validation_instruments": 12,
+        "validation_market_contexts": 2,
+        "validation_timeframes": 2,
+        "wilson95": 0.9955684412857684
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    },
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T235220-codex-broader-root-v2-probe/root-v2-broader/main_regime_v2_broader_root_calibration_report.json",
+      "blockers": [],
+      "calibration": {
+        "coverage": 0.06580645161290323,
+        "ece": null,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_ece": true,
+        "passes_lcb": true,
+        "passes_support_cal": true,
+        "passes_support_test": true,
+        "passes_timeframes": true,
+        "support": 1020,
+        "validation_instruments": 7,
+        "validation_market_contexts": 7,
+        "validation_timeframes": 2,
+        "wilson95": 0.996247994464769
+      },
+      "passed": true,
+      "raw_committed": false,
+      "root": "Crisis",
+      "rule": "range_ratio32_128 >= 1.43116959912",
+      "runtime_code_changed": false,
+      "state": "accepted_95",
+      "test": {
+        "coverage": 0.06175802789490756,
+        "ece": null,
+        "passes_context": true,
+        "passes_coverage": true,
+        "passes_ece": true,
+        "passes_lcb": true,
+        "passes_support_cal": true,
+        "passes_support_test": true,
+        "passes_timeframes": true,
+        "support": 952,
+        "validation_instruments": 7,
+        "validation_market_contexts": 7,
+        "validation_timeframes": 2,
+        "wilson95": 0.9959810711439178
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    },
+    {
+      "accepted_95": true,
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.json",
+      "calibration": {
+        "channels": 147,
+        "coins": 364,
+        "coverage": 0.5902732595966168,
+        "negative_controls": 10076,
+        "support": 14516,
+        "wilson95": 0.9997354338315891
+      },
+      "evidence_class": "direct_social_event_confirmed",
+      "passed": true,
+      "raw_committed": false,
+      "root": "Manipulation",
+      "rule": "classified_telegram_coin_pump_event_present == 1",
+      "runtime_code_changed": false,
+      "state": "accepted_95",
+      "target_policy": "source-backed direct Telegram pump-attempt event, not OHLCV proxy",
+      "test": {
+        "channels": 167,
+        "coins": 365,
+        "coverage": 0.5218770331815225,
+        "negative_controls": 11758,
+        "support": 12834,
+        "wilson95": 0.9997007706604714
+      },
+      "thresholds_relaxed": false,
+      "trade_usable": false
+    }
+  ],
+  "run_id": "20260511T050045+0800-codex-current-goal-completion-audit",
+  "success_criteria": [
+    "Bull, Bear, Sideways, Crisis, and direct-input-gated Manipulation have accepted 95 evidence",
+    "UnknownOrMixed remains residual and is not a completion root",
+    "expanded/sub-regime labels do not count as root completion",
+    "each accepted root maps to concrete artifacts and unchanged gates",
+    "no trade-usable strategy claim is made by Board A"
+  ]
+}

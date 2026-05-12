@@ -1,0 +1,35 @@
+{
+  "run_id": "20260512T072758+0800-codex-datacite-dataverse-source-route-probe-after-072412-v1",
+  "gate_result": "datacite_dataverse_source_route_probe_after_072412_v1=no_required_source_route_no_unlock",
+  "scope": "Readback summary over existing Datacite and Harvard Dataverse command outputs; no target-root mutation, no approvals, no canonical merge, no downstream promotion, no trade claim, no update_goal.",
+  "query_count": 24,
+  "all_query_exits_zero": true,
+  "required_exact_results": {
+    "datacite_mainregimev2": 0,
+    "dataverse_mainregimev2": 0,
+    "datacite_native_subhour_source_label_rows": 0,
+    "dataverse_native_subhour_source_label_rows": 0,
+    "datacite_strict_direct_manipulation_positive_rows": 0,
+    "dataverse_strict_direct_manipulation_positive_rows": 0,
+    "datacite_strict_direct_manipulation_matched_controls": 0,
+    "dataverse_strict_direct_manipulation_matched_controls": 0,
+    "datacite_strict_oystacher": 0,
+    "dataverse_strict_oystacher": 0
+  },
+  "broad_false_positive_disposition": {
+    "datacite_direct_manipulation_positive_rows_matched_controls_top_results": "recursive_harmonic_or_covid_records_not_trading_controls",
+    "datacite_strict_3red_top_results": "figshare_rfc_taps_3red_model_not_3red_trading",
+    "dataverse_broad_phrase_results": "generic_search_noise_not_source_control_unlock"
+  },
+  "accepted_rows_added": 0,
+  "r6_owner_export_unlock": false,
+  "r5_recency_unlock": false,
+  "r3_native_subhour_unlock": false,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

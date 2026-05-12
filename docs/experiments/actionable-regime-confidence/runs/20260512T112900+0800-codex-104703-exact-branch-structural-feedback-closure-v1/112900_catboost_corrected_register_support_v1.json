@@ -1,0 +1,49 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1",
+  "source_count_once_root": "20260512T112650+0800-codex-104703-history-catboost-path-ranker-v1",
+  "classification": "supporting_only",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "commands": {
+    "23_corrected_register_catboost_trainer_artifact_json": 0,
+    "24_enable_path_ranker_runtime_after_corrected_register": 0,
+    "25_policy_training_status_after_corrected_register": 0,
+    "26_workflow_status_execution_candidate_after_corrected_register": 0,
+    "27_workflow_status_full_after_corrected_register": 0,
+    "28_pre_bayes_status_after_corrected_register": 0,
+    "29_catboost_info_cleanup_check": 0,
+    "30_final_catboost_info_cleanup_check": 0
+  },
+  "readback": {
+    "trainer_artifact_trained_rows": 87,
+    "trainer_artifact_history_rows": 87,
+    "trainer_artifact_calibration_rows": 87,
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "runtime_source": "candidate_set",
+    "score_model_family": "catboost",
+    "runtime_matches": 3,
+    "raw_scored_mature": "86/30",
+    "production_validation": "85/30",
+    "observation_validation": "43/30",
+    "execution_ready": false,
+    "execution_actionable": false,
+    "execution_gate_status": "execution_observe_only",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "catboost_info_cleanup": "absent_after_step_30"
+  },
+  "gates": [
+    "supporting_only:112900_corrected_register_after_112650",
+    "pass:corrected_register_trainer_artifact_json_exit0",
+    "pass:corrected_runtime_enable_exit0",
+    "pass:catboost_external_model_runtime_candidate_set_ready",
+    "pass:raw_scored_mature_86_of_30",
+    "pass:production_validation_85_of_30",
+    "pass:observation_validation_43_of_30",
+    "pass:catboost_info_cleanup_absent",
+    "fail_closed:execution_candidate_ready_false_actionable_false",
+    "fail_closed:execution_gate_observe_only",
+    "fail_closed:pre_bayes_pass_neutralized_no_policy_bridge",
+    "fail_closed:no_same_root_six_provider_aq_packet"
+  ]
+}

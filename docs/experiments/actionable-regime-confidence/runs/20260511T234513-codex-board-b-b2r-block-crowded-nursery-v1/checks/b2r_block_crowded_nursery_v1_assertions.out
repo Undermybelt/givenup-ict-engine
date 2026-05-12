@@ -1,0 +1,14 @@
+run_id=20260511T234513+0800-codex-board-b-b2r-block-crowded-nursery-v1
+rc_spa_gate_pass=True
+branch_path_preserved=True
+pre_bayes_seen=True
+catboost_runtime_ready=True
+execution_tree_block_crowded=True
+ranker_used_by_execution_tree=True
+yfinance_fresh_ok=True
+kraken_cli_fresh_ok=True
+nursery_status=incubation_only
+promotion_allowed=False
+report_md=docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/b2r-nursery/b2r_block_crowded_nursery_feedback_v1.md
+report_json=docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/b2r-nursery/b2r_block_crowded_nursery_feedback_v1.json
+report_csv=docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/b2r-nursery/b2r_block_crowded_nursery_feedback_v1.csv

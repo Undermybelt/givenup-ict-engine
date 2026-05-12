@@ -1,0 +1,6 @@
+gate,observed,required,pass
+official_order_fetch,200,200,True
+text_extraction,45856,>0,True
+single_event_rows,0,>0 for materialization,False
+intake_unchanged,True,True,True
+strict_full_objective_achieved,False,True,False

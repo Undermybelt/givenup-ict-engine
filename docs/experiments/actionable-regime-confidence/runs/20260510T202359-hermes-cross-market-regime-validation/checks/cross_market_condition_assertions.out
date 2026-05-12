@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "all_required_files_exist": true,
+    "five_regimes_have_conditions": true,
+    "every_regime_cross_market_context_floor": true,
+    "validation_uses_different_instruments_markets_timeframes": true,
+    "board_cursor_points_to_run": true,
+    "thresholds_not_relaxed": true,
+    "existing_accepted_only": true,
+    "zero_new_accepted_95": true,
+    "nonleaky_search_blocks_future_and_target": true,
+    "nonleaky_search_zero_new_accepted_95": true,
+    "no_trade_promotion": true
+  },
+  "failed": [],
+  "condition_validation_objective_covered": true,
+  "per_regime_acceptance_complete": false,
+  "missing_work": [
+    "five additional regimes still lack accepted 95/99 packets under unchanged gates"
+  ]
+}

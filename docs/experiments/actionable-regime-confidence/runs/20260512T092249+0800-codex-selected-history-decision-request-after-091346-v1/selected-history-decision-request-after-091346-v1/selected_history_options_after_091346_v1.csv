@@ -1,0 +1,4 @@
+option,meaning,tradeoff,selected
+HTF,Higher-timeframe history,"Cleaner context, fewer samples",false
+MTF,Mid-timeframe history,"Balanced sample count and noise",false
+LTF,Lower-timeframe history,"More samples, noisier regime behavior",false

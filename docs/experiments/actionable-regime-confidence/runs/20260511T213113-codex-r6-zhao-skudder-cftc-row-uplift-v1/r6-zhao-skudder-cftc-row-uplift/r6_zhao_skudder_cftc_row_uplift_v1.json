@@ -1,0 +1,227 @@
+{
+  "accepted_rows_added": 0,
+  "after": {
+    "matched_negative_rows": 41,
+    "matched_negative_sha256": "e8275f60bfee0892cf18a7ddade59191f6f65b99b1fb83b7019a3f3c298ffd4e",
+    "positive_rows": 41,
+    "positive_sha256": "456621bb910eaae72af29e9d63cafd4859d795b9ace3ddc3bff2e05b0c5590e9",
+    "provenance_sha256": "6e13fa01b21c95845a81a9947748a94366c6c0234578bcdebd7964e5d63ee01d"
+  },
+  "before": {
+    "matched_negative_rows": 41,
+    "matched_negative_sha256": "e8275f60bfee0892cf18a7ddade59191f6f65b99b1fb83b7019a3f3c298ffd4e",
+    "positive_rows": 41,
+    "positive_sha256": "456621bb910eaae72af29e9d63cafd4859d795b9ace3ddc3bff2e05b0c5590e9",
+    "provenance_sha256": "b13660c44031fd351ef04c1b0e51af74ac05363ae0f750bed4208f7fae763b84"
+  },
+  "board_hash_before": "ee528a0d696977c328e97308ca0c259bb57e656cc1308e4a62aa24067b5b6906",
+  "broad_normal_sample": false,
+  "combined_min_wilson95_lcb": 0.914332429815568,
+  "created_at_utc": "2026-05-11T13:38:35.252666+00:00",
+  "decision": "r6_zhao_skudder_cftc_row_uplift_v1=rows_added_schema_ready_calibration_still_blocked",
+  "direct_species_closed": false,
+  "external_requests_sent": true,
+  "gate_rows": [
+    {
+      "gate": "verifier_schema_ready",
+      "observed": "schema_ready_unscored",
+      "pass": true,
+      "required": "schema_ready_unscored"
+    },
+    {
+      "gate": "positive_rows_materialized",
+      "observed": 7,
+      "pass": true,
+      "required": 7
+    },
+    {
+      "gate": "matched_negative_rows_materialized",
+      "observed": 7,
+      "pass": true,
+      "required": 7
+    },
+    {
+      "gate": "positive_support",
+      "observed": 41,
+      "pass": false,
+      "required": ">=50"
+    },
+    {
+      "gate": "negative_support",
+      "observed": 41,
+      "pass": false,
+      "required": ">=50"
+    },
+    {
+      "gate": "orphan_groups",
+      "observed": 0,
+      "pass": true,
+      "required": 0
+    },
+    {
+      "gate": "chronological_split",
+      "observed": 35,
+      "pass": true,
+      "required": ">=2 dates"
+    },
+    {
+      "gate": "heldout_symbol_or_venue",
+      "observed": "symbols=18;venues=7",
+      "pass": true,
+      "required": "symbol>=2 or venue>=2"
+    },
+    {
+      "gate": "wilson95_lcb",
+      "observed": "0.914332",
+      "pass": false,
+      "required": ">=0.95"
+    },
+    {
+      "gate": "broad_normal_sample",
+      "observed": false,
+      "pass": false,
+      "required": true
+    },
+    {
+      "gate": "direct_species_coverage",
+      "observed": false,
+      "pass": false,
+      "required": true
+    }
+  ],
+  "labels": {
+    "matched_negative_normal_activity": 38,
+    "normal_control": 3,
+    "positive_spoofing_layering": 41
+  },
+  "matched_group_count": 40,
+  "matched_negative_rows": 41,
+  "matched_negative_rows_added": 7,
+  "matched_negative_rows_added_this_rerun": 0,
+  "matched_negative_source_row_ids_added": [],
+  "negative_wilson95_lcb": 0.914332429815568,
+  "new_confidence_gate": false,
+  "next_action": "Acquire more source-owned R6 rows, broad normal-market controls, and direct species rows; R2/R3/R4/R5 remain blocked until required source-owned files exist.",
+  "orphan_groups": [],
+  "positive_rows": 41,
+  "positive_rows_added": 7,
+  "positive_rows_added_this_rerun": 0,
+  "positive_source_row_ids_added": [],
+  "positive_wilson95_lcb": 0.914332429815568,
+  "raw_data_committed": false,
+  "run_id": "20260511T213113-codex-r6-zhao-skudder-cftc-row-uplift-v1",
+  "runtime_code_changed": false,
+  "source_results": {
+    "skudder": {
+      "all_text_checks_pass": true,
+      "extracted_this_run": false,
+      "fetched_this_run": false,
+      "pdf_bytes": 307463,
+      "pdf_path": "/tmp/ict-engine-r6-zhao-skudder-cftc-row-uplift-v1/raw/skudder.pdf",
+      "pdf_sha256": "c83a4d6501c643843c0987e5508f7954c6676c6dd2e8eb2f983c4f80523de9fe",
+      "text_chars": 60613,
+      "text_checks": {
+        "Spoof Event Example 1 (Futures Scheme): August 31, 2017": true,
+        "Spoof Event Example 2 (Futures Scheme): December 5, 2017": true,
+        "Spoof Event Example 3 (Options Scheme): July 1, 2016": true,
+        "Spoof Event Example 4 (Options Scheme): July 11, 2016": true,
+        "options on soybean futures": true
+      },
+      "text_path": "/tmp/ict-engine-r6-zhao-skudder-cftc-row-uplift-v1/text/skudder.txt",
+      "text_sha256": "4eb5ba3de809b1d74bf276242b63fa193957cd034aa69f0949f26cf5cdc1ebfa",
+      "url": "https://www.cftc.gov/media/7166/enfdavidskuddercomplaint041422/download"
+    },
+    "zhao": {
+      "all_text_checks_pass": true,
+      "extracted_this_run": false,
+      "fetched_this_run": false,
+      "pdf_bytes": 838317,
+      "pdf_path": "/tmp/ict-engine-r6-zhao-skudder-cftc-row-uplift-v1/raw/zhao.pdf",
+      "pdf_sha256": "ed6895fed61e2725e7020c6fcd8c206ce1ad6f8806fbfc3d0383ee8962dae1a0",
+      "text_chars": 93137,
+      "text_checks": {
+        "Event Example 1: April 15, 2013": true,
+        "Event Example 2: March 5, 2014": true,
+        "Event Example 3: March 21, 2016": true,
+        "to buy 82 contracts": true,
+        "to sell one": true
+      },
+      "text_path": "/tmp/ict-engine-r6-zhao-skudder-cftc-row-uplift-v1/text/zhao.txt",
+      "text_sha256": "85b2324fb7c9c954aa88b1b0c10b0aa0d38cf14fc302fe357107ddc1a714fdf2",
+      "url": "https://www.cftc.gov/idc/groups/public/@lrenforcementactions/documents/legalpleading/enfjiongshengorder012918.pdf"
+    }
+  },
+  "strict_full_objective_achieved": false,
+  "support_ok": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unique_dates": 35,
+  "unique_symbols": 18,
+  "unique_venues": 7,
+  "update_goal": false,
+  "verifier": {
+    "matched_group_count": 40,
+    "matched_negative_rows": 41,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 41,
+    "provenance_keys": [
+      "cftc_flotron_complaint_examples",
+      "cftc_gandhi_order",
+      "cftc_geneva_order_2018",
+      "cftc_geneva_order_examples",
+      "cftc_geneva_order_rows_added",
+      "cftc_genuine_order_text_checks",
+      "cftc_genuine_order_text_status",
+      "cftc_mohan_additional_examples",
+      "cftc_mohan_complaint",
+      "cftc_mohan_complaint_rows_added",
+      "cftc_mohan_complaint_text_checks",
+      "cftc_order",
+      "cftc_shak_complaint",
+      "cftc_shak_complaint_examples",
+      "cftc_shak_rows_added",
+      "cftc_text_checks",
+      "cftc_text_extraction_status",
+      "cftc_vorley_chanu_complaint",
+      "cftc_zhao_skudder_examples",
+      "created_at_utc",
+      "finra_public_schema",
+      "gandhi_matched_negative_rows_added",
+      "gandhi_positive_rows_added",
+      "gandhi_rows_materialized_at_utc",
+      "license_or_permission",
+      "matched_control_limitations",
+      "matched_control_policy",
+      "matched_negative_control_policy",
+      "matched_negative_materialized_at_utc",
+      "matched_negative_rows_acquired",
+      "matched_negative_rows_count",
+      "matched_negative_rows_path",
+      "matched_negative_rows_sha256",
+      "mohan_additional_matched_negative_rows_added",
+      "mohan_additional_positive_rows_added",
+      "mohan_additional_rows_materialized_at_utc",
+      "mohan_complaint_control_policy",
+      "positive_rows_count",
+      "positive_rows_path",
+      "positive_rows_sha256",
+      "r6_flotron_cftc_row_uplift_v1",
+      "r6_geneva_cftc_row_uplift_v1",
+      "r6_mohan_shak_duplicate_cleanup_v1",
+      "r6_mohan_shak_row_uplift_v1",
+      "r6_shak_duplicate_row_cleanup_v1",
+      "r6_zhao_skudder_cftc_row_uplift_v1",
+      "shak_complaint_matched_negative_rows_added",
+      "shak_complaint_positive_rows_added",
+      "shak_complaint_rows_materialized_at_utc",
+      "source",
+      "updated_at_utc",
+      "updated_by",
+      "vorley_chanu_matched_negative_rows_added",
+      "vorley_chanu_positive_rows_added",
+      "vorley_chanu_rows_materialized_at_utc"
+    ],
+    "status": "schema_ready_unscored"
+  },
+  "verifier_returncode": 0
+}

@@ -1,0 +1,326 @@
+{
+  "accepted_rows_added": 0,
+  "aq_results": [
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/workspace/auto-quant-provider-linked-yfinance/user_data/data/BTC_USDT-1h.feather",
+      "first_ts_ms": 1778025600000,
+      "last_ts_ms": 1778551200000,
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": -955.2486587271273,
+            "max_drawdown_pct": -0.6141881432000081,
+            "profit_factor": 0.0,
+            "sharpe": -100.0,
+            "sortino": -100.0,
+            "total_profit_pct": -0.61,
+            "trade_count": 1,
+            "win_rate_pct": 0.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": -955.2486587271273,
+              "max_drawdown_pct": -0.6141881432000081,
+              "profit_factor": 0.0,
+              "sharpe": -100.0,
+              "sortino": -100.0,
+              "total_profit_pct": -0.61,
+              "trade_count": 1,
+              "win_rate_pct": 0.0
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": 0.0,
+            "max_drawdown_pct": -0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "total_profit_pct": 0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": 0.0,
+              "max_drawdown_pct": -0.0,
+              "profit_factor": 0.0,
+              "sharpe": 0.0,
+              "sortino": 0.0,
+              "total_profit_pct": 0.0,
+              "trade_count": 0,
+              "win_rate_pct": 0.0
+            }
+          }
+        }
+      },
+      "normalized_pair": "BTC/USDT",
+      "provider": "yfinance",
+      "provider_symbol": "BTC-USD",
+      "rows": 146,
+      "run_tomac_exit": 0,
+      "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/provider-csv/yfinance_btc_usd_1h_7d.csv",
+      "timeframe": "1h",
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/workspace/auto-quant-provider-linked-yfinance"
+    },
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/workspace/auto-quant-provider-linked-kraken_public_ccxt/user_data/data/BTC_USDT-1h.feather",
+      "first_ts_ms": 1778122800000,
+      "last_ts_ms": 1778551200000,
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": -1687.8635803697748,
+            "max_drawdown_pct": -0.5844122281999989,
+            "profit_factor": 0.11653182396569162,
+            "sharpe": -30.23404338579132,
+            "sortino": -100.0,
+            "total_profit_pct": -0.52,
+            "trade_count": 2,
+            "win_rate_pct": 50.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": -1687.8635803697748,
+              "max_drawdown_pct": -0.5844122281999989,
+              "profit_factor": 0.11653182396569162,
+              "sharpe": -30.23404338579132,
+              "sortino": -100.0,
+              "total_profit_pct": -0.52,
+              "trade_count": 2,
+              "win_rate_pct": 50.0
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": 0.0,
+            "max_drawdown_pct": -0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "total_profit_pct": 0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": 0.0,
+              "max_drawdown_pct": -0.0,
+              "profit_factor": 0.0,
+              "sharpe": 0.0,
+              "sortino": 0.0,
+              "total_profit_pct": 0.0,
+              "trade_count": 0,
+              "win_rate_pct": 0.0
+            }
+          }
+        }
+      },
+      "normalized_pair": "BTC/USDT",
+      "provider": "kraken_public_ccxt",
+      "provider_symbol": "BTC/USD",
+      "rows": 120,
+      "run_tomac_exit": 0,
+      "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/provider-csv/kraken_public_ccxt_btc_1h_120.csv",
+      "timeframe": "1h",
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/workspace/auto-quant-provider-linked-kraken_public_ccxt"
+    },
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/workspace/auto-quant-provider-linked-binance_public_ccxt/user_data/data/BTC_USDT-1h.feather",
+      "first_ts_ms": 1778122800000,
+      "last_ts_ms": 1778551200000,
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": -1407.3310414395396,
+            "max_drawdown_pct": -0.5917754464000063,
+            "profit_factor": 0.2633692659067377,
+            "sharpe": -22.27901341939791,
+            "sortino": -100.0,
+            "total_profit_pct": -0.44,
+            "trade_count": 2,
+            "win_rate_pct": 50.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": -1407.3310414395396,
+              "max_drawdown_pct": -0.5917754464000063,
+              "profit_factor": 0.2633692659067377,
+              "sharpe": -22.27901341939791,
+              "sortino": -100.0,
+              "total_profit_pct": -0.44,
+              "trade_count": 2,
+              "win_rate_pct": 50.0
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": 0.0,
+            "max_drawdown_pct": -0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "total_profit_pct": 0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": 0.0,
+              "max_drawdown_pct": -0.0,
+              "profit_factor": 0.0,
+              "sharpe": 0.0,
+              "sortino": 0.0,
+              "total_profit_pct": 0.0,
+              "trade_count": 0,
+              "win_rate_pct": 0.0
+            }
+          }
+        }
+      },
+      "normalized_pair": "BTC/USDT",
+      "provider": "binance_public_ccxt",
+      "provider_symbol": "BTC/USDT",
+      "rows": 120,
+      "run_tomac_exit": 0,
+      "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/provider-csv/binance_public_ccxt_btc_1h_120.csv",
+      "timeframe": "1h",
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/workspace/auto-quant-provider-linked-binance_public_ccxt"
+    },
+    {
+      "compile_exit": 0,
+      "feather": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/workspace/auto-quant-provider-linked-bybit_public_ccxt/user_data/data/BTC_USDT-1h.feather",
+      "first_ts_ms": 1778122800000,
+      "last_ts_ms": 1778551200000,
+      "metrics": {
+        "ProviderCryptoMomentumStateV1": {
+          "aggregate": {
+            "calmar": -1421.6293036992704,
+            "max_drawdown_pct": -0.5919850471000063,
+            "profit_factor": 0.2558852133885258,
+            "sharpe": -22.63947833040509,
+            "sortino": -100.0,
+            "total_profit_pct": -0.44,
+            "trade_count": 2,
+            "win_rate_pct": 50.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": -1421.6293036992704,
+              "max_drawdown_pct": -0.5919850471000063,
+              "profit_factor": 0.2558852133885258,
+              "sharpe": -22.63947833040509,
+              "sortino": -100.0,
+              "total_profit_pct": -0.44,
+              "trade_count": 2,
+              "win_rate_pct": 50.0
+            }
+          }
+        },
+        "ProviderCryptoPullbackRevertV1": {
+          "aggregate": {
+            "calmar": 0.0,
+            "max_drawdown_pct": -0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "total_profit_pct": 0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0
+          },
+          "per_pair": {
+            "BTC/USDT": {
+              "calmar": 0.0,
+              "max_drawdown_pct": -0.0,
+              "profit_factor": 0.0,
+              "sharpe": 0.0,
+              "sortino": 0.0,
+              "total_profit_pct": 0.0,
+              "trade_count": 0,
+              "win_rate_pct": 0.0
+            }
+          }
+        }
+      },
+      "normalized_pair": "BTC/USDT",
+      "provider": "bybit_public_ccxt",
+      "provider_symbol": "BTC/USDT",
+      "rows": 120,
+      "run_tomac_exit": 0,
+      "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/provider-csv/bybit_public_ccxt_btc_1h_120.csv",
+      "timeframe": "1h",
+      "workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/workspace/auto-quant-provider-linked-bybit_public_ccxt"
+    }
+  ],
+  "downstream_promotion": false,
+  "explicit_selected_history": false,
+  "gate_result": "provider_linked_aq_provenance_probe_v1=aq_ran_with_public_provider_rows_but_six_provider_gate_fail_closed_no_promotion",
+  "generated_at": "2026-05-12T03:08:25.705585+00:00",
+  "mature_rooted_branch_observations_added": 0,
+  "promotion_allowed": false,
+  "provider_invocation_rows": {
+    "binance_public_ccxt": {
+      "first": "2026-05-07 03:00:00+00:00",
+      "last": "2026-05-12 02:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T105207+0800-codex-provider-lane-bridge-probe-v1/provider-csv/binance_public_ccxt_btc_1h_120.csv",
+      "rows": 120,
+      "status": "ok",
+      "symbol": "BTC/USDT",
+      "timeframe": "1h"
+    },
+    "bybit_public_ccxt": {
+      "first": "2026-05-07 03:00:00+00:00",
+      "last": "2026-05-12 02:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T105207+0800-codex-provider-lane-bridge-probe-v1/provider-csv/bybit_public_ccxt_btc_1h_120.csv",
+      "rows": 120,
+      "status": "ok",
+      "symbol": "BTC/USDT",
+      "timeframe": "1h"
+    },
+    "ibkr_ad_hoc_uv": {
+      "exit": 0,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T105207+0800-codex-provider-lane-bridge-probe-v1/provider-csv/ibkr_QQQ_1h_5d.csv",
+      "rows": 80,
+      "status": "ok",
+      "stderr_tail": "",
+      "symbol": "QQQ",
+      "timeframe": "1 hour"
+    },
+    "kraken_public_ccxt": {
+      "first": "2026-05-07 03:00:00+00:00",
+      "last": "2026-05-12 02:00:00+00:00",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T105207+0800-codex-provider-lane-bridge-probe-v1/provider-csv/kraken_public_ccxt_btc_1h_120.csv",
+      "rows": 120,
+      "status": "ok",
+      "symbol": "BTC/USD",
+      "timeframe": "1h"
+    },
+    "tradingview_mcp_harness": {
+      "exit": 1,
+      "interval": "1d",
+      "status": "failed",
+      "stderr_tail": "Error: market-data-harness fetch encountered failures: role=etf_reference provider=tradingview_mcp symbol=NASDAQ:QQQ fetch_failed:tradingview MCP call 'get_ohlcv' returned error | install_prompt=Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable. | install_prompt=Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+      "stdout_tail": "      }\n    ],\n    \"missing_roles\": [],\n    \"warnings\": []\n  },\n  \"results\": [\n    {\n      \"ok\": false,\n      \"provider\": \"tradingview_mcp\",\n      \"operation\": \"ohlcv.fetch\",\n      \"role\": \"etf_reference\",\n      \"symbol\": \"NASDAQ:QQQ\",\n      \"error\": {\n        \"category\": \"fetch_failed\",\n        \"message\": \"tradingview MCP call 'get_ohlcv' returned error\",\n        \"retryable\": true\n      }\n    }\n  ]\n}",
+      "symbol": "NASDAQ:QQQ"
+    },
+    "yfinance": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T105207+0800-codex-provider-lane-bridge-probe-v1/provider-csv/yfinance_btc_usd_1h_7d.csv",
+      "rows": 146,
+      "status": "ok",
+      "symbol": "BTC-USD",
+      "timeframe": "1h"
+    }
+  },
+  "run_id": "20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1",
+  "six_provider_promotion_matrix_passed": false,
+  "source_control_evidence_acquired": false,
+  "source_provider_bridge": "docs/experiments/actionable-regime-confidence/runs/20260512T105207+0800-codex-provider-lane-bridge-probe-v1",
+  "template_workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1/workspace/auto-quant-yahoo-btc-pullback-precision",
+  "update_goal": false
+}

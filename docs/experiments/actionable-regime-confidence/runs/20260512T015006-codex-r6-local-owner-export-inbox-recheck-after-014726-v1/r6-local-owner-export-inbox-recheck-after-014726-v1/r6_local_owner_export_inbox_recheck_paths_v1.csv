@@ -1,0 +1,15 @@
+kind,path,present,file_count,disposition
+target_root,/tmp/ict-engine-board-a-r6-owner-export-v1,false,0,required_r6_owner_export_root_absent
+target_root,/tmp/ict-engine-native-subhour-source-label-intake,false,0,r3_native_subhour_root_absent
+target_root,/tmp/ict-engine-source-panel-recency-extension,false,0,r5_recency_extension_root_absent
+target_root,/tmp/ict-engine-source-label-equivalence-intake,true,2,schema_ready_but_confidence_blocked
+reference_root,docs/experiments/actionable-regime-confidence/runs/20260512T014221-codex-current-objective-completion-audit-after-013904-v1,true,6,restored_fail_closed_reference
+reference_root,docs/experiments/actionable-regime-confidence/runs/20260512T014300-codex-r6-owner-export-current-send-channel-preflight-v1,true,6,send_channel_preflight_only_no_controls
+reference_root,docs/experiments/actionable-regime-confidence/runs/20260512T014305-codex-current-objective-prompt-artifact-audit-after-013904-v1,true,4,prompt_artifact_audit_not_complete
+reference_root,docs/experiments/actionable-regime-confidence/runs/20260512T014314-codex-r6-owner-route-current-web-recheck-v1,true,5,restored_route_recheck_only_no_controls
+reference_root,docs/experiments/actionable-regime-confidence/runs/20260512T014426-codex-current-objective-completion-audit-after-014229-v1,false,0,stale_non_evidence_until_restored
+reference_root,docs/experiments/actionable-regime-confidence/runs/20260512T014432-codex-board-b-220646-structural-candidate-handoff-readback-v1,true,20,board_b_build_lock_material_not_board_a_promotion_evidence
+reference_root,docs/experiments/actionable-regime-confidence/runs/20260512T014726-codex-014426-reference-drift-correction-v1,true,4,014426_absence_correction
+candidate_bundle,/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging,true,3,isolated_projection_not_owner_export_root_not_promotion_evidence
+approval_file,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,true,1,decision_package_only_no_approval
+approval_file,/private/tmp/r6_oystacher_approval_template_v1.json.valid,true,1,template_pending_no_decision

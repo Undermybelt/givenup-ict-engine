@@ -1,0 +1,14 @@
+{
+  "features": [
+    "htf_alignment_score",
+    "evidence_quality_score",
+    "risk_reward",
+    "setup_quality",
+    "selected_direction",
+    "setup_family",
+    "entry_style",
+    "ltf_path_label"
+  ],
+  "created_at": "2026-05-12T12:17:32.151791",
+  "n_samples": 237
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "current-goal-completion-audit/v2",
+  "loop_id": "20260511T080831+0800-codex-current-goal-completion-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T080831-codex-current-goal-completion-audit",
+  "objective": "Every active regime must reach 95%-99% calibrated confidence and remain suitably confident when validated across other markets, other timeframes, all cycles, and all instrument/provider species before reporting completion.",
+  "active_board_taxonomy_readback": {
+    "source": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md current cursor",
+    "taxonomy": "MainRegimeV2",
+    "price_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "direct_event_class": "Manipulation",
+    "residual": "UnknownOrMixed"
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "Named board updated in docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "evidence": "Current Cursor and evidence sections exist through 20260511T075056 plus this 20260511T080831 audit.",
+      "status": "covered"
+    },
+    {
+      "requirement": "Each active regime reaches 95%-99% calibrated confidence",
+      "evidence": "Baseline packets exist for Bull/Bear/Sideways/Crisis and one direct Manipulation source, but current expanded objective requires independent source-label attachment across the attempted full panel before acceptance.",
+      "status": "not_achieved_current_expanded_goal"
+    },
+    {
+      "requirement": "Validate across other markets",
+      "evidence": "Direct source-label attachability is only 16/612 slots and all attached slots are yfinance index cells; Kraken/non-yfinance cells remain missing.",
+      "status": "not_achieved"
+    },
+    {
+      "requirement": "Validate across other timeframes / full cycle ladder",
+      "evidence": "Only yfinance ^DJI/^GSPC 1d and 1w have all four price-root source-label candidates; intraday, monthly, and Kraken timeframe slots remain missing.",
+      "status": "not_achieved"
+    },
+    {
+      "requirement": "Full species / provider universe tried or dispositioned",
+      "evidence": "Provider and cache lanes were dispositioned; uv wrapper reports 6/7 market-data providers ready, but readiness does not supply independent source labels. TradingView remains connectivity-blocked.",
+      "status": "partially_dispositioned_not_accepted"
+    },
+    {
+      "requirement": "Do not accept proxy labels as completion",
+      "evidence": "HF TSIE/HMM/OHLCV/cache candidates are explicitly sidecar/proxy only; OHLCV manipulation proxies remain fail-closed.",
+      "status": "covered_guardrail"
+    },
+    {
+      "requirement": "Manipulation handled with direct evidence",
+      "evidence": "Mehrnoom/Mirtaheri direct-event packet remains provenance; full direct-event/order-flow/order-lifecycle variety coverage remains incomplete.",
+      "status": "not_achieved_full_coverage"
+    },
+    {
+      "requirement": "Report final result only when all requirements are covered",
+      "evidence": "Current blockers remain: 596/612 missing root-label slots, incomplete direct Manipulation coverage, and provider/timeframe gaps.",
+      "status": "not_achieved"
+    }
+  ],
+  "key_evidence_readback": {
+    "direct_source_label_attachability": {
+      "run": "20260511T075056+0800-codex-direct-source-label-attachability",
+      "slot_count": 612,
+      "direct_source_label_slots": 16,
+      "missing_slots": 596,
+      "full_four_root_cells": 4,
+      "full_four_root_cells_detail": [
+        "yfinance ^DJI 1d",
+        "yfinance ^DJI 1w",
+        "yfinance ^GSPC 1d",
+        "yfinance ^GSPC 1w"
+      ],
+      "accepted_full_panel": false
+    },
+    "provider_readiness": {
+      "default_runtime_market_data_ready": "1/7",
+      "uv_wrapper_market_data_ready": "6/7",
+      "remaining_connectivity_blocker": "TradingViewRemix",
+      "provider_readiness_solves_label_blocker": false
+    }
+  },
+  "audit_result": {
+    "goal_achieved": false,
+    "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "primary_blocker": "596 of 612 current root-label slots are still missing independent source labels; the attached 16 slots cover only yfinance ^DJI/^GSPC 1d/1w, and direct Manipulation coverage remains incomplete.",
+    "next_action": "Acquire independent source labels for the 596 missing MainRegimeV2 root-label slots, prioritizing non-yfinance cells and intraday/monthly timeframes; keep the 16 attached Kaggle slots as partial source-label evidence only."
+  },
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,5 @@
+market_data:1/1 ready
+guide: tradingview_mcp: access=local_stdio_or_remote_api_key fit=tradfi/crypto fallback=31 summary=Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.
+detail: tradingview_mcp | access=local_stdio_or_remote_api_key | Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.
+market_data: ready 1/1 selectable 1 default 0
+  ready: tradingview_mcp

@@ -1,0 +1,104 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T073800-codex-local-cache-source-label-audit/checks/local_cache_source_label_audit_assertions.out",
+    "details_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T073800-codex-local-cache-source-label-audit/local-cache-source-labels/local_cache_source_label_audit.csv",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T073800-codex-local-cache-source-label-audit/scripts/local_cache_source_label_audit.py",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T073800-codex-local-cache-source-label-audit/local-cache-source-labels/local_cache_source_label_audit.json",
+    "summary_md": "docs/experiments/actionable-regime-confidence/runs/20260511T073800-codex-local-cache-source-label-audit/local-cache-source-labels/local_cache_source_label_audit.md"
+  },
+  "classification_policy": {
+    "accepted_as_source_label": "Only externally sourced root labels for Bull/Bear/Sideways/Crisis with provenance and symbol/timeframe attachability.",
+    "not_accepted": [
+      "OHLCV-only cache files",
+      "Auto-Quant strategy outputs or backtest metadata",
+      "repo runtime/analyze artifacts",
+      "HMM, Viterbi, cluster, future-target, prediction, or factor benchmark outputs",
+      "direct Manipulation overlay evidence when attached to OHLCV bar cells"
+    ]
+  },
+  "completion_accounting": {
+    "accepted_full_cycle_full_universe": false,
+    "raw_ohlcv_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "why_not_accepted": [
+      "Local and Auto-Quant caches contain usable OHLCV/data artifacts, but no independent full MainRegimeV2 root label panel.",
+      "Generated model states, backtest targets, and strategy predictions are proxy/model outputs, not source labels.",
+      "No local cache artifact attaches all four roots to the yfinance/Kraken full-cycle cells."
+    ]
+  },
+  "created_at_utc": "2026-05-10T23:37:40.982134+00:00",
+  "gate_result": "blocked_local_and_autoquant_cache_have_no_independent_root_label_panel",
+  "goal_achieved": false,
+  "next_action": "Acquire or create a provenance-backed external MainRegimeV2 root label panel for the ready yfinance/Kraken cells, then rerun attachability and full-coverage disposition.",
+  "objective": "Audit repo-local, Auto-Quant, and scratch caches for independent source-backed MainRegimeV2 root label panels.",
+  "run_id": "20260511T073800+0800-codex-local-cache-source-label-audit",
+  "source_lanes": {
+    "auto_quant_backtest_metadata": "/Users/thrill3r/Auto-Quant/user_data/backtest_results",
+    "auto_quant_cache": "/Users/thrill3r/Auto-Quant/user_data/data",
+    "repo_state": "/Users/thrill3r/projects-ict-engine/ict-engine/state",
+    "tmp_scratch": "/private/tmp and /tmp bounded candidate scan"
+  },
+  "summary": {
+    "auto_quant_ohlcv_cells": 52,
+    "auto_quant_symbols": [
+      "AAPL",
+      "AAPL_USD",
+      "AVAX_USDT",
+      "BNB_USDT",
+      "BTC-USD",
+      "BTCY_USD",
+      "BTC_USDT",
+      "DIA_USD",
+      "ES_F",
+      "ES_USD",
+      "ETH_USDT",
+      "EURUSD_X",
+      "EUR_USD",
+      "GLD_USD",
+      "IWM_USD",
+      "NQ_USD",
+      "QQQ_USD",
+      "SOL_USDT",
+      "SPY",
+      "SPY_USD",
+      "binance_BTCUSDT",
+      "bybit_BTCUSDT_linear",
+      "kraken_AAPLx",
+      "kraken_EURUSD",
+      "kraken_PF_SPX",
+      "kraken_SPYx",
+      "kraken_XBTUSD"
+    ],
+    "auto_quant_timeframes": [
+      "15m",
+      "1d",
+      "1h",
+      "4h",
+      "5m"
+    ],
+    "counts_by_lane": {
+      "auto_quant_backtest_metadata": 34,
+      "auto_quant_cache": 54,
+      "repo_state": 125,
+      "tmp_scratch": 134
+    },
+    "counts_by_status": {
+      "generated_or_runtime_labelish_json_not_independent_source": 170,
+      "labelish_or_generated_columns_not_independent_source": 6,
+      "no_root_label_columns": 2,
+      "no_root_label_keys": 117,
+      "ohlcv_only": 52
+    },
+    "full_root_label_panel_cells_available": 0,
+    "independent_source_backed_mainregimev2_label_sources": 0,
+    "root_label_coverage": {
+      "Bear": 0,
+      "Bull": 0,
+      "Crisis": 0,
+      "Sideways": 0
+    },
+    "rows_scanned": 347
+  }
+}

@@ -1,0 +1,11 @@
+assert_smt_packet_failed: missing executable fixture smt_bullish_positive_input.json
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T202459+0800-codex-smt-relationship-resolver-schema-preflight-v1/scripts/assert_smt_packet.py", line 132, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T202459+0800-codex-smt-relationship-resolver-schema-preflight-v1/scripts/assert_smt_packet.py", line 91, in main
+    assert_true(fixture.exists(), f"missing executable fixture {fixture_name}")
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T202459+0800-codex-smt-relationship-resolver-schema-preflight-v1/scripts/assert_smt_packet.py", line 48, in assert_true
+    raise AssertionError(message)
+AssertionError: missing executable fixture smt_bullish_positive_input.json

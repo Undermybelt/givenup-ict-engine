@@ -1,0 +1,12 @@
+PASS run_id=20260512T121354+0800-codex-115700-layer-contract-downstream-v1
+PASS source_run_id=20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1
+PASS enriched_rows=237
+PASS contract_complete_rows=237
+PASS contract_rejected_rows=0
+FAIL_CLOSED market_factor_trainable_rows=0
+PASS stale_or_wrong_auto_quant_run_id_rows=0
+PASS stale_symbol_namespace_rows=0
+PASS provider_counts={"binance_public": 52, "bybit_public": 51, "ibkr_paxos_long_midpoint": 44, "kraken_public": 32, "tvr_default_binance": 37, "yfinance": 21}
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

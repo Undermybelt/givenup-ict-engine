@@ -1,0 +1,92 @@
+[
+  {
+    "provider": "Yahoo chart",
+    "query": "NQ=F",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/NQ%3DF?range=60d&interval=1h",
+    "error": null,
+    "returned_rows": 1135,
+    "first_time": "1772514000",
+    "last_time": "1778589695"
+  },
+  {
+    "provider": "Yahoo chart",
+    "query": "ES=F",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/ES%3DF?range=60d&interval=1h",
+    "error": null,
+    "returned_rows": 1135,
+    "first_time": "1772514000",
+    "last_time": "1778589696"
+  },
+  {
+    "provider": "Yahoo chart",
+    "query": "EURUSD=X",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/EURUSD%3DX?range=60d&interval=1h",
+    "error": null,
+    "returned_rows": 1409,
+    "first_time": "1771372800",
+    "last_time": "1778590285"
+  },
+  {
+    "provider": "Yahoo chart",
+    "query": "DX-Y.NYB",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB?range=60d&interval=1h",
+    "error": null,
+    "returned_rows": 1180,
+    "first_time": "1772514000",
+    "last_time": "1778589700"
+  },
+  {
+    "provider": "Yahoo chart",
+    "query": "GC=F",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?range=60d&interval=1h",
+    "error": null,
+    "returned_rows": 1131,
+    "first_time": "1772514000",
+    "last_time": "1778589699"
+  },
+  {
+    "provider": "Yahoo chart",
+    "query": "SI=F",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?range=60d&interval=1h",
+    "error": null,
+    "returned_rows": 1131,
+    "first_time": "1772514000",
+    "last_time": "1778589698"
+  },
+  {
+    "provider": "Yahoo chart",
+    "query": "BTC-USD",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD?range=60d&interval=1h",
+    "error": null,
+    "returned_rows": 1429,
+    "first_time": "1773446400",
+    "last_time": "1778590304"
+  },
+  {
+    "provider": "Yahoo chart",
+    "query": "ETH-USD",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/ETH-USD?range=60d&interval=1h",
+    "error": null,
+    "returned_rows": 1429,
+    "first_time": "1773446400",
+    "last_time": "1778590306"
+  },
+  {
+    "provider": "Kraken OHLC",
+    "query": "XBTUSD",
+    "url": "https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=60",
+    "error": null,
+    "returned_rows": 721,
+    "first_time": "1775995200",
+    "last_time": "1778587200"
+  },
+  {
+    "provider": "Kraken OHLC",
+    "query": "ETHUSD",
+    "url": "https://api.kraken.com/0/public/OHLC?pair=ETHUSD&interval=60",
+    "error": null,
+    "returned_rows": 721,
+    "first_time": "1775995200",
+    "last_time": "1778587200"
+  }
+]

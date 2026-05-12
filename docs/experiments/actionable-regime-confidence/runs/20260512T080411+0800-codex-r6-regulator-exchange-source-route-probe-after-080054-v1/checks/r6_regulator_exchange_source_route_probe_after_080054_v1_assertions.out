@@ -1,0 +1,17 @@
+gate_result=r6_regulator_exchange_source_route_probe_after_080054_v1=official_context_only_no_owner_export_control_unlock
+sources_checked=6
+status_failures=2
+official_context_hits=3
+possible_r6_exports=0
+accepted_rows_added=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

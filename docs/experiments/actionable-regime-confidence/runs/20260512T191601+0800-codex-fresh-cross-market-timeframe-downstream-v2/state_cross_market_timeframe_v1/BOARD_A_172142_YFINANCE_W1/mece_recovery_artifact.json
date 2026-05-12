@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-BOARD_A_172142_YFINANCE_W1-1778584827461",
+  "generated_at": "2026-05-12T11:20:27.461268Z",
+  "symbol": "BOARD_A_172142_YFINANCE_W1",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "7e5f9fb323d1d313",
+  "execution_validity_summary": "execution_blocked=2487;execution_observe_only=1744;execution_ready=1647",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        1763
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.5186455276219801,
+      "execution_readiness_drift": -0.0000162678509247171,
+      "sample_count": 1763
+    },
+    {
+      "horizon_bars": [
+        1763,
+        4702
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4942734583084856,
+      "execution_readiness_drift": 1.0946884337946494e-6,
+      "sample_count": 2939
+    },
+    {
+      "horizon_bars": [
+        4702,
+        5878
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.476371592521178,
+      "execution_readiness_drift": -0.00007271992975668717,
+      "sample_count": 1176
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "8fc3f6b50e06b983",
+    "data_fingerprint": "5c5e7e6c2690b951"
+  }
+}

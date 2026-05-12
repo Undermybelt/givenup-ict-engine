@@ -1,0 +1,1 @@
+./target/debug/ict-engine workflow-status --symbol LONG_NQ_TOMAC_135318_SLICE --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/state_nq_slice_v1 --refresh --output-format json

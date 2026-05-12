@@ -1,0 +1,7 @@
+requirement,artifact,status,note
+six provider CSVs under one root,docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider-csv,covered,"{""binance_public"": 46955, ""bybit_public"": 1000, ""ibkr_aggtrades"": 6930, ""kraken_public"": 1993, ""tvr_local_stdio"": 720, ""yfinance"": 17291}"
+same-root AQ workspaces,docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/workspace,covered,files=168
+AQ/TOMAC exits,docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/checks,covered,run_success=6
+old root references absent,docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/command-output,covered,refs=0
+downstream chain,N/A,not_started,terminal readback required before downstream
+Board A acceptance,N/A,not_claimed,accepted_95_contexts_added=0

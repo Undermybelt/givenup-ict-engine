@@ -1,0 +1,13 @@
+PASS active_taxonomy=MainRegimeV2
+PASS live_api_base=https://api.pumpolymp.com
+PASS positive_pump_documents_available=true
+PASS same_asset_venue_negative_controls_available=false
+PASS manual_or_adjudicated_event_label_source_visible=false
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS accepted_direct_manipulation_sources_added=0
+PASS raw_data_committed=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS trade_usable=false
+GATE blocked_pumpolymp_live_api_positive_only_no_negative_controls

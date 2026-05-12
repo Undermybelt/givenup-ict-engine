@@ -1,0 +1,21 @@
+2026-05-12 04:01:52,593 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 04:01:52,602 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 04:01:52,603 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 04:01:52,605 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps
+/auto-quant/user_data/strategies_external
+2026-05-12 04:01:52,606 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 04:01:52,607 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps
+/auto-quant/user_data ...
+2026-05-12 04:01:52,608 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps
+/auto-quant/user_data/data ...
+2026-05-12 04:01:52,610 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 04:01:52,613 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 04:01:52,637 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 04:01:52,638 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 04:01:52,642 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 04:01:52,643 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 04:01:52,986 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 04:01:53,024 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...

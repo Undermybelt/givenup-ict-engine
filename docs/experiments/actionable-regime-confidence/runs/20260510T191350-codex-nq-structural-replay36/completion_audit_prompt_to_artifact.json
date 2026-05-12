@@ -1,0 +1,100 @@
+{
+  "schema_version": "completion-audit-prompt-to-artifact/v1",
+  "objective": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md followed with real Auto-Quant -> filter/Pre-Bayes -> BBN -> CatBoost -> execution-tree operation and provider artifacts for IBKR/TradingViewRemix/yfinance/Kraken in durable subfolders",
+  "run_roots": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36"
+  ],
+  "checklist": [
+    {
+      "requirement": "Follow docs/plans/2026-05-10-actionable-regime-confidence-todo.md and keep board updated",
+      "evidence": [
+        "docs/plans/2026-05-10-actionable-regime-confidence-todo.md current cursor",
+        "ledger row 20260510T191350+0800-codex-nq-structural-replay36-catboost-closure"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Personally run Auto-Quant import/material through ict-engine",
+      "evidence": [
+        "20260510T185358.../ict-engine/01_auto_quant_results_import_nq.json n_ok=1",
+        "state/auto-quant/NQ/auto_quant_strategy_library.json"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Run filter / Pre-Bayes layer",
+      "evidence": [
+        "20260510T185358.../ict-engine/03_pre_bayes_status_nq.json",
+        "ict-engine/17_pre_bayes_status_after_bbn_apply_nq.json latest_gate_status=observe_only latest_uses_soft_evidence=true"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Run belief network / BBN, not just dry-run",
+      "evidence": [
+        "ict-engine/16_auto_quant_prior_init_nq_apply.json dry_run=false evidence_value_gate_passed=true strategies_applied=1 trade_count=1081"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Run CatBoost/path-ranker and validate mature structural rows",
+      "evidence": [
+        "catboost/path_ranker_model/catboost_model.cbm",
+        "ict-engine/18_policy_training_status_after_bbn_apply_nq_agent.json score_model_family=catboost raw_scored_mature=1397/30 production_validation=1395/30 observation_validation=40/30"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Run execution tree consumer readback",
+      "evidence": [
+        "ict-engine/20_execution_tree_trace_after_bbn_apply_nq.json path_ranker_score_visible_to_execution_tree=true path_ranker_score_used_by_execution_tree=true ranker_validation_ready=true gate_status=observe branch=transition_guardrail"
+      ],
+      "status": "pass_with_residual",
+      "residual": "execution trace model family field remains unknown; policy/workflow artifacts show CatBoost/external_model and trace confirms score was visible/used. No execute promotion claimed."
+    },
+    {
+      "requirement": "Use/check IBKR, TradingViewRemix, yfinance, Kraken",
+      "evidence": [
+        "provider/ibkr_QQQ_1h.csv lines=4008",
+        "provider/yf_QQQ_1h_20240601_20260509.csv lines=3370",
+        "provider/kraken_PF_XBTUSD_1h_2024_2025.csv lines=2001",
+        "provider/provider-tvremix-tools-list-health.json ok=false http_status=429"
+      ],
+      "status": "pass_with_provider_blocker_recorded",
+      "residual": "TradingViewRemix was probed and durably recorded as rate-limited/unhealthy; no TradingViewRemix market data was trusted."
+    },
+    {
+      "requirement": "Store results in a named subfolder and keep useful tmp/state artifacts durable for later continuation",
+      "evidence": [
+        "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain",
+        "README.md",
+        "evidence packets",
+        "provider CSVs",
+        "state/NQ",
+        "structural replay windows/feedback",
+        "catboost model/scores"
+      ],
+      "status": "pass"
+    },
+    {
+      "requirement": "Do not hallucinate or claim trade usability",
+      "evidence": [
+        "evidence_packet_structural_replay36_catboost_closure.json decision.trade_usable=false",
+        "board blocker says trade-use remains blocked by observe/guarded execution state"
+      ],
+      "status": "pass"
+    }
+  ],
+  "overall_status": "achieved_for_requested_regime-confidence/full-chain-artifact-goal",
+  "not_claimed": [
+    "tradable strategy",
+    "execute-ready release candidate",
+    "TradingViewRemix data availability"
+  ],
+  "residual_risk": [
+    "Execution tree trace carries model_family=unknown even though policy/workflow show CatBoost/external_model; trace confirms score visible/used and ranker validation ready.",
+    "TradingViewRemix remains rate-limited/unhealthy, recorded as provider blocker rather than ignored."
+  ]
+}

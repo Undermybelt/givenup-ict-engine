@@ -1,0 +1,5 @@
+path,format,readable,rows,has_required_columns,date_min,date_max,ticker_count,unknown_ticker_count,bad_label_count,extension_candidate,blockers
+/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_analysis_by_ticker.csv,csv,True,39,False,,,39,0,0,False,['missing_required_columns']
+/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_by_year.csv,csv,True,27,False,,,0,0,0,False,['missing_required_columns']
+/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv,csv,True,245021,True,2000-01-03,2026-01-30,39,0,16,False,"['not_newer_than_source_panel', 'non_root_labels']"
+/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.parquet,parquet,False,,False,,,,,,False,['not_csv_checked_by_this_probe']

@@ -1,0 +1,14 @@
+{
+  "body": {
+    "order": "published_date",
+    "order_direction": "desc",
+    "page_size": 10,
+    "search_for": "market regime crisis labels"
+  },
+  "error": null,
+  "payload": [],
+  "provider": "figshare",
+  "query": "market regime crisis labels",
+  "status": 200,
+  "url": "https://api.figshare.com/v2/articles/search"
+}

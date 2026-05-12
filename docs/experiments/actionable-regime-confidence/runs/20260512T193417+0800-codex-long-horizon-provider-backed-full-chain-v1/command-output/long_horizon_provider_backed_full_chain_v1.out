@@ -1,0 +1,2541 @@
+{
+  "accepted_95_contexts": 0,
+  "aggregate_target_rows": 18,
+  "catboost_calibration_rows": 12,
+  "catboost_trained_rows": 12,
+  "catboost_trainer_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1/trainer_artifact.json",
+  "contexts": [
+    {
+      "actual_end": "2026-05-11T20:00:00Z",
+      "actual_start": "2025-01-02T14:30:00Z",
+      "candidate_actionable_after_scores": false,
+      "candidate_actionable_before_scores": false,
+      "candidate_ready_after_scores": null,
+      "candidate_ready_before_scores": null,
+      "candidate_status_after_scores": "no_trade",
+      "candidate_status_before_scores": "no_trade",
+      "derived_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "execution_gate_status_after_scores": null,
+      "execution_gate_status_before_scores": null,
+      "gap_stats_1h": {
+        "gap_count_gt_1h": 338,
+        "max_gap_hours": 92.5,
+        "median_gap_hours": 1.0
+      },
+      "market": "equity",
+      "native_cross_timeframe": false,
+      "pre_bayes_confidence": 0.0,
+      "pre_bayes_gate": "pass_neutralized",
+      "provider": "yfinance/YF",
+      "requested_span": "all_available_rows_from_source_provider_artifact",
+      "rows_1d": 339,
+      "rows_1h": 2355,
+      "rows_4h": 803,
+      "source_native_timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+      "symbol": "BOARD_A_YF_SPY_193417",
+      "target_history_rows_after_scores": 3,
+      "target_history_rows_before_scores": 3,
+      "target_summary_after_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_YF_SPY_193417:f071ea51654edc41",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 3,
+        "history_rows_with_path_prob_lower_bound": 3,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 3,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 3,
+        "rows_with_execution_gate_status": 3,
+        "rows_with_path_prob_lower_bound": 3,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 3,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=3 execution_gate_rows=3 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_YF_SPY_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      },
+      "target_summary_before_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_YF_SPY_193417:f071ea51654edc41",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 0,
+        "history_rows_with_path_prob_lower_bound": 0,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 0,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 0,
+        "rows_with_execution_gate_status": 0,
+        "rows_with_path_prob_lower_bound": 0,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 0,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_YF_SPY_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_YF_SPY_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      }
+    },
+    {
+      "actual_end": "2026-05-12T10:00:00Z",
+      "actual_start": "2026-01-02T09:00:00Z",
+      "candidate_actionable_after_scores": false,
+      "candidate_actionable_before_scores": false,
+      "candidate_ready_after_scores": null,
+      "candidate_ready_before_scores": null,
+      "candidate_status_after_scores": "no_trade",
+      "candidate_status_before_scores": "no_trade",
+      "derived_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "execution_gate_status_after_scores": null,
+      "execution_gate_status_before_scores": null,
+      "gap_stats_1h": {
+        "gap_count_gt_1h": 89,
+        "max_gap_hours": 81.0,
+        "median_gap_hours": 1.0
+      },
+      "market": "equity",
+      "native_cross_timeframe": false,
+      "pre_bayes_confidence": 0.0,
+      "pre_bayes_gate": "pass_neutralized",
+      "provider": "IBKR",
+      "requested_span": "all_available_rows_from_source_provider_artifact",
+      "rows_1d": 100,
+      "rows_1h": 1427,
+      "rows_4h": 401,
+      "source_native_timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+      "symbol": "BOARD_A_IBKR_SPY_193417",
+      "target_history_rows_after_scores": 3,
+      "target_history_rows_before_scores": 3,
+      "target_summary_after_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_IBKR_SPY_193417:a84c8f0d9dfdc52b",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 3,
+        "history_rows_with_path_prob_lower_bound": 3,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 3,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 3,
+        "rows_with_execution_gate_status": 3,
+        "rows_with_path_prob_lower_bound": 3,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 3,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=3 execution_gate_rows=3 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_IBKR_SPY_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      },
+      "target_summary_before_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_IBKR_SPY_193417:a84c8f0d9dfdc52b",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 0,
+        "history_rows_with_path_prob_lower_bound": 0,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 0,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 0,
+        "rows_with_execution_gate_status": 0,
+        "rows_with_path_prob_lower_bound": 0,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 0,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_IBKR_SPY_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_IBKR_SPY_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      }
+    },
+    {
+      "actual_end": "2026-05-12T00:00:00Z",
+      "actual_start": "2025-01-01T00:00:00Z",
+      "candidate_actionable_after_scores": false,
+      "candidate_actionable_before_scores": false,
+      "candidate_ready_after_scores": null,
+      "candidate_ready_before_scores": null,
+      "candidate_status_after_scores": "no_trade",
+      "candidate_status_before_scores": "no_trade",
+      "derived_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "execution_gate_status_after_scores": null,
+      "execution_gate_status_before_scores": null,
+      "gap_stats_1h": {
+        "gap_count_gt_1h": 0,
+        "max_gap_hours": 1.0,
+        "median_gap_hours": 1.0
+      },
+      "market": "crypto",
+      "native_cross_timeframe": false,
+      "pre_bayes_confidence": 0.0,
+      "pre_bayes_gate": "pass_neutralized",
+      "provider": "Binance",
+      "requested_span": "all_available_rows_from_source_provider_artifact",
+      "rows_1d": 497,
+      "rows_1h": 11905,
+      "rows_4h": 2977,
+      "source_native_timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+      "symbol": "BOARD_A_BINANCE_BTC_193417",
+      "target_history_rows_after_scores": 3,
+      "target_history_rows_before_scores": 3,
+      "target_summary_after_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_BINANCE_BTC_193417:7593a29deab0cd1d",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 3,
+        "history_rows_with_path_prob_lower_bound": 3,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 3,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 3,
+        "rows_with_execution_gate_status": 3,
+        "rows_with_path_prob_lower_bound": 3,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 3,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=3 execution_gate_rows=3 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_BINANCE_BTC_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      },
+      "target_summary_before_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_BINANCE_BTC_193417:7593a29deab0cd1d",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 0,
+        "history_rows_with_path_prob_lower_bound": 0,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 0,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 0,
+        "rows_with_execution_gate_status": 0,
+        "rows_with_path_prob_lower_bound": 0,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 0,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BINANCE_BTC_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_BINANCE_BTC_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      }
+    },
+    {
+      "actual_end": "2026-05-12T00:00:00Z",
+      "actual_start": "2026-03-31T09:00:00Z",
+      "candidate_actionable_after_scores": false,
+      "candidate_actionable_before_scores": false,
+      "candidate_ready_after_scores": null,
+      "candidate_ready_before_scores": null,
+      "candidate_status_after_scores": "no_trade",
+      "candidate_status_before_scores": "no_trade",
+      "derived_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "execution_gate_status_after_scores": null,
+      "execution_gate_status_before_scores": null,
+      "gap_stats_1h": {
+        "gap_count_gt_1h": 0,
+        "max_gap_hours": 1.0,
+        "median_gap_hours": 1.0
+      },
+      "market": "crypto",
+      "native_cross_timeframe": false,
+      "pre_bayes_confidence": 0.0,
+      "pre_bayes_gate": "pass_neutralized",
+      "provider": "Bybit",
+      "requested_span": "all_available_rows_from_source_provider_artifact",
+      "rows_1d": 43,
+      "rows_1h": 1000,
+      "rows_4h": 251,
+      "source_native_timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+      "symbol": "BOARD_A_BYBIT_BTC_193417",
+      "target_history_rows_after_scores": 3,
+      "target_history_rows_before_scores": 3,
+      "target_summary_after_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_BYBIT_BTC_193417:3c34f58399ca4dbd",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 3,
+        "history_rows_with_path_prob_lower_bound": 3,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 3,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 3,
+        "rows_with_execution_gate_status": 3,
+        "rows_with_path_prob_lower_bound": 3,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 3,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=3 execution_gate_rows=3 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_BYBIT_BTC_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      },
+      "target_summary_before_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_BYBIT_BTC_193417:3c34f58399ca4dbd",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 0,
+        "history_rows_with_path_prob_lower_bound": 0,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 0,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 0,
+        "rows_with_execution_gate_status": 0,
+        "rows_with_path_prob_lower_bound": 0,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 0,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_BYBIT_BTC_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_BYBIT_BTC_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      }
+    },
+    {
+      "actual_end": "2025-03-25T07:00:00Z",
+      "actual_start": "2025-01-01T00:00:00Z",
+      "candidate_actionable_after_scores": false,
+      "candidate_actionable_before_scores": false,
+      "candidate_ready_after_scores": null,
+      "candidate_ready_before_scores": null,
+      "candidate_status_after_scores": "no_trade",
+      "candidate_status_before_scores": "no_trade",
+      "derived_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "execution_gate_status_after_scores": null,
+      "execution_gate_status_before_scores": null,
+      "gap_stats_1h": {
+        "gap_count_gt_1h": 0,
+        "max_gap_hours": 1.0,
+        "median_gap_hours": 1.0
+      },
+      "market": "crypto",
+      "native_cross_timeframe": false,
+      "pre_bayes_confidence": 0.0,
+      "pre_bayes_gate": "pass_neutralized",
+      "provider": "Kraken",
+      "requested_span": "all_available_rows_from_source_provider_artifact",
+      "rows_1d": 84,
+      "rows_1h": 2000,
+      "rows_4h": 500,
+      "source_native_timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+      "symbol": "BOARD_A_KRAKEN_BTC_193417",
+      "target_history_rows_after_scores": 3,
+      "target_history_rows_before_scores": 3,
+      "target_summary_after_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_KRAKEN_BTC_193417:60c5152fc00102a7",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 3,
+        "history_rows_with_path_prob_lower_bound": 3,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 3,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 3,
+        "rows_with_execution_gate_status": 3,
+        "rows_with_path_prob_lower_bound": 3,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 3,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=3 execution_gate_rows=3 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_KRAKEN_BTC_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      },
+      "target_summary_before_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_KRAKEN_BTC_193417:60c5152fc00102a7",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 0,
+        "history_rows_with_path_prob_lower_bound": 0,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 0,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 0,
+        "rows_with_execution_gate_status": 0,
+        "rows_with_path_prob_lower_bound": 0,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 0,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_KRAKEN_BTC_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_KRAKEN_BTC_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      }
+    },
+    {
+      "actual_end": "2026-05-12T10:00:00Z",
+      "actual_start": "2026-04-12T11:00:00Z",
+      "candidate_actionable_after_scores": false,
+      "candidate_actionable_before_scores": false,
+      "candidate_ready_after_scores": null,
+      "candidate_ready_before_scores": null,
+      "candidate_status_after_scores": "no_trade",
+      "candidate_status_before_scores": "no_trade",
+      "derived_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "execution_gate_status_after_scores": null,
+      "execution_gate_status_before_scores": null,
+      "gap_stats_1h": {
+        "gap_count_gt_1h": 1,
+        "max_gap_hours": 2.0,
+        "median_gap_hours": 1.0
+      },
+      "market": "crypto",
+      "native_cross_timeframe": false,
+      "pre_bayes_confidence": 0.0,
+      "pre_bayes_gate": "pass_neutralized",
+      "provider": "TradingViewRemix/TVR",
+      "requested_span": "all_available_rows_from_source_provider_artifact",
+      "rows_1d": 31,
+      "rows_1h": 719,
+      "rows_4h": 181,
+      "source_native_timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+      "symbol": "BOARD_A_TVR_BTC_193417",
+      "target_history_rows_after_scores": 3,
+      "target_history_rows_before_scores": 3,
+      "target_summary_after_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_TVR_BTC_193417:1dfac111f40482db",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 3,
+        "history_rows_with_path_prob_lower_bound": 3,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 3,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 3,
+        "rows_with_execution_gate_status": 3,
+        "rows_with_path_prob_lower_bound": 3,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 3,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=3 execution_gate_rows=3 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_TVR_BTC_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      },
+      "target_summary_before_scores": {
+        "candidate_set_id": "structural-candidates:BOARD_A_TVR_BTC_193417:1dfac111f40482db",
+        "candidate_set_size": 3,
+        "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target.csv",
+        "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target_history.csv",
+        "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target_history.jsonl",
+        "history_mature_rows": 2,
+        "history_rows": 3,
+        "history_rows_with_calibrated_path_prob": 0,
+        "history_rows_with_path_prob_lower_bound": 0,
+        "history_rows_with_propensity_estimate": 2,
+        "history_rows_with_raw_path_score": 0,
+        "history_rows_with_training_weight": 2,
+        "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target.jsonl",
+        "mature_rows": 2,
+        "pending_reward_states": {
+          "matured_success": 2,
+          "unobserved": 1
+        },
+        "rows": 3,
+        "rows_with_calibrated_path_prob": 0,
+        "rows_with_execution_gate_status": 0,
+        "rows_with_path_prob_lower_bound": 0,
+        "rows_with_propensity_estimate": 2,
+        "rows_with_raw_path_score": 0,
+        "rows_with_training_weight": 2,
+        "summary_line": "structural_path_ranking_target rows=3 history_rows=3 candidate_set_size=3 mature_rows=2 history_mature_rows=2 propensity_rows=2 calibrated_rows=0 execution_gate_rows=0 training_weight_rows=2",
+        "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state/BOARD_A_TVR_BTC_193417/policy_training/structural_path_ranking_target_summary.json",
+        "symbol": "BOARD_A_TVR_BTC_193417",
+        "trainer_manifest": {
+          "calibration_columns": [
+            "calibrated_path_prob",
+            "path_prob_lower_bound",
+            "execution_gate_status"
+          ],
+          "dataset_role": "external_path_ranker_training_dataset",
+          "feature_columns": [
+            "rank",
+            "direction",
+            "regime_profit_branch_path",
+            "parent_regime_root",
+            "main_regime",
+            "sub_regime",
+            "sub_sub_regime_or_profit_factor",
+            "profit_factor",
+            "regime_calibration_bucket",
+            "behavior_policy_probability",
+            "execution_propensity",
+            "target_policy_probability_confidence",
+            "target_policy_probability_lower_bound",
+            "target_policy_reward_prior",
+            "target_policy_reward_lower_bound",
+            "experience_prior",
+            "current_posterior",
+            "structural_baseline_score"
+          ],
+          "group_id_column": "candidate_set_id",
+          "guardrail_columns": [
+            "candidate_set_size",
+            "path_id",
+            "scenario_id",
+            "pending_reward_state",
+            "maturity_weight",
+            "propensity_estimate",
+            "ips_weight"
+          ],
+          "label_column": "calibrated_label",
+          "maturity_column": "maturity_mask",
+          "notes": [
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.",
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+          ],
+          "protocol_version": "structural-path-ranking-trainer-manifest-v1",
+          "raw_score_column": "raw_path_score",
+          "weight_column": "training_weight"
+        }
+      }
+    }
+  ],
+  "contexts_total": 6,
+  "execution_ready_contexts": 0,
+  "generated_at": "2026-05-12T11:49:10.894250Z",
+  "hard_failures": [
+    "4h and 1d are derived from provider 1h rows, not native provider timeframe fetches",
+    "per-regime calibrated >=95 is required but only accepted_95_contexts can promote",
+    "execution tree must be non-observe/actionable before any trade usable claim"
+  ],
+  "long_horizon_provider_backed_inventory": true,
+  "markets_tested": [
+    "crypto",
+    "equity"
+  ],
+  "native_cross_timeframe_provider_fetch": false,
+  "promotion_allowed": false,
+  "providers_tested": [
+    "Binance",
+    "Bybit",
+    "IBKR",
+    "Kraken",
+    "TradingViewRemix/TVR",
+    "yfinance/YF"
+  ],
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1",
+  "schema_version": "board-a-long-horizon-provider-backed-full-chain-v1",
+  "score_rows": 18,
+  "source_aq_root": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1",
+  "source_provider_root": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1",
+  "steps": [
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "validate-market-state",
+        "--data",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1h.json",
+        "--compact"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_validate_1h",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_auto_quant_results_import",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_auto_quant_prior_init",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-ingest-real-trades",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--trades",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_real_trades_v1.jsonl",
+        "--source",
+        "board_a_193417_board_a_yf_spy_193417"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_auto_quant_ingest_real_trades",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--data-ltf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1h.json",
+        "--data-mtf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/4h.json",
+        "--data-htf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1d.json",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_analyze",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_pre_bayes_status",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_export_structural_path_target",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_policy_training_status_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_workflow_execution_candidate_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "validate-market-state",
+        "--data",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_IBKR_SPY_193417/1h.json",
+        "--compact"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_validate_1h",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_auto_quant_results_import",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_auto_quant_prior_init",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-ingest-real-trades",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--trades",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_real_trades_v1.jsonl",
+        "--source",
+        "board_a_193417_board_a_ibkr_spy_193417"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_auto_quant_ingest_real_trades",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--data-ltf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_IBKR_SPY_193417/1h.json",
+        "--data-mtf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_IBKR_SPY_193417/4h.json",
+        "--data-htf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_IBKR_SPY_193417/1d.json",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_analyze",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_pre_bayes_status",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_export_structural_path_target",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_policy_training_status_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_workflow_execution_candidate_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "validate-market-state",
+        "--data",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1h.json",
+        "--compact"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_validate_1h",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_auto_quant_results_import",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_auto_quant_prior_init",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-ingest-real-trades",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--trades",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_real_trades_v1.jsonl",
+        "--source",
+        "board_a_193417_board_a_binance_btc_193417"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_auto_quant_ingest_real_trades",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--data-ltf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1h.json",
+        "--data-mtf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/4h.json",
+        "--data-htf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BINANCE_BTC_193417/1d.json",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_analyze",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_pre_bayes_status",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_export_structural_path_target",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_policy_training_status_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_workflow_execution_candidate_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "validate-market-state",
+        "--data",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BYBIT_BTC_193417/1h.json",
+        "--compact"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_validate_1h",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_auto_quant_results_import",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_auto_quant_prior_init",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-ingest-real-trades",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--trades",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_real_trades_v1.jsonl",
+        "--source",
+        "board_a_193417_board_a_bybit_btc_193417"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_auto_quant_ingest_real_trades",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--data-ltf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BYBIT_BTC_193417/1h.json",
+        "--data-mtf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BYBIT_BTC_193417/4h.json",
+        "--data-htf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_BYBIT_BTC_193417/1d.json",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_analyze",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_pre_bayes_status",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_export_structural_path_target",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_policy_training_status_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_workflow_execution_candidate_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "validate-market-state",
+        "--data",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1h.json",
+        "--compact"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_validate_1h",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_auto_quant_results_import",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_auto_quant_prior_init",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-ingest-real-trades",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--trades",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_real_trades_v1.jsonl",
+        "--source",
+        "board_a_193417_board_a_kraken_btc_193417"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_auto_quant_ingest_real_trades",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--data-ltf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1h.json",
+        "--data-mtf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/4h.json",
+        "--data-htf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_KRAKEN_BTC_193417/1d.json",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_analyze",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_pre_bayes_status",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_export_structural_path_target",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_policy_training_status_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_workflow_execution_candidate_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "validate-market-state",
+        "--data",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json",
+        "--compact"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_validate_1h",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-results-import",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_auto_quant_results_import",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-prior-init",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--library",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_strategy_library_v1.json"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_auto_quant_prior_init",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-ingest-real-trades",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--trades",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/provider_btc_172142_real_trades_v1.jsonl",
+        "--source",
+        "board_a_193417_board_a_tvr_btc_193417"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_auto_quant_ingest_real_trades",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--data-ltf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json",
+        "--data-mtf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/4h.json",
+        "--data-htf",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1d.json",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_analyze",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_pre_bayes_status",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_export_structural_path_target",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_policy_training_status_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_workflow_execution_candidate_before_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/.local/bin/uv",
+        "run",
+        "--offline",
+        "--with",
+        "pandas",
+        "--with",
+        "numpy",
+        "--with",
+        "catboost",
+        "python",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+        "--target-csv",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_structural_path_ranking_target_history.csv",
+        "--output-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1",
+        "--model-family",
+        "catboost"
+      ],
+      "exit": 0,
+      "name": "70_train_catboost_aggregate",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/.local/bin/uv",
+        "run",
+        "--offline",
+        "--with",
+        "pandas",
+        "--with",
+        "numpy",
+        "--with",
+        "catboost",
+        "python",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+        "--apply",
+        "--model-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1",
+        "--target-csv",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_structural_path_ranking_target_history.csv",
+        "--output-scores",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "71_apply_catboost_aggregate",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "apply-structural-path-ranking-external-scores",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--scores-file",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_apply_structural_path_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--artifact-uri",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_register_trainer_artifact",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_enable_path_ranker_runtime",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_policy_training_status_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_YF_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "01_board_a_yf_spy_193417_workflow_execution_candidate_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "apply-structural-path-ranking-external-scores",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--scores-file",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_apply_structural_path_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--artifact-uri",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_register_trainer_artifact",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_enable_path_ranker_runtime",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_policy_training_status_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_IBKR_SPY_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "02_board_a_ibkr_spy_193417_workflow_execution_candidate_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "apply-structural-path-ranking-external-scores",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--scores-file",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_apply_structural_path_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--artifact-uri",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_register_trainer_artifact",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_enable_path_ranker_runtime",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_policy_training_status_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_BINANCE_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "03_board_a_binance_btc_193417_workflow_execution_candidate_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "apply-structural-path-ranking-external-scores",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--scores-file",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_apply_structural_path_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--artifact-uri",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_register_trainer_artifact",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_enable_path_ranker_runtime",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_policy_training_status_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_BYBIT_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "04_board_a_bybit_btc_193417_workflow_execution_candidate_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "apply-structural-path-ranking-external-scores",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--scores-file",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_apply_structural_path_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--artifact-uri",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_register_trainer_artifact",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_enable_path_ranker_runtime",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_policy_training_status_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_KRAKEN_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "05_board_a_kraken_btc_193417_workflow_execution_candidate_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "apply-structural-path-ranking-external-scores",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--scores-file",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_apply_structural_path_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--artifact-uri",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/long-horizon-provider-backed-full-chain-v1/catboost_aggregate_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_register_trainer_artifact",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_enable_path_ranker_runtime",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_policy_training_status_after_scores",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_TVR_BTC_193417",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state",
+        "--phase",
+        "execution-candidate",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "06_board_a_tvr_btc_193417_workflow_execution_candidate_after_scores",
+      "timed_out": false
+    }
+  ],
+  "steps_all_zero": true,
+  "steps_exit_zero": 86,
+  "steps_total": 86,
+  "trade_usable": false,
+  "update_goal": false
+}

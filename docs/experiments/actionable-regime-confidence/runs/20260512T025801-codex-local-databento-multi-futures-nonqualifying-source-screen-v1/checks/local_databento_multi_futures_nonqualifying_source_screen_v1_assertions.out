@@ -1,0 +1,14 @@
+all_targets_scanned=PASS
+all_dataset_glbx_mdp3=PASS
+all_schema_ohlcv_1m=PASS
+all_have_local_ohlcv_file=PASS
+not_r6_owner_controls=PASS
+not_flip_approval=PASS
+not_r3_source_labels=PASS
+not_r5_recency_extension=PASS
+accepted_rows_added_0=PASS
+canonical_merge_allowed_false=PASS
+downstream_promotion_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+raw_data_not_committed=PASS

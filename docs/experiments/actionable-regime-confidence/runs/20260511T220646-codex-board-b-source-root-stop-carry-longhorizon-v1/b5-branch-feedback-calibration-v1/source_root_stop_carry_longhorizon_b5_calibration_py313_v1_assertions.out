@@ -1,0 +1,14 @@
+run_id=20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-b5-calibration-py313-v1
+catboost_trained=True
+trainer_artifact_ready=True
+runtime_selection_ready=True
+production_validation_ready=True
+production_validation_rows=274
+observation_validation_ready=True
+observation_validation_rows=48
+pre_bayes_gate_status=None
+workflow_path_is_required_branch_path=False
+execution_candidate_ready=False
+closed_loop_confidence_ready=False
+promotion_allowed=False
+decision=b5_catboost_runtime_ready_but_execution_tree_branch_path_not_consumed

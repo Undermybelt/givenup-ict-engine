@@ -1,0 +1,105 @@
+{
+  "artifact_type": "external_metadata_search_readback_v1",
+  "board_sha256_observed_before_run": "6c934f0102b974377578b5b7fc7e732e40b6cd77350b9a4d7b13ffb318def4c8",
+  "created_at_local": "2026-05-11T19:42:30+08:00",
+  "decision": {
+    "accepted_rows_added": 0,
+    "candidate_records": 6,
+    "full_other_market_source_label_equivalence": false,
+    "gate_result": "external_metadata_search_readback_v1=no_promotable_source_owned_labels",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "guardrails": [
+    "Readback only from already-running metadata searches.",
+    "No external repository was cloned.",
+    "No external package was installed or executed.",
+    "No raw provider or dataset rows were downloaded or committed.",
+    "Current Cursor was not edited."
+  ],
+  "poll_readbacks": [
+    {
+      "query": "market regime Bull Bear Sideways Python",
+      "result_count": 3,
+      "source": "github_api_metadata"
+    },
+    {
+      "query": "regime_label Bull Bear Sideways ticker",
+      "result_count": 0,
+      "source": "github_api_metadata"
+    },
+    {
+      "query": "stock market regime labels dataset",
+      "result_count": 0,
+      "source": "github_api_metadata"
+    },
+    {
+      "query": "regime_label Bull Bear Sideways ticker",
+      "result_count": 0,
+      "source": "kaggle_cli_metadata"
+    }
+  ],
+  "result_disposition": [
+    {
+      "accepted_rows_added": 0,
+      "candidate": "AndrewFSee/regime-rl-trading",
+      "decision": "blocked_feature_or_hmm_detector_outputs_not_source_labels",
+      "new_confidence_gate": false,
+      "reason": "Repository is a regime-detection and RL framework; it does not expose source-owned row-level labels or an approved MainRegimeV2 crosswalk.",
+      "source": "github_api_metadata",
+      "url": "https://github.com/AndrewFSee/regime-rl-trading"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate": "Hasan8123/Market-Regime-Detection-System",
+      "decision": "blocked_tool_generated_from_historical_ohlcv",
+      "new_confidence_gate": false,
+      "reason": "Metadata describes automated detection from historical market data, not a source-owned label panel.",
+      "source": "github_api_metadata",
+      "url": "https://github.com/Hasan8123/Market-Regime-Detection-System"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate": "BuildWithSaravanan/Market-Regime-Detection-System",
+      "decision": "blocked_tool_generated_from_historical_ohlcv",
+      "new_confidence_gate": false,
+      "reason": "Metadata describes automated regime detection from stock data, not row-level source-owned labels with provenance.",
+      "source": "github_api_metadata",
+      "url": "https://github.com/BuildWithSaravanan/Market-Regime-Detection-System"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate": "github_api: regime_label Bull Bear Sideways ticker",
+      "decision": "no_results",
+      "new_confidence_gate": false,
+      "reason": "GitHub metadata search returned zero repositories.",
+      "source": "github_api_metadata",
+      "url": ""
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate": "github_api: stock market regime labels dataset",
+      "decision": "no_results",
+      "new_confidence_gate": false,
+      "reason": "GitHub metadata search returned zero repositories.",
+      "source": "github_api_metadata",
+      "url": ""
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate": "kaggle_cli: regime_label Bull Bear Sideways ticker",
+      "decision": "no_datasets_found",
+      "new_confidence_gate": false,
+      "reason": "Kaggle metadata search returned no datasets for the exact label-oriented query.",
+      "source": "kaggle_cli_metadata",
+      "url": ""
+    }
+  ],
+  "run_id": "20260511T194230+0800-codex-external-metadata-search-readback-v1",
+  "scope": "Readback of legacy GitHub and Kaggle metadata searches for source-owned or owner-approved regime-label intake evidence."
+}

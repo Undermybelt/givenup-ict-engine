@@ -1,0 +1,97 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-11T20:20:06.863913+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps/auto-quant",
+  "auto_quant_pinned_ref": "local-auto-quant-env",
+  "config_path": "",
+  "timeframe": "1h",
+  "log_path": "",
+  "strategies": [
+    {
+      "name": "NQRootPulseMeanRevert",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps/auto-quant/user_data/strategies_external/NQRootPulseMeanRevert.py",
+      "metadata": {
+        "strategy": "NQRootPulseMeanRevert",
+        "mutation_id": "032157-ltf-synthetic-mean-revert-v1",
+        "base_factor": "nq_root_pulse_mean_revert",
+        "hypothesis": "",
+        "paradigm": "",
+        "expected_regime": "MainRegimeV2::Sideways",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "rsi7",
+          "sma20",
+          "bbands20",
+          "atr14"
+        ],
+        "parent": "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+        "asset_class": "",
+        "status": "agent_selected_ltf_tick_precision_probe_non_promotional",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 4.65853317166883,
+        "sortino": 16.617756275208208,
+        "calmar": 236.13300844661129,
+        "total_profit_pct": 0.46,
+        "max_drawdown_pct": 0.2649458044943627,
+        "trade_count": 11,
+        "win_rate_pct": 81.81818181818183,
+        "profit_factor": 2.0020886889579557
+      },
+      "per_pair_metrics": {},
+      "pairs": [
+        "B2RNQCOSTCRISISREPAIR032157/USD"
+      ],
+      "timerange": "20230101-20251231",
+      "commit": "local-auto-quant-env",
+      "error": null
+    },
+    {
+      "name": "NQRootTrendPulse",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps/auto-quant/user_data/strategies_external/NQRootTrendPulse.py",
+      "metadata": {
+        "strategy": "NQRootTrendPulse",
+        "mutation_id": "032157-ltf-synthetic-trend-pulse-v1",
+        "base_factor": "nq_root_trend_pulse",
+        "hypothesis": "",
+        "paradigm": "",
+        "expected_regime": "MainRegimeV2::Bull",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "ema9",
+          "ema21",
+          "ema13_4h",
+          "ema34_4h",
+          "atr14"
+        ],
+        "parent": "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+        "asset_class": "",
+        "status": "agent_selected_ltf_tick_precision_probe_non_promotional",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 3.351096347625909,
+        "sortino": -100.0,
+        "calmar": 394.4508167751803,
+        "total_profit_pct": 0.25,
+        "max_drawdown_pct": 0.09484078141841668,
+        "trade_count": 4,
+        "win_rate_pct": 75.0,
+        "profit_factor": 3.6746907397352073
+      },
+      "per_pair_metrics": {},
+      "pairs": [
+        "B2RNQCOSTCRISISREPAIR032157/USD"
+      ],
+      "timerange": "20230101-20251231",
+      "commit": "local-auto-quant-env",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

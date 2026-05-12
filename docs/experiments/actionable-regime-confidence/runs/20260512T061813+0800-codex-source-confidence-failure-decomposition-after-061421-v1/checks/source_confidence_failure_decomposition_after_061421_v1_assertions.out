@@ -1,0 +1,7 @@
+decision=source_confidence_failure_decomposition_after_061421_v1=all_regimes_blocked_by_confidence_distribution_required_roots_absent_no_promotion
+accepted_label_count=0
+required_roots_unlocked=false
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+trade_usable=false
+update_goal=false

@@ -1,0 +1,13 @@
+main_regime_v2_label,split_role,rows
+Bear,calibration,346801
+Bear,heldout_market,254759
+Bear,heldout_time,232620
+Bear,test,601584
+Bull,calibration,380914
+Bull,heldout_market,261647
+Bull,heldout_time,223964
+Bull,test,568530
+Sideways,calibration,492100
+Sideways,heldout_market,375651
+Sideways,heldout_time,327992
+Sideways,test,966341

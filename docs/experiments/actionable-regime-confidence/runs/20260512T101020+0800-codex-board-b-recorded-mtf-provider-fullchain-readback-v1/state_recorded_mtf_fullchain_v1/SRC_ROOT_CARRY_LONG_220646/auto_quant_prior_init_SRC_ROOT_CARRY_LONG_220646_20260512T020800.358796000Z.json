@@ -1,0 +1,128 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.34606244282457066,
+    1.2651488773825433e-7,
+    0.6539374306605416
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "RegimeRootPulseBranch",
+      "mutation_id": "recorded_nq_precision_fixed_v1",
+      "trade_count": 300,
+      "n_win": 105,
+      "n_loss": 195,
+      "n_breakeven": 0,
+      "temper": 0.25,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.38290916455696206,
+        1.1139240506329113e-6,
+        0.6170897215189873
+      ],
+      "diff": [
+        -0.6170468354430378,
+        -0.00002088607594936709,
+        0.6170677215189874
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.6654862049246972,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 6.970919668332682,
+      "bbn_log_loss_after": 0.6497666725989033,
+      "bbn_log_loss_delta": 6.321152995733779,
+      "bbn_contradiction_before": 1.299956,
+      "bbn_contradiction_after": 0.0658205569620254,
+      "bbn_contradiction_lift": 1.2341354430379745,
+      "evidence_value_gate_passed": true
+    },
+    {
+      "strategy_name": "RegimeTrendCarry",
+      "mutation_id": "recorded_nq_precision_fixed_v1",
+      "trade_count": 30,
+      "n_win": 11,
+      "n_loss": 19,
+      "n_breakeven": 0,
+      "temper": 0.25,
+      "before_probs": [
+        0.38290916455696206,
+        1.1139240506329113e-6,
+        0.6170897215189873
+      ],
+      "after_probs": [
+        0.37231623115024765,
+        3.874518436984039e-7,
+        0.6276833813979086
+      ],
+      "diff": [
+        -0.010592933406714411,
+        -7.264722069345074e-7,
+        0.010593659878921247
+      ],
+      "bbn_entropy_before": 0.6654862049246972,
+      "bbn_entropy_after": 0.6601828471407472,
+      "bbn_entropy_reduction": 0.00530335778395008,
+      "bbn_log_loss_before": 0.6577202832037754,
+      "bbn_log_loss_after": 0.6572265833849484,
+      "bbn_log_loss_delta": 0.0004936998188269648,
+      "bbn_contradiction_before": 0.03248722362869202,
+      "bbn_contradiction_after": 0.011299903870849427,
+      "bbn_contradiction_lift": 0.02118731975784259,
+      "evidence_value_gate_passed": true
+    },
+    {
+      "strategy_name": "RegimeVolBreakout",
+      "mutation_id": "recorded_nq_precision_fixed_v1",
+      "trade_count": 33,
+      "n_win": 11,
+      "n_loss": 22,
+      "n_breakeven": 0,
+      "temper": 0.25,
+      "before_probs": [
+        0.37231623115024765,
+        3.874518436984039e-7,
+        0.6276833813979086
+      ],
+      "after_probs": [
+        0.34606244282457066,
+        1.2651488773825433e-7,
+        0.6539374306605416
+      ],
+      "diff": [
+        -0.026253788325676986,
+        -2.6093695596014956e-7,
+        0.026254049262632972
+      ],
+      "bbn_entropy_before": 0.6601828471407472,
+      "bbn_entropy_after": 0.6449770839306722,
+      "bbn_entropy_reduction": 0.01520576321007494,
+      "bbn_log_loss_before": 0.639816840295298,
+      "bbn_log_loss_after": 0.6368744191217731,
+      "bbn_log_loss_delta": 0.002942421173524834,
+      "bbn_contradiction_before": 0.07796657053751607,
+      "bbn_contradiction_after": 0.025458472012250162,
+      "bbn_contradiction_lift": 0.05250809852526591,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [],
+  "temper": 0.25,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.02050912099402502,
+  "bbn_log_loss_delta": 6.32458911672613,
+  "bbn_contradiction_lift": 1.307830861321083,
+  "evidence_value_gate_passed": true
+}

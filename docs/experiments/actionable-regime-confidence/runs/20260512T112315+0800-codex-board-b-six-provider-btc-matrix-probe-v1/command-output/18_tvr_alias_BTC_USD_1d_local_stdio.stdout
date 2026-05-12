@@ -1,0 +1,347 @@
+{
+  "plan": {
+    "request": {
+      "market_key": "board-b-btc-six-provider-tvr-BTC_USD",
+      "primary_data_path": null,
+      "interval": "1d",
+      "start": null,
+      "end": null,
+      "count": null,
+      "related_roles": [
+        "crypto_reference"
+      ],
+      "provider_preferences": {
+        "crypto_reference": "tradingview_mcp"
+      },
+      "symbol_overrides": {
+        "crypto_reference": {
+          "display_symbol": "BTC-USD",
+          "yfinance": null,
+          "tradingview_mcp": "BTC-USD",
+          "ibkr": null
+        }
+      },
+      "options_volatility_proxy_symbol": null
+    },
+    "provider_summary": {
+      "required_requirements": [],
+      "provider_statuses": [
+        {
+          "provider": "ibkr",
+          "status": "install_required",
+          "healthy": false,
+          "reason": "missing_local_ibkr_consent",
+          "supported_requirements": [],
+          "install_prompts": [
+            "Consumer agent request: ask the user to install IBKR TWS or IB Gateway, then enable the IBKR API locally. Search keywords: Interactive Brokers TWS download, IB Gateway download.",
+            "Consumer agent follow-up: after the user installs IBKR TWS or Gateway, run python scripts/ibkr_bridge/setup.py --enable",
+            "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+            "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+          ],
+          "redacted_config": [
+            "consent_path=<local-path>",
+            "capabilities_path=<local-path>",
+            "consent_present=false",
+            "capabilities_present=false",
+            "reachable_gateway_ports=IB Gateway paper:4002",
+            "ibkr_runtime_missing_modules=redis"
+          ]
+        },
+        {
+          "provider": "yfinance",
+          "status": "ready",
+          "healthy": true,
+          "reason": "public_yahoo_http_endpoints",
+          "supported_requirements": [],
+          "install_prompts": [],
+          "redacted_config": [
+            "provider_mode=public_http"
+          ]
+        },
+        {
+          "provider": "tradingview_mcp",
+          "status": "ready",
+          "healthy": true,
+          "reason": "local_stdio_ohlcv_available",
+          "supported_requirements": [],
+          "install_prompts": [],
+          "redacted_config": [
+            "mcp_url=https://tvremix.xyz/api/mcp/v1",
+            "credential_source=missing",
+            "local_config=<unset>",
+            "ICT_ENGINE_TVREMIX_MCP_API_KEY=<unset>",
+            "stdio_cmd_env=<set>",
+            "stdio_args_env=<set>",
+            "probe_connectivity=true",
+            "probe_ohlcv=<skipped>",
+            "probe_options=<skipped>"
+          ]
+        }
+      ],
+      "actionable_install_prompts": [
+        "Consumer agent follow-up: after the user installs IBKR TWS or Gateway, run python scripts/ibkr_bridge/setup.py --enable",
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise.",
+        "Consumer agent request: ask the user to install IBKR TWS or IB Gateway, then enable the IBKR API locally. Search keywords: Interactive Brokers TWS download, IB Gateway download."
+      ]
+    },
+    "tasks": [
+      {
+        "role": "crypto_reference",
+        "provider": "tradingview_mcp",
+        "operation": "Ohlcv",
+        "symbol": "BTC-USD",
+        "request": {
+          "TradingViewMcp": {
+            "symbol": "BTC-USD"
+          }
+        }
+      }
+    ],
+    "missing_roles": [],
+    "warnings": []
+  },
+  "results": [
+    {
+      "ok": true,
+      "provider": "tradingview_mcp",
+      "operation": "ohlcv.fetch",
+      "role": "crypto_reference",
+      "symbol": "BTC-USD",
+      "data": [
+        {
+          "close": 74484.640625,
+          "high": 74896.3125,
+          "low": 70588.523438,
+          "open": 70757.617188,
+          "timestamp": "2026-04-13T00:00:00Z",
+          "volume": 52278211554.0
+        },
+        {
+          "close": 74181.609375,
+          "high": 76061.757812,
+          "low": 73877.203125,
+          "open": 74478.398438,
+          "timestamp": "2026-04-14T00:00:00Z",
+          "volume": 53540826530.0
+        },
+        {
+          "close": 74805.078125,
+          "high": 75409.273438,
+          "low": 73549.203125,
+          "open": 74182.023438,
+          "timestamp": "2026-04-15T00:00:00Z",
+          "volume": 38090174312.0
+        },
+        {
+          "close": 75152.132812,
+          "high": 75506.570312,
+          "low": 73346.265625,
+          "open": 74810.875,
+          "timestamp": "2026-04-16T00:00:00Z",
+          "volume": 41312783855.0
+        },
+        {
+          "close": 77126.875,
+          "high": 78320.679688,
+          "low": 74558.601562,
+          "open": 75164.039062,
+          "timestamp": "2026-04-17T00:00:00Z",
+          "volume": 54137194839.0
+        },
+        {
+          "close": 75726.210938,
+          "high": 77416.703125,
+          "low": 75504.945312,
+          "open": 77136.046875,
+          "timestamp": "2026-04-18T00:00:00Z",
+          "volume": 26014416776.0
+        },
+        {
+          "close": 73856.351562,
+          "high": 76243.09375,
+          "low": 73802.382812,
+          "open": 75723.695312,
+          "timestamp": "2026-04-19T00:00:00Z",
+          "volume": 30931515195.0
+        },
+        {
+          "close": 75872.523438,
+          "high": 76575.359375,
+          "low": 73775.570312,
+          "open": 73854.25,
+          "timestamp": "2026-04-20T00:00:00Z",
+          "volume": 39674447916.0
+        },
+        {
+          "close": 76352.773438,
+          "high": 76881.476562,
+          "low": 74852.671875,
+          "open": 75872.828125,
+          "timestamp": "2026-04-21T00:00:00Z",
+          "volume": 36453522626.0
+        },
+        {
+          "close": 78203.101562,
+          "high": 79468.0,
+          "low": 76159.578125,
+          "open": 76354.21875,
+          "timestamp": "2026-04-22T00:00:00Z",
+          "volume": 48336654537.0
+        },
+        {
+          "close": 78268.953125,
+          "high": 78676.9375,
+          "low": 77014.453125,
+          "open": 78203.875,
+          "timestamp": "2026-04-23T00:00:00Z",
+          "volume": 40354900916.0
+        },
+        {
+          "close": 77455.3125,
+          "high": 78554.09375,
+          "low": 77318.445312,
+          "open": 78263.820312,
+          "timestamp": "2026-04-24T00:00:00Z",
+          "volume": 32784213526.0
+        },
+        {
+          "close": 77612.015625,
+          "high": 77882.640625,
+          "low": 77184.664062,
+          "open": 77457.210938,
+          "timestamp": "2026-04-25T00:00:00Z",
+          "volume": 16702933134.0
+        },
+        {
+          "close": 78657.539062,
+          "high": 78923.5625,
+          "low": 77334.890625,
+          "open": 77613.117188,
+          "timestamp": "2026-04-26T00:00:00Z",
+          "volume": 21482934750.0
+        },
+        {
+          "close": 77366.625,
+          "high": 79488.171875,
+          "low": 76481.34375,
+          "open": 78661.015625,
+          "timestamp": "2026-04-27T00:00:00Z",
+          "volume": 38135631927.0
+        },
+        {
+          "close": 76350.671875,
+          "high": 77483.867188,
+          "low": 75673.601562,
+          "open": 77368.117188,
+          "timestamp": "2026-04-28T00:00:00Z",
+          "volume": 32056900880.0
+        },
+        {
+          "close": 75776.132812,
+          "high": 77884.96875,
+          "low": 74958.570312,
+          "open": 76350.6875,
+          "timestamp": "2026-04-29T00:00:00Z",
+          "volume": 41460907886.0
+        },
+        {
+          "close": 76304.320312,
+          "high": 76611.484375,
+          "low": 75318.984375,
+          "open": 75778.632812,
+          "timestamp": "2026-04-30T00:00:00Z",
+          "volume": 29497862305.0
+        },
+        {
+          "close": 78179.0,
+          "high": 78894.976562,
+          "low": 76294.695312,
+          "open": 76305.054688,
+          "timestamp": "2026-05-01T00:00:00Z",
+          "volume": 39164328894.0
+        },
+        {
+          "close": 78657.25,
+          "high": 79119.789062,
+          "low": 78031.960938,
+          "open": 78177.75,
+          "timestamp": "2026-05-02T00:00:00Z",
+          "volume": 16761531851.0
+        },
+        {
+          "close": 78538.226562,
+          "high": 79402.359375,
+          "low": 78073.078125,
+          "open": 78656.726562,
+          "timestamp": "2026-05-03T00:00:00Z",
+          "volume": 20544392639.0
+        },
+        {
+          "close": 79827.90625,
+          "high": 80742.359375,
+          "low": 78217.960938,
+          "open": 78540.289062,
+          "timestamp": "2026-05-04T00:00:00Z",
+          "volume": 54325085296.0
+        },
+        {
+          "close": 80927.054688,
+          "high": 81751.453125,
+          "low": 79787.578125,
+          "open": 79823.53125,
+          "timestamp": "2026-05-05T00:00:00Z",
+          "volume": 39700107376.0
+        },
+        {
+          "close": 81427.53125,
+          "high": 82792.210938,
+          "low": 80751.023438,
+          "open": 80930.734375,
+          "timestamp": "2026-05-06T00:00:00Z",
+          "volume": 41751540000.0
+        },
+        {
+          "close": 80009.992188,
+          "high": 81684.953125,
+          "low": 79522.65625,
+          "open": 81428.851562,
+          "timestamp": "2026-05-07T00:00:00Z",
+          "volume": 36931193154.0
+        },
+        {
+          "close": 80186.765625,
+          "high": 80447.265625,
+          "low": 79205.515625,
+          "open": 80009.625,
+          "timestamp": "2026-05-08T00:00:00Z",
+          "volume": 33789351540.0
+        },
+        {
+          "close": 80664.367188,
+          "high": 81030.0625,
+          "low": 80119.929688,
+          "open": 80187.742188,
+          "timestamp": "2026-05-09T00:00:00Z",
+          "volume": 18102086996.0
+        },
+        {
+          "close": 82138.929688,
+          "high": 82430.171875,
+          "low": 80274.132812,
+          "open": 80665.609375,
+          "timestamp": "2026-05-10T00:00:00Z",
+          "volume": 26965971077.0
+        },
+        {
+          "close": 81152.476562,
+          "high": 81721.414062,
+          "low": 80838.953125,
+          "open": 81721.414062,
+          "timestamp": "2026-05-12T00:00:00Z",
+          "volume": 30045034496.0
+        }
+      ]
+    }
+  ]
+}

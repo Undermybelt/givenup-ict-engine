@@ -1,0 +1,10 @@
+requirement,status,evidence
+Board B authoritative markdown updated,partial,"Append-only sections through 073629 plus count-once corrections exist"
+Regime-rooted profitability training,blocked,"Root-first branch path contract exists; new selected-data training is blocked by source/control gates"
+Branch path preserved through downstream chain,partial_non_promoting,"Earlier 034002 downstream combined readback showed branch-target visibility and CatBoost candidate matches but promotion stayed fail-closed"
+Provider surfaces included,partial_non_promoting,"Provider readbacks include yfinance and Kraken CLI ready; IBKR and TradingViewRemix remain unhealthy or dependency-blocked"
+AutoQuant operated on real artifacts,partial_non_promoting,"Earlier Board B artifacts operated AutoQuant/RC-SPA; no new selected-data AutoQuant is permitted without selected history"
+Filter Pre-Bayes BBN CatBoost execution tree promotion,blocked,"Workflow remains user_selected_historical_data_missing and path-ranking mature/calibrated rows remain 0"
+Source/control unlock exists,blocked,"073629 reports R6 absent, R5 absent, R3 non-promoting, source-label equivalence non-target, approval false"
+Multi-agent safety,pass,"Append-only count-once discipline used; no prior sections deleted or rewritten"
+Completion update_goal,blocked,"Required gates remain false and update_goal=false"

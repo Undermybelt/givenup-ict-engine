@@ -1,0 +1,61 @@
+{
+  "approval": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T19:59:12Z",
+  "gate_result": "board_a_provider_reachability_after_034813_v1=ibkr_yfinance_kraken_reachable_tradingview_failed_source_controls_absent_no_promotion",
+  "non_mutations": {
+    "canonical_live_intake_mutated": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "new_confidence_gate": false,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "r6_owner_export_root_exists": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provider_readback": {
+    "provider_status_agent_exit": 0,
+    "provider_status_agent_summary": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "yfinance_provider_status_exit": 0,
+    "yfinance_harness_qqq_1d_exit": 0,
+    "ibkr_provider_status_exit": 0,
+    "ibkr_provider_status_reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "ibkr_external_fetch_exit": 0,
+    "ibkr_external_fetch_rows": 21,
+    "ibkr_external_fetch_range_utc": "2026-04-13T00:00:00+00:00..2026-05-11T00:00:00+00:00",
+    "tradingview_mcp_provider_status_exit": 0,
+    "tradingview_mcp_harness_exit": 1,
+    "tradingview_mcp_harness_blocker": "get_ohlcv failed; recredential and verify MCP endpoint",
+    "kraken_cli_provider_status_exit": 0,
+    "kraken_cli_ohlc_exit": 0,
+    "kraken_external_original_exit": 2,
+    "kraken_external_uv_corrected_exit": 2,
+    "kraken_external_python3_pair_interval_mismatch_exit": 1,
+    "kraken_external_python3_corrected_exit": 0,
+    "kraken_external_python3_corrected_rows": 721,
+    "kraken_external_python3_corrected_range_utc": "2026-04-11T19:00:00+00:00..2026-05-11T19:00:00+00:00"
+  },
+  "required_roots": {
+    "r3_native_subhour_source_label_intake": "absent",
+    "r5_source_panel_recency_extension": "absent",
+    "r6_owner_export": "absent"
+  },
+  "run_id": "20260511T195320-codex-board-a-provider-reachability-after-034813-v1",
+  "scope": "provider reachability readback only; not source/control, regime-confidence, canonical merge, downstream promotion, or trade evidence"
+}

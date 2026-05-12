@@ -1,0 +1,77 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-11T10:16:38Z",
+  "generated_at": "2026-05-11T10:16:38.272172Z",
+  "symbol": "CRASHREBOUND",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:CRASHREBOUND:20260511T101638.228Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "d6ff2e3c04fac168",
+    "data_fingerprint": "937fe89c23713ba0"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": null,
+    "reason": "no_previous_run",
+    "comparison_class": "no_previous_run",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": false,
+    "same_factor_version": false
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ict-engine factor-research --symbol CRASHREBOUND --data examples/demo/demo-15m.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T180121-codex-crashrebound-branch-rc-spa-v1/ict-engine/state --backend native",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol CRASHREBOUND --data examples/demo/demo-15m.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T180121-codex-crashrebound-branch-rc-spa-v1/ict-engine/state --backend native",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.6000000000000001,
+  "consensus_strength": 0.6000000000000001,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600",
+    "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600"
+  ],
+  "split_explanations": [
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "937fe89c23713ba0",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "trend",
+  "posterior_confidence": 0.5822867835012198,
+  "posterior_probabilities": {
+    "range": 0.30899359148717004,
+    "stress": 0.15957180254354839,
+    "transition": 0.07640256340513198,
+    "trend": 0.4550320425641497
+  },
+  "posterior_evidence": [
+    "market_policy=CRASHREBOUND hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.860",
+    "pre_bayes_quality_score=0.582 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.837",
+    "market_state_source=volatility=ElevatedVol:0.741 liquidity=NormalLiquidity:0.419 structure=Trending:1.000 behavior=FOMO:0.650",
+    "market_state_source=rationale=volatility=ElevatedVol conf=0.74",
+    "market_state_source=rationale=structure=Trending conf=1.00",
+    "market_state_source=rationale=behavior=FOMO conf=0.65",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.84",
+    "regime_bundle_bbn_evidence_skipped=flag_disabled"
+  ]
+}

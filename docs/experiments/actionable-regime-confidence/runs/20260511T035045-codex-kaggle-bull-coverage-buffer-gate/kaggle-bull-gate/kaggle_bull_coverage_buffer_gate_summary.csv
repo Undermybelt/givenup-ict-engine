@@ -1,0 +1,2 @@
+root_class,state,rule,train_support,train_lcb,calibration_support,calibration_lcb,test_support,test_lcb,test_precision,test_coverage,blockers
+Bull,accepted_95,close_drawdown60 >= -0.0032047199531 AND volatility <= 0.152179344579,9281,0.9649016208318519,2202,0.9525159363146446,3125,0.9619306121174673,0.96864,0.05277735555893331,

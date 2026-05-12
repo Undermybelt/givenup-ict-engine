@@ -1,0 +1,11 @@
+PASS inherited_strict_pass_regimes=SessionLiquidityCoreViable,RangeConsolidation
+PASS new_broader_mtf_missing=none
+PASS all_required_sub_regime_missing_after_this_loop=none
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS trade_usable=false
+BLOCKED MainRegimeV2_root_labels_not_materialized_or_calibrated
+PASS TrendExpansion: lcb=0.991053 cal=5621 test=5562 ece=0.000246 instruments=7 contexts=3 timeframes=3 strong_contexts=6 strong_timeframes=3 weak_segments=1
+PASS ExtremeStress: lcb=0.996526 cal=7117 test=5294 ece=0.000500 instruments=7 contexts=3 timeframes=3 strong_contexts=8 strong_timeframes=3 weak_segments=0
+PASS ReversalBrewing: lcb=0.982821 cal=2625 test=3229 ece=0.000126 instruments=6 contexts=3 timeframes=3 strong_contexts=4 strong_timeframes=2 weak_segments=1
+PASS ThinLiquidity: lcb=0.982625 cal=3781 test=6355 ece=0.004087 instruments=2 contexts=2 timeframes=2 strong_contexts=2 strong_timeframes=2 weak_segments=0

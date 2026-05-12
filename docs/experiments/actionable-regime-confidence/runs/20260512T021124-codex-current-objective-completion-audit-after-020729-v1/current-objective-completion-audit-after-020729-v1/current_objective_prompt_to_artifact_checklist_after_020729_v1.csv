@@ -1,0 +1,17 @@
+requirement,evidence,status
+board_file_authoritative,"Current Cursor remains 20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",pass
+every_active_regime_95_confidence,"accepted rows added 0; strict accepted labels remain empty",blocked
+per_regime_qualifying_conditions,"Bull/Sideways are non-promoting leads; Bear/Crisis unaccepted; Manipulation owner/control gated",blocked
+cross_market_cross_period_cross_cycle_validation,"R3 and R5 roots absent; source-label equivalence has 2 confidence-blocked files",blocked
+r6_owner_export_root,"020729 owner-export verifier blocked on missing required files",blocked
+legacy_direct_intake_safety,"020729 legacy root has 73 positives and 73 negatives but no approved adapter/contract change",partial
+explicit_flip_approval,"020729 approval_present=false and flip_controls_accepted=false",blocked
+provider_context,"020037 provider status ran; yfinance ready; TradingViewRemix/MCP not ready; aggregate partial",partial
+auto_quant_operated,"020037 auto-quant-status ran but missing_dependency/bootstrap_needed",blocked
+pre_bayes_operated,"020037 pre-bayes-status ran with pass_neutralized and confidence 0.5822867835012198",partial
+bbn_policy_operated,"020037 policy status ran but matched_rows=0",blocked
+catboost_path_ranking_operated,"020037 structural path-ranking target export rows=3 mature_rows=0",partial
+execution_tree_operated,"020037 execution-candidate stayed observe_only actionable=false",partial
+tsie_acceptance,"020216 sample-only sidecar/proxy; 020450 script-only/in-progress at audit time",blocked
+multi_agent_safety,"append-only audit; source roots not mutated",pass
+goal_complete,"R6/R3/R5/source-confidence/downstream promotion still blocked",blocked

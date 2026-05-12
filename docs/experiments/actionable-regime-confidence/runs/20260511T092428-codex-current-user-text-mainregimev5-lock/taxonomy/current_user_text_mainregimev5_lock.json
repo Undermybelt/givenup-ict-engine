@@ -1,0 +1,31 @@
+{
+  "run_id": "20260511T092428+0800-codex-current-user-text-mainregimev5-lock",
+  "purpose": "lock active taxonomy to current user text after concurrent V2 drift",
+  "current_user_text_explicitly_reopens_taxonomy": true,
+  "quoted_user_intent_summary": "main categories should include bull expansion, bear expansion, manipulation, and consolidation, with other large classes researched from papers/GitHub",
+  "active_candidate_taxonomy": "MainRegimeV5",
+  "mandatory_next_calibration_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "ConsolidationRange",
+    "CrisisStress",
+    "ManipulationLiquidityEngineering",
+    "TransitionAccumulationDistribution"
+  ],
+  "optional_overlays_until_proven": [
+    "CrossAssetMacroRotation"
+  ],
+  "residual": "UnknownOrMixed",
+  "superseded_conflict_writebacks": [
+    "20260511T091507+0800-codex-mainregimev2-reassert-after-v5-drift",
+    "20260511T092259+0800-codex-mainregimev2-lock-after-false-v5-reopen"
+  ],
+  "accepted_95_roots_added": 0,
+  "accepted_gate": "none_for_MainRegimeV5_taxonomy_reset_no_calibration",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "gate_result": "current_user_text_mainregimev5_locked_no_new_95",
+  "next_action": "materialize MainRegimeV5 schema/crosswalk and rerun unchanged 95-99 chronological calibration across full market/timeframe coverage"
+}

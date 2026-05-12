@@ -1,0 +1,11 @@
+PASS run_id=20260512T054025-codex-r6-owner-official-availability-refresh-v1
+PASS gate_result=r6_owner_official_availability_refresh_v1=official_products_rechecked_no_export_rows_no_promotion
+PASS target_root_mutated=false
+PASS accepted_rows_added=0
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS required_target_roots_absent=true

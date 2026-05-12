@@ -1,0 +1,8 @@
+{
+  "packet_assertion": "pass",
+  "provider_pairs": 7,
+  "rows": 45,
+  "smt_event_count": 42,
+  "downstream_allowed": false,
+  "quality_weight": 0.0
+}

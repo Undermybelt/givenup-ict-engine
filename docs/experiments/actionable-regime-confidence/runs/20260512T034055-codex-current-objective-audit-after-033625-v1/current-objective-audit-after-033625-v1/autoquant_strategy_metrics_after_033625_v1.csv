@@ -1,0 +1,7 @@
+strategy,timerange_label,timerange,sharpe,sortino,calmar,total_profit_pct,max_drawdown_pct,trade_count,win_rate_pct,profit_factor,robust_sharpe,worst_profit_pct,worst_dd_pct,avg_position_pct,profit_floor,min_position_size,pareto_dominated_by
+BTCLeaderBreakV4,full,20210101-20251231,0.9415,4.9623,7.7829,42.4600,-5.7458,600,31.8333,1.7469,,,,,,,
+BTCLeaderBreakV4,SUMMARY,,,,,,,,,,0.9415   # min across declared timeranges,42.4600,-5.7458,6.9583,PASS   (threshold ≥ 20.0% per timerange),PASS   (threshold ≥ 5.0%),none (non-dominated)
+MomentumMTFConfluence,full,20210101-20251231,0.3993,1.0760,2.4190,53.2400,-23.1801,854,34.7775,1.1682,,,,,,,
+MomentumMTFConfluence,SUMMARY,,,,,,,,,,0.3993   # min across declared timeranges,53.2400,-23.1801,21.5841,PASS   (threshold ≥ 20.0% per timerange),PASS   (threshold ≥ 5.0%),none (non-dominated)
+VolBreakoutSized,full,20210101-20251231,1.3390,7.3012,6.1958,25.0200,-4.2529,1221,32.8419,1.4751,,,,,,,
+VolBreakoutSized,SUMMARY,,,,,,,,,,1.3390   # min across declared timeranges,25.0200,-4.2529,3.6641,PASS   (threshold ≥ 20.0% per timerange),FAIL   (threshold ≥ 5.0%),none (non-dominated)

@@ -1,0 +1,1 @@
+./target/debug/ict-engine policy-training-status --symbol B2R_VOL_BREAKOUT_150654 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/state_volatility_breakout_v1 --output-format json

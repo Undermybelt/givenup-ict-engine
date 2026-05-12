@@ -1,0 +1,11 @@
+board_sha256_before_audit=4164ae7c37a63693265ac6add9680052f4777bde6993f23cf943417cce46b65e
+required_root_readback:
+ls: /tmp/ict-engine-board-a-r6-owner-export-v1: No such file or directory
+ls: /tmp/ict-engine-native-subhour-source-label-intake: No such file or directory
+ls: /tmp/ict-engine-source-panel-recency-extension: No such file or directory
+source_artifacts_inspected:
+docs/experiments/actionable-regime-confidence/runs/20260512T034423-codex-autoquant-seeded-threaded-run-settlement-after-033430-v1/autoquant-seeded-threaded-run-settlement-after-033430-v1/autoquant_seeded_threaded_run_settlement_after_033430_v1.md
+docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/current-objective-audit-after-034423-v1/current_objective_audit_after_034423_v1.md
+docs/experiments/actionable-regime-confidence/runs/20260511T195320-codex-board-a-provider-reachability-after-034813-v1/provider-reachability-after-034813-v1/provider_reachability_after_034813_v1.md
+docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/r6-staging-triplet-split-calibration-after-035233-v1/r6_staging_triplet_split_calibration_after_035233_v1.md
+docs/experiments/actionable-regime-confidence/runs/20260512T035823-codex-r6-source-control-acquisition-matrix-after-035433-v1/r6-source-control-acquisition-matrix-after-035433-v1/r6_source_control_acquisition_matrix_after_035433_v1.md

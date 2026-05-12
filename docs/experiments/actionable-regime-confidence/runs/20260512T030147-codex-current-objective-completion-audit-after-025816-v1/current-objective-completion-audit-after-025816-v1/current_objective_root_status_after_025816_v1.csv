@@ -1,0 +1,7 @@
+root,status,files,promotion_use
+/tmp/ict-engine-board-a-r6-owner-export-v1,absent,0,blocked
+/tmp/ict-engine-native-subhour-source-label-intake,absent,0,blocked
+/tmp/ict-engine-source-panel-recency-extension,absent,0,blocked
+/tmp/ict-engine-source-label-equivalence-intake,present,2,non-promoting confidence-blocked
+/tmp/ict-engine-direct-manipulation-row-intake,present,3,legacy non-promoting
+/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,present,1,decision package only non-approving

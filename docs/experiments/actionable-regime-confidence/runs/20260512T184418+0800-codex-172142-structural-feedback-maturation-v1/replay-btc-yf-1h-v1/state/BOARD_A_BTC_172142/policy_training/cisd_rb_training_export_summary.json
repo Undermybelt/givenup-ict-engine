@@ -1,0 +1,8 @@
+{
+  "symbol": "BOARD_A_BTC_172142",
+  "analyze_runs": 6,
+  "update_runs": 1,
+  "matched_rows": 0,
+  "bbn_training_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184418+0800-codex-172142-structural-feedback-maturation-v1/replay-btc-yf-1h-v1/state/BOARD_A_BTC_172142/policy_training/cisd_rb_bbn_training.csv",
+  "catboost_training_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184418+0800-codex-172142-structural-feedback-maturation-v1/replay-btc-yf-1h-v1/state/BOARD_A_BTC_172142/policy_training/cisd_rb_catboost_training.csv"
+}

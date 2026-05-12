@@ -1,0 +1,103 @@
+{
+  "combined_trade_rows": 1326,
+  "combined_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T105219+0800-codex-104610-yahoo-crypto-downstream-readback-v1/104610_yahoo_crypto_precision_real_trades_combined_v1.jsonl",
+  "library": "docs/experiments/actionable-regime-confidence/runs/20260512T105219+0800-codex-104610-yahoo-crypto-downstream-readback-v1/104610_yahoo_crypto_precision_strategy_library_v1.json",
+  "promotion_allowed": false,
+  "source_root": "20260512T104610+0800-codex-board-b-yahoo-crypto-precision-fix-aq-v1",
+  "strategies": [
+    {
+      "aggregate": {
+        "calmar": -2.586607016506895,
+        "max_drawdown_pct": -60.0640364489774,
+        "profit_factor": 0.6792612618429188,
+        "sharpe": -3.894757386013073,
+        "sortino": -7.243337570188228,
+        "total_profit_pct": -57.41,
+        "trade_count": 944,
+        "win_rate_pct": 30.190677966101692
+      },
+      "name": "ProviderCryptoMomentumStateV1",
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": -2.597374387944893,
+          "max_drawdown_pct": -18.72290673450001,
+          "profit_factor": 0.6229948036277781,
+          "sharpe": -1.5223088280676436,
+          "sortino": -2.7667130566929408,
+          "total_profit_pct": -17.97,
+          "trade_count": 315,
+          "win_rate_pct": 23.809523809523807
+        },
+        "ETH/USDT": {
+          "calmar": -2.5514533208088648,
+          "max_drawdown_pct": -26.726808443942886,
+          "profit_factor": 0.6210974150618829,
+          "sharpe": -1.7830817983693021,
+          "sortino": -3.3278072576241486,
+          "total_profit_pct": -25.2,
+          "trade_count": 334,
+          "win_rate_pct": 32.035928143712574
+        },
+        "SOL/USDT": {
+          "calmar": -1.9892441369332423,
+          "max_drawdown_pct": -19.373919381798046,
+          "profit_factor": 0.7803067671736684,
+          "sharpe": -0.7963482271147642,
+          "sortino": -1.599140510107842,
+          "total_profit_pct": -14.24,
+          "trade_count": 295,
+          "win_rate_pct": 34.91525423728813
+        }
+      },
+      "source_policy": "provider_owned_yahoo_crypto_ohlcv_incubation_only_no_selected_history_no_source_control_unlock"
+    },
+    {
+      "aggregate": {
+        "calmar": -2.5842185798540913,
+        "max_drawdown_pct": -10.098723419935139,
+        "profit_factor": 0.8775441774706555,
+        "sharpe": -0.5776729464376381,
+        "sortino": -1.1018832794292148,
+        "total_profit_pct": -9.64,
+        "trade_count": 382,
+        "win_rate_pct": 42.40837696335078
+      },
+      "name": "ProviderCryptoPullbackRevertV1",
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": 1.8392518966111053,
+          "max_drawdown_pct": -3.8986303024656777,
+          "profit_factor": 1.121790222178883,
+          "sharpe": 0.19304527806623903,
+          "sortino": 0.47888725273572824,
+          "total_profit_pct": 2.65,
+          "trade_count": 146,
+          "win_rate_pct": 45.20547945205479
+        },
+        "ETH/USDT": {
+          "calmar": -2.24819696088323,
+          "max_drawdown_pct": -6.168052659348017,
+          "profit_factor": 0.8177120968502605,
+          "sharpe": -0.31181717499161693,
+          "sortino": -0.6389582803036874,
+          "total_profit_pct": -5.12,
+          "trade_count": 127,
+          "win_rate_pct": 40.94488188976378
+        },
+        "SOL/USDT": {
+          "calmar": -2.1774718051425026,
+          "max_drawdown_pct": -8.909816689,
+          "profit_factor": 0.7518048092828533,
+          "sharpe": -0.356840631302906,
+          "sortino": -0.6430751013122512,
+          "total_profit_pct": -7.17,
+          "trade_count": 109,
+          "win_rate_pct": 40.36697247706422
+        }
+      },
+      "source_policy": "provider_owned_yahoo_crypto_ohlcv_incubation_only_no_selected_history_no_source_control_unlock"
+    }
+  ],
+  "strategy_count": 2,
+  "update_goal": false
+}

@@ -1,0 +1,306 @@
+{
+  "run_id": "20260512T112916+0800-codex-negative-evidence-bbn-feedback-v1",
+  "generated_at": "2026-05-12T11:29:16+08:00",
+  "scope": "Classify already-registered negative or fail-closed Board A evidence into BBN/Pre-Bayes/path-ranker consumable feedback classes without mutating runtime code or promoting any branch.",
+  "board_file": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_hash_before_artifact": "fb67d30926863903d374f697925252aeed74bb57600294272b3d675db87458d4",
+  "evidence_sources": [
+    {
+      "run_id": "20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1/provider-linked-aq-provenance-probe-v1/provider_linked_aq_provenance_probe_v1.json",
+      "read_state": "settled_board_registered"
+    },
+    {
+      "run_id": "20260512T111309+0800-codex-105637-provider-linked-momentum-materialized-downstream-v1",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T111309+0800-codex-105637-provider-linked-momentum-materialized-downstream-v1/materialized-momentum-downstream-readback-v1/materialized_momentum_downstream_readback_v1.json",
+      "read_state": "settled_board_registered"
+    },
+    {
+      "run_id": "20260512T111403+0800-codex-105014-ingest-bridge-fix-v1",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T111403+0800-codex-105014-ingest-bridge-fix-v1/105014_ingest_bridge_fix_v1.json",
+      "read_state": "settled_board_registered"
+    },
+    {
+      "run_id": "20260512T111602+0800-codex-tvr-current-provider-fetch-readback-v1",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T111602+0800-codex-tvr-current-provider-fetch-readback-v1/tvr-current-provider-fetch-readback-v1/tvr_current_provider_fetch_readback_v1.json",
+      "read_state": "settled_board_registered"
+    },
+    {
+      "run_id": "20260512T111942+0800-codex-ibkr-qqq-raw-csv-fetch-v1",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T111942+0800-codex-ibkr-qqq-raw-csv-fetch-v1/ibkr-qqq-raw-csv-fetch-v1/ibkr_qqq_raw_csv_fetch_v1.json",
+      "read_state": "settled_board_registered"
+    },
+    {
+      "run_id": "20260512T112030+0800-codex-btc-comparable-tvr-ibkr-provider-preflight-v1",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T112030+0800-codex-btc-comparable-tvr-ibkr-provider-preflight-v1/btc-comparable-tvr-ibkr-provider-preflight-v1/btc_comparable_tvr_ibkr_provider_preflight_v1.json",
+      "read_state": "settled_board_registered"
+    },
+    {
+      "run_id": "20260512T112303+0800-codex-111403-path-ranker-direct-fallback-v1",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T112303+0800-codex-111403-path-ranker-direct-fallback-v1/111403_path_ranker_direct_fallback_v1.json",
+      "read_state": "settled_board_registered"
+    }
+  ],
+  "excluded_sources": [
+    {
+      "run_id": "20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1",
+      "reason": "active_process_at_readback; do_not_classify_until_settled"
+    },
+    {
+      "run_id": "20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1",
+      "reason": "active_followup_process_mutating_same_root_at_readback; use existing board settlement only until settled"
+    }
+  ],
+  "negative_evidence_taxonomy": {
+    "market_strategy_negative": {
+      "bbn_target": "strategy_regime_fit_likelihood",
+      "allowed_prior_effect": "none_until_cross_market_and_cross_period_support",
+      "allowed_likelihood_effect": "downweight P(strategy_edge | regime, branch, provider_context) with support weighting",
+      "catboost_effect": "add realized outcome features and negative labels only when row identity and maturity gates are met",
+      "execution_tree_effect": "observe_or_prune_branch_candidate; never trade-enable"
+    },
+    "provider_tool_reliability": {
+      "bbn_target": "provider_reliability_or_observation_quality_nodes",
+      "allowed_prior_effect": "none_on_market_regime",
+      "allowed_likelihood_effect": "downweight source reliability or increase uncertainty for that provider path",
+      "catboost_effect": "provider_quality_feature_only",
+      "execution_tree_effect": "block_source_authority_or_require_alternate_provider"
+    },
+    "maturity_gate_failure": {
+      "bbn_target": "evidence_maturity_or_sampling_gate_nodes",
+      "allowed_prior_effect": "none_on_regime_truth",
+      "allowed_likelihood_effect": "mark evidence insufficient instead of false",
+      "catboost_effect": "do_not_train_as_negative_outcome_when support_floor_unmet",
+      "execution_tree_effect": "fail_closed_until_observation_or_production_floor_met"
+    },
+    "downstream_policy_failure": {
+      "bbn_target": "workflow_gate_nodes",
+      "allowed_prior_effect": "none_on_market_regime",
+      "allowed_likelihood_effect": "track missing bridge, empty Pre-Bayes, invalid runtime, or execution block as layer-specific reliability",
+      "catboost_effect": "runtime/readiness feature; not a market label",
+      "execution_tree_effect": "fail_closed_with_stopping_layer"
+    }
+  },
+  "classified_evidence": [
+    {
+      "source_run": "20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1",
+      "evidence_class": [
+        "market_strategy_negative",
+        "provider_tool_reliability",
+        "maturity_gate_failure"
+      ],
+      "observed_facts": {
+        "providers_with_aq_rows": [
+          "yfinance",
+          "kraken_public_ccxt",
+          "binance_public_ccxt",
+          "bybit_public_ccxt"
+        ],
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "trade_count_by_provider": {
+          "yfinance": 1,
+          "kraken_public_ccxt": 2,
+          "binance_public_ccxt": 2,
+          "bybit_public_ccxt": 2
+        },
+        "total_profit_pct_by_provider": {
+          "yfinance": -0.61,
+          "kraken_public_ccxt": -0.52,
+          "binance_public_ccxt": -0.44,
+          "bybit_public_ccxt": -0.44
+        },
+        "tradingview_mcp_harness_exit": 1,
+        "six_provider_promotion_matrix_passed": false
+      },
+      "bbn_feedback": {
+        "market_likelihood_update": "weak_negative_for_provider_crypto_momentum_given_btc_1h_provider_context",
+        "market_prior_update_allowed": false,
+        "reason_prior_blocked": "too_few_trades_per_provider_and_six_provider_gate_failed",
+        "provider_reliability_update": "tvr_harness_failure_in_this_root; later default path repaired separately",
+        "maturity_update": "support_floor_unmet"
+      },
+      "next_action": "Use longer provider-owned windows or settled 112315 six-provider BTC matrix after it completes; do not rerun this short diagnostic shape."
+    },
+    {
+      "source_run": "20260512T111309+0800-codex-105637-provider-linked-momentum-materialized-downstream-v1",
+      "evidence_class": [
+        "market_strategy_negative",
+        "maturity_gate_failure",
+        "downstream_policy_failure"
+      ],
+      "observed_facts": {
+        "materialized_rows": 7,
+        "wins": 3,
+        "losses": 4,
+        "total_pnl": -200.6922557,
+        "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "pre_bayes_empty": true,
+        "execution_ready": false,
+        "execution_actionable": false,
+        "closed_loop_branch_admission": "fail_closed"
+      },
+      "bbn_feedback": {
+        "market_likelihood_update": "negative_for_this_strategy_branch_outcome_only",
+        "market_prior_update_allowed": false,
+        "reason_prior_blocked": "short_window_diagnostic_and_pre_bayes_empty",
+        "workflow_gate_update": "pre_bayes_missing_and_execution_fail_closed",
+        "catboost_training_update_allowed": false
+      },
+      "next_action": "Convert only to branch-fit negative evidence after row identity and maturity support are sufficient; keep current use as fail-closed diagnostic."
+    },
+    {
+      "source_run": "20260512T111403+0800-codex-105014-ingest-bridge-fix-v1",
+      "evidence_class": [
+        "maturity_gate_failure",
+        "downstream_policy_failure"
+      ],
+      "observed_facts": {
+        "forced_ingest_rows": 146,
+        "bbn_state_written": true,
+        "observation_validation": "146/30",
+        "pre_bayes_empty": true,
+        "raw_scored_mature": "0/30",
+        "production_validation": "0/30",
+        "trainer_artifact": "missing_before_direct_fallback_repairs",
+        "execution_status": "fail_closed"
+      },
+      "bbn_feedback": {
+        "market_likelihood_update": "none",
+        "market_prior_update_allowed": false,
+        "reason_prior_blocked": "ingest_and_bbn_state_presence_do_not_equal_market_truth",
+        "workflow_gate_update": "bbn_can_hold_feedback_but_pre_bayes_and_path_ranker_consumption_are_missing",
+        "catboost_training_update_allowed": false
+      },
+      "next_action": "Repair Pre-Bayes bridge/gate on the same rooted branch before another BBN -> CatBoost -> execution-tree promotion attempt."
+    },
+    {
+      "source_run": "20260512T112303+0800-codex-111403-path-ranker-direct-fallback-v1",
+      "evidence_class": [
+        "maturity_gate_failure",
+        "downstream_policy_failure"
+      ],
+      "observed_facts": {
+        "raw_scored_mature": "1/30",
+        "production_validation": "0/30",
+        "observation_validation": "146/30",
+        "trainer_artifact": "present_validation_insufficient",
+        "runtime_selection": "enabled_registered_model_invalid",
+        "execution_ready": false,
+        "execution_actionable": false,
+        "closed_loop_branch_admission": "fail_closed"
+      },
+      "bbn_feedback": {
+        "market_likelihood_update": "none",
+        "market_prior_update_allowed": false,
+        "reason_prior_blocked": "runtime_invalid_because_validation_floor_unmet",
+        "path_ranker_update": "validation_floor_failure",
+        "catboost_training_update_allowed": false
+      },
+      "next_action": "Do not treat direct fallback score failure as a market negative; collect mature scored target rows or use a settled history-backed path without copied-state shortcuts."
+    },
+    {
+      "source_run": "20260512T111602+0800-codex-tvr-current-provider-fetch-readback-v1",
+      "evidence_class": [
+        "provider_tool_reliability"
+      ],
+      "observed_facts": {
+        "provider": "tradingview_mcp",
+        "provider_ready": true,
+        "default_harness_rows": 21,
+        "local_stdio_harness_rows": 21,
+        "symbol": "NASDAQ:QQQ",
+        "promotion_allowed": false
+      },
+      "bbn_feedback": {
+        "market_likelihood_update": "none",
+        "market_prior_update_allowed": false,
+        "provider_reliability_update": "tvr_current_qqq_rows_present",
+        "reason_prior_blocked": "provider_reachability_is_not_regime_evidence"
+      },
+      "next_action": "Use as source-quality evidence in a same-root provider matrix; do not promote standalone."
+    },
+    {
+      "source_run": "20260512T111942+0800-codex-ibkr-qqq-raw-csv-fetch-v1",
+      "evidence_class": [
+        "provider_tool_reliability"
+      ],
+      "observed_facts": {
+        "provider": "ibkr",
+        "symbol": "QQQ",
+        "rows": 30,
+        "first_bar": "2026-03-30T00:00:00+00:00",
+        "last_bar": "2026-05-11T00:00:00+00:00",
+        "promotion_allowed": false
+      },
+      "bbn_feedback": {
+        "market_likelihood_update": "none",
+        "market_prior_update_allowed": false,
+        "provider_reliability_update": "ibkr_qqq_daily_rows_present",
+        "reason_prior_blocked": "raw_provider_rows_are_not_selected_history_or_downstream_evidence"
+      },
+      "next_action": "Use in provider coverage matrix only; keep out of regime prior updates."
+    },
+    {
+      "source_run": "20260512T112030+0800-codex-btc-comparable-tvr-ibkr-provider-preflight-v1",
+      "evidence_class": [
+        "provider_tool_reliability"
+      ],
+      "observed_facts": {
+        "tvr_binance_btc_1h_rows": 720,
+        "tvr_coinbase_btc_1h_rows": 715,
+        "tvr_local_stdio_binance_btc_exit": 1,
+        "ibkr_paxos_btc_1h_rows": 45,
+        "same_root_aq_provider_matrix": false,
+        "promotion_allowed": false
+      },
+      "bbn_feedback": {
+        "market_likelihood_update": "none",
+        "market_prior_update_allowed": false,
+        "provider_reliability_update": "tvr_default_path_and_ibkr_paxos_btc_rows_present; tvr_local_stdio_route_unreliable_for_this_symbol",
+        "reason_prior_blocked": "provider_preflight_only_no_aq_no_downstream_chain"
+      },
+      "next_action": "After 112315 settles, combine same-root TVR default BTC, IBKR PAXOS BTC, YF, Kraken, Binance, and Bybit with ordered AQ -> Pre-Bayes -> BBN -> CatBoost -> execution-tree readback."
+    }
+  ],
+  "bbn_consumption_contract": {
+    "evidence_type_shape": "Use soft evidence vectors that sum to 1.0 or hard observations only after node/domain mapping is explicit.",
+    "do_not_pollute_priors": [
+      "provider_tool_reliability",
+      "maturity_gate_failure",
+      "downstream_policy_failure",
+      "single_short_window_strategy_loss"
+    ],
+    "allowed_soft_evidence_nodes": [
+      "provider_reliability.tradingview_mcp.default_credentials",
+      "provider_reliability.tradingview_mcp.local_stdio",
+      "provider_reliability.ibkr.historical_rows",
+      "strategy_regime_fit.ProviderCryptoMomentumStateV1.Bull",
+      "workflow_gate.pre_bayes_available",
+      "workflow_gate.path_ranker_mature_support",
+      "execution_tree.branch_admission"
+    ],
+    "promotion_blockers_preserved": [
+      "no_selected_history_approval",
+      "source_control_evidence_false",
+      "canonical_merge_false",
+      "same_root_six_provider_aq_matrix_false_for_classified_completed_sources",
+      "pre_bayes_empty_for_downstream_roots",
+      "path_ranker_validation_floor_unmet_for_direct_fallback",
+      "execution_tree_fail_closed"
+    ]
+  },
+  "decision": {
+    "gate": "negative_evidence_bbn_feedback_v1=structured_feedback_pack_created_no_promotion",
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_added": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

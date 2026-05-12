@@ -1,0 +1,5 @@
+label,accepted_source_confidence_95,total_support_across_required_splits,total_rows_at_or_above_0_95,worst_split,worst_wilson95_lcb,best_wilson95_lcb,blocking_splits,largest_per_split_new_perfect_rows_needed,diagnosis
+Bear,false,54939,52,heldout_time,0.0,0.0011242749,calibration;heldout_market;heldout_time;test,632515,confidence_quality_blocked_not_support_blocked
+Bull,false,104979,10193,heldout_market,0.0581218497,0.119416014,calibration;heldout_market;heldout_time;test,1043824,confidence_quality_blocked_not_support_blocked
+Crisis,false,30623,276,heldout_market,0.0,0.0173592424,calibration;heldout_market;heldout_time;test,411962,confidence_quality_blocked_not_support_blocked
+Sideways,false,57899,8686,test,0.1075825871,0.2056385432,calibration;heldout_market;heldout_time;test,559036,confidence_quality_blocked_not_support_blocked

@@ -1,0 +1,58 @@
+{
+  "artifact_type": "positive_regime_factor_index_v1",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "54d604e33cad12718144844c828c7d8af9ba8b72f254e4b57b3e7fcde39cfb59",
+  "decision": {
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "call_update_goal": false,
+    "full_direct_manipulation_variety_coverage": false,
+    "full_objective_achieved": false,
+    "gate_result": "positive_regime_factor_index_v1_per_root_supply_present_full_goal_still_blocked",
+    "manipulation_has_direct_scoped_supply": true,
+    "per_price_root_factor_supply_present": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T06:09:33.208322+00:00",
+  "inputs": {
+    "axiswise_summary": "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1_summary.csv",
+    "crosswalk_slots": "docs/experiments/actionable-regime-confidence/runs/20260511T135932-codex-es-nq-source-crosswalk-calibration-v1/crosswalk-calibration/es_nq_source_crosswalk_calibration_v1_slots.csv",
+    "direct_matrix": "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.json",
+    "intraday_slots": "docs/experiments/actionable-regime-confidence/runs/20260511T134756-codex-daily-to-intraday-source-attachment-v1/daily-intraday-attachment/daily_to_intraday_source_attachment_v1_slots.csv",
+    "local_export_check": "docs/experiments/actionable-regime-confidence/runs/20260511T134038-codex-local-row-export-acquisition-check-v1/acquisition-check/local_row_export_acquisition_check_v1.json",
+    "root_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json"
+  },
+  "next_action": "Use this positive index as the Board A factor-supply map; do not run more provider-bar proxy scans. Further Board A completion requires new independent source-label panels or direct positive/negative manipulation rows.",
+  "positive_supply": {
+    "daily_parent_price_roots_accepted": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "daily_parent_price_roots_accepted_count": 4,
+    "direct_manipulation_scoped_varieties_accepted": [
+      "pump_dump_telegram_event",
+      "dex_self_trade_order_lifecycle",
+      "dex_consecutive_self_trade_order_lifecycle",
+      "midsummer_bsc_wash_maker",
+      "midsummer_multichain_wash_maker"
+    ],
+    "direct_manipulation_scoped_varieties_accepted_count": 5,
+    "exact_intraday_parent_context_roots_accepted": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "exact_intraday_parent_context_rows_accepted": 36,
+    "same_source_weekly_monthly_cells_accepted_count": 8
+  },
+  "run_id": "20260511T140042+0800-codex-positive-regime-factor-index-v1",
+  "support_algebra": {
+    "minimum_all_success_support": 73,
+    "why_it_matters": "Any split below this support cannot pass 95 even if every observed row is correct.",
+    "wilson95_lcb_threshold": 0.95
+  }
+}

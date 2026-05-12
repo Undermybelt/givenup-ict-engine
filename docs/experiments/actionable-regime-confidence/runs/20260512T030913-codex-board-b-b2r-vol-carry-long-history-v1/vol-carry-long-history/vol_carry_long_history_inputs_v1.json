@@ -1,0 +1,130 @@
+{
+  "panel": [
+    {
+      "end": "2025-12-31T21:00:00+00:00",
+      "file": "NQ_USD-1h.feather",
+      "pair": "NQ/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1h.feather",
+      "rows": 89250,
+      "source": "^IXIC",
+      "start": "2011-01-02T23:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_futures"
+    },
+    {
+      "end": "2025-12-30T20:00:00+00:00",
+      "file": "QQQ_USD-1h.feather",
+      "pair": "QQQ/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/QQQ_USD-1h.feather",
+      "rows": 2754,
+      "source": "^IXIC",
+      "start": "2024-06-03T13:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-30T20:00:00+00:00",
+      "file": "SPY_USD-1h.feather",
+      "pair": "SPY/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-1h.feather",
+      "rows": 1286,
+      "source": "^GSPC",
+      "start": "2025-05-07T13:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-30T20:00:00+00:00",
+      "file": "IWM_USD-1h.feather",
+      "pair": "IWM/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-1h.feather",
+      "rows": 1286,
+      "source": "^RUT",
+      "start": "2025-05-07T13:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-30T20:00:00+00:00",
+      "file": "DIA_USD-1h.feather",
+      "pair": "DIA/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/DIA_USD-1h.feather",
+      "rows": 1286,
+      "source": "^GSPC",
+      "start": "2025-05-07T13:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-30T20:00:00+00:00",
+      "file": "GLD_USD-1h.feather",
+      "pair": "GLD/USD",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-1h.feather",
+      "rows": 1284,
+      "source": "^GSPC",
+      "start": "2025-05-07T13:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_yfinance"
+    },
+    {
+      "end": "2026-01-29T21:00:00+00:00",
+      "file": "BTC_USDT-1h.feather",
+      "pair": "BTC/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1h.feather",
+      "rows": 44504,
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_crypto"
+    },
+    {
+      "end": "2026-01-29T21:00:00+00:00",
+      "file": "ETH_USDT-1h.feather",
+      "pair": "ETH/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1h.feather",
+      "rows": 44504,
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_crypto"
+    },
+    {
+      "end": "2026-01-29T21:00:00+00:00",
+      "file": "SOL_USDT-1h.feather",
+      "pair": "SOL/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/SOL_USDT-1h.feather",
+      "rows": 44504,
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_crypto"
+    },
+    {
+      "end": "2026-01-29T21:00:00+00:00",
+      "file": "BNB_USDT-1h.feather",
+      "pair": "BNB/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/BNB_USDT-1h.feather",
+      "rows": 44504,
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_crypto"
+    },
+    {
+      "end": "2026-01-29T20:00:00+00:00",
+      "file": "AVAX_USDT-1h.feather",
+      "pair": "AVAX/USDT",
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/AVAX_USDT-1h.feather",
+      "rows": 44503,
+      "source": "^IXIC",
+      "start": "2021-01-01T00:00:00+00:00",
+      "status": "loaded_full_history",
+      "venue": "local_auto_quant_crypto"
+    }
+  ],
+  "source_roots": [
+    "^GSPC",
+    "^IXIC",
+    "^RUT"
+  ]
+}

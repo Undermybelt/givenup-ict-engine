@@ -1,0 +1,11 @@
+requirement,evidence,status
+Do not mutate original 124245 state,"child state copied to docs/experiments/actionable-regime-confidence/runs/20260512T125425+0800-codex-124245-eth-path-ranker-runtime-closure-v1/state_eth_usdt_crypto_nonbtc_1h_4h_1d",pass
+Apply CatBoost scores,"command-output/01_apply_catboost_scores.out and path-ranker/eth_runtime_scores.csv with 3 score rows",pass
+Apply scores into ict-engine,"command-output/02_apply_scores_to_ict.out shows rows=3 and rows_with_raw_path_score=3",pass
+Register trainer artifact,"command-output/03_register_trainer.out shows trainer_artifact_ready=true and model_family=catboost",pass
+Enable runtime,"command-output/04_enable_runtime.out shows runtime_selection_status=enabled_candidate_set_ready and runtime_matches=3",pass
+Read Pre-Bayes/filter,"command-output/08_pre_bayes_refresh.out shows latest_gate_status=pass_neutralized and market_regime range",pass
+Read workflow/execution runtime,"command-output/06_workflow_status_runtime.out shows using_candidate_set_scores and user_selected_historical_data_missing",pass
+Provider authority,"no new IBKR/TVR/YF/Kraken/Binance/Bybit fetch; local feather replay only",fail_closed
+Mature rooted observations,"policy readback shows raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30",fail_closed
+Promotion readiness,"no calibrated path probability, no execution gate status, no non-observe execution-tree release",fail_closed

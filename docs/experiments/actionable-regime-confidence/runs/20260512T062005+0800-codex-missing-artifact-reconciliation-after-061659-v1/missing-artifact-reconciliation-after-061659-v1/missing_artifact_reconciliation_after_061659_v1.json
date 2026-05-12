@@ -1,0 +1,36 @@
+{
+  "run_id": "20260512T062005+0800-codex-missing-artifact-reconciliation-after-061659-v1",
+  "gate_result": "missing_artifact_reconciliation_after_061659_v1=061621_non_counting_missing_artifacts_061748_absent_no_promotion",
+  "board_sha256_before_artifact": "73f30e0080634cc614882326880677dc6b4e820da725cf0d192a5ac04d776cc4",
+  "roots": {
+    "20260512T061421+0800-codex-source-label-equivalence-current-calibration-after-061229-v1": {
+      "present": true,
+      "files_observed": 11,
+      "counting_disposition": "count_once_current_source_label_equivalence_calibration"
+    },
+    "20260512T061659+0800-codex-source-control-arrival-refresh-after-061521-v1": {
+      "present": true,
+      "files_observed": 5,
+      "counting_disposition": "count_once_source_control_arrival_refresh"
+    },
+    "20260512T061621+0800-codex-source-label-equivalence-current-calibration-v1": {
+      "present": true,
+      "files_observed": 0,
+      "counting_disposition": "non_counting_until_artifacts_materialize"
+    },
+    "20260512T061748+0800-codex-source-control-arrival-refresh-after-061421-v1": {
+      "present": false,
+      "files_observed": 0,
+      "counting_disposition": "non_counting_absent_at_final_readback"
+    }
+  },
+  "decision": {
+    "required_target_roots_absent": true,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

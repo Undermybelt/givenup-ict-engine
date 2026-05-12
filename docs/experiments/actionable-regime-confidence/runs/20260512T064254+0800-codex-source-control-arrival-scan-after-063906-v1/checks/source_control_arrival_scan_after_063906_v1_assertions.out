@@ -1,0 +1,11 @@
+gate_result=source_control_arrival_scan_after_063906_v1=no_new_accepted_source_control_unlock_no_downstream
+accepted_unlock_found=False
+r6_owner_export_ready=False
+r5_recency_ready=False
+r3_native_subhour_path_present=True
+r3_native_subhour_accepted_for_promotion=False
+canonical_merge_allowed_now=False
+downstream_promotion_allowed_now=False
+strict_full_objective=False
+trade_usable=False
+update_goal=False

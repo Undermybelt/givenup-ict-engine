@@ -1,0 +1,21 @@
+{
+  "accepted_rows_added": 0,
+  "decision": "source_label_malformed_row_cleanup_v1=malformed_row_removed_schema_ready_unscored",
+  "external_requests_sent": false,
+  "malformed_rows_removed": 0,
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "rows_after": 248440,
+  "rows_before": 248440,
+  "rows_sha256_after": "915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f",
+  "rows_sha256_before": "915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f",
+  "run_id": "20260511T214423-codex-source-label-malformed-row-cleanup-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_returncode": 0,
+  "verifier_row_count": 248440,
+  "verifier_status": "schema_ready_unscored"
+}

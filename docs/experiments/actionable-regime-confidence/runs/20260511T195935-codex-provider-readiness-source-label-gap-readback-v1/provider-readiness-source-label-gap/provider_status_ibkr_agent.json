@@ -1,0 +1,52 @@
+{
+  "default_enabled_providers": [],
+  "install_prompts": [
+    "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+    "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+  ],
+  "pending_provider_details": [
+    {
+      "domain": "market_data",
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ],
+      "provider_id": "ibkr",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    }
+  ],
+  "pending_providers": [
+    "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable"
+  ],
+  "providers": [
+    {
+      "access_mode": "operator_runtime_required",
+      "adopted_by_default": false,
+      "domain": "market_data",
+      "fallback_priority": 30,
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ],
+      "market_fit": [
+        "tradfi"
+      ],
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "selectable_by_user": true,
+      "status": "configured_runtime_unhealthy",
+      "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows.",
+      "user_access": "login_and_local_runtime"
+    }
+  ],
+  "ready_by_domain": {
+    "market_data": "0/1"
+  },
+  "ready_providers": [],
+  "selectable_providers": [
+    "ibkr"
+  ],
+  "summary_line": "market_data:0/1 ready"
+}

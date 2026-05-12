@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/yahoo_nq_f_1h.csv ...
+  raw_rows=642 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=642
+  range 2026-04-01 00:00:00+00:00 -> 2026-05-11 23:00:00+00:00
+  after timerange slice: 642 rows
+  cleaning: SKIPPED (--no-clean)
+  gap_audit: median_gap=3600s max_gap=4,020.0min big_gaps_gt_60x_median=1 (typical for futures session breaks/weekends)
+  wrote   1h:     642 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101256+0800-codex-board-b-provider-yahoo-nq-aq-preseed-v1/workspace/auto-quant-yahoo-nq/user_data/data/NQ_USD-1h.feather
+  wrote   4h:     173 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101256+0800-codex-board-b-provider-yahoo-nq-aq-preseed-v1/workspace/auto-quant-yahoo-nq/user_data/data/NQ_USD-4h.feather
+  wrote   1d:      34 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101256+0800-codex-board-b-provider-yahoo-nq-aq-preseed-v1/workspace/auto-quant-yahoo-nq/user_data/data/NQ_USD-1d.feather
+Done: 3 feather files for pair NQ/USD in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T101256+0800-codex-board-b-provider-yahoo-nq-aq-preseed-v1/workspace/auto-quant-yahoo-nq/user_data/data

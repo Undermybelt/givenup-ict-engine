@@ -1,0 +1,11 @@
+PASS decision=current_goal_completion_audit_v31=kaggle_live_refresh_confirms_strict_objective_blocked
+PASS unmet_requirement_ids=R2,R3,R4,R5,R6,R8
+PASS source_label_verifier_returncode=2
+PASS recency_verifier_returncode=2
+PASS direct_verifier_returncode=2
+PASS native_complete=false
+PASS accepted_rows_added_since_v30=0
+PASS new_confidence_gate_since_v30=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

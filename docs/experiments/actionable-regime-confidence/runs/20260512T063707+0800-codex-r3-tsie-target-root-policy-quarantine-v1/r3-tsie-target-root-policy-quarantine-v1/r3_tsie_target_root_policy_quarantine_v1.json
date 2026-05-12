@@ -1,0 +1,44 @@
+{
+  "run_id": "20260512T063707+0800-codex-r3-tsie-target-root-policy-quarantine-v1",
+  "gate_result": "r3_tsie_target_root_policy_quarantine_v1=target_root_present_but_proxy_policy_blocked_no_promotion",
+  "board_sha256_before_artifact": "2f833ef82a10a7f8464ed0a8fbc7e2e3e6d7722bab741e3da81bc75974e00ba0",
+  "scope": "read-only policy quarantine for TSIE-created R3 target root",
+  "observed_writer": {
+    "pid": 98181,
+    "active": true,
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1/scripts/r3_hf_tsie_native_intraday_intake_v1.py"
+  },
+  "observed_root": {
+    "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+    "present": true,
+    "rows_file": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+    "rows_file_size_bytes": 2786719721,
+    "provenance_file": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+    "provenance_file_size_bytes": 2400,
+    "header": "package_id,source_owner,source_report_or_dataset,source_pull_date,market_family,symbol,source_symbol,equivalence_policy,event_species,timestamp_or_date,timeframe,main_regime_v2_label,direct_label,matched_negative_group_id,split_role,source_row_id,provenance_hash,source_confidence,native_timeframe_minutes,source_regime_label,source_regime_name,redaction_notes"
+  },
+  "prior_blocking_artifacts": [
+    "20260512T062409+0800-codex-r3-r5-source-selection-readback-after-061855-v1",
+    "20260512T062657+0800-codex-tsie-negative-packet-reconciliation-after-062409-v1",
+    "20260512T063215+0800-codex-r3-tsie-native-intraday-materializer-preflight-v1"
+  ],
+  "policy_blockers": [
+    "tsie_rule_or_ohlcv_generated_labels",
+    "single_idx_context",
+    "no_direct_crisis_semantic",
+    "no_accepted_mainregimev2_equivalence",
+    "exact_active_r3_target_cells_absent",
+    "prior_full_parquet_gates_accepted_zero_roots",
+    "materializer_preflight_do_not_run"
+  ],
+  "required_root_path_present": true,
+  "required_root_accepted": false,
+  "target_root_mutated_by_other_active_process": true,
+  "accepted_rows_added": 0,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

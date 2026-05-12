@@ -1,0 +1,27 @@
+Readbacks used:
+
+- Board tail and SHA-256:
+  docs/plans/2026-05-10-actionable-regime-confidence-todo.md
+  sha256 before packet: 1ffdf2edb702a1f1a2afdab68f51be1caed24afb2338865ebda4412055ec0296
+
+- Required roots:
+  ABSENT /tmp/ict-engine-board-a-r6-owner-export-v1
+  ABSENT /tmp/ict-engine-native-subhour-source-label-intake
+  ABSENT /tmp/ict-engine-source-panel-recency-extension
+
+- 043932 terminal report:
+  docs/experiments/actionable-regime-confidence/runs/20260512T043932-codex-source-label-rule-qualifier-miner-v1/source-label-rule-qualifier-miner-v1/source_label_rule_qualifier_miner_v1.md
+  gate: source_label_rule_qualifier_miner_v1=rules_scored_no_full_acceptance
+  accepted labels: []
+
+- 044701 terminal single-atom scan:
+  docs/experiments/actionable-regime-confidence/runs/20260512T044701-codex-source-label-single-atom-qualifier-scan-v1/source-label-single-atom-qualifier-scan-v1/source_label_single_atom_qualifier_scan_v1.md
+  gate: source_label_single_atom_qualifier_scan_v1=single_atom_scored_no_full_acceptance
+  accepted labels: []
+
+- 044947 R3 recheck:
+  docs/experiments/actionable-regime-confidence/runs/20260512T044947-codex-r3-native-subhour-live-source-recheck-v3/r3-native-subhour-live-source-recheck-v3/r3_native_subhour_live_source_recheck_v3.md
+  gate: r3_native_subhour_live_source_recheck_v3=no_ready_source_owned_native_subhour_rows_no_promotion
+
+- Concurrency readback:
+  044701 stale in-progress/empty notes were superseded only for process state after terminal artifacts appeared; no 044701 promotion evidence was accepted.

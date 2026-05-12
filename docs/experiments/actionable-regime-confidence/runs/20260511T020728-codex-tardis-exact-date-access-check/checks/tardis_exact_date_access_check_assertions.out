@@ -1,0 +1,14 @@
+RUN_ID 20260511T020728+0800-codex-tardis-exact-date-access-check
+REPORT docs/experiments/actionable-regime-confidence/runs/20260511T020728-codex-tardis-exact-date-access-check/access-check/tardis_exact_date_access_check.json
+EVENT_CANDIDATES 12
+URL_PROBES 36
+ACCESSIBLE_WITHOUT_CREDENTIALS 0
+UNAUTHORIZED_OR_AUTHORIZATION_REQUIRED 33
+MANIPULATION_INPUT_STATE credentialed_exact_date_export_required
+ACCEPTED_95 false
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+FRESH_CALIBRATION_RERUN false
+TRADE_USABLE false
+RAW_MARKET_DATA_SAVED false
+GATE blocked_exact_date_tardis_requires_credentials

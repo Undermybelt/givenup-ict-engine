@@ -1,0 +1,139 @@
+{
+  "provider": "kraken_public",
+  "direct_input_types_seen": {
+    "tick_trade_prints": true,
+    "l2_order_book_snapshot": true,
+    "order_lifecycle_cancel_replace": false,
+    "level3_order_messages": false,
+    "crypto_event_social": false
+  },
+  "pairs": {
+    "XBTUSD": {
+      "Trades": {
+        "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD",
+        "latency_ms": 1418.119,
+        "ok": true,
+        "error": [],
+        "result_keys": [
+          "XXBTZUSD",
+          "last"
+        ],
+        "pair_key": "XXBTZUSD",
+        "trade_rows": 1000,
+        "first_trade": [
+          "81240.30000",
+          "0.00018473",
+          1778430707.8994536,
+          "s",
+          "m",
+          "",
+          100119839
+        ],
+        "last_trade": [
+          "81338.10000",
+          "0.00057418",
+          1778432256.3463717,
+          "b",
+          "l",
+          "",
+          100120838
+        ],
+        "has_tick_trade_fields": true
+      },
+      "Depth": {
+        "url": "https://api.kraken.com/0/public/Depth?pair=XBTUSD&count=500",
+        "latency_ms": 1587.182,
+        "ok": true,
+        "error": [],
+        "result_keys": [
+          "XXBTZUSD"
+        ],
+        "pair_key": "XXBTZUSD",
+        "bid_levels": 500,
+        "ask_levels": 500,
+        "best_bid": [
+          "81338.00000",
+          "0.002",
+          1778432239
+        ],
+        "best_ask": [
+          "81338.10000",
+          "4.794",
+          1778432257
+        ],
+        "has_l2_depth_fields": true
+      }
+    },
+    "ETHUSD": {
+      "Trades": {
+        "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD",
+        "latency_ms": 781.862,
+        "ok": true,
+        "error": [],
+        "result_keys": [
+          "XETHZUSD",
+          "last"
+        ],
+        "pair_key": "XETHZUSD",
+        "trade_rows": 1000,
+        "first_trade": [
+          "2347.51000",
+          "0.00692952",
+          1778428291.2848613,
+          "b",
+          "l",
+          "",
+          62803441
+        ],
+        "last_trade": [
+          "2348.76000",
+          "0.00413366",
+          1778432258.2978067,
+          "b",
+          "l",
+          "",
+          62804440
+        ],
+        "has_tick_trade_fields": true
+      },
+      "Depth": {
+        "url": "https://api.kraken.com/0/public/Depth?pair=ETHUSD&count=500",
+        "latency_ms": 1237.4,
+        "ok": true,
+        "error": [],
+        "result_keys": [
+          "XETHZUSD"
+        ],
+        "pair_key": "XETHZUSD",
+        "bid_levels": 500,
+        "ask_levels": 500,
+        "best_bid": [
+          "2348.60000",
+          "1.463",
+          1778432246
+        ],
+        "best_ask": [
+          "2348.71000",
+          "0.897",
+          1778432260
+        ],
+        "has_l2_depth_fields": true
+      }
+    }
+  },
+  "total_recent_trade_rows": 2000,
+  "depth_pairs_with_l2": 2,
+  "calibration_usable": false,
+  "why_not_calibration_usable": [
+    "public Kraken probe gives recent trades and current L2 snapshots, but not enough aligned historical order-lifecycle / L2 time series for chronological 120/60 support gates",
+    "no cancel/replace/posting-distance/order-lifecycle fields were available from this public probe"
+  ],
+  "decision": {
+    "Manipulation": "missing_required_inputs",
+    "blockers": [
+      "direct_inputs_live_snapshot_only",
+      "calibration_support_below_120",
+      "proxy_only_low_confidence"
+    ]
+  }
+}

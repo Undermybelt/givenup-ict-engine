@@ -1,0 +1,6 @@
+block_id,instrument_scope,symbol,venue_or_market_center,market_family,order_count,flip_sequences,trading_days,first_trade_date,last_trade_date
+oystacher_comex_copper_dec2011,COMEX copper contract on Globex,COMEX copper futures,COMEX / CME Globex,metals,1633,288,14,2011-12-01,2011-12-20
+oystacher_nymex_crude_may2012,NYMEX crude oil contract on Globex,NYMEX crude oil futures,NYMEX / CME Globex,energy,1102,324,4,2012-05-07,2012-05-11
+oystacher_nymex_natural_gas_nov_dec2012,NYMEX natural gas contract on Globex,NYMEX natural gas futures,NYMEX / CME Globex,energy,1574,330,3,2012-11-30,2012-12-04
+oystacher_cfe_vix_feb_mar2013,CFE VIX contract,CFE VIX futures,CFE,volatility_index,284,89,19,2013-02-19,2013-03-21
+oystacher_cme_es_jun_dec_jan2013_2014,CME E-Mini S&P 500 contract on Globex,CME E-mini S&P 500 futures,CME Globex,equity_index_futures,614,285,11,2013-06-11,2014-01-10

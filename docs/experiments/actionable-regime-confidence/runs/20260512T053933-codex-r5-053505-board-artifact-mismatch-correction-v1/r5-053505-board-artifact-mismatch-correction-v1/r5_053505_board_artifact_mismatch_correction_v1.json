@@ -1,0 +1,23 @@
+{
+  "actual_053505_gate": "r5_current_kaggle_recency_candidate_screen_v1=no_current_post_cutoff_target_rows_no_promotion",
+  "actual_053505_json": "docs/experiments/actionable-regime-confidence/runs/20260512T053505-codex-r5-current-kaggle-recency-candidate-screen-v1/r5-current-kaggle-recency-candidate-screen-v1/r5_current_kaggle_recency_candidate_screen_v1.json",
+  "actual_dataset_id": "mafaqbhatti/stock-market-regimes-20002026",
+  "board_hash_before_correction": "e87a03c13c35a9ced1ac131464ac7f5bcf8f6568bd54a791dcaf8f6ab4b1d8d7",
+  "gate_result": "r5_053505_board_artifact_mismatch_correction_v1=board_entry_mismatch_corrected_no_promotion",
+  "mismatched_board_gate": "r5_current_kaggle_recency_candidate_screen_v1=current_candidates_screened_no_r5_compatible_rows_no_promotion",
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "r5_status": {
+    "date_max": "2026-01-30",
+    "required_target_root_present": false,
+    "target_rows_found": 0
+  },
+  "run_id": "20260512T053933-codex-r5-053505-board-artifact-mismatch-correction-v1"
+}

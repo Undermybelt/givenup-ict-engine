@@ -1,0 +1,10 @@
+PASS active_taxonomy=MainRegimeV5
+PASS schema_materialized=true
+PASS calibration_rerun=false
+PASS accepted_95_roots_added=0
+PASS accepted_gate=none_for_MainRegimeV5_schema_materialized_calibration_pending
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+PASS gate_result=blocked_mainregimev5_schema_materialized_calibration_pending

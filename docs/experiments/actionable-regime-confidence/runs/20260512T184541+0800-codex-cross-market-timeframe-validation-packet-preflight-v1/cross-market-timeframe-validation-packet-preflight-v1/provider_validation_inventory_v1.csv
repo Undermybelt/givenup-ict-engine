@@ -1,0 +1,7 @@
+provider_key,provider_label,symbol,timeframe,rows,first,last,copied,provider_requested,provider_data_acquired,independent_downstream_validation,notes
+binance_public,Binance,BTCUSDT,1h,46955,2021-01-01 00:00:00+00:00,2026-05-12 00:00:00+00:00,True,True,True,False,provider/AQ provenance only; not an independent downstream market/timeframe acceptance row
+bybit_public,Bybit,BTCUSDT,1h,1000,2026-03-31 09:00:00+00:00,2026-05-12 00:00:00+00:00,True,True,True,False,provider/AQ provenance only; not an independent downstream market/timeframe acceptance row
+ibkr_aggtrades,IBKR,BTC.PAXOS,1h,6930,2025-05-12T20:01:00+00:00,2026-05-12T09:00:00+00:00,True,True,True,False,provider/AQ provenance only; not an independent downstream market/timeframe acceptance row
+kraken_public,Kraken,PF_XBTUSD,1h,1993,2026-02-18 00:00:00+00:00,2026-05-12 00:00:00+00:00,True,True,True,False,provider/AQ provenance only; not an independent downstream market/timeframe acceptance row
+tvr_local_stdio,TradingViewRemix/TVR,BTC-USD(local-stdio),1h,720,2026-04-12T09:00:00Z,2026-05-12T08:59:51Z,True,True,True,False,provider/AQ provenance only; not an independent downstream market/timeframe acceptance row
+yfinance,yfinance/YF,BTC-USD,1h,17291,2024-05-15 00:00:00+00:00,2026-05-11 23:00:00+00:00,True,True,True,False,provider/AQ provenance only; not an independent downstream market/timeframe acceptance row

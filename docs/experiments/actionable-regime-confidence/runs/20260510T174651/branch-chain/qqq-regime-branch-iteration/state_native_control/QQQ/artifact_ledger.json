@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:ensemble-vote:factor-research:2026-05-10T09:19:40Z",
+    "artifact_kind": "ensemble_vote",
+    "artifact_id": "ensemble-vote:factor-research:2026-05-10T09:19:40Z",
+    "version": 1,
+    "generated_at": "2026-05-10T09:19:40.865800Z",
+    "symbol": "QQQ",
+    "source_phase": "factor-research",
+    "source_run_id": "research:QQQ:20260510T091940.788Z",
+    "path": "/tmp/ict-regime-branch-iteration-20260510-1/state_native_control/QQQ/ensemble_vote.json",
+    "status": "mixed",
+    "promote_candidate": false,
+    "actionable": true,
+    "decision_hint": "observe",
+    "review_reason": "hard_blocked=false ensemble_action=observe consensus=0.066 regime=research_iteration jump_gate_bias=relax_if_other_gates_clear command=ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+    "review_rule_version": "ensemble-audit-v2-weighted",
+    "top_factor_name": null,
+    "top_factor_action": "observe",
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 36,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

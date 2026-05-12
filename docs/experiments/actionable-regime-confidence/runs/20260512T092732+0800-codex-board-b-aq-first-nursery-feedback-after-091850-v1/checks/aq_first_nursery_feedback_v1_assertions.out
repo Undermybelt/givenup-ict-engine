@@ -1,0 +1,10 @@
+gate_result=aq_first_nursery_feedback_v1=incubation_only_zero_trade_direct_run_tomac
+strategy=TomacNQ_KillzoneBreakout
+pair=NQ/USD
+trades=0
+total_profit_pct=0.0
+win_rate_pct=0.0
+profit_factor=0.0
+sharpe=0.0
+promotion_allowed=false
+update_goal=false

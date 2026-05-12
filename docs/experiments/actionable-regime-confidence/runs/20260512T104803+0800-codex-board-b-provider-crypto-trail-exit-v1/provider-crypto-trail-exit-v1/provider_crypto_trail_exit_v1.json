@@ -1,0 +1,92 @@
+{
+  "schema": "board_b_provider_crypto_trail_exit_readback_v1",
+  "run_id": "20260512T104803+0800-codex-board-b-provider-crypto-trail-exit-v1",
+  "source_workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T103437+0800-codex-board-b-yahoo-crypto-momentum-market-aq-v1/workspace/auto-quant-yahoo-crypto-momentum",
+  "provider_panel": {
+    "aq_provider_invoked": true,
+    "provider_requested": ["Binance/Yahoo-provider-provenanced BTC/ETH/SOL 1h replay panel"],
+    "provider_data_acquired": true,
+    "provider_unreachable": [],
+    "local_cache_replay": "provider-provenanced run-local feather replay"
+  },
+  "commands": [
+    {
+      "name": "00_run_provider_crypto_profit_gate_tomac",
+      "exit": 0,
+      "out": "docs/experiments/actionable-regime-confidence/runs/20260512T104803+0800-codex-board-b-provider-crypto-trail-exit-v1/command-output/00_run_provider_crypto_profit_gate_tomac.out"
+    },
+    {
+      "name": "01_run_provider_crypto_tight_risk_tomac",
+      "exit": 0,
+      "out": "docs/experiments/actionable-regime-confidence/runs/20260512T104803+0800-codex-board-b-provider-crypto-trail-exit-v1/command-output/01_run_provider_crypto_tight_risk_tomac.out"
+    },
+    {
+      "name": "02_run_provider_crypto_ema_rsi_long_panel_tomac",
+      "exit": 0,
+      "out": "docs/experiments/actionable-regime-confidence/runs/20260512T104803+0800-codex-board-b-provider-crypto-trail-exit-v1/command-output/02_run_provider_crypto_ema_rsi_long_panel_tomac.out"
+    }
+  ],
+  "strategies": [
+    {
+      "strategy": "ProviderBtcEmaRsiHold12LongPanelV1",
+      "branch_path": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12LongPanelV1",
+      "trade_count": 474,
+      "total_profit_pct": -10.34,
+      "win_rate_pct": 45.3586,
+      "profit_factor": 0.9156,
+      "max_drawdown_pct": -18.3521,
+      "status": "reject_no_positive_edge"
+    },
+    {
+      "strategy": "ProviderCryptoMomentumProfitGateV1",
+      "branch_path": "Bull -> ProviderCryptoMomentum -> ProfitGatedExit -> ProviderCryptoMomentumProfitGateV1",
+      "trade_count": 180,
+      "total_profit_pct": -12.82,
+      "win_rate_pct": 70.0,
+      "profit_factor": 0.8303,
+      "max_drawdown_pct": -19.8054,
+      "status": "reject_no_positive_edge"
+    },
+    {
+      "strategy": "ProviderCryptoMomentumTightRiskV1",
+      "branch_path": "Bull -> ProviderCryptoMomentum -> TightRiskExit -> ProviderCryptoMomentumTightRiskV1",
+      "trade_count": 246,
+      "total_profit_pct": -14.49,
+      "win_rate_pct": 61.7886,
+      "profit_factor": 0.7905,
+      "max_drawdown_pct": -19.1287,
+      "status": "reject_no_positive_edge"
+    },
+    {
+      "strategy": "ProviderCryptoPullbackProfitGateV1",
+      "branch_path": "Sideways -> ProviderCryptoPullback -> ProfitGatedExit -> ProviderCryptoPullbackProfitGateV1",
+      "trade_count": 93,
+      "total_profit_pct": -1.76,
+      "win_rate_pct": 75.2688,
+      "profit_factor": 0.9377,
+      "max_drawdown_pct": -6.2246,
+      "status": "reject_no_positive_edge"
+    },
+    {
+      "strategy": "ProviderCryptoPullbackTightRiskV1",
+      "branch_path": "Sideways -> ProviderCryptoPullback -> TightRiskExit -> ProviderCryptoPullbackTightRiskV1",
+      "trade_count": 100,
+      "total_profit_pct": -8.08,
+      "win_rate_pct": 62.0,
+      "profit_factor": 0.6847,
+      "max_drawdown_pct": -9.6021,
+      "status": "reject_no_positive_edge"
+    }
+  ],
+  "best_candidate": {
+    "strategy": "ProviderCryptoPullbackProfitGateV1",
+    "total_profit_pct": -1.76,
+    "trade_count": 93,
+    "status": "fail_closed_negative_net_return"
+  },
+  "hard_gate_result": "fail:all_104803_long_panel_variants_negative_net_return",
+  "downstream_consumption": "not_started:blocked_by_no_positive_edge",
+  "promotion_allowed": false,
+  "update_goal": false,
+  "next_action": "Do not promote or downstream-rerun 104803. Use 104703 only as short-window incubation feedback; next Board B work needs a provider-owned rooted factor that keeps positive net edge at >=100 trades or an explicit selected-history/source-control unlock."
+}

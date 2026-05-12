@@ -1,0 +1,564 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T12:00:00+08:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "local",
+  "config_path": "config.tomac.json",
+  "timeframe": "1h",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/command-output",
+  "strategies": [
+    {
+      "name": "yfinance:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-yfinance/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "yfinance:ProviderCryptoMomentumStateV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.7293965722332505,
+        "sortino": 5.7643812114724575,
+        "calmar": 67.90817060171456,
+        "total_profit_pct": 1.69,
+        "max_drawdown_pct": -1.2860010683615697,
+        "trade_count": 14,
+        "win_rate_pct": 50.0,
+        "profit_factor": 1.7314733582840918
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.7293965722332505,
+          "sortino": 5.7643812114724575,
+          "calmar": 67.90817060171456,
+          "total_profit_pct": 1.69,
+          "max_drawdown_pct": -1.2860010683615697,
+          "trade_count": 14,
+          "win_rate_pct": 50.0,
+          "profit_factor": 1.7314733582840918
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "yfinance:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-yfinance/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "yfinance:ProviderCryptoPullbackRevertV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -0.2935183357387061,
+        "sortino": -0.7058021788159177,
+        "calmar": -7.80868006959872,
+        "total_profit_pct": -0.21,
+        "max_drawdown_pct": -1.385215967557131,
+        "trade_count": 8,
+        "win_rate_pct": 37.5,
+        "profit_factor": 0.8505535234732061
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -0.2935183357387061,
+          "sortino": -0.7058021788159177,
+          "calmar": -7.80868006959872,
+          "total_profit_pct": -0.21,
+          "max_drawdown_pct": -1.385215967557131,
+          "trade_count": 8,
+          "win_rate_pct": 37.5,
+          "profit_factor": 0.8505535234732061
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "kraken_public:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-kraken_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "kraken_public:ProviderCryptoMomentumStateV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -1.1266214858050263,
+        "sortino": -3.468558823780218,
+        "calmar": -25.514612024641565,
+        "total_profit_pct": -0.55,
+        "max_drawdown_pct": -1.5951611870743552,
+        "trade_count": 23,
+        "win_rate_pct": 34.78260869565217,
+        "profit_factor": 0.8609310567518771
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -1.1266214858050263,
+          "sortino": -3.468558823780218,
+          "calmar": -25.514612024641565,
+          "total_profit_pct": -0.55,
+          "max_drawdown_pct": -1.5951611870743552,
+          "trade_count": 23,
+          "win_rate_pct": 34.78260869565217,
+          "profit_factor": 0.8609310567518771
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "kraken_public:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-kraken_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "kraken_public:ProviderCryptoPullbackRevertV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -1.627366200080825,
+        "sortino": -5.369962446012744,
+        "calmar": -41.405314647424355,
+        "total_profit_pct": -0.71,
+        "max_drawdown_pct": -1.2627939015214378,
+        "trade_count": 9,
+        "win_rate_pct": 22.22222222222222,
+        "profit_factor": 0.5831340534022595
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -1.627366200080825,
+          "sortino": -5.369962446012744,
+          "calmar": -41.405314647424355,
+          "total_profit_pct": -0.71,
+          "max_drawdown_pct": -1.2627939015214378,
+          "trade_count": 9,
+          "win_rate_pct": 22.22222222222222,
+          "profit_factor": 0.5831340534022595
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "binance_public:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-binance_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "binance_public:ProviderCryptoMomentumStateV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.0089262848650395,
+        "sortino": 3.630136981793552,
+        "calmar": 20.917891838682948,
+        "total_profit_pct": 0.77,
+        "max_drawdown_pct": -1.9084665436534447,
+        "trade_count": 37,
+        "win_rate_pct": 37.83783783783784,
+        "profit_factor": 1.1326410355009615
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.0089262848650395,
+          "sortino": 3.630136981793552,
+          "calmar": 20.917891838682948,
+          "total_profit_pct": 0.77,
+          "max_drawdown_pct": -1.9084665436534447,
+          "trade_count": 37,
+          "win_rate_pct": 37.83783783783784,
+          "profit_factor": 1.1326410355009615
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "binance_public:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-binance_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "binance_public:ProviderCryptoPullbackRevertV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -1.8226824759876528,
+        "sortino": -5.109067421275159,
+        "calmar": -25.27585391033777,
+        "total_profit_pct": -0.98,
+        "max_drawdown_pct": -2.0034384641025116,
+        "trade_count": 15,
+        "win_rate_pct": 26.666666666666668,
+        "profit_factor": 0.5850842589000907
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -1.8226824759876528,
+          "sortino": -5.109067421275159,
+          "calmar": -25.27585391033777,
+          "total_profit_pct": -0.98,
+          "max_drawdown_pct": -2.0034384641025116,
+          "trade_count": 15,
+          "win_rate_pct": 26.666666666666668,
+          "profit_factor": 0.5850842589000907
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "bybit_public:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-bybit_public/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "bybit_public:ProviderCryptoMomentumStateV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.8613380661422825,
+        "sortino": 6.197582095303052,
+        "calmar": 48.80542741171871,
+        "total_profit_pct": 1.48,
+        "max_drawdown_pct": -1.5662364321210491,
+        "trade_count": 34,
+        "win_rate_pct": 41.17647058823529,
+        "profit_factor": 1.288511226299377
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 1.8613380661422825,
+          "sortino": 6.197582095303052,
+          "calmar": 48.80542741171871,
+          "total_profit_pct": 1.48,
+          "max_drawdown_pct": -1.5662364321210491,
+          "trade_count": 34,
+          "win_rate_pct": 41.17647058823529,
+          "profit_factor": 1.288511226299377
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "bybit_public:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-bybit_public/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "bybit_public:ProviderCryptoPullbackRevertV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -3.1115433239784096,
+        "sortino": -7.53777610032749,
+        "calmar": -36.10071356282439,
+        "total_profit_pct": -1.71,
+        "max_drawdown_pct": -2.45058452605016,
+        "trade_count": 17,
+        "win_rate_pct": 23.52941176470588,
+        "profit_factor": 0.45016637432495576
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -3.1115433239784096,
+          "sortino": -7.53777610032749,
+          "calmar": -36.10071356282439,
+          "total_profit_pct": -1.71,
+          "max_drawdown_pct": -2.45058452605016,
+          "trade_count": 17,
+          "win_rate_pct": 23.52941176470588,
+          "profit_factor": 0.45016637432495576
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "tvr_binance:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-tvr_binance/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "tvr_binance:ProviderCryptoMomentumStateV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -2.165966674403075,
+        "sortino": -6.553493325080297,
+        "calmar": -43.55957641112397,
+        "total_profit_pct": -1.03,
+        "max_drawdown_pct": -1.7328183337692755,
+        "trade_count": 25,
+        "win_rate_pct": 32.0,
+        "profit_factor": 0.765930096934388
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -2.165966674403075,
+          "sortino": -6.553493325080297,
+          "calmar": -43.55957641112397,
+          "total_profit_pct": -1.03,
+          "max_drawdown_pct": -1.7328183337692755,
+          "trade_count": 25,
+          "win_rate_pct": 32.0,
+          "profit_factor": 0.765930096934388
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "tvr_binance:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-tvr_binance/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "tvr_binance:ProviderCryptoPullbackRevertV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -4.279593054030906,
+        "sortino": -11.044580756682132,
+        "calmar": -53.913300500591646,
+        "total_profit_pct": -1.47,
+        "max_drawdown_pct": -2.0034385240298596,
+        "trade_count": 12,
+        "win_rate_pct": 16.666666666666664,
+        "profit_factor": 0.34369888998507653
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -4.279593054030906,
+          "sortino": -11.044580756682132,
+          "calmar": -53.913300500591646,
+          "total_profit_pct": -1.47,
+          "max_drawdown_pct": -2.0034385240298596,
+          "trade_count": 12,
+          "win_rate_pct": 16.666666666666664,
+          "profit_factor": 0.34369888998507653
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "ibkr_aggtrades:ProviderCryptoMomentumStateV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-ibkr_aggtrades/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "ibkr_aggtrades:ProviderCryptoMomentumStateV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.11084481510724016,
+        "sortino": 0.363588122671581,
+        "calmar": 2.3191797869722004,
+        "total_profit_pct": 0.08,
+        "max_drawdown_pct": -1.835425186149842,
+        "trade_count": 34,
+        "win_rate_pct": 38.23529411764706,
+        "profit_factor": 1.0144516414659697
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 0.11084481510724016,
+          "sortino": 0.363588122671581,
+          "calmar": 2.3191797869722004,
+          "total_profit_pct": 0.08,
+          "max_drawdown_pct": -1.835425186149842,
+          "trade_count": 34,
+          "win_rate_pct": 38.23529411764706,
+          "profit_factor": 1.0144516414659697
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    },
+    {
+      "name": "ibkr_aggtrades:ProviderCryptoPullbackRevertV1",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace/auto-quant-112315-ibkr_aggtrades/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "ibkr_aggtrades:ProviderCryptoPullbackRevertV1",
+        "base_factor": "fresh_same_root_six_provider_btc_1h",
+        "hypothesis": "Fresh comparable-timeframe provider rows can feed AQ and preserve branch-shaped observations.",
+        "paradigm": "provider_matrix_1h_momentum_or_pullback",
+        "expected_regime": "ProviderCrypto -> MomentumOrPullback -> branch-preserving profit factor",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 2.1333084826074815,
+        "sortino": 10.269443154333992,
+        "calmar": 49.71120813523814,
+        "total_profit_pct": 1.31,
+        "max_drawdown_pct": -1.3636999361312538,
+        "trade_count": 17,
+        "win_rate_pct": 52.94117647058824,
+        "profit_factor": 1.6850347091222428
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 2.1333084826074815,
+          "sortino": 10.269443154333992,
+          "calmar": 49.71120813523814,
+          "total_profit_pct": 1.31,
+          "max_drawdown_pct": -1.3636999361312538,
+          "trade_count": 17,
+          "win_rate_pct": 52.94117647058824,
+          "profit_factor": 1.6850347091222428
+        }
+      },
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "timerange": "20260401-20260512",
+      "commit": "experiment-run-root",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

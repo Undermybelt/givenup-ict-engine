@@ -1,0 +1,12 @@
+{
+  "counts": {
+    "Bear|long|Bear": 762,
+    "Bull|long|Bull": 10663,
+    "Crisis|long|Neutral": 584,
+    "Sideways|long|Neutral": 1468,
+    "Sideways|short|Neutral": 1938
+  },
+  "manifest_path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-v2/strategy_library_nq_cost_crisis_repair_v3_manifest_1_0.json",
+  "records": 15415,
+  "wire_path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-v2/nq_cost_crisis_repair_real_trades_v3_wire_fixed.jsonl"
+}

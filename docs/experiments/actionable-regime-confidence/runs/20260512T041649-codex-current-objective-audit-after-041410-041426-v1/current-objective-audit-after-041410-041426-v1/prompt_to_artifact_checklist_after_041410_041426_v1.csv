@@ -1,0 +1,10 @@
+requirement,evidence,status
+named_board_authoritative,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,partial
+every_regime_95_confidence,041410 accepted_source_confidence_95_labels none,blocked
+cross_market_cross_time_validation,041410 heldout_market and heldout_time gates fail all labels; 040919 no R5 repair,blocked
+source_control_roots_before_promotion,040738 and 041426 required roots absent,blocked
+provider_paths,195320 provider diagnostics plus 040824 TradingView stdio provider readiness,diagnostic_only
+autoquant,040757 bootstrap ok prepare failed; 041426 threaded prepare failed data_ready false,blocked
+prebayes_bbn_catboost_execution_tree,040311 downstream audit shows empty or disabled chain,blocked
+no_proxy_promotion,041351 041410 040824 041426 marked non-promoting,satisfied
+completion_update_goal,current evidence strict_full_objective false update_goal false,not_complete

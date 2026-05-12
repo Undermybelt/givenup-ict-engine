@@ -1,0 +1,27 @@
+{
+  "report": "docs/experiments/actionable-regime-confidence/runs/20260512T141554+0800-codex-provider-longspan-capability-matrix-v1/provider_first_longspan_capability_matrix_v1.md",
+  "provider_rows": 12,
+  "providers": [
+    "binance_public",
+    "bybit_public",
+    "ibkr",
+    "kraken_public",
+    "tradingview_mcp",
+    "yfinance"
+  ],
+  "providers_with_success": [
+    "binance_public",
+    "bybit_public",
+    "ibkr",
+    "kraken_public",
+    "yfinance"
+  ],
+  "strong_intraday_rows_ge_10000": [
+    "yfinance:ES=F:1h:11383",
+    "binance_public:BTCUSDT:1m:521470",
+    "binance_public:BTCUSDT:1h:76429",
+    "ibkr:SPY STK SMART/ARCA:1h:20034"
+  ],
+  "promotion_allowed": false,
+  "trade_usable": false
+}

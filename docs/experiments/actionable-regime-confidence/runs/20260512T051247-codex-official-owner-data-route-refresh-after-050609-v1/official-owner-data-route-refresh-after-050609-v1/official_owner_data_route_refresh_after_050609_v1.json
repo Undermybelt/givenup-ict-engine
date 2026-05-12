@@ -1,0 +1,48 @@
+{
+  "run_id": "20260512T051247-codex-official-owner-data-route-refresh-after-050609-v1",
+  "gate_result": "official_owner_data_route_refresh_after_050609_v1=routes_confirmed_external_license_export_required_no_local_unlock",
+  "purpose": "Refresh official owner-data routes after the terminal non-promoting 050609 ExtraTrees-light screen.",
+  "sources": [
+    {
+      "owner": "CME Group",
+      "url": "https://www.cmegroup.com/market-data/datamine-historical-data/index.html",
+      "route": "CME DataMine historical data self-service purchase/extract route",
+      "board_relevance": "CME DataMine lists futures/options historical datasets including Market by Order, which matches the current R6 owner-export need for licensed verifier-native order-lifecycle/depth data."
+    },
+    {
+      "owner": "CME Group",
+      "url": "https://cmegroupclientsite.atlassian.net/wiki/display/EPICSANDBOX/Market%2BDepth",
+      "route": "CME Market Depth files via DataMine/support",
+      "board_relevance": "Market Depth documentation describes tick-level book/trade reconstruction data from CME DataMine, but this is an external DataMine/support route rather than a local repo artifact."
+    },
+    {
+      "owner": "Cboe DataShop",
+      "url": "https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes",
+      "route": "CFE VIX Futures Trades and Quotes historical product",
+      "board_relevance": "DataShop exposes historical VIX futures trades/quotes fields for the older CFE VIX product window, which is relevant to R6 CFE/VIX export requests but still requires DataShop acquisition."
+    },
+    {
+      "owner": "Cboe",
+      "url": "https://www.cboe.com/markets/us/futures/market-statistics/historical-data/settlement-archive",
+      "route": "CFE public historical archive",
+      "board_relevance": "The public CFE archive is daily/summary price-volume context, not the row-level order-lifecycle or owner-approved normal controls required for canonical Board A merge."
+    }
+  ],
+  "local_root_check": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "decision": {
+    "official_routes_confirmed": true,
+    "public_summary_context_only": true,
+    "licensed_or_owner_export_required": true,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Send/satisfy CME and Cboe/CFE owner-export requests, preserve ticket/export/license identifiers, then copy verifier-native files into the approved /tmp root under a shared lock before direct verifier, split calibration, and downstream rerun."
+}

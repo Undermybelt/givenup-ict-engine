@@ -1,0 +1,133 @@
+{
+  "run_id": "20260512T015006-codex-r6-local-owner-export-inbox-recheck-after-014726-v1",
+  "generated_at_local": "2026-05-12T01:50:06+0800",
+  "generated_at_utc": "2026-05-11T17:50:06Z",
+  "board_hash_before_artifact": "f7475d9a54576a57d63bcd242f24fcdddb6770a596ed566a4115ee7c903e6878",
+  "current_cursor_observed": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "gate_result": "r6_local_owner_export_inbox_recheck_after_014726_v1=no_new_owner_export_or_approval_no_promotion",
+  "scan_scope": [
+    "/tmp",
+    "/private/tmp",
+    "/Users/thrill3r/Downloads",
+    "/Users/thrill3r/Desktop"
+  ],
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": {
+      "present": false,
+      "file_count": 0,
+      "disposition": "required_r6_owner_export_root_absent"
+    },
+    "/tmp/ict-engine-native-subhour-source-label-intake": {
+      "present": false,
+      "file_count": 0,
+      "disposition": "r3_native_subhour_root_absent"
+    },
+    "/tmp/ict-engine-source-panel-recency-extension": {
+      "present": false,
+      "file_count": 0,
+      "disposition": "r5_recency_extension_root_absent"
+    },
+    "/tmp/ict-engine-source-label-equivalence-intake": {
+      "present": true,
+      "file_count": 2,
+      "disposition": "schema_ready_but_confidence_blocked"
+    }
+  },
+  "reference_roots": {
+    "20260512T014221-codex-current-objective-completion-audit-after-013904-v1": {
+      "present": true,
+      "file_count": 6,
+      "disposition": "restored_fail_closed_reference"
+    },
+    "20260512T014300-codex-r6-owner-export-current-send-channel-preflight-v1": {
+      "present": true,
+      "file_count": 6,
+      "disposition": "send_channel_preflight_only_no_controls"
+    },
+    "20260512T014305-codex-current-objective-prompt-artifact-audit-after-013904-v1": {
+      "present": true,
+      "file_count": 4,
+      "disposition": "prompt_artifact_audit_not_complete"
+    },
+    "20260512T014314-codex-r6-owner-route-current-web-recheck-v1": {
+      "present": true,
+      "file_count": 5,
+      "disposition": "restored_route_recheck_only_no_controls"
+    },
+    "20260512T014426-codex-current-objective-completion-audit-after-014229-v1": {
+      "present": false,
+      "file_count": 0,
+      "disposition": "stale_non_evidence_until_restored"
+    },
+    "20260512T014432-codex-board-b-220646-structural-candidate-handoff-readback-v1": {
+      "present": true,
+      "file_count": 20,
+      "disposition": "board_b_build_lock_material_not_board_a_promotion_evidence"
+    },
+    "20260512T014726-codex-014426-reference-drift-correction-v1": {
+      "present": true,
+      "file_count": 4,
+      "disposition": "014426_absence_correction"
+    }
+  },
+  "candidate_bundles": [
+    {
+      "path": "/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+      "present": true,
+      "required_filenames_present": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "manifest_run_id": "20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1",
+      "manifest_artifact_type": "r6_jpm_cbot_treasury_control_uplift_v1_isolated_projection",
+      "manifest_policy": "shared lock exists, so this run verifies an isolated projection and does not mutate the live /tmp intake",
+      "file_line_counts": {
+        "positive_spoofing_layering_rows.csv": 78,
+        "matched_negative_normal_activity_rows.csv": 78
+      },
+      "disposition": "isolated_projection_not_owner_export_root_not_promotion_evidence"
+    }
+  ],
+  "approval_files": [
+    {
+      "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "present": true,
+      "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge",
+      "approval_present": false,
+      "canonical_merge_allowed_now": false,
+      "downstream_rerun_allowed_now": false,
+      "disposition": "decision_package_only_no_approval"
+    },
+    {
+      "path": "/private/tmp/r6_oystacher_approval_template_v1.json.valid",
+      "present": true,
+      "approval_state": "pending",
+      "approved_by": null,
+      "approval_timestamp_utc": null,
+      "decision_values": {
+        "public_recap_pacer_provenance": null,
+        "same_exhibit_flip_as_matched_controls": null,
+        "source_owned_normal_controls_supplied": null
+      },
+      "disposition": "template_pending_no_decision"
+    }
+  ],
+  "assertions": {
+    "source_owned_normal_controls_acquired": 0,
+    "explicit_flip_approval": false,
+    "owner_vendor_request_submitted": false,
+    "ticket_export_license_identifier_received": false,
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "raw_data_committed": false,
+    "external_contact_submitted": false,
+    "trade_usable": false
+  },
+  "next_action": "Preserve the current R6 next action: submit or otherwise satisfy CME/Cboe/CFE owner-export routes with ticket/export/license provenance, or record explicit FLIP-as-control approval before populating the verifier-native root and rerunning the chain."
+}

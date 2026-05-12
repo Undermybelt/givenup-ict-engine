@@ -1,0 +1,8 @@
+PASS derived_timeframe_probe_reproducible
+PASS parent_roots_only
+PASS accepted_1w_bull
+PASS accepted_1w_sideways
+PASS rejected_1w_bear_crisis_and_1mo_all_roots
+PASS full_objective_not_claimed
+PASS raw_data_not_committed
+PASS runtime_code_unchanged

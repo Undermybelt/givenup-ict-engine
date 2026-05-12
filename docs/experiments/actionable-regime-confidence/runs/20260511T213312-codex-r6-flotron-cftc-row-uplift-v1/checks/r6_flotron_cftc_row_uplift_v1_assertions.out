@@ -1,0 +1,15 @@
+PASS decision=r6_flotron_cftc_row_uplift_v1=no_new_unique_rows_calibration_still_blocked
+PASS source_pdf_sha256=e368bd33878c1d7e8d3822e8706d1c48dc712fb2306621e5b09f9b7f7b8f3248
+PASS positive_rows_added=0
+PASS matched_negative_rows_added=0
+PASS verifier_status=schema_ready_unscored
+PASS positive_rows=34
+PASS matched_negative_rows=34
+PASS combined_min_wilson95_lcb=0.898485
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS direct_species_closed=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=false

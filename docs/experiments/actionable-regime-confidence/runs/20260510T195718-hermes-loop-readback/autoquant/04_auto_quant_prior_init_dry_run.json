@@ -1,0 +1,74 @@
+{
+  "bbn_contradiction_lift": 0.009996972385175662,
+  "bbn_entropy_reduction": 0.0038379433791755346,
+  "bbn_log_loss_delta": 0.00005862449705473782,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": {
+    "apply_artifact_id": "auto_quant_prior_init_NQ_20260510T113446.792406000Z",
+    "library_artifact_id": "auto_quant_strategy_library_NQ_20260510T105441.589516000Z"
+  },
+  "dry_run": true,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": "auto_quant_prior_init_NQ_20260510T113446.792406000Z",
+  "final_probs": [
+    0.31456057965412537,
+    1.187262895251876e-9,
+    0.6854394191586117
+  ],
+  "force": false,
+  "initial_probs": [
+    0.3195589054178145,
+    1.616161616161616e-7,
+    0.6804409329660239
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_NQ_20260510T105441.589516000Z",
+  "library_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/autoquant/strategy_library_nq_scratch_no_rsi_2025.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_NQ_20260510T120222.392671000Z",
+  "prior_init_history_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/NQ/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/auto-quant/NQ/auto_quant_prior_init_NQ_20260510T120222.392671000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.31456057965412537,
+        1.187262895251876e-9,
+        0.6854394191586117
+      ],
+      "bbn_contradiction_after": 0.00007398314438611001,
+      "bbn_contradiction_before": 0.010070955529561772,
+      "bbn_contradiction_lift": 0.009996972385175662,
+      "bbn_entropy_after": 0.6227012091090848,
+      "bbn_entropy_before": 0.6265391524882603,
+      "bbn_entropy_reduction": 0.0038379433791755346,
+      "bbn_log_loss_after": 0.6226723739590502,
+      "bbn_log_loss_before": 0.6227309984561049,
+      "bbn_log_loss_delta": 0.00005862449705473782,
+      "before_probs": [
+        0.3195589054178145,
+        1.616161616161616e-7,
+        0.6804409329660239
+      ],
+      "diff": [
+        -0.004998325763689138,
+        -1.6042889872090973e-7,
+        0.004998486192587803
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "board-a-v2-2-nq-binding-repair",
+      "n_breakeven": 0,
+      "n_loss": 741,
+      "n_win": 340,
+      "strategy_name": "TomacNQ_ScratchNoRSINoConflict15m",
+      "temper": 0.5,
+      "trade_count": 1081
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "NQ",
+  "temper": 0.5
+}

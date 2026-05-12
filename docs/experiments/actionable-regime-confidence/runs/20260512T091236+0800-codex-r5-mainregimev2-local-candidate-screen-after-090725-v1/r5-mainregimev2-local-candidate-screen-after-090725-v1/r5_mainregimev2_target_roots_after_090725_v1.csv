@@ -1,0 +1,6 @@
+root_name,path,exists,realpath,duplicate_realpath,file_count_scanned
+r5_required_tmp,/tmp/ict-engine-source-panel-recency-extension,False,,False,0
+r5_required_private_tmp,/private/tmp/ict-engine-source-panel-recency-extension,False,,False,0
+r3_native_subhour_tmp,/tmp/ict-engine-native-subhour-source-label-intake,True,/private/tmp/ict-engine-native-subhour-source-label-intake,False,2
+r3_native_subhour_private_tmp,/private/tmp/ict-engine-native-subhour-source-label-intake,True,/private/tmp/ict-engine-native-subhour-source-label-intake,True,0
+board_a_runs,docs/experiments/actionable-regime-confidence/runs,True,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs,False,22926

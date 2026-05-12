@@ -1,0 +1,16 @@
+run_id=20260511T141910+0800-codex-exact-1h-source-universe-expansion-v1
+board_sha256_at_run=e793d306a7799b5d48d404f6a179944b6cb5912174633cb6331303e9d9d1ce18
+source_ticker_count=39
+ready_ticker_count=39
+scoped_slots=156
+accepted_95_strict_ticker_root_rows=41
+blocked_strict_ticker_root_rows=115
+accepted_by_root={'Bear': 4, 'Bull': 27, 'Crisis': 3, 'Sideways': 7}
+accepted_ticker_count=35
+accepted_full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

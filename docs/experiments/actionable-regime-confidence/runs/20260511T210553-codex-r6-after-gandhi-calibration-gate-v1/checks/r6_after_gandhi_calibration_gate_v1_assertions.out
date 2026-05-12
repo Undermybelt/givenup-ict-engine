@@ -1,0 +1,13 @@
+PASS decision=r6_after_gandhi_calibration_gate_v1=chronology_and_heldout_improved_support_wilson_broad_control_blocked
+PASS verifier_returncode=0
+PASS positive_rows=4
+PASS matched_negative_rows=4
+PASS chronological_split_ok=true
+PASS heldout_symbol_or_venue_ok=true
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS combined_min_wilson95_lcb=0.510109
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

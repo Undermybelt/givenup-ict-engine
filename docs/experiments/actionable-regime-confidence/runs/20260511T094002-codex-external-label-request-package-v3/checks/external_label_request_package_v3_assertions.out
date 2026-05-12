@@ -1,0 +1,9 @@
+PASS active_taxonomy=MainRegimeV2
+PASS missing_slots=564
+PASS accepted_parent_root_sources_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS gate_result=blocked_external_label_request_package_created_no_new_labels
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

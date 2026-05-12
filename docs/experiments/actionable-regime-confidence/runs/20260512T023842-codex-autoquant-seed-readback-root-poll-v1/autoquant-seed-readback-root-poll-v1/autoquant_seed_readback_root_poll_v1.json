@@ -1,0 +1,109 @@
+{
+  "run_id": "20260512T023842-codex-autoquant-seed-readback-root-poll-v1",
+  "gate_result": "autoquant_seed_readback_root_poll_v1=autoquant_seeded_strategy_runs_non_promoting_roots_still_blocked",
+  "board_sha256_before_artifact_generation": "02b43150ce4aa684e18719c4f0c1a78ae43fe1f01a332c1f0f647402fe63005f",
+  "active_cursor": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "inputs": {
+    "threaded_dns_prepare_readback_root": "docs/experiments/actionable-regime-confidence/runs/20260512T023236-codex-autoquant-threaded-dns-prepare-readback-v1",
+    "seeded_strategy_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T023312-codex-autoquant-seed-and-run-after-threaded-prepare-v1",
+    "local_crypto_cache_smoke_root": "docs/experiments/actionable-regime-confidence/runs/20260512T023351-codex-autoquant-local-crypto-cache-backtest-smoke-v1"
+  },
+  "root_status": [
+    {
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "status": "absent",
+      "files": 0,
+      "promotion_use": "blocked"
+    },
+    {
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "status": "absent",
+      "files": 0,
+      "promotion_use": "blocked"
+    },
+    {
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "status": "absent",
+      "files": 0,
+      "promotion_use": "blocked"
+    },
+    {
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "status": "present",
+      "files": 2,
+      "promotion_use": "non_promoting_confidence_blocked"
+    },
+    {
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "status": "present",
+      "files": 3,
+      "promotion_use": "legacy_non_promoting"
+    }
+  ],
+  "autoquant": {
+    "threaded_dns_prepare_readback": {
+      "run_id": "20260512T023236-codex-autoquant-threaded-dns-prepare-readback-v1",
+      "gate_result": "autoquant_threaded_dns_prepare_readback_v1=data_ready_seed_required_no_acceptance_no_merge",
+      "healthy": true,
+      "dependency_healthy": true,
+      "data_ready": true,
+      "prepared_data_file_count": 15,
+      "promotion_evidence": false
+    },
+    "seeded_strategy_run": {
+      "run_id": "20260512T023312-codex-autoquant-seed-and-run-after-threaded-prepare-v1",
+      "seed_exit": 0,
+      "run_exit": 0,
+      "status_after_exit": 0,
+      "active_strategy_count": 3,
+      "strategies": [
+        {
+          "strategy": "CrashRebound",
+          "robust_sharpe": 0.0847,
+          "profit_floor": "FAIL",
+          "full_period_total_profit_pct": 55.69,
+          "worst_declared_timerange_profit_pct": 2.99
+        },
+        {
+          "strategy": "PerPairMR",
+          "robust_sharpe": 0.052,
+          "profit_floor": "FAIL",
+          "full_period_total_profit_pct": 35.78,
+          "worst_declared_timerange_profit_pct": 0.84
+        },
+        {
+          "strategy": "RegimeAdaptiveBNB",
+          "robust_sharpe": 0.0967,
+          "profit_floor": "FAIL",
+          "full_period_total_profit_pct": 16.41,
+          "worst_declared_timerange_profit_pct": 3.71
+        }
+      ],
+      "promotion_evidence": false
+    },
+    "local_crypto_cache_smoke": {
+      "run_id": "20260512T023351-codex-autoquant-local-crypto-cache-backtest-smoke-v1",
+      "bootstrap_exit": 0,
+      "seed_status_exit": 0,
+      "run_exit": 1,
+      "status_after_run_exit": 0,
+      "failure": "binance_market_load_dns_error",
+      "promotion_evidence": false
+    }
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "next": "Preserve the Current Cursor next action for R6; continue only from owner/operator R6 export delivery, explicit FLIP approval, or genuinely source-owned cross-timeframe MainRegimeV2 exports before canonical merge and downstream rerun."
+}

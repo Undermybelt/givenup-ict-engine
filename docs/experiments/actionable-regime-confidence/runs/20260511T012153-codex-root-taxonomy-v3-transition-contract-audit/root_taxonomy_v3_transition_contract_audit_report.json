@@ -1,0 +1,104 @@
+{
+  "schema_version": "root-taxonomy-v3-transition-contract-audit/v1",
+  "loop_id": "20260511T012153+0800-codex-root-taxonomy-v3-transition-contract-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T012153-codex-root-taxonomy-v3-transition-contract-audit",
+  "branch_status": "superseded_provenance_only_after_20260511T011114_main_regime_v2_axis_restored",
+  "objective": "Reconcile whether TransitionRecovery is a required RootTaxonomyV3 release-gate root or optional overlay evidence before any completion claim.",
+  "inputs": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "schema_input_audit_report": "docs/experiments/actionable-regime-confidence/runs/20260511T010718-codex-root-taxonomy-v3-schema-input-audit/root_taxonomy_v3_schema_input_audit_report.json",
+    "schema_input_crosswalk": "docs/experiments/actionable-regime-confidence/runs/20260511T010718-codex-root-taxonomy-v3-schema-input-audit/schema/root_taxonomy_v3_crosswalk.json",
+    "schema_input_schema": "docs/experiments/actionable-regime-confidence/runs/20260511T010718-codex-root-taxonomy-v3-schema-input-audit/schema/root_taxonomy_v3_schema.json",
+    "source_backed_004210_report": "docs/experiments/actionable-regime-confidence/runs/20260511T004210-source-backed-root-materialization/root-v3/source_backed_root_materialization_report.json",
+    "source_backed_003739_report": "docs/experiments/actionable-regime-confidence/runs/20260511T003739-source-backed-root-gate-mtf/root-v2-source-backed/source_backed_root_gate_report.json"
+  },
+  "contract_decision": {
+    "root_axis": [
+      "BullExpansion",
+      "BearExpansion",
+      "Consolidation",
+      "Manipulation",
+      "CrisisStress",
+      "TransitionRecovery",
+      "UnknownOrMixed"
+    ],
+    "required_release_gate_roots": [
+      "BullExpansion",
+      "BearExpansion",
+      "Consolidation",
+      "Manipulation",
+      "CrisisStress"
+    ],
+    "optional_overlay_roots": [
+      "TransitionRecovery"
+    ],
+    "residual_roots": [
+      "UnknownOrMixed"
+    ],
+    "why_transition_recovery_is_optional_now": [
+      "010718 schema defines TransitionRecovery as optional root until consumer contract decides.",
+      "010718 crosswalk sets TransitionRecovery contract_state to optional root until downstream consumer explicitly requires it.",
+      "No downstream consumer contract in the current Board A evidence requires TransitionRecovery for trade usability or release-gate coverage."
+    ],
+    "consumer_activation_rule": "If a downstream consumer later requires TransitionRecovery, treat it as an active required root and rerun or explicitly carry forward the accepted 004210 packet under the then-current schema.",
+    "completion_rule": "For this superseded RootTaxonomyV3 branch, completion would have required every required release-gate root to have calibrated 95% evidence and cross-market/timeframe validation; optional TransitionRecovery evidence cannot compensate for missing required roots. The active board cursor now uses MainRegimeV2 instead."
+  },
+  "evidence_reconciliation": {
+    "transition_recovery_004210": {
+      "state": "accepted_optional_overlay_evidence",
+      "rule": "reversal_persistence16 >= 1",
+      "calibration_support": 2870,
+      "calibration_wilson95_lcb": 0.9940506061082727,
+      "test_support": 3106,
+      "test_wilson95_lcb": 0.9953550324393706,
+      "ece": 0.0008821859904736273,
+      "validation_timeframes": [
+        "15m",
+        "1h"
+      ],
+      "interpretation": "Useful optional/overlay packet, not required release-gate coverage under the current Board A contract."
+    },
+    "transition_recovery_003739": {
+      "state": "blocked_broad_rule",
+      "rule": "NOT UnknownOrMixed_base AND TransitionAccumulationDistribution_base",
+      "calibration_support": 2642,
+      "calibration_wilson95_lcb": 0.7059423611554821,
+      "test_support": 2541,
+      "test_wilson95_lcb": 0.6900065403962535,
+      "ece": 0.015326689230756307,
+      "interpretation": "Broader base rule failed; do not use it as acceptance."
+    },
+    "schema_input_010718": {
+      "state": "schema_contract_controls_current_release_gate",
+      "transition_recovery_contract": "optional root until downstream consumer explicitly requires it",
+      "decision_note": "010718 listed TransitionRecovery in the wider missing evidence inventory; this audit separates optional inventory state from required release-gate coverage."
+    }
+  },
+  "gate_state_after_audit": {
+    "board_state": "blocked",
+    "accepted_required_release_gate_roots_95": [
+      "CrisisStress"
+    ],
+    "accepted_optional_overlay_roots_95": [
+      "TransitionRecovery"
+    ],
+    "missing_required_release_gate_roots_95": [
+      "BullExpansion",
+      "BearExpansion",
+      "Consolidation",
+      "Manipulation"
+    ],
+    "residual_not_release_gate": [
+      "UnknownOrMixed"
+    ],
+    "manipulation_state": "missing_required_inputs",
+    "thresholds_relaxed": false,
+    "blocked_future_target_predictors": true,
+    "fresh_calibration_rerun": false,
+    "runtime_code_changed": false,
+    "trade_usable": false,
+    "accepted_gate": "partial_for_RootTaxonomyV3_required_roots_CrisisStress_only_optional_TransitionRecovery_recorded",
+    "blocker": "required roots missing 95 evidence: BullExpansion, BearExpansion, Consolidation, Manipulation",
+    "next_action": "Acquire higher-signal signed-direction/range inputs and aligned historical manipulation L2/L3/order-lifecycle data, then rerun unchanged RootTaxonomyV3 gates for the missing required roots."
+  }
+}

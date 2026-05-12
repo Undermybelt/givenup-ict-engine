@@ -1,0 +1,3 @@
+item,url,observed_in,classification,board_a_use,promotion_allowed,reason
+cfe_daily_volume_open_interest_csv,https://cdn.cboe.com/data/us/futures/market_statistics/historical_data/cfevoloi.csv,Cboe CFE historical OOF page,public_aggregate_daily_volume_open_interest,route_context_only_no_order_lifecycle_controls,false,aggregate daily product volume/open interest is not source-owned normal-control order-lifecycle/depth/trade/quote rows
+cboe_datashop_route,https://datashop.cboe.com/,Cboe CFE historical OOF page and futures data-services page,owner_route_for_custom_historical_data,owner_export_route_only,false,requires export/order/license/ticket provenance and verifier-native delivery before use

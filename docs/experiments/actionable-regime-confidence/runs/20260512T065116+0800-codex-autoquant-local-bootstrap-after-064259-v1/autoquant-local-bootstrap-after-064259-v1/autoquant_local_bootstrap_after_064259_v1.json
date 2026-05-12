@@ -1,0 +1,52 @@
+{
+  "run_id": "20260512T065116+0800-codex-autoquant-local-bootstrap-after-064259-v1",
+  "generated_at_utc": "2026-05-11T22:53:19Z",
+  "gate_result": "autoquant_local_bootstrap_after_064259_v1=bootstrap_ok_prepare_dns_blocked_data_missing_no_promotion",
+  "state_dir": "/tmp/ict-engine-board-a-064259-runtime-v1",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "command_exits": {
+    "auto_quant_bootstrap_local": 0,
+    "auto_quant_status_after_bootstrap": 0,
+    "auto_quant_prepare": 1,
+    "auto_quant_status_after_prepare": 0
+  },
+  "status_after_bootstrap": {
+    "status": "dependency_ready_data_missing",
+    "healthy": false,
+    "bootstrap_needed": false,
+    "dependency_healthy": true,
+    "data_ready": false,
+    "managed_dir": "/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant",
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+  },
+  "status_after_prepare": {
+    "status": "dependency_ready_data_missing",
+    "healthy": false,
+    "bootstrap_needed": false,
+    "dependency_healthy": true,
+    "data_ready": false,
+    "managed_dir": "/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant",
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+  },
+  "prepare_blocker": {
+    "kind": "network_dns",
+    "host": "api.binance.com",
+    "error_summary": "freqtrade/ccxt could not contact DNS servers while loading Binance markets; prepare ended with Markets were not loaded"
+  },
+  "board_a_accounting": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "artifacts": {
+    "bootstrap_stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T065116+0800-codex-autoquant-local-bootstrap-after-064259-v1/command-output/auto_quant_bootstrap_local.stdout",
+    "prepare_stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T065116+0800-codex-autoquant-local-bootstrap-after-064259-v1/command-output/auto_quant_prepare.stderr",
+    "status_after_prepare_stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T065116+0800-codex-autoquant-local-bootstrap-after-064259-v1/command-output/auto_quant_status_after_prepare.stdout"
+  },
+  "next_action": "Do not use this as promotion evidence. Continue from a valid source/control unlock first; separately, Auto-Quant prepare needs a DNS-safe or local-cache-safe data path before data_ready can become true."
+}

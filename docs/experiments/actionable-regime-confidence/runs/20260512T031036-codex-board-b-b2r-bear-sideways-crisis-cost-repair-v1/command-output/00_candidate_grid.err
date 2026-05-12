@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/.cache/uv/archive-v0/BqaD2ufF8g1e4RZPlYkzL/lib/python3.13/site-packages/pandas/core/indexes/base.py", line 3641, in get_loc
+    return self._engine.get_loc(casted_key)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 168, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 197, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7668, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7676, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'fwd3'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<stdin>", line 56, in <module>
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T031036-codex-board-b-b2r-bear-sideways-crisis-cost-repair-v1/scripts/bear_sideways_crisis_cost_repair_v1.py", line 339, in make_rows
+    pnl = pnl_for_row(row, variant)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T031036-codex-board-b-b2r-bear-sideways-crisis-cost-repair-v1/scripts/bear_sideways_crisis_cost_repair_v1.py", line 317, in pnl_for_row
+    fwd = float(row[f"fwd{hold}"])
+                ~~~^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/BqaD2ufF8g1e4RZPlYkzL/lib/python3.13/site-packages/pandas/core/series.py", line 959, in __getitem__
+    return self._get_value(key)
+           ~~~~~~~~~~~~~~~^^^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/BqaD2ufF8g1e4RZPlYkzL/lib/python3.13/site-packages/pandas/core/series.py", line 1046, in _get_value
+    loc = self.index.get_loc(label)
+  File "/Users/thrill3r/.cache/uv/archive-v0/BqaD2ufF8g1e4RZPlYkzL/lib/python3.13/site-packages/pandas/core/indexes/base.py", line 3648, in get_loc
+    raise KeyError(key) from err
+KeyError: 'fwd3'

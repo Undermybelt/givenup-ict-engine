@@ -1,0 +1,146 @@
+{
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "3718ef087e979ec6dec6cf29436153533bf1a3854d4b79cba059e6f0a0db35e8",
+  "decision": {
+    "accepted_95_source_label_attachment_rows": 36,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_roots_for_exact_yfinance_intraday": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "blocked_exact_attachment_rows": 12,
+    "blocked_roots_for_exact_yfinance_intraday": [
+      "Crisis"
+    ],
+    "full_objective_achieved": false,
+    "gate_result": "daily_to_intraday_source_attachment_v1_accepted36_blocked12_crisis_support_short",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T06:00:33.085398+00:00",
+  "input": {
+    "attack_map": "docs/experiments/actionable-regime-confidence/runs/20260511T134237-codex-yfinance-intraday-source-label-attack-map-v1/source-label-attack/yfinance_intraday_source_label_attack_map_v1.csv",
+    "exact_same_source_slots": 48,
+    "roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "timeframes": [
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "4h"
+    ]
+  },
+  "next_action": "Use local ES/NQ 15m/1h history only for a separate crosswalk calibration package; do not merge that with exact ^GSPC/^DJI source-label attachment. Crisis needs broader exact-source support or new source-label rows before it can close in this exact lane.",
+  "policy": {
+    "not_allowed": [
+      "Do not derive labels from intraday OHLCV.",
+      "Do not use HMM states, strategy predictions, or future returns as labels.",
+      "Do not treat the attached label as an intraday reversal/timing signal.",
+      "Do not attach across ETF/future/index crosswalks in this exact same-source artifact."
+    ],
+    "policy_id": "same_ticker_daily_parent_context_to_intraday_session_date_v1",
+    "rule": "For an intraday bar whose exchange-local session date D equals a date in the same ticker's source panel, attach the source panel's MainRegimeV2 daily parent root for D as parent-day context. Abstain when the date/ticker/root is missing, residual, out of source range, or when the consumer requires intraday micro-regime timing."
+  },
+  "root_stats": {
+    "Bear": {
+      "calibration_2017_2021_exact_tickers": {
+        "positives": 125,
+        "precision": 1.0,
+        "support": 125,
+        "wilson95_lcb": 0.9701846063
+      },
+      "heldout_ticker_all_dates_exact_tickers": {
+        "positives": 1906,
+        "precision": 1.0,
+        "support": 1906,
+        "wilson95_lcb": 0.9979885981
+      },
+      "heldout_time_2022plus_exact_tickers": {
+        "positives": 293,
+        "precision": 1.0,
+        "support": 293,
+        "wilson95_lcb": 0.9870588871
+      }
+    },
+    "Bull": {
+      "calibration_2017_2021_exact_tickers": {
+        "positives": 1665,
+        "precision": 1.0,
+        "support": 1665,
+        "wilson95_lcb": 0.9976981284
+      },
+      "heldout_ticker_all_dates_exact_tickers": {
+        "positives": 6490,
+        "precision": 1.0,
+        "support": 6490,
+        "wilson95_lcb": 0.9994084459
+      },
+      "heldout_time_2022plus_exact_tickers": {
+        "positives": 1135,
+        "precision": 1.0,
+        "support": 1135,
+        "wilson95_lcb": 0.9966268713
+      }
+    },
+    "Crisis": {
+      "calibration_2017_2021_exact_tickers": {
+        "positives": 28,
+        "precision": 1.0,
+        "support": 28,
+        "wilson95_lcb": 0.8793566952
+      },
+      "heldout_ticker_all_dates_exact_tickers": {
+        "positives": 290,
+        "precision": 1.0,
+        "support": 290,
+        "wilson95_lcb": 0.9869267637
+      },
+      "heldout_time_2022plus_exact_tickers": {
+        "positives": 2,
+        "precision": 1.0,
+        "support": 2,
+        "wilson95_lcb": 0.3423802275
+      }
+    },
+    "Sideways": {
+      "calibration_2017_2021_exact_tickers": {
+        "positives": 700,
+        "precision": 1.0,
+        "support": 700,
+        "wilson95_lcb": 0.9945421532
+      },
+      "heldout_ticker_all_dates_exact_tickers": {
+        "positives": 3928,
+        "precision": 1.0,
+        "support": 3928,
+        "wilson95_lcb": 0.9990229874
+      },
+      "heldout_time_2022plus_exact_tickers": {
+        "positives": 616,
+        "precision": 1.0,
+        "support": 616,
+        "wilson95_lcb": 0.9938025139
+      }
+    }
+  },
+  "run_id": "20260511T134756+0800-codex-daily-to-intraday-source-attachment-v1",
+  "source_panel": {
+    "date_max_after_252d_warmup": "2026-01-30",
+    "date_min_after_252d_warmup": "2001-01-02",
+    "exact_tickers": [
+      "^DJI",
+      "^GSPC"
+    ],
+    "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "raw_data_committed": false
+  }
+}

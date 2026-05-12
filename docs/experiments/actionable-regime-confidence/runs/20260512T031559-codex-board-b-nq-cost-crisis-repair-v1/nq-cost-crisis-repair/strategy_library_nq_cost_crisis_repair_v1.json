@@ -1,0 +1,153 @@
+{
+  "auto_quant_pinned_ref": "local-auto-quant-env",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "exported_at": "2026-05-11T19:18:05.981992+00:00",
+  "manifest_version": "auto-quant-strategy-library/v1",
+  "strategies": [
+    {
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/scripts/nq_root_adaptive_event_panel_v1.py",
+      "metadata": {
+        "base_factor": "NQRootAdaptiveCostCrisisRepairV1",
+        "expected_regime": "MainRegimeV2::Bull",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "source_regime_confidence",
+          "vol_z",
+          "price_z_240"
+        ],
+        "mutation_id": "b2r_repeat_nq_root_adaptive_event_panel_v1",
+        "parent": "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV1:bull_source_root_carry_h72",
+        "status": "incubation_only_b2r_repeat_next",
+        "strategy": "NQRootAdaptiveCostCrisisRepairV1_Bull"
+      },
+      "name": "NQRootAdaptiveCostCrisisRepairV1_Bull",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "status": "ok",
+      "timerange": "20110101-20251231",
+      "validation_metrics": {
+        "calmar": 12.28271227375119,
+        "max_drawdown_pct": 87.88029283560144,
+        "profit_factor": 0.0,
+        "sharpe": 12.28271227375119,
+        "sortino": 12.28271227375119,
+        "total_profit_pct": 2033.4779320080927,
+        "trade_count": 10663,
+        "win_rate_pct": 58.71705898902748
+      }
+    },
+    {
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/scripts/nq_root_adaptive_event_panel_v1.py",
+      "metadata": {
+        "base_factor": "NQRootAdaptiveCostCrisisRepairV1",
+        "expected_regime": "MainRegimeV2::Bear",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "source_regime_confidence",
+          "vol_z",
+          "price_z_240"
+        ],
+        "mutation_id": "b2r_repeat_nq_root_adaptive_event_panel_v1",
+        "parent": "Bear -> BearMarketDrawdown -> NQLowZRebound -> NQRootAdaptiveCostCrisisRepairV1:bear_low_z_rebound_h48",
+        "status": "incubation_only_b2r_repeat_next",
+        "strategy": "NQRootAdaptiveCostCrisisRepairV1_Bear"
+      },
+      "name": "NQRootAdaptiveCostCrisisRepairV1_Bear",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "status": "ok",
+      "timerange": "20110101-20251231",
+      "validation_metrics": {
+        "calmar": 5.280675811733677,
+        "max_drawdown_pct": 93.6517831856674,
+        "profit_factor": 0.0,
+        "sharpe": 5.280675811733677,
+        "sortino": 5.280675811733677,
+        "total_profit_pct": 563.0718692115458,
+        "trade_count": 1587,
+        "win_rate_pct": 52.17391304347826
+      }
+    },
+    {
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/scripts/nq_root_adaptive_event_panel_v1.py",
+      "metadata": {
+        "base_factor": "NQRootAdaptiveCostCrisisRepairV1",
+        "expected_regime": "MainRegimeV2::Sideways",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "source_regime_confidence",
+          "vol_z",
+          "price_z_240"
+        ],
+        "mutation_id": "b2r_repeat_nq_root_adaptive_event_panel_v1",
+        "parent": "Sideways -> RangeConsolidation -> NQLowZRebound -> NQRootAdaptiveCostCrisisRepairV1:sideways_low_z_rebound_h36",
+        "status": "incubation_only_b2r_repeat_next",
+        "strategy": "NQRootAdaptiveCostCrisisRepairV1_Sideways"
+      },
+      "name": "NQRootAdaptiveCostCrisisRepairV1_Sideways",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "status": "ok",
+      "timerange": "20110101-20251231",
+      "validation_metrics": {
+        "calmar": 3.145424731946893,
+        "max_drawdown_pct": 84.36720732452642,
+        "profit_factor": 0.0,
+        "sharpe": 3.145424731946893,
+        "sortino": 3.145424731946893,
+        "total_profit_pct": 246.11560872221852,
+        "trade_count": 2693,
+        "win_rate_pct": 51.206832528778314
+      }
+    },
+    {
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T030356-codex-board-b-b2r-repeat-nq-root-adaptive-v1/scripts/nq_root_adaptive_event_panel_v1.py",
+      "metadata": {
+        "base_factor": "NQRootAdaptiveCostCrisisRepairV1",
+        "expected_regime": "MainRegimeV2::Crisis",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "source_regime_confidence",
+          "vol_z",
+          "price_z_240"
+        ],
+        "mutation_id": "b2r_repeat_nq_root_adaptive_event_panel_v1",
+        "parent": "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV1:crisis_flush_rebound_h72",
+        "status": "incubation_only_b2r_repeat_next",
+        "strategy": "NQRootAdaptiveCostCrisisRepairV1_Crisis"
+      },
+      "name": "NQRootAdaptiveCostCrisisRepairV1_Crisis",
+      "pairs": [
+        "NQ/USD"
+      ],
+      "status": "ok",
+      "timerange": "20110101-20251231",
+      "validation_metrics": {
+        "calmar": 12.196695920037971,
+        "max_drawdown_pct": 77.7276061519263,
+        "profit_factor": 0.0,
+        "sharpe": 12.196695920037971,
+        "sortino": 12.196695920037971,
+        "total_profit_pct": 1101.2500775519252,
+        "trade_count": 584,
+        "win_rate_pct": 71.23287671232876
+      }
+    }
+  ],
+  "timeframe": "1h"
+}

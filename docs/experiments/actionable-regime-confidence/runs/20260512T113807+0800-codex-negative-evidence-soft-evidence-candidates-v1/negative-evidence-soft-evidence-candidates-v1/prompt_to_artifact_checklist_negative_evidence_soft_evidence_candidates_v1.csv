@@ -1,0 +1,6 @@
+requirement,evidence,coverage,status
+convert classified negative evidence into candidate soft evidence,negative_evidence_soft_evidence_candidates_v1.json soft_evidence_candidates,8 candidate nodes with states and distributions,pass
+keep priors clean,negative_evidence_soft_evidence_candidates_v1.json all market_prior_update_allowed=false,no parent regime prior mutation allowed,pass
+validate distribution shape,negative_evidence_soft_evidence_candidates_v1.json plus jq validation,all candidate vectors sum to 1.0,pass
+avoid runtime injection,negative_evidence_soft_evidence_candidates_v1.json runtime_mutation=false,candidate artifact only,pass
+preserve promotion gates,negative_evidence_soft_evidence_candidates_v1.json decision,promotion_allowed=false update_goal=false strict_full_objective=false,pass

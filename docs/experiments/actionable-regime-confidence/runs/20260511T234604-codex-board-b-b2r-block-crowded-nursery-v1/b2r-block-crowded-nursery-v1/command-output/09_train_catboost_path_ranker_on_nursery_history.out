@@ -1,0 +1,13 @@
+[load] /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1/SRC_ROOT_CARRY_LONG_220646/policy_training/structural_path_ranking_target_history.csv: 289 rows, 37 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 287 training samples
+[features] label dist: {np.int64(0): np.int64(122), np.int64(1): np.int64(165)}
+[template] User weights template saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/catboost/path_ranker_model_py313/user_weights.json
+[train] CatBoost saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/catboost/path_ranker_model_py313/catboost_model.cbm
+[train] top features:                   Feature Id  Importances
+0  structural_baseline_score        100.0
+[artifact] Registration metadata saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/catboost/path_ranker_model_py313/trainer_artifact.json
+
+[done] Model saved to /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/catboost/path_ranker_model_py313
+[done] To apply: python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/catboost/path_ranker_model_py313 --target-csv <new_target.csv> --output-scores scores.csv

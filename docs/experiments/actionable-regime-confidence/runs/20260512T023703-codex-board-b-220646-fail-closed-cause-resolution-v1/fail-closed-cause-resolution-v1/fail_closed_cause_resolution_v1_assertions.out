@@ -1,0 +1,11 @@
+exact_branch_preserved=true
+pre_bayes_neutralized=true
+pre_bayes_not_sideways_root=true
+pre_bayes_trend_context=true
+catboost_runtime_ready=true
+path_ranker_validation_ready=true
+execution_candidate_not_actionable=true
+execution_tree_fail_closed=true
+ledger_not_promotional=true
+provider_names_present=true
+all_assertions_passed=true

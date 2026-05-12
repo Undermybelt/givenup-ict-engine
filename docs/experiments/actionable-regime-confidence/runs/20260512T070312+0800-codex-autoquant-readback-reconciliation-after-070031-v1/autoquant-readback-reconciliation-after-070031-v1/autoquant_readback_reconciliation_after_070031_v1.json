@@ -1,0 +1,34 @@
+{
+  "run_id": "20260512T070312+0800-codex-autoquant-readback-reconciliation-after-070031-v1",
+  "board_sha256_before_artifact": "02066cf0b28b915944eb484cee9eccb7b108cab778e8ca651c69e7881dcf0123",
+  "gate_result": "autoquant_readback_reconciliation_after_070031_v1=tomac_success_registered_runtime_only_source_control_unlock_absent_no_promotion",
+  "reconciles": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T070031+0800-codex-autoquant-run-readback-after-data-ready-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T070059+0800-codex-autoquant-local-cache-tomac-settlement-after-065613-v1"
+  ],
+  "runtime_accounting": {
+    "default_managed_run_successes": 0,
+    "default_managed_run_failures": 25,
+    "tomac_specific_successes": 1,
+    "tomac_strategy": "TomacNQ_KillzoneBreakout",
+    "tomac_pair": "QQQ/USD",
+    "tomac_trades": 74,
+    "tomac_win_rate_pct": 52.7027,
+    "tomac_total_profit_pct": 6.98,
+    "tomac_sharpe": 0.2207,
+    "tomac_profit_factor": 1.2501
+  },
+  "accounting": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "provider_autoquant_promotion": false,
+    "pre_bayes_bbn_catboost_execution_tree_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "decision": "Runtime count corrected: Tomac-specific local backtest succeeded, but Board A promotion remains blocked because source/control and per-regime confidence gates are absent.",
+  "next_action": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 post-2026-01-30 rows matching the source-panel schema, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export."
+}

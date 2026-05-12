@@ -1,0 +1,7 @@
+avg_pnl,breakeven,chronological_period,first_ts,last_ts,loss_rate,losses,regime_profit_branch_path,rows,total_pnl,win_rate,wins
+10.759653,0,early,2026-04-05T03:00:00Z,2026-04-16T19:00:00Z,0.561404,32,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,57,613.300205,0.438596,25
+4.792873,0,late,2026-04-29T04:00:00Z,2026-05-11T16:00:00Z,0.517857,29,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,56,268.400907,0.482143,27
+-10.454112,0,middle,2026-04-19T14:00:00Z,2026-04-26T08:00:00Z,0.784314,40,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,51,-533.159715,0.215686,11
+16.25352,0,early,2026-04-05T09:00:00Z,2026-04-19T12:00:00Z,0.409091,9,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,22,357.577431,0.590909,13
+-20.887376,0,late,2026-04-29T18:00:00Z,2026-05-08T00:00:00Z,1.0,23,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,23,-480.409639,0.0,0
+-14.632427,0,middle,2026-04-19T12:00:00Z,2026-04-28T08:00:00Z,0.821429,23,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,28,-409.707944,0.178571,5

@@ -1,0 +1,124 @@
+{
+  "schema_version": "rc-spa/v1",
+  "run_id": "20260511T180235+0800-codex-board-b-crashrebound-branch-rc-spa-v1",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "recipe_id": "CrashRebound",
+  "total_trades": 207,
+  "test_folds": 4,
+  "min_trades_per_test_fold": 51,
+  "fold_positive_rate": 1.0,
+  "bootstrap_edge_lcb_5pct": 0.0014776496699833454,
+  "pbo": 0.75,
+  "dsr": 0.0019108190421897042,
+  "tail_loss_p95_abs": 0.11337355397716865,
+  "tail_loss_budget_abs": 0.1,
+  "max_drawdown_R": 0.5486501833761237,
+  "regime_specificity_ratio": 999.0,
+  "cost_stress_survival": false,
+  "hard_gates": {
+    "accepted_regime_id_present": true,
+    "branch_path_present": true,
+    "root_lookup_coverage_full": true,
+    "min_total_trades": true,
+    "min_test_folds": true,
+    "min_trades_per_test_fold": true,
+    "fold_positive_rate": true,
+    "bootstrap_edge_lcb_5pct": true,
+    "cost_stress_survival": false,
+    "pbo": false,
+    "dsr": true,
+    "tail_loss_p95": false,
+    "regime_specificity_ratio": true,
+    "branch_min_total_trades_for_claimed_roots": false
+  },
+  "failure_reasons": [
+    "cost_stress_survival",
+    "pbo",
+    "tail_loss_p95",
+    "branch_min_total_trades_for_claimed_roots"
+  ],
+  "scores": {
+    "edge_score": 0.2955299339966691,
+    "fold_score": 1.0,
+    "depth_score": 1.0,
+    "dsr_score": 0.0023885238027371303,
+    "pbo_score": 0.0,
+    "cost_score": 0.0,
+    "drawdown_score": 0.0,
+    "specificity_score": 1.0
+  },
+  "rc_spa": 40.94642653697444,
+  "promotion_level": "reject",
+  "folds": [
+    {
+      "fold_index": 0,
+      "test_count": 52,
+      "net_return_R": 0.9661116972737109,
+      "positive": true,
+      "stressed_2x_cost_net_R": 0.8621116972737108,
+      "stressed_positive": true
+    },
+    {
+      "fold_index": 1,
+      "test_count": 52,
+      "net_return_R": 0.5217758647869215,
+      "positive": true,
+      "stressed_2x_cost_net_R": 0.41777586478692136,
+      "stressed_positive": true
+    },
+    {
+      "fold_index": 2,
+      "test_count": 51,
+      "net_return_R": 0.09508644031044411,
+      "positive": true,
+      "stressed_2x_cost_net_R": -0.0069135596895559676,
+      "stressed_positive": false
+    },
+    {
+      "fold_index": 3,
+      "test_count": 52,
+      "net_return_R": 0.12768796636813573,
+      "positive": true,
+      "stressed_2x_cost_net_R": 0.02368796636813557,
+      "stressed_positive": true
+    }
+  ],
+  "branch_summary": {
+    "Bull": {
+      "trade_count": 140,
+      "win_rate": 0.7071428571428572,
+      "net_return_R": 1.708641110834176,
+      "mean_R": 0.012204579363101254,
+      "bootstrap_edge_lcb_5pct": 0.004928487521565947,
+      "stressed_2x_cost_net_R": 1.4286411108341754,
+      "branch_path": "Bull -> PullbackInUptrend -> DrawdownLt20RsiLt35VolumeConfirmDailyEmaSlopeUp -> CrashRebound"
+    },
+    "Bear": {
+      "trade_count": 41,
+      "win_rate": 0.7804878048780488,
+      "net_return_R": 0.43529423175621146,
+      "mean_R": 0.010616932481858814,
+      "bootstrap_edge_lcb_5pct": -0.007759771131922405,
+      "stressed_2x_cost_net_R": 0.3532942317562114,
+      "branch_path": "Bear -> BearMarketCapitulationRebound -> DrawdownLt20RsiLt35VolumeConfirmDailyEmaSlopeUp -> CrashRebound"
+    },
+    "Sideways": {
+      "trade_count": 26,
+      "win_rate": 0.4230769230769231,
+      "net_return_R": -0.43327337385117476,
+      "mean_R": -0.016664360532737493,
+      "bootstrap_edge_lcb_5pct": -0.03498897734556715,
+      "stressed_2x_cost_net_R": -0.4852733738511748,
+      "branch_path": "Sideways -> RangeShockMeanReversion -> DrawdownLt20RsiLt35VolumeConfirmDailyEmaSlopeUp -> CrashRebound"
+    },
+    "Crisis": {
+      "trade_count": 0,
+      "win_rate": 0.0,
+      "net_return_R": 0,
+      "mean_R": 0.0,
+      "bootstrap_edge_lcb_5pct": 0.0,
+      "stressed_2x_cost_net_R": 0,
+      "branch_path": ""
+    }
+  }
+}

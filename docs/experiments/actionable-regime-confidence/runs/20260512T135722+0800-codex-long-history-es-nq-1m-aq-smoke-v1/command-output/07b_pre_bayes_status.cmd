@@ -1,0 +1,1 @@
+./target/debug/ict-engine pre-bayes-status --symbol LONG_ES_NQ_1M_TOMAC_V1 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T135722+0800-codex-long-history-es-nq-1m-aq-smoke-v1/state_ict_chain_v1 --output-format json

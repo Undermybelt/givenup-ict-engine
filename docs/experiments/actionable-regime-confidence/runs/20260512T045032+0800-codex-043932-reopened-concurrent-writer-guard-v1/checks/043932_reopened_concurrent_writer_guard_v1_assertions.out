@@ -1,0 +1,7 @@
+PASS diagnostic_only:043932_reopened_concurrent_writer_guard
+PASS fail_closed:writer_active_after_terminal_empty_readback
+PASS fail_closed:shared_output_files_rewritten_after_terminal_empty_readback
+PASS not_consumed:unstable_concurrent_output
+PASS blocked:user_selected_historical_data_missing
+PASS promotion_allowed=false
+PASS update_goal=false

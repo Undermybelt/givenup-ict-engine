@@ -1,0 +1,32 @@
+{
+  "actionable": false,
+  "artifact_id": "execution-candidate:NQ:analyze:v4",
+  "candidate_status": "no_trade",
+  "decision_hint": "Comparable run, but factor backlog remains: tune trend_momentum first.|pda_sequence=unavailable|hybrid_regime_label=trend_decay|hybrid_regime_age=4|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.582|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.8596",
+  "generated_at": "2026-05-11T16:55:27.616052Z",
+  "multi_timeframe_summary": [
+    "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+    "multi_timeframe_missing=1m,5m,30m,4h",
+    "15m:52 bars path=examples/demo/demo-15m.json",
+    "1h:52 bars path=examples/demo/demo-15m.json",
+    "1d:52 bars path=examples/demo/demo-15m.json",
+    "higher_timeframe_direction_bias=bullish",
+    "higher_timeframe_alignment_score=1.0000",
+    "lower_timeframe_entry_alignment_score=0.8596"
+  ],
+  "path": "<local-path>",
+  "posterior_delta": 0.0,
+  "pre_bayes_bridge_selected_entry_quality": "medium",
+  "pre_bayes_gate_status": "pass_neutralized",
+  "review_reason": "duplicate_execution_candidate_context",
+  "review_rule_version": "7bfaf4a346c607e8",
+  "review_status": "discard",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:NQ:20260511T165527.616Z",
+  "symbol": "NQ",
+  "top_factor_action": "tune",
+  "top_factor_name": "trend_momentum",
+  "trade_direction": "Neutral",
+  "version": 4,
+  "win_probability_delta": 0.0
+}

@@ -1,0 +1,64 @@
+{
+  "accepted_rows_added": 0,
+  "candidate_count": 3,
+  "candidates": [
+    {
+      "board_a_gate": "blocked_permissioned_report_center_export_required",
+      "candidate_id": "finra_potential_manipulation_report",
+      "intake_files_created": false,
+      "matched_controls_acquired": false,
+      "official_source_route": true,
+      "public_rows_acquired": false,
+      "reason": "Official FINRA PMR is closer to R6 spoofing/layering than research-paper surfaces, but public unauthenticated pages expose report definitions rather than source-owned positive/control row exports.",
+      "source_owner": "FINRA",
+      "source_url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report",
+      "species_coverage": "layering;quote_spoofing"
+    },
+    {
+      "board_a_gate": "blocked_entitled_user_download_required",
+      "candidate_id": "finra_report_center_technical_assistance",
+      "intake_files_created": false,
+      "matched_controls_acquired": false,
+      "official_source_route": true,
+      "public_rows_acquired": false,
+      "reason": "FINRA documents detail-data download mechanics, but access is permissioned and still requires an owner-approved export before Board A intake files can be populated.",
+      "source_owner": "FINRA",
+      "source_url": "https://www.finra.org/compliance-tools/report-center/technical-assistance",
+      "species_coverage": "report_center_detail_data_export_mechanics"
+    },
+    {
+      "board_a_gate": "rejected_until_source_owned_spoofing_layering_rows_and_controls_are_exported",
+      "candidate_id": "aimm_gt_public_research_candidate",
+      "intake_files_created": false,
+      "matched_controls_acquired": false,
+      "official_source_route": false,
+      "public_rows_acquired": false,
+      "reason": "Potentially relevant public research surface, but it does not close the current R6 spoofing/layering owner-approved positive/control intake requirement without inspectable row exports and provenance.",
+      "source_owner": "AIMM-GT authors",
+      "source_url": "https://arxiv.org/abs/2512.16103",
+      "species_coverage": "broad_market_manipulation_research_candidate"
+    }
+  ],
+  "decision": "r6_finra_official_route_screen_v1=official_route_identified_rows_not_acquired",
+  "generated_at_utc": "2026-05-11T12:49:48.658614+00:00",
+  "intake_files_created": false,
+  "matched_controls_acquired": false,
+  "new_confidence_gate": false,
+  "next": "Use the existing source-acquisition outbox/operator-approved request path to obtain permissioned FINRA PMR/detail-data exports or equivalent owner-approved rows; do not synthesize matched controls.",
+  "official_route_count": 2,
+  "public_rows_acquired": false,
+  "raw_data_committed": false,
+  "required_files": {
+    "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+    "matched_negative_rows": "matched_negative_normal_activity_rows.csv",
+    "positive_rows": "positive_spoofing_layering_rows.csv",
+    "provenance_manifest": "provenance_manifest.json"
+  },
+  "run_id": "20260511T204850-codex-r6-finra-official-route-screen-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "target_requirement": "R6 direct Manipulation spoofing/layering source-owned positives, same-schema matched controls, and provenance manifest.",
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

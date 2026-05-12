@@ -1,0 +1,10 @@
+requirement,status,evidence,blocker
+board_a_authoritative_file,covered,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,
+all_regimes_95_confidence,blocked,Latest post-080054 route probes add zero accepted rows and no valid required source/control root.,R6/R5/R3 required source/control unlock absent; scoped prior 95 evidence does not close full objective.
+cross_market_cross_timeframe_validation,blocked,080333/080452/080700 public source routes found no exact MainRegimeV2/R5/R3/R6 unlock.,No accepted cross-timeframe MainRegimeV2 source export or verifier-native Crisis-capable R3 rows.
+ibkr_tradingview_yfinance_kraken_provider_use,partial,Prior provider/cache and runtime readbacks cover provider visibility only.,Provider diagnostics are not source/control acceptance and promotion remains blocked.
+auto_quant_operated,partial,"Prior Auto-Quant status/readback exists, but selected-data promotion is blocked.","No canonical source/control unlock, so Auto-Quant cannot be promoted for this objective."
+filter_prebayes_bbn_catboost_execution_tree,blocked,Downstream chain is explicitly forbidden before source/control unlock and canonical merge.,No direct verifier/split-calibration/canonical merge input is valid yet.
+source_control_unlock,blocked,080336 arrival poll and 080425 target approval readback both report valid_required_root_unlock=false.,"R6 owner/export absent, R5 recency absent, R3 Crisis absent, approval false."
+multi_agent_append_only,covered,This audit writes a new run root and appends only; Current Cursor is not edited.,
+update_goal_allowed,blocked,strict_full_objective=false and update_goal=false across latest route assertions.,Objective incomplete.

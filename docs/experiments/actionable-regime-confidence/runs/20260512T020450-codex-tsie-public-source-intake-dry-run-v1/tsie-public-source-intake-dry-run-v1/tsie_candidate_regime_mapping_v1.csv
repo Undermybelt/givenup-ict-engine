@@ -1,0 +1,5 @@
+main_regime_v2_candidate,source_labels,support_status,acceptance_status
+Bear,0 STRONG SELL; 1 WEAK SELL,metadata_mapping_only_transport_blocked,blocked_no_aggregate_no_canonical_merge
+Sideways,3 FLAT / NOISE,metadata_mapping_only_transport_blocked,blocked_no_aggregate_no_canonical_merge
+Bull,5 WEAK BUY; 6 STRONG BUY,metadata_mapping_only_transport_blocked,blocked_no_aggregate_no_canonical_merge
+Crisis,none,no_candidate_class,blocked_no_source_label

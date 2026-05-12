@@ -1,0 +1,69 @@
+[
+  {
+    "run_id": "auto_quant_prior_init_B2R_115130_BYBIT_BTC_MOMENTUM_20260512T040928.255696000Z",
+    "timestamp": "2026-05-12T04:09:28.255696Z",
+    "library_artifact_id": "auto_quant_strategy_library_B2R_115130_BYBIT_BTC_MOMENTUM_20260512T040928.232627000Z",
+    "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/115130-bybit-momentum-downstream-v1/115130_bybit_momentum_strategy_library_v1.json",
+    "dry_run": false,
+    "outcome": {
+      "parent_config": [
+        0,
+        0,
+        0
+      ],
+      "initial_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "final_probs": [
+        0.5238011428571429,
+        4.19047619047619e-6,
+        0.47619466666666665
+      ],
+      "strategies_applied": [
+        {
+          "strategy_name": "ProviderCryptoMomentumStateV1",
+          "mutation_id": "provider-owned-115130-bybit-btc-momentum-state-v1",
+          "trade_count": 34,
+          "n_win": 14,
+          "n_loss": 20,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.999956,
+            0.000022,
+            0.000022
+          ],
+          "after_probs": [
+            0.5238011428571429,
+            4.19047619047619e-6,
+            0.47619466666666665
+          ],
+          "diff": [
+            -0.4761548571428571,
+            -0.00001780952380952381,
+            0.47617266666666663
+          ],
+          "bbn_entropy_before": 0.0005158756285885085,
+          "bbn_entropy_after": 0.6920667343353999,
+          "bbn_entropy_reduction": 0.0,
+          "bbn_log_loss_before": 6.308528767813869,
+          "bbn_log_loss_after": 0.702693388414844,
+          "bbn_log_loss_delta": 5.605835379399025,
+          "bbn_contradiction_before": 1.176426588235294,
+          "bbn_contradiction_after": 0.22408125490196085,
+          "bbn_contradiction_lift": 0.9523453333333332,
+          "evidence_value_gate_passed": true
+        }
+      ],
+      "strategies_skipped": [],
+      "temper": 0.5,
+      "prior_strength": 4.0,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_delta": 5.605835379399025,
+      "bbn_contradiction_lift": 0.9523453333333332,
+      "evidence_value_gate_passed": true
+    }
+  }
+]

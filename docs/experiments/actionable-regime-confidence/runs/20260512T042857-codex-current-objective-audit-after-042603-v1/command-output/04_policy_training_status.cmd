@@ -1,0 +1,1 @@
+/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826 --output-format json

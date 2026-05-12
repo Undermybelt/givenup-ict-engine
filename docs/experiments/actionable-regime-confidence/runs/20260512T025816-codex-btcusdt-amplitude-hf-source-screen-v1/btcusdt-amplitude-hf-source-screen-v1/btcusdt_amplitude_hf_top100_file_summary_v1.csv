@@ -1,0 +1,8 @@
+path,rows,symbols,timeframes,min_ts,max_ts,rank_min,rank_max,regime_phase_counts,required_columns_missing,sha256
+data/top100/btcusdt_1m_top100.csv,100,BTCUSDT,1m,2020-02-19 21:54:00 UTC,2025-10-10 21:20:00 UTC,1,100,"{""bear"": 9, ""bull"": 91}",,845efc3c3eced1d256378f244c17f10b9f30d3e4d3531dd4fbc17db903643d3f
+data/top100/btcusdt_5m_top100.csv,100,BTCUSDT,5m,2020-01-19 11:00:00 UTC,2025-10-10 21:20:00 UTC,1,100,"{""bear"": 10, ""bull"": 90}",,f8be0b051cdc34531e42d0eb720f31ac716ddc6bcf1ae142ab8f3b326bbd2537
+data/top100/btcusdt_15m_top100.csv,100,BTCUSDT,15m,2020-01-19 11:00:00 UTC,2025-10-10 21:15:00 UTC,1,100,"{""bear"": 14, ""bull"": 86}",,38523067e239ff7d25ac4d77468c6b7f425564b45573705e2e686c02f43ff924
+data/top100/btcusdt_1h_top100.csv,100,BTCUSDT,1h,2020-02-19 21:00:00 UTC,2025-10-10 21:00:00 UTC,1,100,"{""bear"": 10, ""bull"": 90}",,2364040dc956233b859ad0771995e4131d681b0f04f0f4379e38fc879c0616e8
+data/top100/btcusdt_4h_top100.csv,100,BTCUSDT,4h,2020-02-19 20:00:00 UTC,2026-02-06 00:00:00 UTC,1,100,"{""bear"": 14, ""bull"": 86}",,91ee282ce9e2592883cb86382654345b9056ceee73b0029f0705ecfca5058bc0
+data/top100/btcusdt_1d_top100.csv,100,BTCUSDT,1d,2020-03-12 00:00:00 UTC,2026-02-06 00:00:00 UTC,1,100,"{""bear"": 21, ""bull"": 79}",,eee68241143cb483e9a09f910e4acefb7d58c5a115463d81d700c70de5e61341
+data/top100/btcusdt_1w_top100.csv,100,BTCUSDT,1w,2020-01-06 00:00:00 UTC,2026-02-02 00:00:00 UTC,1,100,"{""bear"": 23, ""bull"": 77}",,6ad85afc56ed9685d3744b38cff51f4283ad3647ca495f190cc17b7d18c3dd8c

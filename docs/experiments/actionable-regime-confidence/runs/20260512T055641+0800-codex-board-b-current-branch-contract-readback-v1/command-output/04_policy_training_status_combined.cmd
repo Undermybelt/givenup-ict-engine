@@ -1,0 +1,1 @@
+./target/debug/ict-engine policy-training-status --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1 --output-format agent

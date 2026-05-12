@@ -1,0 +1,22 @@
+{
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival"
+  ],
+  "notes": [
+    "branch_path=TrendExpansion -> NormalVolatility -> OTERetracementLevel -> OTEContinuationLong",
+    "source_provider=IBKR gateway SPY 1h 90D current fetch",
+    "promotion_allowed=false until downstream filter/pre-Bayes -> BBN -> CatBoost/path-ranker -> execution-tree gates pass"
+  ],
+  "package_id": "ote-162313-ibkr-spy-1h-v1",
+  "strategy_brief": "Board A six-provider OTE continuation packet using 0.500, 0.618, 0.705, and 0.786 retracement leaves inside TrendExpansion.",
+  "strategy_class_name": "ProviderOteTrendRetracementV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/agent-material/ProviderOteTrendRetracementV1.py",
+  "symbol": "SPY",
+  "timeframe": "1h",
+  "title": "OTE six-provider local-stdio packet - IBKR SPY 1h"
+}

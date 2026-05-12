@@ -1,0 +1,105 @@
+{
+  "artifact_type": "current_goal_completion_audit_v12_after_positive_index",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "ec8dc4c24b96a491106345f5fda79146612b67e8152b9f08c0b529fa8593878d",
+  "checklist": [
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T140042-codex-positive-regime-factor-index-v1/positive-factor-index/positive_regime_factor_index_v1.json",
+      "evidence": "daily parent-root accepted roots=['Bear', 'Bull', 'Crisis', 'Sideways']",
+      "gap": "Scoped daily US equity/index panel; not full-universe/full-timeframe completion.",
+      "requirement": "Each MainRegimeV2 price root has its own 95% calibrated factor",
+      "status": "pass_scoped"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T140042-codex-positive-regime-factor-index-v1/positive-factor-index/positive_regime_factor_index_v1.json",
+      "evidence": "same-source weekly/monthly accepted=8/8; exact intraday parent context=36/48",
+      "gap": "Exact intraday Crisis remains support-short; parent-day context is not intraday micro-regime timing.",
+      "requirement": "Validate roots across other timeframes",
+      "status": "partial"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T135908-codex-crosswalk-tracking-source-attachment-v1/crosswalk-attachment/crosswalk_tracking_source_attachment_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T135932-codex-es-nq-source-crosswalk-calibration-v1/crosswalk-calibration/es_nq_source_crosswalk_calibration_v1.json",
+      "evidence": "SPY/DIA tracking crosswalk accepted 36 rows; ES/NQ crosswalk accepted 2 rows.",
+      "gap": "NQ/QQQ blocked without NDX labels; many ETF/futures/index rows unresolved; full species not closed.",
+      "requirement": "Validate roots across other markets/species",
+      "status": "partial"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T133453-codex-post-axiswise-acquisition-request-v12/acquisition-request/post_axiswise_acquisition_request_v12.json",
+      "evidence": "active post-axiswise source-label requests=556; superseded by axiswise=8",
+      "gap": "556 source-label request rows remain active; this is not all-cycle/all-species complete.",
+      "requirement": "Run full-cycle/full-species accounting instead of reporting a scoped win",
+      "status": "fail_open"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.json",
+      "evidence": "accepted scoped varieties=['pump_dump_telegram_event', 'dex_self_trade_order_lifecycle', 'dex_consecutive_self_trade_order_lifecycle', 'midsummer_bsc_wash_maker', 'midsummer_multichain_wash_maker']; full variety coverage=False",
+      "gap": "Spoofing/layering matched negatives, quote stuffing, pinging, bear raid, and painting-the-tape remain open.",
+      "requirement": "Manipulation uses direct event/order-flow/order-lifecycle/on-chain/social rows, not OHLCV proxy",
+      "status": "partial"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T133337-codex-finra-manipulation-acquisition-schema-v1/acquisition-schema/finra_manipulation_acquisition_schema_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T130457-codex-spoofing-appendix-direct-case-inventory/direct-case-inventory/spoofing_appendix_direct_case_inventory.json",
+      "evidence": "FINRA schema ready but rows not acquired; positive case inventory rows=204; accepted_95_direct_gate_added=0",
+      "gap": "Case inventory is positive-only; no matched negative order-book/order-lifecycle rows.",
+      "requirement": "Spoofing/layering has matched positive and negative direct rows before 95 claim",
+      "status": "fail_open"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T140304-codex-source-taxonomy-strategy-reset-v1/source-taxonomy-reset/source_taxonomy_strategy_reset_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T140846-codex-ndx-source-label-availability-probe-v1/ndx-source-label-probe/ndx_source_label_availability_probe_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T134756-codex-daily-to-intraday-source-attachment-v1/daily-intraday-attachment/daily_to_intraday_source_attachment_v1.json",
+      "evidence": "source reset gate=source_taxonomy_strategy_reset_no_new_confidence_gate_stop_broad_negative_sweeps; NDX probe gate=ndx_source_label_availability_probe_v1_no_ndx_source_label_ixic_proxy_rejected; exact intraday gate=daily_to_intraday_source_attachment_v1_accepted36_blocked12_crisis_support_short",
+      "gap": "Guardrail preserved; it blocks completion where labels/rows are absent.",
+      "requirement": "Do not use proxy labels, HMM state ids, future returns, or provider bars as regime labels",
+      "status": "pass_guardrail"
+    }
+  ],
+  "current_cursor": [
+    "## Current Cursor",
+    "",
+    "| Field | Current Value | Update Rule |",
+    "|---|---|---|",
+    "| board_state | blocked | `active`, `blocked`, `accepted_95`, `accepted_99`, `abstain` |",
+    "| last_loop_id | 20260511T142858+0800-codex-positive-target-selector-v1 | Use timestamp or run id |",
+    "| active_market_set | Positive-only selector over the accepted strict rows from `141910`, not a fresh all-source sweep. Selected `PFE+TSLA` as the next two-market rare-root pair because it covers strict `Bear`, `Sideways`, and `Crisis`; `Bull` stays on a separate abundant-root pair. Active denominator remains `MainRegimeV2`: `Bull`, `Bear`, `Sideways`, `Crisis`; `Manipulation` remains separate direct evidence/overlay. | Max two markets per loop |",
+    "| active_timeframes | No new provider timeframe was downloaded. Selector consumed existing yfinance `1h` strict exact-source rows from `141910`: `41` accepted rows across all four roots. A strict two-market pair cannot cover all four roots, so the next loop should stop forcing a single loop to close every root and instead run rare-root pairs first. | Max two timeframes per loop |",
+    "| current_run_root | `docs/experiments/actionable-regime-confidence/runs/20260511T142858-codex-positive-target-selector-v1` | Use `/tmp/...` or `/private/tmp/...` |",
+    "| provider_status | Local artifact readback only: board plus `141910` strict exact-source row CSV; no fresh IBKR, TradingView MCP, yfinance, Kraken, Auto-Quant runtime, runtime code change, row export, threshold relaxation, or raw data commit. | Record IBKR, TradingView MCP, yfinance, Kraken, local cache, Auto-Quant cache |",
+    "| candidate_regime | `MainRegimeV2` positive target scheduling, not a new confidence gate: top rare-root pair `PFE+TSLA` supplies strict `Bear`, `Sideways`, and `Crisis`; root anchors remain `Bull=GE/GS/JPM/MS/WFC`, `Bear=NKE/COP/SBUX/PFE`, `Sideways=MCD/CVX/DIS/MSFT/VZ`, `Crisis=TSLA/INTC/AMD`. | Regime label plus horizon |",
+    "| confidence_lane | 95_parent_root_or_direct_event_gate; no threshold relaxation | `95`, `99`, or `abstain` |",
+    "| accepted_gate | positive_target_selector_v1=`rare_root_anchors_selected_no_new_confidence_gate`; exact_1h_source_universe_expansion_v1=`accepted41_strict_ticker_root_rows_full_goal_still_blocked`; amd_cvx_exact_intraday_source_attachment_v1=`accepted8_blocked0_scoped_1h_2024_2025`; ndx_source_label_availability_probe_v1=`no_ndx_source_label_ixic_proxy_rejected`; source_taxonomy_strategy_reset_v1=`provenance_only_no_new_confidence_gate_stop_broad_negative_sweeps`; positive_regime_factor_index_v1=`per_root_supply_present_full_goal_still_blocked`; es_nq_source_crosswalk_calibration_v1=`accepted2_blocked14_not_full_objective`; crosswalk_tracking_source_attachment_v1=`accepted36_spy_dia_bull_bear_sideways_blocked132`; daily_to_intraday_source_attachment_v1=`accepted36_blocked12_crisis_support_short`; yfinance_intraday_source_label_attack_map_v1=`exact48_crosswalk168_unsupported120_no_confidence_gate`; post_axiswise_acquisition_request_v12=`active_556_source_label_requests_plus_direct_manipulation_open`; finra_manipulation_acquisition_schema_v1=`finra_spoofing_layering_schema_package_ready_rows_not_acquired`; targeted_native_source_label_probe_v1=`targeted_probe_no_new_attachable_native_source_label_panel_finra_schema_target_identified`; completion_audit_v12_after_positive_index=`positive_supply_present_full_goal_still_blocked_update_goal_false`; completion_audit_v11_after_axiswise=`post_axiswise_same_source_timeframes_pass_full_matrix_and_direct_manipulation_still_blocked`; monthly_sideways_purity_policy_probe_v1=`positive_support_for_axiswise_validation_not_full_objective`; source_consensus_axiswise_timeframe_gate_v1=`accepted_95_source_consensus_axiswise_8of8_same_source_timeframe_cells_full_matrix_still_blocked`; direct_manipulation_variety_matrix_v1=`accepted_scoped_direct_varieties_present_full_variety_coverage_incomplete`; taxonomy_relock_v10=`mainregimev2_relocked_after_taxonomy_drift_full_matrix_still_blocked`; completion_audit_v10=`scoped_cross_context_price_roots_pass_full_matrix_still_blocked`; stock_market_regimes_parent_root_abstain=`accepted_95_scoped_parent_roots_all_four_daily_us_equity_index`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal` | Write the exact accepted gate or `none` |",
+    "| blocker | Full-cycle/full-universe matrix is still incomplete, but the next positive path is now targeted: the accepted strict `1h` supply already includes all four roots, and `PFE+TSLA` is the best two-market rare-root pair. A strict two-market loop cannot cover all four roots, so forcing all roots into one loop is a false bottleneck. Remaining blockers are source-label/row-export blockers: strict per-ticker/root coverage is still sparse for Bear/Sideways/Crisis, additional provider-native intraday timeframes are not exhausted, 2026 recency requires extending the source panel beyond `2026-01-30`, unresolved `NQ=F` needs Nasdaq-100-grade source labels or explicit ^IXIC policy, unsupported no-source / Kraken / non-same-source cells remain open, and direct spoofing/layering matched negatives plus quote stuffing, pinging, bear raid, and painting-the-tape rows remain open. | Single blocking reason |",
+    "| next_action | Execute/write back the `PFE+TSLA` rare-root exact-source loop for `Bear`, `Sideways`, and `Crisis`; keep `Bull` on a separate abundant-root pair instead of returning to NQ/QQQ proxy scans or forcing one two-market loop to close every root. | Keep exactly one next action |",
+    ""
+  ],
+  "decision": {
+    "call_update_goal": false,
+    "full_objective_achieved": false,
+    "gate_result": "completion_audit_v12_positive_supply_present_full_objective_still_blocked",
+    "missing_or_incomplete_count": 5,
+    "pass_guardrail_count": 1,
+    "pass_scoped_count": 1,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T06:40:13.146051+00:00",
+  "next_action": "Do not rerun broad negative/proxy sweeps. Acquire either an NDX/QQQ/NQ source-label panel or matched direct spoofing/layering positive-negative order-lifecycle rows; otherwise keep the full objective blocked.",
+  "objective_restated": {
+    "direct_class_or_overlay": "Manipulation",
+    "price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "success_criteria": [
+      "each price root has a regime-specific 95%-99% calibrated packet",
+      "evidence survives other market/species and timeframe/period checks",
+      "full-cycle/full-species accounting is not blocked",
+      "Manipulation uses direct event/order-flow/order-lifecycle/on-chain/social rows with controls",
+      "no OHLCV/HMM/generated/future-return proxy labels are promoted"
+    ]
+  },
+  "run_id": "20260511T142354+0800-current-goal-completion-audit-v12-after-positive-index"
+}

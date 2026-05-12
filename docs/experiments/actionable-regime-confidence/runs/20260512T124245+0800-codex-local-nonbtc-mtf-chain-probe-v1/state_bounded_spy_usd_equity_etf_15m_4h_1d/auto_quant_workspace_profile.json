@@ -1,0 +1,16 @@
+{
+  "profile": "synthetic_ohlcv",
+  "symbol": "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245",
+  "source_data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/provider-data-json/spy_usd_equity_etf_15m_4h_1d/spy_usd_equity_etf_15m_4h_1d-15m.json",
+  "pair": "B2R_LOCAL_NONBTC_SPY_USD_MTF_124245/USD",
+  "base_timeframe": "1h",
+  "additional_timeframes": [
+    "4h",
+    "1d"
+  ],
+  "notes": [
+    "profile_materializes_additive_external_runner",
+    "profile_reuses_primary_cleaned_candle_json_as_prepare_external_source",
+    "profile_is_opt_in_and_state_dir_scoped"
+  ]
+}

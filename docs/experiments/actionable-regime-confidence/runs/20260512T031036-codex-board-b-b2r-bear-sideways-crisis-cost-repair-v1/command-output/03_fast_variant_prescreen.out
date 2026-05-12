@@ -1,0 +1,57 @@
+prescreen_variants 408
+
+ROOT Bull
+bull_cost_breakout_h72_r120_v13 hold 72 action long trades 8666 folds 15 minfold 188 fold+ 0.933 lcb 0.001701 2x 0.000815 dsr 11.859 cost True pre 98.333
+bull_cost_breakout_h72_r120_v8 hold 72 action long trades 8566 folds 15 minfold 187 fold+ 0.933 lcb 0.001696 2x 0.000784 dsr 11.443 cost True pre 98.333
+bull_cost_breakout_h72_r60_v8 hold 72 action long trades 8750 folds 15 minfold 136 fold+ 0.933 lcb 0.001528 2x 0.000647 dsr 11.17 cost True pre 98.333
+bull_cost_breakout_h72_r60_v13 hold 72 action long trades 8833 folds 15 minfold 136 fold+ 0.933 lcb 0.001516 2x 0.000639 dsr 11.181 cost True pre 98.333
+bull_cost_breakout_h72_r60_v3 hold 72 action long trades 8219 folds 15 minfold 121 fold+ 0.933 lcb 0.001458 2x 0.00059 dsr 10.668 cost True pre 98.333
+bull_cost_breakout_h72_r200_v13 hold 72 action long trades 8436 folds 15 minfold 280 fold+ 0.867 lcb 0.001848 2x 0.000924 dsr 11.565 cost True pre 96.667
+bull_cost_breakout_h72_r200_v8 hold 72 action long trades 8293 folds 15 minfold 280 fold+ 0.867 lcb 0.001677 2x 0.000783 dsr 10.558 cost True pre 96.667
+bull_cost_breakout_h72_r200_v3 hold 72 action long trades 7898 folds 15 minfold 272 fold+ 0.8 lcb 0.001602 2x 0.000675 dsr 10.116 cost True pre 95.0
+bull_cost_breakout_h72_r120_v3 hold 72 action long trades 8115 folds 15 minfold 166 fold+ 0.8 lcb 0.001507 2x 0.000567 dsr 10.477 cost True pre 95.0
+bull_cost_breakout_h48_r200_v13 hold 48 action long trades 8436 folds 15 minfold 280 fold+ 0.8 lcb 0.001272 2x 0.000376 dsr 9.922 cost True pre 95.0
+bull_cost_breakout_h48_r200_v8 hold 48 action long trades 8293 folds 15 minfold 280 fold+ 0.8 lcb 0.001192 2x 0.000346 dsr 9.294 cost True pre 95.0
+bull_cost_breakout_h48_r200_v3 hold 48 action long trades 7898 folds 15 minfold 272 fold+ 0.8 lcb 0.001208 2x 0.000225 dsr 9.081 cost True pre 95.0
+
+ROOT Bear
+bear_cap_rebound_h72_r100 hold 72 action long trades 4065 folds 13 minfold 86 fold+ 0.923 lcb 0.001969 2x 0.001029 dsr 5.093 cost True pre 98.077
+bear_cap_rebound_h72_r250 hold 72 action long trades 1580 folds 13 minfold 20 fold+ 0.846 lcb 0.004504 2x 0.003602 dsr 6.403 cost True pre 96.154
+bear_cap_rebound_h72_r150 hold 72 action long trades 3026 folds 13 minfold 60 fold+ 0.846 lcb 0.00296 2x 0.001767 dsr 5.874 cost True pre 96.154
+bear_cap_rebound_h48_r250 hold 48 action long trades 1580 folds 13 minfold 20 fold+ 0.692 lcb 0.001491 2x 0.000562 dsr 3.425 cost True pre 92.308
+bear_cap_rebound_h72_r60 hold 72 action long trades 4987 folds 13 minfold 89 fold+ 0.692 lcb 0.001284 2x 0.000354 dsr 4.118 cost True pre 92.308
+bear_cap_rebound_h72_r30 hold 72 action long trades 5686 folds 13 minfold 94 fold+ 0.692 lcb 0.000954 2x -2.7e-05 dsr 3.657 cost False pre 81.163
+bear_cap_rebound_h48_r150 hold 48 action long trades 3026 folds 13 minfold 60 fold+ 0.769 lcb 0.000501 2x -0.000454 dsr 2.444 cost False pre 71.763
+bear_cap_rebound_h36_r250 hold 36 action long trades 1580 folds 13 minfold 20 fold+ 0.615 lcb 0.000214 2x -0.000757 dsr 1.642 cost False pre 60.745
+bear_cap_rebound_h48_r100 hold 48 action long trades 4065 folds 13 minfold 86 fold+ 0.538 lcb -0.00032 2x -0.001116 dsr 0.992 cost False pre 53.304
+bear_cap_rebound_h24_r250 hold 24 action long trades 1580 folds 13 minfold 20 fold+ 0.615 lcb -0.000956 2x -0.001498 dsr 0.53 cost False pre 45.983
+bear_cap_rebound_h36_r150 hold 36 action long trades 3026 folds 13 minfold 60 fold+ 0.538 lcb -0.00097 2x -0.001894 dsr -0.259 cost False pre 33.462
+bear_cap_rebound_h12_r250 hold 12 action long trades 1580 folds 13 minfold 20 fold+ 0.538 lcb -0.001129 2x -0.00204 dsr -0.583 cost False pre 33.462
+
+ROOT Sideways
+side_pull_revert_h48_z20_a12 hold 48 action long trades 127 folds 13 minfold 1 fold+ 0.769 lcb 0.002388 2x 0.001607 dsr 3.72 cost True pre 94.231
+side_pull_revert_h36_z20_a12 hold 36 action long trades 127 folds 13 minfold 1 fold+ 0.769 lcb 0.001513 2x 0.000763 dsr 3.201 cost True pre 94.231
+side_pull_revert_h48_z20_a40 hold 48 action long trades 1391 folds 15 minfold 30 fold+ 0.6 lcb 0.001004 2x 0.000155 dsr 3.998 cost True pre 90.0
+side_pull_revert_h48_z20_a24 hold 48 action long trades 632 folds 15 minfold 1 fold+ 0.533 lcb 0.000901 2x 0.000182 dsr 3.521 cost True pre 85.862
+side_pull_revert_h48_z20_a18 hold 48 action long trades 350 folds 14 minfold 2 fold+ 0.571 lcb 0.000826 2x -0.00041 dsr 2.512 cost False pre 74.948
+side_pull_revert_h48_z20_a30 hold 48 action long trades 960 folds 15 minfold 7 fold+ 0.533 lcb 0.000651 2x -0.000153 dsr 3.011 cost False pre 69.612
+side_pull_revert_h48_z16_a40 hold 48 action long trades 2140 folds 15 minfold 43 fold+ 0.6 lcb 0.00053 2x -0.000391 dsr 2.981 cost False pre 68.258
+side_pull_revert_h36_z20_a40 hold 36 action long trades 1391 folds 15 minfold 30 fold+ 0.667 lcb 0.000422 2x -0.000311 dsr 2.893 cost False pre 67.219
+side_pull_revert_h36_z20_a24 hold 36 action long trades 632 folds 15 minfold 1 fold+ 0.533 lcb 0.00046 2x -0.000383 dsr 2.445 cost False pre 64.824
+side_pull_revert_h48_z9_a40 hold 48 action long trades 3548 folds 15 minfold 90 fold+ 0.6 lcb 0.000388 2x -0.000553 dsr 2.728 cost False pre 64.706
+side_pull_revert_h48_z12_a40 hold 48 action long trades 2950 folds 15 minfold 76 fold+ 0.667 lcb 0.000302 2x -0.000524 dsr 2.741 cost False pre 64.213
+side_pull_revert_h36_z20_a18 hold 36 action long trades 350 folds 14 minfold 2 fold+ 0.643 lcb 0.000257 2x -0.000595 dsr 2.099 cost False pre 62.487
+
+ROOT Crisis
+crisis_rebound_h72_r300 hold 72 action long trades 128 folds 3 minfold 2 fold+ 1.0 lcb 0.027138 2x 0.023917 dsr 7.277 cost True pre 100.0
+crisis_rebound_h72_r200 hold 72 action long trades 266 folds 4 minfold 11 fold+ 1.0 lcb 0.021916 2x 0.021328 dsr 9.708 cost True pre 100.0
+crisis_rebound_h72_r120 hold 72 action long trades 435 folds 5 minfold 9 fold+ 1.0 lcb 0.019265 2x 0.017872 dsr 11.514 cost True pre 100.0
+crisis_rebound_h36_r300 hold 36 action long trades 128 folds 3 minfold 2 fold+ 1.0 lcb 0.018733 2x 0.017597 dsr 6.782 cost True pre 100.0
+crisis_rebound_h72_r80 hold 72 action long trades 546 folds 5 minfold 16 fold+ 1.0 lcb 0.017314 2x 0.016272 dsr 12.374 cost True pre 100.0
+crisis_rebound_h24_r300 hold 24 action long trades 128 folds 3 minfold 2 fold+ 1.0 lcb 0.017545 2x 0.016212 dsr 6.737 cost True pre 100.0
+crisis_rebound_h48_r300 hold 48 action long trades 128 folds 3 minfold 2 fold+ 1.0 lcb 0.016785 2x 0.014711 dsr 5.233 cost True pre 100.0
+crisis_rebound_h72_r40 hold 72 action long trades 664 folds 5 minfold 28 fold+ 1.0 lcb 0.014085 2x 0.012917 dsr 11.122 cost True pre 100.0
+crisis_rebound_h48_r200 hold 48 action long trades 266 folds 4 minfold 11 fold+ 1.0 lcb 0.013765 2x 0.012407 dsr 6.79 cost True pre 100.0
+crisis_rebound_h36_r200 hold 36 action long trades 266 folds 4 minfold 11 fold+ 1.0 lcb 0.013425 2x 0.01199 dsr 7.345 cost True pre 100.0
+crisis_rebound_h48_r80 hold 48 action long trades 546 folds 5 minfold 16 fold+ 1.0 lcb 0.010046 2x 0.00933 dsr 8.081 cost True pre 100.0
+crisis_rebound_h36_r80 hold 36 action long trades 546 folds 5 minfold 16 fold+ 1.0 lcb 0.009574 2x 0.008414 dsr 8.13 cost True pre 100.0

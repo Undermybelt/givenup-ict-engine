@@ -1,0 +1,63 @@
+{
+  "run_id": "20260512T010454+0800-codex-board-b-220646-real-catboost-explicit-closure-v1",
+  "decision": "not_promoted",
+  "auto_quant_env_root_status": "dependency_ready_data_ready",
+  "auto_quant_004738_recorded_branch_exit": 0,
+  "auto_quant_004738_recorded_branch_results": [
+    {
+      "strategy": "RegimeRootPulseBranch",
+      "trades": 4705,
+      "total_profit_pct": 59.59,
+      "sharpe": 1.148,
+      "win_rate_pct": 35.7705,
+      "profit_factor": 1.0872,
+      "max_drawdown_pct": -25.1489
+    },
+    {
+      "strategy": "RegimeTrendCarry",
+      "trades": 556,
+      "total_profit_pct": 70.45,
+      "sharpe": 0.4874,
+      "win_rate_pct": 34.7122,
+      "profit_factor": 1.2951,
+      "max_drawdown_pct": -18.5655
+    },
+    {
+      "strategy": "RegimeVolBreakout",
+      "trades": 515,
+      "total_profit_pct": 37.35,
+      "sharpe": 0.2928,
+      "win_rate_pct": 36.5049,
+      "profit_factor": 1.1837,
+      "max_drawdown_pct": -17.9457
+    }
+  ],
+  "pre_bayes_gate_status": "pass_neutralized",
+  "parent_regime_root": "Sideways",
+  "regime_profit_branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+  "bbn_read_only_decision_state": "accepted",
+  "bbn_application_status": "skipped_no_supported_label",
+  "catboost_train_exit": 0,
+  "catboost_train_rows": 869,
+  "catboost_current_score_rows": 4,
+  "catboost_history_score_rows": 883,
+  "external_scores_apply_exit": 0,
+  "corrected_export_exit": 0,
+  "corrected_register_exit": 0,
+  "corrected_runtime_enable_exit": 0,
+  "score_model_family": "catboost",
+  "score_source_kind": "external_model",
+  "path_ranker_runtime_ready": true,
+  "path_ranker_runtime_matches": 4,
+  "path_ranker_production_validation_rows": 869,
+  "path_ranker_observation_validation_rows": 82,
+  "structural_bundle_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+  "structural_bundle_gate": "observe",
+  "execution_candidate_source_phase": "analyze-live",
+  "execution_candidate_trade_direction": "Bull",
+  "workflow_current_focus_phase": "update",
+  "workflow_current_focus_reason_contains": "different_data_fingerprint",
+  "workflow_blocking_truth_status": "pass_neutralized",
+  "promotion_allowed": false,
+  "remaining_blocker": "execution-candidate is still analyze-live Bull artifact, not exact structural-branch promotion packet"
+}

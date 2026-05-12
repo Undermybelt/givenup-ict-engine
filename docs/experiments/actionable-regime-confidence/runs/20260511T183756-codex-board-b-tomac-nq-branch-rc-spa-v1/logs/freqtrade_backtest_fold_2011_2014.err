@@ -1,0 +1,51 @@
+2026-05-11 18:39:58,479 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-11 18:39:58,479 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-11 18:39:58,486 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-11 18:39:58,487 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-11 18:39:58,488 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy TomacNQ_KillzoneBreakout from 
+'/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_KillzoneBreakout.py'...
+2026-05-11 18:39:58,488 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-11 18:39:58,488 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-11 18:39:58,488 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-11 18:39:58,488 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-11 18:39:58,488 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-11 18:39:58,488 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.02
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: True
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive: 0.005
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.01
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: True
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-11 18:39:58,489 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 250
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-11 18:39:58,490 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-11 18:39:58,491 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-11 18:39:58,491 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-11 18:39:58,491 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-11 18:39:58,491 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-11 18:39:58,491 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-11 18:39:58,491 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-11 18:39:58,495 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-11 18:39:58,505 - freqtrade.data.history.datahandlers.idatahandler - WARNING - NQ/USD, spot, 1h, data starts at 2011-01-02 23:00:00
+2026-05-11 18:39:58,522 - freqtrade.data.converter.converter - INFO - Missing data fillup for NQ/USD, 1h: before: 24100 - after: 34992 - 45.20%
+2026-05-11 18:39:58,525 - freqtrade.optimize.backtesting - INFO - Loading data from 2011-01-02 23:00:00 up to 2014-12-30 22:00:00 (1457 days).
+2026-05-11 18:39:58,525 - freqtrade.configuration.timerange - WARNING - Moving start-date by 250 candles to account for startup time.
+2026-05-11 18:39:58,797 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-11 18:39:58,798 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy TomacNQ_KillzoneBreakout
+2026-05-11 18:39:58,799 - freqtrade.data.dataprovider - INFO - Loading data for NQ/USD 4h from 2010-11-20 08:00:00 to 2014-12-31 00:00:00
+2026-05-11 18:39:58,802 - freqtrade.data.history.datahandlers.idatahandler - WARNING - NQ/USD, spot, 4h, data starts at 2011-01-02 20:00:00
+2026-05-11 18:39:58,808 - freqtrade.data.converter.converter - INFO - Missing data fillup for NQ/USD, 4h: before: 6285 - after: 8749 - 39.20%
+2026-05-11 18:39:58,823 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2011-01-13 09:00:00 up to 2014-12-30 22:00:00 (1447 days).

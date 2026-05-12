@@ -1,0 +1,91 @@
+{
+  "run_id": "20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2",
+  "generated_at_utc": "2026-05-12T02:19:08Z",
+  "mode": "append_only_settled_readback_non_promoting",
+  "counting_rule": "refines_already_counted_101221_no_second_count",
+  "gate_result": "board_b_093854_local_cache_seed_v2=strategy_seeded_autoquant_run_attempted_binance_dns_failed_no_promotion",
+  "source_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T093854+0800-codex-board-b-htf-nursery-v1/state_htf_nursery_v1",
+  "state_copy_path": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2",
+  "managed_autoquant_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-quant",
+  "local_cache_seed": {
+    "source_cache_dir": "/Users/thrill3r/Auto-Quant/user_data/data",
+    "pairs": ["BTC_USDT", "ETH_USDT", "SOL_USDT", "BNB_USDT", "AVAX_USDT"],
+    "timeframes": ["1h", "4h", "1d"],
+    "seeded_file_count": 15,
+    "source_dest_hashes_match": true
+  },
+  "command_exits": {
+    "auto_quant_status_before": 0,
+    "seed_local_cache": 0,
+    "auto_quant_status_after_seed": 0,
+    "strategy_py_compile": 0,
+    "auto_quant_status_after_strategy_seed": 0,
+    "auto_quant_run": 1
+  },
+  "status_sequence": [
+    {
+      "name": "before_seed",
+      "status": "dependency_ready_data_missing",
+      "healthy": false,
+      "dependency_healthy": true,
+      "data_ready": false
+    },
+    {
+      "name": "after_local_cache_seed",
+      "status": "dependency_ready_seed_required",
+      "healthy": true,
+      "dependency_healthy": true,
+      "data_ready": true,
+      "blocker": "auto_quant_seed_strategies_required"
+    },
+    {
+      "name": "after_strategy_seed",
+      "status": "dependency_ready_data_ready",
+      "healthy": true,
+      "dependency_healthy": true,
+      "data_ready": true,
+      "recommended_next_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/state_local_cache_seed_v2/.deps/auto-quant/run.py"
+    }
+  ],
+  "strategy_seed": {
+    "active_strategy_count": 2,
+    "strategies": [
+      "BNBMeanRevertSharp.py",
+      "CrashReboundVolume.py"
+    ],
+    "py_compile_exit": 0
+  },
+  "auto_quant_run_result": {
+    "attempted": true,
+    "exit": 1,
+    "succeeded_backtests": 0,
+    "failed_backtests": 8,
+    "failure_class": "binance_market_metadata_dns_failure",
+    "failure_surface": "Freqtrade/CCXT load_markets for api.binance.com before cached OHLCV backtest"
+  },
+  "board_a_accounting": {
+    "accepted_rows_added": 0,
+    "every_regime_95_99_objective": false,
+    "cross_context_full_validation": false,
+    "source_control_evidence_acquired": false,
+    "explicit_user_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "artifacts": {
+    "status_before": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/command-output/00_auto_quant_status_before.out",
+    "status_after_seed": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/command-output/02_auto_quant_status_after.out",
+    "status_after_strategy_seed": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/command-output/04_auto_quant_status_after_strategy_seed.out",
+    "auto_quant_run_stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/command-output/05_auto_quant_run.out",
+    "auto_quant_run_stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/command-output/05_auto_quant_run.err",
+    "seeded_files": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/command-output/01_seeded_files.out",
+    "source_hashes": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/checks/01_seed_source_sha256.out",
+    "dest_hashes": "docs/experiments/actionable-regime-confidence/runs/20260512T101221+0800-codex-board-b-093854-local-cache-seed-v2/checks/01_seed_dest_sha256.out"
+  },
+  "next_action": "Do not repeat cache seeding or the same default Binance-backed run.py attempt. Continue with a DNS-free cached-data run path, nonzero provider-owned mature observations, or changed source/control or selected-history evidence."
+}

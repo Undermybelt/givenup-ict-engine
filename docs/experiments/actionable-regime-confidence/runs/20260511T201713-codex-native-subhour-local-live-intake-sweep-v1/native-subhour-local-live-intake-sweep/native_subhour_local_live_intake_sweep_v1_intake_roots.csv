@@ -1,0 +1,5 @@
+root,exists,present_files,required_rows_present,required_provenance_present,complete_native_subhour_package
+/tmp/ict-engine-native-subhour-source-label-intake,False,,False,False,False
+/private/tmp/ict-engine-native-subhour-source-label-intake,False,,False,False,False
+/tmp/ict-engine-source-label-equivalence-intake,False,,False,False,False
+/private/tmp/ict-engine-source-label-equivalence-intake,False,,False,False,False

@@ -1,0 +1,11 @@
+PASS active_taxonomy=MainRegimeV4
+PASS v4_completion_roots=5
+PASS accepted_v4_completion_roots=0
+PASS prior_v2_slots_not_promoted=true
+PASS candidate_v2_slots_for_v4_reaudit=48
+PASS missing_or_rejected_slots=564
+PASS mendeley_v3_blocked=true
+PASS dune_export_materialized=false
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false

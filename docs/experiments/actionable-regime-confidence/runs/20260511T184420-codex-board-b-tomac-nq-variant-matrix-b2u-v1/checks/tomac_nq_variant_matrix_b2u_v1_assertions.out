@@ -1,0 +1,12 @@
+run_id=20260511T184420+0800-codex-board-b-tomac-nq-variant-matrix-b2u-v1
+recipe_id=TomacNQRootAwareVariantMatrixB2U
+pair=NQ/USD
+variant_count=5
+variant_matrix_trade_rows=5109
+selected_trade_rows=2135
+gate_result=fail:required_root_branch_hard_gates_failed
+stable_profit_score=66.047183
+branch_paths_passed=0
+selected_root_trade_counts={'Bull': 431, 'Bear': 522, 'Sideways': 1119, 'Crisis': 63, 'Manipulation(scoped)': 0}
+matrix_root_trade_counts={'Bull': 1232, 'Bear': 1187, 'Sideways': 2579, 'Crisis': 111, 'Manipulation(scoped)': 0}
+report_json=docs/experiments/actionable-regime-confidence/runs/20260511T184420-codex-board-b-tomac-nq-variant-matrix-b2u-v1/branch-rc-spa/tomac_nq_variant_matrix_branch_rc_spa_report_v1.json

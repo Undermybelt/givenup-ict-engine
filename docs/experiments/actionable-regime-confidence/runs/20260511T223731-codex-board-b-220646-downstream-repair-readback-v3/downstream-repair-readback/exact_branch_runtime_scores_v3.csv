@@ -1,0 +1,5 @@
+candidate_set_id,path_id,raw_path_score
+structural-feedback-history:SRC_ROOT_CARRY_LONG_220646:91bfddef56ea7e15,Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12,0.5893175560225903
+structural-feedback-history:SRC_ROOT_CARRY_LONG_220646:8a0c5b62149aa7ee,Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12,0.5506854256388609
+structural-feedback-history:SRC_ROOT_CARRY_LONG_220646:d7c4403b9a112d68,Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12,0.5852012726553506
+structural-feedback-history:SRC_ROOT_CARRY_LONG_220646:a60d5382295d93c1,Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12,0.5757819264860429

@@ -1,0 +1,86 @@
+[
+  {
+    "artifact_id": "ensemble-vote:factor-research:2026-05-10T09:19:40Z",
+    "generated_at": "2026-05-10T09:19:40.865800Z",
+    "symbol": "QQQ",
+    "source_phase": "factor-research",
+    "source_run_id": "research:QQQ:20260510T091940.788Z",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "04bcc39de17e1aa8",
+      "config_hash": "37e8da6bb93638a4",
+      "data_fingerprint": "d50376f1a81feb5d"
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "final_action": "observe",
+    "recommended_command": "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+    "human_next_triage": "hard_blocked=false ensemble_action=observe consensus=0.066 regime=research_iteration jump_gate_bias=relax_if_other_gates_clear command=ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+    "hard_block": {
+      "active": false,
+      "stage": null,
+      "status": null,
+      "reason": null,
+      "evidence": [],
+      "command": null,
+      "human_action": null
+    },
+    "confidence": 0.6600000000000001,
+    "consensus_strength": 0.066,
+    "disagreement_flags": [
+      "executor_disagreement:observe_vs_Observe"
+    ],
+    "executor_summaries": [
+      "executor=catboost_file action=observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=relax_if_other_gates_clear adjusted_confidence=0.660",
+      "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=relax_if_other_gates_clear adjusted_confidence=0.660"
+    ],
+    "split_explanations": [
+      "gating_status=research_iteration",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "posterior_override=research_iteration:0.594",
+      "gating_status=research_iteration",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high"
+    ],
+    "executor_scorecards": [],
+    "executor_scorecards_source": "persisted",
+    "posterior_fingerprint": "d50376f1a81feb5d",
+    "posterior_normalization_status": "normalized",
+    "posterior_active_regime": "research_iteration",
+    "posterior_confidence": 0.5,
+    "posterior_probabilities": {
+      "fallback": 0.5938422469438279,
+      "research_iteration": 0.4061577530561721
+    },
+    "posterior_evidence": [
+      "primary:480 bars path=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+      "higher_timeframe_direction_bias=neutral",
+      "higher_timeframe_alignment_score=1.0000",
+      "lower_timeframe_entry_alignment_score=1.0000",
+      "market_state_primary_regime=RangeConsolidation",
+      "market_state_secondary_regime=WideRange",
+      "market_state_overall_confidence=0.678",
+      "market_state_bbn_market_regime=range",
+      "market_state_bbn_liquidity_context=neutral",
+      "market_state_evidence=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.678",
+      "market_state_evidence=volatility=NormalVol:0.715 liquidity=NormalLiquidity:0.335 structure=Trending:0.853 behavior=FOMO:0.650",
+      "market_state_evidence=rationale=volatility=NormalVol conf=0.72",
+      "market_state_evidence=rationale=structure=Trending conf=0.85",
+      "market_state_evidence=rationale=behavior=FOMO conf=0.65",
+      "market_state_evidence=rationale=primary=RangeConsolidation secondary=WideRange overall=0.68",
+      "structure_ict_pda_context_events=m1:0|m5:0|m15:0|m30:0|h1:0|h4:0|d1:0|w1:0"
+    ]
+  }
+]

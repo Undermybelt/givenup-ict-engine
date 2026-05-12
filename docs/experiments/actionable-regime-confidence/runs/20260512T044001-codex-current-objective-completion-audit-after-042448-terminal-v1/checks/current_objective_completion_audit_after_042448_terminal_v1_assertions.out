@@ -1,0 +1,9 @@
+PASS run_id=20260512T044001-codex-current-objective-completion-audit-after-042448-terminal-v1
+PASS gate_result=current_objective_completion_audit_after_042448_terminal_v1=not_complete_source_roots_absent_confidence_failed_downstream_blocked
+PASS required_roots_present=false
+PASS source_041410_accepted_labels=0
+PASS predictive_041656_accepted_labels=0
+PASS histgb_042448_accepted_labels=0
+PASS autoquant_runtime_succeeded=true
+PASS strict_full_objective=false
+PASS update_goal=false

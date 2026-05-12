@@ -1,0 +1,13 @@
+label,market_family,high_conf_rows
+Bear,india_equity_index,0
+Bear,us_index,3
+Bear,us_single_stock,49
+Bull,india_equity_index,837
+Bull,us_index,795
+Bull,us_single_stock,8561
+Crisis,india_equity_index,276
+Crisis,us_index,0
+Crisis,us_single_stock,0
+Sideways,india_equity_index,328
+Sideways,us_index,1671
+Sideways,us_single_stock,6687

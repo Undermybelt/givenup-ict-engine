@@ -1,0 +1,4 @@
+regime_profit_branch_path,parent_regime_root,bbn_hint_node,bbn_evidence_state,bbn_evidence_weight,trade_count,win_rate,mean_edge,reason
+Bull -> TrendExpansion -> DrawdownRebound -> CrashRebound,Bull,market_regime_context,soft_context_research_watch_not_mutation,0.0,50,0.7,0.01661846035325272,branch path is proxy-only and not Board A trade-root accepted
+Bear -> DowntrendStress -> CapitulationRebound -> CrashRebound,Bear,market_regime_context,soft_context_research_watch_not_mutation,0.0,32,0.6875,0.003300900117899184,branch path is proxy-only and not Board A trade-root accepted
+Sideways -> RangeRecovery -> MeanReversionRebound -> CrashRebound,Sideways,market_regime_context,soft_context_research_watch_not_mutation,0.0,123,0.6666666666666666,0.005194483477176642,branch path is proxy-only and not Board A trade-root accepted

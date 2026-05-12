@@ -1,0 +1,13 @@
+run_id=20260511T043321+0800-codex-systemslab-event-rank-manipulation-gate
+gate_result=blocked_systemslab_event_rank_below_95
+accepted_95=false
+best_timeframe=15S
+best_features=std_rush_order+avg_rush_order+avg_price_max
+calibration_wilson_lcb_95=0.827296901491
+test_wilson_lcb_95=0.871003462599
+calibration_support=63
+test_support=64
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed_to_repo=false
+trade_usable=false

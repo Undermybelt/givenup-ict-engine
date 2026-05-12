@@ -1,0 +1,59 @@
+{
+  "run_id": "20260512T013436-codex-provider-autoquant-readonly-refresh-after-0130-v1",
+  "gate_result": "provider_autoquant_readonly_refresh_after_0130_v1=readiness_refreshed_no_promotion_source_control_blocked_autoquant_data_missing",
+  "runtime_state_dir": "/tmp/ict-engine-board-a-provider-autoquant-readonly-refresh-20260512T013436",
+  "autoquant_state_dir": "/tmp/ict-engine-board-a-provider-autoquant-readonly-refresh-20260512T013436-autoquant",
+  "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "provider_findings": {
+    "yfinance_ready": true,
+    "kraken_cli_ready": true,
+    "ibkr_ready": false,
+    "ibkr_reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "tradingview_mcp_ready": false,
+    "tradingview_mcp_reason": "tradingview_mcp_connectivity_probe_failed",
+    "kraken_public_ready": false,
+    "kraken_public_reason": "python3_provider_dependencies_missing"
+  },
+  "autoquant": {
+    "initial_status": "missing_dependency",
+    "bootstrap_exit": 0,
+    "dependency_commit_after_bootstrap": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "prepare_exit": 1,
+    "prepare_blocker": "binance_exchange_info_dns_failure",
+    "status_after_prepare": "dependency_ready_data_missing",
+    "data_ready_after_prepare": false
+  },
+  "downstream_status": {
+    "analyze_live_nq_yfinance_exit": 143,
+    "analyze_live_nq_yfinance_output_bytes": 0,
+    "pre_bayes_exit": 0,
+    "pre_bayes_has_latest_policy": false,
+    "pre_bayes_has_latest_bridge": false,
+    "policy_training_exit": 0,
+    "policy_training_matched_rows": 0,
+    "workflow_execution_candidate_exit": 0,
+    "workflow_actionable": false,
+    "workflow_review_status": "observe",
+    "structural_path_ranking_export_exit": 0,
+    "structural_path_ranking_rows": 1,
+    "structural_path_ranking_mature_rows": 0
+  },
+  "root_status": {
+    "r6_owner_export_root_present": false,
+    "r3_native_subhour_root_present": false,
+    "r5_recency_root_present": false,
+    "source_label_equivalence_root_present": true,
+    "source_label_equivalence_confidence_blocked": true
+  },
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false
+}

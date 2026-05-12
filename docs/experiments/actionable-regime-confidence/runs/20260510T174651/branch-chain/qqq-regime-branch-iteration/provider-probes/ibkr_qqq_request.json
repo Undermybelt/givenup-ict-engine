@@ -1,0 +1,26 @@
+{
+  "market_key": "QQQ-regime-branch-iteration-20260510",
+  "interval": "1h",
+  "start": "2026-04-10T00:00:00Z",
+  "end": "2026-05-10T00:00:00Z",
+  "count": 720,
+  "options_volatility_proxy_symbol": "^VIX",
+  "related_roles": [
+    "qqq_ibkr_reference"
+  ],
+  "provider_preferences": {
+    "qqq_ibkr_reference": "ibkr"
+  },
+  "symbol_overrides": {
+    "qqq_ibkr_reference": {
+      "display_symbol": "QQQ",
+      "ibkr": {
+        "symbol": "QQQ",
+        "sec_type": "STK",
+        "exchange": "SMART",
+        "currency": "USD",
+        "primary_exchange": "NASDAQ"
+      }
+    }
+  }
+}

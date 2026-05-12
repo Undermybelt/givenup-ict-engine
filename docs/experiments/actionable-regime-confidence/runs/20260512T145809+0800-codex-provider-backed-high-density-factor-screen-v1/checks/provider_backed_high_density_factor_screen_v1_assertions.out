@@ -1,0 +1,6 @@
+pass:trade_rows_ge_500
+pass:branch_path_fields_present
+fail_closed:not_auto_quant_backtest
+fail_closed:not_downstream_admitted
+promotion_allowed=false
+trade_usable=false

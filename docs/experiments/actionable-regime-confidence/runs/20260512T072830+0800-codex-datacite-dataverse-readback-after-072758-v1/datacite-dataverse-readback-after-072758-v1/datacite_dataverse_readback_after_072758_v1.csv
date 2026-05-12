@@ -1,0 +1,13 @@
+source,query,exit,result_count,classification
+datacite,3Red Trading spoofing owner export,0,0,no_result
+datacite,direct manipulation positive rows matched controls,0,11,false_positive_non_market_non_required
+datacite,MainRegimeV2,0,0,no_result
+datacite,native_subhour_source_label_rows,0,0,no_result
+datacite,Oystacher spoofing futures order book dataset,0,0,no_result
+datacite,stock_market_regimes_2026_extension,0,0,no_result
+dataverse,3Red Trading spoofing owner export,0,5,false_positive_foreign_trade_erc20_context
+dataverse,direct manipulation positive rows matched controls,0,5,false_positive_lobbying_matching_biophysics_image_manipulation
+dataverse,MainRegimeV2,0,0,no_result
+dataverse,native_subhour_source_label_rows,0,0,no_result
+dataverse,Oystacher spoofing futures order book dataset,0,5,false_positive_order_learning_future_orders_confiscation
+dataverse,stock_market_regimes_2026_extension,0,0,no_result

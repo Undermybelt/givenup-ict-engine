@@ -1,0 +1,3920 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T072000-codex-yfinance-root-gate-score-matrix/checks/yfinance_root_gate_score_matrix_assertions.out",
+    "score_json": "docs/experiments/actionable-regime-confidence/runs/20260511T072000-codex-yfinance-root-gate-score-matrix/score-matrix/yfinance_root_gate_score_matrix.json",
+    "score_md": "docs/experiments/actionable-regime-confidence/runs/20260511T072000-codex-yfinance-root-gate-score-matrix/score-matrix/yfinance_root_gate_score_matrix.md",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T072000-codex-yfinance-root-gate-score-matrix/scripts/yfinance_root_gate_score_matrix.py"
+  },
+  "completion_accounting": {
+    "accepted_full_cycle_full_universe": false,
+    "full_matrix_scored": true,
+    "why_not_accepted": [
+      "This is close-only rule/gate scoring, not source-labeled calibration.",
+      "No per-cell calibration/test Wilson95 can be computed without root labels for every symbol/timeframe.",
+      "Crisis scoring uses close-range proxy coverage only; it is not the original high/low feature table.",
+      "Manipulation is not an OHLCV bar root and must remain in direct-event variety lanes."
+    ]
+  },
+  "goal_achieved": false,
+  "next_action": "Build labeled calibration panels for the ready yfinance cells or mark cells unsupported; separately enumerate accepted/blocked direct Manipulation varieties.",
+  "objective": "Score accepted MainRegimeV2 root gate expressions over the yfinance full species/cycle matrix.",
+  "raw_ohlcv_committed": false,
+  "root_summary": {
+    "Bear": {
+      "hit_cells": 52,
+      "scored_cells": 126,
+      "symbols_with_hits": [
+        "CL=F",
+        "DIA",
+        "ES=F",
+        "GC=F",
+        "GLD",
+        "NQ=F",
+        "QQQ",
+        "SPY",
+        "USO",
+        "YM=F",
+        "^DJI",
+        "^GSPC",
+        "^NDX",
+        "^VIX"
+      ],
+      "timeframes_with_hits": [
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "4h",
+        "1d",
+        "1w",
+        "1mo"
+      ],
+      "total_candidate_rows": 7685
+    },
+    "Bull": {
+      "hit_cells": 112,
+      "scored_cells": 126,
+      "symbols_with_hits": [
+        "CL=F",
+        "DIA",
+        "ES=F",
+        "GC=F",
+        "GLD",
+        "NQ=F",
+        "QQQ",
+        "SPY",
+        "USO",
+        "YM=F",
+        "^DJI",
+        "^GSPC",
+        "^NDX",
+        "^VIX"
+      ],
+      "timeframes_with_hits": [
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "4h",
+        "1d",
+        "1w",
+        "1mo"
+      ],
+      "total_candidate_rows": 129834
+    },
+    "Crisis": {
+      "hit_cells": 2,
+      "scored_cells": 126,
+      "symbols_with_hits": [
+        "CL=F",
+        "USO"
+      ],
+      "timeframes_with_hits": [
+        "1d",
+        "1w"
+      ],
+      "total_candidate_rows": 29
+    },
+    "Sideways": {
+      "hit_cells": 95,
+      "scored_cells": 126,
+      "symbols_with_hits": [
+        "CL=F",
+        "DIA",
+        "ES=F",
+        "GC=F",
+        "GLD",
+        "NQ=F",
+        "QQQ",
+        "SPY",
+        "USO",
+        "YM=F",
+        "^DJI",
+        "^GSPC",
+        "^NDX",
+        "^VIX"
+      ],
+      "timeframes_with_hits": [
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "total_candidate_rows": 268486
+    }
+  },
+  "run_id": "20260511T072000+0800-codex-yfinance-root-gate-score-matrix",
+  "runtime_code_changed": false,
+  "score_rows": [
+    {
+      "bars": 6899,
+      "first_ts": "2026-05-03 22:10:00+00:00",
+      "last_ts": "2026-05-10 22:58:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6772
+        },
+        "Bull": {
+          "candidate_coverage": 0.0751624335499114,
+          "candidate_rows": 509,
+          "evaluated_rows": 6772
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6772
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9081512108682812,
+          "candidate_rows": 6150,
+          "evaluated_rows": 6772
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 2727,
+      "first_ts": "2026-04-30 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:59:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2600
+        },
+        "Bull": {
+          "candidate_coverage": 0.8257692307692308,
+          "candidate_rows": 2147,
+          "evaluated_rows": 2600
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2600
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 2600,
+          "evaluated_rows": 2600
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 6515,
+      "first_ts": "2026-05-04 04:32:00+00:00",
+      "last_ts": "2026-05-10 22:58:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6388
+        },
+        "Bull": {
+          "candidate_coverage": 0.9596117720726361,
+          "candidate_rows": 6130,
+          "evaluated_rows": 6388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6388
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 6388,
+          "evaluated_rows": 6388
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 6918,
+      "first_ts": "2026-05-03 22:10:00+00:00",
+      "last_ts": "2026-05-10 22:58:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6791
+        },
+        "Bull": {
+          "candidate_coverage": 0.772640259166544,
+          "candidate_rows": 5247,
+          "evaluated_rows": 6791
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6791
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 6791,
+          "evaluated_rows": 6791
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 2730,
+      "first_ts": "2026-04-30 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:59:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Bull": {
+          "candidate_coverage": 0.6477141759508259,
+          "candidate_rows": 1686,
+          "evaluated_rows": 2603
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9769496734537073,
+          "candidate_rows": 2543,
+          "evaluated_rows": 2603
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 6515,
+      "first_ts": "2026-05-04 04:32:00+00:00",
+      "last_ts": "2026-05-10 22:58:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6388
+        },
+        "Bull": {
+          "candidate_coverage": 0.8921415153412648,
+          "candidate_rows": 5699,
+          "evaluated_rows": 6388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6388
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 6388,
+          "evaluated_rows": 6388
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 2730,
+      "first_ts": "2026-04-30 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:59:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Bull": {
+          "candidate_coverage": 0.8152132155205533,
+          "candidate_rows": 2122,
+          "evaluated_rows": 2603
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 2603,
+          "evaluated_rows": 2603
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 2730,
+      "first_ts": "2026-04-30 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:59:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Bull": {
+          "candidate_coverage": 0.9085670380330388,
+          "candidate_rows": 2365,
+          "evaluated_rows": 2603
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 2603,
+          "evaluated_rows": 2603
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 2730,
+      "first_ts": "2026-04-30 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:59:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Bull": {
+          "candidate_coverage": 0.02228198232808298,
+          "candidate_rows": 58,
+          "evaluated_rows": 2603
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Sideways": {
+          "candidate_coverage": 0.857087975412985,
+          "candidate_rows": 2231,
+          "evaluated_rows": 2603
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 6487,
+      "first_ts": "2026-05-04 04:32:00+00:00",
+      "last_ts": "2026-05-10 22:58:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6360
+        },
+        "Bull": {
+          "candidate_coverage": 0.9345911949685535,
+          "candidate_rows": 5944,
+          "evaluated_rows": 6360
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 6360
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 6360,
+          "evaluated_rows": 6360
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 2730,
+      "first_ts": "2026-04-30 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:59:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Bull": {
+          "candidate_coverage": 0.8244333461390703,
+          "candidate_rows": 2146,
+          "evaluated_rows": 2603
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 2603,
+          "evaluated_rows": 2603
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 2730,
+      "first_ts": "2026-04-30 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:59:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Bull": {
+          "candidate_coverage": 0.90472531694199,
+          "candidate_rows": 2355,
+          "evaluated_rows": 2603
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 2603,
+          "evaluated_rows": 2603
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 2730,
+      "first_ts": "2026-04-30 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:59:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Bull": {
+          "candidate_coverage": 0.8059930849020361,
+          "candidate_rows": 2098,
+          "evaluated_rows": 2603
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2603
+        },
+        "Sideways": {
+          "candidate_coverage": 1.0,
+          "candidate_rows": 2603,
+          "evaluated_rows": 2603
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 5425,
+      "first_ts": "2026-04-30 07:15:00+00:00",
+      "last_ts": "2026-05-08 20:14:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 5298
+        },
+        "Bull": {
+          "candidate_coverage": 0.044167610419026046,
+          "candidate_rows": 234,
+          "evaluated_rows": 5298
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 5298
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8888259720649302,
+          "candidate_rows": 4709,
+          "evaluated_rows": 5298
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "1m"
+    },
+    {
+      "bars": 13375,
+      "first_ts": "2026-03-01 23:10:00+00:00",
+      "last_ts": "2026-05-10 22:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.00022644927536231884,
+          "candidate_rows": 3,
+          "evaluated_rows": 13248
+        },
+        "Bull": {
+          "candidate_coverage": 0.018040458937198068,
+          "candidate_rows": 239,
+          "evaluated_rows": 13248
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13248
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6566274154589372,
+          "candidate_rows": 8699,
+          "evaluated_rows": 13248
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4680,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Bull": {
+          "candidate_coverage": 0.3248407643312102,
+          "candidate_rows": 1479,
+          "evaluated_rows": 4553
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9637601581374917,
+          "candidate_rows": 4388,
+          "evaluated_rows": 4553
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 13430,
+      "first_ts": "2026-03-01 23:10:00+00:00",
+      "last_ts": "2026-05-10 22:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13303
+        },
+        "Bull": {
+          "candidate_coverage": 0.6560926106893182,
+          "candidate_rows": 8728,
+          "evaluated_rows": 13303
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13303
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9893257160039088,
+          "candidate_rows": 13161,
+          "evaluated_rows": 13303
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 13430,
+      "first_ts": "2026-03-01 23:10:00+00:00",
+      "last_ts": "2026-05-10 22:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13303
+        },
+        "Bull": {
+          "candidate_coverage": 0.31707133729234005,
+          "candidate_rows": 4218,
+          "evaluated_rows": 13303
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13303
+        },
+        "Sideways": {
+          "candidate_coverage": 0.948132000300684,
+          "candidate_rows": 12613,
+          "evaluated_rows": 13303
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4680,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Bull": {
+          "candidate_coverage": 0.1726334285086756,
+          "candidate_rows": 786,
+          "evaluated_rows": 4553
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Sideways": {
+          "candidate_coverage": 0.7898089171974523,
+          "candidate_rows": 3596,
+          "evaluated_rows": 4553
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 13429,
+      "first_ts": "2026-03-01 23:10:00+00:00",
+      "last_ts": "2026-05-10 22:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13302
+        },
+        "Bull": {
+          "candidate_coverage": 0.5633739287325215,
+          "candidate_rows": 7494,
+          "evaluated_rows": 13302
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13302
+        },
+        "Sideways": {
+          "candidate_coverage": 0.986468200270636,
+          "candidate_rows": 13122,
+          "evaluated_rows": 13302
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4680,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Bull": {
+          "candidate_coverage": 0.3360421699978036,
+          "candidate_rows": 1530,
+          "evaluated_rows": 4553
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9512409400395344,
+          "candidate_rows": 4331,
+          "evaluated_rows": 4553
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4680,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Bull": {
+          "candidate_coverage": 0.4170876345266857,
+          "candidate_rows": 1899,
+          "evaluated_rows": 4553
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9760597408302218,
+          "candidate_rows": 4444,
+          "evaluated_rows": 4553
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4680,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.000658906215681968,
+          "candidate_rows": 3,
+          "evaluated_rows": 4553
+        },
+        "Bull": {
+          "candidate_coverage": 0.018669009444322426,
+          "candidate_rows": 85,
+          "evaluated_rows": 4553
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Sideways": {
+          "candidate_coverage": 0.43883153964419064,
+          "candidate_rows": 1998,
+          "evaluated_rows": 4553
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 13468,
+      "first_ts": "2026-03-01 23:10:00+00:00",
+      "last_ts": "2026-05-10 22:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13341
+        },
+        "Bull": {
+          "candidate_coverage": 0.6107488194288284,
+          "candidate_rows": 8148,
+          "evaluated_rows": 13341
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13341
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9902556030282588,
+          "candidate_rows": 13211,
+          "evaluated_rows": 13341
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4680,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Bull": {
+          "candidate_coverage": 0.32769602459916536,
+          "candidate_rows": 1492,
+          "evaluated_rows": 4553
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9637601581374917,
+          "candidate_rows": 4388,
+          "evaluated_rows": 4553
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4680,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Bull": {
+          "candidate_coverage": 0.4133538326378212,
+          "candidate_rows": 1882,
+          "evaluated_rows": 4553
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9762793762354491,
+          "candidate_rows": 4445,
+          "evaluated_rows": 4553
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4680,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:55:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Bull": {
+          "candidate_coverage": 0.3353832637821217,
+          "candidate_rows": 1527,
+          "evaluated_rows": 4553
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4553
+        },
+        "Sideways": {
+          "candidate_coverage": 0.951021304634307,
+          "candidate_rows": 4330,
+          "evaluated_rows": 4553
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 9114,
+      "first_ts": "2026-02-16 09:00:00+00:00",
+      "last_ts": "2026-05-08 20:10:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.021809280071213976,
+          "candidate_rows": 196,
+          "evaluated_rows": 8987
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 8987
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 8987
+        },
+        "Sideways": {
+          "candidate_coverage": 0.2879715144097029,
+          "candidate_rows": 2588,
+          "evaluated_rows": 8987
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "5m"
+    },
+    {
+      "bars": 4466,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.01751555657985711,
+          "candidate_rows": 76,
+          "evaluated_rows": 4339
+        },
+        "Bull": {
+          "candidate_coverage": 0.008757778289928554,
+          "candidate_rows": 38,
+          "evaluated_rows": 4339
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4339
+        },
+        "Sideways": {
+          "candidate_coverage": 0.33002996082046554,
+          "candidate_rows": 1432,
+          "evaluated_rows": 4339
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 1560,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Bull": {
+          "candidate_coverage": 0.14305652477320308,
+          "candidate_rows": 205,
+          "evaluated_rows": 1433
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8199581297976274,
+          "candidate_rows": 1175,
+          "evaluated_rows": 1433
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 4497,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4370
+        },
+        "Bull": {
+          "candidate_coverage": 0.4615560640732265,
+          "candidate_rows": 2017,
+          "evaluated_rows": 4370
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4370
+        },
+        "Sideways": {
+          "candidate_coverage": 0.956979405034325,
+          "candidate_rows": 4182,
+          "evaluated_rows": 4370
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 4486,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4359
+        },
+        "Bull": {
+          "candidate_coverage": 0.17595778848359717,
+          "candidate_rows": 767,
+          "evaluated_rows": 4359
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4359
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8332186281257169,
+          "candidate_rows": 3632,
+          "evaluated_rows": 4359
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 1560,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Bull": {
+          "candidate_coverage": 0.03210048848569435,
+          "candidate_rows": 46,
+          "evaluated_rows": 1433
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Sideways": {
+          "candidate_coverage": 0.5610607117934403,
+          "candidate_rows": 804,
+          "evaluated_rows": 1433
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 4497,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4370
+        },
+        "Bull": {
+          "candidate_coverage": 0.4112128146453089,
+          "candidate_rows": 1797,
+          "evaluated_rows": 4370
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4370
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9178489702517163,
+          "candidate_rows": 4011,
+          "evaluated_rows": 4370
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 1560,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Bull": {
+          "candidate_coverage": 0.18143754361479414,
+          "candidate_rows": 260,
+          "evaluated_rows": 1433
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6699232379623168,
+          "candidate_rows": 960,
+          "evaluated_rows": 1433
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 1560,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Bull": {
+          "candidate_coverage": 0.32937892533147245,
+          "candidate_rows": 472,
+          "evaluated_rows": 1433
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Sideways": {
+          "candidate_coverage": 0.7990230286113049,
+          "candidate_rows": 1145,
+          "evaluated_rows": 1433
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 1560,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0006978367062107466,
+          "candidate_rows": 1,
+          "evaluated_rows": 1433
+        },
+        "Bull": {
+          "candidate_coverage": 0.005582693649685973,
+          "candidate_rows": 8,
+          "evaluated_rows": 1433
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Sideways": {
+          "candidate_coverage": 0.18771807397069085,
+          "candidate_rows": 269,
+          "evaluated_rows": 1433
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 4497,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4370
+        },
+        "Bull": {
+          "candidate_coverage": 0.4249427917620137,
+          "candidate_rows": 1857,
+          "evaluated_rows": 4370
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4370
+        },
+        "Sideways": {
+          "candidate_coverage": 0.9553775743707094,
+          "candidate_rows": 4175,
+          "evaluated_rows": 4370
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 1560,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Bull": {
+          "candidate_coverage": 0.14445219818562458,
+          "candidate_rows": 207,
+          "evaluated_rows": 1433
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8171667829727843,
+          "candidate_rows": 1171,
+          "evaluated_rows": 1433
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 1560,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Bull": {
+          "candidate_coverage": 0.3244940683879972,
+          "candidate_rows": 465,
+          "evaluated_rows": 1433
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8004187020237264,
+          "candidate_rows": 1147,
+          "evaluated_rows": 1433
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 1560,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:45:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Bull": {
+          "candidate_coverage": 0.19190509420795535,
+          "candidate_rows": 275,
+          "evaluated_rows": 1433
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1433
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6692254012561061,
+          "candidate_rows": 959,
+          "evaluated_rows": 1433
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 3039,
+      "first_ts": "2026-02-16 09:00:00+00:00",
+      "last_ts": "2026-05-08 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.09237637362637363,
+          "candidate_rows": 269,
+          "evaluated_rows": 2912
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2912
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2912
+        },
+        "Sideways": {
+          "candidate_coverage": 0.07383241758241758,
+          "candidate_rows": 215,
+          "evaluated_rows": 2912
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "15m"
+    },
+    {
+      "bars": 2233,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.02849002849002849,
+          "candidate_rows": 60,
+          "evaluated_rows": 2106
+        },
+        "Bull": {
+          "candidate_coverage": 0.009021842355175688,
+          "candidate_rows": 19,
+          "evaluated_rows": 2106
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2106
+        },
+        "Sideways": {
+          "candidate_coverage": 0.1761633428300095,
+          "candidate_rows": 371,
+          "evaluated_rows": 2106
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 780,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Bull": {
+          "candidate_coverage": 0.11332312404287902,
+          "candidate_rows": 74,
+          "evaluated_rows": 653
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6937212863705973,
+          "candidate_rows": 453,
+          "evaluated_rows": 653
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 2249,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2122
+        },
+        "Bull": {
+          "candidate_coverage": 0.4019792648444863,
+          "candidate_rows": 853,
+          "evaluated_rows": 2122
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2122
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8798303487276155,
+          "candidate_rows": 1867,
+          "evaluated_rows": 2122
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 2243,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2116
+        },
+        "Bull": {
+          "candidate_coverage": 0.11247637051039698,
+          "candidate_rows": 238,
+          "evaluated_rows": 2116
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2116
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6786389413988658,
+          "candidate_rows": 1436,
+          "evaluated_rows": 2116
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 780,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Bull": {
+          "candidate_coverage": 0.007656967840735069,
+          "candidate_rows": 5,
+          "evaluated_rows": 653
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Sideways": {
+          "candidate_coverage": 0.4226646248085758,
+          "candidate_rows": 276,
+          "evaluated_rows": 653
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 2249,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2122
+        },
+        "Bull": {
+          "candidate_coverage": 0.3633364750235627,
+          "candidate_rows": 771,
+          "evaluated_rows": 2122
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2122
+        },
+        "Sideways": {
+          "candidate_coverage": 0.7836946277097078,
+          "candidate_rows": 1663,
+          "evaluated_rows": 2122
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 780,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Bull": {
+          "candidate_coverage": 0.15773353751914243,
+          "candidate_rows": 103,
+          "evaluated_rows": 653
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Sideways": {
+          "candidate_coverage": 0.48392036753445633,
+          "candidate_rows": 316,
+          "evaluated_rows": 653
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 780,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Bull": {
+          "candidate_coverage": 0.3016845329249617,
+          "candidate_rows": 197,
+          "evaluated_rows": 653
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6355283307810107,
+          "candidate_rows": 415,
+          "evaluated_rows": 653
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 780,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.010719754977029096,
+          "candidate_rows": 7,
+          "evaluated_rows": 653
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Sideways": {
+          "candidate_coverage": 0.02450229709035222,
+          "candidate_rows": 16,
+          "evaluated_rows": 653
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 2249,
+      "first_ts": "2026-03-01 23:00:00+00:00",
+      "last_ts": "2026-05-10 22:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2122
+        },
+        "Bull": {
+          "candidate_coverage": 0.31950989632422244,
+          "candidate_rows": 678,
+          "evaluated_rows": 2122
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2122
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8807728557964185,
+          "candidate_rows": 1869,
+          "evaluated_rows": 2122
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 780,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Bull": {
+          "candidate_coverage": 0.11179173047473201,
+          "candidate_rows": 73,
+          "evaluated_rows": 653
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6967840735068913,
+          "candidate_rows": 455,
+          "evaluated_rows": 653
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 780,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Bull": {
+          "candidate_coverage": 0.3016845329249617,
+          "candidate_rows": 197,
+          "evaluated_rows": 653
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6493108728943339,
+          "candidate_rows": 424,
+          "evaluated_rows": 653
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 780,
+      "first_ts": "2026-02-12 14:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Bull": {
+          "candidate_coverage": 0.15926493108728942,
+          "candidate_rows": 104,
+          "evaluated_rows": 653
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 653
+        },
+        "Sideways": {
+          "candidate_coverage": 0.48545176110260335,
+          "candidate_rows": 317,
+          "evaluated_rows": 653
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 1578,
+      "first_ts": "2026-02-16 09:00:00+00:00",
+      "last_ts": "2026-05-08 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.15851137146795313,
+          "candidate_rows": 230,
+          "evaluated_rows": 1451
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1451
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1451
+        },
+        "Sideways": {
+          "candidate_coverage": 0.005513439007580979,
+          "candidate_rows": 8,
+          "evaluated_rows": 1451
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "30m"
+    },
+    {
+      "bars": 13447,
+      "first_ts": "2023-12-15 05:00:00+00:00",
+      "last_ts": "2026-05-10 22:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0038288288288288288,
+          "candidate_rows": 51,
+          "evaluated_rows": 13320
+        },
+        "Bull": {
+          "candidate_coverage": 0.12274774774774774,
+          "candidate_rows": 1635,
+          "evaluated_rows": 13320
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13320
+        },
+        "Sideways": {
+          "candidate_coverage": 0.4810810810810811,
+          "candidate_rows": 6408,
+          "evaluated_rows": 13320
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 5068,
+      "first_ts": "2023-06-12 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4941
+        },
+        "Bull": {
+          "candidate_coverage": 0.25318761384335153,
+          "candidate_rows": 1251,
+          "evaluated_rows": 4941
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4941
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6029143897996357,
+          "candidate_rows": 2979,
+          "evaluated_rows": 4941
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 13649,
+      "first_ts": "2023-12-15 05:00:00+00:00",
+      "last_ts": "2026-05-10 22:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13522
+        },
+        "Bull": {
+          "candidate_coverage": 0.4113296849578465,
+          "candidate_rows": 5562,
+          "evaluated_rows": 13522
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13522
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8605975447419021,
+          "candidate_rows": 11637,
+          "evaluated_rows": 13522
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 13695,
+      "first_ts": "2023-12-15 05:00:00+00:00",
+      "last_ts": "2026-05-10 22:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13568
+        },
+        "Bull": {
+          "candidate_coverage": 0.26665683962264153,
+          "candidate_rows": 3618,
+          "evaluated_rows": 13568
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13568
+        },
+        "Sideways": {
+          "candidate_coverage": 0.7074734669811321,
+          "candidate_rows": 9599,
+          "evaluated_rows": 13568
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 5067,
+      "first_ts": "2023-06-12 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4940
+        },
+        "Bull": {
+          "candidate_coverage": 0.20384615384615384,
+          "candidate_rows": 1007,
+          "evaluated_rows": 4940
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4940
+        },
+        "Sideways": {
+          "candidate_coverage": 0.4680161943319838,
+          "candidate_rows": 2312,
+          "evaluated_rows": 4940
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 13646,
+      "first_ts": "2023-12-15 05:00:00+00:00",
+      "last_ts": "2026-05-10 22:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13519
+        },
+        "Bull": {
+          "candidate_coverage": 0.33493601597751316,
+          "candidate_rows": 4528,
+          "evaluated_rows": 13519
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13519
+        },
+        "Sideways": {
+          "candidate_coverage": 0.729195946445743,
+          "candidate_rows": 9858,
+          "evaluated_rows": 13519
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 5069,
+      "first_ts": "2023-06-12 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4942
+        },
+        "Bull": {
+          "candidate_coverage": 0.20740590853905302,
+          "candidate_rows": 1025,
+          "evaluated_rows": 4942
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4942
+        },
+        "Sideways": {
+          "candidate_coverage": 0.4558883043302307,
+          "candidate_rows": 2253,
+          "evaluated_rows": 4942
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 5068,
+      "first_ts": "2023-06-12 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4941
+        },
+        "Bull": {
+          "candidate_coverage": 0.3159279498077312,
+          "candidate_rows": 1561,
+          "evaluated_rows": 4941
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4941
+        },
+        "Sideways": {
+          "candidate_coverage": 0.58267557174661,
+          "candidate_rows": 2879,
+          "evaluated_rows": 4941
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 5068,
+      "first_ts": "2023-06-12 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0010119409026512851,
+          "candidate_rows": 5,
+          "evaluated_rows": 4941
+        },
+        "Bull": {
+          "candidate_coverage": 0.024691358024691357,
+          "candidate_rows": 122,
+          "evaluated_rows": 4941
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4941
+        },
+        "Sideways": {
+          "candidate_coverage": 0.2040072859744991,
+          "candidate_rows": 1008,
+          "evaluated_rows": 4941
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 13642,
+      "first_ts": "2023-12-15 05:00:00+00:00",
+      "last_ts": "2026-05-10 22:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13515
+        },
+        "Bull": {
+          "candidate_coverage": 0.34532001479837215,
+          "candidate_rows": 4667,
+          "evaluated_rows": 13515
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 13515
+        },
+        "Sideways": {
+          "candidate_coverage": 0.8678505364409915,
+          "candidate_rows": 11729,
+          "evaluated_rows": 13515
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 5069,
+      "first_ts": "2023-06-12 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4942
+        },
+        "Bull": {
+          "candidate_coverage": 0.2563739376770538,
+          "candidate_rows": 1267,
+          "evaluated_rows": 4942
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4942
+        },
+        "Sideways": {
+          "candidate_coverage": 0.6027923917442332,
+          "candidate_rows": 2979,
+          "evaluated_rows": 4942
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 5069,
+      "first_ts": "2023-06-12 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4942
+        },
+        "Bull": {
+          "candidate_coverage": 0.3180898421691623,
+          "candidate_rows": 1572,
+          "evaluated_rows": 4942
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4942
+        },
+        "Sideways": {
+          "candidate_coverage": 0.5819506272764063,
+          "candidate_rows": 2876,
+          "evaluated_rows": 4942
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 5069,
+      "first_ts": "2023-06-12 13:30:00+00:00",
+      "last_ts": "2026-05-08 19:30:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4942
+        },
+        "Bull": {
+          "candidate_coverage": 0.20922703358963982,
+          "candidate_rows": 1034,
+          "evaluated_rows": 4942
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 4942
+        },
+        "Sideways": {
+          "candidate_coverage": 0.4554836098745447,
+          "candidate_rows": 2251,
+          "evaluated_rows": 4942
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 9950,
+      "first_ts": "2023-07-24 08:00:00+00:00",
+      "last_ts": "2026-05-08 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.21032271200244324,
+          "candidate_rows": 2066,
+          "evaluated_rows": 9823
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 9823
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 9823
+        },
+        "Sideways": {
+          "candidate_coverage": 0.004377481421154433,
+          "candidate_rows": 43,
+          "evaluated_rows": 9823
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "1h"
+    },
+    {
+      "bars": 3670,
+      "first_ts": "2023-12-15 04:00:00+00:00",
+      "last_ts": "2026-05-10 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.010443127293254304,
+          "candidate_rows": 37,
+          "evaluated_rows": 3543
+        },
+        "Bull": {
+          "candidate_coverage": 0.007056167090036692,
+          "candidate_rows": 25,
+          "evaluated_rows": 3543
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3543
+        },
+        "Sideways": {
+          "candidate_coverage": 0.18543607112616428,
+          "candidate_rows": 657,
+          "evaluated_rows": 3543
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 1703,
+      "first_ts": "2023-06-12 12:00:00+00:00",
+      "last_ts": "2026-05-08 16:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Bull": {
+          "candidate_coverage": 0.12436548223350254,
+          "candidate_rows": 196,
+          "evaluated_rows": 1576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.32550761421319796,
+          "candidate_rows": 513,
+          "evaluated_rows": 1576
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 3705,
+      "first_ts": "2023-12-15 04:00:00+00:00",
+      "last_ts": "2026-05-10 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3578
+        },
+        "Bull": {
+          "candidate_coverage": 0.29625489100055896,
+          "candidate_rows": 1060,
+          "evaluated_rows": 3578
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3578
+        },
+        "Sideways": {
+          "candidate_coverage": 0.5511458915595304,
+          "candidate_rows": 1972,
+          "evaluated_rows": 3578
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 3714,
+      "first_ts": "2023-12-15 04:00:00+00:00",
+      "last_ts": "2026-05-10 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.00027878449958182325,
+          "candidate_rows": 1,
+          "evaluated_rows": 3587
+        },
+        "Bull": {
+          "candidate_coverage": 0.13994981879007526,
+          "candidate_rows": 502,
+          "evaluated_rows": 3587
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3587
+        },
+        "Sideways": {
+          "candidate_coverage": 0.3883468079174798,
+          "candidate_rows": 1393,
+          "evaluated_rows": 3587
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 1703,
+      "first_ts": "2023-06-12 12:00:00+00:00",
+      "last_ts": "2026-05-08 16:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Bull": {
+          "candidate_coverage": 0.02284263959390863,
+          "candidate_rows": 36,
+          "evaluated_rows": 1576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.217005076142132,
+          "candidate_rows": 342,
+          "evaluated_rows": 1576
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 3702,
+      "first_ts": "2023-12-15 04:00:00+00:00",
+      "last_ts": "2026-05-10 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3575
+        },
+        "Bull": {
+          "candidate_coverage": 0.19552447552447552,
+          "candidate_rows": 699,
+          "evaluated_rows": 3575
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3575
+        },
+        "Sideways": {
+          "candidate_coverage": 0.4288111888111888,
+          "candidate_rows": 1533,
+          "evaluated_rows": 3575
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 1703,
+      "first_ts": "2023-06-12 12:00:00+00:00",
+      "last_ts": "2026-05-08 16:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.004441624365482234,
+          "candidate_rows": 7,
+          "evaluated_rows": 1576
+        },
+        "Bull": {
+          "candidate_coverage": 0.04568527918781726,
+          "candidate_rows": 72,
+          "evaluated_rows": 1576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.18718274111675126,
+          "candidate_rows": 295,
+          "evaluated_rows": 1576
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 1703,
+      "first_ts": "2023-06-12 12:00:00+00:00",
+      "last_ts": "2026-05-08 16:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Bull": {
+          "candidate_coverage": 0.14276649746192893,
+          "candidate_rows": 225,
+          "evaluated_rows": 1576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.2715736040609137,
+          "candidate_rows": 428,
+          "evaluated_rows": 1576
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 1703,
+      "first_ts": "2023-06-12 12:00:00+00:00",
+      "last_ts": "2026-05-08 16:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.008883248730964468,
+          "candidate_rows": 14,
+          "evaluated_rows": 1576
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.02728426395939086,
+          "candidate_rows": 43,
+          "evaluated_rows": 1576
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 3703,
+      "first_ts": "2023-12-15 04:00:00+00:00",
+      "last_ts": "2026-05-10 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3576
+        },
+        "Bull": {
+          "candidate_coverage": 0.2301454138702461,
+          "candidate_rows": 823,
+          "evaluated_rows": 3576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.5799776286353467,
+          "candidate_rows": 2074,
+          "evaluated_rows": 3576
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 1703,
+      "first_ts": "2023-06-12 12:00:00+00:00",
+      "last_ts": "2026-05-08 16:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Bull": {
+          "candidate_coverage": 0.12563451776649745,
+          "candidate_rows": 198,
+          "evaluated_rows": 1576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.3343908629441624,
+          "candidate_rows": 527,
+          "evaluated_rows": 1576
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 1703,
+      "first_ts": "2023-06-12 12:00:00+00:00",
+      "last_ts": "2026-05-08 16:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Bull": {
+          "candidate_coverage": 0.15101522842639595,
+          "candidate_rows": 238,
+          "evaluated_rows": 1576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.27347715736040606,
+          "candidate_rows": 431,
+          "evaluated_rows": 1576
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 1703,
+      "first_ts": "2023-06-12 12:00:00+00:00",
+      "last_ts": "2026-05-08 16:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.004441624365482234,
+          "candidate_rows": 7,
+          "evaluated_rows": 1576
+        },
+        "Bull": {
+          "candidate_coverage": 0.044416243654822336,
+          "candidate_rows": 70,
+          "evaluated_rows": 1576
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 1576
+        },
+        "Sideways": {
+          "candidate_coverage": 0.18972081218274112,
+          "candidate_rows": 299,
+          "evaluated_rows": 1576
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 3297,
+      "first_ts": "2023-07-24 08:00:00+00:00",
+      "last_ts": "2026-05-08 20:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.35394321766561515,
+          "candidate_rows": 1122,
+          "evaluated_rows": 3170
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3170
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3170
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 3170
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "4h"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-10 00:00:00+00:00",
+      "last_ts": "2026-05-10 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.1721105527638191,
+          "candidate_rows": 411,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.0016750418760469012,
+          "candidate_rows": 4,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.010050251256281407,
+          "candidate_rows": 24,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.011306532663316583,
+          "candidate_rows": 27,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.24623115577889448,
+          "candidate_rows": 588,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.06155778894472362,
+          "candidate_rows": 147,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2516,
+      "first_ts": "2016-05-10 00:00:00+00:00",
+      "last_ts": "2026-05-10 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.011720385098367517,
+          "candidate_rows": 28,
+          "evaluated_rows": 2389
+        },
+        "Bull": {
+          "candidate_coverage": 0.2758476349937212,
+          "candidate_rows": 659,
+          "evaluated_rows": 2389
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2389
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0493930514859774,
+          "candidate_rows": 118,
+          "evaluated_rows": 2389
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2514,
+      "first_ts": "2016-05-10 00:00:00+00:00",
+      "last_ts": "2026-05-10 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2387
+        },
+        "Bull": {
+          "candidate_coverage": 0.12568077084206117,
+          "candidate_rows": 300,
+          "evaluated_rows": 2387
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2387
+        },
+        "Sideways": {
+          "candidate_coverage": 0.10180142438206954,
+          "candidate_rows": 243,
+          "evaluated_rows": 2387
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.11767169179229481,
+          "candidate_rows": 281,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.10385259631490787,
+          "candidate_rows": 248,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2516,
+      "first_ts": "2016-05-10 00:00:00+00:00",
+      "last_ts": "2026-05-10 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.03641691084135622,
+          "candidate_rows": 87,
+          "evaluated_rows": 2389
+        },
+        "Bull": {
+          "candidate_coverage": 0.17413143574717455,
+          "candidate_rows": 416,
+          "evaluated_rows": 2389
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2389
+        },
+        "Sideways": {
+          "candidate_coverage": 0.020510673922143157,
+          "candidate_rows": 49,
+          "evaluated_rows": 2389
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0364321608040201,
+          "candidate_rows": 87,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.1788107202680067,
+          "candidate_rows": 427,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.02135678391959799,
+          "candidate_rows": 51,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.011306532663316583,
+          "candidate_rows": 27,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.2981574539363484,
+          "candidate_rows": 712,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.04648241206030151,
+          "candidate_rows": 111,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.1226968174204355,
+          "candidate_rows": 293,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.00711892797319933,
+          "candidate_rows": 17,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0016750418760469012,
+          "candidate_rows": 4,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2516,
+      "first_ts": "2016-05-10 00:00:00+00:00",
+      "last_ts": "2026-05-10 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.014650481372959398,
+          "candidate_rows": 35,
+          "evaluated_rows": 2389
+        },
+        "Bull": {
+          "candidate_coverage": 0.22017580577647552,
+          "candidate_rows": 526,
+          "evaluated_rows": 2389
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2389
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0740895772289661,
+          "candidate_rows": 177,
+          "evaluated_rows": 2389
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.012144053601340033,
+          "candidate_rows": 29,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.22529313232830822,
+          "candidate_rows": 538,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.07537688442211055,
+          "candidate_rows": 180,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.010887772194304857,
+          "candidate_rows": 26,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.2868509212730318,
+          "candidate_rows": 685,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.05737018425460637,
+          "candidate_rows": 137,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.03685092127303183,
+          "candidate_rows": 88,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.17336683417085427,
+          "candidate_rows": 414,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.02135678391959799,
+          "candidate_rows": 51,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 2515,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-08 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.49246231155778897,
+          "candidate_rows": 1176,
+          "evaluated_rows": 2388
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 2388
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "1d"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.5215189873417722,
+          "candidate_rows": 206,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.007594936708860759,
+          "candidate_rows": 3,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.22278481012658227,
+          "candidate_rows": 88,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.02531645569620253,
+          "candidate_rows": 10,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.2481012658227848,
+          "candidate_rows": 98,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.1189873417721519,
+          "candidate_rows": 47,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.12658227848101267,
+          "candidate_rows": 50,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.11645569620253164,
+          "candidate_rows": 46,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.09113924050632911,
+          "candidate_rows": 36,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.11645569620253164,
+          "candidate_rows": 46,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.08354430379746836,
+          "candidate_rows": 33,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.020253164556962026,
+          "candidate_rows": 8,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.25569620253164554,
+          "candidate_rows": 101,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.31139240506329113,
+          "candidate_rows": 123,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.012658227848101266,
+          "candidate_rows": 5,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.012658227848101266,
+          "candidate_rows": 5,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.2,
+          "candidate_rows": 79,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.012658227848101266,
+          "candidate_rows": 5,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.20506329113924052,
+          "candidate_rows": 81,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.02531645569620253,
+          "candidate_rows": 10,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.24556962025316456,
+          "candidate_rows": 97,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.1240506329113924,
+          "candidate_rows": 49,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.0810126582278481,
+          "candidate_rows": 32,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 522,
+      "first_ts": "2016-05-09 00:00:00+00:00",
+      "last_ts": "2026-05-04 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.41265822784810124,
+          "candidate_rows": 163,
+          "evaluated_rows": 395
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 395
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "1w"
+    },
+    {
+      "bars": 264,
+      "first_ts": "2000-08-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.4744525547445255,
+          "candidate_rows": 65,
+          "evaluated_rows": 137
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 137
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 137
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 137
+        }
+      },
+      "status": "scored",
+      "symbol": "CL=F",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 341,
+      "first_ts": "1998-01-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.03271028037383177,
+          "candidate_rows": 7,
+          "evaluated_rows": 214
+        },
+        "Bull": {
+          "candidate_coverage": 0.32242990654205606,
+          "candidate_rows": 69,
+          "evaluated_rows": 214
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 214
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 214
+        }
+      },
+      "status": "scored",
+      "symbol": "DIA",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 263,
+      "first_ts": "2000-09-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 136
+        },
+        "Bull": {
+          "candidate_coverage": 0.33088235294117646,
+          "candidate_rows": 45,
+          "evaluated_rows": 136
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 136
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 136
+        }
+      },
+      "status": "scored",
+      "symbol": "ES=F",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 264,
+      "first_ts": "2000-08-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.19708029197080293,
+          "candidate_rows": 27,
+          "evaluated_rows": 137
+        },
+        "Bull": {
+          "candidate_coverage": 0.20437956204379562,
+          "candidate_rows": 28,
+          "evaluated_rows": 137
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 137
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 137
+        }
+      },
+      "status": "scored",
+      "symbol": "GC=F",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 259,
+      "first_ts": "2004-11-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.3106060606060606,
+          "candidate_rows": 41,
+          "evaluated_rows": 132
+        },
+        "Bull": {
+          "candidate_coverage": 0.22727272727272727,
+          "candidate_rows": 30,
+          "evaluated_rows": 132
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 132
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 132
+        }
+      },
+      "status": "scored",
+      "symbol": "GLD",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 263,
+      "first_ts": "2000-09-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 136
+        },
+        "Bull": {
+          "candidate_coverage": 0.14705882352941177,
+          "candidate_rows": 20,
+          "evaluated_rows": 136
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 136
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 136
+        }
+      },
+      "status": "scored",
+      "symbol": "NQ=F",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 327,
+      "first_ts": "1999-03-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 200
+        },
+        "Bull": {
+          "candidate_coverage": 0.185,
+          "candidate_rows": 37,
+          "evaluated_rows": 200
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 200
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 200
+        }
+      },
+      "status": "scored",
+      "symbol": "QQQ",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 401,
+      "first_ts": "1993-01-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.072992700729927,
+          "candidate_rows": 20,
+          "evaluated_rows": 274
+        },
+        "Bull": {
+          "candidate_coverage": 0.28832116788321166,
+          "candidate_rows": 79,
+          "evaluated_rows": 274
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 274
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 274
+        }
+      },
+      "status": "scored",
+      "symbol": "SPY",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 242,
+      "first_ts": "2006-04-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.8434782608695652,
+          "candidate_rows": 97,
+          "evaluated_rows": 115
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 115
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 115
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 115
+        }
+      },
+      "status": "scored",
+      "symbol": "USO",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 247,
+      "first_ts": "2002-04-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 120
+        },
+        "Bull": {
+          "candidate_coverage": 0.25,
+          "candidate_rows": 30,
+          "evaluated_rows": 120
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 120
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 120
+        }
+      },
+      "status": "scored",
+      "symbol": "YM=F",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 413,
+      "first_ts": "1992-01-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.06993006993006994,
+          "candidate_rows": 20,
+          "evaluated_rows": 286
+        },
+        "Bull": {
+          "candidate_coverage": 0.23426573426573427,
+          "candidate_rows": 67,
+          "evaluated_rows": 286
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 286
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 286
+        }
+      },
+      "status": "scored",
+      "symbol": "^DJI",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 497,
+      "first_ts": "1985-01-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.15405405405405406,
+          "candidate_rows": 57,
+          "evaluated_rows": 370
+        },
+        "Bull": {
+          "candidate_coverage": 0.28378378378378377,
+          "candidate_rows": 105,
+          "evaluated_rows": 370
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 370
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 370
+        }
+      },
+      "status": "scored",
+      "symbol": "^GSPC",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 488,
+      "first_ts": "1985-10-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.13019390581717452,
+          "candidate_rows": 47,
+          "evaluated_rows": 361
+        },
+        "Bull": {
+          "candidate_coverage": 0.13573407202216067,
+          "candidate_rows": 49,
+          "evaluated_rows": 361
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 361
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 361
+        }
+      },
+      "status": "scored",
+      "symbol": "^NDX",
+      "timeframe": "1mo"
+    },
+    {
+      "bars": 437,
+      "first_ts": "1990-01-01 00:00:00+00:00",
+      "last_ts": "2026-05-01 00:00:00+00:00",
+      "root_hits": {
+        "Bear": {
+          "candidate_coverage": 0.5193548387096775,
+          "candidate_rows": 161,
+          "evaluated_rows": 310
+        },
+        "Bull": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 310
+        },
+        "Crisis": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 310
+        },
+        "Sideways": {
+          "candidate_coverage": 0.0,
+          "candidate_rows": 0,
+          "evaluated_rows": 310
+        }
+      },
+      "status": "scored",
+      "symbol": "^VIX",
+      "timeframe": "1mo"
+    }
+  ],
+  "source_artifacts": {
+    "fetch_matrix": "docs/experiments/actionable-regime-confidence/runs/20260511T070440-codex-provider-universe-manifest-readback/yfinance-full-matrix/yfinance_full_universe_fetch_matrix.json",
+    "raw_close_root": "/private/tmp/ict-regime-yfinance-full-matrix-20260511T070549"
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

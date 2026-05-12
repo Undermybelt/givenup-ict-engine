@@ -1,0 +1,63 @@
+{
+  "run_id": "20260512T062029+0800-codex-r3-tsie-target-cell-disposition-after-061855-empty-v1",
+  "gate_result": "r3_tsie_target_cell_disposition_after_061855_empty_v1=tsie_large_support_not_exact_r3_native_subhour_target_no_promotion",
+  "scope": "bounded readback after empty 061855 R3/HF/TSIE root",
+  "prior_tsie_dryrun": "docs/experiments/actionable-regime-confidence/runs/20260512T022005-codex-tsie-source-label-intake-dryrun-v1",
+  "dataset": "sujinwo/tsie-market-regime-dataset",
+  "license": "mit",
+  "rows_read": 7193996,
+  "unique_group_id": 1150,
+  "time_min": "1990-06-07 02:00:00",
+  "time_max": "2026-04-07 02:00:00",
+  "minute_values": [0],
+  "target_like_regex": "AAPL|IXIC|NASDAQ|COMP",
+  "target_like_rows": 0,
+  "target_like_groups": [],
+  "sample_groups": [
+    "IDX_DLY_AALI_60",
+    "IDX_DLY_ACES_60",
+    "IDX_DLY_ADES_60",
+    "IDX_DLY_ADHI_240",
+    "IDX_DLY_ADHI_60"
+  ],
+  "r3_target_cells": [
+    {
+      "symbol": "AAPL",
+      "required_timeframe": "15m",
+      "required_after": "2026-01-30",
+      "tsie_exact_rows": 0,
+      "decision": "missing_exact_target_cell"
+    },
+    {
+      "symbol": "AAPL",
+      "required_timeframe": "30m",
+      "required_after": "2026-01-30",
+      "tsie_exact_rows": 0,
+      "decision": "missing_exact_target_cell"
+    },
+    {
+      "symbol": "^IXIC",
+      "required_timeframe": "15m",
+      "required_after": "2026-01-30",
+      "tsie_exact_rows": 0,
+      "decision": "missing_exact_target_cell"
+    },
+    {
+      "symbol": "^IXIC",
+      "required_timeframe": "30m",
+      "required_after": "2026-01-30",
+      "tsie_exact_rows": 0,
+      "decision": "missing_exact_target_cell"
+    }
+  ],
+  "required_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+  "required_root_present": false,
+  "accepted_rows_added": 0,
+  "source_control_evidence_acquired": false,
+  "target_root_mutated": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

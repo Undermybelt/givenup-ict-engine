@@ -1,0 +1,4 @@
+Dataset URL: https://www.kaggle.com/datasets/igormerlinicomposer/herding-based-market-regime-dataset
+License(s): CC0-1.0
+Downloading herding-based-market-regime-dataset.zip to /tmp/ict-engine-live-source-label-extension-discovery-after-041423-v1/data-herding
+

@@ -1,0 +1,6 @@
+requirement,status,evidence
+required_root_rechecked,pass,root status CSV
+tsie_target_root_promoted,fail_closed,logical_quarantine=true accepted_rows_added_by_audit=0
+canonical_merge_allowed,blocked,source/control policy blocked
+downstream_chain_allowed,blocked,no valid required-root unlock
+update_goal_allowed,blocked,strict_full_objective=false

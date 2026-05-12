@@ -1,0 +1,7 @@
+PASS all_sources_present
+PASS queue_entries_present
+PASS no_prior_mutation
+PASS no_production_likelihood_mutation
+PASS no_promotion
+PASS strict_goal_fail_closed
+PASS zero_accepted_95_added

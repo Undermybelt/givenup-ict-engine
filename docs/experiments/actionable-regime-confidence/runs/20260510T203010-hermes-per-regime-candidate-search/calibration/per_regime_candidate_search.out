@@ -1,0 +1,187 @@
+{
+  "accepted_95_candidates": 0,
+  "accepted_99_candidates": 0,
+  "assertions": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/checks/per_regime_candidate_assertions.out",
+  "auto_quant_status": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/auto-quant-status-agent.json",
+  "best_candidate_by_regime": {
+    "ExtremeStress": {
+      "blocker": "wilson95_below_0_95;ece_above_0_05",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.046052631578947366,
+        "ece": 0.0,
+        "precision": 0.18571428571428572,
+        "precision_wilson_lcb_95": 0.1300055545284882,
+        "precision_wilson_lcb_99": 0.11600173028300333,
+        "success": 26,
+        "support": 140
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 4,
+        "test_contexts_with_support": 4,
+        "test_instruments_with_support": 3,
+        "test_markets_with_support": 4,
+        "test_timeframes_with_support": 2
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "realized_vol_rank_252 >= 0.968537415 AND range_rank_252 >= 0.5912698413",
+      "test": {
+        "calibrated_probability": 0.18571428571428572,
+        "coverage": 0.03248492967180174,
+        "ece": 0.10294550810014724,
+        "precision": 0.28865979381443296,
+        "precision_wilson_lcb_95": 0.20790255794224538,
+        "precision_wilson_lcb_99": 0.18673882501070876,
+        "success": 28,
+        "support": 97
+      }
+    },
+    "RangeConsolidation": {
+      "blocker": "calibration_support_below_120;wilson95_below_0_95;ece_above_0_05;coverage_below_0_03",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.03519736842105263,
+        "ece": 0.0,
+        "precision": 0.48598130841121495,
+        "precision_wilson_lcb_95": 0.39342020925846743,
+        "precision_wilson_lcb_99": 0.3660266688735647,
+        "success": 52,
+        "support": 107
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 4,
+        "test_contexts_with_support": 4,
+        "test_instruments_with_support": 3,
+        "test_markets_with_support": 4,
+        "test_timeframes_with_support": 2
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "condition_range_consolidation == true AND realized_vol_rank_252 <= 0.03571428571 AND stretch_32 >= -0.00476659983",
+      "test": {
+        "calibrated_probability": 0.48598130841121495,
+        "coverage": 0.028801071667782986,
+        "ece": 0.13714409910888936,
+        "precision": 0.3488372093023256,
+        "precision_wilson_lcb_95": 0.2565368354800984,
+        "precision_wilson_lcb_99": 0.23165381993700407,
+        "success": 30,
+        "support": 86
+      }
+    },
+    "ReversalBrewing": {
+      "blocker": "wilson95_below_0_95;ece_above_0_05",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.075,
+        "ece": 0.0,
+        "precision": 0.37719298245614036,
+        "precision_wilson_lcb_95": 0.31680519835266785,
+        "precision_wilson_lcb_99": 0.29908763877194006,
+        "success": 86,
+        "support": 228
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 4,
+        "test_contexts_with_support": 4,
+        "test_instruments_with_support": 3,
+        "test_markets_with_support": 4,
+        "test_timeframes_with_support": 2
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "stretch_32 <= -0.007115588686 AND range_rank_252 >= 0.7023809524",
+      "test": {
+        "calibrated_probability": 0.37719298245614036,
+        "coverage": 0.09243134628265237,
+        "ece": 0.05110602593440122,
+        "precision": 0.32608695652173914,
+        "precision_wilson_lcb_95": 0.2734986305037526,
+        "precision_wilson_lcb_99": 0.2582291161049129,
+        "success": 90,
+        "support": 276
+      }
+    },
+    "ThinLiquidity": {
+      "blocker": "wilson95_below_0_95;ece_above_0_05;cross_market_context_support_below_3;cross_market_market_support_below_3",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.04736842105263158,
+        "ece": 0.0,
+        "precision": 0.7013888888888888,
+        "precision_wilson_lcb_95": 0.6222002708374642,
+        "precision_wilson_lcb_99": 0.5960620884893176,
+        "success": 101,
+        "support": 144
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 2,
+        "test_contexts_with_support": 2,
+        "test_instruments_with_support": 2,
+        "test_markets_with_support": 2,
+        "test_timeframes_with_support": 2
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "range_pct <= 0.0006251299854 AND volume_rank_252 <= 0.253968254",
+      "test": {
+        "calibrated_probability": 0.7013888888888888,
+        "coverage": 0.03449430676490288,
+        "ece": 0.08973840345199569,
+        "precision": 0.6116504854368932,
+        "precision_wilson_lcb_95": 0.5151342340722562,
+        "precision_wilson_lcb_99": 0.48480708179775084,
+        "success": 63,
+        "support": 103
+      }
+    },
+    "TrendExpansion": {
+      "blocker": "wilson95_below_0_95;ece_above_0_05",
+      "calibration": {
+        "calibrated_probability": null,
+        "coverage": 0.04802631578947368,
+        "ece": 0.0,
+        "precision": 0.13013698630136986,
+        "precision_wilson_lcb_95": 0.08491961639625936,
+        "precision_wilson_lcb_99": 0.07424760533910016,
+        "success": 19,
+        "support": 146
+      },
+      "context_coverage": {
+        "calibration_contexts_with_support": 4,
+        "test_contexts_with_support": 4,
+        "test_instruments_with_support": 3,
+        "test_markets_with_support": 4,
+        "test_timeframes_with_support": 2
+      },
+      "passes_95": false,
+      "passes_99": false,
+      "rule": "condition_trend_expansion == true AND realized_vol_rank_252 >= 0.6071428571 AND stretch_32 <= 0.006704518247",
+      "test": {
+        "calibrated_probability": 0.13013698630136986,
+        "coverage": 0.04655056932350971,
+        "ece": 0.14324430866265894,
+        "precision": 0.2733812949640288,
+        "precision_wilson_lcb_95": 0.20613202597647926,
+        "precision_wilson_lcb_99": 0.1880160879601838,
+        "success": 38,
+        "support": 139
+      }
+    }
+  },
+  "blocked_feature_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "candidate_rule_table": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/calibration/per_regime_candidate_rules.csv",
+  "candidate_search_report": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/calibration/per_regime_candidate_search_report.json",
+  "loop_id": "20260510T203010+0800-hermes-per-regime-candidate-search",
+  "objective": "Generate stronger per-regime candidates and rerun cross-market chronological calibration without relaxing thresholds.",
+  "per_regime_acceptance_complete": false,
+  "provider_status": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/provider/provider-status-agent.json",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search",
+  "schema_version": "board-a-per-regime-candidate-search-evidence/v1",
+  "source_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/cross_market_regime_features_and_labels.csv",
+  "thresholds_relaxed": false
+}

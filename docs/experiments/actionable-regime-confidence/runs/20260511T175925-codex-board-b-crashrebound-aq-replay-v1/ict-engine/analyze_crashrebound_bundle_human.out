@@ -1,0 +1,10 @@
+market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready
+CRASHREBOUND | Bull bias | entry=medium | gate=pass_neutralized | quality=0.582
+Decision: Observe only
+Action: TUNE trend_momentum
+Next: ict-engine factor-research --symbol CRASHREBOUND --data examples/demo/demo-15m.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/ict-engine/state --backend native
+Structure: bullish_price_action_with_higher_probability_if_execution_confirms
+Technicals: technicals_mixed_or_range_bound
+SMT: smt_analysis_unavailable_without_paired_market
+Regime: regime=bull liquidity=favorable direction=Bull subgraph=trend_subgraph objective_jump_weight=1.000
+Plan: no_trade_due_to_insufficient_edge

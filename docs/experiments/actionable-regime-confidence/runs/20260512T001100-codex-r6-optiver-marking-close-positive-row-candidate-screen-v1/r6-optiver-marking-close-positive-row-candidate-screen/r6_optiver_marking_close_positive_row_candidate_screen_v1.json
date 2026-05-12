@@ -1,0 +1,308 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "d2c849eaaa90a257311f2c33b027039c5f9e1e0a0913ba808e032a2cbdd053a6",
+  "candidate_count": 19,
+  "candidate_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/r6-optiver-marking-close-positive-row-candidate-screen/r6_optiver_marking_close_positive_row_candidates_v1.csv",
+  "decision": "r6_optiver_marking_close_positive_row_candidate_screen_v1=official_cftc_positive_rows_found_controls_missing",
+  "direct_species": "painting_tape_marking_close",
+  "external_requests_sent": true,
+  "fetched_sources": [
+    {
+      "bytes": 46122,
+      "error": "",
+      "filename": "press_5521_08.html",
+      "id": "cftc_press_5521_08",
+      "purpose": "CFTC press release describing the Optiver NYMEX energy futures manipulation complaint.",
+      "raw_path": "/tmp/ict-engine-r6-optiver-marking-close-positive-row-candidate-screen-v1/press_5521_08.html",
+      "sha256": "56eb273880fb1a8fa5e4a539f221ea6d1272cc26c7566dd558b9532a089b96c7",
+      "status": "http_200",
+      "url": "https://www.cftc.gov/PressRoom/PressReleases/5521-08"
+    },
+    {
+      "bytes": 2423973,
+      "error": "",
+      "filename": "enfoptiveruscomplaint072408.pdf",
+      "id": "cftc_optiver_complaint_pdf",
+      "purpose": "Official CFTC complaint; paragraph 256 lists the March 2007 futures-contract instances.",
+      "raw_path": "/tmp/ict-engine-r6-optiver-marking-close-positive-row-candidate-screen-v1/enfoptiveruscomplaint072408.pdf",
+      "sha256": "3ce2407ab94fcb5f93cce6dfbbc13a74cad200d84dde4f33faafbd655ea0e07d",
+      "status": "http_200",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfoptiveruscomplaint072408.pdf"
+    },
+    {
+      "bytes": 48178,
+      "error": "",
+      "filename": "enfoptiverchart.pdf",
+      "id": "cftc_optiver_chart_pdf",
+      "purpose": "Official CFTC chart link from the press packet; retained as source provenance only.",
+      "raw_path": "/tmp/ict-engine-r6-optiver-marking-close-positive-row-candidate-screen-v1/enfoptiverchart.pdf",
+      "sha256": "6538dbd7cf4f747bc8ababa5115898cde2182d71ccbafbfca8144213f8dff18e",
+      "status": "http_200",
+      "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40newsroom/documents/file/enfoptiverchart.pdf"
+    }
+  ],
+  "gate_result": "r6_optiver_marking_close_positive_row_candidate_screen_v1=proposed_rows_only_missing_matched_controls_split_species_still_blocked",
+  "generated_at_utc": "2026-05-11T16:14:30.646136+00:00",
+  "ict_engine_chain_readback": [
+    {
+      "command": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--agent"
+      ],
+      "name": "provider_status",
+      "parsed_summary": {
+        "entry_model_ready": null,
+        "entry_model_total": null,
+        "live_runtime_ready": null,
+        "live_runtime_total": null,
+        "market_data_ready": null,
+        "market_data_total": null
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/provider_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/provider_status.stdout.txt",
+      "stdout_sample": "{\n  \"summary_line\": \"entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready\",\n  \"ready_by_domain\": {\n    \"entry_model\": \"2/2\",\n    \"live_runtime\": \"1/3\",\n    \"local_runtime\": \"1/2\",\n    \"market_data\": \"1/7\"\n  },\n  \"providers\": [\n    {\n      \"provider_id\": \"breaker_rb_long_v1\",\n      \"domain\": \"entry_model\",\n      \"selectable_by_user\": false,\n      \"adopted_by_default\": false,\n      \"ready\": true,\n      \"access_mode\": \"internal_model_registry\",\n      \"use"
+    },
+    {
+      "command": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-status",
+        "--state-dir",
+        "/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100",
+        "--output-format",
+        "json"
+      ],
+      "name": "auto_quant_status",
+      "parsed_summary": {
+        "reason": null,
+        "status": "missing_dependency",
+        "strategies_found": null
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/auto_quant_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/auto_quant_status.stdout.txt",
+      "stdout_sample": "{\n  \"status\": \"missing_dependency\",\n  \"healthy\": false,\n  \"bootstrap_needed\": true,\n  \"dependency_healthy\": false,\n  \"data_ready\": false,\n  \"update_available\": false,\n  \"managed_dir\": \"/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100/auto-quant/.deps/auto-quant\",\n  \"workspace\": {\n    \"repo_root\": \"/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100/auto-quant/.deps/auto-quant\",\n    \"program_md\": \"/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100/auto-quant/.deps/auto"
+    },
+    {
+      "command": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "analyze",
+        "--symbol",
+        "DEMO",
+        "--demo",
+        "--human",
+        "--state-dir",
+        "/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100"
+      ],
+      "name": "analyze_demo",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/analyze_demo.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/analyze_demo.stdout.txt",
+      "stdout_sample": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready\nDEMO | Bull bias | entry=medium | gate=pass_neutralized | quality=0.582\nDecision: Observe only\nAction: TUNE trend_momentum\nNext: ict-engine factor-research --symbol DEMO --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-r6-optiver-marking-close-chain-state-001100 --backend native\nStructure: bullish_price_action_with_higher_probability_if_execution_con"
+    },
+    {
+      "command": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "DEMO",
+        "--state-dir",
+        "/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "name": "pre_bayes_status",
+      "parsed_summary": {
+        "decision": null,
+        "latest_policy": {
+          "directional_conflict_penalty": 0.2,
+          "favorable_liquidity_bonus": 0.05,
+          "hard_pass_quality_threshold": 0.75,
+          "high_uncertainty_threshold": 0.45,
+          "hostile_liquidity_forces_high_uncertainty": true,
+          "hostile_liquidity_penalty": 0.1,
+          "market_overrides": {
+            "CL": {
+              "favorable_liquidity_bonus": 0.03,
+              "hostile_liquidity_forces_high_uncertainty": true,
+              "hostile_liquidity_penalty": 0.14
+            },
+            "ES": {
+              "favorable_liquidity_bonus": 0.06,
+              "hostile_liquidity_forces_high_uncertainty": false,
+              "hostile_liquidity_penalty": 0.06
+            },
+            "GC": {
+              "favorable_liquidity_bonus": 0.07,
+              "hostile_liquidity_forces_high_uncertainty": false,
+              "hostile_liquidity_penalty": 0.09
+            },
+            "NQ": {
+              "favorable_liquidity_bonus": 0.04,
+              "hostile_liquidity_forces_high_uncertainty": true,
+              "hostile_liquidity_penalty": 0.1
+            },
+            "YM": {
+              "favorable_liquidity_bonus": 0.05,
+              "hostile_liquidity_forces_high_uncertainty": false,
+              "hostile_liquidity_penalty": 0.07
+            }
+          },
+          "min_directional_support_gap": 0.08,
+          "min_multi_timeframe_alignment_score": 0.55,
+          "min_multi_timeframe_entry_alignment_score": 0.5,
+          "mixed_alignment_penalty": 0.1,
+          "multi_timeframe_alignment_bonus": 0.05,
+          "multi_timeframe_alignment_penalty": 0.1,
+          "multi_timeframe_direction_conflict_penalty": 0.18,
+          "multi_timeframe_entry_penalty": 0.08,
+          "neutralized_quality_threshold": 0.4,
+          "source": "default",
+          "version": "318900600c5e8cf2"
+        },
+        "status": null
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/pre_bayes_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/pre_bayes_status.stdout.txt",
+      "stdout_sample": "{\n  \"latest_bridge\": {\n    \"long_entry_bias\": [\n      0.2686746395923997,\n      0.49754436458883383,\n      0.2337809958187664\n    ],\n    \"long_entry_quality\": {\n      \"high\": 0.0,\n      \"low\": 0.0,\n      \"medium\": 1.0\n    },\n    \"long_signal_probability\": 0.5539864835137568,\n    \"multi_timeframe_alignment_score\": 1.0,\n    \"multi_timeframe_direction_bias\": \"bullish\",\n    \"multi_timeframe_entry_alignment_score\": 0.8596,\n    \"rationale\": [\n      \"factor_alignment=mixed factor_uncertainty=low\",\n    "
+    },
+    {
+      "command": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "DEMO",
+        "--state-dir",
+        "/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100",
+        "--output-format",
+        "json"
+      ],
+      "name": "policy_training_status",
+      "parsed_summary": {
+        "matched_rows": null,
+        "model_ready": null,
+        "status": null
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/policy_training_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/policy_training_status.stdout.txt",
+      "stdout_sample": "{\n  \"symbol\": \"DEMO\",\n  \"analyze_runs\": 1,\n  \"update_runs\": 0,\n  \"entry_models\": [\n    {\n      \"entry_model_id\": \"cisd_rb_long_v1\",\n      \"consumer_adopted_by_default\": false,\n      \"consumer_effect\": \"internal_training_only\",\n      \"ready\": false,\n      \"matched_rows\": 0,\n      \"summary_line\": \"policy training is not ready for either BBN or CatBoost: matched_rows=0 bbn_warnings=matched_rows_below_minimum: 0; outcome_labels_do_not_cover_win_loss; entry_quality_bins_have_low_diversity; trigger_co"
+    },
+    {
+      "command": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "DEMO",
+        "--state-dir",
+        "/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100",
+        "--refresh",
+        "--phase",
+        "execution-candidate",
+        "--output-format",
+        "json"
+      ],
+      "name": "workflow_status_execution_candidate",
+      "parsed_summary": {
+        "action": null,
+        "phase": null,
+        "symbol": "DEMO"
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/workflow_status_execution_candidate.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/workflow_status_execution_candidate.stdout.txt",
+      "stdout_sample": "{\n  \"actionable\": false,\n  \"artifact_id\": \"execution-candidate:DEMO:analyze:v1\",\n  \"candidate_status\": \"no_trade\",\n  \"decision_hint\": \"Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=trend_decay|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.582|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.8596\",\n  \"gen"
+    },
+    {
+      "command": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "DEMO",
+        "--state-dir",
+        "/tmp/ict-engine-r6-optiver-marking-close-chain-state-001100"
+      ],
+      "name": "structural_path_ranking_target",
+      "parsed_summary": {
+        "keys": [
+          "candidate_set_id",
+          "candidate_set_size",
+          "csv_path",
+          "history_csv_path",
+          "history_jsonl_path",
+          "history_mature_rows",
+          "history_rows",
+          "history_rows_with_calibrated_path_prob",
+          "history_rows_with_path_prob_lower_bound",
+          "history_rows_with_propensity_estimate",
+          "history_rows_with_raw_path_score",
+          "history_rows_with_training_weight",
+          "jsonl_path",
+          "mature_rows",
+          "pending_reward_states",
+          "rows",
+          "rows_with_calibrated_path_prob",
+          "rows_with_execution_gate_status",
+          "rows_with_path_prob_lower_bound",
+          "rows_with_propensity_estimate"
+        ]
+      },
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/structural_path_ranking_target.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/structural_path_ranking_target.stdout.txt",
+      "stdout_sample": "{\n  \"symbol\": \"DEMO\",\n  \"rows\": 3,\n  \"candidate_set_id\": \"structural-candidates:DEMO:ce49690e46a134af\",\n  \"candidate_set_size\": 3,\n  \"pending_reward_states\": {\n    \"unobserved\": 3\n  },\n  \"mature_rows\": 0,\n  \"rows_with_raw_path_score\": 0,\n  \"rows_with_calibrated_path_prob\": 0,\n  \"rows_with_path_prob_lower_bound\": 0,\n  \"rows_with_propensity_estimate\": 1,\n  \"rows_with_execution_gate_status\": 0,\n  \"rows_with_training_weight\": 0,\n  \"csv_path\": \"/tmp/ict-engine-r6-optiver-marking-close-chain-state-001"
+    }
+  ],
+  "live_direct_verifier": {
+    "payload": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "canonical_intake_root",
+        "generated_at_utc",
+        "materialization_note",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "source_v56_json",
+        "source_v56_negative_csv",
+        "source_v56_positive_csv",
+        "thresholds_relaxed",
+        "trade_usable",
+        "v56_gate_result",
+        "v56_negative_sha256",
+        "v56_positive_sha256"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/live_direct_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/command-output/live_direct_verifier.stdout.txt"
+  },
+  "matched_controls_acquired": false,
+  "new_confidence_gate": false,
+  "next_action": "Find or owner-acquire same-schema normal controls for the Optiver marking-close rows before any intake mutation; otherwise continue R6 split-balanced direct species acquisition.",
+  "positive_rows_acquired": true,
+  "raw_data_committed": false,
+  "raw_data_root": "/tmp/ict-engine-r6-optiver-marking-close-positive-row-candidate-screen-v1",
+  "run_id": "20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_checks": {
+    "complaint_has_all_products": true,
+    "complaint_has_all_table_dates": true,
+    "complaint_mentions_paragraph_256": true,
+    "press_mentions_marking_close": true,
+    "press_mentions_optiver": true
+  },
+  "source_screen_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001100-codex-r6-optiver-marking-close-positive-row-candidate-screen-v1/r6-optiver-marking-close-positive-row-candidate-screen/r6_optiver_marking_close_source_screen_v1_sources.csv",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

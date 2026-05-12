@@ -1,0 +1,15 @@
+PASS run_id=20260512T113833+0800-codex-112904-provider-matrix-aq-date-contract-repair-v1
+PASS source_run=20260512T112904+0800-codex-112315-provider-matrix-aq-readback-v1
+PASS provider_runs=6
+PASS compile_success=6
+PASS run_success=5
+PASS strategies_with_metrics=10
+PASS date_contract_repaired=True
+PASS evidence_class=chain_contract_negative_sample_repaired_to_infrastructure_limited_aq_observation
+PASS mature_rooted_branch_observations_added=194
+FAIL_CLOSED six_provider_same_run_authority=false
+FAIL_CLOSED ibkr_1h_midpoint_rows_below_startup_floor
+FAIL_CLOSED no_pre_bayes_bbn_catboost_execution_tree_promotion
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

@@ -1,0 +1,122 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:PROVIDER_AQ_151057:20260512T071254.452Z",
+  "generated_at": "2026-05-12T07:12:54.452644Z",
+  "symbol": "PROVIDER_AQ_151057",
+  "shared_workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "IBKR_SPY_1h_Provider_Trend_Pullback_Resume",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/agent_material_units/IBKR_SPY_1h_Provider_Trend_Pullback_Resume",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/materials/ibkr_spy_provider_trend_pullback_resume.json",
+      "package": {
+        "package_id": "ibkr-spy-provider-trend-pullback-resume-1h-v1",
+        "generated_at": "2026-05-12T07:10:57Z",
+        "title": "IBKR SPY 1h Provider Trend Pullback Resume",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/ibkr_spy_1h_5y.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/strategies/ProviderTrendPullbackResume.py",
+        "strategy_class_name": "ProviderTrendPullbackResume",
+        "strategy_brief": "Provider-backed 1h trend pullback continuation material derived from the 145809 high-density screen and dispatched through the generic Auto-Quant agent-material runtime.",
+        "evaluation_priority": [
+          "trade_count",
+          "win_rate_pct",
+          "profit_factor",
+          "regime_branch_path_preservation",
+          "downstream_pre_bayes_bbn_catboost_execution_tree_admission"
+        ],
+        "consumer_evidence_profile": {
+          "required_surfaces": [
+            "ohlcv"
+          ],
+          "required_indicators": [
+            "ema_fast",
+            "ema_slow",
+            "momentum_24",
+            "range_24"
+          ],
+          "notes": [
+            "screen_only_until Auto-Quant dispatch and downstream admission complete"
+          ],
+          "provider_guidance": [
+            "source_provider=IBKR",
+            "source_input=20260512T143900 ibkr_spy_1h_5y.normalized.csv"
+          ]
+        },
+        "notes": [
+          "branch_family=trend_expansion_or_bull_pullback_resume",
+          "provider_backed_input=true",
+          "not_trade_usable_without downstream admission"
+        ]
+      }
+    },
+    {
+      "job_id": "Yahoo_ES_1h_Provider_Trend_Pullback_Resume",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/agent_material_units/Yahoo_ES_1h_Provider_Trend_Pullback_Resume",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/materials/yahoo_es_provider_trend_pullback_resume.json",
+      "package": {
+        "package_id": "yahoo-es-provider-trend-pullback-resume-1h-v1",
+        "generated_at": "2026-05-12T07:10:57Z",
+        "title": "Yahoo ES 1h Provider Trend Pullback Resume",
+        "symbol": "ES",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/strategies/ProviderTrendPullbackResume.py",
+        "strategy_class_name": "ProviderTrendPullbackResume",
+        "strategy_brief": "Provider-backed 1h trend pullback continuation material derived from the 145809 high-density screen and dispatched through the generic Auto-Quant agent-material runtime.",
+        "evaluation_priority": [
+          "trade_count",
+          "win_rate_pct",
+          "profit_factor",
+          "regime_branch_path_preservation",
+          "downstream_pre_bayes_bbn_catboost_execution_tree_admission"
+        ],
+        "consumer_evidence_profile": {
+          "required_surfaces": [
+            "ohlcv"
+          ],
+          "required_indicators": [
+            "ema_fast",
+            "ema_slow",
+            "momentum_24",
+            "range_24"
+          ],
+          "notes": [
+            "screen_only_until Auto-Quant dispatch and downstream admission complete"
+          ],
+          "provider_guidance": [
+            "source_provider=Yahoo",
+            "source_input=20260512T143900 yahoo_es_1h_20240513_20260512.normalized.csv"
+          ]
+        },
+        "notes": [
+          "branch_family=trend_expansion_or_bull_pullback_resume",
+          "provider_backed_input=true",
+          "not_trade_usable_without downstream admission"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "IBKR_SPY_1h_Provider_Trend_Pullback_Resume"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "Yahoo_ES_1h_Provider_Trend_Pullback_Resume"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

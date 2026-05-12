@@ -1,0 +1,146 @@
+{
+  "accepted_source_classes": [
+    {
+      "condition": "authenticated/user-provided row export with positives and matched negatives",
+      "name": "FINRA Potential Manipulation Report detail export",
+      "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report"
+    },
+    {
+      "condition": "must match schema and include direct positives plus matched normal controls",
+      "name": "equivalent venue or surveillance order-lifecycle export",
+      "url": "local_or_authenticated_source"
+    }
+  ],
+  "artifact_type": "direct_manipulation_row_intake_manifest_v1",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "c01bedceba8c51bc2971e5ad3ddec5c5d8a7c8b4d5f25c95e7202fa4b8b03a4f",
+  "decision": {
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "full_objective_achieved": false,
+    "gate_result": "direct_manipulation_row_intake_manifest_v1_ready_rows_not_acquired",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "existing_evidence": {
+    "accepted_scoped_direct_varieties": [
+      "pump_dump_telegram_event",
+      "dex_self_trade_order_lifecycle",
+      "dex_consecutive_self_trade_order_lifecycle",
+      "midsummer_bsc_wash_maker",
+      "midsummer_multichain_wash_maker"
+    ],
+    "finra_schema_gate": "finra_spoofing_layering_schema_package_ready_rows_not_acquired",
+    "local_inventory_gate": "local_inventory_no_attachable_row_export_found",
+    "local_row_check_gate": "blocked_local_row_export_acquisition_check_no_accepted_exports_found",
+    "usable_local_finra_matched_negative_rows": 0,
+    "usable_local_finra_positive_rows": 0
+  },
+  "generated_at_utc": "2026-05-11T07:51:53.375581+00:00",
+  "next_action": "Place authenticated/user-provided spoofing/layering positive rows, matched negative rows, and provenance manifest under /tmp/ict-engine-direct-manipulation-row-intake, then run the fail-closed verifier before any Wilson95 scoring.",
+  "purpose": "Make the direct Manipulation blocker executable without accepting proxy rows.",
+  "rejected_source_classes": [
+    {
+      "name": "public FINRA documentation page alone",
+      "reason": "schema/report description only; no exportable positive and matched-negative rows"
+    },
+    {
+      "name": "OHLCV, session, liquidity, sweep, or HMM/model labels",
+      "reason": "proxy labels are explicitly forbidden for direct Manipulation completion"
+    },
+    {
+      "name": "synthetic or teaching microstructure datasets",
+      "reason": "not accepted unless source provenance proves direct real order-lifecycle positives and controls"
+    },
+    {
+      "name": "public enforcement case inventory without controls",
+      "reason": "positive case metadata only; lacks matched negative row groups"
+    }
+  ],
+  "required_files": [
+    {
+      "destination": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "file": "positive_spoofing_layering_rows.csv",
+      "purpose": "direct positive spoofing/layering rows",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "file": "matched_negative_normal_activity_rows.csv",
+      "purpose": "same-schema normal controls matched by venue/symbol/date/session/liquidity bucket",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+      "file": "provenance_manifest.json",
+      "purpose": "source export identity, pull date, source owner, redaction notes",
+      "required": true
+    }
+  ],
+  "run_id": "20260511T151950+0800-codex-direct-manipulation-row-intake-manifest-v1",
+  "schema": {
+    "all_fields": [
+      "label",
+      "source_report",
+      "source_section",
+      "trade_date",
+      "symbol",
+      "venue_or_market_center",
+      "participant_type_code",
+      "participant_identifier",
+      "crd_number",
+      "side",
+      "earliest_order_received_time",
+      "latest_order_received_time",
+      "pbbo_bid_earliest",
+      "pbbo_ask_earliest",
+      "pbbo_bid_latest",
+      "pbbo_ask_latest",
+      "order_count",
+      "total_order_quantity",
+      "activity_description",
+      "exception_count",
+      "matched_negative_group_id",
+      "session_bucket",
+      "liquidity_bucket",
+      "source_row_id"
+    ],
+    "field_count": 24,
+    "required_field_count": 17,
+    "required_fields": [
+      "label",
+      "source_report",
+      "source_section",
+      "trade_date",
+      "symbol",
+      "venue_or_market_center",
+      "participant_type_code",
+      "participant_identifier",
+      "side",
+      "earliest_order_received_time",
+      "latest_order_received_time",
+      "order_count",
+      "total_order_quantity",
+      "activity_description",
+      "matched_negative_group_id",
+      "session_bucket",
+      "source_row_id"
+    ],
+    "schema_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T133337-codex-finra-manipulation-acquisition-schema-v1/acquisition-schema/finra_manipulation_acquisition_schema_v1.csv"
+  },
+  "target": {
+    "consumer_gate": "direct_manipulation_gate",
+    "not_main_regime_price_root": true,
+    "taxonomy": "direct Manipulation",
+    "variety": "spoofing_layering"
+  },
+  "verifier": {
+    "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+    "pass_means": "required files and matched groups are present; scoring gate still must run next",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+    "status": "ready_fail_closed"
+  }
+}

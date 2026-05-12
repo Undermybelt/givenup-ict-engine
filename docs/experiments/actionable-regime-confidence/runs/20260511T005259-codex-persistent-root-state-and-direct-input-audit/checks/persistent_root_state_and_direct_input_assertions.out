@@ -1,0 +1,13 @@
+PASS loop_id=20260511T005259+0800-codex-persistent-root-state-and-direct-input-audit
+PASS report=docs/experiments/actionable-regime-confidence/runs/20260511T005259-codex-persistent-root-state-and-direct-input-audit/root-v2-persistent/persistent_root_state_report.json
+PASS inventory=docs/experiments/actionable-regime-confidence/runs/20260511T005259-codex-persistent-root-state-and-direct-input-audit/input-inventory/direct_input_inventory.json
+PASS thresholds_relaxed=false
+PASS blocked_future_target_predictors=true
+PASS runtime_code_changed=false
+ACCEPTED_95_ROOT_CLASSES_CURRENT_RUN=none
+MISSING_95_ROOT_CLASSES_CURRENT_RUN=Bull,Bear,Sideways,Crisis,Manipulation
+RETAINED_PRIOR_ACCEPTED_ROOT_CLASSES=Crisis
+ACCEPTED_95_ROOT_CLASSES_EFFECTIVE=Crisis
+MISSING_95_ROOT_CLASSES_EFFECTIVE=Bull,Bear,Sideways,Manipulation
+DIRECT_MANIPULATION_INPUTS_USABLE=False
+GATE blocked_not_complete

@@ -1,0 +1,9 @@
+requirement,evidence,result
+selected_history_1h_path,factor_research_selected_history.cmd uses 121347 provider-data-json/BTC_USD-1h.json,pass
+ict_engine_control_plane,auto_quant_handoff.factor_research.json emitted under isolated state dir,pass
+auto_quant_prepare,auto_quant_prepare.exit=0 pinned_ref=b640cc8ea0fd3ac5e6b2eaca75ba8abbd0aca91f,pass
+data_materialization,1h 4h 1d feather files exist under user_data/data,pass
+tomac_run,run_tomac attempts executed but all failed,fail_closed
+tomac_error,No pair in whitelist after Auto-Quant venv/root execution,fail_closed
+downstream_promotion_chain,no candidate package produced for Pre-Bayes BBN CatBoost execution-tree rerun,fail_closed
+promotion_update_goal,promotion_allowed=false trade_usable=false update_goal=false,pass

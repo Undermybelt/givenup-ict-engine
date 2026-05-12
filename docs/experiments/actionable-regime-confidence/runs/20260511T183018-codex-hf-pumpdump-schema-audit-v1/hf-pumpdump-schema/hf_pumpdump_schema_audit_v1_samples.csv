@@ -1,0 +1,21 @@
+zip,file,size,header,sample_row_count
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2021-10-23 16.15.csv,339923,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2021-10-9 6.27.csv,702311,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2021-12-6 6.45.csv,407411,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2021-6-26 16.08.csv,293410,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2021-8-15 17.31.csv,434445,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2021-9-7 14.28.csv,768012,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2022-7-11 14.09.csv,273869,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2022-8-26 14.08.csv,482700,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/ADX_2022-9-20 15.56.csv,556892,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data1.zip,data1/AGIX_2021-10-22 13.28.csv,266732,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2021-10-23 16.15.csv,732469,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2021-10-9 6.27.csv,1209964,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2021-12-6 6.45.csv,1182329,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2021-6-26 16.08.csv,554593,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2021-8-15 17.31.csv,1161635,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2021-9-7 14.28.csv,1538890,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2022-7-11 14.09.csv,590730,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2022-8-26 14.08.csv,2194371,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/ADX_2022-9-20 15.56.csv,1127277,symbol|timestamp|datetime|side|price|amount|btc_volume,3
+/tmp/ict-engine-hf-pumpdump-schema-audit/data2.zip,data2/AGIX_2021-10-22 13.28.csv,867107,symbol|timestamp|datetime|side|price|amount|btc_volume,3

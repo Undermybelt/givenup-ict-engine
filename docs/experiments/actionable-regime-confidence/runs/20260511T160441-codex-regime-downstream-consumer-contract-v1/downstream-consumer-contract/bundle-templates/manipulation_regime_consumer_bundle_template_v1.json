@@ -1,0 +1,50 @@
+{
+  "consumer_hints": {
+    "bbn_evidence_hint": {
+      "regime_decision_reasons": [
+        "accepted_95_scoped_context",
+        "not_trade_usable",
+        "no_ohlcv_proxy",
+        "direct_overlay_suppression_or_abstain_only"
+      ],
+      "regime_decision_state": "single_label_95",
+      "regime_label": "DirectOverlay::Manipulation",
+      "regime_label_set": [
+        "DirectOverlay::Manipulation"
+      ],
+      "regime_trade_usable": false,
+      "regime_transition_hazard": null
+    },
+    "execution_tree_hint": "transition_guardrail",
+    "path_ranker_context": {
+      "allowed_action": "suppression; cooldown; abstain; risk overlay; BBN soft evidence; execution-tree audit field",
+      "confidence_floor": 0.967945,
+      "consumer_factor": "direct_manipulation_overlay",
+      "context_source": "regime_factor_consumer_map_v1",
+      "scope_limit": "Scoped direct coverage only. Missing or blocked varieties remain abstain: pump_dump_social_text_or_twitter, spoofing_layering_enforcement_cases, local_spoofing_repos, quote_stuffing, pinging, bear_raid_or_painting_tape"
+    },
+    "trade_usable": false,
+    "user_vrp_nq_context": {}
+  },
+  "latest_decision": {
+    "abstain_reasons": [
+      "accepted_95_scoped_context",
+      "not_trade_usable",
+      "no_ohlcv_proxy",
+      "direct_overlay_suppression_or_abstain_only"
+    ],
+    "decision_state": "single_label_95",
+    "final_label": "DirectOverlay::Manipulation",
+    "label_set": [
+      "DirectOverlay::Manipulation"
+    ],
+    "timestamp": "20260511T160441+0800-codex-regime-downstream-consumer-contract-v1",
+    "trade_usable": false
+  },
+  "provenance": {
+    "run_id": "20260511T160441+0800-codex-regime-downstream-consumer-contract-v1",
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T045102-codex-mehrnoom-telegram-direct-manipulation-gate/direct-event-gate/mehrnoom_telegram_direct_manipulation_gate_report.md | docs/experiments/actionable-regime-confidence/runs/20260511T101019-codex-zenodo-dex-selftrade-direct-gate/direct-gate/zenodo_dex_selftrade_direct_gate_report.md | docs/experiments/actionable-regime-confidence/runs/20260511T102332-codex-zenodo-dex-consecutive-selftrade-gate/direct-gate/zenodo_dex_consecutive_selftrade_gate.md | docs/experiments/actionable-regime-confidence/runs/20260511T111122-codex-midsummer-meme-direct-wash-audit/midsummer-meme-audit/midsummer_meme_direct_wash_audit.md | docs/experiments/actionable-regime-confidence/runs/20260511T112642-codex-midsummer-chain-slice-expansion-audit/chain-slice-audit/midsummer_chain_slice_expansion_audit.md",
+    "source_consumer_map": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv"
+  },
+  "schema_version": "regime-consumer-bundle/v1"
+}

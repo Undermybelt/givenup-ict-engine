@@ -1,0 +1,24 @@
+HTTP/2 200 
+date: Mon, 11 May 2026 19:30:52 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+cache-control: no-cache, no-store
+pragma: no-cache
+content-language: en-US
+set-cookie: .Nop.Customer=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/
+set-cookie: .Nop.Customer=1eeb0e62-3c2a-4718-9e36-926e2449c301; expires=Tue, 11 May 2027 19:30:52 GMT; path=/; secure; httponly
+set-cookie: .Nop.Culture=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/
+set-cookie: .Nop.Culture=c%3Den-US%7Cuic%3Den-US; expires=Tue, 11 May 2027 19:30:52 GMT; path=/
+set-cookie: .Nop.Antiforgery=CfDJ8DInvMKDjDxImCxiCgTFMiWdWrbm_W2ylbHSUaxo-NE03Mzb9FDWxzKAPS9MSfWCzoegjecqw0HgBKYJ4yoID1RnJZJvMNN3zSJD5w16X51azzSnVH69M6PsExmneG7j1d8eh0nBc3OaPF202lsJkP8; path=/; secure; samesite=strict; httponly
+set-cookie: .Nop.TempData=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure; samesite=lax; httponly
+x-frame-options: SAMEORIGIN
+x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+content-security-policy: default-src 'self'; connect-src *; font-src * data:; frame-src *; img-src * data:; media-src *; object-src *; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline';
+referrer-policy: same-origin
+permissions-policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=*, usb=()
+strict-transport-security: max-age=31536000; includeSubDomains
+cf-cache-status: DYNAMIC
+cf-ray: 9fa399c0de06d753-NRT
+

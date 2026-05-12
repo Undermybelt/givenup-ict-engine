@@ -1,0 +1,153 @@
+{
+  "accepted_direct_manipulation_label_sources": 0,
+  "accepted_direct_manipulation_rows_or_windows": 0,
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "accepted_independent_parent_root_label_sources": 0,
+  "active_taxonomy": "MainRegimeV2",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "candidate_classification": [
+    {
+      "accepted_for_board_a": false,
+      "classification": "positive_event_index_only_no_exportable_rows",
+      "fetch_metadata": {
+        "bytes_sampled": 0,
+        "content_type": "text/html",
+        "error": "http_error:403",
+        "flags": {},
+        "sha256_sample_prefix": "",
+        "status": 403
+      },
+      "name": "SEC litigation releases",
+      "next_needed": "structured enforcement row export with symbols, event windows, and matched non-event controls",
+      "organization": "SEC",
+      "reason": "official enforcement document index; useful positive-event provenance, but no bulk timestamped positive/negative market row export or exact-underlying Board A label panel was obtained",
+      "source_url": "https://www.sec.gov/enforcement-litigation/litigation-releases"
+    },
+    {
+      "accepted_for_board_a": false,
+      "classification": "positive_event_index_only_no_exportable_rows",
+      "fetch_metadata": {
+        "bytes_sampled": 0,
+        "content_type": "text/html",
+        "error": "http_error:403",
+        "flags": {},
+        "sha256_sample_prefix": "",
+        "status": 403
+      },
+      "name": "SEC administrative proceedings",
+      "next_needed": "downloadable parsed proceeding rows or authenticated structured API",
+      "organization": "SEC",
+      "reason": "official proceeding document index; not an accepted direct Manipulation label source without parsed rows, timestamps, underlyings, and negative windows",
+      "source_url": "https://www.sec.gov/enforcement-litigation/administrative-proceedings"
+    },
+    {
+      "accepted_for_board_a": false,
+      "classification": "search_surface_no_bulk_market_rows",
+      "fetch_metadata": {
+        "bytes_sampled": 94519,
+        "content_type": "text/html; charset=UTF-8",
+        "flags": {
+          "has_table_markup": false,
+          "mentions_api": false,
+          "mentions_csv": false,
+          "mentions_disciplinary": true,
+          "mentions_enforcement": true,
+          "mentions_manipulation": false
+        },
+        "sha256_sample_prefix": "1be1844d9809a60b",
+        "status": 200
+      },
+      "name": "FINRA disciplinary actions online",
+      "next_needed": "FINRA export/API access that returns row-level market manipulation cases with underlyings and dates",
+      "organization": "FINRA",
+      "reason": "public search surface for disciplinary documents; no direct bulk export of timestamped manipulation positive/negative windows was materialized in this environment",
+      "source_url": "https://www.finra.org/rules-guidance/oversight-enforcement/finra-disciplinary-actions-online"
+    },
+    {
+      "accepted_for_board_a": false,
+      "classification": "catalog_surface_no_specific_manipulation_label_panel",
+      "fetch_metadata": {
+        "bytes_sampled": 104180,
+        "content_type": "text/html; charset=UTF-8",
+        "flags": {
+          "has_table_markup": false,
+          "mentions_api": false,
+          "mentions_csv": false,
+          "mentions_disciplinary": true,
+          "mentions_enforcement": true,
+          "mentions_manipulation": true
+        },
+        "sha256_sample_prefix": "f016e893ed39ce1f",
+        "status": 200
+      },
+      "name": "FINRA data catalog",
+      "next_needed": "specific FINRA API dataset id plus access token/export path if such a dataset exists",
+      "organization": "FINRA",
+      "reason": "public data catalog surface; no accepted dataset was identified that directly exports Board A manipulation labels or parent-root regime labels",
+      "source_url": "https://www.finra.org/finra-data/browse-catalog?page=1"
+    },
+    {
+      "accepted_for_board_a": false,
+      "classification": "positive_event_index_only_no_negative_windows",
+      "fetch_metadata": {
+        "bytes_sampled": 54608,
+        "content_type": "text/html; charset=UTF-8",
+        "flags": {
+          "has_table_markup": true,
+          "mentions_api": false,
+          "mentions_csv": false,
+          "mentions_disciplinary": true,
+          "mentions_enforcement": true,
+          "mentions_manipulation": false
+        },
+        "sha256_sample_prefix": "2c2254aa132e6778",
+        "status": 200
+      },
+      "name": "CFTC enforcement actions",
+      "next_needed": "structured CFTC case rows with instruments, dates, manipulation type, and controls",
+      "organization": "CFTC",
+      "reason": "official enforcement action index can support positive-event research, but it is not a ready positive/negative row panel and does not cover MainRegimeV2 roots",
+      "source_url": "https://www.cftc.gov/LawRegulation/EnforcementActions/index.htm"
+    },
+    {
+      "accepted_for_board_a": false,
+      "classification": "member_case_search_no_market_label_rows",
+      "fetch_metadata": {
+        "bytes_sampled": 25136,
+        "content_type": "text/html; charset=utf-8",
+        "flags": {
+          "has_table_markup": false,
+          "mentions_api": false,
+          "mentions_csv": false,
+          "mentions_disciplinary": false,
+          "mentions_enforcement": false,
+          "mentions_manipulation": false
+        },
+        "sha256_sample_prefix": "ff22840b5b848377",
+        "status": 200
+      },
+      "name": "NFA BASIC search",
+      "next_needed": "bulk disciplinary export with instrument-level event windows and non-event controls",
+      "organization": "NFA",
+      "reason": "public member/case search surface; no exportable market-row label panel with direct manipulation positive/negative windows was obtained",
+      "source_url": "https://www.nfa.futures.org/basicnet/"
+    }
+  ],
+  "gate_result": "blocked_official_enforcement_sources_no_exportable_label_rows",
+  "main_price_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "new_attached_parent_root_slots": 0,
+  "next_action": "Provide or authenticate a structured export/API for direct Manipulation rows, or provide an exact-underlying parent-root label panel; document-index pages alone are not enough.",
+  "objective": "Find official/regulator/SRO sources that provide downloadable or authenticated exact-underlying parent-root labels, or timestamped direct Manipulation positive/negative rows.",
+  "official_sources_inspected": 6,
+  "raw_data_committed": false,
+  "run_id": "20260511T091215+0800-codex-official-enforcement-exportability-probe",
+  "runtime_code_changed": false,
+  "separate_overlay": "Manipulation",
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

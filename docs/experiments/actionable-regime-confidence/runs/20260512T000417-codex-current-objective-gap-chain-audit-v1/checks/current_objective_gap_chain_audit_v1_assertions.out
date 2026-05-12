@@ -1,0 +1,11 @@
+direct_verifier_schema_ready=ok
+r6_positive_rows_73=ok
+r6_matched_negative_rows_73=ok
+r6_pooled_gate_true=ok
+r6_chronological_split_false=ok
+r6_heldout_symbol_false=ok
+r6_heldout_venue_false=ok
+direct_species_not_closed=ok
+provider_autoquant_belief_policy_workflow_commands_captured=ok
+strict_full_objective_not_complete=ok
+update_goal_false=ok

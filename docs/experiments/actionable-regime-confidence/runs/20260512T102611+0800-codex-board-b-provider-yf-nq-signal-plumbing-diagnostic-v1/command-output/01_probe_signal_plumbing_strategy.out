@@ -1,0 +1,16 @@
+rows 11086
+date_min 2024-06-02 22:00:00+00:00
+date_max 2026-05-11 23:00:00+00:00
+provider_row_present 10691
+enter_long_sum 223
+exit_long_sum 230
+entry_exit_overlap 0
+                     date    close  volume  diagnostic_bar_index                            enter_tag
+2024-06-05 00:00:00+00:00 18728.75  3532.0                    48 provider_yf_nq_signal_plumbing_entry
+2024-06-07 02:00:00+00:00 19087.00  1743.0                    96 provider_yf_nq_signal_plumbing_entry
+2024-06-11 04:00:00+00:00 19088.75   965.0                   144 provider_yf_nq_signal_plumbing_entry
+2024-06-13 06:00:00+00:00 19649.75  5181.0                   192 provider_yf_nq_signal_plumbing_entry
+2024-06-17 08:00:00+00:00 19706.50  7211.0                   240 provider_yf_nq_signal_plumbing_entry
+2024-06-20 10:00:00+00:00 20044.25  1211.0                   288 provider_yf_nq_signal_plumbing_entry
+2024-06-24 19:00:00+00:00 19744.75 81169.0                   336 provider_yf_nq_signal_plumbing_entry
+2024-07-01 00:00:00+00:00 19982.75  4804.0                   432 provider_yf_nq_signal_plumbing_entry

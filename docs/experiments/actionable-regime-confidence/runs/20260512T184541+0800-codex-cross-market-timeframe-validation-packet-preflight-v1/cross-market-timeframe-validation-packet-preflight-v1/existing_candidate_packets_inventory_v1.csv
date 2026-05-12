@@ -1,0 +1,6 @@
+run_root,exists,has_path_ranker,has_checks,support_counted,reason
+docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1,True,True,True,False,inventory only; not a fresh full Board A downstream validation packet for the current claim
+docs/experiments/actionable-regime-confidence/runs/20260512T112650+0800-codex-104703-history-catboost-path-ranker-v1,True,False,True,False,inventory only; not a fresh full Board A downstream validation packet for the current claim
+docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation,True,False,True,False,inventory only; not a fresh full Board A downstream validation packet for the current claim
+docs/experiments/actionable-regime-confidence/runs/20260512T121106+0800-codex-115700-same-root-six-provider-aq-chain-v1,True,True,True,False,inventory only; not a fresh full Board A downstream validation packet for the current claim
+docs/experiments/actionable-regime-confidence/runs/20260512T120746+0800-codex-115500-same-root-six-provider-aq-chain-v1,True,True,True,False,inventory only; not a fresh full Board A downstream validation packet for the current claim

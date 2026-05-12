@@ -1,0 +1,5 @@
+Downloading pygments (1.2MiB)
+Downloading hf-xet (3.6MiB)
+ Downloaded hf-xet
+ Downloaded pygments
+Installed 22 packages in 43ms

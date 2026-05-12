@@ -1,0 +1,27 @@
+{
+  "distinct_branches": 4,
+  "distinct_paths": 4,
+  "distinct_scenarios": 4,
+  "latest_path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome invalidated --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1",
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:SRC_ROOT_CARRY_LONG_220646:7f590d5f1b7ec57e",
+      "candidate_set_size": 2,
+      "confirmation": "recommended command remains valid on next refresh",
+      "invalidation": "Recommended path invalidates before trigger.",
+      "path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:update:actionable:execute_recommended_path:primary",
+      "path_label": "recommended_execution",
+      "recommended_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome invalidated --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1",
+      "selected_path_probability": 0.5,
+      "stop": "Use the downstream execution path stop once the path is active.",
+      "trigger": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome invalidated --state-dir <local-path>",
+      "why": "posterior=0.500 prior=0.500 invalidation_rate=n/a"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "total_records": 49
+}

@@ -1,0 +1,257 @@
+{
+  "schema_version": "board-a-a7-covariance-eigenstructure/v1",
+  "rows": 5003,
+  "features_csv": "covariance-eigenstructure/covariance_eigenstructure_features.csv",
+  "input_sources": {
+    "qqq_yfinance_1h": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T183454/provider/yf_QQQ_1h_20240601_20260509.csv",
+    "qqq_ibkr_1h": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T183454/provider/ibkr_QQQ_1h.csv",
+    "nq_auto_quant_15m_cache": "/tmp/ict-regime-chain-20260509T231052/input/nq_auto_quant_15m_ohlcv_20k.csv",
+    "auxiliary_evidence_20k": "/tmp/ict-regime-chain-20260509T231052/provider-probes/provider_auxiliary_evidence_20k.csv"
+  },
+  "feature_count": 39,
+  "covariance_features": [
+    "eigen_top_share_32",
+    "eigen_second_share_32",
+    "eigen_ratio_1_2_32",
+    "corr_nq_qqq_yf_32",
+    "corr_nq_qqq_ibkr_32",
+    "corr_qqq_yf_ibkr_32",
+    "realized_vol_nq_32",
+    "realized_vol_qqq_yf_32",
+    "realized_vol_qqq_ibkr_32",
+    "eigen_top_share_pct_rank_32",
+    "realized_vol_nq_pct_rank_32"
+  ],
+  "targets": {
+    "target_extreme_stress_h8": {
+      "target": "target_extreme_stress_h8",
+      "positive": 567,
+      "negative": 4428,
+      "split": {
+        "train": 2497,
+        "calibration": 1249,
+        "test": 1249
+      },
+      "status": "ran_catboost",
+      "feature_count": 39,
+      "top_importances": [
+        {
+          "feature": "vix3m_level",
+          "importance": 14.657465123532862
+        },
+        {
+          "feature": "nq_close",
+          "importance": 10.793999174383742
+        },
+        {
+          "feature": "qqq_hv_pct_rank_252",
+          "importance": 8.202255058047298
+        },
+        {
+          "feature": "nq_volume",
+          "importance": 7.351475936767296
+        },
+        {
+          "feature": "nq_open",
+          "importance": 6.840116200894164
+        },
+        {
+          "feature": "timestamp",
+          "importance": 5.796816437005806
+        },
+        {
+          "feature": "nq_vs_200d_pct",
+          "importance": 5.506385686847747
+        },
+        {
+          "feature": "vvix_over_vix",
+          "importance": 5.307708165159512
+        },
+        {
+          "feature": "nq_low",
+          "importance": 5.135782093827428
+        },
+        {
+          "feature": "nq_high",
+          "importance": 4.8431454348239145
+        },
+        {
+          "feature": "qqq_hv_level",
+          "importance": 3.876181373661845
+        },
+        {
+          "feature": "realized_vol_nq_pct_rank_32",
+          "importance": 2.1739402964238645
+        },
+        {
+          "feature": "qqq_ibkr_high",
+          "importance": 1.7130587348783597
+        },
+        {
+          "feature": "qqq_yf_low",
+          "importance": 1.6020154723755924
+        },
+        {
+          "feature": "qqq_yf_volume",
+          "importance": 1.5718491481603478
+        },
+        {
+          "feature": "provider_return_disagreement",
+          "importance": 1.2155786722763804
+        },
+        {
+          "feature": "realized_vol_qqq_ibkr_32",
+          "importance": 1.1777266218169795
+        },
+        {
+          "feature": "eigen_ratio_1_2_32",
+          "importance": 1.1191810294468723
+        },
+        {
+          "feature": "qqq_ibkr_volume",
+          "importance": 1.1153254133662196
+        },
+        {
+          "feature": "eigen_top_share_pct_rank_32",
+          "importance": 1.070510690752613
+        }
+      ],
+      "admissible_rules": 437,
+      "accepted_95_rules": 0,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.011232240817408225,
+        "calibration_support": 123,
+        "calibration_success": 14,
+        "calibration_precision": 0.11382113821138211,
+        "calibration_wilson_lcb_95": 0.06902284440685469,
+        "test_support": 404,
+        "test_success": 76,
+        "test_precision": 0.18811881188118812,
+        "precision_wilson_lcb_95": 0.15301440944578648,
+        "precision_wilson_lcb_99": 0.14322657974195283,
+        "ece": 0.1428328679998842,
+        "coverage": 0.32345876701361087,
+        "passes_95": false,
+        "passes_99": false
+      }
+    },
+    "target_reversal_brewing_h8": {
+      "target": "target_reversal_brewing_h8",
+      "positive": 46,
+      "negative": 4949,
+      "split": {
+        "train": 2497,
+        "calibration": 1249,
+        "test": 1249
+      },
+      "status": "ran_catboost",
+      "feature_count": 39,
+      "top_importances": [
+        {
+          "feature": "provider_return_disagreement",
+          "importance": 30.56231769802272
+        },
+        {
+          "feature": "qqq_ibkr_count",
+          "importance": 9.486287517036756
+        },
+        {
+          "feature": "qqq_ibkr_volume",
+          "importance": 5.126570484511011
+        },
+        {
+          "feature": "qqq_yf_low",
+          "importance": 4.1563221699787185
+        },
+        {
+          "feature": "ret_qqq_ibkr",
+          "importance": 3.9759687859065393
+        },
+        {
+          "feature": "ret_qqq_yf",
+          "importance": 3.7445097106212373
+        },
+        {
+          "feature": "ret_nq",
+          "importance": 2.694886215634156
+        },
+        {
+          "feature": "qqq_ibkr_low",
+          "importance": 2.6106322863480815
+        },
+        {
+          "feature": "qqq_yf_volume",
+          "importance": 2.5360152277555903
+        },
+        {
+          "feature": "qqq_yf_open",
+          "importance": 2.3272259937566075
+        },
+        {
+          "feature": "qqq_yf_high",
+          "importance": 2.250125814363178
+        },
+        {
+          "feature": "realized_vol_qqq_ibkr_32",
+          "importance": 2.2344598791391435
+        },
+        {
+          "feature": "nq_volume",
+          "importance": 2.2050469550424507
+        },
+        {
+          "feature": "realized_vol_nq_32",
+          "importance": 2.1522910003329216
+        },
+        {
+          "feature": "realized_vol_qqq_yf_32",
+          "importance": 2.1182689189321575
+        },
+        {
+          "feature": "qqq_hv_pct_rank_252",
+          "importance": 2.105689788502855
+        },
+        {
+          "feature": "nq_high",
+          "importance": 1.9294761260091022
+        },
+        {
+          "feature": "nq_open",
+          "importance": 1.4158788242871492
+        },
+        {
+          "feature": "ret_qqq_avg",
+          "importance": 1.3755145970050076
+        },
+        {
+          "feature": "qqq_yf_close",
+          "importance": 1.3446930597833737
+        }
+      ],
+      "admissible_rules": 441,
+      "accepted_95_rules": 0,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.014694382772514917,
+        "calibration_support": 120,
+        "calibration_success": 11,
+        "calibration_precision": 0.09166666666666666,
+        "calibration_wilson_lcb_95": 0.05195718284856543,
+        "test_support": 141,
+        "test_success": 23,
+        "test_precision": 0.16312056737588654,
+        "precision_wilson_lcb_95": 0.1112244648548197,
+        "precision_wilson_lcb_99": 0.09848413843622696,
+        "ece": 0.08139419511626289,
+        "coverage": 0.11289031224979984,
+        "passes_95": false,
+        "passes_99": false
+      }
+    }
+  },
+  "accepted_95_rule_count": 0,
+  "accepted_99_rule_count": 0,
+  "decision": "abstain_no_calibrated_release_rule",
+  "thresholds_relaxed": false
+}

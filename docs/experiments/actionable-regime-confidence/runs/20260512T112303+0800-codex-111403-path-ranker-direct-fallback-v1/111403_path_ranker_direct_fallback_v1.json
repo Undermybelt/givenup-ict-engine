@@ -1,0 +1,77 @@
+{
+  "execution": {
+    "actionable": false,
+    "closed_loop_branch_admission_status": "fail_closed",
+    "path_id": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+    "path_ranker_raw_score": 0.452055,
+    "path_ranker_runtime_source": "candidate_set",
+    "ready": false,
+    "review_status": "observe"
+  },
+  "exits": {
+    "01_path_ranker_integration_direct_fallback": 0,
+    "02_apply_structural_path_ranking_external_scores": 0,
+    "03_policy_training_status_after_direct_fallback": 0,
+    "04_workflow_execution_candidate_after_direct_fallback": 0,
+    "05_workflow_full_after_direct_fallback": 0
+  },
+  "path_ranking_target": {
+    "calibration_status": null,
+    "history_mature_rows": 1,
+    "history_rows": 2,
+    "mature_rows": 1,
+    "observation_validation_min_rows": 30,
+    "observation_validation_rows": 146,
+    "production_validation_min_rows": 30,
+    "production_validation_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_rows": 1,
+    "rows": 2,
+    "runtime_active_match_count": 0,
+    "runtime_selection_ready": false,
+    "runtime_selection_status": "enabled_registered_model_invalid",
+    "trainer_artifact_ready": true,
+    "trainer_artifact_status": "present_validation_insufficient",
+    "warnings": [
+      "structural_path_ranking_target_update_runs_missing",
+      "structural_path_ranking_target_calibration_not_fitted",
+      "structural_path_probability_calibration_evaluation_insufficient_rows",
+      "structural_path_ranking_target_raw_scored_mature_rows_insufficient:min=30 observed=1",
+      "structural_path_ranking_target_production_validation_insufficient_rows:min=30 observed=0"
+    ]
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion": false,
+    "explicit_selected_history": false,
+    "mature_rooted_branch_observations_promoted": 0,
+    "promotion_allowed": false,
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T112303+0800-codex-111403-path-ranker-direct-fallback-v1",
+  "runtime": {
+    "active_match_count": 0,
+    "enabled": true,
+    "ready": false,
+    "status": "enabled_registered_model_invalid",
+    "summary_line": "Ranker runtime: structural_path_ranking_target rows=2 history_rows=2 mature_rows=1 history_mature_rows=1 raw_scored_mature=1/30 production_validation=0/30 observation_validation=146/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_registered_model_invalid runtime_mode=candidate_set_only runtime_source=registered_model_artifact score_model_family=weighted_feature_sum_v1 score_source=direct_model runtime_matches=0"
+  },
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T111403+0800-codex-105014-ingest-bridge-fix-v1",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T112303+0800-codex-111403-path-ranker-direct-fallback-v1/state_path_ranker_direct_v1",
+  "symbol": "B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610",
+  "validation": {
+    "calibration_quality_ready": false,
+    "calibration_ready": false,
+    "observation_validation_ready": true,
+    "observation_validation_rows": 146,
+    "production_validation_min_rows": 30,
+    "production_validation_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_rows": 1
+  }
+}

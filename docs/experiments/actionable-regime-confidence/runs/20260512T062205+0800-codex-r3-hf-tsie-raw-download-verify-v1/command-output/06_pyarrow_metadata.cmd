@@ -1,0 +1,1 @@
+uv run --with pyarrow --with pandas python -c import pyarrow.parquet as pq; p='/tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/tft_dataset_labeled.parquet'; pf=pq.ParquetFile(p); print('num_rows', pf.metadata.num_rows); print('num_row_groups', pf.metadata.num_row_groups); print('schema'); print(pf.schema)

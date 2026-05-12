@@ -1,0 +1,227 @@
+{
+  "accepted_rows_added": 0,
+  "assertions": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "prior_expanded_gate_blocked": true,
+    "prior_mapping_audit_blocked": true,
+    "prior_parent_gate_blocked": true,
+    "same_commit_as_061855": true,
+    "same_dataset_as_061855": true,
+    "strict_full_objective": false,
+    "target_root_mutated": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "candidate_061855": {
+    "commit_sha": "75e7e2f86c37f8f28204651dcccf8338ca50aa6b",
+    "dataset_id": "sujinwo/tsie-market-regime-dataset",
+    "files": [
+      {
+        "filename": "tft_dataset_labeled.parquet",
+        "parquet_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet",
+        "size_bytes": 591890794
+      }
+    ],
+    "license": "mit",
+    "page_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+    "raw_data_committed": false,
+    "raw_data_downloaded_in_061855": false
+  },
+  "canonical_merge": false,
+  "decision": "tsie_prior_evidence_reconciliation_v1=duplicate_candidate_prior_full_data_and_mapping_failures_no_intake",
+  "downstream_promotion_rerun": false,
+  "next_action": "Do not materialize /tmp/ict-engine-native-subhour-source-label-intake from TSIE unless a new source-owner MainRegimeV2 crosswalk or materially different source revision arrives. Continue with explicit R6 source/control approval, source-owned R5 recency rows, or a different R3 native-subhour source-label panel.",
+  "prior_evidence": [
+    {
+      "accepted_root_labels_added": 0,
+      "gate": "blocked_hf_tsie_not_attachable_as_mainregimev2_source_label_panel",
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T074300-codex-hf-tsie-source-label-mapping-audit",
+      "why_not_accepted": [
+        "Dataset is IDX-specific and does not attach to the ready yfinance/Kraken provider matrix.",
+        "Labels are described as rule-based signal logic, not independent external root annotations.",
+        "Schema includes future_volatility and target_return fields, so leakage-safe usage would need a separate causal feature audit.",
+        "No direct Crisis or Manipulation source label is available in the inspected schema/README."
+      ]
+    },
+    {
+      "accepted_roots": [],
+      "gate": "blocked_tsie_parent_root_labeled_gate_below_95",
+      "market_contexts": [
+        "IDX"
+      ],
+      "root_reports": [
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "calibration_coverage_below_0_03",
+            "test_coverage_below_0_03",
+            "validation_market_contexts_below_2",
+            "validation_timeframes_below_2"
+          ],
+          "calibration_support": 1439,
+          "calibration_wilson95_lcb": 0.3745752849178003,
+          "root": "Bull",
+          "rule": "p_model(Bull) >= 0.554942296743",
+          "test_coverage": 0.002433617707227657,
+          "test_support": 3501,
+          "test_wilson95_lcb": 0.5639793963435015,
+          "validation_market_contexts": [
+            "IDX"
+          ],
+          "validation_timeframes": [
+            "intraday_hourly"
+          ]
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "calibration_coverage_below_0_03",
+            "test_coverage_below_0_03",
+            "validation_market_contexts_below_2",
+            "validation_timeframes_below_2"
+          ],
+          "calibration_support": 1439,
+          "calibration_wilson95_lcb": 0.6409541146584445,
+          "root": "Bear",
+          "rule": "p_model(Bear) >= 0.604139246464",
+          "test_coverage": 0.0013193391626158506,
+          "test_support": 1898,
+          "test_wilson95_lcb": 0.5874415230036558,
+          "validation_market_contexts": [
+            "IDX"
+          ],
+          "validation_timeframes": [
+            "intraday_hourly"
+          ]
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "test_wilson95_below_0_95",
+            "calibration_coverage_below_0_03",
+            "test_coverage_below_0_03",
+            "validation_market_contexts_below_2",
+            "validation_timeframes_below_2"
+          ],
+          "calibration_support": 1441,
+          "calibration_wilson95_lcb": 0.972875671362565,
+          "root": "Sideways",
+          "rule": "p_model(Sideways) >= 0.981051445007",
+          "test_coverage": 0.00012303637080242653,
+          "test_support": 177,
+          "test_wilson95_lcb": 0.8648950387953501,
+          "validation_market_contexts": [
+            "IDX"
+          ],
+          "validation_timeframes": [
+            "intraday_hourly"
+          ]
+        }
+      ],
+      "rows": 7193996,
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T032344-codex-tsie-parent-root-labeled-gate",
+      "timeframes": [
+        "intraday_hourly"
+      ]
+    },
+    {
+      "accepted_roots": [],
+      "gate": "blocked_hf_tsie_expanded_regime_gate_below_95_or_validation_scope",
+      "root_reports": [
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "calibration_coverage_below_0_03",
+            "test_coverage_below_0_03",
+            "ece_above_0_05",
+            "validation_market_contexts_below_2"
+          ],
+          "calibration_support": 11586,
+          "calibration_wilson95_lcb": 0.2738582696644987,
+          "root": "BearExpansion",
+          "rule": null,
+          "test_coverage": 0.027523869901830825,
+          "test_support": 14327,
+          "test_wilson95_lcb": 0.33060913776887707,
+          "validation_market_contexts": [
+            "huggingface_tsie_idx"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "240m"
+          ]
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "validation_market_contexts_below_2"
+          ],
+          "calibration_support": 18238,
+          "calibration_wilson95_lcb": 0.22765711017683848,
+          "root": "BullExpansion",
+          "rule": null,
+          "test_coverage": 0.04490231110598813,
+          "test_support": 23373,
+          "test_wilson95_lcb": 0.27676972826617807,
+          "validation_market_contexts": [
+            "huggingface_tsie_idx"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "240m"
+          ]
+        },
+        {
+          "accepted_95": false,
+          "blockers": [
+            "calibration_wilson95_below_0_95",
+            "test_wilson95_below_0_95",
+            "test_coverage_below_0_03",
+            "ece_above_0_05",
+            "validation_market_contexts_below_2"
+          ],
+          "calibration_support": 27061,
+          "calibration_wilson95_lcb": 0.8543761772012629,
+          "root": "SidewaysConsolidation",
+          "rule": null,
+          "test_coverage": 0.0297696578487311,
+          "test_support": 15496,
+          "test_wilson95_lcb": 0.7659197525358028,
+          "validation_market_contexts": [
+            "huggingface_tsie_idx"
+          ],
+          "validation_timeframes": [
+            "1d",
+            "240m"
+          ]
+        }
+      ],
+      "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T034054-codex-hf-tsie-expanded-regime-gate"
+    }
+  ],
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "run_id": "20260512T062253+0800-codex-tsie-prior-evidence-reconciliation-v1",
+  "same_source_reconciliation": {
+    "mapping_audit_commit": "75e7e2f86c37f8f28204651dcccf8338ca50aa6b",
+    "mapping_audit_dataset": "sujinwo/tsie-market-regime-dataset",
+    "same_commit": true,
+    "same_dataset": true
+  },
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

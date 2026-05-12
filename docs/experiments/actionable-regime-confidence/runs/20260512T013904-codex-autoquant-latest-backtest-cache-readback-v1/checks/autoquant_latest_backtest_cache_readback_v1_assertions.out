@@ -1,0 +1,13 @@
+latest_meta_present=True
+latest_zip_present=True
+latest_strategy_is_tomac=True
+active_default_strategy_count_zero=True
+external_strategy_count_positive=True
+trade_count_low=True
+winrate_below_95=True
+profit_total_negative=True
+r6_root_absent=True
+r3_root_absent=True
+r5_root_absent=True
+downstream_chain_rerun_allowed_false=True
+update_goal_false=True

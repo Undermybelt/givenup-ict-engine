@@ -1,0 +1,10 @@
+goal_achieved=false
+main_price_roots=Bull,Bear,Sideways,Crisis
+manipulation_separate_direct_event_class_or_overlay=true
+v3_reopened_drift_superseded=true
+child_labels_not_root_completion=true
+accepted_full_cycle_full_universe=false
+runtime_code_changed=false
+thresholds_relaxed=false
+trade_usable=false
+gate_result=mainregimev2_reasserted_after_v3_drift_full_universe_still_blocked

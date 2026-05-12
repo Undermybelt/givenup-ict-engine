@@ -1,0 +1,50 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-10T10:48:40.354228+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "local-nq-binding-probe",
+  "config_path": "/tmp/ict-board-a-v2-20260510T184538-config.nq-usd.json",
+  "timeframe": "15m",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T184538/autoquant/fresh_tomac_scratch_no_rsi_nq_binding_2025.out",
+  "strategies": [
+    {
+      "name": "TomacNQ_ScratchNoRSINoConflict15m",
+      "file_path": "/tmp/ict-regime-chain-20260509T231052/scratch_strategies/TomacNQ_ScratchNoRSINoConflict15m.py",
+      "metadata": {
+        "strategy": "TomacNQ_ScratchNoRSINoConflict15m",
+        "mutation_id": "board-a-v2-2-nq-binding-repair",
+        "base_factor": "scratch_no_rsi_no_conflict",
+        "hypothesis": "data-binding repair probe only",
+        "paradigm": "trend_pullback",
+        "status": "probe_only",
+        "created": "2026-05-10"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "calmar": 0.0,
+        "total_profit_pct": -10.881613010630002,
+        "max_drawdown_pct": -14.97,
+        "trade_count": 1081,
+        "win_rate_pct": 31.452358926919523,
+        "profit_factor": 0.9015821223976574
+      },
+      "per_pair_metrics": {
+        "NQ/USD": {
+          "total_profit_pct": -10.881613010630002,
+          "trade_count": 1081,
+          "win_rate_pct": 31.452358926919523,
+          "profit_factor": 0.9015821223976574
+        }
+      },
+      "pairs": [
+        "NQ/USD"
+      ],
+      "timerange": "2025-01-02T08:45:00+00:00 -> 2025-12-29T23:45:00+00:00",
+      "commit": "local-nq-binding-probe",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

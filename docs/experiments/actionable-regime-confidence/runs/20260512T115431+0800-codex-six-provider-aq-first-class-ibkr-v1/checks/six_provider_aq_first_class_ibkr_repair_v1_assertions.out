@@ -1,0 +1,9 @@
+PASS run_id=20260512T115431+0800-codex-six-provider-aq-first-class-ibkr-v1
+PASS repair_inputs=2
+PASS combined_compile_success=6
+PASS combined_run_success=6
+PASS same_root_six_provider_aq_authority=True
+FAIL_CLOSED downstream_promotion_chain=not_run
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

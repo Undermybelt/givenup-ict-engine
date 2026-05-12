@@ -1,0 +1,11 @@
+gate_result=r5_mainregimev2_local_candidate_screen_after_090725_v1=no_source_owned_post_2026_01_30_mainregimev2_unlock
+candidate_files_scanned=2365
+unlock_candidates=0
+source_control_evidence_acquired=false
+valid_required_root_unlock=false
+selected_history=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+promotion_allowed=false
+update_goal=false

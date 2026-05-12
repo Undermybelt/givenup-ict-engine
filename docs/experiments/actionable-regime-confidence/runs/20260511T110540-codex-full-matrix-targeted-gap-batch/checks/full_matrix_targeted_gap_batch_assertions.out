@@ -1,0 +1,10 @@
+PASS input_kaggle_feature_table_present
+PASS input_intraday_feature_table_present
+PASS future_and_target_fields_not_used_as_predictors
+PASS accepted_95_roots_in_this_slice=none
+PASS blocked_roots_in_this_slice=Crisis,Bull,Bear,Sideways
+PASS full_matrix_goal_achieved=false
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

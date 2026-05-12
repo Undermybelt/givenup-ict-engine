@@ -1,0 +1,154 @@
+{
+  "auto_quant_handoff_candidate": {
+    "agent_prompt": "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, work the 'expansion_manipulation' objective, and read /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/program.md before acting. If /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/strategies_external has no active non-underscore .py strategies, first read /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/strategies_external/_template.py.example, create 2-3 seed strategies across different paradigms, prefer archived winners or minimal descendants when available, and only then run uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/run_tomac.py. Never treat 'no strategies found' as completion. Export the best measured candidate package back into ict-engine state.",
+    "artifact_id": "auto-quant-handoff:factor_research:B2R_NQ_COST_CRISIS_REPAIR_032157:20260511T200041.396Z",
+    "backend": "auto-quant",
+    "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/B2R_NQ_COST_CRISIS_REPAIR_032157/analyze_nq_ltf.json",
+    "data_ready": false,
+    "dependency_status": {
+      "adapter_version": "v1",
+      "bootstrap_needed": false,
+      "config_present": true,
+      "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "healthy": true,
+      "last_sync": "2026-05-11T19:53:49.408197Z",
+      "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant",
+      "managed_repo_present": true,
+      "notes": [],
+      "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+      "required_files": [
+        "README.md",
+        "program.md",
+        "prepare.py",
+        "run.py",
+        "versions/README.md"
+      ],
+      "tracked_branch": "master",
+      "update_available": false,
+      "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+    },
+    "handoff_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/B2R_NQ_COST_CRISIS_REPAIR_032157/auto_quant_handoff.factor_research.json",
+    "handoff_kind": "factor_research",
+    "iterations": null,
+    "mutation_spec_path": null,
+    "notes": [
+      "auto_quant_prepare_required_before_run",
+      "auto_quant_seed_strategies_required",
+      "auto_quant_active_strategy_count=0",
+      "requested_at=20260511T200041.399Z"
+    ],
+    "objective": "expansion_manipulation",
+    "paired_data_path": null,
+    "readiness": {
+      "bootstrap_needed": false,
+      "data_ready": false,
+      "dependency_healthy": true,
+      "dependency_status": {
+        "adapter_version": "v1",
+        "bootstrap_needed": false,
+        "config_present": true,
+        "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+        "healthy": true,
+        "last_sync": "2026-05-11T19:53:49.408197Z",
+        "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant",
+        "managed_repo_present": true,
+        "notes": [],
+        "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+        "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+        "required_files": [
+          "README.md",
+          "program.md",
+          "prepare.py",
+          "run.py",
+          "versions/README.md"
+        ],
+        "tracked_branch": "master",
+        "update_available": false,
+        "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+      },
+      "healthy": false,
+      "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant",
+      "next_step": {
+        "action_type": "run_command",
+        "blocked_reason": "auto_quant_prepare_required",
+        "deferred_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1",
+        "prompt": null,
+        "user_input_required": false
+      },
+      "notes": [
+        "auto_quant_profile=synthetic_ohlcv"
+      ],
+      "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1",
+      "recommended_next_command_meta": {
+        "blocked": false,
+        "executable_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1",
+        "kind": "ict_engine",
+        "prompt": null,
+        "recorded_data_paths": [],
+        "requires_user_input": false
+      },
+      "status": "dependency_ready_data_missing",
+      "update_available": false,
+      "workspace": {
+        "config_json": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/config.tomac.json",
+        "data_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/data",
+        "expected_data_files": [
+          "B2R_NQ_COST_CRISIS_REPAIR_032157_USD-1h.feather",
+          "B2R_NQ_COST_CRISIS_REPAIR_032157_USD-4h.feather",
+          "B2R_NQ_COST_CRISIS_REPAIR_032157_USD-1d.feather"
+        ],
+        "prepare_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/prepare_external.py",
+        "profile_name": "synthetic_ohlcv",
+        "program_md": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/program.md",
+        "repo_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant",
+        "run_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/run_tomac.py",
+        "strategies_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/strategies_external",
+        "strategy_seed_source_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/strategies"
+      }
+    },
+    "session_id": null,
+    "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1",
+    "suggested_commands": [
+      "cat /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/program.md",
+      "cat /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/strategies_external/_template.py.example",
+      "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1"
+    ],
+    "suggested_next_steps": [
+      "prepare Auto-Quant market data before attempting the research loop",
+      "re-run factor-research with backend=auto-quant after data becomes ready"
+    ],
+    "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+    "workspace": {
+      "config_json": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/config.tomac.json",
+      "data_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/data",
+      "expected_data_files": [
+        "B2R_NQ_COST_CRISIS_REPAIR_032157_USD-1h.feather",
+        "B2R_NQ_COST_CRISIS_REPAIR_032157_USD-4h.feather",
+        "B2R_NQ_COST_CRISIS_REPAIR_032157_USD-1d.feather"
+      ],
+      "prepare_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/prepare_external.py",
+      "profile_name": "synthetic_ohlcv",
+      "program_md": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/program.md",
+      "repo_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant",
+      "run_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/run_tomac.py",
+      "strategies_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/strategies_external",
+      "strategy_seed_source_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1/.deps/auto-quant/user_data/strategies"
+    }
+  },
+  "human_output": "Auto-Quant handoff | status=dependency_ready_data_missing | objective=expansion_manipulation | data_ready=false\nNext: prepare Auto-Quant market data before attempting the research loop\nRun: ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1\nReview: ict-engine auto-quant-adoption-review --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1 --artifact-id auto-quant-handoff:factor_research:B2R_NQ_COST_CRISIS_REPAIR_032157:20260511T200041.396Z\nWorkflow: ict-engine workflow-status --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1 --human",
+  "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": "auto_quant_prepare_required",
+    "deferred_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "review_command": "ict-engine auto-quant-adoption-review --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1 --artifact-id auto-quant-handoff:factor_research:B2R_NQ_COST_CRISIS_REPAIR_032157:20260511T200041.396Z",
+  "suggested_next_steps": [
+    "prepare Auto-Quant market data before attempting the research loop",
+    "re-run factor-research with backend=auto-quant after data becomes ready"
+  ],
+  "workflow_status_command": "ict-engine workflow-status --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-combined-v1/state_combined_v1 --human"
+}

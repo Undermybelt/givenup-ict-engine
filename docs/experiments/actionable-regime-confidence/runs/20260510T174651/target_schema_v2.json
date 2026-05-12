@@ -1,0 +1,87 @@
+{
+  "schema_version": "board-a-actionable-regime-target-schema/v2",
+  "created_from_loop_id": "20260510T174651+0800-board-a-full-chain-readback",
+  "reason_for_reset": "Repeated abstain results and one rejected same-surface leakage candidate. The v1 target allowed execution-tree status fields to restate the target, so the next loop must use future-realized labels and provider agreement labels instead.",
+  "decision": "change_target_schema_and_regime_family",
+  "threshold_policy": {
+    "precision_wilson_lcb_95": 0.95,
+    "precision_wilson_lcb_99": 0.99,
+    "thresholds_relaxed": false
+  },
+  "accepted_event_shape": {
+    "event": "market + timeframe + regime_id + horizon + allowed_action",
+    "allowed_actions": ["release_long", "release_short", "observe_only"],
+    "handoff_requires_allowed_action": ["release_long", "release_short"]
+  },
+  "regime_families_v2": [
+    {
+      "regime_id": "ProviderAgreementTrendExpansion",
+      "description": "Same-market provider majority agrees on trend expansion and future path avoids bad-loss/tail-loss through the horizon.",
+      "markets": ["QQQ", "NQ"],
+      "timeframes": ["1h", "15m"],
+      "allowed_action_candidates": ["release_long", "observe_only"]
+    },
+    {
+      "regime_id": "ProviderDisagreementTransitionGuardrail",
+      "description": "Provider sources disagree or transition hazard remains high. This family can explain abstention but cannot hand off a release packet.",
+      "markets": ["QQQ", "NQ"],
+      "timeframes": ["1h", "15m"],
+      "allowed_action_candidates": ["observe_only"]
+    },
+    {
+      "regime_id": "CryptoStressExpansion",
+      "description": "Crypto-specific expansion/stress family evaluated on Kraken/Yahoo crypto data only, not used as a QQQ/NQ substitute.",
+      "markets": ["BTC-USD", "PF_XBTUSD"],
+      "timeframes": ["1h", "15m", "1d"],
+      "allowed_action_candidates": ["release_long", "release_short", "observe_only"]
+    }
+  ],
+  "truth_labels_v2": [
+    {
+      "name": "ReleaseAllowedV2",
+      "positive_definition": "Future net path over the horizon avoids configured bad-loss and tail-loss and has positive net payoff after cost.",
+      "forbidden_predictor_fields": ["gate_status", "branch", "decision_hint", "execution_readiness", "readiness_gap_to_observe", "readiness_gap_to_ready"]
+    },
+    {
+      "name": "ProviderAgreementV2",
+      "positive_definition": "At least two same-market provider observations agree on the coarse regime family for the current window.",
+      "forbidden_shortcut": "Do not mix Kraken crypto reachability into QQQ/NQ provider agreement."
+    },
+    {
+      "name": "TransitionStableV2",
+      "positive_definition": "Future realized provider/price-volatility state remains inside the same coarse regime family through the minimum holding horizon.",
+      "forbidden_predictor_fields": ["hybrid_transition_hazard", "duration_remaining_expected_bars"]
+    },
+    {
+      "name": "PathSpecificEdgeV2",
+      "positive_definition": "The selected branch has positive forward payoff after cost under chronological holdout, independent of execution-tree branch labels."
+    }
+  ],
+  "feature_policy": {
+    "allowed_current_features": [
+      "price_returns",
+      "range_volatility",
+      "volume_zscore",
+      "provider_agreement_counts",
+      "cross_timeframe_alignment",
+      "calendar_session",
+      "auto_quant_entry_context"
+    ],
+    "blocked_leakage_features": [
+      "gate_status",
+      "branch",
+      "decision_hint",
+      "execution_readiness",
+      "readiness_gap_to_observe",
+      "readiness_gap_to_ready",
+      "hybrid_transition_hazard",
+      "duration_remaining_expected_bars",
+      "same_surface_execution_tree_categorical"
+    ]
+  },
+  "next_loop": {
+    "id": "A-v2-1",
+    "action": "Generate ProviderAgreementTrendExpansion and ProviderDisagreementTransitionGuardrail labels for QQQ/NQ from the durable run folder, then rerun chronological calibration without blocked leakage fields.",
+    "must_not_do": "Do not lower Wilson, ECE, support, or coverage thresholds."
+  }
+}

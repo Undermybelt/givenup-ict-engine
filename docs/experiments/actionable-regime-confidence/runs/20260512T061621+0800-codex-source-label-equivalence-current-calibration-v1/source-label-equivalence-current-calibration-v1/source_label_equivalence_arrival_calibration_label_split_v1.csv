@@ -1,0 +1,5 @@
+label,accepted_source_confidence_95,blocker
+Bear,false,wilson95_lcb_below_0.95_across_required_splits
+Bull,false,wilson95_lcb_below_0.95_across_required_splits
+Crisis,false,wilson95_lcb_below_0.95_across_required_splits
+Sideways,false,wilson95_lcb_below_0.95_across_required_splits

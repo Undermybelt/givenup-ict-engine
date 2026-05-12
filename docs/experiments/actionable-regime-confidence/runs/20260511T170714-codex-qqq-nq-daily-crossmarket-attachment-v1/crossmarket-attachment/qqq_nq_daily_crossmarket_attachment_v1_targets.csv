@@ -1,0 +1,3 @@
+target,target_role,source_anchor,first_available_source_date,last_available_source_date,source_dates,target_available_source_dates,target_source_date_coverage,available_interval_coverage,roots_present,min_root_support,min_split_return_correlation,min_split_direction_agreement,accepted_daily_crossmarket_attachment
+QQQ,nasdaq_100_etf_crossmarket,^IXIC,2000-01-03,2026-01-30,6559,6559,1.000000000000,1.000000000000,true,462,0.954400827722,0.921471172962,true
+NQ=F,nasdaq_100_futures_crossmarket,^IXIC,2000-09-18,2026-01-30,6559,6378,0.972404329928,0.999686520376,true,382,0.953384189336,0.904031209363,true

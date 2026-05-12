@@ -1,0 +1,61 @@
+{
+  "schema_version": "structural-replay-validation-evidence/v1",
+  "loop_id": "20260510T191825+0800-codex-nq-structural-replay36-validation",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state",
+  "market_timeframes": [
+    "NQ 15m replay windows",
+    "QQQ 1h accepted SessionLiquidityCoreViable guardrail inherited from Board A"
+  ],
+  "accepted_regime_context": {
+    "regime_id": "SessionLiquidityCoreViable",
+    "confidence_lane": 95,
+    "calibration_support": 378,
+    "test_support": 378,
+    "test_precision_wilson_lcb_95": 0.9899396497369397,
+    "ece": 0.010582010582010581,
+    "coverage": 0.3776223776223776,
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json"
+  },
+  "validation_check": {
+    "policy_training_status_command": "ict-engine policy-training-status --symbol NQ --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state --human",
+    "policy_training_status_summary": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural_path_ranking_target rows=3 history_rows=981 mature_rows=1 history_mature_rows=967 raw_scored_mature=965/30 production_validation=963/30 observation_validation=34/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=1",
+    "ranker_runtime_summary": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=981 mature_rows=1 history_mature_rows=967 raw_scored_mature=965/30 production_validation=963/30 observation_validation=34/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=1",
+    "ranker_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=965/30 production_validation=963/30 observation_validation=34/30 ready=true",
+    "workflow_ranker_summary": "Ranker: status=using_history_scores source=history_path applied=1 artifact=0 candidate=0 history=1 lb=0.479 gate=observe",
+    "observation_validation_rows": 34,
+    "observation_validation_min_rows": 30,
+    "raw_scored_mature_rows": 965,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 963,
+    "production_validation_min_rows": 30,
+    "ranker_validation_ready": true,
+    "runtime_selection_status": "enabled_candidate_set_ready",
+    "runtime_source": "candidate_set/history_path",
+    "runtime_matches": 1,
+    "workflow_gate_after_validation": "pass_neutralized",
+    "workflow_latest_phase": "update"
+  },
+  "structural_target_summary_after_export": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target_summary.json",
+    "rows": 3,
+    "history_rows": 1048,
+    "mature_rows": 1,
+    "history_mature_rows": 1032,
+    "history_rows_with_raw_path_score": 1031,
+    "history_rows_with_calibrated_path_prob": 1026,
+    "history_rows_with_path_prob_lower_bound": 1026,
+    "notes": "The exported target summary is a structural dataset summary; readiness is determined by policy-training-status validation counters and workflow ranker runtime status."
+  },
+  "decision": {
+    "board_a_confidence_goal": "accepted_95",
+    "structural_path_validation_goal": "met",
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "Board A accepted packet remains a liquidity/session guardrail, not standalone path-specific edge.",
+      "Latest workflow gate is pass_neutralized and execution/ranker gate is observe, not release.",
+      "Entry-model training modules remain pending even though structural path-ranker validation is now ready."
+    ],
+    "next_action": "Keep SessionLiquidityCoreViable as Board-B guardrail input and run only a release decision when downstream edge gates produce a non-observe execution candidate."
+  }
+}

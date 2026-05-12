@@ -1,0 +1,5 @@
+root,accepted_95,rule,cal_support,cal_precision,cal_wilson95,test_support,test_precision,test_wilson95,blockers
+Bull,True,drawdown_252 >= -0.002313918074873498,5332,0.989872468117,0.986810170470,4581,0.993669504475,0.990923098667,
+Bear,False,range_pos_252 <= 0,619,0.873990306947,0.845518818144,807,0.966542750929,0.951758748480,calibration_coverage_below_0_03;calibration_wilson95_below_0_95;test_coverage_below_0_03
+Sideways,False,abs_ma_ratio_252 <= 0.005983289330013457 AND abs_ret_20 <= 0.01746949514288885,373,0.753351206434,0.707169322239,296,0.800675675676,0.751440839182,calibration_coverage_below_0_03;calibration_wilson95_below_0_95;test_coverage_below_0_03;test_wilson95_below_0_95
+Crisis,False,vol_real_120 >= 0.06997391797413682,57,0.859649122807,0.746752921041,0,0.000000000000,0.000000000000,calibration_support_below_250;calibration_coverage_below_0_03;calibration_wilson95_below_0_95;calibration_market_contexts_below_2;test_support_below_250;test_coverage_below_0_03;test_wilson95_below_0_95;test_market_contexts_below_2

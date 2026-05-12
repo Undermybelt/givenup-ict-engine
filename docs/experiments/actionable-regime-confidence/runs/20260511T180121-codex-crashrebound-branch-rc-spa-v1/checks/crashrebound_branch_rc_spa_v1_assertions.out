@@ -1,0 +1,5 @@
+PASS total_trades=207
+PASS promotion_level=reject
+PASS gate_result=fail:reject_missing_branch_path;reject_missing_required_roots;reject_overfit_risk;reject_cost_fragile;reject_tail_risk
+PASS branch_path_source_accepted_board_a_labels=False
+PASS missing_roots=Crisis

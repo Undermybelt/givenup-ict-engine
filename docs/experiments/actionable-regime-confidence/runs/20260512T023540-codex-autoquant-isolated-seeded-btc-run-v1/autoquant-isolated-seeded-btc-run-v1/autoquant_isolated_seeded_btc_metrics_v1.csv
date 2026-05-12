@@ -1,0 +1,4 @@
+strategy,status,error_type,error_msg,pairs,sharpe,sortino,calmar,total_profit_pct,max_drawdown_pct,trade_count,win_rate_pct,profit_factor,robust_sharpe
+BTCLeaderBreakV4BTCOnly,,,,,0.2464,1.9306,9.5916,14.81,-1.6263,116,35.3448,2.346,
+MTFTrendStackBTCOnly,,,,,-0.0796,-0.2218,-0.5944,-4.27,-7.5637,150,22.0,0.8513,
+MomentumMTFConfluenceBTCOnly,,,,,0.0411,0.0932,0.3001,2.86,-10.0246,169,30.7692,1.0709,

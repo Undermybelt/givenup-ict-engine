@@ -1,0 +1,10 @@
+PASS auto_quant_data_rows=969
+PASS options_auxiliary_rows=1038
+PASS variant_rows_positive=True
+PASS selected_rows_positive=True
+PASS rooted_paths_present=True
+FAIL all_price_roots_represented=False
+PASS strategy_library_exists=True
+PASS real_trades_exists=True
+PASS analyze_jsons_exist=True
+FAIL all_assertions_passed=False

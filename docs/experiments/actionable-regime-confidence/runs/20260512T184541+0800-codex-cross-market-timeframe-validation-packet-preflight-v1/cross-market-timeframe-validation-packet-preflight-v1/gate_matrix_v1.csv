@@ -1,0 +1,11 @@
+gate,passed,status,evidence
+six_provider_aq_surface,True,pass,provider/AQ surface present
+aq_trade_rows_present,True,pass,real_trade_rows=1953
+independent_cross_market_downstream,False,fail_closed,provider_markets=6 but downstream validation rows=0
+independent_cross_timeframe_downstream,False,fail_closed,cleaned_timeframes=1h
+raw_scored_mature_min30,False,fail_closed,history_mature_rows=0 history_raw_score_rows=4
+production_validation_min30,False,fail_closed,mature_rows=0
+observation_validation_min30,True,pass,observation trade rows from AQ feedback=1953; still not production validation
+per_regime_calibrated_95,False,fail_closed,no artifact proves every visible regime calibrated >=0.95
+catboost_path_ranker_ready,False,fail_closed,calibrated_rows=0
+execution_tree_non_observe,False,fail_closed,latest execution candidate remains non-promoting/no-trade in source packet

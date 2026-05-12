@@ -1,0 +1,250 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:PROVIDER_SESSION_184332:20260512T105544.660Z",
+  "generated_at": "2026-05-12T10:55:44.660066Z",
+  "symbol": "PROVIDER_SESSION_184332",
+  "shared_workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "Session_liquidity_VWAP_OR_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/state/auto-quant/agent_material_units/Session_liquidity_VWAP_OR_-_yfinance_YF_SPY_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "session-liquidity-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "Session liquidity VWAP OR - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/ProviderSessionLiquidityVwapOpeningRangeV1.py",
+        "strategy_class_name": "ProviderSessionLiquidityVwapOpeningRangeV1",
+        "strategy_brief": "Board B session/liquidity VWAP opening-range profitability factor.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF SPY 1h current fetch",
+          "branch_matrix=Bull -> SessionLiquidityExpansion -> OpeningRangeBreakout -> session_orb_vwap_continuation_long_v1 | Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1 | Bear -> LiquiditySweepRelief -> SweepReclaim -> session_sweep_reclaim_long_v1 | Transition -> LateSessionCompression -> RangeCompressionRelease -> session_late_compression_release_v1",
+          "timerange=20250101-20260512",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "Session_liquidity_VWAP_OR_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/state/auto-quant/agent_material_units/Session_liquidity_VWAP_OR_-_Binance_BTCUSDT_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "session-liquidity-binance-1h-v1",
+        "generated_at": null,
+        "title": "Session liquidity VWAP OR - Binance BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/ProviderSessionLiquidityVwapOpeningRangeV1.py",
+        "strategy_class_name": "ProviderSessionLiquidityVwapOpeningRangeV1",
+        "strategy_brief": "Board B session/liquidity VWAP opening-range profitability factor.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance public BTCUSDT 1h current fetch",
+          "branch_matrix=Bull -> SessionLiquidityExpansion -> OpeningRangeBreakout -> session_orb_vwap_continuation_long_v1 | Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1 | Bear -> LiquiditySweepRelief -> SweepReclaim -> session_sweep_reclaim_long_v1 | Transition -> LateSessionCompression -> RangeCompressionRelease -> session_late_compression_release_v1",
+          "timerange=20250101-20260512",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "Session_liquidity_VWAP_OR_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/state/auto-quant/agent_material_units/Session_liquidity_VWAP_OR_-_Bybit_BTCUSDT_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "session-liquidity-bybit-1h-v1",
+        "generated_at": null,
+        "title": "Session liquidity VWAP OR - Bybit BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/ProviderSessionLiquidityVwapOpeningRangeV1.py",
+        "strategy_class_name": "ProviderSessionLiquidityVwapOpeningRangeV1",
+        "strategy_brief": "Board B session/liquidity VWAP opening-range profitability factor.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit public linear BTCUSDT 1h current fetch",
+          "branch_matrix=Bull -> SessionLiquidityExpansion -> OpeningRangeBreakout -> session_orb_vwap_continuation_long_v1 | Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1 | Bear -> LiquiditySweepRelief -> SweepReclaim -> session_sweep_reclaim_long_v1 | Transition -> LateSessionCompression -> RangeCompressionRelease -> session_late_compression_release_v1",
+          "timerange=20250101-20260512",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "Session_liquidity_VWAP_OR_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/state/auto-quant/agent_material_units/Session_liquidity_VWAP_OR_-_Kraken_XBTUSD_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "session-liquidity-kraken-1h-v1",
+        "generated_at": null,
+        "title": "Session liquidity VWAP OR - Kraken XBTUSD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/ProviderSessionLiquidityVwapOpeningRangeV1.py",
+        "strategy_class_name": "ProviderSessionLiquidityVwapOpeningRangeV1",
+        "strategy_brief": "Board B session/liquidity VWAP opening-range profitability factor.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken futures PF_XBTUSD 1h current fetch",
+          "branch_matrix=Bull -> SessionLiquidityExpansion -> OpeningRangeBreakout -> session_orb_vwap_continuation_long_v1 | Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1 | Bear -> LiquiditySweepRelief -> SweepReclaim -> session_sweep_reclaim_long_v1 | Transition -> LateSessionCompression -> RangeCompressionRelease -> session_late_compression_release_v1",
+          "timerange=20250101-20260512",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "Session_liquidity_VWAP_OR_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/state/auto-quant/agent_material_units/Session_liquidity_VWAP_OR_-_IBKR_SPY_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "session-liquidity-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "Session liquidity VWAP OR - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/ProviderSessionLiquidityVwapOpeningRangeV1.py",
+        "strategy_class_name": "ProviderSessionLiquidityVwapOpeningRangeV1",
+        "strategy_brief": "Board B session/liquidity VWAP opening-range profitability factor.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR gateway SPY 1h 90D current fetch",
+          "branch_matrix=Bull -> SessionLiquidityExpansion -> OpeningRangeBreakout -> session_orb_vwap_continuation_long_v1 | Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1 | Bear -> LiquiditySweepRelief -> SweepReclaim -> session_sweep_reclaim_long_v1 | Transition -> LateSessionCompression -> RangeCompressionRelease -> session_late_compression_release_v1",
+          "timerange=20250101-20260512",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "Session_liquidity_VWAP_OR_-_TVR_BTC-USD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/state/auto-quant/agent_material_units/Session_liquidity_VWAP_OR_-_TVR_BTC-USD_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-tvr-btc-usd-1h-v1.material.json",
+      "package": {
+        "package_id": "session-liquidity-tvr-btc-usd-1h-v1",
+        "generated_at": null,
+        "title": "Session liquidity VWAP OR - TVR BTC-USD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/ProviderSessionLiquidityVwapOpeningRangeV1.py",
+        "strategy_class_name": "ProviderSessionLiquidityVwapOpeningRangeV1",
+        "strategy_brief": "Board B session/liquidity VWAP opening-range profitability factor.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR local-stdio BTC-USD 1h current fetch",
+          "branch_matrix=Bull -> SessionLiquidityExpansion -> OpeningRangeBreakout -> session_orb_vwap_continuation_long_v1 | Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1 | Bear -> LiquiditySweepRelief -> SweepReclaim -> session_sweep_reclaim_long_v1 | Transition -> LateSessionCompression -> RangeCompressionRelease -> session_late_compression_release_v1",
+          "timerange=20250101-20260512",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "Session_liquidity_VWAP_OR_-_yfinance_YF_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "Session_liquidity_VWAP_OR_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "Session_liquidity_VWAP_OR_-_Bybit_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_ids": [
+        "Session_liquidity_VWAP_OR_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_ids": [
+        "Session_liquidity_VWAP_OR_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_ids": [
+        "Session_liquidity_VWAP_OR_-_TVR_BTC-USD_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

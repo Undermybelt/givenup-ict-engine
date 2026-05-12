@@ -1,0 +1,16 @@
+local_order_lifecycle_depth_source_scan_after_070840_v1 assertions
+
+PASS local candidate scan completed read-only
+PASS no actual DBN files found in searched roots
+PASS no MBO/MBP/depth/order-lifecycle data file promoted
+PASS Tomac Databento NQ metadata is GLBX.MDP3 schema ohlcv-1m
+PASS Tomac archive sample headers are OHLCV only
+PASS external-data-sources matches are code/examples only
+PASS /tmp returned no matching candidate source/control files
+PASS R6 owner-export unlock false
+PASS R5 recency unlock false
+PASS R3 native-subhour unlock false
+PASS canonical merge false
+PASS downstream promotion rerun false
+PASS trade usable false
+PASS update_goal false

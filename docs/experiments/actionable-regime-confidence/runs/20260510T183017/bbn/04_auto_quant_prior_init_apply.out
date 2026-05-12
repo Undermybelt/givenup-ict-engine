@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.8536188292682926,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 4.376401323426838,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.5731664390243902,
+    2.146341463414634e-6,
+    0.42683141463414637
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_QQQ_20260510T103548.930323000Z",
+  "library_path": "/tmp/ict-board-a-v2-20260510T183017/state/auto-quant/QQQ/auto_quant_strategy_library.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_QQQ_20260510T103612.794638000Z",
+  "prior_init_history_path": "/tmp/ict-board-a-v2-20260510T183017/state/auto-quant/QQQ/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "/tmp/ict-board-a-v2-20260510T183017/state/auto-quant/QQQ/auto_quant_prior_init_QQQ_20260510T103612.794638000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.5731664390243902,
+        2.146341463414634e-6,
+        0.42683141463414637
+      ],
+      "bbn_contradiction_after": 0.09228311667765329,
+      "bbn_contradiction_before": 0.9459019459459459,
+      "bbn_contradiction_lift": 0.8536188292682926,
+      "bbn_entropy_after": 0.6824303155704626,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6960054292618328,
+      "bbn_log_loss_before": 5.0724067526886705,
+      "bbn_log_loss_delta": 4.376401323426838,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.4267895609756097,
+        -0.000019853658536585365,
+        0.42680941463414634
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "qqq-regime-branch-20260510-tomac-killzone-breakout",
+      "n_breakeven": 0,
+      "n_loss": 35,
+      "n_win": 39,
+      "strategy_name": "TomacNQ_KillzoneBreakout",
+      "temper": 0.5,
+      "trade_count": 74
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "QQQ",
+  "temper": 0.5
+}

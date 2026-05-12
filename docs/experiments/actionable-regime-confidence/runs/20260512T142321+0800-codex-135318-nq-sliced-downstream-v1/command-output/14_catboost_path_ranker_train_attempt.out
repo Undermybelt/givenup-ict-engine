@@ -1,0 +1,6 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/state_nq_slice_v1/LONG_NQ_TOMAC_135318_SLICE/policy_training/structural_path_ranking_target.csv: 3 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 1 training samples
+[features] label dist: {np.int64(1): np.int64(1)}
+[template] User weights template saved to docs/experiments/actionable-regime-confidence/runs/20260512T142321+0800-codex-135318-nq-sliced-downstream-v1/catboost/path_ranker_model/user_weights.json

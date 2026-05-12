@@ -1,0 +1,7 @@
+ok: kaggle_v3_readback_written
+ok: thresholds_relaxed=false
+ok: runtime_code_changed=false
+ok: raw_data_committed=false
+ok: no_new_accepted_roots_from_kaggle=true
+ok: manipulation_not_evaluated_from_kaggle=true
+ok: missing_roots=BullExpansion,BearExpansion,SidewaysConsolidation,Manipulation

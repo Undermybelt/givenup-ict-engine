@@ -1,0 +1,12 @@
+requirement,evidence,result,notes
+"same-root ETH AQ lineage preserved","source_root.txt -> 20260512T131500+0800-codex-125715-eth-downstream-ingest-readback-v1","pass","support-only; does not recount 125715 or 131500"
+"ict-engine analyze executed","checks/02_analyze_same_symbol_eth_mtf_direct.exit=0","pass","checks/01_analyze_same_symbol_eth_mtf.exit=127 preserved as shell invocation failure"
+"Pre-Bayes status readback executed","checks/03_pre_bayes_status.exit=0","pass","command-output/03_pre_bayes_status.out"
+"Pre-Bayes policy non-null","policy version 318900600c5e8cf2; gate pass_neutralized","pass","canonical confidence 0.5574970918447152"
+"soft evidence populated","market_regime, factor_alignment, factor_uncertainty, liquidity_context, multi_timeframe_resonance","pass","from command-output/03_pre_bayes_status.out"
+"BBN network present","state_ingest/B2R_ETH_SIX_PROVIDER_MOMENTUM_125715/bbn_network.json","pass","network nodes and edges exist"
+"CatBoost/path-ranker runtime visible","command-output/04_policy_training_status.out","pass","enabled_candidate_set_ready; runtime_matches=2; raw_scored_mature=163/30"
+"exact AQ branch preserved","required Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1","fail_closed","workflow structural bundle selected generic trend_follow_through"
+"path-ranker scores match current structural bundle","command-output/05_workflow_structural_bundle.out and 06_workflow_execution_candidate.out","fail_closed","enabled_no_matching_scores; raw score/prob/lower bound null for current bundle"
+"execution tree admits candidate","command-output/06_workflow_execution_candidate.out","fail_closed","candidate_status=execution_blocked; ready=false; actionable=false; review_status=observe"
+"promotion/trade/update_goal allowed","gate section","fail_closed","promotion_allowed=false; trade_usable=false; update_goal=false"

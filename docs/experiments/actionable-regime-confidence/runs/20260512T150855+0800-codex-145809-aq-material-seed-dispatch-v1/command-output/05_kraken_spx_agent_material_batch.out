@@ -1,0 +1,51 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:B2R_OTE_BRANCH_150855:20260512T072456.465Z",
+  "generated_at": "2026-05-12T07:24:56.465493Z",
+  "symbol": "B2R_OTE_BRANCH_150855",
+  "shared_workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "OTE_trend_retracement_long_-_Kraken_SPXUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/state/auto-quant/agent_material_units/OTE_trend_retracement_long_-_Kraken_SPXUSD_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/agent-material/ote_kraken_spxusd_1h.material.json",
+      "package": {
+        "package_id": "ote-trend-retracement-kraken-spxusd-1h-v1",
+        "generated_at": null,
+        "title": "OTE trend retracement long - Kraken SPXUSD 1h",
+        "symbol": "KRAKENSPXUSD",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/kraken_futures_pfspxusd_1h_20200101_20260512.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/agent-material/ProviderOteTrendRetracementV1.py",
+        "strategy_class_name": "ProviderOteTrendRetracementV1",
+        "strategy_brief": "Board B OTE continuation branch seed using 0.500, 0.618, 0.705, and 0.786 retracement leaves inside TrendExpansion.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> OTERetracementLevel -> OTEContinuationLong",
+          "source_provider=Kraken futures PF_SPXUSD 1h capped provider-backed data",
+          "promotion_allowed=false until six-provider provenance and downstream admission are complete"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "OTE_trend_retracement_long_-_Kraken_SPXUSD_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

@@ -1,0 +1,115 @@
+Result for strategy ProviderBtcEmaRsiHold12
+                                             BACKTESTING REPORT                                              
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │     42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+│    TOTAL │     42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                           LEFT OPEN TRADES REPORT                                           
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │      1 │         0.37 │          44.510 │         0.45 │      8:00:00 │    1     0     0   100 │
+│    TOTAL │      1 │         0.37 │          44.510 │         0.45 │      8:00:00 │    1     0     0   100 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                            ENTER TAG STATS                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                         Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ provider_btc_ema_rsi_continuation │      42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+│                             TOTAL │      42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+└───────────────────────────────────┴─────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                        EXIT REASON STATS                                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                   Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│   provider_btc_rsi_exhaustion │     7 │         2.22 │        1655.158 │        16.55 │      6:43:00 │    7     0     0   100 │
+│ provider_btc_12h_risk_horizon │    33 │         0.23 │         844.253 │         8.44 │     12:00:00 │   21     0    12  63.6 │
+│                    force_exit │     1 │         0.37 │          44.510 │         0.45 │      8:00:00 │    1     0     0   100 │
+│                     stop_loss │     1 │         -2.5 │        -284.037 │        -2.84 │     11:00:00 │    0     0     1     0 │
+│                         TOTAL │    42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+└───────────────────────────────┴───────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                                           MIXED TAG STATS                                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                         Enter Tag ┃                   Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ provider_btc_ema_rsi_continuation │   provider_btc_rsi_exhaustion │      7 │         2.22 │        1655.158 │        16.55 │      6:43:00 │    7     0     0   100 │
+│ provider_btc_ema_rsi_continuation │ provider_btc_12h_risk_horizon │     33 │         0.23 │         844.253 │         8.44 │     12:00:00 │   21     0    12  63.6 │
+│ provider_btc_ema_rsi_continuation │                    force_exit │      1 │         0.37 │          44.510 │         0.45 │      8:00:00 │    1     0     0   100 │
+│ provider_btc_ema_rsi_continuation │                     stop_loss │      1 │         -2.5 │        -284.037 │        -2.84 │     11:00:00 │    0     0     1     0 │
+│                             TOTAL │                               │     42 │          0.5 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │
+└───────────────────────────────────┴───────────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-04-04 08:00:00            │
+│ Backtesting to                │ 2026-05-12 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 42 / 1.14                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 12259.885 USDT                 │
+│ Absolute profit               │ 2259.885 USDT                  │
+│ Total profit %                │ 22.60%                         │
+│ CAGR %                        │ 646.29%                        │
+│ Sortino                       │ 15.57                          │
+│ Sharpe                        │ 9.30                           │
+│ Calmar                        │ 398.61                         │
+│ SQN                           │ 2.75                           │
+│ Profit factor                 │ 2.93                           │
+│ Expectancy (Ratio)            │ 53.81 (0.60)                   │
+│ Avg. daily profit             │ 61.078 USDT                    │
+│ Avg. stake amount             │ 11081.878 USDT                 │
+│ Total trade volume            │ 933137.601 USDT                │
+│                               │                                │
+│ Best Pair                     │ BTC/USDT 22.60%                │
+│ Worst Pair                    │ BTC/USDT 22.60%                │
+│ Best trade                    │ BTC/USDT 3.17%                 │
+│ Worst trade                   │ BTC/USDT -2.50%                │
+│ Best day                      │ 378.463 USDT                   │
+│ Worst day                     │ -284.037 USDT                  │
+│ Days win/draw/lose            │ 20 / 9 / 10                    │
+│ Min/Max/Avg. Duration Winners │ 0d 02:00 / 0d 12:00 / 0d 10:35 │
+│ Min/Max/Avg. Duration Losers  │ 0d 11:00 / 0d 12:00 / 0d 11:55 │
+│ Max Consecutive Wins / Loss   │ 10 / 3                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 10004.012 USDT                 │
+│ Max balance                   │ 12277.509 USDT                 │
+│ Max % of account underwater   │ 2.93%                          │
+│ Absolute drawdown             │ 337.522 USDT (2.93%)           │
+│ Drawdown duration             │ 7 days 07:00:00                │
+│ Profit at drawdown start      │ 1529.763 USDT                  │
+│ Profit at drawdown end        │ 1192.241 USDT                  │
+│ Drawdown start                │ 2026-04-22 11:00:00            │
+│ Drawdown end                  │ 2026-04-29 18:00:00            │
+│ Market change                 │ 21.82%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-04-04 08:00:00 -> 2026-05-12 00:00:00 | Max open trades : 1
+                                                                 STRATEGY SUMMARY                                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃                Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ ProviderBtcEmaRsiHold12 │     42 │         0.50 │        2259.885 │         22.6 │     11:00:00 │   29     0    13  69.0 │ 337.522 USDT  2.93% │
+└─────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┴─────────────────────┘
+{
+  "library_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/provider_btc_ema_rsi_strategy_library_v1.json",
+  "metrics": {
+    "calmar": 398.61127074495835,
+    "max_drawdown_pct": -2.927395513956268,
+    "profit_factor": 2.930855342178945,
+    "sharpe": 9.297840154632286,
+    "sortino": 15.570866878678723,
+    "total_profit_pct": 22.6,
+    "trade_count": 42,
+    "win_rate_pct": 69.04761904761905
+  },
+  "rows": 42,
+  "summary_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/provider_btc_ema_rsi_packet_summary_v1.json",
+  "trades_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/provider_btc_ema_rsi_real_trades_v1.jsonl"
+}

@@ -1,0 +1,50 @@
+{
+  "accepted_rows_added": 0,
+  "augmented_control_field_count": 13,
+  "augmented_positive_field_count": 6,
+  "board_sha256_at_start": "a95b244f30ebf68e95bdc66236101f46b7c117250ff4a285235d7dfbad3d0730",
+  "control_missing_verifier_fields": [
+    "source_report",
+    "source_section",
+    "trade_date",
+    "symbol",
+    "venue_or_market_center",
+    "participant_type_code",
+    "participant_identifier",
+    "side",
+    "earliest_order_received_time",
+    "latest_order_received_time",
+    "order_count",
+    "total_order_quantity",
+    "session_bucket"
+  ],
+  "file_contract_ready_without_adapter": false,
+  "gate_result": "r6_owner_export_verifier_compat_preflight_v1=adapter_required_and_augmented_fields_needed_before_verifier_rerun",
+  "generated_at_utc": "2026-05-11T16:30:40.101117+00:00",
+  "new_confidence_gate": false,
+  "next_action": "Keep V62 active. When owner-approved export data arrives, provide verifier-native filenames or run an explicit adapter, and include the missing verifier fields before calibration.",
+  "owner_export_target": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "owner_export_target_exists": false,
+  "positive_missing_verifier_fields": [
+    "source_section",
+    "participant_type_code",
+    "participant_identifier",
+    "side",
+    "order_count",
+    "total_order_quantity"
+  ],
+  "provenance_request_fields": [
+    "owner_approval_reference",
+    "split_contract"
+  ],
+  "raw_data_committed": false,
+  "request_field_rows": 20,
+  "request_matrix_rows": 3,
+  "run_id": "20260512T002923-codex-r6-owner-export-verifier-compat-preflight-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

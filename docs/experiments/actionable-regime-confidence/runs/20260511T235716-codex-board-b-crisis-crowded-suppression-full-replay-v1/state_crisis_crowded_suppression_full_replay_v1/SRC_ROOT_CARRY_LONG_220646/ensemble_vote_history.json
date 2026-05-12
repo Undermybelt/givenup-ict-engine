@@ -1,0 +1,82 @@
+[
+  {
+    "artifact_id": "ensemble-vote:analyze-live:2026-05-11T15:24:16Z",
+    "generated_at": "2026-05-11T15:24:16.672694Z",
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "source_phase": "analyze-live",
+    "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T152411.799Z",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "d1fba762150c532c",
+      "config_hash": "0739cf78a430efa5",
+      "data_fingerprint": "56eb7614e1a548e9"
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "final_action": "favor_mean_reversion_only",
+    "recommended_command": "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_htf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_mtf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_ltf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_ltf.json --paired-data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_spot.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4",
+    "human_next_triage": "hard_blocked=false ensemble_action=favor_mean_reversion_only consensus=0.698 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_htf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_mtf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_ltf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_ltf.json --paired-data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T152411_spot.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T231800-codex-board-b-220646-exact-branch-closed-loop-readback-v4/exact-branch-closed-loop-readback-v4/state_exact_branch_closed_loop_v4",
+    "hard_block": {
+      "active": false,
+      "stage": null,
+      "status": null,
+      "reason": null,
+      "evidence": [],
+      "command": null,
+      "human_action": null
+    },
+    "confidence": 0.6976975271013452,
+    "consensus_strength": 0.6976975271013452,
+    "disagreement_flags": [],
+    "executor_summaries": [
+      "executor=catboost_file action=favor_mean_reversion_only confidence=0.651 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.651",
+      "executor=xgboost_file action=favor_mean_reversion_only confidence=0.754 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.754"
+    ],
+    "split_explanations": [
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "posterior_override=range:0.754",
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "posterior_override=range:0.754"
+    ],
+    "executor_scorecards": [],
+    "executor_scorecards_source": "persisted",
+    "posterior_fingerprint": "56eb7614e1a548e9",
+    "posterior_normalization_status": "normalized",
+    "posterior_active_regime": "range",
+    "posterior_confidence": 0.5484994998985512,
+    "posterior_probabilities": {
+      "range": 0.7542898822472326,
+      "stress": 0.17028112952804422,
+      "transition": 0.07542898822472326,
+      "trend": 0.0
+    },
+    "posterior_evidence": [
+      "market_policy=SRC hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.770 multi_timeframe_entry_alignment_score=0.863",
+      "long/short support gap 0.008 is too small, so alignment is treated as mixed",
+      "pre_bayes_quality_score=0.548 gating_status=pass_neutralized",
+      "market_state_source=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.458",
+      "market_state_source=volatility=ElevatedVol:0.776 liquidity=NormalLiquidity:0.412 structure=Unknown:0.300 behavior=Exhaustion:0.650",
+      "market_state_source=rationale=volatility=ElevatedVol conf=0.78",
+      "market_state_source=rationale=behavior=Exhaustion conf=0.65",
+      "market_state_source=rationale=primary=RangeConsolidation secondary=WideRange overall=0.46",
+      "regime_bundle_bbn_evidence_skipped=no_supported_label",
+      "branch_transition_prior_from=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000"
+    ]
+  }
+]

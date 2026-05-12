@@ -1,0 +1,16 @@
+all_command_exits_zero=true
+provider_paths_enumerated=true
+auto_quant_fresh_selected_data_backtest=false
+pre_bayes_gate_status=observe_only
+bbn_application_status=skipped
+catboost_raw_scored_mature_rows=0/30
+catboost_production_validation_rows=0/30
+catboost_observation_validation_rows=0/30
+execution_candidate_ready=false
+execution_candidate_actionable=false
+execution_tree_closed_loop_status=fail_closed
+execution_tree_path_ranker_score_used=false
+blocked=user_selected_historical_data_missing
+strict_full_objective=false
+promotion_allowed=false
+update_goal=false

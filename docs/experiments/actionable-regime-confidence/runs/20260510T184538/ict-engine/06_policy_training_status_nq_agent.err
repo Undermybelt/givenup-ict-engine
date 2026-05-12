@@ -1,0 +1,5 @@
+error: unexpected argument '--agent' found
+
+Usage: ict-engine policy-training-status --symbol <SYMBOL> --state-dir <STATE_DIR>
+
+For more information, try '--help'.

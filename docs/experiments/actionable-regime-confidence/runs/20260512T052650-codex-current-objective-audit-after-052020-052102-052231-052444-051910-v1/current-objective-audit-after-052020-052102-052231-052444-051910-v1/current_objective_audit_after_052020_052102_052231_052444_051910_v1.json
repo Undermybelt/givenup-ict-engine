@@ -1,0 +1,48 @@
+{
+  "board_hash_before_artifact": "bd4384a420ba31e431b180e8493231a562aac7807385049c2f750fed506ef572",
+  "completed_roots_reviewed": [
+    {
+      "gate": "r6_owner_export_local_arrival_scan_after_051754_v1=no_complete_owner_export_package_no_source_control_unlock_no_promotion",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T052020-codex-r6-owner-export-local-arrival-scan-after-051754-v1"
+    },
+    {
+      "gate": "source_export_credential_readback_after_051754_v1=no_owner_export_or_credential_no_promotion",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T052102-codex-source-export-credential-readback-after-051754-v1"
+    },
+    {
+      "gate": "r6_owner_export_sendable_requests_v5_with_bessembinder_addendum_v1=request_packet_refreshed_addendum_integrated_controls_not_acquired_no_merge",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1"
+    },
+    {
+      "gate": "r6_owner_export_dispatch_manifest_v1=dispatch_manifest_ready_not_sent_controls_not_acquired",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T052444-codex-r6-owner-export-dispatch-manifest-v1"
+    },
+    {
+      "gate": "databento_cfe_mbo_route_specificity_after_044137_v1=route_specificity_confirmed_no_local_export_no_promotion",
+      "root": "docs/experiments/actionable-regime-confidence/runs/20260512T051910-codex-databento-cfe-mbo-route-specificity-after-044137-v1"
+    }
+  ],
+  "generated_at_local": "2026-05-12T05:26:50+0800",
+  "gate_result": "current_objective_audit_after_052020_052102_052231_052444_051910_v1=not_complete_no_source_control_unlock_active_probes_inflight_no_promotion",
+  "inflight_roots_not_counted": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T052301-codex-source-label-macro-context-rule-miner-v1"
+  ],
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "run_id": "20260512T052650-codex-current-objective-audit-after-052020-052102-052231-052444-051910-v1"
+}

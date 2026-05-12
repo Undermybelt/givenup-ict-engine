@@ -1,0 +1,6 @@
+live_verifier_schema_ready=ok
+exact_gate_not_replaced=ok
+strict_full_objective_not_complete=ok
+update_goal_false=ok
+contract_written=ok
+metrics_written=ok

@@ -1,0 +1,62 @@
+{
+  "status": "missing_dependency",
+  "healthy": false,
+  "bootstrap_needed": true,
+  "dependency_healthy": false,
+  "data_ready": false,
+  "update_available": false,
+  "managed_dir": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant",
+  "workspace": {
+    "repo_root": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant",
+    "program_md": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant/program.md",
+    "prepare_script": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant/prepare.py",
+    "run_script": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant/run.py",
+    "config_json": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant/config.json",
+    "strategies_dir": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant/user_data/strategies",
+    "data_dir": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant/user_data/data"
+  },
+  "dependency_status": {
+    "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+    "managed_dir": "/tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant/.deps/auto-quant",
+    "tracked_branch": "master",
+    "pinned_ref": null,
+    "current_commit": null,
+    "upstream_commit": null,
+    "bootstrap_needed": true,
+    "config_present": false,
+    "managed_repo_present": false,
+    "healthy": false,
+    "update_available": false,
+    "required_files": [
+      "README.md",
+      "program.md",
+      "prepare.py",
+      "run.py",
+      "versions/README.md"
+    ],
+    "notes": [
+      "auto_quant_not_bootstrapped"
+    ],
+    "adapter_version": "v1",
+    "last_sync": null
+  },
+  "recommended_next_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant",
+  "recommended_next_command_meta": {
+    "kind": "ict_engine",
+    "requires_user_input": false,
+    "blocked": false,
+    "prompt": null,
+    "executable_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant",
+    "recorded_data_paths": []
+  },
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": "auto_quant_bootstrap_required",
+    "deferred_command": "ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-b-nq-cost-crisis-repair-032157/auto-quant/auto-quant",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "notes": [
+    "auto_quant_not_bootstrapped"
+  ]
+}

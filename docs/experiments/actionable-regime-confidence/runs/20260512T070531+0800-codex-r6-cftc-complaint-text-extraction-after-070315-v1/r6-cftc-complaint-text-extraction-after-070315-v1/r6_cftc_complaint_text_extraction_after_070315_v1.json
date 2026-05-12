@@ -1,0 +1,99 @@
+{
+  "run_id": "20260512T070531+0800-codex-r6-cftc-complaint-text-extraction-after-070315-v1",
+  "board_sha256_before_report_write": "e23e16f21d42e30676b76bafa2b61357f33d51045a5b7aa87c5608503b8aabac",
+  "inputs": {
+    "complaint_pdf": "/tmp/ict-engine-board-a-public-exact-source-route-probe-after-065820-v1/enfigorcomplnt101915.pdf",
+    "complaint_sha256_ref": "docs/experiments/actionable-regime-confidence/runs/20260512T070315+0800-codex-public-exact-source-route-probe-after-065820-v1/command-output/cftc_complaint_pdf.sha256",
+    "consent_order_pdf": "docs/experiments/actionable-regime-confidence/runs/20260512T070531+0800-codex-r6-cftc-complaint-text-extraction-after-070315-v1/command-output/enfoystacherorder122016.pdf",
+    "consent_order_url": "https://www.cftc.gov/idc/groups/public/@lrenforcementactions/documents/legalpleading/enfoystacherorder122016.pdf"
+  },
+  "extraction": {
+    "tool": "uv run --with pypdf python",
+    "complaint_pages": 36,
+    "consent_order_pages": 19,
+    "complaint_chars": 59020,
+    "consent_order_chars": 31856,
+    "complaint_mentions_exhibit_a": true,
+    "complaint_mentions_appendix_dates": true,
+    "order_mentions_monitor": true
+  },
+  "facts": {
+    "charged_trading_days_at_least": 51,
+    "products_or_product_groups": 6,
+    "official_source_route_improved": true,
+    "row_level_order_lifecycle_rows_acquired": false,
+    "source_owned_normal_controls_acquired": false,
+    "main_regime_v2_rows_acquired": false,
+    "valid_required_root_unlock": false
+  },
+  "gate_result": "r6_cftc_complaint_text_extraction_after_070315_v1=official_counts_extracted_controls_not_acquired_no_unlock",
+  "decision": "Official CFTC PDFs strengthen the R6 Oystacher route with product/date/count/fill-rate facts, but do not provide verifier-ready normal controls, owner export provenance, R5 post-cutoff rows, or R3 Crisis-capable MainRegimeV2 labels.",
+  "products": [
+    {
+      "product": "COMEX copper",
+      "exchange": "COMEX",
+      "charged_dates": "2011-12-01, 2011-12-02, 2011-12-05..2011-12-09, 2011-12-12..2011-12-16, 2011-12-19, 2011-12-20",
+      "spoof_orders_at_least": 1633,
+      "manipulative_device_events_at_least": 288,
+      "passive_spoof_fill_pct": 0.89,
+      "passive_spoof_cancel_pct": 99.11,
+      "aggressive_flip_fill_pct": 44.3,
+      "aggressive_flip_cancel_pct": 55.7
+    },
+    {
+      "product": "NYMEX crude oil",
+      "exchange": "NYMEX",
+      "charged_dates": "2012-05-07, 2012-05-09..2012-05-11",
+      "spoof_orders_at_least": 1102,
+      "manipulative_device_events_at_least": 324,
+      "passive_spoof_fill_pct": 1.87,
+      "passive_spoof_cancel_pct": 98.13,
+      "aggressive_flip_fill_pct": 69.83,
+      "aggressive_flip_cancel_pct": 30.17
+    },
+    {
+      "product": "NYMEX natural gas",
+      "exchange": "NYMEX",
+      "charged_dates": "2012-11-30, 2012-12-03..2012-12-04",
+      "spoof_orders_at_least": 1574,
+      "manipulative_device_events_at_least": 330,
+      "passive_spoof_fill_pct": 0.51,
+      "passive_spoof_cancel_pct": 99.49,
+      "aggressive_flip_fill_pct": 50.76,
+      "aggressive_flip_cancel_pct": 49.24
+    },
+    {
+      "product": "CFE VIX",
+      "exchange": "CFE",
+      "charged_dates": "2013-02-19..2013-02-22, 2013-02-25..2013-02-28, 2013-03-01, 2013-03-04..2013-03-07, 2013-03-11..2013-03-12, 2013-03-18..2013-03-21",
+      "spoof_orders_at_least": 284,
+      "manipulative_device_events_at_least": 89,
+      "passive_spoof_fill_pct": 0.94,
+      "passive_spoof_cancel_pct": 99.06,
+      "aggressive_flip_fill_pct": 37.53,
+      "aggressive_flip_cancel_pct": 62.47
+    },
+    {
+      "product": "CME E-Mini S&P 500 June 2013",
+      "exchange": "CME",
+      "charged_dates": "2013-06-11..2013-06-12",
+      "spoof_orders_at_least": 614,
+      "manipulative_device_events_at_least": 285,
+      "passive_spoof_fill_pct": 0.17,
+      "passive_spoof_cancel_pct": 99.83,
+      "aggressive_flip_fill_pct": 55.2,
+      "aggressive_flip_cancel_pct": 37.9
+    },
+    {
+      "product": "CME E-Mini S&P 500 Dec 2013 Jan 2014",
+      "exchange": "CME",
+      "charged_dates": "2013-12-16..2013-12-19, 2014-01-06..2014-01-10",
+      "spoof_orders_at_least": 614,
+      "manipulative_device_events_at_least": 285,
+      "passive_spoof_fill_pct": 0.57,
+      "passive_spoof_cancel_pct": 99.43,
+      "aggressive_flip_fill_pct": 69.39,
+      "aggressive_flip_cancel_pct": 27.81
+    }
+  ]
+}

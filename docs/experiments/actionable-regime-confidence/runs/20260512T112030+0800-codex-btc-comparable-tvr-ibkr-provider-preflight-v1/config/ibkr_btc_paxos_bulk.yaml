@@ -1,0 +1,24 @@
+gateway:
+  host: 127.0.0.1
+  port: 4002
+  client_id: 32
+output:
+  directory: docs/experiments/actionable-regime-confidence/runs/20260512T112030+0800-codex-btc-comparable-tvr-ibkr-provider-preflight-v1/derived/ibkr_btc_paxos
+  filename_template: '{symbol}_{bar_suffix}_{what}.csv'
+  force: true
+defaults:
+  bar_size: '1 hour'
+  duration: '2 D'
+  what_to_show: MIDPOINT
+  rth: false
+  exchange: PAXOS
+  currency: USD
+symbols:
+  - symbol: BTC
+    sec_type: CRYPTO
+    exchange: PAXOS
+    currency: USD
+    what_to_show: MIDPOINT
+    rth: false
+    bar_sizes: ['1 hour']
+    duration: '2 D'

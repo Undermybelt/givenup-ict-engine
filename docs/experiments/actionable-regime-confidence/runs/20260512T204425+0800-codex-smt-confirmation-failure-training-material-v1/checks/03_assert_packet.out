@@ -1,0 +1,8 @@
+{
+  "packet_assertion": "pass",
+  "rows": 7,
+  "signals": 7,
+  "negative_normalized_rows": 2,
+  "quality_weight": 0.0,
+  "downstream_allowed": false
+}

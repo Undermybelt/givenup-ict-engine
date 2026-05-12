@@ -1,0 +1,150 @@
+{
+  "run_id": "20260511T115743+0800-codex-crystalbull-ibd-qqq-logit-gate",
+  "active_taxonomy": "MainRegimeV2",
+  "candidate_source": {
+    "name": "CrystalBull IBD Market Pulse Review",
+    "url": "https://www.crystalbull.com/IBD-market-pulse-review/",
+    "raw_page_committed": false,
+    "embedded_outlook_points": 4957,
+    "mapping_tested": {
+      "Confirmed Uptrend": "Bull",
+      "Uptrend Under Pressure": "Sideways",
+      "Correction": "Bear"
+    },
+    "missing_source_root": "Crisis"
+  },
+  "calibration_setup": {
+    "provider": "yfinance",
+    "instrument": "QQQ",
+    "timeframe": "1d",
+    "model": "pure_numpy_one_vs_rest_l2_logistic_regression",
+    "dependency_note": "sklearn/catboost/xgboost/lightgbm were not installed; no package installation was performed",
+    "feature_family": "current_and_past_OHLCV_rolling_returns_volatility_ma_drawdown_range_volume_rsi",
+    "nonlinear_features": [
+      "zscore",
+      "tanh(zscore)",
+      "zscore_squared"
+    ],
+    "selection_policy": "fit on train only; choose probability threshold on calibration only; evaluate held-out test once",
+    "feature_rows_after_warmup": 4706,
+    "feature_date_range": {
+      "start": "2003-12-30",
+      "end": "2022-09-16"
+    },
+    "label_counts_after_warmup": {
+      "Bull": 2857,
+      "Sideways": 833,
+      "Bear": 1016
+    },
+    "split": {
+      "train": 2823,
+      "calibration": 941,
+      "test": 942
+    },
+    "blocked_predictor_prefixes": [
+      "future_",
+      "target_"
+    ],
+    "thresholds_relaxed": false
+  },
+  "results": {
+    "Bull": {
+      "threshold": 0.8588724964898813,
+      "selection_rule": "maximum calibration support among thresholds with calibration Wilson95 LCB >= 0.95 and support >= 20",
+      "train": {
+        "support": 875,
+        "positive": 854,
+        "precision": 0.976,
+        "wilson95_lcb": 0.9635887439879874
+      },
+      "calibration": {
+        "support": 254,
+        "positive": 249,
+        "precision": 0.9803149606299213,
+        "wilson95_lcb": 0.9547541706694571
+      },
+      "test": {
+        "support": 307,
+        "positive": 293,
+        "precision": 0.9543973941368078,
+        "wilson95_lcb": 0.924919005214456
+      },
+      "stricter_calibration_threshold_check": {
+        "threshold": 0.9313434225966869,
+        "calibration_support": 138,
+        "calibration_positive": 138,
+        "calibration_wilson95_lcb": 0.9729162671599869,
+        "test_support": 198,
+        "test_positive": 189,
+        "test_wilson95_lcb": 0.915883456708482
+      },
+      "accepted_95": false
+    },
+    "Bear": {
+      "threshold": 0.9846222054825979,
+      "selection_rule": "best calibration Wilson95 LCB with support when no calibration threshold reached 0.95",
+      "train": {
+        "support": 127,
+        "positive": 125,
+        "precision": 0.984251968503937,
+        "wilson95_lcb": 0.9443972558906893
+      },
+      "calibration": {
+        "support": 43,
+        "positive": 41,
+        "precision": 0.9534883720930233,
+        "wilson95_lcb": 0.8454422407613695
+      },
+      "test": {
+        "support": 64,
+        "positive": 60,
+        "precision": 0.9375,
+        "wilson95_lcb": 0.8500230335750312
+      },
+      "accepted_95": false
+    },
+    "Sideways": {
+      "threshold": 0.7986020135382524,
+      "selection_rule": "best calibration Wilson95 LCB with support when no calibration threshold reached 0.95",
+      "train": {
+        "support": 213,
+        "positive": 113,
+        "precision": 0.5305164319248826,
+        "wilson95_lcb": 0.4635466363856234
+      },
+      "calibration": {
+        "support": 60,
+        "positive": 39,
+        "precision": 0.65,
+        "wilson95_lcb": 0.5236238380947751
+      },
+      "test": {
+        "support": 115,
+        "positive": 23,
+        "precision": 0.2,
+        "wilson95_lcb": 0.1371296827840679
+      },
+      "accepted_95": false
+    },
+    "Crisis": {
+      "accepted_95": false,
+      "reason": "CrystalBull/IBD source axis has no Crisis label."
+    }
+  },
+  "decision": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_roots": [],
+    "gate_result": "blocked_crystalbull_ibd_qqq_logit_gate_below_95_and_incomplete_source_axis",
+    "notes": [
+      "The probability model improves Bull calibration but the held-out test Wilson95 LCB remains below 0.95.",
+      "Bear and Sideways remain far below the unchanged 95 gate.",
+      "Crisis is absent from the source axis.",
+      "This does not close full-matrix provider/instrument/timeframe coverage."
+    ]
+  },
+  "runtime_code_changed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Stop recycling CrystalBull/IBD QQQ daily OHLCV models; acquire exact source-label panels for current MainRegimeV2 missing slots or a materially different direct source."
+}

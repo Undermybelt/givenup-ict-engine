@@ -1,0 +1,10 @@
+instrument,timeframe,root,accepted_95,cal_lcb,test_lcb,cal_support,test_support,blockers
+ES=F,1mo,Bull,False,0.875445,0.510109,27,4,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95
+ES=F,1mo,Bear,False,0.000000,0.000000,0,0,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95
+ES=F,1mo,Crisis,False,0.000000,0.000000,0,0,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95
+SPY,1mo,Bull,False,0.895730,0.206549,33,1,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95
+SPY,1mo,Bear,False,0.000000,0.000000,0,0,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95
+SPY,1mo,Crisis,False,0.000000,0.000000,0,0,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95
+^GSPC,1mo,Bull,False,0.898485,0.645670,34,7,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95
+^GSPC,1mo,Bear,False,0.000000,0.000000,0,0,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95
+^GSPC,1mo,Crisis,False,0.000000,0.000000,0,0,calibration_support_below_60;calibration_wilson95_below_0_95;test_support_below_60;test_wilson95_below_0_95

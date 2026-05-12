@@ -1,0 +1,37 @@
+{
+  "run_id": "20260512T052431+0800-codex-board-b-objective-audit-v15-after-052231-v1",
+  "gate_result": "board_b_objective_completion_audit_v15_after_052231=not_complete_source_requests_only_no_selected_data_no_promotion",
+  "board_b_hash_before_artifact": "15e0b23f82b2601f87f52695c90cf7024020116a77bf4e296ab7188c9b74642a",
+  "board_a_hash_before_artifact": "f514e5833ba956203f01c14524d0542c6f3e26fb76f3616dfc250fc723b2ae6e",
+  "cursor": "034002/downstream-combined-v1",
+  "blocking_requirement": "user_selected_historical_data_missing",
+  "required_user_choices": [
+    "HTF=1d",
+    "MTF=4h",
+    "LTF=1h"
+  ],
+  "explicit_user_selected_timeframe_present": false,
+  "fresh_selected_data_auto_quant": false,
+  "nonzero_mature_rooted_branch_observations": false,
+  "ordered_chain_promotion_rerun": false,
+  "branch_path_preserved_through_filter_bbn_catboost_execution_tree": false,
+  "post_v14_evidence": {
+    "051815": "source/control arrival poll, no required unlock root, non-promoting",
+    "051909": "source/control arrival scan, no new source/control unlock, non-promoting",
+    "051910": "Databento CFE XCBF.PITCH route specificity, no local export, non-promoting",
+    "052020": "R6 owner-export local arrival scan, no complete owner-export package, non-promoting",
+    "052102": "source export/credential readback, no owner export or credential, non-promoting",
+    "052231": "sendable request packet refreshed with Bessembinder addendum, controls not acquired, no merge",
+    "051844": "active/non-terminal HGB numeric root, not counted",
+    "single_branch_path_survives_pre_bayes_into_bbn_assignments": "active/non-terminal Cargo process, not counted"
+  },
+  "accepted_rows_added": 0,
+  "accepted_regime_confidence_labels": 0,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

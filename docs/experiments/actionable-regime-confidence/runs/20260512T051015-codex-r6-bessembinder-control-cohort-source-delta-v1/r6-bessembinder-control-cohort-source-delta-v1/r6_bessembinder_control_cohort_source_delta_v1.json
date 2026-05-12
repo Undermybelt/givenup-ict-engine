@@ -1,0 +1,34 @@
+{
+  "board_effect": {
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "request_addendum": "docs/experiments/actionable-regime-confidence/runs/20260512T051015-codex-r6-bessembinder-control-cohort-source-delta-v1/r6-bessembinder-control-cohort-source-delta-v1/r6_bessembinder_control_cohort_request_addendum_v1.md",
+    "request_refinement": "Add Bessembinder/CFTC comparison cohort language to renewed R6 owner-export requests when asking for verifier-native normal/control rows.",
+    "target_roots_mutated": false
+  },
+  "gate_result": "r6_bessembinder_control_cohort_source_delta_v1=official_control_cohort_context_found_no_verifier_native_rows_no_promotion",
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "run_id": "20260512T051015-codex-r6-bessembinder-control-cohort-source-delta-v1",
+  "sources": [
+    {
+      "effect": "official/court context for comparative control-cohort request refinement; no verifier-native rows acquired",
+      "title": "CFTC v. Oystacher, N.D. Ill. document 195",
+      "url": "https://law.justia.com/cases/federal/district-courts/illinois/ilndce/1%3A2015cv09196/316889/195/"
+    }
+  ]
+}

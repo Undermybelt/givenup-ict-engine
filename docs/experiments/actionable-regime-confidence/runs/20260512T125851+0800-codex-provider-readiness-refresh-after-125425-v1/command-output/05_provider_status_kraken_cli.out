@@ -1,0 +1,5 @@
+local_runtime:1/1 ready
+guide: kraken_cli: access=login_and_local_runtime fit=crypto fallback=40 summary=Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows.
+detail: kraken_cli | access=login_and_local_runtime | Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows.
+local_runtime: ready 1/1 selectable 0 default 0
+  ready: kraken_cli

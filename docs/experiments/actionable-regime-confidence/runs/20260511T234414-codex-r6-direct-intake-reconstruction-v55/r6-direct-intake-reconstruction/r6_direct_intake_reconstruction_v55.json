@@ -1,0 +1,101 @@
+{
+  "artifact_type": "r6_direct_intake_reconstruction_v55",
+  "board_hash_before": "18486811d9381f23e361fde7aa671678be66d6499dba02f092b6513067ab4de8",
+  "gate_result": "r6_direct_intake_reconstruction_v55=isolated_schema_ready_reconstruction_incomplete_confidence_still_blocked",
+  "gates": [
+    {
+      "gate": "isolated_verifier_schema",
+      "observed": "schema_ready_unscored",
+      "pass": true,
+      "required": "schema_ready_unscored"
+    },
+    {
+      "gate": "reconstructs_v54_positive_count",
+      "observed": 53,
+      "pass": false,
+      "required": 57
+    },
+    {
+      "gate": "reconstructs_v54_negative_count",
+      "observed": 53,
+      "pass": false,
+      "required": 57
+    },
+    {
+      "gate": "positive_groups_have_matched_controls",
+      "observed": 0,
+      "pass": true,
+      "required": 0
+    },
+    {
+      "gate": "reconstructed_wilson95",
+      "observed": "0.932415695547",
+      "pass": false,
+      "required": ">=0.95"
+    },
+    {
+      "gate": "v54_plus_sarao_nowak_wilson95",
+      "observed": "0.947260905856",
+      "pass": false,
+      "required": ">=0.95"
+    }
+  ],
+  "isolated_files": {
+    "matched_negative_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake/matched_negative_normal_activity_rows.csv",
+    "positive_rows": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake/positive_spoofing_layering_rows.csv",
+    "provenance_manifest": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake/provenance_manifest.json"
+  },
+  "isolated_root": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake",
+  "next_action": "Recover the missing durable source rows or rerun the row-uplift scripts under a shared lock until the isolated reconstruction matches V54 57/57 exactly, then materialize matched controls for Sarao and Nowak/Smith before calibration.",
+  "reconstruction": {
+    "matched_group_count": 52,
+    "matched_negative_rows": 53,
+    "missing_vs_v54_negative_rows": 4,
+    "missing_vs_v54_positive_rows": 4,
+    "positive_rows": 53,
+    "wilson95_min_lcb": 0.9324156955469233
+  },
+  "run_id": "20260511T234414+0800-codex-r6-direct-intake-reconstruction-v55",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "sidecar_candidates": {
+    "additional_positive_rows_needed_after_both_on_v54_baseline": 4,
+    "nowak_smith_positive_rows": 6,
+    "sarao_positive_rows": 6,
+    "v54_what_if_positive_rows_after_both": 69,
+    "v54_what_if_wilson95_lcb_after_both": 0.9472609058559943
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "v54_baseline": {
+    "matched_negative_rows": 57,
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T223100-codex-current-goal-completion-audit-v54-after-sidecar-calibration/completion-audit/current_goal_completion_audit_v54_after_sidecar_calibration.json",
+    "positive_rows": 57,
+    "wilson95_min_lcb": 0.936861
+  },
+  "verifier": {
+    "payload": {
+      "matched_group_count": 52,
+      "matched_negative_rows": 53,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 53,
+      "provenance_keys": [
+        "after_cleanup",
+        "artifact_type",
+        "before_cleanup",
+        "board_hash_before",
+        "cleanup_removed_source_row_ids",
+        "created_at_utc",
+        "policy",
+        "run_id",
+        "source_steps"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/direct_manipulation_row_intake_verifier.stdout.txt"
+  }
+}

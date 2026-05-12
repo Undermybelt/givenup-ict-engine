@@ -1,0 +1,523 @@
+{
+  "schema_version": "board-a-actionable-regime-confidence-evidence/v2",
+  "loop_id": "20260510T183454+0800-board-a-v2-provider-agreement-calibration",
+  "board": "Actionable Regime Confidence",
+  "durable_run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T183454",
+  "source_roots": [
+    "/tmp/ict-regime-chain-20260509T231052",
+    "/tmp/ict-regime-branch-iteration-20260510-1",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T174651"
+  ],
+  "active_market_timeframe_set": {
+    "primary_chain": [
+      "QQQ 1h",
+      "NQ 15m"
+    ],
+    "provider_probe_only": [
+      "PF_XBTUSD 1h"
+    ]
+  },
+  "provider_packet": {
+    "status": "refreshed_with_current_failures_recorded",
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:2/2 ready | market_data:6/7 ready",
+    "ready_by_domain": {
+      "entry_model": "2/2",
+      "live_runtime": "1/3",
+      "local_runtime": "2/2",
+      "market_data": "6/7"
+    },
+    "market_data_summary_line": "market_data:6/7 ready",
+    "yfinance": {
+      "exists": true,
+      "artifact": "provider/yf_QQQ_1h_20240601_20260509.csv",
+      "rows": 3369,
+      "first": "2024-06-03 13:30:00+00:00",
+      "last": "2026-05-08 20:00:00+00:00",
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ]
+    },
+    "ibkr": {
+      "exists": true,
+      "artifact": "provider/ibkr_QQQ_1h.csv",
+      "rows": 4007,
+      "first": "2025-05-09T08:00:00+00:00",
+      "last": "2026-05-08T23:00:00+00:00",
+      "columns": [
+        "ts",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "wap",
+        "count"
+      ]
+    },
+    "kraken": {
+      "exists": true,
+      "artifact": "provider/kraken_PF_XBTUSD_1h_2024_2025.csv",
+      "rows": 2000,
+      "first": "2024-01-01 00:00:00+00:00",
+      "last": "2024-03-24 07:00:00+00:00",
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ]
+    },
+    "tradingview_remix": {
+      "current_artifact": "provider/tv_qqq_harness.json",
+      "current_status": "fetch_failed",
+      "current_error": "Error: market-data-harness fetch encountered failures: role=qqq_tv_reference provider=tradingview_mcp symbol=NASDAQ:QQQ fetch_failed:tradingview MCP call 'get_ohlcv' returned error | install_prompt=Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable. | install_prompt=Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+      "durable_prior_success_artifact": "../20260510T174651/provider/full-chain/loop4_tradingview_qqq_1d_fetch.json"
+    },
+    "auto_quant_cache": {
+      "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather",
+      "prior_summary_artifact": "../20260510T174651/provider/full-chain/loop_autoquant_nq_15m_summary.json",
+      "current_tmp_strategy_root": "/tmp/ict-regime-chain-20260509T231052/scratch_strategies"
+    }
+  },
+  "candidate_regime": {
+    "regime_id": "ProviderAgreementTrendExpansion / ProviderDisagreementTransitionGuardrail",
+    "horizon": "16 bars forward-payoff and 20k chronological provider-aware calibration",
+    "allowed_action": "none",
+    "reason": "Provider agreement and forward-payoff probes did not produce accepted 95% release rule; live analyze remained observe/transition_guardrail."
+  },
+  "auto_quant_packet": {
+    "current_tmp_strategy_probe": {
+      "artifact": "autoquant/fresh_tomac_scratch_no_rsi_2025.json",
+      "strategy_dir": "/tmp/ict-regime-chain-20260509T231052/scratch_strategies",
+      "strategies_attempted": 1,
+      "errors": [
+        {
+          "strategy": "TomacNQ_ScratchNoRSINoConflict15m",
+          "error_type": "OperationalException",
+          "error": "No data found. Terminating.",
+          "traceback": "Traceback (most recent call last):\n  File \"/tmp/ict-regime-chain-20260509T231052/fresh_tomac_backtest_runner.py\", line 168, in main\n    results = run_one(strategy, args.timerange, strategy_dir)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ict-regime-chain-20260509T231052/fresh_tomac_backtest_runner.py\", line 116, in run_one\n    bt.start()\n  File \"/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py\", line 1834, in start\n    data, timerange = self.load_bt_data()\n                      ^^^^^^^^^^^^^^^^^^^\n  File \"/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py\", line 314, in load_bt_data\n    data = history.load_data(\n           ^^^^^^^^^^^^^^^^^^\n  File \"/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/data/history/history_utils.py\", line 132, in load_data\n    raise OperationalException(\"No data found. Terminating.\")\nfreqtrade.exceptions.OperationalException: No data found. Terminating.\n"
+        }
+      ],
+      "decision": "strategy_root_found_but_fresh_runner_blocked_no_data"
+    },
+    "durable_512_entry_windows": {
+      "entry_windows": 512,
+      "selected_trades_artifact": "autoquant/autoquant-entry-windows-512-selected-trades.csv",
+      "aq_only_probe": {
+        "artifact": "catboost/autoquant_entry_aqonly_catboost_probe_512.json",
+        "overall_decision": "no_95_candidate"
+      },
+      "qqq_branch_candidate": {
+        "artifact_root": "branch-chain/qqq-regime-branch-iteration",
+        "strategy": "TomacNQ_KillzoneBreakout",
+        "trades": 74,
+        "total_profit_pct": 6.98,
+        "sharpe": 0.2207,
+        "win_rate_pct": 52.7027,
+        "profit_factor": 1.2501,
+        "promotion_state": "not_promoted_weak_sharpe_provider_disagreement"
+      }
+    },
+    "boundary": "Auto-Quant owns recipe/backtest evidence; Board A consumes outputs for regime confidence only."
+  },
+  "downstream_chain": {
+    "pre_bayes": {
+      "artifact": "ict-engine/pre-bayes-status-qqq.txt",
+      "summary": "{\n  \"latest_bridge\": null,\n  \"latest_bridge_diff\": null,\n  \"latest_canonical_structural_active_regime\": null,\n  \"latest_canonical_structural_confidence\": null,\n  \"latest_canonical_structural_probabilities\": {},\n  \"latest_gate_status\": null,\n  \"latest_policy\": null,\n  \"latest_policy_diff\": null,\n  \"latest_policy_lineage\": {\n    \"changed_fields_union\": [],\n    \"latest_version\": null,\n    \"previous_version\": null,\n    \"rollback_candidate_version\": null,\n    \"rollback_reason\": \"no_policy_rollback_suggested\",\n    \"total_versions\": 0\n  },\n  \"latest_policy_version\": null,\n  \"latest_soft_evidence\": null,\n  \"latest_soft_evidence_diff\": [],\n  \"latest_uses_soft_evidence\": null\n}\n"
+    },
+    "bbn": {
+      "artifact": "ict-engine/auto-quant-prior-init-qqq-dry-run.json",
+      "dry_run": true,
+      "summary": {
+        "bbn_contradiction_lift": 0.8536188292682926,
+        "bbn_entropy_reduction": 0.0,
+        "bbn_log_loss_delta": 4.376401323426838,
+        "command": "auto-quant-prior-init",
+        "cross_library_apply": null,
+        "dry_run": true,
+        "evidence_value_gate_passed": true,
+        "existing_apply_artifact_id": null,
+        "final_probs": [
+          0.5731664390243902,
+          2.146341463414634e-06,
+          0.42683141463414637
+        ],
+        "force": false,
+        "initial_probs": [
+          0.999956,
+          2.2e-05,
+          2.2e-05
+        ],
+        "library_artifact_id": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/strategy_library_qqq_tomac_hist.json",
+        "library_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/strategy_library_qqq_tomac_hist.json",
+        "parent_config": [
+          0,
+          0,
+          0
+        ],
+        "prior_init_artifact_id": "auto_quant_prior_init_QQQ_20260510T104111.742572000Z",
+        "prior_init_history_path": "/tmp/ict-board-a-20260510T183454-state/auto-quant/QQQ/auto_quant_prior_init_history.json",
+        "prior_init_state_path": "/tmp/ict-board-a-20260510T183454-state/auto-quant/QQQ/auto_quant_prior_init_QQQ_20260510T104111.742572000Z.json",
+        "prior_strength": 4.0,
+        "strategies_applied": [
+          {
+            "after_probs": [
+              0.5731664390243902,
+              2.146341463414634e-06,
+              0.42683141463414637
+            ],
+            "bbn_contradiction_after": 0.09228311667765329,
+            "bbn_contradiction_before": 0.9459019459459459,
+            "bbn_contradiction_lift": 0.8536188292682926,
+            "bbn_entropy_after": 0.6824303155704626,
+            "bbn_entropy_before": 0.0005158756285885085,
+            "bbn_entropy_reduction": 0.0,
+            "bbn_log_loss_after": 0.6960054292618328,
+            "bbn_log_loss_before": 5.0724067526886705,
+            "bbn_log_loss_delta": 4.376401323426838,
+            "before_probs": [
+              0.999956,
+              2.2e-05,
+              2.2e-05
+            ],
+            "diff": [
+              -0.4267895609756097,
+              -1.9853658536585365e-05,
+              0.42680941463414634
+            ],
+            "evidence_value_gate_passed": true,
+            "mutation_id": "qqq-regime-branch-20260510-tomac-killzone-breakout",
+            "n_breakeven": 0,
+            "n_loss": 35,
+            "n_win": 39,
+            "strategy_name": "TomacNQ_KillzoneBreakout",
+            "temper": 0.5,
+            "trade_count": 74
+          }
+        ],
+        "strategies_skipped": [],
+        "symbol": "QQQ",
+        "temper": 0.5
+      }
+    },
+    "catboost_policy_status": {
+      "artifact": "ict-engine/policy-training-status-qqq.txt",
+      "summary_line": [
+        "  \"summary_line\": \"entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0\"",
+        "}"
+      ]
+    },
+    "analyze_live": {
+      "artifact": "ict-engine/analyze-live-nq-yfinance-agent.json",
+      "gate": "pass_neutralized",
+      "execution_triage": {
+        "branch": "transition_guardrail",
+        "branch_probability": 0.0,
+        "consumer_reason": "market_state=TrendExpansion/BullTrendExhaustion | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+        "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+        "execution_bias": "guarded",
+        "execution_score": 0.5621094129136341,
+        "gate_status": "observe",
+        "one_line": "execution observe | branch=transition_guardrail | bias=guarded | score=0.562 | confidence=0.000 | hint=execution_guarded_due_to_high_transition_hazard",
+        "posterior_uncertainty": 1.0,
+        "reason_summary": [
+          "branch=block_crowded (gate_status=blocked, readiness 0.4486 < 0.45)",
+          "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.550",
+          "market_state=volatility=LowVol:0.890 liquidity=NormalLiquidity:0.433 structure=Trending:0.576 behavior=Neutral:0.450",
+          "market_state=rationale=volatility=LowVol conf=0.89",
+          "market_state=rationale=structure=Trending conf=0.58"
+        ]
+      },
+      "decision_summary": "Observe only"
+    },
+    "workflow_status": {
+      "artifact": "ict-engine/workflow-status-qqq-agent.json",
+      "blocking_status": "no_workflow_state",
+      "blocking_reason": "no_workflow_state",
+      "focus_phase": "workflow_status"
+    },
+    "execution_tree_512_readback": {
+      "artifact": "ict-engine/legacy_entry_scan_512_summary.json",
+      "summary": {
+        "branch_counts": {
+          "block_crowded": 105,
+          "transition_guardrail": 398,
+          "wait_for_reversion": 9
+        },
+        "decision_hint_counts": {
+          "execution_blocked_regardless_of_prediction": 105,
+          "execution_guarded_due_to_high_transition_hazard": 107,
+          "execution_guarded_due_to_low_remaining_regime_duration": 291,
+          "execution_observe_with_medium_prediction": 9
+        },
+        "gate_status_counts": {
+          "blocked": 105,
+          "observe": 407
+        },
+        "metric_summary": {
+          "branch_probability": {
+            "count": 512,
+            "max": 1.0,
+            "mean": 0.044467787109375,
+            "median": 0.0,
+            "min": 0.0,
+            "p25": 0.0,
+            "p75": 0.0
+          },
+          "cycle_phase_alignment": {
+            "count": 365,
+            "max": 0.9981,
+            "mean": -0.12250931506849315,
+            "median": -0.4045,
+            "min": -1.0,
+            "p25": -0.7408,
+            "p75": 0.5674
+          },
+          "dominant_cycle_energy": {
+            "count": 345,
+            "max": 0.9095,
+            "mean": 0.6295104347826087,
+            "median": 0.6329,
+            "min": 0.317,
+            "p25": 0.5279,
+            "p75": 0.7297
+          },
+          "duration_remaining_expected_bars": {
+            "count": 337,
+            "max": 2.5,
+            "mean": 0.4762611275964392,
+            "median": 0.0,
+            "min": 0.0,
+            "p25": 0.0,
+            "p75": 0.55
+          },
+          "execution_readiness": {
+            "count": 512,
+            "max": 0.5193,
+            "mean": 0.385847265625,
+            "median": 0.3932,
+            "min": 0.1363,
+            "p25": 0.3467,
+            "p75": 0.4373
+          },
+          "execution_score": {
+            "count": 512,
+            "max": 0.630333,
+            "mean": 0.541764919921875,
+            "median": 0.557664,
+            "min": 0.34633,
+            "p25": 0.547519,
+            "p75": 0.565877
+          },
+          "hybrid_transition_hazard": {
+            "count": 398,
+            "max": 0.699,
+            "mean": 0.6231984924623116,
+            "median": 0.633,
+            "min": 0.446,
+            "p25": 0.592,
+            "p75": 0.665
+          },
+          "ising_phase_transition_risk": {
+            "count": 503,
+            "max": 0.3634,
+            "mean": 0.2833717693836978,
+            "median": 0.2793,
+            "min": 0.2337,
+            "p25": 0.2658,
+            "p75": 0.2913
+          },
+          "prediction_vote_score": {
+            "count": 512,
+            "max": 0.5626,
+            "mean": 0.548087890625,
+            "median": 0.5475,
+            "min": 0.5393,
+            "p25": 0.5449,
+            "p75": 0.5507
+          },
+          "pythagorean_overstretch": {
+            "count": 255,
+            "max": 1.0,
+            "mean": 0.6837172549019608,
+            "median": 1.0,
+            "min": 0.0021,
+            "p25": 0.2668,
+            "p75": 1.0
+          },
+          "ranker_score_calibrated_path_prob": {
+            "count": 0,
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "p25": null,
+            "p75": null
+          },
+          "ranker_score_path_prob_lower_bound": {
+            "count": 0,
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "p25": null,
+            "p75": null
+          },
+          "ranker_score_raw_path_score": {
+            "count": 0,
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "p25": null,
+            "p75": null
+          },
+          "readiness_gap_to_observe": {
+            "count": 512,
+            "max": 0.3137,
+            "mean": 0.0664431640625,
+            "median": 0.0571,
+            "min": 0.0,
+            "p25": 0.0127,
+            "p75": 0.1033
+          },
+          "readiness_gap_to_ready": {
+            "count": 512,
+            "max": 0.5137,
+            "mean": 0.264152734375,
+            "median": 0.2571,
+            "min": 0.1307,
+            "p25": 0.2127,
+            "p75": 0.3033
+          },
+          "spectral_entropy": {
+            "count": 418,
+            "max": 0.6652,
+            "mean": 0.37692535885167466,
+            "median": 0.3834,
+            "min": 0.1258,
+            "p25": 0.2926,
+            "p75": 0.4561
+          },
+          "top_negative_contribution": {
+            "count": 509,
+            "max": -0.160013,
+            "mean": -0.5820273379174853,
+            "median": -0.5,
+            "min": -0.999969,
+            "p25": -0.617169,
+            "p75": -0.5
+          },
+          "top_positive_contribution": {
+            "count": 512,
+            "max": 0.998052,
+            "mean": 0.5636731640625,
+            "median": 0.525559,
+            "min": 0.336604,
+            "p25": 0.433193,
+            "p75": 0.647479
+          }
+        },
+        "scan_tsv": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-execution-tree-scan-512-compatible/scan.tsv",
+        "schema_version": "execution-tree-guardrail-scan/v1",
+        "windows_scanned": 512
+      }
+    }
+  },
+  "calibration_result": {
+    "target_schema": "ProviderAgreementTrendExpansion / ProviderDisagreementTransitionGuardrail v2",
+    "chronological_splits": {
+      "provider_aware_binary_fast": {
+        "train": 10000,
+        "calibration": 5000,
+        "test": 5000
+      },
+      "forward_payoff": {
+        "train": [
+          0,
+          10000
+        ],
+        "calibration": [
+          10000,
+          15000
+        ],
+        "test": [
+          15000,
+          19984
+        ]
+      }
+    },
+    "provider_aware_catboost": {
+      "artifact": "calibration/catboost-regime-provider-aware-binary-fast-20k.json",
+      "feature_count": 78,
+      "rows": 20000,
+      "pass_count": 0,
+      "truth_counts": {
+        "train": {
+          "RangeConsolidation": 3550,
+          "ReversalBrewing": 4900,
+          "Unknown": 1550
+        },
+        "calibration": {
+          "RangeConsolidation": 1340,
+          "ReversalBrewing": 1685,
+          "Unknown": 1975
+        },
+        "test": {
+          "RangeConsolidation": 1950,
+          "Unknown": 840,
+          "ReversalBrewing": 2210
+        }
+      }
+    },
+    "forward_payoff": {
+      "artifact": "calibration/forward-payoff-confidence-probe-20k.json",
+      "truth_output": "calibration/nq_forward_payoff_truth_20k.jsonl",
+      "feature_count": 152,
+      "rows": 20000,
+      "label_counts": {
+        "train": {
+          "ForwardWin": 3974,
+          "NoEdge": 1995,
+          "Invalidated": 3821,
+          "ForwardLoss": 210
+        },
+        "calibration": {
+          "NoEdge": 1639,
+          "ForwardWin": 1800,
+          "Invalidated": 1368,
+          "ForwardLoss": 193
+        },
+        "test": {
+          "ForwardWin": 1917,
+          "Invalidated": 1665,
+          "NoEdge": 1268,
+          "ForwardLoss": 134
+        }
+      },
+      "pass_count": 0
+    },
+    "accepted_gate": "none",
+    "accepted_regime_packet": null,
+    "board_state": "abstain",
+    "blocker": "abstain_no_calibrated_release_rule",
+    "acceptance_checks": {
+      "precision_wilson_lcb_95_met": false,
+      "calibration_support_met": true,
+      "test_support_met": true,
+      "ece_met": false,
+      "coverage_met": false,
+      "thresholds_relaxed": false
+    },
+    "reason": "No ProviderAgreementTrendExpansion or forward-payoff rule reached 95% calibrated chronological holdout acceptance; pass_count=0 in both provider-aware and forward-payoff probes."
+  },
+  "next_action": "A-v2-2: repair fresh Auto-Quant tmp runner data binding or consume a matching tmp user_data/data root, then rerun ProviderAgreementTrendExpansion labels with QQQ/NQ 1h/15m aligned provider agreement and explicit ECE bins.",
+  "created_at": "2026-05-10T10:42:03.681860+00:00"
+}

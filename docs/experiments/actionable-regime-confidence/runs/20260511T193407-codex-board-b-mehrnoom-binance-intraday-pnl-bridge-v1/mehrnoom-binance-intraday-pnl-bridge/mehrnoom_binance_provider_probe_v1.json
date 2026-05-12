@@ -1,0 +1,160 @@
+{
+  "price_extract": "/private/tmp/ict-regime-mehrnoom-pumpdump-sparse/Telegram/classified/price_extract.csv",
+  "provider": "binance_public_api",
+  "source_root": "/private/tmp/ict-regime-mehrnoom-pumpdump-sparse",
+  "symbols": [
+    {
+      "coin": "ADA",
+      "first_provider_dt": "2017-11-30T12:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 5602,
+      "source_buy_rows": 456,
+      "status": "ok",
+      "symbol": "ADABTC"
+    },
+    {
+      "coin": "XRP",
+      "first_provider_dt": "2017-11-02T07:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 6279,
+      "source_buy_rows": 439,
+      "status": "ok",
+      "symbol": "XRPBTC"
+    },
+    {
+      "coin": "ADX",
+      "first_provider_dt": "2017-11-29T03:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 5635,
+      "source_buy_rows": 417,
+      "status": "ok",
+      "symbol": "ADXBTC"
+    },
+    {
+      "coin": "ETC",
+      "first_provider_dt": "2017-10-12T09:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 6781,
+      "source_buy_rows": 416,
+      "status": "ok",
+      "symbol": "ETCBTC"
+    },
+    {
+      "coin": "TRX",
+      "first_provider_dt": "2017-10-31T04:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 6330,
+      "source_buy_rows": 344,
+      "status": "ok",
+      "symbol": "TRXBTC"
+    },
+    {
+      "coin": "STEEM",
+      "first_provider_dt": "2018-02-01T09:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 4094,
+      "source_buy_rows": 308,
+      "status": "ok",
+      "symbol": "STEEMBTC"
+    },
+    {
+      "coin": "XLM",
+      "first_provider_dt": "2017-12-08T06:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 5416,
+      "source_buy_rows": 287,
+      "status": "ok",
+      "symbol": "XLMBTC"
+    },
+    {
+      "coin": "ETH",
+      "first_provider_dt": "2017-07-14T04:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 8940,
+      "source_buy_rows": 275,
+      "status": "ok",
+      "symbol": "ETHBTC"
+    },
+    {
+      "coin": "LINK",
+      "first_provider_dt": "2017-09-28T08:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 7118,
+      "source_buy_rows": 233,
+      "status": "ok",
+      "symbol": "LINKBTC"
+    },
+    {
+      "coin": "LTC",
+      "first_provider_dt": "2017-07-14T04:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 8940,
+      "source_buy_rows": 220,
+      "status": "ok",
+      "symbol": "LTCBTC"
+    },
+    {
+      "coin": "ZEC",
+      "first_provider_dt": "2017-11-14T03:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 5995,
+      "source_buy_rows": 203,
+      "status": "ok",
+      "symbol": "ZECBTC"
+    },
+    {
+      "coin": "DASH",
+      "first_provider_dt": "2017-10-20T04:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 6594,
+      "source_buy_rows": 178,
+      "status": "ok",
+      "symbol": "DASHBTC"
+    },
+    {
+      "coin": "DOGE",
+      "first_provider_dt": "",
+      "last_provider_dt": "",
+      "provider_rows": 0,
+      "source_buy_rows": 173,
+      "status": "no_rows",
+      "symbol": "DOGEBTC"
+    },
+    {
+      "coin": "ZEN",
+      "first_provider_dt": "2018-05-23T07:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 1465,
+      "source_buy_rows": 129,
+      "status": "ok",
+      "symbol": "ZENBTC"
+    },
+    {
+      "coin": "GAS",
+      "first_provider_dt": "2017-08-07T04:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 8364,
+      "source_buy_rows": 128,
+      "status": "ok",
+      "symbol": "GASBTC"
+    },
+    {
+      "coin": "KNC",
+      "first_provider_dt": "2017-09-26T04:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 7170,
+      "source_buy_rows": 82,
+      "status": "ok",
+      "symbol": "KNCBTC"
+    },
+    {
+      "coin": "BNB",
+      "first_provider_dt": "2017-07-14T04:00:00+00:00",
+      "last_provider_dt": "2018-07-24T01:00:00+00:00",
+      "provider_rows": 8940,
+      "source_buy_rows": 79,
+      "status": "ok",
+      "symbol": "BNBBTC"
+    }
+  ]
+}

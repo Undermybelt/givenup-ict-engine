@@ -1,0 +1,447 @@
+Result for strategy CrashRebound
+                                               BACKTESTING REPORT                                                
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ AVAX/USDT │     18 │         1.86 │        1089.803 │         10.9 │  1 day, 9:47:00 │   12     0     6  66.7 │
+│  SOL/USDT │     20 │         1.27 │         803.173 │         8.03 │ 1 day, 10:48:00 │   13     0     7  65.0 │
+│  BNB/USDT │     12 │         2.01 │         594.328 │         5.94 │  1 day, 5:35:00 │   10     0     2  83.3 │
+│     TOTAL │     50 │         1.66 │        2487.303 │        24.87 │  1 day, 9:11:00 │   35     0    15  70.0 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                             LEFT OPEN TRADES REPORT                                              
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃     Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ AVAX/USDT │      1 │         2.88 │          81.526 │         0.82 │         20:00:00 │    1     0     0   100 │
+│  BNB/USDT │      1 │         -0.3 │          -7.479 │        -0.07 │   1 day, 2:00:00 │    0     0     1     0 │
+│  SOL/USDT │      1 │        -9.49 │        -258.983 │        -2.59 │ 2 days, 20:00:00 │    0     0     1     0 │
+│     TOTAL │      3 │         -2.3 │        -184.937 │        -1.85 │  1 day, 14:00:00 │    1     0     2  33.3 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                 
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │      50 │         1.66 │        2487.303 │        24.87 │ 1 day, 9:11:00 │   35     0    15  70.0 │
+│     TOTAL │      50 │         1.66 │        2487.303 │        24.87 │ 1 day, 9:11:00 │   35     0    15  70.0 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                 
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │    47 │         1.91 │        2672.240 │        26.72 │  1 day, 8:52:00 │   34     0    13  72.3 │
+│  force_exit │     3 │         -2.3 │        -184.937 │        -1.85 │ 1 day, 14:00:00 │    1     0     2  33.3 │
+│       TOTAL │    50 │         1.66 │        2487.303 │        24.87 │  1 day, 9:11:00 │   35     0    15  70.0 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                        MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │     47 │         1.91 │        2672.240 │        26.72 │  1 day, 8:52:00 │   34     0    13  72.3 │
+│           │  force_exit │      3 │         -2.3 │        -184.937 │        -1.85 │ 1 day, 14:00:00 │    1     0     2  33.3 │
+│     TOTAL │             │     50 │         1.66 │        2487.303 │        24.87 │  1 day, 9:11:00 │   35     0    15  70.0 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2021-02-01 16:00:00            │
+│ Backtesting to                │ 2021-12-31 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 3                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 50 / 0.15                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 12487.303 USDT                 │
+│ Absolute profit               │ 2487.303 USDT                  │
+│ Total profit %                │ 24.87%                         │
+│ CAGR %                        │ 27.66%                         │
+│ Sortino                       │ 0.89                           │
+│ Sharpe                        │ 0.85                           │
+│ Calmar                        │ 24.99                          │
+│ SQN                           │ 2.07                           │
+│ Profit factor                 │ 2.14                           │
+│ Expectancy (Ratio)            │ 49.75 (0.34)                   │
+│ Avg. daily profit             │ 7.492 USDT                     │
+│ Avg. stake amount             │ 2959.926 USDT                  │
+│ Total trade volume            │ 299077.506 USDT                │
+│                               │                                │
+│ Best Pair                     │ AVAX/USDT 10.90%               │
+│ Worst Pair                    │ BNB/USDT 5.94%                 │
+│ Best trade                    │ AVAX/USDT 11.04%               │
+│ Worst trade                   │ AVAX/USDT -22.49%              │
+│ Best day                      │ 465.559 USDT                   │
+│ Worst day                     │ -649.081 USDT                  │
+│ Days win/draw/lose            │ 23 / 123 / 11                  │
+│ Min/Max/Avg. Duration Winners │ 0d 02:00 / 2d 06:00 / 0d 23:12 │
+│ Min/Max/Avg. Duration Losers  │ 1d 02:00 / 4d 00:00 / 2d 08:28 │
+│ Max Consecutive Wins / Loss   │ 11 / 4                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 10156.987 USDT                 │
+│ Max balance                   │ 12672.24 USDT                  │
+│ Max % of account underwater   │ 5.73%                          │
+│ Absolute drawdown             │ 694.607 USDT (5.73%)           │
+│ Drawdown duration             │ 9 days 04:00:00                │
+│ Profit at drawdown start      │ 2125.848 USDT                  │
+│ Profit at drawdown end        │ 1431.241 USDT                  │
+│ Drawdown start                │ 2021-11-27 18:00:00            │
+│ Drawdown end                  │ 2021-12-06 22:00:00            │
+│ Market change                 │ 1862.31%                       │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2021-02-01 16:00:00 -> 2021-12-31 00:00:00 | Max open trades : 3
+                                                            STRATEGY SUMMARY                                                             
+┏━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃     Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ CrashRebound │     50 │         1.66 │        2487.303 │        24.87 │ 1 day, 9:11:00 │   35     0    15  70.0 │ 694.607 USDT  5.73% │
+└──────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┴─────────────────────┘
+Result for strategy CrashRebound
+                                               BACKTESTING REPORT                                                
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  SOL/USDT │      8 │         1.36 │         379.686 │          3.8 │  1 day, 2:38:00 │    6     0     2  75.0 │
+│ AVAX/USDT │     20 │         0.91 │         264.909 │         2.65 │ 1 day, 12:00:00 │   14     0     6  70.0 │
+│  BNB/USDT │      4 │        -4.62 │        -345.621 │        -3.46 │ 2 days, 5:00:00 │    2     0     2  50.0 │
+│     TOTAL │     32 │         0.33 │         298.974 │         2.99 │ 1 day, 11:47:00 │   22     0    10  68.8 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                  
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │      32 │         0.33 │         298.974 │         2.99 │ 1 day, 11:47:00 │   22     0    10  68.8 │
+│     TOTAL │      32 │         0.33 │         298.974 │         2.99 │ 1 day, 11:47:00 │   22     0    10  68.8 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                 
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │    32 │         0.33 │         298.974 │         2.99 │ 1 day, 11:47:00 │   22     0    10  68.8 │
+│       TOTAL │    32 │         0.33 │         298.974 │         2.99 │ 1 day, 11:47:00 │   22     0    10  68.8 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                                        MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │     32 │         0.33 │         298.974 │         2.99 │ 1 day, 11:47:00 │   22     0    10  68.8 │
+│     TOTAL │             │     32 │         0.33 │         298.974 │         2.99 │ 1 day, 11:47:00 │   22     0    10  68.8 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2022-01-01 00:00:00            │
+│ Backtesting to                │ 2022-12-31 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 3                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 32 / 0.09                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 10298.974 USDT                 │
+│ Absolute profit               │ 298.974 USDT                   │
+│ Total profit %                │ 2.99%                          │
+│ CAGR %                        │ 3.00%                          │
+│ Sortino                       │ 0.09                           │
+│ Sharpe                        │ 0.08                           │
+│ Calmar                        │ 1.23                           │
+│ SQN                           │ 0.28                           │
+│ Profit factor                 │ 1.14                           │
+│ Expectancy (Ratio)            │ 9.34 (0.04)                    │
+│ Avg. daily profit             │ 0.821 USDT                     │
+│ Avg. stake amount             │ 2521.906 USDT                  │
+│ Total trade volume            │ 162024.665 USDT                │
+│                               │                                │
+│ Best Pair                     │ SOL/USDT 3.80%                 │
+│ Worst Pair                    │ BNB/USDT -3.46%                │
+│ Best trade                    │ AVAX/USDT 10.13%               │
+│ Worst trade                   │ AVAX/USDT -18.65%              │
+│ Best day                      │ 350.231 USDT                   │
+│ Worst day                     │ -941.931 USDT                  │
+│ Days win/draw/lose            │ 18 / 285 / 8                   │
+│ Min/Max/Avg. Duration Winners │ 0d 01:00 / 2d 02:00 / 0d 22:14 │
+│ Min/Max/Avg. Duration Losers  │ 1d 11:00 / 4d 00:00 / 2d 17:36 │
+│ Max Consecutive Wins / Loss   │ 11 / 3                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 8719.304 USDT                  │
+│ Max balance                   │ 10402.626 USDT                 │
+│ Max % of account underwater   │ 12.81%                         │
+│ Absolute drawdown             │ 1280.696 USDT (12.81%)         │
+│ Drawdown duration             │ 15 days 02:00:00               │
+│ Profit at drawdown start      │ 0 USDT                         │
+│ Profit at drawdown end        │ -1280.696 USDT                 │
+│ Drawdown start                │ 2022-01-08 08:00:00            │
+│ Drawdown end                  │ 2022-01-23 10:00:00            │
+│ Market change                 │ -79.00%                        │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2022-01-01 00:00:00 -> 2022-12-31 00:00:00 | Max open trades : 3
+                                                              STRATEGY SUMMARY                                                              
+┏━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃              Drawdown ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
+│ CrashRebound │     32 │         0.33 │         298.974 │         2.99 │ 1 day, 11:47:00 │   22     0    10  68.8 │ 1280.696 USDT  12.81% │
+└──────────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┴───────────────────────┘
+Result for strategy CrashRebound
+                                               BACKTESTING REPORT                                                
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  SOL/USDT │     63 │         0.81 │        1309.869 │         13.1 │  1 day, 7:32:00 │   44     0    19  69.8 │
+│  BNB/USDT │     22 │         1.32 │         864.487 │         8.64 │  1 day, 4:19:00 │   18     0     4  81.8 │
+│ AVAX/USDT │     38 │        -0.43 │        -444.858 │        -4.45 │ 1 day, 11:05:00 │   20     0    18  52.6 │
+│     TOTAL │    123 │         0.52 │        1729.498 │        17.29 │  1 day, 8:03:00 │   82     0    41  66.7 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                 
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │     123 │         0.52 │        1729.498 │        17.29 │ 1 day, 8:03:00 │   82     0    41  66.7 │
+│     TOTAL │     123 │         0.52 │        1729.498 │        17.29 │ 1 day, 8:03:00 │   82     0    41  66.7 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │   123 │         0.52 │        1729.498 │        17.29 │ 1 day, 8:03:00 │   82     0    41  66.7 │
+│       TOTAL │   123 │         0.52 │        1729.498 │        17.29 │ 1 day, 8:03:00 │   82     0    41  66.7 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                       MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │    123 │         0.52 │        1729.498 │        17.29 │ 1 day, 8:03:00 │   82     0    41  66.7 │
+│     TOTAL │             │    123 │         0.52 │        1729.498 │        17.29 │ 1 day, 8:03:00 │   82     0    41  66.7 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2023-01-01 00:00:00            │
+│ Backtesting to                │ 2025-12-31 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 3                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 123 / 0.11                     │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 11729.498 USDT                 │
+│ Absolute profit               │ 1729.498 USDT                  │
+│ Total profit %                │ 17.29%                         │
+│ CAGR %                        │ 5.46%                          │
+│ Sortino                       │ 0.22                           │
+│ Sharpe                        │ 0.19                           │
+│ Calmar                        │ 2.67                           │
+│ SQN                           │ 0.99                           │
+│ Profit factor                 │ 1.27                           │
+│ Expectancy (Ratio)            │ 14.06 (0.09)                   │
+│ Avg. daily profit             │ 1.579 USDT                     │
+│ Avg. stake amount             │ 2863.275 USDT                  │
+│ Total trade volume            │ 707508.655 USDT                │
+│                               │                                │
+│ Best Pair                     │ SOL/USDT 13.10%                │
+│ Worst Pair                    │ AVAX/USDT -4.45%               │
+│ Best trade                    │ BNB/USDT 11.98%                │
+│ Worst trade                   │ AVAX/USDT -16.86%              │
+│ Best day                      │ 536.033 USDT                   │
+│ Worst day                     │ -801.715 USDT                  │
+│ Days win/draw/lose            │ 63 / 923 / 30                  │
+│ Min/Max/Avg. Duration Winners │ 0d 02:00 / 1d 22:00 / 0d 20:12 │
+│ Min/Max/Avg. Duration Losers  │ 1d 04:00 / 5d 09:00 / 2d 07:45 │
+│ Max Consecutive Wins / Loss   │ 10 / 5                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 9943.154 USDT                  │
+│ Max balance                   │ 12593.873 USDT                 │
+│ Max % of account underwater   │ 11.31%                         │
+│ Absolute drawdown             │ 1312.841 USDT (11.31%)         │
+│ Drawdown duration             │ 92 days 02:00:00               │
+│ Profit at drawdown start      │ 1609.618 USDT                  │
+│ Profit at drawdown end        │ 296.777 USDT                   │
+│ Drawdown start                │ 2024-01-13 21:00:00            │
+│ Drawdown end                  │ 2024-04-14 23:00:00            │
+│ Market change                 │ 472.07%                        │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2023-01-01 00:00:00 -> 2025-12-31 00:00:00 | Max open trades : 3
+                                                             STRATEGY SUMMARY                                                              
+┏━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃              Drawdown ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
+│ CrashRebound │    123 │         0.52 │        1729.498 │        17.29 │ 1 day, 8:03:00 │   82     0    41  66.7 │ 1312.841 USDT  11.31% │
+└──────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┴───────────────────────┘
+Result for strategy CrashRebound
+                                               BACKTESTING REPORT                                                
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃    Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  SOL/USDT │     92 │         1.01 │        3202.981 │        32.03 │  1 day, 7:40:00 │   64     0    28  69.6 │
+│  BNB/USDT │     39 │         0.97 │        1382.193 │        13.82 │  1 day, 6:57:00 │   32     0     7  82.1 │
+│ AVAX/USDT │     76 │         0.53 │         983.893 │         9.84 │ 1 day, 11:08:00 │   46     0    30  60.5 │
+│     TOTAL │    207 │         0.83 │        5569.067 │        55.69 │  1 day, 8:48:00 │  142     0    65  68.6 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴─────────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                 ENTER TAG STATS                                                 
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │     207 │         0.83 │        5569.067 │        55.69 │ 1 day, 8:48:00 │  142     0    65  68.6 │
+│     TOTAL │     207 │         0.83 │        5569.067 │        55.69 │ 1 day, 8:48:00 │  142     0    65  68.6 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                EXIT REASON STATS                                                
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │   207 │         0.83 │        5569.067 │        55.69 │ 1 day, 8:48:00 │  142     0    65  68.6 │
+│       TOTAL │   207 │         0.83 │        5569.067 │        55.69 │ 1 day, 8:48:00 │  142     0    65  68.6 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                                                       MIXED TAG STATS                                                        
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │    207 │         0.83 │        5569.067 │        55.69 │ 1 day, 8:48:00 │  142     0    65  68.6 │
+│     TOTAL │             │    207 │         0.83 │        5569.067 │        55.69 │ 1 day, 8:48:00 │  142     0    65  68.6 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2021-02-01 16:00:00            │
+│ Backtesting to                │ 2025-12-31 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 3                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 207 / 0.12                     │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 15569.067 USDT                 │
+│ Absolute profit               │ 5569.067 USDT                  │
+│ Total profit %                │ 55.69%                         │
+│ CAGR %                        │ 9.43%                          │
+│ Sortino                       │ 0.31                           │
+│ Sharpe                        │ 0.29                           │
+│ Calmar                        │ 5.25                           │
+│ SQN                           │ 1.89                           │
+│ Profit factor                 │ 1.42                           │
+│ Expectancy (Ratio)            │ 26.90 (0.13)                   │
+│ Avg. daily profit             │ 3.106 USDT                     │
+│ Avg. stake amount             │ 3507.052 USDT                  │
+│ Total trade volume            │ 1460406.423 USDT               │
+│                               │                                │
+│ Best Pair                     │ SOL/USDT 32.03%                │
+│ Worst Pair                    │ AVAX/USDT 9.84%                │
+│ Best trade                    │ BNB/USDT 11.98%                │
+│ Worst trade                   │ AVAX/USDT -22.49%              │
+│ Best day                      │ 711.503 USDT                   │
+│ Worst day                     │ -1214.055 USDT                 │
+│ Days win/draw/lose            │ 106 / 1425 / 48                │
+│ Min/Max/Avg. Duration Winners │ 0d 01:00 / 2d 06:00 / 0d 21:15 │
+│ Min/Max/Avg. Duration Losers  │ 1d 04:00 / 5d 09:00 / 2d 10:02 │
+│ Max Consecutive Wins / Loss   │ 11 / 5                         │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 10156.987 USDT                 │
+│ Max balance                   │ 16716.408 USDT                 │
+│ Max % of account underwater   │ 12.81%                         │
+│ Absolute drawdown             │ 1742.648 USDT (11.31%)         │
+│ Drawdown duration             │ 92 days 02:00:00               │
+│ Profit at drawdown start      │ 5409.898 USDT                  │
+│ Profit at drawdown end        │ 3667.249 USDT                  │
+│ Drawdown start                │ 2024-01-13 21:00:00            │
+│ Drawdown end                  │ 2024-04-14 23:00:00            │
+│ Market change                 │ 1492.96%                       │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2021-02-01 16:00:00 -> 2025-12-31 00:00:00 | Max open trades : 3
+                                                             STRATEGY SUMMARY                                                              
+┏━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃   Avg Duration ┃  Win  Draw  Loss  Win% ┃              Drawdown ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
+│ CrashRebound │    207 │         0.83 │        5569.067 │        55.69 │ 1 day, 8:48:00 │  142     0    65  68.6 │ 1742.648 USDT  11.31% │
+└──────────────┴────────┴──────────────┴─────────────────┴──────────────┴────────────────┴────────────────────────┴───────────────────────┘
+{
+  "summary": {
+    "schema_version": "crashrebound-branch-rc-spa/v1",
+    "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+    "recipe_id": "CrashRebound",
+    "total_nonoverlap_trades": 205,
+    "test_folds": 3,
+    "min_trades_per_test_fold": 32,
+    "fold_positive_rate": 1.0,
+    "bootstrap_edge_lcb_5pct": 0.007685235556722617,
+    "cost_stress_survival": true,
+    "pbo": 1.0,
+    "dsr": 0.05766787742432156,
+    "tail_loss_p95": 0.10345622960421638,
+    "regime_specificity_ratio": 2.1623878969741943,
+    "roots_with_rows": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "missing_roots": [
+      "Crisis"
+    ],
+    "manipulation_overlay_state": "not_observed",
+    "hard_failures": [
+      "reject_missing_branch_path:branch_path_is_proxy_not_recipe_or_board_a_trade_root",
+      "reject_missing_branch_path:missing_roots=Crisis",
+      "manipulation_overlay_not_observed",
+      "reject_overfit_risk:min_test_folds_lt_4",
+      "reject_overfit_risk:pbo_gt_0_25"
+    ],
+    "diagnostic_rc_spa_before_hard_fail_zeroing": 66.73003632272965,
+    "rc_spa": 0.0,
+    "promotion_level": "reject",
+    "downstream_consumption_status": "research_watch_branch_path_not_consumed",
+    "score_components": {
+      "edge_score": 1.0,
+      "fold_score": 1.0,
+      "depth_score": 1.0,
+      "dsr_score": 0.11533575484864313,
+      "pbo_score": 0.0,
+      "cost_score": 1.0,
+      "drawdown_score": 0.0,
+      "specificity_score": 1.0
+    },
+    "artifacts": {
+      "trades_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_trades_with_branch_paths.csv",
+      "folds_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_branch_fold_metrics.csv",
+      "path_ranker_target_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_path_ranker_target.csv",
+      "bbn_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_bbn_evidence_rows.csv",
+      "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_rc_spa_summary.json",
+      "bundle_json": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_regime_consumer_bundle.json",
+      "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_branch_rc_spa_v1.md"
+    }
+  },
+  "artifacts": {
+    "run_id": "20260511T175925-codex-board-b-crashrebound-aq-replay-v1",
+    "trades_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_trades_with_branch_paths.csv",
+    "folds_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_branch_fold_metrics.csv",
+    "path_ranker_target_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_path_ranker_target.csv",
+    "bbn_rows_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_bbn_evidence_rows.csv",
+    "summary_json": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_rc_spa_summary.json",
+    "bundle_json": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_regime_consumer_bundle.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/rc-spa/crashrebound_branch_rc_spa_v1.md"
+  }
+}

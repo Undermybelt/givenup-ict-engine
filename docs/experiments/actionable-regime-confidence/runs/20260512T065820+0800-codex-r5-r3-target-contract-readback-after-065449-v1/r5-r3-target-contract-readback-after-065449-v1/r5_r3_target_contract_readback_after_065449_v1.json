@@ -1,0 +1,66 @@
+{
+  "run_id": "20260512T065820+0800-codex-r5-r3-target-contract-readback-after-065449-v1",
+  "board_sha256_before_artifact": "0b05a246460cac6efb760a42833ac08fa2fdaefaca156cb8605ae18c6dd7adb2",
+  "gate_result": "r5_r3_target_contract_readback_after_065449_v1=post_cutoff_candidates_found_but_no_required_root_unlock_no_downstream",
+  "scope": "Readback of 065449/065547/065605 public source-search outputs against the existing R5/R3 target contracts.",
+  "source_artifacts": {
+    "targeted_search_profile": "docs/experiments/actionable-regime-confidence/runs/20260512T065449+0800-codex-r5-r3-public-source-targeted-search-after-065134-v1/r5-r3-public-source-targeted-search-after-065134-v1/candidate_profile_summary_v1.csv",
+    "targeted_search_profile_json": "docs/experiments/actionable-regime-confidence/runs/20260512T065449+0800-codex-r5-r3-public-source-targeted-search-after-065134-v1/command-output/candidate_csv_profile.json",
+    "crisis_source_search_raw": "docs/experiments/actionable-regime-confidence/runs/20260512T065547+0800-codex-crisis-capable-public-source-search-after-065134-v1/command-output/",
+    "dashboard_triage": "docs/experiments/actionable-regime-confidence/runs/20260512T065605+0800-codex-public-regime-dashboard-triage-after-065134-v1/public-regime-dashboard-triage-after-065134-v1/public_regime_dashboard_triage_after_065134_v1.md",
+    "r5_verifier_contract": "docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py"
+  },
+  "r5_contract": {
+    "required_rows_file": "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+    "required_provenance_file": "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json",
+    "required_labels": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "required_post_cutoff": "date > 2026-01-30",
+    "required_panel": "existing 39 source-panel tickers from stock-market-regimes 2000-2026"
+  },
+  "candidate_decisions": [
+    {
+      "candidate": "NIFTY 500 Market & Behavior Regime Dataset",
+      "post_cutoff_rows_observed": 35,
+      "decision": "reject_not_required_root_unlock",
+      "reason": "Post-cutoff rows exist, but labels are behavior/macro states such as Trending, Mean-Reverting, Noisy, Durable, Fragile, Calm, Choppy, and Stress. They are not source-owned Bull/Bear/Sideways/Crisis MainRegimeV2 labels for the expected 39-ticker source panel and are not native subhour labels."
+    },
+    {
+      "candidate": "Global Market Stress and Liquidity Regimes",
+      "post_cutoff_rows_observed": 26,
+      "decision": "reject_not_required_root_unlock",
+      "reason": "Post-cutoff rows exist, but the observed source field is a numeric Financial_Stress_Index, not verifier-native MainRegimeV2 labels or source-panel extension rows."
+    },
+    {
+      "candidate": "Stock Market Regimes 2000-2026",
+      "post_cutoff_rows_observed": 0,
+      "decision": "reject_no_recency_unlock",
+      "reason": "The dataset has the needed root vocabulary historically but still ends at 2026-01-30."
+    },
+    {
+      "candidate": "Public regime dashboards from 065605",
+      "post_cutoff_rows_observed": 0,
+      "decision": "reject_dashboard_or_article_only",
+      "reason": "No acquired verifier-native row packet or accepted source/control approval."
+    }
+  ],
+  "accounting": {
+    "accepted_rows_added": 0,
+    "r5_recency_unlock": false,
+    "r3_native_subhour_unlock": false,
+    "r6_owner_export_unlock": false,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "provider_autoquant_promotion": false,
+    "pre_bayes_bbn_catboost_execution_tree_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Do not materialize the NIFTY or macro-stress candidates into R5/R3 target roots. Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 post-2026-01-30 rows matching the existing source-panel schema, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export."
+}

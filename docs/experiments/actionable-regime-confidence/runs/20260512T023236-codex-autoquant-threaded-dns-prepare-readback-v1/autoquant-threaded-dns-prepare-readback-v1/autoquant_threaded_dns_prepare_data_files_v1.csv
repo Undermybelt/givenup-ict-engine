@@ -1,0 +1,16 @@
+symbol,timeframe,path
+AVAX_USDT,1d,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/AVAX_USDT-1d.feather
+AVAX_USDT,1h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/AVAX_USDT-1h.feather
+AVAX_USDT,4h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/AVAX_USDT-4h.feather
+BNB_USDT,1d,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/BNB_USDT-1d.feather
+BNB_USDT,1h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/BNB_USDT-1h.feather
+BNB_USDT,4h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/BNB_USDT-4h.feather
+BTC_USDT,1d,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/BTC_USDT-1d.feather
+BTC_USDT,1h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/BTC_USDT-1h.feather
+BTC_USDT,4h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/BTC_USDT-4h.feather
+ETH_USDT,1d,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/ETH_USDT-1d.feather
+ETH_USDT,1h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/ETH_USDT-1h.feather
+ETH_USDT,4h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/ETH_USDT-4h.feather
+SOL_USDT,1d,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/SOL_USDT-1d.feather
+SOL_USDT,1h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/SOL_USDT-1h.feather
+SOL_USDT,4h,/tmp/ict-engine-board-a-autoquant-bootstrap-20260512T021808/auto-quant/.deps/auto-quant/user_data/data/SOL_USDT-4h.feather

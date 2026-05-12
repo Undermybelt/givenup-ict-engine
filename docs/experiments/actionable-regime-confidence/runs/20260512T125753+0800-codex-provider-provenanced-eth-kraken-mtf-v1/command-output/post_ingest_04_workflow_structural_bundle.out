@@ -1,0 +1,30 @@
+{
+  "candidate_set_id": "structural-candidates:ETH_KRAKEN:b59bf44b142615b4",
+  "candidate_set_size": 3,
+  "composite_score": 0.82,
+  "confirmation_summary": "history_records=1 followed=1",
+  "current_posterior": 1.0,
+  "direction": "bull",
+  "experience_prior": 0.4,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 1,
+  "invalidation_summary": "do not collapse exact feedback path into a generic structural path",
+  "path_id": "TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance -> TomacNQ_KillzoneBreakout",
+  "path_label": "TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance -> TomacNQ_KillzoneBreakout",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol ETH_KRAKEN --data 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf'",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol ETH_KRAKEN --data 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf'",
+    "execution_contract": null,
+    "prompt": "Before using historical data for ETH_KRAKEN again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/data/kraken_ethusd_1h.json",
+    "user_input_required": true
+  },
+  "scenario_id": "TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance",
+  "selected_path_probability": 0.45043788716383176,
+  "stop_summary": "use the recorded branch feedback stop/exit contract",
+  "symbol": "ETH_KRAKEN",
+  "trigger_summary": "preserve exact structural feedback path TrendExpansion -> BullTrendAcceleration -> MultiTimeframeIntradayResonance -> TomacNQ_KillzoneBreakout",
+  "why_this_path": "posterior=1.000 prior=0.400 invalidation_rate=0.000"
+}

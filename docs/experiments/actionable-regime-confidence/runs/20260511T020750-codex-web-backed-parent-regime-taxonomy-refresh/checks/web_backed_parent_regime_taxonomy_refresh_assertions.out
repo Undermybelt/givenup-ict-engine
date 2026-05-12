@@ -1,0 +1,15 @@
+RUN_ID 20260511T020750+0800-codex-web-backed-parent-regime-taxonomy-refresh
+REPORT docs/experiments/actionable-regime-confidence/runs/20260511T020750-codex-web-backed-parent-regime-taxonomy-refresh/source-refresh/web_backed_parent_regime_taxonomy_refresh.json
+ROOT_TARGETS Bull,Bear,Sideways,Crisis,Manipulation
+ROOT_ALIASES_INCLUDE BullExpansion,BearExpansion,Consolidation,CrisisStress
+RESIDUAL_TARGET UnknownOrMixed
+SUBTYPE_PACKETS_COUNT_AS_ROOT_ACCEPTANCE false
+UNLABELED_L2_SIGNATURES_COUNT_AS_MANIPULATION_ACCEPTANCE false
+OHLCV_PROXY_COUNT_AS_MANIPULATION_ACCEPTANCE false
+ACCEPTED_95_ROOTS Crisis
+MISSING_95_ROOTS Bull,Bear,Sideways,Manipulation
+ACCEPTED_GATE partial_for_MainRegimeV2_Crisis_only_prior_evidence_preserved
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+FRESH_CALIBRATION_RERUN false
+TRADE_USABLE false

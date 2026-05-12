@@ -1,0 +1,871 @@
+{
+  "schema_version": "board-a-provider-agreement-v2-probe/v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T174651",
+  "output_dir": "docs/experiments/actionable-regime-confidence/runs/20260510T184129-codex-qqq-nq-cross/provider-agreement-v2",
+  "threshold_policy": {
+    "precision_wilson_lcb_95": 0.95,
+    "thresholds_relaxed": false,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03
+  },
+  "label_policy": {
+    "future_horizons_bars": [
+      4,
+      8,
+      16
+    ],
+    "cost": 0.0002,
+    "bad_loss": 0.004,
+    "tail_loss": 0.006,
+    "blocked_leakage_fields": [
+      "branch",
+      "decision_hint",
+      "duration_remaining_expected_bars",
+      "execution_readiness",
+      "gate_status",
+      "hybrid_transition_hazard",
+      "readiness_gap_to_observe",
+      "readiness_gap_to_ready",
+      "same_surface_execution_tree_categorical"
+    ],
+    "forbidden_future_fields_as_features": "all future_* and target_* columns are excluded from model features"
+  },
+  "lanes": [
+    {
+      "lane_id": "qqq_yf_ibkr_nq_cache_cross_provider_agreement_1h",
+      "market": "QQQ,NQ",
+      "timeframe": "1h",
+      "provider_observations": [
+        "qqq_yfinance_1h",
+        "qqq_ibkr_1h",
+        "nq_autoquant_1h",
+        "nq_autoquant_15m",
+        "nq_autoquant_4h",
+        "nq_autoquant_1d"
+      ],
+      "board_eligible": true,
+      "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+      "row_count": 1132,
+      "feature_count": 259,
+      "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T184129-codex-qqq-nq-cross/provider-agreement-v2/qqq_yf_ibkr_nq_cache_cross_provider_agreement_1h/provider_agreement_v2_features.csv",
+      "split": {
+        "train": 566,
+        "calibration": 283,
+        "test": 283
+      },
+      "target_counts": {
+        "target_release_long_h4": {
+          "positive": 410,
+          "negative": 722
+        },
+        "target_release_long_h8": {
+          "positive": 398,
+          "negative": 734
+        },
+        "target_release_long_h16": {
+          "positive": 363,
+          "negative": 769
+        },
+        "target_release_short_h4": {
+          "positive": 184,
+          "negative": 948
+        },
+        "target_release_short_h8": {
+          "positive": 156,
+          "negative": 976
+        },
+        "target_release_short_h16": {
+          "positive": 103,
+          "negative": 1029
+        }
+      },
+      "candidate_count": 14,
+      "accepted_95_count": 0,
+      "selected_candidate": {
+        "candidate_kind": "catboost_isotonic",
+        "target": "target_release_long_h4",
+        "threshold": 0.5625,
+        "calibration_support": 127,
+        "calibration_success": 81,
+        "calibration_precision": 0.6377952755905512,
+        "calibration_wilson_lcb_95": 0.5512947524229214,
+        "test_support": 129,
+        "test_success": 60,
+        "test_precision": 0.46511627906976744,
+        "precision_wilson_lcb_95": 0.38130031118129837,
+        "ece": 0.19739454121271996,
+        "coverage": 0.4558303886925795,
+        "accepted_95": false,
+        "board_eligible": true,
+        "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+        "positive_count": 410,
+        "negative_count": 722,
+        "top_importances": [
+          {
+            "feature": "provider_agreement_long_any",
+            "importance": 21.298603943057593
+          },
+          {
+            "feature": "provider_agreement_long_count_8",
+            "importance": 2.7332405422318513
+          },
+          {
+            "feature": "nq_aq_1d_ret_4",
+            "importance": 2.512245454056962
+          },
+          {
+            "feature": "nq_aq_1d_ret_8",
+            "importance": 2.3879437647715416
+          },
+          {
+            "feature": "nq_aq_1d_eff_16",
+            "importance": 2.107770649233302
+          },
+          {
+            "feature": "nq_aq_15m_eff_8",
+            "importance": 1.966943032752334
+          },
+          {
+            "feature": "nq_aq_4h_ret_8",
+            "importance": 1.8450540730226133
+          },
+          {
+            "feature": "nq_aq_1d_volume_z_16",
+            "importance": 1.6416359897459194
+          },
+          {
+            "feature": "nq_aq_1d_pos_16",
+            "importance": 1.5347793150465365
+          },
+          {
+            "feature": "nq_aq_1d_volume_z_32",
+            "importance": 1.4762062713438293
+          },
+          {
+            "feature": "nq_aq_4h_eff_8",
+            "importance": 1.2145393321992122
+          },
+          {
+            "feature": "qqq_ibkr_1h_pos_8",
+            "importance": 1.1967406741538873
+          },
+          {
+            "feature": "nq_aq_1h_ret_16",
+            "importance": 1.1809959567518324
+          },
+          {
+            "feature": "nq_aq_1d_range_mean_4",
+            "importance": 1.1475190703260443
+          },
+          {
+            "feature": "nq_aq_4h_range_pct",
+            "importance": 1.1031682799564948
+          },
+          {
+            "feature": "provider_agreement_long_ratio_8",
+            "importance": 1.017468147344528
+          }
+        ]
+      },
+      "top_candidates": [
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h4",
+          "threshold": 0.5625,
+          "calibration_support": 127,
+          "calibration_success": 81,
+          "calibration_precision": 0.6377952755905512,
+          "calibration_wilson_lcb_95": 0.5512947524229214,
+          "test_support": 129,
+          "test_success": 60,
+          "test_precision": 0.46511627906976744,
+          "precision_wilson_lcb_95": 0.38130031118129837,
+          "ece": 0.19739454121271996,
+          "coverage": 0.4558303886925795,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+          "positive_count": 410,
+          "negative_count": 722,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 21.298603943057593
+            },
+            {
+              "feature": "provider_agreement_long_count_8",
+              "importance": 2.7332405422318513
+            },
+            {
+              "feature": "nq_aq_1d_ret_4",
+              "importance": 2.512245454056962
+            },
+            {
+              "feature": "nq_aq_1d_ret_8",
+              "importance": 2.3879437647715416
+            },
+            {
+              "feature": "nq_aq_1d_eff_16",
+              "importance": 2.107770649233302
+            },
+            {
+              "feature": "nq_aq_15m_eff_8",
+              "importance": 1.966943032752334
+            },
+            {
+              "feature": "nq_aq_4h_ret_8",
+              "importance": 1.8450540730226133
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_16",
+              "importance": 1.6416359897459194
+            },
+            {
+              "feature": "nq_aq_1d_pos_16",
+              "importance": 1.5347793150465365
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_32",
+              "importance": 1.4762062713438293
+            },
+            {
+              "feature": "nq_aq_4h_eff_8",
+              "importance": 1.2145393321992122
+            },
+            {
+              "feature": "qqq_ibkr_1h_pos_8",
+              "importance": 1.1967406741538873
+            },
+            {
+              "feature": "nq_aq_1h_ret_16",
+              "importance": 1.1809959567518324
+            },
+            {
+              "feature": "nq_aq_1d_range_mean_4",
+              "importance": 1.1475190703260443
+            },
+            {
+              "feature": "nq_aq_4h_range_pct",
+              "importance": 1.1031682799564948
+            },
+            {
+              "feature": "provider_agreement_long_ratio_8",
+              "importance": 1.017468147344528
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h4",
+          "threshold": 0.5151295034079845,
+          "calibration_support": 127,
+          "calibration_success": 81,
+          "calibration_precision": 0.6377952755905512,
+          "calibration_wilson_lcb_95": 0.5512947524229214,
+          "test_support": 130,
+          "test_success": 60,
+          "test_precision": 0.46153846153846156,
+          "precision_wilson_lcb_95": 0.37817846434310004,
+          "ece": 0.2001222720692326,
+          "coverage": 0.45936395759717313,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+          "positive_count": 410,
+          "negative_count": 722,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 21.298603943057593
+            },
+            {
+              "feature": "provider_agreement_long_count_8",
+              "importance": 2.7332405422318513
+            },
+            {
+              "feature": "nq_aq_1d_ret_4",
+              "importance": 2.512245454056962
+            },
+            {
+              "feature": "nq_aq_1d_ret_8",
+              "importance": 2.3879437647715416
+            },
+            {
+              "feature": "nq_aq_1d_eff_16",
+              "importance": 2.107770649233302
+            },
+            {
+              "feature": "nq_aq_15m_eff_8",
+              "importance": 1.966943032752334
+            },
+            {
+              "feature": "nq_aq_4h_ret_8",
+              "importance": 1.8450540730226133
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_16",
+              "importance": 1.6416359897459194
+            },
+            {
+              "feature": "nq_aq_1d_pos_16",
+              "importance": 1.5347793150465365
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_32",
+              "importance": 1.4762062713438293
+            },
+            {
+              "feature": "nq_aq_4h_eff_8",
+              "importance": 1.2145393321992122
+            },
+            {
+              "feature": "qqq_ibkr_1h_pos_8",
+              "importance": 1.1967406741538873
+            },
+            {
+              "feature": "nq_aq_1h_ret_16",
+              "importance": 1.1809959567518324
+            },
+            {
+              "feature": "nq_aq_1d_range_mean_4",
+              "importance": 1.1475190703260443
+            },
+            {
+              "feature": "nq_aq_4h_range_pct",
+              "importance": 1.1031682799564948
+            },
+            {
+              "feature": "provider_agreement_long_ratio_8",
+              "importance": 1.017468147344528
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h8",
+          "threshold": 0.5,
+          "calibration_support": 145,
+          "calibration_success": 88,
+          "calibration_precision": 0.6068965517241379,
+          "calibration_wilson_lcb_95": 0.5256203875443963,
+          "test_support": 138,
+          "test_success": 61,
+          "test_precision": 0.4420289855072464,
+          "precision_wilson_lcb_95": 0.36185463905743687,
+          "ece": 0.20438231559169848,
+          "coverage": 0.4876325088339223,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+          "positive_count": 398,
+          "negative_count": 734,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 17.11859270910285
+            },
+            {
+              "feature": "nq_aq_4h_ret_8",
+              "importance": 2.431824659943122
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_32",
+              "importance": 2.1493040707729563
+            },
+            {
+              "feature": "provider_agreement_long_count_8",
+              "importance": 1.8721671242137596
+            },
+            {
+              "feature": "nq_aq_1d_pos_16",
+              "importance": 1.8499150226301366
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_16",
+              "importance": 1.7736701210616148
+            },
+            {
+              "feature": "provider_agreement_long_ratio_16",
+              "importance": 1.6661586112328897
+            },
+            {
+              "feature": "qqq_yf_1h_ret_16",
+              "importance": 1.5041290137574383
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 1.4312122142080868
+            },
+            {
+              "feature": "provider_agreement_long_ratio_8",
+              "importance": 1.4008741030783254
+            },
+            {
+              "feature": "nq_aq_1h_pos_8",
+              "importance": 1.385087484300226
+            },
+            {
+              "feature": "nq_aq_4h_eff_8",
+              "importance": 1.3374616945651363
+            },
+            {
+              "feature": "qqq_ibkr_1h_pos_64",
+              "importance": 1.3213067936131202
+            },
+            {
+              "feature": "nq_aq_15m_ret_16",
+              "importance": 1.2156642177129922
+            },
+            {
+              "feature": "nq_aq_15m_range_mean_32",
+              "importance": 1.156964540555946
+            },
+            {
+              "feature": "nq_aq_1h_pos_64",
+              "importance": 1.128277408039107
+            }
+          ]
+        },
+        {
+          "candidate_kind": "whitebox_provider_agreement_long",
+          "target": "target_release_long_h8",
+          "threshold": 1.0,
+          "calibration_support": 216,
+          "calibration_success": 122,
+          "calibration_precision": 0.5648148148148148,
+          "calibration_wilson_lcb_95": 0.49813594935745714,
+          "test_support": 156,
+          "test_success": 63,
+          "test_precision": 0.40384615384615385,
+          "precision_wilson_lcb_95": 0.3300559287633058,
+          "ece": 0.5961538461538461,
+          "coverage": 0.5512367491166078,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context."
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h4",
+          "threshold": 0.5076923076923077,
+          "calibration_support": 192,
+          "calibration_success": 114,
+          "calibration_precision": 0.59375,
+          "calibration_wilson_lcb_95": 0.5231014194080397,
+          "test_support": 155,
+          "test_success": 62,
+          "test_precision": 0.4,
+          "precision_wilson_lcb_95": 0.3261946432215541,
+          "ece": 0.2368580120879746,
+          "coverage": 0.5477031802120141,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+          "positive_count": 410,
+          "negative_count": 722,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 21.298603943057593
+            },
+            {
+              "feature": "provider_agreement_long_count_8",
+              "importance": 2.7332405422318513
+            },
+            {
+              "feature": "nq_aq_1d_ret_4",
+              "importance": 2.512245454056962
+            },
+            {
+              "feature": "nq_aq_1d_ret_8",
+              "importance": 2.3879437647715416
+            },
+            {
+              "feature": "nq_aq_1d_eff_16",
+              "importance": 2.107770649233302
+            },
+            {
+              "feature": "nq_aq_15m_eff_8",
+              "importance": 1.966943032752334
+            },
+            {
+              "feature": "nq_aq_4h_ret_8",
+              "importance": 1.8450540730226133
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_16",
+              "importance": 1.6416359897459194
+            },
+            {
+              "feature": "nq_aq_1d_pos_16",
+              "importance": 1.5347793150465365
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_32",
+              "importance": 1.4762062713438293
+            },
+            {
+              "feature": "nq_aq_4h_eff_8",
+              "importance": 1.2145393321992122
+            },
+            {
+              "feature": "qqq_ibkr_1h_pos_8",
+              "importance": 1.1967406741538873
+            },
+            {
+              "feature": "nq_aq_1h_ret_16",
+              "importance": 1.1809959567518324
+            },
+            {
+              "feature": "nq_aq_1d_range_mean_4",
+              "importance": 1.1475190703260443
+            },
+            {
+              "feature": "nq_aq_4h_range_pct",
+              "importance": 1.1031682799564948
+            },
+            {
+              "feature": "provider_agreement_long_ratio_8",
+              "importance": 1.017468147344528
+            }
+          ]
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_long_h16",
+          "threshold": 0.4857142857142857,
+          "calibration_support": 143,
+          "calibration_success": 88,
+          "calibration_precision": 0.6153846153846154,
+          "calibration_wilson_lcb_95": 0.533619870091324,
+          "test_support": 150,
+          "test_success": 60,
+          "test_precision": 0.4,
+          "precision_wilson_lcb_95": 0.3250432073625253,
+          "ece": 0.15354433535276837,
+          "coverage": 0.5300353356890459,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+          "positive_count": 363,
+          "negative_count": 769,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_long_any",
+              "importance": 15.624362934484878
+            },
+            {
+              "feature": "nq_aq_1d_pos_16",
+              "importance": 3.5543738677872216
+            },
+            {
+              "feature": "nq_aq_1d_volume_z_32",
+              "importance": 2.939347957027719
+            },
+            {
+              "feature": "nq_aq_15m_range_mean_32",
+              "importance": 2.466754035225589
+            },
+            {
+              "feature": "nq_aq_4h_ret_8",
+              "importance": 1.93258395701873
+            },
+            {
+              "feature": "nq_aq_4h_vol_64",
+              "importance": 1.766106251629381
+            },
+            {
+              "feature": "nq_aq_4h_eff_32",
+              "importance": 1.5108904297686472
+            },
+            {
+              "feature": "nq_aq_1d_range_mean_4",
+              "importance": 1.3833493127132432
+            },
+            {
+              "feature": "nq_aq_15m_vol_16",
+              "importance": 1.376089761137548
+            },
+            {
+              "feature": "qqq_yf_1h_vol_8",
+              "importance": 1.30132915308482
+            },
+            {
+              "feature": "nq_aq_1d_range_pct",
+              "importance": 1.2949882338290633
+            },
+            {
+              "feature": "nq_aq_15m_eff_32",
+              "importance": 1.2552490309001139
+            },
+            {
+              "feature": "nq_aq_1d_range_mean_1",
+              "importance": 1.2454003334453567
+            },
+            {
+              "feature": "nq_aq_4h_pos_8",
+              "importance": 1.2091644938055262
+            },
+            {
+              "feature": "qqq_yf_1h_vol_16",
+              "importance": 1.1661135570074588
+            },
+            {
+              "feature": "nq_aq_1h_vol_16",
+              "importance": 1.140732527187612
+            }
+          ]
+        },
+        {
+          "candidate_kind": "whitebox_provider_agreement_long",
+          "target": "target_release_long_h4",
+          "threshold": 1.0,
+          "calibration_support": 216,
+          "calibration_success": 125,
+          "calibration_precision": 0.5787037037037037,
+          "calibration_wilson_lcb_95": 0.5120437215091295,
+          "test_support": 156,
+          "test_success": 62,
+          "test_precision": 0.3974358974358974,
+          "precision_wilson_lcb_95": 0.3239962894494175,
+          "ece": 0.6025641025641026,
+          "coverage": 0.5512367491166078,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context."
+        },
+        {
+          "candidate_kind": "whitebox_provider_agreement_long",
+          "target": "target_release_long_h16",
+          "threshold": 1.0,
+          "calibration_support": 216,
+          "calibration_success": 110,
+          "calibration_precision": 0.5092592592592593,
+          "calibration_wilson_lcb_95": 0.4430144091858717,
+          "test_support": 156,
+          "test_success": 60,
+          "test_precision": 0.38461538461538464,
+          "precision_wilson_lcb_95": 0.31191684770981487,
+          "ece": 0.6153846153846154,
+          "coverage": 0.5512367491166078,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context."
+        },
+        {
+          "candidate_kind": "whitebox_provider_agreement_short",
+          "target": "target_release_short_h4",
+          "threshold": 0.0,
+          "calibration_support": 283,
+          "calibration_success": 39,
+          "calibration_precision": 0.13780918727915195,
+          "calibration_wilson_lcb_95": 0.10247556412144534,
+          "test_support": 283,
+          "test_success": 67,
+          "test_precision": 0.23674911660777384,
+          "precision_wilson_lcb_95": 0.1909552855410907,
+          "ece": 0.2968197879858657,
+          "coverage": 1.0,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context."
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_short_h4",
+          "threshold": 0.0,
+          "calibration_support": 283,
+          "calibration_success": 39,
+          "calibration_precision": 0.13780918727915195,
+          "calibration_wilson_lcb_95": 0.10247556412144534,
+          "test_support": 283,
+          "test_success": 67,
+          "test_precision": 0.23674911660777384,
+          "precision_wilson_lcb_95": 0.1909552855410907,
+          "ece": 0.05520984624017301,
+          "coverage": 1.0,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+          "positive_count": 184,
+          "negative_count": 948,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_short_any",
+              "importance": 14.287297117610454
+            },
+            {
+              "feature": "provider_agreement_short_ratio_8",
+              "importance": 3.9420859473132324
+            },
+            {
+              "feature": "nq_aq_1d_ret_16",
+              "importance": 3.5960862836747176
+            },
+            {
+              "feature": "nq_aq_4h_ret_8",
+              "importance": 2.514697337233287
+            },
+            {
+              "feature": "nq_aq_1d_pos_32",
+              "importance": 2.1512667508905463
+            },
+            {
+              "feature": "nq_aq_4h_pos_8",
+              "importance": 2.1229738710258674
+            },
+            {
+              "feature": "provider_agreement_short_ratio_16",
+              "importance": 2.0042066586228557
+            },
+            {
+              "feature": "provider_agreement_short_count_8",
+              "importance": 1.9408291546949823
+            },
+            {
+              "feature": "nq_aq_1d_pos_16",
+              "importance": 1.3243087956853083
+            },
+            {
+              "feature": "nq_aq_1d_ret_8",
+              "importance": 1.308351532370649
+            },
+            {
+              "feature": "nq_aq_1h_pos_16",
+              "importance": 1.305949020723167
+            },
+            {
+              "feature": "nq_aq_1d_open",
+              "importance": 1.2107752719327902
+            },
+            {
+              "feature": "nq_aq_1d_vol_16",
+              "importance": 1.1755151906149708
+            },
+            {
+              "feature": "nq_aq_4h_pos_16",
+              "importance": 1.1723928198486806
+            },
+            {
+              "feature": "qqq_yf_1h_ret_32",
+              "importance": 1.140270427328483
+            },
+            {
+              "feature": "nq_aq_4h_range_pct",
+              "importance": 1.1333373399694893
+            }
+          ]
+        },
+        {
+          "candidate_kind": "whitebox_provider_agreement_short",
+          "target": "target_release_short_h8",
+          "threshold": 0.0,
+          "calibration_support": 283,
+          "calibration_success": 26,
+          "calibration_precision": 0.09187279151943463,
+          "calibration_wilson_lcb_95": 0.0634678926168661,
+          "test_support": 283,
+          "test_success": 57,
+          "test_precision": 0.20141342756183744,
+          "precision_wilson_lcb_95": 0.15882801778827624,
+          "ece": 0.33215547703180215,
+          "coverage": 1.0,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context."
+        },
+        {
+          "candidate_kind": "catboost_isotonic",
+          "target": "target_release_short_h8",
+          "threshold": 0.0,
+          "calibration_support": 283,
+          "calibration_success": 26,
+          "calibration_precision": 0.09187279151943463,
+          "calibration_wilson_lcb_95": 0.0634678926168661,
+          "test_support": 283,
+          "test_success": 57,
+          "test_precision": 0.20141342756183744,
+          "precision_wilson_lcb_95": 0.15882801778827624,
+          "ece": 0.10067241024996096,
+          "coverage": 1.0,
+          "accepted_95": false,
+          "board_eligible": true,
+          "board_eligibility_note": "Cross-market QQQ/NQ lane: QQQ has same-market yfinance+IBKR provider breadth, NQ contributes local Auto-Quant multi-timeframe regime context.",
+          "positive_count": 156,
+          "negative_count": 976,
+          "top_importances": [
+            {
+              "feature": "provider_agreement_short_any",
+              "importance": 14.21078515777676
+            },
+            {
+              "feature": "nq_aq_1d_open",
+              "importance": 9.820802246899873
+            },
+            {
+              "feature": "provider_agreement_short_ratio_8",
+              "importance": 3.6593165390606437
+            },
+            {
+              "feature": "nq_aq_1d_pos_16",
+              "importance": 2.813085297038814
+            },
+            {
+              "feature": "nq_aq_4h_vol_64",
+              "importance": 2.33401510853101
+            },
+            {
+              "feature": "provider_agreement_short_count_8",
+              "importance": 2.259729518762849
+            },
+            {
+              "feature": "nq_aq_1d_ret_16",
+              "importance": 2.1326454634677514
+            },
+            {
+              "feature": "nq_aq_1h_pos_64",
+              "importance": 1.7835406474589215
+            },
+            {
+              "feature": "nq_aq_4h_ret_8",
+              "importance": 1.6702738225698903
+            },
+            {
+              "feature": "nq_aq_1h_pos_16",
+              "importance": 1.415288611446576
+            },
+            {
+              "feature": "qqq_ibkr_1h_high",
+              "importance": 1.2881543193766092
+            },
+            {
+              "feature": "qqq_ibkr_1h_pos_16",
+              "importance": 1.2732396204432048
+            },
+            {
+              "feature": "nq_aq_1d_volume",
+              "importance": 1.2629307078301892
+            },
+            {
+              "feature": "nq_aq_4h_open",
+              "importance": 1.2507843616723653
+            },
+            {
+              "feature": "nq_aq_4h_pos_16",
+              "importance": 1.2399452670284137
+            },
+            {
+              "feature": "qqq_yf_1h_pos_16",
+              "importance": 1.1455051505812908
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "accepted_95_count": 0,
+  "accepted_packet": null,
+  "overall_decision": "no_95_candidate"
+}

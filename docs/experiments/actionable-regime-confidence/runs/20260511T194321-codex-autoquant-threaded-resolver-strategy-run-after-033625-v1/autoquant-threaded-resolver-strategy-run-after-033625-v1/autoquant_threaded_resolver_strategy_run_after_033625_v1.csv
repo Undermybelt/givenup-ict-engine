@@ -1,0 +1,4 @@
+strategy,trades,win_rate_pct,total_profit_pct,sharpe,sortino,calmar,max_drawdown_pct,profit_factor,robust_sharpe,worst_profit_pct,avg_position_pct,profit_floor,min_position_size,decision
+BTCLeaderBreakV4,600,31.8333,42.4600,0.9415,4.9623,7.7829,-5.7458,1.7469,0.9415,42.4600,6.9583,PASS,PASS,diagnostic_only_no_source_control_no_promotion
+MomentumMTFConfluence,854,34.7775,53.2400,0.3993,1.0760,2.4190,-23.1801,1.1682,0.3993,53.2400,21.5841,PASS,PASS,diagnostic_only_no_source_control_no_promotion
+VolBreakoutSized,1221,32.8419,25.0200,1.3390,7.3012,6.1958,-4.2529,1.4751,1.3390,25.0200,3.6641,PASS,FAIL,diagnostic_only_no_source_control_no_promotion

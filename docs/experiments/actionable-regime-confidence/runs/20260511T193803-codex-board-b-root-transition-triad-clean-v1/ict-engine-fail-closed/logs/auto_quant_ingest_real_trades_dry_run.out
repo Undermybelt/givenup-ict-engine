@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "f297b086bfd6b7db",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": true,
+  "ledger_artifact_id": "auto_quant_real_trades_ROOT_TRIAD_CLEAN_193803_SELECTED_20260511T114636.784507000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": "auto_quant_real_trades_ROOT_TRIAD_CLEAN_193803_SELECTED_20260511T114605.708534000Z",
+  "source": "auto_quant_real_trades",
+  "symbol": "ROOT_TRIAD_CLEAN_193803_SELECTED",
+  "trades_applied": 11633,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260511T193803-codex-board-b-root-transition-triad-clean-v1/ict-engine-fail-closed/root_transition_triad_clean_real_trades_wire_v1.jsonl",
+  "trades_total": 11633
+}

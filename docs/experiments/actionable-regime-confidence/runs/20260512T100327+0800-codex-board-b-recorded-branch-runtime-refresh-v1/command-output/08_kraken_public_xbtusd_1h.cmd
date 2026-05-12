@@ -1,0 +1,1 @@
+uv run --with pandas --with requests python scripts/auto_quant_external/fetch_external.py kraken-kline --pair XBTUSD --interval 1h --output docs/experiments/actionable-regime-confidence/runs/20260512T100327+0800-codex-board-b-recorded-branch-runtime-refresh-v1/provider-fetch/kraken_public_xbtusd_1h.csv

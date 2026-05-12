@@ -1,0 +1,5 @@
+id,root,requirements,exists,required_files,present_files,missing_files,ready
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,R2;R4,False,source_label_equivalence_rows.csv;source_label_equivalence_provenance.json,,source_label_equivalence_rows.csv;source_label_equivalence_provenance.json,False
+native_subhour_source_label,/tmp/ict-engine-native-subhour-source-label-intake,R3,False,native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json,,native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json,False
+source_panel_recency_extension,/tmp/ict-engine-source-panel-recency-extension,R5,False,stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json,,stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json,False
+direct_manipulation_row_intake,/tmp/ict-engine-direct-manipulation-row-intake,R6,False,positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json,,positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json,False

@@ -1,0 +1,7 @@
+PASS yfinance harness acquired 21 QQQ daily rows
+PASS low-pollution IBKR uv fetch acquired 21 QQQ daily rows
+PASS Kraken public fetch acquired 721 XBTUSD hourly rows
+PASS Bybit public fetch acquired 985 BTCUSDT hourly rows
+PASS Binance public fetch acquired 985 BTCUSDT hourly rows
+PASS TradingView MCP fetch failure recorded
+PASS provider acquisition is not promotion evidence and update_goal remains false

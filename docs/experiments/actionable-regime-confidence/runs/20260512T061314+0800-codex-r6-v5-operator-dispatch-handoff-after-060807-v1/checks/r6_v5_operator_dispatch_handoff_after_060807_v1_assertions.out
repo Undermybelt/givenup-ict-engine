@@ -1,0 +1,14 @@
+gate_result=r6_v5_operator_dispatch_handoff_after_060807_v1=operator_dispatch_ready_not_sent_no_approval_no_rows
+cme_v5_draft_sha256=56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b
+cboe_cfe_v5_draft_sha256=411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d
+external_requests_sent=false
+approval_present=false
+source_control_evidence_acquired=false
+required_root_/tmp/ict-engine-board-a-r6-owner-export-v1=absent
+required_root_/tmp/ict-engine-native-subhour-source-label-intake=absent
+required_root_/tmp/ict-engine-source-panel-recency-extension=absent
+target_root_mutated=false
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+trade_usable=false
+update_goal=false

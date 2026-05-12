@@ -1,0 +1,46 @@
+{
+  "decision_hint_raw": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.523|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.6692",
+  "decision_summary": "Observe only",
+  "direction": "Bear",
+  "entry_state": "medium",
+  "evidence": [
+    "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+    "multi_timeframe_missing=1m,5m,30m,4h",
+    "15m:17291 bars path=<local-path>"
+  ],
+  "execution_triage": {
+    "branch": "transition_guardrail",
+    "branch_probability": 0.0,
+    "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "execution_bias": "guarded",
+    "execution_score": 0.5465966729013458,
+    "gate_status": "observe",
+    "one_line": "execution observe | branch=transition_guardrail | bias=guarded | score=0.547 | confidence=0.000 | hint=execution_guarded_due_to_high_transition_hazard",
+    "posterior_uncertainty": 1.0,
+    "reason_summary": [
+      "branch=block_crowded (gate_status=blocked, readiness 0.4089 < 0.45)",
+      "market_state=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.398",
+      "market_state=volatility=NormalVol:0.701 liquidity=NormalLiquidity:0.335 structure=Unknown:0.300 behavior=Neutral:0.450",
+      "market_state=rationale=volatility=NormalVol conf=0.70",
+      "market_state=rationale=primary=RangeConsolidation secondary=WideRange overall=0.40"
+    ]
+  },
+  "next_command": "ict-engine factor-research --symbol BTCUSD --data '/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json' --state-dir '/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1'",
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine factor-research --symbol BTCUSD --data '/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json' --state-dir '/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/state_downstream_v1'",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "pre_bayes_gate": "pass_neutralized",
+  "recommended_next_actions": [
+    "ict-engine factor-research --symbol BTCUSD --data '<local-path> --state-dir '<local-path>"
+  ],
+  "risks": [
+    "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+  ]
+}

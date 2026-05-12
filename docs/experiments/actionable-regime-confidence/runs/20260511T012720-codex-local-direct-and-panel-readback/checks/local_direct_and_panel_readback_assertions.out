@@ -1,0 +1,11 @@
+PASS active_axis=MainRegimeV2
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS fresh_calibration_rerun=false
+PASS tomac_gc_nq_ohlcv_panel_found=true
+PASS direct_mbo_candidates_found=true
+PASS qualifying_direct_manipulation_input_sets=0
+ACCEPTED_95_PRIOR Crisis
+MISSING_95 Bull,Bear,Sideways,Manipulation
+MANIPULATION_INPUT_STATE missing_required_inputs
+GATE blocked_missing_required_inputs

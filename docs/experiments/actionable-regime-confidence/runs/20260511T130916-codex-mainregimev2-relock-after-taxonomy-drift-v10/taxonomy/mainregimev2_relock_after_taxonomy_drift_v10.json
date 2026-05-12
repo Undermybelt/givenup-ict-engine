@@ -1,0 +1,60 @@
+{
+  "run_id": "20260511T130916+0800-codex-mainregimev2-relock-after-taxonomy-drift-v10",
+  "artifact_type": "taxonomy_relock_after_drift",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": {
+    "name": "MainRegimeV2",
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "residual": "UnknownOrMixed",
+    "separate_direct_event_class_or_overlay": [
+      "Manipulation"
+    ]
+  },
+  "relocked_from": {
+    "run_id": "20260511T130633+0800-codex-parent-regime-taxonomy-pivot-v3",
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T130633-codex-parent-regime-taxonomy-pivot-v3/taxonomy/parent_regime_taxonomy_pivot_v3.md",
+    "status": "provenance_only_not_active_denominator",
+    "reason": "It reintroduced BullExpansion/BearExpansion/ConsolidationBalance/CrisisDislocation as parent candidates, which conflicts with the user correction that these expansion/dislocation labels look like child/sub-regime classes under the main root regime layer."
+  },
+  "retained_seed_evidence": [
+    {
+      "run_id": "20260511T130600+0800-codex-stock-regime-same-source-timeframe-rollup-v1",
+      "status": "retained_same_source_timeframe_seed_for_MainRegimeV2"
+    },
+    {
+      "run_id": "20260511T130655+0800-codex-stock-panel-derived-timeframe-probe-v1",
+      "status": "retained_partial_derived_timeframe_probe_for_MainRegimeV2",
+      "accepted_derived_timeframe_roots": [
+        "1w:Bull",
+        "1w:Sideways"
+      ]
+    },
+    {
+      "run_id": "20260511T130102+0800-current-goal-completion-audit-v10-cross-context",
+      "status": "retained_scoped_cross_context_audit"
+    },
+    {
+      "run_id": "20260511T125122+0800-codex-stock-market-regimes-parent-root-abstain",
+      "status": "retained_scoped_daily_parent_root_gate"
+    }
+  ],
+  "decision": {
+    "accepted_confidence_gate_added": false,
+    "parent_axis_reopened": false,
+    "active_denominator_relocked": true,
+    "full_objective_achieved": false,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "gate_result": "mainregimev2_relocked_after_taxonomy_drift_full_matrix_still_blocked",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false,
+    "update_goal_allowed": false
+  },
+  "next_action": "Continue MainRegimeV2 full-matrix work from the retained seed evidence: target weekly Bear/Crisis, monthly roots, unsupported intraday/full-species cells, and direct Manipulation varieties without promoting child/sub-regime labels."
+}

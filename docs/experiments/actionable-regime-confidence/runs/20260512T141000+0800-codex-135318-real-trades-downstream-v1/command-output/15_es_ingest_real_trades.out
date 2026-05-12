@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "8b4e344ce94d3150",
+  "dry_run": false,
+  "feedback_records_inserted": 115,
+  "force": true,
+  "ledger_artifact_id": "auto_quant_real_trades_LONG_ES_TOMAC_135318_20260512T063421.338555000Z",
+  "ledger_status": "applied",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades",
+  "symbol": "LONG_ES_TOMAC_135318",
+  "trades_applied": 115,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/derived/tomac_real_trades_es.jsonl",
+  "trades_total": 115
+}

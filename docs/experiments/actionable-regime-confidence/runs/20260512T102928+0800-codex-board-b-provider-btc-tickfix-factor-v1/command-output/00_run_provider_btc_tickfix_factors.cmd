@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102928+0800-codex-board-b-provider-btc-tickfix-factor-v1/workspace/auto-quant-provider-btc-tickfix-factor/run_tomac.py 

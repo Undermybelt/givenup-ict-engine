@@ -1,0 +1,69 @@
+{
+  "artifact_type": "qqq_nq_daily_crossmarket_attachment_v1",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T170714-codex-qqq-nq-daily-crossmarket-attachment-v1/checks/qqq_nq_daily_crossmarket_attachment_v1_assertions.out",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T170714-codex-qqq-nq-daily-crossmarket-attachment-v1/crossmarket-attachment/qqq_nq_daily_crossmarket_attachment_v1.json",
+    "md": "docs/experiments/actionable-regime-confidence/runs/20260511T170714-codex-qqq-nq-daily-crossmarket-attachment-v1/crossmarket-attachment/qqq_nq_daily_crossmarket_attachment_v1.md",
+    "root_support_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T170714-codex-qqq-nq-daily-crossmarket-attachment-v1/crossmarket-attachment/qqq_nq_daily_crossmarket_attachment_v1_root_support.csv",
+    "split_metrics_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T170714-codex-qqq-nq-daily-crossmarket-attachment-v1/crossmarket-attachment/qqq_nq_daily_crossmarket_attachment_v1_splits.csv",
+    "target_metrics_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T170714-codex-qqq-nq-daily-crossmarket-attachment-v1/crossmarket-attachment/qqq_nq_daily_crossmarket_attachment_v1_targets.csv"
+  },
+  "created_at_utc": "2026-05-11T09:07:14+00:00",
+  "decision": {
+    "blocked_reason": "Daily Nasdaq ETF/futures cross-market attachment only; native sub-hour, crypto/FX source labels, and full direct Manipulation species remain open.",
+    "full_objective_achieved": false,
+    "gate_result": "qqq_nq_daily_crossmarket_attachment_v1=accepted2_targets_8of8_root_cells_daily_tracking_corr_ge095",
+    "new_classification_confidence_gate_claimed": false,
+    "positive_crossmarket_attachment": true,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "policy": {
+    "attachment_rule": "Attach source-anchor MainRegimeV2 daily root to target only after target/source tracking passes chronological split checks.",
+    "min_available_interval_coverage": 0.99,
+    "min_root_support": 50,
+    "min_split_return_correlation": 0.95,
+    "no_child_label_promotion": true,
+    "no_raw_yfinance_data_committed": true,
+    "no_target_generated_regime_labels": true,
+    "root_taxonomy": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "timeframe": "1d"
+  },
+  "rollup": {
+    "accepted_target_count": 2,
+    "accepted_targets": [
+      "QQQ",
+      "NQ=F"
+    ],
+    "scoped_target_count": 2,
+    "target_root_cell_presence_wilson95_lcb": 0.6755924351161198,
+    "target_root_cells_present": 8,
+    "target_root_cells_total": 8
+  },
+  "run_id": "20260511T170714+0800-codex-qqq-nq-daily-crossmarket-attachment-v1",
+  "source_anchor": "^IXIC",
+  "source_anchor_summary": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "root_counts": {
+      "Bear": 1281,
+      "Bull": 3228,
+      "Crisis": 462,
+      "Sideways": 1588
+    },
+    "rows": 6559
+  },
+  "source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "targets": {
+    "NQ=F": "nasdaq_100_futures_crossmarket",
+    "QQQ": "nasdaq_100_etf_crossmarket"
+  }
+}

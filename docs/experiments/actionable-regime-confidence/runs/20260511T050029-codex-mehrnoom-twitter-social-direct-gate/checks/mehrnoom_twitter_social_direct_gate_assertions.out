@@ -1,0 +1,10 @@
+gate_result=blocked_mehrnoom_twitter_social_below_95
+accepted_95=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_committed_to_repo=false
+rows=35844
+positives=8961
+negatives=26883
+best_cal_lcb=0.937652
+best_test_lcb=0.815594

@@ -1,0 +1,1105 @@
+[
+  {
+    "run_id": "research:QQQ:20260510T091940.788Z",
+    "timestamp": "2026-05-10T09:19:40.788544Z",
+    "symbol": "QQQ",
+    "research_objective": "generic",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "04bcc39de17e1aa8",
+      "config_hash": "37e8da6bb93638a4",
+      "data_fingerprint": "d50376f1a81feb5d"
+    },
+    "decision_thresholds": {
+      "promotion_min_score_delta": 0.1,
+      "promotion_min_score": 0.7,
+      "rollback_score_delta": -0.1,
+      "rollback_probability_delta": 0.1,
+      "artifact_consumed_min_window": 3,
+      "artifact_consumed_improvement_quality_delta": 5.0,
+      "artifact_consumed_improvement_positive_rate_delta": 0.25,
+      "artifact_consumed_regression_quality_delta": -5.0,
+      "artifact_consumed_regression_positive_rate_delta": -0.25
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "promotion_decision": {
+      "approved": false,
+      "status": "hold",
+      "reason": "no_previous_run|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "target_factors": [
+        "volatility_mean_reversion",
+        "trend_momentum",
+        "crowding_herding",
+        "session_liquidity",
+        "spectral_rhythm",
+        "structure_ict",
+        "cross_market_smt",
+        "options_hedging"
+      ],
+      "target_families": []
+    },
+    "rollback_recommendation": {
+      "should_rollback": false,
+      "scope": "none",
+      "reason": "no_previous_run|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_rollback_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "target_factors": [],
+      "target_families": []
+    },
+    "family_history_window": 5,
+    "data_path": "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+    "paired_data_path": "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+    "candles": 480,
+    "paired_candles": 147,
+    "config_name": "FactorBacktestConfig::default",
+    "source_command": "factor-research",
+    "factor_count": 8,
+    "best_factor": "volatility_mean_reversion",
+    "aggregate_return": -0.008611661083948549,
+    "feedback_records_generated": 1021,
+    "feedback_records_applied": 849,
+    "factor_score_deltas": [
+      {
+        "factor_name": "volatility_mean_reversion",
+        "previous_score": null,
+        "new_score": 0.4061577530561721,
+        "score_delta": 0.4061577530561721,
+        "previous_weight": null,
+        "new_weight": 0.022579223175878613,
+        "weight_delta": 0.022579223175878613,
+        "previous_action": null,
+        "new_action": "replace"
+      },
+      {
+        "factor_name": "trend_momentum",
+        "previous_score": null,
+        "new_score": 0.3848460989839657,
+        "score_delta": 0.3848460989839657,
+        "previous_weight": null,
+        "new_weight": 0.05850401141980606,
+        "weight_delta": 0.05850401141980606,
+        "previous_action": null,
+        "new_action": "replace"
+      },
+      {
+        "factor_name": "crowding_herding",
+        "previous_score": null,
+        "new_score": 0.32450845993421484,
+        "score_delta": 0.32450845993421484,
+        "previous_weight": null,
+        "new_weight": 0.03648163005614022,
+        "weight_delta": 0.03648163005614022,
+        "previous_action": null,
+        "new_action": "replace"
+      },
+      {
+        "factor_name": "session_liquidity",
+        "previous_score": null,
+        "new_score": 0.3197967509569131,
+        "score_delta": 0.3197967509569131,
+        "previous_weight": null,
+        "new_weight": 0.04064148288865065,
+        "weight_delta": 0.04064148288865065,
+        "previous_action": null,
+        "new_action": "replace"
+      },
+      {
+        "factor_name": "spectral_rhythm",
+        "previous_score": null,
+        "new_score": 0.285400161327881,
+        "score_delta": 0.285400161327881,
+        "previous_weight": null,
+        "new_weight": 0.021457470998141253,
+        "weight_delta": 0.021457470998141253,
+        "previous_action": null,
+        "new_action": "replace"
+      },
+      {
+        "factor_name": "structure_ict",
+        "previous_score": null,
+        "new_score": 0.2820045845748654,
+        "score_delta": 0.2820045845748654,
+        "previous_weight": null,
+        "new_weight": 0.0362310541995177,
+        "weight_delta": 0.0362310541995177,
+        "previous_action": null,
+        "new_action": "replace"
+      },
+      {
+        "factor_name": "cross_market_smt",
+        "previous_score": null,
+        "new_score": 0.1384313725490196,
+        "score_delta": 0.1384313725490196,
+        "previous_weight": null,
+        "new_weight": 0.1611613887519489,
+        "weight_delta": 0.1611613887519489,
+        "previous_action": null,
+        "new_action": "observe"
+      },
+      {
+        "factor_name": "options_hedging",
+        "previous_score": null,
+        "new_score": 0.1384313725490196,
+        "score_delta": 0.1384313725490196,
+        "previous_weight": null,
+        "new_weight": 0.1611613887519489,
+        "weight_delta": 0.1611613887519489,
+        "previous_action": null,
+        "new_action": "observe"
+      }
+    ],
+    "factor_family_decisions": [
+      {
+        "family": "cross_market_smt",
+        "factor_count": 1,
+        "avg_score": 0.1384313725490196,
+        "actions": [
+          "cross_market_smt:observe"
+        ],
+        "replacement_candidates": [],
+        "dominant_action": "observe",
+        "decision_status": "needs_observation",
+        "decision_reason": "dominant_action=observe avg_score_band=f risk_flags=low_family_score,narrow_regime_coverage",
+        "risk_flags": [
+          "low_family_score",
+          "narrow_regime_coverage"
+        ]
+      },
+      {
+        "family": "options_hedging",
+        "factor_count": 1,
+        "avg_score": 0.1384313725490196,
+        "actions": [
+          "options_hedging:observe"
+        ],
+        "replacement_candidates": [],
+        "dominant_action": "observe",
+        "decision_status": "needs_observation",
+        "decision_reason": "dominant_action=observe avg_score_band=f risk_flags=low_family_score,narrow_regime_coverage",
+        "risk_flags": [
+          "low_family_score",
+          "narrow_regime_coverage"
+        ]
+      },
+      {
+        "family": "structure_ict",
+        "factor_count": 1,
+        "avg_score": 0.2820045845748654,
+        "actions": [
+          "structure_ict:replace"
+        ],
+        "replacement_candidates": [
+          "structure_ict"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=f risk_flags=low_family_score,contains_replacement_candidates,narrow_regime_coverage",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates",
+          "narrow_regime_coverage"
+        ]
+      },
+      {
+        "family": "other",
+        "factor_count": 3,
+        "avg_score": 0.30990179073966967,
+        "actions": [
+          "crowding_herding:replace",
+          "session_liquidity:replace",
+          "spectral_rhythm:replace"
+        ],
+        "replacement_candidates": [
+          "crowding_herding",
+          "session_liquidity",
+          "spectral_rhythm"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=f risk_flags=low_family_score,contains_replacement_candidates,narrow_regime_coverage",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates",
+          "narrow_regime_coverage"
+        ]
+      },
+      {
+        "family": "trend_momentum",
+        "factor_count": 1,
+        "avg_score": 0.3848460989839657,
+        "actions": [
+          "trend_momentum:replace"
+        ],
+        "replacement_candidates": [
+          "trend_momentum"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=f risk_flags=low_family_score,contains_replacement_candidates",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates"
+        ]
+      },
+      {
+        "family": "volatility_mean_reversion",
+        "factor_count": 1,
+        "avg_score": 0.4061577530561721,
+        "actions": [
+          "volatility_mean_reversion:replace"
+        ],
+        "replacement_candidates": [
+          "volatility_mean_reversion"
+        ],
+        "dominant_action": "replace",
+        "decision_status": "review_replace",
+        "decision_reason": "dominant_action=replace avg_score_band=d risk_flags=low_family_score,contains_replacement_candidates",
+        "risk_flags": [
+          "low_family_score",
+          "contains_replacement_candidates"
+        ]
+      }
+    ],
+    "factor_family_outcomes": [
+      {
+        "family": "cross_market_smt",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "cross_market_smt"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [],
+          "target_families": [
+            "cross_market_smt"
+          ]
+        }
+      },
+      {
+        "family": "options_hedging",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "options_hedging"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [],
+          "target_families": [
+            "options_hedging"
+          ]
+        }
+      },
+      {
+        "family": "structure_ict",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "structure_ict"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "structure_ict"
+          ],
+          "target_families": [
+            "structure_ict"
+          ]
+        }
+      },
+      {
+        "family": "other",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "other"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "crowding_herding",
+            "session_liquidity",
+            "spectral_rhythm"
+          ],
+          "target_families": [
+            "other"
+          ]
+        }
+      },
+      {
+        "family": "trend_momentum",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "trend_momentum"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "trend_momentum"
+          ],
+          "target_families": [
+            "trend_momentum"
+          ]
+        }
+      },
+      {
+        "family": "volatility_mean_reversion",
+        "promotion_decision": {
+          "approved": false,
+          "status": "hold",
+          "reason": "no_previous_run",
+          "target_factors": [],
+          "target_families": [
+            "volatility_mean_reversion"
+          ]
+        },
+        "rollback_recommendation": {
+          "should_rollback": false,
+          "scope": "none",
+          "reason": "family_stable",
+          "target_factors": [
+            "volatility_mean_reversion"
+          ],
+          "target_families": [
+            "volatility_mean_reversion"
+          ]
+        }
+      }
+    ],
+    "factor_family_diffs": [
+      {
+        "family": "volatility_mean_reversion",
+        "previous_avg_score": null,
+        "new_avg_score": 0.4061577530561721,
+        "avg_score_delta": 0.4061577530561721,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 1
+      },
+      {
+        "family": "trend_momentum",
+        "previous_avg_score": null,
+        "new_avg_score": 0.3848460989839657,
+        "avg_score_delta": 0.3848460989839657,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 1
+      },
+      {
+        "family": "other",
+        "previous_avg_score": null,
+        "new_avg_score": 0.30990179073966967,
+        "avg_score_delta": 0.30990179073966967,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 3
+      },
+      {
+        "family": "structure_ict",
+        "previous_avg_score": null,
+        "new_avg_score": 0.2820045845748654,
+        "avg_score_delta": 0.2820045845748654,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 1
+      },
+      {
+        "family": "cross_market_smt",
+        "previous_avg_score": null,
+        "new_avg_score": 0.1384313725490196,
+        "avg_score_delta": 0.1384313725490196,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 0
+      },
+      {
+        "family": "options_hedging",
+        "previous_avg_score": null,
+        "new_avg_score": 0.1384313725490196,
+        "avg_score_delta": 0.1384313725490196,
+        "previous_replacement_count": 0,
+        "new_replacement_count": 0
+      }
+    ],
+    "factor_family_history": [],
+    "decision_history_summary": {
+      "total_runs": 0,
+      "promotion_approved_runs": 0,
+      "rollback_recommended_runs": 0,
+      "latest_promotion_status": null,
+      "latest_rollback_scope": null
+    },
+    "workflow_state": {
+      "phase": "research_iteration",
+      "reason": "no_previous_run"
+    },
+    "agent_action_plan": {
+      "summary": "research_review_ready",
+      "items": [
+        {
+          "stage": "promotion",
+          "blocking": true,
+          "priority": "high",
+          "title": "Block Promotion",
+          "rationale": "no_previous_run",
+          "expected_output": "Promotion decision resolved with explicit hold or approval rationale",
+          "expected_state_changes": [
+            {
+              "target": "promotion_decision",
+              "direction": "hold_until_thresholds_met",
+              "rationale": "no_previous_run"
+            }
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/agent/prompts.rs"
+          ],
+          "suggested_commands": [
+            "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control"
+          ]
+        },
+        {
+          "stage": "iteration",
+          "blocking": false,
+          "priority": "medium",
+          "title": "REPLACE structure_ict",
+          "rationale": "Replace factor 'structure_ict'. score=0.28 grade=F. Weaknesses: negative_or_flat_return, weak_ir, low_sharpe, unstable_walk_forward, low_win_rate, weak_profit_factor, low_conformal_coverage, narrow_regime_coverage. Agent should design a new factor for this slot, benchmark against the current factor, and only promote it if composite score improves by >=0.15 with trade_count >= 8 and profit_factor >= 1.10.",
+          "expected_output": "A revised factor implementation or parameter set benchmarked against the current baseline",
+          "expected_state_changes": [
+            {
+              "target": "factor:structure_ict",
+              "direction": "replace",
+              "rationale": "Replace factor 'structure_ict'. score=0.28 grade=F. Weaknesses: negative_or_flat_return, weak_ir, low_sharpe, unstable_walk_forward, low_win_rate, weak_profit_factor, low_conformal_coverage, narrow_regime_coverage. Agent should design a new factor for this slot, benchmark against the current factor, and only promote it if composite score improves by >=0.15 with trade_count >= 8 and profit_factor >= 1.10."
+            }
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/registry.rs"
+          ],
+          "suggested_commands": [
+            "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-backtest --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control"
+          ]
+        },
+        {
+          "stage": "family_review",
+          "blocking": false,
+          "priority": "medium",
+          "title": "Family Review cross_market_smt",
+          "rationale": "no_previous_run",
+          "expected_output": "A family-level decision note covering whether cross_market_smt should be tuned, replaced, or held",
+          "expected_state_changes": [
+            {
+              "target": "family:cross_market_smt",
+              "direction": "hold",
+              "rationale": "no_previous_run"
+            }
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "suggested_commands": [
+            "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control"
+          ]
+        },
+        {
+          "stage": "family_review",
+          "blocking": false,
+          "priority": "medium",
+          "title": "Family Review options_hedging",
+          "rationale": "no_previous_run",
+          "expected_output": "A family-level decision note covering whether options_hedging should be tuned, replaced, or held",
+          "expected_state_changes": [
+            {
+              "target": "family:options_hedging",
+              "direction": "hold",
+              "rationale": "no_previous_run"
+            }
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/weight_updater.rs"
+          ],
+          "suggested_commands": [
+            "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control"
+          ]
+        }
+      ]
+    },
+    "recommended_commands": {
+      "analyze": {
+        "command": "ict-engine analyze --symbol QQQ --data-htf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --data-mtf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --data-ltf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+        "ready": true,
+        "missing_inputs": [],
+        "rationale": "replay analyze with the same dataset",
+        "user_data_selection_required": false,
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "recorded_data_paths": []
+      },
+      "research": {
+        "command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+        "ready": false,
+        "missing_inputs": [
+          "user_selected_historical_data"
+        ],
+        "rationale": "rerun factor research on the same dataset User must explicitly choose one of the recorded historical datasets before rerun.",
+        "user_data_selection_required": true,
+        "user_data_selection_prompt": "Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+        "recorded_data_paths": [
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+        ]
+      },
+      "backtest": {
+        "command": "ict-engine factor-backtest --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+        "ready": false,
+        "missing_inputs": [
+          "user_selected_historical_data"
+        ],
+        "rationale": "rerun factor backtest on the same dataset User must explicitly choose one of the recorded historical datasets before rerun.",
+        "user_data_selection_required": true,
+        "user_data_selection_prompt": "Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+        "recorded_data_paths": [
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+        ]
+      },
+      "update": {
+        "command": "ict-engine update --symbol QQQ --outcome <win|loss|breakeven> --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+        "ready": false,
+        "missing_inputs": [
+          "realized_outcome",
+          "pending_update_artifact_if_context_needed"
+        ],
+        "rationale": "update template is available, but a realized outcome is still required before it can be executed",
+        "user_data_selection_required": false,
+        "user_data_selection_prompt": "user_data_selection_not_required",
+        "recorded_data_paths": [
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+        ]
+      }
+    },
+    "recommended_next_command": "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+    "recommended_next_command_meta": {
+      "kind": "ask_user",
+      "requires_user_input": true,
+      "blocked": true,
+      "prompt": "Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+      "executable_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+      "recorded_data_paths": [
+        "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+        "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+      ]
+    },
+    "agent_context_bundle": {
+      "workflow_state": {
+        "phase": "research_iteration",
+        "reason": "no_previous_run"
+      },
+      "decision_hint": "research_review_ready",
+      "recommended_next_command": "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+      "recommended_next_command_meta": {
+        "kind": "ask_user",
+        "requires_user_input": true,
+        "blocked": true,
+        "prompt": "Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+        "executable_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+        "recorded_data_paths": [
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+        ]
+      },
+      "recommended_commands": {
+        "analyze": {
+          "command": "ict-engine analyze --symbol QQQ --data-htf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --data-mtf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --data-ltf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "ready": true,
+          "missing_inputs": [],
+          "rationale": "replay analyze with the same dataset",
+          "user_data_selection_required": false,
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "recorded_data_paths": []
+        },
+        "research": {
+          "command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "ready": false,
+          "missing_inputs": [
+            "user_selected_historical_data"
+          ],
+          "rationale": "rerun factor research on the same dataset User must explicitly choose one of the recorded historical datasets before rerun.",
+          "user_data_selection_required": true,
+          "user_data_selection_prompt": "Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+          "recorded_data_paths": [
+            "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+            "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+          ]
+        },
+        "backtest": {
+          "command": "ict-engine factor-backtest --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "ready": false,
+          "missing_inputs": [
+            "user_selected_historical_data"
+          ],
+          "rationale": "rerun factor backtest on the same dataset User must explicitly choose one of the recorded historical datasets before rerun.",
+          "user_data_selection_required": true,
+          "user_data_selection_prompt": "Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+          "recorded_data_paths": [
+            "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+            "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+          ]
+        },
+        "update": {
+          "command": "ict-engine update --symbol QQQ --outcome <win|loss|breakeven> --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "ready": false,
+          "missing_inputs": [
+            "realized_outcome",
+            "pending_update_artifact_if_context_needed"
+          ],
+          "rationale": "update template is available, but a realized outcome is still required before it can be executed",
+          "user_data_selection_required": false,
+          "user_data_selection_prompt": "user_data_selection_not_required",
+          "recorded_data_paths": [
+            "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+            "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+          ]
+        }
+      },
+      "family_history_window": 5,
+      "comparable_to_last_run": false,
+      "pre_bayes_gate_status": "",
+      "pre_bayes_uses_soft_evidence": false,
+      "pre_bayes_evidence_quality_score": 0.0,
+      "pre_bayes_conflict_flags": [],
+      "pre_bayes_filtered_assignments": {},
+      "pre_bayes_soft_evidence": {},
+      "pre_bayes_policy_version": "",
+      "pre_bayes_multi_timeframe_direction_bias": "",
+      "pre_bayes_multi_timeframe_alignment_score": null,
+      "pre_bayes_multi_timeframe_entry_alignment_score": null,
+      "pre_bayes_entry_quality_bridge_summary": [],
+      "pre_bayes_soft_evidence_diff": [],
+      "pre_bayes_entry_quality_bridge_diff": null,
+      "factor_mutation_evaluation": null,
+      "factor_mutation_priority_markets": [],
+      "factor_mutation_priority_reasons": [],
+      "factor_mutation_recommended_focus": [],
+      "factor_mutation_direction_hints": [],
+      "factor_mutation_step_size_hints": [],
+      "multi_timeframe_summary": [
+        "primary:480 bars path=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+        "higher_timeframe_direction_bias=neutral",
+        "higher_timeframe_alignment_score=1.0000",
+        "lower_timeframe_entry_alignment_score=1.0000",
+        "market_state_primary_regime=RangeConsolidation",
+        "market_state_secondary_regime=WideRange",
+        "market_state_overall_confidence=0.678",
+        "market_state_bbn_market_regime=range",
+        "market_state_bbn_liquidity_context=neutral",
+        "market_state_evidence=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.678",
+        "market_state_evidence=volatility=NormalVol:0.715 liquidity=NormalLiquidity:0.335 structure=Trending:0.853 behavior=FOMO:0.650",
+        "market_state_evidence=rationale=volatility=NormalVol conf=0.72",
+        "market_state_evidence=rationale=structure=Trending conf=0.85",
+        "market_state_evidence=rationale=behavior=FOMO conf=0.65",
+        "market_state_evidence=rationale=primary=RangeConsolidation secondary=WideRange overall=0.68",
+        "structure_ict_pda_context_events=m1:0|m5:0|m15:0|m30:0|h1:0|h4:0|d1:0|w1:0"
+      ],
+      "artifact_consumed_gate_status": "no_consumed_validation",
+      "artifact_consumed_gate_reason": "no_consumed_artifacts",
+      "artifact_consumed_gate_targets": [],
+      "pda_sequence_summary": null,
+      "pda_cluster_label": null,
+      "pda_cluster_confidence": null,
+      "top_factor_actions": [
+        "structure_ict:replace:0.28",
+        "spectral_rhythm:replace:0.29",
+        "session_liquidity:replace:0.32"
+      ],
+      "family_actions": [
+        "cross_market_smt:hold:none",
+        "options_hedging:hold:none",
+        "structure_ict:hold:none",
+        "other:hold:none",
+        "trend_momentum:hold:none",
+        "volatility_mean_reversion:hold:none"
+      ],
+      "stage_views": [
+        {
+          "stage": "analyze",
+          "blocking_items": 0,
+          "recommended_command": "ict-engine analyze --symbol QQQ --data-htf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --data-mtf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --data-ltf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "actions": [
+            "observe current market state"
+          ],
+          "gate_status": "",
+          "gate_reason": ""
+        },
+        {
+          "stage": "research",
+          "blocking_items": 6,
+          "recommended_command": "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "actions": [
+            "blocked_by:user_selected_historical_data"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "backtest",
+          "blocking_items": 6,
+          "recommended_command": "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-backtest --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "actions": [
+            "blocked_by:user_selected_historical_data"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "update",
+          "blocking_items": 0,
+          "recommended_command": "blocked: ict-engine update --symbol QQQ --outcome <win|loss|breakeven> --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control missing=realized_outcome,pending_update_artifact_if_context_needed",
+          "actions": [
+            "blocked_by:realized_outcome,pending_update_artifact_if_context_needed"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        },
+        {
+          "stage": "artifact_consumption",
+          "blocking_items": 0,
+          "recommended_command": "ict-engine workflow-status --symbol QQQ --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control --phase artifact-consumed-gate",
+          "actions": [
+            "no_consumed_artifacts"
+          ],
+          "gate_status": "no_consumed_validation",
+          "gate_reason": "no_consumed_artifacts"
+        }
+      ]
+    },
+    "agent_context_bundle_minimal": {
+      "workflow_phase": "research_iteration",
+      "recommended_next_command": "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+      "recommended_next_command_meta": {
+        "kind": "ask_user",
+        "requires_user_input": true,
+        "blocked": true,
+        "prompt": "Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+        "executable_command": "ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+        "recorded_data_paths": [
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+          "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json"
+        ]
+      },
+      "family_history_window": 5,
+      "comparable_to_last_run": false,
+      "pre_bayes_gate_status": "",
+      "pre_bayes_uses_soft_evidence": false,
+      "pre_bayes_policy_version": "",
+      "pre_bayes_soft_evidence_divergence_count": 0,
+      "pre_bayes_bridge_selected_entry_quality": "",
+      "factor_mutation_acceptance_status": "",
+      "factor_mutation_failure_tags": [],
+      "factor_mutation_priority_markets": [],
+      "factor_mutation_priority_reasons": [],
+      "factor_mutation_direction_hints": [],
+      "factor_mutation_step_size_hints": [],
+      "multi_timeframe_summary": [
+        "primary:480 bars path=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+        "higher_timeframe_direction_bias=neutral",
+        "higher_timeframe_alignment_score=1.0000",
+        "lower_timeframe_entry_alignment_score=1.0000",
+        "market_state_primary_regime=RangeConsolidation",
+        "market_state_secondary_regime=WideRange",
+        "market_state_overall_confidence=0.678",
+        "market_state_bbn_market_regime=range",
+        "market_state_bbn_liquidity_context=neutral",
+        "market_state_evidence=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.678",
+        "market_state_evidence=volatility=NormalVol:0.715 liquidity=NormalLiquidity:0.335 structure=Trending:0.853 behavior=FOMO:0.650",
+        "market_state_evidence=rationale=volatility=NormalVol conf=0.72",
+        "market_state_evidence=rationale=structure=Trending conf=0.85",
+        "market_state_evidence=rationale=behavior=FOMO conf=0.65",
+        "market_state_evidence=rationale=primary=RangeConsolidation secondary=WideRange overall=0.68",
+        "structure_ict_pda_context_events=m1:0|m5:0|m15:0|m30:0|h1:0|h4:0|d1:0|w1:0"
+      ],
+      "artifact_consumed_gate_status": "no_consumed_validation",
+      "pda_cluster_label": null,
+      "top_factor_actions": [
+        "structure_ict:replace:0.28",
+        "spectral_rhythm:replace:0.29",
+        "session_liquidity:replace:0.32"
+      ],
+      "stage_views": [
+        {
+          "stage": "analyze",
+          "recommended_command": "ict-engine analyze --symbol QQQ --data-htf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --data-mtf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --data-ltf /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "gate_status": ""
+        },
+        {
+          "stage": "research",
+          "recommended_command": "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "backtest",
+          "recommended_command": "ask-user: Before using historical data for QQQ again, ask the user which dataset to use. recorded_paths=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json, /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json | blocked until user_selected_historical_data | then ict-engine factor-backtest --symbol QQQ --data /tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json --paired-data /tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "update",
+          "recommended_command": "blocked: ict-engine update --symbol QQQ --outcome <win|loss|breakeven> --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control missing=realized_outcome,pending_update_artifact_if_context_needed",
+          "gate_status": "no_consumed_validation"
+        },
+        {
+          "stage": "artifact_consumption",
+          "recommended_command": "ict-engine workflow-status --symbol QQQ --state-dir /tmp/ict-regime-branch-iteration-20260510-1/state_native_control --phase artifact-consumed-gate",
+          "gate_status": "no_consumed_validation"
+        }
+      ]
+    },
+    "feedback_history_summary": {
+      "total_records": 849,
+      "wins": 339,
+      "losses": 510,
+      "avg_pnl": -0.00005774600034624844,
+      "factor_success_rates": {
+        "crowding_herding": 0.44370860927152317,
+        "session_liquidity": 0.40384615384615385,
+        "spectral_rhythm": 0.2116788321167883,
+        "structure_ict": 0.4594594594594595,
+        "trend_momentum": 0.4956521739130435,
+        "volatility_mean_reversion": 0.3873239436619718
+      }
+    },
+    "artifact_action_summary": [],
+    "duration_sizing_scale": 1.0,
+    "hybrid_duration_model": null,
+    "hybrid_remaining_expected_bars": null,
+    "backtest_conformal_coverage_1sigma": 0.0,
+    "backtest_trade_count": 1021,
+    "canonical_structural_regime_posterior": null,
+    "artifact_decision_summary": {
+      "actionable_artifact_count": 0,
+      "latest_promotable_artifact_id": null,
+      "artifact_rule_break_count": 0,
+      "highlighted_actions": [],
+      "highlighted_factor_targets": [],
+      "highlighted_family_targets": [],
+      "promotion_strength": "low",
+      "rollback_strength": "low",
+      "consumed_trend_status": "no_consumed_validation",
+      "consumed_trend_reason": "no_consumed_artifacts",
+      "consumed_target_kinds": [],
+      "summary": "actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+    },
+    "artifact_decision_section": {
+      "summary": {
+        "actionable_artifact_count": 0,
+        "latest_promotable_artifact_id": null,
+        "artifact_rule_break_count": 0,
+        "highlighted_actions": [],
+        "highlighted_factor_targets": [],
+        "highlighted_family_targets": [],
+        "promotion_strength": "low",
+        "rollback_strength": "low",
+        "consumed_trend_status": "no_consumed_validation",
+        "consumed_trend_reason": "no_consumed_artifacts",
+        "consumed_target_kinds": [],
+        "summary": "actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+      },
+      "action_summary": [],
+      "top_factor_trends": [],
+      "top_family_trends": [],
+      "top_rule_break_effects": [],
+      "top_consumed_trend_comparisons": []
+    },
+    "agent_prompts": {
+      "version": "agent-prompts-v1",
+      "workflow": "Use stored research state to decide factor tuning and replacement for QQQ without auto-generating code inside the engine. Keep internal evidence compact, but when answering a human user, translate the result into exactly five readable blocks: (1) 基本价格结构分析, (2) 技术面价格分析, (3) SMT相关性分析, (4) Regime分类结合贝叶斯分析并给推测概率, (5) 交易计划. Do not expose internal terms like pre-Bayes gate, structure_ict verdict, or market-specific fork directly unless the user explicitly asks for internals.",
+      "prompts": [
+        {
+          "id": "dataset_audit",
+          "stage": "dataset_audit",
+          "priority": "high",
+          "objective": "Audit whether the dataset and command context are sufficient for trustworthy iteration.",
+          "system_prompt": "You are the dataset-audit agent. Check whether the current dataset scope, paired market coverage, and command context are sufficient before making factor or model changes.",
+          "user_prompt": "Symbol=QQQ data_path=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json paired_data_path=Some(\"/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json\") candles=480 paired_candles=Some(147) source_command=factor-research",
+          "success_criteria": [
+            "Flag low sample size or missing paired-market evidence before approving major factor changes",
+            "If this run is not comparable to prior runs, tell the next agent not to over-interpret score deltas"
+          ],
+          "suggested_files": [
+            "src/data/loader.rs",
+            "src/main.rs",
+            "src/factor_lab/research.rs"
+          ]
+        },
+        {
+          "id": "factor_triage",
+          "stage": "factor_research",
+          "priority": "high",
+          "objective": "Select which factors to keep, tune, observe, or replace.",
+          "system_prompt": "You are the factor-iteration agent. Use only the supplied scorecards and feedback summary to decide which factor edits are justified. Do not invent success criteria; follow the thresholds embedded in each factor prompt.",
+          "user_prompt": "Symbol=QQQ top_scorecards=[volatility_mean_reversion score=0.41 grade=D action=replace; trend_momentum score=0.38 grade=F action=replace; crowding_herding score=0.32 grade=F action=replace] iteration_queue=[structure_ict score=0.28 action=replace prompt=Replace factor 'structure_ict'. score=0.28 grade=F. Weaknesses: negative_or_flat_return, weak_ir, low_sharpe, unstable_walk_forward, low_win_rate, weak_profit_factor, low_conformal_coverage, narrow_regime_coverage. Agent should design a new factor for this slot, benchmark against the current factor, and only promote it if composite score improves by >=0.15 with trade_count >= 8 and profit_factor >= 1.10. || spectral_rhythm score=0.29 action=replace prompt=Replace factor 'spectral_rhythm'. score=0.29 grade=F. Weaknesses: negative_or_flat_return, weak_ir, low_sharpe, unstable_walk_forward, low_win_rate, weak_profit_factor, low_conformal_coverage, narrow_regime_coverage. Agent should design a new factor for this slot, benchmark against the current factor, and only promote it if composite score improves by >=0.15 with trade_count >= 8 and profit_factor >= 1.10. || session_liquidity score=0.32 action=replace prompt=Replace factor 'session_liquidity'. score=0.32 grade=F. Weaknesses: negative_or_flat_return, weak_ir, low_sharpe, low_win_rate, weak_profit_factor, low_conformal_coverage, narrow_regime_coverage. Agent should design a new factor for this slot, benchmark against the current factor, and only promote it if composite score improves by >=0.15 with trade_count >= 8 and profit_factor >= 1.10. || crowding_herding score=0.32 action=replace prompt=Replace factor 'crowding_herding'. score=0.32 grade=F. Weaknesses: negative_or_flat_return, weak_ir, low_sharpe, low_win_rate, weak_profit_factor, low_conformal_coverage, narrow_regime_coverage. Agent should design a new factor for this slot, benchmark against the current factor, and only promote it if composite score improves by >=0.15 with trade_count >= 8 and profit_factor >= 1.10. || trend_momentum score=0.38 action=replace prompt=Replace factor 'trend_momentum'. score=0.38 grade=F. Weaknesses: negative_or_flat_return, weak_ir, low_sharpe, unstable_walk_forward, weak_profit_factor, low_conformal_coverage. Agent should design a new factor for this slot, benchmark against the current factor, and only promote it if composite score improves by >=0.15 with trade_count >= 8 and profit_factor >= 1.10.] feedback_summary=records:849 wins:339 losses:510 avg_pnl:-0.000058 factor_success_rates:{\"crowding_herding\": 0.44370860927152317, \"session_liquidity\": 0.40384615384615385, \"spectral_rhythm\": 0.2116788321167883, \"structure_ict\": 0.4594594594594595, \"trend_momentum\": 0.4956521739130435, \"volatility_mean_reversion\": 0.3873239436619718}",
+          "success_criteria": [
+            "Prioritize replace > tune > observe > keep",
+            "Only recommend replacing a factor when its action is replace or replacement_candidate=true",
+            "Use the factor-specific agent prompt as the acceptance rule for the next iteration"
+          ],
+          "suggested_files": [
+            "src/factor_lab/factor_definition.rs",
+            "src/factors/registry.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        },
+        {
+          "id": "feedback_review",
+          "stage": "feedback_learning",
+          "priority": "medium",
+          "objective": "Review which factors are failing by regime and whether weight updates should be trusted.",
+          "system_prompt": "You are the feedback-diagnostics agent. Compare factor success rates, grading, and weaknesses. Focus on regime-conditional failure and persistent underperformance.",
+          "user_prompt": "Symbol=QQQ feedback_total=849 avg_pnl=-0.000058 weak_factors=[volatility_mean_reversion weaknesses=[\"negative_or_flat_return\", \"low_sharpe\", \"unstable_walk_forward\", \"low_win_rate\", \"weak_profit_factor\", \"low_conformal_coverage\"] score=0.41; trend_momentum weaknesses=[\"negative_or_flat_return\", \"weak_ir\", \"low_sharpe\", \"unstable_walk_forward\", \"weak_profit_factor\", \"low_conformal_coverage\"] score=0.38; crowding_herding weaknesses=[\"negative_or_flat_return\", \"weak_ir\", \"low_sharpe\", \"low_win_rate\", \"weak_profit_factor\", \"low_conformal_coverage\", \"narrow_regime_coverage\"] score=0.32; session_liquidity weaknesses=[\"negative_or_flat_return\", \"weak_ir\", \"low_sharpe\", \"low_win_rate\", \"weak_profit_factor\", \"low_conformal_coverage\", \"narrow_regime_coverage\"] score=0.32; spectral_rhythm weaknesses=[\"negative_or_flat_return\", \"weak_ir\", \"low_sharpe\", \"unstable_walk_forward\", \"low_win_rate\", \"weak_profit_factor\", \"low_conformal_coverage\", \"narrow_regime_coverage\"] score=0.29; structure_ict weaknesses=[\"negative_or_flat_return\", \"weak_ir\", \"low_sharpe\", \"unstable_walk_forward\", \"low_win_rate\", \"weak_profit_factor\", \"low_conformal_coverage\", \"narrow_regime_coverage\"] score=0.28; cross_market_smt weaknesses=[\"insufficient_sample\", \"negative_or_flat_return\", \"weak_ic\", \"weak_ir\", \"low_sharpe\", \"low_win_rate\", \"weak_profit_factor\", \"low_conformal_coverage\", \"narrow_regime_coverage\"] score=0.14; options_hedging weaknesses=[\"insufficient_sample\", \"negative_or_flat_return\", \"weak_ic\", \"weak_ir\", \"low_sharpe\", \"low_win_rate\", \"weak_profit_factor\", \"low_conformal_coverage\", \"narrow_regime_coverage\"] score=0.14]",
+          "success_criteria": [
+            "Flag factors with narrow regime coverage or unstable walk-forward",
+            "Do not promote a weaker factor just because it has higher recent win rate on small sample"
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factors/regime_conditional.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        },
+        {
+          "id": "research_diff_review",
+          "stage": "research_diff",
+          "priority": "high",
+          "objective": "Review what changed in this research run compared with the previous run.",
+          "system_prompt": "You are the research-diff agent. Compare factor score, weight, and action changes. Focus on whether the latest run actually improved candidate quality or just changed rankings without robust gains.",
+          "user_prompt": "Symbol=QQQ feedback_generated=1021 feedback_applied=849 score_deltas=[RankingDiffItem { factor_name: \"volatility_mean_reversion\", previous_score: None, new_score: 0.4061577530561721, score_delta: 0.4061577530561721, previous_weight: None, new_weight: 0.022579223175878613, weight_delta: 0.022579223175878613, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"trend_momentum\", previous_score: None, new_score: 0.3848460989839657, score_delta: 0.3848460989839657, previous_weight: None, new_weight: 0.05850401141980606, weight_delta: 0.05850401141980606, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"crowding_herding\", previous_score: None, new_score: 0.32450845993421484, score_delta: 0.32450845993421484, previous_weight: None, new_weight: 0.03648163005614022, weight_delta: 0.03648163005614022, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"session_liquidity\", previous_score: None, new_score: 0.3197967509569131, score_delta: 0.3197967509569131, previous_weight: None, new_weight: 0.04064148288865065, weight_delta: 0.04064148288865065, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"spectral_rhythm\", previous_score: None, new_score: 0.285400161327881, score_delta: 0.285400161327881, previous_weight: None, new_weight: 0.021457470998141253, weight_delta: 0.021457470998141253, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"structure_ict\", previous_score: None, new_score: 0.2820045845748654, score_delta: 0.2820045845748654, previous_weight: None, new_weight: 0.0362310541995177, weight_delta: 0.0362310541995177, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"cross_market_smt\", previous_score: None, new_score: 0.1384313725490196, score_delta: 0.1384313725490196, previous_weight: None, new_weight: 0.1611613887519489, weight_delta: 0.1611613887519489, previous_action: None, new_action: \"observe\" }, RankingDiffItem { factor_name: \"options_hedging\", previous_score: None, new_score: 0.1384313725490196, score_delta: 0.1384313725490196, previous_weight: None, new_weight: 0.1611613887519489, weight_delta: 0.1611613887519489, previous_action: None, new_action: \"observe\" }]",
+          "success_criteria": [
+            "Flag factors whose score improved but action stayed replace or tune",
+            "Highlight score drops on previously strong factors before promoting new edits"
+          ],
+          "suggested_files": [
+            "src/factor_lab/research.rs",
+            "src/state/types.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        },
+        {
+          "id": "promotion_gate",
+          "stage": "promotion_gate",
+          "priority": "high",
+          "objective": "Decide whether a factor iteration is strong enough to promote.",
+          "system_prompt": "You are the promotion-gate agent. Only approve factor promotion when score deltas, grading, and supporting metrics clear the configured improvement thresholds. Reject cosmetic ranking changes.",
+          "user_prompt": "Symbol=QQQ thresholds={promotion_min_score_delta:0.100, promotion_min_score:0.700} top_rankings=[\"volatility_mean_reversion score=0.41 grade=D action=replace\", \"trend_momentum score=0.38 grade=F action=replace\", \"crowding_herding score=0.32 grade=F action=replace\", \"session_liquidity score=0.32 grade=F action=replace\", \"spectral_rhythm score=0.29 grade=F action=replace\"] score_deltas=[RankingDiffItem { factor_name: \"volatility_mean_reversion\", previous_score: None, new_score: 0.4061577530561721, score_delta: 0.4061577530561721, previous_weight: None, new_weight: 0.022579223175878613, weight_delta: 0.022579223175878613, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"trend_momentum\", previous_score: None, new_score: 0.3848460989839657, score_delta: 0.3848460989839657, previous_weight: None, new_weight: 0.05850401141980606, weight_delta: 0.05850401141980606, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"crowding_herding\", previous_score: None, new_score: 0.32450845993421484, score_delta: 0.32450845993421484, previous_weight: None, new_weight: 0.03648163005614022, weight_delta: 0.03648163005614022, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"session_liquidity\", previous_score: None, new_score: 0.3197967509569131, score_delta: 0.3197967509569131, previous_weight: None, new_weight: 0.04064148288865065, weight_delta: 0.04064148288865065, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"spectral_rhythm\", previous_score: None, new_score: 0.285400161327881, score_delta: 0.285400161327881, previous_weight: None, new_weight: 0.021457470998141253, weight_delta: 0.021457470998141253, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"structure_ict\", previous_score: None, new_score: 0.2820045845748654, score_delta: 0.2820045845748654, previous_weight: None, new_weight: 0.0362310541995177, weight_delta: 0.0362310541995177, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"cross_market_smt\", previous_score: None, new_score: 0.1384313725490196, score_delta: 0.1384313725490196, previous_weight: None, new_weight: 0.1611613887519489, weight_delta: 0.1611613887519489, previous_action: None, new_action: \"observe\" }, RankingDiffItem { factor_name: \"options_hedging\", previous_score: None, new_score: 0.1384313725490196, score_delta: 0.1384313725490196, previous_weight: None, new_weight: 0.1611613887519489, weight_delta: 0.1611613887519489, previous_action: None, new_action: \"observe\" }]",
+          "success_criteria": [
+            "Only promote replace/tune outcomes when score delta is material and stability is not worse",
+            "If trade_count is low or dataset coverage changed, recommend holdout validation before promotion"
+          ],
+          "suggested_files": [
+            "src/state/types.rs",
+            "src/factors/weight_updater.rs",
+            "src/factor_lab/research.rs"
+          ]
+        },
+        {
+          "id": "rollback_review",
+          "stage": "rollback_review",
+          "priority": "high",
+          "objective": "Decide whether recent changes should be rolled back or isolated.",
+          "system_prompt": "You are the rollback-review agent. Look for score degradation, action downgrades, and harmful probability shifts. Recommend rollback when the latest iteration weakened factor quality or destabilized outcome calibration.",
+          "user_prompt": "Symbol=QQQ thresholds={rollback_score_delta:-0.100, rollback_probability_delta:0.100} score_deltas=[RankingDiffItem { factor_name: \"volatility_mean_reversion\", previous_score: None, new_score: 0.4061577530561721, score_delta: 0.4061577530561721, previous_weight: None, new_weight: 0.022579223175878613, weight_delta: 0.022579223175878613, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"trend_momentum\", previous_score: None, new_score: 0.3848460989839657, score_delta: 0.3848460989839657, previous_weight: None, new_weight: 0.05850401141980606, weight_delta: 0.05850401141980606, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"crowding_herding\", previous_score: None, new_score: 0.32450845993421484, score_delta: 0.32450845993421484, previous_weight: None, new_weight: 0.03648163005614022, weight_delta: 0.03648163005614022, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"session_liquidity\", previous_score: None, new_score: 0.3197967509569131, score_delta: 0.3197967509569131, previous_weight: None, new_weight: 0.04064148288865065, weight_delta: 0.04064148288865065, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"spectral_rhythm\", previous_score: None, new_score: 0.285400161327881, score_delta: 0.285400161327881, previous_weight: None, new_weight: 0.021457470998141253, weight_delta: 0.021457470998141253, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"structure_ict\", previous_score: None, new_score: 0.2820045845748654, score_delta: 0.2820045845748654, previous_weight: None, new_weight: 0.0362310541995177, weight_delta: 0.0362310541995177, previous_action: None, new_action: \"replace\" }, RankingDiffItem { factor_name: \"cross_market_smt\", previous_score: None, new_score: 0.1384313725490196, score_delta: 0.1384313725490196, previous_weight: None, new_weight: 0.1611613887519489, weight_delta: 0.1611613887519489, previous_action: None, new_action: \"observe\" }, RankingDiffItem { factor_name: \"options_hedging\", previous_score: None, new_score: 0.1384313725490196, score_delta: 0.1384313725490196, previous_weight: None, new_weight: 0.1611613887519489, weight_delta: 0.1611613887519489, previous_action: None, new_action: \"observe\" }] trade_outcome_deltas=[ProbabilityDiff { state: \"high:breakeven\", previous: Some(2.2e-5), new: 2.633953340163646e-7, delta: -2.1736604665983635e-5 }, ProbabilityDiff { state: \"high:loss\", previous: Some(2.2e-5), new: 0.5328088561472596, delta: 0.5327868561472596 }, ProbabilityDiff { state: \"high:win\", previous: Some(0.999956), new: 0.4671908804574065, delta: -0.5327651195425935 }, ProbabilityDiff { state: \"low:breakeven\", previous: Some(0.4857), new: 0.4857, delta: 0.0 }, ProbabilityDiff { state: \"low:loss\", previous: Some(0.263077), new: 0.263077, delta: 0.0 }, ProbabilityDiff { state: \"low:win\", previous: Some(0.251223), new: 0.251223, delta: 0.0 }, ProbabilityDiff { state: \"medium:breakeven\", previous: Some(0.275927), new: 0.005035116898001513, delta: -0.27089188310199847 }, ProbabilityDiff { state: \"medium:loss\", previous: Some(0.296112), new: 0.5652141306379529, delta: 0.2691021306379529 }, ProbabilityDiff { state: \"medium:win\", previous: Some(0.427961), new: 0.4297507524640457, delta: 0.001789752464045724 }]",
+          "success_criteria": [
+            "Recommend rollback when strong factors degrade materially or outcome calibration shifts against realized performance",
+            "If only one factor family regressed, prefer targeted rollback over full revert"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/bbn/trading/topology.rs",
+            "src/factors/weight_updater.rs"
+          ]
+        },
+        {
+          "id": "artifact_decision_review",
+          "stage": "artifact_decision",
+          "priority": "high",
+          "objective": "Review artifact-driven actions and ensure they align with the next code or model iteration.",
+          "system_prompt": "You are the artifact-decision agent. Use the artifact decision section to validate whether the current pending/execution artifacts strengthen promotion, trigger rollback review, or should only be observed.",
+          "user_prompt": "Symbol=QQQ artifact_summary=actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[] consumed_trend_status=no_consumed_validation consumed_trend_reason=no_consumed_artifacts highlighted_actions=[] top_factor_trends=[] top_family_trends=[] top_rule_break_effects=[] top_consumed_trends=[]",
+          "success_criteria": [
+            "Explicitly state whether artifact evidence strengthens promotion, rollback review, or observation only",
+            "Do not ignore rule-break effects when artifact review versions changed",
+            "Use consumed validation trends when realized artifact outcomes are available",
+            "Name the artifact-driven factor/family targets before recommending code edits"
+          ],
+          "suggested_files": [
+            "src/main.rs",
+            "src/state/types.rs",
+            "src/agent/prompts.rs"
+          ]
+        }
+      ]
+    },
+    "prompt_workflow": "Use stored research state to decide factor tuning and replacement for QQQ without auto-generating code inside the engine. Keep internal evidence compact, but when answering a human user, translate the result into exactly five readable blocks: (1) 基本价格结构分析, (2) 技术面价格分析, (3) SMT相关性分析, (4) Regime分类结合贝叶斯分析并给推测概率, (5) 交易计划. Do not expose internal terms like pre-Bayes gate, structure_ict verdict, or market-specific fork directly unless the user explicitly asks for internals.",
+    "factor_mutation_evaluation": null,
+    "multi_timeframe_summary": [
+      "primary:480 bars path=/tmp/ict-regime-branch-iteration-20260510-1/candles/ibkr_QQQ_1h.json",
+      "higher_timeframe_direction_bias=neutral",
+      "higher_timeframe_alignment_score=1.0000",
+      "lower_timeframe_entry_alignment_score=1.0000",
+      "market_state_primary_regime=RangeConsolidation",
+      "market_state_secondary_regime=WideRange",
+      "market_state_overall_confidence=0.678",
+      "market_state_bbn_market_regime=range",
+      "market_state_bbn_liquidity_context=neutral",
+      "market_state_evidence=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.678",
+      "market_state_evidence=volatility=NormalVol:0.715 liquidity=NormalLiquidity:0.335 structure=Trending:0.853 behavior=FOMO:0.650",
+      "market_state_evidence=rationale=volatility=NormalVol conf=0.72",
+      "market_state_evidence=rationale=structure=Trending conf=0.85",
+      "market_state_evidence=rationale=behavior=FOMO conf=0.65",
+      "market_state_evidence=rationale=primary=RangeConsolidation secondary=WideRange overall=0.68",
+      "structure_ict_pda_context_events=m1:0|m5:0|m15:0|m30:0|h1:0|h4:0|d1:0|w1:0"
+    ],
+    "execution_artifact_id": null,
+    "execution_edge_share": 0.54,
+    "prediction_edge_share": 0.45999999999999996,
+    "execution_readiness": 0.3,
+    "execution_gate_status": "execution_blocked",
+    "pda_cluster_label": null,
+    "control_matrix_plan": null
+  }
+]

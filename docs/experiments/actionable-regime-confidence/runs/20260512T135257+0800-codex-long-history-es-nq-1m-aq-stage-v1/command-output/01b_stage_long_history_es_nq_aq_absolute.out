@@ -1,0 +1,125 @@
+{
+  "rows": [
+    {
+      "end": "2023-10-26T16:19:00+00:00",
+      "market": "NQ",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/NQ_USD-1m.feather",
+      "pair": "NQ/USD",
+      "rows": 301577,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json",
+      "start": "2012-07-06T12:46:00+00:00",
+      "timeframe": "1m"
+    },
+    {
+      "end": "2023-10-26T16:15:00+00:00",
+      "market": "NQ",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/NQ_USD-5m.feather",
+      "pair": "NQ/USD",
+      "rows": 73909,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json",
+      "start": "2012-07-06T12:45:00+00:00",
+      "timeframe": "5m"
+    },
+    {
+      "end": "2023-10-26T16:15:00+00:00",
+      "market": "NQ",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/NQ_USD-15m.feather",
+      "pair": "NQ/USD",
+      "rows": 28909,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json",
+      "start": "2012-07-06T12:45:00+00:00",
+      "timeframe": "15m"
+    },
+    {
+      "end": "2023-10-26T16:00:00+00:00",
+      "market": "NQ",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/NQ_USD-1h.feather",
+      "pair": "NQ/USD",
+      "rows": 8880,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json",
+      "start": "2012-07-06T12:00:00+00:00",
+      "timeframe": "1h"
+    },
+    {
+      "end": "2023-10-26T16:00:00+00:00",
+      "market": "NQ",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/NQ_USD-4h.feather",
+      "pair": "NQ/USD",
+      "rows": 2912,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json",
+      "start": "2012-07-06T12:00:00+00:00",
+      "timeframe": "4h"
+    },
+    {
+      "end": "2023-10-26T00:00:00+00:00",
+      "market": "NQ",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/NQ_USD-1d.feather",
+      "pair": "NQ/USD",
+      "rows": 724,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json",
+      "start": "2012-07-06T00:00:00+00:00",
+      "timeframe": "1d"
+    },
+    {
+      "end": "2025-08-04T12:10:00+00:00",
+      "market": "ES",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/ES_USD-1m.feather",
+      "pair": "ES/USD",
+      "rows": 299107,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/es.continuous-1m.json",
+      "start": "2012-04-23T13:38:00+00:00",
+      "timeframe": "1m"
+    },
+    {
+      "end": "2025-08-04T12:10:00+00:00",
+      "market": "ES",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/ES_USD-5m.feather",
+      "pair": "ES/USD",
+      "rows": 89433,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/es.continuous-1m.json",
+      "start": "2012-04-23T13:35:00+00:00",
+      "timeframe": "5m"
+    },
+    {
+      "end": "2025-08-04T12:00:00+00:00",
+      "market": "ES",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/ES_USD-15m.feather",
+      "pair": "ES/USD",
+      "rows": 39717,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/es.continuous-1m.json",
+      "start": "2012-04-23T13:30:00+00:00",
+      "timeframe": "15m"
+    },
+    {
+      "end": "2025-08-04T12:00:00+00:00",
+      "market": "ES",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/ES_USD-1h.feather",
+      "pair": "ES/USD",
+      "rows": 14036,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/es.continuous-1m.json",
+      "start": "2012-04-23T13:00:00+00:00",
+      "timeframe": "1h"
+    },
+    {
+      "end": "2025-08-04T12:00:00+00:00",
+      "market": "ES",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/ES_USD-4h.feather",
+      "pair": "ES/USD",
+      "rows": 5075,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/es.continuous-1m.json",
+      "start": "2012-04-23T12:00:00+00:00",
+      "timeframe": "4h"
+    },
+    {
+      "end": "2025-08-04T00:00:00+00:00",
+      "market": "ES",
+      "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant/user_data/data/ES_USD-1d.feather",
+      "pair": "ES/USD",
+      "rows": 1383,
+      "source": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/es.continuous-1m.json",
+      "start": "2012-04-23T00:00:00+00:00",
+      "timeframe": "1d"
+    }
+  ],
+  "status": "staged"
+}

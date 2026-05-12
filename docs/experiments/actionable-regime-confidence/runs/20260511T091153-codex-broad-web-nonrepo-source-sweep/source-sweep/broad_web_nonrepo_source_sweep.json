@@ -1,0 +1,80 @@
+{
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "accepted_new_direct_manipulation_label_sources": 0,
+  "accepted_new_mainregimev2_root_label_slots": 0,
+  "active_taxonomy": {
+    "main_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "manipulation": "separate_direct_event_or_order_lifecycle_overlay",
+    "residual": "UnknownOrMixed"
+  },
+  "candidates": [
+    {
+      "decision": "partial_existing_only_no_new_missing_slots",
+      "reason": "Public Kaggle stock/index regime labels are already consumed where exact-underlying attachment is allowed; they do not cover intraday/monthly, Kraken, missing exact instruments, or rejected near-underlying slots.",
+      "source_class": "partial_public_label_panel",
+      "source_id": "kaggle_stock_market_regimes_2000_2026",
+      "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026"
+    },
+    {
+      "decision": "rejected_proxy_or_narrow_panel",
+      "reason": "HF TSIE remains a narrow IDX/240m/1d source; previous gates found it not attachable to the full MainRegimeV2 provider/instrument/timeframe matrix.",
+      "source_class": "narrow_public_regime_dataset",
+      "source_id": "hf_tsie_market_regime_dataset",
+      "url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset"
+    },
+    {
+      "decision": "rejected_indicator_proxy_only",
+      "reason": "TradingView market-regime indicators generate states from price/volume math and technical indicators; they do not provide independent source labels or replayable positive/negative event windows.",
+      "source_class": "tradingview_indicator",
+      "source_id": "tradingview_turbo_market_regime_detector_quantalgo",
+      "url": "https://www.tradingview.com/script/2pH4ZOw5-Turbo-Market-Regime-Detector-QuantAlgo/"
+    },
+    {
+      "decision": "rejected_indicator_proxy_only",
+      "reason": "Regime Compass advertises multi-symbol/timeframe support but its components are ADX, Bollinger position, ATR volatility, Hurst exponent, and volume profile; this is feature/proxy logic, not a source-label panel.",
+      "source_class": "tradingview_indicator",
+      "source_id": "tradingview_regime_compass",
+      "url": "https://www.tradingview.com/script/jV0JbXq2-Regime-Compass-The-Fearless-Trader/"
+    },
+    {
+      "decision": "rejected_authenticated_model_signal_not_source_labels",
+      "reason": "QuantHQ HMM regime API is an authenticated service returning model-generated signals. It is not accessible in this environment and is not an independent label panel for all required roots/cycles/species.",
+      "source_class": "authenticated_model_signal_api",
+      "source_id": "quanthq_market_regime_hmm_api",
+      "url": "https://docs-api.quanthq.io/client-api/examples/market-regime"
+    },
+    {
+      "decision": "rejected_methodology_only_hmm_labels",
+      "reason": "The arXiv hierarchical HMM paper is methodology/provenance for regime modeling, not a downloadable exact-underlying label panel for Bull/Bear/Sideways/Crisis across the board matrix.",
+      "source_class": "research_methodology",
+      "source_id": "arxiv_hierarchical_hmm_market_regimes",
+      "url": "https://arxiv.org/abs/2310.03761"
+    },
+    {
+      "decision": "rejected_methodology_or_model_inferred_labels",
+      "reason": "The Ethereum market-regime paper/source result is a research article around market-regime modeling; it does not expose an attachable MainRegimeV2 source-label panel for the required instruments/timeframes.",
+      "source_class": "research_methodology",
+      "source_id": "sciencedirect_ethereum_market_regimes",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0378437125008580"
+    }
+  ],
+  "gate_result": "blocked_broad_web_nonrepo_sources_proxy_partial_or_methodology_only",
+  "raw_data_committed": false,
+  "run_id": "20260511T091153+0800-codex-broad-web-nonrepo-source-sweep",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "web_search_queries": [
+    "\"market regime\" \"Bull\" \"Bear\" \"Sideways\" dataset",
+    "\"stock market regime\" \"regime_label\" dataset",
+    "\"financial market regime\" dataset labels",
+    "\"market manipulation\" \"positive\" \"negative\" financial dataset",
+    "\"Ethereum\" \"bull\" \"bear\" \"sideways\" \"dataset\" \"market regimes\"",
+    "QuantFrontier Mastering Market Regimes Adaptive Trading Strategies Hidden Markov Models URL"
+  ]
+}

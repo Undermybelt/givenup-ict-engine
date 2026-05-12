@@ -1,0 +1,17 @@
+---
+strategy:         ProviderCryptoMomentumStateV1
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data left after adjusting for startup candles.
+traceback:
+
+---
+strategy:         ProviderCryptoPullbackRevertV1
+commit:           1fe86ab
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data left after adjusting for startup candles.
+traceback:
+
+Done: 0 succeeded, 2 failed.

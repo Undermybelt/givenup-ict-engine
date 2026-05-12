@@ -1,0 +1,6 @@
+root,status,file_count,note
+/tmp/ict-engine-board-a-r6-owner-export-v1,absent,0,current owner-export target missing
+/tmp/ict-engine-native-subhour-source-label-intake,absent,0,R3 native sub-hour source labels missing
+/tmp/ict-engine-source-panel-recency-extension,absent,0,R5 recency extension missing
+/tmp/ict-engine-source-label-equivalence-intake,present,2,daily-only confidence-blocked
+/tmp/ict-engine-direct-manipulation-row-intake,present,3,legacy direct-intake root not current owner-export target

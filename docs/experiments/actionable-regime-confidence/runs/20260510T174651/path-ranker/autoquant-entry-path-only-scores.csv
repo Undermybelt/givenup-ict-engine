@@ -1,0 +1,3 @@
+candidate_set_id,path_id,raw_path_score
+structural-candidates:NQ:9a3df645ed32ada4,path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary,0.64774951
+structural-candidates:NQ:9a3df645ed32ada4,path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary,0.00000000

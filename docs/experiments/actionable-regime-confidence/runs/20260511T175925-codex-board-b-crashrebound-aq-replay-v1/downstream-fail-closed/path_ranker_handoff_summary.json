@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "schema_version": "payoff-path-ranker-handoff/v1",
+  "symbol": "CRYPTO_ALT_BASKET",
+  "candidate_id": "CrashRebound__branch_path_rc_spa",
+  "bbn_gate": {
+    "schema_version": "payoff-bbn-gate/v1",
+    "candidate_id": "CrashRebound__branch_path_rc_spa",
+    "payoff_gate": "reject",
+    "consume_by_regime_bbn": false,
+    "reason": "payoff_reject_failure_memory_only",
+    "dsr": 0.5930162980157118,
+    "psr": 1.0,
+    "failure_tags": [
+      "reject_missing_branch_path",
+      "reject_no_positive_edge",
+      "reject_overfit_risk"
+    ]
+  },
+  "target_row_count": 0,
+  "artifact_paths": {
+    "bbn_gate": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/downstream-fail-closed/bbn_gate.json",
+    "failure_memory_jsonl": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/downstream-fail-closed/failure_memory.jsonl",
+    "summary": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/downstream-fail-closed/path_ranker_handoff_summary.json"
+  },
+  "auxiliary_fields": [
+    "qqq_hv_level",
+    "nq_vs_200d_pct",
+    "vix3m_level",
+    "qqq_hv_pct_rank_252",
+    "vvix_over_vix"
+  ]
+}

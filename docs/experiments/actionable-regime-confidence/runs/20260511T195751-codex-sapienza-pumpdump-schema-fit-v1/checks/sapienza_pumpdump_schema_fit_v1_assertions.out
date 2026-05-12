@@ -1,0 +1,9 @@
+json_parses=PASS
+ready_pumpdump_row_intake_candidate_schema=PASS
+can_materialize_scoped_pumpdump_positive_control_package=PASS
+ready_spoofing_layering_intake_source_false=PASS
+full_direct_species_coverage_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+accepted_rows_added_zero=PASS
+raw_data_committed_false=PASS

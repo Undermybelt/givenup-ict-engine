@@ -1,0 +1,5 @@
+ticker,main_regime_v2_label,split_role,min_new_source_sessions,post_cutoff_rows,meets_min_sessions
+XOM,Sideways,heldout_time,5,0,False
+UNH,Bear,calibration,7,0,False
+^DJI,Sideways,calibration,7,0,False
+AMD,Bear,calibration,10,0,False

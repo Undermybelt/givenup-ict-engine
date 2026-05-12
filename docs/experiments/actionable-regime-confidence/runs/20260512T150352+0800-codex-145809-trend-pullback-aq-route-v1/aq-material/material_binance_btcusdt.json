@@ -1,0 +1,46 @@
+{
+  "package_id": "150352-binance_btcusdt-trend-pullback-resume-1h",
+  "generated_at": "2026-05-12T07:16:05.032374Z",
+  "title": "binance BTCUSDT 1h trend-expansion normal-vol pullback-resume",
+  "symbol": "BTCUSDT",
+  "timeframe": "1h",
+  "direction": "long",
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1/aq-material/ProviderBackedTrendPullbackResume1h.py",
+  "strategy_class_name": "ProviderBackedTrendPullbackResume1h",
+  "strategy_brief": "Portable AQ-routed recipe from 145809 branch seed: trend_expansion -> normal_volatility -> down_or_flat_momentum -> trend_pullback_resume.",
+  "evaluation_priority": [
+    "branch_keyed_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "trade_density",
+    "drawdown"
+  ],
+  "consumer_evidence_profile": {
+    "required_surfaces": [
+      "ohlcv"
+    ],
+    "required_indicators": [
+      "ema20",
+      "ema50",
+      "ema100",
+      "ema200",
+      "rsi14",
+      "atr14",
+      "atr_pct_med120"
+    ],
+    "notes": [
+      "branch_path=trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+      "screen_source=145809_provider_backed_high_density_factor_screen_v1",
+      "dispatch is AQ-routed through ict-engine auto-quant-agent-material-* public surface"
+    ],
+    "provider_guidance": [
+      "primary provider source=binance",
+      "six-provider provenance matrix is stored separately under derived/six_provider_provenance_matrix.csv"
+    ]
+  },
+  "notes": [
+    "Do not promote from this package alone; require AQ dispatch result plus downstream admission.",
+    "The branch seed is positive locally but aggregate 145809 trend_pullback_resume_v1 was weak."
+  ]
+}

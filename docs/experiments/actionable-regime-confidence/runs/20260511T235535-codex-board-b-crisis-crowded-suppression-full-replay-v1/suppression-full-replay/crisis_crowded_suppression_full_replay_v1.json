@@ -1,0 +1,94 @@
+{
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "decision": {
+    "interpretation": "The sibling leaf is now encoded across the full selected-row replay. It suppresses all exact Crisis carry rows under the crowded/wide-range context, so it is useful as execution-admissibility feedback but cannot count as a profitable Crisis branch.",
+    "promotion_status": "not_promoted:suppression_no_trade_guard_not_profitability_pass",
+    "status": "fail_closed_nursery_feedback_only"
+  },
+  "downstream_probe": {
+    "agent_selected_recorded_data_path": "docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json",
+    "agent_selected_recorded_data_role": "nursery_replay_input_not_user_approved_production_data",
+    "auto_quant_readback": {
+      "bootstrap_needed": true,
+      "healthy": false,
+      "notes": [
+        "auto_quant_not_bootstrapped"
+      ],
+      "status": "missing_dependency"
+    },
+    "bbn_soft_evidence_status": "applied",
+    "command_exits": {
+      "auto_quant_status": 0,
+      "policy_training_status": 0,
+      "pre_bayes_status": 0,
+      "provider_status_agent": 0,
+      "workflow_execution_candidate": 0,
+      "workflow_status": 0,
+      "workflow_structural_recommended_path_bundle": 0
+    },
+    "downstream_probe_scope": "runtime_probe_exercised_existing_source_crisis_branch; sibling_no_trade_branch_is_encoded_in_replay_rows_only",
+    "execution_candidate_ready": true,
+    "execution_candidate_review_status": "observe",
+    "market_state_primary_regime": "RangeConsolidation",
+    "market_state_secondary_regime": "WideRange",
+    "path_ranker_runtime_ready": true,
+    "path_ranker_score_consumed": true,
+    "path_ranker_validation_ready": true,
+    "pre_bayes_gate_status": "pass_neutralized",
+    "pre_bayes_quality_score": 0.5619249343265972,
+    "provider_readback": {
+      "ibkr_bridge_ready": false,
+      "ibkr_bridge_reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "kraken_cli_ready": true,
+      "kraken_public_ready": false,
+      "kraken_public_reason": "python3_provider_dependencies_missing",
+      "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+      "tradingview_mcp_ready": false,
+      "tradingview_mcp_reason": "tradingview_mcp_connectivity_probe_failed",
+      "yfinance_live_ready": true
+    },
+    "runtime_probe_branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "sibling_branch_path_downstream_consumed": false,
+    "structural_bundle_path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "workflow_actionable_count": 7,
+    "workflow_blocker": "user_selected_historical_data_missing"
+  },
+  "generated_at_utc": "2026-05-11T16:08:17.185893+00:00",
+  "next_action": "Use the replay rows as nursery-only execution-admissibility feedback, then test a non-crowded Crisis context or a historical data path selected by the user before any profitability promotion claim.",
+  "nursery_status": "incubation_only",
+  "promotion_allowed": false,
+  "replay_summary": {
+    "crisis_effective_trade_rows": 0,
+    "crisis_source_dsr": 3.2177242727776023,
+    "crisis_source_edge_lcb": 0.002745066872817171,
+    "crisis_source_pbo": 0.1,
+    "crisis_source_rc_spa": 83.0,
+    "crisis_source_rows": 532,
+    "crisis_suppressed_rows": 532,
+    "effective_trade_rows": 11797,
+    "source_selected_rows": 12329,
+    "suppressed_no_trade_rows": 532
+  },
+  "run_id": "20260511T235535+0800-codex-board-b-crisis-crowded-suppression-full-replay-v1",
+  "schema_version": "board-b-crisis-crowded-suppression-full-replay/v1",
+  "selected_rows_source": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_selected_rows_v1.csv",
+  "selected_rows_total": 12329,
+  "sibling_branch_id": "B2R_CRISIS_CROWDED_SUPPRESSION_SIBLING_V1",
+  "sibling_branch_path": "Crisis -> CrisisReliefCarry -> BlockCrowdedSuppression -> SourceRootStopCarryLongHorizonV1:crisis_carry_no_trade_when_block_crowded_v1",
+  "source_artifacts": {
+    "compatible_live_context": "docs/experiments/actionable-regime-confidence/runs/20260511T234918-codex-board-b-220646-compatible-live-context-readback-v1/compatible-live-context-readback-v1/compatible_live_context_readback_v1.json",
+    "source_rc_spa_report": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/branch-rc-spa/source_root_stop_carry_longhorizon_rc_spa_report_v1.md",
+    "source_sibling_packet": "docs/experiments/actionable-regime-confidence/runs/20260511T234938-codex-board-b-crisis-crowded-suppression-sibling-v1/crisis-crowded-suppression-sibling/crisis_crowded_suppression_sibling_v1.md"
+  },
+  "source_recipe": "SourceRootStopCarryLongHorizonV1",
+  "suppression_context": {
+    "compatible_context_execution_readiness": 0.4504,
+    "compatible_context_execution_tree_branch": "fill_viable",
+    "compatible_context_gate_status": "observe",
+    "compatible_context_workflow_blocker": "user_selected_historical_data_missing",
+    "source_block_crowded_triggered": true,
+    "source_market_context_is_range_wide": true,
+    "suppression_active": true
+  },
+  "suppression_rule": "if execution_tree_branch=block_crowded or execution_readiness<0.45 or live_context=RangeConsolidation/WideRange then no_trade"
+}

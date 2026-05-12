@@ -1,0 +1,7 @@
+PASS board_readable docs/plans/2026-05-10-actionable-regime-confidence-todo.md
+PASS board_sha256 d200c16344b3a00fed6ced9ec00bd3097852ec1f6e06d69e55922729bd604bbb
+PASS required_target_roots_not_complete
+PASS source_control_evidence_acquired_false
+PASS related_current_objective_audits_non_promoting
+PASS no_canonical_merge
+PASS update_goal_false

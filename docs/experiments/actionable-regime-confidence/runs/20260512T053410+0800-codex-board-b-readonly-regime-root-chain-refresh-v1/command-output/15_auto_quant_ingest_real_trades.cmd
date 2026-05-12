@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-ingest-real-trades --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --state-dir /tmp/20260512T053410+0800-ict-engine-board-b-state-copy --trades docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-v2/nq_cost_crisis_repair_real_trades_v3_wire_fixed.jsonl

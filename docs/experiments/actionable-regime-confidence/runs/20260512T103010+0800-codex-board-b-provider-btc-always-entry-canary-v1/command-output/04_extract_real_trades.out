@@ -1,0 +1,93 @@
+Result for strategy ProviderBtcAlwaysEntryCanary
+                                             BACKTESTING REPORT                                              
+┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃     Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ BTC/USDT │     81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │
+│    TOTAL │     81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │
+└──────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                          
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │           0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                ENTER TAG STATS                                                
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │      81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │
+│     TOTAL │      81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │
+└───────────┴─────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                               EXIT REASON STATS                                               
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ exit_signal │    81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │
+│       TOTAL │    81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │
+└─────────────┴───────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                      MIXED TAG STATS                                                       
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ exit_signal │     81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │
+│     TOTAL │             │     81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │
+└───────────┴─────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-04-01 01:00:00            │
+│ Backtesting to                │ 2026-05-12 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 81 / 2.02                      │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 10441.072 USDT                 │
+│ Absolute profit               │ 441.072 USDT                   │
+│ Total profit %                │ 4.41%                          │
+│ CAGR %                        │ 48.27%                         │
+│ Sortino                       │ 3.52                           │
+│ Sharpe                        │ 2.56                           │
+│ Calmar                        │ 42.28                          │
+│ SQN                           │ 0.59                           │
+│ Profit factor                 │ 1.20                           │
+│ Expectancy (Ratio)            │ 5.45 (0.09)                    │
+│ Avg. daily profit             │ 11.027 USDT                    │
+│ Avg. stake amount             │ 10028.489 USDT                 │
+│ Total trade volume            │ 1625056.242 USDT               │
+│                               │                                │
+│ Best Pair                     │ BTC/USDT 4.41%                 │
+│ Worst Pair                    │ BTC/USDT 4.41%                 │
+│ Best trade                    │ BTC/USDT 2.25%                 │
+│ Worst trade                   │ BTC/USDT -2.95%                │
+│ Best day                      │ 376.129 USDT                   │
+│ Worst day                     │ -228.293 USDT                  │
+│ Days win/draw/lose            │ 21 / 0 / 20                    │
+│ Min/Max/Avg. Duration Winners │ 0d 03:00 / 0d 03:00 / 0d 03:00 │
+│ Min/Max/Avg. Duration Losers  │ 0d 03:00 / 0d 03:00 / 0d 03:00 │
+│ Max Consecutive Wins / Loss   │ 5 / 4                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 9774.95 USDT                   │
+│ Max balance                   │ 10646.436 USDT                 │
+│ Max % of account underwater   │ 4.98%                          │
+│ Absolute drawdown             │ 519.493 USDT (4.98%)           │
+│ Drawdown duration             │ 7 days 12:00:00                │
+│ Profit at drawdown start      │ 426.55 USDT                    │
+│ Profit at drawdown end        │ -92.943 USDT                   │
+│ Drawdown start                │ 2026-04-22 16:00:00            │
+│ Drawdown end                  │ 2026-04-30 04:00:00            │
+│ Market change                 │ 20.30%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-04-01 01:00:00 -> 2026-05-12 00:00:00 | Max open trades : 1
+                                                                   STRATEGY SUMMARY                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃                     Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ ProviderBtcAlwaysEntryCanary │     81 │         0.06 │         441.072 │         4.41 │      3:00:00 │   43     0    38  53.1 │ 519.493 USDT  4.98% │
+└──────────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┴─────────────────────┘
+{"losses": 38, "output": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103010+0800-codex-board-b-provider-btc-always-entry-canary-v1/derived/provider_btc_always_entry_canary_trades_v1.jsonl", "total_pnl": 441.0723246099999, "trades_written": 81, "wins": 43}

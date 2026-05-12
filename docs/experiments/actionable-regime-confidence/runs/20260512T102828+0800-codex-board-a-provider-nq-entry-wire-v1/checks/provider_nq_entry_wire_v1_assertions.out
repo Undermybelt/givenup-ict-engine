@@ -1,0 +1,9 @@
+provider_nq_entry_wire_v1_assertions
+json_exists=true
+all_command_exits_recorded=true
+offline_forced_entries_positive=true
+tomac_zero_trade_confirmed=true
+cli_dns_blocked=true
+promotion_allowed=false
+update_goal=false
+all=true

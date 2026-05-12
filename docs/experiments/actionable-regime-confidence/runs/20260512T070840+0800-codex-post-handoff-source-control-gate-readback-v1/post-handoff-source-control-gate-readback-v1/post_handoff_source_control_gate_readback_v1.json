@@ -1,0 +1,93 @@
+{
+  "run_id": "20260512T070840+0800-codex-post-handoff-source-control-gate-readback-v1",
+  "generated_at_local": "2026-05-12T07:08:40+08:00",
+  "gate_result": "post_handoff_source_control_gate_readback_v1=070315_csv_present_no_required_root_unlock_no_downstream",
+  "scope": {
+    "mode": "post_handoff_artifact_and_required_root_readback",
+    "mutated_required_roots": false,
+    "canonical_merge": false,
+    "direct_verifier_run": false,
+    "split_calibration_run": false,
+    "provider_autoquant_promotion_rerun": false,
+    "filter_pre_bayes_bbn_catboost_execution_tree_promotion_rerun": false,
+    "update_goal": false
+  },
+  "board_readback": {
+    "initial_board_sha256": "a43899d6603d94f6ff224f2bc84c04886084d0566036d2c099895a55cc78d4bf",
+    "active_cursor_preserved": true,
+    "strict_objective_state": "blocked",
+    "scoped_consumer_ready_note_preserved": true
+  },
+  "artifact_readback": {
+    "run_070315_root": "docs/experiments/actionable-regime-confidence/runs/20260512T070315+0800-codex-public-exact-source-route-probe-after-065820-v1",
+    "csv_present": true,
+    "json_present": true,
+    "report_present": true,
+    "assertions_present": true,
+    "json_jq_valid": true,
+    "assertions_pass_summary": [
+      "R6 owner-export unlock false",
+      "R5 recency unlock false",
+      "R3 native-subhour unlock false",
+      "canonical merge false",
+      "downstream promotion rerun false",
+      "trade usable false",
+      "update_goal false"
+    ]
+  },
+  "required_roots": [
+    {
+      "id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false,
+      "accepted_unlock": false,
+      "blocker": "missing_required_root"
+    },
+    {
+      "id": "r5_recency_extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false,
+      "accepted_unlock": false,
+      "blocker": "missing_required_root"
+    },
+    {
+      "id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": true,
+      "rows_file": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "provenance_file": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+      "rows_including_header": 5032904,
+      "data_rows": 5032903,
+      "labels_observed": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "crisis_rows_observed": false,
+      "accepted_unlock": false,
+      "blocker": "present_but_tsie_quarantined_and_crisis_absent"
+    }
+  ],
+  "approval_readback": {
+    "r6_approval_decision_package": "docs/experiments/actionable-regime-confidence/runs/20260512T003653-codex-r6-oystacher-approval-decision-package-v1/r6-oystacher-approval-decision-package/r6_oystacher_approval_decision_package_v1.json",
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "templates_present": true,
+    "operator_boundary_external_requests_without_approval": "blocked"
+  },
+  "gate": {
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "r6_owner_export_unlock": false,
+    "r5_recency_unlock": false,
+    "r3_native_subhour_unlock": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned post-2026-01-30 R5 rows matching the source-panel schema, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export."
+}

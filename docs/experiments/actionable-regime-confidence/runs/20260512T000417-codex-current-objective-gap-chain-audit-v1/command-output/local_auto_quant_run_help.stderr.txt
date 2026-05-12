@@ -1,0 +1,2 @@
+ERROR: no strategies found in /Users/thrill3r/Auto-Quant/user_data/strategies.
+Create at least one `.py` file under user_data/strategies/ (see user_data/strategies/_template.py.example for the skeleton).

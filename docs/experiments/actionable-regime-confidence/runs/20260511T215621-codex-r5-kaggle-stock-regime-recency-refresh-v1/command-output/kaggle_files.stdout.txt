@@ -1,0 +1,6 @@
+name,size,creationDate
+dataset_summary.txt,588,2026-02-01 02:25:30.808000
+regime_analysis_by_ticker.csv,1278,2026-02-01 02:25:30.838000
+regime_by_year.csv,758,2026-02-01 02:25:30.861000
+stock_market_regimes_2000_2026.csv,37155794,2026-02-01 02:25:31.845000
+stock_market_regimes_2000_2026.parquet,6583934,2026-02-01 02:25:31.457000

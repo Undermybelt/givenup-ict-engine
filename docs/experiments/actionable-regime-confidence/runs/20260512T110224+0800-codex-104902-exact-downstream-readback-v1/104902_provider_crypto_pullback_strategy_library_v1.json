@@ -1,0 +1,65 @@
+{
+  "auto_quant_pinned_ref": "local-yahoo-btc-pullback-precision-104902",
+  "auto_quant_repo_url": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1/workspace/auto-quant-yahoo-btc-pullback-precision",
+  "config_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1/workspace/auto-quant-yahoo-btc-pullback-precision/config.tomac.json",
+  "exported_at": "2026-05-12T03:02:24+00:00",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1/command-output/01_run_tomac_yahoo_btc_pullback_precision.out",
+  "manifest_version": "1.0",
+  "strategies": [
+    {
+      "commit": "local-yahoo-btc-pullback-precision-104902",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1/workspace/auto-quant-yahoo-btc-pullback-precision/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "asset_class": "crypto_provider_ohlcv",
+        "base_factor": "provider_owned_crypto_pullback_revert",
+        "created": "2026-05-12",
+        "expected_regime": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+        "factors_used": [
+          "provider_yahoo_btc_ohlcv",
+          "rsi_oversold_rebound",
+          "ema50_floor",
+          "atr_exit",
+          "volume_floor",
+          "regime_profit_branch_path"
+        ],
+        "hypothesis": "Standalone Yahoo-provider BTC/USDT 1h pullback branch can preserve positive edge through exact-root downstream consumption.",
+        "mutation_id": "provider-owned-yahoo-crypto-pullback-revert-v1",
+        "paradigm": "pullback_reversion",
+        "parent": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+        "status": "incubation_only_provider_owned_btc_pullback",
+        "strategy": "ProviderCryptoPullbackRevertV1"
+      },
+      "name": "ProviderCryptoPullbackRevertV1",
+      "pairs": [
+        "BTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "calmar": 1.7869559060851206,
+          "max_drawdown_pct": -4.291467939207919,
+          "profit_factor": 1.1185755311888328,
+          "sharpe": 0.18746446058210575,
+          "sortino": 0.4630549582450334,
+          "total_profit_pct": 2.83,
+          "trade_count": 146,
+          "win_rate_pct": 45.20547945205479
+        }
+      },
+      "status": "ok",
+      "timerange": "20240601-20260512",
+      "validation_metrics": {
+        "calmar": 1.7869559060851206,
+        "max_drawdown_pct": -4.291467939207919,
+        "profit_factor": 1.1185755311888328,
+        "sharpe": 0.18746446058210575,
+        "sortino": 0.4630549582450334,
+        "total_profit_pct": 2.83,
+        "trade_count": 146,
+        "win_rate_pct": 45.20547945205479
+      }
+    }
+  ],
+  "timeframe": "1h",
+  "validation_errors": []
+}

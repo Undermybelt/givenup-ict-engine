@@ -1,0 +1,1 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T105149+0800-codex-board-b-provider-crypto-short-fade-v1/workspace/auto-quant-provider-crypto-short-fade && /Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py

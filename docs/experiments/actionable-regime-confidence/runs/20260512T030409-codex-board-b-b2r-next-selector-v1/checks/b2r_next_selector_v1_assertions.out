@@ -1,0 +1,9 @@
+b2r_next_selector_v1
+read_only_no_backtest=PASS
+heavy_probe_started_false=PASS
+correlation_shock_counted_fail_closed=PASS
+crypto_options_counted_fail_closed=PASS
+manipulation_205047_component_only=PASS
+downstream_not_started=PASS
+promotion_allowed_false=PASS
+update_goal_false=PASS

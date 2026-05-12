@@ -1,0 +1,9 @@
+PASS decision=r6_tower_linked_order_fetch_screen_v1=official_order_fetched_no_row_level_events
+PASS fetch_status=200
+PASS row_materializable_candidates=0
+PASS positive_rows_added=0
+PASS matched_controls_added=0
+PASS intake_changed=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

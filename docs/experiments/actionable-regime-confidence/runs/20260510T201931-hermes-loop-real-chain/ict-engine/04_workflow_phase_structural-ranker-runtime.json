@@ -1,0 +1,22 @@
+{
+  "applied_path_count": 3,
+  "artifact_match_count": 0,
+  "calibrated_path_prob": 0.5143288084464555,
+  "candidate_set_match_count": 1,
+  "execution_gate_status": "observe",
+  "history_match_count": 2,
+  "path_prob_lower_bound": 0.4918279035756886,
+  "raw_path_score": 0.382856,
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol NQ --data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state",
+    "execution_contract": null,
+    "prompt": "Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=<local-path>, <local-path>, <local-path>",
+    "user_input_required": true
+  },
+  "reuse_mode": "prefer_history",
+  "runtime_enabled": true,
+  "runtime_source": "candidate_set",
+  "status": "using_candidate_set_scores"
+}

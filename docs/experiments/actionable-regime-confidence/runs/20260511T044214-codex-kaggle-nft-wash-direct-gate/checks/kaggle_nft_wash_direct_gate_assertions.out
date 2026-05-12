@@ -1,0 +1,9 @@
+PASS source_downloaded_to_tmp=true
+PASS raw_data_committed=false
+PASS target_positive=flagged_trades_gt_0
+PASS explicit_negative=flagged_trades_eq_0
+PASS blocked_predictors=flagged_trades,target,token_id,collection_id,future,target,next
+PASS chronological_split=train_calibration_test_by_last_observed_trace_timestamp
+PASS accepted_95=false
+PASS gate_result=blocked_kaggle_nft_wash_direct_gate_below_95_and_coverage
+PASS thresholds_relaxed=false

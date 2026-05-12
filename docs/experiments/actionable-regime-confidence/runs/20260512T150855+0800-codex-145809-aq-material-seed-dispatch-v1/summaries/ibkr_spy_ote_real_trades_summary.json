@@ -1,0 +1,23 @@
+{
+  "branch_paths": {
+    "ote_050": "TrendExpansion -> NormalVolatility -> OTERetracement050 -> OTEContinuationLong",
+    "ote_0618": "TrendExpansion -> NormalVolatility -> OTERetracement0618 -> OTEContinuationLong",
+    "ote_0705": "TrendExpansion -> NormalVolatility -> OTERetracement0705 -> OTEContinuationLong",
+    "ote_0786": "TrendExpansion -> NormalVolatility -> OTERetracement0786 -> OTEContinuationLong"
+  },
+  "counts_by_ote_tag": {
+    "ote_050": 76,
+    "ote_0618": 27,
+    "ote_0705": 27,
+    "ote_0786": 32
+  },
+  "jsonl": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/summaries/ibkr_spy_ote_real_trades.jsonl",
+  "pnl_ratio_sum_by_ote_tag": {
+    "ote_050": 0.00951618,
+    "ote_0618": 0.03758052,
+    "ote_0705": 0.01995716,
+    "ote_0786": -0.0044121
+  },
+  "records": 162,
+  "source": "Freqtrade Backtesting result via Auto-Quant agent material dispatch"
+}

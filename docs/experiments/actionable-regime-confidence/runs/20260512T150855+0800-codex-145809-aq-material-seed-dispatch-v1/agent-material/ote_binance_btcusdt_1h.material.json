@@ -1,0 +1,17 @@
+{
+  "package_id": "ote-trend-retracement-binance-btcusdt-1h-v1",
+  "title": "OTE trend retracement long - Binance BTCUSDT 1h",
+  "symbol": "BTCUSDT",
+  "timeframe": "1h",
+  "direction": "long",
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/agent-material/ProviderOteTrendRetracementV1.py",
+  "strategy_class_name": "ProviderOteTrendRetracementV1",
+  "strategy_brief": "Board B OTE continuation branch seed using 0.500, 0.618, 0.705, and 0.786 retracement leaves inside TrendExpansion.",
+  "evaluation_priority": ["branch_trade_density", "regime_conditioned_win_rate", "profit_factor", "walk_forward_survival"],
+  "notes": [
+    "branch_path=TrendExpansion -> NormalVolatility -> OTERetracementLevel -> OTEContinuationLong",
+    "source_provider=Binance public BTCUSDT 1h provider-backed data",
+    "promotion_allowed=false until six-provider provenance and downstream admission are complete"
+  ]
+}

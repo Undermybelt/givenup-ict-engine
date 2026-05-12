@@ -1,0 +1,67 @@
+{
+  "active_root_status": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false
+    },
+    "/tmp/ict-engine-native-subhour-source-label-intake": {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false
+    },
+    "/tmp/ict-engine-source-panel-recency-extension": {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false
+    }
+  },
+  "board_sha256_before_matrix": "4a898cf9603320c34653ebf4c9efd815e83a369a40ca3e42347b7c81a58abc2d",
+  "family_summary": [
+    {
+      "failing_cells": 3,
+      "max_pair_rows_needed_min": 55,
+      "split_family": "chronological_group_split",
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 142
+    },
+    {
+      "failing_cells": 40,
+      "max_pair_rows_needed_min": 73,
+      "split_family": "heldout_symbol_exact",
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 2847
+    },
+    {
+      "failing_cells": 11,
+      "max_pair_rows_needed_min": 73,
+      "split_family": "heldout_venue_exact",
+      "sum_pair_rows_needed_min_if_exact_cells_must_all_pass": 728
+    }
+  ],
+  "gate_result": "r6_source_control_acquisition_matrix_after_035433_v1=split_gap_matrix_ready_no_rows_acquired_no_promotion",
+  "generated_at_utc": "2026-05-11T20:00:08.012921+00:00",
+  "pooled_diagnostic": {
+    "min_wilson95_lcb": 0.952479911333,
+    "negative_support": 77,
+    "pass": true,
+    "positive_support": 77
+  },
+  "promotion": {
+    "active_owner_export_root_complete": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "explicit_approval_present": false,
+    "flip_controls_accepted": false,
+    "rows_acquired": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "run_id": "20260512T035823-codex-r6-source-control-acquisition-matrix-after-035433-v1",
+  "total_additional_pair_rows_if_every_exact_cell_must_pass": 3717,
+  "upstream": {
+    "split_calibration_json": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/r6-staging-triplet-split-calibration-after-035233-v1/r6_staging_triplet_split_calibration_after_035233_v1.json",
+    "split_gaps_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/r6-staging-triplet-split-calibration-after-035233-v1/r6_staging_triplet_split_gaps_v1.csv",
+    "split_metrics_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1/r6-staging-triplet-split-calibration-after-035233-v1/r6_staging_triplet_split_metrics_v1.csv",
+    "upstream_gate": "r6_staging_triplet_split_calibration_after_035233_v1=staging_pooled95_pass_split_support_broad_controls_and_policy_blocked_no_promotion"
+  }
+}

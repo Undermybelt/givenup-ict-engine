@@ -1,0 +1,5 @@
+gate,status,evidence
+live_intake_required_files,fail,missing_required_files
+sarao_sidecar_preserved,pass,proposed_rows=6
+nowak_smith_sidecar_preserved,pass,proposed_rows=6
+strict_full_objective,fail,current_goal_completion_audit_v55=shared_r6_intake_missing_sidecar_candidates_preserved

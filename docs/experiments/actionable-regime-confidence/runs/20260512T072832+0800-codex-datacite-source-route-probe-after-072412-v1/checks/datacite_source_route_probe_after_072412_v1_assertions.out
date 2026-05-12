@@ -1,0 +1,15 @@
+gate_result=datacite_source_route_probe_after_072412_v1=no_exact_required_source_export_no_unlock
+query_count=11
+failed_queries=0
+total_results_returned=0
+required_exact_hits=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

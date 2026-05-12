@@ -1,0 +1,8 @@
+requirement,status,evidence,gap
+every_regime_95_99,blocked,"100306/100327/100419/100751 are non-promoting; no accepted root packet added","Needs per-regime calibrated packets and cross-context validation"
+cross_market_cross_timeframe_validation,partial,"Provider rows and recorded-MTF readbacks exist, but no canonical source/control merge or selected-history approval","Needs approved source/control plus selected history before promotion"
+provider_paths_checked,covered_non_promoting,"100327 and 101138 provider evidence includes yfinance, TradingView stdio/harness context, IBKR gateway fetch context, Kraken/Binance/Bybit sidecars","Default provider catalog still has unhealthy paths"
+auto_quant_operated,covered_non_promoting,"100419 preseeded Auto-Quant data; 100751 imported AQ results and ran AQ prior/ingest dry-runs","No selected-data promotion; no new mature production branch"
+pre_bayes_bbn_catboost_execution_tree,covered_non_promoting,"100306 and 100751 exercised Pre-Bayes, BBN, CatBoost/path-ranker, and execution-candidate","Execution stayed observe-only; source/control and selected-history gates blocked"
+concurrent_board_safe,covered,"Append-only intake only; no Current Cursor edit","None"
+update_goal,blocked,"update_goal=false across counted roots","Strict objective incomplete"

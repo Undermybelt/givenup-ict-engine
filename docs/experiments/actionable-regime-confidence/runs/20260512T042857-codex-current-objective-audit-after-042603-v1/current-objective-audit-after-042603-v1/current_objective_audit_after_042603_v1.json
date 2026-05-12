@@ -1,0 +1,287 @@
+{
+  "accepted_predictive_confidence_95_labels": [],
+  "accepted_source_confidence_95_labels": [],
+  "autoquant_gate": "autoquant_data_ready_local_cache_run_after_041649_v1=threaded_resolver_run_succeeded_three_backtests_no_board_a_promotion",
+  "autoquant_readback_gate": "autoquant_local_cache_run_readback_after_042222_v1=data_ready_but_backtests_failed_market_loading_no_promotion",
+  "autoquant_runtime_note": "runtime succeeded via threaded resolver but remains non-promoting because source/control roots are absent and strategy rows are runtime_only_non_promoting",
+  "autoquant_successful_backtests": 3,
+  "board_sha256_before_artifact": "818fd723c63d5defdfdd3153cc8d92af3b4e24dc3e4a474205daa6268c917023",
+  "checklist": [
+    {
+      "evidence": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "notes": "Board exists and current audit writes a separate run root; Current Cursor is not edited.",
+      "requirement": "Named board updated and preserved append-only",
+      "status": "pass"
+    },
+    {
+      "evidence": "041410 source-label calibration; 041656 predictive screen",
+      "notes": "source_labels=[]; predictive_labels=[]; no all-regime pass.",
+      "requirement": "Every required regime has calibrated confidence >=95%",
+      "status": "fail"
+    },
+    {
+      "evidence": "041410/041656/041846/042436 readbacks",
+      "notes": "No accepted regimes are available under the latest strict gates; diagnostic conditions are not acceptance.",
+      "requirement": "Per-regime qualifying conditions exist for accepted regimes",
+      "status": "fail"
+    },
+    {
+      "evidence": "041410 split gates; 041846 source discovery; 042436 target-root scan",
+      "notes": "R3/R5 target roots absent; 041846 found no target-root unlock; source-label confidence failed required splits.",
+      "requirement": "Cross-market, cross-cycle, and cross-timeframe validation passes",
+      "status": "fail"
+    },
+    {
+      "evidence": "provider-status --agent fresh command",
+      "notes": "{\"ibkr\": true, \"kraken\": true, \"tradingview\": true, \"yfinance\": true}",
+      "requirement": "Use real provider surfaces: IBKR, TradingView, yfinance, Kraken",
+      "status": "partial"
+    },
+    {
+      "evidence": "042222 and 042603 AutoQuant readbacks plus fresh auto-quant-status",
+      "notes": "data_ready=True; successful_backtests=3; runtime succeeded via threaded resolver but remains non-promoting because source/control roots are absent and strategy rows are runtime_only_non_promoting.",
+      "requirement": "AutoQuant operates on real/local artifacts",
+      "status": "partial"
+    },
+    {
+      "evidence": "fresh pre-bayes-status command",
+      "notes": "pre-bayes exit=0; source/control roots absent so no promoting rerun.",
+      "requirement": "Filter/Pre-Bayes and BBN evidence is present after source unlock",
+      "status": "fail"
+    },
+    {
+      "evidence": "fresh policy-training-status and export-structural-path-ranking-target commands",
+      "notes": "policy exit=0; export exit=0; no promoting target export accepted.",
+      "requirement": "CatBoost/path-ranking evidence is present after source unlock",
+      "status": "fail"
+    },
+    {
+      "evidence": "fresh workflow-status commands",
+      "notes": "workflow exit=0; structural phase exit=0; target roots absent.",
+      "requirement": "Execution-tree/workflow readback is actionable",
+      "status": "fail"
+    },
+    {
+      "evidence": "041846, 042436, 042222/042603 board gates",
+      "notes": "All proxy/readiness/discovery surfaces are non-promoting.",
+      "requirement": "No proxy-only evidence is promoted",
+      "status": "pass"
+    },
+    {
+      "evidence": "promotion statuses and this audit",
+      "notes": "Full objective is not complete; update_goal remains false.",
+      "requirement": "Do not call update_goal unless the full objective is complete",
+      "status": "pass"
+    }
+  ],
+  "command_results": [
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--agent"
+      ],
+      "exit": 0,
+      "name": "00_provider_status_agent",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/00_provider_status_agent.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/00_provider_status_agent.stdout.txt"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--compact"
+      ],
+      "exit": 0,
+      "name": "01_provider_status_compact",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/01_provider_status_compact.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/01_provider_status_compact.stdout.txt"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "auto-quant-status",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "02_auto_quant_status_latest_state",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/02_auto_quant_status_latest_state.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/02_auto_quant_status_latest_state.stdout.txt"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "pre-bayes-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "03_pre_bayes_status",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/03_pre_bayes_status.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/03_pre_bayes_status.stdout.txt"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "04_policy_training_status",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/04_policy_training_status.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/04_policy_training_status.stdout.txt"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826",
+        "--refresh",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "05_workflow_status",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/05_workflow_status.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/05_workflow_status.stdout.txt"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826",
+        "--phase",
+        "structural-recommended-path-bundle",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "06_workflow_structural_recommended_path_bundle",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/06_workflow_structural_recommended_path_bundle.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/06_workflow_structural_recommended_path_bundle.stdout.txt"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "NQ",
+        "--state-dir",
+        "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826"
+      ],
+      "exit": 0,
+      "name": "07_export_structural_path_ranking_target",
+      "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/07_export_structural_path_ranking_target.stderr.txt",
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T042857-codex-current-objective-audit-after-042603-v1/command-output/07_export_structural_path_ranking_target.stdout.txt"
+    }
+  ],
+  "current_cursor_observed": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "decision": "current_objective_audit_after_042603_v1=not_complete_source_roots_absent_no_confidence_gate_downstream_blocked",
+  "generated_at_utc": "2026-05-11T20:33:05.528657+00:00",
+  "missing_or_incomplete_requirements": [
+    {
+      "evidence": "041410 source-label calibration; 041656 predictive screen",
+      "notes": "source_labels=[]; predictive_labels=[]; no all-regime pass.",
+      "requirement": "Every required regime has calibrated confidence >=95%",
+      "status": "fail"
+    },
+    {
+      "evidence": "041410/041656/041846/042436 readbacks",
+      "notes": "No accepted regimes are available under the latest strict gates; diagnostic conditions are not acceptance.",
+      "requirement": "Per-regime qualifying conditions exist for accepted regimes",
+      "status": "fail"
+    },
+    {
+      "evidence": "041410 split gates; 041846 source discovery; 042436 target-root scan",
+      "notes": "R3/R5 target roots absent; 041846 found no target-root unlock; source-label confidence failed required splits.",
+      "requirement": "Cross-market, cross-cycle, and cross-timeframe validation passes",
+      "status": "fail"
+    },
+    {
+      "evidence": "provider-status --agent fresh command",
+      "notes": "{\"ibkr\": true, \"kraken\": true, \"tradingview\": true, \"yfinance\": true}",
+      "requirement": "Use real provider surfaces: IBKR, TradingView, yfinance, Kraken",
+      "status": "partial"
+    },
+    {
+      "evidence": "042222 and 042603 AutoQuant readbacks plus fresh auto-quant-status",
+      "notes": "data_ready=True; successful_backtests=3; runtime succeeded via threaded resolver but remains non-promoting because source/control roots are absent and strategy rows are runtime_only_non_promoting.",
+      "requirement": "AutoQuant operates on real/local artifacts",
+      "status": "partial"
+    },
+    {
+      "evidence": "fresh pre-bayes-status command",
+      "notes": "pre-bayes exit=0; source/control roots absent so no promoting rerun.",
+      "requirement": "Filter/Pre-Bayes and BBN evidence is present after source unlock",
+      "status": "fail"
+    },
+    {
+      "evidence": "fresh policy-training-status and export-structural-path-ranking-target commands",
+      "notes": "policy exit=0; export exit=0; no promoting target export accepted.",
+      "requirement": "CatBoost/path-ranking evidence is present after source unlock",
+      "status": "fail"
+    },
+    {
+      "evidence": "fresh workflow-status commands",
+      "notes": "workflow exit=0; structural phase exit=0; target roots absent.",
+      "requirement": "Execution-tree/workflow readback is actionable",
+      "status": "fail"
+    }
+  ],
+  "next": "Continue only after source-owned recency/native-subhour rows, verifier-native R6 controls, owner-export delivery, explicit approval, or a verified offline AutoQuant market metadata path appears.",
+  "objective_success_criteria": [
+    "every required regime has >=95% calibrated confidence",
+    "each accepted regime has qualifying_condition plus validation_instruments/periods/market_contexts",
+    "cross-market/cycle/timeframe validation passes",
+    "real provider/AutoQuant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution-tree evidence exists",
+    "no proxy-only evidence is promoted"
+  ],
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provider_covered": {
+    "ibkr": true,
+    "kraken": true,
+    "tradingview": true,
+    "yfinance": true
+  },
+  "required_roots_present": false,
+  "run_id": "20260512T042857-codex-current-objective-audit-after-042603-v1",
+  "source_discovery_decision": "live_source_label_extension_discovery_after_041423_v1=candidates_found_no_target_root_unlock_no_promotion",
+  "source_target_scan_gate": "source_target_local_scan_after_041656_v1=no_new_target_root_unlock_no_promotion",
+  "state_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826",
+  "symbol": "NQ",
+  "target_root_status": {
+    "direct_manipulation_sidecar": true,
+    "r3_native_subhour": false,
+    "r5_recency_extension": false,
+    "r6_owner_export": false,
+    "source_label_equivalence_sidecar": true
+  }
+}

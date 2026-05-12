@@ -1,0 +1,54 @@
+{
+  "run_id": "20260512T045627-codex-r6-cme-disciplinary-source-delta-v1",
+  "generated_at_local": "2026-05-12T04:56:27+0800",
+  "gate_result": "r6_cme_disciplinary_source_delta_v1=official_exchange_event_context_found_no_verifier_native_rows_no_promotion",
+  "purpose": "Non-duplicative R6 official-source acquisition delta; does not acquire or promote data.",
+  "sources": [
+    {
+      "route": "CME Group COMEX disciplinary notice",
+      "identifier": "COMEX 11-08380-BC",
+      "url": "https://www.cmegroup.com/tools-information/lookups/advisories/disciplinary/COMEX-11-08380-BC-IGOR-OYSTACHER.html",
+      "event_context": "Oystacher COMEX metals context, several dates between May and July 2011 in Silver, Gold, and Copper futures",
+      "board_a_effect": "official_exchange_event_context_only_no_verifier_native_rows_no_controls"
+    },
+    {
+      "route": "CME Group NYMEX disciplinary notice",
+      "identifier": "NYMEX 10-07963-BC",
+      "url": "https://www.cmegroup.com/tools-information/lookups/advisories/disciplinary/NYMEX-10-07963-BC-IGOR-OYSTACHER.html",
+      "event_context": "Oystacher NYMEX crude oil context, several dates between December 2010 and July 2011 in Crude Oil futures",
+      "board_a_effect": "official_exchange_event_context_only_no_verifier_native_rows_no_controls"
+    }
+  ],
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "credential_presence": {
+    "DATABENTO_API_KEY": false,
+    "CME_API_KEY": false,
+    "CBOE_API_KEY": false,
+    "IBKR_ACCOUNT_ID": false,
+    "TV_SESSION": false
+  },
+  "decision": {
+    "official_exchange_event_context_found": true,
+    "verifier_native_rows_acquired": false,
+    "source_owned_normal_controls_supplied": false,
+    "same_exhibit_flip_approved": false,
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge_allowed": false,
+    "downstream_rerun_allowed": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "boundary": {
+    "licensed_rows_downloaded": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "thresholds_relaxed": false,
+    "proxy_labels_approved": false
+  }
+}

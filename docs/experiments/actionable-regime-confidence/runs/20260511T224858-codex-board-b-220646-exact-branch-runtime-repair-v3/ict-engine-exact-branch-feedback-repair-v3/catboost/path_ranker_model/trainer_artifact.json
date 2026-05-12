@@ -1,0 +1,42 @@
+{
+  "artifact_uri": "docs/experiments/actionable-regime-confidence/runs/20260511T224858-codex-board-b-220646-exact-branch-runtime-repair-v3/ict-engine-exact-branch-feedback-repair-v3/exact_branch_runtime_scores_v3.csv",
+  "calibration_metrics": {
+    "eligible_rows": 275
+  },
+  "calibration_rows": 275,
+  "created_at": "2026-05-11T15:04:46Z",
+  "dataset_role": "external_path_ranker_training_dataset",
+  "history_rows": 12329,
+  "model_artifact_uri": "docs/experiments/actionable-regime-confidence/runs/20260511T222451-codex-board-b-220646-target-surface-readback-v1/catboost/path_ranker_model/catboost_model.cbm",
+  "model_family": "catboost",
+  "notes": [
+    "registered_via=explicit_external_artifact",
+    "uri_source=cli_opt_in",
+    "catboost_runtime_scores_uri=required",
+    "score_rows_written=4",
+    "json_companion_replaces_binary_cbm_as_register_artifact_uri"
+  ],
+  "protocol_version": "structural-path-ranking-trainer-artifact-v1",
+  "score_column": "raw_path_score",
+  "selected_features": [
+    "rank",
+    "direction",
+    "regime_calibration_bucket",
+    "behavior_policy_probability",
+    "execution_propensity",
+    "target_policy_probability_confidence",
+    "target_policy_probability_lower_bound",
+    "target_policy_reward_prior",
+    "target_policy_reward_lower_bound",
+    "experience_prior",
+    "current_posterior",
+    "structural_baseline_score"
+  ],
+  "trained_rows": 12329,
+  "validation_metrics": {
+    "production_validation_min_rows": 30,
+    "production_validation_rows": 275,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_rows": 275
+  }
+}

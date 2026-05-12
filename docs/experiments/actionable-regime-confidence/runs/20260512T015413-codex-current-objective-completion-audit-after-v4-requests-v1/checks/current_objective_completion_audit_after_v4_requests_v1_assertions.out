@@ -1,0 +1,15 @@
+run_id=PASS
+gate_result=PASS
+board_present=PASS
+evidence_files_present=PASS
+r6_owner_export_absent=PASS
+r3_native_subhour_absent=PASS
+r5_recency_extension_absent=PASS
+source_label_equivalence_present=PASS
+accepted_labels_empty=PASS
+accepted_rows_added_zero=PASS
+canonical_merge_allowed_false=PASS
+downstream_chain_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS
+external_requests_sent_false=PASS

@@ -1,0 +1,123 @@
+{
+  "auto_quant_readback": {
+    "data_ready": false,
+    "dependency_healthy": true,
+    "healthy": false,
+    "recommended_next_command": "ict-engine auto-quant-prepare --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1",
+    "status": "dependency_ready_data_missing"
+  },
+  "catboost_path_ranking_readback": {
+    "entry_models_pending": [
+      "cisd_rb_long_v1",
+      "breaker_rb_long_v1"
+    ],
+    "entry_models_ready": [],
+    "observation_validation_ready": true,
+    "observation_validation_rows": 48,
+    "production_validation_ready": true,
+    "production_validation_rows": 286,
+    "raw_scored_mature_rows": 288,
+    "runtime_active_match_count": 1,
+    "runtime_ready": true,
+    "runtime_source_kind": "candidate_set",
+    "runtime_status": "enabled_candidate_set_ready",
+    "trainer_artifact_model_family": "catboost",
+    "trainer_artifact_ready": true,
+    "trainer_artifact_trained_rows": 12329
+  },
+  "command_exit_codes": {
+    "00_provider_status": 0,
+    "01_auto_quant_status": 0,
+    "02_pre_bayes_status": 0,
+    "03_policy_training_status": 0,
+    "04_workflow_structural_bundle": 0,
+    "05_workflow_structural_feedback": 0,
+    "06_workflow_execution_candidate": 0
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "branch_path_preserved_to_execution_candidate": true,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "explicit_user_selected_history": false,
+    "gate": "latest_branch_readonly_chain_v1=branch_path_preserved_bbn_applied_catboost_ready_execution_observe_only_non_promoting",
+    "promotion_allowed": false,
+    "provider_coverage_partial": true,
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "mode": "incubation_only_non_promoting_readonly_chain",
+  "next_action": "Keep production gates fail-closed. Ask for exactly one explicit selected-history lane (HTF, MTF, or LTF) or wait for real R6/R5/R3 source-control unlock evidence before any verifier, canonical merge, selected-data AutoQuant, BBN/CatBoost/execution promotion, trade claim, or update_goal.",
+  "pre_bayes_bbn_readback": {
+    "bbn_application_status": "applied",
+    "bbn_label": "primary::ExtremeStress",
+    "bbn_label_set": "primary::ExtremeStress,Crisis_->_CrisisReliefCarry_->_StopManagedPanicRecovery_->_SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "bbn_trade_usable_field": "true",
+    "canonical_structural_active_regime": "range",
+    "canonical_structural_confidence": 0.5619249343265972,
+    "latest_gate_status": "pass_neutralized",
+    "soft_market_regime_range": 0.65
+  },
+  "provider_readback": {
+    "key_providers": {
+      "ibkr:market_data": {
+        "ready": false,
+        "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+        "status": "configured_runtime_unhealthy"
+      },
+      "ibkr_bridge:local_runtime": {
+        "ready": false,
+        "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+        "status": "configured_runtime_unhealthy"
+      },
+      "kraken_cli:local_runtime": {
+        "ready": true,
+        "reason": "kraken_cli_config_detected",
+        "status": "ready"
+      },
+      "kraken_public:market_data": {
+        "ready": false,
+        "reason": "python3_provider_dependencies_missing",
+        "status": "configured_runtime_unhealthy"
+      },
+      "tradingview_mcp:market_data": {
+        "ready": true,
+        "reason": "mcp_url_and_api_key_available",
+        "status": "ready"
+      },
+      "yfinance:live_runtime": {
+        "ready": true,
+        "reason": "native_yfinance_runtime_available",
+        "status": "ready"
+      },
+      "yfinance:market_data": {
+        "ready": true,
+        "reason": "public_yahoo_http_endpoints",
+        "status": "ready"
+      }
+    },
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:2/7 ready"
+  },
+  "run_id": "20260512T100340+0800-codex-board-a-latest-branch-readonly-chain-v1",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "workflow_readback": {
+    "execution_candidate_status": "execution_observe_only",
+    "execution_path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "execution_path_ranker_raw_score": 0.65,
+    "execution_path_ranker_runtime_source": "history_path",
+    "execution_pre_bayes_gate_status": "pass_neutralized",
+    "execution_readiness": 0.4504361163104953,
+    "execution_ready": false,
+    "execution_review_status": "observe",
+    "structural_bundle_path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "structural_bundle_path_ranker_raw_score": 0.65,
+    "structural_bundle_path_ranker_runtime_source": "history_path",
+    "structural_feedback_blocked_reason": "user_selected_historical_data_missing",
+    "structural_feedback_branch_id": "SRC_ROOT_CARRY_LONG_220646:belief_regime_node:range:range_mean_reversion",
+    "structural_feedback_pre_bayes_gate_status": "pass_neutralized"
+  }
+}

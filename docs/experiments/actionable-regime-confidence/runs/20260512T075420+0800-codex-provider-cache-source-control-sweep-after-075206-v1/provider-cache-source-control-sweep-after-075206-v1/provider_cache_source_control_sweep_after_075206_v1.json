@@ -1,0 +1,328 @@
+{
+  "accepted_rows_added": 0,
+  "approval_packages": [
+    {
+      "approval_present": null,
+      "canonical_merge_allowed_now": null,
+      "downstream_rerun_allowed_now": null,
+      "exists": true,
+      "flip_controls_accepted_under_current_contract": null,
+      "flip_rows": null,
+      "matched_groups": null,
+      "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "positive_spoof_rows": null
+    },
+    {
+      "approval_present": null,
+      "canonical_merge_allowed_now": null,
+      "downstream_rerun_allowed_now": null,
+      "exists": true,
+      "flip_controls_accepted_under_current_contract": null,
+      "flip_rows": null,
+      "matched_groups": null,
+      "path": "/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "positive_spoof_rows": null
+    }
+  ],
+  "board_sha256": "c9b35cdca873724ec024969ff0a5fc17498b7c5bb99e4aaa2d3b694b23eef4e9",
+  "candidate_hit_count": 124,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "gate_result": "provider_cache_source_control_sweep_after_075206_v1=no_valid_required_root_no_unlock",
+  "generated_at_utc": "2026-05-11T23:56:57.704129+00:00",
+  "provider_roots_scanned": [
+    "/Users/thrill3r/Auto-Quant/user_data/data",
+    "/Users/thrill3r/Auto-Quant/user_data/strategies",
+    "/Users/thrill3r/Auto-Quant/user_data/strategies_external",
+    "/Users/thrill3r/Downloads/Tomac",
+    "/Users/thrill3r/tradingview-mcp",
+    "/Users/thrill3r/Library/Application Support/TradingView",
+    "/Users/thrill3r/Jts",
+    "/Users/thrill3r/.ibkr",
+    "/Users/thrill3r/.kraken",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/state",
+    "/tmp/ict-engine-board-a-064259-runtime-v1"
+  ],
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "root_absent_count": 2,
+  "run_id": "20260512T075420+0800-codex-provider-cache-source-control-sweep-after-075206-v1",
+  "scan_truncated_count": 3,
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_status": {
+    "r3_native_subhour": [
+      {
+        "crisis_present": false,
+        "exists": true,
+        "file_count": 2,
+        "is_dir": true,
+        "known_tsie": true,
+        "missing_required_files": [],
+        "observed_labels": [
+          "Bear",
+          "Bull",
+          "Sideways"
+        ],
+        "present_required_files": [],
+        "provenance": {
+          "accepted_mapping_confidence_95_labels": [
+            "Bear",
+            "Bull",
+            "Sideways"
+          ],
+          "created_at_utc": "2026-05-11T22:35:29.972642+00:00",
+          "dataset_id": "sujinwo/tsie-market-regime-dataset",
+          "dataset_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+          "date_max": "2026-04-07 02:00:00",
+          "date_min": "1990-06-07 02:00:00",
+          "excluded_trap_rows": 2161093,
+          "group_count": 1150,
+          "label_mapping": {
+            "0": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Bear",
+              "source_label": "STRONG SELL"
+            },
+            "1": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Bear",
+              "source_label": "WEAK SELL"
+            },
+            "2": {
+              "decision": "abstain_trap",
+              "main_regime_v2_label": "Abstain",
+              "source_label": "BEAR TRAP"
+            },
+            "3": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Sideways",
+              "source_label": "FLAT / NOISE"
+            },
+            "4": {
+              "decision": "abstain_trap",
+              "main_regime_v2_label": "Abstain",
+              "source_label": "BULL TRAP"
+            },
+            "5": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Bull",
+              "source_label": "WEAK BUY"
+            },
+            "6": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Bull",
+              "source_label": "STRONG BUY"
+            }
+          },
+          "limitations": [
+            "Crisis has no direct TSIE source taxonomy class",
+            "trap labels are fail-closed abstain and excluded from accepted rows",
+            "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+            "canonical merge not run",
+            "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+          ],
+          "raw_parquet_committed_to_repo": false,
+          "raw_parquet_path": "/tmp/ict-engine-tsie-hf-download-v1/default/train/0000.parquet",
+          "raw_parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+          "raw_row_count": 7193996,
+          "row_count": 5032903,
+          "rows_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+          "run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+          "symbol_count": 386,
+          "target_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+          "timeframe_count": 3
+        },
+        "required_files": [],
+        "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+      },
+      {
+        "crisis_present": false,
+        "exists": true,
+        "file_count": 2,
+        "is_dir": true,
+        "known_tsie": true,
+        "missing_required_files": [],
+        "observed_labels": [
+          "Bear",
+          "Bull",
+          "Sideways"
+        ],
+        "present_required_files": [],
+        "provenance": {
+          "accepted_mapping_confidence_95_labels": [
+            "Bear",
+            "Bull",
+            "Sideways"
+          ],
+          "created_at_utc": "2026-05-11T22:35:29.972642+00:00",
+          "dataset_id": "sujinwo/tsie-market-regime-dataset",
+          "dataset_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+          "date_max": "2026-04-07 02:00:00",
+          "date_min": "1990-06-07 02:00:00",
+          "excluded_trap_rows": 2161093,
+          "group_count": 1150,
+          "label_mapping": {
+            "0": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Bear",
+              "source_label": "STRONG SELL"
+            },
+            "1": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Bear",
+              "source_label": "WEAK SELL"
+            },
+            "2": {
+              "decision": "abstain_trap",
+              "main_regime_v2_label": "Abstain",
+              "source_label": "BEAR TRAP"
+            },
+            "3": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Sideways",
+              "source_label": "FLAT / NOISE"
+            },
+            "4": {
+              "decision": "abstain_trap",
+              "main_regime_v2_label": "Abstain",
+              "source_label": "BULL TRAP"
+            },
+            "5": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Bull",
+              "source_label": "WEAK BUY"
+            },
+            "6": {
+              "decision": "mapped_unambiguous",
+              "main_regime_v2_label": "Bull",
+              "source_label": "STRONG BUY"
+            }
+          },
+          "limitations": [
+            "Crisis has no direct TSIE source taxonomy class",
+            "trap labels are fail-closed abstain and excluded from accepted rows",
+            "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+            "canonical merge not run",
+            "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+          ],
+          "raw_parquet_committed_to_repo": false,
+          "raw_parquet_path": "/tmp/ict-engine-tsie-hf-download-v1/default/train/0000.parquet",
+          "raw_parquet_sha256": "8b6f25f8b2aba162af2eac30b1a8a9df662fc5dd04878e933f42c8df4eaa6158",
+          "raw_row_count": 7193996,
+          "row_count": 5032903,
+          "rows_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "rows_sha256": "72406e48b000f91ed2b3c3e132651537339afb2a8ed2e3ce43b5007abf38f62f",
+          "run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+          "symbol_count": 386,
+          "target_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+          "timeframe_count": 3
+        },
+        "required_files": [],
+        "root": "/private/tmp/ict-engine-native-subhour-source-label-intake"
+      }
+    ],
+    "r5_recency": [
+      {
+        "exists": false,
+        "file_count": 0,
+        "is_dir": false,
+        "missing_required_files": [],
+        "present_required_files": [],
+        "required_files": [],
+        "root": "/tmp/ict-engine-source-panel-recency-extension"
+      },
+      {
+        "exists": false,
+        "file_count": 0,
+        "is_dir": false,
+        "missing_required_files": [],
+        "present_required_files": [],
+        "required_files": [],
+        "root": "/private/tmp/ict-engine-source-panel-recency-extension"
+      }
+    ],
+    "r6_owner_export": [
+      {
+        "exists": false,
+        "file_count": 0,
+        "is_dir": false,
+        "missing_required_files": [
+          "direct_manipulation_positive_rows.csv",
+          "direct_manipulation_matched_controls.csv",
+          "direct_manipulation_provenance.json"
+        ],
+        "present_required_files": [],
+        "required_files": [
+          "direct_manipulation_positive_rows.csv",
+          "direct_manipulation_matched_controls.csv",
+          "direct_manipulation_provenance.json"
+        ],
+        "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+      },
+      {
+        "exists": false,
+        "file_count": 0,
+        "is_dir": false,
+        "missing_required_files": [
+          "direct_manipulation_positive_rows.csv",
+          "direct_manipulation_matched_controls.csv",
+          "direct_manipulation_provenance.json"
+        ],
+        "present_required_files": [],
+        "required_files": [
+          "direct_manipulation_positive_rows.csv",
+          "direct_manipulation_matched_controls.csv",
+          "direct_manipulation_provenance.json"
+        ],
+        "root": "/private/tmp/ict-engine-board-a-r6-owner-export-v1"
+      }
+    ],
+    "source_label_equivalence_intake": [
+      {
+        "exists": true,
+        "file_count": 2,
+        "is_dir": true,
+        "missing_required_files": [],
+        "present_required_files": [],
+        "required_files": [],
+        "root": "/tmp/ict-engine-source-label-equivalence-intake"
+      },
+      {
+        "exists": true,
+        "file_count": 2,
+        "is_dir": true,
+        "missing_required_files": [],
+        "present_required_files": [],
+        "required_files": [],
+        "root": "/private/tmp/ict-engine-source-label-equivalence-intake"
+      }
+    ],
+    "source_label_equivalence_target": [
+      {
+        "exists": false,
+        "file_count": 0,
+        "is_dir": false,
+        "missing_required_files": [],
+        "present_required_files": [],
+        "required_files": [],
+        "root": "/tmp/ict-engine-source-label-equivalence-v1"
+      },
+      {
+        "exists": false,
+        "file_count": 0,
+        "is_dir": false,
+        "missing_required_files": [],
+        "present_required_files": [],
+        "required_files": [],
+        "root": "/private/tmp/ict-engine-source-label-equivalence-v1"
+      }
+    ]
+  },
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

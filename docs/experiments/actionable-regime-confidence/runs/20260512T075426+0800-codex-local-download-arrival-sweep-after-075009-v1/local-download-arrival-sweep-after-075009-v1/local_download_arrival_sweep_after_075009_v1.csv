@@ -1,0 +1,7 @@
+path,filename,mtime_local,size,required_file_hit,filename_hit,source_label_columns,order_lifecycle_columns,header_preview
+/private/tmp/databento-gc-074844-jq.out,databento-gc-074844-jq.out,2026-05-12T07:51:27.208467+08:00,8294,False,True,,,
+/tmp/databento-gc-074844-jq.out,databento-gc-074844-jq.out,2026-05-12T07:51:27.208467+08:00,8294,False,True,,,
+/private/tmp/databento_gc_raw_recency_disposition_after_074424_v1_json_check.out,databento_gc_raw_recency_disposition_after_074424_v1_json_check.out,2026-05-12T07:53:46.114000+08:00,10136,False,True,,,
+/tmp/databento_gc_raw_recency_disposition_after_074424_v1_json_check.out,databento_gc_raw_recency_disposition_after_074424_v1_json_check.out,2026-05-12T07:53:46.114000+08:00,10136,False,True,,,
+/private/tmp/databento_gc_raw_recency_disposition_after_074424_v1.jsoncheck,databento_gc_raw_recency_disposition_after_074424_v1.jsoncheck,2026-05-12T07:54:36.822336+08:00,10136,False,True,,,
+/tmp/databento_gc_raw_recency_disposition_after_074424_v1.jsoncheck,databento_gc_raw_recency_disposition_after_074424_v1.jsoncheck,2026-05-12T07:54:36.822336+08:00,10136,False,True,,,

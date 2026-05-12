@@ -1,0 +1,94 @@
+{
+  "readback_id": "165222_162400_repaired_aq_downstream_readback_v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1",
+  "source_provider_aq_surface": "164145_same_root_repair_v2",
+  "late_downstream_artifact_source": "state_downstream_v1",
+  "this_session_ran_downstream_commands": false,
+  "this_session_wrote_state_downstream_v1": false,
+  "diagnostic_readback_only": true,
+  "provider_aq": {
+    "provider_rows_current_same_root": "6/6",
+    "aq_strategies_with_metrics": 12,
+    "aq_total_trades": 224,
+    "sample_adequacy": "smoke_only_low_trade_count",
+    "requested_history_span": "2026-04-01_to_2026-05-12_for_most_public_fetches"
+  },
+  "late_downstream_commands": {
+    "20_build_downstream_inputs": 0,
+    "21_auto_quant_results_import": 0,
+    "22_auto_quant_prior_init": 0,
+    "23_analyze_yfinance_candles": 0,
+    "24_pre_bayes_status": 0,
+    "25_policy_training_status": 0,
+    "26_workflow_status": 0,
+    "27_export_structural_path_ranking_target": 0
+  },
+  "auto_quant_results_import": {
+    "n_total_strategies": 12,
+    "n_ok": 12,
+    "n_error": 0,
+    "n_not_run": 0
+  },
+  "bbn_prior_init": {
+    "strategies_applied": 12,
+    "total_trades": 224,
+    "evidence_value_gate_passed": true,
+    "final_probs": [
+      0.44453737170158125,
+      0.0000000034476556316548967,
+      0.555462624850763
+    ],
+    "state_scope": "isolated_run_root_state_downstream_v1"
+  },
+  "pre_bayes": {
+    "latest_gate_status": "pass_neutralized",
+    "latest_canonical_structural_active_regime": "range",
+    "latest_canonical_structural_confidence": 0.523311097658614,
+    "latest_canonical_structural_probabilities": {
+      "range": 0.7471918003808868,
+      "stress": 0.1780890195810245,
+      "transition": 0.07471918003808868,
+      "trend": 0.0
+    },
+    "uses_soft_evidence": true
+  },
+  "analyze_execution": {
+    "decision_summary": "Observe only",
+    "direction": "Bear",
+    "market_state": "RangeConsolidation/WideRange",
+    "market_state_overall_confidence": 0.398,
+    "execution_gate_status": "observe",
+    "execution_branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "execution_score": 0.5465966729013458,
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "ranker": "unknown/unknown/not_ready"
+  },
+  "policy_training_and_path_ranker": {
+    "entry_model_ready": false,
+    "matched_rows": 0,
+    "raw_scored_mature_rows": 0,
+    "production_validation_ready": false,
+    "observation_validation_ready": false,
+    "structural_target_rows": 3,
+    "structural_target_mature_rows": 0,
+    "rows_with_raw_path_score": 0,
+    "rows_with_calibrated_path_prob": 0,
+    "rows_with_execution_gate_status": 0,
+    "rows_with_training_weight": 0
+  },
+  "workflow": {
+    "execution_tree_status": "observe",
+    "execution_tree_promote_candidate": false,
+    "execution_tree_decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "artifact_decision_consumed_trend": "no_consumed_validation"
+  },
+  "gate": {
+    "accepted_95_contexts_added": 0,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "reason": "downstream plumbing ran but confidence, maturity, validation, and execution gates all fail Board A acceptance"
+  }
+}

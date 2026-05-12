@@ -1,0 +1,1 @@
+env PYTHONUNBUFFERED=1 uv --directory /tmp/ict-engine-board-a-autoquant-local-crypto-cache-20260512T023351/auto-quant/.deps/auto-quant run --with ta-lib python run.py 

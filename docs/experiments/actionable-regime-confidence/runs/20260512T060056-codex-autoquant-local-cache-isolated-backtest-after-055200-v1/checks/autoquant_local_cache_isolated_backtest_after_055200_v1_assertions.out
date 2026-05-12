@@ -1,0 +1,16 @@
+gate_result=autoquant_local_cache_isolated_backtest_after_055200_v1=isolated_local_cache_backtest_succeeded_status_data_missing_no_promotion
+isolated_clone_created=true
+dependency_healthy=true
+auto_quant_status=dependency_ready_data_missing
+auto_quant_data_ready=false
+backtest_succeeded=3
+backtest_failed=0
+total_trade_count=26
+accepted_rows_added=0
+source_control_evidence_acquired=false
+target_root_mutated=false
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+strict_full_objective_achieved=false
+trade_usable=false
+update_goal=false

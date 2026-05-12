@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto_quant_real_trades_B2R_SAME_ROOT_SIX_PROVIDER_BTC_1H_115700_20260512T045833.437917000Z",
+    "artifact_kind": "auto_quant_real_trades_ingested",
+    "artifact_id": "auto_quant_real_trades_B2R_SAME_ROOT_SIX_PROVIDER_BTC_1H_115700_20260512T045833.437917000Z",
+    "version": 1,
+    "generated_at": "2026-05-12T04:58:33.437917Z",
+    "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_BTC_1H_115700",
+    "source_phase": "auto_quant_real_trades",
+    "source_run_id": "f37577efee062a19",
+    "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T125559+0800-codex-115700-layer-contract-dry-run-v1/enriched-real-trades/115700_layer_contract_enriched_all.real_trades.jsonl",
+    "status": "dry_run_preview",
+    "promote_candidate": false,
+    "actionable": false,
+    "decision_hint": "ingested 237 trade(s)",
+    "review_reason": "ingested 237/237 (invalid 0) feedback_inserted=0 content_hash=f37577efee062a19 dry_run=true force=false",
+    "review_rule_version": "auto-quant-real-trades-v1",
+    "top_factor_name": null,
+    "top_factor_action": null,
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 237,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

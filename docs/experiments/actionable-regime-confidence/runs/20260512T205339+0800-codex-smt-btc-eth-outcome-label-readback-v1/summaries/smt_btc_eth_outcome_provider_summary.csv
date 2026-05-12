@@ -1,0 +1,7 @@
+provider_id,event_count,outcome_6h_count,hit_rate_6h,mean_forward_6h_return,outcome_12h_count,hit_rate_12h,mean_forward_12h_return
+binance,25,25,0.76,-2.318e-05,25,0.52,-0.00320307
+bybit,25,25,0.76,-0.00029185,25,0.48,-0.00318943
+ibkr,20,20,0.4,0.00178817,18,0.5,-0.0007127
+kraken,18,18,0.5,-0.00017023,18,0.555556,2.59e-06
+tradingviewremix,16,16,0.625,0.00071638,16,0.4375,-0.00084686
+yfinance,23,23,0.608696,0.00031733,22,0.590909,-0.00285686

@@ -1,0 +1,35 @@
+{
+  "run_id": "20260511T155959+0800-current-goal-completion-audit-v14-after-consumer-map",
+  "artifact_type": "current_goal_completion_audit",
+  "objective": "Every active regime reaches 95% calibrated confidence and is validated across other markets and other timeframes before reporting the result.",
+  "active_taxonomy": {
+    "price_roots": ["Bull", "Bear", "Sideways", "Crisis"],
+    "direct_overlay": "Manipulation",
+    "child_labels_are_parent_roots": false
+  },
+  "inputs": {
+    "consumer_map": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+    "market_regime_context": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+    "exact_1h_universe": "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1.json",
+    "direct_intake_manifest": "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_manifest_v1.json",
+    "direct_variety_matrix": "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.json"
+  },
+  "decision": {
+    "scoped_active_lane_accepted_95": true,
+    "full_objective_achieved": false,
+    "call_update_goal": false,
+    "accepted_gate": "completion_audit_v14_after_consumer_map=scoped_active_lanes_accepted_full_objective_still_blocked",
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "trade_usable": false
+  },
+  "missing_or_incomplete": [
+    "direct Manipulation full species coverage",
+    "ticker-specific strict support beyond 41/156 rows",
+    "full species cross-market equivalence beyond source-panel context",
+    "native sub-hour timeframe source overlap",
+    "source panel recency beyond 2026-01-30"
+  ],
+  "next_action": "Use regime_factor_consumer_map_v1.csv as downstream consumer contract and continue only on missing full-objective coverage."
+}

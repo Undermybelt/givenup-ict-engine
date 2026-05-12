@@ -1,0 +1,5 @@
+PASS decision=direct_manipulation_intake_verifier_readback_v1=blocked_missing_direct_intake_files
+PASS verifier_returncode=2
+PASS missing_file_count=3
+PASS accepted_rows_added=0
+PASS update_goal=false

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/scripts/correlation_shock_absorption_v1.py", line 709, in <module>
+    main()
+    ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/scripts/correlation_shock_absorption_v1.py", line 665, in main
+    panel = add_features(load_panel())
+                         ~~~~~~~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/scripts/correlation_shock_absorption_v1.py", line 172, in load_panel
+    raise RuntimeError("empty panel")
+RuntimeError: empty panel

@@ -1,0 +1,44 @@
+{
+  "protocol_version": "structural-path-ranking-trainer-artifact-v1",
+  "dataset_role": "external_path_ranker_training_dataset",
+  "model_family": "catboost",
+  "artifact_uri": "docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/path-ranker/catboost_1h_chain_v1/catboost_model/trainer_artifact.json",
+  "score_column": "raw_path_score",
+  "trained_rows": 248,
+  "history_rows": 248,
+  "calibration_rows": 245,
+  "selected_features": [
+    "rank",
+    "direction",
+    "regime_profit_branch_path",
+    "parent_regime_root",
+    "main_regime",
+    "sub_regime",
+    "sub_sub_regime_or_profit_factor",
+    "profit_factor",
+    "regime_calibration_bucket",
+    "behavior_policy_probability",
+    "execution_propensity",
+    "target_policy_probability_confidence",
+    "target_policy_probability_lower_bound",
+    "target_policy_reward_prior",
+    "target_policy_reward_lower_bound",
+    "experience_prior",
+    "current_posterior",
+    "structural_baseline_score"
+  ],
+  "validation_metrics": {
+    "raw_scored_mature_rows": 0,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 30
+  },
+  "calibration_metrics": {
+    "eligible_rows": 0
+  },
+  "created_at": "2026-05-12T04:10:34.722911+00:00",
+  "notes": [
+    "registered_via=explicit_external_artifact",
+    "uri_source=cli_opt_in"
+  ]
+}

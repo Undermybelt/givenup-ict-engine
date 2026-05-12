@@ -1,0 +1,50 @@
+{
+  "run_id": "20260512T064315+0800-codex-source-control-gate-refresh-after-r3-postwriter-v1",
+  "gate_result": "source_control_gate_refresh_after_r3_postwriter_v1=blocked_r3_present_quarantined_r6_r5_absent_no_dispatch_no_downstream",
+  "board_sha256_before_artifact": "05ebe2d952c07ebf623341b08bf303592002edd1a95e938937e89f85a9508257",
+  "required_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": {
+      "present": false,
+      "valid_unlock": false,
+      "reason": "absent"
+    },
+    "/tmp/ict-engine-native-subhour-source-label-intake": {
+      "present": true,
+      "file_count": 2,
+      "valid_unlock": false,
+      "reason": "present_but_tsie_quarantined_proxy_no_direct_crisis"
+    },
+    "/tmp/ict-engine-source-panel-recency-extension": {
+      "present": false,
+      "valid_unlock": false,
+      "reason": "absent"
+    }
+  },
+  "dispatch_assets": [
+    {
+      "owner": "CME Group",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b",
+      "status": "draft_not_sent"
+    },
+    {
+      "owner": "Cboe/CFE",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d",
+      "status": "draft_not_sent"
+    }
+  ],
+  "decision": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "approval_present": false,
+    "valid_required_root_unlock": false,
+    "target_roots_mutated_by_this_packet": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, verifier-native R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export; then rerun direct verifier, split calibration, canonical merge, providers, AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback in order."
+}

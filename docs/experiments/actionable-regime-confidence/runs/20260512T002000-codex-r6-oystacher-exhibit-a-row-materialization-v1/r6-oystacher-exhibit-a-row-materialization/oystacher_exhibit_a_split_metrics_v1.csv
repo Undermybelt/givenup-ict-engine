@@ -1,0 +1,18 @@
+axis,bucket,positive_support,negative_support,min_wilson95_lcb,pooled95_pass
+contract_family,energy,2657,793,0.99517896656,True
+contract_family,equity_index,614,285,0.986699976735,True
+contract_family,metals,1633,388,0.990196038399,True
+contract_family,volatility_index,278,87,0.95771100465,True
+venue_exact,CFE/CBOE Futures Exchange,278,87,0.95771100465,True
+venue_exact,CME Globex,614,285,0.986699976735,True
+venue_exact,COMEX/CME Globex,1633,388,0.990196038399,True
+venue_exact,NYMEX/CME Globex,2657,793,0.99517896656,True
+symbol_exact,Crude Oil futures,1101,324,0.988282146012,True
+symbol_exact,E-mini S&P 500 futures,614,285,0.986699976735,True
+symbol_exact,High-Grade Copper futures,1633,388,0.990196038399,True
+symbol_exact,Natural Gas futures,1556,469,0.99187550334,True
+symbol_exact,VIX futures,278,87,0.95771100465,True
+chronological_year,2011,1633,388,0.990196038399,True
+chronological_year,2012,2657,793,0.99517896656,True
+chronological_year,2013,542,187,0.979870216976,True
+chronological_year,2014,350,185,0.979657024723,True

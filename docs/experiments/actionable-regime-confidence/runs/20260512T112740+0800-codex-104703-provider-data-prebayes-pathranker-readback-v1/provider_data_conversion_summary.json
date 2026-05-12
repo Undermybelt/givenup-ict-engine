@@ -1,0 +1,26 @@
+[
+  {
+    "frame": "1d",
+    "source": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary/user_data/data/BTC_USDT-1d.feather",
+    "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1/provider-data-json/BTC_USDT-1d.json",
+    "rows": 42,
+    "first": "2026-04-01T00:00:00Z",
+    "last": "2026-05-12T00:00:00Z"
+  },
+  {
+    "frame": "4h",
+    "source": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary/user_data/data/BTC_USDT-4h.feather",
+    "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1/provider-data-json/BTC_USDT-4h.json",
+    "rows": 247,
+    "first": "2026-04-01T00:00:00Z",
+    "last": "2026-05-12T00:00:00Z"
+  },
+  {
+    "frame": "1h",
+    "source": "docs/experiments/actionable-regime-confidence/runs/20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1/workspace/auto-quant-provider-btc-ema-rsi-noncanary/user_data/data/BTC_USDT-1h.feather",
+    "json_path": "docs/experiments/actionable-regime-confidence/runs/20260512T112740+0800-codex-104703-provider-data-prebayes-pathranker-readback-v1/provider-data-json/BTC_USDT-1h.json",
+    "rows": 985,
+    "first": "2026-04-01T00:00:00Z",
+    "last": "2026-05-12T00:00:00Z"
+  }
+]

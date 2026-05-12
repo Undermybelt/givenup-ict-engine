@@ -1,0 +1,6 @@
+usage: fetch_external.py kraken-kline [-h] [--market {spot,futures}]
+                                      --pair PAIR
+                                      [--asset-class {tokenized_asset,forex}]
+                                      [--interval INTERVAL] [--start START]
+                                      [--end END] --output OUTPUT
+fetch_external.py kraken-kline: error: the following arguments are required: --pair

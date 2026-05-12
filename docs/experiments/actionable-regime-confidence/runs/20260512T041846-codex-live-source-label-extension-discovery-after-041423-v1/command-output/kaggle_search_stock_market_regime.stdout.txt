@@ -1,0 +1,21 @@
+ref,title,size,lastUpdated,downloadCount,voteCount,usabilityRating
+mafaqbhatti/stock-market-regimes-20002026,Stock Market Regimes (2000–2026),14239487,2026-02-01 02:25:29.437000,229,45,1.0
+bsthere/mercedes-stock-data-1996-2026,Mercedes-Benz Stock Data (1996-2026),194202,2026-02-26 13:52:53,498,37,1.0
+darkmatternet/s-and-p-500-stocks-25-years-of-data-updated-daily,S&P 500 Stocks: 25 Years of Data (Updated Daily),104570337,2026-05-10 22:34:10,876,31,1.0
+kaushalnandania/crypto-data-2014-2026,Top 50 Cryptocurrency Data (2014 - 2026),8925801,2026-02-17 08:59:51,710,26,1.0
+rockyt07/stock-market-sensex-nifty-all-time-dataset,Stock Market Sensex & Nifty All-time Dataset,59549439,2025-11-13 12:17:40,1281,67,1.0
+kanchana1990/tech-giants-and-global-macroeconomic-indicators,Tech Giants & Global Macroeconomic Indicators,878030,2026-03-12 05:32:05.367000,184,32,1.0
+ibrahimshahrukh/top-50-companies-dataset,Global Top 50 Stocks Historical Data (2006–2026),6168886,2026-02-23 02:06:15.217000,308,28,1.0
+hassanjameelahmed/aramco-stock-2019-2025,Aramco-Stock-2019-2025,33045,2026-02-14 05:38:30.307000,49,11,1.0
+patelris/nvidia-corporation-stock-data-1999-2026,📈 NVIDIA Share Price History,227172,2026-04-29 17:11:37.247000,68,16,1.0
+kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes,Algorithmic Trading: Macro Stress & Asset Regimes,382546,2026-02-25 04:11:37.147000,359,35,1.0
+yekahaaagayeham/stocks-listed-on-nifty-500-july-2021,"Indian Stock Market, Stocks name, symbol(ticker)..",94578,2022-09-15 22:12:09,670,8,0.9411765
+macrosynergy/fixed-income-returns-and-macro-trends,JPMaQS Quantamental Indicators,32934147,2023-12-14 11:23:22,1716,60,1.0
+sergionefedov/macro-indicators-40-years-30-countries,"Macro Indicators, 40 years, 30 countries",97362,2026-04-09 18:10:54.503000,196,11,1.0
+willianoliveiragibin/time-series-prediction,Time Series Prediction,5933,2026-01-20 22:47:54,16,4,1.0
+nickdatak/us-market-regimes-dataset-1995-2024,US Market Regimes Dataset (1995-2024),163252,2026-01-23 12:42:22,31,1,1.0
+vivek468/sip-dataset-nifty-banknifty-gold-and-silver,"SIP ETF Dataset (Nifty, BankNifty, Gold & Silver)",44533,2026-01-14 04:46:52,153,8,1.0
+abidhussai512/macro-regime-dataset-s-and-p-500-vs-federal-fund-rate,Macro Regime Dataset: S&P 500 vs Federal Fund Rate,15701,2026-03-16 04:45:43.063000,14,27,0.9411765
+srisahithis/vix-volatility-index-ohlcv-data-20062020,VIX Volatility Index OHLCV Data (2006–2020),52025,2025-08-06 18:14:45.117000,39,1,0.9411765
+muzaddidafaque/global-and-indian-financial-markets-dataset-2025,Global & Indian Financial Markets Dataset 2025,395094,2026-01-13 21:42:49,136,0,1.0
+tanulkumarsrivastava/lme-aluminum-forecasting-dataset-explainability,lme aluminum forecasting dataset - explainability,589928,2026-02-28 19:37:39,113,1,0.9375

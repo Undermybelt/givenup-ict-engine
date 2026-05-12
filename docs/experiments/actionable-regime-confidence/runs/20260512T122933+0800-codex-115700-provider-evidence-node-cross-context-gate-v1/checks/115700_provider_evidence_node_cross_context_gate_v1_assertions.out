@@ -1,0 +1,14 @@
+PASS run_id=20260512T122933+0800-codex-115700-provider-evidence-node-cross-context-gate-v1
+PASS source_scan_run_id=20260512T122351+0800-codex-115700-provider-evidence-node-scan-v1
+PASS rows=237
+PASS features_checked=5
+FAIL_CLOSED accepted_feature_gates=0
+FAIL_CLOSED instrument_families=1 required=2 values=BTC
+FAIL_CLOSED timeframes=1 required=2 values=1h
+FAIL_CLOSED max_bbn_probability=0.747688 target=0.95
+FAIL_CLOSED pre_bayes_gates={'pass_neutralized': 237}
+FAIL_CLOSED execution_reviews={'observe': 237}
+PASS production_likelihood_mutation=false
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

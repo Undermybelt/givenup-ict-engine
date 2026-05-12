@@ -1,0 +1,8 @@
+gate,observed,required,pass
+positive_support,9,50,False
+negative_support,9,50,False
+chronological_split,6,2,True
+heldout_symbol_or_venue,symbols=4;venues=2,symbol>=2 or venue>=2,True
+wilson95_lcb,0.700855,>=0.95,False
+broad_normal_sample,CFTC same-report or same-complaint genuine-order legs are schema/control seeds only; they are not broad normal-market heldout controls.,source-owned broad normal activity sample,False
+direct_species_coverage,spoofing_layering,spoofing_layering;quote_spoofing;quote_stuffing;pinging;bear_raid;painting_tape,False

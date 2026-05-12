@@ -1,0 +1,4 @@
+logical_role,verifier_native_filename,owner_request_alias,target_path,verifier_native_present,owner_alias_present,accepted_without_adapter,required_before_chain_rerun
+positive_rows,positive_spoofing_layering_rows.csv,direct_manipulation_positive_rows.csv,/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv,False,False,False,True
+matched_negative_rows,matched_negative_normal_activity_rows.csv,direct_manipulation_matched_controls.csv,/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv,False,False,False,True
+provenance_manifest,provenance_manifest.json,direct_manipulation_provenance.json,/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json,False,False,False,True

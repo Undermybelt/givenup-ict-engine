@@ -1,0 +1,118 @@
+{
+  "plan": {
+    "request": {
+      "market_key": "board-b-btc-six-provider-tvr-BITSTAMP_BTCUSD",
+      "primary_data_path": null,
+      "interval": "1d",
+      "start": null,
+      "end": null,
+      "count": null,
+      "related_roles": [
+        "crypto_reference"
+      ],
+      "provider_preferences": {
+        "crypto_reference": "tradingview_mcp"
+      },
+      "symbol_overrides": {
+        "crypto_reference": {
+          "display_symbol": "BITSTAMP:BTCUSD",
+          "yfinance": null,
+          "tradingview_mcp": "BITSTAMP:BTCUSD",
+          "ibkr": null
+        }
+      },
+      "options_volatility_proxy_symbol": null
+    },
+    "provider_summary": {
+      "required_requirements": [],
+      "provider_statuses": [
+        {
+          "provider": "ibkr",
+          "status": "install_required",
+          "healthy": false,
+          "reason": "missing_local_ibkr_consent",
+          "supported_requirements": [],
+          "install_prompts": [
+            "Consumer agent request: ask the user to install IBKR TWS or IB Gateway, then enable the IBKR API locally. Search keywords: Interactive Brokers TWS download, IB Gateway download.",
+            "Consumer agent follow-up: after the user installs IBKR TWS or Gateway, run python scripts/ibkr_bridge/setup.py --enable",
+            "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+            "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+          ],
+          "redacted_config": [
+            "consent_path=<local-path>",
+            "capabilities_path=<local-path>",
+            "consent_present=false",
+            "capabilities_present=false",
+            "reachable_gateway_ports=IB Gateway paper:4002",
+            "ibkr_runtime_missing_modules=redis"
+          ]
+        },
+        {
+          "provider": "yfinance",
+          "status": "ready",
+          "healthy": true,
+          "reason": "public_yahoo_http_endpoints",
+          "supported_requirements": [],
+          "install_prompts": [],
+          "redacted_config": [
+            "provider_mode=public_http"
+          ]
+        },
+        {
+          "provider": "tradingview_mcp",
+          "status": "ready",
+          "healthy": true,
+          "reason": "local_stdio_ohlcv_available",
+          "supported_requirements": [],
+          "install_prompts": [],
+          "redacted_config": [
+            "mcp_url=https://tvremix.xyz/api/mcp/v1",
+            "credential_source=missing",
+            "local_config=<unset>",
+            "ICT_ENGINE_TVREMIX_MCP_API_KEY=<unset>",
+            "stdio_cmd_env=<set>",
+            "stdio_args_env=<set>",
+            "probe_connectivity=true",
+            "probe_ohlcv=<skipped>",
+            "probe_options=<skipped>"
+          ]
+        }
+      ],
+      "actionable_install_prompts": [
+        "Consumer agent follow-up: after the user installs IBKR TWS or Gateway, run python scripts/ibkr_bridge/setup.py --enable",
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise.",
+        "Consumer agent request: ask the user to install IBKR TWS or IB Gateway, then enable the IBKR API locally. Search keywords: Interactive Brokers TWS download, IB Gateway download."
+      ]
+    },
+    "tasks": [
+      {
+        "role": "crypto_reference",
+        "provider": "tradingview_mcp",
+        "operation": "Ohlcv",
+        "symbol": "BITSTAMP:BTCUSD",
+        "request": {
+          "TradingViewMcp": {
+            "symbol": "BITSTAMP:BTCUSD"
+          }
+        }
+      }
+    ],
+    "missing_roles": [],
+    "warnings": []
+  },
+  "results": [
+    {
+      "ok": false,
+      "provider": "tradingview_mcp",
+      "operation": "ohlcv.fetch",
+      "role": "crypto_reference",
+      "symbol": "BITSTAMP:BTCUSD",
+      "error": {
+        "category": "fetch_failed",
+        "message": "tradingview MCP tool 'get_ohlcv' error: Failed to fetch OHLCV for 'BITSTAMP:BTCUSD': Both direct and proxy connections failed: HTTP Error 404: Not Found",
+        "retryable": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+requirement,artifact,status,note
+same run root provider inputs,docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv,covered,fetch_success=6/6
+TVR default configured path,command-output/21_tvr_default_binance_btcusdt_1h.stdout,covered,rows=720
+IBKR 1h long path,docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/input-csv/BTC_1h_midpoint.csv,covered,rows=783
+six provider AQ,docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/workspace,covered,run_success=6/6
+downstream chain,N/A,not_run,no promotion from provider/AQ packet alone

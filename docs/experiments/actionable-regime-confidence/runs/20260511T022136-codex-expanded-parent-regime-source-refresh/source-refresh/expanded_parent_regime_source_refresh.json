@@ -1,0 +1,146 @@
+{
+  "run_id": "20260511T022136+0800-codex-expanded-parent-regime-source-refresh",
+  "purpose": "web-backed correction of parent regime taxonomy after user noted prior labels were sub-regimes",
+  "web_search_completed": true,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "fresh_calibration_rerun": false,
+  "trade_usable": false,
+  "active_emitted_parent_keys": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "Manipulation",
+    "UnknownOrMixed"
+  ],
+  "display_root_wording": {
+    "Bull": [
+      "BullExpansion",
+      "bull-market expansion"
+    ],
+    "Bear": [
+      "BearExpansion",
+      "bear-market expansion"
+    ],
+    "Sideways": [
+      "Consolidation",
+      "range",
+      "chop"
+    ],
+    "Crisis": [
+      "Crash",
+      "CrisisStress",
+      "abnormal stress"
+    ],
+    "Manipulation": [
+      "manipulation root",
+      "direct-evidence manipulation overlay"
+    ],
+    "UnknownOrMixed": [
+      "residual",
+      "mixed"
+    ]
+  },
+  "child_or_overlay_only": [
+    "TrendExpansion",
+    "RangeConsolidation",
+    "ThinLiquidity",
+    "SessionLiquidityCoreViable",
+    "CrisisStress",
+    "TransitionRecovery",
+    "BubbleEuphoria",
+    "LiquidityStress",
+    "Rotation",
+    "VolatilityRegime",
+    "unlabeled_l2_signatures"
+  ],
+  "accepted_active_roots_after_refresh": [
+    "Crisis"
+  ],
+  "missing_active_roots_after_refresh": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Manipulation"
+  ],
+  "source_basis": [
+    {
+      "title": "A simple framework for analysing bull and bear markets",
+      "url": "https://doi.org/10.1002/jae.664",
+      "use": "bull/bear parent cycle framing"
+    },
+    {
+      "title": "Duration Dependence in Stock Prices",
+      "url": "https://doi.org/10.1198/073500104000000136",
+      "use": "bull/bear persistence and duration framing"
+    },
+    {
+      "title": "Components of Bull and Bear Markets: Bull Corrections and Bear Rallies",
+      "url": "https://doi.org/10.1080/07350015.2012.680412",
+      "use": "corrections and rallies are substructure below parent bull/bear states"
+    },
+    {
+      "title": "Bull, bear or any other states in US stock market?",
+      "url": "https://doi.org/10.1016/j.econmod.2014.09.020",
+      "use": "extra states beyond two-state bull/bear are legitimate when evidenced"
+    },
+    {
+      "title": "Price Transmission from Bitcoin to Altcoins: High-Frequency Evidence and Implications for Trading Strategy",
+      "url": "https://doi.org/10.1007/s10690-026-09589-z",
+      "use": "crypto high-frequency regime framing includes sideways/crash style states"
+    },
+    {
+      "title": "A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle",
+      "url": "https://doi.org/10.2307/1912559",
+      "use": "Markov switching as hidden-state method, not taxonomy source alone"
+    },
+    {
+      "title": "hmmlearn",
+      "url": "https://github.com/hmmlearn/hmmlearn",
+      "use": "HMM implementation provenance"
+    },
+    {
+      "title": "Selective review of offline change point detection methods",
+      "url": "https://doi.org/10.1016/j.sigpro.2019.107299",
+      "use": "change-point boundary evidence, not regime semantics by itself"
+    },
+    {
+      "title": "ruptures",
+      "url": "https://github.com/deepcharles/ruptures",
+      "use": "change-point implementation provenance"
+    },
+    {
+      "title": "Regime Change Detection Using Directional Change Indicators in the Foreign Exchange Market to Chart Brexit",
+      "url": "https://doi.org/10.1109/tetci.2017.2775235",
+      "use": "event-based regime boundary features"
+    },
+    {
+      "title": "hidden-regime",
+      "url": "https://github.com/hidden-regime/hidden-regime",
+      "use": "GitHub regime-label implementation provenance"
+    },
+    {
+      "title": "Pump-and-Dump-Detection-on-Cryptocurrency",
+      "url": "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+      "use": "direct event/social manipulation evidence source"
+    },
+    {
+      "title": "Detecting Crypto Wash Trades via Machine Learning",
+      "url": "https://data.mendeley.com/datasets/4hyxfwzpgg",
+      "use": "row-level labeled wash-trading source"
+    },
+    {
+      "title": "nft_wash_trading",
+      "url": "https://github.com/niuniu-zhang/nft_wash_trading",
+      "use": "wash-trading repo provenance"
+    },
+    {
+      "title": "Detecting Spoofing and Layering in Markets",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036",
+      "use": "spoofing/layering as manipulation mechanisms"
+    }
+  ],
+  "gate_result": "blocked_taxonomy_refresh_only",
+  "next_action": "Run unchanged Manipulation gate on row-level labeled Mendeley wash-trading CSVs without committing raw data, or add explicit negative controls/aligned market features to Bayi-Hu event windows."
+}

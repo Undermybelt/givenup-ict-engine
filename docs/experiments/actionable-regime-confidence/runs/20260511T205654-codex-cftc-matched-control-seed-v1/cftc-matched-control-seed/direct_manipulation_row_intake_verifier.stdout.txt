@@ -1,0 +1,23 @@
+{
+  "status": "schema_ready_unscored",
+  "positive_rows": 2,
+  "matched_negative_rows": 2,
+  "matched_group_count": 1,
+  "provenance_keys": [
+    "cftc_order",
+    "cftc_text_checks",
+    "cftc_text_extraction_status",
+    "created_at_utc",
+    "finra_public_schema",
+    "license_or_permission",
+    "matched_negative_control_policy",
+    "matched_negative_materialized_at_utc",
+    "matched_negative_rows_acquired",
+    "matched_negative_rows_count",
+    "matched_negative_rows_path",
+    "matched_negative_rows_sha256",
+    "positive_rows_path",
+    "source"
+  ],
+  "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate"
+}

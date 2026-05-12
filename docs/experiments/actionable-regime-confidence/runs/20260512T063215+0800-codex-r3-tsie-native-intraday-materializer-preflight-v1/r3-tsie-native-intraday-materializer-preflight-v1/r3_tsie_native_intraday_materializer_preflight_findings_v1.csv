@@ -1,0 +1,7 @@
+finding,value,evidence
+materializer_script_present,True,/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T062902+0800-codex-r3-hf-tsie-native-intraday-intake-v1/scripts/r3_hf_tsie_native_intraday_intake_v1.py
+would_write_target_root,True,script contains final TMP_TARGET_ROOT to TARGET_ROOT rename
+declares_target_root_mutated_true,True,script result declares target_root_mutated true
+crisis_missing_or_no_direct_mapping,True,script equivalence policy says crisis_no_direct_mapping
+source_confidence_absent,True,script provenance marks source_confidence_available false
+downstream_blocked_in_script,True,script itself does not allow downstream rerun

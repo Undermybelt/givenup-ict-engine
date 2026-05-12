@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 1685, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 1667, in main
+    return cmd_kraken_kline(args)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 701, in cmd_kraken_kline
+    df = fetcher.spot_ohlc(args.pair, args.interval, asset_class=args.asset_class)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py", line 658, in spot_ohlc
+    raise ValueError(f"unsupported kraken-spot interval {interval!r}")
+ValueError: unsupported kraken-spot interval '60'

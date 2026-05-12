@@ -1,0 +1,6 @@
+ok: source refresh artifact written
+ok: runtime_code_changed=false
+ok: thresholds_relaxed=false
+ok: raw_data_committed=false
+ok: no 95%-99% completion claimed
+ok: Manipulation remains direct-event/order-lifecycle gated

@@ -1,0 +1,7 @@
+gate,observed,required,pass
+positive_support,37,50,False
+negative_support,37,50,False
+chronological_split,17,2,True
+heldout_symbol_or_venue,symbols=10;venues=5,symbol>=2 or venue>=2,True
+wilson95_lcb,0.905942,>=0.95,False
+broad_normal_sample,CFTC public order/complaint same-event genuine-order legs are source-described schema/control seeds only; they are not a broad normal-market calibration sample.,source-owned broad normal activity sample,False

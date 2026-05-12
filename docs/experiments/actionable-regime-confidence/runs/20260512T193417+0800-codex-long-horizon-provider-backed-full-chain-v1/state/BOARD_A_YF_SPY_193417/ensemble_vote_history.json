@@ -1,0 +1,79 @@
+[
+  {
+    "artifact_id": "ensemble-vote:analyze:2026-05-12T11:40:01Z",
+    "generated_at": "2026-05-12T11:40:01.933170Z",
+    "symbol": "BOARD_A_YF_SPY_193417",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:BOARD_A_YF_SPY_193417:20260512T114001.690Z",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "d1fba762150c532c",
+      "config_hash": "85432383367b66f6",
+      "data_fingerprint": "f197770037bc233d"
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "comparison_class": "no_previous_run",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": false,
+      "same_factor_version": false
+    },
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "final_action": "Observe",
+    "recommended_command": "ask-user: Before using historical data for BOARD_A_YF_SPY_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_YF_SPY_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'",
+    "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for BOARD_A_YF_SPY_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_YF_SPY_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_YF_SPY_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'",
+    "hard_block": {
+      "active": false,
+      "stage": null,
+      "status": null,
+      "reason": null,
+      "evidence": [],
+      "command": null,
+      "human_action": null
+    },
+    "confidence": 0.6000000000000001,
+    "consensus_strength": 0.6000000000000001,
+    "disagreement_flags": [],
+    "executor_summaries": [
+      "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600",
+      "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600"
+    ],
+    "split_explanations": [
+      "gating_status=trend",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "gating_status=trend",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high"
+    ],
+    "executor_scorecards": [],
+    "executor_scorecards_source": "persisted",
+    "posterior_fingerprint": "f197770037bc233d",
+    "posterior_normalization_status": "normalized",
+    "posterior_active_regime": "trend",
+    "posterior_confidence": 0.5519387196667616,
+    "posterior_probabilities": {
+      "range": 0.31118261736862873,
+      "stress": 0.16920351642196638,
+      "transition": 0.07552695305254851,
+      "trend": 0.44408691315685633
+    },
+    "posterior_evidence": [
+      "market_policy=BOARD hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.996 multi_timeframe_entry_alignment_score=0.742",
+      "long/short support gap 0.039 is too small, so alignment is treated as mixed",
+      "pre_bayes_quality_score=0.552 gating_status=pass_neutralized",
+      "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.575",
+      "market_state_source=volatility=LowVol:0.796 liquidity=NormalLiquidity:0.433 structure=Trending:0.598 behavior=Exhaustion:0.650",
+      "market_state_source=rationale=volatility=LowVol conf=0.80",
+      "market_state_source=rationale=structure=Trending conf=0.60",
+      "market_state_source=rationale=behavior=Exhaustion conf=0.65",
+      "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.57"
+    ]
+  }
+]

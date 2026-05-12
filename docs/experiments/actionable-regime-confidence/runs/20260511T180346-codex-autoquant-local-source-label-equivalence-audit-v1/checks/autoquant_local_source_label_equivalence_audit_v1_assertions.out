@@ -1,0 +1,9 @@
+PASS accepted_rows_added_zero
+PASS new_confidence_gate_false
+PASS full_objective_false
+PASS no_threshold_relaxation
+PASS no_runtime_code_change
+PASS no_raw_data_commit
+PASS exact_subhour_source_panel_files_zero
+PASS aapl_daily_only_exact_overlap
+ALL_ASSERTIONS_PASS

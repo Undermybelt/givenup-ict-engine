@@ -1,0 +1,7 @@
+evidence_key,path,status,promotion_use
+board,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,present,authoritative_board
+autoquant_023312,docs/experiments/actionable-regime-confidence/runs/20260512T023312-codex-autoquant-seed-and-run-after-threaded-prepare-v1,present,non_promoting_autoquant
+autoquant_023540,docs/experiments/actionable-regime-confidence/runs/20260512T023540-codex-autoquant-isolated-seeded-btc-run-v1,present,non_promoting_autoquant
+autoquant_023920,docs/experiments/actionable-regime-confidence/runs/20260512T023920-codex-autoquant-synthetic-market-map-backtest-probe-v1,present,noncanonical_diagnostic
+provider_021456,docs/experiments/actionable-regime-confidence/runs/20260512T021456-codex-required-provider-status-readback-v1,present,partial_non_promoting
+readonly_chain_021008,docs/experiments/actionable-regime-confidence/runs/20260512T021008-codex-readonly-runtime-chain-output-closure-after-020037-v1,present,partial_non_promoting

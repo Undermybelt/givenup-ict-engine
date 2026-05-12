@@ -1,0 +1,39 @@
+{
+  "run_id": "20260512T050612-codex-045830-terminal-143-readback-v1",
+  "gate_result": "045830_terminal_143_readback_v1=extra_trees_exit_143_no_result_artifacts_no_promotion",
+  "generated_at_local": "2026-05-12T05:06:12+0800",
+  "board_hash_before_writeback": "43ffdf921dabd009e7b4b807ee41c932f84ea607974674de9e00b98995ba67c4",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T045830-codex-source-label-extra-trees-threshold-screen-v1",
+  "source_command": "UV_CACHE_DIR=/tmp/ict-engine-uv-cache-extra-trees uv run --with pandas --with numpy --with scikit-learn python docs/experiments/actionable-regime-confidence/runs/20260512T045830-codex-source-label-extra-trees-threshold-screen-v1/scripts/source_label_extra_trees_threshold_screen_v1.py",
+  "terminal_status": {
+    "writer_active": false,
+    "exit_content": "143",
+    "exit_bytes": 4,
+    "exit_sha256": "9d9b18720961e9b4689fd763b85e7b6f36160ccd3a8a1c9ddc5103bb0f66c396",
+    "stdout_bytes": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 227,
+    "stderr_sha256": "664ad5d057ec2b4da0dafa47497c2d7d2bb19dc8ef7303250e63e153c663e898",
+    "result_json_present": false,
+    "report_present": false,
+    "gates_csv_present": false,
+    "assertions_present": false
+  },
+  "accepted_extra_trees_confidence_95_labels": [],
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "accepted_regime_confidence_labels": 0,
+    "source_control_evidence_acquired": false,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

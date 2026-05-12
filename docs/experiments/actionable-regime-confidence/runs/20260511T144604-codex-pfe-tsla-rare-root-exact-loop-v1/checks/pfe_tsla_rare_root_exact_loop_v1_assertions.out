@@ -1,0 +1,14 @@
+run_id=20260511T144604+0800-codex-pfe-tsla-rare-root-exact-loop-v1
+board_sha256_at_run=7616ed898e9b2b8697d429b98e036ffdfb626fef45aa4f2ebc35dde0e3840508
+selected_pair=PFE+TSLA
+accepted_rows=3
+blocked_rows=5
+accepted_roots=Bear,Sideways,Crisis
+rare_roots_closed=Bear,Sideways,Crisis
+new_provider_downloads=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+full_objective_achieved=false
+assertion_status=PASS

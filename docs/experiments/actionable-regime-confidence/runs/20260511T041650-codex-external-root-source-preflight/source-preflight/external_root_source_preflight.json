@@ -1,0 +1,561 @@
+{
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T041650-codex-external-root-source-preflight/checks/external_root_source_preflight_assertions.out",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T041650-codex-external-root-source-preflight/source-preflight/external_root_source_preflight.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T041650-codex-external-root-source-preflight/source-preflight/external_root_source_preflight.md"
+  },
+  "decision": {
+    "accepted_new_roots_95": [],
+    "accepted_root_classes_95_effective": [
+      "BullExpansion",
+      "SidewaysConsolidation",
+      "CrisisCrash"
+    ],
+    "fresh_calibration_rerun": false,
+    "gate_result": "blocked_external_source_preflight_no_completion_eligible_new_source",
+    "missing_root_classes_95_effective": [
+      "BearExpansion",
+      "Manipulation"
+    ],
+    "next_action": "Acquire genuinely directional BearExpansion evidence or direct manipulation event/order-lifecycle evidence; do not repeat Kaggle OHLCV/macro transforms.",
+    "raw_committed_to_repo": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "downloaded_new_kaggle_source": {
+    "csv_summaries": [
+      {
+        "columns": [
+          "Date",
+          "SP500_Return",
+          "VIX",
+          "Yield_Spread",
+          "Regime_GMM",
+          "Regime_label"
+        ],
+        "label_counts": {
+          "Regime_GMM": {
+            "0": 461,
+            "1": 900,
+            "2": 203
+          },
+          "Regime_label": {
+            "Calm": 900,
+            "Stressful": 461,
+            "Transitional": 203
+          }
+        },
+        "path": "/private/tmp/ict-regime-external-root-source-preflight/gmm_regimes.csv",
+        "rows": 1564
+      },
+      {
+        "columns": [
+          "",
+          "SP500_Return",
+          "VIX",
+          "Yield_Spread",
+          "Regime_HMM",
+          "Regime_label"
+        ],
+        "label_counts": {
+          "Regime_HMM": {
+            "0": 398,
+            "1": 469,
+            "2": 697
+          },
+          "Regime_label": {
+            "Calm": 469,
+            "Stressful": 398,
+            "Transitional": 697
+          }
+        },
+        "path": "/private/tmp/ict-regime-external-root-source-preflight/hmm_regimes.csv",
+        "rows": 1564
+      },
+      {
+        "columns": [
+          "Date",
+          "SP500",
+          "SP500_Return",
+          "VIX",
+          "Yield_Spread"
+        ],
+        "label_counts": {},
+        "path": "/private/tmp/ict-regime-external-root-source-preflight/market_features_weekly.csv",
+        "rows": 1564
+      },
+      {
+        "columns": [
+          "Date",
+          "SP500_Return",
+          "VIX",
+          "Yield_Spread"
+        ],
+        "label_counts": {},
+        "path": "/private/tmp/ict-regime-external-root-source-preflight/market_features_weekly_std.csv",
+        "rows": 1564
+      }
+    ],
+    "dataset_files": [
+      {
+        "columns": [],
+        "creationDate": "2026-01-23T12:42:23.815Z",
+        "datasetRef": "",
+        "description": "",
+        "fileType": "",
+        "hasDatasetRef": false,
+        "hasDescription": false,
+        "hasFileType": false,
+        "hasName": true,
+        "hasOwnerRef": false,
+        "hasUrl": false,
+        "name": "gmm_regimes.csv",
+        "nameNullable": "gmm_regimes.csv",
+        "ownerRef": "",
+        "ref": "",
+        "totalBytes": 122780,
+        "url": ""
+      },
+      {
+        "columns": [],
+        "creationDate": "2026-01-23T12:42:23.828Z",
+        "datasetRef": "",
+        "description": "",
+        "fileType": "",
+        "hasDatasetRef": false,
+        "hasDescription": false,
+        "hasFileType": false,
+        "hasName": true,
+        "hasOwnerRef": false,
+        "hasUrl": false,
+        "name": "hmm_regimes.csv",
+        "nameNullable": "hmm_regimes.csv",
+        "ownerRef": "",
+        "ref": "",
+        "totalBytes": 115919,
+        "url": ""
+      },
+      {
+        "columns": [],
+        "creationDate": "2026-01-23T12:42:23.836Z",
+        "datasetRef": "",
+        "description": "",
+        "fileType": "",
+        "hasDatasetRef": false,
+        "hasDescription": false,
+        "hasFileType": false,
+        "hasName": true,
+        "hasOwnerRef": false,
+        "hasUrl": false,
+        "name": "market_features_weekly.csv",
+        "nameNullable": "market_features_weekly.csv",
+        "ownerRef": "",
+        "ref": "",
+        "totalBytes": 113620,
+        "url": ""
+      },
+      {
+        "columns": [],
+        "creationDate": "2026-01-23T12:42:23.856Z",
+        "datasetRef": "",
+        "description": "",
+        "fileType": "",
+        "hasDatasetRef": false,
+        "hasDescription": false,
+        "hasFileType": false,
+        "hasName": true,
+        "hasOwnerRef": false,
+        "hasUrl": false,
+        "name": "market_features_weekly_std.csv",
+        "nameNullable": "market_features_weekly_std.csv",
+        "ownerRef": "",
+        "ref": "",
+        "totalBytes": 109453,
+        "url": ""
+      }
+    ],
+    "description_excerpt": "This dataset was curated for research into Unsupervised Market Regime Discovery. It focuses on aggregate market behavior rather than individual stock performance, using the S&P 500 as a proxy for the broader US equity market. The goal is to provide a clean, standardized set of features that can be used to identify latent market states (e.g., \"Bull\" vs. \"Bear\" or \"Calm\" vs. \"Stressful\") without relying on predefined economic labels.\n\n\n**Feature Overview**\n\nThe dataset contains 1,564 weekly observations spanning from January 1994 to late 2024. It consists of three primary macro-financial signals, all of which have been Z-score standardized (mean=0, std=1) to ensure equal weighting in clustering and probabilistic models:\n\nSP500_Return: The weekly log-return of the S&P 500 index. This captures the primary growth and contraction signal of the equity market.\n\nVIX: The CBOE Volatility Index. Kn",
+    "download_count": 27,
+    "preflight_reasons": [
+      "labels are unsupervised `Calm` / `Stressful` / `Transitional`, not active MainRegimeV3SourceBacked `BearExpansion` evidence",
+      "single aggregate S&P 500 weekly market context and one timeframe cannot satisfy the board's multi-context root evidence requirement",
+      "`Stressful` is crisis/stress provenance, not a directional `BearExpansion` root, and `Calm` is unnecessary for completion after the accepted `SidewaysConsolidation` reissue",
+      "no direct event/order-lifecycle/L2/L3/MBO/social/on-chain manipulation evidence is present"
+    ],
+    "preflight_verdict": "not_completion_eligible_for_active_roots",
+    "raw_committed_to_repo": false,
+    "ref": "nickdatak/us-market-regimes-dataset-1995-2024",
+    "title": "US Market Regimes Dataset (1995-2024)",
+    "total_bytes": 461772,
+    "zip_path": "/private/tmp/ict-regime-external-root-source-preflight/us-market-regimes-1995-2024.zip"
+  },
+  "huggingface_hits": [
+    {
+      "downloads": 7,
+      "likes": 1,
+      "preflight_reason": "single-market/single-family public dataset; insufficient for active multi-context parent-root completion by itself",
+      "preflight_state": "candidate_not_completion_eligible_without_new_breadth",
+      "ref": "akashkumar5/Multi_Timeframe_Market_Regimes_HMM6_BTCUSD",
+      "search_term": "market regime",
+      "source": "huggingface"
+    },
+    {
+      "downloads": 39,
+      "likes": 0,
+      "preflight_reason": "single-market/single-family public dataset; insufficient for active multi-context parent-root completion by itself",
+      "preflight_state": "candidate_not_completion_eligible_without_new_breadth",
+      "ref": "AAdevloper/nifty50-market-regime",
+      "search_term": "market regime",
+      "source": "huggingface"
+    },
+    {
+      "downloads": 21,
+      "likes": 0,
+      "preflight_reason": "mapping dataset, not calibration-grade market observations",
+      "preflight_state": "too_small_or_conceptual_mapping",
+      "ref": "ClarusC64/market-regime-coherence-mapping-v0.1",
+      "search_term": "market regime",
+      "source": "huggingface"
+    },
+    {
+      "downloads": 23,
+      "likes": 0,
+      "preflight_reason": "mapping dataset, not calibration-grade market observations",
+      "preflight_state": "too_small_or_conceptual_mapping",
+      "ref": "ClarusC64/market-regime-transition-breakpoint-mapping-v0.1",
+      "search_term": "market regime",
+      "source": "huggingface"
+    },
+    {
+      "downloads": 247,
+      "likes": 2,
+      "preflight_reason": "TSIE direct-label gates stayed below 95 and had one market context",
+      "preflight_state": "already_exhausted_in_board",
+      "ref": "sujinwo/tsie-market-regime-dataset",
+      "search_term": "market regime",
+      "source": "huggingface"
+    }
+  ],
+  "kaggle_hits": [
+    {
+      "download_count": 218,
+      "preflight_reason": "existing Kaggle direct-label gates accepted `BullExpansion` only; `BearExpansion` remained below 95",
+      "preflight_state": "already_exhausted_in_board",
+      "ref": "mafaqbhatti/stock-market-regimes-20002026",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Stock Market Regimes (2000\u20132026)",
+      "total_bytes": 14239487
+    },
+    {
+      "download_count": 753,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "ashrafkhetran/silver-gold-and-platinum-price-forecasting",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Silver, Gold & Platinum Price Forecasting",
+      "total_bytes": 275055
+    },
+    {
+      "download_count": 563,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "sergionefedov/oil-and-geopolitics-9k-daily-obs-brent-35-years",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Oil and Geopolitics 9K daily obs Brent 35 years",
+      "total_bytes": 229563
+    },
+    {
+      "download_count": 27,
+      "preflight_reason": "unsupervised Calm/Stressful/Transitional labels; one S&P weekly context",
+      "preflight_state": "downloaded_preflight_rejected",
+      "ref": "nickdatak/us-market-regimes-dataset-1995-2024",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "US Market Regimes Dataset (1995-2024)",
+      "total_bytes": 163252
+    },
+    {
+      "download_count": 211,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "bsthere/volkswagen-stock-data-1995-2026",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Volkswagen Stock Data (1995-2026)",
+      "total_bytes": 552824
+    },
+    {
+      "download_count": 182,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "kanchana1990/tech-giants-and-global-macroeconomic-indicators",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Tech Giants & Global Macroeconomic Indicators",
+      "total_bytes": 878030
+    },
+    {
+      "download_count": 1,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "sergionefedov/synthetic-limit-order-book-market-microstructure",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Limit Order Book 10 days \u00b7 3 market regimes ",
+      "total_bytes": 16204538
+    },
+    {
+      "download_count": 749,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "ibrahimshahrukh/nvidia-daily-stock-prices-20162026-dataset",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "NVIDIA Daily Stock Prices (2016\u20132026) Dataset",
+      "total_bytes": 104879
+    },
+    {
+      "download_count": 350,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "kanchana1990/algorithmic-trading-macro-stress-and-asset-regimes",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Algorithmic Trading: Macro Stress & Asset Regimes",
+      "total_bytes": 382546
+    },
+    {
+      "download_count": 35,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "krupalpatel07/bitcoin-market-microstructure-dataset",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Bitcoin Historical Dataset",
+      "total_bytes": 116169
+    },
+    {
+      "download_count": 91,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "ibrahimshahrukh/s-and-p-500-historical-data-1980-2026",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "S&P 500 Historical Daily Prices (1980\u20132026)",
+      "total_bytes": 941367
+    },
+    {
+      "download_count": 577,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "samyakrajbayar/global-fuel-prices-100-years-19242024",
+      "search_term": "market regimes",
+      "source": "kaggle",
+      "title": "Global Fuel Prices: 100 Years (1924\u20132024)",
+      "total_bytes": 359654
+    },
+    {
+      "download_count": 22,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "nudratabbas/tech-titans-volatility-and-trend-analysis-data",
+      "search_term": "bull bear sideways",
+      "source": "kaggle",
+      "title": "Tech Titans Volatility & Trend Analysis Data",
+      "total_bytes": 519796
+    },
+    {
+      "download_count": 497,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "bsthere/mercedes-stock-data-1996-2026",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "Mercedes-Benz Stock Data (1996-2026)",
+      "total_bytes": 194202
+    },
+    {
+      "download_count": 860,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "darkmatternet/s-and-p-500-stocks-25-years-of-data-updated-daily",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "S&P 500 Stocks: 25 Years of Data (Updated Daily)",
+      "total_bytes": 104565662
+    },
+    {
+      "download_count": 708,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "kaushalnandania/crypto-data-2014-2026",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "Top 50 Cryptocurrency Data (2014 - 2026)",
+      "total_bytes": 8925801
+    },
+    {
+      "download_count": 1279,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "rockyt07/stock-market-sensex-nifty-all-time-dataset",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "Stock Market Sensex & Nifty All-time Dataset",
+      "total_bytes": 59549439
+    },
+    {
+      "download_count": 308,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "ibrahimshahrukh/top-50-companies-dataset",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "Global Top 50 Stocks Historical Data (2006\u20132026)",
+      "total_bytes": 6168886
+    },
+    {
+      "download_count": 48,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "hassanjameelahmed/aramco-stock-2019-2025",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "Aramco-Stock-2019-2025",
+      "total_bytes": 33045
+    },
+    {
+      "download_count": 66,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "patelris/nvidia-corporation-stock-data-1999-2026",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "\ud83d\udcc8 NVIDIA Share Price History",
+      "total_bytes": 227172
+    },
+    {
+      "download_count": 670,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "yekahaaagayeham/stocks-listed-on-nifty-500-july-2021",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "Indian Stock Market, Stocks name, symbol(ticker)..",
+      "total_bytes": 94578
+    },
+    {
+      "download_count": 1714,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "macrosynergy/fixed-income-returns-and-macro-trends",
+      "search_term": "stock market regime",
+      "source": "kaggle",
+      "title": "JPMaQS Quantamental Indicators",
+      "total_bytes": 32934147
+    },
+    {
+      "download_count": 726,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "alitaqishah/nvidia-stock-data-19992026-the-ai-mega-stock",
+      "search_term": "bear market",
+      "source": "kaggle",
+      "title": "NVIDIA Stock Data (1999\u20132026) | The AI Mega Stock",
+      "total_bytes": 241455
+    },
+    {
+      "download_count": 8268,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "computingvictor/zillow-market-analysis-and-real-estate-sales-data",
+      "search_term": "bear market",
+      "source": "kaggle",
+      "title": "\ud83c\udfe0 Airbnb Market Analysis & Real Estate Sales Data",
+      "total_bytes": 3345259
+    },
+    {
+      "download_count": 1259,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "prkhrawsthi/bitcoin-usd-daily-price-with-volume-2015-2023",
+      "search_term": "bear market",
+      "source": "kaggle",
+      "title": "Bitcoin USD Daily Price with Volume (2015-2023)",
+      "total_bytes": 90384
+    },
+    {
+      "download_count": 520,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "jesusgraterol/bitcoin-open-interest-binance-futures",
+      "search_term": "bear market",
+      "source": "kaggle",
+      "title": "Bitcoin Open Interest (Binance Futures)",
+      "total_bytes": 342552
+    },
+    {
+      "download_count": 3579,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "frtgnn/500-richest-people-2021",
+      "search_term": "bear market",
+      "source": "kaggle",
+      "title": "500 Richest People 2021",
+      "total_bytes": 11635
+    },
+    {
+      "download_count": 151,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "arpan129/usdinr-nse-ohlc-data-since-apr-2000",
+      "search_term": "bear market",
+      "source": "kaggle",
+      "title": "USD-INR NSE OHLC data since Apr 2000",
+      "total_bytes": 76729
+    },
+    {
+      "download_count": 53,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "darkmatternet/daily-crypto-market-tracker",
+      "search_term": "bear market",
+      "source": "kaggle",
+      "title": "Daily Crypto Market Tracker CoinGecko",
+      "total_bytes": 33714
+    },
+    {
+      "download_count": 16,
+      "preflight_reason": "search hit is not direct BearExpansion evidence or a direct manipulation source",
+      "preflight_state": "not_selected_this_loop",
+      "ref": "uzmaakhtar/kse-100-synthetic-dataset",
+      "search_term": "bear market",
+      "source": "kaggle",
+      "title": "KSE-100- STOCK EXCHANGE -SYNTHETIC DATASET",
+      "total_bytes": 63923
+    }
+  ],
+  "loop_id": "20260511T041650+0800-codex-external-root-source-preflight",
+  "objective": "Preflight newly discoverable external sources before spending another gate on duplicate or non-eligible evidence.",
+  "search_policy": {
+    "huggingface_search_terms": [
+      "market regime",
+      "bear bull sideways market regime",
+      "sideways market regime dataset",
+      "financial market regime labels"
+    ],
+    "kaggle_search_terms": [
+      "market regimes",
+      "bull bear sideways",
+      "stock market regime",
+      "bear market"
+    ],
+    "raw_committed_to_repo": false,
+    "raw_download_root": "/private/tmp/ict-regime-external-root-source-preflight"
+  },
+  "selected_completion_candidates": []
+}

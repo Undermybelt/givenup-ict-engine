@@ -1,0 +1,41 @@
+{
+  "candidate_set_id": "structural-candidates:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:6833fdb0d8cacb4f",
+  "candidate_set_size": 2,
+  "composite_score": 0.345679012345679,
+  "confirmation_summary": "history_records=162 followed=162",
+  "current_posterior": 0.345679012345679,
+  "direction": "bull",
+  "experience_prior": 0.345679012345679,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 162,
+  "invalidation_summary": "do not collapse exact feedback path into a generic structural path",
+  "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "rank": 1,
+  "recommended_next_step": {
+    "action_type": "none",
+    "blocked_reason": null,
+    "deferred_command": null,
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:6833fdb0d8cacb4f",
+      "candidate_set_size": 2,
+      "confirmation": "history_records=162 followed=162",
+      "invalidation": "do not collapse exact feedback path into a generic structural path",
+      "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "path_label": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "recommended_command": null,
+      "selected_path_probability": 0.6973848069738481,
+      "stop": "use the recorded branch feedback stop/exit contract",
+      "trigger": "preserve exact structural feedback path Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "why": "posterior=0.346 prior=0.346 invalidation_rate=0.000"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion",
+  "selected_path_probability": 0.6973848069738481,
+  "stop_summary": "use the recorded branch feedback stop/exit contract",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+  "trigger_summary": "preserve exact structural feedback path Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "why_this_path": "posterior=0.346 prior=0.346 invalidation_rate=0.000"
+}

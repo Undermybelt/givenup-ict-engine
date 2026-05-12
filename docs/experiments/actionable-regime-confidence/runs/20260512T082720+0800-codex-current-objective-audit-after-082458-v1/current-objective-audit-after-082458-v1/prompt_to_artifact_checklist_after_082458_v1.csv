@@ -1,0 +1,10 @@
+requirement,status,evidence,blocker
+named_board_file_followed,covered,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,
+every_regime_confidence_95_plus,blocked,Post-082458 terminal assertions add 0 accepted rows and no valid source/control root.,"No R6 owner/export rows with valid controls, no R5 recency rows, no accepted Crisis-capable R3 source labels."
+other_market_other_cycle_validation,blocked,No accepted cross-market/cross-timeframe MainRegimeV2 source export in counted post-082458 artifacts.,Validation cannot proceed without source/control unlock.
+ibkr_tradingview_yfinance_kraken_considered,partial,Earlier provider readbacks exist; 082458 confirms owner/export credential hints absent and source/control gate still closed.,Provider readiness is not label/control evidence.
+auto_quant_selected_data_promotion,blocked,Latest counted assertions keep selected-data AutoQuant promotion false.,No canonical source/control merge input.
+filter_prebayes_bbn_catboost_execution_tree_chain,blocked,Latest counted assertions keep downstream promotion rerun false.,"Direct verifier, split calibration, and canonical merge remain disallowed."
+prompt_to_artifact_completion_audit,covered,"This run writes JSON, checklist CSV, assertion CSV, report, and assertion output.",
+multi_agent_append_only_safety,covered,New run root only; board update must append without cursor rewrite.,
+update_goal_complete_allowed,blocked,any_valid_unlock=False; any_source_control=False; any_downstream=False; any_update_goal=False.,Objective is not complete.

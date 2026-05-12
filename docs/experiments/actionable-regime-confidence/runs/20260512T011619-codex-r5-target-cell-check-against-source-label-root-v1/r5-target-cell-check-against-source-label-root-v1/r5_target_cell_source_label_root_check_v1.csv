@@ -1,0 +1,5 @@
+symbol,required_label,source_label_rows_total,latest_source_label_date,post_cutoff_rows_after_2026_01_30,r5_recency_satisfied
+XOM,Sideways,2067,2025-12-19,0,False
+UNH,Bear,1225,2025-12-31,0,False
+^DJI,Sideways,2198,2025-12-01,0,False
+AMD,Bear,1667,2025-12-11,0,False

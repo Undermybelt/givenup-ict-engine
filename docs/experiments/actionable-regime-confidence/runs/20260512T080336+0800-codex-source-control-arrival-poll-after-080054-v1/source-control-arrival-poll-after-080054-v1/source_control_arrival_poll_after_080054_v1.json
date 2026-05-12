@@ -1,0 +1,98 @@
+{
+  "board_hash_before_artifact": "3c7c31248bbb145cd327b1614b888786e9f7158131b7ff1250ca1a494c5fd7a2",
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "direct_verifier_promoting": false,
+    "downstream_promotion_rerun": false,
+    "r3_native_subhour_unlock": false,
+    "r5_recency_unlock": false,
+    "r6_owner_export_unlock": false,
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "split_calibration_run": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "gate_result": "source_control_arrival_poll_after_080054_v1=no_new_required_root_no_unlock",
+  "known_r5_redownload": {
+    "labels": {},
+    "max_date": "2026-01-30",
+    "min_date": "2000-01-03",
+    "path": "/tmp/ict-engine-board-a-r5-kaggle-stock-regimes-recency-redownload-v1/stock_market_regimes_2000_2026.csv",
+    "present": true,
+    "rows": 245021,
+    "rows_after_2026_01_30": 0
+  },
+  "observed_at": "2026-05-12T00:07:39.081375+00:00",
+  "r3_native_subhour": {
+    "crisis_present": false,
+    "labels": [
+      "Bear",
+      "Bull",
+      "Sideways"
+    ],
+    "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+    "present": true,
+    "promotion_allowed": false,
+    "provenance": "",
+    "rows": 5032903,
+    "rows_path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv"
+  },
+  "r5_recency": {
+    "files": [],
+    "path": "",
+    "present": false,
+    "roots": [
+      "/tmp/ict-engine-source-panel-recency-extension",
+      "/private/tmp/ict-engine-source-panel-recency-extension"
+    ],
+    "unlock": false
+  },
+  "r6_approval_package": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "keys": [
+      "approval_slots",
+      "assertions",
+      "control_policy_json",
+      "decision_options",
+      "followup_chain",
+      "gate_result",
+      "generated_at_utc",
+      "next_action",
+      "row_counts",
+      "run_id",
+      "source",
+      "source_materialization_json",
+      "source_policy_json"
+    ],
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "present": true
+  },
+  "r6_owner_export": {
+    "files": [],
+    "path": "",
+    "present": false,
+    "roots": [
+      "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "/private/tmp/ict-engine-board-a-r6-owner-export-v1"
+    ],
+    "unlock": false
+  },
+  "run_id": "20260512T080336+0800-codex-source-control-arrival-poll-after-080054-v1",
+  "source_label_equivalence": {
+    "files": [],
+    "path": "",
+    "present": false,
+    "promotion_allowed": false,
+    "roots": [
+      "/tmp/ict-engine-source-label-equivalence-v1",
+      "/private/tmp/ict-engine-source-label-equivalence-v1"
+    ]
+  }
+}

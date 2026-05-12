@@ -1,0 +1,8 @@
+run_id=20260511T191648+0800-codex-board-b-mehrnoom-yfinance-pnl-bridge-v1
+candidate_coins=16
+provider_reconstructed_rows=27016
+positive_rows=13784
+control_rows=13232
+gate_result=diagnostic_only:yfinance_daily_pnl_bridge_not_promotion_grade
+promotion_allowed=False
+report_md=docs/experiments/actionable-regime-confidence/runs/20260511T191648-codex-board-b-mehrnoom-yfinance-pnl-bridge-v1/mehrnoom-yfinance-pnl-bridge/mehrnoom_yfinance_pnl_bridge_v1.md

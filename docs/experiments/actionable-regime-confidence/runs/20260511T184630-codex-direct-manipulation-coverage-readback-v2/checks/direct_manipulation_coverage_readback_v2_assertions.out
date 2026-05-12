@@ -1,0 +1,6 @@
+PASS accepted_scoped_variety_count=5
+PASS remaining_unaccepted_variety_count>=5
+PASS web_ready_source_candidate_count=0
+PASS spoofing_matched_negative_cases_available=0
+PASS full_objective=false
+PASS current_cursor_edited=false

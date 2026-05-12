@@ -1,0 +1,22 @@
+{
+  "approval_reference": null,
+  "approval_state": "pending",
+  "approval_timestamp_utc": null,
+  "approved_by": null,
+  "decisions": {
+    "public_recap_pacer_provenance": null,
+    "same_exhibit_flip_as_matched_controls": null,
+    "source_owned_normal_controls_supplied": null
+  },
+  "notes": "Set the two decision booleans explicitly, or attach source-owned normal controls if FLIP is rejected.",
+  "raw_pdf_sha256": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+  "required_if_approved": {
+    "rerun_direct_verifier": true,
+    "rerun_provider_autoquant_prebayes_bbn_catboost_execution_tree": true,
+    "rerun_split_calibration": true,
+    "use_shared_lock": true,
+    "use_verifier_native_filenames": true
+  },
+  "run_id_under_review": "20260512T003653-codex-r6-oystacher-approval-decision-package-v1",
+  "source_pdf_url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf"
+}

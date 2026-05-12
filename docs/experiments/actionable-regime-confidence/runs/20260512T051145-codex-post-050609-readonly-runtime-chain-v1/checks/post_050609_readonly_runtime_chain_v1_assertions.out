@@ -1,0 +1,8 @@
+all_commands_exit_zero=PASS
+source_control_evidence_acquired_false=PASS
+target_roots_absent=PASS
+canonical_merge_false=PASS
+downstream_promotion_rerun_false=PASS
+strict_full_objective_false=PASS
+trade_usable_false=PASS
+update_goal_false=PASS

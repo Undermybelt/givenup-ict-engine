@@ -1,0 +1,1 @@
+python3 <inline convert_yfinance_1h_csv_to_analyze_json>

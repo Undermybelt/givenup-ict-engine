@@ -1,0 +1,31 @@
+{
+  "market_key": "NQ",
+  "primary_data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json",
+  "interval": "15m",
+  "count": 64,
+  "related_roles": ["primary", "charting", "broker"],
+  "provider_preferences": {
+    "primary": "yfinance",
+    "charting": "tradingview_mcp",
+    "broker": "ibkr"
+  },
+  "symbol_overrides": {
+    "primary": {
+      "display_symbol": "NQ=F",
+      "yfinance": "NQ=F"
+    },
+    "charting": {
+      "display_symbol": "CME_MINI:NQ1!",
+      "tradingview_mcp": "CME_MINI:NQ1!"
+    },
+    "broker": {
+      "display_symbol": "NQ",
+      "ibkr": {
+        "symbol": "NQ",
+        "sec_type": "FUT",
+        "exchange": "CME",
+        "currency": "USD"
+      }
+    }
+  }
+}

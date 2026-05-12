@@ -1,0 +1,68 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T092520+0800-codex-board-b-aq-first-nursery-feedback-after-091850-v1",
+  "gate": "offline_v041_non_promoting_12_backtests_profit_floor_failed",
+  "command": "uv run run_offline_v041.py",
+  "exit_code": 0,
+  "backtests_succeeded": 12,
+  "backtests_failed": 0,
+  "strategies": [
+    {
+      "name": "CrashRebound",
+      "pair_basket": ["SOL/USDT", "AVAX/USDT", "BNB/USDT"],
+      "timeranges": ["bull_2021", "winter_2022", "recovery_23_25", "full_5y"],
+      "summary": {
+        "robust_sharpe": 0.1516,
+        "worst_profit_pct": 8.63,
+        "profit_floor": "FAIL"
+      },
+      "full_5y": {
+        "trade_count": 176,
+        "total_profit_pct": 40.58,
+        "win_rate_pct": 65.3409,
+        "profit_factor": 1.4204,
+        "max_drawdown_pct": -11.5829
+      }
+    },
+    {
+      "name": "PerPairMR",
+      "pair_basket": ["BTC/USDT", "ETH/USDT", "BNB/USDT", "SOL/USDT", "AVAX/USDT"],
+      "timeranges": ["bull_2021", "winter_2022", "recovery_23_25", "full_5y"],
+      "summary": {
+        "robust_sharpe": -0.2159,
+        "worst_profit_pct": -2.48,
+        "profit_floor": "FAIL"
+      },
+      "full_5y": {
+        "trade_count": 287,
+        "total_profit_pct": 23.97,
+        "win_rate_pct": 64.1115,
+        "profit_factor": 1.3191,
+        "max_drawdown_pct": -10.8912
+      }
+    },
+    {
+      "name": "RegimeAdaptiveBNB",
+      "pair_basket": ["BNB/USDT"],
+      "timeranges": ["bull_2021", "winter_2022", "recovery_23_25", "full_5y"],
+      "summary": {
+        "robust_sharpe": -0.039,
+        "worst_profit_pct": -0.76,
+        "profit_floor": "FAIL"
+      },
+      "full_5y": {
+        "trade_count": 30,
+        "total_profit_pct": 15.96,
+        "win_rate_pct": 60.0,
+        "profit_factor": 2.2702,
+        "max_drawdown_pct": -6.6142
+      }
+    }
+  ],
+  "source_control_evidence_acquired": false,
+  "explicit_selected_history": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion_rerun": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

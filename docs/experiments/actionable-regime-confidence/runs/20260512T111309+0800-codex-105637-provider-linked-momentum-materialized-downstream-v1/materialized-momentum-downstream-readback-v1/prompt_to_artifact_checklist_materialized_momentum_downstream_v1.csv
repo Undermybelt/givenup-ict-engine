@@ -1,0 +1,8 @@
+requirement,evidence,status
+"missing real-trades artifact repaired","materialized 7 normalized provider-linked momentum trades and force ingest applied all 7 with 0 invalid","achieved_for_this_slice"
+"Pre-Bayes/filter populated","pre_bayes status exited 0 but latest bridge/policy/assignments/gate/posterior fields are still null or empty","not_achieved"
+"BBN/CatBoost training ready","entry-model matched_rows=0 and both models remain not ready","not_achieved"
+"Path-ranker target mature","target rows=2 mature_rows=1 but raw_scored_mature=0/30 production_validation=0/30 observation_validation=7/30","not_achieved"
+"Execution tree promotable","exact branch visible with posterior 0.428571 and selected_path_probability 0.740741, but ready=false actionable=false review_status=observe closed_loop_branch_admission=fail_closed","not_achieved"
+"Six-provider AQ matrix","this is a downstream materialization of already-counted 105637 and does not add TVR/IBKR same-run AQ authority","not_achieved"
+"Promotion/update_goal","promotion_allowed=false trade_usable=false update_goal=false","not_complete"

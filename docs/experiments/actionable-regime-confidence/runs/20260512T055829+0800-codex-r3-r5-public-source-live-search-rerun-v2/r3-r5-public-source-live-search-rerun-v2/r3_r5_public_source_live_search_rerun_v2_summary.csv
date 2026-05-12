@@ -1,0 +1,18 @@
+surface,query_or_ref,exit,rows_or_files,r3_metadata_hits,r5_metadata_hits,compatible_source_rows_found,blocker
+kaggle,AAPL 15m regime label,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+kaggle,IXIC 15m regime label,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+kaggle,NQ futures 15m regime label,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+kaggle,Bull Bear Sideways Crisis market regime labels,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+kaggle,market regime labels intraday,0,1,0,0,False,metadata_only_no_downloaded_source_owned_labels
+kaggle,MainRegimeV2 market regime labels,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+kaggle,post 2026 stock market regime labels,0,1,0,0,False,metadata_only_no_downloaded_source_owned_labels
+huggingface,AAPL 15m regime label,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+huggingface,IXIC 15m regime label,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+huggingface,NQ futures 15m regime label,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+huggingface,Bull Bear Sideways Crisis market regime labels,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+huggingface,market regime labels intraday,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+huggingface,MainRegimeV2 market regime labels,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+huggingface,post 2026 stock market regime labels,0,0,0,0,False,metadata_only_no_downloaded_source_owned_labels
+kaggle_files,thisathdamiru/bybit-multi-crypto-historical-data-2020-2026,0,20,0,0,False,file_listing_only_no_source_owned_required_rows
+kaggle_files,sergionefedov/crypto-microstructure,0,6,0,0,False,file_listing_only_no_source_owned_required_rows
+kaggle_files,marketsignal/marketsignal-ai-feature-feed-mag-7-stocks,0,7,0,0,False,file_listing_only_no_source_owned_required_rows

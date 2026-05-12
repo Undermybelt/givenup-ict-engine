@@ -1,0 +1,19 @@
+PASS failed_wrapper_attempt_exit=127_recorded_not_strategy_evidence
+PASS retry_exit=0
+PASS retry_done_summary=3_succeeded_0_failed
+PASS provider_data_acquired=true
+PASS local_cache_replay=true
+PASS strategy=ProviderBtcMomentumCross trade_count=0
+PASS strategy=ProviderBtcMomentumPulse trade_count=0
+PASS strategy=ProviderBtcTrendPullback trade_count=0
+PASS all_three_strategy_trades=0
+PASS mature_rooted_branch_observations=0
+PASS profitability_signal=false
+PASS source_control_unlock=false
+PASS explicit_selected_history=false
+PASS canonical_merge=false
+PASS selected_data_autoquant_promotion=false
+PASS downstream_promotion=false
+PASS trade_usable=false
+PASS promotion_allowed=false
+PASS update_goal=false

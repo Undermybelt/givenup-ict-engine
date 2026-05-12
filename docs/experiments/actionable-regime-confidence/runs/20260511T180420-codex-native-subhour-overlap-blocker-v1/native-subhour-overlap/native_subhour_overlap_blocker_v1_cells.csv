@@ -1,0 +1,5 @@
+symbol,timeframe,download_state,provider_rows,provider_session_count,provider_date_min,provider_date_max,source_symbol_present,source_date_min,source_date_max,source_overlap_sessions,native_subhour_source_overlap_ready,blocker,error
+AAPL,15m,ready,1560,60,2026-02-12,2026-05-08,True,2000-01-03,2026-01-30,0,False,no_provider_session_overlap_with_source_panel_tail,
+AAPL,30m,ready,780,60,2026-02-12,2026-05-08,True,2000-01-03,2026-01-30,0,False,no_provider_session_overlap_with_source_panel_tail,
+^IXIC,15m,ready,1560,60,2026-02-12,2026-05-08,True,2000-01-03,2026-01-30,0,False,no_provider_session_overlap_with_source_panel_tail,
+^IXIC,30m,ready,780,60,2026-02-12,2026-05-08,True,2000-01-03,2026-01-30,0,False,no_provider_session_overlap_with_source_panel_tail,

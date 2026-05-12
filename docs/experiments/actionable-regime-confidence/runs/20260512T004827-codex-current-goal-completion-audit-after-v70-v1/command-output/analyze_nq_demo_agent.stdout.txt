@@ -1,0 +1,46 @@
+{
+  "decision_hint_raw": "Comparable run, but factor backlog remains: tune trend_momentum first.|pda_sequence=unavailable|hybrid_regime_label=trend_decay|hybrid_regime_age=4|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.582|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.8596",
+  "decision_summary": "Comparable run, but factor backlog remains",
+  "direction": "Bull",
+  "entry_state": "medium",
+  "evidence": [
+    "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+    "multi_timeframe_missing=1m,5m,30m,4h",
+    "15m:52 bars path=examples/demo/demo-15m.json"
+  ],
+  "execution_triage": {
+    "branch": "transition_guardrail",
+    "branch_probability": 0.0,
+    "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "execution_bias": "guarded",
+    "execution_score": 0.5730942918066175,
+    "gate_status": "observe",
+    "one_line": "execution observe | branch=transition_guardrail | bias=guarded | score=0.573 | confidence=0.000 | hint=execution_guarded_due_to_high_transition_hazard",
+    "posterior_uncertainty": 1.0,
+    "reason_summary": [
+      "branch=fill_viable (gate_status=observe, ising_risk=0.3293<0.70, overstretch=0.2765<0.70)",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.837",
+      "market_state=volatility=ElevatedVol:0.741 liquidity=NormalLiquidity:0.419 structure=Trending:1.000 behavior=FOMO:0.650",
+      "market_state=rationale=volatility=ElevatedVol conf=0.74",
+      "market_state=rationale=structure=Trending conf=1.00"
+    ]
+  },
+  "next_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-v70-chain --backend native",
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-a-v70-chain --backend native",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "pre_bayes_gate": "pass_neutralized",
+  "recommended_next_actions": [
+    "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir <local-path> --backend native"
+  ],
+  "risks": [
+    "factor:trend_momentum status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+  ]
+}

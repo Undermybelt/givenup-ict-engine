@@ -1,0 +1,9 @@
+board_current_run_root_observed=ok
+isolated_verifier_schema_ready=ok
+pooled_wilson_gate_passed=ok
+sidecar_broad_normal_gate_passed=ok
+direct_split_gate_fail_closed=ok
+direct_species_fail_closed=ok
+shared_intake_write_not_attempted=ok
+strict_full_objective_not_complete=ok
+update_goal_false=ok

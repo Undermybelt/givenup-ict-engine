@@ -1,0 +1,1 @@
+./target/debug/ict-engine workflow-status --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --state-dir /tmp/ict-engine-20260512T105245+0800-codex-board-b-104703-btc-ema-rsi-downstream-readback-v1-state --refresh --agent

@@ -1,0 +1,8 @@
+PASS gate_result=strict_1h_recency_tail_current_source_recheck_v1=no_post_2026_01_30_source_owned_tail_rows
+PASS all_tail_rows_present=false
+PASS rows_after_2026_01_30_all_targets=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

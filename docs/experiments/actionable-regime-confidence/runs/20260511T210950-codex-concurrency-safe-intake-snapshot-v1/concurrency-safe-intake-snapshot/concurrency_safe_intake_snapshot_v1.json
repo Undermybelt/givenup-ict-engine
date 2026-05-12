@@ -1,0 +1,471 @@
+{
+  "accepted_rows_added": 0,
+  "active_or_empty_run_dirs": [
+    "20260511T211030-codex-current-goal-completion-audit-v40-after-mohan-uplift",
+    "20260511T211032-codex-r6-mohan-complaint-expansion-gate-v1",
+    "20260511T211050-codex-r6-current-live-intake-calibration-readback-v1"
+  ],
+  "board_path": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_before": "0db82c211c87672d3121590c164b33d09a36e1613792ed908e73c5b94252c58a",
+  "created_at_utc": "2026-05-11T13:11:15.587590+00:00",
+  "current_cursor": {
+    "accepted_gate": "r6_mohan_additional_row_uplift_v1=`direct_intake_rows_uplifted_schema_ready_calibration_still_blocked`; r6_cftc_gandhi_calibration_gate_v2=`schema_ready_but_calibration_blocked`; r6_cftc_schema_ready_calibration_gate_v1=`schema_ready_but_calibration_blocked`; cftc_matched_control_seed_v1=`direct_intake_schema_ready_unscored_confidence_gate_false`; current_goal_completion_audit_v37=`live_public_v37_and_finra_addendum_rows_not_acquired_blocked`; cftc_finra_direct_public_positive_probe_v1=`public_positives_extracted_controls_absent_blocked`; current_goal_completion_audit_v36=`current_public_scout_and_outbox_v2_rows_not_acquired_blocked`; source_acquisition_outbox_v2=`r6_uplift_merged_rows_not_acquired`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "active_market_set": "R6 direct Manipulation calibration slice after the Mohan additional CFTC row uplift; the direct intake root is schema-ready with five dates, four symbols, and two venues, but support/Wilson95/broad-normal gates still fail, while R2/R3/R4/R5 remain row-unacquired.",
+    "active_timeframes": "R6 public CFTC event timestamps are schema-ready only; chronological split `true`, heldout symbol/venue `true`, support `8/8` versus required `50/50`, Wilson95 min LCB `0.675592`; R3 native sub-hour, R4 strict `1h`, and R5 recency extension remain explicit blockers.",
+    "blocker": "R6 direct root is schema-ready but still fails calibration: eight CFTC positives and eight same-source controls, chronological split true, heldout symbol/venue true, Wilson95 min LCB `0.675592`, support below `50/50`, and no broad normal sample; broader direct Manipulation species are not complete, and R2/R3/R4/R5 source-owned/provenance files remain absent.",
+    "board_state": "blocked",
+    "candidate_regime": "Strict Board A objective across active lanes: scoped `>=95%` evidence persists; R6 spoofing/layering has public regulator schema-ready seeds and now passes chronological plus heldout-symbol/venue checks, but fails support/Wilson95/broad-normal gates; broader direct species remain absent, and R2/R3/R4/R5 still lack source-owned rows/provenance.",
+    "confidence_lane": "`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260511T210744-codex-r6-mohan-additional-row-uplift-v1`",
+    "last_loop_id": "20260511T210744+0800-codex-r6-mohan-additional-row-uplift-v1",
+    "next_action": "For R6, acquire additional source-owned/owner-approved positive and same-schema normal-control rows across more symbols/venues/periods until chronological + heldout-symbol/venue Wilson95 `>=0.95` can pass; for R2/R3/R4/R5, populate the existing fail-closed roots with required source-owned/provenance files, then rerun the relevant verifiers before another completion audit.",
+    "provider_status": "After Mohan additional R6 row uplift: direct files `3/3` are present and verifier can parse them; calibration now has positive rows `8`, matched negative rows `8`, unique dates `5`, symbols `4`, venues `2`, chronological split `true`, heldout symbol/venue `true`, Wilson95 min LCB `0.675592`, broad normal sample `false`; no fresh raw data commit, threshold relaxation, external request send, or runtime code change was introduced by this slice."
+  },
+  "external_requests_sent": false,
+  "gate_result": "concurrency_safe_intake_snapshot_v1=local_snapshot_only_no_new_rows",
+  "latest_run_dirs": [
+    {
+      "file_count": 7,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210002-codex-current-goal-completion-audit-v38-after-cftc-control-seed",
+      "sample_files": [
+        "completion-audit/current_goal_completion_audit_v38_after_cftc_control_seed.json",
+        "completion-audit/current_goal_completion_audit_v38_intake_roots.csv",
+        "completion-audit/current_goal_completion_audit_v38_unmet_requirements.csv",
+        "completion-audit/current_goal_completion_audit_v38_checklist.csv",
+        "completion-audit/current_goal_completion_audit_v38_after_cftc_control_seed.md",
+        "checks/current_goal_completion_audit_v38_after_cftc_control_seed_assertions.out",
+        "scripts/current_goal_completion_audit_v38_after_cftc_control_seed.py"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 3,
+      "has_assertion": true,
+      "has_json": false,
+      "has_md": true,
+      "run_dir": "20260511T210017-codex-current-goal-completion-audit-v37-after-manip-component-pass",
+      "sample_files": [
+        "completion-audit/current_goal_completion_audit_v37_unmet_requirements.csv",
+        "completion-audit/current_goal_completion_audit_v37_after_manip_component_pass.md",
+        "checks/current_goal_completion_audit_v37_after_manip_component_pass_assertions.out"
+      ],
+      "state": "partial_or_in_progress"
+    },
+    {
+      "file_count": 2,
+      "has_assertion": true,
+      "has_json": false,
+      "has_md": true,
+      "run_dir": "20260511T210024-codex-board-b-current-state-completion-audit-v36",
+      "sample_files": [
+        "completion-audit/board_b_current_state_completion_audit_v36.md",
+        "checks/board_b_current_state_completion_audit_v36_assertions.out"
+      ],
+      "state": "partial_or_in_progress"
+    },
+    {
+      "file_count": 6,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210030-codex-r6-cftc-schema-ready-calibration-gate-v1",
+      "sample_files": [
+        "checks/r6_cftc_schema_ready_calibration_gate_v1_assertions.out",
+        "scripts/r6_cftc_schema_ready_calibration_gate_v1.py",
+        "r6-cftc-schema-ready-calibration-gate/r6_cftc_schema_ready_calibration_gate_v1.md",
+        "r6-cftc-schema-ready-calibration-gate/r6_cftc_schema_ready_calibration_gate_v1_gates.csv",
+        "r6-cftc-schema-ready-calibration-gate/r6_cftc_schema_ready_calibration_gate_v1.json",
+        "scripts/__pycache__/r6_cftc_schema_ready_calibration_gate_v1.cpython-314.pyc"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 5,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210150-codex-cftc-gandhi-source-row-uplift-v1",
+      "sample_files": [
+        "checks/cftc_gandhi_source_row_uplift_v1_assertions.out",
+        "cftc-gandhi-source-row-uplift/cftc_gandhi_source_row_uplift_v1_intake_summary.csv",
+        "cftc-gandhi-source-row-uplift/cftc_gandhi_source_row_uplift_v1.md",
+        "cftc-gandhi-source-row-uplift/cftc_gandhi_source_row_uplift_v1.json",
+        "scripts/cftc_gandhi_source_row_uplift_v1.py"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 6,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210156-codex-r6-official-cftc-expansion-scout-v1",
+      "sample_files": [
+        "checks/r6_official_cftc_expansion_scout_v1_assertions.out",
+        "r6-official-cftc-expansion-scout/r6_official_cftc_expansion_scout_v1.md",
+        "r6-official-cftc-expansion-scout/r6_official_cftc_expansion_scout_v1.json",
+        "r6-official-cftc-expansion-scout/r6_official_cftc_expansion_scout_v1_sources.csv",
+        "scripts/r6_official_cftc_expansion_scout_v1.py",
+        "scripts/__pycache__/r6_official_cftc_expansion_scout_v1.cpython-314.pyc"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 5,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210228-codex-r6-additional-cftc-public-order-screen-v1",
+      "sample_files": [
+        "checks/r6_additional_cftc_public_order_screen_v1_assertions.out",
+        "r6-additional-cftc-public-order-screen/r6_additional_cftc_public_order_screen_v1.md",
+        "r6-additional-cftc-public-order-screen/r6_additional_cftc_public_order_screen_v1_cases.csv",
+        "r6-additional-cftc-public-order-screen/r6_additional_cftc_public_order_screen_v1.json",
+        "scripts/r6_additional_cftc_public_order_screen_v1.py"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 5,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210230-codex-r6-cftc-gandhi-calibration-gate-v2",
+      "sample_files": [
+        "checks/r6_cftc_schema_ready_calibration_gate_v1_assertions.out",
+        "r6-cftc-gandhi-calibration-gate/r6_cftc_schema_ready_calibration_gate_v1.md",
+        "r6-cftc-gandhi-calibration-gate/r6_cftc_schema_ready_calibration_gate_v1_gates.csv",
+        "r6-cftc-gandhi-calibration-gate/r6_cftc_schema_ready_calibration_gate_v1.json",
+        "scripts/r6_cftc_gandhi_calibration_gate_v2.py"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 6,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210411-codex-vantmacro-current-regime-route-screen-v1",
+      "sample_files": [
+        "vantmacro-current-regime-route-screen/vantmacro_current_regime_route_screen_v1.json",
+        "vantmacro-current-regime-route-screen/vantmacro_current_regime_route_screen_v1.md",
+        "vantmacro-current-regime-route-screen/vantmacro_current_regime_route_screen_v1_candidates.csv",
+        "checks/vantmacro_current_regime_route_screen_v1_assertions.out",
+        "scripts/vantmacro_current_regime_route_screen_v1.py",
+        "scripts/__pycache__/vantmacro_current_regime_route_screen_v1.cpython-314.pyc"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 3,
+      "has_assertion": true,
+      "has_json": false,
+      "has_md": true,
+      "run_dir": "20260511T210508-codex-board-b-crypto-liquidity-root-family-v2",
+      "sample_files": [
+        "checks/crypto_liquidity_root_family_v2_no_artifact_assertions.out",
+        "checks/crypto_liquidity_root_family_v2_no_artifact_readback.md",
+        "scripts/crypto_liquidity_root_family_v2.py"
+      ],
+      "state": "partial_or_in_progress"
+    },
+    {
+      "file_count": 7,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210514-codex-r6-gandhi-expanded-calibration-gate-v1",
+      "sample_files": [
+        "checks/r6_gandhi_expanded_calibration_gate_v1_assertions.out",
+        "r6-gandhi-expanded-calibration-gate/direct_manipulation_row_intake_verifier.stdout.txt",
+        "r6-gandhi-expanded-calibration-gate/r6_gandhi_expanded_calibration_gate_v1.json",
+        "r6-gandhi-expanded-calibration-gate/r6_gandhi_expanded_calibration_gate_v1.md",
+        "r6-gandhi-expanded-calibration-gate/direct_manipulation_row_intake_verifier.stderr.txt",
+        "r6-gandhi-expanded-calibration-gate/r6_gandhi_expanded_calibration_gate_v1_gates.csv",
+        "scripts/r6_gandhi_expanded_calibration_gate_v1.py"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 8,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210553-codex-r6-after-gandhi-calibration-gate-v1",
+      "sample_files": [
+        "command-output/direct_manipulation_row_intake_verifier.stdout.txt",
+        "command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+        "checks/r6_after_gandhi_calibration_gate_v1_assertions.out",
+        "r6-after-gandhi-calibration-gate/r6_after_gandhi_calibration_gate_v1_gates.csv",
+        "r6-after-gandhi-calibration-gate/r6_after_gandhi_calibration_gate_v1.json",
+        "r6-after-gandhi-calibration-gate/r6_after_gandhi_calibration_gate_v1.md",
+        "scripts/r6_after_gandhi_calibration_gate_v1.py",
+        "scripts/__pycache__/r6_after_gandhi_calibration_gate_v1.cpython-314.pyc"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 5,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210555-codex-r6-cftc-public-order-candidate-uplift-v1",
+      "sample_files": [
+        "checks/r6_cftc_public_order_candidate_uplift_v1_assertions.out",
+        "r6-cftc-public-order-candidate-uplift/r6_cftc_public_order_candidate_uplift_v1_candidates.csv",
+        "r6-cftc-public-order-candidate-uplift/r6_cftc_public_order_candidate_uplift_v1.json",
+        "r6-cftc-public-order-candidate-uplift/r6_cftc_public_order_candidate_uplift_v1.md",
+        "scripts/r6_cftc_public_order_candidate_uplift_v1.py"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 7,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210620-codex-current-goal-completion-audit-v39-after-gandhi-uplift",
+      "sample_files": [
+        "completion-audit/current_goal_completion_audit_v39_after_gandhi_uplift.json",
+        "completion-audit/current_goal_completion_audit_v39_after_gandhi_uplift.md",
+        "completion-audit/current_goal_completion_audit_v39_intake_roots.csv",
+        "completion-audit/current_goal_completion_audit_v39_unmet_requirements.csv",
+        "completion-audit/current_goal_completion_audit_v39_checklist.csv",
+        "checks/current_goal_completion_audit_v39_after_gandhi_uplift_assertions.out",
+        "scripts/current_goal_completion_audit_v39_after_gandhi_uplift.py"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 9,
+      "has_assertion": true,
+      "has_json": true,
+      "has_md": true,
+      "run_dir": "20260511T210744-codex-r6-mohan-additional-row-uplift-v1",
+      "sample_files": [
+        "checks/r6_cftc_schema_ready_calibration_gate_v1_assertions.out",
+        "checks/r6_mohan_additional_row_uplift_v1_assertions.out",
+        "r6-mohan-additional-row-uplift/r6_mohan_additional_row_uplift_v1.md",
+        "r6-mohan-additional-row-uplift/r6_mohan_additional_row_uplift_v1.json",
+        "r6-mohan-additional-row-uplift/r6_cftc_schema_ready_calibration_gate_v1.md",
+        "r6-mohan-additional-row-uplift/r6_cftc_schema_ready_calibration_gate_v1_gates.csv",
+        "r6-mohan-additional-row-uplift/r6_mohan_additional_row_uplift_v1_intake_summary.csv",
+        "r6-mohan-additional-row-uplift/r6_cftc_schema_ready_calibration_gate_v1.json"
+      ],
+      "state": "artifact_complete"
+    },
+    {
+      "file_count": 1,
+      "has_assertion": false,
+      "has_json": false,
+      "has_md": false,
+      "run_dir": "20260511T210849-codex-vantmacro-source-label-request-draft-v1",
+      "sample_files": [
+        "scripts/vantmacro_source_label_request_draft_v1.py"
+      ],
+      "state": "partial_or_in_progress"
+    },
+    {
+      "file_count": 1,
+      "has_assertion": false,
+      "has_json": false,
+      "has_md": false,
+      "run_dir": "20260511T210950-codex-concurrency-safe-intake-snapshot-v1",
+      "sample_files": [
+        "scripts/concurrency_safe_intake_snapshot_v1.py"
+      ],
+      "state": "partial_or_in_progress"
+    },
+    {
+      "file_count": 0,
+      "has_assertion": false,
+      "has_json": false,
+      "has_md": false,
+      "run_dir": "20260511T211030-codex-current-goal-completion-audit-v40-after-mohan-uplift",
+      "sample_files": [],
+      "state": "active_or_empty"
+    },
+    {
+      "file_count": 0,
+      "has_assertion": false,
+      "has_json": false,
+      "has_md": false,
+      "run_dir": "20260511T211032-codex-r6-mohan-complaint-expansion-gate-v1",
+      "sample_files": [],
+      "state": "active_or_empty"
+    },
+    {
+      "file_count": 0,
+      "has_assertion": false,
+      "has_json": false,
+      "has_md": false,
+      "run_dir": "20260511T211050-codex-r6-current-live-intake-calibration-readback-v1",
+      "sample_files": [],
+      "state": "active_or_empty"
+    }
+  ],
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "ready_root_count": 1,
+  "ready_roots_by_file_presence": [
+    "R6_direct_manipulation_row_intake"
+  ],
+  "required_intake_roots": [
+    {
+      "extra_files": [],
+      "file_hashes": {},
+      "id": "R2_R4_source_label_equivalence",
+      "missing_files": [
+        "source_label_equivalence_rows.csv",
+        "source_label_equivalence_provenance.json"
+      ],
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present_files": [],
+      "ready_by_file_presence": false,
+      "required_files_present": 0,
+      "required_files_total": 2,
+      "root_exists": false
+    },
+    {
+      "extra_files": [],
+      "file_hashes": {},
+      "id": "R3_native_subhour_source_label",
+      "missing_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present_files": [],
+      "ready_by_file_presence": false,
+      "required_files_present": 0,
+      "required_files_total": 2,
+      "root_exists": false
+    },
+    {
+      "extra_files": [],
+      "file_hashes": {},
+      "id": "R5_source_panel_recency_extension",
+      "missing_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present_files": [],
+      "ready_by_file_presence": false,
+      "required_files_present": 0,
+      "required_files_total": 2,
+      "root_exists": false
+    },
+    {
+      "extra_files": [],
+      "file_hashes": {
+        "matched_negative_normal_activity_rows.csv": "5f6468bd833df0934b3018f96f6da1d66264ec5d163ff05c1ce5ad3e50382df1",
+        "positive_spoofing_layering_rows.csv": "64482ed3fb1f2ba9a749705c61cb845fcba22196180c3cc84705ae12067b030d",
+        "provenance_manifest.json": "ed022ade0d5cdbdff145bf3e45f6822e2857edc0e502cb3559fb5d349f8d4e8d"
+      },
+      "id": "R6_direct_manipulation_row_intake",
+      "missing_files": [],
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "present_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "ready_by_file_presence": true,
+      "required_files_present": 3,
+      "required_files_total": 3,
+      "root_exists": true
+    }
+  ],
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T210950-codex-concurrency-safe-intake-snapshot-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_readbacks": [
+    {
+      "id": "R2_R4_source_label_equivalence",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "status": "blocked",
+      "stderr": "",
+      "stdout": "{\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv\",\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json\"\n  ],\n  \"reason\": \"missing_required_files\",\n  \"status\": \"blocked\"\n}"
+    },
+    {
+      "id": "R5_source_panel_recency_extension",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "status": "blocked",
+      "stderr": "",
+      "stdout": "{\n  \"status\": \"blocked\",\n  \"reason\": \"missing_required_files\",\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv\",\n    \"/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json\"\n  ]\n}"
+    },
+    {
+      "id": "R6_direct_manipulation_row_intake",
+      "parsed": {
+        "matched_group_count": 8,
+        "matched_negative_rows": 9,
+        "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+        "positive_rows": 9,
+        "provenance_keys": [
+          "cftc_gandhi_order",
+          "cftc_genuine_order_text_checks",
+          "cftc_genuine_order_text_status",
+          "cftc_mohan_additional_examples",
+          "cftc_mohan_complaint",
+          "cftc_mohan_complaint_rows_added",
+          "cftc_mohan_complaint_text_checks",
+          "cftc_order",
+          "cftc_text_checks",
+          "cftc_text_extraction_status",
+          "created_at_utc",
+          "finra_public_schema",
+          "gandhi_matched_negative_rows_added",
+          "gandhi_positive_rows_added",
+          "gandhi_rows_materialized_at_utc",
+          "license_or_permission",
+          "matched_control_limitations",
+          "matched_control_policy",
+          "matched_negative_control_policy",
+          "matched_negative_materialized_at_utc",
+          "matched_negative_rows_acquired",
+          "matched_negative_rows_count",
+          "matched_negative_rows_path",
+          "matched_negative_rows_sha256",
+          "mohan_additional_matched_negative_rows_added",
+          "mohan_additional_positive_rows_added",
+          "mohan_additional_rows_materialized_at_utc",
+          "mohan_complaint_control_policy",
+          "positive_rows_count",
+          "positive_rows_path",
+          "positive_rows_sha256",
+          "source",
+          "updated_at_utc",
+          "updated_by"
+        ],
+        "status": "schema_ready_unscored"
+      },
+      "returncode": 0,
+      "status": "schema_ready_unscored",
+      "stderr": "",
+      "stdout": "{\n  \"status\": \"schema_ready_unscored\",\n  \"positive_rows\": 9,\n  \"matched_negative_rows\": 9,\n  \"matched_group_count\": 8,\n  \"provenance_keys\": [\n    \"cftc_gandhi_order\",\n    \"cftc_genuine_order_text_checks\",\n    \"cftc_genuine_order_text_status\",\n    \"cftc_mohan_additional_examples\",\n    \"cftc_mohan_complaint\",\n    \"cftc_mohan_complaint_rows_added\",\n    \"cftc_mohan_complaint_text_checks\",\n    \"cftc_order\",\n    \"cftc_text_checks\",\n    \"cftc_text_extraction_status\",\n    \"created_at_utc\",\n    \"finra_public_schema\",\n    \"gandhi_matched_negative_rows_added\",\n    \"gandhi_positive_rows_added\",\n    \"gandhi_rows_materialized_at_utc\",\n    \"license_or_permission\",\n    \"matched_control_limitations\",\n    \"matched_control_policy\",\n    \"matched_negative_control_policy\",\n    \"matched_negative_materialized_at_utc\",\n    \"matched_negative_rows_acquired\",\n    \"matched_negative_rows_count\",\n    \"matched_negative_rows_path\",\n    \"matched_negative_rows_sha256\",\n    \"mohan_additional_matched_negative_rows_added\",\n    \"mohan_additional_positive_rows_added\",\n    \"mohan_additional_rows_materialized_at_utc\",\n    \"mohan_complaint_control_policy\",\n    \"positive_rows_count\",\n    \"positive_rows_path\",\n    \"positive_rows_sha256\",\n    \"source\",\n    \"updated_at_utc\",\n    \"updated_by\"\n  ],\n  \"next\": \"run chronological and heldout-symbol/venue Wilson95 calibration gate\"\n}"
+    }
+  ]
+}

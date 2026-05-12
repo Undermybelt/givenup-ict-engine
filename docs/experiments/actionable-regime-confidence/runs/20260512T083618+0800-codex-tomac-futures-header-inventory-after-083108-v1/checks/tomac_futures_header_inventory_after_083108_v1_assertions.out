@@ -1,0 +1,15 @@
+gate_result=tomac_futures_header_inventory_after_083108_v1=ohlcv_symbology_only_no_source_control_unlock
+files_indexed=13
+order_lifecycle_header_hits=0
+matched_control_header_hits=0
+source_control_package_hits=0
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

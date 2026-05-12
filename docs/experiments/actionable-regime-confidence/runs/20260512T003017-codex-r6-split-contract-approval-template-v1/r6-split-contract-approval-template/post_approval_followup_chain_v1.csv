@@ -1,0 +1,6 @@
+step,command_or_check,required_evidence,may_accept_without
+1,python3 <direct_manipulation_row_intake_verifier_v1.py> --intake-root /tmp/ict-engine-board-a-r6-owner-export-v1,"status is schema_ready_unscored or stricter pass, required files present, rows counted",false
+2,rerun chronological/symbol/venue or approved-family split calibration,every accepted bucket has Wilson95 LCB >= 0.95 with positive/control support,false
+3,"provider-status for IBKR, TradingViewRemix/MCP, yfinance, Kraken",provider readiness recorded; missing providers are non-promoting blockers,false
+4,Auto-Quant status/prepare/readback,Auto-Quant state and artifacts captured under docs/experiments,false
+5,"pre-Bayes/BBN, CatBoost or policy-training, workflow-status, execution-tree/path-ranking",downstream readbacks consume the accepted export or remain explicitly non-promoting,false

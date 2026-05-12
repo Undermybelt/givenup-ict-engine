@@ -1,0 +1,13 @@
+PASS checklist.named_board_contract
+PASS checklist.all_active_roots_accounted
+PASS checklist.all_roots_95
+PASS checklist.other_markets_verified
+PASS checklist.other_timeframes_or_periods_verified
+PASS checklist.sub_regimes_not_counted
+PASS checklist.no_trade_claim
+PASS root.Bull
+PASS root.Bear
+PASS root.Sideways
+PASS root.Crisis
+PASS root.Manipulation
+PASS goal_achieved

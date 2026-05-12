@@ -1,0 +1,6 @@
+local_source,symbol,present,dataset,schema,start_ns,end_ns,board_decision
+/Users/thrill3r/Downloads/Tomac/es future 2021-2025/metadata.json,ES.FUT,true,GLBX.MDP3,ohlcv-1m,1293840000000000000,1767225600000000000,local_bar_data_not_source_owned_normal_controls
+/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/metadata.json,GC.FUT,true,GLBX.MDP3,ohlcv-1m,1609891200000000000,1767657600000000000,local_bar_data_not_source_owned_normal_controls
+/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/metadata.json,NQ.FUT,true,GLBX.MDP3,ohlcv-1m,1275782400000000000,1775260800000000000,local_bar_data_not_source_owned_normal_controls
+/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/metadata.json,YM.FUT,true,GLBX.MDP3,ohlcv-1m,1293840000000000000,1767225600000000000,local_bar_data_not_source_owned_normal_controls
+/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/metadata.json,6E.FUT,true,GLBX.MDP3,ohlcv-1m,1420070400000000000,1767225600000000000,local_bar_data_not_source_owned_normal_controls

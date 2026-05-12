@@ -1,0 +1,11 @@
+bundle_loaded=true
+mainregime_label_visible=true
+read_only_bbn_label_visible=true
+bbn_mutation_remained_off=true
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

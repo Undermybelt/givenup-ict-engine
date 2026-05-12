@@ -1,0 +1,1 @@
+ibkr-historical requires the ibkr_bridge package. Make sure scripts/ibkr_bridge/ is reachable from sys.path (searched: ['/Users/thrill3r/projects-ict-engine/ict-engine/scripts', '/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/scripts', '/Users/thrill3r/projects-ict-engine/ict-engine/scripts']). Underlying error: No module named 'redis'

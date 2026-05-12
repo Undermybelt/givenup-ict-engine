@@ -1,0 +1,18 @@
+PASS gate_result=not_complete_source_controls_absent_local_triplets_nonpromoting_downstream_blocked
+PASS checklist_blocked_count_positive=6
+PASS r6_owner_export_root_exists=false
+PASS r3_native_subhour_source_label_root_exists=false
+PASS r5_source_panel_recency_extension_root_exists=false
+PASS direct_verifier_exit_code=2
+PASS direct_verifier_missing_required_files=missing_required_files
+PASS local_triplets_found_but_not_copied=4
+PASS provider_status_exit_code=0
+PASS autoquant_status_exit_code=0
+PASS autoquant_data_ready=True
+PASS pre_bayes_no_latest_policy
+PASS policy_training_matched_rows_zero=[0, 0]
+PASS workflow_actionable_artifacts_zero=0
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS source_roots_mutated=false
+PASS thresholds_relaxed=false

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import pyarrow.parquet as pq; p='/tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/tft_dataset_labeled.parquet'; pf=pq.ParquetFile(p); print('num_rows', pf.metadata.num_rows); print('num_row_groups', pf.metadata.num_row_groups); print('schema'); print(pf.schema)
+                                                                                                                                 ~~~~~~~~~~~~~~^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/BqaD2ufF8g1e4RZPlYkzL/lib/python3.13/site-packages/pyarrow/parquet/core.py", line 324, in __init__
+    source = filesystem.open_input_file(source)
+  File "pyarrow/_fs.pyx", line 815, in pyarrow._fs.FileSystem.open_input_file
+  File "pyarrow/error.pxi", line 155, in pyarrow.lib.pyarrow_internal_check_status
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+    raise convert_status(status)
+FileNotFoundError: [Errno 2] Failed to open local file '/tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/tft_dataset_labeled.parquet'. Detail: [errno 2] No such file or directory

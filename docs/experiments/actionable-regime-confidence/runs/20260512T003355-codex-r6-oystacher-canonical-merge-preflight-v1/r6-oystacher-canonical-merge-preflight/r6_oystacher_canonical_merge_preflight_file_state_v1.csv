@@ -1,0 +1,10 @@
+root,filename,path,exists,sha256,row_count
+isolated,positive_spoofing_layering_rows.csv,docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/positive_spoofing_layering_rows.csv,True,83ca3116fc15fb6dd59ff78c0b98dc2efdd5eb6bc4252fc8c399b786c788f690,5182
+isolated,matched_negative_normal_activity_rows.csv,docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/matched_negative_normal_activity_rows.csv,True,cbf742b41797fb727f47db2e0a2840f01bb14f9e1d5bea4d4b160fc43a275c0e,1553
+isolated,provenance_manifest.json,docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/provenance_manifest.json,True,adbec91f711e065abdc87b4eb56aa38e9f07f3c61ae37b08f4299f4b2e6f8a1a,
+owner_target,positive_spoofing_layering_rows.csv,/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv,False,,
+owner_target,matched_negative_normal_activity_rows.csv,/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv,False,,
+owner_target,provenance_manifest.json,/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json,False,,
+live_direct,positive_spoofing_layering_rows.csv,/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,True,ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6,73
+live_direct,matched_negative_normal_activity_rows.csv,/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,True,d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d,73
+live_direct,provenance_manifest.json,/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,True,9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b,

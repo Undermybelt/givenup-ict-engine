@@ -1,0 +1,130 @@
+{
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "generated_at": "2026-05-11T14:22:51.803001Z",
+  "current_focus_phase": "",
+  "current_focus_reason": "",
+  "blocking_truth": {
+    "stage": "stage_unavailable",
+    "status": "insufficient_state",
+    "reason": "no workflow phase snapshots available",
+    "evidence": [],
+    "next_command": "next_command_unavailable"
+  },
+  "recommended_next_command": "",
+  "recommended_next_command_meta": {
+    "kind": "unavailable",
+    "requires_user_input": false,
+    "blocked": false,
+    "prompt": null,
+    "executable_command": null,
+    "recorded_data_paths": []
+  },
+  "pending_actions": [],
+  "risk_flags": [],
+  "latest_train": null,
+  "latest_analyze": null,
+  "latest_research": null,
+  "latest_backtest": null,
+  "latest_update": null,
+  "latest_pre_bayes_policy": null,
+  "latest_pre_bayes_entry_quality_bridge": null,
+  "latest_pre_bayes_entry_quality_bridge_diff": null,
+  "latest_pre_bayes_policy_diff": null,
+  "latest_pre_bayes_policy_lineage": {
+    "latest_version": null,
+    "previous_version": null,
+    "total_versions": 0,
+    "changed_fields_union": [],
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested"
+  },
+  "latest_pre_bayes_soft_evidence_diff": [],
+  "recent_pre_bayes_policies": [],
+  "latest_pending_update": null,
+  "recent_pending_updates": [],
+  "latest_execution_candidate": null,
+  "recent_execution_candidates": [],
+  "latest_ensemble_vote": null,
+  "recent_ensemble_votes": [],
+  "recent_artifacts": [],
+  "actionable_artifacts": [],
+  "latest_promotable_artifact": null,
+  "artifact_history_summary": {
+    "total_entries": 0,
+    "pending_update_entries": 0,
+    "execution_candidate_entries": 0,
+    "ensemble_vote_entries": 0,
+    "promotable_entries": 0,
+    "actionable_entries": 0,
+    "consumed_entries": 0,
+    "average_quality_score": 0.0,
+    "latest_consumed_artifact_id": null,
+    "statuses_by_kind": {}
+  },
+  "artifact_factor_trends": [],
+  "artifact_family_trends": [],
+  "artifact_decision_summary": {
+    "actionable_artifact_count": 0,
+    "latest_promotable_artifact_id": null,
+    "artifact_rule_break_count": 0,
+    "highlighted_actions": [],
+    "highlighted_factor_targets": [],
+    "highlighted_family_targets": [],
+    "promotion_strength": "low",
+    "rollback_strength": "low",
+    "consumed_trend_status": "no_consumed_validation",
+    "consumed_trend_reason": "no_consumed_artifacts",
+    "consumed_target_kinds": [],
+    "summary": "actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+  },
+  "artifact_review_rules": {
+    "pending_update": {
+      "min_probability_improvement": 0.03,
+      "min_top_factor_score_improvement": 0.05,
+      "min_avg_family_score_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true,
+      "require_same_prompt_version": true
+    },
+    "execution_candidate": {
+      "min_posterior_improvement": 0.03,
+      "min_win_probability_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true
+    }
+  },
+  "artifact_review_rule_sources": {
+    "pending_update": {
+      "min_avg_family_score_improvement": "default",
+      "min_probability_improvement": "default",
+      "min_top_factor_score_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default",
+      "require_same_prompt_version": "default"
+    },
+    "execution_candidate": {
+      "min_posterior_improvement": "default",
+      "min_win_probability_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default"
+    }
+  },
+  "artifact_lineage_summaries": [],
+  "artifact_rule_break_effects": [],
+  "artifact_factor_rule_break_impacts": [],
+  "artifact_family_rule_break_impacts": [],
+  "artifact_consumed_impact_summary": {
+    "total_consumed": 0,
+    "positive_consumed": 0,
+    "negative_consumed": 0,
+    "neutral_consumed": 0,
+    "cumulative_quality_score": 0,
+    "points": [],
+    "by_kind": {},
+    "recent_windows": [],
+    "trend_comparisons": [],
+    "by_kind_trend_comparisons": {}
+  },
+  "field_diffs": [],
+  "disagreements": []
+}

@@ -1,0 +1,5 @@
+gate,status,evidence
+local_source_panel_recency,fail,date_max=2026-01-30; required_after=2026-01-30
+kaggle_dataset_reachable,pass,list_rc=0; files_rc=0
+kaggle_owner_refresh_on_or_after_audit_date,fail,last_updated=2026-02-01 02:25:29.437000; max_file_creation=2026-02-01 02:25:31.845000
+r5_intake_verifier,fail,"{""missing_files"": [""/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv"", ""/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json""], ""reason"": ""missing_required_files"", ""status"": ""blocked""}"

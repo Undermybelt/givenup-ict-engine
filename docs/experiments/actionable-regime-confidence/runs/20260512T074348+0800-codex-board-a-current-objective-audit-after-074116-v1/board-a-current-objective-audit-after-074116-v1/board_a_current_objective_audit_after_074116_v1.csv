@@ -1,0 +1,11 @@
+requirement,current_evidence,status
+Board A authoritative markdown has current cursor and settled tail evidence,Board A contains the current cursor plus count-once 073755 and 074116 R3 manual-review append-only sections.,pass
+Active root contract remains MainRegimeV2 roots plus separate direct Manipulation overlay,Top-of-board contract keeps Bull/Bear/Sideways/Crisis roots and DirectOverlay::Manipulation separate; child/sub-regime packets cannot complete root accounting.,pass_contract
+R6 owner/export rows with valid controls or explicit approval,073755 local sweep and 074116 review report R6 owner/export unlock false; approval package remains non-approving.,blocked
+R5 post-2026-01-30 source-panel rows matching source-panel schema,073755 local sweep reports R5 recency unlock false and the recency root absent.,blocked
+Verifier-native Crisis-capable R3 MainRegimeV2 native-subhour labels,074116 manually reviewed the two possible R3 files and found they are the same TSIE-derived root; Crisis has no direct TSIE source taxonomy class.,blocked
+Accepted cross-timeframe MainRegimeV2 source export or valid required-root unlock,073755 and 074116 assertions keep valid_required_root_unlock=false and source_control_evidence_acquired=false.,blocked
+Canonical merge direct verifier and split calibration after valid unlock,No valid unlock exists; 074116 reports direct_verifier_run=false split_calibration_run=false canonical_merge=false.,blocked
+Provider AutoQuant filter Pre-Bayes BBN CatBoost execution-tree promotion rerun,Downstream promotion rerun remains false; promotion is not allowed before source/control unlock and canonical merge.,blocked
+Strict full objective and trade usability,074116 reports strict_full_objective=false and trade_usable=false.,blocked
+Completion/update_goal,All required unlock and downstream gates remain false; update_goal=false.,blocked

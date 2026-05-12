@@ -1,0 +1,144 @@
+{
+  "accepted_95_contexts_added": 0,
+  "execution": {
+    "actionable": false,
+    "candidate_status": "execution_blocked",
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.27721687745951024,
+    "path_ranker_calibrated_path_prob": 0.3125,
+    "path_ranker_path_prob_lower_bound": 0.21821371337170056,
+    "path_ranker_raw_score": 0.9293726488899158,
+    "ready": false,
+    "review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+    "review_status": "observe"
+  },
+  "exits": {
+    "01_export_structural_path_target": 0,
+    "02_train_catboost_history": 0,
+    "03_apply_catboost_current": 0,
+    "04_apply_structural_path_scores": 0,
+    "05_register_trainer_artifact": 0,
+    "06_enable_path_ranker_candidate_set": 0,
+    "07_policy_training_status_after_runtime": 0,
+    "08_workflow_status_execution_candidate": 0,
+    "09_pre_bayes_status": 0,
+    "10_workflow_status_full": 0,
+    "11_export_structural_path_target_after_runtime": 0
+  },
+  "gates": [
+    {
+      "evidence": "exit_count=11 nonzero=[]",
+      "gate": "commands_zero",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "evidence": "observations=32",
+      "gate": "replay_observations_min30",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "evidence": "trained_rows=1120",
+      "gate": "catboost_trained_rows_min30",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "evidence": "Ranker runtime: structural_path_ranking_target rows=1 history_rows=1130 mature_rows=1 history_mature_rows=1120 raw_scored_mature=1120/30 production_validation=1120/30 observation_validation=32/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=candidate_set_only runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=1",
+      "gate": "path_ranker_runtime_ready",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "evidence": "raw_scored_mature=1120/30",
+      "gate": "raw_scored_mature_min30",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "evidence": "production_validation=1120/30",
+      "gate": "production_validation_min30",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "evidence": "observation_validation=32/30",
+      "gate": "observation_validation_min30",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "evidence": "confidence=0.7873539660614577",
+      "gate": "current_pre_bayes_confidence_95",
+      "passed": false,
+      "status": "fail_closed"
+    },
+    {
+      "evidence": "probabilities={'range': 1.0, 'stress': 0.0, 'transition': 0.0, 'trend': 0.0}",
+      "gate": "every_regime_95",
+      "passed": false,
+      "status": "fail_closed"
+    },
+    {
+      "evidence": "replay used BTCUSD from the 172142 YF 1h candle file only",
+      "gate": "independent_cross_market_validation",
+      "passed": false,
+      "status": "fail_closed"
+    },
+    {
+      "evidence": "replay windows were generated from the same 1h source and passed as ltf/mtf/htf",
+      "gate": "independent_cross_timeframe_validation",
+      "passed": false,
+      "status": "fail_closed"
+    },
+    {
+      "evidence": "actionable=False ready=False gate=execution_blocked review=observe",
+      "gate": "execution_tree_non_observe",
+      "passed": false,
+      "status": "fail_closed"
+    },
+    {
+      "evidence": "path_prob=0.3125 lower_bound=0.21821371337170056",
+      "gate": "path_probability_95",
+      "passed": false,
+      "status": "fail_closed"
+    }
+  ],
+  "path_ranker": {
+    "calibration_rows": 1120,
+    "observation_validation_rows": 32,
+    "production_validation_rows": 1120,
+    "raw_scored_mature_rows": 1120,
+    "runtime_mode": "candidate_set_only",
+    "runtime_ready": true,
+    "runtime_status": "enabled_candidate_set_ready",
+    "target_summary": "structural_path_ranking_target rows=1 history_rows=1130 candidate_set_size=1 mature_rows=1 history_mature_rows=1120 propensity_rows=1 calibrated_rows=1 execution_gate_rows=1 training_weight_rows=1",
+    "trained_rows": 1120
+  },
+  "pre_bayes": {
+    "active_regime": "range",
+    "confidence": 0.7873539660614577,
+    "gate_status": "pass_neutralized",
+    "probabilities": {
+      "range": 1.0,
+      "stress": 0.0,
+      "transition": 0.0,
+      "trend": 0.0
+    }
+  },
+  "promotion_allowed": false,
+  "replay": {
+    "count": 32,
+    "final_mature_rows": 1,
+    "horizon": 24,
+    "lookback": 120,
+    "ok": true,
+    "threshold": 0.001
+  },
+  "run_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1",
+  "schema_version": "board-a-post-replay-190658-readback-v1",
+  "symbol": "BTCUSD",
+  "trade_usable": false,
+  "update_goal": false
+}

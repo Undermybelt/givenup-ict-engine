@@ -1,0 +1,13 @@
+verifier_field,positive_request_mapping,control_request_mapping,bridge_status,notes
+source_report,source_dataset,provenance_or_source_dataset_required,partial_mapping_controls_need_source_dataset,Positive rows carry source_dataset; matched controls need equivalent owner/export identifier.
+source_section,,,missing_required_source_locator,"V62 request does not require report section, appendix id, or row block locator."
+symbol,symbol,control_symbol_required,partial_mapping_controls_need_symbol,V62 control file does not require symbol even though matching_dimensions may describe it.
+venue_or_market_center,venue_or_market_center,control_venue_or_market_center_required,partial_mapping_controls_need_venue,"Controls need explicit venue/market center, not only narrative matching dimensions."
+participant_type_code,,,missing_required_participant_dimension,Do not fabricate participant fields; owner export must provide them or verifier contract must be amended.
+participant_identifier,,,missing_required_participant_dimension,Do not fabricate participant identifiers.
+side,,,missing_required_order_dimension,Order side is required by the current verifier and absent from V62 required fields.
+earliest_order_received_time,event_start,control_event_start_required,partial_mapping_controls_need_event_start,Positive event_start can map only if it is the earliest order timestamp.
+latest_order_received_time,event_end,control_event_end_required,partial_mapping_controls_need_event_end,Positive event_end can map only if it is the latest order timestamp.
+order_count,,,missing_required_order_dimension,The current verifier requires order_count; V62 does not.
+total_order_quantity,,,missing_required_order_dimension,The current verifier requires total_order_quantity; V62 does not.
+session_bucket,,,missing_or_derivable_only_with_session_policy,Do not derive without explicit timezone/session policy in provenance.

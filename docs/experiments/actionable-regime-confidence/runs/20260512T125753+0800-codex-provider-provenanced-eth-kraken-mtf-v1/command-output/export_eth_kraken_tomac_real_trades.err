@@ -1,0 +1,160 @@
+2026-05-12 13:19:47,552 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 13:19:47,554 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 13:19:47,555 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 13:19:47,555 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf/.deps/auto-quan
+t/user_data/strategies_external
+2026-05-12 13:19:47,556 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 13:19:47,556 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf/.deps/auto-quan
+t/user_data ...
+2026-05-12 13:19:47,557 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf/.deps/auto-quan
+t/user_data/data ...
+2026-05-12 13:19:47,557 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 13:19:47,559 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 13:19:47,572 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 13:19:47,572 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 13:19:47,573 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 13:19:47,574 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 13:19:47,602 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 13:19:47,602 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 13:19:47,656 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy TomacNQ_KillzoneBreakout from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf/.deps/auto-qua
+nt/user_data/strategies_external/TomacNQ_KillzoneBreakout.py'...
+2026-05-12 13:19:47,657 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 13:19:47,658 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 13:19:47,659 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-12 13:19:47,659 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 13:19:47,659 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 13:19:47,660 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 13:19:47,660 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-12 13:19:47,660 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 13:19:47,660 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.02
+2026-05-12 13:19:47,661 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: True
+2026-05-12 13:19:47,662 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive: 0.005
+2026-05-12 13:19:47,665 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.01
+2026-05-12 13:19:47,665 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: True
+2026-05-12 13:19:47,669 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 13:19:47,672 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 13:19:47,673 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60}
+2026-05-12 13:19:47,674 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 13:19:47,674 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-12 13:19:47,675 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 13:19:47,678 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 250
+2026-05-12 13:19:47,679 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 13:19:47,679 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 13:19:47,680 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 13:19:47,681 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 13:19:47,681 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 13:19:47,682 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 13:19:47,682 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 13:19:47,683 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 13:19:47,683 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 13:19:47,684 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-12 13:19:47,684 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-12 13:19:47,717 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1/state_eth_kraken_mtf/.deps/auto-qua
+nt/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-12 13:19:48,068 - freqtrade.data.history.datahandlers.idatahandler - WARNING - ETHKRAKEN/USD, spot, 1h, data starts at 2026-04-12 04:00:00
+2026-05-12 13:19:48,093 - freqtrade.optimize.backtesting - INFO - Loading data from 2026-04-12 04:00:00 up to 2026-05-12 00:00:00 (29 days).
+2026-05-12 13:19:48,094 - freqtrade.configuration.timerange - WARNING - Moving start-date by 250 candles to account for startup time.
+2026-05-12 13:19:48,111 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-12 13:19:48,114 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy TomacNQ_KillzoneBreakout
+2026-05-12 13:19:48,115 - freqtrade.data.dataprovider - INFO - Loading data for ETHKRAKEN/USD 4h from 2026-03-01 08:00:00 to 2026-05-12 00:00:00
+2026-05-12 13:19:48,118 - freqtrade.data.history.datahandlers.idatahandler - WARNING - ETHKRAKEN/USD, spot, 4h, data starts at 2026-04-12 04:00:00
+2026-05-12 13:19:48,145 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2026-04-22 14:00:00 up to 2026-05-12 00:00:00 (19 days).
+Result for strategy TomacNQ_KillzoneBreakout
+                                               BACKTESTING REPORT                                                
+┏━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃          Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ETHKRAKEN/USD │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+│         TOTAL │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+└───────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                               ENTER TAG STATS                                                
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │       1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+│     TOTAL │       1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+└───────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                  EXIT REASON STATS                                                  
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ trailing_stop_loss │     1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+│              TOTAL │     1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+└────────────────────┴───────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                         MIXED TAG STATS                                                          
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃        Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ trailing_stop_loss │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+│     TOTAL │                    │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+└───────────┴────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-04-22 14:00:00            │
+│ Backtesting to                │ 2026-05-12 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 1 / 0.05                       │
+│ Starting balance              │ 100000 USD                     │
+│ Final balance                 │ 100773.6 USD                   │
+│ Absolute profit               │ 773.6 USD                      │
+│ Total profit %                │ 0.77%                          │
+│ CAGR %                        │ 15.96%                         │
+│ Sortino                       │ -100.00                        │
+│ Sharpe                        │ -100.00                        │
+│ Calmar                        │ -100.00                        │
+│ SQN                           │ -100.00                        │
+│ Profit factor                 │ 0.00                           │
+│ Expectancy (Ratio)            │ 773.60 (100.00)                │
+│ Avg. daily profit             │ 40.716 USD                     │
+│ Avg. stake amount             │ 93900 USD                      │
+│ Total trade volume            │ 188573.6 USD                   │
+│                               │                                │
+│ Best Pair                     │ ETHKRAKEN/USD 0.77%            │
+│ Worst Pair                    │ ETHKRAKEN/USD 0.77%            │
+│ Best trade                    │ ETHKRAKEN/USD 0.82%            │
+│ Worst trade                   │ ETHKRAKEN/USD 0.82%            │
+│ Best day                      │ 773.6 USD                      │
+│ Worst day                     │ 773.6 USD                      │
+│ Days win/draw/lose            │ 1 / 0 / 0                      │
+│ Min/Max/Avg. Duration Winners │ 0d 06:00 / 0d 06:00 / 0d 06:00 │
+│ Min/Max/Avg. Duration Losers  │ 0d 00:00 / 0d 00:00 / 0d 00:00 │
+│ Max Consecutive Wins / Loss   │ 1 / 0                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 100773.6 USD                   │
+│ Max balance                   │ 100773.6 USD                   │
+│ Max % of account underwater   │ 0.00%                          │
+│ Absolute drawdown             │ 0 USD (0.00%)                  │
+│ Drawdown duration             │ 0 days 00:00:00                │
+│ Profit at drawdown start      │ 0 USD                          │
+│ Profit at drawdown end        │ 0 USD                          │
+│ Drawdown start                │ 2026-05-10 22:00:00            │
+│ Drawdown end                  │ 2026-05-10 22:00:00            │
+│ Market change                 │ -2.96%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-04-22 14:00:00 -> 2026-05-12 00:00:00 | Max open trades : 1
+                                                             STRATEGY SUMMARY                                                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃                 Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃     Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ TomacNQ_KillzoneBreakout │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │ 0 USD  0.00% │
+└──────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┴──────────────┘

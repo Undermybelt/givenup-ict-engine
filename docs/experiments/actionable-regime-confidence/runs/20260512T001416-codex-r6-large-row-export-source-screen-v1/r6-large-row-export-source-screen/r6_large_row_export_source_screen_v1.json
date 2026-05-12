@@ -1,0 +1,38 @@
+{
+  "board_sha256_at_start": "11aae407b56c1855212c94eedeeca43c26022c88a87ce3ba08a776c91d7d9cf5",
+  "decision": {
+    "accepted_rows_added": 0,
+    "external_requests_sent": true,
+    "gate_result": "r6_large_row_export_source_screen_v1=no_ready_public_large_owner_export_found",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "dryrun_ref": {
+    "gate_result": "r6_grouped_heldout_contract_dryrun_v1=grouped_contract_still_fails_owner_approval_required",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T001116-codex-r6-grouped-heldout-contract-dryrun-v1/r6-grouped-heldout-contract-dryrun/r6_grouped_heldout_contract_dryrun_v1.json"
+  },
+  "generated_at_utc": "2026-05-11T16:15:41.492185+00:00",
+  "next_action": "Treat R6 as blocked on owner/user-provided direct export: FINRA/CFTC/BMLL/Tardis are owner-request targets, while public raw/synthetic datasets remain fail-closed.",
+  "owner_request_targets": [
+    "finra_potential_manipulation_report",
+    "cftc_public_orders",
+    "bmll_level3_data",
+    "tardis_crypto_market_data"
+  ],
+  "ready_large_owner_exports": 0,
+  "run_id": "20260512T001416-codex-r6-large-row-export-source-screen-v1",
+  "search_queries": [
+    "public dataset market manipulation spoofing layering labeled order book rows",
+    "CFTC spoofing order data public dataset row level matched controls",
+    "FINRA potential manipulation report data download layering spoofing sample rows",
+    "Kaggle market manipulation detection dataset spoofing quote stuffing"
+  ],
+  "source_screen_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001416-codex-r6-large-row-export-source-screen-v1/r6-large-row-export-source-screen/r6_large_row_export_source_screen_v1_sources.csv",
+  "sources_screened": 6
+}

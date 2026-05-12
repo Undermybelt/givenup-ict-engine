@@ -1,0 +1,20 @@
+{
+  "accepted_hgb_numeric_confidence_95_labels": [
+    "Bear",
+    "Bull",
+    "Crisis",
+    "Sideways"
+  ],
+  "gate_result": "source_label_hgb_numeric_threshold_screen_v1=all_root_labels_hgb_numeric_accepted",
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 4,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": true,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": true,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

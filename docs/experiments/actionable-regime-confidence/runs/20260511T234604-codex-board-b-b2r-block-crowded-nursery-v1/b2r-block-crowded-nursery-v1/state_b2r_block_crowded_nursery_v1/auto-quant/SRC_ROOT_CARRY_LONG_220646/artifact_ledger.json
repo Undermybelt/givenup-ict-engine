@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto_quant_real_trades_SRC_ROOT_CARRY_LONG_220646_20260511T155331.512517000Z",
+    "artifact_kind": "auto_quant_real_trades_ingested",
+    "artifact_id": "auto_quant_real_trades_SRC_ROOT_CARRY_LONG_220646_20260511T155331.512517000Z",
+    "version": 1,
+    "generated_at": "2026-05-11T15:53:31.512517Z",
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "source_phase": "auto_quant_real_trades",
+    "source_run_id": "94ca0acd6de8089d",
+    "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234604-codex-board-b-b2r-block-crowded-nursery-v1/b2r-block-crowded-nursery-v1/selected_real_trades_wire_seed_220646.jsonl",
+    "status": "applied",
+    "promote_candidate": false,
+    "actionable": false,
+    "decision_hint": "ingested 48 trade(s)",
+    "review_reason": "ingested 48/48 (invalid 0) feedback_inserted=48 content_hash=94ca0acd6de8089d dry_run=false force=false",
+    "review_rule_version": "auto-quant-real-trades-v1",
+    "top_factor_name": null,
+    "top_factor_action": null,
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 48,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

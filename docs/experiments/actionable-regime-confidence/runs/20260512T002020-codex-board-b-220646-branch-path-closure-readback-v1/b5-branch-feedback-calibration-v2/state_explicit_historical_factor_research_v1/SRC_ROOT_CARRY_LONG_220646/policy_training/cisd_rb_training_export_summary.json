@@ -1,0 +1,8 @@
+{
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "analyze_runs": 1,
+  "update_runs": 81,
+  "matched_rows": 0,
+  "bbn_training_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/policy_training/cisd_rb_bbn_training.csv",
+  "catboost_training_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/policy_training/cisd_rb_catboost_training.csv"
+}

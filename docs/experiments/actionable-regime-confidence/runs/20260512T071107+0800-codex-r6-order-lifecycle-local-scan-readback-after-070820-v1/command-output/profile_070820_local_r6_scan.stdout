@@ -1,0 +1,6 @@
+{
+  "candidate_rows": 280,
+  "unique_paths": 270,
+  "required_r6_file_names_found": 0,
+  "gate_result": "r6_order_lifecycle_local_scan_readback_after_070820_v1=no_required_r6_owner_export_files_no_unlock_no_downstream"
+}

@@ -1,0 +1,12 @@
+requirement,status,evidence,blocker
+board_a_authoritative_file,covered,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,
+board_b_dependency_mirror,covered,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,
+all_regimes_95_confidence,blocked,075925/075932 plus counted latest 080333/080336/080411/080425/080452/080700 remain fail-closed; 080446 is absent/stale; no accepted rows added,no_accepted_rows_and_no_per_regime_95_cross_market_unlock
+cross_market_cross_timeframe_validation,blocked,latest route probes and exact web search remain negative,no_new_required_root_and_no_selected_history
+ibkr_tradingview_yfinance_kraken_provider_use,partial,"board text shows diagnostic provider visibility including IBKR, TradingView, yfinance, Kraken, but no promoted source/control root",diagnostic_only
+auto_quant_operated,partial,prior board readbacks show AutoQuant read-only status; current run adds no new promotion evidence,selected_history_gate_missing
+filter_prebayes_bbn_catboost_execution_tree,blocked,latest evidence stays upstream and fail-closed,no_promotion_allowed
+source_control_unlock,blocked,080333/080336/080411/080425/080452/080700 fail closed; 080446 absent/stale,valid_required_root_unlock_false
+user_selected_history,blocked,no HTF/MTF/LTF selection in the objective file or latest readbacks,user_selected_historical_data_missing
+multi_agent_append_only,covered,all new evidence was appended as new artifacts or tail pointers,
+update_goal_allowed,blocked,all acceptance fields remain false,objective_incomplete

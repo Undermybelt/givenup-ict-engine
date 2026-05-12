@@ -1,0 +1,12 @@
+run_id=20260511T143344+0800-codex-regime-consumer-unit-pivot-v1
+board_sha256_at_run=ec8dc4c24b96a491106345f5fda79146612b67e8152b9f08c0b529fa8593878d
+pooled_exact_1h_roots_ready=Bull,Bear,Sideways,Crisis
+strict_exact_1h_rows_accepted=41
+unit_drift_examples=5
+full_objective_achieved=false
+call_update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

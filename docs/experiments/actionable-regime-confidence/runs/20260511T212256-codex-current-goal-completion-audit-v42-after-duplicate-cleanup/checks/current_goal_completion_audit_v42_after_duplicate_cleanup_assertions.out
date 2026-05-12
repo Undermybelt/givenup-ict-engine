@@ -1,0 +1,8 @@
+PASS decision=current_goal_completion_audit_v42=duplicate_cleanup_still_blocked
+PASS direct_positive_rows=35
+PASS direct_matched_negative_rows=35
+PASS direct_wilson95_min_lcb=0.901099
+PASS ready_intake_roots=1/4
+PASS blocked_count=8
+PASS strict_full_objective_achieved=false
+PASS update_goal=false

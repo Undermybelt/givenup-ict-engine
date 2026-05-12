@@ -1,0 +1,13 @@
+PASS decision=r6_zhao_skudder_cftc_row_uplift_v1=rows_added_schema_ready_calibration_still_blocked
+PASS positive_rows_materialized=7
+PASS matched_negative_rows_materialized=7
+PASS verifier_status=schema_ready_unscored
+PASS positive_rows=41
+PASS matched_negative_rows=41
+PASS combined_min_wilson95_lcb=0.914332
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=true

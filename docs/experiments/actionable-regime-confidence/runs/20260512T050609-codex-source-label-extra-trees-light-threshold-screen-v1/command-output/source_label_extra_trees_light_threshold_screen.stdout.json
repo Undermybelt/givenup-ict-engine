@@ -1,0 +1,15 @@
+{
+  "accepted_extra_trees_light_confidence_95_labels": [],
+  "gate_result": "source_label_extra_trees_light_threshold_screen_v1=extra_trees_light_scored_no_full_acceptance",
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

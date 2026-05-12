@@ -1,0 +1,41 @@
+{
+  "artifact_type": "external_intake_live_rerun_v1",
+  "decision": {
+    "accepted_rows_added": 0,
+    "gate_result": "external_intake_live_rerun_v1=missing_required_files_still_blocked",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T10:43:33.667655+00:00",
+  "intake_root": "/tmp/ict-engine-board-a-external-intake-bundle-v1",
+  "missing_file_count": 7,
+  "missing_packages": [
+    "direct_manipulation_species",
+    "price_root_equivalence",
+    "source_panel_recency_extension"
+  ],
+  "next_action": "Place all required package files under the intake root, then rerun this verifier before any calibration or goal-completion claim.",
+  "purpose": "Check whether source-owned/owner-approved Board A intake rows have appeared since the bundle manifest.",
+  "required_file_count": 7,
+  "run_id": "20260511T183950+0800-codex-external-intake-live-rerun-v1",
+  "verifier": "docs/experiments/actionable-regime-confidence/runs/20260511T183606-codex-external-intake-bundle-v1/external-intake-bundle/board_a_external_intake_verifier_v1.py",
+  "verifier_returncode": 2,
+  "verifier_stdout_json": {
+    "missing_files": [
+      "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_rows.csv",
+      "/tmp/ict-engine-board-a-external-intake-bundle-v1/price-root/source_label_equivalence_provenance.json",
+      "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_rows.csv",
+      "/tmp/ict-engine-board-a-external-intake-bundle-v1/recency/source_panel_recency_extension_provenance.json",
+      "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_positive_rows.csv",
+      "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_matched_controls.csv",
+      "/tmp/ict-engine-board-a-external-intake-bundle-v1/direct-manipulation/direct_manipulation_provenance.json"
+    ],
+    "reason": "missing_required_files",
+    "status": "blocked"
+  }
+}

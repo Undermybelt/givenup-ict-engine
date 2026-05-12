@@ -1,0 +1,7 @@
+PASS row_count=6
+PASS strict_1h_accepted_rows=41
+PASS strict_1h_total_slots=156
+PASS native_subhour_ready_cells=0
+PASS jan2026_tail_standalone_gate_passes=0
+PASS full_objective=false
+PASS current_cursor_edited=false

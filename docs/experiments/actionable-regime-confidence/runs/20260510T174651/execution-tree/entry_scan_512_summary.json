@@ -1,0 +1,184 @@
+{
+  "branch_counts": {
+    "block_crowded": 105,
+    "transition_guardrail": 398,
+    "wait_for_reversion": 9
+  },
+  "decision_hint_counts": {
+    "execution_blocked_regardless_of_prediction": 105,
+    "execution_guarded_due_to_high_transition_hazard": 107,
+    "execution_guarded_due_to_low_remaining_regime_duration": 291,
+    "execution_observe_with_medium_prediction": 9
+  },
+  "gate_status_counts": {
+    "blocked": 105,
+    "observe": 407
+  },
+  "metric_summary": {
+    "branch_probability": {
+      "count": 512,
+      "max": 1.0,
+      "mean": 0.044467787109375,
+      "median": 0.0,
+      "min": 0.0,
+      "p25": 0.0,
+      "p75": 0.0
+    },
+    "cycle_phase_alignment": {
+      "count": 365,
+      "max": 0.9981,
+      "mean": -0.12250931506849315,
+      "median": -0.4045,
+      "min": -1.0,
+      "p25": -0.7408,
+      "p75": 0.5674
+    },
+    "dominant_cycle_energy": {
+      "count": 345,
+      "max": 0.9095,
+      "mean": 0.6295104347826087,
+      "median": 0.6329,
+      "min": 0.317,
+      "p25": 0.5279,
+      "p75": 0.7297
+    },
+    "duration_remaining_expected_bars": {
+      "count": 337,
+      "max": 2.5,
+      "mean": 0.4762611275964392,
+      "median": 0.0,
+      "min": 0.0,
+      "p25": 0.0,
+      "p75": 0.55
+    },
+    "execution_readiness": {
+      "count": 512,
+      "max": 0.5193,
+      "mean": 0.385847265625,
+      "median": 0.3932,
+      "min": 0.1363,
+      "p25": 0.3467,
+      "p75": 0.4373
+    },
+    "execution_score": {
+      "count": 512,
+      "max": 0.630333,
+      "mean": 0.541764919921875,
+      "median": 0.557664,
+      "min": 0.34633,
+      "p25": 0.547519,
+      "p75": 0.565877
+    },
+    "hybrid_transition_hazard": {
+      "count": 398,
+      "max": 0.699,
+      "mean": 0.6231984924623116,
+      "median": 0.633,
+      "min": 0.446,
+      "p25": 0.592,
+      "p75": 0.665
+    },
+    "ising_phase_transition_risk": {
+      "count": 503,
+      "max": 0.3634,
+      "mean": 0.2833717693836978,
+      "median": 0.2793,
+      "min": 0.2337,
+      "p25": 0.2658,
+      "p75": 0.2913
+    },
+    "prediction_vote_score": {
+      "count": 512,
+      "max": 0.5626,
+      "mean": 0.548087890625,
+      "median": 0.5475,
+      "min": 0.5393,
+      "p25": 0.5449,
+      "p75": 0.5507
+    },
+    "pythagorean_overstretch": {
+      "count": 255,
+      "max": 1.0,
+      "mean": 0.6837172549019608,
+      "median": 1.0,
+      "min": 0.0021,
+      "p25": 0.2668,
+      "p75": 1.0
+    },
+    "ranker_score_calibrated_path_prob": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p25": null,
+      "p75": null
+    },
+    "ranker_score_path_prob_lower_bound": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p25": null,
+      "p75": null
+    },
+    "ranker_score_raw_path_score": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p25": null,
+      "p75": null
+    },
+    "readiness_gap_to_observe": {
+      "count": 512,
+      "max": 0.3137,
+      "mean": 0.0664431640625,
+      "median": 0.0571,
+      "min": 0.0,
+      "p25": 0.0127,
+      "p75": 0.1033
+    },
+    "readiness_gap_to_ready": {
+      "count": 512,
+      "max": 0.5137,
+      "mean": 0.264152734375,
+      "median": 0.2571,
+      "min": 0.1307,
+      "p25": 0.2127,
+      "p75": 0.3033
+    },
+    "spectral_entropy": {
+      "count": 418,
+      "max": 0.6652,
+      "mean": 0.37692535885167466,
+      "median": 0.3834,
+      "min": 0.1258,
+      "p25": 0.2926,
+      "p75": 0.4561
+    },
+    "top_negative_contribution": {
+      "count": 509,
+      "max": -0.160013,
+      "mean": -0.5820273379174853,
+      "median": -0.5,
+      "min": -0.999969,
+      "p25": -0.617169,
+      "p75": -0.5
+    },
+    "top_positive_contribution": {
+      "count": 512,
+      "max": 0.998052,
+      "mean": 0.5636731640625,
+      "median": 0.525559,
+      "min": 0.336604,
+      "p25": 0.433193,
+      "p75": 0.647479
+    }
+  },
+  "scan_tsv": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-execution-tree-scan-512-compatible/scan.tsv",
+  "schema_version": "execution-tree-guardrail-scan/v1",
+  "windows_scanned": 512
+}

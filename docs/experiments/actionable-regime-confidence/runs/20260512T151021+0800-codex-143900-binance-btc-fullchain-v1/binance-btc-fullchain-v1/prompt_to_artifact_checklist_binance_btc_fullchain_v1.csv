@@ -1,0 +1,8 @@
+requirement,artifact,status,note
+provider-backed large window,docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv,covered,rows=76429
+Auto-Quant executed,docs/experiments/actionable-regime-confidence/runs/20260512T151021+0800-codex-143900-binance-btc-fullchain-v1/workspace/auto-quant-binance-btc-fullchain,covered,exit=0
+real trades ingested,docs/experiments/actionable-regime-confidence/runs/20260512T151021+0800-codex-143900-binance-btc-fullchain-v1/derived/binance_btc_fullchain_real_trades.jsonl,covered,trades=892
+Pre-Bayes/BBN readback,docs/experiments/actionable-regime-confidence/runs/20260512T151021+0800-codex-143900-binance-btc-fullchain-v1/command-output/05_pre_bayes_status.out,covered,exit=0
+CatBoost/path-ranker attempted,docs/experiments/actionable-regime-confidence/runs/20260512T151021+0800-codex-143900-binance-btc-fullchain-v1/path-ranker,covered,exit=1
+execution-tree readback,docs/experiments/actionable-regime-confidence/runs/20260512T151021+0800-codex-143900-binance-btc-fullchain-v1/command-output/14_workflow_execution_candidate.out,covered,exit=0
+95% regime acceptance,docs/experiments/actionable-regime-confidence/runs/20260512T151021+0800-codex-143900-binance-btc-fullchain-v1/binance-btc-fullchain-v1/binance_btc_fullchain_v1.md,fail_closed,no acceptance promotion from this diagnostic

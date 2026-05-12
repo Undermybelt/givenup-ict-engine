@@ -1,0 +1,13 @@
+PASS official_route_refresh_only=true
+PASS cme_official_route_present=true
+PASS cboe_cfe_official_route_present=true
+PASS external_requests_sent=false
+PASS vendor_ticket_or_export_id_present=false
+PASS approval_present=false
+PASS required_root_board_a_r6_owner_export_present=false
+PASS required_root_native_subhour_present=false
+PASS required_root_source_panel_recency_present=false
+PASS target_roots_mutated=false
+PASS canonical_merge_allowed_now=false
+PASS downstream_rerun_allowed_now=false
+PASS update_goal=false

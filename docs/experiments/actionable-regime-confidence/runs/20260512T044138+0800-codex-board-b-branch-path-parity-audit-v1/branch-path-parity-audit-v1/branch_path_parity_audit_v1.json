@@ -1,0 +1,43 @@
+{
+  "run_id": "20260512T044138+0800-codex-board-b-branch-path-parity-audit-v1",
+  "gate": "branch_path_parity_audit_v1=partial_path_preservation_no_promotion",
+  "source_run": "docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3",
+  "source_slice": "downstream-combined-v1",
+  "recipe_id": "NQRootAdaptiveCostCrisisRepairV3",
+  "trade_wire_rows": 15415,
+  "trade_wire_root_counts": {
+    "Bull": 10663,
+    "Sideways": 3406,
+    "Bear": 762,
+    "Crisis": 584
+  },
+  "branch_paths_observed_at_catboost": [
+    "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+    "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+    "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72",
+    "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72",
+    "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72"
+  ],
+  "layer_status": {
+    "auto_quant_strategy_manifest": "partial_four_price_root_paths",
+    "auto_quant_trade_wire": "root_only_no_full_path_string",
+    "pre_bayes_filter": "no_full_branch_path_strings_observe_only",
+    "bbn": "generic_market_regime_nodes_no_full_branch_paths",
+    "catboost_path_ranker_target": "all_five_full_paths_unobserved_not_mature",
+    "catboost_current_scores": "all_five_full_paths_candidate_set_only",
+    "execution_tree": "single_bull_path_fail_closed_not_actionable",
+    "workflow": "blocked_user_selected_historical_data_missing"
+  },
+  "assertions": {
+    "branch_path_contract_satisfied": false,
+    "auto_quant_trade_wire_full_path": false,
+    "pre_bayes_full_path": false,
+    "bbn_full_path": false,
+    "catboost_full_path": true,
+    "execution_tree_full_path": "partial_fail_closed",
+    "selected_historical_data": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "next_action": "explicit user selection of exactly one HTF=1d, MTF=4h, or LTF=1h before selected-data factor-research/Auto-Quant; selected run must emit full rooted branch path fields before downstream continuation"
+}

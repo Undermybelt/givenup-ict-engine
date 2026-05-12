@@ -1,0 +1,14 @@
+{
+  "body": {
+    "order": "published_date",
+    "order_direction": "desc",
+    "page_size": 10,
+    "search_for": "stock market regimes 2026 extension"
+  },
+  "error": null,
+  "payload": [],
+  "provider": "figshare",
+  "query": "stock market regimes 2026 extension",
+  "status": 200,
+  "url": "https://api.figshare.com/v2/articles/search"
+}

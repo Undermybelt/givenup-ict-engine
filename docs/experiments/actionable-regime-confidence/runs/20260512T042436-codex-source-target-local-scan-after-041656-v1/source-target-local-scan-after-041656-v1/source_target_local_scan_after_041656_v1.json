@@ -1,0 +1,29 @@
+{
+  "run_id": "20260512T042436-codex-source-target-local-scan-after-041656-v1",
+  "gate_result": "source_target_local_scan_after_041656_v1=no_new_target_root_unlock_no_promotion",
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "missing",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "missing",
+    "/tmp/ict-engine-source-panel-recency-extension": "missing",
+    "/tmp/ict-engine-source-label-equivalence-intake": "present_diagnostic_only",
+    "/tmp/ict-engine-direct-manipulation-row-intake": "present_sidecar_nonpromoting"
+  },
+  "approval_package": {
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "present": true,
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

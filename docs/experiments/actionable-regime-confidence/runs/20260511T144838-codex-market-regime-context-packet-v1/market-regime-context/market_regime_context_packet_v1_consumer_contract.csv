@@ -1,0 +1,5 @@
+consumer_field,value_contract,source,allowed_action,must_not_do
+market_regime_context.root,Bull|Bear|Sideways|Crisis,accepted exact-source parent-root context packet,provide context to downstream gates; may size down or suppress incompatible factor paths,must not execute trades or claim ticker-specific timing from this field alone
+market_regime_context.confidence_floor,minimum accepted split Wilson95 LCB across retained context layers,"daily parent root, 1w/1mo source consensus, exact 1h panel context",audit whether context evidence remains above 0.95,must not reinterpret as alpha edge or profitability
+market_regime_context.scope,context_ready_not_full_completion,consumer-unit pivot,unblock market-context consumers from ticker-specific denominator drift,must not mark full objective complete
+direct_manipulation_route,partial_blocked,consumer-unit pivot and positive direct varieties,route to matched-row acquisition,must not use OHLCV/session/liquidity proxies as Manipulation labels

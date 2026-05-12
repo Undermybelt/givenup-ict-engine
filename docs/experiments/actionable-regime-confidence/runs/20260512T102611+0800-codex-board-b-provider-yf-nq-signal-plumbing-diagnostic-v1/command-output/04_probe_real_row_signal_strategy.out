@@ -1,0 +1,17 @@
+rows 11086
+date_min 2024-06-02 22:00:00+00:00
+date_max 2026-05-11 23:00:00+00:00
+provider_row_present 10691
+provider_real_row_index_max 10691
+enter_long_sum 222
+exit_long_sum 222
+entry_exit_overlap 0
+                     date    close  volume  provider_real_row_index                     enter_tag
+2024-06-05 01:00:00+00:00 18744.50  4360.0                       48 provider_yf_nq_real_row_entry
+2024-06-07 05:00:00+00:00 19093.00  2697.0                       96 provider_yf_nq_real_row_entry
+2024-06-11 08:00:00+00:00 19064.50  6777.0                      144 provider_yf_nq_real_row_entry
+2024-06-13 12:00:00+00:00 19629.25 30923.0                      192 provider_yf_nq_real_row_entry
+2024-06-17 15:00:00+00:00 19750.00 39895.0                      240 provider_yf_nq_real_row_entry
+2024-06-20 19:00:00+00:00 19767.25 14346.0                      288 provider_yf_nq_real_row_entry
+2024-06-25 07:00:00+00:00 19739.00 11064.0                      336 provider_yf_nq_real_row_entry
+2024-06-27 11:00:00+00:00 19975.00  7370.0                      384 provider_yf_nq_real_row_entry

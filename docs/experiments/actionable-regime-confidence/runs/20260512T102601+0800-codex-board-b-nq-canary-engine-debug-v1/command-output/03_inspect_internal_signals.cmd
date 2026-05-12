@@ -1,0 +1,1 @@
+inspect internal Freqtrade signal list for ProviderNqAlwaysInDiagnostic

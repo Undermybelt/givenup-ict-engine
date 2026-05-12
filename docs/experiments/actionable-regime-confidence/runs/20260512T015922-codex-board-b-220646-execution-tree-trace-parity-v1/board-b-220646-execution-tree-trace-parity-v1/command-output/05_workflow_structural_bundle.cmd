@@ -1,0 +1,1 @@
+target/debug/ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --phase structural-recommended-path --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T015922-codex-board-b-220646-execution-tree-trace-parity-v1/board-b-220646-execution-tree-trace-parity-v1/state_trace_parity_v1 --agent

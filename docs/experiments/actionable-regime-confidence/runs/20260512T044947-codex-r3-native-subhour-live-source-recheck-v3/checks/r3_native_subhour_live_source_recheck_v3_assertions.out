@@ -1,0 +1,12 @@
+r3_native_subhour_live_source_recheck_v3=no_ready_source_owned_native_subhour_rows_no_promotion
+required_intake_root_present=false
+required_rows_file_present=false
+required_provenance_file_present=false
+ready_source_owned_native_subhour_exports=0
+accepted_rows_added=0
+source_control_evidence_acquired=false
+canonical_merge_allowed=false
+downstream_rerun_allowed=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

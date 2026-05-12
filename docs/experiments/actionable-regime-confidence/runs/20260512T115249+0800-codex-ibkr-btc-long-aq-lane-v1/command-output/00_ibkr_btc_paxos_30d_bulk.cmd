@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python scripts/auto_quant_external/fetch_external.py ibkr-bulk --config docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/config/ibkr_btc_paxos_30d_bulk.yaml --force

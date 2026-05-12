@@ -1,0 +1,247 @@
+[run] /Users/thrill3r/.local/bin/uv run --with pandas --with numpy --with catboost python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --target-csv docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/structural_path_ranking_target_history_mature_only.csv --output-dir docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model --model-family catboost --output-scores docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_scores_nq_history_mature.csv
+[load] docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/structural_path_ranking_target_history_mature_only.csv: 1397 rows, 37 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] 1 features, 1397 training samples
+[features] label dist: {np.float64(0.0): np.int64(678), np.float64(1.0): np.int64(719)}
+[template] User weights template saved to docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/user_weights.json
+[train] CatBoost saved to docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm
+[train] top features:                   Feature Id  Importances
+0  structural_baseline_score        100.0
+[artifact] Registration metadata saved to docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/trainer_artifact.json
+
+[done] Model saved to docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model
+[done] To apply: python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model --target-csv <new_target.csv> --output-scores scores.csv
+
+[run] /Users/thrill3r/.local/bin/uv run --with pandas --with numpy --with catboost python /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py --apply --model-dir docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model --target-csv docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/structural_path_ranking_target_history_mature_only.csv --output-scores docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_scores_nq_history_mature.csv
+[load] docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/structural_path_ranking_target_history_mature_only.csv: 1397 rows, 37 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] 1 features, 1397 training samples
+[features] label dist: {np.float64(0.0): np.int64(678), np.float64(1.0): np.int64(719)}
+[apply] CatBoost predictions: 1397
+[apply] Scores saved to docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_scores_nq_history_mature.csv
+
+[run] /Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine register-structural-path-ranking-trainer-artifact --symbol NQ --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state --artifact-uri docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/trainer_artifact.json --model-family catboost --score-column raw_path_score
+{
+  "export_ready": true,
+  "calibration_ready": true,
+  "calibration_quality_ready": true,
+  "trainer_manifest_ready": true,
+  "trainer_manifest_protocol_version": "structural-path-ranking-trainer-manifest-v1",
+  "trainer_manifest_dataset_role": "external_path_ranker_training_dataset",
+  "trainer_feature_columns": 12,
+  "trainer_calibration_columns": 3,
+  "trainer_guardrail_columns": 7,
+  "trainer_artifact_ready": true,
+  "trainer_artifact_status": "runtime_eligible",
+  "trainer_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_trainer_artifact.json",
+  "trainer_artifact_protocol_version": "structural-path-ranking-trainer-artifact-v1",
+  "trainer_artifact_dataset_role": "external_path_ranker_training_dataset",
+  "trainer_artifact_model_family": "catboost",
+  "trainer_artifact_score_column": "raw_path_score",
+  "trainer_artifact_trained_rows": 1397,
+  "trainer_artifact_history_rows": 1397,
+  "trainer_artifact_calibration_rows": 1397,
+  "trainer_artifact_feature_columns": 1,
+  "trainer_artifact_uri_present": true,
+  "runtime_selection_enabled": true,
+  "runtime_selection_ready": true,
+  "runtime_selection_status": "enabled_candidate_set_ready",
+  "runtime_selection_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_runtime_selection.json",
+  "runtime_selection_mode": "prefer_history",
+  "runtime_source_kind": "candidate_set",
+  "runtime_active_match_count": 1,
+  "runtime_artifact_match_count": 0,
+  "runtime_candidate_set_match_count": 1,
+  "runtime_history_match_count": 5,
+  "rows": 3,
+  "candidate_set_id": "structural-candidates:NQ:8f288754c638a9e8",
+  "candidate_set_size": 3,
+  "mature_rows": 1,
+  "rows_with_propensity_estimate": 1,
+  "rows_with_calibrated_path_prob": 1,
+  "rows_with_execution_gate_status": 1,
+  "rows_with_training_weight": 1,
+  "history_rows": 1421,
+  "history_mature_rows": 1397,
+  "history_rows_with_raw_path_score": 1395,
+  "history_rows_with_calibrated_path_prob": 1390,
+  "history_rows_with_path_prob_lower_bound": 1390,
+  "history_rows_with_propensity_estimate": 1401,
+  "history_rows_with_training_weight": 1397,
+  "update_runs_with_structural_feedback": 40,
+  "feedback_rows_with_structural_feedback": 40,
+  "feedback_rows_total": 40,
+  "feedback_rows_without_structural_feedback": 0,
+  "feedback_rows_without_structural_feedback_dominant_count": 0,
+  "feedback_rows_matured": 40,
+  "feedback_rows_pending": 0,
+  "pending_update_artifact_present": true,
+  "pending_update_history_rows": 38,
+  "pending_update_templates_with_structural_feedback": 0,
+  "calibration_evaluation_rows": 1390,
+  "calibration_brier_score": 0.2497058247016356,
+  "calibration_propensity_weighted_rows": 1390,
+  "calibration_propensity_weighted_brier_score": 0.24964638335373654,
+  "calibration_expected_error": 0.00008409561943894419,
+  "calibration_max_error": 0.0013368983957219305,
+  "raw_scored_mature_rows": 1392,
+  "raw_scored_mature_min_rows": 30,
+  "raw_scored_mature_shortfall_rows": 0,
+  "production_validation_ready": true,
+  "production_validation_rows": 1390,
+  "production_validation_min_rows": 30,
+  "production_validation_shortfall_rows": 0,
+  "observation_validation_ready": true,
+  "observation_validation_rows": 40,
+  "observation_validation_min_rows": 30,
+  "observation_validation_shortfall_rows": 0,
+  "target_row_validation": {
+    "raw_scored_mature_rows": 1392,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_shortfall_rows": 0,
+    "production_validation_ready": true,
+    "production_validation_rows": 1390,
+    "production_validation_min_rows": 30,
+    "production_validation_shortfall_rows": 0,
+    "summary_line": "target_rows raw_scored_mature=1392/30 production_validation=1390/30 ready=true"
+  },
+  "feedback_observation_validation": {
+    "ready": true,
+    "mature_observations": 40,
+    "min_observations": 30,
+    "shortfall_observations": 0,
+    "pending_observations": 0,
+    "total_observations": 40,
+    "outcome_distribution": {
+      "breakeven": 5,
+      "invalidated": 3,
+      "loss": 12,
+      "win": 20
+    },
+    "summary_line": "observations mature=40/30 pending=0 total=40 ready=true"
+  },
+  "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target_summary.json",
+  "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target.csv",
+  "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target.jsonl",
+  "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target_history.csv",
+  "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target_history.jsonl",
+  "warnings": [],
+  "summary_line": "structural_path_ranking_target rows=3 history_rows=1421 mature_rows=1 history_mature_rows=1397 raw_scored_mature=1392/30 production_validation=1390/30 observation_validation=40/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=1"
+}
+
+[run] /Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine enable-structural-path-ranking-runtime --symbol NQ --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state --reuse-mode prefer_history
+{
+  "export_ready": true,
+  "calibration_ready": true,
+  "calibration_quality_ready": true,
+  "trainer_manifest_ready": true,
+  "trainer_manifest_protocol_version": "structural-path-ranking-trainer-manifest-v1",
+  "trainer_manifest_dataset_role": "external_path_ranker_training_dataset",
+  "trainer_feature_columns": 12,
+  "trainer_calibration_columns": 3,
+  "trainer_guardrail_columns": 7,
+  "trainer_artifact_ready": true,
+  "trainer_artifact_status": "runtime_eligible",
+  "trainer_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_trainer_artifact.json",
+  "trainer_artifact_protocol_version": "structural-path-ranking-trainer-artifact-v1",
+  "trainer_artifact_dataset_role": "external_path_ranker_training_dataset",
+  "trainer_artifact_model_family": "catboost",
+  "trainer_artifact_score_column": "raw_path_score",
+  "trainer_artifact_trained_rows": 1397,
+  "trainer_artifact_history_rows": 1397,
+  "trainer_artifact_calibration_rows": 1397,
+  "trainer_artifact_feature_columns": 1,
+  "trainer_artifact_uri_present": true,
+  "runtime_selection_enabled": true,
+  "runtime_selection_ready": true,
+  "runtime_selection_status": "enabled_candidate_set_ready",
+  "runtime_selection_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_runtime_selection.json",
+  "runtime_selection_mode": "prefer_history",
+  "runtime_source_kind": "candidate_set",
+  "runtime_active_match_count": 1,
+  "runtime_artifact_match_count": 0,
+  "runtime_candidate_set_match_count": 1,
+  "runtime_history_match_count": 5,
+  "rows": 3,
+  "candidate_set_id": "structural-candidates:NQ:8f288754c638a9e8",
+  "candidate_set_size": 3,
+  "mature_rows": 1,
+  "rows_with_propensity_estimate": 1,
+  "rows_with_calibrated_path_prob": 1,
+  "rows_with_execution_gate_status": 1,
+  "rows_with_training_weight": 1,
+  "history_rows": 1421,
+  "history_mature_rows": 1397,
+  "history_rows_with_raw_path_score": 1395,
+  "history_rows_with_calibrated_path_prob": 1390,
+  "history_rows_with_path_prob_lower_bound": 1390,
+  "history_rows_with_propensity_estimate": 1401,
+  "history_rows_with_training_weight": 1397,
+  "update_runs_with_structural_feedback": 40,
+  "feedback_rows_with_structural_feedback": 40,
+  "feedback_rows_total": 40,
+  "feedback_rows_without_structural_feedback": 0,
+  "feedback_rows_without_structural_feedback_dominant_count": 0,
+  "feedback_rows_matured": 40,
+  "feedback_rows_pending": 0,
+  "pending_update_artifact_present": true,
+  "pending_update_history_rows": 38,
+  "pending_update_templates_with_structural_feedback": 0,
+  "calibration_evaluation_rows": 1390,
+  "calibration_brier_score": 0.2497058247016356,
+  "calibration_propensity_weighted_rows": 1390,
+  "calibration_propensity_weighted_brier_score": 0.24964638335373654,
+  "calibration_expected_error": 0.00008409561943894419,
+  "calibration_max_error": 0.0013368983957219305,
+  "raw_scored_mature_rows": 1392,
+  "raw_scored_mature_min_rows": 30,
+  "raw_scored_mature_shortfall_rows": 0,
+  "production_validation_ready": true,
+  "production_validation_rows": 1390,
+  "production_validation_min_rows": 30,
+  "production_validation_shortfall_rows": 0,
+  "observation_validation_ready": true,
+  "observation_validation_rows": 40,
+  "observation_validation_min_rows": 30,
+  "observation_validation_shortfall_rows": 0,
+  "target_row_validation": {
+    "raw_scored_mature_rows": 1392,
+    "raw_scored_mature_min_rows": 30,
+    "raw_scored_mature_shortfall_rows": 0,
+    "production_validation_ready": true,
+    "production_validation_rows": 1390,
+    "production_validation_min_rows": 30,
+    "production_validation_shortfall_rows": 0,
+    "summary_line": "target_rows raw_scored_mature=1392/30 production_validation=1390/30 ready=true"
+  },
+  "feedback_observation_validation": {
+    "ready": true,
+    "mature_observations": 40,
+    "min_observations": 30,
+    "shortfall_observations": 0,
+    "pending_observations": 0,
+    "total_observations": 40,
+    "outcome_distribution": {
+      "breakeven": 5,
+      "invalidated": 3,
+      "loss": 12,
+      "win": 20
+    },
+    "summary_line": "observations mature=40/30 pending=0 total=40 ready=true"
+  },
+  "summary_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target_summary.json",
+  "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target.csv",
+  "jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target.jsonl",
+  "history_csv_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target_history.csv",
+  "history_jsonl_path": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state/NQ/policy_training/structural_path_ranking_target_history.jsonl",
+  "warnings": [],
+  "summary_line": "structural_path_ranking_target rows=3 history_rows=1421 mature_rows=1 history_mature_rows=1397 raw_scored_mature=1392/30 production_validation=1390/30 observation_validation=40/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=unknown score_source=unknown runtime_matches=1"
+}
+
+
+[done] Model: docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model
+[done] Scores: docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_scores_nq_history_mature.csv
+
+[next] Apply to runtime:
+  ./target/debug/ict-engine apply-structural-path-ranking-external-scores \
+    --symbol NQ --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state --scores-file docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_scores_nq_history_mature.csv

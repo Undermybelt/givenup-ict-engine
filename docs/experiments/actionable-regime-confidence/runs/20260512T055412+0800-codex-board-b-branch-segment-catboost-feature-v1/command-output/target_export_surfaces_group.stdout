@@ -1,0 +1,9 @@
+
+running 4 tests
+test application::orchestration::structural_playbook::tests::target_export_surfaces_exact_feedback_paths_in_current_rows ... ok
+test application::orchestration::structural_playbook::tests::target_export_surfaces_read_only_bbn_label_set_branch_paths_in_current_rows ... ok
+test application::orchestration::structural_playbook::tests::target_export_surfaces_regime_bundle_branch_paths_in_current_rows ... ok
+test application::orchestration::structural_playbook::tests::target_export_surfaces_branch_segments_as_catboost_features ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 934 filtered out; finished in 0.09s
+

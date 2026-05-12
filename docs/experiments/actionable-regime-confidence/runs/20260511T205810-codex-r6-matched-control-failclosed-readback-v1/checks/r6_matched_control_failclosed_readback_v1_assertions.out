@@ -1,0 +1,5 @@
+positive_rows_present=PASS
+provenance_present=PASS
+matched_negative_controls_present=PASS
+verifier_schema_ready_unscored=PASS
+strict_full_objective_not_claimed=PASS

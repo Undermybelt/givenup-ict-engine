@@ -1,0 +1,12 @@
+PASS run_id=20260512T053933-codex-r5-053505-board-artifact-mismatch-correction-v1
+PASS gate_result=r5_053505_board_artifact_mismatch_correction_v1=board_entry_mismatch_corrected_no_promotion
+PASS actual_053505_gate=r5_current_kaggle_recency_candidate_screen_v1=no_current_post_cutoff_target_rows_no_promotion
+PASS target_rows_found=0
+PASS required_target_root_present=false
+PASS accepted_rows_added=0
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

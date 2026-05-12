@@ -1,0 +1,10 @@
+file,split,controlled_positive_event_groups,positive_event_groups,control_presence_rate,wilson95_lcb
+features_5S.csv.gz,all,317,317,1.0,0.9880269250899991
+features_5S.csv.gz,chronological_calibration_first_60pct,190,190,1.0,0.9801824705402803
+features_5S.csv.gz,chronological_heldout_last_40pct,127,127,1.0,0.9706403547062368
+features_15S.csv.gz,all,317,317,1.0,0.9880269250899991
+features_15S.csv.gz,chronological_calibration_first_60pct,190,190,1.0,0.9801824705402803
+features_15S.csv.gz,chronological_heldout_last_40pct,127,127,1.0,0.9706403547062368
+features_25S.csv.gz,all,317,317,1.0,0.9880269250899991
+features_25S.csv.gz,chronological_calibration_first_60pct,190,190,1.0,0.9801824705402803
+features_25S.csv.gz,chronological_heldout_last_40pct,127,127,1.0,0.9706403547062368

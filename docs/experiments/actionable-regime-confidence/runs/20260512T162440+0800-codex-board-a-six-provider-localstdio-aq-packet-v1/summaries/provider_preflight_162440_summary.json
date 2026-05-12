@@ -1,0 +1,140 @@
+{
+  "command_exits": {
+    "00_provider_status_agent_localstdio": 0,
+    "01_yfinance_btc_usd_1h": 0,
+    "02_binance_btcusdt_1h": 0,
+    "03_bybit_linear_btcusdt_1h": 0,
+    "04_kraken_futures_pfxbtusd_1h": 0,
+    "05_ibkr_spy_1h": 0,
+    "06_tvr_btc_usd_1h_localstdio": 0
+  },
+  "decision": {
+    "auto_quant_should_start": false,
+    "blockers": [
+      "provider_rows_not_same_symbol_or_same_market_context:IBKR,Kraken,Bybit"
+    ],
+    "promotion_allowed": false,
+    "same_root_current_aq_authority": false,
+    "six_provider_current_rows": true,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provider_rows": [
+    {
+      "data": {
+        "exists": true,
+        "first_timestamp": "2026-05-11T08:00:00+00:00",
+        "last_timestamp": "2026-05-12T08:00:00+00:00",
+        "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162440+0800-codex-board-a-six-provider-localstdio-aq-packet-v1/data/ibkr_spy_1h_2d.csv",
+        "rows": 17
+      },
+      "exit": 0,
+      "notes": "Current reachable IBKR row is SPY context, not BTC/crypto same-symbol AQ input.",
+      "provider": "IBKR",
+      "provider_symbol": "SPY STK SMART/ARCA",
+      "same_symbol_as_crypto_packet": false,
+      "timeframe": "1h",
+      "usable_for_current_aq_authority": false
+    },
+    {
+      "data": {
+        "exists": true,
+        "first_timestamp": "2026-04-12T09:00:00Z",
+        "last_timestamp": "2026-05-12T08:38:22Z",
+        "ok": true,
+        "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162440+0800-codex-board-a-six-provider-localstdio-aq-packet-v1/data/tradingview_mcp_btc_usd_1h.json",
+        "rows": 720
+      },
+      "exit": 0,
+      "notes": "Local-stdio tradingview_mcp route; remote HTTP API key path intentionally unset.",
+      "provider": "TradingViewRemix/TVR",
+      "provider_symbol": "BTC-USD",
+      "same_symbol_as_crypto_packet": true,
+      "timeframe": "1h",
+      "usable_for_current_aq_authority": true
+    },
+    {
+      "data": {
+        "exists": true,
+        "first_timestamp": "2026-05-01 00:00:00+00:00",
+        "last_timestamp": "2026-05-11 23:00:00+00:00",
+        "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162440+0800-codex-board-a-six-provider-localstdio-aq-packet-v1/data/yfinance_btc_usd_1h_20260501_20260512.csv",
+        "rows": 263
+      },
+      "exit": 0,
+      "notes": "Public Yahoo HTTP OHLCV.",
+      "provider": "yfinance/YF",
+      "provider_symbol": "BTC-USD",
+      "same_symbol_as_crypto_packet": true,
+      "timeframe": "1h",
+      "usable_for_current_aq_authority": true
+    },
+    {
+      "data": {
+        "exists": true,
+        "first_timestamp": "2026-05-01 00:00:00+00:00",
+        "last_timestamp": "2026-05-12 00:00:00+00:00",
+        "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162440+0800-codex-board-a-six-provider-localstdio-aq-packet-v1/data/kraken_futures_pfxbtusd_1h_20260501_20260512.csv",
+        "rows": 265
+      },
+      "exit": 0,
+      "notes": "Kraken futures BTC-perp public OHLCV; related instrument, not exact spot BTCUSDT.",
+      "provider": "Kraken",
+      "provider_symbol": "PF_XBTUSD",
+      "same_symbol_as_crypto_packet": false,
+      "timeframe": "1h",
+      "usable_for_current_aq_authority": true
+    },
+    {
+      "data": {
+        "exists": true,
+        "first_timestamp": "2026-05-01 00:00:00+00:00",
+        "last_timestamp": "2026-05-12 00:00:00+00:00",
+        "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162440+0800-codex-board-a-six-provider-localstdio-aq-packet-v1/data/binance_btcusdt_1h_20260501_20260512.csv",
+        "rows": 265
+      },
+      "exit": 0,
+      "notes": "Public Binance spot OHLCV.",
+      "provider": "Binance",
+      "provider_symbol": "BTCUSDT",
+      "same_symbol_as_crypto_packet": true,
+      "timeframe": "1h",
+      "usable_for_current_aq_authority": true
+    },
+    {
+      "data": {
+        "exists": true,
+        "first_timestamp": "2026-05-01 00:00:00+00:00",
+        "last_timestamp": "2026-05-12 00:00:00+00:00",
+        "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T162440+0800-codex-board-a-six-provider-localstdio-aq-packet-v1/data/bybit_linear_btcusdt_1h_20260501_20260512.csv",
+        "rows": 265
+      },
+      "exit": 0,
+      "notes": "Public Bybit linear-perp OHLCV; related instrument, not exact spot BTCUSDT.",
+      "provider": "Bybit",
+      "provider_symbol": "BTCUSDT linear",
+      "same_symbol_as_crypto_packet": false,
+      "timeframe": "1h",
+      "usable_for_current_aq_authority": true
+    }
+  ],
+  "provider_status_reasons": {
+    "ibkr": {
+      "ready": false,
+      "reason": "missing_local_ibkr_consent",
+      "status": "install_required"
+    },
+    "tradingview_mcp": {
+      "ready": true,
+      "reason": "local_stdio_ohlcv_ready_options_unverified",
+      "status": "ready_degraded"
+    },
+    "yfinance": {
+      "ready": true,
+      "reason": "native_yfinance_runtime_available",
+      "status": "ready"
+    }
+  },
+  "run_id": "20260512T162440+0800-codex-board-a-six-provider-localstdio-aq-packet-v1",
+  "scope": "board_a_six_provider_localstdio_preflight"
+}

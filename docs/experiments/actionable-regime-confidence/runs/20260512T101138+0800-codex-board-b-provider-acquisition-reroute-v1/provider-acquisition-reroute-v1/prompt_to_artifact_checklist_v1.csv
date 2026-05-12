@@ -1,0 +1,8 @@
+requirement,evidence,status,notes
+"Check yfinance / yf","command-output/01_market_data_harness_fetch.out","covered","Fetched 21 QQQ daily rows."
+"Check TradingViewRemix / TradingView MCP","command-output/01_market_data_harness_fetch.err","blocked","Connectivity probe / get_ohlcv failed for NASDAQ:QQQ."
+"Check IBKR","command-output/01_market_data_harness_fetch.err","blocked","IBKR historical fetch failed; stderr reports missing redis / ibkr_bridge dependency."
+"Check Kraken","command-output/02_kraken_xbtusd_1h.out; provider-data/kraken_XBTUSD_1h.csv","covered","Fetched 721 XBTUSD 1h rows from 2026-04-12 to 2026-05-12."
+"Record provider status","command-output/00_provider_status_agent.out","covered","Provider status exited 0."
+"Do not claim regime acceptance from provider fetch","provider-acquisition-reroute-v1/provider_acquisition_reroute_v1.json","covered","accepted_main_regime_v2_root_packet=false."
+"Do not call update_goal unless complete","provider-acquisition-reroute-v1/provider_acquisition_reroute_v1.json","covered","update_goal=false."

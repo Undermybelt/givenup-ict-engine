@@ -1,0 +1,10 @@
+CARGO_TARGET_DIR=/tmp/ict-engine-codex-branch-path-wire-target-v2 cargo test regime_profit_branch_path --lib -- --nocapture
+
+Finished `test` profile [unoptimized + debuginfo] target(s) in 2.11s
+Running unittests src/lib.rs (/tmp/ict-engine-codex-branch-path-wire-target-v2/debug/deps/ict_engine-97d28a47a09f25ad)
+
+running 2 tests
+test application::auto_quant::real_trades::wire::tests::explicit_regime_profit_branch_path_recovers_structural_segments_without_split_fields ... ok
+test application::auto_quant::real_trades::wire::tests::record_level_regime_profit_branch_path_becomes_structural_feedback_and_factor_usage ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 935 filtered out; finished in 0.04s

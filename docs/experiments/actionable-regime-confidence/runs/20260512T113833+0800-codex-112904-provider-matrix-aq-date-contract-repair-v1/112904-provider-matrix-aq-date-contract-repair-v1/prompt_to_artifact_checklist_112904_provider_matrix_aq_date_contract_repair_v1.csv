@@ -1,0 +1,7 @@
+requirement,artifact,status,note
+do not duplicate provider fetch work,docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1,covered,reused 112315 rows plus 112030 TVR/IBKR precheck
+repair 112904 date contract,docs/experiments/actionable-regime-confidence/runs/20260512T113833+0800-codex-112904-provider-matrix-aq-date-contract-repair-v1/workspace,covered,feather date is datetime64 UTC
+run AQ on provider rows,command-output/aq_*_run_tomac.*,covered,5 provider runs exited 0
+preserve branch path,run_tomac.py STRATEGY_WIRE_META,covered,provider_matrix -> ProviderCrypto -> MomentumOrPullback -> ProviderCryptoMomentumStateV1_or_ProviderCryptoPullbackRevertV1
+classify negative evidence,docs/experiments/actionable-regime-confidence/runs/20260512T113833+0800-codex-112904-provider-matrix-aq-date-contract-repair-v1/112904-provider-matrix-aq-date-contract-repair-v1/112904_provider_matrix_aq_date_contract_repair_v1.md,covered,chain_contract_negative_sample_repaired_to_infrastructure_limited_aq_observation
+downstream chain,N/A,not_run,promotion blocked by mixed-source authority and IBKR 1h quality

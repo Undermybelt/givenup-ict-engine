@@ -1,0 +1,29 @@
+{
+  "branch_paths": [
+    "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+    "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+    "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+  ],
+  "branch_score_rows": 4,
+  "branch_scores": "docs/experiments/actionable-regime-confidence/runs/20260511T222129-codex-board-b-220646-branch-catboost-runtime-gap-v1/catboost/branch_catboost_scores_v1.csv",
+  "catboost_model": "docs/experiments/actionable-regime-confidence/runs/20260511T222129-codex-board-b-220646-branch-catboost-runtime-gap-v1/catboost/branch_catboost_model_v1.cbm",
+  "holdout_rows": 2778,
+  "model_family": "catboost",
+  "promotion_status": "not_promoted:runtime_target_path_ids_do_not_match_regime_profit_branch_paths",
+  "runtime_can_consume_exact_branch_paths_without_mapping": false,
+  "runtime_candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+  "runtime_exact_branch_scores": "docs/experiments/actionable-regime-confidence/runs/20260511T222129-codex-board-b-220646-branch-catboost-runtime-gap-v1/catboost/runtime_external_scores_exact_branch_paths_v1.csv",
+  "runtime_path_ids": [
+    "path:scenario:NQ:belief_regime_node:trend:range_mean_reversion:primary",
+    "path:scenario:NQ:belief_regime_node:trend:stress_de_risk:primary",
+    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+  ],
+  "runtime_path_ids_matching_regime_profit_branch_paths": [],
+  "runtime_target_rows": 3,
+  "schema_version": "board-b-branch-catboost-runtime-gap-probe/v1",
+  "source_branch_features": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/downstream-chain/catboost/catboost_branch_features_v1.csv",
+  "source_runtime_target": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/state/NQ/policy_training/structural_path_ranking_target.csv",
+  "total_rows": 12329,
+  "train_rows": 9551
+}

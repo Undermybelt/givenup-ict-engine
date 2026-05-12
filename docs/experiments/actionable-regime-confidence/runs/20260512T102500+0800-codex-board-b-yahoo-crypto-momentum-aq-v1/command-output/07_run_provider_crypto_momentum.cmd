@@ -1,0 +1,1 @@
+uv --directory /Users/thrill3r/Auto-Quant run python /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1/workspace/auto-quant-yahoo-crypto-momentum/run_tomac.py

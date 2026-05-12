@@ -1,0 +1,12 @@
+PASS checklist_items=9
+PASS unmet_requirements=4
+PASS scoped_95_present=true
+PASS strict_1h_fixed_gate=41/156
+PASS strict_1h_future_protocol=45/156
+PASS remaining_near_miss_after_future=9
+PASS min_new_source_sessions_needed=5
+PASS external_second_screen_accepted_rows=0
+PASS direct_v2_ready_sources=0
+PASS live_tmp_intake_files=0
+PASS strict_full_objective=false
+PASS update_goal=false

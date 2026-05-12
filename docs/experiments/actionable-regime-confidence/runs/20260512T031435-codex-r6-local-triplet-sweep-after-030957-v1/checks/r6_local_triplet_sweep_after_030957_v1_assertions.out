@@ -1,0 +1,16 @@
+PASS canonical_r6_owner_export_root_absent=true
+PASS r3_native_subhour_source_label_root_absent=true
+PASS r5_source_panel_recency_extension_root_absent=true
+PASS only_extra_noncanonical_triplet_is_000803_isolated_projection=true
+PASS legacy_direct_intake_sidecars_not_owner_export=true
+PASS accepted_rows_added=0
+PASS canonical_merge_allowed=false
+PASS downstream_promotion_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS shared_intake_mutated=false
+PASS r3_r5_r6_roots_mutated=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false

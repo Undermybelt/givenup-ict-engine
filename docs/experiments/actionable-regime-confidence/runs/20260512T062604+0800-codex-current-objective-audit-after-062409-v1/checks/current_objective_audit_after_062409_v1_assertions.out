@@ -1,0 +1,12 @@
+gate_result=current_objective_audit_after_062409_v1=not_complete_required_roots_absent_no_source_control_no_downstream_rerun
+objective_complete=false
+required_roots_absent=true
+source_label_equivalence_rows=248440
+accepted_rows_added=0
+source_control_evidence_acquired=false
+target_root_mutated=false
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

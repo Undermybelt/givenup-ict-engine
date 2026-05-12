@@ -1,0 +1,14 @@
+gate_result=current_objective_audit_after_085727_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion
+branch_contract_present=true
+cursor_fail_closed=true
+source_control_evidence_acquired=false
+valid_required_root_unlock=false
+explicit_user_selected_history=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+objective_complete=false
+update_goal=false

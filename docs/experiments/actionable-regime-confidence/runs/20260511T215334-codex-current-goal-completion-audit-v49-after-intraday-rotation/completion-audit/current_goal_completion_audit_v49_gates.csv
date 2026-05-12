@@ -1,0 +1,16 @@
+requirement,status,evidence,blocker,next_action
+root_first_branch_path_contract,pass,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md root-first profit factor contract and latest branch rows preserve parent_regime_root/regime_profit_branch_path,none,keep preserving branch path through all future candidates
+multi_agent_append_only_coordination,pass,latest board rows preserve preliminary no-artifact readbacks as superseded rows instead of deleting concurrent work,none,re-read cursor before every edit
+real_auto_quant_or_provider_backtest_artifacts,pass,214454 IntradayRiskDefensiveRotationV1 emitted 41880 variant rows and 2571 selected price-root rows with assertions,none,continue selecting materially different root families/panels
+scoped_manipulation_component,pass,205047 ManipulationStopTakeProfitGridV2 component remains pass and is consumed as component-only evidence,component cannot promote full Board B alone,combine only after all price roots pass
+bull_price_root_rc_spa,fail,214454 Bull selected rows 98 and failed thin/fold/edge/cost/DSR/specificity/score gates,Bull did not pass unchanged RC-SPA,repair with different root family/panel
+bear_price_root_rc_spa,fail,214454 Bear selected rows 2191 but failed edge/cost/fold/overfit/DSR/specificity/score gates,Bear did not pass unchanged RC-SPA,repair with different root family/panel
+sideways_price_root_rc_spa,fail,214454 Sideways selected rows 203 and failed fold/edge/cost/overfit/DSR/specificity/score gates,Sideways did not pass unchanged RC-SPA,repair with different root family/panel
+crisis_price_root_rc_spa,fail,214454 Crisis selected rows 79 and failed thin/insufficient-fold/edge/cost/overfit/score gates,Crisis did not pass unchanged RC-SPA,repair with crisis-bearing provider panel or direct crisis source
+all_price_roots_plus_manipulation_pass_together,fail,latest price roots passed 0/4 while Manipulation component passed,full Board B promotion requires Bull/Bear/Sideways/Crisis plus scoped Manipulation together,do not run downstream promotion
+pre_bayes_same_branch_path,blocked,downstream_consumption is not_started:blocked_by_branch_rc_spa_hard_gates,no RC-SPA-passing packet exists,run only after all required branch gates pass
+bbn_same_branch_path,blocked,downstream_consumption is not_started:blocked_by_branch_rc_spa_hard_gates,no RC-SPA-passing packet exists,run only after Pre-Bayes eligible packet exists
+catboost_path_ranker_same_branch_path,blocked,downstream_consumption is not_started:blocked_by_branch_rc_spa_hard_gates,no RC-SPA-passing packet exists,run only after BBN eligible packet exists
+execution_tree_same_branch_path,blocked,downstream_consumption is not_started:blocked_by_branch_rc_spa_hard_gates,no RC-SPA-passing packet exists,run only after path-ranker eligible packet exists
+provider_breadth_ibkr_tradingview_yf_kraken,partial,prior provider readbacks captured yfinance/TradingView/Kraken readiness and IBKR gateway/dependency state; latest 214454 used local Auto-Quant feathers,latest candidate did not freshly exercise all providers,prefer next material provider panel or provider-status refresh
+goal_completion,fail,root price branches failed and downstream was not started,objective not achieved,continue B2R-repeat-next

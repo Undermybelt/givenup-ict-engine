@@ -1,0 +1,10 @@
+PASS run_id=20260512T051754-codex-current-objective-audit-after-051145-051153-051247-v2
+PASS gate_result=current_objective_audit_after_051145_051153_051247_v2=not_complete_no_accepted_regimes_no_source_control_unlock_no_promotion
+PASS accepted_regime_confidence_labels=0
+PASS source_control_evidence_acquired=false
+PASS new_confidence_gate=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

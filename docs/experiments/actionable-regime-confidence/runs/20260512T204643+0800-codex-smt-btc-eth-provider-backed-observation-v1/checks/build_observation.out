@@ -1,0 +1,13 @@
+{
+  "provider_count": 6,
+  "providers_with_overlap": 6,
+  "providers_with_stable_relationship": 6,
+  "total_aligned_rows": 5163,
+  "smt_event_count": 127,
+  "branch_keyed_trade_count": 0,
+  "fold_count": 2,
+  "fold_keys": [
+    "2026-04",
+    "2026-05"
+  ]
+}

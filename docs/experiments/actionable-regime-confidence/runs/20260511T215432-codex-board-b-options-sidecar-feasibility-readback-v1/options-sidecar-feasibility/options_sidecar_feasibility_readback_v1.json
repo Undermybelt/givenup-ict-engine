@@ -1,0 +1,121 @@
+{
+  "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T215432-codex-board-b-options-sidecar-feasibility-readback-v1/checks/options_sidecar_feasibility_readback_v1_assertions.out",
+    "manipulation_component": "docs/experiments/actionable-regime-confidence/runs/20260511T205047-codex-board-b-manipulation-stop-tp-grid-v2/manipulation-stop-tp-grid-v2/manipulation_stop_tp_grid_v2.md",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T215432-codex-board-b-options-sidecar-feasibility-readback-v1/options-sidecar-feasibility/options_sidecar_feasibility_readback_v1.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T215432-codex-board-b-options-sidecar-feasibility-readback-v1/options-sidecar-feasibility/options_sidecar_feasibility_readback_v1.md",
+    "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T215432-codex-board-b-options-sidecar-feasibility-readback-v1/options-sidecar-feasibility/options_sidecar_feasibility_sources_v1.csv"
+  },
+  "created_at_utc": "2026-05-11T13:55:43.069367+00:00",
+  "decision": {
+    "branch_rows_emitted": 0,
+    "downstream_consumption": "not_started:blocked_by_options_sidecar_feasibility",
+    "gate_result": "fail:options_sidecar_single_snapshot_not_trainable",
+    "has_greeks": true,
+    "has_iv": true,
+    "has_open_interest": true,
+    "has_volume": true,
+    "manipulation_component_pass_consumed": false,
+    "minimum_monthly_folds": 4,
+    "minimum_snapshots_for_folds": 20,
+    "next_action": "Acquire or build a historical options/dealer-positioning sidecar with >=20 dated snapshots and >=4 chronological folds before using IV/skew/OI as a Board B root-branch profit factor.",
+    "price_root_paths_passed": 0,
+    "primary_blocker": "Local options sidecar has IV/Greek snapshot fields but not a historical snapshot time series, so it cannot be aligned to Board A roots across chronological folds or treated as a profitability factor.",
+    "rc_spa_scored": false,
+    "total_option_rows": 1038,
+    "unique_snapshot_count": 2
+  },
+  "intended_branch_path_shape": "main_regime -> options_vol_sidecar_context -> option_iv_skew_oi_factor -> profit_factor",
+  "recipe_id": "OptionsSidecarFeasibilityReadbackV1",
+  "run_id": "20260511T215432+0800-codex-board-b-options-sidecar-feasibility-readback-v1",
+  "schema_version": "board-b-options-sidecar-feasibility/v1",
+  "sidecars": {
+    "btc_ohlcv_files": [
+      "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1d.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-4h.feather"
+    ],
+    "crypto_ohlcv_file_count": 15,
+    "crypto_ohlcv_files": [
+      "/Users/thrill3r/Auto-Quant/user_data/data/AVAX_USDT-1d.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/AVAX_USDT-1h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/AVAX_USDT-4h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/BNB_USDT-1d.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/BNB_USDT-1h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/BNB_USDT-4h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1d.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-1h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/BTC_USDT-4h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1d.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-1h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/ETH_USDT-4h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/SOL_USDT-1d.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/SOL_USDT-1h.feather",
+      "/Users/thrill3r/Auto-Quant/user_data/data/SOL_USDT-4h.feather"
+    ]
+  },
+  "sources": [
+    {
+      "exists": true,
+      "field_counts": {
+        "delta": 538,
+        "gamma": 538,
+        "mark_iv": 538,
+        "open_interest": 0,
+        "theta": 538,
+        "vega": 538,
+        "volume_24h": 0
+      },
+      "has_greeks": true,
+      "has_iv": true,
+      "has_open_interest": false,
+      "has_volume": false,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/options/binance_BTC.csv",
+      "rows": 538,
+      "snapshot_values": [
+        "2026-04-26T02:19:48.037498+00:00"
+      ],
+      "underlyings": [
+        "BTCUSDT"
+      ],
+      "unique_expiries": 12,
+      "unique_sides": [
+        "CALL",
+        "PUT"
+      ],
+      "unique_snapshots": 1
+    },
+    {
+      "exists": true,
+      "field_counts": {
+        "delta": 500,
+        "gamma": 500,
+        "mark_iv": 500,
+        "open_interest": 500,
+        "theta": 500,
+        "vega": 500,
+        "volume_24h": 500
+      },
+      "has_greeks": true,
+      "has_iv": true,
+      "has_open_interest": true,
+      "has_volume": true,
+      "path": "/Users/thrill3r/Auto-Quant/user_data/data/options/bybit_BTC.csv",
+      "rows": 500,
+      "snapshot_values": [
+        "2026-04-26T02:10:30.177279+00:00"
+      ],
+      "underlyings": [
+        "BTC"
+      ],
+      "unique_expiries": 9,
+      "unique_sides": [
+        "C",
+        "P"
+      ],
+      "unique_snapshots": 1
+    }
+  ]
+}

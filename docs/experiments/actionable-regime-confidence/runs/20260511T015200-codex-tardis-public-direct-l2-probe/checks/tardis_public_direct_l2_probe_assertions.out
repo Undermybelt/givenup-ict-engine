@@ -1,0 +1,10 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T015200-codex-tardis-public-direct-l2-probe/direct-l2/tardis_public_direct_l2_probe.json
+report_md: docs/experiments/actionable-regime-confidence/runs/20260511T015200-codex-tardis-public-direct-l2-probe/direct-l2/tardis_public_direct_l2_probe.md
+public_tardis_direct_l2_accessible: True
+qualifying_direct_manipulation_input_sets: 0
+manipulation_input_state: direct_l2_accessible_but_unlabeled_not_calibration_grade
+thresholds_relaxed: False
+runtime_code_changed: False
+fresh_calibration_rerun: False
+trade_usable: False
+GATE blocked_direct_l2_probe_only

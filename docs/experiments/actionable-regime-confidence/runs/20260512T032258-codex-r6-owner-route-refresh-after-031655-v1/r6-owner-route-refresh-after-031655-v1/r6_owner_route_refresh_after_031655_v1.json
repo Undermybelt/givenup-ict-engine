@@ -1,0 +1,75 @@
+{
+  "run_id": "20260512T032258-codex-r6-owner-route-refresh-after-031655-v1",
+  "generated_at_local": "2026-05-12T03:22:58+08:00",
+  "board_sha256_before_refresh": "436d3c55cc2093a46721fb92b814aa9be023aff4835439b7ec950f9e1526543e",
+  "gate_result": "r6_owner_route_refresh_after_031655_v1=official_routes_current_controls_not_acquired_no_merge",
+  "latest_current_objective_audit": {
+    "run_id": "20260512T031655-codex-current-objective-completion-audit-after-031435-v1",
+    "gate_result": "current_objective_completion_audit_after_031435_v1=not_complete_latest_r6_packets_nonpromoting_source_controls_downstream_blocked"
+  },
+  "official_route_refresh": [
+    {
+      "route_id": "cme_market_depth_market_by_order",
+      "owner": "CME Group",
+      "official_url": "https://cmegroupclientsite.atlassian.net/wiki/spaces/EPICSANDBOX/pages/457091894/Market+Depth",
+      "current_readback": "Historical Market Depth date coverage includes CME from 2005, NYMEX and COMEX from 2007, FIX-formatted files from 2009, and order book/trade data at tick granularity.",
+      "oystacher_date_fit": "exchange_level_2011_2013_fit_confirmed",
+      "verifier_control_fit": "potentially_usable_after_licensed_export_product_contract_scope_and_provenance",
+      "promotion_use": "blocked_until_export_acquired",
+      "remaining_gap": "licensed verifier-native export not acquired; product/contract scope and normal-control policy acceptance still required"
+    },
+    {
+      "route_id": "cboe_legacy_cfe_vix_futures_trades_quotes",
+      "owner": "Cboe/CFE",
+      "official_url": "https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes",
+      "current_readback": "Legacy CFE VIX futures trades and quotes product covers April 2004 through February 2018 and provides quote/trade-style fields.",
+      "oystacher_date_fit": "2013_2014_vix_window_covered",
+      "verifier_control_fit": "weak_without_order_ids_side_added_liquidity_or_explicit_control_policy",
+      "promotion_use": "blocked_until_export_and_policy_fit_confirmed",
+      "remaining_gap": "licensed export not acquired; order-lifecycle/depth fields not proven sufficient for matched normal controls"
+    },
+    {
+      "route_id": "cboe_current_cfe_futures_trades",
+      "owner": "Cboe/CFE",
+      "official_url": "https://datashop.cboe.com/cfe-futures-trades",
+      "current_readback": "Current CFE Futures Trades product includes trade side, trade condition, order IDs, and side-added-liquidity style fields.",
+      "oystacher_date_fit": "not_usable_for_2013_2014_because_availability_starts_2018_03",
+      "verifier_control_fit": "schema_relevant_but_date_mismatched",
+      "promotion_use": "blocked_date_mismatch",
+      "remaining_gap": "starts after Oystacher VIX date window"
+    },
+    {
+      "route_id": "cboe_us_futures_depth_of_book",
+      "owner": "Cboe/CFE",
+      "official_url": "https://www.cboe.com/market_data_services/us/futures/",
+      "current_readback": "Current Cboe Futures Depth of Book service route exists.",
+      "oystacher_date_fit": "historical_2013_2014_depth_availability_not_confirmed",
+      "verifier_control_fit": "unknown_until_datashop_or_support_export_confirmation",
+      "promotion_use": "blocked_until_historical_export_confirmed",
+      "remaining_gap": "historical depth/order-lifecycle export and provenance not acquired"
+    }
+  ],
+  "live_gate_status": {
+    "source_owned_normal_controls_acquired": 0,
+    "flip_approval_present": false,
+    "r6_owner_export_root_complete": false,
+    "r3_native_subhour_root_exists": false,
+    "r5_recency_extension_root_exists": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "non_mutations": {
+    "external_requests_sent": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "r3_r5_r6_roots_mutated": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false
+  },
+  "decision": "not_complete"
+}

@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-B2R_ETH_SIX_PROVIDER_MOMENTUM_125715-1778563215202",
+  "generated_at": "2026-05-12T05:20:15.202684Z",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "ffe95976c9bc122c",
+  "execution_validity_summary": "execution_blocked=303;execution_observe_only=171;execution_ready=98",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        172
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.44281049087086377,
+      "execution_readiness_drift": 0.00036947433850129276,
+      "sample_count": 172
+    },
+    {
+      "horizon_bars": [
+        172,
+        458
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4322553333649179,
+      "execution_readiness_drift": 0.00014079707358500136,
+      "sample_count": 286
+    },
+    {
+      "horizon_bars": [
+        458,
+        572
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.44063297960841313,
+      "execution_readiness_drift": -0.0005537287717810832,
+      "sample_count": 114
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "b3f8c0bf78541ed0",
+    "data_fingerprint": "5a7b1342fd5ec9b0"
+  }
+}

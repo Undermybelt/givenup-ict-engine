@@ -1,0 +1,10 @@
+PASS diagnostic_run_root_preserved
+PASS slow_scan_exit_marker_recorded
+FAIL_CLOSED first_scan_killed_slow_scan
+FAIL_CLOSED no_candidate_json_produced
+FAIL_CLOSED not_real_auto_quant_execution
+FAIL_CLOSED no_provider_matrix_invocation_rows
+FAIL_CLOSED no_mature_profitable_rooted_branch
+FAIL_CLOSED no_pre_bayes_bbn_catboost_execution_tree_chain
+promotion_allowed=false
+update_goal=false

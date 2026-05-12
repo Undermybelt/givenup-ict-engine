@@ -1,0 +1,8 @@
+regime_label,source_label,main_regime_v2,decision
+0,STRONG SELL,Bear,map
+1,WEAK SELL,Bear,map
+2,BEAR TRAP,Abstain,abstain_trap
+3,FLAT / NOISE,Sideways,map
+4,BULL TRAP,Abstain,abstain_trap
+5,WEAK BUY,Bull,map
+6,STRONG BUY,Bull,map

@@ -1,0 +1,35 @@
+{
+  "run_id": "20260512T041426-codex-autoquant-threaded-prepare-after-040757-v1",
+  "gate_result": "autoquant_threaded_prepare_after_040757_v1=threaded_prepare_still_dns_blocked_no_promotion",
+  "state_dir": "/tmp/ict-engine-autoquant-bootstrap-prepare-after-040311-v1/autoquant-state",
+  "threaded_resolver_path": "docs/experiments/actionable-regime-confidence/runs/20260512T022552-codex-autoquant-threaded-dns-prepare-probe-v1/scripts",
+  "command_exits": {
+    "auto_quant_status_before": 0,
+    "auto_quant_prepare_threaded": 1,
+    "auto_quant_status_after": 0
+  },
+  "status_before": {
+    "status": "dependency_ready_data_missing",
+    "dependency_healthy": true,
+    "data_ready": false
+  },
+  "status_after": {
+    "status": "dependency_ready_data_missing",
+    "dependency_healthy": true,
+    "data_ready": false
+  },
+  "prepare_blocker": "binance_dns_exchange_info_unavailable",
+  "source_roots_absent_after": [
+    "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "/tmp/ict-engine-native-subhour-source-label-intake",
+    "/tmp/ict-engine-source-panel-recency-extension"
+  ],
+  "accepted_rows_added": 0,
+  "source_control_evidence_acquired": false,
+  "new_confidence_gate": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

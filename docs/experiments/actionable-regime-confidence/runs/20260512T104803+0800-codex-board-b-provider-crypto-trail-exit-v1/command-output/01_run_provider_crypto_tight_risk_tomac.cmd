@@ -1,0 +1,1 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T104803+0800-codex-board-b-provider-crypto-trail-exit-v1/workspace/auto-quant-provider-crypto-trail-exit && /Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py

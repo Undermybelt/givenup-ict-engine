@@ -1,0 +1,536 @@
+2026-05-12 12:37:51,296 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 12:37:51,301 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 12:37:51,302 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 12:37:51,303 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data/strategies_external
+2026-05-12 12:37:51,304 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 12:37:51,304 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data ...
+2026-05-12 12:37:51,305 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data/data ...
+2026-05-12 12:37:51,305 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 12:37:51,306 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 12:37:51,319 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 12:37:51,321 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 12:37:51,326 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 12:37:51,327 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 12:37:51,355 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 12:37:51,356 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 12:37:52,746 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy TomacAggressiveBE from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_
+pairmap_v1/.deps/auto-quant/user_data/strategies_external/TomacAggressiveBE.py'...
+2026-05-12 12:37:52,747 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 12:37:52,748 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 12:37:52,749 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-12 12:37:52,750 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 12:37:52,750 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 12:37:52,750 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 12:37:52,750 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-12 12:37:52,751 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 12:37:52,751 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.04
+2026-05-12 12:37:52,751 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: True
+2026-05-12 12:37:52,751 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive: 0.003
+2026-05-12 12:37:52,752 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.005
+2026-05-12 12:37:52,752 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: True
+2026-05-12 12:37:52,752 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 12:37:52,752 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 12:37:52,752 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60}
+2026-05-12 12:37:52,753 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 12:37:52,753 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-12 12:37:52,753 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 12:37:52,753 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 200
+2026-05-12 12:37:52,753 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 12:37:52,754 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 12:37:52,754 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 12:37:52,754 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 12:37:52,754 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 12:37:52,754 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 12:37:52,754 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 12:37:52,755 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 12:37:52,755 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 12:37:52,755 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-12 12:37:52,755 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-12 12:37:52,759 - freqtrade.configuration.config_validation - CRITICAL - Invalid configuration. Reason: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 
+'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 
+'BCH', 'BNB', '']
+
+Failed validating 'enum' in schema['properties']['fiat_display_currency']:
+    {'description': 'Fiat currency for display purposes.',
+     'type': 'string',
+     'enum': ['AUD',
+              'BRL',
+              'CAD',
+              'CHF',
+              'CLP',
+              'CNY',
+              'CZK',
+              'DKK',
+              'EUR',
+              'GBP',
+              'HKD',
+              'HUF',
+              'IDR',
+              'ILS',
+              'INR',
+              'JPY',
+              'KRW',
+              'MXN',
+              'MYR',
+              'NOK',
+              'NZD',
+              'PHP',
+              'PKR',
+              'PLN',
+              'RUB',
+              'UAH',
+              'SEK',
+              'SGD',
+              'THB',
+              'TRY',
+              'TWD',
+              'ZAR',
+              'USD',
+              'BTC',
+              'ETH',
+              'XRP',
+              'LTC',
+              'BCH',
+              'BNB',
+              '']}
+
+On instance['fiat_display_currency']:
+    'USDT'
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 65, in validate_config_schema
+    FreqtradeValidator(conf_schema).validate(conf)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/jsonschema/validators.py", line 450, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 'BCH', 'BNB', '']
+
+Failed validating 'enum' in schema['properties']['fiat_display_currency']:
+    {'description': 'Fiat currency for display purposes.',
+     'type': 'string',
+     'enum': ['AUD',
+              'BRL',
+              'CAD',
+              'CHF',
+              'CLP',
+              'CNY',
+              'CZK',
+              'DKK',
+              'EUR',
+              'GBP',
+              'HKD',
+              'HUF',
+              'IDR',
+              'ILS',
+              'INR',
+              'JPY',
+              'KRW',
+              'MXN',
+              'MYR',
+              'NOK',
+              'NZD',
+              'PHP',
+              'PKR',
+              'PLN',
+              'RUB',
+              'UAH',
+              'SEK',
+              'SGD',
+              'THB',
+              'TRY',
+              'TWD',
+              'ZAR',
+              'USD',
+              'BTC',
+              'ETH',
+              'XRP',
+              'LTC',
+              'BCH',
+              'BNB',
+              '']}
+
+On instance['fiat_display_currency']:
+    'USDT'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/run_tomac.py", line 229, in main
+    results = run_backtest(name)
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/run_tomac.py", line 164, in run_backtest
+    bt = Backtesting(config, exchange=exchange)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 164, in __init__
+    validate_config_consistency(self.config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 98, in validate_config_consistency
+    validate_config_schema(conf, preliminary=preliminary)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 70, in validate_config_schema
+    raise ConfigurationError(result.message)
+freqtrade.exceptions.ConfigurationError: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 'BCH', 'BNB', '']
+2026-05-12 12:37:52,765 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/config.tomac.json ...
+2026-05-12 12:37:52,767 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 12:37:52,768 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 12:37:52,768 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 12:37:52,768 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data/strategies_external
+2026-05-12 12:37:52,769 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 12:37:52,769 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data ...
+2026-05-12 12:37:52,769 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data/data ...
+2026-05-12 12:37:52,769 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 12:37:52,770 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 12:37:52,777 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 12:37:52,778 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 12:37:52,778 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 12:37:52,778 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 12:37:52,796 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 12:37:52,796 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 12:37:52,798 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy TomacKillzoneBreakout from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_
+pairmap_v1/.deps/auto-quant/user_data/strategies_external/TomacKillzoneBreakout.py'...
+2026-05-12 12:37:52,798 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 12:37:52,799 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 12:37:52,799 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-12 12:37:52,799 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 12:37:52,800 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 12:37:52,800 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 12:37:52,800 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-12 12:37:52,800 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 12:37:52,800 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.05
+2026-05-12 12:37:52,801 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: True
+2026-05-12 12:37:52,801 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive: 0.01
+2026-05-12 12:37:52,801 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.02
+2026-05-12 12:37:52,801 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: True
+2026-05-12 12:37:52,801 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 12:37:52,801 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 12:37:52,802 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-12 12:37:52,802 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 12:37:52,802 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-12 12:37:52,802 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 12:37:52,803 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 250
+2026-05-12 12:37:52,803 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 12:37:52,803 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 12:37:52,803 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 12:37:52,804 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 12:37:52,804 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 12:37:52,804 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 12:37:52,804 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 12:37:52,804 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 12:37:52,804 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 12:37:52,805 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-12 12:37:52,805 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-12 12:37:52,807 - freqtrade.configuration.config_validation - CRITICAL - Invalid configuration. Reason: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 
+'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 
+'BCH', 'BNB', '']
+
+Failed validating 'enum' in schema['properties']['fiat_display_currency']:
+    {'description': 'Fiat currency for display purposes.',
+     'type': 'string',
+     'enum': ['AUD',
+              'BRL',
+              'CAD',
+              'CHF',
+              'CLP',
+              'CNY',
+              'CZK',
+              'DKK',
+              'EUR',
+              'GBP',
+              'HKD',
+              'HUF',
+              'IDR',
+              'ILS',
+              'INR',
+              'JPY',
+              'KRW',
+              'MXN',
+              'MYR',
+              'NOK',
+              'NZD',
+              'PHP',
+              'PKR',
+              'PLN',
+              'RUB',
+              'UAH',
+              'SEK',
+              'SGD',
+              'THB',
+              'TRY',
+              'TWD',
+              'ZAR',
+              'USD',
+              'BTC',
+              'ETH',
+              'XRP',
+              'LTC',
+              'BCH',
+              'BNB',
+              '']}
+
+On instance['fiat_display_currency']:
+    'USDT'
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 65, in validate_config_schema
+    FreqtradeValidator(conf_schema).validate(conf)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/jsonschema/validators.py", line 450, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 'BCH', 'BNB', '']
+
+Failed validating 'enum' in schema['properties']['fiat_display_currency']:
+    {'description': 'Fiat currency for display purposes.',
+     'type': 'string',
+     'enum': ['AUD',
+              'BRL',
+              'CAD',
+              'CHF',
+              'CLP',
+              'CNY',
+              'CZK',
+              'DKK',
+              'EUR',
+              'GBP',
+              'HKD',
+              'HUF',
+              'IDR',
+              'ILS',
+              'INR',
+              'JPY',
+              'KRW',
+              'MXN',
+              'MYR',
+              'NOK',
+              'NZD',
+              'PHP',
+              'PKR',
+              'PLN',
+              'RUB',
+              'UAH',
+              'SEK',
+              'SGD',
+              'THB',
+              'TRY',
+              'TWD',
+              'ZAR',
+              'USD',
+              'BTC',
+              'ETH',
+              'XRP',
+              'LTC',
+              'BCH',
+              'BNB',
+              '']}
+
+On instance['fiat_display_currency']:
+    'USDT'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/run_tomac.py", line 229, in main
+    results = run_backtest(name)
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/run_tomac.py", line 164, in run_backtest
+    bt = Backtesting(config, exchange=exchange)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 164, in __init__
+    validate_config_consistency(self.config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 98, in validate_config_consistency
+    validate_config_schema(conf, preliminary=preliminary)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 70, in validate_config_schema
+    raise ConfigurationError(result.message)
+freqtrade.exceptions.ConfigurationError: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 'BCH', 'BNB', '']
+2026-05-12 12:37:52,810 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/config.tomac.json ...
+2026-05-12 12:37:52,812 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 12:37:52,812 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 12:37:52,812 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 12:37:52,812 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data/strategies_external
+2026-05-12 12:37:52,813 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 12:37:52,813 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data ...
+2026-05-12 12:37:52,813 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_p
+airmap_v1/.deps/auto-quant/user_data/data ...
+2026-05-12 12:37:52,813 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 12:37:52,814 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 12:37:52,823 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 12:37:52,823 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 12:37:52,824 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 12:37:52,824 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 12:37:52,837 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 12:37:52,837 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 12:37:52,839 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy TomacRRWinRate from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_
+pairmap_v1/.deps/auto-quant/user_data/strategies_external/TomacRRWinRate.py'...
+2026-05-12 12:37:52,840 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 12:37:52,840 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 12:37:52,840 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-05-12 12:37:52,841 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 12:37:52,841 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 12:37:52,841 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 12:37:52,842 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 0.03}
+2026-05-12 12:37:52,842 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 12:37:52,842 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.02
+2026-05-12 12:37:52,842 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-12 12:37:52,843 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-12 12:37:52,843 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-12 12:37:52,843 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 12:37:52,843 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 12:37:52,843 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-12 12:37:52,844 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 12:37:52,844 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-05-12 12:37:52,844 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 12:37:52,844 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 300
+2026-05-12 12:37:52,845 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 12:37:52,845 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 12:37:52,845 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 12:37:52,845 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 12:37:52,845 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 12:37:52,846 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 12:37:52,847 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 12:37:52,848 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 12:37:52,848 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 12:37:52,848 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-12 12:37:52,848 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-12 12:37:52,851 - freqtrade.configuration.config_validation - CRITICAL - Invalid configuration. Reason: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 
+'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 
+'BCH', 'BNB', '']
+
+Failed validating 'enum' in schema['properties']['fiat_display_currency']:
+    {'description': 'Fiat currency for display purposes.',
+     'type': 'string',
+     'enum': ['AUD',
+              'BRL',
+              'CAD',
+              'CHF',
+              'CLP',
+              'CNY',
+              'CZK',
+              'DKK',
+              'EUR',
+              'GBP',
+              'HKD',
+              'HUF',
+              'IDR',
+              'ILS',
+              'INR',
+              'JPY',
+              'KRW',
+              'MXN',
+              'MYR',
+              'NOK',
+              'NZD',
+              'PHP',
+              'PKR',
+              'PLN',
+              'RUB',
+              'UAH',
+              'SEK',
+              'SGD',
+              'THB',
+              'TRY',
+              'TWD',
+              'ZAR',
+              'USD',
+              'BTC',
+              'ETH',
+              'XRP',
+              'LTC',
+              'BCH',
+              'BNB',
+              '']}
+
+On instance['fiat_display_currency']:
+    'USDT'
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 65, in validate_config_schema
+    FreqtradeValidator(conf_schema).validate(conf)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/jsonschema/validators.py", line 450, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 'BCH', 'BNB', '']
+
+Failed validating 'enum' in schema['properties']['fiat_display_currency']:
+    {'description': 'Fiat currency for display purposes.',
+     'type': 'string',
+     'enum': ['AUD',
+              'BRL',
+              'CAD',
+              'CHF',
+              'CLP',
+              'CNY',
+              'CZK',
+              'DKK',
+              'EUR',
+              'GBP',
+              'HKD',
+              'HUF',
+              'IDR',
+              'ILS',
+              'INR',
+              'JPY',
+              'KRW',
+              'MXN',
+              'MYR',
+              'NOK',
+              'NZD',
+              'PHP',
+              'PKR',
+              'PLN',
+              'RUB',
+              'UAH',
+              'SEK',
+              'SGD',
+              'THB',
+              'TRY',
+              'TWD',
+              'ZAR',
+              'USD',
+              'BTC',
+              'ETH',
+              'XRP',
+              'LTC',
+              'BCH',
+              'BNB',
+              '']}
+
+On instance['fiat_display_currency']:
+    'USDT'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/run_tomac.py", line 229, in main
+    results = run_backtest(name)
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/run_tomac.py", line 164, in run_backtest
+    bt = Backtesting(config, exchange=exchange)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 164, in __init__
+    validate_config_consistency(self.config)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 98, in validate_config_consistency
+    validate_config_schema(conf, preliminary=preliminary)
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123508+0800-codex-115700-selected-history-btcusdt-pairmap-v1/state_selected_history_btcusdt_pairmap_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 70, in validate_config_schema
+    raise ConfigurationError(result.message)
+freqtrade.exceptions.ConfigurationError: 'USDT' is not one of ['AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'UAH', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'USD', 'BTC', 'ETH', 'XRP', 'LTC', 'BCH', 'BNB', '']

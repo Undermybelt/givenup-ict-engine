@@ -1,0 +1,56 @@
+feature,best_bin,source_provider,rows,wins,losses,win_rate,loss_rate,avg_pnl,wilson_win_lower_95,meets_min_rows,meets_95_gate,axis,chronological_bucket,branch_path
+provider_rv_median_24h,high,binance_public,18,11,7,0.611111,0.388889,23.378305,0.386187,False,False,source_provider,,
+provider_rv_median_24h,high,bybit_public,19,11,8,0.578947,0.421053,20.540177,0.362756,False,False,source_provider,,
+provider_rv_median_24h,high,ibkr_paxos_long_midpoint,16,8,8,0.5,0.5,17.76084,0.279992,False,False,source_provider,,
+provider_rv_median_24h,high,kraken_public,8,6,2,0.75,0.25,28.016205,0.40927,False,False,source_provider,,
+provider_rv_median_24h,high,tvr_default_binance,10,7,3,0.7,0.3,26.570993,0.396773,False,False,source_provider,,
+provider_rv_median_24h,high,yfinance,7,5,2,0.714286,0.285714,30.213704,0.358929,False,False,source_provider,,
+provider_rv_median_24h,high,,44,24,20,0.545455,0.454545,21.367192,0.400659,True,False,chronological_bucket,early,
+provider_rv_median_24h,high,,14,10,4,0.714286,0.285714,20.529906,0.453505,False,False,chronological_bucket,middle,
+provider_rv_median_24h,high,,20,14,6,0.7,0.3,28.450334,0.481023,False,False,chronological_bucket,late,
+provider_rv_median_24h,high,,57,38,19,0.666667,0.333333,24.965425,0.537223,True,False,branch_path,,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1
+provider_rv_median_24h,high,,21,10,11,0.47619,0.52381,17.788217,0.283437,False,False,branch_path,,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1
+provider_return_dispersion_24h,high,binance_public,17,8,9,0.470588,0.529412,6.663878,0.261648,False,False,source_provider,,
+provider_return_dispersion_24h,high,bybit_public,18,8,10,0.444444,0.555556,3.727121,0.245592,False,False,source_provider,,
+provider_return_dispersion_24h,high,ibkr_paxos_long_midpoint,15,7,8,0.466667,0.533333,9.643935,0.248092,False,False,source_provider,,
+provider_return_dispersion_24h,high,kraken_public,7,3,4,0.428571,0.571429,-3.660145,0.158217,False,False,source_provider,,
+provider_return_dispersion_24h,high,tvr_default_binance,9,3,6,0.333333,0.666667,-7.651968,0.120582,False,False,source_provider,,
+provider_return_dispersion_24h,high,yfinance,10,7,3,0.7,0.3,23.633318,0.396773,False,False,source_provider,,
+provider_return_dispersion_24h,high,,35,25,10,0.714286,0.285714,31.914485,0.549448,True,False,chronological_bucket,early,
+provider_return_dispersion_24h,high,,16,0,16,0.0,1.0,-31.952748,0.0,False,False,chronological_bucket,middle,
+provider_return_dispersion_24h,high,,25,11,14,0.44,0.56,-5.555415,0.266654,False,False,chronological_bucket,late,
+provider_return_dispersion_24h,high,,57,31,26,0.54386,0.45614,12.078683,0.415905,True,False,branch_path,,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1
+provider_return_dispersion_24h,high,,19,5,14,0.263158,0.736842,-11.663544,0.118062,False,False,branch_path,,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1
+provider_range_pos_median_24h,high,binance_public,15,8,7,0.533333,0.466667,13.021324,0.301166,False,False,source_provider,,
+provider_range_pos_median_24h,high,bybit_public,16,8,8,0.5,0.5,11.842463,0.279992,False,False,source_provider,,
+provider_range_pos_median_24h,high,ibkr_paxos_long_midpoint,17,10,7,0.588235,0.411765,22.149021,0.360051,False,False,source_provider,,
+provider_range_pos_median_24h,high,kraken_public,13,6,7,0.461538,0.538462,8.871531,0.232058,False,False,source_provider,,
+provider_range_pos_median_24h,high,tvr_default_binance,12,5,7,0.416667,0.583333,4.332905,0.193257,False,False,source_provider,,
+provider_range_pos_median_24h,high,yfinance,8,5,3,0.625,0.375,21.810645,0.305738,False,False,source_provider,,
+provider_range_pos_median_24h,high,,23,23,0,1.0,0.0,55.864866,0.856879,False,False,chronological_bucket,early,
+provider_range_pos_median_24h,high,,28,5,23,0.178571,0.821429,-10.7637,0.078784,False,False,chronological_bucket,middle,
+provider_range_pos_median_24h,high,,30,14,16,0.466667,0.533333,3.987807,0.302321,True,False,chronological_bucket,late,
+provider_range_pos_median_24h,high,,74,36,38,0.486486,0.513514,10.533451,0.376116,True,False,branch_path,,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1
+provider_range_pos_median_24h,high,,7,6,1,0.857143,0.142857,46.238167,0.486865,False,False,branch_path,,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1
+provider_return_median_abs_1h,mid,binance_public,17,8,9,0.470588,0.529412,3.21135,0.261648,False,False,source_provider,,
+provider_return_median_abs_1h,mid,bybit_public,16,7,9,0.4375,0.5625,-0.285334,0.230984,False,False,source_provider,,
+provider_return_median_abs_1h,mid,ibkr_paxos_long_midpoint,15,5,10,0.333333,0.666667,1.589623,0.151761,False,False,source_provider,,
+provider_return_median_abs_1h,mid,kraken_public,10,4,6,0.4,0.6,-3.196411,0.168178,False,False,source_provider,,
+provider_return_median_abs_1h,mid,tvr_default_binance,11,4,7,0.363636,0.636364,-4.550249,0.151662,False,False,source_provider,,
+provider_return_median_abs_1h,mid,yfinance,6,3,3,0.5,0.5,2.155759,0.187613,False,False,source_provider,,
+provider_return_median_abs_1h,mid,,20,11,9,0.55,0.45,16.911667,0.342082,False,False,chronological_bucket,early,
+provider_return_median_abs_1h,mid,,26,6,20,0.230769,0.769231,-13.291311,0.110337,False,False,chronological_bucket,middle,
+provider_return_median_abs_1h,mid,,29,14,15,0.482759,0.517241,0.418289,0.313858,False,False,chronological_bucket,late,
+provider_return_median_abs_1h,mid,,55,20,35,0.363636,0.636364,-2.72526,0.249303,True,False,branch_path,,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1
+provider_return_median_abs_1h,mid,,20,11,9,0.55,0.45,7.733948,0.342082,False,False,branch_path,,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1
+provider_return_dispersion_4h,high,binance_public,19,9,10,0.473684,0.526316,11.075661,0.273295,False,False,source_provider,,
+provider_return_dispersion_4h,high,bybit_public,19,8,11,0.421053,0.578947,9.15465,0.231416,False,False,source_provider,,
+provider_return_dispersion_4h,high,ibkr_paxos_long_midpoint,18,7,11,0.388889,0.611111,10.321386,0.20305,False,False,source_provider,,
+provider_return_dispersion_4h,high,kraken_public,8,3,5,0.375,0.625,-2.187116,0.136842,False,False,source_provider,,
+provider_return_dispersion_4h,high,tvr_default_binance,8,3,5,0.375,0.625,-1.844494,0.136842,False,False,source_provider,,
+provider_return_dispersion_4h,high,yfinance,7,5,2,0.714286,0.285714,36.528343,0.358929,False,False,source_provider,,
+provider_return_dispersion_4h,high,,37,20,17,0.540541,0.459459,24.173145,0.383838,True,False,chronological_bucket,early,
+provider_return_dispersion_4h,high,,22,5,17,0.227273,0.772727,-9.700797,0.101229,False,False,chronological_bucket,middle,
+provider_return_dispersion_4h,high,,20,10,10,0.5,0.5,5.630877,0.299295,False,False,chronological_bucket,late,
+provider_return_dispersion_4h,high,,69,29,40,0.42029,0.57971,9.067711,0.311059,True,False,branch_path,,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1
+provider_return_dispersion_4h,high,,10,6,4,0.6,0.4,16.793429,0.31267,False,False,branch_path,,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1

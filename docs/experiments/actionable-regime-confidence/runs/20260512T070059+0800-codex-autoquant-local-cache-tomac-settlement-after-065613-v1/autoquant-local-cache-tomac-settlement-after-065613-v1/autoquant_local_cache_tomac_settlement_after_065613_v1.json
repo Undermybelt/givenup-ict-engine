@@ -1,0 +1,58 @@
+{
+  "run_id": "20260512T070059+0800-codex-autoquant-local-cache-tomac-settlement-after-065613-v1",
+  "board_sha256_before_artifact": "af1d64f37c9503ef8e10817bedb5b752d08e2bf6a02e5935a2a57fc016433c42",
+  "gate_result": "autoquant_local_cache_tomac_settlement_after_065613_v1=tomac_backtest_succeeded_runtime_only_source_control_unlock_absent_no_promotion",
+  "source_command_root": "docs/experiments/actionable-regime-confidence/runs/20260512T065613+0800-codex-autoquant-local-cache-data-ready-after-065116-v1/command-output/",
+  "readback": {
+    "autoquant_status_after_cache": {
+      "exit": 0,
+      "status": "dependency_ready_data_ready",
+      "healthy": true,
+      "data_ready": true
+    },
+    "default_seeded_strategy_run": {
+      "exit": 1,
+      "attempted_backtests": 12,
+      "succeeded": 0,
+      "failed": 12,
+      "error_type": "OperationalException",
+      "error_summary": "Could not load Binance markets through Freqtrade/CCXT"
+    },
+    "threaded_resolver_seeded_strategy_run": {
+      "exit": 1,
+      "attempted_backtests": 12,
+      "succeeded": 0,
+      "failed": 12,
+      "error_type": "OperationalException",
+      "error_summary": "Could not load Binance markets through Freqtrade/CCXT"
+    },
+    "tomac_specific_run": {
+      "exit": 0,
+      "strategy": "TomacNQ_KillzoneBreakout",
+      "pair": "QQQ/USD",
+      "timeframe": "1h",
+      "backtesting_from": "2024-06-13 23:00:00",
+      "backtesting_to": "2025-12-30 20:00:00",
+      "trades": 74,
+      "win_rate_pct": 52.7027,
+      "total_profit_pct": 6.98,
+      "sharpe": 0.2207,
+      "sortino": 0.3825,
+      "profit_factor": 1.2501,
+      "max_drawdown_pct": -4.2049
+    }
+  },
+  "accounting": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "provider_autoquant_promotion": false,
+    "pre_bayes_bbn_catboost_execution_tree_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "decision": "Runtime evidence only. The Tomac run is single-pair strategy output and does not satisfy Board A source/control or per-regime confidence gates.",
+  "next_action": "Continue only from explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 post-2026-01-30 rows matching the source-panel schema, verifier-native Crisis-capable R3 MainRegimeV2 labels, or a genuinely new accepted cross-timeframe MainRegimeV2 source export."
+}

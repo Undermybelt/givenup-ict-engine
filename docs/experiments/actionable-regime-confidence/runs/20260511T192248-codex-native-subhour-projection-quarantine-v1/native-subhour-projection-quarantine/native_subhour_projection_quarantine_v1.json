@@ -1,0 +1,100 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before": "bdc6f598881eb8ab765680d550c31c279f5d7ebf64f9047f6b71193b71c08d9e",
+  "created_at_utc": "2026-05-11T11:24:52.358531+00:00",
+  "decision": "native_subhour_projection_quarantine_v1=projected_subhour_rows_not_native_source_labels",
+  "guardrails": [
+    "Do not treat source-window projection rows as native sub-hour source labels.",
+    "Do not treat scoped accepted gates as source-owned other-cycle validation rows.",
+    "Do not rerun calibration from projected labels without a source-owned native sub-hour panel."
+  ],
+  "native_subhour_eligible_rows": 0,
+  "native_subhour_source_overlap_closed": false,
+  "new_confidence_gate": false,
+  "panels_read": [
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T124000-codex-unified-source-label-panel-v1/unified-panel/unified_source_label_panel_v1.csv",
+      "roots": {
+        "Bear": 84,
+        "Bull": 84,
+        "Crisis": 63,
+        "Sideways": 608
+      },
+      "rows": 839,
+      "run_id": "20260511T124000-codex-unified-source-label-panel-v1",
+      "source_lanes": {
+        "sideways_scoped_dated_window": 608,
+        "source_window_crosswalk": 231
+      },
+      "timeframes": {
+        "15m": 33,
+        "1d": 442,
+        "1h": 33,
+        "1m": 33,
+        "1mo": 33,
+        "1w": 166,
+        "30m": 33,
+        "4h": 33,
+        "5m": 33
+      }
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T124027-codex-unified-source-label-panel-v1/unified-source-label-panel/unified_source_label_panel_v1.csv",
+      "roots": {
+        "Bear": 84,
+        "Bull": 84,
+        "Crisis": 63,
+        "Sideways": 608
+      },
+      "rows": 839,
+      "run_id": "20260511T124027-codex-unified-source-label-panel-v1",
+      "source_lanes": {
+        "bull_bear_crisis_source_window_crosswalk": 231,
+        "sideways_scoped_dated_windows_from_accepted_gate": 608
+      },
+      "timeframes": {
+        "15m": 33,
+        "1d": 442,
+        "1h": 33,
+        "1m": 33,
+        "1mo": 33,
+        "1w": 166,
+        "30m": 33,
+        "4h": 33,
+        "5m": 33
+      }
+    }
+  ],
+  "quarantined_subhour_rows": 264,
+  "raw_data_committed": false,
+  "run_id": "20260511T192248+0800-codex-native-subhour-projection-quarantine-v1",
+  "runtime_code_changed": false,
+  "scope": "Audit old unified source-label panels for rows that look sub-hour but are actually projected dated windows.",
+  "strict_full_objective_achieved": false,
+  "subhour_crosswalk_layers": {
+    "macro_crisis_to_gspc_time_projection": 24,
+    "macro_crisis_to_spx_tradable_proxy": 48,
+    "same_underlying_spx_to_gspc_time_projection": 64,
+    "spx_tradable_proxy_time_projection": 128
+  },
+  "subhour_quarantine_reasons": {
+    "dated_window_materialization_not_native_subhour_rows": 48,
+    "projected_day_or_month_source_window_to_subhour_target": 216
+  },
+  "subhour_roots": {
+    "Bear": 96,
+    "Bull": 96,
+    "Crisis": 72
+  },
+  "subhour_rows_read": 264,
+  "subhour_timeframes": {
+    "15m": 66,
+    "1m": 66,
+    "30m": 66,
+    "5m": 66
+  },
+  "thresholds_relaxed": false,
+  "total_rows_read": 1678,
+  "trade_usable": false,
+  "update_goal": false
+}

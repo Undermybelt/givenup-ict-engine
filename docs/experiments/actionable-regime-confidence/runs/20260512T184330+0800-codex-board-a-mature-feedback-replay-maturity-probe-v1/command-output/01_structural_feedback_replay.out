@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "symbol": "BTCUSD",
+  "candles_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/data/cleaned/btc_usd_1h_yfinance_candles.json",
+  "output_root": "docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay",
+  "count": 32,
+  "lookback": 120,
+  "horizon": 24,
+  "threshold": 0.001,
+  "final_mature_rows": 1
+}
+[done] observations=32 final_mature_rows=1

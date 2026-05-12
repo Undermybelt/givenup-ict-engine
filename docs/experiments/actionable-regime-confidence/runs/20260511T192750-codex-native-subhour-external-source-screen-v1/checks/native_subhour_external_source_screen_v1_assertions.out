@@ -1,0 +1,4 @@
+PASS decision=native_subhour_external_source_screen_v1=no_ready_native_subhour_source_labels
+PASS accepted_rows_added=0
+PASS native_subhour_source_overlap_closed=false
+PASS update_goal=false

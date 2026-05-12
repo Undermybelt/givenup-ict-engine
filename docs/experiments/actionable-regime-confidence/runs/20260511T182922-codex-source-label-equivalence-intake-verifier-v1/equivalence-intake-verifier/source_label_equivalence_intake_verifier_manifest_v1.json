@@ -1,0 +1,70 @@
+{
+  "artifact_type": "source_label_equivalence_intake_verifier_manifest_v1",
+  "decision": {
+    "accepted_rows_added": 0,
+    "full_objective_achieved": false,
+    "gate_result": "source_label_equivalence_intake_verifier_v1=ready_rows_not_acquired",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T10:30:29.401087+00:00",
+  "next_action": "Place source-owned label rows and provenance under /tmp/ict-engine-source-label-equivalence-intake, run the verifier, then rerun unchanged chronological and heldout-market/timeframe gates.",
+  "optional_fields": [
+    "redaction_notes"
+  ],
+  "request_root": "docs/experiments/actionable-regime-confidence/runs/20260511T163532-codex-source-label-equivalence-request-v1/source-label-equivalence",
+  "required_fields": [
+    "package_id",
+    "source_owner",
+    "source_report_or_dataset",
+    "source_pull_date",
+    "market_family",
+    "symbol",
+    "source_symbol",
+    "equivalence_policy",
+    "event_species",
+    "timestamp_or_date",
+    "timeframe",
+    "main_regime_v2_label",
+    "direct_label",
+    "matched_negative_group_id",
+    "split_role",
+    "source_row_id",
+    "provenance_hash"
+  ],
+  "required_files": [
+    {
+      "destination": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+      "file": "source_label_equivalence_rows.csv",
+      "purpose": "source-owned or owner-approved price-root/direct-Manipulation label rows using the request schema",
+      "required": true
+    },
+    {
+      "destination": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+      "file": "source_label_equivalence_provenance.json",
+      "purpose": "source owner, pull/approval date, export identity, hashes, and non-proxy attestation",
+      "required": true
+    }
+  ],
+  "run_id": "20260511T182922+0800-codex-source-label-equivalence-intake-verifier-v1",
+  "schema": "docs/experiments/actionable-regime-confidence/runs/20260511T163532-codex-source-label-equivalence-request-v1/source-label-equivalence/source_label_equivalence_request_v1_required_schema.csv",
+  "target_package_count": 5,
+  "targets": "docs/experiments/actionable-regime-confidence/runs/20260511T163532-codex-source-label-equivalence-request-v1/source-label-equivalence/source_label_equivalence_request_v1_targets.csv",
+  "verifier": {
+    "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py --intake-root /tmp/ict-engine-source-label-equivalence-intake",
+    "missing_result": {
+      "missing_files": [
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+        "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "missing_result_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_missing_result_v1.json",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py"
+  }
+}

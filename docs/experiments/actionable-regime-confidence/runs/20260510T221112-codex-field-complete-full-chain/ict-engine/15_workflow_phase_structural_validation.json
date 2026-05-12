@@ -1,0 +1,51 @@
+{
+  "delayed_reward": null,
+  "live_regime_truth_rule": {
+    "current_state_branch": "temporal_hmm_pre_bayes_nowcast",
+    "pivot_confirmation_dependency": "not_required",
+    "status": "enforced",
+    "summary": "retrospective zigzag, tiny-leg, or cluster outputs are not sufficient by themselves for live regime truth"
+  },
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol NQ --data docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain/state",
+    "execution_contract": null,
+    "prompt": "Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_htf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json",
+    "user_input_required": true
+  },
+  "source_reliability": {
+    "calibration_brier_score": null,
+    "calibration_log_loss": null,
+    "calibration_observation_count": 0,
+    "calibration_source_count": 0,
+    "calibration_status": null,
+    "distinct_source_count": 1,
+    "holdout_brier_score": null,
+    "holdout_evaluation_item_count": 0,
+    "holdout_log_loss": null,
+    "holdout_observation_coverage": null,
+    "holdout_reason": "status=unavailable train=0 eval=0 obs=0 sources=0",
+    "holdout_split_strategy": null,
+    "holdout_status": null,
+    "holdout_training_item_count": 0,
+    "multi_source_item_count": 0,
+    "ready": false,
+    "replay_brier_score": null,
+    "replay_evaluation_item_count": 0,
+    "replay_log_loss": null,
+    "replay_observation_count": 0,
+    "replay_observation_coverage": null,
+    "replay_reason": "status=unavailable train=0 eval=0 obs=0 sources=0",
+    "replay_source_count": 0,
+    "replay_split_strategy": null,
+    "replay_status": null,
+    "status": "needs_multiple_sources"
+  },
+  "target_policy": {
+    "context_count": 0,
+    "current_model": "symbol:regime:direction_bucket_posterior",
+    "status": "bucket_posterior_empty",
+    "upgrade_path": "learned_contextual_model_not_yet_landed"
+  }
+}

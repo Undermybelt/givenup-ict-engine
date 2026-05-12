@@ -1,0 +1,9 @@
+crosswalk_layer,source_native_scope,target_provider,target_instruments,target_timeframes,roots,candidate_slot_count,status,decision_needed
+strict_native_no_projection,"S&P 500 1d/1w plus NBER monthly native windows",yfinance,^GSPC,"1d|1w","Bull|Bear|Crisis",0,no_current_missing_slot,"No current missing ^GSPC 1d/1w Bull/Bear slots remain; NBER monthly Crisis needs projection before use."
+same_underlying_spx_to_gspc_time_projection,"Yardeni S&P 500 dated Bull/Bear windows",yfinance,^GSPC,"1m|5m|15m|30m|1h|4h|1mo","Bull|Bear",14,pending_owner_crosswalk,"Approve or reject calendar-date S&P 500 window membership as intraday/monthly ^GSPC labels."
+macro_crisis_to_gspc_time_projection,"NBER US contraction months",yfinance,^GSPC,"1m|5m|15m|30m|1h|4h|1mo",Crisis,7,pending_owner_crosswalk,"Approve or reject NBER contraction months as Crisis labels for same-underlying S&P 500 bars."
+spx_tradable_proxy_time_projection,"Yardeni S&P 500 dated Bull/Bear windows",yfinance,"SPY|ES=F","1m|5m|15m|30m|1h|4h|1mo","Bull|Bear",28,pending_owner_crosswalk,"Approve or reject SPY and ES=F as S&P 500 tradable proxy targets."
+macro_crisis_to_spx_tradable_proxy,"NBER US contraction months",yfinance,"SPY|ES=F","1m|5m|15m|30m|1h|4h|1mo",Crisis,14,pending_owner_crosswalk,"Approve or reject NBER contraction months as Crisis labels for SPY and ES=F."
+sideways_source_gap,"no dated source window",any,any,any,Sideways,0,blocked,"Provide a dated Sideways source or approve an adjudication protocol."
+broad_us_equity_family_projection,"S&P 500 and NBER source windows",yfinance,"QQQ|^NDX|NQ=F|^DJI|DIA|YM=F",any,"Bull|Bear|Crisis",0,fail_closed_by_default,"Needs explicit broader index-family crosswalk; not applied by default."
+non_equity_projection,"S&P 500 and NBER source windows",any,"commodities|vol|crypto",any,"Bull|Bear|Crisis",0,fail_closed_by_default,"Not direct labels for commodities, vol, or crypto."

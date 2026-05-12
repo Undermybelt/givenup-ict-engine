@@ -1,0 +1,7 @@
+root,present,file_count,promotion_use
+/tmp/ict-engine-board-a-r6-owner-export-v1,false,0,blocked_required_r6_owner_export
+/tmp/ict-engine-native-subhour-source-label-intake,false,0,blocked_required_r3_native_subhour_labels
+/tmp/ict-engine-source-panel-recency-extension,false,0,blocked_required_r5_recency_extension
+/tmp/ict-engine-source-label-equivalence-intake,true,2,non_promoting_confidence_blocked_sidecar
+/tmp/ict-engine-direct-manipulation-row-intake,true,3,legacy_non_promoting_sidecar
+/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,true,1,non_approving_decision_package

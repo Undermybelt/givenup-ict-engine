@@ -1,0 +1,17 @@
+{
+  "bad_direct_groups": [],
+  "bad_rows": [
+    {
+      "line": 248442,
+      "package_id": "price_root_equivalence_us_index_futures",
+      "reason": "bad_main_regime_v2_label"
+    },
+    {
+      "line": 248442,
+      "package_id": "price_root_equivalence_us_index_futures",
+      "reason": "missing_equivalence_policy"
+    }
+  ],
+  "reason": "rows_failed_guardrails",
+  "status": "blocked"
+}

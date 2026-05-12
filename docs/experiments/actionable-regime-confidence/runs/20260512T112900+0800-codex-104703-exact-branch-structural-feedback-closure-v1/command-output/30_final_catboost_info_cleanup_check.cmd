@@ -1,0 +1,1 @@
+if test -d catboost_info; then find catboost_info -maxdepth 2 -type f -print | sort; rm -rf catboost_info; fi; if test -d catboost_info; then echo catboost_info_present; exit 1; else echo catboost_info_absent; fi

@@ -1,0 +1,10 @@
+Loading /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/.deps/auto-quant/profile_source.csv ...
+  raw_rows=260 bad_date=0 duplicate_ts=0 nan_ohlc=0 after_load=260
+  range 2025-10-31 16:00:00+00:00 -> 2025-12-31 20:00:00+00:00
+  after timerange slice: 260 rows
+  cleaning: SKIPPED (--no-clean)
+  gap_audit: median_gap=14400s max_gap=3,120.0min big_gaps_gt_60x_median=0 (typical for futures session breaks/weekends)
+  wrote   1h:     260 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/.deps/auto-quant/user_data/data/B2R_NQ_COST_CRISIS_REPAIR_032157_USD-1h.feather
+  wrote   4h:     260 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/.deps/auto-quant/user_data/data/B2R_NQ_COST_CRISIS_REPAIR_032157_USD-4h.feather
+  wrote   1d:      53 bars -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/.deps/auto-quant/user_data/data/B2R_NQ_COST_CRISIS_REPAIR_032157_USD-1d.feather
+Done: 3 feather files for pair B2R_NQ_COST_CRISIS_REPAIR_032157/USD in /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T041143+0800-codex-board-b-032157-agent-selected-mtf-factor-research-v1/state_agent_selected_mtf_v1/.deps/auto-quant/user_data/data

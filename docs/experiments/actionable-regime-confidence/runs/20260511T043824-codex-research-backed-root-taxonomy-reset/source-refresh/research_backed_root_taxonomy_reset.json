@@ -1,0 +1,60 @@
+{
+  "run_id": "20260511T043824+0800-codex-research-backed-root-taxonomy-reset",
+  "purpose": "Research-backed reset after the user corrected prior labels as sub-regimes rather than main regimes.",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "fresh_calibration_rerun": false,
+  "trade_usable": false,
+  "gate_result": "taxonomy_reset_no_new_accepted_root",
+  "active_main_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "CrisisStress/VolatilityDislocation"
+  ],
+  "direct_input_gated_root_or_overlay": "Manipulation",
+  "residual": "UnknownOrMixed",
+  "candidate_large_roots_preflight_only": [
+    "TransitionRecovery",
+    "LiquidityDrought",
+    "CrossAssetRotation/RiskOnRiskOff",
+    "MacroPolicyRegime",
+    "BubbleEuphoria"
+  ],
+  "sub_regime_or_evidence_only": [
+    "low_vol_bull",
+    "high_vol_bull",
+    "regular_bear",
+    "correction",
+    "crash",
+    "range_persistence",
+    "accumulation_distribution_display_label",
+    "hmm_state_id",
+    "change_point_break",
+    "directional_change_event",
+    "spoofing_layering",
+    "pump_event",
+    "wash_burst",
+    "wall_imbalance",
+    "thin_liquidity"
+  ],
+  "source_urls": [
+    "https://doi.org/10.1057/s41283-022-00112-y",
+    "https://arxiv.org/abs/2007.14874",
+    "https://doi.org/10.2307/1912559",
+    "https://doi.org/10.1093/rfs/15.4.1137",
+    "https://github.com/hmmlearn/hmmlearn",
+    "https://doi.org/10.1016/j.sigpro.2019.107299",
+    "https://github.com/deepcharles/ruptures",
+    "https://doi.org/10.3390/a11120202",
+    "https://github.com/hidden-regime/hidden-regime",
+    "https://doi.org/10.1057/s41265-016-0029-z",
+    "https://ssrn.com/abstract=4525036",
+    "https://arxiv.org/abs/2504.15908",
+    "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+    "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency"
+  ],
+  "missing_after_reset": [
+    "Manipulation"
+  ]
+}

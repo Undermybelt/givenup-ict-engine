@@ -1,0 +1,84 @@
+{
+  "approval": {
+    "approval_package_path": "docs/experiments/actionable-regime-confidence/runs/20260512T034813-codex-current-objective-audit-after-034423-v1/command-output/r6_approval_decision_package.pretty.json",
+    "approval_package_present": true,
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted": false,
+    "gate_result": "r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge"
+  },
+  "candidate_counts": {
+    "candidate_files": 204,
+    "complete_bundle_directories": [
+      "/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging",
+      "/tmp/ict-engine-direct-manipulation-row-intake",
+      "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake"
+    ],
+    "complete_required_r6_bundles_outside_target_root": 4
+  },
+  "gate_result": "source_control_inbox_repoll_after_034813_v1=verifier_native_bundle_candidate_found_no_auto_promotion",
+  "generated_at_utc": "2026-05-11T19:54:09.605671+00:00",
+  "non_mutations": {
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "explicit_approval_present": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "new_confidence_gate": false,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "r6_owner_export_root_complete": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "roots": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "required_r6_complete_here": false,
+      "required_r6_files_present": "",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_key": "r6_owner_export"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "required_r6_complete_here": false,
+      "required_r6_files_present": "",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_key": "r3_native_subhour"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "required_r6_complete_here": false,
+      "required_r6_files_present": "",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_key": "r5_recency_extension"
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "is_dir": true,
+      "required_r6_complete_here": false,
+      "required_r6_files_present": "",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_key": "source_label_equivalence"
+    }
+  ],
+  "run_id": "20260512T035028-codex-source-control-inbox-repoll-after-034813-v1",
+  "scope": "targeted local inbox repoll after 034813 current-objective audit"
+}

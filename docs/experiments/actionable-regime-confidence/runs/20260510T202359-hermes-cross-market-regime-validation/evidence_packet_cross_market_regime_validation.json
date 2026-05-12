@@ -1,0 +1,1752 @@
+{
+  "schema_version": "board-a-cross-market-regime-condition-validation/v1",
+  "loop_id": "20260510T202359+0800-cross-market-regime-condition-validation",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation",
+  "objective": "Every regime must have explicit qualifying conditions and validation across different instruments, times, and markets.",
+  "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/cross_market_regime_features_and_labels.csv",
+  "input_sources": {
+    "QQQ_IBKR_1h": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/ibkr_QQQ_1h.csv",
+    "QQQ_yfinance_1h": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/yf_QQQ_1h_20240601_20260509.csv",
+    "NQ_15m_cache": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json",
+    "Kraken_PF_XBTUSD_1h": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/kraken_PF_XBTUSD_1h_2024_2025.csv",
+    "existing_accepted_session_liquidity": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json",
+    "full_chain_reaudit": "docs/experiments/actionable-regime-confidence/runs/20260510T200154-hermes-loop-full-chain-reaudit/evidence_packet_full_chain_reaudit.json"
+  },
+  "validation_universe": [
+    {
+      "instrument": "QQQ",
+      "market": "US ETF / IBKR",
+      "timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/ibkr_QQQ_1h.csv",
+      "rows": 4007
+    },
+    {
+      "instrument": "QQQ",
+      "market": "US ETF / yfinance",
+      "timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/yf_QQQ_1h_20240601_20260509.csv",
+      "rows": 3369
+    },
+    {
+      "instrument": "NQ",
+      "market": "CME futures",
+      "timeframe": "15m",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json",
+      "rows": 2786
+    },
+    {
+      "instrument": "PF_XBTUSD",
+      "market": "Kraken crypto",
+      "timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/kraken_PF_XBTUSD_1h_2024_2025.csv",
+      "rows": 2000
+    }
+  ],
+  "threshold_policy": {
+    "thresholds_relaxed": false,
+    "thresholds_are_train_split_local": true,
+    "precision_wilson_lcb_95": 0.95,
+    "precision_wilson_lcb_99": 0.99,
+    "calibration_support_min_95": 120,
+    "test_support_min_95": 60,
+    "ece_max_95": 0.05,
+    "coverage_min_95": 0.03,
+    "cross_market_coverage_floor": ">=3 instrument/market/timeframe contexts, >=3 market labels, >=2 timeframes"
+  },
+  "dataset_summaries": [
+    {
+      "instrument": "QQQ",
+      "market": "US ETF / IBKR",
+      "timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/ibkr_QQQ_1h.csv",
+      "rows": 4007,
+      "split": {
+        "train": 2003,
+        "calibration": 1002,
+        "test": 1002,
+        "train_time_range": {
+          "start": "2025-05-09 08:00:00+00:00",
+          "end": "2025-11-06 14:00:00+00:00"
+        },
+        "calibration_time_range": {
+          "start": "2025-11-06 15:00:00+00:00",
+          "end": "2026-02-09 14:00:00+00:00"
+        },
+        "test_time_range": {
+          "start": "2026-02-09 15:00:00+00:00",
+          "end": "2026-05-08 23:00:00+00:00"
+        }
+      },
+      "thresholds_from_train_split": {
+        "horizon_bars_8h": 8.0,
+        "volume_horizon_bars_4h": 4.0,
+        "trend_ret_q70": 0.0038061448960401644,
+        "absret_low_q35": 0.0023264658207600374,
+        "range_low_q35": 0.007093309531033716,
+        "absret_high_q90": 0.011018623211436606,
+        "drawdown_bad_q10": -0.011269235886576178,
+        "reversal_move_q65": 0.005223686561645468,
+        "ret4_pos_q60": 0.0012791503053340397,
+        "ret4_abs_low_q40": 0.0016812903875411535,
+        "stretch_abs_q80": 0.008178602884739972,
+        "volume_low_q30": 91273.8,
+        "count_low_q30": 466.0
+      },
+      "regime_results": [
+        {
+          "regime_id": "TrendExpansion",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "condition": "condition_trend_expansion",
+          "target": "target_trend_expansion",
+          "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+          "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+          "calibration": {
+            "support": 188,
+            "success": 36,
+            "precision": 0.19148936170212766,
+            "precision_wilson_lcb_95": 0.14164627861962834,
+            "precision_wilson_lcb_99": 0.12860117072534047,
+            "coverage": 0.18762475049900199,
+            "ece": 0.0,
+            "calibrated_probability": 0.19148936170212766
+          },
+          "test": {
+            "support": 243,
+            "success": 69,
+            "precision": 0.2839506172839506,
+            "precision_wilson_lcb_95": 0.230961262117397,
+            "precision_wilson_lcb_99": 0.21595708711014366,
+            "coverage": 0.24446680080482897,
+            "ece": 0.09246125558182294,
+            "calibrated_probability": 0.19148936170212766
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "RangeConsolidation",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+          "condition": "condition_range_consolidation",
+          "target": "target_range_consolidation",
+          "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+          "target_definition": "future 8h absolute return and future 8h range both below train q35",
+          "calibration": {
+            "support": 140,
+            "success": 43,
+            "precision": 0.30714285714285716,
+            "precision_wilson_lcb_95": 0.23673031590244445,
+            "precision_wilson_lcb_99": 0.21735451787081364,
+            "coverage": 0.13972055888223553,
+            "ece": 0.0,
+            "calibrated_probability": 0.30714285714285716
+          },
+          "test": {
+            "support": 120,
+            "success": 6,
+            "precision": 0.05,
+            "precision_wilson_lcb_95": 0.023114364414465797,
+            "precision_wilson_lcb_99": 0.018399385546893656,
+            "coverage": 0.12072434607645875,
+            "ece": 0.2571428571428572,
+            "calibrated_probability": 0.30714285714285716
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ExtremeStress",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "condition": "condition_extreme_stress",
+          "target": "target_extreme_stress",
+          "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+          "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+          "calibration": {
+            "support": 377,
+            "success": 142,
+            "precision": 0.376657824933687,
+            "precision_wilson_lcb_95": 0.32922149554181773,
+            "precision_wilson_lcb_99": 0.3150325208929194,
+            "coverage": 0.37624750499001997,
+            "ece": 0.0,
+            "calibrated_probability": 0.376657824933687
+          },
+          "test": {
+            "support": 370,
+            "success": 134,
+            "precision": 0.3621621621621622,
+            "precision_wilson_lcb_95": 0.31483752859704206,
+            "precision_wilson_lcb_99": 0.3007525543077539,
+            "coverage": 0.3722334004024145,
+            "ece": 0.014495662771524809,
+            "calibrated_probability": 0.376657824933687
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ReversalBrewing",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "condition": "condition_reversal_brewing",
+          "target": "target_reversal_brewing",
+          "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+          "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+          "calibration": {
+            "support": 291,
+            "success": 76,
+            "precision": 0.2611683848797251,
+            "precision_wilson_lcb_95": 0.21404334215746137,
+            "precision_wilson_lcb_99": 0.20069113994469964,
+            "coverage": 0.2904191616766467,
+            "ece": 0.0,
+            "calibrated_probability": 0.2611683848797251
+          },
+          "test": {
+            "support": 344,
+            "success": 74,
+            "precision": 0.21511627906976744,
+            "precision_wilson_lcb_95": 0.17496658871302168,
+            "precision_wilson_lcb_99": 0.16372705011882652,
+            "coverage": 0.3460764587525151,
+            "ece": 0.046052105809957666,
+            "calibrated_probability": 0.2611683848797251
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ThinLiquidity",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "condition": "condition_thin_liquidity",
+          "target": "target_thin_liquidity",
+          "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+          "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+          "calibration": {
+            "support": 295,
+            "success": 90,
+            "precision": 0.3050847457627119,
+            "precision_wilson_lcb_95": 0.25532618581004946,
+            "precision_wilson_lcb_99": 0.24094846321110588,
+            "coverage": 0.2944111776447106,
+            "ece": 0.0,
+            "calibrated_probability": 0.3050847457627119
+          },
+          "test": {
+            "support": 294,
+            "success": 30,
+            "precision": 0.10204081632653061,
+            "precision_wilson_lcb_95": 0.0724152739988674,
+            "precision_wilson_lcb_99": 0.06500503247208045,
+            "coverage": 0.29577464788732394,
+            "ece": 0.20304392943618127,
+            "calibrated_probability": 0.3050847457627119
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        }
+      ]
+    },
+    {
+      "instrument": "QQQ",
+      "market": "US ETF / yfinance",
+      "timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/yf_QQQ_1h_20240601_20260509.csv",
+      "rows": 3369,
+      "split": {
+        "train": 1684,
+        "calibration": 842,
+        "test": 843,
+        "train_time_range": {
+          "start": "2024-06-03 13:00:00+00:00",
+          "end": "2025-05-20 18:00:00+00:00"
+        },
+        "calibration_time_range": {
+          "start": "2025-05-20 19:00:00+00:00",
+          "end": "2025-11-11 17:00:00+00:00"
+        },
+        "test_time_range": {
+          "start": "2025-11-11 18:00:00+00:00",
+          "end": "2026-05-08 20:00:00+00:00"
+        }
+      },
+      "thresholds_from_train_split": {
+        "horizon_bars_8h": 8.0,
+        "volume_horizon_bars_4h": 4.0,
+        "trend_ret_q70": 0.007334320256765258,
+        "absret_low_q35": 0.005148546310316847,
+        "range_low_q35": 0.01394175940331456,
+        "absret_high_q90": 0.025477192580547592,
+        "drawdown_bad_q10": -0.026010749179995952,
+        "reversal_move_q65": 0.011985040222632193,
+        "ret4_pos_q60": 0.0023783682564022875,
+        "ret4_abs_low_q40": 0.0035334048917668335,
+        "stretch_abs_q80": 0.021737555766432295,
+        "volume_low_q30": 2971084.1,
+        "count_low_q30": NaN
+      },
+      "regime_results": [
+        {
+          "regime_id": "TrendExpansion",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "condition": "condition_trend_expansion",
+          "target": "target_trend_expansion",
+          "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+          "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+          "calibration": {
+            "support": 173,
+            "success": 34,
+            "precision": 0.19653179190751446,
+            "precision_wilson_lcb_95": 0.1441865754176339,
+            "precision_wilson_lcb_99": 0.13055241801621217,
+            "coverage": 0.20546318289786222,
+            "ece": 0.0,
+            "calibrated_probability": 0.19653179190751446
+          },
+          "test": {
+            "support": 140,
+            "success": 35,
+            "precision": 0.25,
+            "precision_wilson_lcb_95": 0.1855992056681231,
+            "precision_wilson_lcb_99": 0.16851155759102018,
+            "coverage": 0.16766467065868262,
+            "ece": 0.053468208092485536,
+            "calibrated_probability": 0.19653179190751446
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "RangeConsolidation",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+          "condition": "condition_range_consolidation",
+          "target": "target_range_consolidation",
+          "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+          "target_definition": "future 8h absolute return and future 8h range both below train q35",
+          "calibration": {
+            "support": 195,
+            "success": 95,
+            "precision": 0.48717948717948717,
+            "precision_wilson_lcb_95": 0.4179528065489525,
+            "precision_wilson_lcb_99": 0.3969308290217473,
+            "coverage": 0.23159144893111638,
+            "ece": 0.0,
+            "calibrated_probability": 0.48717948717948717
+          },
+          "test": {
+            "support": 165,
+            "success": 58,
+            "precision": 0.3515151515151515,
+            "precision_wilson_lcb_95": 0.2827980172324818,
+            "precision_wilson_lcb_99": 0.26320777520128197,
+            "coverage": 0.19760479041916168,
+            "ece": 0.13566433566433567,
+            "calibrated_probability": 0.48717948717948717
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ExtremeStress",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "condition": "condition_extreme_stress",
+          "target": "target_extreme_stress",
+          "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+          "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+          "calibration": {
+            "support": 185,
+            "success": 9,
+            "precision": 0.04864864864864865,
+            "precision_wilson_lcb_95": 0.025802366653230147,
+            "precision_wilson_lcb_99": 0.021303483572924106,
+            "coverage": 0.21971496437054633,
+            "ece": 0.0,
+            "calibrated_probability": 0.04864864864864865
+          },
+          "test": {
+            "support": 254,
+            "success": 24,
+            "precision": 0.09448818897637795,
+            "precision_wilson_lcb_95": 0.06431893474765854,
+            "precision_wilson_lcb_99": 0.05701325122897431,
+            "coverage": 0.30419161676646705,
+            "ece": 0.0458395403277293,
+            "calibrated_probability": 0.04864864864864865
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ReversalBrewing",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "condition": "condition_reversal_brewing",
+          "target": "target_reversal_brewing",
+          "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+          "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+          "calibration": {
+            "support": 27,
+            "success": 9,
+            "precision": 0.3333333333333333,
+            "precision_wilson_lcb_95": 0.18643261498715644,
+            "precision_wilson_lcb_99": 0.15427415507786185,
+            "coverage": 0.032066508313539195,
+            "ece": 0.0,
+            "calibrated_probability": 0.3333333333333333
+          },
+          "test": {
+            "support": 90,
+            "success": 17,
+            "precision": 0.18888888888888888,
+            "precision_wilson_lcb_95": 0.12141259844132832,
+            "precision_wilson_lcb_99": 0.1054851863579411,
+            "coverage": 0.10778443113772455,
+            "ece": 0.14444444444444443,
+            "calibrated_probability": 0.3333333333333333
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "calibration_support_below_120;wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ThinLiquidity",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "condition": "condition_thin_liquidity",
+          "target": "target_thin_liquidity",
+          "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+          "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+          "calibration": {
+            "support": 254,
+            "success": 26,
+            "precision": 0.10236220472440945,
+            "precision_wilson_lcb_95": 0.0708159594650154,
+            "precision_wilson_lcb_99": 0.0630728875185879,
+            "coverage": 0.3016627078384798,
+            "ece": 0.0,
+            "calibrated_probability": 0.10236220472440945
+          },
+          "test": {
+            "support": 303,
+            "success": 79,
+            "precision": 0.2607260726072607,
+            "precision_wilson_lcb_95": 0.21450725227927614,
+            "precision_wilson_lcb_99": 0.2013822104611162,
+            "coverage": 0.362874251497006,
+            "ece": 0.15836386788285128,
+            "calibrated_probability": 0.10236220472440945
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        }
+      ]
+    },
+    {
+      "instrument": "NQ",
+      "market": "CME futures",
+      "timeframe": "15m",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json",
+      "rows": 2786,
+      "split": {
+        "train": 1393,
+        "calibration": 696,
+        "test": 697,
+        "train_time_range": {
+          "start": "2026-03-26 11:00:00+00:00",
+          "end": "2026-04-17 08:00:00+00:00"
+        },
+        "calibration_time_range": {
+          "start": "2026-04-17 08:15:00+00:00",
+          "end": "2026-04-29 01:15:00+00:00"
+        },
+        "test_time_range": {
+          "start": "2026-04-29 01:30:00+00:00",
+          "end": "2026-05-08 20:59:59+00:00"
+        }
+      },
+      "thresholds_from_train_split": {
+        "horizon_bars_8h": 32.0,
+        "volume_horizon_bars_4h": 16.0,
+        "trend_ret_q70": 0.005709925827825212,
+        "absret_low_q35": 0.002951347005334925,
+        "range_low_q35": 0.008451990230059504,
+        "absret_high_q90": 0.015133410233411948,
+        "drawdown_bad_q10": -0.0137806049032821,
+        "reversal_move_q65": 0.00771941854351943,
+        "ret4_pos_q60": 0.0005947940140120397,
+        "ret4_abs_low_q40": 0.0008582714212359453,
+        "stretch_abs_q80": 0.006121935236329845,
+        "volume_low_q30": 1440.9999999999998,
+        "count_low_q30": NaN
+      },
+      "regime_results": [
+        {
+          "regime_id": "TrendExpansion",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "condition": "condition_trend_expansion",
+          "target": "target_trend_expansion",
+          "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+          "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+          "calibration": {
+            "support": 155,
+            "success": 22,
+            "precision": 0.14193548387096774,
+            "precision_wilson_lcb_95": 0.0956370142322721,
+            "precision_wilson_lcb_99": 0.08441622940604848,
+            "coverage": 0.22270114942528735,
+            "ece": 0.0,
+            "calibrated_probability": 0.14193548387096774
+          },
+          "test": {
+            "support": 169,
+            "success": 40,
+            "precision": 0.23668639053254437,
+            "precision_wilson_lcb_95": 0.1789020830828869,
+            "precision_wilson_lcb_99": 0.16342353402051657,
+            "coverage": 0.25413533834586466,
+            "ece": 0.09475090666157662,
+            "calibrated_probability": 0.14193548387096774
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "RangeConsolidation",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+          "condition": "condition_range_consolidation",
+          "target": "target_range_consolidation",
+          "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+          "target_definition": "future 8h absolute return and future 8h range both below train q35",
+          "calibration": {
+            "support": 145,
+            "success": 78,
+            "precision": 0.5379310344827586,
+            "precision_wilson_lcb_95": 0.4568515620015899,
+            "precision_wilson_lcb_99": 0.4319701614891966,
+            "coverage": 0.20833333333333334,
+            "ece": 0.0,
+            "calibrated_probability": 0.5379310344827586
+          },
+          "test": {
+            "support": 165,
+            "success": 46,
+            "precision": 0.2787878787878788,
+            "precision_wilson_lcb_95": 0.21599800988023912,
+            "precision_wilson_lcb_99": 0.19876326372629327,
+            "coverage": 0.24812030075187969,
+            "ece": 0.2591431556948798,
+            "calibrated_probability": 0.5379310344827586
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ExtremeStress",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "condition": "condition_extreme_stress",
+          "target": "target_extreme_stress",
+          "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+          "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+          "calibration": {
+            "support": 193,
+            "success": 4,
+            "precision": 0.02072538860103627,
+            "precision_wilson_lcb_95": 0.008088504310272446,
+            "precision_wilson_lcb_99": 0.006186775345284176,
+            "coverage": 0.27729885057471265,
+            "ece": 0.0,
+            "calibrated_probability": 0.02072538860103627
+          },
+          "test": {
+            "support": 188,
+            "success": 8,
+            "precision": 0.0425531914893617,
+            "precision_wilson_lcb_95": 0.02171755533671344,
+            "precision_wilson_lcb_99": 0.01774861845614601,
+            "coverage": 0.28270676691729324,
+            "ece": 0.02182780288832543,
+            "calibrated_probability": 0.02072538860103627
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ReversalBrewing",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "condition": "condition_reversal_brewing",
+          "target": "target_reversal_brewing",
+          "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+          "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+          "calibration": {
+            "support": 30,
+            "success": 2,
+            "precision": 0.06666666666666667,
+            "precision_wilson_lcb_95": 0.018477023791270374,
+            "precision_wilson_lcb_99": 0.013131331935656843,
+            "coverage": 0.04310344827586207,
+            "ece": 0.0,
+            "calibrated_probability": 0.06666666666666667
+          },
+          "test": {
+            "support": 49,
+            "success": 11,
+            "precision": 0.22448979591836735,
+            "precision_wilson_lcb_95": 0.13024970149659185,
+            "precision_wilson_lcb_99": 0.10955732705941038,
+            "coverage": 0.07368421052631578,
+            "ece": 0.15782312925170067,
+            "calibrated_probability": 0.06666666666666667
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "calibration_support_below_120;test_support_below_60;wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ThinLiquidity",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "condition": "condition_thin_liquidity",
+          "target": "target_thin_liquidity",
+          "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+          "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+          "calibration": {
+            "support": 244,
+            "success": 155,
+            "precision": 0.6352459016393442,
+            "precision_wilson_lcb_95": 0.5731846589623457,
+            "precision_wilson_lcb_99": 0.5532647955078683,
+            "coverage": 0.3505747126436782,
+            "ece": 0.0,
+            "calibrated_probability": 0.6352459016393442
+          },
+          "test": {
+            "support": 218,
+            "success": 131,
+            "precision": 0.6009174311926605,
+            "precision_wilson_lcb_95": 0.5347047499391167,
+            "precision_wilson_lcb_99": 0.5137216981213665,
+            "coverage": 0.32781954887218046,
+            "ece": 0.034328470446683745,
+            "calibrated_probability": 0.6352459016393442
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        }
+      ]
+    },
+    {
+      "instrument": "PF_XBTUSD",
+      "market": "Kraken crypto",
+      "timeframe": "1h",
+      "source_path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/provider/kraken_PF_XBTUSD_1h_2024_2025.csv",
+      "rows": 2000,
+      "split": {
+        "train": 1000,
+        "calibration": 500,
+        "test": 500,
+        "train_time_range": {
+          "start": "2024-01-01 00:00:00+00:00",
+          "end": "2024-02-11 15:00:00+00:00"
+        },
+        "calibration_time_range": {
+          "start": "2024-02-11 16:00:00+00:00",
+          "end": "2024-03-03 11:00:00+00:00"
+        },
+        "test_time_range": {
+          "start": "2024-03-03 12:00:00+00:00",
+          "end": "2024-03-24 07:00:00+00:00"
+        }
+      },
+      "thresholds_from_train_split": {
+        "horizon_bars_8h": 8.0,
+        "volume_horizon_bars_4h": 4.0,
+        "trend_ret_q70": 0.005827864646549252,
+        "absret_low_q35": 0.003950256598662643,
+        "range_low_q35": 0.01427906240024392,
+        "absret_high_q90": 0.024354061363293524,
+        "drawdown_bad_q10": -0.027015216847445022,
+        "reversal_move_q65": 0.00936782554425667,
+        "ret4_pos_q60": 0.0019819763287973057,
+        "ret4_abs_low_q40": 0.003495702929622837,
+        "stretch_abs_q80": 0.02007002870306059,
+        "volume_low_q30": 74.42035,
+        "count_low_q30": NaN
+      },
+      "regime_results": [
+        {
+          "regime_id": "TrendExpansion",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "condition": "condition_trend_expansion",
+          "target": "target_trend_expansion",
+          "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+          "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+          "calibration": {
+            "support": 131,
+            "success": 30,
+            "precision": 0.22900763358778625,
+            "precision_wilson_lcb_95": 0.16538602138134892,
+            "precision_wilson_lcb_99": 0.14889318078299613,
+            "coverage": 0.262,
+            "ece": 0.0,
+            "calibrated_probability": 0.22900763358778625
+          },
+          "test": {
+            "support": 128,
+            "success": 35,
+            "precision": 0.2734375,
+            "precision_wilson_lcb_95": 0.2036699978045802,
+            "precision_wilson_lcb_99": 0.1850274446981776,
+            "coverage": 0.2601626016260163,
+            "ece": 0.04442986641221375,
+            "calibrated_probability": 0.22900763358778625
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "RangeConsolidation",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+          "condition": "condition_range_consolidation",
+          "target": "target_range_consolidation",
+          "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+          "target_definition": "future 8h absolute return and future 8h range both below train q35",
+          "calibration": {
+            "support": 103,
+            "success": 40,
+            "precision": 0.3883495145631068,
+            "precision_wilson_lcb_95": 0.29986199561845933,
+            "precision_wilson_lcb_99": 0.2750198633749466,
+            "coverage": 0.206,
+            "ece": 0.0,
+            "calibrated_probability": 0.3883495145631068
+          },
+          "test": {
+            "support": 51,
+            "success": 9,
+            "precision": 0.17647058823529413,
+            "precision_wilson_lcb_95": 0.09572403469126317,
+            "precision_wilson_lcb_99": 0.07911453771646912,
+            "coverage": 0.10365853658536585,
+            "ece": 0.21187892632781266,
+            "calibrated_probability": 0.3883495145631068
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "calibration_support_below_120;test_support_below_60;wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ExtremeStress",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "condition": "condition_extreme_stress",
+          "target": "target_extreme_stress",
+          "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+          "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+          "calibration": {
+            "support": 177,
+            "success": 37,
+            "precision": 0.20903954802259886,
+            "precision_wilson_lcb_95": 0.15563478852051657,
+            "precision_wilson_lcb_99": 0.14154917496205227,
+            "coverage": 0.354,
+            "ece": 0.0,
+            "calibrated_probability": 0.20903954802259886
+          },
+          "test": {
+            "support": 193,
+            "success": 91,
+            "precision": 0.47150259067357514,
+            "precision_wilson_lcb_95": 0.4023211173632648,
+            "precision_wilson_lcb_99": 0.3814403922892467,
+            "coverage": 0.39227642276422764,
+            "ece": 0.2624630426509763,
+            "calibrated_probability": 0.20903954802259886
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ReversalBrewing",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "condition": "condition_reversal_brewing",
+          "target": "target_reversal_brewing",
+          "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+          "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+          "calibration": {
+            "support": 97,
+            "success": 12,
+            "precision": 0.12371134020618557,
+            "precision_wilson_lcb_95": 0.0722040020802373,
+            "precision_wilson_lcb_99": 0.06107967667066581,
+            "coverage": 0.194,
+            "ece": 0.0,
+            "calibrated_probability": 0.12371134020618557
+          },
+          "test": {
+            "support": 164,
+            "success": 56,
+            "precision": 0.34146341463414637,
+            "precision_wilson_lcb_95": 0.27326034779176006,
+            "precision_wilson_lcb_99": 0.2539176783525042,
+            "coverage": 0.3333333333333333,
+            "ece": 0.2177520744279608,
+            "calibrated_probability": 0.12371134020618557
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "calibration_support_below_120;wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ThinLiquidity",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "condition": "condition_thin_liquidity",
+          "target": "target_thin_liquidity",
+          "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+          "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+          "calibration": {
+            "support": 135,
+            "success": 45,
+            "precision": 0.3333333333333333,
+            "precision_wilson_lcb_95": 0.25939723284907457,
+            "precision_wilson_lcb_99": 0.23881307392197976,
+            "coverage": 0.27,
+            "ece": 0.0,
+            "calibrated_probability": 0.3333333333333333
+          },
+          "test": {
+            "support": 110,
+            "success": 18,
+            "precision": 0.16363636363636364,
+            "precision_wilson_lcb_95": 0.10608807657526535,
+            "precision_wilson_lcb_99": 0.09248499201158047,
+            "coverage": 0.22357723577235772,
+            "ece": 0.16969696969696968,
+            "calibrated_probability": 0.3333333333333333
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        }
+      ]
+    }
+  ],
+  "regime_condition_matrix": [
+    {
+      "regime_id": "TrendExpansion",
+      "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+      "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+      "allowed_action": "release_candidate_only_when_other_gates_pass",
+      "validation_contexts": [
+        "QQQ:US ETF / IBKR:1h",
+        "QQQ:US ETF / yfinance:1h",
+        "NQ:CME futures:15m",
+        "PF_XBTUSD:Kraken crypto:1h"
+      ],
+      "market_count": 4,
+      "timeframe_count": 2,
+      "instrument_result_count": 4,
+      "passes_cross_market_coverage_floor": true,
+      "passes_95_anywhere": false,
+      "passes_99_anywhere": false,
+      "instrument_results": [
+        {
+          "regime_id": "TrendExpansion",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "condition": "condition_trend_expansion",
+          "target": "target_trend_expansion",
+          "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+          "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+          "calibration": {
+            "support": 188,
+            "success": 36,
+            "precision": 0.19148936170212766,
+            "precision_wilson_lcb_95": 0.14164627861962834,
+            "precision_wilson_lcb_99": 0.12860117072534047,
+            "coverage": 0.18762475049900199,
+            "ece": 0.0,
+            "calibrated_probability": 0.19148936170212766
+          },
+          "test": {
+            "support": 243,
+            "success": 69,
+            "precision": 0.2839506172839506,
+            "precision_wilson_lcb_95": 0.230961262117397,
+            "precision_wilson_lcb_99": 0.21595708711014366,
+            "coverage": 0.24446680080482897,
+            "ece": 0.09246125558182294,
+            "calibrated_probability": 0.19148936170212766
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "TrendExpansion",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "condition": "condition_trend_expansion",
+          "target": "target_trend_expansion",
+          "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+          "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+          "calibration": {
+            "support": 173,
+            "success": 34,
+            "precision": 0.19653179190751446,
+            "precision_wilson_lcb_95": 0.1441865754176339,
+            "precision_wilson_lcb_99": 0.13055241801621217,
+            "coverage": 0.20546318289786222,
+            "ece": 0.0,
+            "calibrated_probability": 0.19653179190751446
+          },
+          "test": {
+            "support": 140,
+            "success": 35,
+            "precision": 0.25,
+            "precision_wilson_lcb_95": 0.1855992056681231,
+            "precision_wilson_lcb_99": 0.16851155759102018,
+            "coverage": 0.16766467065868262,
+            "ece": 0.053468208092485536,
+            "calibrated_probability": 0.19653179190751446
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "TrendExpansion",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "condition": "condition_trend_expansion",
+          "target": "target_trend_expansion",
+          "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+          "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+          "calibration": {
+            "support": 155,
+            "success": 22,
+            "precision": 0.14193548387096774,
+            "precision_wilson_lcb_95": 0.0956370142322721,
+            "precision_wilson_lcb_99": 0.08441622940604848,
+            "coverage": 0.22270114942528735,
+            "ece": 0.0,
+            "calibrated_probability": 0.14193548387096774
+          },
+          "test": {
+            "support": 169,
+            "success": 40,
+            "precision": 0.23668639053254437,
+            "precision_wilson_lcb_95": 0.1789020830828869,
+            "precision_wilson_lcb_99": 0.16342353402051657,
+            "coverage": 0.25413533834586466,
+            "ece": 0.09475090666157662,
+            "calibrated_probability": 0.14193548387096774
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "TrendExpansion",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "condition": "condition_trend_expansion",
+          "target": "target_trend_expansion",
+          "condition_definition": "ret_4 > train q60, close > rolling MA32, and volume rank >= 0.35",
+          "target_definition": "future 8h return >= train q70 and interim drawdown not worse than stress-scaled drawdown floor",
+          "calibration": {
+            "support": 131,
+            "success": 30,
+            "precision": 0.22900763358778625,
+            "precision_wilson_lcb_95": 0.16538602138134892,
+            "precision_wilson_lcb_99": 0.14889318078299613,
+            "coverage": 0.262,
+            "ece": 0.0,
+            "calibrated_probability": 0.22900763358778625
+          },
+          "test": {
+            "support": 128,
+            "success": 35,
+            "precision": 0.2734375,
+            "precision_wilson_lcb_95": 0.2036699978045802,
+            "precision_wilson_lcb_99": 0.1850274446981776,
+            "coverage": 0.2601626016260163,
+            "ece": 0.04442986641221375,
+            "calibrated_probability": 0.22900763358778625
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        }
+      ]
+    },
+    {
+      "regime_id": "RangeConsolidation",
+      "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+      "target_definition": "future 8h absolute return and future 8h range both below train q35",
+      "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+      "validation_contexts": [
+        "QQQ:US ETF / IBKR:1h",
+        "QQQ:US ETF / yfinance:1h",
+        "NQ:CME futures:15m",
+        "PF_XBTUSD:Kraken crypto:1h"
+      ],
+      "market_count": 4,
+      "timeframe_count": 2,
+      "instrument_result_count": 4,
+      "passes_cross_market_coverage_floor": true,
+      "passes_95_anywhere": false,
+      "passes_99_anywhere": false,
+      "instrument_results": [
+        {
+          "regime_id": "RangeConsolidation",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+          "condition": "condition_range_consolidation",
+          "target": "target_range_consolidation",
+          "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+          "target_definition": "future 8h absolute return and future 8h range both below train q35",
+          "calibration": {
+            "support": 140,
+            "success": 43,
+            "precision": 0.30714285714285716,
+            "precision_wilson_lcb_95": 0.23673031590244445,
+            "precision_wilson_lcb_99": 0.21735451787081364,
+            "coverage": 0.13972055888223553,
+            "ece": 0.0,
+            "calibrated_probability": 0.30714285714285716
+          },
+          "test": {
+            "support": 120,
+            "success": 6,
+            "precision": 0.05,
+            "precision_wilson_lcb_95": 0.023114364414465797,
+            "precision_wilson_lcb_99": 0.018399385546893656,
+            "coverage": 0.12072434607645875,
+            "ece": 0.2571428571428572,
+            "calibrated_probability": 0.30714285714285716
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "RangeConsolidation",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+          "condition": "condition_range_consolidation",
+          "target": "target_range_consolidation",
+          "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+          "target_definition": "future 8h absolute return and future 8h range both below train q35",
+          "calibration": {
+            "support": 195,
+            "success": 95,
+            "precision": 0.48717948717948717,
+            "precision_wilson_lcb_95": 0.4179528065489525,
+            "precision_wilson_lcb_99": 0.3969308290217473,
+            "coverage": 0.23159144893111638,
+            "ece": 0.0,
+            "calibrated_probability": 0.48717948717948717
+          },
+          "test": {
+            "support": 165,
+            "success": 58,
+            "precision": 0.3515151515151515,
+            "precision_wilson_lcb_95": 0.2827980172324818,
+            "precision_wilson_lcb_99": 0.26320777520128197,
+            "coverage": 0.19760479041916168,
+            "ece": 0.13566433566433567,
+            "calibrated_probability": 0.48717948717948717
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "RangeConsolidation",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+          "condition": "condition_range_consolidation",
+          "target": "target_range_consolidation",
+          "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+          "target_definition": "future 8h absolute return and future 8h range both below train q35",
+          "calibration": {
+            "support": 145,
+            "success": 78,
+            "precision": 0.5379310344827586,
+            "precision_wilson_lcb_95": 0.4568515620015899,
+            "precision_wilson_lcb_99": 0.4319701614891966,
+            "coverage": 0.20833333333333334,
+            "ece": 0.0,
+            "calibrated_probability": 0.5379310344827586
+          },
+          "test": {
+            "support": 165,
+            "success": 46,
+            "precision": 0.2787878787878788,
+            "precision_wilson_lcb_95": 0.21599800988023912,
+            "precision_wilson_lcb_99": 0.19876326372629327,
+            "coverage": 0.24812030075187969,
+            "ece": 0.2591431556948798,
+            "calibrated_probability": 0.5379310344827586
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "RangeConsolidation",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_mean_reversion_candidate_only_when_other_gates_pass",
+          "condition": "condition_range_consolidation",
+          "target": "target_range_consolidation",
+          "condition_definition": "|ret_4| <= train q40, realized-vol rank <= 0.45, and range rank <= 0.55",
+          "target_definition": "future 8h absolute return and future 8h range both below train q35",
+          "calibration": {
+            "support": 103,
+            "success": 40,
+            "precision": 0.3883495145631068,
+            "precision_wilson_lcb_95": 0.29986199561845933,
+            "precision_wilson_lcb_99": 0.2750198633749466,
+            "coverage": 0.206,
+            "ece": 0.0,
+            "calibrated_probability": 0.3883495145631068
+          },
+          "test": {
+            "support": 51,
+            "success": 9,
+            "precision": 0.17647058823529413,
+            "precision_wilson_lcb_95": 0.09572403469126317,
+            "precision_wilson_lcb_99": 0.07911453771646912,
+            "coverage": 0.10365853658536585,
+            "ece": 0.21187892632781266,
+            "calibrated_probability": 0.3883495145631068
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "calibration_support_below_120;test_support_below_60;wilson95_below_0_95;ece_above_0_05"
+        }
+      ]
+    },
+    {
+      "regime_id": "ExtremeStress",
+      "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+      "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+      "allowed_action": "guardrail_only_reduce_or_block_release",
+      "validation_contexts": [
+        "QQQ:US ETF / IBKR:1h",
+        "QQQ:US ETF / yfinance:1h",
+        "NQ:CME futures:15m",
+        "PF_XBTUSD:Kraken crypto:1h"
+      ],
+      "market_count": 4,
+      "timeframe_count": 2,
+      "instrument_result_count": 4,
+      "passes_cross_market_coverage_floor": true,
+      "passes_95_anywhere": false,
+      "passes_99_anywhere": false,
+      "instrument_results": [
+        {
+          "regime_id": "ExtremeStress",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "condition": "condition_extreme_stress",
+          "target": "target_extreme_stress",
+          "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+          "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+          "calibration": {
+            "support": 377,
+            "success": 142,
+            "precision": 0.376657824933687,
+            "precision_wilson_lcb_95": 0.32922149554181773,
+            "precision_wilson_lcb_99": 0.3150325208929194,
+            "coverage": 0.37624750499001997,
+            "ece": 0.0,
+            "calibrated_probability": 0.376657824933687
+          },
+          "test": {
+            "support": 370,
+            "success": 134,
+            "precision": 0.3621621621621622,
+            "precision_wilson_lcb_95": 0.31483752859704206,
+            "precision_wilson_lcb_99": 0.3007525543077539,
+            "coverage": 0.3722334004024145,
+            "ece": 0.014495662771524809,
+            "calibrated_probability": 0.376657824933687
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ExtremeStress",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "condition": "condition_extreme_stress",
+          "target": "target_extreme_stress",
+          "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+          "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+          "calibration": {
+            "support": 185,
+            "success": 9,
+            "precision": 0.04864864864864865,
+            "precision_wilson_lcb_95": 0.025802366653230147,
+            "precision_wilson_lcb_99": 0.021303483572924106,
+            "coverage": 0.21971496437054633,
+            "ece": 0.0,
+            "calibrated_probability": 0.04864864864864865
+          },
+          "test": {
+            "support": 254,
+            "success": 24,
+            "precision": 0.09448818897637795,
+            "precision_wilson_lcb_95": 0.06431893474765854,
+            "precision_wilson_lcb_99": 0.05701325122897431,
+            "coverage": 0.30419161676646705,
+            "ece": 0.0458395403277293,
+            "calibrated_probability": 0.04864864864864865
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ExtremeStress",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "condition": "condition_extreme_stress",
+          "target": "target_extreme_stress",
+          "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+          "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+          "calibration": {
+            "support": 193,
+            "success": 4,
+            "precision": 0.02072538860103627,
+            "precision_wilson_lcb_95": 0.008088504310272446,
+            "precision_wilson_lcb_99": 0.006186775345284176,
+            "coverage": 0.27729885057471265,
+            "ece": 0.0,
+            "calibrated_probability": 0.02072538860103627
+          },
+          "test": {
+            "support": 188,
+            "success": 8,
+            "precision": 0.0425531914893617,
+            "precision_wilson_lcb_95": 0.02171755533671344,
+            "precision_wilson_lcb_99": 0.01774861845614601,
+            "coverage": 0.28270676691729324,
+            "ece": 0.02182780288832543,
+            "calibrated_probability": 0.02072538860103627
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ExtremeStress",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "condition": "condition_extreme_stress",
+          "target": "target_extreme_stress",
+          "condition_definition": "realized-vol rank >= 0.85, range rank >= 0.85, or ret_4 <= train q10",
+          "target_definition": "future 8h absolute return >= train q90 or future max drawdown <= train q10 drawdown",
+          "calibration": {
+            "support": 177,
+            "success": 37,
+            "precision": 0.20903954802259886,
+            "precision_wilson_lcb_95": 0.15563478852051657,
+            "precision_wilson_lcb_99": 0.14154917496205227,
+            "coverage": 0.354,
+            "ece": 0.0,
+            "calibrated_probability": 0.20903954802259886
+          },
+          "test": {
+            "support": 193,
+            "success": 91,
+            "precision": 0.47150259067357514,
+            "precision_wilson_lcb_95": 0.4023211173632648,
+            "precision_wilson_lcb_99": 0.3814403922892467,
+            "coverage": 0.39227642276422764,
+            "ece": 0.2624630426509763,
+            "calibrated_probability": 0.20903954802259886
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        }
+      ]
+    },
+    {
+      "regime_id": "ReversalBrewing",
+      "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+      "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+      "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+      "validation_contexts": [
+        "QQQ:US ETF / IBKR:1h",
+        "QQQ:US ETF / yfinance:1h",
+        "NQ:CME futures:15m",
+        "PF_XBTUSD:Kraken crypto:1h"
+      ],
+      "market_count": 4,
+      "timeframe_count": 2,
+      "instrument_result_count": 4,
+      "passes_cross_market_coverage_floor": true,
+      "passes_95_anywhere": false,
+      "passes_99_anywhere": false,
+      "instrument_results": [
+        {
+          "regime_id": "ReversalBrewing",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "condition": "condition_reversal_brewing",
+          "target": "target_reversal_brewing",
+          "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+          "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+          "calibration": {
+            "support": 291,
+            "success": 76,
+            "precision": 0.2611683848797251,
+            "precision_wilson_lcb_95": 0.21404334215746137,
+            "precision_wilson_lcb_99": 0.20069113994469964,
+            "coverage": 0.2904191616766467,
+            "ece": 0.0,
+            "calibrated_probability": 0.2611683848797251
+          },
+          "test": {
+            "support": 344,
+            "success": 74,
+            "precision": 0.21511627906976744,
+            "precision_wilson_lcb_95": 0.17496658871302168,
+            "precision_wilson_lcb_99": 0.16372705011882652,
+            "coverage": 0.3460764587525151,
+            "ece": 0.046052105809957666,
+            "calibrated_probability": 0.2611683848797251
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ReversalBrewing",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "condition": "condition_reversal_brewing",
+          "target": "target_reversal_brewing",
+          "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+          "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+          "calibration": {
+            "support": 27,
+            "success": 9,
+            "precision": 0.3333333333333333,
+            "precision_wilson_lcb_95": 0.18643261498715644,
+            "precision_wilson_lcb_99": 0.15427415507786185,
+            "coverage": 0.032066508313539195,
+            "ece": 0.0,
+            "calibrated_probability": 0.3333333333333333
+          },
+          "test": {
+            "support": 90,
+            "success": 17,
+            "precision": 0.18888888888888888,
+            "precision_wilson_lcb_95": 0.12141259844132832,
+            "precision_wilson_lcb_99": 0.1054851863579411,
+            "coverage": 0.10778443113772455,
+            "ece": 0.14444444444444443,
+            "calibrated_probability": 0.3333333333333333
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "calibration_support_below_120;wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ReversalBrewing",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "condition": "condition_reversal_brewing",
+          "target": "target_reversal_brewing",
+          "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+          "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+          "calibration": {
+            "support": 30,
+            "success": 2,
+            "precision": 0.06666666666666667,
+            "precision_wilson_lcb_95": 0.018477023791270374,
+            "precision_wilson_lcb_99": 0.013131331935656843,
+            "coverage": 0.04310344827586207,
+            "ece": 0.0,
+            "calibrated_probability": 0.06666666666666667
+          },
+          "test": {
+            "support": 49,
+            "success": 11,
+            "precision": 0.22448979591836735,
+            "precision_wilson_lcb_95": 0.13024970149659185,
+            "precision_wilson_lcb_99": 0.10955732705941038,
+            "coverage": 0.07368421052631578,
+            "ece": 0.15782312925170067,
+            "calibrated_probability": 0.06666666666666667
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "calibration_support_below_120;test_support_below_60;wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ReversalBrewing",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "condition": "condition_reversal_brewing",
+          "target": "target_reversal_brewing",
+          "condition_definition": "|stretch from MA32| >= train q80 and volume rank >= 0.25",
+          "target_definition": "future 8h move reverses current MA32 stretch sign with magnitude >= train q65",
+          "calibration": {
+            "support": 97,
+            "success": 12,
+            "precision": 0.12371134020618557,
+            "precision_wilson_lcb_95": 0.0722040020802373,
+            "precision_wilson_lcb_99": 0.06107967667066581,
+            "coverage": 0.194,
+            "ece": 0.0,
+            "calibrated_probability": 0.12371134020618557
+          },
+          "test": {
+            "support": 164,
+            "success": 56,
+            "precision": 0.34146341463414637,
+            "precision_wilson_lcb_95": 0.27326034779176006,
+            "precision_wilson_lcb_99": 0.2539176783525042,
+            "coverage": 0.3333333333333333,
+            "ece": 0.2177520744279608,
+            "calibrated_probability": 0.12371134020618557
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "calibration_support_below_120;wilson95_below_0_95;ece_above_0_05"
+        }
+      ]
+    },
+    {
+      "regime_id": "ThinLiquidity",
+      "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+      "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+      "allowed_action": "guardrail_only_liquidity_context",
+      "validation_contexts": [
+        "QQQ:US ETF / IBKR:1h",
+        "QQQ:US ETF / yfinance:1h",
+        "NQ:CME futures:15m",
+        "PF_XBTUSD:Kraken crypto:1h"
+      ],
+      "market_count": 4,
+      "timeframe_count": 2,
+      "instrument_result_count": 4,
+      "passes_cross_market_coverage_floor": true,
+      "passes_95_anywhere": false,
+      "passes_99_anywhere": false,
+      "instrument_results": [
+        {
+          "regime_id": "ThinLiquidity",
+          "instrument": "QQQ",
+          "market": "US ETF / IBKR",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "condition": "condition_thin_liquidity",
+          "target": "target_thin_liquidity",
+          "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+          "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+          "calibration": {
+            "support": 295,
+            "success": 90,
+            "precision": 0.3050847457627119,
+            "precision_wilson_lcb_95": 0.25532618581004946,
+            "precision_wilson_lcb_99": 0.24094846321110588,
+            "coverage": 0.2944111776447106,
+            "ece": 0.0,
+            "calibrated_probability": 0.3050847457627119
+          },
+          "test": {
+            "support": 294,
+            "success": 30,
+            "precision": 0.10204081632653061,
+            "precision_wilson_lcb_95": 0.0724152739988674,
+            "precision_wilson_lcb_99": 0.06500503247208045,
+            "coverage": 0.29577464788732394,
+            "ece": 0.20304392943618127,
+            "calibrated_probability": 0.3050847457627119
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ThinLiquidity",
+          "instrument": "QQQ",
+          "market": "US ETF / yfinance",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "condition": "condition_thin_liquidity",
+          "target": "target_thin_liquidity",
+          "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+          "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+          "calibration": {
+            "support": 254,
+            "success": 26,
+            "precision": 0.10236220472440945,
+            "precision_wilson_lcb_95": 0.0708159594650154,
+            "precision_wilson_lcb_99": 0.0630728875185879,
+            "coverage": 0.3016627078384798,
+            "ece": 0.0,
+            "calibrated_probability": 0.10236220472440945
+          },
+          "test": {
+            "support": 303,
+            "success": 79,
+            "precision": 0.2607260726072607,
+            "precision_wilson_lcb_95": 0.21450725227927614,
+            "precision_wilson_lcb_99": 0.2013822104611162,
+            "coverage": 0.362874251497006,
+            "ece": 0.15836386788285128,
+            "calibrated_probability": 0.10236220472440945
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        },
+        {
+          "regime_id": "ThinLiquidity",
+          "instrument": "NQ",
+          "market": "CME futures",
+          "timeframe": "15m",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "condition": "condition_thin_liquidity",
+          "target": "target_thin_liquidity",
+          "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+          "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+          "calibration": {
+            "support": 244,
+            "success": 155,
+            "precision": 0.6352459016393442,
+            "precision_wilson_lcb_95": 0.5731846589623457,
+            "precision_wilson_lcb_99": 0.5532647955078683,
+            "coverage": 0.3505747126436782,
+            "ece": 0.0,
+            "calibrated_probability": 0.6352459016393442
+          },
+          "test": {
+            "support": 218,
+            "success": 131,
+            "precision": 0.6009174311926605,
+            "precision_wilson_lcb_95": 0.5347047499391167,
+            "precision_wilson_lcb_99": 0.5137216981213665,
+            "coverage": 0.32781954887218046,
+            "ece": 0.034328470446683745,
+            "calibrated_probability": 0.6352459016393442
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95"
+        },
+        {
+          "regime_id": "ThinLiquidity",
+          "instrument": "PF_XBTUSD",
+          "market": "Kraken crypto",
+          "timeframe": "1h",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "condition": "condition_thin_liquidity",
+          "target": "target_thin_liquidity",
+          "condition_definition": "volume rank <= 0.30, raw volume <= train q30, or IBKR count <= train q30 when count is available",
+          "target_definition": "future 4h median volume <= train q30, or future IBKR count <= train q30 when count is available",
+          "calibration": {
+            "support": 135,
+            "success": 45,
+            "precision": 0.3333333333333333,
+            "precision_wilson_lcb_95": 0.25939723284907457,
+            "precision_wilson_lcb_99": 0.23881307392197976,
+            "coverage": 0.27,
+            "ece": 0.0,
+            "calibrated_probability": 0.3333333333333333
+          },
+          "test": {
+            "support": 110,
+            "success": 18,
+            "precision": 0.16363636363636364,
+            "precision_wilson_lcb_95": 0.10608807657526535,
+            "precision_wilson_lcb_99": 0.09248499201158047,
+            "coverage": 0.22357723577235772,
+            "ece": 0.16969696969696968,
+            "calibrated_probability": 0.3333333333333333
+          },
+          "passes_95": false,
+          "passes_99": false,
+          "blocker": "wilson95_below_0_95;ece_above_0_05"
+        }
+      ]
+    }
+  ],
+  "existing_accepted_context": {
+    "accepted_regime_id": "SessionLiquidityCoreViable",
+    "confidence_lane": "95",
+    "precision_wilson_lcb": 0.9899396497369397,
+    "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json",
+    "kept_as_primary_gate": true
+  },
+  "full_chain_context": {
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T200154-hermes-loop-full-chain-reaudit/evidence_packet_full_chain_reaudit.json",
+    "provider_key_readiness": {
+      "yfinance": true,
+      "ibkr_bridge": true,
+      "ibkr_market_data": true,
+      "kraken_cli": true,
+      "kraken_public": true,
+      "tradingview_mcp": false
+    },
+    "bbn_apply": {
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/ict-engine/16_auto_quant_prior_init_nq_apply.json",
+      "dry_run": false,
+      "evidence_value_gate_passed": true,
+      "strategies_applied": 1,
+      "trade_count": 1081
+    },
+    "catboost_path_ranker": {
+      "score_model_family": "catboost",
+      "raw_scored_mature_rows": 1397,
+      "production_validation_rows": 1395,
+      "current_path_ranker_gate": "observe"
+    },
+    "execution_tree": {
+      "status": "observe",
+      "promote_candidate": false,
+      "branch": "transition_guardrail"
+    }
+  },
+  "decision": {
+    "condition_matrix_complete": true,
+    "accepted_gate": "accepted_95_existing_SessionLiquidityCoreViable_only",
+    "accepted_new_regime_count_95": 0,
+    "accepted_new_regime_count_99": 0,
+    "trade_usable": false,
+    "not_promoted_reason": "This run validates condition coverage breadth; it does not create a non-observe release candidate with path-specific edge.",
+    "next_action": "Use the cross-market condition matrix to target missing support/Wilson/ECE blockers; do not promote any regime until it passes unchanged thresholds across the required market contexts.",
+    "accepted_new_regime_count_95_after_nonleaky_search": 0
+  },
+  "nonleaky_candidate_search": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/simple_threshold_candidate_search.json",
+    "schema_version": "simple-threshold-candidate-search/v2-nonleaky",
+    "blocked_feature_prefixes": [
+      "future_",
+      "target_"
+    ],
+    "searched_features": [
+      "ret_1",
+      "ret_4",
+      "stretch_32",
+      "range_pct",
+      "realized_vol_rank_252",
+      "range_rank_252",
+      "volume_rank_252",
+      "stretch_abs_rank_252",
+      "volume",
+      "count"
+    ],
+    "accepted_95_count": 0,
+    "best_rows": 20
+  }
+}

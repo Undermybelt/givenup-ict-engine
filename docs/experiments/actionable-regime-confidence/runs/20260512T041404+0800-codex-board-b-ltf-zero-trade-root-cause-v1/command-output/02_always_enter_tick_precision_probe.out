@@ -1,0 +1,104 @@
+Result for strategy AlwaysEnterProbe
+                                                        BACKTESTING REPORT                                                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                            Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ B2RNQCOSTCRISISREPAIR032157/USD │     22 │         0.03 │        743.800 │         0.74 │      8:35:00 │   12     0    10  54.5 │
+│                           TOTAL │     22 │         0.03 │        743.800 │         0.74 │      8:35:00 │   12     0    10  54.5 │
+└─────────────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                    ENTER TAG STATS                                                    
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃          Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ always_enter_probe │      22 │         0.03 │        743.800 │         0.74 │      8:35:00 │   12     0    10  54.5 │
+│              TOTAL │      22 │         0.03 │        743.800 │         0.74 │      8:35:00 │   12     0    10  54.5 │
+└────────────────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                              EXIT REASON STATS                                               
+┏━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         roi │     1 │          1.0 │        984.296 │         0.98 │      4:00:00 │    1     0     0   100 │
+│ exit_signal │    21 │        -0.01 │       -240.495 │        -0.24 │      8:49:00 │   11     0    10  52.4 │
+│       TOTAL │    22 │         0.03 │        743.800 │         0.74 │      8:35:00 │   12     0    10  54.5 │
+└─────────────┴───────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                          MIXED TAG STATS                                                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃          Enter Tag ┃ Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ always_enter_probe │         roi │      1 │          1.0 │        984.296 │         0.98 │      4:00:00 │    1     0     0   100 │
+│ always_enter_probe │ exit_signal │     21 │        -0.01 │       -240.495 │        -0.24 │      8:49:00 │   11     0    10  52.4 │
+│              TOTAL │             │     22 │         0.03 │        743.800 │         0.74 │      8:35:00 │   12     0    10  54.5 │
+└────────────────────┴─────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                             SUMMARY METRICS                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                                  ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2025-12-15 13:00:00                    │
+│ Backtesting to                │ 2025-12-31 00:00:00                    │
+│ Trading Mode                  │ Spot                                   │
+│ Max open trades               │ 1                                      │
+│                               │                                        │
+│ Total/Daily Avg Trades        │ 22 / 1.47                              │
+│ Starting balance              │ 100000 USD                             │
+│ Final balance                 │ 100743.8 USD                           │
+│ Absolute profit               │ 743.8 USD                              │
+│ Total profit %                │ 0.74%                                  │
+│ CAGR %                        │ 19.76%                                 │
+│ Sortino                       │ 2.61                                   │
+│ Sharpe                        │ 2.49                                   │
+│ Calmar                        │ 74.77                                  │
+│ SQN                           │ 0.41                                   │
+│ Profit factor                 │ 1.37                                   │
+│ Expectancy (Ratio)            │ 33.81 (0.17)                           │
+│ Avg. daily profit             │ 49.587 USD                             │
+│ Avg. stake amount             │ 99528.313 USD                          │
+│ Total trade volume            │ 4379989.581 USD                        │
+│                               │                                        │
+│ Best Pair                     │ B2RNQCOSTCRISISREPAIR032157/USD 0.74%  │
+│ Worst Pair                    │ B2RNQCOSTCRISISREPAIR032157/USD 0.74%  │
+│ Best trade                    │ B2RNQCOSTCRISISREPAIR032157/USD 1.00%  │
+│ Worst trade                   │ B2RNQCOSTCRISISREPAIR032157/USD -1.27% │
+│ Best day                      │ 973.682 USD                            │
+│ Worst day                     │ -736.79 USD                            │
+│ Days win/draw/lose            │ 4 / 5 / 6                              │
+│ Min/Max/Avg. Duration Winners │ 0d 04:00 / 1d 11:00 / 0d 07:25         │
+│ Min/Max/Avg. Duration Losers  │ 0d 05:00 / 2d 07:00 / 0d 10:00         │
+│ Max Consecutive Wins / Loss   │ 5 / 2                                  │
+│ Rejected Entry signals        │ 0                                      │
+│ Entry/Exit Timeouts           │ 0 / 0                                  │
+│                               │                                        │
+│ Min balance                   │ 99423.834 USD                          │
+│ Max balance                   │ 101046.892 USD                         │
+│ Max % of account underwater   │ 1.27%                                  │
+│ Absolute drawdown             │ 1275.862 USD (1.27%)                   │
+│ Drawdown duration             │ 0 days 20:00:00                        │
+│ Profit at drawdown start      │ 699.696 USD                            │
+│ Profit at drawdown end        │ -576.166 USD                           │
+│ Drawdown start                │ 2025-12-17 10:00:00                    │
+│ Drawdown end                  │ 2025-12-18 06:00:00                    │
+│ Market change                 │ -0.09%                                 │
+└───────────────────────────────┴────────────────────────────────────────┘
+
+Backtested 2025-12-15 13:00:00 -> 2025-12-31 00:00:00 | Max open trades : 1
+                                                             STRATEGY SUMMARY                                                             
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃         Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃            Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ AlwaysEnterProbe │     22 │         0.03 │        743.800 │         0.74 │      8:35:00 │   12     0    10  54.5 │ 1275.862 USD  1.27% │
+└──────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┴─────────────────────┘
+precision_mode tick_size_amount_0.000001_price_0.01
+backtest_trade_count 22
+backtest_profit_pct 0.7400
+backtest_sharpe 2.4936
+backtest_win_rate_pct 54.5455
+rejected_signals 0
+timedout_entry_orders 0
+canceled_entry_orders 0
+left_open_trades_len 1
+trades_len 22

@@ -1,0 +1,101 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T102018+0800-codex-board-a-aq-provider-authority-readback-v1",
+  "mode": "board_a_readback_provider_authority_no_promotion",
+  "aq_provider_invoked": true,
+  "aq_invocation": "factor-research --backend auto-quant plus auto-quant-prepare",
+  "provider_requested": [
+    "IBKR",
+    "TradingViewRemix/TVR",
+    "yfinance/YF",
+    "Kraken",
+    "Binance",
+    "Bybit"
+  ],
+  "provider_data_acquired": {
+    "yfinance": "NQ=F 1h 642 rows, 2026-04-01 00:00:00Z -> 2026-05-11 23:00:00Z",
+    "IBKR": "QQQ 1d 21 rows via 20260512T101138 low-pollution uv fetch",
+    "Kraken": "XBTUSD 1h 721 rows",
+    "Binance": "BTCUSDT 1h 985 rows",
+    "Bybit": "BTCUSDT linear 1h 985 rows"
+  },
+  "provider_unreachable": {
+    "TradingViewRemix/TVR": "get_ohlcv failed in recorded harness fetch",
+    "default_IBKR_harness": "default harness runtime missing redis, but uv low-pollution IBKR fetch succeeded in 101138"
+  },
+  "local_cache_replay": false,
+  "provider_sidecar_replay": true,
+  "primary_provider_input": {
+    "source_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/yahoo_nq_f_1h.csv",
+    "output_json": "docs/experiments/actionable-regime-confidence/runs/20260512T102018+0800-codex-board-a-aq-provider-authority-readback-v1/provider-data/yahoo_nq_f_1h_candles.json",
+    "rows": 642,
+    "first_timestamp": "2026-04-01 00:00:00Z",
+    "last_timestamp": "2026-05-11 23:00:00Z"
+  },
+  "auto_quant_handoff_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T102018+0800-codex-board-a-aq-provider-authority-readback-v1/state_board_a_aq_provider_readback_v1/NQ/auto_quant_handoff.factor_research.json",
+  "auto_quant_dependency_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "auto_quant_status_after_prepare": "dependency_ready_data_ready",
+  "auto_quant_data_ready_after_prepare": true,
+  "prepared_data_files": [
+    "NQ_USD-1d.feather",
+    "NQ_USD-1h.feather",
+    "NQ_USD-4h.feather"
+  ],
+  "exit_codes": {
+    "01_provider_status_agent": "0",
+    "02_auto_quant_status_before": "0",
+    "03_factor_research_auto_quant_handoff": "0",
+    "04_auto_quant_status_after": "0",
+    "05_auto_quant_prepare": "127",
+    "06_auto_quant_status_after_prepare": "0",
+    "07_auto_quant_prepare_retry": "0",
+    "08_auto_quant_status_after_prepare_retry": "0"
+  },
+  "gate": [
+    "pass:board_a_auto_quant_handoff_created",
+    "pass:provider_yfinance_nq_csv_replayed_as_provider_provenanced_sidecar",
+    "pass:auto_quant_prepare_dependency_ready_data_ready",
+    "partial:provider_matrix_yfinance_ibkr_kraken_binance_bybit_acquired_tvr_unreachable",
+    "fail_closed:no_regime_promotion_from_readback",
+    "fail_closed:no_pre_bayes_bbn_catboost_execution_tree_promotion_rerun",
+    "promotion_allowed=false",
+    "update_goal=false"
+  ],
+  "provider_matrix": [
+    {
+      "provider": "yfinance",
+      "yield": "NQ=F_1h_642_rows",
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/yahoo_nq_f_1h.csv",
+      "status": "provider_data_acquired"
+    },
+    {
+      "provider": "IBKR",
+      "yield": "QQQ_1d_21_rows",
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T101138+0800-codex-board-b-provider-acquisition-reroute-v1/provider-data/",
+      "status": "provider_data_acquired_via_uv_low_pollution"
+    },
+    {
+      "provider": "TradingViewRemix/TVR",
+      "yield": "CME_MINI:NQ1!_get_ohlcv",
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/command-output/03_market_data_harness_fetch.err",
+      "status": "provider_unreachable_get_ohlcv_failed"
+    },
+    {
+      "provider": "Kraken",
+      "yield": "XBTUSD_1h_721_rows",
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/kraken_xbtusd_1h.csv",
+      "status": "provider_data_acquired"
+    },
+    {
+      "provider": "Binance",
+      "yield": "BTCUSDT_1h_985_rows",
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/binance_btcusdt_1h.csv",
+      "status": "provider_data_acquired"
+    },
+    {
+      "provider": "Bybit",
+      "yield": "BTCUSDT_linear_1h_985_rows",
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/bybit_btcusdt_linear_1h.csv",
+      "status": "provider_data_acquired"
+    }
+  ]
+}

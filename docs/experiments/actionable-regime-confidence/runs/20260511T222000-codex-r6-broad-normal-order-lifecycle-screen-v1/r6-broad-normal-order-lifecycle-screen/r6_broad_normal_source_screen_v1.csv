@@ -1,0 +1,6 @@
+source,status,runtime_status,probe_status,r6_control_value,reason
+ibkr,screened_not_accepted,configured_runtime_unhealthy_with_gateway_reachable,,blocked,"current provider-status reports missing ibkr runtime dependencies; even healthy IBKR historical ticks are bid/ask/trade data, not public participant/order-lifecycle controls."
+tradingview_mcp_or_remix,screened_not_accepted,ready,,blocked,"TradingView surfaces are OHLCV/chart-feature sources in this workflow, not order add/cancel/execute lifecycle feeds."
+yfinance,screened_not_accepted,ready,200,blocked,"Yahoo/yfinance is OHLCV/chart data; even when the chart probe is reachable, the surface is not order-lifecycle evidence."
+kraken_public_depth,screened_not_accepted,live_http_ok,,blocked,"Kraken public depth is a live aggregated book snapshot with price/size/time levels, not durable order IDs or add/cancel/execute lifecycles."
+nasdaq_itch_s010303,accepted_sidecar_control_source,public_https_download,,independent_broad_normal_order_lifecycle_controls_sidecar,Nasdaq ITCH sample provides direct add/execute/cancel/delete order lifecycle messages from an exchange-feed background day.

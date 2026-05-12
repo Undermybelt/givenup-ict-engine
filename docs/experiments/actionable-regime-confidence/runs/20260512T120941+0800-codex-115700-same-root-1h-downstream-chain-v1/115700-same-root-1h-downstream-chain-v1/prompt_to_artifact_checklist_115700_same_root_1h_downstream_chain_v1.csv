@@ -1,0 +1,8 @@
+requirement,artifact,status,note
+source six-provider 1h AQ packet,docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1/same-root-six-provider-1h-aq-v1/same_root_six_provider_1h_aq_v1.json,covered,20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1
+rooted trade observations,docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/derived/same_root_1h_six_provider_aq_real_trades.jsonl,covered,237
+strategy library import,docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/derived/strategy_library_115700_same_root_1h_aq_v1.json,covered,auto-quant-results-import attempted
+Pre-Bayes/filter,docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/state_115700_downstream_chain_v1,covered,pre-bayes-status captured
+BBN state,docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/state_115700_downstream_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/bbn_network.json,covered,state artifact readback path
+CatBoost/path-ranker,docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/path-ranker,covered,base and augmented train/apply/register attempted
+execution tree,docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/command-output,covered,workflow-status captured

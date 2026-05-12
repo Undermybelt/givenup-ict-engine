@@ -1,0 +1,7 @@
+PASS required_r6_root=absent
+PASS approved_target_complete_package_count=0
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS update_goal=false

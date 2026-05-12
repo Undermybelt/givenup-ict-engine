@@ -1,0 +1,4 @@
+provider,instrument,timeframe,root,slot_decision,source_label,source_raw_value,source_label_count,acceptance_scope,source_name,source_url,source_date_start,source_date_end
+yfinance,QQQ,1d,Bull,attached_source_label_window_only,Confirmed Uptrend,-1.0,3046,source_label_target_only_not_calibrated_factor,CrystalBull IBD Market Pulse Review,https://www.crystalbull.com/IBD-market-pulse-review/,2002-12-31,2022-09-16
+yfinance,QQQ,1d,Bear,attached_source_label_window_only,Market in Correction,1.0,1065,source_label_target_only_not_calibrated_factor,CrystalBull IBD Market Pulse Review,https://www.crystalbull.com/IBD-market-pulse-review/,2002-12-31,2022-09-16
+yfinance,QQQ,1d,Sideways,attached_source_label_window_only,Uptrend Under Pressure,0.5,846,source_label_target_only_not_calibrated_factor,CrystalBull IBD Market Pulse Review,https://www.crystalbull.com/IBD-market-pulse-review/,2002-12-31,2022-09-16

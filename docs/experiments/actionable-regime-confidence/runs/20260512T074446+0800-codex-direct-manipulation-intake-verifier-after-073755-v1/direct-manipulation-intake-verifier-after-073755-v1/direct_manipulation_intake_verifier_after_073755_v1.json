@@ -1,0 +1,51 @@
+{
+  "decision": {
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "direct_verifier_promoting": false,
+    "direct_verifier_run": true,
+    "downstream_promotion_rerun": false,
+    "r6_owner_export_unlock": false,
+    "schema_ready_unscored": true,
+    "source_control_evidence_acquired": false,
+    "split_calibration_run": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "gate_result": "direct_manipulation_intake_verifier_after_073755_v1=schema_ready_unscored_non_promoting",
+  "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "notes": [
+    "Read-only source/acquisition verifier for the direct Manipulation row intake.",
+    "Schema-ready output is non-promoting because it is unscored and not under the R6 owner-export target root.",
+    "No canonical merge, split calibration, selected-data AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, or execution-tree promotion was run."
+  ],
+  "run_id": "20260512T074446+0800-codex-direct-manipulation-intake-verifier-after-073755-v1",
+  "verifier_command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+  "verifier_exit_code": 0,
+  "verifier_stderr": "",
+  "verifier_stdout": {
+    "matched_group_count": 70,
+    "matched_negative_rows": 73,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 73,
+    "provenance_keys": [
+      "canonical_intake_root",
+      "generated_at_utc",
+      "materialization_note",
+      "raw_data_committed",
+      "run_id",
+      "runtime_code_changed",
+      "source_v56_json",
+      "source_v56_negative_csv",
+      "source_v56_positive_csv",
+      "thresholds_relaxed",
+      "trade_usable",
+      "v56_gate_result",
+      "v56_negative_sha256",
+      "v56_positive_sha256"
+    ],
+    "status": "schema_ready_unscored"
+  }
+}

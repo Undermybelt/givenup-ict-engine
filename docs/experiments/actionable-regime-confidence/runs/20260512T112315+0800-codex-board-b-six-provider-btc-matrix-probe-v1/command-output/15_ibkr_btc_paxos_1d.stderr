@@ -1,0 +1,3 @@
+open orders request timed out
+completed orders request timed out
+Error 10299, reqId 4: \u9884\u671f\u663e\u793a\u7684\u662fAGGTRADES\uff0c\u8bf7\u4f7f\u7528\u8be5\u503c\uff08\u800c\u975eTRADES\uff09\u3002, contract: Crypto(conId=479624278, symbol='BTC', exchange='PAXOS', currency='USD', localSymbol='BTC.USD', tradingClass='BTC')

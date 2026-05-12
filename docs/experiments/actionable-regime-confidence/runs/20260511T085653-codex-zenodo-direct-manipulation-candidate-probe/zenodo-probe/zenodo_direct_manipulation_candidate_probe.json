@@ -1,0 +1,71 @@
+{
+  "accepted_direct_manipulation_sources": 0,
+  "accepted_label_rows_materialized": 0,
+  "gate_result": "blocked_zenodo_candidates_false_positive_or_no_rows",
+  "next_action": "Do not spend more cycles on these six Zenodo records; obtain a true financial market manipulation dataset with timestamped positive/negative rows or authenticated Dune export.",
+  "objective": "Verify Zenodo sidecar manipulation candidates from unauthenticated source probe.",
+  "raw_data_committed": false,
+  "records": [
+    {
+      "decision": "rejected_non_financial_biological_market",
+      "file_hints": [
+        "Market Manipulation video data.xlsx",
+        "Market Manipulation main data.xlsx",
+        "Market Manipulation relatedness data.xlsx"
+      ],
+      "record_id": "5026154",
+      "title": "Data from: Market forces influence helping behaviour in cooperatively breeding paper wasps",
+      "url": "https://zenodo.org/records/5026154"
+    },
+    {
+      "decision": "rejected_non_financial_biometric_spoofing",
+      "file_hints": [],
+      "record_id": "4580200",
+      "title": "VERA Spoofing PalmVein",
+      "url": "https://zenodo.org/records/4580200"
+    },
+    {
+      "decision": "rejected_non_financial_voice_deepfake",
+      "file_hints": [
+        "HuBERT_Ensemble_Models_for_Singing_Voice_Deepfake_Detection.pdf"
+      ],
+      "record_id": "16955639",
+      "title": "HuBERT Ensemble Models for Singing Voice Deepfake Detection",
+      "url": "https://zenodo.org/records/16955639"
+    },
+    {
+      "decision": "rejected_policy_chapter_no_rows",
+      "file_hints": [
+        "Chapter 8 Market Manipulation, Insider Trading and Regulatory Effectiveness A Comparative Study of South Africa the USA and the UK.docx"
+      ],
+      "record_id": "19653452",
+      "title": "Chapter 8: Market Manipulation, Insider Trading, and Regulatory Effectiveness: A Comparative Study of South Africa, the USA, and the UK",
+      "url": "https://zenodo.org/records/19653452"
+    },
+    {
+      "decision": "rejected_non_financial_gps_spoofing",
+      "file_hints": [
+        "README.md",
+        "dataset.tar.bz2",
+        "parameter_space.png"
+      ],
+      "record_id": "8202936",
+      "title": "MARitime SIMulated (MARSIM) Dataset for GPS Spoofing Detection",
+      "url": "https://zenodo.org/records/8202936"
+    },
+    {
+      "decision": "rejected_dataset_catalog_not_market_rows",
+      "file_hints": [
+        "data_collection_v6.xlsx"
+      ],
+      "record_id": "17226688",
+      "title": "Data Collection & Requirements",
+      "url": "https://zenodo.org/records/17226688"
+    }
+  ],
+  "records_inspected": 6,
+  "run_id": "20260511T085653+0800-codex-zenodo-direct-manipulation-candidate-probe",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

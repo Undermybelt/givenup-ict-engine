@@ -1,0 +1,41 @@
+{
+  "run_id": "20260512T053523-codex-concurrent-readback-reconciliation-after-052522-terminal-v1",
+  "generated_at_local": "2026-05-12T05:35:23+0800",
+  "board_hash_before_writeback": "7b428c5d8a4783b8280a50f0f678b8cc2f772e3bd7fa2d109a95483be7bc584f",
+  "gate_result": "concurrent_readback_reconciliation_after_052522_terminal_v1=053047_missing_root_still_noncounting_052522_terminal_3of4_no_promotion",
+  "counting_rule": {
+    "053047_board_a_missing_root": "non_counting_until_materialized",
+    "052940_objective_audit": "latest_verified_current_objective_audit",
+    "052650_v5_dispatch": "current_dispatch_packet",
+    "051844_hgb_screen": "diagnostic_4of4_no_promotion",
+    "052522_numeric_tree_screen": "diagnostic_3of4_no_promotion"
+  },
+  "052522_terminal": {
+    "terminal": true,
+    "rows_scored": 248440,
+    "accepted_labels": [
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "rejected_labels": [
+      "Bear"
+    ],
+    "bear_best_wilson95_lcb": 0.9465286635,
+    "bear_blocker": "heldout_market_wilson95_below_0.95"
+  },
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "promotion_status": {
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Send or satisfy the 052650 v5 CME/Cboe/CFE owner-export dispatch drafts and preserve ticket/export/license identifiers, or otherwise unlock a required target root before direct verifier, split calibration, canonical merge, provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback."
+}

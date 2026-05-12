@@ -1,0 +1,120 @@
+{
+  "run_id": "20260512T015055-codex-r6-owner-export-operator-handoff-v2",
+  "board_sha256_before_artifact_refresh": "87c088095b63318a9eebfc8a8012496d4ab915e887c8df96abc382cdb15a142f",
+  "gate_result": "r6_owner_export_operator_handoff_v2=operator_packet_ready_no_request_submitted_no_controls_acquired",
+  "observed_at": "2026-05-12T01:50:55+08:00",
+  "current_cursor_preserved": true,
+  "purpose": "Make the current R6 owner-export next action executable by an owner/operator without using it as acceptance evidence.",
+  "input_artifacts": {
+    "sendable_requests_v4": "docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1",
+    "sendable_requests_v3": "docs/experiments/actionable-regime-confidence/runs/20260512T005913-codex-r6-owner-export-sendable-requests-v3",
+    "request_bundle_v2": "docs/experiments/actionable-regime-confidence/runs/20260512T005126-codex-r6-owner-export-request-bundle-v2",
+    "send_channel_preflight_v1": "docs/experiments/actionable-regime-confidence/runs/20260512T014300-codex-r6-owner-export-current-send-channel-preflight-v1",
+    "route_recheck_v1": "docs/experiments/actionable-regime-confidence/runs/20260512T014314-codex-r6-owner-route-current-web-recheck-v1",
+    "completion_audit_current_reference": "docs/experiments/actionable-regime-confidence/runs/20260512T014305-codex-current-objective-prompt-artifact-audit-after-013904-v1"
+  },
+  "request_drafts": [
+    {
+      "owner": "CME Group",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/cme_group_owner_export_request_v4.md",
+      "required_cells": 13,
+      "required_support_per_cell": 73,
+      "submitter": "owner_or_operator_account_required",
+      "submitted_by_this_packet": false
+    },
+    {
+      "owner": "Cboe/CFE",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/cboe_cfe_owner_export_request_v4.md",
+      "required_cells": 4,
+      "required_support_per_cell": 73,
+      "submitter": "owner_or_operator_account_required",
+      "submitted_by_this_packet": false
+    }
+  ],
+  "send_channels": [
+    {
+      "owner": "CME Group",
+      "route": "CME DataMine historical data",
+      "url": "https://www.cmegroup.com/market-data/datamine-historical-data/index.html",
+      "operator_action": "Submit the CME request draft through CME DataMine/Data Sales or equivalent owner route."
+    },
+    {
+      "owner": "CME Group",
+      "route": "CME Market Depth Files FAQ",
+      "url": "https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf",
+      "operator_action": "Use as product/date coverage support for 2011-2013 Market Depth/FIX-FAST or equivalent rows."
+    },
+    {
+      "owner": "Cboe/CFE",
+      "route": "Cboe DataShop CFE VIX futures trades and quotes",
+      "url": "https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes",
+      "operator_action": "Submit or route the 2014 VIX/CFE trades/quotes export request."
+    },
+    {
+      "owner": "Cboe/CFE",
+      "route": "Cboe U.S. Futures Market Data Services",
+      "url": "https://ww2.cboe.com/market_data_services/us/futures/",
+      "operator_action": "Use support/custom-export path if historical depth or order-lifecycle rows are required."
+    }
+  ],
+  "required_delivery": {
+    "delivery_root_after_approval": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "required_files": [
+      "positive_spoofing_layering_rows.csv",
+      "matched_negative_normal_activity_rows.csv",
+      "provenance_manifest.json"
+    ],
+    "minimum_controls": {
+      "required_cells": 17,
+      "required_support_per_cell": 73,
+      "current_source_owned_normal_controls": 0
+    },
+    "provenance_required_fields": [
+      "source_owner",
+      "licensed_export_reference",
+      "raw_file_sha256",
+      "field_mapping",
+      "normal_control_basis",
+      "license_constraints"
+    ]
+  },
+  "post_arrival_chain": [
+    {
+      "step": 1,
+      "name": "place_owner_export_files",
+      "allowed_now": false,
+      "requires": "owner export or explicit FLIP approval plus shared lock"
+    },
+    {
+      "step": 2,
+      "name": "direct_verifier",
+      "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-board-a-r6-owner-export-v1",
+      "allowed_now": false
+    },
+    {
+      "step": 3,
+      "name": "downstream_chain",
+      "command": "direct verifier -> split calibration -> provider status -> Auto-Quant -> Pre-Bayes/BBN -> CatBoost/path-ranking -> execution-tree readback",
+      "allowed_now": false
+    }
+  ],
+  "observed_empty_staging_root_not_touched": "docs/experiments/actionable-regime-confidence/runs/20260512T014941-codex-r6-owner-export-operator-handoff-v1",
+  "owner_vendor_request_submitted": false,
+  "ticket_or_export_identifier_received": false,
+  "source_owned_normal_controls_acquired": 0,
+  "flip_as_control_approved": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "r3_r5_r6_roots_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_contact_submitted": false,
+  "trade_usable": false,
+  "next_action": "An owner/operator must submit the CME and Cboe/CFE request drafts or explicitly approve FLIP-as-control. Only after ticket/export identifiers and verifier-native rows arrive should the R6 owner-export root be populated under shared lock and the full downstream chain be rerun."
+}

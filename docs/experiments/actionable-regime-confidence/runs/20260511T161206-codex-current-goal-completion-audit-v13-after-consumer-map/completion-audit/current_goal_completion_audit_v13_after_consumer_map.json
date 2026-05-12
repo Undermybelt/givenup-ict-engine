@@ -1,0 +1,57 @@
+{
+  "schema_version": "current-goal-completion-audit/v13",
+  "run_id": "20260511T161206+0800-codex-current-goal-completion-audit-v13-after-consumer-map",
+  "board_file": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_cursor_observed": "20260511T153637+0800-codex-regime-factor-consumer-map-v1",
+  "objective": "Each active regime must reach 95% confidence and remain suitably confident across other markets, other timeframes, full cycle, and full species before reporting completion.",
+  "concrete_success_criteria": [
+    "Bull, Bear, Sideways, and Crisis each have accepted 95% evidence with explicit rule/signal, support, and chronological/cross-context validation.",
+    "Separate direct Manipulation has accepted direct rows and controls for all required varieties or explicit abstain coverage that satisfies the full-species objective.",
+    "Validation covers other markets, other timeframes, and full-cycle periods, including unresolved 2026 recency if required.",
+    "No proxy labels, OHLCV-only manipulation proxies, HMM/generated/future-return labels, or unsupported index crosswalks are used as source labels.",
+    "A downstream consumer contract exists and does not overclaim trade usability or full objective completion."
+  ],
+  "decision": "not_complete",
+  "full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "summary": {
+    "accepted_95_scoped_active_lanes": "5/5",
+    "price_root_context_ready": "4/4",
+    "weekly_monthly_same_source_cells": "8/8",
+    "strict_exact_1h_ticker_root_rows": "41/156",
+    "direct_manipulation_scoped_varieties_accepted": 5,
+    "direct_manipulation_missing_or_blocked_varieties": [
+      "pump_dump_social_text_or_twitter",
+      "spoofing_layering_enforcement_cases",
+      "local_spoofing_repos",
+      "quote_stuffing",
+      "pinging",
+      "bear_raid_or_painting_tape"
+    ],
+    "primary_blockers": [
+      "full direct Manipulation species coverage remains incomplete",
+      "spoofing/layering has positive cases but no matched negative controls",
+      "strict ticker/root 1h support remains partial at 41/156",
+      "full-cycle and 2026 recency coverage remain incomplete"
+    ]
+  },
+  "evidence_inspected": [
+    "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/checks/regime_factor_consumer_map_v1_assertions.out",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/checks/market_regime_context_packet_v1_assertions.out",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T141910-codex-exact-1h-source-universe-expansion-v1/exact-1h-universe/exact_1h_source_universe_expansion_v1.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_manifest_v1.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/checks/direct_manipulation_row_intake_manifest_v1_assertions.out",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T153806-codex-bull-anchor-exact-loop-v1/bull-anchor-loop/bull_anchor_exact_loop_v1.md",
+    "docs/experiments/actionable-regime-confidence/runs/20260511T153806-codex-bull-anchor-exact-loop-v1/checks/bull_anchor_exact_loop_v1_assertions.out"
+  ],
+  "next_action": "Keep using regime_factor_consumer_map_v1.csv as the scoped downstream consumer contract; do not call update_goal. To close the full objective, acquire source-owned direct Manipulation row exports with matched negatives for missing species and extend source-backed full-cycle/2026 coverage instead of running more proxy sweeps."
+}

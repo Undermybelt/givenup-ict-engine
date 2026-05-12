@@ -1,0 +1,11 @@
+scoped_active_lane_accepted_95=true
+full_objective_achieved=false
+has_full_cycle_row=true
+has_full_species_row=true
+has_other_market_row=true
+has_other_timeframe_row=true
+has_failed_or_partial=true
+call_update_goal=false
+thresholds_relaxed=false
+raw_data_committed=false
+assertion_status=PASS

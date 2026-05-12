@@ -1,0 +1,11 @@
+gate,status,evidence
+source_label_equivalence_schema,pass,status=schema_ready_unscored; rows=248440
+source_label_equivalence_confidence,fail,accepted_source_confidence_95_labels=0/4
+native_subhour_source_label_root,fail,path=/tmp/ict-engine-native-subhour-source-label-intake; exists=False
+source_panel_recency_extension_root,fail,status=blocked; reason=missing_required_files
+direct_manipulation_schema,pass,status=schema_ready_unscored; positives=60; matched_negatives=60
+direct_manipulation_support,pass,positives=60; matched_negatives=60; required_min=50/50
+direct_manipulation_wilson95,fail,min_lcb=0.939828; required>=0.95
+direct_manipulation_broad_normal_sample,fail,broad_normal_sample=False; controls are same-source genuine-order seeds
+direct_manipulation_species_coverage,fail,direct_species_closed=False
+strict_full_objective,fail,source confidence accepted 0/4 labels; R3 native sub-hour missing; R5 recency missing; R6 Wilson95/broad-normal/direct-species gates incomplete

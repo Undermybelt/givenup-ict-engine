@@ -1,0 +1,1 @@
+PASS decision=r2_r3_r5_public_route_and_root_readback_v1=rows_not_acquired_blocked ready_roots=1/4 exact_hits=0 source_verifier=blocked recency_verifier=blocked update_goal=false

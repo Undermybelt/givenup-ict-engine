@@ -1,0 +1,136 @@
+{
+  "accepted_labels": [],
+  "accepted_rows_added": 0,
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_audit": "8651a75652b7e36279b4577fcf3b3860d03b67a2303e0622d0b9fcdc7dbb1449",
+  "canonical_merge_allowed": false,
+  "checklist_counts": {
+    "blocked": 5,
+    "partial": 3,
+    "pass": 3
+  },
+  "downstream_chain_rerun_allowed": false,
+  "evidence_presence": {
+    "autoquant_cache": true,
+    "operator_handoff": true,
+    "readonly_runtime_chain": true,
+    "send_channel_preflight": true,
+    "source_arrival_poll": true,
+    "source_label_failclosed": true,
+    "v4_requests": true
+  },
+  "external_requests_sent": false,
+  "gate_result": "current_objective_completion_audit_after_v4_requests_v1=not_complete_owner_export_and_regime_acceptance_blocked",
+  "new_confidence_gate": false,
+  "objective_restatement": [
+    "Each active MainRegimeV2 regime must have accepted calibrated confidence >=95%.",
+    "Accepted confidence must validate across other markets and other cycles/timeframes.",
+    "Real Auto-Quant and ict-engine filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree surfaces must be operated in order.",
+    "IBKR, TradingViewRemix, yfinance, and Kraken provider context must be recorded.",
+    "Multi-agent board edits must stay append-only and not disturb concurrent work."
+  ],
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md; sha256_at_audit=8651a75652b7e36279b4577fcf3b3860d03b67a2303e0622d0b9fcdc7dbb1449",
+      "gap": "none",
+      "requirement": "Named Board A markdown remains the live contract",
+      "status": "pass"
+    },
+    {
+      "evidence": "012425/014305/015121 preserve accepted labels as empty and strict objective false",
+      "gap": "No accepted Bull/Bear/Sideways/Crisis packet; Bull/Sideways are field-complete leads only.",
+      "requirement": "Every MainRegimeV2 regime reaches calibrated confidence >=95%",
+      "status": "blocked"
+    },
+    {
+      "evidence": "012425 source-label fail-closed audit",
+      "gap": "Condition leads exist for Bull/Sideways, but no accepted labels; Bear/Crisis remain unaccepted.",
+      "requirement": "Each accepted regime has its own qualifying condition",
+      "status": "partial"
+    },
+    {
+      "evidence": "r3={'path': '/tmp/ict-engine-native-subhour-source-label-intake', 'present': False, 'file_count': 0}; r5={'path': '/tmp/ict-engine-source-panel-recency-extension', 'present': False, 'file_count': 0}; source_label={'path': '/tmp/ict-engine-source-label-equivalence-intake', 'present': True, 'file_count': 2}",
+      "gap": "R3 native sub-hour and R5 recency roots absent; source-label equivalence is daily-only and confidence-blocked.",
+      "requirement": "Validation transfers to other markets and cycles/timeframes",
+      "status": "blocked"
+    },
+    {
+      "evidence": "r6={'path': '/tmp/ict-engine-board-a-r6-owner-export-v1', 'present': False, 'file_count': 0}; 015040 v4 request packet; 015121 source-arrival poll",
+      "gap": "Owner-export root absent; controls 0; FLIP approval false; request drafts are not data.",
+      "requirement": "R6 direct manipulation has source-owned normal controls or explicit FLIP approval",
+      "status": "blocked"
+    },
+    {
+      "evidence": "013533 provider/runtime readback and later board registrations",
+      "gap": "Provider surfaces are read-only context; yfinance/Kraken CLI usable, while IBKR/TradingView/Kraken public remain not promotion evidence.",
+      "requirement": "Provider context includes IBKR, TradingViewRemix, yfinance, and Kraken",
+      "status": "partial"
+    },
+    {
+      "evidence": "013904 Auto-Quant cache readback; Tomac latest result has 9 trades and negative profit",
+      "gap": "Auto-Quant evidence is parseable but low-trade/negative and contains no accepted source/control roots.",
+      "requirement": "Operate Auto-Quant as part of the real chain",
+      "status": "blocked"
+    },
+    {
+      "evidence": "013533 read-only runtime chain refresh",
+      "gap": "Commands were callable/read-only; downstream promotion rerun remains disallowed until source/control roots and canonical merge pass.",
+      "requirement": "Operate ict-engine filter, Pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree surfaces",
+      "status": "partial"
+    },
+    {
+      "evidence": "015040 v4 request packet registered as requests_refreshed_current_routes_controls_not_acquired_no_merge",
+      "gap": "none for posture; still not completion evidence",
+      "requirement": "Use v4 sendable request packet only as operator handoff, not acceptance evidence",
+      "status": "pass"
+    },
+    {
+      "evidence": "This audit writes an isolated run root and only appends a board registration after re-read.",
+      "gap": "none",
+      "requirement": "Multi-agent append-only discipline preserved",
+      "status": "pass"
+    },
+    {
+      "evidence": "accepted_rows_added=0; canonical_merge_allowed=false; downstream_chain_rerun_allowed=false",
+      "gap": "Source/control evidence and per-regime 95% acceptance are missing.",
+      "requirement": "Goal may be marked complete",
+      "status": "blocked"
+    }
+  ],
+  "r3_r5_r6_roots_mutated": false,
+  "raw_data_committed": false,
+  "root_status": {
+    "direct_manipulation_old": {
+      "file_count": 3,
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "present": true
+    },
+    "r3_native_subhour": {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    "r5_recency_extension": {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    },
+    "r6_owner_export": {
+      "file_count": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false
+    },
+    "source_label_equivalence": {
+      "file_count": 2,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true
+    }
+  },
+  "run_id": "20260512T015413-codex-current-objective-completion-audit-after-v4-requests-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

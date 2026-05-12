@@ -1,0 +1,5 @@
+data_rows 11086 start 2024-06-02 22:00:00+00:00 end 2026-05-11 23:00:00+00:00
+ProviderNqAlwaysInDiagnostic enter_long 11086 exit_long 0 overlap 0 enter_after_2024_06_10 10969
+ProviderNqModuloCanary enter_long 450 exit_long 443 overlap 0 enter_after_2024_06_10 445
+ProviderNqSampledPulse enter_long 130 exit_long 4435 overlap 0 enter_after_2024_06_10 128
+ProviderNqTrendPulse enter_long 3080 exit_long 5011 overlap 0 enter_after_2024_06_10 3069

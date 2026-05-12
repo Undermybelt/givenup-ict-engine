@@ -1,0 +1,250 @@
+{
+  "rows": 512,
+  "features_csv": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-aqonly-probe-512/autoquant_entry_aqonly_features_512.csv",
+  "feature_count": 435,
+  "target_counts": {
+    "AvoidBadLossCluster": {
+      "positive": 331,
+      "negative": 181
+    },
+    "AnyWinCluster": {
+      "positive": 162,
+      "negative": 350
+    },
+    "RepresentativeWin": {
+      "positive": 162,
+      "negative": 350
+    },
+    "MaterialWin": {
+      "positive": 105,
+      "negative": 407
+    }
+  },
+  "targets": {
+    "AvoidBadLossCluster": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "15m_ret_1",
+          "importance": 16.89313681478155
+        },
+        {
+          "feature": "4h_ret_1",
+          "importance": 3.1037550808141012
+        },
+        {
+          "feature": "15m_upper_wick_frac",
+          "importance": 1.7995250943018113
+        },
+        {
+          "feature": "1d_dd_5",
+          "importance": 1.7737915774559618
+        },
+        {
+          "feature": "1h_ret_1",
+          "importance": 1.3884215897984524
+        },
+        {
+          "feature": "5m_eff_96",
+          "importance": 1.2238488502418734
+        },
+        {
+          "feature": "15m_dd_96",
+          "importance": 1.2118151335529483
+        },
+        {
+          "feature": "1h_eff_32",
+          "importance": 1.1979056189135333
+        },
+        {
+          "feature": "1h_eff_8",
+          "importance": 1.156419087691056
+        },
+        {
+          "feature": "5m_ret_1",
+          "importance": 1.1106886986041213
+        },
+        {
+          "feature": "15m_body_frac",
+          "importance": 1.0567353522813894
+        },
+        {
+          "feature": "15m_vol_8",
+          "importance": 1.0445145363297879
+        }
+      ],
+      "calibration_admissible_rules": 0,
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "AnyWinCluster": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "15m_ret_1",
+          "importance": 8.977434563791352
+        },
+        {
+          "feature": "1h_ret_1",
+          "importance": 3.420599897179701
+        },
+        {
+          "feature": "1d_pos_10",
+          "importance": 3.371182598108272
+        },
+        {
+          "feature": "4h_ret_1",
+          "importance": 2.9351403834054217
+        },
+        {
+          "feature": "1h_pos_4",
+          "importance": 2.871969643746665
+        },
+        {
+          "feature": "5m_ret_1",
+          "importance": 2.7681170377972273
+        },
+        {
+          "feature": "1d_eff_5",
+          "importance": 2.463368997048545
+        },
+        {
+          "feature": "5m_ret_192",
+          "importance": 1.5620094941414457
+        },
+        {
+          "feature": "15m_eff_192",
+          "importance": 1.4943856106239184
+        },
+        {
+          "feature": "1h_eff_32",
+          "importance": 1.275170426196585
+        },
+        {
+          "feature": "5m_pos_96",
+          "importance": 1.2557089326142246
+        },
+        {
+          "feature": "5m_pos_64",
+          "importance": 1.2264262329660245
+        }
+      ],
+      "calibration_admissible_rules": 0,
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "RepresentativeWin": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "15m_ret_1",
+          "importance": 8.977434563791352
+        },
+        {
+          "feature": "1h_ret_1",
+          "importance": 3.420599897179701
+        },
+        {
+          "feature": "1d_pos_10",
+          "importance": 3.371182598108272
+        },
+        {
+          "feature": "4h_ret_1",
+          "importance": 2.9351403834054217
+        },
+        {
+          "feature": "1h_pos_4",
+          "importance": 2.871969643746665
+        },
+        {
+          "feature": "5m_ret_1",
+          "importance": 2.7681170377972273
+        },
+        {
+          "feature": "1d_eff_5",
+          "importance": 2.463368997048545
+        },
+        {
+          "feature": "5m_ret_192",
+          "importance": 1.5620094941414457
+        },
+        {
+          "feature": "15m_eff_192",
+          "importance": 1.4943856106239184
+        },
+        {
+          "feature": "1h_eff_32",
+          "importance": 1.275170426196585
+        },
+        {
+          "feature": "5m_pos_96",
+          "importance": 1.2557089326142246
+        },
+        {
+          "feature": "5m_pos_64",
+          "importance": 1.2264262329660245
+        }
+      ],
+      "calibration_admissible_rules": 0,
+      "accepted_rules": 0,
+      "selected_rule": null
+    },
+    "MaterialWin": {
+      "skipped": false,
+      "top_importances": [
+        {
+          "feature": "15m_ret_1",
+          "importance": 5.751237274847244
+        },
+        {
+          "feature": "4h_ret_1",
+          "importance": 4.9201161552392225
+        },
+        {
+          "feature": "15m_eff_64",
+          "importance": 3.2940697742995733
+        },
+        {
+          "feature": "1d_pos_10",
+          "importance": 2.9004763223699346
+        },
+        {
+          "feature": "1d_pos_5",
+          "importance": 2.8421442109880917
+        },
+        {
+          "feature": "1h_ret_1",
+          "importance": 1.987951094310723
+        },
+        {
+          "feature": "1d_eff_5",
+          "importance": 1.7608739364116344
+        },
+        {
+          "feature": "1h_eff_32",
+          "importance": 1.7527704565894604
+        },
+        {
+          "feature": "15m_volume_z_4",
+          "importance": 1.512813994663123
+        },
+        {
+          "feature": "1h_bounce_4",
+          "importance": 1.4540085454377738
+        },
+        {
+          "feature": "5m_eff_16",
+          "importance": 1.3437902709297267
+        },
+        {
+          "feature": "15m_volume_z_16",
+          "importance": 1.302410102934341
+        }
+      ],
+      "calibration_admissible_rules": 0,
+      "accepted_rules": 0,
+      "selected_rule": null
+    }
+  },
+  "overall_decision": "no_95_candidate"
+}

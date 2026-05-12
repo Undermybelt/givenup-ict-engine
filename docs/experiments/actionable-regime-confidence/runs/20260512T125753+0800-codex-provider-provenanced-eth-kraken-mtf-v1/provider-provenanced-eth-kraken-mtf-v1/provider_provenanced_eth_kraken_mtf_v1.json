@@ -1,0 +1,60 @@
+{
+  "run_id": "20260512T125753+0800-codex-provider-provenanced-eth-kraken-mtf-v1",
+  "gate_result": "kraken_mtf_provider_data_ready_auto_quant_prepare_ready_tomac_pair_whitelist_fail_closed",
+  "provider": "kraken-spot",
+  "source_symbol": "ETHUSD",
+  "workspace_symbol": "ETHKRAKEN",
+  "workspace_pair": "ETHKRAKEN/USD",
+  "provider_rows": {
+    "1h": 721,
+    "4h": 721,
+    "1d": 721
+  },
+  "provider_windows": {
+    "1h": {
+      "first_timestamp": "2026-04-12T04:00:00Z",
+      "last_timestamp": "2026-05-12T04:00:00Z"
+    },
+    "4h": {
+      "first_timestamp": "2026-01-12T04:00:00Z",
+      "last_timestamp": "2026-05-12T04:00:00Z"
+    },
+    "1d": {
+      "first_timestamp": "2024-05-22T00:00:00Z",
+      "last_timestamp": "2026-05-12T00:00:00Z"
+    }
+  },
+  "provider_requested": true,
+  "provider_data_acquired": true,
+  "provider_unreachable": false,
+  "local_cache_replay": false,
+  "auto_quant_dependency": {
+    "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+    "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+  },
+  "auto_quant_prepare_ready": true,
+  "tomac_exit_codes": {
+    "auto_quant_run_tomac": 1,
+    "auto_quant_run_tomac_workspace": 1,
+    "auto_quant_run_tomac_after_prepare": 1
+  },
+  "fail_closed_reasons": [
+    "freqtrade_no_pair_in_whitelist",
+    "wrong_python_context_missing_freqtrade",
+    "no_strategy_metric_packet",
+    "no_real_trade_rows",
+    "no_downstream_chain"
+  ],
+  "analyze_readback": {
+    "candidate_status": "no_trade",
+    "review_status": "observe",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.43776422616823835
+  },
+  "evidence_class": "infrastructure_negative_sample",
+  "market_factor_learning_quality_weight": 0,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

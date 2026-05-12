@@ -1,0 +1,158 @@
+{
+  "schema_version": "board-a-real-chain-loop-evidence/v1",
+  "loop_id": "20260510T201931-hermes-loop-real-chain+0800-real-autoquant-ictengine-chain",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T201931-hermes-loop-real-chain",
+  "objective": "Operate the actual Auto-Quant -> ict-engine pre-Bayes -> BBN -> CatBoost/path-ranker -> workflow/execution-tree surfaces for Board A without inventing status.",
+  "selected_scope": {
+    "markets": [
+      "QQQ",
+      "NQ"
+    ],
+    "timeframes": [
+      "QQQ 1h",
+      "NQ 15m"
+    ],
+    "reason": "Board A cursor uses accepted QQQ SessionLiquidityCoreViable guardrail and NQ structural replay/path-ranker context."
+  },
+  "provider_readback": {
+    "artifact_agent": "provider/01_provider_status_agent.json",
+    "artifact_compact": "provider/01_provider_status_compact.txt",
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:2/2 ready | market_data:6/7 ready",
+    "ready_observed": [
+      "yfinance",
+      "ibkr",
+      "ibkr_bridge",
+      "kraken_public",
+      "kraken_cli"
+    ],
+    "not_ready_observed": [
+      "tradingview_mcp"
+    ],
+    "tradingview_blocker": "configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed",
+    "durable_artifact_index": "provider/02_durable_provider_artifact_index.txt",
+    "tradingview_artifact_index": "provider/03_tradingview_provider_index.txt",
+    "named_provider_probe_summary": "provider/04_named_provider_probe_summary.json"
+  },
+  "auto_quant": {
+    "status_artifact": "autoquant/01_auto_quant_status_replay36.json",
+    "import_artifact": "autoquant/03_auto_quant_results_import_nq.json",
+    "library_source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/autoquant/strategy_library_nq_scratch_no_rsi_2025.json",
+    "n_total_strategies": 1,
+    "n_ok": 1,
+    "n_error": 0,
+    "library_state_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T201931-hermes-loop-real-chain/state/auto-quant/NQ/auto_quant_strategy_library.json",
+    "training_process_check": "logs/01_training_process_check.txt"
+  },
+  "pre_bayes": {
+    "replay_state_artifact": "ict-engine/01_pre_bayes_status_nq.json",
+    "replay_latest_gate_status": "pass_neutralized",
+    "replay_uses_soft_evidence": true,
+    "isolated_after_bbn_artifact": "ict-engine/06_pre_bayes_status_isolated_after_bbn.json",
+    "isolated_latest_gate_status": null,
+    "isolated_note": "Fresh isolated BBN state has no analyze policy yet, so pre-Bayes fields are null; replay state remains the workflow-bearing state."
+  },
+  "bbn": {
+    "dry_run_artifact": "bbn/01_auto_quant_prior_init_nq_dry_run.json",
+    "apply_artifact": "bbn/02_auto_quant_prior_init_nq_apply.json",
+    "dry_run": false,
+    "evidence_value_gate_passed": true,
+    "strategies_applied_count": 1,
+    "trade_count": 1081,
+    "bbn_log_loss_delta": 6.7286527442285795,
+    "bbn_contradiction_lift": 1.3608378659320477,
+    "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260510T201931-hermes-loop-real-chain/state"
+  },
+  "catboost_path_ranker": {
+    "apply_stdout": "catboost/04_path_ranker_apply.out",
+    "apply_scores": "catboost/04_path_ranker_apply_scores_nq.csv",
+    "apply_scores_summary": "catboost/04_path_ranker_apply_scores_summary.json",
+    "rows_scored": 3,
+    "register_artifact": "catboost/05_register_structural_path_ranking_trainer_artifact.json",
+    "enable_artifact": "catboost/06_enable_structural_path_ranking_runtime.json",
+    "apply_to_runtime_artifact": "catboost/07_apply_structural_path_ranking_external_scores.json",
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "runtime_summary": "Ranker runtime: structural_path_ranking_target rows=3 history_rows=1462 mature_rows=1 history_mature_rows=1436 raw_scored_mature=1436/30 production_validation=1434/30 observation_validation=40/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+    "validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=1436/30 production_validation=1434/30 observation_validation=40/30 ready=true",
+    "raw_scored_mature_rows": 1436,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 1434,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 40,
+    "observation_validation_min_rows": 30,
+    "sample_scores": [
+      {
+        "candidate_set_id": "structural-candidates:NQ:e83d4f011de776c1",
+        "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+        "raw_path_score": "0.47560889371791215",
+        "score_model_family": "catboost",
+        "score_source_kind": "external_model",
+        "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+        "score_generator": "pandas_path_ranker_trainer.py"
+      },
+      {
+        "candidate_set_id": "structural-candidates:NQ:e83d4f011de776c1",
+        "path_id": "path:scenario:NQ:belief_regime_node:range:trend_follow_through:primary",
+        "raw_path_score": "0.4081829795325158",
+        "score_model_family": "catboost",
+        "score_source_kind": "external_model",
+        "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+        "score_generator": "pandas_path_ranker_trainer.py"
+      },
+      {
+        "candidate_set_id": "structural-candidates:NQ:e83d4f011de776c1",
+        "path_id": "path:scenario:NQ:belief_regime_node:range:stress_de_risk:primary",
+        "raw_path_score": "0.4081829795325158",
+        "score_model_family": "catboost",
+        "score_source_kind": "external_model",
+        "score_model_artifact_uri": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/catboost/path_ranker_model/catboost_model.cbm",
+        "score_generator": "pandas_path_ranker_trainer.py"
+      }
+    ]
+  },
+  "workflow_readback": {
+    "workflow_status_artifact": "ict-engine/03_workflow_status_nq.json",
+    "human_after_catboost": "ict-engine/08_workflow_status_after_catboost_apply.human.txt",
+    "recommended_path_artifact": "ict-engine/10_workflow_phase_structural_recommended_path_bundle_after_catboost.json",
+    "ranker_runtime_artifact": "ict-engine/09_workflow_phase_structural_ranker_runtime_after_catboost.json",
+    "validation_artifact": "ict-engine/11_workflow_phase_structural_validation_after_catboost.json",
+    "ranker_status": "using_candidate_set_scores",
+    "ranker_runtime_source": "candidate_set",
+    "ranker_applied_path_count": 4,
+    "ranker_execution_gate_status": "observe",
+    "ranker_raw_path_score": 0.47560889371791215,
+    "ranker_path_prob_lower_bound": 0.4324800119658634,
+    "recommended_path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+    "recommended_path_label": "range_mean_reversion",
+    "delayed_reward_status": "ready",
+    "source_reliability_status": "needs_multi_source_overlap"
+  },
+  "execution_tree_readback": {
+    "artifact": "execution/02_execution_tree_trace_after_catboost_apply_nq.json",
+    "generated_at": "2026-05-10T12:06:12.372982Z",
+    "gate_status": "observe",
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "consumer_reason": "market_state=TrendExpansion/BullTrendExhaustion | execution=observe/transition_guardrail/guarded | ranker=candidate_set/catboost/ready",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_model_family": "catboost",
+    "path_ranker_runtime_source": "candidate_set",
+    "ranker_validation_ready": true,
+    "timing_note": "Execution trace was produced by the workflow-bearing replay analyze state; the split_reason_lineage may include the prior 1397/30 summary, while policy/workflow artifacts in this packet are authoritative for the latest 1436/30 readback."
+  },
+  "decision": {
+    "board_a_confidence_goal": "accepted_95 remains from SessionLiquidityCoreViable",
+    "new_regime_acceptance": "none",
+    "chain_operated": true,
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "TradingViewRemix MCP remains unhealthy even though yfinance/IBKR/Kraken paths are ready or durably indexed.",
+      "Pre-Bayes/workflow/execution tree remain observe/guarded rather than non-observe execute-ready.",
+      "Accepted SessionLiquidityCoreViable is a guardrail, not standalone path-specific edge.",
+      "Entry-model training modules remain pending even though structural path-ranker validation is ready."
+    ],
+    "next_action": "Continue to use the CatBoost-ready ranker only as downstream context; do not promote until a non-observe release candidate passes edge, Pre-Bayes, BBN, and execution-tree gates."
+  }
+}

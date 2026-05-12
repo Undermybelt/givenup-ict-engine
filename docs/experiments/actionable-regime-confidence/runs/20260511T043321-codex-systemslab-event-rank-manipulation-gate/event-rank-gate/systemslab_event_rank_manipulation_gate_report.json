@@ -1,0 +1,1843 @@
+{
+  "accepted_95": false,
+  "active_root_accounting_after_gate": {
+    "accepted_95_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "missing_95_roots": [
+      "Manipulation"
+    ]
+  },
+  "best_timeframe": {
+    "blocked_predictors": [
+      "date",
+      "pump_index",
+      "symbol",
+      "gt",
+      "hour_sin",
+      "hour_cos",
+      "minute_sin",
+      "minute_cos"
+    ],
+    "event_rank_unit": "one top-ranked current/past feature row selected per pump event; success iff selected row is the labeled pump/dump row",
+    "leaderboard_top10": [
+      {
+        "accepted_95": false,
+        "blocker": "held_out_event_rank_wilson95_below_95",
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 5,
+          "precision": 0.9206349206349206,
+          "selected_positive_rate": 0.9206349206349206,
+          "successes": 58,
+          "support": 63,
+          "wilson95_lcb": 0.8272969014909591
+        },
+        "features": [
+          "std_rush_order",
+          "avg_rush_order",
+          "avg_price_max"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_rush_order_within_event_rank",
+          "avg_price_max_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 3,
+          "precision": 0.953125,
+          "selected_positive_rate": 0.953125,
+          "successes": 61,
+          "support": 64,
+          "wilson95_lcb": 0.8710034625990631
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 11,
+          "precision": 0.9421052631578948,
+          "selected_positive_rate": 0.9421052631578948,
+          "successes": 179,
+          "support": 190,
+          "wilson95_lcb": 0.8993192942010715
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 14,
+          "precision": 0.7777777777777778,
+          "selected_positive_rate": 0.7777777777777778,
+          "successes": 49,
+          "support": 63,
+          "wilson95_lcb": 0.6608771888656634
+        },
+        "features": [
+          "std_rush_order",
+          "avg_rush_order",
+          "std_trades"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_rush_order_within_event_rank",
+          "std_trades_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 6,
+          "precision": 0.90625,
+          "selected_positive_rate": 0.90625,
+          "successes": 58,
+          "support": 64,
+          "wilson95_lcb": 0.810171204003544
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 12,
+          "precision": 0.9368421052631579,
+          "selected_positive_rate": 0.9368421052631579,
+          "successes": 178,
+          "support": 190,
+          "wilson95_lcb": 0.892864599842426
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 5,
+          "precision": 0.9206349206349206,
+          "selected_positive_rate": 0.9206349206349206,
+          "successes": 58,
+          "support": 63,
+          "wilson95_lcb": 0.8272969014909591
+        },
+        "features": [
+          "std_rush_order",
+          "avg_price_max"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_price_max_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 5,
+          "precision": 0.921875,
+          "selected_positive_rate": 0.921875,
+          "successes": 59,
+          "support": 64,
+          "wilson95_lcb": 0.8298046264583709
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 13,
+          "precision": 0.9315789473684211,
+          "selected_positive_rate": 0.9315789473684211,
+          "successes": 177,
+          "support": 190,
+          "wilson95_lcb": 0.8864705102977051
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 6,
+          "precision": 0.9047619047619048,
+          "selected_positive_rate": 0.9047619047619048,
+          "successes": 57,
+          "support": 63,
+          "wilson95_lcb": 0.8073829893716311
+        },
+        "features": [
+          "avg_rush_order",
+          "avg_price_max"
+        ],
+        "rank_columns": [
+          "avg_rush_order_within_event_rank",
+          "avg_price_max_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 5,
+          "precision": 0.921875,
+          "selected_positive_rate": 0.921875,
+          "successes": 59,
+          "support": 64,
+          "wilson95_lcb": 0.8298046264583709
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 13,
+          "precision": 0.9315789473684211,
+          "selected_positive_rate": 0.9315789473684211,
+          "successes": 177,
+          "support": 190,
+          "wilson95_lcb": 0.8864705102977051
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 14,
+          "precision": 0.7777777777777778,
+          "selected_positive_rate": 0.7777777777777778,
+          "successes": 49,
+          "support": 63,
+          "wilson95_lcb": 0.6608771888656634
+        },
+        "features": [
+          "std_rush_order"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 4,
+          "precision": 0.9375,
+          "selected_positive_rate": 0.9375,
+          "successes": 60,
+          "support": 64,
+          "wilson95_lcb": 0.8500251490779133
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 14,
+          "precision": 0.9263157894736842,
+          "selected_positive_rate": 0.9263157894736842,
+          "successes": 176,
+          "support": 190,
+          "wilson95_lcb": 0.8801310736896368
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 15,
+          "precision": 0.7619047619047619,
+          "selected_positive_rate": 0.7619047619047619,
+          "successes": 48,
+          "support": 63,
+          "wilson95_lcb": 0.6436433989030313
+        },
+        "features": [
+          "avg_rush_order"
+        ],
+        "rank_columns": [
+          "avg_rush_order_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 5,
+          "precision": 0.921875,
+          "selected_positive_rate": 0.921875,
+          "successes": 59,
+          "support": 64,
+          "wilson95_lcb": 0.8298046264583709
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 14,
+          "precision": 0.9263157894736842,
+          "selected_positive_rate": 0.9263157894736842,
+          "successes": 176,
+          "support": 190,
+          "wilson95_lcb": 0.8801310736896368
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 16,
+          "precision": 0.746031746031746,
+          "selected_positive_rate": 0.746031746031746,
+          "successes": 47,
+          "support": 63,
+          "wilson95_lcb": 0.6265881256339354
+        },
+        "features": [
+          "std_rush_order",
+          "avg_rush_order"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_rush_order_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 4,
+          "precision": 0.9375,
+          "selected_positive_rate": 0.9375,
+          "successes": 60,
+          "support": 64,
+          "wilson95_lcb": 0.8500251490779133
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 14,
+          "precision": 0.9263157894736842,
+          "selected_positive_rate": 0.9263157894736842,
+          "successes": 176,
+          "support": 190,
+          "wilson95_lcb": 0.8801310736896368
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 3,
+          "precision": 0.9523809523809523,
+          "selected_positive_rate": 0.9523809523809523,
+          "successes": 60,
+          "support": 63,
+          "wilson95_lcb": 0.8690903216209392
+        },
+        "features": [
+          "std_rush_order",
+          "avg_rush_order",
+          "std_trades",
+          "avg_price_max"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_rush_order_within_event_rank",
+          "std_trades_within_event_rank",
+          "avg_price_max_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 5,
+          "precision": 0.921875,
+          "selected_positive_rate": 0.921875,
+          "successes": 59,
+          "support": 64,
+          "wilson95_lcb": 0.8298046264583709
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 14,
+          "precision": 0.9263157894736842,
+          "selected_positive_rate": 0.9263157894736842,
+          "successes": 176,
+          "support": 190,
+          "wilson95_lcb": 0.8801310736896368
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 6,
+          "precision": 0.9047619047619048,
+          "selected_positive_rate": 0.9047619047619048,
+          "successes": 57,
+          "support": 63,
+          "wilson95_lcb": 0.8073829893716311
+        },
+        "features": [
+          "std_rush_order",
+          "avg_rush_order",
+          "std_trades",
+          "avg_price"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_rush_order_within_event_rank",
+          "std_trades_within_event_rank",
+          "avg_price_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 6,
+          "precision": 0.90625,
+          "selected_positive_rate": 0.90625,
+          "successes": 58,
+          "support": 64,
+          "wilson95_lcb": 0.810171204003544
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 16,
+          "precision": 0.9157894736842105,
+          "selected_positive_rate": 0.9157894736842105,
+          "successes": 174,
+          "support": 190,
+          "wilson95_lcb": 0.8675969993151479
+        }
+      },
+      {
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 13,
+          "precision": 0.7936507936507936,
+          "selected_positive_rate": 0.7936507936507936,
+          "successes": 50,
+          "support": 63,
+          "wilson95_lcb": 0.6783018567138666
+        },
+        "features": [
+          "std_rush_order",
+          "avg_rush_order",
+          "std_trades",
+          "avg_volume"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_rush_order_within_event_rank",
+          "std_trades_within_event_rank",
+          "avg_volume_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 9,
+          "precision": 0.859375,
+          "selected_positive_rate": 0.859375,
+          "successes": 55,
+          "support": 64,
+          "wilson95_lcb": 0.7538371825842297
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 17,
+          "precision": 0.9105263157894737,
+          "selected_positive_rate": 0.9105263157894737,
+          "successes": 173,
+          "support": 190,
+          "wilson95_lcb": 0.8613945325822252
+        }
+      }
+    ],
+    "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_15S.csv.gz",
+    "positive_events": 317,
+    "rows": 584081,
+    "selected": {
+      "accepted_95": false,
+      "blocker": "held_out_event_rank_wilson95_below_95",
+      "calibration": {
+        "event_coverage": 1.0,
+        "failures": 5,
+        "precision": 0.9206349206349206,
+        "selected_positive_rate": 0.9206349206349206,
+        "successes": 58,
+        "support": 63,
+        "wilson95_lcb": 0.8272969014909591
+      },
+      "features": [
+        "std_rush_order",
+        "avg_rush_order",
+        "avg_price_max"
+      ],
+      "rank_columns": [
+        "std_rush_order_within_event_rank",
+        "avg_rush_order_within_event_rank",
+        "avg_price_max_within_event_rank"
+      ],
+      "test": {
+        "event_coverage": 1.0,
+        "failures": 3,
+        "precision": 0.953125,
+        "selected_positive_rate": 0.953125,
+        "successes": 61,
+        "support": 64,
+        "wilson95_lcb": 0.8710034625990631
+      },
+      "train": {
+        "event_coverage": 1.0,
+        "failures": 11,
+        "precision": 0.9421052631578948,
+        "selected_positive_rate": 0.9421052631578948,
+        "successes": 179,
+        "support": 190,
+        "wilson95_lcb": 0.8993192942010715
+      }
+    },
+    "sha256": "fd6fd97f50ddc13b37b9a6361c09bf4cb07159c61f150328902b2d95137041f2",
+    "split_event_counts": {
+      "calibration": 63,
+      "test": 64,
+      "train": 190
+    },
+    "timeframe": "15S"
+  },
+  "candidate_regime": "Manipulation",
+  "evidence_class": "direct_event_social_exchange_transaction_features",
+  "gate_contract": {
+    "future_or_target_leakage_allowed": false,
+    "min_calibration_support": 50,
+    "min_calibration_wilson95_lcb": 0.95,
+    "min_test_support": 50,
+    "min_test_wilson95_lcb": 0.95,
+    "thresholds_relaxed": false
+  },
+  "gate_result": "blocked_systemslab_event_rank_below_95",
+  "next_action": "Use a stronger direct order-lifecycle/L2/L3/MBO/social/on-chain source; SystemsLab scalar and event-rank gates are below 95.",
+  "raw_data_committed_to_repo": false,
+  "run_id": "20260511T043321+0800-codex-systemslab-event-rank-manipulation-gate",
+  "runtime_code_changed": false,
+  "source_repo": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+  "source_root": "/private/tmp/ict-regime-systemslab-pump-dump",
+  "thresholds_relaxed": false,
+  "timeframe_reports": [
+    {
+      "blocked_predictors": [
+        "date",
+        "pump_index",
+        "symbol",
+        "gt",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos"
+      ],
+      "event_rank_unit": "one top-ranked current/past feature row selected per pump event; success iff selected row is the labeled pump/dump row",
+      "leaderboard_top10": [
+        {
+          "accepted_95": false,
+          "blocker": "held_out_event_rank_wilson95_below_95",
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 10,
+            "precision": 0.8412698412698413,
+            "selected_positive_rate": 0.8412698412698413,
+            "successes": 53,
+            "support": 63,
+            "wilson95_lcb": 0.7318842321822745
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 9,
+            "precision": 0.859375,
+            "selected_positive_rate": 0.859375,
+            "successes": 55,
+            "support": 64,
+            "wilson95_lcb": 0.7538371825842297
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 20,
+            "precision": 0.8947368421052632,
+            "selected_positive_rate": 0.8947368421052632,
+            "successes": 170,
+            "support": 190,
+            "wilson95_lcb": 0.8430089432701318
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 12,
+            "precision": 0.8095238095238095,
+            "selected_positive_rate": 0.8095238095238095,
+            "successes": 51,
+            "support": 63,
+            "wilson95_lcb": 0.6959321285012545
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_trades",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 10,
+            "precision": 0.84375,
+            "selected_positive_rate": 0.84375,
+            "successes": 54,
+            "support": 64,
+            "wilson95_lcb": 0.7357193822745122
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 25,
+            "precision": 0.868421052631579,
+            "selected_positive_rate": 0.868421052631579,
+            "successes": 165,
+            "support": 190,
+            "wilson95_lcb": 0.8129765730585481
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 12,
+            "precision": 0.8095238095238095,
+            "selected_positive_rate": 0.8095238095238095,
+            "successes": 51,
+            "support": 63,
+            "wilson95_lcb": 0.6959321285012545
+          },
+          "features": [
+            "std_rush_order",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 9,
+            "precision": 0.859375,
+            "selected_positive_rate": 0.859375,
+            "successes": 55,
+            "support": 64,
+            "wilson95_lcb": 0.7538371825842297
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 27,
+            "precision": 0.8578947368421053,
+            "selected_positive_rate": 0.8578947368421053,
+            "successes": 163,
+            "support": 190,
+            "wilson95_lcb": 0.8011404242512712
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 12,
+            "precision": 0.8095238095238095,
+            "selected_positive_rate": 0.8095238095238095,
+            "successes": 51,
+            "support": 63,
+            "wilson95_lcb": 0.6959321285012545
+          },
+          "features": [
+            "avg_rush_order",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "avg_rush_order_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 9,
+            "precision": 0.859375,
+            "selected_positive_rate": 0.859375,
+            "successes": 55,
+            "support": 64,
+            "wilson95_lcb": 0.7538371825842297
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 27,
+            "precision": 0.8578947368421053,
+            "selected_positive_rate": 0.8578947368421053,
+            "successes": 163,
+            "support": 190,
+            "wilson95_lcb": 0.8011404242512712
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 26,
+            "precision": 0.5873015873015873,
+            "selected_positive_rate": 0.5873015873015873,
+            "successes": 37,
+            "support": 63,
+            "wilson95_lcb": 0.4641531769742257
+          },
+          "features": [
+            "std_rush_order"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.796875,
+            "selected_positive_rate": 0.796875,
+            "successes": 51,
+            "support": 64,
+            "wilson95_lcb": 0.6828636426898583
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 28,
+            "precision": 0.8526315789473684,
+            "selected_positive_rate": 0.8526315789473684,
+            "successes": 162,
+            "support": 190,
+            "wilson95_lcb": 0.7952555165297375
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 11,
+            "precision": 0.8253968253968254,
+            "selected_positive_rate": 0.8253968253968254,
+            "successes": 52,
+            "support": 63,
+            "wilson95_lcb": 0.7137857247924103
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_trades",
+            "avg_price"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank",
+            "avg_price_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 9,
+            "precision": 0.859375,
+            "selected_positive_rate": 0.859375,
+            "successes": 55,
+            "support": 64,
+            "wilson95_lcb": 0.7538371825842297
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 28,
+            "precision": 0.8526315789473684,
+            "selected_positive_rate": 0.8526315789473684,
+            "successes": 162,
+            "support": 190,
+            "wilson95_lcb": 0.7952555165297375
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.7936507936507936,
+            "selected_positive_rate": 0.7936507936507936,
+            "successes": 50,
+            "support": 63,
+            "wilson95_lcb": 0.6783018567138666
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "avg_volume",
+            "avg_price"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "avg_volume_within_event_rank",
+            "avg_price_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 15,
+            "precision": 0.765625,
+            "selected_positive_rate": 0.765625,
+            "successes": 49,
+            "support": 64,
+            "wilson95_lcb": 0.6486674241743136
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 28,
+            "precision": 0.8526315789473684,
+            "selected_positive_rate": 0.8526315789473684,
+            "successes": 162,
+            "support": 190,
+            "wilson95_lcb": 0.7952555165297375
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 18,
+            "precision": 0.7142857142857143,
+            "selected_positive_rate": 0.7142857142857143,
+            "successes": 45,
+            "support": 63,
+            "wilson95_lcb": 0.5929728343259287
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "avg_volume"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "avg_volume_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 18,
+            "precision": 0.71875,
+            "selected_positive_rate": 0.71875,
+            "successes": 46,
+            "support": 64,
+            "wilson95_lcb": 0.5986606971779259
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 29,
+            "precision": 0.8473684210526315,
+            "selected_positive_rate": 0.8473684210526315,
+            "successes": 161,
+            "support": 190,
+            "wilson95_lcb": 0.7893914535120105
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 10,
+            "precision": 0.8412698412698413,
+            "selected_positive_rate": 0.8412698412698413,
+            "successes": 53,
+            "support": 63,
+            "wilson95_lcb": 0.7318842321822745
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "avg_price"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "avg_price_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 8,
+            "precision": 0.875,
+            "selected_positive_rate": 0.875,
+            "successes": 56,
+            "support": 64,
+            "wilson95_lcb": 0.7722543817887005
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 29,
+            "precision": 0.8473684210526315,
+            "selected_positive_rate": 0.8473684210526315,
+            "successes": 161,
+            "support": 190,
+            "wilson95_lcb": 0.7893914535120105
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 14,
+            "precision": 0.7777777777777778,
+            "selected_positive_rate": 0.7777777777777778,
+            "successes": 49,
+            "support": 63,
+            "wilson95_lcb": 0.6608771888656634
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "avg_volume",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "avg_volume_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 14,
+            "precision": 0.78125,
+            "selected_positive_rate": 0.78125,
+            "successes": 50,
+            "support": 64,
+            "wilson95_lcb": 0.6656721604337418
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 29,
+            "precision": 0.8473684210526315,
+            "selected_positive_rate": 0.8473684210526315,
+            "successes": 161,
+            "support": 190,
+            "wilson95_lcb": 0.7893914535120105
+          }
+        }
+      ],
+      "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_5S.csv.gz",
+      "positive_events": 317,
+      "rows": 821275,
+      "selected": {
+        "accepted_95": false,
+        "blocker": "held_out_event_rank_wilson95_below_95",
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 10,
+          "precision": 0.8412698412698413,
+          "selected_positive_rate": 0.8412698412698413,
+          "successes": 53,
+          "support": 63,
+          "wilson95_lcb": 0.7318842321822745
+        },
+        "features": [
+          "std_rush_order",
+          "avg_rush_order",
+          "avg_price_max"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_rush_order_within_event_rank",
+          "avg_price_max_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 9,
+          "precision": 0.859375,
+          "selected_positive_rate": 0.859375,
+          "successes": 55,
+          "support": 64,
+          "wilson95_lcb": 0.7538371825842297
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 20,
+          "precision": 0.8947368421052632,
+          "selected_positive_rate": 0.8947368421052632,
+          "successes": 170,
+          "support": 190,
+          "wilson95_lcb": 0.8430089432701318
+        }
+      },
+      "sha256": "e1f82b42d735e368f04a60062cadd50d6b097cc1222ebe8830cbff24b6d5ab99",
+      "split_event_counts": {
+        "calibration": 63,
+        "test": 64,
+        "train": 190
+      },
+      "timeframe": "5S"
+    },
+    {
+      "blocked_predictors": [
+        "date",
+        "pump_index",
+        "symbol",
+        "gt",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos"
+      ],
+      "event_rank_unit": "one top-ranked current/past feature row selected per pump event; success iff selected row is the labeled pump/dump row",
+      "leaderboard_top10": [
+        {
+          "accepted_95": false,
+          "blocker": "held_out_event_rank_wilson95_below_95",
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.9206349206349206,
+            "selected_positive_rate": 0.9206349206349206,
+            "successes": 58,
+            "support": 63,
+            "wilson95_lcb": 0.8272969014909591
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 3,
+            "precision": 0.953125,
+            "selected_positive_rate": 0.953125,
+            "successes": 61,
+            "support": 64,
+            "wilson95_lcb": 0.8710034625990631
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 11,
+            "precision": 0.9421052631578948,
+            "selected_positive_rate": 0.9421052631578948,
+            "successes": 179,
+            "support": 190,
+            "wilson95_lcb": 0.8993192942010715
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 14,
+            "precision": 0.7777777777777778,
+            "selected_positive_rate": 0.7777777777777778,
+            "successes": 49,
+            "support": 63,
+            "wilson95_lcb": 0.6608771888656634
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_trades"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 6,
+            "precision": 0.90625,
+            "selected_positive_rate": 0.90625,
+            "successes": 58,
+            "support": 64,
+            "wilson95_lcb": 0.810171204003544
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 12,
+            "precision": 0.9368421052631579,
+            "selected_positive_rate": 0.9368421052631579,
+            "successes": 178,
+            "support": 190,
+            "wilson95_lcb": 0.892864599842426
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.9206349206349206,
+            "selected_positive_rate": 0.9206349206349206,
+            "successes": 58,
+            "support": 63,
+            "wilson95_lcb": 0.8272969014909591
+          },
+          "features": [
+            "std_rush_order",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.921875,
+            "selected_positive_rate": 0.921875,
+            "successes": 59,
+            "support": 64,
+            "wilson95_lcb": 0.8298046264583709
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.9315789473684211,
+            "selected_positive_rate": 0.9315789473684211,
+            "successes": 177,
+            "support": 190,
+            "wilson95_lcb": 0.8864705102977051
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 6,
+            "precision": 0.9047619047619048,
+            "selected_positive_rate": 0.9047619047619048,
+            "successes": 57,
+            "support": 63,
+            "wilson95_lcb": 0.8073829893716311
+          },
+          "features": [
+            "avg_rush_order",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "avg_rush_order_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.921875,
+            "selected_positive_rate": 0.921875,
+            "successes": 59,
+            "support": 64,
+            "wilson95_lcb": 0.8298046264583709
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.9315789473684211,
+            "selected_positive_rate": 0.9315789473684211,
+            "successes": 177,
+            "support": 190,
+            "wilson95_lcb": 0.8864705102977051
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 14,
+            "precision": 0.7777777777777778,
+            "selected_positive_rate": 0.7777777777777778,
+            "successes": 49,
+            "support": 63,
+            "wilson95_lcb": 0.6608771888656634
+          },
+          "features": [
+            "std_rush_order"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 4,
+            "precision": 0.9375,
+            "selected_positive_rate": 0.9375,
+            "successes": 60,
+            "support": 64,
+            "wilson95_lcb": 0.8500251490779133
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 14,
+            "precision": 0.9263157894736842,
+            "selected_positive_rate": 0.9263157894736842,
+            "successes": 176,
+            "support": 190,
+            "wilson95_lcb": 0.8801310736896368
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 15,
+            "precision": 0.7619047619047619,
+            "selected_positive_rate": 0.7619047619047619,
+            "successes": 48,
+            "support": 63,
+            "wilson95_lcb": 0.6436433989030313
+          },
+          "features": [
+            "avg_rush_order"
+          ],
+          "rank_columns": [
+            "avg_rush_order_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.921875,
+            "selected_positive_rate": 0.921875,
+            "successes": 59,
+            "support": 64,
+            "wilson95_lcb": 0.8298046264583709
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 14,
+            "precision": 0.9263157894736842,
+            "selected_positive_rate": 0.9263157894736842,
+            "successes": 176,
+            "support": 190,
+            "wilson95_lcb": 0.8801310736896368
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 16,
+            "precision": 0.746031746031746,
+            "selected_positive_rate": 0.746031746031746,
+            "successes": 47,
+            "support": 63,
+            "wilson95_lcb": 0.6265881256339354
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 4,
+            "precision": 0.9375,
+            "selected_positive_rate": 0.9375,
+            "successes": 60,
+            "support": 64,
+            "wilson95_lcb": 0.8500251490779133
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 14,
+            "precision": 0.9263157894736842,
+            "selected_positive_rate": 0.9263157894736842,
+            "successes": 176,
+            "support": 190,
+            "wilson95_lcb": 0.8801310736896368
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 3,
+            "precision": 0.9523809523809523,
+            "selected_positive_rate": 0.9523809523809523,
+            "successes": 60,
+            "support": 63,
+            "wilson95_lcb": 0.8690903216209392
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_trades",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.921875,
+            "selected_positive_rate": 0.921875,
+            "successes": 59,
+            "support": 64,
+            "wilson95_lcb": 0.8298046264583709
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 14,
+            "precision": 0.9263157894736842,
+            "selected_positive_rate": 0.9263157894736842,
+            "successes": 176,
+            "support": 190,
+            "wilson95_lcb": 0.8801310736896368
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 6,
+            "precision": 0.9047619047619048,
+            "selected_positive_rate": 0.9047619047619048,
+            "successes": 57,
+            "support": 63,
+            "wilson95_lcb": 0.8073829893716311
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_trades",
+            "avg_price"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank",
+            "avg_price_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 6,
+            "precision": 0.90625,
+            "selected_positive_rate": 0.90625,
+            "successes": 58,
+            "support": 64,
+            "wilson95_lcb": 0.810171204003544
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 16,
+            "precision": 0.9157894736842105,
+            "selected_positive_rate": 0.9157894736842105,
+            "successes": 174,
+            "support": 190,
+            "wilson95_lcb": 0.8675969993151479
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.7936507936507936,
+            "selected_positive_rate": 0.7936507936507936,
+            "successes": 50,
+            "support": 63,
+            "wilson95_lcb": 0.6783018567138666
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_trades",
+            "avg_volume"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank",
+            "avg_volume_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 9,
+            "precision": 0.859375,
+            "selected_positive_rate": 0.859375,
+            "successes": 55,
+            "support": 64,
+            "wilson95_lcb": 0.7538371825842297
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 17,
+            "precision": 0.9105263157894737,
+            "selected_positive_rate": 0.9105263157894737,
+            "successes": 173,
+            "support": 190,
+            "wilson95_lcb": 0.8613945325822252
+          }
+        }
+      ],
+      "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_15S.csv.gz",
+      "positive_events": 317,
+      "rows": 584081,
+      "selected": {
+        "accepted_95": false,
+        "blocker": "held_out_event_rank_wilson95_below_95",
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 5,
+          "precision": 0.9206349206349206,
+          "selected_positive_rate": 0.9206349206349206,
+          "successes": 58,
+          "support": 63,
+          "wilson95_lcb": 0.8272969014909591
+        },
+        "features": [
+          "std_rush_order",
+          "avg_rush_order",
+          "avg_price_max"
+        ],
+        "rank_columns": [
+          "std_rush_order_within_event_rank",
+          "avg_rush_order_within_event_rank",
+          "avg_price_max_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 3,
+          "precision": 0.953125,
+          "selected_positive_rate": 0.953125,
+          "successes": 61,
+          "support": 64,
+          "wilson95_lcb": 0.8710034625990631
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 11,
+          "precision": 0.9421052631578948,
+          "selected_positive_rate": 0.9421052631578948,
+          "successes": 179,
+          "support": 190,
+          "wilson95_lcb": 0.8993192942010715
+        }
+      },
+      "sha256": "fd6fd97f50ddc13b37b9a6361c09bf4cb07159c61f150328902b2d95137041f2",
+      "split_event_counts": {
+        "calibration": 63,
+        "test": 64,
+        "train": 190
+      },
+      "timeframe": "15S"
+    },
+    {
+      "blocked_predictors": [
+        "date",
+        "pump_index",
+        "symbol",
+        "gt",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos"
+      ],
+      "event_rank_unit": "one top-ranked current/past feature row selected per pump event; success iff selected row is the labeled pump/dump row",
+      "leaderboard_top10": [
+        {
+          "accepted_95": false,
+          "blocker": "held_out_event_rank_wilson95_below_95",
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 10,
+            "precision": 0.8412698412698413,
+            "selected_positive_rate": 0.8412698412698413,
+            "successes": 53,
+            "support": 63,
+            "wilson95_lcb": 0.7318842321822745
+          },
+          "features": [
+            "avg_rush_order"
+          ],
+          "rank_columns": [
+            "avg_rush_order_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 4,
+            "precision": 0.9375,
+            "selected_positive_rate": 0.9375,
+            "successes": 60,
+            "support": 64,
+            "wilson95_lcb": 0.8500251490779133
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 11,
+            "precision": 0.9421052631578948,
+            "selected_positive_rate": 0.9421052631578948,
+            "successes": 179,
+            "support": 190,
+            "wilson95_lcb": 0.8993192942010715
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 10,
+            "precision": 0.8412698412698413,
+            "selected_positive_rate": 0.8412698412698413,
+            "successes": 53,
+            "support": 63,
+            "wilson95_lcb": 0.7318842321822745
+          },
+          "features": [
+            "std_rush_order"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 3,
+            "precision": 0.953125,
+            "selected_positive_rate": 0.953125,
+            "successes": 61,
+            "support": 64,
+            "wilson95_lcb": 0.8710034625990631
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 12,
+            "precision": 0.9368421052631579,
+            "selected_positive_rate": 0.9368421052631579,
+            "successes": 178,
+            "support": 190,
+            "wilson95_lcb": 0.892864599842426
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 8,
+            "precision": 0.873015873015873,
+            "selected_positive_rate": 0.873015873015873,
+            "successes": 55,
+            "support": 63,
+            "wilson95_lcb": 0.7689296552173034
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_trades"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 3,
+            "precision": 0.953125,
+            "selected_positive_rate": 0.953125,
+            "successes": 61,
+            "support": 64,
+            "wilson95_lcb": 0.8710034625990631
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 12,
+            "precision": 0.9368421052631579,
+            "selected_positive_rate": 0.9368421052631579,
+            "successes": 178,
+            "support": 190,
+            "wilson95_lcb": 0.892864599842426
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 4,
+            "precision": 0.9365079365079365,
+            "selected_positive_rate": 0.9365079365079365,
+            "successes": 59,
+            "support": 63,
+            "wilson95_lcb": 0.8478082215469362
+          },
+          "features": [
+            "std_rush_order",
+            "std_trades",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "std_trades_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.921875,
+            "selected_positive_rate": 0.921875,
+            "successes": 59,
+            "support": 64,
+            "wilson95_lcb": 0.8298046264583709
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 12,
+            "precision": 0.9368421052631579,
+            "selected_positive_rate": 0.9368421052631579,
+            "successes": 178,
+            "support": 190,
+            "wilson95_lcb": 0.892864599842426
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 4,
+            "precision": 0.9365079365079365,
+            "selected_positive_rate": 0.9365079365079365,
+            "successes": 59,
+            "support": 63,
+            "wilson95_lcb": 0.8478082215469362
+          },
+          "features": [
+            "avg_rush_order",
+            "std_trades",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.921875,
+            "selected_positive_rate": 0.921875,
+            "successes": 59,
+            "support": 64,
+            "wilson95_lcb": 0.8298046264583709
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 12,
+            "precision": 0.9368421052631579,
+            "selected_positive_rate": 0.9368421052631579,
+            "successes": 178,
+            "support": 190,
+            "wilson95_lcb": 0.892864599842426
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 9,
+            "precision": 0.8571428571428571,
+            "selected_positive_rate": 0.8571428571428571,
+            "successes": 54,
+            "support": 63,
+            "wilson95_lcb": 0.7502543407837413
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 4,
+            "precision": 0.9375,
+            "selected_positive_rate": 0.9375,
+            "successes": 60,
+            "support": 64,
+            "wilson95_lcb": 0.8500251490779133
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.9315789473684211,
+            "selected_positive_rate": 0.9315789473684211,
+            "successes": 177,
+            "support": 190,
+            "wilson95_lcb": 0.8864705102977051
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 7,
+            "precision": 0.8888888888888888,
+            "selected_positive_rate": 0.8888888888888888,
+            "successes": 56,
+            "support": 63,
+            "wilson95_lcb": 0.7879534424991746
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 4,
+            "precision": 0.9375,
+            "selected_positive_rate": 0.9375,
+            "successes": 60,
+            "support": 64,
+            "wilson95_lcb": 0.8500251490779133
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.9315789473684211,
+            "selected_positive_rate": 0.9315789473684211,
+            "successes": 177,
+            "support": 190,
+            "wilson95_lcb": 0.8864705102977051
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 4,
+            "precision": 0.9365079365079365,
+            "selected_positive_rate": 0.9365079365079365,
+            "successes": 59,
+            "support": 63,
+            "wilson95_lcb": 0.8478082215469362
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_trades",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_trades_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.921875,
+            "selected_positive_rate": 0.921875,
+            "successes": 59,
+            "support": 64,
+            "wilson95_lcb": 0.8298046264583709
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.9315789473684211,
+            "selected_positive_rate": 0.9315789473684211,
+            "successes": 177,
+            "support": 190,
+            "wilson95_lcb": 0.8864705102977051
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.9206349206349206,
+            "selected_positive_rate": 0.9206349206349206,
+            "successes": 58,
+            "support": 63,
+            "wilson95_lcb": 0.8272969014909591
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "std_volume",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "std_volume_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 7,
+            "precision": 0.890625,
+            "selected_positive_rate": 0.890625,
+            "successes": 57,
+            "support": 64,
+            "wilson95_lcb": 0.7910135867310387
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.9315789473684211,
+            "selected_positive_rate": 0.9315789473684211,
+            "successes": 177,
+            "support": 190,
+            "wilson95_lcb": 0.8864705102977051
+          }
+        },
+        {
+          "calibration": {
+            "event_coverage": 1.0,
+            "failures": 5,
+            "precision": 0.9206349206349206,
+            "selected_positive_rate": 0.9206349206349206,
+            "successes": 58,
+            "support": 63,
+            "wilson95_lcb": 0.8272969014909591
+          },
+          "features": [
+            "std_rush_order",
+            "avg_rush_order",
+            "avg_volume",
+            "avg_price_max"
+          ],
+          "rank_columns": [
+            "std_rush_order_within_event_rank",
+            "avg_rush_order_within_event_rank",
+            "avg_volume_within_event_rank",
+            "avg_price_max_within_event_rank"
+          ],
+          "test": {
+            "event_coverage": 1.0,
+            "failures": 7,
+            "precision": 0.890625,
+            "selected_positive_rate": 0.890625,
+            "successes": 57,
+            "support": 64,
+            "wilson95_lcb": 0.7910135867310387
+          },
+          "train": {
+            "event_coverage": 1.0,
+            "failures": 13,
+            "precision": 0.9315789473684211,
+            "selected_positive_rate": 0.9315789473684211,
+            "successes": 177,
+            "support": 190,
+            "wilson95_lcb": 0.8864705102977051
+          }
+        }
+      ],
+      "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_25S.csv.gz",
+      "positive_events": 317,
+      "rows": 482137,
+      "selected": {
+        "accepted_95": false,
+        "blocker": "held_out_event_rank_wilson95_below_95",
+        "calibration": {
+          "event_coverage": 1.0,
+          "failures": 10,
+          "precision": 0.8412698412698413,
+          "selected_positive_rate": 0.8412698412698413,
+          "successes": 53,
+          "support": 63,
+          "wilson95_lcb": 0.7318842321822745
+        },
+        "features": [
+          "avg_rush_order"
+        ],
+        "rank_columns": [
+          "avg_rush_order_within_event_rank"
+        ],
+        "test": {
+          "event_coverage": 1.0,
+          "failures": 4,
+          "precision": 0.9375,
+          "selected_positive_rate": 0.9375,
+          "successes": 60,
+          "support": 64,
+          "wilson95_lcb": 0.8500251490779133
+        },
+        "train": {
+          "event_coverage": 1.0,
+          "failures": 11,
+          "precision": 0.9421052631578948,
+          "selected_positive_rate": 0.9421052631578948,
+          "successes": 179,
+          "support": 190,
+          "wilson95_lcb": 0.8993192942010715
+        }
+      },
+      "sha256": "0d43d1d396ef13778ab2cd2a9f047034713f9066bdc07c23efce335da8185331",
+      "split_event_counts": {
+        "calibration": 63,
+        "test": 64,
+        "train": 190
+      },
+      "timeframe": "25S"
+    }
+  ],
+  "trade_usable": false
+}

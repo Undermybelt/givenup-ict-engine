@@ -1,0 +1,14 @@
+warning: field `candidate_set_id` is never read
+   --> src/application/orchestration/structural_playbook.rs:193:5
+    |
+192 | struct StructuralRankedPathSelection {
+    |        ----------------------------- field in this struct
+193 |     candidate_set_id: String,
+    |     ^^^^^^^^^^^^^^^^
+    |
+    = note: `StructuralRankedPathSelection` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ict-engine` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.54s
+     Running unittests src/lib.rs (target/debug/deps/ict_engine-97d28a47a09f25ad)

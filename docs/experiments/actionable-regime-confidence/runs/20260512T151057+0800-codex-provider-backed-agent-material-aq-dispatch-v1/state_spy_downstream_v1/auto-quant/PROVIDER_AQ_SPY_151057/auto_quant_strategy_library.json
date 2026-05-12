@@ -1,0 +1,58 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T15:18:30+08:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "da4a0aa",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/agent_material_units/IBKR_SPY_1h_Provider_Trend_Pullback_Resume/aq_workspace/config.tomac.json",
+  "timeframe": "1h",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/agent_material_units/IBKR_SPY_1h_Provider_Trend_Pullback_Resume/aq_workspace/run_tomac.stdout.log",
+  "strategies": [
+    {
+      "name": "ProviderTrendPullbackResume_SPY_IBKR_AQ_DISPATCH",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/agent_material_units/IBKR_SPY_1h_Provider_Trend_Pullback_Resume/aq_workspace/user_data/strategies_external/ProviderTrendPullbackResume.py",
+      "metadata": {
+        "strategy": "ProviderTrendPullbackResume",
+        "mutation_id": "151057_provider_backed_agent_material_spy_v1",
+        "base_factor": "provider_trend_pullback_resume",
+        "hypothesis": "Provider-backed SPY 1h trend pullback continuation material dispatched through ict-engine generic Auto-Quant agent-material runtime.",
+        "paradigm": "trend_pullback_continuation",
+        "expected_regime": "trend_expansion_or_bull_pullback_resume",
+        "factors_used": [],
+        "parent": "",
+        "asset_class": "",
+        "status": "provider_backed_auto_quant_dispatch_support_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.6637,
+        "sortino": 1.6126,
+        "calmar": 7.5834,
+        "total_profit_pct": 29.99,
+        "max_drawdown_pct": -6.8992,
+        "trade_count": 316,
+        "win_rate_pct": 41.4557,
+        "profit_factor": 1.3903
+      },
+      "per_pair_metrics": {
+        "SPY/USD": {
+          "sharpe": 0.6637,
+          "sortino": 1.6126,
+          "calmar": 7.5834,
+          "total_profit_pct": 29.99,
+          "max_drawdown_pct": -6.8992,
+          "trade_count": 316,
+          "win_rate_pct": 41.4557,
+          "profit_factor": 1.3903
+        }
+      },
+      "pairs": [
+        "SPY/USD"
+      ],
+      "timerange": "2023-01-01 00:00:00 -> 2025-12-31 00:00:00",
+      "commit": "da4a0aa",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

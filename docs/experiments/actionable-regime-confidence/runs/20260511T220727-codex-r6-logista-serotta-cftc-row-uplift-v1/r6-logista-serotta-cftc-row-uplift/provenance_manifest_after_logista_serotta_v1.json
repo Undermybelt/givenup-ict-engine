@@ -1,0 +1,772 @@
+{
+  "cftc_flotron_complaint_examples": {
+    "control_boundary": "same-complaint genuine-order legs are schema/control seeds only, not broad normal-market calibration controls",
+    "matched_negative_source_row_ids": [],
+    "pdf_path": "/tmp/ict-engine-r6-public-source-probes-v1/flotron.pdf",
+    "pdf_sha256": "e368bd33878c1d7e8d3822e8706d1c48dc712fb2306621e5b09f9b7f7b8f3248",
+    "positive_source_row_ids": [],
+    "rows_materialized_at_utc": "2026-05-11T13:35:12.784400+00:00",
+    "text_checks": {
+      "10:11:23.173": true,
+      "11:15:37.060": true,
+      "13:10:15.536": true,
+      "13:26:42.415": true,
+      "5:06:35.057": true,
+      "August 29, 2008": true,
+      "February 15, 2013": true,
+      "July 1, 2013": true,
+      "June 28, 2012": true,
+      "October 14, 2013": true,
+      "October 17, 2013": true,
+      "October 9, 2008": true,
+      "September 6, 2011": true
+    },
+    "text_path": "/tmp/ict-engine-r6-public-source-probes-v1/flotron.txt",
+    "text_sha256": "b6bef292f823e36c8c76b1f6c7f320a9acd8293692df73f9032eefe0b54a3459",
+    "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfandreflotroncomplaint012918.pdf"
+  },
+  "cftc_franko_order_2018_examples": {
+    "broad_normal_sample_added": false,
+    "control_policy": "Same-source genuine-order leg from a public CFTC complaint/order; schema/control seed only, not an independent broad normal-market calibration sample.",
+    "matched_negative_source_row_ids": [],
+    "pdf_path": "/tmp/ict-engine-r6-franko-source/enfmichaeldfrankoorder091918.pdf",
+    "pdf_sha256": "63ad6a3d2e41fbd12291544574783a5b030e5ae6cacbec58d79813f46e7298fd",
+    "positive_source_row_ids": [],
+    "rows_materialized_at_utc": "2026-05-11T14:13:30.622892+00:00",
+    "run_id": "20260511T221034-codex-r6-logista-franko-row-uplift-v1",
+    "source_kind": "official_cftc_administrative_order_pdf",
+    "source_report": "CFTC Order: Michael D. Franko, CFTC Docket No. 18-35",
+    "source_url": "https://www.cftc.gov/sites/default/files/2018-09/enfmichaeldfrankoorder091918.pdf",
+    "text_checks": {
+      "100 lot bid": true,
+      "COMEX copper futures": true,
+      "December 17, 2013": true,
+      "First Genuine Order": true,
+      "LME copper futures": true,
+      "Second Genuine Order": true,
+      "approximately one second": true
+    },
+    "text_path": "/tmp/ict-engine-r6-franko-source/enfmichaeldfrankoorder091918.txt",
+    "text_sha256": "73760eb9892ff5ee2a85b636172bd9e14e3a1341b197b8739f34679529c0f5ff"
+  },
+  "cftc_gandhi_order": {
+    "bytes": 91877,
+    "path": "/tmp/ict-engine-cftc-source-row-search/enfkamaldeepdandhiorder101118.pdf",
+    "sha256": "a2c11e309db7fac840c2cffb6a25b56eb117276a059ae2a4171146a481d880e3",
+    "text_checks": {
+      "10:09:14.592 AM": true,
+      "10:09:16.932 AM": true,
+      "4:45:57.496 AM": true,
+      "600 sell contracts": true,
+      "December 16, 2013": true,
+      "September 17, 2014": true
+    },
+    "text_path": "/tmp/ict-engine-cftc-source-row-search/enfkamaldeepdandhiorder101118.txt",
+    "url": "https://www.cftc.gov/sites/default/files/2018-10/enfkamaldeepdandhiorder101118.pdf"
+  },
+  "cftc_geneva_order_2018": {
+    "bytes": 142683,
+    "path": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1/cftc_geneva_order_2018.bin",
+    "sha256": "7b4b6a7631e476d683923327aae7c1e6300e6903a02b4a2a2e5dc0cf69d2c994",
+    "source_kind": "public CFTC administrative order",
+    "text_checks": {
+      "15-lot buy Genuine Order": true,
+      "200-lot sell Spoof Order": true,
+      "75 lots": true,
+      "April 24, 2013": true,
+      "CFTC Docket No. 18-37": true,
+      "May 21, 2013": true,
+      "RBOB gasoline": true,
+      "September 1, 2015": true,
+      "Soft Red Winter wheat": true,
+      "over forty lots": true,
+      "two-lot sell Genuine Order": true
+    },
+    "url": "https://www.cftc.gov/sites/default/files/2018-09/enfgenevaorder092018.pdf"
+  },
+  "cftc_geneva_order_examples": {
+    "corrected_from_live_csv_after_duplicate_run": "20260511T212209-codex-r6-geneva-order-row-uplift-v1",
+    "matched_negative_rows_present": 3,
+    "matched_negative_source_row_ids": [
+      "cftc_geneva_20130424_rbob_sell_genuine_order_control",
+      "cftc_geneva_20130521_crude_buy_genuine_order_control",
+      "cftc_geneva_20150901_wheat_sell_genuine_order_control"
+    ],
+    "pdf_path": "/private/tmp/ict-engine-cftc-official-spoofing-expansion/geneva.pdf",
+    "pdf_sha256": "7b4b6a7631e476d683923327aae7c1e6300e6903a02b4a2a2e5dc0cf69d2c994",
+    "positive_rows_present": 3,
+    "positive_source_row_ids": [
+      "cftc_geneva_20130424_rbob_buy_spoof_orders",
+      "cftc_geneva_20130521_crude_sell_spoof_order",
+      "cftc_geneva_20150901_wheat_buy_spoof_orders"
+    ],
+    "rows_materialized_at_utc": "2026-05-11T13:26:05.599956+00:00",
+    "text_checks": {
+      "April 24, 2013": true,
+      "Genuine Order": true,
+      "May 21, 2013": true,
+      "RBOB gasoline": true,
+      "September 1, 2015": true,
+      "Soft Red Winter wheat": true,
+      "Spoof Orders": true,
+      "light sweet crude oil": true
+    },
+    "text_path": "/private/tmp/ict-engine-cftc-official-spoofing-expansion/geneva.txt",
+    "text_sha256": "7e765941961f355372d71d01dcf091aed73fb8e47762985afb95210b452a0e2e",
+    "url": "https://www.cftc.gov/sites/default/files/2018-09/enfgenevaorder092018.pdf"
+  },
+  "cftc_geneva_order_rows_added": {
+    "control_boundary": "same-source genuine-order legs are schema/control seeds only, not broad normal-market calibration controls",
+    "corrected_after_duplicate_run": "20260511T212209-codex-r6-geneva-order-row-uplift-v1",
+    "corrected_from_live_csv_after_duplicate_run": "20260511T212209-codex-r6-geneva-order-row-uplift-v1",
+    "matched_negative": 3,
+    "matched_negative_source_row_ids": [
+      "cftc_geneva_20130424_rbob_sell_genuine_order_control",
+      "cftc_geneva_20130521_crude_buy_genuine_order_control",
+      "cftc_geneva_20150901_wheat_sell_genuine_order_control"
+    ],
+    "positive": 3,
+    "positive_source_row_ids": [
+      "cftc_geneva_20130424_rbob_buy_spoof_orders",
+      "cftc_geneva_20130521_crude_sell_spoof_order",
+      "cftc_geneva_20150901_wheat_buy_spoof_orders"
+    ]
+  },
+  "cftc_genuine_order_text_checks": {
+    "first_genuine_order_entry": true,
+    "first_genuine_order_fill": true,
+    "second_genuine_order_entry": true,
+    "second_genuine_order_fill": true
+  },
+  "cftc_genuine_order_text_status": "ok",
+  "cftc_logista_2020_complaint_examples": {
+    "broad_normal_sample_added": false,
+    "control_policy": "Same-source genuine-order leg from a public CFTC complaint/order; schema/control seed only, not an independent broad normal-market calibration sample.",
+    "matched_negative_source_row_ids": [
+      "cftc_logista_serotta_20200129_clm0_clu0_buy_genuine_orders_control",
+      "cftc_logista_serotta_20200220_ngh0_ngj0_sell_genuine_orders_control",
+      "cftc_logista_serotta_20200311_clm0_clz0_sell_genuine_orders_control"
+    ],
+    "pdf_path": "/tmp/ict-engine-r6-logista-source/enflogistaadvisorscomplaint090723.pdf",
+    "pdf_sha256": "d8e9193adce9e69a6db7a49624eca2cc5485d77a503f90b1ad45eca64d707a92",
+    "positive_source_row_ids": [
+      "cftc_logista_serotta_20200129_clm0_clu0_sell_spoof_order",
+      "cftc_logista_serotta_20200220_ngh0_ngj0_buy_spoof_order",
+      "cftc_logista_serotta_20200311_clm0_clz0_buy_spoof_order"
+    ],
+    "rows_materialized_at_utc": "2026-05-11T14:13:30.622892+00:00",
+    "run_id": "20260511T221034-codex-r6-logista-franko-row-uplift-v1",
+    "source_kind": "official_cftc_federal_complaint_pdf",
+    "source_report": "CFTC Complaint: Logista Advisors LLC and Andrew Harris Serotta, Case 1:23-cv-07485",
+    "source_url": "https://www.cftc.gov/sites/default/files/2023-09/enflogistaadvisorscomplaint090723.pdf",
+    "text_checks": {
+      "11:29:48.415 AM": true,
+      "12:00:06.610 PM Central Time": true,
+      "1:06:29.086 PM": true,
+      "269 contracts": true,
+      "77 contracts": true,
+      "Spoof Event Example 1: January 29, 2020": true,
+      "Spoof Event Example 2: February 20, 2020": true,
+      "Spoof Event Example 3: March 11, 2020": true,
+      "filling 9 contracts": true
+    },
+    "text_path": "/tmp/ict-engine-r6-logista-source/logista.txt",
+    "text_sha256": "79cc077d44f603b4ce32c2f100603f14d21e9214e09c2517a869a19d79438880"
+  },
+  "cftc_logista_serotta_complaint_examples": {
+    "control_boundary": "same-complaint genuine-order legs are schema/control seeds only, not broad normal-market calibration controls",
+    "matched_negative_rows_added_this_run": [
+      "cftc_logista_serotta_20200129_cl_buy_genuine_orders_control",
+      "cftc_logista_serotta_20200220_ng_sell_genuine_orders_control",
+      "cftc_logista_serotta_20200311_cl_sell_genuine_orders_control"
+    ],
+    "materialized_examples": [
+      "example_1",
+      "example_2",
+      "example_3"
+    ],
+    "pdf_path": "/tmp/ict-engine-r6-logista-serotta-cftc-row-uplift-v1/raw/enflogistaadvisorscomplaint090723.pdf",
+    "pdf_sha256": "d8e9193adce9e69a6db7a49624eca2cc5485d77a503f90b1ad45eca64d707a92",
+    "positive_rows_added_this_run": [
+      "cftc_logista_serotta_20200129_cl_sell_spoof_order",
+      "cftc_logista_serotta_20200220_ng_buy_spoof_order",
+      "cftc_logista_serotta_20200311_cl_buy_spoof_order"
+    ],
+    "rows_materialized_at_utc": "2026-05-11T14:14:43.351431+00:00",
+    "screened_not_materialized": {
+      "example_4": "aggregate sequence without clean individual row-level side/timestamp rows",
+      "example_5": "IFEU supervision/order-violation example, not included in CEA spoofing count rows"
+    },
+    "source_kind": "public CFTC federal complaint",
+    "text_checks": {
+      "11:29:48.415": true,
+      "11:30:50.876": true,
+      "12:00:06.610": true,
+      "12:00:23.225": true,
+      "1:06:29.086": true,
+      "1:07:36.935": true,
+      "Spoof Event Example 1": true,
+      "Spoof Event Example 2": true,
+      "Spoof Event Example 3": true,
+      "zero fills": true
+    },
+    "text_path": "/tmp/ict-engine-r6-logista-serotta-cftc-row-uplift-v1/raw/enflogistaadvisorscomplaint090723.txt",
+    "text_sha256": "79cc077d44f603b4ce32c2f100603f14d21e9214e09c2517a869a19d79438880",
+    "url": "https://www.cftc.gov/media/9206/enflogistaadvisorscomplaint090723/download"
+  },
+  "cftc_mohan_additional_examples": {
+    "pdf_path": "/tmp/ict-engine-cftc-source-row-search/enfmohancomplaint012818.pdf",
+    "pdf_sha256": "c801c06b2487d263a351b8239cfa510c749d7714fa172c405fb706c4307ff37a",
+    "text_checks": {
+      "5:27:41.553 AM": true,
+      "5:27:42.713 AM": true,
+      "5:27:47.976 AM": true,
+      "8:05:39.461 AM": true,
+      "8:05:40.703 AM": true,
+      "8:05:47.421 AM": true,
+      "December 9, 2013": true,
+      "November 27, 2013": true
+    },
+    "text_path": "/tmp/ict-engine-cftc-source-row-search/enfmohancomplaint012818.txt",
+    "text_sha256": "bda6d2d4649779cf8db9e9afd994216fb78943d85a9bce57f0b2570bb6c82f3e",
+    "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/@lrenforcementactions/documents/legalpleading/enfmohancomplaint012818.pdf"
+  },
+  "cftc_mohan_complaint": {
+    "bytes": 892265,
+    "path": "/tmp/ict-engine-cftc-order-expansion-probe/enfmohancomplaint012818.pdf",
+    "sha256": "c801c06b2487d263a351b8239cfa510c749d7714fa172c405fb706c4307ff37a",
+    "source_kind": "public CFTC federal complaint and exhibits",
+    "text_path": "/tmp/ict-engine-cftc-order-expansion-probe/enfmohancomplaint012818.gs.txt",
+    "url": "local cached public CFTC complaint PDF; source URL not fetched in this slice"
+  },
+  "cftc_mohan_complaint_rows_added": {
+    "deduplicated_duplicate_source_row_ids_removed": [
+      "cftc_mohan_complaint_20131127_dow_buy_genuine_first_leg_control",
+      "cftc_mohan_complaint_20131127_dow_buy_spoof_second_leg",
+      "cftc_mohan_complaint_20131127_dow_sell_genuine_second_leg_control",
+      "cftc_mohan_complaint_20131127_dow_sell_spoof_first_leg",
+      "cftc_mohan_complaint_20131209_nq_buy_genuine_first_leg_control",
+      "cftc_mohan_complaint_20131209_nq_buy_spoof_second_leg",
+      "cftc_mohan_complaint_20131209_nq_sell_genuine_second_leg_control",
+      "cftc_mohan_complaint_20131209_nq_sell_spoof_first_leg"
+    ],
+    "deduplication_reason": "Nov 27 and Dec 9 Mohan complaint rows were already present under cftc_mohan_additional_* source_row_ids; keep only the new Dec 3 no-fill event rows from this slice.",
+    "matched_negative": 1,
+    "matched_negative_source_row_ids": [
+      "cftc_mohan_complaint_20131203_nq_buy_genuine_no_fill_leg_control"
+    ],
+    "positive": 1,
+    "positive_source_row_ids": [
+      "cftc_mohan_complaint_20131203_nq_sell_spoof_no_fill_leg"
+    ]
+  },
+  "cftc_mohan_complaint_text_checks": {
+    "dec_3_no_fill_event": true,
+    "dec_9_nasdaq_event": true,
+    "nov_27_dow_event": true,
+    "paragraph_47_exhibits_a_d": false,
+    "spoof_counts_period": true
+  },
+  "cftc_order": {
+    "bytes": 503821,
+    "content_type": "application/pdf",
+    "path": "/tmp/ict-engine-cftc-finra-direct-public-positive-probe/enfkrishnamohanorder022519.pdf",
+    "sha256": "cc56f4f993b80334145757edc42fd568349722ebb894c3df5ef4832a8bb0fda8",
+    "status": 200,
+    "url": "https://www.cftc.gov/sites/default/files/2019-02/enfkrishnamohanorder022519.pdf"
+  },
+  "cftc_shak_complaint": {
+    "path": "/tmp/ict-engine-r6-cftc-public-order-candidate-uplift-v1/cftc_shak_complaint_2022.bin",
+    "sha256": "74f48d22698215c85904ff012a86606ca4a0ab9b72f55b14eb23ea853d7b8e18",
+    "source_kind": "public CFTC federal complaint",
+    "text_checks": {
+      "5:17:44.407": true,
+      "5:18:16.998": true,
+      "6:30:46.389": true,
+      "6:31:35.275": true,
+      "7:53:21.124": true,
+      "7:53:54.558": true,
+      "8:30:20.375": true,
+      "8:30:36.432": true,
+      "9:47:34.921": true,
+      "9:48:10.953": true,
+      "January 22, 2018": true,
+      "March 24, 2017": true,
+      "March 3, 2017": true,
+      "October 5, 2017": true,
+      "September 18, 2017": true
+    },
+    "url": "https://www.cftc.gov/media/7526/enfshakcomplaint080522/download"
+  },
+  "cftc_shak_complaint_examples": {
+    "pdf_path": "/tmp/ict-engine-r6-shak-cftc-source/enfshakcomplaint080522.pdf",
+    "pdf_sha256": "74f48d22698215c85904ff012a86606ca4a0ab9b72f55b14eb23ea853d7b8e18",
+    "text_checks": {
+      "At 1:43:33.731 PM on February 26, 2018": true,
+      "At 3:19:34.946 AM on February 21, 2018": true,
+      "At 5:17:12.964 AM on January 22, 2018": true,
+      "At 6:30:32.856 AM on September 18, 2017": true,
+      "At 7:52:57.348 AM on March 3, 2017": true,
+      "At 8:30:17.046 AM on March 24, 2017": true,
+      "Between 5:17:44.407 and 5:18:12.169": false,
+      "Between 6:30:46.389 and 6:31:19.636": true,
+      "Between 7:53:21.124 and 7:53:50.324": false,
+      "Between 8:30:26.155 and 8:30:32.855": true
+    },
+    "text_path": "/tmp/ict-engine-r6-shak-cftc-source/enfshakcomplaint080522.txt",
+    "text_sha256": "564f140334b547dee34aa5245521af8560b0fde4467a3fc258ee0c2b419228f5",
+    "url": "https://www.cftc.gov/media/7526/enfshakcomplaint080522/download"
+  },
+  "cftc_shak_rows_added": {
+    "control_policy": "Source-described same-event genuine-order legs from the public CFTC complaint; schema/control seeds only, not a broad normal-market calibration sample.",
+    "matched_negative": 5,
+    "matched_negative_source_row_ids": [
+      "cftc_shak_20170303_gold_sell_genuine_order_control",
+      "cftc_shak_20170324_gold_sell_genuine_order_control",
+      "cftc_shak_20170918_silver_sell_genuine_orders_control",
+      "cftc_shak_20171005_gold_sell_iceberg_genuine_order_control",
+      "cftc_shak_20180122_silver_sell_genuine_order_control"
+    ],
+    "positive": 5,
+    "positive_source_row_ids": [
+      "cftc_shak_20170303_gold_buy_spoof_series",
+      "cftc_shak_20170324_gold_buy_spoof_series",
+      "cftc_shak_20170918_silver_buy_spoof_series",
+      "cftc_shak_20171005_gold_buy_spoof_second_series",
+      "cftc_shak_20180122_silver_buy_spoof_series"
+    ]
+  },
+  "cftc_text_checks": {
+    "contains_example_date": true,
+    "contains_first_spoof_time": true,
+    "contains_relevant_markets": true,
+    "contains_second_spoof_time": true,
+    "contains_thousands_occasions": true
+  },
+  "cftc_text_extraction_status": "ok",
+  "cftc_vorley_chanu_complaint": {
+    "bytes": 65791,
+    "limitation": "same-complaint genuine-order control seeds; still not a broad source-owned normal-market sample",
+    "local_raw_path": "/tmp/ict-engine-r6-vorley-chanu-row-uplift-v1/raw/enfvorleychanucomplaint012618.pdf",
+    "matched_negative_rows_added_this_run": [
+      "cftc_vorley_chanu_20120106_gold_sell_genuine_iceberg_control",
+      "cftc_vorley_chanu_20120606_gold_sell_genuine_iceberg_control",
+      "cftc_vorley_chanu_20130128_gold_buy_genuine_iceberg_control",
+      "cftc_vorley_chanu_20130523_gold_buy_genuine_iceberg_control"
+    ],
+    "positive_rows_added_this_run": [
+      "cftc_vorley_chanu_20120106_gold_buy_spoof_orders",
+      "cftc_vorley_chanu_20120606_gold_buy_spoof_orders",
+      "cftc_vorley_chanu_20130128_gold_sell_spoof_order",
+      "cftc_vorley_chanu_20130523_gold_sell_spoof_order"
+    ],
+    "row_scope": "paragraphs 38-49 exact examples only",
+    "sha256": "2a109b1b86b529737396f57461dded471bbae4f4ddfcedc124cd7961f2b91493",
+    "source_kind": "official_cftc_federal_complaint_pdf",
+    "source_report": "CFTC Complaint: James Vorley and Cedric Chanu, Case 1:18-cv-00603",
+    "source_url": "https://www.cftc.gov/idc/groups/public/@lrenforcementactions/documents/legalpleading/enfvorleychanucomplaint012618.pdf"
+  },
+  "cftc_zhao_skudder_examples": {
+    "control_boundary": "same-complaint genuine-order legs are schema/control seeds only, not broad normal-market calibration controls",
+    "matched_negative_source_row_ids": [
+      "cftc_zhao_20130415_es_sell_genuine_order_control",
+      "cftc_zhao_20140305_es_buy_genuine_order_control",
+      "cftc_zhao_20160321_es_sell_genuine_order_control",
+      "cftc_skudder_20170831_soybean_sell_genuine_iceberg_control",
+      "cftc_skudder_20171205_soybean_sell_genuine_iceberg_control",
+      "cftc_skudder_20160701_soybean_call_options_buy_genuine_control",
+      "cftc_skudder_20160711_soybean_call_options_buy_genuine_control"
+    ],
+    "positive_source_row_ids": [
+      "cftc_zhao_20130415_es_buy_spoof_orders",
+      "cftc_zhao_20140305_es_sell_spoof_order",
+      "cftc_zhao_20160321_es_buy_spoof_order",
+      "cftc_skudder_20170831_soybean_buy_spoof_order",
+      "cftc_skudder_20171205_soybean_buy_spoof_order",
+      "cftc_skudder_20160701_soybean_futures_sell_spoof_order",
+      "cftc_skudder_20160711_soybean_futures_sell_spoof_order"
+    ],
+    "rows_materialized_at_utc": "2026-05-11T13:38:33.927721+00:00",
+    "run_id": "20260511T213113-codex-r6-zhao-skudder-cftc-row-uplift-v1",
+    "skudder": {
+      "all_text_checks_pass": true,
+      "extracted_this_run": false,
+      "fetched_this_run": false,
+      "pdf_bytes": 307463,
+      "pdf_path": "/tmp/ict-engine-r6-zhao-skudder-cftc-row-uplift-v1/raw/skudder.pdf",
+      "pdf_sha256": "c83a4d6501c643843c0987e5508f7954c6676c6dd2e8eb2f983c4f80523de9fe",
+      "text_chars": 60613,
+      "text_checks": {
+        "Spoof Event Example 1 (Futures Scheme): August 31, 2017": true,
+        "Spoof Event Example 2 (Futures Scheme): December 5, 2017": true,
+        "Spoof Event Example 3 (Options Scheme): July 1, 2016": true,
+        "Spoof Event Example 4 (Options Scheme): July 11, 2016": true,
+        "options on soybean futures": true
+      },
+      "text_path": "/tmp/ict-engine-r6-zhao-skudder-cftc-row-uplift-v1/text/skudder.txt",
+      "text_sha256": "4eb5ba3de809b1d74bf276242b63fa193957cd034aa69f0949f26cf5cdc1ebfa",
+      "url": "https://www.cftc.gov/media/7166/enfdavidskuddercomplaint041422/download"
+    },
+    "zhao": {
+      "all_text_checks_pass": true,
+      "extracted_this_run": false,
+      "fetched_this_run": false,
+      "pdf_bytes": 838317,
+      "pdf_path": "/tmp/ict-engine-r6-zhao-skudder-cftc-row-uplift-v1/raw/zhao.pdf",
+      "pdf_sha256": "ed6895fed61e2725e7020c6fcd8c206ce1ad6f8806fbfc3d0383ee8962dae1a0",
+      "text_chars": 93137,
+      "text_checks": {
+        "Event Example 1: April 15, 2013": true,
+        "Event Example 2: March 5, 2014": true,
+        "Event Example 3: March 21, 2016": true,
+        "to buy 82 contracts": true,
+        "to sell one": true
+      },
+      "text_path": "/tmp/ict-engine-r6-zhao-skudder-cftc-row-uplift-v1/text/zhao.txt",
+      "text_sha256": "85b2324fb7c9c954aa88b1b0c10b0aa0d38cf14fc302fe357107ddc1a714fdf2",
+      "url": "https://www.cftc.gov/idc/groups/public/@lrenforcementactions/documents/legalpleading/enfjiongshengorder012918.pdf"
+    }
+  },
+  "created_at_utc": "2026-05-11T12:55:41.545531+00:00",
+  "finra_public_schema": {
+    "bytes": 92282,
+    "content_type": "text/html; charset=UTF-8",
+    "path": "/tmp/ict-engine-cftc-finra-direct-public-positive-probe/finra-potential-manipulation-report.html",
+    "sha256": "68e251d9bd6ea7affc605d05622036f19aa9cffe82ab265781cca568d26039d4",
+    "status": 200,
+    "url": "https://www.finra.org/compliance-tools/report-center/cross-market-equities-supervision/potential-manipulation-report"
+  },
+  "gandhi_matched_negative_rows_added": 2,
+  "gandhi_positive_rows_added": 2,
+  "gandhi_rows_materialized_at_utc": "2026-05-11T13:05:15.103990+00:00",
+  "license_or_permission": "CFTC public order and FINRA public report-center documentation; no private FINRA Gateway rows acquired.",
+  "matched_control_limitations": "CFTC same-complaint genuine-order legs are schema/control seeds only; they are not independent broad normal-market heldout controls.",
+  "matched_control_policy": "CFTC public-order genuine-order rows from the same December 2 2013 E-mini NASDAQ fact pattern. These are source-described genuine-order control candidates and are sufficient only for the schema/verifier intake step; they are not broad independent clean-market controls and must not be promoted as a 95% confidence gate.",
+  "matched_negative_control_policy": "CFTC public complaint same-event genuine-order legs are source-described schema/control seeds only; they are not a broad normal-market calibration sample.",
+  "matched_negative_materialized_at_utc": "2026-05-11T12:58:00.886607+00:00",
+  "matched_negative_rows_acquired": true,
+  "matched_negative_rows_count": 57,
+  "matched_negative_rows_path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+  "matched_negative_rows_sha256": "dba281798f2752e2e6d0503db10f9d8e0336bfba1b756513fbe558ba4e2ccf85",
+  "mohan_additional_matched_negative_rows_added": 4,
+  "mohan_additional_positive_rows_added": 4,
+  "mohan_additional_rows_materialized_at_utc": "2026-05-11T13:09:11.092235+00:00",
+  "mohan_complaint_control_policy": "Genuine-order legs are source-described same-event control seeds only; they are not independent broad normal-market calibration rows.",
+  "positive_rows_count": 57,
+  "positive_rows_path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+  "positive_rows_sha256": "6c138c6b2e3f44c7e5afa5cb734bffc2e9fe714eb44f917c0ac253b44f383561",
+  "r6_flotron_cftc_row_uplift_v1": {
+    "matched_negative_rows_added": 0,
+    "positive_rows_added": 0,
+    "run_id": "20260511T213312-codex-r6-flotron-cftc-row-uplift-v1"
+  },
+  "r6_geneva_cftc_row_uplift_v1": {
+    "matched_negative_rows_added": 0,
+    "positive_rows_added": 0,
+    "run_id": "20260511T212137-codex-r6-geneva-cftc-row-uplift-v1"
+  },
+  "r6_logista_cftc_row_repair_v1": {
+    "limitation": "Official CFTC same-event spoof/genuine-order examples only; not broad normal-market controls.",
+    "matched_negative_rows_added": 0,
+    "matched_negative_rows_removed_deprecated": 0,
+    "matched_negative_rows_repaired": 0,
+    "materialized_at_utc": "2026-05-11T14:10:19.309289+00:00",
+    "positive_rows_added": 0,
+    "positive_rows_removed_deprecated": 0,
+    "positive_rows_repaired": 0,
+    "run_id": "20260511T220556-codex-r6-logista-cftc-row-repair-v1",
+    "source_report": "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-07485, Document 1",
+    "source_url": "https://www.cftc.gov/media/9206/enflogistaadvisorscomplaint090723/download"
+  },
+  "r6_logista_cftc_row_uplift_v1": {
+    "license_or_permission": "Official public CFTC complaint; public regulatory pleading.",
+    "limitation": "Rows are official CFTC same-event spoof/genuine-order examples. They increase source-owned R6 support but are not broad normal-market controls.",
+    "matched_negative_rows_added": 5,
+    "materialized_at_utc": "2026-05-11T14:04:57.750011+00:00",
+    "positive_rows_added": 5,
+    "run_id": "20260511T220226-codex-r6-logista-cftc-row-uplift-v1",
+    "source_report": "CFTC Complaint: CFTC v. Logista Advisors LLC, Southern Trust Metals, Inc., Loreley Overseas Corp., and Michael Serotta, No. 1:23-cv-8068",
+    "source_url": "https://www.cftc.gov/media/9206/enflogistaadvisorscomplaint090723/download"
+  },
+  "r6_logista_franko_row_uplift_v1": {
+    "broad_normal_sample_added": false,
+    "confidence_gate": false,
+    "matched_negative_rows_added": 3,
+    "positive_rows_added": 3,
+    "run_id": "20260511T221034-codex-r6-logista-franko-row-uplift-v1"
+  },
+  "r6_logista_semantic_duplicate_cleanup_v1": {
+    "duplicate_prefix_removed": "cftc_logista_serotta_",
+    "matched_negative_rows_removed": 8,
+    "positive_rows_removed": 8,
+    "reason": "Remove semantic duplicates of the five Logista/Serotta CFTC complaint examples because canonical repaired cftc_logista_* rows already represent those same source events.",
+    "removed_at_utc": "2026-05-11T14:13:55.194174+00:00",
+    "removed_matched_negative_source_row_ids": [
+      "cftc_logista_serotta_20200129_cl_buy_genuine_orders_control",
+      "cftc_logista_serotta_20200220_ng_sell_genuine_orders_control",
+      "cftc_logista_serotta_20200311_cl_sell_genuine_orders_control",
+      "cftc_logista_serotta_20200219_ng_genuine_orders_control",
+      "cftc_logista_serotta_20200205_ice_brent_wti_genuine_orders_control",
+      "cftc_logista_serotta_20200129_clm0_clu0_buy_genuine_orders_control",
+      "cftc_logista_serotta_20200220_ngh0_ngj0_sell_genuine_orders_control",
+      "cftc_logista_serotta_20200311_clm0_clz0_sell_genuine_orders_control"
+    ],
+    "removed_positive_source_row_ids": [
+      "cftc_logista_serotta_20200129_cl_sell_spoof_order",
+      "cftc_logista_serotta_20200220_ng_buy_spoof_order",
+      "cftc_logista_serotta_20200311_cl_buy_spoof_order",
+      "cftc_logista_serotta_20200219_ng_alternating_spoof_sequence",
+      "cftc_logista_serotta_20200205_ice_brent_wti_spoof_sequence",
+      "cftc_logista_serotta_20200129_clm0_clu0_sell_spoof_order",
+      "cftc_logista_serotta_20200220_ngh0_ngj0_buy_spoof_order",
+      "cftc_logista_serotta_20200311_clm0_clz0_buy_spoof_order"
+    ],
+    "run_id": "20260511T221210-codex-r6-logista-semantic-duplicate-cleanup-v1"
+  },
+  "r6_logista_serotta_cftc_row_uplift_v1": {
+    "expected_total_matched_negative_rows": 60,
+    "expected_total_positive_rows": 60,
+    "matched_negative_rows_added": 3,
+    "positive_rows_added": 3
+  },
+  "r6_mohan_shak_duplicate_cleanup_v1": {
+    "cleanup_at_utc": "2026-05-11T13:25:02.423247+00:00",
+    "reason": "Rows from 20260511T211201 duplicated source facts already materialized by concurrent Mohan/Shak official CFTC uplifts under different row IDs.",
+    "removed_matched_negative_rows": 11,
+    "removed_positive_rows": 11,
+    "removed_source_row_ids": [
+      "cftc_mohan_complaint_20131127_ym_buy_genuine_iceberg_control",
+      "cftc_mohan_complaint_20131127_ym_buy_spoof_second_third_groups",
+      "cftc_mohan_complaint_20131127_ym_sell_genuine_iceberg_control",
+      "cftc_mohan_complaint_20131127_ym_sell_spoof_first_group",
+      "cftc_mohan_complaint_20131203_nq_buy_genuine_iceberg_control",
+      "cftc_mohan_complaint_20131203_nq_sell_spoof_no_fill_event",
+      "cftc_mohan_complaint_20131209_nq_buy_genuine_iceberg_control",
+      "cftc_mohan_complaint_20131209_nq_buy_spoof_third_fourth_groups",
+      "cftc_mohan_complaint_20131209_nq_sell_genuine_iceberg_control",
+      "cftc_mohan_complaint_20131209_nq_sell_spoof_first_second_groups",
+      "cftc_shak_complaint_20170303_gold_buy_spoof_orders",
+      "cftc_shak_complaint_20170303_gold_sell_genuine_control",
+      "cftc_shak_complaint_20170324_gold_buy_spoof_orders",
+      "cftc_shak_complaint_20170324_gold_sell_genuine_control",
+      "cftc_shak_complaint_20170918_silver_buy_spoof_orders",
+      "cftc_shak_complaint_20170918_silver_sell_genuine_control",
+      "cftc_shak_complaint_20180122_silver_buy_spoof_orders",
+      "cftc_shak_complaint_20180122_silver_sell_genuine_control",
+      "cftc_shak_complaint_20180221_silver_buy_genuine_control",
+      "cftc_shak_complaint_20180221_silver_buy_spoof_orders",
+      "cftc_shak_complaint_20180221_silver_sell_genuine_control",
+      "cftc_shak_complaint_20180221_silver_sell_spoof_orders"
+    ],
+    "run_id": "20260511T212325+0800-codex-r6-mohan-shak-duplicate-cleanup-v1"
+  },
+  "r6_mohan_shak_row_uplift_v1": {
+    "control_limitations": "Controls are same-source genuine-order counterparts from public CFTC complaints. They are schema/calibration seeds only and are not a broad independent normal-market sample.",
+    "materialized_at_utc": "2026-05-11T13:18:18.437804+00:00",
+    "negative_addition_candidates": 11,
+    "positive_addition_candidates": 11,
+    "run_id": "20260511T211201+0800-codex-r6-mohan-shak-row-uplift-v1",
+    "sources": {
+      "mohan_complaint": {
+        "bytes": 892265,
+        "content_type": "application/pdf",
+        "path": "/tmp/ict-engine-r6-mohan-shak-row-uplift-v1/mohan_complaint.pdf",
+        "sha256": "c801c06b2487d263a351b8239cfa510c749d7714fa172c405fb706c4307ff37a",
+        "status": 200,
+        "text_check_count": 6,
+        "text_checks": {
+          "2:34:47.807 AM": true,
+          "5:27:41.553 AM": true,
+          "8:05:39.461 AM": true,
+          "December 3, 2013": true,
+          "December 9, 2013": true,
+          "November 27, 2013": true
+        },
+        "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfmohancomplaint012818.pdf"
+      },
+      "shak_complaint": {
+        "bytes": 1571506,
+        "content_type": "application/pdf",
+        "path": "/tmp/ict-engine-r6-mohan-shak-row-uplift-v1/shak_complaint.pdf",
+        "sha256": "74f48d22698215c85904ff012a86606ca4a0ab9b72f55b14eb23ea853d7b8e18",
+        "status": 200,
+        "text_check_count": 10,
+        "text_checks": {
+          "3:19:34.946 AM": true,
+          "5:17:12.964 AM": true,
+          "6:30:32.856 AM": true,
+          "7:52:57.348 AM": true,
+          "8:30:17.046 AM": true,
+          "February 21, 2018": true,
+          "January 22, 2018": true,
+          "March 24, 2017": true,
+          "March 3, 2017": true,
+          "September 18, 2017": true
+        },
+        "url": "https://www.cftc.gov/media/7526/enfshakcomplaint080522/download"
+      }
+    }
+  },
+  "r6_official_rowlevel_support_extension_v1": {
+    "control_boundary": "same-complaint genuine-order legs are schema/control seeds only, not broad normal-market calibration controls",
+    "matched_negative_rows_added_this_run": 9,
+    "matched_negative_source_row_ids": [
+      "cftc_roman_banoczay_20180125_cl_buy_genuine_order_control",
+      "cftc_roman_banoczay_20180201_cl_buy_genuine_order_control",
+      "cftc_roman_banoczay_20180212_cl_sell_genuine_order_control",
+      "cftc_roman_banoczay_20180212_cl_buy_genuine_order_control",
+      "cftc_logista_serotta_20200129_cl_buy_genuine_orders_control",
+      "cftc_logista_serotta_20200220_ng_sell_genuine_orders_control",
+      "cftc_logista_serotta_20200311_cl_sell_genuine_orders_control",
+      "cftc_logista_serotta_20200219_ng_genuine_orders_control",
+      "cftc_logista_serotta_20200205_ice_brent_wti_genuine_orders_control"
+    ],
+    "positive_rows_added_this_run": 9,
+    "positive_source_row_ids": [
+      "cftc_roman_banoczay_20180125_cl_sell_layered_spoof_orders",
+      "cftc_roman_banoczay_20180201_cl_sell_layered_spoof_orders",
+      "cftc_roman_banoczay_20180212_cl_buy_layered_spoof_orders_first_leg",
+      "cftc_roman_banoczay_20180212_cl_sell_layered_spoof_orders_second_leg",
+      "cftc_logista_serotta_20200129_cl_sell_spoof_order",
+      "cftc_logista_serotta_20200220_ng_buy_spoof_order",
+      "cftc_logista_serotta_20200311_cl_buy_spoof_order",
+      "cftc_logista_serotta_20200219_ng_alternating_spoof_sequence",
+      "cftc_logista_serotta_20200205_ice_brent_wti_spoof_sequence"
+    ],
+    "rows_materialized_at_utc": "2026-05-11T14:10:34.560044+00:00",
+    "run_id": "20260511T220755+0800-codex-r6-official-rowlevel-support-extension-v1",
+    "sources": [
+      {
+        "extract_returncode": 0,
+        "extract_stderr_path": "",
+        "extract_stdout": "31 60404",
+        "id": "roman_banoczay_complaint",
+        "pdf_bytes": 101240,
+        "pdf_path": "/tmp/ict-engine-r6-official-rowlevel-support-extension-v1/raw/roman_banoczay_complaint.pdf",
+        "pdf_sha256": "f83be67555e9016e9f023f4339a5b2e0fb290b74104594449fa26e7ae93966b6",
+        "text_chars": 59980,
+        "text_checks": {
+          "02:10:35.632": true,
+          "03:02:13.105": true,
+          "03:02:22.251": true,
+          "06:31:45.692": true,
+          "Event Example 1:  January 25, 2018": true,
+          "Event Example 2:  February 1, 2018": true,
+          "Event Example 3:  February 12, 2018": true
+        },
+        "text_path": "/tmp/ict-engine-r6-official-rowlevel-support-extension-v1/raw/roman_banoczay_complaint.txt",
+        "text_sha256": "43058acabb45a427da387c5c72c010d96f7a79dfc44de7387ae8e060f1d2b681",
+        "title": "CFTC Complaint: CFTC v. Roman/Banoczay et al., Case 1:20-cv-05777",
+        "url": "https://www.cftc.gov/media/4831/enfromancomplaint092920/download"
+      },
+      {
+        "extract_returncode": 0,
+        "extract_stderr_path": "",
+        "extract_stdout": "34 61962",
+        "id": "logista_serotta_complaint",
+        "pdf_bytes": 406583,
+        "pdf_path": "/tmp/ict-engine-r6-official-rowlevel-support-extension-v1/raw/logista_serotta_complaint.pdf",
+        "pdf_sha256": "d8e9193adce9e69a6db7a49624eca2cc5485d77a503f90b1ad45eca64d707a92",
+        "text_chars": 61372,
+        "text_checks": {
+          "10:56:22.803": true,
+          "11:29:48.415 AM": true,
+          "12:00:06.610 PM": true,
+          "1:06:29.086 PM": true,
+          "8:23": true,
+          "Spoof Event Example 1: January 29, 2020": true,
+          "Spoof Event Example 2: February 20, 2020": true,
+          "Spoof Event Example 3: March 11, 2020": true
+        },
+        "text_path": "/tmp/ict-engine-r6-official-rowlevel-support-extension-v1/raw/logista_serotta_complaint.txt",
+        "text_sha256": "75ee5f1d08b37880f1ebb7084e9c440696d09d0b8e728b791561cf7d7ce7c02b",
+        "title": "CFTC Complaint: CFTC v. Logista Advisors LLC and Nicholas Serotta, Case 1:23-cv-07485",
+        "url": "https://www.cftc.gov/media/9206/enflogistaadvisorscomplaint090723/download"
+      }
+    ]
+  },
+  "r6_shak_duplicate_row_cleanup_v1": {
+    "matched_negative_rows_removed": [
+      "cftc_shak_20170303_gold_sell_genuine_order_control",
+      "cftc_shak_20170324_gold_sell_genuine_order_control",
+      "cftc_shak_20170918_silver_sell_genuine_orders_control",
+      "cftc_shak_20171005_gold_sell_iceberg_genuine_order_control",
+      "cftc_shak_20180122_silver_sell_genuine_order_control"
+    ],
+    "other_agent_rows_preserved": true,
+    "positive_rows_removed": [
+      "cftc_shak_20170303_gold_buy_spoof_series",
+      "cftc_shak_20170324_gold_buy_spoof_series",
+      "cftc_shak_20170918_silver_buy_spoof_series",
+      "cftc_shak_20171005_gold_buy_spoof_second_series",
+      "cftc_shak_20180122_silver_buy_spoof_series"
+    ],
+    "reason": "Remove only the five semantic duplicate Shak rows introduced by the 211628 local slice after a concurrent 211606 Shak uplift had already materialized equivalent examples under different source_row_ids.",
+    "run_id": "20260511T212004-codex-r6-shak-duplicate-row-cleanup-v1"
+  },
+  "r6_vorley_franko_row_uplift_v1": {
+    "control_policy": "same-official-source genuine-order controls; not a broad normal-market sample",
+    "matched_negative_rows_added": 7,
+    "matched_negative_source_row_ids_added": [
+      "cftc_vorley_chanu_20110328_silver_sell_genuine_iceberg_control",
+      "cftc_vorley_chanu_20110316_gold_sell_genuine_iceberg_control",
+      "cftc_vorley_chanu_20101103_gold_sell_genuine_iceberg_control",
+      "cftc_vorley_chanu_20130602_gold_sell_genuine_iceberg_control",
+      "cftc_vorley_chanu_20130709_gold_sell_genuine_iceberg_control",
+      "cftc_franko_20131217_comex_copper_first_sell_genuine_control",
+      "cftc_franko_20131217_comex_copper_second_sell_genuine_control"
+    ],
+    "materialized_at_utc": "2026-05-11T14:08:59.454444+00:00",
+    "positive_rows_added": 7,
+    "positive_source_row_ids_added": [
+      "cftc_vorley_chanu_20110328_silver_buy_spoof_orders",
+      "cftc_vorley_chanu_20110316_gold_buy_spoof_orders",
+      "cftc_vorley_chanu_20101103_gold_buy_spoof_orders",
+      "cftc_vorley_chanu_20130602_gold_buy_spoof_order",
+      "cftc_vorley_chanu_20130709_gold_buy_spoof_order",
+      "cftc_franko_20131217_lme_copper_first_buy_spoof_order",
+      "cftc_franko_20131217_lme_copper_second_buy_spoof_order"
+    ],
+    "run_id": "20260511T220410-codex-r6-vorley-franko-row-uplift-v1",
+    "source_text": {
+      "/private/tmp/ict-engine-r6-pdf-row-probe/text/cftc_pr_7686_18_vorley_chanu_complaint_james_vorley_and_cedric_chanu.txt": {
+        "all_checks_pass": true,
+        "bytes": 36554,
+        "checks": {
+          "On July 9, 2013": true,
+          "On June 2, 2013": true,
+          "Vorley placed 12 buy": true,
+          "on November 3, 2010": true,
+          "series of 21 Spoof Orders to buy for a total of 220 lots": true
+        },
+        "sha256": "9caeaaf75f3e74aea205e280958098867df22bb467783ef85a20ce478fdb32f6",
+        "text_chars": 36247
+      },
+      "/private/tmp/ict-engine-r6-pdf-row-probe/text/cftc_pr_7796_18_franko_order_michael_d_franko.txt": {
+        "all_checks_pass": true,
+        "bytes": 20512,
+        "checks": {
+          "100 lot bid": true,
+          "Franko canceled his second Spoof Order on LME approximately one second": true,
+          "this example from December 17, 2013": true
+        },
+        "sha256": "9b6390e467e7659accd618e5975221d0c5dd4429ca45d46cf98840deee3f04de",
+        "text_chars": 20330
+      }
+    }
+  },
+  "r6_zhao_skudder_cftc_row_uplift_v1": {
+    "matched_negative_rows_added": 0,
+    "positive_rows_added": 0,
+    "run_id": "20260511T213113-codex-r6-zhao-skudder-cftc-row-uplift-v1"
+  },
+  "shak_complaint_matched_negative_rows_added": 8,
+  "shak_complaint_positive_rows_added": 8,
+  "shak_complaint_rows_materialized_at_utc": "2026-05-11T13:18:06.893305+00:00",
+  "source": "public_partial_positive_probe",
+  "updated_at_utc": "2026-05-11T14:13:55.194715+00:00",
+  "updated_by": "20260511T221210-codex-r6-logista-semantic-duplicate-cleanup-v1",
+  "vorley_chanu_matched_negative_rows_added": 4,
+  "vorley_chanu_positive_rows_added": 4,
+  "vorley_chanu_rows_materialized_at_utc": "2026-05-11T13:15:58.415062+00:00"
+}

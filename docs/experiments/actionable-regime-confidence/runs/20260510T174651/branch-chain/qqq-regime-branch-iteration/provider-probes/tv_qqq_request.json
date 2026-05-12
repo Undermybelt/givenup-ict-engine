@@ -1,0 +1,20 @@
+{
+  "market_key": "QQQ-regime-branch-iteration-20260510",
+  "interval": "1h",
+  "start": "2026-04-10T00:00:00Z",
+  "end": "2026-05-10T00:00:00Z",
+  "count": 720,
+  "options_volatility_proxy_symbol": "^VIX",
+  "related_roles": [
+    "qqq_tv_reference"
+  ],
+  "provider_preferences": {
+    "qqq_tv_reference": "tradingview_mcp"
+  },
+  "symbol_overrides": {
+    "qqq_tv_reference": {
+      "display_symbol": "NASDAQ:QQQ",
+      "tradingview_mcp": "NASDAQ:QQQ"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+field_name,required,applies_to,description,guardrail
+source_owner,true,all,Person or system that owns or approves the labels,Must not be inferred by agent from OHLCV only
+source_report_or_dataset,true,all,Report dataset export or manifest identifying the source,Must be source-owned or owner-approved
+source_pull_date,true,all,Date the export was pulled or approved,Needed for provenance and recency audit
+market_family,true,all,US index futures crypto FX rates commodities stocks or direct manipulation,Used for heldout-market validation
+symbol,true,all,Instrument or event species identifier,Use exact source symbol not unsupported proxy
+source_symbol,true,price roots,Source dataset symbol if different from local symbol,Requires explicit equivalence policy
+equivalence_policy,true,price roots,Exact underlying or owner-approved crosswalk statement,Rejects IXIC to NDX promotion without owner approval
+event_species,true,direct manipulation,Direct species such as spoofing_layering or quote_stuffing,Missing species remain abstain
+timestamp_or_date,true,all,Source date timestamp or event time,Needed for exact timeframe/source-date joins
+timeframe,true,price roots,1d 1w 1mo 1h or proven native sub-hour timeframe,Native sub-hour requires source-date overlap proof
+main_regime_v2_label,true,price roots,Bull Bear Sideways or Crisis,No child/sub-regime label can replace this
+direct_label,true,direct manipulation,positive or normal_control,Positive-only exports do not pass the gate
+matched_negative_group_id,true,direct manipulation,Group linking positives to matched normal controls,Required for spoofing/layering and other direct gates
+split_role,true,all,train calibration heldout_time heldout_market heldout_ticker or test,Needed for chronological and cross-context validation
+source_row_id,true,all,Stable source row identifier,Required for reproducibility
+provenance_hash,true,all,Hash of source row or export manifest,Needed to avoid stale or duplicate rows
+redaction_notes,false,all,Any source redaction or aggregation note,Must not hide fields required for gate

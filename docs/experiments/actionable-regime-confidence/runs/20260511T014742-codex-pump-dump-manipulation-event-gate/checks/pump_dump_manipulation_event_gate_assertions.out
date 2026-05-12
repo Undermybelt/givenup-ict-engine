@@ -1,0 +1,12 @@
+RUN_ID 20260511T014742+0800-codex-pump-dump-manipulation-event-gate
+SOURCE_CLONED_TO_TMP true
+PUMP_EVENT_ROWS 1110
+LABELED_FEATURE_FILES 3
+ACTIVE_AXIS MainRegimeV2
+CANDIDATE_REGIME Manipulation
+ACCEPTED_95 false
+MANIPULATION_INPUT_STATE partial_event_social_dataset_not_release_complete
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+TRADE_USABLE false
+GATE blocked_partial_external_dataset

@@ -1,0 +1,2174 @@
+{
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "generated_at": "2026-05-12T03:09:33.949490Z",
+  "current_focus_phase": "analyze",
+  "current_focus_reason": "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.996;long/short support gap 0.017 is too small, so alignment is treated as mixed;multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized;evidence quality is too low, so BBN input is downgraded to neutralized defaults;pre_bayes_quality_score=0.362 gating_status=observe_only;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.675;market_state_source=volatility=ElevatedVol:0.735 liquidity=NormalLiquidity:0.391 structure=Trending:0.687 behavior=Exhaustion:0.650;market_state_source=rationale=volatility=ElevatedVol conf=0.73;market_state_source=rationale=structure=Trending conf=0.69;market_state_source=rationale=behavior=Exhaustion conf=0.65;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.68",
+  "blocking_truth": {
+    "stage": "analyze",
+    "status": "observe_only",
+    "reason": "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "evidence": [
+      "pre_bayes_gate_status=observe_only",
+      "bridge_probability_gap=0.004",
+      "selected_entry_quality=medium",
+      "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.996",
+      "long/short support gap 0.017 is too small, so alignment is treated as mixed"
+    ],
+    "next_command": "ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'"
+  },
+  "recommended_next_command": "ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+  "recommended_next_command_meta": {
+    "kind": "ict_engine",
+    "requires_user_input": false,
+    "blocked": false,
+    "prompt": null,
+    "executable_command": "ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+    "recorded_data_paths": []
+  },
+  "pending_actions": [
+    "analyze:Review Pre-Bayes Evidence Gate",
+    "promotion:Block Promotion",
+    "iteration:TUNE structure_ict"
+  ],
+  "risk_flags": [
+    "analyze:not_comparable:different_data_fingerprint",
+    "analyze:pre_bayes:low_directional_separation",
+    "analyze:pre_bayes:multi_timeframe_direction_conflict",
+    "update:not_comparable:no_previous_run",
+    "update:promotion_blocked:no_previous_run|artifact_actionable_count=3 artifact_latest_promotable=Some(\"ensemble-vote:analyze:2026-05-12T03:04:57Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=high|artifact_consumed_trend_reason=no_consumed_artifacts"
+  ],
+  "latest_train": null,
+  "latest_analyze": {
+    "phase": "analyze",
+    "source_command": "analyze",
+    "run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+    "timestamp": "2026-05-12T03:07:57.870256Z",
+    "workflow_phase": "pre_bayes_observe_only",
+    "workflow_reason": "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.996;long/short support gap 0.017 is too small, so alignment is treated as mixed;multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized;evidence quality is too low, so BBN input is downgraded to neutralized defaults;pre_bayes_quality_score=0.362 gating_status=observe_only;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.675;market_state_source=volatility=ElevatedVol:0.735 liquidity=NormalLiquidity:0.391 structure=Trending:0.687 behavior=Exhaustion:0.650;market_state_source=rationale=volatility=ElevatedVol conf=0.73;market_state_source=rationale=structure=Trending conf=0.69;market_state_source=rationale=behavior=Exhaustion conf=0.65;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.68",
+    "promotion_status": "observe",
+    "rollback_scope": "none",
+    "comparable_to_previous": false,
+    "comparison_class": "different_data_fingerprint",
+    "recommended_next_command": "ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+    "recommended_next_command_meta": {
+      "kind": "ict_engine",
+      "requires_user_input": false,
+      "blocked": false,
+      "prompt": null,
+      "executable_command": "ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "recorded_data_paths": []
+    },
+    "phase_summary": "selected_direction=Bear selected_entry_quality=medium pre_bayes_status=observe_only pre_bayes_quality=0.362 decision_hint=Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963 hybrid_duration_model=geometric hybrid_remaining_expected_bars=3.000 mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963 execution_readiness=0.250 execution_gate=execution_blocked execution_edge=0.306",
+    "top_actions": [
+      "analyze:Review Pre-Bayes Evidence Gate",
+      "promotion:Block Promotion",
+      "iteration:TUNE structure_ict"
+    ],
+    "risk_flags": [
+      "not_comparable:different_data_fingerprint",
+      "pre_bayes:low_directional_separation",
+      "pre_bayes:multi_timeframe_direction_conflict"
+    ],
+    "selected_direction": "Bear",
+    "selected_entry_quality": "medium",
+    "pre_bayes_gate_status": "observe_only",
+    "pre_bayes_uses_soft_evidence": true,
+    "pre_bayes_policy_version": "318900600c5e8cf2",
+    "pre_bayes_evidence_quality_score": 0.36196457207803,
+    "pre_bayes_conflict_flags": [
+      "low_directional_separation",
+      "multi_timeframe_direction_conflict"
+    ],
+    "pre_bayes_filtered_assignments": {
+      "__policy_version": "318900600c5e8cf2",
+      "factor_alignment": "mixed",
+      "factor_uncertainty": "high",
+      "liquidity_context": "neutral",
+      "market_regime": "range",
+      "market_state_primary_regime": "TrendExpansion",
+      "market_state_secondary_regime": "BullTrendExhaustion",
+      "multi_timeframe_resonance": "mixed"
+    },
+    "pre_bayes_soft_evidence": {
+      "factor_alignment": {
+        "bearish": 0.2,
+        "bullish": 0.2,
+        "mixed": 0.6
+      },
+      "factor_uncertainty": {
+        "high": 0.6,
+        "low": 0.4
+      },
+      "liquidity_context": {
+        "favorable": 0.2,
+        "hostile": 0.2,
+        "neutral": 0.6
+      },
+      "market_regime": {
+        "range": 0.3481315723113664,
+        "stress": 0.18510023059402575,
+        "transition": 0.2320877148742443,
+        "trend": 0.23468048222036356
+      },
+      "multi_timeframe_resonance": {
+        "aligned": 0.2,
+        "dislocated": 0.2,
+        "mixed": 0.6
+      }
+    },
+    "market_state_evidence": [
+      "primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.675",
+      "volatility=ElevatedVol:0.735 liquidity=NormalLiquidity:0.391 structure=Trending:0.687 behavior=Exhaustion:0.650",
+      "rationale=volatility=ElevatedVol conf=0.73",
+      "rationale=structure=Trending conf=0.69",
+      "rationale=behavior=Exhaustion conf=0.65",
+      "rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.68"
+    ],
+    "canonical_structural_active_regime": "range",
+    "canonical_structural_confidence": 0.36196457207803,
+    "canonical_structural_probabilities": {
+      "range": 0.3481315723113664,
+      "stress": 0.18510023059402575,
+      "transition": 0.2320877148742443,
+      "trend": 0.23468048222036356
+    },
+    "pre_bayes_long_signal_probability": 0.540429135990648,
+    "pre_bayes_short_signal_probability": 0.5446360384322226,
+    "pre_bayes_selected_entry_quality_probability": 1.0,
+    "pre_bayes_bridge_selected_entry_quality": "medium",
+    "pre_bayes_bridge_probability_gap": 0.0042069024415746226,
+    "pre_bayes_bridge_rationale_summary": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.043 short_support=0.061 uncertainty=0.334",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.996",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "pre_bayes_multi_timeframe_direction_bias": "neutral",
+    "pre_bayes_multi_timeframe_alignment_score": 1.0,
+    "pre_bayes_multi_timeframe_entry_alignment_score": 0.9963,
+    "realized_outcome": null,
+    "structural_learning_credit_class": null,
+    "structural_learning_success_credit": null,
+    "structural_learning_observation_weight": null,
+    "family_states": [
+      "cross_market_smt:hold:none",
+      "options_hedging:hold:none",
+      "trend_momentum:hold:none",
+      "other:hold:none",
+      "volatility_mean_reversion:hold:none",
+      "structure_ict:hold:none"
+    ],
+    "factor_actions": [
+      "structure_ict:tune:0.54",
+      "spectral_rhythm:tune:0.33",
+      "volatility_mean_reversion:tune:0.30"
+    ],
+    "multi_timeframe_summary": [
+      "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+      "multi_timeframe_missing=1m,5m,30m,4h",
+      "15m:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "1h:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "1d:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=1.0000",
+      "lower_timeframe_entry_alignment_score=0.9963"
+    ],
+    "structural_feedback": null,
+    "family_score_map": {
+      "cross_market_smt": 0.1225,
+      "options_hedging": 0.1537788799696692,
+      "other": 0.2924348321171268,
+      "structure_ict": 0.5353853125000001,
+      "trend_momentum": 0.1789720167340939,
+      "volatility_mean_reversion": 0.29987783361471654
+    },
+    "factor_score_map": {},
+    "objective_market_credibility_shrink": null,
+    "execution_edge_share": 0.30640993209403156,
+    "prediction_edge_share": 0.6935900679059684,
+    "execution_readiness": 0.25049262390637494,
+    "execution_gate_status": "execution_blocked",
+    "pda_cluster_label": null,
+    "hybrid_duration_model": "geometric",
+    "hybrid_remaining_expected_bars": 3.0,
+    "spectral_entropy": null,
+    "sparsity_ratio": null,
+    "segments_gate": null
+  },
+  "latest_research": null,
+  "latest_backtest": null,
+  "latest_update": {
+    "phase": "update",
+    "source_command": "update",
+    "run_id": "update:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030637.876Z",
+    "timestamp": "2026-05-12T03:06:38.235260Z",
+    "workflow_phase": "research_iteration",
+    "workflow_reason": "no_previous_run|artifact_actionable_count=3 artifact_latest_promotable=Some(\"ensemble-vote:analyze:2026-05-12T03:04:57Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=high|artifact_consumed_trend_reason=no_consumed_artifacts",
+    "promotion_status": "hold",
+    "rollback_scope": "none",
+    "comparable_to_previous": false,
+    "comparison_class": "no_previous_run",
+    "recommended_next_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+    "recommended_next_command_meta": {
+      "kind": "ict_engine",
+      "requires_user_input": false,
+      "blocked": false,
+      "prompt": null,
+      "executable_command": "ict-engine update --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --outcome win --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "recorded_data_paths": []
+    },
+    "phase_summary": "realized_outcome=win learning_credit_class=positive_executed success_credit=1.000 observation_weight=1.000 feedback_applied=1 duplicate_feedback_skipped=false consumed_pre_bayes_gate_status=pass_neutralized mtf_source=primary_only execution_readiness=0.570 execution_gate=execution_observe_only execution_edge=0.600",
+    "top_actions": [
+      "update:Review Consumed Pre-Bayes",
+      "promotion:Block Promotion",
+      "artifact_factor_review:Artifact Factor structure_ict"
+    ],
+    "risk_flags": [
+      "not_comparable:no_previous_run",
+      "promotion_blocked:no_previous_run|artifact_actionable_count=3 artifact_latest_promotable=Some(\"ensemble-vote:analyze:2026-05-12T03:04:57Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=high|artifact_consumed_trend_reason=no_consumed_artifacts"
+    ],
+    "selected_direction": null,
+    "selected_entry_quality": "medium",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "pre_bayes_uses_soft_evidence": false,
+    "pre_bayes_policy_version": "",
+    "pre_bayes_evidence_quality_score": 0.581424,
+    "pre_bayes_conflict_flags": [],
+    "pre_bayes_filtered_assignments": {
+      "parent_regime_root": "B2R_PROVIDER_BTC_EMA_RSI_104703:trend",
+      "pre_bayes_branch_path_gate": "pass_neutralized",
+      "regime_profit_branch_path": "path:scenario:B2R_PROVIDER_BTC_EMA_RSI_104703:belief_regime_node:trend:trend_follow_through:primary"
+    },
+    "pre_bayes_soft_evidence": {
+      "factor_alignment": {},
+      "factor_uncertainty": {},
+      "liquidity_context": {},
+      "market_regime": {},
+      "multi_timeframe_resonance": {}
+    },
+    "market_state_evidence": [],
+    "canonical_structural_active_regime": null,
+    "canonical_structural_confidence": null,
+    "canonical_structural_probabilities": {},
+    "pre_bayes_long_signal_probability": null,
+    "pre_bayes_short_signal_probability": null,
+    "pre_bayes_selected_entry_quality_probability": null,
+    "pre_bayes_bridge_selected_entry_quality": null,
+    "pre_bayes_bridge_probability_gap": null,
+    "pre_bayes_bridge_rationale_summary": [],
+    "pre_bayes_multi_timeframe_direction_bias": "",
+    "pre_bayes_multi_timeframe_alignment_score": null,
+    "pre_bayes_multi_timeframe_entry_alignment_score": null,
+    "realized_outcome": "win",
+    "structural_learning_credit_class": "positive_executed",
+    "structural_learning_success_credit": 1.0,
+    "structural_learning_observation_weight": 1.0,
+    "family_states": [],
+    "factor_actions": [],
+    "multi_timeframe_summary": [],
+    "structural_feedback": {
+      "protocol_version": "structural-feedback-v1",
+      "recommendation_id": "structural-feedback:B2R_PROVIDER_BTC_EMA_RSI_104703:structural-candidates:B2R_PROVIDER_BTC_EMA_RSI_104703:ae8ab5f0ac199585:path:scenario:B2R_PROVIDER_BTC_EMA_RSI_104703:belief_regime_node:trend:trend_follow_through:primary",
+      "recommended_at": "2026-05-12T03:05:30Z",
+      "node_id": "B2R_PROVIDER_BTC_EMA_RSI_104703:trend",
+      "branch_id": "B2R_PROVIDER_BTC_EMA_RSI_104703:path_ranker:trend_follow_through",
+      "scenario_id": "scenario:B2R_PROVIDER_BTC_EMA_RSI_104703:belief_regime_node:trend:trend_follow_through",
+      "path_id": "path:scenario:B2R_PROVIDER_BTC_EMA_RSI_104703:belief_regime_node:trend:trend_follow_through:primary",
+      "followed_path": true,
+      "exit_reason": "forward_12_bar_close",
+      "notes": "semi_auto_replay observation=1 data_index=119 threshold=0.001"
+    },
+    "family_score_map": {},
+    "factor_score_map": {},
+    "objective_market_credibility_shrink": null,
+    "execution_edge_share": 0.6,
+    "prediction_edge_share": 0.4,
+    "execution_readiness": 0.57,
+    "execution_gate_status": "execution_observe_only",
+    "pda_cluster_label": null,
+    "hybrid_duration_model": null,
+    "hybrid_remaining_expected_bars": null,
+    "spectral_entropy": null,
+    "sparsity_ratio": null,
+    "segments_gate": null
+  },
+  "latest_pre_bayes_policy": {
+    "version": "318900600c5e8cf2",
+    "source": "default",
+    "min_directional_support_gap": 0.08,
+    "high_uncertainty_threshold": 0.45,
+    "min_multi_timeframe_alignment_score": 0.55,
+    "min_multi_timeframe_entry_alignment_score": 0.5,
+    "hard_pass_quality_threshold": 0.75,
+    "neutralized_quality_threshold": 0.4,
+    "directional_conflict_penalty": 0.2,
+    "mixed_alignment_penalty": 0.1,
+    "multi_timeframe_direction_conflict_penalty": 0.18,
+    "multi_timeframe_alignment_penalty": 0.1,
+    "multi_timeframe_entry_penalty": 0.08,
+    "multi_timeframe_alignment_bonus": 0.05,
+    "hostile_liquidity_penalty": 0.1,
+    "favorable_liquidity_bonus": 0.05,
+    "hostile_liquidity_forces_high_uncertainty": true,
+    "market_overrides": {
+      "CL": {
+        "hostile_liquidity_penalty": 0.14,
+        "favorable_liquidity_bonus": 0.03,
+        "hostile_liquidity_forces_high_uncertainty": true
+      },
+      "ES": {
+        "hostile_liquidity_penalty": 0.06,
+        "favorable_liquidity_bonus": 0.06,
+        "hostile_liquidity_forces_high_uncertainty": false
+      },
+      "GC": {
+        "hostile_liquidity_penalty": 0.09,
+        "favorable_liquidity_bonus": 0.07,
+        "hostile_liquidity_forces_high_uncertainty": false
+      },
+      "NQ": {
+        "hostile_liquidity_penalty": 0.1,
+        "favorable_liquidity_bonus": 0.04,
+        "hostile_liquidity_forces_high_uncertainty": true
+      },
+      "YM": {
+        "hostile_liquidity_penalty": 0.07,
+        "favorable_liquidity_bonus": 0.05,
+        "hostile_liquidity_forces_high_uncertainty": false
+      }
+    }
+  },
+  "latest_pre_bayes_entry_quality_bridge": {
+    "long_signal_probability": 0.540429135990648,
+    "short_signal_probability": 0.5446360384322226,
+    "long_entry_bias": [
+      0.6919005037719173,
+      0.2377468077022178,
+      0.07035268852586486
+    ],
+    "short_entry_bias": [
+      0.04766720592152641,
+      0.2528396664825933,
+      0.6994931275958803
+    ],
+    "long_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "selected_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_alignment_score": 1.0,
+    "multi_timeframe_entry_alignment_score": 0.9963,
+    "rationale": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.043 short_support=0.061 uncertainty=0.334",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.996",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ]
+  },
+  "latest_pre_bayes_entry_quality_bridge_diff": {
+    "dominant_long_entry_quality": "medium",
+    "dominant_long_entry_quality_probability": 1.0,
+    "dominant_short_entry_quality": "medium",
+    "dominant_short_entry_quality_probability": 1.0,
+    "selected_entry_quality": "medium",
+    "selected_entry_quality_probability": 1.0,
+    "long_short_signal_probability_gap": 0.0042069024415746226,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_alignment_score": 1.0,
+    "multi_timeframe_entry_alignment_score": 0.9963,
+    "rationale_summary": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.043 short_support=0.061 uncertainty=0.334",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.996",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ]
+  },
+  "latest_pre_bayes_policy_diff": {
+    "previous_version": "318900600c5e8cf2",
+    "changed_fields": [],
+    "summary": "policy_unchanged"
+  },
+  "latest_pre_bayes_policy_lineage": {
+    "latest_version": "318900600c5e8cf2",
+    "previous_version": "318900600c5e8cf2",
+    "total_versions": 2,
+    "changed_fields_union": [
+      "initial_policy"
+    ],
+    "rollback_candidate_version": "318900600c5e8cf2",
+    "rollback_reason": "latest_gate_status=observe_only suggests reverting to previous stable policy version"
+  },
+  "latest_pre_bayes_soft_evidence_diff": [
+    {
+      "node": "market_regime",
+      "filtered_state": "range",
+      "dominant_soft_state": "range",
+      "dominant_soft_probability": 0.6,
+      "entropy": 0.9502705392332347,
+      "diverges_from_filtered_state": false
+    },
+    {
+      "node": "liquidity_context",
+      "filtered_state": "neutral",
+      "dominant_soft_state": "neutral",
+      "dominant_soft_probability": 0.6,
+      "entropy": 0.9502705392332347,
+      "diverges_from_filtered_state": false
+    },
+    {
+      "node": "factor_alignment",
+      "filtered_state": "mixed",
+      "dominant_soft_state": "mixed",
+      "dominant_soft_probability": 0.6,
+      "entropy": 0.9502705392332347,
+      "diverges_from_filtered_state": false
+    },
+    {
+      "node": "factor_uncertainty",
+      "filtered_state": "high",
+      "dominant_soft_state": "high",
+      "dominant_soft_probability": 0.6,
+      "entropy": 0.6730116670092565,
+      "diverges_from_filtered_state": false
+    },
+    {
+      "node": "multi_timeframe_resonance",
+      "filtered_state": "mixed",
+      "dominant_soft_state": "mixed",
+      "dominant_soft_probability": 0.6,
+      "entropy": 0.9502705392332347,
+      "diverges_from_filtered_state": false
+    }
+  ],
+  "recent_pre_bayes_policies": [
+    {
+      "timestamp": "2026-05-12T03:04:57.314734Z",
+      "run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "source_command": "analyze",
+      "policy": {
+        "version": "318900600c5e8cf2",
+        "source": "default",
+        "min_directional_support_gap": 0.08,
+        "high_uncertainty_threshold": 0.45,
+        "min_multi_timeframe_alignment_score": 0.55,
+        "min_multi_timeframe_entry_alignment_score": 0.5,
+        "hard_pass_quality_threshold": 0.75,
+        "neutralized_quality_threshold": 0.4,
+        "directional_conflict_penalty": 0.2,
+        "mixed_alignment_penalty": 0.1,
+        "multi_timeframe_direction_conflict_penalty": 0.18,
+        "multi_timeframe_alignment_penalty": 0.1,
+        "multi_timeframe_entry_penalty": 0.08,
+        "multi_timeframe_alignment_bonus": 0.05,
+        "hostile_liquidity_penalty": 0.1,
+        "favorable_liquidity_bonus": 0.05,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "market_overrides": {
+          "CL": {
+            "hostile_liquidity_penalty": 0.14,
+            "favorable_liquidity_bonus": 0.03,
+            "hostile_liquidity_forces_high_uncertainty": true
+          },
+          "ES": {
+            "hostile_liquidity_penalty": 0.06,
+            "favorable_liquidity_bonus": 0.06,
+            "hostile_liquidity_forces_high_uncertainty": false
+          },
+          "GC": {
+            "hostile_liquidity_penalty": 0.09,
+            "favorable_liquidity_bonus": 0.07,
+            "hostile_liquidity_forces_high_uncertainty": false
+          },
+          "NQ": {
+            "hostile_liquidity_penalty": 0.1,
+            "favorable_liquidity_bonus": 0.04,
+            "hostile_liquidity_forces_high_uncertainty": true
+          },
+          "YM": {
+            "hostile_liquidity_penalty": 0.07,
+            "favorable_liquidity_bonus": 0.05,
+            "hostile_liquidity_forces_high_uncertainty": false
+          }
+        }
+      },
+      "diff_from_previous": {
+        "previous_version": null,
+        "changed_fields": [
+          "initial_policy"
+        ],
+        "summary": "changed_fields=[\"initial_policy\"]"
+      }
+    },
+    {
+      "timestamp": "2026-05-12T03:07:57.870256Z",
+      "run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "source_command": "analyze",
+      "policy": {
+        "version": "318900600c5e8cf2",
+        "source": "default",
+        "min_directional_support_gap": 0.08,
+        "high_uncertainty_threshold": 0.45,
+        "min_multi_timeframe_alignment_score": 0.55,
+        "min_multi_timeframe_entry_alignment_score": 0.5,
+        "hard_pass_quality_threshold": 0.75,
+        "neutralized_quality_threshold": 0.4,
+        "directional_conflict_penalty": 0.2,
+        "mixed_alignment_penalty": 0.1,
+        "multi_timeframe_direction_conflict_penalty": 0.18,
+        "multi_timeframe_alignment_penalty": 0.1,
+        "multi_timeframe_entry_penalty": 0.08,
+        "multi_timeframe_alignment_bonus": 0.05,
+        "hostile_liquidity_penalty": 0.1,
+        "favorable_liquidity_bonus": 0.05,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "market_overrides": {
+          "CL": {
+            "hostile_liquidity_penalty": 0.14,
+            "favorable_liquidity_bonus": 0.03,
+            "hostile_liquidity_forces_high_uncertainty": true
+          },
+          "ES": {
+            "hostile_liquidity_penalty": 0.06,
+            "favorable_liquidity_bonus": 0.06,
+            "hostile_liquidity_forces_high_uncertainty": false
+          },
+          "GC": {
+            "hostile_liquidity_penalty": 0.09,
+            "favorable_liquidity_bonus": 0.07,
+            "hostile_liquidity_forces_high_uncertainty": false
+          },
+          "NQ": {
+            "hostile_liquidity_penalty": 0.1,
+            "favorable_liquidity_bonus": 0.04,
+            "hostile_liquidity_forces_high_uncertainty": true
+          },
+          "YM": {
+            "hostile_liquidity_penalty": 0.07,
+            "favorable_liquidity_bonus": 0.05,
+            "hostile_liquidity_forces_high_uncertainty": false
+          }
+        }
+      },
+      "diff_from_previous": {
+        "previous_version": "318900600c5e8cf2",
+        "changed_fields": [],
+        "summary": "policy_unchanged"
+      }
+    }
+  ],
+  "latest_pending_update": {
+    "artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+    "version": 2,
+    "generated_at": "2026-05-12T03:07:57.870256Z",
+    "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/pending_update_feedback.json",
+    "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963",
+    "entry_quality": "medium",
+    "factor_alignment": "mixed",
+    "factor_uncertainty": "low",
+    "top_factor_name": "structure_ict",
+    "top_factor_action": "tune",
+    "review_rule_version": "55f482c1291f879a",
+    "review_status": "observe",
+    "review_reason": "artifact_not_comparable_same_data_factor_prompt_required",
+    "pre_bayes_gate_status": "observe_only",
+    "pre_bayes_bridge_selected_entry_quality": "medium",
+    "multi_timeframe_summary": [
+      "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+      "multi_timeframe_missing=1m,5m,30m,4h",
+      "15m:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "1h:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "1d:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=1.0000",
+      "lower_timeframe_entry_alignment_score=0.9963"
+    ],
+    "quality_delta": -1,
+    "selected_probability_delta": -0.008699038880146892,
+    "top_factor_score_delta": -0.03648968749999992,
+    "avg_family_score_delta": -0.04976870564431157
+  },
+  "recent_pending_updates": [
+    {
+      "artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.314734Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/pending_update_feedback.json",
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.581|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9897",
+      "entry_quality": "medium",
+      "factor_alignment": "mixed",
+      "factor_uncertainty": "low",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "review_rule_version": "55f482c1291f879a",
+      "review_status": "promote_latest",
+      "review_reason": "first_pending_update_artifact",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "pre_bayes_bridge_selected_entry_quality": "medium",
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+        "multi_timeframe_missing=1m,5m,30m,4h",
+        "15m:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json",
+        "1h:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json",
+        "1d:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=1.0000",
+        "lower_timeframe_entry_alignment_score=0.9897"
+      ],
+      "quality_delta": 0,
+      "selected_probability_delta": 0.0,
+      "top_factor_score_delta": 0.0,
+      "avg_family_score_delta": 0.0
+    },
+    {
+      "artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "version": 2,
+      "generated_at": "2026-05-12T03:07:57.870256Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/pending_update_feedback.json",
+      "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963",
+      "entry_quality": "medium",
+      "factor_alignment": "mixed",
+      "factor_uncertainty": "low",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "review_rule_version": "55f482c1291f879a",
+      "review_status": "observe",
+      "review_reason": "artifact_not_comparable_same_data_factor_prompt_required",
+      "pre_bayes_gate_status": "observe_only",
+      "pre_bayes_bridge_selected_entry_quality": "medium",
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+        "multi_timeframe_missing=1m,5m,30m,4h",
+        "15m:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+        "1h:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+        "1d:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=1.0000",
+        "lower_timeframe_entry_alignment_score=0.9963"
+      ],
+      "quality_delta": -1,
+      "selected_probability_delta": -0.008699038880146892,
+      "top_factor_score_delta": -0.03648968749999992,
+      "avg_family_score_delta": -0.04976870564431157
+    }
+  ],
+  "latest_execution_candidate": {
+    "artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+    "version": 2,
+    "generated_at": "2026-05-12T03:07:57.870256Z",
+    "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/execution_candidate.json",
+    "trade_direction": "Bear",
+    "actionable": false,
+    "candidate_status": "no_trade",
+    "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963",
+    "top_factor_name": "structure_ict",
+    "top_factor_action": "tune",
+    "review_rule_version": "7bfaf4a346c607e8",
+    "review_status": "observe",
+    "review_reason": "candidate_not_actionable",
+    "pre_bayes_gate_status": "observe_only",
+    "pre_bayes_bridge_selected_entry_quality": "medium",
+    "multi_timeframe_summary": [
+      "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+      "multi_timeframe_missing=1m,5m,30m,4h",
+      "15m:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "1h:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "1d:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=1.0000",
+      "lower_timeframe_entry_alignment_score=0.9963"
+    ],
+    "posterior_delta": -0.003728159558760796,
+    "win_probability_delta": -0.008699038880146892
+  },
+  "recent_execution_candidates": [
+    {
+      "artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.314734Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/execution_candidate.json",
+      "trade_direction": "Bull",
+      "actionable": false,
+      "candidate_status": "no_trade",
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.581|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9897",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "review_rule_version": "7bfaf4a346c607e8",
+      "review_status": "observe",
+      "review_reason": "first_execution_candidate_artifact",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "pre_bayes_bridge_selected_entry_quality": "medium",
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+        "multi_timeframe_missing=1m,5m,30m,4h",
+        "15m:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json",
+        "1h:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json",
+        "1d:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=1.0000",
+        "lower_timeframe_entry_alignment_score=0.9897"
+      ],
+      "posterior_delta": 0.0,
+      "win_probability_delta": 0.0
+    },
+    {
+      "artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "version": 2,
+      "generated_at": "2026-05-12T03:07:57.870256Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/execution_candidate.json",
+      "trade_direction": "Bear",
+      "actionable": false,
+      "candidate_status": "no_trade",
+      "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "review_rule_version": "7bfaf4a346c607e8",
+      "review_status": "observe",
+      "review_reason": "candidate_not_actionable",
+      "pre_bayes_gate_status": "observe_only",
+      "pre_bayes_bridge_selected_entry_quality": "medium",
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+        "multi_timeframe_missing=1m,5m,30m,4h",
+        "15m:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+        "1h:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+        "1d:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=1.0000",
+        "lower_timeframe_entry_alignment_score=0.9963"
+      ],
+      "posterior_delta": -0.003728159558760796,
+      "win_probability_delta": -0.008699038880146892
+    }
+  ],
+  "latest_ensemble_vote": {
+    "artifact_id": "ensemble-vote:analyze:2026-05-12T03:07:57Z",
+    "generated_at": "2026-05-12T03:07:57.924296Z",
+    "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+    "provenance": {
+      "prompt_version": "agent-prompts-v1",
+      "factor_version": "d1fba762150c532c",
+      "config_hash": "7e465f65b990692d",
+      "data_fingerprint": "560a10adabb2723b"
+    },
+    "dataset_comparability": {
+      "comparable": false,
+      "previous_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "reason": "different_data_fingerprint",
+      "comparison_class": "different_data_fingerprint",
+      "same_data": false,
+      "same_config": false,
+      "same_prompt_version": true,
+      "same_factor_version": true
+    },
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "final_action": "Observe",
+    "recommended_command": "ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+    "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.350 regime=range jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+    "hard_block": {
+      "active": false,
+      "stage": null,
+      "status": null,
+      "reason": null,
+      "evidence": [],
+      "command": null,
+      "human_action": null
+    },
+    "confidence": 0.36196457207803,
+    "consensus_strength": 0.36196457207803,
+    "disagreement_flags": [],
+    "executor_summaries": [
+      "executor=catboost_file action=Observe confidence=0.350 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350",
+      "executor=xgboost_file action=Observe confidence=0.350 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350"
+    ],
+    "split_explanations": [
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "gating_status=range",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high"
+    ],
+    "executor_scorecards": [
+      {
+        "executor": "catboost_file",
+        "wins": 0,
+        "losses": 0,
+        "breakevens": 0,
+        "validated_positive": 0,
+        "validated_negative": 0,
+        "cumulative_quality_score": 0,
+        "latest_weight_hint": 0.55,
+        "last_outcome": null,
+        "last_updated_at": null
+      },
+      {
+        "executor": "xgboost_file",
+        "wins": 0,
+        "losses": 0,
+        "breakevens": 0,
+        "validated_positive": 0,
+        "validated_negative": 0,
+        "cumulative_quality_score": 0,
+        "latest_weight_hint": 0.45,
+        "last_outcome": null,
+        "last_updated_at": null
+      }
+    ],
+    "executor_scorecards_source": "persisted",
+    "posterior_fingerprint": "560a10adabb2723b",
+    "posterior_normalization_status": "canonical_structural_regime_posterior",
+    "posterior_active_regime": "range",
+    "posterior_confidence": 0.36196457207803,
+    "posterior_probabilities": {
+      "range": 0.3481315723113664,
+      "stress": 0.18510023059402575,
+      "transition": 0.2320877148742443,
+      "trend": 0.23468048222036356
+    },
+    "posterior_evidence": [
+      "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.996",
+      "long/short support gap 0.017 is too small, so alignment is treated as mixed",
+      "multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized",
+      "evidence quality is too low, so BBN input is downgraded to neutralized defaults",
+      "pre_bayes_quality_score=0.362 gating_status=observe_only",
+      "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.675",
+      "market_state_source=volatility=ElevatedVol:0.735 liquidity=NormalLiquidity:0.391 structure=Trending:0.687 behavior=Exhaustion:0.650",
+      "market_state_source=rationale=volatility=ElevatedVol conf=0.73",
+      "market_state_source=rationale=structure=Trending conf=0.69",
+      "market_state_source=rationale=behavior=Exhaustion conf=0.65",
+      "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.68",
+      "branch_transition_prior_from=B2R_PROVIDER_BTC_EMA_RSI_104703:path_ranker:trend_follow_through weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000"
+    ]
+  },
+  "recent_ensemble_votes": [
+    {
+      "artifact_id": "ensemble-vote:analyze:2026-05-12T03:04:57Z",
+      "generated_at": "2026-05-12T03:04:57.522308Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "provenance": {
+        "prompt_version": "agent-prompts-v1",
+        "factor_version": "d1fba762150c532c",
+        "config_hash": "7e465f65b990692d",
+        "data_fingerprint": "a3445bd7ee05872e"
+      },
+      "dataset_comparability": {
+        "comparable": false,
+        "previous_run_id": null,
+        "reason": "no_previous_run",
+        "comparison_class": "no_previous_run",
+        "same_data": false,
+        "same_config": false,
+        "same_prompt_version": false,
+        "same_factor_version": false
+      },
+      "ensemble_version": "ensemble-audit-v2-weighted",
+      "final_action": "Observe",
+      "recommended_command": "ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "hard_block": {
+        "active": false,
+        "stage": null,
+        "status": null,
+        "reason": null,
+        "evidence": [],
+        "command": null,
+        "human_action": null
+      },
+      "confidence": 0.5814244742951883,
+      "consensus_strength": 0.5814244742951883,
+      "disagreement_flags": [],
+      "executor_summaries": [
+        "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600",
+        "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600"
+      ],
+      "split_explanations": [
+        "gating_status=trend",
+        "selected_entry_quality=medium",
+        "factor_alignment=mixed",
+        "factor_uncertainty=high",
+        "gating_status=trend",
+        "selected_entry_quality=medium",
+        "factor_alignment=mixed",
+        "factor_uncertainty=high"
+      ],
+      "executor_scorecards": [],
+      "executor_scorecards_source": "persisted",
+      "posterior_fingerprint": "a3445bd7ee05872e",
+      "posterior_normalization_status": "canonical_structural_regime_posterior",
+      "posterior_active_regime": "trend",
+      "posterior_confidence": 0.5814244742951883,
+      "posterior_probabilities": {
+        "range": 0.3090564907936269,
+        "stress": 0.15984855949195836,
+        "transition": 0.07637740368254925,
+        "trend": 0.45471754603186554
+      },
+      "posterior_evidence": [
+        "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+        "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.990",
+        "long/short support gap 0.061 is too small, so alignment is treated as mixed",
+        "pre_bayes_quality_score=0.581 gating_status=pass_neutralized",
+        "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.848",
+        "market_state_source=volatility=ElevatedVol:0.588 liquidity=NormalLiquidity:0.489 structure=Trending:1.000 behavior=FOMO:0.800",
+        "market_state_source=rationale=volatility=ElevatedVol conf=0.59",
+        "market_state_source=rationale=structure=Trending conf=1.00",
+        "market_state_source=rationale=behavior=FOMO conf=0.80",
+        "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.85"
+      ]
+    },
+    {
+      "artifact_id": "ensemble-vote:analyze:2026-05-12T03:07:57Z",
+      "generated_at": "2026-05-12T03:07:57.924296Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "provenance": {
+        "prompt_version": "agent-prompts-v1",
+        "factor_version": "d1fba762150c532c",
+        "config_hash": "7e465f65b990692d",
+        "data_fingerprint": "560a10adabb2723b"
+      },
+      "dataset_comparability": {
+        "comparable": false,
+        "previous_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+        "reason": "different_data_fingerprint",
+        "comparison_class": "different_data_fingerprint",
+        "same_data": false,
+        "same_config": false,
+        "same_prompt_version": true,
+        "same_factor_version": true
+      },
+      "ensemble_version": "ensemble-audit-v2-weighted",
+      "final_action": "Observe",
+      "recommended_command": "ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.350 regime=range jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "hard_block": {
+        "active": false,
+        "stage": null,
+        "status": null,
+        "reason": null,
+        "evidence": [],
+        "command": null,
+        "human_action": null
+      },
+      "confidence": 0.36196457207803,
+      "consensus_strength": 0.36196457207803,
+      "disagreement_flags": [],
+      "executor_summaries": [
+        "executor=catboost_file action=Observe confidence=0.350 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350",
+        "executor=xgboost_file action=Observe confidence=0.350 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.350"
+      ],
+      "split_explanations": [
+        "gating_status=range",
+        "selected_entry_quality=medium",
+        "factor_alignment=mixed",
+        "factor_uncertainty=high",
+        "gating_status=range",
+        "selected_entry_quality=medium",
+        "factor_alignment=mixed",
+        "factor_uncertainty=high"
+      ],
+      "executor_scorecards": [
+        {
+          "executor": "catboost_file",
+          "wins": 0,
+          "losses": 0,
+          "breakevens": 0,
+          "validated_positive": 0,
+          "validated_negative": 0,
+          "cumulative_quality_score": 0,
+          "latest_weight_hint": 0.55,
+          "last_outcome": null,
+          "last_updated_at": null
+        },
+        {
+          "executor": "xgboost_file",
+          "wins": 0,
+          "losses": 0,
+          "breakevens": 0,
+          "validated_positive": 0,
+          "validated_negative": 0,
+          "cumulative_quality_score": 0,
+          "latest_weight_hint": 0.45,
+          "last_outcome": null,
+          "last_updated_at": null
+        }
+      ],
+      "executor_scorecards_source": "persisted",
+      "posterior_fingerprint": "560a10adabb2723b",
+      "posterior_normalization_status": "canonical_structural_regime_posterior",
+      "posterior_active_regime": "range",
+      "posterior_confidence": 0.36196457207803,
+      "posterior_probabilities": {
+        "range": 0.3481315723113664,
+        "stress": 0.18510023059402575,
+        "transition": 0.2320877148742443,
+        "trend": 0.23468048222036356
+      },
+      "posterior_evidence": [
+        "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+        "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=1.000 multi_timeframe_entry_alignment_score=0.996",
+        "long/short support gap 0.017 is too small, so alignment is treated as mixed",
+        "multi-timeframe direction bias 'bullish' conflicts with regime/alignment, so factor_alignment is neutralized",
+        "evidence quality is too low, so BBN input is downgraded to neutralized defaults",
+        "pre_bayes_quality_score=0.362 gating_status=observe_only",
+        "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.675",
+        "market_state_source=volatility=ElevatedVol:0.735 liquidity=NormalLiquidity:0.391 structure=Trending:0.687 behavior=Exhaustion:0.650",
+        "market_state_source=rationale=volatility=ElevatedVol conf=0.73",
+        "market_state_source=rationale=structure=Trending conf=0.69",
+        "market_state_source=rationale=behavior=Exhaustion conf=0.65",
+        "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.68",
+        "branch_transition_prior_from=B2R_PROVIDER_BTC_EMA_RSI_104703:path_ranker:trend_follow_through weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000"
+      ]
+    }
+  ],
+  "recent_artifacts": [
+    {
+      "entry_id": "ledger:mece-recovery-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555053400",
+      "artifact_kind": "mece_recovery_artifact",
+      "artifact_id": "mece-recovery-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555053400",
+      "version": 2,
+      "generated_at": "2026-05-12T03:04:13.400539Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/mece_recovery_artifact.json",
+      "status": "blocked",
+      "promote_candidate": false,
+      "actionable": false,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.581|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9897",
+      "review_reason": "accuracy=1.0000;accuracy_gate=promote;macro_f1=1.0000;sparsity_ratio=1.000;segments=0..36:1.000,36..96:1.000,96..120:1.000;execution_blocked=57;execution_observe_only=41;execution_ready=22",
+      "review_rule_version": "mece-recovery-artifact-v2",
+      "top_factor_name": "cross_market_smt",
+      "top_factor_action": null,
+      "family_scores": {
+        "mece_accuracy": 1.0,
+        "mece_macro_f1": 1.0,
+        "mece_sparsity_ratio": 1.0
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 100,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555097292",
+      "artifact_kind": "execution_tree_artifact",
+      "artifact_id": "execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555097292",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.292477Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/execution_tree_trace.json",
+      "status": "observe",
+      "promote_candidate": false,
+      "actionable": true,
+      "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+      "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000",
+      "review_rule_version": "execution-tree-artifact-v1",
+      "top_factor_name": null,
+      "top_factor_action": null,
+      "family_scores": {
+        "branch_probability": 0.0,
+        "execution_score": 0.5724993507938823
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 0,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "artifact_kind": "pending_update",
+      "artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.314734Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/pending_update_feedback.json",
+      "status": "promote_latest",
+      "promote_candidate": true,
+      "actionable": true,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.581|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9897",
+      "review_reason": "first_pending_update_artifact",
+      "review_rule_version": "55f482c1291f879a",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "family_scores": {
+        "cross_market_smt": 0.1225,
+        "options_hedging": 0.1518119231409703,
+        "other": 0.35824774638802687,
+        "structure_ict": 0.571875,
+        "trend_momentum": 0.279720842274261,
+        "volatility_mean_reversion": 0.3974055969982177
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 275,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "artifact_kind": "execution_candidate",
+      "artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.314734Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/execution_candidate.json",
+      "status": "observe",
+      "promote_candidate": false,
+      "actionable": false,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.581|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9897",
+      "review_reason": "first_execution_candidate_artifact",
+      "review_rule_version": "7bfaf4a346c607e8",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "family_scores": {
+        "cross_market_smt": 0.1225,
+        "options_hedging": 0.1518119231409703,
+        "other": 0.35824774638802687,
+        "structure_ict": 0.571875,
+        "trend_momentum": 0.279720842274261,
+        "volatility_mean_reversion": 0.3974055969982177
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 79,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:ensemble-vote:analyze:2026-05-12T03:04:57Z",
+      "artifact_kind": "ensemble_vote",
+      "artifact_id": "ensemble-vote:analyze:2026-05-12T03:04:57Z",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.522308Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/ensemble_vote.json",
+      "status": "consensus",
+      "promote_candidate": true,
+      "actionable": true,
+      "decision_hint": "Observe",
+      "review_reason": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "review_rule_version": "ensemble-audit-v2-weighted",
+      "top_factor_name": null,
+      "top_factor_action": "Observe",
+      "family_scores": {},
+      "supersedes_artifact_id": null,
+      "quality_score": 60,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:mece-recovery-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555265590",
+      "artifact_kind": "mece_recovery_artifact",
+      "artifact_id": "mece-recovery-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555265590",
+      "version": 2,
+      "generated_at": "2026-05-12T03:07:45.590120Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/mece_recovery_artifact.json",
+      "status": "blocked",
+      "promote_candidate": false,
+      "actionable": false,
+      "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963",
+      "review_reason": "accuracy=1.0000;accuracy_gate=promote;macro_f1=1.0000;sparsity_ratio=1.000;segments=0..36:1.000,36..96:1.000,96..120:1.000;execution_blocked=59;execution_observe_only=38;execution_ready=23",
+      "review_rule_version": "mece-recovery-artifact-v2",
+      "top_factor_name": "cross_market_smt",
+      "top_factor_action": null,
+      "family_scores": {
+        "mece_accuracy": 1.0,
+        "mece_macro_f1": 1.0,
+        "mece_sparsity_ratio": 1.0
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 100,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555277867",
+      "artifact_kind": "execution_tree_artifact",
+      "artifact_id": "execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555277867",
+      "version": 1,
+      "generated_at": "2026-05-12T03:07:57.867048Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/execution_tree_trace.json",
+      "status": "blocked",
+      "promote_candidate": false,
+      "actionable": false,
+      "decision_hint": "execution_blocked_regardless_of_prediction",
+      "review_reason": "branch=block_crowded;bias=skip;branch_prob=0.0000;uncertainty=1.0000",
+      "review_rule_version": "execution-tree-artifact-v1",
+      "top_factor_name": null,
+      "top_factor_action": null,
+      "family_scores": {
+        "branch_probability": 0.0,
+        "execution_score": 0.44177381752181066
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 0,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "artifact_kind": "pending_update",
+      "artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "version": 2,
+      "generated_at": "2026-05-12T03:07:57.870256Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/pending_update_feedback.json",
+      "status": "observe",
+      "promote_candidate": false,
+      "actionable": true,
+      "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963",
+      "review_reason": "artifact_not_comparable_same_data_factor_prompt_required",
+      "review_rule_version": "55f482c1291f879a",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "family_scores": {
+        "cross_market_smt": 0.1225,
+        "options_hedging": 0.1537788799696692,
+        "other": 0.2924348321171268,
+        "structure_ict": 0.5353853125000001,
+        "trend_momentum": 0.1789720167340939,
+        "volatility_mean_reversion": 0.29987783361471654
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 274,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "artifact_kind": "execution_candidate",
+      "artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "version": 2,
+      "generated_at": "2026-05-12T03:07:57.870256Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/execution_candidate.json",
+      "status": "observe",
+      "promote_candidate": false,
+      "actionable": false,
+      "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963",
+      "review_reason": "candidate_not_actionable",
+      "review_rule_version": "7bfaf4a346c607e8",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "family_scores": {
+        "cross_market_smt": 0.1225,
+        "options_hedging": 0.1537788799696692,
+        "other": 0.2924348321171268,
+        "structure_ict": 0.5353853125000001,
+        "trend_momentum": 0.1789720167340939,
+        "volatility_mean_reversion": 0.29987783361471654
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 77,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:ensemble-vote:analyze:2026-05-12T03:07:57Z",
+      "artifact_kind": "ensemble_vote",
+      "artifact_id": "ensemble-vote:analyze:2026-05-12T03:07:57Z",
+      "version": 1,
+      "generated_at": "2026-05-12T03:07:57.924296Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/ensemble_vote.json",
+      "status": "consensus",
+      "promote_candidate": false,
+      "actionable": true,
+      "decision_hint": "Observe",
+      "review_reason": "hard_blocked=false ensemble_action=Observe consensus=0.350 regime=range jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "review_rule_version": "ensemble-audit-v2-weighted",
+      "top_factor_name": null,
+      "top_factor_action": "Observe",
+      "family_scores": {},
+      "supersedes_artifact_id": null,
+      "quality_score": 35,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    }
+  ],
+  "actionable_artifacts": [
+    {
+      "entry_id": "ledger:execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555097292",
+      "artifact_kind": "execution_tree_artifact",
+      "artifact_id": "execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555097292",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.292477Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/execution_tree_trace.json",
+      "status": "observe",
+      "promote_candidate": false,
+      "actionable": true,
+      "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+      "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000",
+      "review_rule_version": "execution-tree-artifact-v1",
+      "top_factor_name": null,
+      "top_factor_action": null,
+      "family_scores": {
+        "branch_probability": 0.0,
+        "execution_score": 0.5724993507938823
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 0,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "artifact_kind": "pending_update",
+      "artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.314734Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/pending_update_feedback.json",
+      "status": "promote_latest",
+      "promote_candidate": true,
+      "actionable": true,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.581|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9897",
+      "review_reason": "first_pending_update_artifact",
+      "review_rule_version": "55f482c1291f879a",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "family_scores": {
+        "cross_market_smt": 0.1225,
+        "options_hedging": 0.1518119231409703,
+        "other": 0.35824774638802687,
+        "structure_ict": 0.571875,
+        "trend_momentum": 0.279720842274261,
+        "volatility_mean_reversion": 0.3974055969982177
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 275,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:ensemble-vote:analyze:2026-05-12T03:04:57Z",
+      "artifact_kind": "ensemble_vote",
+      "artifact_id": "ensemble-vote:analyze:2026-05-12T03:04:57Z",
+      "version": 1,
+      "generated_at": "2026-05-12T03:04:57.522308Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/ensemble_vote.json",
+      "status": "consensus",
+      "promote_candidate": true,
+      "actionable": true,
+      "decision_hint": "Observe",
+      "review_reason": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "review_rule_version": "ensemble-audit-v2-weighted",
+      "top_factor_name": null,
+      "top_factor_action": "Observe",
+      "family_scores": {},
+      "supersedes_artifact_id": null,
+      "quality_score": 60,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "artifact_kind": "pending_update",
+      "artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "version": 2,
+      "generated_at": "2026-05-12T03:07:57.870256Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/pending_update_feedback.json",
+      "status": "observe",
+      "promote_candidate": false,
+      "actionable": true,
+      "decision_hint": "Observe only: current run not comparable to last analyze (different_data_fingerprint).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=observe_only|pre_bayes_quality_score=0.362|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9963",
+      "review_reason": "artifact_not_comparable_same_data_factor_prompt_required",
+      "review_rule_version": "55f482c1291f879a",
+      "top_factor_name": "structure_ict",
+      "top_factor_action": "tune",
+      "family_scores": {
+        "cross_market_smt": 0.1225,
+        "options_hedging": 0.1537788799696692,
+        "other": 0.2924348321171268,
+        "structure_ict": 0.5353853125000001,
+        "trend_momentum": 0.1789720167340939,
+        "volatility_mean_reversion": 0.29987783361471654
+      },
+      "supersedes_artifact_id": null,
+      "quality_score": 274,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    },
+    {
+      "entry_id": "ledger:ensemble-vote:analyze:2026-05-12T03:07:57Z",
+      "artifact_kind": "ensemble_vote",
+      "artifact_id": "ensemble-vote:analyze:2026-05-12T03:07:57Z",
+      "version": 1,
+      "generated_at": "2026-05-12T03:07:57.924296Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source_phase": "analyze",
+      "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030757.870Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/ensemble_vote.json",
+      "status": "consensus",
+      "promote_candidate": false,
+      "actionable": true,
+      "decision_hint": "Observe",
+      "review_reason": "hard_blocked=false ensemble_action=Observe consensus=0.350 regime=range jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_02.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+      "review_rule_version": "ensemble-audit-v2-weighted",
+      "top_factor_name": null,
+      "top_factor_action": "Observe",
+      "family_scores": {},
+      "supersedes_artifact_id": null,
+      "quality_score": 35,
+      "consumed_by_update_run_id": null,
+      "consumed_at": null,
+      "consumed_outcome": null,
+      "regraded_at": null,
+      "consumption_regrade_status": null,
+      "consumption_regrade_reason": null
+    }
+  ],
+  "latest_promotable_artifact": {
+    "entry_id": "ledger:ensemble-vote:analyze:2026-05-12T03:04:57Z",
+    "artifact_kind": "ensemble_vote",
+    "artifact_id": "ensemble-vote:analyze:2026-05-12T03:04:57Z",
+    "version": 1,
+    "generated_at": "2026-05-12T03:04:57.522308Z",
+    "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:B2R_PROVIDER_BTC_EMA_RSI_104703:20260512T030457.314Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state/B2R_PROVIDER_BTC_EMA_RSI_104703/ensemble_vote.json",
+    "status": "consensus",
+    "promote_candidate": true,
+    "actionable": true,
+    "decision_hint": "Observe",
+    "review_reason": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ict-engine factor-research --symbol B2R_PROVIDER_BTC_EMA_RSI_104703 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/windows/b2r_provider_btc_ema_rsi_104703_15m_obs_01.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T110221+0800-codex-104703-structural-feedback-replay-v1/replay/state'",
+    "review_rule_version": "ensemble-audit-v2-weighted",
+    "top_factor_name": null,
+    "top_factor_action": "Observe",
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 60,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  },
+  "artifact_history_summary": {
+    "total_entries": 10,
+    "pending_update_entries": 2,
+    "execution_candidate_entries": 2,
+    "ensemble_vote_entries": 2,
+    "promotable_entries": 2,
+    "actionable_entries": 5,
+    "consumed_entries": 0,
+    "average_quality_score": 100.0,
+    "latest_consumed_artifact_id": null,
+    "statuses_by_kind": {
+      "ensemble_vote": {
+        "consensus": 2
+      },
+      "execution_candidate": {
+        "observe": 2
+      },
+      "execution_tree_artifact": {
+        "blocked": 1,
+        "observe": 1
+      },
+      "mece_recovery_artifact": {
+        "blocked": 2
+      },
+      "pending_update": {
+        "observe": 1,
+        "promote_latest": 1
+      }
+    }
+  },
+  "artifact_factor_trends": [
+    {
+      "factor_name": "structure_ict",
+      "entries": 4,
+      "promotable_entries": 1,
+      "consumed_entries": 0,
+      "average_quality_score": 176.25,
+      "latest_status": "observe",
+      "latest_action": "tune",
+      "decision_status": "promotion_supporting",
+      "decision_reason": "latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "factor_name": "cross_market_smt",
+      "entries": 2,
+      "promotable_entries": 0,
+      "consumed_entries": 0,
+      "average_quality_score": 100.0,
+      "latest_status": "blocked",
+      "latest_action": null,
+      "decision_status": "observe",
+      "decision_reason": "latest_action=None research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "none",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    }
+  ],
+  "artifact_family_trends": [
+    {
+      "family": "cross_market_smt",
+      "entries": 4,
+      "promotable_entries": 1,
+      "consumed_entries": 0,
+      "average_quality_score": 176.25,
+      "latest_status": "observe",
+      "latest_score": 0.1225,
+      "decision_status": "promotion_supporting",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "options_hedging",
+      "entries": 4,
+      "promotable_entries": 1,
+      "consumed_entries": 0,
+      "average_quality_score": 176.25,
+      "latest_status": "observe",
+      "latest_score": 0.1537788799696692,
+      "decision_status": "promotion_supporting",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "other",
+      "entries": 4,
+      "promotable_entries": 1,
+      "consumed_entries": 0,
+      "average_quality_score": 176.25,
+      "latest_status": "observe",
+      "latest_score": 0.2924348321171268,
+      "decision_status": "promotion_supporting",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "structure_ict",
+      "entries": 4,
+      "promotable_entries": 1,
+      "consumed_entries": 0,
+      "average_quality_score": 176.25,
+      "latest_status": "observe",
+      "latest_score": 0.5353853125000001,
+      "decision_status": "promotion_supporting",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "trend_momentum",
+      "entries": 4,
+      "promotable_entries": 1,
+      "consumed_entries": 0,
+      "average_quality_score": 176.25,
+      "latest_status": "observe",
+      "latest_score": 0.1789720167340939,
+      "decision_status": "promotion_supporting",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "volatility_mean_reversion",
+      "entries": 4,
+      "promotable_entries": 1,
+      "consumed_entries": 0,
+      "average_quality_score": 176.25,
+      "latest_status": "observe",
+      "latest_score": 0.29987783361471654,
+      "decision_status": "promotion_supporting",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "branch_probability",
+      "entries": 2,
+      "promotable_entries": 0,
+      "consumed_entries": 0,
+      "average_quality_score": 0.0,
+      "latest_status": "blocked",
+      "latest_score": 0.0,
+      "decision_status": "observe",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "none",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "execution_score",
+      "entries": 2,
+      "promotable_entries": 0,
+      "consumed_entries": 0,
+      "average_quality_score": 0.0,
+      "latest_status": "blocked",
+      "latest_score": 0.44177381752181066,
+      "decision_status": "observe",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "none",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "mece_accuracy",
+      "entries": 2,
+      "promotable_entries": 0,
+      "consumed_entries": 0,
+      "average_quality_score": 100.0,
+      "latest_status": "blocked",
+      "latest_score": 1.0,
+      "decision_status": "observe",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "none",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "mece_macro_f1",
+      "entries": 2,
+      "promotable_entries": 0,
+      "consumed_entries": 0,
+      "average_quality_score": 100.0,
+      "latest_status": "blocked",
+      "latest_score": 1.0,
+      "decision_status": "observe",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "none",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    },
+    {
+      "family": "mece_sparsity_ratio",
+      "entries": 2,
+      "promotable_entries": 0,
+      "consumed_entries": 0,
+      "average_quality_score": 100.0,
+      "latest_status": "blocked",
+      "latest_score": 1.0,
+      "decision_status": "observe",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "promotion_link_status": "none",
+      "rollback_link_status": "none",
+      "consumed_validation_status": "insufficient_consumed_history",
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_rank": 0,
+      "consumed_validation_score": 0.0
+    }
+  ],
+  "artifact_decision_summary": {
+    "actionable_artifact_count": 5,
+    "latest_promotable_artifact_id": "ensemble-vote:analyze:2026-05-12T03:04:57Z",
+    "artifact_rule_break_count": 0,
+    "highlighted_actions": [
+      "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:other status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+    ],
+    "highlighted_factor_targets": [
+      "structure_ict"
+    ],
+    "highlighted_family_targets": [
+      "cross_market_smt",
+      "options_hedging",
+      "other",
+      "structure_ict",
+      "trend_momentum",
+      "volatility_mean_reversion"
+    ],
+    "promotion_strength": "high",
+    "rollback_strength": "low",
+    "consumed_trend_status": "no_consumed_validation",
+    "consumed_trend_reason": "no_consumed_artifacts",
+    "consumed_target_kinds": [],
+    "summary": "actionable_artifacts=5 latest_promotable=Some(\"ensemble-vote:analyze:2026-05-12T03:04:57Z\") rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+  },
+  "artifact_review_rules": {
+    "pending_update": {
+      "min_probability_improvement": 0.03,
+      "min_top_factor_score_improvement": 0.05,
+      "min_avg_family_score_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true,
+      "require_same_prompt_version": true
+    },
+    "execution_candidate": {
+      "min_posterior_improvement": 0.03,
+      "min_win_probability_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true
+    }
+  },
+  "artifact_review_rule_sources": {
+    "pending_update": {
+      "min_avg_family_score_improvement": "default",
+      "min_probability_improvement": "default",
+      "min_top_factor_score_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default",
+      "require_same_prompt_version": "default"
+    },
+    "execution_candidate": {
+      "min_posterior_improvement": "default",
+      "min_win_probability_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default"
+    }
+  },
+  "artifact_lineage_summaries": [
+    {
+      "artifact_kind": "mece_recovery_artifact",
+      "root_artifact_id": "mece-recovery-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555053400",
+      "latest_artifact_id": "mece-recovery-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555053400",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "mece-recovery-artifact-v2"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": ""
+    },
+    {
+      "artifact_kind": "execution_tree_artifact",
+      "root_artifact_id": "execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555097292",
+      "latest_artifact_id": "execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555097292",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "execution-tree-artifact-v1"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": ""
+    },
+    {
+      "artifact_kind": "pending_update",
+      "root_artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "latest_artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "55f482c1291f879a"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "pass_neutralized",
+      "latest_pre_bayes_bridge_selected_entry_quality": "medium",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "bullish"
+    },
+    {
+      "artifact_kind": "execution_candidate",
+      "root_artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "latest_artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v1",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "7bfaf4a346c607e8"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "pass_neutralized",
+      "latest_pre_bayes_bridge_selected_entry_quality": "medium",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "bullish"
+    },
+    {
+      "artifact_kind": "ensemble_vote",
+      "root_artifact_id": "ensemble-vote:analyze:2026-05-12T03:04:57Z",
+      "latest_artifact_id": "ensemble-vote:analyze:2026-05-12T03:04:57Z",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "ensemble-audit-v2-weighted"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": ""
+    },
+    {
+      "artifact_kind": "mece_recovery_artifact",
+      "root_artifact_id": "mece-recovery-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555265590",
+      "latest_artifact_id": "mece-recovery-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555265590",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "mece-recovery-artifact-v2"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": ""
+    },
+    {
+      "artifact_kind": "execution_tree_artifact",
+      "root_artifact_id": "execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555277867",
+      "latest_artifact_id": "execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555277867",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "execution-tree-artifact-v1"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": ""
+    },
+    {
+      "artifact_kind": "pending_update",
+      "root_artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "latest_artifact_id": "pending-update:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "55f482c1291f879a"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "observe_only",
+      "latest_pre_bayes_bridge_selected_entry_quality": "medium",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "neutral"
+    },
+    {
+      "artifact_kind": "execution_candidate",
+      "root_artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "latest_artifact_id": "execution-candidate:B2R_PROVIDER_BTC_EMA_RSI_104703:analyze:v2",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "7bfaf4a346c607e8"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "observe_only",
+      "latest_pre_bayes_bridge_selected_entry_quality": "medium",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "neutral"
+    },
+    {
+      "artifact_kind": "ensemble_vote",
+      "root_artifact_id": "ensemble-vote:analyze:2026-05-12T03:07:57Z",
+      "latest_artifact_id": "ensemble-vote:analyze:2026-05-12T03:07:57Z",
+      "artifact_count": 1,
+      "quality_delta": 0,
+      "consumed_count": 0,
+      "conclusion": "stable",
+      "distinct_review_rule_versions": [
+        "ensemble-audit-v2-weighted"
+      ],
+      "review_rule_break_count": 0,
+      "embedded_pre_bayes_change_count": 0,
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": ""
+    }
+  ],
+  "artifact_rule_break_effects": [],
+  "artifact_factor_rule_break_impacts": [],
+  "artifact_family_rule_break_impacts": [],
+  "artifact_consumed_impact_summary": {
+    "total_consumed": 0,
+    "positive_consumed": 0,
+    "negative_consumed": 0,
+    "neutral_consumed": 0,
+    "cumulative_quality_score": 0,
+    "points": [],
+    "by_kind": {},
+    "recent_windows": [],
+    "trend_comparisons": [],
+    "by_kind_trend_comparisons": {}
+  },
+  "field_diffs": [
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "promotion_status",
+      "left_value": "observe",
+      "right_value": "hold",
+      "severity": "high"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "workflow_phase",
+      "left_value": "pre_bayes_observe_only",
+      "right_value": "research_iteration",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "comparison_class",
+      "left_value": "different_data_fingerprint",
+      "right_value": "no_previous_run",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_gate_status",
+      "left_value": "observe_only",
+      "right_value": "pass_neutralized",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_policy_version",
+      "left_value": "318900600c5e8cf2",
+      "right_value": "",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_uses_soft_evidence",
+      "left_value": "true",
+      "right_value": "false",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_soft_market_regime",
+      "left_value": "{\"range\": 0.3481315723113664, \"stress\": 0.18510023059402575, \"transition\": 0.2320877148742443, \"trend\": 0.23468048222036356}",
+      "right_value": "Some({})",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_bridge_selected_entry_quality",
+      "left_value": "medium",
+      "right_value": "",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_bridge_probability_gap",
+      "left_value": "0.0042",
+      "right_value": "",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_multi_timeframe_direction_bias",
+      "left_value": "neutral",
+      "right_value": "",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_multi_timeframe_alignment_score",
+      "left_value": "1.0000",
+      "right_value": "",
+      "severity": "medium"
+    },
+    {
+      "left_phase": "analyze",
+      "right_phase": "update",
+      "field": "pre_bayes_multi_timeframe_entry_alignment_score",
+      "left_value": "0.9963",
+      "right_value": "",
+      "severity": "medium"
+    }
+  ],
+  "disagreements": []
+}

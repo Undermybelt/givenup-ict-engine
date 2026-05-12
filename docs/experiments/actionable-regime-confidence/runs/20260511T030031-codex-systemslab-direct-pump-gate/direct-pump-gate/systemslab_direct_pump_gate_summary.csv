@@ -1,0 +1,7 @@
+timeframe,split,rule,support,true_positive,false_positive,precision,wilson95_lcb
+5S,train_select,std_rush_order >= 0.041,507,143,364,0.282051282051,0.244633262845
+5S,calibration,std_rush_order >= 0.041,318,88,230,0.276729559748,0.230444813724
+5S,test,std_rush_order >= 0.041,264,69,195,0.261363636364,0.212055487029
+25S,train_select,std_rush_order >= 0.062707,290,154,136,0.531034482759,0.473568422211
+25S,calibration,std_rush_order >= 0.062707,147,82,65,0.557823129252,0.477080539171
+25S,test,std_rush_order >= 0.062707,106,68,38,0.641509433962,0.546742001177

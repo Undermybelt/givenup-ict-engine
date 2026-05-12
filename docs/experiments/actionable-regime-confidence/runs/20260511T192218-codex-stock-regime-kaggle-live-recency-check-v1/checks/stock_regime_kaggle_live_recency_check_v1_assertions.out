@@ -1,0 +1,13 @@
+run_id=20260511T192218-codex-stock-regime-kaggle-live-recency-check-v1
+gate_result=stock_regime_kaggle_live_recency_check_v1=upstream_current_file_no_xom_sideways_tail_repair
+rows=245021
+max_date=2026-01-30
+xom_sideways_after_2026_01_30=0
+xom_sideways_2026_01_02_to_2026_01_30=0
+xom_sideways_repair_ready=false
+accepted_rows_added=0
+new_confidence_gate=false
+strict_full_objective_achieved=false
+update_goal=false
+raw_download_location=/tmp/ict-engine-kaggle-stock-regimes-live-check-20260511T191523
+report_json=docs/experiments/actionable-regime-confidence/runs/20260511T192218-codex-stock-regime-kaggle-live-recency-check-v1/kaggle-live-recency/stock_regime_kaggle_live_recency_check_v1.json

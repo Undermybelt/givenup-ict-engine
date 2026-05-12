@@ -1,0 +1,24 @@
+{
+  "latest_bridge": null,
+  "latest_bridge_diff": null,
+  "latest_canonical_structural_active_regime": null,
+  "latest_canonical_structural_confidence": null,
+  "latest_canonical_structural_probabilities": {},
+  "latest_filtered_assignments": null,
+  "latest_gate_status": null,
+  "latest_policy": null,
+  "latest_policy_diff": null,
+  "latest_policy_lineage": {
+    "changed_fields_union": [],
+    "latest_version": null,
+    "previous_version": null,
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested",
+    "total_versions": 0
+  },
+  "latest_policy_version": null,
+  "latest_soft_evidence": null,
+  "latest_soft_evidence_diff": [],
+  "latest_structural_feedback": null,
+  "latest_uses_soft_evidence": null
+}

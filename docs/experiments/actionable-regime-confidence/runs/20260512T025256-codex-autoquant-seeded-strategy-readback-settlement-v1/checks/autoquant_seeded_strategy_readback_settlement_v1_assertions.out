@@ -1,0 +1,11 @@
+autoquant_seeded_strategy_readback_settlement_v1
+unpatched_exit_is_1=PASS
+connector_patch_exit_is_0=PASS
+status_after_exit_is_0=PASS
+done_12_succeeded_0_failed=PASS
+all_profit_floor_fail=PASS
+accepted_rows_added_zero=PASS
+canonical_merge_allowed_false=PASS
+downstream_rerun_allowed_false=PASS
+strict_full_objective_achieved_false=PASS
+update_goal_false=PASS

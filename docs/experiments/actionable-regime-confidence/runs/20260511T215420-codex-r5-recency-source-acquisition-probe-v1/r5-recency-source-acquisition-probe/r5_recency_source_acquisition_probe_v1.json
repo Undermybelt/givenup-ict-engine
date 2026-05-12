@@ -1,0 +1,169 @@
+{
+  "accepted_rows_added": 0,
+  "compatible_post_cutoff_source_count": 0,
+  "created_at_utc": "2026-05-11T13:56:40.566855+00:00",
+  "decision": "r5_recency_source_acquisition_probe_v1=no_source_owned_post_cutoff_rows_found",
+  "external_requests_sent": true,
+  "intake_files_written": false,
+  "kaggle_dataset_ref": "mafaqbhatti/stock-market-regimes-20002026",
+  "kaggle_files_command": {
+    "command": [
+      "kaggle",
+      "datasets",
+      "files",
+      "mafaqbhatti/stock-market-regimes-20002026"
+    ],
+    "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/kaggle_dataset_files_stock_market_regimes.exit",
+    "returncode": 0,
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/kaggle_dataset_files_stock_market_regimes.stderr.txt",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/kaggle_dataset_files_stock_market_regimes.stdout.txt"
+  },
+  "kaggle_list_command": {
+    "command": [
+      "kaggle",
+      "datasets",
+      "list",
+      "-s",
+      "stock market regimes 2000 2026"
+    ],
+    "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/kaggle_datasets_list_stock_market_regimes.exit",
+    "returncode": 0,
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/kaggle_datasets_list_stock_market_regimes.stderr.txt",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/kaggle_datasets_list_stock_market_regimes.stdout.txt"
+  },
+  "last_source_date_required_after": "2026-01-30",
+  "local_candidates": [
+    {
+      "date_max": "2026-01-30",
+      "date_min": "2000-01-03",
+      "exists": true,
+      "fields": [
+        "date",
+        "ticker",
+        "close",
+        "returns",
+        "volatility",
+        "regime_label",
+        "regime_confidence",
+        "macro_context",
+        "unemployment_rate",
+        "fed_funds_rate",
+        "cpi",
+        "10y_treasury",
+        "2y_treasury",
+        "vix"
+      ],
+      "label_counts": {
+        "Bear": 54939,
+        "Bull": 103766,
+        "Crisis": 29632,
+        "High-volatility": 16,
+        "Sideways": 56668
+      },
+      "missing_r5_columns": [],
+      "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+      "post_cutoff_row_count": 0,
+      "r5_schema_compatible": true,
+      "row_count": 245021,
+      "sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+      "source_type": "r5_expected_stock_panel",
+      "ticker_count": 39,
+      "unknown_tickers": []
+    },
+    {
+      "date_max": "2026-03-20",
+      "date_min": "2012-02-02",
+      "exists": true,
+      "fields": [
+        "Date",
+        "run_date",
+        "feature_date",
+        "macro_state",
+        "fast_state",
+        "combined_state",
+        "macro_confidence",
+        "fast_confidence",
+        "combined_confidence",
+        "confidence",
+        "p_fragile_smooth",
+        "p_calm_smooth",
+        "p_choppy_smooth",
+        "p_stress_smooth",
+        "p_fragile_raw",
+        "p_calm_raw",
+        "p_choppy_raw",
+        "p_stress_raw",
+        "p_fragile_adaptive",
+        "p_calm_adaptive",
+        "p_choppy_adaptive",
+        "p_stress_adaptive",
+        "adaptive_macro_state",
+        "adaptive_fast_state",
+        "adaptive_combined_state"
+      ],
+      "label_counts": {
+        "Durable\u2013Calm": 499,
+        "Durable\u2013Choppy": 449,
+        "Durable\u2013Stress": 265,
+        "Fragile\u2013Calm": 732,
+        "Fragile\u2013Choppy": 793,
+        "Fragile\u2013Stress": 726
+      },
+      "missing_r5_columns": [
+        "date",
+        "ticker",
+        "close",
+        "returns",
+        "volatility",
+        "regime_label",
+        "regime_confidence",
+        "macro_context",
+        "unemployment_rate",
+        "fed_funds_rate",
+        "cpi",
+        "10y_treasury",
+        "2y_treasury",
+        "vix"
+      ],
+      "path": "/tmp/ict-engine-public-source-intake-scout/nifty/regime_timeline_history.csv",
+      "post_cutoff_row_count": 34,
+      "r5_schema_compatible": false,
+      "row_count": 3464,
+      "sha256": "4bfb78601e36557e177701bf8ee6a0c9b8e243206e0f9eafe8ee6c7115f0b732",
+      "source_type": "nifty_source_label_timeline",
+      "ticker_count": null,
+      "unknown_tickers": []
+    }
+  ],
+  "new_confidence_gate": false,
+  "next": "Find source-owned post-2026-01-30 stock-panel regime rows or keep R5 blocked; do not synthesize labels from price providers.",
+  "raw_data_committed": false,
+  "run_id": "20260511T215420-codex-r5-recency-source-acquisition-probe-v1",
+  "runtime_code_changed": false,
+  "source_panel_recency_verifier": {
+    "command": {
+      "command": [
+        "python3",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py",
+        "--intake-root",
+        "/tmp/ict-engine-source-panel-recency-extension"
+      ],
+      "exit": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/source_panel_recency_verifier.exit",
+      "returncode": 2,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/source_panel_recency_verifier.stderr.txt",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260511T215420-codex-r5-recency-source-acquisition-probe-v1/command-output/source_panel_recency_verifier.stdout.txt"
+    },
+    "parsed": {
+      "missing_files": [
+        "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+        "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    }
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

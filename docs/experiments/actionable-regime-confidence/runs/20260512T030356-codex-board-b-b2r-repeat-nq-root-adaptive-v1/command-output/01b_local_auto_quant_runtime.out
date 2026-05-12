@@ -1,0 +1,7 @@
+auto_quant_root=/Users/thrill3r/Auto-Quant
+python_ready=True
+pandas=2.3.3
+pyarrow=24.0.0
+nq_1h_exists=True
+nq_1h_bytes=2263498
+data_files=40

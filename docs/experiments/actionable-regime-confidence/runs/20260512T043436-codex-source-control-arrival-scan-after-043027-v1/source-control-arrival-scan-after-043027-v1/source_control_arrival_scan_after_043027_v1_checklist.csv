@@ -1,0 +1,11 @@
+gate,readback,status
+r6_owner_export_root,/tmp/ict-engine-board-a-r6-owner-export-v1,blocked
+r3_native_subhour_root,/tmp/ict-engine-native-subhour-source-label-intake,blocked
+r5_recency_extension_root,/tmp/ict-engine-source-panel-recency-extension,blocked
+approval_package,r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge,blocked
+same_exhibit_flip_controls,rejected_under_current_contract,blocked
+source_owned_normal_controls_alternative,not_supplied,blocked
+known_non_target_local_triplets,4 present,non_promoting
+related_roots_043222_043314,read back separately; count only through their own board registrations,non_promoting
+histgb_042448,settled_needs_artifact_readback,non_promoting
+update_goal_eligibility,strict_full_objective false,blocked

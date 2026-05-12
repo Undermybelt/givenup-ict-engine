@@ -1,0 +1,4 @@
+API connection failed: ConnectionRefusedError(61, "Connect call failed ('127.0.0.1', 7497)")
+Make sure API port on TWS/IBG is open
+Cannot reach IBKR Gateway at 127.0.0.1:7497 (clientId=21). Is IB Gateway / TWS running and API enabled? Underlying error: [Errno 61] Connect call failed ('127.0.0.1', 7497)
+Error: market-data-harness fetch encountered failures: role=charting provider=tradingview_mcp symbol=CME_MINI:NQ1! fetch_failed:tradingview MCP call 'get_ohlcv' returned error | role=broker provider=ibkr symbol=NQ fetch_failed:ibkr historical fetch failed for 'NQ' | install_prompt=Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable. | install_prompt=Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.

@@ -1,0 +1,10 @@
+PASS superseded_drift_artifact=true
+PASS active_axis=MainRegimeV2
+PASS root_taxonomy_v3_provenance_only=true
+PASS child_labels=BullExpansion,BearExpansion,Consolidation,CrisisStress,TransitionRecovery
+PASS accepted_active_root_95=Crisis
+PASS missing_active_root_95=Bull,Bear,Sideways,Manipulation
+PASS residual_not_release_gate=UnknownOrMixed
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+GATE blocked_not_complete

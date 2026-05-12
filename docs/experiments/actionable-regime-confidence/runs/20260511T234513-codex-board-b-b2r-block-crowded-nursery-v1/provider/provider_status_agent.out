@@ -1,0 +1,400 @@
+{
+  "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "ready_by_domain": {
+    "entry_model": "2/2",
+    "live_runtime": "1/3",
+    "local_runtime": "1/2",
+    "market_data": "1/7"
+  },
+  "providers": [
+    {
+      "provider_id": "breaker_rb_long_v1",
+      "domain": "entry_model",
+      "selectable_by_user": false,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "internal_model_registry",
+      "user_access": "builtin_registry",
+      "market_fit": [
+        "entry_model"
+      ],
+      "status": "registered",
+      "reason": "entry_model_registry_member",
+      "summary": "Built-in entry-model registry member used by status and training surfaces."
+    },
+    {
+      "provider_id": "cisd_rb_long_v1",
+      "domain": "entry_model",
+      "selectable_by_user": false,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "internal_model_registry",
+      "user_access": "builtin_registry",
+      "market_fit": [
+        "entry_model"
+      ],
+      "status": "registered",
+      "reason": "entry_model_registry_member",
+      "summary": "Built-in entry-model registry member used by status and training surfaces."
+    },
+    {
+      "provider_id": "crypto_public_runtime",
+      "domain": "live_runtime",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_runtime_bundle",
+      "user_access": "operator_runtime_optional",
+      "market_fit": [
+        "crypto"
+      ],
+      "fallback_priority": 21,
+      "status": "operator_runtime_required",
+      "reason": "explicit_opt_in_required",
+      "summary": "Optional crypto-public runtime bundle for CoinAnk/Hyperliquid-style futures observation when the user explicitly wants that lane.",
+      "install_prompts": [
+        "Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane."
+      ]
+    },
+    {
+      "provider_id": "external_http_runtime",
+      "domain": "live_runtime",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "external_http_runtime",
+      "user_access": "operator_runtime_optional",
+      "market_fit": [
+        "tradfi",
+        "crypto"
+      ],
+      "fallback_priority": 20,
+      "status": "operator_runtime_required",
+      "reason": "base_url_and_service_required",
+      "summary": "Optional external HTTP runtime when the user already has a compatible market-data service.",
+      "install_prompts": [
+        "Consumer agent request: ask whether the user wants zero-config yfinance or a generic external HTTP runtime.",
+        "Consumer agent follow-up: if the user chooses the external HTTP runtime, keep the external_http_runtime backend and pass --external-http-base-url <url> (default http://127.0.0.1:6901/api/v1)."
+      ]
+    },
+    {
+      "provider_id": "yfinance",
+      "domain": "live_runtime",
+      "selectable_by_user": true,
+      "adopted_by_default": true,
+      "ready": true,
+      "access_mode": "local_library",
+      "user_access": "free_no_login",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 1,
+      "status": "ready",
+      "reason": "native_yfinance_runtime_available",
+      "summary": "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows."
+    },
+    {
+      "provider_id": "ibkr_bridge",
+      "domain": "local_runtime",
+      "selectable_by_user": false,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "local_consent_runtime",
+      "user_access": "login_and_local_runtime",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 40,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "summary": "Local IBKR bridge reused by broker-linked workflows after the user enables the local API.",
+      "install_prompts": [
+        "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+        "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise."
+      ]
+    },
+    {
+      "provider_id": "kraken_cli",
+      "domain": "local_runtime",
+      "selectable_by_user": false,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "local_cli_runtime",
+      "user_access": "login_and_local_runtime",
+      "market_fit": [
+        "crypto"
+      ],
+      "fallback_priority": 40,
+      "status": "ready",
+      "reason": "kraken_cli_config_detected",
+      "summary": "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows."
+    },
+    {
+      "provider_id": "binance_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "crypto"
+      ],
+      "fallback_priority": 2,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto market-data path for broad spot/perp history.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+      ]
+    },
+    {
+      "provider_id": "bybit_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "crypto"
+      ],
+      "fallback_priority": 1,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto market-data path for exchange-style replay and factor work.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+      ]
+    },
+    {
+      "provider_id": "ibkr",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "operator_runtime_required",
+      "user_access": "login_and_local_runtime",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 30,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows.",
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    },
+    {
+      "provider_id": "kraken_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "crypto",
+        "fx",
+        "tokenized_assets"
+      ],
+      "fallback_priority": 3,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+      ]
+    },
+    {
+      "provider_id": "polymarket_public",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "public_script_adapter",
+      "user_access": "public_no_login",
+      "market_fit": [
+        "prediction_market"
+      ],
+      "fallback_priority": 4,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login prediction-market history path when network access is available.",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+      ]
+    },
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "operator_runtime_required",
+      "user_access": "local_stdio_or_remote_api_key",
+      "market_fit": [
+        "tradfi",
+        "crypto"
+      ],
+      "fallback_priority": 31,
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.",
+      "install_prompts": [
+        "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+        "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+      ]
+    },
+    {
+      "provider_id": "yfinance",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "public_or_env_ready",
+      "user_access": "free_no_login",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 1,
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints",
+      "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests."
+    }
+  ],
+  "ready_providers": [
+    "breaker_rb_long_v1",
+    "cisd_rb_long_v1",
+    "yfinance",
+    "kraken_cli",
+    "yfinance"
+  ],
+  "pending_providers": [
+    "crypto_public_runtime@live_runtime:operator_runtime_required:explicit_opt_in_required",
+    "external_http_runtime@live_runtime:operator_runtime_required:base_url_and_service_required",
+    "ibkr_bridge@local_runtime:configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+    "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "polymarket_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed"
+  ],
+  "pending_provider_details": [
+    {
+      "provider_id": "crypto_public_runtime",
+      "domain": "live_runtime",
+      "status": "operator_runtime_required",
+      "reason": "explicit_opt_in_required",
+      "install_prompts": [
+        "Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane."
+      ]
+    },
+    {
+      "provider_id": "external_http_runtime",
+      "domain": "live_runtime",
+      "status": "operator_runtime_required",
+      "reason": "base_url_and_service_required",
+      "install_prompts": [
+        "Consumer agent request: ask whether the user wants zero-config yfinance or a generic external HTTP runtime.",
+        "Consumer agent follow-up: if the user chooses the external HTTP runtime, keep the external_http_runtime backend and pass --external-http-base-url <url> (default http://127.0.0.1:6901/api/v1)."
+      ]
+    },
+    {
+      "provider_id": "ibkr_bridge",
+      "domain": "local_runtime",
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "install_prompts": [
+        "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+        "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise."
+      ]
+    },
+    {
+      "provider_id": "binance_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+      ]
+    },
+    {
+      "provider_id": "bybit_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+      ]
+    },
+    {
+      "provider_id": "ibkr",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    },
+    {
+      "provider_id": "kraken_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+      ]
+    },
+    {
+      "provider_id": "polymarket_public",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+      ]
+    },
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "install_prompts": [
+        "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+        "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+      ]
+    }
+  ],
+  "selectable_providers": [
+    "crypto_public_runtime",
+    "external_http_runtime",
+    "yfinance",
+    "binance_public",
+    "bybit_public",
+    "ibkr",
+    "kraken_public",
+    "polymarket_public",
+    "tradingview_mcp",
+    "yfinance"
+  ],
+  "default_enabled_providers": [
+    "yfinance"
+  ],
+  "install_prompts": [
+    "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise.",
+    "Consumer agent follow-up: if the user chooses the external HTTP runtime, keep the external_http_runtime backend and pass --external-http-base-url <url> (default http://127.0.0.1:6901/api/v1).",
+    "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+    "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable.",
+    "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise.",
+    "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+    "Consumer agent request: ask whether the user wants zero-config yfinance or a generic external HTTP runtime.",
+    "Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane.",
+    "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+    "System python3 is missing provider script modules: ccxt, ib_async, redis, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis xgboost"
+  ]
+}

@@ -1,0 +1,7 @@
+assert active_taxonomy == MainRegimeV3SourceBacked
+assert thresholds_relaxed == false
+assert runtime_code_changed == false
+assert fresh_calibration_rerun == false
+assert accepted_95_roots_after_refresh == [BullExpansion, CrisisCrash]
+assert missing_roots_after_refresh == [BearExpansion, SidewaysConsolidation, Manipulation]
+assert manipulation_requires_direct_event_or_order_lifecycle_evidence == true

@@ -1,0 +1,10 @@
+PASS scoped_active_lanes_accepted_95=true
+PASS strict_1h_fixed_gate_rows=41/156
+PASS strict_1h_future_protocol_rows=45/156
+PASS native_subhour_ready=0/4
+PASS source_label_other_market_gate_total=0
+PASS local_schema_exact_matches=0
+PASS direct_remaining_unaccepted_varieties=6
+PASS direct_missing_species_ready_sources=0
+PASS strict_full_objective=false
+PASS update_goal=false

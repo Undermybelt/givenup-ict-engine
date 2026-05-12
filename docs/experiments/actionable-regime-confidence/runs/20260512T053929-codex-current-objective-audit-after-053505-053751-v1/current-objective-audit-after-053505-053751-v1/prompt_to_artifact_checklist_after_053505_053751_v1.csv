@@ -1,0 +1,16 @@
+requirement,evidence,status,notes
+Bull >=95 confidence,051844 HGB diagnostic support 618 Wilson95 0.9908918883,satisfied_diagnostic_only,Source-control absent
+Bear >=95 confidence,051844 HGB diagnostic support 177 Wilson95 0.9787578642,satisfied_diagnostic_only,052522 numeric tree rejected Bear at 0.9465286635
+Sideways >=95 confidence,051844 HGB diagnostic support 534 Wilson95 0.990666799,satisfied_diagnostic_only,Source-control absent
+Crisis >=95 confidence,051844 HGB diagnostic support 547 Wilson95 0.9930261988,satisfied_diagnostic_only,Source-control absent
+Other markets validation,051844 includes heldout-market split,partial_diagnostic_only,Still over equivalence package
+Other periods/timeframes validation,051844 includes heldout-time split,partial_diagnostic_only,Still over equivalence package
+Real artifacts not prose,051844/052522/053505/053751 JSON plus assertions inspected,satisfied_for_audit,No proxy accepted as completion
+IBKR/TradingViewRemix/yfinance/Kraken handling,Prior provider readbacks exist but no post-unlock full chain rerun,blocked,No source unlock
+Provider/AutoQuant to Pre-Bayes/BBN/CatBoost/execution-tree chain,Canonical merge false and downstream promotion rerun false,blocked,Rerun forbidden before unlock
+R6 owner/export source root,/tmp/ict-engine-board-a-r6-owner-export-v1 absent,blocked,No verifier-native owner/export rows
+R3 native subhour source root,/tmp/ict-engine-native-subhour-source-label-intake absent,blocked,No native subhour rows
+R5 recency extension source root,/tmp/ict-engine-source-panel-recency-extension absent and 053505 target rows 0,blocked,No compatible current source rows
+Approval package,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid gate decision_package_ready_no_approval_no_merge,blocked,No approval or merge allowed
+Multi-agent board safety,Append-only readbacks and duplicate sections preserved,satisfied_for_this_slice,No cleanup or overwrite
+Goal completion,update_goal false and strict live objective false,not_allowed,Do not mark complete

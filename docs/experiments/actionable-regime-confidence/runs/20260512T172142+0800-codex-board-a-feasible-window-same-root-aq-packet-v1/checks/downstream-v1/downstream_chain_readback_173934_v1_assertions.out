@@ -1,0 +1,15 @@
+PASS run_id=20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1
+PASS core_steps_zero=True
+PASS target_rows=3
+PASS catboost_train_exit=0
+PASS catboost_apply_exit=0
+PASS register_exit=0
+PASS apply_scores_exit=0
+PASS enable_exit=0
+PASS scores_rows=3
+FAIL_CLOSED maturity_ready_min30=False
+FAIL_CLOSED calibrated_95_regime_acceptance_not_proven
+FAIL_CLOSED cross_market_timeframe_validation_not_run
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

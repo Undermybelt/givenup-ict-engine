@@ -1,0 +1,12 @@
+requirement,evidence,status,notes
+"Named board remains authoritative","docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md","pass","Audit appended to the same board; Current Cursor not edited."
+"Regime-rooted branch path contract","044611 branch_path_field_bridge_downstream_addendum_v1.md; 050430 root_branch_chain_refresh_v1.md","partial","044611 enriched 15415/15415 rows and 050430 exposed five rooted paths, but execution-tree admission remains incomplete."
+"Auto-Quant profitability factor from selected historical data","050430 root_branch_chain_refresh_v1.md; board user_selected_historical_data gate","fail","No explicit HTF/MTF/LTF user selection; copied-state Auto-Quant status missing_dependency; no fresh selected-data training."
+"Pre-Bayes/filter branch continuation","044611 branch_path_field_bridge_downstream_addendum_v1.md; 050430 root_branch_chain_refresh_v1.md","fail","Pre-Bayes still observe_only."
+"BBN branch continuation","044611 branch_path_field_bridge_downstream_addendum_v1.md; 050430 root_branch_chain_refresh_v1.md","fail","Read-only branch visibility exists, but BBN application is skipped."
+"CatBoost/path-ranker branch validation","044611 branch_path_field_bridge_downstream_addendum_v1.md; 050430 root_branch_chain_refresh_v1.md","fail","runtime_matches=5 but validation remains 0/30 and calibration not_fitted."
+"Execution tree branch admission","044611 branch_path_field_bridge_downstream_addendum_v1.md; 050430 root_branch_chain_refresh_v1.md","fail","Execution candidate blocked/not ready; execution tree does not admit the full rooted branch set."
+"Provider visibility across yfinance, IBKR, TradingViewRemix/MCP, Kraken","050430 root_branch_chain_refresh_v1.md; 044611 downstream provider readback","partial","yfinance and Kraken CLI ready; IBKR dependency-unhealthy with gateway reachable; TradingView MCP failed; kraken_public dependency-unhealthy."
+"043932 source-label rule confidence","043932_stable_terminal_readback_v1.md","fail","accepted_rule_confidence_95_labels=[]; all label rules fail Wilson 95 lower bound."
+"Multi-agent safety","board append-only rows; live process readbacks","pass","No in-flight 044701 output consumed; no current cursor rewrite; no process killed."
+"Completion/update_goal","this audit","fail","strict_full_objective=false; update_goal=false."

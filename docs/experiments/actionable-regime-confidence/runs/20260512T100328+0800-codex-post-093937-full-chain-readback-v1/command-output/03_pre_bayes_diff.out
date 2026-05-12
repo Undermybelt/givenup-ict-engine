@@ -1,0 +1,126 @@
+{
+  "latest_bridge": {
+    "long_entry_bias": [
+      0.22394887907778807,
+      0.5094539547644855,
+      0.26659716615772644
+    ],
+    "long_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "long_signal_probability": 0.548984766690052,
+    "multi_timeframe_alignment_score": 0.7702,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.8625,
+    "rationale": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.069 short_support=0.032 uncertainty=0.305",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.770 multi_timeframe_entry_alignment_score=0.863",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_entry_bias": [
+      0.06561200381887275,
+      0.3411691604936517,
+      0.5932188356874755
+    ],
+    "short_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_signal_probability": 0.5399739679227151
+  },
+  "latest_bridge_diff": {
+    "dominant_long_entry_quality": "medium",
+    "dominant_long_entry_quality_probability": 1.0,
+    "dominant_short_entry_quality": "medium",
+    "dominant_short_entry_quality_probability": 1.0,
+    "long_short_signal_probability_gap": 0.009010798767336903,
+    "multi_timeframe_alignment_score": 0.7702,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.8625,
+    "rationale_summary": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.069 short_support=0.032 uncertainty=0.305",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.770 multi_timeframe_entry_alignment_score=0.863",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": "medium",
+    "selected_entry_quality_probability": 1.0
+  },
+  "latest_canonical_structural_active_regime": "range",
+  "latest_canonical_structural_confidence": 0.5619249343265972,
+  "latest_canonical_structural_probabilities": {
+    "range": 0.49278355150525566,
+    "stress": 0.16605860514495197,
+    "transition": 0.07581285407773164,
+    "trend": 0.26534498927206074
+  },
+  "latest_gate_status": "pass_neutralized",
+  "latest_policy_diff": {
+    "changed_fields": [],
+    "previous_version": "318900600c5e8cf2",
+    "summary": "policy_unchanged"
+  },
+  "latest_policy_lineage": {
+    "changed_fields_union": [
+      "initial_policy"
+    ],
+    "latest_version": "318900600c5e8cf2",
+    "previous_version": "318900600c5e8cf2",
+    "rollback_candidate_version": "318900600c5e8cf2",
+    "rollback_reason": "latest_gate_status=pass_neutralized suggests reverting to previous stable policy version",
+    "total_versions": 2
+  },
+  "latest_policy_version": "318900600c5e8cf2",
+  "latest_soft_evidence_diff": [
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.65,
+      "dominant_soft_state": "range",
+      "entropy": 0.8900481522306134,
+      "filtered_state": "range",
+      "node": "market_regime"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 1.0,
+      "dominant_soft_state": "neutral",
+      "entropy": -0.0,
+      "filtered_state": "neutral",
+      "node": "liquidity_context"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 1.0,
+      "dominant_soft_state": "mixed",
+      "entropy": -0.0,
+      "filtered_state": "mixed",
+      "node": "factor_alignment"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.5904812335816493,
+      "dominant_soft_state": "low",
+      "entropy": 0.6766829156348827,
+      "filtered_state": "low",
+      "node": "factor_uncertainty"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.5904812335816493,
+      "dominant_soft_state": "aligned",
+      "entropy": 0.6766829156348827,
+      "filtered_state": "aligned",
+      "node": "multi_timeframe_resonance"
+    }
+  ],
+  "latest_uses_soft_evidence": true
+}

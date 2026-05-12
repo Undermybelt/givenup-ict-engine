@@ -1,0 +1,44 @@
+{
+  "summary_line": "market_data:1/1 ready",
+  "ready_by_domain": {
+    "market_data": "1/1"
+  },
+  "providers": [
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "public_or_env_ready",
+      "user_access": "api_key_required",
+      "market_fit": [
+        "tradfi",
+        "crypto"
+      ],
+      "fallback_priority": 31,
+      "status": "ready",
+      "reason": "mcp_url_and_api_key_available",
+      "summary": "Setup-required TradingViewRemix MCP path for chart-linked symbols and richer TradingView coverage."
+    }
+  ],
+  "ready_providers": [
+    "tradingview_mcp"
+  ],
+  "pending_providers": [],
+  "pending_provider_details": [],
+  "selectable_providers": [
+    "tradingview_mcp"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": [],
+  "available_opt_in_profiles": [
+    {
+      "profile_id": "thrill3r_nq_closed_loop_v1",
+      "display_name": "Thrill3r NQ Closed Loop v1",
+      "selector": "thrill3r-nq-closed-loop-v1",
+      "opt_in_only": true,
+      "summary": "Personal NQ workflow: local Tomac historical MTF data plus QQQ spot/options and VIX, with yfinance zero-config first and optional external runtime reuse."
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+Result for strategy TomacNQ_KillzoneBreakout
+                                               BACKTESTING REPORT                                                
+┏━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃          Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ETHKRAKEN/USD │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+│         TOTAL │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+└───────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                         LEFT OPEN TRADES REPORT                                         
+┏━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ TOTAL │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │
+└───────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                               ENTER TAG STATS                                                
+┏━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│     OTHER │       1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+│     TOTAL │       1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+└───────────┴─────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                  EXIT REASON STATS                                                  
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ trailing_stop_loss │     1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+│              TOTAL │     1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+└────────────────────┴───────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                         MIXED TAG STATS                                                          
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Enter Tag ┃        Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│           │ trailing_stop_loss │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+│     TOTAL │                    │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │
+└───────────┴────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2026-04-22 14:00:00            │
+│ Backtesting to                │ 2026-05-12 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 1                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 1 / 0.05                       │
+│ Starting balance              │ 100000 USD                     │
+│ Final balance                 │ 100773.6 USD                   │
+│ Absolute profit               │ 773.6 USD                      │
+│ Total profit %                │ 0.77%                          │
+│ CAGR %                        │ 15.96%                         │
+│ Sortino                       │ -100.00                        │
+│ Sharpe                        │ -100.00                        │
+│ Calmar                        │ -100.00                        │
+│ SQN                           │ -100.00                        │
+│ Profit factor                 │ 0.00                           │
+│ Expectancy (Ratio)            │ 773.60 (100.00)                │
+│ Avg. daily profit             │ 40.716 USD                     │
+│ Avg. stake amount             │ 93900 USD                      │
+│ Total trade volume            │ 188573.6 USD                   │
+│                               │                                │
+│ Best Pair                     │ ETHKRAKEN/USD 0.77%            │
+│ Worst Pair                    │ ETHKRAKEN/USD 0.77%            │
+│ Best trade                    │ ETHKRAKEN/USD 0.82%            │
+│ Worst trade                   │ ETHKRAKEN/USD 0.82%            │
+│ Best day                      │ 773.6 USD                      │
+│ Worst day                     │ 773.6 USD                      │
+│ Days win/draw/lose            │ 1 / 0 / 0                      │
+│ Min/Max/Avg. Duration Winners │ 0d 06:00 / 0d 06:00 / 0d 06:00 │
+│ Min/Max/Avg. Duration Losers  │ 0d 00:00 / 0d 00:00 / 0d 00:00 │
+│ Max Consecutive Wins / Loss   │ 1 / 0                          │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 100773.6 USD                   │
+│ Max balance                   │ 100773.6 USD                   │
+│ Max % of account underwater   │ 0.00%                          │
+│ Absolute drawdown             │ 0 USD (0.00%)                  │
+│ Drawdown duration             │ 0 days 00:00:00                │
+│ Profit at drawdown start      │ 0 USD                          │
+│ Profit at drawdown end        │ 0 USD                          │
+│ Drawdown start                │ 2026-05-10 22:00:00            │
+│ Drawdown end                  │ 2026-05-10 22:00:00            │
+│ Market change                 │ -2.96%                         │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2026-04-22 14:00:00 -> 2026-05-12 00:00:00 | Max open trades : 1
+                                                             STRATEGY SUMMARY                                                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃                 Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USD ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃     Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ TomacNQ_KillzoneBreakout │      1 │         0.82 │        773.600 │         0.77 │      6:00:00 │    1     0     0   100 │ 0 USD  0.00% │
+└──────────────────────────┴────────┴──────────────┴────────────────┴──────────────┴──────────────┴────────────────────────┴──────────────┘
+---
+strategy:         TomacNQ_KillzoneBreakout
+commit:           34ba6b6
+config:           config.tomac.json
+pairs:            ETHKRAKEN/USD
+sharpe:           -100.0000
+sortino:          -100.0000
+calmar:           -100.0000
+total_profit_pct: 0.7700
+max_drawdown_pct: -0.0000
+trade_count:      1
+win_rate_pct:     100.0000
+profit_factor:    0.0000
+per_pair:
+  ETHKRAKEN/USD: sharpe=-100.0000 trades=1 profit_pct=0.77 dd_pct=-0.00 wr=100.0 pf=0.00
+
+Done: 1 succeeded, 0 failed.

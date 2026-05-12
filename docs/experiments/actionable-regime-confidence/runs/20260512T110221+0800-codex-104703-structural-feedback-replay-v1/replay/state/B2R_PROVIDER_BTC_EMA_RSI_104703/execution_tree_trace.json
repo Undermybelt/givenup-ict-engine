@@ -1,0 +1,71 @@
+{
+  "artifact_id": "execution-tree-B2R_PROVIDER_BTC_EMA_RSI_104703-1778555277867",
+  "generated_at": "2026-05-12T03:07:57.867048Z",
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "output": {
+    "execution_score": 0.44177381752181066,
+    "branch": "block_crowded",
+    "execution_bias": "skip",
+    "gate_status": "blocked",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.2505 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.2505 < 0.45)",
+      "prediction_vote_score=0.5446 (medium) × execution_readiness=0.2505 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.675",
+      "market_state=volatility=ElevatedVol:0.735 liquidity=NormalLiquidity:0.391 structure=Trending:0.687 behavior=Exhaustion:0.650",
+      "market_state=rationale=volatility=ElevatedVol conf=0.73",
+      "market_state=rationale=structure=Trending conf=0.69",
+      "market_state=rationale=behavior=Exhaustion conf=0.65",
+      "market_state=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.68",
+      "path_ranker=Ranker runtime: structural_path_ranking_target rows=3 history_rows=6 mature_rows=1 history_mature_rows=2 raw_scored_mature=2/30 production_validation=0/30 observation_validation=1/30 calibration=not_fitted trainer_artifact=missing trainer_status=missing runtime_selection=disabled runtime_mode=none runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0",
+      "path_ranker=Ranker validation: calibration=false quality_ready=false raw_scored_mature=2/30 production_validation=0/30 observation_validation=1/30 ready=false",
+      "path_ranker=ranker_machine=runtime_source=unknown score_model_family=unknown score_source=unknown validation_ready=false active_match_count=0",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=path:scenario:B2R_PROVIDER_BTC_EMA_RSI_104703:belief_regime_node:trend:trend_follow_through:primary runtime_source=none raw_path_score=none calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)"
+    ],
+    "decision_hint": "execution_blocked_regardless_of_prediction",
+    "consumer_reason": "market_state=TrendExpansion/BullTrendExhaustion | execution=blocked/block_crowded/skip | ranker=unknown/unknown/not_ready",
+    "path_ranker_score_visible_to_execution_tree": false,
+    "path_ranker_score_used_by_execution_tree": false,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "unknown",
+    "ranker_validation_ready": false
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "cycle_phase_alignment",
+      "contribution": 0.7480021409741827,
+      "feature_value": "0.7480"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.4535044047088494,
+      "feature_value": "0.3465"
+    },
+    {
+      "feature": "execution_readiness",
+      "contribution": -0.3995073760936251,
+      "feature_value": "0.2505"
+    },
+    {
+      "feature": "dominant_cycle_energy",
+      "contribution": 0.36160231749158533,
+      "feature_value": "0.5116"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "7e465f65b990692d",
+    "data_fingerprint": "560a10adabb2723b"
+  }
+}

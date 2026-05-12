@@ -1,0 +1,7 @@
+requirement,evidence,coverage,status
+classify negative results for BBN use,negative_evidence_bbn_feedback_v1.json classified_evidence,typed market_strategy/provider_tool/maturity/downstream classes,pass
+do not pollute market priors,negative_evidence_bbn_feedback_v1.json bbn_consumption_contract.do_not_pollute_priors,provider/tool/maturity/downstream and short diagnostics blocked from prior updates,pass
+preserve ordered chain semantics,negative_evidence_bbn_feedback_v1.json negative_evidence_taxonomy and classified_evidence,Auto-Quant/Pre-Bayes/BBN/CatBoost/execution-tree stopping layers preserved,pass
+include real artifact readback,negative_evidence_bbn_feedback_v1.json evidence_sources,uses existing run JSON/report artifacts under docs/experiments,pass
+avoid active concurrent roots,negative_evidence_bbn_feedback_v1.json excluded_sources,112315 and active 112900 follow-up excluded,pass
+no promotion/no update_goal,negative_evidence_bbn_feedback_v1.json decision,promotion_allowed=false and update_goal=false,pass

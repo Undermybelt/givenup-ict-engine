@@ -1,0 +1,14 @@
+source,positive_added,negative_added
+docs/experiments/actionable-regime-confidence/runs/20260511T205239-codex-cftc-finra-direct-public-positive-probe-v1/scripts/cftc_finra_direct_public_positive_probe_v1.py,2,0
+docs/experiments/actionable-regime-confidence/runs/20260511T205654-codex-cftc-matched-control-seed-v1/scripts/cftc_matched_control_seed_v1.py,0,2
+docs/experiments/actionable-regime-confidence/runs/20260511T210150-codex-cftc-gandhi-source-row-uplift-v1/scripts/cftc_gandhi_source_row_uplift_v1.py,2,2
+docs/experiments/actionable-regime-confidence/runs/20260511T210744-codex-r6-mohan-additional-row-uplift-v1/scripts/r6_mohan_additional_row_uplift_v1.py,4,4
+docs/experiments/actionable-regime-confidence/runs/20260511T211201-codex-r6-mohan-shak-row-uplift-v1/scripts/r6_mohan_shak_row_uplift_v1.py,11,11
+docs/experiments/actionable-regime-confidence/runs/20260511T211208-codex-cftc-vorley-chanu-row-uplift-calibration-v1/scripts/cftc_vorley_chanu_row_uplift_calibration_v1.py,4,4
+docs/experiments/actionable-regime-confidence/runs/20260511T211606-codex-r6-shak-complaint-row-uplift-gate-v1/scripts/r6_shak_complaint_row_uplift_gate_v1.py,8,8
+docs/experiments/actionable-regime-confidence/runs/20260511T211628-codex-r6-shak-cftc-row-uplift-v1/scripts/r6_shak_cftc_row_uplift_v1.py,5,5
+docs/experiments/actionable-regime-confidence/runs/20260511T212137-codex-r6-geneva-cftc-row-uplift-v1/scripts/r6_geneva_cftc_row_uplift_v1.py,3,3
+docs/experiments/actionable-regime-confidence/runs/20260511T213113-codex-r6-zhao-skudder-cftc-row-uplift-v1/scripts/r6_zhao_skudder_cftc_row_uplift_v1.py,7,7
+docs/experiments/actionable-regime-confidence/runs/20260511T213312-codex-r6-flotron-cftc-row-uplift-v1/scripts/r6_flotron_cftc_row_uplift_v1.py,10,10
+docs/experiments/actionable-regime-confidence/runs/20260511T220410-codex-r6-vorley-franko-row-uplift-v1/scripts/r6_vorley_franko_row_uplift_v1.py,7,7
+docs/experiments/actionable-regime-confidence/runs/20260511T220755-codex-r6-official-rowlevel-support-extension-v1/scripts/r6_official_rowlevel_support_extension_v1.py,9,9

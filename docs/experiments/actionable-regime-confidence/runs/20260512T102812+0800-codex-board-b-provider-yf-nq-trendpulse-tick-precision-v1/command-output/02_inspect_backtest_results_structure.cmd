@@ -1,0 +1,1 @@
+inspect ProviderNqSampledPulse bt.results structure

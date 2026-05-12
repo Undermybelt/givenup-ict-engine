@@ -1,0 +1,264 @@
+{
+  "all_assertions_passed": true,
+  "assertions": {
+    "catboost_runtime_ready": true,
+    "exact_branch_preserved": true,
+    "execution_candidate_not_actionable": true,
+    "execution_tree_fail_closed": true,
+    "ledger_not_promotional": true,
+    "path_ranker_validation_ready": true,
+    "pre_bayes_neutralized": true,
+    "pre_bayes_not_sideways_root": true,
+    "pre_bayes_trend_context": true,
+    "provider_names_present": true
+  },
+  "conclusion": "reject_current_context_not_source_recipe",
+  "decision": {
+    "current_exact_sideways_branch_context": "fail_closed_rejected_for_current_replay_context",
+    "next_action": "Use only a user-selected/provider-sourced Sideways-or-range-compatible context for another exact-branch replay, or encode an explicit abstain/sibling branch for non-Sideways contexts. Do not rerun RC-SPA and do not promote from CatBoost/path-ranker readiness alone.",
+    "source_recipe_status": "not_rejected_by_this_audit_rc_spa_score_unchanged_85_7407"
+  },
+  "evidence": {
+    "artifact_ledger": {
+      "actionable": false,
+      "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/execution_tree_trace.json",
+      "promote_candidate": false,
+      "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000;branch_admission_status=fail_closed",
+      "status": "observe"
+    },
+    "auto_quant_status": {
+      "bootstrap_needed": false,
+      "data_ready": true,
+      "dependency_healthy": true,
+      "dependency_status": {
+        "adapter_version": "v1",
+        "bootstrap_needed": false,
+        "config_present": true,
+        "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+        "healthy": true,
+        "last_sync": "2026-05-11T16:50:29.628833Z",
+        "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+        "managed_repo_present": true,
+        "notes": [],
+        "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+        "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+        "required_files": [
+          "README.md",
+          "program.md",
+          "prepare.py",
+          "run.py",
+          "versions/README.md"
+        ],
+        "tracked_branch": "master",
+        "update_available": false,
+        "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+      },
+      "healthy": true,
+      "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+      "next_step": {
+        "action_type": "run_command",
+        "blocked_reason": null,
+        "deferred_command": "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+        "prompt": null,
+        "user_input_required": false
+      },
+      "notes": [],
+      "recommended_next_command": "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+      "recommended_next_command_meta": {
+        "blocked": false,
+        "executable_command": "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+        "kind": "other",
+        "prompt": null,
+        "recorded_data_paths": [],
+        "requires_user_input": false
+      },
+      "status": "dependency_ready_data_ready",
+      "update_available": false,
+      "workspace": {
+        "config_json": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/config.json",
+        "data_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/data",
+        "prepare_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/prepare.py",
+        "program_md": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/program.md",
+        "repo_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+        "run_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+        "strategies_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies"
+      }
+    },
+    "catboost_path_ranker": {
+      "candidate_path_ranker_calibrated_path_prob": 0.42857142857142855,
+      "candidate_path_ranker_path_prob_lower_bound": 0.21901991525144823,
+      "candidate_path_ranker_raw_score": 0.857407,
+      "candidate_path_ranker_runtime_source": "history_path",
+      "runtime": {
+        "active_match_count": 4,
+        "enabled": true,
+        "model_family": "catboost",
+        "ready": true,
+        "reuse_mode": "prefer_history",
+        "score_model_artifact_uri": "docs/experiments/actionable-regime-confidence/runs/20260512T010454-codex-board-b-220646-real-catboost-explicit-closure-v1/real-catboost-explicit-closure-v1/catboost/path_ranker_model/catboost_model.cbm",
+        "score_model_family": "catboost",
+        "score_source_kind": "external_model",
+        "source_kind": "candidate_set",
+        "status": "enabled_candidate_set_ready",
+        "summary_line": "Ranker runtime: structural_path_ranking_target rows=4 history_rows=883 mature_rows=4 history_mature_rows=869 raw_scored_mature=869/30 production_validation=869/30 observation_validation=82/30 calibration=evaluated trainer_artifact=ready trainer_status=runtime_eligible runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=4"
+      },
+      "validation": {
+        "calibration_quality_ready": true,
+        "calibration_ready": true,
+        "calibration_status": "evaluated",
+        "feedback_observation_validation": {
+          "mature_observations": 82,
+          "min_observations": 30,
+          "outcome_distribution": {
+            "loss": 38,
+            "win": 44
+          },
+          "pending_observations": 0,
+          "ready": true,
+          "shortfall_observations": 0,
+          "summary_line": "observations mature=82/30 pending=0 total=82 ready=true",
+          "total_observations": 82
+        },
+        "observation_validation_min_rows": 30,
+        "observation_validation_ready": true,
+        "observation_validation_rows": 82,
+        "observation_validation_shortfall_rows": 0,
+        "production_validation_min_rows": 30,
+        "production_validation_ready": true,
+        "production_validation_rows": 869,
+        "production_validation_shortfall_rows": 0,
+        "raw_scored_mature_min_rows": 30,
+        "raw_scored_mature_rows": 869,
+        "raw_scored_mature_shortfall_rows": 0,
+        "summary_line": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=869/30 production_validation=869/30 observation_validation=82/30 ready=true",
+        "target_row_validation": {
+          "production_validation_min_rows": 30,
+          "production_validation_ready": true,
+          "production_validation_rows": 869,
+          "production_validation_shortfall_rows": 0,
+          "raw_scored_mature_min_rows": 30,
+          "raw_scored_mature_rows": 869,
+          "raw_scored_mature_shortfall_rows": 0,
+          "summary_line": "target_rows raw_scored_mature=869/30 production_validation=869/30 ready=true"
+        }
+      }
+    },
+    "execution_tree": {
+      "closed_loop_branch_admission": {
+        "actionable": false,
+        "candidate_status": "execution_observe_only",
+        "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+        "evidence": [
+          "pre_bayes_gate_status=pass_neutralized",
+          "execution_gate_status=execution_observe_only",
+          "review_status=observe",
+          "execution_tree_gate_status=observe",
+          "execution_tree_branch=transition_guardrail"
+        ],
+        "execution_gate_status": "execution_observe_only",
+        "execution_tree_bias": "guarded",
+        "execution_tree_branch": "transition_guardrail",
+        "execution_tree_gate_status": "observe",
+        "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+        "path_label": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+        "pre_bayes_gate_status": "pass_neutralized",
+        "ready": false,
+        "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+        "review_status": "observe",
+        "source_phase": "structural-recommended-path-bundle",
+        "status": "fail_closed"
+      },
+      "output": {
+        "branch": "transition_guardrail",
+        "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+        "execution_bias": "guarded",
+        "gate_status": "observe",
+        "path_ranker_runtime_source": "history_path",
+        "ranker_validation_ready": true,
+        "score_line": "path_ranker=ranker_score=path_id=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 runtime_source=history_path raw_path_score=0.857407 calibrated_path_prob=0.428571 path_prob_lower_bound=0.219020 execution_gate_status=observe"
+      }
+    },
+    "pre_bayes": {
+      "active_regime": "trend",
+      "active_regime_confidence": 0.5458617984369726,
+      "filtered_assignments": {
+        "__policy_version": "318900600c5e8cf2",
+        "factor_alignment": "mixed",
+        "factor_uncertainty": "low",
+        "liquidity_context": "neutral",
+        "market_regime": "trend",
+        "market_state_primary_regime": "TrendExpansion",
+        "market_state_secondary_regime": "BullTrendAcceleration",
+        "multi_timeframe_resonance": "aligned"
+      },
+      "latest_gate_status": "pass_neutralized",
+      "latest_policy_version": "318900600c5e8cf2",
+      "latest_uses_soft_evidence": true,
+      "long_short_signal_probability_gap": 0.007747167221267781,
+      "probabilities": {
+        "range": 0.3116149341034506,
+        "stress": 0.1711057100551827,
+        "transition": 0.07535402635861976,
+        "trend": 0.441925329482747
+      },
+      "selected_entry_quality": "medium",
+      "soft_evidence_entropy": {
+        "factor_alignment": -0.0,
+        "factor_uncertainty": 0.6781192003385584,
+        "liquidity_context": -0.0,
+        "market_regime": 0.6781192003385584,
+        "multi_timeframe_resonance": 0.6781192003385584
+      }
+    },
+    "provider_paths_kept_in_view": {
+      "provider_status_output": "docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/command-output/01_provider_status.out",
+      "summary_text_contains": {
+        "ibkr": true,
+        "kraken": true,
+        "tradingviewremix": true,
+        "yfinance": true
+      }
+    },
+    "workflow": {
+      "actionable": false,
+      "blocking_truth": {
+        "evidence": [
+          "historical data reuse requires explicit user path selection",
+          "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1"
+        ],
+        "next_command": "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1/state_execution_tree_admission_current_bin_v1",
+        "reason": "user_selected_historical_data_missing",
+        "stage": "analyze",
+        "status": "blocked"
+      },
+      "candidate_status": "execution_blocked",
+      "closed_loop_branch_admission": {
+        "actionable": false,
+        "candidate_status": "execution_blocked",
+        "evidence": [
+          "pre_bayes_gate_status=pass_neutralized",
+          "execution_gate_status=execution_blocked",
+          "review_status=observe"
+        ],
+        "execution_gate_status": "execution_blocked",
+        "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+        "path_label": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+        "pre_bayes_gate_status": "pass_neutralized",
+        "ready": false,
+        "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+        "review_status": "observe",
+        "source_phase": "structural-recommended-path-bundle",
+        "status": "fail_closed"
+      },
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.4420748337394927,
+      "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+      "ready": false
+    }
+  },
+  "objective_branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+  "promotion_allowed": false,
+  "root_cause": "branch_root_context_mismatch_plus_neutralized_pre_bayes_and_execution_blocked",
+  "source_run": "docs/experiments/actionable-regime-confidence/runs/20260512T022415-codex-board-b-220646-execution-tree-admission-current-bin-v1/execution-tree-admission-current-bin-v1"
+}

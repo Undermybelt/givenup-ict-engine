@@ -1,0 +1,75 @@
+{
+  "run_id": "20260512T041636-codex-current-objective-completion-audit-after-041410-v1",
+  "gate_result": "current_objective_completion_audit_after_041410_v1=not_complete_source_confidence_no_acceptance_r6_r3_r5_and_downstream_blocked",
+  "board_sha256_before_command_audit": "fc704133b97f8a0bb68f5b1a446192c74fd17568bd3f3a86f987d9a2fafa1516",
+  "objective_status": "not_complete",
+  "evidence": {
+    "source_roots": {
+      "/tmp/ict-engine-board-a-r6-owner-export-v1": "missing",
+      "/tmp/ict-engine-native-subhour-source-label-intake": "missing",
+      "/tmp/ict-engine-source-panel-recency-extension": "missing",
+      "/tmp/ict-engine-source-label-equivalence-intake": "present"
+    },
+    "r6_owner_export_verifier": {
+      "exit": 2,
+      "status": "blocked",
+      "reason": "missing_required_files"
+    },
+    "source_label_equivalence_verifier": {
+      "exit": 0,
+      "status": "schema_ready_unscored",
+      "row_count": 248440
+    },
+    "source_label_confidence_calibration_041410": {
+      "decision": "source_label_equivalence_confidence_calibration_v1=source_confidence_scored_no_acceptance",
+      "accepted_source_confidence_95_labels": [],
+      "new_confidence_gate": false,
+      "strict_full_objective_achieved": false
+    },
+    "source_panel_recency_verifier": {
+      "exit": 2,
+      "status": "blocked",
+      "reason": "missing_required_files"
+    },
+    "autoquant": {
+      "exit": 0,
+      "status": "dependency_ready_data_missing",
+      "healthy": false,
+      "bootstrap_needed": false,
+      "dependency_healthy": true,
+      "data_ready": false
+    },
+    "pre_bayes_bbn": {
+      "exit": 0,
+      "latest_policy": null,
+      "latest_soft_evidence": null,
+      "latest_bridge": null,
+      "latest_gate_status": null
+    },
+    "policy_catboost_path_ranking": {
+      "exit": 0,
+      "entry_models_ready": [],
+      "matched_rows_total": 0,
+      "structural_path_ranking_runtime": "disabled",
+      "structural_path_ranking_ready": false
+    },
+    "execution_workflow": {
+      "exit": 0,
+      "ready": false,
+      "actionable": false,
+      "review_status": "observe",
+      "trade_direction": "observe"
+    }
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "accepted_regime_confidence_labels": 0,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next": "Acquire verifier-native R6 owner/export rows plus source-owned broad normal controls, source-owned R3/R5 target rows, or explicit approval before rerunning the full downstream chain."
+}

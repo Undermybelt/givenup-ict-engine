@@ -1,0 +1,134 @@
+{
+  "artifact_id": "auto-quant-handoff:factor_research:QQQ:20260510T092546.341Z",
+  "handoff_kind": "factor_research",
+  "symbol": "QQQ",
+  "state_dir": "/tmp/ict-regime-branch-iteration-20260510-1/state",
+  "objective": "generic",
+  "backend": "auto-quant",
+  "data_path": "/tmp/ict-regime-branch-iteration-20260510-1/candles/yf_QQQ_1h_2024_2025.json",
+  "paired_data_path": "/tmp/ict-regime-branch-iteration-20260510-1/candles/tv_QQQ_1h.json",
+  "mutation_spec_path": null,
+  "iterations": null,
+  "session_id": null,
+  "dependency_status": {
+    "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+    "managed_dir": "/Users/thrill3r/Auto-Quant",
+    "tracked_branch": "master",
+    "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "bootstrap_needed": false,
+    "config_present": false,
+    "managed_repo_present": true,
+    "healthy": true,
+    "update_available": false,
+    "required_files": [
+      "README.md",
+      "program.md",
+      "prepare.py",
+      "run.py",
+      "versions/README.md"
+    ],
+    "notes": [],
+    "adapter_version": "v1",
+    "last_sync": null
+  },
+  "readiness": {
+    "status": "dependency_ready_data_ready",
+    "healthy": true,
+    "bootstrap_needed": false,
+    "dependency_healthy": true,
+    "data_ready": true,
+    "update_available": false,
+    "managed_dir": "/Users/thrill3r/Auto-Quant",
+    "workspace": {
+      "repo_root": "/Users/thrill3r/Auto-Quant",
+      "program_md": "/Users/thrill3r/Auto-Quant/program.md",
+      "prepare_script": "/Users/thrill3r/Auto-Quant/prepare_external.py",
+      "run_script": "/Users/thrill3r/Auto-Quant/run_tomac.py",
+      "config_json": "/Users/thrill3r/Auto-Quant/config.tomac.json",
+      "strategies_dir": "/Users/thrill3r/Auto-Quant/user_data/strategies_external",
+      "data_dir": "/Users/thrill3r/Auto-Quant/user_data/data",
+      "profile_name": "synthetic_ohlcv",
+      "expected_data_files": [
+        "QQQ_USD-1h.feather",
+        "QQQ_USD-4h.feather",
+        "QQQ_USD-1d.feather"
+      ],
+      "strategy_seed_source_dir": "/Users/thrill3r/Auto-Quant/user_data/strategies"
+    },
+    "dependency_status": {
+      "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+      "managed_dir": "/Users/thrill3r/Auto-Quant",
+      "tracked_branch": "master",
+      "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "bootstrap_needed": false,
+      "config_present": false,
+      "managed_repo_present": true,
+      "healthy": true,
+      "update_available": false,
+      "required_files": [
+        "README.md",
+        "program.md",
+        "prepare.py",
+        "run.py",
+        "versions/README.md"
+      ],
+      "notes": [],
+      "adapter_version": "v1",
+      "last_sync": null
+    },
+    "recommended_next_command": "uv run --with ta-lib /Users/thrill3r/Auto-Quant/run_tomac.py",
+    "recommended_next_command_meta": {
+      "kind": "other",
+      "requires_user_input": false,
+      "blocked": false,
+      "prompt": null,
+      "executable_command": "uv run --with ta-lib /Users/thrill3r/Auto-Quant/run_tomac.py",
+      "recorded_data_paths": []
+    },
+    "next_step": {
+      "action_type": "run_command",
+      "blocked_reason": null,
+      "deferred_command": "uv run --with ta-lib /Users/thrill3r/Auto-Quant/run_tomac.py",
+      "prompt": null,
+      "user_input_required": false
+    },
+    "notes": [
+      "auto_quant_profile=synthetic_ohlcv"
+    ]
+  },
+  "workspace": {
+    "repo_root": "/Users/thrill3r/Auto-Quant",
+    "program_md": "/Users/thrill3r/Auto-Quant/program.md",
+    "prepare_script": "/Users/thrill3r/Auto-Quant/prepare_external.py",
+    "run_script": "/Users/thrill3r/Auto-Quant/run_tomac.py",
+    "config_json": "/Users/thrill3r/Auto-Quant/config.tomac.json",
+    "strategies_dir": "/Users/thrill3r/Auto-Quant/user_data/strategies_external",
+    "data_dir": "/Users/thrill3r/Auto-Quant/user_data/data",
+    "profile_name": "synthetic_ohlcv",
+    "expected_data_files": [
+      "QQQ_USD-1h.feather",
+      "QQQ_USD-4h.feather",
+      "QQQ_USD-1d.feather"
+    ],
+    "strategy_seed_source_dir": "/Users/thrill3r/Auto-Quant/user_data/strategies"
+  },
+  "data_ready": true,
+  "handoff_artifact_path": "",
+  "suggested_commands": [
+    "cat /Users/thrill3r/Auto-Quant/program.md",
+    "uv run --with ta-lib /Users/thrill3r/Auto-Quant/run_tomac.py"
+  ],
+  "suggested_next_steps": [
+    "open Auto-Quant program.md and stage a research loop for the requested objective",
+    "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
+  ],
+  "agent_prompt": "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, work the 'generic' objective, and read /Users/thrill3r/Auto-Quant/program.md before acting. Run uv run --with ta-lib /Users/thrill3r/Auto-Quant/run_tomac.py on the current active strategy set, review measured results, and iterate only from backtest evidence. Never treat 'no strategies found' as completion. Export the best measured candidate package back into ict-engine state.",
+  "notes": [
+    "auto_quant_active_strategy_count=1",
+    "requested_at=20260510T092546.344Z"
+  ]
+}

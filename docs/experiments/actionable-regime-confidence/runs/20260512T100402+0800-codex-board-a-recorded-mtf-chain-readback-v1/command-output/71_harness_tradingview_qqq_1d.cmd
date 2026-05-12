@@ -1,0 +1,1 @@
+/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine market-data-harness --action fetch --market recorded-mtf-tradingview-qqq-1d --interval 1d --role etf_reference --provider etf_reference=tradingview_mcp --symbol-spec etf_reference=NASDAQ:QQQ

@@ -1,0 +1,10 @@
+run_id=20260511T215253+0800-codex-board-b-options-sidecar-feasibility-v1
+binance_rows=538
+binance_unique_snapshots=1
+bybit_rows=500
+bybit_unique_snapshots=1
+board_b_profitability_rows_added=0
+rc_spa_started=false
+gate_result=diagnostic_only:options_sidecar_single_snapshot_not_rc_spa_usable
+downstream_consumption=not_started:no_chronological_options_panel
+ASSERT_PASS:single_snapshot_options_sidecars_not_used_as_profitability_evidence

@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.9325412584269662,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 4.423396586279612,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.5337068764044944,
+    4.943820224719101e-7,
+    0.4662926292134832
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_B2R_VOL_BREAKOUT_150654_20260512T072837.580144000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/derived/strategy_library_volatility_breakout_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_B2R_VOL_BREAKOUT_150654_20260512T072837.753941000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/state_volatility_breakout_v1/auto-quant/B2R_VOL_BREAKOUT_150654/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1/state_volatility_breakout_v1/auto-quant/B2R_VOL_BREAKOUT_150654/auto_quant_prior_init_B2R_VOL_BREAKOUT_150654_20260512T072837.753941000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.5337068764044944,
+        4.943820224719101e-7,
+        0.4662926292134832
+      ],
+      "bbn_contradiction_after": 0.021437730078780845,
+      "bbn_contradiction_before": 0.953978988505747,
+      "bbn_contradiction_lift": 0.9325412584269662,
+      "bbn_entropy_after": 0.6908804448666366,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6923209813662785,
+      "bbn_log_loss_before": 5.11571756764589,
+      "bbn_log_loss_delta": 4.423396586279612,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.4662491235955055,
+        -0.00002150561797752809,
+        0.46627062921348317
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "150654_145809_volatility_breakout_follow_v1",
+      "n_breakeven": 0,
+      "n_loss": 166,
+      "n_win": 182,
+      "strategy_name": "volatility_breakout_follow_v1",
+      "temper": 0.5,
+      "trade_count": 348
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "B2R_VOL_BREAKOUT_150654",
+  "temper": 0.5
+}

@@ -1,0 +1,287 @@
+{
+  "auto_quant_run_id_counts": {
+    "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1": 255
+  },
+  "classification": {
+    "115130": "infrastructure_repair_candidate_plus_chain_contract_negative_sample",
+    "115249": "infrastructure_repair_candidate_plus_chain_contract_negative_sample",
+    "market_factor_negative_rows_added": 0
+  },
+  "evaluated_roots": {
+    "115130": "20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1",
+    "115249": "20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1"
+  },
+  "examples": [
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 1,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775358000000_1775368800000_1"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 2,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775404800000_1775430000000_2"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 3,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775552400000_1775559600000_3"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 4,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775584800000_1775599200000_4"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 5,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775703600000_1775710800000_5"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 6,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775718000000_1775743200000_6"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 7,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775746800000_1775772000000_7"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 8,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1775815200000_1775952000000_8"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 9,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1776088800000_1776117600000_9"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 10,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1776211200000_1776236400000_10"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 11,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1776254400000_1776268800000_11"
+    },
+    {
+      "auto_quant_run_id": "20260512T104902+0800-codex-board-b-yahoo-btc-pullback-precision-aq-v1",
+      "failures": [
+        "missing_provider_provenance",
+        "missing_pre_bayes_filter_state",
+        "missing_bbn_posterior",
+        "missing_catboost_path_ranker_label",
+        "missing_execution_tree_decision",
+        "missing_failure_reason",
+        "missing_quality_weight",
+        "stale_or_wrong_auto_quant_run_id",
+        "stale_symbol_namespace"
+      ],
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/workspace/auto-quant-112315-binance_public/derived/ProviderCryptoMomentumStateV1.real_trades.jsonl",
+      "line": 12,
+      "run_label": "115130",
+      "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+      "trade_id": "yahoo_btc_pullback_precision_104902_ProviderCryptoMomentumStateV1_BTC_USDT_1776276000000_1776337200000_12"
+    }
+  ],
+  "failure_counts": {
+    "missing_bbn_posterior": 255,
+    "missing_catboost_path_ranker_label": 255,
+    "missing_execution_tree_decision": 255,
+    "missing_failure_reason": 255,
+    "missing_pre_bayes_filter_state": 255,
+    "missing_provider_provenance": 255,
+    "missing_quality_weight": 255,
+    "stale_or_wrong_auto_quant_run_id": 255,
+    "stale_symbol_namespace": 255
+  },
+  "gate_result": "fail_closed:no_market_factor_negative_ingestion_rows",
+  "market_factor_trainable_rows": 0,
+  "per_run": {
+    "115130": {
+      "files": 12,
+      "rejected_rows": 211,
+      "rows": 211
+    },
+    "115249": {
+      "files": 2,
+      "rejected_rows": 44,
+      "rows": 44
+    }
+  },
+  "promotion_allowed": false,
+  "provider_file_counts": {
+    "auto-quant-112315-binance_public": 2,
+    "auto-quant-112315-bybit_public": 2,
+    "auto-quant-112315-ibkr_midpoint_14d": 2,
+    "auto-quant-112315-ibkr_paxos_long_midpoint": 2,
+    "auto-quant-112315-kraken_public": 2,
+    "auto-quant-112315-tvr_binance": 2,
+    "auto-quant-112315-yfinance": 2
+  },
+  "rejected_rows": 255,
+  "run_id": "20260512T115829+0800-codex-115130-115249-row-schema-gate-v1",
+  "symbol_counts": {
+    "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902": 255
+  },
+  "total_rows": 255,
+  "trade_usable": false,
+  "update_goal": false
+}

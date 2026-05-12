@@ -1,0 +1,62 @@
+{
+  "factor_name": "smt_confirmation_failure_v1",
+  "branch_path": "CrossMarketConfirmation -> LiquiditySweepValidation -> SMTConfirmationFailure -> SMTConfirmationOnly",
+  "ict_engine_surface_mapping": {
+    "Structure": [
+      "base_swing_type",
+      "base_level",
+      "comparison_swing_type",
+      "comparison_level",
+      "swept_side",
+      "same_event_time_delta_bars"
+    ],
+    "Technicals": [
+      "near_pd_array",
+      "pd_array_type",
+      "mss_or_cisd_confirmed",
+      "displacement_confirmed"
+    ],
+    "SMT": [
+      "base_symbol",
+      "comparison_symbol",
+      "relationship_type",
+      "relationship_confidence",
+      "normalized_for_inverse_correlation",
+      "raw_comparison_swing_type",
+      "smt_signal",
+      "confidence",
+      "fail_closed_reason"
+    ],
+    "Regime posterior evidence": [
+      "per_regime_statistics",
+      "quality_gate.quality_weight",
+      "quality_gate.fail_closed_reason"
+    ],
+    "Execution tree features": [
+      "smt_signal",
+      "swept_side",
+      "near_pd_array",
+      "mss_or_cisd_confirmed",
+      "displacement_confirmed",
+      "actionable"
+    ],
+    "Feedback/update learning fields": [
+      "base_symbol",
+      "comparison_symbol",
+      "relationship_type",
+      "provider_provenance",
+      "smt_signal",
+      "fail_closed_reason",
+      "quality_gate.allowed_feedback_targets"
+    ]
+  },
+  "gates": {
+    "smt_confirmation_only": true,
+    "standalone_actionable_allowed": false,
+    "provider_backed_training_required_before_downstream": true,
+    "missing_base_or_comparison_level_fail_closed": true,
+    "unstable_recent_correlation_fail_closed": true,
+    "session_or_timeframe_mismatch_fail_closed": true,
+    "inverse_correlation_normalization_required": true
+  }
+}

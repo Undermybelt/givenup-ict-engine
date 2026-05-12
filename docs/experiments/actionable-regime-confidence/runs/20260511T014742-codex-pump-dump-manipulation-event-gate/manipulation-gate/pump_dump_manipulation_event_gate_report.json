@@ -1,0 +1,144 @@
+{
+  "run_id": "20260511T014742+0800-codex-pump-dump-manipulation-event-gate",
+  "source": {
+    "url": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+    "commit": "d71250d4cb055dde2d415c8cba38a0dcd6eb6e16",
+    "local_clone": "/tmp/ict-regime-manipulation-datasets/pump-and-dump-dataset",
+    "paper": "Pump and Dumps in the Bitcoin Era: Real Time Detection of Cryptocurrency Market Manipulations",
+    "paper_doi": "10.1109/ICCCN49398.2020.9209660",
+    "license_file_present": true
+  },
+  "dataset": {
+    "pump_telegram_rows": 1110,
+    "groups": 13,
+    "labeled_feature_files": [
+      "features_15S.csv.gz",
+      "features_25S.csv.gz",
+      "features_5S.csv.gz"
+    ]
+  },
+  "evaluations": [
+    {
+      "file": "features_15S.csv.gz",
+      "rows": 584104,
+      "positives": 317,
+      "pump_events": 327,
+      "symbols": 85,
+      "date_min": "2018-01-02 18:14:30",
+      "date_max": "2021-01-19 16:58:15",
+      "split": {
+        "events": 327,
+        "train_events": 163,
+        "calibration_events": 82,
+        "test_events": 82
+      },
+      "rule": "std_trades >= 0.009",
+      "accepted_95": false,
+      "train": {
+        "support": 3626,
+        "positives": 158,
+        "precision": 0.043574186431329286,
+        "wilson95_lcb": 0.03739850904712905
+      },
+      "calibration": {
+        "support": 1000,
+        "positives": 79,
+        "precision": 0.079,
+        "wilson95_lcb": 0.06384721576082918
+      },
+      "test": {
+        "support": 1183,
+        "positives": 77,
+        "precision": 0.0650887573964497,
+        "wilson95_lcb": 0.05239174435434571
+      },
+      "blocker": "calibration_or_test_wilson_below_95_or_support_below_50"
+    },
+    {
+      "file": "features_25S.csv.gz",
+      "rows": 482157,
+      "positives": 317,
+      "pump_events": 327,
+      "symbols": 85,
+      "date_min": "2018-01-02 18:14:35",
+      "date_max": "2021-01-19 16:58:20",
+      "split": {
+        "events": 327,
+        "train_events": 163,
+        "calibration_events": 82,
+        "test_events": 82
+      },
+      "rule": "std_volume >= 0.008",
+      "accepted_95": false,
+      "train": {
+        "support": 3122,
+        "positives": 155,
+        "precision": 0.04964766175528507,
+        "wilson95_lcb": 0.04256626727957244
+      },
+      "calibration": {
+        "support": 892,
+        "positives": 76,
+        "precision": 0.08520179372197309,
+        "wilson95_lcb": 0.06861234227060233
+      },
+      "test": {
+        "support": 977,
+        "positives": 72,
+        "precision": 0.0736949846468782,
+        "wilson95_lcb": 0.058928570141689264
+      },
+      "blocker": "calibration_or_test_wilson_below_95_or_support_below_50"
+    },
+    {
+      "file": "features_5S.csv.gz",
+      "rows": 821307,
+      "positives": 317,
+      "pump_events": 327,
+      "symbols": 85,
+      "date_min": "2018-01-02 18:14:40",
+      "date_max": "2021-01-19 16:58:25",
+      "split": {
+        "events": 327,
+        "train_events": 163,
+        "calibration_events": 82,
+        "test_events": 82
+      },
+      "rule": "std_trades >= 0.012",
+      "accepted_95": false,
+      "train": {
+        "support": 5207,
+        "positives": 157,
+        "precision": 0.030151718840023045,
+        "wilson95_lcb": 0.025842154877928382
+      },
+      "calibration": {
+        "support": 1274,
+        "positives": 75,
+        "precision": 0.05886970172684458,
+        "wilson95_lcb": 0.04722221161069362
+      },
+      "test": {
+        "support": 1665,
+        "positives": 75,
+        "precision": 0.04504504504504504,
+        "wilson95_lcb": 0.0360865939205551
+      },
+      "blocker": "calibration_or_test_wilson_below_95_or_support_below_50"
+    }
+  ],
+  "decision": {
+    "board_state": "blocked",
+    "dataset_state": "partial_crypto_event_social_manipulation_evidence",
+    "active_axis": "MainRegimeV2",
+    "candidate_regime": "Manipulation",
+    "accepted_95": false,
+    "accepted_timeframes": [],
+    "manipulation_input_state": "partial_event_social_dataset_not_release_complete",
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "trade_usable": false,
+    "blocker": "Dataset provides useful labeled crypto pump-and-dump event/social/trade-feature evidence, but strict chronological gates did not pass 95% Wilson lower bound across feature timeframes and it covers Binance crypto pumps only, not cross-market L2/L3/order-lifecycle manipulation.",
+    "next_action": "Acquire broader calibration-grade direct manipulation data: market-wide L2/L3/MBO/order-lifecycle datasets or multiple event/social/on-chain manipulation datasets across venues and periods, then rerun unchanged Manipulation gates."
+  }
+}

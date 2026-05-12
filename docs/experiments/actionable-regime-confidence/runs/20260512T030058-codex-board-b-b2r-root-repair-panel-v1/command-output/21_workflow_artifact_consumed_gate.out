@@ -1,0 +1,7 @@
+{
+  "promotion_strength": "high",
+  "reason": "no_consumed_artifacts",
+  "rollback_strength": "low",
+  "status": "no_consumed_validation",
+  "target_kinds": []
+}

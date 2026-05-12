@@ -1,0 +1,663 @@
+{
+  "accepted_95": false,
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T045215-codex-mehrnoom-social-manipulation-gate/checks/mehrnoom_social_manipulation_gate_assertions.out",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T045215-codex-mehrnoom-social-manipulation-gate/social-event-gate/mehrnoom_social_manipulation_gate_report.json",
+    "report": "docs/experiments/actionable-regime-confidence/runs/20260511T045215-codex-mehrnoom-social-manipulation-gate/social-event-gate/mehrnoom_social_manipulation_gate_report.md",
+    "sample": "docs/experiments/actionable-regime-confidence/runs/20260511T045215-codex-mehrnoom-social-manipulation-gate/social-event-gate/mehrnoom_social_message_feature_sample.csv",
+    "summary": "docs/experiments/actionable-regime-confidence/runs/20260511T045215-codex-mehrnoom-social-manipulation-gate/social-event-gate/mehrnoom_social_manipulation_gate_summary.csv"
+  },
+  "candidate_regime": "Manipulation",
+  "dataset": {
+    "channels_parsed": 80,
+    "classified_positive_rows_total": 62850,
+    "classified_unique_positive_messages_total": 47992,
+    "date_max": "2018-07-23 16:54:27+00:00",
+    "date_min": "2017-06-15 12:36:32+00:00",
+    "matched_positive_pairs": 40565,
+    "negative_control_policy": "source_channel_messages_not_present_in_classified_coin_pump_output",
+    "negative_control_rows": 201389,
+    "parse_errors": 0,
+    "positive_message_rows": 40565,
+    "raw_message_rows": 241954,
+    "selected_channels": 80,
+    "selected_positive_label_rows": 53482,
+    "selected_raw_bytes": 262141102
+  },
+  "decision": "blocked_mehrnoom_social_gate_below_95_coverage_or_ece",
+  "elapsed_seconds": 146.31,
+  "evidence_class": "direct_social_event_telegram_raw_message",
+  "gate_result": {
+    "accepted_95": false,
+    "blocker": "held_out_wilson_coverage_or_ece_below_gate",
+    "calibration": {
+      "calibrated_confidence": 0.9097552064303982,
+      "coverage": 0.09049728871842348,
+      "ece_vs_calibrated_confidence": 0.0,
+      "precision": 0.9097552064303982,
+      "rows": 60488,
+      "successes": 4980,
+      "support": 5474,
+      "wilson95_lcb": 0.901874602752493
+    },
+    "coverage_min": 0.03,
+    "ece_max": 0.05,
+    "gate": "mehrnoom_raw_telegram_message_social_gate",
+    "lcb_min": 0.95,
+    "rule": "nb_score >= 9.11666",
+    "split": {
+      "calibration": {
+        "date_max": "2018-05-10 22:49:58+00:00",
+        "date_min": "2018-03-20 16:40:26+00:00",
+        "negative_controls": 50033,
+        "positives": 10455,
+        "rows": 60488
+      },
+      "test": {
+        "date_max": "2018-07-23 16:54:27+00:00",
+        "date_min": "2018-05-10 22:50:02+00:00",
+        "negative_controls": 53710,
+        "positives": 6779,
+        "rows": 60489
+      },
+      "train": {
+        "date_max": "2018-03-20 16:40:10+00:00",
+        "date_min": "2017-06-15 12:36:32+00:00",
+        "negative_controls": 97646,
+        "positives": 23331,
+        "rows": 120977
+      }
+    },
+    "support_min": 50,
+    "test": {
+      "calibrated_confidence": 0.9097552064303982,
+      "coverage": 0.055051331647076325,
+      "ece_vs_calibrated_confidence": 0.017262713937905683,
+      "precision": 0.8924924924924925,
+      "rows": 60489,
+      "successes": 2972,
+      "support": 3330,
+      "wilson95_lcb": 0.8815158066569652
+    },
+    "top_train_candidates": [
+      {
+        "rule": "nb_score >= 9.11666",
+        "train_coverage": 0.10001074584425139,
+        "train_precision": 0.9021406727828746,
+        "train_support": 12099,
+        "train_wilson95_lcb": 0.8967179972238122
+      },
+      {
+        "rule": "nb_score >= 5.36852",
+        "train_coverage": 0.15002025178339684,
+        "train_precision": 0.8828034602457435,
+        "train_support": 18149,
+        "train_wilson95_lcb": 0.8780426202949025
+      },
+      {
+        "rule": "nb_score >= 13.099",
+        "train_coverage": 0.05000123990510593,
+        "train_precision": 0.8732021821788726,
+        "train_support": 6049,
+        "train_wilson95_lcb": 0.8645793246755976
+      },
+      {
+        "rule": "nb_score >= 1.87621",
+        "train_coverage": 0.20001322565446325,
+        "train_precision": 0.8496921105922222,
+        "train_support": 24197,
+        "train_wilson95_lcb": 0.8451337524939427
+      },
+      {
+        "rule": "has_buy & has_sell",
+        "train_coverage": 0.18358861601792076,
+        "train_precision": 0.8243583971184151,
+        "train_support": 22210,
+        "train_wilson95_lcb": 0.8192980984962915
+      },
+      {
+        "rule": "has_buy",
+        "train_coverage": 0.27081180720302206,
+        "train_precision": 0.6930895549722239,
+        "train_support": 32762,
+        "train_wilson95_lcb": 0.6880729877626562
+      },
+      {
+        "rule": "has_pair_word & has_sell",
+        "train_coverage": 0.0598791505823421,
+        "train_precision": 0.6553009387078962,
+        "train_support": 7244,
+        "train_wilson95_lcb": 0.6442766327520392
+      },
+      {
+        "rule": "has_buy & has_pair_word",
+        "train_coverage": 0.06422708448713392,
+        "train_precision": 0.6512226512226512,
+        "train_support": 7770,
+        "train_wilson95_lcb": 0.6405534370758125
+      },
+      {
+        "rule": "has_buy & has_exchange",
+        "train_coverage": 0.049711928713722445,
+        "train_precision": 0.652643831060858,
+        "train_support": 6014,
+        "train_wilson95_lcb": 0.6405163371868781
+      },
+      {
+        "rule": "has_exchange & has_sell",
+        "train_coverage": 0.04333881646924622,
+        "train_precision": 0.6503909975205036,
+        "train_support": 5243,
+        "train_wilson95_lcb": 0.6373778060087681
+      },
+      {
+        "rule": "number_count >= 5",
+        "train_coverage": 0.1831835803499839,
+        "train_precision": 0.5915798023554893,
+        "train_support": 22161,
+        "train_wilson95_lcb": 0.5850928416025284
+      },
+      {
+        "rule": "has_buy & has_coin_word",
+        "train_coverage": 0.03882556188366384,
+        "train_precision": 0.592931658505429,
+        "train_support": 4697,
+        "train_wilson95_lcb": 0.5788113344990871
+      },
+      {
+        "rule": "number_count >= 4",
+        "train_coverage": 0.24099622242244392,
+        "train_precision": 0.5713942719945121,
+        "train_support": 29155,
+        "train_wilson95_lcb": 0.5657047074909762
+      },
+      {
+        "rule": "has_buy & has_price",
+        "train_coverage": 0.034270977127883816,
+        "train_precision": 0.5711529184756392,
+        "train_support": 4146,
+        "train_wilson95_lcb": 0.5560291699127461
+      },
+      {
+        "rule": "has_sell",
+        "train_coverage": 0.2804252047909933,
+        "train_precision": 0.5574060427413412,
+        "train_support": 33925,
+        "train_wilson95_lcb": 0.5521144520342431
+      },
+      {
+        "rule": "number_count >= 7",
+        "train_coverage": 0.10902898898137663,
+        "train_precision": 0.5487490523123578,
+        "train_support": 13190,
+        "train_wilson95_lcb": 0.5402438552130128
+      },
+      {
+        "rule": "number_count >= 3",
+        "train_coverage": 0.3061656347900841,
+        "train_precision": 0.4819784551418775,
+        "train_support": 37039,
+        "train_wilson95_lcb": 0.4768918952808477
+      },
+      {
+        "rule": "upper_token_count >= 5",
+        "train_coverage": 0.1657339824925399,
+        "train_precision": 0.4564089775561097,
+        "train_support": 20050,
+        "train_wilson95_lcb": 0.44952346156611384
+      },
+      {
+        "rule": "ticker_like_count >= 5",
+        "train_coverage": 0.16339469485935343,
+        "train_precision": 0.4560631355289118,
+        "train_support": 19767,
+        "train_wilson95_lcb": 0.4491290655572529
+      },
+      {
+        "rule": "line_count >= 10",
+        "train_coverage": 0.10164742058407797,
+        "train_precision": 0.4545824184760511,
+        "train_support": 12297,
+        "train_wilson95_lcb": 0.44579722091132423
+      }
+    ],
+    "train": {
+      "calibrated_confidence": 0.9021406727828746,
+      "coverage": 0.10001074584425139,
+      "ece_vs_calibrated_confidence": 0.0,
+      "precision": 0.9021406727828746,
+      "rows": 120977,
+      "successes": 10915,
+      "support": 12099,
+      "wilson95_lcb": 0.8967179972238122
+    }
+  },
+  "next_action": "Acquire stronger direct event/order-lifecycle/L2/L3/MBO/social/on-chain Manipulation positives and negatives or broaden this source with additional explicit controls, then rerun the unchanged gate.",
+  "predictor_policy": {
+    "blocked_predictors": [
+      "source label y",
+      "Channel ID",
+      "Message ID",
+      "Coin",
+      "date identity",
+      "future_*",
+      "target_*",
+      "next_*"
+    ],
+    "used_predictors": "raw Telegram message text-derived regex/count/token-score features only"
+  },
+  "raw_data_committed": false,
+  "run_id": "20260511T045215+0800-codex-mehrnoom-social-manipulation-gate",
+  "runtime_code_changed": false,
+  "selected_channels": [
+    {
+      "channel_id": 1137853181,
+      "positive_label_rows": 6416,
+      "size": 14361585
+    },
+    {
+      "channel_id": 1286919325,
+      "positive_label_rows": 1886,
+      "size": 1094522
+    },
+    {
+      "channel_id": 1148414624,
+      "positive_label_rows": 1590,
+      "size": 10657707
+    },
+    {
+      "channel_id": 1168808502,
+      "positive_label_rows": 1409,
+      "size": 4755609
+    },
+    {
+      "channel_id": 1128135714,
+      "positive_label_rows": 1394,
+      "size": 7400494
+    },
+    {
+      "channel_id": 1241159528,
+      "positive_label_rows": 1306,
+      "size": 1368886
+    },
+    {
+      "channel_id": 1353862358,
+      "positive_label_rows": 1281,
+      "size": 5239521
+    },
+    {
+      "channel_id": 1372313465,
+      "positive_label_rows": 1265,
+      "size": 7883756
+    },
+    {
+      "channel_id": 1101026633,
+      "positive_label_rows": 1202,
+      "size": 5681220
+    },
+    {
+      "channel_id": 1268278510,
+      "positive_label_rows": 1013,
+      "size": 7565625
+    },
+    {
+      "channel_id": 1147798110,
+      "positive_label_rows": 1011,
+      "size": 9303896
+    },
+    {
+      "channel_id": 1141241803,
+      "positive_label_rows": 932,
+      "size": 3490136
+    },
+    {
+      "channel_id": 1115904838,
+      "positive_label_rows": 880,
+      "size": 4313823
+    },
+    {
+      "channel_id": 1136817405,
+      "positive_label_rows": 867,
+      "size": 2400182
+    },
+    {
+      "channel_id": 1149375708,
+      "positive_label_rows": 812,
+      "size": 3346120
+    },
+    {
+      "channel_id": 1137683620,
+      "positive_label_rows": 797,
+      "size": 7133922
+    },
+    {
+      "channel_id": 1144675996,
+      "positive_label_rows": 733,
+      "size": 4652590
+    },
+    {
+      "channel_id": 1090996030,
+      "positive_label_rows": 732,
+      "size": 2558213
+    },
+    {
+      "channel_id": 1095533634,
+      "positive_label_rows": 728,
+      "size": 2765520
+    },
+    {
+      "channel_id": 1196167823,
+      "positive_label_rows": 725,
+      "size": 7318411
+    },
+    {
+      "channel_id": 1142644156,
+      "positive_label_rows": 724,
+      "size": 3398432
+    },
+    {
+      "channel_id": 1121453288,
+      "positive_label_rows": 717,
+      "size": 3907328
+    },
+    {
+      "channel_id": 1129810706,
+      "positive_label_rows": 701,
+      "size": 2994098
+    },
+    {
+      "channel_id": 1113995061,
+      "positive_label_rows": 698,
+      "size": 1991087
+    },
+    {
+      "channel_id": 1228399647,
+      "positive_label_rows": 669,
+      "size": 17290385
+    },
+    {
+      "channel_id": 1147530638,
+      "positive_label_rows": 638,
+      "size": 1413126
+    },
+    {
+      "channel_id": 1126647644,
+      "positive_label_rows": 636,
+      "size": 3262376
+    },
+    {
+      "channel_id": 1351738786,
+      "positive_label_rows": 618,
+      "size": 1985641
+    },
+    {
+      "channel_id": 1203300637,
+      "positive_label_rows": 581,
+      "size": 2922342
+    },
+    {
+      "channel_id": 1129226192,
+      "positive_label_rows": 560,
+      "size": 4185725
+    },
+    {
+      "channel_id": 1192783688,
+      "positive_label_rows": 555,
+      "size": 1136763
+    },
+    {
+      "channel_id": 1179433767,
+      "positive_label_rows": 536,
+      "size": 1414534
+    },
+    {
+      "channel_id": 1228043983,
+      "positive_label_rows": 534,
+      "size": 1138691
+    },
+    {
+      "channel_id": 1170225132,
+      "positive_label_rows": 526,
+      "size": 3267025
+    },
+    {
+      "channel_id": 1136728217,
+      "positive_label_rows": 524,
+      "size": 3366744
+    },
+    {
+      "channel_id": 1267170242,
+      "positive_label_rows": 523,
+      "size": 1598943
+    },
+    {
+      "channel_id": 1297269082,
+      "positive_label_rows": 517,
+      "size": 3250381
+    },
+    {
+      "channel_id": 1227436771,
+      "positive_label_rows": 514,
+      "size": 3213488
+    },
+    {
+      "channel_id": 1328275659,
+      "positive_label_rows": 508,
+      "size": 3195058
+    },
+    {
+      "channel_id": 1371778001,
+      "positive_label_rows": 505,
+      "size": 3219997
+    },
+    {
+      "channel_id": 1226478289,
+      "positive_label_rows": 501,
+      "size": 3149204
+    },
+    {
+      "channel_id": 1321570188,
+      "positive_label_rows": 493,
+      "size": 1416312
+    },
+    {
+      "channel_id": 1294498041,
+      "positive_label_rows": 486,
+      "size": 7054137
+    },
+    {
+      "channel_id": 1129197833,
+      "positive_label_rows": 482,
+      "size": 1417133
+    },
+    {
+      "channel_id": 1135438240,
+      "positive_label_rows": 481,
+      "size": 1179193
+    },
+    {
+      "channel_id": 1093396548,
+      "positive_label_rows": 476,
+      "size": 1864761
+    },
+    {
+      "channel_id": 1339386847,
+      "positive_label_rows": 470,
+      "size": 697447
+    },
+    {
+      "channel_id": 1399600169,
+      "positive_label_rows": 456,
+      "size": 1430770
+    },
+    {
+      "channel_id": 1261576825,
+      "positive_label_rows": 442,
+      "size": 4642123
+    },
+    {
+      "channel_id": 1125136365,
+      "positive_label_rows": 436,
+      "size": 3396091
+    },
+    {
+      "channel_id": 1074945601,
+      "positive_label_rows": 436,
+      "size": 3521059
+    },
+    {
+      "channel_id": 1134786908,
+      "positive_label_rows": 435,
+      "size": 2258686
+    },
+    {
+      "channel_id": 1220042421,
+      "positive_label_rows": 428,
+      "size": 374842
+    },
+    {
+      "channel_id": 1251630050,
+      "positive_label_rows": 425,
+      "size": 1806997
+    },
+    {
+      "channel_id": 1398892549,
+      "positive_label_rows": 405,
+      "size": 1420328
+    },
+    {
+      "channel_id": 1293749712,
+      "positive_label_rows": 403,
+      "size": 2727360
+    },
+    {
+      "channel_id": 1387320606,
+      "positive_label_rows": 399,
+      "size": 2750520
+    },
+    {
+      "channel_id": 1258098667,
+      "positive_label_rows": 393,
+      "size": 887574
+    },
+    {
+      "channel_id": 1221311339,
+      "positive_label_rows": 393,
+      "size": 2638288
+    },
+    {
+      "channel_id": 1158947787,
+      "positive_label_rows": 392,
+      "size": 2724332
+    },
+    {
+      "channel_id": 1240673228,
+      "positive_label_rows": 388,
+      "size": 2652144
+    },
+    {
+      "channel_id": 1081054885,
+      "positive_label_rows": 387,
+      "size": 1590625
+    },
+    {
+      "channel_id": 1264183469,
+      "positive_label_rows": 385,
+      "size": 1672354
+    },
+    {
+      "channel_id": 1383419557,
+      "positive_label_rows": 385,
+      "size": 2517225
+    },
+    {
+      "channel_id": 1329816173,
+      "positive_label_rows": 384,
+      "size": 2566112
+    },
+    {
+      "channel_id": 1143831893,
+      "positive_label_rows": 383,
+      "size": 4237316
+    },
+    {
+      "channel_id": 1392777632,
+      "positive_label_rows": 374,
+      "size": 1759653
+    },
+    {
+      "channel_id": 1138714324,
+      "positive_label_rows": 364,
+      "size": 852319
+    },
+    {
+      "channel_id": 1110470285,
+      "positive_label_rows": 363,
+      "size": 3382351
+    },
+    {
+      "channel_id": 1151387276,
+      "positive_label_rows": 362,
+      "size": 1737942
+    },
+    {
+      "channel_id": 1284981137,
+      "positive_label_rows": 357,
+      "size": 2514825
+    },
+    {
+      "channel_id": 1106396065,
+      "positive_label_rows": 355,
+      "size": 1088709
+    },
+    {
+      "channel_id": 1189429611,
+      "positive_label_rows": 354,
+      "size": 2433099
+    },
+    {
+      "channel_id": 1093840480,
+      "positive_label_rows": 337,
+      "size": 2348985
+    },
+    {
+      "channel_id": 1134682431,
+      "positive_label_rows": 334,
+      "size": 1448998
+    },
+    {
+      "channel_id": 1268798078,
+      "positive_label_rows": 227,
+      "size": 348714
+    },
+    {
+      "channel_id": 1214871289,
+      "positive_label_rows": 111,
+      "size": 137763
+    },
+    {
+      "channel_id": 1260497025,
+      "positive_label_rows": 18,
+      "size": 20000
+    },
+    {
+      "channel_id": 1142098152,
+      "positive_label_rows": 17,
+      "size": 27623
+    },
+    {
+      "channel_id": 1355931489,
+      "positive_label_rows": 2,
+      "size": 3286
+    }
+  ],
+  "source": {
+    "commit": "86e86b966806b3bf7a3f580f0d0427ab9195f5a5",
+    "data_root": "/private/tmp/ict-regime-mehrnoom-pump-dump",
+    "lfs_cache": "/private/tmp/ict-regime-mehrnoom-pump-dump-lfs-cache",
+    "paper": "https://arxiv.org/abs/1902.03110",
+    "repository": "https://github.com/Mehrnoom/Cryptocurrency-Pump-Dump"
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

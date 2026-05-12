@@ -1,0 +1,158 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T02:52:19.995315+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104610+0800-codex-board-b-yahoo-crypto-precision-fix-aq-v1/workspace/auto-quant-yahoo-crypto-precision-fix",
+  "auto_quant_pinned_ref": "local-yahoo-crypto-precision-104610",
+  "config_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104610+0800-codex-board-b-yahoo-crypto-precision-fix-aq-v1/workspace/auto-quant-yahoo-crypto-precision-fix/config.tomac.json",
+  "timeframe": "1h",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104610+0800-codex-board-b-yahoo-crypto-precision-fix-aq-v1/command-output/01_run_tomac_yahoo_crypto_precision_fix.out",
+  "strategies": [
+    {
+      "name": "ProviderCryptoMomentumStateV1",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104610+0800-codex-board-b-yahoo-crypto-precision-fix-aq-v1/workspace/auto-quant-yahoo-crypto-precision-fix/user_data/strategies_external/ProviderCryptoMomentumStateV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoMomentumStateV1",
+        "mutation_id": "provider-owned-yahoo-crypto-momentum-state-v1",
+        "base_factor": "provider_owned_crypto_momentum_state",
+        "hypothesis": "Provider-owned Yahoo crypto 1h bars can supply nonzero rooted momentum observations across BTC/ETH/SOL without remote exchange metadata.",
+        "paradigm": "momentum_state",
+        "expected_regime": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "factors_used": [
+          "ema20",
+          "ema80",
+          "rsi_midline_cross",
+          "volume_floor"
+        ],
+        "parent": "BoardA/BoardB provider-owned AQ follow-up after zero-trade BTC pulse and Yahoo NQ TOMAC slices.",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -3.894757386013073,
+        "sortino": -7.243337570188228,
+        "calmar": -2.586607016506895,
+        "total_profit_pct": -57.41,
+        "max_drawdown_pct": -60.0640364489774,
+        "trade_count": 944,
+        "win_rate_pct": 30.190677966101692,
+        "profit_factor": 0.6792612618429188
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": -1.5223088280676436,
+          "sortino": -2.7667130566929408,
+          "calmar": -2.597374387944893,
+          "total_profit_pct": -17.97,
+          "max_drawdown_pct": -18.72290673450001,
+          "trade_count": 315,
+          "win_rate_pct": 23.809523809523807,
+          "profit_factor": 0.6229948036277781
+        },
+        "ETH/USDT": {
+          "sharpe": -1.783081798369302,
+          "sortino": -3.3278072576241486,
+          "calmar": -2.5514533208088648,
+          "total_profit_pct": -25.2,
+          "max_drawdown_pct": -26.72680844394289,
+          "trade_count": 334,
+          "win_rate_pct": 32.035928143712574,
+          "profit_factor": 0.6210974150618829
+        },
+        "SOL/USDT": {
+          "sharpe": -0.7963482271147642,
+          "sortino": -1.599140510107842,
+          "calmar": -1.9892441369332423,
+          "total_profit_pct": -14.24,
+          "max_drawdown_pct": -19.373919381798046,
+          "trade_count": 295,
+          "win_rate_pct": 34.91525423728813,
+          "profit_factor": 0.7803067671736684
+        }
+      },
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SOL/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "local-yahoo-crypto-precision-104610",
+      "error": null
+    },
+    {
+      "name": "ProviderCryptoPullbackRevertV1",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T104610+0800-codex-board-b-yahoo-crypto-precision-fix-aq-v1/workspace/auto-quant-yahoo-crypto-precision-fix/user_data/strategies_external/ProviderCryptoPullbackRevertV1.py",
+      "metadata": {
+        "strategy": "ProviderCryptoPullbackRevertV1",
+        "mutation_id": "provider-owned-yahoo-crypto-pullback-revert-v1",
+        "base_factor": "provider_owned_crypto_pullback_revert",
+        "hypothesis": "BTC/ETH/SOL provider-owned 1h pullbacks below short trend can rebound often enough to create nonzero incubation observations.",
+        "paradigm": "pullback_reversion",
+        "expected_regime": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+        "factors_used": [
+          "rsi_oversold_rebound",
+          "ema50_floor",
+          "atr_exit",
+          "volume_floor"
+        ],
+        "parent": "BoardA/BoardB provider-owned AQ follow-up after zero-trade BTC pulse and Yahoo NQ TOMAC slices.",
+        "asset_class": "crypto_provider_ohlcv",
+        "status": "incubation_only",
+        "created": ""
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -0.5776729464376381,
+        "sortino": -1.1018832794292148,
+        "calmar": -2.5842185798540913,
+        "total_profit_pct": -9.64,
+        "max_drawdown_pct": -10.09872341993514,
+        "trade_count": 382,
+        "win_rate_pct": 42.40837696335078,
+        "profit_factor": 0.8775441774706555
+      },
+      "per_pair_metrics": {
+        "BTC/USDT": {
+          "sharpe": 0.19304527806623903,
+          "sortino": 0.47888725273572824,
+          "calmar": 1.839251896611105,
+          "total_profit_pct": 2.65,
+          "max_drawdown_pct": -3.8986303024656777,
+          "trade_count": 146,
+          "win_rate_pct": 45.20547945205479,
+          "profit_factor": 1.121790222178883
+        },
+        "ETH/USDT": {
+          "sharpe": -0.31181717499161693,
+          "sortino": -0.6389582803036874,
+          "calmar": -2.24819696088323,
+          "total_profit_pct": -5.12,
+          "max_drawdown_pct": -6.168052659348017,
+          "trade_count": 127,
+          "win_rate_pct": 40.94488188976378,
+          "profit_factor": 0.8177120968502605
+        },
+        "SOL/USDT": {
+          "sharpe": -0.356840631302906,
+          "sortino": -0.6430751013122512,
+          "calmar": -2.1774718051425026,
+          "total_profit_pct": -7.17,
+          "max_drawdown_pct": -8.909816689,
+          "trade_count": 109,
+          "win_rate_pct": 40.36697247706422,
+          "profit_factor": 0.7518048092828533
+        }
+      },
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SOL/USDT"
+      ],
+      "timerange": "20240601-20260512",
+      "commit": "local-yahoo-crypto-precision-104610",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

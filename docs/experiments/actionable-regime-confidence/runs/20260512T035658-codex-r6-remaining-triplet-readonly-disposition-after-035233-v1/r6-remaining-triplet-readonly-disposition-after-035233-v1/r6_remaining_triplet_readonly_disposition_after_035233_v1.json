@@ -1,0 +1,76 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge_allowed": false,
+  "candidates": [
+    {
+      "disposition": "canonical_tmp_sidecar_not_owner_export_root_trade_usable_false",
+      "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "negative_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "positive_rows": 73,
+      "positive_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "provenance_manifest_sha256": "9d85856f9096203ee31a0abba7fe7701b11e3941c2063fa8c1186bd2ce59331b",
+      "provenance_run_id": "20260511T235910-codex-r6-canonical-intake-v57-materialization-v1",
+      "raw_data_committed": false,
+      "runtime_code_changed": false,
+      "status": "schema_ready_unscored",
+      "thresholds_relaxed": false,
+      "trade_usable": false,
+      "verifier_exit": 0
+    },
+    {
+      "disposition": "isolated_reconstruction_same_event_controls_not_broad_normal_market_background",
+      "intake_root": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "matched_control_policy": "Candidate positives require same-source genuine-order controls for verifier parity. These controls remain same-event controls, not broad normal-market background.",
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "negative_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "positive_rows": 73,
+      "positive_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "provenance_manifest_sha256": "dab98802cca2f2f9cd411e41ba8e3c561e05692aec6c8e342da48f13fa5d00c8",
+      "provenance_run_id": "20260511T234414-codex-r6-direct-intake-reconstruction-v55",
+      "raw_data_committed": false,
+      "runtime_code_changed": false,
+      "status": "schema_ready_unscored",
+      "thresholds_relaxed": false,
+      "verifier_exit": 0
+    },
+    {
+      "disposition": "clean_readback_of_v55_73x73_csv_same_snapshot_not_owner_export_root",
+      "intake_root": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "negative_sha256": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+      "positive_rows": 73,
+      "positive_sha256": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+      "provenance_manifest_sha256": "99dd02f92423ae8bbf78e90fcc0981551d19a5036c75382cd7db679c7772b657",
+      "provenance_run_id": "20260511T235900-codex-r6-direct-intake-v56-clean-readback",
+      "raw_data_committed": false,
+      "runtime_code_changed": false,
+      "status": "schema_ready_unscored",
+      "thresholds_relaxed": false,
+      "verifier_exit": 0
+    }
+  ],
+  "downstream_promotion_rerun_allowed": false,
+  "gate_result": "r6_remaining_triplet_readonly_disposition_after_035233_v1=remaining_triplets_schema_ready_required_owner_export_absent_no_promotion",
+  "new_confidence_gate": false,
+  "non_mutations": {
+    "canonical_live_intake_mutated": false,
+    "copied_to_owner_export_root": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "source_roots_mutated": false,
+    "thresholds_relaxed": false
+  },
+  "required_source_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "run_id": "20260512T035658-codex-r6-remaining-triplet-readonly-disposition-after-035233-v1",
+  "strict_full_objective_achieved": false,
+  "trade_usable": false,
+  "update_goal": false
+}

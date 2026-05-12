@@ -1,0 +1,4799 @@
+{
+  "factor_profiles": {},
+  "factor_rankings": [],
+  "feedback_history": [
+    {
+      "timestamp": "2021-06-09T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00104",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0016833819380230874,
+          "confidence": 0.6,
+          "weight": 0.0016833819380230874,
+          "long_support": 0.0016833819380230874,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0016833819380230874,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00104",
+        "recommended_at": "2021-06-08T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-07-14T08:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00106",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00013786764705892018,
+          "confidence": 0.6,
+          "weight": 0.00013786764705892018,
+          "long_support": 0.00013786764705892018,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00013786764705892018,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00106",
+        "recommended_at": "2021-07-13T12:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-07-27T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00107",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0034828135670385008,
+          "confidence": 0.6,
+          "weight": 0.0034828135670385008,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0034828135670385008,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00107",
+        "recommended_at": "2021-07-27T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-08-17T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00111",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.003797155503628691,
+          "confidence": 0.6,
+          "weight": 0.003797155503628691,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.003797155503628691,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00111",
+        "recommended_at": "2021-08-17T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-09-02T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00114",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.001061946902654931,
+          "confidence": 0.6,
+          "weight": 0.001061946902654931,
+          "long_support": 0.001061946902654931,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.001061946902654931,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00114",
+        "recommended_at": "2021-09-01T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-10-28T11:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00125",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0016669956789718832,
+          "confidence": 0.6,
+          "weight": 0.0016669956789718832,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0016669956789718832,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00125",
+        "recommended_at": "2021-10-27T15:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-11-09T18:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00127",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.004994557213293116,
+          "confidence": 0.6,
+          "weight": 0.004994557213293116,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.004994557213293116,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00127",
+        "recommended_at": "2021-11-08T22:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-11-19T10:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00129",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.002262588315652403,
+          "confidence": 0.6,
+          "weight": 0.002262588315652403,
+          "long_support": 0.002262588315652403,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.002262588315652403,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00129",
+        "recommended_at": "2021-11-18T14:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-11-22T15:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00130",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.007221985513421458,
+          "confidence": 0.6,
+          "weight": 0.007221985513421458,
+          "long_support": 0.007221985513421458,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.007221985513421458,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00130",
+        "recommended_at": "2021-11-19T19:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2021-12-30T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00133",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.002390338002180581,
+          "confidence": 0.6,
+          "weight": 0.002390338002180581,
+          "long_support": 0.002390338002180581,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.002390338002180581,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00133",
+        "recommended_at": "2021-12-29T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-01-06T00:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00134",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.016979352269154258,
+          "confidence": 0.6,
+          "weight": 0.016979352269154258,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.016979352269154258,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00134",
+        "recommended_at": "2022-01-05T12:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-03-24T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00143",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.008775071633237763,
+          "confidence": 0.6,
+          "weight": 0.008775071633237763,
+          "long_support": 0.008775071633237763,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.008775071633237763,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00143",
+        "recommended_at": "2022-03-24T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-03-31T22:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00144",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.012510352643738345,
+          "confidence": 0.6,
+          "weight": 0.012510352643738345,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.012510352643738345,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00144",
+        "recommended_at": "2022-03-31T10:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-07-11T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00148",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.003987674460757762,
+          "confidence": 0.6,
+          "weight": 0.003987674460757762,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.003987674460757762,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00148",
+        "recommended_at": "2022-07-11T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-08-08T10:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00150",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.006537055419703286,
+          "confidence": 0.6,
+          "weight": 0.006537055419703286,
+          "long_support": 0.006537055419703286,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.006537055419703286,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00150",
+        "recommended_at": "2022-08-05T14:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-08-18T14:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00152",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.002407835986628304,
+          "confidence": 0.6,
+          "weight": 0.002407835986628304,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.002407835986628304,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00152",
+        "recommended_at": "2022-08-17T18:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-10-06T21:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00156",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0049399198931909805,
+          "confidence": 0.6,
+          "weight": 0.0049399198931909805,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0049399198931909805,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00156",
+        "recommended_at": "2022-10-06T09:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-10-27T21:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00159",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.011331222358883064,
+          "confidence": 0.6,
+          "weight": 0.011331222358883064,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.011331222358883064,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00159",
+        "recommended_at": "2022-10-27T09:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-11-02T13:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00160",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.006881508218857912,
+          "confidence": 0.6,
+          "weight": 0.006881508218857912,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.006881508218857912,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00160",
+        "recommended_at": "2022-11-01T17:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-11-15T17:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00162",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.010279594877882436,
+          "confidence": 0.6,
+          "weight": 0.010279594877882436,
+          "long_support": 0.010279594877882436,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.010279594877882436,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00162",
+        "recommended_at": "2022-11-14T21:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2022-12-05T13:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00163",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.001902314894878576,
+          "confidence": 0.6,
+          "weight": 0.001902314894878576,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.001902314894878576,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00163",
+        "recommended_at": "2022-12-02T17:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-01-25T21:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00174",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.006338665861756576,
+          "confidence": 0.6,
+          "weight": 0.006338665861756576,
+          "long_support": 0.006338665861756576,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.006338665861756576,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00174",
+        "recommended_at": "2023-01-25T09:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-02-15T23:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00175",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.006930596760857943,
+          "confidence": 0.6,
+          "weight": 0.006930596760857943,
+          "long_support": 0.006930596760857943,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.006930596760857943,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00175",
+        "recommended_at": "2023-02-15T11:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-03-29T11:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00178",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.006968993031006843,
+          "confidence": 0.6,
+          "weight": 0.006968993031006843,
+          "long_support": 0.006968993031006843,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.006968993031006843,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00178",
+        "recommended_at": "2023-03-28T15:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-04-18T08:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00183",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00540475036354815,
+          "confidence": 0.6,
+          "weight": 0.00540475036354815,
+          "long_support": 0.00540475036354815,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00540475036354815,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00183",
+        "recommended_at": "2023-04-17T12:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-04-20T10:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00184",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.003798509629342917,
+          "confidence": 0.6,
+          "weight": 0.003798509629342917,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.003798509629342917,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00184",
+        "recommended_at": "2023-04-19T14:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-05-10T15:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00186",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0017763718213894553,
+          "confidence": 0.6,
+          "weight": 0.0017763718213894553,
+          "long_support": 0.0017763718213894553,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0017763718213894553,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00186",
+        "recommended_at": "2023-05-09T19:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-05-22T23:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00187",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0024588794194180252,
+          "confidence": 0.6,
+          "weight": 0.0024588794194180252,
+          "long_support": 0.0024588794194180252,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0024588794194180252,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00187",
+        "recommended_at": "2023-05-22T11:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-05-23T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00188",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.00986975743816465,
+          "confidence": 0.6,
+          "weight": 0.00986975743816465,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.00986975743816465,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00188",
+        "recommended_at": "2023-05-23T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-06-01T08:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00190",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0019129603060736855,
+          "confidence": 0.6,
+          "weight": 0.0019129603060736855,
+          "long_support": 0.0019129603060736855,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0019129603060736855,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00190",
+        "recommended_at": "2023-05-31T12:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-06-07T12:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00191",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0036307418425427502,
+          "confidence": 0.6,
+          "weight": 0.0036307418425427502,
+          "long_support": 0.0036307418425427502,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0036307418425427502,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00191",
+        "recommended_at": "2023-06-06T16:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-07-06T16:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00196",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.008667584587951138,
+          "confidence": 0.6,
+          "weight": 0.008667584587951138,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.008667584587951138,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00196",
+        "recommended_at": "2023-07-05T20:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-08-02T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00197",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.008100002189189826,
+          "confidence": 0.6,
+          "weight": 0.008100002189189826,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.008100002189189826,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00197",
+        "recommended_at": "2023-08-01T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-09-05T10:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00199",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0011752184132334254,
+          "confidence": 0.6,
+          "weight": 0.0011752184132334254,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0011752184132334254,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00199",
+        "recommended_at": "2023-09-01T14:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-11-17T12:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00209",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.005793871866295319,
+          "confidence": 0.6,
+          "weight": 0.005793871866295319,
+          "long_support": 0.005793871866295319,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.005793871866295319,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00209",
+        "recommended_at": "2023-11-16T16:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-11-28T11:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00210",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.001341278392224976,
+          "confidence": 0.6,
+          "weight": 0.001341278392224976,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.001341278392224976,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00210",
+        "recommended_at": "2023-11-27T15:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2023-12-18T10:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00213",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0029201747841842707,
+          "confidence": 0.6,
+          "weight": 0.0029201747841842707,
+          "long_support": 0.0029201747841842707,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0029201747841842707,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00213",
+        "recommended_at": "2023-12-15T14:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-01-26T13:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00216",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0037403921246248473,
+          "confidence": 0.6,
+          "weight": 0.0037403921246248473,
+          "long_support": 0.0037403921246248473,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0037403921246248473,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00216",
+        "recommended_at": "2024-01-25T17:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-01-30T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00218",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00697464511364565,
+          "confidence": 0.6,
+          "weight": 0.00697464511364565,
+          "long_support": 0.00697464511364565,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00697464511364565,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00218",
+        "recommended_at": "2024-01-29T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-02-06T21:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00221",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0017856418164847732,
+          "confidence": 0.6,
+          "weight": 0.0017856418164847732,
+          "long_support": 0.0017856418164847732,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0017856418164847732,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00221",
+        "recommended_at": "2024-02-06T09:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-03-25T18:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00225",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00001920122887866249,
+          "confidence": 0.6,
+          "weight": 0.00001920122887866249,
+          "long_support": 0.00001920122887866249,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00001920122887866249,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00225",
+        "recommended_at": "2024-03-22T22:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-04-02T15:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00226",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.009746849986595696,
+          "confidence": 0.6,
+          "weight": 0.009746849986595696,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.009746849986595696,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00226",
+        "recommended_at": "2024-04-01T19:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-04-30T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00232",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.016007070607875873,
+          "confidence": 0.6,
+          "weight": 0.016007070607875873,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.016007070607875873,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00232",
+        "recommended_at": "2024-04-30T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-05-09T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00233",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.007572529728473443,
+          "confidence": 0.6,
+          "weight": 0.007572529728473443,
+          "long_support": 0.007572529728473443,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.007572529728473443,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00233",
+        "recommended_at": "2024-05-09T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-05-14T12:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00234",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0002495201535508418,
+          "confidence": 0.6,
+          "weight": 0.0002495201535508418,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0002495201535508418,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00234",
+        "recommended_at": "2024-05-13T16:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-05-20T11:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00236",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.002798630939999436,
+          "confidence": 0.6,
+          "weight": 0.002798630939999436,
+          "long_support": 0.002798630939999436,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.002798630939999436,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00236",
+        "recommended_at": "2024-05-17T15:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-06-10T08:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00242",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0007136150234741123,
+          "confidence": 0.6,
+          "weight": 0.0007136150234741123,
+          "long_support": 0.0007136150234741123,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0007136150234741123,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00242",
+        "recommended_at": "2024-06-07T12:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-06-14T22:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00244",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.005688450777298071,
+          "confidence": 0.6,
+          "weight": 0.005688450777298071,
+          "long_support": 0.005688450777298071,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.005688450777298071,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00244",
+        "recommended_at": "2024-06-14T10:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-08-22T11:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00253",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.005654064306035211,
+          "confidence": 0.6,
+          "weight": 0.005654064306035211,
+          "long_support": 0.005654064306035211,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.005654064306035211,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00253",
+        "recommended_at": "2024-08-21T15:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-08-27T23:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00255",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00010700909577310291,
+          "confidence": 0.6,
+          "weight": 0.00010700909577310291,
+          "long_support": 0.00010700909577310291,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00010700909577310291,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00255",
+        "recommended_at": "2024-08-27T11:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-09-18T12:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00259",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0034174038410195173,
+          "confidence": 0.6,
+          "weight": 0.0034174038410195173,
+          "long_support": 0.0034174038410195173,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0034174038410195173,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00259",
+        "recommended_at": "2024-09-17T16:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-09-23T16:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00262",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.001479420208175597,
+          "confidence": 0.6,
+          "weight": 0.001479420208175597,
+          "long_support": 0.001479420208175597,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.001479420208175597,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00262",
+        "recommended_at": "2024-09-20T20:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-10-11T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00268",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.006449033514114966,
+          "confidence": 0.6,
+          "weight": 0.006449033514114966,
+          "long_support": 0.006449033514114966,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.006449033514114966,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00268",
+        "recommended_at": "2024-10-11T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-10-21T21:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00272",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00025693290625383725,
+          "confidence": 0.6,
+          "weight": 0.00025693290625383725,
+          "long_support": 0.00025693290625383725,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00025693290625383725,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00272",
+        "recommended_at": "2024-10-21T09:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-03-27T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00293",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0071997629133762064,
+          "confidence": 0.6,
+          "weight": 0.0071997629133762064,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0071997629133762064,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00293",
+        "recommended_at": "2025-03-26T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-04-29T11:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00300",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00621027252137063,
+          "confidence": 0.6,
+          "weight": 0.00621027252137063,
+          "long_support": 0.00621027252137063,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00621027252137063,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00300",
+        "recommended_at": "2025-04-28T15:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-04-30T08:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00301",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.006552602839461352,
+          "confidence": 0.6,
+          "weight": 0.006552602839461352,
+          "long_support": 0.006552602839461352,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.006552602839461352,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00301",
+        "recommended_at": "2025-04-29T12:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-05-06T16:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00302",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.007155031602869011,
+          "confidence": 0.6,
+          "weight": 0.007155031602869011,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.007155031602869011,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00302",
+        "recommended_at": "2025-05-05T20:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-05-16T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00307",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.008820418330091728,
+          "confidence": 0.6,
+          "weight": 0.008820418330091728,
+          "long_support": 0.008820418330091728,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.008820418330091728,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00307",
+        "recommended_at": "2025-05-15T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-05-30T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00311",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0037548838861357625,
+          "confidence": 0.6,
+          "weight": 0.0037548838861357625,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0037548838861357625,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00311",
+        "recommended_at": "2025-05-29T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-06-06T13:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00313",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.007519049377328502,
+          "confidence": 0.6,
+          "weight": 0.007519049377328502,
+          "long_support": 0.007519049377328502,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.007519049377328502,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00313",
+        "recommended_at": "2025-06-05T17:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-07-03T08:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00319",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00643728110001307,
+          "confidence": 0.6,
+          "weight": 0.00643728110001307,
+          "long_support": 0.00643728110001307,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00643728110001307,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00319",
+        "recommended_at": "2025-07-02T12:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-07-08T22:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00321",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0015446500402253038,
+          "confidence": 0.6,
+          "weight": 0.0015446500402253038,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0015446500402253038,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00321",
+        "recommended_at": "2025-07-08T10:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-07-23T15:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00325",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.005152425933877325,
+          "confidence": 0.6,
+          "weight": 0.005152425933877325,
+          "long_support": 0.005152425933877325,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.005152425933877325,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00325",
+        "recommended_at": "2025-07-22T19:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-07-30T10:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00328",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0009894148317994844,
+          "confidence": 0.6,
+          "weight": 0.0009894148317994844,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0009894148317994844,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00328",
+        "recommended_at": "2025-07-29T14:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-08-12T22:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00330",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.010444521345204016,
+          "confidence": 0.6,
+          "weight": 0.010444521345204016,
+          "long_support": 0.010444521345204016,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.010444521345204016,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00330",
+        "recommended_at": "2025-08-12T10:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-08-15T08:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00331",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00496420790538421,
+          "confidence": 0.6,
+          "weight": 0.00496420790538421,
+          "long_support": 0.00496420790538421,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00496420790538421,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00331",
+        "recommended_at": "2025-08-14T12:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-08-18T09:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00332",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0024375097034622373,
+          "confidence": 0.6,
+          "weight": 0.0024375097034622373,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0024375097034622373,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00332",
+        "recommended_at": "2025-08-15T13:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-08-27T13:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00333",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.003888871605015165,
+          "confidence": 0.6,
+          "weight": 0.003888871605015165,
+          "long_support": 0.003888871605015165,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.003888871605015165,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00333",
+        "recommended_at": "2025-08-26T17:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-09-17T21:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00339",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.00024249405131770985,
+          "confidence": 0.6,
+          "weight": 0.00024249405131770985,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.00024249405131770985,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00339",
+        "recommended_at": "2025-09-17T09:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-09-22T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00341",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.006842383505777594,
+          "confidence": 0.6,
+          "weight": 0.006842383505777594,
+          "long_support": 0.006842383505777594,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.006842383505777594,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00341",
+        "recommended_at": "2025-09-22T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-09-24T23:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00342",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.004123711340206171,
+          "confidence": 0.6,
+          "weight": 0.004123711340206171,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.004123711340206171,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00342",
+        "recommended_at": "2025-09-24T11:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-10-01T21:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00344",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.007967165620473171,
+          "confidence": 0.6,
+          "weight": 0.007967165620473171,
+          "long_support": 0.007967165620473171,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.007967165620473171,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00344",
+        "recommended_at": "2025-10-01T09:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-10-06T13:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00346",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0012253620048117142,
+          "confidence": 0.6,
+          "weight": 0.0012253620048117142,
+          "long_support": 0.0012253620048117142,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0012253620048117142,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00346",
+        "recommended_at": "2025-10-03T17:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-10-10T22:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00349",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.03217641190571907,
+          "confidence": 0.6,
+          "weight": 0.03217641190571907,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.03217641190571907,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00349",
+        "recommended_at": "2025-10-10T10:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-01-09T11:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00360",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0008697669024702037,
+          "confidence": 0.6,
+          "weight": 0.0008697669024702037,
+          "long_support": 0.0008697669024702037,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0008697669024702037,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00360",
+        "recommended_at": "2026-01-08T15:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-01-14T11:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00362",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": -0.0037044511070110087,
+          "confidence": 0.6,
+          "weight": 0.0037044511070110087,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0037044511070110087,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00362",
+        "recommended_at": "2026-01-13T15:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-02-11T22:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00364",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.00014441058818426278,
+          "confidence": 0.6,
+          "weight": 0.00014441058818426278,
+          "long_support": 0.00014441058818426278,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.00014441058818426278,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00364",
+        "recommended_at": "2026-02-11T10:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-22T10:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00373",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.0006218290252828496,
+          "confidence": 0.6,
+          "weight": 0.0006218290252828496,
+          "long_support": 0.0006218290252828496,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0006218290252828496,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00373",
+        "recommended_at": "2026-04-21T14:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-24T20:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00376",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.007321614987444436,
+          "confidence": 0.6,
+          "weight": 0.007321614987444436,
+          "long_support": 0.007321614987444436,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.007321614987444436,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00376",
+        "recommended_at": "2026-04-24T08:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-05T13:00:00Z",
+      "symbol": "SPY",
+      "source": "150352_145809_screen_branch_probe",
+      "run_id": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "trade_id": "145809-trend_pullback_resume_v1-00380",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "trend_pullback_resume",
+          "category": "TrendMomentum",
+          "direction": "Bull",
+          "value": 0.005846894881182729,
+          "confidence": 0.6,
+          "weight": 0.005846894881182729,
+          "long_support": 0.005846894881182729,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.4
+        },
+        {
+          "factor_name": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.6,
+        "long_score": 0.6,
+        "short_score": 0.4,
+        "win_prob_long": 0.6,
+        "win_prob_short": 0.4,
+        "uncertainty": 0.4
+      },
+      "realized_outcome": "win",
+      "pnl": 0.005846894881182729,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:SPY:145809-trend_pullback_resume_v1-00380",
+        "recommended_at": "2026-05-04T17:00:00+00:00",
+        "node_id": "trend_expansion",
+        "branch_id": "trend_expansion -> normal_volatility",
+        "scenario_id": "trend_expansion -> normal_volatility -> down_or_flat_momentum",
+        "path_id": "trend_expansion->normal_volatility->down_or_flat_momentum->trend_pullback_resume",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    }
+  ],
+  "structural_prior_state": {
+    "nodes": {},
+    "branches": {},
+    "scenarios": {},
+    "paths": {},
+    "event_ledger": [],
+    "node_duration_priors": {},
+    "branch_transition_priors": {},
+    "node_temporal_posteriors": {},
+    "node_transition_posteriors": {},
+    "branch_temporal_posteriors": {},
+    "source_reliability_posteriors": {}
+  },
+  "last_updated": "2026-05-12T07:26:23.495146Z"
+}

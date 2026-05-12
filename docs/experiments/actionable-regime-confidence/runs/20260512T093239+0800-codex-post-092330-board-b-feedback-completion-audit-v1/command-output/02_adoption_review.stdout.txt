@@ -1,0 +1,40 @@
+{
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1/state_b2r_nq_ltf_nursery_v1",
+  "artifact_id": "auto-quant-handoff:factor_research:B2R_NQ_COST_CRISIS_REPAIR_032157:20260512T013053.268Z",
+  "handoff_kind": "factor_research",
+  "backend": "auto-quant",
+  "data_ready": true,
+  "dependency_healthy": true,
+  "workspace_repo_root": "docs/experiments/actionable-regime-confidence/runs/20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1/state_b2r_nq_ltf_nursery_v1/.deps/auto-quant",
+  "suggested_commands": [
+    "cat docs/experiments/actionable-regime-confidence/runs/20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1/state_b2r_nq_ltf_nursery_v1/.deps/auto-quant/program.md",
+    "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1/state_b2r_nq_ltf_nursery_v1/.deps/auto-quant/run_tomac.py"
+  ],
+  "suggested_next_steps": [
+    "open Auto-Quant program.md and stage a research loop for the requested objective",
+    "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
+  ],
+  "recommended_next_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1/state_b2r_nq_ltf_nursery_v1/.deps/auto-quant/run_tomac.py",
+  "recommended_next_command_meta": {
+    "kind": "other",
+    "requires_user_input": false,
+    "blocked": false,
+    "prompt": null,
+    "executable_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1/state_b2r_nq_ltf_nursery_v1/.deps/auto-quant/run_tomac.py",
+    "recorded_data_paths": []
+  },
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "uv run --with ta-lib docs/experiments/actionable-regime-confidence/runs/20260512T092832+0800-codex-board-b-aq-first-nursery-ltf-v1/state_b2r_nq_ltf_nursery_v1/.deps/auto-quant/run_tomac.py",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "review_status": "ready_for_external_execution",
+  "review_summary": "handoff is ready for Auto-Quant execution and candidate export",
+  "notes": [
+    "auto_quant_active_strategy_count=1",
+    "requested_at=20260512T013053.269Z"
+  ]
+}

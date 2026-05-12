@@ -1,0 +1,14 @@
+gate,status,evidence
+factor_research_command_ran,pass,checks/01_factor_research_selected_1h.exit=0
+auto_quant_prepare_command_ran,pass,checks/02_auto_quant_prepare.exit exists
+auto_quant_prepare_passed,fail,checks/02_auto_quant_prepare.exit=1
+auto_quant_data_ready,fail,auto_quant_handoff.factor_research.json data_ready=false
+selected_history_source_control_unlocked,fail,workflow_snapshot blocking_truth.reason=user_selected_historical_data_missing
+pre_bayes_ge_95,fail,pre_bayes_quality=0.5250864595751618
+bbn_or_structural_regime_ge_95,fail,max_structural_regime_probability=0.7476877176681956
+cross_instrument,fail,BTC-like source only
+cross_timeframe,partial,explicit MTF summary covers derived 15m/1h/1d from BTC sources but source packet remains BTC-only selected 1h line
+execution_ready,fail,execution_gate_status=execution_blocked
+actionable_or_promotable,fail,execution_candidate actionable=false review=observe
+trade_usable,fail,trade_usable=false
+update_goal,fail,update_goal=false

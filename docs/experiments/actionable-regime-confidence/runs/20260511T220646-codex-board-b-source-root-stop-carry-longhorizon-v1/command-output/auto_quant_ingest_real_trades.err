@@ -1,0 +1,4 @@
+Error: ingesting real trades for symbol 'BOARD_B_SOURCE_ROOT_STOP_CARRY_LH' from '/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/ict-engine-downstream/source_root_stop_carry_longhorizon_real_trades_wire_v1.jsonl'
+
+Caused by:
+    refusing to re-ingest the same JSONL: a prior auto_quant_real_trades_ingested entry with content_hash 'c4d404b1f7d836e6' exists (auto_quant_real_trades_BOARD_B_SOURCE_ROOT_STOP_CARRY_LH_20260511T141444.833533000Z); pass --force after rolling back the BBN to override

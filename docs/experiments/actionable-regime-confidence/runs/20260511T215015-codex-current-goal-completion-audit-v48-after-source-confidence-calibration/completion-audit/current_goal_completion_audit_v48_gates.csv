@@ -1,0 +1,8 @@
+gate,required,observed,pass
+ready_intake_roots,4,2,False
+source_confidence_accepted_labels,Bear;Bull;Crisis;Sideways accepted at >=0.95,none,False
+native_subhour_root_ready,true,false,False
+source_panel_recency_verifier,not_blocked,blocked,False
+r6_support,>=50/50,41/41,False
+r6_wilson95_min_lcb,>=0.95,0.914332,False
+strict_full_objective,true,false,False

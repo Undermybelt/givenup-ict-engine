@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-05-10T14:12:54.528735Z",
+  "decision_state": "accepted_95_field_complete_6_of_6",
+  "trade_usable": false,
+  "final_label": "MultiRegimeFieldCompleteGuardrailSet",
+  "label_set": [
+    "SessionLiquidityCoreViable",
+    "RangeConsolidation",
+    "ThinLiquidity",
+    "TrendExpansion",
+    "ExtremeStress",
+    "ReversalBrewing"
+  ],
+  "abstain_reasons": [
+    "board_a_confidence_only",
+    "not_strategy_profitability",
+    "board_b_must_prove_non_observe_release_and_path_specific_edge"
+  ],
+  "confidence_95": true,
+  "confidence_99": false,
+  "min_precision_wilson_lcb": 0.9536435698638122,
+  "max_transition_hazard": 0.9977802441731409,
+  "source_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T212828-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json"
+}

@@ -1,0 +1,9 @@
+metric,key,value
+label_count,Bull,1213
+label_count,Crisis,991
+label_count,Sideways,1231
+split_count,calibration,1292
+split_count,heldout_time,1319
+split_count,test,824
+date_min,all,2012-02-02
+date_max,all,2026-03-20

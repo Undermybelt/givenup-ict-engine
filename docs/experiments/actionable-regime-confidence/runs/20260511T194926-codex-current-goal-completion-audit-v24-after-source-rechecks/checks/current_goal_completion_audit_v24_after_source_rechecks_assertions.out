@@ -1,0 +1,6 @@
+decision=current_goal_completion_audit_v24=latest_source_rechecks_confirm_full_objective_blocked
+checklist_rows=8
+failed_rows=6
+failed_ids=R2,R3,R4,R5,R6,R8
+strict_full_objective_achieved=false
+update_goal=false

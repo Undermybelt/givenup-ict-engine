@@ -1,0 +1,9 @@
+accepted_new_regimes: ['TrendExpansion', 'ExtremeStress', 'ReversalBrewing']
+per_regime_coverage: {'SessionLiquidityCoreViable': 'accepted_95_existing', 'TrendExpansion': 'accepted_95_new_cross_context', 'RangeConsolidation': 'accepted_95_existing', 'ExtremeStress': 'accepted_95_new_cross_context', 'ReversalBrewing': 'accepted_95_new_cross_context', 'ThinLiquidity': 'accepted_95_existing_via_ThinLiquidityOffHoursPersistent'}
+all_required_regimes_covered: True
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+validation_instruments_min_95: 2
+validation_market_contexts_min_95: 2
+trade_usable: False
+reversal_packet_semantics: trend-failure transition hazard, not direct sign-reversal prediction

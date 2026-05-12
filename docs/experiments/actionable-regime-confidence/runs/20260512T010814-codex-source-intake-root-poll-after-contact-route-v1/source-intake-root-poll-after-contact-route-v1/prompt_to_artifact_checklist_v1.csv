@@ -1,0 +1,5 @@
+requirement,evidence,status,reason
+every regime reaches 95 percent calibrated confidence,board cursor plus root poll,blocked,"source-owned rows remain absent, so no new calibrated regime packet can be promoted"
+validate across other markets and periods,target root poll,blocked,R6 owner controls and non-R6 source-label/R3/R5 roots are absent
+use real provider/Auto-Quant/pre-Bayes/BBN/CatBoost/execution-tree evidence,current board cursor,blocked_not_rerun,board explicitly forbids downstream promotion rerun until verifier-native controls/provenance arrive
+do not disturb concurrent board work,append-only artifact and board hash,satisfied_for_this_slice,no shared intake roots were created or mutated; no cursor rewrite by this artifact

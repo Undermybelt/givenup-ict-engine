@@ -1,0 +1,6 @@
+market_data:0/1 ready
+guide: tradingview_mcp: access=local_stdio_or_remote_api_key fit=tradfi/crypto fallback=31 summary=Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.
+detail: tradingview_mcp | access=local_stdio_or_remote_api_key | Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.
+setup: Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1. | Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable.
+market_data: ready 0/1 selectable 1 default 0
+  pending: tradingview_mcp(configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed)

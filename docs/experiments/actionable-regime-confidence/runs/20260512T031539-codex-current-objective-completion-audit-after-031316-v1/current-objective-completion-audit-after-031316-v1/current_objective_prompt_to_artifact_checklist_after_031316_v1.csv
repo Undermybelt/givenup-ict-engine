@@ -1,0 +1,16 @@
+check_id,status,evidence,notes
+objective_restatement,pass,current_objective_completion_audit_after_031316_v1.md,Strict objective restated with regime confidence and downstream chain order.
+prior_current_audit_read,pass,20260512T030957-codex-current-objective-completion-audit-after-030617-030623-v1,Latest prior audit was not complete.
+latest_staging_packet_read,pass,20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1,Staging packet exists and was inspected.
+latest_triplet_sweep_read,pass,20260512T031435-codex-r6-local-triplet-sweep-after-030957-v1,Triplet sweep exists and was inspected.
+proxy_promotion_rejected,pass,r6_noncanonical_staging_split_calibration_v1.json,Noncanonical staging is recorded as no-promotion.
+provider_autoquant_context,partial,030300 and 030957 artifacts,Read-only context exists but does not provide source labels or promotion permission.
+pooled_staging_gate,partial,031316 pooled_gate=true,Pooled gate passed but split gates failed and canonical root absent.
+r6_owner_export_root,blocked,/tmp/ict-engine-board-a-r6-owner-export-v1,Absent and canonical owner root not mutated.
+r3_native_subhour_source_label_root,blocked,/tmp/ict-engine-native-subhour-source-label-intake,Absent.
+r5_source_panel_recency_extension_root,blocked,/tmp/ict-engine-source-panel-recency-extension,Absent.
+cross_time_split_validation,blocked,031316 split gates,Chronological/heldout symbol/heldout venue gates are false.
+approval_or_flip_controls,blocked,/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid,Approval false and FLIP controls not accepted.
+per_regime_95_full_objective,blocked,current evidence set,No new accepted rows or confidence gate after 031316.
+owner_export_triplet_discovery,blocked,031435 triplet sweep,No new owner/operator R6 export triplet was found.
+canonical_and_downstream_promotion,blocked,031316 promotion fields,Canonical merge and downstream rerun remain false.

@@ -1,0 +1,9 @@
+rows 11086
+date_start 1717365600000
+date_end 1778540400000
+volume_nonzero 10691
+entry_count_raw 3600
+entry_count_after_startup 3571
+exit_count_raw 4772
+entry_exit_overlap 405
+entry_no_exit_after_startup 3171

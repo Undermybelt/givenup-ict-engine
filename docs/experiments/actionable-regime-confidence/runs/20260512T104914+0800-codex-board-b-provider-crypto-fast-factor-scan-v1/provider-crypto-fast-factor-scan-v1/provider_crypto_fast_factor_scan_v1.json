@@ -1,0 +1,38 @@
+{
+  "branch_path": null,
+  "closeout_time": "2026-05-12T10:57:04+0800",
+  "evidence": {
+    "first_scan_command": "command-output/00_fast_provider_crypto_scan.cmd",
+    "first_scan_exit": "checks/00_fast_provider_crypto_scan.exit",
+    "first_scan_stderr": "command-output/00_fast_provider_crypto_scan.err",
+    "first_scan_stdout": "command-output/00_fast_provider_crypto_scan.out",
+    "reduced_script": "workspace/fast_provider_crypto_scan.py",
+    "reduced_script_sha256": "41ffd934823456d514154f6be37eb97a95c65977f8c3cc63997ead35c55e1b92"
+  },
+  "gate": {
+    "count_once": "104914_provider_crypto_fast_factor_scan",
+    "fail_closed": [
+      "first_scan_killed_slow_scan",
+      "no_candidate_json_produced",
+      "not_real_auto_quant_execution",
+      "no_provider_matrix_invocation_rows",
+      "no_mature_profitable_rooted_branch",
+      "no_pre_bayes_bbn_catboost_execution_tree_chain"
+    ],
+    "pass": [
+      "diagnostic_run_root_preserved",
+      "slow_scan_exit_marker_recorded"
+    ],
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "result": {
+    "candidate_json_produced": false,
+    "first_scan_exit_marker": "killed_slow_scan",
+    "reduced_scan_rerun": false,
+    "status": "diagnostic_fail_closed"
+  },
+  "run_id": "20260512T104914+0800-codex-board-b-provider-crypto-fast-factor-scan-v1",
+  "schema": "provider_crypto_fast_factor_scan_v1",
+  "source_data_root": "docs/experiments/actionable-regime-confidence/runs/20260512T103437+0800-codex-board-b-yahoo-crypto-momentum-market-aq-v1/workspace/auto-quant-yahoo-crypto-momentum/user_data/data"
+}

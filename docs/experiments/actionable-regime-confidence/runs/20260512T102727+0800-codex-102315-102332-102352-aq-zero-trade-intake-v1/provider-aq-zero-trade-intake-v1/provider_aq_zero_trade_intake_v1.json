@@ -1,0 +1,80 @@
+{
+  "run_id": "20260512T102727+0800-codex-102315-102332-102352-aq-zero-trade-intake-v1",
+  "mode": "append_only_board_a_intake_no_promotion",
+  "inputs": {
+    "102315": "docs/experiments/actionable-regime-confidence/runs/20260512T102315+0800-codex-board-b-provider-yahoo-nq-long-aq-preseed-v1",
+    "102332": "docs/experiments/actionable-regime-confidence/runs/20260512T102332+0800-codex-board-b-provider-yf-nq-trendpulse-aq-v1",
+    "102352": "docs/experiments/actionable-regime-confidence/runs/20260512T102352+0800-codex-board-b-provider-btc-signal-canary-v1"
+  },
+  "runs": [
+    {
+      "run_id": "20260512T102315+0800-codex-board-b-provider-yahoo-nq-long-aq-preseed-v1",
+      "provider": "yfinance",
+      "pair": "NQ/USD",
+      "strategy": "TomacNQ_KillzoneBreakout",
+      "fetch_exit": 0,
+      "prepare_exit": 0,
+      "run_exit": 0,
+      "bars_1h": 11381,
+      "bars_4h": 3085,
+      "bars_1d": 612,
+      "succeeded_strategies": 1,
+      "failed_strategies": 0,
+      "trade_count": 0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    {
+      "run_id": "20260512T102332+0800-codex-board-b-provider-yf-nq-trendpulse-aq-v1",
+      "provider": "yfinance",
+      "pair": "NQ/USD",
+      "strategy": "ProviderNqTrendPulse",
+      "run_exit": 0,
+      "probe_exit": 0,
+      "trend_count": 3963,
+      "pulse_count": 3962,
+      "tradable_count": 11080,
+      "succeeded_strategies": 1,
+      "failed_strategies": 0,
+      "trade_count": 0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    {
+      "run_id": "20260512T102352+0800-codex-board-b-provider-btc-signal-canary-v1",
+      "provider": "binance",
+      "pair": "BTC/USDT",
+      "strategy": "ProviderBtcSignalCanary",
+      "run_exit": 0,
+      "succeeded_strategies": 1,
+      "failed_strategies": 0,
+      "trade_count": 0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0
+    }
+  ],
+  "decision": {
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "gate": [
+    "provider_yahoo_nq_long_2y_aq_preseed_v1=zero_trade_no_promotion",
+    "provider_yf_nq_trendpulse_aq_v1=zero_trade_no_promotion",
+    "provider_btc_signal_canary_v1=zero_trade_no_promotion"
+  ]
+}

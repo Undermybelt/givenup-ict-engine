@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "d56f172efc2f8c42",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_BOARD_A_BTC_172142_20260512T095011.302759000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "board_a_172142_same_root_aq",
+  "symbol": "BOARD_A_BTC_172142",
+  "trades_applied": 1953,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260512T172142+0800-codex-board-a-feasible-window-same-root-aq-packet-v1/derived/downstream-v1/real_trades_172142_same_root.jsonl",
+  "trades_total": 1953
+}

@@ -1,0 +1,10 @@
+gate,readback,status
+r6_owner_export_root,/tmp/ict-engine-board-a-r6-owner-export-v1 missing,blocked
+r3_native_subhour_root,/tmp/ict-engine-native-subhour-source-label-intake missing,blocked
+r5_recency_extension_root,/tmp/ict-engine-source-panel-recency-extension missing,blocked
+approval_package,r6_oystacher_approval_decision_package_v1=decision_package_ready_no_approval_no_merge,blocked
+same_exhibit_flip_controls,rejected_under_current_contract,blocked
+source_owned_normal_controls_alternative,not_supplied,blocked
+mainregimev2_or_owner_export_arrival,no new accepted delivery root found,blocked
+non_target_local_triplets,known verifier-shaped local triplets only,non_promoting
+update_goal_eligibility,strict_full_objective false,blocked

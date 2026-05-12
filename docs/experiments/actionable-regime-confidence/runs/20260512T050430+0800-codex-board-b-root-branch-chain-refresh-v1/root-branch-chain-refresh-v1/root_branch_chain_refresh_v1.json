@@ -1,0 +1,113 @@
+{
+  "all_commands_exit_zero": true,
+  "auto_quant_healthy": false,
+  "auto_quant_notes": [
+    "auto_quant_not_bootstrapped"
+  ],
+  "auto_quant_status": "missing_dependency",
+  "bbn_application_status": "skipped",
+  "bbn_read_only_decision_state": "accepted",
+  "bbn_trade_usable": "true",
+  "blocking_reasons": [
+    "not_user_selected_historical_data",
+    "auto_quant_status_missing_dependency_in_isolated_copy",
+    "pre_bayes_observe_only",
+    "bbn_application_skipped",
+    "policy_training_matched_rows_zero",
+    "catboost_structural_runtime_candidate_set_only_validation_0_of_30",
+    "execution_candidate_not_ready"
+  ],
+  "branch_path_count": 5,
+  "branch_paths": [
+    "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72",
+    "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound -> NQRootAdaptiveCostCrisisRepairV3:bear_oversold_high_vix_rebound_h72",
+    "Sideways -> RangeConsolidation -> NQCalmVixZReversion -> NQRootAdaptiveCostCrisisRepairV3:sideways_calm_vix_z_revert_h72",
+    "Crisis -> ExtremeStress -> NQFlushRebound -> NQRootAdaptiveCostCrisisRepairV3:crisis_flush_rebound_h72",
+    "Manipulation(scoped) -> TelegramPumpEvent -> ProviderStopTakeShort -> ManipulationStopTakeProfitGridV2:short_tp120_sl060_h72"
+  ],
+  "command_exit_codes": {
+    "00_provider_status_agent.exit": "0",
+    "01_provider_status_compact.exit": "0",
+    "02_auto_quant_status.exit": "0",
+    "03_pre_bayes_status.exit": "0",
+    "04_policy_training_status.exit": "0",
+    "05_export_structural_path_target.exit": "0",
+    "06_workflow_structural_bundle.exit": "0",
+    "07_workflow_execution_candidate.exit": "0",
+    "08_workflow_full.exit": "0"
+  },
+  "entry_model_matched_rows": {
+    "breaker_rb_long_v1": 0,
+    "cisd_rb_long_v1": 0
+  },
+  "execution_phase_candidate_status": "execution_blocked",
+  "execution_phase_ready": false,
+  "execution_phase_review_reason": "structural_recommended_path_visible_but_execution_or_pre_bayes_gate_not_ready",
+  "execution_trace_branch_hit_count": 1,
+  "execution_trace_branch_hits": [
+    "Bull -> TrendExpansion -> NQSourceRootCarry -> NQRootAdaptiveCostCrisisRepairV3:bull_source_root_carry_h72"
+  ],
+  "gate_result": "root_branch_chain_refresh_v1=full_runtime_refresh_exit0_no_promotion",
+  "policy_training_ready": false,
+  "policy_training_summary": "entry-model training modules mixed: ready=[] pending=[cisd_rb_long_v1,breaker_rb_long_v1] | structural_path_ranking_target rows=5 history_rows=13 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=5",
+  "pre_bayes_gate_status": "observe_only",
+  "pre_bayes_quality_score": null,
+  "promotion_allowed": false,
+  "provider_matrix": {
+    "ibkr:market_data": {
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    "ibkr_bridge:local_runtime": {
+      "ready": false,
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    "kraken_cli:local_runtime": {
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    },
+    "kraken_public:market_data": {
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    "tradingview_mcp:market_data": {
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy"
+    },
+    "yfinance:live_runtime": {
+      "ready": true,
+      "reason": "native_yfinance_runtime_available",
+      "status": "ready"
+    },
+    "yfinance:market_data": {
+      "ready": true,
+      "reason": "public_yahoo_http_endpoints",
+      "status": "ready"
+    }
+  },
+  "provider_summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "run_id": "20260512T050430+0800-codex-board-b-root-branch-chain-refresh-v1",
+  "structural_candidate_set_size": 5,
+  "structural_runtime": {
+    "calibration_status": "not_fitted",
+    "candidate_set_match_count": 5,
+    "observation_validation_rows": 0,
+    "production_validation_rows": 0,
+    "raw_scored_mature_rows": 0,
+    "ready": true,
+    "source_kind": "candidate_set",
+    "status": "enabled_candidate_set_ready",
+    "summary_line": "Ranker runtime: structural_path_ranking_target rows=5 history_rows=13 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=5",
+    "validation_summary_line": "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 ready=false"
+  },
+  "structural_runtime_match_count": 5,
+  "structural_runtime_source": "candidate_set",
+  "update_goal": false,
+  "workflow_human_next_triage": null,
+  "workflow_latest_candidate_status": "no_trade"
+}

@@ -1,0 +1,4 @@
+Error: yahoo chart returned error for 'QQQ=F'
+
+Caused by:
+    HTTP status client error (404 Not Found) for url (https://query1.finance.yahoo.com/v8/finance/chart/QQQ%3DF?interval=1d&period1=1742122320&period2=1778410320&includePrePost=true&events=div%2Csplits)

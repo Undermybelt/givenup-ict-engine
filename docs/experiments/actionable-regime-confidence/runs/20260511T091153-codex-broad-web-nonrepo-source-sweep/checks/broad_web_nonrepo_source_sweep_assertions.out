@@ -1,0 +1,9 @@
+PASS candidates_classified=7
+PASS accepted_new_mainregimev2_root_label_slots=0
+PASS accepted_new_direct_manipulation_label_sources=0
+PASS accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+PASS gate_result=blocked_broad_web_nonrepo_sources_proxy_partial_or_methodology_only
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

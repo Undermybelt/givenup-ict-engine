@@ -1,0 +1,10 @@
+PASS decision=current_goal_completion_audit_v33=r3_r6_contact_matrices_ready_rows_not_acquired_blocked
+PASS ready_intake_roots=0_of_4
+PASS accepted_rows_added_since_v32=0
+PASS new_confidence_gate_since_v32=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS unmet_ids=R2,R3,R4,R5,R6,R8

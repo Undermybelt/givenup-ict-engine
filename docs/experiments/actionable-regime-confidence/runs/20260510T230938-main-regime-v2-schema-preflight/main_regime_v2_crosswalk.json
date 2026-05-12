@@ -1,0 +1,39 @@
+{
+  "schema_version": "main-regime-v2-crosswalk/v1",
+  "source_strict_cross_timeframe_audit": "docs/experiments/actionable-regime-confidence/runs/20260510T224929-codex-strict-cross-timeframe-audit/audit/strict_cross_timeframe_audit.json",
+  "strict_cross_timeframe_pass_regimes": [
+    "SessionLiquidityCoreViable",
+    "RangeConsolidation"
+  ],
+  "strict_cross_timeframe_missing_regimes": [
+    "TrendExpansion",
+    "ExtremeStress",
+    "ReversalBrewing",
+    "ThinLiquidity"
+  ],
+  "subtype_to_root": {
+    "SessionLiquidityCoreViable": [
+      "liquidity_context",
+      "ManipulationLiquidityEngineering_context_only"
+    ],
+    "TrendExpansion": [
+      "BullExpansion_candidate",
+      "BearExpansion_candidate"
+    ],
+    "RangeConsolidation": [
+      "ConsolidationRange_candidate"
+    ],
+    "ExtremeStress": [
+      "CrisisStress_candidate",
+      "BearExpansion_context_only"
+    ],
+    "ReversalBrewing": [
+      "TransitionAccumulationDistribution_candidate"
+    ],
+    "ThinLiquidity": [
+      "liquidity_context",
+      "ManipulationLiquidityEngineering_context_only"
+    ]
+  },
+  "downgrade_rule": "Subtypes are evidence only; root classes require their own accepted packet or explicit residual bucket."
+}

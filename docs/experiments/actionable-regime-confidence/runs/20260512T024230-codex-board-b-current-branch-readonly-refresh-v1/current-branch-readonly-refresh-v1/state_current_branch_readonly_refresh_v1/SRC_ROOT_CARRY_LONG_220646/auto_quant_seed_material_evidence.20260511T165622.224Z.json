@@ -1,0 +1,57 @@
+{
+  "artifact_id": "auto-quant-seed-material-evidence:SRC_ROOT_CARRY_LONG_220646:20260511T165622.224Z",
+  "generated_at": "2026-05-11T16:56:22.224019Z",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1",
+  "strategy_material_root": "/Users/thrill3r/Auto-Quant/user_data/strategies_external",
+  "workspace_repo_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+  "strategies_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies",
+  "strategy_template_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies/_template.py.example",
+  "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/SRC_ROOT_CARRY_LONG_220646/auto_quant_seed_material_evidence.20260511T165622.224Z.json",
+  "active_strategy_count": 0,
+  "selected_materials": [
+    {
+      "summary": {
+        "name": "TomacNQ_KillzoneBreakout",
+        "strategy_path": "TomacNQ_KillzoneBreakout.py",
+        "trade_rows": 0,
+        "tp_count": 0,
+        "sl_count": 0,
+        "be_count": 0
+      },
+      "evidence_strength_score": 10.0,
+      "inferred_tags": [
+        "ict-structure",
+        "breakout",
+        "trend-following",
+        "ema-reclaim",
+        "session-timing"
+      ],
+      "seed_strategy_name": "TomacTomacnqKillzonebreakoutSeed",
+      "seed_strategy_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies/TomacTomacnqKillzonebreakoutSeed.py",
+      "authoring_focus": [
+        "re-express only the underlying trading idea as Auto-Quant-native strategy logic; never copy maintainer-local paths or execute the external script directly",
+        "preserve the strongest visible ideas from this material: ict-structure, breakout, trend-following, ema-reclaim, session-timing",
+        "no matched csv evidence was found, so treat this as weak inspiration and validate aggressively"
+      ],
+      "strategy_excerpt": "\"\"\"\nTomacNQ_KillzoneBreakout — single-pair NQ futures strategy on synthetic NQ/USD feather data.\n\nParadigm: breakout\nHypothesis: On NQ continuous-rolled 1h futures bars, breakouts above the prior 24h high concentrated in the US AM session (UTC 13:30-15:30 ≈ NY 09:30-11:30) deliver follow-through when the 4h trend (EMA21>EMA89) agrees, mirroring Tomac's literal AM killzone exploit on its native asset class.\nParent: TomacKillzoneBreakout (crypto generalisation, autoresearch/apr26)\nCreated: pending-first-commit\nStatus: active\nUses MTF: yes\n\nProvenance: idea originally seeded by /Users/thrill3r/Downloads/Tomac/ultimate_ict_strategy.py and 90wr1.5rrr_strategy.py (read-only). Source data: /Users/thrill3r/Downloads/Tomac/nq future 2021-2025/NQ_1min_Continuous_Shifted_2836.csv resampled by prepare_external.py.\n\n# AUTO_QUANT_META v1\nStrategy:        TomacNQ_KillzoneBreakout\nMutation_id:     synthetic-ohlcv-TomacNQ_KillzoneBreakout\nBase_factor:     tomac_n_q__killzone_breakout\nHypothesis:      On NQ continuous-rolled 1h futures bars, breakouts above the prior 24h high concentrated in the US AM session (UTC 13:30-15:30 ≈ NY 09:30-11:30) deliver follow-through when the 4h trend (EMA21 above EMA89) agrees, mirroring Tomac's literal AM killzone exploit on its native asset class.\nParadigm:        breakout\nExpected_regime: multi_timeframe_intraday_resonance\nFactors_used:    tomac_n_q__killzone_breakout\nParent:          TomacKillzoneBreakout (crypto generalisation, autoresearch/apr26)\nAsset_class:     synthetic_ohlcv\nStatus:          active\nCreated:         pending-first-commit\n# END_AUTO_QUANT_META\n\"\"\"\nfrom __future__ import annotations\n",
+      "materialized_strategy_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies/TomacTomacnqKillzonebreakoutSeed.py",
+      "materialization_status": "materialized"
+    }
+  ],
+  "suggested_next_steps": [
+    "read /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/program.md and the strategy template before authoring any seed strategy descendants",
+    "author 2-3 active non-underscore strategy files under /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies from these seed packets before any run.py execution",
+    "run uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py only after the seed descendants are written and reviewed"
+  ],
+  "notes": [
+    "external_seed_material_root=/Users/thrill3r/Auto-Quant/user_data/strategies_external",
+    "seed_materials_are_read_only_reference_inputs",
+    "do_not_execute_or_copy_external_scripts_directly_into_the_managed_workspace",
+    "re-express_external_logic_as_auto_quant_native_strategy_code_before_any_run",
+    "workspace_currently_has_no_active_strategies_so_seed_authoring_is_required"
+  ],
+  "materialized_strategy_paths": [
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies/TomacTomacnqKillzonebreakoutSeed.py"
+  ]
+}

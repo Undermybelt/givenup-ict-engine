@@ -1,0 +1,1758 @@
+{
+  "actionable_artifacts": [
+    {
+      "actionable": true,
+      "artifact_id": "execution-tree-SRC_ROOT_CARRY_LONG_220646-1778517424964",
+      "artifact_kind": "execution_tree_artifact",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+      "entry_id": "ledger:execution-tree-SRC_ROOT_CARRY_LONG_220646-1778517424964",
+      "family_scores": {
+        "branch_probability": 0.0,
+        "execution_score": 0.5621401595857166
+      },
+      "generated_at": "2026-05-11T16:37:04.964200Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/execution_tree_trace.json",
+      "promote_candidate": false,
+      "quality_score": 0,
+      "regraded_at": null,
+      "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000",
+      "review_rule_version": "execution-tree-artifact-v1",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "status": "observe",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": null,
+      "top_factor_name": null,
+      "version": 1
+    },
+    {
+      "actionable": true,
+      "artifact_id": "pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "artifact_kind": "pending_update",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+      "entry_id": "ledger:pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "family_scores": {
+        "cross_market_smt": 0.1,
+        "options_hedging": 0.2575,
+        "other": 0.25969793489233367,
+        "structure_ict": 0.571875,
+        "trend_momentum": 0.1801439149035265,
+        "volatility_mean_reversion": 0.2870655542479674
+      },
+      "generated_at": "2026-05-11T16:37:04.965162Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/pending_update_feedback.json",
+      "promote_candidate": true,
+      "quality_score": 281,
+      "regraded_at": null,
+      "review_reason": "first_pending_update_artifact",
+      "review_rule_version": "55f482c1291f879a",
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "status": "promote_latest",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "tune",
+      "top_factor_name": "structure_ict",
+      "version": 1
+    },
+    {
+      "actionable": true,
+      "artifact_id": "execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "artifact_kind": "execution_candidate",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+      "entry_id": "ledger:execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "family_scores": {
+        "cross_market_smt": 0.1,
+        "options_hedging": 0.2575,
+        "other": 0.25969793489233367,
+        "structure_ict": 0.571875,
+        "trend_momentum": 0.1801439149035265,
+        "volatility_mean_reversion": 0.2870655542479674
+      },
+      "generated_at": "2026-05-11T16:37:04.965162Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/execution_candidate.json",
+      "promote_candidate": true,
+      "quality_score": 86,
+      "regraded_at": null,
+      "review_reason": "first_execution_candidate_artifact",
+      "review_rule_version": "7bfaf4a346c607e8",
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "status": "promote_latest",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "tune",
+      "top_factor_name": "structure_ict",
+      "version": 1
+    },
+    {
+      "actionable": true,
+      "artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+      "artifact_kind": "ensemble_vote",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "Observe",
+      "entry_id": "ledger:ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+      "family_scores": {},
+      "generated_at": "2026-05-11T16:37:05.466814Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/ensemble_vote.json",
+      "promote_candidate": true,
+      "quality_score": 60,
+      "regraded_at": null,
+      "review_reason": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+      "review_rule_version": "ensemble-audit-v2-weighted",
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "status": "consensus",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "Observe",
+      "top_factor_name": null,
+      "version": 1
+    },
+    {
+      "actionable": true,
+      "artifact_id": "auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165005.384Z",
+      "artifact_kind": "auto_quant_handoff_candidate",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "auto-quant",
+      "entry_id": "ledger:auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165005.384Z",
+      "family_scores": {},
+      "generated_at": "2026-05-11T16:50:05.388209Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/SRC_ROOT_CARRY_LONG_220646/auto_quant_handoff.factor_research.json",
+      "promote_candidate": false,
+      "quality_score": 30,
+      "regraded_at": null,
+      "review_reason": "prepare Auto-Quant market data before attempting the research loop | re-run factor-research with backend=auto-quant after data becomes ready",
+      "review_rule_version": "auto-quant-handoff-v1",
+      "source_phase": "factor_research",
+      "source_run_id": null,
+      "status": "prepare_required",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "review",
+      "top_factor_name": null,
+      "version": 1
+    }
+  ],
+  "artifact_consumed_impact_summary": {
+    "by_kind": {},
+    "by_kind_trend_comparisons": {},
+    "cumulative_quality_score": 0,
+    "negative_consumed": 0,
+    "neutral_consumed": 0,
+    "points": [],
+    "positive_consumed": 0,
+    "recent_windows": [],
+    "total_consumed": 0,
+    "trend_comparisons": []
+  },
+  "artifact_decision_summary": {
+    "actionable_artifact_count": 5,
+    "artifact_rule_break_count": 0,
+    "consumed_target_kinds": [],
+    "consumed_trend_reason": "no_consumed_artifacts",
+    "consumed_trend_status": "no_consumed_validation",
+    "highlighted_actions": [
+      "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "family:other status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+    ],
+    "highlighted_factor_targets": [
+      "structure_ict"
+    ],
+    "highlighted_family_targets": [
+      "cross_market_smt",
+      "options_hedging",
+      "other",
+      "structure_ict",
+      "trend_momentum",
+      "volatility_mean_reversion"
+    ],
+    "latest_promotable_artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+    "promotion_strength": "high",
+    "rollback_strength": "low",
+    "summary": "actionable_artifacts=5 latest_promotable=Some(\"ensemble-vote:analyze-live:2026-05-11T16:37:05Z\") rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+  },
+  "artifact_factor_rule_break_impacts": [],
+  "artifact_factor_trends": [
+    {
+      "average_quality_score": 183.5,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "promotion_supporting",
+      "entries": 2,
+      "factor_name": "structure_ict",
+      "latest_action": "tune",
+      "latest_status": "promote_latest",
+      "promotable_entries": 2,
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 100.0,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "latest_action=None research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "observe",
+      "entries": 1,
+      "factor_name": "cross_market_smt",
+      "latest_action": null,
+      "latest_status": "blocked",
+      "promotable_entries": 0,
+      "promotion_link_status": "none",
+      "rollback_link_status": "none"
+    }
+  ],
+  "artifact_family_rule_break_impacts": [],
+  "artifact_family_trends": [
+    {
+      "average_quality_score": 183.5,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "promotion_supporting",
+      "entries": 2,
+      "family": "cross_market_smt",
+      "latest_score": 0.1,
+      "latest_status": "promote_latest",
+      "promotable_entries": 2,
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 183.5,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "promotion_supporting",
+      "entries": 2,
+      "family": "options_hedging",
+      "latest_score": 0.2575,
+      "latest_status": "promote_latest",
+      "promotable_entries": 2,
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 183.5,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "promotion_supporting",
+      "entries": 2,
+      "family": "other",
+      "latest_score": 0.25969793489233367,
+      "latest_status": "promote_latest",
+      "promotable_entries": 2,
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 183.5,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "promotion_supporting",
+      "entries": 2,
+      "family": "structure_ict",
+      "latest_score": 0.571875,
+      "latest_status": "promote_latest",
+      "promotable_entries": 2,
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 183.5,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "promotion_supporting",
+      "entries": 2,
+      "family": "trend_momentum",
+      "latest_score": 0.1801439149035265,
+      "latest_status": "promote_latest",
+      "promotable_entries": 2,
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 183.5,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "promotion_supporting",
+      "entries": 2,
+      "family": "volatility_mean_reversion",
+      "latest_score": 0.2870655542479674,
+      "latest_status": "promote_latest",
+      "promotable_entries": 2,
+      "promotion_link_status": "promotion_supporting",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 0.0,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "observe",
+      "entries": 1,
+      "family": "branch_probability",
+      "latest_score": 0.0,
+      "latest_status": "observe",
+      "promotable_entries": 0,
+      "promotion_link_status": "none",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 0.0,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "observe",
+      "entries": 1,
+      "family": "execution_score",
+      "latest_score": 0.5621401595857166,
+      "latest_status": "observe",
+      "promotable_entries": 0,
+      "promotion_link_status": "none",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 100.0,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "observe",
+      "entries": 1,
+      "family": "mece_accuracy",
+      "latest_score": 1.0,
+      "latest_status": "blocked",
+      "promotable_entries": 0,
+      "promotion_link_status": "none",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 100.0,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "observe",
+      "entries": 1,
+      "family": "mece_macro_f1",
+      "latest_score": 1.0,
+      "latest_status": "blocked",
+      "promotable_entries": 0,
+      "promotion_link_status": "none",
+      "rollback_link_status": "none"
+    },
+    {
+      "average_quality_score": 100.0,
+      "consumed_entries": 0,
+      "consumed_validation_rank": 0,
+      "consumed_validation_reason": "no_comparisons_available min_window=3",
+      "consumed_validation_score": 0.0,
+      "consumed_validation_status": "insufficient_consumed_history",
+      "decision_reason": "research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+      "decision_status": "observe",
+      "entries": 1,
+      "family": "mece_sparsity_ratio",
+      "latest_score": 1.0,
+      "latest_status": "blocked",
+      "promotable_entries": 0,
+      "promotion_link_status": "none",
+      "rollback_link_status": "none"
+    }
+  ],
+  "artifact_history_summary": {
+    "actionable_entries": 5,
+    "average_quality_score": 92.83333333333333,
+    "consumed_entries": 0,
+    "ensemble_vote_entries": 1,
+    "execution_candidate_entries": 1,
+    "latest_consumed_artifact_id": null,
+    "pending_update_entries": 1,
+    "promotable_entries": 3,
+    "statuses_by_kind": {
+      "auto_quant_handoff_candidate": {
+        "prepare_required": 1
+      },
+      "ensemble_vote": {
+        "consensus": 1
+      },
+      "execution_candidate": {
+        "promote_latest": 1
+      },
+      "execution_tree_artifact": {
+        "observe": 1
+      },
+      "mece_recovery_artifact": {
+        "blocked": 1
+      },
+      "pending_update": {
+        "promote_latest": 1
+      }
+    },
+    "total_entries": 6
+  },
+  "artifact_lineage_summaries": [
+    {
+      "artifact_count": 1,
+      "artifact_kind": "mece_recovery_artifact",
+      "conclusion": "stable",
+      "consumed_count": 0,
+      "distinct_review_rule_versions": [
+        "mece-recovery-artifact-v2"
+      ],
+      "embedded_pre_bayes_change_count": 0,
+      "latest_artifact_id": "mece-recovery-SRC_ROOT_CARRY_LONG_220646-1778517419952",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "",
+      "quality_delta": 0,
+      "review_rule_break_count": 0,
+      "root_artifact_id": "mece-recovery-SRC_ROOT_CARRY_LONG_220646-1778517419952"
+    },
+    {
+      "artifact_count": 1,
+      "artifact_kind": "execution_tree_artifact",
+      "conclusion": "stable",
+      "consumed_count": 0,
+      "distinct_review_rule_versions": [
+        "execution-tree-artifact-v1"
+      ],
+      "embedded_pre_bayes_change_count": 0,
+      "latest_artifact_id": "execution-tree-SRC_ROOT_CARRY_LONG_220646-1778517424964",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "",
+      "quality_delta": 0,
+      "review_rule_break_count": 0,
+      "root_artifact_id": "execution-tree-SRC_ROOT_CARRY_LONG_220646-1778517424964"
+    },
+    {
+      "artifact_count": 1,
+      "artifact_kind": "pending_update",
+      "conclusion": "stable",
+      "consumed_count": 0,
+      "distinct_review_rule_versions": [
+        "55f482c1291f879a"
+      ],
+      "embedded_pre_bayes_change_count": 0,
+      "latest_artifact_id": "pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "latest_pre_bayes_bridge_selected_entry_quality": "medium",
+      "latest_pre_bayes_gate_status": "pass_neutralized",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "bullish",
+      "quality_delta": 0,
+      "review_rule_break_count": 0,
+      "root_artifact_id": "pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1"
+    },
+    {
+      "artifact_count": 1,
+      "artifact_kind": "execution_candidate",
+      "conclusion": "stable",
+      "consumed_count": 0,
+      "distinct_review_rule_versions": [
+        "7bfaf4a346c607e8"
+      ],
+      "embedded_pre_bayes_change_count": 0,
+      "latest_artifact_id": "execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "latest_pre_bayes_bridge_selected_entry_quality": "medium",
+      "latest_pre_bayes_gate_status": "pass_neutralized",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "bullish",
+      "quality_delta": 0,
+      "review_rule_break_count": 0,
+      "root_artifact_id": "execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1"
+    },
+    {
+      "artifact_count": 1,
+      "artifact_kind": "ensemble_vote",
+      "conclusion": "stable",
+      "consumed_count": 0,
+      "distinct_review_rule_versions": [
+        "ensemble-audit-v2-weighted"
+      ],
+      "embedded_pre_bayes_change_count": 0,
+      "latest_artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "",
+      "quality_delta": 0,
+      "review_rule_break_count": 0,
+      "root_artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:37:05Z"
+    },
+    {
+      "artifact_count": 1,
+      "artifact_kind": "auto_quant_handoff_candidate",
+      "conclusion": "stable",
+      "consumed_count": 0,
+      "distinct_review_rule_versions": [
+        "auto-quant-handoff-v1"
+      ],
+      "embedded_pre_bayes_change_count": 0,
+      "latest_artifact_id": "auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165005.384Z",
+      "latest_pre_bayes_bridge_selected_entry_quality": "",
+      "latest_pre_bayes_gate_status": "",
+      "latest_pre_bayes_multi_timeframe_direction_bias": "",
+      "quality_delta": 0,
+      "review_rule_break_count": 0,
+      "root_artifact_id": "auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165005.384Z"
+    }
+  ],
+  "artifact_review_rule_sources": {
+    "execution_candidate": {
+      "min_posterior_improvement": "default",
+      "min_win_probability_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default"
+    },
+    "pending_update": {
+      "min_avg_family_score_improvement": "default",
+      "min_probability_improvement": "default",
+      "min_top_factor_score_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default",
+      "require_same_prompt_version": "default"
+    }
+  },
+  "artifact_review_rules": {
+    "execution_candidate": {
+      "min_posterior_improvement": 0.03,
+      "min_win_probability_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true
+    },
+    "pending_update": {
+      "min_avg_family_score_improvement": 0.03,
+      "min_probability_improvement": 0.03,
+      "min_top_factor_score_improvement": 0.05,
+      "require_same_data": true,
+      "require_same_factor_version": true,
+      "require_same_prompt_version": true
+    }
+  },
+  "artifact_rule_break_effects": [],
+  "blocking_truth": {
+    "evidence": [
+      "pre_bayes_gate_status=pass_neutralized",
+      "bridge_probability_gap=0.008",
+      "selected_entry_quality=medium",
+      "market_policy=SRC hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.771 multi_timeframe_entry_alignment_score=0.859",
+      "long/short support gap 0.032 is too small, so alignment is treated as mixed"
+    ],
+    "next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+    "reason": "market_policy=SRC hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "stage": "analyze",
+    "status": "pass_neutralized"
+  },
+  "current_focus_phase": "update",
+  "current_focus_reason": "insufficient_improvement|artifact_actionable_count=4 artifact_latest_promotable=Some(\"ensemble-vote:analyze-live:2026-05-11T16:37:05Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=high|artifact_consumed_trend_reason=no_consumed_artifacts",
+  "disagreements": [],
+  "field_diffs": [
+    {
+      "field": "promotion_status",
+      "left_phase": "analyze",
+      "left_value": "observe",
+      "right_phase": "update",
+      "right_value": "hold",
+      "severity": "high"
+    },
+    {
+      "field": "workflow_phase",
+      "left_phase": "analyze",
+      "left_value": "pre_bayes_neutralized_review",
+      "right_phase": "update",
+      "right_value": "research_iteration",
+      "severity": "medium"
+    },
+    {
+      "field": "comparison_class",
+      "left_phase": "analyze",
+      "left_value": "no_previous_run",
+      "right_phase": "update",
+      "right_value": "same_data_different_config",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_gate_status",
+      "left_phase": "analyze",
+      "left_value": "pass_neutralized",
+      "right_phase": "update",
+      "right_value": "blocked",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_policy_version",
+      "left_phase": "analyze",
+      "left_value": "318900600c5e8cf2",
+      "right_phase": "update",
+      "right_value": "structural-feedback-branch-path-v1",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_uses_soft_evidence",
+      "left_phase": "analyze",
+      "left_value": "true",
+      "right_phase": "update",
+      "right_value": "false",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_soft_market_regime",
+      "left_phase": "analyze",
+      "left_value": "{\"range\": 0.31071752431703736, \"stress\": 0.1671571069949645, \"transition\": 0.07571299027318505, \"trend\": 0.4464123784148131}",
+      "right_phase": "update",
+      "right_value": "None",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_bridge_selected_entry_quality",
+      "left_phase": "analyze",
+      "left_value": "medium",
+      "right_phase": "update",
+      "right_value": "",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_bridge_probability_gap",
+      "left_phase": "analyze",
+      "left_value": "0.0078",
+      "right_phase": "update",
+      "right_value": "",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_multi_timeframe_direction_bias",
+      "left_phase": "analyze",
+      "left_value": "bullish",
+      "right_phase": "update",
+      "right_value": "direction_bias_unavailable",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_multi_timeframe_alignment_score",
+      "left_phase": "analyze",
+      "left_value": "0.7711",
+      "right_phase": "update",
+      "right_value": "",
+      "severity": "medium"
+    },
+    {
+      "field": "pre_bayes_multi_timeframe_entry_alignment_score",
+      "left_phase": "analyze",
+      "left_value": "0.8591",
+      "right_phase": "update",
+      "right_value": "",
+      "severity": "medium"
+    }
+  ],
+  "generated_at": "2026-05-11T16:50:37.470315Z",
+  "latest_analyze": {
+    "canonical_structural_active_regime": "trend",
+    "canonical_structural_confidence": 0.558445370096112,
+    "canonical_structural_probabilities": {
+      "range": 0.31071752431703736,
+      "stress": 0.1671571069949645,
+      "transition": 0.07571299027318505,
+      "trend": 0.4464123784148131
+    },
+    "comparable_to_previous": false,
+    "comparison_class": "no_previous_run",
+    "execution_edge_share": 0.3598525754147423,
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.44860389082179186,
+    "factor_actions": [
+      "structure_ict:tune:0.57",
+      "spectral_rhythm:tune:0.37",
+      "volatility_mean_reversion:tune:0.29"
+    ],
+    "factor_score_map": {},
+    "family_score_map": {
+      "cross_market_smt": 0.1,
+      "options_hedging": 0.2575,
+      "other": 0.25969793489233367,
+      "structure_ict": 0.571875,
+      "trend_momentum": 0.1801439149035265,
+      "volatility_mean_reversion": 0.2870655542479674
+    },
+    "family_states": [
+      "cross_market_smt:hold:none",
+      "trend_momentum:hold:none",
+      "options_hedging:hold:none",
+      "other:hold:none",
+      "volatility_mean_reversion:hold:none",
+      "structure_ict:hold:none"
+    ],
+    "hybrid_duration_model": null,
+    "hybrid_remaining_expected_bars": null,
+    "market_state_evidence": [
+      "primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.543",
+      "volatility=NormalVol:0.601 liquidity=NormalLiquidity:0.412 structure=Trending:0.589 behavior=RiskOn:0.550",
+      "rationale=volatility=NormalVol conf=0.60",
+      "rationale=structure=Trending conf=0.59",
+      "rationale=behavior=RiskOn conf=0.55",
+      "rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.54"
+    ],
+    "multi_timeframe_summary": [
+      "multi_timeframe_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d",
+      "1m:6838 bars source=live",
+      "5m:4045 bars source=live",
+      "15m:2746 bars source=live",
+      "1h:1875 bars source=live",
+      "4h:291 bars source=live",
+      "1d:291 bars source=live",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=0.7711",
+      "lower_timeframe_entry_alignment_score=0.8591",
+      "persisted_4h_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_h4.json",
+      "persisted_5m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m5.json",
+      "persisted_1m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m1.json"
+    ],
+    "objective_market_credibility_shrink": null,
+    "pda_cluster_label": null,
+    "phase": "analyze",
+    "phase_summary": "selected_direction=Bull selected_entry_quality=medium pre_bayes_status=pass_neutralized pre_bayes_quality=0.558 decision_hint=Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591 mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591 execution_readiness=0.449 execution_gate=execution_blocked execution_edge=0.360",
+    "pre_bayes_bridge_probability_gap": 0.007767487419823582,
+    "pre_bayes_bridge_rationale_summary": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.067 short_support=0.035 uncertainty=0.307",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.771 multi_timeframe_entry_alignment_score=0.859",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "pre_bayes_bridge_selected_entry_quality": "medium",
+    "pre_bayes_conflict_flags": [
+      "low_directional_separation"
+    ],
+    "pre_bayes_evidence_quality_score": 0.558445370096112,
+    "pre_bayes_filtered_assignments": {
+      "__policy_version": "318900600c5e8cf2",
+      "factor_alignment": "mixed",
+      "factor_uncertainty": "low",
+      "liquidity_context": "neutral",
+      "market_regime": "trend",
+      "market_state_primary_regime": "TrendExpansion",
+      "market_state_secondary_regime": "BullTrendAcceleration",
+      "multi_timeframe_resonance": "aligned",
+      "read_only_regime_bbn_decision_state": "accepted",
+      "read_only_regime_bbn_label": "SourceRootStopCarryLongHorizonV1",
+      "read_only_regime_bbn_label_set": "Bull_->_RootCarryExpansion_->_StopManagedRiskCarry_->_SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12,Bear_->_BearReliefCarry_->_StopManagedRecoveryCarry_->_SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12,Sideways_->_RangeCarry_->_StopManagedRangeCarry_->_SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12,Crisis_->_CrisisReliefCarry_->_StopManagedPanicRecovery_->_SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "read_only_regime_bbn_reasons": "branch_rc_spa_all_price_roots_passed",
+      "read_only_regime_bbn_soft_evidence_strength": "moderate",
+      "read_only_regime_bbn_soft_evidence_weight": "0.650",
+      "read_only_regime_bbn_trade_usable": "true",
+      "read_only_regime_bbn_transition_hazard": "0.000",
+      "regime_bundle_bbn_application_status": "skipped",
+      "regime_bundle_branch_path_count": "4",
+      "regime_bundle_branch_paths_json": "[\"Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12\",\"Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12\",\"Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12\",\"Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12\"]",
+      "regime_bundle_stable_profit_score": "0.857407"
+    },
+    "pre_bayes_gate_status": "pass_neutralized",
+    "pre_bayes_long_signal_probability": 0.5481872890046164,
+    "pre_bayes_multi_timeframe_alignment_score": 0.7711,
+    "pre_bayes_multi_timeframe_direction_bias": "bullish",
+    "pre_bayes_multi_timeframe_entry_alignment_score": 0.8591,
+    "pre_bayes_policy_version": "318900600c5e8cf2",
+    "pre_bayes_selected_entry_quality_probability": 1.0,
+    "pre_bayes_short_signal_probability": 0.5404198015847929,
+    "pre_bayes_soft_evidence": {
+      "factor_alignment": {
+        "bearish": 0.0,
+        "bullish": 0.0,
+        "mixed": 1.0
+      },
+      "factor_uncertainty": {
+        "high": 0.410388657475972,
+        "low": 0.589611342524028
+      },
+      "liquidity_context": {
+        "favorable": 0.0,
+        "hostile": 0.0,
+        "neutral": 1.0
+      },
+      "market_regime": {
+        "range": 0.31071752431703736,
+        "stress": 0.1671571069949645,
+        "transition": 0.07571299027318505,
+        "trend": 0.4464123784148131
+      },
+      "multi_timeframe_resonance": {
+        "aligned": 0.589611342524028,
+        "dislocated": 0.0,
+        "mixed": 0.410388657475972
+      }
+    },
+    "pre_bayes_uses_soft_evidence": true,
+    "prediction_edge_share": 0.6401474245852578,
+    "promotion_status": "observe",
+    "realized_outcome": null,
+    "recommended_next_command": "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+    "recommended_next_command_meta": {
+      "blocked": true,
+      "executable_command": "ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+      "kind": "ask_user",
+      "prompt": "Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json",
+      "recorded_data_paths": [
+        "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json"
+      ],
+      "requires_user_input": true
+    },
+    "risk_flags": [
+      "not_comparable:no_previous_run",
+      "pre_bayes:low_directional_separation"
+    ],
+    "rollback_scope": "none",
+    "run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+    "segments_gate": null,
+    "selected_direction": "Bull",
+    "selected_entry_quality": "medium",
+    "source_command": "analyze-live",
+    "sparsity_ratio": null,
+    "spectral_entropy": null,
+    "structural_feedback": null,
+    "structural_learning_credit_class": null,
+    "structural_learning_observation_weight": null,
+    "structural_learning_success_credit": null,
+    "timestamp": "2026-05-11T16:37:04.965162Z",
+    "top_actions": [
+      "analyze:Review Pre-Bayes Evidence Gate",
+      "promotion:Block Promotion",
+      "iteration:TUNE structure_ict"
+    ],
+    "workflow_phase": "pre_bayes_neutralized_review",
+    "workflow_reason": "market_policy=SRC hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.771 multi_timeframe_entry_alignment_score=0.859;long/short support gap 0.032 is too small, so alignment is treated as mixed;pre_bayes_quality_score=0.558 gating_status=pass_neutralized;market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.543;market_state_source=volatility=NormalVol:0.601 liquidity=NormalLiquidity:0.412 structure=Trending:0.589 behavior=RiskOn:0.550;market_state_source=rationale=volatility=NormalVol conf=0.60;market_state_source=rationale=structure=Trending conf=0.59;market_state_source=rationale=behavior=RiskOn conf=0.55;market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.54;regime_bundle_bbn_evidence_skipped=no_supported_label"
+  },
+  "latest_backtest": null,
+  "latest_ensemble_vote": {
+    "artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+    "confidence": 0.6000000000000001,
+    "consensus_strength": 0.6000000000000001,
+    "dataset_comparability": {
+      "comparable": false,
+      "comparison_class": "no_previous_run",
+      "previous_run_id": null,
+      "reason": "no_previous_run",
+      "same_config": false,
+      "same_data": false,
+      "same_factor_version": false,
+      "same_prompt_version": false
+    },
+    "disagreement_flags": [],
+    "ensemble_version": "ensemble-audit-v2-weighted",
+    "executor_scorecards": [],
+    "executor_scorecards_source": "persisted",
+    "executor_summaries": [
+      "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600",
+      "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600"
+    ],
+    "final_action": "Observe",
+    "generated_at": "2026-05-11T16:37:05.466814Z",
+    "hard_block": {
+      "active": false,
+      "command": null,
+      "evidence": [],
+      "human_action": null,
+      "reason": null,
+      "stage": null,
+      "status": null
+    },
+    "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+    "posterior_active_regime": "trend",
+    "posterior_confidence": 0.558445370096112,
+    "posterior_evidence": [
+      "market_policy=SRC hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.771 multi_timeframe_entry_alignment_score=0.859",
+      "long/short support gap 0.032 is too small, so alignment is treated as mixed",
+      "pre_bayes_quality_score=0.558 gating_status=pass_neutralized",
+      "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.543",
+      "market_state_source=volatility=NormalVol:0.601 liquidity=NormalLiquidity:0.412 structure=Trending:0.589 behavior=RiskOn:0.550",
+      "market_state_source=rationale=volatility=NormalVol conf=0.60",
+      "market_state_source=rationale=structure=Trending conf=0.59",
+      "market_state_source=rationale=behavior=RiskOn conf=0.55",
+      "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.54",
+      "regime_bundle_bbn_evidence_skipped=no_supported_label",
+      "branch_transition_prior_from=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000"
+    ],
+    "posterior_fingerprint": "50090ae500f54c9d",
+    "posterior_normalization_status": "normalized",
+    "posterior_probabilities": {
+      "range": 0.31071752431703736,
+      "stress": 0.1671571069949645,
+      "transition": 0.07571299027318505,
+      "trend": 0.4464123784148131
+    },
+    "provenance": {
+      "config_hash": "0739cf78a430efa5",
+      "data_fingerprint": "50090ae500f54c9d",
+      "factor_version": "d1fba762150c532c",
+      "prompt_version": "agent-prompts-v1"
+    },
+    "recommended_command": "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+    "source_phase": "analyze-live",
+    "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+    "split_explanations": [
+      "gating_status=trend",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high",
+      "gating_status=trend",
+      "selected_entry_quality=medium",
+      "factor_alignment=mixed",
+      "factor_uncertainty=high"
+    ],
+    "symbol": "SRC_ROOT_CARRY_LONG_220646"
+  },
+  "latest_execution_candidate": {
+    "actionable": true,
+    "artifact_id": "execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+    "candidate_status": "ready",
+    "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+    "generated_at": "2026-05-11T16:37:04.965162Z",
+    "multi_timeframe_summary": [
+      "multi_timeframe_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d",
+      "1m:6838 bars source=live",
+      "5m:4045 bars source=live",
+      "15m:2746 bars source=live",
+      "1h:1875 bars source=live",
+      "4h:291 bars source=live",
+      "1d:291 bars source=live",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=0.7711",
+      "lower_timeframe_entry_alignment_score=0.8591",
+      "persisted_4h_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_h4.json",
+      "persisted_5m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m5.json",
+      "persisted_1m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m1.json"
+    ],
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/SRC_ROOT_CARRY_LONG_220646/execution_candidate.json",
+    "posterior_delta": 0.0,
+    "pre_bayes_bridge_selected_entry_quality": "medium",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "review_reason": "first_execution_candidate_artifact",
+    "review_rule_version": "7bfaf4a346c607e8",
+    "review_status": "promote_latest",
+    "source_phase": "analyze-live",
+    "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "top_factor_action": "tune",
+    "top_factor_name": "structure_ict",
+    "trade_direction": "Bull",
+    "version": 1,
+    "win_probability_delta": 0.0
+  },
+  "latest_pending_update": {
+    "artifact_id": "pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+    "avg_family_score_delta": 0.0,
+    "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+    "entry_quality": "medium",
+    "factor_alignment": "mixed",
+    "factor_uncertainty": "low",
+    "generated_at": "2026-05-11T16:37:04.965162Z",
+    "multi_timeframe_summary": [
+      "multi_timeframe_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d",
+      "1m:6838 bars source=live",
+      "5m:4045 bars source=live",
+      "15m:2746 bars source=live",
+      "1h:1875 bars source=live",
+      "4h:291 bars source=live",
+      "1d:291 bars source=live",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=0.7711",
+      "lower_timeframe_entry_alignment_score=0.8591",
+      "persisted_4h_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_h4.json",
+      "persisted_5m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m5.json",
+      "persisted_1m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m1.json"
+    ],
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/SRC_ROOT_CARRY_LONG_220646/pending_update_feedback.json",
+    "pre_bayes_bridge_selected_entry_quality": "medium",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "quality_delta": 0,
+    "review_reason": "first_pending_update_artifact",
+    "review_rule_version": "55f482c1291f879a",
+    "review_status": "promote_latest",
+    "selected_probability_delta": 0.0,
+    "source_phase": "analyze-live",
+    "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "top_factor_action": "tune",
+    "top_factor_name": "structure_ict",
+    "top_factor_score_delta": 0.0,
+    "version": 1
+  },
+  "latest_pre_bayes_entry_quality_bridge": {
+    "long_entry_bias": [
+      0.21901211058720388,
+      0.5107036496506662,
+      0.27028423976213
+    ],
+    "long_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "long_signal_probability": 0.5481872890046164,
+    "multi_timeframe_alignment_score": 0.7711,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.8591,
+    "rationale": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.067 short_support=0.035 uncertainty=0.307",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.771 multi_timeframe_entry_alignment_score=0.859",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_entry_bias": [
+      0.06539736653495026,
+      0.3412905719731753,
+      0.5933120614918744
+    ],
+    "short_entry_quality": {
+      "high": 0.0,
+      "low": 0.0,
+      "medium": 1.0
+    },
+    "short_signal_probability": 0.5404198015847929
+  },
+  "latest_pre_bayes_entry_quality_bridge_diff": {
+    "dominant_long_entry_quality": "medium",
+    "dominant_long_entry_quality_probability": 1.0,
+    "dominant_short_entry_quality": "medium",
+    "dominant_short_entry_quality_probability": 1.0,
+    "long_short_signal_probability_gap": 0.007767487419823582,
+    "multi_timeframe_alignment_score": 0.7711,
+    "multi_timeframe_direction_bias": "bullish",
+    "multi_timeframe_entry_alignment_score": 0.8591,
+    "rationale_summary": [
+      "factor_alignment=mixed factor_uncertainty=low",
+      "long_support=0.067 short_support=0.035 uncertainty=0.307",
+      "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.771 multi_timeframe_entry_alignment_score=0.859",
+      "entry_quality_bias combines directional factor support with cascade probability bias"
+    ],
+    "selected_entry_quality": "medium",
+    "selected_entry_quality_probability": 1.0
+  },
+  "latest_pre_bayes_policy": {
+    "directional_conflict_penalty": 0.2,
+    "favorable_liquidity_bonus": 0.05,
+    "hard_pass_quality_threshold": 0.75,
+    "high_uncertainty_threshold": 0.45,
+    "hostile_liquidity_forces_high_uncertainty": true,
+    "hostile_liquidity_penalty": 0.1,
+    "market_overrides": {
+      "CL": {
+        "favorable_liquidity_bonus": 0.03,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.14
+      },
+      "ES": {
+        "favorable_liquidity_bonus": 0.06,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.06
+      },
+      "GC": {
+        "favorable_liquidity_bonus": 0.07,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.09
+      },
+      "NQ": {
+        "favorable_liquidity_bonus": 0.04,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.1
+      },
+      "YM": {
+        "favorable_liquidity_bonus": 0.05,
+        "hostile_liquidity_forces_high_uncertainty": false,
+        "hostile_liquidity_penalty": 0.07
+      }
+    },
+    "min_directional_support_gap": 0.08,
+    "min_multi_timeframe_alignment_score": 0.55,
+    "min_multi_timeframe_entry_alignment_score": 0.5,
+    "mixed_alignment_penalty": 0.1,
+    "multi_timeframe_alignment_bonus": 0.05,
+    "multi_timeframe_alignment_penalty": 0.1,
+    "multi_timeframe_direction_conflict_penalty": 0.18,
+    "multi_timeframe_entry_penalty": 0.08,
+    "neutralized_quality_threshold": 0.4,
+    "source": "default",
+    "version": "318900600c5e8cf2"
+  },
+  "latest_pre_bayes_policy_diff": {
+    "changed_fields": [
+      "initial_policy"
+    ],
+    "previous_version": null,
+    "summary": "changed_fields=[\"initial_policy\"]"
+  },
+  "latest_pre_bayes_policy_lineage": {
+    "changed_fields_union": [
+      "initial_policy"
+    ],
+    "latest_version": "318900600c5e8cf2",
+    "previous_version": null,
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested",
+    "total_versions": 1
+  },
+  "latest_pre_bayes_soft_evidence_diff": [
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.589611342524028,
+      "dominant_soft_state": "bull",
+      "entropy": 0.6769996924044879,
+      "filtered_state": "bull",
+      "node": "market_regime"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 1.0,
+      "dominant_soft_state": "neutral",
+      "entropy": -0.0,
+      "filtered_state": "neutral",
+      "node": "liquidity_context"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 1.0,
+      "dominant_soft_state": "mixed",
+      "entropy": -0.0,
+      "filtered_state": "mixed",
+      "node": "factor_alignment"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.589611342524028,
+      "dominant_soft_state": "low",
+      "entropy": 0.6769996924044879,
+      "filtered_state": "low",
+      "node": "factor_uncertainty"
+    },
+    {
+      "diverges_from_filtered_state": false,
+      "dominant_soft_probability": 0.589611342524028,
+      "dominant_soft_state": "aligned",
+      "entropy": 0.6769996924044879,
+      "filtered_state": "aligned",
+      "node": "multi_timeframe_resonance"
+    }
+  ],
+  "latest_promotable_artifact": {
+    "actionable": true,
+    "artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+    "artifact_kind": "ensemble_vote",
+    "consumed_at": null,
+    "consumed_by_update_run_id": null,
+    "consumed_outcome": null,
+    "consumption_regrade_reason": null,
+    "consumption_regrade_status": null,
+    "decision_hint": "Observe",
+    "entry_id": "ledger:ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+    "family_scores": {},
+    "generated_at": "2026-05-11T16:37:05.466814Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/ensemble_vote.json",
+    "promote_candidate": true,
+    "quality_score": 60,
+    "regraded_at": null,
+    "review_reason": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+    "review_rule_version": "ensemble-audit-v2-weighted",
+    "source_phase": "analyze-live",
+    "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+    "status": "consensus",
+    "supersedes_artifact_id": null,
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "top_factor_action": "Observe",
+    "top_factor_name": null,
+    "version": 1
+  },
+  "latest_research": null,
+  "latest_train": null,
+  "latest_update": {
+    "canonical_structural_active_regime": null,
+    "canonical_structural_confidence": null,
+    "canonical_structural_probabilities": {},
+    "comparable_to_previous": true,
+    "comparison_class": "same_data_different_config",
+    "execution_edge_share": 0.6,
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.37,
+    "factor_actions": [],
+    "factor_score_map": {},
+    "family_score_map": {},
+    "family_states": [],
+    "hybrid_duration_model": null,
+    "hybrid_remaining_expected_bars": null,
+    "market_state_evidence": [],
+    "multi_timeframe_summary": [],
+    "objective_market_credibility_shrink": null,
+    "pda_cluster_label": null,
+    "phase": "update",
+    "phase_summary": "realized_outcome=loss learning_credit_class=negative_executed success_credit=0.000 observation_weight=1.000 feedback_applied=1 duplicate_feedback_skipped=false consumed_pre_bayes_gate_status=blocked mtf_source=primary_only execution_readiness=0.370 execution_gate=execution_blocked execution_edge=0.600",
+    "pre_bayes_bridge_probability_gap": null,
+    "pre_bayes_bridge_rationale_summary": [],
+    "pre_bayes_bridge_selected_entry_quality": null,
+    "pre_bayes_conflict_flags": [],
+    "pre_bayes_evidence_quality_score": 0.0,
+    "pre_bayes_filtered_assignments": {
+      "parent_regime_root": "Sideways",
+      "pre_bayes_branch_path_gate": "blocked_missing_consumed_pre_bayes_filter",
+      "regime_profit_branch_path": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+    },
+    "pre_bayes_gate_status": "blocked",
+    "pre_bayes_long_signal_probability": null,
+    "pre_bayes_multi_timeframe_alignment_score": null,
+    "pre_bayes_multi_timeframe_direction_bias": "direction_bias_unavailable",
+    "pre_bayes_multi_timeframe_entry_alignment_score": null,
+    "pre_bayes_policy_version": "structural-feedback-branch-path-v1",
+    "pre_bayes_selected_entry_quality_probability": null,
+    "pre_bayes_short_signal_probability": null,
+    "pre_bayes_soft_evidence": {},
+    "pre_bayes_uses_soft_evidence": false,
+    "prediction_edge_share": 0.4,
+    "promotion_status": "hold",
+    "realized_outcome": "loss",
+    "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+    "recommended_next_command_meta": {
+      "blocked": false,
+      "executable_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+      "kind": "ict_engine",
+      "prompt": null,
+      "recorded_data_paths": [],
+      "requires_user_input": false
+    },
+    "risk_flags": [
+      "promotion_blocked:insufficient_improvement|artifact_actionable_count=4 artifact_latest_promotable=Some(\"ensemble-vote:analyze-live:2026-05-11T16:37:05Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=high|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "pre_bayes:blocked_missing_consumed_pre_bayes_filter"
+    ],
+    "rollback_scope": "none",
+    "run_id": "update:SRC_ROOT_CARRY_LONG_220646:20260511T164424.077Z",
+    "segments_gate": null,
+    "selected_direction": null,
+    "selected_entry_quality": "medium",
+    "source_command": "update",
+    "sparsity_ratio": null,
+    "spectral_entropy": null,
+    "structural_feedback": {
+      "branch_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+      "exit_reason": "stop_loss",
+      "followed_path": true,
+      "node_id": "Sideways",
+      "notes": "b5_branch_feedback_calibration_v1; exact Board B regime_profit_branch_path; source_trade_id=SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12:DIA/USD:1d:13",
+      "path_id": "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+      "protocol_version": "board-b-source-root-stop-carry-longhorizon/v1",
+      "recommendation_id": "SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12:DIA/USD:1d:13",
+      "recommended_at": "2000-01-21T00:00:00+00:00",
+      "scenario_id": "RangeCarry"
+    },
+    "structural_learning_credit_class": "negative_executed",
+    "structural_learning_observation_weight": 1.0,
+    "structural_learning_success_credit": 0.0,
+    "timestamp": "2026-05-11T16:44:24.862950Z",
+    "top_actions": [
+      "promotion:Block Promotion",
+      "artifact_factor_review:Artifact Factor structure_ict",
+      "artifact_family_review:Artifact Family cross_market_smt"
+    ],
+    "workflow_phase": "research_iteration",
+    "workflow_reason": "insufficient_improvement|artifact_actionable_count=4 artifact_latest_promotable=Some(\"ensemble-vote:analyze-live:2026-05-11T16:37:05Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=high|artifact_consumed_trend_reason=no_consumed_artifacts"
+  },
+  "pending_actions": [
+    "promotion:Block Promotion",
+    "artifact_factor_review:Artifact Factor structure_ict",
+    "artifact_family_review:Artifact Family cross_market_smt"
+  ],
+  "recent_artifacts": [
+    {
+      "actionable": false,
+      "artifact_id": "mece-recovery-SRC_ROOT_CARRY_LONG_220646-1778517419952",
+      "artifact_kind": "mece_recovery_artifact",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+      "entry_id": "ledger:mece-recovery-SRC_ROOT_CARRY_LONG_220646-1778517419952",
+      "family_scores": {
+        "mece_accuracy": 1.0,
+        "mece_macro_f1": 1.0,
+        "mece_sparsity_ratio": 1.0
+      },
+      "generated_at": "2026-05-11T16:36:59.952074Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/mece_recovery_artifact.json",
+      "promote_candidate": false,
+      "quality_score": 100,
+      "regraded_at": null,
+      "review_reason": "accuracy=1.0000;accuracy_gate=promote;macro_f1=1.0000;sparsity_ratio=1.000;segments=0..1214:1.000,1214..3236:1.000,3236..4045:1.000;execution_blocked=1968;execution_observe_only=1165;execution_ready=912",
+      "review_rule_version": "mece-recovery-artifact-v2",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "status": "blocked",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": null,
+      "top_factor_name": "cross_market_smt",
+      "version": 2
+    },
+    {
+      "actionable": true,
+      "artifact_id": "execution-tree-SRC_ROOT_CARRY_LONG_220646-1778517424964",
+      "artifact_kind": "execution_tree_artifact",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+      "entry_id": "ledger:execution-tree-SRC_ROOT_CARRY_LONG_220646-1778517424964",
+      "family_scores": {
+        "branch_probability": 0.0,
+        "execution_score": 0.5621401595857166
+      },
+      "generated_at": "2026-05-11T16:37:04.964200Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/execution_tree_trace.json",
+      "promote_candidate": false,
+      "quality_score": 0,
+      "regraded_at": null,
+      "review_reason": "branch=transition_guardrail;bias=guarded;branch_prob=0.0000;uncertainty=1.0000",
+      "review_rule_version": "execution-tree-artifact-v1",
+      "source_phase": "analyze",
+      "source_run_id": null,
+      "status": "observe",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": null,
+      "top_factor_name": null,
+      "version": 1
+    },
+    {
+      "actionable": true,
+      "artifact_id": "pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "artifact_kind": "pending_update",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+      "entry_id": "ledger:pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "family_scores": {
+        "cross_market_smt": 0.1,
+        "options_hedging": 0.2575,
+        "other": 0.25969793489233367,
+        "structure_ict": 0.571875,
+        "trend_momentum": 0.1801439149035265,
+        "volatility_mean_reversion": 0.2870655542479674
+      },
+      "generated_at": "2026-05-11T16:37:04.965162Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/pending_update_feedback.json",
+      "promote_candidate": true,
+      "quality_score": 281,
+      "regraded_at": null,
+      "review_reason": "first_pending_update_artifact",
+      "review_rule_version": "55f482c1291f879a",
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "status": "promote_latest",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "tune",
+      "top_factor_name": "structure_ict",
+      "version": 1
+    },
+    {
+      "actionable": true,
+      "artifact_id": "execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "artifact_kind": "execution_candidate",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+      "entry_id": "ledger:execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "family_scores": {
+        "cross_market_smt": 0.1,
+        "options_hedging": 0.2575,
+        "other": 0.25969793489233367,
+        "structure_ict": 0.571875,
+        "trend_momentum": 0.1801439149035265,
+        "volatility_mean_reversion": 0.2870655542479674
+      },
+      "generated_at": "2026-05-11T16:37:04.965162Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/execution_candidate.json",
+      "promote_candidate": true,
+      "quality_score": 86,
+      "regraded_at": null,
+      "review_reason": "first_execution_candidate_artifact",
+      "review_rule_version": "7bfaf4a346c607e8",
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "status": "promote_latest",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "tune",
+      "top_factor_name": "structure_ict",
+      "version": 1
+    },
+    {
+      "actionable": true,
+      "artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+      "artifact_kind": "ensemble_vote",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "Observe",
+      "entry_id": "ledger:ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+      "family_scores": {},
+      "generated_at": "2026-05-11T16:37:05.466814Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/ensemble_vote.json",
+      "promote_candidate": true,
+      "quality_score": 60,
+      "regraded_at": null,
+      "review_reason": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+      "review_rule_version": "ensemble-audit-v2-weighted",
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "status": "consensus",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "Observe",
+      "top_factor_name": null,
+      "version": 1
+    },
+    {
+      "actionable": true,
+      "artifact_id": "auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165005.384Z",
+      "artifact_kind": "auto_quant_handoff_candidate",
+      "consumed_at": null,
+      "consumed_by_update_run_id": null,
+      "consumed_outcome": null,
+      "consumption_regrade_reason": null,
+      "consumption_regrade_status": null,
+      "decision_hint": "auto-quant",
+      "entry_id": "ledger:auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165005.384Z",
+      "family_scores": {},
+      "generated_at": "2026-05-11T16:50:05.388209Z",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/SRC_ROOT_CARRY_LONG_220646/auto_quant_handoff.factor_research.json",
+      "promote_candidate": false,
+      "quality_score": 30,
+      "regraded_at": null,
+      "review_reason": "prepare Auto-Quant market data before attempting the research loop | re-run factor-research with backend=auto-quant after data becomes ready",
+      "review_rule_version": "auto-quant-handoff-v1",
+      "source_phase": "factor_research",
+      "source_run_id": null,
+      "status": "prepare_required",
+      "supersedes_artifact_id": null,
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "review",
+      "top_factor_name": null,
+      "version": 1
+    }
+  ],
+  "recent_ensemble_votes": [
+    {
+      "artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:37:05Z",
+      "confidence": 0.6000000000000001,
+      "consensus_strength": 0.6000000000000001,
+      "dataset_comparability": {
+        "comparable": false,
+        "comparison_class": "no_previous_run",
+        "previous_run_id": null,
+        "reason": "no_previous_run",
+        "same_config": false,
+        "same_data": false,
+        "same_factor_version": false,
+        "same_prompt_version": false
+      },
+      "disagreement_flags": [],
+      "ensemble_version": "ensemble-audit-v2-weighted",
+      "executor_scorecards": [],
+      "executor_scorecards_source": "persisted",
+      "executor_summaries": [
+        "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.55 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600",
+        "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.45 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600"
+      ],
+      "final_action": "Observe",
+      "generated_at": "2026-05-11T16:37:05.466814Z",
+      "hard_block": {
+        "active": false,
+        "command": null,
+        "evidence": [],
+        "human_action": null,
+        "reason": null,
+        "stage": null,
+        "status": null
+      },
+      "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+      "posterior_active_regime": "trend",
+      "posterior_confidence": 0.558445370096112,
+      "posterior_evidence": [
+        "market_policy=SRC hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+        "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.771 multi_timeframe_entry_alignment_score=0.859",
+        "long/short support gap 0.032 is too small, so alignment is treated as mixed",
+        "pre_bayes_quality_score=0.558 gating_status=pass_neutralized",
+        "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.543",
+        "market_state_source=volatility=NormalVol:0.601 liquidity=NormalLiquidity:0.412 structure=Trending:0.589 behavior=RiskOn:0.550",
+        "market_state_source=rationale=volatility=NormalVol conf=0.60",
+        "market_state_source=rationale=structure=Trending conf=0.59",
+        "market_state_source=rationale=behavior=RiskOn conf=0.55",
+        "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.54",
+        "regime_bundle_bbn_evidence_skipped=no_supported_label",
+        "branch_transition_prior_from=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000"
+      ],
+      "posterior_fingerprint": "50090ae500f54c9d",
+      "posterior_normalization_status": "normalized",
+      "posterior_probabilities": {
+        "range": 0.31071752431703736,
+        "stress": 0.1671571069949645,
+        "transition": 0.07571299027318505,
+        "trend": 0.4464123784148131
+      },
+      "provenance": {
+        "config_hash": "0739cf78a430efa5",
+        "data_fingerprint": "50090ae500f54c9d",
+        "factor_version": "d1fba762150c532c",
+        "prompt_version": "agent-prompts-v1"
+      },
+      "recommended_command": "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_htf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "split_explanations": [
+        "gating_status=trend",
+        "selected_entry_quality=medium",
+        "factor_alignment=mixed",
+        "factor_uncertainty=high",
+        "gating_status=trend",
+        "selected_entry_quality=medium",
+        "factor_alignment=mixed",
+        "factor_uncertainty=high"
+      ],
+      "symbol": "SRC_ROOT_CARRY_LONG_220646"
+    }
+  ],
+  "recent_execution_candidates": [
+    {
+      "actionable": true,
+      "artifact_id": "execution-candidate:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "candidate_status": "ready",
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+      "generated_at": "2026-05-11T16:37:04.965162Z",
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d",
+        "1m:6838 bars source=live",
+        "5m:4045 bars source=live",
+        "15m:2746 bars source=live",
+        "1h:1875 bars source=live",
+        "4h:291 bars source=live",
+        "1d:291 bars source=live",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=0.7711",
+        "lower_timeframe_entry_alignment_score=0.8591",
+        "persisted_4h_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_h4.json",
+        "persisted_5m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m5.json",
+        "persisted_1m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m1.json"
+      ],
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/SRC_ROOT_CARRY_LONG_220646/execution_candidate.json",
+      "posterior_delta": 0.0,
+      "pre_bayes_bridge_selected_entry_quality": "medium",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "review_reason": "first_execution_candidate_artifact",
+      "review_rule_version": "7bfaf4a346c607e8",
+      "review_status": "promote_latest",
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "tune",
+      "top_factor_name": "structure_ict",
+      "trade_direction": "Bull",
+      "version": 1,
+      "win_probability_delta": 0.0
+    }
+  ],
+  "recent_pending_updates": [
+    {
+      "artifact_id": "pending-update:SRC_ROOT_CARRY_LONG_220646:analyze-live:v1",
+      "avg_family_score_delta": 0.0,
+      "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.558|mtf_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d mtf_direction=bullish mtf_alignment=0.7711 mtf_entry_alignment=0.8591",
+      "entry_quality": "medium",
+      "factor_alignment": "mixed",
+      "factor_uncertainty": "low",
+      "generated_at": "2026-05-11T16:37:04.965162Z",
+      "multi_timeframe_summary": [
+        "multi_timeframe_source=live_futures_multi_timeframe covered_intervals=1m,5m,15m,1h,4h,1d",
+        "1m:6838 bars source=live",
+        "5m:4045 bars source=live",
+        "15m:2746 bars source=live",
+        "1h:1875 bars source=live",
+        "4h:291 bars source=live",
+        "1d:291 bars source=live",
+        "higher_timeframe_direction_bias=bullish",
+        "higher_timeframe_alignment_score=0.7711",
+        "lower_timeframe_entry_alignment_score=0.8591",
+        "persisted_4h_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_h4.json",
+        "persisted_5m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m5.json",
+        "persisted_1m_path=docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_m1.json"
+      ],
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_explicit_historical_factor_research_v1/SRC_ROOT_CARRY_LONG_220646/pending_update_feedback.json",
+      "pre_bayes_bridge_selected_entry_quality": "medium",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "quality_delta": 0,
+      "review_reason": "first_pending_update_artifact",
+      "review_rule_version": "55f482c1291f879a",
+      "review_status": "promote_latest",
+      "selected_probability_delta": 0.0,
+      "source_phase": "analyze-live",
+      "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "symbol": "SRC_ROOT_CARRY_LONG_220646",
+      "top_factor_action": "tune",
+      "top_factor_name": "structure_ict",
+      "top_factor_score_delta": 0.0,
+      "version": 1
+    }
+  ],
+  "recent_pre_bayes_policies": [
+    {
+      "diff_from_previous": {
+        "changed_fields": [
+          "initial_policy"
+        ],
+        "previous_version": null,
+        "summary": "changed_fields=[\"initial_policy\"]"
+      },
+      "policy": {
+        "directional_conflict_penalty": 0.2,
+        "favorable_liquidity_bonus": 0.05,
+        "hard_pass_quality_threshold": 0.75,
+        "high_uncertainty_threshold": 0.45,
+        "hostile_liquidity_forces_high_uncertainty": true,
+        "hostile_liquidity_penalty": 0.1,
+        "market_overrides": {
+          "CL": {
+            "favorable_liquidity_bonus": 0.03,
+            "hostile_liquidity_forces_high_uncertainty": true,
+            "hostile_liquidity_penalty": 0.14
+          },
+          "ES": {
+            "favorable_liquidity_bonus": 0.06,
+            "hostile_liquidity_forces_high_uncertainty": false,
+            "hostile_liquidity_penalty": 0.06
+          },
+          "GC": {
+            "favorable_liquidity_bonus": 0.07,
+            "hostile_liquidity_forces_high_uncertainty": false,
+            "hostile_liquidity_penalty": 0.09
+          },
+          "NQ": {
+            "favorable_liquidity_bonus": 0.04,
+            "hostile_liquidity_forces_high_uncertainty": true,
+            "hostile_liquidity_penalty": 0.1
+          },
+          "YM": {
+            "favorable_liquidity_bonus": 0.05,
+            "hostile_liquidity_forces_high_uncertainty": false,
+            "hostile_liquidity_penalty": 0.07
+          }
+        },
+        "min_directional_support_gap": 0.08,
+        "min_multi_timeframe_alignment_score": 0.55,
+        "min_multi_timeframe_entry_alignment_score": 0.5,
+        "mixed_alignment_penalty": 0.1,
+        "multi_timeframe_alignment_bonus": 0.05,
+        "multi_timeframe_alignment_penalty": 0.1,
+        "multi_timeframe_direction_conflict_penalty": 0.18,
+        "multi_timeframe_entry_penalty": 0.08,
+        "neutralized_quality_threshold": 0.4,
+        "source": "default",
+        "version": "318900600c5e8cf2"
+      },
+      "run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T163704.965Z",
+      "source_command": "analyze-live",
+      "timestamp": "2026-05-11T16:37:04.965162Z"
+    }
+  ],
+  "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+  "recommended_next_command_meta": {
+    "blocked": false,
+    "executable_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T002020-codex-board-b-220646-branch-path-closure-readback-v1/b5-branch-feedback-calibration-v2/state_branch_feedback_v1",
+    "kind": "ict_engine",
+    "prompt": null,
+    "recorded_data_paths": [],
+    "requires_user_input": false
+  },
+  "risk_flags": [
+    "analyze:not_comparable:no_previous_run",
+    "analyze:pre_bayes:low_directional_separation",
+    "update:pre_bayes:blocked_missing_consumed_pre_bayes_filter",
+    "update:promotion_blocked:insufficient_improvement|artifact_actionable_count=4 artifact_latest_promotable=Some(\"ensemble-vote:analyze-live:2026-05-11T16:37:05Z\") artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=high|artifact_consumed_trend_reason=no_consumed_artifacts"
+  ],
+  "symbol": "SRC_ROOT_CARRY_LONG_220646"
+}

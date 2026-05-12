@@ -1,0 +1,97 @@
+{
+  "artifact_id": "execution-tree-BOARD_A_KRAKEN_BTC_193417-1778586461230",
+  "generated_at": "2026-05-12T11:47:41.230692Z",
+  "symbol": "BOARD_A_KRAKEN_BTC_193417",
+  "output": {
+    "execution_score": 0.5231373099565243,
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "gate_status": "observe",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.3302 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.3302 < 0.45)",
+      "prediction_vote_score=0.5464 (medium) × execution_readiness=0.3302 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.590",
+      "market_state=volatility=NormalVol:0.530 liquidity=ThinLiquidity:0.643 structure=Trending:0.830 behavior=Exhaustion:0.650",
+      "market_state=rationale=volatility=NormalVol conf=0.53",
+      "market_state=rationale=liquidity=ThinLiquidity conf=0.64",
+      "market_state=rationale=structure=Trending conf=0.83",
+      "market_state=rationale=behavior=Exhaustion conf=0.65",
+      "market_state=rationale=primary=RangeConsolidation secondary=WideRange overall=0.59",
+      "path_ranker=Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+      "path_ranker=Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false",
+      "path_ranker=ranker_machine=runtime_source=unknown score_model_family=unknown score_source=unknown validation_ready=false active_match_count=0",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1 runtime_source=none raw_path_score=none calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "hybrid_transition_hazard=0.633"
+    ],
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+    "path_ranker_score_visible_to_execution_tree": false,
+    "path_ranker_score_used_by_execution_tree": false,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "unknown",
+    "ranker_validation_ready": false
+  },
+  "closed_loop_branch_admission": {
+    "actionable": false,
+    "candidate_status": "execution_observe_only",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "evidence": [
+      "pre_bayes_gate_status=pass_neutralized",
+      "execution_gate_status=execution_observe_only",
+      "review_status=observe",
+      "execution_tree_gate_status=observe",
+      "execution_tree_branch=transition_guardrail"
+    ],
+    "execution_gate_status": "execution_observe_only",
+    "execution_tree_bias": "guarded",
+    "execution_tree_branch": "transition_guardrail",
+    "execution_tree_gate_status": "observe",
+    "path_id": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+    "path_label": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "ready": false,
+    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "review_status": "observe",
+    "source_phase": "structural-recommended-path-bundle",
+    "status": "fail_closed"
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "dominant_cycle_energy",
+      "contribution": 0.6312804005768816,
+      "feature_value": "0.7813"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.6279071751880515,
+      "feature_value": "0.1721"
+    },
+    {
+      "feature": "cycle_phase_alignment",
+      "contribution": -0.519423620326385,
+      "feature_value": "-0.5194"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.41845238095238085,
+      "feature_value": "0.2815"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "7bcb9e239804d1cc",
+    "data_fingerprint": "b3fea6e90f3d0af3"
+  }
+}

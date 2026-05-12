@@ -1,0 +1,55 @@
+{
+  "artifact_id": "mece-recovery-BTCUSD-1778584104047",
+  "generated_at": "2026-05-12T11:08:24.047156Z",
+  "symbol": "BTCUSD",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt",
+    "options_hedging",
+    "structure_ict"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "8e88be8408a1ae85",
+  "execution_validity_summary": "execution_blocked=56;execution_observe_only=35;execution_ready=29",
+  "sparsity_ratio": 1.0,
+  "pruned_factor_trail": [],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        36
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.5085026988920557,
+      "execution_readiness_drift": 0.0020301354659846855,
+      "sample_count": 36
+    },
+    {
+      "horizon_bars": [
+        36,
+        96
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.43287643027994294,
+      "execution_readiness_drift": 0.0010633061918926298,
+      "sample_count": 60
+    },
+    {
+      "horizon_bars": [
+        96,
+        120
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.5421964623083727,
+      "execution_readiness_drift": 0.009072855874971749,
+      "sample_count": 24
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "77a67daecf93eafe",
+    "data_fingerprint": "30c3bf432f833b9e"
+  }
+}

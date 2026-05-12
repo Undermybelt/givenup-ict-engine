@@ -1,0 +1,2 @@
+pairs ['NQ/USD'] timerange 2024-06-02 23:00:00+00:00 2026-05-12 00:00:00+00:00
+headers ['date', 'open', 'high', 'low', 'close', 'enter_long', 'exit_long', 'enter_short', 'exit_short', 'enter_tag', 'exit_tag']

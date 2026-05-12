@@ -1,0 +1,4 @@
+scope,pair,strategy,trade_count,total_profit_pct,win_rate_pct,profit_factor,sharpe,max_drawdown_pct
+aggregate,TOTAL,TomacNQ_KillzoneBreakout,153,5.43,59.4771,1.0984,0.0252,-6.8357
+per_pair,NQ/USD,TomacNQ_KillzoneBreakout,77,9.5,72.7,1.31,0.0395,-7.04
+per_pair,ES/USD,TomacNQ_KillzoneBreakout,76,-4.08,46.1,0.83,-0.0221,-10.19

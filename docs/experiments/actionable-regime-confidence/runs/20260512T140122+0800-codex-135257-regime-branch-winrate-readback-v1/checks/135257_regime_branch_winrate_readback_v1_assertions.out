@@ -1,0 +1,4 @@
+trade_rows_gt_0=True
+pair_count_ge_2=True
+branch_paths_populated=True
+promotion_false=True

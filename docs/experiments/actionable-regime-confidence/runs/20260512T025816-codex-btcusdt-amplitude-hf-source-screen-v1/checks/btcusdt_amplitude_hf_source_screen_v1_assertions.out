@@ -1,0 +1,10 @@
+dataset_id_matches: PASS
+expected_files_present: PASS
+single_symbol_only: PASS
+top100_rows_match_manifest: PASS
+labels_do_not_cover_all_mainregimev2_roots: PASS
+canonical_merge_false: PASS
+accepted_rows_zero: PASS
+update_goal_false: PASS
+raw_data_committed_false: PASS
+gate_result: btcusdt_amplitude_hf_source_screen_v1=single_symbol_derived_amplitude_regime_labels_no_promotion

@@ -1,0 +1,146 @@
+{
+  "accepted_new_manipulation_sources": 0,
+  "accepted_new_root_label_slots": 0,
+  "candidates": [
+    {
+      "class": "independent_root_labels_partial",
+      "decision": "partial_existing_only_no_new_missing_slots",
+      "path": "/private/tmp/ict-regime-kaggle-regime-label-root/kaggle_regime_label_feature_table.csv",
+      "reason": "Exact-source daily/weekly labels already attached where allowed; remaining gaps are intraday/monthly, non-yfinance, missing exact instruments, or rejected Nasdaq near-proxies.",
+      "source_id": "kaggle_stock_market_regimes_2000_2026_existing_cache"
+    },
+    {
+      "class": "model_inferred_hmm_gmm",
+      "decision": "rejected_proxy_only",
+      "path": "/private/tmp/ict-regime-kaggle-us-market-regimes/hmm_regimes.csv",
+      "reason": "Labels are HMM/GMM state labels such as Calm/Stressful/Transitional, not independent Bull/Bear/Sideways/Crisis source labels for target instruments/timeframes.",
+      "source_id": "kaggle_us_market_regimes_1995_2024_hmm_gmm_existing_cache"
+    },
+    {
+      "class": "off_universe_unlabeled_integer_regime",
+      "decision": "rejected_off_universe_or_proxy_only",
+      "path": "/private/tmp/ict-regime-hf-label-candidates/nifty50_market_regime.csv",
+      "reason": "Nifty50 daily integer regimes are not target instruments and do not expose independent MainRegimeV2 root semantics.",
+      "source_id": "hf_nifty50_market_regime_existing_cache"
+    },
+    {
+      "class": "model_inferred_hmm",
+      "decision": "rejected_proxy_only",
+      "path": "/private/tmp/ict-regime-hf-label-candidates/btc_hmm6_train.csv",
+      "reason": "BTC HMM6 labels are model-inferred HMM states, not independent source-backed roots.",
+      "source_id": "hf_btc_hmm6_existing_cache"
+    },
+    {
+      "class": "direct_manipulation_candidate",
+      "decision": "blocked_missing_api_key_no_rows",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T083150-codex-dune-nft-wash-trades-export-probe/dune-export-probe/dune_nft_wash_trades_export_probe.json",
+      "reason": "Dune schema is promising for Manipulation, but no replayable rows were exported because DUNE_API_KEY is absent and public endpoint returned 401.",
+      "source_id": "dune_nft_wash_trades"
+    }
+  ],
+  "exact_slot_probe": {
+    "kaggle_cache_meta": {
+      "exists": true,
+      "roots": [
+        "Bear",
+        "Bull",
+        "Crisis",
+        "High-volatility",
+        "Sideways"
+      ],
+      "sample_tickers": [
+        "AAPL",
+        "ABBV",
+        "AMD",
+        "AMZN",
+        "BA",
+        "BAC",
+        "CAT",
+        "COP",
+        "CSCO",
+        "CVX",
+        "DIS",
+        "GE",
+        "GOOGL",
+        "GS",
+        "HD",
+        "INTC",
+        "JNJ",
+        "JPM",
+        "MCD",
+        "META"
+      ],
+      "ticker_count": 39,
+      "timeframes": [
+        "1d",
+        "1w"
+      ]
+    },
+    "new_exact_missing_slot_examples": [],
+    "new_exact_missing_slots_attachable": 0,
+    "rejected_near_proxy_slots_reseen": 24
+  },
+  "gate_result": "blocked_no_new_unauthenticated_source_labels_for_564_slots",
+  "missing_summary": {
+    "by_instrument": {
+      "CL=F": 36,
+      "DIA": 28,
+      "ES=F": 28,
+      "ETHUSD": 36,
+      "GC=F": 36,
+      "GLD": 36,
+      "NQ=F": 36,
+      "QQQ": 36,
+      "SOLUSD": 36,
+      "SPY": 28,
+      "USO": 36,
+      "XBTUSD": 36,
+      "YM=F": 28,
+      "^DJI": 28,
+      "^GSPC": 28,
+      "^NDX": 36,
+      "^VIX": 36
+    },
+    "by_provider": {
+      "kraken_public_lowpollution_http": 108,
+      "yfinance": 456
+    },
+    "by_reason": {
+      "missing_instrument_source_label": 40,
+      "missing_intraday_or_monthly_source_label": 392,
+      "missing_non_yfinance_source_label": 108,
+      "rejected_near_underlying_proxy_not_accepted": 24
+    },
+    "by_root": {
+      "Bear": 141,
+      "Bull": 141,
+      "Crisis": 141,
+      "Sideways": 141
+    },
+    "by_timeframe": {
+      "15m": 68,
+      "1d": 44,
+      "1h": 68,
+      "1m": 68,
+      "1mo": 68,
+      "1w": 44,
+      "30m": 68,
+      "4h": 68,
+      "5m": 68
+    },
+    "rows": 564
+  },
+  "next_action": "search_or_acquire_non_kaggle_exact_underlying_label_panels_or_authenticated_direct_manipulation_rows",
+  "objective": "bounded_unauthenticated_source_acquisition_probe_for_564_missing_mainregimev2_root_label_slots",
+  "raw_data_committed": false,
+  "run_id": "20260511T084131+0800-codex-root-label-source-acquisition-probe",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "web_queries": [
+    "\"QQQ\" \"market regime\" \"Bull\" \"Bear\" \"Sideways\" dataset",
+    "\"NQ\" \"market regime\" \"Bull\" \"Bear\" \"Sideways\" dataset",
+    "\"VIX\" \"market regime\" \"Bull\" \"Bear\" \"Sideways\" dataset",
+    "\"crude oil\" \"market regime\" \"bull\" \"bear\" \"sideways\" dataset"
+  ]
+}

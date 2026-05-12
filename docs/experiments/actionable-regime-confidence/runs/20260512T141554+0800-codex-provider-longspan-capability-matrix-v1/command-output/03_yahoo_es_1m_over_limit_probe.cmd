@@ -1,0 +1,1 @@
+python3 scripts/auto_quant_external/fetch_external.py yahoo --symbol ES=F --interval 1m --start 2024-01-01 --end 2026-05-12 --output /tmp/ict-provider-longspan-20260512T141554+0800/yahoo_es_1m_20240101_20260512.csv 

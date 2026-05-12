@@ -1,0 +1,11 @@
+PASS active_taxonomy=MainRegimeV2
+PASS slot_count=612
+PASS attached_candidate_slots=48
+PASS full_four_root_cells=12
+PASS missing_or_rejected_slots=564
+PASS rejected_near_proxy_slots=24
+PASS accepted_full_panel=false
+PASS goal_achieved=false
+PASS raw_data_committed=false
+PASS thresholds_relaxed=false
+PASS trade_usable=false

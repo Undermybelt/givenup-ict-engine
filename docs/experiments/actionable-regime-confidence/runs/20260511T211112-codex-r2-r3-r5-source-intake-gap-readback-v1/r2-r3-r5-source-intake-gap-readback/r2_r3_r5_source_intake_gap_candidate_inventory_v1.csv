@@ -1,0 +1,6 @@
+closes_required_intake,date_max,date_min,kind,path,post_2026_01_30_rows_available,reason,regime_count,rows,sha256,size_bytes,ticker_count
+False,2026-01-30,2000-01-03,file,/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv,False,source panel exists locally but max source date is not a post-2026-01-30 recency extension and it is not copied into the R5 intake root with provenance,5,245021,2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0,37155794,39
+False,,,file,/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.parquet,,not an exact required R2/R3/R5 intake file,,,d22e8aa213f6d97b15348a3aa8f507929fed79d9a0aa3764badddb397a2f20dd,6583934,
+False,,,file,/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_analysis_by_ticker.csv,,not an exact required R2/R3/R5 intake file,,,4f393baa07e29de8e274e49ef1d9c4ecc006300827d76bdb1d6cf0d2559ee101,1278,
+False,,,file,/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_by_year.csv,,not an exact required R2/R3/R5 intake file,,,9e3fb7bf707a544210a80db3aec9fffc4e257b4a82cce1b934c3fe2cd02cd08e,758,
+False,,,file,/Users/thrill3r/Downloads/ictscripts/ICT Market Regime Detector,,not an exact required R2/R3/R5 intake file,,,36422875795844de1b29e8cc40d154153de628d81c50f30aabbfdd211e1b6bb7,68553,

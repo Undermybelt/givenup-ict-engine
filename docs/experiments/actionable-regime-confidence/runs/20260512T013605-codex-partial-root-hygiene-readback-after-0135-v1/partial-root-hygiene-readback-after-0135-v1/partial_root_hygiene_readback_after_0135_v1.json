@@ -1,0 +1,84 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "external_requests_sent": false,
+  "gate_result": "partial_root_hygiene_readback_after_0135_v1=partial_roots_not_evidence_r6_r3_r5_missing_no_promotion",
+  "generated_at_utc": "2026-05-11T17:36:54.940704+00:00",
+  "new_confidence_gate": false,
+  "r3_native_subhour_ready": false,
+  "r3_root_mutated": false,
+  "r5_recency_extension_ready": false,
+  "r5_root_mutated": false,
+  "r6_owner_export_ready": false,
+  "r6_owner_export_root_mutated": false,
+  "raw_data_committed": false,
+  "run_id": "20260512T013605-codex-partial-root-hygiene-readback-after-0135-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_label_equivalence_ready": true,
+  "strict_full_objective_achieved": false,
+  "target_roots": [
+    {
+      "assertion_count": 0,
+      "board_ref_count": 0,
+      "command_exit_codes": "auto_quant_status.exit:0;provider_status_agent.exit:0;provider_status_ibkr_agent.exit:0;provider_status_kraken_cli_agent.exit:0;provider_status_kraken_public_agent.exit:0;provider_status_tradingview_mcp_agent.exit:0;provider_status_yfinance_agent.exit:0",
+      "command_output_count": 23,
+      "file_count": 23,
+      "json_count": 0,
+      "report_count": 0,
+      "root_present": "true",
+      "run_id": "20260512T013436-codex-provider-autoquant-readonly-refresh-after-0130-v1",
+      "status": "partial_command_capture_only_not_evidence"
+    },
+    {
+      "assertion_count": 0,
+      "board_ref_count": 0,
+      "command_exit_codes": "",
+      "command_output_count": 0,
+      "file_count": 0,
+      "json_count": 0,
+      "report_count": 0,
+      "root_present": "false",
+      "run_id": "20260512T013502-codex-readonly-runtime-surface-registration-after-0130xx-review-v1",
+      "status": "absent_not_evidence"
+    }
+  ],
+  "thresholds_relaxed": false,
+  "tmp_roots": [
+    {
+      "missing_files": "direct_manipulation_rows.csv;direct_manipulation_provenance.json",
+      "required_files": "direct_manipulation_rows.csv;direct_manipulation_provenance.json",
+      "required_files_present": "false",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_id": "r6_owner_export",
+      "root_present": "false"
+    },
+    {
+      "missing_files": "",
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "required_files_present": "true",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_id": "source_label_equivalence",
+      "root_present": "true"
+    },
+    {
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "required_files_present": "false",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_id": "r3_native_subhour",
+      "root_present": "false"
+    },
+    {
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "required_files_present": "false",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_id": "r5_recency_extension",
+      "root_present": "false"
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false
+}

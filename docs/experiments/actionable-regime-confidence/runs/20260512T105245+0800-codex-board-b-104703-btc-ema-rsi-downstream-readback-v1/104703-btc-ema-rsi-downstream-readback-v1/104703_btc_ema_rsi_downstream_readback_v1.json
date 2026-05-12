@@ -1,0 +1,62 @@
+{
+  "run_id": "20260512T105245+0800-codex-board-b-104703-btc-ema-rsi-downstream-readback-v1",
+  "source_run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+  "gate_result": "104703_btc_ema_rsi_downstream_readback_v1=positive_provider_owned_branch_fail_closed",
+  "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+  "state_dir": "/tmp/ict-engine-20260512T105245+0800-codex-board-b-104703-btc-ema-rsi-downstream-readback-v1-state",
+  "source_metrics": {
+    "strategy": "ProviderBtcEmaRsiHold12",
+    "branch_path": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+    "timerange": "20260401-20260512",
+    "pairs": [
+      "BTC/USDT"
+    ],
+    "trade_count": 42,
+    "win_rate_pct": 69.0476,
+    "total_profit_pct": 22.6,
+    "profit_factor": 2.9309,
+    "sharpe": 9.2978,
+    "max_drawdown_pct": -2.9274
+  },
+  "command_exits": {
+    "validate_strategy_library": 0,
+    "auto_quant_results_import": 0,
+    "auto_quant_prior_init_apply": 0,
+    "pre_bayes_status": 0,
+    "policy_training_status": 0,
+    "export_structural_path_ranking_target": 0,
+    "policy_training_status_after_export": 0,
+    "workflow_structural_bundle": 0,
+    "workflow_execution_candidate": 0,
+    "workflow_full": 0
+  },
+  "readback": {
+    "auto_quant_import_ok": "1/1",
+    "auto_quant_import_meta_invalid": 0,
+    "bbn_prior_applied": true,
+    "bbn_dry_run": false,
+    "bbn_evidence_value_gate_passed": true,
+    "bbn_trade_count": 42,
+    "bbn_n_win": 29,
+    "bbn_n_loss": 13,
+    "pre_bayes_policy_present": false,
+    "latest_gate_status": null,
+    "path_ranker_rows": 1,
+    "path_ranker_history_rows": 1,
+    "path_ranker_raw_scored_mature": "0/30",
+    "path_ranker_production_validation": "0/30",
+    "path_ranker_observation_validation": "0/30",
+    "path_ranker_trainer_artifact": "missing",
+    "runtime_selection": "disabled",
+    "workflow_path_label": "bootstrap_readiness",
+    "workflow_branch_admission_status": "fail_closed",
+    "workflow_candidate_ready": false,
+    "workflow_candidate_actionable": false
+  },
+  "decision": {
+    "count_once": true,
+    "promotion_allowed": false,
+    "update_goal": false,
+    "reason": "The source strategy is a real non-canary positive provider-owned AQ branch, but downstream runtime has no pre-Bayes policy, no mature path-ranker rows, no trainer artifact, and no workflow snapshot for the imported branch path."
+  }
+}

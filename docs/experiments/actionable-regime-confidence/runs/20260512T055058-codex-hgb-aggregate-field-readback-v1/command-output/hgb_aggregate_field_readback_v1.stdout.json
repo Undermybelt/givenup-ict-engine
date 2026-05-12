@@ -1,0 +1,9 @@
+{
+  "gate_result": "hgb_aggregate_field_readback_v1=all_hgb_labels_aggregate_fields_present_source_control_absent",
+  "diagnostic_aggregate_field_complete_labels": [
+    "Bear",
+    "Bull",
+    "Crisis",
+    "Sideways"
+  ]
+}

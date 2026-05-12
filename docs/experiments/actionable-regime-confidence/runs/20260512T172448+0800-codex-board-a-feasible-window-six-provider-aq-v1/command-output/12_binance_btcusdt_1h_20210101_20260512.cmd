@@ -1,0 +1,1 @@
+uv run --with pandas scripts/auto_quant_external/fetch_external.py binance-kline --symbol BTCUSDT --interval 1h --start 2021-01-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T172448+0800-codex-board-a-feasible-window-six-provider-aq-v1/provider-csv/binance_btcusdt_1h_20210101_20260512.csv

@@ -1,0 +1,12 @@
+PASS decision=current_goal_completion_audit_v48=source_confidence_calibrated_no_labels_accepted_still_blocked
+PASS calibration_decision=source_label_equivalence_confidence_calibration_v1=source_confidence_scored_no_acceptance
+PASS accepted_source_confidence_95_labels=none
+PASS source_label_status=schema_ready_unscored
+PASS source_label_rows=248440
+PASS ready_root_count=2
+PASS r6_positive_rows=41
+PASS r6_matched_negative_rows=41
+PASS r6_wilson95_min_lcb=0.914332
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

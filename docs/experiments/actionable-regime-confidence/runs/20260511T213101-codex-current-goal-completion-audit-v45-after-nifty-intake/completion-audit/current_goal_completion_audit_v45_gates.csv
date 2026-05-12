@@ -1,0 +1,14 @@
+gate,observed,required,pass
+ready_intake_roots,2,4,False
+source_label_schema_ready,schema_ready_unscored,schema_ready_unscored,True
+source_label_all_main_labels,"{""Bull"": 1213, ""Crisis"": 991, ""Sideways"": 1231}",Bear/Bull/Crisis/Sideways,False
+source_label_confidence_95,False,True,False
+cross_market_complete,False,True,False
+cross_timeframe_complete,False,True,False
+native_subhour_root_ready,False,True,False
+recency_extension_ready,False,True,False
+r6_positive_support,24,>=50,False
+r6_negative_support,24,>=50,False
+r6_wilson95_lcb,0.862024,>=0.95,False
+r6_broad_normal_sample,False,True,False
+r6_direct_species_coverage,False,True,False

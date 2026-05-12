@@ -1,0 +1,14 @@
+PASS exit_zero
+PASS strategy
+PASS pair_qqq
+PASS trades_74
+PASS profit_positive
+PASS win_rate_present
+PASS sharpe_present
+PASS data_fill_warnings_present
+PASS accepted_rows_zero
+PASS canonical_merge_false
+PASS downstream_false
+PASS strict_false
+PASS update_goal_false
+PASS raw_data_committed_false

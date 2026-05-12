@@ -1,0 +1,3 @@
+filename,rows,positives,label,chronology_acceptance_allowed,best_rule,train_support,train_lcb,calibration_support,calibration_lcb,test_support,test_lcb,accepted_95_context,blocker
+gox_ml_samples.csv,5537252,1902646,wash,True,price_deviation <= -0.2989376,9864,0.9203461875496436,30108,0.6702577003842415,105729,0.2700399195550654,False,calibration_or_test_wilson_below_95_or_support_below_50
+LooksRare_ml_samples.csv,401125,163195,filter_1234,False,sellerFee_amount >= 4.47174e+20,4013,0.9981845390248475,1446,0.994970890988308,948,0.994049223429434,False,source_order_not_global_chronological_for_public_ml_sample

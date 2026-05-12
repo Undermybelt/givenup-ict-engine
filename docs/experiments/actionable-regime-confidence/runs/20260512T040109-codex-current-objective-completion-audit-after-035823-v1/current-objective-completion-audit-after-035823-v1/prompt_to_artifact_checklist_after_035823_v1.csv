@@ -1,0 +1,16 @@
+requirement,evidence,status
+named_board_live_contract,"board hash 4164ae7c37a63693265ac6add9680052f4777bde6993f23cf943417cce46b65e",pass
+multi_agent_safe,"additive artifact, no Current Cursor edit, in-progress roots not modified",pass
+every_regime_confidence_95,"full_objective_gate none, accepted_rows_added 0, new_confidence_gate false",blocked
+per_regime_qualifying_conditions,"no accepted regime packet after 035823",blocked
+cross_market_timeframe_validation,"035433 chronological/heldout-symbol/heldout-venue/broad-normal gates false",blocked
+source_control_acquisition,"035823 rows_acquired false, 3717 additional paired rows if exact cells must pass",blocked
+provider_operation,"195320 yfinance/IBKR/Kraken partial reachability, TradingView failed, non-promoting",partial
+autoquant_operation,"034423 three seeded threaded backtests succeeded, runtime-only",partial
+filter_pre_bayes,"034813 no latest policy, soft evidence, bridge, filtered assignments, or canonical structural confidence",blocked
+bbn_policy_training,"034813 matched_rows 0",blocked
+catboost_path_ranking,"034813 structural path-ranking runtime disabled and target export missing",blocked
+execution_tree_workflow,"034813 actionable artifacts 0 and fail-closed workflow",blocked
+required_source_roots,"fresh readback: R6 owner-export, R3 native-subhour, R5 recency-extension roots absent",blocked
+no_proxy_promotion,"runtime/provider/schema/pooled-only evidence remains non-promoting",pass
+completion_update_goal,"strict_full_objective false, trade_usable false, update_goal false",blocked

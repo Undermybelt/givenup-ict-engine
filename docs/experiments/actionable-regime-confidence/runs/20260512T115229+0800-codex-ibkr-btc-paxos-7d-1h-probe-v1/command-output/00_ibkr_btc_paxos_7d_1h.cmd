@@ -1,0 +1,1 @@
+env PYTHONPATH=/Users/thrill3r/projects-ict-engine/ict-engine/scripts:/Users/thrill3r/projects-ict-engine/ict-engine /Users/thrill3r/Auto-Quant/.venv/bin/python scripts/auto_quant_external/fetch_external.py ibkr-bulk --config docs/experiments/actionable-regime-confidence/runs/20260512T115229+0800-codex-ibkr-btc-paxos-7d-1h-probe-v1/config/ibkr_btc_paxos_7d_1h.yaml --force

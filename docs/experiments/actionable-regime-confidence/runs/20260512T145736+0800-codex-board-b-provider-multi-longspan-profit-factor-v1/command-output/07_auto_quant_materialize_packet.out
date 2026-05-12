@@ -1,0 +1,123 @@
+Result for strategy ProviderMultiLongspanEmaRsiV1
+                                              BACKTESTING REPORT                                              
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ KSPX/USDT │     83 │         0.32 │         268.890 │         2.69 │      5:59:00 │   26     0    57  31.3 │
+│ BBTC/USDT │     45 │         0.49 │         220.936 │         2.21 │     10:41:00 │   31     0    14  68.9 │
+│   ES/USDT │    454 │         0.01 │          65.629 │         0.66 │     11:00:00 │  247     4   203  54.4 │
+│ KXBT/USDT │     67 │         -0.4 │        -265.757 │        -2.66 │      9:49:00 │   28     0    39  41.8 │
+│  SPY/USDT │    915 │        -0.03 │        -276.643 │        -2.77 │     10:16:00 │  502     5   408  54.9 │
+│  BTC/USDT │   3301 │        -0.02 │        -525.030 │        -5.25 │     10:18:00 │ 1612     0  1689  48.8 │
+│     TOTAL │   4865 │        -0.01 │        -511.975 │        -5.12 │     10:17:00 │ 2446     9  2410  50.3 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                           LEFT OPEN TRADES REPORT                                            
+┏━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃      Pair ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  BTC/USDT │      1 │         0.37 │           3.681 │         0.04 │      8:00:00 │    1     0     0   100 │
+│ BBTC/USDT │      1 │         0.36 │           3.636 │         0.04 │      8:00:00 │    1     0     0   100 │
+│   ES/USDT │      1 │         0.13 │           1.312 │         0.01 │      4:00:00 │    1     0     0   100 │
+│  SPY/USDT │      1 │         0.13 │           1.300 │         0.01 │      4:00:00 │    1     0     0   100 │
+│     TOTAL │      4 │         0.25 │           9.929 │          0.1 │      6:00:00 │    4     0     0   100 │
+└───────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                             ENTER TAG STATS                                                             
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                           Enter Tag ┃ Entries ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ provider_multi_ema_rsi_continuation │    4865 │        -0.01 │        -511.975 │        -5.12 │     10:17:00 │ 2446     9  2410  50.3 │
+│                               TOTAL │    4865 │        -0.01 │        -511.975 │        -5.12 │     10:17:00 │ 2446     9  2410  50.3 │
+└─────────────────────────────────────┴─────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                         EXIT REASON STATS                                                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                     Exit Reason ┃ Exits ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│   provider_multi_rsi_exhaustion │   724 │          2.1 │       15220.492 │        152.2 │      6:05:00 │  724     0     0   100 │
+│ provider_multi_12h_risk_horizon │  3548 │         0.05 │        1924.522 │        19.25 │     12:00:00 │ 1718     9  1821  48.4 │
+│                      force_exit │     4 │         0.25 │           9.929 │          0.1 │      6:00:00 │    4     0     0   100 │
+│                       stop_loss │   589 │         -3.0 │      -17666.918 │      -176.67 │      5:10:00 │    0     0   589     0 │
+│                           TOTAL │  4865 │        -0.01 │        -511.975 │        -5.12 │     10:17:00 │ 2446     9  2410  50.3 │
+└─────────────────────────────────┴───────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                                                                             MIXED TAG STATS                                                                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                           Enter Tag ┃                     Exit Reason ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ provider_multi_ema_rsi_continuation │   provider_multi_rsi_exhaustion │    724 │          2.1 │       15220.492 │        152.2 │      6:05:00 │  724     0     0   100 │
+│ provider_multi_ema_rsi_continuation │ provider_multi_12h_risk_horizon │   3548 │         0.05 │        1924.522 │        19.25 │     12:00:00 │ 1718     9  1821  48.4 │
+│ provider_multi_ema_rsi_continuation │                      force_exit │      4 │         0.25 │           9.929 │          0.1 │      6:00:00 │    4     0     0   100 │
+│ provider_multi_ema_rsi_continuation │                       stop_loss │    589 │         -3.0 │      -17666.918 │      -176.67 │      5:10:00 │    0     0   589     0 │
+│                               TOTAL │                                 │   4865 │        -0.01 │        -511.975 │        -5.12 │     10:17:00 │ 2446     9  2410  50.3 │
+└─────────────────────────────────────┴─────────────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┘
+                         SUMMARY METRICS                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric                        ┃ Value                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Backtesting from              │ 2017-08-20 12:00:00            │
+│ Backtesting to                │ 2026-05-12 00:00:00            │
+│ Trading Mode                  │ Spot                           │
+│ Max open trades               │ 6                              │
+│                               │                                │
+│ Total/Daily Avg Trades        │ 4865 / 1.53                    │
+│ Starting balance              │ 10000 USDT                     │
+│ Final balance                 │ 9488.025 USDT                  │
+│ Absolute profit               │ -511.975 USDT                  │
+│ Total profit %                │ -5.12%                         │
+│ CAGR %                        │ -0.60%                         │
+│ Sortino                       │ -0.27                          │
+│ Sharpe                        │ -0.17                          │
+│ Calmar                        │ -0.14                          │
+│ SQN                           │ -0.40                          │
+│ Profit factor                 │ 0.98                           │
+│ Expectancy (Ratio)            │ -0.11 (-0.01)                  │
+│ Avg. daily profit             │ -0.161 USDT                    │
+│ Avg. stake amount             │ 1000 USDT                      │
+│ Total trade volume            │ 9729486.679 USDT               │
+│                               │                                │
+│ Best Pair                     │ KSPX/USDT 2.69%                │
+│ Worst Pair                    │ BTC/USDT -5.25%                │
+│ Best trade                    │ BTC/USDT 20.28%                │
+│ Worst trade                   │ KXBT/USDT -3.00%               │
+│ Best day                      │ 190.454 USDT                   │
+│ Worst day                     │ -119.956 USDT                  │
+│ Days win/draw/lose            │ 1184 / 644 / 1359              │
+│ Min/Max/Avg. Duration Winners │ 0d 01:00 / 0d 12:00 / 0d 10:14 │
+│ Min/Max/Avg. Duration Losers  │ 0d 00:00 / 0d 12:00 / 0d 10:20 │
+│ Max Consecutive Wins / Loss   │ 12 / 15                        │
+│ Rejected Entry signals        │ 0                              │
+│ Entry/Exit Timeouts           │ 0 / 0                          │
+│                               │                                │
+│ Min balance                   │ 8490.146 USDT                  │
+│ Max balance                   │ 10878.778 USDT                 │
+│ Max % of account underwater   │ 21.96%                         │
+│ Absolute drawdown             │ 2388.632 USDT (21.96%)         │
+│ Drawdown duration             │ 2466 days 21:00:00             │
+│ Profit at drawdown start      │ 878.778 USDT                   │
+│ Profit at drawdown end        │ -1509.854 USDT                 │
+│ Drawdown start                │ 2017-12-08 00:00:00            │
+│ Drawdown end                  │ 2024-09-08 21:00:00            │
+│ Market change                 │ 322.76%                        │
+└───────────────────────────────┴────────────────────────────────┘
+
+Backtested 2017-08-20 12:00:00 -> 2026-05-12 00:00:00 | Max open trades : 6
+                                                                     STRATEGY SUMMARY                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                      Strategy ┃ Trades ┃ Avg Profit % ┃ Tot Profit USDT ┃ Tot Profit % ┃ Avg Duration ┃  Win  Draw  Loss  Win% ┃              Drawdown ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ProviderMultiLongspanEmaRsiV1 │   4865 │        -0.01 │        -511.975 │        -5.12 │     10:17:00 │ 2446     9  2410  50.3 │ 2388.632 USDT  21.96% │
+└───────────────────────────────┴────────┴──────────────┴─────────────────┴──────────────┴──────────────┴────────────────────────┴───────────────────────┘
+{
+  "library_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/provider_multi_longspan_ema_rsi_strategy_library_v1.json",
+  "metrics": {
+    "calmar": -0.13982343270510286,
+    "max_drawdown_pct": -21.956803495306612,
+    "profit_factor": 0.9830379635723149,
+    "sharpe": -0.16553407854615224,
+    "sortino": -0.27292657123576897,
+    "total_profit_pct": -5.12,
+    "trade_count": 4865,
+    "win_rate_pct": 50.277492291880776
+  },
+  "rows": 4865,
+  "summary_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/provider_multi_longspan_ema_rsi_packet_summary_v1.json",
+  "trades_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/provider_multi_longspan_ema_rsi_real_trades_v1.jsonl"
+}

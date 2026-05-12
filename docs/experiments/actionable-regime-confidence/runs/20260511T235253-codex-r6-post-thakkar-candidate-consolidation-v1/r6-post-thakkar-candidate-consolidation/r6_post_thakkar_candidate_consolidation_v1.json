@@ -1,0 +1,97 @@
+{
+  "run_id": "20260511T235253-codex-r6-post-thakkar-candidate-consolidation-v1",
+  "generated_at_utc": "2026-05-11T15:54:33.377988+00:00",
+  "board_sha256_at_start": "18486811d9381f23e361fde7aa671678be66d6499dba02f092b6513067ab4de8",
+  "canonical_live_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "canonical_live_intake_exists": false,
+  "direct_verifier": {
+    "returncode": 2,
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235253-codex-r6-post-thakkar-candidate-consolidation-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt",
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T235253-codex-r6-post-thakkar-candidate-consolidation-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "parsed": {
+      "status": "blocked",
+      "reason": "missing_required_files",
+      "missing_files": [
+        "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+      ]
+    }
+  },
+  "direct_verifier_blocked_missing_required_files": true,
+  "v54_baseline_positive_rows": 57,
+  "v54_baseline_matched_negative_rows": 57,
+  "sidecar_broad_normal_control_rows": 80,
+  "sidecar_broad_normal_wilson95_lcb": 0.954180263735,
+  "source_summaries": [
+    {
+      "source": "sarao",
+      "run_id": "20260511T225505-codex-r6-sarao-positive-row-candidate-screen-v1",
+      "positive_rows": 6,
+      "control_rows": 0,
+      "positive_csv_exists": true
+    },
+    {
+      "source": "nowak_smith",
+      "run_id": "20260511T233454-codex-r6-nowak-smith-positive-row-candidate-screen-v1",
+      "positive_rows": 6,
+      "control_rows": 0,
+      "positive_csv_exists": true
+    },
+    {
+      "source": "oystacher_khara_salim",
+      "run_id": "20260511T234735-codex-r6-oystacher-khara-salim-positive-row-candidate-screen-v1",
+      "positive_rows": 4,
+      "control_rows": 0,
+      "positive_csv_exists": true
+    },
+    {
+      "source": "jpmorgan_latest",
+      "run_id": "20260511T234818-codex-r6-jpmorgan-positive-row-candidate-screen-v1",
+      "positive_rows": 8,
+      "control_rows": 0,
+      "positive_csv_exists": true
+    },
+    {
+      "source": "thakkar_backofbook",
+      "run_id": "20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1",
+      "positive_rows": 4,
+      "control_rows": 2,
+      "positive_csv_exists": true
+    },
+    {
+      "source": "moncada_large_lot",
+      "run_id": "20260511T235000-codex-r6-moncada-large-lot-positive-row-candidate-screen-v1",
+      "positive_rows": 6,
+      "control_rows": 0,
+      "positive_csv_exists": true
+    },
+    {
+      "source": "trunz_empty_screen",
+      "run_id": "20260511T235000-codex-r6-trunz-positive-row-candidate-screen-v1",
+      "positive_rows": 0,
+      "control_rows": 0,
+      "positive_csv_exists": true
+    }
+  ],
+  "unique_proposed_positive_rows": 34,
+  "duplicate_candidate_rows": 0,
+  "proposed_matched_control_rows": 2,
+  "what_if_positive_rows_after_unique_sidecars": 91,
+  "v54_baseline_wilson95_lcb": 0.936858991217,
+  "what_if_positive_wilson95_lcb_after_unique_sidecars": 0.959494567785,
+  "what_if_min_wilson95_lcb_after_unique_sidecars": 0.954180263735,
+  "pooled_what_if_wilson95_pass": true,
+  "matched_controls_materialized_for_all_candidates": false,
+  "shared_intake_mutated": false,
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "gate_result": "r6_post_thakkar_candidate_consolidation_v1=pooled_whatif_passes_but_live_intake_missing_and_split_gates_not_rerun",
+  "next_action": "Restore or rematerialize the direct R6 intake from durable row artifacts under a shared lock, materialize matched controls for every accepted candidate, then rerun direct plus sidecar calibration and chronological/symbol/venue split gates before any acceptance claim."
+}

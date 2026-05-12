@@ -1,0 +1,452 @@
+{
+  "schema_version": "regime-consumer-bundle/v1",
+  "artifact_count": 7,
+  "missing_artifacts": [],
+  "latest_decision": {
+    "timestamp": "2026-05-10T14:12:54.528735Z",
+    "decision_state": "accepted_95_field_complete_6_of_6",
+    "trade_usable": false,
+    "final_label": "MultiRegimeFieldCompleteGuardrailSet",
+    "label_set": [
+      "SessionLiquidityCoreViable",
+      "RangeConsolidation",
+      "ThinLiquidity",
+      "TrendExpansion",
+      "ExtremeStress",
+      "ReversalBrewing"
+    ],
+    "abstain_reasons": [
+      "board_a_confidence_only",
+      "not_strategy_profitability",
+      "board_b_must_prove_non_observe_release_and_path_specific_edge"
+    ]
+  },
+  "consumer_hints": {
+    "execution_tree_hint": "transition_guardrail",
+    "bbn_evidence_hint": {
+      "regime_decision_state": "accepted_95_field_complete_6_of_6",
+      "regime_trade_usable": false,
+      "regime_label": "MultiRegimeFieldCompleteGuardrailSet",
+      "regime_label_set": [
+        "SessionLiquidityCoreViable",
+        "RangeConsolidation",
+        "ThinLiquidity",
+        "TrendExpansion",
+        "ExtremeStress",
+        "ReversalBrewing"
+      ],
+      "regime_transition_hazard": 0.9977802441731409,
+      "regime_decision_reasons": [
+        "board_a_confidence_only",
+        "not_strategy_profitability",
+        "board_b_must_prove_non_observe_release_and_path_specific_edge"
+      ]
+    },
+    "path_ranker_context": {
+      "regime_label": "MultiRegimeFieldCompleteGuardrailSet",
+      "regime_confidence_tier": "95",
+      "precision_wilson_lcb_min": 0.9536435698638122,
+      "accepted_regime_count": 6,
+      "allowed_action": "context_guardrail_only_until_board_b_edge_gate_passes",
+      "regime_trade_usable": false,
+      "accepted_regimes": [
+        {
+          "accepted_regime_id": "SessionLiquidityCoreViable",
+          "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+          "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T212828-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json",
+          "calibration_support": 3496,
+          "confidence_lane": "95",
+          "coverage": 0.9352216748768473,
+          "downstream_evidence_fields": [
+            "finite_daily_ohlcv",
+            "volume_ratio32_128",
+            "target_SessionLiquidityCoreViable",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ],
+          "duration_viable": true,
+          "ece": 0.0,
+          "horizon": "5 daily bars",
+          "market": "multi-context: NQ local CME futures + yfinance ETF/crypto",
+          "passes_95": true,
+          "precision_wilson_lcb": 0.9989893135869218,
+          "qualifying_condition": "finite daily OHLCV with volume > 0 AND volume_ratio32_128 >= 0.770028013962",
+          "target": "target_SessionLiquidityCoreViable",
+          "test_support": 3797,
+          "timeframe": "1d",
+          "transition_hazard": 0.0,
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1d",
+            "NQ:CME_futures_local:1d",
+            "QQQ:yfinance_ETF:1d",
+            "SPY:yfinance_ETF:1d"
+          ],
+          "validation_instruments": [
+            "BTC-USD",
+            "NQ",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_periods": {
+            "calibration": {
+              "precision": 1.0,
+              "precision_wilson_lcb_95": 0.9989023906180056,
+              "success": 3496,
+              "support": 3496
+            },
+            "test": {
+              "precision": 1.0,
+              "precision_wilson_lcb_95": 0.9989893135869218,
+              "success": 3797,
+              "support": 3797
+            },
+            "train": {
+              "precision": 1.0,
+              "precision_wilson_lcb_95": 0.9994690334484095,
+              "success": 7231,
+              "support": 7231
+            }
+          }
+        },
+        {
+          "accepted_regime_id": "RangeConsolidation",
+          "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+          "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T212828-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json",
+          "calibration_support": 503,
+          "confidence_lane": "95",
+          "coverage": 0.06526005888125613,
+          "downstream_evidence_fields": [
+            "condition_RangeConsolidationReissued",
+            "target_RangeConsolidationLowStressTransitionHazard",
+            "range_ratio32_128",
+            "vol_ratio32_128",
+            "stretch_abs32",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ],
+          "duration_viable": true,
+          "ece": 0.04680936934782276,
+          "horizon": "1 daily bar",
+          "market": "multi-context: NQ local CME futures + yfinance ETF/crypto",
+          "passes_95": true,
+          "precision_wilson_lcb": 0.9567602328682457,
+          "qualifying_condition": "per-context daily range base condition (vol_ratio32_128 <= train q45 AND range_ratio32_128 <= train q45 AND stretch_abs32 <= train q70) AND range_ratio32_128 <= 0.7289901983",
+          "target": "target_RangeConsolidationLowStressTransitionHazard",
+          "test_support": 266,
+          "timeframe": "1d",
+          "transition_hazard": 0.018796992481203034,
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1d",
+            "NQ:CME_futures_local:1d",
+            "QQQ:yfinance_ETF:1d",
+            "SPY:yfinance_ETF:1d"
+          ],
+          "validation_instruments": [
+            "BTC-USD",
+            "NQ",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_periods": {
+            "calibration": {
+              "precision": 0.9343936381709742,
+              "precision_wilson_lcb_95": 0.9092961911156091,
+              "success": 470,
+              "support": 503
+            },
+            "test": {
+              "precision": 0.981203007518797,
+              "precision_wilson_lcb_95": 0.9567602328682457,
+              "success": 261,
+              "support": 266
+            },
+            "train": {
+              "precision": 0.9504036908881199,
+              "precision_wilson_lcb_95": 0.9338609000507118,
+              "success": 824,
+              "support": 867
+            }
+          }
+        },
+        {
+          "accepted_regime_id": "ThinLiquidity",
+          "allowed_action": "guardrail_only_liquidity_context",
+          "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T212828-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json",
+          "calibration_support": 584,
+          "confidence_lane": "95",
+          "coverage": 0.06477832512315271,
+          "downstream_evidence_fields": [
+            "condition_ThinLiquidityReissued",
+            "target_ThinLiquidityPersistsNext5d",
+            "volume_ratio32_128",
+            "volume",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ],
+          "duration_viable": true,
+          "ece": 0.001712328767123239,
+          "horizon": "5 daily bars",
+          "market": "multi-context: NQ local CME futures + yfinance ETF/crypto",
+          "passes_95": true,
+          "precision_wilson_lcb": 0.9856039655993807,
+          "qualifying_condition": "per-context daily thin-liquidity base condition (volume_ratio32_128 <= train q30 OR volume <= train q30) AND volume_ratio32_128 <= 0.770028013962",
+          "target": "target_ThinLiquidityPersistsNext5d",
+          "test_support": 263,
+          "timeframe": "1d",
+          "transition_hazard": 0.0,
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1d",
+            "NQ:CME_futures_local:1d",
+            "QQQ:yfinance_ETF:1d",
+            "SPY:yfinance_ETF:1d"
+          ],
+          "validation_instruments": [
+            "BTC-USD",
+            "NQ",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_periods": {
+            "calibration": {
+              "precision": 0.9982876712328768,
+              "precision_wilson_lcb_95": 0.9903651989455108,
+              "success": 583,
+              "support": 584
+            },
+            "test": {
+              "precision": 1.0,
+              "precision_wilson_lcb_95": 0.9856039655993807,
+              "success": 263,
+              "support": 263
+            },
+            "train": {
+              "precision": 0.9975124378109452,
+              "precision_wilson_lcb_95": 0.9909757641920194,
+              "success": 802,
+              "support": 804
+            }
+          }
+        },
+        {
+          "accepted_regime_id": "TrendExpansion",
+          "allowed_action": "release_candidate_only_when_other_gates_pass",
+          "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json",
+          "calibration_support": 273,
+          "confidence_lane": "95",
+          "coverage": 0.14310344827586208,
+          "downstream_evidence_fields": [
+            "TrendExpansionPersistsNext5dAcrossContexts",
+            "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ],
+          "duration_viable": true,
+          "ece": 0.036674169204289675,
+          "horizon": "5 daily bars",
+          "market": "multi-context: NQ local CME futures + yfinance ETF/crypto",
+          "precision_wilson_lcb": 0.9536435698638122,
+          "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+          "test_support": 581,
+          "timeframe": "1d",
+          "transition_hazard": 0.0,
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1d",
+            "NQ:CME_futures_local:1d",
+            "QQQ:yfinance_ETF:1d",
+            "SPY:yfinance_ETF:1d"
+          ],
+          "validation_instruments": [
+            "BTC-USD",
+            "NQ",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_periods": {
+            "calibration": {
+              "precision": 0.9340659340659341,
+              "precision_wilson_lcb_95": 0.8981955919622417,
+              "success": 255,
+              "support": 273
+            },
+            "test": {
+              "precision": 0.9707401032702238,
+              "precision_wilson_lcb_95": 0.9536435698638122,
+              "success": 564,
+              "support": 581
+            },
+            "train": {
+              "precision": 0.9487179487179487,
+              "precision_wilson_lcb_95": 0.9291933870751613,
+              "success": 629,
+              "support": 663
+            }
+          }
+        },
+        {
+          "accepted_regime_id": "ExtremeStress",
+          "allowed_action": "guardrail_only_reduce_or_block_release",
+          "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json",
+          "calibration_support": 445,
+          "confidence_lane": "95",
+          "coverage": 0.05279960707269155,
+          "downstream_evidence_fields": [
+            "ExtremeStressPersistsNext2dAcrossContexts",
+            "stress_persistence_16 >= 1 AND jump_intensity_32 >= 0.125",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ],
+          "duration_viable": true,
+          "ece": 0.015573556310425896,
+          "horizon": "2 daily bars",
+          "market": "multi-context: NQ local CME futures + yfinance ETF/crypto",
+          "precision_wilson_lcb": 0.9741288651988539,
+          "qualifying_condition": "stress_persistence_16 >= 1 AND jump_intensity_32 >= 0.125",
+          "test_support": 215,
+          "timeframe": "1d",
+          "transition_hazard": 0.0,
+          "validation_contexts": [
+            "NQ:CME_futures_local:1d",
+            "QQQ:yfinance_ETF:1d",
+            "SPY:yfinance_ETF:1d"
+          ],
+          "validation_instruments": [
+            "NQ",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_ETF"
+          ],
+          "validation_periods": {
+            "calibration": {
+              "precision": 0.9797752808988764,
+              "precision_wilson_lcb_95": 0.9620141961475877,
+              "success": 436,
+              "support": 445
+            },
+            "test": {
+              "precision": 0.9953488372093023,
+              "precision_wilson_lcb_95": 0.9741288651988539,
+              "success": 214,
+              "support": 215
+            },
+            "train": {
+              "precision": 0.9725085910652921,
+              "precision_wilson_lcb_95": 0.9558121312977035,
+              "success": 566,
+              "support": 582
+            }
+          }
+        },
+        {
+          "accepted_regime_id": "ReversalBrewing",
+          "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+          "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json",
+          "calibration_support": 843,
+          "confidence_lane": "95",
+          "coverage": 0.22192118226600985,
+          "downstream_evidence_fields": [
+            "TrendExpansionFailureHazardWithin5dAcrossContexts",
+            "ma64_slope16 <= 0.00115583574 AND stretch64 <= 0.005836516932",
+            "chronological per-instrument train/calibration/test split",
+            "NQ local daily OHLCV",
+            "QQQ/SPY/BTC-USD yfinance daily OHLCV"
+          ],
+          "duration_viable": true,
+          "ece": 0.0013389630343508818,
+          "horizon": "5 daily bars",
+          "market": "multi-context: NQ local CME futures + yfinance ETF/crypto",
+          "precision_wilson_lcb": 0.9919428347812438,
+          "qualifying_condition": "ma64_slope16 <= 0.00115583574 AND stretch64 <= 0.005836516932",
+          "test_support": 901,
+          "timeframe": "1d",
+          "transition_hazard": 0.9977802441731409,
+          "validation_contexts": [
+            "BTC-USD:yfinance_crypto:1d",
+            "NQ:CME_futures_local:1d",
+            "QQQ:yfinance_ETF:1d",
+            "SPY:yfinance_ETF:1d"
+          ],
+          "validation_instruments": [
+            "BTC-USD",
+            "NQ",
+            "QQQ",
+            "SPY"
+          ],
+          "validation_market_contexts": [
+            "CME_futures_local",
+            "yfinance_ETF",
+            "yfinance_crypto"
+          ],
+          "validation_periods": {
+            "calibration": {
+              "precision": 0.99644128113879,
+              "precision_wilson_lcb_95": 0.9895896367375854,
+              "success": 840,
+              "support": 843
+            },
+            "test": {
+              "precision": 0.9977802441731409,
+              "precision_wilson_lcb_95": 0.9919428347812438,
+              "success": 899,
+              "support": 901
+            },
+            "train": {
+              "precision": 1.0,
+              "precision_wilson_lcb_95": 0.9976473779496824,
+              "success": 1629,
+              "support": 1629
+            }
+          }
+        }
+      ]
+    },
+    "user_vrp_nq_context": {},
+    "trade_usable": false
+  },
+  "artifacts": {
+    "decision": {
+      "status": "present",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain/regime-sidecar/regime_high_confidence_decision.json",
+      "schema_version": "regime-high-confidence-decision/v1"
+    },
+    "accepted_packet_set": {
+      "status": "present",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T212828-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json",
+      "schema_version": "board-a-legacy-regime-contract-reissue/v1"
+    }
+  },
+  "consumer_contract": {
+    "zero_config": true,
+    "hotplug_scope": "include_artifact",
+    "main_runtime_mutation": "none",
+    "optional_for_consumers": true,
+    "token_friendly": true
+  }
+}

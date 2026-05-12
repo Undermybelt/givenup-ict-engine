@@ -1,0 +1,2 @@
+candidate,source,rows,date_min,date_max,post_2026_01_30_rows,label_vocab,decision,required_root_unlock
+AAdevloper/nifty50-market-regime,https://huggingface.co/datasets/AAdevloper/nifty50-market-regime,2235,2015-10-23,2024-11-14,0,"RISK_OFF=0;RISK_ON=1","binary_daily_nifty_context_no_mainregimev2_no_recency_no_native_subhour_no_r6_controls",false

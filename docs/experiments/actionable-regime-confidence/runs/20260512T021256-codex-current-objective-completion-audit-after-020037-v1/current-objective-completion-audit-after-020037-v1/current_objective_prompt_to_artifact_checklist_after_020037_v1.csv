@@ -1,0 +1,12 @@
+requirement,status,evidence,gap
+Use the named Board A markdown and preserve multi-agent coordination,pass,docs/plans/2026-05-10-actionable-regime-confidence-todo.md; sha256=109859a582a9a7800c1170f88145be11dbffaddc14c46c25ddbdb24304aff5b0,none
+Every MainRegimeV2 regime reaches accepted calibrated confidence >=95%,blocked,Latest registered packets still add accepted_rows_added=0 and no new confidence gate,No strict Bull/Bear/Sideways/Crisis accepted packet is present.
+Each accepted regime has its own qualifying condition,blocked,020216 sample mapping and 020104/020235 source screens remain non-promoting,No accepted per-regime qualifying_condition rows.
+Validate across other markets,blocked,R6 owner-export root absent; source-owned normal controls absent,No source-owned cross-market accepted packet.
+Validate across other cycles/timeframes,blocked,"R3={'path': '/tmp/ict-engine-native-subhour-source-label-intake', 'present': False, 'kind': 'absent', 'file_count': 0}; R5={'path': '/tmp/ict-engine-source-panel-recency-extension', 'present': False, 'kind': 'absent', 'file_count': 0}",Native sub-hour and recency-extension roots remain absent.
+Record IBKR/TradingViewRemix/yfinance/Kraken provider context,partial,020037/021008 runtime readbacks record callable but partial provider status,Provider status is not promotion evidence without source/control roots.
+Operate Auto-Quant on real artifacts,partial,020037 auto_quant_status=missing_dependency,Auto-Quant remains non-promoting in this state.
+Operate filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution tree,partial,020037 runtime chain callable; policy matched rows 0; path mature rows 0; execution observe-only,Callable/read-only surfaces are not accepted downstream promotion.
+R6 has source-owned normal controls or explicit FLIP approval,blocked,approval_present=False; flip_controls=False,Owner-export root absent and FLIP controls are not approved.
+Canonical merge and downstream promotion rerun are allowed,blocked,canonical=False; downstream=False,Canonical merge and downstream rerun remain false.
+Goal can be marked complete,blocked,strict_full_objective_achieved=false; update_goal=false,Objective is not achieved.

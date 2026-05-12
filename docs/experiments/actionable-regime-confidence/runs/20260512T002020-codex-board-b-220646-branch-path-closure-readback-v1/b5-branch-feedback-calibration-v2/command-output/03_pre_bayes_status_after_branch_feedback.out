@@ -1,0 +1,39 @@
+{
+  "latest_bridge": null,
+  "latest_bridge_diff": null,
+  "latest_canonical_structural_active_regime": null,
+  "latest_canonical_structural_confidence": null,
+  "latest_canonical_structural_probabilities": {},
+  "latest_filtered_assignments": {
+    "parent_regime_root": "Crisis",
+    "pre_bayes_branch_path_gate": "blocked_missing_consumed_pre_bayes_filter",
+    "regime_profit_branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12"
+  },
+  "latest_gate_status": "blocked",
+  "latest_policy": null,
+  "latest_policy_diff": null,
+  "latest_policy_lineage": {
+    "changed_fields_union": [],
+    "latest_version": null,
+    "previous_version": null,
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested",
+    "total_versions": 0
+  },
+  "latest_policy_version": "structural-feedback-branch-path-v1",
+  "latest_soft_evidence": {},
+  "latest_soft_evidence_diff": [],
+  "latest_structural_feedback": {
+    "branch_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "exit_reason": "time_stop",
+    "followed_path": true,
+    "node_id": "Crisis",
+    "notes": "b5_branch_feedback_calibration_v1; exact Board B regime_profit_branch_path; source_trade_id=SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12:NQ/USD:4h:18840",
+    "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "protocol_version": "board-b-source-root-stop-carry-longhorizon/v1",
+    "recommendation_id": "SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12:NQ/USD:4h:18840",
+    "recommended_at": "2022-11-07T00:00:00+00:00",
+    "scenario_id": "CrisisReliefCarry"
+  },
+  "latest_uses_soft_evidence": false
+}

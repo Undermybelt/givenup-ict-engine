@@ -1,0 +1,17 @@
+{
+  "market_key": "board-b-real-chain-yfinance-qqq",
+  "interval": "1d",
+  "start": "2026-02-01T00:00:00Z",
+  "end": "2026-05-01T00:00:00Z",
+  "count": 90,
+  "related_roles": ["etf_reference"],
+  "provider_preferences": {
+    "etf_reference": "yfinance"
+  },
+  "symbol_overrides": {
+    "etf_reference": {
+      "display_symbol": "QQQ",
+      "yfinance": "QQQ"
+    }
+  }
+}

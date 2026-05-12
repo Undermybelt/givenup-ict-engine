@@ -1,0 +1,35 @@
+{
+  "run_id": "20260512T061235+0800-codex-source-control-gate-live-refresh-v1",
+  "gate_result": "source_control_gate_live_refresh_v1=required_roots_absent_known_terminal_roots_registered_no_downstream_rerun",
+  "board_sha256_before_artifact": "4c8e15f6b913dc5e77a09ad3aad2c3cc05138c1b68dc3fa4b236b39e77e536f2",
+  "registered_roots_checked": {
+    "060722": "registered_count_once",
+    "060802": "registered_count_once",
+    "060807": "registered_count_once"
+  },
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "dispatch_state": {
+    "current_v5_dispatch_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1",
+    "feasibility_readback_root": "docs/experiments/actionable-regime-confidence/runs/20260512T055516-codex-r6-owner-export-dispatch-feasibility-readback-v1",
+    "drafts_parseable": true,
+    "external_requests_sent": false,
+    "sender_identity_present": false,
+    "ticket_export_license_identifiers_received": false
+  },
+  "decision": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "target_roots_mutated": false,
+    "approval_present": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Use the existing v5 owner-export drafts only through an approved operator mail path, or supply explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, or source-owned R3 native sub-hour labels. Do not mutate target roots or rerun downstream promotion until the source/control gate unlocks."
+}

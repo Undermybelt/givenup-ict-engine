@@ -1,0 +1,134 @@
+{
+  "dominant_daily_2021_2025_by_root": {
+    "Bear": 301,
+    "Bull": 846,
+    "Crisis": 8,
+    "Sideways": 100
+  },
+  "dominant_daily_by_root": {
+    "Bear": 1385,
+    "Bull": 3900,
+    "Crisis": 417,
+    "Sideways": 857
+  },
+  "overall_by_root": {
+    "Bear": {
+      "rows": 54939,
+      "unique_dates": 6380,
+      "unique_tickers": 39
+    },
+    "Bull": {
+      "rows": 103766,
+      "unique_dates": 6460,
+      "unique_tickers": 39
+    },
+    "Crisis": {
+      "rows": 29632,
+      "unique_dates": 6045,
+      "unique_tickers": 39
+    },
+    "High-volatility": {
+      "rows": 16,
+      "unique_dates": 16,
+      "unique_tickers": 10
+    },
+    "Sideways": {
+      "rows": 56668,
+      "unique_dates": 6445,
+      "unique_tickers": 39
+    }
+  },
+  "source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+  "window_2021_2025_by_root": {
+    "Bear": {
+      "rows": 12057,
+      "unique_dates": 1248,
+      "unique_tickers": 39
+    },
+    "Bull": {
+      "rows": 21528,
+      "unique_dates": 1251,
+      "unique_tickers": 39
+    },
+    "Crisis": {
+      "rows": 4646,
+      "unique_dates": 1162,
+      "unique_tickers": 39
+    },
+    "Sideways": {
+      "rows": 10714,
+      "unique_dates": 1253,
+      "unique_tickers": 39
+    }
+  },
+  "yf_symbol_source_overlap": {
+    "AAPL": {
+      "Bear": 1309,
+      "Bull": 3341,
+      "Crisis": 993,
+      "Sideways": 916
+    },
+    "AMD": {
+      "Bear": 1667,
+      "Bull": 1423,
+      "Crisis": 3184,
+      "Sideways": 285
+    },
+    "AMZN": {
+      "Bear": 1427,
+      "Bull": 2794,
+      "Crisis": 1487,
+      "Sideways": 851
+    },
+    "JPM": {
+      "Bear": 1361,
+      "Bull": 2829,
+      "Crisis": 785,
+      "Sideways": 1584
+    },
+    "MSFT": {
+      "Bear": 1400,
+      "Bull": 2779,
+      "Crisis": 807,
+      "Sideways": 1573
+    },
+    "NVDA": {
+      "Bear": 1275,
+      "Bull": 2737,
+      "Crisis": 2015,
+      "High-volatility": 1,
+      "Sideways": 531
+    },
+    "TSLA": {
+      "Bear": 867,
+      "Bull": 1537,
+      "Crisis": 1244,
+      "High-volatility": 2,
+      "Sideways": 272
+    },
+    "XOM": {
+      "Bear": 1658,
+      "Bull": 2627,
+      "Crisis": 207,
+      "Sideways": 2067
+    },
+    "^GSPC": {
+      "Bear": 1068,
+      "Bull": 3339,
+      "Crisis": 159,
+      "Sideways": 1993
+    },
+    "^IXIC": {
+      "Bear": 1281,
+      "Bull": 3228,
+      "Crisis": 462,
+      "Sideways": 1588
+    },
+    "^RUT": {
+      "Bear": 1318,
+      "Bull": 2957,
+      "Crisis": 277,
+      "Sideways": 2007
+    }
+  }
+}

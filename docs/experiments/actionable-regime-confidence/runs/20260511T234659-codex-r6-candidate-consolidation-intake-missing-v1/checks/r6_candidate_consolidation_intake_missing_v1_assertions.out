@@ -1,0 +1,8 @@
+canonical_live_intake_exists=False
+direct_verifier_blocked_missing_required_files=True
+combined_proposed_positive_rows=12
+proposed_positive_rows_without_matched_controls=12
+what_if_min_wilson95_lcb_after_sidecars=0.947260905856
+new_confidence_gate=False
+strict_full_objective_achieved=False
+update_goal=False

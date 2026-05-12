@@ -1,0 +1,89 @@
+{
+  "allowed_outcomes": [
+    "win",
+    "loss",
+    "breakeven",
+    "invalidated",
+    "abandoned",
+    "not_followed"
+  ],
+  "bbn_support_score": 0.5777152955289298,
+  "branch_id": "NQ:belief_regime_node:trend:trend_follow_through",
+  "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+  "candidate_set_size": 3,
+  "direction": "Observe",
+  "entry_style": "conditional_execution",
+  "feedback_fields": [
+    {
+      "description": "Whether the user actually followed the recommended path.",
+      "field_id": "followed_path",
+      "label": "Followed Path",
+      "required": true,
+      "value_type": "boolean"
+    },
+    {
+      "description": "One of win, loss, breakeven, invalidated, abandoned, or not_followed.",
+      "field_id": "realized_outcome",
+      "label": "Realized Outcome",
+      "required": true,
+      "value_type": "enum"
+    },
+    {
+      "description": "Optional realized PnL from the actual execution.",
+      "field_id": "realized_pnl",
+      "label": "Realized PnL",
+      "required": false,
+      "value_type": "number"
+    },
+    {
+      "description": "Freeform reason such as stop_hit, target_hit, invalidated, timed_out.",
+      "field_id": "exit_reason",
+      "label": "Exit Reason",
+      "required": false,
+      "value_type": "string"
+    },
+    {
+      "description": "Optional operator notes about what actually happened.",
+      "field_id": "notes",
+      "label": "Notes",
+      "required": false,
+      "value_type": "string"
+    }
+  ],
+  "node_id": "NQ:belief_regime_node:trend",
+  "notes": [
+    "Preserve recommendation_id plus node/branch/scenario/path ids when recording live feedback.",
+    "This is a protocol contract only; canonical persistence wiring comes next."
+  ],
+  "path_id": "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+  "path_posterior": 0.5777152955289298,
+  "pre_bayes_gate_status": "pass_neutralized",
+  "protocol_version": "structural-feedback-v1",
+  "recommendation_id": "structural-feedback:NQ:NQ:belief_regime_node:trend:path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+  "recommended_at": "2026-05-11T16:15:55Z",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-r6-jpm-cbot-treasury-chain-state --backend native",
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:NQ:af0c00ee702b8d23",
+      "candidate_set_size": 3,
+      "confirmation": "recommended command remains valid on next refresh",
+      "invalidation": "regime branch trend loses posterior support or invalidates before trigger",
+      "path_id": "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+      "path_label": "trend_follow_through",
+      "recommended_command": "ict-engine factor-research --symbol NQ --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-r6-jpm-cbot-treasury-chain-state --backend native",
+      "selected_path_probability": 0.366375845843043,
+      "stop": "Use execution candidate 'execution-candidate:NQ:analyze:v2' once actionable; current candidate_status=no_trade.",
+      "trigger": "regime_posterior=trend:0.453",
+      "why": "posterior=0.578 prior=0.500 invalidation_rate=0.000"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "scenario:NQ:belief_regime_node:trend:trend_follow_through",
+  "selected_entry_quality": "medium",
+  "selected_entry_quality_probability": 1.0,
+  "selected_path_probability": 0.366375845843043,
+  "symbol": "NQ"
+}

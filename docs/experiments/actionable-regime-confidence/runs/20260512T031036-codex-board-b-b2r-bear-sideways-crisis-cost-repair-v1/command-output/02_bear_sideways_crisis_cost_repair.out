@@ -1,0 +1,24 @@
+{
+  "all_required_branches_passed": false,
+  "branch_paths_evaluated": 17,
+  "direct_manipulation_gate": "pass:direct_manipulation_stop_tp_candidate",
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "failure_tags": [
+    "Bull=fail:reject_no_regime_specificity",
+    "Sideways=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_no_regime_specificity|reject_rc_spa_below_60"
+  ],
+  "gate_result": "fail:required_root_or_scoped_manipulation_hard_gates_failed",
+  "minimum_required_branch_score": 50.0,
+  "next_action": "Do not run downstream. Use this as nursery feedback: keep the fwd3-capable NQ source-root join and repair the failing branch gate(s), especially Sideways/Crisis edge and source-owned Manipulation PnL, before another downstream attempt.",
+  "price_roots_passed": 2,
+  "primary_blocker": "Bear/Sideways/Crisis cost-repair panel repaired the missing fwd3 horizon, kept the NQ long-history source-root join, and combined the scoped Manipulation component, but at least one required branch RC-SPA gate still failed.",
+  "root_trade_counts": {
+    "Bear": 3032,
+    "Bull": 10100,
+    "Crisis": 506,
+    "Sideways": 6064
+  },
+  "selected_price_root_rows": 19702,
+  "stable_profit_score": 87.0,
+  "variant_trade_rows": 58151
+}

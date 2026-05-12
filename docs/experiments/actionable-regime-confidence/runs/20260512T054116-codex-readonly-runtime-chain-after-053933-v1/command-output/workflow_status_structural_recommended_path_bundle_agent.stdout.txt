@@ -1,0 +1,29 @@
+{
+  "candidate_set_id": "structural-candidates:NQ:ce1f52ebedee4f14",
+  "candidate_set_size": 2,
+  "composite_score": 0.5,
+  "confirmation_summary": "recommended command remains valid on next refresh",
+  "current_posterior": 0.5,
+  "direction": "observe",
+  "experience_prior": 0.5,
+  "historical_total_records": 0,
+  "invalidation_summary": "regime branch range loses posterior support or invalidates before trigger",
+  "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+  "path_label": "range_mean_reversion",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol NQ --data /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/nq.continuous-15m.json --state-dir state",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol NQ --data /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/nq.continuous-15m.json --state-dir state",
+    "execution_contract": null,
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "scenario:NQ:belief_regime_node:range:range_mean_reversion",
+  "selected_path_probability": 0.5,
+  "stop_summary": "Use execution candidate 'execution-candidate:NQ:analyze:v1' once actionable; current candidate_status=no_trade.",
+  "symbol": "NQ",
+  "trigger_summary": "regime_posterior=range:0.600",
+  "why_this_path": "posterior=0.500 prior=0.500 invalidation_rate=n/a"
+}

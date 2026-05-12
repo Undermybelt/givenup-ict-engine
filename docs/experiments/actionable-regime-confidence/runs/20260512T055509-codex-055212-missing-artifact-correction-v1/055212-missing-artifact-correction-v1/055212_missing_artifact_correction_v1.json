@@ -1,0 +1,26 @@
+{
+  "run_id": "20260512T055509-codex-055212-missing-artifact-correction-v1",
+  "gate_result": "055212_missing_artifact_correction_v1=prior_registration_artifacts_missing_do_not_count_no_promotion",
+  "board_sha256_before_artifact": "655abb1dde0a6ed3bd4051b7e51e37e46d6ef0f09e67e6d6c241de41d2571d5e",
+  "scope": "Append-only correction after verification found the 055212 source-search artifact directory missing after a board registration was appended.",
+  "missing_root": "docs/experiments/actionable-regime-confidence/runs/20260512T055212-codex-r3-r5-public-source-live-search-v1",
+  "prior_registration": {
+    "board_section": "2026-05-12 Supplemental 055212 R3/R5 Public Source Live Search v1",
+    "status": "do_not_count_until_artifact_root_is_restored_or_rerun",
+    "reason": "The referenced report, JSON, CSV, and assertions were absent at verification time."
+  },
+  "required_roots_present": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "target_root_mutated": false,
+  "accepted_rows_added": 0,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "next_action": "Do not count the prior 055212 registration as durable evidence unless its artifact root is restored or the source search is rerun into a durable run root. Continue only after a required source/control root or explicit approval unlocks the Board A chain."
+}

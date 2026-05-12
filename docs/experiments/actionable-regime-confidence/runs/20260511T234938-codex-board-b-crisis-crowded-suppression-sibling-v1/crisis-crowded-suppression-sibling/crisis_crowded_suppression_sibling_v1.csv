@@ -1,0 +1,2 @@
+sibling_branch_id,nursery_status,parent_regime_root,sibling_branch_path,source_trade_count,source_crisis_rc_spa,current_context,execution_tree_branch,suppression_action_result,promotion_allowed
+B2R_CRISIS_CROWDED_SUPPRESSION_SIBLING_V1,incubation_only,Crisis,Crisis -> CrisisReliefCarry -> BlockCrowdedSuppression -> SourceRootStopCarryLongHorizonV1:crisis_carry_no_trade_when_block_crowded_v1,532,83.0,RangeConsolidation/WideRange,block_crowded,no_trade,false

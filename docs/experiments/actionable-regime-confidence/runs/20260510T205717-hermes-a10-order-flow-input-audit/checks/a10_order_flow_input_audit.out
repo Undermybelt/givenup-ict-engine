@@ -1,0 +1,13 @@
+{
+  "decision": "missing_required_inputs",
+  "file_count_scanned": 112,
+  "output_csv": "docs/experiments/actionable-regime-confidence/runs/20260510T205717-hermes-a10-order-flow-input-audit/audit/a10_scanned_input_fields.csv",
+  "output_json": "docs/experiments/actionable-regime-confidence/runs/20260510T205717-hermes-a10-order-flow-input-audit/audit/a10_order_flow_input_audit_report.json",
+  "partial_microstructure_like_file_count": 5,
+  "real_order_flow_candidate_count": 0,
+  "verdict_counts": {
+    "no_relevant_fields": 61,
+    "ohlcv_or_derived_only": 46,
+    "partial_microstructure_like_fields_not_sufficient": 5
+  }
+}

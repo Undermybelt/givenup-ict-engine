@@ -1,0 +1,73 @@
+{
+  "artifact_id": "execution-tree-B2R_NQ_COST_CRISIS_REPAIR_032157-1778527948993",
+  "generated_at": "2026-05-11T19:32:28.993301Z",
+  "symbol": "B2R_NQ_COST_CRISIS_REPAIR_032157",
+  "output": {
+    "execution_score": 0.458668368180434,
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "gate_status": "observe",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.3211 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.3211 < 0.45)",
+      "path_ranker_score_input=0.7507 visible=true used=true ranker_validation_ready=false effective_prediction_vote_score=0.6025",
+      "prediction_vote_score=0.6025 (medium) × execution_readiness=0.3211 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.629",
+      "market_state=volatility=ElevatedVol:0.664 liquidity=NormalLiquidity:0.363 structure=Trending:0.589 behavior=RiskOff:0.550",
+      "market_state=rationale=volatility=ElevatedVol conf=0.66",
+      "market_state=rationale=structure=Trending conf=0.59",
+      "market_state=rationale=behavior=RiskOff conf=0.55",
+      "market_state=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.63",
+      "path_ranker=Ranker runtime: structural_path_ranking_target rows=3 history_rows=6 mature_rows=0 history_mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 calibration=not_fitted trainer_artifact=ready trainer_status=present_validation_insufficient runtime_selection=enabled_candidate_set_ready runtime_mode=prefer_history runtime_source=candidate_set score_model_family=catboost score_source=external_model runtime_matches=3",
+      "path_ranker=Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30 ready=false",
+      "path_ranker=ranker_machine=runtime_source=candidate_set score_model_family=catboost score_source=external_model validation_ready=false active_match_count=3",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=path:scenario:B2R_NQ_COST_CRISIS_REPAIR_032157:belief_regime_node:range:range_mean_reversion:primary runtime_source=history_path raw_path_score=0.750659 calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "hybrid_transition_hazard=0.653"
+    ],
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=history_path/catboost/not_ready",
+    "path_ranker_score_visible_to_execution_tree": true,
+    "path_ranker_score_used_by_execution_tree": true,
+    "path_ranker_model_family": "catboost",
+    "path_ranker_runtime_source": "history_path",
+    "ranker_validation_ready": false
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.4577704486874566,
+      "feature_value": "0.3422"
+    },
+    {
+      "feature": "cycle_phase_alignment",
+      "contribution": -0.4389404295908554,
+      "feature_value": "-0.4389"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.39995948902237655,
+      "feature_value": "0.3000"
+    },
+    {
+      "feature": "execution_readiness",
+      "contribution": -0.3289458960494962,
+      "feature_value": "0.3211"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "18f35e7365e0b192",
+    "data_fingerprint": "06c8bb057ee4b218"
+  }
+}

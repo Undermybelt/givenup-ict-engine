@@ -1,0 +1,9 @@
+label,split_role,high_conf_rows
+Bull,calibration,5460
+Bull,heldout_market,795
+Bull,heldout_time,2417
+Bull,test,1521
+Sideways,calibration,4929
+Sideways,heldout_market,1671
+Sideways,heldout_time,1388
+Sideways,test,698

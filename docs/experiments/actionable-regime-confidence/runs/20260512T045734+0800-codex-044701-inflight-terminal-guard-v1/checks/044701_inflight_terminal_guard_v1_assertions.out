@@ -1,0 +1,11 @@
+044701_inflight_terminal_guard_v1=not_consumed_writer_active
+active_writer_pids=90697,90743,91172
+exit_file_present=true
+stdout_bytes=3920
+stderr_bytes=0
+summary_json_bytes=3919
+stable_terminal_evidence=false
+consumed=false
+promotion_allowed=false
+update_goal=false
+blocked=user_selected_historical_data_missing

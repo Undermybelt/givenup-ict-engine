@@ -1,0 +1,12 @@
+run_id=20260511T140846+0800-codex-ndx-source-label-availability-probe-v1
+board_sha256_at_run=a716ae660ff8dcbc7f7ab66daf989eff8048d315065eea21512b3b906ae9566a
+source_panel_has_ndx_or_nasdaq100_source_label=false
+local_ndx_source_label_files_found=0
+ixic_near_proxy_previously_rejected=true
+accepted_rows_added=0
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

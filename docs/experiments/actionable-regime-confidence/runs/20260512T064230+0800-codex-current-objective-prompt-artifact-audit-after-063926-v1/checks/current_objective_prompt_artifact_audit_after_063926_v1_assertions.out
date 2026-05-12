@@ -1,0 +1,12 @@
+gate_result=current_objective_prompt_artifact_audit_after_063926_v1=not_complete_required_unlocks_absent_or_quarantined_no_downstream
+objective_complete=false
+r6_owner_export_unlock=false
+r3_native_subhour_unlock=false
+r5_recency_unlock=false
+r3_physical_rows=5032903
+r3_board_accepted_rows=0
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

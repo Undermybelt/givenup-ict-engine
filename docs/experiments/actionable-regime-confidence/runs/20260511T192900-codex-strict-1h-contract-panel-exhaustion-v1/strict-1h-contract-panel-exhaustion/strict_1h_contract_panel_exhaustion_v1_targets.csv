@@ -1,0 +1,5 @@
+priority,symbol,label,split_role,split_year,required_new_source_sessions,source_rows_in_split,existing_strict_gate_support,extra_source_rows_beyond_existing_gate,can_materialize_from_existing_panel,source_first_date,source_last_date,jan2026_tail_rows_for_symbol_label,near_miss_blocker,acceptable_package_id,market_family
+1,XOM,Sideways,heldout_time,2025,5,68,68,0,false,2025-02-10,2025-12-19,0,heldout_time_support_below_73|heldout_time_wilson95_below_0_95,native_subhour_overlap_after_recency,us_equity_strict_1h_source_extension
+2,UNH,Bear,calibration,2024,7,66,66,0,false,2024-01-25,2024-12-31,0,calibration_support_below_73|calibration_wilson95_below_0_95,native_subhour_overlap_after_recency,us_equity_strict_1h_source_extension
+3,^DJI,Sideways,calibration,2024,7,66,66,0,false,2024-01-17,2024-12-31,0,calibration_support_below_73|calibration_wilson95_below_0_95,native_subhour_overlap_after_recency,us_index_strict_1h_source_extension
+4,AMD,Bear,calibration,2024,10,63,63,0,false,2024-03-25,2024-12-31,0,calibration_support_below_73|calibration_wilson95_below_0_95,native_subhour_overlap_after_recency,us_equity_strict_1h_source_extension

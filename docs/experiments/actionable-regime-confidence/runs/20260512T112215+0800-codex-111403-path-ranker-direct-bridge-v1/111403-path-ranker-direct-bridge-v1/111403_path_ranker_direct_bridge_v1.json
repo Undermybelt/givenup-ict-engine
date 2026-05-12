@@ -1,0 +1,68 @@
+{
+  "run_id": "20260512T112215+0800-codex-111403-path-ranker-direct-bridge-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T111403+0800-codex-105014-ingest-bridge-fix-v1",
+  "symbol": "B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610",
+  "gate": "111403_path_ranker_direct_bridge_v1=direct_scores_applied_runtime_enabled_but_validation_floor_and_execution_fail_closed_no_promotion",
+  "exits": {
+    "01_apply_direct_fallback_scores": 0,
+    "02_apply_external_scores": 0,
+    "03_register_weighted_fallback_artifact": 0,
+    "04_enable_runtime": 0,
+    "05_policy_training_status": 0,
+    "06_workflow_structural_bundle": 0,
+    "07_workflow_execution_candidate": 0,
+    "08_workflow_full": 0
+  },
+  "scores": {
+    "rows": 2,
+    "families": [
+      "weighted_feature_sum_v1"
+    ],
+    "sources": [
+      "direct_fallback"
+    ]
+  },
+  "path_ranking": {
+    "runtime_status": "enabled_registered_model_invalid",
+    "runtime_ready": false,
+    "runtime_enabled": true,
+    "runtime_selection_status": "enabled_registered_model_invalid",
+    "runtime_active_match_count": 2,
+    "score_model_family": "weighted_feature_sum_v1",
+    "score_source_kind": "direct_model",
+    "rows": 2,
+    "history_rows": 2,
+    "mature_rows": 1,
+    "history_mature_rows": 1,
+    "raw_scored_mature_rows": 1,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 146,
+    "observation_validation_min_rows": 30,
+    "calibration_status": "not_fitted"
+  },
+  "execution": {
+    "structural_path_id": "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+    "selected_path_probability": 0.750853263579073,
+    "execution_ready": false,
+    "execution_actionable": false,
+    "execution_review_status": "observe",
+    "closed_loop_status": "fail_closed",
+    "closed_loop_reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "blocking_truth_status": "insufficient_state"
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_promoted": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

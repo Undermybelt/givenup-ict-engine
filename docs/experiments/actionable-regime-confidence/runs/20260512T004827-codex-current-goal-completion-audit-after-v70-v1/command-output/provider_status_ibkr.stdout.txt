@@ -1,0 +1,52 @@
+{
+  "summary_line": "market_data:0/1 ready",
+  "ready_by_domain": {
+    "market_data": "0/1"
+  },
+  "providers": [
+    {
+      "provider_id": "ibkr",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "operator_runtime_required",
+      "user_access": "login_and_local_runtime",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 30,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows.",
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    }
+  ],
+  "ready_providers": [],
+  "pending_providers": [
+    "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable"
+  ],
+  "pending_provider_details": [
+    {
+      "provider_id": "ibkr",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    }
+  ],
+  "selectable_providers": [
+    "ibkr"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": [
+    "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+    "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+  ]
+}

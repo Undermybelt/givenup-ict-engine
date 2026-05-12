@@ -1,0 +1,1664 @@
+{
+  "acceptance_95": {
+    "coverage_min": 0.03,
+    "ece_max": 0.05,
+    "precision_wilson_lcb_95_min": 0.95,
+    "support_min": 250,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  },
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T040241-codex-kaggle-bear-sideways-logodds-probe/checks/kaggle_bear_sideways_logodds_probe_assertions.out",
+    "report_json": "docs/experiments/actionable-regime-confidence/runs/20260511T040241-codex-kaggle-bear-sideways-logodds-probe/kaggle-logodds-probe/kaggle_bear_sideways_logodds_probe_report.json",
+    "report_md": "docs/experiments/actionable-regime-confidence/runs/20260511T040241-codex-kaggle-bear-sideways-logodds-probe/kaggle-logodds-probe/kaggle_bear_sideways_logodds_probe_report.md",
+    "summary_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T040241-codex-kaggle-bear-sideways-logodds-probe/kaggle-logodds-probe/kaggle_bear_sideways_logodds_probe_summary.csv"
+  },
+  "decision": {
+    "accepted_new_roots_95": [],
+    "accepted_root_classes_95_effective": [
+      "Bull",
+      "Crisis"
+    ],
+    "fresh_calibration_rerun": true,
+    "gate_result": "blocked_kaggle_bear_sideways_logodds_below_95",
+    "manipulation_blocker": "Kaggle OHLCV/macro regime labels are not direct event/order-lifecycle/L2/L3/MBO/social/on-chain manipulation evidence.",
+    "manipulation_evaluated": false,
+    "missing_root_classes_95_effective": [
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ],
+    "next_action": "Stop repeating Kaggle OHLCV/macro transformations for Bear/Sideways; acquire materially stronger parent-labeled bear/sideways regime-cycle evidence, and keep Manipulation on direct-event evidence only.",
+    "retained_prior_accepted_root_classes_95": [
+      "Bull",
+      "Crisis"
+    ],
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "feature_policy": {
+    "blocked_future_target_next_predictors": true,
+    "candidate_features": [
+      "10y_treasury",
+      "2y_treasury",
+      "close",
+      "close_drawdown60",
+      "cpi",
+      "fed_funds_rate",
+      "real_rate_proxy",
+      "ret1_lag1",
+      "ret20",
+      "ret5",
+      "returns",
+      "unemployment_rate",
+      "vix",
+      "vol20_mean",
+      "vol60_z",
+      "volatility",
+      "yield_curve_10y_2y"
+    ],
+    "runtime_code_changed": false,
+    "source_label_used_only_as_target": true,
+    "source_regime_confidence_blocked_as_predictor": true,
+    "thresholds_selected_on": "train_split_only"
+  },
+  "loop_id": "20260511T040241+0800-codex-kaggle-bear-sideways-logodds-probe",
+  "objective": "Train-only quantile log-odds factor probe for missing MainRegimeV2 Bear and Sideways roots using existing Kaggle direct-label table.",
+  "root_reports": {
+    "Bear": {
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "calibration_coverage_below_0_03",
+        "test_coverage_below_0_03",
+        "ece_above_0_05"
+      ],
+      "calibration": {
+        "coverage": 0.02212194957074292,
+        "ece": 0.015672615706705306,
+        "precision": 0.8449197860962567,
+        "precision_wilson_lcb_95": 0.8243038502480222,
+        "success": 1106,
+        "support": 1309,
+        "validation_instruments": [
+          "AAPL",
+          "ABBV",
+          "AMD",
+          "AMZN",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "META",
+          "MS",
+          "MSFT",
+          "NFLX",
+          "NKE",
+          "NVDA",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "TSLA",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "validation_market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "feature_report": [
+        {
+          "feature": "10y_treasury",
+          "top_train_only_bins": [
+            {
+              "bin": 23,
+              "contribution": 0.5211017571190313,
+              "smoothed_precision": 0.32321011405799094,
+              "train_support": 7267
+            },
+            {
+              "bin": 12,
+              "contribution": 0.5031874820196839,
+              "smoothed_precision": 0.31930392553622017,
+              "train_support": 7403
+            },
+            {
+              "bin": 16,
+              "contribution": 0.4811379098714539,
+              "smoothed_precision": 0.3145306859205776,
+              "train_support": 6638
+            }
+          ]
+        },
+        {
+          "feature": "2y_treasury",
+          "top_train_only_bins": [
+            {
+              "bin": 16,
+              "contribution": 0.5701730470993086,
+              "smoothed_precision": 0.33403597526700396,
+              "train_support": 7106
+            },
+            {
+              "bin": 15,
+              "contribution": 0.41739065198869285,
+              "smoothed_precision": 0.3009518477043673,
+              "train_support": 7134
+            },
+            {
+              "bin": 20,
+              "contribution": 0.38904691937836344,
+              "smoothed_precision": 0.295022745517795,
+              "train_support": 7464
+            }
+          ]
+        },
+        {
+          "feature": "close",
+          "top_train_only_bins": [
+            {
+              "bin": 3,
+              "contribution": 0.539242091105016,
+              "smoothed_precision": 0.3271908847939232,
+              "train_support": 7099
+            },
+            {
+              "bin": 4,
+              "contribution": 0.39693599076924,
+              "smoothed_precision": 0.29666619777746517,
+              "train_support": 7099
+            },
+            {
+              "bin": 5,
+              "contribution": 0.3327158205480839,
+              "smoothed_precision": 0.28344352229568154,
+              "train_support": 7099
+            }
+          ]
+        },
+        {
+          "feature": "close_drawdown60",
+          "top_train_only_bins": [
+            {
+              "bin": 3,
+              "contribution": 1.7852293695827859,
+              "smoothed_precision": 0.6283323879750425,
+              "train_support": 7042
+            },
+            {
+              "bin": 4,
+              "contribution": 1.7507676766922984,
+              "smoothed_precision": 0.6202495745887692,
+              "train_support": 7042
+            },
+            {
+              "bin": 0,
+              "contribution": 1.7199618054193435,
+              "smoothed_precision": 0.6129671574178935,
+              "train_support": 3522
+            }
+          ]
+        },
+        {
+          "feature": "cpi",
+          "top_train_only_bins": [
+            {
+              "bin": 2,
+              "contribution": 0.9372891134652837,
+              "smoothed_precision": 0.4199762501649294,
+              "train_support": 7569
+            },
+            {
+              "bin": 22,
+              "contribution": 0.7716377747680031,
+              "smoothed_precision": 0.38024175496194595,
+              "train_support": 6691
+            },
+            {
+              "bin": 8,
+              "contribution": 0.5365448991030711,
+              "smoothed_precision": 0.32659740999003845,
+              "train_support": 7017
+            }
+          ]
+        },
+        {
+          "feature": "fed_funds_rate",
+          "top_train_only_bins": [
+            {
+              "bin": 13,
+              "contribution": 0.9367556945962257,
+              "smoothed_precision": 0.41984631690514046,
+              "train_support": 7538
+            },
+            {
+              "bin": 8,
+              "contribution": 0.8154101399716561,
+              "smoothed_precision": 0.390609756097561,
+              "train_support": 8190
+            },
+            {
+              "bin": 17,
+              "contribution": 0.634035417442852,
+              "smoothed_precision": 0.3483897950648264,
+              "train_support": 7163
+            }
+          ]
+        },
+        {
+          "feature": "real_rate_proxy",
+          "top_train_only_bins": [
+            {
+              "bin": 13,
+              "contribution": 0.9353173878214566,
+              "smoothed_precision": 0.41949602122015917,
+              "train_support": 7530
+            },
+            {
+              "bin": 8,
+              "contribution": 0.8213531800150813,
+              "smoothed_precision": 0.3920253164556962,
+              "train_support": 7890
+            },
+            {
+              "bin": 17,
+              "contribution": 0.6275743391384487,
+              "smoothed_precision": 0.34692447807201904,
+              "train_support": 7127
+            }
+          ]
+        },
+        {
+          "feature": "ret1_lag1",
+          "top_train_only_bins": [
+            {
+              "bin": 0,
+              "contribution": 1.294442650947972,
+              "smoothed_precision": 0.5085698229839842,
+              "train_support": 3549
+            },
+            {
+              "bin": 1,
+              "contribution": 1.052265567420635,
+              "smoothed_precision": 0.44821277793414016,
+              "train_support": 7096
+            },
+            {
+              "bin": 2,
+              "contribution": 0.8114633810422985,
+              "smoothed_precision": 0.38967070081621163,
+              "train_support": 7096
+            }
+          ]
+        },
+        {
+          "feature": "ret20",
+          "top_train_only_bins": [
+            {
+              "bin": 2,
+              "contribution": 2.911309959424673,
+              "smoothed_precision": 0.8390464099308789,
+              "train_support": 7079
+            },
+            {
+              "bin": 3,
+              "contribution": 2.893489835565534,
+              "smoothed_precision": 0.8366252821670429,
+              "train_support": 7078
+            },
+            {
+              "bin": 4,
+              "contribution": 2.698041731617087,
+              "smoothed_precision": 0.8081264108352144,
+              "train_support": 7078
+            }
+          ]
+        },
+        {
+          "feature": "ret5",
+          "top_train_only_bins": [
+            {
+              "bin": 0,
+              "contribution": 1.9592168659918763,
+              "smoothed_precision": 0.6679786336800675,
+              "train_support": 3547
+            },
+            {
+              "bin": 1,
+              "contribution": 1.9159471185720607,
+              "smoothed_precision": 0.6583133887089962,
+              "train_support": 7093
+            },
+            {
+              "bin": 2,
+              "contribution": 1.472667848814033,
+              "smoothed_precision": 0.5529279279279279,
+              "train_support": 7094
+            }
+          ]
+        },
+        {
+          "feature": "returns",
+          "top_train_only_bins": [
+            {
+              "bin": 0,
+              "contribution": 1.0934830620602642,
+              "smoothed_precision": 0.4584269662921348,
+              "train_support": 3550
+            },
+            {
+              "bin": 1,
+              "contribution": 0.9380910584724083,
+              "smoothed_precision": 0.4201716134477423,
+              "train_support": 7099
+            },
+            {
+              "bin": 2,
+              "contribution": 0.7593734194001862,
+              "smoothed_precision": 0.37735583684950774,
+              "train_support": 7100
+            }
+          ]
+        },
+        {
+          "feature": "unemployment_rate",
+          "top_train_only_bins": [
+            {
+              "bin": 1,
+              "contribution": 0.8450742956115559,
+              "smoothed_precision": 0.39769329346433147,
+              "train_support": 4672
+            },
+            {
+              "bin": 17,
+              "contribution": 0.7834921493518392,
+              "smoothed_precision": 0.3830392714854866,
+              "train_support": 7018
+            },
+            {
+              "bin": 5,
+              "contribution": 0.36118155602695434,
+              "smoothed_precision": 0.28926047233235647,
+              "train_support": 5791
+            }
+          ]
+        },
+        {
+          "feature": "vix",
+          "top_train_only_bins": [
+            {
+              "bin": 25,
+              "contribution": 1.2528586494167997,
+              "smoothed_precision": 0.4981746700365066,
+              "train_support": 3551
+            },
+            {
+              "bin": 23,
+              "contribution": 1.126515731648141,
+              "smoothed_precision": 0.4666385728332631,
+              "train_support": 7109
+            },
+            {
+              "bin": 24,
+              "contribution": 1.1119285592179704,
+              "smoothed_precision": 0.4630098452883263,
+              "train_support": 7100
+            }
+          ]
+        },
+        {
+          "feature": "vol20_mean",
+          "top_train_only_bins": [
+            {
+              "bin": 18,
+              "contribution": 0.6391670316890852,
+              "smoothed_precision": 0.3495556495979687,
+              "train_support": 7079
+            },
+            {
+              "bin": 17,
+              "contribution": 0.5538631088686569,
+              "smoothed_precision": 0.3304176072234763,
+              "train_support": 7078
+            },
+            {
+              "bin": 15,
+              "contribution": 0.49198299950708757,
+              "smoothed_precision": 0.31687358916478553,
+              "train_support": 7078
+            }
+          ]
+        },
+        {
+          "feature": "vol60_z",
+          "top_train_only_bins": [
+            {
+              "bin": 25,
+              "contribution": 0.7241739115741805,
+              "smoothed_precision": 0.3691218130311615,
+              "train_support": 3520
+            },
+            {
+              "bin": 24,
+              "contribution": 0.5983447659649956,
+              "smoothed_precision": 0.34033196198042276,
+              "train_support": 7039
+            },
+            {
+              "bin": 23,
+              "contribution": 0.4399407602419342,
+              "smoothed_precision": 0.30571712299616965,
+              "train_support": 7039
+            }
+          ]
+        },
+        {
+          "feature": "volatility",
+          "top_train_only_bins": [
+            {
+              "bin": 19,
+              "contribution": 0.8117243607713307,
+              "smoothed_precision": 0.38973277074542895,
+              "train_support": 7100
+            },
+            {
+              "bin": 20,
+              "contribution": 0.794177580584748,
+              "smoothed_precision": 0.3855675903783936,
+              "train_support": 7099
+            },
+            {
+              "bin": 18,
+              "contribution": 0.7751350238854455,
+              "smoothed_precision": 0.3810662540441694,
+              "train_support": 7099
+            }
+          ]
+        },
+        {
+          "feature": "yield_curve_10y_2y",
+          "top_train_only_bins": [
+            {
+              "bin": 19,
+              "contribution": 0.4285282580638986,
+              "smoothed_precision": 0.3033001571503405,
+              "train_support": 7626
+            },
+            {
+              "bin": 20,
+              "contribution": 0.3885987243373197,
+              "smoothed_precision": 0.2949295365392997,
+              "train_support": 6873
+            },
+            {
+              "bin": 18,
+              "contribution": 0.2847440452786728,
+              "smoothed_precision": 0.27380230442692544,
+              "train_support": 6586
+            }
+          ]
+        }
+      ],
+      "root_class": "Bear",
+      "rule": "train_only_quantile_log_odds_score_Bear >= 9.49274139571",
+      "state": "blocked",
+      "test": {
+        "coverage": 0.016061204843694585,
+        "ece": 0.05827904743913448,
+        "precision": 0.8023133543638276,
+        "precision_wilson_lcb_95": 0.7758072737045165,
+        "success": 763,
+        "support": 951,
+        "validation_instruments": [
+          "AAPL",
+          "ABBV",
+          "AMD",
+          "AMZN",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JPM",
+          "MCD",
+          "META",
+          "MS",
+          "MSFT",
+          "NFLX",
+          "NKE",
+          "NVDA",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "TSLA",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "validation_market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "threshold_selected_on": "train_split_only",
+      "top_train_candidates": [
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 9.49274139571",
+          "train": {
+            "coverage": 0.035000732468644706,
+            "ece": 0.0,
+            "precision": 0.860592401802962,
+            "precision_wilson_lcb_95": 0.8517559358533197,
+            "success": 5346,
+            "support": 6212
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 9.18432723188",
+          "train": {
+            "coverage": 0.040004056749416844,
+            "ece": 0.0,
+            "precision": 0.8543661971830986,
+            "precision_wilson_lcb_95": 0.8459696751868715,
+            "success": 6066,
+            "support": 7100
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 8.90092573869",
+          "train": {
+            "coverage": 0.04500174665599892,
+            "ece": 0.0,
+            "precision": 0.8488794290722423,
+            "precision_wilson_lcb_95": 0.8408569018448805,
+            "success": 6780,
+            "support": 7987
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 8.6185297774",
+          "train": {
+            "coverage": 0.050005070936771055,
+            "ece": 0.0,
+            "precision": 0.8406760563380282,
+            "precision_wilson_lcb_95": 0.8329147788115532,
+            "success": 7461,
+            "support": 8875
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 8.38169308315",
+          "train": {
+            "coverage": 0.05500276084335313,
+            "ece": 0.0,
+            "precision": 0.8362015980331899,
+            "precision_wilson_lcb_95": 0.828728032492447,
+            "success": 8163,
+            "support": 9762
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 8.12844238331",
+          "train": {
+            "coverage": 0.06000045074993521,
+            "ece": 0.0,
+            "precision": 0.8301248943562776,
+            "precision_wilson_lcb_95": 0.8228738315424549,
+            "success": 8840,
+            "support": 10649
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 7.91270590125",
+          "train": {
+            "coverage": 0.06500377503070734,
+            "ece": 0.0,
+            "precision": 0.8258646095172055,
+            "precision_wilson_lcb_95": 0.8188365481063685,
+            "success": 9528,
+            "support": 11537
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 7.68929807363",
+          "train": {
+            "coverage": 0.07000146493728941,
+            "ece": 0.0,
+            "precision": 0.8193013522215068,
+            "precision_wilson_lcb_95": 0.8124372205558188,
+            "success": 10179,
+            "support": 12424
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 7.47176969637",
+          "train": {
+            "coverage": 0.07500478921806154,
+            "ece": 0.0,
+            "precision": 0.8146784855769231,
+            "precision_wilson_lcb_95": 0.8079874466790223,
+            "success": 10845,
+            "support": 13312
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 7.2610633887",
+          "train": {
+            "coverage": 0.08000247912464363,
+            "ece": 0.0,
+            "precision": 0.8103387562504402,
+            "precision_wilson_lcb_95": 0.8038068950855057,
+            "success": 11506,
+            "support": 14199
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 7.05838964331",
+          "train": {
+            "coverage": 0.0850001690312257,
+            "ece": 0.0,
+            "precision": 0.8054487604401431,
+            "precision_wilson_lcb_95": 0.7990545288864989,
+            "success": 12151,
+            "support": 15086
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 6.86251942934",
+          "train": {
+            "coverage": 0.09000349331199783,
+            "ece": 0.0,
+            "precision": 0.8003004882934769,
+            "precision_wilson_lcb_95": 0.7940291189455273,
+            "success": 12784,
+            "support": 15974
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 6.66666686669",
+          "train": {
+            "coverage": 0.09500118321857991,
+            "ece": 0.0,
+            "precision": 0.795326493090564,
+            "precision_wilson_lcb_95": 0.7891696486603555,
+            "success": 13410,
+            "support": 16861
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 6.47233008443",
+          "train": {
+            "coverage": 0.10000450749935205,
+            "ece": 0.0,
+            "precision": 0.7920446222322385,
+            "precision_wilson_lcb_95": 0.7860110973094231,
+            "success": 14058,
+            "support": 17749
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 6.2814458458",
+          "train": {
+            "coverage": 0.10500219740593413,
+            "ece": 0.0,
+            "precision": 0.7877763468555484,
+            "precision_wilson_lcb_95": 0.781846912231864,
+            "success": 14681,
+            "support": 18636
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 6.09937005075",
+          "train": {
+            "coverage": 0.1099998873125162,
+            "ece": 0.0,
+            "precision": 0.7841520258157045,
+            "precision_wilson_lcb_95": 0.7783254507386749,
+            "success": 15309,
+            "support": 19523
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 5.91138681484",
+          "train": {
+            "coverage": 0.11500321159328833,
+            "ece": 0.0,
+            "precision": 0.7795796384302582,
+            "precision_wilson_lcb_95": 0.773840468066301,
+            "success": 15912,
+            "support": 20411
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 5.73838241364",
+          "train": {
+            "coverage": 0.12000090149987042,
+            "ece": 0.0,
+            "precision": 0.7742511033899897,
+            "precision_wilson_lcb_95": 0.7685871591554342,
+            "success": 16490,
+            "support": 21298
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 5.56772614713",
+          "train": {
+            "coverage": 0.12500422578064255,
+            "ece": 0.0,
+            "precision": 0.7688632470927612,
+            "precision_wilson_lcb_95": 0.763269865909394,
+            "success": 17058,
+            "support": 22186
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Bear >= 5.38894323927",
+          "train": {
+            "coverage": 0.1300019156872246,
+            "ece": 0.0,
+            "precision": 0.7648766957049365,
+            "precision_wilson_lcb_95": 0.7593609627413547,
+            "success": 17648,
+            "support": 23073
+          }
+        }
+      ],
+      "train": {
+        "coverage": 0.035000732468644706,
+        "ece": 0.0,
+        "precision": 0.860592401802962,
+        "precision_wilson_lcb_95": 0.8517559358533197,
+        "success": 5346,
+        "support": 6212,
+        "validation_instruments": [
+          "AAPL",
+          "ABBV",
+          "AMD",
+          "AMZN",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "META",
+          "MS",
+          "MSFT",
+          "NFLX",
+          "NKE",
+          "NVDA",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "TSLA",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "validation_market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      }
+    },
+    "Sideways": {
+      "accepted_95": false,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95"
+      ],
+      "calibration": {
+        "coverage": 0.030977489353072398,
+        "ece": 0.020928286577072908,
+        "precision": 0.8379705400981997,
+        "precision_wilson_lcb_95": 0.8203979917417717,
+        "success": 1536,
+        "support": 1833,
+        "validation_instruments": [
+          "AAPL",
+          "ABBV",
+          "AMZN",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "META",
+          "MS",
+          "MSFT",
+          "NFLX",
+          "NKE",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "validation_market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "feature_report": [
+        {
+          "feature": "10y_treasury",
+          "top_train_only_bins": [
+            {
+              "bin": 7,
+              "contribution": 0.4356472205624322,
+              "smoothed_precision": 0.3118479348292125,
+              "train_support": 6987
+            },
+            {
+              "bin": 8,
+              "contribution": 0.2412203282439659,
+              "smoothed_precision": 0.27171849905095635,
+              "train_support": 6839
+            },
+            {
+              "bin": 2,
+              "contribution": 0.19151784767464464,
+              "smoothed_precision": 0.2619953188999415,
+              "train_support": 6826
+            }
+          ]
+        },
+        {
+          "feature": "2y_treasury",
+          "top_train_only_bins": [
+            {
+              "bin": 4,
+              "contribution": 0.43209640555447437,
+              "smoothed_precision": 0.3110864437352574,
+              "train_support": 7197
+            },
+            {
+              "bin": 6,
+              "contribution": 0.33391399545841005,
+              "smoothed_precision": 0.29044425817267394,
+              "train_support": 7148
+            },
+            {
+              "bin": 18,
+              "contribution": 0.3137020323638241,
+              "smoothed_precision": 0.2862965565706254,
+              "train_support": 7105
+            }
+          ]
+        },
+        {
+          "feature": "close",
+          "top_train_only_bins": [
+            {
+              "bin": 25,
+              "contribution": 0.4060505382961139,
+              "smoothed_precision": 0.30553215388935695,
+              "train_support": 3551
+            },
+            {
+              "bin": 23,
+              "contribution": 0.36391736746417913,
+              "smoothed_precision": 0.29666619777746517,
+              "train_support": 7099
+            },
+            {
+              "bin": 10,
+              "contribution": 0.27963681694684983,
+              "smoothed_precision": 0.2793869516310461,
+              "train_support": 7102
+            }
+          ]
+        },
+        {
+          "feature": "close_drawdown60",
+          "top_train_only_bins": [
+            {
+              "bin": 12,
+              "contribution": 1.2946656051834342,
+              "smoothed_precision": 0.516874645490641,
+              "train_support": 7042
+            },
+            {
+              "bin": 11,
+              "contribution": 1.244725495682187,
+              "smoothed_precision": 0.5043959160521838,
+              "train_support": 7042
+            },
+            {
+              "bin": 10,
+              "contribution": 1.0976356643747323,
+              "smoothed_precision": 0.4676687464549064,
+              "train_support": 7042
+            }
+          ]
+        },
+        {
+          "feature": "cpi",
+          "top_train_only_bins": [
+            {
+              "bin": 5,
+              "contribution": 0.4434280474921284,
+              "smoothed_precision": 0.3135201305767138,
+              "train_support": 7342
+            },
+            {
+              "bin": 14,
+              "contribution": 0.43645436271010263,
+              "smoothed_precision": 0.31202117286530157,
+              "train_support": 7169
+            },
+            {
+              "bin": 16,
+              "contribution": 0.39793895941672763,
+              "smoothed_precision": 0.30381374089415797,
+              "train_support": 6991
+            }
+          ]
+        },
+        {
+          "feature": "fed_funds_rate",
+          "top_train_only_bins": [
+            {
+              "bin": 0,
+              "contribution": 0.3808500606258399,
+              "smoothed_precision": 0.30021141649048627,
+              "train_support": 936
+            },
+            {
+              "bin": 9,
+              "contribution": 0.31697414050537975,
+              "smoothed_precision": 0.2869656164204471,
+              "train_support": 7639
+            },
+            {
+              "bin": 3,
+              "contribution": 0.2343339138493309,
+              "smoothed_precision": 0.2703579076170083,
+              "train_support": 16335
+            }
+          ]
+        },
+        {
+          "feature": "real_rate_proxy",
+          "top_train_only_bins": [
+            {
+              "bin": 0,
+              "contribution": 0.3488172444513379,
+              "smoothed_precision": 0.2935251798561151,
+              "train_support": 1380
+            },
+            {
+              "bin": 9,
+              "contribution": 0.31660750438761587,
+              "smoothed_precision": 0.28689060253561627,
+              "train_support": 7641
+            },
+            {
+              "bin": 3,
+              "contribution": 0.23774334156867305,
+              "smoothed_precision": 0.27103099304237827,
+              "train_support": 15800
+            }
+          ]
+        },
+        {
+          "feature": "ret1_lag1",
+          "top_train_only_bins": [
+            {
+              "bin": 8,
+              "contribution": 0.29820725408186977,
+              "smoothed_precision": 0.28314100759921196,
+              "train_support": 7096
+            },
+            {
+              "bin": 7,
+              "contribution": 0.28967641129608057,
+              "smoothed_precision": 0.28141269171239625,
+              "train_support": 7097
+            },
+            {
+              "bin": 9,
+              "contribution": 0.2829031334214469,
+              "smoothed_precision": 0.2800450323670138,
+              "train_support": 7096
+            }
+          ]
+        },
+        {
+          "feature": "ret20",
+          "top_train_only_bins": [
+            {
+              "bin": 9,
+              "contribution": 1.955409759399755,
+              "smoothed_precision": 0.6744251657497531,
+              "train_support": 7079
+            },
+            {
+              "bin": 8,
+              "contribution": 1.8979389042545072,
+              "smoothed_precision": 0.6616817155756207,
+              "train_support": 7078
+            },
+            {
+              "bin": 7,
+              "contribution": 1.7793386525492307,
+              "smoothed_precision": 0.6346452249964734,
+              "train_support": 7079
+            }
+          ]
+        },
+        {
+          "feature": "ret5",
+          "top_train_only_bins": [
+            {
+              "bin": 7,
+              "contribution": 0.668797468316223,
+              "smoothed_precision": 0.36393073349289035,
+              "train_support": 7093
+            },
+            {
+              "bin": 5,
+              "contribution": 0.6649255281489603,
+              "smoothed_precision": 0.3630349099099099,
+              "train_support": 7094
+            },
+            {
+              "bin": 6,
+              "contribution": 0.6535610501158469,
+              "smoothed_precision": 0.36041109390398424,
+              "train_support": 7093
+            }
+          ]
+        },
+        {
+          "feature": "returns",
+          "top_train_only_bins": [
+            {
+              "bin": 7,
+              "contribution": 0.27392703964233456,
+              "smoothed_precision": 0.2782388521592348,
+              "train_support": 7099
+            },
+            {
+              "bin": 9,
+              "contribution": 0.27112347603241027,
+              "smoothed_precision": 0.27767618511745673,
+              "train_support": 7099
+            },
+            {
+              "bin": 6,
+              "contribution": 0.2561530152273622,
+              "smoothed_precision": 0.2746835443037975,
+              "train_support": 7100
+            }
+          ]
+        },
+        {
+          "feature": "unemployment_rate",
+          "top_train_only_bins": [
+            {
+              "bin": 10,
+              "contribution": 0.4415311433244047,
+              "smoothed_precision": 0.3131120133747313,
+              "train_support": 4177
+            },
+            {
+              "bin": 13,
+              "contribution": 0.3332574609054758,
+              "smoothed_precision": 0.2903089739533903,
+              "train_support": 9473
+            },
+            {
+              "bin": 12,
+              "contribution": 0.2974439862473717,
+              "smoothed_precision": 0.2829861111111111,
+              "train_support": 5174
+            }
+          ]
+        },
+        {
+          "feature": "vix",
+          "top_train_only_bins": [
+            {
+              "bin": 10,
+              "contribution": 0.34718158469509086,
+              "smoothed_precision": 0.2931861107075403,
+              "train_support": 6873
+            },
+            {
+              "bin": 9,
+              "contribution": 0.3075966871410365,
+              "smoothed_precision": 0.28505067567567566,
+              "train_support": 7094
+            },
+            {
+              "bin": 13,
+              "contribution": 0.26811700448758236,
+              "smoothed_precision": 0.27707357398732435,
+              "train_support": 7248
+            }
+          ]
+        },
+        {
+          "feature": "vol20_mean",
+          "top_train_only_bins": [
+            {
+              "bin": 1,
+              "contribution": 0.6390913476828836,
+              "smoothed_precision": 0.3570823927765237,
+              "train_support": 7078
+            },
+            {
+              "bin": 2,
+              "contribution": 0.5881067901335089,
+              "smoothed_precision": 0.3454648046268867,
+              "train_support": 7079
+            },
+            {
+              "bin": 3,
+              "contribution": 0.5418141679466529,
+              "smoothed_precision": 0.33507336343115124,
+              "train_support": 7078
+            }
+          ]
+        },
+        {
+          "feature": "vol60_z",
+          "top_train_only_bins": [
+            {
+              "bin": 12,
+              "contribution": 0.08163503257567006,
+              "smoothed_precision": 0.2413108242303873,
+              "train_support": 7039
+            },
+            {
+              "bin": 14,
+              "contribution": 0.07620327073179256,
+              "smoothed_precision": 0.24031777557100298,
+              "train_support": 7039
+            },
+            {
+              "bin": 0,
+              "contribution": 0.07104199881585105,
+              "smoothed_precision": 0.23937677053824363,
+              "train_support": 3520
+            }
+          ]
+        },
+        {
+          "feature": "volatility",
+          "top_train_only_bins": [
+            {
+              "bin": 6,
+              "contribution": 0.4925650124279981,
+              "smoothed_precision": 0.3241912798874824,
+              "train_support": 7100
+            },
+            {
+              "bin": 5,
+              "contribution": 0.48312675830959473,
+              "smoothed_precision": 0.32212688141792095,
+              "train_support": 7099
+            },
+            {
+              "bin": 4,
+              "contribution": 0.47667741447658674,
+              "smoothed_precision": 0.3207202138134759,
+              "train_support": 7099
+            }
+          ]
+        },
+        {
+          "feature": "yield_curve_10y_2y",
+          "top_train_only_bins": [
+            {
+              "bin": 12,
+              "contribution": 0.32105800522813543,
+              "smoothed_precision": 0.28780196838651956,
+              "train_support": 6696
+            },
+            {
+              "bin": 5,
+              "contribution": 0.29837894176635915,
+              "smoothed_precision": 0.2831758567197856,
+              "train_support": 7081
+            },
+            {
+              "bin": 8,
+              "contribution": 0.20964241485043966,
+              "smoothed_precision": 0.26551485832757427,
+              "train_support": 7225
+            }
+          ]
+        }
+      ],
+      "root_class": "Sideways",
+      "rule": "train_only_quantile_log_odds_score_Sideways >= 5.10770657745",
+      "state": "blocked",
+      "test": {
+        "coverage": 0.032679738562091505,
+        "ece": 0.02737817083378835,
+        "precision": 0.7896640826873385,
+        "precision_wilson_lcb_95": 0.770940356265338,
+        "success": 1528,
+        "support": 1935,
+        "validation_instruments": [
+          "AAPL",
+          "ABBV",
+          "AMZN",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "META",
+          "MS",
+          "MSFT",
+          "NFLX",
+          "NKE",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "validation_market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      },
+      "threshold_selected_on": "train_split_only",
+      "top_train_candidates": [
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 5.10770657745",
+          "train": {
+            "coverage": 0.040004056749416844,
+            "ece": 0.0,
+            "precision": 0.8170422535211268,
+            "precision_wilson_lcb_95": 0.8078783597300702,
+            "success": 5801,
+            "support": 7100
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.97798535869",
+          "train": {
+            "coverage": 0.04500174665599892,
+            "ece": 0.0,
+            "precision": 0.8159509202453987,
+            "precision_wilson_lcb_95": 0.8073009671466156,
+            "success": 6517,
+            "support": 7987
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 5.24081699792",
+          "train": {
+            "coverage": 0.035000732468644706,
+            "ece": 0.0,
+            "precision": 0.8166452028332261,
+            "precision_wilson_lcb_95": 0.8068278346733351,
+            "success": 5073,
+            "support": 6212
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.85997591423",
+          "train": {
+            "coverage": 0.050005070936771055,
+            "ece": 0.0,
+            "precision": 0.8123943661971831,
+            "precision_wilson_lcb_95": 0.8041377034825925,
+            "success": 7210,
+            "support": 8875
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.74509224593",
+          "train": {
+            "coverage": 0.05500276084335313,
+            "ece": 0.0,
+            "precision": 0.8096701495595164,
+            "precision_wilson_lcb_95": 0.8017616301940351,
+            "success": 7904,
+            "support": 9762
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.63941820816",
+          "train": {
+            "coverage": 0.06000045074993521,
+            "ece": 0.0,
+            "precision": 0.8060850784111184,
+            "precision_wilson_lcb_95": 0.7984661136966309,
+            "success": 8584,
+            "support": 10649
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.53574364392",
+          "train": {
+            "coverage": 0.06500377503070734,
+            "ece": 0.0,
+            "precision": 0.7997746381208286,
+            "precision_wilson_lcb_95": 0.7923733359712078,
+            "success": 9227,
+            "support": 11537
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.4294117575",
+          "train": {
+            "coverage": 0.07000146493728941,
+            "ece": 0.0,
+            "precision": 0.7970862846104314,
+            "precision_wilson_lcb_95": 0.7899232205461224,
+            "success": 9903,
+            "support": 12424
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.33417787677",
+          "train": {
+            "coverage": 0.07500478921806154,
+            "ece": 0.0,
+            "precision": 0.7930438701923077,
+            "precision_wilson_lcb_95": 0.7860778116204378,
+            "success": 10557,
+            "support": 13312
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.24402661467",
+          "train": {
+            "coverage": 0.08000247912464363,
+            "ece": 0.0,
+            "precision": 0.787238537925206,
+            "precision_wilson_lcb_95": 0.7804297014778621,
+            "success": 11178,
+            "support": 14199
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.15005902377",
+          "train": {
+            "coverage": 0.0850001690312257,
+            "ece": 0.0,
+            "precision": 0.7813867161606788,
+            "precision_wilson_lcb_95": 0.7747202671868855,
+            "success": 11788,
+            "support": 15086
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 4.06244243994",
+          "train": {
+            "coverage": 0.09000349331199783,
+            "ece": 0.0,
+            "precision": 0.776449229998748,
+            "precision_wilson_lcb_95": 0.7699224061205675,
+            "success": 12403,
+            "support": 15974
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 3.97437722442",
+          "train": {
+            "coverage": 0.09500118321857991,
+            "ece": 0.0,
+            "precision": 0.770950714666983,
+            "precision_wilson_lcb_95": 0.7645465733374724,
+            "success": 12999,
+            "support": 16861
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 3.89298790609",
+          "train": {
+            "coverage": 0.10000450749935205,
+            "ece": 0.0,
+            "precision": 0.7652262099273198,
+            "precision_wilson_lcb_95": 0.7589335917151845,
+            "success": 13582,
+            "support": 17749
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 3.81353509793",
+          "train": {
+            "coverage": 0.10500219740593413,
+            "ece": 0.0,
+            "precision": 0.7582635758746512,
+            "precision_wilson_lcb_95": 0.7520638998644716,
+            "success": 14131,
+            "support": 18636
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 3.73541210411",
+          "train": {
+            "coverage": 0.1099998873125162,
+            "ece": 0.0,
+            "precision": 0.7518823951237003,
+            "precision_wilson_lcb_95": 0.7457745487316648,
+            "success": 14679,
+            "support": 19523
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 3.65666116414",
+          "train": {
+            "coverage": 0.11500321159328833,
+            "ece": 0.0,
+            "precision": 0.745774337367106,
+            "precision_wilson_lcb_95": 0.7397549662550799,
+            "success": 15222,
+            "support": 20411
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 3.57434266571",
+          "train": {
+            "coverage": 0.12000090149987042,
+            "ece": 0.0,
+            "precision": 0.7375809935205183,
+            "precision_wilson_lcb_95": 0.7316299732575038,
+            "success": 15709,
+            "support": 21298
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 3.50082017988",
+          "train": {
+            "coverage": 0.12500422578064255,
+            "ece": 0.0,
+            "precision": 0.7310466059677274,
+            "precision_wilson_lcb_95": 0.72517226080713,
+            "success": 16219,
+            "support": 22186
+          }
+        },
+        {
+          "rule": "train_only_quantile_log_odds_score_Sideways >= 3.42215676761",
+          "train": {
+            "coverage": 0.1300019156872246,
+            "ece": 0.0,
+            "precision": 0.7244398214363108,
+            "precision_wilson_lcb_95": 0.718637737712453,
+            "success": 16715,
+            "support": 23073
+          }
+        }
+      ],
+      "train": {
+        "coverage": 0.040004056749416844,
+        "ece": 0.0,
+        "precision": 0.8170422535211268,
+        "precision_wilson_lcb_95": 0.8078783597300702,
+        "success": 5801,
+        "support": 7100,
+        "validation_instruments": [
+          "AAPL",
+          "ABBV",
+          "AMD",
+          "AMZN",
+          "BA",
+          "BAC",
+          "CAT",
+          "COP",
+          "CSCO",
+          "CVX",
+          "DIS",
+          "GE",
+          "GOOGL",
+          "GS",
+          "HD",
+          "INTC",
+          "JNJ",
+          "JPM",
+          "MCD",
+          "META",
+          "MS",
+          "MSFT",
+          "NFLX",
+          "NKE",
+          "PFE",
+          "SBUX",
+          "T",
+          "TMO",
+          "TSLA",
+          "UNH",
+          "VZ",
+          "WFC",
+          "WMT",
+          "XOM",
+          "^DJI",
+          "^GSPC",
+          "^IXIC",
+          "^RUT"
+        ],
+        "validation_market_contexts": [
+          "index",
+          "single_stock"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      }
+    }
+  },
+  "source": {
+    "feature_table_tmp_path": "/private/tmp/ict-regime-kaggle-regime-label-root/kaggle_regime_label_feature_table.csv",
+    "raw_or_full_feature_table_committed": false
+  }
+}

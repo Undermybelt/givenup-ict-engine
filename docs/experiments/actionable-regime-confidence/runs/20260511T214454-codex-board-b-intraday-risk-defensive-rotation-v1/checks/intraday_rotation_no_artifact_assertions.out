@@ -1,0 +1,14 @@
+run_id=20260511T214454+0800-codex-board-b-intraday-risk-defensive-rotation-v1
+cursor_state=running:intraday_rotation_rc_spa
+matching_process_observed=false
+run_artifacts_observed=false
+rc_spa_report_exists=false
+variant_rows=0
+selected_rows=0
+gate_result=fail:run_marked_running_without_process_or_artifacts
+downstream_consumption=not_started:no_rc_spa_report
+scoped_manipulation_component_consumed=false
+pre_bayes_started=false
+bbn_started=false
+catboost_started=false
+execution_tree_started=false

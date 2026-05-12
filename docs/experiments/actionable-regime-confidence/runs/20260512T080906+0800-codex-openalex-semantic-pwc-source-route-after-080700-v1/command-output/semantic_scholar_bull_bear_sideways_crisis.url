@@ -1,0 +1,1 @@
+https://api.semanticscholar.org/graph/v1/paper/search?limit=8&fields=title,year,url,abstract,externalIds&query=%22market%20regime%22%20%22Bull%22%20%22Bear%22%20%22Sideways%22%20%22Crisis%22

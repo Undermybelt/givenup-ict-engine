@@ -1,0 +1,68 @@
+{
+  "run_id": "20260512T055129-codex-054718-provider-autoquant-rerun-correction-v1",
+  "gate_result": "054718_provider_autoquant_rerun_correction_v1=rerun_exit0_provider_bars_no_source_root_unlock_no_promotion",
+  "corrected_root": "docs/experiments/actionable-regime-confidence/runs/20260512T054718-codex-provider-autoquant-source-unlock-probe-after-053505-v1",
+  "corrected_wrapper_exit": 0,
+  "script_fix": "repo root resolver now walks upward to Cargo.toml plus the Board A plan instead of using parents[5]",
+  "corrected_probe_gate": "provider_autoquant_source_unlock_probe_after_053505_v1=provider_surfaces_refreshed_no_source_root_unlock_no_promotion",
+  "auto_quant_summary": {
+    "status": "dependency_ready_seed_required",
+    "healthy": true,
+    "data_ready": true,
+    "next_blocker": "auto_quant_seed_strategies_required",
+    "managed_dir": "/Users/thrill3r/Auto-Quant"
+  },
+  "provider_bars": [
+    {
+      "provider": "ibkr",
+      "symbol": "AAPL",
+      "timeframe": "1h",
+      "rows": 158,
+      "sha256": "0746bc0d32cff41612a9bab56e6a7e837a7da484bb66ac0d252f1cb08c887724",
+      "path": "/tmp/20260512T054718-codex-provider-autoquant-source-unlock-probe-after-053505-v1/provider-bars/AAPL_ibkr_1h_2w.csv"
+    },
+    {
+      "provider": "kraken",
+      "symbol": "PF_XBTUSD",
+      "timeframe": "1h",
+      "rows": 2000,
+      "sha256": "4ce6974a63eda68f268f81e6e56e2f6933f0d160a15d5d1933c5d466bc24880d",
+      "path": "/tmp/20260512T054718-codex-provider-autoquant-source-unlock-probe-after-053505-v1/provider-bars/PF_XBTUSD_kraken_futures_1h_20260131_20260510.csv"
+    },
+    {
+      "provider": "yfinance",
+      "symbol": "QQQ",
+      "timeframe": "1h",
+      "rows": 473,
+      "sha256": "f85640f440e27b7aae8af9ffaf39816643e52027d1a44c1571aa4b0a4ecefad2",
+      "path": "/tmp/20260512T054718-codex-provider-autoquant-source-unlock-probe-after-053505-v1/provider-bars/QQQ_yfinance_1h_20260131_20260510.csv"
+    }
+  ],
+  "required_target_roots_present": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "decision": {
+    "source_control_evidence_acquired": false,
+    "target_root_mutated": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "supersedes_stale_board_fields_only": [
+    "054718 wrapper exit 1",
+    "wrong docs/target path",
+    "provider fetch return code 2",
+    "no provider bars produced"
+  ],
+  "does_not_supersede": [
+    "non-promoting gate",
+    "source-control roots absent",
+    "no canonical merge",
+    "no downstream promotion",
+    "no trade claim"
+  ]
+}

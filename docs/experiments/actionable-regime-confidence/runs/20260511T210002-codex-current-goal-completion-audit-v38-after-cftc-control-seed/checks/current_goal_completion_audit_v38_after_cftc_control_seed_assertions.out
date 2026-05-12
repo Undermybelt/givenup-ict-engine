@@ -1,0 +1,8 @@
+PASS decision=current_goal_completion_audit_v38=cftc_control_seed_schema_ready_unscored_strict_objective_blocked
+PASS direct_schema_ready_unscored=true
+PASS ready_intake_roots=1_of_4
+PASS accepted_rows_added_since_v37=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

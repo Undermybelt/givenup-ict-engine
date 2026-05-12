@@ -1,0 +1,10 @@
+PASS run_id=20260512T123820+0800-codex-non-btc-local-aq-mtf-chain-probe-v1
+PASS converted_candle_files=6
+PASS markets_checked=2
+FAIL_CLOSED accepted_95_count=0 target=2
+FAIL_CLOSED max_regime_probability=0.742080 target=0.95
+FAIL_CLOSED execution_ready_contexts=0 target=2
+PASS production_likelihood_mutation=false
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

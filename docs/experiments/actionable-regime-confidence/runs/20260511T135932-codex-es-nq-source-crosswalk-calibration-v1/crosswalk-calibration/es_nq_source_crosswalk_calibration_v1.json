@@ -1,0 +1,433 @@
+{
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "3718ef087e979ec6dec6cf29436153533bf1a3854d4b79cba059e6f0a0db35e8",
+  "decision": {
+    "accepted_95_source_label_crosswalk_attachment_rows": 2,
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_slots": [
+      {
+        "instrument": "ES=F",
+        "root": "Bull",
+        "timeframe": "15m"
+      },
+      {
+        "instrument": "ES=F",
+        "root": "Bull",
+        "timeframe": "1h"
+      }
+    ],
+    "blocked_crosswalk_attachment_rows": 14,
+    "blocker_counts": {
+      "calibration_support_below_50|calibration_wilson95_below_0_95|heldout_time_support_below_50|heldout_time_wilson95_below_0_95": 4,
+      "crosswalk_relation_policy_unresolved|calibration_support_below_50|calibration_wilson95_below_0_95": 2,
+      "crosswalk_relation_policy_unresolved|calibration_support_below_50|calibration_wilson95_below_0_95|heldout_time_support_below_50|heldout_time_wilson95_below_0_95": 2,
+      "crosswalk_relation_policy_unresolved|calibration_support_below_50|calibration_wilson95_below_0_95|heldout_time_wilson95_below_0_95": 2,
+      "crosswalk_relation_policy_unresolved|heldout_time_support_below_50|heldout_time_wilson95_below_0_95": 1,
+      "crosswalk_relation_policy_unresolved|heldout_time_wilson95_below_0_95": 1,
+      "heldout_time_wilson95_below_0_95": 2
+    },
+    "full_objective_achieved": false,
+    "gate_result": "es_nq_crosswalk_calibration_v1_accepted2_blocked14_not_full_objective",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T06:01:50.398041+00:00",
+  "input": {
+    "attack_map": "docs/experiments/actionable-regime-confidence/runs/20260511T134237-codex-yfinance-intraday-source-label-attack-map-v1/source-label-attack/yfinance_intraday_source_label_attack_map_v1.csv",
+    "raw_data_committed": false,
+    "remaining_crosswalk_candidates_outside_scope": 152,
+    "roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "scoped_es_nq_15m_1h_slots": 16,
+    "source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "target_timeframes": [
+      "15m",
+      "1h"
+    ],
+    "total_explicit_crosswalk_candidates_in_attack_map": 168
+  },
+  "next_action": "Acquire or approve a Nasdaq-100-grade source-label relation for NQ=F and add broader exact-source Crisis/Bear/Sideways support; keep the remaining ETF/futures/index crosswalks and Kraken/full-species rows separate.",
+  "policy": {
+    "allowed": [
+      "Use source-backed daily parent labels only as parent-day context for target intraday sessions.",
+      "Use target 15m bars only for session-date coverage and derived 1h coverage.",
+      "Accept only direct relation policies plus calibration and heldout-time source-label support."
+    ],
+    "not_allowed": [
+      "Do not derive target labels from target OHLCV bars.",
+      "Do not treat attached labels as intraday micro-regime timing.",
+      "Do not use HMM states, generated labels, strategy predictions, or future returns as labels.",
+      "Do not accept NQ=F through ^IXIC until the Nasdaq 100 versus Nasdaq Composite policy is resolved."
+    ],
+    "policy_id": "es_nq_source_crosswalk_parent_day_context_v1",
+    "target_relation_notes": {
+      "ES=F": "ES futures are treated as direct S&P 500 index-future context for ^GSPC source labels.",
+      "NQ=F": "NQ futures track Nasdaq 100; the available source panel ticker is ^IXIC, so ^NDX or owner-approved ^IXIC policy is required before acceptance."
+    }
+  },
+  "root_stats": {
+    "ES=F": {
+      "15m": {
+        "Bear": {
+          "all_target_sessions": {
+            "positives": 19,
+            "precision": 1.0,
+            "support": 19,
+            "wilson95_lcb": 0.8318207759
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 8,
+            "precision": 1.0,
+            "support": 8,
+            "wilson95_lcb": 0.6755924351
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 3,
+            "precision": 1.0,
+            "support": 3,
+            "wilson95_lcb": 0.4385029682
+          }
+        },
+        "Bull": {
+          "all_target_sessions": {
+            "positives": 838,
+            "precision": 1.0,
+            "support": 838,
+            "wilson95_lcb": 0.9954368382
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 320,
+            "precision": 1.0,
+            "support": 320,
+            "wilson95_lcb": 0.9881378412
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 160,
+            "precision": 1.0,
+            "support": 160,
+            "wilson95_lcb": 0.9765538048
+          }
+        },
+        "Crisis": {
+          "all_target_sessions": {
+            "positives": 0,
+            "precision": 0.0,
+            "support": 0,
+            "wilson95_lcb": 0.0
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 0,
+            "precision": 0.0,
+            "support": 0,
+            "wilson95_lcb": 0.0
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 0,
+            "precision": 0.0,
+            "support": 0,
+            "wilson95_lcb": 0.0
+          }
+        },
+        "Sideways": {
+          "all_target_sessions": {
+            "positives": 371,
+            "precision": 1.0,
+            "support": 371,
+            "wilson95_lcb": 0.9897517771
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 134,
+            "precision": 1.0,
+            "support": 134,
+            "wilson95_lcb": 0.972131325
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 65,
+            "precision": 1.0,
+            "support": 65,
+            "wilson95_lcb": 0.9441984687
+          }
+        }
+      },
+      "1h": {
+        "Bear": {
+          "all_target_sessions": {
+            "positives": 8,
+            "precision": 1.0,
+            "support": 8,
+            "wilson95_lcb": 0.6755924351
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 2,
+            "precision": 1.0,
+            "support": 2,
+            "wilson95_lcb": 0.3423802275
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 3,
+            "precision": 1.0,
+            "support": 3,
+            "wilson95_lcb": 0.4385029682
+          }
+        },
+        "Bull": {
+          "all_target_sessions": {
+            "positives": 613,
+            "precision": 1.0,
+            "support": 613,
+            "wilson95_lcb": 0.9937723725
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 233,
+            "precision": 1.0,
+            "support": 233,
+            "wilson95_lcb": 0.9837804629
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 139,
+            "precision": 1.0,
+            "support": 139,
+            "wilson95_lcb": 0.9731068357
+          }
+        },
+        "Crisis": {
+          "all_target_sessions": {
+            "positives": 0,
+            "precision": 0.0,
+            "support": 0,
+            "wilson95_lcb": 0.0
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 0,
+            "precision": 0.0,
+            "support": 0,
+            "wilson95_lcb": 0.0
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 0,
+            "precision": 0.0,
+            "support": 0,
+            "wilson95_lcb": 0.0
+          }
+        },
+        "Sideways": {
+          "all_target_sessions": {
+            "positives": 252,
+            "precision": 1.0,
+            "support": 252,
+            "wilson95_lcb": 0.9849850027
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 88,
+            "precision": 1.0,
+            "support": 88,
+            "wilson95_lcb": 0.9581729333
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 53,
+            "precision": 1.0,
+            "support": 53,
+            "wilson95_lcb": 0.9324180114
+          }
+        }
+      }
+    },
+    "NQ=F": {
+      "15m": {
+        "Bear": {
+          "all_target_sessions": {
+            "positives": 141,
+            "precision": 1.0,
+            "support": 141,
+            "wilson95_lcb": 0.9734781819
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 49,
+            "precision": 1.0,
+            "support": 49,
+            "wilson95_lcb": 0.9273021808
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 82,
+            "precision": 1.0,
+            "support": 82,
+            "wilson95_lcb": 0.9552493763
+          }
+        },
+        "Bull": {
+          "all_target_sessions": {
+            "positives": 318,
+            "precision": 1.0,
+            "support": 318,
+            "wilson95_lcb": 0.9880641269
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 190,
+            "precision": 1.0,
+            "support": 190,
+            "wilson95_lcb": 0.9801824705
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 64,
+            "precision": 1.0,
+            "support": 64,
+            "wilson95_lcb": 0.9433759402
+          }
+        },
+        "Crisis": {
+          "all_target_sessions": {
+            "positives": 36,
+            "precision": 1.0,
+            "support": 36,
+            "wilson95_lcb": 0.9035813714
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 9,
+            "precision": 1.0,
+            "support": 9,
+            "wilson95_lcb": 0.7008549516
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 24,
+            "precision": 1.0,
+            "support": 24,
+            "wilson95_lcb": 0.8620237953
+          }
+        },
+        "Sideways": {
+          "all_target_sessions": {
+            "positives": 143,
+            "precision": 1.0,
+            "support": 143,
+            "wilson95_lcb": 0.9738394126
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 34,
+            "precision": 1.0,
+            "support": 34,
+            "wilson95_lcb": 0.8984854458
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 56,
+            "precision": 1.0,
+            "support": 56,
+            "wilson95_lcb": 0.9358060633
+          }
+        }
+      },
+      "1h": {
+        "Bear": {
+          "all_target_sessions": {
+            "positives": 110,
+            "precision": 1.0,
+            "support": 110,
+            "wilson95_lcb": 0.9662560647
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 24,
+            "precision": 1.0,
+            "support": 24,
+            "wilson95_lcb": 0.8620237953
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 77,
+            "precision": 1.0,
+            "support": 77,
+            "wilson95_lcb": 0.9524815747
+          }
+        },
+        "Bull": {
+          "all_target_sessions": {
+            "positives": 245,
+            "precision": 1.0,
+            "support": 245,
+            "wilson95_lcb": 0.9845626254
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 157,
+            "precision": 1.0,
+            "support": 157,
+            "wilson95_lcb": 0.9761164886
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 36,
+            "precision": 1.0,
+            "support": 36,
+            "wilson95_lcb": 0.9035813714
+          }
+        },
+        "Crisis": {
+          "all_target_sessions": {
+            "positives": 21,
+            "precision": 1.0,
+            "support": 21,
+            "wilson95_lcb": 0.8453609811
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 0,
+            "precision": 0.0,
+            "support": 0,
+            "wilson95_lcb": 0.0
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 18,
+            "precision": 1.0,
+            "support": 18,
+            "wilson95_lcb": 0.8241207764
+          }
+        },
+        "Sideways": {
+          "all_target_sessions": {
+            "positives": 122,
+            "precision": 1.0,
+            "support": 122,
+            "wilson95_lcb": 0.9694738216
+          },
+          "calibration_2017_2021_target_sessions": {
+            "positives": 23,
+            "precision": 1.0,
+            "support": 23,
+            "wilson95_lcb": 0.8568833815
+          },
+          "heldout_time_2022plus_target_sessions": {
+            "positives": 52,
+            "precision": 1.0,
+            "support": 52,
+            "wilson95_lcb": 0.9312077639
+          }
+        }
+      }
+    }
+  },
+  "run_id": "20260511T135932+0800-codex-es-nq-source-crosswalk-calibration-v1",
+  "target_data": {
+    "ES=F": {
+      "bar_count_15m": 39881,
+      "date_max": "2025-08-04",
+      "date_min": "2012-04-23",
+      "local_15m_path": "/Users/thrill3r/Downloads/Tomac/ict-engine-cleaned-15m/es.continuous-15m.json",
+      "local_15m_sha256": "3fcf6c93041024dd154e6e01c64fd8797a80e387a3cb59dc7895d1270f7a15ec",
+      "local_symbol": "ES",
+      "raw_data_committed": false,
+      "session_count_15m": 1408,
+      "session_count_1h_from_15m": 990
+    },
+    "NQ=F": {
+      "bar_count_15m": 28975,
+      "date_max": "2023-10-26",
+      "date_min": "2012-07-06",
+      "local_15m_path": "/Users/thrill3r/Downloads/Tomac/ict-engine-cleaned-15m/nq.continuous-15m.json",
+      "local_15m_sha256": "a063fb81214725781417bc3fc71101de9332b39a8fb7516fc9c10e6f6bae0da5",
+      "local_symbol": "NQ",
+      "raw_data_committed": false,
+      "session_count_15m": 738,
+      "session_count_1h_from_15m": 575
+    }
+  }
+}

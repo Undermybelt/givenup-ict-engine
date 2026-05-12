@@ -1,0 +1,5 @@
+PASS structural bundle preserved exact Crisis branch path
+PASS execution candidate preserved exact Crisis branch path
+PASS provider status refreshed with yfinance, TradingView MCP, and Kraken CLI ready
+PASS HTF Auto-Quant workspace remains dependency_ready_data_missing
+PASS promotion remains blocked and update_goal remains false

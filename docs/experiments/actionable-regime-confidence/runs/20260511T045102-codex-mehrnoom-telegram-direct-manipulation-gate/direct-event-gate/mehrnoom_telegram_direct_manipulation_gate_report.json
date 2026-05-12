@@ -1,0 +1,130 @@
+{
+  "abstain_condition": "no direct classified pump/manipulation event for the coin/time window",
+  "accepted_95": true,
+  "allowed_action": "suppress_or_abstain_for_target_coin_while_manipulation_event_active",
+  "candidate_root": "Manipulation",
+  "evidence_class": "direct_social_event_confirmed",
+  "fresh_calibration_rerun": true,
+  "gate_result": "accepted_manipulation_95_direct_event_sourcebacked",
+  "horizon": "event_time_to_operator_defined_cooldown_window",
+  "predictor_blocklist": [
+    "future_*",
+    "target_*",
+    "next_*",
+    "OHLCV_proxy_only",
+    "source_row_index"
+  ],
+  "raw_data_committed": false,
+  "raw_data_root": "/private/tmp/ict-regime-mehrnoom-pump-dump",
+  "rule": "classified_telegram_coin_pump_event_present == 1",
+  "run_id": "20260511T045102+0800-codex-mehrnoom-telegram-direct-manipulation-gate",
+  "runtime_code_changed": false,
+  "source_paper": "https://arxiv.org/abs/1902.03110",
+  "source_repo": "https://github.com/Mehrnoom/Cryptocurrency-Pump-Dump",
+  "source_stats": {
+    "coin_pump_csv": {
+      "date_max": "2018-07-23 14:43:47",
+      "date_min": "2017-05-18 11:16:01",
+      "rows_after_dedupe": 61515,
+      "top_coins": {
+        "ADA": 504,
+        "ADX": 452,
+        "BTC": 8957,
+        "CAN": 749,
+        "DGB": 378,
+        "DNT": 338,
+        "DON": 476,
+        "ETC": 427,
+        "HOLD": 2716,
+        "LSK": 372,
+        "NEO": 415,
+        "OMG": 338,
+        "SC": 425,
+        "STRAT": 501,
+        "SYS": 410,
+        "TIME": 436,
+        "TRX": 369,
+        "WAVES": 340,
+        "XRP": 480,
+        "XVG": 378
+      },
+      "unique_channels": 209,
+      "unique_coins": 542,
+      "unique_event_keys": 47984
+    },
+    "negative_controls": {
+      "policy": "same coin timestamp controls with no classified pump event within +/-24h",
+      "rows": 61445
+    },
+    "price_extract_csv": {
+      "date_max": "2018-07-23 17:06:12",
+      "date_min": "2017-05-18 11:16:01",
+      "exists": true,
+      "rows": 55751,
+      "unique_channels": 210,
+      "unique_coins": 565,
+      "unique_event_keys": 49532
+    }
+  },
+  "split_policy": "chronological 60/20/20 over positive direct events plus same-coin non-event controls",
+  "split_summaries": [
+    {
+      "coverage": 0.46309097809585775,
+      "date_max": "2018-03-18 17:16:38",
+      "date_min": "2017-05-18 11:16:01",
+      "false_positives": 0,
+      "negative_controls": 39611,
+      "precision": 1.0,
+      "rows": 73776,
+      "split": "train",
+      "successes": 34165,
+      "support": 34165,
+      "unique_channels_predicted_positive": 139,
+      "unique_coins_predicted_positive": 466,
+      "wilson95_lcb": 0.9998875742150835
+    },
+    {
+      "coverage": 0.5902732595966168,
+      "date_max": "2018-05-03 14:17:40",
+      "date_min": "2018-03-18 17:17:41",
+      "false_positives": 0,
+      "negative_controls": 10076,
+      "precision": 1.0,
+      "rows": 24592,
+      "split": "calibration",
+      "successes": 14516,
+      "support": 14516,
+      "unique_channels_predicted_positive": 147,
+      "unique_coins_predicted_positive": 364,
+      "wilson95_lcb": 0.9997354338315891
+    },
+    {
+      "coverage": 0.5218770331815225,
+      "date_max": "2018-07-23 14:43:47",
+      "date_min": "2018-05-03 14:25:52",
+      "false_positives": 0,
+      "negative_controls": 11758,
+      "precision": 1.0,
+      "rows": 24592,
+      "split": "test",
+      "successes": 12834,
+      "support": 12834,
+      "unique_channels_predicted_positive": 167,
+      "unique_coins_predicted_positive": 365,
+      "wilson95_lcb": 0.9997007706604714
+    }
+  ],
+  "target_policy": "source-backed direct Telegram pump-attempt event, not OHLCV proxy",
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "validation_contexts": {
+    "channels_total": 209,
+    "coins_total": 542,
+    "positive_date_max": "2018-07-23 14:43:47",
+    "positive_date_min": "2017-05-18 11:16:01",
+    "source_modalities": [
+      "Telegram classified pump-attempt event",
+      "Telegram extracted buy/sell price sidecar"
+    ]
+  }
+}

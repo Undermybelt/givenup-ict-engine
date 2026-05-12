@@ -1,0 +1,13 @@
+PASS run_id=20260512T122546+0800-codex-121701-context-split-validator-v1
+PASS source_gap_run_id=20260512T121701+0800-codex-120630-regime-confidence-gap-map-v1
+PASS rows=237
+PASS providers=6
+PASS chronological_splits=4
+PASS chronological_min_rows=59
+FAIL_CLOSED regime_95_met=False
+FAIL_CLOSED cross_instrument_available=False
+FAIL_CLOSED cross_timeframe_available=False
+FAIL_CLOSED execution_ready=False actionable=False review=observe
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

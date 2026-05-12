@@ -1,0 +1,8 @@
+check,status,evidence,decision
+uv_pip_uninstall_aiodns,failed,exit=2 unexpected_argument_dash_y,noaiodns_workaround_not_applied
+import_check,aiodns_still_present,exit=0 aiodns_present=True,noaiodns_workaround_not_applied
+state_copy_metadata,aliased_original_dependency,managed_dir=/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant/.deps/auto-quant,diagnostic_only
+auto_quant_prepare,pass,exit=0 status=prepared,data_ready_after_retry
+auto_quant_status,pass,exit=0 status=dependency_ready_seed_required healthy=true data_ready=true,seed_required
+source_control_roots,absent,r6=false r3=false r5=false,blocks_promotion
+promotion,blocked,accepted_rows_added=0 canonical_merge=false downstream_rerun=false update_goal=false,no_promotion

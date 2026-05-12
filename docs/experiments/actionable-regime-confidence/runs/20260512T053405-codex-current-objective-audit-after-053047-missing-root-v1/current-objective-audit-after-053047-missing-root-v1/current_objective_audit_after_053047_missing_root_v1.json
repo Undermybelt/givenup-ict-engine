@@ -1,0 +1,39 @@
+{
+  "run_id": "20260512T053405-codex-current-objective-audit-after-053047-missing-root-v1",
+  "generated_at_local": "2026-05-12T05:34:05+0800",
+  "board_hash_before_writeback": "ff7c1a6b9755048c326f7d8328f500e6dd4ffcefe0ee759658b4d6400de7010d",
+  "gate_result": "current_objective_audit_after_053047_missing_root_v1=053047_board_registration_missing_artifacts_no_promotion",
+  "verified_roots": {
+    "hgb_numeric_threshold_screen_051844": true,
+    "objective_audit_052940": true,
+    "v5_dispatch_manifest_052650": true
+  },
+  "missing_or_noncounting_roots": {
+    "board_a_objective_audit_053047_missing": true,
+    "board_b_053047_plus0800_exists_but_wrong_scope": true,
+    "macro_context_miner_052301_noncounting_cleanup": true,
+    "numeric_tree_052522_nonterminal": true
+  },
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "approval_status": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false
+  },
+  "promotion_status": {
+    "accepted_regime_confidence_labels_diagnostic": 4,
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "counting_rule": "Count this audit once as a missing-artifact/readback correction. Treat the Board A 053047 registration as non-counting until its promised artifact root is materialized and verified.",
+  "next_action": "Send or satisfy the 052650 v5 CME/Cboe/CFE owner-export dispatch drafts and preserve ticket/export/license identifiers, or otherwise unlock a required target root before direct verifier, split calibration, canonical merge, provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback."
+}

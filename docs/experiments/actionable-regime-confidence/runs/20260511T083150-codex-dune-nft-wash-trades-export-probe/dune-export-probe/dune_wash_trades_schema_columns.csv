@@ -1,0 +1,28 @@
+column,type,description
+blockchain,VARCHAR,Blockchain on which the trade occurred
+project,VARCHAR,NFT marketplace name
+version,VARCHAR,Contract version
+nft_contract_address,VARBINARY,NFT contract address
+token_id,DOUBLE,NFT token ID
+token_standard,VARCHAR,"Token standard (ERC721, ERC1155)"
+trade_category,VARCHAR,How the NFT was traded
+buyer,VARBINARY,Buyer wallet address
+seller,VARBINARY,Seller wallet address
+project_contract_address,VARBINARY,Marketplace contract address
+aggregator_name,VARCHAR,Aggregator name if applicable
+aggregator_address,VARBINARY,Aggregator contract address
+tx_from,VARBINARY,Address that initiated the transaction
+tx_to,VARBINARY,Address that received the transaction
+block_time,TIMESTAMP,UTC event block time
+block_date,DATE,UTC event block date
+block_number,BIGINT,Block number
+tx_hash,VARBINARY,Transaction hash
+unique_trade_id,VARCHAR,Unique trade identifier
+buyer_first_funded_by,VARBINARY,Wallet that first funded the buyer in ETH
+seller_first_funded_by,VARBINARY,Wallet that first funded the seller in ETH
+filter_1_same_buyer_seller,BOOLEAN,Whether buyer and seller are the same address
+filter_2_back_and_forth_trade,BOOLEAN,Whether the NFT was traded back and forth between buyer and seller
+filter_3_bought_or_sold_3x,BOOLEAN,Whether the same NFT was bought 3+ times (excluding ERC1155)
+filter_4_first_funded_by_same_wallet,BOOLEAN,Whether the same wallet first funded both buyer and seller
+filter_5_flashloan,BOOLEAN,Whether the transaction included a flashloan
+is_wash_trade,BOOLEAN,Final verdict: true if any filter was triggered

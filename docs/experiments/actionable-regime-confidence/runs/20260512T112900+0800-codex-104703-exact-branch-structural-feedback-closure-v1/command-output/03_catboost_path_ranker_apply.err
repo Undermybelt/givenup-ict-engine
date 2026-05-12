@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 690, in <module>
+    main()
+    ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 635, in main
+    apply_model(
+    ~~~~~~~~~~~^
+        model_dir,
+        ^^^^^^^^^^
+    ...<3 lines>...
+        allow_direct_fallback=args.allow_direct_fallback,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 370, in apply_model
+    raise RuntimeError(
+        f"No trained model found in {model_dir}; pass --allow-direct-fallback to use weighted_feature_sum_v1"
+    )
+RuntimeError: No trained model found in docs/experiments/actionable-regime-confidence/runs/20260512T112900+0800-codex-104703-exact-branch-structural-feedback-closure-v1/state_exact_branch_v1/B2R_PROVIDER_BTC_EMA_RSI_104703/policy_training/path_ranker_model_104703_exact_branch_v1; pass --allow-direct-fallback to use weighted_feature_sum_v1

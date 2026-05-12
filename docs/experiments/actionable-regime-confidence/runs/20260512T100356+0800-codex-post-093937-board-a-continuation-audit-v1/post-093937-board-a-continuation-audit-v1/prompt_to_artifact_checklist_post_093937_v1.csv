@@ -1,0 +1,9 @@
+requirement,evidence,status
+every active root has >=95 confidence and cross-context validation,"prior Board A scoped map exists, but strict current objective remains blocked by source/control and selected-history gates",not_complete
+do not disturb multi-agent construction,append-only artifact; no existing root edited; 093435 counted and later roots duplicate-guarded as non-promoting feedback,pass
+"use provider/readiness surfaces including IBKR, TradingView, yfinance, Kraken",docs/experiments/actionable-regime-confidence/runs/20260512T100356+0800-codex-post-093937-board-a-continuation-audit-v1/command-output/provider_status_agent_fresh.stdout.txt,pass_readonly
+use Auto-Quant without inventing status,docs/experiments/actionable-regime-confidence/runs/20260512T100356+0800-codex-post-093937-board-a-continuation-audit-v1/command-output/auto_quant_status_local_data_ready_fresh.stdout.txt,pass_readonly
+use filter / Pre-Bayes / BBN / CatBoost / execution-tree chain,093937 confirms execution-candidate branch preservation but observe-only; no new promotion rerun because selected-history/source-control gates are absent,blocked_no_promotion
+R6 direct manipulation verifier,docs/experiments/actionable-regime-confidence/runs/20260512T100356+0800-codex-post-093937-board-a-continuation-audit-v1/command-output/direct_manipulation_row_intake_verifier_fresh.stdout.txt,schema_ready_unscored_non_promoting
+owner-approved source/control export,direct_manipulation_* owner-export triplet absent under /tmp/ict-engine-board-a-r6-owner-export-v1,blocked
+explicit selected history HTF/MTF/LTF,latest board text requires explicit selection and no new user selection is encoded in repo artifacts,blocked

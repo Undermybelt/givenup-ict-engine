@@ -1,0 +1,4 @@
+file,present,rows,role
+/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,True,2,source_owned_positive_rows
+/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,True,2,required_same_schema_matched_normal_controls
+/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,True,,provenance_manifest

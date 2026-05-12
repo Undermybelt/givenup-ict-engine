@@ -1,0 +1,39 @@
+{
+  "latest_bridge": null,
+  "latest_bridge_diff": null,
+  "latest_canonical_structural_active_regime": null,
+  "latest_canonical_structural_confidence": null,
+  "latest_canonical_structural_probabilities": {},
+  "latest_filtered_assignments": {
+    "parent_regime_root": "Crisis",
+    "pre_bayes_branch_path_gate": "blocked_missing_consumed_pre_bayes_filter",
+    "regime_profit_branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12"
+  },
+  "latest_gate_status": "blocked",
+  "latest_policy": null,
+  "latest_policy_diff": null,
+  "latest_policy_lineage": {
+    "changed_fields_union": [],
+    "latest_version": null,
+    "previous_version": null,
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested",
+    "total_versions": 0
+  },
+  "latest_policy_version": "structural-feedback-branch-path-v1",
+  "latest_soft_evidence": {},
+  "latest_soft_evidence_diff": [],
+  "latest_structural_feedback": {
+    "branch_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "exit_reason": "execution_tree_block_crowded",
+    "followed_path": true,
+    "node_id": "Crisis",
+    "notes": "b2r_block_crowded_nursery_v1; exact Board B regime_profit_branch_path; execution_tree=block_crowded; market_state=RangeConsolidation/WideRange; execution_readiness=0.4433<0.45; negative execution-admissibility feedback only, not profitability rejection",
+    "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "protocol_version": "board-b-b2r-block-crowded-nursery/v1",
+    "recommendation_id": "B2R:block_crowded:220646:crisis_carry_h8_sl048_tp12",
+    "recommended_at": "20260511T231800+0800-codex-board-b-220646-exact-branch-closed-loop-readback-v4",
+    "scenario_id": "CrisisReliefCarry"
+  },
+  "latest_uses_soft_evidence": false
+}

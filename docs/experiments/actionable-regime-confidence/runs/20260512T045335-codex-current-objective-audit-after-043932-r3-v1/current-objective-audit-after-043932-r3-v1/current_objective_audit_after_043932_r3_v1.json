@@ -1,0 +1,119 @@
+{
+  "run_id": "20260512T045335-codex-current-objective-audit-after-043932-r3-v1",
+  "gate": "current_objective_audit_after_043932_r3_v1=not_complete_043932_044701_no_acceptance_roots_absent_downstream_blocked",
+  "objective": {
+    "regimes": ["Bull", "Bear", "Sideways", "Crisis"],
+    "confidence_floor": 0.95,
+    "requires_per_regime_qualifying_condition": true,
+    "requires_cross_market_period_timeframe_validation": true,
+    "required_chain_order": [
+      "provider/AutoQuant",
+      "filter/Pre-Bayes",
+      "BBN",
+      "CatBoost/path-ranking",
+      "execution tree"
+    ]
+  },
+  "board": {
+    "path": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "sha256_before_packet": "1ffdf2edb702a1f1a2afdab68f51be1caed24afb2338865ebda4412055ec0296",
+    "append_only_packet": true
+  },
+  "latest_diagnostic_evidence": {
+    "043932_rule_qualifier_miner": {
+      "gate": "source_label_rule_qualifier_miner_v1=rules_scored_no_full_acceptance",
+      "rows_scored": 248440,
+      "accepted_labels": [],
+      "per_label_best_min_wilson95": {
+        "Bear": 0.566325058,
+        "Bull": 0.7054974201,
+        "Crisis": 0.4729340579,
+        "Sideways": 0.3659108855
+      }
+    },
+    "042448_histgb": {
+      "gate": "source_label_histgb_confidence_screen_v1=histgb_confidence_scored_no_full_acceptance",
+      "rows_scored": 248440,
+      "accepted_labels": []
+    },
+    "044701_single_atom": {
+      "gate": "source_label_single_atom_qualifier_scan_v1=single_atom_scored_no_full_acceptance",
+      "rows_scored": 248440,
+      "accepted_labels": [],
+      "per_label_best_min_wilson95": {
+        "Bear": 0.4249084736,
+        "Bull": 0.5353234712,
+        "Crisis": 0.4324193032,
+        "Sideways": 0.3488806669
+      },
+      "consumed_in_this_audit": true
+    }
+  },
+  "required_roots": {
+    "r6_owner_export": {
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false
+    },
+    "r3_native_subhour": {
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false
+    },
+    "r5_recency_extension": {
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false
+    }
+  },
+  "source_gate_evidence": {
+    "r6": "044137 official routes confirmed, no verifier-native rows/provenance",
+    "r5": "044500 no new post-cutoff target rows",
+    "r3": "044947 no ready source-owned native sub-hour rows"
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "Bull confidence >=95 with own qualifying condition and cross-axis validation",
+      "status": "blocked",
+      "evidence": "043932 Bull min Wilson95 0.7054974201 and 044701 Bull min Wilson95 0.5353234712, accepted false"
+    },
+    {
+      "requirement": "Bear confidence >=95 with own qualifying condition and cross-axis validation",
+      "status": "blocked",
+      "evidence": "043932 Bear min Wilson95 0.566325058 and 044701 Bear min Wilson95 0.4249084736, accepted false"
+    },
+    {
+      "requirement": "Sideways confidence >=95 with own qualifying condition and cross-axis validation",
+      "status": "blocked",
+      "evidence": "043932 Sideways min Wilson95 0.3659108855 and 044701 Sideways min Wilson95 0.3488806669, accepted false"
+    },
+    {
+      "requirement": "Crisis confidence >=95 with own qualifying condition and cross-axis validation",
+      "status": "blocked",
+      "evidence": "043932 Crisis min Wilson95 0.4729340579 and 044701 Crisis min Wilson95 0.4324193032, accepted false"
+    },
+    {
+      "requirement": "source/control unlock before canonical merge",
+      "status": "blocked",
+      "evidence": "R6/R3/R5 required roots absent"
+    },
+    {
+      "requirement": "provider/AutoQuant/filter/Pre-Bayes/BBN/CatBoost/execution-tree promotion chain",
+      "status": "blocked",
+      "evidence": "no source/control unlock; prior downstream matched/mature/actionable rows remain zero"
+    },
+    {
+      "requirement": "do not disturb concurrent work",
+      "status": "satisfied_for_this_audit",
+      "evidence": "043932 and 044701 consumed only after terminal artifacts; stale process-state notes not promoted"
+    }
+  ],
+  "promotion": {
+    "accepted_rows_added": 0,
+    "accepted_regime_confidence_labels": 0,
+    "source_control_evidence_acquired": false,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

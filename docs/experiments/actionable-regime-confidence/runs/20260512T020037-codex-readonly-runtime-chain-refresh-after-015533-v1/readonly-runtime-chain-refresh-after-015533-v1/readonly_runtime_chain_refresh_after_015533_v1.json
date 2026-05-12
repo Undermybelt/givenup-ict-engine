@@ -1,0 +1,70 @@
+{
+  "accepted_rows_added": 0,
+  "all_command_exit_zero": true,
+  "analyze_decision": "Observe only",
+  "analyze_direction": "Bull",
+  "analyze_pre_bayes_gate": "pass_neutralized",
+  "auto_quant_bootstrap_needed": true,
+  "auto_quant_healthy": false,
+  "auto_quant_status": "missing_dependency",
+  "canonical_merge_allowed": false,
+  "downstream_promotion_rerun_allowed": false,
+  "execution_branch": "transition_guardrail",
+  "execution_candidate_actionable": false,
+  "execution_candidate_gate_status": "execution_observe_only",
+  "execution_candidate_status": "execution_observe_only",
+  "execution_gate_status": "observe",
+  "export_mature_rows": 0,
+  "export_rows": 3,
+  "export_rows_with_execution_gate_status": 0,
+  "export_rows_with_training_weight": 0,
+  "gate_result": "readonly_runtime_chain_refresh_after_015533_v1=runtime_surfaces_callable_non_promoting_source_control_blocked",
+  "new_confidence_gate": false,
+  "policy_training_entry_models_ready": [
+    false,
+    false
+  ],
+  "policy_training_matched_rows": 0,
+  "pre_bayes_latest_gate_status": "pass_neutralized",
+  "pre_bayes_structural_confidence": 0.5822867835012198,
+  "pre_bayes_structural_regime": "trend",
+  "provider_status_agent": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "root_status": [
+    {
+      "exists": "false",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "top_level_files": 0
+    },
+    {
+      "exists": "false",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "top_level_files": 0
+    },
+    {
+      "exists": "false",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "top_level_files": 0
+    },
+    {
+      "exists": "true",
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "top_level_files": 2
+    }
+  ],
+  "run_id": "20260512T020037-codex-readonly-runtime-chain-refresh-after-015533-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "structural_bundle_composite_score": 0.5576007484508538,
+  "structural_bundle_direction": "Observe",
+  "structural_path_ranker_active_match_count": 0,
+  "structural_path_ranker_runtime_status": "disabled",
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "tradingview_mcp_status": "market_data:0/1 ready",
+  "update_goal": false,
+  "workflow_full_actionable_artifacts": 3,
+  "workflow_full_consumed_targets": [],
+  "workflow_full_consumed_trend_status": "no_consumed_validation",
+  "yfinance_status": "live_runtime:1/1 ready | market_data:1/1 ready"
+}

@@ -1,0 +1,9 @@
+CARGO_TARGET_DIR=/tmp/ict-engine-codex-regime-bundle-bbn-target cargo test single_branch_path_survives_pre_bayes_into_bbn_assignments --test regime_consumer_bundle_adapter -- --nocapture
+
+Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 28s
+Running tests/regime_consumer_bundle_adapter.rs (/tmp/ict-engine-codex-regime-bundle-bbn-target/debug/deps/regime_consumer_bundle_adapter-a6418140b6c67f0e)
+
+running 1 test
+test single_branch_path_survives_pre_bayes_into_bbn_assignments ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s

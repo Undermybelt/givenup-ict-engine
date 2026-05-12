@@ -1,0 +1,23 @@
+{
+  "accepted_new_roots_95": [],
+  "accepted_root_classes_95_effective": [
+    "CrisisCrash"
+  ],
+  "fresh_calibration_rerun": true,
+  "gate_result": "blocked_hf_tsie_expanded_regime_gate_below_95_or_validation_scope",
+  "manipulation_blocker": "TSIE is labeled buy/sell/flat regime data, not direct event/order-lifecycle/L2 manipulation evidence.",
+  "manipulation_evaluated": false,
+  "missing_root_classes_95_effective": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "Manipulation"
+  ],
+  "next_action": "Run a completion-eligible full-data MainRegimeV3Candidate gate or switch to a smaller direct-labeled cross-market source, and acquire direct manipulation event/order-lifecycle labels.",
+  "retained_prior_accepted_root_classes_95": [
+    "CrisisCrash"
+  ],
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

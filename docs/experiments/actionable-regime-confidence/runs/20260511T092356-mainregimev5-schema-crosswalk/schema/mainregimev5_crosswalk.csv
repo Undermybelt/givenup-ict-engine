@@ -1,0 +1,8 @@
+v5_root,prior_provenance_only,required_reaudit,forbidden_shortcut
+BullExpansion,"Bull; TrendExpansion","signed positive expansion source labels or calibrated parent-root gate across markets/timeframes","generic trend; future return target; HMM state id"
+BearExpansion,"Bear; TrendExpansion; stress sidecars","signed negative expansion labels separated from crisis/stress","generic drawdown proxy; future return target; crisis bucket reuse"
+ConsolidationRange,"Sideways; RangeConsolidation","range/compression persistence with false-break/mean-reversion context and cross-context calibration","absence-of-trend proxy alone"
+CrisisStress,"Crisis; ExtremeStress; CrisisStress; CrisisCrash","tail/loss/liquidity-cliff labels with chronological support and enough non-crisis controls","ordinary bear expansion; volatility-only proxy"
+ManipulationLiquidityEngineering,"Manipulation overlay; ThinLiquidity; SessionLiquidityCoreViable","direct event/order-flow/order-lifecycle/L2/L3/MBO/wash-trade/social positive and negative rows","OHLCV sweeps; thin-liquidity; volume-ratio; indicator proxy"
+TransitionAccumulationDistribution,"ReversalBrewing; transition hazard; accumulation/distribution clues","boundary/transition labels with post-boundary validation and duration viability","reversal-looking candle pattern without source labels or calibration"
+CrossAssetMacroRotation,"macro sidecars; breadth sidecars; rotation sidecars","separability and downstream action difference before mandatory use","macro context as a substitute for price-root labels"

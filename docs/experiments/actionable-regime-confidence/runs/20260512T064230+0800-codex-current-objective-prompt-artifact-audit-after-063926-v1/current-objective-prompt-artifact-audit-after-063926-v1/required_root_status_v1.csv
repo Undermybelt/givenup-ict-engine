@@ -1,0 +1,5 @@
+root_id,root,exists,is_dir,required_files_present
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,False,False,False
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,True,True,True
+r5_recency,/tmp/ict-engine-source-panel-recency-extension,False,False,False
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,True,True,True

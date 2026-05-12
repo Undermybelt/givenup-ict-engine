@@ -1,0 +1,23 @@
+{
+  "run_id": "20260512T044728+0800-codex-043932-terminal-empty-readback-v1",
+  "source_packet": "docs/experiments/actionable-regime-confidence/runs/20260512T043932-codex-source-label-rule-qualifier-miner-v1",
+  "observed_at": "2026-05-12T04:47:28+0800",
+  "writer_pids_checked": [62422, 62434, 64420, 66422, 66434, 67619, 67646, 67649],
+  "writer_processes_present": false,
+  "exit_file_present": false,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "rule_qualifier_payload_present": false,
+  "accepted_rows_added": 0,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false,
+  "blockers": [
+    "no_terminal_exit_file",
+    "empty_stdout_stderr",
+    "user_selected_historical_data_missing"
+  ]
+}

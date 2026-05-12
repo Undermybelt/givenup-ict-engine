@@ -1,0 +1,209 @@
+candidate,split_family,split_name,positive_support,negative_support,positive_wilson95_lcb,negative_wilson95_lcb,min_wilson95_lcb,support_ok,wilson_ok,pass
+jpm_cbot_staging,pooled_all_source_rows,all_rows,77,77,0.952479911333,0.952479911333,0.952479911333,True,True,True
+jpm_cbot_staging,chronological_group_split,chronological_train,40,40,0.91237546075,0.91237546075,0.91237546075,False,False,False
+jpm_cbot_staging,chronological_group_split,chronological_calibration,18,18,0.824115449418,0.824115449418,0.824115449418,False,False,False
+jpm_cbot_staging,chronological_group_split,chronological_test,19,19,0.831815634632,0.831815634632,0.831815634632,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"10-Year T-Note Futures contract, December 2011 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"10-Year T-Note Futures contract, March 2010 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,April 2017 Gold futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,August-delivery Gold Futures,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,CBOT soybean call options,0,2,0.0,0.34237195289,0.0,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,CBOT soybean futures,4,2,0.510099979596,0.34237195289,0.34237195289,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,CLM0-CLU0 crude oil June-September 2020 calendar spread,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,CLM0-CLZ0 crude oil June-December 2020 calendar spread,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,COMEX Gold Futures,6,6,0.609656966347,0.609656966347,0.609656966347,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,COMEX Gold Futures June delivery,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,COMEX Silver Futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,COMEX copper futures,0,2,0.0,0.34237195289,0.0,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,December 2013 E-mini Dow futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,December 2013 E-mini NASDAQ futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,December 2014 E-mini S&P 500 futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,December 2017 Gold futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,December 2017 Silver futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,December-delivery Gold Futures,7,7,0.645661157025,0.645661157025,0.645661157025,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,E-mini S&P 500 futures,9,9,0.700847246449,0.700847246449,0.700847246449,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Gold Futures contract, April 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Gold Futures contract, August 2015 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Gold Futures contract, December 2013 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Gold Futures contract, June 2013 expiry",2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,ICE Brent/WTI crude spread April 2020,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,LME copper futures / COMEX copper futures cross-market example,2,0,0.34237195289,0.0,0.0,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,March 2014 E-mini S&P 500 futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,March 2018 Crude Oil futures,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,March 2018 Silver futures,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,March-delivery Silver Futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,NGH0-NGJ0 natural gas March-April 2020 calendar spread,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Platinum Futures contract, July 2016 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,RBOB gasoline futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Silver Futures contract, March 2012 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Silver Futures contract, March 2013 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Silver Futures contract, March 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Silver Futures contract, May 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,Soft Red Winter wheat futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"T-Bond Futures contract, September 2009 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,"Ultra T-Bond Futures contract, September 2015 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_symbol_exact,light sweet crude oil futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_venue_exact,CBOT,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+jpm_cbot_staging,heldout_venue_exact,CBOT/CME Globex,8,8,0.675584380489,0.675584380489,0.675584380489,False,False,False
+jpm_cbot_staging,heldout_venue_exact,CME,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+jpm_cbot_staging,heldout_venue_exact,CME Globex,9,9,0.700847246449,0.700847246449,0.700847246449,False,False,False
+jpm_cbot_staging,heldout_venue_exact,CME Group registered futures market (source order),3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+jpm_cbot_staging,heldout_venue_exact,COMEX,8,10,0.675584380489,0.722459831233,0.675584380489,False,False,False
+jpm_cbot_staging,heldout_venue_exact,COMEX/CME Globex,29,29,0.883026405534,0.883026405534,0.883026405534,False,False,False
+jpm_cbot_staging,heldout_venue_exact,IFEU electronic market,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+jpm_cbot_staging,heldout_venue_exact,LME and COMEX,2,0,0.34237195289,0.0,0.0,False,False,False
+jpm_cbot_staging,heldout_venue_exact,NYMEX/CME Globex,8,8,0.675584380489,0.675584380489,0.675584380489,False,False,False
+jpm_cbot_staging,heldout_venue_exact,US futures exchange / CFTC complaint,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+direct_manipulation_intake,pooled_all_source_rows,all_rows,73,73,0.950006246616,0.950006246616,0.950006246616,True,True,True
+direct_manipulation_intake,chronological_group_split,chronological_train,38,38,0.908187067416,0.908187067416,0.908187067416,False,False,False
+direct_manipulation_intake,chronological_group_split,chronological_calibration,17,17,0.815676339628,0.815676339628,0.815676339628,False,False,False
+direct_manipulation_intake,chronological_group_split,chronological_test,18,18,0.824115449418,0.824115449418,0.824115449418,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,April 2017 Gold futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,August-delivery Gold Futures,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,CBOT soybean call options,0,2,0.0,0.34237195289,0.0,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,CBOT soybean futures,4,2,0.510099979596,0.34237195289,0.34237195289,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,CLM0-CLU0 crude oil June-September 2020 calendar spread,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,CLM0-CLZ0 crude oil June-December 2020 calendar spread,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,COMEX Gold Futures,6,6,0.609656966347,0.609656966347,0.609656966347,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,COMEX Gold Futures June delivery,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,COMEX Silver Futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,COMEX copper futures,0,2,0.0,0.34237195289,0.0,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,December 2013 E-mini Dow futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,December 2013 E-mini NASDAQ futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,December 2014 E-mini S&P 500 futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,December 2017 Gold futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,December 2017 Silver futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,December-delivery Gold Futures,7,7,0.645661157025,0.645661157025,0.645661157025,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,E-mini S&P 500 futures,9,9,0.700847246449,0.700847246449,0.700847246449,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Gold Futures contract, April 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Gold Futures contract, August 2015 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Gold Futures contract, December 2013 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Gold Futures contract, June 2013 expiry",2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,ICE Brent/WTI crude spread April 2020,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,LME copper futures / COMEX copper futures cross-market example,2,0,0.34237195289,0.0,0.0,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,March 2014 E-mini S&P 500 futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,March 2018 Crude Oil futures,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,March 2018 Silver futures,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,March-delivery Silver Futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,NGH0-NGJ0 natural gas March-April 2020 calendar spread,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Platinum Futures contract, July 2016 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,RBOB gasoline futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Silver Futures contract, March 2012 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Silver Futures contract, March 2013 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Silver Futures contract, March 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,"Silver Futures contract, May 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,Soft Red Winter wheat futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_symbol_exact,light sweet crude oil futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_venue_exact,CBOT,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+direct_manipulation_intake,heldout_venue_exact,CBOT/CME Globex,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+direct_manipulation_intake,heldout_venue_exact,CME,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+direct_manipulation_intake,heldout_venue_exact,CME Globex,9,9,0.700847246449,0.700847246449,0.700847246449,False,False,False
+direct_manipulation_intake,heldout_venue_exact,CME Group registered futures market (source order),3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+direct_manipulation_intake,heldout_venue_exact,COMEX,8,10,0.675584380489,0.722459831233,0.675584380489,False,False,False
+direct_manipulation_intake,heldout_venue_exact,COMEX/CME Globex,29,29,0.883026405534,0.883026405534,0.883026405534,False,False,False
+direct_manipulation_intake,heldout_venue_exact,IFEU electronic market,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+direct_manipulation_intake,heldout_venue_exact,LME and COMEX,2,0,0.34237195289,0.0,0.0,False,False,False
+direct_manipulation_intake,heldout_venue_exact,NYMEX/CME Globex,8,8,0.675584380489,0.675584380489,0.675584380489,False,False,False
+direct_manipulation_intake,heldout_venue_exact,US futures exchange / CFTC complaint,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+v55_reconstruction_intake,pooled_all_source_rows,all_rows,73,73,0.950006246616,0.950006246616,0.950006246616,True,True,True
+v55_reconstruction_intake,chronological_group_split,chronological_train,38,38,0.908187067416,0.908187067416,0.908187067416,False,False,False
+v55_reconstruction_intake,chronological_group_split,chronological_calibration,17,17,0.815676339628,0.815676339628,0.815676339628,False,False,False
+v55_reconstruction_intake,chronological_group_split,chronological_test,18,18,0.824115449418,0.824115449418,0.824115449418,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,April 2017 Gold futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,August-delivery Gold Futures,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,CBOT soybean call options,0,2,0.0,0.34237195289,0.0,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,CBOT soybean futures,4,2,0.510099979596,0.34237195289,0.34237195289,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,CLM0-CLU0 crude oil June-September 2020 calendar spread,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,CLM0-CLZ0 crude oil June-December 2020 calendar spread,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,COMEX Gold Futures,6,6,0.609656966347,0.609656966347,0.609656966347,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,COMEX Gold Futures June delivery,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,COMEX Silver Futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,COMEX copper futures,0,2,0.0,0.34237195289,0.0,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,December 2013 E-mini Dow futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,December 2013 E-mini NASDAQ futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,December 2014 E-mini S&P 500 futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,December 2017 Gold futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,December 2017 Silver futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,December-delivery Gold Futures,7,7,0.645661157025,0.645661157025,0.645661157025,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,E-mini S&P 500 futures,9,9,0.700847246449,0.700847246449,0.700847246449,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Gold Futures contract, April 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Gold Futures contract, August 2015 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Gold Futures contract, December 2013 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Gold Futures contract, June 2013 expiry",2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,ICE Brent/WTI crude spread April 2020,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,LME copper futures / COMEX copper futures cross-market example,2,0,0.34237195289,0.0,0.0,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,March 2014 E-mini S&P 500 futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,March 2018 Crude Oil futures,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,March 2018 Silver futures,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,March-delivery Silver Futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,NGH0-NGJ0 natural gas March-April 2020 calendar spread,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Platinum Futures contract, July 2016 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,RBOB gasoline futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Silver Futures contract, March 2012 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Silver Futures contract, March 2013 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Silver Futures contract, March 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,"Silver Futures contract, May 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,Soft Red Winter wheat futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_symbol_exact,light sweet crude oil futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,CBOT,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,CBOT/CME Globex,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,CME,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,CME Globex,9,9,0.700847246449,0.700847246449,0.700847246449,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,CME Group registered futures market (source order),3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,COMEX,8,10,0.675584380489,0.722459831233,0.675584380489,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,COMEX/CME Globex,29,29,0.883026405534,0.883026405534,0.883026405534,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,IFEU electronic market,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,LME and COMEX,2,0,0.34237195289,0.0,0.0,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,NYMEX/CME Globex,8,8,0.675584380489,0.675584380489,0.675584380489,False,False,False
+v55_reconstruction_intake,heldout_venue_exact,US futures exchange / CFTC complaint,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+v56_clean_readback_intake,pooled_all_source_rows,all_rows,73,73,0.950006246616,0.950006246616,0.950006246616,True,True,True
+v56_clean_readback_intake,chronological_group_split,chronological_train,38,38,0.908187067416,0.908187067416,0.908187067416,False,False,False
+v56_clean_readback_intake,chronological_group_split,chronological_calibration,17,17,0.815676339628,0.815676339628,0.815676339628,False,False,False
+v56_clean_readback_intake,chronological_group_split,chronological_test,18,18,0.824115449418,0.824115449418,0.824115449418,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,April 2017 Gold futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,August-delivery Gold Futures,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,CBOT soybean call options,0,2,0.0,0.34237195289,0.0,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,CBOT soybean futures,4,2,0.510099979596,0.34237195289,0.34237195289,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,CLM0-CLU0 crude oil June-September 2020 calendar spread,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,CLM0-CLZ0 crude oil June-December 2020 calendar spread,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,COMEX Gold Futures,6,6,0.609656966347,0.609656966347,0.609656966347,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,COMEX Gold Futures June delivery,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,COMEX Silver Futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,COMEX copper futures,0,2,0.0,0.34237195289,0.0,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,December 2013 E-mini Dow futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,December 2013 E-mini NASDAQ futures,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,December 2014 E-mini S&P 500 futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,December 2017 Gold futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,December 2017 Silver futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,December-delivery Gold Futures,7,7,0.645661157025,0.645661157025,0.645661157025,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,E-mini S&P 500 futures,9,9,0.700847246449,0.700847246449,0.700847246449,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Gold Futures contract, April 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Gold Futures contract, August 2015 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Gold Futures contract, December 2013 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Gold Futures contract, June 2013 expiry",2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,ICE Brent/WTI crude spread April 2020,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,LME copper futures / COMEX copper futures cross-market example,2,0,0.34237195289,0.0,0.0,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,March 2014 E-mini S&P 500 futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,March 2018 Crude Oil futures,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,March 2018 Silver futures,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,March-delivery Silver Futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,NGH0-NGJ0 natural gas March-April 2020 calendar spread,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Platinum Futures contract, July 2016 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,RBOB gasoline futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Silver Futures contract, March 2012 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Silver Futures contract, March 2013 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Silver Futures contract, March 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,"Silver Futures contract, May 2014 expiry",1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,Soft Red Winter wheat futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_symbol_exact,light sweet crude oil futures,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,CBOT,2,2,0.34237195289,0.34237195289,0.34237195289,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,CBOT/CME Globex,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,CME,4,4,0.510099979596,0.510099979596,0.510099979596,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,CME Globex,9,9,0.700847246449,0.700847246449,0.700847246449,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,CME Group registered futures market (source order),3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,COMEX,8,10,0.675584380489,0.722459831233,0.675584380489,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,COMEX/CME Globex,29,29,0.883026405534,0.883026405534,0.883026405534,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,IFEU electronic market,1,1,0.206543291474,0.206543291474,0.206543291474,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,LME and COMEX,2,0,0.34237195289,0.0,0.0,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,NYMEX/CME Globex,8,8,0.675584380489,0.675584380489,0.675584380489,False,False,False
+v56_clean_readback_intake,heldout_venue_exact,US futures exchange / CFTC complaint,3,3,0.438493919551,0.438493919551,0.438493919551,False,False,False

@@ -1,0 +1,41 @@
+{
+  "accepted_rows_added": 0,
+  "candidate_records": 11,
+  "decision": "native_subhour_source_recheck_v2=no_ready_native_subhour_source_owned_labels",
+  "disposition_counts": {
+    "blocked_code_or_signal_surface_not_source_owned_labels": 4,
+    "blocked_generated_or_model_derived_regime_labels": 4,
+    "blocked_raw_provider_panel_no_source_owned_regime_labels": 1,
+    "blocked_research_code_or_prediction_target_not_owner_approved_labels": 1,
+    "blocked_synthetic_panel_not_source_owned_labels": 1
+  },
+  "github_queries": [
+    "\"intraday market regime\" labels",
+    "\"market regime\" \"5m\" labels",
+    "\"regime label\" \"BTCUSD\"",
+    "\"multi timeframe market regimes\""
+  ],
+  "huggingface_queries": [
+    "5m market regime",
+    "intraday regime label",
+    "crypto market regime 5m",
+    "BTCUSD HMM market regimes",
+    "multi timeframe market regimes"
+  ],
+  "kaggle_queries": [
+    "5m market regime",
+    "intraday regime label",
+    "crypto market regime 5m",
+    "BTCUSD HMM market regimes"
+  ],
+  "native_subhour_source_overlap_closed": false,
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "ready_native_subhour_source_owned_label_sources": 0,
+  "runtime_code_changed": false,
+  "scan_started_at": "2026-05-11T11:48:03.318030+00:00",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

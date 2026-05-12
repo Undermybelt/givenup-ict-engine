@@ -1,0 +1,5 @@
+error: Request failed after 3 retries in 7.4s
+  Caused by: Failed to fetch: `https://pypi.org/simple/pandas/`
+  Caused by: error sending request for url (https://pypi.org/simple/pandas/)
+  Caused by: client error (Connect)
+  Caused by: tls handshake eof

@@ -1,0 +1,111 @@
+{
+  "run_id": "20260511T020725+0800-codex-direct-event-dataset-source-scan",
+  "active_axis": "MainRegimeV2",
+  "candidate_regime": "Manipulation",
+  "objective": "Find directly downloadable row-level event/social/on-chain or direct L2/L3/order-lifecycle datasets for the active Manipulation root gate.",
+  "sources": [
+    {
+      "name": "Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+      "url": "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+      "source_type": "event_social_pump_and_dump",
+      "raw_rows_directly_accessible": true,
+      "local_probe": {
+        "pd_logs_cleaned_url": "https://raw.githubusercontent.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency/master/Data/Telegram/Labeled/PD_logs_cleaned.txt",
+        "pd_logs_cleaned_lines_including_header": 1336,
+        "pd_events": 1335,
+        "pd_event_exchanges": 14,
+        "pd_event_coins": 277,
+        "largest_exchange_count": {
+          "exchange": "binance",
+          "events": 1003
+        },
+        "pred_pump_message_lines_including_header": 36697,
+        "label_txt_lines": 5146,
+        "label_txt_counts": {
+          "0": 3654,
+          "1": 847,
+          "2": 630,
+          "?": 15
+        }
+      },
+      "gate_usability": "strong_candidate_not_yet_calibrated",
+      "notes": "Repository README says the P&D logs contain 1,335 samples and 709 observed Telegram P&Ds. Local raw probes confirm a directly downloadable cleaned event log with coin, exchange, pair, and timestamp fields. This still needs an unchanged chronological gate with negative controls and/or aligned market features before acceptance."
+    },
+    {
+      "name": "SystemsLab-Sapienza/gme-pump-xrp-telegram",
+      "url": "https://github.com/SystemsLab-Sapienza/gme-pump-xrp-telegram",
+      "source_type": "raw_social_corpus",
+      "raw_rows_directly_accessible": true,
+      "local_probe": {
+        "message_html_files": 120,
+        "structured_event_label_table_found": false
+      },
+      "gate_usability": "context_only_until_events_extracted",
+      "notes": "Repository contains Telegram group messages, files, videos, and images for the OFFICIAL BUY & HOLD XRP group. It is useful social provenance, but no structured positive/negative event table was found in this scan."
+    },
+    {
+      "name": "cakcora/chartalist",
+      "url": "https://github.com/cakcora/chartalist",
+      "source_type": "on_chain_anomaly_raw_transactions",
+      "raw_rows_directly_accessible": false,
+      "local_probe": {
+        "readme_lists_idex_and_etherdelta_anomaly_datasets": true,
+        "dataloader_urls_found": true,
+        "direct_csv_url_probe_result": "HTTP 200 text/html, not CSV row data",
+        "explicit_manipulation_label_column_found": false
+      },
+      "gate_usability": "not_gate_ready",
+      "notes": "The dataloader source lists IDEXTrades.csv, EtherDeltaTrades.csv, and EtherDollarPrice.csv, but direct URL probes returned the site HTML shell. The listed datasets are transaction/anomaly inputs without an explicit manipulation label column in the dataloader metadata."
+    },
+    {
+      "name": "Jananigaekwad/Group-3-Wash-Trading-Case-Study-for-ERC20-Token",
+      "url": "https://github.com/Jananigaekwad/Group-3-Wash-Trading-Case-Study-for-ERC20-Token",
+      "source_type": "erc20_wash_trading_case_study",
+      "raw_rows_directly_accessible": true,
+      "local_probe": {
+        "preprocessed_csv_found": true,
+        "first_columns": [
+          "Transaction Hash",
+          "Blockno",
+          "UnixTimestamp",
+          "DateTime (UTC)",
+          "From",
+          "To",
+          "Quantity",
+          "Method"
+        ],
+        "explicit_ground_truth_label_found": false
+      },
+      "gate_usability": "not_gate_ready",
+      "notes": "The repository includes a directly downloadable normalized ERC20 transaction CSV, but the README frames anomaly detection as unsupervised and the sampled columns did not include an explicit wash-trade label."
+    },
+    {
+      "name": "dianxiang-sun/rug_pull_dataset",
+      "url": "https://github.com/dianxiang-sun/rug_pull_dataset",
+      "source_type": "defi_rug_pull_incidents",
+      "raw_rows_directly_accessible": true,
+      "local_probe": {
+        "csv_files": [
+          "rugpull_dataset.csv",
+          "rugpull_full_dataset_new.csv"
+        ],
+        "documented_incidents": 2391,
+        "time_period": "2020-2023"
+      },
+      "gate_usability": "adjacent_out_of_scope_for_current_gate",
+      "notes": "This is a validated DeFi security incident dataset. It is useful adjacent on-chain fraud context, but it is not an exchange/order-flow manipulation event ledger for the current MainRegimeV2 gate."
+    }
+  ],
+  "gate_result": {
+    "directly_downloadable_candidate_sources": 1,
+    "source_ready_for_next_gate": "Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+    "qualifying_calibration_input_sets_after_this_scan": 0,
+    "accepted_95": false,
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "fresh_calibration_rerun": false,
+    "trade_usable": false,
+    "gate": "candidate_event_social_dataset_acquired_gate_not_run"
+  },
+  "next_action": "Create a bounded unchanged Manipulation event/social gate using the Bayi-Hu cleaned P&D event log plus available message labels, with chronological split and explicit negative controls or market-feature alignment. Do not count it as acceptance until that gate passes."
+}

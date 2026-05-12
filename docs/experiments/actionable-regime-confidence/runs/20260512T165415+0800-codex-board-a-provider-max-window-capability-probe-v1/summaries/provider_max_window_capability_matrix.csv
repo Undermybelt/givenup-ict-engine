@@ -1,0 +1,7 @@
+provider,label,requested_history_span,returned_first,returned_last,timeframe,kline_rows,exit,portable_to_consumer,local_file_runtime_dependency,status
+yfinance/YF,01_yfinance_btc_usd_1h_20210101_20260512,2021-01-01_to_2026-05-12,,,1h,0,1,True,False,fail_closed
+Kraken,02_kraken_xbtusd_1h_20210101_20260512,2021-01-01_to_2026-05-12,2022-03-23 10:00:00+00:00,2022-06-14 17:00:00+00:00,1h,2000,0,True,False,current_row_ready
+Binance,03_binance_btcusdt_1h_20210101_20260512,2021-01-01_to_2026-05-12,2021-01-01 00:00:00+00:00,2026-05-12 00:00:00+00:00,1h,46955,0,True,False,current_row_ready
+Bybit,04_bybit_btcusdt_linear_1h_20210101_20260512,2021-01-01_to_2026-05-12,2026-03-31 09:00:00+00:00,2026-05-12 00:00:00+00:00,1h,1000,0,True,False,current_row_ready
+TradingViewRemix/TVR,05_tvr_btc_usd_1h_local_stdio_default_window,provider_default_local_stdio_no_explicit_range,2026-04-12T09:00:00Z,2026-05-12T08:59:51Z,1h,720,0,True,False,current_row_ready
+IBKR,06_ibkr_btc_paxos_aggtrades_1h_1y_duration,1Y_duration_via_ibkr_bulk,,,1h,0,1,True,False,fail_closed

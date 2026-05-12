@@ -1,0 +1,6 @@
+root_class,source_root_class,state,accepted_95,calibration_support,test_support,calibration_wilson95_lcb,test_wilson95_lcb,rule
+BullExpansion,BullExpansion,blocked,False,317,302,0.760596626752,0.788369131252,BullExpansion_base AND drawdown64 >= -0.00158986511419
+BearExpansion,BearExpansion,blocked,False,223,185,0.454823342928,0.544451807208,expanded_root_decile_log_odds_score_BearExpansion >= 1.55898213987
+SidewaysConsolidation,SidewaysConsolidation,blocked,False,297,289,0.763092059363,0.745637847266,expanded_root_decile_log_odds_score_SidewaysConsolidation >= 1.43914039008
+CrisisCrash,CrisisStress,accepted_95,True,542,402,0.986646707595,0.982043937573,range_ratio32_128 >= 1.354447594 AND vol_ratio32_128 >= 1.34848093042
+Manipulation,Manipulation,missing_required_inputs,False,0,0,0.000000000000,0.000000000000,calibration_grade_direct_L2_L3_MBO_order_lifecycle_or_event_data_present == true

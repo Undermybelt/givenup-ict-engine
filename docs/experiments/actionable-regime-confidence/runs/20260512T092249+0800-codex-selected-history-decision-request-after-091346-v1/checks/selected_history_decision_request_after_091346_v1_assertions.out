@@ -1,0 +1,8 @@
+gate_result=selected_history_decision_request_after_091346_v1=awaiting_explicit_htf_mtf_ltf_selection
+source_control_evidence_acquired=false
+valid_required_root_unlock=false
+explicit_user_selected_history=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+promotion_allowed=false
+update_goal=false

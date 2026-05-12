@@ -1,0 +1,11 @@
+PASS rows_exported_ge_1000
+PASS positive_rows_ge_500
+PASS negative_rows_ge_500
+FAIL min_calibration_test_per_venue_class_wilson95_lcb_ge_0_95
+FAIL accepted_direct_self_trade_slice_95_true
+PASS accepted_parent_root_slots_added_0
+PASS full_board_goal_achieved_false
+PASS thresholds_relaxed_false
+PASS runtime_code_changed_false
+PASS raw_data_committed_false
+PASS trade_usable_false

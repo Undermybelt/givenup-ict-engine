@@ -1,0 +1,69 @@
+{
+  "delayed_reward": {
+    "evaluation_record_count": 13,
+    "first_evaluation_recommended_at": "2026-05-10T11:20:22+00:00",
+    "last_evaluation_recommended_at": "2026-05-10T11:22:17+00:00",
+    "latest_training_recommended_at": "2026-05-10T11:20:08+00:00",
+    "remaining_gap": "full_event_time_competing_risk_validation_not_yet_landed",
+    "resolution_1h_brier_score": 0.0013717421124828572,
+    "resolution_1h_observation_count": 13,
+    "resolution_24h_brier_score": 0.0013717421124828572,
+    "resolution_24h_observation_count": 13,
+    "resolution_4h_brier_score": 0.0013717421124828572,
+    "resolution_4h_observation_count": 13,
+    "resolution_brier_score": 0.0013717421124828572,
+    "resolution_observation_count": 13,
+    "status": "ready",
+    "status_reason": "ready",
+    "training_record_count": 25,
+    "validation_owner": "horizon_replay_validation"
+  },
+  "live_regime_truth_rule": {
+    "current_state_branch": "temporal_hmm_pre_bayes_nowcast",
+    "pivot_confirmation_dependency": "not_required",
+    "status": "enforced",
+    "summary": "retrospective zigzag, tiny-leg, or cluster outputs are not sufficient by themselves for live regime truth"
+  },
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol NQ --data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state",
+    "execution_contract": null,
+    "prompt": "Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=<local-path>, <local-path>, <local-path>",
+    "user_input_required": true
+  },
+  "source_reliability": {
+    "calibration_brier_score": null,
+    "calibration_log_loss": null,
+    "calibration_observation_count": 0,
+    "calibration_source_count": 0,
+    "calibration_status": null,
+    "distinct_source_count": 2,
+    "holdout_brier_score": null,
+    "holdout_evaluation_item_count": 0,
+    "holdout_log_loss": null,
+    "holdout_observation_coverage": null,
+    "holdout_reason": "status=unavailable train=0 eval=0 obs=0 sources=0",
+    "holdout_split_strategy": null,
+    "holdout_status": null,
+    "holdout_training_item_count": 0,
+    "multi_source_item_count": 0,
+    "ready": false,
+    "replay_brier_score": null,
+    "replay_evaluation_item_count": 0,
+    "replay_log_loss": null,
+    "replay_observation_count": 0,
+    "replay_observation_coverage": null,
+    "replay_reason": "status=unavailable train=0 eval=0 obs=0 sources=0",
+    "replay_source_count": 0,
+    "replay_split_strategy": null,
+    "replay_status": null,
+    "status": "needs_multi_source_overlap"
+  },
+  "target_policy": {
+    "context_count": 2,
+    "current_model": "symbol:regime:direction_bucket_posterior",
+    "status": "bucket_posterior_live",
+    "upgrade_path": "learned_contextual_model_not_yet_landed"
+  }
+}

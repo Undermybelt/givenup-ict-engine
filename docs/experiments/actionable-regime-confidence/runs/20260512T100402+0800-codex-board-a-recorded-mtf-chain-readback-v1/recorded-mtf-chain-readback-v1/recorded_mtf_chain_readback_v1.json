@@ -1,0 +1,355 @@
+{
+  "blockers": [
+    "explicit_selected_history_approval_absent",
+    "board_a_source_control_unlock_absent",
+    "pre_bayes_or_execution_readiness_not_promoting",
+    "production_promotion_chain_not_authorized"
+  ],
+  "command_results": [
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/10_provider_status_agent.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/10_provider_status_agent.exit",
+      "name": "10_provider_status_agent",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/10_provider_status_agent.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/10_provider_status_agent.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/11_provider_status_yfinance.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/11_provider_status_yfinance.exit",
+      "name": "11_provider_status_yfinance",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/11_provider_status_yfinance.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/11_provider_status_yfinance.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/12_provider_status_tradingview_mcp.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/12_provider_status_tradingview_mcp.exit",
+      "name": "12_provider_status_tradingview_mcp",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/12_provider_status_tradingview_mcp.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/12_provider_status_tradingview_mcp.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/13_provider_status_ibkr.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/13_provider_status_ibkr.exit",
+      "name": "13_provider_status_ibkr",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/13_provider_status_ibkr.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/13_provider_status_ibkr.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/14_provider_status_ibkr_bridge.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/14_provider_status_ibkr_bridge.exit",
+      "name": "14_provider_status_ibkr_bridge",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/14_provider_status_ibkr_bridge.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/14_provider_status_ibkr_bridge.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/15_provider_status_kraken_public.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/15_provider_status_kraken_public.exit",
+      "name": "15_provider_status_kraken_public",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/15_provider_status_kraken_public.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/15_provider_status_kraken_public.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/16_provider_status_kraken_cli.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/16_provider_status_kraken_cli.exit",
+      "name": "16_provider_status_kraken_cli",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/16_provider_status_kraken_cli.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/16_provider_status_kraken_cli.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/17_provider_status_binance_public.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/17_provider_status_binance_public.exit",
+      "name": "17_provider_status_binance_public",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/17_provider_status_binance_public.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/17_provider_status_binance_public.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/18_provider_status_bybit_public.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/18_provider_status_bybit_public.exit",
+      "name": "18_provider_status_bybit_public",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/18_provider_status_bybit_public.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/18_provider_status_bybit_public.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/20_auto_quant_status_json.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/20_auto_quant_status_json.exit",
+      "name": "20_auto_quant_status_json",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/20_auto_quant_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/20_auto_quant_status_json.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/30_pre_bayes_status_json.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/30_pre_bayes_status_json.exit",
+      "name": "30_pre_bayes_status_json",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/30_pre_bayes_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/30_pre_bayes_status_json.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/40_policy_training_status_json.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/40_policy_training_status_json.exit",
+      "name": "40_policy_training_status_json",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/40_policy_training_status_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/40_policy_training_status_json.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/50_workflow_structural_bundle_json.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/50_workflow_structural_bundle_json.exit",
+      "name": "50_workflow_structural_bundle_json",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/50_workflow_structural_bundle_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/50_workflow_structural_bundle_json.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/51_workflow_execution_candidate_json.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/51_workflow_execution_candidate_json.exit",
+      "name": "51_workflow_execution_candidate_json",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/51_workflow_execution_candidate_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/51_workflow_execution_candidate_json.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/52_workflow_full_json.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/52_workflow_full_json.exit",
+      "name": "52_workflow_full_json",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/52_workflow_full_json.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/52_workflow_full_json.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/60_export_structural_path_ranking_target.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/60_export_structural_path_ranking_target.exit",
+      "name": "60_export_structural_path_ranking_target",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/60_export_structural_path_ranking_target.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/60_export_structural_path_ranking_target.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/70_harness_yfinance_qqq_1d.cmd",
+      "exit": 0,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/70_harness_yfinance_qqq_1d.exit",
+      "name": "70_harness_yfinance_qqq_1d",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/70_harness_yfinance_qqq_1d.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/70_harness_yfinance_qqq_1d.out"
+    },
+    {
+      "cmd_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/71_harness_tradingview_qqq_1d.cmd",
+      "exit": 1,
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/71_harness_tradingview_qqq_1d.exit",
+      "name": "71_harness_tradingview_qqq_1d",
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/71_harness_tradingview_qqq_1d.err",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/command-output/71_harness_tradingview_qqq_1d.out"
+    }
+  ],
+  "downstream_key_fields": {
+    "30_pre_bayes_status_json": {},
+    "40_policy_training_status_json": {
+      "ready": false
+    },
+    "50_workflow_structural_bundle_json": {
+      "path_ranker_raw_score": 0.65,
+      "path_ranker_runtime_source": "history_path"
+    },
+    "51_workflow_execution_candidate_json": {
+      "actionable": false,
+      "candidate_status": "execution_observe_only",
+      "execution_readiness": 0.4504361163104953,
+      "path_ranker_raw_score": 0.65,
+      "path_ranker_runtime_source": "history_path",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "ready": false,
+      "review_status": "observe"
+    },
+    "52_workflow_full_json": {
+      "actionable": true,
+      "candidate_status": "execution_observe_only",
+      "closed_loop_branch_admission": {
+        "actionable": false,
+        "candidate_status": "execution_observe_only",
+        "evidence": [
+          "pre_bayes_gate_status=pass_neutralized",
+          "execution_gate_status=execution_observe_only",
+          "review_status=observe"
+        ],
+        "execution_gate_status": "execution_observe_only",
+        "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+        "path_label": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+        "pre_bayes_gate_status": "pass_neutralized",
+        "ready": false,
+        "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+        "review_status": "observe",
+        "source_phase": "structural-recommended-path-bundle",
+        "status": "fail_closed"
+      },
+      "execution_readiness": 0.4504361163104953,
+      "path_ranker_raw_score": 0.65,
+      "path_ranker_runtime_source": "history_path",
+      "pre_bayes_gate_status": "pass_neutralized",
+      "ready": false,
+      "regime_profit_branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "review_status": "observe"
+    }
+  },
+  "gate": "incubation_only_recorded_mtf_chain_readback_no_promotion",
+  "generated_at": "2026-05-12T02:18:02.414698+00:00",
+  "harness_readback": {
+    "tradingview_mcp_qqq_1d_error": "Error: market-data-harness fetch encountered failures: role=etf_reference provider=tradingview_mcp symbol=NASDAQ:QQQ fetch_failed:tradingview MCP call 'get_ohlcv' returned error | install_prompt=Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable. | install_prompt=Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+    "tradingview_mcp_qqq_1d_exit": 1,
+    "yfinance_qqq_1d_exit": 0
+  },
+  "mode": "incubation_only_readback",
+  "promotion_allowed": false,
+  "provider_matrix": [
+    {
+      "domain": "entry_model",
+      "provider_id": "breaker_rb_long_v1",
+      "ready": true,
+      "reason": "entry_model_registry_member",
+      "status": "registered",
+      "user_access": "builtin_registry"
+    },
+    {
+      "domain": "entry_model",
+      "provider_id": "cisd_rb_long_v1",
+      "ready": true,
+      "reason": "entry_model_registry_member",
+      "status": "registered",
+      "user_access": "builtin_registry"
+    },
+    {
+      "domain": "live_runtime",
+      "provider_id": "crypto_public_runtime",
+      "ready": false,
+      "reason": "explicit_opt_in_required",
+      "status": "operator_runtime_required",
+      "user_access": "operator_runtime_optional"
+    },
+    {
+      "domain": "live_runtime",
+      "provider_id": "external_http_runtime",
+      "ready": false,
+      "reason": "base_url_and_service_required",
+      "status": "operator_runtime_required",
+      "user_access": "operator_runtime_optional"
+    },
+    {
+      "domain": "live_runtime",
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available",
+      "status": "ready",
+      "user_access": "free_no_login"
+    },
+    {
+      "domain": "local_runtime",
+      "provider_id": "ibkr_bridge",
+      "ready": false,
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy",
+      "user_access": "login_and_local_runtime"
+    },
+    {
+      "domain": "local_runtime",
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready",
+      "user_access": "login_and_local_runtime"
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "binance_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy",
+      "user_access": "public_no_login"
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "bybit_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy",
+      "user_access": "public_no_login"
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy",
+      "user_access": "login_and_local_runtime"
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy",
+      "user_access": "public_no_login"
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "polymarket_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy",
+      "user_access": "public_no_login"
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "tradingview_mcp",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy",
+      "user_access": "local_stdio_or_remote_api_key"
+    },
+    {
+      "domain": "market_data",
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "public_yahoo_http_endpoints",
+      "status": "ready",
+      "user_access": "free_no_login"
+    }
+  ],
+  "provider_readiness_summary": {
+    "binance_public_ready": false,
+    "binance_public_reasons": [
+      "python3_provider_dependencies_missing"
+    ],
+    "bybit_public_ready": false,
+    "bybit_public_reasons": [
+      "python3_provider_dependencies_missing"
+    ],
+    "ibkr_bridge_ready": false,
+    "ibkr_ready": false,
+    "ibkr_reasons": [
+      "ibkr_runtime_dependencies_missing_with_gateway_reachable"
+    ],
+    "kraken_cli_ready": true,
+    "kraken_public_ready": false,
+    "kraken_public_reasons": [
+      "python3_provider_dependencies_missing"
+    ],
+    "tradingview_mcp_ready": false,
+    "tradingview_mcp_reasons": [
+      "tradingview_mcp_connectivity_probe_failed"
+    ],
+    "yfinance_ready": true
+  },
+  "run_id": "20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T100402+0800-codex-board-a-recorded-mtf-chain-readback-v1/state_recorded_mtf_chain_readback_v1",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "update_goal": false
+}

@@ -1,0 +1,91 @@
+{
+  "run_id": "20260512T032302-codex-provider-autoquant-readonly-refresh-after-031655-v1",
+  "generated_at_local": "2026-05-12T03:27:02+0800",
+  "board_sha256_before_artifact": "d5a3234eec194b73936a2b0e03366a070ed5d38195594c8a74d7bbc1b5b9ac6a",
+  "gate_result": "provider_autoquant_readonly_refresh_after_031655_v1=readiness_refreshed_no_promotion_source_controls_blocked",
+  "scope": "read_only_provider_autoquant_status_after_031655_no_downstream_promotion_restored_because_board_references_032302",
+  "provider_summary": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+  "ready_by_domain": {
+    "entry_model": "2/2",
+    "live_runtime": "1/3",
+    "local_runtime": "1/2",
+    "market_data": "1/7"
+  },
+  "selected_providers": {
+    "yfinance_live": {
+      "ready": true,
+      "status": "ready",
+      "reason": "native_yfinance_runtime_available"
+    },
+    "yfinance_market_data": {
+      "ready": true,
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints"
+    },
+    "ibkr_market_data": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    },
+    "ibkr_bridge": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "install_prompts": [
+        "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async.",
+        "A local IBKR API is reachable on port 4002; reuse it unless the user says otherwise."
+      ]
+    },
+    "tradingview_mcp": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "install_prompts": [
+        "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+        "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+      ]
+    },
+    "kraken_cli": {
+      "ready": true,
+      "status": "ready",
+      "reason": "kraken_cli_config_detected"
+    },
+    "kraken_public": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "install_prompts": [
+        "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+      ]
+    }
+  },
+  "auto_quant": {
+    "state_dir": "/tmp/ict-engine-board-a-autoquant-threaded-dns-20260512T022552",
+    "status": "dependency_ready_data_ready",
+    "healthy": true,
+    "dependency_healthy": true,
+    "data_ready": true,
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "recommended_next_command": "uv run --with ta-lib /tmp/ict-engine-board-a-autoquant-threaded-dns-20260512T022552/auto-quant/.deps/auto-quant/run.py"
+  },
+  "approval": {
+    "approval_present": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "update_goal": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

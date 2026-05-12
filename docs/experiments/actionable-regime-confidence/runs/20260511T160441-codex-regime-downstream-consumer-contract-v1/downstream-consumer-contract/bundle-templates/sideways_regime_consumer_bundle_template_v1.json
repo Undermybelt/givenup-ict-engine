@@ -1,0 +1,50 @@
+{
+  "consumer_hints": {
+    "bbn_evidence_hint": {
+      "regime_decision_reasons": [
+        "accepted_95_scoped_context",
+        "not_trade_usable",
+        "no_ohlcv_proxy",
+        "market_regime_context_only"
+      ],
+      "regime_decision_state": "single_label_95",
+      "regime_label": "MainRegimeV2::Sideways",
+      "regime_label_set": [
+        "MainRegimeV2::Sideways"
+      ],
+      "regime_trade_usable": false,
+      "regime_transition_hazard": null
+    },
+    "execution_tree_hint": "transition_guardrail",
+    "path_ranker_context": {
+      "allowed_action": "pre_bayes_regime_context; bbn_soft_evidence_context; catboost_path_ranker_context; execution_tree_sizing_or_suppression_context",
+      "confidence_floor": 0.9529358324,
+      "consumer_factor": "market_regime_context",
+      "context_source": "regime_factor_consumer_map_v1",
+      "scope_limit": "Not ticker-specific alpha, not intraday transition timing, not full-cycle/full-species completion."
+    },
+    "trade_usable": false,
+    "user_vrp_nq_context": {}
+  },
+  "latest_decision": {
+    "abstain_reasons": [
+      "accepted_95_scoped_context",
+      "not_trade_usable",
+      "no_ohlcv_proxy",
+      "market_regime_context_only"
+    ],
+    "decision_state": "single_label_95",
+    "final_label": "MainRegimeV2::Sideways",
+    "label_set": [
+      "MainRegimeV2::Sideways"
+    ],
+    "timestamp": "20260511T160441+0800-codex-regime-downstream-consumer-contract-v1",
+    "trade_usable": false
+  },
+  "provenance": {
+    "run_id": "20260511T160441+0800-codex-regime-downstream-consumer-contract-v1",
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T144838-codex-market-regime-context-packet-v1/market-regime-context/market_regime_context_packet_v1.json",
+    "source_consumer_map": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv"
+  },
+  "schema_version": "regime-consumer-bundle/v1"
+}

@@ -1,0 +1,11 @@
+requirement,status,evidence
+classify negative results instead of collapsing them into factor failure,pass,provider_harness_fetch_matrix_v1.md evidence_class=provider_acquisition_positive_plus_infrastructure_negative_sample
+keep infrastructure failure out of market/factor learning,pass,provider_harness_fetch_matrix_v1.md market_factor_learning_quality_weight=0 and disallowed_feedback_targets
+record provider provenance,pass,provider_harness_fetch_matrix_v1.md provider_provenance line
+record branch attribution fields even when not applicable,pass,provider_harness_fetch_matrix_v1.md branch_path and four branch fields
+record downstream chain status,pass,provider_harness_fetch_matrix_v1.md Pre-Bayes BBN CatBoost execution-tree all not_run
+record final outcome and failure reason,pass,provider_harness_fetch_matrix_v1.md final_outcome and failure_reason
+verify YF provider data acquisition,pass,command-output/02_market_data_harness_fetch.out yfinance ok=true rows=27
+verify TVR provider data acquisition,pass,command-output/02_market_data_harness_fetch.out tradingview_mcp ok=true rows=27
+verify IBKR infrastructure failure,pass,command-output/02_market_data_harness_fetch.err No module named redis
+avoid promotion claim,pass,provider_harness_fetch_matrix_v1.md promotion remains blocked

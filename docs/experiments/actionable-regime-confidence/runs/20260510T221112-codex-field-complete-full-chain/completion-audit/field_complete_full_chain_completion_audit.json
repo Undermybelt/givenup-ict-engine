@@ -1,0 +1,165 @@
+{
+  "loop_id": "20260510T221112+0800-codex-field-complete-full-chain",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain",
+  "objective": "Verify that every required regime has its own accepted 95%-99% field-complete packet, then consume the 6/6 packet set through Auto-Quant -> Pre-Bayes/filter -> BBN -> CatBoost -> execution tree.",
+  "verdict": {
+    "board_a_confidence_coverage": "accepted_95_field_complete_6_of_6",
+    "accepted_regime_count": 6,
+    "accepted_regime_count_required": 6,
+    "confidence_99": false,
+    "min_precision_wilson_lcb": 0.9536435698638122,
+    "trade_usable": false,
+    "execution_promotion": "blocked",
+    "execution_blocker": "execution tree remains observe/transition_guardrail/guarded; CatBoost score is visible and used, but structural ranker validation is not ready and Board B edge gates have not passed"
+  },
+  "required_regime_packets": [
+    {
+      "regime": "SessionLiquidityCoreViable",
+      "confidence_lane": "95",
+      "qualifying_condition": "finite daily OHLCV with volume > 0 AND volume_ratio32_128 >= 0.770028013962",
+      "calibration_support": 3496,
+      "test_support": 3797,
+      "test_precision_wilson_lcb_95": 0.9989893135869218,
+      "ece": 0.0,
+      "validation_instruments": ["BTC-USD", "NQ", "QQQ", "SPY"],
+      "validation_market_contexts": ["CME_futures_local", "yfinance_ETF", "yfinance_crypto"],
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T212828-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json"
+    },
+    {
+      "regime": "TrendExpansion",
+      "confidence_lane": "95",
+      "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+      "calibration_support": 273,
+      "test_support": 581,
+      "test_precision_wilson_lcb_95": 0.9536435698638122,
+      "ece": 0.036674169204289675,
+      "validation_instruments": ["BTC-USD", "NQ", "QQQ", "SPY"],
+      "validation_market_contexts": ["CME_futures_local", "yfinance_ETF", "yfinance_crypto"],
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    {
+      "regime": "RangeConsolidation",
+      "confidence_lane": "95",
+      "qualifying_condition": "per-context daily range base condition (vol_ratio32_128 <= train q45 AND range_ratio32_128 <= train q45 AND stretch_abs32 <= train q70) AND range_ratio32_128 <= 0.7289901983",
+      "calibration_support": 503,
+      "test_support": 266,
+      "test_precision_wilson_lcb_95": 0.9567602328682457,
+      "ece": 0.04680936934782276,
+      "validation_instruments": ["BTC-USD", "NQ", "QQQ", "SPY"],
+      "validation_market_contexts": ["CME_futures_local", "yfinance_ETF", "yfinance_crypto"],
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T212828-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json"
+    },
+    {
+      "regime": "ExtremeStress",
+      "confidence_lane": "95",
+      "qualifying_condition": "stress_persistence_16 >= 1 AND jump_intensity_32 >= 0.125",
+      "calibration_support": 445,
+      "test_support": 215,
+      "test_precision_wilson_lcb_95": 0.9741288651988539,
+      "ece": 0.015573556310425896,
+      "validation_instruments": ["NQ", "QQQ", "SPY"],
+      "validation_market_contexts": ["CME_futures_local", "yfinance_ETF"],
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    {
+      "regime": "ReversalBrewing",
+      "confidence_lane": "95",
+      "qualifying_condition": "ma64_slope16 <= 0.00115583574 AND stretch64 <= 0.005836516932",
+      "calibration_support": 843,
+      "test_support": 901,
+      "test_precision_wilson_lcb_95": 0.9919428347812438,
+      "ece": 0.0013389630343508818,
+      "validation_instruments": ["BTC-USD", "NQ", "QQQ", "SPY"],
+      "validation_market_contexts": ["CME_futures_local", "yfinance_ETF", "yfinance_crypto"],
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    {
+      "regime": "ThinLiquidity",
+      "confidence_lane": "95",
+      "qualifying_condition": "per-context daily thin-liquidity base condition (volume_ratio32_128 <= train q30 OR volume <= train q30) AND volume_ratio32_128 <= 0.770028013962",
+      "calibration_support": 584,
+      "test_support": 263,
+      "test_precision_wilson_lcb_95": 0.9856039655993807,
+      "ece": 0.001712328767123239,
+      "validation_instruments": ["BTC-USD", "NQ", "QQQ", "SPY"],
+      "validation_market_contexts": ["CME_futures_local", "yfinance_ETF", "yfinance_crypto"],
+      "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T212828-codex-legacy-regime-contract-reissue/evidence_packet_legacy_regime_contract_reissue.json"
+    }
+  ],
+  "full_chain_evidence": {
+    "regime_bundle": {
+      "artifact": "regime-sidecar/regime_consumer_bundle.json",
+      "decision_artifact": "regime-sidecar/regime_high_confidence_decision.json",
+      "decision_state": "accepted_95_field_complete_6_of_6",
+      "trade_usable": false,
+      "strict_runtime_load": "ict-engine/17_analyze_nq_after_catboost_bundle_agent.json"
+    },
+    "auto_quant": {
+      "status_artifact": "autoquant/01_auto_quant_status_agent.json",
+      "import_artifact": "autoquant/02_auto_quant_results_import_nq.json",
+      "n_ok": 1,
+      "symbol": "NQ"
+    },
+    "pre_bayes_filter": {
+      "artifact_before_bbn": "ict-engine/04_pre_bayes_status_after_bundle.json",
+      "artifact_after_bbn": "ict-engine/07_pre_bayes_status_after_bbn_apply.json",
+      "latest_gate_status": "pass_neutralized",
+      "uses_soft_evidence": true,
+      "active_regime": "trend",
+      "active_regime_confidence": 0.5486584078567163
+    },
+    "bbn": {
+      "dry_run_artifact": "bbn/05_auto_quant_prior_init_nq_dry_run.json",
+      "apply_artifact": "bbn/06_auto_quant_prior_init_nq_apply.json",
+      "dry_run": false,
+      "evidence_value_gate_passed": true,
+      "strategies_applied": 1,
+      "trade_count": 1081,
+      "bbn_log_loss_delta": 6.7286527442285795
+    },
+    "catboost_path_ranker": {
+      "target_export_artifact": "catboost/08_export_structural_path_ranking_target.json",
+      "register_artifact": "catboost/09_register_catboost_path_ranker_artifact.json",
+      "enable_artifact": "catboost/10_enable_structural_path_ranking_runtime.json",
+      "apply_scores_artifact": "catboost/11_apply_structural_path_ranking_external_scores.json",
+      "policy_training_readback": "ict-engine/19_policy_training_status_after_catboost_analyze_agent.json",
+      "runtime_source": "candidate_set",
+      "score_model_family": "catboost",
+      "score_source_kind": "external_model",
+      "runtime_matches": 3,
+      "raw_scored_mature": "0/30",
+      "production_validation": "0/30",
+      "observation_validation": "0/30",
+      "validation_ready": false
+    },
+    "execution_tree": {
+      "analyze_artifact": "ict-engine/17_analyze_nq_after_catboost_bundle_agent.json",
+      "trace_artifact": "execution/18_execution_tree_trace_after_catboost_analyze.json",
+      "workflow_readback": "ict-engine/20_workflow_status_after_catboost_analyze_agent.json",
+      "gate_status": "observe",
+      "branch": "transition_guardrail",
+      "execution_bias": "guarded",
+      "path_ranker_score_visible_to_execution_tree": true,
+      "path_ranker_score_used_by_execution_tree": true,
+      "ranker_validation_ready": false,
+      "blocking_reason": "user_selected_historical_data_missing"
+    }
+  },
+  "assertions": [
+    {
+      "requirement": "One accepted regime is not enough; every required regime must have its own packet.",
+      "status": "satisfied",
+      "evidence": "six distinct accepted_regime_id entries under required_regime_packets"
+    },
+    {
+      "requirement": "Run Auto-Quant -> Pre-Bayes/filter -> BBN -> CatBoost -> execution tree on real local artifacts.",
+      "status": "satisfied",
+      "evidence": "full_chain_evidence maps each stage to current run artifacts"
+    },
+    {
+      "requirement": "Do not claim trade/execution readiness unless execution tree and Board B edge gates pass.",
+      "status": "satisfied_fail_closed",
+      "evidence": "execution tree gate_status=observe, branch=transition_guardrail, ranker_validation_ready=false, trade_usable=false"
+    }
+  ]
+}

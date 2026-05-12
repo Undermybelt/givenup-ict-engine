@@ -1,0 +1,5 @@
+requirement,artifact,status,note
+longer IBKR BTC historical fetch,docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/derived/ibkr_btc_paxos_long/BTC_1h_midpoint.csv,covered,rows=782
+IBKR AQ/TOMAC lane,docs/experiments/actionable-regime-confidence/runs/20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1/workspace,covered,run_success=1
+same-root six-provider authority,N/A,not_closed,this is a narrow IBKR repair continuation not a full same-packet downstream closure
+downstream chain,N/A,not_run,promotion remains blocked until combined same-root provider packet is pushed through Pre-Bayes/BBN/CatBoost/execution tree

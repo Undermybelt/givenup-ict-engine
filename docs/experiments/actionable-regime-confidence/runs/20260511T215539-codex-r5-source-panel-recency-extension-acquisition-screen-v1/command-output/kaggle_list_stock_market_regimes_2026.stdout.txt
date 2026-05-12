@@ -1,0 +1,10 @@
+ref,title,size,lastUpdated,downloadCount,voteCount,usabilityRating
+mafaqbhatti/stock-market-regimes-20002026,Stock Market Regimes (2000–2026),14239487,2026-02-01 02:25:29.437000,224,45,1.0
+bsthere/volkswagen-stock-data-1995-2026,Volkswagen Stock Data (1995-2026),552824,2026-02-27 13:09:55.527000,211,28,1.0
+kanchana1990/tech-giants-and-global-macroeconomic-indicators,Tech Giants & Global Macroeconomic Indicators,878030,2026-03-12 05:32:05.367000,182,32,1.0
+ibrahimshahrukh/nvidia-daily-stock-prices-20162026-dataset,NVIDIA Daily Stock Prices (2016–2026) Dataset,104879,2026-02-01 01:44:02,749,53,1.0
+tanulkumarsrivastava/lme-aluminum-forecasting-dataset-explainability,lme aluminum forecasting dataset - explainability,589928,2026-02-28 19:37:39,113,1,0.9375
+sergionefedov/istanbul-real-estate-sales-and-rentals-20202026,Istanbul Real Estate: Sales & Rentals (2020–2026),4917901,2026-05-09 10:09:46.703000,3,1,1.0
+franekwodarczyk/trading-dataset-us-stocks-various-sectors-from-09,Trading Dataset US Stocks various sectors from 09,8948243,2026-04-18 17:11:50,18,1,0.9411765
+bayillageda/stocktwits-sentiment-data,StockTwits Sentiment Data,175864893,2026-04-25 15:46:11.473000,13,1,0.47058824
+franekwodarczyk/trading-dataset-tech-stocks-from-2009-ex-nvda-tsm,"Trading Dataset Tech Stocks from 2009 eg.NVDA, TSM",8076730,2026-04-18 16:54:52.833000,14,0,0.9411765

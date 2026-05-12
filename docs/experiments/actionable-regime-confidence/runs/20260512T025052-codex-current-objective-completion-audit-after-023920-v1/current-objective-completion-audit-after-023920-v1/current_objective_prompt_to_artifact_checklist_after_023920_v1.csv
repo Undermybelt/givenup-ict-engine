@@ -1,0 +1,12 @@
+requirement,status,evidence
+every_regime_confidence_at_least_95_percent,blocked,"accepted_rows_added=0; no new confidence gate; no fresh accepted per-regime packets"
+per_regime_qualifying_conditions,blocked,"no accepted regimes after latest Auto-Quant diagnostics"
+cross_market_and_cross_cycle_validation,blocked,"R3 native sub-hour absent; R5 recency extension absent; R6 controls absent"
+R6_source_controls_or_explicit_FLIP_approval,blocked,"/tmp/ict-engine-board-a-r6-owner-export-v1 absent; explicit FLIP approval false"
+canonical_merge_and_downstream_promotion_rerun,blocked,"canonical merge false; downstream promotion rerun false"
+provider_context_ibkr_tradingviewremix_yfinance_kraken,partial,"021456 provider readback exists but remains non-promoting"
+real_autoquant_operation,pass,"023312, 023540, and 023920 operated Auto-Quant on local prepared artifacts"
+real_chain_filter_bbn_catboost_execution_tree,partial,"021008 read-only chain closure exists; no eligible post-control promotion rerun"
+same_markdown_multi_agent_append_only,partial,"board updated append-only; duplicate supersession sections require count-once coordination"
+no_proxy_completion,pass,"readiness/profitability/synthetic-metadata/callability artifacts were not promoted"
+docs_experiments_evidence,pass,"current evidence cited under docs/experiments/actionable-regime-confidence/runs"

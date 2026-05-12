@@ -1,0 +1,9 @@
+PASS enriched_wire_created=true
+PASS rows_total=15415
+PASS rows_enriched=15415
+PASS missing_strategy_rows=0
+PASS catboost_paths_visible=true
+PASS missing_target_path_is_zero_trade_scoped_manipulation=true
+PASS selected_historical_data=false
+PASS promotion_allowed=false
+PASS update_goal=false

@@ -1,0 +1,8 @@
+strategy=ProviderCryptoMomentumStateV1
+  pair=BTC_USDT rows=17007 volume_nonzero=8416 enter_long=364 exit_long=6413 range=1717200000000->1778540400000
+  pair=ETH_USDT rows=17004 volume_nonzero=8469 enter_long=390 exit_long=6640 range=1717200000000->1778540400000
+  pair=SOL_USDT rows=17006 volume_nonzero=8483 enter_long=331 exit_long=6957 range=1717200000000->1778540400000
+strategy=ProviderCryptoPullbackRevertV1
+  pair=BTC_USDT rows=17007 volume_nonzero=8416 enter_long=327 exit_long=8105 range=1717200000000->1778540400000
+  pair=ETH_USDT rows=17004 volume_nonzero=8469 enter_long=275 exit_long=8124 range=1717200000000->1778540400000
+  pair=SOL_USDT rows=17006 volume_nonzero=8483 enter_long=330 exit_long=8895 range=1717200000000->1778540400000

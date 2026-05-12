@@ -1,0 +1,271 @@
+{
+  "accepted_95_contexts_added": 0,
+  "active_process_rows": [
+    {
+      "process_line": "89708 45991    02:10 Ss   /bin/zsh -lc tmpdir=$(mktemp -d /tmp/ict-engine-release-export.XXXXXX)\\012git archive HEAD | tar -x -C \"$tmpdir\"\\012printf '%s\\n' \"$tmpdir\"\\012CARGO_TARGET_DIR=/tmp/ict-engine-release-export.y6Pefh/target cargo fmt --manifest-path \"$tmpdir/Cargo.toml\" --check\\012CARGO_TARGET_DIR=/tmp/ict-engine-release-export.y6Pefh/target cargo clippy --manifest-path \"$tmpdir/Cargo.toml\" --all-targets -- -D warnings\\012CARGO_TARGET_DIR=/tmp/ict-engine-release-export.y6Pefh/target cargo test --manifest-path \"$tmpdir/Cargo.toml\""
+    },
+    {
+      "process_line": "89886 89708    02:00 S    /Users/thrill3r/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo-clippy clippy --manifest-path /tmp/ict-engine-release-export.ueDk6B/Cargo.toml --all-targets -- -D warnings"
+    },
+    {
+      "process_line": "89887 89886    02:00 S    /Users/thrill3r/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo check --manifest-path /tmp/ict-engine-release-export.ueDk6B/Cargo.toml --all-targets"
+    },
+    {
+      "process_line": "89945 89887    01:59 R    /Users/thrill3r/.rustup/toolchains/stable-aarch64-apple-darwin/bin/clippy-driver /Users/thrill3r/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name ict_engine --edition=2021 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --check-cfg cfg(docsrs,test) --check-cfg cfg(feature, values()) -C metadata=423bbe4cf4945fcb -C extra-filename=-152eb3feda303429 --out-dir /tmp/ict-engine-release-export.y6Pefh/target/debug/deps -C incremental=/tmp/ict-engine-release-export.y6Pefh/target/debug/incremental -L dependency=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps --extern anyhow=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libanyhow-a5143c001a93d3c6.rmeta --extern approx=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libapprox-38f5ee39df2a9ca9.rmeta --extern async_trait=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libasync_trait-4d24afdfaf5578bb.dylib --extern chrono=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libchrono-657c26e46666bbda.rmeta --extern chrono_tz=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libchrono_tz-e3b02080b7f6766c.rmeta --extern clap=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libclap-536f49d33bee15ff.rmeta --extern csv=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libcsv-04ec82ea049df757.rmeta --extern env_logger=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libenv_logger-d4b523ef7b6092a8.rmeta --extern futures=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libfutures-a18fd2b6801cd222.rmeta --extern log=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/liblog-b93cf7be49aa5f43.rmeta --extern loopybayesnet=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libloopybayesnet-e5080563827aeaec.rmeta --extern ndarray=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libndarray-bdcf0851fe1355de.rmeta --extern rand=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/librand-f40062c5654ca526.rmeta --extern rand_distr=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/librand_distr-871f9f586362e34d.rmeta --extern rayon=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/librayon-ef68bf2e1a296e79.rmeta --extern redis=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libredis-c7f24c56da0902e4.rmeta --extern reqwest=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libreqwest-22d68c7825e39bed.rmeta --extern serde=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libserde-6785de87e9fba0a9.rmeta --extern serde_json=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libserde_json-476aace147341dec.rmeta --extern serde_yaml=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libserde_yaml-61111f24cf95bb12.rmeta --extern statrs=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libstatrs-726708f6520bdcc5.rmeta --extern urlencoding=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/liburlencoding-d3ca2b058929f499.rmeta -L native=/tmp/ict-engine-release-export.y6Pefh/target/debug/build/ring-bdb78ef215239a75/out"
+    },
+    {
+      "process_line": "89946 89887    01:59 R    /Users/thrill3r/.rustup/toolchains/stable-aarch64-apple-darwin/bin/clippy-driver /Users/thrill3r/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name ict_engine --edition=2021 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,metadata -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --test --check-cfg cfg(docsrs,test) --check-cfg cfg(feature, values()) -C metadata=33d0c07322fee906 -C extra-filename=-caf9cdef46d03a98 --out-dir /tmp/ict-engine-release-export.y6Pefh/target/debug/deps -C incremental=/tmp/ict-engine-release-export.y6Pefh/target/debug/incremental -L dependency=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps --extern anyhow=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libanyhow-a5143c001a93d3c6.rmeta --extern approx=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libapprox-38f5ee39df2a9ca9.rmeta --extern async_trait=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libasync_trait-4d24afdfaf5578bb.dylib --extern chrono=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libchrono-657c26e46666bbda.rmeta --extern chrono_tz=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libchrono_tz-e3b02080b7f6766c.rmeta --extern clap=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libclap-536f49d33bee15ff.rmeta --extern csv=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libcsv-04ec82ea049df757.rmeta --extern env_logger=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libenv_logger-d4b523ef7b6092a8.rmeta --extern futures=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libfutures-a18fd2b6801cd222.rmeta --extern log=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/liblog-b93cf7be49aa5f43.rmeta --extern loopybayesnet=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libloopybayesnet-e5080563827aeaec.rmeta --extern ndarray=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libndarray-bdcf0851fe1355de.rmeta --extern rand=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/librand-f40062c5654ca526.rmeta --extern rand_distr=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/librand_distr-871f9f586362e34d.rmeta --extern rayon=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/librayon-ef68bf2e1a296e79.rmeta --extern redis=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libredis-c7f24c56da0902e4.rmeta --extern reqwest=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libreqwest-22d68c7825e39bed.rmeta --extern serde=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libserde-6785de87e9fba0a9.rmeta --extern serde_json=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libserde_json-476aace147341dec.rmeta --extern serde_yaml=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libserde_yaml-61111f24cf95bb12.rmeta --extern statrs=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libstatrs-726708f6520bdcc5.rmeta --extern tempfile=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/libtempfile-f9fce5c885cb4f40.rmeta --extern urlencoding=/tmp/ict-engine-release-export.y6Pefh/target/debug/deps/liburlencoding-d3ca2b058929f499.rmeta -L native=/tmp/ict-engine-release-export.y6Pefh/target/debug/build/ring-bdb78ef215239a75/out"
+    },
+    {
+      "process_line": "91648   614    00:48 Ss   /bin/zsh -lc set -u\\012ROOT='docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1'\\012OUT=\"$ROOT/command-output\"\\012CHECK=\"$ROOT/checks\"\\012MAT=\"$ROOT/agent-material\"\\012CMD=\"python3 -c validate five material JSON files under $MAT\"\\012printf '%s\\n' \"$CMD\" > \"$OUT/01_material_json_valid.cmd\"\\012python3 - \"$MAT/ob-fvg-pullback-ibkr-spy-1h-v1.material.json\" \"$MAT/ob-fvg-pullback-yf-es-1h-v1.material.json\" \"$MAT/ob-fvg-pullback-kraken-xbtusd-1h-v1.material.json\" \"$MAT/ob-fvg-pullback-binance-btcusdt-1h-v1.material.json\" \"$MAT/ob-fvg-pullback-bybit-btcusdt-1h-v1.material.json\" > \"$OUT/01_material_json_valid.out\" 2> \"$OUT/01_material_json_valid.err\" <<'PY'\\012import json\\012import sys\\012from pathlib import Path\\012for raw in sys.argv[1:]:\\012    path = Path(raw)\\012    with path.open() as f:\\012        obj = json.load(f)\\012    required = [\"package_id\", \"symbol\", \"timeframe\", \"data_path\", \"strategy_source_path\", \"strategy_class_name\"]\\012    missing = [k for k in required if not obj.get(k)]\\012    if missing:\\012        raise SystemExit(f\"{path}: missing {missing}\")\\012    print(f\"PASS {path.name} package_id={obj['package_id']} symbol={obj['symbol']} timeframe={obj['timeframe']}\")\\012PY\\012printf '%s\\n' \"$?\" > \"$CHECK/01_material_json_valid.exit\"\\012CMD=\"./target/debug/ict-engine auto-quant-agent-material-dispatch --symbol PROVIDER_OB_FVG_160511 --state-dir $ROOT/state --group-indices 0,1,2,3,4\"\\012printf '%s\\n' \"$CMD\" > \"$OUT/04_agent_material_dispatch_groups_0_4.cmd\"\\012./target/debug/ict-engine auto-quant-agent-material-dispatch --symbol PROVIDER_OB_FVG_160511 --state-dir \"$ROOT/state\" --group-indices 0,1,2,3,4 > \"$OUT/04_agent_material_dispatch_groups_0_4.out\" 2> \"$OUT/04_agent_material_dispatch_groups_0_4.err\"\\012printf '%s\\n' \"$?\" > \"$CHECK/04_agent_material_dispatch_groups_0_4.exit\"\\012printf 'json_valid_exit='; cat \"$CHECK/01_material_json_valid.exit\"\\012printf 'dispatch_exit='; cat \"$CHECK/04_agent_material_dispatch_groups_0_4.exit\""
+    },
+    {
+      "process_line": "91662 91648    00:47 S    ./target/debug/ict-engine auto-quant-agent-material-dispatch --symbol PROVIDER_OB_FVG_160511 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state --group-indices 0,1,2,3,4"
+    },
+    {
+      "process_line": "92148   849    00:35 Ss   /bin/zsh -lc sleep 90; printf '%s\\n' '---processes---'; ps -axo pid,ppid,etime,stat,command | rg -i \"160734|ote-same-root-provider|fetch_external|Auto-Quant|ict-engine analyze|catboost|freqtrade\" | rg -v \"rg -i\"; printf '%s\\n' '---files---'; find docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1 -maxdepth 4 -type f | sort | tail -n 120; printf '%s\\n' '---exits---'; find docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/checks -maxdepth 2 -type f -name '*.exit' -exec sh -c 'for f; do printf \"%s=\" \"$f\"; tr -d \"\\n\" < \"$f\"; printf \"\\n\"; done' sh {} + 2>/dev/null; printf '%s\\n' '---board---'; rg -n \"160734|support_once:160734|active_claim_closed:160734|ote_same_root_provider\" docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md | tail -n 100"
+    },
+    {
+      "process_line": "92218  1478    00:33 Ss   /bin/zsh -lc sleep 90\\012printf '%s\\n' '--- active 160734 ---'\\012ps -axo pid,ppid,stat,etime,pcpu,pmem,command | rg -i '160734|ote-same-root|prepare_ote|auto-quant|ict-engine analyze|workflow-status|pandas_path_ranker|catboost' | rg -v 'rg -i' || true\\012printf '%s\\n' '--- checks 160734 ---'\\012RUN=docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1\\012find \"$RUN/checks\" -maxdepth 1 -type f 2>/dev/null | sort | while read -r f; do printf '%s=' \"$(basename \"$f\")\"; tr -d '\\n' < \"$f\" | cut -c1-220; printf '\\n'; done\\012printf '%s\\n' '--- files 160734 ---'\\012find \"$RUN\" -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,180p'\\012printf '%s\\n' '--- board 160734 ---'\\012rg -n '160734|active_claim:160734|support_once:160734|active_claim_closed:160734|Terminal.*160734|160734.*Terminal' docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md | tail -n 100"
+    },
+    {
+      "process_line": "92826 91662    00:09 R    /Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py"
+    },
+    {
+      "process_line": "93086  1579    00:00 Ss   /bin/zsh -lc sleep 70; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; tail -n 130 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; printf '\\n---active---\\n'; ps -axo pid,ppid,etime,command | rg -i '20260512T160734|ote-same-root|auto-quant|auto_quant|ict-engine analyze|path-ranker|catboost|provider-status|market-data-harness|tradingview_mcp|tvr|sleep 95'"
+    }
+  ],
+  "auto_quant_status_exit": 0,
+  "board_a_edited": false,
+  "board_hash_before": "e9f63d9dba25e7435e1a951c6b6001d1aa6b662c1fe4b4cafc687b14d85d1773",
+  "canonical_merge_allowed": false,
+  "checklist": [
+    {
+      "blocker": "",
+      "evidence": "board_hash_before=e9f63d9dba25e7435e1a951c6b6001d1aa6b662c1fe4b4cafc687b14d85d1773; current_cursor=20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+      "requirement": "use Board A markdown as authoritative plan without disturbing concurrent edits",
+      "requirement_id": "R1",
+      "status": "pass_readonly_artifact_only"
+    },
+    {
+      "blocker": "current cursor remains blocked; no new accepted >=95 context",
+      "evidence": "confidence_lane=`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.; accepted_gate=r6_owner_route_entitlement_readback_v1=`route_fit_improved_controls_not_acquired_no_merge`; r6_owner_export_outbound_request_messages_v1=`outbound_messages_ready_not_sent_controls_not_acquired`; r6_official_route_date_fit_check_v1=`official_owner_routes_confirmed_controls_not_acquired_cfe_depth_date_gap`; r6_oystacher_external_control_source_scan_v1=`external_routes_identified_no_verifier_ready_source_owned_normal_controls`; r6_oystacher_public_normal_control_source_probe_v1=`no_public_source_owned_normal_controls_found`; r6_oystacher_owner_control_source_route_screen_v1=`official_source_routes_identified_controls_not_acquired`; r6_local_control_applicability_audit_v1=`local_candidate_controls_insufficient_no_approval_no_merge`; r6_oystacher_independent_normal_control_screen_v1=`no_independent_owner_approved_normal_controls_found`; r6_oystacher_local_control_path_disposition_v1=`no_local_path_satisfies_source_owned_normal_control_contract`; current_objective_reconciliation_after_v71_v1=`blocked_controls_absent_non_r6_absent_no_merge`; current_goal_completion_audit_after_v66_v1=`not_complete_technical_preflight_pass_policy_controls_canonical_downstream_r5_r3_blocked`; v71_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_source_control_blocked`; v65_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_policy_blocked`; r6_oystacher_control_contract_request_v1=`control_request_ready_no_controls_or_approval`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+      "requirement": "every regime reaches confidence >=95%",
+      "requirement_id": "R2",
+      "status": "fail_closed"
+    },
+    {
+      "blocker": "R6 event/order-lifecycle rows are blocked; no cross-market/timeframe promotion rerun allowed",
+      "evidence": "Event/order-lifecycle rows only for R6; no OHLCV proxy timeframe promotion. The materialized public row-level source still contains only `SPOOF`/`FLIP` sides, not independent normal/non-manipulation rows. No full downstream rerun is allowed until RECAP/PACER provenance plus FLIP-control approval, or source-owned normal controls, then canonical/owner-export-root merge happens under a shared lock.",
+      "requirement": "verify accepted confidence on other markets and other timeframes",
+      "requirement_id": "R3",
+      "status": "fail_closed"
+    },
+    {
+      "blocker": "owner-export controls or explicit FLIP approval absent, so downstream rerun would be invalid",
+      "evidence": "owner_files_all_present=False; direct_verifier_exit=2",
+      "requirement": "operate provider -> Auto-Quant -> filter/pre-Bayes -> BBN -> CatBoost/path-ranker -> execution tree",
+      "requirement_id": "R4",
+      "status": "blocked_before_downstream_chain"
+    },
+    {
+      "blocker": "same-root six-provider AQ authority absent; provider readiness remains incomplete",
+      "evidence": "{\"binance_public\": \"binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing\", \"bybit_public\": \"bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing\", \"ibkr\": \"ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable\", \"kraken_cli\": \"ready\", \"kraken_public\": \"kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing\", \"tradingview_mcp\": \"tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed\", \"yfinance\": \"ready\"}",
+      "requirement": "include IBKR, TradingViewRemix/TVR, yfinance/YF, Kraken, Binance, and Bybit provider authority",
+      "requirement_id": "R5",
+      "status": "fail_closed"
+    },
+    {
+      "blocker": "",
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T160838+0800-codex-board-a-current-blocker-refresh-v1/command-output",
+      "requirement": "record real command evidence under docs/experiments instead of speculation",
+      "requirement_id": "R6",
+      "status": "pass"
+    },
+    {
+      "blocker": "",
+      "evidence": "strict_full_objective_achieved=false; trade_usable=false; update_goal=false",
+      "requirement": "do not claim trade usability or call update_goal unless strict objective is achieved",
+      "requirement_id": "R7",
+      "status": "pass"
+    }
+  ],
+  "cross_market_timeframe_validation_passed": false,
+  "current_cursor": {
+    "accepted_gate": "r6_owner_route_entitlement_readback_v1=`route_fit_improved_controls_not_acquired_no_merge`; r6_owner_export_outbound_request_messages_v1=`outbound_messages_ready_not_sent_controls_not_acquired`; r6_official_route_date_fit_check_v1=`official_owner_routes_confirmed_controls_not_acquired_cfe_depth_date_gap`; r6_oystacher_external_control_source_scan_v1=`external_routes_identified_no_verifier_ready_source_owned_normal_controls`; r6_oystacher_public_normal_control_source_probe_v1=`no_public_source_owned_normal_controls_found`; r6_oystacher_owner_control_source_route_screen_v1=`official_source_routes_identified_controls_not_acquired`; r6_local_control_applicability_audit_v1=`local_candidate_controls_insufficient_no_approval_no_merge`; r6_oystacher_independent_normal_control_screen_v1=`no_independent_owner_approved_normal_controls_found`; r6_oystacher_local_control_path_disposition_v1=`no_local_path_satisfies_source_owned_normal_control_contract`; current_objective_reconciliation_after_v71_v1=`blocked_controls_absent_non_r6_absent_no_merge`; current_goal_completion_audit_after_v66_v1=`not_complete_technical_preflight_pass_policy_controls_canonical_downstream_r5_r3_blocked`; v71_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_source_control_blocked`; v65_provider_autoquant_readonly_refresh_v1=`readiness_refreshed_no_promotion_policy_blocked`; r6_oystacher_control_contract_request_v1=`control_request_ready_no_controls_or_approval`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "active_market_set": "R6 owner-route entitlement readback after public Exhibit A materialization and outbound request packaging: `5182` source-marked `SPOOF` rows remain isolated positive candidates, `1553` same-exhibit `FLIP` rows remain rejected as normal controls without explicit approval, public/source-owned normal controls remain `0`, candidate official owner routes cover `17/17` required cells, CME Market Depth exchange-level date fit is improved for the 2011-2013 CME/NYMEX/COMEX window, and Cboe/CFE VIX DataShop trades/quotes date fit is improved while full historical depth/order-lifecycle remains a custom/support export blocker.",
+    "active_timeframes": "Event/order-lifecycle rows only for R6; no OHLCV proxy timeframe promotion. The materialized public row-level source still contains only `SPOOF`/`FLIP` sides, not independent normal/non-manipulation rows. No full downstream rerun is allowed until RECAP/PACER provenance plus FLIP-control approval, or source-owned normal controls, then canonical/owner-export-root merge happens under a shared lock.",
+    "blocker": "Strict objective remains blocked: public probes found `0` source-owned normal controls, official source-owner routes are identified but controls are not acquired, CME exchange-level date fit is improved but licensed verifier-native exports/provenance are still absent, Cboe/CFE VIX trades/quotes date fit is improved but historical full-depth/order-lifecycle still needs DataShop/support confirmation, all `17` required Oystacher control cells still have `0` valid source-owned normal controls, same-exhibit `FLIP` rows are not approved as controls, canonical live intake was not mutated, post-V71 provider/Auto-Quant ran read-only without promotion, pre-Bayes/BBN/CatBoost/execution-tree promotion rerun was not allowed, source-label confidence is still `0/4`, R5 post-`2026-01-30` source-panel rows are absent, and R3 native-subhour root exists but remains TSIE-derived/quarantined, Crisis-absent, and non-promoting.",
+    "board_state": "blocked",
+    "candidate_regime": "DirectOverlay::Manipulation / R6 Oystacher Exhibit A public court-order-lifecycle rows; `SPOOF` positives are preserved as positive candidates, but same-exhibit `FLIP` rows are rejected as normal controls until explicit control-policy approval or source-owned normal controls arrive.",
+    "confidence_lane": "`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260512T010127-codex-r6-owner-route-entitlement-readback-v1`",
+    "last_loop_id": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+    "next_action": "Send or otherwise satisfy the CME and Cboe/CFE owner-export messages, preserving ticket/export/license identifiers in provenance; obtain licensed CME Market Depth/Market by Order or equivalent normal-control exports plus Cboe/CFE VIX historical trades/quotes or depth/order-lifecycle export, or explicitly approve the same-exhibit `FLIP`-as-control exception; only then copy verifier-native files into `/tmp/ict-engine-board-a-r6-owner-export-v1` or canonical live root under a shared lock and rerun direct verifier, split calibration, AQ provider routing across IBKR/TradingViewRemix/yfinance/Kraken/Binance/Bybit, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback while keeping R5 and R3 blocked.",
+    "provider_status": "Latest provider/Auto-Quant read-only refresh `005248` remains non-promoting with `entry_model:2/2 ready`, `live_runtime:1/3 ready`, `local_runtime:1/2 ready`, `market_data:1/7 ready`; yfinance and Kraken CLI are usable, IBKR/TradingView/Kraken public remain non-promoting/dependency-blocked; Auto-Quant status is `dependency_ready_seed_required`, healthy/data_ready true. Latest R6 entitlement readback found no local `databento` CLI, no `dbn` CLI, no Python `databento`, no Python `pyarrow`, no Databento API key env, no complete owner-export package, and only local OHLCV bar data rather than source-owned normal controls. Rerun provider promotion plus pre-Bayes/BBN/CatBoost/workflow/execution-tree only after explicit source/control-policy approval or source-owned normal controls and canonical merge."
+  },
+  "decision": "fail_closed_current_blocker_refresh_only",
+  "direct_verifier_exit_code": 2,
+  "downstream_rerun_allowed": false,
+  "latest_run_roots": [
+    {
+      "mtime_ns": "1778570277063770009",
+      "name": "20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150346+0800-codex-143900-binance-btcusdt-provider-downstream-v1"
+    },
+    {
+      "mtime_ns": "1778570528024807425",
+      "name": "20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1"
+    },
+    {
+      "mtime_ns": "1778570654285211301",
+      "name": "20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1"
+    },
+    {
+      "mtime_ns": "1778570669727977568",
+      "name": "20260512T151907+0800-codex-ob-fvg-regime-branch-screen-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T151907+0800-codex-ob-fvg-regime-branch-screen-v1"
+    },
+    {
+      "mtime_ns": "1778570697923533184",
+      "name": "20260512T151021+0800-codex-143900-binance-btc-fullchain-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T151021+0800-codex-143900-binance-btc-fullchain-v1"
+    },
+    {
+      "mtime_ns": "1778571124336685204",
+      "name": "20260512T151746+0800-codex-ob-fvg-trend-pullback-screen-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T151746+0800-codex-ob-fvg-trend-pullback-screen-v1"
+    },
+    {
+      "mtime_ns": "1778571429037393447",
+      "name": "20260512T152746+0800-codex-board-b-required-provider-readiness-probe-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T152746+0800-codex-board-b-required-provider-readiness-probe-v1"
+    },
+    {
+      "mtime_ns": "1778571457677850725",
+      "name": "20260512T153551+0800-codex-board-b-lowpollution-provider-adapter-smoke-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T153551+0800-codex-board-b-lowpollution-provider-adapter-smoke-v1"
+    },
+    {
+      "mtime_ns": "1778571503131956455",
+      "name": "20260512T150515+0800-codex-btc-binance-full-provider-aq-chain-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150515+0800-codex-btc-binance-full-provider-aq-chain-v1"
+    },
+    {
+      "mtime_ns": "1778571604170820383",
+      "name": "20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150654+0800-codex-145809-volatility-breakout-aq-route-v1"
+    },
+    {
+      "mtime_ns": "1778571991688740704",
+      "name": "20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T150352+0800-codex-145809-trend-pullback-aq-route-v1"
+    },
+    {
+      "mtime_ns": "1778572128311428454",
+      "name": "20260512T154536+0800-codex-board-b-tvr-mcp-redacted-health-probe-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T154536+0800-codex-board-b-tvr-mcp-redacted-health-probe-v1"
+    },
+    {
+      "mtime_ns": "1778572142143723664",
+      "name": "20260512T154513+0800-codex-tvr-lightweight-provider-health-refresh-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T154513+0800-codex-tvr-lightweight-provider-health-refresh-v1"
+    },
+    {
+      "mtime_ns": "1778572498601613530",
+      "name": "20260512T155014+0800-codex-board-b-ote-branch-continuation-contract-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T155014+0800-codex-board-b-ote-branch-continuation-contract-v1"
+    },
+    {
+      "mtime_ns": "1778573281245096510",
+      "name": "20260512T160421+0800-codex-board-a-current-tail-tvr-blocker-audit-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T160421+0800-codex-board-a-current-tail-tvr-blocker-audit-v1"
+    },
+    {
+      "mtime_ns": "1778573480584047469",
+      "name": "20260512T160838+0800-codex-board-a-current-blocker-refresh-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T160838+0800-codex-board-a-current-blocker-refresh-v1"
+    },
+    {
+      "mtime_ns": "1778573581499719233",
+      "name": "20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1"
+    },
+    {
+      "mtime_ns": "1778573662166760556",
+      "name": "20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1"
+    },
+    {
+      "mtime_ns": "1778573694149514201",
+      "name": "20260512T161025+0800-codex-tvr-local-stdio-symbol-normalization-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T161025+0800-codex-tvr-local-stdio-symbol-normalization-v1"
+    },
+    {
+      "mtime_ns": "1778573708133824676",
+      "name": "20260512T160908+0800-codex-board-a-tvr-local-stdio-alias-probe-v1",
+      "path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T160908+0800-codex-board-a-tvr-local-stdio-alias-probe-v1"
+    }
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Acquire source-owned R6 normal controls or explicit FLIP-as-control approval, then populate the owner-export root under shared lock and rerun verifier, provider/AQ, pre-Bayes/BBN, CatBoost/path-ranker, and execution-tree evidence.",
+  "owner_export_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "owner_export_root_present": false,
+  "owner_files_all_present": false,
+  "promotion_allowed": false,
+  "provider_agent_pending_providers": [
+    "crypto_public_runtime@live_runtime:operator_runtime_required:explicit_opt_in_required",
+    "external_http_runtime@live_runtime:operator_runtime_required:base_url_and_service_required",
+    "ibkr_bridge@local_runtime:configured_runtime_unhealthy:ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+    "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "polymarket_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed"
+  ],
+  "provider_agent_ready_providers": [
+    "breaker_rb_long_v1",
+    "cisd_rb_long_v1",
+    "yfinance",
+    "kraken_cli",
+    "yfinance"
+  ],
+  "provider_status_by_provider": {
+    "binance_public": "binance_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "bybit_public": "bybit_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "ibkr": "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "kraken_cli": "ready",
+    "kraken_public": "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing",
+    "tradingview_mcp": "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed",
+    "yfinance": "ready"
+  },
+  "required_owner_files": [
+    {
+      "bytes": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+      "present": false,
+      "required_file": "positive_spoofing_layering_rows.csv"
+    },
+    {
+      "bytes": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+      "present": false,
+      "required_file": "matched_negative_normal_activity_rows.csv"
+    },
+    {
+      "bytes": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json",
+      "present": false,
+      "required_file": "provenance_manifest.json"
+    }
+  ],
+  "run_id": "20260512T160838+0800-codex-board-a-current-blocker-refresh-v1",
+  "runtime_code_changed": false,
+  "same_root_six_provider_aq_authority": false,
+  "strict_full_objective_achieved": false,
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,4 @@
+target_path,required_for,status,notes
+/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv,source_owned_normal_controls,missing,"Must contain source-owned normal/non-manipulation rows, not same-sequence FLIP rows, unless exception approved."
+/tmp/ict-engine-board-a-r6-owner-export-v1/validation_contract_approval.json,explicit_flip_as_control_contract,missing,Use flip_control_approval_template_v1.json only if user/owner approves the exception.
+/tmp/ict-engine-board-a-r6-owner-export-v1/owner_approval_reference.md,explicit_flip_as_control_contract,missing,Human-readable approval reference must match validation_contract_approval.json.

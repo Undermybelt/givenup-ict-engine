@@ -1,0 +1,14 @@
+{
+  "body": {
+    "order": "published_date",
+    "order_direction": "desc",
+    "page_size": 10,
+    "search_for": "futures order lifecycle spoofing controls"
+  },
+  "error": null,
+  "payload": [],
+  "provider": "figshare",
+  "query": "futures order lifecycle spoofing controls",
+  "status": 200,
+  "url": "https://api.figshare.com/v2/articles/search"
+}

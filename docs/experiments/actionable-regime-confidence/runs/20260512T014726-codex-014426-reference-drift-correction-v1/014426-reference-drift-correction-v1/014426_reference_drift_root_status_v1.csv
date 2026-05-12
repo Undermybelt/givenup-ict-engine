@@ -1,0 +1,7 @@
+id,path,present,disposition
+referenced_014426,docs/experiments/actionable-regime-confidence/runs/20260512T014426-codex-current-objective-completion-audit-after-014229-v1,False,stale_non_evidence_unless_restored
+board_b_014432,docs/experiments/actionable-regime-confidence/runs/20260512T014432-codex-board-b-220646-structural-candidate-handoff-readback-v1,True,board_b_partial_build_lock_not_board_a_promotion_evidence
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,False,missing_required_root
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,False,missing_required_root
+r5_recency_extension,/tmp/ict-engine-source-panel-recency-extension,False,missing_required_root
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,True,present_but_confidence_blocked

@@ -1,0 +1,51 @@
+{
+  "run_id": "20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1",
+  "gate_result": "provider_yf_nq_tickfix_rerun_v1=entry_wire_repaired_nonzero_trades_no_promotion",
+  "source_workspace": "20260512T102332+0800-codex-board-b-provider-yf-nq-trendpulse-aq-v1/workspace/auto-quant-yf-nq-trendpulse",
+  "source_data": "provider-owned Yahoo NQ=F long-history feathers from the copied 102332 workspace",
+  "run_local_repairs": {
+    "synthetic_market_precision": {
+      "amount": 0.000001,
+      "price": 0.01
+    },
+    "exit_pricing_price_side": "other"
+  },
+  "precheck": {
+    "exit_code": 1,
+    "failure": "ConfigurationError: Market exit orders require exit_pricing.price_side = \"other\"."
+  },
+  "rerun": {
+    "exit_code": 0,
+    "strategies_succeeded": 3,
+    "strategies_failed": 0,
+    "results": {
+      "ProviderNqAlwaysInDiagnostic": {
+        "trade_count": 2782,
+        "total_profit_pct": -61.3,
+        "sharpe": -5.4536,
+        "win_rate_pct": 29.3314,
+        "profit_factor": 0.6067,
+        "gate": "fail_closed:diagnostic_always_in_unprofitable"
+      },
+      "ProviderNqSampledPulse": {
+        "trade_count": 18,
+        "total_profit_pct": 0.97,
+        "sharpe": 0.1898,
+        "win_rate_pct": 33.3333,
+        "profit_factor": 5.3246,
+        "gate": "fail_closed:profitable_but_probe_only_trade_count_18"
+      },
+      "ProviderNqTrendPulse": {
+        "trade_count": 896,
+        "total_profit_pct": -38.1,
+        "sharpe": -3.3038,
+        "win_rate_pct": 37.7232,
+        "profit_factor": 0.5912,
+        "gate": "fail_closed:dense_provider_nq_strategy_unprofitable"
+      }
+    }
+  },
+  "diagnostic_only": true,
+  "promotion_allowed": false,
+  "update_goal": false
+}

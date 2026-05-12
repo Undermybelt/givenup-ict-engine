@@ -1,0 +1,16 @@
+{
+  "cftc_complaint_url_without_exhibit_a": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfigorcomplnt101915.pdf",
+  "cftc_press_url": "https://www.cftc.gov/PressRoom/PressReleases/7253-15",
+  "courtlistener_docket_url": "https://www.courtlistener.com/docket/4263217/us-commodity-futures-trading-commission-v-oystacher/",
+  "generated_at_utc": "2026-05-11T16:29:02.202143+00:00",
+  "parser": "pypdf text extraction plus fail-closed regex row parser",
+  "raw_data_committed": false,
+  "raw_pdf_path_tmp": "/tmp/ict-engine-oystacher-exhibit-a-row-materialization-v1/gov.uscourts.ilnd.316889.1.1.oystacher_exhibit_a.pdf",
+  "raw_pdf_sha256": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+  "run_id": "20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_pdf_url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf",
+  "thresholds_relaxed": false,
+  "unparsed_candidate_lines_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/oystacher_exhibit_a_unparsed_candidate_lines_v1.csv"
+}

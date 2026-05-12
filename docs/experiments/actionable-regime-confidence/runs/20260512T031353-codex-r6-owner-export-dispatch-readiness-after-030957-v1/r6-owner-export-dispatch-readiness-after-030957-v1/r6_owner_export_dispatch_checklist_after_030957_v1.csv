@@ -1,0 +1,7 @@
+step,status,evidence_required,allowed_next
+cme_market_depth_or_mbo_request,ready_to_dispatch,licensed CME Market Depth or Market by Order export with ticket/export/license id and provenance,dispatch_or_owner_supply
+cboe_cfe_vix_request,ready_to_dispatch_or_confirm_scope,CFE VIX historical trades/quotes or depth/order-lifecycle export with provenance,dispatch_or_owner_supply
+control_policy,blocked,explicit FLIP-as-control approval or source-owned normal controls,do_not_merge_until_present
+verifier_native_delivery,blocked,positive_spoofing_layering_rows.csv plus matched_negative_normal_activity_rows.csv plus provenance_manifest.json under /tmp/ict-engine-board-a-r6-owner-export-v1,rerun_direct_verifier_after_present
+split_calibration,blocked,direct verifier pass plus chronological/symbol/venue or approved-family split contract,rerun_after_verifier
+provider_autoquant_prebayes_bbn_catboost_execution_tree,blocked,canonical merge and split calibration pass,rerun_full_chain_after_merge

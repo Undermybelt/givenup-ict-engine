@@ -1,0 +1,5 @@
+{
+  "achieved": true,
+  "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T045938-codex-board-a-completion-audit/checks/board_a_completion_audit_assertions.out",
+  "audit_json": "docs/experiments/actionable-regime-confidence/runs/20260511T045938-codex-board-a-completion-audit/completion-audit/board_a_completion_audit.json"
+}

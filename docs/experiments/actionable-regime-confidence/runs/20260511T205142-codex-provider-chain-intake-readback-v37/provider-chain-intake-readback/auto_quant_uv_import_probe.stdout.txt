@@ -1,0 +1,1 @@
+{"freqtrade": true, "pandas": true}

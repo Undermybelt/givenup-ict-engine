@@ -1,0 +1,33 @@
+---
+strategy:         ProviderNqAlwaysInDiagnostic
+commit:           1fe86ab
+status:           ERROR
+error_type:       ConfigurationError
+error_msg:        Market entry orders require entry_pricing.price_side = "other".
+traceback:
+
+---
+strategy:         ProviderNqModuloCanary
+commit:           1fe86ab
+status:           ERROR
+error_type:       ConfigurationError
+error_msg:        Market entry orders require entry_pricing.price_side = "other".
+traceback:
+
+---
+strategy:         ProviderNqSampledPulse
+commit:           1fe86ab
+status:           ERROR
+error_type:       ConfigurationError
+error_msg:        Market entry orders require entry_pricing.price_side = "other".
+traceback:
+
+---
+strategy:         ProviderNqTrendPulse
+commit:           1fe86ab
+status:           ERROR
+error_type:       ConfigurationError
+error_msg:        Market entry orders require entry_pricing.price_side = "other".
+traceback:
+
+Done: 0 succeeded, 4 failed.

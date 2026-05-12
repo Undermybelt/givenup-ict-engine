@@ -1,0 +1,104 @@
+{
+  "artifact_id": "ensemble-vote:analyze-live:2026-05-11T16:04:57Z",
+  "generated_at": "2026-05-11T16:04:57.278821Z",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "source_phase": "analyze-live",
+  "source_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T160457.055Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "0739cf78a430efa5",
+    "data_fingerprint": "12f3c9e29c7f44eb"
+  },
+  "dataset_comparability": {
+    "comparable": false,
+    "previous_run_id": "analyze-live:SRC_ROOT_CARRY_LONG_220646:20260511T152411.799Z",
+    "reason": "different_data_fingerprint",
+    "comparison_class": "different_data_fingerprint",
+    "same_data": false,
+    "same_config": false,
+    "same_prompt_version": true,
+    "same_factor_version": true
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "Observe",
+  "recommended_command": "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_htf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_mtf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_ltf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_ltf.json --paired-data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_spot.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1",
+  "human_next_triage": "hard_blocked=false ensemble_action=Observe consensus=0.600 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_htf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_mtf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_ltf.json, /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_ltf.json --paired-data /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T160457_spot.json --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235747-codex-board-b-crisis-crowded-suppression-full-replay-v1/crisis-crowded-suppression-full-replay/state_crisis_crowded_suppression_full_replay_v1",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.5999999999999999,
+  "consensus_strength": 0.5999999999999999,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=Observe confidence=0.600 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600",
+    "executor=xgboost_file action=Observe confidence=0.600 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.600"
+  ],
+  "split_explanations": [
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high",
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=high"
+  ],
+  "executor_scorecards": [
+    {
+      "executor": "catboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.55,
+      "last_outcome": null,
+      "last_updated_at": null
+    },
+    {
+      "executor": "xgboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.45,
+      "last_outcome": null,
+      "last_updated_at": null
+    }
+  ],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "12f3c9e29c7f44eb",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "trend",
+  "posterior_confidence": 0.560314872795873,
+  "posterior_probabilities": {
+    "range": 0.310583468896692,
+    "stress": 0.1665672631454449,
+    "transition": 0.0757666124413232,
+    "trend": 0.44708265551654
+  },
+  "posterior_evidence": [
+    "market_policy=SRC hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.771 multi_timeframe_entry_alignment_score=0.860",
+    "long/short support gap 0.030 is too small, so alignment is treated as mixed",
+    "pre_bayes_quality_score=0.560 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.649",
+    "market_state_source=volatility=ElevatedVol:0.799 liquidity=NormalLiquidity:0.433 structure=Trending:0.610 behavior=RiskOn:0.550",
+    "market_state_source=rationale=volatility=ElevatedVol conf=0.80",
+    "market_state_source=rationale=structure=Trending conf=0.61",
+    "market_state_source=rationale=behavior=RiskOn conf=0.55",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendAcceleration overall=0.65",
+    "regime_bundle_bbn_evidence_skipped=no_supported_label",
+    "branch_transition_prior_from=Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12 weighted_transition_mass=0.000 transition_outcome_support=0.000 transition_temporal_posterior_support=0.000"
+  ]
+}

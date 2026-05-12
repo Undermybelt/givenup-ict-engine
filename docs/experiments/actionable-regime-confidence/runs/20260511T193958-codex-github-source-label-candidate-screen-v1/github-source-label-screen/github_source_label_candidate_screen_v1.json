@@ -1,0 +1,101 @@
+{
+  "artifact_type": "github_source_label_candidate_screen_v1",
+  "board_sha256_observed": "6c934f0102b974377578b5b7fc7e732e40b6cd77350b9a4d7b13ffb318def4c8",
+  "candidates": [
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "checked_in_crypto_regime_framework_with_models",
+      "decision": "blocked_hmm_generated_labels_not_source_owned",
+      "evidence": "README describes HMM discovery followed by LSTM prediction; src/regime_label.py maps HMM states to regimes using ATR/BB-width/ADX.",
+      "new_confidence_gate": false,
+      "reason": "Regimes are discovered from OHLCV/technical features and HMM state mapping, not source-owned or owner-approved MainRegimeV2 labels.",
+      "repo": "akash-kumar5/CryptoMarket_Regime_Classifier",
+      "source": "github",
+      "url": "https://github.com/akash-kumar5/CryptoMarket_Regime_Classifier"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "sp500_hmm_regime_project",
+      "decision": "blocked_hmm_pseudo_labels_not_source_owned",
+      "evidence": "README states regimes are labeled by HMM on directional-change indicators; modules/hidden_markov_model.py fits hmmlearn and predicts regimes.",
+      "new_confidence_gate": false,
+      "reason": "Labels are retrospective HMM outputs and then classifier targets; they are proxy/generated labels rather than source-owned labels.",
+      "repo": "uday-31/detecting-market-regime-changes",
+      "source": "github",
+      "url": "https://github.com/uday-31/detecting-market-regime-changes"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "published_turning_point_method_implementation",
+      "decision": "blocked_method_generated_binary_turning_points",
+      "evidence": "README cites Lunde-Timmermann/Pagan-Sossounov style regime-change detection; bullbeaR.R computes turning points from prices.",
+      "new_confidence_gate": false,
+      "reason": "The repository provides methodology-generated bull/bear turning points from price series, not row-level source-owned regime labels or a four-root MainRegimeV2 crosswalk.",
+      "repo": "iamd26/Predicting-Market-Regimes-Based-on-Stock-Bond-Return-ratio",
+      "source": "github",
+      "url": "https://github.com/iamd26/Predicting-Market-Regimes-Based-on-Stock-Bond-Return-ratio"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "ftse_volatility_crisis_classifier",
+      "decision": "blocked_model_generated_binary_crisis_noncrisis",
+      "evidence": "README says notebooks generate a feature matrix and Orange/Random Forest classifies crisis vs non-crisis volatility regimes.",
+      "new_confidence_gate": false,
+      "reason": "Binary model output is not source-owned Bull/Bear/Sideways/Crisis labels and does not cover the required active-regime taxonomy.",
+      "repo": "hetu412patel/volatility-regime-classification",
+      "source": "github",
+      "url": "https://github.com/hetu412patel/volatility-regime-classification"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "bull_bear_sideways_volatile_framework",
+      "decision": "blocked_feature_or_hmm_detector_outputs_not_source_labels",
+      "evidence": "README and src/regime_detection show feature-threshold and Gaussian-HMM detectors that map model states/features to regimes.",
+      "new_confidence_gate": false,
+      "reason": "The framework generates detector outputs for strategy routing; no source-owned row-level label panel or owner-approved crosswalk is exposed.",
+      "repo": "AndrewFSee/regime-rl-trading",
+      "source": "github",
+      "url": "https://github.com/AndrewFSee/regime-rl-trading"
+    },
+    {
+      "accepted_rows_added": 0,
+      "candidate_strength": "spy_bull_bear_sideways_kmeans_demo",
+      "decision": "blocked_kmeans_generated_spy_labels",
+      "evidence": "README/main.py classify SPY into Bull/Bear/Sideways with KMeans over yfinance-derived features.",
+      "new_confidence_gate": false,
+      "reason": "Labels are KMeans-generated from SPY OHLCV features and a plot output, not source-owned validation labels.",
+      "repo": "Hishamhajaz/market-regime-detection",
+      "source": "github",
+      "url": "https://github.com/Hishamhajaz/market-regime-detection"
+    }
+  ],
+  "created_at_utc": "2026-05-11T11:41:26.985114+00:00",
+  "decision": {
+    "accepted_rows_added": 0,
+    "candidate_records": 6,
+    "full_other_market_source_label_equivalence": false,
+    "gate_result": "github_source_label_candidate_screen_v1=no_promotable_source_label_equivalence",
+    "new_confidence_gate": false,
+    "queries": 4,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "guardrails": [
+    "No external repository was cloned.",
+    "No raw dataset rows were downloaded or committed.",
+    "Generated/HMM/KMeans/feature-threshold labels remain fail-closed.",
+    "Current Cursor was not edited."
+  ],
+  "run_id": "20260511T193958+0800-codex-github-source-label-candidate-screen-v1",
+  "scope": "Targeted public GitHub repository screen for source-owned or owner-approved active-regime labels.",
+  "search_queries": [
+    "market regime labels",
+    "bull bear sideways market regime",
+    "financial market regime dataset",
+    "regime classification stock market"
+  ]
+}

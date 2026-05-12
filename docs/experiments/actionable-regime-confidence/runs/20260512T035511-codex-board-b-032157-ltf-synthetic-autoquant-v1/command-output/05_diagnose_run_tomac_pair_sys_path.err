@@ -1,0 +1,25 @@
+2026-05-12 04:00:34,108 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 04:00:34,122 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 04:00:34,124 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 04:00:34,125 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps
+/auto-quant/user_data/strategies_external
+2026-05-12 04:00:34,125 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 04:00:34,126 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps
+/auto-quant/user_data ...
+2026-05-12 04:00:34,129 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.deps
+/auto-quant/user_data/data ...
+2026-05-12 04:00:34,129 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 04:00:34,131 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 04:00:34,146 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 04:00:34,147 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 04:00:34,148 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 04:00:34,148 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 04:00:34,177 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 04:00:34,178 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 04:00:34,193 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T035511-codex-board-b-032157-ltf-synthetic-autoquant-v1/state_ltf_synthetic_autoquant_v1/.dep
+s/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-12 04:00:34,194 - freqtrade.plugins.pairlistmanager - INFO - Whitelist with 0 pairs: []

@@ -1,0 +1,171 @@
+{
+  "branch_counts": {
+    "RangeConsolidation -> KrakenEquityProxyWindow -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": 83,
+    "RangeConsolidation -> WideRange -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": 915,
+    "TrendExpansion -> BullTrendAcceleration -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": 454,
+    "TrendExpansion -> BybitWindowCapped -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": 45,
+    "TrendExpansion -> KrakenFuturesWindow -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": 67,
+    "TrendExpansion -> WideRange -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": 3301
+  },
+  "branch_outcomes": {
+    "RangeConsolidation -> KrakenEquityProxyWindow -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": {
+      "loss": 57,
+      "win": 26
+    },
+    "RangeConsolidation -> WideRange -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": {
+      "flat": 5,
+      "loss": 408,
+      "win": 502
+    },
+    "TrendExpansion -> BullTrendAcceleration -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": {
+      "flat": 4,
+      "loss": 203,
+      "win": 247
+    },
+    "TrendExpansion -> BybitWindowCapped -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": {
+      "loss": 14,
+      "win": 31
+    },
+    "TrendExpansion -> KrakenFuturesWindow -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": {
+      "loss": 39,
+      "win": 28
+    },
+    "TrendExpansion -> WideRange -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1": {
+      "loss": 1689,
+      "win": 1612
+    }
+  },
+  "branch_path_template": "main_regime -> sub_regime -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1",
+  "library_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/provider_multi_longspan_ema_rsi_strategy_library_v1.json",
+  "local_cache_replay": "provider-provenanced CSV copied from 141554 provider matrix into this run root",
+  "promotion_scope": "incubation_only_provider_backed_multi_market",
+  "provider_data_acquired": true,
+  "provider_requested": [
+    "binance_public",
+    "bybit_public",
+    "ibkr",
+    "kraken_public",
+    "yfinance"
+  ],
+  "providers_not_invoked_this_slice": [
+    "TradingViewRemix/TVR"
+  ],
+  "run_id": "20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1",
+  "strategies": [
+    {
+      "commit": "provider-multi-longspan-run-local",
+      "error": null,
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/workspace/auto-quant-provider-multi-longspan-v1/user_data/strategies_external/ProviderMultiLongspanEmaRsiV1.py",
+      "metadata": {
+        "asset_class": "crypto_tradfi_provider_ohlcv",
+        "base_factor": "provider_backed_multi_market_ema_rsi_continuation",
+        "created": "2026-05-12",
+        "expected_regime": "TrendExpansion -> ProviderTrend -> EmaRsiContinuation -> ProviderMultiLongspanEmaRsiV1",
+        "factors_used": [
+          "provider_binance_btc_ohlcv",
+          "provider_ibkr_spy_ohlcv",
+          "provider_yfinance_es_ohlcv",
+          "provider_kraken_futures_ohlcv",
+          "provider_bybit_window_ohlcv",
+          "ema8",
+          "ema24",
+          "rsi14_midband",
+          "fixed_12h_risk_horizon",
+          "regime_profit_branch_path"
+        ],
+        "hypothesis": "Long-span provider-owned 1h bars can produce branch-keyed profitability evidence with enough observations for downstream admission tests.",
+        "mutation_id": "provider-multi-longspan-ema-rsi-v1",
+        "paradigm": "ema_rsi_continuation",
+        "parent": "BoardB provider multi-longspan profitability-factor continuation",
+        "status": "incubation_only_provider_backed_multi_market",
+        "strategy": "ProviderMultiLongspanEmaRsiV1"
+      },
+      "name": "ProviderMultiLongspanEmaRsiV1",
+      "pairs": [
+        "BTC/USDT",
+        "SPY/USDT",
+        "ES/USDT",
+        "KXBT/USDT",
+        "KSPX/USDT",
+        "BBTC/USDT"
+      ],
+      "per_pair_metrics": {
+        "BBTC/USDT": {
+          "calmar": 5.404144248904678,
+          "max_drawdown_pct": -0.24515520886024808,
+          "profit_factor": 3.2498678958947895,
+          "sharpe": 0.12512637384792583,
+          "sortino": 0.27445030721862057,
+          "total_profit_pct": 2.21,
+          "trade_count": 45,
+          "win_rate_pct": 68.88888888888889
+        },
+        "BTC/USDT": {
+          "calmar": -0.19818258102360853,
+          "max_drawdown_pct": -15.886168852183669,
+          "profit_factor": 0.9785207854563837,
+          "sharpe": -0.15680030356947164,
+          "sortino": -0.27529724473403966,
+          "total_profit_pct": -5.25,
+          "trade_count": 3301,
+          "win_rate_pct": 48.833686761587394
+        },
+        "ES/USDT": {
+          "calmar": 0.2861588183175963,
+          "max_drawdown_pct": -1.3752838051649672,
+          "profit_factor": 1.07133659703211,
+          "sharpe": 0.06419242740516916,
+          "sortino": 0.07631607659588124,
+          "total_profit_pct": 0.66,
+          "trade_count": 454,
+          "win_rate_pct": 54.40528634361234
+        },
+        "KSPX/USDT": {
+          "calmar": 0.3784603042263764,
+          "max_drawdown_pct": -4.260442309158524,
+          "profit_factor": 1.1666960187095037,
+          "sharpe": 0.029886149669711665,
+          "sortino": 0.31723140716281445,
+          "total_profit_pct": 2.69,
+          "trade_count": 83,
+          "win_rate_pct": 31.32530120481928
+        },
+        "KXBT/USDT": {
+          "calmar": -0.564800917129232,
+          "max_drawdown_pct": -2.821565363364863,
+          "profit_factor": 0.600387312678274,
+          "sharpe": -0.08209967475651123,
+          "sortino": -0.13348395290065176,
+          "total_profit_pct": -2.66,
+          "trade_count": 67,
+          "win_rate_pct": 41.7910447761194
+        },
+        "SPY/USDT": {
+          "calmar": -0.3297267613494645,
+          "max_drawdown_pct": -5.031144489261904,
+          "profit_factor": 0.8867906672793207,
+          "sharpe": -0.22325847202895135,
+          "sortino": -0.24257168288403183,
+          "total_profit_pct": -2.77,
+          "trade_count": 915,
+          "win_rate_pct": 54.86338797814207
+        }
+      },
+      "status": "ok",
+      "timerange": "20170817-20260512",
+      "validation_metrics": {
+        "calmar": -0.13982343270510286,
+        "max_drawdown_pct": -21.956803495306612,
+        "profit_factor": 0.9830379635723149,
+        "sharpe": -0.16553407854615224,
+        "sortino": -0.27292657123576897,
+        "total_profit_pct": -5.12,
+        "trade_count": 4865,
+        "win_rate_pct": 50.277492291880776
+      }
+    }
+  ],
+  "symbol": "B2R_PROVIDER_MULTI_LONGSPAN_EMA_RSI_145736",
+  "total_trade_rows": 4865,
+  "trades_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T145736+0800-codex-board-b-provider-multi-longspan-profit-factor-v1/provider_multi_longspan_ema_rsi_real_trades_v1.jsonl"
+}

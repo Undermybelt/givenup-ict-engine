@@ -1,0 +1,7 @@
+json_parse_ok
+thresholds_relaxed=false
+runtime_code_changed=false
+raw_data_committed=false
+accepted_95=false
+decision=blocked_mehrnoom_social_gate_below_95_coverage_or_ece
+mehrnoom_gate_blocked

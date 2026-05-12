@@ -1,0 +1,176 @@
+{
+  "schema_version": "board-a-sticky-hazard-per-regime-evidence/v1",
+  "loop_id": "20260510T205856+0800-codex-sticky-hazard-per-regime",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime",
+  "objective": "Produce one calibrated 95%-99% packet for every required regime; do not stop at a single accepted regime.",
+  "thresholds_relaxed": false,
+  "blocked_feature_prefixes": [
+    "future_",
+    "target_"
+  ],
+  "candidate_selection_source": "train split only",
+  "report": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/sticky-hazard/sticky_hazard_per_regime_report.json",
+  "candidate_rule_table": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/sticky-hazard/sticky_hazard_candidate_rules.csv",
+  "existing_accepted_regime_packets": [
+    {
+      "accepted_regime_id": "SessionLiquidityCoreViable",
+      "market": "QQQ",
+      "timeframe": "1h",
+      "horizon": "4 observed IBKR bars",
+      "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9899396497369397,
+      "calibration_support": 378,
+      "test_support": 378,
+      "ece": 0.010582010582010581,
+      "coverage": 0.3776223776223776,
+      "transition_hazard": 0.0,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "hour_utc",
+        "session_core_utc_13_18",
+        "qqq_ibkr_1h_count",
+        "qqq_ibkr_1h_volume",
+        "qqq_yfinance_current_bar_present"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json"
+    },
+    {
+      "accepted_regime_id": "RangeConsolidation",
+      "market": "NQ",
+      "timeframe": "15m",
+      "horizon": "next 15m window regime persistence",
+      "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9676071866741978,
+      "calibration_support": 467,
+      "test_support": 313,
+      "ece": 0.004488121867580741,
+      "coverage": 0.06341166936790923,
+      "transition_hazard": null,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "catboost_isotonic",
+        "RangeConsolidation_persists_next_15m"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json"
+    },
+    {
+      "accepted_regime_id": "ThinLiquidityOffHoursPersistent",
+      "market": "QQQ",
+      "timeframe": "1h",
+      "horizon": "next 4 observed IBKR 1h bars",
+      "allowed_action": "guardrail_only_liquidity_context",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9775144812786577,
+      "calibration_support": 125,
+      "test_support": 167,
+      "ece": 0.0,
+      "coverage": 0.16683316683316685,
+      "transition_hazard": 0.0,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "21 <= hour_utc <= 23 and qqq_yfinance_current_bar_present == 0",
+        "future_yfinance_regular_session_absent_all_h4"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json"
+    }
+  ],
+  "accepted_new_regime_packets": [
+    {
+      "accepted_regime_id": "TrendExpansion",
+      "market": "NQ CME futures",
+      "timeframe": "1d",
+      "horizon": "1 bars",
+      "allowed_action": "release_candidate_only_when_other_gates_pass",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9527177201011987,
+      "calibration_support": 130,
+      "test_support": 213,
+      "ece": 0.03506681112314913,
+      "coverage": 0.18330464716006883,
+      "transition_hazard": 0.0,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "NQ longspan OHLCV",
+        "TrendExpansionPersistsNext1d",
+        "trend_persistence_16 >= 1 AND ma128_slope32 >= 0.02084241865",
+        "chronological train/calibration/test split"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_per_regime.json"
+    },
+    {
+      "accepted_regime_id": "ExtremeStress",
+      "market": "NQ CME futures",
+      "timeframe": "4h",
+      "horizon": "2 bars",
+      "allowed_action": "guardrail_only_reduce_or_block_release",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9867919146181203,
+      "calibration_support": 556,
+      "test_support": 287,
+      "ece": 0.0,
+      "coverage": 0.048089812332439676,
+      "transition_hazard": 0.0,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "NQ longspan OHLCV",
+        "ExtremeStressPersistsNext2x4hBars",
+        "range_ratio32_128 >= 1.396823594",
+        "chronological train/calibration/test split"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_per_regime.json"
+    },
+    {
+      "accepted_regime_id": "ReversalBrewing",
+      "market": "NQ CME futures",
+      "timeframe": "1d",
+      "horizon": "5 bars",
+      "allowed_action": "observe_or_reversal_candidate_only_when_other_gates_pass",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9857640155168049,
+      "calibration_support": 246,
+      "test_support": 266,
+      "ece": 0.020325203252032575,
+      "coverage": 0.229706390328152,
+      "transition_hazard": 1.0,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "NQ longspan OHLCV",
+        "TrendExpansionFailureHazardWithin5d",
+        "ma64_slope16 <= 0.0009505334239 AND drawdown_from_64_high <= -0.02636827336",
+        "chronological train/calibration/test split"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_per_regime.json"
+    }
+  ],
+  "per_regime_coverage": {
+    "SessionLiquidityCoreViable": "accepted_95_existing",
+    "TrendExpansion": "accepted_95_new",
+    "RangeConsolidation": "accepted_95_existing",
+    "ExtremeStress": "accepted_95_new",
+    "ReversalBrewing": "accepted_95_new",
+    "ThinLiquidity": "accepted_95_existing_via_ThinLiquidityOffHoursPersistent"
+  },
+  "missing_after_this_loop": [],
+  "all_required_regimes_covered": true,
+  "decision": {
+    "board_state": "accepted_95",
+    "accepted_required_regimes": [
+      "SessionLiquidityCoreViable",
+      "TrendExpansion",
+      "RangeConsolidation",
+      "ExtremeStress",
+      "ReversalBrewing",
+      "ThinLiquidity"
+    ],
+    "missing_required_regimes": [],
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "These packets close the regime-confidence coverage gate only.",
+      "TrendExpansion and ReversalBrewing packets are context/hazard packets; execution still requires non-observe release and path-specific edge gates.",
+      "No result here changes the prior execution-tree observe/transition_guardrail readback."
+    ],
+    "next_action": "Hand the 6/6 regime-confidence packet set to Board B only as context/guardrails; keep execution promotion blocked until non-observe release and path-specific edge gates pass."
+  }
+}

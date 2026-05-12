@@ -1,0 +1,448 @@
+{
+  "bbn_contradiction_lift": 1.8644594131358565,
+  "bbn_entropy_reduction": 0.3325096286970258,
+  "bbn_log_loss_delta": 0.3997422709700732,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": {
+    "apply_artifact_id": "auto_quant_prior_init_B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_20260512T041411.689973000Z",
+    "library_artifact_id": "auto_quant_strategy_library_B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_20260512T041411.645456000Z"
+  },
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.2879681066298914,
+    1.0063648063613704e-17,
+    0.7120318933701085
+  ],
+  "force": true,
+  "initial_probs": [
+    0.2879685881769064,
+    1.4879524770620246e-11,
+    0.712031411808214
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_20260512T041606.959799000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/derived/strategy_library_115700_same_root_1h_aq_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_20260512T041606.989386000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/state_115700_downstream_chain_v1/auto-quant/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120941+0800-codex-115700-same-root-1h-downstream-chain-v1/state_115700_downstream_chain_v1/auto-quant/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/auto_quant_prior_init_B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700_20260512T041606.989386000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.44303565263882155,
+        5.668390388807713e-12,
+        0.5569643473555101
+      ],
+      "bbn_contradiction_after": 0.19085177164543388,
+      "bbn_contradiction_before": 0.5009859005692641,
+      "bbn_contradiction_lift": 0.3101341289238302,
+      "bbn_entropy_after": 0.6866431940788835,
+      "bbn_entropy_before": 0.600322754363829,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.7084815016844057,
+      "bbn_log_loss_before": 0.8270866631065092,
+      "bbn_log_loss_delta": 0.11860516142210353,
+      "before_probs": [
+        0.2879685881769064,
+        1.4879524770620246e-11,
+        0.712031411808214
+      ],
+      "diff": [
+        0.15506706446191515,
+        -9.211134381812533e-12,
+        -0.1550670644527039
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "yfinance:ProviderCryptoMomentumStateV1",
+      "n_breakeven": 0,
+      "n_loss": 6,
+      "n_win": 7,
+      "strategy_name": "yfinance:ProviderCryptoMomentumStateV1",
+      "temper": 0.5,
+      "trade_count": 13
+    },
+    {
+      "after_probs": [
+        0.40901782631941075,
+        2.8341951944038564e-12,
+        0.5909821736777551
+      ],
+      "bbn_contradiction_after": 0.06803565264448988,
+      "bbn_contradiction_before": 0.13607130528897982,
+      "bbn_contradiction_lift": 0.06803565264448994,
+      "bbn_entropy_after": 0.6764990751765341,
+      "bbn_entropy_before": 0.6866431940788835,
+      "bbn_entropy_reduction": 0.010144118902349453,
+      "bbn_log_loss_after": 0.6639795926665102,
+      "bbn_log_loss_before": 0.6710731679679235,
+      "bbn_log_loss_delta": 0.007093575301413302,
+      "before_probs": [
+        0.44303565263882155,
+        5.668390388807713e-12,
+        0.5569643473555101
+      ],
+      "diff": [
+        -0.034017826319410804,
+        -2.8341951944038564e-12,
+        0.034017826322244926
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "yfinance:ProviderCryptoPullbackRevertV1",
+      "n_breakeven": 0,
+      "n_loss": 5,
+      "n_win": 3,
+      "strategy_name": "yfinance:ProviderCryptoPullbackRevertV1",
+      "temper": 0.5,
+      "trade_count": 8
+    },
+    {
+      "after_probs": [
+        0.3636175035662995,
+        7.314052114590597e-13,
+        0.6363824964329691
+      ],
+      "bbn_contradiction_after": 0.03158283322101839,
+      "bbn_contradiction_before": 0.12238347873144642,
+      "bbn_contradiction_lift": 0.09080064551042803,
+      "bbn_entropy_after": 0.6554712187606858,
+      "bbn_entropy_before": 0.6764990751765341,
+      "bbn_entropy_reduction": 0.021027856415848256,
+      "bbn_log_loss_after": 0.6466328056385202,
+      "bbn_log_loss_before": 0.653978855880006,
+      "bbn_log_loss_delta": 0.007346050241485824,
+      "before_probs": [
+        0.40901782631941075,
+        2.8341951944038564e-12,
+        0.5909821736777551
+      ],
+      "diff": [
+        -0.04540032275311123,
+        -2.102789982944797e-12,
+        0.045400322755213995
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "kraken_public:ProviderCryptoMomentumStateV1",
+      "n_breakeven": 0,
+      "n_loss": 15,
+      "n_win": 8,
+      "strategy_name": "kraken_public:ProviderCryptoMomentumStateV1",
+      "temper": 0.5,
+      "trade_count": 23
+    },
+    {
+      "after_probs": [
+        0.28876117814884683,
+        3.4419068774543986e-13,
+        0.711238821850809
+      ],
+      "bbn_contradiction_after": 0.1330779118539376,
+      "bbn_contradiction_before": 0.28279056268961744,
+      "bbn_contradiction_lift": 0.14971265083567983,
+      "bbn_entropy_after": 0.6010387313728132,
+      "bbn_entropy_before": 0.6554712187606858,
+      "bbn_entropy_reduction": 0.05443248738787265,
+      "bbn_log_loss_after": 0.5410599644953389,
+      "bbn_log_loss_before": 0.5763326627717075,
+      "bbn_log_loss_delta": 0.035272698276368586,
+      "before_probs": [
+        0.3636175035662995,
+        7.314052114590597e-13,
+        0.6363824964329691
+      ],
+      "diff": [
+        -0.07485632541745268,
+        -3.8721452371361985e-13,
+        0.07485632541783993
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "kraken_public:ProviderCryptoPullbackRevertV1",
+      "n_breakeven": 0,
+      "n_loss": 7,
+      "n_win": 2,
+      "strategy_name": "kraken_public:ProviderCryptoPullbackRevertV1",
+      "temper": 0.5,
+      "trade_count": 9
+    },
+    {
+      "after_probs": [
+        0.3624464316709061,
+        6.11894555991893e-14,
+        0.6375535683290328
+      ],
+      "bbn_contradiction_after": 0.031863893414944625,
+      "bbn_contradiction_before": 0.17923440045906316,
+      "bbn_contradiction_lift": 0.14737050704411853,
+      "bbn_entropy_after": 0.6548128083168723,
+      "bbn_entropy_before": 0.6010387313728132,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.663810560245017,
+      "bbn_log_loss_before": 0.6818204190984559,
+      "bbn_log_loss_delta": 0.018009858853438976,
+      "before_probs": [
+        0.28876117814884683,
+        3.4419068774543986e-13,
+        0.711238821850809
+      ],
+      "diff": [
+        0.07368525352205929,
+        -2.8300123214625056e-13,
+        -0.07368525352177624
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "binance_public:ProviderCryptoMomentumStateV1",
+      "n_breakeven": 0,
+      "n_loss": 23,
+      "n_win": 14,
+      "strategy_name": "binance_public:ProviderCryptoMomentumStateV1",
+      "temper": 0.5,
+      "trade_count": 37
+    },
+    {
+      "after_probs": [
+        0.2999813675377065,
+        2.1283288904065846e-14,
+        0.7000186324622723
+      ],
+      "bbn_contradiction_after": 0.06662940174212215,
+      "bbn_contradiction_before": 0.19155953000860115,
+      "bbn_contradiction_lift": 0.124930128266479,
+      "bbn_entropy_after": 0.6108485139835403,
+      "bbn_entropy_before": 0.6548128083168723,
+      "bbn_entropy_reduction": 0.04396429433333193,
+      "bbn_log_loss_after": 0.5826180832824382,
+      "bbn_log_loss_before": 0.6007200736829532,
+      "bbn_log_loss_delta": 0.018101990400514967,
+      "before_probs": [
+        0.3624464316709061,
+        6.11894555991893e-14,
+        0.6375535683290328
+      ],
+      "diff": [
+        -0.06246506413319963,
+        -3.9906166695123454e-14,
+        0.06246506413323949
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "binance_public:ProviderCryptoPullbackRevertV1",
+      "n_breakeven": 0,
+      "n_loss": 11,
+      "n_win": 4,
+      "strategy_name": "binance_public:ProviderCryptoPullbackRevertV1",
+      "temper": 0.5,
+      "trade_count": 15
+    },
+    {
+      "after_probs": [
+        0.3904726414357536,
+        4.053959791250637e-15,
+        0.6095273585642423
+      ],
+      "bbn_contradiction_after": 0.042584128893198625,
+      "bbn_contradiction_before": 0.2235666766892929,
+      "bbn_contradiction_lift": 0.18098254779609427,
+      "bbn_entropy_after": 0.6689590357053877,
+      "bbn_entropy_before": 0.6108485139835403,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6784409440710031,
+      "bbn_log_loss_before": 0.7055722156549392,
+      "bbn_log_loss_delta": 0.027131271583936134,
+      "before_probs": [
+        0.2999813675377065,
+        2.1283288904065846e-14,
+        0.7000186324622723
+      ],
+      "diff": [
+        0.09049127389804712,
+        -1.7229329112815207e-14,
+        -0.09049127389802991
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "bybit_public:ProviderCryptoMomentumStateV1",
+      "n_breakeven": 0,
+      "n_loss": 20,
+      "n_win": 14,
+      "strategy_name": "bybit_public:ProviderCryptoMomentumStateV1",
+      "temper": 0.5,
+      "trade_count": 34
+    },
+    {
+      "after_probs": [
+        0.28495124525944115,
+        1.297267133200204e-15,
+        0.7150487547405575
+      ],
+      "bbn_contradiction_after": 0.09931425522476725,
+      "bbn_contradiction_before": 0.3103570475773976,
+      "bbn_contradiction_lift": 0.21104279235263038,
+      "bbn_entropy_after": 0.5975689944599748,
+      "bbn_entropy_before": 0.6689590357053877,
+      "bbn_entropy_reduction": 0.07139004124541293,
+      "bbn_log_loss_after": 0.5518828166228995,
+      "bbn_log_loss_before": 0.5998540155421487,
+      "bbn_log_loss_delta": 0.04797119891924917,
+      "before_probs": [
+        0.3904726414357536,
+        4.053959791250637e-15,
+        0.6095273585642423
+      ],
+      "diff": [
+        -0.10552139617631245,
+        -2.7566926580504334e-15,
+        0.10552139617631517
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "bybit_public:ProviderCryptoPullbackRevertV1",
+      "n_breakeven": 0,
+      "n_loss": 13,
+      "n_win": 4,
+      "strategy_name": "bybit_public:ProviderCryptoPullbackRevertV1",
+      "temper": 0.5,
+      "trade_count": 17
+    },
+    {
+      "after_probs": [
+        0.311503332184107,
+        3.1448900198792824e-16,
+        0.6884966678158927
+      ],
+      "bbn_contradiction_after": 0.01699333563178599,
+      "bbn_contradiction_before": 0.07009750948111762,
+      "bbn_contradiction_lift": 0.05310417384933163,
+      "bbn_entropy_after": 0.6202982313477006,
+      "bbn_entropy_before": 0.5975689944599748,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6270369423564377,
+      "bbn_log_loss_before": 0.6298149925479148,
+      "bbn_log_loss_delta": 0.002778050191477144,
+      "before_probs": [
+        0.28495124525944115,
+        1.297267133200204e-15,
+        0.7150487547405575
+      ],
+      "diff": [
+        0.02655208692466582,
+        -9.827781312122758e-16,
+        -0.02655208692466482
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "tvr_default_binance:ProviderCryptoMomentumStateV1",
+      "n_breakeven": 0,
+      "n_loss": 17,
+      "n_win": 8,
+      "strategy_name": "tvr_default_binance:ProviderCryptoMomentumStateV1",
+      "temper": 0.5,
+      "trade_count": 25
+    },
+    {
+      "after_probs": [
+        0.22460133287364278,
+        1.257956007951713e-16,
+        0.7753986671263571
+      ],
+      "bbn_contradiction_after": 0.11586933241395254,
+      "bbn_contradiction_before": 0.2896733310348813,
+      "bbn_contradiction_lift": 0.17380399862092877,
+      "bbn_entropy_after": 0.5326703282145762,
+      "bbn_entropy_before": 0.6202982313477006,
+      "bbn_entropy_reduction": 0.08762790313312441,
+      "bbn_log_loss_after": 0.46088636095752755,
+      "bbn_log_loss_before": 0.5054282077641958,
+      "bbn_log_loss_delta": 0.044541846806668284,
+      "before_probs": [
+        0.311503332184107,
+        3.1448900198792824e-16,
+        0.6884966678158927
+      ],
+      "diff": [
+        -0.08690199931046419,
+        -1.8869340119275694e-16,
+        0.08690199931046438
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "tvr_default_binance:ProviderCryptoPullbackRevertV1",
+      "n_breakeven": 0,
+      "n_loss": 10,
+      "n_win": 2,
+      "strategy_name": "tvr_default_binance:ProviderCryptoPullbackRevertV1",
+      "temper": 0.5,
+      "trade_count": 12
+    },
+    {
+      "after_probs": [
+        0.3449202665747285,
+        2.515912015903426e-17,
+        0.6550797334252714
+      ],
+      "bbn_contradiction_after": 0.06015946685054288,
+      "bbn_contradiction_before": 0.30079733425271443,
+      "bbn_contradiction_lift": 0.24063786740217155,
+      "bbn_entropy_after": 0.644245245331196,
+      "bbn_entropy_before": 0.5326703282145762,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6635397002240033,
+      "bbn_log_loss_before": 0.7190218462837564,
+      "bbn_log_loss_delta": 0.0554821460597531,
+      "before_probs": [
+        0.22460133287364278,
+        1.257956007951713e-16,
+        0.7753986671263571
+      ],
+      "diff": [
+        0.12031893370108573,
+        -1.0063648063613704e-16,
+        -0.1203189337010857
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "ibkr_paxos_long_midpoint:ProviderCryptoMomentumStateV1",
+      "n_breakeven": 0,
+      "n_loss": 20,
+      "n_win": 12,
+      "strategy_name": "ibkr_paxos_long_midpoint:ProviderCryptoMomentumStateV1",
+      "temper": 0.5,
+      "trade_count": 32
+    },
+    {
+      "after_probs": [
+        0.2879681066298914,
+        1.0063648063613704e-17,
+        0.7120318933701085
+      ],
+      "bbn_contradiction_after": 0.07593621325978289,
+      "bbn_contradiction_before": 0.18984053314945717,
+      "bbn_contradiction_lift": 0.11390431988967428,
+      "bbn_entropy_after": 0.6003223180521098,
+      "bbn_entropy_before": 0.644245245331196,
+      "bbn_entropy_reduction": 0.0439229272790862,
+      "bbn_log_loss_after": 0.5659508173473946,
+      "bbn_log_loss_before": 0.5833592402610588,
+      "bbn_log_loss_delta": 0.01740842291366418,
+      "before_probs": [
+        0.3449202665747285,
+        2.515912015903426e-17,
+        0.6550797334252714
+      ],
+      "diff": [
+        -0.0569521599448371,
+        -1.5095472095420556e-17,
+        0.056952159944837155
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "ibkr_paxos_long_midpoint:ProviderCryptoPullbackRevertV1",
+      "n_breakeven": 0,
+      "n_loss": 9,
+      "n_win": 3,
+      "strategy_name": "ibkr_paxos_long_midpoint:ProviderCryptoPullbackRevertV1",
+      "temper": 0.5,
+      "trade_count": 12
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+  "temper": 0.5
+}

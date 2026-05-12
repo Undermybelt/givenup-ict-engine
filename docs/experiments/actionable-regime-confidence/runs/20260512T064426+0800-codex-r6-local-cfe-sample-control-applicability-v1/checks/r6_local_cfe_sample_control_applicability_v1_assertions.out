@@ -1,0 +1,10 @@
+gate_result=r6_local_cfe_sample_control_applicability_v1=cfe_sample_schema_context_only_no_controls_no_promotion
+cfe_sample_contract_fit=False
+accepted_rows_added=0
+source_control_evidence_acquired_false=True
+target_root_mutated_false=True
+canonical_merge_allowed_now_false=True
+downstream_rerun_allowed_now_false=True
+strict_full_objective_false=True
+trade_usable_false=True
+update_goal_false=True

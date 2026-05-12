@@ -1,0 +1,141 @@
+{
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "allowed_action": "suppress_or_defer_long_until_execution_readiness_context_compatible",
+  "artifacts": {
+    "assertions": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234648-codex-board-b-block-crowded-nursery-feedback-v1/checks/block_crowded_nursery_feedback_v1_assertions.out",
+    "packet_csv": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234648-codex-board-b-block-crowded-nursery-feedback-v1/nursery-feedback/block_crowded_nursery_feedback_v1.csv",
+    "packet_json": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234648-codex-board-b-block-crowded-nursery-feedback-v1/nursery-feedback/block_crowded_nursery_feedback_v1.json",
+    "packet_md": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234648-codex-board-b-block-crowded-nursery-feedback-v1/nursery-feedback/block_crowded_nursery_feedback_v1.md"
+  },
+  "auto_quant_branch_evidence": {
+    "bootstrap_edge_lcb_5pct": 0.002745066872817171,
+    "dsr": 3.2177242727776023,
+    "fold_positive_rate": 0.8,
+    "hard_gate_result": "pass",
+    "mean_profit_ratio_net": 0.005464054855810504,
+    "pbo": 0.1,
+    "rc_spa": 83.0,
+    "recipe_id": "SourceRootStopCarryLongHorizonV1",
+    "source_regime_profit_branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "test_folds": 10,
+    "total_trades": 532,
+    "win_rate": 0.5657894736842105
+  },
+  "auto_quant_status_readback": {
+    "recommended_next_command": "ict-engine auto-quant-bootstrap --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/auto-quant/auto-quant",
+    "status": "missing_dependency"
+  },
+  "branch_path": "Crisis -> RangeConsolidation/WideRange -> BlockCrowdedExecutionAdmissibility -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "child_child_or_profit_factor": "block_crowded execution-admissibility feature",
+  "child_regime_hypothesis": "RangeConsolidation/WideRange live context inside Crisis-rooted candidate",
+  "command_exits": {
+    "auto_quant_status_json": 0,
+    "policy_training_status_agent": 0,
+    "pre_bayes_status_json": 0,
+    "provider_status": 0,
+    "workflow_execution_candidate_json": 0,
+    "workflow_status_agent": 0,
+    "workflow_status_json": 0,
+    "workflow_structural_recommended_path_bundle_json": 0
+  },
+  "downstream_probe_evidence": {
+    "bbn_evidence_label": "primary::ExtremeStress",
+    "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=observe/fill_viable/passive | ranker=history_path/unknown/ready",
+    "execution_decision_hint": "execution_observe_with_medium_prediction",
+    "execution_readiness": 0.4504,
+    "execution_readiness_floor": 0.45,
+    "execution_tree_bias": "passive",
+    "execution_tree_branch": "fill_viable",
+    "execution_tree_gate_status": "observe",
+    "market_state_line": "market_state=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.435",
+    "path_ranker_score_input": 0.5373,
+    "path_ranker_score_used": true,
+    "path_ranker_score_visible": true,
+    "policy_training_ready": true,
+    "policy_training_rows": 274,
+    "pre_bayes_gate_status": "pass_neutralized",
+    "pre_bayes_quality_score": 0.562,
+    "prior_consumer_reason": "market_state=RangeConsolidation/WideRange | execution=blocked/block_crowded/skip | ranker=history_path/unknown/ready",
+    "prior_execution_readiness": 0.4433,
+    "prior_execution_readiness_floor": 0.45,
+    "prior_execution_tree_branch": "block_crowded",
+    "prior_execution_tree_gate_status": "blocked",
+    "ranker_validation_ready": true,
+    "workflow_blocking_truth": {
+      "evidence": [
+        "historical data reuse requires explicit user path selection",
+        "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_htf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1"
+      ],
+      "next_command": "ask-user: Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_htf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1",
+      "reason": "user_selected_historical_data_missing",
+      "stage": "analyze",
+      "status": "blocked"
+    }
+  },
+  "interpretation": {
+    "block_crowded_context_sensitive": true,
+    "block_crowded_repeated_in_fresh_refresh": false,
+    "board_a_feedback_allowed_after_repeat_evidence": true,
+    "branch_routing_failure": false,
+    "closed_loop_confidence_ready": false,
+    "negative_execution_admissibility_feature": true,
+    "profitability_rejection": false
+  },
+  "next_action": "Use this as incubation-only negative execution-admissibility feedback. The fresh refresh did not repeat block_crowded, so treat the feature as context-sensitive and repeat across compatible live/readback contexts before sending a Board A split; do not promote until workflow blocking truth and closed-loop confidence are explicit.",
+  "nursery_branch_id": "B2R_NURSERY_220646_CRISIS_BLOCK_CROWDED_V1",
+  "nursery_gate": {
+    "explicit_action_leaf": true,
+    "nonzero_chronological_evidence": true,
+    "replay_or_backtest_costed": true,
+    "result": "pass",
+    "rooted_path": true
+  },
+  "nursery_status": "incubation_only",
+  "parent_regime_root": "Crisis",
+  "profit_factor_leaf": "SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "promotion_gate": {
+    "promotion_allowed": false,
+    "reason": "prior run blocked as block_crowded; fresh refresh moved to observe/fill_viable but still lacks explicit closed-loop promotion and is blocked by historical-data selection truth",
+    "result": "fail_closed:observe_only_and_workflow_blocking_truth"
+  },
+  "provider_readback": {
+    "providers": {
+      "ibkr": {
+        "ready": false,
+        "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+        "status": "configured_runtime_unhealthy"
+      },
+      "ibkr_bridge": {
+        "ready": false,
+        "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+        "status": "configured_runtime_unhealthy"
+      },
+      "kraken_cli": {
+        "ready": true,
+        "reason": "kraken_cli_config_detected",
+        "status": "ready"
+      },
+      "kraken_public": {
+        "ready": false,
+        "reason": "python3_provider_dependencies_missing",
+        "status": "configured_runtime_unhealthy"
+      },
+      "tradingview_mcp": {
+        "ready": false,
+        "reason": "tradingview_mcp_connectivity_probe_failed",
+        "status": "configured_runtime_unhealthy"
+      },
+      "yfinance": {
+        "ready": true,
+        "reason": "public_yahoo_http_endpoints",
+        "status": "ready"
+      }
+    },
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+  },
+  "run_id": "20260511T234648+0800-codex-board-b-block-crowded-nursery-feedback-v1",
+  "schema_version": "board-b-block-crowded-nursery-feedback/v1",
+  "source_live_readback": "20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1",
+  "source_strict_candidate": "20260511T220646+0800-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "suppression_rule": "suppress exact Crisis carry branch when execution_tree_branch=block_crowded or readiness < 0.45 in RangeConsolidation/WideRange"
+}

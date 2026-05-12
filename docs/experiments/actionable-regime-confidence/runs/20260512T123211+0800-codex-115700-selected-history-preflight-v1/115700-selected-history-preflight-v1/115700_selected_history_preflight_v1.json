@@ -1,0 +1,179 @@
+{
+  "mode": "copied_state_native_preflight_only",
+  "promotion_allowed": false,
+  "results": [
+    {
+      "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json",
+      "factor_research_exit": 0,
+      "factor_research_keys": [
+        "compact_compare_report",
+        "control_matrix_plan",
+        "ensemble",
+        "factor_lifecycle",
+        "human_output",
+        "human_research_compare_summary",
+        "reflection_bundle",
+        "report",
+        "research_compare_report",
+        "structural_path_ranking_runtime_summary",
+        "structural_path_ranking_validation_summary"
+      ],
+      "label": "1h",
+      "latest_execution_candidate": {
+        "actionable": false,
+        "candidate_status": "no_trade",
+        "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.525|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.9974 mtf_entry_alignment=0.8022",
+        "posterior": null,
+        "review_status": "observe",
+        "trade_direction": "Neutral",
+        "win_probability": null
+      },
+      "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/state-copies/state_1h_copy",
+      "workflow_blocking_truth": {
+        "evidence": [
+          "pre_bayes_gate_status=pass_neutralized",
+          "bridge_probability_gap=0.004",
+          "selected_entry_quality=medium",
+          "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+          "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.802",
+          "long/short support gap 0.015 is too small, so alignment is treated as mixed"
+        ],
+        "next_command": "ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/state-copies/state_1h_copy' --objective expansion_manipulation --backend native",
+        "reason": "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+        "stage": "analyze",
+        "status": "pass_neutralized"
+      },
+      "workflow_exit": 0,
+      "workflow_phase_detail": {
+        "actionable": false,
+        "candidate_status": "execution_blocked",
+        "execution_gate_status": "execution_blocked",
+        "execution_readiness": 0.3,
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "path_ranker_calibrated_path_prob": 0.34309623430962344,
+        "ready": false,
+        "review_status": "observe",
+        "selected_path_probability": 0.3150405758830578
+      }
+    },
+    {
+      "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json",
+      "factor_research_exit": 0,
+      "factor_research_keys": [
+        "compact_compare_report",
+        "control_matrix_plan",
+        "ensemble",
+        "factor_lifecycle",
+        "human_output",
+        "human_research_compare_summary",
+        "reflection_bundle",
+        "report",
+        "research_compare_report",
+        "structural_path_ranking_runtime_summary",
+        "structural_path_ranking_validation_summary"
+      ],
+      "label": "4h",
+      "latest_execution_candidate": {
+        "actionable": false,
+        "candidate_status": "no_trade",
+        "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.525|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.9974 mtf_entry_alignment=0.8022",
+        "posterior": null,
+        "review_status": "observe",
+        "trade_direction": "Neutral",
+        "win_probability": null
+      },
+      "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/state-copies/state_4h_copy",
+      "workflow_blocking_truth": {
+        "evidence": [
+          "pre_bayes_gate_status=pass_neutralized",
+          "bridge_probability_gap=0.004",
+          "selected_entry_quality=medium",
+          "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+          "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.802",
+          "long/short support gap 0.015 is too small, so alignment is treated as mixed"
+        ],
+        "next_command": "ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/state-copies/state_4h_copy' --objective expansion_manipulation --backend native",
+        "reason": "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+        "stage": "analyze",
+        "status": "pass_neutralized"
+      },
+      "workflow_exit": 0,
+      "workflow_phase_detail": {
+        "actionable": false,
+        "candidate_status": "execution_blocked",
+        "execution_gate_status": "execution_blocked",
+        "execution_readiness": 0.3,
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "path_ranker_calibrated_path_prob": 0.34309623430962344,
+        "ready": false,
+        "review_status": "observe",
+        "selected_path_probability": 0.3150405758830578
+      }
+    },
+    {
+      "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json",
+      "factor_research_exit": 0,
+      "factor_research_keys": [
+        "compact_compare_report",
+        "control_matrix_plan",
+        "ensemble",
+        "factor_lifecycle",
+        "human_output",
+        "human_research_compare_summary",
+        "reflection_bundle",
+        "report",
+        "research_compare_report",
+        "structural_path_ranking_runtime_summary",
+        "structural_path_ranking_validation_summary"
+      ],
+      "label": "1d",
+      "latest_execution_candidate": {
+        "actionable": false,
+        "candidate_status": "no_trade",
+        "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.525|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.9974 mtf_entry_alignment=0.8022",
+        "posterior": null,
+        "review_status": "observe",
+        "trade_direction": "Neutral",
+        "win_probability": null
+      },
+      "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/state-copies/state_1d_copy",
+      "workflow_blocking_truth": {
+        "evidence": [
+          "pre_bayes_gate_status=pass_neutralized",
+          "bridge_probability_gap=0.004",
+          "selected_entry_quality=medium",
+          "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+          "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.802",
+          "long/short support gap 0.015 is too small, so alignment is treated as mixed"
+        ],
+        "next_command": "ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T123211+0800-codex-115700-selected-history-preflight-v1/state-copies/state_1d_copy' --objective expansion_manipulation --backend native",
+        "reason": "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+        "stage": "analyze",
+        "status": "pass_neutralized"
+      },
+      "workflow_exit": 0,
+      "workflow_phase_detail": {
+        "actionable": false,
+        "candidate_status": "execution_blocked",
+        "execution_gate_status": "execution_blocked",
+        "execution_readiness": 0.3,
+        "path_id": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "path_ranker_calibrated_path_prob": 0.34309623430962344,
+        "ready": false,
+        "review_status": "observe",
+        "selected_path_probability": 0.3150405758830578
+      }
+    }
+  ],
+  "run_id": "20260512T123211+0800-codex-115700-selected-history-preflight-v1",
+  "source_root_id": "20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+  "source_state_mutated": false,
+  "support": {
+    "preferred_for_user_selection": "1h",
+    "ready_actionable_labels": [],
+    "reason": "1h preserves the current 115700 same-root 1h AQ/runtime surface unless a preflight copy becomes ready/actionable."
+  },
+  "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,9 @@
+requirement,evidence,result
+preserve_board_authority,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md support-only packet for already-counted 121347,pass
+regime_rooted_branch_path,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,pass
+ordered_chain_readback,workflow-status readbacks after existing 121347 Auto-Quant -> Pre-Bayes/filter -> BBN -> CatBoost/path-ranker -> execution-tree chain,pass
+no_duplicate_provider_aq,no provider fetch or AQ/TOMAC command run in this packet source remains 115700,pass
+execution_readiness,execution_readiness=0.32853919817900823 execution_gate_status=execution_blocked actionable=false review_status=observe,fail_closed
+catboost_path_ranker_branch_evidence,raw=0.9868275780976984 calibrated=0.34309623430962344 lower_bound=0.2928391743629338 runtime_source=history_path,pass_non_promoting
+selected_history_source_control_gate,workflow blocking truth user_selected_historical_data_missing and board requires exactly one HTF=1d MTF=4h or LTF=1h selection before factor-research,fail_closed
+promotion_update_goal,promotion_allowed=false trade_usable=false update_goal=false,pass

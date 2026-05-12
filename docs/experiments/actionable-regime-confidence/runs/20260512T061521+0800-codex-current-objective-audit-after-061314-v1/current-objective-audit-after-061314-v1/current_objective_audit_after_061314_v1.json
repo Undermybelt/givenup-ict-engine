@@ -1,0 +1,120 @@
+{
+  "run_id": "20260512T061521+0800-codex-current-objective-audit-after-061314-v1",
+  "gate_result": "current_objective_audit_after_061314_v1=not_complete_operator_dispatch_ready_not_sent_equivalence_unscored_required_roots_absent",
+  "generated_at_local": "2026-05-12T06:15:21+08:00",
+  "board_hash_before_artifact": "7c6f7fed4b3f4d0ad68180cc9e2e19b40d60e2e99e3ba4be1bdffd2bc94c7d0b",
+  "objective": "Every active MainRegimeV2 root must reach at least 95% calibrated confidence, survive validation across other markets/cycles/timeframes, and pass the ordered provider/AutoQuant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution-tree chain after source/control unlock.",
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement_id": "active_roots_ge_95",
+      "requirement": "Bear, Bull, Crisis, and Sideways each have >=95% calibrated confidence evidence.",
+      "evidence": "053852 hgb_per_regime_field_materialization_v1 and 055058 hgb_aggregate_field_readback_v1 assertions.",
+      "status": "diagnostic_only_pass",
+      "gap": "Both packets explicitly keep source_control_evidence_acquired=false and downstream_promotion_rerun=false."
+    },
+    {
+      "requirement_id": "other_markets_periods",
+      "requirement": "Regime confidence survives other markets and chronological periods.",
+      "evidence": "053856 hgb_validation_axis_audit_after_051844_v1 assertions: heldout_market_rows=26236, heldout_time_rows=45384, test_rows=27844.",
+      "status": "partial_diagnostic",
+      "gap": "This remains daily HGB/source-label-equivalence evidence only, not source/control promotion evidence."
+    },
+    {
+      "requirement_id": "other_cycles_timeframes",
+      "requirement": "Regime confidence survives other cycles/timeframes with source-owned validation.",
+      "evidence": "053856 timeframe_counts=1d:248440; 061229 source_label_equivalence_current_verifier_v1 row_count=248440 and status=schema_ready_unscored.",
+      "status": "blocked",
+      "gap": "Native sub-hour target root is absent and the equivalence verifier is unscored/non-promoting."
+    },
+    {
+      "requirement_id": "r3_native_subhour",
+      "requirement": "R3 native sub-hour source-owned labels exist for intake.",
+      "evidence": "/tmp/ict-engine-native-subhour-source-label-intake live filesystem check.",
+      "status": "blocked",
+      "gap": "Required root is absent."
+    },
+    {
+      "requirement_id": "r5_recency_extension",
+      "requirement": "R5 post-cutoff source-owned MainRegimeV2 recency rows exist.",
+      "evidence": "/tmp/ict-engine-source-panel-recency-extension live filesystem check and 060446 source-arrival sweep.",
+      "status": "blocked",
+      "gap": "Required root is absent; known local stock-regime rows remain daily through 2026-01-30 only."
+    },
+    {
+      "requirement_id": "r6_owner_export_controls",
+      "requirement": "R6 verifier-native owner/export rows plus valid controls exist.",
+      "evidence": "/tmp/ict-engine-board-a-r6-owner-export-v1 live filesystem check; 060807 route/contact recency assertions; 061314 operator-dispatch handoff assertions; approval package assertions.",
+      "status": "blocked",
+      "gap": "Required root is absent, v5 drafts are not sent, no controls were acquired, approval_present=false, and canonical_merge_allowed_now=false."
+    },
+    {
+      "requirement_id": "ordered_downstream_chain",
+      "requirement": "After source/control unlock, run direct verifier, split calibration, canonical merge, provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback.",
+      "evidence": "060807, 061229, 061314, and approval package assertions.",
+      "status": "blocked",
+      "gap": "No source/control unlock exists, so canonical merge and downstream promotion rerun are not allowed."
+    },
+    {
+      "requirement_id": "no_proxy_promotion",
+      "requirement": "Do not accept proxy signals, schema-ready roots, provider reachability, AutoQuant cache backtests, or dispatch drafts as completion.",
+      "evidence": "060056, 060802, 060807, 061229, and 061314 gate results.",
+      "status": "pass",
+      "gap": "No promotion or trade claim was made."
+    }
+  ],
+  "evidence_readback": {
+    "diagnostic_confidence_packets": [
+      "20260512T053852-codex-hgb-per-regime-field-materialization-v1",
+      "20260512T055058-codex-hgb-aggregate-field-readback-v1"
+    ],
+    "cross_axis_packet": "20260512T053856-codex-hgb-validation-axis-audit-after-051844-v1",
+    "latest_route_contact_packet": "20260512T060807-codex-r6-owner-route-public-contact-recency-check-v1",
+    "latest_equivalence_verifier_packet": "20260512T061229+0800-codex-source-label-equivalence-current-verifier-v1",
+    "latest_operator_dispatch_packet": "20260512T061314+0800-codex-r6-v5-operator-dispatch-handoff-after-060807-v1",
+    "source_label_equivalence": {
+      "root_present": true,
+      "row_count": 248440,
+      "status": "schema_ready_unscored",
+      "confidence_acceptance": false,
+      "promotion_allowed": false
+    },
+    "operator_dispatch": {
+      "v5_drafts_ready": true,
+      "external_requests_sent": false,
+      "approval_present": false,
+      "source_control_evidence_acquired": false,
+      "target_root_mutated": false
+    },
+    "required_target_roots": {
+      "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+      "/tmp/ict-engine-native-subhour-source-label-intake": false,
+      "/tmp/ict-engine-source-panel-recency-extension": false
+    },
+    "approval_decision_package": {
+      "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "approval_present": false,
+      "canonical_merge_allowed_now": false,
+      "downstream_rerun_allowed_now": false,
+      "trade_usable": false,
+      "update_goal": false
+    }
+  },
+  "assertions": {
+    "objective_complete": false,
+    "diagnostic_confidence_all_active_roots": true,
+    "source_label_equivalence_schema_ready": true,
+    "source_label_equivalence_row_count": 248440,
+    "source_label_equivalence_confidence_acceptance": false,
+    "operator_dispatch_ready": true,
+    "external_requests_sent": false,
+    "required_target_roots_absent": true,
+    "source_control_evidence_acquired": false,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Use the v5 drafts through an approved operator dispatch path, or supply explicit source/control approval, verifier-native R6 owner-export rows with valid controls, source-owned R5 recency rows, or source-owned R3 native sub-hour labels. Only after a required root unlocks should the ordered downstream chain rerun."
+}

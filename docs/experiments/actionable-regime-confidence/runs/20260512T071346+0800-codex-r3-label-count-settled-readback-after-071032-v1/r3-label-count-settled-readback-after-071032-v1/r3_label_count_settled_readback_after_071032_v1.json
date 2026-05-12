@@ -1,0 +1,29 @@
+{
+  "run_id": "20260512T071346+0800-codex-r3-label-count-settled-readback-after-071032-v1",
+  "source_run_id": "20260512T071032+0800-codex-r3-label-count-readback-after-070434-v1",
+  "source_output": "docs/experiments/actionable-regime-confidence/runs/20260512T071032+0800-codex-r3-label-count-readback-after-070434-v1/command-output/r3_main_regime_v2_label_counts_header_aware.tsv",
+  "gate": "r3_label_count_settled_readback_after_071032_v1=tsie_quarantined_no_crisis_no_unlock_no_downstream",
+  "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+  "root_present": true,
+  "source_status": "tsie_quarantined",
+  "label_counts": {
+    "Bear": 1435764,
+    "Bull": 1435055,
+    "Sideways": 2162084
+  },
+  "data_rows": 5032903,
+  "crisis_rows": 0,
+  "main_regime_v2_labels_present": true,
+  "crisis_capable": false,
+  "accepted_rows_added": 0,
+  "r6_owner_export_unlock": false,
+  "r5_recency_unlock": false,
+  "r3_native_subhour_unlock": false,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

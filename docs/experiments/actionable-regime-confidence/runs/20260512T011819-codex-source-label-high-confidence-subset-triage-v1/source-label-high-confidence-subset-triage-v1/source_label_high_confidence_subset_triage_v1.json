@@ -1,0 +1,59 @@
+{
+  "accepted_rows_added": 0,
+  "blockers_by_label": {
+    "Bear": [
+      "calibration_high_conf_support_below_50",
+      "heldout_market_high_conf_support_below_50",
+      "heldout_time_high_conf_support_below_50",
+      "test_high_conf_support_below_50"
+    ],
+    "Bull": [],
+    "Crisis": [
+      "heldout_market_high_conf_support_below_50",
+      "cross_market_family_high_conf_coverage_below_2"
+    ],
+    "Sideways": []
+  },
+  "board_hash_before_writeback": "2c388d5689587ba60f22a50c85dbc71842d1962248888a0c44319c07ed49b808",
+  "calibration_decision": "source_label_equivalence_confidence_calibration_v1=source_confidence_scored_no_acceptance",
+  "calibration_run": "20260512T011056-codex-source-label-equivalence-calibration-after-root-poll-v1",
+  "candidate_labels": [
+    "Bull",
+    "Sideways"
+  ],
+  "canonical_merge_allowed": false,
+  "confidence_threshold": 0.95,
+  "decision": "source_label_high_confidence_subset_triage_v1=triage_only_no_acceptance",
+  "downstream_chain_rerun_allowed": false,
+  "generated_at_utc": "2026-05-11T17:21:13.622837+00:00",
+  "min_support_per_split": 50,
+  "missing_confidence_rows": 0,
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "required_market_families": [
+    "india_equity_index",
+    "us_index",
+    "us_single_stock"
+  ],
+  "required_splits": [
+    "calibration",
+    "heldout_market",
+    "heldout_time",
+    "test"
+  ],
+  "row_count": 248440,
+  "run_id": "20260512T011819-codex-source-label-high-confidence-subset-triage-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_provenance_sha256": "a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b",
+  "source_rows_path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+  "source_rows_sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25",
+  "strict_full_objective_achieved": false,
+  "support_only_candidates": [
+    "Bull",
+    "Sideways"
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

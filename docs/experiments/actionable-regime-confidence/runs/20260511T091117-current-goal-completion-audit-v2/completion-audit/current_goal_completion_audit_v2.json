@@ -1,0 +1,84 @@
+{
+  "run_id": "20260511T091117+0800-current-goal-completion-audit-v2",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "objective": "Every active regime must reach 95%-99% calibrated confidence and validate across other markets/timeframes before reporting the outcome.",
+  "goal_achieved": false,
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "active_taxonomy": "MainRegimeV2",
+  "main_price_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "separate_overlay": "Manipulation",
+  "missing_or_rejected_parent_root_source_label_slots": 564,
+  "missing_by_root": {
+    "Bull": 141,
+    "Bear": 141,
+    "Sideways": 141,
+    "Crisis": 141
+  },
+  "missing_by_provider": {
+    "yfinance": 456,
+    "kraken_public_lowpollution_http": 108
+  },
+  "missing_by_timeframe": {
+    "1m": 68,
+    "5m": 68,
+    "15m": 68,
+    "30m": 68,
+    "1h": 68,
+    "4h": 68,
+    "1d": 44,
+    "1w": 44,
+    "1mo": 68
+  },
+  "latest_source_probe_additions": {
+    "accepted_parent_root_label_slots": 0,
+    "accepted_direct_manipulation_rows_or_windows": 0
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "requirement": "Use named Board A TODO as authoritative artifact",
+      "status": "pass",
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md"
+    },
+    {
+      "requirement": "Every active regime reaches 95%-99% calibrated confidence",
+      "status": "fail",
+      "evidence": "accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal"
+    },
+    {
+      "requirement": "Validate across other markets and other timeframes",
+      "status": "fail",
+      "evidence": "564 missing/rejected parent-root slots across yfinance and kraken_public_lowpollution_http"
+    },
+    {
+      "requirement": "Full-cycle/full-universe coverage",
+      "status": "fail",
+      "evidence": "141 missing/rejected slots for each parent root"
+    },
+    {
+      "requirement": "Direct Manipulation evidence",
+      "status": "fail",
+      "evidence": "0 accepted timestamped direct positive/negative rows/windows"
+    },
+    {
+      "requirement": "No proxy labels promoted",
+      "status": "pass",
+      "evidence": "proxy/model/subtype candidates remain rejected or sidecar-only"
+    },
+    {
+      "requirement": "Report the result",
+      "status": "pass",
+      "evidence": "completion audit v2 and Board A Current Cursor"
+    }
+  ],
+  "single_blocker": "564 missing/rejected parent-root source-label slots plus incomplete direct Manipulation label coverage",
+  "next_action": "Obtain downloadable/authenticated exact-underlying parent-root label panel or timestamped direct Manipulation positive/negative rows.",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false
+}

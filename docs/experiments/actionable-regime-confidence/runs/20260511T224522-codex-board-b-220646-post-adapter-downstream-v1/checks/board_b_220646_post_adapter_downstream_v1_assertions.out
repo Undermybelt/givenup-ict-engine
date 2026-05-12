@@ -1,0 +1,14 @@
+target_exact_paths_ready=True
+score_rows_written=4
+scores_applied=True
+rows_with_raw_path_score_after_scores=4
+bear_bbn_applied=False
+bear_bbn_skipped_unsupported=False
+workflow_prefer_history_has_branch_path=True
+execution_candidate_has_branch_path=False
+workflow_candidate_status=None
+workflow_actionable=None
+downstream_promotable=False
+promotion_status=not_promoted:post_adapter_downstream_rerun_failed
+thresholds_relaxed=false
+raw_data_committed=false

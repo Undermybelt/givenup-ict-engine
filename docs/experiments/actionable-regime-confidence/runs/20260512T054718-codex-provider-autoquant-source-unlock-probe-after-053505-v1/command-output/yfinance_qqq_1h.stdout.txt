@@ -1,0 +1,1 @@
+yahoo QQQ 1h: 473 rows (2026-02-02 18:30:00+00:00 -> 2026-05-11 20:00:00+00:00) -> /private/tmp/20260512T054718-codex-provider-autoquant-source-unlock-probe-after-053505-v1/provider-bars/QQQ_yfinance_1h_20260131_20260510.csv

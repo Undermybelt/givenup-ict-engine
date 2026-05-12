@@ -1,0 +1,9 @@
+requirement,evidence,status
+Same-root provider/AQ provenance preserved,"Child run derives from `131500`, which derives from `125715` same-root ETH six-provider AQ authority",covered
+Run ordered downstream chain,"Commands cover CatBoost train/apply, ict-engine external-score apply/register/runtime, policy-training status, workflow runtime/structural/full readbacks, and Pre-Bayes refresh",covered_partial
+CatBoost/path-ranker maturity,"`score_model_family=catboost`, `score_source_kind=external_model`, `runtime_active_match_count=2`, `raw_scored_mature=163/30`, `production_validation=162/30`, `observation_validation=162/30`",covered
+Every-regime calibrated >=95 confidence,"Selected path probability `0.6632710958496916`; branch posterior `0.345679012345679`; Pre-Bayes latest policy/bridge absent after runtime",missing
+Cross-market/timeframe acceptance,"This is an ETH same-root provider packet; no all-regime cross-market/timeframe acceptance packet exists",missing
+Execution-tree non-observe readiness,"Workflow closed-loop branch admission `fail_closed`; `actionable=false`; `ready=false`; `review_status=observe`",missing
+No duplicate counting,"Treat as one child closure under already-counted `131500`/`125715`; do not count parent roots again",covered
+No production mutation or live-trade claim,"Isolated state root; no production BBN/CPD promotion; `trade_usable=false`; `promotion_allowed=false`; `update_goal=false`",covered

@@ -1,0 +1,53 @@
+{
+  "summary_line": "market_data:0/1 ready",
+  "ready_by_domain": {
+    "market_data": "0/1"
+  },
+  "providers": [
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": false,
+      "access_mode": "operator_runtime_required",
+      "user_access": "local_stdio_or_remote_api_key",
+      "market_fit": [
+        "tradfi",
+        "crypto"
+      ],
+      "fallback_priority": 31,
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes.",
+      "install_prompts": [
+        "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+        "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+      ]
+    }
+  ],
+  "ready_providers": [],
+  "pending_providers": [
+    "tradingview_mcp@market_data:configured_runtime_unhealthy:tradingview_mcp_connectivity_probe_failed"
+  ],
+  "pending_provider_details": [
+    {
+      "provider_id": "tradingview_mcp",
+      "domain": "market_data",
+      "status": "configured_runtime_unhealthy",
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "install_prompts": [
+        "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1.",
+        "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable."
+      ]
+    }
+  ],
+  "selectable_providers": [
+    "tradingview_mcp"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": [
+    "Consumer agent follow-up: retry a lightweight MCP health check such as tools/list before treating TradingViewRemix as usable.",
+    "Consumer agent request: TradingViewRemix MCP credentials were present but the live probe failed. Ask the user to re-enter ICT_ENGINE_TVREMIX_MCP_API_KEY and verify the MCP endpoint at https://tvremix.xyz/api/mcp/v1."
+  ]
+}

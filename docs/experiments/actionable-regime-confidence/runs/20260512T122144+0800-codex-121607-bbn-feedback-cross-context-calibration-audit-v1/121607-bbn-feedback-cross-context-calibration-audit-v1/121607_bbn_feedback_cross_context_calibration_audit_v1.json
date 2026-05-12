@@ -1,0 +1,746 @@
+{
+  "by_branch": {
+    "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.615854,
+      "losses": 101,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 164,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.384146,
+      "wins": 63
+    },
+    "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.753425,
+      "losses": 55,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 73,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.246575,
+      "wins": 18
+    }
+  },
+  "by_provider": {
+    "binance_public": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.653846,
+      "losses": 34,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "binance_public"
+      ],
+      "rows": 52,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.346154,
+      "wins": 18
+    },
+    "bybit_public": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.647059,
+      "losses": 33,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "bybit_public"
+      ],
+      "rows": 51,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.352941,
+      "wins": 18
+    },
+    "ibkr_paxos_long_midpoint": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.659091,
+      "losses": 29,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 44,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.340909,
+      "wins": 15
+    },
+    "kraken_public": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.6875,
+      "losses": 22,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "kraken_public"
+      ],
+      "rows": 32,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.3125,
+      "wins": 10
+    },
+    "tvr_default_binance": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.72973,
+      "losses": 27,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 37,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.27027,
+      "wins": 10
+    },
+    "yfinance": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.52381,
+      "losses": 11,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 21,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.47619,
+      "wins": 10
+    }
+  },
+  "by_provider_branch": {
+    "binance_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.621622,
+      "losses": 23,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "binance_public"
+      ],
+      "rows": 37,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.378378,
+      "wins": 14
+    },
+    "binance_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.733333,
+      "losses": 11,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "binance_public"
+      ],
+      "rows": 15,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.266667,
+      "wins": 4
+    },
+    "bybit_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.588235,
+      "losses": 20,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "bybit_public"
+      ],
+      "rows": 34,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.411765,
+      "wins": 14
+    },
+    "bybit_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.764706,
+      "losses": 13,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "bybit_public"
+      ],
+      "rows": 17,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.235294,
+      "wins": 4
+    },
+    "ibkr_paxos_long_midpoint | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.625,
+      "losses": 20,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 32,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.375,
+      "wins": 12
+    },
+    "ibkr_paxos_long_midpoint | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.75,
+      "losses": 9,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "ibkr_paxos_long_midpoint"
+      ],
+      "rows": 12,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.25,
+      "wins": 3
+    },
+    "kraken_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.652174,
+      "losses": 15,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "kraken_public"
+      ],
+      "rows": 23,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.347826,
+      "wins": 8
+    },
+    "kraken_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.777778,
+      "losses": 7,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "kraken_public"
+      ],
+      "rows": 9,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.222222,
+      "wins": 2
+    },
+    "tvr_default_binance | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.68,
+      "losses": 17,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 25,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.32,
+      "wins": 8
+    },
+    "tvr_default_binance | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.833333,
+      "losses": 10,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "tvr_default_binance"
+      ],
+      "rows": 12,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.166667,
+      "wins": 2
+    },
+    "yfinance | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.461538,
+      "losses": 6,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 13,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.538462,
+      "wins": 7
+    },
+    "yfinance | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1": {
+      "breakeven": 0,
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "instruments": [
+        "BTC"
+      ],
+      "loss_rate": 0.625,
+      "losses": 5,
+      "max_bbn_probability": 0.747688,
+      "providers": [
+        "yfinance"
+      ],
+      "rows": 8,
+      "timeframes": [
+        "1h"
+      ],
+      "win_rate": 0.375,
+      "wins": 3
+    }
+  },
+  "checklist": [
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.enriched_layer_contract.jsonl",
+      "notes": "read 237 enriched exact-root rows",
+      "requirement": "Use exact Board A run artifacts, not chat-only inference",
+      "status": "pass"
+    },
+    {
+      "evidence": "binance_public,bybit_public,ibkr_paxos_long_midpoint,kraken_public,tvr_default_binance,yfinance",
+      "notes": "missing=[]",
+      "requirement": "Provider coverage includes YF, Kraken, Binance, Bybit, TVR, IBKR",
+      "status": "pass"
+    },
+    {
+      "evidence": "max_bbn_probability=0.747688; max_pre_bayes_confidence=0.525086",
+      "notes": "accepted_regime_count_95=0/2",
+      "requirement": "Every visible regime/branch reaches >=95% confidence",
+      "status": "fail"
+    },
+    {
+      "evidence": "BTC",
+      "notes": "all observed rows normalize to BTC",
+      "requirement": "Validate on other markets/instruments",
+      "status": "fail"
+    },
+    {
+      "evidence": "1h",
+      "notes": "all observed rows are 1h",
+      "requirement": "Validate on other periods/timeframes",
+      "status": "fail"
+    },
+    {
+      "evidence": "chronological_buckets.csv",
+      "notes": "at least one chronological bucket is below 95%",
+      "requirement": "Chronological calibration remains >=95%",
+      "status": "fail"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json",
+      "notes": "chain exists, but Pre-Bayes is pass_neutralized and execution is observe/blocked",
+      "requirement": "Pass through Pre-Bayes/BBN/CatBoost/execution tree",
+      "status": "partial"
+    },
+    {
+      "evidence": "assertions",
+      "notes": "promotion_allowed=false; trade_usable=false; update_goal=false",
+      "requirement": "Do not promote or update goal unless all gates pass",
+      "status": "pass"
+    }
+  ],
+  "chronological_buckets": [
+    {
+      "branches": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "bucket": 1,
+      "end_open_ts": "2026-04-19T12:00:00+00:00",
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "loss_rate": 0.518987,
+      "losses": 41,
+      "main_regimes": [
+        "Bull",
+        "Range"
+      ],
+      "max_bbn_probability": 0.747688,
+      "max_pre_bayes_confidence": 0.525086,
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 79,
+      "start_open_ts": "2026-04-05T03:00:00+00:00",
+      "win_rate": 0.481013,
+      "wins": 38
+    },
+    {
+      "branches": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "bucket": 2,
+      "end_open_ts": "2026-04-28T08:00:00+00:00",
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "loss_rate": 0.797468,
+      "losses": 63,
+      "main_regimes": [
+        "Bull",
+        "Range"
+      ],
+      "max_bbn_probability": 0.747688,
+      "max_pre_bayes_confidence": 0.525086,
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 79,
+      "start_open_ts": "2026-04-19T12:00:00+00:00",
+      "win_rate": 0.202532,
+      "wins": 16
+    },
+    {
+      "branches": [
+        "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+        "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+      ],
+      "breakeven": 0,
+      "bucket": 3,
+      "end_open_ts": "2026-05-11T16:00:00+00:00",
+      "execution_actionable_rows": 0,
+      "execution_ready_rows": 0,
+      "loss_rate": 0.658228,
+      "losses": 52,
+      "main_regimes": [
+        "Bull",
+        "Range"
+      ],
+      "max_bbn_probability": 0.747688,
+      "max_pre_bayes_confidence": 0.525086,
+      "providers": [
+        "binance_public",
+        "bybit_public",
+        "ibkr_paxos_long_midpoint",
+        "kraken_public",
+        "tvr_default_binance",
+        "yfinance"
+      ],
+      "rows": 79,
+      "start_open_ts": "2026-04-29T04:00:00+00:00",
+      "win_rate": 0.341772,
+      "wins": 27
+    }
+  ],
+  "gate_results": {
+    "chronological_context_pass": false,
+    "confidence_95_pass": false,
+    "every_visible_regime_95": false,
+    "execution_admissible": false,
+    "gate": "fail_closed:confidence_below_95,single_instrument_only,single_timeframe_only,chronological_buckets_below_95,execution_not_admissible,not_every_visible_regime_at_95",
+    "instrument_context_pass": false,
+    "promotion_allowed": false,
+    "provider_context_pass": true,
+    "timeframe_context_pass": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provider_branch_source_rows": [
+    {
+      "avg_pnl": "2.089566",
+      "loss_rate": "0.621622",
+      "losses": "23",
+      "provider_branch": "binance_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": "37",
+      "total_pnl": "77.313931",
+      "win_rate": "0.378378",
+      "wins": "14"
+    },
+    {
+      "avg_pnl": "-6.538014",
+      "loss_rate": "0.733333",
+      "losses": "11",
+      "provider_branch": "binance_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": "15",
+      "total_pnl": "-98.070217",
+      "win_rate": "0.266667",
+      "wins": "4"
+    },
+    {
+      "avg_pnl": "4.354134",
+      "loss_rate": "0.588235",
+      "losses": "20",
+      "provider_branch": "bybit_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": "34",
+      "total_pnl": "148.040565",
+      "win_rate": "0.411765",
+      "wins": "14"
+    },
+    {
+      "avg_pnl": "-10.078406",
+      "loss_rate": "0.764706",
+      "losses": "13",
+      "provider_branch": "bybit_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": "17",
+      "total_pnl": "-171.3329",
+      "win_rate": "0.235294",
+      "wins": "4"
+    },
+    {
+      "avg_pnl": "3.069398",
+      "loss_rate": "0.625",
+      "losses": "20",
+      "provider_branch": "ibkr_paxos_long_midpoint | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": "32",
+      "total_pnl": "98.220726",
+      "win_rate": "0.375",
+      "wins": "12"
+    },
+    {
+      "avg_pnl": "-2.226316",
+      "loss_rate": "0.75",
+      "losses": "9",
+      "provider_branch": "ibkr_paxos_long_midpoint | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": "12",
+      "total_pnl": "-26.715788",
+      "win_rate": "0.25",
+      "wins": "3"
+    },
+    {
+      "avg_pnl": "-2.4082",
+      "loss_rate": "0.652174",
+      "losses": "15",
+      "provider_branch": "kraken_public | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": "23",
+      "total_pnl": "-55.388609",
+      "win_rate": "0.347826",
+      "wins": "8"
+    },
+    {
+      "avg_pnl": "-7.906294",
+      "loss_rate": "0.777778",
+      "losses": "7",
+      "provider_branch": "kraken_public | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": "9",
+      "total_pnl": "-71.156648",
+      "win_rate": "0.222222",
+      "wins": "2"
+    },
+    {
+      "avg_pnl": "-4.108881",
+      "loss_rate": "0.68",
+      "losses": "17",
+      "provider_branch": "tvr_default_binance | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": "25",
+      "total_pnl": "-102.722031",
+      "win_rate": "0.32",
+      "wins": "8"
+    },
+    {
+      "avg_pnl": "-12.249479",
+      "loss_rate": "0.833333",
+      "losses": "10",
+      "provider_branch": "tvr_default_binance | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": "12",
+      "total_pnl": "-146.993745",
+      "win_rate": "0.166667",
+      "wins": "2"
+    },
+    {
+      "avg_pnl": "14.082832",
+      "loss_rate": "0.461538",
+      "losses": "6",
+      "provider_branch": "yfinance | Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "rows": "13",
+      "total_pnl": "183.076815",
+      "win_rate": "0.538462",
+      "wins": "7"
+    },
+    {
+      "avg_pnl": "-2.283857",
+      "loss_rate": "0.625",
+      "losses": "5",
+      "provider_branch": "yfinance | Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1",
+      "rows": "8",
+      "total_pnl": "-18.270854",
+      "win_rate": "0.375",
+      "wins": "3"
+    }
+  ],
+  "run_id": "20260512T122144+0800-codex-121607-bbn-feedback-cross-context-calibration-audit-v1",
+  "source_enriched_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.enriched_layer_contract.jsonl",
+  "source_feedback_packet": "docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json",
+  "source_feedback_packet_summary": {
+    "active_structural_regime": null,
+    "active_structural_regime_confidence": null,
+    "execution": null,
+    "losses": null,
+    "pre_bayes_gate": null,
+    "rows": null,
+    "win_rate": null,
+    "wins": null
+  },
+  "source_provider_branch_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_by_provider_branch_v1.csv",
+  "summary": {
+    "accepted_regime_count_95": 0,
+    "branches": [
+      "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+      "Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1"
+    ],
+    "execution_actionable_rows": 0,
+    "execution_ready_rows": 0,
+    "instruments": [
+      "BTC"
+    ],
+    "main_regimes": [
+      "Bull",
+      "Range"
+    ],
+    "max_bbn_probability": 0.747688,
+    "max_pre_bayes_confidence": 0.525086,
+    "missing_providers": [],
+    "promotional_review_rows": 0,
+    "providers": [
+      "binance_public",
+      "bybit_public",
+      "ibkr_paxos_long_midpoint",
+      "kraken_public",
+      "tvr_default_binance",
+      "yfinance"
+    ],
+    "rows": 237,
+    "timeframes": [
+      "1h"
+    ],
+    "visible_regime_or_branch_count": 2
+  },
+  "threshold": 0.95
+}

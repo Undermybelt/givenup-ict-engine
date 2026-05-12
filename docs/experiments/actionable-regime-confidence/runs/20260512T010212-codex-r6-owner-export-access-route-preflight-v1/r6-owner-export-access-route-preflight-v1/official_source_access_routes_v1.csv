@@ -1,0 +1,8 @@
+route_id,owner_branch,route,scope,status,blocker
+CME_GROUP_DATAMINE,cme_group,CME DataMine / Data Sales,CME/NYMEX/COMEX/CME Globex Market Depth or Market by Order export route,pinned_from_sendable_request_and_contact_route,licensed verifier-native export and provenance not acquired
+CME_MARKETDATA_SUPPORT,cme_group,marketdata@cmegroup.com,CME market-data support fallback for product and historical depth scope,pinned,no ticket/export/provenance acquired
+CME_FIX_FAST_HISTORICAL,cme_group,CME historical FIX formatted files,exchange-level date-fit route for 2011-2013 CME-group Oystacher cells,route_fit_only,no verifier-native normal-control rows acquired
+CBOE_DATASHOP,cboe_cfe,Cboe DataShop sales/support,CFE VIX futures trades/quotes historical route covering April 2004 through February 2018,pinned,historical full-depth/order-lifecycle confirmation still required
+CFE_MARKET_DATA_SERVICES,cboe_cfe,marketdata@cboe.com,CFE market data services route for VIX/CFE historical export request,pinned,no ticket/export/provenance acquired
+CBOE_SUPPORT_FORM,cboe_cfe,Cboe DataShop contact form/phone,Cboe/CFE custom historical data request path,pinned,no custom export acquired
+LICENSED_EQUIVALENT,user_or_owner_provided,Licensed equivalent source-owner export package,verifier-native owner package delivered into /tmp/ict-engine-board-a-r6-owner-export-v1,acceptable_route_only,no package present

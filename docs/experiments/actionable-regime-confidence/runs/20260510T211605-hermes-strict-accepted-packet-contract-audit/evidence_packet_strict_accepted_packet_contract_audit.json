@@ -1,0 +1,151 @@
+{
+  "schema_version": "board-a-strict-accepted-packet-contract-audit/v1",
+  "loop_id": "20260510T211605+0800-hermes-strict-accepted-packet-contract-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T211605-hermes-strict-accepted-packet-contract-audit",
+  "objective": "Audit whether every accepted Board A regime packet itself satisfies the current contract: regime-specific qualifying_condition plus validation_instruments, validation_periods, and validation_market_contexts.",
+  "thresholds_relaxed": false,
+  "audited_packet_sources": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+  ],
+  "required_contract_fields": [
+    "qualifying_condition",
+    "validation_instruments",
+    "validation_periods",
+    "validation_market_contexts"
+  ],
+  "contract_results": {
+    "SessionLiquidityCoreViable": {
+      "status": "contract_incomplete",
+      "accepted_metrics_retained": {
+        "precision_wilson_lcb_95": 0.9899396497369397,
+        "calibration_support": 378,
+        "test_support": 378,
+        "ece": 0.010582010582010581
+      },
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json",
+      "missing_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "note": "The source packet has a rule-like session/liquidity candidate and chronological evidence, but it does not expose the current output-contract fields required by Board A."
+    },
+    "TrendExpansion": {
+      "status": "contract_complete_accepted_95",
+      "qualifying_condition": "trend_persistence_16 >= 1 AND stretch64 >= 0.05054785682",
+      "precision_wilson_lcb_95": 0.9536435698638122,
+      "calibration_support": 273,
+      "test_support": 581,
+      "ece": 0.036674169204289675,
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    "RangeConsolidation": {
+      "status": "contract_incomplete",
+      "accepted_metrics_retained": {
+        "precision_wilson_lcb_95": 0.9676071866741978,
+        "calibration_support": 467,
+        "test_support": 313,
+        "ece": 0.004488121867580741
+      },
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json",
+      "missing_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "note": "The accepted NQ 15m persistence packet predates the stricter cross-context output contract and does not expose required validation axes."
+    },
+    "ExtremeStress": {
+      "status": "contract_complete_accepted_95",
+      "qualifying_condition": "stress_persistence_16 >= 1 AND jump_intensity_32 >= 0.125",
+      "precision_wilson_lcb_95": 0.9741288651988539,
+      "calibration_support": 445,
+      "test_support": 215,
+      "ece": 0.015573556310425896,
+      "validation_instruments": [
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    "ReversalBrewing": {
+      "status": "contract_complete_accepted_95",
+      "qualifying_condition": "ma64_slope16 <= 0.00115583574 AND stretch64 <= 0.005836516932",
+      "precision_wilson_lcb_95": 0.9919428347812438,
+      "calibration_support": 843,
+      "test_support": 901,
+      "ece": 0.0013389630343508818,
+      "validation_instruments": [
+        "BTC-USD",
+        "NQ",
+        "QQQ",
+        "SPY"
+      ],
+      "validation_market_contexts": [
+        "CME_futures_local",
+        "yfinance_ETF",
+        "yfinance_crypto"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T205856-codex-sticky-hazard-per-regime/evidence_packet_sticky_hazard_cross_context.json"
+    },
+    "ThinLiquidity": {
+      "status": "contract_incomplete",
+      "accepted_metrics_retained": {
+        "precision_wilson_lcb_95": 0.9775144812786577,
+        "calibration_support": 125,
+        "test_support": 167,
+        "ece": 0.0
+      },
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json",
+      "missing_contract_fields": [
+        "qualifying_condition",
+        "validation_instruments",
+        "validation_periods",
+        "validation_market_contexts"
+      ],
+      "note": "ThinLiquidityOffHoursPersistent has a rule and evidence, but the accepted packet does not expose all strict validation contract fields."
+    }
+  },
+  "strict_contract_coverage": {
+    "contract_complete_accepted_count": 3,
+    "required_count": 6,
+    "contract_complete_regimes": [
+      "TrendExpansion",
+      "ExtremeStress",
+      "ReversalBrewing"
+    ],
+    "contract_incomplete_regimes": [
+      "SessionLiquidityCoreViable",
+      "RangeConsolidation",
+      "ThinLiquidity"
+    ],
+    "surface_metrics_accepted_count": 6,
+    "strict_board_state": "active"
+  },
+  "decision": {
+    "board_state": "active",
+    "accepted_gate": "strict contract incomplete: 3/6 accepted packets expose required qualifying_condition and validation axes; surface metrics exist for 6/6 but cannot close Board A under the current contract.",
+    "trade_usable": false,
+    "next_action": "Backfill strict output-contract packets for SessionLiquidityCoreViable, RangeConsolidation, and ThinLiquidity with qualifying_condition, validation_instruments, validation_periods, and validation_market_contexts, without changing thresholds or borrowing another regime packet."
+  }
+}

@@ -1,0 +1,8 @@
+PASS normalized_trades_ingested 146
+PASS history_rows_at_least_30 148
+PASS raw_scored_mature_at_least_30 147
+PASS production_validation_at_least_30 146
+PASS trainer_artifact_ready True
+PASS runtime_enabled enabled=True ready=True
+FAIL_CLOSED pre_bayes_present policy fields checked
+FAIL_CLOSED execution_actionable workflow checked

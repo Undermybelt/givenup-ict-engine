@@ -1,0 +1,36 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "6b6a6ee0f092d953486e8fa129138344c2f475aef38bb154587472d48b8d32d4",
+  "canonical_live_intake_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "external_requests_sent": false,
+  "gate_result": "r6_oystacher_exhibit_a_policy_review_v1=positive_source_candidate_controls_rejected_no_canonical_merge",
+  "generated_at_utc": "2026-05-11T16:34:16.478366+00:00",
+  "isolated_split_axes_pass": true,
+  "matched_control_policy_decision": "rejected_flip_rows_not_normal_controls",
+  "materialization_run": "20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1",
+  "new_confidence_gate": false,
+  "next_action": "Source owner-approved normal/non-manipulation matched controls for the Exhibit A SPOOF rows, or get explicit owner/user approval for a different control contract, before any canonical merge or downstream chain rerun.",
+  "parsed_order_rows": 6735,
+  "positive_source_policy_decision": "usable_as_positive_candidate_only",
+  "raw_data_committed": false,
+  "raw_pdf_sha256": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+  "run_id": "20260512T003326-codex-r6-oystacher-exhibit-a-policy-review-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "side_counts": {
+    "FLIP": 1553,
+    "SPOOF": 5182
+  },
+  "source_pdf_url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf",
+  "source_policy": {
+    "flip_rows": "rejected_as_normal_matched_controls",
+    "positive_spoof_rows": "source_labeled_spoof_positive_candidates",
+    "public_recap_pacer_exhibit_a": "usable_as_official_court_filed_positive_source_candidate",
+    "rationale": "The court-filed Exhibit A labels SPOOF rows directly, but FLIP rows are part of the same alleged flip sequences and same participant/order-lifecycle narrative. They are not owner-labeled normal/non-manipulation controls."
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

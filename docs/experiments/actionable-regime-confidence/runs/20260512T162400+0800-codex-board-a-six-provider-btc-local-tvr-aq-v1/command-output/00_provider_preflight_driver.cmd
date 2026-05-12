@@ -1,0 +1,1 @@
+uv run --with pandas --with requests --with ib_async --with redis --with pyyaml python docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/scripts/board_a_162400_provider_preflight_v1.py

@@ -1,0 +1,18 @@
+requirement,evidence,status,blocker_or_gap
+same_board_file_used,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,pass,append-only registration still required after artifact creation
+latest_cursor_re_read,Current Cursor last_loop_id 20260512T003358+0800-codex-r6-oystacher-exhibit-a-policy-review-v1,pass,none
+every_regime_95_confidence,Current cursor reports strict full objective blocked and source-label confidence 0/4,blocked,not every regime has canonical accepted 95 evidence under strict objective
+cross_market_cross_period_validation,R6 technical preflight split axes pass but controls are policy-blocked; price-root full matrix still blocked,blocked,control side invalid for canonical promotion and R5/R3/source-label roots absent
+r6_direct_manipulation_technical_preflight,V66 preflight status true with isolated verifier schema_ready_unscored,partial,technical readiness only; not canonical acceptance
+r6_direct_manipulation_controls,V65/V66 reject 1553 FLIP rows as matched normal controls without explicit approval,blocked,need explicit FLIP-control approval or independent owner-approved normal controls
+r6_oystacher_control_cells,003627 control request enumerates 17 required cells with 0 valid source-owned normal controls each,blocked,need at least 73 valid normal controls per cell or explicit FLIP-as-control exception approval
+canonical_owner_export_root,V66 preflight owner_target_exists false and owner_target_mutated false,blocked,target root absent and canonical merge not allowed
+provider_ibkr_tradingview_yfinance_kraken_after_v66,Current cursor says no provider/downstream rerun until approval or source-owned controls plus canonical merge,blocked,no approved canonical intake
+auto_quant_after_v66,Current cursor says no Auto-Quant rerun until approval or source-owned controls plus canonical merge,blocked,no approved canonical intake
+pre_bayes_bbn_after_v66,Current cursor says no BBN rerun until approval or source-owned controls plus canonical merge,blocked,no approved canonical intake
+catboost_path_ranking_after_v66,Current cursor says no CatBoost/path-ranking rerun until approval or source-owned controls plus canonical merge,blocked,no approved canonical intake
+execution_tree_after_v66,Current cursor says no execution-tree rerun until approval or source-owned controls plus canonical merge,blocked,no approved canonical intake
+r5_recency_source_panel,/tmp/ict-engine-source-panel-recency-extension absent,blocked,post-2026-01-30 source-panel rows absent
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake absent,blocked,native sub-hour source-owned overlap rows absent
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake absent and cursor says 0/4,blocked,source-label equivalence root absent
+no_proxy_completion_claim,Audit refuses update_goal and records technical-preflight-only gap,pass,none

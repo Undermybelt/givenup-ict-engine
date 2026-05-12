@@ -1,0 +1,1 @@
+python3 /Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py yahoo --symbol QQQ --interval 1h --start 2026-01-31 --end 2026-05-10 --output /tmp/20260512T054718-codex-provider-autoquant-source-unlock-probe-after-053505-v1/provider-bars/QQQ_yfinance_1h_20260131_20260510.csv

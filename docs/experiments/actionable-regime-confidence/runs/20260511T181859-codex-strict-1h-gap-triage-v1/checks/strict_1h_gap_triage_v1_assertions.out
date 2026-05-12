@@ -1,0 +1,12 @@
+run_id=20260511T181859+0800-codex-strict-1h-gap-triage-v1
+strict_slots=156
+accepted_strict_rows=41
+blocked_strict_rows=115
+provider_not_ready_tickers=0
+near_miss_count=34
+recency_extension_candidate_count=0
+accepted_rows_added=0
+new_confidence_gate=false
+full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

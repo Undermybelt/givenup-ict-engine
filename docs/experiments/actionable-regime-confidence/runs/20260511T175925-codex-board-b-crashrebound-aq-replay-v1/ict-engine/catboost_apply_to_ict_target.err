@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 690, in <module>
+    main()
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 635, in main
+    apply_model(
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 349, in apply_model
+    scores = model.predict_proba(X)[:, 1] if model.classes_.shape[0] == 2 else model.predict_proba(X).argmax(axis=1)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/hOhqNnVs5XRXfYeeBRnZf/lib/python3.11/site-packages/catboost/core.py", line 5653, in predict_proba
+    return self._predict(X, 'Probability', ntree_start, ntree_end, thread_count, verbose, 'predict_proba', task_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/hOhqNnVs5XRXfYeeBRnZf/lib/python3.11/site-packages/catboost/core.py", line 2926, in _predict
+    data, data_is_single_object = self._process_predict_input_data(data, parent_method_name, thread_count)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/hOhqNnVs5XRXfYeeBRnZf/lib/python3.11/site-packages/catboost/core.py", line 2906, in _process_predict_input_data
+    data = Pool(
+           ^^^^^
+  File "/Users/thrill3r/.cache/uv/archive-v0/hOhqNnVs5XRXfYeeBRnZf/lib/python3.11/site-packages/catboost/core.py", line 863, in __init__
+    self._init(data, label, cat_features, text_features, embedding_features, embedding_features_data, pairs, graph, weight,
+  File "/Users/thrill3r/.cache/uv/archive-v0/hOhqNnVs5XRXfYeeBRnZf/lib/python3.11/site-packages/catboost/core.py", line 1476, in _init
+    self._check_string_feature_value(cat_features, features_count, 'cat_features')
+  File "/Users/thrill3r/.cache/uv/archive-v0/hOhqNnVs5XRXfYeeBRnZf/lib/python3.11/site-packages/catboost/core.py", line 908, in _check_string_feature_value
+    raise CatBoostError("Invalid {}[{}] = {} value: index must be < {}.".format(features_name, indx, feature, features_count))
+_catboost.CatBoostError: Invalid cat_features[0] = 4 value: index must be < 1.

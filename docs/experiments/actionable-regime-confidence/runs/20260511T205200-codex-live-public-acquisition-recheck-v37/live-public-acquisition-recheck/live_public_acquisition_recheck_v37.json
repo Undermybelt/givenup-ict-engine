@@ -1,0 +1,208 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_writeback": "b08aa12a25eb1bed6e273b83460aee81125d61067a1245c3f264a440b5f4c52d",
+  "decision": "live_public_acquisition_recheck_v37=no_new_public_rows_intakes_still_absent_blocked",
+  "external_authenticated_message_sent": false,
+  "generated_at_utc": "2026-05-11T12:53:38.288708+00:00",
+  "intake_roots_checked": [
+    {
+      "exists": false,
+      "id": "source_label_equivalence",
+      "missing_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "requirements": "R2;R4",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "exists": false,
+      "id": "native_subhour_source_label",
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "requirements": "R3",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "exists": false,
+      "id": "source_panel_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "requirements": "R5",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "exists": false,
+      "id": "direct_manipulation_row_intake",
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "requirements": "R6",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "kaggle_available": true,
+  "kaggle_commands": [
+    {
+      "cmd": "kaggle datasets metadata mafaqbhatti/stock-market-regimes-20002026 -p /tmp/ict-engine-kaggle-stock-regimes-live-refresh-v37",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Downloaded metadata to /tmp/ict-engine-kaggle-stock-regimes-live-refresh-v37/dataset-metadata.json\n"
+    },
+    {
+      "cmd": "kaggle datasets files mafaqbhatti/stock-market-regimes-20002026 -v",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "name,size,creationDate\ndataset_summary.txt,588,2026-02-01 02:25:30.808000\nregime_analysis_by_ticker.csv,1278,2026-02-01 02:25:30.838000\nregime_by_year.csv,758,2026-02-01 02:25:30.861000\nstock_market_regimes_2000_2026.csv,37155794,2026-02-01 02:25:31.845000\nstock_market_regimes_2000_2026.parquet,6583934,2026-02-01 02:25:31.457000\n"
+    },
+    {
+      "cmd": "kaggle datasets download mafaqbhatti/stock-market-regimes-20002026 -p /tmp/ict-engine-kaggle-stock-regimes-live-refresh-v37 --unzip",
+      "returncode": 0,
+      "stderr": "\n  0%|          | 0.00/13.6M [00:00<?, ?B/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13.6M/13.6M [00:00<00:00, 276MB/s]\n",
+      "stdout": "Dataset URL: https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026\nLicense(s): apache-2.0\nDownloading stock-market-regimes-20002026.zip to /tmp/ict-engine-kaggle-stock-regimes-live-refresh-v37\n\n"
+    }
+  ],
+  "kaggle_dataset": "mafaqbhatti/stock-market-regimes-20002026",
+  "kaggle_metadata_license": null,
+  "kaggle_pull_root": "/tmp/ict-engine-kaggle-stock-regimes-live-refresh-v37",
+  "kaggle_stats": {
+    "date_max": "2026-01-30",
+    "date_min": "2000-01-03",
+    "exists": true,
+    "fieldnames": [
+      "date",
+      "ticker",
+      "close",
+      "returns",
+      "volatility",
+      "regime_label",
+      "regime_confidence",
+      "macro_context",
+      "unemployment_rate",
+      "fed_funds_rate",
+      "cpi",
+      "10y_treasury",
+      "2y_treasury",
+      "vix"
+    ],
+    "post_cutoff_target_rows": 0,
+    "row_count": 245021,
+    "sha256": "2c8a3d8bc3c834f89eb776cf69930c041f1059a895e115b623d4427f67193cd0",
+    "target_counts": [
+      {
+        "main_regime_v2_label": "Sideways",
+        "min_new_source_sessions": 5,
+        "post_cutoff_rows": 0,
+        "split_role": "heldout_time",
+        "symbol": "XOM",
+        "total_rows": 2067
+      },
+      {
+        "main_regime_v2_label": "Bear",
+        "min_new_source_sessions": 7,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "symbol": "UNH",
+        "total_rows": 1225
+      },
+      {
+        "main_regime_v2_label": "Sideways",
+        "min_new_source_sessions": 7,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "symbol": "^DJI",
+        "total_rows": 2198
+      },
+      {
+        "main_regime_v2_label": "Bear",
+        "min_new_source_sessions": 10,
+        "post_cutoff_rows": 0,
+        "split_role": "calibration",
+        "symbol": "AMD",
+        "total_rows": 1667
+      }
+    ]
+  },
+  "kaggle_url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026",
+  "new_confidence_gate": false,
+  "next_action": "Use the source acquisition outbox with explicit user approval, or place real source-owned/owner-approved intake files under the four /tmp roots and rerun the fail-closed verifiers.",
+  "outbox_decision": "source_acquisition_outbox_v1=outbox_ready_rows_not_acquired",
+  "raw_data_committed": false,
+  "ready_intake_root_count": 0,
+  "ready_intake_roots": [],
+  "recency_materialization": {
+    "created": false,
+    "reason": "no_post_cutoff_target_rows"
+  },
+  "request_sent": false,
+  "rows_acquired": false,
+  "run_id": "20260511T205200-codex-live-public-acquisition-recheck-v37",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unmet_ids": [
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R8"
+  ],
+  "update_goal": false,
+  "v35_decision": "current_goal_completion_audit_v35=outbox_ready_rows_not_acquired_blocked",
+  "verifier_results": {
+    "direct_manipulation_row_intake": {
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+          "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+          "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"status\": \"blocked\",\n  \"reason\": \"missing_required_files\",\n  \"missing_files\": [\n    \"/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv\",\n    \"/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv\",\n    \"/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json\"\n  ]\n}\n"
+    },
+    "native_subhour_source_label": {
+      "reason": "missing_required_files",
+      "returncode": null,
+      "status": "blocked",
+      "stderr": "",
+      "stdout": "{\"exists\": false, \"id\": \"native_subhour_source_label\", \"missing_files\": \"native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json\", \"present_files\": \"\", \"ready\": false, \"required_files\": \"native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json\", \"requirements\": \"R3\", \"root\": \"/tmp/ict-engine-native-subhour-source-label-intake\"}"
+    },
+    "source_label_equivalence": {
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv\",\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json\"\n  ],\n  \"reason\": \"missing_required_files\",\n  \"status\": \"blocked\"\n}\n"
+    },
+    "source_panel_recency_extension": {
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"status\": \"blocked\",\n  \"reason\": \"missing_required_files\",\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv\",\n    \"/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json\"\n  ]\n}\n"
+    }
+  }
+}

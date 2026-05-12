@@ -1,0 +1,2 @@
+run_id,artifact_type,status,registered_in_todo_before_this_ledger,gate_result,accepted_rows_added,new_confidence_gate,full_objective_achieved,update_goal,path
+20260511T184212-codex-direct-manipulation-web-source-screen-v1,direct_manipulation_web_source_screen_v1,completed_blocked,False,direct_manipulation_web_source_screen_v1=no_ready_real_matched_negative_source,0,False,False,False,docs/experiments/actionable-regime-confidence/runs/20260511T184212-codex-direct-manipulation-web-source-screen-v1

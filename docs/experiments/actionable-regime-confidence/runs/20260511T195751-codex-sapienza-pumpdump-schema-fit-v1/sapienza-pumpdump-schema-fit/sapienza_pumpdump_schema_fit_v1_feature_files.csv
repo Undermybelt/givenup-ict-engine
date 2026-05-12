@@ -1,0 +1,4 @@
+file,sha256,rows,positive_rows_gt_1,negative_rows_gt_0,symbols,pump_indices,positive_pump_indices,positive_pump_indices_with_same_schema_negative_rows,same_pump_negative_controls_min,same_pump_negative_controls_median,same_pump_negative_controls_max,positive_event_join_matches_within_180s,positive_event_join_unmatched,positive_event_join_delta_seconds_max,date_min,date_max
+features_5S.csv.gz,e1f82b42d735e368f04a60062cadd50d6b097cc1222ebe8830cbff24b6d5ab99,821307,317,820990,85,327,317,317,221,1861,13209,317,0,180.0,2018-01-02 18:14:40,2021-01-19 16:58:25
+features_15S.csv.gz,fd6fd97f50ddc13b37b9a6361c09bf4cb07159c61f150328902b2d95137041f2,584104,317,583787,85,327,317,317,214,1404,7738,317,0,180.0,2018-01-02 18:14:30,2021-01-19 16:58:15
+features_25S.csv.gz,0d43d1d396ef13778ab2cd2a9f047034713f9066bdc07c23efce335da8185331,482157,317,481840,85,327,317,317,208,1234,5559,317,0,180.0,2018-01-02 18:14:35,2021-01-19 16:58:20

@@ -1,0 +1,78 @@
+{
+  "schema_version": "regime-profitability-packet/v1",
+  "run_id": "20260511T182222+0800-codex-board-b-rootaware-multibranch-rc-spa-v1",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "recipe_id": "RootAwareMultiBranchV1",
+  "recipe_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/strategies/RootAwareMultiBranchV1.py",
+  "backtest_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260511T182222-codex-board-b-rootaware-multibranch-rc-spa-v1/branch-rc-spa/rootaware_multibranch_trades_v1.csv",
+  "total_trades": 1064,
+  "test_folds": 4,
+  "fold_positive_rate": 1.0,
+  "bootstrap_edge_lcb_5pct": 0.005142015480321316,
+  "pbo": 0.75,
+  "dsr": 0.8246115657449011,
+  "cost_stress_result": "pass",
+  "tail_loss_p95": 0.048977739817434474,
+  "regime_specificity_ratio": 2.4659921869692196,
+  "rc_spa": 80.0,
+  "promotion_level": "reject",
+  "downstream_consumption_status": "not_started_rc_spa_rejected",
+  "branch_summary": {
+    "Bull": {
+      "trade_count": 1063,
+      "win_rate": 0.3396048918156162,
+      "net_return_R": 10.109290433378122,
+      "mean_R": 0.009510150925097037,
+      "bootstrap_edge_lcb_5pct": 0.004895496585123898,
+      "stressed_2x_cost_net_R": 7.983290433378163,
+      "branch_path": "Bull -> TrendExpansion -> Donchian24Ema4hTrendVolumeVolTarget -> RootAwareMultiBranchV1"
+    },
+    "Bear": {
+      "trade_count": 0,
+      "win_rate": 0.0,
+      "net_return_R": 0,
+      "mean_R": 0.0,
+      "bootstrap_edge_lcb_5pct": 0.0,
+      "stressed_2x_cost_net_R": 0,
+      "branch_path": "Bear -> SuppressBearRootNoTrade -> NoPositiveEdge -> no_trade"
+    },
+    "Sideways": {
+      "trade_count": 1,
+      "win_rate": 1.0,
+      "net_return_R": 0.02345195787818739,
+      "mean_R": 0.02345195787818739,
+      "bootstrap_edge_lcb_5pct": 0.02345195787818739,
+      "stressed_2x_cost_net_R": 0.02145195787818739,
+      "branch_path": "Sideways -> SuppressSidewaysRootNoTrade -> Donchian24Ema4hTrendVolumeVolTarget -> RootAwareMultiBranchV1"
+    },
+    "Crisis": {
+      "trade_count": 0,
+      "win_rate": 0.0,
+      "net_return_R": 0,
+      "mean_R": 0.0,
+      "bootstrap_edge_lcb_5pct": 0.0,
+      "stressed_2x_cost_net_R": 0,
+      "branch_path": "Crisis -> SuppressCrisisRootNoTrade -> TailRiskSuppression -> no_trade"
+    }
+  },
+  "hard_gates": {
+    "accepted_regime_id_present": true,
+    "branch_path_present": true,
+    "root_lookup_coverage_full": true,
+    "min_total_trades": true,
+    "min_test_folds": true,
+    "min_trades_per_test_fold": true,
+    "fold_positive_rate": true,
+    "bootstrap_edge_lcb_5pct": true,
+    "cost_stress_survival": true,
+    "pbo": false,
+    "dsr": true,
+    "tail_loss_p95": true,
+    "regime_specificity_ratio": true,
+    "branch_min_total_trades_for_claimed_roots": false
+  },
+  "failure_reasons": [
+    "pbo",
+    "branch_min_total_trades_for_claimed_roots"
+  ]
+}

@@ -1,0 +1,507 @@
+{
+  "schema_version": "board-a-v2-2-nq-binding-calibration/v1",
+  "loop_id": "20260510T184538+0800-board-a-v2-2-nq-binding-repair",
+  "label_counts": {
+    "provider_agreement_v2": {
+      "positive": 343,
+      "negative": 738
+    },
+    "provider_agreement_trend_expansion_event": {
+      "positive": 112,
+      "negative": 969
+    },
+    "provider_disagreement_transition_guardrail_event": {
+      "positive": 1045,
+      "negative": 36
+    },
+    "release_allowed_v2": {
+      "positive": 340,
+      "negative": 741
+    },
+    "path_specific_edge_v2": {
+      "positive": 180,
+      "negative": 901
+    },
+    "transition_stable_v2": {
+      "positive": 229,
+      "negative": 852
+    },
+    "provider_agreement_trend_expansion_release_v2": {
+      "positive": 15,
+      "negative": 1066
+    }
+  },
+  "target_reports": {
+    "target_provider_agreement_trend_expansion_release_v2": {
+      "target": "target_provider_agreement_trend_expansion_release_v2",
+      "skipped": false,
+      "positive": 15,
+      "negative": 1066,
+      "train_rows": 540,
+      "calibration_rows": 270,
+      "test_rows": 271,
+      "top_importances": [
+        {
+          "feature": "provider_expansion_votes",
+          "importance": 13.18900216418657
+        },
+        {
+          "feature": "nq_aq_15m_ret_1",
+          "importance": 7.203529368252014
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 5.952972868017788
+        },
+        {
+          "feature": "nq_aq_15m_vol_64",
+          "importance": 5.8805970003220756
+        },
+        {
+          "feature": "nq_aq_15m_ret_32",
+          "importance": 5.611822958972955
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 5.546263217932537
+        },
+        {
+          "feature": "qqq_yf_1h_eff_16",
+          "importance": 5.375864022142872
+        },
+        {
+          "feature": "qqq_yf_1h_ret_16",
+          "importance": 5.276600492374116
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 4.712536413362696
+        },
+        {
+          "feature": "qqq_yf_1h_dd_16",
+          "importance": 3.28620116796937
+        },
+        {
+          "feature": "nq_aq_15m_eff_16",
+          "importance": 2.674925089745303
+        },
+        {
+          "feature": "entry_hour_sin",
+          "importance": 2.5866434716116853
+        }
+      ],
+      "admissible_rules": 151,
+      "accepted_95_rules": 0,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.0011233167220363214,
+        "calibration_support": 120,
+        "calibration_success": 4,
+        "calibration_precision": 0.03333333333333333,
+        "calibration_wilson_lcb_95": 0.0130375510983506,
+        "test_support": 139,
+        "test_success": 3,
+        "test_precision": 0.02158273381294964,
+        "precision_wilson_lcb_95": 0.00736681444378494,
+        "precision_wilson_lcb_99": 0.0054693519329698905,
+        "ece": 0.016302420067370836,
+        "coverage": 0.5129151291512916,
+        "passes_95": false,
+        "passes_99": false
+      }
+    },
+    "target_release_allowed_v2": {
+      "target": "target_release_allowed_v2",
+      "skipped": false,
+      "positive": 340,
+      "negative": 741,
+      "train_rows": 540,
+      "calibration_rows": 270,
+      "test_rows": 271,
+      "top_importances": [
+        {
+          "feature": "nq_aq_15m_ret_1",
+          "importance": 47.756754648415146
+        },
+        {
+          "feature": "qqq_yf_1h_ret_8",
+          "importance": 4.5050128817248085
+        },
+        {
+          "feature": "nq_aq_15m_ret_32",
+          "importance": 3.9710890182674414
+        },
+        {
+          "feature": "nq_aq_15m_range_pct",
+          "importance": 2.5204767734362936
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 2.4613201752605987
+        },
+        {
+          "feature": "qqq_yf_1h_pos_16",
+          "importance": 2.4409577110724743
+        },
+        {
+          "feature": "qqq_yf_1h_eff_16",
+          "importance": 2.3946444212552516
+        },
+        {
+          "feature": "qqq_yf_1h_ret_1",
+          "importance": 2.143978908170973
+        },
+        {
+          "feature": "qqq_yf_1h_ret_16",
+          "importance": 2.132177006417762
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 1.7714418799216878
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 1.571316855624246
+        },
+        {
+          "feature": "nq_aq_15m_vol_16",
+          "importance": 1.5514530649181038
+        }
+      ],
+      "admissible_rules": 151,
+      "accepted_95_rules": 0,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.41809288013269935,
+        "calibration_support": 124,
+        "calibration_success": 63,
+        "calibration_precision": 0.5080645161290323,
+        "calibration_wilson_lcb_95": 0.42116044210328424,
+        "test_support": 121,
+        "test_success": 70,
+        "test_precision": 0.5785123966942148,
+        "precision_wilson_lcb_95": 0.4894429849829527,
+        "precision_wilson_lcb_99": 0.46177195484780315,
+        "ece": 0.07784789206666898,
+        "coverage": 0.44649446494464945,
+        "passes_95": false,
+        "passes_99": false
+      }
+    },
+    "target_path_specific_edge_v2": {
+      "target": "target_path_specific_edge_v2",
+      "skipped": false,
+      "positive": 180,
+      "negative": 901,
+      "train_rows": 540,
+      "calibration_rows": 270,
+      "test_rows": 271,
+      "top_importances": [
+        {
+          "feature": "nq_aq_15m_ret_1",
+          "importance": 29.89335536351714
+        },
+        {
+          "feature": "nq_aq_15m_range_pct",
+          "importance": 5.398117066283094
+        },
+        {
+          "feature": "qqq_yf_1h_ret_8",
+          "importance": 5.0569591636941
+        },
+        {
+          "feature": "qqq_yf_1h_vol_16",
+          "importance": 4.774485089970756
+        },
+        {
+          "feature": "nq_aq_15m_ret_32",
+          "importance": 3.478469872877589
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 3.468064541955237
+        },
+        {
+          "feature": "qqq_yf_1h_ret_1",
+          "importance": 2.850012482523853
+        },
+        {
+          "feature": "qqq_yf_1h_vol_64",
+          "importance": 2.7704651941628278
+        },
+        {
+          "feature": "nq_aq_15m_vol_16",
+          "importance": 2.6049823819496365
+        },
+        {
+          "feature": "nq_aq_15m_dd_16",
+          "importance": 2.404833958206956
+        },
+        {
+          "feature": "qqq_yf_1h_pos_16",
+          "importance": 2.3923418440966078
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 2.3759029131455707
+        }
+      ],
+      "admissible_rules": 151,
+      "accepted_95_rules": 0,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.0517986870435438,
+        "calibration_support": 136,
+        "calibration_success": 29,
+        "calibration_precision": 0.21323529411764705,
+        "calibration_wilson_lcb_95": 0.15277093808158598,
+        "test_support": 163,
+        "test_success": 42,
+        "test_precision": 0.25766871165644173,
+        "precision_wilson_lcb_95": 0.1966511784786284,
+        "precision_wilson_lcb_99": 0.180134552441116,
+        "ece": 0.10329496696688859,
+        "coverage": 0.6014760147601476,
+        "passes_95": false,
+        "passes_99": false
+      }
+    },
+    "target_transition_stable_v2": {
+      "target": "target_transition_stable_v2",
+      "skipped": false,
+      "positive": 229,
+      "negative": 852,
+      "train_rows": 540,
+      "calibration_rows": 270,
+      "test_rows": 271,
+      "top_importances": [
+        {
+          "feature": "provider_guardrail_votes",
+          "importance": 69.24489483390457
+        },
+        {
+          "feature": "nq_aq_15m_ret_1",
+          "importance": 9.15299812200576
+        },
+        {
+          "feature": "nq_aq_15m_ret_32",
+          "importance": 2.7708770219112506
+        },
+        {
+          "feature": "qqq_yf_1h_pos_16",
+          "importance": 2.370302536247289
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 2.0657176044483054
+        },
+        {
+          "feature": "qqq_yf_1h_ret_8",
+          "importance": 1.236081155013923
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.9323134408679756
+        },
+        {
+          "feature": "qqq_yf_1h_eff_16",
+          "importance": 0.8983262022780513
+        },
+        {
+          "feature": "nq_aq_15m_eff_16",
+          "importance": 0.8687622896840475
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.7757664636057828
+        },
+        {
+          "feature": "nq_aq_15m_range_pct",
+          "importance": 0.7606139777771771
+        },
+        {
+          "feature": "qqq_yf_1h_ret_1",
+          "importance": 0.6342922664591385
+        }
+      ],
+      "admissible_rules": 151,
+      "accepted_95_rules": 0,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.005315556246804411,
+        "calibration_support": 120,
+        "calibration_success": 59,
+        "calibration_precision": 0.49166666666666664,
+        "calibration_wilson_lcb_95": 0.4038757172769723,
+        "test_support": 94,
+        "test_success": 41,
+        "test_precision": 0.43617021276595747,
+        "precision_wilson_lcb_95": 0.34038166214603166,
+        "precision_wilson_lcb_99": 0.3129748935973259,
+        "ece": 0.051801534143118756,
+        "coverage": 0.34686346863468637,
+        "passes_95": false,
+        "passes_99": false
+      }
+    },
+    "target_provider_agreement_v2": {
+      "target": "target_provider_agreement_v2",
+      "skipped": false,
+      "positive": 343,
+      "negative": 738,
+      "train_rows": 540,
+      "calibration_rows": 270,
+      "test_rows": 271,
+      "top_importances": [
+        {
+          "feature": "provider_bull_votes",
+          "importance": 92.94175506576617
+        },
+        {
+          "feature": "qqq_ibkr_1h_eff_16",
+          "importance": 0.3337301922518069
+        },
+        {
+          "feature": "nq_aq_15m_ret_4",
+          "importance": 0.31017456962191614
+        },
+        {
+          "feature": "qqq_ibkr_1h_ret_4",
+          "importance": 0.30073908458301
+        },
+        {
+          "feature": "qqq_yf_1h_ret_16",
+          "importance": 0.30049595229728665
+        },
+        {
+          "feature": "entry_hour_cos",
+          "importance": 0.2829663755485474
+        },
+        {
+          "feature": "qqq_ibkr_1h_trend_dir",
+          "importance": 0.2727713935635304
+        },
+        {
+          "feature": "qqq_ibkr_1h_range_pct",
+          "importance": 0.26750137277757063
+        },
+        {
+          "feature": "qqq_yf_1h_pos_16",
+          "importance": 0.2659101232730862
+        },
+        {
+          "feature": "qqq_yf_1h_dd_16",
+          "importance": 0.26319073856777875
+        },
+        {
+          "feature": "qqq_ibkr_1h_vol_64",
+          "importance": 0.24390313148449347
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.23533225598222515
+        }
+      ],
+      "admissible_rules": 151,
+      "accepted_95_rules": 12,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.9898026804768612,
+        "calibration_support": 130,
+        "calibration_success": 130,
+        "calibration_precision": 1.0,
+        "calibration_wilson_lcb_95": 0.9712984388055687,
+        "test_support": 83,
+        "test_success": 83,
+        "test_precision": 1.0,
+        "precision_wilson_lcb_95": 0.9557646903580262,
+        "precision_wilson_lcb_99": 0.925978643891852,
+        "ece": 0.004171262311526647,
+        "coverage": 0.3062730627306273,
+        "passes_95": true,
+        "passes_99": false
+      }
+    },
+    "target_provider_agreement_trend_expansion_event": {
+      "target": "target_provider_agreement_trend_expansion_event",
+      "skipped": false,
+      "positive": 112,
+      "negative": 969,
+      "train_rows": 540,
+      "calibration_rows": 270,
+      "test_rows": 271,
+      "top_importances": [
+        {
+          "feature": "provider_expansion_votes",
+          "importance": 60.37160099523546
+        },
+        {
+          "feature": "provider_bull_votes",
+          "importance": 23.709398591486295
+        },
+        {
+          "feature": "qqq_yf_1h_dd_16",
+          "importance": 1.077730441439133
+        },
+        {
+          "feature": "nq_aq_15m_pos_16",
+          "importance": 0.8268311586539018
+        },
+        {
+          "feature": "qqq_ibkr_1h_ret_4",
+          "importance": 0.824567412598725
+        },
+        {
+          "feature": "qqq_ibkr_1h_trend_dir",
+          "importance": 0.7915156260286985
+        },
+        {
+          "feature": "qqq_yf_1h_trend_dir",
+          "importance": 0.7523002265856382
+        },
+        {
+          "feature": "provider_guardrail_votes",
+          "importance": 0.7218587300309354
+        },
+        {
+          "feature": "qqq_yf_1h_pos_16",
+          "importance": 0.6839994245978182
+        },
+        {
+          "feature": "qqq_ibkr_1h_eff_16",
+          "importance": 0.6578091533726921
+        },
+        {
+          "feature": "nq_aq_15m_ret_16",
+          "importance": 0.644748817916118
+        },
+        {
+          "feature": "qqq_yf_1h_ret_16",
+          "importance": 0.5948980837368516
+        }
+      ],
+      "admissible_rules": 151,
+      "accepted_95_rules": 0,
+      "accepted_99_rules": 0,
+      "selected_rule": {
+        "threshold": 0.001547293856868235,
+        "calibration_support": 120,
+        "calibration_success": 38,
+        "calibration_precision": 0.31666666666666665,
+        "calibration_wilson_lcb_95": 0.24022834604198928,
+        "test_support": 101,
+        "test_success": 26,
+        "test_precision": 0.25742574257425743,
+        "precision_wilson_lcb_95": 0.1821524234251967,
+        "precision_wilson_lcb_99": 0.16280195933181044,
+        "ece": 0.007542335283208447,
+        "coverage": 0.3726937269372694,
+        "passes_95": false,
+        "passes_99": false
+      }
+    }
+  },
+  "accepted_gate": "none",
+  "board_state": "abstain",
+  "blocker": "abstain_no_calibrated_release_rule"
+}

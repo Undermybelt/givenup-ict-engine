@@ -1,0 +1,61 @@
+{
+  "accepted_hint_rows": 0,
+  "accepted_rows_added": 0,
+  "board_sha256_before_artifact": "4e99e2ec508795e194c7b6d6449cac590a605e95ab2d97eb24443bf2b0d5772c",
+  "candidate_files_scanned": 580,
+  "canonical_merge": false,
+  "category_counts": {
+    "external_api_docs_or_tooling": 15,
+    "hermes_eval_docs_or_skills": 19,
+    "local_trade_log_not_owner_export": 2,
+    "strategy_code_or_docs_not_source_rows": 5,
+    "tomac_symbology_context_only": 5,
+    "unrelated_repo_intake_docs_or_code": 23,
+    "unrelated_text_or_metadata": 1
+  },
+  "downstream_promotion_rerun": false,
+  "exact_package_rows": [
+    {
+      "accepted_source_control": "false",
+      "complete": "True",
+      "family": "r3",
+      "reason": "R3 native-subhour package is complete on disk but non-unlocking because Crisis-capable MainRegimeV2/source-control approval is absent.",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "accepted_source_control": "false",
+      "complete": "True",
+      "family": "r3",
+      "reason": "R3 native-subhour package is complete on disk but non-unlocking because Crisis-capable MainRegimeV2/source-control approval is absent.",
+      "root": "/private/tmp/ict-engine-native-subhour-source-label-intake"
+    }
+  ],
+  "exact_required_packages": 2,
+  "gate_result": "candidate_disposition_after_083703_v1=all_083559_hints_disposed_no_source_control_unlock",
+  "hint_rows_disposed": 70,
+  "observed_at_utc": "2026-05-12T00:49:42.157120+00:00",
+  "promotion_allowed": false,
+  "r3_accepted_labels": [
+    "Bear",
+    "Bull",
+    "Sideways"
+  ],
+  "r3_crisis_present": false,
+  "r3_limitations": [
+    "Crisis has no direct TSIE source taxonomy class",
+    "trap labels are fail-closed abstain and excluded from accepted rows",
+    "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+    "canonical merge not run",
+    "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+  ],
+  "run_id": "20260512T084809+0800-codex-083559-candidate-disposition-after-083703-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_candidates_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T083559+0800-codex-local-order-lifecycle-source-sweep-after-083108-v1/local-order-lifecycle-source-sweep-after-083108-v1/local_order_lifecycle_source_sweep_candidates_v1.csv",
+  "source_control_evidence_acquired": false,
+  "source_target_roots_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T083559+0800-codex-local-order-lifecycle-source-sweep-after-083108-v1/local-order-lifecycle-source-sweep-after-083108-v1/local_order_lifecycle_source_sweep_target_roots_v1.csv",
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false,
+  "verifier_native_hint_rows": 70
+}

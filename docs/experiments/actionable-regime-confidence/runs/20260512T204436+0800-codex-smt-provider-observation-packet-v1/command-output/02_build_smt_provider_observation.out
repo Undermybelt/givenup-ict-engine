@@ -1,0 +1,11 @@
+{
+  "rows": 67,
+  "aligned_row_count": 2000,
+  "base_swing_count": 571,
+  "comparison_swing_count": 581,
+  "recent_correlation": 0.8784,
+  "recent_correlation_stable": true,
+  "candidate_smt_event_count": 64,
+  "nonzero_trade_outcome_count": 0,
+  "downstream_allowed": false
+}

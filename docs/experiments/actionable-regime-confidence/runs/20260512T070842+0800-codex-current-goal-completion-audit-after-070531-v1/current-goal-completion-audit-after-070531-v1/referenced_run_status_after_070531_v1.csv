@@ -1,0 +1,10 @@
+run_id,exists,report_count,json_count,assertion_count,status
+20260512T065822+0800-codex-source-control-provider-refresh-after-065506-v1,True,1,1,1,terminal_or_raw
+20260512T070031+0800-codex-autoquant-run-readback-after-data-ready-v1,True,1,1,1,terminal_or_raw
+20260512T070312+0800-codex-autoquant-readback-reconciliation-after-070031-v1,True,1,1,1,terminal_or_raw
+20260512T070315+0800-codex-public-exact-source-route-probe-after-065820-v1,True,1,2,1,terminal_or_raw
+20260512T070434+0800-codex-r6-owner-export-arrival-poll-after-070315-v1,True,1,1,1,terminal_or_raw
+20260512T070443+0800-codex-local-tomac-futures-ohlcv-r6-applicability-v1,True,1,1,1,terminal_or_raw
+20260512T070506+0800-codex-github-code-source-route-probe-after-070315-v1,True,1,5,1,terminal_or_raw
+20260512T070509+0800-codex-completion-audit-after-070315-v1,True,1,1,1,terminal_or_raw
+20260512T070531+0800-codex-r6-cftc-complaint-text-extraction-after-070315-v1,True,1,1,1,terminal_or_raw

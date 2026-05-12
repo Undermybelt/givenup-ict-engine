@@ -1,0 +1,5 @@
+ibkr-bulk: 2 task(s) -> /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-six-provider-aq-first-class-ibkr-v1/provider-csv
+  [1/2] OK   BTC      1 hour   AGGTRADES     250 rows -> ibkr_BTC_1h_aggtrades.csv
+  [2/2] OK   BTC      1 hour   MIDPOINT      250 rows -> ibkr_BTC_1h_midpoint.csv
+
+ibkr-bulk done: ok=2 skip=0 empty=0 fail=0  (2 total)

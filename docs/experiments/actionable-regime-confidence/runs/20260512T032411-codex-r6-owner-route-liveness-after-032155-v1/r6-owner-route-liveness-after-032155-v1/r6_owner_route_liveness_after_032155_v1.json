@@ -1,0 +1,36 @@
+{
+  "run_id": "20260512T032411-codex-r6-owner-route-liveness-after-032155-v1",
+  "generated_at_local": "2026-05-12T03:24:37+0800",
+  "board_sha256_before_artifact": "41d54a099f34934514047fa4c9b4b52838aad59da853df8cdc71daf0d8097a5d",
+  "gate_result": "r6_owner_route_liveness_after_032155_v1=official_routes_observed_rows_not_acquired_no_promotion",
+  "scope": "route_liveness_only_after_032155_source_unlock_readback",
+  "route_summary": {
+    "routes_checked": 4,
+    "routes_observed_via_web_or_curl": 4,
+    "cli_curl_http_200": 2,
+    "cli_curl_blocked_or_transport_failed": 2
+  },
+  "cme_cli_observation": {
+    "default_curl_exit": 92,
+    "http1_retry_exit": 28,
+    "browser_ua_http_code": 403,
+    "web_readback_observed": true,
+    "decision": "route exists but CLI access is not verifier data acquisition"
+  },
+  "cboe_cli_observation": {
+    "oof_historical_data_http_code": 200,
+    "futures_market_data_services_http_code": 200,
+    "web_readback_observed": true
+  },
+  "promotion": {
+    "rows_acquired": false,
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Use these live official routes only to send or satisfy owner/export requests. Do not rerun direct verifier or downstream provider/Auto-Quant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution-tree until source-owned rows or explicit FLIP-control approval arrive."
+}

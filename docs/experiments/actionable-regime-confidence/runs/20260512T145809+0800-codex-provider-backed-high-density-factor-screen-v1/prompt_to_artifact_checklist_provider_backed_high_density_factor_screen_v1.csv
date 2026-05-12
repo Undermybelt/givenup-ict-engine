@@ -1,0 +1,12 @@
+requirement,evidence,status
+"Use the Board B plan as the authoritative target","docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md latest direction correction requires large-window provider-backed or portable local-trained factor surface","pass"
+"Do not continue another agent's active 141000 root","No writes to 141000 root; 145809 is a separate run root sourced only from settled normalized provider data","pass"
+"Seek materially higher trade density","summaries/provider_backed_high_density_factor_manifest.json trade_count_total=9388","pass"
+"Use provider-backed data","source root 143900 normalized CSVs: Binance BTCUSDT 1h, IBKR SPY 1h, Yahoo ES 1h","partial"
+"Use all explicitly required providers including IBKR TradingViewRemix YF Kraken","IBKR and Yahoo/YF represented; TradingViewRemix and Kraken are not included in this screen input","fail_closed"
+"Attach branch path fields","summaries/provider_backed_high_density_factor_trades.csv has main_regime sub_regime sub_sub_regime_or_profit_factor profit_factor branch_path","pass"
+"Use exact four-part branch shape","branch_path values use main_regime->sub_regime->sub_sub_regime_or_profit_factor->profit_factor","pass"
+"Prove regime-conditioned profitability before promotion","branch summaries exist, but no walk-forward/cost/slippage/provider-complete validation yet","fail_closed"
+"Run Auto-Quant","This root is a lightweight factor screen only, not an Auto-Quant backtest","fail_closed"
+"Run filter/Pre-Bayes -> BBN -> CatBoost/path-ranker -> execution tree","No downstream admission run in this root","fail_closed"
+"Avoid live-trade or promotion claim","manifest and report set promotion_allowed=false trade_usable=false","pass"

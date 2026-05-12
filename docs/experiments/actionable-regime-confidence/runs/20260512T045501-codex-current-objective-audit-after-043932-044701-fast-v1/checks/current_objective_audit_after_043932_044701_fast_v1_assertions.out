@@ -1,0 +1,15 @@
+PASS run_id=20260512T045501-codex-current-objective-audit-after-043932-044701-fast-v1
+PASS gate_result=current_objective_audit_after_043932_044701_fast_v1=not_complete_rule_miner_and_single_atom_no_acceptance_source_roots_absent_downstream_blocked
+PASS source_label_calibration_041410_accepted_labels=0
+PASS predictive_041656_accepted_labels=0
+PASS histgb_042448_accepted_labels=0
+PASS rule_qualifier_043932_accepted_labels=0
+PASS single_atom_044701_accepted_labels=0
+PASS r6_owner_export_root_present=false
+PASS r3_native_subhour_root_present=false
+PASS r5_recency_extension_root_present=false
+PASS provider_autoquant_runtime_evidence_non_promoting=true
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

@@ -1,0 +1,134 @@
+{
+  "accepted_rows_added": 0,
+  "decision": "required_intake_disk_sweep_v1=no_required_intake_files_found_verifiers_blocked",
+  "disk_hit_count": 0,
+  "disk_hits": [],
+  "generated_at_utc": "2026-05-11T12:37:04.562996+00:00",
+  "intake_roots": [
+    {
+      "exists": false,
+      "missing_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "package": "source_label_equivalence",
+      "present_files": "",
+      "ready": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "exists": false,
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "package": "native_subhour_source_label",
+      "present_files": "",
+      "ready": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "exists": false,
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "package": "source_panel_recency_extension",
+      "present_files": "",
+      "ready": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "exists": false,
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "package": "direct_manipulation_row_intake",
+      "present_files": "",
+      "ready": false,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "native_subhour_package_ready": false,
+  "new_confidence_gate": false,
+  "next": "Acquire source-owned or owner-approved intake files externally, place them under the exact /tmp roots, then rerun source-label, recency, direct-manipulation, and native-subhour checks before another audit.",
+  "raw_data_committed": false,
+  "required_files": {
+    "direct_manipulation_row_intake": [
+      "positive_spoofing_layering_rows.csv",
+      "matched_negative_normal_activity_rows.csv",
+      "provenance_manifest.json"
+    ],
+    "native_subhour_source_label": [
+      "native_subhour_source_label_rows.csv",
+      "native_subhour_source_label_provenance.json"
+    ],
+    "source_label_equivalence": [
+      "source_label_equivalence_rows.csv",
+      "source_label_equivalence_provenance.json"
+    ],
+    "source_panel_recency_extension": [
+      "stock_market_regimes_2026_extension.csv",
+      "source_panel_recency_provenance.json"
+    ]
+  },
+  "run_id": "20260511T203437-codex-required-intake-disk-sweep-v1",
+  "runtime_code_changed": false,
+  "searched_roots": [
+    "/Users/thrill3r",
+    "/tmp",
+    "/private/tmp"
+  ],
+  "skip_dir_names": [
+    ".Trash",
+    ".cache",
+    ".cargo",
+    ".git",
+    ".rustup",
+    "Library",
+    "node_modules",
+    "target"
+  ],
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_results": {
+    "direct_manipulation_row_intake": {
+      "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+          "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+          "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"status\": \"blocked\",\n  \"reason\": \"missing_required_files\",\n  \"missing_files\": [\n    \"/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv\",\n    \"/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv\",\n    \"/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json\"\n  ]\n}"
+    },
+    "source_label_equivalence": {
+      "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py --intake-root /tmp/ict-engine-source-label-equivalence-intake",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv\",\n    \"/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json\"\n  ],\n  \"reason\": \"missing_required_files\",\n  \"status\": \"blocked\"\n}"
+    },
+    "source_panel_recency_extension": {
+      "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py --intake-root /tmp/ict-engine-source-panel-recency-extension",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "{\n  \"status\": \"blocked\",\n  \"reason\": \"missing_required_files\",\n  \"missing_files\": [\n    \"/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv\",\n    \"/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json\"\n  ]\n}"
+    }
+  }
+}

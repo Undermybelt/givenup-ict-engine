@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.8860709673340358,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 4.067949399056391,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": true,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.5569425020669531,
+    1.4266029018399934e-8,
+    0.44305748366701786
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260511T154919.379745000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/autoquant/strategy_library_source_root_stop_carry_longhorizon_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260511T154919.390565000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234513-codex-board-b-b2r-block-crowded-nursery-v1/state_b2r_block_crowded_nursery_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260511T154919.390565000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.5569425020669531,
+        1.4266029018399934e-8,
+        0.44305748366701786
+      ],
+      "bbn_contradiction_after": 0.0005749507452893425,
+      "bbn_contradiction_before": 0.8866459180793251,
+      "bbn_contradiction_lift": 0.8860709673340358,
+      "bbn_entropy_after": 0.6866484526538024,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6867139668629659,
+      "bbn_log_loss_before": 4.754663365919357,
+      "bbn_log_loss_delta": 4.067949399056391,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.4430134979330469,
+        -0.000021985733970981598,
+        0.44303548366701784
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "board-b-20260511T220646-source-root-stop-carry-longhorizon-v1",
+      "n_breakeven": 0,
+      "n_loss": 5466,
+      "n_win": 6863,
+      "strategy_name": "SourceRootStopCarryLongHorizonV1",
+      "temper": 0.5,
+      "trade_count": 12329
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "temper": 0.5
+}

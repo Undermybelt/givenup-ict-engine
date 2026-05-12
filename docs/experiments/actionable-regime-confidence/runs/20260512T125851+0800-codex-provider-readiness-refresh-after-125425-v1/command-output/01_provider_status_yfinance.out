@@ -1,0 +1,6 @@
+live_runtime:1/1 ready | market_data:1/1 ready
+guide: yfinance: access=free_no_login fit=tradfi fallback=1 summary=Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows. | yfinance: access=free_no_login fit=tradfi fallback=1 summary=Free historical tradfi fallback for replay, factor research, and factor backtests.
+live_runtime: ready 1/1 selectable 1 default 1
+  ready: yfinance
+market_data: ready 1/1 selectable 1 default 0
+  ready: yfinance

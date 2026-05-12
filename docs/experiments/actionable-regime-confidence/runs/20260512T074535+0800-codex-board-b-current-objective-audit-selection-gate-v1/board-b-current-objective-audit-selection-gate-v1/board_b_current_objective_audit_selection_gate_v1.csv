@@ -1,0 +1,11 @@
+requirement,evidence,status,notes
+named_board_contract,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md current cursor,pass,cursor read before audit
+rooted_branch_path,Board B Root-First Profit Factor Contract,pass,Bull/Bear/Sideways/Crisis plus optional Manipulation root
+downstream_chain,034002 cursor readback,partial_fail_closed,Pre-Bayes observe-only path-ranker 0/30 execution blocked
+autoquant_real_artifacts,032157 and 034002 readbacks,partial_fail_closed,prior chain operated but current selected-data reuse is blocked
+provider_visibility,selection packet provider note,partial_non_promoting,refresh after selected data produces usable observations
+explicit_user_selection,historical_data_selection_options_v1 and interval_readback_v2,missing,HTF/MTF/LTF not selected by user
+selected_data_autoquant,current gate,not_run_blocked,not allowed before explicit selection
+promotion_gate,current cursor hard_gate_result,fail_not_complete,downstream closed loop not promotable
+multi_agent_safety,process check before audit,pass,no relevant active promotion process observed
+update_goal,current audit,not_allowed,objective not complete

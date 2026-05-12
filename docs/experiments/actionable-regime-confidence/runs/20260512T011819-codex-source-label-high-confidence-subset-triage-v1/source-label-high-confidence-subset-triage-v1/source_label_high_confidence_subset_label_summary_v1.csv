@@ -1,0 +1,5 @@
+label,total_rows,high_conf_rows,high_conf_share,high_conf_symbol_count,high_conf_timeframes,high_conf_date_min,high_conf_date_max,split_support_gate_pass,cross_market_family_count,triage_candidate,blockers
+Bear,54939,52,0.0009465043,19,1d,2000-01-05,2012-05-25,false,2,false,calibration_high_conf_support_below_50;heldout_market_high_conf_support_below_50;heldout_time_high_conf_support_below_50;test_high_conf_support_below_50
+Bull,104979,10193,0.0970956096,40,1d,2000-01-21,2026-01-30,true,3,true,
+Crisis,30623,276,0.0090128335,1,1d,2013-04-16,2026-03-20,false,1,false,heldout_market_high_conf_support_below_50;cross_market_family_high_conf_coverage_below_2
+Sideways,57899,8686,0.1500198622,40,1d,2000-01-21,2026-01-30,true,3,true,

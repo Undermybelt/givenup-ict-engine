@@ -1,0 +1,170 @@
+{
+  "accepted_rows_added": 0,
+  "approval_packages": [
+    {
+      "approval_present": false,
+      "canonical_merge_allowed_now": false,
+      "downstream_rerun_allowed_now": false,
+      "exists": true,
+      "flip_controls_accepted_under_current_contract": false,
+      "flip_rows": 1553,
+      "matched_groups": 1313,
+      "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "positive_spoof_rows": 5182
+    },
+    {
+      "approval_present": false,
+      "canonical_merge_allowed_now": false,
+      "downstream_rerun_allowed_now": false,
+      "exists": true,
+      "flip_controls_accepted_under_current_contract": false,
+      "flip_rows": 1553,
+      "matched_groups": 1313,
+      "path": "/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+      "positive_spoof_rows": 5182
+    }
+  ],
+  "approval_present": false,
+  "board": {
+    "board_sha256": "ce758db0e75fb9938ef7590db3a7d6a2ee9cb668ef28740134172747ac0c8b4a",
+    "marker_found": true,
+    "positive_approval_or_unlock_tokens": [],
+    "post_marker_bytes": 8502
+  },
+  "canonical_merge": false,
+  "canonical_merge_allowed_now": false,
+  "cutoff_local": "2026-05-12T07:41:16+08:00",
+  "direct_verifier_run": false,
+  "downstream_promotion_rerun": false,
+  "downstream_rerun_allowed_now": false,
+  "gate_result": "source_control_arrival_poll_after_074116_v1=no_new_required_source_control_unlock",
+  "r3_native_subhour_unlock": false,
+  "r3_roots": [
+    {
+      "accepted_mapping_labels": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "crisis_string_present": true,
+      "exists": true,
+      "known_tsie_dataset": true,
+      "limitations": [
+        "Crisis has no direct TSIE source taxonomy class",
+        "trap labels are fail-closed abstain and excluded from accepted rows",
+        "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+        "canonical merge not run",
+        "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+      ],
+      "provenance_exists": true,
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "accepted_mapping_labels": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "crisis_string_present": true,
+      "exists": true,
+      "known_tsie_dataset": true,
+      "limitations": [
+        "Crisis has no direct TSIE source taxonomy class",
+        "trap labels are fail-closed abstain and excluded from accepted rows",
+        "source_confidence is deterministic taxonomy mapping confidence, not downstream profitability",
+        "canonical merge not run",
+        "downstream provider/AutoQuant/Pre-Bayes/BBN/CatBoost/execution-tree not rerun"
+      ],
+      "provenance_exists": true,
+      "root": "/private/tmp/ict-engine-native-subhour-source-label-intake"
+    }
+  ],
+  "r5_recency_unlock": false,
+  "r5_roots": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "missing_required_files": [],
+      "present_required_files": [],
+      "required_files": [],
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "missing_required_files": [],
+      "present_required_files": [],
+      "required_files": [],
+      "root": "/private/tmp/ict-engine-source-panel-recency-extension"
+    }
+  ],
+  "r6_owner_export_unlock": false,
+  "r6_roots": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "missing_required_files": [
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "present_required_files": [],
+      "required_files": [
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "missing_required_files": [
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "present_required_files": [],
+      "required_files": [
+        "direct_manipulation_positive_rows.csv",
+        "direct_manipulation_matched_controls.csv",
+        "direct_manipulation_provenance.json"
+      ],
+      "root": "/private/tmp/ict-engine-board-a-r6-owner-export-v1"
+    }
+  ],
+  "recent_mainregimev2_filename_count": 43,
+  "recent_required_filename_count": 0,
+  "recent_signal_count": 43,
+  "run_id": "20260512T074408+0800-codex-source-control-arrival-poll-after-074116-v1",
+  "source_control_evidence_acquired": false,
+  "source_label_equivalence_roots": [
+    {
+      "exists": true,
+      "file_count": 2,
+      "is_dir": true,
+      "missing_required_files": [],
+      "present_required_files": [],
+      "required_files": [],
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "is_dir": true,
+      "missing_required_files": [],
+      "present_required_files": [],
+      "required_files": [],
+      "root": "/private/tmp/ict-engine-source-label-equivalence-intake"
+    }
+  ],
+  "split_calibration_run": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

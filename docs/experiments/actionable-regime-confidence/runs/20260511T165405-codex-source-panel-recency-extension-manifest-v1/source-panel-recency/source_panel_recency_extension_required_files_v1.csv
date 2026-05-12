@@ -1,0 +1,3 @@
+file,destination,purpose,required
+stock_market_regimes_2026_extension.csv,/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv,source-owned MainRegimeV2 rows after 2026-01-30 using the existing source-panel columns,True
+source_panel_recency_provenance.json,/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json,"source identity, owner, pull date, generation/export notes, and non-proxy attestation",True

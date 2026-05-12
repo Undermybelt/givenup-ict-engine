@@ -1,0 +1,7 @@
+error: unexpected argument '--data' found
+
+  tip: a similar argument exists: '--data-ltf'
+
+Usage: ict-engine analyze --symbol <SYMBOL> --data-ltf <DATA_LTF>
+
+For more information, try '--help'.

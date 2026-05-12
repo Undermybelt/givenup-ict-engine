@@ -1,0 +1,6 @@
+decision=board_a_intake_file_presence_rescan_v1=no_required_intake_files_present
+required_present_count=0
+required_missing_count=12
+exact_filename_candidate_count=0
+strict_full_objective_achieved=false
+update_goal=false

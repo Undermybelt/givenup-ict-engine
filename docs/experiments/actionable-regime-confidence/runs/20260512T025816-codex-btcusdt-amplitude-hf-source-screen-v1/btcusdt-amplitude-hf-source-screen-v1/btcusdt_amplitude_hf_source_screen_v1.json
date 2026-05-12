@@ -1,0 +1,711 @@
+{
+  "board_a_gate": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "future_dated_regime_window_present": true,
+    "gate_result": "btcusdt_amplitude_hf_source_screen_v1=single_symbol_derived_amplitude_regime_labels_no_promotion",
+    "labels_are_derived_research_cycle_context": true,
+    "missing_mainregimev2_roots": [
+      "Sideways",
+      "Crisis"
+    ],
+    "new_confidence_gate": false,
+    "single_symbol_only": true,
+    "source_owned_mainregimev2_export": false,
+    "strict_full_objective_achieved": false,
+    "update_goal": false
+  },
+  "board_cursor_before_artifact": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "board_hash_before_artifact": "bc8411758656acaa8c7e47f270df12bff57b25170e0f42dc86548f52a12ad123",
+  "dataset": {
+    "api_sha256": "05520733491b568f6a7390d7e048747c278c6d4f93797a56db4158c7eec19f5f",
+    "disabled": false,
+    "downloads": 377,
+    "gated": false,
+    "id": "123olp/btcusdt-amplitude-top100",
+    "last_modified": "2026-05-10T23:20:31.000Z",
+    "likes": 0,
+    "private": false,
+    "sha": "ff9d802e45cad196a06fc11beb541afff253d76e",
+    "tags": [
+      "language:zh",
+      "size_categories:1K<n<10K",
+      "region:us",
+      "cryptocurrency",
+      "finance",
+      "time-series",
+      "visualization",
+      "btcusdt"
+    ],
+    "url": "https://huggingface.co/datasets/123olp/btcusdt-amplitude-top100"
+  },
+  "expected_files": {
+    "expected": [
+      "dataset_manifest.json",
+      "data/stats/btcusdt_regime_windows.csv",
+      "data/top100/btcusdt_1m_top100.csv",
+      "data/top100/btcusdt_5m_top100.csv",
+      "data/top100/btcusdt_15m_top100.csv",
+      "data/top100/btcusdt_1h_top100.csv",
+      "data/top100/btcusdt_4h_top100.csv",
+      "data/top100/btcusdt_1d_top100.csv",
+      "data/top100/btcusdt_1w_top100.csv"
+    ],
+    "missing": [],
+    "present": [
+      "data/stats/btcusdt_regime_windows.csv",
+      "data/top100/btcusdt_15m_top100.csv",
+      "data/top100/btcusdt_1d_top100.csv",
+      "data/top100/btcusdt_1h_top100.csv",
+      "data/top100/btcusdt_1m_top100.csv",
+      "data/top100/btcusdt_1w_top100.csv",
+      "data/top100/btcusdt_4h_top100.csv",
+      "data/top100/btcusdt_5m_top100.csv",
+      "dataset_manifest.json"
+    ]
+  },
+  "generated_at_utc": "2026-05-11T18:59:45.308194+00:00",
+  "manifest": {
+    "dataset_id": "btcusdt-amplitude-top100-hf-20260510",
+    "dataset_repo_id": "123olp/btcusdt-amplitude-top100",
+    "generated_at_utc": "2026-05-10T23:17:51.348402+00:00",
+    "metric": {
+      "formula": "(high - low) / prev_close * 100",
+      "name": "range_pct",
+      "unit": "percent"
+    },
+    "record_counts": {
+      "event_windows_rows": 413359,
+      "forward_returns_rows": 2800,
+      "top100_rows_total": 700
+    },
+    "release_version": "v20260510.231458",
+    "sha256": "b085dddd6cde8fd6b3b76fa41ce1d8f9df93a4d1c1bb89a79d6153791e23d000",
+    "snapshot": {
+      "db_now_utc": "2026-05-10T22:56:32.215084+00:00",
+      "latest_updated_at_utc": "2026-04-28T18:26:53.754231+00:00",
+      "snapshot_lag_hours": 292.494
+    },
+    "symbol": "BTCUSDT",
+    "timeframes": [
+      "1m",
+      "5m",
+      "15m",
+      "1h",
+      "4h",
+      "1d",
+      "1w"
+    ]
+  },
+  "non_edits": {
+    "external_vendor_contact_sent": false,
+    "r3_r5_r6_roots_mutated": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "regime_windows": {
+    "columns": [
+      "阶段标签",
+      "阶段代码",
+      "开始(UTC)",
+      "结束(UTC)",
+      "跨度天数"
+    ],
+    "contains_future_dated_window_after_screen_date": true,
+    "max_window_end_utc": "2026-12-31 23:59:59 UTC",
+    "path": "data/stats/btcusdt_regime_windows.csv",
+    "phase_counts": {
+      "bear": 1,
+      "bull": 2
+    },
+    "rows": 3,
+    "sha256": "259da9ee44d44019121d12ddc27b35fb24ee5c0e7c2bbb253219bd406641c3e2",
+    "window_labels": [
+      "2020-01~2021-11 牛市周期",
+      "2021-11~2022-11 熊市周期",
+      "2022-11~2026-12 牛市恢复周期"
+    ]
+  },
+  "run_id": "20260512T025816-codex-btcusdt-amplitude-hf-source-screen-v1",
+  "top100_derived_summary": {
+    "files": 7,
+    "regime_label_counts": {
+      "2020-01~2021-11 牛市周期": 490,
+      "2021-11~2022-11 熊市周期": 101,
+      "2022-11~2026-12 牛市恢复周期": 109
+    },
+    "regime_phase_counts": {
+      "bear": 101,
+      "bull": 599
+    },
+    "regime_phase_label_counts": {
+      "熊市阶段": 101,
+      "牛市阶段": 599
+    },
+    "rows_total": 700,
+    "symbols": [
+      "BTCUSDT"
+    ],
+    "timeframes": [
+      "15m",
+      "1d",
+      "1h",
+      "1m",
+      "1w",
+      "4h",
+      "5m"
+    ]
+  },
+  "top100_files": [
+    {
+      "columns": [
+        "rank",
+        "symbol",
+        "timeframe",
+        "ts",
+        "range_pct",
+        "range_abs",
+        "prev_close",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "taker_buy_volume",
+        "taker_sell_volume",
+        "volume_delta",
+        "abs_volume_delta",
+        "taker_buy_ratio",
+        "taker_buy_quote_volume",
+        "taker_sell_quote_volume",
+        "quote_delta",
+        "abs_quote_delta",
+        "taker_buy_quote_ratio",
+        "body_abs",
+        "body_pct",
+        "body_ratio",
+        "upper_wick_ratio",
+        "lower_wick_ratio",
+        "close_pos_in_range",
+        "volume_log10",
+        "volume_pct_rank",
+        "year",
+        "month",
+        "regime_phase",
+        "regime_label",
+        "regime_phase_label"
+      ],
+      "max_ts": "2025-10-10 21:20:00 UTC",
+      "min_ts": "2020-02-19 21:54:00 UTC",
+      "path": "data/top100/btcusdt_1m_top100.csv",
+      "rank_max": 100,
+      "rank_min": 1,
+      "regime_label_counts": {
+        "2020-01~2021-11 牛市周期": 85,
+        "2021-11~2022-11 熊市周期": 9,
+        "2022-11~2026-12 牛市恢复周期": 6
+      },
+      "regime_phase_counts": {
+        "bear": 9,
+        "bull": 91
+      },
+      "regime_phase_label_counts": {
+        "熊市阶段": 9,
+        "牛市阶段": 91
+      },
+      "required_columns_missing": [],
+      "required_columns_present": [
+        "range_pct",
+        "rank",
+        "regime_label",
+        "regime_phase",
+        "regime_phase_label",
+        "symbol",
+        "timeframe",
+        "ts"
+      ],
+      "rows": 100,
+      "sha256": "845efc3c3eced1d256378f244c17f10b9f30d3e4d3531dd4fbc17db903643d3f",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "timeframes": [
+        "1m"
+      ]
+    },
+    {
+      "columns": [
+        "rank",
+        "symbol",
+        "timeframe",
+        "ts",
+        "range_pct",
+        "range_abs",
+        "prev_close",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "taker_buy_volume",
+        "taker_sell_volume",
+        "volume_delta",
+        "abs_volume_delta",
+        "taker_buy_ratio",
+        "taker_buy_quote_volume",
+        "taker_sell_quote_volume",
+        "quote_delta",
+        "abs_quote_delta",
+        "taker_buy_quote_ratio",
+        "body_abs",
+        "body_pct",
+        "body_ratio",
+        "upper_wick_ratio",
+        "lower_wick_ratio",
+        "close_pos_in_range",
+        "volume_log10",
+        "volume_pct_rank",
+        "year",
+        "month",
+        "regime_phase",
+        "regime_label",
+        "regime_phase_label"
+      ],
+      "max_ts": "2025-10-10 21:20:00 UTC",
+      "min_ts": "2020-01-19 11:00:00 UTC",
+      "path": "data/top100/btcusdt_5m_top100.csv",
+      "rank_max": 100,
+      "rank_min": 1,
+      "regime_label_counts": {
+        "2020-01~2021-11 牛市周期": 81,
+        "2021-11~2022-11 熊市周期": 10,
+        "2022-11~2026-12 牛市恢复周期": 9
+      },
+      "regime_phase_counts": {
+        "bear": 10,
+        "bull": 90
+      },
+      "regime_phase_label_counts": {
+        "熊市阶段": 10,
+        "牛市阶段": 90
+      },
+      "required_columns_missing": [],
+      "required_columns_present": [
+        "range_pct",
+        "rank",
+        "regime_label",
+        "regime_phase",
+        "regime_phase_label",
+        "symbol",
+        "timeframe",
+        "ts"
+      ],
+      "rows": 100,
+      "sha256": "f8be0b051cdc34531e42d0eb720f31ac716ddc6bcf1ae142ab8f3b326bbd2537",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "timeframes": [
+        "5m"
+      ]
+    },
+    {
+      "columns": [
+        "rank",
+        "symbol",
+        "timeframe",
+        "ts",
+        "range_pct",
+        "range_abs",
+        "prev_close",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "taker_buy_volume",
+        "taker_sell_volume",
+        "volume_delta",
+        "abs_volume_delta",
+        "taker_buy_ratio",
+        "taker_buy_quote_volume",
+        "taker_sell_quote_volume",
+        "quote_delta",
+        "abs_quote_delta",
+        "taker_buy_quote_ratio",
+        "body_abs",
+        "body_pct",
+        "body_ratio",
+        "upper_wick_ratio",
+        "lower_wick_ratio",
+        "close_pos_in_range",
+        "volume_log10",
+        "volume_pct_rank",
+        "year",
+        "month",
+        "regime_phase",
+        "regime_label",
+        "regime_phase_label"
+      ],
+      "max_ts": "2025-10-10 21:15:00 UTC",
+      "min_ts": "2020-01-19 11:00:00 UTC",
+      "path": "data/top100/btcusdt_15m_top100.csv",
+      "rank_max": 100,
+      "rank_min": 1,
+      "regime_label_counts": {
+        "2020-01~2021-11 牛市周期": 74,
+        "2021-11~2022-11 熊市周期": 14,
+        "2022-11~2026-12 牛市恢复周期": 12
+      },
+      "regime_phase_counts": {
+        "bear": 14,
+        "bull": 86
+      },
+      "regime_phase_label_counts": {
+        "熊市阶段": 14,
+        "牛市阶段": 86
+      },
+      "required_columns_missing": [],
+      "required_columns_present": [
+        "range_pct",
+        "rank",
+        "regime_label",
+        "regime_phase",
+        "regime_phase_label",
+        "symbol",
+        "timeframe",
+        "ts"
+      ],
+      "rows": 100,
+      "sha256": "38523067e239ff7d25ac4d77468c6b7f425564b45573705e2e686c02f43ff924",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "timeframes": [
+        "15m"
+      ]
+    },
+    {
+      "columns": [
+        "rank",
+        "symbol",
+        "timeframe",
+        "ts",
+        "range_pct",
+        "range_abs",
+        "prev_close",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "taker_buy_volume",
+        "taker_sell_volume",
+        "volume_delta",
+        "abs_volume_delta",
+        "taker_buy_ratio",
+        "taker_buy_quote_volume",
+        "taker_sell_quote_volume",
+        "quote_delta",
+        "abs_quote_delta",
+        "taker_buy_quote_ratio",
+        "body_abs",
+        "body_pct",
+        "body_ratio",
+        "upper_wick_ratio",
+        "lower_wick_ratio",
+        "close_pos_in_range",
+        "volume_log10",
+        "volume_pct_rank",
+        "year",
+        "month",
+        "regime_phase",
+        "regime_label",
+        "regime_phase_label"
+      ],
+      "max_ts": "2025-10-10 21:00:00 UTC",
+      "min_ts": "2020-02-19 21:00:00 UTC",
+      "path": "data/top100/btcusdt_1h_top100.csv",
+      "rank_max": 100,
+      "rank_min": 1,
+      "regime_label_counts": {
+        "2020-01~2021-11 牛市周期": 75,
+        "2021-11~2022-11 熊市周期": 10,
+        "2022-11~2026-12 牛市恢复周期": 15
+      },
+      "regime_phase_counts": {
+        "bear": 10,
+        "bull": 90
+      },
+      "regime_phase_label_counts": {
+        "熊市阶段": 10,
+        "牛市阶段": 90
+      },
+      "required_columns_missing": [],
+      "required_columns_present": [
+        "range_pct",
+        "rank",
+        "regime_label",
+        "regime_phase",
+        "regime_phase_label",
+        "symbol",
+        "timeframe",
+        "ts"
+      ],
+      "rows": 100,
+      "sha256": "2364040dc956233b859ad0771995e4131d681b0f04f0f4379e38fc879c0616e8",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "timeframes": [
+        "1h"
+      ]
+    },
+    {
+      "columns": [
+        "rank",
+        "symbol",
+        "timeframe",
+        "ts",
+        "range_pct",
+        "range_abs",
+        "prev_close",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "taker_buy_volume",
+        "taker_sell_volume",
+        "volume_delta",
+        "abs_volume_delta",
+        "taker_buy_ratio",
+        "taker_buy_quote_volume",
+        "taker_sell_quote_volume",
+        "quote_delta",
+        "abs_quote_delta",
+        "taker_buy_quote_ratio",
+        "body_abs",
+        "body_pct",
+        "body_ratio",
+        "upper_wick_ratio",
+        "lower_wick_ratio",
+        "close_pos_in_range",
+        "volume_log10",
+        "volume_pct_rank",
+        "year",
+        "month",
+        "regime_phase",
+        "regime_label",
+        "regime_phase_label"
+      ],
+      "max_ts": "2026-02-06 00:00:00 UTC",
+      "min_ts": "2020-02-19 20:00:00 UTC",
+      "path": "data/top100/btcusdt_4h_top100.csv",
+      "rank_max": 100,
+      "rank_min": 1,
+      "regime_label_counts": {
+        "2020-01~2021-11 牛市周期": 66,
+        "2021-11~2022-11 熊市周期": 14,
+        "2022-11~2026-12 牛市恢复周期": 20
+      },
+      "regime_phase_counts": {
+        "bear": 14,
+        "bull": 86
+      },
+      "regime_phase_label_counts": {
+        "熊市阶段": 14,
+        "牛市阶段": 86
+      },
+      "required_columns_missing": [],
+      "required_columns_present": [
+        "range_pct",
+        "rank",
+        "regime_label",
+        "regime_phase",
+        "regime_phase_label",
+        "symbol",
+        "timeframe",
+        "ts"
+      ],
+      "rows": 100,
+      "sha256": "91ee282ce9e2592883cb86382654345b9056ceee73b0029f0705ecfca5058bc0",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "timeframes": [
+        "4h"
+      ]
+    },
+    {
+      "columns": [
+        "rank",
+        "symbol",
+        "timeframe",
+        "ts",
+        "range_pct",
+        "range_abs",
+        "prev_close",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "taker_buy_volume",
+        "taker_sell_volume",
+        "volume_delta",
+        "abs_volume_delta",
+        "taker_buy_ratio",
+        "taker_buy_quote_volume",
+        "taker_sell_quote_volume",
+        "quote_delta",
+        "abs_quote_delta",
+        "taker_buy_quote_ratio",
+        "body_abs",
+        "body_pct",
+        "body_ratio",
+        "upper_wick_ratio",
+        "lower_wick_ratio",
+        "close_pos_in_range",
+        "volume_log10",
+        "volume_pct_rank",
+        "year",
+        "month",
+        "regime_phase",
+        "regime_label",
+        "regime_phase_label"
+      ],
+      "max_ts": "2026-02-06 00:00:00 UTC",
+      "min_ts": "2020-03-12 00:00:00 UTC",
+      "path": "data/top100/btcusdt_1d_top100.csv",
+      "rank_max": 100,
+      "rank_min": 1,
+      "regime_label_counts": {
+        "2020-01~2021-11 牛市周期": 59,
+        "2021-11~2022-11 熊市周期": 21,
+        "2022-11~2026-12 牛市恢复周期": 20
+      },
+      "regime_phase_counts": {
+        "bear": 21,
+        "bull": 79
+      },
+      "regime_phase_label_counts": {
+        "熊市阶段": 21,
+        "牛市阶段": 79
+      },
+      "required_columns_missing": [],
+      "required_columns_present": [
+        "range_pct",
+        "rank",
+        "regime_label",
+        "regime_phase",
+        "regime_phase_label",
+        "symbol",
+        "timeframe",
+        "ts"
+      ],
+      "rows": 100,
+      "sha256": "eee68241143cb483e9a09f910e4acefb7d58c5a115463d81d700c70de5e61341",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "timeframes": [
+        "1d"
+      ]
+    },
+    {
+      "columns": [
+        "rank",
+        "symbol",
+        "timeframe",
+        "ts",
+        "range_pct",
+        "range_abs",
+        "prev_close",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "taker_buy_volume",
+        "taker_sell_volume",
+        "volume_delta",
+        "abs_volume_delta",
+        "taker_buy_ratio",
+        "taker_buy_quote_volume",
+        "taker_sell_quote_volume",
+        "quote_delta",
+        "abs_quote_delta",
+        "taker_buy_quote_ratio",
+        "body_abs",
+        "body_pct",
+        "body_ratio",
+        "upper_wick_ratio",
+        "lower_wick_ratio",
+        "close_pos_in_range",
+        "volume_log10",
+        "volume_pct_rank",
+        "year",
+        "month",
+        "regime_phase",
+        "regime_label",
+        "regime_phase_label"
+      ],
+      "max_ts": "2026-02-02 00:00:00 UTC",
+      "min_ts": "2020-01-06 00:00:00 UTC",
+      "path": "data/top100/btcusdt_1w_top100.csv",
+      "rank_max": 100,
+      "rank_min": 1,
+      "regime_label_counts": {
+        "2020-01~2021-11 牛市周期": 50,
+        "2021-11~2022-11 熊市周期": 23,
+        "2022-11~2026-12 牛市恢复周期": 27
+      },
+      "regime_phase_counts": {
+        "bear": 23,
+        "bull": 77
+      },
+      "regime_phase_label_counts": {
+        "熊市阶段": 23,
+        "牛市阶段": 77
+      },
+      "required_columns_missing": [],
+      "required_columns_present": [
+        "range_pct",
+        "rank",
+        "regime_label",
+        "regime_phase",
+        "regime_phase_label",
+        "symbol",
+        "timeframe",
+        "ts"
+      ],
+      "rows": 100,
+      "sha256": "6ad85afc56ed9685d3744b38cff51f4283ad3647ca495f190cc17b7d18c3dd8c",
+      "symbols": [
+        "BTCUSDT"
+      ],
+      "timeframes": [
+        "1w"
+      ]
+    }
+  ]
+}

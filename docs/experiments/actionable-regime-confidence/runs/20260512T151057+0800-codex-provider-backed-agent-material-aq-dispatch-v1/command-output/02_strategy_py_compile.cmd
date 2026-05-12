@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python -m py_compile docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/strategies/ProviderTrendPullbackResume.py

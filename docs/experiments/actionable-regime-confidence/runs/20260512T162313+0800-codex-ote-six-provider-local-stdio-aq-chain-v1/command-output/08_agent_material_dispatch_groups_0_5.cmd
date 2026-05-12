@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-dispatch --symbol PROVIDER_OTE_162313 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T162313+0800-codex-ote-six-provider-local-stdio-aq-chain-v1/state --group-indices 0,1,2,3,4,5

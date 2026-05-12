@@ -1,0 +1,17 @@
+PASS decision=r6_cftc_vorley_chanu_calibration_gate_v3=schema_ready_but_calibration_blocked
+PASS positive_rows_added_this_run=4
+PASS matched_negative_rows_added_this_run=4
+PASS positive_rows_total=13
+PASS matched_negative_rows_total=13
+PASS verifier_status=schema_ready_unscored
+PASS chronological_split_ok=true
+PASS heldout_symbol_or_venue_ok=true
+PASS combined_min_wilson95_lcb=0.771905
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false

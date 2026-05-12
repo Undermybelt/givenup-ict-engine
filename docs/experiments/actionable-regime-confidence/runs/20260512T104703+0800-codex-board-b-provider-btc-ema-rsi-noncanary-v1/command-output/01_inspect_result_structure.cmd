@@ -1,0 +1,1 @@
+inspect ProviderBtcEmaRsiHold12 Backtesting result structure for trade extraction

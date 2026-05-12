@@ -1,0 +1,58 @@
+{
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "accepted_new_direct_manipulation_rows": 0,
+  "accepted_new_parent_root_label_sources": 0,
+  "active_taxonomy": "MainRegimeV2",
+  "env_present": {
+    "DUNE_API_KEY": false,
+    "FINRA_API_KEY": false,
+    "FINRA_CLIENT_ID": false,
+    "FINRA_CLIENT_SECRET": false,
+    "FRED_API_KEY": false,
+    "HF_TOKEN": false,
+    "HUGGINGFACE_TOKEN": false,
+    "KAGGLE_KEY": false,
+    "KAGGLE_USERNAME": false,
+    "SEC_API_KEY": false
+  },
+  "export_paths": {
+    "dune_ready": false,
+    "finra_ready": false,
+    "fred_ready_sidecar_only": false,
+    "huggingface_ready": false,
+    "kaggle_ready": false,
+    "sec_api_ready": false,
+    "tradingview_config_present": true
+  },
+  "file_present": {
+    "dune_config": {
+      "exists": false,
+      "path": "/Users/thrill3r/.config/dune/config.json",
+      "size_bytes": 0
+    },
+    "huggingface_token": {
+      "exists": false,
+      "path": "/Users/thrill3r/.cache/huggingface/token",
+      "size_bytes": 0
+    },
+    "ict_tvremix_mcp": {
+      "exists": true,
+      "path": "/Users/thrill3r/.ict-engine/tvremix_mcp.json",
+      "size_bytes": 106
+    },
+    "kaggle_json": {
+      "exists": false,
+      "path": "/Users/thrill3r/.kaggle/kaggle.json",
+      "size_bytes": 0
+    }
+  },
+  "gate_result": "blocked_auth_export_paths_no_accepted_label_export_available",
+  "next_action": "Use an available authenticated export path only if it yields exact-underlying parent-root labels or timestamped direct Manipulation positive/negative rows; otherwise user-provided structured panels are required.",
+  "objective": "Check whether authenticated/exportable local paths exist for source-label panels or direct Manipulation rows.",
+  "raw_data_committed": false,
+  "run_id": "20260511T093411+0800-codex-auth-export-path-preflight",
+  "runtime_code_changed": false,
+  "secret_values_recorded": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,8 @@
+requirement,artifact,status,note
+source six-provider 1h AQ root,docs/experiments/actionable-regime-confidence/runs/20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1,covered,20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1
+rooted trade observations,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.repaired.jsonl,covered,237
+strategy library import,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/strategy_library_same_root_six_provider_1h_aq_v1.json,covered,auto-quant-results-import attempted
+Pre-Bayes/filter,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1,covered,pre-bayes-status captured
+BBN/runtime state surfaces,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700,covered,analyze/workflow artifacts captured
+CatBoost/path-ranker,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/path-ranker,covered,standard and augmented train/apply/register/enable attempted
+execution tree,docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/command-output,covered,workflow-status captured

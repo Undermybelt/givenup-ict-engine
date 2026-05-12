@@ -1,0 +1,9 @@
+isolated_verifier_returncode=PASS
+isolated_positive_rows_73=PASS
+isolated_matched_negative_rows_73=PASS
+pooled_min_wilson95_ge_095=PASS
+chronological_split_gate_false=PASS
+heldout_symbol_gate_false=PASS
+heldout_venue_gate_false=PASS
+live_shared_intake_readback_completed=PASS
+update_goal_false=PASS

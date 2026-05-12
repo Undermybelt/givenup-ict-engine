@@ -1,0 +1,8 @@
+requirement,artifact,status,note
+single provider root,docs/experiments/actionable-regime-confidence/runs/20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1,covered,20260512T112315+0800-codex-board-b-six-provider-btc-matrix-probe-v1
+six provider AQ workspaces,docs/experiments/actionable-regime-confidence/runs/20260512T115204+0800-codex-112315-same-root-six-provider-aq-chain-v1/workspace,covered,6/6 run exits 0
+rooted trade observations,docs/experiments/actionable-regime-confidence/runs/20260512T115204+0800-codex-112315-same-root-six-provider-aq-chain-v1/derived/same_root_six_provider_aq_real_trades.jsonl,covered,170
+strategy library import,docs/experiments/actionable-regime-confidence/runs/20260512T115204+0800-codex-112315-same-root-six-provider-aq-chain-v1/derived/strategy_library_same_root_six_provider_aq_v1.json,covered,auto-quant-results-import attempted
+Pre-Bayes/filter,docs/experiments/actionable-regime-confidence/runs/20260512T115204+0800-codex-112315-same-root-six-provider-aq-chain-v1/state_six_provider_chain_v1,covered,pre-bayes-status captured
+CatBoost/path-ranker,docs/experiments/actionable-regime-confidence/runs/20260512T115204+0800-codex-112315-same-root-six-provider-aq-chain-v1/path-ranker,covered,train/apply/register/enable attempted
+execution tree,docs/experiments/actionable-regime-confidence/runs/20260512T115204+0800-codex-112315-same-root-six-provider-aq-chain-v1/command-output,covered,workflow-status captured

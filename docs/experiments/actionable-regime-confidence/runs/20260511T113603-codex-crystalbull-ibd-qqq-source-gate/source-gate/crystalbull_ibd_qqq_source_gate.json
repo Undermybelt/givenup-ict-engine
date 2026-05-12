@@ -1,0 +1,140 @@
+{
+  "run_id": "20260511T113603+0800-codex-crystalbull-ibd-qqq-source-gate",
+  "active_taxonomy": "MainRegimeV2",
+  "candidate_source": {
+    "name": "CrystalBull IBD Market Pulse Review",
+    "url": "https://www.crystalbull.com/IBD-market-pulse-review/",
+    "raw_page_committed": false,
+    "embedded_outlook_points": 4957,
+    "embedded_outlook_date_range_utc": {
+      "start": "2002-12-31",
+      "end": "2022-09-16"
+    },
+    "raw_value_mapping_tested": {
+      "-1.0": "Bull candidate from Confirmed Uptrend",
+      "0.5": "Sideways candidate from Uptrend Under Pressure",
+      "1.0": "Bear candidate from Correction"
+    },
+    "raw_value_counts": {
+      "-1.0": 3046,
+      "0.5": 846,
+      "1.0": 1065
+    }
+  },
+  "calibration_setup": {
+    "provider": "yfinance",
+    "instrument": "QQQ",
+    "timeframe": "1d",
+    "price_source": "yfinance QQQ auto-adjusted daily OHLCV fetched at run time",
+    "feature_rows_after_warmup": 4706,
+    "feature_date_range": {
+      "start": "2003-12-30",
+      "end": "2022-09-16"
+    },
+    "label_counts_after_warmup": {
+      "Bull": 2857,
+      "Bear": 1016,
+      "Sideways": 833
+    },
+    "split": {
+      "train": 2823,
+      "calibration": 941,
+      "test": 942
+    },
+    "selection_policy": "train-only one- and two-condition OHLCV feature rules; calibration and test held out",
+    "wilson_z": 1.96,
+    "thresholds_relaxed": false,
+    "blocked_predictor_prefixes": [
+      "future_",
+      "target_"
+    ]
+  },
+  "best_candidates": {
+    "Bull": {
+      "rule": "ma_ratio_20 >= 0.0339732954359 AND ret_20 >= 0.0535997879283",
+      "train": {
+        "positive": 223,
+        "support": 223,
+        "precision": 1.0,
+        "wilson95_lcb": 0.983065
+      },
+      "calibration": {
+        "positive": 23,
+        "support": 24,
+        "precision": 0.958333,
+        "wilson95_lcb": 0.797578
+      },
+      "test": {
+        "positive": 135,
+        "support": 141,
+        "precision": 0.957447,
+        "wilson95_lcb": 0.910274
+      },
+      "accepted_95": false
+    },
+    "Bear": {
+      "rule": "ret_20 <= -0.063102622668 AND rsi14 <= 33.5610627494",
+      "train": {
+        "positive": 127,
+        "support": 130,
+        "precision": 0.976923,
+        "wilson95_lcb": 0.934347
+      },
+      "calibration": {
+        "positive": 17,
+        "support": 19,
+        "precision": 0.894737,
+        "wilson95_lcb": 0.686054
+      },
+      "test": {
+        "positive": 34,
+        "support": 46,
+        "precision": 0.73913,
+        "wilson95_lcb": 0.597406
+      },
+      "accepted_95": false
+    },
+    "Sideways": {
+      "rule": "ret_120 >= 0.217526352355 AND ret_10 <= 0.00338053039555",
+      "train": {
+        "positive": 34,
+        "support": 53,
+        "precision": 0.641509,
+        "wilson95_lcb": 0.506909
+      },
+      "calibration": {
+        "positive": 0,
+        "support": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0
+      },
+      "test": {
+        "positive": 12,
+        "support": 26,
+        "precision": 0.461538,
+        "wilson95_lcb": 0.287556
+      },
+      "accepted_95": false
+    },
+    "Crisis": {
+      "rule": null,
+      "reason": "CrystalBull/IBD Current Outlook mapping has no Crisis root label.",
+      "accepted_95": false
+    }
+  },
+  "decision": {
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "accepted_roots": [],
+    "gate_result": "blocked_crystalbull_ibd_qqq_daily_source_gate_below_95_and_incomplete_roots",
+    "notes": [
+      "The page provides a useful QQQ daily third-party regime-state source candidate, but the calibrated train-only OHLCV detector failed the unchanged 95% Wilson LCB gate on held-out calibration/test.",
+      "The source has only Bull/Bear/Sideways-style states and lacks a Crisis root.",
+      "The source is daily QQQ only and does not close QQQ intraday, weekly, monthly, or cross-instrument missing slots."
+    ]
+  },
+  "runtime_code_changed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Continue exact MainRegimeV2 provider/instrument/timeframe label-window acquisition; do not promote the IBD/CrystalBull daily QQQ source gate."
+}

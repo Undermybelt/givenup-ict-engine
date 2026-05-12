@@ -1,0 +1,40 @@
+{
+  "run_id": "20260512T070820+0800-codex-r6-order-lifecycle-local-file-scan-after-070737-v1",
+  "gate_result": "r6_order_lifecycle_local_file_scan_after_070737_v1=no_required_r6_owner_export_files_no_unlock",
+  "scope": "Materialized readback for the local R6 order-lifecycle candidate-file scan after the 070737 completion audit.",
+  "raw_scan": {
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260512T070820+0800-codex-r6-order-lifecycle-local-file-scan-after-070737-v1/command-output/local_r6_order_lifecycle_candidate_files.csv",
+    "line_count_including_header": 281,
+    "candidate_rows": 280
+  },
+  "classification": {
+    "tomac_context_files": 20,
+    "stock_market_regimes_old_file": 1,
+    "ictscripts_file": 1,
+    "repo_intake_code_files": 115,
+    "external_data_source_code_files": 82,
+    "required_r6_target_contract_hits": 0
+  },
+  "required_contract": {
+    "target_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "required_positive_rows": "direct_manipulation_positive_rows.csv or positive_spoofing_layering_rows.csv under an approved owner-export package",
+    "required_control_rows": "direct_manipulation_matched_controls.csv or matched_negative_normal_activity_rows.csv under an approved owner-export package",
+    "required_provenance": "direct_manipulation_provenance.json or provenance_manifest.json with ticket/export/license/order/support identifiers",
+    "satisfied": false
+  },
+  "accounting": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "r6_owner_export_unlock": false,
+    "r5_recency_unlock": false,
+    "r3_native_subhour_unlock": false,
+    "target_roots_mutated": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Continue only from explicit source/control approval or verifier-native R6 owner-export rows with valid controls; do not promote code-path hits or OHLCV/symbology context as controls."
+}

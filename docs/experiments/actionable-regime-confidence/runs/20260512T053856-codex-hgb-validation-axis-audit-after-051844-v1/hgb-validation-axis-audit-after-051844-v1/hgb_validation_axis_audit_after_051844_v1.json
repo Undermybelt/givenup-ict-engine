@@ -1,0 +1,99 @@
+{
+  "run_id": "20260512T053856-codex-hgb-validation-axis-audit-after-051844-v1",
+  "board_hash_before_artifact": "e87a03c13c35a9ced1ac131464ac7f5bcf8f6568bd54a791dcaf8f6ab4b1d8d7",
+  "gate_result": "hgb_validation_axis_audit_after_051844_v1=price_roots_95_daily_cross_market_cross_period_only_timeframe_source_control_downstream_blocked",
+  "objective_restated": "Every active MainRegimeV2 root needs >=95% calibrated confidence, validation on other markets and other cycles/timeframes, and then the real ict-engine chain must run through provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution tree after a valid source/control unlock.",
+  "hgb_packet": {
+    "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T051844-codex-source-label-hgb-numeric-threshold-screen-v1",
+    "gate": "source_label_hgb_numeric_threshold_screen_v1=all_root_labels_hgb_numeric_accepted",
+    "rows_scored": 248440,
+    "accepted_labels": ["Bear", "Bull", "Crisis", "Sideways"],
+    "feature_policy": "numeric_only_no_symbol_or_source_owner_one_hot",
+    "train_split": "calibration",
+    "split_counts": {
+      "calibration": 148976,
+      "heldout_market": 26236,
+      "heldout_time": 45384,
+      "test": 27844
+    },
+    "label_min_wilson95_lcb": {
+      "Bear": 0.9787578642,
+      "Bull": 0.9908918883,
+      "Crisis": 0.9930261988,
+      "Sideways": 0.990666799
+    }
+  },
+  "source_label_equivalence_intake": {
+    "rows_path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+    "provenance_path": "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json",
+    "rows_sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25",
+    "source_owner_counts": {
+      "source-owned-stock-market-regimes-2000-2026": 245005,
+      "ahaanverma00": 3435
+    },
+    "market_family_counts": {
+      "us_single_stock": 218769,
+      "us_index": 26236,
+      "india_equity_index": 3435
+    },
+    "timeframe_counts": {
+      "1d": 248440
+    },
+    "date_min": "2000-01-03",
+    "date_max": "2026-03-20",
+    "provenance_limitations": [
+      "daily source-label equivalence rows do not satisfy native sub-hour validation",
+      "R5 source-panel recency extension remains a separate missing intake root",
+      "R6 direct Manipulation controls remain a separate direct-event root",
+      "source confidence calibration was reconstructed and remains non-promoting without source/control unlock"
+    ]
+  },
+  "validation_axis_checklist": [
+    {
+      "requirement": "Bull/Bear/Crisis/Sideways each have >=95% diagnostic confidence",
+      "evidence": "051844 HGB accepted all four labels with min Wilson95 LCBs above 0.95.",
+      "status": "satisfied_diagnostic"
+    },
+    {
+      "requirement": "Other market validation",
+      "evidence": "051844 includes heldout_market split with 26236 rows; intake has us_single_stock, us_index, and india_equity_index market families.",
+      "status": "satisfied_daily_diagnostic_not_promotion"
+    },
+    {
+      "requirement": "Other period validation",
+      "evidence": "051844 includes heldout_time and test splits; source-label rows span 2000-01-03 through 2026-03-20.",
+      "status": "satisfied_daily_diagnostic_not_promotion"
+    },
+    {
+      "requirement": "Other cycle/timeframe validation",
+      "evidence": "All 248440 source-label equivalence rows have timeframe=1d; native sub-hour target root is absent.",
+      "status": "blocked"
+    },
+    {
+      "requirement": "Source/control validity before promotion",
+      "evidence": "051844 has source_control_evidence_acquired=false; R6/R3/R5 target roots remain absent.",
+      "status": "blocked"
+    },
+    {
+      "requirement": "Ordered downstream chain after unlock",
+      "evidence": "051844 has canonical_merge=false and downstream_promotion_rerun=false; board Current Cursor forbids rerun before source/control unlock.",
+      "status": "blocked"
+    }
+  ],
+  "required_target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 4,
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "next_action": "Do not promote from the daily HGB screen alone. Acquire or approve a required source/control target root, especially native sub-hour or source-owned cross-timeframe MainRegimeV2 rows, then rerun direct verifier, split calibration, canonical merge, provider/AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, and execution-tree readback in order."
+}

@@ -1,0 +1,64 @@
+{
+  "actionable": false,
+  "base_level": null,
+  "base_swing_type": "n/a",
+  "base_symbol": "NQ",
+  "branch_path": "Transition -> CrossMarketConfirmation -> smt_divergence_confirmation_failure -> ict_smt_divergence_confirmation_v1",
+  "comparison_level": null,
+  "comparison_swing_type": "n/a",
+  "comparison_symbol": "ES",
+  "confidence": 0.0,
+  "confirmation_only": true,
+  "displacement_confirmed": false,
+  "fail_closed_reason": "no_provider_backed_same_event_pair_in_required_coverage",
+  "full_window_correlation": null,
+  "main_regime": "Transition",
+  "mss_or_cisd_confirmed": false,
+  "near_pd_array": false,
+  "normalized_for_inverse_correlation": false,
+  "pd_array_type": "none",
+  "per_regime_stats": {
+    "other": {
+      "expectancy": null,
+      "sample_window": "n/a",
+      "trade_count": 0,
+      "win_rate": null
+    },
+    "range": {
+      "expectancy": null,
+      "sample_window": "n/a",
+      "trade_count": 0,
+      "win_rate": null
+    },
+    "stress": {
+      "expectancy": null,
+      "sample_window": "n/a",
+      "trade_count": 0,
+      "win_rate": null
+    },
+    "transition": {
+      "expectancy": null,
+      "sample_window": "n/a",
+      "trade_count": 0,
+      "win_rate": null
+    },
+    "trend": {
+      "expectancy": null,
+      "sample_window": "n/a",
+      "trade_count": 0,
+      "win_rate": null
+    }
+  },
+  "profit_factor": "ict_smt_divergence_confirmation_v1",
+  "quality_weight": "0_for_bbn_catboost_execution_tree_learning",
+  "recent_correlation": null,
+  "regime_profit_branch_path": "Transition -> CrossMarketConfirmation -> smt_divergence_confirmation_failure -> ict_smt_divergence_confirmation_v1",
+  "relationship_confidence": 0.0,
+  "relationship_type": "uncertain",
+  "session": "n/a",
+  "smt_signal": "none",
+  "sub_regime": "CrossMarketConfirmation",
+  "sub_sub_regime_or_profit_factor": "smt_divergence_confirmation_failure",
+  "swept_side": "none",
+  "timeframe": "1h"
+}

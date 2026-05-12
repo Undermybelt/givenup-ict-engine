@@ -1,0 +1,17 @@
+PASS run_id=20260512T123211+0800-codex-115700-selected-history-preflight-v1
+PASS source_root_id=20260512T121347+0800-codex-115700-enriched-downstream-chain-v1
+PASS source_state_mutated=false
+PASS datasets_checked=3
+PASS suggested_user_selection=1h
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false
+PASS 1h_factor_research_exit=0
+PASS 1h_workflow_exit=0
+FAIL_CLOSED 1h_ready=False actionable=False review=observe
+PASS 4h_factor_research_exit=0
+PASS 4h_workflow_exit=0
+FAIL_CLOSED 4h_ready=False actionable=False review=observe
+PASS 1d_factor_research_exit=0
+PASS 1d_workflow_exit=0
+FAIL_CLOSED 1d_ready=False actionable=False review=observe

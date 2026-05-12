@@ -1,0 +1,92 @@
+{
+  "accepted_rows_added": 0,
+  "additional_positive_rows_needed_after_prior_sidecars": 0,
+  "additional_positive_rows_needed_from_latest_verified_baseline": 16,
+  "assertions_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1/checks/r6_thakkar_backofbook_positive_row_candidate_screen_v1_assertions.out",
+  "board_sha256_at_start": "5aa3192dc3b21faf6ece37cb100271ac4c57beb7ccea19f17e053adfa00895c2",
+  "current_baseline_wilson95_lcb": 0.936858991217,
+  "direct_verifier": {
+    "payload": {
+      "missing_files": [
+        "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "external_requests_sent": true,
+  "gate_result": "r6_thakkar_backofbook_positive_row_candidate_screen_v1=sidecar_candidates_enough_for_pooled_wilson_but_live_intake_missing",
+  "generated_at_utc": "2026-05-11T15:53:33.057160+00:00",
+  "json_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1/r6-thakkar-backofbook-positive-row-candidate-screen/r6_thakkar_backofbook_positive_row_candidate_screen_v1.json",
+  "latest_verified_baseline": {
+    "gate_result": {
+      "accepted_rows_added": 0,
+      "board_state": "blocked",
+      "external_requests_sent": false,
+      "gate_result": "current_goal_completion_audit_v54_after_sidecar_calibration=broad_normal_axis_passed_positive_confidence_still_blocked",
+      "new_confidence_gate": false,
+      "raw_data_committed": false,
+      "runtime_code_changed": false,
+      "strict_full_objective_achieved": false,
+      "thresholds_relaxed": false,
+      "trade_usable": false,
+      "update_goal": false
+    },
+    "positive_rows": 57,
+    "source": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T223100-codex-current-goal-completion-audit-v54-after-sidecar-calibration/completion-audit/current_goal_completion_audit_v54_after_sidecar_calibration.json"
+  },
+  "latest_verified_positive_rows": 57,
+  "live_intake_missing_files": [
+    "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+    "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+    "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+  ],
+  "live_intake_status": "blocked",
+  "new_confidence_gate": false,
+  "next_action": "Restore or re-materialize the shared R6 direct intake under a fresh lock, then decide whether to accept Sarao, Nowak/Smith, and Thakkar candidates with matched controls and rerun direct plus sidecar calibration; do not claim acceptance from sidecar what-if evidence while the live intake is missing.",
+  "nowak_smith_sidecar_positive_rows": 6,
+  "proposed_matched_control_rows": 2,
+  "proposed_matched_controls_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1/r6-thakkar-backofbook-positive-row-candidate-screen/r6_thakkar_backofbook_matched_control_candidates_v1.csv",
+  "proposed_positive_rows": 4,
+  "proposed_positive_rows_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1/r6-thakkar-backofbook-positive-row-candidate-screen/r6_thakkar_backofbook_positive_row_candidates_v1.csv",
+  "raw_data_committed": false,
+  "raw_text_path": "/tmp/ict-engine-r6-thakkar-backofbook-positive-row-candidate-screen-v1/raw/enfthakkarcomplaint012818.txt",
+  "report_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1/r6-thakkar-backofbook-positive-row-candidate-screen/r6_thakkar_backofbook_positive_row_candidate_screen_v1.md",
+  "row_materializable_sources": [
+    "cftc_thakkar_20130222_backofbook_buy_150400",
+    "cftc_thakkar_20130225_backofbook_sell_150450",
+    "cftc_thakkar_20130225_backofbook_sell_150475",
+    "cftc_thakkar_20130225_backofbook_sell_150500"
+  ],
+  "run_id": "20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1",
+  "runtime_code_changed": false,
+  "sarao_sidecar_positive_rows": 6,
+  "shared_intake_mutated": false,
+  "sidecar_broad_normal_control_rows": 80,
+  "sidecar_broad_normal_wilson95_lcb": 0.954180263735,
+  "source": {
+    "bytes": 93786,
+    "content_type": "application/pdf",
+    "http_status": 200,
+    "pdf_path": "/tmp/ict-engine-r6-thakkar-backofbook-positive-row-candidate-screen-v1/raw/enfthakkarcomplaint012818.pdf",
+    "sha256": "e829a8f29b14e1e68312dd986852d04086ccb9b0b5a01b70b86f878ba45cd46c",
+    "url": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40lrenforcementactions/documents/legalpleading/enfthakkarcomplaint012818.pdf"
+  },
+  "source_screen_count": 4,
+  "source_screen_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T234834-codex-r6-thakkar-backofbook-positive-row-candidate-screen-v1/r6-thakkar-backofbook-positive-row-candidate-screen/r6_thakkar_backofbook_positive_row_source_screen_v1.csv",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "what_if_min_wilson95_lcb_with_prior_sidecars": 0.950006246616,
+  "what_if_pooled_wilson_gate_with_prior_sidecars": true,
+  "what_if_positive_rows_thakkar_only": 61,
+  "what_if_positive_rows_with_prior_sidecars": 73,
+  "what_if_positive_wilson95_lcb_thakkar_only": 0.940754083798,
+  "what_if_positive_wilson95_lcb_with_prior_sidecars": 0.950006246616
+}

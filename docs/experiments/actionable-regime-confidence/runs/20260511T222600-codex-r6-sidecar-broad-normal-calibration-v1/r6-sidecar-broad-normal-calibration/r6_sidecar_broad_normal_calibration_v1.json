@@ -1,0 +1,436 @@
+{
+  "accepted_gate": false,
+  "additional_positive_rows_for_pooled_95": 16,
+  "board_hash_before_start": "5f2b8b3a93934583eb2e8beaebe1cd1d7446bc5de97edcbf08382f7c7c11201a",
+  "broad_control_symbol_counts": [
+    {
+      "count": 1,
+      "name": "AAPL"
+    },
+    {
+      "count": 1,
+      "name": "AMZN"
+    },
+    {
+      "count": 2,
+      "name": "BBH"
+    },
+    {
+      "count": 1,
+      "name": "CDN"
+    },
+    {
+      "count": 1,
+      "name": "CHKP"
+    },
+    {
+      "count": 2,
+      "name": "CSCO"
+    },
+    {
+      "count": 1,
+      "name": "CSTR"
+    },
+    {
+      "count": 1,
+      "name": "DELL"
+    },
+    {
+      "count": 2,
+      "name": "EFA"
+    },
+    {
+      "count": 4,
+      "name": "EK"
+    },
+    {
+      "count": 4,
+      "name": "FRX"
+    },
+    {
+      "count": 1,
+      "name": "GDT"
+    },
+    {
+      "count": 1,
+      "name": "GNTX"
+    },
+    {
+      "count": 10,
+      "name": "HD"
+    },
+    {
+      "count": 2,
+      "name": "HHH"
+    },
+    {
+      "count": 2,
+      "name": "IEF"
+    },
+    {
+      "count": 2,
+      "name": "IWM"
+    },
+    {
+      "count": 2,
+      "name": "LOW"
+    },
+    {
+      "count": 2,
+      "name": "LQD"
+    },
+    {
+      "count": 2,
+      "name": "MDY"
+    },
+    {
+      "count": 1,
+      "name": "MRM"
+    },
+    {
+      "count": 3,
+      "name": "MSFT"
+    },
+    {
+      "count": 2,
+      "name": "OIH"
+    },
+    {
+      "count": 2,
+      "name": "ORCL"
+    },
+    {
+      "count": 2,
+      "name": "PMTC"
+    },
+    {
+      "count": 2,
+      "name": "PPH"
+    },
+    {
+      "count": 1,
+      "name": "RHAT"
+    },
+    {
+      "count": 1,
+      "name": "RTH"
+    },
+    {
+      "count": 2,
+      "name": "SHY"
+    },
+    {
+      "count": 2,
+      "name": "SNPS"
+    },
+    {
+      "count": 2,
+      "name": "TLT"
+    },
+    {
+      "count": 1,
+      "name": "XLE"
+    },
+    {
+      "count": 2,
+      "name": "XLF"
+    },
+    {
+      "count": 2,
+      "name": "XLK"
+    },
+    {
+      "count": 11,
+      "name": "ZVZZT"
+    }
+  ],
+  "broad_normal_sidecar_gate": true,
+  "broad_normal_sidecar_rows": 80,
+  "broad_normal_wilson95_lcb": 0.954180263735,
+  "decision": "r6_sidecar_broad_normal_calibration_v1=broad_normal_sidecar_available_positive_split_species_still_blocked",
+  "direct_species_closed": false,
+  "direct_verifier": {
+    "matched_group_count": 56,
+    "matched_negative_rows": 57,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 57,
+    "provenance_keys": [
+      "cftc_flotron_complaint_examples",
+      "cftc_franko_order_2018_examples",
+      "cftc_gandhi_order",
+      "cftc_geneva_order_2018",
+      "cftc_geneva_order_examples",
+      "cftc_geneva_order_rows_added",
+      "cftc_genuine_order_text_checks",
+      "cftc_genuine_order_text_status",
+      "cftc_logista_2020_complaint_examples",
+      "cftc_logista_serotta_complaint_examples",
+      "cftc_mohan_additional_examples",
+      "cftc_mohan_complaint",
+      "cftc_mohan_complaint_rows_added",
+      "cftc_mohan_complaint_text_checks",
+      "cftc_order",
+      "cftc_shak_complaint",
+      "cftc_shak_complaint_examples",
+      "cftc_shak_rows_added",
+      "cftc_text_checks",
+      "cftc_text_extraction_status",
+      "cftc_vorley_chanu_complaint",
+      "cftc_zhao_skudder_examples",
+      "created_at_utc",
+      "finra_public_schema",
+      "gandhi_matched_negative_rows_added",
+      "gandhi_positive_rows_added",
+      "gandhi_rows_materialized_at_utc",
+      "license_or_permission",
+      "matched_control_limitations",
+      "matched_control_policy",
+      "matched_negative_control_policy",
+      "matched_negative_materialized_at_utc",
+      "matched_negative_rows_acquired",
+      "matched_negative_rows_count",
+      "matched_negative_rows_path",
+      "matched_negative_rows_sha256",
+      "mohan_additional_matched_negative_rows_added",
+      "mohan_additional_positive_rows_added",
+      "mohan_additional_rows_materialized_at_utc",
+      "mohan_complaint_control_policy",
+      "positive_rows_count",
+      "positive_rows_path",
+      "positive_rows_sha256",
+      "r6_flotron_cftc_row_uplift_v1",
+      "r6_geneva_cftc_row_uplift_v1",
+      "r6_logista_cftc_row_repair_v1",
+      "r6_logista_cftc_row_uplift_v1",
+      "r6_logista_franko_row_uplift_v1",
+      "r6_logista_semantic_duplicate_cleanup_v1",
+      "r6_logista_serotta_cftc_row_uplift_v1",
+      "r6_mohan_shak_duplicate_cleanup_v1",
+      "r6_mohan_shak_row_uplift_v1",
+      "r6_official_rowlevel_support_extension_v1",
+      "r6_shak_duplicate_row_cleanup_v1",
+      "r6_vorley_franko_row_uplift_v1",
+      "r6_zhao_skudder_cftc_row_uplift_v1",
+      "shak_complaint_matched_negative_rows_added",
+      "shak_complaint_positive_rows_added",
+      "shak_complaint_rows_materialized_at_utc",
+      "source",
+      "updated_at_utc",
+      "updated_by",
+      "vorley_chanu_matched_negative_rows_added",
+      "vorley_chanu_positive_rows_added",
+      "vorley_chanu_rows_materialized_at_utc"
+    ],
+    "status": "schema_ready_unscored"
+  },
+  "direct_verifier_command": {
+    "cmd": [
+      "python3",
+      "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py",
+      "--intake-root",
+      "/tmp/ict-engine-direct-manipulation-row-intake"
+    ],
+    "name": "direct_manipulation_row_intake_verifier",
+    "returncode": 0,
+    "stderr_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T222600-codex-r6-sidecar-broad-normal-calibration-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T222600-codex-r6-sidecar-broad-normal-calibration-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "external_requests_sent": false,
+  "generated_at_utc": "2026-05-11T14:28:11.898983+00:00",
+  "input_hashes": {
+    "broad_normal_market_order_lifecycle_controls_v1.csv": "28bbabff08836dabc6891fe55ff4b471d8c5af105836eeb34ebebc9369de7bce",
+    "matched_negative_normal_activity_rows.csv": "dba281798f2752e2e6d0503db10f9d8e0336bfba1b756513fbe558ba4e2ccf85",
+    "positive_spoofing_layering_rows.csv": "6c138c6b2e3f44c7e5afa5cb734bffc2e9fe714eb44f917c0ac253b44f383561"
+  },
+  "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "missing_direct_species": [
+    "quote_stuffing",
+    "pinging",
+    "bear_raid_or_painting_tape",
+    "pump_dump_social_text_or_twitter"
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Acquire source-owned positive direct rows: at least 16 more for pooled Wilson95, and more for chronological/symbol/venue split support; then rerun calibration with sidecar broad-normal controls.",
+  "pooled_sidecar_gate": false,
+  "pooled_sidecar_min_wilson95_lcb": 0.936858991217,
+  "positive_chronological_split_gate": false,
+  "positive_chronological_split_metrics": [
+    {
+      "positive_support": 29,
+      "positive_wilson95_lcb": 0.883026405534,
+      "split": "chronological_train",
+      "support_ok": false,
+      "wilson_ok": false
+    },
+    {
+      "positive_support": 14,
+      "positive_wilson95_lcb": 0.784682988073,
+      "split": "chronological_calibration",
+      "support_ok": false,
+      "wilson_ok": false
+    },
+    {
+      "positive_support": 14,
+      "positive_wilson95_lcb": 0.784682988073,
+      "split": "chronological_test",
+      "support_ok": false,
+      "wilson_ok": false
+    }
+  ],
+  "positive_rows": 57,
+  "positive_wilson95_lcb": 0.936858991217,
+  "raw_data_committed": false,
+  "run_id": "20260511T222600-codex-r6-sidecar-broad-normal-calibration-v1",
+  "runtime_code_changed": false,
+  "same_event_negative_rows": 57,
+  "shared_intake_mutated": false,
+  "sidecar_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T222000-codex-r6-broad-normal-order-lifecycle-screen-v1/r6-broad-normal-order-lifecycle-screen/broad_normal_market_order_lifecycle_controls_v1.csv",
+  "strict_full_objective_achieved": false,
+  "symbol_counts": [
+    {
+      "count": 2,
+      "name": "April 2017 Gold futures"
+    },
+    {
+      "count": 3,
+      "name": "August-delivery Gold Futures"
+    },
+    {
+      "count": 4,
+      "name": "CBOT soybean futures"
+    },
+    {
+      "count": 1,
+      "name": "CLM0-CLU0 crude oil June-September 2020 calendar spread"
+    },
+    {
+      "count": 1,
+      "name": "CLM0-CLZ0 crude oil June-December 2020 calendar spread"
+    },
+    {
+      "count": 6,
+      "name": "COMEX Gold Futures"
+    },
+    {
+      "count": 1,
+      "name": "COMEX Gold Futures June delivery"
+    },
+    {
+      "count": 1,
+      "name": "COMEX Silver Futures"
+    },
+    {
+      "count": 2,
+      "name": "December 2013 E-mini Dow futures"
+    },
+    {
+      "count": 5,
+      "name": "December 2013 E-mini NASDAQ futures"
+    },
+    {
+      "count": 1,
+      "name": "December 2014 E-mini S&P 500 futures"
+    },
+    {
+      "count": 1,
+      "name": "December 2017 Gold futures"
+    },
+    {
+      "count": 1,
+      "name": "December 2017 Silver futures"
+    },
+    {
+      "count": 7,
+      "name": "December-delivery Gold Futures"
+    },
+    {
+      "count": 3,
+      "name": "E-mini S&P 500 futures"
+    },
+    {
+      "count": 1,
+      "name": "ICE Brent/WTI crude spread April 2020"
+    },
+    {
+      "count": 2,
+      "name": "LME copper futures"
+    },
+    {
+      "count": 1,
+      "name": "March 2014 E-mini S&P 500 futures"
+    },
+    {
+      "count": 4,
+      "name": "March 2018 Crude Oil futures"
+    },
+    {
+      "count": 4,
+      "name": "March 2018 Silver futures"
+    },
+    {
+      "count": 1,
+      "name": "March-delivery Silver Futures"
+    },
+    {
+      "count": 2,
+      "name": "NGH0-NGJ0 natural gas March-April 2020 calendar spread"
+    },
+    {
+      "count": 1,
+      "name": "RBOB gasoline futures"
+    },
+    {
+      "count": 1,
+      "name": "Soft Red Winter wheat futures"
+    },
+    {
+      "count": 1,
+      "name": "light sweet crude oil futures"
+    }
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "venue_counts": [
+    {
+      "count": 2,
+      "name": "CBOT"
+    },
+    {
+      "count": 4,
+      "name": "CBOT/CME Globex"
+    },
+    {
+      "count": 7,
+      "name": "CME"
+    },
+    {
+      "count": 3,
+      "name": "CME Globex"
+    },
+    {
+      "count": 3,
+      "name": "CME Group registered futures market (source order)"
+    },
+    {
+      "count": 8,
+      "name": "COMEX"
+    },
+    {
+      "count": 19,
+      "name": "COMEX/CME Globex"
+    },
+    {
+      "count": 1,
+      "name": "IFEU electronic market"
+    },
+    {
+      "count": 2,
+      "name": "LME and COMEX cross-market"
+    },
+    {
+      "count": 8,
+      "name": "NYMEX/CME Globex"
+    }
+  ]
+}

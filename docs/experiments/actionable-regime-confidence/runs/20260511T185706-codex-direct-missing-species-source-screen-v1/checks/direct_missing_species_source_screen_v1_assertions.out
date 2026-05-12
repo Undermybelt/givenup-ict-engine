@@ -1,0 +1,6 @@
+PASS candidate_count=7
+PASS ready_source_candidate_count=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective=false
+PASS current_cursor_edited=false

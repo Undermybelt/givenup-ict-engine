@@ -1,0 +1,25 @@
+Apply tempered Beta-Binomial pseudo-counts from an imported Auto-Quant strategy library to the trade_outcome CPT prior
+
+Usage: ict-engine auto-quant-prior-init [OPTIONS] --symbol <SYMBOL>
+
+Options:
+      --symbol <SYMBOL>
+          Instrument identifier supplied by the caller
+      --state-dir <STATE_DIR>
+          State directory holding Auto-Quant artifacts [env: ICT_ENGINE_STATE_DIR=] [default: state]
+      --library <LIBRARY>
+          Path to a strategy_library.json. If omitted, defaults to the canonical state copy persisted by auto-quant-results-import
+      --strategies <STRATEGIES>
+          Comma-separated strategy names; if omitted, every status=ok strategy in the manifest is applied
+      --temper <TEMPER>
+          Temper factor in [0, 1]. Backtest counts are multiplied by this before being added to the Dirichlet prior. Defaults to 0.5
+      --prior-strength <PRIOR_STRENGTH>
+          Dirichlet concentration applied to the existing CPT row. Defaults to 4.0
+      --parent-config <PARENT_CONFIG>
+          Three usize indices [entry_quality, factor_alignment, factor_uncertainty]. Defaults to 0,0,0
+      --dry-run
+          Compute the diff and emit the ledger entry but do not persist the mutated trading network
+      --force
+          Override the ledger-enforced single-apply guard. Use only after consciously rolling back the BBN snapshot.
+  -h, --help
+          Print help

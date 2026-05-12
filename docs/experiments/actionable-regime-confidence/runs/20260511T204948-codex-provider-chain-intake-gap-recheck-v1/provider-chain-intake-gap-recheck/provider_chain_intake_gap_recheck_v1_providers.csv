@@ -1,0 +1,5 @@
+provider,rows,first_timestamp,last_timestamp,sha256,tmp_path
+yfinance_QQQ_1h,3369,2024-06-03 13:30:00+00:00,2026-05-08 20:00:00+00:00,b3f72e678c93db2b65fed4ff0c25df3d8b1aad547c9d266f4fc1e2de9f8693a1,/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_raw/yahoo_QQQ_1h.csv
+tradingview_mcp_QQQ_1h,140,2026-04-13T13:30:00Z,2026-05-08T19:30:00Z,86e2cc7d6b39ceab9636c0c9784a43f02ff180b49d411a1de43cdd639a6515ff,/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_raw/tradingview_mcp_QQQ_1h.json
+ibkr_QQQ_1h_1M,325,2026-04-13T08:00:00+00:00,2026-05-11T12:00:00+00:00,b301d707e9c1b787880d53d2d33248e2c9f878eb718db53551fd4e7eeb7decb7,/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_raw/ibkr_QQQ_1h_1M.csv
+kraken_XBTUSD_1h,721,2026-04-11 12:00:00+00:00,2026-05-11 12:00:00+00:00,60146f05d30ba025edc5faf86747f119138b7fb143fbbcd552109a6903ca3fd4,/tmp/ict-engine-board-a-20260511T204948-provider-chain-intake-gap-recheck-v1/provider_raw/kraken_XBTUSD_1h.csv

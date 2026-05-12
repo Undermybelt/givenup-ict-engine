@@ -1,0 +1,129 @@
+{
+  "accepted_rows_added": 0,
+  "candidate_hits": [],
+  "candidate_hits_count": 0,
+  "decision": "r3_r5_source_label_intake_presence_sweep_v1=non_r6_intake_roots_absent_or_incomplete",
+  "external_requests_sent": false,
+  "generated_at": "2026-05-11T16:32:40.232136+00:00",
+  "intake_roots": [
+    {
+      "acceptance": "schema_ready_unscored first, then Wilson95 >=0.95 per MainRegimeV2 root/split",
+      "all_required_present": false,
+      "blocker": "source-label confidence/equivalence",
+      "csv_row_counts": {},
+      "file_hashes": {},
+      "id": "source_label_equivalence",
+      "missing_files": [
+        "source_label_equivalence_rows.csv",
+        "source_label_equivalence_provenance.json"
+      ],
+      "present_files": [],
+      "required_files": [
+        "source_label_equivalence_rows.csv",
+        "source_label_equivalence_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_exists": false
+    },
+    {
+      "acceptance": "source-native or owner-approved sub-hour labels plus provenance; no OHLCV/HMM proxy",
+      "all_required_present": false,
+      "blocker": "R3 native-subhour root",
+      "csv_row_counts": {},
+      "file_hashes": {},
+      "id": "native_subhour_source_label",
+      "missing_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "present_files": [],
+      "required_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": false
+    },
+    {
+      "acceptance": "post-2026-01-30 source-owned rows matching the recency verifier schema",
+      "all_required_present": false,
+      "blocker": "R5 post-2026-01-30 source-panel recency",
+      "csv_row_counts": {},
+      "file_hashes": {},
+      "id": "source_panel_recency_extension",
+      "missing_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "present_files": [],
+      "required_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false
+    }
+  ],
+  "missing_required_file_count": 6,
+  "native_subhour_root_ready": false,
+  "new_confidence_gate": false,
+  "next_action": "Preserve the active V62 R6 owner-export next action. For non-R6 hardening, populate the missing source-label equivalence, native-subhour, or R5 recency intake roots with owner-approved/source-owned files before rerunning the unchanged gates.",
+  "present_required_file_count": 0,
+  "raw_data_committed": false,
+  "ready_root_count": 0,
+  "ready_roots": [],
+  "required_file_count": 6,
+  "roots_checked": 3,
+  "run_id": "20260512T002807-codex-r3-r5-source-label-intake-presence-sweep-v1",
+  "runtime_code_changed": false,
+  "source_label_equivalence_status": "blocked",
+  "source_panel_recency_status": "blocked",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifier_results": [
+    {
+      "cmd": [
+        "python3",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py",
+        "--intake-root",
+        "/tmp/ict-engine-source-label-equivalence-intake"
+      ],
+      "exit_code": 2,
+      "exit_file": "docs/experiments/actionable-regime-confidence/runs/20260512T002807-codex-r3-r5-source-label-intake-presence-sweep-v1/command-output/source_label_equivalence_verifier.exit",
+      "id": "source_label_equivalence_verifier",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260512T002807-codex-r3-r5-source-label-intake-presence-sweep-v1/command-output/source_label_equivalence_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260512T002807-codex-r3-r5-source-label-intake-presence-sweep-v1/command-output/source_label_equivalence_verifier.stdout.txt"
+    },
+    {
+      "cmd": [
+        "python3",
+        "docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py",
+        "--intake-root",
+        "/tmp/ict-engine-source-panel-recency-extension"
+      ],
+      "exit_code": 2,
+      "exit_file": "docs/experiments/actionable-regime-confidence/runs/20260512T002807-codex-r3-r5-source-label-intake-presence-sweep-v1/command-output/source_panel_recency_extension_verifier.exit",
+      "id": "source_panel_recency_extension_verifier",
+      "parsed": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260512T002807-codex-r3-r5-source-label-intake-presence-sweep-v1/command-output/source_panel_recency_extension_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260512T002807-codex-r3-r5-source-label-intake-presence-sweep-v1/command-output/source_panel_recency_extension_verifier.stdout.txt"
+    }
+  ]
+}

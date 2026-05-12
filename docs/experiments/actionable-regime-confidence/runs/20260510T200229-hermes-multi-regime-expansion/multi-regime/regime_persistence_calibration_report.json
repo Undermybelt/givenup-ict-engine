@@ -1,0 +1,377 @@
+{
+  "schema_version": "board-a-regime-persistence-expansion/v1",
+  "loop_id": "20260510T200229+0800-hermes-regime-persistence-expansion",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion",
+  "threshold_policy": {
+    "thresholds_relaxed": false,
+    "precision_wilson_lcb_95": 0.95,
+    "precision_wilson_lcb_99": 0.99,
+    "calibration_support_min_95": 120,
+    "test_support_min_95": 60,
+    "ece_max_95": 0.05,
+    "coverage_min_95": 0.03
+  },
+  "input_sources": {
+    "nq_auto_quant_15m_ohlcv_20k": "/tmp/ict-regime-chain-20260509T231052/input/nq_auto_quant_15m_ohlcv_20k.csv",
+    "session_liquidity_features": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_features.csv",
+    "session_liquidity_accepted_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json"
+  },
+  "nq_persistence_split": {
+    "train": 9872,
+    "calibration": 4936,
+    "test": 4936,
+    "start": "2025-02-28 12:00:00+00:00",
+    "end": "2025-12-31 21:45:00+00:00"
+  },
+  "existing_accepted_regime_packets": [
+    {
+      "accepted_regime_id": "SessionLiquidityCoreViable",
+      "market": "QQQ",
+      "timeframe": "1h",
+      "horizon": "4 observed IBKR bars",
+      "allowed_action": "observe_or_release_candidate_only_when_other_gates_pass",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9899396497369397,
+      "calibration_support": 378,
+      "test_support": 378,
+      "ece": 0.010582010582010581,
+      "coverage": 0.3776223776223776,
+      "transition_hazard": 0.0,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "hour_utc",
+        "session_core_utc_13_18",
+        "qqq_ibkr_1h_count",
+        "qqq_ibkr_1h_volume",
+        "qqq_yfinance_current_bar_present"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T184532-codex-session-liquidity/session-liquidity/session_liquidity_regime_probe_report.json"
+    }
+  ],
+  "new_regime_results": [
+    {
+      "regime_id": "TrendExpansion",
+      "market": "NQ",
+      "timeframe": "15m",
+      "horizon": "next 15m window regime persistence",
+      "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+      "target": "TrendExpansion_persists_next_15m",
+      "model_family": "catboost_isotonic",
+      "threshold": 0.925,
+      "calibration": {
+        "support": 201,
+        "success": 191,
+        "precision": 0.9502487562189055,
+        "precision_wilson_lcb_95": 0.910855477253997,
+        "precision_wilson_lcb_99": 0.8944161980698171,
+        "coverage": 0.040721231766612645,
+        "ece": 1.1102230246251565e-16,
+        "mean_probability": 0.9502487562189056
+      },
+      "test": {
+        "support": 250,
+        "success": 219,
+        "precision": 0.876,
+        "precision_wilson_lcb_95": 0.8293682502458599,
+        "precision_wilson_lcb_99": 0.812401459320251,
+        "coverage": 0.0506482982171799,
+        "ece": 0.07390451529578423,
+        "mean_probability": 0.9499045152957842
+      },
+      "current_label_baseline_calibration": {
+        "support": 918,
+        "success": 721,
+        "precision": 0.7854030501089324,
+        "precision_wilson_lcb_95": 0.7576850950166408,
+        "precision_wilson_lcb_99": 0.7485180055148193,
+        "coverage": 0.1859805510534846,
+        "ece": 0.0,
+        "mean_probability": 0.7854030501089324
+      },
+      "current_label_baseline_test": {
+        "support": 1127,
+        "success": 868,
+        "precision": 0.7701863354037267,
+        "precision_wilson_lcb_95": 0.7447306325372348,
+        "precision_wilson_lcb_99": 0.7363802276571636,
+        "coverage": 0.228322528363047,
+        "ece": 0.0,
+        "mean_probability": 0.7701863354037267
+      },
+      "accepted_95": false,
+      "accepted_99": false,
+      "confidence_lane": "abstain",
+      "blocker": "precision_wilson_lcb_below_95;ece_above_95_limit"
+    },
+    {
+      "regime_id": "RangeConsolidation",
+      "market": "NQ",
+      "timeframe": "15m",
+      "horizon": "next 15m window regime persistence",
+      "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+      "target": "RangeConsolidation_persists_next_15m",
+      "model_family": "catboost_isotonic",
+      "threshold": 0.9896907216494846,
+      "calibration": {
+        "support": 467,
+        "success": 463,
+        "precision": 0.9914346895074947,
+        "precision_wilson_lcb_95": 0.978186212412689,
+        "precision_wilson_lcb_99": 0.9716526963513256,
+        "coverage": 0.09461102106969206,
+        "ece": 0.0,
+        "mean_probability": 0.9914346895074947
+      },
+      "test": {
+        "support": 313,
+        "success": 309,
+        "precision": 0.987220447284345,
+        "precision_wilson_lcb_95": 0.9676071866741978,
+        "precision_wilson_lcb_99": 0.9580236351321185,
+        "coverage": 0.06341166936790923,
+        "ece": 0.004488121867580741,
+        "mean_probability": 0.9917085691519257
+      },
+      "current_label_baseline_calibration": {
+        "support": 2263,
+        "success": 1982,
+        "precision": 0.8758285461776403,
+        "precision_wilson_lcb_95": 0.8616011580576108,
+        "precision_wilson_lcb_99": 0.8568657222322194,
+        "coverage": 0.4584683954619125,
+        "ece": 0.0,
+        "mean_probability": 0.8758285461776403
+      },
+      "current_label_baseline_test": {
+        "support": 1864,
+        "success": 1608,
+        "precision": 0.8626609442060086,
+        "precision_wilson_lcb_95": 0.8462875532595175,
+        "precision_wilson_lcb_99": 0.8408349860469924,
+        "coverage": 0.37763371150729336,
+        "ece": 0.0,
+        "mean_probability": 0.8626609442060086
+      },
+      "accepted_95": true,
+      "accepted_99": false,
+      "confidence_lane": "95",
+      "blocker": "none"
+    },
+    {
+      "regime_id": "ExtremeStress",
+      "market": "NQ",
+      "timeframe": "15m",
+      "horizon": "next 15m window regime persistence",
+      "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+      "target": "ExtremeStress_persists_next_15m",
+      "model_family": "catboost_isotonic",
+      "threshold": 0.0,
+      "calibration": {
+        "support": 4936,
+        "success": 53,
+        "precision": 0.01073743922204214,
+        "precision_wilson_lcb_95": 0.008218766293428954,
+        "precision_wilson_lcb_99": 0.007561420714003753,
+        "coverage": 1.0,
+        "ece": 3.469446951953614e-18,
+        "mean_probability": 0.010737439222042143
+      },
+      "test": {
+        "support": 4936,
+        "success": 82,
+        "precision": 0.01661264181523501,
+        "precision_wilson_lcb_95": 0.013404487894280653,
+        "precision_wilson_lcb_99": 0.012533839319315966,
+        "coverage": 1.0,
+        "ece": 0.00037999367174827714,
+        "mean_probability": 0.016232648143486732
+      },
+      "current_label_baseline_calibration": {
+        "support": 58,
+        "success": 53,
+        "precision": 0.9137931034482759,
+        "precision_wilson_lcb_95": 0.8135637093712647,
+        "precision_wilson_lcb_99": 0.7718644488063799,
+        "coverage": 0.011750405186385737,
+        "ece": 0.0,
+        "mean_probability": 0.9137931034482759
+      },
+      "current_label_baseline_test": {
+        "support": 96,
+        "success": 82,
+        "precision": 0.8541666666666666,
+        "precision_wilson_lcb_95": 0.7699818497355329,
+        "precision_wilson_lcb_99": 0.738660109748755,
+        "coverage": 0.019448946515397084,
+        "ece": 0.0,
+        "mean_probability": 0.8541666666666666
+      },
+      "accepted_95": false,
+      "accepted_99": false,
+      "confidence_lane": "abstain",
+      "blocker": "precision_wilson_lcb_below_95"
+    },
+    {
+      "regime_id": "ReversalBrewing",
+      "market": "NQ",
+      "timeframe": "15m",
+      "horizon": "next 15m window regime persistence",
+      "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+      "target": "ReversalBrewing_persists_next_15m",
+      "model_family": "catboost_isotonic",
+      "threshold": 0.631578947368421,
+      "calibration": {
+        "support": 146,
+        "success": 102,
+        "precision": 0.6986301369863014,
+        "precision_wilson_lcb_95": 0.6198923684391731,
+        "precision_wilson_lcb_99": 0.593939679315469,
+        "coverage": 0.02957860615883306,
+        "ece": 0.0,
+        "mean_probability": 0.6986301369863014
+      },
+      "test": {
+        "support": 166,
+        "success": 112,
+        "precision": 0.6746987951807228,
+        "precision_wilson_lcb_95": 0.6001797805084459,
+        "precision_wilson_lcb_99": 0.5758955259555569,
+        "coverage": 0.033630470016207455,
+        "ece": 0.024265758828711403,
+        "mean_probability": 0.6989645540094342
+      },
+      "current_label_baseline_calibration": {
+        "support": 374,
+        "success": 194,
+        "precision": 0.5187165775401069,
+        "precision_wilson_lcb_95": 0.4681458554017636,
+        "precision_wilson_lcb_99": 0.45242228272530666,
+        "coverage": 0.07576985413290113,
+        "ece": 0.0,
+        "mean_probability": 0.5187165775401069
+      },
+      "current_label_baseline_test": {
+        "support": 410,
+        "success": 190,
+        "precision": 0.4634146341463415,
+        "precision_wilson_lcb_95": 0.41570945369920465,
+        "precision_wilson_lcb_99": 0.40106661384659764,
+        "coverage": 0.08306320907617504,
+        "ece": 0.0,
+        "mean_probability": 0.4634146341463415
+      },
+      "accepted_95": false,
+      "accepted_99": false,
+      "confidence_lane": "abstain",
+      "blocker": "precision_wilson_lcb_below_95"
+    },
+    {
+      "regime_id": "ThinLiquidityOffHoursPersistent",
+      "market": "QQQ",
+      "timeframe": "1h",
+      "horizon": "next 4 observed IBKR 1h bars",
+      "allowed_action": "guardrail_only_liquidity_context",
+      "target": "future_yfinance_regular_session_absent_all_h4",
+      "rule": "21 <= hour_utc <= 23 and qqq_yfinance_current_bar_present == 0",
+      "calibration": {
+        "support": 125,
+        "success": 125,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9701846062916736,
+        "precision_wilson_lcb_99": 0.9495962182343544,
+        "coverage": 0.12487512487512488,
+        "ece": 0.0,
+        "mean_probability": 1.0
+      },
+      "test": {
+        "support": 167,
+        "success": 167,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9775144812786577,
+        "precision_wilson_lcb_99": 0.9617882307594716,
+        "coverage": 0.16683316683316685,
+        "ece": 0.0,
+        "mean_probability": 1.0
+      },
+      "accepted_95": true,
+      "accepted_99": false,
+      "confidence_lane": "95",
+      "blocker": "none"
+    }
+  ],
+  "accepted_new_regime_count_95": 2,
+  "accepted_new_regime_count_99": 0,
+  "accepted_new_regime_packets": [
+    {
+      "accepted_regime_id": "RangeConsolidation",
+      "market": "NQ",
+      "timeframe": "15m",
+      "horizon": "next 15m window regime persistence",
+      "allowed_action": "regime_context_only_until_downstream_edge_gate_passes",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9676071866741978,
+      "calibration_support": 467,
+      "test_support": 313,
+      "ece": 0.004488121867580741,
+      "coverage": 0.06341166936790923,
+      "transition_hazard": null,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "catboost_isotonic",
+        "RangeConsolidation_persists_next_15m"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json"
+    },
+    {
+      "accepted_regime_id": "ThinLiquidityOffHoursPersistent",
+      "market": "QQQ",
+      "timeframe": "1h",
+      "horizon": "next 4 observed IBKR 1h bars",
+      "allowed_action": "guardrail_only_liquidity_context",
+      "confidence_lane": "95",
+      "precision_wilson_lcb": 0.9775144812786577,
+      "calibration_support": 125,
+      "test_support": 167,
+      "ece": 0.0,
+      "coverage": 0.16683316683316685,
+      "transition_hazard": 0.0,
+      "duration_viable": true,
+      "downstream_evidence_fields": [
+        "21 <= hour_utc <= 23 and qqq_yfinance_current_bar_present == 0",
+        "future_yfinance_regular_session_absent_all_h4"
+      ],
+      "artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260510T200229-hermes-multi-regime-expansion/evidence_packet_regime_persistence_expansion.json"
+    }
+  ],
+  "abstained_new_regimes": [
+    {
+      "regime_id": "TrendExpansion",
+      "blocker": "precision_wilson_lcb_below_95;ece_above_95_limit",
+      "calibration_support": 201,
+      "test_support": 250,
+      "test_wilson95": 0.8293682502458599,
+      "test_ece": 0.07390451529578423,
+      "test_coverage": 0.0506482982171799
+    },
+    {
+      "regime_id": "ExtremeStress",
+      "blocker": "precision_wilson_lcb_below_95",
+      "calibration_support": 4936,
+      "test_support": 4936,
+      "test_wilson95": 0.013404487894280653,
+      "test_ece": 0.00037999367174827714,
+      "test_coverage": 1.0
+    },
+    {
+      "regime_id": "ReversalBrewing",
+      "blocker": "precision_wilson_lcb_below_95",
+      "calibration_support": 146,
+      "test_support": 166,
+      "test_wilson95": 0.6001797805084459,
+      "test_ece": 0.024265758828711403,
+      "test_coverage": 0.033630470016207455
+    }
+  ],
+  "decision": "accepted_additional_regimes",
+  "next_action": "Continue Trend/Range/Stress/Reversal feature work; keep accepted liquidity regimes as guardrails/context only and do not lower thresholds."
+}

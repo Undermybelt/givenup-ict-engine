@@ -1,0 +1,523 @@
+{
+  "active_processes": [
+    {
+      "command": "/bin/zsh -lc while ps -axo command | rg -q '/tmp/ict-engine-native-subhour-source-label-intake.*(wc -l|shasum|jq|head)|shasum -a 256 /tmp/ict-engine-native-subhour-source-label-intake' ; do date '+%Y-%m-%dT%H:%M:%S%z readback_active'; sleep 15; done; echo readback_processes_settled; ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '063155|063217|063734|062902|native-subhour-source-label-intake|shasum|wc -l|target/debug/ict-engine|auto[-_ ]?quant|catboost|pre-bayes|bbn|execution-tree' | rg -v 'rg -i' || true",
+      "etime": "04:48",
+      "pid": "14029",
+      "ppid": "3405",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 60\\012ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '064230|current_objective_prompt_artifact_audit|063926|063155|063217|063734|native-subhour|source_label|workflow-status|auto-quant|catboost|pre-bayes|bbn|execution-tree|apply_patch' | rg -v 'rg -i'",
+      "etime": "00:58",
+      "pid": "25387",
+      "ppid": "5119",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc while ps -p 26259 >/dev/null 2>&1; do sleep 10; done; echo refresh_064309_settled; find docs/experiments/actionable-regime-confidence/runs/20260512T064309+0800-codex-source-control-arrival-refresh-after-063906-v2 -maxdepth 4 -type f -print 2>/dev/null | sort | sed -n '1,240p'; ps -axo pid,ppid,stat,etime,command | rg -i '064309|064315|064320|064325|actionable-regime|target/debug/ict-engine|auto.?quant|catboost|bbn|pre-bayes|execution-tree|python|duckdb|uv run' | rg -v 'rg -i' || true",
+      "etime": "00:34",
+      "pid": "27071",
+      "ppid": "4110",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc while ps -p 26259 >/dev/null 2>&1 || ps -p 26732 >/dev/null 2>&1 || ps -p 26754 >/dev/null 2>&1; do sleep 10; done; ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '064309|064325|064419|source-control-arrival|apply_patch|docs/plans/2026-05-10-regime-conditional' | rg -v 'rg -i' || true",
+      "etime": "00:32",
+      "pid": "27218",
+      "ppid": "4899",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 60; ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '064220|064230|064254|064309|064315|064320|064325|064328|source_control|current_objective|board_b_current|auto.?quant|catboost|pre.?bayes|bbn|execution-tree|apply_patch' | rg -v 'rg -i'; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; find docs/experiments/actionable-regime-confidence/runs -maxdepth 1 -type d \\( -name '20260512T0642*' -o -name '20260512T0643*' \\) -print | sort",
+      "etime": "00:29",
+      "pid": "27420",
+      "ppid": "5267",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc while ps -p 26259 >/dev/null 2>&1 || ps -p 26732 >/dev/null 2>&1 || ps -p 26854 >/dev/null 2>&1; do sleep 5; done; echo source_control_v2_finished; ps -axo pid,ppid,stat,etime,command | rg '064309|064320|064325|actionable-regime-confidence|provider-status' | rg -v 'rg ' || true",
+      "etime": "00:25",
+      "pid": "27515",
+      "ppid": "3870",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc while ps -axo command | rg -q \"source_control_arrival_refresh_after_063906_v2\\.py\"; do sleep 5; done; date '+%Y-%m-%dT%H:%M:%S%z'",
+      "etime": "00:16",
+      "pid": "27891",
+      "ppid": "4189",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 70; ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '064309|064320|064325|source_control_arrival_refresh_after_063906_v2|provider-status|apply_patch|target/debug/ict-engine|python|shasum' | rg -v 'rg -i' || true; echo '--- dirs'; for root in docs/experiments/actionable-regime-confidence/runs/20260512T064309+0800-codex-source-control-arrival-refresh-after-063906-v2 docs/experiments/actionable-regime-confidence/runs/20260512T064320+0800-codex-source-control-arrival-refresh-after-063906-v2 docs/experiments/actionable-regime-confidence/runs/20260512T064325+0800-codex-source-control-arrival-refresh-after-063906-v2; do echo \"## $root\"; find \"$root\" -maxdepth 4 -type f -print 2>/dev/null | sort | sed -n '1,120p'; done; echo '--- board'; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; tail -n 80 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "etime": "00:15",
+      "pid": "27957",
+      "ppid": "4412",
+      "stat": "Ss"
+    },
+    {
+      "command": "/bin/zsh -lc sleep 70\\012ps -axo pid,ppid,stat,etime,%cpu,%mem,command | rg -i '064309|064320|064325|064419|064426|064328|source_control_arrival_refresh_after_063906_v2|source-control-arrival|current_objective|provider-status|auto-quant|catboost|pre-bayes|bbn|execution-tree|apply_patch'",
+      "etime": "00:13",
+      "pid": "27986",
+      "ppid": "4822",
+      "stat": "Ss"
+    }
+  ],
+  "board_sha256_before_artifact": "f154812aa9e9c5d47d8d79b009a9e7ae6cb3f6ac6d0a4537782be1b24114102b",
+  "candidate_files": [
+    {
+      "candidate_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "filename": "native_subhour_source_label_rows.csv",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "size_bytes": 2786719721,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "filename": "native_subhour_source_label_provenance.json",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+      "size_bytes": 2400,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "filename": "provenance_manifest.json",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+      "size_bytes": 1450,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "filename": "provenance_manifest.json",
+      "path": "/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/provenance_manifest.json",
+      "size_bytes": 6572,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "filename": "provenance_manifest.json",
+      "path": "/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/provenance_manifest.json",
+      "size_bytes": 1458,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "filename": "native_subhour_source_label_rows.csv",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+      "size_bytes": 2786719721,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "filename": "native_subhour_source_label_provenance.json",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+      "size_bytes": 2400,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "filename": "provenance_manifest.json",
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json",
+      "size_bytes": 1450,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake",
+      "filename": "provenance_manifest.json",
+      "path": "/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake/provenance_manifest.json",
+      "size_bytes": 6572,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake",
+      "filename": "provenance_manifest.json",
+      "path": "/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake/provenance_manifest.json",
+      "size_bytes": 1458,
+      "surface": "tmp"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000345-codex-r6-moncada-species-extension-calibration-v1/r6-moncada-species-extension-calibration/isolated-direct-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000345-codex-r6-moncada-species-extension-calibration-v1/r6-moncada-species-extension-calibration/isolated-direct-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 63774,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000345-codex-r6-moncada-species-extension-calibration-v1/r6-moncada-species-extension-calibration/isolated-direct-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000345-codex-r6-moncada-species-extension-calibration-v1/r6-moncada-species-extension-calibration/isolated-direct-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 64548,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000345-codex-r6-moncada-species-extension-calibration-v1/r6-moncada-species-extension-calibration/isolated-direct-intake",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000345-codex-r6-moncada-species-extension-calibration-v1/r6-moncada-species-extension-calibration/isolated-direct-intake/provenance_manifest.json",
+      "size_bytes": 2204,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 3344725,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 1093232,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake/provenance_manifest.json",
+      "size_bytes": 1325,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-live-intake-rehydration-v1/r6-live-intake-rehydration",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-live-intake-rehydration-v1/r6-live-intake-rehydration/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-live-intake-rehydration-v1/r6-live-intake-rehydration",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-live-intake-rehydration-v1/r6-live-intake-rehydration/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-live-intake-rehydration-v1/r6-live-intake-rehydration",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235910-codex-r6-live-intake-rehydration-v1/r6-live-intake-rehydration/provenance_manifest.json",
+      "size_bytes": 1450,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000048-codex-r6-isolated-reconstruction-verification-v57/isolated-direct-intake/provenance_manifest.json",
+      "size_bytes": 1130,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58949,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58689,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235745-codex-r6-active-sidecar-isolated-calibration-v1/r6-active-sidecar-isolated-calibration/isolated-direct-intake/provenance_manifest.json",
+      "size_bytes": 1554,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/isolated-direct-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/isolated-direct-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/isolated-direct-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/isolated-direct-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/isolated-direct-intake",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/isolated-direct-intake/provenance_manifest.json",
+      "size_bytes": 6572,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/delta-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/delta-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 13939,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/delta-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/delta-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 13428,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/delta-intake",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T235048-codex-r6-jpmorgan-order-positive-row-candidate-screen-v1/delta-intake/provenance_manifest.json",
+      "size_bytes": 939,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 58924,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 58890,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake/provenance_manifest.json",
+      "size_bytes": 2257,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052444-codex-r6-owner-export-dispatch-manifest-v1/r6-owner-export-dispatch-manifest-v1",
+      "filename": "cboe_cfe_owner_export_dispatch_v1.eml",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052444-codex-r6-owner-export-dispatch-manifest-v1/r6-owner-export-dispatch-manifest-v1/cboe_cfe_owner_export_dispatch_v1.eml",
+      "size_bytes": 1123,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052444-codex-r6-owner-export-dispatch-manifest-v1/r6-owner-export-dispatch-manifest-v1",
+      "filename": "cme_group_owner_export_dispatch_v1.eml",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052444-codex-r6-owner-export-dispatch-manifest-v1/r6-owner-export-dispatch-manifest-v1/cme_group_owner_export_dispatch_v1.eml",
+      "size_bytes": 1139,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052711-codex-r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/r6-owner-export-dispatch-manifest-v2-v5-addendum-v1",
+      "filename": "cboe_cfe_owner_export_dispatch_v2.eml",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052711-codex-r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/cboe_cfe_owner_export_dispatch_v2.eml",
+      "size_bytes": 1725,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052711-codex-r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/r6-owner-export-dispatch-manifest-v2-v5-addendum-v1",
+      "filename": "cme_group_owner_export_dispatch_v2.eml",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052711-codex-r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/r6-owner-export-dispatch-manifest-v2-v5-addendum-v1/cme_group_owner_export_dispatch_v2.eml",
+      "size_bytes": 1696,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1",
+      "filename": "cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "size_bytes": 6357,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1",
+      "filename": "cme_group_owner_export_v5_dispatch_v1.eml",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "size_bytes": 8735,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake",
+      "filename": "positive_spoofing_layering_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake/positive_spoofing_layering_rows.csv",
+      "size_bytes": 40547,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake",
+      "filename": "matched_negative_normal_activity_rows.csv",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake/matched_negative_normal_activity_rows.csv",
+      "size_bytes": 40082,
+      "surface": "repo_runs"
+    },
+    {
+      "candidate_root": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake",
+      "filename": "provenance_manifest.json",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction/isolated-direct-intake/provenance_manifest.json",
+      "size_bytes": 6037,
+      "surface": "repo_runs"
+    }
+  ],
+  "decision": {
+    "accepted_rows_added": 0,
+    "candidate_file_count": 55,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "gate_result": "source_control_arrival_refresh_after_063906_v2=only_tsie_quarantine_present_no_valid_unlock_no_downstream",
+    "r3_native_subhour_root_policy_quarantined": true,
+    "r3_native_subhour_root_present": true,
+    "r5_recency_extension_root_present": false,
+    "r6_owner_export_root_present": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "generated_at_utc": "2026-05-11T22:45:03.526300+00:00",
+  "notes": [
+    "Bounded scan inspected exact required roots, /tmp ict-engine candidates, and repo experiment artifacts.",
+    "The TSIE R3 root is present but remains policy-quarantined under 063734/063906.",
+    "No R6 owner/export root and no R5 recency-extension root were found.",
+    "No canonical merge or downstream provider/AutoQuant chain was run."
+  ],
+  "required_roots": [
+    {
+      "accepted_for_promotion": false,
+      "all_required_present": false,
+      "decision_notes": "",
+      "id": "r6_owner_export",
+      "missing_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "present_files": "",
+      "provenance_labels": "",
+      "provenance_row_count": "",
+      "provenance_run_id": "",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_exists": false,
+      "sizes_json": "{}"
+    },
+    {
+      "accepted_for_promotion": false,
+      "all_required_present": true,
+      "decision_notes": "TSIE root is complete on disk but policy-quarantined, Crisis absent",
+      "id": "r3_native_subhour",
+      "missing_files": "",
+      "present_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "provenance_labels": "Bear;Bull;Sideways",
+      "provenance_row_count": 5032903,
+      "provenance_run_id": "20260512T063155+0800-codex-r3-tsie-native-subhour-intake-materialization-v1",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_exists": true,
+      "sizes_json": "{\"native_subhour_source_label_provenance.json\": 2400, \"native_subhour_source_label_rows.csv\": 2786719721}"
+    },
+    {
+      "accepted_for_promotion": false,
+      "all_required_present": false,
+      "decision_notes": "",
+      "id": "r5_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "provenance_labels": "",
+      "provenance_row_count": "",
+      "provenance_run_id": "",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_exists": false,
+      "sizes_json": "{}"
+    }
+  ],
+  "run_id": "20260512T064309+0800-codex-source-control-arrival-refresh-after-063906-v2"
+}

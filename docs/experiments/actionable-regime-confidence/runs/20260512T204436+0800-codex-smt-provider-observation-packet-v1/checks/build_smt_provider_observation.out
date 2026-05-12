@@ -1,0 +1,7 @@
+{
+  "assertion": "pass",
+  "rows": 5,
+  "provider_backed_rows": 5,
+  "smt_event_rows": 0,
+  "downstream_allowed": false
+}

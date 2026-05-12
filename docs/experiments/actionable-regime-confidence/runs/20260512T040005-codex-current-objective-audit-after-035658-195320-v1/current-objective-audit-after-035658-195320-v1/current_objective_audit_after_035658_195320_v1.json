@@ -1,0 +1,112 @@
+{
+  "run_id": "20260512T040005-codex-current-objective-audit-after-035658-195320-v1",
+  "generated_at_local": "2026-05-12T04:00:05+08:00",
+  "board_sha256_before_artifact": "9c34b63f7a07499efb2898ac6e24101073ae429ae5610b5c96fd607835938434",
+  "gate_result": "current_objective_audit_after_035658_195320_v1=not_complete_provider_partial_triplets_nonpromoting_source_controls_absent_downstream_blocked",
+  "objective_restatement": {
+    "board_file": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "success_criteria": [
+      "every active regime has calibrated >=95% confidence",
+      "each accepted regime has its own qualifying condition",
+      "validation across other markets/cycles/timeframes",
+      "real provider and AutoQuant operation",
+      "filter/Pre-Bayes/BBN, CatBoost/path-ranking, and execution-tree readback after source/control unlock",
+      "no proxy evidence promoted",
+      "multi-agent append-only discipline preserved"
+    ]
+  },
+  "latest_input_roots": [
+    {
+      "run_id": "20260511T195320-codex-board-a-provider-reachability-after-034813-v1",
+      "gate_result": "provider_reachability_after_034813_v1=partial_provider_fetch_yfinance_ibkr_kraken_pass_tradingview_blocked_no_promotion"
+    },
+    {
+      "run_id": "20260512T035658-codex-r6-remaining-triplet-readonly-disposition-after-035233-v1",
+      "gate_result": "r6_remaining_triplet_readonly_disposition_after_035233_v1=remaining_triplets_schema_ready_required_owner_export_absent_no_promotion"
+    },
+    {
+      "run_id": "20260512T035433-codex-r6-staging-triplet-split-calibration-after-035233-v1",
+      "gate_result": "r6_staging_triplet_split_calibration_after_035233_v1=staging_pooled95_pass_split_support_broad_controls_and_policy_blocked_no_promotion"
+    },
+    {
+      "run_id": "20260512T035442-codex-r6-candidate-verifier-sweep-after-035028-v1",
+      "gate_result": "r6_candidate_verifier_sweep_after_035028_v1=candidate_bundles_schema_ready_unscored_no_auto_promotion"
+    }
+  ],
+  "checklist_counts": {
+    "pass": 3,
+    "partial": 2,
+    "blocked": 6
+  },
+  "required_source_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "absent",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "absent",
+    "/tmp/ict-engine-source-panel-recency-extension": "absent"
+  },
+  "approval_package": {
+    "path": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "exists": true,
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provider_reachability": {
+    "yfinance_harness_qqq_1d": {
+      "exit_code": 0,
+      "rows": 21
+    },
+    "ibkr_external_qqq_1_month_daily": {
+      "exit_code": 0,
+      "rows": 21,
+      "provider_status": "configured_runtime_unhealthy_with_gateway_reachable"
+    },
+    "tradingview_harness_qqq_1d": {
+      "exit_code": 1,
+      "status": "fetch_failed_mcp_get_ohlcv_error"
+    },
+    "kraken_cli_xbtusd_1h": {
+      "exit_code": 0,
+      "rows": 721
+    },
+    "kraken_external_xbtusd_1h_corrected": {
+      "exit_code": 0,
+      "rows": 721
+    }
+  },
+  "triplet_disposition": {
+    "remaining_triplet_roots": 3,
+    "remaining_triplet_rows_each": {
+      "positive_rows": 73,
+      "matched_negative_rows": 73,
+      "matched_group_count": 70
+    },
+    "remaining_triplets_share_same_snapshot": true,
+    "staging_pooled_wilson95_lcb": 0.952479911333,
+    "staging_chronological_gate": false,
+    "staging_heldout_symbol_gate": false,
+    "staging_heldout_venue_gate": false,
+    "broad_normal_controls": false,
+    "owner_export_root_complete": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "non_mutations": {
+    "source_roots_mutated": false,
+    "candidate_roots_copied_to_required_root": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false
+  },
+  "next_action": "Continue only from explicit approval, verifier-native owner/export rows/source-owned normal controls, or genuinely source-owned cross-timeframe MainRegimeV2 exports before target-root materialization, verifier rerun, split calibration, canonical merge, and downstream promotion."
+}

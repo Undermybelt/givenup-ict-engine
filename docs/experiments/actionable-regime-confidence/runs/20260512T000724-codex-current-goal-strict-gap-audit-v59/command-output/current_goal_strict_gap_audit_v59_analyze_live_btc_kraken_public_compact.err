@@ -1,0 +1,1 @@
+Error: analyze-live 'BTCUSD' still needs an options symbol. Pass --options-symbol <symbol> or choose a market key with built-in defaults such as NQ, ES, GC, or CL. Provider-first path: ict-engine provider-status --domain live_runtime --agent

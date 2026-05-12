@@ -1,0 +1,8 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T125425+0800-codex-124245-eth-path-ranker-runtime-closure-v1/state_eth_usdt_crypto_nonbtc_1h_4h_1d/B2R_LOCAL_NONBTC_ETH_USDT_MTF_124245/policy_training/structural_path_ranking_target_history.csv: 3 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] No mature samples, using all 3 samples
+[features] 1 features, 3 training samples
+[features] label dist: {np.int64(0): np.int64(1), np.int64(1): np.int64(2)}
+[apply] CatBoost predictions: 3
+[apply] Scores saved to docs/experiments/actionable-regime-confidence/runs/20260512T125425+0800-codex-124245-eth-path-ranker-runtime-closure-v1/path-ranker/eth_runtime_scores.csv

@@ -1,0 +1,102 @@
+{
+  "run_id": "20260512T032658-codex-autoquant-bootstrap-prepare-readback-after-032145-v1",
+  "generated_at_local": "2026-05-12T03:26:58+08:00",
+  "board_sha256_before_artifact": "61efeca4302f41e5c3df225433db6ee61d9ebe682668b56ec3d50431cdf2a68b",
+  "gate_result": "autoquant_bootstrap_prepare_readback_after_032145_v1=bootstrap_succeeded_prepare_failed_dns_source_controls_absent_no_promotion",
+  "scope": "auto_quant_bootstrap_prepare_diagnostics_only_after_032145",
+  "inputs": {
+    "provider_autoquant_readiness": "docs/experiments/actionable-regime-confidence/runs/20260512T032145-codex-provider-autoquant-readonly-refresh-after-031655-v1",
+    "latest_current_objective_audit": "docs/experiments/actionable-regime-confidence/runs/20260512T031655-codex-current-objective-completion-audit-after-031435-v1",
+    "latest_request_status": "docs/experiments/actionable-regime-confidence/runs/20260512T032417-codex-r6-owner-export-request-status-after-032258-v1"
+  },
+  "command_readback": [
+    {
+      "id": "baseline_032145_auto_quant_status",
+      "command": "./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145 --output-format json",
+      "exit_code": 0,
+      "status": "missing_dependency",
+      "bootstrap_needed": true,
+      "dependency_healthy": false,
+      "data_ready": false
+    },
+    {
+      "id": "auto_quant_bootstrap",
+      "command": "./target/debug/ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant",
+      "exit_code": 0,
+      "status": "dependency_bootstrapped",
+      "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "dependency_healthy": true
+    },
+    {
+      "id": "status_original_outer_state_after_bootstrap",
+      "command": "./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145 --output-format json",
+      "exit_code": 0,
+      "status": "missing_dependency",
+      "diagnosis": "outer CLI state-dir wrapper targets the unbootstrapped sibling path"
+    },
+    {
+      "id": "status_with_output_dir_override",
+      "command": "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR=/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant ./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145 --output-format json",
+      "exit_code": 0,
+      "status": "dependency_ready_data_missing",
+      "bootstrap_needed": false,
+      "dependency_healthy": true,
+      "data_ready": false
+    },
+    {
+      "id": "prepare_with_output_dir_override",
+      "command": "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR=/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant ./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145",
+      "exit_code": 1,
+      "status": "failed",
+      "failure_class": "dns_exchange_not_available",
+      "error_summary": "Freqtrade/CCXT could not contact DNS servers for api.binance.com; markets were not loaded"
+    },
+    {
+      "id": "post_prepare_status_with_output_dir_override",
+      "command": "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR=/tmp/ict-engine-board-a-readonly-refresh-20260512T032145/auto-quant/auto-quant ./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-readonly-refresh-20260512T032145 --output-format json",
+      "exit_code": 0,
+      "status": "dependency_ready_data_missing",
+      "dependency_healthy": true,
+      "data_ready": false
+    }
+  ],
+  "diagnosis": {
+    "cli_state_dir_recursion_observed": true,
+    "root_cause": "auto_quant_command.rs maps CLI state_dir through resolve_auto_quant_output_dir before calling application Auto-Quant commands; readiness follow-up commands are emitted from the already mapped Auto-Quant state path, so replaying them through the CLI appends another auto-quant segment",
+    "canonical_owner": "src/auto_quant_command.rs shell wrapper plus src/application/auto_quant/readiness.rs recommended command surface",
+    "runtime_code_changed": false,
+    "workaround_used_for_diagnostic_only": "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR override pointed the CLI at the bootstrapped internal Auto-Quant state"
+  },
+  "provider_readiness": {
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "yfinance_ready": true,
+    "kraken_cli_ready": true,
+    "ibkr_ready": false,
+    "ibkr_bridge_ready": false,
+    "tradingview_mcp_ready": false
+  },
+  "downstream_readiness": {
+    "pre_bayes_latest_gate_status": null,
+    "pre_bayes_latest_filtered_assignments": null,
+    "workflow_blocking_truth_status": "insufficient_state",
+    "workflow_closed_loop_branch_status": "fail_closed",
+    "workflow_actionable_artifacts_count": 0,
+    "latest_promotable_artifact": null
+  },
+  "source_control_status": {
+    "r6_owner_export_root_exists": false,
+    "r3_native_subhour_source_label_root_exists": false,
+    "r5_source_panel_recency_extension_root_exists": false,
+    "source_owned_normal_controls_acquired": 0,
+    "explicit_flip_approval_present": false
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

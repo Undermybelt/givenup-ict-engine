@@ -1,0 +1,61 @@
+{
+  "run_id": "20260511T090914+0800-public-external-source-candidate-audit",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "active_taxonomy": "MainRegimeV2",
+  "main_price_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "separate_overlay": "Manipulation",
+  "candidates_inspected": 6,
+  "accepted_independent_parent_root_label_sources": 0,
+  "new_attached_parent_root_slots": 0,
+  "accepted_direct_manipulation_rows_or_windows": 0,
+  "candidate_classification": [
+    {
+      "candidate": "HuggingFace TSIE market regime dataset",
+      "source_url": "https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset",
+      "decision": "rejected_off_universe_rule_ohlcv_labels",
+      "reason": "IDX/off-universe, rule-based price action/volatility/RSI/volume labels, no exact requested instrument/timeframe slots, and no Crisis root"
+    },
+    {
+      "candidate": "TRADEMEM market regime detection",
+      "source_url": "https://www.trademem.com/en/market-regime-detection",
+      "decision": "rejected_model_current_service_no_export_panel",
+      "reason": "real-time bull/bear/stagnant tag model surface with no accepted historical exportable source-label panel"
+    },
+    {
+      "candidate": "GetRegime API",
+      "source_url": "https://getregime.com/api/v1/market/regime",
+      "decision": "blocked_cloudflare_current_service_no_rows",
+      "reason": "direct curl returned a Cloudflare challenge page rather than materialized JSON rows; no historical label panel was obtained"
+    },
+    {
+      "candidate": "NBER business cycle dates",
+      "source_url": "https://www.nber.org/research/data/us-business-cycle-expansions-and-contractions",
+      "decision": "sidecar_only_macro_cycle_not_price_root_panel",
+      "reason": "official recession chronology is macro context, not instrument-specific Bull/Bear/Sideways/Crisis price-root labels"
+    },
+    {
+      "candidate": "FRED USREC",
+      "source_url": "https://fred.stlouisfed.org/series/USREC",
+      "decision": "sidecar_only_recession_indicator_not_root_panel",
+      "reason": "monthly NBER-based recession indicator cannot fill all parent roots or exact-underlying market slots"
+    },
+    {
+      "candidate": "GitHub code API probe",
+      "source_url": "https://api.github.com/search/code",
+      "decision": "blocked_unmaterialized_code_search",
+      "reason": "narrow unauthenticated probes did not materialize a CSV/source-label panel in this environment"
+    }
+  ],
+  "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+  "gate_result": "blocked_public_external_candidates_no_accepted_source_label_panel",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Obtain downloadable/authenticated exact-underlying parent-root label panel or timestamped direct Manipulation positive/negative rows."
+}

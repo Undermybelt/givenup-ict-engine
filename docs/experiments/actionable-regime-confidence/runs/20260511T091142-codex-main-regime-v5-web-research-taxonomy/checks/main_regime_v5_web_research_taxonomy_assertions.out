@@ -1,0 +1,6 @@
+PASS main_regime_v5_taxonomy_reset_recorded=true
+PASS accepted_95_roots_added=0
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS manipulation_requires_direct_labels=true
+PASS existing_subtype_packets_not_promoted=true

@@ -1,0 +1,66 @@
+{
+  "run_id": "20260512T120320+0800-codex-115431-layered-negative-evidence-validator-v1",
+  "source_run_id": "20260512T115431+0800-codex-six-provider-aq-first-class-ibkr-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T115431+0800-codex-six-provider-aq-first-class-ibkr-v1",
+  "validator_mode": "read_only_schema_gate",
+  "raw_trade_files_checked": 12,
+  "workspace_raw_trade_rows_visible": 185,
+  "source_report_authority": {
+    "provider_inputs": 4,
+    "compile_success": 4,
+    "run_success": 4,
+    "strategies_with_metrics": 8,
+    "total_trades": 148,
+    "same_root_six_provider_aq_authority": false,
+    "downstream_promotion_chain": "not_run"
+  },
+  "minimum_schema_fields": [
+    "branch_path",
+    "main_regime",
+    "sub_regime",
+    "sub_sub_regime_or_profit_factor",
+    "profit_factor",
+    "provider_provenance",
+    "pre_bayes_filter_state",
+    "bbn_posterior",
+    "catboost_path_ranker_label",
+    "execution_tree_decision",
+    "outcome",
+    "failure_reason",
+    "quality_weight"
+  ],
+  "accepted_market_factor_negative_rows": 0,
+  "rejected_chain_contract_rows": 185,
+  "infrastructure_negative_context": [
+    "source_yfinance_fetch_rows0_exit2",
+    "source_tvr_fetch_rows0_exit1",
+    "workspace_raw_rows_do_not_match_source_report_authority_rows"
+  ],
+  "missing_fields_all_raw_rows": [
+    "branch_path",
+    "main_regime",
+    "sub_regime",
+    "sub_sub_regime_or_profit_factor",
+    "profit_factor",
+    "provider_provenance",
+    "pre_bayes_filter_state",
+    "bbn_posterior",
+    "catboost_path_ranker_label",
+    "execution_tree_decision",
+    "failure_reason",
+    "quality_weight"
+  ],
+  "outcome_field_present": "profit_ratio",
+  "classification": {
+    "market_factor_negative_sample": 0,
+    "chain_contract_negative_sample": 185,
+    "infrastructure_negative_sample": [
+      "provider_authority_mismatch",
+      "source_yfinance_fetch_failed",
+      "source_tvr_fetch_failed"
+    ]
+  },
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

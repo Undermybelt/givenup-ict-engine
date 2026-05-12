@@ -1,0 +1,76 @@
+{
+  "run_id": "20260512T031655-codex-current-objective-completion-audit-after-031435-v1",
+  "generated_at_local": "2026-05-12T03:16:55+08:00",
+  "board_sha256_before_audit": "c10241697c540af86deb4d81506489a62d2924e9b788bff40a65ecf756b99831",
+  "gate_result": "current_objective_completion_audit_after_031435_v1=not_complete_latest_r6_packets_nonpromoting_source_controls_downstream_blocked",
+  "objective": "Every active regime has calibrated >=95% confidence, per-regime qualifying conditions, cross-market/cycle/timeframe/provider validation, and downstream provider/Auto-Quant -> filter/Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution-tree rerun only after source/control gates allow it.",
+  "latest_evidence": {
+    "prior_current_objective_audit": "docs/experiments/actionable-regime-confidence/runs/20260512T030957-codex-current-objective-completion-audit-after-030617-030623-v1",
+    "intermediate_current_objective_audit": "docs/experiments/actionable-regime-confidence/runs/20260512T031539-codex-current-objective-completion-audit-after-031316-v1",
+    "dispatch_readiness": "docs/experiments/actionable-regime-confidence/runs/20260512T031353-codex-r6-owner-export-dispatch-readiness-after-030957-v1",
+    "noncanonical_staging_calibration": "docs/experiments/actionable-regime-confidence/runs/20260512T031316-codex-r6-noncanonical-staging-split-calibration-v1",
+    "local_triplet_sweep": "docs/experiments/actionable-regime-confidence/runs/20260512T031435-codex-r6-local-triplet-sweep-after-030957-v1"
+  },
+  "checklist_counts": {
+    "pass": 2,
+    "partial": 2,
+    "blocked": 11
+  },
+  "root_status": [
+    {
+      "root_id": "r6_owner_export_root",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "exists": false,
+      "promotion_use": "blocked"
+    },
+    {
+      "root_id": "r3_native_subhour_source_label_root",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "exists": false,
+      "promotion_use": "blocked"
+    },
+    {
+      "root_id": "r5_source_panel_recency_extension_root",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "exists": false,
+      "promotion_use": "blocked"
+    },
+    {
+      "root_id": "legacy_direct_manipulation_sidecar",
+      "path": "/private/tmp/ict-engine-direct-manipulation-row-intake",
+      "exists": true,
+      "promotion_use": "non_promoting_sidecar"
+    },
+    {
+      "root_id": "source_label_equivalence_sidecar",
+      "path": "/private/tmp/ict-engine-source-label-equivalence-intake",
+      "exists": true,
+      "promotion_use": "non_promoting_sidecar"
+    }
+  ],
+  "approval_readback": {
+    "source": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+    "approval_present": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "latest_packet_assessment": {
+    "r6_owner_export_dispatch_readiness_after_030957": "requests_ready_dispatch_or_approval_required_rows_not_acquired",
+    "r6_noncanonical_staging_split_calibration_v1": "noncanonical_schema_ready_pooled_pass_split_support_fails_no_promotion",
+    "r6_local_triplet_sweep_after_030957_v1": "no_new_owner_export_triplet_only_known_non_promoting_projection_and_sidecars"
+  },
+  "promotion": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "decision": "not_complete"
+}

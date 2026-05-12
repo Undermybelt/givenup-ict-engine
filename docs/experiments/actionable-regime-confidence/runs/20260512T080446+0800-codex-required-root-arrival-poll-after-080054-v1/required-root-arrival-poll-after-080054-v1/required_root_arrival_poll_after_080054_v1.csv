@@ -1,0 +1,5 @@
+name,root,exists,file_count,unlock,reason
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,False,0,False,absent
+r5_recency,/tmp/ict-engine-source-panel-recency-extension,False,0,False,absent
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,True,2,False,tsie_present_crisis_absent_non_promoting
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,True,2,False,equivalence_inventory_non_promoting

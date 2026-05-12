@@ -1,0 +1,7 @@
+six_provider_current_rows=True
+same_root_current_aq_authority=False
+auto_quant_should_start=False
+blockers=provider_rows_not_same_symbol_or_same_market_context:IBKR,Kraken,Bybit
+promotion_allowed=false
+trade_usable=false
+update_goal=false

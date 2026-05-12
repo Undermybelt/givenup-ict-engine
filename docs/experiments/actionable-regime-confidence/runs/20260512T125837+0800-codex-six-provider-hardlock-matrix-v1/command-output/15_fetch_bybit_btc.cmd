@@ -1,0 +1,1 @@
+target/debug/ict-engine market-data-harness --action fetch --market hardlock-bybit-btcusdt-1d --interval 1d --role crypto_reference --provider crypto_reference=bybit_public --symbol-spec crypto_reference=BTC/USDT

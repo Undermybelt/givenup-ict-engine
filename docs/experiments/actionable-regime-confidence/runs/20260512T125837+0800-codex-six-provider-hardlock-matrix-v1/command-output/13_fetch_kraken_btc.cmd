@@ -1,0 +1,1 @@
+target/debug/ict-engine market-data-harness --action fetch --market hardlock-kraken-btcusd-1d --interval 1d --role crypto_reference --provider crypto_reference=kraken_public --symbol-spec crypto_reference=BTC/USD

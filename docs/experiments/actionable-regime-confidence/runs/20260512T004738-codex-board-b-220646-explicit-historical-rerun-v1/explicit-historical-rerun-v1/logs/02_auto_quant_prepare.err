@@ -1,0 +1,1 @@
+Error: auto-quant dependency is missing; bootstrap first with ict-engine auto-quant-bootstrap --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/auto-quant

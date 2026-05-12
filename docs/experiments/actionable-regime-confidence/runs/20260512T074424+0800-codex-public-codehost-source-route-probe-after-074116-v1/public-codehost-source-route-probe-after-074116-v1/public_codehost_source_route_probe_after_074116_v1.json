@@ -1,0 +1,37 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge": false,
+  "crisis_context_hits": 0,
+  "downstream_promotion_rerun": false,
+  "failed_or_blocked_requests": 38,
+  "gate_result": "public_codehost_source_route_probe_after_074116_v1=no_required_source_export_no_unlock",
+  "generated_at_utc": "2026-05-11T23:46:57.679642+00:00",
+  "mainregime_hits": 0,
+  "non_promotion_reason": [
+    "Public code-host metadata/code-search hits are discovery evidence only.",
+    "No complete verifier-native R6 owner/export packet with valid controls was acquired.",
+    "No source-owned post-2026-01-30 R5 source-panel recency root was acquired.",
+    "No verifier-native Crisis-capable R3 MainRegimeV2 row export was acquired.",
+    "No canonical merge, selected-data AutoQuant, filter/Pre-Bayes, BBN, CatBoost/path-ranking, or execution-tree promotion rerun was allowed."
+  ],
+  "nonzero_search_total_count": 0,
+  "owner_hits": 0,
+  "r3_hits": 0,
+  "r5_hits": 0,
+  "r6_hits": 0,
+  "requests_sent": 48,
+  "required_filename_hits": 0,
+  "run_id": "20260512T074424+0800-codex-public-codehost-source-route-probe-after-074116-v1",
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "surfaces": [
+    "grep.app public GitHub code index API",
+    "GitHub repository search API",
+    "GitHub code search API availability/readback",
+    "GitLab public project search API"
+  ],
+  "top_rows_scanned": 0,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

@@ -1,0 +1,749 @@
+{
+  "accepted_95_contexts_added": 0,
+  "aggregate_current_rows": 14,
+  "aggregate_history_rows": 14,
+  "calibration_rows": 14,
+  "contexts": [
+    {
+      "current_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_SPY_YF_191941/policy_training/structural_path_ranking_target.csv",
+      "current_rows": 1,
+      "history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_SPY_YF_191941/policy_training/structural_path_ranking_target_history.csv",
+      "history_rows": 1,
+      "symbol": "BOARD_A_SPY_YF_191941"
+    },
+    {
+      "current_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_SPY_IBKR_191941/policy_training/structural_path_ranking_target.csv",
+      "current_rows": 1,
+      "history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_SPY_IBKR_191941/policy_training/structural_path_ranking_target_history.csv",
+      "history_rows": 1,
+      "symbol": "BOARD_A_SPY_IBKR_191941"
+    },
+    {
+      "current_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_BTC_BINANCE_191941/policy_training/structural_path_ranking_target.csv",
+      "current_rows": 3,
+      "history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_BTC_BINANCE_191941/policy_training/structural_path_ranking_target_history.csv",
+      "history_rows": 3,
+      "symbol": "BOARD_A_BTC_BINANCE_191941"
+    },
+    {
+      "current_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_BTC_BYBIT_191941/policy_training/structural_path_ranking_target.csv",
+      "current_rows": 3,
+      "history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_BTC_BYBIT_191941/policy_training/structural_path_ranking_target_history.csv",
+      "history_rows": 3,
+      "symbol": "BOARD_A_BTC_BYBIT_191941"
+    },
+    {
+      "current_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_BTC_KRAKEN_191941/policy_training/structural_path_ranking_target.csv",
+      "current_rows": 3,
+      "history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_BTC_KRAKEN_191941/policy_training/structural_path_ranking_target_history.csv",
+      "history_rows": 3,
+      "symbol": "BOARD_A_BTC_KRAKEN_191941"
+    },
+    {
+      "current_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_BTC_TVR_191941/policy_training/structural_path_ranking_target.csv",
+      "current_rows": 3,
+      "history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state/BOARD_A_BTC_TVR_191941/policy_training/structural_path_ranking_target_history.csv",
+      "history_rows": 3,
+      "symbol": "BOARD_A_BTC_TVR_191941"
+    }
+  ],
+  "generated_at": "2026-05-12T11:42:53.871204+00:00",
+  "promotion_allowed": false,
+  "readbacks": [
+    {
+      "actionable": false,
+      "candidate_status": "execution_blocked",
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.445260663306333,
+      "observation_validation": null,
+      "path_ranker_calibrated_path_prob": null,
+      "path_ranker_runtime_source": null,
+      "production_validation": null,
+      "raw_scored_mature": null,
+      "ready": false,
+      "review_status": "observe",
+      "runtime_selection": null,
+      "symbol": "BOARD_A_SPY_YF_191941"
+    },
+    {
+      "actionable": false,
+      "candidate_status": "execution_blocked",
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.357063857811572,
+      "observation_validation": null,
+      "path_ranker_calibrated_path_prob": null,
+      "path_ranker_runtime_source": null,
+      "production_validation": null,
+      "raw_scored_mature": null,
+      "ready": false,
+      "review_status": "observe",
+      "runtime_selection": null,
+      "symbol": "BOARD_A_SPY_IBKR_191941"
+    },
+    {
+      "actionable": false,
+      "candidate_status": "execution_blocked",
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.30857294418992276,
+      "observation_validation": null,
+      "path_ranker_calibrated_path_prob": null,
+      "path_ranker_runtime_source": null,
+      "production_validation": null,
+      "raw_scored_mature": null,
+      "ready": false,
+      "review_status": "observe",
+      "runtime_selection": null,
+      "symbol": "BOARD_A_BTC_BINANCE_191941"
+    },
+    {
+      "actionable": false,
+      "candidate_status": "execution_blocked",
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.31338818270118096,
+      "observation_validation": null,
+      "path_ranker_calibrated_path_prob": null,
+      "path_ranker_runtime_source": null,
+      "production_validation": null,
+      "raw_scored_mature": null,
+      "ready": false,
+      "review_status": "observe",
+      "runtime_selection": null,
+      "symbol": "BOARD_A_BTC_BYBIT_191941"
+    },
+    {
+      "actionable": false,
+      "candidate_status": "execution_blocked",
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.3301706894644791,
+      "observation_validation": null,
+      "path_ranker_calibrated_path_prob": null,
+      "path_ranker_runtime_source": null,
+      "production_validation": null,
+      "raw_scored_mature": null,
+      "ready": false,
+      "review_status": "observe",
+      "runtime_selection": null,
+      "symbol": "BOARD_A_BTC_KRAKEN_191941"
+    },
+    {
+      "actionable": false,
+      "candidate_status": "execution_blocked",
+      "execution_gate_status": "execution_blocked",
+      "execution_readiness": 0.3038638086825627,
+      "observation_validation": null,
+      "path_ranker_calibrated_path_prob": null,
+      "path_ranker_runtime_source": null,
+      "production_validation": null,
+      "raw_scored_mature": null,
+      "ready": false,
+      "review_status": "observe",
+      "runtime_selection": null,
+      "symbol": "BOARD_A_BTC_TVR_191941"
+    }
+  ],
+  "score_rows": 14,
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1",
+  "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+  "steps": [
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_SPY_YF_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state"
+      ],
+      "exit": 0,
+      "name": "01_export_target_board_a_spy_yf_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_spy_yf_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_spy_yf_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_SPY_IBKR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state"
+      ],
+      "exit": 0,
+      "name": "01_export_target_board_a_spy_ibkr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_spy_ibkr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_spy_ibkr_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_BTC_BINANCE_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state"
+      ],
+      "exit": 0,
+      "name": "01_export_target_board_a_btc_binance_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_btc_binance_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_btc_binance_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_BTC_BYBIT_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state"
+      ],
+      "exit": 0,
+      "name": "01_export_target_board_a_btc_bybit_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_btc_bybit_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_btc_bybit_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_BTC_KRAKEN_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state"
+      ],
+      "exit": 0,
+      "name": "01_export_target_board_a_btc_kraken_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_btc_kraken_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_btc_kraken_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "export-structural-path-ranking-target",
+        "--symbol",
+        "BOARD_A_BTC_TVR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state"
+      ],
+      "exit": 0,
+      "name": "01_export_target_board_a_btc_tvr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_btc_tvr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/01_export_target_board_a_btc_tvr_191941.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/.local/bin/uv",
+        "run",
+        "--offline",
+        "--with",
+        "pandas",
+        "--with",
+        "numpy",
+        "--with",
+        "catboost",
+        "python",
+        "scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+        "--target-csv",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/aggregate_structural_path_ranking_target_history.csv",
+        "--output-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1",
+        "--model-family",
+        "catboost"
+      ],
+      "exit": 0,
+      "name": "20_train_catboost_aggregate",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/20_train_catboost_aggregate.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/20_train_catboost_aggregate.out"
+    },
+    {
+      "argv": [
+        "/Users/thrill3r/.local/bin/uv",
+        "run",
+        "--offline",
+        "--with",
+        "pandas",
+        "--with",
+        "numpy",
+        "--with",
+        "catboost",
+        "python",
+        "scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+        "--apply",
+        "--model-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1",
+        "--target-csv",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/aggregate_structural_path_ranking_target_current.csv",
+        "--output-scores",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/aggregate_scores.csv"
+      ],
+      "exit": 0,
+      "name": "21_apply_catboost_aggregate_current",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/21_apply_catboost_aggregate_current.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/21_apply_catboost_aggregate_current.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_SPY_YF_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--artifact-uri",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score",
+        "--trained-rows",
+        "14",
+        "--calibration-rows",
+        "14"
+      ],
+      "exit": 0,
+      "name": "31_register_trainer_board_a_spy_yf_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_spy_yf_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_spy_yf_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_SPY_YF_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "32_enable_runtime_board_a_spy_yf_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_spy_yf_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_spy_yf_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_SPY_YF_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "40_policy_training_status_board_a_spy_yf_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_spy_yf_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_spy_yf_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_SPY_YF_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--refresh",
+        "--phase",
+        "execution-candidate",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "41_workflow_execution_candidate_board_a_spy_yf_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_spy_yf_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_spy_yf_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_SPY_IBKR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--artifact-uri",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score",
+        "--trained-rows",
+        "14",
+        "--calibration-rows",
+        "14"
+      ],
+      "exit": 0,
+      "name": "31_register_trainer_board_a_spy_ibkr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_spy_ibkr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_spy_ibkr_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_SPY_IBKR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "32_enable_runtime_board_a_spy_ibkr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_spy_ibkr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_spy_ibkr_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_SPY_IBKR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "40_policy_training_status_board_a_spy_ibkr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_spy_ibkr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_spy_ibkr_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_SPY_IBKR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--refresh",
+        "--phase",
+        "execution-candidate",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "41_workflow_execution_candidate_board_a_spy_ibkr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_spy_ibkr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_spy_ibkr_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_BTC_BINANCE_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--artifact-uri",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score",
+        "--trained-rows",
+        "14",
+        "--calibration-rows",
+        "14"
+      ],
+      "exit": 0,
+      "name": "31_register_trainer_board_a_btc_binance_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_btc_binance_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_btc_binance_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_BTC_BINANCE_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "32_enable_runtime_board_a_btc_binance_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_btc_binance_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_btc_binance_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_BTC_BINANCE_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "40_policy_training_status_board_a_btc_binance_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_btc_binance_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_btc_binance_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_BTC_BINANCE_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--refresh",
+        "--phase",
+        "execution-candidate",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "41_workflow_execution_candidate_board_a_btc_binance_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_btc_binance_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_btc_binance_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_BTC_BYBIT_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--artifact-uri",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score",
+        "--trained-rows",
+        "14",
+        "--calibration-rows",
+        "14"
+      ],
+      "exit": 0,
+      "name": "31_register_trainer_board_a_btc_bybit_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_btc_bybit_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_btc_bybit_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_BTC_BYBIT_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "32_enable_runtime_board_a_btc_bybit_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_btc_bybit_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_btc_bybit_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_BTC_BYBIT_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "40_policy_training_status_board_a_btc_bybit_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_btc_bybit_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_btc_bybit_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_BTC_BYBIT_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--refresh",
+        "--phase",
+        "execution-candidate",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "41_workflow_execution_candidate_board_a_btc_bybit_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_btc_bybit_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_btc_bybit_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_BTC_KRAKEN_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--artifact-uri",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score",
+        "--trained-rows",
+        "14",
+        "--calibration-rows",
+        "14"
+      ],
+      "exit": 0,
+      "name": "31_register_trainer_board_a_btc_kraken_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_btc_kraken_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_btc_kraken_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_BTC_KRAKEN_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "32_enable_runtime_board_a_btc_kraken_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_btc_kraken_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_btc_kraken_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_BTC_KRAKEN_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "40_policy_training_status_board_a_btc_kraken_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_btc_kraken_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_btc_kraken_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_BTC_KRAKEN_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--refresh",
+        "--phase",
+        "execution-candidate",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "41_workflow_execution_candidate_board_a_btc_kraken_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_btc_kraken_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_btc_kraken_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        "BOARD_A_BTC_TVR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--artifact-uri",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1/trainer_artifact.json",
+        "--model-family",
+        "catboost",
+        "--score-column",
+        "raw_path_score",
+        "--trained-rows",
+        "14",
+        "--calibration-rows",
+        "14"
+      ],
+      "exit": 0,
+      "name": "31_register_trainer_board_a_btc_tvr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_btc_tvr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/31_register_trainer_board_a_btc_tvr_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        "BOARD_A_BTC_TVR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--reuse-mode",
+        "candidate_set_only"
+      ],
+      "exit": 0,
+      "name": "32_enable_runtime_board_a_btc_tvr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_btc_tvr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/32_enable_runtime_board_a_btc_tvr_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "policy-training-status",
+        "--symbol",
+        "BOARD_A_BTC_TVR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "40_policy_training_status_board_a_btc_tvr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_btc_tvr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/40_policy_training_status_board_a_btc_tvr_191941.out"
+    },
+    {
+      "argv": [
+        "./target/debug/ict-engine",
+        "workflow-status",
+        "--symbol",
+        "BOARD_A_BTC_TVR_191941",
+        "--state-dir",
+        "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state",
+        "--refresh",
+        "--phase",
+        "execution-candidate",
+        "--output-format",
+        "json"
+      ],
+      "exit": 0,
+      "name": "41_workflow_execution_candidate_board_a_btc_tvr_191941",
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_btc_tvr_191941.err",
+      "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/command-output/41_workflow_execution_candidate_board_a_btc_tvr_191941.out"
+    }
+  ],
+  "steps_all_zero": true,
+  "steps_exit_zero": 32,
+  "steps_total": 32,
+  "symbols": [
+    "BOARD_A_SPY_YF_191941",
+    "BOARD_A_SPY_IBKR_191941",
+    "BOARD_A_BTC_BINANCE_191941",
+    "BOARD_A_BTC_BYBIT_191941",
+    "BOARD_A_BTC_KRAKEN_191941",
+    "BOARD_A_BTC_TVR_191941"
+  ],
+  "trade_usable": false,
+  "trained_rows": 14,
+  "trainer_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-191941-structural-path-ranker-extension-v1/aggregate/catboost_191941_structural_path_ranker_v1/trainer_artifact.json",
+  "update_goal": false
+}

@@ -1,0 +1,5 @@
+CRASHREBOUND | analyze | pass_neutralized | duration=negative_binomial | remaining_bars=5.00
+Block: none
+Latest: analyze | direction=Bull entry=medium gate=pass_neutralized quality=0.582
+Next: Review the latest ensemble, pre-bayes evidence, and structural path before rerunning analyze. Start with ict-engine workflow-status --symbol CRASHREBOUND --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/ict-engine/state --phase ensemble-vote --human.
+Evidence: ict-engine workflow-status --symbol CRASHREBOUND --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/ict-engine/state --phase ensemble-vote --human | ict-engine pre-bayes-status --symbol CRASHREBOUND --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/ict-engine/state --human | ict-engine workflow-status --symbol CRASHREBOUND --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T175925-codex-board-b-crashrebound-aq-replay-v1/ict-engine/state --phase structural-recommended-path-bundle --human

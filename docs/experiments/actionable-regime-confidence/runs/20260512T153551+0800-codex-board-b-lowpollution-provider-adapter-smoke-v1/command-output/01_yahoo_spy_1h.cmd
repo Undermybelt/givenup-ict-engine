@@ -1,0 +1,1 @@
+uv run --with pandas --with requests --with ib_async --with redis --with pyyaml python scripts/auto_quant_external/fetch_external.py yahoo --symbol SPY --interval 1h --start 2026-05-01 --end 2026-05-06 --output docs/experiments/actionable-regime-confidence/runs/20260512T153551+0800-codex-board-b-lowpollution-provider-adapter-smoke-v1/data/yahoo_spy_1h_20260501_20260506.csv 

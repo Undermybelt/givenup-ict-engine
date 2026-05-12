@@ -1,0 +1,13 @@
+RUN_ID 20260511T021618+0800-codex-mendeley-looksrare-manipulation-smoke
+MENDELEY_FILE_LIST_ACQUIRED true
+LOOKSRARE_RAW_DOWNLOADED true
+LOOKSRARE_SHA256_MATCHES_METADATA true
+LOOKSRARE_ROWS 401125
+EXPLICIT_TIMESTAMP_COLUMN_PRESENT false
+CHRONOLOGY_STATUS blocked_explicit_timestamp_absent_file_order_split_only
+BEST_MIN_WILSON95_LCB 0.878134
+ACCEPTED_95 false
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+TRADE_USABLE false
+GATE blocked_no_accepted_95_and_no_explicit_timestamp

@@ -1,0 +1,10 @@
+requirement,status,evidence,blocker
+board_a_authoritative_file,covered,/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-10-actionable-regime-confidence-todo.md,
+all_regimes_95_confidence,blocked,Latest post-080906/0815xx/081705 source-control routes add zero accepted rows and no valid required root.,"No valid R6 owner/export, R5 recency, or Crisis-capable R3 source/control root."
+cross_market_cross_timeframe_validation,blocked,No accepted cross-timeframe MainRegimeV2 source export or verifier-native Crisis-capable R3 rows in latest assertions.,Source/control unlock absent.
+ibkr_tradingview_yfinance_kraken_provider_use,partial,Earlier provider/runtime readbacks exist; current slice checked source/control and credential presence only.,Provider reachability cannot substitute for source/control evidence.
+auto_quant_operated,partial,"Earlier Auto-Quant readbacks exist, but selected-data promotion remains false in latest assertions.",No canonical source/control unlock.
+filter_prebayes_bbn_catboost_execution_tree,blocked,Latest assertions keep canonical_merge=false and downstream_promotion_rerun=false.,Direct verifier/split calibration/canonical merge input is invalid until source/control unlock.
+source_control_unlock,blocked,Assertion roots checked 6; missing assertions 0; any_unlock=False.,Owner/export or explicit FLIP-control approval still absent.
+multi_agent_append_only,covered,This audit writes a new run root and does not edit cursor or prior sections.,
+update_goal_allowed,blocked,any_update_goal=False; strict_full_objective=false in latest route assertions.,Objective incomplete.

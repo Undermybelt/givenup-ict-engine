@@ -1,0 +1,69 @@
+[
+  {
+    "run_id": "auto_quant_prior_init_LONG_NQ_TOMAC_135318_SLICE_20260512T062426.036652000Z",
+    "timestamp": "2026-05-12T06:24:26.036652Z",
+    "library_artifact_id": "auto_quant_strategy_library_LONG_NQ_TOMAC_135318_SLICE_20260512T062425.951663000Z",
+    "library_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T141000+0800-codex-135318-real-trades-downstream-v1/manifests/strategy_library_135318_nq_v1.json",
+    "dry_run": false,
+    "outcome": {
+      "parent_config": [
+        0,
+        0,
+        0
+      ],
+      "initial_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "final_probs": [
+        0.7529370352941177,
+        2.0705882352941177e-6,
+        0.24706089411764706
+      ],
+      "strategies_applied": [
+        {
+          "strategy_name": "TomacNQ_KillzoneBreakout_NQ",
+          "mutation_id": "135318_long_history_nq_tomac_v1",
+          "trade_count": 77,
+          "n_win": 56,
+          "n_loss": 21,
+          "n_breakeven": 0,
+          "temper": 0.5,
+          "before_probs": [
+            0.999956,
+            0.000022,
+            0.000022
+          ],
+          "after_probs": [
+            0.7529370352941177,
+            2.0705882352941177e-6,
+            0.24706089411764706
+          ],
+          "diff": [
+            -0.24701896470588225,
+            -0.00001992941176470588,
+            0.24703889411764707
+          ],
+          "bbn_entropy_before": 0.0005158756285885085,
+          "bbn_entropy_after": 0.5591116928039044,
+          "bbn_entropy_reduction": 0.0,
+          "bbn_log_loss_before": 2.9248869383238274,
+          "bbn_log_loss_after": 0.587686427155914,
+          "bbn_log_loss_delta": 2.3372005111679135,
+          "bbn_contradiction_before": 0.5454105454545454,
+          "bbn_contradiction_after": 0.05133275721925135,
+          "bbn_contradiction_lift": 0.494077788235294,
+          "evidence_value_gate_passed": true
+        }
+      ],
+      "strategies_skipped": [],
+      "temper": 0.5,
+      "prior_strength": 4.0,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_delta": 2.3372005111679135,
+      "bbn_contradiction_lift": 0.494077788235294,
+      "evidence_value_gate_passed": true
+    }
+  }
+]

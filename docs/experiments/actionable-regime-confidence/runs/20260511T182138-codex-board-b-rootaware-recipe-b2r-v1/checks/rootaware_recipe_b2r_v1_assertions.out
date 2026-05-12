@@ -1,0 +1,5 @@
+trade_rows=0
+roots_with_trades=
+gate_result=reject_b2r_insufficient_root_coverage
+selected_for_b3=false
+report_json=docs/experiments/actionable-regime-confidence/runs/20260511T182138-codex-board-b-rootaware-recipe-b2r-v1/rootaware-rc-spa/rootaware_regime_switch_b2r_report_v1.json

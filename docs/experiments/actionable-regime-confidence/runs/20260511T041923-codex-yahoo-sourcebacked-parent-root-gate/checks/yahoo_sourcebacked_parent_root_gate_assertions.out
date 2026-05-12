@@ -1,0 +1,10 @@
+loop_id=20260511T041923+0800-codex-yahoo-sourcebacked-parent-root-gate
+gate_result=accepted_95
+accepted_new_roots_95=Bear,Sideways
+missing_roots_95=Manipulation
+thresholds_relaxed=false
+runtime_code_changed=false
+raw_or_full_feature_table_committed=false
+trade_usable=false
+Bear:state=accepted_95:cal_lcb=0.993968:test_lcb=0.992722:test_precision=1.000000:test_coverage=0.065582:blockers=none
+Sideways:state=accepted_95:cal_lcb=0.988647:test_lcb=0.995568:test_precision=1.000000:test_coverage=0.108010:blockers=none

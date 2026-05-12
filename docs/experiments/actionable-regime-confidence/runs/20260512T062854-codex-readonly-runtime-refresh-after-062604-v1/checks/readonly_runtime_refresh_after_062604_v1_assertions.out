@@ -1,0 +1,14 @@
+analyze_live_ran=true
+canonical_merge=false
+catboost_matched_rows_positive=false
+downstream_promotion_rerun=false
+path_ranking_export_ready=true
+path_ranking_mature_rows_positive=false
+policy_training_ready=false
+pre_bayes_pass_neutralized=true
+provider_status_called=true
+required_roots_present=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false
+workflow_blocked=true

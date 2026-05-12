@@ -1,0 +1,6 @@
+PASS local_only_no_external_requests
+PASS no_runtime_code_changed
+PASS no_threshold_relaxation
+PASS no_raw_data_committed
+PASS current_cursor_not_modified_by_script
+PASS update_goal_false

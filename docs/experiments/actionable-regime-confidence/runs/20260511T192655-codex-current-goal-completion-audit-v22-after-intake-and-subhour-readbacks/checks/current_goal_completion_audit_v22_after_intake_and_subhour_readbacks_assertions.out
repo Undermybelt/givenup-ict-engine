@@ -1,0 +1,11 @@
+PASS checklist_items=9
+PASS unmet_requirements=5
+PASS scoped_95_present=true
+PASS strict_1h_fixed_gate=41/156
+PASS strict_1h_future_protocol=45/156
+PASS strict_intake_missing_required_files=2
+PASS strict_intake_live_files=0
+PASS native_subhour_eligible_rows=0
+PASS native_subhour_quarantined_rows=264
+PASS strict_full_objective=false
+PASS update_goal=false

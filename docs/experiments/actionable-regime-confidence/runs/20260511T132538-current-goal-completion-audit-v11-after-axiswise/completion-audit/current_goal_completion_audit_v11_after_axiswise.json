@@ -1,0 +1,110 @@
+{
+  "active_taxonomy": {
+    "name": "MainRegimeV2",
+    "price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "separate_direct_event_class_or_overlay": [
+      "Manipulation"
+    ]
+  },
+  "audited_files": {
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256": "28f8ce29e2292291761ca66d967f3c257a9f9e99ad5e6eb9ef26b323c6152081",
+    "cross_context_completion_audit_v10": "docs/experiments/actionable-regime-confidence/runs/20260511T130102-current-goal-completion-audit-v10-cross-context/completion-audit/current_goal_completion_audit_v10_cross_context.json",
+    "direct_manipulation_variety_matrix": "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.json",
+    "source_consensus_axiswise_timeframe_gate": "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1.json",
+    "stock_panel_parent_root_abstain": "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json"
+  },
+  "decision": {
+    "accepted_full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "call_update_goal": false,
+    "full_objective_achieved": false,
+    "gate_result": "post_axiswise_audit_same_source_timeframes_closed_full_matrix_still_blocked",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "generated_at_utc": "2026-05-11T05:27:44.656008+00:00",
+  "manipulation_status": {
+    "accepted_scoped_direct_varieties": [
+      "pump_dump_telegram_event",
+      "dex_self_trade_order_lifecycle",
+      "dex_consecutive_self_trade_order_lifecycle",
+      "midsummer_bsc_wash_maker",
+      "midsummer_multichain_wash_maker"
+    ],
+    "full_direct_manipulation_variety_coverage_complete": false,
+    "missing_direct_varieties": [
+      "quote_stuffing",
+      "pinging",
+      "bear_raid_or_painting_tape"
+    ]
+  },
+  "next_action": "Target unsupported intraday/full-species MainRegimeV2 cells with native or broader source-label panels; keep direct Manipulation matched-negative acquisition separate.",
+  "objective": "Every active MainRegimeV2 regime reaches 95% confidence and survives validation across other markets, timeframes, cycles, and species; direct Manipulation stays direct-evidence only.",
+  "price_root_status": {
+    "daily_parent_roots_accepted_95": true,
+    "same_source_weekly_monthly_cells": [
+      "1mo:Bear",
+      "1mo:Bull",
+      "1mo:Crisis",
+      "1mo:Sideways",
+      "1w:Bear",
+      "1w:Bull",
+      "1w:Crisis",
+      "1w:Sideways"
+    ],
+    "same_source_weekly_monthly_cells_accepted_95": true,
+    "scoped_cross_market_timeframe_price_roots_pass": true
+  },
+  "prompt_to_artifact_checklist": [
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T125122-codex-stock-market-regimes-parent-root-abstain/parent-root-abstain/stock_market_regimes_parent_root_abstain.json",
+      "notes": "Daily US equity/index parent-root gates cover Bull, Bear, Sideways, and Crisis directly.",
+      "requirement": "Every active MainRegimeV2 price root has its own 95% parent-root gate.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T131922-codex-source-consensus-axiswise-timeframe-gate-v1/source-consensus-axiswise/source_consensus_axiswise_timeframe_gate_v1.json",
+      "notes": "Axiswise source-consensus gate accepted 1w and 1mo cells for all four roots.",
+      "requirement": "Weekly and monthly same-source timeframe cells validate at 95% for every active price root.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T130102-current-goal-completion-audit-v10-cross-context/completion-audit/current_goal_completion_audit_v10_cross_context.json",
+      "notes": "v10 scoped audit is still a scoped floor, not the expanded full-universe/full-species objective.",
+      "requirement": "Evidence survives more than one market/context and more than one timeframe.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "notes": "Current cursor still records unsupported intraday/full-species cells as open.",
+      "requirement": "Unsupported intraday/full-species cells are not silently counted as complete.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T131311-codex-direct-manipulation-variety-matrix-v1/direct-manipulation/direct_manipulation_variety_matrix_v1.json",
+      "notes": "Direct varieties are scoped; missing spoofing/layering matched negatives, quote stuffing, pinging, bear raid, and painting-the-tape.",
+      "requirement": "Direct Manipulation is direct-event/order-flow/order-lifecycle evidence, not OHLCV proxy evidence.",
+      "status": "pass"
+    },
+    {
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "notes": "Same-source 1w/1mo is now closed, but expanded intraday/full-species and direct Manipulation variety coverage remain open.",
+      "requirement": "Full objective gate closes only when full-market/full-timeframe/full-species plus direct Manipulation coverage are complete.",
+      "status": "blocked"
+    }
+  ],
+  "remaining_blockers": [
+    "Expanded intraday/full-species MainRegimeV2 source-label matrix remains incomplete.",
+    "Same-source stock-market-regimes weekly/monthly closure is US equity/index scoped, not all species.",
+    "Direct Manipulation variety coverage remains incomplete without matched negatives for spoofing/layering and other order-book varieties.",
+    "Full objective gate remains none; do not call update_goal."
+  ],
+  "run_id": "20260511T132538+0800-current-goal-completion-audit-v11-after-axiswise"
+}

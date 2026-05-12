@@ -1,0 +1,2 @@
+root_class,state,source_regime_id,rule,calibration_support,calibration_lcb,calibration_coverage,test_support,test_lcb,test_precision,test_coverage,ece,blockers
+SidewaysConsolidation,accepted_95,RangeConsolidation,catboost_isotonic_probability(RangeConsolidation_persists_next_15m) >= 0.9896907216494846,467,0.978186212412689,0.09461102106969206,313,0.9676071866741978,0.987220447284345,0.06341166936790923,0.004488121867580741,none

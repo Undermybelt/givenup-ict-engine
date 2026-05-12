@@ -1,0 +1,38 @@
+{
+  "run_id": "20260512T040757-codex-autoquant-bootstrap-prepare-after-040311-v1",
+  "gate_result": "autoquant_bootstrap_prepare_after_040311_v1=bootstrap_succeeded_prepare_dns_blocked_no_promotion",
+  "state_dir": "/tmp/ict-engine-autoquant-bootstrap-prepare-after-040311-v1/autoquant-state",
+  "command_exits": {
+    "auto_quant_status_before": 0,
+    "auto_quant_bootstrap": 0,
+    "auto_quant_prepare": 1,
+    "auto_quant_status_after": 0
+  },
+  "status_before": {
+    "status": "missing_dependency",
+    "bootstrap_needed": true,
+    "dependency_healthy": false,
+    "data_ready": false
+  },
+  "status_after": {
+    "status": "dependency_ready_data_missing",
+    "bootstrap_needed": false,
+    "dependency_healthy": true,
+    "data_ready": false,
+    "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+  },
+  "prepare_blocker": "binance_dns_exchange_info_unavailable",
+  "source_roots_absent_after": [
+    "/tmp/ict-engine-board-a-r6-owner-export-v1",
+    "/tmp/ict-engine-native-subhour-source-label-intake",
+    "/tmp/ict-engine-source-panel-recency-extension"
+  ],
+  "accepted_rows_added": 0,
+  "source_control_evidence_acquired": false,
+  "new_confidence_gate": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false
+}

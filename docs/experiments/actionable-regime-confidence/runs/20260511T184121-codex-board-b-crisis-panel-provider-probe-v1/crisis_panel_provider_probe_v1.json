@@ -1,0 +1,646 @@
+{
+  "completion_audit": [
+    {
+      "evidence": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+      "requirement": "Board B file remains the authoritative execution board.",
+      "status": "covered"
+    },
+    {
+      "evidence": "Current board cursor and 183244 branch matrix preserve Bull/Bear/Sideways/Crisis branch rows.",
+      "requirement": "Profitability factors must emit root-first branch paths.",
+      "status": "covered_but_rejected"
+    },
+    {
+      "evidence": "Prior 183244 branch matrix has 5198 real Auto-Quant/Freqtrade rows; this probe does not create a recipe.",
+      "requirement": "Auto-Quant evidence must be real, not inferred.",
+      "status": "covered_for_prior_candidate"
+    },
+    {
+      "evidence": "Current branch matrix failed RC-SPA; downstream remains fail-closed.",
+      "requirement": "Downstream filter/BBN/CatBoost/execution-tree branch promotion must only happen after RC-SPA pass.",
+      "status": "blocked_correctly"
+    },
+    {
+      "evidence": {
+        "harness": {
+          "harness-ibkr-qqq-1d": {
+            "error_count": 1,
+            "ok_count": 0,
+            "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-ibkr-qqq-1d.err",
+            "stderr_bytes": 904,
+            "stderr_excerpt": "ibkr-historical requires the ibkr_bridge package. Make sure scripts/ibkr_bridge/ is reachable from sys.path (searched: ['/Users/thrill3r/projects-ict-engine/ict-engine/scripts', '/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/scripts', '/Users/thrill3r/projects-ict-engine/ict-engine/scripts']). Underlying error: No module named 'redis'\nError: market-data-harness fetch encountered failures: role=etf_reference provider=ibkr symbol=QQQ fetch_failed:ibkr historical fetch ",
+            "stdout_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-ibkr-qqq-1d.out",
+            "stdout_bytes": 4157
+          },
+          "harness-kraken-xbtusd-1d": {
+            "error_count": 0,
+            "ok_count": 0,
+            "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-kraken-xbtusd-1d.err",
+            "stderr_bytes": 143,
+            "stderr_excerpt": "Error: market-data-harness request validation failed: missing_provider_symbol_for_role=crypto_reference | unsupported provider 'kraken_public'\n",
+            "stdout_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-kraken-xbtusd-1d.out",
+            "stdout_bytes": 0
+          },
+          "harness-tradingview-qqq-1d": {
+            "error_count": 0,
+            "ok_count": 1,
+            "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-tradingview-qqq-1d.err",
+            "stderr_bytes": 0,
+            "stderr_excerpt": "",
+            "stdout_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-tradingview-qqq-1d.out",
+            "stdout_bytes": 7812
+          },
+          "harness-yfinance-qqq-1d": {
+            "error_count": 0,
+            "ok_count": 1,
+            "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-yfinance-qqq-1d.err",
+            "stderr_bytes": 0,
+            "stderr_excerpt": "",
+            "stdout_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-yfinance-qqq-1d.out",
+            "stdout_bytes": 9365
+          }
+        },
+        "ibkr_status": "market_data:0/1 ready",
+        "kraken_status": "market_data:0/1 ready",
+        "tradingview_status": "market_data:1/1 ready",
+        "yfinance_status": "live_runtime:1/1 ready | market_data:1/1 ready"
+      },
+      "requirement": "Use provider evidence from yfinance, TradingViewRemix, IBKR, and Kraken before declaring data blocked.",
+      "status": "covered"
+    },
+    {
+      "evidence": {
+        "dominant_daily_2021_2025": {
+          "Bear": 301,
+          "Bull": 846,
+          "Crisis": 8,
+          "Sideways": 100
+        },
+        "local_autoquant": {
+          "by_interval": {
+            "15m": 5,
+            "1d": 12,
+            "1h": 11,
+            "4h": 11,
+            "5m": 1
+          },
+          "file_count": 40,
+          "instruments": {
+            "AAPL_USD": [
+              "1d"
+            ],
+            "AVAX_USDT": [
+              "1d",
+              "1h",
+              "4h"
+            ],
+            "BNB_USDT": [
+              "1d",
+              "1h",
+              "4h"
+            ],
+            "BTCY_USD": [
+              "1d"
+            ],
+            "BTC_USDT": [
+              "1d",
+              "1h",
+              "4h"
+            ],
+            "DIA_USD": [
+              "15m",
+              "1h",
+              "4h"
+            ],
+            "ES_USD": [
+              "1d"
+            ],
+            "ETH_USDT": [
+              "1d",
+              "1h",
+              "4h"
+            ],
+            "EUR_USD": [
+              "1d"
+            ],
+            "GLD_USD": [
+              "15m",
+              "1h",
+              "4h"
+            ],
+            "IWM_USD": [
+              "15m",
+              "1h",
+              "4h"
+            ],
+            "NQ_USD": [
+              "15m",
+              "1d",
+              "1h",
+              "4h",
+              "5m"
+            ],
+            "QQQ_USD": [
+              "1d",
+              "1h",
+              "4h"
+            ],
+            "SOL_USDT": [
+              "1d",
+              "1h",
+              "4h"
+            ],
+            "SPY_USD": [
+              "15m",
+              "1d",
+              "1h",
+              "4h"
+            ]
+          },
+          "ok_file_count": 40,
+          "summary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/panel/local_autoquant_feather_summary.json"
+        },
+        "source_panel_2021_2025": {
+          "Bear": {
+            "rows": 12057,
+            "unique_dates": 1248,
+            "unique_tickers": 39
+          },
+          "Bull": {
+            "rows": 21528,
+            "unique_dates": 1251,
+            "unique_tickers": 39
+          },
+          "Crisis": {
+            "rows": 4646,
+            "unique_dates": 1162,
+            "unique_tickers": 39
+          },
+          "Sideways": {
+            "rows": 10714,
+            "unique_dates": 1253,
+            "unique_tickers": 39
+          }
+        },
+        "yfinance_fetch": {
+          "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/panel/yfinance_panel_fetch_summary_v1.json",
+          "failed_symbols": [],
+          "ok_symbols": [
+            "^GSPC",
+            "^IXIC",
+            "^RUT",
+            "AAPL",
+            "AMD",
+            "AMZN",
+            "MSFT",
+            "NVDA",
+            "TSLA",
+            "XOM",
+            "JPM",
+            "BTC-USD"
+          ]
+        }
+      },
+      "requirement": "Broader crisis-capable panel must be available before another crisis-depth claim.",
+      "status": "available_for_next_recipe_but_not_yet_scored"
+    },
+    {
+      "evidence": "No branch has passed RC-SPA and no promoted branch path has completed downstream consumption.",
+      "requirement": "Objective can be marked complete.",
+      "status": "not_achieved"
+    }
+  ],
+  "decision": {
+    "completion_status": "not_achieved",
+    "downstream": "not_started:no_rc_spa_passing_recipe",
+    "fresh_provider_panel_available": true,
+    "gate_result": "not_started:panel_probe_no_recipe_scored",
+    "next_action": "B2R-repeat: synthesize and score a second root-aware recipe on the broader source-panel/yfinance equity-index daily universe with per-instrument roots; treat IBKR/Kraken as recorded support/unhealthy paths, not as blockers, and do not run downstream promotion unless branch RC-SPA passes."
+  },
+  "generated_at_utc": "2026-05-11T10:47:20.703682+00:00",
+  "local_autoquant": {
+    "by_interval": {
+      "15m": 5,
+      "1d": 12,
+      "1h": 11,
+      "4h": 11,
+      "5m": 1
+    },
+    "file_count": 40,
+    "instruments": {
+      "AAPL_USD": [
+        "1d"
+      ],
+      "AVAX_USDT": [
+        "1d",
+        "1h",
+        "4h"
+      ],
+      "BNB_USDT": [
+        "1d",
+        "1h",
+        "4h"
+      ],
+      "BTCY_USD": [
+        "1d"
+      ],
+      "BTC_USDT": [
+        "1d",
+        "1h",
+        "4h"
+      ],
+      "DIA_USD": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "ES_USD": [
+        "1d"
+      ],
+      "ETH_USDT": [
+        "1d",
+        "1h",
+        "4h"
+      ],
+      "EUR_USD": [
+        "1d"
+      ],
+      "GLD_USD": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "IWM_USD": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "NQ_USD": [
+        "15m",
+        "1d",
+        "1h",
+        "4h",
+        "5m"
+      ],
+      "QQQ_USD": [
+        "1d",
+        "1h",
+        "4h"
+      ],
+      "SOL_USDT": [
+        "1d",
+        "1h",
+        "4h"
+      ],
+      "SPY_USD": [
+        "15m",
+        "1d",
+        "1h",
+        "4h"
+      ]
+    },
+    "ok_file_count": 40,
+    "summary_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/panel/local_autoquant_feather_summary.json"
+  },
+  "provider_summary": {
+    "harness_fetches": {
+      "harness-ibkr-qqq-1d": {
+        "error_count": 1,
+        "ok_count": 0,
+        "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-ibkr-qqq-1d.err",
+        "stderr_bytes": 904,
+        "stderr_excerpt": "ibkr-historical requires the ibkr_bridge package. Make sure scripts/ibkr_bridge/ is reachable from sys.path (searched: ['/Users/thrill3r/projects-ict-engine/ict-engine/scripts', '/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/scripts', '/Users/thrill3r/projects-ict-engine/ict-engine/scripts']). Underlying error: No module named 'redis'\nError: market-data-harness fetch encountered failures: role=etf_reference provider=ibkr symbol=QQQ fetch_failed:ibkr historical fetch ",
+        "stdout_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-ibkr-qqq-1d.out",
+        "stdout_bytes": 4157
+      },
+      "harness-kraken-xbtusd-1d": {
+        "error_count": 0,
+        "ok_count": 0,
+        "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-kraken-xbtusd-1d.err",
+        "stderr_bytes": 143,
+        "stderr_excerpt": "Error: market-data-harness request validation failed: missing_provider_symbol_for_role=crypto_reference | unsupported provider 'kraken_public'\n",
+        "stdout_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-kraken-xbtusd-1d.out",
+        "stdout_bytes": 0
+      },
+      "harness-tradingview-qqq-1d": {
+        "error_count": 0,
+        "ok_count": 1,
+        "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-tradingview-qqq-1d.err",
+        "stderr_bytes": 0,
+        "stderr_excerpt": "",
+        "stdout_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-tradingview-qqq-1d.out",
+        "stdout_bytes": 7812
+      },
+      "harness-yfinance-qqq-1d": {
+        "error_count": 0,
+        "ok_count": 1,
+        "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-yfinance-qqq-1d.err",
+        "stderr_bytes": 0,
+        "stderr_excerpt": "",
+        "stdout_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/harness-yfinance-qqq-1d.out",
+        "stdout_bytes": 9365
+      }
+    },
+    "provider_status": {
+      "ibkr": {
+        "install_prompts": [
+          "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+          "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+        ],
+        "pending_providers": [
+          "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable"
+        ],
+        "ready_providers": [],
+        "status_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/provider-status-ibkr.agent.json",
+        "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/provider-status-ibkr.err",
+        "summary_line": "market_data:0/1 ready"
+      },
+      "kraken_public": {
+        "install_prompts": [
+          "System python3 is missing provider script modules: ccxt, ib_async, redis, sklearn, pyarrow, xgboost. Install with: python3 -m pip install --user --break-system-packages ccxt ib_async redis scikit-learn pyarrow xgboost"
+        ],
+        "pending_providers": [
+          "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing"
+        ],
+        "ready_providers": [],
+        "status_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/provider-status-kraken_public.agent.json",
+        "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/provider-status-kraken_public.err",
+        "summary_line": "market_data:0/1 ready"
+      },
+      "tradingview_mcp": {
+        "install_prompts": [],
+        "pending_providers": [],
+        "ready_providers": [
+          "tradingview_mcp"
+        ],
+        "status_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/provider-status-tradingview_mcp.agent.json",
+        "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/provider-status-tradingview_mcp.err",
+        "summary_line": "market_data:1/1 ready"
+      },
+      "yfinance": {
+        "install_prompts": [],
+        "pending_providers": [],
+        "ready_providers": [
+          "yfinance",
+          "yfinance"
+        ],
+        "status_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/provider-status-yfinance.agent.json",
+        "stderr_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/provider/provider-status-yfinance.err",
+        "summary_line": "live_runtime:1/1 ready | market_data:1/1 ready"
+      }
+    }
+  },
+  "run_id": "20260511T184121+0800-codex-board-b-crisis-panel-provider-probe-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1",
+  "schema_version": "board-b-crisis-panel-provider-probe/v1",
+  "source_panel": {
+    "dominant_daily_2021_2025_by_root": {
+      "Bear": 301,
+      "Bull": 846,
+      "Crisis": 8,
+      "Sideways": 100
+    },
+    "dominant_daily_by_root": {
+      "Bear": 1385,
+      "Bull": 3900,
+      "Crisis": 417,
+      "Sideways": 857
+    },
+    "overall_by_root": {
+      "Bear": {
+        "rows": 54939,
+        "unique_dates": 6380,
+        "unique_tickers": 39
+      },
+      "Bull": {
+        "rows": 103766,
+        "unique_dates": 6460,
+        "unique_tickers": 39
+      },
+      "Crisis": {
+        "rows": 29632,
+        "unique_dates": 6045,
+        "unique_tickers": 39
+      },
+      "High-volatility": {
+        "rows": 16,
+        "unique_dates": 16,
+        "unique_tickers": 10
+      },
+      "Sideways": {
+        "rows": 56668,
+        "unique_dates": 6445,
+        "unique_tickers": 39
+      }
+    },
+    "source_panel": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "window_2021_2025_by_root": {
+      "Bear": {
+        "rows": 12057,
+        "unique_dates": 1248,
+        "unique_tickers": 39
+      },
+      "Bull": {
+        "rows": 21528,
+        "unique_dates": 1251,
+        "unique_tickers": 39
+      },
+      "Crisis": {
+        "rows": 4646,
+        "unique_dates": 1162,
+        "unique_tickers": 39
+      },
+      "Sideways": {
+        "rows": 10714,
+        "unique_dates": 1253,
+        "unique_tickers": 39
+      }
+    },
+    "yf_symbol_source_overlap": {
+      "AAPL": {
+        "Bear": 1309,
+        "Bull": 3341,
+        "Crisis": 993,
+        "Sideways": 916
+      },
+      "AMD": {
+        "Bear": 1667,
+        "Bull": 1423,
+        "Crisis": 3184,
+        "Sideways": 285
+      },
+      "AMZN": {
+        "Bear": 1427,
+        "Bull": 2794,
+        "Crisis": 1487,
+        "Sideways": 851
+      },
+      "JPM": {
+        "Bear": 1361,
+        "Bull": 2829,
+        "Crisis": 785,
+        "Sideways": 1584
+      },
+      "MSFT": {
+        "Bear": 1400,
+        "Bull": 2779,
+        "Crisis": 807,
+        "Sideways": 1573
+      },
+      "NVDA": {
+        "Bear": 1275,
+        "Bull": 2737,
+        "Crisis": 2015,
+        "High-volatility": 1,
+        "Sideways": 531
+      },
+      "TSLA": {
+        "Bear": 867,
+        "Bull": 1537,
+        "Crisis": 1244,
+        "High-volatility": 2,
+        "Sideways": 272
+      },
+      "XOM": {
+        "Bear": 1658,
+        "Bull": 2627,
+        "Crisis": 207,
+        "Sideways": 2067
+      },
+      "^GSPC": {
+        "Bear": 1068,
+        "Bull": 3339,
+        "Crisis": 159,
+        "Sideways": 1993
+      },
+      "^IXIC": {
+        "Bear": 1281,
+        "Bull": 3228,
+        "Crisis": 462,
+        "Sideways": 1588
+      },
+      "^RUT": {
+        "Bear": 1318,
+        "Bull": 2957,
+        "Crisis": 277,
+        "Sideways": 2007
+      }
+    }
+  },
+  "yfinance_panel_fetch": {
+    "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T184121-codex-board-b-crisis-panel-provider-probe-v1/panel/yfinance_panel_fetch_summary_v1.json",
+    "failed_symbols": [],
+    "ok_symbols": [
+      "^GSPC",
+      "^IXIC",
+      "^RUT",
+      "AAPL",
+      "AMD",
+      "AMZN",
+      "MSFT",
+      "NVDA",
+      "TSLA",
+      "XOM",
+      "JPM",
+      "BTC-USD"
+    ],
+    "symbols": [
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 7398.93017578125,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "^GSPC"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 26247.080078125,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "^IXIC"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 2861.2099609375,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "^RUT"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 293.32000732421875,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "AAPL"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 455.19000244140625,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "AMD"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 272.67999267578125,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "AMZN"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 415.1199951171875,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "MSFT"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 215.1999969482422,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "NVDA"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 428.3500061035156,
+        "ok": true,
+        "rows": 3990,
+        "start": "2010-06-29 00:00:00+00:00",
+        "symbol": "TSLA"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 144.57000732421875,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "XOM"
+      },
+      {
+        "end": "2026-05-08 00:00:00+00:00",
+        "last_close": 302.1000061035156,
+        "ok": true,
+        "rows": 6627,
+        "start": "2000-01-03 00:00:00+00:00",
+        "symbol": "JPM"
+      },
+      {
+        "end": "2026-05-11 00:00:00+00:00",
+        "last_close": 81005.453125,
+        "ok": true,
+        "rows": 4255,
+        "start": "2014-09-17 00:00:00+00:00",
+        "symbol": "BTC-USD"
+      }
+    ]
+  }
+}

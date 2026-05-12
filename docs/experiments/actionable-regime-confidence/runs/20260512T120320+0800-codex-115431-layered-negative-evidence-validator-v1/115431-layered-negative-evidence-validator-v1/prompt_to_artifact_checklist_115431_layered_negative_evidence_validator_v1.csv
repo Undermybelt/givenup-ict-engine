@@ -1,0 +1,9 @@
+requirement,evidence,status
+Validate provider-rooted raw trades before BBN/CatBoost/execution-tree learning use,115431_layered_negative_evidence_validator_v1.md,PASS
+Preserve Board B layered negative-evidence attribution contract,115431_layered_negative_evidence_validator_v1.json,PASS
+Check branch_path and four-part branch fields,assertions missing_branch_path_all_raw_rows and missing_four_part_branch_fields_all_raw_rows,FAIL_CLOSED_EXPECTED
+Check provider provenance,assertions missing_provider_provenance_all_raw_rows,FAIL_CLOSED_EXPECTED
+Check Pre-Bayes BBN CatBoost execution-tree attribution fields,assertions missing_pre_bayes_bbn_catboost_execution_tree_fields_all_raw_rows,FAIL_CLOSED_EXPECTED
+Reject market-factor negative samples when schema is incomplete,accepted_market_factor_negative_rows=0,FAIL_CLOSED_EXPECTED
+Avoid promotion or trade claim,promotion_allowed=false trade_usable=false,PASS
+Avoid update_goal,update_goal=false,PASS

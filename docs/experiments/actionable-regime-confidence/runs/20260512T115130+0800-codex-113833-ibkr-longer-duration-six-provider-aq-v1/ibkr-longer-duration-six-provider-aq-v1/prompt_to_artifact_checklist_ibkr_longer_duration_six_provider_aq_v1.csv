@@ -1,0 +1,4 @@
+requirement,artifact,status,note
+longer IBKR 1h input,docs/experiments/actionable-regime-confidence/runs/20260512T115130+0800-codex-113833-ibkr-longer-duration-six-provider-aq-v1/provider-csv/BTC_1h_midpoint.csv,covered,rows=359
+six provider AQ rerun,command-output/aq_*_run_tomac.*,covered,6/6 provider runs exited 0
+downstream chain,N/A,not_run,run only repairs provider/AQ authority; downstream remains separate

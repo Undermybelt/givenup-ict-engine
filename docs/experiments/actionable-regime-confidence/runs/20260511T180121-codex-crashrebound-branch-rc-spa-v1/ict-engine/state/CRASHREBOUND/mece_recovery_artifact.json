@@ -1,0 +1,58 @@
+{
+  "artifact_id": "mece-recovery-CRASHREBOUND-1778494590726",
+  "generated_at": "2026-05-11T10:16:30.726876Z",
+  "symbol": "CRASHREBOUND",
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "selected_factors": [
+    "cross_market_smt"
+  ],
+  "hmm_viterbi_hash": "d1fba762150c532c",
+  "label_hash": "5249550460334d7d",
+  "execution_validity_summary": "execution_blocked=17;execution_observe_only=35;execution_ready=0",
+  "sparsity_ratio": 0.0,
+  "pruned_factor_trail": [
+    [
+      "cross_market_smt",
+      0.0
+    ]
+  ],
+  "segments": [
+    {
+      "horizon_bars": [
+        0,
+        16
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.497443181818182,
+      "execution_readiness_drift": -0.001838235294117583,
+      "sample_count": 16
+    },
+    {
+      "horizon_bars": [
+        16,
+        42
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.4779370629370628,
+      "execution_readiness_drift": -0.000498212898212908,
+      "sample_count": 26
+    },
+    {
+      "horizon_bars": [
+        42,
+        52
+      ],
+      "accuracy": 1.0,
+      "execution_readiness_mean": 0.475636363636364,
+      "execution_readiness_drift": -0.0009256198347111478,
+      "sample_count": 10
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "d6ff2e3c04fac168",
+    "data_fingerprint": "937fe89c23713ba0"
+  }
+}

@@ -1,0 +1,4 @@
+{"error": "Cannot save file into a non-existent directory: '$RUN_ROOT/provider-csv'", "error_type": "OSError", "provider": "yfinance", "status": "error"}
+{"error": "Cannot save file into a non-existent directory: '$RUN_ROOT/provider-csv'", "error_type": "OSError", "provider": "kraken_public_ccxt", "status": "error", "symbol": "BTC/USD", "timeframe": "1h"}
+{"error": "Cannot save file into a non-existent directory: '$RUN_ROOT/provider-csv'", "error_type": "OSError", "provider": "binance_public_ccxt", "status": "error", "symbol": "BTC/USDT", "timeframe": "1h"}
+{"error": "Cannot save file into a non-existent directory: '$RUN_ROOT/provider-csv'", "error_type": "OSError", "provider": "bybit_public_ccxt", "status": "error", "symbol": "BTC/USDT", "timeframe": "1h"}

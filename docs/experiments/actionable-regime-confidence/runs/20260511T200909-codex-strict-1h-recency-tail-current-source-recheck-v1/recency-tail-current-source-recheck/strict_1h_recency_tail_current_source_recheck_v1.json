@@ -1,0 +1,182 @@
+{
+  "accepted_rows_added": 0,
+  "all_tail_rows_present": false,
+  "candidate_sources_checked": 10,
+  "candidates": [
+    {
+      "current_version": 1,
+      "disposition": "same public source panel metadata; local panel max date is still the decisive row-level check",
+      "hit_count": 1,
+      "last_updated": "2026-02-01T02:25:29.437Z",
+      "query_or_ref": "mafaqbhatti/stock-market-regimes-20002026",
+      "ready_tail_source": false,
+      "source": "kaggle_dataset_view",
+      "status": "metadata_read",
+      "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026"
+    },
+    {
+      "current_version": "",
+      "disposition": "mafaqbhatti/stock-market-regimes-20002026",
+      "hit_count": 1,
+      "last_updated": "",
+      "query_or_ref": "stock market regimes 2000 2026",
+      "ready_tail_source": false,
+      "source": "kaggle_dataset_list",
+      "status": "metadata_read",
+      "url": "https://www.kaggle.com/api/v1/datasets/list?search=stock%20market%20regimes%202000%202026"
+    },
+    {
+      "current_version": "",
+      "disposition": "mafaqbhatti/stock-market-regimes-20002026",
+      "hit_count": 1,
+      "last_updated": "",
+      "query_or_ref": "stock_market_regimes_2000_2026.csv",
+      "ready_tail_source": false,
+      "source": "kaggle_dataset_list",
+      "status": "metadata_read",
+      "url": "https://www.kaggle.com/api/v1/datasets/list?search=stock_market_regimes_2000_2026.csv"
+    },
+    {
+      "current_version": "",
+      "disposition": "no datasets returned",
+      "hit_count": 0,
+      "last_updated": "",
+      "query_or_ref": "XOM Sideways UNH Bear AMD Bear regime dataset",
+      "ready_tail_source": false,
+      "source": "kaggle_dataset_list",
+      "status": "metadata_read",
+      "url": "https://www.kaggle.com/api/v1/datasets/list?search=XOM%20Sideways%20UNH%20Bear%20AMD%20Bear%20regime%20dataset"
+    },
+    {
+      "current_version": "",
+      "disposition": "no ready source-owned recency-tail label dataset found",
+      "hit_count": 0,
+      "last_updated": "",
+      "query_or_ref": "stock market regimes 2000 2026",
+      "ready_tail_source": false,
+      "source": "huggingface_dataset_search",
+      "status": "metadata_read",
+      "url": "https://huggingface.co/api/datasets?search=stock%20market%20regimes%202000%202026"
+    },
+    {
+      "current_version": "",
+      "disposition": "no ready source-owned recency-tail label dataset found",
+      "hit_count": 0,
+      "last_updated": "",
+      "query_or_ref": "stock_market_regimes_2000_2026.csv",
+      "ready_tail_source": false,
+      "source": "huggingface_dataset_search",
+      "status": "metadata_read",
+      "url": "https://huggingface.co/api/datasets?search=stock_market_regimes_2000_2026.csv"
+    },
+    {
+      "current_version": "",
+      "disposition": "no ready source-owned recency-tail label dataset found",
+      "hit_count": 0,
+      "last_updated": "",
+      "query_or_ref": "XOM Sideways UNH Bear AMD Bear regime dataset",
+      "ready_tail_source": false,
+      "source": "huggingface_dataset_search",
+      "status": "metadata_read",
+      "url": "https://huggingface.co/api/datasets?search=XOM%20Sideways%20UNH%20Bear%20AMD%20Bear%20regime%20dataset"
+    },
+    {
+      "current_version": "",
+      "disposition": "no repository hit with source-owned post-cutoff labels",
+      "hit_count": 0,
+      "last_updated": "",
+      "query_or_ref": "\"stock_market_regimes_2000_2026.csv\"",
+      "ready_tail_source": false,
+      "source": "github_repository_search",
+      "status": "metadata_read",
+      "url": "https://api.github.com/search/repositories?q=%22stock_market_regimes_2000_2026.csv%22"
+    },
+    {
+      "current_version": "",
+      "disposition": "no repository hit with source-owned post-cutoff labels",
+      "hit_count": 0,
+      "last_updated": "",
+      "query_or_ref": "\"stock market regimes 2000 2026\"",
+      "ready_tail_source": false,
+      "source": "github_repository_search",
+      "status": "metadata_read",
+      "url": "https://api.github.com/search/repositories?q=%22stock%20market%20regimes%202000%202026%22"
+    },
+    {
+      "current_version": "",
+      "disposition": "no repository hit with source-owned post-cutoff labels",
+      "hit_count": 0,
+      "last_updated": "",
+      "query_or_ref": "\"XOM\" \"Sideways\" \"UNH\" \"Bear\" \"AMD\" \"regime\"",
+      "ready_tail_source": false,
+      "source": "github_repository_search",
+      "status": "metadata_read",
+      "url": "https://api.github.com/search/repositories?q=%22XOM%22%20%22Sideways%22%20%22UNH%22%20%22Bear%22%20%22AMD%22%20%22regime%22"
+    }
+  ],
+  "cutoff_exclusive": "2026-01-30",
+  "gate_result": "strict_1h_recency_tail_current_source_recheck_v1=no_post_2026_01_30_source_owned_tail_rows",
+  "generated_at_utc": "2026-05-11T12:11:29.182845+00:00",
+  "local_source_panel": {
+    "exists": true,
+    "fieldnames": [
+      "date",
+      "ticker",
+      "close",
+      "returns",
+      "volatility",
+      "regime_label",
+      "regime_confidence",
+      "macro_context",
+      "unemployment_rate",
+      "fed_funds_rate",
+      "cpi",
+      "10y_treasury",
+      "2y_treasury",
+      "vix"
+    ],
+    "max_date": "2026-01-30",
+    "path": "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+    "rows": 245021
+  },
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "ready_external_tail_sources": 0,
+  "run_id": "20260511T200909-codex-strict-1h-recency-tail-current-source-recheck-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "target_requirement": "R5 strict_1h_recency_tail_repair",
+  "target_rows": [
+    {
+      "max_date": "2025-12-19",
+      "regime_label": "Sideways",
+      "rows_after_2026_01_30": 0,
+      "source_rows": 2067,
+      "ticker": "XOM"
+    },
+    {
+      "max_date": "2025-12-31",
+      "regime_label": "Bear",
+      "rows_after_2026_01_30": 0,
+      "source_rows": 1225,
+      "ticker": "UNH"
+    },
+    {
+      "max_date": "2025-12-01",
+      "regime_label": "Sideways",
+      "rows_after_2026_01_30": 0,
+      "source_rows": 2198,
+      "ticker": "^DJI"
+    },
+    {
+      "max_date": "2025-12-11",
+      "regime_label": "Bear",
+      "rows_after_2026_01_30": 0,
+      "source_rows": 1667,
+      "ticker": "AMD"
+    }
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,13 @@
+run_id=20260511T083150+0800-codex-dune-nft-wash-trades-export-probe
+gate_result=blocked_dune_export_missing_api_key
+docs_prove_export_candidate=true
+dune_api_key_present=false
+public_result_status=401
+accepted_direct_manipulation_95=false
+mainregimev2_root_slots_added=0
+manipulation_label_slots_added=0
+accepted_full_cycle_full_universe=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false

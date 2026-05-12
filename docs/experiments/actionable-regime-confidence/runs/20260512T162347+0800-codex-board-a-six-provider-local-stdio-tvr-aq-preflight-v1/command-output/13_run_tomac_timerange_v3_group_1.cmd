@@ -1,0 +1,1 @@
+cd docs/experiments/actionable-regime-confidence/runs/20260512T162347+0800-codex-board-a-six-provider-local-stdio-tvr-aq-preflight-v1/state_iso_v2/auto-quant/agent_material_units/Board_A_six-provider_preflight_-_Bybit_BTCUSDT_linear_1h_ISO_timestamp_retry/aq_workspace && /Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py

@@ -1,0 +1,60 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.5035911446747383,
+    3.611738148984198e-8,
+    0.49640881920788016
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "ProviderMultiLongspanEmaRsiV1",
+      "mutation_id": "provider-multi-longspan-ema-rsi-v1",
+      "trade_count": 4865,
+      "n_win": 2446,
+      "n_loss": 2419,
+      "n_breakeven": 0,
+      "temper": 0.5,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.5035911446747383,
+        3.611738148984198e-8,
+        0.49640881920788016
+      ],
+      "diff": [
+        -0.49636485532526164,
+        -0.00002196388261851016,
+        0.49638681920788014
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.6931220174456196,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 5.332496602550793,
+      "bbn_log_loss_after": 0.6931331487580685,
+      "bbn_log_loss_delta": 4.639363453792725,
+      "bbn_contradiction_before": 0.9944061541623843,
+      "bbn_contradiction_after": 0.0016325157466240568,
+      "bbn_contradiction_lift": 0.9927736384157603,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [],
+  "temper": 0.5,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 4.639363453792725,
+  "bbn_contradiction_lift": 0.9927736384157603,
+  "evidence_value_gate_passed": true
+}

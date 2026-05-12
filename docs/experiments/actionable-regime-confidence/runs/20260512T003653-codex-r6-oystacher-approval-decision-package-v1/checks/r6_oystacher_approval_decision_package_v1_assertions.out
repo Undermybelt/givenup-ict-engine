@@ -1,0 +1,11 @@
+materialization_rows_match=pass
+positive_rows_match=pass
+flip_rows_match=pass
+source_policy_not_approved=pass
+control_policy_rejects_flip_controls=pass
+canonical_merge_blocked_now=pass
+downstream_rerun_blocked_now=pass
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+strict_full_objective_achieved=false
+update_goal=false

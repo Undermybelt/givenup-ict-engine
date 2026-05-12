@@ -1,0 +1,11 @@
+item,status,evidence
+provider_btc_data_prepared,true,command-output/00_prepare_binance_btc_csv.out
+autoquant_tomac_invoked,true,command-output/01_run_provider_btc_pulse.out
+command_exits_zero,true,checks/00_prepare_binance_btc_csv.exit and checks/01_run_provider_btc_pulse.exit
+nonzero_trades,false,trade_count 0
+source_control_unlock,false,not an R6/R5/R3 source-control packet
+selected_history_choice,false,no HTF/MTF/LTF choice recorded
+canonical_merge,false,no canonical intake mutation
+downstream_promotion,false,no Pre-Bayes/BBN/CatBoost/execution-tree promotion
+trade_usable,false,zero trades and promotion blocked
+update_goal,false,strict objective not achieved

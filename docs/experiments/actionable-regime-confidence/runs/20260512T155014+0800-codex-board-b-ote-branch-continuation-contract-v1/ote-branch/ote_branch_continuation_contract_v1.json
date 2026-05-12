@@ -1,0 +1,145 @@
+{
+  "assumed_ote_ratios": [
+    0.5,
+    0.618,
+    0.705,
+    0.786
+  ],
+  "board_scope": "Board B profitability factor branch only",
+  "branch_levels": [
+    {
+      "branch_leaf": "OTERetracement050",
+      "branch_path": "TrendExpansion -> NormalVolatility -> OTERetracement050 -> OTEContinuationLong",
+      "ibkr_spy_pnl_ratio_sum": 0.00951618,
+      "ibkr_spy_trade_count": 76,
+      "ratio": 0.5,
+      "tag": "ote_050"
+    },
+    {
+      "branch_leaf": "OTERetracement0618",
+      "branch_path": "TrendExpansion -> NormalVolatility -> OTERetracement0618 -> OTEContinuationLong",
+      "ibkr_spy_pnl_ratio_sum": 0.03758052,
+      "ibkr_spy_trade_count": 27,
+      "ratio": 0.618,
+      "tag": "ote_0618"
+    },
+    {
+      "branch_leaf": "OTERetracement0705",
+      "branch_path": "TrendExpansion -> NormalVolatility -> OTERetracement0705 -> OTEContinuationLong",
+      "ibkr_spy_pnl_ratio_sum": 0.01995716,
+      "ibkr_spy_trade_count": 27,
+      "ratio": 0.705,
+      "tag": "ote_0705"
+    },
+    {
+      "branch_leaf": "OTERetracement0786",
+      "branch_path": "TrendExpansion -> NormalVolatility -> OTERetracement0786 -> OTEContinuationLong",
+      "ibkr_spy_pnl_ratio_sum": -0.0044121,
+      "ibkr_spy_trade_count": 32,
+      "ratio": 0.786,
+      "tag": "ote_0786"
+    }
+  ],
+  "current_tvr_blocker_root": "docs/experiments/actionable-regime-confidence/runs/20260512T154536+0800-codex-board-b-tvr-mcp-redacted-health-probe-v1",
+  "decision": {
+    "allowed_feedback_target": "profitability_factor_branch_queue_and_provider_repair_queue_only",
+    "evidence_class": "ote_profitability_branch_contract_with_current_provider_blocker",
+    "failure_reason": "not_six_provider_aq_authority_tvr_rate_limited_and_mixed_provider_results",
+    "nursery_status": "incubation_only",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "factor_family": "OTE trend retracement continuation",
+  "not_board_a_market_state_analysis": true,
+  "owned_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T155014+0800-codex-board-b-ote-branch-continuation-contract-v1",
+  "provider_rows": [
+    {
+      "aq_provider_invoked": true,
+      "failure_reason": "",
+      "local_cache_replay": false,
+      "profit_factor": 1.2609,
+      "provider": "IBKR",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1",
+      "status": "completed_positive_seed",
+      "symbol_context": "SPY 1h",
+      "trade_count": 162
+    },
+    {
+      "aq_provider_invoked": false,
+      "failure_reason": "tvr_tools_list_http_429_rate_limited",
+      "local_cache_replay": false,
+      "profit_factor": "",
+      "provider": "TradingViewRemix/TVR",
+      "provider_data_acquired": false,
+      "provider_requested": true,
+      "provider_unreachable": true,
+      "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T154536+0800-codex-board-b-tvr-mcp-redacted-health-probe-v1",
+      "status": "provider_unreachable_current_rate_limited",
+      "symbol_context": "BTC 1h route",
+      "trade_count": 0
+    },
+    {
+      "aq_provider_invoked": true,
+      "failure_reason": "negative_total_profit",
+      "local_cache_replay": false,
+      "profit_factor": 0.927,
+      "provider": "yfinance/YF",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1",
+      "status": "completed_negative",
+      "symbol_context": "ES 1h",
+      "trade_count": 103
+    },
+    {
+      "aq_provider_invoked": true,
+      "failure_reason": "OperationalException_no_data_found",
+      "local_cache_replay": false,
+      "profit_factor": "",
+      "provider": "Kraken",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1",
+      "status": "aq_job_failed",
+      "symbol_context": "XBTUSD 1h",
+      "trade_count": 0
+    },
+    {
+      "aq_provider_invoked": true,
+      "failure_reason": "zero_trades",
+      "local_cache_replay": false,
+      "profit_factor": 0.0,
+      "provider": "Binance",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1",
+      "status": "completed_zero_trades",
+      "symbol_context": "BTCUSDT 1h",
+      "trade_count": 0
+    },
+    {
+      "aq_provider_invoked": true,
+      "failure_reason": "OperationalException_no_data_found",
+      "local_cache_replay": false,
+      "profit_factor": "",
+      "provider": "Bybit",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1",
+      "status": "aq_job_failed",
+      "symbol_context": "BTCUSDT linear 1h",
+      "trade_count": 0
+    }
+  ],
+  "ratio_correction_note": "If the user's remembered two 0.7x levels differ, replace 0.705/0.786 in the next packet.",
+  "schema_version": "board-b-ote-branch-continuation-contract/v1",
+  "source_seed_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1"
+}

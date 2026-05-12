@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.8799700799999999,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 6.203514191278857,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.55998592,
+    7.0399999999999995e-6,
+    0.44000704
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_SRC_ROOT_CARRY_LONG_220646_20260511T162207.069030000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/autoquant/agent_selected_recorded_mtf_strategy_library_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260511T162207.128278000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_v1/auto-quant/SRC_ROOT_CARRY_LONG_220646/auto_quant_prior_init_SRC_ROOT_CARRY_LONG_220646_20260511T162207.128278000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.55998592,
+        7.0399999999999995e-6,
+        0.44000704
+      ],
+      "bbn_contradiction_after": 0.41410356705882356,
+      "bbn_contradiction_before": 1.2940736470588234,
+      "bbn_contradiction_lift": 0.8799700799999999,
+      "bbn_entropy_after": 0.6860179777505295,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.735863053219597,
+      "bbn_log_loss_before": 6.939377244498454,
+      "bbn_log_loss_delta": 6.203514191278857,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.43997007999999993,
+        -0.000014959999999999999,
+        0.43998504
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "",
+      "n_breakeven": 0,
+      "n_loss": 11,
+      "n_win": 6,
+      "strategy_name": "RegimeTrendCarry",
+      "temper": 0.5,
+      "trade_count": 17
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "temper": 0.5
+}

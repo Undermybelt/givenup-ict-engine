@@ -1,0 +1,8 @@
+target_root_missing_or_incomplete=PASS
+direct_verifier_fail_closed=PASS
+request_verifier_filename_mismatch_recorded=PASS
+no_approval_present=PASS
+no_chain_rerun_without_rows_or_approval=PASS
+accepted_rows_zero=PASS
+strict_full_objective_false=PASS
+update_goal_false=PASS

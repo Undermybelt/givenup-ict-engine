@@ -1,0 +1,10 @@
+PASS decision=us_panel_source_label_equivalence_extension_v1=schema_ready_all_price_roots_confidence_unaccepted
+PASS us_rows_added=245005
+PASS all_price_roots_present=true
+PASS source_confidence_ge_95_count=17766
+PASS verifier_status=blocked
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=false

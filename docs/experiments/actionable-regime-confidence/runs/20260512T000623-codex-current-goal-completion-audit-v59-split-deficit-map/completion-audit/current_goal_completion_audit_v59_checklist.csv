@@ -1,0 +1,9 @@
+requirement,evidence,status,gap
+Board file is the authoritative plan,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,pass,
+Every active regime reaches calibrated 95-99 confidence,Current Cursor full_objective_gate=none; V58 decision update_goal=false,blocked,Strict full objective remains blocked; do not call update_goal.
+Cross-market and cross-timeframe validation,docs/experiments/actionable-regime-confidence/runs/20260511T235815-codex-r6-live-intake-rehydrate-calibration-v1/r6-live-intake-rehydrate-calibration/r6_live_intake_rehydrate_split_metrics_v1.csv,blocked,R6 chronological/symbol/venue split gates are false.
+"Direct Manipulation uses direct event/order-lifecycle rows, not OHLCV proxies",live verifier status=schema_ready_unscored; rows=73/73,pass,
+Direct Manipulation species breadth,docs/experiments/actionable-regime-confidence/runs/20260512T000623-codex-current-goal-completion-audit-v59-split-deficit-map/completion-audit/r6_direct_species_deficit_v59.csv,blocked,Only spoofing/layering label is present; non-spoofing species remain missing.
+"Provider and downstream chain readback: IBKR, TradingViewRemix, yfinance, Kraken, Auto-Quant, pre-Bayes/BBN, CatBoost/path-ranker, execution tree",docs/experiments/actionable-regime-confidence/runs/20260512T000623-codex-current-goal-completion-audit-v59-split-deficit-map/completion-audit/current_goal_completion_audit_v59_commands.csv,partial,"Commands were run, but provider/runtime surfaces remain context only and do not close split/species/R5/R3 gates."
+No proxy signal accepted as completion,r6_pooled_pass=True; split_blocked=True; strict_complete=False,pass,
+Multi-agent safe board updates,board_sha256_at_start=8593cb09cabc29d6b9b99367d6d1f755bb76a939a67eafb7399ced39a7a3fe96; append-only section planned,pass,

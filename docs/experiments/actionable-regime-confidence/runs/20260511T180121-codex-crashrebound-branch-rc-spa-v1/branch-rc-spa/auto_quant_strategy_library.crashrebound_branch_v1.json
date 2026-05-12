@@ -1,0 +1,107 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-11T18:01:21+08:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "34ba6b6",
+  "config_path": "/Users/thrill3r/Auto-Quant/config.json",
+  "validation_errors": [],
+  "timeframe": "1h",
+  "strategies": [
+    {
+      "name": "CrashRebound",
+      "file_path": "/Users/thrill3r/Auto-Quant/versions/0.4.1/strategies/CrashRebound.py",
+      "status": "ok",
+      "metadata": {
+        "strategy": "CrashRebound",
+        "mutation_id": "board-b-crashrebound-branch-rc-spa-v1",
+        "base_factor": "auto_quant_v0.4.1_measured_seed",
+        "hypothesis": "Drawdown rebound recipe requires Board A rooted branch-path proof before promotion.",
+        "expected_regime": "reversal_or_rebound_after_drawdown",
+        "branch_path_source": "auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label",
+        "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation"
+      },
+      "validation_metrics": {
+        "sharpe": 0.29030585729503583,
+        "sortino": 0.31481518684206494,
+        "calmar": 5.247333163194871,
+        "total_profit_pct": 55.69,
+        "max_drawdown_pct": -11.308628954537363,
+        "trade_count": 207,
+        "win_rate_pct": 68.59903381642512,
+        "profit_factor": 1.4160985610749157,
+        "rc_spa": 59.790091923028434,
+        "promotion_level": "reject",
+        "gate_result": "fail:reject_missing_branch_path;reject_missing_required_roots;reject_overfit_risk;reject_cost_fragile;reject_tail_risk"
+      },
+      "per_pair_metrics": {
+        "SOL/USDT": {
+          "sharpe": 0.20157048192190918,
+          "sortino": 0.25400371786272996,
+          "calmar": 4.752877176461955,
+          "total_profit_pct": 32.03,
+          "max_drawdown_pct": -7.180653568224171,
+          "trade_count": 92,
+          "win_rate_pct": 69.56521739130434,
+          "profit_factor": 1.6598380634317504
+        },
+        "BNB/USDT": {
+          "sharpe": 0.08717490694630269,
+          "sortino": 0.12359714925027102,
+          "calmar": 2.450653192495277,
+          "total_profit_pct": 13.82,
+          "max_drawdown_pct": -6.009702404441451,
+          "trade_count": 39,
+          "win_rate_pct": 82.05128205128204,
+          "profit_factor": 1.7476561961002703
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.04139422463176326,
+          "sortino": 0.04480194839988616,
+          "calmar": 0.8577437291253956,
+          "total_profit_pct": 9.84,
+          "max_drawdown_pct": -12.22239527675204,
+          "trade_count": 76,
+          "win_rate_pct": 60.526315789473685,
+          "profit_factor": 1.1472647431176513
+        }
+      },
+      "branch_path_metrics": [
+        {
+          "regime_profit_branch_path": "Bear -> BearMarketCapitulation -> ReboundAttempt -> CrashRebound",
+          "parent_regime_root": "Bear",
+          "branch_path_source": "auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label",
+          "trades": 32,
+          "net_profit_ratio_sum": 0.105628803772774,
+          "mean_profit_ratio": 0.0033009001178991816,
+          "win_rate": 0.6875
+        },
+        {
+          "regime_profit_branch_path": "Bull -> BullPullback -> CapitulationMeanReversionSetup -> CrashRebound",
+          "parent_regime_root": "Bull",
+          "branch_path_source": "auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label",
+          "trades": 159,
+          "net_profit_ratio_sum": 1.2266258671008383,
+          "mean_profit_ratio": 0.007714628094973828,
+          "win_rate": 0.6729559748427673
+        },
+        {
+          "regime_profit_branch_path": "Sideways -> RangeConsolidation -> MeanReversionSetup -> CrashRebound",
+          "parent_regime_root": "Sideways",
+          "branch_path_source": "auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label",
+          "trades": 16,
+          "net_profit_ratio_sum": 0.37840729786559973,
+          "mean_profit_ratio": 0.02365045611659998,
+          "win_rate": 0.8125
+        }
+      ],
+      "pairs": [
+        "SOL/USDT",
+        "AVAX/USDT",
+        "BNB/USDT"
+      ],
+      "timerange": "20210101-20251231",
+      "commit": "34ba6b6",
+      "error": null
+    }
+  ]
+}

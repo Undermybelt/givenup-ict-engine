@@ -1,0 +1,35 @@
+{
+  "run_id": "20260512T071107+0800-codex-r6-order-lifecycle-local-scan-readback-after-070820-v1",
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T070820+0800-codex-r6-order-lifecycle-local-file-scan-after-070737-v1",
+  "source_candidate_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T070820+0800-codex-r6-order-lifecycle-local-file-scan-after-070737-v1/command-output/local_r6_order_lifecycle_candidate_files.csv",
+  "gate_result": "r6_order_lifecycle_local_scan_readback_after_070820_v1=no_required_r6_owner_export_files_no_unlock_no_downstream",
+  "candidate_rows": 280,
+  "unique_paths": 270,
+  "classification_counts": {
+    "historical_regime_context": 1,
+    "indicator_or_script_context": 1,
+    "other_false_positive": 58,
+    "source_code_false_positive": 200,
+    "tomac_symbology_context": 20
+  },
+  "decision_counts": {
+    "code_not_source_owned_data": 200,
+    "not_order_lifecycle_rows": 20,
+    "not_r6_owner_export_controls": 1,
+    "not_required_root_unlock": 58,
+    "not_verifier_native_owner_export": 1
+  },
+  "required_r6_file_names_found": 0,
+  "required_r6_files_present": false,
+  "r6_owner_export_unlock": false,
+  "r5_recency_unlock": false,
+  "r3_native_subhour_unlock": false,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "decision": "The local scan found symbology/context/code false positives only, not verifier-native R6 owner-export rows or controls. No required target root is unlocked."
+}

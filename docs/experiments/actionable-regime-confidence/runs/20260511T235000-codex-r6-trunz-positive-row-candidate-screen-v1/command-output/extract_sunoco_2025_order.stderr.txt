@@ -1,0 +1,1 @@
+GPL Ghostscript 10.05.0: Unrecoverable error, exit code 1

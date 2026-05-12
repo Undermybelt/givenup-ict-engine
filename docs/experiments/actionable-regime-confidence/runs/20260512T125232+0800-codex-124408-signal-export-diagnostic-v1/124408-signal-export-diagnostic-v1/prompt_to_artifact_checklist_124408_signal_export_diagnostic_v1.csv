@@ -1,0 +1,10 @@
+requirement,status,evidence
+derive_from_settled_124408,pass,source_run_root points to 20260512T124408+0800-codex-123227-tomac-trade-density-iteration-v1
+plain_cli_signal_export,blocked,exit_codes all 2 because plain freqtrade CLI loaded remote Binance metadata and hit DNS
+use_synthetic_exchange_path,pass,diagnostic script imports run_tomac.py and uses _build_exchange_with_synthetic_pairs
+entry_signal_presence,pass,trade-direction rows were 150 65 and 1 after Freqtrade conversion
+zero_trade_root_cause,pass,precision.amount=8 under tick-size mode rounded BTC order amounts to 0.0
+precision_fix_probe,pass,in-memory precision amount tick size 1e-8 produced 144 total diagnostic trades
+downstream_chain_consumption,fail_closed,no Pre-Bayes BBN CatBoost execution-tree consumption was run from this diagnostic root
+goal_completion,fail_closed,promotion_allowed=false trade_usable=false update_goal=false
+

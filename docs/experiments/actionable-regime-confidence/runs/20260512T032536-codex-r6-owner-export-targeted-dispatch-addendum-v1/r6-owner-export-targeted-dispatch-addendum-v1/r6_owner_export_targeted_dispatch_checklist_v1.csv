@@ -1,0 +1,14 @@
+requirement,status,evidence,reason
+latest_current_audit_read,pass,031655,current objective still not complete
+source_unlock_read,pass,032155,no new source unlock roots
+requirements_quantified_read,pass,032152,row/control deficits quantified
+route_refresh_read,pass,032258,official route fit refreshed
+dispatch_addendum_ready,pass,this packet,request text and target matrix created
+external_requests_sent,blocked,none,this packet does not send external requests
+rows_acquired,blocked,none,no owner/export rows acquired
+source_owned_normal_controls,blocked,032155 and 032152,source-owned normal controls acquired equals 0
+flip_control_approval,blocked,approval package,explicit FLIP approval absent
+r6_owner_export_root,blocked,/tmp/ict-engine-board-a-r6-owner-export-v1,root absent or incomplete
+canonical_merge,blocked,promotion fields,canonical merge false
+downstream_chain_rerun,blocked,promotion fields,downstream promotion rerun false
+update_goal,blocked,promotion fields,update_goal false

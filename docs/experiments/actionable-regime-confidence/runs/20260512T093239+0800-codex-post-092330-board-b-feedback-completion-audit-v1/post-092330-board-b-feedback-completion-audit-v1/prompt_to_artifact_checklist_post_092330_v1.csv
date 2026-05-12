@@ -1,0 +1,13 @@
+requirement,status,evidence,notes
+"Named Board A plan must stay authoritative","pass_append_only","docs/plans/2026-05-10-actionable-regime-confidence-todo.md","This packet appends only; Current Cursor is not edited."
+"Every active regime reaches >=95% calibrated confidence","blocked","Current Board A tail plus latest post-092330 roots","No latest root adds a regime-confidence packet or accepted rows."
+"Every regime has its own qualifying condition","blocked","Latest post-092330 roots","The roots are nursery/prepare/TOMAC feedback, not per-regime qualifying-condition packets."
+"Other markets, periods, and contexts are validated","blocked","092520/092558/092732/092800/092832 readback","Latest roots are negative or failed nursery runs; no cross-context production validation."
+"Auto-Quant is actually operated","partial_non_promoting","092520 TOMAC run; 092558 prepare/TOMAC; 092800 prepare/TOMAC; 092832 handoff/TOMAC","Auto-Quant surfaces were exercised, but outputs are zero-trade, failed, or prepare-only."
+"ict-engine is actually operated","partial_non_promoting","092800 factor-research and auto-quant-prepare outputs; 092832 factor-research human outputs; 093239 command-output read-only status checks","ict-engine handoff/prepare/status/adoption surfaces ran; workflow-status remains no_workflow_state."
+"IBKR, TradingViewRemix, yfinance, Kraken considered","partial_non_promoting","091715 provider runtime gate","yfinance and Kraken CLI usable; TradingViewRemix false; IBKR gateway reachable but market-data false."
+"Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree promotion chain is evidenced","blocked","Current Board A tail and latest roots","No source/control unlock or explicit selected history, so no authorized promotion rerun."
+"Explicit selected-history user choice exists","missing","092249 decision request and current board tail","Available options remain HTF/MTF/LTF; no explicit user selection is recorded."
+"R6/R5/R3 source/control unlock exists","missing","091245/091346/091850 reconciliations and current board tail","No owner-approved R6/R5/R3 rows, no FLIP approval, and 091850 is stale/board-only."
+"No proxy signal is promoted as completion","pass","post_092330_board_b_feedback_completion_audit_v1.json","All latest roots are classified non-promoting."
+"update_goal is allowed","fail_closed","post_092330_board_b_feedback_completion_audit_v1.json","Objective is not complete; update_goal=false."

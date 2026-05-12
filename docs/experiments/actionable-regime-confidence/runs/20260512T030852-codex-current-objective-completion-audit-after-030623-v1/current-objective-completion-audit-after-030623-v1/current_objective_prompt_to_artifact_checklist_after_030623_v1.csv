@@ -1,0 +1,15 @@
+requirement,status,evidence,decision
+active_objective_rested,pass,Board A current objective requires every-regime confidence plus source/control and downstream evidence,no_promotion
+030617_verifier_present,pass,R6 owner-export target verifier exists and is blocked missing required files,no_promotion
+030623_poll_present,pass,Source-control arrival poll exists and reports no new R6/R3/R5 source-control or approval,no_promotion
+r6_owner_export_root,blocked,/tmp/ict-engine-board-a-r6-owner-export-v1 absent,no_promotion
+r3_native_subhour_source_label_root,blocked,/tmp/ict-engine-native-subhour-source-label-intake absent,no_promotion
+r5_source_panel_recency_extension_root,blocked,/tmp/ict-engine-source-panel-recency-extension absent,no_promotion
+explicit_flip_or_owner_control_approval,blocked,approval_present false and flip_controls_accepted_under_current_contract false,no_promotion
+every_regime_95_confidence,blocked,no new confidence gate after 030617/030623,no_promotion
+per_regime_qualifying_conditions,blocked,no new accepted per-regime packet after 030617/030623,no_promotion
+cross_market_cycle_context_validation,blocked,no new accepted cross-axis validation after 030617/030623,no_promotion
+canonical_merge,blocked,canonical_merge_allowed false,no_merge
+downstream_promotion_rerun,blocked,downstream_promotion_rerun_allowed false,no_rerun
+trade_usable,blocked,trade_usable false,no_trade
+update_goal,blocked,update_goal false,no_goal_update

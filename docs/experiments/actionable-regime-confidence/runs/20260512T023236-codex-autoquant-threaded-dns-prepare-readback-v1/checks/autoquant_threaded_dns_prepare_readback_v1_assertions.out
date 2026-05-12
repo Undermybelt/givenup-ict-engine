@@ -1,0 +1,17 @@
+prepare_exit_zero=PASS
+status_after_dependency_ready_seed_required=PASS
+healthy_after_true=PASS
+data_ready_after_true=PASS
+prepared_data_file_count_15=PASS
+next_autoquant_blocker_seed_strategies_required=PASS
+accepted_rows_zero=PASS
+new_confidence_gate_false=PASS
+canonical_merge_false=PASS
+downstream_rerun_false=PASS
+strict_objective_false=PASS
+update_goal_false=PASS
+runtime_code_changed_false=PASS
+shared_intake_mutated_false=PASS
+r3_r5_r6_roots_mutated_false=PASS
+raw_data_committed_false=PASS
+trade_usable_false=PASS

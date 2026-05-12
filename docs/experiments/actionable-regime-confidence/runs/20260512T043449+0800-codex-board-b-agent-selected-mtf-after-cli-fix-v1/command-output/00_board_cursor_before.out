@@ -1,0 +1,17 @@
+## Current Cursor
+
+| Field | Current Value | Update Rule |
+|---|---|---|
+| board_state | rejected | `waiting_for_board_a`, `active`, `research_watch`, `stable_candidate`, `pilot_candidate`, `rejected`, `blocked` |
+| last_loop_id | 20260512T034002+0800-codex-board-b-nq-cost-crisis-repair-v3-downstream-combined-v1 | Use timestamp or run id |
+| accepted_regime_id | BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation | Must come from Board A |
+| accepted_regime_artifact | `docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv` | Path to Board A packet |
+| auto_quant_recipe | `NQRootAdaptiveCostCrisisRepairV3` passed all four price roots plus `205047` scoped Manipulation component; combined cleanwire/exact-branch/CatBoost readback still rejected promotion | Recipe id, hash, or artifact path |
+| backtest_run_root | `docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3` | Use `/tmp/...` or `/private/tmp/...` |
+| stable_profit_score | 90.0000 | RC-SPA score from 0 to 100 |
+| hard_gate_result | fail:downstream_closed_loop_not_promotable | `pass` or `fail:<reason>` |
+| downstream_consumption | execution_tree:fail_closed | `not_started`, `pre_bayes`, `bbn`, `catboost`, `execution_tree`, `feedback_updated` |
+| blocker | `034002/downstream-combined-v1` repaired the cleanwire/branch-path split and trained CatBoost, but promotion is still fail-closed: wire-fixed ingest applied `15,415/15,415` with `0` invalid rows, aggregate bundle exported all `5` exact rooted paths, CatBoost trained/applied/registered/enabled with `5` candidate-set matches, but Pre-Bayes stayed `observe_only`, path-ranker validation stayed `0/30` production and `0/30` observation, execution-candidate stayed `execution_blocked`, and workflow still requires explicit `user_selected_historical_data` | Single blocking reason |
+| next_action | Obtain an explicit user-selected historical data path for `032157` from the combined state, then run the workflow-deferred factor-research / structural-feedback path to create mature branch observations before another promotion check; do not promote from RC-SPA or CatBoost candidate-set raw scores | Keep exactly one next action |
+
+## Root-First Profit Factor Contract

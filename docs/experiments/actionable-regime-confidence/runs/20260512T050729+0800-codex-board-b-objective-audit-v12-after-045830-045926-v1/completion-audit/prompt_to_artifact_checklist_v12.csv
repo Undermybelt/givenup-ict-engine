@@ -1,0 +1,17 @@
+requirement,evidence,verdict
+authoritative_board_append_only,"Board B markdown contains 045830/045926 terminal readbacks and v11 fail-closed audit rows",pass
+current_cursor_promotable,"Current Cursor remains rejected at 034002 with blocker requiring user_selected_historical_data",fail
+rooted_branch_path_visible,"044611 enriched 15415/15415 rows with rooted branch fields; diagnostic only",partial
+explicit_user_historical_data_selection,"No explicit user choice among HTF=1d MTF=4h LTF=1h",fail
+fresh_selected_data_auto_quant_training,"050430 copied-state Auto-Quant missing_dependency/not bootstrapped; no fresh selected-data run",fail
+nonzero_mature_rooted_observations,"CatBoost/path-ranker validation remains 0/30 and no mature selected observations exist",fail
+pre_bayes_branch_admission,"Pre-Bayes latest gate observe_only",fail
+bbn_branch_application,"BBN branch paths visible/read-only but application skipped",fail
+catboost_validation_ready,"candidate matching diagnostic only; validation remains 0/30",fail
+execution_candidate_ready,"execution candidate blocked and execution tree not trade-usable",fail
+source_confidence_043932_044701_045926,"source-label scans scored 248440 rows but accepted zero confidence-95 labels",fail
+extra_trees_045830,"045830 exit 143 stdout 0 screen_completed=false scored_rows=0",fail
+r3_native_subhour_source_rows,"044947 found no source-owned AAPL/IXIC native sub-hour rows",fail
+provider_coverage,"yfinance ready and Kraken CLI ready; IBKR dependency-unhealthy; TradingView MCP failed",partial
+multi_agent_safety,"duplicate/concurrent readbacks treated count-once; no output overwritten by this audit",pass
+goal_complete,"selected-data and downstream promotion evidence missing",fail

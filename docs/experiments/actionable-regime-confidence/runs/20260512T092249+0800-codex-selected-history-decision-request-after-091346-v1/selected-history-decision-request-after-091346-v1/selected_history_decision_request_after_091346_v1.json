@@ -1,0 +1,17 @@
+{
+  "canonical_merge": false,
+  "decision_options": [
+    "HTF",
+    "MTF",
+    "LTF"
+  ],
+  "downstream_promotion_rerun": false,
+  "explicit_user_selected_history": false,
+  "gate_result": "selected_history_decision_request_after_091346_v1=awaiting_explicit_htf_mtf_ltf_selection",
+  "promotion_allowed": false,
+  "run_id": "20260512T092249+0800-codex-selected-history-decision-request-after-091346-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

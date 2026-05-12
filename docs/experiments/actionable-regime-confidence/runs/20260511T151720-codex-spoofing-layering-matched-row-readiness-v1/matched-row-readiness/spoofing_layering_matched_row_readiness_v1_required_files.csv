@@ -1,0 +1,4 @@
+required_file,required,status,minimum_fields,accepted_source_types
+positive_spoofing_layering_rows.csv,True,missing,"label, source_report, trade_date, symbol, venue_or_market_center, side, earliest_order_received_time, latest_order_received_time, order_count, total_order_quantity, activity_description, matched_negative_group_id, source_row_id",FINRA/CAT/venue/surveillance/exported order-lifecycle rows; not enforcement-case prose
+matched_negative_normal_activity_rows.csv,True,missing,same schema as positives; matched venue/symbol/date/session/liquidity bucket; normal activity label,same source/export family as positives or venue-owned normal control export
+provenance_manifest.json,True,missing,"source owner, export identity, pull date, redaction notes, row counts, schema version",source-owned export provenance

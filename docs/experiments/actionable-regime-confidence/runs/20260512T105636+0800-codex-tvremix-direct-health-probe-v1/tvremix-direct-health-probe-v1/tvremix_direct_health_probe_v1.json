@@ -1,0 +1,32 @@
+{
+  "config": {
+    "api_key_present": true,
+    "credential_source": "local_config",
+    "local_config_exists": true,
+    "url_host": "tvremix.xyz",
+    "url_present": true
+  },
+  "decision": "tvr_not_healthy_for_board_gate",
+  "gate": "tvremix_direct_health_probe_v1",
+  "generated_at": "2026-05-12T02:56:38.124643+00:00",
+  "probes": {
+    "get_ohlcv_QQQ_1d_10": {
+      "body_prefix": "{\"error\": \"Rate limit exceeded. Retry after 200s.\"}",
+      "content_type": "application/json",
+      "elapsed_sec": 1.175,
+      "http_status": 429,
+      "ok_http": false
+    },
+    "tools_list": {
+      "body_prefix": "{\"error\": \"Rate limit exceeded. Retry after 201s.\"}",
+      "content_type": "application/json",
+      "elapsed_sec": 1.421,
+      "http_status": 429,
+      "ok_http": false
+    }
+  },
+  "promotion_allowed": false,
+  "run_id": "20260512T105636+0800-codex-tvremix-direct-health-probe-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T105636+0800-codex-tvremix-direct-health-probe-v1",
+  "update_goal": false
+}

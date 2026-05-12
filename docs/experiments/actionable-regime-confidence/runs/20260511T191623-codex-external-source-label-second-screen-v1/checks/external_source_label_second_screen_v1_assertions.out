@@ -1,0 +1,5 @@
+PASS decision=external_source_label_second_screen_v1=no_promotable_source_label_equivalence
+PASS accepted_rows_added=0
+PASS full_other_market_source_label_equivalence=false
+PASS update_goal=false
+PASS raw_data_committed=false

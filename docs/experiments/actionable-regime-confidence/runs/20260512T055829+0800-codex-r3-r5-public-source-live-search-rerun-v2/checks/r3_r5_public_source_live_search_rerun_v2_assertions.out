@@ -1,0 +1,13 @@
+gate_result=r3_r5_public_source_live_search_rerun_v2=no_exact_r3_r5_rows_no_promotion
+json_exists=True
+md_exists=True
+summary_csv_exists=True
+kaggle_rows=2
+huggingface_rows=0
+candidate_file_rows=33
+compatible_source_rows_found=false
+target_root_mutated=false
+canonical_merge=false
+downstream_promotion_rerun=false
+trade_usable=false
+update_goal=false

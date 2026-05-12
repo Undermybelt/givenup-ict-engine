@@ -1,0 +1,6 @@
+root_class,source_root_class,state,accepted_95,calibration_support,calibration_lcb,test_support,test_lcb,test_coverage,blockers,rule
+BullExpansion,Bull,blocked,False,1498,0.9623196841049471,2210,0.9662239127370376,0.037324145851277635,calibration_coverage_below_0_03,close_drawdown60 >= 0 AND volatility <= 0.152179344579
+BearExpansion,Bear,blocked,False,2548,0.7504657526410464,2545,0.8367203533458685,0.04298187836719528,calibration_wilson95_below_0_95;test_wilson95_below_0_95;ece_above_0_05,ret20 <= -0.043667898623 AND vix >= 29.5200004578
+SidewaysConsolidation,Sideways,blocked,False,2166,0.7277929561967755,1681,0.7453850364867555,0.028389995102261405,calibration_wilson95_below_0_95;test_wilson95_below_0_95;test_coverage_below_0_03,ret20 <= 0.00252597008559 AND vol20_mean <= 0.129492491459
+CrisisCrash,not_evaluated_in_kaggle_readback,preserved_from_v3_crosswalk_not_reissued,True,,,,,,,preserved_from_20260511T033945_CrisisCrash_readback
+Manipulation,not_evaluated,missing_required_inputs,False,,,,,,missing_required_direct_event_order_lifecycle_inputs,Kaggle stock-market regime labels are not direct manipulation evidence

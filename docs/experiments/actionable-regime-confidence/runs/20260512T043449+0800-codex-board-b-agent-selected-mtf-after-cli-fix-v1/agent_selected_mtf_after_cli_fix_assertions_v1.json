@@ -1,0 +1,22 @@
+{
+  "board_cursor_should_advance": false,
+  "user_selected_historical_data_satisfied": false,
+  "selected_option": "agent_selected_mtf_4h_diagnostic_only",
+  "factor_research_exit": 0,
+  "auto_quant_status_before_exit": 0,
+  "auto_quant_status_after_exit": 0,
+  "data_ready": true,
+  "dependency_ready_data_ready": true,
+  "auto_quant_active_strategy_count": 1,
+  "auto_quant_run_tomac_executed": false,
+  "copied_state_tmp_path": "/tmp/20260512T043449+0800-codex-board-b-agent-selected-mtf-after-cli-fix-v1/state_mtf_after_cli_fix_v1",
+  "workspace_paths_are_tmp_local": false,
+  "shared_combined_state_workspace_referenced": true,
+  "pre_bayes_rerun": false,
+  "bbn_posterior_accepted": false,
+  "catboost_path_ranker_rerun": false,
+  "execution_tree_rerun": false,
+  "mature_rooted_observations": 0,
+  "promotion_allowed": false,
+  "update_goal": false
+}

@@ -1,0 +1,28 @@
+{
+  "can_rerun_manipulation_95_gate_now": false,
+  "crosswalk_materialized": true,
+  "fresh_calibration_rerun": false,
+  "manipulation_input_state": "missing_required_inputs",
+  "missing_95": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "Manipulation",
+    "TransitionRecovery"
+  ],
+  "prior_accepted_95": [
+    "CrisisStress"
+  ],
+  "root_axis": [
+    "BullExpansion",
+    "BearExpansion",
+    "Consolidation",
+    "Manipulation",
+    "CrisisStress",
+    "TransitionRecovery",
+    "UnknownOrMixed"
+  ],
+  "runtime_code_changed": false,
+  "schema_materialized": true,
+  "thresholds_relaxed": false
+}

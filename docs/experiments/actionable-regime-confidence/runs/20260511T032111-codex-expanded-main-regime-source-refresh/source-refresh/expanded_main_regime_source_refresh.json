@@ -1,0 +1,54 @@
+{
+  "run_id": "20260511T032111+0800-codex-expanded-main-regime-source-refresh",
+  "result": "blocked_taxonomy_refresh_only_no_new_95",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "fresh_calibration_rerun": false,
+  "trade_usable": false,
+  "active_roots": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "CrisisStress",
+    "Manipulation",
+    "UnknownOrMixed"
+  ],
+  "candidate_preflight_roots": [
+    "TransitionRecovery",
+    "BubbleEuphoria",
+    "VolatilityDislocation",
+    "LiquidityDrought",
+    "CrossAssetRotation"
+  ],
+  "accepted_95_roots_from_this_scan": [],
+  "preserved_prior_provenance": [
+    "CrisisStress"
+  ],
+  "missing_required_roots_after_refresh": [
+    "BullExpansion",
+    "BearExpansion",
+    "SidewaysConsolidation",
+    "Manipulation"
+  ],
+  "manipulation_gate": "direct_input_required_ohlcv_proxy_fail_closed",
+  "sources": [
+    "https://ideas.repec.org/a/jae/japmet/v18y2003i1p23-46.html",
+    "https://doi.org/10.2307/1392140",
+    "https://doi.org/10.1111/j.1468-0297.2004.00962.x",
+    "https://doi.org/10.2307/1912559",
+    "https://doi.org/10.1093/rfs/15.4.1137",
+    "https://arxiv.org/abs/2007.14874",
+    "https://github.com/hmmlearn/hmmlearn",
+    "https://github.com/hidden-regime/hidden-regime",
+    "https://doi.org/10.1016/j.sigpro.2019.107299",
+    "https://github.com/deepcharles/ruptures",
+    "https://arxiv.org/abs/2309.15383",
+    "https://arxiv.org/abs/1811.10109",
+    "https://doi.org/10.1186/s40163-018-0093-5",
+    "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+    "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+    "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036",
+    "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2780579",
+    "https://arxiv.org/abs/2504.15908"
+  ]
+}

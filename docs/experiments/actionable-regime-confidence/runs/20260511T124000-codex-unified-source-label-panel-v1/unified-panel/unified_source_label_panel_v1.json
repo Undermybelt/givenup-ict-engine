@@ -1,0 +1,85 @@
+{
+  "artifact_type": "unified_source_label_panel_v1",
+  "coverage_audit": {
+    "all_active_price_roots_represented": true,
+    "confidence_gate_claimed": false,
+    "full_objective_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "manipulation_represented": false,
+    "remaining_blockers": [
+      "Bull/Bear/Crisis crosswalk rows are source-label windows, not held-out confidence gates.",
+      "Sideways dated windows are scoped to existing Yahoo 1d/1w accepted gate only.",
+      "Unsupported intraday/monthly/full-species Sideways cells remain abstained.",
+      "Broader index families, commodities, volatility, and crypto full-species projections still need exact sources or explicit crosswalk decisions.",
+      "Manipulation remains a separate direct-event/order-flow/order-lifecycle class and is not represented in this price-root panel."
+    ]
+  },
+  "generated_at_utc": "2026-05-11T04:39:38.913836+00:00",
+  "guardrails": {
+    "future_or_target_predictors_used": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_board_modified": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "inputs": {
+    "approved_crosswalk_slots": "docs/experiments/actionable-regime-confidence/runs/20260511T122933-codex-source-window-crosswalk-decision-v1/source-window-crosswalk/approved_source_window_slots_v1.csv",
+    "approved_crosswalk_slots_sha256": "b0e84671ce994b0c4979b1a841cea2041422d488c5b6c262e8b35ff8b79bdf35",
+    "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+    "board_sha256_at_run": "ddb0f825a9c809e77da52e1189169f46a2c4c15aba98fac1e34cb064fe3597d1",
+    "sideways_windows": "docs/experiments/actionable-regime-confidence/runs/20260511T123500-codex-sideways-dated-window-materialization-v1/sideways-windows/sideways_dated_windows_v1.csv",
+    "sideways_windows_sha256": "1a3741cc2e5ad5b3c2dd36f720c7ec0d2af2bff5913a5db88c54165ea961274b",
+    "source_window_seed": "docs/experiments/actionable-regime-confidence/runs/20260511T120900-codex-exportable-source-scan/source-scan/source_window_seed_v1.csv",
+    "source_window_seed_sha256": "9ff522b5ab4dcc41e4adc9e6b53ce4dfbdb068140359c2f5d98266909d946bc3"
+  },
+  "next_action": "Run targeted calibration using this unified panel only where source-label windows and bar data overlap; abstain all unsupported cells.",
+  "panel": {
+    "by_instrument": {
+      "BNB-USD": 36,
+      "BTC-USD": 68,
+      "EEM": 11,
+      "EFA": 66,
+      "ES=F": 77,
+      "ETH-USD": 21,
+      "GLD": 69,
+      "HYG": 138,
+      "IWM": 33,
+      "QQQ": 23,
+      "SOL-USD": 1,
+      "SPY": 137,
+      "TLT": 82,
+      "^GSPC": 77
+    },
+    "by_root": {
+      "Bear": 84,
+      "Bull": 84,
+      "Crisis": 63,
+      "Sideways": 608
+    },
+    "by_scope_tier": {
+      "s_and_p_500_tradable_proxy": 154,
+      "same_underlying_calendar_window": 77,
+      "scoped_existing_yahoo_gate_1d_1w": 608
+    },
+    "by_source_type": {
+      "sideways_scoped_dated_window": 608,
+      "source_window_crosswalk": 231
+    },
+    "by_timeframe": {
+      "15m": 33,
+      "1d": 442,
+      "1h": 33,
+      "1m": 33,
+      "1mo": 33,
+      "1w": 166,
+      "30m": 33,
+      "4h": 33,
+      "5m": 33
+    },
+    "crosswalk_source_windows": 231,
+    "csv": "docs/experiments/actionable-regime-confidence/runs/20260511T124000-codex-unified-source-label-panel-v1/unified-panel/unified_source_label_panel_v1.csv",
+    "sideways_scoped_dated_windows": 608,
+    "total_label_windows": 839
+  },
+  "run_id": "20260511T124000+0800-codex-unified-source-label-panel-v1"
+}

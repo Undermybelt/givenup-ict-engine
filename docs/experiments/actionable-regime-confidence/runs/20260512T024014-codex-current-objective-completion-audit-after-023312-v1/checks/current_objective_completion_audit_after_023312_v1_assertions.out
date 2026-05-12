@@ -1,0 +1,17 @@
+PASS run_id
+PASS objective_restated
+PASS prompt_to_artifact_checklist_present
+PASS autoquant_seed_run_evidence_present
+PASS autoquant_run_exit_zero
+PASS autoquant_data_ready_true
+PASS accepted_rows_zero
+PASS new_confidence_gate_false
+PASS r6_owner_export_absent
+PASS native_subhour_absent
+PASS recency_extension_absent
+PASS flip_approval_false
+PASS canonical_merge_false
+PASS downstream_rerun_false
+PASS strict_objective_false
+PASS update_goal_false
+PASS proxy_evidence_not_promoted

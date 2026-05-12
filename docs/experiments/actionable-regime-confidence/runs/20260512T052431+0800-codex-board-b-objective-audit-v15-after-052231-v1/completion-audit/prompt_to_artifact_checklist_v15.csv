@@ -1,0 +1,11 @@
+requirement,evidence,status
+named_board_b_ledger,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md hash 15e0b23f82b2601f87f52695c90cf7024020116a77bf4e296ab7188c9b74642a,satisfied_for_this_audit
+multi_agent_append_only,new run root plus one Board B append; active 051844 and cargo processes not counted,satisfied_for_this_audit
+explicit_user_selected_timeframe,"no exact selection of HTF=1d or MTF=4h or LTF=1h",blocked
+fresh_selected_data_auto_quant,no post-selection selected-data Auto-Quant/factor-research packet,blocked
+nonzero_mature_rooted_observations,no nonzero mature selected rooted branch observations,blocked
+ordered_branch_path_chain,no selected rooted branch promotion through Pre-Bayes/filter -> BBN -> CatBoost/path-ranker -> execution tree,blocked
+providers_exercised,"051153 yfinance/Kraken/IBKR/TradingViewMCP reachability only; TradingView harness exit 1",partial_non_promoting
+source_control_unlock,"051815/051909/052020/052102 no unlock; 051910 route only; 052231 request text only",blocked
+no_proxy_only_promotion,post-v14 evidence remains non-promoting with update_goal=false,satisfied_fail_closed
+completion_allowed,strict_full_objective=false promotion_allowed=false update_goal=false,blocked

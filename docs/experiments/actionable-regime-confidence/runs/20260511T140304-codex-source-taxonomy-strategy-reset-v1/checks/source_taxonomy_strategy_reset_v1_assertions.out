@@ -1,0 +1,14 @@
+run_id=20260511T140304+0800-codex-source-taxonomy-strategy-reset-v1
+cursor_seen_before_final_board_write=20260511T140042+0800-codex-positive-regime-factor-index-v1
+strategy_reset=true
+preserved_recent_positive_rows=38
+accepted_confidence_gate_added=false
+accepted_95_roots_added=0
+accepted_direct_manipulation_rows_added=0
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+next_positive_slice=nasdaq100_grade_source_relation_before_more_nq_qqq_calibration
+assertion_status=PASS

@@ -1,0 +1,5 @@
+source,positive_rows,matched_negative_rows,accepted_into_canonical_intake
+v55_versioned_csv_after_excluding_prior_sidecars,57,57,False
+sarao_sidecar,6,6,False
+nowak_smith_sidecar,6,6,False
+thakkar_active_sidecar,4,4,False

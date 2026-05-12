@@ -1,0 +1,11 @@
+source_snapshot_verifier_ok=ok
+staging_verifier_ok=ok
+live_verifier_ok=ok
+positive_rows_73=ok
+matched_negative_rows_73=ok
+pooled_wilson95_passed=ok
+chronological_split_still_blocked=ok
+heldout_symbol_still_blocked=ok
+heldout_venue_still_blocked=ok
+strict_full_objective_not_complete=ok
+update_goal_false=ok

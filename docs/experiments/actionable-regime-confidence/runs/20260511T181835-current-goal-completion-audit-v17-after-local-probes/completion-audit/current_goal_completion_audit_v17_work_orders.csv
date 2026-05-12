@@ -1,0 +1,5 @@
+priority,gap,next_artifact,acceptance
+P0,source_label_equivalence_across_other_species,fulfill_source_label_equivalence_request_v1,source-owned or owner-approved MainRegimeV2 labels for QQQ/NQ/NDX/futures/crypto/FX; no OHLCV promotion
+P0,source_panel_recency_after_2026_01_30,source_panel_recency_extension_rows_verified_v1,"post-2026-01-30 source-owned rows pass recency verifier, then unchanged gates rerun"
+P1,native_subhour_source_overlap,native_subhour_overlap_after_recency_v1,source-owned labels overlap provider-native subhour rows before calibration
+P2,direct_manipulation_full_species_with_matched_negatives,direct_manipulation_row_intake_verified_v1,source-owned positives plus matched negatives pass verifier and unchanged direct calibration gate

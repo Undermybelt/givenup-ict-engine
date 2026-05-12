@@ -1,0 +1,46 @@
+{
+  "decision_hint_raw": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.452|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.9941 mtf_entry_alignment=0.8718",
+  "decision_summary": "Observe only",
+  "direction": "Bear",
+  "entry_state": "medium",
+  "evidence": [
+    "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+    "multi_timeframe_missing=1m,5m,30m,4h",
+    "15m:719 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json"
+  ],
+  "execution_triage": {
+    "branch": "transition_guardrail",
+    "branch_probability": 0.0,
+    "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/not_ready",
+    "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+    "execution_bias": "guarded",
+    "execution_score": 0.5273103517605424,
+    "gate_status": "observe",
+    "one_line": "execution observe | branch=transition_guardrail | bias=guarded | score=0.527 | confidence=0.000 | hint=execution_guarded_due_to_high_transition_hazard",
+    "posterior_uncertainty": 1.0,
+    "reason_summary": [
+      "branch=block_crowded (gate_status=blocked, readiness 0.3039 < 0.45)",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.673",
+      "market_state=volatility=NormalVol:0.757 liquidity=HighLiquidity:0.601 structure=Trending:1.000 behavior=RiskOff:0.550",
+      "market_state=rationale=volatility=NormalVol conf=0.76",
+      "market_state=rationale=liquidity=HighLiquidity conf=0.60"
+    ]
+  },
+  "next_command": "ask-user: Before using historical data for BOARD_A_TVR_BTC_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_TVR_BTC_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'",
+  "next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol BOARD_A_TVR_BTC_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'",
+    "prompt": "Before using historical data for BOARD_A_TVR_BTC_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json",
+    "user_input_required": true
+  },
+  "pre_bayes_gate": "pass_neutralized",
+  "recommended_next_actions": [
+    "ask-user: Before using historical data for BOARD_A_TVR_BTC_193417 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_TVR_BTC_193417 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/data/BOARD_A_TVR_BTC_193417/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T193417+0800-codex-long-horizon-provider-backed-full-chain-v1/state'"
+  ],
+  "risks": [
+    "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+  ]
+}

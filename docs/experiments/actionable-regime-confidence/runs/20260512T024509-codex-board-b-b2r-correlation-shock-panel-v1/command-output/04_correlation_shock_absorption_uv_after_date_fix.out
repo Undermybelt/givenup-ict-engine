@@ -1,0 +1,4 @@
+RUN_ROOT=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1
+REPORT=/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024509-codex-board-b-b2r-correlation-shock-panel-v1/branch-rc-spa/correlation_shock_absorption_rc_spa_report_v1.json
+SELECTED_ROWS=88
+ROOTS=Bull,Bear,Sideways,Crisis

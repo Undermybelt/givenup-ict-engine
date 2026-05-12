@@ -1,0 +1,39 @@
+{
+  "run_id": "20260512T053751-codex-052301-macro-final-process-readback-v1",
+  "gate_result": "052301_macro_final_process_readback_v1=process_exited_artifacts_unchanged_non_counting_no_promotion",
+  "board_hash_before_writeback": "b915e15f19a3d590407f7387edfb5a3aadc18c800f852450e50e3ae1decc7b47",
+  "source_run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T052301-codex-source-label-macro-context-rule-miner-v1",
+  "process_readback": {
+    "command": "ps -p 93472,93788 -o pid,ppid,stat,etime,%cpu,%mem,command",
+    "active_rows": 0,
+    "pids_checked": [93472, 93788]
+  },
+  "source_artifacts": {
+    "report": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052301-codex-source-label-macro-context-rule-miner-v1/source-label-macro-context-rule-miner-v1/source_label_macro_context_rule_miner_v1.md",
+      "sha256": "c26804dcb754b8738c6816240dea2751400874a961bfc6669f05dc20b2b4a4ac"
+    },
+    "json": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052301-codex-source-label-macro-context-rule-miner-v1/source-label-macro-context-rule-miner-v1/source_label_macro_context_rule_miner_v1.json",
+      "sha256": "6e57e54dedea2bfa2f8c0e9e13a93b41b6318ff4208524d0f53809852094f3c5"
+    },
+    "assertions": {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052301-codex-source-label-macro-context-rule-miner-v1/checks/source_label_macro_context_rule_miner_v1_assertions.out",
+      "sha256": "5f99725a2d7c34979160770788f4bd2d19bf4576e996e537caae622278da33e1"
+    }
+  },
+  "source_gate_result": "source_label_macro_context_rule_miner_v1=aborted_nonterminal_superseded_no_evidence",
+  "row_count": 0,
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "counting_rule": "Count this readback once as stale process-status closure only; do not count it as a confidence packet or promotion evidence."
+}

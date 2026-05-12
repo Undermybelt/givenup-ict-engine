@@ -1,0 +1,51 @@
+{
+  "run_id": "20260512T033334-codex-autoquant-local-cache-tomac-resolver-readback-after-033216-v1",
+  "generated_at_local": "2026-05-12T03:33:34+08:00",
+  "board_sha256_before_artifact": "0d57e17c4c9b86ac515aa39c7c2857a8657e687e8d7771ce5236ee8bf6cb8bc5",
+  "gate_result": "autoquant_local_cache_tomac_resolver_readback_after_033216_v1=local_cache_backtest_succeeded_resolver_diagnosed_no_board_a_promotion",
+  "source_evidence": {
+    "local_cache_tomac_run": {
+      "run_id": "20260512T033215-codex-autoquant-local-cache-tomac-readback-after-032835-v1",
+      "exitcode": 0,
+      "strategy": "TomacNQ_KillzoneBreakout",
+      "pair": "QQQ/USD",
+      "timeframe": "1h",
+      "informative_timeframe": "4h",
+      "backtest_from": "2024-06-13 23:00:00",
+      "backtest_to": "2025-12-30 20:00:00",
+      "trades": 74,
+      "win_rate_pct": 52.7027,
+      "total_profit_pct": 6.98,
+      "sharpe": 0.2207,
+      "sortino": 0.3825,
+      "calmar": 5.6268,
+      "max_drawdown_pct": -4.2049,
+      "profit_factor": 1.2501
+    },
+    "resolver_diagnostic": {
+      "run_id": "20260512T033216-codex-autoquant-aiodns-resolver-diagnostic-after-032658-v1",
+      "gate_result": "autoquant_aiodns_resolver_diagnostic_after_032658_v1=threaded_resolver_reaches_binance_aiodns_loopback_fails_prepare_still_no_promotion",
+      "socket_getaddrinfo_reached_binance": true,
+      "curl_reached_binance": true,
+      "aiodns_nameserver": "127.0.0.1",
+      "aiodns_failed": true,
+      "threaded_resolver_reached_binance": true,
+      "prepare_still_failed_without_workaround": true
+    }
+  },
+  "board_a_acceptance": {
+    "accepted_regime_confidence_added": false,
+    "per_regime_qualifying_conditions_added": false,
+    "cross_market_cycle_timeframe_validation_added": false,
+    "source_owned_normal_controls_acquired": 0,
+    "r6_owner_export_root_complete": false,
+    "r3_native_subhour_source_label_root_complete": false,
+    "r5_source_panel_recency_extension_root_complete": false,
+    "canonical_merge_allowed": false,
+    "downstream_promotion_rerun_allowed": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "decision": "not_complete"
+}

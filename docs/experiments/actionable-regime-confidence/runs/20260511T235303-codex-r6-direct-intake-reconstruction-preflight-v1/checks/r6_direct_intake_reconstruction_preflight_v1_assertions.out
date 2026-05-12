@@ -1,0 +1,14 @@
+run_id=20260511T235303-codex-r6-direct-intake-reconstruction-preflight-v1
+board_sha256_at_start=f8125e5fb23a327baf5be3a20678e5c060f17a2a36de944130adb8aeeba8138f
+canonical_live_intake_exists=true
+direct_verifier_blocked_missing_required_files=false
+durable_snapshot_files_count=12
+row_generation_scripts_count=94
+unique_proposed_positive_rows=34
+pooled_what_if_wilson95_pass=true
+provider_downstream_all_zero=true
+shared_intake_mutated=false
+accepted_rows_added=0
+strict_full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

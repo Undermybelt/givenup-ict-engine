@@ -1,0 +1,165 @@
+{
+  "assertions": {
+    "approved_dispatch_channel_present": false,
+    "canonical_merge": false,
+    "current_r6_required_package_complete": false,
+    "dispatch_ticket_export_license_provenance_present": false,
+    "downstream_promotion_rerun": false,
+    "legacy_r6_required_package_complete": false,
+    "owner_data_cli_ready": false,
+    "owner_data_env_names_present_count": 0,
+    "post_083703_dispatch_candidate_files": 0,
+    "post_083703_dropzone_candidates": 0,
+    "promotion_allowed": false,
+    "r3_native_subhour_root_present": true,
+    "r5_recency_root_present": false,
+    "selected_data_autoquant_promotion": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "valid_required_root_unlock": false
+  },
+  "board_a_sha256_before_artifact": "c2aa65620adc4785a775688541f4b844ca660e2f452c18bf49ff74ba2ca86615",
+  "board_b_sha256_before_artifact": "b699f4e6685a0683d29683c005bee685497dc8e01828477de2d9f8656eed8369",
+  "decision": "No post-083703 owner/export or approved dispatch evidence was acquired. The required R6 owner-export package is still incomplete or absent, R5 recency roots are absent, R3 native-subhour roots remain present but non-unlocking, and dispatch remains without ticket/export/license provenance.",
+  "dispatch_candidate_files_after_cutoff": [],
+  "dispatch_drafts": [
+    {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "sent_or_receipt_text_present": false,
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b",
+      "status": "draft_not_sent",
+      "ticket_or_license_text_present": true
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "sent_or_receipt_text_present": false,
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d",
+      "status": "draft_not_sent",
+      "ticket_or_license_text_present": true
+    }
+  ],
+  "dropzone_candidates_after_cutoff": [],
+  "env_keys_present_without_values": [],
+  "gate_result": "source_control_dropzone_dispatch_refresh_after_083703_v1=no_new_owner_export_or_approved_dispatch_no_unlock",
+  "generated_at_local": "2026-05-12T08:54:30.932209+08:00",
+  "next": "Continue source/control acquisition only: obtain owner-approved/authenticated FINRA, venue-surveillance, CAT-like, CME/Cboe/CFE order-lifecycle export rows with positives and matched normal controls, source-owned post-2026-01-30 R5 MainRegimeV2 rows, verifier-native Crisis-capable R3 native-subhour labels, or explicit same-exhibit FLIP-as-control approval before verifier, split calibration, canonical merge, selected-data AutoQuant, Pre-Bayes/BBN, CatBoost/path-ranking, execution-tree promotion, trade claims, or update_goal.",
+  "run_id": "20260512T085131+0800-codex-source-control-dropzone-dispatch-refresh-after-083703-v1",
+  "scope": {
+    "cutoff_local": "2026-05-12T08:37:03+08:00",
+    "mode": "read_only_dropzone_dispatch_refresh_after_083703",
+    "no_dispatch_sent": true,
+    "no_downstream_promotion": true,
+    "no_external_requests": true,
+    "no_root_mutation": true,
+    "no_selected_data_autoquant": true,
+    "no_verifier": true,
+    "update_goal": false
+  },
+  "target_roots": [
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": false,
+      "file_count": 0,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": []
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": false,
+      "file_count": 0,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "sample_files": []
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": false,
+      "file_count": 0,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r5_recency_tmp",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": []
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": false,
+      "file_count": 0,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r5_recency_private_tmp",
+      "path": "/private/tmp/ict-engine-source-panel-recency-extension",
+      "sample_files": []
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": true,
+      "file_count": 2,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r3_native_subhour_tmp",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "sample_files": [
+        {
+          "mtime": "2026-05-12T06:35:34.137892",
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "size": 2400
+        },
+        {
+          "mtime": "2026-05-12T06:35:23.150451",
+          "path": "/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size": 2786719721
+        }
+      ]
+    },
+    {
+      "current_r6_complete": false,
+      "current_r6_required_present": [],
+      "exists": true,
+      "file_count": 2,
+      "legacy_r6_complete": false,
+      "legacy_r6_required_present": [],
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "sample_files": [
+        {
+          "mtime": "2026-05-12T06:35:34.137892",
+          "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_provenance.json",
+          "size": 2400
+        },
+        {
+          "mtime": "2026-05-12T06:35:23.150451",
+          "path": "/private/tmp/ict-engine-native-subhour-source-label-intake/native_subhour_source_label_rows.csv",
+          "size": 2786719721
+        }
+      ]
+    }
+  ],
+  "tool_paths": {
+    "databento": "",
+    "dbn": "",
+    "gh": "/opt/homebrew/bin/gh",
+    "huggingface-cli": "",
+    "kaggle": "/Users/thrill3r/.local/bin/kaggle",
+    "mail": "/usr/bin/mail",
+    "mailx": "/usr/bin/mailx",
+    "msmtp": "",
+    "mutt": "",
+    "sendmail": "/usr/sbin/sendmail",
+    "swaks": ""
+  }
+}

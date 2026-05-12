@@ -1,0 +1,6 @@
+requirement,artifact,status,note
+fresh same-root provider fetches,docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv,covered,all commands wrote into this run root
+TVR first-class input,docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv/tvr_binance_btcusdt_1h.csv,covered,rows=720
+IBKR first-class input,docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/provider-csv/BTC_1h_aggtrades.csv,covered,rows=783
+AQ on every non-empty provider source,docs/experiments/actionable-regime-confidence/runs/20260512T115500+0800-codex-six-provider-btc-same-root-aq-ibkr-aggtrades-probe-v1/workspace,covered,run_success=6
+downstream chain,N/A,not_run,blocked unless same-root authority and selected-history/source-control pass

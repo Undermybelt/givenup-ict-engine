@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 1.3608378659320477,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 6.7286527442285795,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.3195589054178145,
+    1.616161616161616e-7,
+    0.6804409329660239
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_NQ_20260510T141403.612371000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain/state/auto-quant/NQ/auto_quant_strategy_library.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_NQ_20260510T141901.860874000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain/state/auto-quant/NQ/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain/state/auto-quant/NQ/auto_quant_prior_init_NQ_20260510T141901.860874000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.3195589054178145,
+        1.616161616161616e-7,
+        0.6804409329660239
+      ],
+      "bbn_contradiction_after": 0.010070955529561772,
+      "bbn_contradiction_before": 1.3709088214616094,
+      "bbn_contradiction_lift": 1.3608378659320477,
+      "bbn_entropy_after": 0.6265391524882603,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6227309984561049,
+      "bbn_log_loss_before": 7.351383742684685,
+      "bbn_log_loss_delta": 6.7286527442285795,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.6803970945821854,
+        -0.000021838383838383837,
+        0.680418932966024
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "board-a-v2-2-nq-binding-repair",
+      "n_breakeven": 0,
+      "n_loss": 741,
+      "n_win": 340,
+      "strategy_name": "TomacNQ_ScratchNoRSINoConflict15m",
+      "temper": 0.5,
+      "trade_count": 1081
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "NQ",
+  "temper": 0.5
+}

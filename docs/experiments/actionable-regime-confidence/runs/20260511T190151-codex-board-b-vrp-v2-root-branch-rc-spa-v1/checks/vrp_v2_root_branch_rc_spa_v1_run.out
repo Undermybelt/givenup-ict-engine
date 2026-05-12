@@ -1,0 +1,24 @@
+{
+  "board_state": "rejected",
+  "branch_paths_evaluated": 5,
+  "branch_paths_passed": 0,
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "gate_result": "fail:all_branch_paths_failed_rc_spa_hard_gates",
+  "next_action": "If VRP is reused, convert it into a true multi-root parameter matrix or add direct Manipulation rows before downstream promotion; do not treat aggregate Sharpe as enough.",
+  "ok": true,
+  "primary_blocker": "VRP V2 is a different Auto-Quant artifact family and carries root-first branch paths, but downstream promotion is blocked unless every required root branch clears RC-SPA; scoped Manipulation still has no direct rows.",
+  "required_root_failures": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "root_trade_counts": {
+    "Bear": 46,
+    "Bull": 554,
+    "Crisis": 22,
+    "Sideways": 193
+  },
+  "stable_profit_score": 67.93744938639676,
+  "total_trade_rows": 815
+}

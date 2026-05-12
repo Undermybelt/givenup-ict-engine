@@ -1,0 +1,2 @@
+/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/user_data/strategies/TomacNQ_KillzoneBreakout.py
+/tmp/ict-engine-board-a-064259-runtime-v1/auto-quant/.deps/auto-quant/user_data/strategies/_template.py.example

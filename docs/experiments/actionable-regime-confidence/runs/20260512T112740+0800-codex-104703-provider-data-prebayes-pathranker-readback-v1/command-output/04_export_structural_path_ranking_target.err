@@ -1,0 +1,5 @@
+error: unexpected argument '--output-format' found
+
+Usage: ict-engine export-structural-path-ranking-target --symbol <SYMBOL> --state-dir <STATE_DIR>
+
+For more information, try '--help'.

@@ -1,0 +1,40 @@
+{
+  "candidate_set_id": "structural-candidates:B2R_YAHOO_BTC_PULLBACK_PRECISION_104902:19bf289f1afd1a30",
+  "candidate_set_size": 1,
+  "composite_score": 0.15,
+  "confirmation_summary": "recommended command remains valid on next refresh",
+  "current_posterior": 0.0,
+  "direction": "observe",
+  "experience_prior": 0.5,
+  "historical_total_records": 0,
+  "invalidation_summary": "Required market data or state inputs stay missing.",
+  "path_id": "path:scenario:B2R_YAHOO_BTC_PULLBACK_PRECISION_104902:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+  "path_label": "bootstrap_readiness",
+  "rank": 1,
+  "recommended_next_step": {
+    "action_type": "none",
+    "blocked_reason": null,
+    "deferred_command": null,
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:B2R_YAHOO_BTC_PULLBACK_PRECISION_104902:19bf289f1afd1a30",
+      "candidate_set_size": 1,
+      "confirmation": "recommended command remains valid on next refresh",
+      "invalidation": "Required market data or state inputs stay missing.",
+      "path_id": "path:scenario:B2R_YAHOO_BTC_PULLBACK_PRECISION_104902:bootstrap:no_workflow_state:bootstrap_collect_inputs:primary",
+      "path_label": "bootstrap_readiness",
+      "recommended_command": null,
+      "selected_path_probability": 1.0,
+      "stop": "No trade until preconditions are satisfied.",
+      "trigger": "No workflow snapshot exists yet.",
+      "why": "posterior=0.000 prior=0.500 invalidation_rate=n/a"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "scenario:B2R_YAHOO_BTC_PULLBACK_PRECISION_104902:bootstrap:no_workflow_state:bootstrap_collect_inputs",
+  "selected_path_probability": 1.0,
+  "stop_summary": "No trade until preconditions are satisfied.",
+  "symbol": "B2R_YAHOO_BTC_PULLBACK_PRECISION_104902",
+  "trigger_summary": "No workflow snapshot exists yet.",
+  "why_this_path": "posterior=0.000 prior=0.500 invalidation_rate=n/a"
+}

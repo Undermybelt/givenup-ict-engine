@@ -1,0 +1,7 @@
+requirement,artifact,status,note
+non-BTC same-root provider fetches,docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/provider-csv,covered,all commands wrote into this run root
+six required provider rows,docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/six-provider-eth-same-root-aq-v1/six_provider_eth_same_root_aq_v1.json,covered,"yfinance, Kraken, Binance, Bybit, TVR, IBKR"
+TVR first-class input,docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/provider-csv/tvr_binance_ethusdt_1h.csv,covered,rows=720
+IBKR first-class input,docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/provider-csv/ETH_1h_aggtrades.csv,covered,rows=784
+AQ on every non-empty provider source,docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/workspace,covered,run_success=6
+downstream chain,N/A,not_run,blocked unless same-root ETH authority and nonzero mature observations justify downstream

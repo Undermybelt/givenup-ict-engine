@@ -1,0 +1,1 @@
+./target/debug/ict-engine market-data-harness --action fetch --market board-b-btc-six-provider-tvr --interval 1d --role crypto_reference --provider crypto_reference=tradingview_mcp --symbol-spec crypto_reference=BINANCE:BTCUSDT 

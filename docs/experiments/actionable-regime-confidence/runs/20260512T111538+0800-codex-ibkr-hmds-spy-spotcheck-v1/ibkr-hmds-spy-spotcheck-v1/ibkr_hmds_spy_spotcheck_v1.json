@@ -1,0 +1,78 @@
+{
+  "run_id": "20260512T111538+0800-codex-ibkr-hmds-spy-spotcheck-v1",
+  "target": "IBKR_HMDS_SPY_1d_probe",
+  "scope": "provider_health_spotcheck_only",
+  "host": "127.0.0.1",
+  "port": 4002,
+  "consent_present": true,
+  "capabilities_present": true,
+  "port_reachable": true,
+  "repo_provider_status": {
+    "ibkr": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable"
+    },
+    "ibkr_bridge": {
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable"
+    }
+  },
+  "direct_uv_ib_async_probe": {
+    "connected": true,
+    "qualified_contract": true,
+    "symbol": "SPY",
+    "duration": "2 D",
+    "bar_size": "1 day",
+    "what_to_show": "TRADES",
+    "bars": 2,
+    "first_bar": "2026-05-08",
+    "last_bar": "2026-05-11",
+    "elapsed_sec": 12.512,
+    "exception": null
+  },
+  "ibkr_api_messages": [
+    {
+      "code": 2104,
+      "farm": "hfarm",
+      "meaning": "market_data_farm_ok"
+    },
+    {
+      "code": 2107,
+      "farm": "apachmds",
+      "meaning": "historical_data_farm_inactive_available_on_demand"
+    },
+    {
+      "code": 2107,
+      "farm": "ushmds",
+      "meaning": "historical_data_farm_inactive_available_on_demand"
+    },
+    {
+      "code": 2158,
+      "farm": "secdefhk",
+      "meaning": "security_definition_farm_ok"
+    },
+    {
+      "code": 321,
+      "farm": null,
+      "meaning": "api_read_only_mode_confirmation_notice"
+    },
+    {
+      "code": 2106,
+      "farm": "ushmds",
+      "meaning": "historical_data_farm_ok_after_us_historical_request"
+    }
+  ],
+  "decision": {
+    "inactive_farm_is_hard_failure": false,
+    "inactive_farm_is_skip_excuse": false,
+    "us_historical_request_returned_rows": true,
+    "apac_historical_request_exercised": false,
+    "board_a_provider_gate_passed": false,
+    "board_b_six_provider_authority_passed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

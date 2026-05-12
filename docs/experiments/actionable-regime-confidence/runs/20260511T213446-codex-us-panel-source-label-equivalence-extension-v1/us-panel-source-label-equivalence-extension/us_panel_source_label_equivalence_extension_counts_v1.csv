@@ -1,0 +1,15 @@
+metric,key,value
+label_counts,Bear,54939
+label_counts,Bull,103766
+label_counts,Crisis,29632
+label_counts,Sideways,56668
+market_family_counts,us_index,26236
+market_family_counts,us_single_stock,218769
+split_counts,calibration,147684
+split_counts,heldout_market,26236
+split_counts,heldout_time,44065
+split_counts,test,27020
+summary,row_count,245005
+summary,symbol_count,39
+summary,date_min,2000-01-03
+summary,date_max,2026-01-30

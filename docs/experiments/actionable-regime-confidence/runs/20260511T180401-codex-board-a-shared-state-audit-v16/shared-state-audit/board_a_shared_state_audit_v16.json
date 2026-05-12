@@ -1,0 +1,103 @@
+{
+  "accepted_95_lanes": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "Manipulation"
+  ],
+  "artifact_type": "board_a_shared_state_audit_v16",
+  "call_update_goal": false,
+  "checklist": [
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+      "evidence": "4/4 roots; min floor 0.9529358324",
+      "gap": "scoped context factor only, not full-market/full-timeframe completion",
+      "requirement": "each active MainRegimeV2 price root has scoped >=95 confidence",
+      "status": "pass_scoped"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json",
+      "evidence": "scoped direct floor 0.967945",
+      "gap": "full direct species coverage remains incomplete",
+      "requirement": "direct Manipulation has >=95 confidence without OHLCV proxy promotion",
+      "status": "pass_scoped_partial_species"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T162942-codex-daily-main-root-source-inventory-v1/daily-main-root-inventory/daily_main_root_source_inventory_v1.json | docs/experiments/actionable-regime-confidence/runs/20260511T172400-codex-qqq-nq-ixic-attachment-guardrail-audit-v1/guardrail-audit/qqq_nq_ixic_attachment_guardrail_audit_v1.json",
+      "evidence": "daily source inventory covers 156/156 ticker-root slots; QQQ/NQ IXIC attachment is provenance only",
+      "gap": "no owner-approved QQQ/NQ/NDX/futures/crypto/FX source-label equivalence yet",
+      "requirement": "validate across other markets",
+      "status": "partial"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T155959-current-goal-completion-audit-v14-after-consumer-map/completion-audit/current_goal_completion_audit_v14_after_consumer_map.json | docs/experiments/actionable-regime-confidence/runs/20260511T180420-codex-native-subhour-overlap-blocker-v1/native-subhour-overlap/native_subhour_overlap_blocker_v1.json",
+      "evidence": "cross-timeframe context exists in prior audits, but v14 records native sub-hour source overlap and strict exact 1h support as incomplete; native-subhour ready overlap cells 0/4",
+      "gap": "strict exact 1h support beyond 41/156 and native sub-hour overlap remain open",
+      "requirement": "validate across other timeframes/cycles",
+      "status": "partial"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_manifest_v1.json | docs/experiments/actionable-regime-confidence/runs/20260511T180345-codex-source-panel-recency-local-acquisition-probe-v1/local-acquisition-probe/source_panel_recency_local_acquisition_probe_v1.json",
+      "evidence": "source panel max date 2026-01-30; missing weekday sessions 71; local extension candidates found 0",
+      "gap": "source-owned extension rows and provenance files not acquired",
+      "requirement": "source recency through the current audit date",
+      "status": "blocked_missing_source_rows"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T172521-codex-real-provider-branch-chain-v1/provider/01_provider_status_agent.json",
+      "evidence": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:2/7 ready; yahoo QQQ 1h rows 190; kraken XBTUSD 1h rows 721",
+      "gap": "provider candles are not source-owned regime labels",
+      "requirement": "real provider paths checked before declaring data blocked",
+      "status": "provider_ready_partial_no_confidence_gate"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.json | docs/experiments/actionable-regime-confidence/runs/20260511T155959-current-goal-completion-audit-v14-after-consumer-map/completion-audit/current_goal_completion_audit_v14_after_consumer_map.json | docs/experiments/actionable-regime-confidence/runs/20260511T163532-codex-source-label-equivalence-request-v1/source-label-equivalence/source_label_equivalence_request_v1.json | docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_manifest_v1.json | docs/experiments/actionable-regime-confidence/runs/20260511T172400-codex-qqq-nq-ixic-attachment-guardrail-audit-v1/guardrail-audit/qqq_nq_ixic_attachment_guardrail_audit_v1.json",
+      "evidence": "consumer map, v14 audit, source-label request, recency manifest, and guardrail all keep update_goal=false",
+      "gap": "full objective still incomplete",
+      "requirement": "do not call update_goal until strict objective closes",
+      "status": "pass"
+    }
+  ],
+  "coordination_mode": "additive_only_do_not_rewrite_parallel_sections",
+  "latest_guardrail": "provenance_only_not_source_label_equivalence",
+  "min_main_root_confidence_floor": 0.9529358324,
+  "missing_or_incomplete": [
+    "owner-approved QQQ/NQ/NDX/futures source-label equivalence",
+    "crypto/FX/rates/commodities source-label equivalence",
+    "strict exact 1h support beyond 41/156",
+    "native sub-hour source overlap",
+    "source-panel recency extension beyond 2026-01-30",
+    "full direct Manipulation species coverage and matched negatives"
+  ],
+  "native_subhour_overlap": {
+    "blocked_cells": 4,
+    "blockers": [
+      "no_provider_session_overlap_with_source_panel_tail"
+    ],
+    "cells_checked": 4,
+    "ready_overlap_cells": 0
+  },
+  "next_action": "Fulfill the source-label equivalence or recency-extension intake packages before any new full-objective claim; use real provider candles only as readiness/provenance until source-owned labels or owner-approved equivalence exists.",
+  "objective_restatement": "Every active regime must have >=95 calibrated confidence, and that evidence must survive other-market and other-timeframe/cycle validation before reporting full completion.",
+  "provider_candle_rows_readback": {
+    "kraken_XBTUSD_1h": 721,
+    "yahoo_QQQ_1h": 190
+  },
+  "provider_readiness_summary": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:2/7 ready",
+  "raw_data_committed": false,
+  "recency_local_probe": {
+    "expected_intake_files_present": [
+      false,
+      false
+    ],
+    "extension_candidate_count": 0
+  },
+  "run_id": "20260511T180401+0800-codex-board-a-shared-state-audit-v16",
+  "runtime_code_changed": false,
+  "scoped_active_lane_accepted_95": true,
+  "scoped_direct_manipulation_confidence_floor": 0.967945,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,11 @@
+requirement,evidence,result
+every_regime_at_least_95_confidence,"accepted rows added 0; R3 target root TSIE-quarantined and Crisis-absent",not_met
+cross_market_cycle_timeframe_validation,"Tomac futures OHLCV context spans ES/NQ/YM/6E/GC but has no MainRegimeV2 labels or controls",partial_context_only
+provider_surfaces_ibkr_tradingviewremix_yfinance_kraken,"065822 provider refresh ran; yfinance and Kraken CLI usable; IBKR/TradingViewRemix non-promoting or operator-gated",partial_diagnostic_only
+real_autoquant_operation,"AutoQuant data-ready; default managed runs failed; Tomac harness succeeded once",partial_runtime_only
+filter_prebayes_bbn_catboost_execution_tree,"065822 ran read-only analyze-live Pre-Bayes workflow path-ranking before source/control unlock; mature calibrated rows 0",blocked_not_promoted
+r6_owner_export_controls,"070531 extracted official CFTC counts but no row-level order lifecycle rows or source-owned normal controls",not_met
+r5_post_2026_01_30_mainregimev2_recency,"/tmp/ict-engine-source-panel-recency-extension absent",not_met
+r3_crisis_capable_native_subhour_mainregimev2,"/tmp/ict-engine-native-subhour-source-label-intake present but TSIE-quarantined and Crisis-absent",not_met
+canonical_merge_and_downstream_promotion,"blocked because valid required-root unlock false",not_applicable_blocked
+multi_agent_safety,"board tails and processes re-read; append-only artifact no target-root mutation",met

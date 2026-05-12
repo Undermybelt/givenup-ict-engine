@@ -1,0 +1,129 @@
+{
+  "schema_version": "board-b-crisis-coverage-provider-probe/v1",
+  "run_id": "20260511T183644+0800-codex-board-b-crisis-coverage-provider-probe-v1",
+  "purpose": "Refresh named provider readiness for Board B B2R-repeat crisis coverage without claiming source-label coverage.",
+  "providers": [
+    {
+      "requested": "yfinance",
+      "exists": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "status": "ready",
+      "reason": "native_yfinance_runtime_available",
+      "summary": "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows."
+    },
+    {
+      "requested": "yfinance",
+      "exists": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints",
+      "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests."
+    },
+    {
+      "requested": "tradingview_mcp",
+      "exists": true,
+      "provider_id": "tradingview_mcp",
+      "ready": true,
+      "status": "ready",
+      "reason": "mcp_url_and_api_key_available",
+      "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes."
+    },
+    {
+      "requested": "kraken_cli",
+      "exists": true,
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "status": "ready",
+      "reason": "kraken_cli_config_detected",
+      "summary": "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows."
+    },
+    {
+      "requested": "kraken_public",
+      "exists": true,
+      "provider_id": "kraken_public",
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately."
+    },
+    {
+      "requested": "ibkr",
+      "exists": true,
+      "provider_id": "ibkr",
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows."
+    },
+    {
+      "requested": "all",
+      "exists": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "status": "ready",
+      "reason": "native_yfinance_runtime_available",
+      "summary": "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows."
+    },
+    {
+      "requested": "all",
+      "exists": true,
+      "provider_id": "ibkr_bridge",
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable",
+      "summary": "Local IBKR bridge reused by broker-linked workflows after the user enables the local API."
+    },
+    {
+      "requested": "all",
+      "exists": true,
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "status": "ready",
+      "reason": "kraken_cli_config_detected",
+      "summary": "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows."
+    },
+    {
+      "requested": "all",
+      "exists": true,
+      "provider_id": "ibkr",
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows."
+    },
+    {
+      "requested": "all",
+      "exists": true,
+      "provider_id": "kraken_public",
+      "ready": false,
+      "status": "configured_runtime_unhealthy",
+      "reason": "python3_provider_dependencies_missing",
+      "summary": "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately."
+    },
+    {
+      "requested": "all",
+      "exists": true,
+      "provider_id": "tradingview_mcp",
+      "ready": true,
+      "status": "ready",
+      "reason": "mcp_url_and_api_key_available",
+      "summary": "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes."
+    },
+    {
+      "requested": "all",
+      "exists": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "status": "ready",
+      "reason": "public_yahoo_http_endpoints",
+      "summary": "Free historical tradfi fallback for replay, factor research, and factor backtests."
+    }
+  ],
+  "decision": {
+    "gate_result": "provider_probe_only_source_label_gap_remains",
+    "source_label_coverage_added": 0,
+    "next_action": "Acquire source-owned crisis-capable labels or an owner-approved broader label/equivalence panel before another root-aware profitability recipe claim."
+  }
+}

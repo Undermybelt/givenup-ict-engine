@@ -1,0 +1,16 @@
+loop_id: 20260510T235308+0800-codex-rich-cross-timeframe-root-probe
+report: docs/experiments/actionable-regime-confidence/runs/20260510T235308-codex-rich-cross-timeframe-root-probe/rich-root/main_regime_v2_rich_cross_timeframe_root_report.json
+summary_csv: docs/experiments/actionable-regime-confidence/runs/20260510T235308-codex-rich-cross-timeframe-root-probe/rich-root/main_regime_v2_rich_cross_timeframe_root_summary.csv
+accepted_root_classes_95: ['Crisis']
+missing_root_classes_95: ['Bull', 'Bear', 'Sideways', 'Manipulation']
+accepted_95_all_main_regime_v2_roots: False
+accepted_gate: partial_root_acceptance_crisis_only_not_complete
+trade_usable: False
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+Bull: state=blocked accepted_count=0 cal_lcb=0.221408 test_lcb=0.281692 cal_support=3014 test_support=2809 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05', 'validation_timeframes_below_2']
+Bear: state=blocked accepted_count=0 cal_lcb=0.188076 test_lcb=0.239683 cal_support=470 test_support=494 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05']
+Sideways: state=blocked accepted_count=0 cal_lcb=0.600633 test_lcb=0.691640 cal_support=752 test_support=635 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05']
+Crisis: state=accepted_95 accepted_count=148 cal_lcb=0.999205 test_lcb=0.999278 cal_support=4830 test_support=5315 blockers=[]
+Manipulation: state=missing_required_inputs accepted_count=0 cal_lcb=0.000000 test_lcb=0.000000 cal_support=0 test_support=0 blockers=['missing_required_inputs', 'proxy_only_low_confidence']
+OVERALL: BLOCKED_NOT_COMPLETE

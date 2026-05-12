@@ -1,0 +1,12 @@
+requirement,evidence,status,next_action
+same_board_updated,"Board B append-only readbacks through 063155 quarantine family plus this audit artifact",partial,"append narrow Board B readback"
+regime_rooted_profit_factor_training,"063155 TSIE rows exist but 063734/063926 quarantine the R3 root",missing,"obtain non-quarantined R3/R5/R6 source-control unlock before training"
+branch_path_preserved_downstream,"branch contract remains main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor",missing,"rerun downstream only after accepted source-control unlock"
+selected_data_autoquant_training,"no explicit HTF=1d or MTF=4h or LTF=1h selection and no selected-data training from accepted root",missing,"select exactly one historical path after unlock"
+filter_pre_bayes,"no post-unlock filter or Pre-Bayes evidence for accepted source-control set",missing,"rerun after unlock and selected history"
+bbn,"no post-unlock BBN evidence for accepted source-control set",missing,"rerun after unlock and selected history"
+catboost_path_ranking,"no post-unlock CatBoost/path-ranking promotion rerun",missing,"rerun after unlock and selected history"
+execution_tree,"no post-unlock execution-tree promotion rerun",missing,"rerun after unlock and selected history"
+providers_ibkr_tradingview_yfinance_kraken,"prior diagnostics considered providers but no complete provider-backed promotion chain exists after valid unlock",partial,"rerun provider-backed chain after unlock"
+source_control_unlock,"064220 valid_required_unlock=false; R3 quarantined; R6 absent; R5 absent",missing,"obtain explicit approval or valid R3/R5/R6 root"
+multi_agent_safety,"append-only artifact; no cursor edit; no rewrite of existing rows",satisfied,"continue append-only"

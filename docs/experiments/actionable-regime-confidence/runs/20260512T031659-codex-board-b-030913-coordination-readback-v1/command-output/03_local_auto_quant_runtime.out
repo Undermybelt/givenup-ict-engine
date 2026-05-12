@@ -1,0 +1,9 @@
+auto_quant_repo=/Users/thrill3r/Auto-Quant
+run_py_exists=True
+freqtrade=True
+pandas=True
+pyarrow=True
+numpy=True
+data:NQ_USD-1h.feather=True size=2263498
+data:BTC_USDT-1h.feather=True size=1383538
+data:ETH_USDT-1h.feather=True size=1275634

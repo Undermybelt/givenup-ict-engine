@@ -1,0 +1,283 @@
+{
+  "plan": {
+    "request": {
+      "market_key": "NQ",
+      "primary_data_path": null,
+      "interval": "1d",
+      "start": null,
+      "end": null,
+      "count": null,
+      "related_roles": [
+        "etf_reference"
+      ],
+      "provider_preferences": {
+        "etf_reference": "tradingview_mcp"
+      },
+      "symbol_overrides": {
+        "etf_reference": {
+          "display_symbol": "NASDAQ:QQQ",
+          "yfinance": null,
+          "tradingview_mcp": "NASDAQ:QQQ",
+          "ibkr": null
+        }
+      },
+      "options_volatility_proxy_symbol": null
+    },
+    "provider_summary": {
+      "required_requirements": [
+        "etf_reference"
+      ],
+      "provider_statuses": [
+        {
+          "provider": "ibkr",
+          "status": "configured_runtime_unhealthy",
+          "healthy": false,
+          "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [
+            "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+            "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+          ],
+          "redacted_config": [
+            "consent_path=<local-path>",
+            "capabilities_path=<local-path>",
+            "consent_present=true",
+            "capabilities_present=true",
+            "reachable_gateway_ports=IB Gateway paper:4002",
+            "ibkr_runtime_missing_modules=redis"
+          ]
+        },
+        {
+          "provider": "yfinance",
+          "status": "ready",
+          "healthy": true,
+          "reason": "public_yahoo_http_endpoints",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [],
+          "redacted_config": [
+            "provider_mode=public_http"
+          ]
+        },
+        {
+          "provider": "tradingview_mcp",
+          "status": "ready",
+          "healthy": true,
+          "reason": "mcp_url_and_api_key_available",
+          "supported_requirements": [
+            "etf_reference"
+          ],
+          "install_prompts": [],
+          "redacted_config": [
+            "mcp_url=https://tvremix.xyz/api/mcp/v1",
+            "ICT_ENGINE_TVREMIX_MCP_API_KEY=<set>",
+            "probe_connectivity=true",
+            "probe_ohlcv=true",
+            "probe_options=<skipped>"
+          ]
+        }
+      ],
+      "actionable_install_prompts": [
+        "Consumer agent follow-up: make sure the runtime that executes provider-status and provider fetches can import redis and ib_async. Low-pollution path: use uv run --with redis --with ib_async --with pandas for ad-hoc IBKR historical fetches.",
+        "Consumer agent follow-up: reuse the single reachable local IBKR API on port 4002 unless the user says otherwise."
+      ]
+    },
+    "tasks": [
+      {
+        "role": "etf_reference",
+        "provider": "tradingview_mcp",
+        "operation": "Ohlcv",
+        "symbol": "NASDAQ:QQQ",
+        "request": {
+          "TradingViewMcp": {
+            "symbol": "NASDAQ:QQQ"
+          }
+        }
+      }
+    ],
+    "missing_roles": [],
+    "warnings": []
+  },
+  "results": [
+    {
+      "ok": true,
+      "provider": "tradingview_mcp",
+      "operation": "ohlcv.fetch",
+      "role": "etf_reference",
+      "symbol": "NASDAQ:QQQ",
+      "data": [
+        {
+          "close": 611.07,
+          "high": 613.67,
+          "low": 609.58,
+          "open": 611.84,
+          "timestamp": "2026-04-10T13:30:00Z",
+          "volume": 34038533.0
+        },
+        {
+          "close": 617.39,
+          "high": 626.74,
+          "low": 608.11,
+          "open": 609.48,
+          "timestamp": "2026-04-13T13:30:00Z",
+          "volume": 32972110.0
+        },
+        {
+          "close": 628.6,
+          "high": 628.6,
+          "low": 620.1,
+          "open": 620.22,
+          "timestamp": "2026-04-14T13:30:00Z",
+          "volume": 49921081.0
+        },
+        {
+          "close": 637.4,
+          "high": 637.83,
+          "low": 628.2,
+          "open": 629.08,
+          "timestamp": "2026-04-15T13:30:00Z",
+          "volume": 50102386.0
+        },
+        {
+          "close": 640.47,
+          "high": 642.18,
+          "low": 635.255,
+          "open": 639.21,
+          "timestamp": "2026-04-16T13:30:00Z",
+          "volume": 42320581.0
+        },
+        {
+          "close": 648.85,
+          "high": 650.0,
+          "low": 644.07,
+          "open": 645.59,
+          "timestamp": "2026-04-17T13:30:00Z",
+          "volume": 53488871.0
+        },
+        {
+          "close": 646.79,
+          "high": 648.76,
+          "low": 642.52,
+          "open": 648.04,
+          "timestamp": "2026-04-20T13:30:00Z",
+          "volume": 37138511.0
+        },
+        {
+          "close": 644.33,
+          "high": 650.2,
+          "low": 642.21,
+          "open": 648.41,
+          "timestamp": "2026-04-21T13:30:00Z",
+          "volume": 39580523.0
+        },
+        {
+          "close": 655.11,
+          "high": 655.33,
+          "low": 648.52,
+          "open": 650.15,
+          "timestamp": "2026-04-22T13:30:00Z",
+          "volume": 37368402.0
+        },
+        {
+          "close": 651.42,
+          "high": 656.92,
+          "low": 645.52,
+          "open": 653.55,
+          "timestamp": "2026-04-23T13:30:00Z",
+          "volume": 40099827.0
+        },
+        {
+          "close": 663.88,
+          "high": 664.51,
+          "low": 656.5301,
+          "open": 658.51,
+          "timestamp": "2026-04-24T13:30:00Z",
+          "volume": 45563050.0
+        },
+        {
+          "close": 664.23,
+          "high": 664.43,
+          "low": 660.69,
+          "open": 663.4,
+          "timestamp": "2026-04-27T13:30:00Z",
+          "volume": 32717030.0
+        },
+        {
+          "close": 657.55,
+          "high": 659.64,
+          "low": 653.81,
+          "open": 657.41,
+          "timestamp": "2026-04-28T13:30:00Z",
+          "volume": 34147916.0
+        },
+        {
+          "close": 661.57,
+          "high": 661.72,
+          "low": 656.5899,
+          "open": 658.63,
+          "timestamp": "2026-04-29T13:30:00Z",
+          "volume": 31724860.0
+        },
+        {
+          "close": 667.74,
+          "high": 668.9,
+          "low": 657.56,
+          "open": 665.35,
+          "timestamp": "2026-04-30T13:30:00Z",
+          "volume": 40622226.0
+        },
+        {
+          "close": 674.15,
+          "high": 675.97,
+          "low": 668.8,
+          "open": 669.16,
+          "timestamp": "2026-05-01T13:30:00Z",
+          "volume": 39172607.0
+        },
+        {
+          "close": 672.88,
+          "high": 676.73,
+          "low": 668.9,
+          "open": 674.66,
+          "timestamp": "2026-05-04T13:30:00Z",
+          "volume": 34541990.0
+        },
+        {
+          "close": 681.61,
+          "high": 682.7734,
+          "low": 677.51,
+          "open": 677.96,
+          "timestamp": "2026-05-05T13:30:00Z",
+          "volume": 37101063.0
+        },
+        {
+          "close": 695.77,
+          "high": 695.93,
+          "low": 686.48,
+          "open": 687.78,
+          "timestamp": "2026-05-06T13:30:00Z",
+          "volume": 38778492.0
+        },
+        {
+          "close": 694.94,
+          "high": 701.24,
+          "low": 691.77,
+          "open": 696.58,
+          "timestamp": "2026-05-07T13:30:00Z",
+          "volume": 43779087.0
+        },
+        {
+          "close": 711.23,
+          "high": 711.23,
+          "low": 699.5,
+          "open": 699.92,
+          "timestamp": "2026-05-08T13:30:00Z",
+          "volume": 44320421.0
+        }
+      ]
+    }
+  ]
+}

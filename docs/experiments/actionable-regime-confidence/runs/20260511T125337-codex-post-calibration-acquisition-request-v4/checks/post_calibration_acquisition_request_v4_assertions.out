@@ -1,0 +1,13 @@
+PASS run_id=20260511T125337+0800-codex-post-calibration-acquisition-request-v4
+PASS consumed_latest_calibration=20260511T124107+0800-codex-source-window-slot-calibration-v1
+PASS accepted_crosswalk_slots_from_latest_calibration=0
+PASS acquisition_requests=4
+PASS includes_price_root_exact_label_panel=true
+PASS includes_historical_source_window_bar_overlap=true
+PASS includes_sideways_expanded_dated_windows=true
+PASS includes_direct_manipulation_variety_rows=true
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false
+PASS goal_complete=false

@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.6046088000000001,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 2.745023334260917,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": true,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.6976727813953488,
+    8.186046511627906e-7,
+    0.3023264
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_CRYPTO_20260511T101554.649488000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260511T180235-codex-board-b-crashrebound-branch-rc-spa-v1/branch-rc-spa/crashrebound_strategy_library_for_import_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_CRYPTO_20260511T101638.682297000Z",
+  "prior_init_history_path": "/private/tmp/ict-board-b-crashrebound-branch-20260511T180235/auto-quant/CRYPTO/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "/private/tmp/ict-board-b-crashrebound-branch-20260511T180235/auto-quant/CRYPTO/auto_quant_prior_init_CRYPTO_20260511T101638.682297000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.6976727813953488,
+        8.186046511627906e-7,
+        0.3023264
+      ],
+      "bbn_contradiction_after": 0.02336652367149754,
+      "bbn_contradiction_before": 0.6279753236714976,
+      "bbn_contradiction_lift": 0.6046088000000001,
+      "bbn_entropy_after": 0.6128345858850257,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.6225934528736107,
+      "bbn_log_loss_before": 3.3676167871345277,
+      "bbn_log_loss_delta": 2.745023334260917,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.3022832186046511,
+        -0.000021181395348837207,
+        0.3023044
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "board-b-crashrebound-branch-rc-spa-v1",
+      "n_breakeven": 0,
+      "n_loss": 65,
+      "n_win": 142,
+      "strategy_name": "CrashRebound",
+      "temper": 0.5,
+      "trade_count": 207
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "CRYPTO",
+  "temper": 0.5
+}

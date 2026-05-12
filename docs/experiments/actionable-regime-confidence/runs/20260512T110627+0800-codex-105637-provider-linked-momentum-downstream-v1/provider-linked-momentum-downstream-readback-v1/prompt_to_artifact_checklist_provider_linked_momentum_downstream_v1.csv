@@ -1,0 +1,8 @@
+requirement,evidence,status
+"real-trades artifact available","derived/provider_linked_momentum_105637_real_trades.jsonl missing; dry-run and force ingest exits were 1","not_achieved"
+"Pre-Bayes/filter populated","pre_bayes status exited 0 but latest fields were null or empty and no filtered assignments existed","not_achieved"
+"BBN/CatBoost training ready","policy training exited 0 but matched_rows=0 for both entry models","not_achieved"
+"Path-ranker target mature","structural target rows=1 mature_rows=0 raw_scored_mature=0/30 production_validation=0/30 observation_validation=0/30","not_achieved"
+"Execution tree promotable","workflow observed bootstrap path only; ready=false actionable=false review_status=observe closed_loop_branch_admission=fail_closed","not_achieved"
+"Six-provider AQ matrix","this root is a downstream readback of already-counted 105637 and does not add TVR/IBKR same-run AQ authority","not_achieved"
+"Promotion/update_goal","promotion_allowed=false trade_usable=false update_goal=false","not_complete"

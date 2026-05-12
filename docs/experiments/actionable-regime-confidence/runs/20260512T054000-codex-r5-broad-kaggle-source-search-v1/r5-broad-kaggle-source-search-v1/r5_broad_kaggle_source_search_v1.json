@@ -1,0 +1,60 @@
+{
+  "run_id": "20260512T054000-codex-r5-broad-kaggle-source-search-v1",
+  "gate_result": "r5_broad_kaggle_source_search_v1=current_nifty_candidate_found_not_schema_compatible_no_promotion",
+  "search_commands": [
+    {"query": "stock market regime", "exit": 0, "output": "docs/experiments/actionable-regime-confidence/runs/20260512T054000-codex-r5-broad-kaggle-source-search-v1/command-output/kaggle_list_stock_market_regime.csv"},
+    {"query": "market regime labels", "exit": 0, "output": "docs/experiments/actionable-regime-confidence/runs/20260512T054000-codex-r5-broad-kaggle-source-search-v1/command-output/kaggle_list_market_regime_labels.csv"},
+    {"query": "financial market regimes", "exit": 0, "output": "docs/experiments/actionable-regime-confidence/runs/20260512T054000-codex-r5-broad-kaggle-source-search-v1/command-output/kaggle_list_financial_market_regimes.csv"},
+    {"query": "regime classification stock", "exit": 0, "output": "docs/experiments/actionable-regime-confidence/runs/20260512T054000-codex-r5-broad-kaggle-source-search-v1/command-output/kaggle_list_regime_classification_stock.csv"}
+  ],
+  "inspected_candidate": {
+    "dataset_id": "ahaanverma00/nifty-500-market-and-behavior-regime-dataset",
+    "last_updated": "2026-04-15 15:25:28.867000",
+    "files_exit": 0,
+    "download_exit": 0,
+    "download_root": "/tmp/ict-engine-kaggle-nifty500-behavior-regime-20260512T054000",
+    "files": {
+      "behavior_regime_predictions.csv": {
+        "sha256": "a3d89910596bd8f953218e5bfe3d57eab4f5c9c76f9b0ef1d38c9c9dca079c77",
+        "rows": 3846,
+        "date_min": "2010-09-20",
+        "date_max": "2026-03-20",
+        "post_cutoff_rows_after_2026_01_30": 35,
+        "state_fields": ["behavior_fast_state", "behavior_slow_state"]
+      },
+      "regime_timeline_history.csv": {
+        "sha256": "4bfb78601e36557e177701bf8ee6a0c9b8e243206e0f9eafe8ee6c7115f0b732",
+        "rows": 3464,
+        "date_min": "2012-02-02",
+        "date_max": "2026-03-20",
+        "post_cutoff_rows_after_2026_01_30": 34,
+        "state_fields": ["macro_state", "fast_state", "combined_state", "adaptive_macro_state", "adaptive_fast_state", "adaptive_combined_state"],
+        "probability_families": ["p_fragile", "p_calm", "p_choppy", "p_stress"]
+      },
+      "final_features_matrix.csv": {
+        "sha256": "f7e44a4f73505b2e733f33262262e9756bb974f717afdbfbfaa29a83cfeecc28",
+        "rows": 3500,
+        "date_min": "2012-02-02",
+        "date_max": "2026-03-20"
+      }
+    }
+  },
+  "schema_decision": {
+    "current_post_cutoff_rows_exist": true,
+    "direct_mainregimev2_root_labels_present": false,
+    "source_owned_stock_panel_extension_present": false,
+    "target_provenance_manifest_present": false,
+    "target_root_mutated": false,
+    "schema_compatible_r5_unlock": false,
+    "reason": "Candidate is current and regime-like, but its labels are NIFTY behavior/macro states rather than source-owned MainRegimeV2 Bull/Bear/Sideways/Crisis rows with provenance."
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

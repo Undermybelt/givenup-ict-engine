@@ -1,0 +1,140 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "46668c884897f24875a7d0a81b15b90c621130066a0794e8a189534786ef81ab",
+  "chronological_split_gate": false,
+  "direct_species_closed": false,
+  "existing_live_verifier": {
+    "payload": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "canonical_intake_root",
+        "generated_at_utc",
+        "materialization_note",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "source_v56_json",
+        "source_v56_negative_csv",
+        "source_v56_positive_csv",
+        "thresholds_relaxed",
+        "trade_usable",
+        "v56_gate_result",
+        "v56_negative_sha256",
+        "v56_positive_sha256"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0
+  },
+  "external_requests_sent": false,
+  "gate_result": "r6_live_intake_rehydration_v1=live_schema_ready_pooled95_passed_split_species_full_objective_still_blocked",
+  "generated_at_utc": "2026-05-11T16:01:59.755367+00:00",
+  "heldout_symbol_gate": false,
+  "heldout_venue_gate": false,
+  "live_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "live_verifier": {
+    "payload": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "canonical_intake_root",
+        "generated_at_utc",
+        "materialization_note",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "source_v56_json",
+        "source_v56_negative_csv",
+        "source_v56_positive_csv",
+        "thresholds_relaxed",
+        "trade_usable",
+        "v56_gate_result",
+        "v56_negative_sha256",
+        "v56_positive_sha256"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0
+  },
+  "lock_acquired_at_utc": "2026-05-11T16:01:59.585930+00:00",
+  "lock_path": "/tmp/ict-engine-direct-manipulation-row-intake.lock",
+  "matched_group_count": 70,
+  "matched_negative_rows": 73,
+  "matched_negative_wilson95_lcb": 0.950006246616416,
+  "mutation": "skipped_existing_live_schema_ready",
+  "new_confidence_gate": false,
+  "next_action": "Keep R6 blocked for strict completion: live schema is restored and pooled Wilson95 passes, but chronological/symbol/venue split support and non-spoofing direct species coverage remain blocked; keep R5 source-owner recency blocked.",
+  "pooled_min_wilson95_lcb": 0.950006246616416,
+  "pooled_wilson95_gate": true,
+  "positive_rows": 73,
+  "positive_wilson95_lcb": 0.950006246616416,
+  "raw_data_committed": false,
+  "run_id": "20260511T235910-codex-r6-live-intake-rehydration-v1",
+  "runtime_code_changed": false,
+  "sidecar_broad_normal_control_rows": 80,
+  "sidecar_broad_normal_wilson95_lcb": 0.954180263735425,
+  "source_snapshot_json": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/r6_isolated_reconstruction_snapshot_v56.json",
+  "source_snapshot_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/isolated-direct-intake",
+  "source_snapshot_splits": "docs/experiments/actionable-regime-confidence/runs/20260511T235726-codex-r6-isolated-reconstruction-snapshot-v56/r6-isolated-reconstruction-snapshot-v56/r6_isolated_reconstruction_snapshot_v56_split_metrics.csv",
+  "source_verifier": {
+    "payload": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "baseline_matched_negative_rows",
+        "baseline_positive_rows",
+        "baseline_reconstructed_from",
+        "generated_at_utc",
+        "jpm_cftc_rows_accepted_in_isolated_reconstruction",
+        "jpm_source",
+        "matched_control_policy",
+        "nowak_smith_candidate_rows_accepted_in_isolated_reconstruction",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "sarao_candidate_rows_accepted_in_isolated_reconstruction",
+        "sidecar_broad_normal_controls_path",
+        "thresholds_relaxed"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0
+  },
+  "staging_verifier": {
+    "payload": {
+      "matched_group_count": 70,
+      "matched_negative_rows": 73,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 73,
+      "provenance_keys": [
+        "baseline_matched_negative_rows",
+        "baseline_positive_rows",
+        "baseline_reconstructed_from",
+        "generated_at_utc",
+        "jpm_cftc_rows_accepted_in_isolated_reconstruction",
+        "jpm_source",
+        "matched_control_policy",
+        "nowak_smith_candidate_rows_accepted_in_isolated_reconstruction",
+        "raw_data_committed",
+        "run_id",
+        "runtime_code_changed",
+        "sarao_candidate_rows_accepted_in_isolated_reconstruction",
+        "sidecar_broad_normal_controls_path",
+        "thresholds_relaxed"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

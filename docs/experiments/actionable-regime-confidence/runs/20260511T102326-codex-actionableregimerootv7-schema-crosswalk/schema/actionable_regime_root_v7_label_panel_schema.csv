@@ -1,0 +1,24 @@
+field,required,accepted_values_or_format,notes
+provider,true,string,Provider or source namespace.
+instrument,true,string,Exact underlying instrument or market symbol.
+timeframe,true,string,Bar/event timeframe or source-native cadence.
+window_start,true,ISO-8601 timestamp,Inclusive label/event start.
+window_end,true,ISO-8601 timestamp,Exclusive label/event end when available.
+v7_label,true,"BullExpansion|BearExpansion|ConsolidationBalance|CrisisDislocation|ManipulationIntegrityEvent|TransitionRotation|UnknownOrMixed",V7 candidate label namespace.
+label_role,true,"mandatory_root|watchlist_root|residual",Completion accounting role.
+allowed_action,true,string,Downstream action permission or suppression meaning.
+horizon,true,string,Regime horizon the label is valid for.
+source_name,true,string,Human-readable source name.
+source_url,true,url,Public or authenticated source URL without local secrets.
+source_record_id,true,string,Stable row/document/window identifier.
+label_provenance_kind,true,"real_source_label|real_direct_event|real_order_flow|real_order_lifecycle|real_l2_l3_mbo|real_social_event|real_on_chain_event|synthetic|proxy|model_inferred|future_return",Only real source/direct values can be accepted.
+positive_negative,false,"positive|negative|not_applicable",Required for ManipulationIntegrityEvent rows.
+is_synthetic,true,"true|false",Synthetic rows cannot satisfy accepted gates.
+is_proxy,true,"true|false",Proxy rows cannot satisfy accepted gates by themselves.
+is_future_return_derived,true,"true|false",Future-return-derived labels are forbidden.
+calibration_split,true,"train|calibration|test|external_validation",Chronological split assignment.
+validation_market_context,true,string,Market/species context for cross-context validation.
+validation_timeframe_context,true,string,Timeframe context for full-cycle validation.
+validation_period_id,true,string,Chronological period bucket.
+confidence_floor_required,true,"0.95|0.99",Gate floor.
+notes,false,string,Short caveats.

@@ -1,0 +1,17 @@
+PASS gate_result=r6_owner_route_web_recheck_after_043901_v1=official_routes_confirmed_no_verifier_native_rows_no_promotion
+PASS official_routes_confirmed=true
+PASS verifier_native_rows_acquired=false
+PASS source_owned_normal_controls_supplied=false
+PASS same_exhibit_flip_approved=false
+PASS r6_owner_export_root_present=false
+PASS r3_native_subhour_root_present=false
+PASS r5_recency_extension_root_present=false
+PASS accepted_rows_added=0
+PASS accepted_regime_confidence_labels=0
+PASS source_control_evidence_acquired=false
+PASS new_confidence_gate=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

@@ -1,0 +1,9 @@
+Raw deduped row snapshot was removed from the repo artifact directory to keep
+the run aligned with raw_data_committed=false.
+
+Original filename: source_label_equivalence_rows_deduped.csv
+Original size bytes: 166118612
+Original sha256: 915d8148a468798600d4357a60f6c322bd19f421ad7ed01632a5e1c00be2937f
+Retained evidence: source_label_equivalence_duplicate_cleanup_v1.json,
+source_label_equivalence_duplicate_cleanup_v1.md, verifier stdout, and
+provenance hashes.

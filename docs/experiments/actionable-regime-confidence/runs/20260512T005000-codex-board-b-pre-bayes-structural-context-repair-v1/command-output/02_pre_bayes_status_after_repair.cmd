@@ -1,0 +1,1 @@
+./target/debug/ict-engine pre-bayes-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T005000-codex-board-b-pre-bayes-structural-context-repair-v1/state_pre_bayes_structural_context_repair_v1 --refresh --output-format json

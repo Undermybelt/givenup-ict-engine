@@ -1,0 +1,49 @@
+{
+  "run_id": "20260511T041508+0800-codex-missing-root-source-readiness",
+  "gate_result": "blocked_source_readiness_only_no_new_95",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "fresh_calibration_rerun": false,
+  "raw_large_provider_data_committed": false,
+  "accepted_roots_added": [],
+  "active_accounting_after_slice": {
+    "accepted_95": ["Bull", "Crisis"],
+    "missing": ["Bear", "Sideways"],
+    "missing_required_inputs": ["Manipulation"]
+  },
+  "bear_sideways": {
+    "state": "needs_bounded_causal_hmm_parent_root_gate",
+    "candidate_sources": [
+      "https://github.com/hidden-regime/hidden-regime",
+      "https://www.mdpi.com/1911-8074/18/11/613",
+      "https://link.springer.com/chapter/10.1007/978-981-97-9474-5_21"
+    ],
+    "accepted_95": false,
+    "blocker": "source methods identified but no fresh chronological parent-root calibration gate has passed for Bear or Sideways"
+  },
+  "manipulation": {
+    "state": "direct_source_metadata_available_labels_missing",
+    "candidate_source": "https://zenodo.org/records/18184441",
+    "metadata_cache": "/private/tmp/ict-regime-missing-root-source-readiness",
+    "metadata_files": [
+      "hyperliquid_README.md",
+      "hyperliquid_SCHEMA.md",
+      "hyperliquid_read_data.py"
+    ],
+    "direct_fields_observed_in_metadata": [
+      "ts",
+      "userId",
+      "statusId",
+      "isAsk",
+      "limitPx",
+      "sz",
+      "oid",
+      "timestampDiff",
+      "orderTypeId",
+      "tifId"
+    ],
+    "accepted_95": false,
+    "blocker": "direct order-lifecycle source lacks explicit manipulation positives/negatives and raw archives are too large for blind ingestion"
+  },
+  "next_action": "Run one bounded source-backed causal HMM parent-root gate for Bear and Sideways first; keep Manipulation fail-closed until direct event/order-lifecycle labels can be paired with Hyperliquid/L4-style source."
+}

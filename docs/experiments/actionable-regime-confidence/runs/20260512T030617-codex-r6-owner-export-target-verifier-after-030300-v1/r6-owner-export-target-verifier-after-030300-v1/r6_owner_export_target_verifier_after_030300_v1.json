@@ -1,0 +1,30 @@
+{
+  "accepted_rows_added": 0,
+  "approval_decision_package": "/private/tmp/r6_oystacher_approval_decision_package_v1.json.valid",
+  "board_hash_before_artifact": "5306b07717c87afd0420b5b12dd1d029b70178d75d4db7f8c6615a51796618e4",
+  "canonical_merge_allowed": false,
+  "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-board-a-r6-owner-export-v1",
+  "command_exit": 2,
+  "downstream_promotion_rerun_allowed": false,
+  "gate_result": "r6_owner_export_target_verifier_after_030300_v1=owner_export_target_missing_required_files_no_promotion",
+  "intake_root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+  "missing_files": [
+    "/tmp/ict-engine-board-a-r6-owner-export-v1/positive_spoofing_layering_rows.csv",
+    "/tmp/ict-engine-board-a-r6-owner-export-v1/matched_negative_normal_activity_rows.csv",
+    "/tmp/ict-engine-board-a-r6-owner-export-v1/provenance_manifest.json"
+  ],
+  "new_confidence_gate": false,
+  "non_edits": {
+    "r3_r5_r6_roots_mutated": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "thresholds_relaxed": false
+  },
+  "reason": "missing_required_files",
+  "run_id": "20260512T030617-codex-r6-owner-export-target-verifier-after-030300-v1",
+  "status": "blocked",
+  "strict_full_objective_achieved": false,
+  "trade_usable": false,
+  "update_goal": false
+}

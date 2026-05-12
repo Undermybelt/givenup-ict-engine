@@ -1,0 +1,6 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T120746+0800-codex-115500-same-root-six-provider-aq-chain-v1/state_six_provider_chain_v1/B2R_PROVIDER_MATRIX_SIX_PROVIDER_AQ_115500/policy_training/structural_path_ranking_target_history.csv: 248 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 245 training samples
+[features] label dist: {np.int64(0): np.int64(2), np.int64(1): np.int64(243)}
+[template] User weights template saved to docs/experiments/actionable-regime-confidence/runs/20260512T120746+0800-codex-115500-same-root-six-provider-aq-chain-v1/path-ranker/catboost_model/user_weights.json

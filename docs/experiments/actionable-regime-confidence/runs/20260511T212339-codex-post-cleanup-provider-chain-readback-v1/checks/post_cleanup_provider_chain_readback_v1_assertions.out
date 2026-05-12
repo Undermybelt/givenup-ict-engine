@@ -1,0 +1,16 @@
+PASS decision=post_cleanup_provider_chain_readback_v1=providers_and_chain_checked_strict_confidence_still_blocked
+PASS direct_verifier_status=schema_ready_unscored
+PASS direct_positive_rows=24
+PASS direct_matched_negative_rows=24
+PASS yfinance_ready=true
+PASS kraken_cli_ready=true
+PASS analyze_live_nq_yfinance_exit=0
+PASS pre_bayes_status_exit=0
+PASS policy_training_status_exit=0
+PASS workflow_execution_candidate_exit=0
+PASS export_structural_path_ranking_target_exit=0
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

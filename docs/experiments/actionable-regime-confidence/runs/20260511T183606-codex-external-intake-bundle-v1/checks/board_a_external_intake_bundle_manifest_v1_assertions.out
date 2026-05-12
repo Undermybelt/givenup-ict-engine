@@ -1,0 +1,6 @@
+PASS required_file_count=7
+PASS missing_intake_blocks
+PASS missing_required_files
+PASS accepted_rows_added=0
+PASS full_objective=false
+PASS current_cursor_edited=false

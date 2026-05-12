@@ -1,0 +1,17 @@
+requirement,status,evidence,gap
+named_board_file_preserved,pass,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,board remains coordination surface
+autoquant_status_checked,pass,00_status_before and 04_status_after_threaded_run exit 0,status dependency_ready_data_ready
+autoquant_seeded_run_executed,pass,03_autoquant_run_threaded_resolver exit 0 with 3 succeeded 0 failed,runtime oracle executed
+unpatched_dns_failure_captured,pass,01_autoquant_run exit 1 through aiodns market loading,contrast evidence preserved
+every_active_regime_calibrated_95,blocked,AutoQuant output is strategy performance not calibrated regime confidence,no per-regime 95 confidence
+per_regime_qualifying_conditions,blocked,no qualifying_condition rows in AutoQuant run,conditions missing
+cross_market_cycle_timeframe_validation,blocked,run covers crypto strategy universe but not every active regime across required markets/cycles/timeframes,validation missing
+r6_owner_export_or_flip_approval,blocked,/tmp/ict-engine-board-a-r6-owner-export-v1 absent and approval false,owner export or approval missing
+r3_native_subhour_source_labels,blocked,/tmp/ict-engine-native-subhour-source-label-intake absent,native sub-hour labels missing
+r5_source_panel_recency_extension,blocked,/tmp/ict-engine-source-panel-recency-extension absent,recency extension missing
+provider_coverage_ibkr_tradingview_yfinance_kraken,blocked,not advanced by this AutoQuant runtime run,provider chain still requires source/control unlock before promotion
+filter_prebayes_bbn_evidence,blocked,no post-source-unlock filter/BBN run,source controls must unlock first
+catboost_path_ranking,blocked,no post-source-unlock CatBoost/path-ranking run,source controls must unlock first
+execution_tree_promotion,blocked,no post-source-unlock execution-tree run,source controls must unlock first
+canonical_merge_and_downstream_rerun,blocked,canonical merge false and source roots absent,merge/rerun disallowed
+goal_completion_update_goal,blocked,strict objective false update_goal false,do not call update_goal

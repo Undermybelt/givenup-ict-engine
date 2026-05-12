@@ -1,0 +1,13 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T014630-codex-provider-export-readiness-contract/provider-readiness/provider_export_readiness_contract.json
+provider_export_ready_now: False
+databento_credential_present: False
+databento_tool_present: False
+ibkr_gateway_or_tws_port_open: True
+ibkr_python_tool_present: False
+tradingview_config_present: True
+thresholds_relaxed: False
+runtime_code_changed: False
+fresh_calibration_rerun: False
+trade_usable: False
+MANIPULATION_INPUT_STATE missing_required_inputs
+GATE blocked_provider_export_not_ready

@@ -1,0 +1,180 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "selected_strategy": "TomacNQ_KillzoneBreakout",
+  "timeframe": "1h",
+  "candidate_status": "probe_only",
+  "promotion_state": "not_promoted_weak_sharpe_provider_disagreement",
+  "breadth_matrix": {
+    "QQQ/USD": {
+      "status": "covered",
+      "trade_count": 74,
+      "trade_density_label": "thin",
+      "sharpe": 0.2207,
+      "win_rate_pct": 52.7027,
+      "profit_factor": 1.2501,
+      "total_profit_pct": 6.98,
+      "max_drawdown_pct": -4.2049
+    },
+    "IBKR_QQQ_1h_regime_probe": {
+      "status": "flat",
+      "trade_count": null,
+      "trade_density_label": "external_evidence",
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "source_window": "480 rows via IBKR gateway 127.0.0.1:4002",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=RangeConsolidation/WideRange",
+        "execution=observe/transition_guardrail/guarded"
+      ]
+    },
+    "YF_QQQ_1h_regime_probe": {
+      "status": "flat",
+      "trade_count": null,
+      "trade_density_label": "external_evidence",
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "source_window": "historical QQQ 1h Yahoo/YF artifact",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=TrendExpansion/BullTrendAcceleration",
+        "execution=observe/fill_viable/passive"
+      ]
+    },
+    "TradingView_QQQ_1h_regime_probe": {
+      "status": "flat",
+      "trade_count": null,
+      "trade_density_label": "external_evidence",
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "source_window": "147 rows via TradingViewRemix/MCP harness",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=TrendExpansion/BullTrendAcceleration",
+        "execution=observe/fill_viable/passive"
+      ]
+    },
+    "Kraken_PF_XBTUSD_1h_provider_probe": {
+      "status": "flat",
+      "trade_count": null,
+      "trade_density_label": "external_evidence",
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "source_window": "721 rows, provider reachability evidence only",
+      "evidence_source": "provider probe",
+      "notes": [
+        "provider path reachable",
+        "not a QQQ branch-performance substitute"
+      ]
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 74,
+    "aggregate_label": "thin",
+    "covered_market_count": 1
+  },
+  "aggregate_metrics": {
+    "sharpe": 0.2207,
+    "win_rate_pct": 52.7027,
+    "profit_factor": 1.2501,
+    "total_profit_pct": 6.98,
+    "max_drawdown_pct": -4.2049,
+    "trade_count": 74
+  },
+  "resonance_summary": {
+    "base_timeframe": "1h",
+    "context_stack": [
+      "4h",
+      "1d"
+    ],
+    "resonance_by_timeframe": {
+      "1h": "breakout trigger",
+      "4h": "ema21_gt_ema89 alignment",
+      "1d": "not yet independently validated"
+    }
+  },
+  "autoresearch": {
+    "effective_status": "manual_auto_quant_probe_importable",
+    "decision_counts": {
+      "probe_only": 1,
+      "promoted": 0,
+      "rejected": 0
+    },
+    "failure_tag_counts": {
+      "weak_sharpe": 1,
+      "provider_regime_disagreement": 1,
+      "not_branch_complete": 1
+    },
+    "best_attempt_score_delta": 0.0
+  },
+  "cross_market_evidence": {
+    "IBKR_QQQ_1h_regime_probe": {
+      "trade_count": null,
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "window": "480 rows via IBKR gateway 127.0.0.1:4002",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=RangeConsolidation/WideRange",
+        "execution=observe/transition_guardrail/guarded"
+      ]
+    },
+    "YF_QQQ_1h_regime_probe": {
+      "trade_count": null,
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "window": "historical QQQ 1h Yahoo/YF artifact",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=TrendExpansion/BullTrendAcceleration",
+        "execution=observe/fill_viable/passive"
+      ]
+    },
+    "TradingView_QQQ_1h_regime_probe": {
+      "trade_count": null,
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "window": "147 rows via TradingViewRemix/MCP harness",
+      "evidence_source": "ict-engine analyze",
+      "notes": [
+        "market_state=TrendExpansion/BullTrendAcceleration",
+        "execution=observe/fill_viable/passive"
+      ]
+    },
+    "Kraken_PF_XBTUSD_1h_provider_probe": {
+      "trade_count": null,
+      "sharpe": null,
+      "win_rate_pct": null,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "window": "721 rows, provider reachability evidence only",
+      "evidence_source": "provider probe",
+      "notes": [
+        "provider path reachable",
+        "not a QQQ branch-performance substitute"
+      ]
+    }
+  }
+}

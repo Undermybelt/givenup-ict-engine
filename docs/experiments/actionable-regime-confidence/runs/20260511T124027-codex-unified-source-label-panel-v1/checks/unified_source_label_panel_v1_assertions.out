@@ -1,0 +1,12 @@
+PASS run_id=20260511T124027+0800-codex-unified-source-label-panel-v1
+PASS price_roots_with_materialized_windows=4
+PASS materialized_panel_rows=818
+PASS deferred_refresh_required_rows=21
+PASS missing_slots_covered=67
+PASS still_missing_or_out_of_scope=497
+PASS confidence_gate_claimed=false
+PASS full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+PASS thresholds_relaxed=false
+PASS runtime_code_changed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

@@ -1,0 +1,17 @@
+PASS artifact_packet_verified=true
+PASS canonical_readback=true
+PASS canonical_command_exit=0
+PASS gate_result=fail:required_root_branch_hard_gates_failed
+PASS stable_profit_score=75.88863517875106
+PASS variant_trade_rows=47843
+PASS selected_trade_rows=13275
+PASS branch_paths_passed=0
+PASS downstream_consumption=not_started:blocked_by_branch_rc_spa_hard_gates
+PASS provider_status_captured=true
+PASS yfinance_ready=true
+PASS kraken_cli_ready=true
+PASS ibkr_gateway_reachable_deps_unhealthy=true
+PASS tradingviewremix_probe_recorded=true
+PASS downstream_not_started_because_rc_spa_failed=true
+PASS promotion_allowed_false=true
+PASS all_assertions_passed=true

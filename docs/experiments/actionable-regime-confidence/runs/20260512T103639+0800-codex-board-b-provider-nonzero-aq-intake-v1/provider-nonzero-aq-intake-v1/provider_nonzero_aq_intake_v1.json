@@ -1,0 +1,161 @@
+{
+  "run_id": "20260512T103639+0800-codex-board-b-provider-nonzero-aq-intake-v1",
+  "mode": "append_only_unregistered_provider_nonzero_intake_non_promoting",
+  "board_hash_before_writeback": "087ac45b3565118590eceb0079d27d0243357cb77aa5be5e69df219257ddf2fd",
+  "source_runs": [
+    {
+      "run_id": "20260512T102500+0800-codex-board-b-yahoo-crypto-momentum-aq-v1",
+      "counting_role": "context_only_already_registered_in_board_102500_closeout",
+      "aq_provider_invoked": "Auto-Quant/TOMAC provider crypto momentum run",
+      "provider_requested": ["Yahoo/yfinance BTC-USD 1h", "Yahoo/yfinance ETH-USD 1h", "Yahoo/yfinance SOL-USD 1h"],
+      "provider_data_acquired": true,
+      "provider_unreachable": [],
+      "local_cache_replay": false,
+      "result": "nonzero_trades_negative_profit_fail_closed",
+      "strategies": [
+        {
+          "strategy": "ProviderCryptoMomentumStateV1",
+          "trade_count": 295,
+          "total_profit_pct": -18.73,
+          "win_rate_pct": 34.9153,
+          "profit_factor": 0.735
+        },
+        {
+          "strategy": "ProviderCryptoPullbackRevertV1",
+          "trade_count": 109,
+          "total_profit_pct": -7.08,
+          "win_rate_pct": 40.367,
+          "profit_factor": 0.6898
+        }
+      ]
+    },
+    {
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "counting_role": "count_once_in_this_packet",
+      "aq_provider_invoked": "Auto-Quant/TOMAC provider Yahoo NQ tick-precision run",
+      "provider_requested": ["Yahoo/yfinance NQ/F long-history 1h through provider-provenanced run-local feathers"],
+      "provider_data_acquired": true,
+      "provider_unreachable": [],
+      "local_cache_replay": true,
+      "result": "nq_tick_precision_produced_trades_mixed_not_promotable",
+      "strategies": [
+        {
+          "strategy": "ProviderNqSampledPulse",
+          "trade_count": 18,
+          "total_profit_pct": 0.97,
+          "win_rate_pct": 33.3333,
+          "profit_factor": 5.3246,
+          "support_gate": "fail_low_trade_count"
+        },
+        {
+          "strategy": "ProviderNqTrendPulse",
+          "trade_count": 896,
+          "total_profit_pct": -38.1,
+          "win_rate_pct": 37.7232,
+          "profit_factor": 0.5912,
+          "support_gate": "pass_trade_count_fail_profit"
+        }
+      ]
+    },
+    {
+      "run_id": "20260512T102928+0800-codex-board-b-provider-btc-tickfix-factor-v1",
+      "related_rerun": "20260512T103240+0800-codex-board-b-provider-btc-precision-fix-aq-v1",
+      "counting_role": "context_only_already_registered_in_board_102352_102928_closeout",
+      "aq_provider_invoked": "Auto-Quant/TOMAC provider BTC tick-fix factor run",
+      "provider_requested": ["Binance BTCUSDT 1h provider-acquired source CSV"],
+      "provider_data_acquired": true,
+      "provider_unreachable": [],
+      "local_cache_replay": true,
+      "result": "btc_tickfix_factor_nonzero_mixed_fail_closed",
+      "strategies": [
+        {
+          "strategy": "ProviderBtcMomentumCross",
+          "trade_count": 9,
+          "total_profit_pct": 2.14,
+          "win_rate_pct": 55.5556,
+          "profit_factor": 1.777,
+          "support_gate": "fail_low_trade_count"
+        },
+        {
+          "strategy": "ProviderBtcMomentumPulse",
+          "trade_count": 57,
+          "total_profit_pct": -3.61,
+          "win_rate_pct": 38.5965,
+          "profit_factor": 0.8418,
+          "support_gate": "fail_profit"
+        },
+        {
+          "strategy": "ProviderBtcTrendPullback",
+          "trade_count": 16,
+          "total_profit_pct": -5.21,
+          "win_rate_pct": 31.25,
+          "profit_factor": 0.2877,
+          "support_gate": "fail_low_trade_count_and_profit"
+        }
+      ]
+    },
+    {
+      "run_id": "20260512T103010+0800-codex-board-b-provider-btc-always-entry-canary-v1",
+      "related_run": "20260512T103114+0800-codex-board-b-btc-signal-consumption-diagnostic-v1",
+      "counting_role": "count_once_in_this_packet",
+      "aq_provider_invoked": "Auto-Quant/TOMAC provider BTC canary after price-side repair",
+      "provider_requested": ["Binance BTCUSDT 1h provider-acquired source CSV"],
+      "provider_data_acquired": true,
+      "provider_unreachable": [],
+      "local_cache_replay": true,
+      "result": "positive_canary_plumbing_observations_non_promoting",
+      "strategies": [
+        {
+          "strategy": "ProviderBtcAlwaysEntryCanary",
+          "trade_count": 81,
+          "total_profit_pct": 4.41,
+          "win_rate_pct": 53.0864,
+          "profit_factor": 1.1993,
+          "support_gate": "diagnostic_canary_not_branch_rooted"
+        },
+        {
+          "strategy": "ProviderBtcSignalCanary",
+          "trade_count": 80,
+          "total_profit_pct": 3.19,
+          "win_rate_pct": 55.0,
+          "profit_factor": 1.1263,
+          "support_gate": "diagnostic_canary_not_branch_rooted"
+        }
+      ]
+    }
+  ],
+  "supporting_diagnostics": [
+    {
+      "run_id": "20260512T102601+0800-codex-board-b-nq-canary-engine-debug-v1",
+      "result": "nq_canary_zero_trades_before_tick_precision_capture"
+    },
+    {
+      "run_id": "20260512T102611+0800-codex-board-b-provider-yf-nq-signal-plumbing-diagnostic-v1",
+      "result": "offline_entries_present_223_but_market_price_side_configuration_failed_before_retry"
+    },
+    {
+      "run_id": "20260512T102728+0800-codex-board-b-provider-yahoo-nq-dense-aq-v1",
+      "result": "three_dense_yahoo_nq_strategies_reached_measurement_zero_trades"
+    }
+  ],
+  "gate": {
+    "provider_nonzero_aq_intake_v1": "unregistered_nonzero_provider_observations_found_non_promoting",
+    "count_once": [
+      "102812_provider_yf_nq_trendpulse_tick_precision",
+      "103010_103114_provider_btc_price_side_canary_repair"
+    ],
+    "context_only_not_counted_again": [
+      "102500_provider_yahoo_crypto_momentum_aq",
+      "102928_provider_btc_tickfix_factor"
+    ],
+    "nonzero_executed_trade_observations_present": true,
+    "positive_non_canary_branch_rooted_recipe_present": false,
+    "pre_bayes_rerun": false,
+    "bbn_rerun": false,
+    "catboost_path_ranker_rerun": false,
+    "execution_tree_rerun": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  },
+  "next_action": "Convert the BTC price-side canary into a non-canary, Board-B-rooted recipe or find a provider-owned recipe with positive profit, adequate support, and explicit branch path before running Pre-Bayes/filter -> BBN -> CatBoost/path-ranker -> execution tree."
+}

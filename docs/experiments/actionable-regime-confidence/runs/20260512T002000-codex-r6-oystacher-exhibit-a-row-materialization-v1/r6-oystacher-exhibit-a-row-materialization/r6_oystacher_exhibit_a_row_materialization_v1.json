@@ -1,0 +1,80 @@
+{
+  "accepted_rows_added": 0,
+  "all_materialized_split_axes_pass": true,
+  "board_sha256_at_start": "a95b244f30ebf68e95bdc66236101f46b7c117250ff4a285235d7dfbad3d0730",
+  "contract_counts": {
+    "CLM2": 1425,
+    "ESH": 1,
+    "ESH4": 637,
+    "ESM3": 261,
+    "HGH2": 2019,
+    "HGH21": 2,
+    "NGF3": 2025,
+    "VX": 365
+  },
+  "courtlistener_docket_url": "https://www.courtlistener.com/docket/4263217/us-commodity-futures-trading-commission-v-oystacher/",
+  "direct_verifier": {
+    "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/command-output/direct_manipulation_row_intake_verifier.exit",
+    "name": "direct_manipulation_row_intake_verifier",
+    "parsed": {
+      "matched_group_count": 1313,
+      "matched_negative_rows": 1553,
+      "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+      "positive_rows": 5182,
+      "provenance_keys": [
+        "cftc_complaint_url_without_exhibit_a",
+        "cftc_press_url",
+        "courtlistener_docket_url",
+        "generated_at_utc",
+        "parser",
+        "raw_data_committed",
+        "raw_pdf_path_tmp",
+        "raw_pdf_sha256",
+        "run_id",
+        "runtime_code_changed",
+        "shared_intake_mutated",
+        "source_pdf_url",
+        "thresholds_relaxed",
+        "unparsed_candidate_lines_csv"
+      ],
+      "status": "schema_ready_unscored"
+    },
+    "returncode": 0,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "download_returncode": 0,
+  "gate_result": "r6_oystacher_exhibit_a_row_materialization_v1=public_court_exhibit_rows_isolated_schema_ready_policy_review_required",
+  "generated_at_utc": "2026-05-11T16:29:02.363389+00:00",
+  "group_stats": {
+    "groups_started": 1553,
+    "negative_groups": 1553,
+    "orphan_positive_groups_dropped": 0,
+    "positive_groups": 1313
+  },
+  "isolated_intake_root": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/isolated-oystacher-exhibit-a-intake",
+  "matched_control_candidate_rows": 1553,
+  "new_confidence_gate": false,
+  "next_action": "Review whether public RECAP/PACER Exhibit A is acceptable source provenance for canonical R6 intake, then merge through a shared lock and rerun split/species plus downstream chain only if approved.",
+  "parsed_order_rows": 6735,
+  "pdf_pages": 116,
+  "positive_candidate_rows": 5182,
+  "raw_data_committed": false,
+  "raw_pdf_path_tmp": "/tmp/ict-engine-oystacher-exhibit-a-row-materialization-v1/gov.uscourts.ilnd.316889.1.1.oystacher_exhibit_a.pdf",
+  "raw_pdf_sha256": "3ceb2758093d3ec9ec1a861ee1ab52074175517b158ffb50aff014ddac017a66",
+  "run_id": "20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "side_counts": {
+    "FLIP": 1553,
+    "SPOOF": 5182
+  },
+  "source_accepted_for_live_canonical_intake": false,
+  "source_pdf_url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf",
+  "split_metrics_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T002000-codex-r6-oystacher-exhibit-a-row-materialization-v1/r6-oystacher-exhibit-a-row-materialization/oystacher_exhibit_a_split_metrics_v1.csv",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unparsed_candidate_lines": 8,
+  "update_goal": false
+}

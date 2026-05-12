@@ -1,0 +1,168 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_before_artifact": "60ef12e136d26f01dbe634f538c9d02a156cb468d447236cb1337e47dbff6ae4",
+  "canonical_merge": false,
+  "current_r6_required_package_complete": false,
+  "cutoff_mtime_utc": "2026-05-12T01:07:32.304913+00:00",
+  "cutoff_source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T090725+0800-codex-current-objective-audit-after-085908-v1",
+  "downstream_promotion_rerun": false,
+  "gate_result": "source_control_arrival_poll_after_090725_v1=no_new_required_root_no_unlock",
+  "observed_at_utc": "2026-05-12T01:13:37.549486+00:00",
+  "post_090725_dropzone_candidates": [],
+  "prior_assertion_rows": [
+    {
+      "accepted_rows_added": "0",
+      "gate_result": "r3_r5_required_root_local_sweep_after_085612_v1=no_crisis_r3_or_r5_mainregimev2_unlock",
+      "name": "085908_r3_r5_required_root_local_sweep",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T085908+0800-codex-r3-r5-required-root-local-sweep-after-085612-v1/checks/r3_r5_required_root_local_sweep_after_085612_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    {
+      "accepted_rows_added": "0",
+      "gate_result": "current_objective_audit_after_085908_v1=not_complete_source_control_absent_no_selected_history_no_downstream_promotion",
+      "name": "090725_current_objective_audit",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T090725+0800-codex-current-objective-audit-after-085908-v1/checks/current_objective_audit_after_085908_v1_assertions.out",
+      "present": "true",
+      "source_control_evidence_acquired": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  ],
+  "promotion_allowed": false,
+  "r3_crisis_label_present": false,
+  "r3_native_subhour_complete_required_file_set": true,
+  "r3_native_subhour_unlock": false,
+  "r5_recency_complete_required_file_set": false,
+  "run_id": "20260512T091136+0800-codex-source-control-arrival-poll-after-090725-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_roots": [
+    {
+      "complete_required_file_set": false,
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "name": "r6_owner_export_tmp",
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "required_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "required_files_present": {
+        "matched_negative_normal_activity_rows.csv": false,
+        "positive_spoofing_layering_rows.csv": false,
+        "provenance_manifest.json": false
+      },
+      "unlocking": false
+    },
+    {
+      "complete_required_file_set": false,
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "name": "r6_owner_export_private_tmp",
+      "path": "/private/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "required_files": [
+        "positive_spoofing_layering_rows.csv",
+        "matched_negative_normal_activity_rows.csv",
+        "provenance_manifest.json"
+      ],
+      "required_files_present": {
+        "matched_negative_normal_activity_rows.csv": false,
+        "positive_spoofing_layering_rows.csv": false,
+        "provenance_manifest.json": false
+      },
+      "unlocking": false
+    },
+    {
+      "complete_required_file_set": false,
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "name": "r5_recency_tmp",
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "required_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "required_files_present": {
+        "source_panel_recency_provenance.json": false,
+        "stock_market_regimes_2026_extension.csv": false
+      },
+      "unlocking": false
+    },
+    {
+      "complete_required_file_set": false,
+      "exists": false,
+      "file_count": 0,
+      "is_dir": false,
+      "name": "r5_recency_private_tmp",
+      "path": "/private/tmp/ict-engine-source-panel-recency-extension",
+      "required_files": [
+        "stock_market_regimes_2026_extension.csv",
+        "source_panel_recency_provenance.json"
+      ],
+      "required_files_present": {
+        "source_panel_recency_provenance.json": false,
+        "stock_market_regimes_2026_extension.csv": false
+      },
+      "unlocking": false
+    },
+    {
+      "accepted_mapping_confidence_95_labels": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "complete_required_file_set": true,
+      "crisis_label_present": false,
+      "exists": true,
+      "file_count": 2,
+      "is_dir": true,
+      "name": "r3_native_subhour_tmp",
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "required_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "required_files_present": {
+        "native_subhour_source_label_provenance.json": true,
+        "native_subhour_source_label_rows.csv": true
+      },
+      "row_count": 5032903,
+      "unlocking": false
+    },
+    {
+      "accepted_mapping_confidence_95_labels": [
+        "Bear",
+        "Bull",
+        "Sideways"
+      ],
+      "complete_required_file_set": true,
+      "crisis_label_present": false,
+      "exists": true,
+      "file_count": 2,
+      "is_dir": true,
+      "name": "r3_native_subhour_private_tmp",
+      "path": "/private/tmp/ict-engine-native-subhour-source-label-intake",
+      "required_files": [
+        "native_subhour_source_label_rows.csv",
+        "native_subhour_source_label_provenance.json"
+      ],
+      "required_files_present": {
+        "native_subhour_source_label_provenance.json": true,
+        "native_subhour_source_label_rows.csv": true
+      },
+      "row_count": 5032903,
+      "unlocking": false
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

@@ -1,0 +1,16 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T003739-source-backed-root-gate-mtf/root-v2-source-backed/source_backed_root_gate_report.json
+feature_table: docs/experiments/actionable-regime-confidence/runs/20260511T003739-source-backed-root-gate-mtf/root-v2-source-backed/source_backed_root_feature_table.csv
+accepted_root_classes_95: ['CrisisStress']
+missing_root_classes_95: ['BullExpansion', 'BearExpansion', 'Consolidation', 'TransitionRecovery', 'Manipulation']
+accepted_gate: partial_for_MainRegimeV2_source_backed_roots
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+target_columns_used_only_as_labels: True
+trade_usable: False
+BullExpansion: state=blocked cal_lcb=0.774116 test_lcb=0.743988 cal=114 test=261 blockers=calibration_support_below_120,calibration_wilson95_below_0_95,test_wilson95_below_0_95,ece_above_0_05,validation_timeframes_below_2
+BearExpansion: state=blocked cal_lcb=0.371555 test_lcb=0.348329 cal=223 test=261 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+Consolidation: state=blocked cal_lcb=0.730695 test_lcb=0.742078 cal=297 test=246 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+CrisisStress: state=accepted_95 cal_lcb=0.986647 test_lcb=0.982044 cal=542 test=402 blockers=
+TransitionRecovery: state=blocked cal_lcb=0.705942 test_lcb=0.690007 cal=2642 test=2541 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+Manipulation: state=missing_required_inputs cal_lcb=0.000000 test_lcb=0.000000 cal=0 test=0 blockers=missing_required_inputs,proxy_only_low_confidence
+UnknownOrMixed: state=residual_not_release_gate cal_lcb=0.995080 test_lcb=0.995221 cal=777 test=800 blockers=residual_not_release_gate

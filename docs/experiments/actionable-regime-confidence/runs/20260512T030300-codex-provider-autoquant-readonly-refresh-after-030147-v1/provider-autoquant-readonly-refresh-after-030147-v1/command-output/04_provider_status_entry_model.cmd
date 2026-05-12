@@ -1,0 +1,1 @@
+./target/debug/ict-engine provider-status --domain entry_model --agent 

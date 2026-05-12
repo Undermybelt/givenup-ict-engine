@@ -1,0 +1,18 @@
+verifier_field,positive_request_mapping,control_request_mapping,bridge_status,notes
+label,positive_label,normal_label,direct_positive_control_name_split,Adapter must set verifier label from source-owned positive/normal labels without changing semantics.
+source_report,source_dataset,provenance_or_source_dataset_required,partial_mapping_controls_need_source_dataset,Positive rows carry source_dataset; matched controls need equivalent owner/export identifier.
+source_section,,,missing_required_source_locator,"V62 request does not require report section, appendix id, or row block locator."
+trade_date,event_start,control_event_start_required,derivable_only_with_timestamp_policy,Can derive date from event_start only if timezone and session policy are explicit.
+symbol,symbol,control_symbol_required,partial_mapping_controls_need_symbol,V62 control file does not require symbol even though matching_dimensions may describe it.
+venue_or_market_center,venue_or_market_center,control_venue_or_market_center_required,partial_mapping_controls_need_venue,"Controls need explicit venue/market center, not only narrative matching dimensions."
+participant_type_code,,,missing_required_participant_dimension,Do not fabricate participant fields; owner export must provide them or verifier contract must be amended.
+participant_identifier,,,missing_required_participant_dimension,Do not fabricate participant identifiers.
+side,,,missing_required_order_dimension,Order side is required by the current verifier and absent from V62 required fields.
+earliest_order_received_time,event_start,control_event_start_required,partial_mapping_controls_need_event_start,Positive event_start can map only if it is the earliest order timestamp.
+latest_order_received_time,event_end,control_event_end_required,partial_mapping_controls_need_event_end,Positive event_end can map only if it is the latest order timestamp.
+order_count,,,missing_required_order_dimension,The current verifier requires order_count; V62 does not.
+total_order_quantity,,,missing_required_order_dimension,The current verifier requires total_order_quantity; V62 does not.
+activity_description,species + positive_label + event_id,matching_dimensions + normal_label,derivable_only_with_explicit_policy,"Derived descriptions are acceptable only as adapter metadata, not as source-owned proof."
+matched_negative_group_id,matched_control_group_id,matched_control_group_id,direct_group_mapping,Name differs but semantics match if positive/control groups are owner-approved.
+session_bucket,,,missing_or_derivable_only_with_session_policy,Do not derive without explicit timezone/session policy in provenance.
+source_row_id,source_row_id,control_row_id,direct_positive_control_name_split,Control row id can map to source_row_id only for verifier-native staged controls.

@@ -1,0 +1,17 @@
+PASS decision=r3_native_subhour_public_web_source_screen_v1=no_ready_source_owned_native_subhour_rows_found
+PASS ready_public_source_native_subhour_exports_found=0
+PASS intake_root_exists=false
+PASS intake_rows_file_exists=false
+PASS intake_provenance_file_exists=false
+PASS rows_acquired=false
+PASS accepted_rows_added=0
+PASS canonical_merge_allowed=false
+PASS downstream_chain_rerun_allowed=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS runtime_code_changed=false
+PASS shared_intake_mutated=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS raw_data_downloaded=false
+PASS trade_usable=false

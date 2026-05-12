@@ -1,0 +1,10 @@
+source_id,owner,url,official_route,date_fit,detail_fit,decision
+cme_datamine,CME Group,https://www.cmegroup.com/market-data/datamine-historical-data/index.html,yes,product_start_dates_require_export_confirmation,market_by_order_and_pcap_listed,route_plausible_controls_not_acquired
+cme_futures_options_catalog,CME Group,https://www.cmegroup.com/market-data/browse-data/catalog/futures-and-options-data.html,yes,historical_depth_claimed_broadly,granular_depth_of_book_claimed,route_plausible_controls_not_acquired
+cme_market_depth_faq,CME Group,https://www.cmegroup.com/market-data/files/cme-group-market-depth-faq.pdf,yes,product_start_dates_depend_on_product,order_book_recreation_and_millisecond_timestamps,route_plausible_controls_not_acquired
+cme_cloud_market_depth,CME Group,https://www.cmegroup.com/market-data/connect-data/cloud-mdp.html,yes,insufficient_for_2011_2013_if_2014_plus_only,order_book_statistics_quotes,not_primary_for_older_cells
+cboe_cfe_historical_futures,Cboe,https://www.cboe.com/markets/us/futures/market-statistics/historical-data/futures/,yes,price_volume_detail_2013_current,daily_or_price_volume_not_order_lifecycle,custom_export_required
+cboe_cfe_archive,Cboe,https://www.cboe.com/markets/us/futures/market-statistics/historical-data/settlement-archive,yes,2004_2013_archive_for_daily_volume_open_interest,daily_archive_not_order_lifecycle,not_sufficient_for_controls
+cboe_futures_market_data_services,Cboe,https://www.cboe.com/market_data_services/us/futures/,yes,real_time_route_not_historical_export_by_itself,top_and_depth_of_book_feeds_listed,custom_historical_export_required
+cboe_vix_futures,Cboe,https://www.cboe.com/en/tradable-products/vix/vix-futures/,yes,vix_futures_introduced_2004,product_existence_not_depth_export,route_context_only
+

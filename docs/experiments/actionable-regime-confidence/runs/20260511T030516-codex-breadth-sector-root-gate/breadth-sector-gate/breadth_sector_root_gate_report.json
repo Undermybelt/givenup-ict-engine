@@ -1,0 +1,336 @@
+{
+  "dataset": {
+    "feature_rows": 9111,
+    "feature_table": "docs/experiments/actionable-regime-confidence/runs/20260511T030516-codex-breadth-sector-root-gate/breadth-sector-gate/breadth_sector_root_features.csv",
+    "label_counts": {
+      "Bear|1d": 1738,
+      "Bear|1w": 169,
+      "Bull|1d": 1950,
+      "Bull|1w": 242,
+      "Crisis|1d": 809,
+      "Crisis|1w": 971,
+      "Sideways|1d": 1825,
+      "Sideways|1w": 9,
+      "UnknownOrMixed|1d": 1223,
+      "UnknownOrMixed|1w": 175
+    },
+    "split_counts": {
+      "calibration|1d": 1887,
+      "calibration|1w": 390,
+      "test|1d": 1887,
+      "test|1w": 393,
+      "train|1d": 3771,
+      "train|1w": 783
+    },
+    "targets": [
+      "SPY",
+      "QQQ",
+      "IWM"
+    ],
+    "timeframes": [
+      "1d",
+      "1w"
+    ]
+  },
+  "decision": {
+    "blocker": "Breadth/sector/credit/volatility features did not close all missing MainRegimeV2 roots at the unchanged 95% held-out gate.",
+    "gate": "blocked_breadth_sector_roots_below_95",
+    "missing_active_roots_after_gate": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ],
+    "newly_accepted_roots": [],
+    "next_action": "If no roots pass, acquire a labeled macro/bull-bear-sideways regime dataset or options/dealer-positioning history before rerunning unchanged gates.",
+    "raw_provider_csv_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "provider": {
+    "available_symbols": [
+      "DIA",
+      "GLD",
+      "HYG",
+      "IWM",
+      "LQD",
+      "QQQ",
+      "RSP",
+      "SPY",
+      "TLT",
+      "UUP",
+      "XLB",
+      "XLC",
+      "XLE",
+      "XLF",
+      "XLI",
+      "XLK",
+      "XLP",
+      "XLRE",
+      "XLU",
+      "XLV",
+      "XLY",
+      "^VIX"
+    ],
+    "date_max": "2026-05-08T00:00:00+00:00",
+    "date_min": "2016-05-09T00:00:00+00:00",
+    "requested_symbols": [
+      "DIA",
+      "GLD",
+      "HYG",
+      "IWM",
+      "LQD",
+      "QQQ",
+      "RSP",
+      "SPY",
+      "TLT",
+      "UUP",
+      "XLB",
+      "XLC",
+      "XLE",
+      "XLF",
+      "XLI",
+      "XLK",
+      "XLP",
+      "XLRE",
+      "XLU",
+      "XLV",
+      "XLY",
+      "^VIX"
+    ],
+    "rows": 54798
+  },
+  "root_reports": [
+    {
+      "accepted_95": false,
+      "blockers": [
+        "test_support_below_60",
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "coverage_below_0_03",
+        "ece_above_0_05",
+        "validation_timeframes_below_2"
+      ],
+      "calibration": {
+        "coverage": 0.2028985507246377,
+        "ece": 0.02242965367965366,
+        "precision": 0.3203463203463203,
+        "precision_wilson_lcb_95": 0.2794295367966663,
+        "success": 148,
+        "support": 462,
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d"
+        ]
+      },
+      "ece": 0.26906426906426906,
+      "root_class": "Bull",
+      "rule": "breadth_above_ma200 <= 0.318181818182",
+      "state": "blocked",
+      "test": {
+        "coverage": 0.017105263157894738,
+        "ece": 0.26906426906426906,
+        "precision": 0.05128205128205128,
+        "precision_wilson_lcb_95": 0.014177955415274114,
+        "success": 2,
+        "support": 39,
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d"
+        ]
+      },
+      "train": {
+        "coverage": 0.10540184453227931,
+        "ece": 0.0,
+        "precision": 0.29791666666666666,
+        "precision_wilson_lcb_95": 0.25873853327249574,
+        "success": 143,
+        "support": 480,
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d",
+          "1w"
+        ]
+      }
+    },
+    {
+      "accepted_95": false,
+      "blockers": [
+        "calibration_support_below_120",
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05",
+        "validation_timeframes_below_2"
+      ],
+      "calibration": {
+        "coverage": 0.02766798418972332,
+        "ece": 0.5379969096783256,
+        "precision": 0.6825396825396826,
+        "precision_wilson_lcb_95": 0.5599646825583142,
+        "success": 43,
+        "support": 63,
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d"
+        ]
+      },
+      "ece": 0.4801587301587302,
+      "root_class": "Bear",
+      "rule": "panel_range20_mean <= 0.0127445794453",
+      "state": "blocked",
+      "test": {
+        "coverage": 0.2578947368421053,
+        "ece": 0.4801587301587302,
+        "precision": 0.20238095238095238,
+        "precision_wilson_lcb_95": 0.17188621095779558,
+        "success": 119,
+        "support": 588,
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d"
+        ]
+      },
+      "train": {
+        "coverage": 0.2977602108036891,
+        "ece": 0.0,
+        "precision": 0.14454277286135694,
+        "precision_wilson_lcb_95": 0.1268303043620524,
+        "success": 196,
+        "support": 1356,
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d"
+        ]
+      }
+    },
+    {
+      "accepted_95": false,
+      "blockers": [
+        "calibration_support_below_120",
+        "test_support_below_60",
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "coverage_below_0_03",
+        "ece_above_0_05",
+        "validation_timeframes_below_2"
+      ],
+      "calibration": {
+        "coverage": 0.006587615283267457,
+        "ece": 0.26799704360679977,
+        "precision": 0.8666666666666667,
+        "precision_wilson_lcb_95": 0.6211801716767764,
+        "success": 13,
+        "support": 15,
+        "validation_instruments": [
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d"
+        ]
+      },
+      "ece": 0.22083333333333333,
+      "root_class": "Sideways",
+      "rule": "vol20 <= 0.00465418081575",
+      "state": "blocked",
+      "test": {
+        "coverage": 0.021052631578947368,
+        "ece": 0.22083333333333333,
+        "precision": 0.6458333333333334,
+        "precision_wilson_lcb_95": 0.504390570103431,
+        "success": 31,
+        "support": 48,
+        "validation_instruments": [
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d"
+        ]
+      },
+      "train": {
+        "coverage": 0.09903381642512077,
+        "ece": 0.0,
+        "precision": 0.5986696230598669,
+        "precision_wilson_lcb_95": 0.5527819101692583,
+        "success": 270,
+        "support": 451,
+        "validation_instruments": [
+          "IWM",
+          "QQQ",
+          "SPY"
+        ],
+        "validation_market_contexts": [
+          "yfinance_us_equity_proxy"
+        ],
+        "validation_timeframes": [
+          "1d"
+        ]
+      }
+    }
+  ],
+  "run_id": "20260511T030516+0800-codex-breadth-sector-root-gate",
+  "threshold_policy": {
+    "blocked_predictor_prefixes": [
+      "future_",
+      "target_",
+      "next_"
+    ],
+    "calibration_support_min": 120,
+    "coverage_min": 0.03,
+    "ece_max": 0.05,
+    "precision_wilson_lcb_95_min": 0.95,
+    "test_support_min": 60,
+    "thresholds_relaxed": false,
+    "validation_instruments_min": 2,
+    "validation_timeframes_min": 2
+  }
+}

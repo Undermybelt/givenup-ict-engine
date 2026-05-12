@@ -1,0 +1,96 @@
+{
+  "run_id": "20260511T044214+0800-codex-kaggle-nft-wash-direct-gate",
+  "gate": "MainRegimeV2.Manipulation.direct_onchain_wash_trading",
+  "source": {
+    "kind": "public_kaggle_dataset",
+    "url": "https://www.kaggle.com/datasets/nikih94uni/ethereum-nfts-flagged-for-suspected-wash-trading",
+    "title": "Ethereum NFTs Flagged for Suspected Wash Trading",
+    "raw_zip_cache": "/private/tmp/ict-regime-kaggle-nft-wash/nft_wash.zip",
+    "raw_extracted_cache": "/private/tmp/ict-regime-kaggle-nft-wash/extracted",
+    "raw_committed_to_repo": false,
+    "dataset_bytes": 20142871,
+    "license": "CC BY 4.0",
+    "source_description": "Ethereum NFT ownership traces plus token-level flagged trade counts derived from structural wash-trading detection."
+  },
+  "target_policy": {
+    "positive": "flagged_trades > 0",
+    "negative": "flagged_trades == 0",
+    "target_fields_used_as_predictors": false,
+    "blocked_predictor_families": [
+      "flagged_trades",
+      "target",
+      "token_id",
+      "collection id/name",
+      "future_*",
+      "target_*",
+      "*_next",
+      "next_*"
+    ],
+    "predictor_class": "direct on-chain ownership/order-lifecycle features only: transfer counts, paid-trade counts, address reuse, reverse edges, repeated pairs, token lifetime, and account activity aggregates."
+  },
+  "panel": {
+    "token_rows": 145098,
+    "positive_rows": 28219,
+    "positive_rate": 0.19448234986009455,
+    "collections": 11,
+    "chronological_order_field": "token last observed ownership-trace timestamp",
+    "split": {
+      "train_rows": 87058,
+      "calibration_rows": 29020,
+      "test_rows": 29020
+    }
+  },
+  "best_high_precision_candidate": {
+    "model": "sklearn HistGradientBoostingClassifier",
+    "threshold": "p_model(ManipulationOnchainWash) >= 0.957925",
+    "calibration": {
+      "wilson95_lcb": 0.944055,
+      "precision": 0.971119,
+      "support": 277,
+      "coverage": 0.009545,
+      "collection_contexts": 10
+    },
+    "test": {
+      "wilson95_lcb": 0.940528,
+      "precision": 0.961864,
+      "support": 472,
+      "coverage": 0.016265,
+      "collection_contexts": 10
+    },
+    "blockers": [
+      "calibration_wilson95_lcb_below_0.95",
+      "test_wilson95_lcb_below_0.95",
+      "calibration_coverage_below_0.03",
+      "test_coverage_below_0.03"
+    ]
+  },
+  "best_coverage_eligible_candidate": {
+    "model": "sklearn HistGradientBoostingClassifier",
+    "threshold": "p_model(ManipulationOnchainWash) >= 0.837883",
+    "calibration": {
+      "wilson95_lcb": 0.876851,
+      "precision": 0.897959,
+      "support": 931,
+      "coverage": 0.032081,
+      "collection_contexts": 10
+    },
+    "test": {
+      "wilson95_lcb": 0.863879,
+      "precision": 0.881616,
+      "support": 1436,
+      "coverage": 0.049483,
+      "collection_contexts": 11
+    },
+    "blockers": [
+      "calibration_wilson95_lcb_below_0.95",
+      "test_wilson95_lcb_below_0.95"
+    ]
+  },
+  "gate_result": "blocked_kaggle_nft_wash_direct_gate_below_95_and_coverage",
+  "accepted_95": false,
+  "thresholds_relaxed": false,
+  "runtime_code_changed": false,
+  "fresh_calibration_rerun": true,
+  "trade_usable": false,
+  "next_action": "Do not repeat this Kaggle NFT wash structural-feature path as an acceptance attempt; acquire stronger direct event/order-lifecycle/L2/L3/MBO/social/on-chain positives and negatives with enough support to satisfy both Wilson95 >= 0.95 and coverage >= 0.03."
+}

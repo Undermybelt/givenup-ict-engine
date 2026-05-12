@@ -1,0 +1,24 @@
+{
+  "aggregate": {
+    "calmar": -0.5968670579282692,
+    "max_drawdown_pct": -90.38528160930034,
+    "profit_factor": 0.6725106376079354,
+    "sharpe": -1.985151974351755,
+    "sortino": -2.7369389548740832,
+    "total_profit_pct": -89.97,
+    "trade_count": 2758,
+    "win_rate_pct": 26.68600435097897
+  },
+  "per_pair": {
+    "BTC/USDT": {
+      "calmar": -0.5968670579282692,
+      "max_drawdown_pct": -90.38528160930034,
+      "profit_factor": 0.6725106376079354,
+      "sharpe": -1.985151974351755,
+      "sortino": -2.7369389548740832,
+      "total_profit_pct": -89.97,
+      "trade_count": 2758,
+      "win_rate_pct": 26.68600435097897
+    }
+  }
+}

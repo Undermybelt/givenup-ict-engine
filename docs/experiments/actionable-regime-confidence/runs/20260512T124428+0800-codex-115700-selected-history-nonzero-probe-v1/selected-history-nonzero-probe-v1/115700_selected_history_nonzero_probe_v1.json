@@ -1,0 +1,92 @@
+{
+  "run_id": "20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1",
+  "source_selected_history_root": "20260512T122600+0800-codex-115700-selected-history-factor-research-v1",
+  "source_pair_repair_readback": "20260512T123854+0800-codex-122600-pair-repair-readback-v1",
+  "source_provider_aq_root": "20260512T115700+0800-codex-same-root-six-provider-1h-aq-v1",
+  "source_enriched_downstream_root": "20260512T121347+0800-codex-115700-enriched-downstream-chain-v1",
+  "objective_file": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+  "board_hash_before_registration": "fcfc75d8aab84f2584f2e2031cf1b4457f3c4653552a48defdd250746962c6ff",
+  "scope": "isolated nonzero-trade probe using the existing 122600 selected-history data/config and a separate strategy directory",
+  "workspace_policy": {
+    "ict_engine_runtime_code_modified": false,
+    "existing_122600_auto_quant_workspace_modified": false,
+    "probe_strategy_root": "docs/experiments/actionable-regime-confidence/runs/20260512T124428+0800-codex-115700-selected-history-nonzero-probe-v1/strategies_external"
+  },
+  "command_runs": {
+    "momentum_probe_only": {
+      "exit": 0,
+      "stdout_sha256": "b8012e0365308fd3c6d3aea54b0d5effa95e4e694cdeeb7ec4f3c1eb68b920b8",
+      "stderr_sha256": "51268abf9623f2d198ca445b53f311c7008310ab8328816836d03f229e9a9d59",
+      "strategies_succeeded": 1,
+      "strategies_failed": 0,
+      "metrics": [
+        {
+          "strategy": "B2R115700SelectedHistoryMomentumProbeV1",
+          "trade_count": 0,
+          "total_profit_pct": 0.0,
+          "win_rate_pct": 0.0,
+          "profit_factor": 0.0
+        }
+      ]
+    },
+    "momentum_plus_always_in_control": {
+      "exit": 0,
+      "stdout_sha256": "4f8a2ed54b8a845793a17438cb3f307d338e9ec5394dcb90ef7f80171c949959",
+      "stderr_sha256": "67d1aa55143c9aa3522fa3b48d3ed931e2d0f575eaf1367d4e676eeea54e9006",
+      "strategies_succeeded": 2,
+      "strategies_failed": 0,
+      "metrics": [
+        {
+          "strategy": "B2R115700AlwaysInControlProbeV1",
+          "trade_count": 0,
+          "total_profit_pct": 0.0,
+          "win_rate_pct": 0.0,
+          "profit_factor": 0.0,
+          "interpretation": "control strategy forced enter_long across available rows but still produced zero trades"
+        },
+        {
+          "strategy": "B2R115700SelectedHistoryMomentumProbeV1",
+          "trade_count": 0,
+          "total_profit_pct": 0.0,
+          "win_rate_pct": 0.0,
+          "profit_factor": 0.0
+        }
+      ]
+    }
+  },
+  "manual_signal_probe": {
+    "momentum_condition_rows": 184,
+    "momentum_condition_rows_after_startup_30": 182,
+    "momentum_condition_rows_with_nonzero_volume": 83,
+    "source": "offline pandas check against B2RSAMEROOTSIXPROVIDER1HAQ115700_USD-1h.feather"
+  },
+  "decision": {
+    "nonzero_trade_recipe_found": false,
+    "pair_construction_repaired": true,
+    "strategy_selectivity_only_blocker": false,
+    "harness_or_execution_contract_blocker": true,
+    "measured_profitability_packet": false,
+    "rc_spa_surface": false,
+    "downstream_promotion_artifact": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "evidence_class": "chain_contract_negative_sample",
+  "gate": [
+    "support_once:124428_115700_selected_history_nonzero_probe_v1",
+    "supporting_only:nonzero_trade_probe_after_pair_repair",
+    "pass:commands_exit0",
+    "pass:manual_momentum_signal_rows_184",
+    "fail_closed:momentum_probe_trade_count_0",
+    "fail_closed:always_in_control_trade_count_0",
+    "fail_closed:nonzero_trade_recipe_found_false",
+    "fail_closed:no_measured_profitability_packet",
+    "fail_closed:no_rc_spa_surface",
+    "fail_closed:no_downstream_promotion_artifact",
+    "promotion_allowed=false",
+    "trade_usable=false",
+    "update_goal=false"
+  ],
+  "next": "Do not spend more loops on stricter selected-history strategies in this 122600 harness. The next valid work is to diagnose why even the always-in control strategy produces zero closed trades, or use a wider provider-provenanced history/harness that can create nonzero selected-history observations before RC-SPA and downstream closure."
+}

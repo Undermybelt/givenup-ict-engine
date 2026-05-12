@@ -1,0 +1,5 @@
+Auto-Quant handoff | status=dependency_ready_data_ready | objective=generic | data_ready=true
+Next: open Auto-Quant program.md and stage a research loop for the requested objective
+Run: uv run --with ta-lib <local-path>
+Review: ict-engine auto-quant-adoption-review --symbol QQQ --state-dir <local-path> --artifact-id auto-quant-handoff:factor_research:QQQ:20260510T092546.341Z
+Workflow: ict-engine workflow-status --symbol QQQ --state-dir <local-path> --human

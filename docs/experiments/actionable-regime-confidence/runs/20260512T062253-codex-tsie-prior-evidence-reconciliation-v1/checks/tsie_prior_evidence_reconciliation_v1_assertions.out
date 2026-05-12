@@ -1,0 +1,12 @@
+accepted_rows_added=0
+canonical_merge=false
+downstream_promotion_rerun=false
+prior_expanded_gate_blocked=true
+prior_mapping_audit_blocked=true
+prior_parent_gate_blocked=true
+same_commit_as_061855=true
+same_dataset_as_061855=true
+strict_full_objective=false
+target_root_mutated=false
+trade_usable=false
+update_goal=false

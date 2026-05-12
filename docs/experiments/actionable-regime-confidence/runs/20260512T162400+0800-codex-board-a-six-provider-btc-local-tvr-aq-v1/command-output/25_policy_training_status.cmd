@@ -1,0 +1,1 @@
+./target/debug/ict-engine policy-training-status --symbol BOARD_A_BTC_162400 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T162400+0800-codex-board-a-six-provider-btc-local-tvr-aq-v1/state_downstream_v1 --output-format json

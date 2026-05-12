@@ -1,0 +1,54 @@
+{
+  "run_id": "20260512T100231+0800-codex-post-093435-autoquant-ingest-chain-readback-v1",
+  "source_run_id": "20260512T093435+0800-codex-board-b-aq-first-tomac-smoke-downstream-v1",
+  "gate_result": "post_093435_autoquant_ingest_chain_readback_v1=autoquant_trades_ingested_isolated_downstream_fail_closed_no_promotion",
+  "autoquant_backtest": {
+    "strategy": "TomacNQ_KillzoneBreakout",
+    "pair": "NQ/USD",
+    "timerange": "20230101-20251231",
+    "total_trades": 5,
+    "profit_total_pct": -1.3072,
+    "profit_total_abs_usd": -1307.2,
+    "winrate": 0.6,
+    "profit_factor": 0.6185451489401438,
+    "sharpe": -0.019160211112092523
+  },
+  "ingest": {
+    "v1_invalid_rows": 5,
+    "v2_dry_run_valid_rows": 5,
+    "v2_force_applied_rows": 5,
+    "v2_force_feedback_records_inserted": 5,
+    "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T100231+0800-codex-post-093435-autoquant-ingest-chain-readback-v1/state_ingest"
+  },
+  "downstream": {
+    "pre_bayes_latest_gate_status": null,
+    "policy_training_matched_rows": 0,
+    "catboost_ready": false,
+    "structural_path_target_rows": 1,
+    "structural_path_mature_rows": 0,
+    "production_validation_rows": 0,
+    "production_validation_min_rows": 30,
+    "observation_validation_rows": 0,
+    "observation_validation_min_rows": 30,
+    "execution_review_status": "observe",
+    "execution_ready": false
+  },
+  "provider_status": {
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready",
+    "yfinance_ready": true,
+    "kraken_cli_ready": true,
+    "ibkr_market_data_ready": false,
+    "tradingview_mcp_ready": false
+  },
+  "board_a_completion": {
+    "accepted_rows_added": 0,
+    "valid_required_root_unlock": false,
+    "source_control_evidence_acquired": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

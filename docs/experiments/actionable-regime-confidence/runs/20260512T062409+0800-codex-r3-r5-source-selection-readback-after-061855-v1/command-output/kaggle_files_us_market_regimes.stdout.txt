@@ -1,0 +1,6 @@
+name                              size  creationDate                
+------------------------------  ------  --------------------------  
+gmm_regimes.csv                 122780  2026-01-23 12:42:23.815000  
+hmm_regimes.csv                 115919  2026-01-23 12:42:23.828000  
+market_features_weekly.csv      113620  2026-01-23 12:42:23.836000  
+market_features_weekly_std.csv  109453  2026-01-23 12:42:23.856000  

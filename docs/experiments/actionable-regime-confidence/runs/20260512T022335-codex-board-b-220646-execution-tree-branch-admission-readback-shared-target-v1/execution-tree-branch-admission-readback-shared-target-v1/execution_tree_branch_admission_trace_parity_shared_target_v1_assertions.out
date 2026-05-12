@@ -1,0 +1,7 @@
+true
+true
+ledger_test_command=CARGO_TARGET_DIR=/tmp/ict-engine-codex-test-execution-tree-ledger cargo test execution_tree_artifact_ledger_marks_fail_closed_branch_admission_not_actionable --lib -- --nocapture
+ledger_test_exit=0
+ledger_test_result=1 passed; 0 failed; 925 filtered out
+trace_readback=docs/experiments/actionable-regime-confidence/runs/20260512T022335-codex-board-b-220646-execution-tree-branch-admission-readback-shared-target-v1/execution-tree-branch-admission-readback-shared-target-v1/execution_tree_branch_admission_trace_readback_shared_target_v1.json
+ledger_readback=docs/experiments/actionable-regime-confidence/runs/20260512T022335-codex-board-b-220646-execution-tree-branch-admission-readback-shared-target-v1/execution-tree-branch-admission-readback-shared-target-v1/execution_tree_branch_admission_ledger_readback_shared_target_v1.json

@@ -1,0 +1,46 @@
+{
+  "decision_hint_raw": "Comparable run, but factor backlog remains: tune structure_ict first.|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=2|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.564|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=1.0000 mtf_entry_alignment=0.9238",
+  "decision_summary": "Comparable run, but factor backlog remains",
+  "direction": "Bull",
+  "entry_state": "medium",
+  "evidence": [
+    "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+    "multi_timeframe_missing=1m,5m,30m,4h",
+    "15m:120 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/windows/btcusd_15m_obs_32.json"
+  ],
+  "execution_triage": {
+    "branch": "block_crowded",
+    "branch_probability": 0.0,
+    "consumer_reason": "market_state=TrendExpansion/BullTrendAcceleration | execution=blocked/block_crowded/passive | ranker=candidate_set/catboost/ready",
+    "decision_hint": "execution_blocked_regardless_of_prediction",
+    "execution_bias": "passive",
+    "execution_score": 0.4376010667255047,
+    "gate_status": "blocked",
+    "one_line": "execution blocked | branch=block_crowded | bias=passive | score=0.438 | confidence=0.000 | hint=execution_blocked_regardless_of_prediction",
+    "posterior_uncertainty": 1.0,
+    "reason_summary": [
+      "branch=block_crowded (gate_status=blocked, readiness 0.2772 < 0.45)",
+      "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendAcceleration overall_confidence=0.766",
+      "market_state=volatility=ElevatedVol:0.805 liquidity=NormalLiquidity:0.419 structure=Trending:0.636 behavior=FOMO:0.800",
+      "market_state=rationale=volatility=ElevatedVol conf=0.81",
+      "market_state=rationale=structure=Trending conf=0.64"
+    ]
+  },
+  "next_command": "ict-engine factor-research --symbol BTCUSD --data 'docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/windows/btcusd_15m_obs_32.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/state'",
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine factor-research --symbol BTCUSD --data 'docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/windows/btcusd_15m_obs_32.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/state'",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "pre_bayes_gate": "pass_neutralized",
+  "recommended_next_actions": [
+    "ict-engine factor-research --symbol BTCUSD --data 'docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/windows/btcusd_15m_obs_32.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T184330+0800-codex-board-a-mature-feedback-replay-maturity-probe-v1/replay/state'"
+  ],
+  "risks": [
+    "factor:structure_ict status=promotion_supporting reason=latest_action=Some(\"tune\") research_action=None backtest_action=None update_action=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:cross_market_smt status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3",
+    "family:options_hedging status=promotion_supporting reason=research_state=None backtest_state=None update_state=None consumed_validation_status=insufficient_consumed_history consumed_validation_reason=no_comparisons_available min_window=3"
+  ]
+}

@@ -1,0 +1,1 @@
+./target/debug/ict-engine policy-training-status --symbol B2R_YAHOO_CRYPTO_PRECISION_104610 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T105219+0800-codex-104610-yahoo-crypto-downstream-readback-v1/state_yahoo_crypto_precision_104610 --output-format json

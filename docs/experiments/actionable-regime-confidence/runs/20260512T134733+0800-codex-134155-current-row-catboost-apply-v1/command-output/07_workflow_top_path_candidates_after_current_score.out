@@ -1,0 +1,69 @@
+{
+  "candidate_count": 3,
+  "candidate_set_id": "structural-candidates:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:b7d77aa214e58a0a",
+  "candidates": [
+    {
+      "behavior_policy_probability": 0.33333333333333337,
+      "candidate_set_id": "structural-candidates:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:b7d77aa214e58a0a",
+      "composite_score": 0.3319059066724885,
+      "current_posterior": 0.367008438103555,
+      "direction": "Observe",
+      "experience_prior": 0.25,
+      "historical_followed_count": 0,
+      "historical_total_records": 0,
+      "path_id": "path:scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:range_mean_reversion:primary",
+      "path_label": "range_mean_reversion",
+      "rank": 1,
+      "recommended_command": "ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/state_catboost_plus_bbn_v1'",
+      "scenario_id": "scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:range_mean_reversion"
+    },
+    {
+      "behavior_policy_probability": 0.33333333333333337,
+      "candidate_set_id": "structural-candidates:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:b7d77aa214e58a0a",
+      "composite_score": 0.3319059066724885,
+      "current_posterior": 0.367008438103555,
+      "direction": "Observe",
+      "experience_prior": 0.25,
+      "historical_followed_count": 0,
+      "historical_total_records": 0,
+      "path_id": "path:scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:transition_confirmation:primary",
+      "path_label": "transition_confirmation",
+      "rank": 2,
+      "recommended_command": "ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/state_catboost_plus_bbn_v1'",
+      "scenario_id": "scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:transition_confirmation"
+    },
+    {
+      "behavior_policy_probability": 0.33333333333333337,
+      "candidate_set_id": "structural-candidates:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:b7d77aa214e58a0a",
+      "composite_score": 0.3319059066724885,
+      "current_posterior": 0.367008438103555,
+      "direction": "Observe",
+      "experience_prior": 0.25,
+      "historical_followed_count": 0,
+      "historical_total_records": 0,
+      "path_id": "path:scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:trend_follow_through:primary",
+      "path_label": "trend_follow_through",
+      "rank": 3,
+      "recommended_command": "ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/state_catboost_plus_bbn_v1'",
+      "scenario_id": "scenario:B2R_ETH_SIX_PROVIDER_MOMENTUM_125715:belief_regime_node:range:trend_follow_through"
+    }
+  ],
+  "path_ranker_runtime": {
+    "applied_path_count": 0,
+    "artifact_match_count": 0,
+    "candidate_set_match_count": 0,
+    "enabled": true,
+    "history_match_count": 0,
+    "reuse_mode": "candidate_set_only",
+    "status": "enabled_no_matching_scores"
+  },
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/state_catboost_plus_bbn_v1'",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2R_ETH_SIX_PROVIDER_MOMENTUM_125715 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T134155+0800-codex-130814-plus-bbn-analyze-chain-v1/data/eth_six_provider_composite_1h.json",
+    "user_input_required": true
+  },
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715"
+}

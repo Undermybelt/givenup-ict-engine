@@ -1,0 +1,1 @@
+./target/debug/ict-engine policy-training-status --symbol B2R_NQ_COST_CRISIS_REPAIR_032157 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T041404+0800-codex-board-b-ltf-zero-trade-root-cause-v1/state_tick_precision_v1 --output-format json

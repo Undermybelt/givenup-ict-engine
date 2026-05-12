@@ -1,0 +1,9 @@
+PASS taxonomy_reassertion_no_new_roots
+PASS active_parent_roots=Bull,Bear,Sideways,Crisis,Manipulation
+PASS residual_root=UnknownOrMixed
+PASS accepted_active_roots=Bull,Crisis
+PASS missing_active_roots=Bear,Sideways,Manipulation
+PASS SidewaysConsolidation=sub_regime_evidence_only
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS fresh_calibration_rerun=false

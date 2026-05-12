@@ -1,0 +1,76 @@
+{
+  "board_sha256_before_artifact": "bd4384a420ba31e431b180e8493231a562aac7807385049c2f750fed506ef572",
+  "dispatch_items": [
+    {
+      "base_request": "docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/cme_group_owner_export_request_v4.md",
+      "dispatch_draft": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "fallback_contact": "marketdata@cmegroup.com",
+      "owner": "CME Group",
+      "primary_contact": "CMEDataSales@cmegroup.com",
+      "sent_by_this_artifact": false,
+      "subject": "ICT Engine Board A R6 Oystacher verifier-native owner export request v5 - CME/NYMEX/COMEX normal controls",
+      "uses_official_contact_from_052444": true,
+      "uses_v5_addendum": true,
+      "v5_addendum": "docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/cme_group_owner_export_request_v5_with_bessembinder_addendum.md"
+    },
+    {
+      "base_request": "docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/cboe_cfe_owner_export_request_v4.md",
+      "dispatch_draft": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "fallback_contact": "DataShop contact form or phone from 010506 contact-route check",
+      "owner": "Cboe/CFE",
+      "primary_contact": "marketdata@cboe.com",
+      "sent_by_this_artifact": false,
+      "subject": "ICT Engine Board A R6 Oystacher verifier-native owner export request v5 - CFE/VIX normal controls",
+      "uses_official_contact_from_052444": true,
+      "uses_v5_addendum": true,
+      "v5_addendum": "docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/cboe_cfe_owner_export_request_v5_with_bessembinder_addendum.md"
+    }
+  ],
+  "external_requests_sent_by_this_artifact": false,
+  "gate_result": "r6_owner_export_v5_dispatch_manifest_v1=v5_dispatch_drafts_ready_not_sent_controls_not_acquired",
+  "inputs": {
+    "prior_v3_dispatch_manifest": "docs/experiments/actionable-regime-confidence/runs/20260512T052444-codex-r6-owner-export-dispatch-manifest-v1/r6-owner-export-dispatch-manifest-v1/r6_owner_export_dispatch_manifest_v1.json",
+    "v4_current_route_packet": "docs/experiments/actionable-regime-confidence/runs/20260512T015040-codex-r6-owner-export-sendable-requests-v4-current-routes-v1/r6-owner-export-sendable-requests-v4-current-routes-v1/r6_owner_export_sendable_requests_v4_current_routes_v1.md",
+    "v5_bessembinder_packet": "docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6_owner_export_sendable_requests_v5_with_bessembinder_addendum_v1.md"
+  },
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 0,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": false,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "raw_data_committed": false,
+  "required_delivery": {
+    "files": [
+      "positive_spoofing_layering_rows.csv",
+      "matched_negative_normal_activity_rows.csv",
+      "provenance_manifest.json"
+    ],
+    "provenance_must_include": [
+      "ticket_id",
+      "export_id_or_order_id",
+      "license_or_entitlement_id",
+      "source_owner",
+      "source_contact_route",
+      "data_product",
+      "date_scope",
+      "product_scope",
+      "source_owner_or_cftc_bessembinder_cohort_marker"
+    ],
+    "target_root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+  },
+  "required_roots_present": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": false,
+    "/tmp/ict-engine-native-subhour-source-label-intake": false,
+    "/tmp/ict-engine-source-panel-recency-extension": false
+  },
+  "run_id": "20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1",
+  "runtime_code_changed": false,
+  "supersedes_dispatch_manifest_for_sending": "052444 v3 dispatch manifest only for current send draft selection; 052444 remains route/contact evidence",
+  "target_roots_mutated": false
+}

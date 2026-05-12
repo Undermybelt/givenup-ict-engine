@@ -1,0 +1,1 @@
+UV_CACHE_DIR=/tmp/ict-engine-uv-cache-numeric-tree uv run --with scikit-learn --with pandas --with numpy python docs/experiments/actionable-regime-confidence/runs/20260512T052522-codex-source-label-numeric-tree-threshold-screen-v1/scripts/source_label_numeric_tree_threshold_screen_v1.py

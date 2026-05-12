@@ -1,0 +1,6 @@
+gate,value,required,status
+cached_sources_present,true,true,pass
+row_materialization,0,only if row-level source fields exist,fail_closed
+intake_unchanged,true,true,pass
+external_requests_sent,false,false,pass
+accepted_confidence,false,true,blocked

@@ -1,0 +1,46 @@
+Legacy intraday missing-regime exploration
+Loop context: resumed local session 21164
+Source feature table: docs/experiments/actionable-regime-confidence/runs/20260510T214429-codex-legacy-regime-contract-reissue/legacy-contract/legacy_regime_contract_features.csv
+Purpose: exploratory search for non-1d accepted candidates for TrendExpansion, ExtremeStress, ReversalBrewing, and ThinLiquidity under unchanged 95% gates.
+Result: accepted candidates = 0
+
+Best observed rows by missing regime:
+
+TrendExpansion
+- rule: trend_base_x AND trend_persist_x>=0 AND stretch_32>=0.02
+- test_support: 137
+- test_wilson95: 0.634698
+- ece: 0.052113
+- coverage: 0.045455
+- timeframes: 1h
+- passes: false
+
+ExtremeStress
+- rule: stress_base_x AND stress_persist_x>=0 AND realized_vol_rank_252>=0.9
+- test_support: 359
+- test_wilson95: 0.942491
+- ece: 0.029224
+- coverage: 0.119111
+- timeframes: 15m|1h
+- passes: false
+
+ReversalBrewing
+- rule: trend_persist_x>=0 AND ret_1<=-0.0025
+- test_support: 449
+- test_wilson95: 0.851275
+- ece: 0.027494
+- coverage: 0.148971
+- timeframes: 15m|1h
+- passes: false
+
+ThinLiquidity
+- rule: thin_base_x AND thin_persist_x>=0.625 AND volume_rank_252<=0.2
+- test_support: 282
+- test_wilson95: 0.808704
+- ece: 0.067943
+- coverage: 0.093563
+- timeframes: 15m|1h
+- passes: false
+
+Passing table: empty.
+Use: blocker evidence only. This exploration does not supersede the strict audit JSON and does not promote any regime.

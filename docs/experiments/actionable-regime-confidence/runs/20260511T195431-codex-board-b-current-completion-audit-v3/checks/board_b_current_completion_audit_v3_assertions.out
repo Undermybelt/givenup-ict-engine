@@ -1,0 +1,8 @@
+goal_complete=false
+required_branch_paths_passed=false
+downstream_promotion_allowed=false
+active_concurrent_cursor=20260511T194637+0800-codex-board-b-mehrnoom-binance-horizon-sweep-v1
+active_concurrent_cursor_overwritten=false
+audit_artifact_exists=true
+post_audit_195624_gate_result=fail:required_root_branch_hard_gates_failed
+post_audit_195624_branch_paths_passed=1/5

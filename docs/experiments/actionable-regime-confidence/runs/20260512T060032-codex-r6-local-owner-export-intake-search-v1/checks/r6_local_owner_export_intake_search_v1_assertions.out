@@ -1,0 +1,9 @@
+gate_result=r6_local_owner_export_intake_search_v1=no_local_owner_export_or_control_rows_no_promotion
+accepted_rows_added=0
+source_control_evidence_acquired=false
+target_root_mutated=false
+canonical_merge_allowed_now=false
+downstream_rerun_allowed_now=false
+strict_full_objective_achieved=false
+trade_usable=false
+update_goal=false

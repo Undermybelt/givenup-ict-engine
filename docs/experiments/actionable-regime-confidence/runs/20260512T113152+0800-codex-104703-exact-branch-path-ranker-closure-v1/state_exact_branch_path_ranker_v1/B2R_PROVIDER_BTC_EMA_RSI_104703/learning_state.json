@@ -1,0 +1,2498 @@
+{
+  "factor_profiles": {},
+  "factor_rankings": [],
+  "feedback_history": [
+    {
+      "timestamp": "2026-04-04T21:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0001_1775293200000_1775336400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.00490588586773942,
+          "confidence": 1.0,
+          "weight": 48.56826809,
+          "long_support": 48.56826809,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.00490588586773942,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 48.56826809,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0001_1775293200000_1775336400000",
+        "recommended_at": "2026-04-04T09:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-05T12:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0002_1775347200000_1775390400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.004478872494255641,
+          "confidence": 1.0,
+          "weight": 44.55619195,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.004478872494255641,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -44.55619195,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0002_1775347200000_1775390400000",
+        "recommended_at": "2026-04-05T00:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-05T23:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0003_1775408400000_1775430000000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.016750130667283144,
+          "confidence": 1.0,
+          "weight": 165.89281936,
+          "long_support": 165.89281936,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.016750130667283144,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 165.89281936,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0003_1775408400000_1775430000000",
+        "recommended_at": "2026-04-05T17:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-07T10:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0004_1775512800000_1775556000000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.005106539832697092,
+          "confidence": 1.0,
+          "weight": 51.41369394,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.005106539832697092,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -51.41369394,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0004_1775512800000_1775556000000",
+        "recommended_at": "2026-04-06T22:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-07T23:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0005_1775595600000_1775602800000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.03166083833085363,
+          "confidence": 1.0,
+          "weight": 317.15631306,
+          "long_support": 317.15631306,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.03166083833085363,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 317.15631306,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0005_1775595600000_1775602800000",
+        "recommended_at": "2026-04-07T21:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-09T03:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0006_1775660400000_1775703600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.002083542216372792,
+          "confidence": 1.0,
+          "weight": 21.52567977,
+          "long_support": 21.52567977,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.002083542216372792,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 21.52567977,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0006_1775660400000_1775703600000",
+        "recommended_at": "2026-04-08T15:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-09T21:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0007_1775725200000_1775768400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.01634327029085038,
+          "confidence": 1.0,
+          "weight": 169.19535354,
+          "long_support": 169.19535354,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.01634327029085038,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 169.19535354,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0007_1775725200000_1775768400000",
+        "recommended_at": "2026-04-09T09:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-10T11:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0008_1775775600000_1775818800000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.0004991242737780344,
+          "confidence": 1.0,
+          "weight": 5.25083956,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.0004991242737780344,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -5.25083956,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0008_1775775600000_1775818800000",
+        "recommended_at": "2026-04-09T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-11T00:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0009_1775822400000_1775865600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.011578371050180737,
+          "confidence": 1.0,
+          "weight": 121.74548889,
+          "long_support": 121.74548889,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.011578371050180737,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 121.74548889,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0009_1775822400000_1775865600000",
+        "recommended_at": "2026-04-10T12:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-11T13:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0010_1775869200000_1775912400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0015389596534256694,
+          "confidence": 1.0,
+          "weight": 16.36750417,
+          "long_support": 16.36750417,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.0015389596534256694,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 16.36750417,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0010_1775869200000_1775912400000",
+        "recommended_at": "2026-04-11T01:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-12T04:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0011_1775923200000_1775966400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.017362497937774453,
+          "confidence": 1.0,
+          "weight": 184.93904055,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.017362497937774453,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -184.93904055,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0011_1775923200000_1775966400000",
+        "recommended_at": "2026-04-11T16:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-13T20:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0012_1776096000000_1776110400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.020251552216586925,
+          "confidence": 1.0,
+          "weight": 212.00434978,
+          "long_support": 212.00434978,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.020251552216586925,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 212.00434978,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0012_1776096000000_1776110400000",
+        "recommended_at": "2026-04-13T16:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-15T05:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0013_1776186000000_1776229200000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.004176970002148728,
+          "confidence": 1.0,
+          "weight": 44.60349364,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.004176970002148728,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -44.60349364,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0013_1776186000000_1776229200000",
+        "recommended_at": "2026-04-14T17:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-16T07:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0014_1776279600000_1776322800000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.008801148644421275,
+          "confidence": 1.0,
+          "weight": 93.59383461,
+          "long_support": 93.59383461,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.008801148644421275,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 93.59383461,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0014_1776279600000_1776322800000",
+        "recommended_at": "2026-04-15T19:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-16T20:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0015_1776326400000_1776369600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.008512988471833998,
+          "confidence": 1.0,
+          "weight": 91.31825675,
+          "long_support": 91.31825675,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.008512988471833998,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 91.31825675,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0015_1776326400000_1776369600000",
+        "recommended_at": "2026-04-16T08:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-17T09:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0016_1776373200000_1776416400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.007403273552168711,
+          "confidence": 1.0,
+          "weight": 80.08371249,
+          "long_support": 80.08371249,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.007403273552168711,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 80.08371249,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0016_1776373200000_1776416400000",
+        "recommended_at": "2026-04-16T21:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-17T14:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0017_1776423600000_1776434400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.027382753463764852,
+          "confidence": 1.0,
+          "weight": 298.37948033,
+          "long_support": 298.37948033,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.027382753463764852,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 298.37948033,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0017_1776423600000_1776434400000",
+        "recommended_at": "2026-04-17T11:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-18T12:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0018_1776470400000_1776513600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.013402401209215369,
+          "confidence": 1.0,
+          "weight": 149.99989623,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.013402401209215369,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -149.99989623,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0018_1776470400000_1776513600000",
+        "recommended_at": "2026-04-18T00:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-21T01:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0019_1776690000000_1776733200000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.010659462868219545,
+          "confidence": 1.0,
+          "weight": 117.71796177,
+          "long_support": 117.71796177,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.010659462868219545,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 117.71796177,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0019_1776690000000_1776733200000",
+        "recommended_at": "2026-04-20T13:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-21T14:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0020_1776736800000_1776780000000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.0003635042758690976,
+          "confidence": 1.0,
+          "weight": 4.05672859,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.0003635042758690976,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -4.05672859,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0020_1776736800000_1776780000000",
+        "recommended_at": "2026-04-21T02:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-22T11:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0021_1776819600000_1776855600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.023398444895968044,
+          "confidence": 1.0,
+          "weight": 261.03402849,
+          "long_support": 261.03402849,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.023398444895968044,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 261.03402849,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0021_1776819600000_1776855600000",
+        "recommended_at": "2026-04-22T01:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-23T09:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0022_1776891600000_1776934800000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.007373462598019967,
+          "confidence": 1.0,
+          "weight": 84.16412928,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.007373462598019967,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -84.16412928,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0022_1776891600000_1776934800000",
+        "recommended_at": "2026-04-22T21:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-24T05:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0023_1776963600000_1777006800000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.0055530005485543545,
+          "confidence": 1.0,
+          "weight": 62.9218401,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.0055530005485543545,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -62.9218401,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0023_1776963600000_1777006800000",
+        "recommended_at": "2026-04-23T17:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-25T01:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0024_1777035600000_1777078800000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.010460085608084755,
+          "confidence": 1.0,
+          "weight": 117.87313409,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.010460085608084755,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -117.87313409,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0024_1777035600000_1777078800000",
+        "recommended_at": "2026-04-24T13:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-27T01:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0025_1777208400000_1777251600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.01896263131291776,
+          "confidence": 1.0,
+          "weight": 211.47421584,
+          "long_support": 211.47421584,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.01896263131291776,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 211.47421584,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0025_1777208400000_1777251600000",
+        "recommended_at": "2026-04-26T13:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-04-29T18:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0026_1777446000000_1777485600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.024999912373451675,
+          "confidence": 1.0,
+          "weight": 284.03688208,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.024999912373451675,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -284.03688208,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0026_1777446000000_1777485600000",
+        "recommended_at": "2026-04-29T07:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-01T02:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0027_1777557600000_1777600800000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0034764254854241956,
+          "confidence": 1.0,
+          "weight": 38.51990243,
+          "long_support": 38.51990243,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.0034764254854241956,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 38.51990243,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0027_1777557600000_1777600800000",
+        "recommended_at": "2026-04-30T14:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-01T13:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0028_1777604400000_1777640400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.01701823702410995,
+          "confidence": 1.0,
+          "weight": 189.2164759,
+          "long_support": 189.2164759,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.01701823702410995,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 189.2164759,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0028_1777604400000_1777640400000",
+        "recommended_at": "2026-05-01T03:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-02T09:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0029_1777669200000_1777712400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.00558781451228568,
+          "confidence": 1.0,
+          "weight": 63.17458885,
+          "long_support": 63.17458885,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.00558781451228568,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 63.17458885,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0029_1777669200000_1777712400000",
+        "recommended_at": "2026-05-01T21:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-02T22:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0030_1777716000000_1777759200000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0054437420593571855,
+          "confidence": 1.0,
+          "weight": 61.88620345,
+          "long_support": 61.88620345,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.0054437420593571855,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 61.88620345,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0030_1777716000000_1777759200000",
+        "recommended_at": "2026-05-02T10:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-03T13:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0031_1777770000000_1777813200000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0026070018548183353,
+          "confidence": 1.0,
+          "weight": 29.79695572,
+          "long_support": 29.79695572,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.0026070018548183353,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 29.79695572,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0031_1777770000000_1777813200000",
+        "recommended_at": "2026-05-03T01:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-04T02:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0032_1777816800000_1777860000000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.013975084024908458,
+          "confidence": 1.0,
+          "weight": 160.1417041,
+          "long_support": 160.1417041,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.013975084024908458,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 160.1417041,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0032_1777816800000_1777860000000",
+        "recommended_at": "2026-05-03T14:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-04T20:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0033_1777881600000_1777924800000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.004473959101252485,
+          "confidence": 1.0,
+          "weight": 51.97678879,
+          "long_support": 51.97678879,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.004473959101252485,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 51.97678879,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0033_1777881600000_1777924800000",
+        "recommended_at": "2026-05-04T08:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-05T09:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0034_1777928400000_1777971600000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0109904461903426,
+          "confidence": 1.0,
+          "weight": 128.24844337,
+          "long_support": 128.24844337,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.0109904461903426,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 128.24844337,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0034_1777928400000_1777971600000",
+        "recommended_at": "2026-05-04T21:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-05T22:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0035_1777975200000_1778018400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.01018898811453222,
+          "confidence": 1.0,
+          "weight": 120.18981582,
+          "long_support": 120.18981582,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.01018898811453222,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 120.18981582,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0035_1777975200000_1778018400000",
+        "recommended_at": "2026-05-05T10:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-06T11:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0036_1778022000000_1778065200000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.014532629065850492,
+          "confidence": 1.0,
+          "weight": 173.15682637,
+          "long_support": 173.15682637,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.014532629065850492,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 173.15682637,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0036_1778022000000_1778065200000",
+        "recommended_at": "2026-05-05T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-07T02:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0037_1778076000000_1778119200000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.006160211286808186,
+          "confidence": 1.0,
+          "weight": 74.4551684,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.006160211286808186,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -74.4551684,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0037_1778076000000_1778119200000",
+        "recommended_at": "2026-05-06T14:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-09T09:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0038_1778274000000_1778317200000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0034198111440617933,
+          "confidence": 1.0,
+          "weight": 41.08134462,
+          "long_support": 41.08134462,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.0034198111440617933,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 41.08134462,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0038_1778274000000_1778317200000",
+        "recommended_at": "2026-05-08T21:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-09T22:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0039_1778320800000_1778364000000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.006708287150415085,
+          "confidence": 1.0,
+          "weight": 80.85782203,
+          "long_support": 80.85782203,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.006708287150415085,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 80.85782203,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0039_1778320800000_1778364000000",
+        "recommended_at": "2026-05-09T10:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-10T12:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0040_1778371200000_1778414400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.001769990261335096,
+          "confidence": 1.0,
+          "weight": 21.47612754,
+          "long_support": 21.47612754,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.001769990261335096,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 21.47612754,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0040_1778371200000_1778414400000",
+        "recommended_at": "2026-05-10T00:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-11T13:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0041_1778461200000_1778504400000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": -0.0051119948869244435,
+          "confidence": 1.0,
+          "weight": 62.13493857,
+          "long_support": 0.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": -0.0051119948869244435,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -62.13493857,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0041_1778461200000_1778504400000",
+        "recommended_at": "2026-05-11T01:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2026-05-12T00:00:00Z",
+      "symbol": "B2R_PROVIDER_BTC_EMA_RSI_104703",
+      "source": "auto_quant_real_trades",
+      "run_id": "20260512T104703+0800-codex-board-b-provider-btc-ema-rsi-noncanary-v1",
+      "trade_id": "provider-owned-btc-ema-rsi-hold12-v1_0042_1778515200000_1778544000000",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "ProviderBtcEmaRsiHold12",
+          "category": "trend_momentum",
+          "direction": "Bull",
+          "value": 0.0036806031586938586,
+          "confidence": 1.0,
+          "weight": 44.51034422,
+          "long_support": 44.51034422,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        },
+        {
+          "factor_name": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 1.0,
+        "long_score": 0.0036806031586938586,
+        "short_score": 0.0,
+        "win_prob_long": 1.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 44.51034422,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_BTC_EMA_RSI_104703:provider-owned-btc-ema-rsi-hold12-v1_0042_1778515200000_1778544000000",
+        "recommended_at": "2026-05-11T16:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderTrend",
+        "scenario_id": "Bull -> ProviderTrend -> EmaRsiContinuation",
+        "path_id": "Bull -> ProviderTrend -> EmaRsiContinuation -> ProviderBtcEmaRsiHold12",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    }
+  ],
+  "structural_prior_state": {
+    "nodes": {},
+    "branches": {},
+    "scenarios": {},
+    "paths": {},
+    "event_ledger": [],
+    "node_duration_priors": {},
+    "branch_transition_priors": {},
+    "node_temporal_posteriors": {},
+    "node_transition_posteriors": {},
+    "branch_temporal_posteriors": {},
+    "source_reliability_posteriors": {}
+  },
+  "last_updated": "2026-05-12T03:31:52.683131Z"
+}

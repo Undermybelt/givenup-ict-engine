@@ -1,0 +1,15 @@
+gate_result=source_control_arrival_poll_after_083618_v1=no_new_required_root_no_unlock
+accepted_rows_added=0
+r6_owner_export_complete_required_file_set=false
+r5_recency_complete_required_file_set=false
+r3_native_subhour_complete_required_file_set=true
+recent_stub_terminal_artifact_count=3
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

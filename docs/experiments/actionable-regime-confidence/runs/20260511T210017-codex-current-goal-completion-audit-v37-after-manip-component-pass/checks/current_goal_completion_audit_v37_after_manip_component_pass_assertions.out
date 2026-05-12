@@ -1,0 +1,10 @@
+run_id=20260511T210017+0800-codex-current-goal-completion-audit-v37-after-manip-component-pass
+strict_full_objective_achieved=false
+update_goal=false
+accepted_board_a_context_present=true
+root_first_contract_present=true
+scoped_manipulation_component_pass=true
+required_root_branches_passing=false
+all_five_branches_passing=false
+downstream_promoted_packet_exists=false
+next_action=run_or_repair_materially_different_bull_bear_sideways_crisis_root_branch_candidate

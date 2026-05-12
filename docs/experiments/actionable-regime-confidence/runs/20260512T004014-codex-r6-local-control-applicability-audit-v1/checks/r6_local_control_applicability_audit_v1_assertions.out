@@ -1,0 +1,10 @@
+gate_result=r6_local_control_applicability_audit_v1=local_candidate_controls_insufficient_no_approval_no_merge
+candidate_roots_checked=13
+required_cells_total=17
+required_cells_passing_best_single_root=0
+owner_approval_present=False
+verifier_native_owner_package_present=False
+canonical_merge_allowed=false
+downstream_rerun_allowed=false
+shared_intake_mutated=false
+ASSERTIONS_PASSED=true

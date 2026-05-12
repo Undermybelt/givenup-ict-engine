@@ -1,0 +1,36 @@
+{
+  "market_key": "board-b-032157-provider-owned-aq-acquisition-v1",
+  "interval": "1h",
+  "start": "2026-04-01T00:00:00Z",
+  "end": "2026-05-12T00:00:00Z",
+  "count": 240,
+  "related_roles": [
+    "nq_yfinance",
+    "nq_tradingview",
+    "nq_ibkr"
+  ],
+  "provider_preferences": {
+    "nq_yfinance": "yfinance",
+    "nq_tradingview": "tradingview_mcp",
+    "nq_ibkr": "ibkr"
+  },
+  "symbol_overrides": {
+    "nq_yfinance": {
+      "display_symbol": "NQ=F",
+      "yfinance": "NQ=F"
+    },
+    "nq_tradingview": {
+      "display_symbol": "CME_MINI:NQ1!",
+      "tradingview_mcp": "CME_MINI:NQ1!"
+    },
+    "nq_ibkr": {
+      "display_symbol": "NQ",
+      "ibkr": {
+        "symbol": "NQ",
+        "sec_type": "FUT",
+        "exchange": "CME",
+        "currency": "USD"
+      }
+    }
+  }
+}

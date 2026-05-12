@@ -1,0 +1,10 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T003051-codex-root-selective-classifier-probe/root-classifier/root_selective_classifier_report.json
+summary: docs/experiments/actionable-regime-confidence/runs/20260511T003051-codex-root-selective-classifier-probe/root-classifier/root_selective_classifier_summary.csv
+accepted_95_root_classes: ['Crisis']
+blocked_root_classes: ['Bull', 'Bear', 'Sideways', 'Manipulation']
+thresholds_relaxed: False
+Bull: accepted=False model=hgb test_lcb=0.350423 test_support=1074 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95']
+Bear: accepted=False model=hgb test_lcb=0.340998 test_support=783 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95']
+Sideways: accepted=False model=et test_lcb=0.573407 test_support=449 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'test_coverage_below_0_03', 'ece_above_0_05']
+Crisis: accepted=True model=rf test_lcb=0.997214 test_support=1375 blockers=[]
+Manipulation: accepted=False model=required_input_gate test_lcb=0.000000 test_support=0 blockers=['missing_required_inputs', 'proxy_only_low_confidence']

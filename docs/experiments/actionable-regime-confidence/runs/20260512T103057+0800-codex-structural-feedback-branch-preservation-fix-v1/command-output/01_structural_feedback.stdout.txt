@@ -1,0 +1,91 @@
+{
+  "allowed_outcomes": [
+    "win",
+    "loss",
+    "breakeven",
+    "invalidated",
+    "abandoned",
+    "not_followed"
+  ],
+  "bbn_support_score": 0.5822884327025901,
+  "branch_id": "SRC_ROOT_CARRY_LONG_220646:belief_regime_node:range:range_mean_reversion",
+  "candidate_set_id": "structural-candidates:SRC_ROOT_CARRY_LONG_220646:21c78877a12536a2",
+  "candidate_set_size": 3,
+  "confirmation_summary": "same rooted branch path must reach downstream runtime",
+  "direction": "bull",
+  "entry_style": "structural_recommended_path",
+  "feedback_fields": [
+    {
+      "description": "Whether the user actually followed the recommended path.",
+      "field_id": "followed_path",
+      "label": "Followed Path",
+      "required": true,
+      "value_type": "boolean"
+    },
+    {
+      "description": "One of win, loss, breakeven, invalidated, abandoned, or not_followed.",
+      "field_id": "realized_outcome",
+      "label": "Realized Outcome",
+      "required": true,
+      "value_type": "enum"
+    },
+    {
+      "description": "Optional realized PnL from the actual execution.",
+      "field_id": "realized_pnl",
+      "label": "Realized PnL",
+      "required": false,
+      "value_type": "number"
+    },
+    {
+      "description": "Freeform reason such as stop_hit, target_hit, invalidated, timed_out.",
+      "field_id": "exit_reason",
+      "label": "Exit Reason",
+      "required": false,
+      "value_type": "string"
+    },
+    {
+      "description": "Optional operator notes about what actually happened.",
+      "field_id": "notes",
+      "label": "Notes",
+      "required": false,
+      "value_type": "string"
+    }
+  ],
+  "generic_template_path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:belief_regime_node:range:range_mean_reversion:primary",
+  "invalidation_summary": "do not collapse this branch into a generic structural runtime path",
+  "node_id": "SRC_ROOT_CARRY_LONG_220646:belief_regime_node:range",
+  "notes": [
+    "Preserve recommendation_id plus node/branch/scenario/path ids when recording live feedback.",
+    "This is a protocol contract only; canonical persistence wiring comes next."
+  ],
+  "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "path_label": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "path_posterior": 0.5822884327025901,
+  "path_ranker_calibrated_path_prob": null,
+  "path_ranker_execution_gate_status": null,
+  "path_ranker_path_prob_lower_bound": null,
+  "path_ranker_raw_score": 0.65,
+  "path_ranker_runtime_source": "history_path",
+  "pre_bayes_gate_status": "pass_neutralized",
+  "protocol_version": "structural-feedback-v1",
+  "recommendation_id": "structural-feedback:SRC_ROOT_CARRY_LONG_220646:Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "recommended_at": "2026-05-12T02:31:29Z",
+  "recommended_command": "ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol SRC_ROOT_CARRY_LONG_220646 --data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json --paired-data docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json --state-dir docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1",
+    "execution_contract": null,
+    "prompt": "Before using historical data for SRC_ROOT_CARRY_LONG_220646 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_htf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_mtf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_ltf.json, docs/experiments/actionable-regime-confidence/runs/20260511T233426-codex-board-b-220646-crisis-branch-live-replay-v1/state_crisis_branch_live_replay_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T154641_spot.json",
+    "user_input_required": true
+  },
+  "scenario_id": "regime-bundle-branch:a60d5382295d93c1",
+  "selected_entry_quality": "medium",
+  "selected_entry_quality_probability": 1.0,
+  "selected_path_probability": 0.3896757804925325,
+  "source_phase": "structural-recommended-path-bundle",
+  "stop_summary": "use the branch-specific stop contract",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "trigger_summary": "preserve exact regime_profit_branch_path Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "why_this_path": "posterior=0.582 prior=0.561 invalidation_rate=0.000"
+}

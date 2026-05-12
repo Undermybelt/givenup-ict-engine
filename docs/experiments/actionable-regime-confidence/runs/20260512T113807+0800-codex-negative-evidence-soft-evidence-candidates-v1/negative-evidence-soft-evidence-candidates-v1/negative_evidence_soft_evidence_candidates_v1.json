@@ -1,0 +1,218 @@
+{
+  "run_id": "20260512T113807+0800-codex-negative-evidence-soft-evidence-candidates-v1",
+  "generated_at": "2026-05-12T11:38:07+08:00",
+  "scope": "Convert the settled negative-evidence feedback classification into explicit BBN soft-evidence candidate nodes. This is a candidate artifact only; it does not inject evidence into runtime state or update parent regime priors.",
+  "board_file": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_hash_before_artifact": "04d9a571cb8df3e4c287c959cec8ed2fc9752d93dcf275f747650f5017997d51",
+  "source_feedback_pack": "docs/experiments/actionable-regime-confidence/runs/20260512T112916+0800-codex-negative-evidence-bbn-feedback-v1/negative-evidence-bbn-feedback-v1/negative_evidence_bbn_feedback_v1.json",
+  "runtime_mutation": false,
+  "prior_mutation": false,
+  "candidate_state_schema": {
+    "EvidenceType": "Soft(Vec<f64>)",
+    "validation_rule": "distribution values must be finite, non-negative, non-empty, and sum to 1.0 before runtime use",
+    "source_code_reference": "src/bbn/evidence.rs"
+  },
+  "soft_evidence_candidates": [
+    {
+      "node_id": "provider_reliability.tradingview_mcp.default_credentials",
+      "states": [
+        "healthy",
+        "degraded",
+        "unknown"
+      ],
+      "distribution": [
+        0.35,
+        0.50,
+        0.15
+      ],
+      "source_evidence": [
+        "111602_tvr_qqq_rows_present",
+        "112030_tvr_default_btc_rows_present",
+        "112315_tvr_btc_fetch_failed_in_registered_provider_matrix"
+      ],
+      "consumer": "provider_quality_node",
+      "allowed_effect": "provider reliability only",
+      "market_prior_update_allowed": false,
+      "notes": "Mixed TVR evidence: successful QQQ/BTC fetches in earlier roots, but failure in the registered 112315 BTC provider-matrix root."
+    },
+    {
+      "node_id": "provider_reliability.tradingview_mcp.local_stdio",
+      "states": [
+        "healthy",
+        "degraded",
+        "unknown"
+      ],
+      "distribution": [
+        0.20,
+        0.70,
+        0.10
+      ],
+      "source_evidence": [
+        "112030_tvr_local_stdio_btc_failure",
+        "112315_tvr_local_stdio_alias_mixed"
+      ],
+      "consumer": "provider_quality_node",
+      "allowed_effect": "provider reliability only",
+      "market_prior_update_allowed": false,
+      "notes": "Local stdio route remains unreliable enough to require a default-path or alternate-symbol check before authority use."
+    },
+    {
+      "node_id": "provider_reliability.ibkr.historical_rows",
+      "states": [
+        "healthy",
+        "degraded",
+        "unknown"
+      ],
+      "distribution": [
+        0.65,
+        0.25,
+        0.10
+      ],
+      "source_evidence": [
+        "111538_ibkr_spy_rows_present",
+        "111942_ibkr_qqq_rows_present",
+        "112030_ibkr_paxos_btc_rows_present",
+        "112315_ibkr_paxos_aggtrades_rows_present_after_trades_zero"
+      ],
+      "consumer": "provider_quality_node",
+      "allowed_effect": "provider reliability only",
+      "market_prior_update_allowed": false,
+      "notes": "Direct IBKR historical rows are repeatedly reachable, but repo provider-status dependency gates still block treating the default provider path as fully healthy."
+    },
+    {
+      "node_id": "workflow_gate.pre_bayes_available",
+      "states": [
+        "available",
+        "empty",
+        "unknown"
+      ],
+      "distribution": [
+        0.05,
+        0.90,
+        0.05
+      ],
+      "source_evidence": [
+        "111309_pre_bayes_empty",
+        "111403_pre_bayes_empty",
+        "112303_pre_bayes_not_repaired",
+        "113152_pre_bayes_empty"
+      ],
+      "consumer": "workflow_gate_node",
+      "allowed_effect": "downstream gate reliability only",
+      "market_prior_update_allowed": false,
+      "notes": "Repeated fail-closed roots show BBN/path-ranker can have artifacts while Pre-Bayes policy fields remain empty."
+    },
+    {
+      "node_id": "workflow_gate.path_ranker_mature_support.111403_direct_fallback",
+      "states": [
+        "ready",
+        "insufficient",
+        "unknown"
+      ],
+      "distribution": [
+        0.05,
+        0.90,
+        0.05
+      ],
+      "source_evidence": [
+        "112303_raw_scored_mature_1_of_30",
+        "112303_production_validation_0_of_30",
+        "112303_runtime_enabled_registered_model_invalid"
+      ],
+      "consumer": "path_ranker_maturity_node",
+      "allowed_effect": "maturity gate only",
+      "market_prior_update_allowed": false,
+      "notes": "Direct fallback scoring is present but not mature enough to be a valid negative market label or execution input."
+    },
+    {
+      "node_id": "workflow_gate.path_ranker_mature_support.104703_exact_branch",
+      "states": [
+        "ready",
+        "insufficient",
+        "unknown"
+      ],
+      "distribution": [
+        0.70,
+        0.20,
+        0.10
+      ],
+      "source_evidence": [
+        "113152_raw_scored_mature_43_of_30",
+        "113152_production_validation_42_of_30",
+        "113152_runtime_enabled_candidate_set_ready"
+      ],
+      "consumer": "path_ranker_maturity_node",
+      "allowed_effect": "path-ranker readiness only",
+      "market_prior_update_allowed": false,
+      "notes": "Local path-ranker support is repaired for the copied 104703 exact branch, but this does not satisfy six-provider authority or Pre-Bayes/execution promotion."
+    },
+    {
+      "node_id": "strategy_regime_fit.ProviderCryptoMomentumStateV1.Bull",
+      "states": [
+        "edge_positive",
+        "edge_negative",
+        "unknown"
+      ],
+      "distribution": [
+        0.10,
+        0.65,
+        0.25
+      ],
+      "source_evidence": [
+        "105637_provider_linked_aq_negative_or_weak_metrics",
+        "111309_7_rows_3_wins_4_losses_total_pnl_negative"
+      ],
+      "consumer": "strategy_regime_likelihood_node",
+      "allowed_effect": "strategy-regime likelihood only",
+      "market_prior_update_allowed": false,
+      "notes": "Use only as weak branch-fit likelihood evidence because support is short and downstream gates failed."
+    },
+    {
+      "node_id": "execution_tree.branch_admission",
+      "states": [
+        "ready",
+        "fail_closed",
+        "unknown"
+      ],
+      "distribution": [
+        0.05,
+        0.90,
+        0.05
+      ],
+      "source_evidence": [
+        "111309_execution_fail_closed",
+        "111403_execution_fail_closed",
+        "112303_execution_fail_closed",
+        "113152_execution_fail_closed"
+      ],
+      "consumer": "execution_gate_node",
+      "allowed_effect": "execution admission gate only",
+      "market_prior_update_allowed": false,
+      "notes": "Repeated execution fail-closed states should block release, not rewrite market regime truth."
+    }
+  ],
+  "runtime_injection_requirements_before_use": [
+    "Map candidate node_id values to concrete BBN NodeId entries and state ordering.",
+    "Confirm each state vector matches the runtime node cardinality.",
+    "Run EvidenceManager validation for every candidate distribution.",
+    "Keep provider/tool, maturity, and execution gate evidence out of parent regime priors.",
+    "Add tests that fail if any candidate distribution does not sum to 1.0."
+  ],
+  "decision": {
+    "gate": "negative_evidence_soft_evidence_candidates_v1=candidate_soft_evidence_pack_created_no_runtime_injection_no_promotion",
+    "candidate_count": 8,
+    "runtime_mutation": false,
+    "prior_mutation": false,
+    "accepted_rows_added": 0,
+    "mature_rooted_branch_observations_added": 0,
+    "source_control_evidence_acquired": false,
+    "explicit_selected_history": false,
+    "canonical_merge": false,
+    "selected_data_autoquant_promotion": false,
+    "downstream_promotion": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "promotion_allowed": false,
+    "update_goal": false
+  }
+}

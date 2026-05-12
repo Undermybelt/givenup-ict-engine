@@ -1,0 +1,9 @@
+metric,value
+trade_count,74
+win_rate_pct,52.7027
+total_profit_pct,6.98
+sharpe,0.2207
+sortino,0.3825
+calmar,5.6268
+max_drawdown_pct,-4.2049
+profit_factor,1.2501

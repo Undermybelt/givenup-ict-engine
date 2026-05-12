@@ -1,0 +1,2 @@
+dataset_id,license_tags,num_rows,num_columns,num_bytes_parquet_files,feature_count,tmp_sample_rows
+sujinwo/tsie-market-regime-dataset,license:mit,7193996,32,591890794,32,/tmp/ict-engine-tsie-market-regime-dry-run-v1/first_rows_sample.json

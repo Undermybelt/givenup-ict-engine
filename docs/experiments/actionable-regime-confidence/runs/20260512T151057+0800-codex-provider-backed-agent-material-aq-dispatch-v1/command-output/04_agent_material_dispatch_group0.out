@@ -1,0 +1,41 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_AQ_151057:20260512T071446.730Z",
+  "generated_at": "2026-05-12T07:14:46.734461Z",
+  "symbol": "PROVIDER_AQ_151057",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:PROVIDER_AQ_151057:20260512T071254.452Z",
+  "selected_group_indices": [
+    0
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "IBKR_SPY_1h_Provider_Trend_Pullback_Resume",
+          "title": "IBKR SPY 1h Provider Trend Pullback Resume",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/agent_material_units/IBKR_SPY_1h_Provider_Trend_Pullback_Resume/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/agent_material_units/IBKR_SPY_1h_Provider_Trend_Pullback_Resume/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T151057+0800-codex-provider-backed-agent-material-aq-dispatch-v1/state/auto-quant/agent_material_units/IBKR_SPY_1h_Provider_Trend_Pullback_Resume/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.6637,
+            "sortino": 1.6126,
+            "calmar": 7.5834,
+            "total_profit_pct": 29.99,
+            "max_drawdown_pct": -6.8992,
+            "trade_count": 316,
+            "win_rate_pct": 41.4557,
+            "profit_factor": 1.3903
+          }
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 1,
+    "completed_jobs": 1,
+    "blocked_jobs": 0,
+    "failed_jobs": 0
+  }
+}

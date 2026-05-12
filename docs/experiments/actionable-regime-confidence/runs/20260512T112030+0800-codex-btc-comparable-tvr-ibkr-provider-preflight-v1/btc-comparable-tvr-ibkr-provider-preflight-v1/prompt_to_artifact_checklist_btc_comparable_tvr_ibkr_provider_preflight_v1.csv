@@ -1,0 +1,6 @@
+requirement,artifact,status,notes
+TradingViewRemix BTC provider coverage,command-output/01_tvr_btc_binance_1h.stdout and 02_tvr_btc_coinbase_1h.stdout,COVERED_PROVIDER_LAYER,rows=720/715
+TradingViewRemix local stdio BTC path,command-output/03_tvr_btc_binance_1h_local_stdio.stderr,FAIL_CLOSED,local stdio returned 404 for BINANCE:BTCUSDT
+IBKR BTC-comparable coverage,derived/ibkr_btc_paxos/BTC_1h_midpoint.csv,COVERED_PROVIDER_LAYER,rows=45 PAXOS MIDPOINT
+same-root AQ provider matrix,N/A,NOT_RUN,provider preflight only
+Pre-Bayes/filter -> BBN -> CatBoost/path-ranker -> execution tree,N/A,NOT_RUN,provider preflight only

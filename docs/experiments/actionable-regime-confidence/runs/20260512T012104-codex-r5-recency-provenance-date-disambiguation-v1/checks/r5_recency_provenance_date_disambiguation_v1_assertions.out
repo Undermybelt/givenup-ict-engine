@@ -1,0 +1,14 @@
+run_id=20260512T012104-codex-r5-recency-provenance-date-disambiguation-v1
+gate_result=r5_recency_provenance_date_disambiguation_v1=composite_date_max_not_r5_stock_recency_rows_root_still_missing
+stock_source_date_max=2026-01-30
+stock_source_post_cutoff_rows=0
+source_label_provenance_date_max=2026-03-20
+r5_verifier_status=blocked
+r5_verifier_reason=missing_required_files
+r5_verifier_exit_code=2
+all_r5_targets_satisfied=false
+accepted_rows_added=0
+new_confidence_gate=false
+downstream_chain_rerun_allowed=false
+strict_full_objective_achieved=false
+update_goal=false

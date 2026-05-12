@@ -1,0 +1,16 @@
+{
+  "profile": "synthetic_ohlcv",
+  "symbol": "NQ_LONG_1M_2010_2026",
+  "source_data_path": "/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1m/nq.continuous-1m.json",
+  "pair": "NQ_LONG_1M_2010_2026/USD",
+  "base_timeframe": "1h",
+  "additional_timeframes": [
+    "4h",
+    "1d"
+  ],
+  "notes": [
+    "profile_materializes_additive_external_runner",
+    "profile_reuses_primary_cleaned_candle_json_as_prepare_external_source",
+    "profile_is_opt_in_and_state_dir_scoped"
+  ]
+}

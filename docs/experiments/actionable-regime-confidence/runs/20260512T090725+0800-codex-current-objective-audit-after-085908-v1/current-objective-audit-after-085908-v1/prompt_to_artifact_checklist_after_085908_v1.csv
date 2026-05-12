@@ -1,0 +1,9 @@
+requirement,status,evidence,gap
+named_board_b_live_contract,covered,"Board B append-only corrections through terminal 085908","duplicate concurrent sections remain but live EOF pointers are fail-closed"
+regime_rooted_branch_path,partial,"Board contract keeps main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor","needs valid source/control root and selected history before training"
+provider_runtime_surfaces,runtime_only,"IBKR TradingViewRemix yfinance/YF Kraken observed in earlier runtime readbacks","runtime visibility is not source/control evidence"
+valid_source_control_root,blocked,"085908 no_crisis_r3_or_r5_mainregimev2_unlock","needs R6 owner export R5 source-owned rows Crisis-capable R3 labels or FLIP approval"
+explicit_selected_history,blocked,"no_explicit_user_selected_history","user must select exactly one HTF MTF or LTF"
+selected_data_autoquant,not_run,"selected_data_autoquant_promotion=false","blocked until source/control and selected-history gates pass"
+downstream_chain,not_run,"downstream_promotion_rerun=false","blocked until source/control and selected-history gates pass"
+completion_update_goal,blocked,"strict_full_objective=false promotion_allowed=false update_goal=false","do not call update_goal"

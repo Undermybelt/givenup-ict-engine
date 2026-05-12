@@ -1,0 +1,95 @@
+{
+  "artifact_id": "execution-tree-LONG_NQ_TOMAC_135318_SLICE-1778567088984",
+  "generated_at": "2026-05-12T06:24:48.984948Z",
+  "symbol": "LONG_NQ_TOMAC_135318_SLICE",
+  "output": {
+    "execution_score": 0.5495578706837614,
+    "branch": "block_crowded",
+    "execution_bias": "skip",
+    "gate_status": "blocked",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.3649 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.3649 < 0.45)",
+      "prediction_vote_score=0.5420 (medium) × execution_readiness=0.3649 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=RangeConsolidation secondary_regime=Accumulation overall_confidence=0.501",
+      "market_state=volatility=NormalVol:0.555 liquidity=NormalLiquidity:0.391 structure=Accumulation:0.650 behavior=Crowding:0.600",
+      "market_state=rationale=volatility=NormalVol conf=0.55",
+      "market_state=rationale=structure=Accumulation conf=0.65",
+      "market_state=rationale=behavior=Crowding conf=0.60",
+      "market_state=rationale=primary=RangeConsolidation secondary=Accumulation overall=0.50",
+      "path_ranker=Ranker runtime: structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0",
+      "path_ranker=Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 observation_validation=0/0 ready=false",
+      "path_ranker=ranker_machine=runtime_source=unknown score_model_family=unknown score_source=unknown validation_ready=false active_match_count=0",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout runtime_source=none raw_path_score=none calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)"
+    ],
+    "decision_hint": "execution_blocked_regardless_of_prediction",
+    "consumer_reason": "market_state=RangeConsolidation/Accumulation | execution=blocked/block_crowded/skip | ranker=unknown/unknown/not_ready",
+    "path_ranker_score_visible_to_execution_tree": false,
+    "path_ranker_score_used_by_execution_tree": false,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "unknown",
+    "ranker_validation_ready": false
+  },
+  "closed_loop_branch_admission": {
+    "actionable": false,
+    "candidate_status": "execution_blocked",
+    "decision_hint": "execution_blocked_regardless_of_prediction",
+    "evidence": [
+      "pre_bayes_gate_status=pass_neutralized",
+      "execution_gate_status=execution_blocked",
+      "review_status=observe",
+      "execution_tree_gate_status=blocked",
+      "execution_tree_branch=block_crowded"
+    ],
+    "execution_gate_status": "execution_blocked",
+    "execution_tree_bias": "skip",
+    "execution_tree_branch": "block_crowded",
+    "execution_tree_gate_status": "blocked",
+    "path_id": "TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout",
+    "path_label": "TrendExpansion -> LongHistoryTomacBreakout -> KillzoneContinuation -> TomacNQ_KillzoneBreakout",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "ready": false,
+    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+    "review_status": "observe",
+    "source_phase": "structural-recommended-path-bundle",
+    "status": "fail_closed"
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "pythagorean_overstretch",
+      "contribution": 0.5357928964482236,
+      "feature_value": "0.1642"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.4727696300782286,
+      "feature_value": "0.3272"
+    },
+    {
+      "feature": "ising_phase_transition_risk",
+      "contribution": 0.413562417598795,
+      "feature_value": "0.2864"
+    },
+    {
+      "feature": "execution_readiness",
+      "contribution": -0.28506234734090363,
+      "feature_value": "0.3649"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "c1c5b18b41b45779",
+    "data_fingerprint": "93ce7d7568d0ff16"
+  }
+}

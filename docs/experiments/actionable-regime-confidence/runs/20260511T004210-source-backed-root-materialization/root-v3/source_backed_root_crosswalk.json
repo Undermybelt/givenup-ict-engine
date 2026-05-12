@@ -1,0 +1,63 @@
+{
+  "schema_version": "main-regime-v2-source-backed-crosswalk/v1",
+  "source_reset": "docs/experiments/actionable-regime-confidence/runs/20260511T002449-source-backed-root-ontology-reset/source_backed_root_ontology_reset.md",
+  "root_crosswalk": {
+    "BullExpansion": {
+      "prior_labels": [
+        "Bull",
+        "BullExpansion"
+      ],
+      "current_target": "target_BullExpansion_next",
+      "state_before_this_run": "missing_95_root_packet"
+    },
+    "BearExpansion": {
+      "prior_labels": [
+        "Bear",
+        "BearExpansion"
+      ],
+      "current_target": "target_BearExpansion_next",
+      "state_before_this_run": "missing_95_root_packet"
+    },
+    "Consolidation": {
+      "prior_labels": [
+        "Sideways",
+        "ConsolidationRange",
+        "RangeConsolidation"
+      ],
+      "current_target": "target_ConsolidationRange_next",
+      "state_before_this_run": "missing_95_root_packet"
+    },
+    "CrisisStress": {
+      "prior_labels": [
+        "Crisis",
+        "CrisisStress",
+        "ExtremeStress"
+      ],
+      "current_target": "target_CrisisStress_next",
+      "state_before_this_run": "partial_accepted_95_carried_from_broader_Crisis"
+    },
+    "Manipulation": {
+      "prior_labels": [
+        "Manipulation",
+        "ManipulationOverlay"
+      ],
+      "current_target": null,
+      "state_before_this_run": "missing_required_inputs"
+    },
+    "TransitionRecovery": {
+      "prior_labels": [
+        "TransitionAccumulationDistribution",
+        "ReversalBrewing"
+      ],
+      "current_target": "target_TransitionAccumulationDistribution_next",
+      "state_before_this_run": "schema_not_materialized"
+    },
+    "UnknownOrMixed": {
+      "prior_labels": [
+        "UnknownOrMixed"
+      ],
+      "current_target": "target_UnknownOrMixed_next",
+      "state_before_this_run": "residual_not_release_gate"
+    }
+  }
+}

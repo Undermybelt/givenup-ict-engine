@@ -1,0 +1,112 @@
+{
+  "artifact_id": "ensemble-vote:analyze:2026-05-12T11:31:00Z",
+  "generated_at": "2026-05-12T11:31:00.690165Z",
+  "symbol": "BOARD_A_SPY_IBKR_191941",
+  "source_phase": "analyze",
+  "source_run_id": "analyze:BOARD_A_SPY_IBKR_191941:20260512T113100.641Z",
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "baed40fc79588057",
+    "data_fingerprint": "e565e7a7cd426ed6"
+  },
+  "dataset_comparability": {
+    "comparable": true,
+    "previous_run_id": "analyze:BOARD_A_SPY_IBKR_191941:20260512T112722.621Z",
+    "reason": "same_data_same_config",
+    "comparison_class": "same_data_same_config",
+    "same_data": true,
+    "same_config": true,
+    "same_prompt_version": true,
+    "same_factor_version": true
+  },
+  "ensemble_version": "ensemble-audit-v2-weighted",
+  "final_action": "execute_follow_through",
+  "recommended_command": "ask-user: Before using historical data for BOARD_A_SPY_IBKR_191941 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_IBKR_191941/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_IBKR_191941/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_IBKR_191941/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_SPY_IBKR_191941 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_IBKR_191941/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state'",
+  "human_next_triage": "hard_blocked=false ensemble_action=execute_follow_through consensus=0.994 regime=trend jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for BOARD_A_SPY_IBKR_191941 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_IBKR_191941/1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_IBKR_191941/4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_IBKR_191941/1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol BOARD_A_SPY_IBKR_191941 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/data/BOARD_A_SPY_IBKR_191941/1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T191941+0800-codex-independent-market-timeframe-downstream-smoke-v1/state'",
+  "hard_block": {
+    "active": false,
+    "stage": null,
+    "status": null,
+    "reason": null,
+    "evidence": [],
+    "command": null,
+    "human_action": null
+  },
+  "confidence": 0.993971836419753,
+  "consensus_strength": 0.993971836419753,
+  "disagreement_flags": [],
+  "executor_summaries": [
+    "executor=catboost_file action=execute_follow_through confidence=0.989 policy_source=catboost_file:sample_file weight=0.54 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=0.989",
+    "executor=xgboost_file action=execute_follow_through confidence=1.000 policy_source=xgboost_file:sample_file weight=0.46 jump_gate_bias=objective_market_credibility_shrink adjusted_confidence=1.000"
+  ],
+  "split_explanations": [
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=low",
+    "posterior_override=trend:1.000",
+    "gating_status=trend",
+    "selected_entry_quality=medium",
+    "factor_alignment=mixed",
+    "factor_uncertainty=low",
+    "posterior_override=trend:1.000"
+  ],
+  "executor_scorecards": [
+    {
+      "executor": "catboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.55,
+      "last_outcome": null,
+      "last_updated_at": null
+    },
+    {
+      "executor": "xgboost_file",
+      "wins": 0,
+      "losses": 0,
+      "breakevens": 0,
+      "validated_positive": 0,
+      "validated_negative": 0,
+      "cumulative_quality_score": 0,
+      "latest_weight_hint": 0.45,
+      "last_outcome": null,
+      "last_updated_at": null
+    }
+  ],
+  "executor_scorecards_source": "persisted",
+  "posterior_fingerprint": "e565e7a7cd426ed6",
+  "posterior_normalization_status": "normalized",
+  "posterior_active_regime": "trend",
+  "posterior_confidence": 0.9777421652421652,
+  "posterior_probabilities": {
+    "range": 0.0,
+    "stress": 0.0,
+    "transition": 0.0,
+    "trend": 1.0
+  },
+  "posterior_evidence": [
+    "market_policy=BOARD hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true",
+    "multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.927",
+    "long/short support gap 0.066 is too small, so alignment is treated as mixed",
+    "pre_bayes_quality_score=0.562 gating_status=pass_neutralized",
+    "market_state_source=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.593",
+    "market_state_source=volatility=NormalVol:0.725 liquidity=NormalLiquidity:0.517 structure=Trending:0.674 behavior=Exhaustion:0.650",
+    "market_state_source=rationale=volatility=NormalVol conf=0.72",
+    "market_state_source=rationale=liquidity=NormalLiquidity conf=0.52",
+    "market_state_source=rationale=structure=Trending conf=0.67",
+    "market_state_source=rationale=behavior=Exhaustion conf=0.65",
+    "market_state_source=rationale=primary=TrendExpansion secondary=BullTrendExhaustion overall=0.59",
+    "node_transition_posterior_from=BOARD_A_SPY_IBKR_191941:belief_regime_node:trend:trend_follow_through",
+    "branch_transition_prior_from=BOARD_A_SPY_IBKR_191941:belief_regime_node:trend:trend_follow_through weighted_transition_mass=0.300 transition_outcome_support=0.500 transition_temporal_posterior_support=0.999",
+    "transition_posterior_multiplier=1.000",
+    "branch_temporal_summary=transition_mass=0.300 transition_prior=1.000 transition_support=0.500 transition_temporal=0.999 multiplier=1.000 normalized_posterior=1.000",
+    "duration_persistence_prior=0.667 observations=2 streaks=1 weighted_streak_mass=1.000 expected_dwell=2.000 break_hazard=0.667 sticky_self_transition=0.366 duration_outcome_support=0.442 duration_temporal_posterior_support=0.599",
+    "duration_posterior_blend_weight=0.056",
+    "node_temporal_summary=duration_mass=1.000 expected_dwell=2.000 break_hazard=0.667 sequence_break=0.438 sequence_reset=0.000 sticky_self_transition=0.366 duration_support=0.442 duration_temporal=0.599 blend=0.056"
+  ]
+}

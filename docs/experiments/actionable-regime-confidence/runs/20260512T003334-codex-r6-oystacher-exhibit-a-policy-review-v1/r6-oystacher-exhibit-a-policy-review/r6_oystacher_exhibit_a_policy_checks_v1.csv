@@ -1,0 +1,5 @@
+check,status,reason
+public_recapped_court_exhibit_positive_source,pass_for_positive_candidate,CourtListener/RECAP PDF is a public copy of court-filed CFTC Exhibit A and the parsed rows carry source labels marked SPOOF.
+spoof_rows_source_owned_positive_label,pass_for_positive_candidate,Positive candidate rows=5182 and labels={'positive_spoofing_layering': 5182}.
+flip_rows_are_normal_matched_controls,fail_current_contract,"Rows marked FLIP in the same CFTC exhibit are counterpart legs in the alleged flip sequence, not source-owned normal/non-manipulation controls."
+canonical_merge_without_approval,fail_closed,Existing R6 verifier contract calls the negative file matched_negative_normal_activity_rows.csv; same-exhibit FLIP rows require explicit policy approval or a separate control taxonomy before promotion.

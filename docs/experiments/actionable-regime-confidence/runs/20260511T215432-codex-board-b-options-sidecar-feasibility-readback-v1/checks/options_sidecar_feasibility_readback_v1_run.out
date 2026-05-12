@@ -1,0 +1,18 @@
+{
+  "branch_rows_emitted": 0,
+  "downstream_consumption": "not_started:blocked_by_options_sidecar_feasibility",
+  "gate_result": "fail:options_sidecar_single_snapshot_not_trainable",
+  "has_greeks": true,
+  "has_iv": true,
+  "has_open_interest": true,
+  "has_volume": true,
+  "manipulation_component_pass_consumed": false,
+  "minimum_monthly_folds": 4,
+  "minimum_snapshots_for_folds": 20,
+  "next_action": "Acquire or build a historical options/dealer-positioning sidecar with >=20 dated snapshots and >=4 chronological folds before using IV/skew/OI as a Board B root-branch profit factor.",
+  "price_root_paths_passed": 0,
+  "primary_blocker": "Local options sidecar has IV/Greek snapshot fields but not a historical snapshot time series, so it cannot be aligned to Board A roots across chronological folds or treated as a profitability factor.",
+  "rc_spa_scored": false,
+  "total_option_rows": 1038,
+  "unique_snapshot_count": 2
+}

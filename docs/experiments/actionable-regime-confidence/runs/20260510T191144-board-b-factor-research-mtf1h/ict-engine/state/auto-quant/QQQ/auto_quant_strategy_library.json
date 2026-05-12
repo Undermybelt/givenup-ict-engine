@@ -1,0 +1,277 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-10T11:30:20.211222Z",
+  "auto_quant_repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+  "auto_quant_pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+  "config_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/config.json",
+  "timeframe": "1h",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/auto-quant-run-project.out",
+  "strategies": [
+    {
+      "name": "CrashRebound",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/user_data/strategies/CrashRebound.py",
+      "metadata": {
+        "strategy": "CrashRebound",
+        "mutation_id": "board-b-crashrebound-seed",
+        "base_factor": "auto_quant_measured_seed",
+        "hypothesis": "Alts-only drawdown rebound after rolling high drawdown and oversold confirmation across bull/winter/recovery regimes.",
+        "paradigm": "counter-trend drawdown-rebound",
+        "expected_regime": "reversal_or_rebound_after_drawdown",
+        "factors_used": [
+          "rolling_30d_drawdown",
+          "rsi14",
+          "ema200_1d_slope",
+          "volume_sma20"
+        ],
+        "parent": "versions/0.4.1/CrashRebound",
+        "asset_class": "crypto_spot",
+        "status": "active",
+        "created": "34ba6b6"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.2903,
+        "sortino": 0.3148,
+        "calmar": 5.2473,
+        "total_profit_pct": 55.69,
+        "max_drawdown_pct": -11.3086,
+        "trade_count": 207,
+        "win_rate_pct": 68.599,
+        "profit_factor": 1.4161
+      },
+      "per_pair_metrics": {
+        "AVAX/USDT": {
+          "sharpe": 0.0414,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 9.84,
+          "max_drawdown_pct": -12.22,
+          "trade_count": 76,
+          "win_rate_pct": 60.5,
+          "profit_factor": 1.15
+        },
+        "BNB/USDT": {
+          "sharpe": 0.0872,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 13.82,
+          "max_drawdown_pct": -6.01,
+          "trade_count": 39,
+          "win_rate_pct": 82.1,
+          "profit_factor": 1.75
+        },
+        "SOL/USDT": {
+          "sharpe": 0.2016,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 32.03,
+          "max_drawdown_pct": -7.18,
+          "trade_count": 92,
+          "win_rate_pct": 69.6,
+          "profit_factor": 1.66
+        }
+      },
+      "pairs": [
+        "SOL/USDT",
+        "AVAX/USDT",
+        "BNB/USDT"
+      ],
+      "timerange": "20210101-20251231",
+      "commit": "34ba6b6",
+      "error": null
+    },
+    {
+      "name": "PerPairMR",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/user_data/strategies/PerPairMR.py",
+      "metadata": {
+        "strategy": "PerPairMR",
+        "mutation_id": "board-b-perpairmr-seed",
+        "base_factor": "auto_quant_measured_seed",
+        "hypothesis": "Different pair families require different mean-reversion/breakout mechanisms under the same regime gate.",
+        "paradigm": "per-pair mean-reversion and conditional breakout",
+        "expected_regime": "regime_gated_mean_reversion",
+        "factors_used": [
+          "rsi14",
+          "bollinger_lower",
+          "donchian_48",
+          "ema200_1d",
+          "ema50_4h"
+        ],
+        "parent": "versions/0.4.1/PerPairMR",
+        "asset_class": "crypto_spot",
+        "status": "active",
+        "created": "34ba6b6"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.3512,
+        "sortino": 0.4301,
+        "calmar": 2.5909,
+        "total_profit_pct": 35.78,
+        "max_drawdown_pct": -14.5454,
+        "trade_count": 519,
+        "win_rate_pct": 58.1888,
+        "profit_factor": 1.1981
+      },
+      "per_pair_metrics": {
+        "AVAX/USDT": {
+          "sharpe": 0.1413,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 16.4,
+          "max_drawdown_pct": -9.19,
+          "trade_count": 115,
+          "win_rate_pct": 63.5,
+          "profit_factor": 1.37
+        },
+        "BNB/USDT": {
+          "sharpe": 0.1359,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 13.57,
+          "max_drawdown_pct": -3.8,
+          "trade_count": 115,
+          "win_rate_pct": 69.6,
+          "profit_factor": 1.38
+        },
+        "BTC/USDT": {
+          "sharpe": 0.0743,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 6.15,
+          "max_drawdown_pct": -3.34,
+          "trade_count": 71,
+          "win_rate_pct": 39.4,
+          "profit_factor": 1.33
+        },
+        "ETH/USDT": {
+          "sharpe": -0.0139,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": -1.45,
+          "max_drawdown_pct": -8.92,
+          "trade_count": 61,
+          "win_rate_pct": 32.8,
+          "profit_factor": 0.94
+        },
+        "SOL/USDT": {
+          "sharpe": 0.0113,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 1.12,
+          "max_drawdown_pct": -14.42,
+          "trade_count": 157,
+          "win_rate_pct": 64.3,
+          "profit_factor": 1.02
+        }
+      },
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "BNB/USDT",
+        "SOL/USDT",
+        "AVAX/USDT"
+      ],
+      "timerange": "20210101-20251231",
+      "commit": "34ba6b6",
+      "error": null
+    },
+    {
+      "name": "VolBreakoutSized",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T191144-board-b-factor-research-mtf1h/ict-engine/state/.deps/auto-quant/user_data/strategies/VolBreakoutSized.py",
+      "metadata": {
+        "strategy": "VolBreakoutSized",
+        "mutation_id": "board-b-volbreakoutsized-seed",
+        "base_factor": "auto_quant_measured_seed",
+        "hypothesis": "Per-pair Donchian breakout with 4h trend gate and ATR-based stake scaling can preserve risk-adjusted edge across the full 2021-2025 regime mix.",
+        "paradigm": "breakout with volatility-targeted sizing",
+        "expected_regime": "trend_expansion",
+        "factors_used": [
+          "donchian_24",
+          "ema50_4h",
+          "ema200_4h",
+          "atr_pct_4h",
+          "volume_sma20"
+        ],
+        "parent": "versions/0.4.0/VolBreakoutSized",
+        "asset_class": "crypto_spot",
+        "status": "active",
+        "created": "34ba6b6"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.339,
+        "sortino": 7.3012,
+        "calmar": 6.1958,
+        "total_profit_pct": 25.02,
+        "max_drawdown_pct": -4.2529,
+        "trade_count": 1221,
+        "win_rate_pct": 32.8419,
+        "profit_factor": 1.4751
+      },
+      "per_pair_metrics": {
+        "AVAX/USDT": {
+          "sharpe": 0.2281,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 4.8,
+          "max_drawdown_pct": -0.82,
+          "trade_count": 209,
+          "win_rate_pct": 33.5,
+          "profit_factor": 1.56
+        },
+        "BNB/USDT": {
+          "sharpe": 0.3074,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 5.83,
+          "max_drawdown_pct": -1.52,
+          "trade_count": 269,
+          "win_rate_pct": 32.3,
+          "profit_factor": 1.48
+        },
+        "BTC/USDT": {
+          "sharpe": 0.2262,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 4.66,
+          "max_drawdown_pct": -1.32,
+          "trade_count": 257,
+          "win_rate_pct": 32.7,
+          "profit_factor": 1.38
+        },
+        "ETH/USDT": {
+          "sharpe": 0.1799,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 2.87,
+          "max_drawdown_pct": -1.77,
+          "trade_count": 242,
+          "win_rate_pct": 33.1,
+          "profit_factor": 1.27
+        },
+        "SOL/USDT": {
+          "sharpe": 0.4167,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 6.86,
+          "max_drawdown_pct": -0.68,
+          "trade_count": 244,
+          "win_rate_pct": 32.8,
+          "profit_factor": 1.77
+        }
+      },
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SOL/USDT",
+        "BNB/USDT",
+        "AVAX/USDT"
+      ],
+      "timerange": "20210101-20251231",
+      "commit": "34ba6b6",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

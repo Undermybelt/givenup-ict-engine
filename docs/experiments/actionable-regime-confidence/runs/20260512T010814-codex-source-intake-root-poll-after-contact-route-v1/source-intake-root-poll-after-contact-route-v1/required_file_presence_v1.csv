@@ -1,0 +1,13 @@
+request_id,root,required_file,present,size_bytes,data_rows,sha256
+r6_oystacher_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,positive_spoofing_layering_rows.csv,false,0,0,
+r6_oystacher_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,matched_negative_normal_activity_rows.csv,false,0,0,
+r6_oystacher_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,provenance_manifest.json,false,0,0,
+r6_oystacher_owner_export_private_tmp_alias,/private/tmp/ict-engine-board-a-r6-owner-export-v1,positive_spoofing_layering_rows.csv,false,0,0,
+r6_oystacher_owner_export_private_tmp_alias,/private/tmp/ict-engine-board-a-r6-owner-export-v1,matched_negative_normal_activity_rows.csv,false,0,0,
+r6_oystacher_owner_export_private_tmp_alias,/private/tmp/ict-engine-board-a-r6-owner-export-v1,provenance_manifest.json,false,0,0,
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,source_label_equivalence_rows.csv,true,148968262,248440,337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,source_label_equivalence_provenance.json,true,3365,0,a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b
+r3_native_subhour_source_labels,/tmp/ict-engine-native-subhour-source-label-intake,native_subhour_source_label_rows.csv,false,0,0,
+r3_native_subhour_source_labels,/tmp/ict-engine-native-subhour-source-label-intake,native_subhour_source_label_provenance.json,false,0,0,
+r5_source_panel_recency_extension,/tmp/ict-engine-source-panel-recency-extension,stock_market_regimes_2026_extension.csv,false,0,0,
+r5_source_panel_recency_extension,/tmp/ict-engine-source-panel-recency-extension,source_panel_recency_provenance.json,false,0,0,

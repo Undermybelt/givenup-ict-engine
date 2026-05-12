@@ -1,0 +1,109 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-11T10:19:40.729567+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "34ba6b6",
+  "config_path": "/Users/thrill3r/Auto-Quant/config.json",
+  "timeframe": "1h",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260511T181445-codex-board-b-volbreakoutsized-branch-rc-spa-v1/logs/freqtrade_backtest_full_5y.out",
+  "strategies": [
+    {
+      "name": "VolBreakoutSized",
+      "file_path": "/Users/thrill3r/Auto-Quant/versions/0.4.0/strategies/VolBreakoutSized.py",
+      "metadata": {
+        "strategy": "VolBreakoutSized",
+        "mutation_id": "board-b-volbreakoutsized-branch-rc-spa-v1",
+        "base_factor": "auto_quant_v0_4_0_volbreakoutsized",
+        "hypothesis": "Per-pair Donchian breakout with 4h trend regime gate, volume confirmation, and ATR/close vol-target sizing.",
+        "paradigm": "trend breakout with volatility-targeted sizing",
+        "expected_regime": "rooted_market_regime_context_then_trend_expansion_branch",
+        "factors_used": [
+          "market_regime_context.root",
+          "donchian_high_24",
+          "ema50_4h_gt_ema200_4h",
+          "volume_sma20",
+          "atr_pct_4h_vol_target",
+          "regime_profit_branch_path"
+        ],
+        "parent": "versions/0.4.0/VolBreakoutSized",
+        "asset_class": "crypto_spot",
+        "status": "active",
+        "created": "34ba6b6"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 1.338973,
+        "sortino": 7.301177,
+        "calmar": 6.19583,
+        "total_profit_pct": 25.02,
+        "max_drawdown_pct": -4.252916,
+        "trade_count": 1221,
+        "win_rate_pct": 32.841933,
+        "profit_factor": 1.475113
+      },
+      "per_pair_metrics": {
+        "SOL/USDT": {
+          "sharpe": 0.416698,
+          "sortino": 2.409005,
+          "calmar": 10.554663,
+          "total_profit_pct": 6.86,
+          "max_drawdown_pct": -0.684689,
+          "trade_count": 244,
+          "win_rate_pct": 32.786885,
+          "profit_factor": 1.769989
+        },
+        "BNB/USDT": {
+          "sharpe": 0.307355,
+          "sortino": 1.525809,
+          "calmar": 4.052337,
+          "total_profit_pct": 5.83,
+          "max_drawdown_pct": -1.515744,
+          "trade_count": 269,
+          "win_rate_pct": 32.342007,
+          "profit_factor": 1.480039
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.228115,
+          "sortino": 1.760604,
+          "calmar": 6.144416,
+          "total_profit_pct": 4.8,
+          "max_drawdown_pct": -0.822166,
+          "trade_count": 209,
+          "win_rate_pct": 33.492823,
+          "profit_factor": 1.558395
+        },
+        "BTC/USDT": {
+          "sharpe": 0.226247,
+          "sortino": 1.172702,
+          "calmar": 3.71682,
+          "total_profit_pct": 4.66,
+          "max_drawdown_pct": -1.320341,
+          "trade_count": 257,
+          "win_rate_pct": 32.684825,
+          "profit_factor": 1.375113
+        },
+        "ETH/USDT": {
+          "sharpe": 0.179912,
+          "sortino": 0.906673,
+          "calmar": 1.705743,
+          "total_profit_pct": 2.87,
+          "max_drawdown_pct": -1.771765,
+          "trade_count": 242,
+          "win_rate_pct": 33.057851,
+          "profit_factor": 1.271026
+        }
+      },
+      "pairs": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SOL/USDT",
+        "BNB/USDT",
+        "AVAX/USDT"
+      ],
+      "timerange": "20210101-20251231",
+      "commit": "34ba6b6",
+      "error": null
+    }
+  ],
+  "validation_errors": []
+}

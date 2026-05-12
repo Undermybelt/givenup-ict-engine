@@ -1,0 +1,66 @@
+{
+  "run_id": "20260512T024354+0800-codex-board-b-b2r-repeat-crypto-options-breadth-v1",
+  "schema_version": "board-b-b2r-repeat-crypto-options-breadth/v1",
+  "recipe_id": "CryptoOptionsBreadthRootV1",
+  "board_state": "rejected",
+  "gate_result": "fail:required_root_branch_hard_gates_failed",
+  "stable_profit_score": 82.34627989071636,
+  "variant_trade_rows": 859,
+  "selected_trade_rows": 492,
+  "branch_paths_evaluated": 5,
+  "price_root_paths_passed": 0,
+  "roots_passed": [],
+  "root_trade_counts": {
+    "Bull": 183,
+    "Bear": 2,
+    "Sideways": 307,
+    "Crisis": 0
+  },
+  "manipulation_component_combined": false,
+  "manipulation_component_policy": "combine only if all price roots pass unchanged RC-SPA",
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "options_auxiliary": {
+    "venues": [
+      "binance",
+      "bybit"
+    ],
+    "rows": 1038,
+    "snapshot_min": "2026-04-26T02:10:30.177279+00:00",
+    "snapshot_max": "2026-04-26T02:19:48.037498+00:00",
+    "median_call_iv": 0.4294,
+    "median_put_iv": 0.4294,
+    "put_call_iv_spread": 0.0,
+    "open_interest_rows": 500
+  },
+  "provider_panel": {
+    "local_auto_quant_feathers": [
+      "AVAX_USDT",
+      "BNB_USDT",
+      "BTC_USDT",
+      "ETH_USDT",
+      "GLD_USD",
+      "NQ_USD",
+      "QQQ_USD",
+      "SOL_USDT",
+      "SPY_USD"
+    ],
+    "auxiliary_options_files": [
+      "options/binance_BTC.csv",
+      "options/bybit_BTC.csv"
+    ],
+    "provider_visibility_required": [
+      "yfinance",
+      "kraken",
+      "ibkr",
+      "tradingviewremix"
+    ]
+  },
+  "next_action": "Do not run downstream for this packet; use as nursery feedback for root coverage and options-breadth data repair.",
+  "artifacts": {
+    "variant_rows": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/branch-rc-spa/crypto_options_breadth_variant_trades_v1.csv",
+    "selected_rows": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/branch-rc-spa/crypto_options_breadth_selected_trades_v1.csv",
+    "branch_summary": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/branch-rc-spa/crypto_options_breadth_branch_summary_v1.csv",
+    "strategy_library": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/branch-rc-spa/strategy_library_crypto_options_breadth_v1.json",
+    "real_trades": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T024354-codex-board-b-b2r-repeat-crypto-options-breadth-v1/branch-rc-spa/crypto_options_breadth_real_trades_v1.jsonl"
+  }
+}

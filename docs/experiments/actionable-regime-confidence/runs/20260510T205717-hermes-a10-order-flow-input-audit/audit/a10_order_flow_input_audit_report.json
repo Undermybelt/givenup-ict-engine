@@ -1,0 +1,1638 @@
+{
+  "schema_version": "board-a-a10-order-flow-input-audit/v1",
+  "objective": "Audit whether durable tick/order-flow/order-book/L2 inputs exist before A10 order-flow entropy.",
+  "roots": [
+    "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes",
+    "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ"
+  ],
+  "excluded_parts": [
+    ".deps",
+    ".venv",
+    "__pycache__",
+    "node_modules",
+    "site-packages"
+  ],
+  "required_field_groups": {
+    "tick_or_trade": [
+      "aggressor_side",
+      "buyer_maker",
+      "is_buyer_maker",
+      "last_price",
+      "last_size",
+      "side",
+      "tick",
+      "tick_id",
+      "trade_id",
+      "trade_price",
+      "trade_qty",
+      "trade_quantity",
+      "trade_side",
+      "trade_size"
+    ],
+    "signed_flow": [
+      "buy_qty",
+      "buy_volume",
+      "ofi",
+      "order_flow",
+      "order_flow_imbalance",
+      "sell_qty",
+      "sell_volume",
+      "signed_trade_volume",
+      "signed_volume",
+      "taker_buy_base_volume",
+      "taker_buy_volume",
+      "taker_sell_base_volume",
+      "taker_sell_volume"
+    ],
+    "bid_ask_quote": [
+      "ask",
+      "ask_price",
+      "ask_qty",
+      "ask_size",
+      "best_ask",
+      "best_bid",
+      "bid",
+      "bid_price",
+      "bid_qty",
+      "bid_size",
+      "spread"
+    ],
+    "l2_depth": [
+      "ask_depth",
+      "ask_size_1",
+      "ask_size_2",
+      "asks",
+      "bid_depth",
+      "bid_size_1",
+      "bid_size_2",
+      "bids",
+      "book",
+      "depth",
+      "l2",
+      "level2",
+      "order_book",
+      "orderbook"
+    ]
+  },
+  "file_count_scanned": 112,
+  "verdict_counts": {
+    "no_relevant_fields": 61,
+    "ohlcv_or_derived_only": 46,
+    "partial_microstructure_like_fields_not_sufficient": 5
+  },
+  "required_group_file_counts": {
+    "tick_or_trade": 5
+  },
+  "real_order_flow_candidate_count": 0,
+  "partial_microstructure_like_file_count": 5,
+  "decision": "missing_required_inputs",
+  "missing_required_inputs": [
+    "historical bid/ask quote price and size",
+    "historical L2 bid/ask depth or order-book snapshots",
+    "signed trade volume or aggressor-side trade labels",
+    "buy/sell volume split aligned to Board A windows",
+    "durable tick/trade tape aligned to QQQ/NQ/PF_XBTUSD calibration/test windows"
+  ],
+  "proxy_policy": "OHLCV/count-derived pressure or scripts/research/ofi_session_sidecar.py fallback_mode=ohlcv_proxy_low_confidence is insufficient for A10 acceptance.",
+  "records": [
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_h4.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_htf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_ltf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_m1.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_m5.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_mtf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T105601_spot.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_h4.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_htf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_ltf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_m1.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_m5.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_mtf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_live_20260510T110505_spot.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/analyze_runs.json",
+      "suffix": ".json",
+      "rows": 2,
+      "columns": null,
+      "field_count": 379,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/artifact_ledger.json",
+      "suffix": ".json",
+      "rows": 10,
+      "columns": null,
+      "field_count": 37,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/ensemble_executor_scorecards.json",
+      "suffix": ".json",
+      "rows": 2,
+      "columns": null,
+      "field_count": 10,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/ensemble_vote.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 57,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/ensemble_vote_history.json",
+      "suffix": ".json",
+      "rows": 2,
+      "columns": null,
+      "field_count": 57,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/execution_candidate.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 141,
+      "ohlcv_fields_present": [
+        "high",
+        "low"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/execution_candidate_history.json",
+      "suffix": ".json",
+      "rows": 2,
+      "columns": null,
+      "field_count": 141,
+      "ohlcv_fields_present": [
+        "high",
+        "low"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/execution_tree_trace.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 27,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/learning_state.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 199,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/mece_recovery_artifact.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 21,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/pending_update_feedback.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 169,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {
+        "tick_or_trade": [
+          "trade_id"
+        ]
+      },
+      "verdict": "partial_microstructure_like_fields_not_sufficient",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/pending_update_history.json",
+      "suffix": ".json",
+      "rows": 2,
+      "columns": null,
+      "field_count": 169,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {
+        "tick_or_trade": [
+          "trade_id"
+        ]
+      },
+      "verdict": "partial_microstructure_like_fields_not_sufficient",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/policy_training/structural_path_ranking_runtime_selection.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 5,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/policy_training/structural_path_ranking_target.csv",
+      "suffix": ".csv",
+      "rows": 3,
+      "columns": 37,
+      "field_count": 37,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/policy_training/structural_path_ranking_target_history.csv",
+      "suffix": ".csv",
+      "rows": 3,
+      "columns": 37,
+      "field_count": 37,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/policy_training/structural_path_ranking_target_summary.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 38,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/policy_training/structural_path_ranking_trainer_artifact.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 19,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/pre_bayes_policy_history.json",
+      "suffix": ".json",
+      "rows": 2,
+      "columns": null,
+      "field_count": 31,
+      "ohlcv_fields_present": [
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/state/NQ/workflow_snapshot.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 354,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/cross_market_regime_condition_matrix.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 121,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/cross_market_regime_features_and_labels.csv",
+      "suffix": ".csv",
+      "rows": 12162,
+      "columns": 32,
+      "field_count": 32,
+      "ohlcv_fields_present": [
+        "close",
+        "count",
+        "high",
+        "low",
+        "open",
+        "ts",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/cross-market/simple_threshold_candidate_search.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 20,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T202359-hermes-cross-market-regime-validation/evidence_packet_cross_market_regime_validation.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 121,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/auto-quant-status-after-prepare-agent.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 40,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/auto-quant-status-agent.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 40,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/autoquant/state/auto-quant/auto-quant/auto_quant_dependency.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 6,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/calibration/per_regime_candidate_rules.csv",
+      "suffix": ".csv",
+      "rows": 25,
+      "columns": 16,
+      "field_count": 16,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/calibration/per_regime_candidate_search_report.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 74,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/evidence_packet_per_regime_candidate_search.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 41,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/policy-training-status-nq.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 117,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/pre-bayes-status-nq.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 88,
+      "ohlcv_fields_present": [
+        "high",
+        "low"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T105601_h4.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T105601_htf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T105601_ltf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T105601_m1.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T105601_m5.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T105601_mtf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T105601_spot.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T110505_h4.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T110505_htf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T110505_ltf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T110505_m1.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T110505_m5.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T110505_mtf.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_live_20260510T110505_spot.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 7,
+      "ohlcv_fields_present": [
+        "close",
+        "high",
+        "low",
+        "open",
+        "timestamp",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/analyze_runs.json",
+      "suffix": ".json",
+      "rows": 39,
+      "columns": null,
+      "field_count": 379,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/artifact_ledger.json",
+      "suffix": ".json",
+      "rows": 195,
+      "columns": null,
+      "field_count": 37,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/bbn_network.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 17,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/ensemble_executor_scorecards.json",
+      "suffix": ".json",
+      "rows": 2,
+      "columns": null,
+      "field_count": 10,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/ensemble_vote.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 57,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/ensemble_vote_history.json",
+      "suffix": ".json",
+      "rows": 39,
+      "columns": null,
+      "field_count": 57,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/execution_candidate.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 140,
+      "ohlcv_fields_present": [
+        "high",
+        "low"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/execution_candidate_history.json",
+      "suffix": ".json",
+      "rows": 39,
+      "columns": null,
+      "field_count": 141,
+      "ohlcv_fields_present": [
+        "high",
+        "low"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/execution_tree_trace.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 27,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/learning_state.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 263,
+      "ohlcv_fields_present": [
+        "timestamp"
+      ],
+      "required_group_matches": {
+        "tick_or_trade": [
+          "trade_id"
+        ]
+      },
+      "verdict": "partial_microstructure_like_fields_not_sufficient",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/mece_recovery_artifact.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 21,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/pending_update_feedback.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 168,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {
+        "tick_or_trade": [
+          "trade_id"
+        ]
+      },
+      "verdict": "partial_microstructure_like_fields_not_sufficient",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/pending_update_history.json",
+      "suffix": ".json",
+      "rows": 39,
+      "columns": null,
+      "field_count": 169,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {
+        "tick_or_trade": [
+          "trade_id"
+        ]
+      },
+      "verdict": "partial_microstructure_like_fields_not_sufficient",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/breaker_rb_bbn_training.csv",
+      "suffix": ".csv",
+      "rows": 0,
+      "columns": 12,
+      "field_count": 12,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/breaker_rb_catboost_training.csv",
+      "suffix": ".csv",
+      "rows": 0,
+      "columns": 24,
+      "field_count": 24,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/breaker_rb_training_export_summary.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 6,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/cisd_rb_bbn_training.csv",
+      "suffix": ".csv",
+      "rows": 0,
+      "columns": 13,
+      "field_count": 13,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/cisd_rb_catboost_training.csv",
+      "suffix": ".csv",
+      "rows": 0,
+      "columns": 27,
+      "field_count": 27,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/cisd_rb_training_export_summary.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 6,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/structural_path_ranking_runtime_selection.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 5,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/structural_path_ranking_target.csv",
+      "suffix": ".csv",
+      "rows": 3,
+      "columns": 37,
+      "field_count": 37,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/structural_path_ranking_target_history.csv",
+      "suffix": ".csv",
+      "rows": 1462,
+      "columns": 37,
+      "field_count": 37,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/structural_path_ranking_target_summary.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 39,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/policy_training/structural_path_ranking_trainer_artifact.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 22,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/pre_bayes_policy_history.json",
+      "suffix": ".json",
+      "rows": 39,
+      "columns": null,
+      "field_count": 31,
+      "ohlcv_fields_present": [
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/update_runs.json",
+      "suffix": ".json",
+      "rows": 40,
+      "columns": null,
+      "field_count": 227,
+      "ohlcv_fields_present": [
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/NQ/workflow_snapshot.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 361,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/NQ/artifact_ledger.json",
+      "suffix": ".json",
+      "rows": 5,
+      "columns": null,
+      "field_count": 26,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/NQ/auto_quant_prior_init_NQ_20260510T105659.307491000Z.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 26,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/NQ/auto_quant_prior_init_NQ_20260510T113446.792406000Z.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 26,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/NQ/auto_quant_prior_init_NQ_20260510T120222.392671000Z.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 26,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/NQ/auto_quant_prior_init_NQ_20260510T120819.011688000Z.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 11,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/NQ/auto_quant_prior_init_history.json",
+      "suffix": ".json",
+      "rows": 4,
+      "columns": null,
+      "field_count": 32,
+      "ohlcv_fields_present": [
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/NQ/auto_quant_strategy_library.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 38,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/NQ/bbn_network.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 17,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/ict-engine/state-copy/auto-quant/auto-quant/auto_quant_dependency.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 6,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T203010-hermes-per-regime-candidate-search/provider/provider-status-agent.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 25,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/autoquant/auto-quant-status-current-managed.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 40,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/autoquant/auto-quant-status-current.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 40,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/evidence_packet_a8_transition_sidecar.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 62,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/ict-engine/fresh_chain_readback_summary.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 19,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/ict-engine/policy-training-status-nq-current.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 117,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/ict-engine/pre-bayes-status-nq-current.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 88,
+      "ohlcv_fields_present": [
+        "high",
+        "low"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/ict-engine/workflow-status-nq-current.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 361,
+      "ohlcv_fields_present": [
+        "high",
+        "low",
+        "timestamp"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/provider/provider-status-agent-current.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 25,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/sidecar/a8_transition_sidecar_candidate_report.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 84,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/sidecar/a8_transition_sidecar_candidate_rules.csv",
+      "suffix": ".csv",
+      "rows": 15,
+      "columns": 16,
+      "field_count": 16,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T204325-hermes-a8-transition-sidecar/sidecar/a8_transition_sidecar_features.csv",
+      "suffix": ".csv",
+      "rows": 12162,
+      "columns": 53,
+      "field_count": 53,
+      "ohlcv_fields_present": [
+        "close",
+        "count",
+        "high",
+        "low",
+        "open",
+        "ts",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/evidence_packet_a9_tv_formula_recipes.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 44,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/recipes/a9_tv_formula_candidate_report.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 74,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/recipes/a9_tv_formula_candidate_rules.csv",
+      "suffix": ".csv",
+      "rows": 15,
+      "columns": 16,
+      "field_count": 16,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/recipes/a9_tv_formula_features.csv",
+      "suffix": ".csv",
+      "rows": 12162,
+      "columns": 51,
+      "field_count": 51,
+      "ohlcv_fields_present": [
+        "close",
+        "count",
+        "high",
+        "low",
+        "open",
+        "ts",
+        "volume"
+      ],
+      "required_group_matches": {},
+      "verdict": "ohlcv_or_derived_only",
+      "note": null
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260510T205000-hermes-a9-tv-formula-recipes/recipes/tradingview_formula_recipe_manifest.json",
+      "suffix": ".json",
+      "rows": null,
+      "columns": null,
+      "field_count": 14,
+      "ohlcv_fields_present": [],
+      "required_group_matches": {},
+      "verdict": "no_relevant_fields",
+      "note": null
+    }
+  ]
+}

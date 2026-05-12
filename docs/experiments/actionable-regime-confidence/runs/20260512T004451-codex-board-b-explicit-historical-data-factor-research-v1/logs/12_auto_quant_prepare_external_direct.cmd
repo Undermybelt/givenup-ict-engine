@@ -1,0 +1,1 @@
+cd <AQ>; uv run --with ta-lib prepare_external.py --csv profile_source.csv --pair SRC_ROOT_CARRY_LONG_220646/USD --timeframes 1h,4h,1d --datadir user_data/data --column-map date:date,open:open,high:high,low:low,close:close,volume:volume --no-clean

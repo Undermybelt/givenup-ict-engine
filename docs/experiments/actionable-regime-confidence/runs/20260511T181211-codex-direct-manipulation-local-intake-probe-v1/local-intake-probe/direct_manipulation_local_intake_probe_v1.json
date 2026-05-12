@@ -1,0 +1,55 @@
+{
+  "artifact_type": "direct_manipulation_local_intake_probe_v1",
+  "candidate_file_count": 0,
+  "candidate_files": [],
+  "decision": {
+    "accepted_direct_rows_added": 0,
+    "full_objective_achieved": false,
+    "gate_result": "direct_manipulation_local_intake_probe_v1=missing_required_files",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "expected_files": [
+    {
+      "exists": false,
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv"
+    },
+    {
+      "exists": false,
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv"
+    },
+    {
+      "exists": false,
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+    }
+  ],
+  "generated_at_utc": "2026-05-11T10:13:29.065864+00:00",
+  "intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "next_action": "Place source-owned positive spoofing/layering rows, matched normal controls, and provenance under /tmp/ict-engine-direct-manipulation-row-intake, then rerun the verifier.",
+  "run_id": "20260511T181211+0800-codex-direct-manipulation-local-intake-probe-v1",
+  "search_roots": [
+    "/tmp",
+    "/private/tmp",
+    "/Users/thrill3r/Downloads",
+    "/Users/thrill3r/Auto-Quant"
+  ],
+  "target_variety": "spoofing_layering",
+  "verifier": {
+    "command": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+    "returncode": 2,
+    "stderr": "",
+    "stdout_json": {
+      "missing_files": [
+        "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    }
+  }
+}

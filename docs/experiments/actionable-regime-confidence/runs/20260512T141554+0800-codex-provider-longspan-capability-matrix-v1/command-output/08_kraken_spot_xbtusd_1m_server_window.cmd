@@ -1,0 +1,1 @@
+python3 scripts/auto_quant_external/fetch_external.py kraken-kline --market spot --pair XBTUSD --interval 1m --output /tmp/ict-provider-longspan-20260512T141554+0800/kraken_spot_xbtusd_1m_server_window.csv 

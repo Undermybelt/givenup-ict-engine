@@ -1,0 +1,2 @@
+nursery_branch_id,source_artifact,strategy,trade_count,sharpe,total_profit_pct,win_rate_pct,profit_factor,branch_identity,path_ranker_raw_score,path_ranker_runtime_ready,execution_candidate_review_status,selected_history_status,promotion_allowed
+recorded_branch_precision_fixed_v1,recorded_branch_precision_fixed_v1.md,RegimeRootPulseBranch,300,1.5610,3.1600,35.0000,1.1132,Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12,0.6500,true,observe,agent_selected_not_user_selected,false

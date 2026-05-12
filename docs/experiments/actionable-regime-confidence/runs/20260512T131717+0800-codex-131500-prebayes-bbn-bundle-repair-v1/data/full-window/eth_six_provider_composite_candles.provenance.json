@@ -1,0 +1,19 @@
+{
+  "source_provider_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T125715+0800-codex-six-provider-eth-same-root-aq-v1/provider-csv",
+  "provider_rows": {
+    "ETH_1h_aggtrades.csv": 784,
+    "binance_ethusdt_1h.csv": 985,
+    "bybit_ethusdt_linear_1h.csv": 985,
+    "kraken_ethusd_1h.csv": 721,
+    "tvr_binance_ethusdt_1h.csv": 720,
+    "yfinance_eth_usd_1h.csv": 983
+  },
+  "source_csv_count": 6,
+  "composite_1h_rows": 1017,
+  "composite_4h_rows": 249,
+  "composite_1d_rows": 43,
+  "first_timestamp": "2026-03-31T20:01:00Z",
+  "last_timestamp": "2026-05-12T05:00:00Z",
+  "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "symbol": "B2R_ETH_SIX_PROVIDER_MOMENTUM_125715"
+}

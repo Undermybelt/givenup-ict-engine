@@ -1,0 +1,11 @@
+PASS gate_result=provider_source_root_readonly_refresh_after_050609_v1=providers_refreshed_no_source_control_unlock_no_promotion
+PASS required_roots_absent=true
+PASS yfinance_fetch_rows=197
+PASS kraken_fetch_rows=721
+PASS ibkr_spy_fetch_rows=21
+PASS tradingview_harness_exit=1
+PASS accepted_rows_added=0
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS update_goal=false

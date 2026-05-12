@@ -1,0 +1,12 @@
+ASSERT board_b_cursor=20260511T213155+0800-codex-board-b-session-liquidity-intraday-v1
+ASSERT accepted_board_a_context_present=true
+ASSERT latest_stable_profit_score=70.5092
+ASSERT latest_hard_gate_result=fail:required_root_branch_hard_gates_failed
+ASSERT latest_price_root_paths_passed=0/4
+ASSERT manipulation_component_pass=true
+ASSERT all_price_roots_plus_manipulation_pass=false
+ASSERT downstream_consumption=not_started:blocked_by_branch_rc_spa_hard_gates
+ASSERT promoted_profitability_packet_exists=false
+ASSERT update_goal=false
+ASSERT goal_complete=false
+ASSERT drift_decision=continue

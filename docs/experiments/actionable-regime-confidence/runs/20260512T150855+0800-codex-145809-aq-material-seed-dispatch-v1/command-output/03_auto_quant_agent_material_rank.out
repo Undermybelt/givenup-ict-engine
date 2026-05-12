@@ -1,0 +1,48 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:B2R_OTE_BRANCH_150855:20260512T071914.128Z",
+  "generated_at": "2026-05-12T07:19:14.134795Z",
+  "symbol": "B2R_OTE_BRANCH_150855",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:B2R_OTE_BRANCH_150855:20260512T071838.149Z",
+  "ranking": [
+    {
+      "unit_label": "OTE trend retracement long - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 34.5679,
+      "sharpe": 0.2471,
+      "total_profit_pct": 5.96,
+      "trade_count": 162
+    },
+    {
+      "unit_label": "OTE trend retracement long - Yahoo ES 1h",
+      "status": "completed",
+      "win_rate_pct": 30.0971,
+      "sharpe": -0.0873,
+      "total_profit_pct": -0.84,
+      "trade_count": 103
+    },
+    {
+      "unit_label": "OTE trend retracement long - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE trend retracement long - Kraken XBTUSD 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OTE trend retracement long - Bybit BTCUSDT 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    }
+  ]
+}

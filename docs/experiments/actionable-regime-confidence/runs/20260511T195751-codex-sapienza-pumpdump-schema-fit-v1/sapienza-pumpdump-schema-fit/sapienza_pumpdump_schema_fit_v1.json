@@ -1,0 +1,192 @@
+{
+  "accepted_rows_added": 0,
+  "binance_event_rows": 520,
+  "blocker": "Scoped pump/dump schema can be materialized, but Board A's current strict direct Manipulation blocker still requires spoofing/layering positives plus matched controls and broader direct species coverage.",
+  "can_materialize_scoped_pumpdump_positive_control_package": true,
+  "decision": "sapienza_pumpdump_schema_fit_v1=scoped_pumpdump_schema_ready_not_strict_manipulation_closure",
+  "feature_files": [
+    {
+      "date_max": "2021-01-19 16:58:25",
+      "date_min": "2018-01-02 18:14:40",
+      "file": "features_5S.csv.gz",
+      "headers": [
+        "date",
+        "pump_index",
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos",
+        "symbol",
+        "gt"
+      ],
+      "negative_rows_gt_0": 820990,
+      "positive_event_join_delta_seconds_max": 180.0,
+      "positive_event_join_matches_within_180s": 317,
+      "positive_event_join_unmatched": 0,
+      "positive_pump_indices": 317,
+      "positive_pump_indices_with_same_schema_negative_rows": 317,
+      "positive_rows_gt_1": 317,
+      "pump_indices": 327,
+      "rows": 821307,
+      "same_pump_negative_controls_max": 13209,
+      "same_pump_negative_controls_median": 1861,
+      "same_pump_negative_controls_min": 221,
+      "sha256": "e1f82b42d735e368f04a60062cadd50d6b097cc1222ebe8830cbff24b6d5ab99",
+      "symbols": 85
+    },
+    {
+      "date_max": "2021-01-19 16:58:15",
+      "date_min": "2018-01-02 18:14:30",
+      "file": "features_15S.csv.gz",
+      "headers": [
+        "date",
+        "pump_index",
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos",
+        "symbol",
+        "gt"
+      ],
+      "negative_rows_gt_0": 583787,
+      "positive_event_join_delta_seconds_max": 180.0,
+      "positive_event_join_matches_within_180s": 317,
+      "positive_event_join_unmatched": 0,
+      "positive_pump_indices": 317,
+      "positive_pump_indices_with_same_schema_negative_rows": 317,
+      "positive_rows_gt_1": 317,
+      "pump_indices": 327,
+      "rows": 584104,
+      "same_pump_negative_controls_max": 7738,
+      "same_pump_negative_controls_median": 1404,
+      "same_pump_negative_controls_min": 214,
+      "sha256": "fd6fd97f50ddc13b37b9a6361c09bf4cb07159c61f150328902b2d95137041f2",
+      "symbols": 85
+    },
+    {
+      "date_max": "2021-01-19 16:58:20",
+      "date_min": "2018-01-02 18:14:35",
+      "file": "features_25S.csv.gz",
+      "headers": [
+        "date",
+        "pump_index",
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos",
+        "symbol",
+        "gt"
+      ],
+      "negative_rows_gt_0": 481840,
+      "positive_event_join_delta_seconds_max": 180.0,
+      "positive_event_join_matches_within_180s": 317,
+      "positive_event_join_unmatched": 0,
+      "positive_pump_indices": 317,
+      "positive_pump_indices_with_same_schema_negative_rows": 317,
+      "positive_rows_gt_1": 317,
+      "pump_indices": 327,
+      "rows": 482157,
+      "same_pump_negative_controls_max": 5559,
+      "same_pump_negative_controls_median": 1234,
+      "same_pump_negative_controls_min": 208,
+      "sha256": "0d43d1d396ef13778ab2cd2a9f047034713f9066bdc07c23efce335da8185331",
+      "symbols": 85
+    }
+  ],
+  "full_direct_manipulation_species_coverage": false,
+  "group_rows": 13,
+  "new_confidence_gate": false,
+  "pump_event_rows": 1110,
+  "raw_data_committed": false,
+  "ready_pumpdump_row_intake_candidate_schema": true,
+  "ready_spoofing_layering_intake_source": false,
+  "run_id": "20260511T195751-codex-sapienza-pumpdump-schema-fit-v1",
+  "runtime_code_changed": false,
+  "schema_fit_fields": [
+    {
+      "fit_status": "ready_derived_for_pumpdump",
+      "notes": "All checked positive feature rows join to a Binance pump event within 180 seconds, but the native feature key is a build-local pump_index rather than an immutable upstream event id.",
+      "required_field": "event_id_or_source_row_id",
+      "source_columns": "feature_file,pump_index,symbol,date + pump_telegram source row ordinal via nearest event join"
+    },
+    {
+      "fit_status": "ready_for_pumpdump",
+      "notes": "Feature timestamps are UTC exchange windows; market session is crypto 24x7 and window size is encoded as 5S, 15S, or 25S.",
+      "required_field": "timestamp_session_window",
+      "source_columns": "date,feature_file granularity,pump_telegram date/hour"
+    },
+    {
+      "fit_status": "ready_for_pumpdump",
+      "notes": "Feature rows carry symbols; source event table and README constrain the checked labeled feature package to Binance SYM/BTC crypto pairs.",
+      "required_field": "symbol_market_venue",
+      "source_columns": "symbol,pump_telegram exchange,README pair contract"
+    },
+    {
+      "fit_status": "ready_scoped_to_pumpdump",
+      "notes": "gt=1/gt=0 supports a direct pump/dump species package only; it is not a spoofing/layering, quote-stuffing, pinging, bear-raid, or painting-tape label source.",
+      "required_field": "direct_label_or_species",
+      "source_columns": "gt,pump_telegram event context"
+    },
+    {
+      "fit_status": "ready_scoped_to_pumpdump",
+      "notes": "Each positive pump_index has same-schema gt=0 rows in the same feature file and event window group.",
+      "required_field": "matched_negative_group_or_controls",
+      "source_columns": "feature_file,pump_index,gt"
+    },
+    {
+      "fit_status": "ready",
+      "notes": "The artifact records compact source hashes only; raw rows stay in /tmp.",
+      "required_field": "provenance_hash",
+      "source_columns": "source commit plus SHA256 of source CSV/GZ files"
+    },
+    {
+      "fit_status": "missing",
+      "notes": "No order-book layering/spoofing lifecycle labels are present in this source package.",
+      "required_field": "spoofing_layering_positive_rows",
+      "source_columns": "N/A"
+    },
+    {
+      "fit_status": "missing",
+      "notes": "The package covers pump/dump only and does not cover quote stuffing, pinging, bear raid, or painting tape.",
+      "required_field": "full_direct_manipulation_species_coverage",
+      "source_columns": "N/A"
+    }
+  ],
+  "source": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+  "source_commit": "d71250d4cb055dde2d415c8cba38a0dcd6eb6e16",
+  "source_hashes": {
+    "groups.csv": "2c03d41c21ab9a1983cd96eb3fc22269622ec809a924efc2d6e45b0ed80c6daa",
+    "labeled_features/features_15S.csv.gz": "fd6fd97f50ddc13b37b9a6361c09bf4cb07159c61f150328902b2d95137041f2",
+    "labeled_features/features_25S.csv.gz": "0d43d1d396ef13778ab2cd2a9f047034713f9066bdc07c23efce335da8185331",
+    "labeled_features/features_5S.csv.gz": "e1f82b42d735e368f04a60062cadd50d6b097cc1222ebe8830cbff24b6d5ab99",
+    "pump_telegram.csv": "7ca4d2ac21b02888a269af6dd8a56415074d86f1e5e51e5de314f536a6a3b593"
+  },
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

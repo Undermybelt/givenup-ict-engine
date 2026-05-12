@@ -1,0 +1,133 @@
+{
+  "factor_name": "smt_relationship_resolver",
+  "factor_version": "2026-05-12.outcome-label-readback.v1",
+  "source_observation_root": "docs/experiments/actionable-regime-confidence/runs/20260512T204643+0800-codex-smt-btc-eth-provider-backed-observation-v1",
+  "branch_path": "Transition -> LiquiditySweepConfirmationFailure -> smt_divergence_confirmation_only -> smt_relationship_resolver:btc_eth_1h_v1",
+  "aggregate": {
+    "event_count": 127,
+    "outcome_6h_count": 127,
+    "outcome_12h_count": 124,
+    "hit_rate_6h": 0.622047,
+    "hit_rate_12h": 0.516129,
+    "mean_forward_6h_return": 0.00034318,
+    "mean_forward_12h_return": -0.00200802
+  },
+  "provider_summary": [
+    {
+      "provider_id": "binance",
+      "event_count": 25,
+      "outcome_6h_count": 25,
+      "hit_rate_6h": 0.76,
+      "mean_forward_6h_return": -2.318e-05,
+      "outcome_12h_count": 25,
+      "hit_rate_12h": 0.52,
+      "mean_forward_12h_return": -0.00320307
+    },
+    {
+      "provider_id": "bybit",
+      "event_count": 25,
+      "outcome_6h_count": 25,
+      "hit_rate_6h": 0.76,
+      "mean_forward_6h_return": -0.00029185,
+      "outcome_12h_count": 25,
+      "hit_rate_12h": 0.48,
+      "mean_forward_12h_return": -0.00318943
+    },
+    {
+      "provider_id": "ibkr",
+      "event_count": 20,
+      "outcome_6h_count": 20,
+      "hit_rate_6h": 0.4,
+      "mean_forward_6h_return": 0.00178817,
+      "outcome_12h_count": 18,
+      "hit_rate_12h": 0.5,
+      "mean_forward_12h_return": -0.0007127
+    },
+    {
+      "provider_id": "kraken",
+      "event_count": 18,
+      "outcome_6h_count": 18,
+      "hit_rate_6h": 0.5,
+      "mean_forward_6h_return": -0.00017023,
+      "outcome_12h_count": 18,
+      "hit_rate_12h": 0.555556,
+      "mean_forward_12h_return": 2.59e-06
+    },
+    {
+      "provider_id": "tradingviewremix",
+      "event_count": 16,
+      "outcome_6h_count": 16,
+      "hit_rate_6h": 0.625,
+      "mean_forward_6h_return": 0.00071638,
+      "outcome_12h_count": 16,
+      "hit_rate_12h": 0.4375,
+      "mean_forward_12h_return": -0.00084686
+    },
+    {
+      "provider_id": "yfinance",
+      "event_count": 23,
+      "outcome_6h_count": 23,
+      "hit_rate_6h": 0.608696,
+      "mean_forward_6h_return": 0.00031733,
+      "outcome_12h_count": 22,
+      "hit_rate_12h": 0.590909,
+      "mean_forward_12h_return": -0.00285686
+    }
+  ],
+  "regime_summary": [
+    {
+      "regime_label": "other",
+      "event_count": 6,
+      "outcome_6h_count": 6,
+      "hit_rate_6h": 0.333333,
+      "mean_forward_6h_return": -0.00180151,
+      "outcome_12h_count": 6,
+      "hit_rate_12h": 0.0,
+      "mean_forward_12h_return": -0.00963444
+    },
+    {
+      "regime_label": "range",
+      "event_count": 45,
+      "outcome_6h_count": 45,
+      "hit_rate_6h": 0.711111,
+      "mean_forward_6h_return": -0.00171938,
+      "outcome_12h_count": 44,
+      "hit_rate_12h": 0.659091,
+      "mean_forward_12h_return": -0.0030796
+    },
+    {
+      "regime_label": "transition",
+      "event_count": 63,
+      "outcome_6h_count": 63,
+      "hit_rate_6h": 0.539683,
+      "mean_forward_6h_return": 0.00258363,
+      "outcome_12h_count": 61,
+      "hit_rate_12h": 0.393443,
+      "mean_forward_12h_return": -0.00016662
+    },
+    {
+      "regime_label": "trend",
+      "event_count": 13,
+      "outcome_6h_count": 13,
+      "hit_rate_6h": 0.846154,
+      "mean_forward_6h_return": -0.00238487,
+      "outcome_12h_count": 13,
+      "hit_rate_12h": 0.846154,
+      "mean_forward_12h_return": -0.00350167
+    }
+  ],
+  "quality_gate": {
+    "outcome_labels_present": true,
+    "mss_cisd_displacement_pda_present": false,
+    "observation_quality_weight": 0.25,
+    "learning_quality_weight": 0.0,
+    "auto_quant_dispatch_allowed": false,
+    "pre_bayes_filter_allowed": false,
+    "bbn_learning_allowed": false,
+    "catboost_learning_allowed": false,
+    "execution_tree_branch_weight_update_allowed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "fail_closed_reason": "outcome_labels_exist_but_entry_context_missing_mss_cisd_displacement_pda"
+  }
+}

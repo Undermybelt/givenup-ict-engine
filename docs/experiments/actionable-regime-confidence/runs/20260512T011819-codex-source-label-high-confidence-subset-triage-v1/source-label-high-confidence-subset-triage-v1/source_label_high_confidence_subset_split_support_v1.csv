@@ -1,0 +1,17 @@
+label,split_role,high_conf_rows
+Bear,calibration,49
+Bear,heldout_market,3
+Bear,heldout_time,0
+Bear,test,0
+Bull,calibration,5460
+Bull,heldout_market,795
+Bull,heldout_time,2417
+Bull,test,1521
+Crisis,calibration,130
+Crisis,heldout_market,0
+Crisis,heldout_time,80
+Crisis,test,66
+Sideways,calibration,4929
+Sideways,heldout_market,1671
+Sideways,heldout_time,1388
+Sideways,test,698

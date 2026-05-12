@@ -1,0 +1,194 @@
+{
+  "chain_summary": {
+    "analyze_bull_bundle_readonly": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/analyze_bull_bundle_readonly.json",
+      "first_line": "{",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/analyze_bull_bundle_readonly.err"
+    },
+    "auto_quant_run_help": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/auto_quant_run_help.out",
+      "first_line": "",
+      "returncode": 2,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/auto_quant_run_help.err"
+    },
+    "auto_quant_status": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/auto_quant_status.json",
+      "first_line": "{",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/auto_quant_status.err"
+    },
+    "export_structural_path_ranking_target": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/export_structural_path_ranking_target.json",
+      "first_line": "{",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/export_structural_path_ranking_target.err"
+    },
+    "policy_training_status": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/policy_training_status.json",
+      "first_line": "{",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/policy_training_status.err"
+    },
+    "pre_bayes_status": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/pre_bayes_status.json",
+      "first_line": "{",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/pre_bayes_status.err"
+    },
+    "workflow_status_execution_candidate": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/workflow_status_execution_candidate.json",
+      "first_line": "{",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/chain-readback/workflow_status_execution_candidate.err"
+    }
+  },
+  "current_intake_roots": "docs/experiments/actionable-regime-confidence/runs/20260511T205323-codex-current-goal-completion-audit-v37-after-live-public-recheck/completion-audit/current_goal_completion_audit_v37_intake_roots.csv",
+  "decision": {
+    "accepted_rows_added": 0,
+    "downstream_chain_status": "read-only bundle/analyze/pre-bayes/policy/workflow/export commands executed; promotion remains fail-closed because source-owned intake rows are absent",
+    "existing_intake_roots": [
+      "/tmp/ict-engine-direct-manipulation-row-intake"
+    ],
+    "gate_result": "board_a_provider_chain_readback_v1=providers_and_chain_rerun_source_rows_still_missing",
+    "intake_missing_files": {
+      "/tmp/ict-engine-direct-manipulation-row-intake": "matched_negative_normal_activity_rows.csv",
+      "/tmp/ict-engine-native-subhour-source-label-intake": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "/tmp/ict-engine-source-label-equivalence-intake": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "/tmp/ict-engine-source-panel-recency-extension": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json"
+    },
+    "new_confidence_gate": false,
+    "next_action": "Populate the four fail-closed intake roots with source-owned or owner-approved rows/provenance, then rerun the R2/R3/R4/R5/R6 verifiers and only then rerun BBN/CatBoost/execution-tree gates.",
+    "outbox_rows_checked": 9,
+    "provider_fetches": [
+      {
+        "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/harness_yfinance_qqq_1d_fetch.json",
+        "error_count": 0,
+        "first_timestamp": "2026-04-13T13:30:00Z",
+        "last_timestamp": "2026-05-08T13:30:00Z",
+        "name": "harness_yfinance_qqq_1d_fetch",
+        "ok_count": 1,
+        "returncode": 0,
+        "rows": 20
+      },
+      {
+        "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/harness_tradingview_qqq_1d_fetch.json",
+        "error_count": 0,
+        "first_timestamp": "2026-04-13T13:30:00Z",
+        "last_timestamp": "2026-05-08T13:30:00Z",
+        "name": "harness_tradingview_qqq_1d_fetch",
+        "ok_count": 1,
+        "returncode": 0,
+        "rows": 20
+      },
+      {
+        "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/harness_ibkr_qqq_1d_fetch.out",
+        "name": "harness_ibkr_qqq_1d_fetch",
+        "returncode": 1
+      },
+      {
+        "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/kraken_cli_xbtusd_1h_ohlc.json",
+        "error_count": 0,
+        "first_timestamp": 1775912400,
+        "last_timestamp": 1778504400,
+        "name": "kraken_cli_xbtusd_1h_ohlc",
+        "ok_count": 1,
+        "returncode": 0,
+        "rows": 721
+      }
+    ],
+    "raw_data_committed": false,
+    "ready_intake_roots": "0/4",
+    "runtime_code_changed": false,
+    "source_rows_acquired": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T13:02:42.084029+00:00",
+  "intake_roots": [
+    {
+      "exists": "False",
+      "id": "source_label_equivalence",
+      "missing_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "present_files": "",
+      "ready": "False",
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "requirements": "R2;R4",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "exists": "False",
+      "id": "native_subhour_source_label",
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_files": "",
+      "ready": "False",
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "requirements": "R3",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "exists": "False",
+      "id": "source_panel_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "ready": "False",
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "requirements": "R5",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "exists": "True",
+      "id": "direct_manipulation_row_intake",
+      "missing_files": "matched_negative_normal_activity_rows.csv",
+      "present_files": "positive_spoofing_layering_rows.csv;provenance_manifest.json",
+      "ready": "False",
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "requirements": "R6",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "provider_summary": {
+    "provider_status_agent": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_agent.json",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_agent.err",
+      "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:1/7 ready"
+    },
+    "provider_status_ibkr": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_ibkr.json",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_ibkr.err",
+      "summary_line": "market_data:0/1 ready"
+    },
+    "provider_status_kraken_cli": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_kraken_cli.json",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_kraken_cli.err",
+      "summary_line": "local_runtime:1/1 ready"
+    },
+    "provider_status_kraken_public": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_kraken_public.json",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_kraken_public.err",
+      "summary_line": "market_data:0/1 ready"
+    },
+    "provider_status_tradingview_mcp": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_tradingview_mcp.json",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_tradingview_mcp.err",
+      "summary_line": "market_data:1/1 ready"
+    },
+    "provider_status_yfinance": {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_yfinance.json",
+      "returncode": 0,
+      "stderr": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1/provider/provider_status_yfinance.err",
+      "summary_line": "live_runtime:1/1 ready | market_data:1/1 ready"
+    }
+  },
+  "run_id": "20260511T205144+0800-codex-board-a-provider-chain-readback-v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T205144-codex-board-a-provider-chain-readback-v1",
+  "schema_version": "board-a-provider-chain-readback/v1",
+  "source_acquisition_outbox_v2": "docs/experiments/actionable-regime-confidence/runs/20260511T204715-codex-source-acquisition-outbox-v2-after-r6-uplift/source-acquisition-outbox-v2/source_acquisition_outbox_v2.json"
+}

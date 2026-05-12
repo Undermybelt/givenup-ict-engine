@@ -1,0 +1,7 @@
+CRYPTO | analyze | pass_neutralized | duration=negative_binomial | remaining_bars=5.00
+Block: none
+Latest: analyze | direction=Bull entry=medium gate=pass_neutralized quality=0.582
+Next: Review the latest ensemble, pre-bayes evidence, and structural path before rerunning analyze. Start with ict-engine workflow-status --symbol CRYPTO --state-dir <local-path> --profile examples/provider_profiles/thrill3r-nq-closed-loop-v1.json --phase ensemble-vote --human.
+Evidence: ict-engine workflow-status --symbol CRYPTO --state-dir <local-path> --profile examples/provider_profiles/thrill3r-nq-closed-loop-v1.json --phase ensemble-vote --human | ict-engine pre-bayes-status --symbol CRYPTO --state-dir <local-path> --human | ict-engine workflow-status --symbol CRYPTO --state-dir <local-path> --profile examples/provider_profiles/thrill3r-nq-closed-loop-v1.json --phase structural-recommended-path-bundle --human
+Dataset resolver: profile_opt_in=Personal NQ workflow: local Tomac historical MTF data plus QQQ spot/options and VIX, with yfinance zero-config first and optional external runtime reuse. | contracts=Tomac cleaned multi-timeframe futures root, Paired ETF context, Volatility overlay | tracks=ibkr_local_bridge:pending:ibkr,ibkr_bridge | kraken_cli_authenticated:ready:kraken_cli | live_operator_runtime:pending:external_http_runtime,crypto_public_runtime
+Ranker: status=enabled_no_matching_scores source=none applied=0 artifact=0 candidate=0 history=0 score=n/a gate=n/a

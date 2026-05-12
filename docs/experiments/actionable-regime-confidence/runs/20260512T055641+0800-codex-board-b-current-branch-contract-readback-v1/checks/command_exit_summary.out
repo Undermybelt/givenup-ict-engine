@@ -1,0 +1,10 @@
+command_exit_summary
+01_provider_status_agent.exit=0
+02_auto_quant_status_combined.exit=0
+03_pre_bayes_status_combined.exit=0
+04_policy_training_status_combined.exit=0
+05_workflow_structural_bundle_combined.exit=0
+06_workflow_execution_candidate_combined.exit=0
+07_board_hashes.exit=0
+08_required_tmp_roots.exit=0
+09_active_owner_processes.exit=0

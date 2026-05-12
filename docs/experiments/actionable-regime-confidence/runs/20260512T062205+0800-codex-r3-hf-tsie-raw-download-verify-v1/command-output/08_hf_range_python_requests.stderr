@@ -1,0 +1,47 @@
+urllib3.exceptions.SSLError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='cas-bridge.xethub.hf.co', port=443): Max retries exceeded with url: /xet-bridge-us/69db153a61f7dc0587c18e6e/c2c9c64568d08ce3fcd37c3de85f8c155bb0dec0c678cb4140b8e6e2eb85bff3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cas%2F20260511%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260511T222136Z&X-Amz-Expires=3600&X-Amz-Signature=c8982f6f4337eb3bab93eae959f862748b21ff51dbbd0e0a7789aed32cb9fefb&X-Amz-SignedHeaders=host&X-Xet-Cas-Uid=public&response-content-disposition=inline%3B+filename*%3DUTF-8%27%270000.parquet%3B+filename%3D%220000.parquet%22%3B&x-amz-checksum-mode=ENABLED&x-id=GetObject&Expires=1778541696&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc3ODU0MTY5Nn19LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2FzLWJyaWRnZS54ZXRodWIuaGYuY28veGV0LWJyaWRnZS11cy82OWRiMTUzYTYxZjdkYzA1ODdjMThlNmUvYzJjOWM2NDU2OGQwOGNlM2ZjZDM3YzNkZTg1ZjhjMTU1YmIwZGVjMGM2NzhjYjQxNDBiOGU2ZTJlYjg1YmZmMyoifV19&Signature=ERfqETTjGOInwxclqz1px16zQ4fCsEK2uUPoMwklUqL-pmvqE7m5HxHh4mm7uMJ4SHxWo03mL4oFoscJ30-lf9ajLv6RBVvtOj~xE8RXrN6Nh8Bh2L~jXuz2JAFEIH1GAcoWBkcKNdYmAT1utmnye-nGqQkEVWFdVflUFt3EGVV7gjZJ1WP6UzQTijmLe99G-yw6j4KRfrNUK8hNWdZge325A5g9ELRhOYfbqY59hI8pS-qujCfgb32uLq8up6BT6GFncfOVQKQOCnU0SSMSxD1jitqncnocAxGgpR~-c89XkLpFPaM2k0cp6lD0kANTnI2q4I3Rfz9qgZhESC9kzA__&Key-Pair-Id=K2L8F4GPSG1IFC (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import requests, sys; url='https://huggingface.co/datasets/sujinwo/tsie-market-regime-dataset/resolve/refs%2Fconvert%2Fparquet/default/train/0000.parquet'; out='/tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/range_0_1m_requests.parquet.part'; r=requests.get(url, headers={'Range':'bytes=0-1048575'}, timeout=60); print('status', r.status_code); print('url', r.url); print('content_length', len(r.content)); open(out,'wb').write(r.content); print('wrote', out)
+                                                                                                                                                                                                                                                                     ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/requests/sessions.py", line 724, in send
+    history = [resp for resp in gen]
+                                ^^^
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/requests/sessions.py", line 265, in resolve_redirects
+    resp = self.send(
+        req,
+    ...<6 lines>...
+        **adapter_kwargs,
+    )
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/thrill3r/.venv/lib/python3.13/site-packages/requests/adapters.py", line 698, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='cas-bridge.xethub.hf.co', port=443): Max retries exceeded with url: /xet-bridge-us/69db153a61f7dc0587c18e6e/c2c9c64568d08ce3fcd37c3de85f8c155bb0dec0c678cb4140b8e6e2eb85bff3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cas%2F20260511%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260511T222136Z&X-Amz-Expires=3600&X-Amz-Signature=c8982f6f4337eb3bab93eae959f862748b21ff51dbbd0e0a7789aed32cb9fefb&X-Amz-SignedHeaders=host&X-Xet-Cas-Uid=public&response-content-disposition=inline%3B+filename*%3DUTF-8%27%270000.parquet%3B+filename%3D%220000.parquet%22%3B&x-amz-checksum-mode=ENABLED&x-id=GetObject&Expires=1778541696&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc3ODU0MTY5Nn19LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2FzLWJyaWRnZS54ZXRodWIuaGYuY28veGV0LWJyaWRnZS11cy82OWRiMTUzYTYxZjdkYzA1ODdjMThlNmUvYzJjOWM2NDU2OGQwOGNlM2ZjZDM3YzNkZTg1ZjhjMTU1YmIwZGVjMGM2NzhjYjQxNDBiOGU2ZTJlYjg1YmZmMyoifV19&Signature=ERfqETTjGOInwxclqz1px16zQ4fCsEK2uUPoMwklUqL-pmvqE7m5HxHh4mm7uMJ4SHxWo03mL4oFoscJ30-lf9ajLv6RBVvtOj~xE8RXrN6Nh8Bh2L~jXuz2JAFEIH1GAcoWBkcKNdYmAT1utmnye-nGqQkEVWFdVflUFt3EGVV7gjZJ1WP6UzQTijmLe99G-yw6j4KRfrNUK8hNWdZge325A5g9ELRhOYfbqY59hI8pS-qujCfgb32uLq8up6BT6GFncfOVQKQOCnU0SSMSxD1jitqncnocAxGgpR~-c89XkLpFPaM2k0cp6lD0kANTnI2q4I3Rfz9qgZhESC9kzA__&Key-Pair-Id=K2L8F4GPSG1IFC (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))

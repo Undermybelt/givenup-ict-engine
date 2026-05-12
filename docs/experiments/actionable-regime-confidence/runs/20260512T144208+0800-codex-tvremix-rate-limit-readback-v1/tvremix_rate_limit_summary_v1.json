@@ -1,0 +1,20 @@
+{
+  "protocol": "tvremix_rate_limit_readback_v1",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T144208+0800-codex-tvremix-rate-limit-readback-v1",
+  "local_config_present": true,
+  "local_config_keys_present": [
+    "url",
+    "api_key"
+  ],
+  "api_key_redacted": true,
+  "probe": {
+    "method": "tools/list",
+    "http_status": 429,
+    "response_body": "Rate limit exceeded. Retry after 62344s.",
+    "retry_after_seconds": 62344
+  },
+  "classification": "provider_health_gap_not_board_a_acceptance",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

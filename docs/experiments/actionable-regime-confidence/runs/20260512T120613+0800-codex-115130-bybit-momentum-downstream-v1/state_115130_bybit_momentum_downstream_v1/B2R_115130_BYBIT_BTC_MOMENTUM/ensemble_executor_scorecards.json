@@ -1,0 +1,26 @@
+[
+  {
+    "executor": "catboost_file",
+    "wins": 0,
+    "losses": 0,
+    "breakevens": 0,
+    "validated_positive": 0,
+    "validated_negative": 0,
+    "cumulative_quality_score": 0,
+    "latest_weight_hint": 0.55,
+    "last_outcome": null,
+    "last_updated_at": null
+  },
+  {
+    "executor": "xgboost_file",
+    "wins": 0,
+    "losses": 0,
+    "breakevens": 0,
+    "validated_positive": 0,
+    "validated_negative": 0,
+    "cumulative_quality_score": 0,
+    "latest_weight_hint": 0.45,
+    "last_outcome": null,
+    "last_updated_at": null
+  }
+]

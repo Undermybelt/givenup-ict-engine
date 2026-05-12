@@ -1,0 +1,7 @@
+{
+  "base_symbol": "NQ",
+  "timeframe": "5m",
+  "session": "NY_AM",
+  "provider_universe": ["NQ", "ES", "YM", "RTY", "QQQ", "SPY", "DXY", "VIX"],
+  "candles": {}
+}

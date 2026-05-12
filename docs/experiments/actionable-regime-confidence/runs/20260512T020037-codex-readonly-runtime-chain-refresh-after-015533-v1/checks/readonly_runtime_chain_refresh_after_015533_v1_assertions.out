@@ -1,0 +1,10 @@
+all_commands_exit_zero: PASS
+auto_quant_non_promoting: PASS
+analyze_observe_only: PASS
+pre_bayes_pass_neutralized: PASS
+policy_training_no_matched_rows: PASS
+execution_candidate_not_actionable: PASS
+path_export_no_mature_rows: PASS
+no_canonical_merge: PASS
+no_goal_update: PASS
+overall: PASS

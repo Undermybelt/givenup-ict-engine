@@ -1,0 +1,37 @@
+{
+  "market_key": "board-b-provider-matrix-spy-1d-after-125425",
+  "interval": "1d",
+  "start": "2026-04-01T00:00:00Z",
+  "end": "2026-05-09T00:00:00Z",
+  "count": 40,
+  "related_roles": [
+    "yf_spy",
+    "tvr_spy",
+    "ibkr_spy"
+  ],
+  "provider_preferences": {
+    "yf_spy": "yfinance",
+    "tvr_spy": "tradingview_mcp",
+    "ibkr_spy": "ibkr"
+  },
+  "symbol_overrides": {
+    "yf_spy": {
+      "display_symbol": "SPY",
+      "yfinance": "SPY"
+    },
+    "tvr_spy": {
+      "display_symbol": "AMEX:SPY",
+      "tradingview_mcp": "AMEX:SPY"
+    },
+    "ibkr_spy": {
+      "display_symbol": "SPY",
+      "ibkr": {
+        "symbol": "SPY",
+        "sec_type": "STK",
+        "exchange": "SMART",
+        "currency": "USD",
+        "primary_exchange": "ARCA"
+      }
+    }
+  }
+}

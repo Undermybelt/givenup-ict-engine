@@ -1,0 +1,6 @@
+PASS provider_rows_6=6
+PASS provider_requested_all=True
+PASS provider_data_acquired_6=6
+PASS material_count_6=6
+PASS promotion_allowed_false=True
+PASS update_goal_false=True

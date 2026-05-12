@@ -1,0 +1,11 @@
+requirement,status,evidence,note
+non-BTC market,covered,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/local-nonbtc-mtf-chain-probe-v1/local_nonbtc_mtf_chain_probe_v1.json,ETH_USDT and SPY_USD panels
+non-1h timeframe,covered,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/local-nonbtc-mtf-chain-probe-v1/local_nonbtc_mtf_chain_probe_v1.json,SPY ltf=15m plus 4h/1d context
+Auto-Quant local data,covered,/Users/thrill3r/Auto-Quant/user_data/data,source feathers under Auto-Quant user_data/data
+ict-engine analyze,covered,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output,per-panel analyze commands captured
+factor-research auto-quant,covered,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output,per-panel auto-quant backend invoked
+Pre-Bayes/BBN,covered,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output,pre-bayes-status refresh invoked
+CatBoost/path-ranker,partial,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/path-ranker,trainer attempted only when exported target exists
+execution tree,covered,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/command-output,workflow-status structural-ranker-runtime invoked
+>=95 confidence,fail,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/local-nonbtc-mtf-chain-probe-v1/local_nonbtc_mtf_chain_probe_v1.json,no panel accepted
+trade usable,fail,docs/experiments/actionable-regime-confidence/runs/20260512T124245+0800-codex-local-nonbtc-mtf-chain-probe-v1/local-nonbtc-mtf-chain-probe-v1/local_nonbtc_mtf_chain_probe_v1.json,promotion_allowed=false

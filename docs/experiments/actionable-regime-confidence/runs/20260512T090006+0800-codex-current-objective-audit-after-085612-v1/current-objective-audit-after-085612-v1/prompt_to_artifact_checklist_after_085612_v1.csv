@@ -1,0 +1,9 @@
+requirement,status,evidence,gap
+Every regime reaches >=95 calibrated confidence,blocked,085042/085131/085612 all keep valid_required_root_unlock=false and source_control_evidence_acquired=false,No accepted R6/R5/R3 source-control root; R3 Crisis absent
+Validate confidence across other markets / periods / timeframes,blocked,source-control unlock false; explicit selected history false; canonical merge false,No qualifying source-owned cross-axis packet after 085612
+Use real AutoQuant -> filter / Pre-Bayes -> BBN -> CatBoost/path-ranking -> execution tree chain,blocked,selected_data_autoquant_promotion=false and downstream_promotion_rerun=false in latest assertion set,Chain is intentionally not authorized until source/control and selected-history gates unlock
+"Remember IBKR, TradingViewRemix, yfinance, Kraken provider surfaces",partial,"Provider surfaces are historically observed in earlier Board A packets, but 085612 is only source/control triage",Provider operation is not sufficient without source/control unlock and selected-history gate
+Acquire source/control evidence,blocked,085612 official_owner_export_package_hits=0 and verifier_native_positive_control_provenance_packages_acquired=0,Need owner-approved/authenticated FINRA / venue-surveillance / CAT-like / CME-Cboe-CFE rows or explicit FLIP approval
+Explicit user-selected historical path before non-promotional factor research,blocked,latest board gates still include no_explicit_user_selected_history / user_selected_historical_data_missing,No explicit HTF/MTF/LTF selection in current evidence
+Do not disturb concurrent work,pass,This audit is append-only and reads current hashes/tails; it does not rewrite cursor or older sections,
+Do not make trade claim or complete goal prematurely,pass,"trade_usable=false, strict_full_objective=false, update_goal=false",

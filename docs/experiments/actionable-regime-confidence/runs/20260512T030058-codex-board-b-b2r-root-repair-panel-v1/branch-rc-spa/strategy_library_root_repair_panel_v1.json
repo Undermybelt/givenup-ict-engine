@@ -1,0 +1,188 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-11T19:09:58.742210+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "local-auto-quant-env",
+  "config_path": "/Users/thrill3r/Auto-Quant/config.json",
+  "log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/branch-rc-spa/auto_quant_root_repair_panel_v1.out",
+  "timeframe": "1h",
+  "validation_errors": [],
+  "strategies": [
+    {
+      "name": "RootRepairPanelV1_Bull",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/scripts/root_repair_panel_v1.py",
+      "pairs": [
+        "NQ/USD",
+        "BTC/USDT",
+        "ETH/USDT",
+        "BNB/USDT",
+        "SOL/USDT",
+        "AVAX/USDT"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "RootRepairPanelV1_Bull",
+        "mutation_id": "b2r_root_repair_panel_v1",
+        "status": "incubation_only_b2r_repeat_after_crypto_options_breadth",
+        "base_factor": "RootRepairPanelV1",
+        "parent": "Bull -> TrendExpansion -> CrossAssetTrendCarry -> RootRepairPanelV1:nq_crypto_trend_followthrough_h24",
+        "expected_regime": "MainRegimeV2::Bull",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "cross_breadth",
+          "nq_ret24",
+          "btc_ret24",
+          "btc_vol24",
+          "btc_eth_spread_z"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 4365,
+        "win_rate_pct": 50.69873997709049,
+        "total_profit_pct": -217.98866505072044,
+        "sharpe": -2.381640865481262,
+        "profit_factor": 0.9029137876732473,
+        "max_drawdown_pct": 2.556708388052751,
+        "sortino": -2.381640865481262,
+        "calmar": -2.381640865481262
+      },
+      "per_pair_metrics": {}
+    },
+    {
+      "name": "RootRepairPanelV1_Bear",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/scripts/root_repair_panel_v1.py",
+      "pairs": [
+        "NQ/USD",
+        "BTC/USDT",
+        "ETH/USDT",
+        "BNB/USDT",
+        "SOL/USDT",
+        "AVAX/USDT"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "RootRepairPanelV1_Bear",
+        "mutation_id": "b2r_root_repair_panel_v1",
+        "status": "incubation_only_b2r_repeat_after_crypto_options_breadth",
+        "base_factor": "RootRepairPanelV1",
+        "parent": "Bear -> BearMarketDrawdown -> CryptoDeleveragingShort -> RootRepairPanelV1:btc_deleveraging_short_h12",
+        "expected_regime": "MainRegimeV2::Bear",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "cross_breadth",
+          "nq_ret24",
+          "btc_ret24",
+          "btc_vol24",
+          "btc_eth_spread_z"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 340,
+        "win_rate_pct": 47.05882352941176,
+        "total_profit_pct": 50.22548204632968,
+        "sharpe": 0.551368915892728,
+        "profit_factor": 1.0796458401794846,
+        "max_drawdown_pct": 7.1324315002617436,
+        "sortino": 0.551368915892728,
+        "calmar": 0.551368915892728
+      },
+      "per_pair_metrics": {}
+    },
+    {
+      "name": "RootRepairPanelV1_Sideways",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/scripts/root_repair_panel_v1.py",
+      "pairs": [
+        "NQ/USD",
+        "BTC/USDT",
+        "ETH/USDT",
+        "BNB/USDT",
+        "SOL/USDT",
+        "AVAX/USDT"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "RootRepairPanelV1_Sideways",
+        "mutation_id": "b2r_root_repair_panel_v1",
+        "status": "incubation_only_b2r_repeat_after_crypto_options_breadth",
+        "base_factor": "RootRepairPanelV1",
+        "parent": "Sideways -> RangeConsolidation -> IndexRangeFade -> RootRepairPanelV1:nq_lowvol_range_fade_h12",
+        "expected_regime": "MainRegimeV2::Sideways",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "cross_breadth",
+          "nq_ret24",
+          "btc_ret24",
+          "btc_vol24",
+          "btc_eth_spread_z"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 5722,
+        "win_rate_pct": 43.20167773505767,
+        "total_profit_pct": -564.9419633693736,
+        "sharpe": -8.503316458605228,
+        "profit_factor": 0.725449711540669,
+        "max_drawdown_pct": 1.5218598590189736,
+        "sortino": -8.503316458605228,
+        "calmar": -8.503316458605228
+      },
+      "per_pair_metrics": {}
+    },
+    {
+      "name": "RootRepairPanelV1_Crisis",
+      "status": "ok",
+      "file_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T030058-codex-board-b-b2r-root-repair-panel-v1/scripts/root_repair_panel_v1.py",
+      "pairs": [
+        "NQ/USD",
+        "BTC/USDT",
+        "ETH/USDT",
+        "BNB/USDT",
+        "SOL/USDT",
+        "AVAX/USDT"
+      ],
+      "timerange": "20210101-20260129",
+      "commit": "local-auto-quant-env",
+      "error": null,
+      "metadata": {
+        "strategy": "RootRepairPanelV1_Crisis",
+        "mutation_id": "b2r_root_repair_panel_v1",
+        "status": "incubation_only_b2r_repeat_after_crypto_options_breadth",
+        "base_factor": "RootRepairPanelV1",
+        "parent": "Crisis -> ExtremeStress -> IndexTailShort -> RootRepairPanelV1:nq_tail_short_h12",
+        "expected_regime": "MainRegimeV2::Crisis",
+        "factors_used": [
+          "parent_regime_root",
+          "regime_profit_branch_path",
+          "cross_breadth",
+          "nq_ret24",
+          "btc_ret24",
+          "btc_vol24",
+          "btc_eth_spread_z"
+        ]
+      },
+      "validation_metrics": {
+        "trade_count": 17,
+        "win_rate_pct": 11.76470588235294,
+        "total_profit_pct": -18.791777280459357,
+        "sharpe": -3.789182224227301,
+        "profit_factor": 0.13757678268130935,
+        "max_drawdown_pct": 2.265081969739961,
+        "sortino": -3.789182224227301,
+        "calmar": -3.789182224227301
+      },
+      "per_pair_metrics": {}
+    }
+  ]
+}

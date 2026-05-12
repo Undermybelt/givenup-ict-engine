@@ -1,0 +1,8 @@
+PASS source board updated in docs/plans/2026-05-10-actionable-regime-confidence-todo.md
+PASS main price regime root set is Bull, Bear, Sideways, Crisis
+PASS Manipulation moved to direct-event overlay gate accounting
+PASS child/provenance labels are not counted as root regimes
+PASS expanded all-species/all-cycles blocker remains open
+PASS runtime code changed false
+PASS thresholds relaxed false
+PASS trade usable false

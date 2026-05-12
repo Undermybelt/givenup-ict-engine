@@ -1,0 +1,11 @@
+[load] docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/state_prebayes_provider_data_v1/B2R_YAHOO_CRYPTO_BTC_PULLBACK_104610/policy_training/structural_path_ranking_target_history.csv: 297 rows, 43 columns
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 293 training samples
+[features] label dist: {np.int64(0): np.int64(5), np.int64(1): np.int64(288)}
+[features] No VRP V2 features found, using structural_baseline_score as fallback
+[features] label column unusable; derived pseudo-labels from structural_baseline_score
+[features] 1 features, 297 training samples
+[features] label dist: {np.int64(0): np.int64(5), np.int64(1): np.int64(292)}
+[apply] CatBoost predictions: 297
+[apply] Scores saved to docs/experiments/actionable-regime-confidence/runs/20260512T114101+0800-codex-112954-prebayes-provider-data-rerun-v1/path-ranker/history_scores.csv

@@ -1,0 +1,13 @@
+run_id=20260511T234622-codex-r6-live-intake-missing-readback-v55
+live_intake_exists=false
+verifier_status=blocked
+verifier_reason=missing_required_files
+sarao_sidecar_rows=6
+nowak_smith_sidecar_rows=6
+sidecar_candidate_total_rows=12
+what_if_both_lcb=0.947260905856
+accepted_rows_added=0
+new_confidence_gate=false
+strict_full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

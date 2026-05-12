@@ -1,0 +1,1 @@
+find 'docs/experiments/actionable-regime-confidence/runs/20260512T053410+0800-codex-board-b-readonly-regime-root-chain-refresh-v1' -maxdepth 3 -type f -print | sort | while IFS= read -r f; do printf '%s\t%s bytes\n' "$f" ""; done

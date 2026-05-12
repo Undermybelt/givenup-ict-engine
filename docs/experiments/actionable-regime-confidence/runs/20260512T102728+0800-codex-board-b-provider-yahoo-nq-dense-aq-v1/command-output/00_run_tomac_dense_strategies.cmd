@@ -1,0 +1,1 @@
+uv --directory /Users/thrill3r/Auto-Quant run python /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T102728+0800-codex-board-b-provider-yahoo-nq-dense-aq-v1/workspace/run_tomac.py

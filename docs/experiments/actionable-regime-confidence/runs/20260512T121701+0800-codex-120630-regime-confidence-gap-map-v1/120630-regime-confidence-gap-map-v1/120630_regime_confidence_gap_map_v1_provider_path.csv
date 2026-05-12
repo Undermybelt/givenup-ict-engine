@@ -1,0 +1,13 @@
+provider,path,trades,wins,losses,win_rate
+binance_public,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,37,14,23,0.3783783783783784
+binance_public,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,15,4,11,0.26666666666666666
+bybit_public,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,34,14,20,0.4117647058823529
+bybit_public,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,17,4,13,0.23529411764705882
+ibkr_paxos_long_midpoint,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,32,12,20,0.375
+ibkr_paxos_long_midpoint,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,12,3,9,0.25
+kraken_public,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,23,8,15,0.34782608695652173
+kraken_public,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,9,2,7,0.2222222222222222
+tvr_default_binance,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,25,8,17,0.32
+tvr_default_binance,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,12,2,10,0.16666666666666666
+yfinance,Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1,13,7,6,0.5384615384615384
+yfinance,Range -> ProviderCryptoPullback -> MeanRevertBounce -> ProviderCryptoPullbackRevertV1,8,3,5,0.375

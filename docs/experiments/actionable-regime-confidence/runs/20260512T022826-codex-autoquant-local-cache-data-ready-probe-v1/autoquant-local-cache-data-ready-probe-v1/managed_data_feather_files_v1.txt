@@ -1,0 +1,15 @@
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/BTC_USDT-1d.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/BTC_USDT-1h.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/BTC_USDT-4h.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/ETH_USDT-1h.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/ETH_USDT-4h.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/NQ_USD-15m.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/NQ_USD-1d.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/NQ_USD-1h.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/NQ_USD-4h.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/NQ_USD-5m.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/QQQ_USD-1h.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/QQQ_USD-4h.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/SPY_USD-15m.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/SPY_USD-1d.feather
+/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data/SPY_USD-4h.feather

@@ -1,0 +1,287 @@
+{
+  "accepted_gate": false,
+  "accepted_rows_added": 0,
+  "blocker": "The durable isolated v55 snapshot passes pooled Wilson95 and broad-normal sidecar Wilson95, but chronological/symbol/venue split gates and direct species coverage remain fail-closed; the active board cursor root was present during this readback.",
+  "board_current_run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235815-codex-r6-live-intake-rehydrate-calibration-v1",
+  "board_current_run_root_exists": true,
+  "board_sha256_at_start": "8593cb09cabc29d6b9b99367d6d1f755bb76a939a67eafb7399ced39a7a3fe96",
+  "broad_normal_sidecar_rows": 80,
+  "broad_normal_wilson95_lcb": 0.954180263735,
+  "candidate_materialized_counts": {
+    "jpmorgan_latest": 3,
+    "nowak_smith": 6,
+    "sarao": 6
+  },
+  "candidate_source_counts": {
+    "jpmorgan_latest": 8,
+    "moncada_large_lot": 6,
+    "nowak_smith": 6,
+    "oystacher_khara_salim": 4,
+    "sarao": 6,
+    "thakkar_backofbook": 4
+  },
+  "candidate_unresolved_counts": {
+    "jpmorgan_latest": 5,
+    "moncada_large_lot": 6,
+    "oystacher_khara_salim": 4,
+    "thakkar_backofbook": 4
+  },
+  "chain_readback": {
+    "analyze_live_nq_yfinance_exit": 0,
+    "auto_quant_status_exit": 0,
+    "export_structural_path_ranking_target_exit": 0,
+    "policy_training_status_exit": 0,
+    "pre_bayes_status_exit": 0,
+    "workflow_status_execution_candidate_exit": 0
+  },
+  "commands": [
+    {
+      "cmd": "/opt/homebrew/opt/python@3.14/bin/python3.14 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/direct_manipulation_row_intake_verifier_isolated.exit",
+      "name": "direct_manipulation_row_intake_verifier_isolated",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/direct_manipulation_row_intake_verifier_isolated.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/direct_manipulation_row_intake_verifier_isolated.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_agent.exit",
+      "name": "provider_status_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_agent.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider ibkr --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_ibkr_agent.exit",
+      "name": "provider_status_ibkr_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_ibkr_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_ibkr_agent.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider tradingview_mcp --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_tradingview_mcp_agent.exit",
+      "name": "provider_status_tradingview_mcp_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_tradingview_mcp_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_tradingview_mcp_agent.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider yfinance --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_yfinance_agent.exit",
+      "name": "provider_status_yfinance_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_yfinance_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_yfinance_agent.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_public --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_kraken_public_agent.exit",
+      "name": "provider_status_kraken_public_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_kraken_public_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_kraken_public_agent.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine provider-status --provider kraken_cli --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_kraken_cli_agent.exit",
+      "name": "provider_status_kraken_cli_agent",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_kraken_cli_agent.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/provider_status_kraken_cli_agent.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-board-a-r6-rehydration-autoquant-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/auto_quant_status.exit",
+      "name": "auto_quant_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/auto_quant_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/auto_quant_status.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --options-volatility-proxy-symbol ^VIX --futures-backend yfinance --aux-backend yfinance --state-dir /tmp/ict-engine-board-a-r6-rehydration-chain-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/analyze_live_nq_yfinance.exit",
+      "name": "analyze_live_nq_yfinance",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/analyze_live_nq_yfinance.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/analyze_live_nq_yfinance.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-rehydration-chain-v1 --refresh",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/pre_bayes_status.exit",
+      "name": "pre_bayes_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/pre_bayes_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/pre_bayes_status.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-rehydration-chain-v1 --output-format json",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/policy_training_status.exit",
+      "name": "policy_training_status",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/policy_training_status.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/policy_training_status.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-rehydration-chain-v1 --phase execution-candidate --agent",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/workflow_status_execution_candidate.exit",
+      "name": "workflow_status_execution_candidate",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/workflow_status_execution_candidate.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/workflow_status_execution_candidate.stdout.txt",
+      "timed_out": false
+    },
+    {
+      "cmd": "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine export-structural-path-ranking-target --symbol NQ --state-dir /tmp/ict-engine-board-a-r6-rehydration-chain-v1",
+      "exit_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/export_structural_path_ranking_target.exit",
+      "name": "export_structural_path_ranking_target",
+      "returncode": 0,
+      "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/export_structural_path_ranking_target.stderr.txt",
+      "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/command-output/export_structural_path_ranking_target.stdout.txt",
+      "timed_out": false
+    }
+  ],
+  "current_cursor_root": "docs/experiments/actionable-regime-confidence/runs/20260511T235303-codex-r6-direct-intake-reconstruction-preflight-v1",
+  "current_cursor_root_exists": true,
+  "decision": "r6_isolated_rehydration_split_readback_v1=durable_v55_rehydrated_pooled95_pass_split_species_still_blocked",
+  "direct_species_closed": false,
+  "direct_split_gate": false,
+  "direct_verifier": {
+    "matched_group_count": 70,
+    "matched_negative_rows": 73,
+    "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+    "positive_rows": 73,
+    "provenance_keys": [
+      "artifact_type",
+      "board_current_run_root",
+      "board_current_run_root_exists",
+      "board_sha256_at_start",
+      "current_cursor_root",
+      "current_cursor_root_exists",
+      "generated_at_utc",
+      "policy",
+      "post_thakkar_control_candidate_rows",
+      "post_thakkar_unique_candidate_rows",
+      "run_id",
+      "shared_intake_exists_at_start",
+      "shared_intake_root",
+      "source_snapshot_hashes",
+      "source_snapshot_paths"
+    ],
+    "status": "schema_ready_unscored"
+  },
+  "external_requests_sent": true,
+  "generated_at_utc": "2026-05-11T16:11:04.802595+00:00",
+  "input_hashes": {
+    "broad_normal_controls": "28bbabff08836dabc6891fe55ff4b471d8c5af105836eeb34ebebc9369de7bce",
+    "matched_negative_rows": "d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d",
+    "positive_rows": "ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6",
+    "provenance_manifest": "afcd402e0f03f66b0d9abb33d8bdc9c648655c76da8a8ef76a9f626b606f544c"
+  },
+  "isolated_files": {
+    "matched_negative_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake/matched_negative_normal_activity_rows.csv",
+    "positive_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake/positive_spoofing_layering_rows.csv",
+    "provenance_manifest": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake/provenance_manifest.json"
+  },
+  "isolated_intake_root": "docs/experiments/actionable-regime-confidence/runs/20260512T000038-codex-r6-isolated-rehydration-split-readback-v1/r6-isolated-rehydration-split-readback/isolated-direct-intake",
+  "matched_group_count": 70,
+  "matched_negative_rows": 73,
+  "matched_negative_wilson95_lcb": 0.950006246616,
+  "missing_direct_species": [
+    "quote_stuffing",
+    "pinging",
+    "bear_raid_or_painting_tape",
+    "pump_dump_social_text_or_twitter",
+    "independent_non_spoofing_direct_species"
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Materialize source-owned matched controls and split support for the unrehydrated sidecar positives, then rerun chronological/symbol/venue gates while keeping R5 blocked.",
+  "pooled_min_wilson95_lcb": 0.950006246616,
+  "pooled_wilson_gate": true,
+  "positive_chronological_split_gate": false,
+  "positive_rows": 73,
+  "positive_wilson95_lcb": 0.950006246616,
+  "post_thakkar_control_candidate_rows": 2,
+  "post_thakkar_materialized_candidate_rows": 15,
+  "post_thakkar_unique_candidate_rows": 34,
+  "post_thakkar_unmaterialized_candidate_rows": 19,
+  "providers": [
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "ibkr",
+      "ready": false,
+      "reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "tradingview_mcp",
+      "ready": false,
+      "reason": "tradingview_mcp_connectivity_probe_failed",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "live_runtime",
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "yfinance",
+      "ready": true,
+      "reason": "native_yfinance_runtime_available;public_yahoo_http_endpoints",
+      "status": "ready"
+    },
+    {
+      "domains": [
+        "market_data"
+      ],
+      "observed": true,
+      "provider_id": "kraken_public",
+      "ready": false,
+      "reason": "python3_provider_dependencies_missing",
+      "status": "configured_runtime_unhealthy"
+    },
+    {
+      "domains": [
+        "local_runtime"
+      ],
+      "observed": true,
+      "provider_id": "kraken_cli",
+      "ready": true,
+      "reason": "kraken_cli_config_detected",
+      "status": "ready"
+    }
+  ],
+  "raw_data_committed": false,
+  "run_id": "20260512T000038+0800-codex-r6-isolated-rehydration-split-readback-v1",
+  "runtime_code_changed": false,
+  "shared_intake_exists_at_end": true,
+  "shared_intake_exists_at_start": true,
+  "shared_intake_mutated": false,
+  "sidecar_broad_normal_gate": true,
+  "sidecar_broad_normal_min_wilson95_lcb": 0.950006246616,
+  "source_snapshot_root": "docs/experiments/actionable-regime-confidence/runs/20260511T234414-codex-r6-direct-intake-reconstruction-v55/r6-direct-intake-reconstruction-v55",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unmatched_group_count": 0,
+  "update_goal": false
+}

@@ -1,0 +1,12 @@
+all_required_regimes_95_cross_market_timeframe: True
+missing_after_this_loop: []
+regime_ids: ['ExtremeStress', 'RangeConsolidation', 'ReversalBrewing', 'SessionLiquidityCoreViable', 'ThinLiquidity', 'TrendExpansion']
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+trade_usable: False
+ExtremeStress: lcb=0.983067 instruments=7 contexts=7 timeframes=2 passes=True
+RangeConsolidation: lcb=0.967607 instruments=2 contexts=3 timeframes=2 passes=True
+ReversalBrewing: lcb=0.969093 instruments=7 contexts=7 timeframes=2 passes=True
+SessionLiquidityCoreViable: lcb=0.963173 instruments=3 contexts=4 timeframes=2 passes=True
+ThinLiquidity: lcb=0.994766 instruments=6 contexts=5 timeframes=2 passes=True
+TrendExpansion: lcb=0.971342 instruments=7 contexts=7 timeframes=2 passes=True

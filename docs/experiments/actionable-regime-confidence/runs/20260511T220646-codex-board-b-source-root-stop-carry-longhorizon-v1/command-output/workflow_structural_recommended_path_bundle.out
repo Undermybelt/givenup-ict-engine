@@ -1,0 +1,42 @@
+{
+  "candidate_set_id": "structural-candidates:BOARD_B_SOURCE_ROOT_STOP_CARRY_LH:7314df86c067d2f5",
+  "candidate_set_size": 3,
+  "composite_score": 0.5544007068702508,
+  "confirmation_summary": "recommended command remains valid on next refresh",
+  "current_posterior": 0.5777152955289298,
+  "direction": "Observe",
+  "experience_prior": 0.5,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 2,
+  "invalidation_summary": "regime branch trend loses posterior support or invalidates before trigger",
+  "path_id": "path:scenario:BOARD_B_SOURCE_ROOT_STOP_CARRY_LH:belief_regime_node:trend:trend_follow_through:primary",
+  "path_label": "trend_follow_through",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol BOARD_B_SOURCE_ROOT_STOP_CARRY_LH --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-v1 --backend native",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine factor-research --symbol BOARD_B_SOURCE_ROOT_STOP_CARRY_LH --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-v1 --backend native",
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:BOARD_B_SOURCE_ROOT_STOP_CARRY_LH:7314df86c067d2f5",
+      "candidate_set_size": 3,
+      "confirmation": "recommended command remains valid on next refresh",
+      "invalidation": "regime branch trend loses posterior support or invalidates before trigger",
+      "path_id": "path:scenario:BOARD_B_SOURCE_ROOT_STOP_CARRY_LH:belief_regime_node:trend:trend_follow_through:primary",
+      "path_label": "trend_follow_through",
+      "recommended_command": "ict-engine factor-research --symbol BOARD_B_SOURCE_ROOT_STOP_CARRY_LH --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-board-b-source-root-stop-carry-longhorizon-v1 --backend native",
+      "selected_path_probability": 0.366375845843043,
+      "stop": "Use execution candidate 'execution-candidate:BOARD_B_SOURCE_ROOT_STOP_CARRY_LH:analyze:v2' once actionable; current candidate_status=no_trade.",
+      "trigger": "regime_posterior=trend:0.453",
+      "why": "posterior=0.578 prior=0.500 invalidation_rate=0.000"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "scenario:BOARD_B_SOURCE_ROOT_STOP_CARRY_LH:belief_regime_node:trend:trend_follow_through",
+  "selected_path_probability": 0.366375845843043,
+  "stop_summary": "Use execution candidate 'execution-candidate:BOARD_B_SOURCE_ROOT_STOP_CARRY_LH:analyze:v2' once actionable; current candidate_status=no_trade.",
+  "symbol": "BOARD_B_SOURCE_ROOT_STOP_CARRY_LH",
+  "trigger_summary": "regime_posterior=trend:0.453",
+  "why_this_path": "posterior=0.578 prior=0.500 invalidation_rate=0.000"
+}

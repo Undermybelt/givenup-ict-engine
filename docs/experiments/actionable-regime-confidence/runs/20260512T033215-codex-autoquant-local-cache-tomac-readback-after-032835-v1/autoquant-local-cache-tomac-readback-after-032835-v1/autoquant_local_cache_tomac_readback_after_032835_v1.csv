@@ -1,0 +1,25 @@
+field,value,decision
+exit_code,0,runtime_command_succeeded
+strategy,TomacNQ_KillzoneBreakout,diagnostic_only
+pair,QQQ/USD,local_cache_backtest_only
+timeframe,1h,local_cache_backtest_only
+backtest_from,2024-06-13 23:00:00,diagnostic_only
+backtest_to,2025-12-30 20:00:00,diagnostic_only
+trades,74,diagnostic_only
+win_rate_pct,52.7027,below_board_a_acceptance_context
+total_profit_pct,6.98,diagnostic_only
+sharpe,0.2207,diagnostic_only
+profit_factor,1.2501,diagnostic_only
+max_drawdown_pct,-4.2049,diagnostic_only
+missing_data_fillup_1h_pct,401.38,data_quality_warning
+missing_data_fillup_4h_pct,278.62,data_quality_warning
+source_control_evidence_acquired,false,no_promotion
+owner_export_rows_acquired,false,no_promotion
+flip_approval_acquired,false,no_promotion
+accepted_rows_added,0,no_promotion
+new_confidence_gate,false,no_promotion
+canonical_merge_allowed,false,no_promotion
+downstream_promotion_rerun_allowed,false,no_promotion
+strict_full_objective_achieved,false,no_promotion
+trade_usable,false,no_promotion
+update_goal,false,no_completion

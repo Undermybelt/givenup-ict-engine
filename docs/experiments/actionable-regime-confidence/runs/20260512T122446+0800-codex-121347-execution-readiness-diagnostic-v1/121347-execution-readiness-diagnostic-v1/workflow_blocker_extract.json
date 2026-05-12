@@ -1,0 +1,95 @@
+{
+  "latest_execution_candidate": {
+    "actionable": false,
+    "artifact_id": "execution-candidate:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:analyze:v1",
+    "candidate_status": "no_trade",
+    "decision_hint": "Observe only: current run not comparable to last analyze (no_previous_run).|pda_sequence=unavailable|hybrid_regime_label=range_choppy|hybrid_regime_age=1|pre_bayes_gating_status=pass_neutralized|pre_bayes_quality_score=0.525|mtf_source=analyze_explicit_frames covered_intervals=15m,1h,1d mtf_direction=bullish mtf_alignment=0.9974 mtf_entry_alignment=0.8022",
+    "generated_at": "2026-05-12T04:17:06.327710Z",
+    "multi_timeframe_summary": [
+      "multi_timeframe_source=analyze_explicit_frames covered_intervals=15m,1h,1d",
+      "multi_timeframe_missing=1m,5m,30m,4h",
+      "15m:971 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json",
+      "1h:243 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json",
+      "1d:41 bars path=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json",
+      "higher_timeframe_direction_bias=bullish",
+      "higher_timeframe_alignment_score=0.9974",
+      "lower_timeframe_entry_alignment_score=0.8022"
+    ],
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/execution_candidate.json",
+    "posterior_delta": 0.0,
+    "pre_bayes_bridge_selected_entry_quality": "medium",
+    "pre_bayes_gate_status": "pass_neutralized",
+    "review_reason": "first_execution_candidate_artifact",
+    "review_rule_version": "7bfaf4a346c607e8",
+    "review_status": "observe",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:20260512T041706.327Z",
+    "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+    "top_factor_action": "tune",
+    "top_factor_name": "structure_ict",
+    "trade_direction": "Neutral",
+    "version": 1,
+    "win_probability_delta": 0.0
+  },
+  "latest_promotable_artifact": {
+    "actionable": true,
+    "artifact_id": "ensemble-vote:analyze:2026-05-12T04:17:06Z",
+    "artifact_kind": "ensemble_vote",
+    "consumed_at": null,
+    "consumed_by_update_run_id": null,
+    "consumed_outcome": null,
+    "consumption_regrade_reason": null,
+    "consumption_regrade_status": null,
+    "decision_hint": "favor_mean_reversion_only",
+    "entry_id": "ledger:ensemble-vote:analyze:2026-05-12T04:17:06Z",
+    "family_scores": {},
+    "generated_at": "2026-05-12T04:17:06.479404Z",
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1/B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700/ensemble_vote.json",
+    "promote_candidate": true,
+    "quality_score": 68,
+    "regraded_at": null,
+    "review_reason": "hard_blocked=false ensemble_action=favor_mean_reversion_only consensus=0.686 regime=range jump_gate_bias=objective_market_credibility_shrink command=ask-user: Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1'",
+    "review_rule_version": "ensemble-audit-v2-weighted",
+    "source_phase": "analyze",
+    "source_run_id": "analyze:B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700:20260512T041706.327Z",
+    "status": "consensus",
+    "supersedes_artifact_id": null,
+    "symbol": "B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700",
+    "top_factor_action": "favor_mean_reversion_only",
+    "top_factor_name": null,
+    "version": 1
+  },
+  "blocking_truth": {
+    "evidence": [
+      "historical data reuse requires explicit user path selection",
+      "ask-user: Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1'"
+    ],
+    "next_command": "ask-user: Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1'",
+    "reason": "user_selected_historical_data_missing",
+    "stage": "analyze",
+    "status": "blocked"
+  },
+  "recommended_next_command_meta": {
+    "blocked": true,
+    "executable_command": "ict-engine factor-research --symbol B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/state_115700_enriched_downstream_chain_v1'",
+    "kind": "ask_user",
+    "prompt": "Before using historical data for B2R_SAME_ROOT_SIX_PROVIDER_1H_AQ_115700 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json",
+    "recorded_data_paths": [
+      "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1d.json",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-4h.json",
+      "docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/provider-data-json/BTC_USD-1h.json"
+    ],
+    "requires_user_input": true
+  },
+  "risk_flags": [
+    "analyze:not_comparable:no_previous_run",
+    "analyze:pre_bayes:low_directional_separation"
+  ],
+  "current_focus_phase": "analyze",
+  "current_focus_reason": "market_policy=B2R hostile_liquidity_penalty=0.100 favorable_liquidity_bonus=0.050 hostile_liquidity_forces_high_uncertainty=true;multi_timeframe_direction_bias=bullish multi_timeframe_alignment_score=0.997 multi_timeframe_entry_alignment_score=0.802;long/short support gap 0.015 is too small, so alignment is treated as mixed;pre_bayes_quality_score=0.525 gating_status=pass_neutralized;market_state_source=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.402;market_state_source=volatility=NormalVol:0.719 liquidity=NormalLiquidity:0.398 structure=Unknown:0.300 behavior=Neutral:0.450;market_state_source=rationale=volatility=NormalVol conf=0.72;market_state_source=rationale=primary=RangeConsolidation secondary=WideRange overall=0.40",
+  "pending_actions": [
+    "analyze:Review Pre-Bayes Evidence Gate",
+    "promotion:Block Promotion",
+    "iteration:TUNE structure_ict"
+  ]
+}

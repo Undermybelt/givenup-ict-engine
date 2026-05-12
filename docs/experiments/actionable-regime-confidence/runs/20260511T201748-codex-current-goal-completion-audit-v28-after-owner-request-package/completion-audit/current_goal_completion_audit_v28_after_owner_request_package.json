@@ -1,0 +1,127 @@
+{
+  "accepted_rows_added_since_v27": 0,
+  "checklist": [
+    {
+      "artifact": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+      "evidence": "Board cursor and ledger were re-read; this v27 audit is generated under docs/experiments for the same board.",
+      "gap": "",
+      "id": "R0",
+      "requirement": "Use the named Board A markdown as the execution contract and write results back there.",
+      "status": "pass_checked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T195945-codex-sapienza-pumpdump-control-gate-v1/sapienza-pumpdump-control-gate/sapienza_pumpdump_control_gate_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T200319-codex-current-goal-completion-audit-v26-after-sapienza-gate/completion-audit/current_goal_completion_audit_v26_after_sapienza_gate.json",
+      "evidence": "Scoped active-lane 95% evidence persists; Sapienza pump/dump adds 317 event groups with min split Wilson95 LCB 0.970640354706.",
+      "gap": "This remains scoped evidence, not strict full-market/full-cycle/full-species closure.",
+      "id": "R1",
+      "requirement": "Every active regime has calibrated >=95% confidence.",
+      "status": "pass_scoped_not_full"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T200951-codex-live-intake-verifier-recheck-v2-after-v26/live-intake-verifier-recheck/live_intake_verifier_recheck_v2_after_v26.json",
+      "evidence": "Source-label equivalence verifier status=blocked; missing files=2.",
+      "gap": "No source_label_equivalence_rows.csv or provenance file is present; no other-market/source-label equivalence can be accepted.",
+      "id": "R2",
+      "requirement": "The 95% regime result transfers to other markets/species using source-owned or owner-approved labels.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T200319-codex-current-goal-completion-audit-v26-after-sapienza-gate/completion-audit/current_goal_completion_audit_v26_after_sapienza_gate.json",
+      "evidence": "v26 still carries native sub-hour and strict timeframe blockers; no post-v26 artifact supplies native sub-hour source-owned labels.",
+      "gap": "Native sub-hour price-root source labels remain missing.",
+      "id": "R3",
+      "requirement": "The 95% regime result transfers to other cycles/timeframes, including native sub-hour source labels.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T200951-codex-live-intake-verifier-recheck-v2-after-v26/live-intake-verifier-recheck/live_intake_verifier_recheck_v2_after_v26.json",
+      "evidence": "Intake files present under checked /tmp roots=0; source-label verifier remains blocked.",
+      "gap": "Strict exact 1h row/provenance intake is still absent.",
+      "id": "R4",
+      "requirement": "Strict exact 1h remaining slots have source-owned rows and provenance.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T200909-codex-strict-1h-recency-tail-current-source-recheck-v1/recency-tail-current-source-recheck/strict_1h_recency_tail_current_source_recheck_v1.json",
+      "evidence": "Recency gate=strict_1h_recency_tail_current_source_recheck_v1=no_post_2026_01_30_source_owned_tail_rows; rows_after_2026_01_30={'XOM/Sideways': 0, 'UNH/Bear': 0, '^DJI/Sideways': 0, 'AMD/Bear': 0}; ready_external_tail_sources=0.",
+      "gap": "XOM/Sideways, UNH/Bear, ^DJI/Sideways, and AMD/Bear still have zero post-cutoff source rows.",
+      "id": "R5",
+      "requirement": "Strict 1h recency-tail targets after 2026-01-30 are repaired with source-owned labels.",
+      "status": "fail_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T200347-codex-spoofing-layering-current-source-recheck-v1/spoofing-layering-current-source-recheck/spoofing_layering_current_source_recheck_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T200726-codex-spoofing-layering-source-acquisition-screen-v1/spoofing-layering-source-acquisition-screen/spoofing_layering_source_acquisition_screen_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T200951-codex-live-intake-verifier-recheck-v2-after-v26/live-intake-verifier-recheck/live_intake_verifier_recheck_v2_after_v26.json; docs/experiments/actionable-regime-confidence/runs/20260511T201352-codex-do-putnins-owner-request-package-v1/do-putnins-owner-request-package/do_putnins_owner_request_package_v1.json",
+      "evidence": "Pump/dump scoped gate remains accepted, but source_recheck=spoofing_layering_current_source_recheck_v1=no_source_owned_matched_control_rows; acquisition_screen=spoofing_layering_source_acquisition_screen_v1=no_ready_positive_control_intake_source; direct_intake_status=blocked; missing_direct_files=3. Owner request package=do_putnins_owner_request_package_v1=owner_request_ready_rows_not_acquired; required_files=3; required_fields=17; accepted_rows_added=0.",
+      "gap": "Owner-request package is ready, but no owner-approved rows have been acquired; spoofing/layering, quote stuffing, pinging, bear raid, and painting tape remain uncovered.",
+      "id": "R6",
+      "requirement": "Direct Manipulation has source-owned row-level positives, matched controls, and provenance across required species.",
+      "status": "partial_still_blocked"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T200726-codex-spoofing-layering-source-acquisition-screen-v1/spoofing-layering-source-acquisition-screen/spoofing_layering_source_acquisition_screen_v1.json; docs/experiments/actionable-regime-confidence/runs/20260511T200909-codex-strict-1h-recency-tail-current-source-recheck-v1/recency-tail-current-source-recheck/strict_1h_recency_tail_current_source_recheck_v1.json",
+      "evidence": "Post-v26 screens keep proprietary, synthetic, simulated, metadata-only, and public-doc-only sources fail-closed; thresholds_relaxed=false and raw_data_committed=false.",
+      "gap": "",
+      "id": "R7",
+      "requirement": "No proxy, generated, synthetic, future-return, duplicated, or OHLCV-only labels are promoted.",
+      "status": "pass_guardrail"
+    },
+    {
+      "artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T201254-codex-current-goal-completion-audit-v27-after-live-intake-and-tail-rechecks",
+      "evidence": "R2, R3, R4, R5, and R6 remain uncovered or partial after the v27 audit plus the owner-request package.",
+      "gap": "Strict full objective is not achieved; update_goal must remain false.",
+      "id": "R8",
+      "requirement": "Mark the goal complete only if every explicit requirement is covered by real evidence.",
+      "status": "fail_blocked"
+    }
+  ],
+  "checklist_rows": 9,
+  "decision": "current_goal_completion_audit_v28=owner_request_ready_rows_not_acquired_strict_objective_blocked",
+  "generated_at_utc": "2026-05-11T12:19:27.345335+00:00",
+  "new_confidence_gate_since_v27": false,
+  "objective_restatement": "Every active regime in Board A must have calibrated >=95% confidence, and the same regime confidence must remain suitable across other markets/species and other cycles/timeframes before reporting completion.",
+  "owner_request_decision": "do_putnins_owner_request_package_v1=owner_request_ready_rows_not_acquired",
+  "owner_request_required_fields": [
+    "label",
+    "source_report",
+    "source_section",
+    "trade_date",
+    "symbol",
+    "venue_or_market_center",
+    "participant_type_code",
+    "participant_identifier",
+    "side",
+    "earliest_order_received_time",
+    "latest_order_received_time",
+    "order_count",
+    "total_order_quantity",
+    "activity_description",
+    "matched_negative_group_id",
+    "session_bucket",
+    "source_row_id"
+  ],
+  "owner_request_required_files": [
+    "positive_spoofing_layering_rows.csv",
+    "matched_negative_normal_activity_rows.csv",
+    "provenance_manifest.json"
+  ],
+  "post_v27_artifacts_checked": [
+    "docs/experiments/actionable-regime-confidence/runs/20260511T201352-codex-do-putnins-owner-request-package-v1/do-putnins-owner-request-package/do_putnins_owner_request_package_v1.json"
+  ],
+  "raw_data_committed": false,
+  "run_id": "20260511T201748-codex-current-goal-completion-audit-v28-after-owner-request-package",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "unmet_ids": [
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R8"
+  ],
+  "unmet_rows": 6,
+  "update_goal": false,
+  "v27_prior_decision": "current_goal_completion_audit_v27=post_v26_rechecks_confirm_strict_full_objective_blocked"
+}

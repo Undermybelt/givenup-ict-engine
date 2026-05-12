@@ -1,0 +1,309 @@
+{
+  "run_id": "20260511T180121+0800-codex-crashrebound-branch-rc-spa-v1",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+  "recipe_id": "CrashRebound",
+  "recipe_source": "/Users/thrill3r/Auto-Quant/versions/0.4.1/strategies/CrashRebound.py",
+  "rc_spa_trade_scope": "full_5y_trades_year_folds",
+  "total_trades": 207,
+  "win_rate": 0.6859903381642513,
+  "net_profit_ratio_sum": 1.7106619687392108,
+  "max_drawdown": -0.45478810032513106,
+  "folds": [
+    {
+      "fold_id": "2021",
+      "fold_kind": "calendar_year_from_full_5y_trades",
+      "trades": 52,
+      "net_profit_ratio_sum": 0.9661116972737112,
+      "win_rate": 0.7307692307692307,
+      "positive_edge": true
+    },
+    {
+      "fold_id": "2022",
+      "fold_kind": "calendar_year_from_full_5y_trades",
+      "trades": 32,
+      "net_profit_ratio_sum": 0.105628803772774,
+      "win_rate": 0.6875,
+      "positive_edge": true
+    },
+    {
+      "fold_id": "2023",
+      "fold_kind": "calendar_year_from_full_5y_trades",
+      "trades": 16,
+      "net_profit_ratio_sum": 0.37840729786559973,
+      "win_rate": 0.8125,
+      "positive_edge": true
+    },
+    {
+      "fold_id": "2024",
+      "fold_kind": "calendar_year_from_full_5y_trades",
+      "trades": 68,
+      "net_profit_ratio_sum": 0.31181423020983934,
+      "win_rate": 0.6323529411764706,
+      "positive_edge": true
+    },
+    {
+      "fold_id": "2025",
+      "fold_kind": "calendar_year_from_full_5y_trades",
+      "trades": 39,
+      "net_profit_ratio_sum": -0.051300060382711815,
+      "win_rate": 0.6666666666666666,
+      "positive_edge": false
+    }
+  ],
+  "branches": [
+    {
+      "regime_profit_branch_path": "Bear -> BearMarketCapitulation -> ReboundAttempt -> CrashRebound",
+      "parent_regime_root": "Bear",
+      "branch_path_source": "auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label",
+      "trades": 32,
+      "net_profit_ratio_sum": 0.105628803772774,
+      "mean_profit_ratio": 0.0033009001178991816,
+      "win_rate": 0.6875
+    },
+    {
+      "regime_profit_branch_path": "Bull -> BullPullback -> CapitulationMeanReversionSetup -> CrashRebound",
+      "parent_regime_root": "Bull",
+      "branch_path_source": "auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label",
+      "trades": 159,
+      "net_profit_ratio_sum": 1.2266258671008383,
+      "mean_profit_ratio": 0.007714628094973828,
+      "win_rate": 0.6729559748427673
+    },
+    {
+      "regime_profit_branch_path": "Sideways -> RangeConsolidation -> MeanReversionSetup -> CrashRebound",
+      "parent_regime_root": "Sideways",
+      "branch_path_source": "auto_quant_v0.4.1_calendar_regime_proxy_not_board_a_source_label",
+      "trades": 16,
+      "net_profit_ratio_sum": 0.37840729786559973,
+      "mean_profit_ratio": 0.02365045611659998,
+      "win_rate": 0.8125
+    }
+  ],
+  "hard_gates": {
+    "accepted_regime_id_present": true,
+    "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+    "branch_path_present": true,
+    "branch_path_source_accepted_board_a_labels": false,
+    "all_required_roots_present": false,
+    "missing_roots": [
+      "Crisis"
+    ],
+    "total_trades_gate": true,
+    "min_test_folds_gate": true,
+    "min_trades_per_test_fold_gate": true,
+    "fold_positive_rate": 0.8,
+    "fold_positive_rate_gate": true,
+    "bootstrap_edge_lcb_5pct": 0.0015987614903785533,
+    "bootstrap_edge_lcb_gate": true,
+    "cost_stress_survival": false,
+    "pbo": null,
+    "pbo_gate": false,
+    "pbo_note": "not computable from one selected recipe without a candidate panel",
+    "dsr": null,
+    "dsr_proxy": 2.091119386051054,
+    "dsr_gate": true,
+    "dsr_note": "proxy only; formal DSR not available in Auto-Quant artifact",
+    "tail_loss_p95": 0.10322619762881445,
+    "tail_loss_budget": 0.05,
+    "tail_loss_gate": false,
+    "regime_specificity_ratio": 4.294021250648969,
+    "regime_specificity_gate": true
+  },
+  "rc_spa_components": {
+    "edge_score": 0.6395045961514213,
+    "fold_score": 0.8,
+    "depth_score": 1.0,
+    "dsr_score": 1.0,
+    "pbo_score": 0.0,
+    "cost_score": 0.0,
+    "drawdown_score": 0.0,
+    "specificity_score": 1.0
+  },
+  "rc_spa": 59.790091923028434,
+  "promotion_level": "reject",
+  "gate_result": "fail:reject_missing_branch_path;reject_missing_required_roots;reject_overfit_risk;reject_cost_fragile;reject_tail_risk",
+  "downstream_consumption_status": "not_started_rejected_before_promotion",
+  "metrics_by_timerange": {
+    "bull_2021": {
+      "timerange": "20210101-20211231",
+      "aggregate": {
+        "sharpe": 0.8496235009059655,
+        "sortino": 0.894427055271684,
+        "calmar": 24.986755507778913,
+        "total_profit_pct": 24.87,
+        "max_drawdown_pct": -5.728319143285115,
+        "trade_count": 50,
+        "win_rate_pct": 70.0,
+        "profit_factor": 2.1391788313104954
+      },
+      "per_pair": {
+        "AVAX/USDT": {
+          "sharpe": 0.29708227185960995,
+          "sortino": 0.28856056846736955,
+          "calmar": 10.356050193051587,
+          "total_profit_pct": 10.9,
+          "max_drawdown_pct": -6.055668630106494,
+          "trade_count": 18,
+          "win_rate_pct": 66.66666666666666,
+          "profit_factor": 2.1388545753772994
+        },
+        "SOL/USDT": {
+          "sharpe": 0.29213834867169763,
+          "sortino": 0.4477433627567316,
+          "calmar": 16.34479502123075,
+          "total_profit_pct": 8.03,
+          "max_drawdown_pct": -2.827729014319508,
+          "trade_count": 20,
+          "win_rate_pct": 65.0,
+          "profit_factor": 1.80559913642024
+        },
+        "BNB/USDT": {
+          "sharpe": 0.35339716011895894,
+          "sortino": 0.31882458353022053,
+          "calmar": 15.9775096032705,
+          "total_profit_pct": 5.94,
+          "max_drawdown_pct": -2.1405495194497695,
+          "trade_count": 12,
+          "win_rate_pct": 83.33333333333334,
+          "profit_factor": 3.5896537247999696
+        }
+      }
+    },
+    "winter_2022": {
+      "timerange": "20220101-20221231",
+      "aggregate": {
+        "sharpe": 0.08468167401312071,
+        "sortino": 0.09085298901536831,
+        "calmar": 1.225272427313818,
+        "total_profit_pct": 2.99,
+        "max_drawdown_pct": -12.806958726400008,
+        "trade_count": 32,
+        "win_rate_pct": 68.75,
+        "profit_factor": 1.1431867635889241
+      },
+      "per_pair": {
+        "SOL/USDT": {
+          "sharpe": 0.15528635658665818,
+          "sortino": 0.21214105579005635,
+          "calmar": 8.407060726163081,
+          "total_profit_pct": 3.8,
+          "max_drawdown_pct": -2.3704188095999963,
+          "trade_count": 8,
+          "win_rate_pct": 75.0,
+          "profit_factor": 2.3266150979562092
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.06916850388770521,
+          "sortino": 0.06626900388144909,
+          "calmar": 1.4659182812437188,
+          "total_profit_pct": 2.65,
+          "max_drawdown_pct": -9.484890825,
+          "trade_count": 20,
+          "win_rate_pct": 70.0,
+          "profit_factor": 1.203139146982483
+        },
+        "BNB/USDT": {
+          "sharpe": -0.10923536738387858,
+          "sortino": -0.39301866917075123,
+          "calmar": -4.148540147446705,
+          "total_profit_pct": -3.46,
+          "max_drawdown_pct": -4.372698753000003,
+          "trade_count": 4,
+          "win_rate_pct": 50.0,
+          "profit_factor": 0.30558822527295515
+        }
+      }
+    },
+    "recovery_23_25": {
+      "timerange": "20230101-20251231",
+      "aggregate": {
+        "sharpe": 0.19199602146798866,
+        "sortino": 0.21858229139998064,
+        "calmar": 2.668444167031164,
+        "total_profit_pct": 17.29,
+        "max_drawdown_pct": -11.308220313865784,
+        "trade_count": 123,
+        "win_rate_pct": 66.66666666666666,
+        "profit_factor": 1.2675442981736165
+      },
+      "per_pair": {
+        "SOL/USDT": {
+          "sharpe": 0.1730283806231901,
+          "sortino": 0.20960356052462234,
+          "calmar": 3.587554127715402,
+          "total_profit_pct": 13.1,
+          "max_drawdown_pct": -6.370326133129818,
+          "trade_count": 63,
+          "win_rate_pct": 69.84126984126983,
+          "profit_factor": 1.4895063890870346
+        },
+        "BNB/USDT": {
+          "sharpe": 0.11033212531060073,
+          "sortino": 0.13910356967110635,
+          "calmar": 5.514004232984052,
+          "total_profit_pct": 8.64,
+          "max_drawdown_pct": -2.7354182084961343,
+          "trade_count": 22,
+          "win_rate_pct": 81.81818181818183,
+          "profit_factor": 2.1646321799756896
+        },
+        "AVAX/USDT": {
+          "sharpe": -0.03925036362182158,
+          "sortino": -0.04668382918047491,
+          "calmar": -0.7212685576874437,
+          "total_profit_pct": -4.45,
+          "max_drawdown_pct": -10.761099698120347,
+          "trade_count": 38,
+          "win_rate_pct": 52.63157894736842,
+          "profit_factor": 0.8539611655891516
+        }
+      }
+    },
+    "full_5y": {
+      "timerange": "20210101-20251231",
+      "aggregate": {
+        "sharpe": 0.29030585729503583,
+        "sortino": 0.31481518684206494,
+        "calmar": 5.247333163194871,
+        "total_profit_pct": 55.69,
+        "max_drawdown_pct": -11.308628954537363,
+        "trade_count": 207,
+        "win_rate_pct": 68.59903381642512,
+        "profit_factor": 1.4160985610749157
+      },
+      "per_pair": {
+        "SOL/USDT": {
+          "sharpe": 0.20157048192190918,
+          "sortino": 0.25400371786272996,
+          "calmar": 4.752877176461955,
+          "total_profit_pct": 32.03,
+          "max_drawdown_pct": -7.180653568224171,
+          "trade_count": 92,
+          "win_rate_pct": 69.56521739130434,
+          "profit_factor": 1.6598380634317504
+        },
+        "BNB/USDT": {
+          "sharpe": 0.08717490694630269,
+          "sortino": 0.12359714925027102,
+          "calmar": 2.450653192495277,
+          "total_profit_pct": 13.82,
+          "max_drawdown_pct": -6.009702404441451,
+          "trade_count": 39,
+          "win_rate_pct": 82.05128205128204,
+          "profit_factor": 1.7476561961002703
+        },
+        "AVAX/USDT": {
+          "sharpe": 0.04139422463176326,
+          "sortino": 0.04480194839988616,
+          "calmar": 0.8577437291253956,
+          "total_profit_pct": 9.84,
+          "max_drawdown_pct": -12.22239527675204,
+          "trade_count": 76,
+          "win_rate_pct": 60.526315789473685,
+          "profit_factor": 1.1472647431176513
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+zsh -lc ls -l '/tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/tft_dataset_labeled.parquet'; shasum -a 256 '/tmp/ict-engine-r3-hf-tsie-native-subhour-source-screen-v1/tft_dataset_labeled.parquet'

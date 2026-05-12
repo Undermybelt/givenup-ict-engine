@@ -1,0 +1,64 @@
+{
+  "aggregate_metrics": {
+    "calmar": 0.206559553699215,
+    "max_drawdown_pct": -3.862621640646046,
+    "profit_factor": 1.057427255281844,
+    "sharpe": 0.0192368176971445,
+    "sortino": 0.025772264627207216,
+    "total_profit_pct": 2.0,
+    "trade_count": 224,
+    "win_rate_pct": 58.03571428571429
+  },
+  "artifacts": {
+    "branch_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T140122+0800-codex-135257-regime-branch-winrate-readback-v1/regime-branch-winrate-v1/regime_branch_winrate_summary.csv",
+    "period_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T140122+0800-codex-135257-regime-branch-winrate-readback-v1/regime-branch-winrate-v1/chronological_bucket_summary.csv",
+    "raw_trades": "docs/experiments/actionable-regime-confidence/runs/20260512T140122+0800-codex-135257-regime-branch-winrate-readback-v1/regime-branch-winrate-v1/135257_raw_trades_export.csv",
+    "trades_with_entry_regime": "docs/experiments/actionable-regime-confidence/runs/20260512T140122+0800-codex-135257-regime-branch-winrate-readback-v1/regime-branch-winrate-v1/135257_trades_with_entry_regime.csv"
+  },
+  "branch_count": 4,
+  "gates": [
+    "support_once:135257_regime_branch_winrate_readback_v1",
+    "evidence_class:market_factor_screening_sample_not_promotion",
+    "pass:trade_rows_exported_224",
+    "pass:branch_paths_populated_224",
+    "pass:branch_summary_rows_7",
+    "pass:chronological_bucket_summary_written",
+    "fail_closed:heuristic_entry_regime_not_board_a_accepted_regime",
+    "fail_closed:not_yet_pre_bayes_bbn_catboost_execution_tree",
+    "fail_closed:not_yet_provider_context_matrix_validated",
+    "promotion_allowed=false",
+    "trade_usable=false",
+    "update_goal=false"
+  ],
+  "pair_count": 2,
+  "per_pair_metrics": {
+    "ES/USD": {
+      "calmar": -0.0917573157616915,
+      "max_drawdown_pct": -6.3001002101989005,
+      "profit_factor": 0.9316924099739734,
+      "sharpe": -0.014455826213889264,
+      "sortino": -0.020398247987201357,
+      "total_profit_pct": -1.45,
+      "trade_count": 133,
+      "win_rate_pct": 49.62406015037594
+    },
+    "NQ/USD": {
+      "calmar": 0.44523347658600815,
+      "max_drawdown_pct": -3.0903823698721764,
+      "profit_factor": 1.2533716364578242,
+      "sharpe": 0.03170747659395997,
+      "sortino": 0.04116234647355626,
+      "total_profit_pct": 3.44,
+      "trade_count": 91,
+      "win_rate_pct": 70.32967032967034
+    }
+  },
+  "promotion_allowed": false,
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T140122+0800-codex-135257-regime-branch-winrate-readback-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1",
+  "source_workspace": "docs/experiments/actionable-regime-confidence/runs/20260512T135257+0800-codex-long-history-es-nq-1m-aq-stage-v1/workspace/auto-quant",
+  "strategy": "TomacNQ_KillzoneBreakout",
+  "trade_rows": 224,
+  "trade_usable": false,
+  "update_goal": false
+}

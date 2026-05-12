@@ -1,0 +1,29 @@
+{
+  "fallback_rows": [
+    {
+      "exit": 0,
+      "kline_rows": 17463,
+      "label": "01b_yfinance_btc_usd_1h_730d_fallback",
+      "provider": "yfinance/YF",
+      "requested_history_span": "2024-05-13_to_2026-05-12_730d_1h_cap_fallback",
+      "returned_first": "2024-05-13 00:00:00+00:00",
+      "returned_last": "2026-05-11 23:00:00+00:00",
+      "status": "current_row_ready",
+      "timeframe": "1h"
+    },
+    {
+      "exit": 0,
+      "kline_rows": 6930,
+      "label": "06b_ibkr_btc_paxos_aggtrades_1y_client77",
+      "provider": "IBKR",
+      "requested_history_span": "1Y_duration_via_ibkr_bulk_client77",
+      "returned_first": "2025-05-12T20:01:00+00:00",
+      "returned_last": "2026-05-12T09:00:00+00:00",
+      "status": "current_row_ready",
+      "timeframe": "1h"
+    }
+  ],
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

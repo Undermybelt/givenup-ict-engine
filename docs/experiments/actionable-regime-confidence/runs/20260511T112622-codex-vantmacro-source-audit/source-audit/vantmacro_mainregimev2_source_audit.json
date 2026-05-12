@@ -1,0 +1,63 @@
+{
+  "run_id": "20260511T112622+0800-codex-vantmacro-source-audit",
+  "active_taxonomy": "MainRegimeV2",
+  "candidate_source": {
+    "name": "VantMacro",
+    "urls": [
+      "https://vantmacro.com/methodology",
+      "https://vantmacro.com/learn/guides/market-regimes",
+      "https://vantmacro.com/"
+    ],
+    "public_surface_summary": {
+      "history_period": "2003-12-17 to 2026-01-20 on methodology page; guide references 2003-12-17 to 2025-12-05",
+      "daily_classifications": "8039 on methodology page; guide references 8025",
+      "regime_count": 7,
+      "regimes_seen": [
+        "ReflationaryExpansion",
+        "StagflationarySqueeze",
+        "PostShockRecovery",
+        "DisinflationarySlowdown",
+        "LateCycleInflationaryBoom",
+        "CrisisLiquidation",
+        "Transitional"
+      ],
+      "source_inputs": [
+        "FRED CFNAI",
+        "FRED CPIAUCSL",
+        "FRED WALCL",
+        "Yahoo Finance ^VIX",
+        "FRED BAMLH0A0HYM2",
+        "Yahoo Finance asset prices"
+      ],
+      "public_history_export_found": false,
+      "pro_history_export_claimed": true,
+      "model_output_not_ground_truth_label": true
+    }
+  },
+  "board_fit": {
+    "required_price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "candidate_labels_are_exact_mainregimev2_roots": false,
+    "native_timeframe": "1d",
+    "exact_provider_instrument_timeframe_slots_filled": 0,
+    "direct_manipulation_rows_found": 0,
+    "accepted_parent_root_slots_added": 0,
+    "accepted_direct_manipulation_rows_added": 0,
+    "notes": [
+      "VantMacro is a useful macro-context provenance candidate, but its public taxonomy is seven macro composite states rather than the active Board A MainRegimeV2 price roots.",
+      "CrisisLiquidation can inform Crisis provenance only; it does not provide exact Bull/Bear/Sideways/Crisis source labels for the current yfinance/Kraken provider-instrument-timeframe missing slots.",
+      "The public surface documents methodology and aggregate distributions, but no row-level historical label export was located on the public surface in this audit.",
+      "The methodology itself describes classifications as model outputs and context/risk framing, so a local reimplementation would be a derived model/proxy rather than an independent source-label panel."
+    ]
+  },
+  "gate_result": "blocked_vantmacro_macro_model_output_not_exact_mainregimev2_label_panel",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "trade_usable": false,
+  "next_action": "Continue exact MainRegimeV2 provider/instrument/timeframe label-window acquisition or acquire materialized direct Manipulation positives and matched negatives."
+}

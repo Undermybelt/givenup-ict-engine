@@ -1,0 +1,56 @@
+{
+  "run_id": "20260512T091245+0800-codex-local-source-control-candidate-refresh-after-085908-v1",
+  "gate_result": "local_source_control_candidate_refresh_after_085908_v1=no_new_owner_export_or_required_root_unlock",
+  "scope": "read-only local /tmp Downloads Desktop candidate refresh after 085908",
+  "candidates_read": [
+    {
+      "path": "/tmp/r6_owner_official_availability_refresh_v1.verify.json",
+      "gate_result": "r6_owner_official_availability_refresh_v1=official_products_rechecked_no_export_rows_no_promotion",
+      "accepted_rows_added": 0,
+      "source_control_evidence_acquired": false
+    },
+    {
+      "path": "/tmp/r6_finra_auth_export_route_v1.jq.out",
+      "gate_result": "r6_finra_auth_export_route_v1=official_access_path_identified_rows_not_acquired",
+      "authenticated_export_available": false,
+      "matched_controls_available": false,
+      "owner_approval_record_available": false
+    },
+    {
+      "path": "/tmp/r5_json_check.out",
+      "gate_result": "r5_recency_provenance_date_disambiguation_v1=composite_date_max_not_r5_stock_recency_rows_root_still_missing",
+      "r5_recency_root_exists": false,
+      "post_cutoff_rows": 0
+    },
+    {
+      "path": "/tmp/r3_native_subhour_sendable_requests_v2_json_check.out",
+      "gate_result": "r3_native_subhour_sendable_requests_v2=sendable_requests_created_rows_not_acquired_no_downstream",
+      "row_file_exists": false,
+      "provenance_file_exists": false,
+      "request_sent": false,
+      "rows_acquired": false
+    },
+    {
+      "path": "/tmp/r6_recap_082215_json_check.out",
+      "gate_result": "r6_recap_novel_pdf_single_retry_after_081323_v1=courtlistener_rate_limited_no_pdf_no_control_unlock",
+      "http_status": 429,
+      "pdf_acquired": false
+    },
+    {
+      "path": "/tmp/crisis_crowded_suppression_full_replay_v2.out",
+      "gate_result": "fail_closed_nursery_feedback_only",
+      "promotion_allowed": false,
+      "workflow_blocker": "user_selected_historical_data_missing"
+    }
+  ],
+  "accepted_rows_added": 0,
+  "valid_required_root_unlock": false,
+  "source_control_evidence_acquired": false,
+  "canonical_merge": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion_rerun": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

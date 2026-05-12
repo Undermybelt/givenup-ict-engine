@@ -1,0 +1,7 @@
+name,path,exists,file_count,current_r6_required_present,legacy_r6_required_present,current_r6_complete,legacy_r6_complete
+r6_owner_export_tmp,/tmp/ict-engine-board-a-r6-owner-export-v1,False,0,,,False,False
+r6_owner_export_private_tmp,/private/tmp/ict-engine-board-a-r6-owner-export-v1,False,0,,,False,False
+r5_recency_tmp,/tmp/ict-engine-source-panel-recency-extension,False,0,,,False,False
+r5_recency_private_tmp,/private/tmp/ict-engine-source-panel-recency-extension,False,0,,,False,False
+r3_native_subhour_tmp,/tmp/ict-engine-native-subhour-source-label-intake,True,2,,,False,False
+r3_native_subhour_private_tmp,/private/tmp/ict-engine-native-subhour-source-label-intake,True,2,,,False,False

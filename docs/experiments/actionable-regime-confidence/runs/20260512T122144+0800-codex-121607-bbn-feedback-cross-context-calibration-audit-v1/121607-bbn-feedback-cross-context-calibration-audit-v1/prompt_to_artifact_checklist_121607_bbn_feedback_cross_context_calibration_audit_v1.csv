@@ -1,0 +1,9 @@
+requirement,evidence,status,notes
+"Use exact Board A run artifacts, not chat-only inference",docs/experiments/actionable-regime-confidence/runs/20260512T121347+0800-codex-115700-enriched-downstream-chain-v1/derived/same_root_six_provider_1h_aq_real_trades.enriched_layer_contract.jsonl,pass,read 237 enriched exact-root rows
+"Provider coverage includes YF, Kraken, Binance, Bybit, TVR, IBKR","binance_public,bybit_public,ibkr_paxos_long_midpoint,kraken_public,tvr_default_binance,yfinance",pass,missing=[]
+Every visible regime/branch reaches >=95% confidence,max_bbn_probability=0.747688; max_pre_bayes_confidence=0.525086,fail,accepted_regime_count_95=0/2
+Validate on other markets/instruments,BTC,fail,all observed rows normalize to BTC
+Validate on other periods/timeframes,1h,fail,all observed rows are 1h
+Chronological calibration remains >=95%,chronological_buckets.csv,fail,at least one chronological bucket is below 95%
+Pass through Pre-Bayes/BBN/CatBoost/execution tree,docs/experiments/actionable-regime-confidence/runs/20260512T121607+0800-codex-120630-bbn-negative-feedback-packet-v1/120630-bbn-negative-feedback-packet-v1/120630_bbn_negative_feedback_packet_v1.json,partial,"chain exists, but Pre-Bayes is pass_neutralized and execution is observe/blocked"
+Do not promote or update goal unless all gates pass,assertions,pass,promotion_allowed=false; trade_usable=false; update_goal=false

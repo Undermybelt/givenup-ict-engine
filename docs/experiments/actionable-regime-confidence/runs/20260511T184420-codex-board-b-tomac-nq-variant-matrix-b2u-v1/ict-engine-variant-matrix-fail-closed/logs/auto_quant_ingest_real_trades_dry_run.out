@@ -1,0 +1,16 @@
+{
+  "command": "auto-quant-ingest-real-trades",
+  "content_hash": "388153848bd1728e",
+  "dry_run": true,
+  "feedback_records_inserted": 0,
+  "force": false,
+  "ledger_artifact_id": "auto_quant_real_trades_TOMAC_NQ_VARIANT_MATRIX_B_184420_20260511T105238.045287000Z",
+  "ledger_status": "dry_run_preview",
+  "previous_artifact_id": null,
+  "source": "auto_quant_real_trades",
+  "symbol": "TOMAC_NQ_VARIANT_MATRIX_B_184420",
+  "trades_applied": 5109,
+  "trades_invalid": 0,
+  "trades_path": "docs/experiments/actionable-regime-confidence/runs/20260511T184420-codex-board-b-tomac-nq-variant-matrix-b2u-v1/ict-engine-variant-matrix-fail-closed/tomac_nq_variant_matrix_real_trades_wire_v1.jsonl",
+  "trades_total": 5109
+}

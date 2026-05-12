@@ -1,0 +1,5 @@
+candidate_id,intake_root,exit,status,positive_rows,matched_negative_rows,matched_group_count,chronological_wilson95_calibration_run,heldout_symbol_venue_calibration_run,promotion_allowed
+jpm_cbot_staging,/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging,0,schema_ready_unscored,77,77,74,false,false,false
+direct_manipulation_intake,/tmp/ict-engine-direct-manipulation-row-intake,0,schema_ready_unscored,73,73,70,false,false,false
+v55_reconstruction_intake,/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake,0,schema_ready_unscored,73,73,70,false,false,false
+v56_clean_readback_intake,/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake,0,schema_ready_unscored,73,73,70,false,false,false

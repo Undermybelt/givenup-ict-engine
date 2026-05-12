@@ -1,0 +1,27 @@
+{
+  "schema_version": "root-taxonomy-v3-schema-input-audit/v1",
+  "loop_id": "20260511T010718+0800-codex-root-taxonomy-v3-schema-input-audit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T010718-codex-root-taxonomy-v3-schema-input-audit",
+  "objective": "Build RootTaxonomyV3 schema/crosswalk and decide whether current direct/signed/range inputs justify another unchanged 95% gate.",
+  "schema": "docs/experiments/actionable-regime-confidence/runs/20260511T010718-codex-root-taxonomy-v3-schema-input-audit/schema/root_taxonomy_v3_schema.json",
+  "crosswalk": "docs/experiments/actionable-regime-confidence/runs/20260511T010718-codex-root-taxonomy-v3-schema-input-audit/schema/root_taxonomy_v3_crosswalk.json",
+  "input_inventory": "docs/experiments/actionable-regime-confidence/runs/20260511T010718-codex-root-taxonomy-v3-schema-input-audit/input-audit/root_taxonomy_v3_input_inventory.json",
+  "decision": {
+    "board_state": "blocked",
+    "accepted_gate": "partial_for_RootTaxonomyV3_CrisisStress_only",
+    "new_gate_run_now": false,
+    "thresholds_relaxed": false,
+    "blocked_future_target_predictors": true,
+    "trade_usable": false,
+    "accepted_root_classes_95_current_evidence": [],
+    "missing_root_classes_95_current_evidence": [
+      "BullExpansion",
+      "BearExpansion",
+      "Consolidation",
+      "Manipulation",
+      "TransitionRecovery"
+    ],
+    "blocker": "direct Manipulation calibration inputs missing; cross-asset RootTaxonomyV3 gate accepted zero classes; source-backed gate accepted only CrisisStress",
+    "next_action": "Acquire aligned historical L2/order-flow/order-lifecycle manipulation data or a genuinely new signed/range provider panel before another RootTaxonomyV3 95% gate."
+  }
+}

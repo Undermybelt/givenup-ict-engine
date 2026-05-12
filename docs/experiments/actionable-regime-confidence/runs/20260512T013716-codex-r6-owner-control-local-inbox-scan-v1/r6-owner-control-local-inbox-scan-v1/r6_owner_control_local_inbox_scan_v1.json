@@ -1,0 +1,50 @@
+{
+  "run_id": "20260512T013716-codex-r6-owner-control-local-inbox-scan-v1",
+  "gate_result": "r6_owner_control_local_inbox_scan_v1=old_candidates_found_no_source_owned_controls_no_approval",
+  "scan_roots": [
+    "/Users/thrill3r/Downloads",
+    "/Users/thrill3r/Desktop",
+    "/tmp"
+  ],
+  "max_depth": 4,
+  "candidate_count": 34,
+  "ready_source_owned_control_candidate_count": 0,
+  "target_roots": [
+    {
+      "id": "r6_owner_export",
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "present": false,
+      "file_count": 0
+    },
+    {
+      "id": "r3_native_subhour",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "present": false,
+      "file_count": 0
+    },
+    {
+      "id": "r5_recency_extension",
+      "root": "/tmp/ict-engine-source-panel-recency-extension",
+      "present": false,
+      "file_count": 0
+    },
+    {
+      "id": "source_label_equivalence",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake",
+      "present": true,
+      "file_count": 2
+    }
+  ],
+  "accepted_rows_added": 0,
+  "new_confidence_gate": false,
+  "canonical_merge_allowed": false,
+  "downstream_chain_rerun_allowed": false,
+  "strict_full_objective_achieved": false,
+  "update_goal": false,
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "thresholds_relaxed": false,
+  "raw_data_committed": false,
+  "external_requests_sent": false,
+  "trade_usable": false
+}

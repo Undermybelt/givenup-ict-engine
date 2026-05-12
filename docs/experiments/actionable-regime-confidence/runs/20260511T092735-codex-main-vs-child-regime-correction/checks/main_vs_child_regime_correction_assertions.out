@@ -1,0 +1,9 @@
+PASS active_taxonomy=MainRegimeV2
+PASS demoted_v5_active_roots_to_child_or_overlay_evidence=true
+PASS accepted_parent_root_slots_added=0
+PASS accepted_direct_manipulation_rows_added=0
+PASS accepted_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false
+PASS trade_usable=false

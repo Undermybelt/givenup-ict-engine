@@ -1,0 +1,97 @@
+{
+  "approval_assertions": {
+    "approval_present": false,
+    "canonical_merge_allowed_now": false,
+    "downstream_rerun_allowed_now": false,
+    "flip_controls_accepted_under_current_contract": false,
+    "public_recap_source_positive_candidate": true,
+    "shared_intake_mutated": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "board_hash_before_audit": "2f2b49e58c60f1e5f1ccc5f93b9caf4fc9acc1f078b8e3cd539708cd715ecbae",
+  "checklist_counts": {
+    "blocked": 7,
+    "partial": 1,
+    "pass": 3
+  },
+  "decision": "Not complete. Continue only from owner/operator R6 export delivery, explicit FLIP approval, or genuinely source-owned cross-timeframe MainRegimeV2 labels before canonical merge and downstream promotion.",
+  "evidence_presence": [
+    {
+      "artifact_id": "025816_btcusdt_hf_screen",
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T025816-codex-btcusdt-amplitude-hf-source-screen-v1/btcusdt-amplitude-hf-source-screen-v1/btcusdt_amplitude_hf_source_screen_v1.md"
+    },
+    {
+      "artifact_id": "025816_btcusdt_hf_assertions",
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T025816-codex-btcusdt-amplitude-hf-source-screen-v1/checks/btcusdt_amplitude_hf_source_screen_v1_assertions.out"
+    },
+    {
+      "artifact_id": "025801_databento_multi_json",
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T025801-codex-local-databento-multi-futures-nonqualifying-source-screen-v1/local-databento-multi-futures-nonqualifying-source-screen-v1/local_databento_multi_futures_nonqualifying_source_screen_v1.json"
+    },
+    {
+      "artifact_id": "025256_autoquant_settlement_json",
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T025256-codex-autoquant-seeded-strategy-readback-settlement-v1/autoquant-seeded-strategy-readback-settlement-v1/autoquant_seeded_strategy_readback_settlement_v1.json"
+    },
+    {
+      "artifact_id": "025156_databento_gc_json",
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T025156-codex-local-databento-gc-nonqualifying-source-screen-v1/local-databento-gc-nonqualifying-source-screen-v1/local_databento_gc_nonqualifying_source_screen_v1.json"
+    },
+    {
+      "artifact_id": "024942_ninjatrader_screen_json",
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T024942-codex-r6-ninjatrader-local-cache-owner-export-screen-v1/r6-ninjatrader-local-cache-owner-export-screen-v1/ninjatrader_local_cache_owner_export_screen_v1.json"
+    }
+  ],
+  "gate_result": "current_objective_completion_audit_after_025816_v1=not_complete_r6_source_controls_regime_confidence_cross_validation_downstream_blocked_after_btcusdt_amplitude_screen",
+  "generated_at_utc": "2026-05-11T19:02:29.990296+00:00",
+  "objective": "Every Board A regime reaches calibrated >=95% confidence with per-regime qualifying conditions and cross-market/cycle/context validation, then provider/Auto-Quant/filter/Pre-Bayes/BBN/CatBoost/path-ranking/execution-tree evidence supports promotion without disturbing multi-agent board state.",
+  "promotion": {
+    "accepted_rows_added": 0,
+    "canonical_merge_allowed": false,
+    "downstream_rerun_allowed": false,
+    "new_confidence_gate": false,
+    "strict_full_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "root_status": [
+    {
+      "exists": false,
+      "file_count": 0,
+      "path": "/tmp/ict-engine-board-a-r6-owner-export-v1",
+      "root_id": "r6_owner_export_root"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "path": "/tmp/ict-engine-native-subhour-source-label-intake",
+      "root_id": "r3_native_subhour_source_label_root"
+    },
+    {
+      "exists": false,
+      "file_count": 0,
+      "path": "/tmp/ict-engine-source-panel-recency-extension",
+      "root_id": "r5_source_panel_recency_extension_root"
+    },
+    {
+      "exists": true,
+      "file_count": 2,
+      "path": "/tmp/ict-engine-source-label-equivalence-intake",
+      "root_id": "source_label_equivalence_root"
+    },
+    {
+      "exists": true,
+      "file_count": 3,
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake",
+      "root_id": "legacy_direct_manipulation_root"
+    }
+  ],
+  "run_id": "20260512T030229-codex-current-objective-completion-audit-after-025816-v1"
+}

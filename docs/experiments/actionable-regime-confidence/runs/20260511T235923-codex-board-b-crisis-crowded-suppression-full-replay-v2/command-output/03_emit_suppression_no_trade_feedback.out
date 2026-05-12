@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "output_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T235923-codex-board-b-crisis-crowded-suppression-full-replay-v2/suppression-full-replay-v2/crisis_crowded_suppression_feedback_v2.json",
+  "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "realized_outcome": "not_followed",
+  "followed_path": false
+}

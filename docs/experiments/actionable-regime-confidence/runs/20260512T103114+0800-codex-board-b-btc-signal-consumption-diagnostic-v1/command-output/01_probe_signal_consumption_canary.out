@@ -1,0 +1,13 @@
+rows=985
+date_range=1775001600000->1778544000000
+volume_nonzero=985
+enter_long_sum=81
+buy_sum=81
+exit_long_sum=80
+sell_sum=80
+         date    close     volume  canary_bar_index                              enter_tag
+1775088000000 68600.29  409.19040                24 provider_btc_signal_consumption_canary
+1775131200000 66052.71 1024.11018                36 provider_btc_signal_consumption_canary
+1775174400000 66785.86  388.08477                48 provider_btc_signal_consumption_canary
+1775217600000 66722.16  808.01051                60 provider_btc_signal_consumption_canary
+1775260800000 66893.39  159.10280                72 provider_btc_signal_consumption_canary

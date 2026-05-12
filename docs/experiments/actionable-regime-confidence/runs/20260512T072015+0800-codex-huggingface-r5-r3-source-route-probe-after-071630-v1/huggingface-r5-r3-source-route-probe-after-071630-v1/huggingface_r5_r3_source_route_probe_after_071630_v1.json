@@ -1,0 +1,21 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge": false,
+  "direct_verifier_run": false,
+  "downstream_promotion_rerun": false,
+  "exact_main_regime_v2_search_results": 0,
+  "gate_result": "huggingface_r5_r3_source_route_probe_after_071630_v1=no_mainregimev2_source_export_no_r5_r3_unlock",
+  "huggingface_searches_exit_zero": true,
+  "market_regime_hyphen_results": 5,
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "run_id": "20260512T072015+0800-codex-huggingface-r5-r3-source-route-probe-after-071630-v1",
+  "source_control_evidence_acquired": false,
+  "split_calibration_run": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "tsie_status": "already_quarantined_crisis_absent",
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

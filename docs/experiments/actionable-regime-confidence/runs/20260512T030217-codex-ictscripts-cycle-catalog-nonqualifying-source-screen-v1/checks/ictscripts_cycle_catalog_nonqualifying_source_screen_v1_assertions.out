@@ -1,0 +1,14 @@
+PASS gate_result=proxy_guidance_and_session_overlay_only_no_promotion
+PASS screened_270m_session_cycles=true
+PASS screened_ict_concepts_catalog=true
+PASS source_owned_labels=false
+PASS r6_owner_controls=false
+PASS explicit_flip_approval=false
+PASS direct_manipulation_positive_negative_controls=false
+PASS accepted_rows_added=0
+PASS canonical_merge_allowed=false
+PASS downstream_rerun_allowed=false
+PASS strict_objective_achieved=false
+PASS update_goal=false
+PASS raw_source_committed=false
+PASS runtime_code_changed=false

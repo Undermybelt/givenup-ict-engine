@@ -1,0 +1,10 @@
+QQQ | update | pass_neutralized
+Block: none
+Latest: update | entry=medium
+Next: Review the latest ensemble, pre-bayes evidence, and structural path before rerunning update. Start with ict-engine workflow-status --symbol QQQ --state-dir <local-path> --phase ensemble-vote --human.
+Evidence: ict-engine workflow-status --symbol QQQ --state-dir <local-path> --phase ensemble-vote --human | ict-engine pre-bayes-status --symbol QQQ --state-dir <local-path> --human | ict-engine workflow-status --symbol QQQ --state-dir <local-path> --phase structural-recommended-path-bundle --human
+Feedback: recommendation=structural-feedback:QQQ:structural-candidates:QQQ:f138e54482068e9c:path:scenario:QQQ:belief_regime_node:range:range_mean_reversion:primary path=path:scenario:QQQ:belief_regime_node:range:range_mean_reversion:primary followed=true exit=forward_16_bar_close
+Path: path:scenario:QQQ:belief_regime_node:range:range_mean_reversion:primary total=36 wins=24 losses=11 invalidated=1 avg_pnl=0.0037
+Validation: em=needs_multi_source_overlap holdout=unavailable split=unavailable holdout_brier=n/a holdout_cov=n/a holdout_reason=status=unavailable train=0 eval=0 obs=0 sources=0 replay=unavailable replay_brier=n/a replay_cov=n/a replay_reason=status=unavailable train=0 eval=0 obs=0 sources=0 calib=unavailable calib_brier=n/a calib_obs=0 multi_source_items=0 target_policy=bucket_posterior contexts=1 live_truth=retrospective_not_sufficient current_state_branch=temporal_hmm_pre_bayes_nowcast | replay=ready overall_brier=0.001 reason=ready eval=12 train_until=2026-05-10T09:44:27+00:00 eval_range=2026-05-10T09:44:35+00:00..2026-05-10T09:46:02+00:00 obs=12 obs_1h=12 obs_4h=12 obs_24h=12
+Ranker: status=using_candidate_set_scores source=candidate_set applied=1 artifact=0 candidate=1 history=0 lb=0.567 gate=pass
+History: nodes=1 branches=1 scenarios=1 paths=1 latest_path=path:scenario:QQQ:belief_regime_node:range:range_mean_reversion:primary

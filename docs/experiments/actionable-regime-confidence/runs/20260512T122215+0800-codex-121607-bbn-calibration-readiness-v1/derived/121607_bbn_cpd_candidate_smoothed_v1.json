@@ -1,0 +1,26 @@
+{
+  "candidate_probs": [
+    0.351456,
+    0.031003,
+    0.617541
+  ],
+  "current_probs": [
+    0.427961,
+    0.275927,
+    0.296112
+  ],
+  "empirical_probs": [
+    0.341772,
+    0.0,
+    0.658228
+  ],
+  "empirical_weight": 0.88764,
+  "mode": "candidate_only_do_not_overwrite",
+  "smoothing_alpha": 30.0,
+  "source_rows": 237,
+  "states": [
+    "win",
+    "breakeven",
+    "loss"
+  ]
+}

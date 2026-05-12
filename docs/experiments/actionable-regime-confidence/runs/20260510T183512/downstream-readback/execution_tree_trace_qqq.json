@@ -1,0 +1,72 @@
+{
+  "artifact_id": "execution-tree-QQQ-1778406360621",
+  "generated_at": "2026-05-10T09:46:00.621862Z",
+  "symbol": "QQQ",
+  "output": {
+    "execution_score": 0.584538417337384,
+    "branch": "transition_guardrail",
+    "execution_bias": "guarded",
+    "gate_status": "observe",
+    "branch_probability": 0.0,
+    "posterior_uncertainty": 1.0,
+    "split_reason_lineage": [
+      "execution_readiness=0.3781 → gate_status=blocked",
+      "branch=block_crowded (gate_status=blocked, readiness 0.3781 < 0.45)",
+      "prediction_vote_score=0.6081 (medium) × execution_readiness=0.3781 (weak) → bias=skip, hint=execution_blocked_regardless_of_prediction",
+      "mece_recovery_confidence=1.0000",
+      "market_state=primary_regime=RangeConsolidation secondary_regime=WideRange overall_confidence=0.533",
+      "market_state=volatility=NormalVol:0.638 liquidity=NormalLiquidity:0.321 structure=Trending:0.608 behavior=Neutral:0.450",
+      "market_state=rationale=volatility=NormalVol conf=0.64",
+      "market_state=rationale=structure=Trending conf=0.61",
+      "market_state=rationale=primary=RangeConsolidation secondary=WideRange overall=0.53",
+      "path_ranker=Ranker runtime: structural_path_ranking_target rows=1 history_rows=1302 mature_rows=1 history_mature_rows=1294 raw_scored_mature=1293/30 production_validation=1293/30 observation_validation=35/30 calibration=evaluated trainer_artifact=missing trainer_status=missing runtime_selection=disabled runtime_mode=none runtime_source=none score_model_family=unknown score_source=unknown runtime_matches=0",
+      "path_ranker=Ranker validation: calibration=true quality_ready=true raw_scored_mature=1293/30 production_validation=1293/30 observation_validation=35/30 ready=true",
+      "path_ranker=ranker_machine=runtime_source=unknown score_model_family=unknown score_source=unknown validation_ready=true active_match_count=0",
+      "path_ranker=factor_hotplug_summary=Factor hotplug: config=absent all_default_enabled",
+      "path_ranker=ranker_score=path_id=path:scenario:QQQ:belief_regime_node:range:range_mean_reversion:primary runtime_source=none raw_path_score=none calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none",
+      "hmm_posterior=(acc=0.286, manip=0.429, dist=0.286)",
+      "hybrid_transition_hazard=0.612",
+      "duration_remaining_expected_bars=0.000"
+    ],
+    "decision_hint": "execution_guarded_due_to_low_remaining_regime_duration",
+    "consumer_reason": "market_state=RangeConsolidation/WideRange | execution=observe/transition_guardrail/guarded | ranker=unknown/unknown/ready",
+    "path_ranker_score_visible_to_execution_tree": false,
+    "path_ranker_score_used_by_execution_tree": false,
+    "path_ranker_model_family": "unknown",
+    "path_ranker_runtime_source": "unknown",
+    "ranker_validation_ready": true
+  },
+  "execution_shap_top_k": [
+    {
+      "feature": "cycle_phase_alignment",
+      "contribution": 0.9842238016863275,
+      "feature_value": "0.9842"
+    },
+    {
+      "feature": "pythagorean_overstretch",
+      "contribution": 0.6852530856092437,
+      "feature_value": "0.0147"
+    },
+    {
+      "feature": "dominant_cycle_energy",
+      "contribution": 0.597451732368712,
+      "feature_value": "0.7475"
+    },
+    {
+      "feature": "spectral_entropy",
+      "contribution": 0.502267270109181,
+      "feature_value": "0.2977"
+    },
+    {
+      "feature": "branch_probability",
+      "contribution": -0.5,
+      "feature_value": "0.0000"
+    }
+  ],
+  "provenance": {
+    "prompt_version": "agent-prompts-v1",
+    "factor_version": "d1fba762150c532c",
+    "config_hash": "b3b31675cd6aa309",
+    "data_fingerprint": "37139abb77defb2e"
+  }
+}

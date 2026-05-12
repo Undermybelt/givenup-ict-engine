@@ -1,0 +1,1 @@
+./target/debug/ict-engine pre-bayes-diff --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T100328+0800-codex-post-093937-full-chain-readback-v1/state_copy --refresh

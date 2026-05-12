@@ -1,0 +1,100 @@
+{
+  "active_taxonomy": "MainRegimeV2",
+  "attachability": {
+    "attached_slots_by_provider": {
+      "yfinance": 16
+    },
+    "attached_slots_by_root": {
+      "Bear": 4,
+      "Bull": 4,
+      "Crisis": 4,
+      "Sideways": 4
+    },
+    "direct_source_label_slots": 16,
+    "full_four_root_cell_details": [
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "^DJI",
+        "provider": "yfinance",
+        "timeframe": "1d"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "^DJI",
+        "provider": "yfinance",
+        "timeframe": "1w"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "^GSPC",
+        "provider": "yfinance",
+        "timeframe": "1d"
+      },
+      {
+        "attached_roots": [
+          "Bear",
+          "Bull",
+          "Crisis",
+          "Sideways"
+        ],
+        "instrument": "^GSPC",
+        "provider": "yfinance",
+        "timeframe": "1w"
+      }
+    ],
+    "full_four_root_cells": 4,
+    "missing_slots": 596,
+    "status_counts": {
+      "direct_source_label_attached_candidate": 16,
+      "missing_instrument_source_label": 96,
+      "missing_intraday_or_monthly_source_label": 392,
+      "missing_non_yfinance_source_label": 108
+    }
+  },
+  "completion_accounting": {
+    "accepted_confidence": false,
+    "accepted_full_panel": false,
+    "blocker": "Only 16 of 612 current MainRegimeV2 root-label slots have direct source-label candidates from this public stock/index panel; only 4 provider/instrument/timeframe cells have all four price roots, all on yfinance 1d/1w indices. Kraken, most yfinance symbols, intraday/monthly timeframes, and Manipulation direct-event coverage remain outside this source.",
+    "goal_achieved": false
+  },
+  "contract": {
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260511T073700-codex-root-label-panel-contract/label-panel-contract/root_label_panel_contract.json",
+    "provider_slots": {
+      "kraken_public_lowpollution_http": 108,
+      "yfinance": 504
+    },
+    "slot_count": 612
+  },
+  "main_price_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "objective": "Direct source-label attachability audit for active MainRegimeV2 root-label slots.",
+  "run_id": "20260511T075056+0800-codex-direct-source-label-attachability",
+  "runtime_code_changed": false,
+  "source": {
+    "local_feature_table": "/private/tmp/ict-regime-kaggle-regime-label-root/kaggle_regime_label_feature_table.csv",
+    "name": "Kaggle stock-market-regimes-2000-2026",
+    "raw_data_committed": false,
+    "url": "https://www.kaggle.com/datasets/mafaqbhatti/stock-market-regimes-20002026"
+  },
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,30 @@
+{
+  "candidate_set_id": "structural-candidates:B2R_PROVIDER_MATRIX_MOMENTUM_113833:58cfde814c17ca19",
+  "candidate_set_size": 3,
+  "composite_score": 0.5192898021670089,
+  "confirmation_summary": "user confirms the required input",
+  "current_posterior": 0.5345590139527494,
+  "direction": "favor_mean_reversion_only",
+  "experience_prior": 0.48366164133361483,
+  "historical_invalidation_rate": 0.0,
+  "historical_total_records": 1,
+  "invalidation_summary": "regime branch range loses posterior support or invalidates before trigger",
+  "path_id": "path:scenario:B2R_PROVIDER_MATRIX_MOMENTUM_113833:belief_regime_node:range:range_mean_reversion:primary",
+  "path_label": "range_mean_reversion",
+  "rank": 1,
+  "recommended_command": "ict-engine factor-research --symbol B2R_PROVIDER_MATRIX_MOMENTUM_113833 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T130000+0800-codex-113833-provider-momentum-downstream-v1/provider-data-json/binance_btcusdt_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T130000+0800-codex-113833-provider-momentum-downstream-v1/state_provider_momentum_downstream_v1'",
+  "recommended_next_step": {
+    "action_type": "ask_user_choose_historical_data",
+    "blocked_reason": "user_selected_historical_data_missing",
+    "deferred_command": "ict-engine factor-research --symbol B2R_PROVIDER_MATRIX_MOMENTUM_113833 --data 'docs/experiments/actionable-regime-confidence/runs/20260512T130000+0800-codex-113833-provider-momentum-downstream-v1/provider-data-json/binance_btcusdt_1h.json' --state-dir 'docs/experiments/actionable-regime-confidence/runs/20260512T130000+0800-codex-113833-provider-momentum-downstream-v1/state_provider_momentum_downstream_v1'",
+    "execution_contract": null,
+    "prompt": "Before using historical data for B2R_PROVIDER_MATRIX_MOMENTUM_113833 again, ask the user which dataset to use. recorded_paths=docs/experiments/actionable-regime-confidence/runs/20260512T130000+0800-codex-113833-provider-momentum-downstream-v1/provider-data-json/binance_btcusdt_1d.json, docs/experiments/actionable-regime-confidence/runs/20260512T130000+0800-codex-113833-provider-momentum-downstream-v1/provider-data-json/binance_btcusdt_4h.json, docs/experiments/actionable-regime-confidence/runs/20260512T130000+0800-codex-113833-provider-momentum-downstream-v1/provider-data-json/binance_btcusdt_1h.json",
+    "user_input_required": true
+  },
+  "scenario_id": "scenario:B2R_PROVIDER_MATRIX_MOMENTUM_113833:belief_regime_node:range:range_mean_reversion",
+  "selected_path_probability": 0.36629745646317147,
+  "stop_summary": "Use execution candidate 'execution-candidate:B2R_PROVIDER_MATRIX_MOMENTUM_113833:analyze:v1' once actionable; current candidate_status=no_trade.",
+  "symbol": "B2R_PROVIDER_MATRIX_MOMENTUM_113833",
+  "trigger_summary": "regime_posterior=range:0.750",
+  "why_this_path": "posterior=0.535 prior=0.484 invalidation_rate=0.000"
+}

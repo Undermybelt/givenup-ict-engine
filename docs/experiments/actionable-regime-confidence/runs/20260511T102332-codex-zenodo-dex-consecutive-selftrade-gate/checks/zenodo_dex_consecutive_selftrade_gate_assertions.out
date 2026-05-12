@@ -1,0 +1,12 @@
+PASS json_written
+PASS sample_csv_written
+PASS rows_streamed_consecutive=200000
+PASS positive_self_trade_rows=12671
+PASS negative_control_rows=187329
+PASS min_calibration_test_positive_or_negative_wilson95_lcb=0.979218
+PASS min_calibration_test_positive_support=181
+PASS min_calibration_test_negative_support=32858
+PASS accepted_direct_self_trade_slice_95=true
+PASS accepted_parent_root_slots_added=0
+PASS raw_data_committed=false
+GATE accepted_direct_manipulation_self_trade_consecutive_95_context_only_full_goal_blocked

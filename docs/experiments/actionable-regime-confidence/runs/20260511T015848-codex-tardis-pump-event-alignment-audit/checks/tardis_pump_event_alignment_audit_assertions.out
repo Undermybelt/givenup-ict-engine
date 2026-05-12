@@ -1,0 +1,14 @@
+RUN_ID 20260511T015848+0800-codex-tardis-pump-event-alignment-audit
+REPORT docs/experiments/actionable-regime-confidence/runs/20260511T015848-codex-tardis-pump-event-alignment-audit/alignment/tardis_pump_event_alignment_audit.json
+BINANCE_EVENTS 520
+BINANCE_FIRST_DAY_EVENTS 15
+EXACT_DATE_AVAILABLE_EVENTS 9
+PUBLIC_FIRST_DAY_ALIGNED_EVENTS 0
+QUALIFYING_DIRECT_MANIPULATION_INPUT_SETS 0
+MANIPULATION_INPUT_STATE pump_labels_do_not_align_with_public_tardis_first_day_l2
+ACCEPTED_95 false
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+FRESH_CALIBRATION_RERUN false
+TRADE_USABLE false
+GATE blocked_public_tardis_label_alignment

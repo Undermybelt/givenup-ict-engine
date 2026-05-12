@@ -1,0 +1,4649 @@
+{
+  "run_id": "20260511T024355+0800-codex-bayi-hu-aligned-market-feature-gate",
+  "source": {
+    "url": "https://github.com/Bayi-Hu/Pump-and-Dump-Detection-on-Cryptocurrency",
+    "sample_root": "/private/tmp/ict-regime-bayi-gdrive",
+    "train_archive_bytes": 2161560089,
+    "test_archive_bytes": 1020248375,
+    "train_member_uncompressed_bytes": 5712551648,
+    "test_member_uncompressed_bytes": 2704964353,
+    "train_archive_sha256": "cbd0e54487b8d46f2f57dd5215120505af69f31469b4d339d4a9ed7374126a84",
+    "test_archive_sha256": "88854280bc194a0dcb44974cba4d79a13d045402fb2a3fa906ea1213f5f747bc",
+    "raw_csv_extracted_to_repo": false
+  },
+  "dataset": {
+    "axis_note": "Executed after the MainRegimeV3 reset. This run evaluates only direct-event-aligned Manipulation evidence and does not reissue BullExpansion, BearExpansion, SidewaysConsolidation, or CrisisStress.",
+    "columns": 147,
+    "target_features_used": 139,
+    "train_archive": {
+      "rows": 132314,
+      "positives": 748,
+      "negatives": 131566,
+      "bad_rows": 0,
+      "timestamp_min": 1546353004000,
+      "timestamp_max": 1620579611000,
+      "events": 754,
+      "fit_events": 527,
+      "calibration_events": 227
+    },
+    "test_archive": {
+      "rows": 64299,
+      "positives": 200,
+      "negatives": 64099,
+      "bad_rows": 0,
+      "timestamp_min": 1620579621000,
+      "timestamp_max": 1642518014000
+    },
+    "train_calibration_split": {
+      "fit_rows": 82365,
+      "fit_positives": 521,
+      "fit_negatives": 81844,
+      "calibration_rows": 49949,
+      "calibration_positives": 227,
+      "calibration_negatives": 49722,
+      "bad_rows": 0,
+      "reservoir_rows": 82365,
+      "reservoir_positives": 521
+    },
+    "train_eval": {
+      "rows": 132314,
+      "bad_rows": 0,
+      "fit_rows": 82365,
+      "calibration_rows": 49949
+    },
+    "test_eval": {
+      "rows": 64299,
+      "bad_rows": 0
+    },
+    "chronology_note": "Official test archive is held out. Fit/calibration split is by sorted channel_id|timestamp event within the official train sample.",
+    "reservoir_seed": 20260511,
+    "reservoir_max": 200000,
+    "top_candidates": 120
+  },
+  "gate_contract": {
+    "fit_support_min": 120,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "coverage_min": 0.03,
+    "required_lcb": 0.95,
+    "future_or_target_leakage_allowed": false,
+    "thresholds_relaxed": false
+  },
+  "evaluations": [
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 4,
+      "rule": "pre_6h_return >= 1.95934015751",
+      "feature": "pre_6h_return",
+      "direction": "ge",
+      "threshold": 1.9593401575088503,
+      "reservoir": {
+        "support": 1648,
+        "positives": 39,
+        "precision": 0.02366504854368932,
+        "wilson95_lcb": 0.017359345372833918,
+        "coverage": 0.020008498755539367
+      },
+      "fit": {
+        "support": 1648,
+        "positives": 39,
+        "precision": 0.02366504854368932,
+        "wilson95_lcb": 0.017359345372833918,
+        "coverage": 0.020008498755539367
+      },
+      "calibration": {
+        "support": 2543,
+        "positives": 51,
+        "precision": 0.02005505308690523,
+        "wilson95_lcb": 0.015286526029422782,
+        "coverage": 0.05091193016877215
+      },
+      "test": {
+        "support": 1329,
+        "positives": 57,
+        "precision": 0.04288939051918736,
+        "wilson95_lcb": 0.03325021532772276,
+        "coverage": 0.020669061727243036
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 8,
+      "rule": "pre_1h_return >= 2.2777635479",
+      "feature": "pre_1h_return",
+      "direction": "ge",
+      "threshold": 2.2777635478973393,
+      "reservoir": {
+        "support": 1648,
+        "positives": 35,
+        "precision": 0.021237864077669904,
+        "wilson95_lcb": 0.015309901296656943,
+        "coverage": 0.020008498755539367
+      },
+      "fit": {
+        "support": 1648,
+        "positives": 35,
+        "precision": 0.021237864077669904,
+        "wilson95_lcb": 0.015309901296656943,
+        "coverage": 0.020008498755539367
+      },
+      "calibration": {
+        "support": 1215,
+        "positives": 26,
+        "precision": 0.02139917695473251,
+        "wilson95_lcb": 0.014644637950514888,
+        "coverage": 0.024324811307533684
+      },
+      "test": {
+        "support": 893,
+        "positives": 32,
+        "precision": 0.03583426651735722,
+        "wilson95_lcb": 0.02549595077980024,
+        "coverage": 0.013888240874663681
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 9,
+      "rule": "pre_1h_return >= 3.13196591377",
+      "feature": "pre_1h_return",
+      "direction": "ge",
+      "threshold": 3.131965913772583,
+      "reservoir": {
+        "support": 824,
+        "positives": 19,
+        "precision": 0.023058252427184466,
+        "wilson95_lcb": 0.014810595138467506,
+        "coverage": 0.010004249377769683
+      },
+      "fit": {
+        "support": 824,
+        "positives": 19,
+        "precision": 0.023058252427184466,
+        "wilson95_lcb": 0.014810595138467506,
+        "coverage": 0.010004249377769683
+      },
+      "calibration": {
+        "support": 667,
+        "positives": 15,
+        "precision": 0.022488755622188907,
+        "wilson95_lcb": 0.01367503299632534,
+        "coverage": 0.01335362069310697
+      },
+      "test": {
+        "support": 500,
+        "positives": 29,
+        "precision": 0.058,
+        "wilson95_lcb": 0.0406837291117572,
+        "coverage": 0.007776170702499262
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 14,
+      "rule": "pre_3h_return >= 2.09631967545",
+      "feature": "pre_3h_return",
+      "direction": "ge",
+      "threshold": 2.0963196754455566,
+      "reservoir": {
+        "support": 1649,
+        "positives": 31,
+        "precision": 0.01879927228623408,
+        "wilson95_lcb": 0.0132752319930729,
+        "coverage": 0.02002063983488132
+      },
+      "fit": {
+        "support": 1649,
+        "positives": 31,
+        "precision": 0.01879927228623408,
+        "wilson95_lcb": 0.0132752319930729,
+        "coverage": 0.02002063983488132
+      },
+      "calibration": {
+        "support": 1890,
+        "positives": 39,
+        "precision": 0.020634920634920634,
+        "wilson95_lcb": 0.015131343128424068,
+        "coverage": 0.03783859536727462
+      },
+      "test": {
+        "support": 1097,
+        "positives": 52,
+        "precision": 0.04740200546946217,
+        "wilson95_lcb": 0.03632965861353065,
+        "coverage": 0.01706091852128338
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 17,
+      "rule": "pre_3d_alexa_index >= 0.357165187597",
+      "feature": "pre_3d_alexa_index",
+      "direction": "ge",
+      "threshold": 0.3571651875972748,
+      "reservoir": {
+        "support": 16488,
+        "positives": 244,
+        "precision": 0.014798641436196022,
+        "wilson95_lcb": 0.01306536036523724,
+        "coverage": 0.2001821161901293
+      },
+      "fit": {
+        "support": 16488,
+        "positives": 244,
+        "precision": 0.014798641436196022,
+        "wilson95_lcb": 0.01306536036523724,
+        "coverage": 0.2001821161901293
+      },
+      "calibration": {
+        "support": 6234,
+        "positives": 107,
+        "precision": 0.017163939685595122,
+        "wilson95_lcb": 0.014224452985080327,
+        "coverage": 0.12480730344951851
+      },
+      "test": {
+        "support": 4604,
+        "positives": 76,
+        "precision": 0.016507384882710686,
+        "wilson95_lcb": 0.013209495868126215,
+        "coverage": 0.0716029798286132
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 2,
+      "rule": "pre_6h_return >= 1.22798411846",
+      "feature": "pre_6h_return",
+      "direction": "ge",
+      "threshold": 1.2279841184616098,
+      "reservoir": {
+        "support": 4119,
+        "positives": 101,
+        "precision": 0.024520514688031077,
+        "wilson95_lcb": 0.020221913268884784,
+        "coverage": 0.05000910580950647
+      },
+      "fit": {
+        "support": 4119,
+        "positives": 101,
+        "precision": 0.024520514688031077,
+        "wilson95_lcb": 0.020221913268884784,
+        "coverage": 0.05000910580950647
+      },
+      "calibration": {
+        "support": 5153,
+        "positives": 83,
+        "precision": 0.016107122064816612,
+        "wilson95_lcb": 0.013012840534885021,
+        "coverage": 0.10316522853310377
+      },
+      "test": {
+        "support": 3085,
+        "positives": 80,
+        "precision": 0.02593192868719611,
+        "wilson95_lcb": 0.020885754103060525,
+        "coverage": 0.04797897323442044
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 23,
+      "rule": "pre_36h_return >= 1.63023495197",
+      "feature": "pre_36h_return",
+      "direction": "ge",
+      "threshold": 1.6302349519729618,
+      "reservoir": {
+        "support": 1648,
+        "positives": 29,
+        "precision": 0.017597087378640776,
+        "wilson95_lcb": 0.012279881005892805,
+        "coverage": 0.020008498755539367
+      },
+      "fit": {
+        "support": 1648,
+        "positives": 29,
+        "precision": 0.017597087378640776,
+        "wilson95_lcb": 0.012279881005892805,
+        "coverage": 0.020008498755539367
+      },
+      "calibration": {
+        "support": 3484,
+        "positives": 63,
+        "precision": 0.018082663605051664,
+        "wilson95_lcb": 0.014159500913740663,
+        "coverage": 0.06975114616909248
+      },
+      "test": {
+        "support": 1941,
+        "positives": 54,
+        "precision": 0.027820710973724884,
+        "wilson95_lcb": 0.021385008358342564,
+        "coverage": 0.03018709466710213
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 33,
+      "rule": "pre_1h_return >= 1.25885224342",
+      "feature": "pre_1h_return",
+      "direction": "ge",
+      "threshold": 1.258852243423462,
+      "reservoir": {
+        "support": 4120,
+        "positives": 61,
+        "precision": 0.014805825242718446,
+        "wilson95_lcb": 0.011544028841645893,
+        "coverage": 0.05002124688884842
+      },
+      "fit": {
+        "support": 4120,
+        "positives": 61,
+        "precision": 0.014805825242718446,
+        "wilson95_lcb": 0.011544028841645893,
+        "coverage": 0.05002124688884842
+      },
+      "calibration": {
+        "support": 3304,
+        "positives": 57,
+        "precision": 0.01725181598062954,
+        "wilson95_lcb": 0.013339910834987496,
+        "coverage": 0.06614747041982823
+      },
+      "test": {
+        "support": 2205,
+        "positives": 52,
+        "precision": 0.023582766439909298,
+        "wilson95_lcb": 0.018029096279088278,
+        "coverage": 0.03429291279802174
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 34,
+      "rule": "pre_24h_return >= 0.985964655876",
+      "feature": "pre_24h_return",
+      "direction": "ge",
+      "threshold": 0.9859646558761597,
+      "reservoir": {
+        "support": 4120,
+        "positives": 61,
+        "precision": 0.014805825242718446,
+        "wilson95_lcb": 0.011544028841645893,
+        "coverage": 0.05002124688884842
+      },
+      "fit": {
+        "support": 4120,
+        "positives": 61,
+        "precision": 0.014805825242718446,
+        "wilson95_lcb": 0.011544028841645893,
+        "coverage": 0.05002124688884842
+      },
+      "calibration": {
+        "support": 6502,
+        "positives": 92,
+        "precision": 0.014149492463857275,
+        "wilson95_lcb": 0.011552130176732036,
+        "coverage": 0.13017277623175638
+      },
+      "test": {
+        "support": 4277,
+        "positives": 80,
+        "precision": 0.018704699555763385,
+        "wilson95_lcb": 0.01505524233154625,
+        "coverage": 0.06651736418917868
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 38,
+      "rule": "pre_6h_return >= 2.67220497131",
+      "feature": "pre_6h_return",
+      "direction": "ge",
+      "threshold": 2.6722049713134766,
+      "reservoir": {
+        "support": 825,
+        "positives": 15,
+        "precision": 0.01818181818181818,
+        "wilson95_lcb": 0.011048889981639498,
+        "coverage": 0.010016390457111637
+      },
+      "fit": {
+        "support": 825,
+        "positives": 15,
+        "precision": 0.01818181818181818,
+        "wilson95_lcb": 0.011048889981639498,
+        "coverage": 0.010016390457111637
+      },
+      "calibration": {
+        "support": 1476,
+        "positives": 42,
+        "precision": 0.028455284552845527,
+        "wilson95_lcb": 0.02112000532649588,
+        "coverage": 0.029550141143966847
+      },
+      "test": {
+        "support": 819,
+        "positives": 54,
+        "precision": 0.06593406593406594,
+        "wilson95_lcb": 0.05088345259234815,
+        "coverage": 0.01273736761069379
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 5,
+      "rule": "pre_12h_return >= 0.970198869705",
+      "feature": "pre_12h_return",
+      "direction": "ge",
+      "threshold": 0.9701988697052002,
+      "reservoir": {
+        "support": 4122,
+        "positives": 86,
+        "precision": 0.020863658418243572,
+        "wilson95_lcb": 0.0169257857478614,
+        "coverage": 0.050045529047532324
+      },
+      "fit": {
+        "support": 4122,
+        "positives": 86,
+        "precision": 0.020863658418243572,
+        "wilson95_lcb": 0.0169257857478614,
+        "coverage": 0.050045529047532324
+      },
+      "calibration": {
+        "support": 5646,
+        "positives": 76,
+        "precision": 0.013460857244066596,
+        "wilson95_lcb": 0.01076865699449252,
+        "coverage": 0.11303529600192196
+      },
+      "test": {
+        "support": 3871,
+        "positives": 75,
+        "precision": 0.01937483854301214,
+        "wilson95_lcb": 0.015485225551545844,
+        "coverage": 0.06020311357874928
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 3,
+      "rule": "pre_3h_return >= 1.24373364449",
+      "feature": "pre_3h_return",
+      "direction": "ge",
+      "threshold": 1.2437336444854736,
+      "reservoir": {
+        "support": 4123,
+        "positives": 90,
+        "precision": 0.021828765462042203,
+        "wilson95_lcb": 0.017793488239894722,
+        "coverage": 0.05005767012687428
+      },
+      "fit": {
+        "support": 4123,
+        "positives": 90,
+        "precision": 0.021828765462042203,
+        "wilson95_lcb": 0.017793488239894722,
+        "coverage": 0.05005767012687428
+      },
+      "calibration": {
+        "support": 4456,
+        "positives": 61,
+        "precision": 0.013689407540394972,
+        "wilson95_lcb": 0.010672398695994501,
+        "coverage": 0.08921099521511942
+      },
+      "test": {
+        "support": 2665,
+        "positives": 68,
+        "precision": 0.02551594746716698,
+        "wilson95_lcb": 0.020177588222581616,
+        "coverage": 0.04144698984432106
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 52,
+      "rule": "pre_3d_alexa_index >= 0.1057517156",
+      "feature": "pre_3d_alexa_index",
+      "direction": "ge",
+      "threshold": 0.10575171560049057,
+      "reservoir": {
+        "support": 24715,
+        "positives": 291,
+        "precision": 0.01177422617843415,
+        "wilson95_lcb": 0.010503251628340737,
+        "coverage": 0.30006677593638076
+      },
+      "fit": {
+        "support": 24715,
+        "positives": 291,
+        "precision": 0.01177422617843415,
+        "wilson95_lcb": 0.010503251628340737,
+        "coverage": 0.30006677593638076
+      },
+      "calibration": {
+        "support": 9139,
+        "positives": 132,
+        "precision": 0.014443593390961813,
+        "wilson95_lcb": 0.012193507884970995,
+        "coverage": 0.18296662595847765
+      },
+      "test": {
+        "support": 6902,
+        "positives": 90,
+        "precision": 0.01303969863807592,
+        "wilson95_lcb": 0.010621285786166062,
+        "coverage": 0.1073422603772998
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 19,
+      "rule": "pre_36h_return >= 1.00137376785",
+      "feature": "pre_36h_return",
+      "direction": "ge",
+      "threshold": 1.0013737678527834,
+      "reservoir": {
+        "support": 4119,
+        "positives": 67,
+        "precision": 0.01626608400097111,
+        "wilson95_lcb": 0.012829317013529287,
+        "coverage": 0.05000910580950647
+      },
+      "fit": {
+        "support": 4119,
+        "positives": 67,
+        "precision": 0.01626608400097111,
+        "wilson95_lcb": 0.012829317013529287,
+        "coverage": 0.05000910580950647
+      },
+      "calibration": {
+        "support": 6725,
+        "positives": 87,
+        "precision": 0.012936802973977694,
+        "wilson95_lcb": 0.010500583379881806,
+        "coverage": 0.13463733007667822
+      },
+      "test": {
+        "support": 4230,
+        "positives": 91,
+        "precision": 0.021513002364066194,
+        "wilson95_lcb": 0.017555357745557908,
+        "coverage": 0.06578640414314375
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 28,
+      "rule": "pre_48h_return >= 0.94472951889",
+      "feature": "pre_48h_return",
+      "direction": "ge",
+      "threshold": 0.944729518890381,
+      "reservoir": {
+        "support": 4119,
+        "positives": 63,
+        "precision": 0.01529497450837582,
+        "wilson95_lcb": 0.011973391521918345,
+        "coverage": 0.05000910580950647
+      },
+      "fit": {
+        "support": 4119,
+        "positives": 63,
+        "precision": 0.01529497450837582,
+        "wilson95_lcb": 0.011973391521918345,
+        "coverage": 0.05000910580950647
+      },
+      "calibration": {
+        "support": 6406,
+        "positives": 83,
+        "precision": 0.012956603184514517,
+        "wilson95_lcb": 0.010464687188608691,
+        "coverage": 0.12825081583214878
+      },
+      "test": {
+        "support": 4828,
+        "positives": 84,
+        "precision": 0.01739850869925435,
+        "wilson95_lcb": 0.014075590971451071,
+        "coverage": 0.07508670430333286
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 43,
+      "rule": "pre_72h_return >= 0.20935113728",
+      "feature": "pre_72h_return",
+      "direction": "ge",
+      "threshold": 0.20935113728046417,
+      "reservoir": {
+        "support": 4121,
+        "positives": 57,
+        "precision": 0.013831594273234651,
+        "wilson95_lcb": 0.010691567631321617,
+        "coverage": 0.050033387968190374
+      },
+      "fit": {
+        "support": 4121,
+        "positives": 57,
+        "precision": 0.013831594273234651,
+        "wilson95_lcb": 0.010691567631321617,
+        "coverage": 0.050033387968190374
+      },
+      "calibration": {
+        "support": 7241,
+        "positives": 92,
+        "precision": 0.012705427427150947,
+        "wilson95_lcb": 0.01037189479190411,
+        "coverage": 0.14496786722456906
+      },
+      "test": {
+        "support": 5759,
+        "positives": 90,
+        "precision": 0.015627713144643167,
+        "wilson95_lcb": 0.01273209076177344,
+        "coverage": 0.08956593415138649
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 12,
+      "rule": "pre_60h_return >= 0.26290589571",
+      "feature": "pre_60h_return",
+      "direction": "ge",
+      "threshold": 0.26290589570999146,
+      "reservoir": {
+        "support": 4123,
+        "positives": 70,
+        "precision": 0.01697792869269949,
+        "wilson95_lcb": 0.013460471608836894,
+        "coverage": 0.05005767012687428
+      },
+      "fit": {
+        "support": 4123,
+        "positives": 70,
+        "precision": 0.01697792869269949,
+        "wilson95_lcb": 0.013460471608836894,
+        "coverage": 0.05005767012687428
+      },
+      "calibration": {
+        "support": 6506,
+        "positives": 83,
+        "precision": 0.01275745465723947,
+        "wilson95_lcb": 0.010303662088326702,
+        "coverage": 0.13025285791507338
+      },
+      "test": {
+        "support": 5058,
+        "positives": 81,
+        "precision": 0.01601423487544484,
+        "wilson95_lcb": 0.01290395286214542,
+        "coverage": 0.07866374282648253
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 58,
+      "rule": "pre_48h_return >= 1.54319092751",
+      "feature": "pre_48h_return",
+      "direction": "ge",
+      "threshold": 1.5431909275054931,
+      "reservoir": {
+        "support": 1648,
+        "positives": 25,
+        "precision": 0.01516990291262136,
+        "wilson95_lcb": 0.010296186007102309,
+        "coverage": 0.020008498755539367
+      },
+      "fit": {
+        "support": 1648,
+        "positives": 25,
+        "precision": 0.01516990291262136,
+        "wilson95_lcb": 0.010296186007102309,
+        "coverage": 0.020008498755539367
+      },
+      "calibration": {
+        "support": 3405,
+        "positives": 61,
+        "precision": 0.017914831130690163,
+        "wilson95_lcb": 0.013972356501330985,
+        "coverage": 0.06816953292358205
+      },
+      "test": {
+        "support": 2130,
+        "positives": 54,
+        "precision": 0.02535211267605634,
+        "wilson95_lcb": 0.01948251339694557,
+        "coverage": 0.03312648719264685
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 67,
+      "rule": "pre_48h_return >= 2.09239896774",
+      "feature": "pre_48h_return",
+      "direction": "ge",
+      "threshold": 2.0923989677429202,
+      "reservoir": {
+        "support": 824,
+        "positives": 14,
+        "precision": 0.01699029126213592,
+        "wilson95_lcb": 0.010147311390041715,
+        "coverage": 0.010004249377769683
+      },
+      "fit": {
+        "support": 824,
+        "positives": 14,
+        "precision": 0.01699029126213592,
+        "wilson95_lcb": 0.010147311390041715,
+        "coverage": 0.010004249377769683
+      },
+      "calibration": {
+        "support": 2008,
+        "positives": 44,
+        "precision": 0.021912350597609563,
+        "wilson95_lcb": 0.016363296053697986,
+        "coverage": 0.04020100502512563
+      },
+      "test": {
+        "support": 1264,
+        "positives": 32,
+        "precision": 0.02531645569620253,
+        "wilson95_lcb": 0.017989238469434305,
+        "coverage": 0.01965815953591813
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 15,
+      "rule": "pre_1h_return >= 4.29511559486",
+      "feature": "pre_1h_return",
+      "direction": "ge",
+      "threshold": 4.295115594863878,
+      "reservoir": {
+        "support": 412,
+        "positives": 10,
+        "precision": 0.024271844660194174,
+        "wilson95_lcb": 0.013236379337159725,
+        "coverage": 0.005002124688884842
+      },
+      "fit": {
+        "support": 412,
+        "positives": 10,
+        "precision": 0.024271844660194174,
+        "wilson95_lcb": 0.013236379337159725,
+        "coverage": 0.005002124688884842
+      },
+      "calibration": {
+        "support": 338,
+        "positives": 7,
+        "precision": 0.020710059171597635,
+        "wilson95_lcb": 0.010067382912162871,
+        "coverage": 0.00676690224028509
+      },
+      "test": {
+        "support": 278,
+        "positives": 11,
+        "precision": 0.039568345323741004,
+        "wilson95_lcb": 0.02223560364084195,
+        "coverage": 0.00432355091058959
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 31,
+      "rule": "pre_1h_return >= 0.747552335262",
+      "feature": "pre_1h_return",
+      "direction": "ge",
+      "threshold": 0.7475523352622986,
+      "reservoir": {
+        "support": 8240,
+        "positives": 115,
+        "precision": 0.013956310679611651,
+        "wilson95_lcb": 0.011640379975109659,
+        "coverage": 0.10004249377769683
+      },
+      "fit": {
+        "support": 8240,
+        "positives": 115,
+        "precision": 0.013956310679611651,
+        "wilson95_lcb": 0.011640379975109659,
+        "coverage": 0.10004249377769683
+      },
+      "calibration": {
+        "support": 6499,
+        "positives": 81,
+        "precision": 0.012463455916294814,
+        "wilson95_lcb": 0.010039674089082698,
+        "coverage": 0.13011271496926866
+      },
+      "test": {
+        "support": 4662,
+        "positives": 70,
+        "precision": 0.015015015015015015,
+        "wilson95_lcb": 0.01190205888141773,
+        "coverage": 0.07250501563010311
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 40,
+      "rule": "pre_3d_alexa_index >= 1.38633263111",
+      "feature": "pre_3d_alexa_index",
+      "direction": "ge",
+      "threshold": 1.386332631111145,
+      "reservoir": {
+        "support": 4139,
+        "positives": 58,
+        "precision": 0.014013046629620681,
+        "wilson95_lcb": 0.010856101309069196,
+        "coverage": 0.050251927396345535
+      },
+      "fit": {
+        "support": 4139,
+        "positives": 58,
+        "precision": 0.014013046629620681,
+        "wilson95_lcb": 0.010856101309069196,
+        "coverage": 0.050251927396345535
+      },
+      "calibration": {
+        "support": 1954,
+        "positives": 32,
+        "precision": 0.016376663254861822,
+        "wilson95_lcb": 0.011624112310209624,
+        "coverage": 0.03911990230034635
+      },
+      "test": {
+        "support": 1856,
+        "positives": 27,
+        "precision": 0.014547413793103448,
+        "wilson95_lcb": 0.01001696642021828,
+        "coverage": 0.028865145647677257
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 76,
+      "rule": "pre_12h_return >= 1.54133081436",
+      "feature": "pre_12h_return",
+      "direction": "ge",
+      "threshold": 1.5413308143615723,
+      "reservoir": {
+        "support": 1701,
+        "positives": 25,
+        "precision": 0.014697236919459141,
+        "wilson95_lcb": 0.009974756026162658,
+        "coverage": 0.020651975960662903
+      },
+      "fit": {
+        "support": 1701,
+        "positives": 25,
+        "precision": 0.014697236919459141,
+        "wilson95_lcb": 0.009974756026162658,
+        "coverage": 0.020651975960662903
+      },
+      "calibration": {
+        "support": 2655,
+        "positives": 57,
+        "precision": 0.021468926553672316,
+        "wilson95_lcb": 0.01660781630736226,
+        "coverage": 0.05315421730164768
+      },
+      "test": {
+        "support": 1861,
+        "positives": 68,
+        "precision": 0.03653949489521763,
+        "wilson95_lcb": 0.02892504858346933,
+        "coverage": 0.02894290735470225
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 100,
+      "rule": "pre_3d_volume_usd <= -0.150846809149",
+      "feature": "pre_3d_volume_usd",
+      "direction": "le",
+      "threshold": -0.15084680914878845,
+      "reservoir": {
+        "support": 16479,
+        "positives": 186,
+        "precision": 0.011287092663389769,
+        "wilson95_lcb": 0.009784256965621897,
+        "coverage": 0.20007284647605172
+      },
+      "fit": {
+        "support": 16479,
+        "positives": 186,
+        "precision": 0.011287092663389769,
+        "wilson95_lcb": 0.009784256965621897,
+        "coverage": 0.20007284647605172
+      },
+      "calibration": {
+        "support": 4273,
+        "positives": 77,
+        "precision": 0.01802012637491224,
+        "wilson95_lcb": 0.014442875641611612,
+        "coverage": 0.08554725820336744
+      },
+      "test": {
+        "support": 3058,
+        "positives": 46,
+        "precision": 0.015042511445389144,
+        "wilson95_lcb": 0.01129675759524869,
+        "coverage": 0.04755906001648548
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 101,
+      "rule": "pre_3d_volume_btc <= -0.152991950512",
+      "feature": "pre_3d_volume_btc",
+      "direction": "le",
+      "threshold": -0.15299195051193237,
+      "reservoir": {
+        "support": 16473,
+        "positives": 185,
+        "precision": 0.011230498391306987,
+        "wilson95_lcb": 0.009731413566434123,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 185,
+        "precision": 0.011230498391306987,
+        "wilson95_lcb": 0.009731413566434123,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 9084,
+        "positives": 157,
+        "precision": 0.01728313518273888,
+        "wilson95_lcb": 0.014799988253500145,
+        "coverage": 0.18186550281286912
+      },
+      "test": {
+        "support": 10144,
+        "positives": 146,
+        "precision": 0.014392744479495269,
+        "wilson95_lcb": 0.012251976351175245,
+        "coverage": 0.15776295121230502
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 119,
+      "rule": "pre_3d_volume_usd <= -0.150525733829",
+      "feature": "pre_3d_volume_usd",
+      "direction": "le",
+      "threshold": -0.15052573382854462,
+      "reservoir": {
+        "support": 24711,
+        "positives": 264,
+        "precision": 0.010683501274735947,
+        "wilson95_lcb": 0.009475580536285553,
+        "coverage": 0.30001821161901293
+      },
+      "fit": {
+        "support": 24711,
+        "positives": 264,
+        "precision": 0.010683501274735947,
+        "wilson95_lcb": 0.009475580536285553,
+        "coverage": 0.30001821161901293
+      },
+      "calibration": {
+        "support": 6974,
+        "positives": 120,
+        "precision": 0.01720676799541153,
+        "wilson95_lcb": 0.014409818884177163,
+        "coverage": 0.13962241486316043
+      },
+      "test": {
+        "support": 5282,
+        "positives": 100,
+        "precision": 0.01893222264293828,
+        "wilson95_lcb": 0.015591220956767174,
+        "coverage": 0.08214746730120219
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 10,
+      "rule": "pre_6h_return >= 0.755175054073",
+      "feature": "pre_6h_return",
+      "direction": "ge",
+      "threshold": 0.7551750540733337,
+      "reservoir": {
+        "support": 8243,
+        "positives": 137,
+        "precision": 0.016620162562173964,
+        "wilson95_lcb": 0.014076957661977498,
+        "coverage": 0.1000789170157227
+      },
+      "fit": {
+        "support": 8243,
+        "positives": 137,
+        "precision": 0.016620162562173964,
+        "wilson95_lcb": 0.014076957661977498,
+        "coverage": 0.1000789170157227
+      },
+      "calibration": {
+        "support": 8826,
+        "positives": 101,
+        "precision": 0.01144346249716746,
+        "wilson95_lcb": 0.009427394706178805,
+        "coverage": 0.1767002342389237
+      },
+      "test": {
+        "support": 5806,
+        "positives": 114,
+        "precision": 0.019634860489149156,
+        "wilson95_lcb": 0.016370786073662883,
+        "coverage": 0.09029689419742142
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 53,
+      "rule": "pre_36h_return >= 0.627007031441",
+      "feature": "pre_36h_return",
+      "direction": "ge",
+      "threshold": 0.6270070314407357,
+      "reservoir": {
+        "support": 8237,
+        "positives": 104,
+        "precision": 0.012625956051960666,
+        "wilson95_lcb": 0.010431806693112276,
+        "coverage": 0.10000607053967098
+      },
+      "fit": {
+        "support": 8237,
+        "positives": 104,
+        "precision": 0.012625956051960666,
+        "wilson95_lcb": 0.010431806693112276,
+        "coverage": 0.10000607053967098
+      },
+      "calibration": {
+        "support": 10599,
+        "positives": 117,
+        "precision": 0.011038777243136145,
+        "wilson95_lcb": 0.009219274202451526,
+        "coverage": 0.21219644036917656
+      },
+      "test": {
+        "support": 7688,
+        "positives": 111,
+        "precision": 0.014438085327783559,
+        "wilson95_lcb": 0.012003764668308678,
+        "coverage": 0.11956640072162864
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 46,
+      "rule": "pre_24h_return >= 0.632304942608",
+      "feature": "pre_24h_return",
+      "direction": "ge",
+      "threshold": 0.6323049426078805,
+      "reservoir": {
+        "support": 8237,
+        "positives": 106,
+        "precision": 0.012868762899113755,
+        "wilson95_lcb": 0.010651840643058547,
+        "coverage": 0.10000607053967098
+      },
+      "fit": {
+        "support": 8237,
+        "positives": 106,
+        "precision": 0.012868762899113755,
+        "wilson95_lcb": 0.010651840643058547,
+        "coverage": 0.10000607053967098
+      },
+      "calibration": {
+        "support": 10029,
+        "positives": 111,
+        "precision": 0.011067903081064912,
+        "wilson95_lcb": 0.009199406493220132,
+        "coverage": 0.20078480049650643
+      },
+      "test": {
+        "support": 7354,
+        "positives": 97,
+        "precision": 0.013190100625509927,
+        "wilson95_lcb": 0.010825063038427597,
+        "coverage": 0.11437191869235913
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 16,
+      "rule": "pre_3h_return >= 0.752690553665",
+      "feature": "pre_3h_return",
+      "direction": "ge",
+      "threshold": 0.7526905536651611,
+      "reservoir": {
+        "support": 8238,
+        "positives": 128,
+        "precision": 0.015537751881524642,
+        "wilson95_lcb": 0.013083912526978422,
+        "coverage": 0.10001821161901293
+      },
+      "fit": {
+        "support": 8238,
+        "positives": 128,
+        "precision": 0.015537751881524642,
+        "wilson95_lcb": 0.013083912526978422,
+        "coverage": 0.10001821161901293
+      },
+      "calibration": {
+        "support": 7983,
+        "positives": 89,
+        "precision": 0.011148690968307654,
+        "wilson95_lcb": 0.009069139195150698,
+        "coverage": 0.15982301947986946
+      },
+      "test": {
+        "support": 5222,
+        "positives": 94,
+        "precision": 0.01800076599004213,
+        "wilson95_lcb": 0.014732991373292169,
+        "coverage": 0.08121432681690229
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 7,
+      "rule": "pre_12h_return >= 0.58767977953",
+      "feature": "pre_12h_return",
+      "direction": "ge",
+      "threshold": 0.5876797795295717,
+      "reservoir": {
+        "support": 8237,
+        "positives": 157,
+        "precision": 0.019060337501517543,
+        "wilson95_lcb": 0.016323806587366305,
+        "coverage": 0.10000607053967098
+      },
+      "fit": {
+        "support": 8237,
+        "positives": 157,
+        "precision": 0.019060337501517543,
+        "wilson95_lcb": 0.016323806587366305,
+        "coverage": 0.10000607053967098
+      },
+      "calibration": {
+        "support": 9721,
+        "positives": 105,
+        "precision": 0.010801357884991257,
+        "wilson95_lcb": 0.00893111745897505,
+        "coverage": 0.19461851088109872
+      },
+      "test": {
+        "support": 7314,
+        "positives": 108,
+        "precision": 0.014766201804757998,
+        "wilson95_lcb": 0.012245700671063587,
+        "coverage": 0.1137498250361592
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 26,
+      "rule": "pre_60h_return >= 0.16183077991",
+      "feature": "pre_60h_return",
+      "direction": "ge",
+      "threshold": 0.1618307799100884,
+      "reservoir": {
+        "support": 8237,
+        "positives": 119,
+        "precision": 0.014447007405608838,
+        "wilson95_lcb": 0.012087154611130456,
+        "coverage": 0.10000607053967098
+      },
+      "fit": {
+        "support": 8237,
+        "positives": 119,
+        "precision": 0.014447007405608838,
+        "wilson95_lcb": 0.012087154611130456,
+        "coverage": 0.10000607053967098
+      },
+      "calibration": {
+        "support": 9969,
+        "positives": 105,
+        "precision": 0.010532651218778213,
+        "wilson95_lcb": 0.008708751797305786,
+        "coverage": 0.1995835752467517
+      },
+      "test": {
+        "support": 9072,
+        "positives": 103,
+        "precision": 0.011353615520282186,
+        "wilson95_lcb": 0.009370972907975225,
+        "coverage": 0.1410908412261466
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 18,
+      "rule": "pre_48h_return >= 0.582027375698",
+      "feature": "pre_48h_return",
+      "direction": "ge",
+      "threshold": 0.5820273756980903,
+      "reservoir": {
+        "support": 8237,
+        "positives": 126,
+        "precision": 0.015296831370644652,
+        "wilson95_lcb": 0.012863343780045266,
+        "coverage": 0.10000607053967098
+      },
+      "fit": {
+        "support": 8237,
+        "positives": 126,
+        "precision": 0.015296831370644652,
+        "wilson95_lcb": 0.012863343780045266,
+        "coverage": 0.10000607053967098
+      },
+      "calibration": {
+        "support": 10148,
+        "positives": 104,
+        "precision": 0.010248324793062672,
+        "wilson95_lcb": 0.008465762336799925,
+        "coverage": 0.20316723057518668
+      },
+      "test": {
+        "support": 8994,
+        "positives": 95,
+        "precision": 0.010562597287080276,
+        "wilson95_lcb": 0.008648929414775446,
+        "coverage": 0.1398777585965567
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 110,
+      "rule": "pre_3d_reddit_index <= -0.237056151032",
+      "feature": "pre_3d_reddit_index",
+      "direction": "le",
+      "threshold": -0.23705615103244781,
+      "reservoir": {
+        "support": 41184,
+        "positives": 434,
+        "precision": 0.010538073038073038,
+        "wilson95_lcb": 0.009596515855388394,
+        "coverage": 0.5000182116190129
+      },
+      "fit": {
+        "support": 41184,
+        "positives": 434,
+        "precision": 0.010538073038073038,
+        "wilson95_lcb": 0.009596515855388394,
+        "coverage": 0.5000182116190129
+      },
+      "calibration": {
+        "support": 21897,
+        "positives": 217,
+        "precision": 0.009910033337900168,
+        "wilson95_lcb": 0.008681307477436657,
+        "coverage": 0.43838715489799596
+      },
+      "test": {
+        "support": 21360,
+        "positives": 198,
+        "precision": 0.009269662921348315,
+        "wilson95_lcb": 0.008069831452182475,
+        "coverage": 0.33219801241076846
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 27,
+      "rule": "pre_12h_return >= 0.264557868242",
+      "feature": "pre_12h_return",
+      "direction": "ge",
+      "threshold": 0.2645578682422638,
+      "reservoir": {
+        "support": 16474,
+        "positives": 226,
+        "precision": 0.01371858686414957,
+        "wilson95_lcb": 0.012052297365672326,
+        "coverage": 0.20001214107934195
+      },
+      "fit": {
+        "support": 16474,
+        "positives": 226,
+        "precision": 0.01371858686414957,
+        "wilson95_lcb": 0.012052297365672326,
+        "coverage": 0.20001214107934195
+      },
+      "calibration": {
+        "support": 15443,
+        "positives": 142,
+        "precision": 0.009195104578126011,
+        "wilson95_lcb": 0.007806999301630312,
+        "coverage": 0.30917535886604336
+      },
+      "test": {
+        "support": 14053,
+        "positives": 134,
+        "precision": 0.009535330534405464,
+        "wilson95_lcb": 0.008057243156712511,
+        "coverage": 0.21855705376444423
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 54,
+      "rule": "pre_72h_return >= 0.123115462065",
+      "feature": "pre_72h_return",
+      "direction": "ge",
+      "threshold": 0.12311546206474311,
+      "reservoir": {
+        "support": 8237,
+        "positives": 103,
+        "precision": 0.012504552628384121,
+        "wilson95_lcb": 0.01032187388918264,
+        "coverage": 0.10000607053967098
+      },
+      "fit": {
+        "support": 8237,
+        "positives": 103,
+        "precision": 0.012504552628384121,
+        "wilson95_lcb": 0.01032187388918264,
+        "coverage": 0.10000607053967098
+      },
+      "calibration": {
+        "support": 10892,
+        "positives": 107,
+        "precision": 0.00982372383400661,
+        "wilson95_lcb": 0.008136618565091073,
+        "coverage": 0.2180624236721456
+      },
+      "test": {
+        "support": 10451,
+        "positives": 98,
+        "precision": 0.009377093101138647,
+        "wilson95_lcb": 0.007701118888836864,
+        "coverage": 0.16253752002363955
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 13,
+      "rule": "pre_6h_return >= 0.370516777039",
+      "feature": "pre_6h_return",
+      "direction": "ge",
+      "threshold": 0.3705167770385742,
+      "reservoir": {
+        "support": 16474,
+        "positives": 249,
+        "precision": 0.015114726235279836,
+        "wilson95_lcb": 0.01336143464552101,
+        "coverage": 0.20001214107934195
+      },
+      "fit": {
+        "support": 16474,
+        "positives": 249,
+        "precision": 0.015114726235279836,
+        "wilson95_lcb": 0.01336143464552101,
+        "coverage": 0.20001214107934195
+      },
+      "calibration": {
+        "support": 14438,
+        "positives": 130,
+        "precision": 0.009004017176894306,
+        "wilson95_lcb": 0.007588490179614087,
+        "coverage": 0.2890548359326513
+      },
+      "test": {
+        "support": 10982,
+        "positives": 136,
+        "precision": 0.01238390092879257,
+        "wilson95_lcb": 0.010479372594177168,
+        "coverage": 0.17079581330969376
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 32,
+      "rule": "pre_36h_return >= 0.296079874039",
+      "feature": "pre_36h_return",
+      "direction": "ge",
+      "threshold": 0.2960798740386963,
+      "reservoir": {
+        "support": 16474,
+        "positives": 218,
+        "precision": 0.01323297316984339,
+        "wilson95_lcb": 0.01159801305751363,
+        "coverage": 0.20001214107934195
+      },
+      "fit": {
+        "support": 16474,
+        "positives": 218,
+        "precision": 0.01323297316984339,
+        "wilson95_lcb": 0.01159801305751363,
+        "coverage": 0.20001214107934195
+      },
+      "calibration": {
+        "support": 15978,
+        "positives": 141,
+        "precision": 0.008824633871573414,
+        "wilson95_lcb": 0.007487928690745908,
+        "coverage": 0.3198862840096899
+      },
+      "test": {
+        "support": 14456,
+        "positives": 144,
+        "precision": 0.00996126175982291,
+        "wilson95_lcb": 0.008467582981593376,
+        "coverage": 0.22482464735065863
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 41,
+      "rule": "pre_1h_return >= 0.377987205982",
+      "feature": "pre_1h_return",
+      "direction": "ge",
+      "threshold": 0.37798720598220825,
+      "reservoir": {
+        "support": 16477,
+        "positives": 204,
+        "precision": 0.012380894580324087,
+        "wilson95_lcb": 0.010802509891511217,
+        "coverage": 0.2000485643173678
+      },
+      "fit": {
+        "support": 16477,
+        "positives": 204,
+        "precision": 0.012380894580324087,
+        "wilson95_lcb": 0.010802509891511217,
+        "coverage": 0.2000485643173678
+      },
+      "calibration": {
+        "support": 11992,
+        "positives": 100,
+        "precision": 0.008338892595063376,
+        "wilson95_lcb": 0.0068614360566580474,
+        "coverage": 0.240084886584316
+      },
+      "test": {
+        "support": 9571,
+        "positives": 90,
+        "precision": 0.009403406122662208,
+        "wilson95_lcb": 0.007657056294266279,
+        "coverage": 0.14885145958724086
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 22,
+      "rule": "pre_3h_return >= 0.356682211161",
+      "feature": "pre_3h_return",
+      "direction": "ge",
+      "threshold": 0.3566822111606598,
+      "reservoir": {
+        "support": 16479,
+        "positives": 235,
+        "precision": 0.014260574063960191,
+        "wilson95_lcb": 0.012560230153921303,
+        "coverage": 0.20007284647605172
+      },
+      "fit": {
+        "support": 16479,
+        "positives": 235,
+        "precision": 0.014260574063960191,
+        "wilson95_lcb": 0.012560230153921303,
+        "coverage": 0.20007284647605172
+      },
+      "calibration": {
+        "support": 14258,
+        "positives": 117,
+        "precision": 0.00820591948379857,
+        "wilson95_lcb": 0.006851881862881954,
+        "coverage": 0.28545116018338706
+      },
+      "test": {
+        "support": 10697,
+        "positives": 132,
+        "precision": 0.012339908385528653,
+        "wilson95_lcb": 0.0104159613429988,
+        "coverage": 0.1663633960092692
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 55,
+      "rule": "pre_6h_return >= 0.182348501682",
+      "feature": "pre_6h_return",
+      "direction": "ge",
+      "threshold": 0.18234850168228145,
+      "reservoir": {
+        "support": 24710,
+        "positives": 286,
+        "precision": 0.011574261432618372,
+        "wilson95_lcb": 0.010314510657752655,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 286,
+        "precision": 0.011574261432618372,
+        "wilson95_lcb": 0.010314510657752655,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 18668,
+        "positives": 149,
+        "precision": 0.007981572744803942,
+        "wilson95_lcb": 0.006802473305877046,
+        "coverage": 0.37374121604036115
+      },
+      "test": {
+        "support": 15680,
+        "positives": 159,
+        "precision": 0.01014030612244898,
+        "wilson95_lcb": 0.008687746804332347,
+        "coverage": 0.24386071323037684
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 81,
+      "rule": "pre_72h_return >= 0.0491928756237",
+      "feature": "pre_72h_return",
+      "direction": "ge",
+      "threshold": 0.049192875623703,
+      "reservoir": {
+        "support": 16474,
+        "positives": 189,
+        "precision": 0.01147262352798349,
+        "wilson95_lcb": 0.009956517983743503,
+        "coverage": 0.20001214107934195
+      },
+      "fit": {
+        "support": 16474,
+        "positives": 189,
+        "precision": 0.01147262352798349,
+        "wilson95_lcb": 0.009956517983743503,
+        "coverage": 0.20001214107934195
+      },
+      "calibration": {
+        "support": 16155,
+        "positives": 134,
+        "precision": 0.008294645620550913,
+        "wilson95_lcb": 0.00700825632523715,
+        "coverage": 0.3234298984964664
+      },
+      "test": {
+        "support": 18336,
+        "positives": 146,
+        "precision": 0.007962478184991274,
+        "wilson95_lcb": 0.006775129226954652,
+        "coverage": 0.2851677320020529
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 64,
+      "rule": "pre_36h_return >= 0.115784242749",
+      "feature": "pre_36h_return",
+      "direction": "ge",
+      "threshold": 0.11578424274921417,
+      "reservoir": {
+        "support": 24714,
+        "positives": 283,
+        "precision": 0.011450999433519463,
+        "wilson95_lcb": 0.010198387885498225,
+        "coverage": 0.3000546348570388
+      },
+      "fit": {
+        "support": 24714,
+        "positives": 283,
+        "precision": 0.011450999433519463,
+        "wilson95_lcb": 0.010198387885498225,
+        "coverage": 0.3000546348570388
+      },
+      "calibration": {
+        "support": 20116,
+        "positives": 161,
+        "precision": 0.008003579240405647,
+        "wilson95_lcb": 0.0068627248641632095,
+        "coverage": 0.4027307854011091
+      },
+      "test": {
+        "support": 20444,
+        "positives": 158,
+        "precision": 0.007728428878888672,
+        "wilson95_lcb": 0.006617065176164007,
+        "coverage": 0.3179520676837898
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 37,
+      "rule": "pre_3h_return >= 0.168627381325",
+      "feature": "pre_3h_return",
+      "direction": "ge",
+      "threshold": 0.16862738132476807,
+      "reservoir": {
+        "support": 24711,
+        "positives": 310,
+        "precision": 0.01254502043624297,
+        "wilson95_lcb": 0.01123112170968252,
+        "coverage": 0.30001821161901293
+      },
+      "fit": {
+        "support": 24711,
+        "positives": 310,
+        "precision": 0.01254502043624297,
+        "wilson95_lcb": 0.01123112170968252,
+        "coverage": 0.30001821161901293
+      },
+      "calibration": {
+        "support": 19173,
+        "positives": 144,
+        "precision": 0.007510561727429197,
+        "wilson95_lcb": 0.006383275274012561,
+        "coverage": 0.3838515285591303
+      },
+      "test": {
+        "support": 15948,
+        "positives": 147,
+        "precision": 0.009217456734386757,
+        "wilson95_lcb": 0.007847955699602368,
+        "coverage": 0.24802874072691644
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 30,
+      "rule": "pre_24h_return >= 0.30621278286",
+      "feature": "pre_24h_return",
+      "direction": "ge",
+      "threshold": 0.30621278285980225,
+      "reservoir": {
+        "support": 16475,
+        "positives": 220,
+        "precision": 0.013353566009104704,
+        "wilson95_lcb": 0.011710817765087091,
+        "coverage": 0.2000242821586839
+      },
+      "fit": {
+        "support": 16475,
+        "positives": 220,
+        "precision": 0.013353566009104704,
+        "wilson95_lcb": 0.011710817765087091,
+        "coverage": 0.2000242821586839
+      },
+      "calibration": {
+        "support": 15540,
+        "positives": 117,
+        "precision": 0.007528957528957529,
+        "wilson95_lcb": 0.0062863017756737164,
+        "coverage": 0.3111173396864802
+      },
+      "test": {
+        "support": 13174,
+        "positives": 137,
+        "precision": 0.010399271291938668,
+        "wilson95_lcb": 0.008804085951371611,
+        "coverage": 0.20488654566945053
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 118,
+      "rule": "pre_6h_return >= 0.0464824676514",
+      "feature": "pre_6h_return",
+      "direction": "ge",
+      "threshold": 0.04648246765136722,
+      "reservoir": {
+        "support": 32946,
+        "positives": 347,
+        "precision": 0.01053238632914466,
+        "wilson95_lcb": 0.009485710832597744,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 347,
+        "precision": 0.01053238632914466,
+        "wilson95_lcb": 0.009485710832597744,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 22574,
+        "positives": 164,
+        "precision": 0.007264995127137415,
+        "wilson95_lcb": 0.006237914033013933,
+        "coverage": 0.4519409797993954
+      },
+      "test": {
+        "support": 21056,
+        "positives": 160,
+        "precision": 0.007598784194528876,
+        "wilson95_lcb": 0.006512334217051244,
+        "coverage": 0.3274701006236489
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 48,
+      "rule": "pre_12h_return >= 0.0977038785815",
+      "feature": "pre_12h_return",
+      "direction": "ge",
+      "threshold": 0.09770387858152377,
+      "reservoir": {
+        "support": 24710,
+        "positives": 294,
+        "precision": 0.01189801699716714,
+        "wilson95_lcb": 0.010619947476983357,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 294,
+        "precision": 0.01189801699716714,
+        "wilson95_lcb": 0.010619947476983357,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 19755,
+        "positives": 157,
+        "precision": 0.00794735509997469,
+        "wilson95_lcb": 0.006801255891901653,
+        "coverage": 0.3955034134817514
+      },
+      "test": {
+        "support": 20202,
+        "positives": 146,
+        "precision": 0.007227007227007227,
+        "wilson95_lcb": 0.006149017989290807,
+        "coverage": 0.31418840106378015
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 90,
+      "rule": "pre_3h_return >= 0.0424145720899",
+      "feature": "pre_3h_return",
+      "direction": "ge",
+      "threshold": 0.04241457208991051,
+      "reservoir": {
+        "support": 32947,
+        "positives": 360,
+        "precision": 0.01092663975475764,
+        "wilson95_lcb": 0.009859745528488988,
+        "coverage": 0.40001214107934197
+      },
+      "fit": {
+        "support": 32947,
+        "positives": 360,
+        "precision": 0.01092663975475764,
+        "wilson95_lcb": 0.009859745528488988,
+        "coverage": 0.40001214107934197
+      },
+      "calibration": {
+        "support": 23382,
+        "positives": 167,
+        "precision": 0.007142246172269267,
+        "wilson95_lcb": 0.006140896922644577,
+        "coverage": 0.46811747982942603
+      },
+      "test": {
+        "support": 21080,
+        "positives": 150,
+        "precision": 0.007115749525616698,
+        "wilson95_lcb": 0.006067430086182725,
+        "coverage": 0.32784335681736887
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 36,
+      "rule": "pre_60h_return >= 0.0732871651649",
+      "feature": "pre_60h_return",
+      "direction": "ge",
+      "threshold": 0.0732871651649475,
+      "reservoir": {
+        "support": 16473,
+        "positives": 214,
+        "precision": 0.012990954895890245,
+        "wilson95_lcb": 0.011371784506752662,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 214,
+        "precision": 0.012990954895890245,
+        "wilson95_lcb": 0.011371784506752662,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 15155,
+        "positives": 144,
+        "precision": 0.009501814582645991,
+        "wilson95_lcb": 0.008076771334691436,
+        "coverage": 0.30340947766722054
+      },
+      "test": {
+        "support": 16340,
+        "positives": 118,
+        "precision": 0.007221542227662179,
+        "wilson95_lcb": 0.006034096089718292,
+        "coverage": 0.25412525855767587
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 80,
+      "rule": "pre_48h_return >= 0.268704175949",
+      "feature": "pre_48h_return",
+      "direction": "ge",
+      "threshold": 0.2687041759490967,
+      "reservoir": {
+        "support": 16474,
+        "positives": 189,
+        "precision": 0.01147262352798349,
+        "wilson95_lcb": 0.009956517983743503,
+        "coverage": 0.20001214107934195
+      },
+      "fit": {
+        "support": 16474,
+        "positives": 189,
+        "precision": 0.01147262352798349,
+        "wilson95_lcb": 0.009956517983743503,
+        "coverage": 0.20001214107934195
+      },
+      "calibration": {
+        "support": 15420,
+        "positives": 135,
+        "precision": 0.008754863813229572,
+        "wilson95_lcb": 0.007401962693670999,
+        "coverage": 0.3087148891869707
+      },
+      "test": {
+        "support": 16553,
+        "positives": 119,
+        "precision": 0.007189029179000785,
+        "wilson95_lcb": 0.0060114501835130466,
+        "coverage": 0.25743790727694055
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 39,
+      "rule": "pre_24h_return >= 0.130409997702",
+      "feature": "pre_24h_return",
+      "direction": "ge",
+      "threshold": 0.1304099977016448,
+      "reservoir": {
+        "support": 24710,
+        "positives": 303,
+        "precision": 0.0122622420072845,
+        "wilson95_lcb": 0.010963868328394492,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 303,
+        "precision": 0.0122622420072845,
+        "wilson95_lcb": 0.010963868328394492,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 19788,
+        "positives": 139,
+        "precision": 0.00702445926824338,
+        "wilson95_lcb": 0.005952676407894026,
+        "coverage": 0.3961640873691165
+      },
+      "test": {
+        "support": 18630,
+        "positives": 148,
+        "precision": 0.007944176060118088,
+        "wilson95_lcb": 0.006766940366193733,
+        "coverage": 0.2897401203751225
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 106,
+      "rule": "pre_24h_return >= -0.00111804641783",
+      "feature": "pre_24h_return",
+      "direction": "ge",
+      "threshold": -0.0011180464178323578,
+      "reservoir": {
+        "support": 32946,
+        "positives": 353,
+        "precision": 0.010714502519273963,
+        "wilson95_lcb": 0.009658432825588063,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 353,
+        "precision": 0.010714502519273963,
+        "wilson95_lcb": 0.009658432825588063,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 23704,
+        "positives": 162,
+        "precision": 0.006834289571380357,
+        "wilson95_lcb": 0.005862438612826079,
+        "coverage": 0.4745640553364432
+      },
+      "test": {
+        "support": 24462,
+        "positives": 169,
+        "precision": 0.006908674679094105,
+        "wilson95_lcb": 0.005945302234999761,
+        "coverage": 0.38044137544907386
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 87,
+      "rule": "pre_48h_return >= 0.0923670351505",
+      "feature": "pre_48h_return",
+      "direction": "ge",
+      "threshold": 0.09236703515052762,
+      "reservoir": {
+        "support": 24710,
+        "positives": 275,
+        "precision": 0.01112909753136382,
+        "wilson95_lcb": 0.009894971199475836,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 275,
+        "precision": 0.01112909753136382,
+        "wilson95_lcb": 0.009894971199475836,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 20017,
+        "positives": 160,
+        "precision": 0.007993205775091173,
+        "wilson95_lcb": 0.006850542222295537,
+        "coverage": 0.4007487637390138
+      },
+      "test": {
+        "support": 23341,
+        "positives": 159,
+        "precision": 0.006812047470116962,
+        "wilson95_lcb": 0.005834953555678025,
+        "coverage": 0.3630072007340705
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 114,
+      "rule": "pre_60h_return >= 0.0218973569572",
+      "feature": "pre_60h_return",
+      "direction": "ge",
+      "threshold": 0.02189735695719719,
+      "reservoir": {
+        "support": 24711,
+        "positives": 266,
+        "precision": 0.010764436890453644,
+        "wilson95_lcb": 0.009551719482755058,
+        "coverage": 0.30001821161901293
+      },
+      "fit": {
+        "support": 24711,
+        "positives": 266,
+        "precision": 0.010764436890453644,
+        "wilson95_lcb": 0.009551719482755058,
+        "coverage": 0.30001821161901293
+      },
+      "calibration": {
+        "support": 19597,
+        "positives": 150,
+        "precision": 0.007654232790733275,
+        "wilson95_lcb": 0.006526821844478887,
+        "coverage": 0.39234018699073053
+      },
+      "test": {
+        "support": 23423,
+        "positives": 157,
+        "precision": 0.006702813473935875,
+        "wilson95_lcb": 0.0057357132836317595,
+        "coverage": 0.36428249272928037
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 69,
+      "rule": "pre_12h_return >= -0.0203997865319",
+      "feature": "pre_12h_return",
+      "direction": "ge",
+      "threshold": -0.020399786531925194,
+      "reservoir": {
+        "support": 32946,
+        "positives": 366,
+        "precision": 0.011109087597887451,
+        "wilson95_lcb": 0.010032941451861054,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 366,
+        "precision": 0.011109087597887451,
+        "wilson95_lcb": 0.010032941451861054,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 23558,
+        "positives": 171,
+        "precision": 0.007258680702945921,
+        "wilson95_lcb": 0.006252140019535353,
+        "coverage": 0.4716410738953733
+      },
+      "test": {
+        "support": 26332,
+        "positives": 167,
+        "precision": 0.006342093270545344,
+        "wilson95_lcb": 0.005452641556261649,
+        "coverage": 0.4095242538764211
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 42,
+      "rule": "pre_3d_volume_btc <= -0.153682842851",
+      "feature": "pre_3d_volume_btc",
+      "direction": "le",
+      "threshold": -0.15368284285068512,
+      "reservoir": {
+        "support": 1651,
+        "positives": 26,
+        "precision": 0.015748031496062992,
+        "wilson95_lcb": 0.010769315118976972,
+        "coverage": 0.020044921993565227
+      },
+      "fit": {
+        "support": 1651,
+        "positives": 26,
+        "precision": 0.015748031496062992,
+        "wilson95_lcb": 0.010769315118976972,
+        "coverage": 0.020044921993565227
+      },
+      "calibration": {
+        "support": 1210,
+        "positives": 16,
+        "precision": 0.013223140495867768,
+        "wilson95_lcb": 0.008155529448467652,
+        "coverage": 0.024224709203387457
+      },
+      "test": {
+        "support": 2040,
+        "positives": 17,
+        "precision": 0.008333333333333333,
+        "wilson95_lcb": 0.005209450200547673,
+        "coverage": 0.03172677646619699
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 103,
+      "rule": "pre_3d_volume_btc <= -0.14844353497",
+      "feature": "pre_3d_volume_btc",
+      "direction": "le",
+      "threshold": -0.1484435349702835,
+      "reservoir": {
+        "support": 41183,
+        "positives": 437,
+        "precision": 0.010611174513755676,
+        "wilson95_lcb": 0.009666225538420002,
+        "coverage": 0.5000060705396709
+      },
+      "fit": {
+        "support": 41183,
+        "positives": 437,
+        "precision": 0.010611174513755676,
+        "wilson95_lcb": 0.009666225538420002,
+        "coverage": 0.5000060705396709
+      },
+      "calibration": {
+        "support": 23780,
+        "positives": 203,
+        "precision": 0.00853658536585366,
+        "wilson95_lcb": 0.007444076259845425,
+        "coverage": 0.47608560731946586
+      },
+      "test": {
+        "support": 32460,
+        "positives": 194,
+        "precision": 0.005976586568083795,
+        "wilson95_lcb": 0.005194567061522494,
+        "coverage": 0.504829002006252
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 117,
+      "rule": "pre_12h_volume_quote_tb <= -0.180106270313",
+      "feature": "pre_12h_volume_quote_tb",
+      "direction": "le",
+      "threshold": -0.18010627031326293,
+      "reservoir": {
+        "support": 16473,
+        "positives": 181,
+        "precision": 0.010987676804467918,
+        "wilson95_lcb": 0.009505895195592121,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 181,
+        "precision": 0.010987676804467918,
+        "wilson95_lcb": 0.009505895195592121,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 6567,
+        "positives": 59,
+        "precision": 0.008984315516978834,
+        "wilson95_lcb": 0.0069718867502171315,
+        "coverage": 0.13147410358565736
+      },
+      "test": {
+        "support": 16348,
+        "positives": 102,
+        "precision": 0.006239295326645461,
+        "wilson95_lcb": 0.005142824692059044,
+        "coverage": 0.25424967728891584
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 104,
+      "rule": "pre_60h_volume_quote <= -0.154032230377",
+      "feature": "pre_60h_volume_quote",
+      "direction": "le",
+      "threshold": -0.15403223037719727,
+      "reservoir": {
+        "support": 24711,
+        "positives": 269,
+        "precision": 0.01088584031403019,
+        "wilson95_lcb": 0.009665962490154934,
+        "coverage": 0.30001821161901293
+      },
+      "fit": {
+        "support": 24711,
+        "positives": 269,
+        "precision": 0.01088584031403019,
+        "wilson95_lcb": 0.009665962490154934,
+        "coverage": 0.30001821161901293
+      },
+      "calibration": {
+        "support": 10580,
+        "positives": 97,
+        "precision": 0.009168241965973534,
+        "wilson95_lcb": 0.0075218676776218265,
+        "coverage": 0.21181605237342088
+      },
+      "test": {
+        "support": 23328,
+        "positives": 139,
+        "precision": 0.005958504801097394,
+        "wilson95_lcb": 0.005048984867133931,
+        "coverage": 0.3628050202958055
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 113,
+      "rule": "pre_60h_volume_quote_tb <= -0.15970928669",
+      "feature": "pre_60h_volume_quote_tb",
+      "direction": "le",
+      "threshold": -0.1597092866897583,
+      "reservoir": {
+        "support": 16473,
+        "positives": 182,
+        "precision": 0.011048382201177685,
+        "wilson95_lcb": 0.009562256555862387,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 182,
+        "precision": 0.011048382201177685,
+        "wilson95_lcb": 0.009562256555862387,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 5913,
+        "positives": 74,
+        "precision": 0.012514797902925756,
+        "wilson95_lcb": 0.009981098622724562,
+        "coverage": 0.1183807483633306
+      },
+      "test": {
+        "support": 13449,
+        "positives": 84,
+        "precision": 0.006245817532902075,
+        "wilson95_lcb": 0.005048066194039634,
+        "coverage": 0.20916343955582514
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 92,
+      "rule": "pre_60h_volume_quote_tb_avg <= -0.240192621946",
+      "feature": "pre_60h_volume_quote_tb_avg",
+      "direction": "le",
+      "threshold": -0.24019262194633484,
+      "reservoir": {
+        "support": 16474,
+        "positives": 187,
+        "precision": 0.011351220104406944,
+        "wilson95_lcb": 0.009843646728739842,
+        "coverage": 0.20001214107934195
+      },
+      "fit": {
+        "support": 16474,
+        "positives": 187,
+        "precision": 0.011351220104406944,
+        "wilson95_lcb": 0.009843646728739842,
+        "coverage": 0.20001214107934195
+      },
+      "calibration": {
+        "support": 7021,
+        "positives": 59,
+        "precision": 0.008403361344537815,
+        "wilson95_lcb": 0.00652068892877912,
+        "coverage": 0.14056337464213498
+      },
+      "test": {
+        "support": 20774,
+        "positives": 119,
+        "precision": 0.0057283142389525366,
+        "wilson95_lcb": 0.004789478485950599,
+        "coverage": 0.3230843403474393
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 93,
+      "rule": "pre_60h_volume_quote_tb_sum <= -0.240192621946",
+      "feature": "pre_60h_volume_quote_tb_sum",
+      "direction": "le",
+      "threshold": -0.24019262194633484,
+      "reservoir": {
+        "support": 16474,
+        "positives": 187,
+        "precision": 0.011351220104406944,
+        "wilson95_lcb": 0.009843646728739842,
+        "coverage": 0.20001214107934195
+      },
+      "fit": {
+        "support": 16474,
+        "positives": 187,
+        "precision": 0.011351220104406944,
+        "wilson95_lcb": 0.009843646728739842,
+        "coverage": 0.20001214107934195
+      },
+      "calibration": {
+        "support": 7021,
+        "positives": 59,
+        "precision": 0.008403361344537815,
+        "wilson95_lcb": 0.00652068892877912,
+        "coverage": 0.14056337464213498
+      },
+      "test": {
+        "support": 20774,
+        "positives": 119,
+        "precision": 0.0057283142389525366,
+        "wilson95_lcb": 0.004789478485950599,
+        "coverage": 0.3230843403474393
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 71,
+      "rule": "pre_36h_volume_quote <= -0.186196047068",
+      "feature": "pre_36h_volume_quote",
+      "direction": "le",
+      "threshold": -0.1861960470676422,
+      "reservoir": {
+        "support": 16473,
+        "positives": 190,
+        "precision": 0.011534025374855825,
+        "wilson95_lcb": 0.01001357926893526,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 190,
+        "precision": 0.011534025374855825,
+        "wilson95_lcb": 0.01001357926893526,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 6207,
+        "positives": 49,
+        "precision": 0.007894312872563236,
+        "wilson95_lcb": 0.005976794088851943,
+        "coverage": 0.12426675208712887
+      },
+      "test": {
+        "support": 17281,
+        "positives": 99,
+        "precision": 0.005728835136855506,
+        "wilson95_lcb": 0.00470820889877061,
+        "coverage": 0.2687600118197795
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 102,
+      "rule": "pre_36h_volume_quote <= -0.182307362556",
+      "feature": "pre_36h_volume_quote",
+      "direction": "le",
+      "threshold": -0.18230736255645752,
+      "reservoir": {
+        "support": 24710,
+        "positives": 269,
+        "precision": 0.010886280857952246,
+        "wilson95_lcb": 0.00966635389306042,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 269,
+        "precision": 0.010886280857952246,
+        "wilson95_lcb": 0.00966635389306042,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 10462,
+        "positives": 79,
+        "precision": 0.00755113744981839,
+        "wilson95_lcb": 0.0060635468927445054,
+        "coverage": 0.20945364271556988
+      },
+      "test": {
+        "support": 25417,
+        "positives": 141,
+        "precision": 0.005547468229924853,
+        "wilson95_lcb": 0.004706089175628841,
+        "coverage": 0.39529386149084744
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 35,
+      "rule": "pre_12h_volume_quote <= -0.182014507055",
+      "feature": "pre_12h_volume_quote",
+      "direction": "le",
+      "threshold": -0.1820145070552826,
+      "reservoir": {
+        "support": 16473,
+        "positives": 215,
+        "precision": 0.013051660292600012,
+        "wilson95_lcb": 0.011428503523652345,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 215,
+        "precision": 0.013051660292600012,
+        "wilson95_lcb": 0.011428503523652345,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 7018,
+        "positives": 60,
+        "precision": 0.008549444286121402,
+        "wilson95_lcb": 0.006648172910693786,
+        "coverage": 0.14050331337964725
+      },
+      "test": {
+        "support": 19067,
+        "positives": 107,
+        "precision": 0.005611790003671265,
+        "wilson95_lcb": 0.004646498501929783,
+        "coverage": 0.29653649356910683
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 84,
+      "rule": "pre_60h_volume_quote <= -0.157312989235",
+      "feature": "pre_60h_volume_quote",
+      "direction": "le",
+      "threshold": -0.15731298923492432,
+      "reservoir": {
+        "support": 16473,
+        "positives": 188,
+        "precision": 0.01141261458143629,
+        "wilson95_lcb": 0.009900677946614062,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 188,
+        "precision": 0.01141261458143629,
+        "wilson95_lcb": 0.009900677946614062,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 6180,
+        "positives": 72,
+        "precision": 0.011650485436893204,
+        "wilson95_lcb": 0.009262180168233072,
+        "coverage": 0.12372620072473924
+      },
+      "test": {
+        "support": 14836,
+        "positives": 84,
+        "precision": 0.0056619034780264225,
+        "wilson95_lcb": 0.00457589820942883,
+        "coverage": 0.23073453708455807
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 49,
+      "rule": "pre_60h_volume_quote_avg <= -0.241122040153",
+      "feature": "pre_60h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.24112204015254973,
+      "reservoir": {
+        "support": 16473,
+        "positives": 200,
+        "precision": 0.0121410793419535,
+        "wilson95_lcb": 0.010578760237644935,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 200,
+        "precision": 0.0121410793419535,
+        "wilson95_lcb": 0.010578760237644935,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 7364,
+        "positives": 62,
+        "precision": 0.00841933731667572,
+        "wilson95_lcb": 0.006573634336891558,
+        "coverage": 0.1474303789865663
+      },
+      "test": {
+        "support": 22030,
+        "positives": 120,
+        "precision": 0.005447117566954153,
+        "wilson95_lcb": 0.004557670034221671,
+        "coverage": 0.34261808115211745
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 50,
+      "rule": "pre_60h_volume_quote_sum <= -0.241122040153",
+      "feature": "pre_60h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.24112204015254973,
+      "reservoir": {
+        "support": 16473,
+        "positives": 200,
+        "precision": 0.0121410793419535,
+        "wilson95_lcb": 0.010578760237644935,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 200,
+        "precision": 0.0121410793419535,
+        "wilson95_lcb": 0.010578760237644935,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 7364,
+        "positives": 62,
+        "precision": 0.00841933731667572,
+        "wilson95_lcb": 0.006573634336891558,
+        "coverage": 0.1474303789865663
+      },
+      "test": {
+        "support": 22030,
+        "positives": 120,
+        "precision": 0.005447117566954153,
+        "wilson95_lcb": 0.004557670034221671,
+        "coverage": 0.34261808115211745
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 109,
+      "rule": "pre_12h_volume_quote_tb <= -0.176430627704",
+      "feature": "pre_12h_volume_quote_tb",
+      "direction": "le",
+      "threshold": -0.1764306277036667,
+      "reservoir": {
+        "support": 24720,
+        "positives": 268,
+        "precision": 0.010841423948220064,
+        "wilson95_lcb": 0.009624369588113364,
+        "coverage": 0.30012748133309053
+      },
+      "fit": {
+        "support": 24720,
+        "positives": 268,
+        "precision": 0.010841423948220064,
+        "wilson95_lcb": 0.009624369588113364,
+        "coverage": 0.30012748133309053
+      },
+      "calibration": {
+        "support": 11384,
+        "positives": 100,
+        "precision": 0.008784258608573436,
+        "wilson95_lcb": 0.0072281530830602975,
+        "coverage": 0.22791247072013454
+      },
+      "test": {
+        "support": 25107,
+        "positives": 135,
+        "precision": 0.005376986497789461,
+        "wilson95_lcb": 0.004544978647265365,
+        "coverage": 0.3904726356552979
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 72,
+      "rule": "pre_72h_volume_quote_tb_avg <= -0.231010353565",
+      "feature": "pre_72h_volume_quote_tb_avg",
+      "direction": "le",
+      "threshold": -0.23101035356521607,
+      "reservoir": {
+        "support": 24710,
+        "positives": 278,
+        "precision": 0.011250505868069607,
+        "wilson95_lcb": 0.010009339558920222,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 278,
+        "precision": 0.011250505868069607,
+        "wilson95_lcb": 0.010009339558920222,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 11848,
+        "positives": 94,
+        "precision": 0.007933828494260635,
+        "wilson95_lcb": 0.006488147559339017,
+        "coverage": 0.2372019459849046
+      },
+      "test": {
+        "support": 28805,
+        "positives": 148,
+        "precision": 0.00513799687554244,
+        "wilson95_lcb": 0.004375762141951884,
+        "coverage": 0.4479851941709824
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 73,
+      "rule": "pre_72h_volume_quote_tb_sum <= -0.231010353565",
+      "feature": "pre_72h_volume_quote_tb_sum",
+      "direction": "le",
+      "threshold": -0.23101035356521607,
+      "reservoir": {
+        "support": 24710,
+        "positives": 278,
+        "precision": 0.011250505868069607,
+        "wilson95_lcb": 0.010009339558920222,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 278,
+        "precision": 0.011250505868069607,
+        "wilson95_lcb": 0.010009339558920222,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 11848,
+        "positives": 94,
+        "precision": 0.007933828494260635,
+        "wilson95_lcb": 0.006488147559339017,
+        "coverage": 0.2372019459849046
+      },
+      "test": {
+        "support": 28805,
+        "positives": 148,
+        "precision": 0.00513799687554244,
+        "wilson95_lcb": 0.004375762141951884,
+        "coverage": 0.4479851941709824
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 85,
+      "rule": "pre_72h_volume_quote_tb_avg <= -0.240205931664",
+      "feature": "pre_72h_volume_quote_tb_avg",
+      "direction": "le",
+      "threshold": -0.24020593166351317,
+      "reservoir": {
+        "support": 16473,
+        "positives": 188,
+        "precision": 0.01141261458143629,
+        "wilson95_lcb": 0.009900677946614062,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 188,
+        "precision": 0.01141261458143629,
+        "wilson95_lcb": 0.009900677946614062,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 7088,
+        "positives": 65,
+        "precision": 0.009170428893905192,
+        "wilson95_lcb": 0.007201906166619975,
+        "coverage": 0.14190474283769444
+      },
+      "test": {
+        "support": 20719,
+        "positives": 108,
+        "precision": 0.0052126067860417975,
+        "wilson95_lcb": 0.004319617371891436,
+        "coverage": 0.3222289615701644
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 86,
+      "rule": "pre_72h_volume_quote_tb_sum <= -0.240205931664",
+      "feature": "pre_72h_volume_quote_tb_sum",
+      "direction": "le",
+      "threshold": -0.24020593166351317,
+      "reservoir": {
+        "support": 16473,
+        "positives": 188,
+        "precision": 0.01141261458143629,
+        "wilson95_lcb": 0.009900677946614062,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 188,
+        "precision": 0.01141261458143629,
+        "wilson95_lcb": 0.009900677946614062,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 7088,
+        "positives": 65,
+        "precision": 0.009170428893905192,
+        "wilson95_lcb": 0.007201906166619975,
+        "coverage": 0.14190474283769444
+      },
+      "test": {
+        "support": 20719,
+        "positives": 108,
+        "precision": 0.0052126067860417975,
+        "wilson95_lcb": 0.004319617371891436,
+        "coverage": 0.3222289615701644
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 44,
+      "rule": "pre_72h_volume_quote_avg <= -0.241131439805",
+      "feature": "pre_72h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.24113143980503082,
+      "reservoir": {
+        "support": 16476,
+        "positives": 202,
+        "precision": 0.012260257344015538,
+        "wilson95_lcb": 0.010689978365602551,
+        "coverage": 0.20003642323802587
+      },
+      "fit": {
+        "support": 16476,
+        "positives": 202,
+        "precision": 0.012260257344015538,
+        "wilson95_lcb": 0.010689978365602551,
+        "coverage": 0.20003642323802587
+      },
+      "calibration": {
+        "support": 7407,
+        "positives": 69,
+        "precision": 0.009315512353179425,
+        "wilson95_lcb": 0.007367937989806232,
+        "coverage": 0.14829125708222388
+      },
+      "test": {
+        "support": 21864,
+        "positives": 113,
+        "precision": 0.005168313208927918,
+        "wilson95_lcb": 0.004300898220988369,
+        "coverage": 0.3400363924788877
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 45,
+      "rule": "pre_72h_volume_quote_sum <= -0.241131439805",
+      "feature": "pre_72h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.24113143980503082,
+      "reservoir": {
+        "support": 16476,
+        "positives": 202,
+        "precision": 0.012260257344015538,
+        "wilson95_lcb": 0.010689978365602551,
+        "coverage": 0.20003642323802587
+      },
+      "fit": {
+        "support": 16476,
+        "positives": 202,
+        "precision": 0.012260257344015538,
+        "wilson95_lcb": 0.010689978365602551,
+        "coverage": 0.20003642323802587
+      },
+      "calibration": {
+        "support": 7407,
+        "positives": 69,
+        "precision": 0.009315512353179425,
+        "wilson95_lcb": 0.007367937989806232,
+        "coverage": 0.14829125708222388
+      },
+      "test": {
+        "support": 21864,
+        "positives": 113,
+        "precision": 0.005168313208927918,
+        "wilson95_lcb": 0.004300898220988369,
+        "coverage": 0.3400363924788877
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 96,
+      "rule": "pre_72h_volume_quote_avg <= -0.219591292739",
+      "feature": "pre_72h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.21959129273891448,
+      "reservoir": {
+        "support": 32946,
+        "positives": 358,
+        "precision": 0.010866266011048382,
+        "wilson95_lcb": 0.00980243032610076,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 358,
+        "precision": 0.010866266011048382,
+        "wilson95_lcb": 0.00980243032610076,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 16808,
+        "positives": 120,
+        "precision": 0.007139457401237506,
+        "wilson95_lcb": 0.005974427681780956,
+        "coverage": 0.33650323329796394
+      },
+      "test": {
+        "support": 36375,
+        "positives": 178,
+        "precision": 0.0048934707903780066,
+        "wilson95_lcb": 0.004226769784314099,
+        "coverage": 0.5657164186068212
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 97,
+      "rule": "pre_72h_volume_quote_sum <= -0.219591292739",
+      "feature": "pre_72h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.21959129273891448,
+      "reservoir": {
+        "support": 32946,
+        "positives": 358,
+        "precision": 0.010866266011048382,
+        "wilson95_lcb": 0.00980243032610076,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 358,
+        "precision": 0.010866266011048382,
+        "wilson95_lcb": 0.00980243032610076,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 16808,
+        "positives": 120,
+        "precision": 0.007139457401237506,
+        "wilson95_lcb": 0.005974427681780956,
+        "coverage": 0.33650323329796394
+      },
+      "test": {
+        "support": 36375,
+        "positives": 178,
+        "precision": 0.0048934707903780066,
+        "wilson95_lcb": 0.004226769784314099,
+        "coverage": 0.5657164186068212
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 79,
+      "rule": "pre_12h_volume_quote <= -0.177892282605",
+      "feature": "pre_12h_volume_quote",
+      "direction": "le",
+      "threshold": -0.1778922826051712,
+      "reservoir": {
+        "support": 24711,
+        "positives": 277,
+        "precision": 0.011209582776900975,
+        "wilson95_lcb": 0.009970808662011322,
+        "coverage": 0.30001821161901293
+      },
+      "fit": {
+        "support": 24711,
+        "positives": 277,
+        "precision": 0.011209582776900975,
+        "wilson95_lcb": 0.009970808662011322,
+        "coverage": 0.30001821161901293
+      },
+      "calibration": {
+        "support": 11594,
+        "positives": 96,
+        "precision": 0.008280144902535794,
+        "wilson95_lcb": 0.006785791984452676,
+        "coverage": 0.23211675909427615
+      },
+      "test": {
+        "support": 27344,
+        "positives": 134,
+        "precision": 0.0049005266237565825,
+        "wilson95_lcb": 0.004139515387691823,
+        "coverage": 0.4252632233782796
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 107,
+      "rule": "pre_48h_volume_quote_tb_avg <= -0.229202598333",
+      "feature": "pre_48h_volume_quote_tb_avg",
+      "direction": "le",
+      "threshold": -0.22920259833335876,
+      "reservoir": {
+        "support": 24711,
+        "positives": 268,
+        "precision": 0.01084537250617134,
+        "wilson95_lcb": 0.009627876909993052,
+        "coverage": 0.30001821161901293
+      },
+      "fit": {
+        "support": 24711,
+        "positives": 268,
+        "precision": 0.01084537250617134,
+        "wilson95_lcb": 0.009627876909993052,
+        "coverage": 0.30001821161901293
+      },
+      "calibration": {
+        "support": 11955,
+        "positives": 85,
+        "precision": 0.007109995817649519,
+        "wilson95_lcb": 0.005754148664361762,
+        "coverage": 0.23934413101363392
+      },
+      "test": {
+        "support": 29166,
+        "positives": 142,
+        "precision": 0.00486868271274772,
+        "wilson95_lcb": 0.004132451340141865,
+        "coverage": 0.4535995894181869
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 108,
+      "rule": "pre_48h_volume_quote_tb_sum <= -0.229202598333",
+      "feature": "pre_48h_volume_quote_tb_sum",
+      "direction": "le",
+      "threshold": -0.22920259833335876,
+      "reservoir": {
+        "support": 24711,
+        "positives": 268,
+        "precision": 0.01084537250617134,
+        "wilson95_lcb": 0.009627876909993052,
+        "coverage": 0.30001821161901293
+      },
+      "fit": {
+        "support": 24711,
+        "positives": 268,
+        "precision": 0.01084537250617134,
+        "wilson95_lcb": 0.009627876909993052,
+        "coverage": 0.30001821161901293
+      },
+      "calibration": {
+        "support": 11955,
+        "positives": 85,
+        "precision": 0.007109995817649519,
+        "wilson95_lcb": 0.005754148664361762,
+        "coverage": 0.23934413101363392
+      },
+      "test": {
+        "support": 29166,
+        "positives": 142,
+        "precision": 0.00486868271274772,
+        "wilson95_lcb": 0.004132451340141865,
+        "coverage": 0.4535995894181869
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 77,
+      "rule": "pre_60h_volume_quote_tb_avg <= -0.231021216512",
+      "feature": "pre_60h_volume_quote_tb_avg",
+      "direction": "le",
+      "threshold": -0.23102121651172638,
+      "reservoir": {
+        "support": 24710,
+        "positives": 277,
+        "precision": 0.011210036422501011,
+        "wilson95_lcb": 0.009971212412942507,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 277,
+        "precision": 0.011210036422501011,
+        "wilson95_lcb": 0.009971212412942507,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 11758,
+        "positives": 92,
+        "precision": 0.007824459942167036,
+        "wilson95_lcb": 0.006384787466289001,
+        "coverage": 0.23540010811027248
+      },
+      "test": {
+        "support": 28945,
+        "positives": 140,
+        "precision": 0.0048367593712212815,
+        "wilson95_lcb": 0.004100567466785474,
+        "coverage": 0.45016252196768225
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 78,
+      "rule": "pre_60h_volume_quote_tb_sum <= -0.231021216512",
+      "feature": "pre_60h_volume_quote_tb_sum",
+      "direction": "le",
+      "threshold": -0.23102121651172638,
+      "reservoir": {
+        "support": 24710,
+        "positives": 277,
+        "precision": 0.011210036422501011,
+        "wilson95_lcb": 0.009971212412942507,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 277,
+        "precision": 0.011210036422501011,
+        "wilson95_lcb": 0.009971212412942507,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 11758,
+        "positives": 92,
+        "precision": 0.007824459942167036,
+        "wilson95_lcb": 0.006384787466289001,
+        "coverage": 0.23540010811027248
+      },
+      "test": {
+        "support": 28945,
+        "positives": 140,
+        "precision": 0.0048367593712212815,
+        "wilson95_lcb": 0.004100567466785474,
+        "coverage": 0.45016252196768225
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 56,
+      "rule": "pre_72h_volume_quote_avg <= -0.23206448555",
+      "feature": "pre_72h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.23206448554992676,
+      "reservoir": {
+        "support": 24714,
+        "positives": 286,
+        "precision": 0.011572388120093874,
+        "wilson95_lcb": 0.01031284023610894,
+        "coverage": 0.3000546348570388
+      },
+      "fit": {
+        "support": 24714,
+        "positives": 286,
+        "precision": 0.011572388120093874,
+        "wilson95_lcb": 0.01031284023610894,
+        "coverage": 0.3000546348570388
+      },
+      "calibration": {
+        "support": 11800,
+        "positives": 97,
+        "precision": 0.008220338983050848,
+        "wilson95_lcb": 0.006743661534830813,
+        "coverage": 0.23624096578510081
+      },
+      "test": {
+        "support": 29678,
+        "positives": 143,
+        "precision": 0.004818383988139363,
+        "wilson95_lcb": 0.00409208922286473,
+        "coverage": 0.46156238821754614
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 57,
+      "rule": "pre_72h_volume_quote_sum <= -0.23206448555",
+      "feature": "pre_72h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.23206448554992676,
+      "reservoir": {
+        "support": 24714,
+        "positives": 286,
+        "precision": 0.011572388120093874,
+        "wilson95_lcb": 0.01031284023610894,
+        "coverage": 0.3000546348570388
+      },
+      "fit": {
+        "support": 24714,
+        "positives": 286,
+        "precision": 0.011572388120093874,
+        "wilson95_lcb": 0.01031284023610894,
+        "coverage": 0.3000546348570388
+      },
+      "calibration": {
+        "support": 11800,
+        "positives": 97,
+        "precision": 0.008220338983050848,
+        "wilson95_lcb": 0.006743661534830813,
+        "coverage": 0.23624096578510081
+      },
+      "test": {
+        "support": 29678,
+        "positives": 143,
+        "precision": 0.004818383988139363,
+        "wilson95_lcb": 0.00409208922286473,
+        "coverage": 0.46156238821754614
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 70,
+      "rule": "pre_24h_volume_quote <= -0.196149906516",
+      "feature": "pre_24h_volume_quote",
+      "direction": "le",
+      "threshold": -0.19614990651607514,
+      "reservoir": {
+        "support": 16473,
+        "positives": 190,
+        "precision": 0.011534025374855825,
+        "wilson95_lcb": 0.01001357926893526,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 190,
+        "precision": 0.011534025374855825,
+        "wilson95_lcb": 0.01001357926893526,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 7314,
+        "positives": 54,
+        "precision": 0.007383100902378999,
+        "wilson95_lcb": 0.005663320784090724,
+        "coverage": 0.146429357945104
+      },
+      "test": {
+        "support": 19665,
+        "positives": 98,
+        "precision": 0.004983473175692856,
+        "wilson95_lcb": 0.00409131411999413,
+        "coverage": 0.30583679372929595
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 65,
+      "rule": "pre_60h_volume_quote_avg <= -0.231936332583",
+      "feature": "pre_60h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.23193633258342744,
+      "reservoir": {
+        "support": 24710,
+        "positives": 282,
+        "precision": 0.01141238365034399,
+        "wilson95_lcb": 0.010161891200864687,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 282,
+        "precision": 0.01141238365034399,
+        "wilson95_lcb": 0.010161891200864687,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 11891,
+        "positives": 94,
+        "precision": 0.007905138339920948,
+        "wilson95_lcb": 0.006464669934471831,
+        "coverage": 0.23806282408056217
+      },
+      "test": {
+        "support": 29672,
+        "positives": 140,
+        "precision": 0.004718252898355352,
+        "wilson95_lcb": 0.004000065338055762,
+        "coverage": 0.46146907416911614
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 66,
+      "rule": "pre_60h_volume_quote_sum <= -0.231936332583",
+      "feature": "pre_60h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.23193633258342744,
+      "reservoir": {
+        "support": 24710,
+        "positives": 282,
+        "precision": 0.01141238365034399,
+        "wilson95_lcb": 0.010161891200864687,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 282,
+        "precision": 0.01141238365034399,
+        "wilson95_lcb": 0.010161891200864687,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 11891,
+        "positives": 94,
+        "precision": 0.007905138339920948,
+        "wilson95_lcb": 0.006464669934471831,
+        "coverage": 0.23806282408056217
+      },
+      "test": {
+        "support": 29672,
+        "positives": 140,
+        "precision": 0.004718252898355352,
+        "wilson95_lcb": 0.004000065338055762,
+        "coverage": 0.46146907416911614
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 62,
+      "rule": "pre_36h_volume_quote_avg <= -0.22768535912",
+      "feature": "pre_36h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.22768535912036897,
+      "reservoir": {
+        "support": 24710,
+        "positives": 283,
+        "precision": 0.011452853095912586,
+        "wilson95_lcb": 0.01020003976283532,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 283,
+        "precision": 0.011452853095912586,
+        "wilson95_lcb": 0.01020003976283532,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 12426,
+        "positives": 90,
+        "precision": 0.007242877836793819,
+        "wilson95_lcb": 0.0058966992912898464,
+        "coverage": 0.2487737492242087
+      },
+      "test": {
+        "support": 30487,
+        "positives": 142,
+        "precision": 0.004657722963886246,
+        "wilson95_lcb": 0.003953334298695547,
+        "coverage": 0.47414423241418996
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 63,
+      "rule": "pre_36h_volume_quote_sum <= -0.22768535912",
+      "feature": "pre_36h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.22768535912036897,
+      "reservoir": {
+        "support": 24710,
+        "positives": 283,
+        "precision": 0.011452853095912586,
+        "wilson95_lcb": 0.01020003976283532,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 283,
+        "precision": 0.011452853095912586,
+        "wilson95_lcb": 0.01020003976283532,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 12426,
+        "positives": 90,
+        "precision": 0.007242877836793819,
+        "wilson95_lcb": 0.0058966992912898464,
+        "coverage": 0.2487737492242087
+      },
+      "test": {
+        "support": 30487,
+        "positives": 142,
+        "precision": 0.004657722963886246,
+        "wilson95_lcb": 0.003953334298695547,
+        "coverage": 0.47414423241418996
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 60,
+      "rule": "pre_48h_volume_quote_avg <= -0.229710564017",
+      "feature": "pre_48h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.22971056401729584,
+      "reservoir": {
+        "support": 24712,
+        "positives": 285,
+        "precision": 0.011532858530268695,
+        "wilson95_lcb": 0.010275517325954067,
+        "coverage": 0.3000303526983549
+      },
+      "fit": {
+        "support": 24712,
+        "positives": 285,
+        "precision": 0.011532858530268695,
+        "wilson95_lcb": 0.010275517325954067,
+        "coverage": 0.3000303526983549
+      },
+      "calibration": {
+        "support": 12362,
+        "positives": 91,
+        "precision": 0.007361268403171008,
+        "wilson95_lcb": 0.005999918944553467,
+        "coverage": 0.24749244229113695
+      },
+      "test": {
+        "support": 30513,
+        "positives": 142,
+        "precision": 0.004653754137580703,
+        "wilson95_lcb": 0.003949964585927682,
+        "coverage": 0.4745485932907199
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 61,
+      "rule": "pre_48h_volume_quote_sum <= -0.229710564017",
+      "feature": "pre_48h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.22971056401729584,
+      "reservoir": {
+        "support": 24712,
+        "positives": 285,
+        "precision": 0.011532858530268695,
+        "wilson95_lcb": 0.010275517325954067,
+        "coverage": 0.3000303526983549
+      },
+      "fit": {
+        "support": 24712,
+        "positives": 285,
+        "precision": 0.011532858530268695,
+        "wilson95_lcb": 0.010275517325954067,
+        "coverage": 0.3000303526983549
+      },
+      "calibration": {
+        "support": 12362,
+        "positives": 91,
+        "precision": 0.007361268403171008,
+        "wilson95_lcb": 0.005999918944553467,
+        "coverage": 0.24749244229113695
+      },
+      "test": {
+        "support": 30513,
+        "positives": 142,
+        "precision": 0.004653754137580703,
+        "wilson95_lcb": 0.003949964585927682,
+        "coverage": 0.4745485932907199
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 111,
+      "rule": "pre_36h_volume_quote_tb_avg <= -0.227538713813",
+      "feature": "pre_36h_volume_quote_tb_avg",
+      "direction": "le",
+      "threshold": -0.22753871381282806,
+      "reservoir": {
+        "support": 24710,
+        "positives": 267,
+        "precision": 0.010805341966815055,
+        "wilson95_lcb": 0.009590184216834812,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 267,
+        "precision": 0.010805341966815055,
+        "wilson95_lcb": 0.009590184216834812,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 12183,
+        "positives": 84,
+        "precision": 0.006894853484363458,
+        "wilson95_lcb": 0.005572949293336624,
+        "coverage": 0.24390878696270196
+      },
+      "test": {
+        "support": 29194,
+        "positives": 136,
+        "precision": 0.004658491470850175,
+        "wilson95_lcb": 0.003939893019022018,
+        "coverage": 0.4540350549775269
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 112,
+      "rule": "pre_36h_volume_quote_tb_sum <= -0.227538713813",
+      "feature": "pre_36h_volume_quote_tb_sum",
+      "direction": "le",
+      "threshold": -0.22753871381282806,
+      "reservoir": {
+        "support": 24710,
+        "positives": 267,
+        "precision": 0.010805341966815055,
+        "wilson95_lcb": 0.009590184216834812,
+        "coverage": 0.300006070539671
+      },
+      "fit": {
+        "support": 24710,
+        "positives": 267,
+        "precision": 0.010805341966815055,
+        "wilson95_lcb": 0.009590184216834812,
+        "coverage": 0.300006070539671
+      },
+      "calibration": {
+        "support": 12183,
+        "positives": 84,
+        "precision": 0.006894853484363458,
+        "wilson95_lcb": 0.005572949293336624,
+        "coverage": 0.24390878696270196
+      },
+      "test": {
+        "support": 29194,
+        "positives": 136,
+        "precision": 0.004658491470850175,
+        "wilson95_lcb": 0.003939893019022018,
+        "coverage": 0.4540350549775269
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 98,
+      "rule": "pre_72h_volume_quote_tb_avg <= -0.219135448337",
+      "feature": "pre_72h_volume_quote_tb_avg",
+      "direction": "le",
+      "threshold": -0.21913544833660126,
+      "reservoir": {
+        "support": 32946,
+        "positives": 358,
+        "precision": 0.010866266011048382,
+        "wilson95_lcb": 0.00980243032610076,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 358,
+        "precision": 0.010866266011048382,
+        "wilson95_lcb": 0.00980243032610076,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 16603,
+        "positives": 121,
+        "precision": 0.007287839547069807,
+        "wilson95_lcb": 0.0061031551509013356,
+        "coverage": 0.3323990470279685
+      },
+      "test": {
+        "support": 35583,
+        "positives": 158,
+        "precision": 0.004440322625973077,
+        "wilson95_lcb": 0.0038009609863936004,
+        "coverage": 0.5533989642140624
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 99,
+      "rule": "pre_72h_volume_quote_tb_sum <= -0.219135448337",
+      "feature": "pre_72h_volume_quote_tb_sum",
+      "direction": "le",
+      "threshold": -0.21913544833660126,
+      "reservoir": {
+        "support": 32946,
+        "positives": 358,
+        "precision": 0.010866266011048382,
+        "wilson95_lcb": 0.00980243032610076,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 358,
+        "precision": 0.010866266011048382,
+        "wilson95_lcb": 0.00980243032610076,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 16603,
+        "positives": 121,
+        "precision": 0.007287839547069807,
+        "wilson95_lcb": 0.0061031551509013356,
+        "coverage": 0.3323990470279685
+      },
+      "test": {
+        "support": 35583,
+        "positives": 158,
+        "precision": 0.004440322625973077,
+        "wilson95_lcb": 0.0038009609863936004,
+        "coverage": 0.5533989642140624
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 74,
+      "rule": "pre_60h_volume_quote_avg <= -0.219638332725",
+      "feature": "pre_60h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.21963833272457123,
+      "reservoir": {
+        "support": 32949,
+        "positives": 365,
+        "precision": 0.011077726182888707,
+        "wilson95_lcb": 0.010003208596246474,
+        "coverage": 0.40003642323802585
+      },
+      "fit": {
+        "support": 32949,
+        "positives": 365,
+        "precision": 0.011077726182888707,
+        "wilson95_lcb": 0.010003208596246474,
+        "coverage": 0.40003642323802585
+      },
+      "calibration": {
+        "support": 16742,
+        "positives": 125,
+        "precision": 0.007466252538525863,
+        "wilson95_lcb": 0.006270529455604824,
+        "coverage": 0.3351818855232337
+      },
+      "test": {
+        "support": 36308,
+        "positives": 160,
+        "precision": 0.004406742315743087,
+        "wilson95_lcb": 0.0037758800538188475,
+        "coverage": 0.5646744117326864
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 75,
+      "rule": "pre_60h_volume_quote_sum <= -0.219638332725",
+      "feature": "pre_60h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.21963833272457123,
+      "reservoir": {
+        "support": 32949,
+        "positives": 365,
+        "precision": 0.011077726182888707,
+        "wilson95_lcb": 0.010003208596246474,
+        "coverage": 0.40003642323802585
+      },
+      "fit": {
+        "support": 32949,
+        "positives": 365,
+        "precision": 0.011077726182888707,
+        "wilson95_lcb": 0.010003208596246474,
+        "coverage": 0.40003642323802585
+      },
+      "calibration": {
+        "support": 16742,
+        "positives": 125,
+        "precision": 0.007466252538525863,
+        "wilson95_lcb": 0.006270529455604824,
+        "coverage": 0.3351818855232337
+      },
+      "test": {
+        "support": 36308,
+        "positives": 160,
+        "precision": 0.004406742315743087,
+        "wilson95_lcb": 0.0037758800538188475,
+        "coverage": 0.5646744117326864
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 94,
+      "rule": "pre_48h_volume_quote_avg <= -0.217763260007",
+      "feature": "pre_48h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.2177632600069046,
+      "reservoir": {
+        "support": 32948,
+        "positives": 359,
+        "precision": 0.010895957265994901,
+        "wilson95_lcb": 0.009830639454322766,
+        "coverage": 0.4000242821586839
+      },
+      "fit": {
+        "support": 32948,
+        "positives": 359,
+        "precision": 0.010895957265994901,
+        "wilson95_lcb": 0.009830639454322766,
+        "coverage": 0.4000242821586839
+      },
+      "calibration": {
+        "support": 17152,
+        "positives": 123,
+        "precision": 0.007171175373134328,
+        "wilson95_lcb": 0.0060140890784703025,
+        "coverage": 0.3433902580632245
+      },
+      "test": {
+        "support": 36639,
+        "positives": 157,
+        "precision": 0.004285051447910696,
+        "wilson95_lcb": 0.003666199497715185,
+        "coverage": 0.5698222367377409
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 95,
+      "rule": "pre_48h_volume_quote_sum <= -0.217763260007",
+      "feature": "pre_48h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.2177632600069046,
+      "reservoir": {
+        "support": 32948,
+        "positives": 359,
+        "precision": 0.010895957265994901,
+        "wilson95_lcb": 0.009830639454322766,
+        "coverage": 0.4000242821586839
+      },
+      "fit": {
+        "support": 32948,
+        "positives": 359,
+        "precision": 0.010895957265994901,
+        "wilson95_lcb": 0.009830639454322766,
+        "coverage": 0.4000242821586839
+      },
+      "calibration": {
+        "support": 17152,
+        "positives": 123,
+        "precision": 0.007171175373134328,
+        "wilson95_lcb": 0.0060140890784703025,
+        "coverage": 0.3433902580632245
+      },
+      "test": {
+        "support": 36639,
+        "positives": 157,
+        "precision": 0.004285051447910696,
+        "wilson95_lcb": 0.003666199497715185,
+        "coverage": 0.5698222367377409
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 68,
+      "rule": "pre_72h_volume_quote <= -0.187987276912",
+      "feature": "pre_72h_volume_quote",
+      "direction": "le",
+      "threshold": -0.18798727691173553,
+      "reservoir": {
+        "support": 16473,
+        "positives": 192,
+        "precision": 0.011655436168275359,
+        "wilson95_lcb": 0.01012652646819253,
+        "coverage": 0.2
+      },
+      "fit": {
+        "support": 16473,
+        "positives": 192,
+        "precision": 0.011655436168275359,
+        "wilson95_lcb": 0.01012652646819253,
+        "coverage": 0.2
+      },
+      "calibration": {
+        "support": 6804,
+        "positives": 75,
+        "precision": 0.011022927689594356,
+        "wilson95_lcb": 0.00880335234020031,
+        "coverage": 0.13621894332218865
+      },
+      "test": {
+        "support": 17828,
+        "positives": 81,
+        "precision": 0.004543414853040162,
+        "wilson95_lcb": 0.003657315608633799,
+        "coverage": 0.27726714256831364
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 51,
+      "rule": "pre_60h_volume_quote <= -0.159471750259",
+      "feature": "pre_60h_volume_quote",
+      "direction": "le",
+      "threshold": -0.15947175025939941,
+      "reservoir": {
+        "support": 8241,
+        "positives": 105,
+        "precision": 0.012741172187841281,
+        "wilson95_lcb": 0.010536673951982715,
+        "coverage": 0.10005463485703879
+      },
+      "fit": {
+        "support": 8241,
+        "positives": 105,
+        "precision": 0.012741172187841281,
+        "wilson95_lcb": 0.010536673951982715,
+        "coverage": 0.10005463485703879
+      },
+      "calibration": {
+        "support": 2465,
+        "positives": 21,
+        "precision": 0.008519269776876268,
+        "wilson95_lcb": 0.005578915380925971,
+        "coverage": 0.04935033734409097
+      },
+      "test": {
+        "support": 6432,
+        "positives": 33,
+        "precision": 0.005130597014925373,
+        "wilson95_lcb": 0.0036556904671862797,
+        "coverage": 0.1000326599169505
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 82,
+      "rule": "pre_60h_volume_quote_tb_avg <= -0.219078674912",
+      "feature": "pre_60h_volume_quote_tb_avg",
+      "direction": "le",
+      "threshold": -0.2190786749124527,
+      "reservoir": {
+        "support": 32946,
+        "positives": 362,
+        "precision": 0.010987676804467918,
+        "wilson95_lcb": 0.00991766839530202,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 362,
+        "precision": 0.010987676804467918,
+        "wilson95_lcb": 0.00991766839530202,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 16610,
+        "positives": 125,
+        "precision": 0.007525586995785672,
+        "wilson95_lcb": 0.006320389081946103,
+        "coverage": 0.33253918997377324
+      },
+      "test": {
+        "support": 35567,
+        "positives": 152,
+        "precision": 0.004273624427137515,
+        "wilson95_lcb": 0.0036471439907695873,
+        "coverage": 0.5531501267515825
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 83,
+      "rule": "pre_60h_volume_quote_tb_sum <= -0.219078674912",
+      "feature": "pre_60h_volume_quote_tb_sum",
+      "direction": "le",
+      "threshold": -0.2190786749124527,
+      "reservoir": {
+        "support": 32946,
+        "positives": 362,
+        "precision": 0.010987676804467918,
+        "wilson95_lcb": 0.00991766839530202,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 362,
+        "precision": 0.010987676804467918,
+        "wilson95_lcb": 0.00991766839530202,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 16610,
+        "positives": 125,
+        "precision": 0.007525586995785672,
+        "wilson95_lcb": 0.006320389081946103,
+        "coverage": 0.33253918997377324
+      },
+      "test": {
+        "support": 35567,
+        "positives": 152,
+        "precision": 0.004273624427137515,
+        "wilson95_lcb": 0.0036471439907695873,
+        "coverage": 0.5531501267515825
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 88,
+      "rule": "pre_24h_volume_quote_avg <= -0.226985663176",
+      "feature": "pre_24h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.22698566317558289,
+      "reservoir": {
+        "support": 24712,
+        "positives": 275,
+        "precision": 0.01112819682745225,
+        "wilson95_lcb": 0.009894169906259541,
+        "coverage": 0.3000303526983549
+      },
+      "fit": {
+        "support": 24712,
+        "positives": 275,
+        "precision": 0.01112819682745225,
+        "wilson95_lcb": 0.009894169906259541,
+        "coverage": 0.3000303526983549
+      },
+      "calibration": {
+        "support": 12531,
+        "positives": 88,
+        "precision": 0.0070225839917005825,
+        "wilson95_lcb": 0.005704013529582728,
+        "coverage": 0.2508758934112795
+      },
+      "test": {
+        "support": 30278,
+        "positives": 129,
+        "precision": 0.00426051918884999,
+        "wilson95_lcb": 0.0035871135783188254,
+        "coverage": 0.47089379306054524
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 89,
+      "rule": "pre_24h_volume_quote_sum <= -0.226985663176",
+      "feature": "pre_24h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.22698566317558289,
+      "reservoir": {
+        "support": 24712,
+        "positives": 275,
+        "precision": 0.01112819682745225,
+        "wilson95_lcb": 0.009894169906259541,
+        "coverage": 0.3000303526983549
+      },
+      "fit": {
+        "support": 24712,
+        "positives": 275,
+        "precision": 0.01112819682745225,
+        "wilson95_lcb": 0.009894169906259541,
+        "coverage": 0.3000303526983549
+      },
+      "calibration": {
+        "support": 12531,
+        "positives": 88,
+        "precision": 0.0070225839917005825,
+        "wilson95_lcb": 0.005704013529582728,
+        "coverage": 0.2508758934112795
+      },
+      "test": {
+        "support": 30278,
+        "positives": 129,
+        "precision": 0.00426051918884999,
+        "wilson95_lcb": 0.0035871135783188254,
+        "coverage": 0.47089379306054524
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 115,
+      "rule": "pre_36h_volume_quote_avg <= -0.215689322352",
+      "feature": "pre_36h_volume_quote_avg",
+      "direction": "le",
+      "threshold": -0.21568932235240937,
+      "reservoir": {
+        "support": 32946,
+        "positives": 348,
+        "precision": 0.010562739027499544,
+        "wilson95_lcb": 0.009514492068898121,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 348,
+        "precision": 0.010562739027499544,
+        "wilson95_lcb": 0.009514492068898121,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 17401,
+        "positives": 121,
+        "precision": 0.006953623354979599,
+        "wilson95_lcb": 0.0058231227738771915,
+        "coverage": 0.3483753428497067
+      },
+      "test": {
+        "support": 36672,
+        "positives": 150,
+        "precision": 0.004090314136125654,
+        "wilson95_lcb": 0.0034869939253558153,
+        "coverage": 0.5703354640041058
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 116,
+      "rule": "pre_36h_volume_quote_sum <= -0.215689322352",
+      "feature": "pre_36h_volume_quote_sum",
+      "direction": "le",
+      "threshold": -0.21568932235240937,
+      "reservoir": {
+        "support": 32946,
+        "positives": 348,
+        "precision": 0.010562739027499544,
+        "wilson95_lcb": 0.009514492068898121,
+        "coverage": 0.4
+      },
+      "fit": {
+        "support": 32946,
+        "positives": 348,
+        "precision": 0.010562739027499544,
+        "wilson95_lcb": 0.009514492068898121,
+        "coverage": 0.4
+      },
+      "calibration": {
+        "support": 17401,
+        "positives": 121,
+        "precision": 0.006953623354979599,
+        "wilson95_lcb": 0.0058231227738771915,
+        "coverage": 0.3483753428497067
+      },
+      "test": {
+        "support": 36672,
+        "positives": 150,
+        "precision": 0.004090314136125654,
+        "wilson95_lcb": 0.0034869939253558153,
+        "coverage": 0.5703354640041058
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 21,
+      "rule": "pre_60h_volume_quote <= -0.160219606757",
+      "feature": "pre_60h_volume_quote",
+      "direction": "le",
+      "threshold": -0.160219606757164,
+      "reservoir": {
+        "support": 4119,
+        "positives": 66,
+        "precision": 0.016023306627822288,
+        "wilson95_lcb": 0.012614997050056071,
+        "coverage": 0.05000910580950647
+      },
+      "fit": {
+        "support": 4119,
+        "positives": 66,
+        "precision": 0.016023306627822288,
+        "wilson95_lcb": 0.012614997050056071,
+        "coverage": 0.05000910580950647
+      },
+      "calibration": {
+        "support": 978,
+        "positives": 9,
+        "precision": 0.009202453987730062,
+        "wilson95_lcb": 0.004848894063901754,
+        "coverage": 0.019579971571002424
+      },
+      "test": {
+        "support": 2273,
+        "positives": 6,
+        "precision": 0.0026396832380114386,
+        "wilson95_lcb": 0.0012103347131719238,
+        "coverage": 0.03535047201356164
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 47,
+      "rule": "pre_3d_volume_usd <= -0.151019135118",
+      "feature": "pre_3d_volume_usd",
+      "direction": "le",
+      "threshold": -0.15101913511753082,
+      "reservoir": {
+        "support": 8237,
+        "positives": 106,
+        "precision": 0.012868762899113755,
+        "wilson95_lcb": 0.010651840643058547,
+        "coverage": 0.10000607053967098
+      },
+      "fit": {
+        "support": 8237,
+        "positives": 106,
+        "precision": 0.012868762899113755,
+        "wilson95_lcb": 0.010651840643058547,
+        "coverage": 0.10000607053967098
+      },
+      "calibration": {
+        "support": 2153,
+        "positives": 45,
+        "precision": 0.02090106827682304,
+        "wilson95_lcb": 0.015657152976184058,
+        "coverage": 0.043103966045366274
+      },
+      "test": {
+        "support": 1167,
+        "positives": 3,
+        "precision": 0.002570694087403599,
+        "wilson95_lcb": 0.0008746447133689844,
+        "coverage": 0.018149582419633277
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 105,
+      "rule": "pre_60h_volume <= -0.0571252733469",
+      "feature": "pre_60h_volume",
+      "direction": "le",
+      "threshold": -0.05712527334690094,
+      "reservoir": {
+        "support": 8237,
+        "positives": 97,
+        "precision": 0.011776132086924851,
+        "wilson95_lcb": 0.009663507440952646,
+        "coverage": 0.10000607053967098
+      },
+      "fit": {
+        "support": 8237,
+        "positives": 97,
+        "precision": 0.011776132086924851,
+        "wilson95_lcb": 0.009663507440952646,
+        "coverage": 0.10000607053967098
+      },
+      "calibration": {
+        "support": 4778,
+        "positives": 25,
+        "precision": 0.005232314776056928,
+        "wilson95_lcb": 0.0035466768053918508,
+        "coverage": 0.09565757072213658
+      },
+      "test": {
+        "support": 12218,
+        "positives": 14,
+        "precision": 0.0011458503846783433,
+        "wilson95_lcb": 0.0006827058492854125,
+        "coverage": 0.19001850728627195
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 20,
+      "rule": "pre_60h_volume <= -0.0571604803205",
+      "feature": "pre_60h_volume",
+      "direction": "le",
+      "threshold": -0.05716048032045364,
+      "reservoir": {
+        "support": 4119,
+        "positives": 67,
+        "precision": 0.01626608400097111,
+        "wilson95_lcb": 0.012829317013529287,
+        "coverage": 0.05000910580950647
+      },
+      "fit": {
+        "support": 4119,
+        "positives": 67,
+        "precision": 0.01626608400097111,
+        "wilson95_lcb": 0.012829317013529287,
+        "coverage": 0.05000910580950647
+      },
+      "calibration": {
+        "support": 2534,
+        "positives": 4,
+        "precision": 0.0015785319652722968,
+        "wilson95_lcb": 0.0006140261576852066,
+        "coverage": 0.05073174638130894
+      },
+      "test": {
+        "support": 7485,
+        "positives": 8,
+        "precision": 0.0010688042752171009,
+        "wilson95_lcb": 0.000541685784944106,
+        "coverage": 0.11640927541641394
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 6,
+      "rule": "pre_60h_volume <= -0.0571731324494",
+      "feature": "pre_60h_volume",
+      "direction": "le",
+      "threshold": -0.05717313244938851,
+      "reservoir": {
+        "support": 1648,
+        "positives": 38,
+        "precision": 0.023058252427184466,
+        "wilson95_lcb": 0.016845036418740963,
+        "coverage": 0.020008498755539367
+      },
+      "fit": {
+        "support": 1648,
+        "positives": 38,
+        "precision": 0.023058252427184466,
+        "wilson95_lcb": 0.016845036418740963,
+        "coverage": 0.020008498755539367
+      },
+      "calibration": {
+        "support": 1355,
+        "positives": 2,
+        "precision": 0.0014760147601476014,
+        "wilson95_lcb": 0.00040486985088638487,
+        "coverage": 0.0271276702236281
+      },
+      "test": {
+        "support": 3834,
+        "positives": 8,
+        "precision": 0.0020865936358894104,
+        "wilson95_lcb": 0.0010576952010903215,
+        "coverage": 0.05962767694676434
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 91,
+      "rule": "pre_48h_volume <= -0.0834888070822",
+      "feature": "pre_48h_volume",
+      "direction": "le",
+      "threshold": -0.08348880708217621,
+      "reservoir": {
+        "support": 413,
+        "positives": 8,
+        "precision": 0.01937046004842615,
+        "wilson95_lcb": 0.009847275466042475,
+        "coverage": 0.005014265768226795
+      },
+      "fit": {
+        "support": 413,
+        "positives": 8,
+        "precision": 0.01937046004842615,
+        "wilson95_lcb": 0.009847275466042475,
+        "coverage": 0.005014265768226795
+      },
+      "calibration": {
+        "support": 826,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.016536867604957057
+      },
+      "test": {
+        "support": 2040,
+        "positives": 8,
+        "precision": 0.00392156862745098,
+        "wilson95_lcb": 0.0019884511304278235,
+        "coverage": 0.03172677646619699
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 29,
+      "rule": "pre_48h_volume <= -0.0834847912192",
+      "feature": "pre_48h_volume",
+      "direction": "le",
+      "threshold": -0.08348479121923447,
+      "reservoir": {
+        "support": 827,
+        "positives": 16,
+        "precision": 0.019347037484885126,
+        "wilson95_lcb": 0.01194333355340223,
+        "coverage": 0.010040672615795544
+      },
+      "fit": {
+        "support": 827,
+        "positives": 16,
+        "precision": 0.019347037484885126,
+        "wilson95_lcb": 0.01194333355340223,
+        "coverage": 0.010040672615795544
+      },
+      "calibration": {
+        "support": 1142,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.022863320586998737
+      },
+      "test": {
+        "support": 3158,
+        "positives": 8,
+        "precision": 0.00253324889170361,
+        "wilson95_lcb": 0.0012842002266502904,
+        "coverage": 0.04911429415698534
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 11,
+      "rule": "pre_6h_volume <= -0.0892062038183",
+      "feature": "pre_6h_volume",
+      "direction": "le",
+      "threshold": -0.08920620381832123,
+      "reservoir": {
+        "support": 826,
+        "positives": 18,
+        "precision": 0.021791767554479417,
+        "wilson95_lcb": 0.013828064109944666,
+        "coverage": 0.01002853153645359
+      },
+      "fit": {
+        "support": 826,
+        "positives": 18,
+        "precision": 0.021791767554479417,
+        "wilson95_lcb": 0.013828064109944666,
+        "coverage": 0.01002853153645359
+      },
+      "calibration": {
+        "support": 1200,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.024024504995094998
+      },
+      "test": {
+        "support": 3170,
+        "positives": 1,
+        "precision": 0.0003154574132492114,
+        "wilson95_lcb": 5.568815005474839e-05,
+        "coverage": 0.04930092225384532
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 24,
+      "rule": "pre_60h_volume_quote <= -0.160499200225",
+      "feature": "pre_60h_volume_quote",
+      "direction": "le",
+      "threshold": -0.1604992002248764,
+      "reservoir": {
+        "support": 1653,
+        "positives": 29,
+        "precision": 0.017543859649122806,
+        "wilson95_lcb": 0.012242654662614642,
+        "coverage": 0.020069204152249134
+      },
+      "fit": {
+        "support": 1653,
+        "positives": 29,
+        "precision": 0.017543859649122806,
+        "wilson95_lcb": 0.012242654662614642,
+        "coverage": 0.020069204152249134
+      },
+      "calibration": {
+        "support": 284,
+        "positives": 3,
+        "precision": 0.01056338028169014,
+        "wilson95_lcb": 0.003598882064227182,
+        "coverage": 0.005685799515505816
+      },
+      "test": {
+        "support": 459,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.007138524704894322
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 59,
+      "rule": "pre_3d_volume_usd <= -0.151103556752",
+      "feature": "pre_3d_volume_usd",
+      "direction": "le",
+      "threshold": -0.15110355675220488,
+      "reservoir": {
+        "support": 1648,
+        "positives": 25,
+        "precision": 0.01516990291262136,
+        "wilson95_lcb": 0.010296186007102309,
+        "coverage": 0.020008498755539367
+      },
+      "fit": {
+        "support": 1648,
+        "positives": 25,
+        "precision": 0.01516990291262136,
+        "wilson95_lcb": 0.010296186007102309,
+        "coverage": 0.020008498755539367
+      },
+      "calibration": {
+        "support": 577,
+        "positives": 1,
+        "precision": 0.0017331022530329288,
+        "wilson95_lcb": 0.0003060006424989561,
+        "coverage": 0.011551782818474843
+      },
+      "test": {
+        "support": 403,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.006267593586214404
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 25,
+      "rule": "pre_3d_alexa_index >= 7.16581678391",
+      "feature": "pre_3d_alexa_index",
+      "direction": "ge",
+      "threshold": 7.165816783905029,
+      "reservoir": {
+        "support": 449,
+        "positives": 10,
+        "precision": 0.022271714922048998,
+        "wilson95_lcb": 0.012141668432280268,
+        "coverage": 0.005451344624537121
+      },
+      "fit": {
+        "support": 449,
+        "positives": 10,
+        "precision": 0.022271714922048998,
+        "wilson95_lcb": 0.012141668432280268,
+        "coverage": 0.005451344624537121
+      },
+      "calibration": {
+        "support": 123,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.002462511761997237
+      },
+      "test": {
+        "support": 205,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.003188229988024697
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 120,
+      "rule": "pre_3h_volume >= 7.81811833191",
+      "feature": "pre_3h_volume",
+      "direction": "ge",
+      "threshold": 7.818118331909142,
+      "reservoir": {
+        "support": 165,
+        "positives": 4,
+        "precision": 0.024242424242424242,
+        "wilson95_lcb": 0.009466869080261892,
+        "coverage": 0.0020032780914223274
+      },
+      "fit": {
+        "support": 165,
+        "positives": 4,
+        "precision": 0.024242424242424242,
+        "wilson95_lcb": 0.009466869080261892,
+        "coverage": 0.0020032780914223274
+      },
+      "calibration": {
+        "support": 46,
+        "positives": 1,
+        "precision": 0.021739130434782608,
+        "wilson95_lcb": 0.003847854258050289,
+        "coverage": 0.0009209393581453082
+      },
+      "test": {
+        "support": 10,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.00015552341404998524
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    },
+    {
+      "gate": "reservoir_selected_single_feature_threshold",
+      "rank": 1,
+      "rule": "pre_3d_alexa_index >= 14.9228305817",
+      "feature": "pre_3d_alexa_index",
+      "direction": "ge",
+      "threshold": 14.922830581665039,
+      "reservoir": {
+        "support": 168,
+        "positives": 9,
+        "precision": 0.05357142857142857,
+        "wilson95_lcb": 0.02843692682778746,
+        "coverage": 0.002039701329448188
+      },
+      "fit": {
+        "support": 168,
+        "positives": 9,
+        "precision": 0.05357142857142857,
+        "wilson95_lcb": 0.02843692682778746,
+        "coverage": 0.002039701329448188
+      },
+      "calibration": {
+        "support": 0,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.0
+      },
+      "test": {
+        "support": 0,
+        "positives": 0,
+        "precision": 0.0,
+        "wilson95_lcb": 0.0,
+        "coverage": 0.0
+      },
+      "accepted_95": false,
+      "blocker": "fit_calibration_or_test_wilson_support_or_coverage_below_gate"
+    }
+  ],
+  "decision": {
+    "board_state": "blocked",
+    "active_axis": "MainRegimeV3",
+    "candidate_regime": "Manipulation",
+    "accepted_95": false,
+    "accepted_gates": [],
+    "manipulation_input_state": "direct_event_aligned_target_coin_samples_below_95",
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "trade_usable": false,
+    "gate": "blocked_bayi_hu_aligned_market_features_below_95",
+    "blocker": "Bayi-Hu aligned target-coin samples are direct event-aligned manipulation evidence, but the bounded streaming scalar target-feature gate did not pass unchanged 95% Wilson lower bounds with support and 3% coverage floors on calibration and official test.",
+    "next_action": "Materialize the full MainRegimeV3 schema/crosswalk and rerun unchanged 95% chronological root gates for BullExpansion, BearExpansion, SidewaysConsolidation, CrisisStress, and Manipulation; for Manipulation, the next non-proxy slice should use a sequence/ranking gate over coin_id_seq and feature_seq rather than only scalar target features."
+  },
+  "elapsed_seconds": 137.338
+}

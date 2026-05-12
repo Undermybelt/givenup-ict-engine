@@ -1,0 +1,58 @@
+{
+  "run_id": "20260512T030217+0800-codex-ictscripts-cycle-catalog-nonqualifying-source-screen-v1",
+  "gate_result": "ictscripts_cycle_catalog_nonqualifying_source_screen_v1=proxy_guidance_and_session_overlay_only_no_promotion",
+  "source_root": "/Users/thrill3r/Downloads/ictscripts",
+  "raw_source_committed": false,
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "inputs_screened": [
+    {
+      "path": "/Users/thrill3r/Downloads/ictscripts/270m Session Cycles.TXT",
+      "sha256": "675f5729ed2db18f691cef9782f518f15383fd383fcace0c6ed2fc4f03a09c3e",
+      "line_count": 151,
+      "classification": "tradingview_pine_session_overlay",
+      "observed_logic": [
+        "fixed input.session windows",
+        "chart time membership",
+        "session high low range boxes",
+        "session labels"
+      ],
+      "source_owned_labels": false,
+      "r6_owner_controls": false,
+      "direct_manipulation_positive_negative_controls": false
+    },
+    {
+      "path": "/Users/thrill3r/Downloads/ictscripts/ict_concepts_catalog.json",
+      "sha256": "73fe85f8ac4c555ea640a27e9f6120afed05e45dd9767d480c9ef20a9f303a5f",
+      "line_count": 1753,
+      "classification": "local_concept_factor_guidance_catalog",
+      "catalog_file_count": 27,
+      "catalog_concept_count": 25,
+      "catalog_declared_source_root": "/Users/thrill3r/Downloads/scripts",
+      "noted_declared_source_root_mismatch": true,
+      "observed_relevant_concepts": [
+        "market_regime",
+        "power_of_three"
+      ],
+      "source_owned_labels": false,
+      "r6_owner_controls": false,
+      "direct_manipulation_positive_negative_controls": false
+    }
+  ],
+  "already_registered_reference": {
+    "run_id": "20260511T085659+0800-codex-local-pine-regime-detector-audit",
+    "path": "/Users/thrill3r/Downloads/ictscripts/ICT Market Regime Detector",
+    "decision": "blocked_local_pine_indicator_is_proxy_logic_not_source_labels"
+  },
+  "board_a_decision": {
+    "accepted_rows_added": 0,
+    "new_confidence_gate": false,
+    "canonical_merge_allowed": false,
+    "downstream_rerun_allowed": false,
+    "strict_objective_achieved": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "reason": "The cycle script is a fixed-session range overlay and the catalog is guidance/factor-schema material. Neither input provides owner/operator exports, normal controls, explicit FLIP control approval, source-owned MainRegimeV2 labels, or direct Manipulation positive/negative control windows.",
+  "next_action": "Continue only from owner/operator R6 export delivery, explicit FLIP approval, or genuinely source-owned cross-timeframe MainRegimeV2 labels before canonical merge and downstream promotion."
+}

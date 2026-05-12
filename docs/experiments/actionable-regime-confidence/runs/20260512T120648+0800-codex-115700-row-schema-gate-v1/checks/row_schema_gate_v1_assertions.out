@@ -1,0 +1,14 @@
+PASS run_id=20260512T120648+0800-codex-115700-row-schema-gate-v1
+PASS total_rows=237
+FAIL_CLOSED market_factor_trainable_rows=0
+PASS rejected_rows=237
+FAIL_CLOSED stale_or_wrong_auto_quant_run_id_rows=237
+FAIL_CLOSED missing_provider_provenance_rows=237
+FAIL_CLOSED missing_pre_bayes_filter_state_rows=237
+FAIL_CLOSED missing_bbn_posterior_rows=237
+FAIL_CLOSED missing_catboost_path_ranker_label_rows=237
+FAIL_CLOSED missing_execution_tree_decision_rows=237
+PASS evidence_class=infrastructure_repair_candidate_plus_chain_contract_negative_sample
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

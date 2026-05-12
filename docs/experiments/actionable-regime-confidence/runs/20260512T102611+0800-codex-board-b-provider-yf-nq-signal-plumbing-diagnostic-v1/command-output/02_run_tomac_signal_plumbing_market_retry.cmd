@@ -1,0 +1,1 @@
+/Users/thrill3r/Auto-Quant/.venv/bin/python docs/experiments/actionable-regime-confidence/runs/20260512T102611+0800-codex-board-b-provider-yf-nq-signal-plumbing-diagnostic-v1/workspace/auto-quant-yf-nq-signal-plumbing-diagnostic/run_tomac.py # after entry_pricing.price_side=other

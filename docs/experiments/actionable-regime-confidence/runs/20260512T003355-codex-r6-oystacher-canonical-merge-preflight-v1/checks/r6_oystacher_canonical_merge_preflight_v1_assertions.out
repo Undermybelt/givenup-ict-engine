@@ -1,0 +1,15 @@
+isolated_verifier_returncode=0
+isolated_verifier_status=schema_ready_unscored
+technical_preflight_pass=True
+all_split_axes_pass=True
+min_split_wilson95_lcb=0.95771100465
+source_policy_gate=False
+canonical_merge_allowed=False
+owner_target_exists=False
+owner_target_mutated=false
+shared_intake_mutated=false
+accepted_rows_added=0
+new_confidence_gate=false
+strict_full_objective_achieved=false
+update_goal=false
+assertion_status=PASS

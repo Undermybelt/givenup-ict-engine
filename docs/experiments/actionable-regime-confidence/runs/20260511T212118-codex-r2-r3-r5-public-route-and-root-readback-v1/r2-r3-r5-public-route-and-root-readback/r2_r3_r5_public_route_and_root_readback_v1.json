@@ -1,0 +1,276 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_run": "799a2dc249db1f820f8a6296e2e61fe1a72c7df3c88bab700668b39c6101a790",
+  "checklist": [
+    {
+      "evidence": "verifier=blocked; exact_hits=0",
+      "gap": "source_label_equivalence_rows.csv and source_label_equivalence_provenance.json absent",
+      "id": "R2_R4_source_label_equivalence",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "native root not ready",
+      "gap": "native_subhour_source_label_rows.csv and native_subhour_source_label_provenance.json absent",
+      "id": "R3_native_subhour",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "verifier=blocked; VantMacro=public_route_still_found_no_board_required_row_export",
+      "gap": "stock_market_regimes_2026_extension.csv and source_panel_recency_provenance.json absent",
+      "id": "R5_recency_extension",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "direct=32/32; sampled_complete=4",
+      "gap": "R6 still lacks support, Wilson95 >=0.95, broad normal sample, and direct species coverage",
+      "id": "R6_coordination",
+      "status": "still_blocked"
+    }
+  ],
+  "created_at_utc": "2026-05-11T13:22:48.607855+00:00",
+  "current_cursor": {
+    "accepted_gate": "r6_shak_duplicate_row_cleanup_v1=`duplicate_rows_removed_calibration_still_blocked`; r6_shak_cftc_row_uplift_v1=`duplicate_inflated_superseded_by_cleanup`; r6_cftc_vorley_chanu_calibration_gate_v3=`schema_ready_but_calibration_blocked`; current_goal_completion_audit_v41=`post_source_gap_still_blocked`; current_goal_completion_audit_v40=`live_direct_9x9_schema_ready_calibration_blocked`; r6_current_live_intake_calibration_readback_v1=`schema_ready_but_calibration_blocked`; r6_mohan_complaint_expansion_gate_v1=`schema_ready_but_calibration_blocked`; r6_mohan_additional_row_uplift_v1=`direct_intake_rows_uplifted_schema_ready_calibration_still_blocked`; full_objective_gate=`none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal`",
+    "active_market_set": "R6 direct Manipulation row cleanup after the `211628` Shak duplicate-inflated slice; the direct intake root is schema-ready with seventeen dates, ten symbols, and five venues, but support/Wilson95/broad-normal/direct-species gates still fail, while R2/R3/R4/R5 remain row-unacquired.",
+    "active_timeframes": "R6 public CFTC event timestamps are schema-ready only after duplicate cleanup; chronological split `true`, heldout symbol/venue `true`, support `32/32` versus required `50/50`, Wilson95 min LCB `0.892821`; R3 native sub-hour, R4 strict `1h`, and R5 recency extension remain explicit blockers.",
+    "blocker": "R6 direct root is schema-ready but still fails calibration after duplicate cleanup: thirty-two CFTC positives and thirty-two same-source controls, chronological split true, heldout symbol/venue true, Wilson95 min LCB `0.892821`, support below `50/50`, Wilson95 below `0.95`, no broad normal sample, and direct species coverage still limited; broader direct Manipulation species are not complete, and R2/R3/R4/R5 source-owned/provenance files remain absent.",
+    "board_state": "blocked",
+    "candidate_regime": "Strict Board A objective across active lanes: scoped `>=95%` evidence persists; R6 spoofing/layering has public regulator schema-ready seeds and now passes chronological plus heldout-symbol/venue checks, but fails support/Wilson95/broad-normal/direct-species gates; broader direct species remain absent, and R2/R3/R4/R5 still lack source-owned rows/provenance.",
+    "confidence_lane": "`blocked` for strict full objective; prior scoped active-lane `95` evidence remains preserved.",
+    "current_run_root": "`docs/experiments/actionable-regime-confidence/runs/20260511T212004-codex-r6-shak-duplicate-row-cleanup-v1`",
+    "last_loop_id": "20260511T212004+0800-codex-r6-shak-duplicate-row-cleanup-v1",
+    "next_action": "For R6, acquire additional source-owned/owner-approved positive and broad same-schema normal-control rows across more symbols/venues/periods/direct species until chronological + heldout-symbol/venue Wilson95 `>=0.95` can pass; for R2/R3/R4/R5, populate the existing fail-closed roots with required source-owned/provenance files, then rerun the relevant verifiers before another completion audit.",
+    "provider_status": "After duplicate cleanup: direct files `3/3` are present and verifier returns `schema_ready_unscored`; positive rows `32`, matched negative rows `32`, unique dates `17`, symbols `10`, venues `5`, chronological split `true`, heldout symbol/venue `true`, Wilson95 min LCB `0.892821`, broad normal sample `false`, direct species coverage still limited, and ready intake roots `1/4`; the cleanup removed only this agent's five duplicate Shak rows from the `211628` slice and preserved concurrent agent rows."
+  },
+  "decision": "r2_r3_r5_public_route_and_root_readback_v1=rows_not_acquired_blocked",
+  "exact_required_file_hits": [],
+  "external_requests_sent": false,
+  "intake_roots": [
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "file_hashes": "{}",
+      "id": "source_label_equivalence",
+      "missing_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "source_label_equivalence_rows.csv;source_label_equivalence_provenance.json",
+      "requirements": "R2;R4",
+      "root": "/tmp/ict-engine-source-label-equivalence-intake"
+    },
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "file_hashes": "{}",
+      "id": "native_subhour_source_label",
+      "missing_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "native_subhour_source_label_rows.csv;native_subhour_source_label_provenance.json",
+      "requirements": "R3",
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "csv_row_counts": "{}",
+      "exists": false,
+      "file_hashes": "{}",
+      "id": "source_panel_recency_extension",
+      "missing_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "present_files": "",
+      "ready": false,
+      "required_files": "stock_market_regimes_2026_extension.csv;source_panel_recency_provenance.json",
+      "requirements": "R5",
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    },
+    {
+      "csv_row_counts": "{\"matched_negative_normal_activity_rows.csv\": 32, \"positive_spoofing_layering_rows.csv\": 32}",
+      "exists": true,
+      "file_hashes": "{\"matched_negative_normal_activity_rows.csv\": \"34559491aab50037fd86f65e5abe87bcec89e7f1aa7d98e4c150201f99065a35\", \"positive_spoofing_layering_rows.csv\": \"4f747d620eedbadd4703c1fcb8715bff3241927731a7f54309ddf1ec8bfc906f\", \"provenance_manifest.json\": \"470449d5c3d711494ca6af6219c3132f333f0156f78cd29327e5a3ad5b720e01\"}",
+      "id": "direct_manipulation_row_intake",
+      "missing_files": "",
+      "present_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "ready": true,
+      "required_files": "positive_spoofing_layering_rows.csv;matched_negative_normal_activity_rows.csv;provenance_manifest.json",
+      "requirements": "R6",
+      "root": "/tmp/ict-engine-direct-manipulation-row-intake"
+    }
+  ],
+  "new_confidence_gate": false,
+  "sampled_concurrent_artifacts": [
+    {
+      "assertion_count": 1,
+      "file_count": 8,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260511T211201-codex-r6-mohan-shak-row-uplift-v1",
+      "state": "artifact_complete_sampled"
+    },
+    {
+      "assertion_count": 1,
+      "file_count": 13,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260511T211552-codex-current-goal-completion-audit-v41-post-source-gap",
+      "state": "artifact_complete_sampled"
+    },
+    {
+      "assertion_count": 1,
+      "file_count": 7,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260511T211606-codex-r6-shak-complaint-row-uplift-gate-v1",
+      "state": "artifact_complete_sampled"
+    },
+    {
+      "assertion_count": 1,
+      "file_count": 8,
+      "json_count": 1,
+      "report_count": 1,
+      "run_id": "20260511T211628-codex-r6-shak-cftc-row-uplift-v1",
+      "state": "artifact_complete_sampled"
+    }
+  ],
+  "public_route_probe": {
+    "bytes": 131928,
+    "disposition": "public_route_still_found_no_board_required_row_export",
+    "has_board_required_row_export": false,
+    "intake_files_created": false,
+    "markers": {
+      "api": true,
+      "csv": false,
+      "daily": true,
+      "dashboard": true,
+      "download": true,
+      "regime": true,
+      "signin_or_paywall": true,
+      "weekly": true
+    },
+    "raw_committed_to_repo": false,
+    "raw_path": "/tmp/ict-engine-r2-r3-r5-public-route-readback-v1/vantmacro_home.html",
+    "returncode": 0,
+    "script_path_sample": [
+      "/_next/static/chunks/08ea6ab923aa629e.js",
+      "/_next/static/chunks/141610bbab69d135.js",
+      "/_next/static/chunks/2974f50810e8448f.js",
+      "/_next/static/chunks/351af5f2c46c9d2c.js",
+      "/_next/static/chunks/44ed4b3a6a772dc5.js",
+      "/_next/static/chunks/49afa4a751fc120e.js",
+      "/_next/static/chunks/64df2b54f1c0f26d.js",
+      "/_next/static/chunks/909d9737bf84d874.js",
+      "/_next/static/chunks/95f518fc233f989e.js",
+      "/_next/static/chunks/a404237d59c2e0dd.js",
+      "/_next/static/chunks/a6dad97d9634a72d.js",
+      "/_next/static/chunks/aed8350221b59ebe.js",
+      "/_next/static/chunks/c215eb4a2c8d7296.js",
+      "/_next/static/chunks/turbopack-5a9705a8d771601c.js",
+      "/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ],
+    "sha256": "dec2abd87c58ebdeb96b9e1b6bb8df50de4bf4109cec8791dd15a40abb862304",
+    "source_owned_rows_acquired": false,
+    "url": "https://vantmacro.com/"
+  },
+  "raw_data_committed": false,
+  "ready_intake_roots": 1,
+  "run_id": "20260511T212118-codex-r2-r3-r5-public-route-and-root-readback-v1",
+  "runtime_code_changed": false,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "verifiers": [
+    {
+      "command": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T182922-codex-source-label-equivalence-intake-verifier-v1/equivalence-intake-verifier/source_label_equivalence_intake_verifier_v1.py --intake-root /tmp/ict-engine-source-label-equivalence-intake",
+      "id": "source_label_equivalence_verifier",
+      "payload": {
+        "missing_files": [
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_rows.csv",
+          "/tmp/ict-engine-source-label-equivalence-intake/source_label_equivalence_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "status": "blocked",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212118-codex-r2-r3-r5-public-route-and-root-readback-v1/command-output/source_label_equivalence_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212118-codex-r2-r3-r5-public-route-and-root-readback-v1/command-output/source_label_equivalence_verifier.stdout.txt"
+    },
+    {
+      "command": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T165405-codex-source-panel-recency-extension-manifest-v1/source-panel-recency/source_panel_recency_extension_verifier_v1.py --intake-root /tmp/ict-engine-source-panel-recency-extension",
+      "id": "source_panel_recency_verifier",
+      "payload": {
+        "missing_files": [
+          "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+          "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+        ],
+        "reason": "missing_required_files",
+        "status": "blocked"
+      },
+      "returncode": 2,
+      "status": "blocked",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212118-codex-r2-r3-r5-public-route-and-root-readback-v1/command-output/source_panel_recency_verifier.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212118-codex-r2-r3-r5-public-route-and-root-readback-v1/command-output/source_panel_recency_verifier.stdout.txt"
+    },
+    {
+      "command": "python3 /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+      "id": "direct_manipulation_verifier_coordination_only",
+      "payload": {
+        "matched_group_count": 31,
+        "matched_negative_rows": 32,
+        "next": "run chronological and heldout-symbol/venue Wilson95 calibration gate",
+        "positive_rows": 32,
+        "provenance_keys": [
+          "cftc_gandhi_order",
+          "cftc_genuine_order_text_checks",
+          "cftc_genuine_order_text_status",
+          "cftc_mohan_additional_examples",
+          "cftc_mohan_complaint",
+          "cftc_mohan_complaint_rows_added",
+          "cftc_mohan_complaint_text_checks",
+          "cftc_order",
+          "cftc_shak_complaint",
+          "cftc_shak_complaint_examples",
+          "cftc_shak_rows_added",
+          "cftc_text_checks",
+          "cftc_text_extraction_status",
+          "cftc_vorley_chanu_complaint",
+          "created_at_utc",
+          "finra_public_schema",
+          "gandhi_matched_negative_rows_added",
+          "gandhi_positive_rows_added",
+          "gandhi_rows_materialized_at_utc",
+          "license_or_permission",
+          "matched_control_limitations",
+          "matched_control_policy",
+          "matched_negative_control_policy",
+          "matched_negative_materialized_at_utc",
+          "matched_negative_rows_acquired",
+          "matched_negative_rows_count",
+          "matched_negative_rows_path",
+          "matched_negative_rows_sha256",
+          "mohan_additional_matched_negative_rows_added",
+          "mohan_additional_positive_rows_added",
+          "mohan_additional_rows_materialized_at_utc",
+          "mohan_complaint_control_policy",
+          "positive_rows_count",
+          "positive_rows_path",
+          "positive_rows_sha256",
+          "r6_mohan_shak_row_uplift_v1",
+          "r6_shak_duplicate_row_cleanup_v1",
+          "shak_complaint_matched_negative_rows_added",
+          "shak_complaint_positive_rows_added",
+          "shak_complaint_rows_materialized_at_utc",
+          "source",
+          "updated_at_utc",
+          "updated_by",
+          "vorley_chanu_matched_negative_rows_added",
+          "vorley_chanu_positive_rows_added",
+          "vorley_chanu_rows_materialized_at_utc"
+        ],
+        "status": "schema_ready_unscored"
+      },
+      "returncode": 0,
+      "status": "schema_ready_unscored",
+      "stderr_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212118-codex-r2-r3-r5-public-route-and-root-readback-v1/command-output/direct_manipulation_verifier_coordination_only.stderr.txt",
+      "stdout_file": "docs/experiments/actionable-regime-confidence/runs/20260511T212118-codex-r2-r3-r5-public-route-and-root-readback-v1/command-output/direct_manipulation_verifier_coordination_only.stdout.txt"
+    }
+  ]
+}

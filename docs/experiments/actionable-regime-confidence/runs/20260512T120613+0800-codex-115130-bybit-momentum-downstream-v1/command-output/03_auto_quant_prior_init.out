@@ -1,0 +1,71 @@
+{
+  "bbn_contradiction_lift": 0.9523453333333332,
+  "bbn_entropy_reduction": 0.0,
+  "bbn_log_loss_delta": 5.605835379399025,
+  "command": "auto-quant-prior-init",
+  "cross_library_apply": null,
+  "dry_run": false,
+  "evidence_value_gate_passed": true,
+  "existing_apply_artifact_id": null,
+  "final_probs": [
+    0.5238011428571429,
+    4.19047619047619e-6,
+    0.47619466666666665
+  ],
+  "force": false,
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "library_artifact_id": "auto_quant_strategy_library_B2R_115130_BYBIT_BTC_MOMENTUM_20260512T040928.232627000Z",
+  "library_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/115130-bybit-momentum-downstream-v1/115130_bybit_momentum_strategy_library_v1.json",
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "prior_init_artifact_id": "auto_quant_prior_init_B2R_115130_BYBIT_BTC_MOMENTUM_20260512T040928.255696000Z",
+  "prior_init_history_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/state_115130_bybit_momentum_downstream_v1/auto-quant/B2R_115130_BYBIT_BTC_MOMENTUM/auto_quant_prior_init_history.json",
+  "prior_init_state_path": "docs/experiments/actionable-regime-confidence/runs/20260512T120613+0800-codex-115130-bybit-momentum-downstream-v1/state_115130_bybit_momentum_downstream_v1/auto-quant/B2R_115130_BYBIT_BTC_MOMENTUM/auto_quant_prior_init_B2R_115130_BYBIT_BTC_MOMENTUM_20260512T040928.255696000Z.json",
+  "prior_strength": 4.0,
+  "strategies_applied": [
+    {
+      "after_probs": [
+        0.5238011428571429,
+        4.19047619047619e-6,
+        0.47619466666666665
+      ],
+      "bbn_contradiction_after": 0.22408125490196085,
+      "bbn_contradiction_before": 1.176426588235294,
+      "bbn_contradiction_lift": 0.9523453333333332,
+      "bbn_entropy_after": 0.6920667343353999,
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_after": 0.702693388414844,
+      "bbn_log_loss_before": 6.308528767813869,
+      "bbn_log_loss_delta": 5.605835379399025,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "diff": [
+        -0.4761548571428571,
+        -0.00001780952380952381,
+        0.47617266666666663
+      ],
+      "evidence_value_gate_passed": true,
+      "mutation_id": "provider-owned-115130-bybit-btc-momentum-state-v1",
+      "n_breakeven": 0,
+      "n_loss": 20,
+      "n_win": 14,
+      "strategy_name": "ProviderCryptoMomentumStateV1",
+      "temper": 0.5,
+      "trade_count": 34
+    }
+  ],
+  "strategies_skipped": [],
+  "symbol": "B2R_115130_BYBIT_BTC_MOMENTUM",
+  "temper": 0.5
+}

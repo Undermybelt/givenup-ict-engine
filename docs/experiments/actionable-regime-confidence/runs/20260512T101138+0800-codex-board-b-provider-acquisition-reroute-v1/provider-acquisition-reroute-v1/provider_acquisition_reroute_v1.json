@@ -1,0 +1,37 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T101138+0800-codex-board-b-provider-acquisition-reroute-v1",
+  "gate": "provider_acquisition_only:not_profitability_evidence",
+  "aq_provider_invoked": "false_provider_acquisition_slice",
+  "provider_requested": [
+    "yfinance",
+    "TradingViewMCP",
+    "IBKR",
+    "Kraken",
+    "Bybit",
+    "Binance"
+  ],
+  "provider_data_acquired": {
+    "yfinance_QQQ_1d_rows": 21,
+    "ibkr_QQQ_1d_rows": 21,
+    "kraken_XBTUSD_1h_rows": 721,
+    "bybit_BTCUSDT_linear_1h_rows": 985,
+    "binance_BTCUSDT_1h_rows": 985
+  },
+  "provider_unreachable": {
+    "tradingview_mcp": "get_ohlcv_failed",
+    "ibkr_default_harness": "missing_default_runtime_redis_dependency"
+  },
+  "provider_recovered_with_uv": {
+    "ibkr": true,
+    "kraken_public": true,
+    "bybit_public": true,
+    "binance_public": true
+  },
+  "local_cache_replay": false,
+  "auto_quant_training_run": false,
+  "downstream_promotion_run": false,
+  "selected_history_approval": false,
+  "source_control_evidence_acquired": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

@@ -1,0 +1,14 @@
+requirement,status,evidence,decision
+board_file_named,satisfied,docs/plans/2026-05-10-actionable-regime-confidence-todo.md,Same board updated append-only.
+each_regime_confidence_95,diagnostic_only,20260512T053852-codex-hgb-per-regime-field-materialization-v1;20260512T055058-codex-hgb-aggregate-field-readback-v1,All four active MainRegimeV2 roots exceed 95 percent diagnostically but source/control evidence is absent.
+other_market_validation,diagnostic_only,20260512T053852-codex-hgb-per-regime-field-materialization-v1,Diagnostic instruments and contexts exist but are not promoted source/control evidence.
+other_cycle_timeframe_validation,missing,20260512T055011-codex-r3-subhour-runtime-completion-audit-v1;20260512T055658+0800-codex-r3-r5-public-source-live-search-durable-v1,Native sub-hour source-label rows are absent.
+multi_agent_no_disruption,partial,append-only board sections and count-once reconciliations,Concurrent duplicate placements were reconciled without rewriting prior sections.
+real_provider_ibkr_yf_kraken,partial_non_promoting,20260512T055129-codex-054718-provider-autoquant-rerun-correction-v1,IBKR AAPL 1h Kraken PF_XBTUSD 1h and yfinance QQQ 1h bars exist under /tmp only.
+tradingviewremix_surface,blocked_or_unhealthy,20260512T054116-codex-readonly-runtime-chain-after-053933-v1,Runtime readback remains callable-surface evidence only and not source/control evidence.
+autoquant,partial_non_promoting,20260512T055200-codex-autoquant-local-reuse-readiness-after-054116-v1,Bootstrap succeeded but prepare failed and data_ready=false.
+filter_prebayes_bbn_catboost_execution_tree,blocked,20260512T054116-codex-readonly-runtime-chain-after-053933-v1,Callable readback only; no source-unlocked downstream promotion rerun.
+r6_owner_export_or_approval,missing,20260512T055516-codex-r6-owner-export-dispatch-feasibility-readback-v1;private tmp approval package,Drafts parse but were not sent and approval_present=false.
+r3_r5_source_rows,missing,20260512T055103;20260512T055116;20260512T055658,Searches found no exact source-owned rows.
+required_target_roots,missing,/tmp/ict-engine-board-a-r6-owner-export-v1;/tmp/ict-engine-native-subhour-source-label-intake;/tmp/ict-engine-source-panel-recency-extension,All three required roots absent at audit.
+goal_complete,not_complete,current_objective_audit_after_055658_v1,Do not call update_goal.

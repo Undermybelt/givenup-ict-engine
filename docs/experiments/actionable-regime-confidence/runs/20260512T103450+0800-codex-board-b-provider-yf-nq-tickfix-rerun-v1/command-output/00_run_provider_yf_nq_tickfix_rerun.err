@@ -1,0 +1,217 @@
+2026-05-12 10:37:51,067 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:37:51,204 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:37:51,205 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:37:51,208 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data/strategies_external
+2026-05-12 10:37:51,208 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 10:37:51,209 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data ...
+2026-05-12 10:37:51,210 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data/data ...
+2026-05-12 10:37:51,210 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:37:51,212 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:37:51,238 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:37:51,239 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:37:51,241 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:37:51,241 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:37:51,372 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:37:51,373 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 10:37:51,384 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy ProviderNqAlwaysInDiagnostic from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix
+-rerun/user_data/strategies_external/ProviderNqAlwaysInDiagnostic.py'...
+2026-05-12 10:37:51,385 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 10:37:51,387 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 10:37:51,388 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'order_types' with value from the configuration: {'entry': 'market', 'exit': 'market', 'stoploss': 'market', 
+'stoploss_on_exchange': False}.
+2026-05-12 10:37:51,390 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-12 10:37:51,391 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 10:37:51,391 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 10:37:51,392 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 10:37:51,392 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 0.01, '24': 0}
+2026-05-12 10:37:51,393 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 10:37:51,393 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.02
+2026-05-12 10:37:51,394 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-12 10:37:51,394 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-12 10:37:51,395 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-12 10:37:51,395 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 10:37:51,396 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 10:37:51,396 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'market', 'exit': 'market', 'stoploss': 'market', 'stoploss_on_exchange': False}
+2026-05-12 10:37:51,397 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 10:37:51,399 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-12 10:37:51,399 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 10:37:51,400 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 1
+2026-05-12 10:37:51,400 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 10:37:51,400 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: False
+2026-05-12 10:37:51,400 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 10:37:51,401 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 10:37:51,401 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 10:37:51,402 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 10:37:51,402 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 10:37:51,402 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 10:37:51,551 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 10:37:51,554 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-rerun/run_tomac.py", line 229, in main
+    results = run_backtest(name)
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-rerun/run_tomac.py", line 164, in run_backtest
+    bt = Backtesting(config, exchange=exchange)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 164, in __init__
+    validate_config_consistency(self.config)
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 84, in validate_config_consistency
+    _validate_price_config(conf)
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 124, in _validate_price_config
+    raise ConfigurationError('Market exit orders require exit_pricing.price_side = "other".')
+freqtrade.exceptions.ConfigurationError: Market exit orders require exit_pricing.price_side = "other".
+2026-05-12 10:37:51,627 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/config.tomac.json ...
+2026-05-12 10:37:51,635 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:37:51,635 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:37:51,636 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:37:51,636 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data/strategies_external
+2026-05-12 10:37:51,636 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 10:37:51,637 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data ...
+2026-05-12 10:37:51,642 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data/data ...
+2026-05-12 10:37:51,644 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:37:51,644 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:37:51,794 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:37:51,801 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:37:51,802 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:37:51,803 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:37:52,161 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:37:52,177 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 10:37:52,307 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy ProviderNqSampledPulse from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix
+-rerun/user_data/strategies_external/ProviderNqSampledPulse.py'...
+2026-05-12 10:37:52,308 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 10:37:52,309 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 10:37:52,309 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'order_types' with value from the configuration: {'entry': 'market', 'exit': 'market', 'stoploss': 'market', 
+'stoploss_on_exchange': False}.
+2026-05-12 10:37:52,310 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-12 10:37:52,310 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 10:37:52,311 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 10:37:52,311 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 10:37:52,312 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 0.02, '24': 0.004, '72': 0}
+2026-05-12 10:37:52,314 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 10:37:52,395 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.03
+2026-05-12 10:37:52,404 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-12 10:37:52,477 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-12 10:37:52,520 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-12 10:37:52,652 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 10:37:52,653 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 10:37:52,654 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'market', 'exit': 'market', 'stoploss': 'market', 'stoploss_on_exchange': False}
+2026-05-12 10:37:52,654 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 10:37:52,654 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-12 10:37:52,655 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 10:37:52,655 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 96
+2026-05-12 10:37:52,784 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 10:37:52,808 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 10:37:52,808 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 10:37:52,882 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 10:37:52,899 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 10:37:52,909 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 10:37:52,909 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 10:37:52,910 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 10:37:52,910 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 10:37:52,910 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-rerun/run_tomac.py", line 229, in main
+    results = run_backtest(name)
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-rerun/run_tomac.py", line 164, in run_backtest
+    bt = Backtesting(config, exchange=exchange)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 164, in __init__
+    validate_config_consistency(self.config)
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 84, in validate_config_consistency
+    _validate_price_config(conf)
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 124, in _validate_price_config
+    raise ConfigurationError('Market exit orders require exit_pricing.price_side = "other".')
+freqtrade.exceptions.ConfigurationError: Market exit orders require exit_pricing.price_side = "other".
+2026-05-12 10:37:52,944 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/config.tomac.json ...
+2026-05-12 10:37:53,070 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 10:37:53,071 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 10:37:53,072 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 10:37:53,074 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data/strategies_external
+2026-05-12 10:37:53,074 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 10:37:53,075 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data ...
+2026-05-12 10:37:53,075 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-
+rerun/user_data/data ...
+2026-05-12 10:37:53,076 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 10:37:53,077 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 10:37:53,099 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 10:37:53,100 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 10:37:53,102 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 10:37:53,103 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 10:37:53,346 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 10:37:53,351 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 10:37:53,358 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy ProviderNqTrendPulse from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix
+-rerun/user_data/strategies_external/ProviderNqTrendPulse.py'...
+2026-05-12 10:37:53,361 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 10:37:53,366 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 10:37:53,367 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'order_types' with value from the configuration: {'entry': 'market', 'exit': 'market', 'stoploss': 'market', 
+'stoploss_on_exchange': False}.
+2026-05-12 10:37:53,367 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-12 10:37:53,367 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 10:37:53,368 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 10:37:53,368 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 10:37:53,368 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 0.035, '24': 0.018, '72': 0.006, '168': 0}
+2026-05-12 10:37:53,368 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 10:37:53,369 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.025
+2026-05-12 10:37:53,369 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: True
+2026-05-12 10:37:53,369 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive: 0.006
+2026-05-12 10:37:53,369 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.014
+2026-05-12 10:37:53,369 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: True
+2026-05-12 10:37:53,369 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 10:37:53,370 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 10:37:53,370 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'market', 'exit': 'market', 'stoploss': 'market', 'stoploss_on_exchange': False}
+2026-05-12 10:37:53,370 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 10:37:53,370 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-12 10:37:53,371 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 10:37:53,371 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 120
+2026-05-12 10:37:53,371 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 10:37:53,371 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 10:37:53,372 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 10:37:53,373 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 10:37:53,373 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 10:37:53,373 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 10:37:53,373 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 10:37:53,377 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 10:37:53,378 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 10:37:53,378 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-rerun/run_tomac.py", line 229, in main
+    results = run_backtest(name)
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T103450+0800-codex-board-b-provider-yf-nq-tickfix-rerun-v1/workspace/auto-quant-yf-nq-tickfix-rerun/run_tomac.py", line 164, in run_backtest
+    bt = Backtesting(config, exchange=exchange)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/optimize/backtesting.py", line 164, in __init__
+    validate_config_consistency(self.config)
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 84, in validate_config_consistency
+    _validate_price_config(conf)
+  File "/Users/thrill3r/Auto-Quant/.venv/lib/python3.11/site-packages/freqtrade/configuration/config_validation.py", line 124, in _validate_price_config
+    raise ConfigurationError('Market exit orders require exit_pricing.price_side = "other".')
+freqtrade.exceptions.ConfigurationError: Market exit orders require exit_pricing.price_side = "other".

@@ -1,0 +1,174 @@
+{
+  "run_id": "20260511T021900+0800-codex-mendeley-wash-trading-calibration-gate",
+  "dataset": {
+    "url": "https://data.mendeley.com/public-api/datasets/4hyxfwzpgg",
+    "id": "4hyxfwzpgg",
+    "doi": "10.17632/4hyxfwzpgg.3",
+    "version": 3,
+    "name": "Detecting Crypto Wash Trades via Machine Learning",
+    "license": "CC BY 4.0",
+    "size": 3497730752,
+    "fetched_at_local": "2026-05-11T02:25:20"
+  },
+  "gate_contract": {
+    "split": "row-order train 50%, calibration 25%, test 25%; acceptance only allowed when source script proves global chronological output order",
+    "rule_selection": "single-feature threshold rule selected on train split by Wilson95 lower bound",
+    "support_floor": 50,
+    "target_lcb": 0.95,
+    "target_or_future_predictors_used": false,
+    "thresholds_relaxed": false,
+    "raw_data_committed": false,
+    "tmp_root": "/tmp/ict-regime-mendeley-wash-trading"
+  },
+  "evaluations": [
+    {
+      "filename": "gox_ml_samples.csv",
+      "tmp_path": "/tmp/ict-regime-mendeley-wash-trading/gox_ml_samples.csv",
+      "tmp_size_bytes": 986063630,
+      "label": "wash",
+      "features": [
+        "bitcoins",
+        "round_level",
+        "cumu_wash_percent_opt",
+        "buyer_24h_trade_count",
+        "buyer_7d_trade_count",
+        "seller_24h_trade_count",
+        "seller_7d_trade_count",
+        "buyer_24h_btc_sum",
+        "buyer_7d_btc_sum",
+        "seller_24h_btc_sum",
+        "seller_7d_btc_sum",
+        "buyer_all_btc_sum",
+        "seller_all_btc_sum",
+        "price_deviation",
+        "time_since_last_trade",
+        "hours"
+      ],
+      "counts": {
+        "rows": 5537252,
+        "positives": 1902646,
+        "negatives": 3634606
+      },
+      "split": {
+        "train_end": 2768626,
+        "cal_end": 4152939,
+        "train_rows": 2768626,
+        "calibration_rows": 1384313,
+        "test_rows": 1384313
+      },
+      "chronology": {
+        "global_chronological_order_evidence": true,
+        "evidence": "gox_ml_sample.py sorts by `time` immediately before writing ML samples.",
+        "acceptance_allowed": true
+      },
+      "candidate_rules": 450,
+      "best_rule": {
+        "feature": "price_deviation",
+        "direction": "le",
+        "threshold": -0.2989375999999987,
+        "train": {
+          "support": 9864,
+          "positives": 9131,
+          "precision": 0.9256893755068938,
+          "wilson95_lcb": 0.9203461875496436
+        },
+        "calibration": {
+          "support": 30108,
+          "positives": 20340,
+          "precision": 0.6755679553607015,
+          "wilson95_lcb": 0.6702577003842415
+        },
+        "test": {
+          "support": 105729,
+          "positives": 28834,
+          "precision": 0.272716094921923,
+          "wilson95_lcb": 0.2700399195550654
+        }
+      },
+      "accepted_95_context": false,
+      "blocker": "calibration_or_test_wilson_below_95_or_support_below_50"
+    },
+    {
+      "filename": "LooksRare_ml_samples.csv",
+      "tmp_path": "/tmp/ict-regime-mendeley-wash-trading/LooksRare_ml_samples.csv",
+      "tmp_size_bytes": 38651230,
+      "label": "filter_1234",
+      "features": [
+        "sellerFee_amount",
+        "round_level",
+        "cumu_wash_percent_opt",
+        "buyer_24h_trade_count",
+        "buyer_7d_trade_count",
+        "seller_24h_trade_count",
+        "seller_7d_trade_count",
+        "buyer_24h_nfttrade_count",
+        "buyer_7d_nfttrade_count",
+        "seller_24h_nfttrade_count",
+        "seller_7d_nfttrade_count",
+        "buyer_nft_all_trade_count",
+        "seller_nft_all_trade_count",
+        "price_deviation",
+        "time_since_last_trade",
+        "hours"
+      ],
+      "counts": {
+        "rows": 401125,
+        "positives": 163195,
+        "negatives": 237930
+      },
+      "split": {
+        "train_end": 200562,
+        "cal_end": 300843,
+        "train_rows": 200562,
+        "calibration_rows": 100281,
+        "test_rows": 100282
+      },
+      "chronology": {
+        "global_chronological_order_evidence": false,
+        "evidence": "nft_ml_sample.py writes after sorting by `contractAddress`, `timestamp`; timestamp is omitted from public ML samples, so a global chronological split cannot be verified from the public CSV alone.",
+        "acceptance_allowed": false
+      },
+      "candidate_rules": 348,
+      "best_rule": {
+        "feature": "sellerFee_amount",
+        "direction": "ge",
+        "threshold": 4.47174e+20,
+        "train": {
+          "support": 4013,
+          "positives": 4011,
+          "precision": 0.9995016197358585,
+          "wilson95_lcb": 0.9981845390248475
+        },
+        "calibration": {
+          "support": 1446,
+          "positives": 1444,
+          "precision": 0.9986168741355463,
+          "wilson95_lcb": 0.994970890988308
+        },
+        "test": {
+          "support": 948,
+          "positives": 947,
+          "precision": 0.9989451476793249,
+          "wilson95_lcb": 0.994049223429434
+        }
+      },
+      "accepted_95_context": false,
+      "blocker": "source_order_not_global_chronological_for_public_ml_sample"
+    }
+  ],
+  "decision": {
+    "board_state": "blocked",
+    "active_axis": "MainRegimeV2",
+    "candidate_regime": "Manipulation",
+    "accepted_95": false,
+    "accepted_contexts": [],
+    "accepted_95_context_count": 0,
+    "manipulation_input_state": "raw_wash_labels_calibration_failed_or_blocked",
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "fresh_calibration_rerun": true,
+    "trade_usable": false,
+    "blocker": "No Mendeley wash-trading file produced an accepted active-root packet under the unchanged chronological 95% gate.",
+    "next_action": "Recover or stream source raw rows with timestamps for NFT marketplace samples, or run a second direct/event manipulation source so Manipulation has cross-context chronological evidence; keep Bull/Bear/Sideways on non-OHLCV signed-direction/sideways inputs."
+  }
+}

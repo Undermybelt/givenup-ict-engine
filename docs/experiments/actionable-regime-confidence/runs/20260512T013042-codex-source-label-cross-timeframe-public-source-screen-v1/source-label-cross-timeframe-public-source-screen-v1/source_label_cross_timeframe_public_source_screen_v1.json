@@ -1,0 +1,31 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before_writeback": "e95512dd313ebdffcf8c71e1554a9ef9eb32c6b2c9e1de71c1ff6088df16ac7f",
+  "canonical_merge_allowed": false,
+  "condition_input_decision": "source_label_bull_sideways_qualifying_condition_v1=conditions_drafted_cross_market_period_ok_timeframe_r6_baseline_blocked_no_acceptance",
+  "condition_input_run": "20260512T012330-codex-source-label-bull-sideways-qualifying-condition-v1",
+  "current_cursor": "20260512T010127+0800-codex-r6-owner-route-entitlement-readback-v1",
+  "decision": "source_label_cross_timeframe_public_source_screen_v1=no_ready_source_owned_cross_timeframe_labels_found",
+  "downstream_chain_rerun_allowed": false,
+  "external_web_search_sent": true,
+  "generated_at_utc": "2026-05-11T17:31:52.021579+00:00",
+  "new_confidence_gate": false,
+  "r3_native_root_present": false,
+  "r5_recency_root_present": false,
+  "r6_owner_export_root_present": false,
+  "raw_data_committed": false,
+  "raw_data_downloaded": false,
+  "ready_public_cross_timeframe_source_label_exports_found": 0,
+  "run_id": "20260512T013042-codex-source-label-cross-timeframe-public-source-screen-v1",
+  "runtime_code_changed": false,
+  "search_records": 5,
+  "shared_intake_mutated": false,
+  "strict_full_objective_achieved": false,
+  "target_labels": [
+    "Bull",
+    "Sideways"
+  ],
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

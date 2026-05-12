@@ -1,0 +1,12 @@
+PASS decision=source_acquisition_outbox_v2=r6_uplift_merged_rows_not_acquired
+PASS outbox_v1_rows_5=5
+PASS r6_candidate_surfaces_5=5
+PASS v2_outbox_rows_9=9
+PASS includes_bear_raid={'painting_tape': 3, 'bear_raid': 2}
+PASS includes_painting_tape={'painting_tape': 3, 'bear_raid': 2}
+PASS request_sent_false=False
+PASS rows_acquired_false=False
+PASS accepted_rows_added_zero=0
+PASS strict_full_objective_achieved_false=False
+PASS update_goal_false=False
+PASS raw_data_committed_false=False

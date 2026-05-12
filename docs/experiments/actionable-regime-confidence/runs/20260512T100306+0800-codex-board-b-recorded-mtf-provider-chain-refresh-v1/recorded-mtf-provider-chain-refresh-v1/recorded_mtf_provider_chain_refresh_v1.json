@@ -1,0 +1,54 @@
+{
+  "run_id": "20260512T100306+0800-codex-board-b-recorded-mtf-provider-chain-refresh-v1",
+  "mode": "incubation_only",
+  "source_nursery_packet": "20260512T092330+0800-codex-board-b-aq-first-nursery-feedback-v1",
+  "state_copy": "/tmp/ict-engine-20260512T100306-state",
+  "branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+  "provider_readback": {
+    "yfinance_live_ready": true,
+    "yfinance_market_data_ready": true,
+    "tradingview_mcp_ready": false,
+    "tradingview_mcp_reason": "tradingview_mcp_connectivity_probe_failed",
+    "ibkr_market_data_ready": false,
+    "ibkr_reason": "ibkr_runtime_dependencies_missing_with_gateway_reachable",
+    "kraken_cli_ready": true,
+    "kraken_public_ready": false
+  },
+  "pre_bayes_bbn_readback": {
+    "pre_bayes_gate": "pass_neutralized",
+    "bbn_soft_evidence_applied": true,
+    "market_regime_soft_evidence": {
+      "range": 0.65,
+      "bear": 0.175,
+      "bull": 0.175
+    },
+    "read_only_regime_bbn_trade_usable": true
+  },
+  "catboost_path_ranker_readback": {
+    "target_current_rows": 6,
+    "target_history_rows": 295,
+    "history_mature_rows": 288,
+    "trained_rows": 288,
+    "model_family": "catboost",
+    "usable_features": [
+      "structural_baseline_score"
+    ],
+    "current_score_rows": 6,
+    "crisis_branch_raw_score": 0.9336295132673809,
+    "runtime_source": "registered_artifact",
+    "score_source": "external_artifact",
+    "runtime_matches": 3
+  },
+  "execution_tree_readback": {
+    "path_preserved": true,
+    "ready": false,
+    "review_status": "observe",
+    "candidate_status": "execution_observe_only",
+    "execution_readiness": 0.4504361163104953,
+    "selected_path_probability": 0.41526935554751543,
+    "blocked_reason": "user_selected_historical_data_missing"
+  },
+  "promotion_allowed": false,
+  "update_goal": false,
+  "gate": "incubation_only:recorded_mtf_catboost_registered_artifact_observe_only"
+}

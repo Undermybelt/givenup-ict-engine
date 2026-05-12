@@ -1,0 +1,15 @@
+{
+  "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1",
+  "losses": 4,
+  "providers": [
+    "yfinance",
+    "kraken_public_ccxt",
+    "binance_public_ccxt",
+    "bybit_public_ccxt"
+  ],
+  "records": 7,
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1",
+  "symbol": "B2R_PROVIDER_LINKED_MOMENTUM_105637",
+  "total_pnl": -200.6922557,
+  "wins": 3
+}

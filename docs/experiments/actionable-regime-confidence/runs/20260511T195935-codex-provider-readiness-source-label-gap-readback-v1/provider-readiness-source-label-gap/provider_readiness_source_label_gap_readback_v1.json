@@ -1,0 +1,152 @@
+{
+  "artifact_type": "provider_readiness_source_label_gap_readback_v1",
+  "commands": [
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--compact"
+      ],
+      "name": "provider_status_compact",
+      "parsed_json_path": "",
+      "pending_providers": [],
+      "ready_providers": [],
+      "returncode": 0,
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_compact.out",
+      "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:2/7 ready"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--provider",
+        "yfinance",
+        "--agent"
+      ],
+      "name": "provider_status_yfinance_agent",
+      "parsed_json_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_yfinance_agent.json",
+      "pending_providers": [],
+      "ready_providers": [
+        "yfinance",
+        "yfinance"
+      ],
+      "returncode": 0,
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_yfinance_agent.out",
+      "summary_line": "live_runtime:1/1 ready | market_data:1/1 ready"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--provider",
+        "tradingview_mcp",
+        "--agent"
+      ],
+      "name": "provider_status_tradingview_mcp_agent",
+      "parsed_json_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_tradingview_mcp_agent.json",
+      "pending_providers": [],
+      "ready_providers": [
+        "tradingview_mcp"
+      ],
+      "returncode": 0,
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_tradingview_mcp_agent.out",
+      "summary_line": "market_data:1/1 ready"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--provider",
+        "ibkr",
+        "--agent"
+      ],
+      "name": "provider_status_ibkr_agent",
+      "parsed_json_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_ibkr_agent.json",
+      "pending_providers": [
+        "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable"
+      ],
+      "ready_providers": [],
+      "returncode": 0,
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_ibkr_agent.out",
+      "summary_line": "market_data:0/1 ready"
+    },
+    {
+      "args": [
+        "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+        "provider-status",
+        "--provider",
+        "kraken_public",
+        "--agent"
+      ],
+      "name": "provider_status_kraken_public_agent",
+      "parsed_json_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_kraken_public_agent.json",
+      "pending_providers": [
+        "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing"
+      ],
+      "ready_providers": [],
+      "returncode": 0,
+      "stdout_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T195935-codex-provider-readiness-source-label-gap-readback-v1/provider-readiness-source-label-gap/provider_status_kraken_public_agent.out",
+      "summary_line": "market_data:0/1 ready"
+    }
+  ],
+  "decision": {
+    "accepted_rows_added": 0,
+    "gate_result": "provider_readiness_source_label_gap_readback_v1=providers_checked_source_labels_still_blocked",
+    "new_confidence_gate": false,
+    "pending_by_provider": {
+      "ibkr": [
+        "ibkr@market_data:configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable"
+      ],
+      "kraken_public": [
+        "kraken_public@market_data:configured_runtime_unhealthy:python3_provider_dependencies_missing"
+      ],
+      "tradingview_mcp": [],
+      "yfinance": []
+    },
+    "provider_status_compact": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:2/7 ready",
+    "raw_data_committed": false,
+    "ready_by_provider": {
+      "ibkr": [],
+      "kraken_public": [],
+      "tradingview_mcp": [
+        "tradingview_mcp"
+      ],
+      "yfinance": [
+        "yfinance",
+        "yfinance"
+      ]
+    },
+    "runtime_code_changed": false,
+    "source_label_gap_evidence": {
+      "local_inventory_exact_intake_hits": 0,
+      "native_subhour_ready_sources": 0,
+      "strict_1h_ready_exact_target_sources": 0,
+      "v25_failed_ids": [
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ]
+    },
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T12:01:18.969211+00:00",
+  "interpretation": [
+    "Provider status was freshly checked through the real ict-engine CLI.",
+    "yfinance and TradingView MCP are ready provider surfaces, but provider readiness does not supply source-owned MainRegimeV2 labels.",
+    "IBKR and kraken_public are still configured but unhealthy in this runtime.",
+    "The latest source-label artifacts still show zero ready strict exact-target, native sub-hour, or exact intake rows."
+  ],
+  "run_id": "20260511T195935-codex-provider-readiness-source-label-gap-readback-v1",
+  "source_gap_artifacts": {
+    "current_goal_v25": "docs/experiments/actionable-regime-confidence/runs/20260511T195401-codex-current-goal-completion-audit-v25-after-local-inventory/completion-audit/current_goal_completion_audit_v25_after_local_inventory.json",
+    "local_broad_inventory": "docs/experiments/actionable-regime-confidence/runs/20260511T194952-codex-local-broad-source-owned-label-inventory-v1/local-broad-source-owned-label-inventory/local_broad_source_owned_label_inventory_v1.json",
+    "native_subhour_recheck": "docs/experiments/actionable-regime-confidence/runs/20260511T194400-codex-native-subhour-source-recheck-v2/native-subhour-source-recheck/native_subhour_source_recheck_v2.json",
+    "strict_1h_exact_target_search": "docs/experiments/actionable-regime-confidence/runs/20260511T194739-codex-strict-1h-target-exact-source-search-v1/strict-1h-target-exact-source-search/strict_1h_target_exact_source_search_v1.json"
+  }
+}

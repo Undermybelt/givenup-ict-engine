@@ -1,0 +1,58 @@
+{
+  "bootstrap_needed": false,
+  "data_ready": true,
+  "dependency_healthy": true,
+  "dependency_status": {
+    "adapter_version": "v1",
+    "bootstrap_needed": false,
+    "config_present": true,
+    "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "healthy": true,
+    "last_sync": "2026-05-11T18:29:28.079043Z",
+    "managed_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant",
+    "managed_repo_present": true,
+    "notes": [],
+    "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+    "repo_url": "/Users/thrill3r/Auto-Quant",
+    "required_files": [
+      "README.md",
+      "program.md",
+      "prepare.py",
+      "run.py",
+      "versions/README.md"
+    ],
+    "tracked_branch": "master",
+    "update_available": false,
+    "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+  },
+  "healthy": true,
+  "managed_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant",
+  "next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "uv run --with ta-lib /tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/run.py",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "notes": [],
+  "recommended_next_command": "uv run --with ta-lib /tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/run.py",
+  "recommended_next_command_meta": {
+    "blocked": false,
+    "executable_command": "uv run --with ta-lib /tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/run.py",
+    "kind": "other",
+    "prompt": null,
+    "recorded_data_paths": [],
+    "requires_user_input": false
+  },
+  "status": "dependency_ready_data_ready",
+  "update_available": false,
+  "workspace": {
+    "config_json": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/config.json",
+    "data_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/data",
+    "prepare_script": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/prepare.py",
+    "program_md": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/program.md",
+    "repo_root": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant",
+    "run_script": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/run.py",
+    "strategies_dir": "/tmp/ict-engine-board-a-autoquant-local-cache-20260512T022826/auto-quant/.deps/auto-quant/user_data/strategies"
+  }
+}

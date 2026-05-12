@@ -1,0 +1,2 @@
+aiodns_present True
+aiohttp 3.13.5

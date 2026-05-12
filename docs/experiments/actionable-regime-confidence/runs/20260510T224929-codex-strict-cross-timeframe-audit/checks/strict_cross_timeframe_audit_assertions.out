@@ -1,0 +1,4 @@
+PASS all_six_regimes_still_accepted_95_market_context: ['SessionLiquidityCoreViable', 'RangeConsolidation']
+PASS strict_cross_timeframe_gate_incomplete_expected: ['TrendExpansion', 'ExtremeStress', 'ReversalBrewing', 'ThinLiquidity']
+PASS missing_regimes_identified: ['TrendExpansion', 'ExtremeStress', 'ReversalBrewing', 'ThinLiquidity']
+PASS fresh_cross_timeframe_search_accepts_zero: 0

@@ -1,0 +1,15 @@
+all_commands_exit_0=true
+provider_readback_captured=true
+auto_quant_dependency_healthy=true
+auto_quant_data_ready=false
+pre_bayes_gate_status=pass_neutralized
+regime_bundle_bbn_application_status=applied
+entry_model_catboost_ready=false
+structural_path_ranking_catboost_artifact_ready=true
+structural_path_ranking_observation_validation=48/30
+execution_candidate_status=execution_observe_only
+execution_candidate_ready=false
+workflow_blocker=user_selected_historical_data_missing
+accepted_rows_added=0
+promotion=false
+update_goal=false

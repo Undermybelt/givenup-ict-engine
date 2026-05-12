@@ -1,0 +1,11 @@
+requirement,status,evidence
+derive_from_settled_124408,pass,source_run points to 20260512T124408+0800-codex-123227-tomac-trade-density-iteration-v1
+use_diagnostic_precision_root_cause,pass,parent points to 20260512T125232+0800-codex-124408-signal-export-diagnostic-v1
+avoid_repo_runtime_mutation,pass,precision fix applied in wrapper memory only
+wrapper_exit0,pass,precision_fix_tomac_rerun_v1.exit=0
+nonzero_candidate_trades,pass,total_trades=144
+best_candidate_selected,pass,TomacAggressiveBE trade_count=94 total_profit_pct=2.72 sharpe=3.1752
+trade_exports_written,pass,three strategy trade CSVs under trade-exports
+downstream_chain_consumption,fail_closed,no Pre-Bayes BBN CatBoost execution-tree consumption yet
+goal_completion,fail_closed,promotion_allowed=false trade_usable=false update_goal=false
+

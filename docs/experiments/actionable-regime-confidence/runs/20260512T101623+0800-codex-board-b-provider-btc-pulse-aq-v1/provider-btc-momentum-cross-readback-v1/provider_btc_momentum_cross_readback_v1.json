@@ -1,0 +1,71 @@
+{
+  "run_id": "20260512T101623+0800-codex-board-b-provider-btc-pulse-aq-v1",
+  "addendum_id": "20260512T102708+0800-codex-board-b-provider-btc-momentum-cross-readback-v1",
+  "gate_result": "provider_btc_momentum_cross_readback_v1=retry_exit0_all_three_zero_trades_no_promotion",
+  "source_provider_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T100419+0800-codex-board-b-provider-owned-aq-acquisition-v1/provider-csv/binance_btcusdt_1h.csv",
+  "provider_path": "Binance BTC/USDT 1h provider-owned acquisition from 100419 replayed through 101623 run-local Auto-Quant/TOMAC workspace",
+  "aq_provider_invoked": "Auto-Quant/TOMAC invoked in 101623; live provider fetch not re-invoked in this addendum",
+  "provider_requested": "Binance BTCUSDT 1h via 100419 provider-owned acquisition sidecar",
+  "provider_data_acquired": true,
+  "provider_unreachable": [],
+  "local_cache_replay": true,
+  "prepared_bars": {
+    "1h": 985,
+    "4h": 247,
+    "1d": 42
+  },
+  "failed_wrapper_attempt": {
+    "label": "02_run_provider_btc_momentum_cross",
+    "exit": 127,
+    "counted_as_strategy_evidence": false
+  },
+  "retry": {
+    "label": "03_run_provider_btc_momentum_cross",
+    "exit": 0,
+    "done_summary": "3 succeeded, 0 failed"
+  },
+  "strategies": [
+    {
+      "strategy": "ProviderBtcMomentumCross",
+      "backtest_start": "2026-04-03 12:00:00",
+      "backtest_end": "2026-05-12 00:00:00",
+      "trades": 0,
+      "total_profit_pct": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0,
+      "sharpe": 0.0
+    },
+    {
+      "strategy": "ProviderBtcMomentumPulse",
+      "backtest_start": "2026-04-03 12:00:00",
+      "backtest_end": "2026-05-12 00:00:00",
+      "trades": 0,
+      "total_profit_pct": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0,
+      "sharpe": 0.0
+    },
+    {
+      "strategy": "ProviderBtcTrendPullback",
+      "backtest_start": "2026-04-04 18:00:00",
+      "backtest_end": "2026-05-12 00:00:00",
+      "trades": 0,
+      "total_profit_pct": 0.0,
+      "win_rate_pct": 0.0,
+      "profit_factor": 0.0,
+      "sharpe": 0.0
+    }
+  ],
+  "accepted_rows_added": 0,
+  "mature_rooted_branch_observations": 0,
+  "profitability_signal": false,
+  "source_control_evidence_acquired": false,
+  "explicit_selected_history": false,
+  "canonical_merge": false,
+  "selected_data_autoquant_promotion": false,
+  "downstream_promotion": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "promotion_allowed": false,
+  "update_goal": false
+}

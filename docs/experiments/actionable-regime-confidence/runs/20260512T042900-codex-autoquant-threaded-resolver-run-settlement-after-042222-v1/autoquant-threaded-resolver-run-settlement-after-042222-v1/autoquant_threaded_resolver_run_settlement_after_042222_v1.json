@@ -1,0 +1,59 @@
+{
+  "run_id": "20260512T042900-codex-autoquant-threaded-resolver-run-settlement-after-042222-v1",
+  "gate_result": "autoquant_threaded_resolver_run_settlement_after_042222_v1=runtime_succeeded_strategy_quality_not_promoting_source_roots_absent",
+  "source_command_root": "docs/experiments/actionable-regime-confidence/runs/20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1",
+  "command_output": {
+    "cmd": "docs/experiments/actionable-regime-confidence/runs/20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1/command-output/05_autoquant_run_threaded_resolver.cmd",
+    "stdout": "docs/experiments/actionable-regime-confidence/runs/20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1/command-output/05_autoquant_run_threaded_resolver.stdout.txt",
+    "stderr": "docs/experiments/actionable-regime-confidence/runs/20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1/command-output/05_autoquant_run_threaded_resolver.stderr.txt",
+    "exit": "docs/experiments/actionable-regime-confidence/runs/20260512T042222-codex-autoquant-data-ready-local-cache-run-after-041649-v1/command-output/05_autoquant_run_threaded_resolver.exit",
+    "exit_code": 0,
+    "successful_backtests": 3,
+    "failed_backtests": 0
+  },
+  "strategies": [
+    {
+      "strategy": "BTCLeaderBreakV4BTCOnly",
+      "trades": 116,
+      "win_rate_pct": 35.3448,
+      "total_profit_pct": 14.81,
+      "sharpe": 0.2464,
+      "profit_factor": 2.346,
+      "quality_gate": "profit_floor_fail"
+    },
+    {
+      "strategy": "MTFTrendStackBTCOnly",
+      "trades": 150,
+      "win_rate_pct": 22.0,
+      "total_profit_pct": -4.27,
+      "sharpe": -0.0796,
+      "profit_factor": 0.8513,
+      "quality_gate": "profit_floor_fail"
+    },
+    {
+      "strategy": "MomentumMTFConfluenceBTCOnly",
+      "trades": 169,
+      "win_rate_pct": 30.7692,
+      "total_profit_pct": 2.86,
+      "sharpe": 0.0411,
+      "profit_factor": 1.0709,
+      "quality_gate": "profit_floor_fail"
+    }
+  ],
+  "target_roots": {
+    "/tmp/ict-engine-board-a-r6-owner-export-v1": "missing",
+    "/tmp/ict-engine-native-subhour-source-label-intake": "missing",
+    "/tmp/ict-engine-source-panel-recency-extension": "missing",
+    "/tmp/ict-engine-source-label-equivalence-intake": "present_diagnostic_only"
+  },
+  "promotion_status": {
+    "accepted_rows_added": 0,
+    "source_control_evidence_acquired": false,
+    "new_confidence_gate": false,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

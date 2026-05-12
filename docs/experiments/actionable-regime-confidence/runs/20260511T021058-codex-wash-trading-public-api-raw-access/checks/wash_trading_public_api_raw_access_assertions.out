@@ -1,0 +1,12 @@
+RUN_ID 20260511T021058+0800-codex-wash-trading-public-api-raw-access
+REPORT docs/experiments/actionable-regime-confidence/runs/20260511T021058-codex-wash-trading-public-api-raw-access/raw-access/wash_trading_public_api_raw_access.json
+RAW_ROW_LEVEL_PUBLIC_DOWNLOADS_VERIFIED 4
+QUALIFYING_DIRECT_MANIPULATION_INPUT_SETS 1
+MANIPULATION_INPUT_STATE raw_event_onchain_wash_labels_accessible_not_calibrated
+ACCEPTED_95 false
+THRESHOLDS_RELAXED false
+RUNTIME_CODE_CHANGED false
+FRESH_CALIBRATION_RERUN false
+TRADE_USABLE false
+RAW_DATA_COMMITTED false
+GATE blocked_raw_access_verified_calibration_not_run

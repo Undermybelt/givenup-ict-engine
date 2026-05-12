@@ -1,0 +1,11 @@
+field,required,description
+provider,True,Target provider lane such as yfinance or kraken_public_lowpollution_http.
+instrument,True,"Exact requested instrument/underlying, not a near proxy."
+timeframe,True,"Exact requested timeframe: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w, or 1mo."
+window_start,True,"Inclusive timestamp/date for the label window, with timezone."
+window_end,True,Exclusive or inclusive end timestamp/date for the label window; convention must be documented.
+root_label,True,"One of Bull, Bear, Sideways, Crisis."
+label_source_id,True,Stable dataset/source identifier and version.
+label_provenance,True,Independent source-backed/manual/official label provenance; not HMM/GMM/OHLCV/future-return/proxy output.
+source_url_or_private_ref,True,"Public URL, authenticated export id, or private handoff reference."
+confidence_or_quality_flag,False,Optional source confidence/quality metadata; not a substitute for calibration.

@@ -1,0 +1,15 @@
+PASS run_id=20260512T130000+0800-codex-113833-provider-momentum-downstream-v1
+PASS provider_matrix_rows=6
+PASS provider_rows_ok=True
+PASS merged_momentum_trade_rows=133
+PASS command_exits_recorded=12
+PASS ingest_exit=0
+PASS analyze_exit=0
+PASS pre_bayes_exit=0
+PASS export_target_exit=0
+FAIL_CLOSED target_rows=4
+FAIL_CLOSED mature_rows=None
+FAIL_CLOSED execution_ready=False
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

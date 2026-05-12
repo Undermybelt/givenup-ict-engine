@@ -1,0 +1,1 @@
+{"control_mean_return": 0.006960826352454777, "control_rows": 72, "edge_lcb_5pct": -0.033142397067490025, "edge_vs_control": -0.01203346962484506, "fold_positive_rate_vs_control": 0.058823529411764705, "horizon_gate": "blocked:insufficient_positive_rows", "horizon_hours": 6, "monthly_folds": 17, "positive_mean_return": -0.005072643272390283, "positive_rows": 24}

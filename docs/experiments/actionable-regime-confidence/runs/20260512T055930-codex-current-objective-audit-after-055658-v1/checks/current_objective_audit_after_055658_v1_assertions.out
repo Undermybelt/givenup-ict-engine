@@ -1,0 +1,13 @@
+PASS gate_result=current_objective_audit_after_055658_v1=not_complete_source_control_roots_absent_cross_timeframe_downstream_blocked
+PASS each_regime_confidence_95=diagnostic_only
+PASS cross_timeframe_validation=missing
+PASS provider_autoquant_chain=partial_non_promoting
+PASS r6_owner_export_or_approval=missing
+PASS r3_r5_source_rows=missing
+PASS required_target_roots_absent=true
+PASS source_control_evidence_acquired=false
+PASS canonical_merge=false
+PASS downstream_promotion_rerun=false
+PASS strict_full_objective=false
+PASS trade_usable=false
+PASS update_goal=false

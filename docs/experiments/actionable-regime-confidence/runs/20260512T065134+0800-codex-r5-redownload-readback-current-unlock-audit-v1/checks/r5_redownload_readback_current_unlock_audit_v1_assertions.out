@@ -1,0 +1,17 @@
+gate_result=r5_redownload_readback_current_unlock_audit_v1=redownload_has_no_post_cutoff_rows_no_valid_unlock_no_downstream
+objective_complete=false
+r5_redownload_rows=245021
+r5_redownload_date_max=2026-01-30
+r5_redownload_rows_after_2026_01_30=0
+r5_target_root_present=false
+r5_verifier_exit=2
+r6_owner_export_unlock=false
+r3_native_subhour_unlock=false
+r5_recency_unlock=false
+valid_required_root_unlock=false
+accepted_rows_added=0
+canonical_merge=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+update_goal=false

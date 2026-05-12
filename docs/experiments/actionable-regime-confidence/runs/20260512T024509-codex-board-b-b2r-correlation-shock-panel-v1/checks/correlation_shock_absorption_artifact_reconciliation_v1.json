@@ -1,0 +1,23 @@
+{
+  "run_id": "20260512T024509+0800-codex-board-b-b2r-correlation-shock-panel-v1",
+  "authority": "latest_024509_evidence_ledger_row",
+  "latest_ledger_packet": {
+    "gate_result": "fail:required_root_branch_hard_gates_failed",
+    "stable_profit_score": 75.88863517875106,
+    "variant_trade_rows": 47843,
+    "selected_trade_rows": 13275,
+    "branch_paths_passed": 0,
+    "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+    "source": "checks/correlation_shock_absorption_canonical_readback_v3.json"
+  },
+  "shadow_packet": {
+    "gate_result": "fail:required_root_branch_hard_gates_failed",
+    "stable_profit_score": 72.16251032599476,
+    "variant_trade_rows": 281,
+    "selected_trade_rows": 88,
+    "price_root_paths_passed": 0,
+    "downstream_consumption": "not_started:rc_spa_failed",
+    "source": "checks/correlation_shock_absorption_current_artifact_readback_v2.json"
+  },
+  "generic_report_aligned_to_latest_ledger": true
+}

@@ -1,0 +1,90 @@
+104:---
+105:strategy:         CrashRebound
+110:sharpe:           0.8496
+113:total_profit_pct: 24.8700
+115:trade_count:      50
+116:win_rate_pct:     70.0000
+220:---
+221:strategy:         CrashRebound
+226:sharpe:           0.0847
+229:total_profit_pct: 2.9900
+231:trade_count:      32
+232:win_rate_pct:     68.7500
+336:---
+337:strategy:         CrashRebound
+342:sharpe:           0.1920
+345:total_profit_pct: 17.2900
+347:trade_count:      123
+348:win_rate_pct:     66.6667
+452:---
+453:strategy:         CrashRebound
+458:sharpe:           0.2903
+461:total_profit_pct: 55.6900
+463:trade_count:      207
+464:win_rate_pct:     68.5990
+474:---
+475:strategy:         CrashRebound
+478:robust_sharpe:    0.0847   # min across declared timeranges
+482:profit_floor:     FAIL   (threshold ≥ 20.0% per timerange)
+483:min_position_size: PASS   (threshold ≥ 5.0%)
+484:pareto_dominated_by: none (non-dominated)
+582:---
+583:strategy:         PerPairMR
+588:sharpe:           1.4888
+591:total_profit_pct: 25.3600
+593:trade_count:      106
+594:win_rate_pct:     66.0377
+702:---
+703:strategy:         PerPairMR
+708:sharpe:           0.0520
+711:total_profit_pct: 0.8400
+713:trade_count:      44
+714:win_rate_pct:     56.8182
+822:---
+823:strategy:         PerPairMR
+828:sharpe:           0.1840
+831:total_profit_pct: 9.3900
+833:trade_count:      375
+834:win_rate_pct:     56.2667
+942:---
+943:strategy:         PerPairMR
+948:sharpe:           0.3512
+951:total_profit_pct: 35.7800
+953:trade_count:      519
+954:win_rate_pct:     58.1888
+966:---
+967:strategy:         PerPairMR
+970:robust_sharpe:    0.0520   # min across declared timeranges
+974:profit_floor:     FAIL   (threshold ≥ 20.0% per timerange)
+975:min_position_size: PASS   (threshold ≥ 5.0%)
+976:pareto_dominated_by: none (non-dominated)
+1070:---
+1071:strategy:         RegimeAdaptiveBNB
+1076:sharpe:           0.3226
+1079:total_profit_pct: 8.1100
+1081:trade_count:      16
+1082:win_rate_pct:     81.2500
+1182:---
+1183:strategy:         RegimeAdaptiveBNB
+1188:sharpe:           0.2359
+1191:total_profit_pct: 3.7100
+1193:trade_count:      25
+1194:win_rate_pct:     68.0000
+1294:---
+1295:strategy:         RegimeAdaptiveBNB
+1300:sharpe:           0.0967
+1303:total_profit_pct: 6.5800
+1305:trade_count:      72
+1306:win_rate_pct:     68.0556
+1406:---
+1407:strategy:         RegimeAdaptiveBNB
+1412:sharpe:           0.1380
+1415:total_profit_pct: 16.4100
+1417:trade_count:      115
+1418:win_rate_pct:     69.5652
+1426:---
+1427:strategy:         RegimeAdaptiveBNB
+1430:robust_sharpe:    0.0967   # min across declared timeranges
+1434:profit_floor:     FAIL   (threshold ≥ 20.0% per timerange)
+1435:min_position_size: PASS   (threshold ≥ 5.0%)
+1436:pareto_dominated_by: none (non-dominated)

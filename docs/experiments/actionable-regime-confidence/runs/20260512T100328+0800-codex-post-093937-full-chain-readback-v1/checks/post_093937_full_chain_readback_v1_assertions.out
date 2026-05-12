@@ -1,0 +1,5 @@
+PASS report_md_present
+PASS report_json_present
+PASS checklist_present
+PASS json_gate_values
+PASS command_exits_all_zero

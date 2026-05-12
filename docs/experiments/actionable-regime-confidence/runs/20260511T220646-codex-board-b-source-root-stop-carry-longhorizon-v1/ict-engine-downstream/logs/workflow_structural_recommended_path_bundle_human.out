@@ -1,0 +1,4 @@
+SRC_ROOT_CARRY_LONG_220646 | structural-path | bootstrap_readiness | posterior=0.000 | selected_prob=1.000
+Trigger: No workflow snapshot exists yet.
+Stop: No trade until preconditions are satisfied.
+Next: No actionable command available.

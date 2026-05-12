@@ -1,0 +1,13 @@
+split,root,daily_rows,covered
+train_2000_2015,Bull,57918,true
+train_2000_2015,Bear,33134,true
+train_2000_2015,Sideways,34047,true
+train_2000_2015,Crisis,21080,true
+calibration_2016_2021,Bull,29305,true
+calibration_2016_2021,Bear,10954,true
+calibration_2016_2021,Sideways,14404,true
+calibration_2016_2021,Crisis,4266,true
+test_2022_2026,Bull,16543,true
+test_2022_2026,Bear,10851,true
+test_2022_2026,Sideways,8217,true
+test_2022_2026,Crisis,4286,true

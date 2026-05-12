@@ -1,0 +1,1 @@
+ICT_ENGINE_AQ_FORCE_THREADED_RESOLVER=1 PYTHONPATH=docs/experiments/actionable-regime-confidence/runs/20260512T033430-codex-autoquant-threaded-resolver-workaround-run-v1/threaded-resolver-workaround uv --directory /tmp/ict-engine-board-a-autoquant-local-cache-data-ready-065613-v1/auto-quant/.deps/auto-quant run --with ta-lib run.py

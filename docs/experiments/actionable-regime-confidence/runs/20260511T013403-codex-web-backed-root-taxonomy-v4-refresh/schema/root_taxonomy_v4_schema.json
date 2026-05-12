@@ -1,0 +1,70 @@
+{
+  "schema_id": "RootTaxonomyV4",
+  "created_at": "2026-05-11T01:34:03+08:00",
+  "purpose": "Board A active root taxonomy after user correction and web-backed paper/GitHub refresh.",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "fresh_calibration_run": false,
+  "required_roots": [
+    {
+      "root": "BullExpansion",
+      "description": "Positive signed directional expansion with persistence, continuation, breadth, or directional-change expansion evidence.",
+      "allowed_input_families": ["OHLCV", "breadth", "cross_asset", "volatility_context", "directional_change", "change_point"],
+      "blocked_promotions": ["unsigned TrendExpansion", "generic Bull"]
+    },
+    {
+      "root": "BearExpansion",
+      "description": "Negative signed directional expansion separated from disorderly crisis or liquidity panic.",
+      "allowed_input_families": ["OHLCV", "breadth", "credit_context", "cross_asset", "volatility_context", "directional_change", "change_point"],
+      "blocked_promotions": ["generic Bear", "CrisisStress without ordinary bear separation"]
+    },
+    {
+      "root": "Consolidation",
+      "description": "Range-bound, compressed, or balanced auction state separated from low-vol bull drift and post-crisis compression.",
+      "allowed_input_families": ["OHLCV", "range_compression", "directional_change", "change_point", "liquidity_context"],
+      "blocked_promotions": ["generic Sideways", "child-only RangeConsolidation without root gate"]
+    },
+    {
+      "root": "Manipulation",
+      "description": "Market state or overlay where price/order flow is materially distorted by spoofing, layering, wash trading, pump/dump, oracle/mempool, or event/social manipulation.",
+      "required_input_families": ["tick", "order_flow", "L2", "L3", "order_lifecycle", "event_social", "on_chain"],
+      "fail_closed_without_required_inputs": true,
+      "blocked_promotions": ["OHLCV proxy", "ThinLiquidity", "SessionLiquidityCoreViable", "sweep-like range", "volume-ratio filter"]
+    },
+    {
+      "root": "CrisisStress",
+      "description": "Disorderly crash/stress/liquidity-fragility state that breaks normal expansion/consolidation assumptions.",
+      "allowed_input_families": ["OHLCV", "volatility", "correlation", "spread_credit", "flight_to_quality", "liquidity_stress", "change_point"],
+      "blocked_promotions": ["ordinary BearExpansion"]
+    }
+  ],
+  "conditional_roots": [
+    {
+      "root": "TransitionRecovery",
+      "description": "Recovery, reversal, or rotation state. Required only if a downstream consumer contract activates it as a first-class gate.",
+      "default_handling": "optional_overlay_or_provenance"
+    },
+    {
+      "root": "UnknownOrMixed",
+      "description": "Residual abstention bucket.",
+      "default_handling": "residual_not_release_gate"
+    }
+  ],
+  "source_urls": [
+    "https://doi.org/10.2307/1912559",
+    "https://doi.org/10.1093/rfs/15.4.1137",
+    "https://doi.org/10.1016/j.jedc.2006.12.004",
+    "https://ssrn.com/abstract=1083124",
+    "https://doi.org/10.1109/TETCI.2017.2775235",
+    "https://doi.org/10.1016/j.sigpro.2019.107299",
+    "https://github.com/deepcharles/ruptures",
+    "https://github.com/hmmlearn/hmmlearn",
+    "https://github.com/hidden-regime/hidden-regime",
+    "https://www.cftc.gov/sites/default/files/idc/groups/public/%40newsroom/documents/file/dtpinterpretiveorder_qa.pdf",
+    "https://www.finra.org/rules-guidance/guidance/reports/2024-finra-annual-regulatory-oversight-report/manipulative-trading",
+    "https://www.mdpi.com/2073-4336/12/2/46",
+    "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2780579",
+    "https://arxiv.org/abs/2504.15908",
+    "https://github.com/orderbooktools/crobat"
+  ]
+}

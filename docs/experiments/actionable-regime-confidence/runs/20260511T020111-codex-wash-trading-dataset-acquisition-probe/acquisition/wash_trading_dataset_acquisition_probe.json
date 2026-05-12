@@ -1,0 +1,41 @@
+{
+  "run_id": "20260511T020111+0800-codex-wash-trading-dataset-acquisition-probe",
+  "active_axis": "MainRegimeV2",
+  "candidate_regime": "Manipulation",
+  "objective": "Probe whether a second direct/event manipulation dataset can be acquired without credentials and used for the active Manipulation root gate.",
+  "sources": [
+    {
+      "name": "Mendeley Data: Detecting Crypto Wash Trades via Machine Learning",
+      "url": "https://data.mendeley.com/datasets/4hyxfwzpgg/3",
+      "doi": "10.17632/4hyxfwzpgg.3",
+      "metadata_found": true,
+      "raw_row_data_downloaded": false,
+      "notes": "Public metadata page describes labeled machine learning samples from on-chain transactions of major NFT exchanges and Mt. Gox. No raw row-level files were acquired through no-auth local probes."
+    },
+    {
+      "name": "GitHub: niuniu-zhang/nft_wash_trading",
+      "url": "https://github.com/niuniu-zhang/nft_wash_trading",
+      "metadata_found": true,
+      "raw_row_data_downloaded": false,
+      "aggregate_results_available": true,
+      "notes": "README says raw labeled datasets and generated ML samples are not included; data/results metrics are available but are aggregate outputs only."
+    }
+  ],
+  "local_probe_results": {
+    "mendeley_public_api_no_auth": "401 Unauthorized",
+    "mendeley_data_page": "metadata_loaded_but_file_list_not_acquired",
+    "mendeley_guessed_file_endpoints": "html_or_error_not_raw_data",
+    "github_data_results": "aggregate_metrics_only",
+    "github_raw_samples": "not_in_repository"
+  },
+  "gate_result": {
+    "qualifying_direct_manipulation_input_sets": 0,
+    "accepted_95": false,
+    "manipulation_input_state": "candidate_dataset_not_acquired",
+    "thresholds_relaxed": false,
+    "runtime_code_changed": false,
+    "trade_usable": false,
+    "gate": "blocked_dataset_not_acquired"
+  },
+  "next_action": "Acquire the Mendeley raw row-level files through browser/UI download, API token, author-provided files, or another public mirror; otherwise continue searching for directly downloadable event/social/on-chain manipulation datasets or L2/L3/MBO/order-lifecycle datasets."
+}

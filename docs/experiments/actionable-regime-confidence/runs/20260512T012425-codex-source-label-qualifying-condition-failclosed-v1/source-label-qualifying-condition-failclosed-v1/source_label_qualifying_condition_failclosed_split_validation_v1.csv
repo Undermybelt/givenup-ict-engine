@@ -1,0 +1,9 @@
+label,split_role,condition_high_conf_rows,baseline_full_row_wilson95_lcb,baseline_full_row_gate_pass
+Bull,calibration,5460,0.0884105543,false
+Bull,heldout_market,795,0.0581218497,false
+Bull,heldout_time,2417,0.1194160140,false
+Bull,test,1521,0.1162235034,false
+Sideways,calibration,4929,0.1401735306,false
+Sideways,heldout_market,1671,0.2056385432,false
+Sideways,heldout_time,1388,0.1348835676,false
+Sideways,test,698,0.1075825871,false

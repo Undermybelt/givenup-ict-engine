@@ -1,0 +1,6 @@
+prompt_requirement,artifact_or_command,status,notes
+Use real local ict-engine surfaces,"command-output/00_structural_recommended_path_bundle.stdout.txt; command-output/01_structural_feedback.stdout.txt; command-output/02_execution_candidate.stdout.txt; command-output/03_workflow_full.stdout.txt",satisfied,"Replayed recorded-MTF state with rebuilt local CLI."
+Fix structural-feedback path owner mismatch,"src/application/orchestration/workflow_status.rs",satisfied,"structural-feedback now overlays the generic feedback contract with the exact structural recommended path bundle when available."
+Preserve exact branch path across downstream surfaces,"checks/structural_feedback_branch_preservation_fix_v1_assertions.out",satisfied,"Recommended bundle, structural-feedback, execution-candidate, and full workflow candidate agree on the exact crisis branch path."
+Do not claim promotion without selected history or source/control unlock,"structural_feedback_branch_preservation_fix_v1.md",satisfied,"Run is explicitly non-promoting; ready=false and closed_loop_branch_admission=fail_closed."
+Record Board A update in authoritative markdown,"docs/plans/2026-05-10-actionable-regime-confidence-todo.md",satisfied,"Append-only 103057 section written after fresh board hash b1e7528f49d9b7057a6ebe6b13de64fbaaac7011dc43576c2e07a355552f7f7f."

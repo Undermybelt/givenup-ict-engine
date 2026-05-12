@@ -1,0 +1,276 @@
+{
+  "accepted_rows_added": 0,
+  "decision": "local_broad_source_owned_label_inventory_v1=no_new_promotable_uncounted_source_owned_labels",
+  "generated_at": "2026-05-11T11:54:07.538513+00:00",
+  "group_count": 7,
+  "groups": [
+    {
+      "accepted_rows_added": 0,
+      "bytes_total": 33322354,
+      "closes_full_direct_manipulation_species_gap": false,
+      "closes_native_subhour_gap": false,
+      "closes_other_market_equivalence_gap": false,
+      "closes_recency_tail_gap": false,
+      "closes_strict_1h_gap": false,
+      "csv_files": 978,
+      "disposition": "raw_or_event_window_pump_dump_not_missing_species",
+      "exact_intake_filename_hits": 0,
+      "file_count": 978,
+      "group": "direct_pump_dump_raw_windows",
+      "label_like_header_files": 0,
+      "promotable_new_rows": 0,
+      "reason": "Raw/event-window crypto pump/dump files are not source-owned rows for the missing direct manipulation species and do not provide spoofing/layering controls.",
+      "sample_paths": [
+        "/tmp/ict-regime-kamps-pump-dump/__MACOSX/data/kraken/._kraken_BCH-BTC_[2018-04-20 01.00.00]-TO-[2018-05-10 00.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_ADA-BNB_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_ADA-BTC_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_ADA-ETH_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_ADA-USDT_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_ADX-BNB_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_ADX-BTC_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_ADX-ETH_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_AE-BNB_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_AE-BTC_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_AE-ETH_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv",
+        "/tmp/ict-regime-kamps-pump-dump/data/binance/binance_AION-BNB_[2018-04-20 00.00.00]-TO-[2018-05-09 23.00.00].csv"
+      ]
+    },
+    {
+      "accepted_rows_added": 0,
+      "bytes_total": 25901952,
+      "closes_full_direct_manipulation_species_gap": false,
+      "closes_native_subhour_gap": false,
+      "closes_other_market_equivalence_gap": false,
+      "closes_recency_tail_gap": false,
+      "closes_strict_1h_gap": false,
+      "csv_files": 3,
+      "disposition": "known_scoped_direct_pump_dump_already_counted",
+      "exact_intake_filename_hits": 0,
+      "file_count": 11,
+      "group": "direct_pump_dump_telegram",
+      "label_like_header_files": 1,
+      "promotable_new_rows": 0,
+      "reason": "Telegram pump/dump direct rows support the already accepted scoped pump_dump variety, but they do not cover spoofing/layering, quote stuffing, pinging, bear raid, or matched negative controls.",
+      "sample_paths": [
+        "/tmp/ict-regime-bayi-pd/Data/Telegram/Labeled/PD_logs_cleaned.txt",
+        "/tmp/ict-regime-bayi-pd/Data/Telegram/Labeled/PD_logs_raw.txt",
+        "/tmp/ict-regime-bayi-pd/Data/Telegram/Labeled/label.txt",
+        "/tmp/ict-regime-bayi-pd/Data/Telegram/Labeled/pred_pump_message.csv",
+        "/tmp/ict-regime-bayi-pd/TargetCoinPrediction/FeatGeneration/raw/binanceSymbol2CoinId.json",
+        "/tmp/ict-regime-bayi-pd/TargetCoinPrediction/FeatGeneration/raw/coinDate2Statistics_pred3d.json",
+        "/tmp/ict-regime-bayi-pd/TargetCoinPrediction/FeatGeneration/raw/neg_binance_required_file_name.txt",
+        "/tmp/ict-regime-bayi-pd/TargetCoinPrediction/FeatGeneration/raw/neg_coin_gecko_statistics.txt",
+        "/tmp/pump-and-dump-dataset/groups.csv",
+        "/tmp/pump-and-dump-dataset/pump_telegram.csv",
+        "/tmp/pump-and-dump-dataset/requirements.txt"
+      ]
+    },
+    {
+      "accepted_rows_added": 0,
+      "bytes_total": 259441003,
+      "closes_full_direct_manipulation_species_gap": false,
+      "closes_native_subhour_gap": false,
+      "closes_other_market_equivalence_gap": false,
+      "closes_recency_tail_gap": false,
+      "closes_strict_1h_gap": false,
+      "csv_files": 5,
+      "disposition": "generated_proxy_outputs_rejected",
+      "exact_intake_filename_hits": 0,
+      "file_count": 86,
+      "group": "generated_or_model_derived_regime_outputs",
+      "label_like_header_files": 0,
+      "promotable_new_rows": 0,
+      "reason": "Model outputs and prior experiment predictions are not source-owned active-regime labels for strict Board A completion.",
+      "sample_paths": [
+        "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/regime-sidecar/regime_consumer_bundle.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T185125-board-b-handoff-codex/regime-sidecar/regime_high_confidence_decision.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/regime-sidecar/accepted_session_liquidity_packet.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/regime-sidecar/regime_consumer_bundle.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/regime-sidecar/regime_high_confidence_decision.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain/regime-sidecar/regime_consumer_bundle.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T221112-codex-field-complete-full-chain/regime-sidecar/regime_high_confidence_decision.json",
+        "/tmp/hmm_regime_nq_15m/hmm_regime_4states.json",
+        "/tmp/hmm_regime_nq_15m_v2/hmm_regime_4states.json",
+        "/tmp/hmm_regime_nq_15m_v3/hmm_regime_4states.json",
+        "/tmp/hmm_regime_nq_15m_v4/hmm_regime_4states.json",
+        "/tmp/hmm_regime_nq_15m_v8/hmm_regime_8states.json"
+      ]
+    },
+    {
+      "accepted_rows_added": 0,
+      "bytes_total": 1640,
+      "closes_full_direct_manipulation_species_gap": false,
+      "closes_native_subhour_gap": false,
+      "closes_other_market_equivalence_gap": false,
+      "closes_recency_tail_gap": false,
+      "closes_strict_1h_gap": false,
+      "csv_files": 0,
+      "disposition": "code_or_synthetic_surface_not_source_owned_rows",
+      "exact_intake_filename_hits": 0,
+      "file_count": 3,
+      "group": "local_spoofing_repo_quantsingularity",
+      "label_like_header_files": 0,
+      "promotable_new_rows": 0,
+      "reason": "Local spoofing repo contains code, config, or synthetic generation surfaces; no exportable real positive rows plus matched controls are present.",
+      "sample_paths": [
+        "/tmp/ict-regime-quantsingularity-spoofing/configs/config.json",
+        "/tmp/ict-regime-quantsingularity-spoofing/requirements-prod.txt",
+        "/tmp/ict-regime-quantsingularity-spoofing/requirements.txt"
+      ]
+    },
+    {
+      "accepted_rows_added": 0,
+      "bytes_total": 5723058243,
+      "closes_full_direct_manipulation_species_gap": false,
+      "closes_native_subhour_gap": false,
+      "closes_other_market_equivalence_gap": false,
+      "closes_recency_tail_gap": false,
+      "closes_strict_1h_gap": false,
+      "csv_files": 461,
+      "disposition": "not_promotable_by_path_header_inventory",
+      "exact_intake_filename_hits": 0,
+      "file_count": 6069,
+      "group": "other_local_hits",
+      "label_like_header_files": 37,
+      "promotable_new_rows": 0,
+      "reason": "Filename matched broad keywords but did not expose an exact Board A intake file, known source-owned schema path, or missing-species positive/control package under this bounded path/header inventory.",
+      "sample_paths": [
+        "/tmp/github_market_regime_repos.json",
+        "/tmp/hf_AAdevloper_nifty50-market-regime.json",
+        "/tmp/hf_akashkumar5_Multi_Timeframe_Market_Regimes_HMM6_BTCUSD.json",
+        "/tmp/hf_dark_pool_synthetic_manipulation_audit.verify.json",
+        "/tmp/hf_market_regime_datasets.json",
+        "/tmp/hf_sujinwo_tsie-market-regime-dataset.json",
+        "/tmp/ict-aq-ict-live-20260510-rerun-050155/auto_quant_trade_exports/regime_bnb_full/.last_result.json",
+        "/tmp/ict-aq-ict-live-20260510-rerun-050155/auto_quant_trade_exports/regime_bnb_full/backtest-result-2026-05-10_05-19-52.meta.json",
+        "/tmp/ict-aq-ict-live-20260510-rerun-050155/auto_quant_trade_exports/regime_bnb_full/unzipped/backtest-result-2026-05-10_05-19-52.json",
+        "/tmp/ict-aq-ict-live-20260510-rerun-050155/auto_quant_trade_exports/regime_bnb_full/unzipped/backtest-result-2026-05-10_05-19-52_config.json",
+        "/tmp/ict-aq-ict-live-20260510-rerun-050155/oos_guard/regime_adaptive_bnb_labels.jsonl",
+        "/tmp/ict-aq-ict-live-20260510-rerun-050155/oos_guard/regime_adaptive_bnb_payoff_report.json"
+      ]
+    },
+    {
+      "accepted_rows_added": 0,
+      "bytes_total": 412053386,
+      "closes_full_direct_manipulation_species_gap": false,
+      "closes_native_subhour_gap": false,
+      "closes_other_market_equivalence_gap": false,
+      "closes_recency_tail_gap": false,
+      "closes_strict_1h_gap": false,
+      "csv_files": 442,
+      "disposition": "already_registered_board_artifacts",
+      "exact_intake_filename_hits": 0,
+      "file_count": 1801,
+      "group": "repo_existing_board_artifacts",
+      "label_like_header_files": 118,
+      "promotable_new_rows": 0,
+      "reason": "Existing Board A artifacts are already counted or rejected; they are not new intake rows.",
+      "sample_paths": [
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/autoquant/autoquant-entry-windows-512-summary.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/autoresearch_status_qqq_regime_branch.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/branch_ranking_rows_qqq_20260510.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/candidate-pack/factor_eval_grid_summary.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/candidate-pack/factor_expression.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/candidate-pack/transfer_score.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/candidate_spec_qqq_regime_branch.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/catboost-path-ranker-qqq-replay-36-mature-only/feature_importance.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/catboost-path-ranker-qqq-replay-36-mature-only/features.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/catboost-path-ranker-qqq-replay-36-mature-only/path_scores_catboost_current.csv",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/catboost-path-ranker-qqq-replay-36-mature-only/trainer_artifact.json",
+        "docs/experiments/actionable-regime-confidence/runs/20260510T174651/branch-chain/qqq-regime-branch-iteration/catboost-path-ranker-qqq-replay-36-mature-only/user_weights.json"
+      ]
+    },
+    {
+      "accepted_rows_added": 0,
+      "bytes_total": 131224686,
+      "closes_full_direct_manipulation_species_gap": false,
+      "closes_native_subhour_gap": false,
+      "closes_other_market_equivalence_gap": false,
+      "closes_recency_tail_gap": false,
+      "closes_strict_1h_gap": false,
+      "csv_files": 7,
+      "disposition": "known_source_daily_already_counted",
+      "exact_intake_filename_hits": 0,
+      "file_count": 14,
+      "group": "stock_market_regimes_source_panel",
+      "label_like_header_files": 3,
+      "promotable_new_rows": 0,
+      "reason": "Daily MainRegimeV2 source panel is already counted by the strict gate; local duplicates do not add strict 1h, native sub-hour, recency-tail, or other-market equivalence rows.",
+      "sample_paths": [
+        "/Users/thrill3r/Downloads/stock-market-regimes-20002026/dataset_summary.txt",
+        "/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_analysis_by_ticker.csv",
+        "/Users/thrill3r/Downloads/stock-market-regimes-20002026/regime_by_year.csv",
+        "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.csv",
+        "/Users/thrill3r/Downloads/stock-market-regimes-20002026/stock_market_regimes_2000_2026.parquet",
+        "/tmp/ict-engine-kaggle-stock-regimes-live-check-20260511T191523/stock_market_regimes_2000_2026.csv",
+        "/tmp/ict-engine-kaggle-stock-regimes-live-check-20260511T191523/stock_market_regimes_2000_2026.parquet",
+        "/tmp/kaggle_stock_market_regimes_20002026/dataset_summary.txt",
+        "/tmp/kaggle_stock_market_regimes_20002026/missing_instruments.txt",
+        "/tmp/kaggle_stock_market_regimes_20002026/regime_analysis_by_ticker.csv",
+        "/tmp/kaggle_stock_market_regimes_20002026/regime_by_year.csv",
+        "/tmp/kaggle_stock_market_regimes_20002026/stock_market_regimes_2000_2026.csv"
+      ]
+    }
+  ],
+  "match_count": 8962,
+  "new_confidence_gate": false,
+  "raw_data_committed": false,
+  "requirement_status": [
+    {
+      "evidence": "Local inventory found no uncounted source-owned strict 1h or native sub-hour label rows.",
+      "id": "R2",
+      "requirement": "Other-cycle/timeframe validation has suitable confidence",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "No local source_label_equivalence_rows.csv or equivalent uncounted package found.",
+      "id": "R3",
+      "requirement": "Strict 1h next-source intake has source-owned rows and provenance",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "Only known stock-market-regimes source panel duplicates were found; no uncounted recency-tail source rows.",
+      "id": "R5",
+      "requirement": "XOM/Sideways recency-tail repair rows exist",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "Local hits were generated/model/code/raw-provider surfaces or already registered projections; none are source-owned native sub-hour labels.",
+      "id": "R6",
+      "requirement": "Native sub-hour source labels exist",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "No owner-approved MainRegimeV2 equivalence package found outside existing Board A artifacts.",
+      "id": "R7",
+      "requirement": "Other-market/source-label equivalence has suitable confidence",
+      "status": "fail_blocked"
+    },
+    {
+      "evidence": "Local direct hits only cover already scoped pump/dump or code/synthetic/raw surfaces; no missing species positive/control package found.",
+      "id": "R8",
+      "requirement": "Direct Manipulation has full species coverage with real positives and matched controls",
+      "status": "fail_blocked"
+    }
+  ],
+  "run_id": "20260511T194952+0800-codex-local-broad-source-owned-label-inventory-v1",
+  "runtime_code_changed": false,
+  "search_roots": [
+    {
+      "max_depth": 6,
+      "root": "/Users/thrill3r/Downloads"
+    },
+    {
+      "max_depth": 5,
+      "root": "/tmp"
+    },
+    {
+      "max_depth": 6,
+      "root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence"
+    }
+  ],
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,221 @@
+{
+  "active_taxonomy": "MainRegimeV2",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T082950-codex-mendeley-v3-current-reaudit/checks/mendeley_v3_current_reaudit_assertions.out",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T082950-codex-mendeley-v3-current-reaudit/mendeley-v3-reaudit/mendeley_v3_current_reaudit.json",
+    "md": "docs/experiments/actionable-regime-confidence/runs/20260511T082950-codex-mendeley-v3-current-reaudit/mendeley-v3-reaudit/mendeley_v3_current_reaudit.md",
+    "script": "docs/experiments/actionable-regime-confidence/runs/20260511T082950-codex-mendeley-v3-current-reaudit/scripts/mendeley_v3_current_reaudit.py"
+  },
+  "created_at_utc": "2026-05-11T00:34:23.230482+00:00",
+  "decision": {
+    "accepted_direct_manipulation_label_sources_added": 0,
+    "accepted_full_cycle_full_universe": false,
+    "blockers": [
+      "No verified local Mendeley v3 file has an accepted unchanged 95% direct Manipulation gate.",
+      "LooksRare and Blur remain blocked as NFT ML samples without global chronology-grade timestamp evidence.",
+      "Gox HGB remains blocked by test coverage below 0.03 and calibration/test ECE above 0.05 despite Wilson95 above 0.95.",
+      "OpenSea v3 is 2127010916 bytes and is not present locally; current /private/tmp free space is insufficient for a safe bounded fetch."
+    ],
+    "gate_result": "blocked_mendeley_v3_current_reaudit_no_accepted_manipulation_label_panel",
+    "goal_achieved": false,
+    "mainregimev2_root_slots_added": 0,
+    "manipulation_label_slots_added": 0,
+    "next_action": "Do not promote Mendeley v3 as accepted. Either free enough temp disk and evaluate OpenSea with the unchanged gate, or move to a provenance-preserving Dune nft.wash_trades export path with replayable timestamps.",
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "direct_event_class_or_overlay": "Manipulation",
+  "disk": {
+    "opensea_safe_fetch_possible": false,
+    "opensea_size_bytes": 2127010916,
+    "private_tmp_free_bytes": 3249737728,
+    "safe_fetch_buffer_bytes": 2147483648
+  },
+  "files": [
+    {
+      "accepted_95_chronology_grade": false,
+      "accepted_95_rule_only": false,
+      "chronology_grade": "blocked_file_order_not_global_chronology",
+      "chronology_reason": "nft_ml_sample.py writes rows sorted by contractAddress,timestamp after dropping timestamp",
+      "download_url": "https://data.mendeley.com/public-files/datasets/4hyxfwzpgg/files/54078a82-be05-4131-b103-1f1c23580e74/file_downloaded",
+      "filename": "Blur_ml_samples.csv",
+      "local": {
+        "actual_sha256": "51e41acafc574fd4f7853b4a64676775e9695e8dd9fd2eb937e1587f9a41678b",
+        "exists": true,
+        "path": "/private/tmp/Blur_ml_samples.csv",
+        "sha256_matches_mendeley_v3": true
+      },
+      "mendeley_v3_sha256": "51e41acafc574fd4f7853b4a64676775e9695e8dd9fd2eb937e1587f9a41678b",
+      "mendeley_v3_size_bytes": 346004976,
+      "prior_best_rule": {
+        "calibration": {
+          "coverage": 0.00032498154826987043,
+          "positives": 223,
+          "precision": 0.9911111111111112,
+          "support": 225,
+          "wilson95_lcb": 0.9681751470156602
+        },
+        "candidate_class": "strict_non_leaky",
+        "min_support": 225,
+        "min_wilson95_lcb": 0.9593303773955086,
+        "passes_coverage": false,
+        "passes_support": true,
+        "passes_wilson95": true,
+        "rule_type": "and2",
+        "test": {
+          "coverage": 0.0005531900142702802,
+          "positives": 375,
+          "precision": 0.97911227154047,
+          "support": 383,
+          "wilson95_lcb": 0.9593303773955086
+        }
+      },
+      "prior_gate_entry_available": true,
+      "status": "verified_prior_gate_still_applicable"
+    },
+    {
+      "accepted_95_chronology_grade": false,
+      "accepted_95_rule_only": false,
+      "chronology_grade": "blocked_file_order_not_global_chronology",
+      "chronology_reason": "nft_ml_sample.py writes rows sorted by contractAddress,timestamp after dropping timestamp",
+      "download_url": "https://data.mendeley.com/public-files/datasets/4hyxfwzpgg/files/34c45754-393a-4a58-84b9-ff6227d349f9/file_downloaded",
+      "filename": "LooksRare_ml_samples.csv",
+      "local": {
+        "actual_sha256": "b50e57907f9c5602f251c261cc4f29889d2f3ceeeaf9cbcfcca447a1fa566c3f",
+        "exists": true,
+        "path": "/private/tmp/ict-regime-mendeley-wash-trading/LooksRare_ml_samples.csv",
+        "sha256_matches_mendeley_v3": true
+      },
+      "mendeley_v3_sha256": "b50e57907f9c5602f251c261cc4f29889d2f3ceeeaf9cbcfcca447a1fa566c3f",
+      "mendeley_v3_size_bytes": 38651230,
+      "prior_best_rule": {
+        "calibration": {
+          "coverage": 0.0010470551573698971,
+          "positives": 82,
+          "precision": 0.9761904761904762,
+          "support": 84,
+          "wilson95_lcb": 0.9172855899143008
+        },
+        "candidate_class": "strict_non_leaky",
+        "min_support": 84,
+        "min_wilson95_lcb": 0.9172855899143008,
+        "passes_coverage": false,
+        "passes_support": false,
+        "passes_wilson95": false,
+        "rule_type": "and2",
+        "test": {
+          "coverage": 0.002991586163913992,
+          "positives": 240,
+          "precision": 1.0,
+          "support": 240,
+          "wilson95_lcb": 0.9842460800584413
+        }
+      },
+      "prior_gate_entry_available": true,
+      "status": "verified_prior_gate_still_applicable"
+    },
+    {
+      "accepted_95_chronology_grade": null,
+      "accepted_95_rule_only": null,
+      "chronology_grade": "blocked_file_order_not_global_chronology",
+      "chronology_reason": "nft_ml_sample.py writes rows sorted by contractAddress,timestamp after dropping timestamp",
+      "download_url": "https://data.mendeley.com/public-files/datasets/4hyxfwzpgg/files/83fb5bdf-7bd8-4acc-a528-75631a2a64cf/file_downloaded",
+      "filename": "OpenSea_ml_samples.csv",
+      "local": {
+        "actual_sha256": null,
+        "exists": false,
+        "path": null,
+        "sha256_matches_mendeley_v3": false
+      },
+      "mendeley_v3_sha256": "9b04bec65d083053b02ea82eb8432f48fdc2d8e27fe1a45565847a35c355e32f",
+      "mendeley_v3_size_bytes": 2127010916,
+      "prior_best_rule": null,
+      "prior_gate_entry_available": true,
+      "status": "blocked_not_fetched_disk_capacity"
+    },
+    {
+      "accepted_95_chronology_grade": false,
+      "accepted_95_rule_only": false,
+      "chronology_grade": "indirect_source_script_chronology",
+      "chronology_reason": "gox_ml_sample.py sorts by time immediately before writing features, but timestamp is absent from the ML CSV",
+      "download_url": "https://data.mendeley.com/public-files/datasets/4hyxfwzpgg/files/32c0bbb6-ea90-4fa3-a6da-b1216faf162e/file_downloaded",
+      "filename": "gox_ml_samples.csv",
+      "local": {
+        "actual_sha256": "28cd2a2cca5aed49964e7e75043f9a79f773018d1e891add17319f7541716bff",
+        "exists": true,
+        "path": "/private/tmp/ict-regime-mendeley-wash-trading/gox_ml_samples.csv",
+        "sha256_matches_mendeley_v3": true
+      },
+      "mendeley_v3_sha256": "28cd2a2cca5aed49964e7e75043f9a79f773018d1e891add17319f7541716bff",
+      "mendeley_v3_size_bytes": 986063630,
+      "prior_best_rule": {
+        "calibration": {
+          "coverage": 0.05223892726533929,
+          "positives": 51475,
+          "precision": 0.8897704487312452,
+          "support": 57852,
+          "wilson95_lcb": 0.8871925447016642
+        },
+        "candidate_class": "strict_non_leaky",
+        "min_support": 24934,
+        "min_wilson95_lcb": 0.8871925447016642,
+        "passes_coverage": false,
+        "passes_support": true,
+        "passes_wilson95": false,
+        "rule_type": "and2",
+        "test": {
+          "coverage": 0.0225147658903193,
+          "positives": 23329,
+          "precision": 0.9356300633672896,
+          "support": 24934,
+          "wilson95_lcb": 0.9325163427318617
+        }
+      },
+      "prior_gate_entry_available": true,
+      "status": "verified_prior_gate_still_applicable"
+    }
+  ],
+  "main_price_roots": [
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis"
+  ],
+  "objective": "Re-fetch Mendeley v3 metadata and re-audit whether unchanged prior wash-trading gates can add accepted direct Manipulation label coverage.",
+  "prior_gox_hgb_readback": {
+    "accepted_95": false,
+    "blockers": [
+      "test_coverage_below_min",
+      "calibration_ece_above_max",
+      "test_ece_above_max"
+    ],
+    "calibration": {
+      "coverage": 0.030348999954851234,
+      "ece_10bin": 0.08171197215474314,
+      "precision": 0.9783397798274324,
+      "rows": 1107450,
+      "successes": 32882,
+      "support": 33610,
+      "wilson_lcb_95": 0.9767279547055007
+    },
+    "gate_result": "blocked_mendeley_gox_hgb_wash_below_95",
+    "test": {
+      "coverage": 0.008994528877575621,
+      "ece_10bin": 0.11550138174952651,
+      "precision": 0.987953016765385,
+      "rows": 1107451,
+      "successes": 9841,
+      "support": 9961,
+      "wilson_lcb_95": 0.9856146629785103
+    }
+  },
+  "run_id": "20260511T082950+0800-codex-mendeley-v3-current-reaudit",
+  "source": {
+    "doi": "10.17632/4hyxfwzpgg.3",
+    "files_url": "https://data.mendeley.com/public-api/datasets/4hyxfwzpgg/files?folder_id=root&version=3",
+    "id": "4hyxfwzpgg",
+    "metadata_cache": "/private/tmp/mendeley_v3_files_current.json"
+  }
+}

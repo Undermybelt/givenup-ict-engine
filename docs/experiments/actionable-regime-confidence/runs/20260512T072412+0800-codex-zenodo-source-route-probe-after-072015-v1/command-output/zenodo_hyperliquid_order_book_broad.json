@@ -1,0 +1,2238 @@
+{
+  "aggregations": {
+    "access_status": {
+      "buckets": [
+        {
+          "doc_count": 242380,
+          "is_selected": false,
+          "key": "open",
+          "label": "Open"
+        },
+        {
+          "doc_count": 16441,
+          "is_selected": false,
+          "key": "restricted",
+          "label": "Restricted"
+        },
+        {
+          "doc_count": 356,
+          "is_selected": false,
+          "key": "embargoed",
+          "label": "Embargoed"
+        }
+      ],
+      "label": "Access status"
+    },
+    "file_type": {
+      "buckets": [
+        {
+          "doc_count": 159037,
+          "is_selected": false,
+          "key": "pdf",
+          "label": "PDF"
+        },
+        {
+          "doc_count": 55167,
+          "is_selected": false,
+          "key": "html",
+          "label": "HTML"
+        },
+        {
+          "doc_count": 9467,
+          "is_selected": false,
+          "key": "zip",
+          "label": "ZIP"
+        },
+        {
+          "doc_count": 5369,
+          "is_selected": false,
+          "key": "png",
+          "label": "PNG"
+        },
+        {
+          "doc_count": 4139,
+          "is_selected": false,
+          "key": "docx",
+          "label": "DOCX"
+        },
+        {
+          "doc_count": 3387,
+          "is_selected": false,
+          "key": "txt",
+          "label": "TXT"
+        },
+        {
+          "doc_count": 2822,
+          "is_selected": false,
+          "key": "csv",
+          "label": "CSV"
+        },
+        {
+          "doc_count": 2805,
+          "is_selected": false,
+          "key": "xlsx",
+          "label": "XLSX"
+        },
+        {
+          "doc_count": 2638,
+          "is_selected": false,
+          "key": "jpg",
+          "label": "JPG"
+        },
+        {
+          "doc_count": 2360,
+          "is_selected": false,
+          "key": "xml",
+          "label": "XML"
+        }
+      ],
+      "label": "File type"
+    },
+    "publication_date": {
+      "buckets": [
+        {
+          "doc_count": 239,
+          "is_selected": false,
+          "key": "2000",
+          "label": "2000"
+        },
+        {
+          "doc_count": 257,
+          "is_selected": false,
+          "key": "2001",
+          "label": "2001"
+        },
+        {
+          "doc_count": 390,
+          "is_selected": false,
+          "key": "2002",
+          "label": "2002"
+        },
+        {
+          "doc_count": 528,
+          "is_selected": false,
+          "key": "2003",
+          "label": "2003"
+        },
+        {
+          "doc_count": 575,
+          "is_selected": false,
+          "key": "2004",
+          "label": "2004"
+        },
+        {
+          "doc_count": 10787,
+          "is_selected": false,
+          "key": "2005",
+          "label": "2005"
+        },
+        {
+          "doc_count": 1004,
+          "is_selected": false,
+          "key": "2006",
+          "label": "2006"
+        },
+        {
+          "doc_count": 10579,
+          "is_selected": false,
+          "key": "2007",
+          "label": "2007"
+        },
+        {
+          "doc_count": 1928,
+          "is_selected": false,
+          "key": "2008",
+          "label": "2008"
+        },
+        {
+          "doc_count": 2982,
+          "is_selected": false,
+          "key": "2009",
+          "label": "2009"
+        },
+        {
+          "doc_count": 2204,
+          "is_selected": false,
+          "key": "2010",
+          "label": "2010"
+        },
+        {
+          "doc_count": 2713,
+          "is_selected": false,
+          "key": "2011",
+          "label": "2011"
+        },
+        {
+          "doc_count": 3212,
+          "is_selected": false,
+          "key": "2012",
+          "label": "2012"
+        },
+        {
+          "doc_count": 3725,
+          "is_selected": false,
+          "key": "2013",
+          "label": "2013"
+        },
+        {
+          "doc_count": 5777,
+          "is_selected": false,
+          "key": "2014",
+          "label": "2014"
+        },
+        {
+          "doc_count": 5357,
+          "is_selected": false,
+          "key": "2015",
+          "label": "2015"
+        },
+        {
+          "doc_count": 6323,
+          "is_selected": false,
+          "key": "2016",
+          "label": "2016"
+        },
+        {
+          "doc_count": 9531,
+          "is_selected": false,
+          "key": "2017",
+          "label": "2017"
+        },
+        {
+          "doc_count": 10807,
+          "is_selected": false,
+          "key": "2018",
+          "label": "2018"
+        },
+        {
+          "doc_count": 12337,
+          "is_selected": false,
+          "key": "2019",
+          "label": "2019"
+        },
+        {
+          "doc_count": 14034,
+          "is_selected": false,
+          "key": "2020",
+          "label": "2020"
+        },
+        {
+          "doc_count": 17075,
+          "is_selected": false,
+          "key": "2021",
+          "label": "2021"
+        },
+        {
+          "doc_count": 17886,
+          "is_selected": false,
+          "key": "2022",
+          "label": "2022"
+        },
+        {
+          "doc_count": 21621,
+          "is_selected": false,
+          "key": "2023",
+          "label": "2023"
+        },
+        {
+          "doc_count": 23798,
+          "is_selected": false,
+          "key": "2024",
+          "label": "2024"
+        },
+        {
+          "doc_count": 30577,
+          "is_selected": false,
+          "key": "2025",
+          "label": "2025"
+        },
+        {
+          "doc_count": 22476,
+          "is_selected": false,
+          "key": "2026",
+          "label": "2026"
+        }
+      ],
+      "label": "Publication date"
+    },
+    "resource_type": {
+      "buckets": [
+        {
+          "doc_count": 225536,
+          "inner": {
+            "buckets": [
+              {
+                "doc_count": 112057,
+                "is_selected": false,
+                "key": "publication-article",
+                "label": "Journal article"
+              },
+              {
+                "doc_count": 53999,
+                "is_selected": false,
+                "key": "publication-taxonomictreatment",
+                "label": "Taxonomic treatment"
+              },
+              {
+                "doc_count": 11535,
+                "is_selected": false,
+                "key": "publication-book",
+                "label": "Book"
+              },
+              {
+                "doc_count": 10553,
+                "is_selected": false,
+                "key": "publication-conferencepaper",
+                "label": "Conference paper"
+              },
+              {
+                "doc_count": 8933,
+                "is_selected": false,
+                "key": "publication-preprint",
+                "label": "Preprint"
+              },
+              {
+                "doc_count": 5564,
+                "is_selected": false,
+                "key": "publication-section",
+                "label": "Book chapter"
+              },
+              {
+                "doc_count": 2960,
+                "is_selected": false,
+                "key": "publication-report",
+                "label": "Report"
+              },
+              {
+                "doc_count": 2920,
+                "is_selected": false,
+                "key": "publication-deliverable",
+                "label": "Project deliverable"
+              },
+              {
+                "doc_count": 2052,
+                "is_selected": false,
+                "key": "publication-dissertation",
+                "label": "Thesis"
+              },
+              {
+                "doc_count": 1832,
+                "is_selected": false,
+                "key": "publication-journal",
+                "label": "Journal"
+              }
+            ]
+          },
+          "is_selected": false,
+          "key": "publication",
+          "label": "Publication"
+        },
+        {
+          "doc_count": 14615,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "dataset",
+          "label": "Dataset"
+        },
+        {
+          "doc_count": 5066,
+          "inner": {
+            "buckets": [
+              {
+                "doc_count": 174,
+                "is_selected": false,
+                "key": "software-computationalnotebook",
+                "label": "Computational notebook"
+              }
+            ]
+          },
+          "is_selected": false,
+          "key": "software",
+          "label": "Software"
+        },
+        {
+          "doc_count": 4757,
+          "inner": {
+            "buckets": [
+              {
+                "doc_count": 4268,
+                "is_selected": false,
+                "key": "image-figure",
+                "label": "Figure"
+              },
+              {
+                "doc_count": 159,
+                "is_selected": false,
+                "key": "image-photo",
+                "label": "Photo"
+              },
+              {
+                "doc_count": 64,
+                "is_selected": false,
+                "key": "image-other",
+                "label": "Other"
+              },
+              {
+                "doc_count": 55,
+                "is_selected": false,
+                "key": "image-diagram",
+                "label": "Diagram"
+              },
+              {
+                "doc_count": 16,
+                "is_selected": false,
+                "key": "image-plot",
+                "label": "Plot"
+              },
+              {
+                "doc_count": 15,
+                "is_selected": false,
+                "key": "image-drawing",
+                "label": "Drawing"
+              }
+            ]
+          },
+          "is_selected": false,
+          "key": "image",
+          "label": "Image"
+        },
+        {
+          "doc_count": 3473,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "presentation",
+          "label": "Presentation"
+        },
+        {
+          "doc_count": 2109,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "poster",
+          "label": "Poster"
+        },
+        {
+          "doc_count": 1730,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "other",
+          "label": "Other"
+        },
+        {
+          "doc_count": 902,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "video",
+          "label": "Video/Audio"
+        },
+        {
+          "doc_count": 438,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "lesson",
+          "label": "Lesson"
+        },
+        {
+          "doc_count": 248,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "model",
+          "label": "Model"
+        }
+      ],
+      "label": "Resource types"
+    },
+    "subject": {
+      "buckets": [
+        {
+          "doc_count": 78130,
+          "is_selected": false,
+          "key": "Biodiversity",
+          "label": "Biodiversity"
+        },
+        {
+          "doc_count": 73021,
+          "is_selected": false,
+          "key": "Taxonomy",
+          "label": "Taxonomy"
+        },
+        {
+          "doc_count": 55473,
+          "is_selected": false,
+          "key": "Animalia",
+          "label": "Animalia"
+        },
+        {
+          "doc_count": 28046,
+          "is_selected": false,
+          "key": "Chordata",
+          "label": "Chordata"
+        },
+        {
+          "doc_count": 24022,
+          "is_selected": false,
+          "key": "Mammalia",
+          "label": "Mammalia"
+        },
+        {
+          "doc_count": 22688,
+          "is_selected": false,
+          "key": "Arthropoda",
+          "label": "Arthropoda"
+        },
+        {
+          "doc_count": 14702,
+          "is_selected": false,
+          "key": "Insecta",
+          "label": "Insecta"
+        },
+        {
+          "doc_count": 11926,
+          "is_selected": false,
+          "key": "Plantae",
+          "label": "Plantae"
+        },
+        {
+          "doc_count": 11334,
+          "is_selected": false,
+          "key": "Tracheophyta",
+          "label": "Tracheophyta"
+        },
+        {
+          "doc_count": 9139,
+          "is_selected": false,
+          "key": "Magnoliopsida",
+          "label": "Magnoliopsida"
+        }
+      ],
+      "label": "Subjects"
+    }
+  },
+  "hits": {
+    "hits": [
+      {
+        "conceptdoi": "10.5281/zenodo.18184440",
+        "conceptrecid": "18184440",
+        "created": "2026-03-25T16:59:52.400350+00:00",
+        "doi": "10.5281/zenodo.18184441",
+        "doi_url": "https://doi.org/10.5281/zenodo.18184441",
+        "files": [
+          {
+            "checksum": "md5:5b2b2007dbd59196ba010e2b3923f5e0",
+            "id": "faaef2e5-0840-4110-b0b8-ac61b37bd72e",
+            "key": "btc_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/btc_orders_202512.tar.xz/content"
+            },
+            "size": 19268354932
+          },
+          {
+            "checksum": "md5:3cbb57a28ef63339bb1c60252cbd3024",
+            "id": "5d90bcd4-f279-4f87-962b-927179279a26",
+            "key": "eth_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/eth_orders_202512.tar.xz/content"
+            },
+            "size": 12120113008
+          },
+          {
+            "checksum": "md5:df9b9220373a6f11403a75796a084c6d",
+            "id": "d59f1002-353b-4fad-9f0b-92a78e71337a",
+            "key": "btc_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/btc_rejected_202512.tar.xz/content"
+            },
+            "size": 46038646232
+          },
+          {
+            "checksum": "md5:b2a54cf4796f95b524bbdf108d835522",
+            "id": "d42bb177-d349-41c0-a186-03fa97ffe1a1",
+            "key": "eth_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/eth_rejected_202512.tar.xz/content"
+            },
+            "size": 24087215608
+          },
+          {
+            "checksum": "md5:5abed7980b4d8c57651dbb9237c02d88",
+            "id": "8d1f05ae-12d8-40f6-baa2-943579646de0",
+            "key": "sol_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/sol_orders_202512.tar.xz/content"
+            },
+            "size": 6271301388
+          },
+          {
+            "checksum": "md5:7bbe3626b137d356ea4c5c3009cb3e56",
+            "id": "31aaeb73-55bd-467e-a91b-5f125f5c2fd2",
+            "key": "sol_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/sol_rejected_202512.tar.xz/content"
+            },
+            "size": 8529075876
+          },
+          {
+            "checksum": "md5:350656ae19550b14d2e1ebe025b25dc7",
+            "id": "97753436-5bc1-49cf-b570-11443f0203e1",
+            "key": "book_diffs_202512.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/book_diffs_202512.tar/content"
+            },
+            "size": 49555435520
+          },
+          {
+            "checksum": "md5:582490cf94b58068a6ae59aedb63c952",
+            "id": "c4d844ac-26ab-47fd-a7ef-34287d4a721e",
+            "key": "trades_2025_10.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_10.tar/content"
+            },
+            "size": 10049740800
+          },
+          {
+            "checksum": "md5:6fbab17d761b67e279ac0592e8520af7",
+            "id": "605f1cf0-0ce2-4792-a1ba-a24998a39720",
+            "key": "trades_2025_11.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_11.tar/content"
+            },
+            "size": 8847390720
+          },
+          {
+            "checksum": "md5:434b242b9b897e689576b3eea8450e0c",
+            "id": "ef9ee6b5-a3c9-45fa-a356-e998b471afdf",
+            "key": "trades_2026_01.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2026_01.tar/content"
+            },
+            "size": 3847168000
+          },
+          {
+            "checksum": "md5:83f0ecdcc34a5d55e93048ac844bed3f",
+            "id": "5dbbba8c-a7c9-4109-b7f4-7f37412c3f54",
+            "key": "mapdir.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/mapdir.tar.xz/content"
+            },
+            "size": 10188884
+          },
+          {
+            "checksum": "md5:03ccb90a9042880ef7360a54f49c9a6b",
+            "id": "56b03cfe-4a0f-4ffe-a48d-4d5c30244f31",
+            "key": "read_data.py",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/read_data.py/content"
+            },
+            "size": 24427
+          },
+          {
+            "checksum": "md5:44f6eaf275db120e32678c263809610d",
+            "id": "49831920-4e96-4e7e-87d4-98c8710b07c0",
+            "key": "SCHEMA.md",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/SCHEMA.md/content"
+            },
+            "size": 16136
+          },
+          {
+            "checksum": "md5:79c1f3018c90cfdce86bc68fccd1a6d8",
+            "id": "d21e3597-8b05-44e0-a824-c6af2756fee4",
+            "key": "README.md",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/README.md/content"
+            },
+            "size": 5407
+          },
+          {
+            "checksum": "md5:7949be6a52ec7fb3b591ee633bae3329",
+            "id": "0db63fc7-e146-4bbb-8b0b-aacbca3fb9df",
+            "key": "trades_2025_12.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_12.tar/content"
+            },
+            "size": 6694522880
+          }
+        ],
+        "id": 18184441,
+        "links": {
+          "access": "https://zenodo.org/api/records/18184441/access",
+          "access_grants": "https://zenodo.org/api/records/18184441/access/grants",
+          "access_links": "https://zenodo.org/api/records/18184441/access/links",
+          "access_request": "https://zenodo.org/api/records/18184441/access/request",
+          "access_users": "https://zenodo.org/api/records/18184441/access/users",
+          "archive": "https://zenodo.org/api/records/18184441/files-archive",
+          "archive_media": "https://zenodo.org/api/records/18184441/media-files-archive",
+          "communities": "https://zenodo.org/api/records/18184441/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/18184441/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.18184441",
+          "draft": "https://zenodo.org/api/records/18184441/draft",
+          "file_modification": "https://zenodo.org/api/records/18184441/file-modification",
+          "files": "https://zenodo.org/api/records/18184441/files",
+          "latest": "https://zenodo.org/api/records/18184441/versions/latest",
+          "latest_html": "https://zenodo.org/records/18184441/latest",
+          "media_files": "https://zenodo.org/api/records/18184441/media-files",
+          "parent": "https://zenodo.org/api/records/18184440",
+          "parent_doi": "https://doi.org/10.5281/zenodo.18184440",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18184440",
+          "parent_html": "https://zenodo.org/records/18184440",
+          "preview_html": "https://zenodo.org/records/18184441?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/18184441/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/18184441/request-deletion",
+          "requests": "https://zenodo.org/api/records/18184441/requests",
+          "reserve_doi": "https://zenodo.org/api/records/18184441/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/18184441",
+          "self_doi": "https://doi.org/10.5281/zenodo.18184441",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18184441",
+          "self_html": "https://zenodo.org/records/18184441",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:18184441/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:18184441/sequence/default",
+          "versions": "https://zenodo.org/api/records/18184441/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "contributors": [
+            {
+              "affiliation": "University of Oxford",
+              "name": "Albers, Jakob",
+              "type": "DataCollector"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "University of Oxford",
+              "name": "Albers, Jakob"
+            },
+            {
+              "affiliation": "University of California, Los Angeles",
+              "name": "Cucuringu, Mihai"
+            },
+            {
+              "affiliation": "University of Oxford",
+              "name": "Howison, Sam"
+            },
+            {
+              "affiliation": "Queen Mary University of London",
+              "name": "Shestopaloff, Alexander Y."
+            }
+          ],
+          "description": "<div>This dataset accompanies the paper \"An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange.\"</div>\n<div>&nbsp;</div>\n<div>It contains three data streams from the Hyperliquid decentralized perpetual futures exchange:</div>\n<div>&nbsp;</div>\n<div>- Order statuses (Dec 2025): Complete order lifecycle events for BTC, ETH, and SOL perpetual contracts, including rejected orders &mdash; data typically unavailable from any exchange. Custom binary format, 54 bytes per&nbsp;record. ~880 million records per day.</div>\n<div>- Raw book diffs (Dec 2025): Every change to the visible limit order book for BTC, ETH, and SOL. Gzip-compressed JSON lines.</div>\n<div>- Trades (Oct 2025 &ndash; Jan 2026): Trade execution data for all 250+ perpetual contracts. Gzip-compressed JSON lines.</div>\n<div>&nbsp;</div>\n<div>Includes lookup tables, a Python reader (read_data.py), and full schema documentation (SCHEMA.md). See README.md for quick start instructions.</div>",
+          "doi": "10.5281/zenodo.18184441",
+          "keywords": [
+            "market microstructure",
+            "high-frequency trading",
+            "order flow",
+            "limit order book",
+            "rejected orders",
+            "Hyperliquid",
+            "cryptocurrency",
+            "perpetual futures"
+          ],
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2026-03-25",
+          "related_identifiers": [
+            {
+              "identifier": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6250738",
+              "relation": "isSupplementTo",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            },
+            {
+              "identifier": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6250378",
+              "relation": "isSupplementTo",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            },
+            {
+              "identifier": "https://papers.ssrn.com/abstract=6465720",
+              "relation": "isDescribedBy",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            }
+          ],
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "18184440"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Dataset",
+            "type": "dataset"
+          },
+          "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+          "version": "1.0"
+        },
+        "modified": "2026-03-25T16:59:53.103968+00:00",
+        "owners": [
+          {
+            "id": "1438183"
+          }
+        ],
+        "recid": "18184441",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 186,
+          "unique_downloads": 181,
+          "unique_views": 183,
+          "version_downloads": 186,
+          "version_unique_downloads": 181,
+          "version_unique_views": 183,
+          "version_views": 197,
+          "views": 197
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+        "updated": "2026-03-25T16:59:53.103968+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15847285",
+        "conceptrecid": "15847285",
+        "created": "2025-07-09T11:02:05.084464+00:00",
+        "doi": "10.5281/zenodo.15847286",
+        "doi_url": "https://doi.org/10.5281/zenodo.15847286",
+        "files": [
+          {
+            "checksum": "md5:8e0ee58d1daec2964310bd788b367e25",
+            "id": "041b8df5-cd07-4bc2-930a-6cd54147af08",
+            "key": "D8.4 City Communication Pack.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/15847286/files/D8.4%20City%20Communication%20Pack.pdf/content"
+            },
+            "size": 12600943
+          }
+        ],
+        "id": 15847286,
+        "links": {
+          "access": "https://zenodo.org/api/records/15847286/access",
+          "access_grants": "https://zenodo.org/api/records/15847286/access/grants",
+          "access_links": "https://zenodo.org/api/records/15847286/access/links",
+          "access_request": "https://zenodo.org/api/records/15847286/access/request",
+          "access_users": "https://zenodo.org/api/records/15847286/access/users",
+          "archive": "https://zenodo.org/api/records/15847286/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15847286/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15847286/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15847286/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15847286",
+          "draft": "https://zenodo.org/api/records/15847286/draft",
+          "file_modification": "https://zenodo.org/api/records/15847286/file-modification",
+          "files": "https://zenodo.org/api/records/15847286/files",
+          "latest": "https://zenodo.org/api/records/15847286/versions/latest",
+          "latest_html": "https://zenodo.org/records/15847286/latest",
+          "media_files": "https://zenodo.org/api/records/15847286/media-files",
+          "parent": "https://zenodo.org/api/records/15847285",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15847285",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15847285",
+          "parent_html": "https://zenodo.org/records/15847285",
+          "preview_html": "https://zenodo.org/records/15847286?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15847286/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15847286/request-deletion",
+          "requests": "https://zenodo.org/api/records/15847286/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15847286/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15847286",
+          "self_doi": "https://doi.org/10.5281/zenodo.15847286",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15847286",
+          "self_html": "https://zenodo.org/records/15847286",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15847286/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15847286/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:15847286:D8.4%20City%20Communication%20Pack.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:15847286:D8.4%20City%20Communication%20Pack.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:15847286:D8.4%20City%20Communication%20Pack.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:15847286:D8.4%20City%20Communication%20Pack.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:15847286:D8.4%20City%20Communication%20Pack.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:15847286:D8.4%20City%20Communication%20Pack.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/15847286/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Bavuso, Daniela"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Bordin, Daniela"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Stefano"
+            }
+          ],
+          "dates": [
+            {
+              "type": "accepted"
+            }
+          ],
+          "description": "<p>This document represents an overview of the available items and tools referring to D 8.4. City&nbsp;Communication Pack of the INclusive Health And wellBeing In small and medium size ciTies&nbsp;(IN-HABIT) project, WP8 Dissemination, Communication and Outreach. It includes all the&nbsp;available visual and digital tools, shared with the Local Community Activators (LCAs) of the<br>participating cities and the Key Local Contacts (KLCs) in charge of communication actions. The&nbsp;tools have been developed after a thorough discussion with the above-mentioned teams, to&nbsp;guarantee a simple, user-friendly, and effective use during local communication and&nbsp;dissemination activities and events.<br>The communication strategy is tightly coupled with the dissemination activities, given that the&nbsp;focus from the start will be on creating awareness by publicising the project in the cities and&nbsp;beyond. To multiply the impact and adapt the communication efforts, partners will use their local&nbsp;media and own communication channels to disseminate project results and engage with local&nbsp;actors. Each partner is responsible for identifying local stakeholders in its city/country and&nbsp;ensuring that the project communication reaches the largest possible number of targeted actors&nbsp;at a local level. Other city and international levels will be also targeted through city networks&nbsp;and relevant events.<br>An initial version of the D 8.4 is issued in M16 and will be a living document that will evolve&nbsp;during the project&rsquo;s lifetime. As local communication initiatives are held, and communication&nbsp;necessities emerge, other specific tools will be added to the package and shared with the Project&nbsp;Partners. The package will be stored in the internal repository of IN-HABIT documents, ensuring&nbsp;access to all partners.</p>",
+          "doi": "10.5281/zenodo.15847286",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2021-12-31",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15847285"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.4 City Communication Pack"
+        },
+        "modified": "2025-07-09T11:02:05.370512+00:00",
+        "owners": [
+          {
+            "id": "367694"
+          }
+        ],
+        "recid": "15847286",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 21,
+          "unique_downloads": 16,
+          "unique_views": 17,
+          "version_downloads": 21,
+          "version_unique_downloads": 16,
+          "version_unique_views": 17,
+          "version_views": 18,
+          "views": 18
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.4 City Communication Pack",
+        "updated": "2025-07-09T11:02:05.370512+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15846856",
+        "conceptrecid": "15846856",
+        "created": "2025-07-09T10:12:45.057469+00:00",
+        "doi": "10.5281/zenodo.15846857",
+        "doi_url": "https://doi.org/10.5281/zenodo.15846857",
+        "files": [
+          {
+            "checksum": "md5:2d111cedd981fc5bd7b42991fe7277de",
+            "id": "e86c49fe-4dfd-45dc-9a23-01c665093385",
+            "key": "D8.2 Promotional Video.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/15846857/files/D8.2%20Promotional%20Video.pdf/content"
+            },
+            "size": 34234478
+          }
+        ],
+        "id": 15846857,
+        "links": {
+          "access": "https://zenodo.org/api/records/15846857/access",
+          "access_grants": "https://zenodo.org/api/records/15846857/access/grants",
+          "access_links": "https://zenodo.org/api/records/15846857/access/links",
+          "access_request": "https://zenodo.org/api/records/15846857/access/request",
+          "access_users": "https://zenodo.org/api/records/15846857/access/users",
+          "archive": "https://zenodo.org/api/records/15846857/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15846857/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15846857/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15846857/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15846857",
+          "draft": "https://zenodo.org/api/records/15846857/draft",
+          "file_modification": "https://zenodo.org/api/records/15846857/file-modification",
+          "files": "https://zenodo.org/api/records/15846857/files",
+          "latest": "https://zenodo.org/api/records/15846857/versions/latest",
+          "latest_html": "https://zenodo.org/records/15846857/latest",
+          "media_files": "https://zenodo.org/api/records/15846857/media-files",
+          "parent": "https://zenodo.org/api/records/15846856",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15846856",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15846856",
+          "parent_html": "https://zenodo.org/records/15846856",
+          "preview_html": "https://zenodo.org/records/15846857?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15846857/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15846857/request-deletion",
+          "requests": "https://zenodo.org/api/records/15846857/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15846857/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15846857",
+          "self_doi": "https://doi.org/10.5281/zenodo.15846857",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15846857",
+          "self_html": "https://zenodo.org/records/15846857",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15846857/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15846857/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:15846857:D8.2%20Promotional%20Video.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:15846857:D8.2%20Promotional%20Video.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:15846857:D8.2%20Promotional%20Video.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:15846857:D8.2%20Promotional%20Video.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:15846857:D8.2%20Promotional%20Video.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:15846857:D8.2%20Promotional%20Video.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/15846857/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Stefano"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Bordin, Daniela"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Cianchi, Emma"
+            }
+          ],
+          "description": "<div>\n<div>\n<div>\n<div>\n<p>This document outlines the development of the INclusive Health And wellBeing In small and medium size ciTies (IN-HABIT) promotional video &ndash; WP8 Dissemination, Exploitation, Communication and Outreach (DECO) strategy &ndash; deliverable D8.2 of task 8.2 (communication and engagement actions and tools).<br><br></p>\n<div>\n<div>\n<div>\n<div>\n<p>The outcome is a promotional video about the project and four local spotlight videos, available on <a href=\"https://www.inhabit-h2020.eu/media-press/\">IN-HABIT's website</a> and&nbsp;<a href=\"https://www.youtube.com/watch?v=zXe7ywJIakw\">YouTube channe</a>l.</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>",
+          "doi": "10.5281/zenodo.15846857",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2021-09-30",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15846856"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.2 - IN-HABIT Promotional Video"
+        },
+        "modified": "2025-07-09T10:12:45.319534+00:00",
+        "owners": [
+          {
+            "id": "367694"
+          }
+        ],
+        "recid": "15846857",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 21,
+          "unique_downloads": 18,
+          "unique_views": 20,
+          "version_downloads": 21,
+          "version_unique_downloads": 18,
+          "version_unique_views": 20,
+          "version_views": 22,
+          "views": 22
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.2 - IN-HABIT Promotional Video",
+        "updated": "2025-07-09T10:12:45.319534+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15848387",
+        "conceptrecid": "15848387",
+        "created": "2025-07-09T13:19:29.411604+00:00",
+        "doi": "10.5281/zenodo.15848388",
+        "doi_url": "https://doi.org/10.5281/zenodo.15848388",
+        "files": [
+          {
+            "checksum": "md5:36076c1ba6ce02a3888c023dd07b8db4",
+            "id": "bd00d657-87f4-499b-9957-55b075e31213",
+            "key": "D8.7 Dissemination and Communication Actions Report II.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/15848388/files/D8.7%20Dissemination%20and%20Communication%20Actions%20Report%20II.pdf/content"
+            },
+            "size": 1725406
+          }
+        ],
+        "id": 15848388,
+        "links": {
+          "access": "https://zenodo.org/api/records/15848388/access",
+          "access_grants": "https://zenodo.org/api/records/15848388/access/grants",
+          "access_links": "https://zenodo.org/api/records/15848388/access/links",
+          "access_request": "https://zenodo.org/api/records/15848388/access/request",
+          "access_users": "https://zenodo.org/api/records/15848388/access/users",
+          "archive": "https://zenodo.org/api/records/15848388/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15848388/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15848388/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15848388/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15848388",
+          "draft": "https://zenodo.org/api/records/15848388/draft",
+          "file_modification": "https://zenodo.org/api/records/15848388/file-modification",
+          "files": "https://zenodo.org/api/records/15848388/files",
+          "latest": "https://zenodo.org/api/records/15848388/versions/latest",
+          "latest_html": "https://zenodo.org/records/15848388/latest",
+          "media_files": "https://zenodo.org/api/records/15848388/media-files",
+          "parent": "https://zenodo.org/api/records/15848387",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15848387",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15848387",
+          "parent_html": "https://zenodo.org/records/15848387",
+          "preview_html": "https://zenodo.org/records/15848388?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15848388/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15848388/request-deletion",
+          "requests": "https://zenodo.org/api/records/15848388/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15848388/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15848388",
+          "self_doi": "https://doi.org/10.5281/zenodo.15848388",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15848388",
+          "self_html": "https://zenodo.org/records/15848388",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15848388/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15848388/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:15848388:D8.7%20Dissemination%20and%20Communication%20Actions%20Report%20II.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:15848388:D8.7%20Dissemination%20and%20Communication%20Actions%20Report%20II.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:15848388:D8.7%20Dissemination%20and%20Communication%20Actions%20Report%20II.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:15848388:D8.7%20Dissemination%20and%20Communication%20Actions%20Report%20II.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:15848388:D8.7%20Dissemination%20and%20Communication%20Actions%20Report%20II.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:15848388:D8.7%20Dissemination%20and%20Communication%20Actions%20Report%20II.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/15848388/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Casali, Beatrice"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Tinelli, Ariana"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Silvestri Cecinelli, Elena"
+            }
+          ],
+          "dates": [
+            {
+              "type": "accepted"
+            }
+          ],
+          "description": "<div>\n<div>\n<div>\n<div>This deliverable summarises the dissemination and communication activities related to project activities and results carried out by IN-HABIT partners during the last 12 months, M13 to M24 (September 2021-August 2022).</div>\n<div>The structure of the document responds to the WP8 - Dissemination and Communication tasks distribution specified in the Description of Actions (DoA). The distribution of tasks is as follows:</div>\n<ul>\n<li>T8.1. Dissemination &amp; Communication Strategy;</li>\n<li>T8.2. Communication &amp; Engagement Actions and Tools;</li>\n<li>T8.3. Dissemination Actions and Tools.</li>\n</ul>\n</div>\n</div>\n</div>",
+          "doi": "10.5281/zenodo.15848388",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2022-08-31",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15848387"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.7 Dissemination and Communication Actions Report II"
+        },
+        "modified": "2025-07-09T13:19:29.609404+00:00",
+        "owners": [
+          {
+            "id": "367694"
+          }
+        ],
+        "recid": "15848388",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 22,
+          "unique_downloads": 20,
+          "unique_views": 72,
+          "version_downloads": 22,
+          "version_unique_downloads": 20,
+          "version_unique_views": 72,
+          "version_views": 75,
+          "views": 75
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.7 Dissemination and Communication Actions Report II",
+        "updated": "2025-07-09T13:19:29.609404+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15847018",
+        "conceptrecid": "15847018",
+        "created": "2025-07-09T10:36:14.892756+00:00",
+        "doi": "10.5281/zenodo.15847019",
+        "doi_url": "https://doi.org/10.5281/zenodo.15847019",
+        "files": [
+          {
+            "checksum": "md5:57860e64eb921164a5bb7cba1f5d50b7",
+            "id": "be8fb715-f50b-40e0-ae0e-01568a21c04f",
+            "key": "D8.3 IN-HABIT Website.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/15847019/files/D8.3%20IN-HABIT%20Website.pdf/content"
+            },
+            "size": 593638
+          }
+        ],
+        "id": 15847019,
+        "links": {
+          "access": "https://zenodo.org/api/records/15847019/access",
+          "access_grants": "https://zenodo.org/api/records/15847019/access/grants",
+          "access_links": "https://zenodo.org/api/records/15847019/access/links",
+          "access_request": "https://zenodo.org/api/records/15847019/access/request",
+          "access_users": "https://zenodo.org/api/records/15847019/access/users",
+          "archive": "https://zenodo.org/api/records/15847019/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15847019/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15847019/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15847019/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15847019",
+          "draft": "https://zenodo.org/api/records/15847019/draft",
+          "file_modification": "https://zenodo.org/api/records/15847019/file-modification",
+          "files": "https://zenodo.org/api/records/15847019/files",
+          "latest": "https://zenodo.org/api/records/15847019/versions/latest",
+          "latest_html": "https://zenodo.org/records/15847019/latest",
+          "media_files": "https://zenodo.org/api/records/15847019/media-files",
+          "parent": "https://zenodo.org/api/records/15847018",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15847018",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15847018",
+          "parent_html": "https://zenodo.org/records/15847018",
+          "preview_html": "https://zenodo.org/records/15847019?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15847019/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15847019/request-deletion",
+          "requests": "https://zenodo.org/api/records/15847019/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15847019/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15847019",
+          "self_doi": "https://doi.org/10.5281/zenodo.15847019",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15847019",
+          "self_html": "https://zenodo.org/records/15847019",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15847019/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15847019/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:15847019:D8.3%20IN-HABIT%20Website.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:15847019:D8.3%20IN-HABIT%20Website.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:15847019:D8.3%20IN-HABIT%20Website.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:15847019:D8.3%20IN-HABIT%20Website.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:15847019:D8.3%20IN-HABIT%20Website.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:15847019:D8.3%20IN-HABIT%20Website.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/15847019/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Silvestri, Elena"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Stefano"
+            },
+            {
+              "affiliation": null,
+              "name": "Bordin, Daniela"
+            }
+          ],
+          "description": "<p>This document outlines the development of the INclusive Health And wellBeing In small and&nbsp;medium size ciTies (IN-HABIT) website &ndash; WP8 Dissemination, Exploitation, Communication and&nbsp;Outreach strategy (DECO) &ndash; deliverable D8.3 of Task 8.2 (communication and engagement&nbsp;actions and tools), with a focus on the creation and amelioration of the project website. The&nbsp;functioning website has been online since M12 (September 2021).&nbsp;<br><br>The ultimate goal is to produce a multilingual, user-friendly and easy-to-navigate space to&nbsp;enhance public awareness and promote local events, news and results through a recognisable&nbsp;and strong visual identity based on the project&rsquo;s communication guidelines, as long as a&nbsp;recognizable dynamic space to disseminate project progress and results.<br><br>The website represents a multilingual modular communication platform whose purpose is to&nbsp;be used by city partners to promote visionary and integrated solutions (VIS), by disseminating&nbsp;project updates, news, events, results and products. The website will be integrated with the IN-HABIT platform and app and will embed social media news feeds throughout the project&nbsp;lifetime.</p>",
+          "doi": "10.5281/zenodo.15847019",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2021-08-31",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15847018"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.3 IN-HABIT Website"
+        },
+        "modified": "2025-07-09T10:36:15.121946+00:00",
+        "owners": [
+          {
+            "id": "367694"
+          }
+        ],
+        "recid": "15847019",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 15,
+          "unique_downloads": 14,
+          "unique_views": 19,
+          "version_downloads": 15,
+          "version_unique_downloads": 14,
+          "version_unique_views": 19,
+          "version_views": 20,
+          "views": 20
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.3 IN-HABIT Website",
+        "updated": "2025-07-09T10:36:15.121946+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.10594520",
+        "conceptrecid": "10594520",
+        "created": "2024-01-30T21:31:32.489457+00:00",
+        "doi": "10.5281/zenodo.10594521",
+        "doi_url": "https://doi.org/10.5281/zenodo.10594521",
+        "files": [
+          {
+            "checksum": "md5:a02f415c1e2d7ba7217209d4976c1eaa",
+            "id": "68a32d61-a0f4-4d69-9fe1-7a519a0caaeb",
+            "key": "Annex 2_IN-HABIT_Communication Guidelines_final_24022021.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/10594521/files/Annex%202_IN-HABIT_Communication%20Guidelines_final_24022021.pdf/content"
+            },
+            "size": 3720747
+          },
+          {
+            "checksum": "md5:a62945887a6bb9cb8d152381c4f97639",
+            "id": "0496c863-2ab1-429d-bf14-6b9c298ea48e",
+            "key": "WP8_D 8.1_ DC Plan_ final_rev25022021_reviewed_FULL.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/10594521/files/WP8_D%208.1_%20DC%20Plan_%20final_rev25022021_reviewed_FULL.pdf/content"
+            },
+            "size": 17019247
+          },
+          {
+            "checksum": "md5:3ec091d50221fe09d9d4d7f01b117813",
+            "id": "51576cb7-c4b7-41e0-a93d-cacdb3685cbb",
+            "key": "Annex 1_IN-HABIT_Visual identity-Guidelines_final_2402021.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/10594521/files/Annex%201_IN-HABIT_Visual%20identity-Guidelines_final_2402021.pdf/content"
+            },
+            "size": 11768202
+          }
+        ],
+        "id": 10594521,
+        "links": {
+          "access": "https://zenodo.org/api/records/10594521/access",
+          "access_grants": "https://zenodo.org/api/records/10594521/access/grants",
+          "access_links": "https://zenodo.org/api/records/10594521/access/links",
+          "access_request": "https://zenodo.org/api/records/10594521/access/request",
+          "access_users": "https://zenodo.org/api/records/10594521/access/users",
+          "archive": "https://zenodo.org/api/records/10594521/files-archive",
+          "archive_media": "https://zenodo.org/api/records/10594521/media-files-archive",
+          "communities": "https://zenodo.org/api/records/10594521/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/10594521/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.10594521",
+          "draft": "https://zenodo.org/api/records/10594521/draft",
+          "file_modification": "https://zenodo.org/api/records/10594521/file-modification",
+          "files": "https://zenodo.org/api/records/10594521/files",
+          "latest": "https://zenodo.org/api/records/10594521/versions/latest",
+          "latest_html": "https://zenodo.org/records/10594521/latest",
+          "media_files": "https://zenodo.org/api/records/10594521/media-files",
+          "parent": "https://zenodo.org/api/records/10594520",
+          "parent_doi": "https://doi.org/10.5281/zenodo.10594520",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.10594520",
+          "parent_html": "https://zenodo.org/records/10594520",
+          "preview_html": "https://zenodo.org/records/10594521?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/10594521/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/10594521/request-deletion",
+          "requests": "https://zenodo.org/api/records/10594521/requests",
+          "reserve_doi": "https://zenodo.org/api/records/10594521/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/10594521",
+          "self_doi": "https://doi.org/10.5281/zenodo.10594521",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.10594521",
+          "self_html": "https://zenodo.org/records/10594521",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:10594521/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:10594521/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:10594521:Annex%202_IN-HABIT_Communication%20Guidelines_final_24022021.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:10594521:Annex%202_IN-HABIT_Communication%20Guidelines_final_24022021.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:10594521:Annex%202_IN-HABIT_Communication%20Guidelines_final_24022021.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:10594521:Annex%202_IN-HABIT_Communication%20Guidelines_final_24022021.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:10594521:Annex%202_IN-HABIT_Communication%20Guidelines_final_24022021.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:10594521:Annex%202_IN-HABIT_Communication%20Guidelines_final_24022021.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/10594521/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Bavuso, Daniela",
+              "orcid": "0009-0009-0757-8837"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Bordin, Daniela"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            }
+          ],
+          "dates": [
+            {
+              "type": "accepted"
+            }
+          ],
+          "description": "<div>\n<div>\n<div>\n<div>\n<p>This document represents a Dissemination and Communication (DC) Plan and a comprehensive Dissemination, Exploitation, Communication and Outreach (DECO) strategy including all the guidelines and actions related to the INclusive Health And wellBeing In small and medium size ciTies (IN-HABIT) project objectives as well as an overview of the various communication strategies, messages and expected key performance indicators (KPIs).</p>\n<p>The strategy includes web, social media, print, audio-visual and digital tools which will be adapted to reach the IN-HABIT relevant target audiences. Tracking and monitoring of these activities will enable the impact of the communication and dissemination activities to be measured.</p>\n<p>The communication strategy is tightly coupled with the dissemination activities, given that the focus from the start will be on creating awareness by publicising the project in the cities and beyond.<br>To multiply the impact and adapt the communication efforts, partners will use their local media and own communication channels to disseminate project results and engage with local actors. Each partner is responsible for identifying local stakeholders in its city/country and ensuring that the project communication reaches the largest possible number of targeted actors at a local level. Other city and international levels will be also targeted through city networks and relevant events.</p>\n<p>An initial version of the DC plan will be issued in M6, but the plan will be a living document that will evolve during the project&rsquo;s lifetime. An addendum taking into account specific local needs emerging from the stakeholder mapping and training activities with community activators and observers, plus the work with local key contacts, will be developed by M12. The DC will be updated throughout the duration of the project based on periodic DECO Committee decisions. Each time the document is updated, all partners will be duly informed.&nbsp;</p>\n<div>\n<div>\n<div>\n<div>\n<p>In addition, the DC will be stored in the internal repository of IN-HABIT documents, ensuring access to all partners.</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>",
+          "doi": "10.5281/zenodo.10594521",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2021-02-28",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "10594520"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.1 IN-HABIT Dissemination and Communication Plan (DECO) & Annexes - Communication and Visual Guidelines"
+        },
+        "modified": "2025-07-09T09:43:48.983514+00:00",
+        "owners": [
+          {
+            "id": "1060783"
+          }
+        ],
+        "recid": "10594521",
+        "revision": 8,
+        "state": "done",
+        "stats": {
+          "downloads": 45,
+          "unique_downloads": 41,
+          "unique_views": 54,
+          "version_downloads": 44,
+          "version_unique_downloads": 40,
+          "version_unique_views": 54,
+          "version_views": 56,
+          "views": 56
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.1 IN-HABIT Dissemination and Communication Plan (DECO) & Annexes - Communication and Visual Guidelines",
+        "updated": "2025-07-09T09:43:48.983514+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15848953",
+        "conceptrecid": "15848953",
+        "created": "2025-07-09T14:27:47.759290+00:00",
+        "doi": "10.5281/zenodo.15848954",
+        "doi_url": "https://doi.org/10.5281/zenodo.15848954",
+        "files": [
+          {
+            "checksum": "md5:7dffc3ab3b3f8ed623254a426ddb1d45",
+            "id": "1d527c3f-30f0-43c9-8f1a-0711d35c7b3c",
+            "key": "D8.11 IN-HABIT Video in Lucca.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/15848954/files/D8.11%20IN-HABIT%20Video%20in%20Lucca.pdf/content"
+            },
+            "size": 183660
+          }
+        ],
+        "id": 15848954,
+        "links": {
+          "access": "https://zenodo.org/api/records/15848954/access",
+          "access_grants": "https://zenodo.org/api/records/15848954/access/grants",
+          "access_links": "https://zenodo.org/api/records/15848954/access/links",
+          "access_request": "https://zenodo.org/api/records/15848954/access/request",
+          "access_users": "https://zenodo.org/api/records/15848954/access/users",
+          "archive": "https://zenodo.org/api/records/15848954/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15848954/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15848954/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15848954/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15848954",
+          "draft": "https://zenodo.org/api/records/15848954/draft",
+          "file_modification": "https://zenodo.org/api/records/15848954/file-modification",
+          "files": "https://zenodo.org/api/records/15848954/files",
+          "latest": "https://zenodo.org/api/records/15848954/versions/latest",
+          "latest_html": "https://zenodo.org/records/15848954/latest",
+          "media_files": "https://zenodo.org/api/records/15848954/media-files",
+          "parent": "https://zenodo.org/api/records/15848953",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15848953",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15848953",
+          "parent_html": "https://zenodo.org/records/15848953",
+          "preview_html": "https://zenodo.org/records/15848954?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15848954/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15848954/request-deletion",
+          "requests": "https://zenodo.org/api/records/15848954/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15848954/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15848954",
+          "self_doi": "https://doi.org/10.5281/zenodo.15848954",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15848954",
+          "self_html": "https://zenodo.org/records/15848954",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15848954/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15848954/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:15848954:D8.11%20IN-HABIT%20Video%20in%20Lucca.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:15848954:D8.11%20IN-HABIT%20Video%20in%20Lucca.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:15848954:D8.11%20IN-HABIT%20Video%20in%20Lucca.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:15848954:D8.11%20IN-HABIT%20Video%20in%20Lucca.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:15848954:D8.11%20IN-HABIT%20Video%20in%20Lucca.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:15848954:D8.11%20IN-HABIT%20Video%20in%20Lucca.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/15848954/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Stefano"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Cianchi, Emma"
+            }
+          ],
+          "dates": [
+            {
+              "type": "accepted"
+            }
+          ],
+          "description": "<div>This document outlines the development of the INclusive Health And wellBeing In small and medium size ciTies (IN-HABIT) video for the city of Lucca &ndash; WP8 Dissemination, Exploitation, Communication and Outreach (DECO) strategy &ndash; deliverable D8.11 of task 8.2 (communication and engagement actions and tools).</div>\n<div>&nbsp;</div>\n<div>The IN-HABIT video in Lucca is available here on the <a href=\"https://www.inhabit-h2020.eu/media-press/\">IN-HABIT website</a> and on the <a href=\"https://youtu.be/ftndL6C_T2M?feature=shared\">project's YouTube channel</a>.&nbsp;</div>",
+          "doi": "10.5281/zenodo.15848954",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2023-08-30",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15848953"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.11 IN-HABIT Video in Lucca"
+        },
+        "modified": "2025-07-09T14:33:17.947407+00:00",
+        "owners": [
+          {
+            "id": "367694"
+          }
+        ],
+        "recid": "15848954",
+        "revision": 6,
+        "state": "done",
+        "stats": {
+          "downloads": 19,
+          "unique_downloads": 19,
+          "unique_views": 120,
+          "version_downloads": 19,
+          "version_unique_downloads": 19,
+          "version_unique_views": 120,
+          "version_views": 121,
+          "views": 121
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.11 IN-HABIT Video in Lucca",
+        "updated": "2025-07-09T14:33:17.947407+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15848451",
+        "conceptrecid": "15848451",
+        "created": "2025-07-09T14:17:27.596423+00:00",
+        "doi": "10.5281/zenodo.15848452",
+        "doi_url": "https://doi.org/10.5281/zenodo.15848452",
+        "files": [
+          {
+            "checksum": "md5:bb721cee27973fdadc5bfcd777fc74cf",
+            "id": "654b69f5-549f-4958-a5a7-87e770239e35",
+            "key": "D8.10 IN-HABIT Video in Riga.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/15848452/files/D8.10%20IN-HABIT%20Video%20in%20Riga.pdf/content"
+            },
+            "size": 202663
+          }
+        ],
+        "id": 15848452,
+        "links": {
+          "access": "https://zenodo.org/api/records/15848452/access",
+          "access_grants": "https://zenodo.org/api/records/15848452/access/grants",
+          "access_links": "https://zenodo.org/api/records/15848452/access/links",
+          "access_request": "https://zenodo.org/api/records/15848452/access/request",
+          "access_users": "https://zenodo.org/api/records/15848452/access/users",
+          "archive": "https://zenodo.org/api/records/15848452/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15848452/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15848452/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15848452/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15848452",
+          "draft": "https://zenodo.org/api/records/15848452/draft",
+          "file_modification": "https://zenodo.org/api/records/15848452/file-modification",
+          "files": "https://zenodo.org/api/records/15848452/files",
+          "latest": "https://zenodo.org/api/records/15848452/versions/latest",
+          "latest_html": "https://zenodo.org/records/15848452/latest",
+          "media_files": "https://zenodo.org/api/records/15848452/media-files",
+          "parent": "https://zenodo.org/api/records/15848451",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15848451",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15848451",
+          "parent_html": "https://zenodo.org/records/15848451",
+          "preview_html": "https://zenodo.org/records/15848452?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15848452/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15848452/request-deletion",
+          "requests": "https://zenodo.org/api/records/15848452/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15848452/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15848452",
+          "self_doi": "https://doi.org/10.5281/zenodo.15848452",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15848452",
+          "self_html": "https://zenodo.org/records/15848452",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15848452/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15848452/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:15848452:D8.10%20IN-HABIT%20Video%20in%20Riga.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:15848452:D8.10%20IN-HABIT%20Video%20in%20Riga.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:15848452:D8.10%20IN-HABIT%20Video%20in%20Riga.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:15848452:D8.10%20IN-HABIT%20Video%20in%20Riga.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:15848452:D8.10%20IN-HABIT%20Video%20in%20Riga.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:15848452:D8.10%20IN-HABIT%20Video%20in%20Riga.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/15848452/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Stefano"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Cianchi, Emma"
+            }
+          ],
+          "dates": [
+            {
+              "type": "accepted"
+            }
+          ],
+          "description": "<div>\n<div>\n<div>\n<div>This document outlines the development of the INclusive Health And wellBeing In small and medium size ciTies (IN-HABIT) video for the city of Riga &ndash; WP8 Dissemination, Exploitation, Communication and Outreach (DECO) strategy &ndash; deliverable D8.10 of task 8.2 (communication and engagement actions and tools).</div>\n<div>&nbsp;</div>\n<div>The IN-HABIT video in Riga is available here on the <a href=\"https://www.inhabit-h2020.eu/media-press/\">IN-HABIT website</a> and on the <a href=\"https://youtu.be/DFBdRNJSb1U?feature=shared\">project's YouTube channel</a>.&nbsp;</div>\n</div>\n</div>\n</div>",
+          "doi": "10.5281/zenodo.15848452",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2023-08-30",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15848451"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.10 IN-HABIT Video in Riga"
+        },
+        "modified": "2025-07-09T14:17:27.842906+00:00",
+        "owners": [
+          {
+            "id": "367694"
+          }
+        ],
+        "recid": "15848452",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 27,
+          "unique_downloads": 25,
+          "unique_views": 98,
+          "version_downloads": 27,
+          "version_unique_downloads": 25,
+          "version_unique_views": 98,
+          "version_views": 101,
+          "views": 101
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.10 IN-HABIT Video in Riga",
+        "updated": "2025-07-09T14:17:27.842906+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15847607",
+        "conceptrecid": "15847607",
+        "created": "2025-07-09T11:45:33.961002+00:00",
+        "doi": "10.5281/zenodo.15847608",
+        "doi_url": "https://doi.org/10.5281/zenodo.15847608",
+        "files": [
+          {
+            "checksum": "md5:624909cfad7958534c1200a0744d49c1",
+            "id": "479022a1-6b9e-4438-8e9d-48d026f02ce7",
+            "key": "D8.6 IN-HABIT App Initial (Demo) Version.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/15847608/files/D8.6%20IN-HABIT%20App%20Initial%20(Demo)%20Version.pdf/content"
+            },
+            "size": 1680059
+          }
+        ],
+        "id": 15847608,
+        "links": {
+          "access": "https://zenodo.org/api/records/15847608/access",
+          "access_grants": "https://zenodo.org/api/records/15847608/access/grants",
+          "access_links": "https://zenodo.org/api/records/15847608/access/links",
+          "access_request": "https://zenodo.org/api/records/15847608/access/request",
+          "access_users": "https://zenodo.org/api/records/15847608/access/users",
+          "archive": "https://zenodo.org/api/records/15847608/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15847608/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15847608/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15847608/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15847608",
+          "draft": "https://zenodo.org/api/records/15847608/draft",
+          "file_modification": "https://zenodo.org/api/records/15847608/file-modification",
+          "files": "https://zenodo.org/api/records/15847608/files",
+          "latest": "https://zenodo.org/api/records/15847608/versions/latest",
+          "latest_html": "https://zenodo.org/records/15847608/latest",
+          "media_files": "https://zenodo.org/api/records/15847608/media-files",
+          "parent": "https://zenodo.org/api/records/15847607",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15847607",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15847607",
+          "parent_html": "https://zenodo.org/records/15847607",
+          "preview_html": "https://zenodo.org/records/15847608?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15847608/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15847608/request-deletion",
+          "requests": "https://zenodo.org/api/records/15847608/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15847608/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15847608",
+          "self_doi": "https://doi.org/10.5281/zenodo.15847608",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15847608",
+          "self_html": "https://zenodo.org/records/15847608",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15847608/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15847608/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:15847608:D8.6%20IN-HABIT%20App%20Initial%20(Demo)%20Version.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:15847608:D8.6%20IN-HABIT%20App%20Initial%20(Demo)%20Version.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:15847608:D8.6%20IN-HABIT%20App%20Initial%20(Demo)%20Version.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:15847608:D8.6%20IN-HABIT%20App%20Initial%20(Demo)%20Version.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:15847608:D8.6%20IN-HABIT%20App%20Initial%20(Demo)%20Version.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:15847608:D8.6%20IN-HABIT%20App%20Initial%20(Demo)%20Version.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/15847608/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Stefano"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Baccalario, Pierdomenico"
+            }
+          ],
+          "dates": [
+            {
+              "type": "accepted"
+            }
+          ],
+          "description": "<div>\n<div>\n<div>\n<div>This deliverable summarises the study and production process of the D 8.6 IN-HABIT APP (demo version), MS8 of the IN-HABIT project. The reported activities were carried out from M5 until M28 of the project, with the cooperation of the WPLs for WP1-4, WP6, WP7.This document describes the collaborative process involving IN-HABIT&rsquo;s consortium in defining the App main characteristics and purposes, and the following steps taken for the demo implementation involving the technical and management teams from BOT partner.As for the timing, the demo version of the IN-HABIT APP has already been developed, and is currently under review by the tech team to include specific features to be updated at the beginning of January 2022 and consequently shared among the local PPs for a first launch of the test version in the local contexts.The final version is intended to be delivered on M36, integrating the work on the data platform and the results of the test phase.</div>\n</div>\n</div>\n</div>",
+          "doi": "10.5281/zenodo.15847608",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2022-12-31",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15847607"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.6 IN-HABIT App Initial (Demo) Version"
+        },
+        "modified": "2025-07-09T11:45:34.187045+00:00",
+        "owners": [
+          {
+            "id": "367694"
+          }
+        ],
+        "recid": "15847608",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 15,
+          "unique_downloads": 12,
+          "unique_views": 19,
+          "version_downloads": 15,
+          "version_unique_downloads": 12,
+          "version_unique_views": 19,
+          "version_views": 20,
+          "views": 20
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.6 IN-HABIT App Initial (Demo) Version",
+        "updated": "2025-07-09T11:45:34.187045+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15848994",
+        "conceptrecid": "15848994",
+        "created": "2025-07-09T14:32:43.758443+00:00",
+        "doi": "10.5281/zenodo.15848995",
+        "doi_url": "https://doi.org/10.5281/zenodo.15848995",
+        "files": [
+          {
+            "checksum": "md5:cb317b904723ac74d69af2bc896f5c42",
+            "id": "6ab1a476-48c9-4a07-96f2-b97b8ee22f63",
+            "key": "D8.12 IN-HABIT Video in Nitra.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/15848995/files/D8.12%20IN-HABIT%20Video%20in%20Nitra.pdf/content"
+            },
+            "size": 184112
+          }
+        ],
+        "id": 15848995,
+        "links": {
+          "access": "https://zenodo.org/api/records/15848995/access",
+          "access_grants": "https://zenodo.org/api/records/15848995/access/grants",
+          "access_links": "https://zenodo.org/api/records/15848995/access/links",
+          "access_request": "https://zenodo.org/api/records/15848995/access/request",
+          "access_users": "https://zenodo.org/api/records/15848995/access/users",
+          "archive": "https://zenodo.org/api/records/15848995/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15848995/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15848995/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15848995/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15848995",
+          "draft": "https://zenodo.org/api/records/15848995/draft",
+          "file_modification": "https://zenodo.org/api/records/15848995/file-modification",
+          "files": "https://zenodo.org/api/records/15848995/files",
+          "latest": "https://zenodo.org/api/records/15848995/versions/latest",
+          "latest_html": "https://zenodo.org/records/15848995/latest",
+          "media_files": "https://zenodo.org/api/records/15848995/media-files",
+          "parent": "https://zenodo.org/api/records/15848994",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15848994",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15848994",
+          "parent_html": "https://zenodo.org/records/15848994",
+          "preview_html": "https://zenodo.org/records/15848995?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15848995/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15848995/request-deletion",
+          "requests": "https://zenodo.org/api/records/15848995/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15848995/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15848995",
+          "self_doi": "https://doi.org/10.5281/zenodo.15848995",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15848995",
+          "self_html": "https://zenodo.org/records/15848995",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15848995/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15848995/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:15848995:D8.12%20IN-HABIT%20Video%20in%20Nitra.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:15848995:D8.12%20IN-HABIT%20Video%20in%20Nitra.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:15848995:D8.12%20IN-HABIT%20Video%20in%20Nitra.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:15848995:D8.12%20IN-HABIT%20Video%20in%20Nitra.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:15848995:D8.12%20IN-HABIT%20Video%20in%20Nitra.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:15848995:D8.12%20IN-HABIT%20Video%20in%20Nitra.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/15848995/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "eu"
+            },
+            {
+              "id": "in-habit-h2020"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Clara"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Marrone, Stefano"
+            },
+            {
+              "affiliation": "Book on a Tree",
+              "name": "Cianchi, Emma"
+            }
+          ],
+          "dates": [
+            {
+              "type": "accepted"
+            }
+          ],
+          "description": "<div>This document outlines the development of the INclusive Health And wellBeing In small and medium size ciTies (IN-HABIT) video for the city of Nitra &ndash; WP8 Dissemination, Exploitation, Communication and Outreach (DECO) strategy &ndash; deliverable D8.12 of task 8.2 (communication and engagement actions and tools).</div>\n<div>&nbsp;</div>\n<div>The IN-HABIT video in Nitra is available here on the <a href=\"https://www.inhabit-h2020.eu/media-press/\">IN-HABIT website</a> and on the <a href=\"https://www.youtube.com/watch?v=4I606cWrGzU\">project's YouTube channel</a>.&nbsp;</div>",
+          "doi": "10.5281/zenodo.15848995",
+          "grants": [
+            {
+              "acronym": "IN-HABIT",
+              "code": "869227",
+              "funder": {
+                "acronym": "EC",
+                "doi": "10.13039/501100000780",
+                "name": "European Commission"
+              },
+              "internal_id": "10.13039/501100000780::869227",
+              "program": "H2020-EU.3.5.",
+              "title": "INclusive Health And wellBeing In small and medium size ciTies",
+              "url": "https://cordis.europa.eu/projects/869227"
+            }
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2023-08-30",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15848994"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "deliverable",
+            "title": "Project deliverable",
+            "type": "publication"
+          },
+          "title": "D8.12 IN-HABIT Video in Nitra"
+        },
+        "modified": "2025-07-09T14:32:43.978030+00:00",
+        "owners": [
+          {
+            "id": "367694"
+          }
+        ],
+        "recid": "15848995",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 15,
+          "unique_downloads": 15,
+          "unique_views": 20,
+          "version_downloads": 15,
+          "version_unique_downloads": 15,
+          "version_unique_views": 20,
+          "version_views": 21,
+          "views": 21
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "D8.12 IN-HABIT Video in Nitra",
+        "updated": "2025-07-09T14:32:43.978030+00:00"
+      }
+    ],
+    "total": 259177
+  },
+  "links": {
+    "next": "https://zenodo.org/api/records?page=2&q=Hyperliquid+order+book&size=10&sort=bestmatch",
+    "self": "https://zenodo.org/api/records?page=1&q=Hyperliquid+order+book&size=10&sort=bestmatch"
+  }
+}

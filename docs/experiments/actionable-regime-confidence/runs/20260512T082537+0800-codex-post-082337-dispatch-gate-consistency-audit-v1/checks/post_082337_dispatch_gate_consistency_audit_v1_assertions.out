@@ -1,0 +1,15 @@
+gate_result=post_082337_dispatch_gate_consistency_audit_v1=contradictory_unlock_flags_fail_closed_no_promotion
+contradictions=7
+accepted_rows_added=0
+r6_owner_export_unlock=false
+r5_recency_unlock=false
+r3_native_subhour_unlock=false
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

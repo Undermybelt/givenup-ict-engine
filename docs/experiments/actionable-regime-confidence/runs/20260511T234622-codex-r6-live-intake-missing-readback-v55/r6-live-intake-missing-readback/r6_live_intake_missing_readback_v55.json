@@ -1,0 +1,90 @@
+{
+  "blocker": "The shared R6 direct Manipulation intake is absent in /tmp, so the Sarao and Nowak/Smith sidecar positives cannot be accepted or calibrated against the live intake in this readback.",
+  "board_sha256_at_start": "b851ef2ab9d2fb1ce1c4f07d98c84457cda85aa3be2a2e98af1fbf0035a9e821",
+  "decision": {
+    "accepted_rows_added": 0,
+    "gate_result": "current_goal_completion_audit_v55=shared_r6_intake_missing_sidecar_candidates_preserved",
+    "new_confidence_gate": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "shared_intake_mutated": false,
+    "strict_full_objective_achieved": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "generated_at_utc": "2026-05-11T15:47:20.785007+00:00",
+  "live_intake_exists": false,
+  "live_intake_root": "/tmp/ict-engine-direct-manipulation-row-intake",
+  "next_action": "Under a fresh shared-intake lock, restore or reconstruct the R6 intake from durable row-uplift scripts/provenance, then decide whether to append Sarao and Nowak/Smith positives with matched controls; even if all current sidecars are accepted, source at least four more all-correct positive direct rows and rerun sidecar calibration plus chronological/symbol/venue split gates.",
+  "required_files": [
+    {
+      "bytes": 0,
+      "exists": false,
+      "name": "positive_spoofing_layering_rows.csv",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv"
+    },
+    {
+      "bytes": 0,
+      "exists": false,
+      "name": "matched_negative_normal_activity_rows.csv",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv"
+    },
+    {
+      "bytes": 0,
+      "exists": false,
+      "name": "provenance_manifest.json",
+      "path": "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+    }
+  ],
+  "run_id": "20260511T234622-codex-r6-live-intake-missing-readback-v55",
+  "schema_version": "r6-live-intake-missing-readback/v55",
+  "sidecar_candidate_total_rows": 12,
+  "sidecar_candidates": {
+    "nowak_smith": {
+      "csv_exists": true,
+      "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260511T233454-codex-r6-nowak-smith-positive-row-candidate-screen-v1/r6-nowak-smith-positive-row-candidate-screen/r6_nowak_smith_positive_row_candidates_v1.csv",
+      "csv_rows": 6,
+      "current_direct_positives_at_candidate_run": 57,
+      "gate_result": "r6_nowak_smith_positive_row_candidate_screen_v1=proposed_rows_only_positive_confidence_still_blocked",
+      "json_exists": true,
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260511T233454-codex-r6-nowak-smith-positive-row-candidate-screen-v1/r6-nowak-smith-positive-row-candidate-screen/r6_nowak_smith_positive_row_candidate_screen_v1.json",
+      "json_sha256": "23c1e56dc76661ddef82cdee15091af247c3b33808b653ca5c525a7d72c26807",
+      "proposed_positive_rows": 6,
+      "what_if_min_wilson95_lcb": 0.942526809651
+    },
+    "sarao": {
+      "csv_exists": true,
+      "csv_path": "docs/experiments/actionable-regime-confidence/runs/20260511T225505-codex-r6-sarao-positive-row-candidate-screen-v1/r6-sarao-positive-row-candidate-screen/r6_sarao_positive_row_candidates_v1.csv",
+      "csv_rows": 6,
+      "current_direct_positives_at_candidate_run": 57,
+      "gate_result": "r6_sarao_positive_row_candidate_screen_v1=proposed_rows_only_positive_confidence_still_blocked",
+      "json_exists": true,
+      "json_path": "docs/experiments/actionable-regime-confidence/runs/20260511T225505-codex-r6-sarao-positive-row-candidate-screen-v1/r6-sarao-positive-row-candidate-screen/r6_sarao_positive_row_candidate_screen_v1.json",
+      "json_sha256": "02af908bb10579321919949f7cb44bfa80332bee7082c9c8f6fa14df93522524",
+      "proposed_positive_rows": 6,
+      "what_if_min_wilson95_lcb": 0.942526809651
+    }
+  },
+  "verifier": {
+    "cmd": "python3 docs/experiments/actionable-regime-confidence/runs/20260511T151950-codex-direct-manipulation-row-intake-manifest-v1/direct-manipulation-intake/direct_manipulation_row_intake_verifier_v1.py --intake-root /tmp/ict-engine-direct-manipulation-row-intake",
+    "payload": {
+      "missing_files": [
+        "/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv",
+        "/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json"
+      ],
+      "reason": "missing_required_files",
+      "status": "blocked"
+    },
+    "returncode": 2,
+    "stderr_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234622-codex-r6-live-intake-missing-readback-v55/command-output/direct_manipulation_row_intake_verifier.stderr.txt",
+    "stdout_path": "docs/experiments/actionable-regime-confidence/runs/20260511T234622-codex-r6-live-intake-missing-readback-v55/command-output/direct_manipulation_row_intake_verifier.stdout.txt"
+  },
+  "what_if_after_sarao_and_nowak_smith": {
+    "additional_positive_rows_needed_for_pooled_95": 4,
+    "min_wilson95_lcb": 0.947260905856,
+    "positive_rows": 69,
+    "still_below_95": true
+  }
+}

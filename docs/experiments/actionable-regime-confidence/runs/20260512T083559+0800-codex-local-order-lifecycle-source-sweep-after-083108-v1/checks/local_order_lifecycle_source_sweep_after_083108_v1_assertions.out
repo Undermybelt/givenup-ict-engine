@@ -1,0 +1,14 @@
+gate_result=local_order_lifecycle_source_sweep_after_083108_v1=no_accepted_owner_export_or_required_source_control_package
+candidate_files_scanned=580
+verifier_native_candidate_files=70
+exact_required_packages=2
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

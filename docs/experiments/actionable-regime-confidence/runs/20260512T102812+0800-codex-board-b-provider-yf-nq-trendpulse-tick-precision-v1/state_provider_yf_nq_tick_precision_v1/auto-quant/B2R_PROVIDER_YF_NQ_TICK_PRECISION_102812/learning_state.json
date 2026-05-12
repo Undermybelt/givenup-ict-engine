@@ -1,0 +1,884 @@
+{
+  "factor_profiles": {},
+  "factor_rankings": [],
+  "feedback_history": [
+    {
+      "timestamp": "2024-06-07T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0001",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0001",
+        "recommended_at": "2024-06-06T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-06-17T07:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0002",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0002",
+        "recommended_at": "2024-06-16T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-07-29T00:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0003",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 0.003999999999999999,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0003",
+        "recommended_at": "2024-07-28T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-08-12T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0004",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0004",
+        "recommended_at": "2024-08-11T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-09-23T00:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0005",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0039998502863273985,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0005",
+        "recommended_at": "2024-09-22T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-10-07T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0006",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0006",
+        "recommended_at": "2024-10-06T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2024-10-21T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0007",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0007",
+        "recommended_at": "2024-10-20T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-03-24T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0008",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0017693601644757336,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0008",
+        "recommended_at": "2025-03-23T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-05-27T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0009",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0009",
+        "recommended_at": "2025-05-26T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-06-10T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0010",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0015116984848658368,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0010",
+        "recommended_at": "2025-06-09T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-06-20T02:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0011",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0011",
+        "recommended_at": "2025-06-19T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-06-30T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0012",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0012",
+        "recommended_at": "2025-06-29T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-08-11T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0013",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0013",
+        "recommended_at": "2025-08-10T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-08-25T02:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0014",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.001516678156652702,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0014",
+        "recommended_at": "2025-08-24T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-09-08T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0015",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0006844771121384119,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0015",
+        "recommended_at": "2025-09-07T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-09-22T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0016",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "loss",
+      "pnl": -0.0007343990503113652,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0016",
+        "recommended_at": "2025-09-21T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "loss",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-10-06T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0017",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "win",
+      "pnl": 0.0000997864569820584,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0017",
+        "recommended_at": "2025-10-05T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "win",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    },
+    {
+      "timestamp": "2025-10-20T01:00:00Z",
+      "symbol": "B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812",
+      "source": "board_b_provider_yf_nq_tick_precision_v1",
+      "run_id": "20260512T102812+0800-codex-board-b-provider-yf-nq-trendpulse-tick-precision-v1",
+      "trade_id": "provider-yf-nq-sampled-pulse-tick-precision-v1_0018",
+      "prompt_version": null,
+      "factor_version": null,
+      "data_fingerprint": null,
+      "factors_used": [
+        {
+          "factor_name": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+          "category": "regime_profit_branch_path",
+          "direction": "Bull",
+          "value": 1.0,
+          "confidence": 1.0,
+          "weight": 1.0,
+          "long_support": 1.0,
+          "short_support": 0.0,
+          "uncertainty_contribution": 0.0
+        }
+      ],
+      "model_probabilities_before_trade": {
+        "selected_direction": "Bull",
+        "selected_probability": 0.0,
+        "long_score": 0.0,
+        "short_score": 0.0,
+        "win_prob_long": 0.0,
+        "win_prob_short": 0.0,
+        "uncertainty": 0.0
+      },
+      "realized_outcome": "breakeven",
+      "pnl": 0.0,
+      "regime_at_entry": "ManipulationExpansion",
+      "structural_feedback": {
+        "protocol_version": "structural-feedback-v1",
+        "recommendation_id": "auto-quant-real-trade-branch:B2R_PROVIDER_YF_NQ_TICK_PRECISION_102812:provider-yf-nq-sampled-pulse-tick-precision-v1_0018",
+        "recommended_at": "2025-10-19T23:00:00+00:00",
+        "node_id": "Bull",
+        "branch_id": "Bull -> ProviderYfNq",
+        "scenario_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic",
+        "path_id": "Bull -> ProviderYfNq -> SampledPulseDiagnostic -> ProviderNqSampledPulse:provider_yf_nq_sampled_pulse_h48",
+        "followed_path": true,
+        "exit_reason": "breakeven",
+        "notes": "record_level_regime_profit_branch_path"
+      },
+      "reflection_mismatch_tags": []
+    }
+  ],
+  "structural_prior_state": {
+    "nodes": {},
+    "branches": {},
+    "scenarios": {},
+    "paths": {},
+    "event_ledger": [],
+    "node_duration_priors": {},
+    "branch_transition_priors": {},
+    "node_temporal_posteriors": {},
+    "node_transition_posteriors": {},
+    "branch_temporal_posteriors": {},
+    "source_reliability_posteriors": {}
+  },
+  "last_updated": "2026-05-12T02:36:03.529357Z"
+}

@@ -1,0 +1,6 @@
+requirement,evidence,status
+parse 115130 real-trade JSONL,211 rows across 12 files,pass
+preserve branch-path check,211 rows with full branch path,pass
+block market-factor learning,0 rows accepted,pass
+classify incomplete downstream contract,211 chain-contract rows,pass
+no promotion/update_goal,promotion_allowed=false trade_usable=false update_goal=false,pass

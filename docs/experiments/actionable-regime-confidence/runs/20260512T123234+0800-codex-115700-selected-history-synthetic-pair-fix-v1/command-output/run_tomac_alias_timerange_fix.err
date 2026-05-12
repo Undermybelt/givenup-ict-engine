@@ -1,0 +1,227 @@
+2026-05-12 12:39:25,882 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 12:39:25,883 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 12:39:25,884 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 12:39:25,885 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data/strategies_external
+2026-05-12 12:39:25,886 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 12:39:25,887 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data ...
+2026-05-12 12:39:25,888 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data/data ...
+2026-05-12 12:39:25,889 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 12:39:25,891 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 12:39:25,900 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 12:39:25,901 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 12:39:25,901 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 12:39:25,902 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 12:39:25,919 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 12:39:25,919 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 12:39:25,941 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy TomacAggressiveBE from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synth
+etic_pair_fix_v1/.deps/auto-quant/user_data/strategies_external/TomacAggressiveBE.py'...
+2026-05-12 12:39:25,942 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 12:39:25,943 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 12:39:25,944 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-12 12:39:25,944 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 12:39:25,944 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 12:39:25,944 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 12:39:25,945 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-12 12:39:25,945 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 12:39:25,945 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.04
+2026-05-12 12:39:25,945 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: True
+2026-05-12 12:39:25,945 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive: 0.003
+2026-05-12 12:39:25,946 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.005
+2026-05-12 12:39:25,946 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: True
+2026-05-12 12:39:25,946 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 12:39:25,946 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 12:39:25,946 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60}
+2026-05-12 12:39:25,947 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 12:39:25,947 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-12 12:39:25,947 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 12:39:25,947 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 200
+2026-05-12 12:39:25,948 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 12:39:25,948 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 12:39:25,948 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 12:39:25,948 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 12:39:25,949 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 12:39:25,949 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 12:39:25,950 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 12:39:25,950 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 12:39:25,950 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 12:39:25,951 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-12 12:39:25,951 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-12 12:39:25,963 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synth
+etic_pair_fix_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-12 12:39:26,115 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1h, data starts at 2026-04-01 00:00:00
+2026-05-12 12:39:26,116 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1h, data ends at 2026-05-11 23:00:00
+2026-05-12 12:39:26,136 - freqtrade.data.converter.converter - INFO - Missing data fillup for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, 1h: before: 971 - after: 984 - 1.34%
+2026-05-12 12:39:26,137 - freqtrade.optimize.backtesting - INFO - Loading data from 2026-04-01 00:00:00 up to 2026-05-11 23:00:00 (40 days).
+2026-05-12 12:39:26,138 - freqtrade.configuration.timerange - WARNING - Moving start-date by 200 candles to account for startup time.
+2026-05-12 12:39:26,155 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-12 12:39:26,158 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy TomacAggressiveBE
+2026-05-12 12:39:26,159 - freqtrade.data.dataprovider - INFO - Loading data for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD 4h from 2026-02-26 16:00:00 to 2026-05-12 00:00:00
+2026-05-12 12:39:26,163 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 4h, data starts at 2026-04-01 00:00:00
+2026-05-12 12:39:26,163 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 4h, data ends at 2026-05-11 20:00:00
+2026-05-12 12:39:26,174 - freqtrade.data.converter.converter - INFO - Missing data fillup for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, 4h: before: 243 - after: 246 - 1.23%
+2026-05-12 12:39:26,188 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2026-04-09 08:00:00 up to 2026-05-11 23:00:00 (32 days).
+2026-05-12 12:39:26,285 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/config.tomac.json ...
+2026-05-12 12:39:26,288 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 12:39:26,289 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 12:39:26,290 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 12:39:26,290 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data/strategies_external
+2026-05-12 12:39:26,291 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 12:39:26,291 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data ...
+2026-05-12 12:39:26,292 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data/data ...
+2026-05-12 12:39:26,292 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 12:39:26,292 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 12:39:26,308 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 12:39:26,309 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 12:39:26,309 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 12:39:26,309 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 12:39:26,324 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 12:39:26,324 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 12:39:26,327 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy TomacKillzoneBreakout from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synth
+etic_pair_fix_v1/.deps/auto-quant/user_data/strategies_external/TomacKillzoneBreakout.py'...
+2026-05-12 12:39:26,327 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 12:39:26,328 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 12:39:26,328 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-12 12:39:26,328 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 12:39:26,328 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 12:39:26,329 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 12:39:26,330 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 100}
+2026-05-12 12:39:26,330 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 12:39:26,330 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.05
+2026-05-12 12:39:26,330 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: True
+2026-05-12 12:39:26,330 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive: 0.01
+2026-05-12 12:39:26,331 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.02
+2026-05-12 12:39:26,331 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: True
+2026-05-12 12:39:26,331 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 12:39:26,331 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 12:39:26,332 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-12 12:39:26,332 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 12:39:26,332 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-12 12:39:26,332 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 12:39:26,333 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 250
+2026-05-12 12:39:26,333 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 12:39:26,333 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 12:39:26,333 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 12:39:26,334 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 12:39:26,334 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 12:39:26,334 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 12:39:26,334 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 12:39:26,335 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 12:39:26,335 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 12:39:26,335 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-12 12:39:26,335 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-12 12:39:26,342 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synth
+etic_pair_fix_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-12 12:39:26,346 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1h, data starts at 2026-04-01 00:00:00
+2026-05-12 12:39:26,346 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1h, data ends at 2026-05-11 23:00:00
+2026-05-12 12:39:26,352 - freqtrade.data.converter.converter - INFO - Missing data fillup for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, 1h: before: 971 - after: 984 - 1.34%
+2026-05-12 12:39:26,353 - freqtrade.optimize.backtesting - INFO - Loading data from 2026-04-01 00:00:00 up to 2026-05-11 23:00:00 (40 days).
+2026-05-12 12:39:26,353 - freqtrade.configuration.timerange - WARNING - Moving start-date by 250 candles to account for startup time.
+2026-05-12 12:39:26,372 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-12 12:39:26,375 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy TomacKillzoneBreakout
+2026-05-12 12:39:26,376 - freqtrade.data.dataprovider - INFO - Loading data for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD 1d from 2025-07-25 00:00:00 to 2026-05-12 00:00:00
+2026-05-12 12:39:26,379 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1d, data starts at 2026-04-01 00:00:00
+2026-05-12 12:39:26,380 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1d, data ends at 2026-05-11 00:00:00
+2026-05-12 12:39:26,389 - freqtrade.data.dataprovider - INFO - Loading data for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD 4h from 2026-02-18 08:00:00 to 2026-05-12 00:00:00
+2026-05-12 12:39:26,394 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 4h, data starts at 2026-04-01 00:00:00
+2026-05-12 12:39:26,395 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 4h, data ends at 2026-05-11 20:00:00
+2026-05-12 12:39:26,402 - freqtrade.data.converter.converter - INFO - Missing data fillup for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, 4h: before: 243 - after: 246 - 1.23%
+2026-05-12 12:39:26,411 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2026-04-11 10:00:00 up to 2026-05-11 23:00:00 (30 days).
+2026-05-12 12:39:26,445 - freqtrade.configuration.load_config - INFO - Using config: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/config.tomac.json ...
+2026-05-12 12:39:26,448 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-05-12 12:39:26,448 - freqtrade.loggers - INFO - Logfile configured
+2026-05-12 12:39:26,448 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-05-12 12:39:26,448 - freqtrade.configuration.configuration - INFO - Using additional Strategy lookup path: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data/strategies_external
+2026-05-12 12:39:26,449 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 1 ...
+2026-05-12 12:39:26,449 - freqtrade.configuration.configuration - INFO - Using user-data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data ...
+2026-05-12 12:39:26,449 - freqtrade.configuration.configuration - INFO - Using data directory: 
+/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synthe
+tic_pair_fix_v1/.deps/auto-quant/user_data/data ...
+2026-05-12 12:39:26,450 - freqtrade.configuration.configuration - INFO - Parameter --export detected: none ...
+2026-05-12 12:39:26,450 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-05-12 12:39:26,457 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-05-12 12:39:26,457 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-05-12 12:39:26,457 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-05-12 12:39:26,458 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.50
+2026-05-12 12:39:26,472 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-05-12 12:39:26,472 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-05-12 12:39:26,474 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy TomacRRWinRate from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synth
+etic_pair_fix_v1/.deps/auto-quant/user_data/strategies_external/TomacRRWinRate.py'...
+2026-05-12 12:39:26,475 - freqtrade.strategy.hyper - INFO - Found no parameter file.
+2026-05-12 12:39:26,475 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 1h.
+2026-05-12 12:39:26,476 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USD.
+2026-05-12 12:39:26,476 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-05-12 12:39:26,476 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-05-12 12:39:26,477 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 1.
+2026-05-12 12:39:26,477 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 0.03}
+2026-05-12 12:39:26,477 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 1h
+2026-05-12 12:39:26,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.02
+2026-05-12 12:39:26,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: False
+2026-05-12 12:39:26,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.0
+2026-05-12 12:39:26,478 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: False
+2026-05-12 12:39:26,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-05-12 12:39:26,479 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-05-12 12:39:26,480 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60, 'emergency_exit': 'market'}
+2026-05-12 12:39:26,480 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-05-12 12:39:26,481 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USD
+2026-05-12 12:39:26,481 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-05-12 12:39:26,481 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 300
+2026-05-12 12:39:26,481 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-05-12 12:39:26,481 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-05-12 12:39:26,482 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-05-12 12:39:26,482 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-05-12 12:39:26,482 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-05-12 12:39:26,482 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-05-12 12:39:26,483 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-05-12 12:39:26,483 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-05-12 12:39:26,483 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-05-12 12:39:26,483 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 1
+2026-05-12 12:39:26,483 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-05-12 12:39:26,489 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from 
+'/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T123234+0800-codex-115700-selected-history-synthetic-pair-fix-v1/state_selected_history_synth
+etic_pair_fix_v1/.deps/auto-quant/.venv/lib/python3.11/site-packages/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-05-12 12:39:26,492 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1h, data starts at 2026-04-01 00:00:00
+2026-05-12 12:39:26,493 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1h, data ends at 2026-05-11 23:00:00
+2026-05-12 12:39:26,500 - freqtrade.data.converter.converter - INFO - Missing data fillup for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, 1h: before: 971 - after: 984 - 1.34%
+2026-05-12 12:39:26,501 - freqtrade.optimize.backtesting - INFO - Loading data from 2026-04-01 00:00:00 up to 2026-05-11 23:00:00 (40 days).
+2026-05-12 12:39:26,501 - freqtrade.configuration.timerange - WARNING - Moving start-date by 300 candles to account for startup time.
+2026-05-12 12:39:26,518 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-05-12 12:39:26,519 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy TomacRRWinRate
+2026-05-12 12:39:26,520 - freqtrade.data.dataprovider - INFO - Loading data for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD 1d from 2025-06-05 00:00:00 to 2026-05-12 00:00:00
+2026-05-12 12:39:26,524 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1d, data starts at 2026-04-01 00:00:00
+2026-05-12 12:39:26,525 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 1d, data ends at 2026-05-11 00:00:00
+2026-05-12 12:39:26,536 - freqtrade.data.dataprovider - INFO - Loading data for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD 4h from 2026-02-10 00:00:00 to 2026-05-12 00:00:00
+2026-05-12 12:39:26,540 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 4h, data starts at 2026-04-01 00:00:00
+2026-05-12 12:39:26,540 - freqtrade.data.history.datahandlers.idatahandler - WARNING - B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, spot, 4h, data ends at 2026-05-11 20:00:00
+2026-05-12 12:39:26,548 - freqtrade.data.converter.converter - INFO - Missing data fillup for B2R-SAME-ROOT-SIX-PROVIDER-1H-AQ-115700/USD, 4h: before: 243 - after: 246 - 1.23%
+2026-05-12 12:39:26,555 - freqtrade.optimize.backtesting - INFO - Backtesting with data from 2026-04-13 12:00:00 up to 2026-05-11 23:00:00 (28 days).

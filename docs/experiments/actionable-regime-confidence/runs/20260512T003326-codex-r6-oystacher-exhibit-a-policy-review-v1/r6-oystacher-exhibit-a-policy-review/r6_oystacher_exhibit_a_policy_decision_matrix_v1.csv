@@ -1,0 +1,7 @@
+requirement,evidence,decision,promotion_effect
+official_or_owner_source_provenance,https://storage.courtlistener.com/recap/gov.uscourts.ilnd.316889/gov.uscourts.ilnd.316889.1.1.pdf,positive_source_candidate_ok,can_seed_positive_rows_after owner/user policy approval and reproducible fetch
+direct_positive_labels,SPOOF rows=5182,positive_candidates_ok,large positive supply for spoofing_layering
+matched normal/non-manipulation controls,FLIP rows=1553 from same exhibit/sequences,rejected,cannot use as matched_negative_normal_activity
+split axes Wilson95,isolated split pass=True,diagnostic_only,invalid for acceptance until controls are valid
+canonical intake merge,controls rejected; no owner/user approval file in target root,blocked,do not mutate live intake
+downstream chain rerun,no accepted canonical intake change,blocked,do not rerun provider/Auto-Quant/BBN/CatBoost/execution-tree as promotion evidence

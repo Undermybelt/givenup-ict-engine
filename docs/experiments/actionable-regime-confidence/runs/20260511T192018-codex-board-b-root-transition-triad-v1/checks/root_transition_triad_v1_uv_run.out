@@ -1,0 +1,25 @@
+{
+  "branch_paths_evaluated": 5,
+  "branch_paths_passed": 0,
+  "downstream_consumption": "not_started:blocked_by_branch_rc_spa_hard_gates",
+  "gate_result": "fail:required_root_branch_hard_gates_failed",
+  "matrix_root_trade_counts": {
+    "Bear": 8762,
+    "Bull": 36036,
+    "Crisis": 995,
+    "Manipulation(scoped)": 0,
+    "Sideways": 16103
+  },
+  "next_action": "B2R-repeat: keep RootTransitionTriad as fail-closed evidence; direct Manipulation still needs trade/PnL rows, and failed roots need a different family or provider panel without relaxing RC-SPA.",
+  "primary_blocker": "Bull=fail:reject_overfit_risk; Bear=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_tail_risk|reject_rc_spa_below_60; Sideways=fail:reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60; Crisis=fail:reject_thin_trades|reject_fold_trade_depth|reject_no_positive_edge|reject_cost_fragile|reject_rc_spa_below_60; Manipulation(scoped)=fail:reject_thin_trades|reject_insufficient_test_folds|reject_fold_trade_depth|reject_fold_inconsistency|reject_no_positive_edge|reject_cost_fragile|reject_overfit_risk|reject_dsr_nonpositive|reject_no_regime_specificity|reject_rc_spa_below_60",
+  "selected_root_trade_counts": {
+    "Bear": 2161,
+    "Bull": 6548,
+    "Crisis": 28,
+    "Manipulation(scoped)": 0,
+    "Sideways": 2896
+  },
+  "selected_trade_rows": 11633,
+  "stable_profit_score": 76.25,
+  "variant_trade_rows": 61896
+}

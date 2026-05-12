@@ -1,0 +1,13 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260510T233911-main-regime-v2-advanced-root-features/advanced_root_feature_report.json
+accepted_root_classes_95: ['CrisisStress', 'TransitionAccumulationDistribution']
+missing_root_classes_95: ['BullExpansion', 'BearExpansion', 'ConsolidationRange', 'UnknownOrMixed', 'ManipulationLiquidityEngineering']
+accepted_gate: none_for_main_regime_v2
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+BullExpansion: accepted=False lcb=0.322179 cal=671 test=875 blockers=['ece_above_05', 'precision_wilson_lcb_below_95', 'validation_timeframes_lt_2']
+BearExpansion: accepted=False lcb=0.364394 cal=462 test=546 blockers=['ece_above_05', 'precision_wilson_lcb_below_95', 'validation_timeframes_lt_2']
+ConsolidationRange: accepted=False lcb=0.615735 cal=522 test=495 blockers=['precision_wilson_lcb_below_95']
+UnknownOrMixed: accepted=False lcb=0.446298 cal=6350 test=5752 blockers=['precision_wilson_lcb_below_95', 'residual_or_abstain_bucket_not_release_gate']
+CrisisStress: accepted=True lcb=0.957479 cal=1994 test=1674 blockers=[]
+TransitionAccumulationDistribution: accepted=True lcb=0.972063 cal=5521 test=6054 blockers=[]
+ManipulationLiquidityEngineering: accepted=False lcb=0.000000 cal=0 test=0 blockers=['missing_required_inputs', 'no_tick_l2_order_lifecycle_or_crypto_event_evidence']

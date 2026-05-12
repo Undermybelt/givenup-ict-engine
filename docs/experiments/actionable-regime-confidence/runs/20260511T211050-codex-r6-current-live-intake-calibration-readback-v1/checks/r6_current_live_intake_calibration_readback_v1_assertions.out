@@ -1,0 +1,15 @@
+PASS decision=r6_current_live_intake_calibration_readback_v1=schema_ready_but_calibration_blocked
+PASS verifier_status=schema_ready_unscored
+PASS positive_rows=13
+PASS matched_negative_rows=13
+PASS chronological_split_ok=true
+PASS heldout_symbol_or_venue_ok=true
+PASS combined_min_wilson95_lcb=0.771905
+PASS support_ok=false
+PASS broad_normal_sample=false
+PASS species_coverage_ok=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

@@ -1,0 +1,9 @@
+target_schema: docs/experiments/actionable-regime-confidence/runs/20260510T230938-main-regime-v2-schema-preflight/main_regime_v2_target_schema.json
+crosswalk: docs/experiments/actionable-regime-confidence/runs/20260510T230938-main-regime-v2-schema-preflight/main_regime_v2_crosswalk.json
+preflight: docs/experiments/actionable-regime-confidence/runs/20260510T230938-main-regime-v2-schema-preflight/main_regime_v2_calibration_preflight.json
+accepted_root_classes_95: ['CrisisStress', 'TransitionAccumulationDistribution']
+missing_root_classes_95: ['BullExpansion', 'BearExpansion', 'ConsolidationRange', 'UnknownOrMixed', 'ManipulationLiquidityEngineering']
+accepted_gate: none_for_main_regime_v2
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+manipulation_input_state: missing_required_inputs

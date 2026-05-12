@@ -1,0 +1,9 @@
+---
+strategy:         TomacNQ_KillzoneBreakout
+commit:           34ba6b6
+status:           ERROR
+error_type:       OperationalException
+error_msg:        No data found. Terminating.
+traceback:
+
+Done: 0 succeeded, 1 failed.

@@ -1,0 +1,155 @@
+{
+  "accepted_rows_added": 0,
+  "board_a_sha256": "f06120ce0132b05d81db4a1b0d1d6f4cb1351343ce3e1dee050e3aed1231369d",
+  "board_b_sha256": "015614f50a095249005f50d4aad12128acf17b43669865a523671f0a1d4ef337",
+  "canonical_merge": false,
+  "checklist": [
+    {
+      "blocker": "",
+      "evidence": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md sha256=f06120ce0132b05d81db4a1b0d1d6f4cb1351343ce3e1dee050e3aed1231369d",
+      "requirement": "Read latest Board A contract",
+      "status": "pass"
+    },
+    {
+      "blocker": "075413 remains not complete with blocked requirements and no required-root unlock.",
+      "evidence": "board_a_latest_completion_audit_after_075009_v1=not_complete_no_required_root_unlock_no_downstream_promotion",
+      "requirement": "Count 075413 latest audit once",
+      "status": "pass_fail_closed"
+    },
+    {
+      "blocker": "No source-label or control sidecar; no accepted rows.",
+      "evidence": "tomac_local_source_label_sidecar_scan_after_074844_v1=no_source_label_or_control_sidecar_no_unlock",
+      "requirement": "Count 075411 Tomac sidecar scan once",
+      "status": "pass_fail_closed"
+    },
+    {
+      "blocker": "Provider/cache inventory yielded no valid required root.",
+      "evidence": "provider_cache_source_control_sweep_after_075206_v1=no_valid_required_root_no_unlock",
+      "requirement": "Count 075420 provider/cache sweep once",
+      "status": "pass_fail_closed"
+    },
+    {
+      "blocker": "Local/download candidates were not source labels or order-lifecycle controls.",
+      "evidence": "local_download_arrival_sweep_after_075009_v1=no_new_required_source_control_unlock",
+      "requirement": "Count 075426 local/download arrival sweep once",
+      "status": "pass_fail_closed"
+    },
+    {
+      "blocker": "R6 owner/export, R5 source-panel recency, and verifier-native Crisis-capable R3 roots are still absent or quarantined.",
+      "evidence": "TSIE-derived R3, raw OHLCV, provider/cache inventory, local downloads, and runtime readiness remain non-promoting.",
+      "requirement": "Do not promote proxy evidence",
+      "status": "pass_fail_closed"
+    },
+    {
+      "blocker": "",
+      "evidence": "No direct verifier, split calibration, canonical merge, selected-data AutoQuant, Pre-Bayes, BBN, CatBoost/path-ranking, or execution-tree promotion was run by this audit.",
+      "requirement": "Do not run blocked downstream chain",
+      "status": "pass"
+    },
+    {
+      "blocker": "Continue source/control acquisition only.",
+      "evidence": "accepted_rows_added=0; valid_required_root_unlock=false; source_control_evidence_acquired=false; strict_full_objective=false; update_goal=false",
+      "requirement": "Completion objective",
+      "status": "blocked"
+    }
+  ],
+  "downstream_promotion_rerun": false,
+  "evidence_assertions": {
+    "audit_075413": "docs/experiments/actionable-regime-confidence/runs/20260512T075413+0800-codex-board-a-latest-completion-audit-after-075009-v1/checks/board_a_latest_completion_audit_after_075009_v1_assertions.out",
+    "local_download_075426": "docs/experiments/actionable-regime-confidence/runs/20260512T075426+0800-codex-local-download-arrival-sweep-after-075009-v1/checks/local_download_arrival_sweep_after_075009_v1_assertions.out",
+    "provider_cache_075420": "docs/experiments/actionable-regime-confidence/runs/20260512T075420+0800-codex-provider-cache-source-control-sweep-after-075206-v1/checks/provider_cache_source_control_sweep_after_075206_v1_assertions.out",
+    "tomac_075411": "docs/experiments/actionable-regime-confidence/runs/20260512T075411+0800-codex-tomac-local-source-label-sidecar-scan-after-074844-v1/checks/tomac_local_source_label_sidecar_scan_after_074844_v1_assertions.out"
+  },
+  "evidence_reports": {
+    "audit_075413": "docs/experiments/actionable-regime-confidence/runs/20260512T075413+0800-codex-board-a-latest-completion-audit-after-075009-v1/board-a-latest-completion-audit-after-075009-v1/board_a_latest_completion_audit_after_075009_v1.md",
+    "local_download_075426": "docs/experiments/actionable-regime-confidence/runs/20260512T075426+0800-codex-local-download-arrival-sweep-after-075009-v1/local-download-arrival-sweep-after-075009-v1/local_download_arrival_sweep_after_075009_v1.md",
+    "provider_cache_075420": "docs/experiments/actionable-regime-confidence/runs/20260512T075420+0800-codex-provider-cache-source-control-sweep-after-075206-v1/provider-cache-source-control-sweep-after-075206-v1/provider_cache_source_control_sweep_after_075206_v1.md",
+    "tomac_075411": "docs/experiments/actionable-regime-confidence/runs/20260512T075411+0800-codex-tomac-local-source-label-sidecar-scan-after-074844-v1/tomac-local-source-label-sidecar-scan-after-074844-v1/tomac_local_source_label_sidecar_scan_after_074844_v1.md"
+  },
+  "gate_result": "board_a_latest_completion_audit_after_075426_v1=not_complete_latest_inventory_no_required_unlock",
+  "parsed_assertions": {
+    "audit_075413": {
+      "accepted_rows_added": "0",
+      "blocked_requirements": "7",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "board_a_latest_completion_audit_after_075009_v1=not_complete_no_required_root_unlock_no_downstream_promotion",
+      "partial_requirements": "2",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    "local_download_075426": {
+      "accepted_rows_added": "0",
+      "candidate_rows": "6",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "files_scanned": "190546",
+      "gate_result": "local_download_arrival_sweep_after_075009_v1=no_new_required_source_control_unlock",
+      "order_lifecycle_schema_hits": "0",
+      "r3_native_subhour_root_present": "true",
+      "r5_recency_root_present": "false",
+      "r6_owner_export_complete": "false",
+      "required_filename_hits": "0",
+      "source_control_evidence_acquired": "false",
+      "source_label_schema_hits": "0",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    "provider_cache_075420": {
+      "candidate_hit_count": "124",
+      "canonical_merge": "false",
+      "downstream_promotion_rerun": "false",
+      "gate_result": "provider_cache_source_control_sweep_after_075206_v1=no_valid_required_root_no_unlock",
+      "r3_native_subhour_unlock": "false",
+      "r5_recency_unlock": "false",
+      "r6_owner_export_unlock": "false",
+      "root_absent_count": "2",
+      "scan_truncated_count": "3",
+      "selected_data_autoquant_promotion": "false",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    },
+    "tomac_075411": {
+      "accepted_rows_added": "0",
+      "canonical_merge": "false",
+      "csv_header_source_label_or_control_hits": "0",
+      "downstream_promotion_rerun": "false",
+      "filename_sidecar_scan_hits": "0",
+      "gate_result": "tomac_local_source_label_sidecar_scan_after_074844_v1=no_source_label_or_control_sidecar_no_unlock",
+      "mainregimev2_hits": "0",
+      "market_regime_label_report_files": "2",
+      "matched_negative_hits": "0",
+      "order_lifecycle_hits": "0",
+      "pass_marker": "tomac_local_source_label_sidecar_scan_after_074844_v1",
+      "r3_native_subhour_unlock": "false",
+      "r5_recency_unlock": "false",
+      "r6_owner_export_unlock": "false",
+      "source_confidence_hits": "0",
+      "source_control_evidence_acquired": "false",
+      "strict_full_objective": "false",
+      "trade_usable": "false",
+      "update_goal": "false",
+      "valid_required_root_unlock": "false"
+    }
+  },
+  "promotion_allowed": false,
+  "r3_native_subhour_unlock": false,
+  "r5_recency_unlock": false,
+  "r6_owner_export_unlock": false,
+  "run_id": "20260512T075814+0800-codex-board-a-latest-completion-audit-after-075426-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

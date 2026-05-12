@@ -1,0 +1,137 @@
+{
+  "schema_version": "main-regime-v2-parent-child-crosswalk/v1",
+  "loop_id": "20260511T020421+0800-codex-main-regime-v2-parent-child-crosswalk",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T020421-codex-main-regime-v2-parent-child-crosswalk",
+  "purpose": "Lock the Board A reporting boundary so subtype, child, overlay, and direct-L2 signature evidence cannot be reported as MainRegimeV2 root acceptance.",
+  "root_target_axis": {
+    "emittable_root_targets": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis",
+      "Manipulation"
+    ],
+    "residual_target": "UnknownOrMixed",
+    "residual_release_gate": "not_promotable_as_accepted_trade_regime",
+    "manipulation_treatment": "direct_input_gated_root_or_overlay_only"
+  },
+  "root_acceptance_contract": {
+    "required_packet_scope": "target_root_must_equal_emittable_root_target",
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2,
+    "blocked_predictor_patterns": [
+      "future_*",
+      "target_*",
+      "*_next",
+      "next_*"
+    ],
+    "subtype_packets_count_as_root_acceptance": false,
+    "unlabeled_l2_signatures_count_as_manipulation_acceptance": false,
+    "ohlcv_proxy_count_as_manipulation_acceptance": false
+  },
+  "parent_child_crosswalk": {
+    "Bull": {
+      "allowed_child_or_feature_evidence": [
+        "TrendExpansion",
+        "BullExpansion",
+        "positive persistence features",
+        "signed positive provider-agreement features"
+      ],
+      "blocked_as_direct_root_labels": [
+        "TrendExpansion",
+        "BullExpansion"
+      ],
+      "promotion_requirement": "A calibrated packet whose emitted target root is exactly Bull, with signed positive direction and cross-context validation."
+    },
+    "Bear": {
+      "allowed_child_or_feature_evidence": [
+        "TrendExpansion",
+        "BearExpansion",
+        "negative persistence features",
+        "signed negative provider-agreement features"
+      ],
+      "blocked_as_direct_root_labels": [
+        "TrendExpansion",
+        "BearExpansion",
+        "ExtremeStress",
+        "CrisisStress"
+      ],
+      "promotion_requirement": "A calibrated packet whose emitted target root is exactly Bear, separated from Crisis and validated across contexts."
+    },
+    "Sideways": {
+      "allowed_child_or_feature_evidence": [
+        "RangeConsolidation",
+        "Consolidation",
+        "range/chop/compression features"
+      ],
+      "blocked_as_direct_root_labels": [
+        "RangeConsolidation",
+        "Consolidation"
+      ],
+      "promotion_requirement": "A calibrated packet whose emitted target root is exactly Sideways, with a residual UnknownOrMixed bucket and cross-context validation."
+    },
+    "Crisis": {
+      "allowed_child_or_feature_evidence": [
+        "ExtremeStress",
+        "CrisisStress",
+        "tail-volatility and liquidity-cliff features"
+      ],
+      "blocked_as_direct_root_labels": [
+        "ExtremeStress",
+        "CrisisStress"
+      ],
+      "promotion_requirement": "A calibrated packet whose emitted target root is exactly Crisis. Prior evidence currently preserves this root only."
+    },
+    "Manipulation": {
+      "allowed_child_or_feature_evidence": [
+        "event-confirmed pump/dump labels",
+        "direct L2/L3/MBO/order-lifecycle fields",
+        "direct L2 signature features only when paired with event-confirmed positive/negative labels"
+      ],
+      "blocked_as_direct_root_labels": [
+        "ThinLiquidity",
+        "SessionLiquidityCoreViable",
+        "unlabeled direct L2 signatures",
+        "wall imbalance",
+        "layering stack",
+        "one-sided cancellation burst"
+      ],
+      "promotion_requirement": "A calibrated packet whose emitted target root is exactly Manipulation and whose positive/negative labels are event-confirmed or direct-input-confirmed.",
+      "current_public_tardis_state": "blocked_public_tardis_label_alignment"
+    },
+    "UnknownOrMixed": {
+      "allowed_child_or_feature_evidence": [],
+      "blocked_as_direct_root_labels": [
+        "UnknownOrMixed"
+      ],
+      "promotion_requirement": "Residual bucket required for taxonomy coverage but never accepted as a release/trade regime."
+    }
+  },
+  "current_acceptance_state": {
+    "accepted_95_roots": [
+      "Crisis"
+    ],
+    "missing_95_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ],
+    "trade_usable": false,
+    "board_state": "blocked"
+  },
+  "decision": {
+    "accepted_gate": "partial_for_MainRegimeV2_Crisis_only_prior_evidence_preserved",
+    "crosswalk_locked": true,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "fresh_calibration_rerun": false,
+    "trade_usable": false,
+    "next_action": "Use a credentialed historical Tardis/Binance export for the nine exact-date available pump events, or provide another labeled direct L2/L3/order-lifecycle manipulation dataset before rerunning unchanged gates."
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "run_id": "20260512T160908+0800-codex-board-a-tvr-local-stdio-alias-probe-v1",
+  "scope": "read_only_tradingview_mcp_local_stdio_alias_probe",
+  "board_hash_before_terminal_readback": "e9f63d9dba25e7435e1a951c6b6001d1aa6b662c1fe4b4cafc687b14d85d1773",
+  "remote_http_api_called": false,
+  "remote_url_env": "unset",
+  "api_key_env": "unset",
+  "stdio_cmd_env": "set",
+  "stdio_args_env": "set",
+  "probes": [
+    {
+      "check": "01_tvr_local_stdio_btc_usd_1h",
+      "symbol": "BTC-USD",
+      "interval": "1h",
+      "provider": "tradingview_mcp",
+      "role": "crypto_reference",
+      "exit": 0,
+      "ok": true,
+      "operation": "ohlcv.fetch",
+      "rows": 720,
+      "first_timestamp": "2026-04-12T09:00:00Z",
+      "last_timestamp": "2026-05-12T08:12:15Z",
+      "provider_reason": "local_stdio_ohlcv_available",
+      "credential_source": "missing"
+    },
+    {
+      "check": "02_tvr_local_stdio_qqq_1h",
+      "symbol": "NASDAQ:QQQ",
+      "interval": "1h",
+      "provider": "tradingview_mcp",
+      "role": "etf_reference",
+      "exit": 0,
+      "ok": true,
+      "operation": "ohlcv.fetch",
+      "rows": 148,
+      "first_timestamp": "2026-04-13T13:30:00Z",
+      "last_timestamp": "2026-05-11T20:00:00Z",
+      "provider_reason": "local_stdio_ohlcv_available",
+      "credential_source": "missing"
+    },
+    {
+      "check": "03_tvr_local_stdio_es_f_1h",
+      "symbol": "ES=F",
+      "interval": "1h",
+      "provider": "tradingview_mcp",
+      "role": "futures_reference",
+      "exit": 0,
+      "ok": true,
+      "operation": "ohlcv.fetch",
+      "rows": 487,
+      "first_timestamp": "2026-04-12T22:00:00Z",
+      "last_timestamp": "2026-05-12T08:02:23Z",
+      "provider_reason": "local_stdio_ohlcv_available",
+      "credential_source": "missing"
+    }
+  ],
+  "decision": {
+    "local_stdio_ohlcv_route_available": true,
+    "remote_429_blocker_superseded_for_this_route": false,
+    "provider_route_plumbing_evidence_only": true,
+    "same_root_six_provider_aq_authority": false,
+    "auto_quant_ran": false,
+    "pre_bayes_bbn_catboost_execution_tree_ran": false,
+    "accepted_95_contexts_added": 0,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  }
+}

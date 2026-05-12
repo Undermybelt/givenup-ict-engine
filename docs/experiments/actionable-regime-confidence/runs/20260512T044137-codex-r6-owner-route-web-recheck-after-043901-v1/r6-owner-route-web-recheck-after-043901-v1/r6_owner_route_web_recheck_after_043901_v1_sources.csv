@@ -1,0 +1,8 @@
+route,url,readback,board_a_effect
+CME DataMine,https://www.cmegroup.com/market-data/datamine-historical-data/index.html,Market by Order and PCAP historical datasets available via purchase/extraction,official_route_confirmed_no_local_export
+CME DataMine overview PDF,https://www.cmegroup.com/content/dam/cmegroup/education/files/cme-datamine-overview.pdf,Market depth and Market by Order historical data listed,official_route_confirmed_no_local_export
+CFE historical data,https://ww2.cboe.com/us/futures/market_statistics/historical_data/,Public daily volume/open interest and DataShop route for custom VIX historical data,public_page_not_verifier_native_controls
+Cboe DataShop CFE VIX futures trades/quotes,https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes,CFE VIX tick trades/quotes April 2004 to February 2018,date_fit_possible_but_no_acquired_export
+Cboe DataShop futures products,https://datashop.cboe.com/futures,CFE VIX futures trades/quotes product and support routes,official_route_confirmed_no_local_export
+Databento venues and datasets,https://databento.com/docs/venues-and-datasets,CFE full depth-of-book PITCH and CME market data records documented,vendor_route_confirmed_no_local_export
+Databento PCAP,https://databento.com/pcaps,Proprietary exchange feeds and full order book/market depth with license restrictions,vendor_route_confirmed_no_local_export

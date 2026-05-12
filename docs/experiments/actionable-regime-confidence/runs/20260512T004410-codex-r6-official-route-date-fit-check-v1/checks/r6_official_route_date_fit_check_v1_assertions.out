@@ -1,0 +1,11 @@
+required_cells_17=PASS
+candidate_official_routes_cover_17_cells=PASS
+cme_route_plausible_controls_not_acquired=PASS
+cfe_depth_date_gap_recorded=PASS
+controls_not_acquired=PASS
+flip_control_not_approved=PASS
+canonical_merge_false=PASS
+downstream_rerun_false=PASS
+accepted_rows_zero=PASS
+strict_full_objective_false=PASS
+update_goal_false=PASS

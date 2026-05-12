@@ -1,0 +1,14 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260511T010240-root-taxonomy-v3-cross-asset-gate/root-v3/root_taxonomy_v3_cross_asset_gate_report.json
+accepted_root_classes_95: []
+missing_root_classes_95: ['BullExpansion', 'BearExpansion', 'Consolidation', 'CrisisStress', 'TransitionRecovery', 'Manipulation']
+accepted_gate: none_for_RootTaxonomyV3
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+trade_usable: False
+direct_manipulation_calibration_usable: False
+BullExpansion: state=blocked test_lcb=0.195503 cal=1578 test=1869 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+BearExpansion: state=blocked test_lcb=0.204221 cal=4830 test=4800 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+Consolidation: state=blocked test_lcb=0.622629 cal=434 test=369 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+CrisisStress: state=blocked test_lcb=0.478952 cal=361 test=360 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95,ece_above_0_05
+TransitionRecovery: state=blocked test_lcb=0.187492 cal=2234 test=2326 blockers=calibration_wilson95_below_0_95,test_wilson95_below_0_95
+Manipulation: state=missing_required_inputs test_lcb=0.000000 cal=0 test=0 blockers=direct_inputs_live_snapshot_only,calibration_support_below_120,proxy_only_low_confidence

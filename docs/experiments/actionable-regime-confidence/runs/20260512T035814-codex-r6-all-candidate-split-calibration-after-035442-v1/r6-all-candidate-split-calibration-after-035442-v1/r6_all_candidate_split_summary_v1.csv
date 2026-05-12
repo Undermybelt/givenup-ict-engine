@@ -1,0 +1,5 @@
+candidate,root,status,verifier_returncode,positive_rows,matched_negative_rows,matched_group_count,symbols,venues,pooled_min_wilson95_lcb,pooled_gate,chronological_split_gate,heldout_symbol_gate,heldout_venue_gate,failing_chronological_cells,failing_symbol_cells,failing_venue_cells,max_pair_gap
+jpm_cbot_staging,/private/tmp/20260512T000803-codex-r6-jpm-cbot-treasury-control-uplift-v1.staging,schema_ready_unscored,0,77,77,74,40,11,0.952479911333,True,False,False,False,3,40,11,73
+direct_manipulation_intake,/private/tmp/ict-engine-direct-manipulation-row-intake,schema_ready_unscored,0,73,73,70,36,11,0.950006246616,True,False,False,False,3,36,11,73
+v55_reconstruction_intake,/private/tmp/ict-engine-r6-direct-intake-reconstruction-v55/intake,schema_ready_unscored,0,73,73,70,36,11,0.950006246616,True,False,False,False,3,36,11,73
+v56_clean_readback_intake,/private/tmp/ict-engine-r6-direct-intake-v56-clean-readback/intake,schema_ready_unscored,0,73,73,70,36,11,0.950006246616,True,False,False,False,3,36,11,73

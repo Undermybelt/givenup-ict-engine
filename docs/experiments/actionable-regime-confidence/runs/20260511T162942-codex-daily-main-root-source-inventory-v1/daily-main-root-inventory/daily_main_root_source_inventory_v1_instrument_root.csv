@@ -1,0 +1,9 @@
+instrument_class,root,daily_rows,covered
+us_index,Bull,12786,true
+us_index,Bear,4635,true
+us_index,Sideways,7786,true
+us_index,Crisis,1029,true
+us_single_stock,Bull,90980,true
+us_single_stock,Bear,50304,true
+us_single_stock,Sideways,48882,true
+us_single_stock,Crisis,28603,true

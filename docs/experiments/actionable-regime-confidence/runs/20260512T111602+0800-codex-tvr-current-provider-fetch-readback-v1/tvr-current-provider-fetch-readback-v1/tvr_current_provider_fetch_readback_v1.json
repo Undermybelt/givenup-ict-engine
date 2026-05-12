@@ -1,0 +1,35 @@
+{
+  "accepted_rows_added": 0,
+  "canonical_merge": false,
+  "default_harness": {
+    "first_time": null,
+    "last_time": null,
+    "ok": true,
+    "provider": "tradingview_mcp",
+    "rows": 21,
+    "symbol": "NASDAQ:QQQ"
+  },
+  "default_harness_exit": 0,
+  "downstream_promotion": false,
+  "explicit_selected_history": false,
+  "gate": "tvr_current_provider_fetch_readback_v1=tradingview_mcp_ready_and_ohlcv_rows_present_provider_layer_only_no_promotion",
+  "local_stdio_harness": {
+    "first_time": null,
+    "last_time": null,
+    "ok": true,
+    "provider": "tradingview_mcp",
+    "rows": 21,
+    "symbol": "NASDAQ:QQQ"
+  },
+  "local_stdio_harness_exit": 0,
+  "mature_rooted_branch_observations_added": 0,
+  "promotion_allowed": false,
+  "provider_ready": true,
+  "provider_reason": "mcp_url_and_api_key_available",
+  "provider_status": "ready",
+  "provider_status_exit": 0,
+  "run_id": "20260512T111602+0800-codex-tvr-current-provider-fetch-readback-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "update_goal": false
+}

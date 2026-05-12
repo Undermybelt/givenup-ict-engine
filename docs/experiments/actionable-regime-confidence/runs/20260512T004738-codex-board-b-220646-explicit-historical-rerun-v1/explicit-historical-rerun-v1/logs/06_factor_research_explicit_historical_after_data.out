@@ -1,0 +1,150 @@
+{
+  "auto_quant_handoff_candidate": {
+    "agent_prompt": "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, work the 'expansion_manipulation' objective, and read /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/program.md before acting. Run uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py on the current active strategy set, review measured results, and iterate only from backtest evidence. Read-only external strategy materials from /Users/thrill3r/Auto-Quant/user_data/strategies_external are attached as seed inspiration only; do not execute those scripts directly or carry their absolute-path runtime dependencies into the managed Auto-Quant workspace. Highest-evidence materials: TomacNQ_KillzoneBreakout [TomacNQ_KillzoneBreakout.py]. Never treat 'no strategies found' as completion. Export the best measured candidate package back into ict-engine state.",
+    "artifact_id": "auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165622.339Z",
+    "backend": "auto-quant",
+    "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_ltf.json",
+    "data_ready": true,
+    "dependency_status": {
+      "adapter_version": "v1",
+      "bootstrap_needed": false,
+      "config_present": true,
+      "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "healthy": true,
+      "last_sync": "2026-05-11T16:50:29.628833Z",
+      "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+      "managed_repo_present": true,
+      "notes": [],
+      "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+      "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+      "required_files": [
+        "README.md",
+        "program.md",
+        "prepare.py",
+        "run.py",
+        "versions/README.md"
+      ],
+      "tracked_branch": "master",
+      "update_available": false,
+      "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+    },
+    "external_strategy_materials": [
+      {
+        "be_count": 0,
+        "name": "TomacNQ_KillzoneBreakout",
+        "sl_count": 0,
+        "strategy_path": "TomacNQ_KillzoneBreakout.py",
+        "tp_count": 0,
+        "trade_rows": 0
+      }
+    ],
+    "handoff_artifact_path": "docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/SRC_ROOT_CARRY_LONG_220646/auto_quant_handoff.factor_research.json",
+    "handoff_kind": "factor_research",
+    "iterations": null,
+    "mutation_spec_path": null,
+    "notes": [
+      "auto_quant_active_strategy_count=1",
+      "auto_quant_strategy_material_root=/Users/thrill3r/Auto-Quant/user_data/strategies_external",
+      "auto_quant_external_strategy_material_count=1",
+      "auto_quant_external_strategy_material=TomacNQ_KillzoneBreakout [TomacNQ_KillzoneBreakout.py]",
+      "requested_at=20260511T165622.343Z",
+      "auto_quant_seed_material_evidence_artifact_id=auto-quant-seed-material-evidence:SRC_ROOT_CARRY_LONG_220646:20260511T165622.224Z"
+    ],
+    "objective": "expansion_manipulation",
+    "paired_data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/SRC_ROOT_CARRY_LONG_220646/analyze_live_20260511T163704_spot.json",
+    "readiness": {
+      "bootstrap_needed": false,
+      "data_ready": true,
+      "dependency_healthy": true,
+      "dependency_status": {
+        "adapter_version": "v1",
+        "bootstrap_needed": false,
+        "config_present": true,
+        "current_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+        "healthy": true,
+        "last_sync": "2026-05-11T16:50:29.628833Z",
+        "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+        "managed_repo_present": true,
+        "notes": [],
+        "pinned_ref": "34ba6b6ee6aa69813a50a72158d4c089d97afb96",
+        "repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+        "required_files": [
+          "README.md",
+          "program.md",
+          "prepare.py",
+          "run.py",
+          "versions/README.md"
+        ],
+        "tracked_branch": "master",
+        "update_available": false,
+        "upstream_commit": "34ba6b6ee6aa69813a50a72158d4c089d97afb96"
+      },
+      "healthy": true,
+      "managed_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+      "next_step": {
+        "action_type": "run_command",
+        "blocked_reason": null,
+        "deferred_command": "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+        "prompt": null,
+        "user_input_required": false
+      },
+      "notes": [],
+      "recommended_next_command": "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+      "recommended_next_command_meta": {
+        "blocked": false,
+        "executable_command": "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+        "kind": "other",
+        "prompt": null,
+        "recorded_data_paths": [],
+        "requires_user_input": false
+      },
+      "status": "dependency_ready_data_ready",
+      "update_available": false,
+      "workspace": {
+        "config_json": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/config.json",
+        "data_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/data",
+        "prepare_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/prepare.py",
+        "program_md": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/program.md",
+        "repo_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+        "run_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+        "strategies_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies"
+      }
+    },
+    "session_id": null,
+    "state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1",
+    "strategy_material_root": "/Users/thrill3r/Auto-Quant/user_data/strategies_external",
+    "suggested_commands": [
+      "cat /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/program.md",
+      "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py"
+    ],
+    "suggested_next_steps": [
+      "open Auto-Quant program.md and stage a research loop for the requested objective",
+      "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
+    ],
+    "symbol": "SRC_ROOT_CARRY_LONG_220646",
+    "workspace": {
+      "config_json": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/config.json",
+      "data_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/data",
+      "prepare_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/prepare.py",
+      "program_md": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/program.md",
+      "repo_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant",
+      "run_script": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+      "strategies_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/user_data/strategies"
+    }
+  },
+  "human_output": "Auto-Quant handoff | status=dependency_ready_data_ready | objective=expansion_manipulation | data_ready=true\nNext: open Auto-Quant program.md and stage a research loop for the requested objective\nRun: uv run --with ta-lib <local-path>\nReview: ict-engine auto-quant-adoption-review --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1 --artifact-id auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165622.339Z\nWorkflow: ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1 --human",
+  "recommended_next_command": "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "uv run --with ta-lib /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1/.deps/auto-quant/run.py",
+    "prompt": null,
+    "user_input_required": false
+  },
+  "review_command": "ict-engine auto-quant-adoption-review --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1 --artifact-id auto-quant-handoff:factor_research:SRC_ROOT_CARRY_LONG_220646:20260511T165622.339Z",
+  "suggested_next_steps": [
+    "open Auto-Quant program.md and stage a research loop for the requested objective",
+    "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
+  ],
+  "workflow_status_command": "ict-engine workflow-status --symbol SRC_ROOT_CARRY_LONG_220646 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T004738-codex-board-b-220646-explicit-historical-rerun-v1/explicit-historical-rerun-v1/state_explicit_historical_v1 --human"
+}

@@ -1,0 +1,13 @@
+gate_result=blocked_mendeley_gox_hgb_wash_below_95
+accepted=False
+blockers=test_coverage_below_min,calibration_ece_above_max,test_ece_above_max
+threshold=0.986846513566
+calibration_wilson_lcb_95=0.976727954706
+test_wilson_lcb_95=0.985614662979
+calibration_support=33610
+test_support=9961
+calibration_coverage=0.030348999955
+test_coverage=0.008994528878
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_committed_to_repo=false

@@ -1,0 +1,230 @@
+{
+  "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+  "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+  "artifact_type": "board_b_crashrebound_branch_rc_spa_v1",
+  "artifacts": {
+    "assertions": "docs/experiments/actionable-regime-confidence/runs/20260511T180155-codex-crashrebound-branch-rc-spa-v1/checks/crashrebound_branch_rc_spa_v1_assertions.out",
+    "fold_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T180155-codex-crashrebound-branch-rc-spa-v1/branch-rc-spa/crashrebound_branch_rc_spa_v1_folds.csv",
+    "hard_gates_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T180155-codex-crashrebound-branch-rc-spa-v1/branch-rc-spa/crashrebound_branch_rc_spa_v1_hard_gates.csv",
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260511T180155-codex-crashrebound-branch-rc-spa-v1/branch-rc-spa/crashrebound_branch_rc_spa_v1.json",
+    "md": "docs/experiments/actionable-regime-confidence/runs/20260511T180155-codex-crashrebound-branch-rc-spa-v1/branch-rc-spa/crashrebound_branch_rc_spa_v1.md",
+    "oracle_log": "docs/experiments/actionable-regime-confidence/runs/20260511T180155-codex-crashrebound-branch-rc-spa-v1/checks/crashrebound_branch_rc_spa_v1_oracle.out",
+    "trade_csv": "docs/experiments/actionable-regime-confidence/runs/20260511T180155-codex-crashrebound-branch-rc-spa-v1/branch-rc-spa/crashrebound_branch_rc_spa_v1_trades.csv"
+  },
+  "auto_quant_root": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_source_changed": false,
+  "auto_quant_strategy_source": "/Users/thrill3r/Auto-Quant/versions/0.4.1/strategies/CrashRebound.py",
+  "diagnostics": {
+    "bootstrap_edge_lcb_5pct": -0.0010607838821823073,
+    "canonical_nonoverlapping_folds": 2,
+    "canonical_trade_rows": 82,
+    "cost_stress_bootstrap_lcb_5pct": -0.0030607838821823086,
+    "cost_stress_extra_round_trip_fee": 0.002,
+    "fold_positive_rate": 1.0,
+    "manipulation_overlay_state": "not_joined_abstain",
+    "missing_required_roots": [
+      "Crisis",
+      "Sideways"
+    ],
+    "roots_present": [
+      "Bear",
+      "Bull"
+    ],
+    "tail_loss_p95": 0.17779169387887275
+  },
+  "downstream_consumption_status": "not_started_hard_gates_failed",
+  "fold_rows": [
+    {
+      "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+      "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+      "calmar": 24.986756,
+      "fold_label": "bull_2021",
+      "fold_role": "root_conditioned_timerange_proxy",
+      "losses": 15,
+      "max_drawdown_pct": -5.728319,
+      "parent_regime_root": "Bull",
+      "profit_factor": 2.139179,
+      "profit_factor_family": "counter_trend_drawdown_rebound",
+      "profit_factor_leaf": "CrashRebound",
+      "profit_total_pct": 24.873032,
+      "regime_profit_branch_path": "Bull -> DrawdownPullback -> OversoldRebound -> CrashRebound",
+      "root_label_source": "timerange_proxy_not_board_a_per_trade_join",
+      "sharpe": 0.849624,
+      "sortino": 0.894427,
+      "strategy": "CrashRebound",
+      "sub_regime_tags": "drawdown_pullback",
+      "sub_sub_regime_or_profit_factor": "oversold_rebound",
+      "timerange": "20210101-20211231",
+      "total_trades": 50,
+      "win_rate_pct": 70.0,
+      "wins": 35
+    },
+    {
+      "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+      "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+      "calmar": 1.225272,
+      "fold_label": "winter_2022",
+      "fold_role": "root_conditioned_timerange_proxy",
+      "losses": 10,
+      "max_drawdown_pct": -12.806959,
+      "parent_regime_root": "Bear",
+      "profit_factor": 1.143187,
+      "profit_factor_family": "counter_trend_drawdown_rebound",
+      "profit_factor_leaf": "CrashRebound",
+      "profit_total_pct": 2.989741,
+      "regime_profit_branch_path": "Bear -> DrawdownCapitulation -> OversoldRebound -> CrashRebound",
+      "root_label_source": "timerange_proxy_not_board_a_per_trade_join",
+      "sharpe": 0.084682,
+      "sortino": 0.090853,
+      "strategy": "CrashRebound",
+      "sub_regime_tags": "drawdown_capitulation",
+      "sub_sub_regime_or_profit_factor": "oversold_rebound",
+      "timerange": "20220101-20221231",
+      "total_trades": 32,
+      "win_rate_pct": 68.75,
+      "wins": 22
+    },
+    {
+      "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+      "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+      "calmar": 2.668444,
+      "fold_label": "recovery_23_25",
+      "fold_role": "mixed_recovery_timerange_proxy_not_canonical_root",
+      "losses": 41,
+      "max_drawdown_pct": -11.30822,
+      "parent_regime_root": "unresolved_mixed_recovery",
+      "profit_factor": 1.267544,
+      "profit_factor_family": "counter_trend_drawdown_rebound",
+      "profit_factor_leaf": "CrashRebound",
+      "profit_total_pct": 17.29498,
+      "regime_profit_branch_path": "unresolved_mixed_recovery -> PostBearRecovery -> OversoldRebound -> CrashRebound",
+      "root_label_source": "timerange_proxy_not_board_a_per_trade_join",
+      "sharpe": 0.191996,
+      "sortino": 0.218582,
+      "strategy": "CrashRebound",
+      "sub_regime_tags": "post_bear_recovery",
+      "sub_sub_regime_or_profit_factor": "oversold_rebound",
+      "timerange": "20230101-20251231",
+      "total_trades": 123,
+      "win_rate_pct": 66.666667,
+      "wins": 82
+    },
+    {
+      "accepted_regime_artifact": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+      "accepted_regime_id": "BoardA_regime_factor_consumer_map_MainRegimeV2_roots_plus_scoped_manipulation",
+      "calmar": 5.247333,
+      "fold_label": "full_5y",
+      "fold_role": "overlap_aggregate_not_used_for_rc_spa",
+      "losses": 65,
+      "max_drawdown_pct": -11.308629,
+      "parent_regime_root": "mixed_overlap_not_a_root",
+      "profit_factor": 1.416099,
+      "profit_factor_family": "counter_trend_drawdown_rebound",
+      "profit_factor_leaf": "CrashRebound",
+      "profit_total_pct": 55.690671,
+      "regime_profit_branch_path": "mixed_overlap_not_a_root -> AggregateBacktest -> OversoldRebound -> CrashRebound",
+      "root_label_source": "timerange_proxy_not_board_a_per_trade_join",
+      "sharpe": 0.290306,
+      "sortino": 0.314815,
+      "strategy": "CrashRebound",
+      "sub_regime_tags": "aggregate_backtest",
+      "sub_sub_regime_or_profit_factor": "oversold_rebound",
+      "timerange": "20210101-20251231",
+      "total_trades": 207,
+      "win_rate_pct": 68.599034,
+      "wins": 142
+    }
+  ],
+  "hard_gate_result": "fail:reject_missing_accepted_per_trade_root_labels;reject_missing_required_roots_sideways_crisis;reject_min_test_folds_lt4;research_watch_branch_path_not_consumed",
+  "hard_gates": [
+    {
+      "evidence": "docs/experiments/actionable-regime-confidence/runs/20260511T153637-codex-regime-factor-consumer-map-v1/regime-factor-map/regime_factor_consumer_map_v1.csv",
+      "gate": "accepted_regime_id_present",
+      "pass": true
+    },
+    {
+      "evidence": "all canonical fold rows emit regime_profit_branch_path",
+      "gate": "branch_path_present",
+      "pass": true
+    },
+    {
+      "evidence": "root_label_source=timerange_proxy_not_board_a_per_trade_join",
+      "gate": "accepted_per_trade_root_label_join",
+      "pass": false
+    },
+    {
+      "evidence": "missing=Crisis,Sideways",
+      "gate": "required_main_roots_covered",
+      "pass": false
+    },
+    {
+      "evidence": "manipulation_overlay_state=not_joined_abstain",
+      "gate": "scoped_manipulation_overlay_joined",
+      "pass": false
+    },
+    {
+      "evidence": "canonical_trade_rows=82",
+      "gate": "min_total_trades_gte_100",
+      "pass": false
+    },
+    {
+      "evidence": "canonical_nonoverlapping_folds=2",
+      "gate": "min_test_folds_gte_4",
+      "pass": false
+    },
+    {
+      "evidence": "bull_2021=50,winter_2022=32",
+      "gate": "min_trades_per_test_fold_gte_10",
+      "pass": true
+    },
+    {
+      "evidence": "fold_positive_rate=1.000000",
+      "gate": "fold_positive_rate_gte_0_75",
+      "pass": true
+    },
+    {
+      "evidence": "bootstrap_edge_lcb_5pct=-0.00106078",
+      "gate": "bootstrap_edge_lcb_5pct_gt_0",
+      "pass": false
+    },
+    {
+      "evidence": "2x fee proxy subtracts extra 20 bps round trip; stressed_lcb=-0.00306078",
+      "gate": "cost_stress_survival_true",
+      "pass": false
+    },
+    {
+      "evidence": "not_computable_without_4plus_nonoverlapping_folds_or_model_selection_matrix",
+      "gate": "pbo_lte_0_25",
+      "pass": false
+    },
+    {
+      "evidence": "not_computable_from_current artifact; no deflated-sharpe trials matrix",
+      "gate": "dsr_gt_0",
+      "pass": false
+    },
+    {
+      "evidence": "tail_loss_p95=0.17779169; configured_risk_budget=missing",
+      "gate": "tail_loss_p95_lte_budget",
+      "pass": false
+    },
+    {
+      "evidence": "not_computable_without out-of-branch baseline roots",
+      "gate": "regime_specificity_ratio_gte_1_20",
+      "pass": false
+    },
+    {
+      "evidence": "pre_bayes/bbn/catboost/execution_tree not run because hard gates failed",
+      "gate": "downstream_branch_consumption_verified",
+      "pass": false
+    }
+  ],
+  "next_action": "Join accepted Board A root labels to each CrashRebound trade timestamp or rerun Auto-Quant with accepted root labels emitted at trade time; then require Bull/Bear/Sideways/Crisis plus scoped Manipulation overlay coverage, at least four non-overlapping folds, PBO/DSR/regime-specificity, and branch-preserving pre-Bayes -> BBN -> CatBoost -> execution-tree consumption before promotion.",
+  "promotion_level": "reject",
+  "raw_market_data_committed": false,
+  "rc_spa": 0,
+  "recipe_id": "CrashRebound",
+  "run_id": "20260511T180155+0800-codex-crashrebound-branch-rc-spa-v1",
+  "runtime_code_changed": false,
+  "thresholds_relaxed": false,
+  "trade_usable": false
+}

@@ -1,0 +1,15 @@
+gate_result=091850_pointer_integrity_readback_v1=no_file_backed_run_root_no_unlock
+board_sections_found=2
+board_sections_file_backed=false
+repo_run_root_present=false
+tmp_run_root_present=false
+accepted_rows_added=0
+valid_required_root_unlock=false
+source_control_evidence_acquired=false
+canonical_merge=false
+selected_data_autoquant_promotion=false
+downstream_promotion_rerun=false
+strict_full_objective=false
+trade_usable=false
+promotion_allowed=false
+update_goal=false

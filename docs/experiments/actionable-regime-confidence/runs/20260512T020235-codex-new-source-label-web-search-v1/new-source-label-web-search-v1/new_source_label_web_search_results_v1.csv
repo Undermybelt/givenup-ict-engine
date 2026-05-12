@@ -1,0 +1,9 @@
+query,result_class,ready_source_owned_mainregime_export,notes
+"site:huggingface.co/datasets ""regime_label"" ""stock"" ""market"" -sujinwo -akashkumar5",known_or_irrelevant,false,"returned no new ready source-owned MainRegimeV2 row export"
+"site:huggingface.co/datasets ""market regime"" ""stock"" ""parquet"" -sujinwo -akashkumar5",known_or_irrelevant,false,"returned no new ready source-owned MainRegimeV2 row export"
+"site:kaggle.com ""market regime"" ""15m"" ""stock""",known_or_irrelevant,false,"returned no ready native subhour stock regime-label export"
+"""market regime"" ""regime_label"" ""AAPL"" OR ""NASDAQ"" dataset",known_or_irrelevant,false,"returned no ready AAPL or NASDAQ source-owned regime-label export"
+"""regime_label"" ""STRONG SELL"" -sujinwo",known_prior,false,"matches the already-known sujinwo-style rule-label family"
+"""market regime"" ""STRONG SELL"" ""WEAK BUY"" -sujinwo",known_prior,false,"matches the already-known sujinwo-style rule-label family"
+"""source-owned"" ""market regimes"" dataset stock",no_ready_dataset,false,"no ready source-owned MainRegimeV2 row export found"
+"""market regime"" ""MainRegimeV2""",no_ready_dataset,false,"no external MainRegimeV2 dataset found"

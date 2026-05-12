@@ -1,0 +1,4 @@
+role,path,exists,sha256,rows
+positive_rows,/tmp/ict-engine-direct-manipulation-row-intake/positive_spoofing_layering_rows.csv,True,ef9f912b5b0a56f85b21c1355c64c2b443d60ebacbb70a0f195de89b223c9ac6,73
+matched_negative_rows,/tmp/ict-engine-direct-manipulation-row-intake/matched_negative_normal_activity_rows.csv,True,d81b8253888d5d68e484679d221640e0f3bee5f4bf6b8e42e14f9d53b53f7e2d,73
+provenance_manifest,/tmp/ict-engine-direct-manipulation-row-intake/provenance_manifest.json,True,c4d0dd205723c0a52d026cedd5b25315131e1f35de07a1871ff72364c4d7c474,

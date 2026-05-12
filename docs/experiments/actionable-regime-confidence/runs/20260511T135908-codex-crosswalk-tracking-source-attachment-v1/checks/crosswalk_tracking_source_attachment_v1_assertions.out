@@ -1,0 +1,16 @@
+run_id=20260511T135908+0800-codex-crosswalk-tracking-source-attachment-v1
+board_sha256_at_run=3718ef087e979ec6dec6cf29436153533bf1a3854d4b79cba059e6f0a0db35e8
+candidate_crosswalk_rows=168
+tracking_pass_targets=DIA,SPY
+accepted_95_crosswalk_source_attachment_rows=36
+blocked_crosswalk_rows=132
+accepted_by_root={'Bear': 12, 'Bull': 12, 'Sideways': 12}
+accepted_by_instrument={'DIA': 18, 'SPY': 18}
+remaining_active_source_label_requests_after_crosswalk=484
+accepted_full_objective_gate=none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal
+full_objective_achieved=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

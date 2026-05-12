@@ -1,0 +1,1 @@
+/Users/thrill3r/.local/bin/uv run --with yfinance --with pandas scripts/auto_quant_external/fetch_external.py yahoo --symbol BTC-USD --interval 1h --start 2024-05-15 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T170852+0800-codex-board-a-provider-gap-repair-yf-ibkr-v1/provider-csv/yfinance_btc_usd_1h_20240515_20260512.csv 

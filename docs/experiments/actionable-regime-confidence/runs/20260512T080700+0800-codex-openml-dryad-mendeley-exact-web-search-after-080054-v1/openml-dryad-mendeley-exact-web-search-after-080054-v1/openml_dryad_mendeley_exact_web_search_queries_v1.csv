@@ -1,0 +1,9 @@
+query,result_count
+"site:openml.org ""MainRegimeV2""",0
+"site:dryad.org ""MainRegimeV2""",0
+"site:data.mendeley.com ""MainRegimeV2""",0
+"site:data.mendeley.com ""Oystacher"" ""spoofing""",0
+"site:dryad.org Oystacher spoofing controls",0
+"site:data.mendeley.com ""3Red Trading"" ""matched controls""",0
+"site:openml.org ""Bull"" ""Bear"" ""Sideways"" ""Crisis"" ""market regime""",0
+"site:dryad.org ""native subhour"" ""market regime""",0

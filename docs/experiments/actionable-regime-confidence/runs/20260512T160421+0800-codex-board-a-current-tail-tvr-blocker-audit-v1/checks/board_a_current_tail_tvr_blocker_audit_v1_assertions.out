@@ -1,0 +1,11 @@
+PASS board_a_hash_before_writeback=9c30382165613518b2c2d56d4850de6df196b2ccbb8c69bbca43b8babe3a13da
+PASS latest_tvr_probe_http_status=429
+PASS latest_tvr_retry_after_seconds=58271
+PASS provider_smoke_non_tvr_five_providers_exit0
+FAIL_CLOSED accepted_95_contexts=0
+FAIL_CLOSED same_root_six_provider_aq_authority=false
+FAIL_CLOSED cross_market_timeframe_validation=false
+FAIL_CLOSED pre_bayes_bbn_catboost_execution_promotion=false
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

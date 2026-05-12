@@ -1,0 +1,14 @@
+check,exit_code,status,rows,start,end,artifact,decision
+provider_status_agent,0,partial_ready,,,,command-output/00_provider_status_agent.stdout,non_promoting
+provider_status_yfinance,0,ready,,,,command-output/01_provider_status_yfinance.stdout,non_promoting
+provider_status_tradingview_mcp,0,configured_runtime_unhealthy,,,,command-output/02_provider_status_tradingview_mcp.stdout,blocked
+provider_status_ibkr,0,configured_runtime_unhealthy_with_gateway_reachable,,,,command-output/03_provider_status_ibkr.stdout,partial
+provider_status_kraken_cli,0,ready,,,,command-output/04_provider_status_kraken_cli.stdout,non_promoting
+provider_status_kraken_public,0,configured_runtime_unhealthy,,,,command-output/05_provider_status_kraken_public.stdout,partial
+yfinance_harness_qqq_1d,0,fetch_ok,21,2026-04-13T13:30:00Z,2026-05-11T13:30:00Z,command-output/06_harness_yfinance_qqq_1d.stdout,non_promoting
+tradingview_harness_qqq_1d,1,fetch_failed_mcp_get_ohlcv_error,,,,command-output/07_harness_tradingview_qqq_1d.stderr,blocked
+ibkr_harness_qqq_1d,1,fetch_failed_missing_explicit_ibkr_contract_json,,,,command-output/08_harness_ibkr_qqq_1d.stderr,command_shape_blocked
+ibkr_external_qqq_1_month_daily,0,fetch_ok,21,2026-04-13T00:00:00+00:00,2026-05-11T00:00:00+00:00,command-output/09_fetch_external_ibkr_qqq_1m.csv,non_promoting
+kraken_cli_xbtusd_1h,0,fetch_ok,721,2026-04-11T19:00:00+00:00,2026-05-11T19:00:00+00:00,command-output/10_kraken_cli_xbtusd_1h.stdout,non_promoting
+kraken_external_xbtusd_1h_original,2,failed_wrong_argument_symbol_instead_of_pair,,,,command-output/11_fetch_external_kraken_xbtusd_1h.stderr,obsolete_command_shape_failure
+kraken_external_xbtusd_1h_corrected,0,fetch_ok,721,2026-04-11T19:00:00+00:00,2026-05-11T19:00:00+00:00,command-output/12_fetch_external_kraken_xbtusd_1h_corrected.csv,non_promoting

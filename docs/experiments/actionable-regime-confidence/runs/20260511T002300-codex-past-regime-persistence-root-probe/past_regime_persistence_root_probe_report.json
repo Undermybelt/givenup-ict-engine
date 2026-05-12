@@ -1,0 +1,163 @@
+{
+  "schema_version": "main-regime-v2-past-regime-persistence-root-probe/v1",
+  "loop_id": "20260511T002300+0800-codex-past-regime-persistence-root-probe",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260511T002300-codex-past-regime-persistence-root-probe",
+  "objective": "Probe whether non-leaky past 8h regime persistence, streak, and rolling persistence features can lift remaining MainRegimeV2 root classes above the unchanged 95% gate.",
+  "input_feature_table": "docs/experiments/actionable-regime-confidence/runs/20260510T224014-codex-cross-timeframe-regime-validation/cross_timeframe_regime_features.csv",
+  "feature_policy": {
+    "future_fields_as_predictors": false,
+    "target_fields_as_predictors": false,
+    "new_predictors": [
+      "past 8h return",
+      "past 8h absolute return",
+      "past 8h range",
+      "past Bull/Bear/Sideways/Crisis flags from non-future window",
+      "past-regime streak length",
+      "rolling 16/64 row past-regime frequency"
+    ],
+    "selection_policy": "candidate atoms and pairs ranked on train split; calibration and test held out"
+  },
+  "acceptance_95": {
+    "precision_wilson_lcb_95_min": 0.95,
+    "calibration_support_min": 120,
+    "test_support_min": 60,
+    "ece_max": 0.05,
+    "coverage_min": 0.03,
+    "validation_instruments_min": 2,
+    "validation_market_contexts_min": 2,
+    "validation_timeframes_min": 2
+  },
+  "root_reports": [
+    {
+      "root_class": "Bull",
+      "state": "blocked",
+      "selected_rule": "volume_ratio32_128 <= 0.264093 AND stress_persistence16 <= 0.0625",
+      "calibration": {
+        "support": 293,
+        "success": 144,
+        "precision": 0.49146757679180886,
+        "precision_wilson_lcb_95": 0.43470666505405386
+      },
+      "test": {
+        "support": 587,
+        "success": 210,
+        "precision": 0.3577512776831346,
+        "precision_wilson_lcb_95": 0.32001459425008894,
+        "coverage": 0.03807979240999027,
+        "validation_instruments": 2,
+        "validation_market_contexts": 2,
+        "validation_timeframes": 2
+      },
+      "ece": 0.13371629910867427,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05"
+      ]
+    },
+    {
+      "root_class": "Bear",
+      "state": "blocked",
+      "selected_rule": "volume_ratio32_128 <= 0.821714 AND trend_persistence16 >= 0.625",
+      "calibration": {
+        "support": 506,
+        "success": 183,
+        "precision": 0.3616600790513834,
+        "precision_wilson_lcb_95": 0.3209826000488559
+      },
+      "test": {
+        "support": 726,
+        "success": 232,
+        "precision": 0.31955922865013775,
+        "precision_wilson_lcb_95": 0.28666542646665266,
+        "coverage": 0.0470969834576711,
+        "validation_instruments": 7,
+        "validation_market_contexts": 7,
+        "validation_timeframes": 2
+      },
+      "ece": 0.04210085040124567,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95"
+      ]
+    },
+    {
+      "root_class": "Sideways",
+      "state": "blocked",
+      "selected_rule": "vol64 <= 0.00114426 AND trend_persistence16 <= 0",
+      "calibration": {
+        "support": 432,
+        "success": 134,
+        "precision": 0.3101851851851852,
+        "precision_wilson_lcb_95": 0.2683989005160685
+      },
+      "test": {
+        "support": 467,
+        "success": 179,
+        "precision": 0.38329764453961457,
+        "precision_wilson_lcb_95": 0.3403240869794799,
+        "coverage": 0.030295167045085954,
+        "validation_instruments": 3,
+        "validation_market_contexts": 2,
+        "validation_timeframes": 2
+      },
+      "ece": 0.0731124593544294,
+      "blockers": [
+        "calibration_wilson95_below_0_95",
+        "test_wilson95_below_0_95",
+        "ece_above_0_05"
+      ]
+    },
+    {
+      "root_class": "Crisis",
+      "state": "accepted_95",
+      "selected_rule": "range_ratio32_128 >= 1.43187",
+      "calibration": {
+        "support": 1019,
+        "success": 1019,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.996244326246686
+      },
+      "test": {
+        "support": 949,
+        "success": 949,
+        "precision": 1.0,
+        "precision_wilson_lcb_95": 0.9959684176363939,
+        "coverage": 0.06156341226078495,
+        "validation_instruments": 7,
+        "validation_market_contexts": 7,
+        "validation_timeframes": 2
+      },
+      "ece": 0.0,
+      "blockers": []
+    },
+    {
+      "root_class": "Manipulation",
+      "state": "missing_required_inputs",
+      "test": {
+        "support": 0,
+        "precision_wilson_lcb_95": 0.0
+      },
+      "blockers": [
+        "missing_required_inputs",
+        "proxy_only_low_confidence"
+      ]
+    }
+  ],
+  "decision": {
+    "board_state": "blocked",
+    "accepted_root_classes_95": [
+      "Crisis"
+    ],
+    "missing_root_classes_95": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ],
+    "accepted_gate": "partial_for_MainRegimeV2",
+    "thresholds_relaxed": false,
+    "trade_usable": false,
+    "next_action": "Do not repeat past-regime persistence search; remaining roots require materially different signed-direction/sideways evidence and direct Manipulation inputs."
+  }
+}

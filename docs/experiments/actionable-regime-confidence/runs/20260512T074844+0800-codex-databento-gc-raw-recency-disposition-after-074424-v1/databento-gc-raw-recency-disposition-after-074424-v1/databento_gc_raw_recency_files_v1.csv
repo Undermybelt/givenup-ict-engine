@@ -1,0 +1,4 @@
+candidate,path,exists,size_bytes,rows,first_ts_event,last_ts_event,columns,has_source_label_columns,has_order_lifecycle_columns,disposition
+gc_continuous,/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/gc_201101_202604.csv,True,401491646,5327112,2011-01-02 18:00:00-05:00,2026-04-14 19:59:00-04:00,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol,False,False,raw_ohlcv_or_symbology_only_non_promoting
+glbx_ohlcv,/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/glbx-mdp3-20210106-20260105.ohlcv-1m.csv,True,585690521,5333532,2021-01-06T00:00:00.000000000Z,2026-01-05T23:59:00.000000000Z,ts_event|rtype|publisher_id|instrument_id|open|high|low|close|volume|symbol,False,False,raw_ohlcv_or_symbology_only_non_promoting
+symbology,/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/symbology.csv,True,30984640,1077103,,,raw_symbol|instrument_id|date,False,False,raw_ohlcv_or_symbology_only_non_promoting

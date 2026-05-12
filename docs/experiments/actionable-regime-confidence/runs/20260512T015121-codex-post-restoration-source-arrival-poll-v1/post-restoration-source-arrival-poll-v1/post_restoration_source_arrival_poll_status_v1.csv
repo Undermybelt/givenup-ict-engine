@@ -1,0 +1,14 @@
+item,path_or_pattern,result
+search_root,/tmp,present
+search_root,/Users/thrill3r/Downloads,present
+pattern,positive_spoofing_layering_rows.csv,no_matches
+pattern,matched_negative_normal_activity_rows.csv,no_matches
+pattern,provenance_manifest.json,no_matches
+pattern,*FLIP*approval*,no_matches
+pattern,*flip*approval*,no_matches
+pattern,*native*subhour*,no_matches
+pattern,*recency*extension*,no_matches
+target_root,/tmp/ict-engine-board-a-r6-owner-export-v1,absent
+target_root,/tmp/ict-engine-native-subhour-source-label-intake,absent
+target_root,/tmp/ict-engine-source-panel-recency-extension,absent
+target_root,/tmp/ict-engine-source-label-equivalence-intake,present_confidence_blocked_daily_only

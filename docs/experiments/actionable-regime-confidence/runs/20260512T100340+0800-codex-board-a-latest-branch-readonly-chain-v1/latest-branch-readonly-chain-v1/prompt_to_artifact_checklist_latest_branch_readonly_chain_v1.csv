@@ -1,0 +1,9 @@
+requirement,evidence,status
+Run real provider readback including IBKR TradingViewRemix/yfinance/Kraken,"00_provider_status stdout; yfinance and TradingView MCP ready, Kraken CLI ready, IBKR dependency-unhealthy, Kraken public dependency-unhealthy",partial_fail_closed
+Operate Auto-Quant,01_auto_quant_status stdout exits 0; dependency ready but data missing in this isolated state,partial_fail_closed
+Operate filter / Pre-Bayes,02_pre_bayes_status stdout exits 0; latest_gate_status=pass_neutralized,readback_only
+Operate BBN / belief network,02_pre_bayes_status stdout exits 0; regime_bundle_bbn_application_status=applied,readback_only
+Operate CatBoost / path ranking,03_policy_training_status stdout exits 0; trainer_artifact_model_family=catboost and runtime ready,readback_only
+Operate execution tree / execution candidate,06_workflow_execution_candidate stdout exits 0; candidate_status=execution_observe_only and ready=false,non_promoting
+Every regime at 95 percent with cross-market and cross-timeframe validation,No new accepted packet; source/control and selected-history gates remain false,not_complete
+Avoid multi-agent document collision,Isolated run root; append-only Board A note planned after fresh hash readback,pass

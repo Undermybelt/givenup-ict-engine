@@ -1,0 +1,135 @@
+{
+  "artifact_type": "regime_consumer_unit_pivot_v1",
+  "board": "docs/plans/2026-05-10-actionable-regime-confidence-todo.md",
+  "board_sha256_at_run": "ec8dc4c24b96a491106345f5fda79146612b67e8152b9f08c0b529fa8593878d",
+  "decision": {
+    "accepted_gate": "regime_consumer_unit_pivot_v1=market_context_roots4_ready_ticker_specific_partial_direct_manipulation_partial",
+    "call_update_goal": false,
+    "full_objective_achieved": false,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "diagnosis": {
+    "root_cause": "the board lacks an explicit consumer-unit acceptance contract; agents mixed market-regime context, cohort/root-pair support, strict ticker/root support, and direct manipulation evidence into one denominator",
+    "specific_unit_drift": "AMD/CVX 8/8 accepted rows used root-pair cohort support, while the later 39-ticker 1h expansion used strict per-ticker/root support",
+    "symptom": "recent loops produced many blocked rows while positive source-backed evidence already exists",
+    "why_more_timeframes_is_low_yield": "additional provider-native timeframes only mirror source-date overlap; they do not resolve source-label acquisition, direct manipulation controls, or the consumer-unit denominator"
+  },
+  "generated_at_utc": "2026-05-11T06:40:05.539056+00:00",
+  "ledger": [
+    {
+      "accepted_roots": "Bull,Bear,Sideways,Crisis",
+      "accepted_roots_count": 4,
+      "blocker": "needs downstream-facing context packet and full-cycle/species accounting; not ticker-specific",
+      "consumer_unit": "market_regime_context_gate",
+      "evidence": "exact same-source daily panel plus 1w/1mo and 1h panel-context support",
+      "owner": "Board A price-root regime context",
+      "status": "context_ready_not_full_completion"
+    },
+    {
+      "accepted_roots": "Bull,Bear,Sideways,Crisis",
+      "accepted_roots_count": 4,
+      "blocker": "sparse Bear/Sideways/Crisis per-ticker support; not a blocker for market context consumers",
+      "consumer_unit": "ticker_specific_signal_gate",
+      "evidence": "strict exact 1h ticker/root rows=41/156 by root={'Bull': 27, 'Bear': 4, 'Sideways': 7, 'Crisis': 3}",
+      "owner": "per-instrument execution or ticker-local signal claims",
+      "status": "partial"
+    },
+    {
+      "accepted_roots": "ManipulationScopedVarieties",
+      "accepted_roots_count": 5,
+      "blocker": "needs matched negatives for spoofing/layering plus quote stuffing/pinging/bear-raid/painting rows",
+      "consumer_unit": "direct_manipulation_gate",
+      "evidence": "scoped direct varieties=pump_dump_telegram_event,dex_self_trade_order_lifecycle,dex_consecutive_self_trade_order_lifecycle,midsummer_bsc_wash_maker,midsummer_multichain_wash_maker",
+      "owner": "direct event/order-flow/order-lifecycle/on-chain/social evidence",
+      "status": "partial_blocked"
+    },
+    {
+      "accepted_roots": "",
+      "accepted_roots_count": 0,
+      "blocker": "more OHLCV/provider timeframe sweeps do not create labels; acquire rows or extend source panel",
+      "consumer_unit": "source_label_acquisition_gate",
+      "evidence": "active source-label requests remain=556",
+      "owner": "missing-source rows and external provider acquisition",
+      "status": "blocked_open"
+    }
+  ],
+  "market_context": {
+    "daily_parent_price_roots_accepted": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "pooled_exact_1h_all_roots_ready": true,
+    "pooled_exact_1h_roots_ready": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "price_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "same_source_weekly_monthly_cells_accepted_count": 8
+  },
+  "next_action": "Use this consumer-unit ledger as the acceptance contract: materialize a downstream-facing market_regime_context packet from existing exact-source positives, while routing Manipulation to direct matched-row acquisition; do not run more broad timeframe sweeps until a consumer explicitly needs ticker-specific support.",
+  "run_id": "20260511T143344+0800-codex-regime-consumer-unit-pivot-v1",
+  "ticker_specific": {
+    "strict_exact_1h_accepted_by_root": {
+      "Bear": 4,
+      "Bull": 27,
+      "Crisis": 3,
+      "Sideways": 7
+    },
+    "strict_exact_1h_rows_accepted": 41,
+    "strict_exact_1h_rows_total": 156
+  },
+  "unit_drift_examples": [
+    {
+      "accepted_unit": "root_pair_cohort",
+      "instrument": "AMD",
+      "not_accepted_unit": "individual_ticker_root",
+      "root": "Bull",
+      "ticker_2024_support": "76",
+      "ticker_2025_support": "62"
+    },
+    {
+      "accepted_unit": "root_pair_cohort",
+      "instrument": "AMD",
+      "not_accepted_unit": "individual_ticker_root",
+      "root": "Bear",
+      "ticker_2024_support": "63",
+      "ticker_2025_support": "76"
+    },
+    {
+      "accepted_unit": "root_pair_cohort",
+      "instrument": "CVX",
+      "not_accepted_unit": "individual_ticker_root",
+      "root": "Bear",
+      "ticker_2024_support": "56",
+      "ticker_2025_support": "29"
+    },
+    {
+      "accepted_unit": "root_pair_cohort",
+      "instrument": "AMD",
+      "not_accepted_unit": "individual_ticker_root",
+      "root": "Sideways",
+      "ticker_2024_support": "10",
+      "ticker_2025_support": "18"
+    },
+    {
+      "accepted_unit": "root_pair_cohort",
+      "instrument": "CVX",
+      "not_accepted_unit": "individual_ticker_root",
+      "root": "Crisis",
+      "ticker_2024_support": "0",
+      "ticker_2025_support": "13"
+    }
+  ]
+}

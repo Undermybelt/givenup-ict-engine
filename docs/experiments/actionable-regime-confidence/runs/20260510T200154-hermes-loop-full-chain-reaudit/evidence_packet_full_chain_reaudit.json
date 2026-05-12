@@ -1,0 +1,107 @@
+{
+  "schema_version": "hermes-loop-full-chain-reaudit-evidence/v1",
+  "loop_id": "20260510T200154+0800-hermes-loop-full-chain-reaudit",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260510T200154-hermes-loop-full-chain-reaudit",
+  "objective": "Re-audit the latest Board A current cursor against real provider-status probes and persisted Auto-Quant -> Pre-Bayes/filter -> BBN -> CatBoost -> execution-tree artifacts.",
+  "lineage": {
+    "accepted_95_packet": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json",
+    "bbn_catboost_closure": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/evidence_packet_structural_replay36_catboost_closure.json",
+    "score_match_closure": "docs/experiments/actionable-regime-confidence/runs/20260510T192649-hermes-full-chain-score-match/evidence_packet_score_match_catboost_runtime_closure.json"
+  },
+  "accepted_regime_context": {
+    "accepted_regime_id": "SessionLiquidityCoreViable",
+    "confidence_lane": 95,
+    "calibration_support": 378,
+    "test_support": 378,
+    "test_wilson95": 0.989940,
+    "ece": 0.010582,
+    "coverage": 0.377622,
+    "trade_use": "guardrail_only_not_standalone_edge"
+  },
+  "provider_status": {
+    "artifact": "provider/01_provider_status_agent.json",
+    "summary_line": "entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:2/2 ready | market_data:6/7 ready",
+    "key_readiness": {
+      "yfinance": true,
+      "ibkr_bridge": true,
+      "ibkr_market_data": true,
+      "kraken_cli": true,
+      "kraken_public": true,
+      "tradingview_mcp": false
+    },
+    "focused_artifacts": [
+      "provider/03_tradingview_mcp_status_agent.json",
+      "provider/04_ibkr_status_agent.json",
+      "provider/05_yfinance_status_agent.json",
+      "provider/06_kraken_public_status_agent.json"
+    ],
+    "durable_csv_artifacts_from_full_chain": {
+      "yfinance_QQQ_1h_lines": 3370,
+      "ibkr_QQQ_1h_lines": 4008,
+      "kraken_PF_XBTUSD_1h_lines": 2001,
+      "tradingviewremix_health": "ok=false http_status=429 in upstream full-chain provider health artifact"
+    }
+  },
+  "auto_quant": {
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T185358-codex-accepted95-full-chain/evidence_packet_full_chain.json",
+    "n_ok": 1,
+    "n_error": 0,
+    "state_reused": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/structural-replay-nq-36/state"
+  },
+  "filter_pre_bayes": {
+    "artifact": "ict-engine/08_pre_bayes_status_reaudit.json",
+    "latest_gate_status": "pass_neutralized",
+    "latest_uses_soft_evidence": true,
+    "latest_canonical_structural_active_regime": "range",
+    "latest_canonical_structural_confidence": 0.6488770449019781
+  },
+  "bbn_apply": {
+    "source_artifact": "docs/experiments/actionable-regime-confidence/runs/20260510T191350-codex-nq-structural-replay36/ict-engine/16_auto_quant_prior_init_nq_apply.json",
+    "dry_run": false,
+    "evidence_value_gate_passed": true,
+    "strategies_applied": 1,
+    "trade_count": 1081
+  },
+  "catboost_path_ranker": {
+    "policy_training_artifact": "ict-engine/07_policy_training_status_reaudit.json",
+    "path_bundle_artifact": "ict-engine/10_workflow_phase_structural_recommended_path_bundle_reaudit.json",
+    "score_model_family": "catboost",
+    "score_source_kind": "external_model",
+    "runtime_status": "enabled_candidate_set_ready",
+    "runtime_matches": 3,
+    "raw_scored_mature_rows": 1397,
+    "raw_scored_mature_min_rows": 30,
+    "production_validation_ready": true,
+    "production_validation_rows": 1395,
+    "observation_validation_ready": true,
+    "observation_validation_rows": 40,
+    "current_path_ranker_raw_score": 0.382856,
+    "current_path_ranker_gate": "observe",
+    "current_candidate_set_match_count": 1,
+    "current_history_match_count": 2
+  },
+  "workflow_and_execution": {
+    "workflow_artifact": "ict-engine/09_workflow_status_reaudit_agent.json",
+    "execution_tree_status_artifact": "ict-engine/11_artifact_status_execution_tree_reaudit.json",
+    "workflow_blocking_status": "blocked",
+    "workflow_blocking_reason": "user_selected_historical_data_missing",
+    "recommended_next_step_action_type": "ask_user_choose_historical_data",
+    "execution_tree_artifact_id": "execution-tree-NQ-1778410561984",
+    "execution_tree_status": "observe",
+    "execution_tree_promote_candidate": false,
+    "execution_tree_branch": "transition_guardrail",
+    "execution_tree_bias": "guarded"
+  },
+  "decision": {
+    "board_a_confidence_goal": "accepted_95",
+    "full_chain_reaudit_goal": "met_with_residual_execution_block",
+    "trade_usable": false,
+    "why_not_trade_usable": [
+      "SessionLiquidityCoreViable remains a liquidity/session guardrail, not standalone path-specific edge.",
+      "Structural path bundle gate remains observe even with CatBoost external-model scores.",
+      "Workflow is blocked by user_selected_historical_data_missing before further factor-research/update promotion.",
+      "Execution tree remains observe/transition_guardrail/guarded and promote_candidate=false."
+    ],
+    "next_action": "Use CatBoost-ready ranker only as downstream context; do not promote to execute until a non-observe release candidate passes edge and execution gates."
+  }
+}

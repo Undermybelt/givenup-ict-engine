@@ -1,0 +1,454 @@
+{
+  "state": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-state-096",
+  "feedback_dir": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096",
+  "records": [
+    {
+      "index": 1,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_001_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0038034284728970316
+    },
+    {
+      "index": 2,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_002_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.004319748669168339
+    },
+    {
+      "index": 3,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_003_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0053268712272543685
+    },
+    {
+      "index": 4,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_004_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0018757144917936346
+    },
+    {
+      "index": 5,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_005_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0025697789545330407
+    },
+    {
+      "index": 6,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_006_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.007543943435597017
+    },
+    {
+      "index": 7,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_007_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0024770898264656798
+    },
+    {
+      "index": 8,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_008_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0017441860465116279
+    },
+    {
+      "index": 9,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_009_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0007083222053413332
+    },
+    {
+      "index": 10,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_010_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0001990795498677527
+    },
+    {
+      "index": 11,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_011_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -9.286021056052746e-05
+    },
+    {
+      "index": 12,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_012_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.008770395056618176
+    },
+    {
+      "index": 13,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_013_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0026090492218231566
+    },
+    {
+      "index": 14,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_014_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0006871199367849657
+    },
+    {
+      "index": 15,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_015_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0006857769853243725
+    },
+    {
+      "index": 16,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_016_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.010506154704582564
+    },
+    {
+      "index": 17,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_017_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.0042082400054299866
+    },
+    {
+      "index": 18,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_018_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -3.412542225889902e-05
+    },
+    {
+      "index": 19,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_019_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0055118821722237275
+    },
+    {
+      "index": 20,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_020_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.001976643795199404
+    },
+    {
+      "index": 21,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_021_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.0009912383643427634
+    },
+    {
+      "index": 22,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_022_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0001476115318670588
+    },
+    {
+      "index": 23,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_023_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0009217953386306987
+    },
+    {
+      "index": 24,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_024_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0003314096337133407
+    },
+    {
+      "index": 25,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_025_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.012492448679516259
+    },
+    {
+      "index": 26,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_026_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0022257804426577634
+    },
+    {
+      "index": 27,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_027_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.009688620071684589
+    },
+    {
+      "index": 28,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_028_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.006209486033915989
+    },
+    {
+      "index": 29,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_029_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0019703342926721272
+    },
+    {
+      "index": 30,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_030_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.00648387882002411
+    },
+    {
+      "index": 31,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_031_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0012942621047089184
+    },
+    {
+      "index": 32,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_032_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0016964004853708883
+    },
+    {
+      "index": 33,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_033_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.0017903590852063483
+    },
+    {
+      "index": 34,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_034_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0001914198851695482
+    },
+    {
+      "index": 35,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_035_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0019012904023813185
+    },
+    {
+      "index": 36,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_036_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0023992430557335125
+    },
+    {
+      "index": 37,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_037_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0013721586754862145
+    },
+    {
+      "index": 38,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_038_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0010408888285475075
+    },
+    {
+      "index": 39,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_039_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0036428181955288465
+    },
+    {
+      "index": 40,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_040_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.0077496060072554385
+    },
+    {
+      "index": 41,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_041_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.006048155714143241
+    },
+    {
+      "index": 42,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_042_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.012529631040180046
+    },
+    {
+      "index": 43,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_043_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.0064904384381736565
+    },
+    {
+      "index": 44,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_044_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.021999898943931964
+    },
+    {
+      "index": 45,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_045_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.009021684316718327
+    },
+    {
+      "index": 46,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_046_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.00713752054590705
+    },
+    {
+      "index": 47,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_047_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.018604593665763246
+    },
+    {
+      "index": 48,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_048_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.007309290174610349
+    },
+    {
+      "index": 49,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_049_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.015153811183512653
+    },
+    {
+      "index": 50,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_050_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.00922332481823541
+    },
+    {
+      "index": 51,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_051_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.006424243895934964
+    },
+    {
+      "index": 52,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_052_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.007142339206749763
+    },
+    {
+      "index": 53,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_053_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.008178585346831196
+    },
+    {
+      "index": 54,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_054_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0034189479788786043
+    },
+    {
+      "index": 55,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_055_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.004120413010810025
+    },
+    {
+      "index": 56,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_056_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.008156590325302459
+    },
+    {
+      "index": 57,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_057_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.00751785460910424
+    },
+    {
+      "index": 58,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_058_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.00896897885300374
+    },
+    {
+      "index": 59,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_059_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.000783020322892081
+    },
+    {
+      "index": 60,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_060_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0021675440058614185
+    },
+    {
+      "index": 61,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_061_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0032542453109053833
+    },
+    {
+      "index": 62,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_062_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.0005695909624900619
+    },
+    {
+      "index": 63,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_063_loss.json",
+      "outcome": "loss",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": -0.004846298064995212
+    },
+    {
+      "index": 64,
+      "path": "/tmp/ict-regime-chain-20260509T231052/autoquant-entry-structural-feedback-096/feedback_064_win.json",
+      "outcome": "win",
+      "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+      "pnl": 0.0011282660332541568
+    }
+  ]
+}

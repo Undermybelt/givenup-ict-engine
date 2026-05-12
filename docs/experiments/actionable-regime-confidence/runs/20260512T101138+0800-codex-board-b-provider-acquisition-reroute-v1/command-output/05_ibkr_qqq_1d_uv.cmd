@@ -1,0 +1,1 @@
+uv run --with pandas --with requests --with redis --with ib_async python scripts/auto_quant_external/fetch_external.py ibkr-historical --symbol QQQ --sec-type STK --exchange SMART --primary-exchange NASDAQ --bar-size "1 day" --duration "1 M" --what-to-show TRADES --port 4002 --client-id 88 --output $ROOT/provider-data/ibkr_QQQ_1d.csv

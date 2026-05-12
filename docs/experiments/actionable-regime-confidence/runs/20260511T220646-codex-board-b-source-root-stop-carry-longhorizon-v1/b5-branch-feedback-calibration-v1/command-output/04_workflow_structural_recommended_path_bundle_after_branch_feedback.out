@@ -1,0 +1,41 @@
+{
+  "candidate_set_id": "structural-candidates:SRC_ROOT_CARRY_LONG_220646:7f590d5f1b7ec57e",
+  "candidate_set_size": 2,
+  "composite_score": 0.5,
+  "confirmation_summary": "recommended command remains valid on next refresh",
+  "current_posterior": 0.5,
+  "direction": "observe",
+  "experience_prior": 0.5,
+  "historical_total_records": 0,
+  "invalidation_summary": "Recommended path invalidates before trigger.",
+  "path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:update:actionable:execute_recommended_path:primary",
+  "path_label": "recommended_execution",
+  "rank": 1,
+  "recommended_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+  "recommended_next_step": {
+    "action_type": "run_command",
+    "blocked_reason": null,
+    "deferred_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+    "execution_contract": {
+      "candidate_set_id": "structural-candidates:SRC_ROOT_CARRY_LONG_220646:7f590d5f1b7ec57e",
+      "candidate_set_size": 2,
+      "confirmation": "recommended command remains valid on next refresh",
+      "invalidation": "Recommended path invalidates before trigger.",
+      "path_id": "path:scenario:SRC_ROOT_CARRY_LONG_220646:update:actionable:execute_recommended_path:primary",
+      "path_label": "recommended_execution",
+      "recommended_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+      "selected_path_probability": 0.5,
+      "stop": "Use the downstream execution path stop once the path is active.",
+      "trigger": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir <local-path>",
+      "why": "posterior=0.500 prior=0.500 invalidation_rate=n/a"
+    },
+    "prompt": null,
+    "user_input_required": false
+  },
+  "scenario_id": "scenario:SRC_ROOT_CARRY_LONG_220646:update:actionable:execute_recommended_path",
+  "selected_path_probability": 0.5,
+  "stop_summary": "Use the downstream execution path stop once the path is active.",
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "trigger_summary": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir <local-path>",
+  "why_this_path": "posterior=0.500 prior=0.500 invalidation_rate=n/a"
+}

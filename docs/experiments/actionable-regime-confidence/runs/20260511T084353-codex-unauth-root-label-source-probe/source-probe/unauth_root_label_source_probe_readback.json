@@ -1,0 +1,34 @@
+{
+  "active_taxonomy": {
+    "mainregimev2_roots": [
+      "Bull",
+      "Bear",
+      "Sideways",
+      "Crisis"
+    ],
+    "residual": "UnknownOrMixed",
+    "separate_overlay": "Manipulation"
+  },
+  "completion_accounting": {
+    "accepted_full_cycle_full_universe": false,
+    "accepted_gate": "none_for_MainRegimeV2_expanded_full_universe_full_cycle_goal",
+    "accepted_new_direct_manipulation_sources": 0,
+    "accepted_new_root_label_slots": 0,
+    "attached_root_label_slots_after_probe": 48,
+    "goal_achieved": false,
+    "missing_or_rejected_root_label_slots_after_probe": 564,
+    "raw_data_committed": false,
+    "runtime_code_changed": false,
+    "thresholds_relaxed": false,
+    "trade_usable": false
+  },
+  "evidence_consumed": {
+    "dune_export_probe": "docs/experiments/actionable-regime-confidence/runs/20260511T083150-codex-dune-nft-wash-trades-export-probe/dune-export-probe/dune_nft_wash_trades_export_probe.json",
+    "root_label_source_acquisition_probe": "docs/experiments/actionable-regime-confidence/runs/20260511T084131-codex-root-label-source-acquisition-probe/source-acquisition/root_label_source_acquisition_probe.json",
+    "unauth_root_label_source_acquisition_probe": "docs/experiments/actionable-regime-confidence/runs/20260511T084023-codex-unauth-root-label-source-acquisition-probe/source-acquisition/unauth_root_label_source_acquisition_probe.json"
+  },
+  "gate_result": "blocked_unauth_root_label_source_probe_no_new_slots",
+  "next_action": "External blocker: provide or authenticate a real independent source-label panel/export for the 564 missing MainRegimeV2 root-label slots, or provide DUNE_API_KEY/public Dune export rows for direct Manipulation wash-trade windows.",
+  "objective": "Read back the focused unauthenticated source probe requested by the board cursor and preserve fail-closed accounting.",
+  "run_id": "20260511T084353+0800-codex-unauth-root-label-source-probe"
+}

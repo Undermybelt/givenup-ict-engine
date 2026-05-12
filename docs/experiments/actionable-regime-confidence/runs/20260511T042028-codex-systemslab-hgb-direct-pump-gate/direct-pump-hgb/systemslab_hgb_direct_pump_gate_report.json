@@ -1,0 +1,498 @@
+{
+  "accepted_95": false,
+  "active_root_accounting_after_gate": {
+    "accepted_95_roots": [
+      "Bull",
+      "Crisis"
+    ],
+    "missing_95_roots": [
+      "Bear",
+      "Sideways",
+      "Manipulation"
+    ]
+  },
+  "best_model": {
+    "accepted_95": false,
+    "calibration": {
+      "coverage": 0.0007362777530047391,
+      "false_positive": 4,
+      "precision": 0.9436619718309859,
+      "quantile": 0.9999,
+      "support": 71,
+      "true_positive": 67,
+      "wilson95_lcb": 0.8639039420002306
+    },
+    "calibration_ece_10bin": 0.009766034350815465,
+    "fit_positives": 157,
+    "fit_rows": 80157,
+    "model": "hgb_sampled",
+    "test": {
+      "coverage": 0.0006740501078480172,
+      "false_positive": 5,
+      "precision": 0.9230769230769231,
+      "support": 65,
+      "true_positive": 60,
+      "wilson95_lcb": 0.8322406672989001
+    },
+    "test_ece_10bin": 0.009698786131096846,
+    "threshold": 0.9907233404354324,
+    "timeframe": "25S"
+  },
+  "candidate_regime": "Manipulation",
+  "gate": "blocked_systemslab_hgb_direct_pump_below_95",
+  "gate_contract": {
+    "max_ece_10bin": 0.05,
+    "min_calibration_wilson95_lcb": 0.95,
+    "min_coverage": 0.03,
+    "min_support": 50,
+    "min_test_wilson95_lcb": 0.95
+  },
+  "label_polarity": "gt=1 labeled pump/dump chunk; gt=0 non-pump chunk.",
+  "raw_data_committed_to_repo": false,
+  "run_id": "20260511T042028+0800-codex-systemslab-hgb-direct-pump-gate",
+  "runtime_code_changed": false,
+  "source_context": "Direct crypto pump-and-dump event dataset with labeled exchange-transaction feature chunks.",
+  "source_repo": "https://github.com/SystemsLab-Sapienza/pump-and-dump-dataset",
+  "source_root": "/private/tmp/ict-regime-systemslab-pump-dump",
+  "thresholds_relaxed": false,
+  "timeframe_reports": [
+    {
+      "blocked_predictors": [
+        "date",
+        "pump_index",
+        "symbol",
+        "gt",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos"
+      ],
+      "features_used": [
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max"
+      ],
+      "model_reports": [
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0006940174478421537,
+            "false_positive": 43,
+            "precision": 0.6228070175438597,
+            "quantile": 0.9999,
+            "support": 114,
+            "true_positive": 71,
+            "wilson95_lcb": 0.5312021858550436
+          },
+          "calibration_ece_10bin": 0.011130316900884852,
+          "fit_positives": 148,
+          "fit_rows": 80148,
+          "model": "hgb_sampled",
+          "test": {
+            "coverage": 0.0006818375522031876,
+            "false_positive": 52,
+            "precision": 0.5357142857142857,
+            "support": 112,
+            "true_positive": 60,
+            "wilson95_lcb": 0.4437035142372299
+          },
+          "test_ece_10bin": 0.010919129339062637,
+          "threshold": 0.990464263815372,
+          "timeframe": "5S"
+        },
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0006392265966967205,
+            "false_positive": 52,
+            "precision": 0.5047619047619047,
+            "quantile": 0.9999,
+            "support": 105,
+            "true_positive": 53,
+            "wilson95_lcb": 0.4106643580135379
+          },
+          "calibration_ece_10bin": 0.015910349543455216,
+          "fit_positives": 148,
+          "fit_rows": 80148,
+          "model": "logit_sampled",
+          "test": {
+            "coverage": 0.0005783443523152038,
+            "false_positive": 48,
+            "precision": 0.49473684210526314,
+            "support": 95,
+            "true_positive": 47,
+            "wilson95_lcb": 0.3963757882123101
+          },
+          "test_ece_10bin": 0.01592711237054061,
+          "threshold": 1.0,
+          "timeframe": "5S"
+        }
+      ],
+      "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_5S.csv.gz",
+      "profile": {
+        "all": {
+          "date_max_utc": "2021-01-19T16:58:25",
+          "date_min_utc": "2018-01-02T18:14:40",
+          "negatives": 820990,
+          "positives": 317,
+          "pump_indices": 327,
+          "rows": 821307,
+          "symbols": 85
+        },
+        "calibration": {
+          "date_max_utc": "2020-05-29T18:35:25",
+          "date_min_utc": "2019-07-09T20:13:30",
+          "negatives": 164163,
+          "positives": 98,
+          "pump_indices": 102,
+          "rows": 164261,
+          "symbols": 53
+        },
+        "test": {
+          "date_max_utc": "2021-01-19T16:58:25",
+          "date_min_utc": "2020-05-29T18:35:30",
+          "negatives": 164191,
+          "positives": 71,
+          "pump_indices": 76,
+          "rows": 164262,
+          "symbols": 36
+        },
+        "train_select": {
+          "date_max_utc": "2019-07-09T20:13:25",
+          "date_min_utc": "2018-01-02T18:14:40",
+          "negatives": 492636,
+          "positives": 148,
+          "pump_indices": 152,
+          "rows": 492784,
+          "symbols": 59
+        }
+      },
+      "sha256": "e1f82b42d735e368f04a60062cadd50d6b097cc1222ebe8830cbff24b6d5ab99",
+      "timeframe": "5S"
+    },
+    {
+      "blocked_predictors": [
+        "date",
+        "pump_index",
+        "symbol",
+        "gt",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos"
+      ],
+      "features_used": [
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max"
+      ],
+      "model_reports": [
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0008303301632411981,
+            "false_positive": 20,
+            "precision": 0.7938144329896907,
+            "quantile": 0.9999,
+            "support": 97,
+            "true_positive": 77,
+            "wilson95_lcb": 0.7028707214143316
+          },
+          "calibration_ece_10bin": 0.010105825720218797,
+          "fit_positives": 153,
+          "fit_rows": 80153,
+          "model": "hgb_sampled",
+          "test": {
+            "coverage": 0.0006420078581761841,
+            "false_positive": 13,
+            "precision": 0.8266666666666667,
+            "support": 75,
+            "true_positive": 62,
+            "wilson95_lcb": 0.7256918855948061
+          },
+          "test_ece_10bin": 0.010109124552591393,
+          "threshold": 0.9906807788439842,
+          "timeframe": "15S"
+        },
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0011042535160630366,
+            "false_positive": 51,
+            "precision": 0.6046511627906976,
+            "quantile": 0.9988981963927855,
+            "support": 129,
+            "true_positive": 78,
+            "wilson95_lcb": 0.5184271757542699
+          },
+          "calibration_ece_10bin": 0.004784831709710117,
+          "fit_positives": 153,
+          "fit_rows": 80153,
+          "model": "logit_sampled",
+          "test": {
+            "coverage": 0.0009672918396521174,
+            "false_positive": 49,
+            "precision": 0.5663716814159292,
+            "support": 113,
+            "true_positive": 64,
+            "wilson95_lcb": 0.4743045474905175
+          },
+          "test_ece_10bin": 0.004609353144227269,
+          "threshold": 0.9999995780222911,
+          "timeframe": "15S"
+        }
+      ],
+      "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_15S.csv.gz",
+      "profile": {
+        "all": {
+          "date_max_utc": "2021-01-19T16:58:15",
+          "date_min_utc": "2018-01-02T18:14:30",
+          "negatives": 583787,
+          "positives": 317,
+          "pump_indices": 327,
+          "rows": 584104,
+          "symbols": 85
+        },
+        "calibration": {
+          "date_max_utc": "2020-05-30T17:39:30",
+          "date_min_utc": "2019-07-22T04:16:00",
+          "negatives": 116727,
+          "positives": 94,
+          "pump_indices": 96,
+          "rows": 116821,
+          "symbols": 51
+        },
+        "test": {
+          "date_max_utc": "2021-01-19T16:58:15",
+          "date_min_utc": "2020-05-30T17:39:45",
+          "negatives": 116751,
+          "positives": 70,
+          "pump_indices": 74,
+          "rows": 116821,
+          "symbols": 36
+        },
+        "train_select": {
+          "date_max_utc": "2019-07-22T04:15:15",
+          "date_min_utc": "2018-01-02T18:14:30",
+          "negatives": 350309,
+          "positives": 153,
+          "pump_indices": 159,
+          "rows": 350462,
+          "symbols": 61
+        }
+      },
+      "sha256": "fd6fd97f50ddc13b37b9a6361c09bf4cb07159c61f150328902b2d95137041f2",
+      "timeframe": "15S"
+    },
+    {
+      "blocked_predictors": [
+        "date",
+        "pump_index",
+        "symbol",
+        "gt",
+        "hour_sin",
+        "hour_cos",
+        "minute_sin",
+        "minute_cos"
+      ],
+      "features_used": [
+        "std_rush_order",
+        "avg_rush_order",
+        "std_trades",
+        "std_volume",
+        "avg_volume",
+        "std_price",
+        "avg_price",
+        "avg_price_max"
+      ],
+      "model_reports": [
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0007362777530047391,
+            "false_positive": 4,
+            "precision": 0.9436619718309859,
+            "quantile": 0.9999,
+            "support": 71,
+            "true_positive": 67,
+            "wilson95_lcb": 0.8639039420002306
+          },
+          "calibration_ece_10bin": 0.009766034350815465,
+          "fit_positives": 157,
+          "fit_rows": 80157,
+          "model": "hgb_sampled",
+          "test": {
+            "coverage": 0.0006740501078480172,
+            "false_positive": 5,
+            "precision": 0.9230769230769231,
+            "support": 65,
+            "true_positive": 60,
+            "wilson95_lcb": 0.8322406672989001
+          },
+          "test_ece_10bin": 0.009698786131096846,
+          "threshold": 0.9907233404354324,
+          "timeframe": "25S"
+        },
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0007570179713992388,
+            "false_positive": 5,
+            "precision": 0.9315068493150684,
+            "quantile": 0.9999,
+            "support": 73,
+            "true_positive": 68,
+            "wilson95_lcb": 0.8494789495941522
+          },
+          "calibration_ece_10bin": 0.050821981312732564,
+          "fit_positives": 157,
+          "fit_rows": 289294,
+          "model": "hgb_full_31x120",
+          "test": {
+            "coverage": 0.0006740501078480172,
+            "false_positive": 5,
+            "precision": 0.9230769230769231,
+            "support": 65,
+            "true_positive": 60,
+            "wilson95_lcb": 0.8322406672989001
+          },
+          "test_ece_10bin": 0.050818823511676894,
+          "threshold": 0.94920608863303,
+          "timeframe": "25S"
+        },
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0007570179713992388,
+            "false_positive": 4,
+            "precision": 0.9452054794520548,
+            "quantile": 0.9999,
+            "support": 73,
+            "true_positive": 69,
+            "wilson95_lcb": 0.8674100245784024
+          },
+          "calibration_ece_10bin": 0.0283381326441396,
+          "fit_positives": 157,
+          "fit_rows": 289294,
+          "model": "hgb_full_15x160",
+          "test": {
+            "coverage": 0.000663680106188817,
+            "false_positive": 5,
+            "precision": 0.921875,
+            "support": 64,
+            "true_positive": 59,
+            "wilson95_lcb": 0.8298046264583709
+          },
+          "test_ece_10bin": 0.028348651836785792,
+          "threshold": 0.9718196806009094,
+          "timeframe": "25S"
+        },
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0008088685173854881,
+            "false_positive": 7,
+            "precision": 0.9102564102564102,
+            "quantile": 0.9999,
+            "support": 78,
+            "true_positive": 71,
+            "wilson95_lcb": 0.8261527543939476
+          },
+          "calibration_ece_10bin": 0.0046427112767579,
+          "fit_positives": 157,
+          "fit_rows": 289294,
+          "model": "hgb_full_7x120",
+          "test": {
+            "coverage": 0.0007362701178032188,
+            "false_positive": 11,
+            "precision": 0.8450704225352113,
+            "support": 71,
+            "true_positive": 60,
+            "wilson95_lcb": 0.7434903714672241
+          },
+          "test_ece_10bin": 0.004603877619546762,
+          "threshold": 0.9957258399935226,
+          "timeframe": "25S"
+        },
+        {
+          "accepted_95": false,
+          "calibration": {
+            "coverage": 0.0011096016841057336,
+            "false_positive": 33,
+            "precision": 0.6915887850467289,
+            "quantile": 0.9988981963927855,
+            "support": 107,
+            "true_positive": 74,
+            "wilson95_lcb": 0.5987150913219855
+          },
+          "calibration_ece_10bin": 0.002647232290934686,
+          "fit_positives": 157,
+          "fit_rows": 80157,
+          "model": "logit_sampled",
+          "test": {
+            "coverage": 0.0010058901609424258,
+            "false_positive": 31,
+            "precision": 0.6804123711340206,
+            "support": 97,
+            "true_positive": 66,
+            "wilson95_lcb": 0.582266326033009
+          },
+          "test_ece_10bin": 0.0027324540225036054,
+          "threshold": 0.9997920668021918,
+          "timeframe": "25S"
+        }
+      ],
+      "path": "/private/tmp/ict-regime-systemslab-pump-dump/labeled_features/features_25S.csv.gz",
+      "profile": {
+        "all": {
+          "date_max_utc": "2021-01-19T16:58:20",
+          "date_min_utc": "2018-01-02T18:14:35",
+          "negatives": 481840,
+          "positives": 317,
+          "pump_indices": 327,
+          "rows": 482157,
+          "symbols": 85
+        },
+        "calibration": {
+          "date_max_utc": "2020-06-03T07:59:10",
+          "date_min_utc": "2019-07-28T21:50:50",
+          "negatives": 96341,
+          "positives": 90,
+          "pump_indices": 94,
+          "rows": 96431,
+          "symbols": 51
+        },
+        "test": {
+          "date_max_utc": "2021-01-19T16:58:20",
+          "date_min_utc": "2020-06-03T07:59:35",
+          "negatives": 96362,
+          "positives": 70,
+          "pump_indices": 73,
+          "rows": 96432,
+          "symbols": 36
+        },
+        "train_select": {
+          "date_max_utc": "2019-07-28T21:49:10",
+          "date_min_utc": "2018-01-02T18:14:35",
+          "negatives": 289137,
+          "positives": 157,
+          "pump_indices": 163,
+          "rows": 289294,
+          "symbols": 62
+        }
+      },
+      "sha256": "0d43d1d396ef13778ab2cd2a9f047034713f9066bdc07c23efce335da8185331",
+      "timeframe": "25S"
+    }
+  ]
+}

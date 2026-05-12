@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "reason": "missing_required_files",
+  "missing_files": [
+    "/tmp/ict-engine-source-panel-recency-extension/stock_market_regimes_2026_extension.csv",
+    "/tmp/ict-engine-source-panel-recency-extension/source_panel_recency_provenance.json"
+  ]
+}

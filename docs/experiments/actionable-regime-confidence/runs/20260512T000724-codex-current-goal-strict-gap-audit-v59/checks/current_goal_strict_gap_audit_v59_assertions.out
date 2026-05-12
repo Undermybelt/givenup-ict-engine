@@ -1,0 +1,9 @@
+consumer_map_all_scoped_lanes_95=ok
+r6_pooled_gate_passes=ok
+r6_chronological_gate_still_false=ok
+r6_symbol_gate_still_false=ok
+r6_venue_gate_still_false=ok
+direct_verifier_schema_ready=ok
+local_auto_quant_checked=ok
+provider_status_checked=ok
+strict_full_objective_not_achieved=ok

@@ -1,0 +1,3 @@
+run_id=20260512T100426+0800-codex-board-b-current-real-chain-readback-v1
+state_dir=docs/experiments/actionable-regime-confidence/runs/20260512T000748-codex-board-b-agent-selected-historical-factor-research-v1/state_agent_selected_historical_factor_research_downstream_v1
+symbol=SRC_ROOT_CARRY_LONG_220646

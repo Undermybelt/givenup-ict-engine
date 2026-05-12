@@ -1,0 +1,61 @@
+{
+  "run_id": "20260512T110913+0800-codex-105637-provider-linked-momentum-downstream-corrected-v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T105637+0800-codex-provider-linked-aq-provenance-probe-v1",
+  "symbol": "B2R_PROVIDER_LINKED_MOMENTUM_105637",
+  "source_trades": {
+    "records": 7,
+    "wins": 3,
+    "losses": 4,
+    "total_pnl": -200.6922557,
+    "providers": [
+      "yfinance",
+      "kraken_public_ccxt",
+      "binance_public_ccxt",
+      "bybit_public_ccxt"
+    ],
+    "branch_path": "Bull -> ProviderCryptoMomentum -> RsiMidlineExpansion -> ProviderCryptoMomentumStateV1"
+  },
+  "command_exits": {
+    "ingest_dry_run": 0,
+    "ingest_force": 0,
+    "pre_bayes_status": 0,
+    "policy_training_before_export": 0,
+    "export_structural_path_ranking_target": 0,
+    "policy_training_after_export": 0,
+    "workflow_structural_bundle": 0,
+    "workflow_execution_candidate": 0,
+    "workflow_full": 0
+  },
+  "ingest": {
+    "trades_total": 7,
+    "trades_applied": 7,
+    "trades_invalid": 0,
+    "feedback_records_inserted": 7
+  },
+  "downstream": {
+    "pre_bayes_policy_present": false,
+    "entry_model_matched_rows": 0,
+    "structural_target_rows": 1,
+    "structural_target_mature_rows": 0,
+    "workflow_path_label": "bootstrap_readiness",
+    "closed_loop_branch_admission_status": "fail_closed",
+    "execution_candidate_ready": false,
+    "execution_candidate_actionable": false
+  },
+  "gate": {
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "fail_closed_reasons": [
+      "source_provider_aq_total_pnl_negative",
+      "tradingviewremix_still_failed_in_source_provider_packet",
+      "ibkr_not_btc_aq_feed_in_source_provider_packet",
+      "pre_bayes_policy_absent",
+      "entry_model_matched_rows_0",
+      "structural_target_mature_rows_0",
+      "structural_target_branch_path_not_preserved",
+      "execution_tree_bootstrap_observe",
+      "closed_loop_branch_admission_fail_closed"
+    ]
+  }
+}

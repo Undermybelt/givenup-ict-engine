@@ -1,0 +1,8 @@
+PASS owner_request_ready_rows_not_acquired
+PASS owner_required_files=3
+PASS owner_required_fields=17
+PASS new_confidence_gate_since_v27=false
+PASS accepted_rows_added_since_v27=0
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS unmet_ids=R2,R3,R4,R5,R6,R8

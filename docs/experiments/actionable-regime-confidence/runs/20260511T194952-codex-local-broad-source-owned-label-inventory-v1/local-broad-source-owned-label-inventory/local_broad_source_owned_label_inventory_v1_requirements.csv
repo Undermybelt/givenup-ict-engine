@@ -1,0 +1,7 @@
+id,requirement,status,evidence
+R2,Other-cycle/timeframe validation has suitable confidence,fail_blocked,Local inventory found no uncounted source-owned strict 1h or native sub-hour label rows.
+R3,Strict 1h next-source intake has source-owned rows and provenance,fail_blocked,No local source_label_equivalence_rows.csv or equivalent uncounted package found.
+R5,XOM/Sideways recency-tail repair rows exist,fail_blocked,Only known stock-market-regimes source panel duplicates were found; no uncounted recency-tail source rows.
+R6,Native sub-hour source labels exist,fail_blocked,Local hits were generated/model/code/raw-provider surfaces or already registered projections; none are source-owned native sub-hour labels.
+R7,Other-market/source-label equivalence has suitable confidence,fail_blocked,No owner-approved MainRegimeV2 equivalence package found outside existing Board A artifacts.
+R8,Direct Manipulation has full species coverage with real positives and matched controls,fail_blocked,Local direct hits only cover already scoped pump/dump or code/synthetic/raw surfaces; no missing species positive/control package found.

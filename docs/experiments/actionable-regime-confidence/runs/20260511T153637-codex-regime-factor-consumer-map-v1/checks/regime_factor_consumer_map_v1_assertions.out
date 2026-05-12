@@ -1,0 +1,10 @@
+accepted_95_lane_count=5
+all_active_lanes_have_factor=true
+manipulation_confidence_floor_ge_095=true
+full_objective_achieved=false
+update_goal=false
+runtime_code_changed=false
+thresholds_relaxed=false
+raw_data_committed=false
+trade_usable=false
+assertion_status=PASS

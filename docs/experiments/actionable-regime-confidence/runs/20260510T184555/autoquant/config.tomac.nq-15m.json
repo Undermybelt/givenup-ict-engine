@@ -1,0 +1,58 @@
+{
+  "cancel_open_orders_on_exit": false,
+  "dataformat_ohlcv": "feather",
+  "dataformat_trades": "feather",
+  "dry_run": true,
+  "dry_run_wallet": 100000,
+  "entry_pricing": {
+    "check_depth_of_market": {
+      "bids_to_ask_delta": 1,
+      "enabled": false
+    },
+    "order_book_top": 1,
+    "price_last_balance": 0.0,
+    "price_side": "same",
+    "use_order_book": false
+  },
+  "exchange": {
+    "ccxt_async_config": {},
+    "ccxt_config": {},
+    "key": "",
+    "name": "binance",
+    "pair_blacklist": [],
+    "pair_whitelist": [
+      "NQ/USD"
+    ],
+    "secret": "",
+    "skip_open_order_update": true,
+    "skip_pair_validation": true
+  },
+  "exit_pricing": {
+    "order_book_top": 1,
+    "price_side": "same",
+    "use_order_book": false
+  },
+  "fee": 0.0,
+  "fiat_display_currency": "USD",
+  "internals": {
+    "process_throttle_secs": 5
+  },
+  "max_open_trades": 1,
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    }
+  ],
+  "stake_amount": "unlimited",
+  "stake_currency": "USD",
+  "timeframe": "15m",
+  "timerange": "20250101-20251231",
+  "tradable_balance_ratio": 0.99,
+  "trading_mode": "spot",
+  "unfilledtimeout": {
+    "entry": 10,
+    "exit": 10,
+    "exit_timeout_count": 0,
+    "unit": "minutes"
+  }
+}

@@ -1,0 +1,11 @@
+report: docs/experiments/actionable-regime-confidence/runs/20260510T234600-main-regime-v2-corrected-advanced-features/root-v2/corrected_advanced_root_feature_report.json
+accepted_root_classes_95: []
+blocked_root_classes: ['Bull', 'Bear', 'Sideways', 'Crisis', 'Manipulation']
+accepted_gate: False
+thresholds_relaxed: False
+blocked_future_target_predictors: True
+Bull: state=blocked test_lcb=0.474209 test_support=142 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05']
+Bear: state=blocked test_lcb=0.259321 test_support=436 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05']
+Sideways: state=blocked test_lcb=0.333684 test_support=149 blockers=['calibration_wilson95_below_0_95', 'test_wilson95_below_0_95']
+Crisis: state=blocked test_lcb=0.460786 test_support=194 blockers=['calibration_support_below_120', 'calibration_wilson95_below_0_95', 'test_wilson95_below_0_95', 'ece_above_0_05', 'validation_timeframes_below_2']
+Manipulation: state=missing_required_inputs test_lcb=0.000000 test_support=0 blockers=['missing_required_inputs', 'proxy_only_low_confidence']

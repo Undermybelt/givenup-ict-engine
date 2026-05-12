@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "accepted_gate": "none",
+  "board_state": "abstain",
+  "blocker": "abstain_no_calibrated_release_rule",
+  "label_counts": {
+    "provider_agreement_v2": {
+      "positive": 343,
+      "negative": 738
+    },
+    "provider_agreement_trend_expansion_event": {
+      "positive": 112,
+      "negative": 969
+    },
+    "provider_disagreement_transition_guardrail_event": {
+      "positive": 1045,
+      "negative": 36
+    },
+    "release_allowed_v2": {
+      "positive": 340,
+      "negative": 741
+    },
+    "path_specific_edge_v2": {
+      "positive": 180,
+      "negative": 901
+    },
+    "transition_stable_v2": {
+      "positive": 229,
+      "negative": 852
+    },
+    "provider_agreement_trend_expansion_release_v2": {
+      "positive": 15,
+      "negative": 1066
+    }
+  },
+  "packet": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260510T184538/evidence_packet_v2.json"
+}

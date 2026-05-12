@@ -1,0 +1,12 @@
+PASS all_active_regimes_have_scoped_factor=True
+PASS bull_has_factor=True
+PASS bear_has_factor=True
+PASS sideways_has_factor=True
+PASS crisis_has_factor=True
+PASS manipulation_has_direct_factor=True
+PASS manipulation_has_two_direct_varieties=True
+PASS full_matrix_completion_false=True
+PASS thresholds_relaxed_false=True
+PASS runtime_code_changed_false=True
+PASS raw_data_committed_false=True
+PASS trade_usable_false=True

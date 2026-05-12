@@ -1,0 +1,11 @@
+00_provider_status.exit=0
+01_auto_quant_status.exit=0
+02_pre_bayes_status.exit=0
+03_policy_training_status.exit=0
+04_workflow_structural_bundle.exit=0
+05_workflow_execution_candidate.exit=0
+06_workflow_full.exit=0
+trace_closed_loop_fail_closed_ok
+pre_bayes_neutralized_gap_and_regime_ok
+catboost_path_ranker_ready_ok
+workflow_fail_closed_blocker_ok

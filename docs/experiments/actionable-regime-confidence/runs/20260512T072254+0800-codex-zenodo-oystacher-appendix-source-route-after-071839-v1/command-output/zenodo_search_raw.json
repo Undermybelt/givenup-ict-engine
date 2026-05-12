@@ -1,0 +1,2471 @@
+{
+  "aggregations": {
+    "access_status": {
+      "buckets": [
+        {
+          "doc_count": 453282,
+          "is_selected": false,
+          "key": "open",
+          "label": "Open"
+        },
+        {
+          "doc_count": 54782,
+          "is_selected": false,
+          "key": "restricted",
+          "label": "Restricted"
+        },
+        {
+          "doc_count": 1712,
+          "is_selected": false,
+          "key": "embargoed",
+          "label": "Embargoed"
+        }
+      ],
+      "label": "Access status"
+    },
+    "file_type": {
+      "buckets": [
+        {
+          "doc_count": 225605,
+          "is_selected": false,
+          "key": "pdf",
+          "label": "PDF"
+        },
+        {
+          "doc_count": 75190,
+          "is_selected": false,
+          "key": "zip",
+          "label": "ZIP"
+        },
+        {
+          "doc_count": 58572,
+          "is_selected": false,
+          "key": "html",
+          "label": "HTML"
+        },
+        {
+          "doc_count": 30854,
+          "is_selected": false,
+          "key": "csv",
+          "label": "CSV"
+        },
+        {
+          "doc_count": 24028,
+          "is_selected": false,
+          "key": "xlsx",
+          "label": "XLSX"
+        },
+        {
+          "doc_count": 20391,
+          "is_selected": false,
+          "key": "txt",
+          "label": "TXT"
+        },
+        {
+          "doc_count": 16649,
+          "is_selected": false,
+          "key": "json",
+          "label": "JSON"
+        },
+        {
+          "doc_count": 12737,
+          "is_selected": false,
+          "key": "png",
+          "label": "PNG"
+        },
+        {
+          "doc_count": 9193,
+          "is_selected": false,
+          "key": "bin",
+          "label": "BIN"
+        },
+        {
+          "doc_count": 9160,
+          "is_selected": false,
+          "key": "md",
+          "label": "MD"
+        }
+      ],
+      "label": "File type"
+    },
+    "publication_date": {
+      "buckets": [
+        {
+          "doc_count": 333,
+          "is_selected": false,
+          "key": "2000",
+          "label": "2000"
+        },
+        {
+          "doc_count": 333,
+          "is_selected": false,
+          "key": "2001",
+          "label": "2001"
+        },
+        {
+          "doc_count": 545,
+          "is_selected": false,
+          "key": "2002",
+          "label": "2002"
+        },
+        {
+          "doc_count": 787,
+          "is_selected": false,
+          "key": "2003",
+          "label": "2003"
+        },
+        {
+          "doc_count": 973,
+          "is_selected": false,
+          "key": "2004",
+          "label": "2004"
+        },
+        {
+          "doc_count": 11189,
+          "is_selected": false,
+          "key": "2005",
+          "label": "2005"
+        },
+        {
+          "doc_count": 1703,
+          "is_selected": false,
+          "key": "2006",
+          "label": "2006"
+        },
+        {
+          "doc_count": 11338,
+          "is_selected": false,
+          "key": "2007",
+          "label": "2007"
+        },
+        {
+          "doc_count": 2766,
+          "is_selected": false,
+          "key": "2008",
+          "label": "2008"
+        },
+        {
+          "doc_count": 4021,
+          "is_selected": false,
+          "key": "2009",
+          "label": "2009"
+        },
+        {
+          "doc_count": 3378,
+          "is_selected": false,
+          "key": "2010",
+          "label": "2010"
+        },
+        {
+          "doc_count": 4032,
+          "is_selected": false,
+          "key": "2011",
+          "label": "2011"
+        },
+        {
+          "doc_count": 4692,
+          "is_selected": false,
+          "key": "2012",
+          "label": "2012"
+        },
+        {
+          "doc_count": 5700,
+          "is_selected": false,
+          "key": "2013",
+          "label": "2013"
+        },
+        {
+          "doc_count": 8149,
+          "is_selected": false,
+          "key": "2014",
+          "label": "2014"
+        },
+        {
+          "doc_count": 8278,
+          "is_selected": false,
+          "key": "2015",
+          "label": "2015"
+        },
+        {
+          "doc_count": 9694,
+          "is_selected": false,
+          "key": "2016",
+          "label": "2016"
+        },
+        {
+          "doc_count": 13610,
+          "is_selected": false,
+          "key": "2017",
+          "label": "2017"
+        },
+        {
+          "doc_count": 18539,
+          "is_selected": false,
+          "key": "2018",
+          "label": "2018"
+        },
+        {
+          "doc_count": 19439,
+          "is_selected": false,
+          "key": "2019",
+          "label": "2019"
+        },
+        {
+          "doc_count": 24384,
+          "is_selected": false,
+          "key": "2020",
+          "label": "2020"
+        },
+        {
+          "doc_count": 31328,
+          "is_selected": false,
+          "key": "2021",
+          "label": "2021"
+        },
+        {
+          "doc_count": 35388,
+          "is_selected": false,
+          "key": "2022",
+          "label": "2022"
+        },
+        {
+          "doc_count": 42565,
+          "is_selected": false,
+          "key": "2023",
+          "label": "2023"
+        },
+        {
+          "doc_count": 58132,
+          "is_selected": false,
+          "key": "2024",
+          "label": "2024"
+        },
+        {
+          "doc_count": 81938,
+          "is_selected": false,
+          "key": "2025",
+          "label": "2025"
+        },
+        {
+          "doc_count": 86315,
+          "is_selected": false,
+          "key": "2026",
+          "label": "2026"
+        }
+      ],
+      "label": "Publication date"
+    },
+    "resource_type": {
+      "buckets": [
+        {
+          "doc_count": 314172,
+          "inner": {
+            "buckets": [
+              {
+                "doc_count": 160807,
+                "is_selected": false,
+                "key": "publication-article",
+                "label": "Journal article"
+              },
+              {
+                "doc_count": 55288,
+                "is_selected": false,
+                "key": "publication-taxonomictreatment",
+                "label": "Taxonomic treatment"
+              },
+              {
+                "doc_count": 24811,
+                "is_selected": false,
+                "key": "publication-other",
+                "label": "Other"
+              },
+              {
+                "doc_count": 13643,
+                "is_selected": false,
+                "key": "publication-conferencepaper",
+                "label": "Conference paper"
+              },
+              {
+                "doc_count": 11828,
+                "is_selected": false,
+                "key": "publication-preprint",
+                "label": "Preprint"
+              },
+              {
+                "doc_count": 11694,
+                "is_selected": false,
+                "key": "publication-book",
+                "label": "Book"
+              },
+              {
+                "doc_count": 5799,
+                "is_selected": false,
+                "key": "publication-section",
+                "label": "Book chapter"
+              },
+              {
+                "doc_count": 4408,
+                "is_selected": false,
+                "key": "publication-report",
+                "label": "Report"
+              },
+              {
+                "doc_count": 3549,
+                "is_selected": false,
+                "key": "publication-deliverable",
+                "label": "Project deliverable"
+              },
+              {
+                "doc_count": 2587,
+                "is_selected": false,
+                "key": "publication-dissertation",
+                "label": "Thesis"
+              }
+            ]
+          },
+          "is_selected": false,
+          "key": "publication",
+          "label": "Publication"
+        },
+        {
+          "doc_count": 152406,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "dataset",
+          "label": "Dataset"
+        },
+        {
+          "doc_count": 14728,
+          "inner": {
+            "buckets": [
+              {
+                "doc_count": 699,
+                "is_selected": false,
+                "key": "software-computationalnotebook",
+                "label": "Computational notebook"
+              }
+            ]
+          },
+          "is_selected": false,
+          "key": "software",
+          "label": "Software"
+        },
+        {
+          "doc_count": 12570,
+          "inner": {
+            "buckets": [
+              {
+                "doc_count": 9141,
+                "is_selected": false,
+                "key": "image-figure",
+                "label": "Figure"
+              },
+              {
+                "doc_count": 2180,
+                "is_selected": false,
+                "key": "image-photo",
+                "label": "Photo"
+              },
+              {
+                "doc_count": 234,
+                "is_selected": false,
+                "key": "image-other",
+                "label": "Other"
+              },
+              {
+                "doc_count": 141,
+                "is_selected": false,
+                "key": "image-diagram",
+                "label": "Diagram"
+              },
+              {
+                "doc_count": 79,
+                "is_selected": false,
+                "key": "image-plot",
+                "label": "Plot"
+              },
+              {
+                "doc_count": 30,
+                "is_selected": false,
+                "key": "image-drawing",
+                "label": "Drawing"
+              }
+            ]
+          },
+          "is_selected": false,
+          "key": "image",
+          "label": "Image"
+        },
+        {
+          "doc_count": 4857,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "presentation",
+          "label": "Presentation"
+        },
+        {
+          "doc_count": 4009,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "other",
+          "label": "Other"
+        },
+        {
+          "doc_count": 2779,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "poster",
+          "label": "Poster"
+        },
+        {
+          "doc_count": 1571,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "video",
+          "label": "Video/Audio"
+        },
+        {
+          "doc_count": 1205,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "model",
+          "label": "Model"
+        },
+        {
+          "doc_count": 691,
+          "inner": {
+            "buckets": []
+          },
+          "is_selected": false,
+          "key": "lesson",
+          "label": "Lesson"
+        }
+      ],
+      "label": "Resource types"
+    },
+    "subject": {
+      "buckets": [
+        {
+          "doc_count": 114076,
+          "is_selected": false,
+          "key": "Biodiversity",
+          "label": "Biodiversity"
+        },
+        {
+          "doc_count": 108664,
+          "is_selected": false,
+          "key": "Taxonomy",
+          "label": "Taxonomy"
+        },
+        {
+          "doc_count": 85216,
+          "is_selected": false,
+          "key": "Animalia",
+          "label": "Animalia"
+        },
+        {
+          "doc_count": 45094,
+          "is_selected": false,
+          "key": "Arthropoda",
+          "label": "Arthropoda"
+        },
+        {
+          "doc_count": 32466,
+          "is_selected": false,
+          "key": "Chordata",
+          "label": "Chordata"
+        },
+        {
+          "doc_count": 31210,
+          "is_selected": false,
+          "key": "Insecta",
+          "label": "Insecta"
+        },
+        {
+          "doc_count": 24544,
+          "is_selected": false,
+          "key": "Mammalia",
+          "label": "Mammalia"
+        },
+        {
+          "doc_count": 14938,
+          "is_selected": false,
+          "key": "Plantae",
+          "label": "Plantae"
+        },
+        {
+          "doc_count": 14174,
+          "is_selected": false,
+          "key": "Tracheophyta",
+          "label": "Tracheophyta"
+        },
+        {
+          "doc_count": 13595,
+          "is_selected": false,
+          "key": "open data",
+          "label": "open data"
+        }
+      ],
+      "label": "Subjects"
+    }
+  },
+  "hits": {
+    "hits": [
+      {
+        "conceptdoi": "10.5281/zenodo.10728400",
+        "conceptrecid": "10728400",
+        "created": "2024-03-13T15:42:43.919712+00:00",
+        "doi": "10.5281/zenodo.10728401",
+        "doi_url": "https://doi.org/10.5281/zenodo.10728401",
+        "files": [
+          {
+            "checksum": "md5:08dee22c9931df48a32fc81d27e8f68f",
+            "id": "03c2a0c0-c978-41c6-a358-18e676602ed1",
+            "key": "idcc-poster-v2.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/10728401/files/idcc-poster-v2.pdf/content"
+            },
+            "size": 999416
+          }
+        ],
+        "id": 10728401,
+        "links": {
+          "access": "https://zenodo.org/api/records/10728401/access",
+          "access_grants": "https://zenodo.org/api/records/10728401/access/grants",
+          "access_links": "https://zenodo.org/api/records/10728401/access/links",
+          "access_request": "https://zenodo.org/api/records/10728401/access/request",
+          "access_users": "https://zenodo.org/api/records/10728401/access/users",
+          "archive": "https://zenodo.org/api/records/10728401/files-archive",
+          "archive_media": "https://zenodo.org/api/records/10728401/media-files-archive",
+          "communities": "https://zenodo.org/api/records/10728401/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/10728401/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.10728401",
+          "draft": "https://zenodo.org/api/records/10728401/draft",
+          "file_modification": "https://zenodo.org/api/records/10728401/file-modification",
+          "files": "https://zenodo.org/api/records/10728401/files",
+          "latest": "https://zenodo.org/api/records/10728401/versions/latest",
+          "latest_html": "https://zenodo.org/records/10728401/latest",
+          "media_files": "https://zenodo.org/api/records/10728401/media-files",
+          "parent": "https://zenodo.org/api/records/10728400",
+          "parent_doi": "https://doi.org/10.5281/zenodo.10728400",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.10728400",
+          "parent_html": "https://zenodo.org/records/10728400",
+          "preview_html": "https://zenodo.org/records/10728401?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/10728401/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/10728401/request-deletion",
+          "requests": "https://zenodo.org/api/records/10728401/requests",
+          "reserve_doi": "https://zenodo.org/api/records/10728401/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/10728401",
+          "self_doi": "https://doi.org/10.5281/zenodo.10728401",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.10728401",
+          "self_html": "https://zenodo.org/records/10728401",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:10728401/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:10728401/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:10728401:idcc-poster-v2.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:10728401:idcc-poster-v2.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:10728401:idcc-poster-v2.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:10728401:idcc-poster-v2.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:10728401:idcc-poster-v2.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:10728401:idcc-poster-v2.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/10728401/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "idcc24"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Open Book Futures, UK",
+              "name": "Barnes, Miranda",
+              "orcid": "0000-0001-7740-4896"
+            },
+            {
+              "affiliation": "Open Book Futures, UK",
+              "name": "Steiner, Tobias",
+              "orcid": "0000-0002-3158-3136"
+            }
+          ],
+          "description": "<div>\n<div>\n<div>\n<p>Open Access and OpenData hold transparency at their core. Yet the distribution channels of scholarly publishing and archiving struggle with an opacity problem: metadata, handled commercially in proprietary, closed-access systems. Thoth Open Metadata is a platform and service providing fully open metadata. The Thoth Archiving Network extends this system to the application of perpetual access.</p>\n</div>\n</div>\n</div>",
+          "doi": "10.5281/zenodo.10728401",
+          "keywords": [
+            "Work on automating curation processes",
+            "Building trust and transparency into research and curation techniques, costs, and workflows",
+            "open access monographs",
+            "open metadata",
+            "digital archiving",
+            "digital preservation",
+            "scholar-led press",
+            "open-source"
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "meeting": {
+            "acronym": "IDCC24",
+            "dates": "19-21 February 2024",
+            "place": "Edinburgh",
+            "session": "Poster",
+            "title": "18th International Digital Curation Conference",
+            "url": "https://www.dcc.ac.uk/events/idcc24"
+          },
+          "publication_date": "2024-02-20",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "10728400"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Poster",
+            "type": "poster"
+          },
+          "title": "Transparency through community-led open infrastructure: a pathway to trust"
+        },
+        "modified": "2024-07-07T02:45:24.223750+00:00",
+        "owners": [
+          {
+            "id": "134813"
+          }
+        ],
+        "recid": "10728401",
+        "revision": 6,
+        "state": "done",
+        "stats": {
+          "downloads": 48,
+          "unique_downloads": 46,
+          "unique_views": 71,
+          "version_downloads": 48,
+          "version_unique_downloads": 46,
+          "version_unique_views": 71,
+          "version_views": 71,
+          "views": 71
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "Transparency through community-led open infrastructure: a pathway to trust",
+        "updated": "2024-07-07T02:45:24.223750+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.13929710",
+        "conceptrecid": "13929710",
+        "created": "2025-07-31T08:11:12.046431+00:00",
+        "doi": "10.5281/zenodo.16629490",
+        "doi_url": "https://doi.org/10.5281/zenodo.16629490",
+        "files": [
+          {
+            "checksum": "md5:c07ad20acd6dc2519c6e8e208b871813",
+            "id": "4eef33ae-3fd7-41fe-a2da-00e24ddc7ee2",
+            "key": "Online Appendix C.xlsx",
+            "links": {
+              "self": "https://zenodo.org/api/records/16629490/files/Online%20Appendix%20C.xlsx/content"
+            },
+            "size": 47904
+          }
+        ],
+        "id": 16629490,
+        "links": {
+          "access": "https://zenodo.org/api/records/16629490/access",
+          "access_grants": "https://zenodo.org/api/records/16629490/access/grants",
+          "access_links": "https://zenodo.org/api/records/16629490/access/links",
+          "access_request": "https://zenodo.org/api/records/16629490/access/request",
+          "access_users": "https://zenodo.org/api/records/16629490/access/users",
+          "archive": "https://zenodo.org/api/records/16629490/files-archive",
+          "archive_media": "https://zenodo.org/api/records/16629490/media-files-archive",
+          "communities": "https://zenodo.org/api/records/16629490/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/16629490/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.16629490",
+          "draft": "https://zenodo.org/api/records/16629490/draft",
+          "file_modification": "https://zenodo.org/api/records/16629490/file-modification",
+          "files": "https://zenodo.org/api/records/16629490/files",
+          "latest": "https://zenodo.org/api/records/16629490/versions/latest",
+          "latest_html": "https://zenodo.org/records/16629490/latest",
+          "media_files": "https://zenodo.org/api/records/16629490/media-files",
+          "parent": "https://zenodo.org/api/records/13929710",
+          "parent_doi": "https://doi.org/10.5281/zenodo.13929710",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.13929710",
+          "parent_html": "https://zenodo.org/records/13929710",
+          "preview_html": "https://zenodo.org/records/16629490?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/16629490/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/16629490/request-deletion",
+          "requests": "https://zenodo.org/api/records/16629490/requests",
+          "reserve_doi": "https://zenodo.org/api/records/16629490/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/16629490",
+          "self_doi": "https://doi.org/10.5281/zenodo.16629490",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.16629490",
+          "self_html": "https://zenodo.org/records/16629490",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:16629490/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:16629490/sequence/default",
+          "versions": "https://zenodo.org/api/records/16629490/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "contributors": [
+            {
+              "affiliation": "Wageningen University & Research",
+              "name": "Verhulst, Marjolein E.",
+              "orcid": "0000-0003-4134-2288",
+              "type": "Researcher"
+            },
+            {
+              "affiliation": "Wageningen University & Research",
+              "name": "Pennings, Joost M.E.",
+              "orcid": "0000-0002-3059-0414",
+              "type": "Supervisor"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Wageningen University & Research",
+              "name": "Verhulst, Marjolein E.",
+              "orcid": "0000-0003-4134-2288"
+            },
+            {
+              "affiliation": "Wageningen University & Research",
+              "name": "Pennings, Joost M.E.",
+              "orcid": "0000-0002-3059-0414"
+            }
+          ],
+          "dates": [
+            {
+              "type": "accepted"
+            }
+          ],
+          "description": "<p>Online appendix C for article in&nbsp;<em>Capital Markets Law Journal</em>&nbsp;entitled \"Spoofing in U.S. Futures Markets: An Interdisciplinary Approach\".</p>",
+          "doi": "10.5281/zenodo.16629490",
+          "language": "eng",
+          "license": {
+            "id": "cc-by-nc-nd-4.0"
+          },
+          "publication_date": "2025-07-31",
+          "relations": {
+            "version": [
+              {
+                "index": 1,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "13929710"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Dataset",
+            "type": "dataset"
+          },
+          "title": "Online appendix C"
+        },
+        "modified": "2025-07-31T08:16:23.482296+00:00",
+        "owners": [
+          {
+            "id": "1119839"
+          }
+        ],
+        "recid": "16629490",
+        "revision": 6,
+        "state": "done",
+        "stats": {
+          "downloads": 36,
+          "unique_downloads": 33,
+          "unique_views": 142,
+          "version_downloads": 21,
+          "version_unique_downloads": 18,
+          "version_unique_views": 75,
+          "version_views": 88,
+          "views": 159
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "Online appendix C",
+        "updated": "2025-07-31T08:16:23.482296+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.18184440",
+        "conceptrecid": "18184440",
+        "created": "2026-03-25T16:59:52.400350+00:00",
+        "doi": "10.5281/zenodo.18184441",
+        "doi_url": "https://doi.org/10.5281/zenodo.18184441",
+        "files": [
+          {
+            "checksum": "md5:5b2b2007dbd59196ba010e2b3923f5e0",
+            "id": "faaef2e5-0840-4110-b0b8-ac61b37bd72e",
+            "key": "btc_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/btc_orders_202512.tar.xz/content"
+            },
+            "size": 19268354932
+          },
+          {
+            "checksum": "md5:3cbb57a28ef63339bb1c60252cbd3024",
+            "id": "5d90bcd4-f279-4f87-962b-927179279a26",
+            "key": "eth_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/eth_orders_202512.tar.xz/content"
+            },
+            "size": 12120113008
+          },
+          {
+            "checksum": "md5:df9b9220373a6f11403a75796a084c6d",
+            "id": "d59f1002-353b-4fad-9f0b-92a78e71337a",
+            "key": "btc_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/btc_rejected_202512.tar.xz/content"
+            },
+            "size": 46038646232
+          },
+          {
+            "checksum": "md5:b2a54cf4796f95b524bbdf108d835522",
+            "id": "d42bb177-d349-41c0-a186-03fa97ffe1a1",
+            "key": "eth_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/eth_rejected_202512.tar.xz/content"
+            },
+            "size": 24087215608
+          },
+          {
+            "checksum": "md5:5abed7980b4d8c57651dbb9237c02d88",
+            "id": "8d1f05ae-12d8-40f6-baa2-943579646de0",
+            "key": "sol_orders_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/sol_orders_202512.tar.xz/content"
+            },
+            "size": 6271301388
+          },
+          {
+            "checksum": "md5:7bbe3626b137d356ea4c5c3009cb3e56",
+            "id": "31aaeb73-55bd-467e-a91b-5f125f5c2fd2",
+            "key": "sol_rejected_202512.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/sol_rejected_202512.tar.xz/content"
+            },
+            "size": 8529075876
+          },
+          {
+            "checksum": "md5:350656ae19550b14d2e1ebe025b25dc7",
+            "id": "97753436-5bc1-49cf-b570-11443f0203e1",
+            "key": "book_diffs_202512.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/book_diffs_202512.tar/content"
+            },
+            "size": 49555435520
+          },
+          {
+            "checksum": "md5:582490cf94b58068a6ae59aedb63c952",
+            "id": "c4d844ac-26ab-47fd-a7ef-34287d4a721e",
+            "key": "trades_2025_10.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_10.tar/content"
+            },
+            "size": 10049740800
+          },
+          {
+            "checksum": "md5:6fbab17d761b67e279ac0592e8520af7",
+            "id": "605f1cf0-0ce2-4792-a1ba-a24998a39720",
+            "key": "trades_2025_11.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_11.tar/content"
+            },
+            "size": 8847390720
+          },
+          {
+            "checksum": "md5:434b242b9b897e689576b3eea8450e0c",
+            "id": "ef9ee6b5-a3c9-45fa-a356-e998b471afdf",
+            "key": "trades_2026_01.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2026_01.tar/content"
+            },
+            "size": 3847168000
+          },
+          {
+            "checksum": "md5:83f0ecdcc34a5d55e93048ac844bed3f",
+            "id": "5dbbba8c-a7c9-4109-b7f4-7f37412c3f54",
+            "key": "mapdir.tar.xz",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/mapdir.tar.xz/content"
+            },
+            "size": 10188884
+          },
+          {
+            "checksum": "md5:03ccb90a9042880ef7360a54f49c9a6b",
+            "id": "56b03cfe-4a0f-4ffe-a48d-4d5c30244f31",
+            "key": "read_data.py",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/read_data.py/content"
+            },
+            "size": 24427
+          },
+          {
+            "checksum": "md5:44f6eaf275db120e32678c263809610d",
+            "id": "49831920-4e96-4e7e-87d4-98c8710b07c0",
+            "key": "SCHEMA.md",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/SCHEMA.md/content"
+            },
+            "size": 16136
+          },
+          {
+            "checksum": "md5:79c1f3018c90cfdce86bc68fccd1a6d8",
+            "id": "d21e3597-8b05-44e0-a824-c6af2756fee4",
+            "key": "README.md",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/README.md/content"
+            },
+            "size": 5407
+          },
+          {
+            "checksum": "md5:7949be6a52ec7fb3b591ee633bae3329",
+            "id": "0db63fc7-e146-4bbb-8b0b-aacbca3fb9df",
+            "key": "trades_2025_12.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/18184441/files/trades_2025_12.tar/content"
+            },
+            "size": 6694522880
+          }
+        ],
+        "id": 18184441,
+        "links": {
+          "access": "https://zenodo.org/api/records/18184441/access",
+          "access_grants": "https://zenodo.org/api/records/18184441/access/grants",
+          "access_links": "https://zenodo.org/api/records/18184441/access/links",
+          "access_request": "https://zenodo.org/api/records/18184441/access/request",
+          "access_users": "https://zenodo.org/api/records/18184441/access/users",
+          "archive": "https://zenodo.org/api/records/18184441/files-archive",
+          "archive_media": "https://zenodo.org/api/records/18184441/media-files-archive",
+          "communities": "https://zenodo.org/api/records/18184441/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/18184441/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.18184441",
+          "draft": "https://zenodo.org/api/records/18184441/draft",
+          "file_modification": "https://zenodo.org/api/records/18184441/file-modification",
+          "files": "https://zenodo.org/api/records/18184441/files",
+          "latest": "https://zenodo.org/api/records/18184441/versions/latest",
+          "latest_html": "https://zenodo.org/records/18184441/latest",
+          "media_files": "https://zenodo.org/api/records/18184441/media-files",
+          "parent": "https://zenodo.org/api/records/18184440",
+          "parent_doi": "https://doi.org/10.5281/zenodo.18184440",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18184440",
+          "parent_html": "https://zenodo.org/records/18184440",
+          "preview_html": "https://zenodo.org/records/18184441?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/18184441/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/18184441/request-deletion",
+          "requests": "https://zenodo.org/api/records/18184441/requests",
+          "reserve_doi": "https://zenodo.org/api/records/18184441/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/18184441",
+          "self_doi": "https://doi.org/10.5281/zenodo.18184441",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18184441",
+          "self_html": "https://zenodo.org/records/18184441",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:18184441/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:18184441/sequence/default",
+          "versions": "https://zenodo.org/api/records/18184441/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "contributors": [
+            {
+              "affiliation": "University of Oxford",
+              "name": "Albers, Jakob",
+              "type": "DataCollector"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "University of Oxford",
+              "name": "Albers, Jakob"
+            },
+            {
+              "affiliation": "University of California, Los Angeles",
+              "name": "Cucuringu, Mihai"
+            },
+            {
+              "affiliation": "University of Oxford",
+              "name": "Howison, Sam"
+            },
+            {
+              "affiliation": "Queen Mary University of London",
+              "name": "Shestopaloff, Alexander Y."
+            }
+          ],
+          "description": "<div>This dataset accompanies the paper \"An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange.\"</div>\n<div>&nbsp;</div>\n<div>It contains three data streams from the Hyperliquid decentralized perpetual futures exchange:</div>\n<div>&nbsp;</div>\n<div>- Order statuses (Dec 2025): Complete order lifecycle events for BTC, ETH, and SOL perpetual contracts, including rejected orders &mdash; data typically unavailable from any exchange. Custom binary format, 54 bytes per&nbsp;record. ~880 million records per day.</div>\n<div>- Raw book diffs (Dec 2025): Every change to the visible limit order book for BTC, ETH, and SOL. Gzip-compressed JSON lines.</div>\n<div>- Trades (Oct 2025 &ndash; Jan 2026): Trade execution data for all 250+ perpetual contracts. Gzip-compressed JSON lines.</div>\n<div>&nbsp;</div>\n<div>Includes lookup tables, a Python reader (read_data.py), and full schema documentation (SCHEMA.md). See README.md for quick start instructions.</div>",
+          "doi": "10.5281/zenodo.18184441",
+          "keywords": [
+            "market microstructure",
+            "high-frequency trading",
+            "order flow",
+            "limit order book",
+            "rejected orders",
+            "Hyperliquid",
+            "cryptocurrency",
+            "perpetual futures"
+          ],
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2026-03-25",
+          "related_identifiers": [
+            {
+              "identifier": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6250738",
+              "relation": "isSupplementTo",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            },
+            {
+              "identifier": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6250378",
+              "relation": "isSupplementTo",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            },
+            {
+              "identifier": "https://papers.ssrn.com/abstract=6465720",
+              "relation": "isDescribedBy",
+              "resource_type": "publication-preprint",
+              "scheme": "url"
+            }
+          ],
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "18184440"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Dataset",
+            "type": "dataset"
+          },
+          "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+          "version": "1.0"
+        },
+        "modified": "2026-03-25T16:59:53.103968+00:00",
+        "owners": [
+          {
+            "id": "1438183"
+          }
+        ],
+        "recid": "18184441",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 186,
+          "unique_downloads": 181,
+          "unique_views": 183,
+          "version_downloads": 186,
+          "version_unique_downloads": 181,
+          "version_unique_views": 183,
+          "version_views": 197,
+          "views": 197
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange",
+        "updated": "2026-03-25T16:59:53.103968+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.17860327",
+        "conceptrecid": "17860327",
+        "created": "2025-12-08T23:56:02.023537+00:00",
+        "doi": "10.5281/zenodo.17860328",
+        "doi_url": "https://doi.org/10.5281/zenodo.17860328",
+        "files": [],
+        "id": 17860328,
+        "links": {
+          "access": "https://zenodo.org/api/records/17860328/access",
+          "access_grants": "https://zenodo.org/api/records/17860328/access/grants",
+          "access_links": "https://zenodo.org/api/records/17860328/access/links",
+          "access_request": "https://zenodo.org/api/records/17860328/access/request",
+          "access_users": "https://zenodo.org/api/records/17860328/access/users",
+          "archive": "https://zenodo.org/api/records/17860328/files-archive",
+          "archive_media": "https://zenodo.org/api/records/17860328/media-files-archive",
+          "communities": "https://zenodo.org/api/records/17860328/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/17860328/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.17860328",
+          "draft": "https://zenodo.org/api/records/17860328/draft",
+          "file_modification": "https://zenodo.org/api/records/17860328/file-modification",
+          "files": "https://zenodo.org/api/records/17860328/files",
+          "latest": "https://zenodo.org/api/records/17860328/versions/latest",
+          "latest_html": "https://zenodo.org/records/17860328/latest",
+          "media_files": "https://zenodo.org/api/records/17860328/media-files",
+          "parent": "https://zenodo.org/api/records/17860327",
+          "parent_doi": "https://doi.org/10.5281/zenodo.17860327",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17860327",
+          "parent_html": "https://zenodo.org/records/17860327",
+          "preview_html": "https://zenodo.org/records/17860328?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/17860328/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/17860328/request-deletion",
+          "requests": "https://zenodo.org/api/records/17860328/requests",
+          "reserve_doi": "https://zenodo.org/api/records/17860328/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/17860328",
+          "self_doi": "https://doi.org/10.5281/zenodo.17860328",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17860328",
+          "self_html": "https://zenodo.org/records/17860328",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:17860328/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:17860328/sequence/default",
+          "versions": "https://zenodo.org/api/records/17860328/versions"
+        },
+        "metadata": {
+          "access_right": "restricted",
+          "contributors": [
+            {
+              "affiliation": "Yangzhou University",
+              "name": "Fang, Meiling",
+              "type": "Supervisor"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Yangzhou University, School of Software Engineering",
+              "name": "Mejba, Raoha Bin"
+            }
+          ],
+          "dates": [
+            {
+              "type": "created"
+            }
+          ],
+          "description": "<p>The <strong>SARSpoof dataset </strong>is a curated collection of face images and videos from the South Asian region (SAR), developed to improve fairness and robustness in face anti-spoofing (FAS) systems. Existing PAD datasets predominantly represent Western and East Asian facial demographics, resulting in accuracy degradation and demographic bias when applied to South Asian or African populations. SARSpoof addresses this gap by providing real, diverse presentation attack samples and bona fide data collected from<strong> 40 South Asian subjects, each contributing five unique photos or videos, resulting in a total of 200 bona fide samples.</strong></p>\n<p>Participants represent multiple regions of South Asia, providing a rich diversity of facial structures, skin tones, and demographic characteristics. To better reflect real-world conditions, the dataset includes samples captured under different lighting environments, as well as images containing various accessories such as glasses, masks, hats, and other natural occlusions. The spoof portion includes realistic replay attacks and other presentation attack modalities captured under practical, uncontrolled settings. Metadata includes device information, environmental context, and optional demographic notes.</p>\n<p>SARSpoof supports research in biometric security, fairness in AI, presentation attack detection, and dataset-driven bias mitigation. The dataset was created as part of the undergraduate thesis project <em>&ldquo;<a href=\"https://doi.org/10.5281/zenodo.17859790\" target=\"_blank\" rel=\"noopener\">Mitigating Ethnic Bias in Face Anti-Spoofing Systems Using MiniFASNet and the SARSpoof Dataset</a>.&rdquo;</em></p>\n<p>&nbsp;</p>\n<p><strong>Note:</strong><em> </em>To access the dataset, please email <em><a rel=\"noopener\">raoha77@outlook.com</a></em>. Thank you.</p>",
+          "doi": "10.5281/zenodo.17860328",
+          "keywords": [
+            "Face Anti-Spoofing",
+            "Presentation Attack Detection",
+            "South Asian Dataset",
+            "Face Dataset",
+            "Biometrics",
+            "Fairness in AI"
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2024-05-07",
+          "references": [
+            "Mejba, R. B. (2024). Mitigating Ethnic Bias in Face Anti-Spoofing Systems Using MiniFASNet and the SARSpoof Dataset [Zenodo]. https://doi.org/10.5281/zenodo.17859790"
+          ],
+          "related_identifiers": [
+            {
+              "identifier": "10.5281/zenodo.17859790",
+              "relation": "isSupplementTo",
+              "resource_type": "publication-dissertation",
+              "scheme": "doi"
+            }
+          ],
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "17860327"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Dataset",
+            "type": "dataset"
+          },
+          "title": "SARSpoof: A South Asian Face Anti-Spoofing Dataset"
+        },
+        "modified": "2026-04-23T00:49:51.726807+00:00",
+        "owners": [
+          {
+            "id": "1485850"
+          }
+        ],
+        "recid": "17860328",
+        "revision": 12,
+        "state": "done",
+        "stats": {
+          "downloads": 8,
+          "unique_downloads": 3,
+          "unique_views": 79,
+          "version_downloads": 8,
+          "version_unique_downloads": 3,
+          "version_unique_views": 79,
+          "version_views": 87,
+          "views": 87
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "SARSpoof: A South Asian Face Anti-Spoofing Dataset",
+        "updated": "2026-04-23T00:49:51.726807+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.18667007",
+        "conceptrecid": "18667007",
+        "created": "2026-02-17T05:58:09.991328+00:00",
+        "doi": "10.5281/zenodo.18667008",
+        "doi_url": "https://doi.org/10.5281/zenodo.18667008",
+        "files": [
+          {
+            "checksum": "md5:dd2960e71ad71ce1189c69c2469132d7",
+            "id": "02049bd8-57bd-49e5-8da9-a8ef4c394e34",
+            "key": "High-Frequency Market Microstructure Analysis using TEN and GNN for Detecting Algorithmic Spoofing.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/18667008/files/High-Frequency%20Market%20Microstructure%20Analysis%20using%20TEN%20and%20GNN%20for%20Detecting%20Algorithmic%20Spoofing.pdf/content"
+            },
+            "size": 797169
+          }
+        ],
+        "id": 18667008,
+        "links": {
+          "access": "https://zenodo.org/api/records/18667008/access",
+          "access_grants": "https://zenodo.org/api/records/18667008/access/grants",
+          "access_links": "https://zenodo.org/api/records/18667008/access/links",
+          "access_request": "https://zenodo.org/api/records/18667008/access/request",
+          "access_users": "https://zenodo.org/api/records/18667008/access/users",
+          "archive": "https://zenodo.org/api/records/18667008/files-archive",
+          "archive_media": "https://zenodo.org/api/records/18667008/media-files-archive",
+          "communities": "https://zenodo.org/api/records/18667008/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/18667008/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.18667008",
+          "draft": "https://zenodo.org/api/records/18667008/draft",
+          "file_modification": "https://zenodo.org/api/records/18667008/file-modification",
+          "files": "https://zenodo.org/api/records/18667008/files",
+          "latest": "https://zenodo.org/api/records/18667008/versions/latest",
+          "latest_html": "https://zenodo.org/records/18667008/latest",
+          "media_files": "https://zenodo.org/api/records/18667008/media-files",
+          "parent": "https://zenodo.org/api/records/18667007",
+          "parent_doi": "https://doi.org/10.5281/zenodo.18667007",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18667007",
+          "parent_html": "https://zenodo.org/records/18667007",
+          "preview_html": "https://zenodo.org/records/18667008?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/18667008/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/18667008/request-deletion",
+          "requests": "https://zenodo.org/api/records/18667008/requests",
+          "reserve_doi": "https://zenodo.org/api/records/18667008/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/18667008",
+          "self_doi": "https://doi.org/10.5281/zenodo.18667008",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18667008",
+          "self_html": "https://zenodo.org/records/18667008",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:18667008/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:18667008/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:18667008:High-Frequency%20Market%20Microstructure%20Analysis%20using%20TEN%20and%20GNN%20for%20Detecting%20Algorithmic%20Spoofing.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:18667008:High-Frequency%20Market%20Microstructure%20Analysis%20using%20TEN%20and%20GNN%20for%20Detecting%20Algorithmic%20Spoofing.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:18667008:High-Frequency%20Market%20Microstructure%20Analysis%20using%20TEN%20and%20GNN%20for%20Detecting%20Algorithmic%20Spoofing.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:18667008:High-Frequency%20Market%20Microstructure%20Analysis%20using%20TEN%20and%20GNN%20for%20Detecting%20Algorithmic%20Spoofing.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:18667008:High-Frequency%20Market%20Microstructure%20Analysis%20using%20TEN%20and%20GNN%20for%20Detecting%20Algorithmic%20Spoofing.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:18667008:High-Frequency%20Market%20Microstructure%20Analysis%20using%20TEN%20and%20GNN%20for%20Detecting%20Algorithmic%20Spoofing.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/18667008/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "creators": [
+            {
+              "affiliation": null,
+              "name": "Ahmed, Abrar"
+            }
+          ],
+          "custom": {
+            "code:codeRepository": "https://github.com/quantsingularity/Deep-Learning-for-HFT-Market-Microstructure-Spoofing-Detection"
+          },
+          "description": "<p>Algorithmic spoofing poses a significant threat to market integrity and remains a primary regulatory focus under MiFID II. This paper introduces a Transformer-Encoder Network (TEN) architecture for real-time, microsecond-level detection of spoofing within high-frequency Limit Order Book (LOB) data, leveraging self-attention to capture non-local temporal and cross-sectional dependencies that traditional RNN and LSTM approaches fail to model. To address coordinated multi-asset conspiracy spoofing, a novel TEN-GNN hybrid incorporates a Graph Neural Network driven by a Hawkes Process-based directional causality metric, achieving an F1-score of 0.952 against state-of-the-art Mamba-2 and RetNet benchmarks. Training combines 327 real prosecuted cases, 3,040 human-annotated surveillance examples, and 6,000 adversarially injected synthetic patterns, with out-of-distribution validation across Nasdaq, Eurex, and Binance markets confirming graceful generalization. The framework successfully identified the 2010 Flash Crash layering pattern 42ms before the primary liquidity event, with ablation studies confirming the GNN and adaptive temporal encoding each contribute meaningfully to overall performance. SHAP and Integrated Gradients provide regulatory-grade explainability, enabling compliance officers to construct evidence chains for regulatory submissions. A decoupled optimization strategy achieves 600&micro;s critical-path latency on FPGA+GPU infrastructure, with scalable deployment tiers accommodating institutions of varying resource constraints for live high-frequency market surveillance pipelines.</p>",
+          "doi": "10.5281/zenodo.18667008",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2026-01-04",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "18667007"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "preprint",
+            "title": "Preprint",
+            "type": "publication"
+          },
+          "title": "High-Frequency Market Microstructure Analysis using Transformer-Encoder Networks (TEN) and Graph Neural Networks (GNN) for Detecting Algorithmic Spoofing"
+        },
+        "modified": "2026-02-23T05:49:08.648034+00:00",
+        "owners": [
+          {
+            "id": "1548744"
+          }
+        ],
+        "recid": "18667008",
+        "revision": 24,
+        "state": "done",
+        "stats": {
+          "downloads": 48,
+          "unique_downloads": 39,
+          "unique_views": 80,
+          "version_downloads": 48,
+          "version_unique_downloads": 39,
+          "version_unique_views": 80,
+          "version_views": 95,
+          "views": 95
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "High-Frequency Market Microstructure Analysis using Transformer-Encoder Networks (TEN) and Graph Neural Networks (GNN) for Detecting Algorithmic Spoofing",
+        "updated": "2026-02-23T05:49:08.648034+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.8142774",
+        "conceptrecid": "8142774",
+        "created": "2023-07-13T09:51:30.801066+00:00",
+        "doi": "10.5281/zenodo.8142775",
+        "doi_url": "https://doi.org/10.5281/zenodo.8142775",
+        "files": [
+          {
+            "checksum": "md5:917603b49fa2a6a5c01c7eff44b251c7",
+            "id": "c9a9abfd-0b6c-4d27-b52a-e7c338eb16af",
+            "key": "SciELO - July 2023 - COPIM.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/8142775/files/SciELO%20-%20July%202023%20-%20COPIM.pdf/content"
+            },
+            "size": 13152762
+          }
+        ],
+        "id": 8142775,
+        "links": {
+          "access": "https://zenodo.org/api/records/8142775/access",
+          "access_grants": "https://zenodo.org/api/records/8142775/access/grants",
+          "access_links": "https://zenodo.org/api/records/8142775/access/links",
+          "access_request": "https://zenodo.org/api/records/8142775/access/request",
+          "access_users": "https://zenodo.org/api/records/8142775/access/users",
+          "archive": "https://zenodo.org/api/records/8142775/files-archive",
+          "archive_media": "https://zenodo.org/api/records/8142775/media-files-archive",
+          "communities": "https://zenodo.org/api/records/8142775/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/8142775/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.8142775",
+          "draft": "https://zenodo.org/api/records/8142775/draft",
+          "file_modification": "https://zenodo.org/api/records/8142775/file-modification",
+          "files": "https://zenodo.org/api/records/8142775/files",
+          "latest": "https://zenodo.org/api/records/8142775/versions/latest",
+          "latest_html": "https://zenodo.org/records/8142775/latest",
+          "media_files": "https://zenodo.org/api/records/8142775/media-files",
+          "parent": "https://zenodo.org/api/records/8142774",
+          "parent_doi": "https://doi.org/10.5281/zenodo.8142774",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.8142774",
+          "parent_html": "https://zenodo.org/records/8142774",
+          "preview_html": "https://zenodo.org/records/8142775?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/8142775/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/8142775/request-deletion",
+          "requests": "https://zenodo.org/api/records/8142775/requests",
+          "reserve_doi": "https://zenodo.org/api/records/8142775/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/8142775",
+          "self_doi": "https://doi.org/10.5281/zenodo.8142775",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.8142775",
+          "self_html": "https://zenodo.org/records/8142775",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:8142775/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:8142775/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:8142775:SciELO%20-%20July%202023%20-%20COPIM.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:8142775:SciELO%20-%20July%202023%20-%20COPIM.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:8142775:SciELO%20-%20July%202023%20-%20COPIM.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:8142775:SciELO%20-%20July%202023%20-%20COPIM.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:8142775:SciELO%20-%20July%202023%20-%20COPIM.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:8142775:SciELO%20-%20July%202023%20-%20COPIM.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/8142775/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "copim"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Open Book Publishers",
+              "name": "Barnes, Lucy",
+              "orcid": "0000-0002-1425-6985"
+            },
+            {
+              "affiliation": "Birkbeck, University of London",
+              "name": "Grady, Tom",
+              "orcid": "0000-0003-1888-947X"
+            },
+            {
+              "affiliation": "Lancaster University",
+              "name": "Deville, Joe",
+              "orcid": "0000-0003-0583-3493"
+            },
+            {
+              "affiliation": "Open Book Publishers, ScholarLed, Trinity College Cambridge",
+              "name": "Gatti, Rupert",
+              "orcid": "0000-0003-0676-9024"
+            },
+            {
+              "affiliation": "Thoth Open Metadata",
+              "name": "Steiner, Toby",
+              "orcid": "0000-0002-3158-3136"
+            }
+          ],
+          "description": "<p>This is the main slidedeck used during the COPIM &ndash; SciELO 25 Years Seminar &quot;Open Book Futures: Working together to Build Community-owned Infrastructures for OA books&quot; / &quot;Futuros do livro aberto: trabalhando juntos para construir infraestruturas de propriedade da comunidade para livros AA&quot; / &quot;Futuros a Libro Abierto: Trabajando juntos para construir infraestructuras de propiedad comunitaria para libros AA&quot;</p>\n\n<p><strong>English</strong>:</p>\n\n<p>Over the last four years, the COPIM team have been developing open, community-governed infrastructure to support open access book publishing. This includes the Open Book Collective, which supports collective funding for OA books and infrastructures, and the Thoth metadata dissemination system, which enables publishers to easily create high-quality, open metadata to share their OA books as widely as possible. All of this infrastructure is community-owned and governed by its users. With &pound;5.8 million from Arcadia and Research England to develop this infrastructure equitably as part of the &lsquo;Open Book Futures&rsquo; project, the COPIM team want to find out how they can collaborate with, and learn from, the members of the SciELO network. How might what COPIM is building be useful to you? What are they currently missing? What are the possibilities for collaboration? Come along to this session, learn more about what COPIM is building, and share your perspective on how OA book publishing can best be nurtured and developed within SciELO and beyond.&nbsp;</p>\n\n<p><strong>Espanol</strong>:</p>\n\n<p>Durante los &uacute;ltimos cuatro a&ntilde;os, el equipo de COPIM ha estado desarrollando una infraestructura abierta y gobernada por la comunidad para respaldar la publicaci&oacute;n de libros de acceso abierto. Esto incluye el Open Book Collective, que apoya la financiaci&oacute;n colectiva de libros e infraestructuras de AA, y el sistema de difusi&oacute;n de metadatos Thoth, que permite a los editores crear f&aacute;cilmente metadatos abiertos de alta calidad para compartir sus libros de AA de la forma m&aacute;s amplia posible. Toda esta infraestructura es propiedad de la comunidad y est&aacute; gobernada por sus usuarios. Con &pound;5,8 millones de Arcadia e Research England para desarrollar esta infraestructura de manera equitativa como parte del proyecto &lsquo;Open Book Futures&rsquo;, el equipo de COPIM quiere saber c&oacute;mo pueden colaborar y aprender de los miembros de la red SciELO. &iquest;C&oacute;mo les puede ser &uacute;til lo que est&aacute; construyendo COPIM? &iquest;Qu&eacute; les falta actualmente? &iquest;Cu&aacute;les son las posibilidades de colaboraci&oacute;n? Venga a esta sesi&oacute;n, aprenda m&aacute;s sobre lo que COPIM est&aacute; construyendo y comparta su perspectiva sobre c&oacute;mo la publicaci&oacute;n de libros de AA puede nutrirse y desarrollarse mejor dentro de SciELO y m&aacute;s all&aacute;.</p>\n\n<p><strong>Portugu&ecirc;s: </strong></p>\n\n<p>Nos &uacute;ltimos quatro anos, a equipe do COPIM desenvolveu uma infraestrutura aberta e governada pela comunidade para dar suporte &agrave; publica&ccedil;&atilde;o de livros de acesso aberto. Isso inclui o Open Book Collective, que ap&oacute;ia o financiamento coletivo para livros e infraestruturas OA, e o sistema de dissemina&ccedil;&atilde;o de metadados Thoth, que permite que os editores criem facilmente metadados abertos de alta qualidade para compartilhar seus livros OA o mais amplamente poss&iacute;vel. Toda essa infraestrutura &eacute; de propriedade da comunidade e governada por seus usu&aacute;rios. Com &pound; 5,8 milh&otilde;es da Arcadia e da Research England para desenvolver essa infraestrutura de forma equitativa como parte do projeto &lsquo;Open Book Futures&rsquo;, a equipe do COPIM quer descobrir como pode colaborar e aprender com os membros da Rede SciELO. Como o que o COPIM est&aacute; construindo pode ser &uacute;til para voc&ecirc;? O que est&aacute; faltando atualmente? Quais s&atilde;o as possibilidades de colabora&ccedil;&atilde;o? Participe desta sess&atilde;o, saiba mais sobre o que o COPIM est&aacute; construindo e compartilhe sua perspectiva sobre como a publica&ccedil;&atilde;o de livros OA pode ser mais bem nutrida e desenvolvida dentro do SciELO e al&eacute;m.</p>",
+          "doi": "10.5281/zenodo.8142775",
+          "keywords": [
+            "Open Book Collective",
+            "COPIM",
+            "Opening the Future",
+            "open access books",
+            "open metadata",
+            "discoverability",
+            "dissemination",
+            "archiving",
+            "Thoth Open Metadata",
+            "business models",
+            "open access",
+            "collective funding models",
+            "libraries",
+            "publishers"
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "meeting": {
+            "dates": "14 July 2023",
+            "place": "online",
+            "title": "COPIM \u2013 SciELO 25 Years Seminar \"Open Book Futures: Working together to Build Community-owned Infrastructures for OA books\"",
+            "url": "https://25.scielo.org/en/seminars/copim/"
+          },
+          "notes": "Open Book Futures is supported by the Research England Development (RED) Fund, and Arcadia.",
+          "publication_date": "2023-07-13",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "8142774"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Presentation",
+            "type": "presentation"
+          },
+          "title": "Open Book Futures: Working together to Build Community-owned Infrastructures for OA books",
+          "version": "1.0"
+        },
+        "modified": "2024-07-11T17:46:04.116592+00:00",
+        "owners": [
+          {
+            "id": "42271"
+          }
+        ],
+        "recid": "8142775",
+        "revision": 6,
+        "state": "done",
+        "stats": {
+          "downloads": 170,
+          "unique_downloads": 156,
+          "unique_views": 234,
+          "version_downloads": 169,
+          "version_unique_downloads": 155,
+          "version_unique_views": 233,
+          "version_views": 244,
+          "views": 245
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "Open Book Futures: Working together to Build Community-owned Infrastructures for OA books",
+        "updated": "2024-07-11T17:46:04.116592+00:00"
+      },
+      {
+        "conceptrecid": "19848029",
+        "created": "2026-04-28T09:20:32.957729+00:00",
+        "doi": "10.21983/P3.0262.1.00",
+        "doi_url": "https://doi.org/10.21983/P3.0262.1.00",
+        "files": [
+          {
+            "checksum": "md5:0c12820f12222682acae372ded1ec3b1",
+            "id": "21c85f7b-46f7-4560-aef7-3f850b81bd56",
+            "key": "27e17948-02c4-4ba3-8244-5c229cc8e9b8_metadata.json",
+            "links": {
+              "self": "https://zenodo.org/api/records/19848030/files/27e17948-02c4-4ba3-8244-5c229cc8e9b8_metadata.json/content"
+            },
+            "size": 48984
+          },
+          {
+            "checksum": "md5:7be58c90606eccbc89e97eb44474bee1",
+            "id": "c14c67c8-c447-432b-a5d9-4a4f60491712",
+            "key": "27e17948-02c4-4ba3-8244-5c229cc8e9b8_book.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/19848030/files/27e17948-02c4-4ba3-8244-5c229cc8e9b8_book.pdf/content"
+            },
+            "size": 25159070
+          }
+        ],
+        "id": 19848030,
+        "links": {
+          "access": "https://zenodo.org/api/records/19848030/access",
+          "access_grants": "https://zenodo.org/api/records/19848030/access/grants",
+          "access_links": "https://zenodo.org/api/records/19848030/access/links",
+          "access_request": "https://zenodo.org/api/records/19848030/access/request",
+          "access_users": "https://zenodo.org/api/records/19848030/access/users",
+          "archive": "https://zenodo.org/api/records/19848030/files-archive",
+          "archive_media": "https://zenodo.org/api/records/19848030/media-files-archive",
+          "communities": "https://zenodo.org/api/records/19848030/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/19848030/communities-suggestions",
+          "doi": "https://doi.org/10.21983/P3.0262.1.00",
+          "draft": "https://zenodo.org/api/records/19848030/draft",
+          "file_modification": "https://zenodo.org/api/records/19848030/file-modification",
+          "files": "https://zenodo.org/api/records/19848030/files",
+          "latest": "https://zenodo.org/api/records/19848030/versions/latest",
+          "latest_html": "https://zenodo.org/records/19848030/latest",
+          "media_files": "https://zenodo.org/api/records/19848030/media-files",
+          "parent": "https://zenodo.org/api/records/19848029",
+          "parent_html": "https://zenodo.org/records/19848029",
+          "preview_html": "https://zenodo.org/records/19848030?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/19848030/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/19848030/request-deletion",
+          "requests": "https://zenodo.org/api/records/19848030/requests",
+          "reserve_doi": "https://zenodo.org/api/records/19848030/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/19848030",
+          "self_doi": "https://doi.org/10.21983/P3.0262.1.00",
+          "self_doi_html": "https://zenodo.org/doi/10.21983/P3.0262.1.00",
+          "self_html": "https://zenodo.org/records/19848030",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:19848030/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:19848030/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:19848030:27e17948-02c4-4ba3-8244-5c229cc8e9b8_book.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:19848030:27e17948-02c4-4ba3-8244-5c229cc8e9b8_book.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:19848030:27e17948-02c4-4ba3-8244-5c229cc8e9b8_book.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:19848030:27e17948-02c4-4ba3-8244-5c229cc8e9b8_book.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:19848030:27e17948-02c4-4ba3-8244-5c229cc8e9b8_book.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:19848030:27e17948-02c4-4ba3-8244-5c229cc8e9b8_book.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/19848030/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "alternate_identifiers": [
+            {
+              "identifier": "urn:uuid:27e17948-02c4-4ba3-8244-5c229cc8e9b8"
+            },
+            {
+              "identifier": "https://punctumbooks.com/titles/anglo-saxonist-pasts-postsaxon-futures/"
+            }
+          ],
+          "communities": [
+            {
+              "id": "thoth"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "University of Denver",
+              "name": "Ellard, Donna-Beth"
+            }
+          ],
+          "description": "<p>Anglo-Saxon(ist) Pasts, postSaxon Futures traces the integral role that colonialism and racism play in the field formerly known as Anglo-Saxon studies by tracking the development of the \"Anglo-Saxonist,\" an overtly racialized term that describes a person whose affinities point towards white nationalism. That scholars continue to call themselves \"Anglo-Saxonists,\" despite urgent calls to combat racism within the field, suggests that this term is much more than just a professional appellative. It is, this book argues, a ghost in the machine of early medieval studies\u2014a spectral figure created by a group of nineteenth-century historians, archaeologists, and philologists responsible for not only framing the interdisciplinary field of \"Anglo-Saxon\" studies but for also encoding ideologies of British colonialism and Anglo-American racism within the field's methods and pedagogies.Anglo-Saxon(ist) pasts, postSaxon Futures is at once a historiography of Anglo-Saxon studies, a mourning of its Anglo-Saxonist \"fathers,\" and an exorcism of the colonial-racial ghosts that lurk within the field's scholarly methods and pedagogies. Part intellectual history, part grief work, this book leverages the genres of literary criticism, auto-ethnography, and creative nonfiction in order to confront Anglo-Saxonist pasts in order to imagine speculative postSaxon futures inclusive of voices and bodies heretofore excluded from the field formerly known as Anglo-Saxon studies.</p>",
+          "doi": "10.21983/P3.0262.1.00",
+          "imprint": {
+            "isbn": "978-1-950192-40-3",
+            "place": "Earth, Milky Way"
+          },
+          "keywords": [
+            "Anglo-Saxon",
+            "autoethnography",
+            "Critical Race Studies",
+            "intellectual history",
+            "Medieval Studies",
+            "Old English",
+            "psychoanalysis"
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-nc-sa-4.0"
+          },
+          "notes": "thoth-work-id:27e17948-02c4-4ba3-8244-5c229cc8e9b8",
+          "publication_date": "2026-04-28",
+          "related_identifiers": [
+            {
+              "identifier": "978-1-950192-39-7",
+              "relation": "isVariantFormOf",
+              "resource_type": "publication-book",
+              "scheme": "isbn"
+            },
+            {
+              "identifier": "10.1017/S0003598X00047931",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.2307/3343076",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.3102/0091732X10383208",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/15348450701341238",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1111/j.1468-0092.2011.00370.x",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1111/j.1540-5931.2011.00830.x",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1016/S0140-6736(12)60026-9",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/13642520902833783",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1215/10642684-2006-031",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.3366/j.ctt1r20xg.358",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1075/ni.22.1.10boc",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.2307/3857519",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.2307/3679110",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/1532708617728955",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1007/978-94-6091-591-8_8",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1037/a0014564",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.2307/1229039",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1057/pmed.2010.32",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/13642520802639546",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/01440350903437965",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1111/j.1741-4113.2008.00581.x",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/1532708617735637",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1057/pmed.2014.10",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/13642529.2018.1561809",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/1532708617728954",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.2307/3679228",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/135050840072008",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/00766097.1984.11735454",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1215/15314200-6936939",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1093/past/126.1.22",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1111/j.1741-4113.2008.00560.x",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1111/j.1360-0443.1985.tb03011.x",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/107780042238077",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1111/1468-0254.00085",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1017/S0263675100002337",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1093/acprof:oso/9780199557318.003.0015",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1179/lan.2012.13.2.002",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/09502380601162548",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/02690059708589553",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.3366/rom.2000.6.2.211",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1179/exm.1993.5.1.79",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.2307/461974",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1007/s11061-014-9414-4",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1093/applin/amm043",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/00020180903381248",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1086/385844",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/00393270902859879",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/00438243.1998.9980400",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1179/1461957113Y.0000000035",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1179/1041257314Z.00000000056",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1484/J.VIATOR.2.300380",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.3721/037.002.sp809",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/00665983.2013.11021004",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1007/BF01513854",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/01433768.1985.10594386",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/00766097.1997.11735606",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1111/j.1468-0254.2008.00221.x",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/1359183504046894",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1017/S0261340900012972",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/1464700108086364",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1111/emed.12062",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1017/S0263675101000035",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/002193479702800101",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1037/a0017495",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1177/107780002237007",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1179/lan.2003.4.1.24",
+              "relation": "cites",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "10.1080/00438243.1998.9980399",
+              "relation": "cites",
+              "scheme": "doi"
+            }
+          ],
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "19848029"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "subtype": "book",
+            "title": "Book",
+            "type": "publication"
+          },
+          "title": "Anglo-Saxon(ist) Pasts, postSaxon Futures"
+        },
+        "modified": "2026-04-28T09:20:33.758205+00:00",
+        "owners": [
+          {
+            "id": "1078327"
+          }
+        ],
+        "recid": "19848030",
+        "revision": 5,
+        "state": "done",
+        "stats": {
+          "downloads": 0,
+          "unique_downloads": 0,
+          "unique_views": 0,
+          "version_downloads": 0,
+          "version_unique_downloads": 0,
+          "version_unique_views": 0,
+          "version_views": 0,
+          "views": 0
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "Anglo-Saxon(ist) Pasts, postSaxon Futures",
+        "updated": "2026-04-28T09:20:33.758205+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.19540978",
+        "conceptrecid": "19540978",
+        "created": "2026-04-12T17:06:21.571314+00:00",
+        "doi": "10.5281/zenodo.19540979",
+        "doi_url": "https://doi.org/10.5281/zenodo.19540979",
+        "files": [
+          {
+            "checksum": "md5:ac838458cbad8615ce33e31c5141cbea",
+            "id": "74db729a-4747-4b32-bc32-d9023ffec4a0",
+            "key": "Kanj_2026_AIDeepfakeDetection.pptx",
+            "links": {
+              "self": "https://zenodo.org/api/records/19540979/files/Kanj_2026_AIDeepfakeDetection.pptx/content"
+            },
+            "size": 7254026
+          }
+        ],
+        "id": 19540979,
+        "links": {
+          "access": "https://zenodo.org/api/records/19540979/access",
+          "access_grants": "https://zenodo.org/api/records/19540979/access/grants",
+          "access_links": "https://zenodo.org/api/records/19540979/access/links",
+          "access_request": "https://zenodo.org/api/records/19540979/access/request",
+          "access_users": "https://zenodo.org/api/records/19540979/access/users",
+          "archive": "https://zenodo.org/api/records/19540979/files-archive",
+          "archive_media": "https://zenodo.org/api/records/19540979/media-files-archive",
+          "communities": "https://zenodo.org/api/records/19540979/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/19540979/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.19540979",
+          "draft": "https://zenodo.org/api/records/19540979/draft",
+          "file_modification": "https://zenodo.org/api/records/19540979/file-modification",
+          "files": "https://zenodo.org/api/records/19540979/files",
+          "latest": "https://zenodo.org/api/records/19540979/versions/latest",
+          "latest_html": "https://zenodo.org/records/19540979/latest",
+          "media_files": "https://zenodo.org/api/records/19540979/media-files",
+          "parent": "https://zenodo.org/api/records/19540978",
+          "parent_doi": "https://doi.org/10.5281/zenodo.19540978",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.19540978",
+          "parent_html": "https://zenodo.org/records/19540978",
+          "preview_html": "https://zenodo.org/records/19540979?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/19540979/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/19540979/request-deletion",
+          "requests": "https://zenodo.org/api/records/19540979/requests",
+          "reserve_doi": "https://zenodo.org/api/records/19540979/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/19540979",
+          "self_doi": "https://doi.org/10.5281/zenodo.19540979",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.19540979",
+          "self_html": "https://zenodo.org/records/19540979",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:19540979/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:19540979/sequence/default",
+          "versions": "https://zenodo.org/api/records/19540979/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "aiu-ice"
+            },
+            {
+              "id": "aiu"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Arab International University (AIU)",
+              "name": "Kanj, Mohammad",
+              "orcid": "0009-0003-5719-8089"
+            },
+            {
+              "affiliation": "Arab International University",
+              "name": "Barhoum, Tarek",
+              "orcid": "0000-0002-9132-6940"
+            }
+          ],
+          "description": "<p>With the rapid advancement of Generative AI, voice cloning has emerged as a significant threat, often used as a primary tool for financial scams and misinformation. My work, titled&nbsp;<strong>\"Real Talk,\"</strong> details the development of an AI-driven system designed to distinguish between authentic human speech and fabricated vocal patterns. The system utilizes Convolutional Neural Networks (CNNs) to classify audio data by analyzing digital discrepancies. Leveraging signal processing techniques such as MFCC extraction and spectrogram visualization via Librosa, the model was trained on industry-standard datasets, including ASVspoof and LibriSpeech. Technical implementation was performed using Python with the TensorFlow, Keras, and PyTorch frameworks. Key features of the application include multi-format support (.wav, .mp3, .m4a), real-time processing, and a percentage-based confidence meter for authenticity reporting. Experimental results demonstrate a detection rate of over 85% with an analysis latency of less than 10 seconds, providing an accessible and efficient solution for non-technical users to verify audio integrity.<br><br></p>\n<p><em><span>This work was conducted at Arab International University (AIU), Syria. The official website of the university is: </span></em><span><a href=\"https://www.aiu.edu.sy\"><em><span>https://www.aiu.edu.sy</span></em></a></span></p>",
+          "doi": "10.5281/zenodo.19540979",
+          "keywords": [
+            "Audio Deepfake Detection",
+            "Arab International University",
+            "Convolutional Neural Networks (CNN)",
+            "Syria",
+            "Spectrogram Analysis",
+            "Librosa",
+            "PyTorch Implementation",
+            "Artifact Detection",
+            "Keras",
+            "Time-Frequency Representation",
+            "Pattern Recognition",
+            "Neural Audio Synthesis"
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "publication_date": "2026-04-12",
+          "references": [
+            "[1] J. Yamagishi et al., \"ASVspoof 2021: Accelerating progress in spoofed and deepfake speech detection,\" in Proc. Interspeech, 2021.",
+            "[2] A. Hamza et al., \"Voice Spoofing Detection Using Deep Learning on VSDC Dataset,\" IEEE Access, 2022.",
+            "[3] M. Khochare et al., \"Deepfake Speech Detection Using Emotion-Based Features,\" IEEE Signal Processing Letters, 2023.",
+            "[4] M. Abuhmida et al., \"Enhancing Audio Deepfake Detection: A Study of Deep Learning Parameters,\" in Proc. iCETiC, Springer, 2024.",
+            "[5] Y. Xie et al., \"The Codecfake Dataset and Countermeasures for the Universally Detection of Deepfake Audio,\" IEEE Transactions on Audio, Speech and Language Processing, 2025."
+          ],
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "19540978"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Presentation",
+            "type": "presentation"
+          },
+          "title": "AI Deepfake audio detection using CNNs (Real Talk)"
+        },
+        "modified": "2026-04-12T17:06:21.863968+00:00",
+        "owners": [
+          {
+            "id": "1607397"
+          }
+        ],
+        "recid": "19540979",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 7,
+          "unique_downloads": 7,
+          "unique_views": 45,
+          "version_downloads": 7,
+          "version_unique_downloads": 7,
+          "version_unique_views": 45,
+          "version_views": 47,
+          "views": 47
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "AI Deepfake audio detection using CNNs (Real Talk)",
+        "updated": "2026-04-12T17:06:21.863968+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.15687292",
+        "conceptrecid": "15687292",
+        "created": "2025-06-18T06:39:21.013172+00:00",
+        "doi": "10.5281/zenodo.15687293",
+        "doi_url": "https://doi.org/10.5281/zenodo.15687293",
+        "files": [
+          {
+            "checksum": "md5:1fae7c173b19b268844a8e3a96c50e1a",
+            "id": "05b0bde2-6327-4c97-aece-0057636ef018",
+            "key": "Code.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/15687293/files/Code.tar/content"
+            },
+            "size": 54272
+          },
+          {
+            "checksum": "md5:316b61eecec9c75696c5c60e7e457921",
+            "id": "0dc0ab86-290f-475f-ba78-750704a65087",
+            "key": "Dataset.tar",
+            "links": {
+              "self": "https://zenodo.org/api/records/15687293/files/Dataset.tar/content"
+            },
+            "size": 1478144
+          }
+        ],
+        "id": 15687293,
+        "links": {
+          "access": "https://zenodo.org/api/records/15687293/access",
+          "access_grants": "https://zenodo.org/api/records/15687293/access/grants",
+          "access_links": "https://zenodo.org/api/records/15687293/access/links",
+          "access_request": "https://zenodo.org/api/records/15687293/access/request",
+          "access_users": "https://zenodo.org/api/records/15687293/access/users",
+          "archive": "https://zenodo.org/api/records/15687293/files-archive",
+          "archive_media": "https://zenodo.org/api/records/15687293/media-files-archive",
+          "communities": "https://zenodo.org/api/records/15687293/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/15687293/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.15687293",
+          "draft": "https://zenodo.org/api/records/15687293/draft",
+          "file_modification": "https://zenodo.org/api/records/15687293/file-modification",
+          "files": "https://zenodo.org/api/records/15687293/files",
+          "latest": "https://zenodo.org/api/records/15687293/versions/latest",
+          "latest_html": "https://zenodo.org/records/15687293/latest",
+          "media_files": "https://zenodo.org/api/records/15687293/media-files",
+          "parent": "https://zenodo.org/api/records/15687292",
+          "parent_doi": "https://doi.org/10.5281/zenodo.15687292",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15687292",
+          "parent_html": "https://zenodo.org/records/15687292",
+          "preview_html": "https://zenodo.org/records/15687293?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/15687293/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/15687293/request-deletion",
+          "requests": "https://zenodo.org/api/records/15687293/requests",
+          "reserve_doi": "https://zenodo.org/api/records/15687293/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/15687293",
+          "self_doi": "https://doi.org/10.5281/zenodo.15687293",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15687293",
+          "self_html": "https://zenodo.org/records/15687293",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15687293/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15687293/sequence/default",
+          "versions": "https://zenodo.org/api/records/15687293/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "contributors": [
+            {
+              "affiliation": "PSAU",
+              "name": "Tariq, U.",
+              "type": "DataCollector"
+            },
+            {
+              "affiliation": "PSAU",
+              "name": "Ahanger, T. A.",
+              "type": "DataManager"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "PSAU",
+              "name": "Tariq, U."
+            },
+            {
+              "affiliation": "PSAU",
+              "name": "Ahanger, T. A."
+            }
+          ],
+          "custom": {
+            "code:developmentStatus": {
+              "id": "concept",
+              "title": {
+                "en": "Concept"
+              }
+            },
+            "code:programmingLanguage": [
+              {
+                "id": "c++",
+                "title": {
+                  "en": "C++"
+                }
+              },
+              {
+                "id": "c#",
+                "title": {
+                  "en": "C#"
+                }
+              },
+              {
+                "id": "python",
+                "title": {
+                  "en": "Python"
+                }
+              }
+            ]
+          },
+          "dates": [
+            {
+              "description": "Dataset+Code",
+              "type": "created"
+            }
+          ],
+          "description": "<p>The dataset is accumulated to compare the effectiveness and efficiency of different methodologies and model architectures in detecting and mitigating UAV spoofing attacks under varying conditions. It provides insights into which combinations of methodologies, models, and spoofing scenarios yield the best performance.</p>",
+          "doi": "10.5281/zenodo.15687293",
+          "language": "eng",
+          "publication_date": "2025-06-18",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "15687292"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Other",
+            "type": "other"
+          },
+          "title": "Rob_BeiD_Spo_Def_UAV_Swms",
+          "version": "1"
+        },
+        "modified": "2025-06-18T06:39:21.231443+00:00",
+        "owners": [
+          {
+            "id": "1151427"
+          }
+        ],
+        "recid": "15687293",
+        "revision": 4,
+        "state": "done",
+        "stats": {
+          "downloads": 20,
+          "unique_downloads": 20,
+          "unique_views": 40,
+          "version_downloads": 20,
+          "version_unique_downloads": 20,
+          "version_unique_views": 40,
+          "version_views": 48,
+          "views": 48
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "Rob_BeiD_Spo_Def_UAV_Swms",
+        "updated": "2025-06-18T06:39:21.231443+00:00"
+      },
+      {
+        "conceptdoi": "10.5281/zenodo.8348261",
+        "conceptrecid": "8348261",
+        "created": "2023-09-15T09:35:09.104534+00:00",
+        "doi": "10.5281/zenodo.8348262",
+        "doi_url": "https://doi.org/10.5281/zenodo.8348262",
+        "files": [
+          {
+            "checksum": "md5:0225890791b9c1f185569ca1893c8f5c",
+            "id": "21c10029-09ab-496c-9645-cc38788752ef",
+            "key": "thoth-poster-OASPA2023-A1-Steiner.pdf",
+            "links": {
+              "self": "https://zenodo.org/api/records/8348262/files/thoth-poster-OASPA2023-A1-Steiner.pdf/content"
+            },
+            "size": 1119531
+          }
+        ],
+        "id": 8348262,
+        "links": {
+          "access": "https://zenodo.org/api/records/8348262/access",
+          "access_grants": "https://zenodo.org/api/records/8348262/access/grants",
+          "access_links": "https://zenodo.org/api/records/8348262/access/links",
+          "access_request": "https://zenodo.org/api/records/8348262/access/request",
+          "access_users": "https://zenodo.org/api/records/8348262/access/users",
+          "archive": "https://zenodo.org/api/records/8348262/files-archive",
+          "archive_media": "https://zenodo.org/api/records/8348262/media-files-archive",
+          "communities": "https://zenodo.org/api/records/8348262/communities",
+          "communities-suggestions": "https://zenodo.org/api/records/8348262/communities-suggestions",
+          "doi": "https://doi.org/10.5281/zenodo.8348262",
+          "draft": "https://zenodo.org/api/records/8348262/draft",
+          "file_modification": "https://zenodo.org/api/records/8348262/file-modification",
+          "files": "https://zenodo.org/api/records/8348262/files",
+          "latest": "https://zenodo.org/api/records/8348262/versions/latest",
+          "latest_html": "https://zenodo.org/records/8348262/latest",
+          "media_files": "https://zenodo.org/api/records/8348262/media-files",
+          "parent": "https://zenodo.org/api/records/8348261",
+          "parent_doi": "https://doi.org/10.5281/zenodo.8348261",
+          "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.8348261",
+          "parent_html": "https://zenodo.org/records/8348261",
+          "preview_html": "https://zenodo.org/records/8348262?preview=1",
+          "quota_increase": "https://zenodo.org/api/records/8348262/quota-increase",
+          "request_deletion": "https://zenodo.org/api/records/8348262/request-deletion",
+          "requests": "https://zenodo.org/api/records/8348262/requests",
+          "reserve_doi": "https://zenodo.org/api/records/8348262/draft/pids/doi",
+          "self": "https://zenodo.org/api/records/8348262",
+          "self_doi": "https://doi.org/10.5281/zenodo.8348262",
+          "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.8348262",
+          "self_html": "https://zenodo.org/records/8348262",
+          "self_iiif_manifest": "https://zenodo.org/api/iiif/record:8348262/manifest",
+          "self_iiif_sequence": "https://zenodo.org/api/iiif/record:8348262/sequence/default",
+          "thumbnails": {
+            "10": "https://zenodo.org/api/iiif/record:8348262:thoth-poster-OASPA2023-A1-Steiner.pdf/full/%5E10,/0/default.jpg",
+            "100": "https://zenodo.org/api/iiif/record:8348262:thoth-poster-OASPA2023-A1-Steiner.pdf/full/%5E100,/0/default.jpg",
+            "1200": "https://zenodo.org/api/iiif/record:8348262:thoth-poster-OASPA2023-A1-Steiner.pdf/full/%5E1200,/0/default.jpg",
+            "250": "https://zenodo.org/api/iiif/record:8348262:thoth-poster-OASPA2023-A1-Steiner.pdf/full/%5E250,/0/default.jpg",
+            "50": "https://zenodo.org/api/iiif/record:8348262:thoth-poster-OASPA2023-A1-Steiner.pdf/full/%5E50,/0/default.jpg",
+            "750": "https://zenodo.org/api/iiif/record:8348262:thoth-poster-OASPA2023-A1-Steiner.pdf/full/%5E750,/0/default.jpg"
+          },
+          "versions": "https://zenodo.org/api/records/8348262/versions"
+        },
+        "metadata": {
+          "access_right": "open",
+          "communities": [
+            {
+              "id": "copim"
+            }
+          ],
+          "creators": [
+            {
+              "affiliation": "Thoth Open Metadata",
+              "name": "Steiner, Tobias",
+              "orcid": "0000-0002-3158-3136"
+            }
+          ],
+          "description": "<p>The poster will showcase Thoth Open Metadata (<a href=\"https://thoth.pub/\">https://thoth.pub/</a>), a non-profit open metadata management and dissemination service for OA books and book chapters.<br>\n<br>\nThe difficulties associated with open access book and chapter metadata are well recognised: siloed or platform-specific metadata or metadata that is not openly licensed or tailored to OA books. This is particularly problematic for small and scholar-led publishers, who are required to submit metadata in multiple different formats to an array of different parties. This data is then often overwritten or degraded across the book distribution system. This is also problematic for third parties interested in creating services for users that rely on metadata records maintained across multiple platforms or publishers.</p>\n\n<p>Thoth seeks to help smaller publishers with creating and disseminating truly open, CC0-licensed metadata of their Open Access books via an open-source one-stop platform. Several publishers have now adopted Thoth as their metadata manager to create, manage and distribute metadata in multiple formats including platform-specific flavours of ONIX, MARC, JSON, and KBART that fulfil requirements of e.g. OAPEN, Project MUSE, JSTOR, Google Books, and others, while also being able to submit book and chapter-level metadata to CrossRef for DOI registration, and to archive content in university repositories and the Internet Archive via the <a href=\"https://doi.org/10.21428/785a6451.22f8d148\">Thoth Archiving Network</a> prototype. Third-party applications such as by the <a href=\"https://openbookcollective.org/books/\">Open Book Collective</a>, the <a href=\"https://github.com/SimonXIX/scholarled_catalogue\">ScholarLed consortium</a>, and <a href=\"https://www.openbookpublishers.com/\">Open Book Publishers</a> have also begun to utilise Thoth&rsquo;s open APIs as a trusted and open source of book metadata to create novel content and services.</p>",
+          "doi": "10.5281/zenodo.8348262",
+          "keywords": [
+            "open metadata",
+            "OA books",
+            "open infrastructure",
+            "Community-led Open Publication Infrastructures for Monographs (COPIM)",
+            "dissemination",
+            "metadata management platform",
+            "open source"
+          ],
+          "language": "eng",
+          "license": {
+            "id": "cc-by-4.0"
+          },
+          "meeting": {
+            "acronym": "OASPA2023",
+            "dates": "19-21 September, 2023",
+            "place": "online",
+            "session": "Poster Lightning Talks",
+            "session_part": "Session 2",
+            "title": "OASPA 2023 conference",
+            "url": "https://oaspa.org/2023-conference-program/"
+          },
+          "notes": "Thoth Open Metadata is supported via the Open Book Futures project funded by the Research England Development (RED) Fund, and Arcadia.",
+          "publication_date": "2023-09-15",
+          "relations": {
+            "version": [
+              {
+                "index": 0,
+                "is_last": true,
+                "parent": {
+                  "pid_type": "recid",
+                  "pid_value": "8348261"
+                }
+              }
+            ]
+          },
+          "resource_type": {
+            "title": "Poster",
+            "type": "poster"
+          },
+          "title": "Thoth Open Metadata - a Community-led Open Metadata Management and Distribution Service for Open Access Books",
+          "version": "1.0"
+        },
+        "modified": "2024-07-11T07:16:59.107469+00:00",
+        "owners": [
+          {
+            "id": "42271"
+          }
+        ],
+        "recid": "8348262",
+        "revision": 6,
+        "state": "done",
+        "stats": {
+          "downloads": 106,
+          "unique_downloads": 87,
+          "unique_views": 449,
+          "version_downloads": 104,
+          "version_unique_downloads": 85,
+          "version_unique_views": 446,
+          "version_views": 531,
+          "views": 534
+        },
+        "status": "published",
+        "submitted": true,
+        "swh": null,
+        "title": "Thoth Open Metadata - a Community-led Open Metadata Management and Distribution Service for Open Access Books",
+        "updated": "2024-07-11T07:16:59.107469+00:00"
+      }
+    ],
+    "total": 509776
+  },
+  "links": {
+    "next": "https://zenodo.org/api/records?page=2&q=Oystacher+spoofing+futures+order+book+dataset&size=10&sort=bestmatch",
+    "self": "https://zenodo.org/api/records?page=1&q=Oystacher+spoofing+futures+order+book+dataset&size=10&sort=bestmatch"
+  }
+}

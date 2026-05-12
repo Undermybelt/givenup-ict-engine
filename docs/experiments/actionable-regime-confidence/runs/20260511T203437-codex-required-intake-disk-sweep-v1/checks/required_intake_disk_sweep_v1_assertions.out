@@ -1,0 +1,11 @@
+PASS decision=required_intake_disk_sweep_v1=no_required_intake_files_found_verifiers_blocked
+PASS disk_hit_count=0
+PASS source_label_verifier_returncode=2
+PASS recency_verifier_returncode=2
+PASS direct_verifier_returncode=2
+PASS native_subhour_package_ready=false
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false

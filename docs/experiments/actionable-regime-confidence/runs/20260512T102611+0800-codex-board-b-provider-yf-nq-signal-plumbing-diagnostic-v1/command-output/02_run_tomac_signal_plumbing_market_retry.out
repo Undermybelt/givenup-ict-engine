@@ -1,0 +1,9 @@
+---
+strategy:         ProviderYfNqSignalPlumbingDiagnostic
+commit:           1fe86ab
+status:           ERROR
+error_type:       ConfigurationError
+error_msg:        Market exit orders require exit_pricing.price_side = "other".
+traceback:
+
+Done: 0 succeeded, 1 failed.

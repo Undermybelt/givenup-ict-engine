@@ -1,0 +1,11 @@
+PASS provider_status_exit=0
+PASS auto_quant_status_exit=0
+PASS yfinance_ready=true
+PASS kraken_cli_status_recorded=true
+PASS kraken_public_blocked_dependencies_missing=true
+PASS ibkr_blocked_dependencies_missing=true
+PASS tradingview_mcp_connectivity_failed=true
+PASS auto_quant_dependency_data_ready=true
+PASS approval_non_approving=true
+PASS downstream_promotion_rerun=false
+PASS update_goal=false

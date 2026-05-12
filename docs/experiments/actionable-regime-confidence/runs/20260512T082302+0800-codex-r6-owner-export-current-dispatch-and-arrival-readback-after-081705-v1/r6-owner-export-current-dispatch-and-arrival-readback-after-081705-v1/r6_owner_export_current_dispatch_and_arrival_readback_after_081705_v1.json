@@ -1,0 +1,103 @@
+{
+  "accepted_rows_added": 0,
+  "all_drafts_parseable": true,
+  "all_reference_artifacts_present": true,
+  "any_sender_identity": false,
+  "board_sha256_before": "31ea5b9fb4ec086586d91075b9e452e8b19e392c16f46de7decdc746e74fbca4",
+  "canonical_merge": false,
+  "dispatch_drafts": [
+    {
+      "exists": true,
+      "from_header_present": false,
+      "parseable": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cme_group_owner_export_v5_dispatch_v1.eml",
+      "sha256": "56319c5826e17480a1130fdd6accc0378a2e5e099f4d4d771532ab2ced6cbd0b",
+      "subject_present": true,
+      "to_header_present": true
+    },
+    {
+      "exists": true,
+      "from_header_present": false,
+      "parseable": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/cboe_cfe_owner_export_v5_dispatch_v1.eml",
+      "sha256": "411e6733aaaf0ade2097f49601086177f2c89f47089d5eb9b37b34a5fae1249d",
+      "subject_present": true,
+      "to_header_present": true
+    }
+  ],
+  "downstream_promotion_rerun": false,
+  "external_requests_sent_by_this_artifact": false,
+  "gate_result": "r6_owner_export_current_dispatch_and_arrival_readback_after_081705_v1=drafts_current_target_roots_absent_no_source_control_unlock",
+  "next_action": "Dispatch or otherwise satisfy the v5 CME and Cboe/CFE owner-export requests through an approved operator path, preserve ticket/export/license identifiers in provenance, or record explicit FLIP-as-control approval before any canonical merge or downstream rerun.",
+  "owner_export_target_unlock": false,
+  "reference_artifacts": [
+    {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052231-codex-r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6-owner-export-sendable-requests-v5-with-bessembinder-addendum-v1/r6_owner_export_sendable_requests_v5_with_bessembinder_addendum_v1.md",
+      "sha256": "1c9c162bf7daf159c196758316a4fceb263ac47fa6b0adedff0629d222f2d309"
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T052650-codex-r6-owner-export-v5-dispatch-manifest-v1/r6-owner-export-v5-dispatch-manifest-v1/r6_owner_export_v5_dispatch_manifest_v1.md",
+      "sha256": "7b579523f28a2f42636d62ed17b4f21c2683f6daaa4de6400285fd2c120bdb27"
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T055516-codex-r6-owner-export-dispatch-feasibility-readback-v1/r6-owner-export-dispatch-feasibility-readback-v1/r6_owner_export_dispatch_feasibility_readback_v1.md",
+      "sha256": "2d5a87514c142f64ddc65b520fd50a92346d31e916ee314ca4014967f65809cf"
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T060032-codex-r6-local-owner-export-intake-search-v1/r6-local-owner-export-intake-search-v1/r6_local_owner_export_intake_search_v1.md",
+      "sha256": "3eadd2b2e353968d673c873157e8eee85ed16f8913a520cfa88f807ea314d9a9"
+    }
+  ],
+  "run_id": "20260512T082302+0800-codex-r6-owner-export-current-dispatch-and-arrival-readback-after-081705-v1",
+  "selected_data_autoquant_promotion": false,
+  "source_control_evidence_acquired": false,
+  "strict_full_objective": false,
+  "target_roots": [
+    {
+      "current_required_complete": false,
+      "current_required_present": [],
+      "exists": false,
+      "legacy_required_complete": false,
+      "legacy_required_present": [],
+      "provenance_like_files": [],
+      "root": "/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    {
+      "current_required_complete": false,
+      "current_required_present": [],
+      "exists": false,
+      "legacy_required_complete": false,
+      "legacy_required_present": [],
+      "provenance_like_files": [],
+      "root": "/private/tmp/ict-engine-board-a-r6-owner-export-v1"
+    },
+    {
+      "current_required_complete": false,
+      "current_required_present": [],
+      "exists": true,
+      "legacy_required_complete": false,
+      "legacy_required_present": [],
+      "provenance_like_files": [
+        "native_subhour_source_label_provenance.json"
+      ],
+      "root": "/tmp/ict-engine-native-subhour-source-label-intake"
+    },
+    {
+      "current_required_complete": false,
+      "current_required_present": [],
+      "exists": false,
+      "legacy_required_complete": false,
+      "legacy_required_present": [],
+      "provenance_like_files": [],
+      "root": "/tmp/ict-engine-source-panel-recency-extension"
+    }
+  ],
+  "target_roots_mutated_by_this_artifact": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "valid_required_root_unlock": false
+}

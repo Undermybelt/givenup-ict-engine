@@ -1,0 +1,13 @@
+PASS decision=r5_kaggle_stock_regime_recency_refresh_v2=latest_public_dataset_no_post_2026_01_30_rows
+PASS kaggle_files_return_code=0
+PASS kaggle_download_return_code=0
+PASS row_count=245021
+PASS date_max=2026-01-30
+PASS extension_rows_found=0
+PASS recency_verifier_status=blocked
+PASS accepted_rows_added=0
+PASS new_confidence_gate=false
+PASS strict_full_objective_achieved=false
+PASS update_goal=false
+PASS raw_data_committed=false
+PASS external_requests_sent=true

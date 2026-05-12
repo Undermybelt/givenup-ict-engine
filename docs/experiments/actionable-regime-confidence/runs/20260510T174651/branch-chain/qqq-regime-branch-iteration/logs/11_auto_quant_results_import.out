@@ -1,0 +1,22 @@
+{
+  "auto_quant_pinned_ref": "34ba6b6",
+  "command": "auto-quant-results-import",
+  "library_artifact_id": "auto_quant_strategy_library_QQQ_20260510T093339.357276000Z",
+  "library_source": "/tmp/ict-regime-branch-iteration-20260510-1/strategy_library_qqq_tomac_hist.json",
+  "library_state_path": "/tmp/ict-regime-branch-iteration-20260510-1/state/auto-quant/QQQ/auto_quant_strategy_library.json",
+  "log_cross_check": {
+    "log_only": [],
+    "manifest_only": [],
+    "matched": 1,
+    "mismatches": [],
+    "n_blocks_in_log": 1,
+    "n_strategies_in_manifest": 1
+  },
+  "manifest_version": "1.0",
+  "n_error": 0,
+  "n_meta_invalid": 0,
+  "n_not_run": 0,
+  "n_ok": 1,
+  "n_total_strategies": 1,
+  "symbol": "QQQ"
+}

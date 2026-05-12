@@ -1,0 +1,1 @@
+zsh -lc printf 'board_hash '; shasum -a 256 docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md; printf '\nactive_processes\n'; ps -axo pid,ppid,stat,lstart,command | rg 'r3-hf-tsie|061855|061813|regime-conditional-auto-quant-profitability|source-label|source-control|auto-quant|AutoQuant|catboost|CatBoost|rustc' | rg -v 'rg ' || true

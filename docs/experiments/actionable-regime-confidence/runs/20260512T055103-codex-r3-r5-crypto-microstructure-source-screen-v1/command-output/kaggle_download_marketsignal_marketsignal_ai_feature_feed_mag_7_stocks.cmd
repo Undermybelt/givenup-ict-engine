@@ -1,0 +1,1 @@
+kaggle datasets download -d marketsignal/marketsignal-ai-feature-feed-mag-7-stocks -p /tmp/ict-engine-r3-r5-crypto-microstructure-source-screen-v1/marketsignal_marketsignal_ai_feature_feed_mag_7_stocks --unzip

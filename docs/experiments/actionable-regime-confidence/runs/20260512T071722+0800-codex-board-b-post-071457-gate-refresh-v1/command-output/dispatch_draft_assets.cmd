@@ -1,0 +1,1 @@
+sh -c find docs/experiments/actionable-regime-confidence/runs -path "*r6*v5*dispatch*" -o -path "*r6*operator*dispatch*" -o -name "*.eml" | sort | tail -n 80 | xargs -I{} sh -c 'printf "%s\t" "$1"; shasum "$1" 2>/dev/null | awk "{print \\\$1}" || true' sh {}

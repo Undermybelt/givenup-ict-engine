@@ -1,0 +1,8 @@
+PASS future_protocol_accepted_rows=4
+PASS near_miss_candidates_before=13
+PASS remaining_near_miss_after_future=9
+PASS remaining_ready_with_existing_tail=0
+PASS min_new_source_sessions_needed=5
+PASS strict_1h_future_protocol_rows=45/156
+PASS strict_full_objective=false
+PASS update_goal=false

@@ -1,0 +1,16 @@
+PASS supporting_only_112900_corrected_register_after_112650=true
+PASS corrected_register_trainer_artifact_json_exit0=true
+PASS corrected_runtime_enable_exit0=true
+PASS catboost_external_model_runtime_candidate_set_ready=true
+PASS raw_scored_mature_86_of_30=true
+PASS production_validation_85_of_30=true
+PASS observation_validation_43_of_30=true
+PASS catboost_info_cleanup_absent=true
+PASS final_catboost_info_cleanup_step30_absent=true
+PASS execution_candidate_ready_false_actionable_false=true
+PASS execution_gate_observe_only=true
+PASS pre_bayes_pass_neutralized_no_policy_bridge=true
+PASS no_same_root_six_provider_aq_packet=true
+PASS promotion_allowed_false=true
+PASS trade_usable_false=true
+PASS update_goal_false=true

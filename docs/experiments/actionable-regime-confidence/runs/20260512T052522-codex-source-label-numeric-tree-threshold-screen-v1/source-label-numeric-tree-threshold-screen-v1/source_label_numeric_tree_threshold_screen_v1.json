@@ -1,0 +1,254 @@
+{
+  "accepted_numeric_tree_confidence_95_labels": [
+    "Bull",
+    "Crisis",
+    "Sideways"
+  ],
+  "feature_importance": [
+    {
+      "feature": "regime_confidence",
+      "importance": 0.5732888024
+    },
+    {
+      "feature": "volatility",
+      "importance": 0.2725015673
+    },
+    {
+      "feature": "regime_conf_x_volatility",
+      "importance": 0.035404137
+    },
+    {
+      "feature": "vix_x_volatility",
+      "importance": 0.0209570429
+    },
+    {
+      "feature": "2y_treasury",
+      "importance": 0.0196032846
+    },
+    {
+      "feature": "p_stress_smooth",
+      "importance": 0.0132625486
+    },
+    {
+      "feature": "yield_curve_10y_2y",
+      "importance": 0.0131980871
+    },
+    {
+      "feature": "cpi",
+      "importance": 0.0112125576
+    },
+    {
+      "feature": "vix",
+      "importance": 0.0092014756
+    },
+    {
+      "feature": "unemployment_rate",
+      "importance": 0.0077886062
+    },
+    {
+      "feature": "p_calm_smooth",
+      "importance": 0.0072444571
+    },
+    {
+      "feature": "returns",
+      "importance": 0.0070938474
+    },
+    {
+      "feature": "fed_funds_rate",
+      "importance": 0.0050243377
+    },
+    {
+      "feature": "close",
+      "importance": 0.0026137882
+    },
+    {
+      "feature": "p_fragile_smooth",
+      "importance": 0.0009005734
+    },
+    {
+      "feature": "10y_treasury",
+      "importance": 0.0004757033
+    },
+    {
+      "feature": "nifty_fragile_minus_calm",
+      "importance": 0.0002291836
+    }
+  ],
+  "gate_result": "source_label_numeric_tree_threshold_screen_v1=numeric_tree_scored_no_full_acceptance",
+  "gates": [
+    {
+      "accepted_extra_trees_confidence_95": false,
+      "blockers": "heldout_market_wilson95_below_0.95",
+      "calibration_label_hits": 2177,
+      "calibration_precision": 0.9927040584,
+      "calibration_support": 2193,
+      "calibration_wilson95_lcb": 0.9881809332,
+      "heldout_market_label_hits": 68,
+      "heldout_market_precision": 1.0,
+      "heldout_market_support": 68,
+      "heldout_market_wilson95_lcb": 0.9465286635,
+      "heldout_time_label_hits": 641,
+      "heldout_time_precision": 0.9771341463,
+      "heldout_time_support": 656,
+      "heldout_time_wilson95_lcb": 0.9626178731,
+      "label": "Bear",
+      "min_split_support": 68,
+      "min_split_wilson95_lcb": 0.9465286635,
+      "test_label_hits": 238,
+      "test_precision": 0.9875518672,
+      "test_support": 241,
+      "test_wilson95_lcb": 0.9640471233,
+      "threshold": 0.965
+    },
+    {
+      "accepted_extra_trees_confidence_95": true,
+      "blockers": "",
+      "calibration_label_hits": 6512,
+      "calibration_precision": 0.9998464609,
+      "calibration_support": 6513,
+      "calibration_wilson95_lcb": 0.9991307404,
+      "heldout_market_label_hits": 535,
+      "heldout_market_precision": 0.9925788497,
+      "heldout_market_support": 539,
+      "heldout_market_wilson95_lcb": 0.9810757714,
+      "heldout_time_label_hits": 2740,
+      "heldout_time_precision": 0.9992706054,
+      "heldout_time_support": 2742,
+      "heldout_time_wilson95_lcb": 0.9973442911,
+      "label": "Bull",
+      "min_split_support": 539,
+      "min_split_wilson95_lcb": 0.9810757714,
+      "test_label_hits": 1679,
+      "test_precision": 1.0,
+      "test_support": 1679,
+      "test_wilson95_lcb": 0.9977172782,
+      "threshold": 0.995
+    },
+    {
+      "accepted_extra_trees_confidence_95": true,
+      "blockers": "",
+      "calibration_label_hits": 13569,
+      "calibration_precision": 1.0,
+      "calibration_support": 13569,
+      "calibration_wilson95_lcb": 0.9997169746,
+      "heldout_market_label_hits": 547,
+      "heldout_market_precision": 1.0,
+      "heldout_market_support": 547,
+      "heldout_market_wilson95_lcb": 0.9930261988,
+      "heldout_time_label_hits": 3299,
+      "heldout_time_precision": 1.0,
+      "heldout_time_support": 3299,
+      "heldout_time_wilson95_lcb": 0.998836923,
+      "label": "Crisis",
+      "min_split_support": 547,
+      "min_split_wilson95_lcb": 0.9930261988,
+      "test_label_hits": 1608,
+      "test_precision": 1.0,
+      "test_support": 1608,
+      "test_wilson95_lcb": 0.9976167266,
+      "threshold": 0.995
+    },
+    {
+      "accepted_extra_trees_confidence_95": true,
+      "blockers": "",
+      "calibration_label_hits": 4094,
+      "calibration_precision": 0.9997557998,
+      "calibration_support": 4095,
+      "calibration_wilson95_lcb": 0.9986179599,
+      "heldout_market_label_hits": 1180,
+      "heldout_market_precision": 1.0,
+      "heldout_market_support": 1180,
+      "heldout_market_wilson95_lcb": 0.9967550901,
+      "heldout_time_label_hits": 1939,
+      "heldout_time_precision": 1.0,
+      "heldout_time_support": 1939,
+      "heldout_time_wilson95_lcb": 0.9980227626,
+      "label": "Sideways",
+      "min_split_support": 955,
+      "min_split_wilson95_lcb": 0.9959936455,
+      "test_label_hits": 955,
+      "test_precision": 1.0,
+      "test_support": 955,
+      "test_wilson95_lcb": 0.9959936455,
+      "threshold": 0.995
+    }
+  ],
+  "label_counts": {
+    "Bear": 54939,
+    "Bull": 104979,
+    "Crisis": 30623,
+    "Sideways": 57899
+  },
+  "model": {
+    "classes": [
+      "Bear",
+      "Bull",
+      "Crisis",
+      "Sideways"
+    ],
+    "feature_columns": [
+      "close",
+      "returns",
+      "volatility",
+      "regime_confidence",
+      "unemployment_rate",
+      "fed_funds_rate",
+      "cpi",
+      "10y_treasury",
+      "2y_treasury",
+      "vix",
+      "macro_confidence",
+      "fast_confidence",
+      "combined_confidence",
+      "confidence",
+      "p_fragile_smooth",
+      "p_calm_smooth",
+      "p_choppy_smooth",
+      "p_stress_smooth",
+      "p_fragile_raw",
+      "p_calm_raw",
+      "p_choppy_raw",
+      "p_stress_raw",
+      "p_fragile_adaptive",
+      "p_calm_adaptive",
+      "p_choppy_adaptive",
+      "p_stress_adaptive",
+      "yield_curve_10y_2y",
+      "vix_x_volatility",
+      "regime_conf_x_volatility",
+      "nifty_stress_minus_calm",
+      "nifty_fragile_minus_calm"
+    ],
+    "feature_policy": "numeric_only_no_symbol_or_source_owner_one_hot",
+    "kind": "DecisionTreeClassifier",
+    "parameters": {
+      "class_weight": "balanced",
+      "max_depth": 7,
+      "min_samples_leaf": 180,
+      "random_state": 20260512
+    },
+    "threshold_selection": "calibration_passing_first_then_best_diagnostic",
+    "train_split": "calibration"
+  },
+  "promotion_status": {
+    "accepted_regime_confidence_labels": 3,
+    "accepted_rows_added": 0,
+    "canonical_merge": false,
+    "downstream_promotion_rerun": false,
+    "new_confidence_gate": true,
+    "source_control_evidence_acquired": false,
+    "strict_full_objective": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "provenance_sha256": "a373b77b4a34041f15004faaccc3f1d629c9c05b946894db0ae741186853a56b",
+  "row_count": 248440,
+  "rows_sha256": "337a2b26fb5c82a27be3548404532e2577017cbb7c26e46683628cafeaed0f25",
+  "run_id": "20260512T052522-codex-source-label-numeric-tree-threshold-screen-v1",
+  "split_counts": {
+    "calibration": 148976,
+    "heldout_market": 26236,
+    "heldout_time": 45384,
+    "test": 27844
+  }
+}

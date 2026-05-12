@@ -1,0 +1,82 @@
+{
+  "accepted_rows_added": 0,
+  "board_sha256_at_start": "f38b221758e34dc7fc3d5c4a2a2989abb130c9624bd53aec769abf22103dd1a7",
+  "candidate_date_context_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001853-codex-r6-oystacher-govinfo-date-row-screen-v1/r6-oystacher-govinfo-date-row-screen/r6_oystacher_govinfo_date_context_candidates_v1.csv",
+  "candidate_date_context_rows": 51,
+  "download": {
+    "content_type": "application/pdf",
+    "final_url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-1.pdf",
+    "http_status": 200,
+    "pdf_bytes": 556530,
+    "pdf_sha256": "19368cc6348dd0f99bb5f84be75aff33703bc4defe7e7de079035acbe7699345",
+    "raw_pdf_committed": false
+  },
+  "external_requests_sent": true,
+  "extraction": {
+    "all_markers_found": true,
+    "markers": {
+      "document_195": true,
+      "flip_285": true,
+      "flip_288": true,
+      "flip_324": true,
+      "flip_330": true,
+      "flip_89": true,
+      "orders_1102": true,
+      "orders_1574": true,
+      "orders_1633": true,
+      "orders_284": true,
+      "orders_614": true
+    },
+    "raw_text_committed": false,
+    "returncode": 0,
+    "text_bytes": 268706,
+    "text_sha256": "9c10a8dd97f70ad944fcda2e6efc1e4cd71549ea12cd213f9739d3af93726152"
+  },
+  "gate_result": "r6_oystacher_govinfo_date_row_screen_v1=official_date_contexts_materialized_exhibit_a_or_owner_export_still_required",
+  "generated_at_utc": "2026-05-11T16:22:07.692376+00:00",
+  "market_block_count": 5,
+  "market_blocks_csv": "docs/experiments/actionable-regime-confidence/runs/20260512T001853-codex-r6-oystacher-govinfo-date-row-screen-v1/r6-oystacher-govinfo-date-row-screen/r6_oystacher_govinfo_market_blocks_v1.csv",
+  "materialization_assessment": {
+    "acceptance_reason": "date-level official context lacks Exhibit A timestamps/order legs and matched controls",
+    "date_contexts_materialized": true,
+    "matched_controls_materialized": false,
+    "positive_supply_if_appendix_acquired": "aggregate spoof orders and flip sequences exceed current debt, but only an appendix/export can turn that supply into accepted rows",
+    "row_level_materialized": false
+  },
+  "new_confidence_gate": false,
+  "next_action": "Acquire Oystacher Exhibit A or an owner-approved equivalent order-lifecycle export with timestamped spoof rows and matched normal controls; date-level court context is not enough for R6 split acceptance.",
+  "raw_data_committed": false,
+  "run_id": "20260512T001853-codex-r6-oystacher-govinfo-date-row-screen-v1",
+  "runtime_code_changed": false,
+  "shared_intake_mutated": false,
+  "source_url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_15-cv-09196/pdf/USCOURTS-ilnd-1_15-cv-09196-1.pdf",
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "totals": {
+    "date_context_positive_only_wilson95_lcb": 0.929950986113,
+    "flip_sequences": 1316,
+    "spoof_orders": 5207,
+    "trading_days": 51
+  },
+  "trade_usable": false,
+  "update_goal": false,
+  "v59_debt_reference": {
+    "json": "docs/experiments/actionable-regime-confidence/runs/20260512T000801-codex-r6-exact-split-support-debt-audit-v1/r6-exact-split-support-debt-audit/r6_exact_split_support_debt_audit_v1.json",
+    "loaded": true,
+    "summary": {
+      "additional_positive_rows_for_chrono_quantiles_before_symbol_venue": 219,
+      "chronological_failing": 3,
+      "exact_symbol_bucket_count": 36,
+      "exact_symbol_pairwise_debt_if_current_buckets_must_all_pass": 2559,
+      "exact_venue_bucket_count": 11,
+      "exact_venue_pairwise_debt_if_current_buckets_must_all_pass": 732,
+      "failing_split_rows": 50,
+      "max_single_bucket_debt": 73,
+      "minimum_total_positive_rows_for_current_50_25_25_chrono_quantiles": 292,
+      "split_rows": 51,
+      "symbol_failing": 36,
+      "total_pairwise_rows_needed_if_existing_exact_buckets_are_filled": 3291,
+      "venue_failing": 11
+    }
+  }
+}

@@ -1,0 +1,11 @@
+govinfo_http_200=PASS
+ghostscript_returncode_0=PASS
+source_markers_all_found=PASS
+candidate_date_context_rows_51=PASS
+total_spoof_orders_5207=PASS
+total_flip_sequences_1316=PASS
+row_level_not_materialized=PASS
+matched_controls_not_materialized=PASS
+accepted_rows_zero=PASS
+strict_full_objective_false=PASS
+update_goal_false=PASS

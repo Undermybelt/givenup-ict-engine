@@ -1,0 +1,15 @@
+schema_has_required_user_fields=true
+schema_forces_actionable_false=true
+sample_has_branch_path=true
+sample_fail_closed=true
+coverage_matrix_fail_closed_until_required_pairs_exist=true
+mapping_keeps_smt_confirmation_only=true
+no_downstream_learning_allowed=true
+local_universe_count=6
+candidate_rows=38
+coverage_rows=7
+detected_local_provider_pair_rows=1
+provider_fetch_allowed=false
+auto_quant_dispatch_allowed=false
+downstream_allowed=false
+overall=pass

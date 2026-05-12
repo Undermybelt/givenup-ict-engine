@@ -1,0 +1,6 @@
+root,exists,dirs_seen,files_seen,candidate_files,inaccessible_entries
+/tmp,True,513,30892,103,0
+/private/tmp,True,528,30956,103,0
+/Users/thrill3r/Downloads,True,2125,10561,8,0
+/Users/thrill3r/Desktop,True,5,2,0,0
+/Users/thrill3r/Documents,True,208,3670,19,0

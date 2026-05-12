@@ -1,0 +1,14 @@
+instrument,root,current_acceptance,calibration_2024_support,calibration_2024_wilson95_lcb,heldout_time_2025_support,heldout_time_2025_wilson95_lcb,calibration_split_passes,heldout_split_passes,one_split_passes,extra_2024_source_sessions_to_pass_fixed_split,extra_2025_source_sessions_to_pass_fixed_split,total_extra_sessions_to_make_fixed_splits_pass,post_2025_extension_use,blocker
+HD,Bull,blocked,162,0.9768365592,69,0.9472627418,true,false,true,0,4,4,rerun_new_chronological_gate_only,heldout_time_support_below_73|heldout_time_wilson95_below_0_95
+XOM,Sideways,blocked,100,0.9630065018,68,0.9465286635,true,false,true,0,5,5,rerun_new_chronological_gate_only,heldout_time_support_below_73|heldout_time_wilson95_below_0_95
+TMO,Bull,blocked,118,0.9684716610,67,0.9457738606,true,false,true,0,6,6,rerun_new_chronological_gate_only,heldout_time_support_below_73|heldout_time_wilson95_below_0_95
+ABBV,Sideways,blocked,75,0.9512761575,67,0.9457738606,true,false,true,0,6,6,rerun_new_chronological_gate_only,heldout_time_support_below_73|heldout_time_wilson95_below_0_95
+UNH,Bear,blocked,66,0.9449974430,151,0.9751910189,false,true,true,7,0,7,rerun_new_chronological_gate_only,calibration_support_below_73|calibration_wilson95_below_0_95
+^DJI,Sideways,blocked,66,0.9449974430,87,0.9577124931,false,true,true,7,0,7,rerun_new_chronological_gate_only,calibration_support_below_73|calibration_wilson95_below_0_95
+AMD,Bear,blocked,63,0.9425288004,76,0.9518864149,false,true,true,10,0,10,rerun_new_chronological_gate_only,calibration_support_below_73|calibration_wilson95_below_0_95
+HD,Sideways,blocked,62,0.9416559279,80,0.9541818705,false,true,true,11,0,11,rerun_new_chronological_gate_only,calibration_support_below_73|calibration_wilson95_below_0_95
+AMD,Bull,blocked,76,0.9518864149,62,0.9416559279,true,false,true,0,11,11,rerun_new_chronological_gate_only,heldout_time_support_below_73|heldout_time_wilson95_below_0_95
+JNJ,Sideways,blocked,99,0.9626467879,61,0.9407561321,true,false,true,0,12,12,rerun_new_chronological_gate_only,heldout_time_support_below_73|heldout_time_wilson95_below_0_95
+TMO,Bear,blocked,59,0.9388706295,98,0.9622800099,false,true,true,14,0,14,rerun_new_chronological_gate_only,calibration_support_below_73|calibration_wilson95_below_0_95
+DIS,Bull,blocked,88,0.9581729333,55,0.9347150989,true,false,true,0,18,18,rerun_new_chronological_gate_only,heldout_time_support_below_73|heldout_time_wilson95_below_0_95
+INTC,Bear,blocked,89,0.9586234548,53,0.9324180114,true,false,true,0,20,20,rerun_new_chronological_gate_only,heldout_time_support_below_73|heldout_time_wilson95_below_0_95

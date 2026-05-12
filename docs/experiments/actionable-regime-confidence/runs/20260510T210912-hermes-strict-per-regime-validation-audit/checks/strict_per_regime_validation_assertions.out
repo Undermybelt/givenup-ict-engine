@@ -1,0 +1,5 @@
+strict_accepted_count: 0
+legacy_accepted_pending_strict_validation: ['SessionLiquidityCoreViable', 'RangeConsolidation', 'ThinLiquidityOffHoursPersistent']
+missing_unaccepted_regimes: ['TrendExpansion', 'ExtremeStress', 'ReversalBrewing']
+thresholds_relaxed: False
+required_fields_checked: qualifying_condition,validation_instruments,validation_periods,validation_market_contexts

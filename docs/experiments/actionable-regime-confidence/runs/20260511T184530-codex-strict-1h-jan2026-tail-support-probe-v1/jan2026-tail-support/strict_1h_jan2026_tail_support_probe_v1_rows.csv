@@ -1,0 +1,14 @@
+instrument,root,missing_extra_sessions_from_184151,jan2026_source_tail_sessions,jan2026_tail_wilson95_lcb,provider_1h_covers_tail,tail_covers_missing_extra,standalone_tail_gate_passes,allowed_use
+ABBV,Sideways,6,19,0.8318207759,true,true,false,future_chronological_gate_preflight_only
+TMO,Bull,6,18,0.8241207764,true,true,false,future_chronological_gate_preflight_only
+HD,Bull,4,15,0.7961166990,true,true,false,future_chronological_gate_preflight_only
+AMD,Bull,11,12,0.7575059933,true,true,false,future_chronological_gate_preflight_only
+DIS,Bull,18,6,0.6096657121,true,false,false,future_chronological_gate_preflight_only
+JNJ,Sideways,12,2,0.3423802275,true,false,false,future_chronological_gate_preflight_only
+HD,Sideways,11,1,0.2065493144,true,false,false,future_chronological_gate_preflight_only
+XOM,Sideways,5,0,0.0000000000,true,false,false,future_chronological_gate_preflight_only
+UNH,Bear,7,0,0.0000000000,true,false,false,future_chronological_gate_preflight_only
+^DJI,Sideways,7,0,0.0000000000,true,false,false,future_chronological_gate_preflight_only
+AMD,Bear,10,0,0.0000000000,true,false,false,future_chronological_gate_preflight_only
+TMO,Bear,14,0,0.0000000000,true,false,false,future_chronological_gate_preflight_only
+INTC,Bear,20,0,0.0000000000,true,false,false,future_chronological_gate_preflight_only

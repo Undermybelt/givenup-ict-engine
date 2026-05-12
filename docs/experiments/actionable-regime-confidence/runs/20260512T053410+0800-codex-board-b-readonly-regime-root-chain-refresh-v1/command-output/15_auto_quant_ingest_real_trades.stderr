@@ -1,0 +1,4 @@
+Error: ingesting real trades for symbol 'B2R_NQ_COST_CRISIS_REPAIR_032157' from 'docs/experiments/actionable-regime-confidence/runs/20260512T032157-codex-board-b-nq-cost-crisis-repair-v3/downstream-v2/nq_cost_crisis_repair_real_trades_v3_wire_fixed.jsonl'
+
+Caused by:
+    refusing to re-ingest the same JSONL: a prior auto_quant_real_trades_ingested entry with content_hash 'd2aec06adb0f4871' exists (auto_quant_real_trades_B2R_NQ_COST_CRISIS_REPAIR_032157_20260511T193244.669772000Z); pass --force after rolling back the BBN to override

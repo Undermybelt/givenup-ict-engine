@@ -1,0 +1,8 @@
+source_id,source_url,disposition,reason
+huggingface_exact_queries,https://huggingface.co/datasets,no_exact_dataset_hits,Exact API searches returned zero dataset hits for spoofing/layering matched-control terms.
+kaggle_exact_queries,https://www.kaggle.com/datasets,no_exact_dataset_hits,Kaggle CLI exact searches returned no datasets for spoofing/layering matched-control terms.
+github_exact_repo_queries,https://api.github.com/search/repositories,no_ready_repo_source,GitHub API returned zero hits for two exact queries and transport errors for the other two; no ready source-owned row package was materialized.
+sneela_aimm_repo_probe,https://github.com/sneela/aimm,repository_not_public_or_not_found,The repo URL surfaced in web snippets was not cloneable/readable from this environment.
+cftc_spoofing_guidance,https://www.cftc.gov/sites/default/files/idc/groups/public/@newsroom/documents/file/dtpinterpretiveorder_qa.pdf,guidance_no_exportable_rows,Official spoofing/layering guidance supports taxonomy only; it does not expose source-owned row-level positives plus matched normal controls.
+justia_cftc_oystacher,https://law.justia.com/cases/federal/district-courts/illinois/ilndce/1:2015cv09196/316583/80/,case_narrative_positive_only,"Enforcement/court narrative is useful positive provenance, but not a structured export with matched same-session normal controls."
+zenodo_aimm_preprint,https://doi.org/10.5281/zenodo.17705751,pdf_only_not_spoofing_layering_rows,"AIMM is a social-media-influenced manipulation framework/preprint surface; checked Zenodo metadata exposes PDF files, not spoofing/layering CSV rows and controls."

@@ -1,0 +1,15 @@
+PASS branch_rc_spa_gate_result=pass
+PASS price_root_paths_passed=4
+PASS manipulation_component_pass=True
+PASS branch_paths_preserved=true
+PASS provider_status_exit=0
+PASS yfinance_ready=True
+PASS tradingview_mcp_ready=False
+PASS kraken_cli_ready=True
+PASS ibkr_gateway_recorded=True
+PASS bbn_roots_skipped_no_supported_label=Bear
+PASS structural_target_exact_board_b_rows=0
+PASS promotion_status=not_promoted:downstream_branch_path_or_bbn_mapping_gap
+PASS runtime_code_changed=false
+PASS thresholds_relaxed=false
+PASS raw_data_committed=false

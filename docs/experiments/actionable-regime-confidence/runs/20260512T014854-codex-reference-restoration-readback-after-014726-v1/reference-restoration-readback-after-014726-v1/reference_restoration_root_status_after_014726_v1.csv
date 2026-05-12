@@ -1,0 +1,8 @@
+root_id,path,present,required_files_present,assertions_pass,gate_result,acceptance_status
+014221,docs/experiments/actionable-regime-confidence/runs/20260512T014221-codex-current-objective-completion-audit-after-013904-v1,true,true,true,current_objective_completion_audit_after_013904_v1=not_complete_source_r6_r3_r5_timeframe_downstream_blocked,restored_fail_closed_reference_only
+014314,docs/experiments/actionable-regime-confidence/runs/20260512T014314-codex-r6-owner-route-current-web-recheck-v1,true,true,true,r6_owner_route_current_web_recheck_v1=current_official_routes_rechecked_controls_not_acquired_no_merge,restored_fail_closed_reference_only
+014426,docs/experiments/actionable-regime-confidence/runs/20260512T014426-codex-current-objective-completion-audit-after-014229-v1,false,false,false,unknown,stale_non_evidence
+r6_owner_export,/tmp/ict-engine-board-a-r6-owner-export-v1,false,false,false,not_applicable,missing
+r3_native_subhour,/tmp/ict-engine-native-subhour-source-label-intake,false,false,false,not_applicable,missing
+r5_recency_extension,/tmp/ict-engine-source-panel-recency-extension,false,false,false,not_applicable,missing
+source_label_equivalence,/tmp/ict-engine-source-label-equivalence-intake,true,true,false,not_applicable,confidence_blocked_daily_only

@@ -1,0 +1,2 @@
+rustfmt_check_after_direct_model=fail
+exit=1

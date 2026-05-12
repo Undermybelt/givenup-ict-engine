@@ -1,0 +1,144 @@
+{
+  "accepted_rows_added": 0,
+  "board_hash_before": "82b72b4daec4a63332b85e3dd8e7491a7bbdba5a98e4b2cdbcecfdaba247096c",
+  "canonical_merge_allowed": false,
+  "decision": {
+    "cboe_route": "Cboe VIX trades/quotes date route improved; historical depth/order-lifecycle remains custom/support route.",
+    "cme_route": "CME exchange-level date fit improved; still needs licensed verifier-native export and normal-control policy/provenance.",
+    "local_entitlement": "No local CLI, Python package, API key, or owner-export delivery package can deliver the R6 controls now."
+  },
+  "downstream_rerun_allowed": false,
+  "gate_result": "r6_owner_route_entitlement_readback_v1=route_fit_improved_controls_not_acquired_no_merge",
+  "local_entitlement_rows": [
+    {
+      "decision": "no_live_entitlement_path",
+      "observed": "absent",
+      "probe": "databento_cli"
+    },
+    {
+      "decision": "no_live_decoder_cli",
+      "observed": "absent",
+      "probe": "dbn_cli"
+    },
+    {
+      "decision": "no_live_entitlement_path",
+      "observed": "absent",
+      "probe": "python_databento"
+    },
+    {
+      "decision": "no_local_arrow_decode_path",
+      "observed": "absent",
+      "probe": "python_pyarrow"
+    },
+    {
+      "decision": "no_live_entitlement_path",
+      "observed": "absent",
+      "probe": "databento_api_key_env"
+    },
+    {
+      "decision": "delivery_root_absent_or_incomplete",
+      "observed": "absent",
+      "probe": "owner_export_root"
+    },
+    {
+      "decision": "verifier_native_package_absent",
+      "observed": "positive_spoofing_layering_rows.csv:false,matched_negative_normal_activity_rows.csv:false,provenance_manifest.json:false",
+      "probe": "owner_required_files"
+    }
+  ],
+  "local_schema_rows": [
+    {
+      "board_decision": "local_bar_data_not_source_owned_normal_controls",
+      "dataset": "GLBX.MDP3",
+      "end_ns": 1767225600000000000,
+      "local_source": "/Users/thrill3r/Downloads/Tomac/es future 2021-2025/metadata.json",
+      "present": "true",
+      "schema": "ohlcv-1m",
+      "start_ns": 1293840000000000000,
+      "symbol": "ES.FUT"
+    },
+    {
+      "board_decision": "local_bar_data_not_source_owned_normal_controls",
+      "dataset": "GLBX.MDP3",
+      "end_ns": 1767657600000000000,
+      "local_source": "/Users/thrill3r/Downloads/Tomac/gc future 2021-2025/metadata.json",
+      "present": "true",
+      "schema": "ohlcv-1m",
+      "start_ns": 1609891200000000000,
+      "symbol": "GC.FUT"
+    },
+    {
+      "board_decision": "local_bar_data_not_source_owned_normal_controls",
+      "dataset": "GLBX.MDP3",
+      "end_ns": 1775260800000000000,
+      "local_source": "/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/metadata.json",
+      "present": "true",
+      "schema": "ohlcv-1m",
+      "start_ns": 1275782400000000000,
+      "symbol": "NQ.FUT"
+    },
+    {
+      "board_decision": "local_bar_data_not_source_owned_normal_controls",
+      "dataset": "GLBX.MDP3",
+      "end_ns": 1767225600000000000,
+      "local_source": "/Users/thrill3r/Downloads/Tomac/ym future 2021-2025/metadata.json",
+      "present": "true",
+      "schema": "ohlcv-1m",
+      "start_ns": 1293840000000000000,
+      "symbol": "YM.FUT"
+    },
+    {
+      "board_decision": "local_bar_data_not_source_owned_normal_controls",
+      "dataset": "GLBX.MDP3",
+      "end_ns": 1767225600000000000,
+      "local_source": "/Users/thrill3r/Downloads/Tomac/eur future 2015-2025/metadata.json",
+      "present": "true",
+      "schema": "ohlcv-1m",
+      "start_ns": 1420070400000000000,
+      "symbol": "6E.FUT"
+    }
+  ],
+  "new_confidence_gate": false,
+  "next_action": "Obtain licensed CME Market Depth/Market by Order or equivalent exports and Cboe/CFE VIX historical trades/quotes or depth/order-lifecycle export with provenance, or explicitly approve same-exhibit FLIP-as-control; only then populate the owner-export root and rerun the full chain.",
+  "observed_cursor": "20260512T004410+0800-codex-r6-official-route-date-fit-check-v1",
+  "official_route_rows": [
+    {
+      "board_decision": "route_improved_controls_not_acquired",
+      "official_url": "https://cmegroupclientsite.atlassian.net/wiki/spaces/EPICSANDBOX/pages/457091894/Market+Depth",
+      "owner": "CME Group",
+      "oystacher_date_fit": "exchange_level_2011_2013_fit_confirmed",
+      "public_readback": "market_depth_cme_2005_nymex_2007_comex_2007_fix_2009",
+      "remaining_gap": "licensed_export_not_acquired_product_contract_scope_and_normal_control_policy_still_required",
+      "route": "CME Market Depth via CME client site / DataMine licensed export"
+    },
+    {
+      "board_decision": "route_improved_controls_not_acquired",
+      "official_url": "https://datashop.cboe.com/cfe-vix-volatility-index-futures-trades-quotes",
+      "owner": "Cboe/CFE",
+      "oystacher_date_fit": "2013_2014_vix_tick_quote_route_plausible",
+      "public_readback": "cfe_vix_futures_trades_quotes_apr_2004_to_feb_2018",
+      "remaining_gap": "full_depth_or_order_lifecycle_export_not_confirmed_and_licensed_export_not_acquired",
+      "route": "Cboe DataShop CFE VIX Futures Trades and Quotes"
+    },
+    {
+      "board_decision": "route_gap_preserved_controls_not_acquired",
+      "official_url": "https://www.cboe.com/market_data_services/us/futures/",
+      "owner": "Cboe/CFE",
+      "oystacher_date_fit": "historical_2013_2014_depth_availability_not_publicly_confirmed",
+      "public_readback": "futures_depth_of_book_feed_exists_for_current_services",
+      "remaining_gap": "custom_datashop_or_market_data_support_export_required_for_historical_depth_order_lifecycle",
+      "route": "Cboe US Futures Market Data Services / Depth of Book"
+    }
+  ],
+  "owner_export_root_mutated": false,
+  "raw_data_committed": false,
+  "required_oystacher_normal_control_cells": 17,
+  "run_id": "20260512T010127-codex-r6-owner-route-entitlement-readback-v1",
+  "runtime_code_changed": false,
+  "same_exhibit_flip_approval": false,
+  "shared_intake_mutated": false,
+  "source_owned_normal_controls_acquired": 0,
+  "strict_full_objective_achieved": false,
+  "thresholds_relaxed": false,
+  "update_goal": false
+}

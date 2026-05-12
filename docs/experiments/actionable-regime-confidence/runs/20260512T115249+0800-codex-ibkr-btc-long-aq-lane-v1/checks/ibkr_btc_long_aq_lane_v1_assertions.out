@@ -1,0 +1,12 @@
+PASS run_id=20260512T115249+0800-codex-ibkr-btc-long-aq-lane-v1
+PASS source_run=20260512T113833+0800-codex-112904-provider-matrix-aq-date-contract-repair-v1
+PASS ibkr_fetch_exit=0
+PASS ibkr_fetch_rows=782
+PASS ibkr_compile_exit=0
+PASS ibkr_tomac_exit=0
+PASS ibkr_strategies_with_metrics=2
+PASS ibkr_total_trades=44
+FAIL_CLOSED same_root_six_provider_downstream_chain_not_rerun
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

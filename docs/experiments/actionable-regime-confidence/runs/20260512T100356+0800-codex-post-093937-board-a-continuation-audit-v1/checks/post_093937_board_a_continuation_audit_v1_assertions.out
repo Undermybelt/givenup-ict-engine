@@ -1,0 +1,9 @@
+all_late_roots_present=True
+auto_quant_status_exit_0=True
+direct_verifier_exit_0=True
+direct_verifier_schema_ready_unscored=True
+owner_export_triplet_absent=True
+promotion_allowed_false=True
+provider_status_exit_0=True
+strict_full_objective_false=True
+update_goal_false=True
